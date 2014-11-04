@@ -19,7 +19,7 @@ package org.jclouds.googlecomputeengine.features;
 import static org.jclouds.googlecomputeengine.GoogleComputeEngineConstants.COMPUTE_READONLY_SCOPE;
 import static org.jclouds.googlecomputeengine.GoogleComputeEngineConstants.COMPUTE_SCOPE;
 import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertTrue;
+import static org.testng.Assert.assertFalse;
 import static org.testng.AssertJUnit.assertNull;
 
 import java.net.URI;
@@ -148,8 +148,7 @@ public class RouteApiExpectTest extends BaseGoogleComputeEngineApiExpectTest {
       RouteApi api = requestsSendResponses(requestForScopes(COMPUTE_READONLY_SCOPE),
               TOKEN_RESPONSE, list, operationResponse).getRouteApi("myproject");
 
-      assertEquals(api.listFirstPage().toString(),
-              new ParseRouteListTest().expected().toString());
+      assertEquals(api.list().next().toString(), new ParseRouteListTest().expected().toString());
    }
 
    public void testListRoutesResponseIs4xx() {
@@ -165,6 +164,6 @@ public class RouteApiExpectTest extends BaseGoogleComputeEngineApiExpectTest {
       RouteApi api = requestsSendResponses(requestForScopes(COMPUTE_READONLY_SCOPE),
               TOKEN_RESPONSE, list, operationResponse).getRouteApi("myproject");
 
-      assertTrue(api.list().concat().isEmpty());
+      assertFalse(api.list().hasNext());
    }
 }

@@ -22,7 +22,7 @@ import static org.jclouds.googlecomputeengine.GoogleComputeEngineConstants.COMPU
 import static org.jclouds.googlecomputeengine.features.ProjectApiExpectTest.GET_PROJECT_REQUEST;
 import static org.jclouds.googlecomputeengine.features.ProjectApiExpectTest.GET_PROJECT_RESPONSE;
 import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertTrue;
+import static org.testng.Assert.assertFalse;
 import static org.testng.AssertJUnit.assertNull;
 
 import java.net.URI;
@@ -216,7 +216,7 @@ public class InstanceApiExpectTest extends BaseGoogleComputeEngineApiExpectTest 
               requestForScopes(COMPUTE_READONLY_SCOPE), TOKEN_RESPONSE,
               LIST_INSTANCES_REQUEST, LIST_INSTANCES_RESPONSE).getInstanceApi("myproject");
 
-      assertEquals(api.listFirstPageInZone("us-central1-a").toString(),
+      assertEquals(api.listInZone("us-central1-a").next().toString(),
               new ParseInstanceListTest().expected().toString());
    }
 
@@ -233,7 +233,7 @@ public class InstanceApiExpectTest extends BaseGoogleComputeEngineApiExpectTest 
       InstanceApi api = requestsSendResponses(requestForScopes(COMPUTE_READONLY_SCOPE),
               TOKEN_RESPONSE, list, operationResponse).getInstanceApi("myproject");
 
-      assertTrue(api.listInZone("us-central1-a").concat().isEmpty());
+      assertFalse(api.listInZone("us-central1-a").hasNext());
    }
 
    public void testSetInstanceMetadataResponseIs2xx() {

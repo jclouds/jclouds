@@ -19,6 +19,8 @@ package org.jclouds.googlecomputeengine.features;
 import static org.jclouds.googlecomputeengine.GoogleComputeEngineConstants.COMPUTE_READONLY_SCOPE;
 import static org.jclouds.googlecomputeengine.GoogleComputeEngineConstants.COMPUTE_SCOPE;
 
+import java.util.Iterator;
+
 import javax.inject.Named;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
@@ -30,9 +32,8 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
-import org.jclouds.Fallbacks.EmptyPagedIterableOnNotFoundOr404;
 import org.jclouds.Fallbacks.NullOnNotFoundOr404;
-import org.jclouds.collect.PagedIterable;
+import org.jclouds.googlecomputeengine.GoogleComputeEngineFallbacks.EmptyIteratorOnNotFoundOr404;
 import org.jclouds.googlecomputeengine.GoogleComputeEngineFallbacks.EmptyListPageOnNotFoundOr404;
 import org.jclouds.googlecomputeengine.domain.ListPage;
 import org.jclouds.googlecomputeengine.domain.Network;
@@ -126,39 +127,14 @@ public interface NetworkApi {
    Operation delete(@PathParam("network") String networkName);
 
    /**
-    * @see NetworkApi#listAtMarker(String, org.jclouds.googlecomputeengine.options.ListOptions)
-    */
-   @Named("Networks:list")
-   @GET
-   @Consumes(MediaType.APPLICATION_JSON)
-   @Path("/global/networks")
-   @OAuthScopes(COMPUTE_READONLY_SCOPE)
-   @ResponseParser(ParseNetworks.class)
-   @Fallback(EmptyListPageOnNotFoundOr404.class)
-   ListPage<Network> listFirstPage();
-
-   /**
-    * @see NetworkApi#listAtMarker(String, org.jclouds.googlecomputeengine.options.ListOptions)
-    */
-   @Named("Networks:list")
-   @GET
-   @Consumes(MediaType.APPLICATION_JSON)
-   @Path("/global/networks")
-   @OAuthScopes(COMPUTE_READONLY_SCOPE)
-   @ResponseParser(ParseNetworks.class)
-   @Fallback(EmptyListPageOnNotFoundOr404.class)
-   ListPage<Network> listAtMarker(@QueryParam("pageToken") @Nullable String marker);
-
-   /**
     * Retrieves the list of persistent network resources contained within the specified project.
     * By default the list as a maximum size of 100, if no options are provided or ListOptions#getMaxResults() has not
     * been set.
     *
     * @param marker      marks the beginning of the next list page
-    * @param listOptions listing options
+    * @param options listing options
     * @return a page of the list
     * @see ListOptions
-    * @see org.jclouds.googlecomputeengine.domain.ListPage
     */
    @Named("Networks:list")
    @GET
@@ -167,8 +143,7 @@ public interface NetworkApi {
    @OAuthScopes(COMPUTE_READONLY_SCOPE)
    @ResponseParser(ParseNetworks.class)
    @Fallback(EmptyListPageOnNotFoundOr404.class)
-   ListPage<Network> listAtMarker(@QueryParam("pageToken") @Nullable String marker,
-                                  ListOptions options);
+   ListPage<Network> listAtMarker(@QueryParam("pageToken") @Nullable String marker, ListOptions options);
 
    /**
     * @see NetworkApi#list(org.jclouds.googlecomputeengine.options.ListOptions)
@@ -179,15 +154,14 @@ public interface NetworkApi {
    @Path("/global/networks")
    @OAuthScopes(COMPUTE_READONLY_SCOPE)
    @ResponseParser(ParseNetworks.class)
-   @Transform(ParseNetworks.ToPagedIterable.class)
-   @Fallback(EmptyPagedIterableOnNotFoundOr404.class)
-   PagedIterable<Network> list();
+   @Transform(ParseNetworks.ToIteratorOfListPage.class)
+   @Fallback(EmptyIteratorOnNotFoundOr404.class)
+   Iterator<ListPage<Network>> list();
 
    /**
     * A paged version of NetworkApi#list()
     *
-    * @return a Paged, Fluent Iterable that is able to fetch additional pages when required
-    * @see PagedIterable
+    * @return an Iterator that is able to fetch additional pages when required
     * @see NetworkApi#listAtMarker(String, org.jclouds.googlecomputeengine.options.ListOptions)
     */
    @Named("Networks:list")
@@ -196,7 +170,7 @@ public interface NetworkApi {
    @Path("/global/networks")
    @OAuthScopes(COMPUTE_READONLY_SCOPE)
    @ResponseParser(ParseNetworks.class)
-   @Transform(ParseNetworks.ToPagedIterable.class)
-   @Fallback(EmptyPagedIterableOnNotFoundOr404.class)
-   PagedIterable<Network> list(ListOptions options);
+   @Transform(ParseNetworks.ToIteratorOfListPage.class)
+   @Fallback(EmptyIteratorOnNotFoundOr404.class)
+   Iterator<ListPage<Network>> list(ListOptions options);
 }

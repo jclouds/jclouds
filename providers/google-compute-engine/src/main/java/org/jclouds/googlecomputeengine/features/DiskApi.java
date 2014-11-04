@@ -19,6 +19,8 @@ package org.jclouds.googlecomputeengine.features;
 import static org.jclouds.googlecomputeengine.GoogleComputeEngineConstants.COMPUTE_READONLY_SCOPE;
 import static org.jclouds.googlecomputeengine.GoogleComputeEngineConstants.COMPUTE_SCOPE;
 
+import java.util.Iterator;
+
 import javax.inject.Named;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
@@ -30,9 +32,8 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
-import org.jclouds.Fallbacks.EmptyPagedIterableOnNotFoundOr404;
 import org.jclouds.Fallbacks.NullOnNotFoundOr404;
-import org.jclouds.collect.PagedIterable;
+import org.jclouds.googlecomputeengine.GoogleComputeEngineFallbacks.EmptyIteratorOnNotFoundOr404;
 import org.jclouds.googlecomputeengine.GoogleComputeEngineFallbacks.EmptyListPageOnNotFoundOr404;
 import org.jclouds.googlecomputeengine.binders.DiskCreationBinder;
 import org.jclouds.googlecomputeengine.domain.Disk;
@@ -103,7 +104,7 @@ public interface DiskApi {
     * @param diskName the name of disk.
     * @param sizeGb   the size of the disk
     * @param zone     the name of the zone where the disk is to be created.
-    * @param diskCreationOption the options of the disk to create.
+    * @param options the options of the disk to create.
     * @return an Operation resource. To check on the status of an operation, poll the Operations resource returned to
     *         you, and look for the status field.
     */
@@ -117,7 +118,7 @@ public interface DiskApi {
    Operation createInZone(@PayloadParam("name") String diskName,
                           @PayloadParam("sizeGb") int sizeGb,
                           @PathParam("zone") String zone,
-                          @PayloadParam("options") DiskCreationOptions diskCreationOptions);
+                          @PayloadParam("options") DiskCreationOptions options);
 
    /**
     * Deletes the specified persistent disk resource.
@@ -135,30 +136,6 @@ public interface DiskApi {
    @Fallback(NullOnNotFoundOr404.class)
    @Nullable
    Operation deleteInZone(@PathParam("zone") String zone, @PathParam("disk") String diskName);
-
-   /**
-    * @see DiskApi#listAtMarkerInZone(String, String, org.jclouds.googlecomputeengine.options.ListOptions)
-    */
-   @Named("Disks:list")
-   @GET
-   @Consumes(MediaType.APPLICATION_JSON)
-   @Path("/zones/{zone}/disks")
-   @OAuthScopes(COMPUTE_READONLY_SCOPE)
-   @ResponseParser(ParseDisks.class)
-   @Fallback(EmptyListPageOnNotFoundOr404.class)
-   ListPage<Disk> listFirstPageInZone(@PathParam("zone") String zone);
-
-   /**
-    * @see DiskApi#listAtMarkerInZone(String, String, org.jclouds.googlecomputeengine.options.ListOptions)
-    */
-   @Named("Disks:list")
-   @GET
-   @Consumes(MediaType.APPLICATION_JSON)
-   @Path("/zones/{zone}/disks")
-   @OAuthScopes(COMPUTE_READONLY_SCOPE)
-   @ResponseParser(ParseDisks.class)
-   @Fallback(EmptyListPageOnNotFoundOr404.class)
-   ListPage<Disk> listAtMarkerInZone(@PathParam("zone") String zone, @QueryParam("pageToken") @Nullable String marker);
 
    /**
     * Retrieves the listPage of persistent disk resources contained within the specified project and zone.
@@ -185,8 +162,7 @@ public interface DiskApi {
     * A paged version of DiskApi#listPageInZone(String)
     *
     * @param zone the zone to list in
-    * @return a Paged, Fluent Iterable that is able to fetch additional pages when required
-    * @see PagedIterable
+    * @return an Iterator that is able to fetch additional pages when required
     * @see DiskApi#listAtMarkerInZone(String, String, org.jclouds.googlecomputeengine.options.ListOptions)
     */
    @Named("Disks:list")
@@ -195,9 +171,9 @@ public interface DiskApi {
    @Path("/zones/{zone}/disks")
    @OAuthScopes(COMPUTE_READONLY_SCOPE)
    @ResponseParser(ParseDisks.class)
-   @Transform(ParseDisks.ToPagedIterable.class)
-   @Fallback(EmptyPagedIterableOnNotFoundOr404.class)
-   PagedIterable<Disk> listInZone(@PathParam("zone") String zone);
+   @Transform(ParseDisks.ToIteratorOfListPage.class)
+   @Fallback(EmptyIteratorOnNotFoundOr404.class)
+   Iterator<ListPage<Disk>> listInZone(@PathParam("zone") String zone);
 
    @Named("Disks:list")
    @GET
@@ -205,9 +181,9 @@ public interface DiskApi {
    @Path("/zones/{zone}/disks")
    @OAuthScopes(COMPUTE_READONLY_SCOPE)
    @ResponseParser(ParseDisks.class)
-   @Transform(ParseDisks.ToPagedIterable.class)
-   @Fallback(EmptyPagedIterableOnNotFoundOr404.class)
-   PagedIterable<Disk> listInZone(@PathParam("zone") String zone, ListOptions options);
+   @Transform(ParseDisks.ToIteratorOfListPage.class)
+   @Fallback(EmptyIteratorOnNotFoundOr404.class)
+   Iterator<ListPage<Disk>> listInZone(@PathParam("zone") String zone, ListOptions options);
 
    /**
     * Create a snapshot of a given disk in a zone.

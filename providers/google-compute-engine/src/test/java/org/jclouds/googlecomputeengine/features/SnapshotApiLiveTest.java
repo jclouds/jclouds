@@ -19,17 +19,15 @@ package org.jclouds.googlecomputeengine.features;
 import static org.jclouds.googlecomputeengine.features.DiskApiLiveTest.TIME_WAIT;
 import static org.testng.Assert.assertEquals;
 
+import java.util.Iterator;
 import java.util.List;
 
-import org.jclouds.collect.PagedIterable;
 import org.jclouds.googlecomputeengine.domain.Disk;
+import org.jclouds.googlecomputeengine.domain.ListPage;
 import org.jclouds.googlecomputeengine.domain.Snapshot;
 import org.jclouds.googlecomputeengine.internal.BaseGoogleComputeEngineApiLiveTest;
 import org.jclouds.googlecomputeengine.options.ListOptions;
 import org.testng.annotations.Test;
-
-import com.google.common.collect.Iterables;
-import com.google.common.collect.Lists;
 
 public class SnapshotApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
 
@@ -47,11 +45,11 @@ public class SnapshotApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
 
    @Test(groups = "live")
    public void testCreateSnapshot() {
-      assertZoneOperationDoneSucessfully(diskApi().createInZone(DISK_NAME, 1, DEFAULT_ZONE_NAME), TIME_WAIT);
+      assertZoneOperationDoneSuccessfully(diskApi().createInZone(DISK_NAME, 1, DEFAULT_ZONE_NAME), TIME_WAIT);
       disk = diskApi().getInZone(DEFAULT_ZONE_NAME, DISK_NAME);
 
-      assertZoneOperationDoneSucessfully(diskApi().createSnapshotInZone(DEFAULT_ZONE_NAME, DISK_NAME, SNAPSHOT_NAME),
-              TIME_WAIT);
+      assertZoneOperationDoneSuccessfully(diskApi().createSnapshotInZone(DEFAULT_ZONE_NAME, DISK_NAME, SNAPSHOT_NAME),
+            TIME_WAIT);
    }
 
    @Test(groups = "live", dependsOnMethods = "testCreateSnapshot")
@@ -65,20 +63,20 @@ public class SnapshotApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
    @Test(groups = "live", dependsOnMethods = "testGetSnapshot")
    public void testListSnapshot() {
 
-      PagedIterable<Snapshot> snapshots = api().list(new ListOptions.Builder()
+      Iterator<ListPage<Snapshot>> snapshots = api().list(new ListOptions.Builder()
               .filter("name eq " + SNAPSHOT_NAME));
 
-      List<Snapshot> snapshotsAsList = Lists.newArrayList(snapshots.concat());
+      List<Snapshot> snapshotsAsList = snapshots.next();
 
       assertEquals(snapshotsAsList.size(), 1);
 
-      assertSnapshotEquals(Iterables.getOnlyElement(snapshotsAsList));
+      assertSnapshotEquals(snapshotsAsList.get(0));
    }
 
    @Test(groups = "live", dependsOnMethods = "testListSnapshot")
    public void testDeleteDisk() {
 
-      assertZoneOperationDoneSucessfully(diskApi().deleteInZone(DEFAULT_ZONE_NAME, DISK_NAME), TIME_WAIT);
+      assertZoneOperationDoneSuccessfully(diskApi().deleteInZone(DEFAULT_ZONE_NAME, DISK_NAME), TIME_WAIT);
       assertGlobalOperationDoneSucessfully(api().delete(SNAPSHOT_NAME), TIME_WAIT);
    }
 

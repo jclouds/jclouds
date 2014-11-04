@@ -18,8 +18,6 @@ package org.jclouds.googlecomputeengine.functions.internal;
 
 import javax.inject.Inject;
 
-import org.jclouds.collect.IterableWithMarker;
-import org.jclouds.collect.IterableWithMarkers;
 import org.jclouds.googlecomputeengine.GoogleComputeEngineApi;
 import org.jclouds.googlecomputeengine.domain.Disk;
 import org.jclouds.googlecomputeengine.domain.ListPage;
@@ -37,22 +35,20 @@ public final class ParseDisks extends ParseJson<ListPage<Disk>> {
       });
    }
 
-   public static class ToPagedIterable extends BaseWithZoneToPagedIterable<Disk, ToPagedIterable> {
+   public static class ToIteratorOfListPage extends BaseWithZoneToIteratorOfListPage<Disk, ToIteratorOfListPage> {
 
       private final GoogleComputeEngineApi api;
 
-      @Inject ToPagedIterable(GoogleComputeEngineApi api) {
+      @Inject ToIteratorOfListPage(GoogleComputeEngineApi api) {
          this.api = api;
       }
 
-      @Override protected Function<Object, IterableWithMarker<Disk>> fetchNextPage(final String projectName,
+      @Override protected Function<String, ListPage<Disk>> fetchNextPage(final String projectName,
             final String zoneName, final ListOptions options) {
-         return new Function<Object, IterableWithMarker<Disk>>() {
+         return new Function<String, ListPage<Disk>>() {
 
-            @Override public IterableWithMarker<Disk> apply(Object input) {
-               ListPage<Disk> result = api.getDiskApi(projectName)
-                     .listAtMarkerInZone(zoneName, input.toString(), options);
-               return IterableWithMarkers.from(result, result.nextPageToken());
+            @Override public ListPage<Disk> apply(String input) {
+               return api.getDiskApi(projectName).listAtMarkerInZone(zoneName, input, options);
             }
          };
       }

@@ -19,10 +19,8 @@ package org.jclouds.googlecomputeengine.functions.internal;
 import static com.google.common.base.Predicates.instanceOf;
 import static com.google.common.collect.Iterables.tryFind;
 
-import org.jclouds.collect.IterableWithMarker;
-import org.jclouds.collect.IterableWithMarkers;
-import org.jclouds.collect.PagedIterable;
-import org.jclouds.collect.PagedIterables;
+import java.util.Iterator;
+
 import org.jclouds.googlecomputeengine.domain.ListPage;
 import org.jclouds.googlecomputeengine.options.ListOptions;
 import org.jclouds.http.HttpRequest;
@@ -32,36 +30,33 @@ import org.jclouds.rest.internal.GeneratedHttpRequest;
 import com.google.common.annotations.Beta;
 import com.google.common.base.Function;
 import com.google.common.base.Optional;
+import com.google.common.collect.Iterators;
 
 @Beta
-public abstract class BaseWithZoneToPagedIterable<T, I extends BaseWithZoneToPagedIterable<T, I>> implements
-        Function<ListPage<T>, PagedIterable<T>>, InvocationContext<I> {
+public abstract class BaseToIteratorOfListPage<T, I extends BaseToIteratorOfListPage<T, I>>
+      implements Function<ListPage<T>, Iterator<ListPage<T>>>, InvocationContext<I> {
 
    private GeneratedHttpRequest request;
 
-   @Override public PagedIterable<T> apply(ListPage<T> input) {
-      if (input.nextPageToken() == null)
-         return PagedIterables.onlyPage(IterableWithMarkers.from(input));
+   @Override
+   public Iterator<ListPage<T>> apply(ListPage<T> input) {
+      if (input.nextPageToken() == null) {
+         return Iterators.singletonIterator(input);
+      }
 
       Optional<Object> project = tryFind(request.getCaller().get().getArgs(), instanceOf(String.class));
 
-      Optional<Object> zone = tryFind(request.getInvocation().getArgs(), instanceOf(String.class));
-
       Optional<Object> listOptions = tryFind(request.getInvocation().getArgs(), instanceOf(ListOptions.class));
 
-      assert project.isPresent() : String.format("programming error, method %s should have a string param for the "
-              + "project", request.getCaller().get().getInvokable());
+      assert project.isPresent() :
+            String.format("programming error, method %s should have a string param for the " + "project",
+                  request.getCaller().get().getInvokable());
 
-      assert zone.isPresent() : String.format("programming error, method %s should have a string param for the "
-              + "zone", request.getCaller().get().getInvokable());
-
-      return PagedIterables.advance(IterableWithMarkers.from(input, input.nextPageToken()),
-            fetchNextPage(project.get().toString(), zone.get().toString(), (ListOptions) listOptions.orNull()));
+      return new AdvancingIterator<T>(input,
+            fetchNextPage(project.get().toString(), (ListOptions) listOptions.orNull()));
    }
 
-   protected abstract Function<Object, IterableWithMarker<T>> fetchNextPage(String projectName,
-                                                                            String zoneName,
-                                                                            ListOptions listOptions);
+   protected abstract Function<String, ListPage<T>> fetchNextPage(String projectName, ListOptions listOptions);
 
    @SuppressWarnings("unchecked")
    @Override

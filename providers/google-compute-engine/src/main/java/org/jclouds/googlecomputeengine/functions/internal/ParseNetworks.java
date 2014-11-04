@@ -18,8 +18,6 @@ package org.jclouds.googlecomputeengine.functions.internal;
 
 import javax.inject.Inject;
 
-import org.jclouds.collect.IterableWithMarker;
-import org.jclouds.collect.IterableWithMarkers;
 import org.jclouds.googlecomputeengine.GoogleComputeEngineApi;
 import org.jclouds.googlecomputeengine.domain.ListPage;
 import org.jclouds.googlecomputeengine.domain.Network;
@@ -37,20 +35,19 @@ public final class ParseNetworks extends ParseJson<ListPage<Network>> {
       });
    }
 
-   public static final class ToPagedIterable extends BaseToPagedIterable<Network, ToPagedIterable> {
+   public static final class ToIteratorOfListPage extends BaseToIteratorOfListPage<Network, ToIteratorOfListPage> {
 
       private final GoogleComputeEngineApi api;
 
-      @Inject ToPagedIterable(GoogleComputeEngineApi api) {
+      @Inject ToIteratorOfListPage(GoogleComputeEngineApi api) {
          this.api = api;
       }
 
-      @Override protected Function<Object, IterableWithMarker<Network>> fetchNextPage(final String projectName,
+      @Override protected Function<String, ListPage<Network>> fetchNextPage(final String projectName,
             final ListOptions options) {
-         return new Function<Object, IterableWithMarker<Network>>() {
-            @Override public IterableWithMarker<Network> apply(Object input) {
-               ListPage<Network> result = api.getNetworkApi(projectName).listAtMarker(input.toString(), options);
-               return IterableWithMarkers.from(result, result.nextPageToken());
+         return new Function<String, ListPage<Network>>() {
+            @Override public ListPage<Network> apply(String input) {
+               return api.getNetworkApi(projectName).listAtMarker(input, options);
             }
          };
       }

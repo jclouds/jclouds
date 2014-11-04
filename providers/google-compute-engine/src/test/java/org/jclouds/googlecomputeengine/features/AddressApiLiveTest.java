@@ -19,15 +19,13 @@ package org.jclouds.googlecomputeengine.features;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
 
-import java.util.List;
+import java.util.Iterator;
 
-import org.jclouds.collect.PagedIterable;
 import org.jclouds.googlecomputeengine.domain.Address;
+import org.jclouds.googlecomputeengine.domain.ListPage;
 import org.jclouds.googlecomputeengine.internal.BaseGoogleComputeEngineApiLiveTest;
 import org.jclouds.googlecomputeengine.options.ListOptions;
 import org.testng.annotations.Test;
-
-import com.google.common.collect.Lists;
 
 public class AddressApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
 
@@ -54,13 +52,10 @@ public class AddressApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
    @Test(groups = "live", dependsOnMethods = "testGetAddress")
    public void testListAddress() {
 
-      PagedIterable<Address> addresss = api().listInRegion(DEFAULT_REGION_NAME, new ListOptions.Builder()
+      Iterator<ListPage<Address>> addresses = api().listInRegion(DEFAULT_REGION_NAME, new ListOptions.Builder()
               .filter("name eq " + ADDRESS_NAME));
 
-      List<Address> addresssAsList = Lists.newArrayList(addresss.concat());
-
-      assertEquals(addresssAsList.size(), 1);
-
+      assertEquals(addresses.next().size(), 1);
    }
 
    @Test(groups = "live", dependsOnMethods = "testListAddress")

@@ -18,8 +18,8 @@ package org.jclouds.googlecomputeengine.features;
 
 import static org.jclouds.googlecomputeengine.GoogleComputeEngineConstants.COMPUTE_READONLY_SCOPE;
 import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertNull;
-import static org.testng.Assert.assertTrue;
 
 import org.jclouds.googlecomputeengine.internal.BaseGoogleComputeEngineApiExpectTest;
 import org.jclouds.googlecomputeengine.parse.ParseMachineTypeListTest;
@@ -95,7 +95,7 @@ public class MachineTypeApiExpectTest extends BaseGoogleComputeEngineApiExpectTe
               TOKEN_RESPONSE, LIST_MACHINE_TYPES_REQUEST, LIST_MACHINE_TYPES_RESPONSE).getMachineTypeApi
               ("myproject");
 
-      assertEquals(machineTypeApi.listFirstPageInZone("us-central1-a").toString(),
+      assertEquals(machineTypeApi.listInZone("us-central1-a").next().toString(),
               new ParseMachineTypeListTest().expected().toString());
    }
 
@@ -106,6 +106,6 @@ public class MachineTypeApiExpectTest extends BaseGoogleComputeEngineApiExpectTe
       MachineTypeApi machineTypeApi = requestsSendResponses(requestForScopes(COMPUTE_READONLY_SCOPE),
               TOKEN_RESPONSE, LIST_MACHINE_TYPES_REQUEST, operationResponse).getMachineTypeApi("myproject");
 
-      assertTrue(machineTypeApi.listInZone("us-central1-a").concat().isEmpty());
+      assertFalse(machineTypeApi.listInZone("us-central1-a").hasNext());
    }
 }

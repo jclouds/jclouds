@@ -18,6 +18,8 @@ package org.jclouds.googlecomputeengine.features;
 
 import static org.jclouds.googlecomputeengine.GoogleComputeEngineConstants.COMPUTE_READONLY_SCOPE;
 
+import java.util.Iterator;
+
 import javax.inject.Named;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
@@ -26,9 +28,8 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
-import org.jclouds.Fallbacks.EmptyPagedIterableOnNotFoundOr404;
 import org.jclouds.Fallbacks.NullOnNotFoundOr404;
-import org.jclouds.collect.PagedIterable;
+import org.jclouds.googlecomputeengine.GoogleComputeEngineFallbacks.EmptyIteratorOnNotFoundOr404;
 import org.jclouds.googlecomputeengine.GoogleComputeEngineFallbacks.EmptyListPageOnNotFoundOr404;
 import org.jclouds.googlecomputeengine.domain.ListPage;
 import org.jclouds.googlecomputeengine.domain.MachineType;
@@ -66,28 +67,6 @@ public interface MachineTypeApi {
    MachineType getInZone(@PathParam("zone") String zone, @PathParam("machineType") String machineTypeName);
 
    /**
-    * @see MachineTypeApi#listAtMarkerInZone(String, String, org.jclouds.googlecomputeengine.options.ListOptions)
-    */
-   @Named("MachineTypes:list")
-   @GET
-   @Path("/zones/{zone}/machineTypes")
-   @OAuthScopes(COMPUTE_READONLY_SCOPE)
-   @ResponseParser(ParseMachineTypes.class)
-   @Fallback(EmptyListPageOnNotFoundOr404.class)
-   ListPage<MachineType> listFirstPageInZone(@PathParam("zone") String zone);
-
-   /**
-    * @see MachineTypeApi#listAtMarkerInZone(String, String, org.jclouds.googlecomputeengine.options.ListOptions)
-    */
-   @Named("MachineTypes:list")
-   @GET
-   @Path("/zones/{zone}/machineTypes")
-   @OAuthScopes(COMPUTE_READONLY_SCOPE)
-   @ResponseParser(ParseMachineTypes.class)
-   @Fallback(EmptyListPageOnNotFoundOr404.class)
-   ListPage<MachineType> listAtMarkerInZone(@PathParam("zone") String zone, @QueryParam("pageToken") @Nullable String marker);
-
-   /**
     * Retrieves the list of machine type resources available to the specified project.
     * By default the list as a maximum size of 100, if no options are provided or ListOptions#getMaxResults() has not
     * been set.
@@ -117,16 +96,15 @@ public interface MachineTypeApi {
    @Path("/zones/{zone}/machineTypes")
    @OAuthScopes(COMPUTE_READONLY_SCOPE)
    @ResponseParser(ParseMachineTypes.class)
-   @Transform(ParseMachineTypes.ToPagedIterable.class)
-   @Fallback(EmptyPagedIterableOnNotFoundOr404.class)
-   PagedIterable<MachineType> listInZone(@PathParam("zone") String zone);
+   @Transform(ParseMachineTypes.ToIteratorOfListPage.class)
+   @Fallback(EmptyIteratorOnNotFoundOr404.class)
+   Iterator<ListPage<MachineType>> listInZone(@PathParam("zone") String zone);
 
    /**
     * A paged version of MachineTypeApi#listInZone(String)
     *
     * @param zone the zone to list in
-    * @return a Paged, Fluent Iterable that is able to fetch additional pages when required
-    * @see PagedIterable
+    * @return an Iterator that is able to fetch additional pages when required
     * @see MachineTypeApi#listAtMarkerInZone(String, String, org.jclouds.googlecomputeengine.options.ListOptions)
     */
    @Named("MachineTypes:list")
@@ -134,8 +112,8 @@ public interface MachineTypeApi {
    @Path("/zones/{zone}/machineTypes")
    @OAuthScopes(COMPUTE_READONLY_SCOPE)
    @ResponseParser(ParseMachineTypes.class)
-   @Transform(ParseMachineTypes.ToPagedIterable.class)
-   @Fallback(EmptyPagedIterableOnNotFoundOr404.class)
-   PagedIterable<MachineType> listInZone(@PathParam("zone") String zone, ListOptions listOptions);
+   @Transform(ParseMachineTypes.ToIteratorOfListPage.class)
+   @Fallback(EmptyIteratorOnNotFoundOr404.class)
+   Iterator<ListPage<MachineType>> listInZone(@PathParam("zone") String zone, ListOptions listOptions);
 
 }

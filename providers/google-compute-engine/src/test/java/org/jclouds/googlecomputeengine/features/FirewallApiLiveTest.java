@@ -20,17 +20,17 @@ import static com.google.common.collect.Iterables.getOnlyElement;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
 
+import java.util.Iterator;
 import java.util.List;
 
-import org.jclouds.collect.PagedIterable;
 import org.jclouds.googlecomputeengine.domain.Firewall;
+import org.jclouds.googlecomputeengine.domain.ListPage;
 import org.jclouds.googlecomputeengine.internal.BaseGoogleComputeEngineApiLiveTest;
 import org.jclouds.googlecomputeengine.options.FirewallOptions;
 import org.jclouds.googlecomputeengine.options.ListOptions;
 import org.testng.annotations.Test;
 
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Lists;
 
 @Test(groups = "live", testName = "FirewallApiLiveTest")
 public class FirewallApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
@@ -110,13 +110,12 @@ public class FirewallApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
    @Test(groups = "live", dependsOnMethods = "testGetFirewall")
    public void testListFirewall() {
 
-      PagedIterable<Firewall> firewalls = api().list(new ListOptions.Builder()
+      Iterator<ListPage<Firewall>> firewalls = api().list(new ListOptions.Builder()
               .filter("name eq " + FIREWALL_NAME));
 
-      List<Firewall> firewallsAsList = Lists.newArrayList(firewalls.concat());
+      List<Firewall> firewallsAsList = firewalls.next();
 
       assertEquals(firewallsAsList.size(), 1);
-
    }
 
    @Test(groups = "live", dependsOnMethods = "testListFirewall")

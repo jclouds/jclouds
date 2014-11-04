@@ -415,8 +415,6 @@ public class GoogleComputeEngineServiceExpectTest extends BaseGoogleComputeEngin
 
    @Test(dependsOnMethods = "testListLocationsWhenResponseIs2xx")
    public void testCreateNodeWhenNetworkNorFirewallExistDoesNotExist() throws RunNodesException, IOException {
-
-
       String payload = Strings2.toStringAndClose(InstanceApiExpectTest.class.getResourceAsStream("/instance_get.json"));
       payload = payload.replace("test-0", "test-1");
 

@@ -17,11 +17,13 @@
 package org.jclouds.googlecomputeengine;
 
 import static org.jclouds.googlecomputeengine.GoogleComputeEngineConstants.COMPUTE_READONLY_SCOPE;
+import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertSame;
 
-import org.jclouds.collect.IterableWithMarker;
-import org.jclouds.collect.PagedIterable;
+import java.util.Iterator;
+
 import org.jclouds.googlecomputeengine.domain.Image;
+import org.jclouds.googlecomputeengine.domain.ListPage;
 import org.jclouds.googlecomputeengine.features.ImageApi;
 import org.jclouds.googlecomputeengine.internal.BaseGoogleComputeEngineApiExpectTest;
 import org.jclouds.googlecomputeengine.options.ListOptions;
@@ -51,12 +53,9 @@ public class PageSystemExpectTest extends BaseGoogleComputeEngineApiExpectTest {
       ImageApi imageApi = requestsSendResponses(requestForScopes(COMPUTE_READONLY_SCOPE),
               TOKEN_RESPONSE, list, operationResponse).getImageApi("myproject");
 
-      PagedIterable<Image> images = imageApi.list();
+      Iterator<ListPage<Image>> images = imageApi.list();
 
-      // expect one page
-      assertSame(images.size(), 1);
-      // with three images
-      assertSame(images.concat().size(), 3);
+      assertEquals(images.next().size(), 3);
    }
 
    public void testGetMultiplePages() {
@@ -100,13 +99,11 @@ public class PageSystemExpectTest extends BaseGoogleComputeEngineApiExpectTest {
               TOKEN_RESPONSE, list1, list1response, list2, list2Response, list3, list3Response)
               .getImageApi("myproject");
 
-      PagedIterable<Image> images = imageApi.list(new ListOptions.Builder().maxResults(3));
+      Iterator<ListPage<Image>> images = imageApi.list(new ListOptions.Builder().maxResults(3));
 
       int imageCounter = 0;
-      for (IterableWithMarker<Image> page : images) {
-         for (Image image : page) {
-            imageCounter++;
-         }
+      while (images.hasNext()) {
+         imageCounter += images.next().size();
       }
       assertSame(imageCounter, 9);
    }

@@ -19,6 +19,8 @@ package org.jclouds.googlecomputeengine.features;
 import static org.jclouds.googlecomputeengine.GoogleComputeEngineConstants.COMPUTE_READONLY_SCOPE;
 import static org.jclouds.googlecomputeengine.GoogleComputeEngineConstants.COMPUTE_SCOPE;
 
+import java.util.Iterator;
+
 import javax.inject.Named;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
@@ -28,9 +30,8 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
-import org.jclouds.Fallbacks.EmptyPagedIterableOnNotFoundOr404;
 import org.jclouds.Fallbacks.NullOnNotFoundOr404;
-import org.jclouds.collect.PagedIterable;
+import org.jclouds.googlecomputeengine.GoogleComputeEngineFallbacks.EmptyIteratorOnNotFoundOr404;
 import org.jclouds.googlecomputeengine.GoogleComputeEngineFallbacks.EmptyListPageOnNotFoundOr404;
 import org.jclouds.googlecomputeengine.domain.ListPage;
 import org.jclouds.googlecomputeengine.domain.Operation;
@@ -81,31 +82,6 @@ public interface ZoneOperationApi {
    void deleteInZone(@PathParam("zone") String zone, @PathParam("operation") String operationName);
 
    /**
-    * @see ZoneOperationApi#listAtMarkerInZone(String, String, org.jclouds.googlecomputeengine.options.ListOptions)
-    */
-   @Named("ZoneOperations:list")
-   @GET
-   @Path("/zones/{zone}/operations")
-   @OAuthScopes(COMPUTE_READONLY_SCOPE)
-   @Consumes(MediaType.APPLICATION_JSON)
-   @ResponseParser(ParseZoneOperations.class)
-   @Fallback(EmptyListPageOnNotFoundOr404.class)
-   ListPage<Operation> listFirstPageInZone(@PathParam("zone") String zone);
-
-   /**
-    * @see ZoneOperationApi#listAtMarkerInZone(String, String, org.jclouds.googlecomputeengine.options.ListOptions)
-    */
-   @Named("ZoneOperations:list")
-   @GET
-   @Path("/zones/{zone}/operations")
-   @OAuthScopes(COMPUTE_READONLY_SCOPE)
-   @Consumes(MediaType.APPLICATION_JSON)
-   @ResponseParser(ParseZoneOperations.class)
-   @Fallback(EmptyListPageOnNotFoundOr404.class)
-   ListPage<Operation> listAtMarkerInZone(@PathParam("zone") String zone,
-                                          @QueryParam("pageToken") @Nullable String marker);
-
-   /**
     * Retrieves the listFirstPage of operation resources contained within the specified project.
     * By default the listFirstPage as a maximum size of 100, if no options are provided or ListOptions#getMaxResults()
     * has not been set.
@@ -114,8 +90,6 @@ public interface ZoneOperationApi {
     * @param marker      marks the beginning of the next list page
     * @param listOptions listing options
     * @return a page of the list, starting at marker
-    * @see ListOptions
-    * @see org.jclouds.googlecomputeengine.domain.ListPage
     */
    @Named("ZoneOperations:list")
    @GET
@@ -137,15 +111,14 @@ public interface ZoneOperationApi {
    @OAuthScopes(COMPUTE_READONLY_SCOPE)
    @Consumes(MediaType.APPLICATION_JSON)
    @ResponseParser(ParseZoneOperations.class)
-   @Transform(ParseZoneOperations.ToPagedIterable.class)
-   @Fallback(EmptyPagedIterableOnNotFoundOr404.class)
-   PagedIterable<Operation> listInZone(@PathParam("zone") String zone);
+   @Transform(ParseZoneOperations.ToIteratorOfListPage.class)
+   @Fallback(EmptyIteratorOnNotFoundOr404.class)
+   Iterator<ListPage<Operation>> listInZone(@PathParam("zone") String zone);
 
    /**
     * A paged version of ZoneOperationApi#listFirstPageInZone(String)
     *
-    * @return a Paged, Fluent Iterable that is able to fetch additional pages when required
-    * @see PagedIterable
+    * @return an Iterator that is able to fetch additional pages when required
     * @see ZoneOperationApi#listAtMarkerInZone(String, String, org.jclouds.googlecomputeengine.options.ListOptions)
     */
    @Named("ZoneOperations:list")
@@ -154,8 +127,7 @@ public interface ZoneOperationApi {
    @OAuthScopes(COMPUTE_READONLY_SCOPE)
    @Consumes(MediaType.APPLICATION_JSON)
    @ResponseParser(ParseZoneOperations.class)
-   @Transform(ParseZoneOperations.ToPagedIterable.class)
-   @Fallback(EmptyPagedIterableOnNotFoundOr404.class)
-   PagedIterable<Operation> listInZone(@PathParam("zone") String zone, ListOptions listOptions);
-
+   @Transform(ParseZoneOperations.ToIteratorOfListPage.class)
+   @Fallback(EmptyIteratorOnNotFoundOr404.class)
+   Iterator<ListPage<Operation>> listInZone(@PathParam("zone") String zone, ListOptions listOptions);
 }

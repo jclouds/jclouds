@@ -18,6 +18,8 @@ package org.jclouds.googlecomputeengine.features;
 
 import static org.jclouds.googlecomputeengine.GoogleComputeEngineConstants.COMPUTE_READONLY_SCOPE;
 
+import java.util.Iterator;
+
 import javax.inject.Named;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
@@ -26,9 +28,8 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
-import org.jclouds.Fallbacks.EmptyPagedIterableOnNotFoundOr404;
 import org.jclouds.Fallbacks.NullOnNotFoundOr404;
-import org.jclouds.collect.PagedIterable;
+import org.jclouds.googlecomputeengine.GoogleComputeEngineFallbacks.EmptyIteratorOnNotFoundOr404;
 import org.jclouds.googlecomputeengine.GoogleComputeEngineFallbacks.EmptyListPageOnNotFoundOr404;
 import org.jclouds.googlecomputeengine.domain.DiskType;
 import org.jclouds.googlecomputeengine.domain.ListPage;
@@ -65,29 +66,7 @@ public interface DiskTypeApi {
       @Path("/zones/{zone}/diskTypes/{diskType}")
       @OAuthScopes(COMPUTE_READONLY_SCOPE)
       @Fallback(NullOnNotFoundOr404.class)
-      DiskType getInZone(@PathParam("zone") String zone, @PathParam("diskType") String diskTypeName);
-
-      /**
-       * @see DiskTypeApi#listAtMarkerInZone(String, String, org.jclouds.googlecomputeengine.options.ListOptions)
-       */
-      @Named("DiskTypes:list")
-      @GET
-      @Path("/zones/{zone}/diskTypes")
-      @OAuthScopes(COMPUTE_READONLY_SCOPE)
-      @ResponseParser(ParseDiskTypes.class)
-      @Fallback(EmptyListPageOnNotFoundOr404.class)
-      ListPage<DiskType> listFirstPageInZone(@PathParam("zone") String zone);
-
-      /**
-       * @see DiskTypeApi#listAtMarkerInZone(String, String, org.jclouds.googlecomputeengine.options.ListOptions)
-       */
-      @Named("DiskTypes:list")
-      @GET
-      @Path("/zones/{zone}/diskType")
-      @OAuthScopes(COMPUTE_READONLY_SCOPE)
-      @ResponseParser(ParseDiskTypes.class)
-      @Fallback(EmptyListPageOnNotFoundOr404.class)
-      ListPage<DiskType> listAtMarkerInZone(@PathParam("zone") String zone, @QueryParam("pageToken") @Nullable String marker);
+      DiskType getInZone(@PathParam("zone") String zone, @PathParam("diskType") String diskType);
 
       /**
        * Retrieves the list of disk type resources available to the specified project.
@@ -119,24 +98,22 @@ public interface DiskTypeApi {
       @Path("/zones/{zone}/diskTypes")
       @OAuthScopes(COMPUTE_READONLY_SCOPE)
       @ResponseParser(ParseDiskTypes.class)
-      @Transform(ParseDiskTypes.ToPagedIterable.class)
-      @Fallback(EmptyPagedIterableOnNotFoundOr404.class)
-      PagedIterable<DiskType> listInZone(@PathParam("zone") String zone);
+      @Transform(ParseDiskTypes.ToIteratorOfListPage.class)
+      @Fallback(EmptyIteratorOnNotFoundOr404.class)
+      Iterator<ListPage<DiskType>> listInZone(@PathParam("zone") String zone);
 
       /**
        * @see DiskTypeApi#listAtMarkerInZone(String, String, org.jclouds.googlecomputeengine.options.ListOptions)
        *
        * @param zone the zone to list in
-       * @return a Paged, Fluent Iterable that is able to fetch additional pages when required
-       * @see PagedIterable
+       * @return an Iterator that is able to fetch additional pages when required
        */
       @Named("DiskTypes:list")
       @GET
       @Path("/zones/{zone}/diskTypes")
       @OAuthScopes(COMPUTE_READONLY_SCOPE)
       @ResponseParser(ParseDiskTypes.class)
-      @Transform(ParseDiskTypes.ToPagedIterable.class)
-      @Fallback(EmptyPagedIterableOnNotFoundOr404.class)
-      PagedIterable<DiskType> listInZone(@PathParam("zone") String zone, ListOptions listOptions);
-
+      @Transform(ParseDiskTypes.ToIteratorOfListPage.class)
+      @Fallback(EmptyIteratorOnNotFoundOr404.class)
+      Iterator<ListPage<DiskType>> listInZone(@PathParam("zone") String zone, ListOptions listOptions);
 }

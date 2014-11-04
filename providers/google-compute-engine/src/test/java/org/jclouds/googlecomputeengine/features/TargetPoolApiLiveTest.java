@@ -40,6 +40,7 @@ import org.testng.annotations.AfterClass;
 import org.testng.annotations.Test;
 
 import com.google.common.base.Predicate;
+import com.google.common.collect.FluentIterable;
 import com.google.common.collect.Iterables;
 
 public class TargetPoolApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
@@ -72,10 +73,10 @@ public class TargetPoolApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
       InstanceApi instanceApi = api.getInstanceApi(userProject.get());
       HttpHealthCheckApi httpHealthCheckApi = api.getHttpHealthCheckApi(userProject.get());
 
+      ListPage<Image> list = api.getImageApi("centos-cloud").list(new ListOptions.Builder().filter("name eq centos.*"))
+            .next();
       // Get an imageUri
-      URI imageUri = api.getImageApi("centos-cloud")
-            .list(new ListOptions.Builder().filter("name eq centos.*"))
-            .concat()
+      URI imageUri = FluentIterable.from(list)
             .filter(new Predicate<Image>() {
                @Override
                public boolean apply(Image input) {
@@ -103,15 +104,13 @@ public class TargetPoolApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
 
       // Create a disk.
       DiskCreationOptions diskCreationOptions = new DiskCreationOptions().sourceImage(instanceTemplate.image());
-      assertZoneOperationDoneSucessfully(api.getDiskApi(userProject.get())
-                                        .createInZone(BOOT_DISK_NAME, DEFAULT_DISK_SIZE_GB, DEFAULT_ZONE_NAME, diskCreationOptions),
-                                        TIME_WAIT_LONG);
+      assertZoneOperationDoneSuccessfully(api.getDiskApi(userProject.get())
+                  .createInZone(BOOT_DISK_NAME, DEFAULT_DISK_SIZE_GB, DEFAULT_ZONE_NAME, diskCreationOptions),
+            TIME_WAIT_LONG);
 
       // Create an instance.
-      assertZoneOperationDoneSucessfully(instanceApi.createInZone(INSTANCE_NAME,
-                                                                  DEFAULT_ZONE_NAME,
-                                                                  instanceTemplate),
-                                                                  TIME_WAIT_LONG);
+      assertZoneOperationDoneSuccessfully(instanceApi.createInZone(INSTANCE_NAME, DEFAULT_ZONE_NAME, instanceTemplate),
+            TIME_WAIT_LONG);
       Instance instance = instanceApi.getInZone(DEFAULT_ZONE_NAME, INSTANCE_NAME);
       instances = new ArrayList<URI>();
       instances.add(instance.selfLink());

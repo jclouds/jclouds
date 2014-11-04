@@ -19,8 +19,8 @@ package org.jclouds.googlecomputeengine.features;
 import static org.jclouds.googlecomputeengine.GoogleComputeEngineConstants.COMPUTE_READONLY_SCOPE;
 import static org.jclouds.googlecomputeengine.GoogleComputeEngineConstants.COMPUTE_SCOPE;
 import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertNull;
-import static org.testng.Assert.assertTrue;
 
 import org.jclouds.googlecomputeengine.internal.BaseGoogleComputeEngineApiExpectTest;
 import org.jclouds.googlecomputeengine.options.ListOptions;
@@ -108,7 +108,7 @@ public class GlobalOperationApiExpectTest extends BaseGoogleComputeEngineApiExpe
       GlobalOperationApi globalOperationApi = requestsSendResponses(requestForScopes(COMPUTE_READONLY_SCOPE),
               TOKEN_RESPONSE, get, operationResponse).getGlobalOperationApi("myproject");
 
-      assertEquals(globalOperationApi.listFirstPage().toString(),
+      assertEquals(globalOperationApi.list().next().toString(),
               new ParseGlobalOperationListTest().expected().toString());
    }
 
@@ -150,6 +150,6 @@ public class GlobalOperationApiExpectTest extends BaseGoogleComputeEngineApiExpe
       GlobalOperationApi globalOperationApi = requestsSendResponses(requestForScopes(COMPUTE_READONLY_SCOPE),
               TOKEN_RESPONSE, get, operationResponse).getGlobalOperationApi("myproject");
 
-      assertTrue(globalOperationApi.list().concat().isEmpty());
+      assertFalse(globalOperationApi.list().hasNext());
    }
 }

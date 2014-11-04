@@ -18,8 +18,6 @@ package org.jclouds.googlecomputeengine.functions.internal;
 
 import javax.inject.Inject;
 
-import org.jclouds.collect.IterableWithMarker;
-import org.jclouds.collect.IterableWithMarkers;
 import org.jclouds.googlecomputeengine.GoogleComputeEngineApi;
 import org.jclouds.googlecomputeengine.domain.ListPage;
 import org.jclouds.googlecomputeengine.domain.Zone;
@@ -37,21 +35,20 @@ public final class ParseZones extends ParseJson<ListPage<Zone>> {
       });
    }
 
-   public static final class ToPagedIterable extends BaseToPagedIterable<Zone, ToPagedIterable> {
+   public static final class ToIteratorOfListPage extends BaseToIteratorOfListPage<Zone, ToIteratorOfListPage> {
 
       private final GoogleComputeEngineApi api;
 
-      @Inject ToPagedIterable(GoogleComputeEngineApi api) {
+      @Inject ToIteratorOfListPage(GoogleComputeEngineApi api) {
          this.api = api;
       }
 
       @Override
-      protected Function<Object, IterableWithMarker<Zone>> fetchNextPage(final String projectName,
+      protected Function<String, ListPage<Zone>> fetchNextPage(final String projectName,
             final ListOptions options) {
-         return new Function<Object, IterableWithMarker<Zone>>() {
-            @Override public IterableWithMarker<Zone> apply(Object input) {
-               ListPage<Zone> result = api.getZoneApi(projectName).listAtMarker(input.toString(), options);
-               return IterableWithMarkers.from(result, result.nextPageToken());
+         return new Function<String, ListPage<Zone>>() {
+            @Override public ListPage<Zone> apply(String input) {
+               return api.getZoneApi(projectName).listAtMarker(input, options);
             }
          };
       }

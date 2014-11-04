@@ -18,8 +18,8 @@ package org.jclouds.googlecomputeengine.features;
 
 import static org.jclouds.googlecomputeengine.GoogleComputeEngineConstants.COMPUTE_READONLY_SCOPE;
 import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertNull;
-import static org.testng.Assert.assertTrue;
 
 import org.jclouds.googlecomputeengine.internal.BaseGoogleComputeEngineApiExpectTest;
 import org.jclouds.googlecomputeengine.parse.ParseDiskTypeListTest;
@@ -95,7 +95,7 @@ public class DiskTypeApiExpectTest extends BaseGoogleComputeEngineApiExpectTest 
               TOKEN_RESPONSE, LIST_DISK_TYPES_REQUEST, LIST_DISK_TYPES_RESPONSE).getDiskTypeApi
               ("myproject");
 
-      assertEquals(diskTypeApi.listFirstPageInZone("us-central1-a").toString(),
+      assertEquals(diskTypeApi.listInZone("us-central1-a").next().toString(),
               new ParseDiskTypeListTest().expected().toString());
    }
 
@@ -106,6 +106,6 @@ public class DiskTypeApiExpectTest extends BaseGoogleComputeEngineApiExpectTest 
       DiskTypeApi diskTypeApi = requestsSendResponses(requestForScopes(COMPUTE_READONLY_SCOPE),
               TOKEN_RESPONSE, LIST_DISK_TYPES_REQUEST, operationResponse).getDiskTypeApi("myproject");
 
-      assertTrue(diskTypeApi.listInZone("us-central1-a").concat().isEmpty());
+      assertFalse(diskTypeApi.listInZone("us-central1-a").hasNext());
    }
 }

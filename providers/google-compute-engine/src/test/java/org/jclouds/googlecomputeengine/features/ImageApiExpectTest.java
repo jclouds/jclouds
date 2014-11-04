@@ -19,7 +19,7 @@ package org.jclouds.googlecomputeengine.features;
 import static org.jclouds.googlecomputeengine.GoogleComputeEngineConstants.COMPUTE_READONLY_SCOPE;
 import static org.jclouds.googlecomputeengine.GoogleComputeEngineConstants.COMPUTE_SCOPE;
 import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertTrue;
+import static org.testng.Assert.assertFalse;
 import static org.testng.AssertJUnit.assertNull;
 
 import org.jclouds.googlecomputeengine.internal.BaseGoogleComputeEngineApiExpectTest;
@@ -139,8 +139,7 @@ public class ImageApiExpectTest extends BaseGoogleComputeEngineApiExpectTest {
               TOKEN_RESPONSE, LIST_PROJECT_IMAGES_REQUEST, LIST_PROJECT_IMAGES_RESPONSE).getImageApi
               ("myproject");
 
-      assertEquals(imageApi.listFirstPage().toString(),
-              new ParseImageListTest().expected().toString());
+      assertEquals(imageApi.list().next().toString(), new ParseImageListTest().expected().toString());
    }
 
    public void testListImagesResponseIs4xx() {
@@ -150,7 +149,7 @@ public class ImageApiExpectTest extends BaseGoogleComputeEngineApiExpectTest {
       ImageApi imageApi = requestsSendResponses(requestForScopes(COMPUTE_READONLY_SCOPE),
               TOKEN_RESPONSE, LIST_PROJECT_IMAGES_REQUEST, operationResponse).getImageApi("myproject");
 
-      assertTrue(imageApi.list().concat().isEmpty());
+      assertFalse(imageApi.list().hasNext());
    }
 
    public void testCreateImageFromPdResponseIs2xx(){

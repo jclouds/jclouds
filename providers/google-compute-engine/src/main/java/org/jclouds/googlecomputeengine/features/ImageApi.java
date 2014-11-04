@@ -19,6 +19,8 @@ package org.jclouds.googlecomputeengine.features;
 import static org.jclouds.googlecomputeengine.GoogleComputeEngineConstants.COMPUTE_READONLY_SCOPE;
 import static org.jclouds.googlecomputeengine.GoogleComputeEngineConstants.COMPUTE_SCOPE;
 
+import java.util.Iterator;
+
 import javax.inject.Named;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
@@ -30,9 +32,8 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
-import org.jclouds.Fallbacks.EmptyPagedIterableOnNotFoundOr404;
 import org.jclouds.Fallbacks.NullOnNotFoundOr404;
-import org.jclouds.collect.PagedIterable;
+import org.jclouds.googlecomputeengine.GoogleComputeEngineFallbacks.EmptyIteratorOnNotFoundOr404;
 import org.jclouds.googlecomputeengine.GoogleComputeEngineFallbacks.EmptyListPageOnNotFoundOr404;
 import org.jclouds.googlecomputeengine.domain.Image;
 import org.jclouds.googlecomputeengine.domain.ListPage;
@@ -89,30 +90,6 @@ public interface ImageApi {
    Operation delete(@PathParam("image") String imageName);
 
    /**
-    * @see ImageApi#listAtMarker(String, org.jclouds.googlecomputeengine.options.ListOptions)
-    */
-   @Named("Images:list")
-   @GET
-   @Consumes(MediaType.APPLICATION_JSON)
-   @Path("/global/images")
-   @OAuthScopes(COMPUTE_READONLY_SCOPE)
-   @ResponseParser(ParseImages.class)
-   @Fallback(EmptyListPageOnNotFoundOr404.class)
-   ListPage<Image> listFirstPage();
-
-   /**
-    * @see ImageApi#listAtMarker(String, org.jclouds.googlecomputeengine.options.ListOptions)
-    */
-   @Named("Images:list")
-   @GET
-   @Consumes(MediaType.APPLICATION_JSON)
-   @Path("/global/images")
-   @OAuthScopes(COMPUTE_READONLY_SCOPE)
-   @ResponseParser(ParseImages.class)
-   @Fallback(EmptyListPageOnNotFoundOr404.class)
-   ListPage<Image> listAtMarker(@QueryParam("pageToken") @Nullable String marker);
-
-   /**
     * Retrieves the list of image resources available to the specified project.
     * By default the list as a maximum size of 100, if no options are provided or ListOptions#getMaxResults() has not
     * been set.
@@ -135,8 +112,7 @@ public interface ImageApi {
    /**
     * A paged version of ImageApi#list()
     *
-    * @return a Paged, Fluent Iterable that is able to fetch additional pages when required
-    * @see PagedIterable
+    * @return an Iterator that is able to fetch additional pages when required
     * @see ImageApi#listAtMarker(String, org.jclouds.googlecomputeengine.options.ListOptions)
     */
    @Named("Images:list")
@@ -145,15 +121,14 @@ public interface ImageApi {
    @Path("/global/images")
    @OAuthScopes(COMPUTE_READONLY_SCOPE)
    @ResponseParser(ParseImages.class)
-   @Transform(ParseImages.ToPagedIterable.class)
-   @Fallback(EmptyPagedIterableOnNotFoundOr404.class)
-   PagedIterable<Image> list();
+   @Transform(ParseImages.ToIteratorOfListPage.class)
+   @Fallback(EmptyIteratorOnNotFoundOr404.class)
+   Iterator<ListPage<Image>> list();
 
    /**
     * A paged version of ImageApi#list()
     *
-    * @return a Paged, Fluent Iterable that is able to fetch additional pages when required
-    * @see PagedIterable
+    * @return an Iterator that is able to fetch additional pages when required
     * @see ImageApi#listAtMarker(String, org.jclouds.googlecomputeengine.options.ListOptions)
     */
    @Named("Images:list")
@@ -162,9 +137,9 @@ public interface ImageApi {
    @Path("/global/images")
    @OAuthScopes(COMPUTE_READONLY_SCOPE)
    @ResponseParser(ParseImages.class)
-   @Transform(ParseImages.ToPagedIterable.class)
-   @Fallback(EmptyPagedIterableOnNotFoundOr404.class)
-   PagedIterable<Image> list(ListOptions options);
+   @Transform(ParseImages.ToIteratorOfListPage.class)
+   @Fallback(EmptyIteratorOnNotFoundOr404.class)
+   Iterator<ListPage<Image>> list(ListOptions options);
 
    /**
     * Creates an image resource in the specified project from the provided persistent disk.
@@ -182,5 +157,4 @@ public interface ImageApi {
    @OAuthScopes(COMPUTE_SCOPE)
    @MapBinder(BindToJsonPayload.class)
    Operation createImageFromPD(@PayloadParam("name") String imageName, @PayloadParam("sourceDisk") String sourceDisk);
-
 }

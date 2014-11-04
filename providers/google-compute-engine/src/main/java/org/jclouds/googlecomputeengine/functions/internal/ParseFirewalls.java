@@ -18,8 +18,6 @@ package org.jclouds.googlecomputeengine.functions.internal;
 
 import javax.inject.Inject;
 
-import org.jclouds.collect.IterableWithMarker;
-import org.jclouds.collect.IterableWithMarkers;
 import org.jclouds.googlecomputeengine.GoogleComputeEngineApi;
 import org.jclouds.googlecomputeengine.domain.Firewall;
 import org.jclouds.googlecomputeengine.domain.ListPage;
@@ -37,20 +35,19 @@ public final class ParseFirewalls extends ParseJson<ListPage<Firewall>> {
       });
    }
 
-   public static final class ToPagedIterable extends BaseToPagedIterable<Firewall, ToPagedIterable> {
+   public static final class ToIteratorOfListPage extends BaseToIteratorOfListPage<Firewall, ToIteratorOfListPage> {
 
       private final GoogleComputeEngineApi api;
 
-      @Inject ToPagedIterable(GoogleComputeEngineApi api) {
+      @Inject ToIteratorOfListPage(GoogleComputeEngineApi api) {
          this.api = api;
       }
 
-      @Override protected Function<Object, IterableWithMarker<Firewall>> fetchNextPage(final String projectName,
+      @Override protected Function<String, ListPage<Firewall>> fetchNextPage(final String projectName,
             final ListOptions options) {
-         return new Function<Object, IterableWithMarker<Firewall>>() {
-            @Override public IterableWithMarker<Firewall> apply(Object input) {
-               ListPage<Firewall> result = api.getFirewallApi(projectName).listAtMarker(input.toString(), options);
-               return IterableWithMarkers.from(result, result.nextPageToken());
+         return new Function<String, ListPage<Firewall>>() {
+            @Override public ListPage<Firewall> apply(String input) {
+               return api.getFirewallApi(projectName).listAtMarker(input, options);
             }
          };
       }

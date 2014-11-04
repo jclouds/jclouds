@@ -20,6 +20,7 @@ import static org.jclouds.googlecomputeengine.GoogleComputeEngineConstants.COMPU
 import static org.jclouds.googlecomputeengine.GoogleComputeEngineConstants.COMPUTE_SCOPE;
 
 import java.net.URI;
+import java.util.Iterator;
 
 import javax.inject.Named;
 import javax.ws.rs.Consumes;
@@ -31,9 +32,8 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
-import org.jclouds.Fallbacks.EmptyPagedIterableOnNotFoundOr404;
 import org.jclouds.Fallbacks.NullOnNotFoundOr404;
-import org.jclouds.collect.PagedIterable;
+import org.jclouds.googlecomputeengine.GoogleComputeEngineFallbacks.EmptyIteratorOnNotFoundOr404;
 import org.jclouds.googlecomputeengine.GoogleComputeEngineFallbacks.EmptyListPageOnNotFoundOr404;
 import org.jclouds.googlecomputeengine.binders.ForwardingRuleCreationBinder;
 import org.jclouds.googlecomputeengine.domain.ForwardingRule;
@@ -80,8 +80,6 @@ public interface ForwardingRuleApi {
     * Creates a ForwardingRule resource in the specified project and region using the data included in the request.
     *
     * @param forwardingRuleName the name of the forwarding rule.
-    * @param targetSelfLink the URL of the target resource to receive the matched traffic. The target resource must live
-    *                       in the same region as this forwarding rule.
     * @return an Operation resource. To check on the status of an operation, poll the Operations resource returned to
     *         you, and look for the status field.
     */
@@ -110,9 +108,8 @@ public interface ForwardingRuleApi {
    @Nullable
    Operation delete(@PathParam("forwardingRule") String forwardingRule);
 
-
    /**
-    * @return a Paged, Fluent Iterable that is able to fetch additional pages when required
+    * @return an Iterator that is able to fetch additional pages when required
     * @see org.jclouds.collect.PagedIterable
     */
    @Named("ForwardingRules:list")
@@ -120,9 +117,9 @@ public interface ForwardingRuleApi {
    @Path("/forwardingRules")
    @OAuthScopes(COMPUTE_READONLY_SCOPE)
    @ResponseParser(ParseForwardingRules.class)
-   @Transform(ParseForwardingRules.ToPagedIterable.class)
-   @Fallback(EmptyPagedIterableOnNotFoundOr404.class)
-   PagedIterable<ForwardingRule> list();
+   @Transform(ParseForwardingRules.ToIteratorOfListPage.class)
+   @Fallback(EmptyIteratorOnNotFoundOr404.class)
+   Iterator<ListPage<ForwardingRule>> list();
 
    @Named("ForwardingRules:list")
    @GET

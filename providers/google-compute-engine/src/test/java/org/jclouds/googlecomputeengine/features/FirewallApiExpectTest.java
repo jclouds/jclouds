@@ -24,7 +24,7 @@ import static org.jclouds.googlecomputeengine.GoogleComputeEngineConstants.COMPU
 import static org.jclouds.io.Payloads.newStringPayload;
 import static org.jclouds.util.Strings2.toStringAndClose;
 import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertTrue;
+import static org.testng.Assert.assertFalse;
 import static org.testng.AssertJUnit.assertNull;
 
 import java.io.IOException;
@@ -259,8 +259,7 @@ public class FirewallApiExpectTest extends BaseGoogleComputeEngineApiExpectTest 
       FirewallApi api = requestsSendResponses(requestForScopes(COMPUTE_READONLY_SCOPE),
               TOKEN_RESPONSE, list, operationResponse).getFirewallApi("myproject");
 
-      assertEquals(api.listFirstPage().toString(),
-              new ParseFirewallListTest().expected().toString());
+      assertEquals(api.list().next().toString(), new ParseFirewallListTest().expected().toString());
    }
 
    public void testListFirewallsResponseIs4xx() {
@@ -276,6 +275,6 @@ public class FirewallApiExpectTest extends BaseGoogleComputeEngineApiExpectTest 
       FirewallApi api = requestsSendResponses(requestForScopes(COMPUTE_READONLY_SCOPE),
               TOKEN_RESPONSE, list, operationResponse).getFirewallApi("myproject");
 
-      assertTrue(api.list().concat().isEmpty());
+      assertFalse(api.list().hasNext());
    }
 }

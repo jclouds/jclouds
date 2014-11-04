@@ -20,8 +20,6 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 import javax.inject.Inject;
 
-import org.jclouds.collect.IterableWithMarker;
-import org.jclouds.collect.IterableWithMarkers;
 import org.jclouds.googlecomputeengine.GoogleComputeEngineApi;
 import org.jclouds.googlecomputeengine.domain.ListPage;
 import org.jclouds.googlecomputeengine.domain.TargetPool;
@@ -39,23 +37,22 @@ public final class ParseTargetPools extends ParseJson<ListPage<TargetPool>> {
       });
    }
 
-   public static class ToPagedIterable extends BaseWithZoneToPagedIterable<TargetPool, ToPagedIterable> {
+   public static class ToIteratorOfListPage extends BaseWithZoneToIteratorOfListPage<TargetPool, ToIteratorOfListPage> {
 
       private final GoogleComputeEngineApi api;
 
-      @Inject ToPagedIterable(GoogleComputeEngineApi api) {
+      @Inject ToIteratorOfListPage(GoogleComputeEngineApi api) {
          this.api = checkNotNull(api, "api");
       }
 
-      @Override protected Function<Object, IterableWithMarker<TargetPool>> fetchNextPage(final String projectName,
+      @Override protected Function<String, ListPage<TargetPool>> fetchNextPage(final String projectName,
                                                                          final String regionName,
                                                                          final ListOptions options) {
-         return new Function<Object, IterableWithMarker<TargetPool>>() {
+         return new Function<String, ListPage<TargetPool>>() {
 
             @Override
-            public IterableWithMarker<TargetPool> apply(Object input) {
-               ListPage<TargetPool> result = api.getTargetPoolApi(projectName, regionName).list(options);
-               return IterableWithMarkers.from(result, result.nextPageToken());
+            public ListPage<TargetPool> apply(String input) {
+               return api.getTargetPoolApi(projectName, regionName).list(options);
             }
          };
       }

@@ -19,7 +19,7 @@ package org.jclouds.googlecomputeengine.features;
 import static org.jclouds.googlecomputeengine.GoogleComputeEngineConstants.COMPUTE_READONLY_SCOPE;
 import static org.jclouds.googlecomputeengine.GoogleComputeEngineConstants.COMPUTE_SCOPE;
 import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertTrue;
+import static org.testng.Assert.assertFalse;
 import static org.testng.AssertJUnit.assertNull;
 
 import javax.ws.rs.core.MediaType;
@@ -137,8 +137,7 @@ public class AddressApiExpectTest extends BaseGoogleComputeEngineApiExpectTest {
       AddressApi api = requestsSendResponses(requestForScopes(COMPUTE_READONLY_SCOPE),
               TOKEN_RESPONSE, list, operationResponse).getAddressApi("myproject");
 
-      assertEquals(api.listFirstPageInRegion("us-central1").toString(),
-              new ParseAddressListTest().expected().toString());
+      assertEquals(api.listInRegion("us-central1").next().toString(), new ParseAddressListTest().expected().toString());
    }
 
    public void testListAddresssResponseIs4xx() {
@@ -154,6 +153,6 @@ public class AddressApiExpectTest extends BaseGoogleComputeEngineApiExpectTest {
       AddressApi api = requestsSendResponses(requestForScopes(COMPUTE_READONLY_SCOPE),
               TOKEN_RESPONSE, list, operationResponse).getAddressApi("myproject");
 
-      assertTrue(api.listInRegion("us-central1").concat().isEmpty());
+      assertFalse(api.listInRegion("us-central1").hasNext());
    }
 }

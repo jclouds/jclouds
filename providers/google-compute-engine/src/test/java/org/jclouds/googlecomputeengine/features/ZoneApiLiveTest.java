@@ -18,20 +18,16 @@ package org.jclouds.googlecomputeengine.features;
 
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
-import static org.testng.Assert.assertSame;
 import static org.testng.Assert.assertTrue;
 
 import java.util.Iterator;
 import java.util.List;
 
-import org.jclouds.collect.IterableWithMarker;
-import org.jclouds.collect.PagedIterable;
+import org.jclouds.googlecomputeengine.domain.ListPage;
 import org.jclouds.googlecomputeengine.domain.Zone;
 import org.jclouds.googlecomputeengine.internal.BaseGoogleComputeEngineApiLiveTest;
 import org.jclouds.googlecomputeengine.options.ListOptions;
 import org.testng.annotations.Test;
-
-import com.google.common.collect.Iterables;
 
 public class ZoneApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
 
@@ -44,18 +40,14 @@ public class ZoneApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
    @Test(groups = "live")
    public void testListZone() {
 
-      PagedIterable<Zone> zones = api().list(new ListOptions.Builder()
-              .maxResults(1));
-
-      Iterator<IterableWithMarker<Zone>> pageIterator = zones.iterator();
+      Iterator<ListPage<Zone>> pageIterator = api().list(new ListOptions.Builder().maxResults(1));
       assertTrue(pageIterator.hasNext());
 
-      IterableWithMarker<Zone> singlePageIterator = pageIterator.next();
-      List<Zone> zoneAsList = singlePageIterator.toList();
+      List<Zone> zoneAsList = pageIterator.next();
 
-      assertSame(zoneAsList.size(), 1);
+      assertEquals(zoneAsList.size(), 1);
 
-      this.zone = Iterables.getOnlyElement(zoneAsList);
+      this.zone = zoneAsList.get(0);
    }
 
 

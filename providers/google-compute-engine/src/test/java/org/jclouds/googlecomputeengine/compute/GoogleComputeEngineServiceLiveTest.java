@@ -67,7 +67,7 @@ public class GoogleComputeEngineServiceLiveTest extends BaseComputeServiceLiveTe
       }, UserProject.class));
       ImmutableSet.Builder<String> deprecatedMachineTypes = ImmutableSet.builder();
       for (MachineType machine : api.getMachineTypeApi(userProject.get())
-              .listInZone(DEFAULT_ZONE_NAME).concat()) {
+              .listInZone(DEFAULT_ZONE_NAME).next()) {
          if (machine.deprecated() != null) {
             deprecatedMachineTypes.add(machine.id());
          }

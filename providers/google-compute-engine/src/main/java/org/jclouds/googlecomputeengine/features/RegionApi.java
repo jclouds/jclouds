@@ -18,6 +18,8 @@ package org.jclouds.googlecomputeengine.features;
 
 import static org.jclouds.googlecomputeengine.GoogleComputeEngineConstants.COMPUTE_READONLY_SCOPE;
 
+import java.util.Iterator;
+
 import javax.inject.Named;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
@@ -25,9 +27,8 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.core.MediaType;
 
-import org.jclouds.Fallbacks.EmptyPagedIterableOnNotFoundOr404;
 import org.jclouds.Fallbacks.NullOnNotFoundOr404;
-import org.jclouds.collect.PagedIterable;
+import org.jclouds.googlecomputeengine.GoogleComputeEngineFallbacks.EmptyIteratorOnNotFoundOr404;
 import org.jclouds.googlecomputeengine.GoogleComputeEngineFallbacks.EmptyListPageOnNotFoundOr404;
 import org.jclouds.googlecomputeengine.domain.ListPage;
 import org.jclouds.googlecomputeengine.domain.Region;
@@ -63,37 +64,12 @@ public interface RegionApi {
    Region get(@PathParam("region") String regionName);
 
    /**
-    * @see org.jclouds.googlecomputeengine.features.RegionApi#listAtMarker(String, org.jclouds.googlecomputeengine.options.ListOptions)
-    */
-   @Named("Regions:list")
-   @GET
-   @Path("/regions")
-   @OAuthScopes(COMPUTE_READONLY_SCOPE)
-   @ResponseParser(ParseRegions.class)
-   @Fallback(EmptyListPageOnNotFoundOr404.class)
-   ListPage<Region> listFirstPage();
-
-   /**
-    * @see org.jclouds.googlecomputeengine.features.RegionApi#listAtMarker(String, org.jclouds.googlecomputeengine.options.ListOptions)
-    */
-   @Named("Regions:list")
-   @GET
-   @Path("/regions")
-   @OAuthScopes(COMPUTE_READONLY_SCOPE)
-   @ResponseParser(ParseRegions.class)
-   @Fallback(EmptyListPageOnNotFoundOr404.class)
-   ListPage<Region> listAtMarker(String marker);
-
-   /**
     * Retrieves the listFirstPage of region resources available to the specified project.
     * By default the listFirstPage as a maximum size of 100, if no options are provided or ListOptions#getMaxResults()
     * has not been set.
     *
     * @param marker      marks the beginning of the next list page
     * @param listOptions listing options
-    * @return a page of the listFirstPage
-    * @see org.jclouds.googlecomputeengine.options.ListOptions
-    * @see org.jclouds.googlecomputeengine.domain.ListPage
     */
    @Named("Regions:list")
    @GET
@@ -104,30 +80,29 @@ public interface RegionApi {
    ListPage<Region> listAtMarker(String marker, ListOptions listOptions);
 
    /**
-    * @see org.jclouds.googlecomputeengine.features.RegionApi#list(org.jclouds.googlecomputeengine.options.ListOptions)
+    * @see RegionApi#list(org.jclouds.googlecomputeengine.options.ListOptions)
     */
    @Named("Regions:list")
    @GET
    @Path("/regions")
    @OAuthScopes(COMPUTE_READONLY_SCOPE)
    @ResponseParser(ParseRegions.class)
-   @Transform(ParseRegions.ToPagedIterable.class)
-   @Fallback(EmptyPagedIterableOnNotFoundOr404.class)
-   PagedIterable<Region> list();
+   @Transform(ParseRegions.ToIteratorOfListPage.class)
+   @Fallback(EmptyIteratorOnNotFoundOr404.class)
+   Iterator<ListPage<Region>> list();
 
    /**
     * A paged version of RegionApi#listFirstPage()
     *
-    * @return a Paged, Fluent Iterable that is able to fetch additional pages when required
-    * @see org.jclouds.googlecomputeengine.features.RegionApi#listAtMarker(String, org.jclouds.googlecomputeengine.options.ListOptions)
-    * @see org.jclouds.collect.PagedIterable
+    * @return an Iterator that is able to fetch additional pages when required
+    * @see RegionApi#listAtMarker(String, org.jclouds.googlecomputeengine.options.ListOptions)
     */
    @Named("Regions:list")
    @GET
    @Path("/regions")
    @OAuthScopes(COMPUTE_READONLY_SCOPE)
    @ResponseParser(ParseRegions.class)
-   @Transform(ParseRegions.ToPagedIterable.class)
-   @Fallback(EmptyPagedIterableOnNotFoundOr404.class)
-   PagedIterable<Region> list(ListOptions listOptions);
+   @Transform(ParseRegions.ToIteratorOfListPage.class)
+   @Fallback(EmptyIteratorOnNotFoundOr404.class)
+   Iterator<ListPage<Region>> list(ListOptions listOptions);
 }

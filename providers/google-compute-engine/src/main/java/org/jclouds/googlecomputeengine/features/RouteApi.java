@@ -20,6 +20,7 @@ import static org.jclouds.googlecomputeengine.GoogleComputeEngineConstants.COMPU
 import static org.jclouds.googlecomputeengine.GoogleComputeEngineConstants.COMPUTE_SCOPE;
 
 import java.net.URI;
+import java.util.Iterator;
 
 import javax.inject.Named;
 import javax.ws.rs.Consumes;
@@ -31,9 +32,8 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
-import org.jclouds.Fallbacks.EmptyPagedIterableOnNotFoundOr404;
 import org.jclouds.Fallbacks.NullOnNotFoundOr404;
-import org.jclouds.collect.PagedIterable;
+import org.jclouds.googlecomputeengine.GoogleComputeEngineFallbacks.EmptyIteratorOnNotFoundOr404;
 import org.jclouds.googlecomputeengine.GoogleComputeEngineFallbacks.EmptyListPageOnNotFoundOr404;
 import org.jclouds.googlecomputeengine.binders.RouteBinder;
 import org.jclouds.googlecomputeengine.domain.ListPage;
@@ -75,28 +75,6 @@ public interface RouteApi {
    Route get(@PathParam("route") String routeName);
 
    /**
-    * @see org.jclouds.googlecomputeengine.features.RouteApi#listAtMarker(String, org.jclouds.googlecomputeengine.options.ListOptions)
-    */
-   @Named("Routes:list")
-   @GET
-   @Path("/global/routes")
-   @OAuthScopes(COMPUTE_READONLY_SCOPE)
-   @ResponseParser(ParseRoutes.class)
-   @Fallback(EmptyListPageOnNotFoundOr404.class)
-   ListPage<Route> listFirstPage();
-
-   /**
-    * @see org.jclouds.googlecomputeengine.features.RouteApi#listAtMarker(String, org.jclouds.googlecomputeengine.options.ListOptions)
-    */
-   @Named("Routes:list")
-   @GET
-   @Path("/global/routes")
-   @OAuthScopes(COMPUTE_READONLY_SCOPE)
-   @ResponseParser(ParseRoutes.class)
-   @Fallback(EmptyListPageOnNotFoundOr404.class)
-   ListPage<Route> listAtMarker(String marker);
-
-   /**
     * Retrieves the listFirstPage of route resources available to the specified project.
     * By default the listFirstPage as a maximum size of 100, if no options are provided or ListOptions#getMaxResults()
     * has not been set.
@@ -116,22 +94,22 @@ public interface RouteApi {
    ListPage<Route> listAtMarker(String marker, ListOptions listOptions);
 
    /**
-    * @see org.jclouds.googlecomputeengine.features.RouteApi#list(org.jclouds.googlecomputeengine.options.ListOptions)
+    * @see RouteApi#list(org.jclouds.googlecomputeengine.options.ListOptions)
     */
    @Named("Routes:list")
    @GET
    @Path("/global/routes")
    @OAuthScopes(COMPUTE_READONLY_SCOPE)
    @ResponseParser(ParseRoutes.class)
-   @Transform(ParseRoutes.ToPagedIterable.class)
-   @Fallback(EmptyPagedIterableOnNotFoundOr404.class)
-   PagedIterable<Route> list();
+   @Transform(ParseRoutes.ToIteratorOfListPage.class)
+   @Fallback(EmptyIteratorOnNotFoundOr404.class)
+   Iterator<ListPage<Route>> list();
 
    /**
     * A paged version of RegionApi#listFirstPage()
     *
-    * @return a Paged, Fluent Iterable that is able to fetch additional pages when required
-    * @see org.jclouds.googlecomputeengine.features.RouteApi#listAtMarker(String, org.jclouds.googlecomputeengine.options.ListOptions)
+    * @return an Iterator that is able to fetch additional pages when required
+    * @see RouteApi#listAtMarker(String, org.jclouds.googlecomputeengine.options.ListOptions)
     * @see org.jclouds.collect.PagedIterable
     */
    @Named("Routes:list")
@@ -139,9 +117,9 @@ public interface RouteApi {
    @Path("/global/routes")
    @OAuthScopes(COMPUTE_READONLY_SCOPE)
    @ResponseParser(ParseRoutes.class)
-   @Transform(ParseRoutes.ToPagedIterable.class)
-   @Fallback(EmptyPagedIterableOnNotFoundOr404.class)
-   PagedIterable<Route> list(ListOptions listOptions);
+   @Transform(ParseRoutes.ToIteratorOfListPage.class)
+   @Fallback(EmptyIteratorOnNotFoundOr404.class)
+   Iterator<ListPage<Route>> list(ListOptions listOptions);
 
    /**
     * Deletes the specified route resource.

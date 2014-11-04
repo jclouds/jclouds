@@ -18,22 +18,17 @@ package org.jclouds.googlecomputeengine.features;
 
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
-import static org.testng.Assert.assertSame;
-import static org.testng.Assert.assertTrue;
 
 import java.net.URI;
 import java.util.Iterator;
 import java.util.List;
 
-import org.jclouds.collect.IterableWithMarker;
-import org.jclouds.collect.PagedIterable;
 import org.jclouds.googlecomputeengine.domain.Disk;
 import org.jclouds.googlecomputeengine.domain.Image;
+import org.jclouds.googlecomputeengine.domain.ListPage;
 import org.jclouds.googlecomputeengine.internal.BaseGoogleComputeEngineApiLiveTest;
 import org.jclouds.googlecomputeengine.options.ListOptions;
 import org.testng.annotations.Test;
-
-import com.google.common.collect.Iterables;
 
 public class ImageApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
 
@@ -60,17 +55,13 @@ public class ImageApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
    @Test(groups = "live")
    public void testListImage() {
 
-      PagedIterable<Image> images = api().list(new ListOptions.Builder().maxResults(1));
+      Iterator<ListPage<Image>> images = api().list(new ListOptions.Builder().maxResults(1));
 
-      Iterator<IterableWithMarker<Image>> pageIterator = images.iterator();
-      assertTrue(pageIterator.hasNext());
+      List<Image> imageAsList = images.next();
 
-      IterableWithMarker<Image> singlePageIterator = pageIterator.next();
-      List<Image> imageAsList = singlePageIterator.toList();
+      assertEquals(imageAsList.size(), 1);
 
-      assertSame(imageAsList.size(), 1);
-
-      this.image = Iterables.getOnlyElement(imageAsList);
+      this.image = imageAsList.get(0);
    }
 
 
@@ -87,7 +78,7 @@ public class ImageApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
 
    @Test(groups = "live")
    public void testInsertDisk() {
-      assertZoneOperationDoneSucessfully(diskApi().createInZone(DISK_NAME, sizeGb, DEFAULT_ZONE_NAME), TIME_WAIT);
+      assertZoneOperationDoneSuccessfully(diskApi().createInZone(DISK_NAME, sizeGb, DEFAULT_ZONE_NAME), TIME_WAIT);
       Disk disk = diskApi().getInZone(DEFAULT_ZONE_NAME, DISK_NAME);
       diskURI = disk.selfLink();
    }
@@ -106,7 +97,7 @@ public class ImageApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
    @Test(groups = "live", dependsOnMethods = "testGetCreatedImage")
    public void testCleanup(){
       assertGlobalOperationDoneSucessfully(imageApi().delete(IMAGE_NAME), TIME_WAIT);
-      assertZoneOperationDoneSucessfully(diskApi().deleteInZone(DEFAULT_ZONE_NAME, DISK_NAME), TIME_WAIT);
+      assertZoneOperationDoneSuccessfully(diskApi().deleteInZone(DEFAULT_ZONE_NAME, DISK_NAME), TIME_WAIT);
    }
 
    private void assertImageEquals(Image result) {

@@ -19,16 +19,14 @@ package org.jclouds.googlecomputeengine.features;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
 
+import java.util.Iterator;
 import java.util.List;
 
-import org.jclouds.collect.PagedIterable;
+import org.jclouds.googlecomputeengine.domain.ListPage;
 import org.jclouds.googlecomputeengine.domain.Network;
 import org.jclouds.googlecomputeengine.internal.BaseGoogleComputeEngineApiLiveTest;
 import org.jclouds.googlecomputeengine.options.ListOptions;
 import org.testng.annotations.Test;
-
-import com.google.common.collect.Iterables;
-import com.google.common.collect.Lists;
 
 @Test(groups = "live", testName = "NetworkApiLiveTest")
 public class NetworkApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
@@ -43,14 +41,11 @@ public class NetworkApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
 
    @Test(groups = "live")
    public void testInsertNetwork() {
-
       assertGlobalOperationDoneSucessfully(api().createInIPv4Range(NETWORK_NAME, IPV4_RANGE), TIME_WAIT);
-
    }
 
    @Test(groups = "live", dependsOnMethods = "testInsertNetwork")
    public void testGetNetwork() {
-
       Network network = api().get(NETWORK_NAME);
       assertNotNull(network);
       assertNetworkEquals(network);
@@ -59,14 +54,14 @@ public class NetworkApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
    @Test(groups = "live", dependsOnMethods = "testGetNetwork")
    public void testListNetwork() {
 
-      PagedIterable<Network> networks = api().list(new ListOptions.Builder()
+      Iterator<ListPage<Network>> networks = api().list(new ListOptions.Builder()
               .filter("name eq " + NETWORK_NAME));
 
-      List<Network> networksAsList = Lists.newArrayList(networks.concat());
+      List<Network> networksAsList = networks.next();
 
       assertEquals(networksAsList.size(), 1);
 
-      assertNetworkEquals(Iterables.getOnlyElement(networksAsList));
+      assertNetworkEquals(networksAsList.get(0));
 
    }
 

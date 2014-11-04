@@ -18,8 +18,6 @@ package org.jclouds.googlecomputeengine.functions.internal;
 
 import javax.inject.Inject;
 
-import org.jclouds.collect.IterableWithMarker;
-import org.jclouds.collect.IterableWithMarkers;
 import org.jclouds.googlecomputeengine.GoogleComputeEngineApi;
 import org.jclouds.googlecomputeengine.domain.ListPage;
 import org.jclouds.googlecomputeengine.domain.Snapshot;
@@ -37,20 +35,19 @@ public final class ParseSnapshots extends ParseJson<ListPage<Snapshot>> {
       });
    }
 
-   public static final class ToPagedIterable extends BaseToPagedIterable<Snapshot, ToPagedIterable> {
+   public static final class ToIteratorOfListPage extends BaseToIteratorOfListPage<Snapshot, ToIteratorOfListPage> {
 
       private final GoogleComputeEngineApi api;
 
-      @Inject ToPagedIterable(GoogleComputeEngineApi api) {
+      @Inject ToIteratorOfListPage(GoogleComputeEngineApi api) {
          this.api = api;
       }
 
-      @Override protected Function<Object, IterableWithMarker<Snapshot>> fetchNextPage(final String projectName,
+      @Override protected Function<String, ListPage<Snapshot>> fetchNextPage(final String projectName,
             final ListOptions options) {
-         return new Function<Object, IterableWithMarker<Snapshot>>() {
-            @Override public IterableWithMarker<Snapshot> apply(Object input) {
-               ListPage<Snapshot> result = api.getSnapshotApi(projectName).listAtMarker(input.toString(), options);
-               return IterableWithMarkers.from(result, result.nextPageToken());
+         return new Function<String, ListPage<Snapshot>>() {
+            @Override public ListPage<Snapshot> apply(String input) {
+               return api.getSnapshotApi(projectName).listAtMarker(input, options);
             }
          };
       }

@@ -18,8 +18,8 @@ package org.jclouds.googlecomputeengine.features;
 
 import static org.jclouds.googlecomputeengine.GoogleComputeEngineConstants.COMPUTE_READONLY_SCOPE;
 import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertNull;
-import static org.testng.Assert.assertTrue;
 
 import org.jclouds.googlecomputeengine.internal.BaseGoogleComputeEngineApiExpectTest;
 import org.jclouds.googlecomputeengine.parse.ParseZoneListTest;
@@ -81,8 +81,7 @@ public class ZoneApiExpectTest extends BaseGoogleComputeEngineApiExpectTest {
       ZoneApi api = requestsSendResponses(requestForScopes(COMPUTE_READONLY_SCOPE),
               TOKEN_RESPONSE, LIST_ZONES_REQ, LIST_ZONES_RESPONSE).getZoneApi("myproject");
 
-      assertEquals(api.listFirstPage().toString(),
-              new ParseZoneListTest().expected().toString());
+      assertEquals(api.list().next().toString(), new ParseZoneListTest().expected().toString());
    }
 
    public void testListZoneWithPaginationOptionsResponseIs4xx() {
@@ -92,6 +91,6 @@ public class ZoneApiExpectTest extends BaseGoogleComputeEngineApiExpectTest {
       ZoneApi api = requestsSendResponses(requestForScopes(COMPUTE_READONLY_SCOPE),
               TOKEN_RESPONSE, LIST_ZONES_REQ, operationResponse).getZoneApi("myproject");
 
-      assertTrue(api.list().concat().isEmpty());
+      assertFalse(api.list().hasNext());
    }
 }

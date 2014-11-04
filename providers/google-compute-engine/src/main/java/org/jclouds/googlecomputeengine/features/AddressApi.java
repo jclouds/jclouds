@@ -19,6 +19,8 @@ package org.jclouds.googlecomputeengine.features;
 import static org.jclouds.googlecomputeengine.GoogleComputeEngineConstants.COMPUTE_READONLY_SCOPE;
 import static org.jclouds.googlecomputeengine.GoogleComputeEngineConstants.COMPUTE_SCOPE;
 
+import java.util.Iterator;
+
 import javax.inject.Named;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
@@ -30,9 +32,8 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
-import org.jclouds.Fallbacks.EmptyPagedIterableOnNotFoundOr404;
 import org.jclouds.Fallbacks.NullOnNotFoundOr404;
-import org.jclouds.collect.PagedIterable;
+import org.jclouds.googlecomputeengine.GoogleComputeEngineFallbacks.EmptyIteratorOnNotFoundOr404;
 import org.jclouds.googlecomputeengine.GoogleComputeEngineFallbacks.EmptyListPageOnNotFoundOr404;
 import org.jclouds.googlecomputeengine.domain.Address;
 import org.jclouds.googlecomputeengine.domain.ListPage;
@@ -65,7 +66,7 @@ public interface AddressApi {
     * @param addressName name of the address resource to return.
     * @return a Address resource.
     */
-   @Named("Addresss:get")
+   @Named("Addresses:get")
    @GET
    @Consumes(MediaType.APPLICATION_JSON)
    @Path("/regions/{region}/addresses/{address}")
@@ -83,7 +84,7 @@ public interface AddressApi {
     * @return an Operation resource. To check on the status of an operation, poll the Operations resource returned to
     *         you, and look for the status field.
     */
-   @Named("Addresss:insert")
+   @Named("Addresses:insert")
    @POST
    @Consumes(MediaType.APPLICATION_JSON)
    @Produces(MediaType.APPLICATION_JSON)
@@ -100,7 +101,7 @@ public interface AddressApi {
     * @return an Operation resource. To check on the status of an operation, poll the Operations resource returned to
     *         you, and look for the status field.
     */
-   @Named("Addresss:delete")
+   @Named("Addresses:delete")
    @DELETE
    @Consumes(MediaType.APPLICATION_JSON)
    @Path("/regions/{region}/addresses/{address}")
@@ -108,30 +109,6 @@ public interface AddressApi {
    @Fallback(NullOnNotFoundOr404.class)
    @Nullable
    Operation deleteInRegion(@PathParam("region") String region, @PathParam("address") String addressName);
-
-   /**
-    * @see org.jclouds.googlecomputeengine.features.AddressApi#listAtMarkerInRegion(String, String, org.jclouds.googlecomputeengine.options.ListOptions)
-    */
-   @Named("Addresss:list")
-   @GET
-   @Consumes(MediaType.APPLICATION_JSON)
-   @Path("/regions/{region}/addresses")
-   @OAuthScopes(COMPUTE_READONLY_SCOPE)
-   @ResponseParser(ParseAddresses.class)
-   @Fallback(EmptyListPageOnNotFoundOr404.class)
-   ListPage<Address> listFirstPageInRegion(@PathParam("region") String region);
-
-   /**
-    * @see org.jclouds.googlecomputeengine.features.AddressApi#listAtMarkerInRegion(String, String, org.jclouds.googlecomputeengine.options.ListOptions)
-    */
-   @Named("Addresss:list")
-   @GET
-   @Consumes(MediaType.APPLICATION_JSON)
-   @Path("/regions/{region}/addresses")
-   @OAuthScopes(COMPUTE_READONLY_SCOPE)
-   @ResponseParser(ParseAddresses.class)
-   @Fallback(EmptyListPageOnNotFoundOr404.class)
-   ListPage<Address> listAtMarkerInRegion(@PathParam("region") String region, @QueryParam("pageToken") @Nullable String marker);
 
    /**
     * Retrieves the listPage of address resources contained within the specified project and region.
@@ -145,7 +122,7 @@ public interface AddressApi {
     * @see org.jclouds.googlecomputeengine.options.ListOptions
     * @see org.jclouds.googlecomputeengine.domain.ListPage
     */
-   @Named("Addresss:list")
+   @Named("Addresses:list")
    @GET
    @Consumes(MediaType.APPLICATION_JSON)
    @Path("/regions/{region}/addresses")
@@ -158,27 +135,26 @@ public interface AddressApi {
     * A paged version of AddressApi#listPageInRegion(String)
     *
     * @param region the region to list in
-    * @return a Paged, Fluent Iterable that is able to fetch additional pages when required
-    * @see org.jclouds.collect.PagedIterable
-    * @see org.jclouds.googlecomputeengine.features.AddressApi#listAtMarkerInRegion(String, String, org.jclouds.googlecomputeengine.options.ListOptions)
+    * @return an Iterator that is able to fetch additional pages when required
+    * @see #listAtMarkerInRegion(String, String, org.jclouds.googlecomputeengine.options.ListOptions)
     */
-   @Named("Addresss:list")
+   @Named("Addresses:list")
    @GET
    @Consumes(MediaType.APPLICATION_JSON)
    @Path("/regions/{region}/addresses")
    @OAuthScopes(COMPUTE_READONLY_SCOPE)
    @ResponseParser(ParseAddresses.class)
-   @Transform(ParseAddresses.ToPagedIterable.class)
-   @Fallback(EmptyPagedIterableOnNotFoundOr404.class)
-   PagedIterable<Address> listInRegion(@PathParam("region") String region);
+   @Transform(ParseAddresses.ToIteratorOfListPage.class)
+   @Fallback(EmptyIteratorOnNotFoundOr404.class)
+   Iterator<ListPage<Address>> listInRegion(@PathParam("region") String region);
 
-   @Named("Addresss:list")
+   @Named("Addresses:list")
    @GET
    @Consumes(MediaType.APPLICATION_JSON)
    @Path("/regions/{region}/addresses")
    @OAuthScopes(COMPUTE_READONLY_SCOPE)
    @ResponseParser(ParseAddresses.class)
-   @Transform(ParseAddresses.ToPagedIterable.class)
-   @Fallback(EmptyPagedIterableOnNotFoundOr404.class)
-   PagedIterable<Address> listInRegion(@PathParam("region") String region, ListOptions options);
+   @Transform(ParseAddresses.ToIteratorOfListPage.class)
+   @Fallback(EmptyIteratorOnNotFoundOr404.class)
+   Iterator<ListPage<Address>> listInRegion(@PathParam("region") String region, ListOptions options);
 }

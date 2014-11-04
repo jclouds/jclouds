@@ -19,8 +19,8 @@ package org.jclouds.googlecomputeengine.features;
 import static org.jclouds.googlecomputeengine.GoogleComputeEngineConstants.COMPUTE_READONLY_SCOPE;
 import static org.jclouds.googlecomputeengine.GoogleComputeEngineConstants.COMPUTE_SCOPE;
 import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertNull;
-import static org.testng.Assert.assertTrue;
 
 import org.jclouds.googlecomputeengine.domain.ListPage;
 import org.jclouds.googlecomputeengine.domain.Operation;
@@ -118,7 +118,7 @@ public class ZoneOperationApiExpectTest extends BaseGoogleComputeEngineApiExpect
       ZoneOperationApi zoneOperationApi = requestsSendResponses(requestForScopes(COMPUTE_READONLY_SCOPE),
               TOKEN_RESPONSE, get, operationResponse).getZoneOperationApi("myproject");
 
-      assertEquals(zoneOperationApi.listFirstPageInZone("us-central1-a").toString(),
+      assertEquals(zoneOperationApi.listInZone("us-central1-a").next().toString(),
               expectedList().toString());
    }
 
@@ -158,9 +158,8 @@ public class ZoneOperationApiExpectTest extends BaseGoogleComputeEngineApiExpect
 
       HttpResponse operationResponse = HttpResponse.builder().statusCode(404).build();
 
-      ZoneOperationApi zoneOperationApi = requestsSendResponses(requestForScopes(COMPUTE_READONLY_SCOPE),
-              TOKEN_RESPONSE, get, operationResponse).getZoneOperationApi("myproject");
+      ZoneOperationApi zoneOperationApi = requestsSendResponses(requestForScopes(COMPUTE_READONLY_SCOPE), TOKEN_RESPONSE, get, operationResponse).getZoneOperationApi("myproject");
 
-      assertTrue(zoneOperationApi.listInZone("us-central1-a").concat().isEmpty());
+      assertFalse(zoneOperationApi.listInZone("us-central1-a").hasNext());
    }
 }

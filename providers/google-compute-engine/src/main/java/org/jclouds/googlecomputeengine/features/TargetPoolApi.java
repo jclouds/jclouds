@@ -20,6 +20,7 @@ import static org.jclouds.googlecomputeengine.GoogleComputeEngineConstants.COMPU
 import static org.jclouds.googlecomputeengine.GoogleComputeEngineConstants.COMPUTE_SCOPE;
 
 import java.net.URI;
+import java.util.Iterator;
 import java.util.List;
 
 import javax.inject.Named;
@@ -33,9 +34,8 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
-import org.jclouds.Fallbacks.EmptyPagedIterableOnNotFoundOr404;
 import org.jclouds.Fallbacks.NullOnNotFoundOr404;
-import org.jclouds.collect.PagedIterable;
+import org.jclouds.googlecomputeengine.GoogleComputeEngineFallbacks.EmptyIteratorOnNotFoundOr404;
 import org.jclouds.googlecomputeengine.GoogleComputeEngineFallbacks.EmptyListPageOnNotFoundOr404;
 import org.jclouds.googlecomputeengine.binders.TargetPoolChangeHealthChecksBinder;
 import org.jclouds.googlecomputeengine.binders.TargetPoolChangeInstancesBinder;
@@ -112,7 +112,7 @@ public interface TargetPoolApi {
    Operation delete(@PathParam("targetPool") String targetPool);
 
    /**
-    * @return a Paged, Fluent Iterable that is able to fetch additional pages when required
+    * @return an Iterator that is able to fetch additional pages when required
     * @see org.jclouds.collect.PagedIterable
     */
    @Named("TargetPools:list")
@@ -120,9 +120,9 @@ public interface TargetPoolApi {
    @Path("/targetPools")
    @OAuthScopes(COMPUTE_READONLY_SCOPE)
    @ResponseParser(ParseTargetPools.class)
-   @Transform(ParseTargetPools.ToPagedIterable.class)
-   @Fallback(EmptyPagedIterableOnNotFoundOr404.class)
-   PagedIterable<TargetPool> list();
+   @Transform(ParseTargetPools.ToIteratorOfListPage.class)
+   @Fallback(EmptyIteratorOnNotFoundOr404.class)
+   Iterator<ListPage<TargetPool>> list();
 
    /**
     * @param options @see org.jclouds.googlecomputeengine.options.ListOptions
@@ -140,7 +140,7 @@ public interface TargetPoolApi {
     * Adds instance to the targetPool.
     *
     * @param targetPool the name of the target pool.
-    * @param instanceName the name for the instance to be added to targetPool.
+    * @param instances the self-links of the instances to be added to targetPool.
     *
     * @return an Operation resource. To check on the status of an operation, poll the Operations resource returned to
     *         you, and look for the status field.
@@ -157,7 +157,7 @@ public interface TargetPoolApi {
     * Removes instance URL from targetPool.
     *
     * @param targetPool the name of the target pool.
-    * @param instanceName the name for the instance to be removed from targetPool.
+    * @param instances the self-links of the instances to be removed from the targetPool.
     *
     * @return an Operation resource. To check on the status of an operation, poll the Operations resource returned to
     *         you, and look for the status field.
@@ -174,7 +174,7 @@ public interface TargetPoolApi {
     * Adds health check URL to targetPool.
     *
     * @param targetPool the name of the target pool.
-    * @param healthCheck the name for the healthCheck to be added to targetPool.
+    * @param healthChecks the self-links of the health checks to be added to targetPool.
     *
     * @return an Operation resource. To check on the status of an operation, poll the Operations resource returned to
     *         you, and look for the status field.
@@ -192,7 +192,7 @@ public interface TargetPoolApi {
     * Removes health check URL from targetPool.
     *
     * @param targetPool the name of the target pool.
-    * @param  the name for the instance to be removed from targetPool.
+    * @param healthChecks the self-links of the health checks to be removed from the targetPool.
     *
     * @return an Operation resource. To check on the status of an operation, poll the Operations resource returned to
     *         you, and look for the status field.

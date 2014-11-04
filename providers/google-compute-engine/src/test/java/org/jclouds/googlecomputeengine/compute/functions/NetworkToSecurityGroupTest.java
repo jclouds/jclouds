@@ -16,6 +16,7 @@
  */
 package org.jclouds.googlecomputeengine.compute.functions;
 
+import static com.google.common.collect.Iterators.singletonIterator;
 import static org.easymock.EasyMock.createMock;
 import static org.easymock.EasyMock.expect;
 import static org.easymock.EasyMock.replay;
@@ -26,10 +27,9 @@ import static org.testng.Assert.assertTrue;
 
 import java.net.URI;
 
-import org.jclouds.collect.IterableWithMarkers;
-import org.jclouds.collect.PagedIterables;
 import org.jclouds.compute.domain.SecurityGroup;
 import org.jclouds.googlecomputeengine.GoogleComputeEngineApi;
+import org.jclouds.googlecomputeengine.domain.ListPage;
 import org.jclouds.googlecomputeengine.domain.Network;
 import org.jclouds.googlecomputeengine.features.FirewallApi;
 import org.jclouds.googlecomputeengine.options.ListOptions;
@@ -39,7 +39,7 @@ import org.testng.annotations.Test;
 
 import com.google.common.base.Predicates;
 import com.google.common.base.Supplier;
-import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
 
 public class NetworkToSecurityGroupTest {
@@ -62,7 +62,7 @@ public class NetworkToSecurityGroupTest {
       expect(api.getFirewallApi(projectSupplier.get()))
               .andReturn(fwApi);
       expect(fwApi.list(options)).andReturn(
-            PagedIterables.onlyPage(IterableWithMarkers.from(ImmutableSet.of(FirewallToIpPermissionTest.fwForTest()))));
+            singletonIterator(ListPage.create(ImmutableList.of(FirewallToIpPermissionTest.fwForTest()), null)));
 
       replay(api, fwApi);
 

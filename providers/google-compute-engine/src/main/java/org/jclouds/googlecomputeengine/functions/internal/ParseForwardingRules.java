@@ -18,8 +18,6 @@ package org.jclouds.googlecomputeengine.functions.internal;
 
 import javax.inject.Inject;
 
-import org.jclouds.collect.IterableWithMarker;
-import org.jclouds.collect.IterableWithMarkers;
 import org.jclouds.googlecomputeengine.GoogleComputeEngineApi;
 import org.jclouds.googlecomputeengine.domain.ForwardingRule;
 import org.jclouds.googlecomputeengine.domain.ListPage;
@@ -37,21 +35,21 @@ public final class ParseForwardingRules extends ParseJson<ListPage<ForwardingRul
       });
    }
 
-   public static class ToPagedIterable extends BaseWithRegionToPagedIterable<ForwardingRule, ToPagedIterable> {
+   public static class ToIteratorOfListPage
+         extends BaseWithRegionToIteratorOfListPage<ForwardingRule, ToIteratorOfListPage> {
 
       private final GoogleComputeEngineApi api;
 
-      @Inject ToPagedIterable(GoogleComputeEngineApi api) {
+      @Inject ToIteratorOfListPage(GoogleComputeEngineApi api) {
          this.api = api;
       }
 
-      @Override protected Function<Object, IterableWithMarker<ForwardingRule>> fetchNextPage(final String projectName,
+      @Override protected Function<String, ListPage<ForwardingRule>> fetchNextPage(final String projectName,
             final String regionName,
             final ListOptions options) {
-         return new Function<Object, IterableWithMarker<ForwardingRule>>() {
-            @Override public IterableWithMarker<ForwardingRule> apply(Object input) {
-               ListPage<ForwardingRule> result = api.getForwardingRuleApi(projectName, regionName).list(options);
-               return IterableWithMarkers.from(result, result.nextPageToken());
+         return new Function<String, ListPage<ForwardingRule>>() {
+            @Override public ListPage<ForwardingRule> apply(String input) {
+               return api.getForwardingRuleApi(projectName, regionName).list(options);
             }
          };
       }

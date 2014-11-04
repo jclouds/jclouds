@@ -20,8 +20,6 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 import javax.inject.Inject;
 
-import org.jclouds.collect.IterableWithMarker;
-import org.jclouds.collect.IterableWithMarkers;
 import org.jclouds.googlecomputeengine.GoogleComputeEngineApi;
 import org.jclouds.googlecomputeengine.domain.HttpHealthCheck;
 import org.jclouds.googlecomputeengine.domain.ListPage;
@@ -39,21 +37,20 @@ public final class ParseHttpHealthChecks extends ParseJson<ListPage<HttpHealthCh
       });
    }
 
-   public static class ToPagedIterable extends BaseToPagedIterable<HttpHealthCheck, ToPagedIterable> {
+   public static class ToIteratorOfListPage extends BaseToIteratorOfListPage<HttpHealthCheck, ToIteratorOfListPage> {
 
       private final GoogleComputeEngineApi api;
 
-      @Inject ToPagedIterable(GoogleComputeEngineApi api) {
+      @Inject ToIteratorOfListPage(GoogleComputeEngineApi api) {
          this.api = checkNotNull(api, "api");
       }
 
-      @Override protected Function<Object, IterableWithMarker<HttpHealthCheck>> fetchNextPage(final String projectName,
+      @Override protected Function<String, ListPage<HttpHealthCheck>> fetchNextPage(final String projectName,
             final ListOptions options) {
-         return new Function<Object, IterableWithMarker<HttpHealthCheck>>() {
+         return new Function<String, ListPage<HttpHealthCheck>>() {
 
-            @Override public IterableWithMarker<HttpHealthCheck> apply(Object input) {
-               ListPage<HttpHealthCheck> result = api.getHttpHealthCheckApi(projectName).list(options);
-               return IterableWithMarkers.from(result, result.nextPageToken());
+            @Override public ListPage<HttpHealthCheck> apply(String input) {
+               return api.getHttpHealthCheckApi(projectName).list(options);
             }
          };
       }

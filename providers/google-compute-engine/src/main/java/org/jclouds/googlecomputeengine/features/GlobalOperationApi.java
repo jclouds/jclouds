@@ -19,6 +19,8 @@ package org.jclouds.googlecomputeengine.features;
 import static org.jclouds.googlecomputeengine.GoogleComputeEngineConstants.COMPUTE_READONLY_SCOPE;
 import static org.jclouds.googlecomputeengine.GoogleComputeEngineConstants.COMPUTE_SCOPE;
 
+import java.util.Iterator;
+
 import javax.inject.Named;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
@@ -28,9 +30,8 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
-import org.jclouds.Fallbacks.EmptyPagedIterableOnNotFoundOr404;
 import org.jclouds.Fallbacks.NullOnNotFoundOr404;
-import org.jclouds.collect.PagedIterable;
+import org.jclouds.googlecomputeengine.GoogleComputeEngineFallbacks.EmptyIteratorOnNotFoundOr404;
 import org.jclouds.googlecomputeengine.GoogleComputeEngineFallbacks.EmptyListPageOnNotFoundOr404;
 import org.jclouds.googlecomputeengine.domain.ListPage;
 import org.jclouds.googlecomputeengine.domain.Operation;
@@ -79,30 +80,6 @@ public interface GlobalOperationApi {
    void delete(@PathParam("operation") String operationName);
 
    /**
-    * @see org.jclouds.googlecomputeengine.features.GlobalOperationApi#listAtMarker(String, org.jclouds.googlecomputeengine.options.ListOptions)
-    */
-   @Named("GlobalOperations:list")
-   @GET
-   @Path("/global/operations")
-   @OAuthScopes(COMPUTE_READONLY_SCOPE)
-   @Consumes(MediaType.APPLICATION_JSON)
-   @ResponseParser(ParseGlobalOperations.class)
-   @Fallback(EmptyListPageOnNotFoundOr404.class)
-   ListPage<Operation> listFirstPage();
-
-   /**
-    * @see org.jclouds.googlecomputeengine.features.GlobalOperationApi#listAtMarker(String, org.jclouds.googlecomputeengine.options.ListOptions)
-    */
-   @Named("GlobalOperations:list")
-   @GET
-   @Path("/global/operations")
-   @OAuthScopes(COMPUTE_READONLY_SCOPE)
-   @Consumes(MediaType.APPLICATION_JSON)
-   @ResponseParser(ParseGlobalOperations.class)
-   @Fallback(EmptyListPageOnNotFoundOr404.class)
-   ListPage<Operation> listAtMarker(@QueryParam("pageToken") @Nullable String marker);
-
-   /**
     * Retrieves the listFirstPage of operation resources contained within the specified project.
     * By default the listFirstPage as a maximum size of 100, if no options are provided or ListOptions#getMaxResults()
     * has not been set.
@@ -110,8 +87,6 @@ public interface GlobalOperationApi {
     * @param marker      marks the beginning of the next list page
     * @param listOptions listing options
     * @return a page of the list, starting at marker
-    * @see org.jclouds.googlecomputeengine.options.ListOptions
-    * @see org.jclouds.googlecomputeengine.domain.ListPage
     */
    @Named("GlobalOperations:list")
    @GET
@@ -120,11 +95,10 @@ public interface GlobalOperationApi {
    @Consumes(MediaType.APPLICATION_JSON)
    @ResponseParser(ParseGlobalOperations.class)
    @Fallback(EmptyListPageOnNotFoundOr404.class)
-   ListPage<Operation> listAtMarker(@QueryParam("pageToken") @Nullable String marker,
-                                    ListOptions listOptions);
+   ListPage<Operation> listAtMarker(@QueryParam("pageToken") @Nullable String marker, ListOptions listOptions);
 
    /**
-    * @see org.jclouds.googlecomputeengine.features.GlobalOperationApi#list(org.jclouds.googlecomputeengine.options.ListOptions)
+    * @see GlobalOperationApi#list(org.jclouds.googlecomputeengine.options.ListOptions)
     */
    @Named("GlobalOperations:list")
    @GET
@@ -132,16 +106,15 @@ public interface GlobalOperationApi {
    @OAuthScopes(COMPUTE_READONLY_SCOPE)
    @Consumes(MediaType.APPLICATION_JSON)
    @ResponseParser(ParseGlobalOperations.class)
-   @Transform(ParseGlobalOperations.ToPagedIterable.class)
-   @Fallback(EmptyPagedIterableOnNotFoundOr404.class)
-   PagedIterable<Operation> list();
+   @Transform(ParseGlobalOperations.ToIteratorOfListPage.class)
+   @Fallback(EmptyIteratorOnNotFoundOr404.class)
+   Iterator<ListPage<Operation>> list();
 
    /**
     * A paged version of GlobalOperationApi#listFirstPage()
     *
-    * @return a Paged, Fluent Iterable that is able to fetch additional pages when required
-    * @see org.jclouds.collect.PagedIterable
-    * @see org.jclouds.googlecomputeengine.features.GlobalOperationApi#listAtMarker(String, org.jclouds.googlecomputeengine.options.ListOptions)
+    * @return an Iterator that is able to fetch additional pages when required
+    * @see GlobalOperationApi#listAtMarker(String, org.jclouds.googlecomputeengine.options.ListOptions)
     */
    @Named("GlobalOperations:list")
    @GET
@@ -149,8 +122,7 @@ public interface GlobalOperationApi {
    @OAuthScopes(COMPUTE_READONLY_SCOPE)
    @Consumes(MediaType.APPLICATION_JSON)
    @ResponseParser(ParseGlobalOperations.class)
-   @Transform(ParseGlobalOperations.ToPagedIterable.class)
-   @Fallback(EmptyPagedIterableOnNotFoundOr404.class)
-   PagedIterable<Operation> list(ListOptions listOptions);
-
+   @Transform(ParseGlobalOperations.ToIteratorOfListPage.class)
+   @Fallback(EmptyIteratorOnNotFoundOr404.class)
+   Iterator<ListPage<Operation>> list(ListOptions listOptions);
 }

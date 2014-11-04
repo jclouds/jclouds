@@ -18,8 +18,8 @@ package org.jclouds.googlecomputeengine.features;
 
 import static org.jclouds.googlecomputeengine.GoogleComputeEngineConstants.COMPUTE_READONLY_SCOPE;
 import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertNull;
-import static org.testng.Assert.assertTrue;
 
 import org.jclouds.googlecomputeengine.internal.BaseGoogleComputeEngineApiExpectTest;
 import org.jclouds.googlecomputeengine.parse.ParseSnapshotListTest;
@@ -78,8 +78,7 @@ public class SnapshotApiExpectTest extends BaseGoogleComputeEngineApiExpectTest 
       SnapshotApi api = requestsSendResponses(requestForScopes(COMPUTE_READONLY_SCOPE),
               TOKEN_RESPONSE, LIST_SNAPSHOTS_REQ, LIST_SNAPSHOTS_RESPONSE).getSnapshotApi("myproject");
 
-      assertEquals(api.listFirstPage().toString(),
-              new ParseSnapshotListTest().expected().toString());
+      assertEquals(api.list().next().toString(), new ParseSnapshotListTest().expected().toString());
    }
 
    public void testListSnapshotWithPaginationOptionsResponseIs4xx() {
@@ -89,6 +88,6 @@ public class SnapshotApiExpectTest extends BaseGoogleComputeEngineApiExpectTest 
       SnapshotApi api = requestsSendResponses(requestForScopes(COMPUTE_READONLY_SCOPE),
               TOKEN_RESPONSE, LIST_SNAPSHOTS_REQ, operationResponse).getSnapshotApi("myproject");
 
-      assertTrue(api.list().concat().isEmpty());
+      assertFalse(api.list().hasNext());
    }
 }

@@ -20,6 +20,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Preconditions.checkState;
 import static com.google.common.collect.Iterables.contains;
 import static com.google.common.collect.Iterables.filter;
+import static com.google.common.collect.Iterables.transform;
 import static com.google.common.collect.Iterables.tryFind;
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
 import static org.jclouds.googlecomputeengine.GoogleComputeEngineConstants.CENTOS_PROJECT;
@@ -30,16 +31,19 @@ import static org.jclouds.googlecomputeengine.GoogleComputeEngineConstants.GCE_I
 import static org.jclouds.googlecomputeengine.GoogleComputeEngineConstants.OPERATION_COMPLETE_INTERVAL;
 import static org.jclouds.googlecomputeengine.GoogleComputeEngineConstants.OPERATION_COMPLETE_TIMEOUT;
 import static org.jclouds.googlecomputeengine.domain.Instance.NetworkInterface.AccessConfig.Type;
+import static org.jclouds.googlecomputeengine.internal.ListPages.concat;
 import static org.jclouds.googlecomputeengine.predicates.InstancePredicates.isBootDisk;
 import static org.jclouds.util.Predicates2.retry;
 
 import java.net.URI;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
 
+import javax.inject.Inject;
 import javax.inject.Named;
 
 import org.jclouds.collect.Memoized;
@@ -61,6 +65,7 @@ import org.jclouds.googlecomputeengine.domain.Image;
 import org.jclouds.googlecomputeengine.domain.Instance;
 import org.jclouds.googlecomputeengine.domain.Instance.AttachedDisk;
 import org.jclouds.googlecomputeengine.domain.Instance.AttachedDisk.Mode;
+import org.jclouds.googlecomputeengine.domain.ListPage;
 import org.jclouds.googlecomputeengine.domain.MachineType;
 import org.jclouds.googlecomputeengine.domain.Operation;
 import org.jclouds.googlecomputeengine.domain.Zone;
@@ -74,13 +79,13 @@ import com.google.common.base.Objects;
 import com.google.common.base.Predicate;
 import com.google.common.base.Supplier;
 import com.google.common.collect.FluentIterable;
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import com.google.common.primitives.Ints;
 import com.google.common.util.concurrent.Atomics;
 import com.google.common.util.concurrent.UncheckedTimeoutException;
-import com.google.inject.Inject;
 
 public final class GoogleComputeEngineServiceAdapter implements ComputeServiceAdapter<InstanceInZone, MachineTypeInZone, Image, Zone> {
 
@@ -241,25 +246,25 @@ public final class GoogleComputeEngineServiceAdapter implements ComputeServiceAd
 
    @Override
    public Iterable<MachineTypeInZone> listHardwareProfiles() {
-      ImmutableSet.Builder<MachineTypeInZone> builder = ImmutableSet.builder();
+      ImmutableList.Builder<MachineTypeInZone> builder = ImmutableList.builder();
 
       for (final Location zone : zones.get().values()) {
-         builder.addAll(api.getMachineTypeApi(userProject.get())
-                 .listInZone(zone.getId())
-                 .concat()
-                 .filter(new Predicate<MachineType>() {
-                    @Override
-                    public boolean apply(MachineType input) {
-                       return input.deprecated() == null;
-                    }
-                 })
-                 .transform(new Function<MachineType, MachineTypeInZone>() {
+         for (Iterator<ListPage<MachineType>> i = api.getMachineTypeApi(userProject.get()).listInZone(zone.getId());
+               i.hasNext(); ) {
+            builder.addAll(FluentIterable.from(i.next()).filter(new Predicate<MachineType>() {
+               @Override
+               public boolean apply(MachineType input) {
+                  return input.deprecated() == null;
+               }
+            }).transform(new Function<MachineType, MachineTypeInZone>() {
 
-                    @Override
-                    public MachineTypeInZone apply(MachineType arg0) {
-                       return new MachineTypeInZone(arg0, arg0.zone());
-                    }
-                 }));
+               @Override
+               public MachineTypeInZone apply(MachineType arg0) {
+                  return new MachineTypeInZone(arg0, arg0.zone());
+               }
+            }));
+         }
+
       }
 
       return builder.build();
@@ -267,15 +272,14 @@ public final class GoogleComputeEngineServiceAdapter implements ComputeServiceAd
 
    @Override
    public Iterable<Image> listImages() {
-      return ImmutableSet.<Image>builder()
-              .addAll(api.getImageApi(userProject.get()).list().concat())
-              .addAll(api.getImageApi(DEBIAN_PROJECT).list().concat())
-              .addAll(api.getImageApi(CENTOS_PROJECT).list().concat())
-              .build();
+      return Iterables.concat( //
+            concat(api.getImageApi(userProject.get()).list()), //
+            concat(api.getImageApi(DEBIAN_PROJECT).list()), //
+            concat(api.getImageApi(CENTOS_PROJECT).list()));
    }
 
    @SuppressWarnings("deprecation")
-@Override
+   @Override
    public Image getImage(String id) {
       return Objects.firstNonNull(api.getImageApi(userProject.get()).get(id),
                                   Objects.firstNonNull(api.getImageApi(DEBIAN_PROJECT).get(id),
@@ -285,7 +289,7 @@ public final class GoogleComputeEngineServiceAdapter implements ComputeServiceAd
 
    @Override
    public Iterable<Zone> listLocations() {
-      return api.getZoneApi(userProject.get()).list().concat();
+      return concat(api.getZoneApi(userProject.get()).list());
    }
 
    @Override
@@ -300,19 +304,18 @@ public final class GoogleComputeEngineServiceAdapter implements ComputeServiceAd
 
    @Override
    public Iterable<InstanceInZone> listNodes() {
-      return FluentIterable.from(zones.get().values()).transformAndConcat(new Function<Location, ImmutableSet<InstanceInZone>>() {
-         @Override
-         public ImmutableSet<InstanceInZone> apply(final Location input) {
-            return api.getInstanceApi(userProject.get()).listInZone(input.getId()).concat()
-                    .transform(new Function<Instance, InstanceInZone>() {
-
-                       @Override
-                       public InstanceInZone apply(Instance arg0) {
-                          return new InstanceInZone(arg0, input.getId());
-                       }
-                    }).toSet();
-         }
-      }).toSet();
+      return FluentIterable.from(zones.get().values())
+            .transformAndConcat(new Function<Location, Iterable<InstanceInZone>>() {
+               @Override
+               public Iterable<InstanceInZone> apply(final Location input) {
+                  return transform(concat(api.getInstanceApi(userProject.get()).listInZone(input.getId())),
+                        new Function<Instance, InstanceInZone>() {
+                           @Override public InstanceInZone apply(Instance arg0) {
+                              return new InstanceInZone(arg0, input.getId());
+                           }
+                        });
+               }
+            }).toList();
    }
 
    @Override

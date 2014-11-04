@@ -30,6 +30,7 @@ import org.jclouds.apis.BaseApiLiveTest;
 import org.jclouds.googlecomputeengine.GoogleComputeEngineApi;
 import org.jclouds.googlecomputeengine.config.UserProject;
 import org.jclouds.googlecomputeengine.domain.Operation;
+import org.jclouds.javax.annotation.Nullable;
 
 import com.google.common.base.Predicate;
 import com.google.common.base.Supplier;
@@ -48,7 +49,6 @@ public class BaseGoogleComputeEngineApiLiveTest extends BaseApiLiveTest<GoogleCo
    protected static final String DEFAULT_ZONE_NAME = "us-central1-a";
    protected static final String DEFAULT_REGION_NAME = "us-central1";
    protected static final String NETWORK_API_URL_SUFFIX = "/global/networks/";
-   protected static final String DEFAULT_NETWORK_NAME = "live-test-network";
    protected static final String MACHINE_TYPE_API_URL_SUFFIX = "/machineTypes/";
    protected static final String DEFAULT_MACHINE_TYPE_NAME = "n1-standard-1";
    protected static final String GATEWAY_API_URL_SUFFIX = "/global/gateways/";
@@ -85,37 +85,30 @@ public class BaseGoogleComputeEngineApiLiveTest extends BaseApiLiveTest<GoogleCo
       return injector.getInstance(GoogleComputeEngineApi.class);
    }
 
-   protected Operation assertGlobalOperationDoneSucessfully(Operation operation, long maxWaitSeconds) {
-      operation = waitGlobalOperationDone(operation, maxWaitSeconds);
+   protected void assertGlobalOperationDoneSucessfully(Operation operation, long maxWaitSeconds) {
+      operation = waitOperationDone(globalOperationDonePredicate, operation, maxWaitSeconds);
       assertEquals(operation.status(), Operation.Status.DONE);
       assertTrue(operation.errors().isEmpty());
-      return operation;
    }
 
-   protected Operation waitGlobalOperationDone(Operation operation, long maxWaitSeconds) {
-      return waitOperationDone(globalOperationDonePredicate, operation, maxWaitSeconds);
+   protected void waitGlobalOperationDone(Operation operation, long maxWaitSeconds) {
+      waitOperationDone(globalOperationDonePredicate, operation, maxWaitSeconds);
    }
 
-   protected Operation assertRegionOperationDoneSucessfully(Operation operation, long maxWaitSeconds) {
-      operation = waitRegionOperationDone(operation, maxWaitSeconds);
+   protected void assertRegionOperationDoneSucessfully(Operation operation, long maxWaitSeconds) {
+      operation = waitOperationDone(regionOperationDonePredicate, operation, maxWaitSeconds);
       assertEquals(operation.status(), Operation.Status.DONE);
       assertTrue(operation.errors().isEmpty());
-      return operation;
    }
 
-   protected Operation waitRegionOperationDone(Operation operation, long maxWaitSeconds) {
-      return waitOperationDone(regionOperationDonePredicate, operation, maxWaitSeconds);
-   }
-
-   protected Operation assertZoneOperationDoneSucessfully(Operation operation, long maxWaitSeconds) {
-      operation = waitZoneOperationDone(operation, maxWaitSeconds);
+   protected void assertZoneOperationDoneSuccessfully(@Nullable Operation operation, long maxWaitSeconds) {
+      operation = waitOperationDone(zoneOperationDonePredicate, operation, maxWaitSeconds);
       assertEquals(operation.status(), Operation.Status.DONE);
       assertTrue(operation.errors().isEmpty());
-      return operation;
    }
 
-   protected Operation waitZoneOperationDone(Operation operation, long maxWaitSeconds) {
-      return waitOperationDone(zoneOperationDonePredicate, operation, maxWaitSeconds);
+   protected void waitZoneOperationDone(@Nullable Operation operation, long maxWaitSeconds) {
+      waitOperationDone(zoneOperationDonePredicate, operation, maxWaitSeconds);
    }
 
    protected URI getDiskTypeUrl(String project, String zone, String diskType){
@@ -128,10 +121,6 @@ public class BaseGoogleComputeEngineApiLiveTest extends BaseApiLiveTest<GoogleCo
 
    protected URI getZoneUrl(String project, String zone) {
       return URI.create(API_URL_PREFIX + project + ZONE_API_URL_SUFFIX + zone);
-   }
-
-   protected URI getDefaultNetworkUrl(String project) {
-      return getNetworkUrl(project, DEFAULT_NETWORK_NAME);
    }
 
    protected URI getNetworkUrl(String project, String network) {
@@ -156,12 +145,14 @@ public class BaseGoogleComputeEngineApiLiveTest extends BaseApiLiveTest<GoogleCo
    }
 
    protected URI getDiskUrl(String project, String diskName) {
-      return URI.create(API_URL_PREFIX + project + ZONE_API_URL_SUFFIX
-              + DEFAULT_ZONE_NAME + "/disks/" + diskName);
+      return URI.create(API_URL_PREFIX + project + ZONE_API_URL_SUFFIX + DEFAULT_ZONE_NAME + "/disks/" + diskName);
    }
 
-   protected static Operation waitOperationDone(Predicate<AtomicReference<Operation>> operationDonePredicate,
-                                                Operation operation, long maxWaitSeconds) {
+   private static Operation waitOperationDone(Predicate<AtomicReference<Operation>> operationDonePredicate,
+                                              @Nullable Operation operation, long maxWaitSeconds) {
+      if (operation == null) { // Null can mean a delete op didn't need to occur.
+         return null;
+      }
       AtomicReference<Operation> operationReference = Atomics.newReference(operation);
       retry(operationDonePredicate, maxWaitSeconds, 1, SECONDS).apply(operationReference);
       return operationReference.get();

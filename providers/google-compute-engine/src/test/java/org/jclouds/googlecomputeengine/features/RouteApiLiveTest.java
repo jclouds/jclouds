@@ -19,17 +19,15 @@ package org.jclouds.googlecomputeengine.features;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
 
+import java.util.Iterator;
 import java.util.List;
 
-import org.jclouds.collect.PagedIterable;
+import org.jclouds.googlecomputeengine.domain.ListPage;
 import org.jclouds.googlecomputeengine.domain.Route;
 import org.jclouds.googlecomputeengine.internal.BaseGoogleComputeEngineApiLiveTest;
 import org.jclouds.googlecomputeengine.options.ListOptions;
 import org.jclouds.googlecomputeengine.options.RouteOptions;
 import org.testng.annotations.Test;
-
-import com.google.common.collect.Iterables;
-import com.google.common.collect.Lists;
 
 @Test(groups = "live", testName = "RouteApiLiveTest")
 public class RouteApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
@@ -70,15 +68,14 @@ public class RouteApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
    @Test(groups = "live", dependsOnMethods = "testGetRoute")
    public void testListRoute() {
 
-      PagedIterable<Route> routes = api().list(new ListOptions()
+      Iterator<ListPage<Route>> routes = api().list(new ListOptions()
               .filter("name eq " + ROUTE_NAME));
 
-      List<Route> routesAsList = Lists.newArrayList(routes.concat());
+      List<Route> routesAsList = routes.next();
 
       assertEquals(routesAsList.size(), 1);
 
-      assertRouteEquals(Iterables.getOnlyElement(routesAsList));
-
+      assertRouteEquals(routesAsList.get(0));
    }
 
    @Test(groups = "live", dependsOnMethods = "testListRoute")

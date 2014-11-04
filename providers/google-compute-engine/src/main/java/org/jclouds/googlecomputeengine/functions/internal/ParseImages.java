@@ -18,8 +18,6 @@ package org.jclouds.googlecomputeengine.functions.internal;
 
 import javax.inject.Inject;
 
-import org.jclouds.collect.IterableWithMarker;
-import org.jclouds.collect.IterableWithMarkers;
 import org.jclouds.googlecomputeengine.GoogleComputeEngineApi;
 import org.jclouds.googlecomputeengine.domain.Image;
 import org.jclouds.googlecomputeengine.domain.ListPage;
@@ -37,20 +35,19 @@ public final class ParseImages extends ParseJson<ListPage<Image>> {
       });
    }
 
-   public static final class ToPagedIterable extends BaseToPagedIterable<Image, ToPagedIterable> {
+   public static final class ToIteratorOfListPage extends BaseToIteratorOfListPage<Image, ToIteratorOfListPage> {
 
       private final GoogleComputeEngineApi api;
 
-      @Inject ToPagedIterable(GoogleComputeEngineApi api) {
+      @Inject ToIteratorOfListPage(GoogleComputeEngineApi api) {
          this.api = api;
       }
 
-      @Override protected Function<Object, IterableWithMarker<Image>> fetchNextPage(final String projectName,
+      @Override protected Function<String, ListPage<Image>> fetchNextPage(final String projectName,
             final ListOptions options) {
-         return new Function<Object, IterableWithMarker<Image>>() {
-            @Override public IterableWithMarker<Image> apply(Object input) {
-               ListPage<Image> result = api.getImageApi(projectName).listAtMarker(input.toString(), options);
-               return IterableWithMarkers.from(result, result.nextPageToken());
+         return new Function<String, ListPage<Image>>() {
+            @Override public ListPage<Image> apply(String input) {
+               return api.getImageApi(projectName).listAtMarker(input, options);
             }
          };
       }

@@ -23,6 +23,7 @@ import static org.jclouds.compute.config.ComputeServiceProperties.TIMEOUT_NODE_S
 import static org.jclouds.compute.config.ComputeServiceProperties.TIMEOUT_NODE_TERMINATED;
 import static org.jclouds.googlecomputeengine.GoogleComputeEngineConstants.OPERATION_COMPLETE_INTERVAL;
 import static org.jclouds.googlecomputeengine.GoogleComputeEngineConstants.OPERATION_COMPLETE_TIMEOUT;
+import static org.jclouds.googlecomputeengine.internal.ListPages.concat;
 import static org.jclouds.util.Predicates2.retry;
 
 import java.util.Map;
@@ -72,7 +73,6 @@ import com.google.common.base.Function;
 import com.google.common.base.Optional;
 import com.google.common.base.Predicate;
 import com.google.common.base.Supplier;
-import com.google.common.collect.Sets;
 import com.google.common.util.concurrent.Atomics;
 import com.google.common.util.concurrent.ListeningExecutorService;
 
@@ -151,21 +151,14 @@ public class GoogleComputeEngineService extends BaseComputeService {
 
    protected void cleanUpNetworksAndFirewallsForGroup(final String groupName) {
       String resourceName = namingConvention.create().sharedNameForGroup(groupName);
-      final Network network = api.getNetworkApi(project.get()).get(resourceName);
+      Network network = api.getNetworkApi(project.get()).get(resourceName);
       FirewallApi firewallApi = api.getFirewallApi(project.get());
-      Predicate<Firewall> firewallBelongsToNetwork = new Predicate<Firewall>() {
-         @Override
-         public boolean apply(Firewall input) {
-            return input != null && input.network().equals(network.selfLink());
+
+      for (Firewall firewall : concat(firewallApi.list())) {
+         if (firewall == null || !firewall.network().equals(network.selfLink())) {
+            continue;
          }
-      };
-
-      Set<AtomicReference<Operation>> operations = Sets.newLinkedHashSet();
-      for (Firewall firewall : firewallApi.list().concat().filter(firewallBelongsToNetwork)) {
-         operations.add(new AtomicReference<Operation>(firewallApi.delete(firewall.name())));
-      }
-
-      for (AtomicReference<Operation> operation : operations) {
+         AtomicReference<Operation> operation = Atomics.newReference(firewallApi.delete(firewall.name()));
          retry(operationDonePredicate, operationCompleteCheckTimeout, operationCompleteCheckInterval,
                  MILLISECONDS).apply(operation);
 

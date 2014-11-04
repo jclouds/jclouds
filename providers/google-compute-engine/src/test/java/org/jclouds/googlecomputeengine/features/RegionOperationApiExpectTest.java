@@ -19,8 +19,8 @@ package org.jclouds.googlecomputeengine.features;
 import static org.jclouds.googlecomputeengine.GoogleComputeEngineConstants.COMPUTE_READONLY_SCOPE;
 import static org.jclouds.googlecomputeengine.GoogleComputeEngineConstants.COMPUTE_SCOPE;
 import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertNull;
-import static org.testng.Assert.assertTrue;
 
 import org.jclouds.googlecomputeengine.domain.ListPage;
 import org.jclouds.googlecomputeengine.domain.Operation;
@@ -120,8 +120,7 @@ public class RegionOperationApiExpectTest extends BaseGoogleComputeEngineApiExpe
       RegionOperationApi regionOperationApi = requestsSendResponses(requestForScopes(COMPUTE_READONLY_SCOPE),
               TOKEN_RESPONSE, get, operationResponse).getRegionOperationApi("myproject");
 
-      assertEquals(regionOperationApi.listFirstPageInRegion("us-central1").toString(),
-              expectedList().toString());
+      assertEquals(regionOperationApi.listInRegion("us-central1").next().toString(), expectedList().toString());
    }
 
    public void testListOperationWithPaginationOptionsResponseIs2xx() {
@@ -162,6 +161,6 @@ public class RegionOperationApiExpectTest extends BaseGoogleComputeEngineApiExpe
       RegionOperationApi regionOperationApi = requestsSendResponses(requestForScopes(COMPUTE_READONLY_SCOPE),
               TOKEN_RESPONSE, get, operationResponse).getRegionOperationApi("myproject");
 
-      assertTrue(regionOperationApi.listInRegion("us-central1").concat().isEmpty());
+      assertFalse(regionOperationApi.listInRegion("us-central1").hasNext());
    }
 }

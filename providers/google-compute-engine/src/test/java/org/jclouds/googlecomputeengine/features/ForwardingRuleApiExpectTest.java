@@ -19,7 +19,7 @@ package org.jclouds.googlecomputeengine.features;
 import static org.jclouds.googlecomputeengine.GoogleComputeEngineConstants.COMPUTE_READONLY_SCOPE;
 import static org.jclouds.googlecomputeengine.GoogleComputeEngineConstants.COMPUTE_SCOPE;
 import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertTrue;
+import static org.testng.Assert.assertFalse;
 import static org.testng.AssertJUnit.assertNull;
 
 import java.net.URI;
@@ -28,7 +28,6 @@ import javax.ws.rs.core.MediaType;
 
 import org.jclouds.googlecomputeengine.internal.BaseGoogleComputeEngineApiExpectTest;
 import org.jclouds.googlecomputeengine.options.ForwardingRuleCreationOptions;
-import org.jclouds.googlecomputeengine.options.ListOptions;
 import org.jclouds.googlecomputeengine.parse.ParseForwardingRuleListTest;
 import org.jclouds.googlecomputeengine.parse.ParseForwardingRuleTest;
 import org.jclouds.googlecomputeengine.parse.ParseRegionOperationTest;
@@ -142,8 +141,7 @@ public class ForwardingRuleApiExpectTest extends BaseGoogleComputeEngineApiExpec
       ForwardingRuleApi api = requestsSendResponses(requestForScopes(COMPUTE_READONLY_SCOPE),
             TOKEN_RESPONSE, list, operationResponse).getForwardingRuleApi("myproject", "us-central1");
 
-      ListOptions options = new ListOptions();
-      assertEquals(api.list(options).toString(), new ParseForwardingRuleListTest().expected().toString());
+      assertEquals(api.list().next().toString(), new ParseForwardingRuleListTest().expected().toString());
    }
 
    public void testListForwardingRulesResponseIs4xx() {
@@ -159,7 +157,7 @@ public class ForwardingRuleApiExpectTest extends BaseGoogleComputeEngineApiExpec
       ForwardingRuleApi api = requestsSendResponses(requestForScopes(COMPUTE_READONLY_SCOPE),
             TOKEN_RESPONSE, list, operationResponse).getForwardingRuleApi("myproject", "us-central1");
 
-      assertTrue(api.list().concat().isEmpty());
+      assertFalse(api.list().hasNext());
    }
 
    public void testSetTargetForwardingRuleResponseIs2xx(){

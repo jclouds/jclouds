@@ -18,8 +18,6 @@ package org.jclouds.googlecomputeengine.functions.internal;
 
 import javax.inject.Inject;
 
-import org.jclouds.collect.IterableWithMarker;
-import org.jclouds.collect.IterableWithMarkers;
 import org.jclouds.googlecomputeengine.GoogleComputeEngineApi;
 import org.jclouds.googlecomputeengine.domain.ListPage;
 import org.jclouds.googlecomputeengine.domain.Region;
@@ -37,20 +35,19 @@ public final class ParseRegions extends ParseJson<ListPage<Region>> {
       });
    }
 
-   public static final class ToPagedIterable extends BaseToPagedIterable<Region, ToPagedIterable> {
+   public static final class ToIteratorOfListPage extends BaseToIteratorOfListPage<Region, ToIteratorOfListPage> {
 
       private final GoogleComputeEngineApi api;
 
-      @Inject ToPagedIterable(GoogleComputeEngineApi api) {
+      @Inject ToIteratorOfListPage(GoogleComputeEngineApi api) {
          this.api = api;
       }
 
-      @Override protected Function<Object, IterableWithMarker<Region>> fetchNextPage(final String projectName,
+      @Override protected Function<String, ListPage<Region>> fetchNextPage(final String projectName,
             final ListOptions options) {
-         return new Function<Object, IterableWithMarker<Region>>() {
-            @Override public IterableWithMarker<Region> apply(Object input) {
-               ListPage<Region> result = api.getRegionApi(projectName).listAtMarker(input.toString(), options);
-               return IterableWithMarkers.from(result, result.nextPageToken());
+         return new Function<String, ListPage<Region>>() {
+            @Override public ListPage<Region> apply(String input) {
+               return api.getRegionApi(projectName).listAtMarker(input, options);
             }
          };
       }

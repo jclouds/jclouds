@@ -19,7 +19,7 @@ package org.jclouds.googlecomputeengine.features;
 import static org.jclouds.googlecomputeengine.GoogleComputeEngineConstants.COMPUTE_READONLY_SCOPE;
 import static org.jclouds.googlecomputeengine.GoogleComputeEngineConstants.COMPUTE_SCOPE;
 import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertTrue;
+import static org.testng.Assert.assertFalse;
 import static org.testng.AssertJUnit.assertNull;
 
 import javax.ws.rs.core.MediaType;
@@ -138,7 +138,7 @@ public class NetworkApiExpectTest extends BaseGoogleComputeEngineApiExpectTest {
       NetworkApi api = requestsSendResponses(requestForScopes(COMPUTE_READONLY_SCOPE),
               TOKEN_RESPONSE, list, operationResponse).getNetworkApi("myproject");
 
-      assertEquals(api.listFirstPage().toString(),
+      assertEquals(api.list().next().toString(),
               new ParseNetworkListTest().expected().toString());
    }
 
@@ -152,9 +152,9 @@ public class NetworkApiExpectTest extends BaseGoogleComputeEngineApiExpectTest {
 
       HttpResponse operationResponse = HttpResponse.builder().statusCode(404).build();
 
-      NetworkApi api = requestsSendResponses(requestForScopes(COMPUTE_READONLY_SCOPE),
-              TOKEN_RESPONSE, list, operationResponse).getNetworkApi("myproject");
+      NetworkApi api = requestsSendResponses(requestForScopes(COMPUTE_READONLY_SCOPE), TOKEN_RESPONSE, list,
+            operationResponse).getNetworkApi("myproject");
 
-      assertTrue(api.list().concat().isEmpty());
+      assertFalse(api.list().hasNext());
    }
 }

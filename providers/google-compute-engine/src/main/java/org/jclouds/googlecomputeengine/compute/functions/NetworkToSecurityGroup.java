@@ -16,6 +16,8 @@
  */
 package org.jclouds.googlecomputeengine.compute.functions;
 
+import static org.jclouds.googlecomputeengine.internal.ListPages.concat;
+
 import javax.annotation.Resource;
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -70,7 +72,7 @@ public class NetworkToSecurityGroup implements Function<Network, SecurityGroup> 
 
       ListOptions options = new ListOptions.Builder().filter("network eq .*/" + network.name());
 
-      for (Firewall fw : api.getFirewallApi(project.get()).list(options).concat()) {
+      for (Firewall fw : concat(api.getFirewallApi(project.get()).list(options))) {
          permBuilder.addAll(firewallToPerms.apply(fw));
       }
 

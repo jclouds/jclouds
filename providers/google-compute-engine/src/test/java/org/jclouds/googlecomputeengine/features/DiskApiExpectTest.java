@@ -19,7 +19,7 @@ package org.jclouds.googlecomputeengine.features;
 import static org.jclouds.googlecomputeengine.GoogleComputeEngineConstants.COMPUTE_READONLY_SCOPE;
 import static org.jclouds.googlecomputeengine.GoogleComputeEngineConstants.COMPUTE_SCOPE;
 import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertTrue;
+import static org.testng.Assert.assertFalse;
 import static org.testng.AssertJUnit.assertNull;
 
 import java.net.URI;
@@ -228,8 +228,7 @@ public class DiskApiExpectTest extends BaseGoogleComputeEngineApiExpectTest {
       DiskApi api = requestsSendResponses(requestForScopes(COMPUTE_READONLY_SCOPE),
               TOKEN_RESPONSE, list, operationResponse).getDiskApi("myproject");
 
-      assertEquals(api.listFirstPageInZone("us-central1-a").toString(),
-              new ParseDiskListTest().expected().toString());
+      assertEquals(api.listInZone("us-central1-a").next().toString(), new ParseDiskListTest().expected().toString());
    }
 
    public void testListDisksResponseIs4xx() {
@@ -245,6 +244,6 @@ public class DiskApiExpectTest extends BaseGoogleComputeEngineApiExpectTest {
       DiskApi api = requestsSendResponses(requestForScopes(COMPUTE_READONLY_SCOPE),
               TOKEN_RESPONSE, list, operationResponse).getDiskApi("myproject");
 
-      assertTrue(api.listInZone("us-central1-a").concat().isEmpty());
+      assertFalse(api.listInZone("us-central1-a").hasNext());
    }
 }

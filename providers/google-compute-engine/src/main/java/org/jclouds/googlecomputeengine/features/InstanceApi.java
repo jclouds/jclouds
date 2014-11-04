@@ -19,6 +19,7 @@ package org.jclouds.googlecomputeengine.features;
 import static org.jclouds.googlecomputeengine.GoogleComputeEngineConstants.COMPUTE_READONLY_SCOPE;
 import static org.jclouds.googlecomputeengine.GoogleComputeEngineConstants.COMPUTE_SCOPE;
 
+import java.util.Iterator;
 import java.util.Map;
 
 import javax.inject.Named;
@@ -32,9 +33,8 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
-import org.jclouds.Fallbacks.EmptyPagedIterableOnNotFoundOr404;
 import org.jclouds.Fallbacks.NullOnNotFoundOr404;
-import org.jclouds.collect.PagedIterable;
+import org.jclouds.googlecomputeengine.GoogleComputeEngineFallbacks.EmptyIteratorOnNotFoundOr404;
 import org.jclouds.googlecomputeengine.GoogleComputeEngineFallbacks.EmptyListPageOnNotFoundOr404;
 import org.jclouds.googlecomputeengine.binders.InstanceBinder;
 import org.jclouds.googlecomputeengine.binders.MetadataBinder;
@@ -121,23 +121,6 @@ public interface InstanceApi {
    Operation deleteInZone(@PathParam("zone") String zone, @PathParam("instance") String instanceName);
 
    /**
-    * A paged version of InstanceApi#listInZone()
-    *
-    * @param zone zone instances are in
-    * @return a Paged, Fluent Iterable that is able to fetch additional pages when required
-    * @see PagedIterable
-    * @see InstanceApi#listAtMarkerInZone(String, String, org.jclouds.googlecomputeengine.options.ListOptions)
-    */
-   @Named("Instances:list")
-   @GET
-   @Consumes(MediaType.APPLICATION_JSON)
-   @Path("/zones/{zone}/instances")
-   @OAuthScopes(COMPUTE_READONLY_SCOPE)
-   @ResponseParser(ParseInstances.class)
-   @Fallback(EmptyListPageOnNotFoundOr404.class)
-   ListPage<Instance> listFirstPageInZone(@PathParam("zone") String zone);
-
-   /**
     * Retrieves the list of instance resources available to the specified project.
     * By default the list as a maximum size of 100, if no options are provided or ListOptions#getMaxResults() has not
     * been set.
@@ -160,7 +143,7 @@ public interface InstanceApi {
                                          ListOptions listOptions);
 
    /**
-    * @see InstanceApi#listAtMarkerInZone(String, String, org.jclouds.googlecomputeengine.options.ListOptions)
+    * @see InstanceApi#listInZone(String, org.jclouds.googlecomputeengine.options.ListOptions)
     */
    @Named("Instances:list")
    @GET
@@ -168,9 +151,9 @@ public interface InstanceApi {
    @Path("/zones/{zone}/instances")
    @OAuthScopes(COMPUTE_READONLY_SCOPE)
    @ResponseParser(ParseInstances.class)
-   @Fallback(EmptyListPageOnNotFoundOr404.class)
-   ListPage<Instance> listAtMarkerInZone(@PathParam("zone") String zone,
-                                         @Nullable String marker);
+   @Transform(ParseInstances.ToIteratorOfListPage.class)
+   @Fallback(EmptyIteratorOnNotFoundOr404.class)
+   Iterator<ListPage<Instance>> listInZone(@PathParam("zone") String zone);
 
    /**
     * @see InstanceApi#listInZone(String, org.jclouds.googlecomputeengine.options.ListOptions)
@@ -181,22 +164,9 @@ public interface InstanceApi {
    @Path("/zones/{zone}/instances")
    @OAuthScopes(COMPUTE_READONLY_SCOPE)
    @ResponseParser(ParseInstances.class)
-   @Transform(ParseInstances.ToPagedIterable.class)
-   @Fallback(EmptyPagedIterableOnNotFoundOr404.class)
-   PagedIterable<Instance> listInZone(@PathParam("zone") String zone);
-
-   /**
-    * @see InstanceApi#listInZone(String, org.jclouds.googlecomputeengine.options.ListOptions)
-    */
-   @Named("Instances:list")
-   @GET
-   @Consumes(MediaType.APPLICATION_JSON)
-   @Path("/zones/{zone}/instances")
-   @OAuthScopes(COMPUTE_READONLY_SCOPE)
-   @ResponseParser(ParseInstances.class)
-   @Transform(ParseInstances.ToPagedIterable.class)
-   @Fallback(EmptyPagedIterableOnNotFoundOr404.class)
-   PagedIterable<Instance> listInZone(@PathParam("zone") String zone, ListOptions options);
+   @Transform(ParseInstances.ToIteratorOfListPage.class)
+   @Fallback(EmptyIteratorOnNotFoundOr404.class)
+   Iterator<ListPage<Instance>> listInZone(@PathParam("zone") String zone, ListOptions options);
 
    /**
     * Adds an access config to an instance's network interface.

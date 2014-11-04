@@ -19,6 +19,7 @@ package org.jclouds.googlecomputeengine.compute.config;
 import static com.google.common.collect.Iterables.transform;
 import static com.google.common.collect.Maps.uniqueIndex;
 import static org.jclouds.Constants.PROPERTY_SESSION_INTERVAL;
+import static org.jclouds.googlecomputeengine.internal.ListPages.concat;
 
 import java.net.URI;
 import java.util.Map;
@@ -212,7 +213,7 @@ public class GoogleComputeEngineServiceContextModule
               new Supplier<Map<URI, ? extends Location>>() {
                  @Override
                  public Map<URI, ? extends Location> get() {
-                    return uniqueIndex(transform(api.getZoneApi(userProject.get()).list().concat(), zoneToLocation),
+                    return uniqueIndex(transform(concat(api.getZoneApi(userProject.get()).list()), zoneToLocation),
                             new Function<Location, URI>() {
                                @Override
                                public URI apply(Location input) {
@@ -236,7 +237,7 @@ public class GoogleComputeEngineServiceContextModule
               new Supplier<Map<URI, Region>>() {
                  @Override
                  public Map<URI, Region> get() {
-                    return uniqueIndex(api.getRegionApi(userProject.get()).list().concat(),
+                    return uniqueIndex(concat(api.getRegionApi(userProject.get()).list()),
                             new Function<Region, URI>() {
                                @Override
                                public URI apply(Region input) {

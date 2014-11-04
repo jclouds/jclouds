@@ -20,6 +20,7 @@ import static org.jclouds.googlecomputeengine.GoogleComputeEngineConstants.COMPU
 import static org.jclouds.googlecomputeengine.GoogleComputeEngineConstants.COMPUTE_SCOPE;
 
 import java.net.URI;
+import java.util.Iterator;
 
 import javax.inject.Named;
 import javax.ws.rs.Consumes;
@@ -33,9 +34,8 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
-import org.jclouds.Fallbacks.EmptyPagedIterableOnNotFoundOr404;
 import org.jclouds.Fallbacks.NullOnNotFoundOr404;
-import org.jclouds.collect.PagedIterable;
+import org.jclouds.googlecomputeengine.GoogleComputeEngineFallbacks.EmptyIteratorOnNotFoundOr404;
 import org.jclouds.googlecomputeengine.GoogleComputeEngineFallbacks.EmptyListPageOnNotFoundOr404;
 import org.jclouds.googlecomputeengine.binders.FirewallBinder;
 import org.jclouds.googlecomputeengine.domain.Firewall;
@@ -149,36 +149,12 @@ public interface FirewallApi {
    Operation delete(@PathParam("firewall") String firewallName);
 
    /**
-    * @see FirewallApi#listAtMarker(String, org.jclouds.googlecomputeengine.options.ListOptions)
-    */
-   @Named("Firewalls:list")
-   @GET
-   @Consumes(MediaType.APPLICATION_JSON)
-   @Path("/global/firewalls")
-   @OAuthScopes(COMPUTE_READONLY_SCOPE)
-   @ResponseParser(ParseFirewalls.class)
-   @Fallback(EmptyListPageOnNotFoundOr404.class)
-   ListPage<Firewall> listFirstPage();
-
-   /**
-    * @see FirewallApi#listAtMarker(String, org.jclouds.googlecomputeengine.options.ListOptions)
-    */
-   @Named("Firewalls:list")
-   @GET
-   @Consumes(MediaType.APPLICATION_JSON)
-   @Path("/global/firewalls")
-   @OAuthScopes(COMPUTE_READONLY_SCOPE)
-   @ResponseParser(ParseFirewalls.class)
-   @Fallback(EmptyListPageOnNotFoundOr404.class)
-   ListPage<Firewall> listAtMarker(@QueryParam("pageToken") @Nullable String marker);
-
-   /**
     * Retrieves the list of firewall resources available to the specified project.
     * By default the list as a maximum size of 100, if no options are provided or ListOptions#getMaxResults() has not
     * been set.
     *
-    * @param marker      marks the beginning of the next list page
-    * @param listOptions listing options
+    * @param marker  marks the beginning of the next list page
+    * @param options listing options
     * @return a page of the list
     * @see ListOptions
     * @see org.jclouds.googlecomputeengine.domain.ListPage
@@ -201,15 +177,14 @@ public interface FirewallApi {
    @Path("/global/firewalls")
    @OAuthScopes(COMPUTE_READONLY_SCOPE)
    @ResponseParser(ParseFirewalls.class)
-   @Transform(ParseFirewalls.ToPagedIterable.class)
-   @Fallback(EmptyPagedIterableOnNotFoundOr404.class)
-   PagedIterable<Firewall> list();
+   @Transform(ParseFirewalls.ToIteratorOfListPage.class)
+   @Fallback(EmptyIteratorOnNotFoundOr404.class)
+   Iterator<ListPage<Firewall>> list();
 
    /**
     * A paged version of FirewallApi#list()
     *
-    * @return a Paged, Fluent Iterable that is able to fetch additional pages when required
-    * @see PagedIterable
+    * @return an Iterator that is able to fetch additional pages when required
     * @see FirewallApi#listAtMarker(String, org.jclouds.googlecomputeengine.options.ListOptions)
     */
    @Named("Firewalls:list")
@@ -218,7 +193,7 @@ public interface FirewallApi {
    @Path("/global/firewalls")
    @OAuthScopes(COMPUTE_READONLY_SCOPE)
    @ResponseParser(ParseFirewalls.class)
-   @Transform(ParseFirewalls.ToPagedIterable.class)
-   @Fallback(EmptyPagedIterableOnNotFoundOr404.class)
-   PagedIterable<Firewall> list(ListOptions options);
+   @Transform(ParseFirewalls.ToIteratorOfListPage.class)
+   @Fallback(EmptyIteratorOnNotFoundOr404.class)
+   Iterator<ListPage<Firewall>> list(ListOptions options);
 }

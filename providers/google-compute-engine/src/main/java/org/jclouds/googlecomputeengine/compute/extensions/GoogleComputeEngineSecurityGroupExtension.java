@@ -22,6 +22,7 @@ import static java.util.concurrent.TimeUnit.MILLISECONDS;
 import static org.jclouds.googlecomputeengine.GoogleComputeEngineConstants.OPERATION_COMPLETE_INTERVAL;
 import static org.jclouds.googlecomputeengine.GoogleComputeEngineConstants.OPERATION_COMPLETE_TIMEOUT;
 import static org.jclouds.googlecomputeengine.compute.strategy.CreateNodesWithGroupEncodedIntoNameThenAddToSet.DEFAULT_INTERNAL_NETWORK_RANGE;
+import static org.jclouds.googlecomputeengine.internal.ListPages.concat;
 import static org.jclouds.googlecomputeengine.predicates.NetworkFirewallPredicates.equalsIpPermission;
 import static org.jclouds.googlecomputeengine.predicates.NetworkFirewallPredicates.providesIpPermission;
 import static org.jclouds.util.Predicates2.retry;
@@ -102,7 +103,7 @@ public class GoogleComputeEngineSecurityGroupExtension implements SecurityGroupE
 
    @Override
    public Set<SecurityGroup> listSecurityGroups() {
-      return api.getNetworkApi(userProject.get()).list().concat().transform(groupConverter).toSet();
+      return FluentIterable.from(concat(api.getNetworkApi(userProject.get()).list())).transform(groupConverter).toSet();
    }
 
    @Override
@@ -172,7 +173,7 @@ public class GoogleComputeEngineSecurityGroupExtension implements SecurityGroupE
 
       ListOptions options = new ListOptions.Builder().filter("network eq .*/" + id);
 
-      FluentIterable<Firewall> fws = api.getFirewallApi(userProject.get()).list(options).concat();
+      FluentIterable<Firewall> fws = FluentIterable.from(concat(api.getFirewallApi(userProject.get()).list(options)));
 
       for (Firewall fw : fws) {
          AtomicReference<Operation> operation = Atomics
@@ -205,7 +206,8 @@ public class GoogleComputeEngineSecurityGroupExtension implements SecurityGroupE
 
       ListOptions options = new ListOptions.Builder().filter("network eq .*/" + group.getName());
 
-      if (api.getFirewallApi(userProject.get()).list(options).concat().anyMatch(providesIpPermission(ipPermission))) {
+      if (Iterables
+            .any(concat(api.getFirewallApi(userProject.get()).list(options)), providesIpPermission(ipPermission))) {
          // Permission already exists.
          return group;
       }
@@ -267,7 +269,7 @@ public class GoogleComputeEngineSecurityGroupExtension implements SecurityGroupE
 
       ListOptions options = new ListOptions.Builder().filter("network eq .*/" + group.getName());
 
-      FluentIterable<Firewall> fws = api.getFirewallApi(userProject.get()).list(options).concat();
+      FluentIterable<Firewall> fws = FluentIterable.from(concat(api.getFirewallApi(userProject.get()).list(options)));
 
       for (Firewall fw : fws) {
          if (equalsIpPermission(ipPermission).apply(fw)) {
@@ -328,13 +330,14 @@ public class GoogleComputeEngineSecurityGroupExtension implements SecurityGroupE
 
    private SecurityGroup groupForTagsInNetwork(Network nw, final Collection<String> tags) {
       ListOptions opts = new Builder().filter("network eq .*/" + nw.name());
-      List<Firewall> fws = api.getFirewallApi(userProject.get()).list(opts).concat().filter(new Predicate<Firewall>() {
-         @Override public boolean apply(final Firewall input) {
-            // If any of the targetTags on the firewall apply or the firewall has no target tags...
-            return Iterables.any(input.targetTags(), Predicates.in(tags)) || Predicates.equalTo(0)
-                  .apply(input.targetTags().size());
-         }
-      }).toList();
+      List<Firewall> fws = FluentIterable.from(concat(api.getFirewallApi(userProject.get()).list(opts)))
+            .filter(new Predicate<Firewall>() {
+               @Override public boolean apply(final Firewall input) {
+                  // If any of the targetTags on the firewall apply or the firewall has no target tags...
+                  return Iterables.any(input.targetTags(), Predicates.in(tags)) || Predicates.equalTo(0)
+                        .apply(input.targetTags().size());
+               }
+            }).toList();
 
       if (fws.isEmpty()) {
          return null;

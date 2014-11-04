@@ -19,6 +19,8 @@ package org.jclouds.googlecomputeengine.features;
 import static org.jclouds.googlecomputeengine.GoogleComputeEngineConstants.COMPUTE_READONLY_SCOPE;
 import static org.jclouds.googlecomputeengine.GoogleComputeEngineConstants.COMPUTE_SCOPE;
 
+import java.util.Iterator;
+
 import javax.inject.Named;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
@@ -28,9 +30,8 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
-import org.jclouds.Fallbacks.EmptyPagedIterableOnNotFoundOr404;
 import org.jclouds.Fallbacks.NullOnNotFoundOr404;
-import org.jclouds.collect.PagedIterable;
+import org.jclouds.googlecomputeengine.GoogleComputeEngineFallbacks.EmptyIteratorOnNotFoundOr404;
 import org.jclouds.googlecomputeengine.GoogleComputeEngineFallbacks.EmptyListPageOnNotFoundOr404;
 import org.jclouds.googlecomputeengine.domain.ListPage;
 import org.jclouds.googlecomputeengine.domain.Operation;
@@ -85,39 +86,12 @@ public interface SnapshotApi {
    Operation delete(@PathParam("snapshot") String snapshotName);
 
    /**
-    * @see org.jclouds.googlecomputeengine.features.SnapshotApi#listAtMarker(String, org.jclouds.googlecomputeengine.options.ListOptions)
-    */
-   @Named("Snapshots:list")
-   @GET
-   @Consumes(MediaType.APPLICATION_JSON)
-   @Path("/global/snapshots")
-   @OAuthScopes(COMPUTE_READONLY_SCOPE)
-   @ResponseParser(ParseSnapshots.class)
-   @Fallback(EmptyListPageOnNotFoundOr404.class)
-   ListPage<Snapshot> listFirstPage();
-
-   /**
-    * @see org.jclouds.googlecomputeengine.features.SnapshotApi#listAtMarker(String, org.jclouds.googlecomputeengine.options.ListOptions)
-    */
-   @Named("Snapshots:list")
-   @GET
-   @Consumes(MediaType.APPLICATION_JSON)
-   @Path("/global/snapshots")
-   @OAuthScopes(COMPUTE_READONLY_SCOPE)
-   @ResponseParser(ParseSnapshots.class)
-   @Fallback(EmptyListPageOnNotFoundOr404.class)
-   ListPage<Snapshot> listAtMarker(@QueryParam("pageToken") @Nullable String marker);
-
-   /**
     * Retrieves the listPage of persistent disk resources contained within the specified project and zone.
     * By default the listPage as a maximum size of 100, if no options are provided or ListOptions#getMaxResults() has
     * not been set.
     *
     * @param marker      marks the beginning of the next list page
     * @param listOptions listing options
-    * @return a page of the listPage
-    * @see org.jclouds.googlecomputeengine.options.ListOptions
-    * @see org.jclouds.googlecomputeengine.domain.ListPage
     */
    @Named("Snapshots:list")
    @GET
@@ -131,9 +105,7 @@ public interface SnapshotApi {
    /**
     * A paged version of SnapshotApi#listPage(String)
     *
-    * @return a Paged, Fluent Iterable that is able to fetch additional pages when required
-    * @see org.jclouds.collect.PagedIterable
-    * @see org.jclouds.googlecomputeengine.features.SnapshotApi#listAtMarker(String, org.jclouds.googlecomputeengine.options.ListOptions)
+    * @return an Iterator that is able to fetch additional pages when required
     */
    @Named("Snapshots:list")
    @GET
@@ -141,9 +113,9 @@ public interface SnapshotApi {
    @Path("/global/snapshots")
    @OAuthScopes(COMPUTE_READONLY_SCOPE)
    @ResponseParser(ParseSnapshots.class)
-   @Transform(ParseSnapshots.ToPagedIterable.class)
-   @Fallback(EmptyPagedIterableOnNotFoundOr404.class)
-   PagedIterable<Snapshot> list();
+   @Transform(ParseSnapshots.ToIteratorOfListPage.class)
+   @Fallback(EmptyIteratorOnNotFoundOr404.class)
+   Iterator<ListPage<Snapshot>> list();
 
    @Named("Snapshots:list")
    @GET
@@ -151,8 +123,7 @@ public interface SnapshotApi {
    @Path("/global/snapshots")
    @OAuthScopes(COMPUTE_READONLY_SCOPE)
    @ResponseParser(ParseSnapshots.class)
-   @Transform(ParseSnapshots.ToPagedIterable.class)
-   @Fallback(EmptyPagedIterableOnNotFoundOr404.class)
-   PagedIterable<Snapshot> list(ListOptions options);
-
+   @Transform(ParseSnapshots.ToIteratorOfListPage.class)
+   @Fallback(EmptyIteratorOnNotFoundOr404.class)
+   Iterator<ListPage<Snapshot>> list(ListOptions options);
 }
