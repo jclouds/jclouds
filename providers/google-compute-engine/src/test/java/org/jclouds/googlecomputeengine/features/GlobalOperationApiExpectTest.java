@@ -18,12 +18,12 @@ package org.jclouds.googlecomputeengine.features;
 
 import static org.jclouds.googlecomputeengine.GoogleComputeEngineConstants.COMPUTE_READONLY_SCOPE;
 import static org.jclouds.googlecomputeengine.GoogleComputeEngineConstants.COMPUTE_SCOPE;
+import static org.jclouds.googlecomputeengine.options.ListOptions.Builder.filter;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertNull;
 
 import org.jclouds.googlecomputeengine.internal.BaseGoogleComputeEngineApiExpectTest;
-import org.jclouds.googlecomputeengine.options.ListOptions;
 import org.jclouds.googlecomputeengine.parse.ParseGlobalOperationListTest;
 import org.jclouds.googlecomputeengine.parse.ParseGlobalOperationTest;
 import org.jclouds.http.HttpRequest;
@@ -69,6 +69,7 @@ public class GlobalOperationApiExpectTest extends BaseGoogleComputeEngineApiExpe
               .builder()
               .method("DELETE")
               .endpoint(OPERATIONS_URL_PREFIX + "/operation-1352178598164-4cdcc9d031510-4aa46279")
+              .addHeader("Accept", "application/json")
               .addHeader("Authorization", "Bearer " + TOKEN).build();
 
       HttpResponse operationResponse = HttpResponse.builder().statusCode(204).build();
@@ -84,6 +85,7 @@ public class GlobalOperationApiExpectTest extends BaseGoogleComputeEngineApiExpe
               .builder()
               .method("DELETE")
               .endpoint(OPERATIONS_URL_PREFIX + "/operation-1352178598164-4cdcc9d031510-4aa46279")
+              .addHeader("Accept", "application/json")
               .addHeader("Authorization", "Bearer " + TOKEN).build();
 
       HttpResponse operationResponse = HttpResponse.builder().statusCode(404).build();
@@ -131,9 +133,9 @@ public class GlobalOperationApiExpectTest extends BaseGoogleComputeEngineApiExpe
       GlobalOperationApi globalOperationApi = requestsSendResponses(requestForScopes(COMPUTE_READONLY_SCOPE),
               TOKEN_RESPONSE, get, operationResponse).getGlobalOperationApi("myproject");
 
-      assertEquals(globalOperationApi.listAtMarker("CglPUEVSQVRJT04SOzU5MDQyMTQ4Nzg1Mi5vcGVyYXRpb24tMTM1Mj" +
+      assertEquals(globalOperationApi.listPage("CglPUEVSQVRJT04SOzU5MDQyMTQ4Nzg1Mi5vcGVyYXRpb24tMTM1Mj" +
               "I0NDI1ODAzMC00Y2RkYmU2YTJkNmIwLWVkMzIyMzQz",
-              new ListOptions.Builder().filter("status eq done").maxResults(3)).toString(),
+              filter("status eq done").maxResults(3)).toString(),
               new ParseGlobalOperationListTest().expected().toString());
    }
 

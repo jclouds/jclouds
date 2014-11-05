@@ -16,6 +16,7 @@
  */
 package org.jclouds.googlecomputeengine.features;
 
+import static org.jclouds.googlecomputeengine.options.ListOptions.Builder.filter;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotEquals;
 import static org.testng.Assert.assertNotNull;
@@ -24,7 +25,6 @@ import org.jclouds.googlecomputeengine.domain.HttpHealthCheck;
 import org.jclouds.googlecomputeengine.domain.ListPage;
 import org.jclouds.googlecomputeengine.internal.BaseGoogleComputeEngineApiLiveTest;
 import org.jclouds.googlecomputeengine.options.HttpHealthCheckCreationOptions;
-import org.jclouds.googlecomputeengine.options.ListOptions;
 import org.testng.annotations.Test;
 
 import com.google.common.collect.Iterables;
@@ -69,8 +69,7 @@ public class HttpHealthCheckApiLiveTest extends BaseGoogleComputeEngineApiLiveTe
 
    @Test(groups = "live", dependsOnMethods = "testInsertHttpHealthCheck")
    public void testListHttpHealthCheck() {
-      ListPage<HttpHealthCheck> httpHealthCheck = api().list(new ListOptions.Builder()
-              .filter("name eq " + HTTP_HEALTH_CHECK_NAME));
+      ListPage<HttpHealthCheck> httpHealthCheck = api().list(filter("name eq " + HTTP_HEALTH_CHECK_NAME)).next();
       assertEquals(Iterables.size(httpHealthCheck), 1);
    }
 

@@ -16,6 +16,7 @@
  */
 package org.jclouds.googlecomputeengine.features;
 
+import static org.jclouds.googlecomputeengine.options.ListOptions.Builder.maxResults;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertTrue;
@@ -25,7 +26,6 @@ import java.util.Iterator;
 import org.jclouds.googlecomputeengine.domain.DiskType;
 import org.jclouds.googlecomputeengine.domain.ListPage;
 import org.jclouds.googlecomputeengine.internal.BaseGoogleComputeEngineApiLiveTest;
-import org.jclouds.googlecomputeengine.options.ListOptions;
 import org.testng.annotations.Test;
 
 public class DiskTypeApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
@@ -33,14 +33,13 @@ public class DiskTypeApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
    private DiskType diskType;
 
    private DiskTypeApi api() {
-      return api.getDiskTypeApi(userProject.get());
+      return api.getDiskTypeApi(userProject.get(), DEFAULT_ZONE_NAME);
    }
 
    @Test(groups = "live")
    public void testDiskType() {
 
-      Iterator<ListPage<DiskType>> pageIterator = api().listInZone(DEFAULT_ZONE_NAME,
-            new ListOptions.Builder().maxResults(1));
+      Iterator<ListPage<DiskType>> pageIterator = api().list(maxResults(1));
       assertTrue(pageIterator.hasNext());
 
       ListPage<DiskType> page = pageIterator.next();
@@ -52,7 +51,7 @@ public class DiskTypeApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
 
    @Test(groups = "live", dependsOnMethods = "testDiskType")
    public void testGetDiskType() {
-      DiskType diskType = api().getInZone(DEFAULT_ZONE_NAME, this.diskType.name());
+      DiskType diskType = api().get(this.diskType.name());
       assertNotNull(diskType);
       assertDiskTypeEquals(diskType, this.diskType);
    }

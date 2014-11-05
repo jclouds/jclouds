@@ -16,6 +16,8 @@
  */
 package org.jclouds.googlecomputeengine.features;
 
+import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
+import static org.jclouds.Fallbacks.VoidOnNotFoundOr404;
 import static org.jclouds.googlecomputeengine.GoogleComputeEngineConstants.COMPUTE_READONLY_SCOPE;
 import static org.jclouds.googlecomputeengine.GoogleComputeEngineConstants.COMPUTE_SCOPE;
 
@@ -28,7 +30,6 @@ import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.QueryParam;
-import javax.ws.rs.core.MediaType;
 
 import org.jclouds.Fallbacks.NullOnNotFoundOr404;
 import org.jclouds.googlecomputeengine.GoogleComputeEngineFallbacks.EmptyIteratorOnNotFoundOr404;
@@ -46,91 +47,64 @@ import org.jclouds.rest.annotations.ResponseParser;
 import org.jclouds.rest.annotations.SkipEncoding;
 import org.jclouds.rest.annotations.Transform;
 
-/**
- * Provides access to Operations via their REST API.
- */
 @SkipEncoding({'/', '='})
 @RequestFilters(OAuthAuthenticationFilter.class)
+@Path("/operations")
+@Consumes(APPLICATION_JSON)
 public interface RegionOperationApi {
 
-   /**
-    * Retrieves the specified operation resource.
-    *
-    * @param region        the region the operation is in
-    * @param operationName name of the operation resource to return.
-    * @return If successful, this method returns an Operation resource
-    */
+   /** Returns an operation by name or null if not found. */
    @Named("RegionOperations:get")
    @GET
-   @Path("/regions/{region}/operations/{operation}")
+   @Path("/{operation}")
    @OAuthScopes(COMPUTE_READONLY_SCOPE)
-   @Consumes(MediaType.APPLICATION_JSON)
    @Fallback(NullOnNotFoundOr404.class)
-   Operation getInRegion(@PathParam("region") String region, @PathParam("operation") String operationName);
+   @Nullable
+   Operation get(@PathParam("operation") String operation);
 
-   /**
-    * Deletes the specified operation resource.
-    *
-    * @param region        the region the operation is in
-    * @param operationName name of the operation resource to delete.
-    */
+   /** Deletes an operation by name. */
    @Named("RegionOperations:delete")
    @DELETE
-   @Path("/regions/{region}/operations/{operation}")
+   @Path("/{operation}")
    @OAuthScopes(COMPUTE_SCOPE)
-   @Fallback(NullOnNotFoundOr404.class)
-   void deleteInRegion(@PathParam("region") String region, @PathParam("operation") String operationName);
+   @Fallback(VoidOnNotFoundOr404.class)
+   void delete(@PathParam("operation") String operation);
 
    /**
-    * Retrieves the listFirstPage of operation resources contained within the specified project.
-    * By default the listFirstPage as a maximum size of 100, if no options are provided or ListOptions#getMaxResults()
-    * has not been set.
+    * Retrieves the list of operation resources available to the specified project.
+    * By default the list as a maximum size of 100, if no options are provided or ListOptions#getMaxResults() has not
+    * been set.
     *
-    * @param region      the region to list in
-    * @param marker      marks the beginning of the next list page
+    * @param token       marks the beginning of the next list page
     * @param listOptions listing options
-    * @return a page of the list, starting at marker
-    * @see org.jclouds.googlecomputeengine.options.ListOptions
-    * @see org.jclouds.googlecomputeengine.domain.ListPage
+    * @return a page of the list
     */
    @Named("RegionOperations:list")
    @GET
-   @Path("/regions/{region}/operations")
    @OAuthScopes(COMPUTE_READONLY_SCOPE)
-   @Consumes(MediaType.APPLICATION_JSON)
    @ResponseParser(ParseRegionOperations.class)
    @Fallback(EmptyListPageOnNotFoundOr404.class)
-   ListPage<Operation> listAtMarkerInRegion(@PathParam("region") String region,
-                                            @QueryParam("pageToken") @Nullable String marker,
-                                            ListOptions listOptions);
+   ListPage<Operation> listPage(@Nullable @QueryParam("pageToken") String token, ListOptions listOptions);
 
    /**
-    * @see RegionOperationApi#listInRegion(String, org.jclouds.googlecomputeengine.options.ListOptions)
+    * @see #list(org.jclouds.googlecomputeengine.options.ListOptions)
     */
    @Named("RegionOperations:list")
    @GET
-   @Path("/regions/{region}/operations")
    @OAuthScopes(COMPUTE_READONLY_SCOPE)
-   @Consumes(MediaType.APPLICATION_JSON)
    @ResponseParser(ParseRegionOperations.class)
    @Transform(ParseRegionOperations.ToIteratorOfListPage.class)
    @Fallback(EmptyIteratorOnNotFoundOr404.class)
-   Iterator<ListPage<Operation>> listInRegion(@PathParam("region") String region);
+   Iterator<ListPage<Operation>> list();
 
    /**
-    * A paged version of RegionOperationApi#listFirstPage(String)
-    *
-    * @return an Iterator that is able to fetch additional pages when required
-    * @see org.jclouds.collect.PagedIterable
-    * @see RegionOperationApi#listAtMarkerInRegion(String, String, org.jclouds.googlecomputeengine.options.ListOptions)
+    * @see #list(org.jclouds.googlecomputeengine.options.ListOptions)
     */
    @Named("RegionOperations:list")
    @GET
-   @Path("/regions/{region}/operations")
    @OAuthScopes(COMPUTE_READONLY_SCOPE)
-   @Consumes(MediaType.APPLICATION_JSON)
    @ResponseParser(ParseRegionOperations.class)
    @Transform(ParseRegionOperations.ToIteratorOfListPage.class)
    @Fallback(EmptyIteratorOnNotFoundOr404.class)
-   Iterator<ListPage<Operation>> listInRegion(@PathParam("region") String region, ListOptions listOptions);
+   Iterator<ListPage<Operation>> list(ListOptions options);
 }

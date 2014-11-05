@@ -23,7 +23,7 @@ import org.jclouds.http.options.BaseHttpRequestOptions;
 /**
  * Allows to optionally specify a filter, max results and a page token for <code>listFirstPage()</code> REST methods.
  */
-public class ListOptions extends BaseHttpRequestOptions {
+public final class ListOptions extends BaseHttpRequestOptions {
 
    /**
     * Optional. Filter expression for filtering listed resources, in the form filter={expression}. Your {expression}
@@ -70,7 +70,7 @@ public class ListOptions extends BaseHttpRequestOptions {
       return this;
    }
 
-   public static class Builder {
+   public static final class Builder {
 
       /**
        * @see ListOptions#filter(String)
@@ -84,6 +84,9 @@ public class ListOptions extends BaseHttpRequestOptions {
        */
       public static ListOptions maxResults(Integer maxResults) {
          return new ListOptions().maxResults(maxResults);
+      }
+
+      private Builder(){
       }
    }
 }

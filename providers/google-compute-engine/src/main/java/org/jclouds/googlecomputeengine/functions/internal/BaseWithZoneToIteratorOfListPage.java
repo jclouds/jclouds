@@ -20,6 +20,7 @@ import static com.google.common.base.Predicates.instanceOf;
 import static com.google.common.collect.Iterables.tryFind;
 
 import java.util.Iterator;
+import java.util.List;
 
 import org.jclouds.googlecomputeengine.domain.ListPage;
 import org.jclouds.googlecomputeengine.options.ListOptions;
@@ -33,7 +34,7 @@ import com.google.common.base.Optional;
 import com.google.common.collect.Iterators;
 
 @Beta
-public abstract class BaseWithZoneToIteratorOfListPage<T, I extends BaseWithZoneToIteratorOfListPage<T, I>>
+abstract class BaseWithZoneToIteratorOfListPage<T, I extends BaseWithZoneToIteratorOfListPage<T, I>>
       implements Function<ListPage<T>, Iterator<ListPage<T>>>, InvocationContext<I> {
 
    private GeneratedHttpRequest request;
@@ -43,20 +44,15 @@ public abstract class BaseWithZoneToIteratorOfListPage<T, I extends BaseWithZone
          return Iterators.singletonIterator(input);
       }
 
-      Optional<Object> project = tryFind(request.getCaller().get().getArgs(), instanceOf(String.class));
+      List<Object> callerArgs = request.getCaller().get().getArgs();
 
-      Optional<Object> zone = tryFind(request.getInvocation().getArgs(), instanceOf(String.class));
+      assert callerArgs.size() == 2 : String.format("programming error, method %s should have 2 args: project, zone",
+            request.getCaller().get().getInvokable());
 
       Optional<Object> listOptions = tryFind(request.getInvocation().getArgs(), instanceOf(ListOptions.class));
 
-      assert project.isPresent() : String.format("programming error, method %s should have a string param for the "
-              + "project", request.getCaller().get().getInvokable());
-
-      assert zone.isPresent() : String.format("programming error, method %s should have a string param for the "
-              + "zone", request.getCaller().get().getInvokable());
-
       return new AdvancingIterator<T>(input,
-            fetchNextPage(project.get().toString(), zone.get().toString(), (ListOptions) listOptions.orNull()));
+            fetchNextPage((String) callerArgs.get(0), (String) callerArgs.get(1), (ListOptions) listOptions.orNull()));
    }
 
    protected abstract Function<String, ListPage<T>> fetchNextPage(String projectName,

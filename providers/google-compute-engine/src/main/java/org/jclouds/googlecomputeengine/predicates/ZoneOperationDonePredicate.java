@@ -52,7 +52,7 @@ public final class ZoneOperationDonePredicate implements Predicate<AtomicReferen
       checkNotNull(input.get(), "input");
       URI zone = checkNotNull(input.get().zone(), "zone of %s", input.get());
       String locationId = checkNotNull(zones.get().get(zone), "location of %s", zone).getId();
-      Operation current = api.getZoneOperationApi(project.get()).getInZone(locationId, input.get().name());
+      Operation current = api.getZoneOperationApi(project.get(), locationId).get(input.get().name());
       switch (current.status()) {
          case DONE:
             input.set(current);

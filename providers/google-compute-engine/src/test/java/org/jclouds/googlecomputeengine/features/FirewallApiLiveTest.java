@@ -17,6 +17,7 @@
 package org.jclouds.googlecomputeengine.features;
 
 import static com.google.common.collect.Iterables.getOnlyElement;
+import static org.jclouds.googlecomputeengine.options.ListOptions.Builder.filter;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
 
@@ -27,7 +28,6 @@ import org.jclouds.googlecomputeengine.domain.Firewall;
 import org.jclouds.googlecomputeengine.domain.ListPage;
 import org.jclouds.googlecomputeengine.internal.BaseGoogleComputeEngineApiLiveTest;
 import org.jclouds.googlecomputeengine.options.FirewallOptions;
-import org.jclouds.googlecomputeengine.options.ListOptions;
 import org.testng.annotations.Test;
 
 import com.google.common.collect.ImmutableList;
@@ -110,8 +110,7 @@ public class FirewallApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
    @Test(groups = "live", dependsOnMethods = "testGetFirewall")
    public void testListFirewall() {
 
-      Iterator<ListPage<Firewall>> firewalls = api().list(new ListOptions.Builder()
-              .filter("name eq " + FIREWALL_NAME));
+      Iterator<ListPage<Firewall>> firewalls = api().list(filter("name eq " + FIREWALL_NAME));
 
       List<Firewall> firewallsAsList = firewalls.next();
 

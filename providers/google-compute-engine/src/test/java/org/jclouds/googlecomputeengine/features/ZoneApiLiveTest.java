@@ -16,6 +16,7 @@
  */
 package org.jclouds.googlecomputeengine.features;
 
+import static org.jclouds.googlecomputeengine.options.ListOptions.Builder.maxResults;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertTrue;
@@ -26,7 +27,6 @@ import java.util.List;
 import org.jclouds.googlecomputeengine.domain.ListPage;
 import org.jclouds.googlecomputeengine.domain.Zone;
 import org.jclouds.googlecomputeengine.internal.BaseGoogleComputeEngineApiLiveTest;
-import org.jclouds.googlecomputeengine.options.ListOptions;
 import org.testng.annotations.Test;
 
 public class ZoneApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
@@ -39,8 +39,7 @@ public class ZoneApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
 
    @Test(groups = "live")
    public void testListZone() {
-
-      Iterator<ListPage<Zone>> pageIterator = api().list(new ListOptions.Builder().maxResults(1));
+      Iterator<ListPage<Zone>> pageIterator = api().list(maxResults(1));
       assertTrue(pageIterator.hasNext());
 
       List<Zone> zoneAsList = pageIterator.next();

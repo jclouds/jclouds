@@ -67,10 +67,9 @@ public class MachineTypeApiExpectTest extends BaseGoogleComputeEngineApiExpectTe
               .payload(payloadFromResource("/machinetype.json")).build();
 
       MachineTypeApi machineTypeApi = requestsSendResponses(requestForScopes(COMPUTE_READONLY_SCOPE),
-              TOKEN_RESPONSE, get, operationResponse).getMachineTypeApi("myproject");
+              TOKEN_RESPONSE, get, operationResponse).getMachineTypeApi("myproject", "us-central1-a");
 
-      assertEquals(machineTypeApi.getInZone("us-central1-a", "n1-standard-1"),
-              new ParseMachineTypeTest().expected());
+      assertEquals(machineTypeApi.get("n1-standard-1"), new ParseMachineTypeTest().expected());
    }
 
    public void testGetMachineTypeResponseIs4xx() throws Exception {
@@ -84,28 +83,27 @@ public class MachineTypeApiExpectTest extends BaseGoogleComputeEngineApiExpectTe
       HttpResponse operationResponse = HttpResponse.builder().statusCode(404).build();
 
       MachineTypeApi machineTypeApi = requestsSendResponses(requestForScopes(COMPUTE_READONLY_SCOPE),
-              TOKEN_RESPONSE, get, operationResponse).getMachineTypeApi("myproject");
+              TOKEN_RESPONSE, get, operationResponse).getMachineTypeApi("myproject", "us-central1-a");
 
-      assertNull(machineTypeApi.getInZone("us-central1-a", "n1-standard-1"));
+      assertNull(machineTypeApi.get("n1-standard-1"));
    }
 
    public void testListMachineTypeNoOptionsResponseIs2xx() throws Exception {
 
       MachineTypeApi machineTypeApi = requestsSendResponses(requestForScopes(COMPUTE_READONLY_SCOPE),
               TOKEN_RESPONSE, LIST_MACHINE_TYPES_REQUEST, LIST_MACHINE_TYPES_RESPONSE).getMachineTypeApi
-              ("myproject");
+              ("myproject", "us-central1-a");
 
-      assertEquals(machineTypeApi.listInZone("us-central1-a").next().toString(),
-              new ParseMachineTypeListTest().expected().toString());
+      assertEquals(machineTypeApi.list().next().toString(), new ParseMachineTypeListTest().expected().toString());
    }
 
    public void testLisOperationWithPaginationOptionsResponseIs4xx() {
 
       HttpResponse operationResponse = HttpResponse.builder().statusCode(404).build();
 
-      MachineTypeApi machineTypeApi = requestsSendResponses(requestForScopes(COMPUTE_READONLY_SCOPE),
-              TOKEN_RESPONSE, LIST_MACHINE_TYPES_REQUEST, operationResponse).getMachineTypeApi("myproject");
+      MachineTypeApi machineTypeApi = requestsSendResponses(requestForScopes(COMPUTE_READONLY_SCOPE), TOKEN_RESPONSE,
+            LIST_MACHINE_TYPES_REQUEST, operationResponse).getMachineTypeApi("myproject", "us-central1-a");
 
-      assertFalse(machineTypeApi.listInZone("us-central1-a").hasNext());
+      assertFalse(machineTypeApi.list().hasNext());
    }
 }

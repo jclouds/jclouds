@@ -17,6 +17,7 @@
 package org.jclouds.googlecomputeengine.features;
 
 import static org.jclouds.googlecomputeengine.features.DiskApiLiveTest.TIME_WAIT;
+import static org.jclouds.googlecomputeengine.options.ListOptions.Builder.filter;
 import static org.testng.Assert.assertEquals;
 
 import java.util.Iterator;
@@ -26,7 +27,6 @@ import org.jclouds.googlecomputeengine.domain.Disk;
 import org.jclouds.googlecomputeengine.domain.ListPage;
 import org.jclouds.googlecomputeengine.domain.Snapshot;
 import org.jclouds.googlecomputeengine.internal.BaseGoogleComputeEngineApiLiveTest;
-import org.jclouds.googlecomputeengine.options.ListOptions;
 import org.testng.annotations.Test;
 
 public class SnapshotApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
@@ -40,16 +40,15 @@ public class SnapshotApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
    }
 
    private DiskApi diskApi() {
-      return api.getDiskApi(userProject.get());
+      return api.getDiskApi(userProject.get(), DEFAULT_ZONE_NAME);
    }
 
    @Test(groups = "live")
    public void testCreateSnapshot() {
-      assertZoneOperationDoneSuccessfully(diskApi().createInZone(DISK_NAME, 1, DEFAULT_ZONE_NAME), TIME_WAIT);
-      disk = diskApi().getInZone(DEFAULT_ZONE_NAME, DISK_NAME);
+      assertZoneOperationDoneSuccessfully(diskApi().create(DISK_NAME, 1), TIME_WAIT);
+      disk = diskApi().get(DISK_NAME);
 
-      assertZoneOperationDoneSuccessfully(diskApi().createSnapshotInZone(DEFAULT_ZONE_NAME, DISK_NAME, SNAPSHOT_NAME),
-            TIME_WAIT);
+      assertZoneOperationDoneSuccessfully(diskApi().createSnapshot(DISK_NAME, SNAPSHOT_NAME), TIME_WAIT);
    }
 
    @Test(groups = "live", dependsOnMethods = "testCreateSnapshot")
@@ -62,9 +61,7 @@ public class SnapshotApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
 
    @Test(groups = "live", dependsOnMethods = "testGetSnapshot")
    public void testListSnapshot() {
-
-      Iterator<ListPage<Snapshot>> snapshots = api().list(new ListOptions.Builder()
-              .filter("name eq " + SNAPSHOT_NAME));
+      Iterator<ListPage<Snapshot>> snapshots = api().list(filter("name eq " + SNAPSHOT_NAME));
 
       List<Snapshot> snapshotsAsList = snapshots.next();
 
@@ -75,8 +72,7 @@ public class SnapshotApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
 
    @Test(groups = "live", dependsOnMethods = "testListSnapshot")
    public void testDeleteDisk() {
-
-      assertZoneOperationDoneSuccessfully(diskApi().deleteInZone(DEFAULT_ZONE_NAME, DISK_NAME), TIME_WAIT);
+      assertZoneOperationDoneSuccessfully(diskApi().delete(DISK_NAME), TIME_WAIT);
       assertGlobalOperationDoneSucessfully(api().delete(SNAPSHOT_NAME), TIME_WAIT);
    }
 

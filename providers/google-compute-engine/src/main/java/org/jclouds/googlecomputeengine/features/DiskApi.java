@@ -16,6 +16,7 @@
  */
 package org.jclouds.googlecomputeengine.features;
 
+import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 import static org.jclouds.googlecomputeengine.GoogleComputeEngineConstants.COMPUTE_READONLY_SCOPE;
 import static org.jclouds.googlecomputeengine.GoogleComputeEngineConstants.COMPUTE_SCOPE;
 
@@ -30,7 +31,6 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
-import javax.ws.rs.core.MediaType;
 
 import org.jclouds.Fallbacks.NullOnNotFoundOr404;
 import org.jclouds.googlecomputeengine.GoogleComputeEngineFallbacks.EmptyIteratorOnNotFoundOr404;
@@ -54,141 +54,66 @@ import org.jclouds.rest.annotations.SkipEncoding;
 import org.jclouds.rest.annotations.Transform;
 import org.jclouds.rest.binders.BindToJsonPayload;
 
-/**
- * Provides access to Disks via their REST API.
- */
 @SkipEncoding({'/', '='})
 @RequestFilters(OAuthAuthenticationFilter.class)
+@Path("/disks")
+@Consumes(APPLICATION_JSON)
 public interface DiskApi {
 
-   /**
-    * Returns the specified persistent disk resource.
-    *
-    * @param zone     Name of the zone the disk is in.
-    * @param diskName name of the persistent disk resource to return.
-    * @return a Disk resource.
-    */
+   /** Returns a persistent disk by name or null if not found. */
    @Named("Disks:get")
    @GET
-   @Consumes(MediaType.APPLICATION_JSON)
-   @Path("/zones/{zone}/disks/{disk}")
+   @Path("/{disk}")
    @OAuthScopes(COMPUTE_READONLY_SCOPE)
    @Fallback(NullOnNotFoundOr404.class)
    @Nullable
-   Disk getInZone(@PathParam("zone") String zone, @PathParam("disk") String diskName);
+   Disk get(@PathParam("disk") String disk);
 
    /**
     * Creates a persistent disk resource in the specified project specifying the size of the disk.
     *
     * @param diskName the name of disk.
     * @param sizeGb   the size of the disk
-    * @param zone     the name of the zone where the disk is to be created.
     * @return an Operation resource. To check on the status of an operation, poll the Operations resource returned to
     *         you, and look for the status field.
     */
    @Named("Disks:insert")
    @POST
-   @Consumes(MediaType.APPLICATION_JSON)
-   @Produces(MediaType.APPLICATION_JSON)
-   @Path("/zones/{zone}/disks")
-   @OAuthScopes({COMPUTE_SCOPE})
+   @Produces(APPLICATION_JSON)
+   @OAuthScopes(COMPUTE_SCOPE)
    @MapBinder(BindToJsonPayload.class)
-   Operation createInZone(@PayloadParam("name") String diskName,
-                          @PayloadParam("sizeGb") int sizeGb,
-                          @PathParam("zone") String zone);
+   Operation create(@PayloadParam("name") String diskName, @PayloadParam("sizeGb") int sizeGb);
 
    /**
-    * Creates a persistent disk resource, in the specified project,
-    * specifying the size of the disk and other options.
+    * Creates a persistent disk resource, in the specified project, specifying the size of the disk and other options.
     *
     * @param diskName the name of disk.
     * @param sizeGb   the size of the disk
-    * @param zone     the name of the zone where the disk is to be created.
     * @param options the options of the disk to create.
     * @return an Operation resource. To check on the status of an operation, poll the Operations resource returned to
     *         you, and look for the status field.
     */
    @Named("Disks:insert")
    @POST
-   @Consumes(MediaType.APPLICATION_JSON)
-   @Produces(MediaType.APPLICATION_JSON)
-   @Path("/zones/{zone}/disks")
-   @OAuthScopes({COMPUTE_SCOPE})
+   @Produces(APPLICATION_JSON)
+   @OAuthScopes(COMPUTE_SCOPE)
    @MapBinder(DiskCreationBinder.class)
-   Operation createInZone(@PayloadParam("name") String diskName,
-                          @PayloadParam("sizeGb") int sizeGb,
-                          @PathParam("zone") String zone,
-                          @PayloadParam("options") DiskCreationOptions options);
+   Operation create(@PayloadParam("name") String diskName,
+                    @PayloadParam("sizeGb") int sizeGb,
+                    @PayloadParam("options") DiskCreationOptions options);
 
-   /**
-    * Deletes the specified persistent disk resource.
-    *
-    * @param zone     the zone the disk is in.
-    * @param diskName name of the persistent disk resource to delete.
-    * @return an Operation resource. To check on the status of an operation, poll the Operations resource returned to
-    *         you, and look for the status field.
-    */
+   /** Deletes a persistent disk by name and returns the operation in progress, or null if not found. */
    @Named("Disks:delete")
    @DELETE
-   @Consumes(MediaType.APPLICATION_JSON)
-   @Path("/zones/{zone}/disks/{disk}")
+   @Path("/{disk}")
    @OAuthScopes(COMPUTE_SCOPE)
    @Fallback(NullOnNotFoundOr404.class)
    @Nullable
-   Operation deleteInZone(@PathParam("zone") String zone, @PathParam("disk") String diskName);
-
-   /**
-    * Retrieves the listPage of persistent disk resources contained within the specified project and zone.
-    * By default the listPage as a maximum size of 100, if no options are provided or ListOptions#getMaxResults() has
-    * not been set.
-    *
-    * @param zone        the zone to search in
-    * @param marker      marks the beginning of the next list page
-    * @param listOptions listing options
-    * @return a page of the listPage
-    * @see ListOptions
-    * @see org.jclouds.googlecomputeengine.domain.ListPage
-    */
-   @Named("Disks:list")
-   @GET
-   @Consumes(MediaType.APPLICATION_JSON)
-   @Path("/zones/{zone}/disks")
-   @OAuthScopes(COMPUTE_READONLY_SCOPE)
-   @ResponseParser(ParseDisks.class)
-   @Fallback(EmptyListPageOnNotFoundOr404.class)
-   ListPage<Disk> listAtMarkerInZone(@PathParam("zone") String zone, @QueryParam("pageToken") @Nullable String marker, ListOptions listOptions);
-
-   /**
-    * A paged version of DiskApi#listPageInZone(String)
-    *
-    * @param zone the zone to list in
-    * @return an Iterator that is able to fetch additional pages when required
-    * @see DiskApi#listAtMarkerInZone(String, String, org.jclouds.googlecomputeengine.options.ListOptions)
-    */
-   @Named("Disks:list")
-   @GET
-   @Consumes(MediaType.APPLICATION_JSON)
-   @Path("/zones/{zone}/disks")
-   @OAuthScopes(COMPUTE_READONLY_SCOPE)
-   @ResponseParser(ParseDisks.class)
-   @Transform(ParseDisks.ToIteratorOfListPage.class)
-   @Fallback(EmptyIteratorOnNotFoundOr404.class)
-   Iterator<ListPage<Disk>> listInZone(@PathParam("zone") String zone);
-
-   @Named("Disks:list")
-   @GET
-   @Consumes(MediaType.APPLICATION_JSON)
-   @Path("/zones/{zone}/disks")
-   @OAuthScopes(COMPUTE_READONLY_SCOPE)
-   @ResponseParser(ParseDisks.class)
-   @Transform(ParseDisks.ToIteratorOfListPage.class)
-   @Fallback(EmptyIteratorOnNotFoundOr404.class)
-   Iterator<ListPage<Disk>> listInZone(@PathParam("zone") String zone, ListOptions options);
+   Operation delete(@PathParam("disk") String disk);
 
    /**
     * Create a snapshot of a given disk in a zone.
     *
-    * @param zone the zone the disk is in.
     * @param diskName the name of the disk.
     * @param snapshotName the name for the snapshot to be created.
     *
@@ -197,12 +122,46 @@ public interface DiskApi {
     */
    @Named("Disks:createSnapshot")
    @POST
-   @Consumes(MediaType.APPLICATION_JSON)
-   @Path("/zones/{zone}/disks/{disk}/createSnapshot")
+   @Path("/{disk}/createSnapshot")
    @OAuthScopes(COMPUTE_SCOPE)
    @MapBinder(BindToJsonPayload.class)
-   Operation createSnapshotInZone(@PathParam("zone") String zone,
-                                  @PathParam("disk") String diskName,
-                                  @PayloadParam("name") String snapshotName);
+   Operation createSnapshot(@PathParam("disk") String diskName, @PayloadParam("name") String snapshotName);
 
+   /**
+    * Retrieves the list of persistent disk resources available to the specified project.
+    * By default the list as a maximum size of 100, if no options are provided or ListOptions#getMaxResults() has not
+    * been set.
+    *
+    * @param token       marks the beginning of the next list page
+    * @param listOptions listing options
+    * @return a page of the list
+    */
+   @Named("Disks:list")
+   @GET
+   @OAuthScopes(COMPUTE_READONLY_SCOPE)
+   @ResponseParser(ParseDisks.class)
+   @Fallback(EmptyListPageOnNotFoundOr404.class)
+   ListPage<Disk> listPage(@Nullable @QueryParam("pageToken") String token, ListOptions listOptions);
+
+   /**
+    * @see #list(org.jclouds.googlecomputeengine.options.ListOptions)
+    */
+   @Named("Disks:list")
+   @GET
+   @OAuthScopes(COMPUTE_READONLY_SCOPE)
+   @ResponseParser(ParseDisks.class)
+   @Transform(ParseDisks.ToIteratorOfListPage.class)
+   @Fallback(EmptyIteratorOnNotFoundOr404.class)
+   Iterator<ListPage<Disk>> list();
+
+   /**
+    * @see #list(org.jclouds.googlecomputeengine.options.ListOptions)
+    */
+   @Named("Disks:list")
+   @GET
+   @OAuthScopes(COMPUTE_READONLY_SCOPE)
+   @ResponseParser(ParseDisks.class)
+   @Transform(ParseDisks.ToIteratorOfListPage.class)
+   @Fallback(EmptyIteratorOnNotFoundOr404.class)
+   Iterator<ListPage<Disk>> list(ListOptions options);
 }

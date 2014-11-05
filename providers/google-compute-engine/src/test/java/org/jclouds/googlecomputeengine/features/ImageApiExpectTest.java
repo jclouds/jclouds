@@ -168,7 +168,7 @@ public class ImageApiExpectTest extends BaseGoogleComputeEngineApiExpectTest {
       ImageApi imageApi = requestsSendResponses(requestForScopes(COMPUTE_SCOPE),
             TOKEN_RESPONSE, createImage, createImageResponse).getImageApi("myproject");
 
-      assertEquals(imageApi.createImageFromPD("my-image", BASE_URL + "/myproject/zones/us-central1-a/disks/mydisk"),
+      assertEquals(imageApi.createFromDisk("my-image", BASE_URL + "/myproject/zones/us-central1-a/disks/mydisk"),
             new ParseOperationTest().expected());
    }
 
@@ -188,6 +188,6 @@ public class ImageApiExpectTest extends BaseGoogleComputeEngineApiExpectTest {
       ImageApi imageApi = requestsSendResponses(requestForScopes(COMPUTE_SCOPE),
               TOKEN_RESPONSE, createImage, createImageResponse).getImageApi("myproject");
 
-      imageApi.createImageFromPD("my-image", BASE_URL + "/myproject/zones/us-central1-a/disks/mydisk");
+      imageApi.createFromDisk("my-image", BASE_URL + "/myproject/zones/us-central1-a/disks/mydisk");
    }
 }

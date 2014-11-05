@@ -18,16 +18,11 @@ package org.jclouds.googlecomputeengine.binders;
 
 import javax.inject.Inject;
 
-import org.jclouds.json.Json;
-
 /**
  * Binder used for adding and deleting healthChecks from a target pool.
  */
 public final class TargetPoolChangeHealthChecksBinder extends TargetPoolMapofListofMapGenericBinder {
-
-   @Inject TargetPoolChangeHealthChecksBinder(Json jsonBinder) {
-      super(jsonBinder);
-      super.outerString("healthChecks");
-      super.innerString("healthCheck");
+   @Inject TargetPoolChangeHealthChecksBinder() {
+      super("healthChecks", "healthCheck");
    }
 }

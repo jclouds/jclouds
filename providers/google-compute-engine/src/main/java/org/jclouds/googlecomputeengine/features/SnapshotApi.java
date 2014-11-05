@@ -16,6 +16,7 @@
  */
 package org.jclouds.googlecomputeengine.features;
 
+import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 import static org.jclouds.googlecomputeengine.GoogleComputeEngineConstants.COMPUTE_READONLY_SCOPE;
 import static org.jclouds.googlecomputeengine.GoogleComputeEngineConstants.COMPUTE_SCOPE;
 
@@ -28,7 +29,6 @@ import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.QueryParam;
-import javax.ws.rs.core.MediaType;
 
 import org.jclouds.Fallbacks.NullOnNotFoundOr404;
 import org.jclouds.googlecomputeengine.GoogleComputeEngineFallbacks.EmptyIteratorOnNotFoundOr404;
@@ -47,80 +47,62 @@ import org.jclouds.rest.annotations.ResponseParser;
 import org.jclouds.rest.annotations.SkipEncoding;
 import org.jclouds.rest.annotations.Transform;
 
-/**
- * Provides access to Snapshots via their REST API.
- */
 @SkipEncoding({'/', '='})
 @RequestFilters(OAuthAuthenticationFilter.class)
+@Path("/snapshots")
+@Consumes(APPLICATION_JSON)
 public interface SnapshotApi {
 
-   /**
-    * Returns the specified snapshot resource.
-    *
-    * @param snapshotName name of the snapshot resource to return.
-    * @return a Snapshot resource.
-    */
+   /** Returns a snapshot by name or null if not found. */
    @Named("Snapshots:get")
    @GET
-   @Consumes(MediaType.APPLICATION_JSON)
-   @Path("/global/snapshots/{snapshot}")
+   @Path("/{snapshot}")
    @OAuthScopes(COMPUTE_READONLY_SCOPE)
    @Fallback(NullOnNotFoundOr404.class)
    @Nullable
-   Snapshot get(@PathParam("snapshot") String snapshotName);
+   Snapshot get(@PathParam("snapshot") String snapshot);
 
-   /**
-    * Deletes the specified snapshot resource.
-    *
-    * @param snapshotName name of the snapshot resource to delete.
-    * @return an Operation resource. To check on the status of an operation, poll the Operations resource returned to
-    *         you, and look for the status field.
-    */
+   /** Deletes a snapshot by name and returns the operation in progress, or null if not found. */
    @Named("Snapshots:delete")
    @DELETE
-   @Consumes(MediaType.APPLICATION_JSON)
-   @Path("/global/snapshots/{snapshot}")
+   @Path("/{snapshot}")
    @OAuthScopes(COMPUTE_SCOPE)
    @Fallback(NullOnNotFoundOr404.class)
    @Nullable
-   Operation delete(@PathParam("snapshot") String snapshotName);
+   Operation delete(@PathParam("snapshot") String snapshot);
 
    /**
-    * Retrieves the listPage of persistent disk resources contained within the specified project and zone.
-    * By default the listPage as a maximum size of 100, if no options are provided or ListOptions#getMaxResults() has
-    * not been set.
+    * Retrieves the list of snapshot resources available to the specified project.
+    * By default the list as a maximum size of 100, if no options are provided or ListOptions#getMaxResults() has not
+    * been set.
     *
-    * @param marker      marks the beginning of the next list page
+    * @param token       marks the beginning of the next list page
     * @param listOptions listing options
+    * @return a page of the list
     */
    @Named("Snapshots:list")
    @GET
-   @Consumes(MediaType.APPLICATION_JSON)
-   @Path("/global/snapshots")
    @OAuthScopes(COMPUTE_READONLY_SCOPE)
    @ResponseParser(ParseSnapshots.class)
    @Fallback(EmptyListPageOnNotFoundOr404.class)
-   ListPage<Snapshot> listAtMarker(@QueryParam("pageToken") @Nullable String marker, ListOptions listOptions);
+   ListPage<Snapshot> listPage(@Nullable @QueryParam("pageToken") String token, ListOptions listOptions);
 
    /**
-    * A paged version of SnapshotApi#listPage(String)
-    *
-    * @return an Iterator that is able to fetch additional pages when required
+    * @see #list(org.jclouds.googlecomputeengine.options.ListOptions)
     */
    @Named("Snapshots:list")
    @GET
-   @Consumes(MediaType.APPLICATION_JSON)
-   @Path("/global/snapshots")
    @OAuthScopes(COMPUTE_READONLY_SCOPE)
    @ResponseParser(ParseSnapshots.class)
    @Transform(ParseSnapshots.ToIteratorOfListPage.class)
    @Fallback(EmptyIteratorOnNotFoundOr404.class)
    Iterator<ListPage<Snapshot>> list();
 
+   /**
+    * @see #list(org.jclouds.googlecomputeengine.options.ListOptions)
+    */
    @Named("Snapshots:list")
    @GET
-   @Consumes(MediaType.APPLICATION_JSON)
-   @Path("/global/snapshots")
    @OAuthScopes(COMPUTE_READONLY_SCOPE)
    @ResponseParser(ParseSnapshots.class)
    @Transform(ParseSnapshots.ToIteratorOfListPage.class)

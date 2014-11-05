@@ -30,10 +30,6 @@ import org.testng.annotations.Test;
 import com.google.common.collect.ImmutableMap;
 import com.google.gson.Gson;
 
-
-/**
- * Tests behavior of {@code BindToJsonPayload}
- */
 @Test(groups = "unit", testName = "HttpHealthCheckCreationBinderTest")
 public class HttpHealthCheckCreationBinderTest extends BaseGoogleComputeEngineExpectTest<Object>{
    
@@ -68,13 +64,5 @@ public class HttpHealthCheckCreationBinderTest extends BaseGoogleComputeEngineEx
             + "\"description\":\"" + DESCRIPTION + "\""
             + "}");
       assertEquals(request.getPayload().getContentMetadata().getContentType(), "application/json");
-
    }
-
-   @Test(expectedExceptions = NullPointerException.class)
-   public void testNullIsBad() {
-      DiskCreationBinder binder = new DiskCreationBinder(json);
-      binder.bindToRequest(HttpRequest.builder().method("GET").endpoint("http://momma").build(), null);
-   }
-
 }

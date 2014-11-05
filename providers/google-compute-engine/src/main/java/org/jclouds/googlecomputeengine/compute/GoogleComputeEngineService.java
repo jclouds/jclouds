@@ -76,7 +76,7 @@ import com.google.common.base.Supplier;
 import com.google.common.util.concurrent.Atomics;
 import com.google.common.util.concurrent.ListeningExecutorService;
 
-public class GoogleComputeEngineService extends BaseComputeService {
+public final class GoogleComputeEngineService extends BaseComputeService {
 
    private final Function<Set<? extends NodeMetadata>, Set<String>> findOrphanedGroups;
    private final GroupNamingConvention.Factory namingConvention;
@@ -86,8 +86,7 @@ public class GoogleComputeEngineService extends BaseComputeService {
    private final long operationCompleteCheckInterval;
    private final long operationCompleteCheckTimeout;
 
-   @Inject
-   protected GoogleComputeEngineService(ComputeServiceContext context,
+   @Inject GoogleComputeEngineService(ComputeServiceContext context,
                                         Map<String, Credentials> credentialStore,
                                         @Memoized Supplier<Set<? extends Image>> images,
                                         @Memoized Supplier<Set<? extends Hardware>> hardwareProfiles,
@@ -148,8 +147,7 @@ public class GoogleComputeEngineService extends BaseComputeService {
       }
    }
 
-
-   protected void cleanUpNetworksAndFirewallsForGroup(final String groupName) {
+   private void cleanUpNetworksAndFirewallsForGroup(final String groupName) {
       String resourceName = namingConvention.create().sharedNameForGroup(groupName);
       Network network = api.getNetworkApi(project.get()).get(resourceName);
       FirewallApi firewallApi = api.getFirewallApi(project.get());
@@ -181,10 +179,6 @@ public class GoogleComputeEngineService extends BaseComputeService {
       }
    }
 
-
-   /**
-    * returns template options, except of type {@link org.jclouds.googlecomputeengine.compute.options.GoogleComputeEngineTemplateOptions}.
-    */
    @Override
    public GoogleComputeEngineTemplateOptions templateOptions() {
       return GoogleComputeEngineTemplateOptions.class.cast(super.templateOptions());

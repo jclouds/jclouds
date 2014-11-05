@@ -47,7 +47,7 @@ public final class ParseFirewalls extends ParseJson<ListPage<Firewall>> {
             final ListOptions options) {
          return new Function<String, ListPage<Firewall>>() {
             @Override public ListPage<Firewall> apply(String input) {
-               return api.getFirewallApi(projectName).listAtMarker(input, options);
+               return api.getFirewallApi(projectName).listPage(input, options);
             }
          };
       }

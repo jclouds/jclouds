@@ -16,6 +16,7 @@
  */
 package org.jclouds.googlecomputeengine.features;
 
+import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 import static org.jclouds.googlecomputeengine.GoogleComputeEngineConstants.COMPUTE_READONLY_SCOPE;
 import static org.jclouds.googlecomputeengine.GoogleComputeEngineConstants.COMPUTE_SCOPE;
 
@@ -30,7 +31,6 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
-import javax.ws.rs.core.MediaType;
 
 import org.jclouds.Fallbacks.NullOnNotFoundOr404;
 import org.jclouds.googlecomputeengine.GoogleComputeEngineFallbacks.EmptyIteratorOnNotFoundOr404;
@@ -52,73 +52,66 @@ import org.jclouds.rest.annotations.SkipEncoding;
 import org.jclouds.rest.annotations.Transform;
 import org.jclouds.rest.binders.BindToJsonPayload;
 
-/**
- * Provides access to Images via their REST API.
- */
 @SkipEncoding({'/', '='})
 @RequestFilters(OAuthAuthenticationFilter.class)
+@Path("/images")
+@Consumes(APPLICATION_JSON)
 public interface ImageApi {
-   /**
-    * Returns the specified image resource.
-    *
-    * @param imageName name of the image resource to return.
-    * @return an Image resource
-    */
+
+   /** Returns an image by name or null if not found. */
    @Named("Images:get")
    @GET
-   @Consumes(MediaType.APPLICATION_JSON)
-   @Path("/global/images/{image}")
+   @Path("/{image}")
    @OAuthScopes(COMPUTE_READONLY_SCOPE)
    @Fallback(NullOnNotFoundOr404.class)
    @Nullable
-   Image get(@PathParam("image") String imageName);
+   Image get(@PathParam("image") String image);
 
-   /**
-    * Deletes the specified image resource.
-    *
-    * @param imageName name of the image resource to delete.
-    * @return an Operation resource. To check on the status of an operation, poll the Operations resource returned to
-    *         you, and look for the status field.  If the image did not exist the result is null.
-    */
+   /** Deletes an image by name and returns the operation in progress, or null if not found. */
    @Named("Images:delete")
    @DELETE
-   @Consumes(MediaType.APPLICATION_JSON)
-   @Path("/global/images/{image}")
+   @Path("/{image}")
    @OAuthScopes(COMPUTE_SCOPE)
    @Fallback(NullOnNotFoundOr404.class)
    @Nullable
-   Operation delete(@PathParam("image") String imageName);
+   Operation delete(@PathParam("image") String image);
+
+   /**
+    * Creates an image resource in the specified project from the provided persistent disk.
+    *
+    * @param image  the name of the created image
+    * @param sourceDisk fully qualified URL for the persistent disk to create the image from
+    * @return an Operation resource. To check on the status of an operation, poll the Operations resource returned to
+    *         you, and look for the status field.
+    */
+   @Named("Images:insert")
+   @POST
+   @Produces(APPLICATION_JSON)
+   @OAuthScopes(COMPUTE_SCOPE)
+   @MapBinder(BindToJsonPayload.class)
+   Operation createFromDisk(@PayloadParam("name") String image, @PayloadParam("sourceDisk") String sourceDisk);
 
    /**
     * Retrieves the list of image resources available to the specified project.
     * By default the list as a maximum size of 100, if no options are provided or ListOptions#getMaxResults() has not
     * been set.
     *
-    * @param marker      marks the beginning of the next list page
+    * @param token       marks the beginning of the next list page
     * @param listOptions listing options
     * @return a page of the list
-    * @see ListOptions
-    * @see org.jclouds.googlecomputeengine.domain.ListPage
     */
    @Named("Images:list")
    @GET
-   @Consumes(MediaType.APPLICATION_JSON)
-   @Path("/global/images")
    @OAuthScopes(COMPUTE_READONLY_SCOPE)
    @ResponseParser(ParseImages.class)
    @Fallback(EmptyListPageOnNotFoundOr404.class)
-   ListPage<Image> listAtMarker(@QueryParam("pageToken") @Nullable String marker, ListOptions listOptions);
+   ListPage<Image> listPage(@Nullable @QueryParam("pageToken") String token, ListOptions listOptions);
 
    /**
-    * A paged version of ImageApi#list()
-    *
-    * @return an Iterator that is able to fetch additional pages when required
-    * @see ImageApi#listAtMarker(String, org.jclouds.googlecomputeengine.options.ListOptions)
+    * @see #list(org.jclouds.googlecomputeengine.options.ListOptions)
     */
    @Named("Images:list")
    @GET
-   @Consumes(MediaType.APPLICATION_JSON)
-   @Path("/global/images")
    @OAuthScopes(COMPUTE_READONLY_SCOPE)
    @ResponseParser(ParseImages.class)
    @Transform(ParseImages.ToIteratorOfListPage.class)
@@ -126,35 +119,13 @@ public interface ImageApi {
    Iterator<ListPage<Image>> list();
 
    /**
-    * A paged version of ImageApi#list()
-    *
-    * @return an Iterator that is able to fetch additional pages when required
-    * @see ImageApi#listAtMarker(String, org.jclouds.googlecomputeengine.options.ListOptions)
+    * @see #list(org.jclouds.googlecomputeengine.options.ListOptions)
     */
    @Named("Images:list")
    @GET
-   @Consumes(MediaType.APPLICATION_JSON)
-   @Path("/global/images")
    @OAuthScopes(COMPUTE_READONLY_SCOPE)
    @ResponseParser(ParseImages.class)
    @Transform(ParseImages.ToIteratorOfListPage.class)
    @Fallback(EmptyIteratorOnNotFoundOr404.class)
    Iterator<ListPage<Image>> list(ListOptions options);
-
-   /**
-    * Creates an image resource in the specified project from the provided persistent disk.
-    *
-    * @param imageName  the name of the created image
-    * @param sourceDisk fully qualified URL for the persistent disk to create the image from
-    * @return an Operation resource. To check on the status of an operation, poll the Operations resource returned to
-    *         you, and look for the status field.
-    */
-   @Named("Images:insert")
-   @POST
-   @Consumes(MediaType.APPLICATION_JSON)
-   @Produces(MediaType.APPLICATION_JSON)
-   @Path("/global/images")
-   @OAuthScopes(COMPUTE_SCOPE)
-   @MapBinder(BindToJsonPayload.class)
-   Operation createImageFromPD(@PayloadParam("name") String imageName, @PayloadParam("sourceDisk") String sourceDisk);
 }

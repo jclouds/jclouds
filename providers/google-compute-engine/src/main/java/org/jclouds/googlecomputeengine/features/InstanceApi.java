@@ -60,10 +60,6 @@ import org.jclouds.rest.annotations.SkipEncoding;
 import org.jclouds.rest.annotations.Transform;
 import org.jclouds.rest.binders.BindToJsonPayload;
 
-/**
- * Provides access to Instances via their REST API.
- * @see InstanceApi
- */
 @SkipEncoding({'/', '='})
 @RequestFilters(OAuthAuthenticationFilter.class)
 @Path("/instances")
@@ -81,7 +77,6 @@ public interface InstanceApi {
 
    /**
     * Creates a instance resource in the specified project using the data included in the request.
-    *
     *
     * @param instance this name of the instance to be created
     * @param template the instance template
@@ -112,18 +107,16 @@ public interface InstanceApi {
     * @param token       marks the beginning of the next list page
     * @param listOptions listing options
     * @return a page of the list
-    * @see ListOptions
-    * @see org.jclouds.googlecomputeengine.domain.ListPage
     */
    @Named("Instances:list")
    @GET
    @OAuthScopes(COMPUTE_READONLY_SCOPE)
    @ResponseParser(ParseInstances.class)
    @Fallback(EmptyListPageOnNotFoundOr404.class)
-   ListPage<Instance> listPage(@Nullable String token, ListOptions listOptions);
+   ListPage<Instance> listPage(@Nullable @QueryParam("pageToken") String token, ListOptions listOptions);
 
    /**
-    * @see InstanceApi#list(org.jclouds.googlecomputeengine.options.ListOptions)
+    * @see #list(org.jclouds.googlecomputeengine.options.ListOptions)
     */
    @Named("Instances:list")
    @GET
@@ -134,7 +127,7 @@ public interface InstanceApi {
    Iterator<ListPage<Instance>> list();
 
    /**
-    * @see InstanceApi#list(org.jclouds.googlecomputeengine.options.ListOptions)
+    * @see #list(org.jclouds.googlecomputeengine.options.ListOptions)
     */
    @Named("Instances:list")
    @GET

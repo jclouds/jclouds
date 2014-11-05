@@ -16,6 +16,7 @@
  */
 package org.jclouds.googlecomputeengine.features;
 
+import static org.jclouds.googlecomputeengine.options.ListOptions.Builder.filter;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
 
@@ -24,7 +25,6 @@ import java.util.Iterator;
 import org.jclouds.googlecomputeengine.domain.Address;
 import org.jclouds.googlecomputeengine.domain.ListPage;
 import org.jclouds.googlecomputeengine.internal.BaseGoogleComputeEngineApiLiveTest;
-import org.jclouds.googlecomputeengine.options.ListOptions;
 import org.testng.annotations.Test;
 
 public class AddressApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
@@ -33,18 +33,18 @@ public class AddressApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
    private static final int TIME_WAIT = 30;
 
    private AddressApi api() {
-      return api.getAddressApi(userProject.get());
+      return api.getAddressApi(userProject.get(), DEFAULT_REGION_NAME);
    }
 
    @Test(groups = "live")
    public void testInsertAddress() {
 
-      assertRegionOperationDoneSucessfully(api().createInRegion(DEFAULT_REGION_NAME, ADDRESS_NAME), TIME_WAIT);
+      assertRegionOperationDoneSucessfully(api().create(ADDRESS_NAME), TIME_WAIT);
    }
 
    @Test(groups = "live", dependsOnMethods = "testInsertAddress")
    public void testGetAddress() {
-      Address address = api().getInRegion(DEFAULT_REGION_NAME, ADDRESS_NAME);
+      Address address = api().get(ADDRESS_NAME);
       assertNotNull(address);
       assertEquals(address.name(), ADDRESS_NAME);
    }
@@ -52,15 +52,13 @@ public class AddressApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
    @Test(groups = "live", dependsOnMethods = "testGetAddress")
    public void testListAddress() {
 
-      Iterator<ListPage<Address>> addresses = api().listInRegion(DEFAULT_REGION_NAME, new ListOptions.Builder()
-              .filter("name eq " + ADDRESS_NAME));
-
+      Iterator<ListPage<Address>> addresses = api().list(filter("name eq " + ADDRESS_NAME));
       assertEquals(addresses.next().size(), 1);
    }
 
    @Test(groups = "live", dependsOnMethods = "testListAddress")
    public void testDeleteAddress() {
 
-      assertRegionOperationDoneSucessfully(api().deleteInRegion(DEFAULT_REGION_NAME, ADDRESS_NAME), TIME_WAIT);
+      assertRegionOperationDoneSucessfully(api().delete(ADDRESS_NAME), TIME_WAIT);
    }
 }

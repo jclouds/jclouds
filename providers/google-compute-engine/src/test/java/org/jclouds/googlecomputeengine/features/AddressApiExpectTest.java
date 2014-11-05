@@ -47,10 +47,9 @@ public class AddressApiExpectTest extends BaseGoogleComputeEngineApiExpectTest {
               .payload(payloadFromResource("/address_get.json")).build();
 
       AddressApi api = requestsSendResponses(requestForScopes(COMPUTE_READONLY_SCOPE),
-              TOKEN_RESPONSE, get, operationResponse).getAddressApi("myproject");
+              TOKEN_RESPONSE, get, operationResponse).getAddressApi("myproject", "us-central1");
 
-      assertEquals(api.getInRegion("us-central1", "test-ip1"),
-              new ParseAddressTest().expected());
+      assertEquals(api.get("test-ip1"), new ParseAddressTest().expected());
    }
 
    public void testGetAddressResponseIs4xx() throws Exception {
@@ -64,9 +63,9 @@ public class AddressApiExpectTest extends BaseGoogleComputeEngineApiExpectTest {
       HttpResponse operationResponse = HttpResponse.builder().statusCode(404).build();
 
       AddressApi api = requestsSendResponses(requestForScopes(COMPUTE_READONLY_SCOPE),
-              TOKEN_RESPONSE, get, operationResponse).getAddressApi("myproject");
+              TOKEN_RESPONSE, get, operationResponse).getAddressApi("myproject", "us-central1");
 
-      assertNull(api.getInRegion("us-central1", "test-ip1"));
+      assertNull(api.get("test-ip1"));
    }
 
    public void testInsertAddressResponseIs2xx() {
@@ -84,9 +83,9 @@ public class AddressApiExpectTest extends BaseGoogleComputeEngineApiExpectTest {
 
       AddressApi api = requestsSendResponses(requestForScopes(COMPUTE_SCOPE),
               TOKEN_RESPONSE, insert,
-              insertAddressResponse).getAddressApi("myproject");
+              insertAddressResponse).getAddressApi("myproject", "us-central1");
 
-      assertEquals(api.createInRegion("us-central1", "test-ip1"), new ParseRegionOperationTest().expected());
+      assertEquals(api.create("test-ip1"), new ParseRegionOperationTest().expected());
    }
 
    public void testDeleteAddressResponseIs2xx() {
@@ -101,10 +100,9 @@ public class AddressApiExpectTest extends BaseGoogleComputeEngineApiExpectTest {
               .payload(payloadFromResource("/region_operation.json")).build();
 
       AddressApi api = requestsSendResponses(requestForScopes(COMPUTE_SCOPE),
-              TOKEN_RESPONSE, delete, deleteResponse).getAddressApi("myproject");
+              TOKEN_RESPONSE, delete, deleteResponse).getAddressApi("myproject", "us-central1");
 
-      assertEquals(api.deleteInRegion("us-central1", "test-ip1"),
-              new ParseRegionOperationTest().expected());
+      assertEquals(api.delete("test-ip1"), new ParseRegionOperationTest().expected());
    }
 
    public void testDeleteAddressResponseIs4xx() {
@@ -118,9 +116,9 @@ public class AddressApiExpectTest extends BaseGoogleComputeEngineApiExpectTest {
       HttpResponse deleteResponse = HttpResponse.builder().statusCode(404).build();
 
       AddressApi api = requestsSendResponses(requestForScopes(COMPUTE_SCOPE),
-              TOKEN_RESPONSE, delete, deleteResponse).getAddressApi("myproject");
+              TOKEN_RESPONSE, delete, deleteResponse).getAddressApi("myproject", "us-central1");
 
-      assertNull(api.deleteInRegion("us-central1", "test-ip1"));
+      assertNull(api.delete("test-ip1"));
    }
 
    public void testListAddresssResponseIs2xx() {
@@ -135,9 +133,9 @@ public class AddressApiExpectTest extends BaseGoogleComputeEngineApiExpectTest {
               .payload(payloadFromResource("/address_list.json")).build();
 
       AddressApi api = requestsSendResponses(requestForScopes(COMPUTE_READONLY_SCOPE),
-              TOKEN_RESPONSE, list, operationResponse).getAddressApi("myproject");
+              TOKEN_RESPONSE, list, operationResponse).getAddressApi("myproject", "us-central1");
 
-      assertEquals(api.listInRegion("us-central1").next().toString(), new ParseAddressListTest().expected().toString());
+      assertEquals(api.list().next().toString(), new ParseAddressListTest().expected().toString());
    }
 
    public void testListAddresssResponseIs4xx() {
@@ -151,8 +149,8 @@ public class AddressApiExpectTest extends BaseGoogleComputeEngineApiExpectTest {
       HttpResponse operationResponse = HttpResponse.builder().statusCode(404).build();
 
       AddressApi api = requestsSendResponses(requestForScopes(COMPUTE_READONLY_SCOPE),
-              TOKEN_RESPONSE, list, operationResponse).getAddressApi("myproject");
+              TOKEN_RESPONSE, list, operationResponse).getAddressApi("myproject", "us-central1");
 
-      assertFalse(api.listInRegion("us-central1").hasNext());
+      assertFalse(api.list().hasNext());
    }
 }

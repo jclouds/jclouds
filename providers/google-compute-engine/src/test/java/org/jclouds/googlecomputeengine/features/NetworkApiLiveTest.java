@@ -16,6 +16,7 @@
  */
 package org.jclouds.googlecomputeengine.features;
 
+import static org.jclouds.googlecomputeengine.options.ListOptions.Builder.filter;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
 
@@ -25,7 +26,6 @@ import java.util.List;
 import org.jclouds.googlecomputeengine.domain.ListPage;
 import org.jclouds.googlecomputeengine.domain.Network;
 import org.jclouds.googlecomputeengine.internal.BaseGoogleComputeEngineApiLiveTest;
-import org.jclouds.googlecomputeengine.options.ListOptions;
 import org.testng.annotations.Test;
 
 @Test(groups = "live", testName = "NetworkApiLiveTest")
@@ -53,21 +53,17 @@ public class NetworkApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
 
    @Test(groups = "live", dependsOnMethods = "testGetNetwork")
    public void testListNetwork() {
-
-      Iterator<ListPage<Network>> networks = api().list(new ListOptions.Builder()
-              .filter("name eq " + NETWORK_NAME));
+      Iterator<ListPage<Network>> networks = api().list(filter("name eq " + NETWORK_NAME));
 
       List<Network> networksAsList = networks.next();
 
       assertEquals(networksAsList.size(), 1);
 
       assertNetworkEquals(networksAsList.get(0));
-
    }
 
    @Test(groups = "live", dependsOnMethods = "testListNetwork")
    public void testDeleteNetwork() {
-
       assertGlobalOperationDoneSucessfully(api().delete(NETWORK_NAME), TIME_WAIT);
    }
 

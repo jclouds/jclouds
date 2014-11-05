@@ -16,6 +16,7 @@
  */
 package org.jclouds.googlecomputeengine.features;
 
+import static org.jclouds.googlecomputeengine.options.ListOptions.Builder.maxResults;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
 
@@ -27,7 +28,6 @@ import org.jclouds.googlecomputeengine.domain.Disk;
 import org.jclouds.googlecomputeengine.domain.Image;
 import org.jclouds.googlecomputeengine.domain.ListPage;
 import org.jclouds.googlecomputeengine.internal.BaseGoogleComputeEngineApiLiveTest;
-import org.jclouds.googlecomputeengine.options.ListOptions;
 import org.testng.annotations.Test;
 
 public class ImageApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
@@ -49,13 +49,12 @@ public class ImageApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
    }
 
    private DiskApi diskApi() {
-      return api.getDiskApi(userProject.get());
+      return api.getDiskApi(userProject.get(), DEFAULT_ZONE_NAME);
    }
 
    @Test(groups = "live")
    public void testListImage() {
-
-      Iterator<ListPage<Image>> images = api().list(new ListOptions.Builder().maxResults(1));
+      Iterator<ListPage<Image>> images = api().list(maxResults(1));
 
       List<Image> imageAsList = images.next();
 
@@ -78,14 +77,14 @@ public class ImageApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
 
    @Test(groups = "live")
    public void testInsertDisk() {
-      assertZoneOperationDoneSuccessfully(diskApi().createInZone(DISK_NAME, sizeGb, DEFAULT_ZONE_NAME), TIME_WAIT);
-      Disk disk = diskApi().getInZone(DEFAULT_ZONE_NAME, DISK_NAME);
+      assertZoneOperationDoneSuccessfully(diskApi().create(DISK_NAME, sizeGb), TIME_WAIT);
+      Disk disk = diskApi().get(DISK_NAME);
       diskURI = disk.selfLink();
    }
 
    @Test(groups = "live", dependsOnMethods = "testInsertDisk")
    public void testCreateImageFromPD(){
-      assertGlobalOperationDoneSucessfully(imageApi().createImageFromPD(IMAGE_NAME, diskURI.toString()), TIME_WAIT);
+      assertGlobalOperationDoneSucessfully(imageApi().createFromDisk(IMAGE_NAME, diskURI.toString()), TIME_WAIT);
    }
 
    @Test(groups = "live", dependsOnMethods = "testCreateImageFromPD")
@@ -97,7 +96,7 @@ public class ImageApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
    @Test(groups = "live", dependsOnMethods = "testGetCreatedImage")
    public void testCleanup(){
       assertGlobalOperationDoneSucessfully(imageApi().delete(IMAGE_NAME), TIME_WAIT);
-      assertZoneOperationDoneSuccessfully(diskApi().deleteInZone(DEFAULT_ZONE_NAME, DISK_NAME), TIME_WAIT);
+      assertZoneOperationDoneSuccessfully(diskApi().delete(DISK_NAME), TIME_WAIT);
    }
 
    private void assertImageEquals(Image result) {

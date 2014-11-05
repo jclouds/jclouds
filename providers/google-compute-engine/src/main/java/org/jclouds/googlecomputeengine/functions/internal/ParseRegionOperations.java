@@ -48,7 +48,7 @@ public final class ParseRegionOperations extends ParseJson<ListPage<Operation>> 
             final String regionName, final ListOptions options) {
          return new Function<String, ListPage<Operation>>() {
             @Override public ListPage<Operation> apply(String input) {
-               return api.getRegionOperationApi(projectName).listAtMarkerInRegion(regionName, input, options);
+               return api.getRegionOperationApi(projectName, regionName).listPage(input, options);
             }
          };
       }

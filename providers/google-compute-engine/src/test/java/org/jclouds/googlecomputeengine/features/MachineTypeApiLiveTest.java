@@ -16,6 +16,7 @@
  */
 package org.jclouds.googlecomputeengine.features;
 
+import static org.jclouds.googlecomputeengine.options.ListOptions.Builder.maxResults;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertTrue;
@@ -26,7 +27,6 @@ import java.util.List;
 import org.jclouds.googlecomputeengine.domain.ListPage;
 import org.jclouds.googlecomputeengine.domain.MachineType;
 import org.jclouds.googlecomputeengine.internal.BaseGoogleComputeEngineApiLiveTest;
-import org.jclouds.googlecomputeengine.options.ListOptions;
 import org.testng.annotations.Test;
 
 public class MachineTypeApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
@@ -34,13 +34,12 @@ public class MachineTypeApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
    private MachineType machineType;
 
    private MachineTypeApi api() {
-      return api.getMachineTypeApi(userProject.get());
+      return api.getMachineTypeApi(userProject.get(), DEFAULT_ZONE_NAME);
    }
 
    @Test(groups = "live")
    public void testListMachineType() {
-      Iterator<ListPage<MachineType>> pageIterator = api().listInZone(DEFAULT_ZONE_NAME, new ListOptions.Builder()
-            .maxResults(1));
+      Iterator<ListPage<MachineType>> pageIterator = api().list(maxResults(1));
       assertTrue(pageIterator.hasNext());
 
       List<MachineType> machineTypeAsList = pageIterator.next();
@@ -53,7 +52,7 @@ public class MachineTypeApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
 
    @Test(groups = "live", dependsOnMethods = "testListMachineType")
    public void testGetMachineType() {
-      MachineType machineType = api().getInZone(DEFAULT_ZONE_NAME, this.machineType.name());
+      MachineType machineType = api().get(this.machineType.name());
       assertNotNull(machineType);
       assertMachineTypeEquals(machineType, this.machineType);
    }

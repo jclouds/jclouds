@@ -47,7 +47,7 @@ public final class ParseNetworks extends ParseJson<ListPage<Network>> {
             final ListOptions options) {
          return new Function<String, ListPage<Network>>() {
             @Override public ListPage<Network> apply(String input) {
-               return api.getNetworkApi(projectName).listAtMarker(input, options);
+               return api.getNetworkApi(projectName).listPage(input, options);
             }
          };
       }

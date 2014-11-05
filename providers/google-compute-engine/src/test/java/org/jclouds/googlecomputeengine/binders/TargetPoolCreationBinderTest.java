@@ -34,10 +34,6 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.gson.Gson;
 
-
-/**
- * Tests behavior of {@code BindToJsonPayload}
- */
 @Test(groups = "unit", testName = "TargetPoolCreationBinderTest")
 public class TargetPoolCreationBinderTest extends BaseGoogleComputeEngineExpectTest<Object>{
 
@@ -72,13 +68,5 @@ public class TargetPoolCreationBinderTest extends BaseGoogleComputeEngineExpectT
             + "\"description\":\"This is a test!\""
             + "}");
       assertEquals(request.getPayload().getContentMetadata().getContentType(), "application/json");
-
    }
-
-   @Test(expectedExceptions = NullPointerException.class)
-   public void testNullIsBad() {
-      DiskCreationBinder binder = new DiskCreationBinder(json);
-      binder.bindToRequest(HttpRequest.builder().method("GET").endpoint("http://momma").build(), null);
-   }
-
 }

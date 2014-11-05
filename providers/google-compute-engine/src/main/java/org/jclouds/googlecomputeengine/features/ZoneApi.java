@@ -16,6 +16,7 @@
  */
 package org.jclouds.googlecomputeengine.features;
 
+import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 import static org.jclouds.googlecomputeengine.GoogleComputeEngineConstants.COMPUTE_READONLY_SCOPE;
 
 import java.util.Iterator;
@@ -25,7 +26,7 @@ import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
-import javax.ws.rs.core.MediaType;
+import javax.ws.rs.QueryParam;
 
 import org.jclouds.Fallbacks.NullOnNotFoundOr404;
 import org.jclouds.googlecomputeengine.GoogleComputeEngineFallbacks.EmptyIteratorOnNotFoundOr404;
@@ -34,6 +35,7 @@ import org.jclouds.googlecomputeengine.domain.ListPage;
 import org.jclouds.googlecomputeengine.domain.Zone;
 import org.jclouds.googlecomputeengine.functions.internal.ParseZones;
 import org.jclouds.googlecomputeengine.options.ListOptions;
+import org.jclouds.javax.annotation.Nullable;
 import org.jclouds.oauth.v2.config.OAuthScopes;
 import org.jclouds.oauth.v2.filters.OAuthAuthenticationFilter;
 import org.jclouds.rest.annotations.Fallback;
@@ -42,49 +44,41 @@ import org.jclouds.rest.annotations.ResponseParser;
 import org.jclouds.rest.annotations.SkipEncoding;
 import org.jclouds.rest.annotations.Transform;
 
-/**
- * Provides access to Zones via their REST API.
- */
 @SkipEncoding({'/', '='})
 @RequestFilters(OAuthAuthenticationFilter.class)
-@Consumes(MediaType.APPLICATION_JSON)
+@Path("/zones")
+@Consumes(APPLICATION_JSON)
 public interface ZoneApi {
 
-   /**
-    * Returns the specified zone resource
-    *
-    * @param zoneName name of the zone resource to return.
-    * @return If successful, this method returns a Zone resource
-    */
+   /** Returns a zone by name or null if not found. */
    @Named("Zones:get")
    @GET
-   @Path("/zones/{zone}")
+   @Path("/{zone}")
    @OAuthScopes(COMPUTE_READONLY_SCOPE)
    @Fallback(NullOnNotFoundOr404.class)
-   Zone get(@PathParam("zone") String zoneName);
+   Zone get(@PathParam("zone") String zone);
 
    /**
-    * Retrieves the listFirstPage of zone resources available to the specified project.
-    * By default the listFirstPage as a maximum size of 100, if no options are provided or ListOptions#getMaxResults()
-    * has not been set.
+    * Retrieves the list of zone resources available to the specified project.
+    * By default the list as a maximum size of 100, if no options are provided or ListOptions#getMaxResults() has not
+    * been set.
     *
-    * @param marker      marks the beginning of the next list page
+    * @param token       marks the beginning of the next list page
     * @param listOptions listing options
+    * @return a page of the list
     */
    @Named("Zones:list")
    @GET
-   @Path("/zones")
    @OAuthScopes(COMPUTE_READONLY_SCOPE)
    @ResponseParser(ParseZones.class)
    @Fallback(EmptyListPageOnNotFoundOr404.class)
-   ListPage<Zone> listAtMarker(String marker, ListOptions listOptions);
+   ListPage<Zone> listPage(@Nullable @QueryParam("pageToken") String token, ListOptions listOptions);
 
    /**
-    * @see ZoneApi#list(org.jclouds.googlecomputeengine.options.ListOptions)
+    * @see #list(org.jclouds.googlecomputeengine.options.ListOptions)
     */
    @Named("Zones:list")
    @GET
-   @Path("/zones")
    @OAuthScopes(COMPUTE_READONLY_SCOPE)
    @ResponseParser(ParseZones.class)
    @Transform(ParseZones.ToIteratorOfListPage.class)
@@ -92,17 +86,13 @@ public interface ZoneApi {
    Iterator<ListPage<Zone>> list();
 
    /**
-    * A paged version of ZoneApi#listFirstPage()
-    *
-    * @return an Iterator that is able to fetch additional pages when required
-    * @see ZoneApi#listAtMarker(String, org.jclouds.googlecomputeengine.options.ListOptions)
+    * @see #list(org.jclouds.googlecomputeengine.options.ListOptions)
     */
    @Named("Zones:list")
    @GET
-   @Path("/zones")
    @OAuthScopes(COMPUTE_READONLY_SCOPE)
    @ResponseParser(ParseZones.class)
    @Transform(ParseZones.ToIteratorOfListPage.class)
    @Fallback(EmptyIteratorOnNotFoundOr404.class)
-   Iterator<ListPage<Zone>> list(ListOptions listOptions);
+   Iterator<ListPage<Zone>> list(ListOptions options);
 }

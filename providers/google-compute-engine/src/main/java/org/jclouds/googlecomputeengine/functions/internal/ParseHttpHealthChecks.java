@@ -50,7 +50,7 @@ public final class ParseHttpHealthChecks extends ParseJson<ListPage<HttpHealthCh
          return new Function<String, ListPage<HttpHealthCheck>>() {
 
             @Override public ListPage<HttpHealthCheck> apply(String input) {
-               return api.getHttpHealthCheckApi(projectName).list(options);
+               return api.getHttpHealthCheckApi(projectName).listPage(input, options);
             }
          };
       }

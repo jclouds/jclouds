@@ -52,7 +52,7 @@ public final class ParseTargetPools extends ParseJson<ListPage<TargetPool>> {
 
             @Override
             public ListPage<TargetPool> apply(String input) {
-               return api.getTargetPoolApi(projectName, regionName).list(options);
+               return api.getTargetPoolApi(projectName, regionName).listPage(input, options);
             }
          };
       }

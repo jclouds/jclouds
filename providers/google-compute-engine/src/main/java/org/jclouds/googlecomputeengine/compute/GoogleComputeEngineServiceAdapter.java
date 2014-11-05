@@ -72,6 +72,7 @@ import org.jclouds.googlecomputeengine.domain.Operation;
 import org.jclouds.googlecomputeengine.domain.Zone;
 import org.jclouds.googlecomputeengine.domain.templates.InstanceTemplate;
 import org.jclouds.googlecomputeengine.domain.templates.InstanceTemplate.PersistentDisk;
+import org.jclouds.googlecomputeengine.features.DiskApi;
 import org.jclouds.googlecomputeengine.features.InstanceApi;
 import org.jclouds.googlecomputeengine.options.DiskCreationOptions;
 
@@ -228,15 +229,12 @@ public final class GoogleComputeEngineServiceAdapter implements ComputeServiceAd
       String diskName = instanceName + "-" + GCE_BOOT_DISK_SUFFIX;
 
       DiskCreationOptions diskCreationOptions = new DiskCreationOptions().sourceImage(imageUri);
-      Operation diskOperation = api.getDiskApi(userProject.get())
-                                   .createInZone(diskName,
-                                                 diskSize,
-                                                 template.getLocation().getId(),
-                                                 diskCreationOptions);
+      DiskApi diskApi = api.getDiskApi(userProject.get(), template.getLocation().getId());
+      Operation diskOperation = diskApi.create(diskName, diskSize, diskCreationOptions);
 
       waitOperationDone(diskOperation);
 
-      return api.getDiskApi(userProject.get()).getInZone(template.getLocation().getId(), diskName);
+      return diskApi.get(diskName);
    }
 
    @Override
@@ -244,7 +242,7 @@ public final class GoogleComputeEngineServiceAdapter implements ComputeServiceAd
       ImmutableList.Builder<MachineTypeInZone> builder = ImmutableList.builder();
 
       for (final Location zone : zones.get().values()) {
-         for (Iterator<ListPage<MachineType>> i = api.getMachineTypeApi(userProject.get()).listInZone(zone.getId());
+         for (Iterator<ListPage<MachineType>> i = api.getMachineTypeApi(userProject.get(), zone.getId()).list();
                i.hasNext(); ) {
             builder.addAll(FluentIterable.from(i.next()).filter(new Predicate<MachineType>() {
                @Override public boolean apply(MachineType input) {
@@ -328,8 +326,9 @@ public final class GoogleComputeEngineServiceAdapter implements ComputeServiceAd
    @Override
    public void destroyNode(final String name) {
       SlashEncodedIds zoneAndId = SlashEncodedIds.fromSlashEncoded(name);
+      InstanceApi instanceApi = api.getInstanceApi(userProject.get(), zoneAndId.left());
       String diskName = null;
-      Instance instance = api.getInstanceApi(userProject.get(), zoneAndId.left()).get(zoneAndId.right());
+      Instance instance = instanceApi.get(zoneAndId.right());
       if (instance != null &&
             "true".equals(instance.metadata().items().get(GCE_DELETE_BOOT_DISK_METADATA_KEY))) {
          for (AttachedDisk input : instance.disks()) {
@@ -339,10 +338,10 @@ public final class GoogleComputeEngineServiceAdapter implements ComputeServiceAd
             }
          }
       }
-      waitOperationDone(api.getInstanceApi(userProject.get(), zoneAndId.left()).delete(zoneAndId.right()));
+      waitOperationDone(instanceApi.delete(zoneAndId.right()));
 
       if (diskName != null) {
-         waitOperationDone(api.getDiskApi(userProject.get()).deleteInZone(zoneAndId.left(), diskName));
+         waitOperationDone(api.getDiskApi(userProject.get(), zoneAndId.left()).delete(diskName));
       }
    }
 

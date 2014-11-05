@@ -16,6 +16,7 @@
  */
 package org.jclouds.googlecomputeengine.features;
 
+import static org.jclouds.googlecomputeengine.options.ListOptions.Builder.filter;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
 
@@ -25,7 +26,6 @@ import org.jclouds.googlecomputeengine.domain.ListPage;
 import org.jclouds.googlecomputeengine.domain.TargetPool;
 import org.jclouds.googlecomputeengine.internal.BaseGoogleComputeEngineApiLiveTest;
 import org.jclouds.googlecomputeengine.options.ForwardingRuleCreationOptions;
-import org.jclouds.googlecomputeengine.options.ListOptions;
 import org.jclouds.googlecomputeengine.options.TargetPoolCreationOptions;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
@@ -56,7 +56,7 @@ public class ForwardingRuleApiLiveTest extends BaseGoogleComputeEngineApiLiveTes
    }
 
    private AddressApi addressApi(){
-      return  api.getAddressApi(userProject.get());
+      return  api.getAddressApi(userProject.get(), DEFAULT_REGION_NAME);
    }
 
    @BeforeClass
@@ -68,15 +68,15 @@ public class ForwardingRuleApiLiveTest extends BaseGoogleComputeEngineApiLiveTes
       assertRegionOperationDoneSucessfully(targetPoolApi().create(TARGETPOOL_NAME_NEW, targetPoolCreationOptions), TIME_WAIT);
       newTargetPool = targetPoolApi().get(TARGETPOOL_NAME_NEW);
 
-      assertRegionOperationDoneSucessfully(addressApi().createInRegion(DEFAULT_REGION_NAME, ADDRESS_NAME), TIME_WAIT);
-      address = addressApi().getInRegion(DEFAULT_REGION_NAME, ADDRESS_NAME);
+      assertRegionOperationDoneSucessfully(addressApi().create(ADDRESS_NAME), TIME_WAIT);
+      address = addressApi().get(ADDRESS_NAME);
    }
 
    @AfterClass
    public void tearDown() {
       assertRegionOperationDoneSucessfully(targetPoolApi().delete(TARGETPOOL_NAME), TIME_WAIT);
       assertRegionOperationDoneSucessfully(targetPoolApi().delete(TARGETPOOL_NAME_NEW), TIME_WAIT);
-      assertRegionOperationDoneSucessfully(addressApi().deleteInRegion(DEFAULT_REGION_NAME, ADDRESS_NAME), TIME_WAIT);
+      assertRegionOperationDoneSucessfully(addressApi().delete(ADDRESS_NAME), TIME_WAIT);
    }
 
    @Test(groups = "live")
@@ -111,9 +111,7 @@ public class ForwardingRuleApiLiveTest extends BaseGoogleComputeEngineApiLiveTes
 
    @Test(groups = "live", dependsOnMethods = "testInsertForwardingRule")
    public void testListForwardingRule() {
-
-      ListPage<ForwardingRule> forwardingRule = api().list(new ListOptions.Builder()
-              .filter("name eq " + FORWARDING_RULE_NAME));
+      ListPage<ForwardingRule> forwardingRule = api().list(filter("name eq " + FORWARDING_RULE_NAME)).next();
       assertEquals(forwardingRule.size(), 1);
    }
 

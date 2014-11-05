@@ -22,6 +22,8 @@ import java.net.URI;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicReference;
 
+import javax.inject.Inject;
+
 import org.jclouds.collect.Memoized;
 import org.jclouds.googlecomputeengine.GoogleComputeEngineApi;
 import org.jclouds.googlecomputeengine.config.UserProject;
@@ -30,10 +32,8 @@ import org.jclouds.googlecomputeengine.domain.Region;
 
 import com.google.common.base.Predicate;
 import com.google.common.base.Supplier;
-import com.google.inject.Inject;
 
 public final class RegionOperationDonePredicate implements Predicate<AtomicReference<Operation>> {
-
    private final GoogleComputeEngineApi api;
    private final Supplier<String> project;
    private final Supplier<Map<URI, Region>> regions;
@@ -46,11 +46,10 @@ public final class RegionOperationDonePredicate implements Predicate<AtomicRefer
    }
 
    @Override public boolean apply(AtomicReference<Operation> input) {
-      checkNotNull(input, "input");
-
-      Operation current = api.getRegionOperationApi(project.get())
-              .getInRegion(regions.get().get(input.get().region()).name(),
-              input.get().name());
+      checkNotNull(input.get(), "input");
+      URI region = checkNotNull(input.get().region(), "region of %s", input.get());
+      String locationId = checkNotNull(regions.get().get(region), "location of %s", region).id();
+      Operation current = api.getRegionOperationApi(project.get(), locationId).get(input.get().name());
       switch (current.status()) {
          case DONE:
             input.set(current);

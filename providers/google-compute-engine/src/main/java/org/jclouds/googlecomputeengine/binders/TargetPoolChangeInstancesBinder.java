@@ -18,16 +18,11 @@ package org.jclouds.googlecomputeengine.binders;
 
 import javax.inject.Inject;
 
-import org.jclouds.json.Json;
-
 /**
  * Binder used for adding and deleting instances from a target pool.
  */
 public final class TargetPoolChangeInstancesBinder extends TargetPoolMapofListofMapGenericBinder {
-
-   @Inject TargetPoolChangeInstancesBinder(Json jsonBinder) {
-      super(jsonBinder);
-      super.outerString("instances");
-      super.innerString("instance");
+   @Inject TargetPoolChangeInstancesBinder() {
+      super("instances", "instance");
    }
 }

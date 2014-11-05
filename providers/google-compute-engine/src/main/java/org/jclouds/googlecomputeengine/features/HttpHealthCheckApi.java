@@ -16,9 +16,9 @@
  */
 package org.jclouds.googlecomputeengine.features;
 
+import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 import static org.jclouds.googlecomputeengine.GoogleComputeEngineConstants.COMPUTE_READONLY_SCOPE;
 import static org.jclouds.googlecomputeengine.GoogleComputeEngineConstants.COMPUTE_SCOPE;
-import static org.jclouds.googlecomputeengine.GoogleComputeEngineFallbacks.EmptyListPageOnNotFoundOr404;
 
 import java.util.Iterator;
 
@@ -31,10 +31,11 @@ import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
-import javax.ws.rs.core.MediaType;
+import javax.ws.rs.QueryParam;
 
 import org.jclouds.Fallbacks.NullOnNotFoundOr404;
 import org.jclouds.googlecomputeengine.GoogleComputeEngineFallbacks.EmptyIteratorOnNotFoundOr404;
+import org.jclouds.googlecomputeengine.GoogleComputeEngineFallbacks.EmptyListPageOnNotFoundOr404;
 import org.jclouds.googlecomputeengine.binders.HttpHealthCheckCreationBinder;
 import org.jclouds.googlecomputeengine.domain.HttpHealthCheck;
 import org.jclouds.googlecomputeengine.domain.ListPage;
@@ -55,20 +56,13 @@ import org.jclouds.rest.annotations.SkipEncoding;
 import org.jclouds.rest.annotations.Transform;
 import org.jclouds.rest.binders.BindToJsonPayload;
 
-/**
- * Provides access to HttpHealthChecks via their REST API.
- */
 @SkipEncoding({'/', '='})
 @RequestFilters(OAuthAuthenticator.class)
-@Consumes(MediaType.APPLICATION_JSON)
+@Path("/httpHealthChecks")
+@Consumes(APPLICATION_JSON)
 public interface HttpHealthCheckApi {
 
-   /**
-    * Returns the specified HttpHealthCheck resource.
-    *
-    * @param httpHealthCheck the name of the HttpHealthCheck resource to return.
-    * @return a HttpHealthCheck resource.
-    */
+   /** Returns a health check by name or null if not found. */
    @Named("HttpHealthChecks:get")
    @GET
    @Path("/{httpHealthCheck}")
@@ -86,7 +80,7 @@ public interface HttpHealthCheckApi {
     */
    @Named("HttpHealthChecks:insert")
    @POST
-   @Produces(MediaType.APPLICATION_JSON)
+   @Produces(APPLICATION_JSON)
    @OAuthScopes(COMPUTE_SCOPE)
    @MapBinder(BindToJsonPayload.class)
    Operation insert(@PayloadParam("name") String httpHealthCheckName);
@@ -100,18 +94,12 @@ public interface HttpHealthCheckApi {
     */
    @Named("HttpHealthChecks:insert")
    @POST
-   @Produces(MediaType.APPLICATION_JSON)
+   @Produces(APPLICATION_JSON)
    @OAuthScopes(COMPUTE_SCOPE)
    @MapBinder(HttpHealthCheckCreationBinder.class)
    Operation insert(@PayloadParam("name") String name, @PayloadParam("options") HttpHealthCheckCreationOptions options);
 
-   /**
-    * Deletes the specified TargetPool resource.
-    *
-    * @param httpHealthCheck name of the persistent forwarding rule resource to delete.
-    * @return an Operation resource. To check on the status of an operation, poll the Operations resource returned to
-    *         you, and look for the status field.
-    */
+   /** Deletes a health check by name and returns the operation in progress, or null if not found. */
    @Named("HttpHealthChecks:delete")
    @DELETE
    @Path("/{httpHealthCheck}")
@@ -119,29 +107,6 @@ public interface HttpHealthCheckApi {
    @Fallback(NullOnNotFoundOr404.class)
    @Nullable
    Operation delete(@PathParam("httpHealthCheck") String httpHealthCheck);
-
-   /**
-    * @return an Iterator that is able to fetch additional pages when required
-    * @see org.jclouds.collect.PagedIterable
-    */
-   @Named("HttpHealthChecks:list")
-   @GET
-   @OAuthScopes(COMPUTE_READONLY_SCOPE)
-   @ResponseParser(ParseHttpHealthChecks.class)
-   @Transform(ParseHttpHealthChecks.ToIteratorOfListPage.class)
-   @Fallback(EmptyIteratorOnNotFoundOr404.class)
-   Iterator<ListPage<HttpHealthCheck>> list();
-
-   /**
-    * @param options @see org.jclouds.googlecomputeengine.options.ListOptions
-    * @return ListPage
-    */
-   @Named("HttpHealthChecks:list")
-   @GET
-   @OAuthScopes(COMPUTE_READONLY_SCOPE)
-   @ResponseParser(ParseHttpHealthChecks.class)
-   @Fallback(EmptyListPageOnNotFoundOr404.class)
-   ListPage<HttpHealthCheck> list(ListOptions options);
 
    /**
     * Updates a HttpHealthCheck resource in the specified project
@@ -173,10 +138,47 @@ public interface HttpHealthCheckApi {
    @Named("HttpHealthChecks:update")
    @PUT
    @Path("/{httpHealthCheck}")
-   @Produces(MediaType.APPLICATION_JSON)
+   @Produces(APPLICATION_JSON)
    @OAuthScopes(COMPUTE_SCOPE)
    @MapBinder(HttpHealthCheckCreationBinder.class)
    Operation update(@PathParam("httpHealthCheck") @PayloadParam("name") String name,
                     @PayloadParam("options") HttpHealthCheckCreationOptions options);
 
+   /**
+    * Retrieves the list of persistent http health check resources available to the specified project.
+    * By default the list as a maximum size of 100, if no options are provided or ListOptions#getMaxResults() has not
+    * been set.
+    *
+    * @param token       marks the beginning of the next list page
+    * @param listOptions listing options
+    * @return a page of the list
+    */
+   @Named("HttpHealthChecks:list")
+   @GET
+   @OAuthScopes(COMPUTE_READONLY_SCOPE)
+   @ResponseParser(ParseHttpHealthChecks.class)
+   @Fallback(EmptyListPageOnNotFoundOr404.class)
+   ListPage<HttpHealthCheck> listPage(@Nullable @QueryParam("pageToken") String token, ListOptions listOptions);
+
+   /**
+    * @see #list(org.jclouds.googlecomputeengine.options.ListOptions)
+    */
+   @Named("HttpHealthChecks:list")
+   @GET
+   @OAuthScopes(COMPUTE_READONLY_SCOPE)
+   @ResponseParser(ParseHttpHealthChecks.class)
+   @Transform(ParseHttpHealthChecks.ToIteratorOfListPage.class)
+   @Fallback(EmptyIteratorOnNotFoundOr404.class)
+   Iterator<ListPage<HttpHealthCheck>> list();
+
+   /**
+    * @see #list(org.jclouds.googlecomputeengine.options.ListOptions)
+    */
+   @Named("HttpHealthChecks:list")
+   @GET
+   @OAuthScopes(COMPUTE_READONLY_SCOPE)
+   @ResponseParser(ParseHttpHealthChecks.class)
+   @Transform(ParseHttpHealthChecks.ToIteratorOfListPage.class)
+   @Fallback(EmptyIteratorOnNotFoundOr404.class)
+   Iterator<ListPage<HttpHealthCheck>> list(ListOptions options);
 }

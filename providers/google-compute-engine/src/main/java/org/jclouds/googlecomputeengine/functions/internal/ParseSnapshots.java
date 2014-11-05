@@ -47,7 +47,7 @@ public final class ParseSnapshots extends ParseJson<ListPage<Snapshot>> {
             final ListOptions options) {
          return new Function<String, ListPage<Snapshot>>() {
             @Override public ListPage<Snapshot> apply(String input) {
-               return api.getSnapshotApi(projectName).listAtMarker(input, options);
+               return api.getSnapshotApi(projectName).listPage(input, options);
             }
          };
       }

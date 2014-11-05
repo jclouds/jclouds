@@ -18,16 +18,8 @@ package org.jclouds.googlecomputeengine.options;
 
 import java.net.URI;
 
-/**
- * Options for attaching disks to instances.
- *
- * @see <a href="https://cloud.google.com/compute/docs/reference/latest/disks/insert"/>
- */
-public class DiskCreationOptions {
+public final class DiskCreationOptions {
 
-   /**
-    *  DiskCreationBinder extends this class to add name and sizeGb
-    */
    private URI type;
    private URI sourceImage;
    private URI sourceSnapshot;
@@ -37,7 +29,7 @@ public class DiskCreationOptions {
     *
     * @return the disk type
     */
-   public URI getType(){
+   public URI type(){
       return type;
    }
 
@@ -46,7 +38,7 @@ public class DiskCreationOptions {
     *
     * @return sourceImage, fully qualified URL for the image to be copied.
     */
-   public URI getSourceImage(){
+   public URI sourceImage(){
       return sourceImage;
    }
 
@@ -55,12 +47,12 @@ public class DiskCreationOptions {
     *
     * @return sourceSnapshot, fully qualified URL for the snapshot to be copied.
     */
-   public URI getSourceSnapshot(){
+   public URI sourceSnapshot(){
       return sourceSnapshot;
    }
 
    /**
-    * @see DiskCreationOptions#getType()
+    * @see DiskCreationOptions#type()
     */
    public DiskCreationOptions type(URI type){
       this.type = type;
@@ -68,7 +60,7 @@ public class DiskCreationOptions {
    }
 
    /**
-    * @see DiskCreationOptions#getSourceImage()
+    * @see DiskCreationOptions#sourceImage()
     */
    public DiskCreationOptions sourceImage(URI sourceImage){
       this.sourceImage = sourceImage;
@@ -76,7 +68,7 @@ public class DiskCreationOptions {
    }
 
    /**
-    * @see DiskCreationOptions#getSourceSnapshot()
+    * @see DiskCreationOptions#sourceSnapshot()
     */
    public DiskCreationOptions sourceSnapshot(URI sourceSnapshot){
       this.sourceSnapshot = sourceSnapshot;

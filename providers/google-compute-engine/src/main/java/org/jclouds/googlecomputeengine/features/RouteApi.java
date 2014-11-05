@@ -16,6 +16,7 @@
  */
 package org.jclouds.googlecomputeengine.features;
 
+import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 import static org.jclouds.googlecomputeengine.GoogleComputeEngineConstants.COMPUTE_READONLY_SCOPE;
 import static org.jclouds.googlecomputeengine.GoogleComputeEngineConstants.COMPUTE_SCOPE;
 
@@ -30,7 +31,7 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
-import javax.ws.rs.core.MediaType;
+import javax.ws.rs.QueryParam;
 
 import org.jclouds.Fallbacks.NullOnNotFoundOr404;
 import org.jclouds.googlecomputeengine.GoogleComputeEngineFallbacks.EmptyIteratorOnNotFoundOr404;
@@ -53,85 +54,25 @@ import org.jclouds.rest.annotations.ResponseParser;
 import org.jclouds.rest.annotations.SkipEncoding;
 import org.jclouds.rest.annotations.Transform;
 
-/**
- * Provides access to Routes via their REST API.
- */
 @SkipEncoding({'/', '='})
 @RequestFilters(OAuthAuthenticationFilter.class)
-@Consumes(MediaType.APPLICATION_JSON)
+@Path("/routes")
+@Consumes(APPLICATION_JSON)
 public interface RouteApi {
 
-   /**
-    * Returns the specified route resource
-    *
-    * @param routeName name of the region resource to return.
-    * @return If successful, this method returns a Route resource
-    */
+   /** Returns a route type by name or null if not found. */
    @Named("Routes:get")
    @GET
-   @Path("/global/routes/{route}")
+   @Path("/{route}")
    @OAuthScopes(COMPUTE_READONLY_SCOPE)
    @Fallback(NullOnNotFoundOr404.class)
    Route get(@PathParam("route") String routeName);
 
-   /**
-    * Retrieves the listFirstPage of route resources available to the specified project.
-    * By default the listFirstPage as a maximum size of 100, if no options are provided or ListOptions#getMaxResults()
-    * has not been set.
-    *
-    * @param marker      marks the beginning of the next list page
-    * @param listOptions listing options
-    * @return a page of the listFirstPage
-    * @see org.jclouds.googlecomputeengine.options.ListOptions
-    * @see org.jclouds.googlecomputeengine.domain.ListPage
-    */
-   @Named("Routes:list")
-   @GET
-   @Path("/global/routes")
-   @OAuthScopes(COMPUTE_READONLY_SCOPE)
-   @ResponseParser(ParseRoutes.class)
-   @Fallback(EmptyListPageOnNotFoundOr404.class)
-   ListPage<Route> listAtMarker(String marker, ListOptions listOptions);
-
-   /**
-    * @see RouteApi#list(org.jclouds.googlecomputeengine.options.ListOptions)
-    */
-   @Named("Routes:list")
-   @GET
-   @Path("/global/routes")
-   @OAuthScopes(COMPUTE_READONLY_SCOPE)
-   @ResponseParser(ParseRoutes.class)
-   @Transform(ParseRoutes.ToIteratorOfListPage.class)
-   @Fallback(EmptyIteratorOnNotFoundOr404.class)
-   Iterator<ListPage<Route>> list();
-
-   /**
-    * A paged version of RegionApi#listFirstPage()
-    *
-    * @return an Iterator that is able to fetch additional pages when required
-    * @see RouteApi#listAtMarker(String, org.jclouds.googlecomputeengine.options.ListOptions)
-    * @see org.jclouds.collect.PagedIterable
-    */
-   @Named("Routes:list")
-   @GET
-   @Path("/global/routes")
-   @OAuthScopes(COMPUTE_READONLY_SCOPE)
-   @ResponseParser(ParseRoutes.class)
-   @Transform(ParseRoutes.ToIteratorOfListPage.class)
-   @Fallback(EmptyIteratorOnNotFoundOr404.class)
-   Iterator<ListPage<Route>> list(ListOptions listOptions);
-
-   /**
-    * Deletes the specified route resource.
-    *
-    * @param routeName name of the route resource to delete.
-    * @return an Operation resource. To check on the status of an operation, poll the Operations resource returned to
-    *         you, and look for the status field.  If the route did not exist the result is null.
-    */
+   /** Deletes a route by name and returns the operation in progress, or null if not found. */
    @Named("Routes:delete")
    @DELETE
-   @Consumes(MediaType.APPLICATION_JSON)
-   @Path("/global/routes/{route}")
+   @Consumes(APPLICATION_JSON)
+   @Path("/{route}")
    @OAuthScopes(COMPUTE_SCOPE)
    @Fallback(NullOnNotFoundOr404.class)
    @Nullable
@@ -148,13 +89,49 @@ public interface RouteApi {
     */
    @Named("Routes:insert")
    @POST
-   @Consumes(MediaType.APPLICATION_JSON)
-   @Produces(MediaType.APPLICATION_JSON)
-   @Path("/global/routes")
+   @Consumes(APPLICATION_JSON)
+   @Produces(APPLICATION_JSON)
    @OAuthScopes({COMPUTE_SCOPE})
    @MapBinder(RouteBinder.class)
    Operation createInNetwork(@PayloadParam("name") String name,
                              @PayloadParam("network") URI network,
                              @PayloadParam("options") RouteOptions routeOptions);
 
+   /**
+    * Retrieves the list of route resources available to the specified project.
+    * By default the list as a maximum size of 100, if no options are provided or ListOptions#getMaxResults() has not
+    * been set.
+    *
+    * @param token       marks the beginning of the next list page
+    * @param listOptions listing options
+    * @return a page of the list
+    */
+   @Named("Routes:list")
+   @GET
+   @OAuthScopes(COMPUTE_READONLY_SCOPE)
+   @ResponseParser(ParseRoutes.class)
+   @Fallback(EmptyListPageOnNotFoundOr404.class)
+   ListPage<Route> listPage(@Nullable @QueryParam("pageToken") String token, ListOptions listOptions);
+
+   /**
+    * @see #list(org.jclouds.googlecomputeengine.options.ListOptions)
+    */
+   @Named("Routes:list")
+   @GET
+   @OAuthScopes(COMPUTE_READONLY_SCOPE)
+   @ResponseParser(ParseRoutes.class)
+   @Transform(ParseRoutes.ToIteratorOfListPage.class)
+   @Fallback(EmptyIteratorOnNotFoundOr404.class)
+   Iterator<ListPage<Route>> list();
+
+   /**
+    * @see #list(org.jclouds.googlecomputeengine.options.ListOptions)
+    */
+   @Named("Routes:list")
+   @GET
+   @OAuthScopes(COMPUTE_READONLY_SCOPE)
+   @ResponseParser(ParseRoutes.class)
+   @Transform(ParseRoutes.ToIteratorOfListPage.class)
+   @Fallback(EmptyIteratorOnNotFoundOr404.class)
+   Iterator<ListPage<Route>> list(ListOptions options);
 }

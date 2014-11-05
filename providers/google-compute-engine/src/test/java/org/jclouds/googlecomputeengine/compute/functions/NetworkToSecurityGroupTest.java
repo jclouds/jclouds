@@ -22,6 +22,7 @@ import static org.easymock.EasyMock.expect;
 import static org.easymock.EasyMock.replay;
 import static org.jclouds.googlecomputeengine.compute.functions.FirewallToIpPermissionTest.hasProtocol;
 import static org.jclouds.googlecomputeengine.compute.functions.FirewallToIpPermissionTest.hasStartAndEndPort;
+import static org.jclouds.googlecomputeengine.options.ListOptions.Builder.filter;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertTrue;
 
@@ -33,7 +34,6 @@ import org.jclouds.googlecomputeengine.domain.ListPage;
 import org.jclouds.googlecomputeengine.domain.Network;
 import org.jclouds.googlecomputeengine.features.FirewallApi;
 import org.jclouds.googlecomputeengine.options.ListOptions;
-import org.jclouds.googlecomputeengine.options.ListOptions.Builder;
 import org.jclouds.net.domain.IpProtocol;
 import org.testng.annotations.Test;
 
@@ -58,7 +58,7 @@ public class NetworkToSecurityGroupTest {
       GoogleComputeEngineApi api = createMock(GoogleComputeEngineApi.class);
       FirewallApi fwApi = createMock(FirewallApi.class);
 
-      ListOptions options = new Builder().filter("network eq .*/jclouds-test");
+      ListOptions options = filter("network eq .*/jclouds-test");
       expect(api.getFirewallApi(projectSupplier.get()))
               .andReturn(fwApi);
       expect(fwApi.list(options)).andReturn(

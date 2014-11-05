@@ -23,7 +23,7 @@ import java.net.URI;
  *
  * @see <a href="https://developers.google.com/compute/docs/reference/latest/instances/attachDisk"/>
  */
-public class AttachDiskOptions {
+public final class AttachDiskOptions {
 
    public enum DiskType {
       SCRATCH,
@@ -41,53 +41,31 @@ public class AttachDiskOptions {
    private String deviceName;
    private boolean boot;
 
-   /**
-    * The disk type
-    *
-    * @return the disk type.
-    */
-   public DiskType getType() {
+   public DiskType type() {
       return type;
    }
 
-   /**
-    * The disk mode
-    *
-    * @return the disk mode
-    */
-   public DiskMode getMode() {
+   public DiskMode mode() {
       return mode;
    }
 
-   /**
-    * The URI of the source disk - optional, if DiskType.SCRATCH is used.
-    *
-    * @return the URI
-    */
-   public URI getSource() {
+   /** The URI of the source disk - optional, if DiskType.SCRATCH is used. */
+   public URI source() {
       return source;
    }
 
-   /**
-    * The device name on the instance - optional.
-    *
-    * @return the device name
-    */
-   public String getDeviceName() {
+   /** The device name on the instance - optional. */
+   public String deviceName() {
       return deviceName;
    }
 
-   /**
-    * Indicates that this is a boot disk. VM will use the first partition of the disk for its root filesystem.
-    *
-    * @return true if this is a boot disk, false otherwise
-    */
-   public boolean getBoot() {
+   /** True if this is a boot disk. VM will use the first partition of the disk for its root filesystem. */
+   public boolean boot() {
       return boot;
    }
 
    /**
-    * @see AttachDiskOptions#getType()
+    * @see AttachDiskOptions#type()
     */
    public AttachDiskOptions type(DiskType type) {
       this.type = type;
@@ -95,7 +73,7 @@ public class AttachDiskOptions {
    }
 
    /**
-    * @see AttachDiskOptions#getMode()
+    * @see AttachDiskOptions#mode()
     */
    public AttachDiskOptions mode(DiskMode mode) {
       this.mode = mode;
@@ -103,7 +81,7 @@ public class AttachDiskOptions {
    }
 
    /**
-    * @see AttachDiskOptions#getSource()
+    * @see AttachDiskOptions#source()
     */
    public AttachDiskOptions source(URI source) {
       this.source = source;
@@ -111,7 +89,7 @@ public class AttachDiskOptions {
    }
 
    /**
-    * @see AttachDiskOptions#getDeviceName()
+    * @see AttachDiskOptions#deviceName()
     */
    public AttachDiskOptions deviceName(String deviceName) {
       this.deviceName = deviceName;
@@ -119,7 +97,7 @@ public class AttachDiskOptions {
    }
 
    /**
-    * @see org.jclouds.googlecomputeengine.options.AttachDiskOptions#getBoot()
+    * @see AttachDiskOptions#boot()
     */
    public AttachDiskOptions boot(boolean boot) {
       this.boot = boot;

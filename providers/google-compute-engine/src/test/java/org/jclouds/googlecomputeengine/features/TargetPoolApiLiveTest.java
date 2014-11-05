@@ -16,6 +16,7 @@
  */
 package org.jclouds.googlecomputeengine.features;
 
+import static org.jclouds.googlecomputeengine.options.ListOptions.Builder.filter;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotEquals;
 import static org.testng.Assert.assertNotNull;
@@ -33,7 +34,6 @@ import org.jclouds.googlecomputeengine.domain.templates.InstanceTemplate;
 import org.jclouds.googlecomputeengine.internal.BaseGoogleComputeEngineApiLiveTest;
 import org.jclouds.googlecomputeengine.options.DiskCreationOptions;
 import org.jclouds.googlecomputeengine.options.HttpHealthCheckCreationOptions;
-import org.jclouds.googlecomputeengine.options.ListOptions;
 import org.jclouds.googlecomputeengine.options.TargetPoolCreationOptions;
 import org.jclouds.googlecomputeengine.options.TargetPoolCreationOptions.SessionAffinityValue;
 import org.testng.annotations.AfterClass;
@@ -73,8 +73,7 @@ public class TargetPoolApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
       InstanceApi instanceApi = api.getInstanceApi(userProject.get(), DEFAULT_ZONE_NAME);
       HttpHealthCheckApi httpHealthCheckApi = api.getHttpHealthCheckApi(userProject.get());
 
-      ListPage<Image> list = api.getImageApi("centos-cloud").list(new ListOptions.Builder().filter("name eq centos.*"))
-            .next();
+      ListPage<Image> list = api.getImageApi("centos-cloud").list(filter("name eq centos.*")).next();
       // Get an imageUri
       URI imageUri = FluentIterable.from(list)
             .filter(new Predicate<Image>() {
@@ -104,9 +103,8 @@ public class TargetPoolApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
 
       // Create a disk.
       DiskCreationOptions diskCreationOptions = new DiskCreationOptions().sourceImage(instanceTemplate.image());
-      assertZoneOperationDoneSuccessfully(api.getDiskApi(userProject.get())
-                  .createInZone(BOOT_DISK_NAME, DEFAULT_DISK_SIZE_GB, DEFAULT_ZONE_NAME, diskCreationOptions),
-            TIME_WAIT_LONG);
+      assertZoneOperationDoneSuccessfully(api.getDiskApi(userProject.get(), DEFAULT_ZONE_NAME)
+                  .create(BOOT_DISK_NAME, DEFAULT_DISK_SIZE_GB, diskCreationOptions), TIME_WAIT_LONG);
 
       // Create an instance.
       assertZoneOperationDoneSuccessfully(instanceApi.create(INSTANCE_NAME, instanceTemplate),
@@ -205,8 +203,7 @@ public class TargetPoolApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
 
    @Test(groups = "live", dependsOnMethods = "testInsertTargetPool")
    public void testListTargetPool() {
-      ListPage<TargetPool> targetPool = api().list(new ListOptions.Builder()
-              .filter("name eq " + BACKUP_TARGETPOOL_NAME));
+      ListPage<TargetPool> targetPool = api().list(filter("name eq " + BACKUP_TARGETPOOL_NAME)).next();
       assertEquals(Iterables.size(targetPool), 1);
    }
 
@@ -249,11 +246,8 @@ public class TargetPoolApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
 
       try {
          waitZoneOperationDone(instanceApi.delete(INSTANCE_NAME), TIME_WAIT_LONG);
-
-         waitZoneOperationDone(api.getDiskApi(userProject.get()).deleteInZone(DEFAULT_ZONE_NAME, BOOT_DISK_NAME),
-                               TIME_WAIT);
+         waitZoneOperationDone(api.getDiskApi(userProject.get(), DEFAULT_ZONE_NAME).delete(BOOT_DISK_NAME), TIME_WAIT);
          waitGlobalOperationDone(api.getNetworkApi(userProject.get()).delete(INSTANCE_NETWORK_NAME), TIME_WAIT_LONG);
-
          waitGlobalOperationDone(httpHealthCheckApi.delete(HEALTHCHECK_NAME), TIME_WAIT);
       } catch (Exception e) {
          // we don't really care about any exception here, so just delete away.

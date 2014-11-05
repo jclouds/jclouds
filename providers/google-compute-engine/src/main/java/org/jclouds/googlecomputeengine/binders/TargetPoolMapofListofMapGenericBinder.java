@@ -16,50 +16,51 @@
  */
 package org.jclouds.googlecomputeengine.binders;
 
+import java.io.IOException;
+import java.io.StringWriter;
+import java.io.Writer;
 import java.net.URI;
 import java.util.List;
 import java.util.Map;
 
-import javax.inject.Inject;
-
 import org.jclouds.http.HttpRequest;
-import org.jclouds.json.Json;
-import org.jclouds.rest.binders.BindToJsonPayload;
+import org.jclouds.rest.MapBinder;
 
-import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
+import com.google.gson.stream.JsonWriter;
 
-class TargetPoolMapofListofMapGenericBinder extends BindToJsonPayload {
+class TargetPoolMapofListofMapGenericBinder implements MapBinder {
+   private final String outterString;
+   private final String innerString;
 
-   @Inject TargetPoolMapofListofMapGenericBinder(Json jsonBinder) {
-      super(jsonBinder);
-   }
-
-   private String outterString;
-   private String innerString;
-
-   public void outerString(String outterString) {
+   TargetPoolMapofListofMapGenericBinder(String outterString, String innerString) {
       this.outterString = outterString;
-   }
-
-   public void innerString(String innerString) {
       this.innerString = innerString;
    }
 
-   /**
-    * For the addInstance request the request body is in an atypical form.
-    *
-    * @see <a href="https://cloud.google.com/compute/docs/reference/latest/targetPools/addInstance"/>
-    */
    @Override public <R extends HttpRequest> R bindToRequest(R request, Map<String, Object> postParams) {
-      List<URI> instances = (List<URI>) postParams.get(outterString);
-      Map<String, List<Map<String, URI>>> finalInstances = Maps.newLinkedHashMap();
-      List<Map<String, URI>> innerInstances = Lists.newArrayList();
-      for (URI instance : instances) {
-         innerInstances.add(ImmutableMap.of(innerString, instance));
+      Writer out = new StringWriter();
+      JsonWriter json = new JsonWriter(out);
+      try {
+         json.beginObject();
+         json.name(outterString);
+         json.beginArray();
+         for (URI uri : (List<URI>) postParams.get(outterString)) {
+            json.beginObject();
+            json.name(innerString).value(uri.toString());
+            json.endObject();
+         }
+         json.endArray();
+         json.endObject();
+         json.close();
+      } catch (IOException e) {
+         throw new AssertionError(e); // should be impossible as we are writing a string!
       }
-      finalInstances.put(outterString, innerInstances);
-      return super.bindToRequest(request, finalInstances);
+      request.setPayload(out.toString());
+      request.getPayload().getContentMetadata().setContentType("application/json");
+      return request;
+   }
+
+   @Override public <R extends HttpRequest> R bindToRequest(R request, Object input) {
+      throw new UnsupportedOperationException();
    }
 }

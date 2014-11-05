@@ -48,7 +48,7 @@ public final class ParseGlobalOperations extends ParseJson<ListPage<Operation>> 
             final ListOptions options) {
          return new Function<String, ListPage<Operation>>() {
             @Override public ListPage<Operation> apply(String input) {
-               return api.getGlobalOperationApi(projectName).listAtMarker(input, options);
+               return api.getGlobalOperationApi(projectName).listPage(input, options);
             }
          };
       }

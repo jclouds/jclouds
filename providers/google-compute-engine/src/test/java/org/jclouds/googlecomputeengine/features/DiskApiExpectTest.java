@@ -53,9 +53,9 @@ public class DiskApiExpectTest extends BaseGoogleComputeEngineApiExpectTest {
               .payload(payloadFromResource("/disk_get.json")).build();
 
       DiskApi api = requestsSendResponses(requestForScopes(COMPUTE_READONLY_SCOPE),
-              TOKEN_RESPONSE, get, operationResponse).getDiskApi("myproject");
+              TOKEN_RESPONSE, get, operationResponse).getDiskApi("myproject", "us-central1-a");
 
-      assertEquals(api.getInZone("us-central1-a", "testimage1"),
+      assertEquals(api.get("testimage1"),
               new ParseDiskTest().expected());
    }
 
@@ -70,9 +70,9 @@ public class DiskApiExpectTest extends BaseGoogleComputeEngineApiExpectTest {
       HttpResponse operationResponse = HttpResponse.builder().statusCode(404).build();
 
       DiskApi api = requestsSendResponses(requestForScopes(COMPUTE_READONLY_SCOPE),
-              TOKEN_RESPONSE, get, operationResponse).getDiskApi("myproject");
+              TOKEN_RESPONSE, get, operationResponse).getDiskApi("myproject", "us-central1-a");
 
-      assertNull(api.getInZone("us-central1-a", "testimage1"));
+      assertNull(api.get("testimage1"));
    }
 
    public void testInsertDiskResponseIs2xx() {
@@ -90,9 +90,9 @@ public class DiskApiExpectTest extends BaseGoogleComputeEngineApiExpectTest {
 
       DiskApi api = requestsSendResponses(requestForScopes(COMPUTE_SCOPE),
               TOKEN_RESPONSE, insert,
-              insertDiskResponse).getDiskApi("myproject");
+              insertDiskResponse).getDiskApi("myproject", "us-central1-a");
 
-      assertEquals(api.createInZone("testimage1", 1, "us-central1-a"), new ParseZoneOperationTest().expected());
+      assertEquals(api.create("testimage1", 1), new ParseZoneOperationTest().expected());
    }
 
    public void testInsertDiskFromImageResponseIs2xx() {
@@ -110,11 +110,10 @@ public class DiskApiExpectTest extends BaseGoogleComputeEngineApiExpectTest {
 
       DiskApi api = requestsSendResponses(requestForScopes(COMPUTE_SCOPE),
                                           TOKEN_RESPONSE, insert,
-                                          insertDiskResponse).getDiskApi("myproject");
+                                          insertDiskResponse).getDiskApi("myproject", "us-central1-a");
 
       DiskCreationOptions diskCreationOptions = new DiskCreationOptions().sourceImage(URI.create(IMAGE_URL));
-      assertEquals(api.createInZone("testimage1", 1, "us-central1-a", diskCreationOptions),
-            new ParseZoneOperationTest().expected());
+      assertEquals(api.create("testimage1", 1, diskCreationOptions), new ParseZoneOperationTest().expected());
    }
 
    public void testInsertDiskSSDResponseIs2xx(){
@@ -132,11 +131,10 @@ public class DiskApiExpectTest extends BaseGoogleComputeEngineApiExpectTest {
 
     DiskApi api = requestsSendResponses(requestForScopes(COMPUTE_SCOPE),
                                        TOKEN_RESPONSE, insert,
-                                       insertDiskResponse).getDiskApi("myproject");
+                                       insertDiskResponse).getDiskApi("myproject", "us-central1-a");
 
     DiskCreationOptions diskCreationOptions = new DiskCreationOptions().type(URI.create(SSD_URL));
-    assertEquals(api.createInZone("testimage1", 1,
-                                  "us-central1-a", diskCreationOptions), new ParseZoneOperationTest().expected());
+    assertEquals(api.create("testimage1", 1, diskCreationOptions), new ParseZoneOperationTest().expected());
    }
 
    public void testCreateSnapshotResponseIs2xx() {
@@ -154,9 +152,9 @@ public class DiskApiExpectTest extends BaseGoogleComputeEngineApiExpectTest {
 
       DiskApi api = requestsSendResponses(requestForScopes(COMPUTE_SCOPE),
               TOKEN_RESPONSE, createSnapshotRequest,
-              createSnapshotResponse).getDiskApi("myproject");
+              createSnapshotResponse).getDiskApi("myproject", "us-central1-a");
 
-      assertEquals(api.createSnapshotInZone("us-central1-a", "testimage1", "test-snap"),
+      assertEquals(api.createSnapshot("testimage1", "test-snap"),
             new ParseZoneOperationTest().expected());
    }
 
@@ -175,9 +173,9 @@ public class DiskApiExpectTest extends BaseGoogleComputeEngineApiExpectTest {
 
       DiskApi api = requestsSendResponses(requestForScopes(COMPUTE_SCOPE),
               TOKEN_RESPONSE, createSnapshotRequest,
-              createSnapshotResponse).getDiskApi("myproject");
+              createSnapshotResponse).getDiskApi("myproject", "us-central1-a");
 
-      api.createSnapshotInZone("us-central1-a", "testimage1", "test-snap");
+      api.createSnapshot("testimage1", "test-snap");
    }
 
    public void testDeleteDiskResponseIs2xx() {
@@ -192,9 +190,9 @@ public class DiskApiExpectTest extends BaseGoogleComputeEngineApiExpectTest {
               .payload(payloadFromResource("/zone_operation.json")).build();
 
       DiskApi api = requestsSendResponses(requestForScopes(COMPUTE_SCOPE),
-              TOKEN_RESPONSE, delete, deleteResponse).getDiskApi("myproject");
+              TOKEN_RESPONSE, delete, deleteResponse).getDiskApi("myproject", "us-central1-a");
 
-      assertEquals(api.deleteInZone("us-central1-a", "testimage1"),
+      assertEquals(api.delete("testimage1"),
               new ParseZoneOperationTest().expected());
    }
 
@@ -209,9 +207,9 @@ public class DiskApiExpectTest extends BaseGoogleComputeEngineApiExpectTest {
       HttpResponse deleteResponse = HttpResponse.builder().statusCode(404).build();
 
       DiskApi api = requestsSendResponses(requestForScopes(COMPUTE_SCOPE),
-              TOKEN_RESPONSE, delete, deleteResponse).getDiskApi("myproject");
+              TOKEN_RESPONSE, delete, deleteResponse).getDiskApi("myproject", "us-central1-a");
 
-      assertNull(api.deleteInZone("us-central1-a", "testimage1"));
+      assertNull(api.delete("testimage1"));
    }
 
    public void testListDisksResponseIs2xx() {
@@ -226,9 +224,9 @@ public class DiskApiExpectTest extends BaseGoogleComputeEngineApiExpectTest {
               .payload(payloadFromResource("/disk_list.json")).build();
 
       DiskApi api = requestsSendResponses(requestForScopes(COMPUTE_READONLY_SCOPE),
-              TOKEN_RESPONSE, list, operationResponse).getDiskApi("myproject");
+              TOKEN_RESPONSE, list, operationResponse).getDiskApi("myproject", "us-central1-a");
 
-      assertEquals(api.listInZone("us-central1-a").next().toString(), new ParseDiskListTest().expected().toString());
+      assertEquals(api.list().next().toString(), new ParseDiskListTest().expected().toString());
    }
 
    public void testListDisksResponseIs4xx() {
@@ -242,8 +240,8 @@ public class DiskApiExpectTest extends BaseGoogleComputeEngineApiExpectTest {
       HttpResponse operationResponse = HttpResponse.builder().statusCode(404).build();
 
       DiskApi api = requestsSendResponses(requestForScopes(COMPUTE_READONLY_SCOPE),
-              TOKEN_RESPONSE, list, operationResponse).getDiskApi("myproject");
+              TOKEN_RESPONSE, list, operationResponse).getDiskApi("myproject", "us-central1-a");
 
-      assertFalse(api.listInZone("us-central1-a").hasNext());
+      assertFalse(api.list().hasNext());
    }
 }

@@ -24,13 +24,10 @@ import java.util.Map;
 
 import org.jclouds.googlecomputeengine.internal.BaseGoogleComputeEngineExpectTest;
 import org.jclouds.http.HttpRequest;
-import org.jclouds.json.Json;
-import org.jclouds.json.internal.GsonWrapper;
 import org.testng.annotations.Test;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
-import com.google.gson.Gson;
 
 @Test(groups = "unit", testName = "TargetPoolAddInstanceBinderTest")
 public class TargetPoolAddInstanceBinderTest extends BaseGoogleComputeEngineExpectTest<Object>{
@@ -40,12 +37,11 @@ public class TargetPoolAddInstanceBinderTest extends BaseGoogleComputeEngineExpe
                                                   "projects/project/zones/us-central1-a/instances/instance-1"),
                                        URI.create("https://www.googleapis.com/compute/v1/" +
                                                   "projects/project/zones/us-central1-a/instances/instance-2"));
-   
-   Json json = new GsonWrapper(new Gson());
+
+   TargetPoolChangeInstancesBinder binder = new TargetPoolChangeInstancesBinder();
  
    @Test
    public void testMap() throws SecurityException, NoSuchMethodException {
-      TargetPoolChangeInstancesBinder binder = new TargetPoolChangeInstancesBinder(json);
       HttpRequest request = HttpRequest.builder().method("GET").endpoint("http://momma").build();
       Map<String, Object> postParams = ImmutableMap.of("instances", (Object) FAKE_INSTANCES);
 
@@ -59,12 +55,5 @@ public class TargetPoolAddInstanceBinderTest extends BaseGoogleComputeEngineExpe
             + "]"
             + "}");
       assertEquals(request.getPayload().getContentMetadata().getContentType(), "application/json");
-
-   }
-
-   @Test(expectedExceptions = NullPointerException.class)
-   public void testNullIsBad() {
-      DiskCreationBinder binder = new DiskCreationBinder(json);
-      binder.bindToRequest(HttpRequest.builder().method("GET").endpoint("http://momma").build(), null);
    }
 }

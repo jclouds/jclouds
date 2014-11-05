@@ -16,6 +16,7 @@
  */
 package org.jclouds.googlecomputeengine.features;
 
+import static org.jclouds.googlecomputeengine.options.ListOptions.Builder.maxResults;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
 
@@ -24,7 +25,6 @@ import java.util.Iterator;
 import org.jclouds.googlecomputeengine.domain.ListPage;
 import org.jclouds.googlecomputeengine.domain.Operation;
 import org.jclouds.googlecomputeengine.internal.BaseGoogleComputeEngineApiLiveTest;
-import org.jclouds.googlecomputeengine.options.ListOptions;
 import org.testng.SkipException;
 import org.testng.annotations.Test;
 
@@ -34,13 +34,11 @@ public class ZoneOperationApiLiveTest extends BaseGoogleComputeEngineApiLiveTest
    private Operation operation;
 
    private ZoneOperationApi api() {
-      return api.getZoneOperationApi(userProject.get());
+      return api.getZoneOperationApi(userProject.get(), DEFAULT_ZONE_NAME);
    }
 
    public void testListOperationsWithFiltersAndPagination() {
-      Iterator<ListPage<Operation>> operations = api().listInZone(DEFAULT_ZONE_NAME, new ListOptions.Builder()
-//              .filter("operationType eq insert")
-              .maxResults(1));
+      Iterator<ListPage<Operation>> operations = api().list(maxResults(1));
 
       // make sure that in spite of having only one result per page we get at least two results
       int count = 0;
@@ -59,7 +57,7 @@ public class ZoneOperationApiLiveTest extends BaseGoogleComputeEngineApiLiveTest
 
    @Test(groups = "live", dependsOnMethods = "testListOperationsWithFiltersAndPagination")
    public void testGetOperation() {
-      Operation result = api().getInZone(DEFAULT_ZONE_NAME, operation.name());
+      Operation result = api().get(operation.name());
       assertNotNull(result);
       assertEquals(result.name(), operation.name()); // Checking state besides name can lead to flaky test.
    }

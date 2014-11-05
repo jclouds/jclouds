@@ -48,7 +48,7 @@ public final class ParseDisks extends ParseJson<ListPage<Disk>> {
          return new Function<String, ListPage<Disk>>() {
 
             @Override public ListPage<Disk> apply(String input) {
-               return api.getDiskApi(projectName).listAtMarkerInZone(zoneName, input, options);
+               return api.getDiskApi(projectName, zoneName).listPage(input, options);
             }
          };
       }

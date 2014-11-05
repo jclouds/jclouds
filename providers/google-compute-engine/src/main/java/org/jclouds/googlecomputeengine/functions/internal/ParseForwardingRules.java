@@ -49,7 +49,7 @@ public final class ParseForwardingRules extends ParseJson<ListPage<ForwardingRul
             final ListOptions options) {
          return new Function<String, ListPage<ForwardingRule>>() {
             @Override public ListPage<ForwardingRule> apply(String input) {
-               return api.getForwardingRuleApi(projectName, regionName).list(options);
+               return api.getForwardingRuleApi(projectName, regionName).listPage(input, options);
             }
          };
       }

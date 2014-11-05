@@ -22,7 +22,6 @@ import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertTrue;
 
 import java.util.Properties;
-import java.util.Set;
 
 import org.jclouds.compute.domain.Hardware;
 import org.jclouds.compute.domain.NodeMetadata;
@@ -66,17 +65,13 @@ public class GoogleComputeEngineServiceLiveTest extends BaseComputeServiceLiveTe
       Supplier<String> userProject = context.utils().injector().getInstance(Key.get(new TypeLiteral<Supplier<String>>() {
       }, UserProject.class));
       ImmutableSet.Builder<String> deprecatedMachineTypes = ImmutableSet.builder();
-      for (MachineType machine : api.getMachineTypeApi(userProject.get())
-              .listInZone(DEFAULT_ZONE_NAME).next()) {
+      for (MachineType machine : api.getMachineTypeApi(userProject.get(), DEFAULT_ZONE_NAME).list().next()) {
          if (machine.deprecated() != null) {
             deprecatedMachineTypes.add(machine.id());
          }
       }
       ImmutableSet<String> deprecatedMachineTypeIds = deprecatedMachineTypes.build();
-      Set<? extends Hardware> hardwareProfiles = client.listHardwareProfiles();
-      System.out.println(hardwareProfiles.size());
-      for (Hardware hardwareProfile : hardwareProfiles) {
-         System.out.println(hardwareProfile);
+      for (Hardware hardwareProfile : client.listHardwareProfiles()) {
          assertFalse(contains(deprecatedMachineTypeIds, hardwareProfile.getId()));
       }
    }

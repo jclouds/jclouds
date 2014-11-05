@@ -31,13 +31,13 @@ import org.jclouds.googlecomputeengine.domain.Image;
 import org.jclouds.googlecomputeengine.domain.Instance;
 import org.jclouds.googlecomputeengine.domain.Instance.AttachedDisk;
 import org.jclouds.googlecomputeengine.domain.ListPage;
+import org.jclouds.googlecomputeengine.domain.Operation;
 import org.jclouds.googlecomputeengine.domain.templates.InstanceTemplate;
 import org.jclouds.googlecomputeengine.internal.BaseGoogleComputeEngineApiLiveTest;
 import org.jclouds.googlecomputeengine.options.AttachDiskOptions;
 import org.jclouds.googlecomputeengine.options.AttachDiskOptions.DiskMode;
 import org.jclouds.googlecomputeengine.options.AttachDiskOptions.DiskType;
 import org.jclouds.googlecomputeengine.options.DiskCreationOptions;
-import org.jclouds.googlecomputeengine.options.ListOptions;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.Test;
 
@@ -70,8 +70,7 @@ public class InstanceApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
    @Override
    protected GoogleComputeEngineApi create(Properties props, Iterable<Module> modules) {
       GoogleComputeEngineApi api = super.create(props, modules);
-      List<Image> list = api.getImageApi("centos-cloud")
-            .list(new ListOptions.Builder().filter("name eq centos.*")).next();
+      List<Image> list = api.getImageApi("centos-cloud").list(filter("name eq centos.*")).next();
       URI imageUri = FluentIterable.from(list)
                         .filter(new Predicate<Image>() {
                            @Override
@@ -102,7 +101,7 @@ public class InstanceApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
    }
 
    private DiskApi diskApi() {
-      return api.getDiskApi(userProject.get());
+      return api.getDiskApi(userProject.get(), DEFAULT_ZONE_NAME);
    }
 
    @Test(groups = "live")
@@ -113,16 +112,11 @@ public class InstanceApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
               (INSTANCE_NETWORK_NAME, IPV4_RANGE), TIME_WAIT);
 
       DiskCreationOptions diskCreationOptions = new DiskCreationOptions().sourceImage(instance.image());
-      assertZoneOperationDoneSuccessfully(api.getDiskApi(userProject.get())
-                  .createInZone(BOOT_DISK_NAME, DEFAULT_DISK_SIZE_GB, DEFAULT_ZONE_NAME, diskCreationOptions),
+      assertZoneOperationDoneSuccessfully(diskApi().create(BOOT_DISK_NAME, DEFAULT_DISK_SIZE_GB, diskCreationOptions),
             TIME_WAIT);
 
-
-      assertZoneOperationDoneSuccessfully(
-            diskApi().createInZone("instance-live-test-disk", DEFAULT_DISK_SIZE_GB, DEFAULT_ZONE_NAME), TIME_WAIT);
-
+      assertZoneOperationDoneSuccessfully(diskApi().create("instance-live-test-disk", DEFAULT_DISK_SIZE_GB), TIME_WAIT);
       assertZoneOperationDoneSuccessfully(api().create(INSTANCE_NAME, instance), TIME_WAIT);
-
    }
 
    @Test(groups = "live", dependsOnMethods = "testInsertInstance")
@@ -162,7 +156,7 @@ public class InstanceApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
 
    @Test(groups = "live", dependsOnMethods = "testSetMetadataForInstance")
    public void testAttachDiskToInstance() {
-      assertZoneOperationDoneSuccessfully(diskApi().createInZone(ATTACH_DISK_NAME, 1, DEFAULT_ZONE_NAME), TIME_WAIT);
+      assertZoneOperationDoneSuccessfully(diskApi().create(ATTACH_DISK_NAME, 1), TIME_WAIT);
 
       Instance originalInstance = api().get(INSTANCE_NAME);
       assertZoneOperationDoneSuccessfully(api().attachDisk(INSTANCE_NAME,
@@ -192,7 +186,7 @@ public class InstanceApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
 
       assertTrue(modifiedInstance.disks().size() < originalInstance.disks().size());
 
-      assertZoneOperationDoneSuccessfully(diskApi().deleteInZone(DEFAULT_ZONE_NAME, ATTACH_DISK_NAME), TIME_WAIT);
+      assertZoneOperationDoneSuccessfully(diskApi().delete(ATTACH_DISK_NAME), TIME_WAIT);
    }
 
    @Test(groups = "live", dependsOnMethods = "testInsertInstance")
@@ -216,12 +210,10 @@ public class InstanceApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
    @Test(groups = "live", dependsOnMethods = "testResetInstance")
    public void testDeleteInstance() {
       assertZoneOperationDoneSuccessfully(api().delete(INSTANCE_NAME), TIME_WAIT);
-      assertZoneOperationDoneSuccessfully(api.getDiskApi(userProject.get()).deleteInZone(DEFAULT_ZONE_NAME, DISK_NAME),
-            TIME_WAIT);
-      assertZoneOperationDoneSuccessfully(
-            api.getDiskApi(userProject.get()).deleteInZone(DEFAULT_ZONE_NAME, BOOT_DISK_NAME), TIME_WAIT);
-      assertGlobalOperationDoneSucessfully(api.getNetworkApi(userProject.get()).delete
-              (INSTANCE_NETWORK_NAME), TIME_WAIT);
+      assertZoneOperationDoneSuccessfully(diskApi().delete(DISK_NAME), TIME_WAIT);
+      assertZoneOperationDoneSuccessfully(diskApi().delete(BOOT_DISK_NAME), TIME_WAIT);
+      Operation deleteNetwork = api.getNetworkApi(userProject.get()).delete(INSTANCE_NETWORK_NAME);
+      assertGlobalOperationDoneSucessfully(deleteNetwork, TIME_WAIT);
    }
 
    private void assertInstanceEquals(Instance result, InstanceTemplate expected) {
@@ -233,12 +225,9 @@ public class InstanceApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
    protected void tearDownContext() {
       try {
          waitZoneOperationDone(api().delete(INSTANCE_NAME), TIME_WAIT);
-         waitZoneOperationDone(api.getDiskApi(userProject.get()).deleteInZone(DEFAULT_ZONE_NAME, DISK_NAME),
-                               TIME_WAIT);
-         waitZoneOperationDone(api.getDiskApi(userProject.get()).deleteInZone(DEFAULT_ZONE_NAME, BOOT_DISK_NAME),
-                               TIME_WAIT);
-         waitGlobalOperationDone(api.getNetworkApi(userProject.get()).delete
-                                                                                (INSTANCE_NETWORK_NAME), TIME_WAIT);
+         waitZoneOperationDone(diskApi().delete(DISK_NAME), TIME_WAIT);
+         waitZoneOperationDone(diskApi().delete(BOOT_DISK_NAME), TIME_WAIT);
+         waitGlobalOperationDone(api.getNetworkApi(userProject.get()).delete(INSTANCE_NETWORK_NAME), TIME_WAIT);
       } catch (Exception e) {
          // we don't really care about any exception here, so just delete away.
        }

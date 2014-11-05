@@ -32,10 +32,6 @@ import org.testng.annotations.Test;
 import com.google.common.collect.ImmutableMap;
 import com.google.gson.Gson;
 
-
-/**
- * Tests behavior of {@code BindToJsonPayload}
- */
 @Test(groups = "unit", testName = "ForwardingRuleCreationBinderTest")
 public class ForwardingRuleCreationBinderTest extends BaseGoogleComputeEngineExpectTest<Object>{
 
@@ -72,13 +68,5 @@ public class ForwardingRuleCreationBinderTest extends BaseGoogleComputeEngineExp
             + "\"target\":\"" + TARGET + "\""
             + "}");
       assertEquals(request.getPayload().getContentMetadata().getContentType(), "application/json");
-
    }
-
-   @Test(expectedExceptions = NullPointerException.class)
-   public void testNullIsBad() {
-      ForwardingRuleCreationBinder binder = new ForwardingRuleCreationBinder(json);
-      binder.bindToRequest(HttpRequest.builder().method("GET").endpoint("http://momma").build(), null);
-   }
-
 }

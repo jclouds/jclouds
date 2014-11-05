@@ -35,8 +35,7 @@ public final class ParseMachineTypes extends ParseJson<ListPage<MachineType>> {
       });
    }
 
-   public static class ToIteratorOfListPage
-         extends BaseWithZoneToIteratorOfListPage<MachineType, ToIteratorOfListPage> {
+   public static class ToIteratorOfListPage extends BaseWithZoneToIteratorOfListPage<MachineType, ToIteratorOfListPage> {
 
       private final GoogleComputeEngineApi api;
 
@@ -49,7 +48,7 @@ public final class ParseMachineTypes extends ParseJson<ListPage<MachineType>> {
          return new Function<String, ListPage<MachineType>>() {
 
             @Override public ListPage<MachineType> apply(String input) {
-               return api.getMachineTypeApi(projectName).listAtMarkerInZone(zoneName, input, options);
+               return api.getMachineTypeApi(projectName, zoneName).listPage(input, options);
             }
          };
       }

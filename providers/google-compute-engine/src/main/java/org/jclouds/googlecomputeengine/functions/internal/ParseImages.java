@@ -47,7 +47,7 @@ public final class ParseImages extends ParseJson<ListPage<Image>> {
             final ListOptions options) {
          return new Function<String, ListPage<Image>>() {
             @Override public ListPage<Image> apply(String input) {
-               return api.getImageApi(projectName).listAtMarker(input, options);
+               return api.getImageApi(projectName).listPage(input, options);
             }
          };
       }

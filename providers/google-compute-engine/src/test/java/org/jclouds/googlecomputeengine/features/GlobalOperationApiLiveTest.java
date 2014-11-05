@@ -16,6 +16,7 @@
  */
 package org.jclouds.googlecomputeengine.features;
 
+import static org.jclouds.googlecomputeengine.options.ListOptions.Builder.maxResults;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
 
@@ -24,7 +25,6 @@ import java.util.Iterator;
 import org.jclouds.googlecomputeengine.domain.ListPage;
 import org.jclouds.googlecomputeengine.domain.Operation;
 import org.jclouds.googlecomputeengine.internal.BaseGoogleComputeEngineApiLiveTest;
-import org.jclouds.googlecomputeengine.options.ListOptions;
 import org.testng.SkipException;
 import org.testng.annotations.Test;
 
@@ -38,9 +38,7 @@ public class GlobalOperationApiLiveTest extends BaseGoogleComputeEngineApiLiveTe
    }
 
    public void testListOperationsWithFiltersAndPagination() {
-      Iterator<ListPage<Operation>> operations = api().list(new ListOptions.Builder()
-            //              .filter("operationType eq insert")
-            .maxResults(1));
+      Iterator<ListPage<Operation>> operations = api().list(maxResults(1));
 
       // make sure that in spite of having only one result per page we get at least two results
       int count = 0;

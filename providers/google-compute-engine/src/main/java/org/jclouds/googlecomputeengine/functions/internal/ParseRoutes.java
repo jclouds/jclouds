@@ -48,7 +48,7 @@ public final class ParseRoutes extends ParseJson<ListPage<Route>> {
             final ListOptions options) {
          return new Function<String, ListPage<Route>>() {
             @Override public ListPage<Route> apply(String input) {
-               return api.getRouteApi(projectName).listAtMarker(input, options);
+               return api.getRouteApi(projectName).listPage(input, options);
             }
          };
       }

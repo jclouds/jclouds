@@ -24,44 +24,29 @@ import java.util.Map;
 import org.jclouds.googlecomputeengine.internal.BaseGoogleComputeEngineExpectTest;
 import org.jclouds.googlecomputeengine.options.DiskCreationOptions;
 import org.jclouds.http.HttpRequest;
-import org.jclouds.json.Json;
-import org.jclouds.json.internal.GsonWrapper;
 import org.testng.annotations.Test;
 
 import com.google.common.collect.ImmutableMap;
-import com.google.gson.Gson;
 
-/**
- * Tests behavior of {@code BindToJsonPayload}
- */
 @Test(groups = "unit", testName = "DiskCreationBinderTest")
 public class DiskCreationBinderTest extends BaseGoogleComputeEngineExpectTest<Object>{
 
    private static final String FAKE_SOURCE_IMAGE = "https://www.googleapis.com/compute/v1/projects/" +
                                        "debian-cloud/global/images/backports-debian-7-wheezy-v20141017";
 
-   Json json = new GsonWrapper(new Gson());
+   DiskCreationBinder binder = new DiskCreationBinder();
  
    @Test
    public void testMap() throws SecurityException, NoSuchMethodException {
-      DiskCreationBinder binder = new DiskCreationBinder(json);
       DiskCreationOptions diskCreationOptions = new DiskCreationOptions().sourceImage(URI.create(FAKE_SOURCE_IMAGE));
 
       HttpRequest request = HttpRequest.builder().method("GET").endpoint("http://momma").build();
       Map<String, Object> postParams = ImmutableMap.of("name", "testName", "sizeGb", 15, "options", diskCreationOptions);
 
-      binder.bindToRequest(request, postParams);
+      request = binder.bindToRequest(request, postParams);
 
       assertEquals(request.getPayload().getRawContent(),
             "{\"name\":\"testName\",\"sizeGb\":15,\"sourceImage\":\"" + FAKE_SOURCE_IMAGE + "\"}");
       assertEquals(request.getPayload().getContentMetadata().getContentType(), "application/json");
-
    }
-
-   @Test(expectedExceptions = NullPointerException.class)
-   public void testNullIsBad() {
-      DiskCreationBinder binder = new DiskCreationBinder(json);
-      binder.bindToRequest(HttpRequest.builder().method("GET").endpoint("http://momma").build(), null);
-   }
-
 }

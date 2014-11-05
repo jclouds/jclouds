@@ -16,6 +16,7 @@
  */
 package org.jclouds.googlecomputeengine.features;
 
+import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 import static org.jclouds.googlecomputeengine.GoogleComputeEngineConstants.COMPUTE_READONLY_SCOPE;
 import static org.jclouds.googlecomputeengine.GoogleComputeEngineConstants.COMPUTE_SCOPE;
 
@@ -30,7 +31,6 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
-import javax.ws.rs.core.MediaType;
 
 import org.jclouds.Fallbacks.NullOnNotFoundOr404;
 import org.jclouds.googlecomputeengine.GoogleComputeEngineFallbacks.EmptyIteratorOnNotFoundOr404;
@@ -52,109 +52,79 @@ import org.jclouds.rest.annotations.SkipEncoding;
 import org.jclouds.rest.annotations.Transform;
 import org.jclouds.rest.binders.BindToJsonPayload;
 
-/**
- * Provides access to Addresses via their REST API.
- */
 @SkipEncoding({'/', '='})
 @RequestFilters(OAuthAuthenticationFilter.class)
+@Path("/addresses")
+@Consumes(APPLICATION_JSON)
 public interface AddressApi {
 
-   /**
-    * Returns the specified address resource.
-    *
-    * @param region     Name of the region the address is in.
-    * @param addressName name of the address resource to return.
-    * @return a Address resource.
-    */
+   /** Returns an address by name or null if not found. */
    @Named("Addresses:get")
    @GET
-   @Consumes(MediaType.APPLICATION_JSON)
-   @Path("/regions/{region}/addresses/{address}")
+   @Path("/{address}")
    @OAuthScopes(COMPUTE_READONLY_SCOPE)
    @Fallback(NullOnNotFoundOr404.class)
    @Nullable
-   Address getInRegion(@PathParam("region") String region, @PathParam("address") String addressName);
+   Address get(@PathParam("address") String address);
 
    /**
-    * Creates a address resource in the specified project specifying the size of the address.
-    *
-    *
-    * @param region     the name of the region where the address is to be created.
-    * @param addressName the name of address.
+    * Creates an address resource in the specified project specifying the size of the address.
+    * 
+    * @param address the name of address.
     * @return an Operation resource. To check on the status of an operation, poll the Operations resource returned to
     *         you, and look for the status field.
     */
    @Named("Addresses:insert")
    @POST
-   @Consumes(MediaType.APPLICATION_JSON)
-   @Produces(MediaType.APPLICATION_JSON)
-   @Path("/regions/{region}/addresses")
+   @Produces(APPLICATION_JSON)
    @OAuthScopes({COMPUTE_SCOPE})
    @MapBinder(BindToJsonPayload.class)
-   Operation createInRegion(@PathParam("region") String region, @PayloadParam("name") String addressName);
+   Operation create(@PayloadParam("name") String address);
 
-   /**
-    * Deletes the specified address resource.
-    *
-    * @param region     the region the address is in.
-    * @param addressName name of the address resource to delete.
-    * @return an Operation resource. To check on the status of an operation, poll the Operations resource returned to
-    *         you, and look for the status field.
-    */
+   /** Deletes an address by name and returns the operation in progress, or null if not found. */
    @Named("Addresses:delete")
    @DELETE
-   @Consumes(MediaType.APPLICATION_JSON)
-   @Path("/regions/{region}/addresses/{address}")
+   @Path("/{address}")
    @OAuthScopes(COMPUTE_SCOPE)
    @Fallback(NullOnNotFoundOr404.class)
    @Nullable
-   Operation deleteInRegion(@PathParam("region") String region, @PathParam("address") String addressName);
+   Operation delete(@PathParam("address") String address);
 
    /**
-    * Retrieves the listPage of address resources contained within the specified project and region.
-    * By default the listPage as a maximum size of 100, if no options are provided or ListOptions#getMaxResults() has
-    * not been set.
+    * Retrieves the list of address resources available to the specified project.
+    * By default the list as a maximum size of 100, if no options are provided or ListOptions#getMaxResults() has not
+    * been set.
     *
-    * @param region        the region to search in
-    * @param marker      marks the beginning of the next list page
+    * @param token       marks the beginning of the next list page
     * @param listOptions listing options
-    * @return a page of the listPage
-    * @see org.jclouds.googlecomputeengine.options.ListOptions
-    * @see org.jclouds.googlecomputeengine.domain.ListPage
+    * @return a page of the list
     */
    @Named("Addresses:list")
    @GET
-   @Consumes(MediaType.APPLICATION_JSON)
-   @Path("/regions/{region}/addresses")
    @OAuthScopes(COMPUTE_READONLY_SCOPE)
    @ResponseParser(ParseAddresses.class)
    @Fallback(EmptyListPageOnNotFoundOr404.class)
-   ListPage<Address> listAtMarkerInRegion(@PathParam("region") String region, @QueryParam("pageToken") @Nullable String marker, ListOptions listOptions);
+   ListPage<Address> listPage(@Nullable @QueryParam("pageToken") String token, ListOptions listOptions);
 
    /**
-    * A paged version of AddressApi#listPageInRegion(String)
-    *
-    * @param region the region to list in
-    * @return an Iterator that is able to fetch additional pages when required
-    * @see #listAtMarkerInRegion(String, String, org.jclouds.googlecomputeengine.options.ListOptions)
+    * @see #list(org.jclouds.googlecomputeengine.options.ListOptions)
     */
    @Named("Addresses:list")
    @GET
-   @Consumes(MediaType.APPLICATION_JSON)
-   @Path("/regions/{region}/addresses")
    @OAuthScopes(COMPUTE_READONLY_SCOPE)
    @ResponseParser(ParseAddresses.class)
    @Transform(ParseAddresses.ToIteratorOfListPage.class)
    @Fallback(EmptyIteratorOnNotFoundOr404.class)
-   Iterator<ListPage<Address>> listInRegion(@PathParam("region") String region);
+   Iterator<ListPage<Address>> list();
 
+   /**
+    * @see #list(org.jclouds.googlecomputeengine.options.ListOptions)
+    */
    @Named("Addresses:list")
    @GET
-   @Consumes(MediaType.APPLICATION_JSON)
-   @Path("/regions/{region}/addresses")
    @OAuthScopes(COMPUTE_READONLY_SCOPE)
    @ResponseParser(ParseAddresses.class)
    @Transform(ParseAddresses.ToIteratorOfListPage.class)
    @Fallback(EmptyIteratorOnNotFoundOr404.class)
-   Iterator<ListPage<Address>> listInRegion(@PathParam("region") String region, ListOptions options);
+   Iterator<ListPage<Address>> list(ListOptions options);
 }

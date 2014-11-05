@@ -23,6 +23,7 @@ import static org.jclouds.googlecomputeengine.GoogleComputeEngineConstants.OPERA
 import static org.jclouds.googlecomputeengine.GoogleComputeEngineConstants.OPERATION_COMPLETE_TIMEOUT;
 import static org.jclouds.googlecomputeengine.compute.strategy.CreateNodesWithGroupEncodedIntoNameThenAddToSet.DEFAULT_INTERNAL_NETWORK_RANGE;
 import static org.jclouds.googlecomputeengine.internal.ListPages.concat;
+import static org.jclouds.googlecomputeengine.options.ListOptions.Builder.filter;
 import static org.jclouds.googlecomputeengine.predicates.NetworkFirewallPredicates.equalsIpPermission;
 import static org.jclouds.googlecomputeengine.predicates.NetworkFirewallPredicates.providesIpPermission;
 import static org.jclouds.util.Predicates2.retry;
@@ -50,7 +51,6 @@ import org.jclouds.googlecomputeengine.domain.Network;
 import org.jclouds.googlecomputeengine.domain.Operation;
 import org.jclouds.googlecomputeengine.options.FirewallOptions;
 import org.jclouds.googlecomputeengine.options.ListOptions;
-import org.jclouds.googlecomputeengine.options.ListOptions.Builder;
 import org.jclouds.net.domain.IpPermission;
 import org.jclouds.net.domain.IpProtocol;
 
@@ -169,7 +169,7 @@ public class GoogleComputeEngineSecurityGroupExtension implements SecurityGroupE
          return false;
       }
 
-      ListOptions options = new ListOptions.Builder().filter("network eq .*/" + id);
+      ListOptions options = filter("network eq .*/" + id);
 
       FluentIterable<Firewall> fws = FluentIterable.from(concat(api.getFirewallApi(userProject.get()).list(options)));
 
@@ -202,7 +202,7 @@ public class GoogleComputeEngineSecurityGroupExtension implements SecurityGroupE
 
       checkNotNull(api.getNetworkApi(userProject.get()).get(group.getId()) == null, "network for group is null");
 
-      ListOptions options = new ListOptions.Builder().filter("network eq .*/" + group.getName());
+      ListOptions options = filter("network eq .*/" + group.getName());
 
       if (Iterables
             .any(concat(api.getFirewallApi(userProject.get()).list(options)), providesIpPermission(ipPermission))) {
@@ -265,7 +265,7 @@ public class GoogleComputeEngineSecurityGroupExtension implements SecurityGroupE
 
       checkNotNull(api.getNetworkApi(userProject.get()).get(group.getId()) == null, "network for group is null");
 
-      ListOptions options = new ListOptions.Builder().filter("network eq .*/" + group.getName());
+      ListOptions options = filter("network eq .*/" + group.getName());
 
       FluentIterable<Firewall> fws = FluentIterable.from(concat(api.getFirewallApi(userProject.get()).list(options)));
 
@@ -327,7 +327,7 @@ public class GoogleComputeEngineSecurityGroupExtension implements SecurityGroupE
    }
 
    private SecurityGroup groupForTagsInNetwork(Network nw, final Collection<String> tags) {
-      ListOptions opts = new Builder().filter("network eq .*/" + nw.name());
+      ListOptions opts = filter("network eq .*/" + nw.name());
       List<Firewall> fws = FluentIterable.from(concat(api.getFirewallApi(userProject.get()).list(opts)))
             .filter(new Predicate<Firewall>() {
                @Override public boolean apply(final Firewall input) {

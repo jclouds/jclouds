@@ -16,6 +16,7 @@
  */
 package org.jclouds.googlecomputeengine.features;
 
+import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 import static org.jclouds.googlecomputeengine.GoogleComputeEngineConstants.COMPUTE_READONLY_SCOPE;
 import static org.jclouds.googlecomputeengine.GoogleComputeEngineConstants.COMPUTE_SCOPE;
 
@@ -28,7 +29,6 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
-import javax.ws.rs.core.MediaType;
 
 import org.jclouds.googlecomputeengine.GoogleComputeEngineFallbacks.NullOn400or404;
 import org.jclouds.googlecomputeengine.binders.MetadataBinder;
@@ -42,25 +42,18 @@ import org.jclouds.rest.annotations.PayloadParam;
 import org.jclouds.rest.annotations.RequestFilters;
 import org.jclouds.rest.annotations.SkipEncoding;
 
-/**
- * Provides access to Projects via their REST API.
- */
 @SkipEncoding({'/', '='})
 @RequestFilters(OAuthAuthenticationFilter.class)
+@Path("/projects")
+@Consumes(APPLICATION_JSON)
 public interface ProjectApi {
 
-   /**
-    * Returns the specified project resource.
-    *
-    * @param projectName name of the project to return
-    * @return if successful, this method returns a Project resource
-    */
+   /** Returns a project by name or null if not found. */
    @Named("Projects:get")
    @GET
    @OAuthScopes(COMPUTE_READONLY_SCOPE)
-   @Consumes(MediaType.APPLICATION_JSON)
    @Fallback(NullOn400or404.class)
-   @Path("/projects/{project}")
+   @Path("/{project}")
    Project get(@PathParam("project") String projectName);
 
    /**
@@ -83,10 +76,9 @@ public interface ProjectApi {
     */
    @Named("Projects:setCommonInstanceMetadata")
    @POST
-   @Path("/projects/{project}/setCommonInstanceMetadata")
+   @Path("/{project}/setCommonInstanceMetadata")
    @OAuthScopes(COMPUTE_SCOPE)
-   @Consumes(MediaType.APPLICATION_JSON)
-   @Produces(MediaType.APPLICATION_JSON)
+   @Produces(APPLICATION_JSON)
    @MapBinder(MetadataBinder.class)
    Operation setCommonInstanceMetadata(@PathParam("project") String projectName,
                                        @PayloadParam("items") Map<String, String> metadata,

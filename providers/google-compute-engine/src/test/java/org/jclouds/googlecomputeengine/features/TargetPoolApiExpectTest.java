@@ -154,8 +154,7 @@ public class TargetPoolApiExpectTest extends BaseGoogleComputeEngineApiExpectTes
               TOKEN_RESPONSE, list, operationResponse).getTargetPoolApi("myproject", "us-central1");
 
       ListOptions options = new ListOptions();
-      assertEquals(api.list(options).toString(),
-              new ParseTargetPoolListTest().expected().toString());
+      assertEquals(api.list(options).next().toString(), new ParseTargetPoolListTest().expected().toString());
    }
 
    public void testListTargetPoolsResponseIs4xx() {

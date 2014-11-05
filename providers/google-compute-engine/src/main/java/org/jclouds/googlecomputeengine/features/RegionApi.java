@@ -16,6 +16,7 @@
  */
 package org.jclouds.googlecomputeengine.features;
 
+import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 import static org.jclouds.googlecomputeengine.GoogleComputeEngineConstants.COMPUTE_READONLY_SCOPE;
 
 import java.util.Iterator;
@@ -25,7 +26,7 @@ import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
-import javax.ws.rs.core.MediaType;
+import javax.ws.rs.QueryParam;
 
 import org.jclouds.Fallbacks.NullOnNotFoundOr404;
 import org.jclouds.googlecomputeengine.GoogleComputeEngineFallbacks.EmptyIteratorOnNotFoundOr404;
@@ -34,6 +35,7 @@ import org.jclouds.googlecomputeengine.domain.ListPage;
 import org.jclouds.googlecomputeengine.domain.Region;
 import org.jclouds.googlecomputeengine.functions.internal.ParseRegions;
 import org.jclouds.googlecomputeengine.options.ListOptions;
+import org.jclouds.javax.annotation.Nullable;
 import org.jclouds.oauth.v2.config.OAuthScopes;
 import org.jclouds.oauth.v2.filters.OAuthAuthenticationFilter;
 import org.jclouds.rest.annotations.Fallback;
@@ -42,49 +44,41 @@ import org.jclouds.rest.annotations.ResponseParser;
 import org.jclouds.rest.annotations.SkipEncoding;
 import org.jclouds.rest.annotations.Transform;
 
-/**
- * Provides access to Regions via their REST API.
- */
 @SkipEncoding({'/', '='})
 @RequestFilters(OAuthAuthenticationFilter.class)
-@Consumes(MediaType.APPLICATION_JSON)
+@Path("/regions")
+@Consumes(APPLICATION_JSON)
 public interface RegionApi {
 
-   /**
-    * Returns the specified region resource
-    *
-    * @param regionName name of the region resource to return.
-    * @return If successful, this method returns a Region resource
-    */
+   /** Returns a region by name or null if not found. */
    @Named("Regions:get")
    @GET
-   @Path("/regions/{region}")
+   @Path("/{region}")
    @OAuthScopes(COMPUTE_READONLY_SCOPE)
    @Fallback(NullOnNotFoundOr404.class)
-   Region get(@PathParam("region") String regionName);
+   Region get(@PathParam("region") String region);
 
    /**
-    * Retrieves the listFirstPage of region resources available to the specified project.
-    * By default the listFirstPage as a maximum size of 100, if no options are provided or ListOptions#getMaxResults()
-    * has not been set.
+    * Retrieves the list of region resources available to the specified project.
+    * By default the list as a maximum size of 100, if no options are provided or ListOptions#getMaxResults() has not
+    * been set.
     *
-    * @param marker      marks the beginning of the next list page
+    * @param token       marks the beginning of the next list page
     * @param listOptions listing options
+    * @return a page of the list
     */
    @Named("Regions:list")
    @GET
-   @Path("/regions")
    @OAuthScopes(COMPUTE_READONLY_SCOPE)
    @ResponseParser(ParseRegions.class)
    @Fallback(EmptyListPageOnNotFoundOr404.class)
-   ListPage<Region> listAtMarker(String marker, ListOptions listOptions);
+   ListPage<Region> listPage(@Nullable @QueryParam("pageToken") String token, ListOptions listOptions);
 
    /**
-    * @see RegionApi#list(org.jclouds.googlecomputeengine.options.ListOptions)
+    * @see #list(org.jclouds.googlecomputeengine.options.ListOptions)
     */
    @Named("Regions:list")
    @GET
-   @Path("/regions")
    @OAuthScopes(COMPUTE_READONLY_SCOPE)
    @ResponseParser(ParseRegions.class)
    @Transform(ParseRegions.ToIteratorOfListPage.class)
@@ -92,17 +86,13 @@ public interface RegionApi {
    Iterator<ListPage<Region>> list();
 
    /**
-    * A paged version of RegionApi#listFirstPage()
-    *
-    * @return an Iterator that is able to fetch additional pages when required
-    * @see RegionApi#listAtMarker(String, org.jclouds.googlecomputeengine.options.ListOptions)
+    * @see #list(org.jclouds.googlecomputeengine.options.ListOptions)
     */
    @Named("Regions:list")
    @GET
-   @Path("/regions")
    @OAuthScopes(COMPUTE_READONLY_SCOPE)
    @ResponseParser(ParseRegions.class)
    @Transform(ParseRegions.ToIteratorOfListPage.class)
    @Fallback(EmptyIteratorOnNotFoundOr404.class)
-   Iterator<ListPage<Region>> list(ListOptions listOptions);
+   Iterator<ListPage<Region>> list(ListOptions options);
 }

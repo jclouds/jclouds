@@ -48,7 +48,7 @@ public final class ParseZones extends ParseJson<ListPage<Zone>> {
             final ListOptions options) {
          return new Function<String, ListPage<Zone>>() {
             @Override public ListPage<Zone> apply(String input) {
-               return api.getZoneApi(projectName).listAtMarker(input, options);
+               return api.getZoneApi(projectName).listPage(input, options);
             }
          };
       }
