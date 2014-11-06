@@ -51,13 +51,13 @@ public class OrphanedGroupsFromDeadNodesTest {
    @Test
    public void testDetectsAllOrphanedGroupsWhenAllNodesTerminated() {
 
-      Set<? extends NodeMetadata> deadNodesGroup1 = (Set) ImmutableSet.builder()
+      Set<NodeMetadata> deadNodesGroup1 = (Set) ImmutableSet.builder()
               .add(new IdAndGroupOnlyNodeMetadata("a", "1", NodeMetadata.Status.TERMINATED)).build();
 
-      Set<? extends NodeMetadata> deadNodesGroup2 = (Set) ImmutableSet.builder()
+      Set<NodeMetadata> deadNodesGroup2 = (Set) ImmutableSet.builder()
               .add(new IdAndGroupOnlyNodeMetadata("b", "2", NodeMetadata.Status.TERMINATED)).build();
 
-      Set<? extends NodeMetadata> allDeadNodes = Sets.union(deadNodesGroup1, deadNodesGroup2);
+      Set<NodeMetadata> allDeadNodes = Sets.union(deadNodesGroup1, deadNodesGroup2);
 
       ComputeService mock = createMock(ComputeService.class);
       expect(mock.listNodesDetailsMatching(EasyMock.<Predicate<ComputeMetadata>>anyObject()))
@@ -80,13 +80,13 @@ public class OrphanedGroupsFromDeadNodesTest {
    @Test
    public void testDetectsAllOrphanedGroupsWhenSomeNodesTerminatedAndOtherMissing() {
 
-      Set<? extends NodeMetadata> deadNodesGroup1 = (Set) ImmutableSet.builder()
+      Set<NodeMetadata> deadNodesGroup1 = (Set) ImmutableSet.builder()
               .add(new IdAndGroupOnlyNodeMetadata("a", "1", NodeMetadata.Status.TERMINATED)).build();
 
-      Set<? extends NodeMetadata> deadNodesGroup2 = (Set) ImmutableSet.builder()
+      Set<NodeMetadata> deadNodesGroup2 = (Set) ImmutableSet.builder()
               .add(new IdAndGroupOnlyNodeMetadata("b", "2", NodeMetadata.Status.TERMINATED)).build();
 
-      Set<? extends NodeMetadata> allDeadNodes = Sets.union(deadNodesGroup1, deadNodesGroup2);
+      Set<NodeMetadata> allDeadNodes = Sets.union(deadNodesGroup1, deadNodesGroup2);
 
       ComputeService mock = createMock(ComputeService.class);
       expect(mock.listNodesDetailsMatching(EasyMock.<Predicate<ComputeMetadata>>anyObject()))
@@ -109,13 +109,13 @@ public class OrphanedGroupsFromDeadNodesTest {
    @Test
    public void testDetectsAllOrphanedGroupsWhenSomeNodesAreAlive() {
 
-      Set<? extends NodeMetadata> deadNodesGroup1 = (Set) ImmutableSet.builder()
+      Set<NodeMetadata> deadNodesGroup1 = (Set) ImmutableSet.builder()
               .add(new IdAndGroupOnlyNodeMetadata("a", "1", NodeMetadata.Status.TERMINATED)).build();
 
-      Set<? extends NodeMetadata> deadNodesGroup2 = (Set) ImmutableSet.builder()
+      Set<NodeMetadata> deadNodesGroup2 = (Set) ImmutableSet.builder()
               .add(new IdAndGroupOnlyNodeMetadata("b", "2", NodeMetadata.Status.RUNNING)).build();
 
-      Set<? extends NodeMetadata> allDeadNodes = Sets.union(deadNodesGroup1, deadNodesGroup2);
+      Set<NodeMetadata> allDeadNodes = Sets.union(deadNodesGroup1, deadNodesGroup2);
 
       ComputeService mock = createMock(ComputeService.class);
       expect(mock.listNodesDetailsMatching(EasyMock.<Predicate<ComputeMetadata>>anyObject()))

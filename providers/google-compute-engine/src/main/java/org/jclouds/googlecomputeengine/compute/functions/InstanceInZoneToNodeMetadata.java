@@ -47,22 +47,22 @@ public final class InstanceInZoneToNodeMetadata implements Function<InstanceInZo
 
    private final Map<Instance.Status, NodeMetadata.Status> toPortableNodeStatus;
    private final GroupNamingConvention nodeNamingConvention;
-   private final Supplier<Map<URI, ? extends Image>> images;
-   private final Supplier<Map<URI, ? extends Hardware>> hardwares;
-   private final Supplier<Map<URI, ? extends Location>> locations;
+   private final Supplier<Map<URI, Image>> images;
+   private final Supplier<Map<URI, Hardware>> hardwares;
+   private final Supplier<Map<URI, Location>> locationsByUri;
    private final FirewallTagNamingConvention.Factory firewallTagNamingConvention;
 
    @Inject InstanceInZoneToNodeMetadata(Map<Instance.Status, NodeMetadata.Status> toPortableNodeStatus,
                                         GroupNamingConvention.Factory namingConvention,
-                                        @Memoized Supplier<Map<URI, ? extends Image>> images,
-                                        @Memoized Supplier<Map<URI, ? extends Hardware>> hardwares,
-                                        @Memoized Supplier<Map<URI, ? extends Location>> locations,
+                                        @Memoized Supplier<Map<URI, Image>> images,
+                                        @Memoized Supplier<Map<URI, Hardware>> hardwares,
+                                        @Memoized Supplier<Map<URI, Location>> locationsByUri,
                                         FirewallTagNamingConvention.Factory firewallTagNamingConvention) {
       this.toPortableNodeStatus = toPortableNodeStatus;
       this.nodeNamingConvention = namingConvention.createWithoutPrefix();
       this.images = images;
       this.hardwares = hardwares;
-      this.locations = locations;
+      this.locationsByUri = locationsByUri;
       this.firewallTagNamingConvention = checkNotNull(firewallTagNamingConvention, "firewallTagNamingConvention");
    }
 
@@ -77,12 +77,16 @@ public final class InstanceInZoneToNodeMetadata implements Function<InstanceInZo
 
       NodeMetadataBuilder builder = new NodeMetadataBuilder();
 
-      Location location = checkNotNull(locations.get().get(input.zone()), "location for %s", input.zone());
-      builder.id(SlashEncodedIds.from(location.getId(), input.name()).slashEncode())
+      Location zone = locationsByUri.get().get(input.zone());
+      if (zone == null) {
+         throw new IllegalStateException(
+               String.format("zone %s not present in %s", input.zone(), locationsByUri.get().keySet()));
+      }
+      builder.id(SlashEncodedIds.from(zone.getId(), input.name()).slashEncode())
               .name(input.name())
               .providerId(input.id())
               .hostname(input.name())
-              .location(location)
+              .location(zone)
               .hardware(hardwares.get().get(input.machineType()))
               .status(toPortableNodeStatus.get(input.status()))
               .tags(tags)
@@ -96,7 +100,7 @@ public final class InstanceInZoneToNodeMetadata implements Function<InstanceInZo
          try {
             URI imageUri = URI.create(input.metadata().items().get(GCE_IMAGE_METADATA_KEY));
 
-            Map<URI, ? extends Image> imagesMap = images.get();
+            Map<URI, Image> imagesMap = images.get();
 
             Image image = checkNotNull(imagesMap.get(imageUri),
                                        "no image for %s. images: %s", imageUri,

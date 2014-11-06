@@ -232,5 +232,4 @@ public class InstanceApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
          // we don't really care about any exception here, so just delete away.
        }
    }
-
 }

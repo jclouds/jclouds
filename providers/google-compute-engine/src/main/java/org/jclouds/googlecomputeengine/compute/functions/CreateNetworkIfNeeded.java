@@ -25,17 +25,14 @@ import static org.jclouds.util.Predicates2.retry;
 
 import java.util.concurrent.atomic.AtomicReference;
 
-import javax.annotation.Resource;
 import javax.inject.Inject;
 import javax.inject.Named;
 
-import org.jclouds.compute.reference.ComputeServiceConstants;
 import org.jclouds.googlecomputeengine.GoogleComputeEngineApi;
 import org.jclouds.googlecomputeengine.compute.domain.NetworkAndAddressRange;
 import org.jclouds.googlecomputeengine.config.UserProject;
 import org.jclouds.googlecomputeengine.domain.Network;
 import org.jclouds.googlecomputeengine.domain.Operation;
-import org.jclouds.logging.Logger;
 
 import com.google.common.base.Function;
 import com.google.common.base.Predicate;
@@ -43,9 +40,6 @@ import com.google.common.base.Supplier;
 import com.google.common.util.concurrent.Atomics;
 
 public class CreateNetworkIfNeeded implements Function<NetworkAndAddressRange, Network> {
-   @Resource @Named(ComputeServiceConstants.COMPUTE_LOGGER)
-   private Logger logger = Logger.NULL;
-
    private final GoogleComputeEngineApi api;
    private final Supplier<String> userProject;
    private final Predicate<AtomicReference<Operation>> operationDonePredicate;

@@ -16,27 +16,19 @@
  */
 package org.jclouds.googlecomputeengine;
 
-import static org.jclouds.reflect.Reflection2.typeToken;
-
-import org.jclouds.View;
-import org.jclouds.apis.internal.BaseApiMetadataTest;
-import org.jclouds.compute.ComputeServiceContext;
+import org.jclouds.providers.internal.BaseProviderMetadataTest;
 import org.testng.annotations.Test;
 
-import com.google.common.collect.ImmutableSet;
-import com.google.common.reflect.TypeToken;
-
 /**
- * Tests that GoogleComputeApiMetadata is properly registered in ServiceLoader
+ * Tests that GoogleComputeProviderMetadata is properly registered in ServiceLoader
  * <p/>
  * <pre>
- * META-INF/services/org.jclouds.apis.ApiMetadata
+ * META-INF/services/org.jclouds.providers.ProviderMetadata
  * </pre>
  */
-@Test(groups = "unit", testName = "GoogleComputeApiMetadataTest")
-public class GoogleComputeEngineApiMetadataTest extends BaseApiMetadataTest {
-   public GoogleComputeEngineApiMetadataTest() {
-      super(new GoogleComputeEngineApiMetadata(),
-            ImmutableSet.<TypeToken<? extends View>>of(typeToken(ComputeServiceContext.class)));
+@Test(groups = "unit", testName = "GoogleComputeProviderMetadataTest")
+public class GoogleComputeEngineProviderMetadataTest extends BaseProviderMetadataTest {
+   public GoogleComputeEngineProviderMetadataTest() {
+      super(new GoogleComputeEngineProviderMetadata(), new GoogleComputeEngineApiMetadata());
    }
 }

@@ -16,12 +16,10 @@
  */
 package org.jclouds.googlecomputeengine.compute.functions;
 
-import static com.google.common.base.Preconditions.checkNotNull;
-import static com.google.common.collect.Iterables.filter;
-import static com.google.common.collect.Iterables.getOnlyElement;
-
 import java.net.URI;
 import java.util.Map;
+
+import javax.inject.Inject;
 
 import org.jclouds.collect.Memoized;
 import org.jclouds.compute.domain.Hardware;
@@ -36,40 +34,31 @@ import org.jclouds.googlecomputeengine.compute.domain.SlashEncodedIds;
 import org.jclouds.googlecomputeengine.domain.MachineType;
 
 import com.google.common.base.Function;
-import com.google.common.base.Predicate;
 import com.google.common.base.Predicates;
 import com.google.common.base.Supplier;
 import com.google.common.collect.ImmutableSet;
-import com.google.inject.Inject;
 
-/**
- * Transforms a google compute domain specific machine type to a generic Hardware object.
- */
-public class MachineTypeInZoneToHardware implements Function<MachineTypeInZone, Hardware> {
+public final class MachineTypeInZoneToHardware implements Function<MachineTypeInZone, Hardware> {
 
-   private final Supplier<Map<URI, ? extends Location>> locations;
+   private final Supplier<Map<URI, Location>> locationsByUri;
 
-   @Inject
-   public MachineTypeInZoneToHardware(@Memoized Supplier<Map<URI, ? extends Location>> locations) {
-      this.locations = locations;
+   @Inject MachineTypeInZoneToHardware(@Memoized Supplier<Map<URI, Location>> locationsByUri) {
+      this.locationsByUri = locationsByUri;
    }
 
    @Override
-   public Hardware apply(final MachineTypeInZone input) {
-      Iterable<? extends Location> zonesForMachineType = filter(locations.get().values(), new Predicate<Location>() {
-         @Override
-         public boolean apply(Location l) {
-            return l.getId().equals(input.machineType().zone());
-         }
-      });
+   public Hardware apply(MachineTypeInZone input) {
+      URI zoneLink = URI.create(
+            input.machineType().selfLink().toString().replace("/machineTypes/" + input.machineType().name(), ""));
 
-      Location location = checkNotNull(getOnlyElement(zonesForMachineType),
-              "location for %s",
-              input.machineType().zone());
-
+      Location zone = locationsByUri.get().get(zoneLink);
+      if (zone == null) {
+         throw new IllegalStateException(
+               String.format("zone %s not present in %s", zoneLink, locationsByUri.get().keySet()));
+      }
       return new HardwareBuilder()
               .id(SlashEncodedIds.from(input.machineType().zone(), input.machineType().name()).slashEncode())
-              .location(location)
+              .location(zone)
               .name(input.machineType().name())
               .hypervisor("kvm")
               .processor(new Processor(input.machineType().guestCpus(), 1.0))

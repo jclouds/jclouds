@@ -157,9 +157,9 @@ public class InstanceInZoneToNodeMetadataTest {
 
    private InstanceInZoneToNodeMetadata createNodeParser(final Set<Hardware> hardware, final Set<Image> images,
          final Set<Location> locations, final String groupName) {
-      Supplier<Map<URI, ? extends Location>> locationSupplier = new Supplier<Map<URI, ? extends Location>>() {
+      Supplier<Map<URI, Location>> locationSupplier = new Supplier<Map<URI, Location>>() {
          @Override
-         public Map<URI, ? extends Location> get() {
+         public Map<URI, Location> get() {
             return Maps.uniqueIndex(locations, new Function<Location, URI>() {
                @Override
                public URI apply(final Location input) {
@@ -169,9 +169,9 @@ public class InstanceInZoneToNodeMetadataTest {
          }
       };
 
-      Supplier<Map<URI, ? extends Hardware>> hardwareSupplier = new Supplier<Map<URI, ? extends Hardware>>() {
+      Supplier<Map<URI, Hardware>> hardwareSupplier = new Supplier<Map<URI, Hardware>>() {
          @Override
-         public Map<URI, ? extends Hardware> get() {
+         public Map<URI, Hardware> get() {
             return Maps.uniqueIndex(hardware, new Function<Hardware, URI>() {
                @Override
                public URI apply(final Hardware input) {
@@ -181,9 +181,9 @@ public class InstanceInZoneToNodeMetadataTest {
          }
       };
 
-      Supplier<Map<URI, ? extends Image>> imageSupplier = new Supplier<Map<URI, ? extends Image>>() {
+      Supplier<Map<URI, Image>> imageSupplier = new Supplier<Map<URI, Image>>() {
          @Override
-         public Map<URI, ? extends Image> get() {
+         public Map<URI, Image> get() {
             return Maps.uniqueIndex(images, new Function<Image, URI>() {
                @Override
                public URI apply(final Image input) {

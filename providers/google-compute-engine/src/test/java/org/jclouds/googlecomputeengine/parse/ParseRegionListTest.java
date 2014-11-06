@@ -47,7 +47,7 @@ public class ParseRegionListTest extends BaseGoogleComputeEngineParseTest<ListPa
             "us-central2", // name
             "us-central2", // description
             Region.Status.UP, // status
-            ImmutableList.of(URI.create("https://www.googleapis.com/compute/v1/zones/us-central2-a")), // zones
+            ImmutableList.of(URI.create(BASE_URL + "/myproject/zones/us-central2-a")), // zones
             ImmutableList.of( //
                   Quota.create("INSTANCES", 0, 8), //
                   Quota.create("CPUS", 0, 8), //

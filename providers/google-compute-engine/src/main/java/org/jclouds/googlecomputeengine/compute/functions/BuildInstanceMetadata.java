@@ -19,8 +19,6 @@ package org.jclouds.googlecomputeengine.compute.functions;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static java.lang.String.format;
 
-import javax.inject.Singleton;
-
 import org.jclouds.compute.options.TemplateOptions;
 
 import com.google.common.base.Function;
@@ -29,11 +27,9 @@ import com.google.common.collect.ImmutableMap;
 /**
  * Prepares metadata from the provided TemplateOptions
  */
-@Singleton
-public class BuildInstanceMetadata implements Function<TemplateOptions, ImmutableMap.Builder<String, String>> {
+public final class BuildInstanceMetadata implements Function<TemplateOptions, ImmutableMap.Builder<String, String>> {
 
-   @Override
-   public ImmutableMap.Builder apply(TemplateOptions input) {
+   @Override public ImmutableMap.Builder apply(TemplateOptions input) {
       ImmutableMap.Builder<String, String> builder = ImmutableMap.builder();
       if (input.getPublicKey() != null) {
          builder.put("sshKeys", format("%s:%s %s@localhost", checkNotNull(input.getLoginUser(),
@@ -42,5 +38,4 @@ public class BuildInstanceMetadata implements Function<TemplateOptions, Immutabl
       builder.putAll(input.getUserMetadata());
       return builder;
    }
-
 }

@@ -36,7 +36,7 @@ import com.google.common.collect.Lists;
 /**
  * Instance options specific to Google Compute Engine.
  */
-public class GoogleComputeEngineTemplateOptions extends TemplateOptions {
+public final class GoogleComputeEngineTemplateOptions extends TemplateOptions {
 
    private Optional<URI> network = Optional.absent();
    private List<Instance.ServiceAccount> serviceAccounts = Lists.newArrayList();

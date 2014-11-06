@@ -38,7 +38,6 @@ import static org.jclouds.util.Predicates2.retry;
 import java.net.URI;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
@@ -47,7 +46,6 @@ import java.util.concurrent.atomic.AtomicReference;
 import javax.inject.Inject;
 import javax.inject.Named;
 
-import org.jclouds.collect.Memoized;
 import org.jclouds.compute.ComputeServiceAdapter;
 import org.jclouds.compute.domain.Hardware;
 import org.jclouds.compute.domain.Template;
@@ -69,15 +67,16 @@ import org.jclouds.googlecomputeengine.domain.Instance.AttachedDisk.Mode;
 import org.jclouds.googlecomputeengine.domain.ListPage;
 import org.jclouds.googlecomputeengine.domain.MachineType;
 import org.jclouds.googlecomputeengine.domain.Operation;
-import org.jclouds.googlecomputeengine.domain.Zone;
 import org.jclouds.googlecomputeengine.domain.templates.InstanceTemplate;
 import org.jclouds.googlecomputeengine.domain.templates.InstanceTemplate.PersistentDisk;
 import org.jclouds.googlecomputeengine.features.DiskApi;
 import org.jclouds.googlecomputeengine.features.InstanceApi;
 import org.jclouds.googlecomputeengine.options.DiskCreationOptions;
+import org.jclouds.location.Zone;
 
 import com.google.common.base.Function;
 import com.google.common.base.Predicate;
+import com.google.common.base.Splitter;
 import com.google.common.base.Supplier;
 import com.google.common.collect.FluentIterable;
 import com.google.common.collect.ImmutableList;
@@ -88,11 +87,12 @@ import com.google.common.primitives.Ints;
 import com.google.common.util.concurrent.Atomics;
 import com.google.common.util.concurrent.UncheckedTimeoutException;
 
-public final class GoogleComputeEngineServiceAdapter implements ComputeServiceAdapter<InstanceInZone, MachineTypeInZone, Image, Zone> {
+public final class GoogleComputeEngineServiceAdapter
+      implements ComputeServiceAdapter<InstanceInZone, MachineTypeInZone, Image, Location> {
 
    private final GoogleComputeEngineApi api;
    private final Supplier<String> userProject;
-   private final Supplier<Map<URI, ? extends Location>> zones;
+   private final Supplier<Set<String>> zoneIds;
    private final Function<TemplateOptions, ImmutableMap.Builder<String, String>> metatadaFromTemplateOptions;
    private final Predicate<AtomicReference<Operation>> retryOperationDonePredicate;
    private final long operationCompleteCheckInterval;
@@ -107,9 +107,9 @@ public final class GoogleComputeEngineServiceAdapter implements ComputeServiceAd
                                             @Named("zone") Predicate<AtomicReference<Operation>> operationDonePredicate,
                                             @Named(OPERATION_COMPLETE_INTERVAL) Long operationCompleteCheckInterval,
                                             @Named(OPERATION_COMPLETE_TIMEOUT) Long operationCompleteCheckTimeout,
-                                            @Memoized Supplier<Map<URI, ? extends Location>> zones,
+                                            @Zone Supplier<Set<String>> zoneIds,
                                             FirewallTagNamingConvention.Factory firewallTagNamingConvention,
-                                            @Named(GCE_IMAGE_PROJECTS) List<String> imageProjects) {
+                                            @Named(GCE_IMAGE_PROJECTS) String imageProjects) {
       this.api = api;
       this.userProject = userProject;
       this.metatadaFromTemplateOptions = metatadaFromTemplateOptions;
@@ -117,9 +117,9 @@ public final class GoogleComputeEngineServiceAdapter implements ComputeServiceAd
       this.operationCompleteCheckTimeout = operationCompleteCheckTimeout;
       this.retryOperationDonePredicate = retry(operationDonePredicate, operationCompleteCheckTimeout,
                                                operationCompleteCheckInterval, TimeUnit.MILLISECONDS);
-      this.zones = zones;
+      this.zoneIds = zoneIds;
       this.firewallTagNamingConvention = firewallTagNamingConvention;
-      this.imageProjects = imageProjects;
+      this.imageProjects = Splitter.on(',').splitToList(imageProjects);
    }
 
    @Override
@@ -241,8 +241,8 @@ public final class GoogleComputeEngineServiceAdapter implements ComputeServiceAd
    public Iterable<MachineTypeInZone> listHardwareProfiles() {
       ImmutableList.Builder<MachineTypeInZone> builder = ImmutableList.builder();
 
-      for (final Location zone : zones.get().values()) {
-         for (Iterator<ListPage<MachineType>> i = api.getMachineTypeApi(userProject.get(), zone.getId()).list();
+      for (final String zoneId : zoneIds.get()) {
+         for (Iterator<ListPage<MachineType>> i = api.getMachineTypeApi(userProject.get(), zoneId).list();
                i.hasNext(); ) {
             builder.addAll(FluentIterable.from(i.next()).filter(new Predicate<MachineType>() {
                @Override public boolean apply(MachineType input) {
@@ -254,7 +254,6 @@ public final class GoogleComputeEngineServiceAdapter implements ComputeServiceAd
                }
             }));
          }
-
       }
 
       return builder.build();
@@ -288,8 +287,8 @@ public final class GoogleComputeEngineServiceAdapter implements ComputeServiceAd
    }
 
    @Override
-   public Iterable<Zone> listLocations() {
-      return concat(api.getZoneApi(userProject.get()).list());
+   public Iterable<Location> listLocations() {
+      throw new UnsupportedOperationException("Locations are configured in GoogleComputeEngineLocationModule");
    }
 
    @Override
@@ -301,13 +300,13 @@ public final class GoogleComputeEngineServiceAdapter implements ComputeServiceAd
 
    @Override
    public Iterable<InstanceInZone> listNodes() {
-      return FluentIterable.from(zones.get().values())
-            .transformAndConcat(new Function<Location, Iterable<InstanceInZone>>() {
-               @Override public Iterable<InstanceInZone> apply(final Location input) {
-                  return transform(concat(api.getInstanceApi(userProject.get(), input.getId()).list()),
+      return FluentIterable.from(zoneIds.get())
+            .transformAndConcat(new Function<String, Iterable<InstanceInZone>>() {
+               @Override public Iterable<InstanceInZone> apply(final String zoneId) {
+                  return transform(concat(api.getInstanceApi(userProject.get(), zoneId).list()),
                         new Function<Instance, InstanceInZone>() {
                            @Override public InstanceInZone apply(Instance arg0) {
-                              return InstanceInZone.create(arg0, input.getId());
+                              return InstanceInZone.create(arg0, zoneId);
                            }
                         });
                }

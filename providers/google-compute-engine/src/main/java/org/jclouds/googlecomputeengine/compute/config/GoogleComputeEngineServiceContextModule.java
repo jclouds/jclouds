@@ -16,18 +16,13 @@
  */
 package org.jclouds.googlecomputeengine.compute.config;
 
-import static com.google.common.collect.Iterables.transform;
-import static com.google.common.collect.Maps.uniqueIndex;
+import static com.google.common.base.Suppliers.memoizeWithExpiration;
+import static java.util.concurrent.TimeUnit.SECONDS;
 import static org.jclouds.Constants.PROPERTY_SESSION_INTERVAL;
-import static org.jclouds.googlecomputeengine.internal.ListPages.concat;
-import static org.jclouds.googlecomputeengine.GoogleComputeEngineConstants.GCE_IMAGE_PROJECTS;
 
 import java.net.URI;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicReference;
 
 import javax.inject.Named;
 import javax.inject.Singleton;
@@ -44,7 +39,6 @@ import org.jclouds.compute.extensions.SecurityGroupExtension;
 import org.jclouds.compute.options.TemplateOptions;
 import org.jclouds.compute.strategy.PrioritizeCredentialsFromTemplate;
 import org.jclouds.domain.Location;
-import org.jclouds.googlecomputeengine.GoogleComputeEngineApi;
 import org.jclouds.googlecomputeengine.compute.GoogleComputeEngineService;
 import org.jclouds.googlecomputeengine.compute.GoogleComputeEngineServiceAdapter;
 import org.jclouds.googlecomputeengine.compute.domain.InstanceInZone;
@@ -61,29 +55,21 @@ import org.jclouds.googlecomputeengine.compute.functions.InstanceInZoneToNodeMet
 import org.jclouds.googlecomputeengine.compute.functions.MachineTypeInZoneToHardware;
 import org.jclouds.googlecomputeengine.compute.functions.NetworkToSecurityGroup;
 import org.jclouds.googlecomputeengine.compute.functions.OrphanedGroupsFromDeadNodes;
-import org.jclouds.googlecomputeengine.compute.functions.RegionToLocation;
-import org.jclouds.googlecomputeengine.compute.functions.ZoneToLocation;
 import org.jclouds.googlecomputeengine.compute.options.GoogleComputeEngineTemplateOptions;
 import org.jclouds.googlecomputeengine.compute.predicates.AllNodesInGroupTerminated;
 import org.jclouds.googlecomputeengine.compute.strategy.CreateNodesWithGroupEncodedIntoNameThenAddToSet;
 import org.jclouds.googlecomputeengine.compute.strategy.PopulateDefaultLoginCredentialsForImageStrategy;
 import org.jclouds.googlecomputeengine.compute.strategy.UseNodeCredentialsButOverrideFromTemplate;
-import org.jclouds.googlecomputeengine.config.UserProject;
 import org.jclouds.googlecomputeengine.domain.Firewall;
 import org.jclouds.googlecomputeengine.domain.Image;
 import org.jclouds.googlecomputeengine.domain.Instance;
 import org.jclouds.googlecomputeengine.domain.Network;
-import org.jclouds.googlecomputeengine.domain.Region;
-import org.jclouds.googlecomputeengine.domain.Zone;
 import org.jclouds.net.domain.IpPermission;
-import org.jclouds.rest.AuthorizationException;
-import org.jclouds.rest.suppliers.MemoizedRetryOnTimeOutButNotOnAuthorizationExceptionSupplier;
 
-import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Function;
+import com.google.common.base.Functions;
 import com.google.common.base.Optional;
 import com.google.common.base.Predicate;
-import com.google.common.base.Splitter;
 import com.google.common.base.Supplier;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
@@ -94,8 +80,8 @@ import com.google.inject.Provides;
 import com.google.inject.Scopes;
 import com.google.inject.TypeLiteral;
 
-public class GoogleComputeEngineServiceContextModule
-        extends ComputeServiceAdapterContextModule<InstanceInZone, MachineTypeInZone, Image, Zone> {
+public final class GoogleComputeEngineServiceContextModule
+      extends ComputeServiceAdapterContextModule<InstanceInZone, MachineTypeInZone, Image, Location> {
 
    @Override
    protected void configure() {
@@ -103,192 +89,126 @@ public class GoogleComputeEngineServiceContextModule
 
       bind(ComputeService.class).to(GoogleComputeEngineService.class);
 
-      bind(new TypeLiteral<ComputeServiceAdapter<InstanceInZone, MachineTypeInZone, Image, Zone>>() {})
-              .to(GoogleComputeEngineServiceAdapter.class);
+      bind(new TypeLiteral<ComputeServiceAdapter<InstanceInZone, MachineTypeInZone, Image, Location>>() {
+      }).to(GoogleComputeEngineServiceAdapter.class);
 
-      bind(new TypeLiteral<Function<InstanceInZone, NodeMetadata>>() {})
-              .to(InstanceInZoneToNodeMetadata.class);
+      bind(new TypeLiteral<Function<Location, Location>>() {
+      }).toInstance(Functions.<Location>identity());
 
-      bind(new TypeLiteral<Function<MachineTypeInZone, Hardware>>() {})
-              .to(MachineTypeInZoneToHardware.class);
+      bind(new TypeLiteral<Function<InstanceInZone, NodeMetadata>>() {
+      }).to(InstanceInZoneToNodeMetadata.class);
 
-      bind(new TypeLiteral<Function<Image, org.jclouds.compute.domain.Image>>() {})
-              .to(GoogleComputeEngineImageToImage.class);
+      bind(new TypeLiteral<Function<MachineTypeInZone, Hardware>>() {
+      }).to(MachineTypeInZoneToHardware.class);
 
-      bind(new TypeLiteral<Function<Region, Location>>() {
-      })
-              .to(RegionToLocation.class);
+      bind(new TypeLiteral<Function<Image, org.jclouds.compute.domain.Image>>() {
+      }).to(GoogleComputeEngineImageToImage.class);
 
-      bind(new TypeLiteral<Function<Zone, Location>>() {})
-              .to(ZoneToLocation.class);
+      bind(new TypeLiteral<Function<Firewall, Iterable<IpPermission>>>() {
+      }).to(FirewallToIpPermission.class);
 
-      bind(new TypeLiteral<Function<Firewall, Iterable<IpPermission>>>() {})
-              .to(FirewallToIpPermission.class);
+      bind(new TypeLiteral<Function<Network, SecurityGroup>>() {
+      }).to(NetworkToSecurityGroup.class);
 
-      bind(new TypeLiteral<Function<Network, SecurityGroup>>() {})
-              .to(NetworkToSecurityGroup.class);
-
-      bind(new TypeLiteral<Function<TemplateOptions, ImmutableMap.Builder<String, String>>>() {})
-              .to(BuildInstanceMetadata.class);
+      bind(new TypeLiteral<Function<TemplateOptions, ImmutableMap.Builder<String, String>>>() {
+      }).to(BuildInstanceMetadata.class);
 
       bind(org.jclouds.compute.strategy.PopulateDefaultLoginCredentialsForImageStrategy.class)
-              .to(PopulateDefaultLoginCredentialsForImageStrategy.class);
+            .to(PopulateDefaultLoginCredentialsForImageStrategy.class);
 
-      bind(org.jclouds.compute.strategy.impl.CreateNodesWithGroupEncodedIntoNameThenAddToSet.class).to(
-              CreateNodesWithGroupEncodedIntoNameThenAddToSet.class);
+      bind(org.jclouds.compute.strategy.impl.CreateNodesWithGroupEncodedIntoNameThenAddToSet.class)
+            .to(CreateNodesWithGroupEncodedIntoNameThenAddToSet.class);
 
       bind(TemplateOptions.class).to(GoogleComputeEngineTemplateOptions.class);
 
-      bind(new TypeLiteral<Function<Set<? extends NodeMetadata>, Set<String>>>() {})
-              .to(OrphanedGroupsFromDeadNodes.class);
+      bind(new TypeLiteral<Function<Set<? extends NodeMetadata>, Set<String>>>() {
+      }).to(OrphanedGroupsFromDeadNodes.class);
 
-      bind(new TypeLiteral<Predicate<String>>() {}).to(AllNodesInGroupTerminated.class);
+      bind(new TypeLiteral<Predicate<String>>() {
+      }).to(AllNodesInGroupTerminated.class);
 
-      bind(new TypeLiteral<Function<NetworkAndAddressRange, Network>>() {})
-              .to(CreateNetworkIfNeeded.class);
+      bind(new TypeLiteral<Function<NetworkAndAddressRange, Network>>() {
+      }).to(CreateNetworkIfNeeded.class);
 
-      bind(new TypeLiteral<CacheLoader<NetworkAndAddressRange, Network>>() {})
-              .to(FindNetworkOrCreate.class);
+      bind(new TypeLiteral<CacheLoader<NetworkAndAddressRange, Network>>() {
+      }).to(FindNetworkOrCreate.class);
 
-      bind(new TypeLiteral<SecurityGroupExtension>() {})
-              .to(GoogleComputeEngineSecurityGroupExtension.class);
+      bind(SecurityGroupExtension.class).to(GoogleComputeEngineSecurityGroupExtension.class);
 
       bind(PrioritizeCredentialsFromTemplate.class).to(UseNodeCredentialsButOverrideFromTemplate.class);
-
-      install(new LocationsFromComputeServiceAdapterModule<InstanceInZone, MachineTypeInZone, Image, Zone>() {});
-
       bind(FirewallTagNamingConvention.Factory.class).in(Scopes.SINGLETON);
    }
 
-   @Provides
-   @Singleton
-   @Memoized
-   public Supplier<Map<URI, ? extends org.jclouds.compute.domain.Image>> provideImagesMap(
-           AtomicReference<AuthorizationException> authException,
-           final Supplier<Set<? extends org.jclouds.compute.domain.Image>> images,
-           @Named(PROPERTY_SESSION_INTERVAL) long seconds) {
-      return MemoizedRetryOnTimeOutButNotOnAuthorizationExceptionSupplier.create(authException,
-              new Supplier<Map<URI, ? extends org.jclouds.compute.domain.Image>>() {
-                 @Override
-                 public Map<URI, ? extends org.jclouds.compute.domain.Image> get() {
-                    return uniqueIndex(images.get(), new Function<org.jclouds.compute.domain.Image, URI>() {
-                       @Override
-                       public URI apply(org.jclouds.compute.domain.Image input) {
-                          return input.getUri();
-                       }
-                    });
-                 }
-              },
-              seconds, TimeUnit.SECONDS);
+   @Provides @Singleton @Memoized Supplier<Map<URI, org.jclouds.compute.domain.Image>> imageByUri(
+         @Memoized final Supplier<Set<? extends org.jclouds.compute.domain.Image>> imageSupplier,
+         @Named(PROPERTY_SESSION_INTERVAL) long seconds) {
+      return memoizeWithExpiration(new Supplier<Map<URI, org.jclouds.compute.domain.Image>>() {
+         @Override public Map<URI, org.jclouds.compute.domain.Image> get() {
+            ImmutableMap.Builder<URI, org.jclouds.compute.domain.Image> result = ImmutableMap.builder();
+            for (org.jclouds.compute.domain.Image image : imageSupplier.get()) {
+               result.put(image.getUri(), image);
+            }
+            return result.build();
+         }
+      }, seconds, SECONDS);
    }
 
-   @Provides
-   @Singleton
-   @Memoized
-   public Supplier<Map<URI, ? extends Hardware>> provideHardwaresMap(
-           AtomicReference<AuthorizationException> authException,
-           final Supplier<Set<? extends Hardware>> hardwares,
-           @Named(PROPERTY_SESSION_INTERVAL) long seconds) {
-      return MemoizedRetryOnTimeOutButNotOnAuthorizationExceptionSupplier.create(authException,
-              new Supplier<Map<URI, ? extends Hardware>>() {
-                 @Override
-                 public Map<URI, ? extends Hardware> get() {
-                    return uniqueIndex(hardwares.get(), new Function<Hardware, URI>() {
-                       @Override
-                       public URI apply(Hardware input) {
-                          return input.getUri();
-                       }
-                    });
-                 }
-              },
-              seconds, TimeUnit.SECONDS);
+   @Provides @Singleton @Memoized Supplier<Map<URI, Hardware>> hardwareByUri(
+         @Memoized final Supplier<Set<? extends Hardware>> hardwareSupplier,
+         @Named(PROPERTY_SESSION_INTERVAL) long seconds) {
+      return memoizeWithExpiration(new Supplier<Map<URI, Hardware>>() {
+         @Override public Map<URI, Hardware> get() {
+            ImmutableMap.Builder<URI, Hardware> result = ImmutableMap.builder();
+            for (Hardware hardware : hardwareSupplier.get()) {
+               result.put(hardware.getUri(), hardware);
+            }
+            return result.build();
+         }
+      }, seconds, SECONDS);
    }
 
-   @Provides
-   @Singleton
-   @Memoized
-   public Supplier<Map<URI, ? extends Location>> provideZones(
-           AtomicReference<AuthorizationException> authException,
-           final GoogleComputeEngineApi api, final Function<Zone, Location> zoneToLocation,
-           @UserProject final Supplier<String> userProject,
-           @Named(PROPERTY_SESSION_INTERVAL) long seconds) {
-      return MemoizedRetryOnTimeOutButNotOnAuthorizationExceptionSupplier.create(authException,
-              new Supplier<Map<URI, ? extends Location>>() {
-                 @Override
-                 public Map<URI, ? extends Location> get() {
-                    return uniqueIndex(transform(concat(api.getZoneApi(userProject.get()).list()), zoneToLocation),
-                            new Function<Location, URI>() {
-                               @Override
-                               public URI apply(Location input) {
-                                  return (URI) input.getMetadata().get("selfLink");
-                               }
-                            });
-                 }
-              },
-              seconds, TimeUnit.SECONDS);
+   @Provides @Singleton @Memoized Supplier<Map<URI, Location>> locationsByUri(
+         @Memoized final Supplier<Set<? extends Location>> locations,
+         @Memoized final Supplier<Map<URI, String>> selfLinkToNames, @Named(PROPERTY_SESSION_INTERVAL) long seconds) {
+      return memoizeWithExpiration(new Supplier<Map<URI, Location>>() {
+         @Override public Map<URI, Location> get() {
+            ImmutableMap.Builder<URI, Location> result = ImmutableMap.builder();
+            for (Location location : locations.get()) {
+               for (Map.Entry<URI, String> entry : selfLinkToNames.get().entrySet()) {
+                  if (entry.getValue().equals(location.getId())) {
+                     result.put(entry.getKey(), location);
+                     continue;
+                  }
+               }
+            }
+            return result.build();
+         }
+      }, seconds, SECONDS);
    }
 
-   @Provides
-   @Singleton
-   @Memoized
-   public Supplier<Map<URI, Region>> provideRegions(
-           AtomicReference<AuthorizationException> authException,
-           final GoogleComputeEngineApi api,
-           @UserProject final Supplier<String> userProject,
-           @Named(PROPERTY_SESSION_INTERVAL) long seconds) {
-      return MemoizedRetryOnTimeOutButNotOnAuthorizationExceptionSupplier.create(authException,
-              new Supplier<Map<URI, Region>>() {
-                 @Override
-                 public Map<URI, Region> get() {
-                    return uniqueIndex(concat(api.getRegionApi(userProject.get()).list()),
-                            new Function<Region, URI>() {
-                               @Override
-                               public URI apply(Region input) {
-                                  return input.selfLink();
-                               }
-                            });
-                 }
-              },
-              seconds, TimeUnit.SECONDS);
-   }
-
-   @Provides
-   @Singleton
-   protected LoadingCache<NetworkAndAddressRange, Network> networkMap(
-           CacheLoader<NetworkAndAddressRange, Network> in) {
+   @Provides @Singleton
+   LoadingCache<NetworkAndAddressRange, Network> networkMap(CacheLoader<NetworkAndAddressRange, Network> in) {
       return CacheBuilder.newBuilder().build(in);
    }
 
-   @Override
-   protected Optional<ImageExtension> provideImageExtension(Injector i) {
+   @Override protected Optional<ImageExtension> provideImageExtension(Injector i) {
       return Optional.absent();
    }
 
-   @Override
-   protected Optional<SecurityGroupExtension> provideSecurityGroupExtension(Injector i) {
+   @Override protected Optional<SecurityGroupExtension> provideSecurityGroupExtension(Injector i) {
       return Optional.of(i.getInstance(SecurityGroupExtension.class));
    }
 
-   @VisibleForTesting
-   public static final Map<Instance.Status, NodeMetadata.Status> toPortableNodeStatus =
-           ImmutableMap.<Instance.Status, NodeMetadata.Status>builder()
-                   .put(Instance.Status.PROVISIONING, NodeMetadata.Status.PENDING)
-                   .put(Instance.Status.STAGING, NodeMetadata.Status.PENDING)
-                   .put(Instance.Status.RUNNING, NodeMetadata.Status.RUNNING)
-                   .put(Instance.Status.STOPPING, NodeMetadata.Status.PENDING)
-                   .put(Instance.Status.STOPPED, NodeMetadata.Status.SUSPENDED)
-                   .put(Instance.Status.TERMINATED, NodeMetadata.Status.TERMINATED).build();
+   private static final Map<Instance.Status, NodeMetadata.Status> toPortableNodeStatus =
+         ImmutableMap.<Instance.Status, NodeMetadata.Status>builder()
+                     .put(Instance.Status.PROVISIONING, NodeMetadata.Status.PENDING)
+                     .put(Instance.Status.STAGING, NodeMetadata.Status.PENDING)
+                     .put(Instance.Status.RUNNING, NodeMetadata.Status.RUNNING)
+                     .put(Instance.Status.STOPPING, NodeMetadata.Status.PENDING)
+                     .put(Instance.Status.STOPPED, NodeMetadata.Status.SUSPENDED)
+                     .put(Instance.Status.TERMINATED, NodeMetadata.Status.TERMINATED).build();
 
-   @Singleton
-   @Provides
-   protected Map<Instance.Status, NodeMetadata.Status> toPortableNodeStatus() {
+   @Provides Map<Instance.Status, NodeMetadata.Status> toPortableNodeStatus() {
       return toPortableNodeStatus;
-   }
-
-   @Singleton
-   @Provides
-   @Named(GCE_IMAGE_PROJECTS)
-   protected List<String> imageProjects(@Named(GCE_IMAGE_PROJECTS) String imageProjects) {
-      return Splitter.on(',').splitToList(imageProjects);
    }
 }

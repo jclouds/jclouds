@@ -18,10 +18,10 @@ package org.jclouds.googlecomputeengine.config;
 
 import static com.google.common.base.Suppliers.compose;
 import static com.google.inject.name.Names.named;
+import static java.util.concurrent.TimeUnit.SECONDS;
 import static org.jclouds.Constants.PROPERTY_SESSION_INTERVAL;
 
 import java.net.URI;
-import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
 
 import javax.inject.Named;
@@ -31,7 +31,6 @@ import org.jclouds.domain.Credentials;
 import org.jclouds.googlecomputeengine.GoogleComputeEngineApi;
 import org.jclouds.googlecomputeengine.compute.domain.SlashEncodedIds;
 import org.jclouds.googlecomputeengine.domain.Operation;
-import org.jclouds.googlecomputeengine.domain.Project;
 import org.jclouds.googlecomputeengine.handlers.GoogleComputeEngineErrorHandler;
 import org.jclouds.googlecomputeengine.predicates.GlobalOperationDonePredicate;
 import org.jclouds.googlecomputeengine.predicates.RegionOperationDonePredicate;
@@ -44,8 +43,6 @@ import org.jclouds.http.annotation.ServerError;
 import org.jclouds.json.config.GsonModule.DateAdapter;
 import org.jclouds.json.config.GsonModule.Iso8601DateAdapter;
 import org.jclouds.location.Provider;
-import org.jclouds.location.suppliers.ImplicitLocationSupplier;
-import org.jclouds.location.suppliers.implicit.FirstZone;
 import org.jclouds.rest.AuthorizationException;
 import org.jclouds.rest.ConfiguresHttpApi;
 import org.jclouds.rest.config.HttpApiModule;
@@ -57,14 +54,10 @@ import com.google.common.base.Splitter;
 import com.google.common.base.Supplier;
 import com.google.common.collect.Iterables;
 import com.google.inject.Provides;
-import com.google.inject.Scopes;
 import com.google.inject.TypeLiteral;
 
-/**
- * Configures the GoogleCompute connection.
- */
 @ConfiguresHttpApi
-public class GoogleComputeEngineHttpApiModule extends HttpApiModule<GoogleComputeEngineApi> {
+public final class GoogleComputeEngineHttpApiModule extends HttpApiModule<GoogleComputeEngineApi> {
    public GoogleComputeEngineHttpApiModule() {
    }
 
@@ -77,7 +70,6 @@ public class GoogleComputeEngineHttpApiModule extends HttpApiModule<GoogleComput
       }).annotatedWith(named("region")).to(RegionOperationDonePredicate.class);
       bind(new TypeLiteral<Predicate<AtomicReference<Operation>>>() {
       }).annotatedWith(named("zone")).to(ZoneOperationDonePredicate.class);
-      bind(ImplicitLocationSupplier.class).to(FirstZone.class).in(Scopes.SINGLETON);
       super.configure();
    }
 
@@ -88,13 +80,21 @@ public class GoogleComputeEngineHttpApiModule extends HttpApiModule<GoogleComput
       bind(HttpErrorHandler.class).annotatedWith(ServerError.class).to(GoogleComputeEngineErrorHandler.class);
    }
 
+   @Override
+   protected void installLocations() {
+      install(new GoogleComputeEngineLocationModule());
+   }
+
+   /**
+    * Since this is caching a direct api call, we memoize, but short-circuit on any auth exception. This prevents
+    * excessive errors when things occur in parallel, or as peers on a function graph.
+    */
    @Provides
    @Singleton
-   @UserProject
-   public Supplier<String> supplyProject(@Provider final Supplier<Credentials> creds,
-                                         final GoogleComputeEngineApi api,
-                                         AtomicReference<AuthorizationException> authException,
-                                         @Named(PROPERTY_SESSION_INTERVAL) long seconds) {
+   @UserProject Supplier<String> projectName(@Provider final Supplier<Credentials> creds,
+                                             final GoogleComputeEngineApi api,
+                                             AtomicReference<AuthorizationException> authException,
+                                             @Named(PROPERTY_SESSION_INTERVAL) long seconds) {
       return MemoizedRetryOnTimeOutButNotOnAuthorizationExceptionSupplier.create(authException,
               compose(new Function<Credentials, String>() {
                  public String apply(Credentials in) {
@@ -111,17 +111,15 @@ public class GoogleComputeEngineHttpApiModule extends HttpApiModule<GoogleComput
                           projectName = Iterables.get(Splitter.on("-").split(projectName), 0);
                        }
                     }
-                    Project project = api.getProjectApi().get(projectName);
-                    return project.name();
+                    return api.getProjectApi().get(projectName).name();
                  }
-              }, creds), seconds, TimeUnit.SECONDS);
+              }, creds), seconds, SECONDS);
    }
 
    @Provides
    @Singleton
-   @Named("machineTypeToURI")
-   public Function<String, URI> provideMachineTypeNameToURIFunction(@Provider final Supplier<URI> endpoint,
-                                                                    @UserProject final Supplier<String> userProject) {
+   @Named("machineTypeToURI") Function<String, URI> machineTypeNameToURI(
+         @Provider final Supplier<URI> endpoint, @UserProject final Supplier<String> userProject) {
       return new Function<String, URI>() {
          @Override
          public URI apply(String input) {
@@ -135,42 +133,12 @@ public class GoogleComputeEngineHttpApiModule extends HttpApiModule<GoogleComput
 
    @Provides
    @Singleton
-   @Named("networkToURI")
-   public Function<String, URI> provideNetworkNameToURIFunction(@Provider final Supplier<URI> endpoint,
-                                                                @UserProject final Supplier<String> userProject) {
+   @Named("networkToURI") Function<String, URI> networkNameToURI(@Provider final Supplier<URI> endpoint,
+                                                                 @UserProject final Supplier<String> userProject) {
       return new Function<String, URI>() {
-         @Override
-         public URI apply(String input) {
+         @Override public URI apply(String input) {
             return Uris.uriBuilder(endpoint.get()).appendPath("/projects/").appendPath(userProject.get())
                     .appendPath("/global/networks/").appendPath(input).build();
-         }
-      };
-   }
-
-   @Provides
-   @Singleton
-   @Named("zoneToURI")
-   public Function<String, URI> provideZoneNameToURIFunction(@Provider final Supplier<URI> endpoint,
-                                                             @UserProject final Supplier<String> userProject) {
-      return new Function<String, URI>() {
-         @Override
-         public URI apply(String input) {
-            return Uris.uriBuilder(endpoint.get()).appendPath("/projects/").appendPath(userProject.get())
-                    .appendPath("/zones/").appendPath(input).build();
-         }
-      };
-   }
-
-   @Provides
-   @Singleton
-   @Named("regionToURI")
-   public Function<String, URI> provideRegionNameToURIFunction(@Provider final Supplier<URI> endpoint,
-                                                               @UserProject final Supplier<String> userProject) {
-      return new Function<String, URI>() {
-         @Override
-         public URI apply(String input) {
-            return Uris.uriBuilder(endpoint.get()).appendPath("/projects/").appendPath(userProject.get())
-                    .appendPath("/regions/").appendPath(input).build();
          }
       };
    }

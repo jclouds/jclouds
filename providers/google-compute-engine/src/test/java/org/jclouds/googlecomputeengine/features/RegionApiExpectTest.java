@@ -51,16 +51,13 @@ public class RegionApiExpectTest extends BaseGoogleComputeEngineApiExpectTest {
            .payload(staticPayloadFromResource("/region_list.json")).build();
 
    public void testGetRegionResponseIs2xx() throws Exception {
-
-
       HttpResponse operationResponse = HttpResponse.builder().statusCode(200)
               .payload(payloadFromResource("/region_get.json")).build();
 
       RegionApi api = requestsSendResponses(requestForScopes(COMPUTE_READONLY_SCOPE),
               TOKEN_RESPONSE, GET_REGION_REQ, operationResponse).getRegionApi("myproject");
 
-      assertEquals(api.get("us-central1"),
-              new ParseRegionTest().expected());
+      assertEquals(api.get("us-central1"), new ParseRegionTest().expected());
    }
 
    public void testGetRegionResponseIs4xx() throws Exception {

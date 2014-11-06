@@ -19,7 +19,6 @@ package org.jclouds.googlecomputeengine;
 import static org.jclouds.Constants.PROPERTY_SESSION_INTERVAL;
 import static org.jclouds.compute.config.ComputeServiceProperties.TEMPLATE;
 import static org.jclouds.googlecomputeengine.GoogleComputeEngineConstants.GCE_IMAGE_PROJECTS;
-import static org.jclouds.googlecomputeengine.GoogleComputeEngineConstants.GCE_PROVIDER_NAME;
 import static org.jclouds.googlecomputeengine.GoogleComputeEngineConstants.OPERATION_COMPLETE_INTERVAL;
 import static org.jclouds.googlecomputeengine.GoogleComputeEngineConstants.OPERATION_COMPLETE_TIMEOUT;
 import static org.jclouds.oauth.v2.config.OAuthProperties.AUDIENCE;
@@ -29,7 +28,6 @@ import static org.jclouds.reflect.Reflection2.typeToken;
 import java.net.URI;
 import java.util.Properties;
 
-import org.jclouds.apis.ApiMetadata;
 import org.jclouds.compute.ComputeServiceContext;
 import org.jclouds.googlecomputeengine.compute.config.GoogleComputeEngineServiceContextModule;
 import org.jclouds.googlecomputeengine.config.GoogleComputeEngineHttpApiModule;
@@ -38,11 +36,9 @@ import org.jclouds.oauth.v2.config.OAuthAuthenticationModule;
 import org.jclouds.oauth.v2.config.OAuthModule;
 import org.jclouds.rest.internal.BaseHttpApiMetadata;
 
-import com.google.auto.service.AutoService;
 import com.google.common.collect.ImmutableSet;
 import com.google.inject.Module;
 
-@AutoService(ApiMetadata.class)
 public class GoogleComputeEngineApiMetadata extends BaseHttpApiMetadata<GoogleComputeEngineApi> {
 
    @Override
@@ -64,9 +60,9 @@ public class GoogleComputeEngineApiMetadata extends BaseHttpApiMetadata<GoogleCo
       properties.put(AUDIENCE, "https://accounts.google.com/o/oauth2/token");
       properties.put(SIGNATURE_OR_MAC_ALGORITHM, "RS256");
       properties.put(PROPERTY_SESSION_INTERVAL, 3600);
-      properties.setProperty(TEMPLATE, "osFamily=DEBIAN,osVersionMatches=7\\..*,locationId=us-central1-a,loginUser=jclouds");
       properties.put(OPERATION_COMPLETE_INTERVAL, 500);
       properties.put(OPERATION_COMPLETE_TIMEOUT, 600000);
+      properties.put(TEMPLATE, "osFamily=DEBIAN,osVersionMatches=7\\..*,locationId=us-central1-a,loginUser=jclouds");
       properties.put(GCE_IMAGE_PROJECTS, "centos-cloud,debian-cloud,rhel-cloud,suse-cloud,opensuse-cloud,gce-nvme,coreos-cloud");
       return properties;
    }
@@ -74,22 +70,22 @@ public class GoogleComputeEngineApiMetadata extends BaseHttpApiMetadata<GoogleCo
    public static class Builder extends BaseHttpApiMetadata.Builder<GoogleComputeEngineApi, Builder> {
 
       protected Builder() {
-         id(GCE_PROVIDER_NAME)
-                 .name("Google Compute Engine Api")
-                 .identityName("Email associated with the Google API client_id")
-                 .credentialName("Private key literal associated with the Google API client_id")
-                 .documentation(URI.create("https://developers.google.com/compute/docs"))
-                 .version("v1")
-                 .defaultEndpoint("https://www.googleapis.com/compute/v1")
-                 .defaultProperties(GoogleComputeEngineApiMetadata.defaultProperties())
-                 .view(typeToken(ComputeServiceContext.class))
-                 .defaultModules(ImmutableSet.<Class<? extends Module>>builder()
-                         .add(GoogleComputeEngineHttpApiModule.class)
-                         .add(GoogleComputeEngineParserModule.class)
-                         .add(OAuthAuthenticationModule.class)
-                         .add(OAuthModule.class)
-                         .add(GoogleComputeEngineServiceContextModule.class)
-                         .build());
+         id("google-compute-engine")
+           .name("Google Compute Engine Api")
+           .identityName("Email associated with the Google API client_id")
+           .credentialName("Private key literal associated with the Google API client_id")
+           .documentation(URI.create("https://developers.google.com/compute/docs"))
+           .version("v1")
+           .defaultEndpoint("https://www.googleapis.com/compute/v1")
+           .defaultProperties(GoogleComputeEngineApiMetadata.defaultProperties())
+           .view(typeToken(ComputeServiceContext.class))
+           .defaultModules(ImmutableSet.<Class<? extends Module>>builder()
+                   .add(GoogleComputeEngineHttpApiModule.class)
+                   .add(GoogleComputeEngineParserModule.class)
+                   .add(OAuthAuthenticationModule.class)
+                   .add(OAuthModule.class)
+                   .add(GoogleComputeEngineServiceContextModule.class)
+                   .build());
       }
 
       @Override

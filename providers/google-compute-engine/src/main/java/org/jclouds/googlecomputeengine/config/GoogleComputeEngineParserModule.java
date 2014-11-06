@@ -55,7 +55,7 @@ public final class GoogleComputeEngineParserModule extends AbstractModule {
       bind(GsonModule.DateAdapter.class).to(GsonModule.Iso8601DateAdapter.class);
    }
 
-   @Provides @Singleton public Map<Type, Object> typeAdapters() {
+   @Provides @Singleton Map<Type, Object> typeAdapters() {
       return new ImmutableMap.Builder<Type, Object>()
             .put(InstanceTemplate.class, new InstanceTemplateTypeAdapter())
             .put(FirewallOptions.class, new FirewallOptionsTypeAdapter())
@@ -63,11 +63,11 @@ public final class GoogleComputeEngineParserModule extends AbstractModule {
    }
 
    // TODO: change jclouds core to use collaborative set bindings
-   @Provides @Singleton public Set<TypeAdapterFactory> typeAdapterFactories() {
+   @Provides @Singleton Set<TypeAdapterFactory> typeAdapterFactories() {
       return ImmutableSet.<TypeAdapterFactory>of(new MetadataTypeAdapter());
    }
 
-   private static class InstanceTemplateTypeAdapter implements JsonSerializer<InstanceTemplate> {
+   private static final class InstanceTemplateTypeAdapter implements JsonSerializer<InstanceTemplate> {
 
       @Override public JsonElement serialize(InstanceTemplate src, Type typeOfSrc, JsonSerializationContext context) {
          InstanceTemplateInternal template = new InstanceTemplateInternal(src);
@@ -96,7 +96,7 @@ public final class GoogleComputeEngineParserModule extends AbstractModule {
          return instance;
       }
 
-      private static class InstanceTemplateInternal extends InstanceTemplate {
+      private static final class InstanceTemplateInternal extends InstanceTemplate {
          private InstanceTemplateInternal(InstanceTemplate template) {
             machineType(template.machineType());
             name(template.name());
@@ -108,11 +108,7 @@ public final class GoogleComputeEngineParserModule extends AbstractModule {
       }
    }
 
-   private static class MetadataTypeAdapter extends SubtypeAdapterFactory<Metadata> {
-
-      private MetadataTypeAdapter() {
-         super(Metadata.class);
-      }
+   private static final class MetadataTypeAdapter extends TypeAdapter<Metadata> implements TypeAdapterFactory {
 
       @Override public void write(JsonWriter out, Metadata src) throws IOException {
          out.beginObject();
@@ -167,9 +163,16 @@ public final class GoogleComputeEngineParserModule extends AbstractModule {
          in.endObject();
          return Metadata.create(fingerprint, builder.build());
       }
+
+      @Override public <T> TypeAdapter<T> create(Gson gson, TypeToken<T> typeToken) {
+         if (!(Metadata.class.isAssignableFrom(typeToken.getRawType()))) {
+            return null;
+         }
+         return (TypeAdapter<T>) this;
+      }
    }
 
-   private static class FirewallOptionsTypeAdapter implements JsonSerializer<FirewallOptions> {
+   private static final class FirewallOptionsTypeAdapter implements JsonSerializer<FirewallOptions> {
 
       @Override public JsonElement serialize(FirewallOptions src, Type typeOfSrc, JsonSerializationContext context) {
          JsonObject firewall = new JsonObject();
@@ -199,7 +202,7 @@ public final class GoogleComputeEngineParserModule extends AbstractModule {
       }
    }
 
-   private static class RouteOptionsTypeAdapter implements JsonSerializer<RouteOptions> {
+   private static final class RouteOptionsTypeAdapter implements JsonSerializer<RouteOptions> {
 
       @Override public JsonElement serialize(RouteOptions src, Type typeOfSrc, JsonSerializationContext context) {
          JsonObject route = new JsonObject();
@@ -243,20 +246,5 @@ public final class GoogleComputeEngineParserModule extends AbstractModule {
          array.add(new JsonPrimitive(string));
       }
       return array;
-   }
-
-   private abstract static class SubtypeAdapterFactory<T> extends TypeAdapter<T> implements TypeAdapterFactory {
-      private final Class<T> baseClass;
-
-      private SubtypeAdapterFactory(Class<T> baseClass) {
-         this.baseClass = baseClass;
-      }
-
-      @Override public <T> TypeAdapter<T> create(Gson gson, TypeToken<T> typeToken) {
-         if (!(baseClass.isAssignableFrom(typeToken.getRawType()))) {
-            return null;
-         }
-         return (TypeAdapter<T>) this;
-      }
    }
 }

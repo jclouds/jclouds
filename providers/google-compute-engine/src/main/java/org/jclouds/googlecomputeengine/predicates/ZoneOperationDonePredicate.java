@@ -23,7 +23,6 @@ import java.util.Map;
 import java.util.concurrent.atomic.AtomicReference;
 
 import org.jclouds.collect.Memoized;
-import org.jclouds.domain.Location;
 import org.jclouds.googlecomputeengine.GoogleComputeEngineApi;
 import org.jclouds.googlecomputeengine.config.UserProject;
 import org.jclouds.googlecomputeengine.domain.Operation;
@@ -39,19 +38,19 @@ public final class ZoneOperationDonePredicate implements Predicate<AtomicReferen
 
    private final GoogleComputeEngineApi api;
    private final Supplier<String> project;
-   private final Supplier<Map<URI, ? extends Location>> zones;
+   private final Supplier<Map<URI, String>> selfLinkToName;
 
    @Inject ZoneOperationDonePredicate(GoogleComputeEngineApi api, @UserProject Supplier<String> project,
-         @Memoized Supplier<Map<URI, ? extends Location>> zones) {
+         @Memoized Supplier<Map<URI, String>> selfLinkToName) {
       this.api = api;
       this.project = project;
-      this.zones = zones;
+      this.selfLinkToName = selfLinkToName;
    }
 
    @Override public boolean apply(AtomicReference<Operation> input) {
       checkNotNull(input.get(), "input");
       URI zone = checkNotNull(input.get().zone(), "zone of %s", input.get());
-      String locationId = checkNotNull(zones.get().get(zone), "location of %s", zone).getId();
+      String locationId = checkNotNull(selfLinkToName.get().get(zone), "location of %s", zone);
       Operation current = api.getZoneOperationApi(project.get(), locationId).get(input.get().name());
       switch (current.status()) {
          case DONE:

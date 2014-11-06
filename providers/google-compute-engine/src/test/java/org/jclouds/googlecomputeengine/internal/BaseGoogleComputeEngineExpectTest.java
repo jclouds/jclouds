@@ -45,14 +45,14 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import javax.ws.rs.core.MediaType;
 
-import org.jclouds.apis.ApiMetadata;
 import org.jclouds.crypto.Crypto;
-import org.jclouds.googlecomputeengine.GoogleComputeEngineApiMetadata;
+import org.jclouds.googlecomputeengine.GoogleComputeEngineProviderMetadata;
 import org.jclouds.http.HttpRequest;
 import org.jclouds.http.HttpResponse;
 import org.jclouds.io.Payload;
 import org.jclouds.oauth.v2.OAuthConstants;
 import org.jclouds.oauth.v2.config.OAuthProperties;
+import org.jclouds.providers.ProviderMetadata;
 import org.jclouds.rest.internal.BaseRestApiExpectTest;
 import org.jclouds.ssh.SshKeys;
 
@@ -85,49 +85,49 @@ public class BaseGoogleComputeEngineExpectTest<T> extends BaseRestApiExpectTest<
                    "  \"expires_in\" : 3600\n" +
                    "}")).build();
 
-   protected String openSshKey;
+   private final KeyPair keyPair;
+   protected final String openSshKey;
 
-
-   public BaseGoogleComputeEngineExpectTest() {
+   protected BaseGoogleComputeEngineExpectTest() {
       provider = "google-compute-engine";
+      try {
+         KeyFactory keyfactory = KeyFactory.getInstance("RSA");
+         PrivateKey privateKey = keyfactory
+               .generatePrivate(privateKeySpec(ByteSource.wrap(PRIVATE_KEY.getBytes(UTF_8))));
+         PublicKey publicKey = keyfactory.generatePublic(publicKeySpec(ByteSource.wrap(PUBLIC_KEY.getBytes(UTF_8))));
+         keyPair = new KeyPair(publicKey, privateKey);
+         openSshKey = SshKeys.encodeAsOpenSSH(RSAPublicKey.class.cast(publicKey));
+      } catch (NoSuchAlgorithmException e) {
+         throw propagate(e);
+      } catch (InvalidKeySpecException e) {
+         throw propagate(e);
+      } catch (IOException e) {
+         throw propagate(e);
+      }
    }
 
-   @Override protected ApiMetadata createApiMetadata(){
-      return new GoogleComputeEngineApiMetadata();
+   @Override protected ProviderMetadata createProviderMetadata(){
+      return new GoogleComputeEngineProviderMetadata();
    }
 
-   @Override
-   protected Module createModule() {
+   @Override protected Module createModule() {
 
       return new Module() {
          @Override
          public void configure(Binder binder) {
             // Predictable time
             binder.bind(new TypeLiteral<Supplier<Long>>() {}).toInstance(Suppliers.ofInstance(0L));
-            try {
-               KeyFactory keyfactory = KeyFactory.getInstance("RSA");
-               PrivateKey privateKey = keyfactory.generatePrivate(privateKeySpec(ByteSource.wrap(
-                       PRIVATE_KEY.getBytes(UTF_8))));
-               PublicKey publicKey = keyfactory.generatePublic(publicKeySpec(ByteSource.wrap(PUBLIC_KEY.getBytes(UTF_8))));
-               KeyPair keyPair = new KeyPair(publicKey, privateKey);
-               openSshKey = SshKeys.encodeAsOpenSSH(RSAPublicKey.class.cast(publicKey));
-               final Crypto crypto = createMock(Crypto.class);
-               KeyPairGenerator rsaKeyPairGenerator = createMock(KeyPairGenerator.class);
-               final SecureRandom secureRandom = createMock(SecureRandom.class);
-               expect(crypto.rsaKeyPairGenerator()).andReturn(rsaKeyPairGenerator).anyTimes();
-               rsaKeyPairGenerator.initialize(2048, secureRandom);
-               expectLastCall().anyTimes();
-               expect(rsaKeyPairGenerator.genKeyPair()).andReturn(keyPair).anyTimes();
-               replay(crypto, rsaKeyPairGenerator, secureRandom);
-               binder.bind(Crypto.class).toInstance(crypto);
-               binder.bind(SecureRandom.class).toInstance(secureRandom);
-            } catch (NoSuchAlgorithmException e) {
-               propagate(e);
-            } catch (InvalidKeySpecException e) {
-               propagate(e);
-            } catch (IOException e) {
-               propagate(e);
-            }
+            Crypto crypto = createMock(Crypto.class);
+            KeyPairGenerator rsaKeyPairGenerator = createMock(KeyPairGenerator.class);
+            SecureRandom secureRandom = createMock(SecureRandom.class);
+            expect(crypto.rsaKeyPairGenerator()).andReturn(rsaKeyPairGenerator).anyTimes();
+            rsaKeyPairGenerator.initialize(2048, secureRandom);
+            expectLastCall().anyTimes();
+            expect(rsaKeyPairGenerator.genKeyPair()).andReturn(keyPair).anyTimes();
+            replay(crypto, rsaKeyPairGenerator, secureRandom);
+            binder.bind(Crypto.class).toInstance(crypto);
+            binder.bind(SecureRandom.class).toInstance(secureRandom);
+
             //  predictable node names
             final AtomicInteger suffix = new AtomicInteger();
             binder.bind(new TypeLiteral<Supplier<String>>() {

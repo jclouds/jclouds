@@ -28,7 +28,6 @@ import org.jclouds.collect.Memoized;
 import org.jclouds.googlecomputeengine.GoogleComputeEngineApi;
 import org.jclouds.googlecomputeengine.config.UserProject;
 import org.jclouds.googlecomputeengine.domain.Operation;
-import org.jclouds.googlecomputeengine.domain.Region;
 
 import com.google.common.base.Predicate;
 import com.google.common.base.Supplier;
@@ -36,19 +35,19 @@ import com.google.common.base.Supplier;
 public final class RegionOperationDonePredicate implements Predicate<AtomicReference<Operation>> {
    private final GoogleComputeEngineApi api;
    private final Supplier<String> project;
-   private final Supplier<Map<URI, Region>> regions;
+   private final Supplier<Map<URI, String>> selfLinkToName;
 
    @Inject RegionOperationDonePredicate(GoogleComputeEngineApi api, @UserProject Supplier<String> project,
-                                @Memoized Supplier<Map<URI, Region>> regions) {
+         @Memoized Supplier<Map<URI, String>> selfLinkToName) {
       this.api = api;
       this.project = project;
-      this.regions = regions;
+      this.selfLinkToName = selfLinkToName;
    }
 
    @Override public boolean apply(AtomicReference<Operation> input) {
       checkNotNull(input.get(), "input");
       URI region = checkNotNull(input.get().region(), "region of %s", input.get());
-      String locationId = checkNotNull(regions.get().get(region), "location of %s", region).id();
+      String locationId = checkNotNull(selfLinkToName.get().get(region), "location of %s", region);
       Operation current = api.getRegionOperationApi(project.get(), locationId).get(input.get().name());
       switch (current.status()) {
          case DONE:
