@@ -82,6 +82,7 @@ public class InstanceApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
                         .get()
                         .selfLink();
       instance = new InstanceTemplate()
+              .name(INSTANCE_NAME)
               .machineType(getDefaultMachineTypeUrl(userProject.get()))
               .addNetworkInterface(getNetworkUrl(userProject.get(), INSTANCE_NETWORK_NAME),
                                    Instance.NetworkInterface.AccessConfig.Type.ONE_TO_ONE_NAT)
@@ -113,7 +114,7 @@ public class InstanceApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
       DiskCreationOptions diskCreationOptions = new DiskCreationOptions().sourceImage(instance.image());
       assertOperationDoneSuccessfully(diskApi().create(BOOT_DISK_NAME, DEFAULT_DISK_SIZE_GB, diskCreationOptions));
       assertOperationDoneSuccessfully(diskApi().create("instance-live-test-disk", DEFAULT_DISK_SIZE_GB));
-      assertOperationDoneSuccessfully(api().create(INSTANCE_NAME, instance));
+      assertOperationDoneSuccessfully(api().create(instance));
    }
 
    @Test(groups = "live", dependsOnMethods = "testInsertInstance")

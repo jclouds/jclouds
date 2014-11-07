@@ -142,7 +142,9 @@ public final class GoogleComputeEngineServiceAdapter
 
       disks.addAll(options.getDisks());
 
-      InstanceTemplate instanceTemplate = new InstanceTemplate().machineType(hardware.getUri());
+      InstanceTemplate instanceTemplate = new InstanceTemplate()
+            .name(name)
+            .machineType(hardware.getUri());
 
       if (options.isEnableNat()) {
          instanceTemplate.addNetworkInterface(options.getNetwork().get(), Type.ONE_TO_ONE_NAT);
@@ -167,7 +169,7 @@ public final class GoogleComputeEngineServiceAdapter
 
       String zone = template.getLocation().getId();
       InstanceApi instanceApi = api.getInstanceApi(userProject.get(), zone);
-      Operation operation = instanceApi.create(name, instanceTemplate);
+      Operation operation = instanceApi.create(instanceTemplate);
 
       if (options.shouldBlockUntilRunning()) {
          waitOperationDone(operation);

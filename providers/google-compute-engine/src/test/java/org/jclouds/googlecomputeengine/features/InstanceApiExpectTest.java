@@ -137,10 +137,12 @@ public class InstanceApiExpectTest extends BaseGoogleComputeEngineApiExpectTest 
               TOKEN_RESPONSE, insert,
               CREATE_INSTANCE_RESPONSE)).getInstanceApi("myproject", "us-central1-a");
 
-      InstanceTemplate options = new InstanceTemplate().machineTypeName("us-central1-a/n1-standard-1")
+      InstanceTemplate options = new InstanceTemplate()
+              .name("test-1")
+              .machineType(URI.create(BASE_URL + "/myproject/zones/us-central1-a/machineTypes/n1-standard-1"))
               .addNetworkInterface(URI.create(BASE_URL + "/myproject/global/networks/default"));
 
-      assertEquals(api.create("test-1", options), new ParseZoneOperationTest().expected());
+      assertEquals(api.create(options), new ParseZoneOperationTest().expected());
    }
 
    public void testInsertInstanceResponseIs2xxAllOptions() {
@@ -161,7 +163,9 @@ public class InstanceApiExpectTest extends BaseGoogleComputeEngineApiExpectTest 
               requestForScopes(COMPUTE_SCOPE),
               TOKEN_RESPONSE, insert, insertInstanceResponse)).getInstanceApi("myproject", "us-central1-a");
 
-      InstanceTemplate options = new InstanceTemplate().machineTypeName("us-central1-a/n1-standard-1")
+      InstanceTemplate options = new InstanceTemplate()
+              .name("test-0")
+              .machineType(URI.create(BASE_URL + "/myproject/zones/us-central1-a/machineTypes/n1-standard-1"))
               .addNetworkInterface(
                     URI.create(BASE_URL + "/myproject/global/networks/default"),
                     Instance.NetworkInterface.AccessConfig.Type.ONE_TO_ONE_NAT)
@@ -172,7 +176,7 @@ public class InstanceApiExpectTest extends BaseGoogleComputeEngineApiExpectTest 
               .addServiceAccount(Instance.ServiceAccount.create("default", ImmutableList.of("myscope")))
               .addMetadata("aKey", "aValue");
 
-      assertEquals(api.create("test-0", options), new ParseZoneOperationTest().expected());
+      assertEquals(api.create(options), new ParseZoneOperationTest().expected());
    }
 
    public void testDeleteInstanceResponseIs2xx() {

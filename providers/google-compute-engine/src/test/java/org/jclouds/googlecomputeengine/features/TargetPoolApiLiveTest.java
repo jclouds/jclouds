@@ -16,6 +16,7 @@
  */
 package org.jclouds.googlecomputeengine.features;
 
+import static org.jclouds.googlecomputeengine.domain.Instance.NetworkInterface.AccessConfig.Type.ONE_TO_ONE_NAT;
 import static org.jclouds.googlecomputeengine.options.ListOptions.Builder.filter;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotEquals;
@@ -85,9 +86,9 @@ public class TargetPoolApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
 
       // Make and instanceTemplate
       InstanceTemplate instanceTemplate = new InstanceTemplate()
+            .name(INSTANCE_NAME)
             .machineType(getDefaultMachineTypeUrl(userProject.get()))
-            .addNetworkInterface(getNetworkUrl(userProject.get(), INSTANCE_NETWORK_NAME),
-                                 Instance.NetworkInterface.AccessConfig.Type.ONE_TO_ONE_NAT)
+            .addNetworkInterface(getNetworkUrl(userProject.get(), INSTANCE_NETWORK_NAME), ONE_TO_ONE_NAT)
             .addMetadata("mykey", "myvalue")
             .description("a description")
             .addDisk(Instance.AttachedDisk.Mode.READ_WRITE, getDiskUrl(userProject.get(), BOOT_DISK_NAME),
@@ -105,7 +106,7 @@ public class TargetPoolApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
                   .create(BOOT_DISK_NAME, DEFAULT_DISK_SIZE_GB, diskCreationOptions));
 
       // Create an instance.
-      assertOperationDoneSuccessfully(instanceApi.create(INSTANCE_NAME, instanceTemplate));
+      assertOperationDoneSuccessfully(instanceApi.create(instanceTemplate));
       Instance instance = instanceApi.get(INSTANCE_NAME);
       instances = new ArrayList<URI>();
       instances.add(instance.selfLink());

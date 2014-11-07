@@ -20,7 +20,6 @@ import static com.google.common.base.Suppliers.compose;
 import static java.util.concurrent.TimeUnit.SECONDS;
 import static org.jclouds.Constants.PROPERTY_SESSION_INTERVAL;
 
-import java.net.URI;
 import java.util.concurrent.atomic.AtomicReference;
 
 import javax.inject.Named;
@@ -28,10 +27,8 @@ import javax.inject.Singleton;
 
 import org.jclouds.domain.Credentials;
 import org.jclouds.googlecomputeengine.GoogleComputeEngineApi;
-import org.jclouds.googlecomputeengine.compute.domain.SlashEncodedIds;
 import org.jclouds.googlecomputeengine.handlers.GoogleComputeEngineErrorHandler;
 import org.jclouds.http.HttpErrorHandler;
-import org.jclouds.http.Uris;
 import org.jclouds.http.annotation.ClientError;
 import org.jclouds.http.annotation.Redirection;
 import org.jclouds.http.annotation.ServerError;
@@ -93,32 +90,5 @@ public final class GoogleComputeEngineHttpApiModule extends HttpApiModule<Google
                     return api.getProjectApi().get(projectName).name();
                  }
               }, creds), seconds, SECONDS);
-   }
-
-   @Provides
-   @Singleton
-   @Named("machineTypeToURI") Function<String, URI> machineTypeNameToURI(
-         @Provider final Supplier<URI> endpoint, @UserProject final Supplier<String> userProject) {
-      return new Function<String, URI>() {
-         @Override
-         public URI apply(String input) {
-            SlashEncodedIds zoneAndMachineType = SlashEncodedIds.fromSlashEncoded(input);
-            return Uris.uriBuilder(endpoint.get()).appendPath("/projects/").appendPath(userProject.get())
-                    .appendPath("/zones/").appendPath(zoneAndMachineType.left())
-                    .appendPath("/machineTypes/").appendPath(zoneAndMachineType.right()).build();
-         }
-      };
-   }
-
-   @Provides
-   @Singleton
-   @Named("networkToURI") Function<String, URI> networkNameToURI(@Provider final Supplier<URI> endpoint,
-                                                                 @UserProject final Supplier<String> userProject) {
-      return new Function<String, URI>() {
-         @Override public URI apply(String input) {
-            return Uris.uriBuilder(endpoint.get()).appendPath("/projects/").appendPath(userProject.get())
-                    .appendPath("/global/networks/").appendPath(input).build();
-         }
-      };
    }
 }

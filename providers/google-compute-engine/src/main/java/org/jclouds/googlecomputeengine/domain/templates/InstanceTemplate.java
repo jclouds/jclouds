@@ -24,6 +24,7 @@ import java.net.URI;
 import java.util.List;
 import java.util.Map;
 
+import org.jclouds.googlecomputeengine.domain.Image;
 import org.jclouds.googlecomputeengine.domain.Instance.NetworkInterface.AccessConfig;
 import org.jclouds.googlecomputeengine.domain.Instance.NetworkInterface.AccessConfig.Type;
 import org.jclouds.googlecomputeengine.domain.Instance.ServiceAccount;
@@ -34,6 +35,7 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 
 /** Optional information for creating an instance. */
+// TODO! this is dangerously similarly named to the InstanceTemplate resource!
 public class InstanceTemplate {
 
    public static final class PersistentDisk {
@@ -107,7 +109,6 @@ public class InstanceTemplate {
    private List<PersistentDisk> disks = Lists.newArrayList();
    private List<NetworkInterface> networkInterfaces = Lists.newArrayList();
    private Map<String, String> metadata = Maps.newLinkedHashMap();
-   private String machineTypeName;
 
    /**
     * @see org.jclouds.googlecomputeengine.domain.Instance#name()
@@ -134,7 +135,7 @@ public class InstanceTemplate {
    }
 
    /**
-    * @see org.jclouds.googlecomputeengine.domain.Instance#image()
+    * @see Image#selfLink()
     */
    public URI image() {
       return image;
@@ -154,18 +155,6 @@ public class InstanceTemplate {
 
    public InstanceTemplate machineType(URI machineType) {
       this.machineType = machineType;
-      return this;
-   }
-
-   /**
-    * @see org.jclouds.googlecomputeengine.domain.Instance#machineTypeName()
-    */
-   public String machineTypeName() {
-      return machineTypeName;
-   }
-
-   public InstanceTemplate machineTypeName(String machineTypeName) {
-      this.machineTypeName = machineTypeName;
       return this;
    }
 

@@ -38,7 +38,6 @@ import javax.ws.rs.QueryParam;
 import org.jclouds.Fallbacks.NullOnNotFoundOr404;
 import org.jclouds.googlecomputeengine.GoogleComputeEngineFallbacks.EmptyIteratorOnNotFoundOr404;
 import org.jclouds.googlecomputeengine.GoogleComputeEngineFallbacks.EmptyListPageOnNotFoundOr404;
-import org.jclouds.googlecomputeengine.binders.InstanceBinder;
 import org.jclouds.googlecomputeengine.binders.MetadataBinder;
 import org.jclouds.googlecomputeengine.domain.Instance;
 import org.jclouds.googlecomputeengine.domain.ListPage;
@@ -78,7 +77,6 @@ public interface InstanceApi {
    /**
     * Creates a instance resource in the specified project using the data included in the request.
     *
-    * @param instance this name of the instance to be created
     * @param template the instance template
     * @return an Operation resource. To check on the status of an operation, poll the Operations resource returned to
     *         you, and look for the status field.
@@ -87,8 +85,7 @@ public interface InstanceApi {
    @POST
    @Produces(APPLICATION_JSON)
    @OAuthScopes(COMPUTE_SCOPE)
-   @MapBinder(InstanceBinder.class)
-   Operation create(@PayloadParam("name") String instance, @PayloadParam("template") InstanceTemplate template);
+   Operation create(@BinderParam(BindToJsonPayload.class) InstanceTemplate template);
 
    /** Deletes an instance by name and returns the operation in progress, or null if not found. */
    @Named("Instances:delete")
