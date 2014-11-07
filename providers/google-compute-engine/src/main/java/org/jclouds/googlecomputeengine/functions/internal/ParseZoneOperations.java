@@ -16,6 +16,11 @@
  */
 package org.jclouds.googlecomputeengine.functions.internal;
 
+import static com.google.common.base.Predicates.instanceOf;
+import static com.google.common.collect.Iterables.tryFind;
+
+import java.util.Iterator;
+
 import javax.inject.Inject;
 
 import org.jclouds.googlecomputeengine.GoogleComputeEngineApi;
@@ -26,6 +31,8 @@ import org.jclouds.http.functions.ParseJson;
 import org.jclouds.json.Json;
 
 import com.google.common.base.Function;
+import com.google.common.base.Optional;
+import com.google.common.collect.Iterators;
 import com.google.inject.TypeLiteral;
 
 public final class ParseZoneOperations extends ParseJson<ListPage<Operation>> {
@@ -43,12 +50,26 @@ public final class ParseZoneOperations extends ParseJson<ListPage<Operation>> {
          this.api = api;
       }
 
+      @Override public Iterator<ListPage<Operation>> apply(ListPage<Operation> input) {
+         if (input.nextPageToken() == null) {
+            return Iterators.singletonIterator(input);
+         }
+
+         String project = (String) request.getCaller().get().getArgs().get(0);
+         String zone = (String) request.getInvocation().getArgs().get(0);
+
+         Optional<Object> listOptions = tryFind(request.getInvocation().getArgs(), instanceOf(ListOptions.class));
+
+         return new AdvancingIterator<Operation>(input,
+               fetchNextPage(project, zone, (ListOptions) listOptions.orNull()));
+      }
+
       @Override protected Function<String, ListPage<Operation>> fetchNextPage(final String projectName,
             final String zoneName, final ListOptions options) {
          return new Function<String, ListPage<Operation>>() {
 
             @Override public ListPage<Operation> apply(String input) {
-               return api.getZoneOperationApi(projectName, zoneName).listPage(input, options);
+               return api.getOperationApi(projectName).listPageInZone(zoneName, input, options);
             }
          };
       }

@@ -16,7 +16,6 @@
  */
 package org.jclouds.googlecomputeengine.compute.predicates;
 
-import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.collect.Iterables.all;
 import static com.google.common.collect.Sets.filter;
 import static org.jclouds.compute.predicates.NodePredicates.TERMINATED;
@@ -24,25 +23,21 @@ import static org.jclouds.compute.predicates.NodePredicates.all;
 import static org.jclouds.compute.predicates.NodePredicates.inGroup;
 
 import javax.inject.Inject;
-import javax.inject.Singleton;
 
 import org.jclouds.compute.ComputeService;
 
 import com.google.common.base.Predicate;
 
-@Singleton
-public class AllNodesInGroupTerminated implements Predicate<String> {
+public final class AllNodesInGroupTerminated implements Predicate<String> {
 
    private final ComputeService computeService;
 
-   @Inject
-   public AllNodesInGroupTerminated(ComputeService computeService) {
-      this.computeService = checkNotNull(computeService, "compute service");
+   @Inject AllNodesInGroupTerminated(ComputeService computeService) {
+      this.computeService = computeService;
    }
 
 
-   @Override
-   public boolean apply(String groupName) {
+   @Override public boolean apply(String groupName) {
       return all(filter(computeService.listNodesDetailsMatching(all()), inGroup(groupName)), TERMINATED);
    }
 }

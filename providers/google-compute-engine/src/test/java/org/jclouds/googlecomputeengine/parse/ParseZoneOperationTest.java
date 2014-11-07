@@ -41,7 +41,7 @@ public class ParseZoneOperationTest extends BaseGoogleComputeEngineParseTest<Ope
             URI.create(BASE_URL + "/myproject/zones/us-central1-a/operations/operation-1354084865060-4cf88735faeb8-bbbb12cb"),
             "operation-1354084865060-4cf88735faeb8-bbbb12cb", // name
             null, // description
-            URI.create(BASE_URL + "/myproject/zones/us-central1-a/instances/instance-api-live-test-instance"),
+            URI.create(BASE_URL + "/myproject/zones/us-central1-a/instances/test-1"),
             "13053094017547040099", // targetId
             null, // clientOperationId
             Operation.Status.DONE, // status

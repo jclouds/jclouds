@@ -25,14 +25,13 @@ import com.google.common.base.Predicate;
 /**
  * The convention for naming instance tags that firewall rules recognise.
  */
-public class FirewallTagNamingConvention {
+public final class FirewallTagNamingConvention {
 
-   public static class Factory {
+   public static final class Factory {
 
       private final GroupNamingConvention.Factory namingConvention;
 
-      @Inject
-      public Factory(GroupNamingConvention.Factory namingConvention) {
+      @Inject Factory(GroupNamingConvention.Factory namingConvention) {
          this.namingConvention = namingConvention;
       }
 
@@ -59,5 +58,4 @@ public class FirewallTagNamingConvention {
          }
       };
    }
-
 }

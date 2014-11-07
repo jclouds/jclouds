@@ -33,8 +33,6 @@ import org.testng.annotations.Test;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
 
-/**
- */
 public class ProjectApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
 
    private static final String METADATA_ITEM_KEY = "projectLiveTestTestProp";
@@ -66,8 +64,8 @@ public class ProjectApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
    public void addItemToMetadata() {
       this.initialMetadataSize = project.commonInstanceMetadata().items().size();
       this.initialFingerprint = this.project.commonInstanceMetadata().fingerprint();
-      assertGlobalOperationDoneSucessfully(addItemToMetadata(projectApi(), userProject.get(), METADATA_ITEM_KEY,
-              METADATA_ITEM_VALUE), 20);
+      assertOperationDoneSuccessfully(addItemToMetadata(projectApi(), userProject.get(), METADATA_ITEM_KEY,
+              METADATA_ITEM_VALUE));
       this.project = projectApi().get(userProject.get());
       assertNotNull(project);
       assertTrue(this.project.commonInstanceMetadata().items().containsKey(METADATA_ITEM_KEY),
@@ -79,7 +77,7 @@ public class ProjectApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
 
    @Test(groups = "live", dependsOnMethods = "addItemToMetadata")
    public void testDeleteItemFromMetadata() {
-      assertGlobalOperationDoneSucessfully(deleteItemFromMetadata(projectApi(), userProject.get(), METADATA_ITEM_KEY), 20);
+      assertOperationDoneSuccessfully(deleteItemFromMetadata(projectApi(), userProject.get(), METADATA_ITEM_KEY));
       this.project = projectApi().get(userProject.get());
       assertNotNull(project);
       assertFalse(project.commonInstanceMetadata().items().containsKey(METADATA_ITEM_KEY));
@@ -115,8 +113,6 @@ public class ProjectApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
       ImmutableMap.Builder<String, String> metadataBuilder = ImmutableMap.builder();
       metadataBuilder.putAll(Maps.filterKeys(project.commonInstanceMetadata().items(), not(equalTo(key))));
       return projectApi.setCommonInstanceMetadata(projectName, metadataBuilder.build(),
-              project.commonInstanceMetadata().fingerprint());
+            project.commonInstanceMetadata().fingerprint());
    }
-
-
 }

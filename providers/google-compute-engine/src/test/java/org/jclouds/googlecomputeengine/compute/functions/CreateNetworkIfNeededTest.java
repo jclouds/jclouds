@@ -26,16 +26,16 @@ import java.net.URI;
 
 import org.jclouds.googlecomputeengine.GoogleComputeEngineApi;
 import org.jclouds.googlecomputeengine.compute.domain.NetworkAndAddressRange;
+import org.jclouds.googlecomputeengine.compute.predicates.AtomicOperationDone;
 import org.jclouds.googlecomputeengine.config.UserProject;
 import org.jclouds.googlecomputeengine.domain.Network;
 import org.jclouds.googlecomputeengine.domain.Operation;
-import org.jclouds.googlecomputeengine.features.GlobalOperationApi;
 import org.jclouds.googlecomputeengine.features.NetworkApi;
 import org.jclouds.googlecomputeengine.parse.ParseGlobalOperationTest;
-import org.jclouds.googlecomputeengine.predicates.GlobalOperationDonePredicate;
 import org.testng.annotations.Test;
 
 import com.google.common.base.Supplier;
+import com.google.common.base.Suppliers;
 import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
 import com.google.inject.Provides;
@@ -48,7 +48,7 @@ public class CreateNetworkIfNeededTest {
    public void testApply() {
       GoogleComputeEngineApi api = createMock(GoogleComputeEngineApi.class);
       NetworkApi nwApi = createMock(NetworkApi.class);
-      GlobalOperationApi globalApi = createMock(GlobalOperationApi.class);
+      ResourceFunctions resources = createMock(ResourceFunctions.class);
 
       Network network = Network.create( //
             "abcd", // id
@@ -61,38 +61,32 @@ public class CreateNetworkIfNeededTest {
 
       Operation createOp = new ParseGlobalOperationTest().expected();
 
-      Supplier<String> userProject = new Supplier<String>() {
-         @Override
-         public String get() {
-            return "myproject";
-         }
-      };
+      Supplier<String> userProject = Suppliers.ofInstance("myproject");
 
       expect(api.getNetworkApi(userProject.get())).andReturn(nwApi).atLeastOnce();
-      expect(api.getGlobalOperationApi(userProject.get())).andReturn(globalApi).atLeastOnce();
 
       expect(nwApi.createInIPv4Range("this-network", "0.0.0.0/0")) .andReturn(createOp);
-      expect(globalApi.get(createOp.name())).andReturn(createOp);
+      expect(resources.operation(createOp.selfLink())).andReturn(createOp);
       expect(nwApi.get("this-network")).andReturn(null);
       expect(nwApi.get("this-network")).andReturn(network);
 
-      replay(api, nwApi, globalApi);
+      replay(api, nwApi, resources);
 
       NetworkAndAddressRange input = NetworkAndAddressRange.create("this-network", "0.0.0.0/0", null);
 
-      GlobalOperationDonePredicate pred = globalOperationDonePredicate(api, userProject);
+      AtomicOperationDone pred = atomicOperationDone(api, resources);
 
-      CreateNetworkIfNeeded creator = new CreateNetworkIfNeeded(api, userProject, pred, 100l, 100l);
+      CreateNetworkIfNeeded creator = new CreateNetworkIfNeeded(api, userProject, pred);
 
       assertEquals(creator.apply(input), network);
 
-      verify(api, nwApi, globalApi);
+      verify(api, nwApi, resources);
    }
 
    public void testApplyWithGateway() {
       GoogleComputeEngineApi api = createMock(GoogleComputeEngineApi.class);
       NetworkApi nwApi = createMock(NetworkApi.class);
-      GlobalOperationApi globalApi = createMock(GlobalOperationApi.class);
+      ResourceFunctions resources = createMock(ResourceFunctions.class);
 
       Network network = Network.create( //
             "abcd", // id
@@ -105,44 +99,39 @@ public class CreateNetworkIfNeededTest {
 
       Operation createOp = new ParseGlobalOperationTest().expected();
 
-      Supplier<String> userProject = new Supplier<String>() {
-         @Override
-         public String get() {
-            return "myproject";
-         }
-      };
+      Supplier<String> userProject = Suppliers.ofInstance("myproject");
 
       expect(api.getNetworkApi(userProject.get())).andReturn(nwApi).atLeastOnce();
-      expect(api.getGlobalOperationApi(userProject.get())).andReturn(globalApi).atLeastOnce();
 
       expect(nwApi.createInIPv4RangeWithGateway("this-network", "0.0.0.0/0", "1.2.3.4")).andReturn(createOp);
-      expect(globalApi.get(createOp.name())).andReturn(createOp);
+      expect(resources.operation(createOp.selfLink())).andReturn(createOp);
       expect(nwApi.get("this-network")).andReturn(null);
       expect(nwApi.get("this-network")).andReturn(network);
 
-      replay(api, nwApi, globalApi);
+      replay(api, nwApi, resources);
 
       NetworkAndAddressRange input = NetworkAndAddressRange.create("this-network", "0.0.0.0/0", "1.2.3.4");
 
-      GlobalOperationDonePredicate pred = globalOperationDonePredicate(api, userProject);
+      AtomicOperationDone pred = atomicOperationDone(api, resources);
 
-      CreateNetworkIfNeeded creator = new CreateNetworkIfNeeded(api, userProject, pred, 100l, 100l);
+      CreateNetworkIfNeeded creator = new CreateNetworkIfNeeded(api, userProject, pred);
 
       assertEquals(creator.apply(input), network);
 
-      verify(api, nwApi, globalApi);
+      verify(api, nwApi, resources);
    }
 
-   private GlobalOperationDonePredicate globalOperationDonePredicate(final GoogleComputeEngineApi api,
-         final Supplier<String> userProject) {
+   private AtomicOperationDone atomicOperationDone(final GoogleComputeEngineApi api,
+         final ResourceFunctions resources) {
       return Guice.createInjector(new AbstractModule() { // Rather than opening ctor public
          @Override protected void configure() {
             bind(GoogleComputeEngineApi.class).toInstance(api);
+            bind(ResourceFunctions.class).toInstance(resources);
          }
 
          @Provides @UserProject Supplier<String> project() {
-            return userProject;
+            return Suppliers.ofInstance("myproject");
          }
-      }).getInstance(GlobalOperationDonePredicate.class);
+      }).getInstance(AtomicOperationDone.class);
    }
 }

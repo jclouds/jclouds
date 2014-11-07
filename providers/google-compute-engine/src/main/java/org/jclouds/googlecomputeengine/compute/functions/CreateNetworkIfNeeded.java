@@ -18,15 +18,10 @@ package org.jclouds.googlecomputeengine.compute.functions;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Preconditions.checkState;
-import static java.util.concurrent.TimeUnit.MILLISECONDS;
-import static org.jclouds.googlecomputeengine.GoogleComputeEngineConstants.OPERATION_COMPLETE_INTERVAL;
-import static org.jclouds.googlecomputeengine.GoogleComputeEngineConstants.OPERATION_COMPLETE_TIMEOUT;
-import static org.jclouds.util.Predicates2.retry;
 
 import java.util.concurrent.atomic.AtomicReference;
 
 import javax.inject.Inject;
-import javax.inject.Named;
 
 import org.jclouds.googlecomputeengine.GoogleComputeEngineApi;
 import org.jclouds.googlecomputeengine.compute.domain.NetworkAndAddressRange;
@@ -39,24 +34,16 @@ import com.google.common.base.Predicate;
 import com.google.common.base.Supplier;
 import com.google.common.util.concurrent.Atomics;
 
-public class CreateNetworkIfNeeded implements Function<NetworkAndAddressRange, Network> {
+public final class CreateNetworkIfNeeded implements Function<NetworkAndAddressRange, Network> {
    private final GoogleComputeEngineApi api;
    private final Supplier<String> userProject;
-   private final Predicate<AtomicReference<Operation>> operationDonePredicate;
-   private final long operationCompleteCheckInterval;
-   private final long operationCompleteCheckTimeout;
+   private final Predicate<AtomicReference<Operation>> operationDone;
 
    @Inject CreateNetworkIfNeeded(GoogleComputeEngineApi api, @UserProject Supplier<String> userProject,
-         @Named("global") Predicate<AtomicReference<Operation>> operationDonePredicate,
-         @Named(OPERATION_COMPLETE_INTERVAL) Long operationCompleteCheckInterval,
-         @Named(OPERATION_COMPLETE_TIMEOUT) Long operationCompleteCheckTimeout) {
-      this.api = checkNotNull(api, "api");
-      this.userProject = checkNotNull(userProject, "userProject");
-      this.operationCompleteCheckInterval = checkNotNull(operationCompleteCheckInterval,
-            "operation completed check interval");
-      this.operationCompleteCheckTimeout = checkNotNull(operationCompleteCheckTimeout,
-            "operation completed check timeout");
-      this.operationDonePredicate = checkNotNull(operationDonePredicate, "operationDonePredicate");
+         Predicate<AtomicReference<Operation>> operationDone) {
+      this.api = api;
+      this.userProject = userProject;
+      this.operationDone = operationDone;
    }
 
    @Override
@@ -71,16 +58,14 @@ public class CreateNetworkIfNeeded implements Function<NetworkAndAddressRange, N
       if (input.gateway() != null) {
          AtomicReference<Operation> operation = Atomics.newReference(api.getNetworkApi(userProject.get())
                .createInIPv4RangeWithGateway(input.name(), input.rangeIPv4(), input.gateway()));
-         retry(operationDonePredicate, operationCompleteCheckTimeout, operationCompleteCheckInterval, MILLISECONDS)
-               .apply(operation);
+         operationDone.apply(operation);
 
          checkState(operation.get().httpErrorStatusCode() == null,
                "Could not insert network, operation failed" + operation);
       } else {
          AtomicReference<Operation> operation = Atomics
                .newReference(api.getNetworkApi(userProject.get()).createInIPv4Range(input.name(), input.rangeIPv4()));
-         retry(operationDonePredicate, operationCompleteCheckTimeout, operationCompleteCheckInterval, MILLISECONDS)
-               .apply(operation);
+         operationDone.apply(operation);
 
          checkState(operation.get().httpErrorStatusCode() == null,
                "Could not insert network, operation failed" + operation);

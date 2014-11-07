@@ -22,7 +22,6 @@ import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
 
 import java.util.Iterator;
-import java.util.List;
 
 import org.jclouds.googlecomputeengine.domain.Firewall;
 import org.jclouds.googlecomputeengine.domain.ListPage;
@@ -38,7 +37,6 @@ public class FirewallApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
    private static final String FIREWALL_NAME = "firewall-api-live-test-firewall";
    private static final String FIREWALL_NETWORK_NAME = "firewall-api-live-test-network";
    private static final String IPV4_RANGE = "10.0.0.0/8";
-   private static final int TIME_WAIT = 30;
 
    private FirewallApi api() {
       return api.getFirewallApi(userProject.get());
@@ -46,10 +44,9 @@ public class FirewallApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
 
    @Test(groups = "live")
    public void testInsertFirewall() {
-
       // need to insert the network first
-      assertGlobalOperationDoneSucessfully(api.getNetworkApi(userProject.get()).createInIPv4Range
-              (FIREWALL_NETWORK_NAME, IPV4_RANGE), TIME_WAIT);
+      assertOperationDoneSuccessfully(
+            api.getNetworkApi(userProject.get()).createInIPv4Range(FIREWALL_NETWORK_NAME, IPV4_RANGE));
 
       FirewallOptions firewall = new FirewallOptions()
               .addAllowedRule(Firewall.Rule.create("tcp", ImmutableList.of("22")))
@@ -57,13 +54,12 @@ public class FirewallApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
               .addSourceTag("tag1")
               .addTargetTag("tag2");
 
-      assertGlobalOperationDoneSucessfully(api().createInNetwork(FIREWALL_NAME, getNetworkUrl(userProject.get(),
-              FIREWALL_NETWORK_NAME), firewall), TIME_WAIT);
+      assertOperationDoneSuccessfully(
+            api().createInNetwork(FIREWALL_NAME, getNetworkUrl(userProject.get(), FIREWALL_NETWORK_NAME), firewall));
    }
 
    @Test(groups = "live", dependsOnMethods = "testInsertFirewall")
    public void testUpdateFirewall() {
-
       FirewallOptions firewall = new FirewallOptions()
               .name(FIREWALL_NAME)
               .network(getNetworkUrl(userProject.get(), FIREWALL_NETWORK_NAME))
@@ -72,12 +68,11 @@ public class FirewallApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
               .addTargetTag("tag2")
               .allowedRules(ImmutableList.of(Firewall.Rule.create("tcp", ImmutableList.of("23"))));
 
-      assertGlobalOperationDoneSucessfully(api().update(FIREWALL_NAME, firewall), TIME_WAIT);
+      assertOperationDoneSuccessfully(api().update(FIREWALL_NAME, firewall));
    }
 
    @Test(groups = "live", dependsOnMethods = "testUpdateFirewall")
    public void testPatchFirewall() {
-
       FirewallOptions firewall = new FirewallOptions()
               .name(FIREWALL_NAME)
               .network(getNetworkUrl(userProject.get(), FIREWALL_NETWORK_NAME))
@@ -87,12 +82,11 @@ public class FirewallApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
               .addSourceTag("tag1")
               .addTargetTag("tag2");
 
-      assertGlobalOperationDoneSucessfully(api().update(FIREWALL_NAME, firewall), TIME_WAIT);
+      assertOperationDoneSuccessfully(api().update(FIREWALL_NAME, firewall));
    }
 
    @Test(groups = "live", dependsOnMethods = "testPatchFirewall")
    public void testGetFirewall() {
-
       FirewallOptions patchedFirewall = new FirewallOptions()
               .name(FIREWALL_NAME)
               .network(getNetworkUrl(userProject.get(), FIREWALL_NETWORK_NAME))
@@ -109,20 +103,15 @@ public class FirewallApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
 
    @Test(groups = "live", dependsOnMethods = "testGetFirewall")
    public void testListFirewall() {
-
       Iterator<ListPage<Firewall>> firewalls = api().list(filter("name eq " + FIREWALL_NAME));
 
-      List<Firewall> firewallsAsList = firewalls.next();
-
-      assertEquals(firewallsAsList.size(), 1);
+      assertEquals(firewalls.next().size(), 1);
    }
 
    @Test(groups = "live", dependsOnMethods = "testListFirewall")
    public void testDeleteFirewall() {
-
-      assertGlobalOperationDoneSucessfully(api().delete(FIREWALL_NAME), TIME_WAIT);
-      assertGlobalOperationDoneSucessfully(api.getNetworkApi(userProject.get()).delete
-              (FIREWALL_NETWORK_NAME), TIME_WAIT);
+      assertOperationDoneSuccessfully(api().delete(FIREWALL_NAME));
+      assertOperationDoneSuccessfully(api.getNetworkApi(userProject.get()).delete(FIREWALL_NETWORK_NAME));
    }
 
    private void assertFirewallEquals(Firewall result, FirewallOptions expected) {

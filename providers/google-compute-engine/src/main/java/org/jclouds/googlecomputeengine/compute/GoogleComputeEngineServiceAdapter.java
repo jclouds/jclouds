@@ -23,24 +23,18 @@ import static com.google.common.collect.Iterables.filter;
 import static com.google.common.collect.Iterables.transform;
 import static com.google.common.collect.Iterables.tryFind;
 import static com.google.common.collect.Lists.newArrayList;
-import static java.util.concurrent.TimeUnit.MILLISECONDS;
 import static org.jclouds.googlecomputeengine.GoogleComputeEngineConstants.GCE_BOOT_DISK_SUFFIX;
 import static org.jclouds.googlecomputeengine.GoogleComputeEngineConstants.GCE_DELETE_BOOT_DISK_METADATA_KEY;
 import static org.jclouds.googlecomputeengine.GoogleComputeEngineConstants.GCE_IMAGE_METADATA_KEY;
 import static org.jclouds.googlecomputeengine.GoogleComputeEngineConstants.GCE_IMAGE_PROJECTS;
-import static org.jclouds.googlecomputeengine.GoogleComputeEngineConstants.OPERATION_COMPLETE_INTERVAL;
-import static org.jclouds.googlecomputeengine.GoogleComputeEngineConstants.OPERATION_COMPLETE_TIMEOUT;
 import static org.jclouds.googlecomputeengine.domain.Instance.NetworkInterface.AccessConfig.Type;
 import static org.jclouds.googlecomputeengine.internal.ListPages.concat;
-import static org.jclouds.googlecomputeengine.predicates.InstancePredicates.isBootDisk;
-import static org.jclouds.util.Predicates2.retry;
 
 import java.net.URI;
 import java.util.Iterator;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Set;
-import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
 
 import javax.inject.Inject;
@@ -66,7 +60,9 @@ import org.jclouds.googlecomputeengine.domain.Instance.AttachedDisk;
 import org.jclouds.googlecomputeengine.domain.Instance.AttachedDisk.Mode;
 import org.jclouds.googlecomputeengine.domain.ListPage;
 import org.jclouds.googlecomputeengine.domain.MachineType;
+import org.jclouds.googlecomputeengine.domain.Metadata;
 import org.jclouds.googlecomputeengine.domain.Operation;
+import org.jclouds.googlecomputeengine.domain.Tags;
 import org.jclouds.googlecomputeengine.domain.templates.InstanceTemplate;
 import org.jclouds.googlecomputeengine.domain.templates.InstanceTemplate.PersistentDisk;
 import org.jclouds.googlecomputeengine.features.DiskApi;
@@ -94,9 +90,8 @@ public final class GoogleComputeEngineServiceAdapter
    private final Supplier<String> userProject;
    private final Supplier<Set<String>> zoneIds;
    private final Function<TemplateOptions, ImmutableMap.Builder<String, String>> metatadaFromTemplateOptions;
-   private final Predicate<AtomicReference<Operation>> retryOperationDonePredicate;
-   private final long operationCompleteCheckInterval;
-   private final long operationCompleteCheckTimeout;
+   private final Predicate<AtomicReference<Operation>> operationDone;
+   private final Predicate<AtomicReference<Instance>> instanceVisible;
    private final FirewallTagNamingConvention.Factory firewallTagNamingConvention;
    private final List<String> imageProjects;
 
@@ -104,19 +99,16 @@ public final class GoogleComputeEngineServiceAdapter
                                             @UserProject Supplier<String> userProject,
                                             Function<TemplateOptions,
                                                     ImmutableMap.Builder<String, String>> metatadaFromTemplateOptions,
-                                            @Named("zone") Predicate<AtomicReference<Operation>> operationDonePredicate,
-                                            @Named(OPERATION_COMPLETE_INTERVAL) Long operationCompleteCheckInterval,
-                                            @Named(OPERATION_COMPLETE_TIMEOUT) Long operationCompleteCheckTimeout,
+                                            Predicate<AtomicReference<Operation>> operationDone,
+                                            Predicate<AtomicReference<Instance>> instanceVisible,
                                             @Zone Supplier<Set<String>> zoneIds,
                                             FirewallTagNamingConvention.Factory firewallTagNamingConvention,
                                             @Named(GCE_IMAGE_PROJECTS) String imageProjects) {
       this.api = api;
       this.userProject = userProject;
       this.metatadaFromTemplateOptions = metatadaFromTemplateOptions;
-      this.operationCompleteCheckInterval = operationCompleteCheckInterval;
-      this.operationCompleteCheckTimeout = operationCompleteCheckTimeout;
-      this.retryOperationDonePredicate = retry(operationDonePredicate, operationCompleteCheckTimeout,
-                                               operationCompleteCheckInterval, TimeUnit.MILLISECONDS);
+      this.operationDone = operationDone;
+      this.instanceVisible = instanceVisible;
       this.zoneIds = zoneIds;
       this.firewallTagNamingConvention = firewallTagNamingConvention;
       this.imageProjects = Splitter.on(',').splitToList(imageProjects);
@@ -174,34 +166,39 @@ public final class GoogleComputeEngineServiceAdapter
       instanceTemplate.serviceAccounts(options.getServiceAccounts());
 
       String zone = template.getLocation().getId();
-      final InstanceApi instanceApi = api.getInstanceApi(userProject.get(), zone);
+      InstanceApi instanceApi = api.getInstanceApi(userProject.get(), zone);
       Operation operation = instanceApi.create(name, instanceTemplate);
 
       if (options.shouldBlockUntilRunning()) {
          waitOperationDone(operation);
       }
 
-      // some times the newly created instances are not immediately returned
-      AtomicReference<Instance> instance = Atomics.newReference();
+      // Some times the newly created instances are not immediately visible to the api.
+      // Make sure that we have a stub object in case that happens.
+      AtomicReference<Instance> instance = Atomics.newReference(Instance.create( //
+            "0000000000000000000", // id can't be null, but isn't available until provisioning is done.
+            operation.targetLink(), // selfLink
+            instanceTemplate.name(), // name
+            instanceTemplate.description(), // description
+            Tags.create(null, null), // tags
+            instanceTemplate.machineType(), // machineType
+            Instance.Status.PROVISIONING, // status
+            null, // statusMessage
+            operation.zone(), // zone
+            null, // networkInterfaces
+            null, // disks
+            Metadata.create(null, null), // metadata
+            instanceTemplate.serviceAccounts() // serviceAccounts
+      ));
 
-      retry(new Predicate<AtomicReference<Instance>>() {
-         @Override public boolean apply(AtomicReference<Instance> input) {
-            input.set(instanceApi.get(name));
-            return input.get() != null;
-         }
-      }, operationCompleteCheckTimeout, operationCompleteCheckInterval, MILLISECONDS).apply(instance);
+      instanceVisible.apply(instance);
 
       if (!options.getTags().isEmpty()) {
          Operation tagsOperation = instanceApi.setTags(name, options.getTags(), instance.get().tags().fingerprint());
 
          waitOperationDone(tagsOperation);
 
-         retry(new Predicate<AtomicReference<Instance>>() {
-            @Override public boolean apply(AtomicReference<Instance> input) {
-               input.set(instanceApi.get(name));
-               return input.get() != null;
-            }
-         }, operationCompleteCheckTimeout, operationCompleteCheckInterval, MILLISECONDS).apply(instance);
+         instanceVisible.apply(instance);
       }
 
       // Add tags for security groups
@@ -397,7 +394,7 @@ public final class GoogleComputeEngineServiceAdapter
       AtomicReference<Operation> operationRef = Atomics.newReference(operation);
 
       // wait for the operation to complete
-      if (!retryOperationDonePredicate.apply(operationRef)) {
+      if (!operationDone.apply(operationRef)) {
          throw new UncheckedTimeoutException("operation did not reach DONE state" + operationRef.get());
       }
 
@@ -407,5 +404,13 @@ public final class GoogleComputeEngineServiceAdapter
                "operation failed. Http Error Code: " + operationRef.get().httpErrorStatusCode() +
                      " HttpError: " + operationRef.get().httpErrorMessage());
       }
+   }
+
+   private static Predicate<PersistentDisk> isBootDisk() {
+      return new Predicate<PersistentDisk>() {
+         @Override public boolean apply(PersistentDisk input) {
+            return input.boot();
+         }
+      };
    }
 }

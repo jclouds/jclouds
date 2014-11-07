@@ -36,6 +36,8 @@ import com.google.common.base.Predicate;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Sets;
+import com.google.inject.AbstractModule;
+import com.google.inject.Guice;
 
 public class OrphanedGroupsFromDeadNodesTest {
 
@@ -67,8 +69,8 @@ public class OrphanedGroupsFromDeadNodesTest {
 
       replay(mock);
 
-      OrphanedGroupsFromDeadNodes orphanedGroupsFromDeadNodes = new OrphanedGroupsFromDeadNodes(new
-              AllNodesInGroupTerminated(mock));
+      OrphanedGroupsFromDeadNodes orphanedGroupsFromDeadNodes = new OrphanedGroupsFromDeadNodes(
+              allNodesInGroupTerminated(mock));
 
       Set<String> orphanedGroups = orphanedGroupsFromDeadNodes.apply(allDeadNodes);
 
@@ -96,8 +98,8 @@ public class OrphanedGroupsFromDeadNodesTest {
 
       replay(mock);
 
-      OrphanedGroupsFromDeadNodes orphanedGroupsFromDeadNodes = new OrphanedGroupsFromDeadNodes(new
-              AllNodesInGroupTerminated(mock));
+      OrphanedGroupsFromDeadNodes orphanedGroupsFromDeadNodes = new OrphanedGroupsFromDeadNodes(
+            allNodesInGroupTerminated(mock));
 
       Set<String> orphanedGroups = orphanedGroupsFromDeadNodes.apply(allDeadNodes);
 
@@ -125,12 +127,20 @@ public class OrphanedGroupsFromDeadNodesTest {
 
       replay(mock);
 
-      OrphanedGroupsFromDeadNodes orphanedGroupsFromDeadNodes = new OrphanedGroupsFromDeadNodes(new
-              AllNodesInGroupTerminated(mock));
+      OrphanedGroupsFromDeadNodes orphanedGroupsFromDeadNodes = new OrphanedGroupsFromDeadNodes(
+              allNodesInGroupTerminated(mock));
 
       Set<String> orphanedGroups = orphanedGroupsFromDeadNodes.apply(allDeadNodes);
 
       assertSame(orphanedGroups.size(), 1);
       assertTrue(orphanedGroups.contains("1"));
+   }
+
+   private Predicate<String> allNodesInGroupTerminated(final ComputeService mock) {
+      return Guice.createInjector(new AbstractModule() {
+         @Override protected void configure() {
+            bind(ComputeService.class).toInstance(mock);
+         }
+      }).getInstance(AllNodesInGroupTerminated.class); // rather than opening ctor.
    }
 }

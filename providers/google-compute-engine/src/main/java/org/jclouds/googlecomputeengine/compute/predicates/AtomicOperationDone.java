@@ -14,36 +14,35 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jclouds.googlecomputeengine.predicates;
+package org.jclouds.googlecomputeengine.compute.predicates;
 
 import static com.google.common.base.Preconditions.checkNotNull;
+import static com.google.common.base.Preconditions.checkState;
 
 import java.util.concurrent.atomic.AtomicReference;
 
-import org.jclouds.googlecomputeengine.GoogleComputeEngineApi;
-import org.jclouds.googlecomputeengine.config.UserProject;
+import javax.inject.Inject;
+
+import org.jclouds.googlecomputeengine.compute.functions.ResourceFunctions;
 import org.jclouds.googlecomputeengine.domain.Operation;
 
 import com.google.common.base.Predicate;
-import com.google.common.base.Supplier;
-import com.google.inject.Inject;
 
-public final class GlobalOperationDonePredicate implements Predicate<AtomicReference<Operation>> {
+public final class AtomicOperationDone implements Predicate<AtomicReference<Operation>> {
 
-   private final GoogleComputeEngineApi api;
-   private final Supplier<String> project;
+   private final ResourceFunctions resources;
 
-   @Inject GlobalOperationDonePredicate(GoogleComputeEngineApi api, @UserProject Supplier<String> project) {
-      this.api = api;
-      this.project = project;
+   @Inject AtomicOperationDone(ResourceFunctions resources) {
+      this.resources = resources;
    }
 
    @Override public boolean apply(AtomicReference<Operation> input) {
-      checkNotNull(input, "input");
-      Operation current = api.getGlobalOperationApi(project.get()).get(input.get().name());
+      checkNotNull(input.get(), "operation");
+      Operation current = resources.operation(input.get().selfLink());
+      input.set(current);
+      checkState(current.errors().isEmpty(), "Task ended in error %s", current); // ISE will break the loop.
       switch (current.status()) {
          case DONE:
-            input.set(current);
             return true;
          case PENDING:
          case RUNNING:

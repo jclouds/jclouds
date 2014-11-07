@@ -16,7 +16,6 @@
  */
 package org.jclouds.googlecomputeengine.features;
 
-import static org.jclouds.googlecomputeengine.features.DiskApiLiveTest.TIME_WAIT;
 import static org.jclouds.googlecomputeengine.options.ListOptions.Builder.filter;
 import static org.testng.Assert.assertEquals;
 
@@ -45,10 +44,10 @@ public class SnapshotApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
 
    @Test(groups = "live")
    public void testCreateSnapshot() {
-      assertZoneOperationDoneSuccessfully(diskApi().create(DISK_NAME, 1), TIME_WAIT);
+      assertOperationDoneSuccessfully(diskApi().create(DISK_NAME, 1));
       disk = diskApi().get(DISK_NAME);
 
-      assertZoneOperationDoneSuccessfully(diskApi().createSnapshot(DISK_NAME, SNAPSHOT_NAME), TIME_WAIT);
+      assertOperationDoneSuccessfully(diskApi().createSnapshot(DISK_NAME, SNAPSHOT_NAME));
    }
 
    @Test(groups = "live", dependsOnMethods = "testCreateSnapshot")
@@ -72,8 +71,8 @@ public class SnapshotApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
 
    @Test(groups = "live", dependsOnMethods = "testListSnapshot")
    public void testDeleteDisk() {
-      assertZoneOperationDoneSuccessfully(diskApi().delete(DISK_NAME), TIME_WAIT);
-      assertGlobalOperationDoneSucessfully(api().delete(SNAPSHOT_NAME), TIME_WAIT);
+      assertOperationDoneSuccessfully(diskApi().delete(DISK_NAME));
+      assertOperationDoneSuccessfully(api().delete(SNAPSHOT_NAME));
    }
 
    private void assertSnapshotEquals(Snapshot result) {

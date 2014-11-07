@@ -17,11 +17,11 @@
 package org.jclouds.googlecomputeengine.predicates;
 
 import static org.jclouds.googlecomputeengine.compute.functions.FirewallToIpPermissionTest.fwForTest;
-import static org.jclouds.googlecomputeengine.predicates.NetworkFirewallPredicates.equalsIpPermission;
-import static org.jclouds.googlecomputeengine.predicates.NetworkFirewallPredicates.hasPortRange;
-import static org.jclouds.googlecomputeengine.predicates.NetworkFirewallPredicates.hasSourceRange;
-import static org.jclouds.googlecomputeengine.predicates.NetworkFirewallPredicates.hasSourceTag;
-import static org.jclouds.googlecomputeengine.predicates.NetworkFirewallPredicates.providesIpPermission;
+import static org.jclouds.googlecomputeengine.compute.predicates.NetworkFirewallPredicates.equalsIpPermission;
+import static org.jclouds.googlecomputeengine.compute.predicates.NetworkFirewallPredicates.hasPortRange;
+import static org.jclouds.googlecomputeengine.compute.predicates.NetworkFirewallPredicates.hasSourceRange;
+import static org.jclouds.googlecomputeengine.compute.predicates.NetworkFirewallPredicates.hasSourceTag;
+import static org.jclouds.googlecomputeengine.compute.predicates.NetworkFirewallPredicates.providesIpPermission;
 import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertTrue;
 

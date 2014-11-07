@@ -19,6 +19,7 @@ package org.jclouds.googlecomputeengine.features;
 import static org.jclouds.googlecomputeengine.options.ListOptions.Builder.filter;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
+import static org.testng.Assert.assertNull;
 import static org.testng.Assert.assertTrue;
 
 import java.net.URI;
@@ -52,7 +53,7 @@ import com.google.inject.Module;
 public class InstanceApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
 
    private static final String INSTANCE_NETWORK_NAME = "instance-api-live-test-network";
-   private static final String INSTANCE_NAME = "instance-api-live-test-instance";
+   private static final String INSTANCE_NAME = "test-1";
    private static final String BOOT_DISK_NAME = INSTANCE_NAME + "-boot-disk";
    private static final String DISK_NAME = "instance-live-test-disk";
    private static final String IPV4_RANGE = "10.0.0.0/8";
@@ -61,9 +62,7 @@ public class InstanceApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
    private static final List<String> TAGS = ImmutableList.of("instance-live-test-tag1", "instance-live-test-tag2");
    private static final String ATTACH_DISK_NAME = "instance-api-live-test-attach-disk";
    private static final String ATTACH_DISK_DEVICE_NAME = "attach-disk-1";
-
    private static final int DEFAULT_DISK_SIZE_GB = 10;
-   private static final int TIME_WAIT = 600;
 
    private InstanceTemplate instance;
 
@@ -108,20 +107,17 @@ public class InstanceApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
    public void testInsertInstance() {
 
       // need to insert the network first
-      assertGlobalOperationDoneSucessfully(api.getNetworkApi(userProject.get()).createInIPv4Range
-              (INSTANCE_NETWORK_NAME, IPV4_RANGE), TIME_WAIT);
+      assertOperationDoneSuccessfully(api.getNetworkApi(userProject.get()).createInIPv4Range
+              (INSTANCE_NETWORK_NAME, IPV4_RANGE));
 
       DiskCreationOptions diskCreationOptions = new DiskCreationOptions().sourceImage(instance.image());
-      assertZoneOperationDoneSuccessfully(diskApi().create(BOOT_DISK_NAME, DEFAULT_DISK_SIZE_GB, diskCreationOptions),
-            TIME_WAIT);
-
-      assertZoneOperationDoneSuccessfully(diskApi().create("instance-live-test-disk", DEFAULT_DISK_SIZE_GB), TIME_WAIT);
-      assertZoneOperationDoneSuccessfully(api().create(INSTANCE_NAME, instance), TIME_WAIT);
+      assertOperationDoneSuccessfully(diskApi().create(BOOT_DISK_NAME, DEFAULT_DISK_SIZE_GB, diskCreationOptions));
+      assertOperationDoneSuccessfully(diskApi().create("instance-live-test-disk", DEFAULT_DISK_SIZE_GB));
+      assertOperationDoneSuccessfully(api().create(INSTANCE_NAME, instance));
    }
 
    @Test(groups = "live", dependsOnMethods = "testInsertInstance")
    public void testGetInstance() {
-
       Instance instance = api().get(INSTANCE_NAME);
       assertNotNull(instance);
       assertInstanceEquals(instance, this.instance);
@@ -130,9 +126,8 @@ public class InstanceApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
    @Test(groups = "live", dependsOnMethods = "testListInstance")
    public void testSetMetadataForInstance() {
       Instance originalInstance = api().get(INSTANCE_NAME);
-      assertZoneOperationDoneSuccessfully(api().setMetadata(INSTANCE_NAME,
-                  ImmutableMap.of(METADATA_ITEM_KEY, METADATA_ITEM_VALUE), originalInstance.metadata().fingerprint()),
-            TIME_WAIT);
+      assertOperationDoneSuccessfully(api().setMetadata(INSTANCE_NAME,
+                  ImmutableMap.of(METADATA_ITEM_KEY, METADATA_ITEM_VALUE), originalInstance.metadata().fingerprint()));
 
       Instance modifiedInstance = api().get(INSTANCE_NAME);
 
@@ -145,8 +140,8 @@ public class InstanceApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
    @Test(groups = "live", dependsOnMethods = "testListInstance")
    public void testSetTagsForInstance() {
       Instance originalInstance = api().get(INSTANCE_NAME);
-      assertZoneOperationDoneSuccessfully(
-            api().setTags(INSTANCE_NAME, TAGS, originalInstance.tags().fingerprint()), TIME_WAIT);
+      assertOperationDoneSuccessfully(
+            api().setTags(INSTANCE_NAME, TAGS, originalInstance.tags().fingerprint()));
 
       Instance modifiedInstance = api().get(INSTANCE_NAME);
 
@@ -156,13 +151,13 @@ public class InstanceApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
 
    @Test(groups = "live", dependsOnMethods = "testSetMetadataForInstance")
    public void testAttachDiskToInstance() {
-      assertZoneOperationDoneSuccessfully(diskApi().create(ATTACH_DISK_NAME, 1), TIME_WAIT);
+      assertOperationDoneSuccessfully(diskApi().create(ATTACH_DISK_NAME, 1));
 
       Instance originalInstance = api().get(INSTANCE_NAME);
-      assertZoneOperationDoneSuccessfully(api().attachDisk(INSTANCE_NAME,
+      assertOperationDoneSuccessfully(api().attachDisk(INSTANCE_NAME,
                   new AttachDiskOptions().type(DiskType.PERSISTENT)
                         .source(getDiskUrl(userProject.get(), ATTACH_DISK_NAME)).mode(DiskMode.READ_ONLY)
-                        .deviceName(ATTACH_DISK_DEVICE_NAME)), TIME_WAIT);
+                        .deviceName(ATTACH_DISK_DEVICE_NAME)));
 
       Instance modifiedInstance = api().get(INSTANCE_NAME);
 
@@ -180,13 +175,13 @@ public class InstanceApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
    @Test(groups = "live", dependsOnMethods = "testAttachDiskToInstance")
    public void testDetachDiskFromInstance() {
       Instance originalInstance = api().get(INSTANCE_NAME);
-      assertZoneOperationDoneSuccessfully(api().detachDisk(INSTANCE_NAME, ATTACH_DISK_DEVICE_NAME), TIME_WAIT);
+      assertOperationDoneSuccessfully(api().detachDisk(INSTANCE_NAME, ATTACH_DISK_DEVICE_NAME));
 
       Instance modifiedInstance = api().get(INSTANCE_NAME);
 
       assertTrue(modifiedInstance.disks().size() < originalInstance.disks().size());
 
-      assertZoneOperationDoneSuccessfully(diskApi().delete(ATTACH_DISK_NAME), TIME_WAIT);
+      assertOperationDoneSuccessfully(diskApi().delete(ATTACH_DISK_NAME));
    }
 
    @Test(groups = "live", dependsOnMethods = "testInsertInstance")
@@ -204,16 +199,16 @@ public class InstanceApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
 
    @Test(groups = "live", dependsOnMethods = "testDetachDiskFromInstance")
    public void testResetInstance() {
-      assertZoneOperationDoneSuccessfully(api().reset(INSTANCE_NAME), TIME_WAIT);
+      assertOperationDoneSuccessfully(api().reset(INSTANCE_NAME));
    }
 
    @Test(groups = "live", dependsOnMethods = "testResetInstance")
    public void testDeleteInstance() {
-      assertZoneOperationDoneSuccessfully(api().delete(INSTANCE_NAME), TIME_WAIT);
-      assertZoneOperationDoneSuccessfully(diskApi().delete(DISK_NAME), TIME_WAIT);
-      assertZoneOperationDoneSuccessfully(diskApi().delete(BOOT_DISK_NAME), TIME_WAIT);
+      assertOperationDoneSuccessfully(api().delete(INSTANCE_NAME));
+      assertOperationDoneSuccessfully(diskApi().delete(DISK_NAME));
+      assertNull(diskApi().get(BOOT_DISK_NAME)); // auto-delete!
       Operation deleteNetwork = api.getNetworkApi(userProject.get()).delete(INSTANCE_NETWORK_NAME);
-      assertGlobalOperationDoneSucessfully(deleteNetwork, TIME_WAIT);
+      assertOperationDoneSuccessfully(deleteNetwork);
    }
 
    private void assertInstanceEquals(Instance result, InstanceTemplate expected) {
@@ -224,10 +219,9 @@ public class InstanceApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
    @AfterClass(groups = { "integration", "live" })
    protected void tearDownContext() {
       try {
-         waitZoneOperationDone(api().delete(INSTANCE_NAME), TIME_WAIT);
-         waitZoneOperationDone(diskApi().delete(DISK_NAME), TIME_WAIT);
-         waitZoneOperationDone(diskApi().delete(BOOT_DISK_NAME), TIME_WAIT);
-         waitGlobalOperationDone(api.getNetworkApi(userProject.get()).delete(INSTANCE_NETWORK_NAME), TIME_WAIT);
+         waitOperationDone(api().delete(INSTANCE_NAME));
+         waitOperationDone(diskApi().delete(DISK_NAME));
+         waitOperationDone(api.getNetworkApi(userProject.get()).delete(INSTANCE_NETWORK_NAME));
       } catch (Exception e) {
          // we don't really care about any exception here, so just delete away.
        }

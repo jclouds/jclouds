@@ -28,16 +28,16 @@ import org.jclouds.googlecomputeengine.internal.BaseGoogleComputeEngineApiLiveTe
 import org.testng.SkipException;
 import org.testng.annotations.Test;
 
-@Test(groups = "live", testName = "ZoneOperationApiLiveTest")
-public class ZoneOperationApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
+@Test(groups = "live", testName = "GlobalOperationApiLiveTest")
+public class OperationApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
 
    private Operation operation;
 
-   private ZoneOperationApi api() {
-      return api.getZoneOperationApi(userProject.get(), DEFAULT_ZONE_NAME);
+   private OperationApi api() {
+      return api.getOperationApi(userProject.get());
    }
 
-   public void testListOperationsWithFiltersAndPagination() {
+   public void listWithOptions() {
       Iterator<ListPage<Operation>> operations = api().list(maxResults(1));
 
       // make sure that in spite of having only one result per page we get at least two results
@@ -50,15 +50,49 @@ public class ZoneOperationApiLiveTest extends BaseGoogleComputeEngineApiLiveTest
          }
       }
       if (count < 2) {
-         throw new SkipException("Not enough operations in " + DEFAULT_ZONE_NAME);
+         throw new SkipException("Not enough global operations");
       }
       assertEquals(count, 2);
    }
 
-   @Test(groups = "live", dependsOnMethods = "testListOperationsWithFiltersAndPagination")
+   @Test(groups = "live", dependsOnMethods = "listWithOptions")
    public void testGetOperation() {
-      Operation result = api().get(operation.name());
+      Operation result = api().get(operation.selfLink());
       assertNotNull(result);
       assertEquals(result.name(), operation.name()); // Checking state besides name can lead to flaky test.
+   }
+
+   public void listInRegionWithOptions() {
+      Iterator<ListPage<Operation>> operations = api().listInRegion(DEFAULT_REGION_NAME, maxResults(1));
+
+      // make sure that in spite of having only one result per page we get at least two results
+      int count = 0;
+      for (; count < 2 && operations.hasNext(); ) {
+         ListPage<Operation> result = operations.next();
+         if (result.isEmpty()) {
+            count++;
+         }
+      }
+      if (count < 2) {
+         throw new SkipException("Not enough region operations");
+      }
+      assertEquals(count, 2);
+   }
+
+   public void listInZoneWithOptions() {
+      Iterator<ListPage<Operation>> operations = api().listInZone(DEFAULT_ZONE_NAME, maxResults(1));
+
+      // make sure that in spite of having only one result per page we get at least two results
+      int count = 0;
+      for (; count < 2 && operations.hasNext(); ) {
+         ListPage<Operation> result = operations.next();
+         if (result.isEmpty()) {
+            count++;
+         }
+      }
+      if (count < 2) {
+         throw new SkipException("Not enough zone operations");
+      }
+      assertEquals(count, 2);
    }
 }

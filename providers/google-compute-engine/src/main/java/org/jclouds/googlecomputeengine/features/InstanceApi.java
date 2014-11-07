@@ -86,7 +86,7 @@ public interface InstanceApi {
    @Named("Instances:insert")
    @POST
    @Produces(APPLICATION_JSON)
-   @OAuthScopes({COMPUTE_SCOPE})
+   @OAuthScopes(COMPUTE_SCOPE)
    @MapBinder(InstanceBinder.class)
    Operation create(@PayloadParam("name") String instance, @PayloadParam("template") InstanceTemplate template);
 
@@ -150,7 +150,7 @@ public interface InstanceApi {
    @POST
    @Produces(APPLICATION_JSON)
    @Path("/{instance}/addAccessConfig")
-   @OAuthScopes({COMPUTE_SCOPE})
+   @OAuthScopes(COMPUTE_SCOPE)
    Operation addAccessConfigToNic(@PathParam("instance") String instance,
                                   @BinderParam(BindToJsonPayload.class)
                                   AccessConfig accessConfig,

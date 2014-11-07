@@ -34,7 +34,6 @@ public class DiskApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
 
    public static final String DISK_NAME = "disk-api-live-test-disk";
    public static final String SSD_DISK_NAME = "disk-api-live-test-disk-ssd";
-   public static final int TIME_WAIT = 30;
    public static final int sizeGb = 1;
 
    private DiskApi api() {
@@ -43,7 +42,7 @@ public class DiskApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
 
    @Test(groups = "live")
    public void testInsertDisk() {
-      assertZoneOperationDoneSuccessfully(api().create(DISK_NAME, sizeGb), TIME_WAIT);
+      assertOperationDoneSuccessfully(api().create(DISK_NAME, sizeGb));
    }
 
    @Test(groups = "live", dependsOnMethods = "testInsertDisk")
@@ -66,7 +65,7 @@ public class DiskApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
 
    @Test(groups = "live", dependsOnMethods = "testListDisk")
    public void testDeleteDisk() {
-      assertZoneOperationDoneSuccessfully(api().delete(DISK_NAME), TIME_WAIT);
+      assertOperationDoneSuccessfully(api().delete(DISK_NAME));
    }
 
    private void assertDiskEquals(Disk result) {
@@ -79,7 +78,7 @@ public class DiskApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
    public void testInsertSSDDisk() {
       URI diskType = getDiskTypeUrl(userProject.get(), DEFAULT_ZONE_NAME, "pd-ssd");
       DiskCreationOptions diskCreationOptions = new DiskCreationOptions().type(diskType);
-      assertZoneOperationDoneSuccessfully(api().create(SSD_DISK_NAME, sizeGb, diskCreationOptions), TIME_WAIT);
+      assertOperationDoneSuccessfully(api().create(SSD_DISK_NAME, sizeGb, diskCreationOptions));
    }
 
    @Test(groups = "live", dependsOnMethods = "testInsertSSDDisk")
@@ -91,7 +90,7 @@ public class DiskApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
 
    @Test(groups = "live", dependsOnMethods = "testGetSSDDisk")
    public void testDeleteSSDDisk() {
-      assertZoneOperationDoneSuccessfully(api().delete(SSD_DISK_NAME), TIME_WAIT);
+      assertOperationDoneSuccessfully(api().delete(SSD_DISK_NAME));
    }
 
    private void assertSSDDiskEquals(Disk result) {

@@ -65,8 +65,7 @@ public class TargetPoolApiExpectTest extends BaseGoogleComputeEngineApiExpectTes
       TargetPoolApi api = requestsSendResponses(requestForScopes(COMPUTE_READONLY_SCOPE),
               TOKEN_RESPONSE, get, operationResponse).getTargetPoolApi("myproject", "us-central1");
 
-      assertEquals(api.get("test"),
-              new ParseTargetPoolTest().expected());
+      assertEquals(api.get("test"), new ParseTargetPoolTest().expected());
    }
 
    public void testGetTargetPoolResponseIs4xx() throws Exception {
@@ -229,8 +228,7 @@ public class TargetPoolApiExpectTest extends BaseGoogleComputeEngineApiExpectTes
       TargetPoolApi api = requestsSendResponses(requestForScopes(COMPUTE_SCOPE),
             TOKEN_RESPONSE, addHealthCheck, operationResponse).getTargetPoolApi("myproject", "us-central1");
 
-      assertEquals(api.addHealthCheck("test", HEALTH_CHECKS),
-            new ParseRegionOperationTest().expected());
+      assertEquals(api.addHealthCheck("test", HEALTH_CHECKS), new ParseRegionOperationTest().expected());
    }
    
    @Test(expectedExceptions = ResourceNotFoundException.class)
@@ -253,8 +251,7 @@ public class TargetPoolApiExpectTest extends BaseGoogleComputeEngineApiExpectTes
       TargetPoolApi api = requestsSendResponses(requestForScopes(COMPUTE_SCOPE),
             TOKEN_RESPONSE, removeHealthCheck, operationResponse).getTargetPoolApi("myproject", "us-central1");
 
-      assertEquals(api.removeHealthCheck("test", HEALTH_CHECKS),
-            new ParseRegionOperationTest().expected());
+      assertEquals(api.removeHealthCheck("test", HEALTH_CHECKS), new ParseRegionOperationTest().expected());
    }
    
    @Test(expectedExceptions = ResourceNotFoundException.class)
@@ -283,8 +280,7 @@ public class TargetPoolApiExpectTest extends BaseGoogleComputeEngineApiExpectTes
       TargetPoolApi api = requestsSendResponses(requestForScopes(COMPUTE_SCOPE),
             TOKEN_RESPONSE, SetBackup, operationResponse).getTargetPoolApi("myproject", "us-central1");
 
-      assertEquals(api.setBackup("testpool", TARGET_POOL),
-            new ParseRegionOperationTest().expected());
+      assertEquals(api.setBackup("testpool", TARGET_POOL), new ParseRegionOperationTest().expected());
    }
    
    public void testSetBackupWithFailoverRatioResponseIs2xx(){
@@ -304,8 +300,7 @@ public class TargetPoolApiExpectTest extends BaseGoogleComputeEngineApiExpectTes
             TOKEN_RESPONSE, SetBackup, operationResponse).getTargetPoolApi("myproject", "us-central1");
 
       Float failoverRatio = Float.valueOf("0.5");
-      assertEquals(api.setBackup("testpool", failoverRatio, TARGET_POOL),
-            new ParseRegionOperationTest().expected());
+      assertEquals(api.setBackup("testpool", failoverRatio, TARGET_POOL), new ParseRegionOperationTest().expected());
    }
    
    @Test(expectedExceptions = ResourceNotFoundException.class)

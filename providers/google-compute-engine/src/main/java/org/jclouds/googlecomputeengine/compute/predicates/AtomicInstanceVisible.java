@@ -14,20 +14,31 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jclouds.googlecomputeengine.predicates;
+package org.jclouds.googlecomputeengine.compute.predicates;
 
-import org.jclouds.googlecomputeengine.domain.templates.InstanceTemplate.PersistentDisk;
+import java.util.concurrent.atomic.AtomicReference;
+
+import javax.inject.Inject;
+
+import org.jclouds.googlecomputeengine.compute.functions.ResourceFunctions;
+import org.jclouds.googlecomputeengine.domain.Instance;
 
 import com.google.common.base.Predicate;
 
-public class InstancePredicates {
+public final class AtomicInstanceVisible implements Predicate<AtomicReference<Instance>> {
 
-   public static Predicate<PersistentDisk> isBootDisk() {
-      return new Predicate<PersistentDisk>() {
-         @Override
-         public boolean apply(PersistentDisk input) {
-            return input.boot();
-         }
-      };
+   private final ResourceFunctions resources;
+
+   @Inject AtomicInstanceVisible(ResourceFunctions resources) {
+      this.resources = resources;
+   }
+
+   @Override public boolean apply(AtomicReference<Instance> input) {
+      Instance response = resources.instance(input.get().selfLink());
+      if (response == null) {
+         return false;
+      }
+      input.set(response);
+      return true;
    }
 }

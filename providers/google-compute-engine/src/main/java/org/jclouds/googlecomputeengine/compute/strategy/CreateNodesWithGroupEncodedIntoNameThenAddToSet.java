@@ -18,10 +18,6 @@ package org.jclouds.googlecomputeengine.compute.strategy;
 
 import static com.google.common.base.Preconditions.checkState;
 import static com.google.common.collect.ImmutableList.of;
-import static java.util.concurrent.TimeUnit.MILLISECONDS;
-import static org.jclouds.googlecomputeengine.GoogleComputeEngineConstants.OPERATION_COMPLETE_INTERVAL;
-import static org.jclouds.googlecomputeengine.GoogleComputeEngineConstants.OPERATION_COMPLETE_TIMEOUT;
-import static org.jclouds.util.Predicates2.retry;
 
 import java.util.List;
 import java.util.Map;
@@ -62,7 +58,7 @@ import com.google.common.util.concurrent.Atomics;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.ListeningExecutorService;
 
-public class CreateNodesWithGroupEncodedIntoNameThenAddToSet extends
+public final class CreateNodesWithGroupEncodedIntoNameThenAddToSet extends
         org.jclouds.compute.strategy.impl.CreateNodesWithGroupEncodedIntoNameThenAddToSet {
 
    public static final String EXTERIOR_RANGE = "0.0.0.0/0";
@@ -71,9 +67,7 @@ public class CreateNodesWithGroupEncodedIntoNameThenAddToSet extends
    private final GoogleComputeEngineApi api;
    private final Supplier<String> userProject;
    private final LoadingCache<NetworkAndAddressRange, Network> networkMap;
-   private final Predicate<AtomicReference<Operation>> operationDonePredicate;
-   private final long operationCompleteCheckInterval;
-   private final long operationCompleteCheckTimeout;
+   private final Predicate<AtomicReference<Operation>> operationDone;
    private final FirewallTagNamingConvention.Factory firewallTagNamingConvention;
 
    @Inject CreateNodesWithGroupEncodedIntoNameThenAddToSet(
@@ -86,18 +80,14 @@ public class CreateNodesWithGroupEncodedIntoNameThenAddToSet extends
                    customizeNodeAndAddToGoodMapOrPutExceptionIntoBadMapFactory,
            GoogleComputeEngineApi api,
            @UserProject Supplier<String> userProject,
-           @Named("global") Predicate<AtomicReference<Operation>> operationDonePredicate,
-           @Named(OPERATION_COMPLETE_INTERVAL) Long operationCompleteCheckInterval,
-           @Named(OPERATION_COMPLETE_TIMEOUT) Long operationCompleteCheckTimeout,
+           Predicate<AtomicReference<Operation>> operationDone,
            LoadingCache<NetworkAndAddressRange, Network> networkMap,
            FirewallTagNamingConvention.Factory firewallTagNamingConvention) {
       super(addNodeWithGroupStrategy, listNodesStrategy, namingConvention, userExecutor,
               customizeNodeAndAddToGoodMapOrPutExceptionIntoBadMapFactory);
       this.api = api;
       this.userProject = userProject;
-      this.operationCompleteCheckInterval = operationCompleteCheckInterval;
-      this.operationCompleteCheckTimeout = operationCompleteCheckTimeout;
-      this.operationDonePredicate = operationDonePredicate;
+      this.operationDone = operationDone;
       this.networkMap = networkMap;
       this.firewallTagNamingConvention = firewallTagNamingConvention;
    }
@@ -171,11 +161,9 @@ public class CreateNodesWithGroupEncodedIntoNameThenAddToSet extends
       }
 
       for (AtomicReference<Operation> operation : operations) {
-         retry(operationDonePredicate, operationCompleteCheckTimeout, operationCompleteCheckInterval,
-                 MILLISECONDS).apply(operation);
-         checkState(operation.get().httpErrorStatusCode() == null,
-               "Could not insert firewall, operation failed" + operation);
+         operationDone.apply(operation);
+         checkState(operation.get().httpErrorStatusCode() == null, "Could not insert firewall, operation failed %s",
+               operation);
       }
    }
-
 }

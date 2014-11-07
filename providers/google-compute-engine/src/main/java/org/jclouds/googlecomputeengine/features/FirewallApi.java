@@ -85,7 +85,7 @@ public interface FirewallApi {
    @Named("Firewalls:insert")
    @POST
    @Produces(APPLICATION_JSON)
-   @OAuthScopes({COMPUTE_SCOPE})
+   @OAuthScopes(COMPUTE_SCOPE)
    @MapBinder(FirewallBinder.class)
    Operation createInNetwork(@PayloadParam("name") String name,
                              @PayloadParam("network") URI network,
@@ -103,7 +103,7 @@ public interface FirewallApi {
    @PUT
    @Produces(APPLICATION_JSON)
    @Path("/{firewall}")
-   @OAuthScopes({COMPUTE_SCOPE})
+   @OAuthScopes(COMPUTE_SCOPE)
    Operation update(@PathParam("firewall") String firewall,
                     @BinderParam(BindToJsonPayload.class) FirewallOptions firewallOptions);
 
@@ -119,7 +119,7 @@ public interface FirewallApi {
    @PATCH
    @Produces(APPLICATION_JSON)
    @Path("/{firewall}")
-   @OAuthScopes({COMPUTE_SCOPE})
+   @OAuthScopes(COMPUTE_SCOPE)
    Operation patch(@PathParam("firewall") String firewall,
                    @BinderParam(BindToJsonPayload.class) FirewallOptions firewallOptions);
 

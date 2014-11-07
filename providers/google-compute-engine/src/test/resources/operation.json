@@ -3,7 +3,7 @@
    "id": "13053095055850848306",
    "selfLink": "https://www.googleapis.com/compute/v1/projects/myproject/zones/us-central1-a/operations/operation-1354084865060-4cf88735faeb8-bbbb12cb",
    "name": "operation-1354084865060-4cf88735faeb8-bbbb12cb",
-   "targetLink": "https://www.googleapis.com/compute/v1/projects/myproject/zones/us-central1-a/instances/instance-api-live-test-instance",
+   "targetLink": "https://www.googleapis.com/compute/v1/projects/myproject/zones/us-central1-a/instances/test-1",
    "targetId": "13053094017547040099",
    "status": "DONE",
    "user": "user@developer.gserviceaccount.com",

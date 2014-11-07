@@ -36,7 +36,6 @@ public class RouteApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
    private static final String IPV4_RANGE = "10.0.0.0/8";
    private static final String ROUTE_NAME = "route-api-live-test-route";
    private static final String ROUTE_NETWORK_NAME = "route-api-live-test-network";
-   public static final int TIME_WAIT = 30;
 
    private RouteApi api() {
       return api.getRouteApi(userProject.get());
@@ -44,17 +43,16 @@ public class RouteApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
 
    @Test(groups = "live")
    public void testInsertRoute() {
-      assertGlobalOperationDoneSucessfully(api.getNetworkApi(userProject.get()).createInIPv4Range
-              (ROUTE_NETWORK_NAME, IPV4_RANGE), TIME_WAIT);
-      assertGlobalOperationDoneSucessfully(api().createInNetwork(ROUTE_NAME,
+      assertOperationDoneSuccessfully(api.getNetworkApi(userProject.get()).createInIPv4Range
+              (ROUTE_NETWORK_NAME, IPV4_RANGE));
+      assertOperationDoneSuccessfully(api().createInNetwork(ROUTE_NAME,
               getNetworkUrl(userProject.get(), ROUTE_NETWORK_NAME),
               new RouteOptions().addTag("footag")
                       .addTag("bartag")
                       .description("RouteApi Live Test")
                       .destRange(DEST_RANGE)
                       .priority(1000)
-                      .nextHopGateway(getGatewayUrl(userProject.get(), DEFAULT_GATEWAY_NAME))),
-              TIME_WAIT);
+                      .nextHopGateway(getGatewayUrl(userProject.get(), DEFAULT_GATEWAY_NAME))));
    }
 
    @Test(groups = "live", dependsOnMethods = "testInsertRoute")
@@ -80,9 +78,8 @@ public class RouteApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
 
    @Test(groups = "live", dependsOnMethods = "testListRoute")
    public void testDeleteRoute() {
-      assertGlobalOperationDoneSucessfully(api().delete(ROUTE_NAME), TIME_WAIT);
-      assertGlobalOperationDoneSucessfully(api.getNetworkApi(userProject.get())
-              .delete(ROUTE_NETWORK_NAME), TIME_WAIT);
+      assertOperationDoneSuccessfully(api().delete(ROUTE_NAME));
+      assertOperationDoneSuccessfully(api.getNetworkApi(userProject.get()).delete(ROUTE_NETWORK_NAME));
    }
 
    private void assertRouteEquals(Route result) {

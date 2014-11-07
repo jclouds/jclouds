@@ -21,11 +21,11 @@ import static com.google.common.base.Preconditions.checkState;
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
 import static org.jclouds.googlecomputeengine.GoogleComputeEngineConstants.OPERATION_COMPLETE_INTERVAL;
 import static org.jclouds.googlecomputeengine.GoogleComputeEngineConstants.OPERATION_COMPLETE_TIMEOUT;
+import static org.jclouds.googlecomputeengine.compute.predicates.NetworkFirewallPredicates.equalsIpPermission;
+import static org.jclouds.googlecomputeengine.compute.predicates.NetworkFirewallPredicates.providesIpPermission;
 import static org.jclouds.googlecomputeengine.compute.strategy.CreateNodesWithGroupEncodedIntoNameThenAddToSet.DEFAULT_INTERNAL_NETWORK_RANGE;
 import static org.jclouds.googlecomputeengine.internal.ListPages.concat;
 import static org.jclouds.googlecomputeengine.options.ListOptions.Builder.filter;
-import static org.jclouds.googlecomputeengine.predicates.NetworkFirewallPredicates.equalsIpPermission;
-import static org.jclouds.googlecomputeengine.predicates.NetworkFirewallPredicates.providesIpPermission;
 import static org.jclouds.util.Predicates2.retry;
 
 import java.util.Collection;
@@ -66,38 +66,31 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Multimap;
 import com.google.common.util.concurrent.Atomics;
 
-/**
- * An extension to compute service to allow for the manipulation of {@link org.jclouds.compute.domain.SecurityGroup}s.
- * Implementation
- * is optional by providers.
- */
-public class GoogleComputeEngineSecurityGroupExtension implements SecurityGroupExtension {
+public final class GoogleComputeEngineSecurityGroupExtension implements SecurityGroupExtension {
 
    private final Supplier<String> userProject;
    private final GroupNamingConvention.Factory namingConvention;
    private final LoadingCache<NetworkAndAddressRange, Network> networkCreator;
    private final Function<Network, SecurityGroup> groupConverter;
    private final GoogleComputeEngineApi api;
-   private final Predicate<AtomicReference<Operation>> operationDonePredicate;
+   private final Predicate<AtomicReference<Operation>> operationDone;
    private final long operationCompleteCheckInterval;
    private final long operationCompleteCheckTimeout;
 
    @Inject GoogleComputeEngineSecurityGroupExtension(GoogleComputeEngineApi api,
          @UserProject Supplier<String> userProject, GroupNamingConvention.Factory namingConvention,
          LoadingCache<NetworkAndAddressRange, Network> networkCreator, Function<Network, SecurityGroup> groupConverter,
-         @Named("global") Predicate<AtomicReference<Operation>> operationDonePredicate,
+         Predicate<AtomicReference<Operation>> operationDone,
          @Named(OPERATION_COMPLETE_INTERVAL) Long operationCompleteCheckInterval,
          @Named(OPERATION_COMPLETE_TIMEOUT) Long operationCompleteCheckTimeout) {
-      this.api = checkNotNull(api, "api");
-      this.userProject = checkNotNull(userProject, "userProject");
-      this.namingConvention = checkNotNull(namingConvention, "namingConvention");
-      this.networkCreator = checkNotNull(networkCreator, "networkCreator");
-      this.groupConverter = checkNotNull(groupConverter, "groupConverter");
-      this.operationCompleteCheckInterval = checkNotNull(operationCompleteCheckInterval,
-            "operation completed check interval");
-      this.operationCompleteCheckTimeout = checkNotNull(operationCompleteCheckTimeout,
-            "operation completed check timeout");
-      this.operationDonePredicate = checkNotNull(operationDonePredicate, "operationDonePredicate");
+      this.api = api;
+      this.userProject = userProject;
+      this.namingConvention = namingConvention;
+      this.networkCreator = networkCreator;
+      this.groupConverter = groupConverter;
+      this.operationCompleteCheckInterval = operationCompleteCheckInterval;
+      this.operationCompleteCheckTimeout = operationCompleteCheckTimeout;
+      this.operationDone = operationDone;
    }
 
    @Override
@@ -177,7 +170,7 @@ public class GoogleComputeEngineSecurityGroupExtension implements SecurityGroupE
          AtomicReference<Operation> operation = Atomics
                .newReference(api.getFirewallApi(userProject.get()).delete(fw.name()));
 
-         retry(operationDonePredicate, operationCompleteCheckTimeout, operationCompleteCheckInterval, MILLISECONDS)
+         retry(operationDone, operationCompleteCheckTimeout, operationCompleteCheckInterval, MILLISECONDS)
                .apply(operation);
 
          checkState(operation.get().httpErrorStatusCode() == null,
@@ -186,7 +179,7 @@ public class GoogleComputeEngineSecurityGroupExtension implements SecurityGroupE
 
       AtomicReference<Operation> operation = Atomics.newReference(api.getNetworkApi(userProject.get()).delete(id));
 
-      retry(operationDonePredicate, operationCompleteCheckTimeout, operationCompleteCheckInterval, MILLISECONDS)
+      retry(operationDone, operationCompleteCheckTimeout, operationCompleteCheckInterval, MILLISECONDS)
             .apply(operation);
 
       checkState(operation.get().httpErrorStatusCode() == null,
@@ -233,7 +226,7 @@ public class GoogleComputeEngineSecurityGroupExtension implements SecurityGroupE
       AtomicReference<Operation> operation = Atomics.newReference(
             api.getFirewallApi(userProject.get()).createInNetwork(uniqueFwName, group.getUri(), fwOptions));
 
-      retry(operationDonePredicate, operationCompleteCheckTimeout, operationCompleteCheckInterval, MILLISECONDS)
+      retry(operationDone, operationCompleteCheckTimeout, operationCompleteCheckInterval, MILLISECONDS)
             .apply(operation);
 
       checkState(operation.get().httpErrorStatusCode() == null,
@@ -274,7 +267,7 @@ public class GoogleComputeEngineSecurityGroupExtension implements SecurityGroupE
             AtomicReference<Operation> operation = Atomics
                   .newReference(api.getFirewallApi(userProject.get()).delete(fw.name()));
 
-            retry(operationDonePredicate, operationCompleteCheckTimeout, operationCompleteCheckInterval, MILLISECONDS)
+            retry(operationDone, operationCompleteCheckTimeout, operationCompleteCheckInterval, MILLISECONDS)
                   .apply(operation);
 
             checkState(operation.get().httpErrorStatusCode() == null,

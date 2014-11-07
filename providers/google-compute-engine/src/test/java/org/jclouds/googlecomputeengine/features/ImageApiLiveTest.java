@@ -33,7 +33,6 @@ import org.testng.annotations.Test;
 public class ImageApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
 
    public static final String DISK_NAME = "image-api-live-test-disk";
-   public static final int TIME_WAIT = 300;
    public static final int sizeGb = 10;
    public static final String IMAGE_NAME = "image-api-live-test-image";
 
@@ -77,14 +76,14 @@ public class ImageApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
 
    @Test(groups = "live")
    public void testInsertDisk() {
-      assertZoneOperationDoneSuccessfully(diskApi().create(DISK_NAME, sizeGb), TIME_WAIT);
+      assertOperationDoneSuccessfully(diskApi().create(DISK_NAME, sizeGb));
       Disk disk = diskApi().get(DISK_NAME);
       diskURI = disk.selfLink();
    }
 
    @Test(groups = "live", dependsOnMethods = "testInsertDisk")
    public void testCreateImageFromPD(){
-      assertGlobalOperationDoneSucessfully(imageApi().createFromDisk(IMAGE_NAME, diskURI.toString()), TIME_WAIT);
+      assertOperationDoneSuccessfully(imageApi().createFromDisk(IMAGE_NAME, diskURI.toString()));
    }
 
    @Test(groups = "live", dependsOnMethods = "testCreateImageFromPD")
@@ -95,8 +94,8 @@ public class ImageApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
 
    @Test(groups = "live", dependsOnMethods = "testGetCreatedImage")
    public void testCleanup(){
-      assertGlobalOperationDoneSucessfully(imageApi().delete(IMAGE_NAME), TIME_WAIT);
-      assertZoneOperationDoneSuccessfully(diskApi().delete(DISK_NAME), TIME_WAIT);
+      assertOperationDoneSuccessfully(imageApi().delete(IMAGE_NAME));
+      assertOperationDoneSuccessfully(diskApi().delete(DISK_NAME));
    }
 
    private void assertImageEquals(Image result) {

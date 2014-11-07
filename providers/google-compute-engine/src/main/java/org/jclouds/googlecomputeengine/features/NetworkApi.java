@@ -77,7 +77,7 @@ public interface NetworkApi {
    @Named("Networks:insert")
    @POST
    @Produces(APPLICATION_JSON)
-   @OAuthScopes({COMPUTE_SCOPE})
+   @OAuthScopes(COMPUTE_SCOPE)
    @MapBinder(BindToJsonPayload.class)
    Operation createInIPv4Range(@PayloadParam("name") String networkName,
                                @PayloadParam("IPv4Range") String IPv4Range);
@@ -94,7 +94,7 @@ public interface NetworkApi {
    @Named("Networks:insert")
    @POST
    @Produces(APPLICATION_JSON)
-   @OAuthScopes({COMPUTE_SCOPE})
+   @OAuthScopes(COMPUTE_SCOPE)
    @MapBinder(BindToJsonPayload.class)
    Operation createInIPv4RangeWithGateway(@PayloadParam("name") String networkName,
                                           @PayloadParam("IPv4Range") String IPv4Range,

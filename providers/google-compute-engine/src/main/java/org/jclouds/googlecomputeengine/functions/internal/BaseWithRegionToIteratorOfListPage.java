@@ -37,7 +37,7 @@ import com.google.common.collect.Iterators;
 abstract class BaseWithRegionToIteratorOfListPage<T, I extends BaseWithRegionToIteratorOfListPage<T, I>>
       implements Function<ListPage<T>, Iterator<ListPage<T>>>, InvocationContext<I> {
 
-   private GeneratedHttpRequest request;
+   GeneratedHttpRequest request;
 
    @Override public Iterator<ListPage<T>> apply(ListPage<T> input) {
       if (input.nextPageToken() == null)

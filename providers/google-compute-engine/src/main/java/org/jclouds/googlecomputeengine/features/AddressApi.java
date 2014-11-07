@@ -77,7 +77,7 @@ public interface AddressApi {
    @Named("Addresses:insert")
    @POST
    @Produces(APPLICATION_JSON)
-   @OAuthScopes({COMPUTE_SCOPE})
+   @OAuthScopes(COMPUTE_SCOPE)
    @MapBinder(BindToJsonPayload.class)
    Operation create(@PayloadParam("name") String address);
 

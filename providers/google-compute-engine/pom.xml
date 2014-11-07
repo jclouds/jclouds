@@ -125,6 +125,7 @@
                                     <goal>test</goal>
                                 </goals>
                                 <configuration>
+                                    <threadCount>1</threadCount>
                                     <systemPropertyVariables>
                                         <test.google-compute-engine.identity>${test.google-compute-engine.identity}
                                         </test.google-compute-engine.identity>

@@ -91,7 +91,7 @@ public interface RouteApi {
    @POST
    @Consumes(APPLICATION_JSON)
    @Produces(APPLICATION_JSON)
-   @OAuthScopes({COMPUTE_SCOPE})
+   @OAuthScopes(COMPUTE_SCOPE)
    @MapBinder(RouteBinder.class)
    Operation createInNetwork(@PayloadParam("name") String name,
                              @PayloadParam("network") URI network,

@@ -25,8 +25,6 @@ import static org.jclouds.googlecomputeengine.GoogleComputeEngineConstants.GCE_B
 import static org.jclouds.googlecomputeengine.GoogleComputeEngineConstants.GCE_IMAGE_PROJECTS;
 import static org.jclouds.googlecomputeengine.domain.Instance.Status.RUNNING;
 import static org.jclouds.googlecomputeengine.domain.Instance.Status.TERMINATED;
-import static org.jclouds.googlecomputeengine.features.GlobalOperationApiExpectTest.GET_GLOBAL_OPERATION_REQUEST;
-import static org.jclouds.googlecomputeengine.features.GlobalOperationApiExpectTest.GET_GLOBAL_OPERATION_RESPONSE;
 import static org.jclouds.googlecomputeengine.features.ImageApiExpectTest.LIST_CENTOS_IMAGES_REQUEST;
 import static org.jclouds.googlecomputeengine.features.ImageApiExpectTest.LIST_CENTOS_IMAGES_RESPONSE;
 import static org.jclouds.googlecomputeengine.features.ImageApiExpectTest.LIST_DEBIAN_IMAGES_REQUEST;
@@ -45,8 +43,6 @@ import static org.jclouds.googlecomputeengine.features.NetworkApiExpectTest.GET_
 import static org.jclouds.googlecomputeengine.features.ProjectApiExpectTest.GET_PROJECT_REQUEST;
 import static org.jclouds.googlecomputeengine.features.ProjectApiExpectTest.GET_PROJECT_RESPONSE;
 import static org.jclouds.googlecomputeengine.features.RegionApiExpectTest.LIST_REGIONS_REQ;
-import static org.jclouds.googlecomputeengine.features.ZoneOperationApiExpectTest.GET_ZONE_OPERATION_REQUEST;
-import static org.jclouds.googlecomputeengine.features.ZoneOperationApiExpectTest.GET_ZONE_OPERATION_RESPONSE;
 import static org.jclouds.util.Strings2.toStringAndClose;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
@@ -77,6 +73,17 @@ import com.google.common.collect.ImmutableSet;
 
 @Test(groups = "unit", testName = "GoogleComputeEngineServiceExpectTest")
 public class GoogleComputeEngineServiceExpectTest extends BaseGoogleComputeEngineServiceExpectTest {
+   private static final String OPERATIONS_URL_PREFIX = BASE_URL + "/myproject/zones/us-central1-a/operations";
+
+   private static final HttpRequest GET_ZONE_OPERATION_REQUEST = HttpRequest
+           .builder()
+           .method("GET")
+           .endpoint(OPERATIONS_URL_PREFIX + "/operation-1354084865060-4cf88735faeb8-bbbb12cb")
+           .addHeader("Accept", "application/json")
+           .addHeader("Authorization", "Bearer " + TOKEN).build();
+
+   private static final HttpResponse GET_ZONE_OPERATION_RESPONSE = HttpResponse.builder().statusCode(200)
+           .payload(staticPayloadFromResource("/zone_operation.json")).build();
 
    private HttpRequest INSERT_NETWORK_REQUEST = HttpRequest
            .builder()
@@ -339,9 +346,9 @@ public class GoogleComputeEngineServiceExpectTest extends BaseGoogleComputeEngin
               .add(getNetworkRequest)
               .add(listFirewallsRequest)
               .add(deleteFirewallRequest)
-              .add(GET_GLOBAL_OPERATION_REQUEST)
+              .add(GET_ZONE_OPERATION_REQUEST)
               .add(deleteNetworkReqquest)
-              .add(GET_GLOBAL_OPERATION_REQUEST)
+              .add(GET_ZONE_OPERATION_REQUEST)
               .build();
 
       List<HttpResponse> orderedResponses = ImmutableList.<HttpResponse>builder()
@@ -365,9 +372,9 @@ public class GoogleComputeEngineServiceExpectTest extends BaseGoogleComputeEngin
               .add(getNetworkResponse)
               .add(listFirewallsResponse)
               .add(SUCCESSFUL_OPERATION_RESPONSE)
-              .add(GET_GLOBAL_OPERATION_RESPONSE)
+              .add(GET_ZONE_OPERATION_RESPONSE)
               .add(SUCCESSFUL_OPERATION_RESPONSE)
-              .add(GET_GLOBAL_OPERATION_RESPONSE)
+              .add(GET_ZONE_OPERATION_RESPONSE)
               .build();
 
       ComputeService client = orderedRequestsSendResponses(orderedRequests, orderedResponses);
@@ -375,7 +382,6 @@ public class GoogleComputeEngineServiceExpectTest extends BaseGoogleComputeEngin
    }
 
    public void listAssignableLocations() throws Exception {
-
       ImmutableMap<HttpRequest, HttpResponse> requestResponseMap = ImmutableMap.
               <HttpRequest, HttpResponse>builder()
               .put(requestForScopes(COMPUTE_READONLY_SCOPE), TOKEN_RESPONSE)
@@ -478,11 +484,11 @@ public class GoogleComputeEngineServiceExpectTest extends BaseGoogleComputeEngin
               .add(GET_NETWORK_REQUEST)
               .add(requestForScopes(COMPUTE_SCOPE))
               .add(INSERT_NETWORK_REQUEST)
-              .add(GET_GLOBAL_OPERATION_REQUEST)
+              .add(GET_ZONE_OPERATION_REQUEST)
               .add(GET_NETWORK_REQUEST)
               .add(getFirewallRequest)
               .add(insertFirewallRequest)
-              .add(GET_GLOBAL_OPERATION_REQUEST)
+              .add(GET_ZONE_OPERATION_REQUEST)
               .add(LIST_INSTANCES_REQUEST)
               .add(createDiskRequestForInstance("test-1"))
               .add(GET_ZONE_OPERATION_REQUEST)
@@ -512,11 +518,11 @@ public class GoogleComputeEngineServiceExpectTest extends BaseGoogleComputeEngin
               .add(HttpResponse.builder().statusCode(404).build())
               .add(TOKEN_RESPONSE)
               .add(SUCCESSFUL_OPERATION_RESPONSE)
-              .add(GET_GLOBAL_OPERATION_RESPONSE)
+              .add(GET_ZONE_OPERATION_RESPONSE)
               .add(GET_NETWORK_RESPONSE)
               .add(HttpResponse.builder().statusCode(404).build())
               .add(SUCCESSFUL_OPERATION_RESPONSE)
-              .add(GET_GLOBAL_OPERATION_RESPONSE)
+              .add(GET_ZONE_OPERATION_RESPONSE)
               .add(LIST_INSTANCES_RESPONSE)
               .add(SUCCESSFUL_OPERATION_RESPONSE)
               .add(GET_ZONE_OPERATION_RESPONSE)

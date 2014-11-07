@@ -38,7 +38,6 @@ public class ForwardingRuleApiLiveTest extends BaseGoogleComputeEngineApiLiveTes
    private static final String TARGETPOOL_NAME_NEW = "forwarding-rule-api-live-test-new-targetpool";
    private static final String DESCRIPTION = "Forwarding rule api live test forwarding rule.";
    private static final String ADDRESS_NAME = "forwarding-rule-api-address";
-   private static final int TIME_WAIT = 30;
    private TargetPool targetPool;
    private TargetPool newTargetPool;
    private Address address;
@@ -62,21 +61,21 @@ public class ForwardingRuleApiLiveTest extends BaseGoogleComputeEngineApiLiveTes
    @BeforeClass
    public void init() {
       TargetPoolCreationOptions targetPoolCreationOptions = new TargetPoolCreationOptions();
-      assertRegionOperationDoneSucessfully(targetPoolApi().create(TARGETPOOL_NAME, targetPoolCreationOptions), TIME_WAIT);
+      assertOperationDoneSuccessfully(targetPoolApi().create(TARGETPOOL_NAME, targetPoolCreationOptions));
       targetPool = targetPoolApi().get(TARGETPOOL_NAME);
 
-      assertRegionOperationDoneSucessfully(targetPoolApi().create(TARGETPOOL_NAME_NEW, targetPoolCreationOptions), TIME_WAIT);
+      assertOperationDoneSuccessfully(targetPoolApi().create(TARGETPOOL_NAME_NEW, targetPoolCreationOptions));
       newTargetPool = targetPoolApi().get(TARGETPOOL_NAME_NEW);
 
-      assertRegionOperationDoneSucessfully(addressApi().create(ADDRESS_NAME), TIME_WAIT);
+      assertOperationDoneSuccessfully(addressApi().create(ADDRESS_NAME));
       address = addressApi().get(ADDRESS_NAME);
    }
 
    @AfterClass
    public void tearDown() {
-      assertRegionOperationDoneSucessfully(targetPoolApi().delete(TARGETPOOL_NAME), TIME_WAIT);
-      assertRegionOperationDoneSucessfully(targetPoolApi().delete(TARGETPOOL_NAME_NEW), TIME_WAIT);
-      assertRegionOperationDoneSucessfully(addressApi().delete(ADDRESS_NAME), TIME_WAIT);
+      assertOperationDoneSuccessfully(targetPoolApi().delete(TARGETPOOL_NAME));
+      assertOperationDoneSuccessfully(targetPoolApi().delete(TARGETPOOL_NAME_NEW));
+      assertOperationDoneSuccessfully(addressApi().delete(ADDRESS_NAME));
    }
 
    @Test(groups = "live")
@@ -86,7 +85,7 @@ public class ForwardingRuleApiLiveTest extends BaseGoogleComputeEngineApiLiveTes
                                                                            .ipAddress(address.address())
                                                                            .ipProtocol(ForwardingRule.IPProtocol.TCP)
                                                                            .target(targetPool.selfLink());
-      assertRegionOperationDoneSucessfully(api().create(FORWARDING_RULE_NAME, forwardingRuleCreationOptions), TIME_WAIT);
+      assertOperationDoneSuccessfully(api().create(FORWARDING_RULE_NAME, forwardingRuleCreationOptions));
    }
 
    @Test(groups = "live", dependsOnMethods = "testInsertForwardingRule")
@@ -102,7 +101,7 @@ public class ForwardingRuleApiLiveTest extends BaseGoogleComputeEngineApiLiveTes
 
    @Test(groups = "live", dependsOnMethods = "testGetForwardingRule")
    public void testSetTargetForwardingRule(){
-      assertRegionOperationDoneSucessfully(api().setTarget(FORWARDING_RULE_NAME, newTargetPool.selfLink()), TIME_WAIT);
+      assertOperationDoneSuccessfully(api().setTarget(FORWARDING_RULE_NAME, newTargetPool.selfLink()));
       ForwardingRule forwardingRule = api().get(FORWARDING_RULE_NAME);
       assertNotNull(forwardingRule);
       assertEquals(forwardingRule.name(), FORWARDING_RULE_NAME);
@@ -117,6 +116,6 @@ public class ForwardingRuleApiLiveTest extends BaseGoogleComputeEngineApiLiveTes
 
    @Test(groups = "live", dependsOnMethods = {"testListForwardingRule", "testSetTargetForwardingRule"}, alwaysRun = true)
    public void testDeleteForwardingRule() {
-      assertRegionOperationDoneSucessfully(api().delete(FORWARDING_RULE_NAME), TIME_WAIT);
+      assertOperationDoneSuccessfully(api().delete(FORWARDING_RULE_NAME));
    }
 }

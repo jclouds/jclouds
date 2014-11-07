@@ -27,7 +27,7 @@ import org.testng.annotations.Test;
 
 @Test(groups = "unit", testName = "GoogleComputeEngineImageToImageTest")
 public class GoogleComputeEngineImageToImageTest {
-   public void testArbitratyImageName() {
+   public void testArbitraryImageName() {
       GoogleComputeEngineImageToImage imageToImage = new GoogleComputeEngineImageToImage();
       Image image = image("arbitratyname");
       org.jclouds.compute.domain.Image transformed = imageToImage.apply(image);

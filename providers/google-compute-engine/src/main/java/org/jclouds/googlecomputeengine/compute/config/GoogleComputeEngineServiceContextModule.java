@@ -17,12 +17,18 @@
 package org.jclouds.googlecomputeengine.compute.config;
 
 import static com.google.common.base.Suppliers.memoizeWithExpiration;
+import static java.util.concurrent.TimeUnit.MILLISECONDS;
 import static java.util.concurrent.TimeUnit.SECONDS;
 import static org.jclouds.Constants.PROPERTY_SESSION_INTERVAL;
+import static org.jclouds.googlecomputeengine.GoogleComputeEngineConstants.OPERATION_COMPLETE_INTERVAL;
+import static org.jclouds.googlecomputeengine.GoogleComputeEngineConstants.OPERATION_COMPLETE_TIMEOUT;
+import static org.jclouds.rest.config.BinderUtils.bindHttpApi;
+import static org.jclouds.util.Predicates2.retry;
 
 import java.net.URI;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicReference;
 
 import javax.inject.Named;
 import javax.inject.Singleton;
@@ -55,8 +61,11 @@ import org.jclouds.googlecomputeengine.compute.functions.InstanceInZoneToNodeMet
 import org.jclouds.googlecomputeengine.compute.functions.MachineTypeInZoneToHardware;
 import org.jclouds.googlecomputeengine.compute.functions.NetworkToSecurityGroup;
 import org.jclouds.googlecomputeengine.compute.functions.OrphanedGroupsFromDeadNodes;
+import org.jclouds.googlecomputeengine.compute.functions.ResourceFunctions;
 import org.jclouds.googlecomputeengine.compute.options.GoogleComputeEngineTemplateOptions;
 import org.jclouds.googlecomputeengine.compute.predicates.AllNodesInGroupTerminated;
+import org.jclouds.googlecomputeengine.compute.predicates.AtomicInstanceVisible;
+import org.jclouds.googlecomputeengine.compute.predicates.AtomicOperationDone;
 import org.jclouds.googlecomputeengine.compute.strategy.CreateNodesWithGroupEncodedIntoNameThenAddToSet;
 import org.jclouds.googlecomputeengine.compute.strategy.PopulateDefaultLoginCredentialsForImageStrategy;
 import org.jclouds.googlecomputeengine.compute.strategy.UseNodeCredentialsButOverrideFromTemplate;
@@ -64,6 +73,7 @@ import org.jclouds.googlecomputeengine.domain.Firewall;
 import org.jclouds.googlecomputeengine.domain.Image;
 import org.jclouds.googlecomputeengine.domain.Instance;
 import org.jclouds.googlecomputeengine.domain.Network;
+import org.jclouds.googlecomputeengine.domain.Operation;
 import org.jclouds.net.domain.IpPermission;
 
 import com.google.common.base.Function;
@@ -137,6 +147,19 @@ public final class GoogleComputeEngineServiceContextModule
 
       bind(PrioritizeCredentialsFromTemplate.class).to(UseNodeCredentialsButOverrideFromTemplate.class);
       bind(FirewallTagNamingConvention.Factory.class).in(Scopes.SINGLETON);
+
+      bindHttpApi(binder(), ResourceFunctions.class);
+   }
+
+   // TODO: these timeouts need thinking through.
+   @Provides Predicate<AtomicReference<Operation>> operationDone(AtomicOperationDone input,
+         @Named(OPERATION_COMPLETE_TIMEOUT) long timeout, @Named(OPERATION_COMPLETE_INTERVAL) long interval) {
+      return retry(input, timeout, interval, MILLISECONDS);
+   }
+
+   @Provides Predicate<AtomicReference<Instance>> instanceVisible(AtomicInstanceVisible input,
+         @Named(OPERATION_COMPLETE_TIMEOUT) long timeout, @Named(OPERATION_COMPLETE_INTERVAL) long interval) {
+      return retry(input, timeout, interval, MILLISECONDS);
    }
 
    @Provides @Singleton @Memoized Supplier<Map<URI, org.jclouds.compute.domain.Image>> imageByUri(

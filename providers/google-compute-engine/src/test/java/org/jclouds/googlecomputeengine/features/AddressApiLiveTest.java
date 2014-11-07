@@ -30,7 +30,6 @@ import org.testng.annotations.Test;
 public class AddressApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
 
    private static final String ADDRESS_NAME = "address-api-live-test-address";
-   private static final int TIME_WAIT = 30;
 
    private AddressApi api() {
       return api.getAddressApi(userProject.get(), DEFAULT_REGION_NAME);
@@ -38,8 +37,7 @@ public class AddressApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
 
    @Test(groups = "live")
    public void testInsertAddress() {
-
-      assertRegionOperationDoneSucessfully(api().create(ADDRESS_NAME), TIME_WAIT);
+      assertOperationDoneSuccessfully(api().create(ADDRESS_NAME));
    }
 
    @Test(groups = "live", dependsOnMethods = "testInsertAddress")
@@ -51,14 +49,12 @@ public class AddressApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
 
    @Test(groups = "live", dependsOnMethods = "testGetAddress")
    public void testListAddress() {
-
       Iterator<ListPage<Address>> addresses = api().list(filter("name eq " + ADDRESS_NAME));
       assertEquals(addresses.next().size(), 1);
    }
 
    @Test(groups = "live", dependsOnMethods = "testListAddress")
    public void testDeleteAddress() {
-
-      assertRegionOperationDoneSucessfully(api().delete(ADDRESS_NAME), TIME_WAIT);
+      assertOperationDoneSuccessfully(api().delete(ADDRESS_NAME));
    }
 }

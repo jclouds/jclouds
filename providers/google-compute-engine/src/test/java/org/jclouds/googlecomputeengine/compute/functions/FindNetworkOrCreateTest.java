@@ -23,27 +23,29 @@ import static org.easymock.EasyMock.verify;
 import static org.testng.Assert.assertEquals;
 
 import java.net.URI;
+import java.util.concurrent.atomic.AtomicReference;
 
 import org.jclouds.googlecomputeengine.GoogleComputeEngineApi;
 import org.jclouds.googlecomputeengine.compute.domain.NetworkAndAddressRange;
-import org.jclouds.googlecomputeengine.config.UserProject;
+import org.jclouds.googlecomputeengine.compute.predicates.AtomicOperationDone;
 import org.jclouds.googlecomputeengine.domain.Network;
 import org.jclouds.googlecomputeengine.domain.Operation;
-import org.jclouds.googlecomputeengine.features.GlobalOperationApi;
 import org.jclouds.googlecomputeengine.features.NetworkApi;
 import org.jclouds.googlecomputeengine.parse.ParseGlobalOperationTest;
-import org.jclouds.googlecomputeengine.predicates.GlobalOperationDonePredicate;
 import org.testng.annotations.Test;
 
+import com.google.common.base.Predicate;
+import com.google.common.base.Predicates;
 import com.google.common.base.Supplier;
+import com.google.common.base.Suppliers;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.LoadingCache;
 import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
-import com.google.inject.Provides;
 
 @Test
 public class FindNetworkOrCreateTest {
+   private static final Supplier<String> USER_PROJECT = Suppliers.ofInstance("myproject");
    private static final String BASE_URL = "https://www.googleapis.com/compute/v1/projects";
    private static final Network NETWORK = Network.create( //
          "abcd", // id
@@ -58,14 +60,7 @@ public class FindNetworkOrCreateTest {
       GoogleComputeEngineApi api = createMock(GoogleComputeEngineApi.class);
       NetworkApi nwApi = createMock(NetworkApi.class);
 
-      Supplier<String> userProject = new Supplier<String>() {
-         @Override
-         public String get() {
-            return "myproject";
-         }
-      };
-
-      expect(api.getNetworkApi(userProject.get())).andReturn(nwApi).atLeastOnce();
+      expect(api.getNetworkApi(USER_PROJECT.get())).andReturn(nwApi).atLeastOnce();
 
       expect(nwApi.get("this-network")).andReturn(NETWORK);
 
@@ -73,11 +68,11 @@ public class FindNetworkOrCreateTest {
 
       NetworkAndAddressRange input = NetworkAndAddressRange.create("this-network", "0.0.0.0/0", null);
 
-      GlobalOperationDonePredicate pred = globalOperationDonePredicate(api, userProject);
+      Predicate<AtomicReference<Operation>> operationDone = Predicates.alwaysFalse(); // No op should be created!
 
-      CreateNetworkIfNeeded creator = new CreateNetworkIfNeeded(api, userProject, pred, 100l, 100l);
+      CreateNetworkIfNeeded creator = new CreateNetworkIfNeeded(api, USER_PROJECT, operationDone);
 
-      FindNetworkOrCreate loader = new FindNetworkOrCreate(api, creator, userProject);
+      FindNetworkOrCreate loader = new FindNetworkOrCreate(api, creator, USER_PROJECT);
 
       LoadingCache<NetworkAndAddressRange, Network> cache = CacheBuilder.newBuilder().build(loader);
 
@@ -92,36 +87,28 @@ public class FindNetworkOrCreateTest {
    public void testLoadNew() {
       GoogleComputeEngineApi api = createMock(GoogleComputeEngineApi.class);
       NetworkApi nwApi = createMock(NetworkApi.class);
-      GlobalOperationApi globalApi = createMock(GlobalOperationApi.class);
+      ResourceFunctions resources = createMock(ResourceFunctions.class);
 
       Operation createOp = new ParseGlobalOperationTest().expected();
 
-      Supplier<String> userProject = new Supplier<String>() {
-         @Override
-         public String get() {
-            return "myproject";
-         }
-      };
-
-      expect(api.getNetworkApi(userProject.get())).andReturn(nwApi).atLeastOnce();
-      expect(api.getGlobalOperationApi(userProject.get())).andReturn(globalApi).atLeastOnce();
+      expect(api.getNetworkApi(USER_PROJECT.get())).andReturn(nwApi).atLeastOnce();
 
       expect(nwApi.createInIPv4Range("this-network", "0.0.0.0/0")).andReturn(createOp);
-      expect(globalApi.get(createOp.name())).andReturn(createOp);
+      expect(resources.operation(createOp.selfLink())).andReturn(createOp);
       // pre-creation
       expect(nwApi.get("this-network")).andReturn(null).times(2);
       // post-creation
       expect(nwApi.get("this-network")).andReturn(NETWORK);
 
-      replay(api, nwApi, globalApi);
+      replay(api, nwApi, resources);
 
       NetworkAndAddressRange input = NetworkAndAddressRange.create("this-network", "0.0.0.0/0", null);
 
-      GlobalOperationDonePredicate pred = globalOperationDonePredicate(api, userProject);
+      AtomicOperationDone pred = atomicOperationDone(resources);
 
-      CreateNetworkIfNeeded creator = new CreateNetworkIfNeeded(api, userProject, pred, 100l, 100l);
+      CreateNetworkIfNeeded creator = new CreateNetworkIfNeeded(api, USER_PROJECT, pred);
 
-      FindNetworkOrCreate loader = new FindNetworkOrCreate(api, creator, userProject);
+      FindNetworkOrCreate loader = new FindNetworkOrCreate(api, creator, USER_PROJECT);
 
       LoadingCache<NetworkAndAddressRange, Network> cache = CacheBuilder.newBuilder().build(loader);
 
@@ -130,20 +117,15 @@ public class FindNetworkOrCreateTest {
       // Second call is to ensure we only need to make the API calls once.
       assertEquals(cache.getUnchecked(input), NETWORK);
 
-      verify(api, nwApi, globalApi);
+      verify(api, nwApi, resources);
    }
 
-   private GlobalOperationDonePredicate globalOperationDonePredicate(final GoogleComputeEngineApi api,
-         final Supplier<String> userProject) {
+   private AtomicOperationDone atomicOperationDone(final ResourceFunctions resources) {
       return Guice.createInjector(new AbstractModule() { // Rather than opening ctor public
          @Override protected void configure() {
-            bind(GoogleComputeEngineApi.class).toInstance(api);
+            bind(ResourceFunctions.class).toInstance(resources);
          }
-
-         @Provides @UserProject Supplier<String> project() {
-            return userProject;
-         }
-      }).getInstance(GlobalOperationDonePredicate.class);
+      }).getInstance(AtomicOperationDone.class);
    }
 }
 

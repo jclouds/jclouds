@@ -26,32 +26,20 @@ import org.jclouds.googlecomputeengine.features.DiskApi;
 import org.jclouds.googlecomputeengine.features.DiskTypeApi;
 import org.jclouds.googlecomputeengine.features.FirewallApi;
 import org.jclouds.googlecomputeengine.features.ForwardingRuleApi;
-import org.jclouds.googlecomputeengine.features.GlobalOperationApi;
 import org.jclouds.googlecomputeengine.features.HttpHealthCheckApi;
 import org.jclouds.googlecomputeengine.features.ImageApi;
 import org.jclouds.googlecomputeengine.features.InstanceApi;
 import org.jclouds.googlecomputeengine.features.MachineTypeApi;
 import org.jclouds.googlecomputeengine.features.NetworkApi;
+import org.jclouds.googlecomputeengine.features.OperationApi;
 import org.jclouds.googlecomputeengine.features.ProjectApi;
 import org.jclouds.googlecomputeengine.features.RegionApi;
-import org.jclouds.googlecomputeengine.features.RegionOperationApi;
 import org.jclouds.googlecomputeengine.features.RouteApi;
 import org.jclouds.googlecomputeengine.features.SnapshotApi;
 import org.jclouds.googlecomputeengine.features.TargetPoolApi;
 import org.jclouds.googlecomputeengine.features.ZoneApi;
-import org.jclouds.googlecomputeengine.features.ZoneOperationApi;
 import org.jclouds.rest.annotations.Delegate;
 
-import com.google.common.annotations.Beta;
-
-
-/**
- * Provides access to GoogleCompute.
- * <p/>
- *
- * @see <a href="https://developers.google.com/compute/docs/reference/v1">api doc</a>
- */
-@Beta
 public interface GoogleComputeEngineApi extends Closeable {
 
    /**
@@ -104,15 +92,6 @@ public interface GoogleComputeEngineApi extends Closeable {
    ForwardingRuleApi getForwardingRuleApi(@PathParam("project") String projectName, @PathParam("region") String region);
 
    /**
-    * Provides access to Global Operation features
-    *
-    * @param projectName the name of the project
-    */
-   @Delegate
-   @Path("/projects/{project}/global")
-   GlobalOperationApi getGlobalOperationApi(@PathParam("project") String projectName);
-
-   /**
     * Provides access to HttpHealthCheck features
     *
     * @param projectName the name of the project
@@ -160,6 +139,14 @@ public interface GoogleComputeEngineApi extends Closeable {
    NetworkApi getNetworkApi(@PathParam("project") String projectName);
 
    /**
+    * Provides access to Operation features
+    *
+    * @param projectName the name of the project
+    */
+   @Delegate
+   OperationApi getOperationApi(@PathParam("project") String projectName);
+
+   /**
     * Provides access to Project features
     */
    @Delegate
@@ -173,16 +160,6 @@ public interface GoogleComputeEngineApi extends Closeable {
    @Delegate
    @Path("/projects/{project}")
    RegionApi getRegionApi(@PathParam("project") String projectName);
-
-   /**
-    * Provides access to Region Operation features
-    *
-    * @param project the name of the project
-    * @param region     the name of the region scoping this request.
-    */
-   @Delegate
-   @Path("/projects/{project}/regions/{region}")
-   RegionOperationApi getRegionOperationApi(@PathParam("project") String project, @PathParam("region") String region);
 
    /**
     * Provides access to Route features
@@ -220,14 +197,4 @@ public interface GoogleComputeEngineApi extends Closeable {
    @Delegate
    @Path("/projects/{project}")
    ZoneApi getZoneApi(@PathParam("project") String projectName);
-
-   /**
-    * Provides access to Zone Operation features
-    *
-    * @param projectName the name of the project
-    * @param zone        the name of the zone scoping this request.
-    */
-   @Delegate
-   @Path("/projects/{project}/zones/{zone}")
-   ZoneOperationApi getZoneOperationApi(@PathParam("project") String projectName, @PathParam("zone") String zone);
 }

@@ -16,15 +16,16 @@
  */
 package org.jclouds.googlecomputeengine.internal;
 
-import static java.util.concurrent.TimeUnit.SECONDS;
+import static com.google.common.base.Preconditions.checkNotNull;
+import static com.google.common.base.Preconditions.checkState;
 import static org.jclouds.oauth.v2.OAuthTestUtils.setCredential;
-import static org.jclouds.util.Predicates2.retry;
 import static org.testng.Assert.assertEquals;
 import static org.testng.AssertJUnit.assertTrue;
 
 import java.net.URI;
 import java.util.Properties;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.logging.Logger;
 
 import org.jclouds.apis.BaseApiLiveTest;
 import org.jclouds.googlecomputeengine.GoogleComputeEngineApi;
@@ -39,7 +40,6 @@ import com.google.inject.Injector;
 import com.google.inject.Key;
 import com.google.inject.Module;
 import com.google.inject.TypeLiteral;
-import com.google.inject.name.Names;
 
 
 public class BaseGoogleComputeEngineApiLiveTest extends BaseApiLiveTest<GoogleComputeEngineApi> {
@@ -57,9 +57,7 @@ public class BaseGoogleComputeEngineApiLiveTest extends BaseApiLiveTest<GoogleCo
    protected static final String DISK_TYPE_API_URL_SUFFIX = "/diskTypes/";
 
    protected Supplier<String> userProject;
-   protected Predicate<AtomicReference<Operation>> globalOperationDonePredicate;
-   protected Predicate<AtomicReference<Operation>> regionOperationDonePredicate;
-   protected Predicate<AtomicReference<Operation>> zoneOperationDonePredicate;
+   protected Predicate<AtomicReference<Operation>> operationDone;
 
    public BaseGoogleComputeEngineApiLiveTest() {
       provider = "google-compute-engine";
@@ -76,39 +74,25 @@ public class BaseGoogleComputeEngineApiLiveTest extends BaseApiLiveTest<GoogleCo
       Injector injector = newBuilder().modules(modules).overrides(props).buildInjector();
       userProject = injector.getInstance(Key.get(new TypeLiteral<Supplier<String>>() {
       }, UserProject.class));
-      globalOperationDonePredicate = injector.getInstance(Key.get(new TypeLiteral<Predicate<AtomicReference<Operation>>>() {
-      }, Names.named("global")));
-      regionOperationDonePredicate = injector.getInstance(Key.get(new TypeLiteral<Predicate<AtomicReference<Operation>>>() {
-      }, Names.named("region")));
-      zoneOperationDonePredicate = injector.getInstance(Key.get(new TypeLiteral<Predicate<AtomicReference<Operation>>>() {
-      }, Names.named("zone")));
+      operationDone = injector.getInstance(Key.get(new TypeLiteral<Predicate<AtomicReference<Operation>>>() {
+      }));
       return injector.getInstance(GoogleComputeEngineApi.class);
    }
 
-   protected void assertGlobalOperationDoneSucessfully(Operation operation, long maxWaitSeconds) {
-      operation = waitOperationDone(globalOperationDonePredicate, operation, maxWaitSeconds);
-      assertEquals(operation.status(), Operation.Status.DONE);
-      assertTrue(operation.errors().isEmpty());
+   protected void assertOperationDoneSuccessfully(Operation operation) {
+      AtomicReference<Operation> ref = Atomics.newReference(checkNotNull(operation, "operation"));
+      checkState(operationDone.apply(ref), "Timeout waiting for operation: %s", operation);
+      assertEquals(ref.get().status(), Operation.Status.DONE);
+      assertTrue(ref.get().errors().isEmpty());
    }
 
-   protected void waitGlobalOperationDone(Operation operation, long maxWaitSeconds) {
-      waitOperationDone(globalOperationDonePredicate, operation, maxWaitSeconds);
-   }
-
-   protected void assertRegionOperationDoneSucessfully(Operation operation, long maxWaitSeconds) {
-      operation = waitOperationDone(regionOperationDonePredicate, operation, maxWaitSeconds);
-      assertEquals(operation.status(), Operation.Status.DONE);
-      assertTrue(operation.errors().isEmpty());
-   }
-
-   protected void assertZoneOperationDoneSuccessfully(@Nullable Operation operation, long maxWaitSeconds) {
-      operation = waitOperationDone(zoneOperationDonePredicate, operation, maxWaitSeconds);
-      assertEquals(operation.status(), Operation.Status.DONE);
-      assertTrue(operation.errors().isEmpty());
-   }
-
-   protected void waitZoneOperationDone(@Nullable Operation operation, long maxWaitSeconds) {
-      waitOperationDone(zoneOperationDonePredicate, operation, maxWaitSeconds);
+   protected void waitOperationDone(@Nullable Operation operation) {
+      if (operation == null) {
+         return;
+      }
+      if (!operationDone.apply(Atomics.newReference(operation))) {
+         Logger.getAnonymousLogger().warning("Timeout waiting for operation: " + operation);
+      }
    }
 
    protected URI getDiskTypeUrl(String project, String zone, String diskType){
@@ -146,16 +130,6 @@ public class BaseGoogleComputeEngineApiLiveTest extends BaseApiLiveTest<GoogleCo
 
    protected URI getDiskUrl(String project, String diskName) {
       return URI.create(API_URL_PREFIX + project + ZONE_API_URL_SUFFIX + DEFAULT_ZONE_NAME + "/disks/" + diskName);
-   }
-
-   private static Operation waitOperationDone(Predicate<AtomicReference<Operation>> operationDonePredicate,
-                                              @Nullable Operation operation, long maxWaitSeconds) {
-      if (operation == null) { // Null can mean a delete op didn't need to occur.
-         return null;
-      }
-      AtomicReference<Operation> operationReference = Atomics.newReference(operation);
-      retry(operationDonePredicate, maxWaitSeconds, 1, SECONDS).apply(operationReference);
-      return operationReference.get();
    }
 }
 

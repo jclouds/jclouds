@@ -32,8 +32,6 @@ import com.google.common.collect.Iterables;
 public class HttpHealthCheckApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
 
    private static final String HTTP_HEALTH_CHECK_NAME = "http-health-check-api-live-test";
-   private static final int TIME_WAIT = 60;
-
    private static final int OFFSET = 2;
 
    private HttpHealthCheckCreationOptions options;
@@ -51,7 +49,7 @@ public class HttpHealthCheckApiLiveTest extends BaseGoogleComputeEngineApiLiveTe
                      .healthyThreshold(30)
                      .unhealthyThreshold(15)
                      .description("A First Health Check!");
-      assertGlobalOperationDoneSucessfully(api().insert(HTTP_HEALTH_CHECK_NAME, options), TIME_WAIT);
+      assertOperationDoneSuccessfully(api().insert(HTTP_HEALTH_CHECK_NAME, options));
    }
 
    @Test(groups = "live", dependsOnMethods = "testInsertHttpHealthCheck")
@@ -79,7 +77,7 @@ public class HttpHealthCheckApiLiveTest extends BaseGoogleComputeEngineApiLiveTe
          .port(options.port() + OFFSET)
          .checkIntervalSec(options.checkIntervalSec() + OFFSET)
          .timeoutSec(options.timeoutSec() + OFFSET);
-      assertGlobalOperationDoneSucessfully(api().patch(HTTP_HEALTH_CHECK_NAME, newOptions), TIME_WAIT);
+      assertOperationDoneSuccessfully(api().patch(HTTP_HEALTH_CHECK_NAME, newOptions));
 
       // Check changes happened and others unchanged.
       HttpHealthCheck httpHealthCheck = api().get(HTTP_HEALTH_CHECK_NAME);
@@ -98,7 +96,7 @@ public class HttpHealthCheckApiLiveTest extends BaseGoogleComputeEngineApiLiveTe
       HttpHealthCheckCreationOptions newOptions = new HttpHealthCheckCreationOptions()
          .checkIntervalSec(options.checkIntervalSec() - OFFSET)
          .timeoutSec(options.timeoutSec() - OFFSET);
-      assertGlobalOperationDoneSucessfully(api().update(HTTP_HEALTH_CHECK_NAME, newOptions), TIME_WAIT);
+      assertOperationDoneSuccessfully(api().update(HTTP_HEALTH_CHECK_NAME, newOptions));
 
       // Check changes happened.
       HttpHealthCheck httpHealthCheck = api().get(HTTP_HEALTH_CHECK_NAME);
@@ -114,6 +112,6 @@ public class HttpHealthCheckApiLiveTest extends BaseGoogleComputeEngineApiLiveTe
 
    @Test(groups = "live", dependsOnMethods = {"testListHttpHealthCheck", "testUpdateHttpHealthCheck"})
    public void testDeleteHttpHealthCheck() {
-      assertGlobalOperationDoneSucessfully(api().delete(HTTP_HEALTH_CHECK_NAME), TIME_WAIT);
+      assertOperationDoneSuccessfully(api().delete(HTTP_HEALTH_CHECK_NAME));
    }
 }

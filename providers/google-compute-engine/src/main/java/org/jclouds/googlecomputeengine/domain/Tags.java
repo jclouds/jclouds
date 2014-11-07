@@ -29,12 +29,12 @@ import com.google.auto.value.AutoValue;
 @AutoValue
 public abstract class Tags {
    /** The fingerprint for the items - needed for updating them. */
-   public abstract String fingerprint();
+   @Nullable public abstract String fingerprint();
 
    public abstract List<String> items();
 
    @SerializedNames({ "fingerprint", "items" })
-   public static Tags create(String fingerprint, @Nullable List<String> items) {
+   public static Tags create(String fingerprint, List<String> items) {
       return new AutoValue_Tags(fingerprint, copyOf(items));
    }
 

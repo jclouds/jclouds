@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jclouds.googlecomputeengine.predicates;
+package org.jclouds.googlecomputeengine.compute.predicates;
 
 import static com.google.common.collect.Sets.intersection;
 

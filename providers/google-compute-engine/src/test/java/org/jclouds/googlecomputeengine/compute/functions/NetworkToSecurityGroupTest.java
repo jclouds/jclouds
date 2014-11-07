@@ -39,6 +39,7 @@ import org.testng.annotations.Test;
 
 import com.google.common.base.Predicates;
 import com.google.common.base.Supplier;
+import com.google.common.base.Suppliers;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
 
@@ -46,12 +47,7 @@ public class NetworkToSecurityGroupTest {
 
    @Test
    public void testApply() {
-      Supplier<String> projectSupplier = new Supplier<String>() {
-         @Override
-         public String get() {
-            return "myproject";
-         }
-      };
+      Supplier<String> projectSupplier = Suppliers.ofInstance("myproject");
 
       FirewallToIpPermission fwToPerm = new FirewallToIpPermission();
 

@@ -16,15 +16,10 @@
  */
 package org.jclouds.googlecomputeengine.compute;
 
-import static com.google.common.base.Preconditions.checkNotNull;
-import static java.util.concurrent.TimeUnit.MILLISECONDS;
 import static org.jclouds.compute.config.ComputeServiceProperties.TIMEOUT_NODE_RUNNING;
 import static org.jclouds.compute.config.ComputeServiceProperties.TIMEOUT_NODE_SUSPENDED;
 import static org.jclouds.compute.config.ComputeServiceProperties.TIMEOUT_NODE_TERMINATED;
-import static org.jclouds.googlecomputeengine.GoogleComputeEngineConstants.OPERATION_COMPLETE_INTERVAL;
-import static org.jclouds.googlecomputeengine.GoogleComputeEngineConstants.OPERATION_COMPLETE_TIMEOUT;
 import static org.jclouds.googlecomputeengine.internal.ListPages.concat;
-import static org.jclouds.util.Predicates2.retry;
 
 import java.util.Map;
 import java.util.Set;
@@ -82,9 +77,7 @@ public final class GoogleComputeEngineService extends BaseComputeService {
    private final GroupNamingConvention.Factory namingConvention;
    private final GoogleComputeEngineApi api;
    private final Supplier<String> project;
-   private final Predicate<AtomicReference<Operation>> operationDonePredicate;
-   private final long operationCompleteCheckInterval;
-   private final long operationCompleteCheckTimeout;
+   private final Predicate<AtomicReference<Operation>> operationDone;
 
    @Inject GoogleComputeEngineService(ComputeServiceContext context,
                                         Map<String, Credentials> credentialStore,
@@ -119,24 +112,17 @@ public final class GoogleComputeEngineService extends BaseComputeService {
                                         GroupNamingConvention.Factory namingConvention,
                                         GoogleComputeEngineApi api,
                                         @UserProject Supplier<String> project,
-                                        @Named("global") Predicate<AtomicReference<Operation>> operationDonePredicate,
-                                        @Named(OPERATION_COMPLETE_INTERVAL) Long operationCompleteCheckInterval,
-                                        @Named(OPERATION_COMPLETE_TIMEOUT) Long operationCompleteCheckTimeout) {
-
+                                        Predicate<AtomicReference<Operation>> operationDone) {
       super(context, credentialStore, images, hardwareProfiles, locations, listNodesStrategy, getImageStrategy,
               getNodeMetadataStrategy, runNodesAndAddToSetStrategy, rebootNodeStrategy, destroyNodeStrategy,
               resumeNodeStrategy, suspendNodeStrategy, templateBuilderProvider, templateOptionsProvider, nodeRunning,
               nodeTerminated, nodeSuspended, initScriptRunnerFactory, initAdminAccess, runScriptOnNodeFactory,
               persistNodeCredentials, timeouts, userExecutor, imageExtension, securityGroupExtension);
-      this.findOrphanedGroups = checkNotNull(findOrphanedGroups, "find orphaned groups function");
-      this.namingConvention = checkNotNull(namingConvention, "naming convention factory");
-      this.api = checkNotNull(api, "google compute api");
-      this.project = checkNotNull(project, "user project name");
-      this.operationDonePredicate = checkNotNull(operationDonePredicate, "operation completed predicate");
-      this.operationCompleteCheckInterval = checkNotNull(operationCompleteCheckInterval,
-              "operation completed check interval");
-      this.operationCompleteCheckTimeout = checkNotNull(operationCompleteCheckTimeout,
-              "operation completed check timeout");
+      this.findOrphanedGroups = findOrphanedGroups;
+      this.namingConvention = namingConvention;
+      this.api = api;
+      this.project = project;
+      this.operationDone = operationDone;
    }
 
    @Override
@@ -157,8 +143,7 @@ public final class GoogleComputeEngineService extends BaseComputeService {
             continue;
          }
          AtomicReference<Operation> operation = Atomics.newReference(firewallApi.delete(firewall.name()));
-         retry(operationDonePredicate, operationCompleteCheckTimeout, operationCompleteCheckInterval,
-                 MILLISECONDS).apply(operation);
+         operationDone.apply(operation);
 
          if (operation.get().httpErrorStatusCode() != null) {
             logger.warn("delete orphaned firewall %s failed. Http Error Code: %d HttpError: %s",
@@ -170,8 +155,7 @@ public final class GoogleComputeEngineService extends BaseComputeService {
       AtomicReference<Operation> operation = Atomics
             .newReference(api.getNetworkApi(project.get()).delete(resourceName));
 
-      retry(operationDonePredicate, operationCompleteCheckTimeout, operationCompleteCheckInterval, MILLISECONDS)
-            .apply(operation);
+      operationDone.apply(operation);
 
       if (operation.get().httpErrorStatusCode() != null) {
          logger.warn("delete orphaned network failed. Http Error Code: " + operation.get().httpErrorStatusCode() +
