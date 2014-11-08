@@ -1,7 +1,7 @@
 {
  "kind": "compute#targetPoolList",
- "selfLink": "https://content.googleapis.com/compute/v1/projects/myproject/regions/us-central1/targetPools",
- "id": "projects/myproject/regions/us-central1/targetPools",
+ "selfLink": "https://content.googleapis.com/compute/v1/projects/party/regions/us-central1/targetPools",
+ "id": "projects/party/regions/us-central1/targetPools",
  "items": [
   {
 
@@ -9,9 +9,9 @@
    "id": "5199309593612841404",
    "creationTimestamp": "2014-01-07T05:25:27.783-08:00",
    "name": "test-targetpool",
-   "region": "https://www.googleapis.com/compute/v1/projects/myproject/regions/us-central1",
+   "region": "https://www.googleapis.com/compute/v1/projects/party/regions/us-central1",
    "sessionAffinity": "NONE",
-   "selfLink": "https://www.googleapis.com/compute/v1/projects/myproject/regions/us-central1/targetPools/test-targetpool"
+   "selfLink": "https://www.googleapis.com/compute/v1/projects/party/regions/us-central1/targetPools/test-targetpool"
   }
  ]
 }

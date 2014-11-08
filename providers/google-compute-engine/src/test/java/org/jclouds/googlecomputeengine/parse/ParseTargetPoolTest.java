@@ -38,10 +38,10 @@ public class ParseTargetPoolTest extends BaseGoogleComputeEngineParseTest<Target
    public TargetPool expected() {
       return TargetPool.create( //
             "5199309593612841404", // id
-            URI.create(BASE_URL + "/myproject/regions/us-central1/targetPools/test-targetpool"), // selfLink
+            URI.create(BASE_URL + "/party/regions/us-central1/targetPools/test-targetpool"), // selfLink
             "test-targetpool", // name
             null, // description
-            URI.create(BASE_URL + "/myproject/regions/us-central1"), // region
+            URI.create(BASE_URL + "/party/regions/us-central1"), // region
             null, // healthChecks
             null, // instances
             SessionAffinityValue.NONE, // sessionAffinity

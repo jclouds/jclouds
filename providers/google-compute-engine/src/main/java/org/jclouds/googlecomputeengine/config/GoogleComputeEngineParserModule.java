@@ -19,6 +19,7 @@ package org.jclouds.googlecomputeengine.config;
 import static org.jclouds.googlecomputeengine.domain.Firewall.Rule;
 
 import java.io.IOException;
+import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.Map;
 import java.util.Set;
@@ -26,12 +27,12 @@ import java.util.Set;
 import javax.inject.Singleton;
 
 import org.jclouds.googlecomputeengine.domain.Firewall;
-import org.jclouds.googlecomputeengine.domain.Metadata;
-import org.jclouds.googlecomputeengine.domain.templates.InstanceTemplate;
+import org.jclouds.googlecomputeengine.domain.ListPage;
 import org.jclouds.googlecomputeengine.options.FirewallOptions;
 import org.jclouds.googlecomputeengine.options.RouteOptions;
 import org.jclouds.json.config.GsonModule;
 
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import com.google.gson.Gson;
@@ -45,6 +46,7 @@ import com.google.gson.TypeAdapter;
 import com.google.gson.TypeAdapterFactory;
 import com.google.gson.reflect.TypeToken;
 import com.google.gson.stream.JsonReader;
+import com.google.gson.stream.JsonToken;
 import com.google.gson.stream.JsonWriter;
 import com.google.inject.AbstractModule;
 import com.google.inject.Provides;
@@ -57,119 +59,13 @@ public final class GoogleComputeEngineParserModule extends AbstractModule {
 
    @Provides @Singleton Map<Type, Object> typeAdapters() {
       return new ImmutableMap.Builder<Type, Object>()
-            .put(InstanceTemplate.class, new InstanceTemplateTypeAdapter())
             .put(FirewallOptions.class, new FirewallOptionsTypeAdapter())
             .put(RouteOptions.class, new RouteOptionsTypeAdapter()).build();
    }
 
    // TODO: change jclouds core to use collaborative set bindings
    @Provides @Singleton Set<TypeAdapterFactory> typeAdapterFactories() {
-      return ImmutableSet.<TypeAdapterFactory>of(new MetadataTypeAdapter());
-   }
-
-   private static final class InstanceTemplateTypeAdapter implements JsonSerializer<InstanceTemplate> {
-
-      @Override public JsonElement serialize(InstanceTemplate src, Type typeOfSrc, JsonSerializationContext context) {
-         InstanceTemplateInternal template = new InstanceTemplateInternal(src);
-         JsonObject instance = (JsonObject) context.serialize(template, InstanceTemplateInternal.class);
-
-         // deal with network
-         JsonArray networkInterfaces = new JsonArray();
-         for (InstanceTemplate.NetworkInterface networkInterface : template.networkInterfaces()) {
-            networkInterfaces.add(context.serialize(networkInterface, InstanceTemplate.NetworkInterface.class));
-         }
-         instance.add("networkInterfaces", networkInterfaces);
-
-         // deal with persistent disks
-         if (!src.disks().isEmpty()) {
-            instance.add("disks", context.serialize(src.disks()));
-         }
-
-         // deal with metadata
-         if (!src.metadata().isEmpty()) {
-            Metadata metadata = Metadata.create(null, src.metadata());
-            JsonObject metadataJson = (JsonObject) context.serialize(metadata);
-            instance.add("metadata", metadataJson);
-            return instance;
-         }
-
-         return instance;
-      }
-
-      private static final class InstanceTemplateInternal extends InstanceTemplate {
-         private InstanceTemplateInternal(InstanceTemplate template) {
-            machineType(template.machineType());
-            name(template.name());
-            description(template.description());
-            image(template.image());
-            serviceAccounts(template.serviceAccounts());
-            networkInterfaces(template.networkInterfaces());
-         }
-      }
-   }
-
-   private static final class MetadataTypeAdapter extends TypeAdapter<Metadata> implements TypeAdapterFactory {
-
-      @Override public void write(JsonWriter out, Metadata src) throws IOException {
-         out.beginObject();
-         out.name("kind").value("compute#metadata");
-         out.name("items");
-         out.beginArray();
-         for (Map.Entry<String, String> entry : src.items().entrySet()) {
-            out.beginObject();
-            out.name("key").value(entry.getKey());
-            out.name("value").value(entry.getValue());
-            out.endObject();
-         }
-         out.endArray();
-         if (src.fingerprint() != null) {
-            out.name("fingerprint").value(src.fingerprint());
-         }
-         out.endObject();
-      }
-
-      @Override public Metadata read(JsonReader in) throws IOException {
-         String fingerprint = null;
-         ImmutableMap.Builder<String, String> builder = ImmutableMap.builder();
-         in.beginObject();
-         while (in.hasNext()) {
-            String name = in.nextName();
-            if (name.equals("items")) {
-               in.beginArray();
-               while (in.hasNext()) {
-                  in.beginObject();
-                  String key = null;
-                  String value = null;
-                  while (in.hasNext()) {
-                     name = in.nextName();
-                     if (name.equals("key")) {
-                        key = in.nextString();
-                     } else if (name.equals("value")) {
-                        value = in.nextString();
-                     } else {
-                        in.skipValue();
-                     }
-                  }
-                  builder.put(key, value);
-                  in.endObject();
-               }
-               in.endArray();
-            } else if (name.equals("fingerprint")) {
-               fingerprint = in.nextString();
-            } else {
-               in.skipValue();
-            }
-         }
-         in.endObject();
-         return Metadata.create(fingerprint, builder.build());
-      }
-
-      @Override public <T> TypeAdapter<T> create(Gson gson, TypeToken<T> typeToken) {
-         if (!(Metadata.class.isAssignableFrom(typeToken.getRawType()))) {
-            return null;
-         }
-         return (TypeAdapter<T>) this;
-      }
+      return ImmutableSet.<TypeAdapterFactory>of(new ListPageAdapterFactory());
    }
 
    private static final class FirewallOptionsTypeAdapter implements JsonSerializer<FirewallOptions> {
@@ -246,5 +142,80 @@ public final class GoogleComputeEngineParserModule extends AbstractModule {
          array.add(new JsonPrimitive(string));
       }
       return array;
+   }
+
+   static final class ListPageAdapterFactory implements TypeAdapterFactory {
+      static final class ListPageAdapter extends TypeAdapter<ListPage<?>> {
+         private final TypeAdapter<?> itemAdapter;
+
+         ListPageAdapter(TypeAdapter<?> itemAdapter) {
+            this.itemAdapter = itemAdapter;
+            nullSafe();
+         }
+
+         public void write(JsonWriter out, ListPage<?> value) throws IOException {
+            throw new UnsupportedOperationException("We only read ListPages!");
+         }
+
+         public ListPage<?> read(JsonReader in) throws IOException {
+            ImmutableList.Builder<Object> items = ImmutableList.builder();
+            String nextPageToken = null;
+            in.beginObject();
+            while (in.hasNext()) {
+               String name = in.nextName();
+               if (name.equals("items")) {
+                  if (in.peek() == JsonToken.BEGIN_ARRAY) {
+                     readItems(in, items);
+                  } else { // aggregated
+                     readAggregate(in, items);
+                  }
+               } else if (name.equals("nextPageToken")) {
+                  nextPageToken = in.nextString();
+               } else {
+                  in.skipValue();
+               }
+            }
+            in.endObject();
+            return ListPage.create(items.build(), nextPageToken);
+         }
+
+         private void readItems(JsonReader in, ImmutableList.Builder<Object> items) throws IOException {
+            in.beginArray();
+            while (in.hasNext()) {
+               Object item = itemAdapter.read(in);
+               if (item != null) {
+                  items.add(item);
+               }
+            }
+            in.endArray();
+         }
+
+         private void readAggregate(JsonReader in, ImmutableList.Builder<Object> items) throws IOException {
+            in.beginObject(); // enter zone name -> type -> items map
+            while (in.hasNext()) {
+               String scope = in.nextName(); // skip zone name
+               in.beginObject(); // enter zone map
+               while (in.hasNext()) {
+                  String resourceTypeOrWarning = in.nextName();
+                  if (!resourceTypeOrWarning.equals("warning")) {
+                     readItems(in, items);
+                  } else {
+                     in.skipValue();
+                  }
+               }
+               in.endObject(); // end zone map
+            }
+            in.endObject(); // end item wrapper
+         }
+      }
+
+      @SuppressWarnings("unchecked") public <T> TypeAdapter<T> create(Gson gson, TypeToken<T> ownerType) {
+         Type type = ownerType.getType();
+         if (ownerType.getRawType() != ListPage.class || !(type instanceof ParameterizedType))
+            return null;
+         Type elementType = ((ParameterizedType) type).getActualTypeArguments()[0];
+         TypeAdapter<?> itemAdapter = gson.getAdapter(TypeToken.get(elementType));
+         return (TypeAdapter<T>) new ListPageAdapter(itemAdapter);
+      }
    }
 }

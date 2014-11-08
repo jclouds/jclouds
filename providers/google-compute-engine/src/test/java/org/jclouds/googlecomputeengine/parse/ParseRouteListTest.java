@@ -41,17 +41,17 @@ public class ParseRouteListTest extends BaseGoogleComputeEngineParseTest<ListPag
       Route route1 = new ParseRouteTest().expected();
       Route route2 = Route.create( //
             "507025480040058551", // id
-            URI.create(BASE_URL + "/myproject/global/routes/default-route-fc92a41ecb5a8d17"), // selfLink
+            URI.create(BASE_URL + "/party/global/routes/default-route-fc92a41ecb5a8d17"), // selfLink
             "default-route-fc92a41ecb5a8d17", // name
             "Default route to the Internet.", // description
-            URI.create(BASE_URL + "/myproject/global/networks/default"), // network
+            URI.create(BASE_URL + "/party/global/networks/default"), // network
             null, // tags
             "0.0.0.0/0", // destRange
             1000, // priority
             null, // nextHopInstance
             null, // nextHopIp
             null, // nextHopNetwork
-            URI.create(BASE_URL + "/myproject/global/gateways/default-internet-gateway"), // nextHopGateway
+            URI.create(BASE_URL + "/party/global/gateways/default-internet-gateway"), // nextHopGateway
             null // warnings
       );
       return ListPage.create( //

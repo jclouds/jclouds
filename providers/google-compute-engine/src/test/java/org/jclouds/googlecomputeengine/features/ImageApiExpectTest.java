@@ -22,7 +22,8 @@ import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertFalse;
 import static org.testng.AssertJUnit.assertNull;
 
-import org.jclouds.googlecomputeengine.internal.BaseGoogleComputeEngineApiExpectTest;
+import org.jclouds.googlecomputeengine.GoogleComputeEngineApi;
+import org.jclouds.googlecomputeengine.internal.BaseGoogleComputeEngineExpectTest;
 import org.jclouds.googlecomputeengine.parse.ParseImageListTest;
 import org.jclouds.googlecomputeengine.parse.ParseImageTest;
 import org.jclouds.googlecomputeengine.parse.ParseOperationTest;
@@ -32,12 +33,12 @@ import org.jclouds.rest.ResourceNotFoundException;
 import org.testng.annotations.Test;
 
 @Test(groups = "unit", testName = "ImageApiExpectTest")
-public class ImageApiExpectTest extends BaseGoogleComputeEngineApiExpectTest {
+public class ImageApiExpectTest extends BaseGoogleComputeEngineExpectTest<GoogleComputeEngineApi> {
 
    public static final HttpRequest LIST_PROJECT_IMAGES_REQUEST = HttpRequest
            .builder()
            .method("GET")
-           .endpoint(BASE_URL + "/myproject/global/images")
+           .endpoint(BASE_URL + "/party/global/images")
            .addHeader("Accept", "application/json")
            .addHeader("Authorization", "Bearer " + TOKEN).build();
 
@@ -103,7 +104,7 @@ public class ImageApiExpectTest extends BaseGoogleComputeEngineApiExpectTest {
       HttpRequest delete = HttpRequest
               .builder()
               .method("DELETE")
-              .endpoint(BASE_URL + "/myproject/global/images/centos-6-2-v20120326")
+              .endpoint(BASE_URL + "/party/global/images/centos-6-2-v20120326")
               .addHeader("Accept", "application/json")
               .addHeader("Authorization", "Bearer " + TOKEN).build();
 
@@ -111,7 +112,7 @@ public class ImageApiExpectTest extends BaseGoogleComputeEngineApiExpectTest {
               .payload(payloadFromResource("/operation.json")).build();
 
       ImageApi imageApi = requestsSendResponses(requestForScopes(COMPUTE_SCOPE),
-              TOKEN_RESPONSE, delete, deleteResponse).getImageApi("myproject");
+              TOKEN_RESPONSE, delete, deleteResponse).getImageApi("party");
 
       assertEquals(imageApi.delete("centos-6-2-v20120326"),
               new ParseOperationTest().expected());
@@ -121,14 +122,14 @@ public class ImageApiExpectTest extends BaseGoogleComputeEngineApiExpectTest {
       HttpRequest delete = HttpRequest
               .builder()
               .method("DELETE")
-              .endpoint(BASE_URL + "/myproject/global/images/centos-6-2-v20120326")
+              .endpoint(BASE_URL + "/party/global/images/centos-6-2-v20120326")
               .addHeader("Accept", "application/json")
               .addHeader("Authorization", "Bearer " + TOKEN).build();
 
       HttpResponse deleteResponse = HttpResponse.builder().statusCode(404).build();
 
       ImageApi imageApi = requestsSendResponses(requestForScopes(COMPUTE_SCOPE),
-              TOKEN_RESPONSE, delete, deleteResponse).getImageApi("myproject");
+              TOKEN_RESPONSE, delete, deleteResponse).getImageApi("party");
 
       assertNull(imageApi.delete("centos-6-2-v20120326"));
    }
@@ -137,7 +138,7 @@ public class ImageApiExpectTest extends BaseGoogleComputeEngineApiExpectTest {
 
       ImageApi imageApi = requestsSendResponses(requestForScopes(COMPUTE_READONLY_SCOPE),
               TOKEN_RESPONSE, LIST_PROJECT_IMAGES_REQUEST, LIST_PROJECT_IMAGES_RESPONSE).getImageApi
-              ("myproject");
+              ("party");
 
       assertEquals(imageApi.list().next().toString(), new ParseImageListTest().expected().toString());
    }
@@ -147,7 +148,7 @@ public class ImageApiExpectTest extends BaseGoogleComputeEngineApiExpectTest {
       HttpResponse operationResponse = HttpResponse.builder().statusCode(404).build();
 
       ImageApi imageApi = requestsSendResponses(requestForScopes(COMPUTE_READONLY_SCOPE),
-              TOKEN_RESPONSE, LIST_PROJECT_IMAGES_REQUEST, operationResponse).getImageApi("myproject");
+              TOKEN_RESPONSE, LIST_PROJECT_IMAGES_REQUEST, operationResponse).getImageApi("party");
 
       assertFalse(imageApi.list().hasNext());
    }
@@ -156,7 +157,7 @@ public class ImageApiExpectTest extends BaseGoogleComputeEngineApiExpectTest {
       HttpRequest createImage = HttpRequest
             .builder()
             .method("POST")
-            .endpoint(BASE_URL + "/myproject/global/images")
+            .endpoint(BASE_URL + "/party/global/images")
             .addHeader("Accept", "application/json")
             .addHeader("Authorization", "Bearer " + TOKEN)
             .payload(payloadFromResource("/image_insert_from_pd.json"))
@@ -166,9 +167,9 @@ public class ImageApiExpectTest extends BaseGoogleComputeEngineApiExpectTest {
                                   .payload(payloadFromResource("/operation.json")).build();
 
       ImageApi imageApi = requestsSendResponses(requestForScopes(COMPUTE_SCOPE),
-            TOKEN_RESPONSE, createImage, createImageResponse).getImageApi("myproject");
+            TOKEN_RESPONSE, createImage, createImageResponse).getImageApi("party");
 
-      assertEquals(imageApi.createFromDisk("my-image", BASE_URL + "/myproject/zones/us-central1-a/disks/mydisk"),
+      assertEquals(imageApi.createFromDisk("my-image", BASE_URL + "/party/zones/us-central1-a/disks/mydisk"),
             new ParseOperationTest().expected());
    }
 
@@ -177,7 +178,7 @@ public class ImageApiExpectTest extends BaseGoogleComputeEngineApiExpectTest {
       HttpRequest createImage = HttpRequest
             .builder()
             .method("POST")
-            .endpoint(BASE_URL + "/myproject/global/images")
+            .endpoint(BASE_URL + "/party/global/images")
             .addHeader("Accept", "application/json")
             .addHeader("Authorization", "Bearer " + TOKEN)
             .payload(payloadFromResource("/image_insert_from_pd.json"))
@@ -186,8 +187,8 @@ public class ImageApiExpectTest extends BaseGoogleComputeEngineApiExpectTest {
       HttpResponse createImageResponse = HttpResponse.builder().statusCode(404).build();
 
       ImageApi imageApi = requestsSendResponses(requestForScopes(COMPUTE_SCOPE),
-              TOKEN_RESPONSE, createImage, createImageResponse).getImageApi("myproject");
+              TOKEN_RESPONSE, createImage, createImageResponse).getImageApi("party");
 
-      imageApi.createFromDisk("my-image", BASE_URL + "/myproject/zones/us-central1-a/disks/mydisk");
+      imageApi.createFromDisk("my-image", BASE_URL + "/party/zones/us-central1-a/disks/mydisk");
    }
 }

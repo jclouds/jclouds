@@ -47,14 +47,14 @@ public class NetworkToSecurityGroupTest {
 
    @Test
    public void testApply() {
-      Supplier<String> projectSupplier = Suppliers.ofInstance("myproject");
+      Supplier<String> projectSupplier = Suppliers.ofInstance("party");
 
       FirewallToIpPermission fwToPerm = new FirewallToIpPermission();
 
       GoogleComputeEngineApi api = createMock(GoogleComputeEngineApi.class);
       FirewallApi fwApi = createMock(FirewallApi.class);
 
-      ListOptions options = filter("network eq .*/jclouds-test");
+      ListOptions options = filter("network eq .*/party-test");
       expect(api.getFirewallApi(projectSupplier.get()))
               .andReturn(fwApi);
       expect(fwApi.list(options)).andReturn(
@@ -64,8 +64,8 @@ public class NetworkToSecurityGroupTest {
 
       Network network = Network.create( //
             "abcd", // id
-            URI.create("https://www.googleapis.com/compute/v1/projects/myproject/global/networks/jclouds-test"),
-            "jclouds-test", // name
+            URI.create("https://www.googleapis.com/compute/v1/projects/party/global/networks/party-test"),
+            "party-test", // name
             "some description", // description
             "0.0.0.0/0", // rangeIPv4
             "1.2.3.4" // gatewayIPv4
@@ -75,8 +75,8 @@ public class NetworkToSecurityGroupTest {
 
       SecurityGroup group = netToSg.apply(network);
 
-      assertEquals(group.getId(), "jclouds-test");
-      assertEquals(group.getUri(), URI.create("https://www.googleapis.com/compute/v1/projects/myproject/global/networks/jclouds-test"));
+      assertEquals(group.getId(), "party-test");
+      assertEquals(group.getUri(), URI.create("https://www.googleapis.com/compute/v1/projects/party/global/networks/party-test"));
       assertEquals(group.getIpPermissions().size(), 3);
       assertTrue(Iterables.any(group.getIpPermissions(), Predicates.and(hasProtocol(IpProtocol.TCP),
               hasStartAndEndPort(1, 10))), "No permission found for TCP, ports 1-10");

@@ -55,10 +55,10 @@ public class FirewallToIpPermissionTest {
       String baseUrl = "https://www.googleapis.com/compute/v1/projects";
       return Firewall.create( //
             "abcd", // id
-            URI.create(baseUrl + "/myproject/global/firewalls/jclouds-test"), // selfLink
+            URI.create(baseUrl + "/jclouds/global/firewalls/jclouds-test"), // selfLink
             "jclouds-test", // name
             null, // description
-            URI.create(baseUrl + "/myproject/global/networks/jclouds-test"), // network
+            URI.create(baseUrl + "/jclouds/global/networks/jclouds-test"), // network
             ImmutableList.of("0.0.0.0/0"), // sourceRanges
             null, // sourceTags
             null, // targetTags

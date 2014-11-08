@@ -16,14 +16,15 @@
  */
 package org.jclouds.googlecomputeengine.features;
 
+import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
+import static org.jclouds.googlecomputeengine.GoogleComputeEngineConstants.COMPUTE_READONLY_SCOPE;
+import static org.jclouds.googlecomputeengine.GoogleComputeEngineConstants.COMPUTE_SCOPE;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNull;
 
-import javax.ws.rs.core.MediaType;
-
-import org.jclouds.googlecomputeengine.GoogleComputeEngineConstants;
+import org.jclouds.googlecomputeengine.GoogleComputeEngineApi;
 import org.jclouds.googlecomputeengine.domain.Metadata;
-import org.jclouds.googlecomputeengine.internal.BaseGoogleComputeEngineApiExpectTest;
+import org.jclouds.googlecomputeengine.internal.BaseGoogleComputeEngineExpectTest;
 import org.jclouds.googlecomputeengine.parse.ParseGlobalOperationTest;
 import org.jclouds.googlecomputeengine.parse.ParseMetadataTest;
 import org.jclouds.googlecomputeengine.parse.ParseProjectTest;
@@ -32,64 +33,59 @@ import org.jclouds.http.HttpResponse;
 import org.testng.annotations.Test;
 
 @Test(groups = "unit", testName = "ProjectApiExpectTest")
-public class ProjectApiExpectTest extends BaseGoogleComputeEngineApiExpectTest {
-
-   public static final String PROJECTS_URL_PREFIX = BASE_URL + "";
+public class ProjectApiExpectTest extends BaseGoogleComputeEngineExpectTest<GoogleComputeEngineApi> {
 
    public static final HttpRequest GET_PROJECT_REQUEST = HttpRequest
            .builder()
            .method("GET")
-           .endpoint(PROJECTS_URL_PREFIX + "/myproject")
-           .addHeader("Accept", "application/json")
+           .endpoint(BASE_URL + "/party")
+           .addHeader("Accept", APPLICATION_JSON)
            .addHeader("Authorization", "Bearer " + TOKEN).build();
 
    public static final HttpResponse GET_PROJECT_RESPONSE = HttpResponse.builder().statusCode(200)
            .payload(staticPayloadFromResource("/project.json")).build();
 
    public void testGetProjectResponseIs2xx() throws Exception {
-      ProjectApi api = requestsSendResponses(requestForScopes(GoogleComputeEngineConstants.COMPUTE_READONLY_SCOPE),
-              TOKEN_RESPONSE, GET_PROJECT_REQUEST,
-              GET_PROJECT_RESPONSE).getProjectApi();
+      ProjectApi api = requestsSendResponses(requestForScopes(COMPUTE_READONLY_SCOPE), TOKEN_RESPONSE,
+            GET_PROJECT_REQUEST, GET_PROJECT_RESPONSE).getProjectApi();
 
-      assertEquals(api.get("myproject"), new ParseProjectTest().expected());
+      assertEquals(api.get("party"), new ParseProjectTest().expected());
    }
 
    public void testGetProjectResponseIs4xx() throws Exception {
       HttpRequest getProjectRequest = HttpRequest
               .builder()
               .method("GET")
-              .endpoint(PROJECTS_URL_PREFIX + "/myproject")
-              .addHeader("Accept", "application/json")
+              .endpoint(BASE_URL + "/party")
+              .addHeader("Accept", APPLICATION_JSON)
               .addHeader("Authorization", "Bearer " + TOKEN).build();
 
       HttpResponse getProjectResponse = HttpResponse.builder().statusCode(404).build();
 
-      ProjectApi api = requestsSendResponses(requestForScopes(GoogleComputeEngineConstants.COMPUTE_READONLY_SCOPE),
-              TOKEN_RESPONSE, getProjectRequest,
-              getProjectResponse).getProjectApi();
+      ProjectApi api = requestsSendResponses(requestForScopes(COMPUTE_READONLY_SCOPE), TOKEN_RESPONSE,
+            getProjectRequest, getProjectResponse).getProjectApi();
 
-      assertNull(api.get("myproject"));
+      assertNull(api.get("party"));
    }
 
    public void testSetCommonInstanceMetadata() {
       HttpRequest setMetadata = HttpRequest
               .builder()
               .method("POST")
-              .endpoint(PROJECTS_URL_PREFIX + "/myproject/setCommonInstanceMetadata")
-              .addHeader("Accept", "application/json")
+              .endpoint(BASE_URL + "/party/setCommonInstanceMetadata")
+              .addHeader("Accept", APPLICATION_JSON)
               .addHeader("Authorization", "Bearer " + TOKEN)
-              .payload(payloadFromResourceWithContentType("/metadata.json", MediaType.APPLICATION_JSON))
+              .payload(payloadFromResourceWithContentType("/metadata.json", APPLICATION_JSON))
               .build();
 
       HttpResponse setMetadataResponse = HttpResponse.builder().statusCode(200)
               .payload(payloadFromResource("/global_operation.json")).build();
 
-      ProjectApi api = requestsSendResponses(requestForScopes(GoogleComputeEngineConstants.COMPUTE_SCOPE),
-              TOKEN_RESPONSE, setMetadata,
-              setMetadataResponse).getProjectApi();
+      ProjectApi api = requestsSendResponses(requestForScopes(COMPUTE_SCOPE), TOKEN_RESPONSE, setMetadata,
+            setMetadataResponse).getProjectApi();
+
       Metadata expected = new ParseMetadataTest().expected();
-      assertEquals(api.setCommonInstanceMetadata("myproject", expected.items(), expected.fingerprint()),
-              new ParseGlobalOperationTest().expected());
+      assertEquals(api.setCommonInstanceMetadata("party", expected), new ParseGlobalOperationTest().expected());
    }
 
 }

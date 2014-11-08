@@ -19,6 +19,7 @@ package org.jclouds.googlecomputeengine.compute.strategy;
 import static com.google.common.base.Preconditions.checkState;
 import static com.google.common.collect.ImmutableList.of;
 
+import java.net.URI;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -118,9 +119,7 @@ public final class CreateNodesWithGroupEncodedIntoNameThenAddToSet extends
     * Try and find a network either previously created by jclouds or user defined.
     */
    private Network getOrCreateNetwork(GoogleComputeEngineTemplateOptions templateOptions, String sharedResourceName) {
-
-      String networkName = templateOptions.getNetworkName().or(sharedResourceName);
-
+      String networkName = templateOptions.network() != null ? toName(templateOptions.network()) : sharedResourceName;
       return networkMap.apply(NetworkAndAddressRange.create(networkName, DEFAULT_INTERNAL_NETWORK_RANGE, null));
    }
 
@@ -165,5 +164,10 @@ public final class CreateNodesWithGroupEncodedIntoNameThenAddToSet extends
          checkState(operation.get().httpErrorStatusCode() == null, "Could not insert firewall, operation failed %s",
                operation);
       }
+   }
+
+   private static String toName(URI link) {
+      String path = link.getPath();
+      return path.substring(path.lastIndexOf('/') + 1);
    }
 }

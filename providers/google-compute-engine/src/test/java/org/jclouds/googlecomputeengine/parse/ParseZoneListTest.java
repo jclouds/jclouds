@@ -42,7 +42,7 @@ public class ParseZoneListTest extends BaseGoogleComputeEngineParseTest<ListPage
       Zone zone1 = new ParseZoneTest().expected();
       Zone zone2 = Zone.create( //
             "13024414164050619686", // id
-            URI.create(BASE_URL + "/myproject/zones/us-central1-b"), // selfLink
+            URI.create(BASE_URL + "/party/zones/us-central1-b"), // selfLink
             "us-central1-b", // name
             "us-central1-b", // description
             Zone.Status.UP, // status

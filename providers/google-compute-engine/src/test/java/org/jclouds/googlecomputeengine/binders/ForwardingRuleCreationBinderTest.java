@@ -38,8 +38,7 @@ public class ForwardingRuleCreationBinderTest extends BaseGoogleComputeEngineExp
    private static String DESCRIPTION = "This is a test!";
    private static String IP_ADDRESS = "1.2.1.1.1";
    private static String PORT_RANGE = "1.2.3.4.1";
-   private static URI TARGET = URI.create("https://www.googleapis.com/compute/v1/projects/myproject/regions/"
-                                        + "europe-west1/targetPools/test-target-pool");
+   private static URI TARGET = URI.create(BASE_URL + "/party/regions/europe-west1/targetPools/test-target-pool");
 
    Json json = new GsonWrapper(new Gson());
 

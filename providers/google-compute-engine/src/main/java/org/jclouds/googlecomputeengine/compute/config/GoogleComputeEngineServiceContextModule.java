@@ -47,21 +47,18 @@ import org.jclouds.compute.strategy.PrioritizeCredentialsFromTemplate;
 import org.jclouds.domain.Location;
 import org.jclouds.googlecomputeengine.compute.GoogleComputeEngineService;
 import org.jclouds.googlecomputeengine.compute.GoogleComputeEngineServiceAdapter;
-import org.jclouds.googlecomputeengine.compute.domain.InstanceInZone;
-import org.jclouds.googlecomputeengine.compute.domain.MachineTypeInZone;
 import org.jclouds.googlecomputeengine.compute.domain.NetworkAndAddressRange;
 import org.jclouds.googlecomputeengine.compute.extensions.GoogleComputeEngineSecurityGroupExtension;
-import org.jclouds.googlecomputeengine.compute.functions.BuildInstanceMetadata;
 import org.jclouds.googlecomputeengine.compute.functions.CreateNetworkIfNeeded;
 import org.jclouds.googlecomputeengine.compute.functions.FindNetworkOrCreate;
 import org.jclouds.googlecomputeengine.compute.functions.FirewallTagNamingConvention;
 import org.jclouds.googlecomputeengine.compute.functions.FirewallToIpPermission;
 import org.jclouds.googlecomputeengine.compute.functions.GoogleComputeEngineImageToImage;
-import org.jclouds.googlecomputeengine.compute.functions.InstanceInZoneToNodeMetadata;
-import org.jclouds.googlecomputeengine.compute.functions.MachineTypeInZoneToHardware;
+import org.jclouds.googlecomputeengine.compute.functions.InstanceToNodeMetadata;
+import org.jclouds.googlecomputeengine.compute.functions.MachineTypeToHardware;
 import org.jclouds.googlecomputeengine.compute.functions.NetworkToSecurityGroup;
 import org.jclouds.googlecomputeengine.compute.functions.OrphanedGroupsFromDeadNodes;
-import org.jclouds.googlecomputeengine.compute.functions.ResourceFunctions;
+import org.jclouds.googlecomputeengine.compute.functions.Resources;
 import org.jclouds.googlecomputeengine.compute.options.GoogleComputeEngineTemplateOptions;
 import org.jclouds.googlecomputeengine.compute.predicates.AllNodesInGroupTerminated;
 import org.jclouds.googlecomputeengine.compute.predicates.AtomicInstanceVisible;
@@ -72,8 +69,11 @@ import org.jclouds.googlecomputeengine.compute.strategy.UseNodeCredentialsButOve
 import org.jclouds.googlecomputeengine.domain.Firewall;
 import org.jclouds.googlecomputeengine.domain.Image;
 import org.jclouds.googlecomputeengine.domain.Instance;
+import org.jclouds.googlecomputeengine.domain.MachineType;
 import org.jclouds.googlecomputeengine.domain.Network;
 import org.jclouds.googlecomputeengine.domain.Operation;
+import org.jclouds.location.suppliers.ImplicitLocationSupplier;
+import org.jclouds.location.suppliers.implicit.FirstZone;
 import org.jclouds.net.domain.IpPermission;
 
 import com.google.common.base.Function;
@@ -85,13 +85,14 @@ import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
 import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.Maps;
 import com.google.inject.Injector;
 import com.google.inject.Provides;
 import com.google.inject.Scopes;
 import com.google.inject.TypeLiteral;
 
 public final class GoogleComputeEngineServiceContextModule
-      extends ComputeServiceAdapterContextModule<InstanceInZone, MachineTypeInZone, Image, Location> {
+      extends ComputeServiceAdapterContextModule<Instance, MachineType, Image, Location> {
 
    @Override
    protected void configure() {
@@ -99,17 +100,21 @@ public final class GoogleComputeEngineServiceContextModule
 
       bind(ComputeService.class).to(GoogleComputeEngineService.class);
 
-      bind(new TypeLiteral<ComputeServiceAdapter<InstanceInZone, MachineTypeInZone, Image, Location>>() {
+      bind(new TypeLiteral<ComputeServiceAdapter<Instance, MachineType, Image, Location>>() {
       }).to(GoogleComputeEngineServiceAdapter.class);
 
+      // Use compute service to supply locations, which are always zones.
+      install(new LocationsFromComputeServiceAdapterModule<Instance, MachineType, Image, Location>() {
+      });
       bind(new TypeLiteral<Function<Location, Location>>() {
       }).toInstance(Functions.<Location>identity());
+      bind(ImplicitLocationSupplier.class).to(FirstZone.class);
 
-      bind(new TypeLiteral<Function<InstanceInZone, NodeMetadata>>() {
-      }).to(InstanceInZoneToNodeMetadata.class);
+      bind(new TypeLiteral<Function<Instance, NodeMetadata>>() {
+      }).to(InstanceToNodeMetadata.class);
 
-      bind(new TypeLiteral<Function<MachineTypeInZone, Hardware>>() {
-      }).to(MachineTypeInZoneToHardware.class);
+      bind(new TypeLiteral<Function<MachineType, Hardware>>() {
+      }).to(MachineTypeToHardware.class);
 
       bind(new TypeLiteral<Function<Image, org.jclouds.compute.domain.Image>>() {
       }).to(GoogleComputeEngineImageToImage.class);
@@ -119,9 +124,6 @@ public final class GoogleComputeEngineServiceContextModule
 
       bind(new TypeLiteral<Function<Network, SecurityGroup>>() {
       }).to(NetworkToSecurityGroup.class);
-
-      bind(new TypeLiteral<Function<TemplateOptions, ImmutableMap.Builder<String, String>>>() {
-      }).to(BuildInstanceMetadata.class);
 
       bind(org.jclouds.compute.strategy.PopulateDefaultLoginCredentialsForImageStrategy.class)
             .to(PopulateDefaultLoginCredentialsForImageStrategy.class);
@@ -148,7 +150,7 @@ public final class GoogleComputeEngineServiceContextModule
       bind(PrioritizeCredentialsFromTemplate.class).to(UseNodeCredentialsButOverrideFromTemplate.class);
       bind(FirewallTagNamingConvention.Factory.class).in(Scopes.SINGLETON);
 
-      bindHttpApi(binder(), ResourceFunctions.class);
+      bindHttpApi(binder(), Resources.class);
    }
 
    // TODO: these timeouts need thinking through.
@@ -162,18 +164,8 @@ public final class GoogleComputeEngineServiceContextModule
       return retry(input, timeout, interval, MILLISECONDS);
    }
 
-   @Provides @Singleton @Memoized Supplier<Map<URI, org.jclouds.compute.domain.Image>> imageByUri(
-         @Memoized final Supplier<Set<? extends org.jclouds.compute.domain.Image>> imageSupplier,
-         @Named(PROPERTY_SESSION_INTERVAL) long seconds) {
-      return memoizeWithExpiration(new Supplier<Map<URI, org.jclouds.compute.domain.Image>>() {
-         @Override public Map<URI, org.jclouds.compute.domain.Image> get() {
-            ImmutableMap.Builder<URI, org.jclouds.compute.domain.Image> result = ImmutableMap.builder();
-            for (org.jclouds.compute.domain.Image image : imageSupplier.get()) {
-               result.put(image.getUri(), image);
-            }
-            return result.build();
-         }
-      }, seconds, SECONDS);
+   @Provides @Singleton Map<URI, URI> diskToSourceImage() {
+      return Maps.newConcurrentMap();
    }
 
    @Provides @Singleton @Memoized Supplier<Map<URI, Hardware>> hardwareByUri(
@@ -191,18 +183,12 @@ public final class GoogleComputeEngineServiceContextModule
    }
 
    @Provides @Singleton @Memoized Supplier<Map<URI, Location>> locationsByUri(
-         @Memoized final Supplier<Set<? extends Location>> locations,
-         @Memoized final Supplier<Map<URI, String>> selfLinkToNames, @Named(PROPERTY_SESSION_INTERVAL) long seconds) {
+         @Memoized final Supplier<Set<? extends Location>> locations, @Named(PROPERTY_SESSION_INTERVAL) long seconds) {
       return memoizeWithExpiration(new Supplier<Map<URI, Location>>() {
          @Override public Map<URI, Location> get() {
             ImmutableMap.Builder<URI, Location> result = ImmutableMap.builder();
             for (Location location : locations.get()) {
-               for (Map.Entry<URI, String> entry : selfLinkToNames.get().entrySet()) {
-                  if (entry.getValue().equals(location.getId())) {
-                     result.put(entry.getKey(), location);
-                     continue;
-                  }
-               }
+               result.put(URI.create(location.getDescription()), location);
             }
             return result.build();
          }

@@ -1,10 +1,1 @@
-{
-    "items": [
-        {
-            "key": "foo",
-            "value": "bar"
-        }
-    ],
-    "fingerprint": "efgh",
-    "kind": "compute#metadata"
-}
+{"fingerprint":"efgh","items":[{"key":"foo","value":"bar"}]}

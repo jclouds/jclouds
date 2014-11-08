@@ -38,7 +38,7 @@ public class ParseHttpHealthCheckTest extends BaseGoogleComputeEngineParseTest<H
    public HttpHealthCheck expected() {
       return HttpHealthCheck.create( //
             "2761502483700014319", // id
-            URI.create(BASE_URL + "/jclouds-gce/global/httpHealthChecks/http-health-check-api-live-test"), // selfLink
+            URI.create(BASE_URL + "/party-gce/global/httpHealthChecks/http-health-check-api-live-test"), // selfLink
             "http-health-check-api-live-test", // name
             null, // description
             null, // host

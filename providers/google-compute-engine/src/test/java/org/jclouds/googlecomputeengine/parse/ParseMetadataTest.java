@@ -24,8 +24,6 @@ import org.jclouds.googlecomputeengine.domain.Metadata;
 import org.jclouds.googlecomputeengine.internal.BaseGoogleComputeEngineParseTest;
 import org.testng.annotations.Test;
 
-import com.google.common.collect.ImmutableMap;
-
 @Test(groups = "unit", testName = "ParseMetadataTest")
 public class ParseMetadataTest extends BaseGoogleComputeEngineParseTest<Metadata> {
 
@@ -36,7 +34,6 @@ public class ParseMetadataTest extends BaseGoogleComputeEngineParseTest<Metadata
 
    @Override @Consumes(APPLICATION_JSON)
    public Metadata expected() {
-      return Metadata.create("efgh",
-            ImmutableMap.<String, String>builder().put("propA", "valueA").put("propB", "valueB").build());
+      return Metadata.create("efgh").put("propA", "valueA").put("propB", "valueB");
    }
 }

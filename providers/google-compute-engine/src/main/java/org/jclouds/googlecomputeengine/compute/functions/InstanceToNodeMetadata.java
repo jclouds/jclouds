@@ -18,9 +18,9 @@ package org.jclouds.googlecomputeengine.compute.functions;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static org.jclouds.compute.util.ComputeServiceUtils.groupFromMapOrName;
-import static org.jclouds.googlecomputeengine.GoogleComputeEngineConstants.GCE_IMAGE_METADATA_KEY;
 
 import java.net.URI;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -28,51 +28,49 @@ import javax.inject.Inject;
 
 import org.jclouds.collect.Memoized;
 import org.jclouds.compute.domain.Hardware;
-import org.jclouds.compute.domain.Image;
 import org.jclouds.compute.domain.NodeMetadata;
 import org.jclouds.compute.domain.NodeMetadataBuilder;
 import org.jclouds.compute.functions.GroupNamingConvention;
 import org.jclouds.domain.Location;
-import org.jclouds.googlecomputeengine.compute.domain.InstanceInZone;
-import org.jclouds.googlecomputeengine.compute.domain.SlashEncodedIds;
 import org.jclouds.googlecomputeengine.domain.Instance;
 
 import com.google.common.base.Function;
-import com.google.common.base.Predicates;
+import com.google.common.base.Predicate;
 import com.google.common.base.Supplier;
-import com.google.common.collect.FluentIterable;
 import com.google.common.collect.ImmutableList;
 
-public final class InstanceInZoneToNodeMetadata implements Function<InstanceInZone, NodeMetadata> {
+public final class InstanceToNodeMetadata implements Function<Instance, NodeMetadata> {
 
    private final Map<Instance.Status, NodeMetadata.Status> toPortableNodeStatus;
    private final GroupNamingConvention nodeNamingConvention;
-   private final Supplier<Map<URI, Image>> images;
+   private final Map<URI, URI> diskToSourceImage;
    private final Supplier<Map<URI, Hardware>> hardwares;
    private final Supplier<Map<URI, Location>> locationsByUri;
    private final FirewallTagNamingConvention.Factory firewallTagNamingConvention;
 
-   @Inject InstanceInZoneToNodeMetadata(Map<Instance.Status, NodeMetadata.Status> toPortableNodeStatus,
-                                        GroupNamingConvention.Factory namingConvention,
-                                        @Memoized Supplier<Map<URI, Image>> images,
-                                        @Memoized Supplier<Map<URI, Hardware>> hardwares,
-                                        @Memoized Supplier<Map<URI, Location>> locationsByUri,
-                                        FirewallTagNamingConvention.Factory firewallTagNamingConvention) {
+   @Inject InstanceToNodeMetadata(Map<Instance.Status, NodeMetadata.Status> toPortableNodeStatus,
+                                  GroupNamingConvention.Factory namingConvention,
+                                  Map<URI, URI> diskToSourceImage,
+                                  @Memoized Supplier<Map<URI, Hardware>> hardwares,
+                                  @Memoized Supplier<Map<URI, Location>> locationsByUri,
+                                  FirewallTagNamingConvention.Factory firewallTagNamingConvention) {
       this.toPortableNodeStatus = toPortableNodeStatus;
       this.nodeNamingConvention = namingConvention.createWithoutPrefix();
-      this.images = images;
+      this.diskToSourceImage = diskToSourceImage;
       this.hardwares = hardwares;
       this.locationsByUri = locationsByUri;
       this.firewallTagNamingConvention = checkNotNull(firewallTagNamingConvention, "firewallTagNamingConvention");
    }
 
-   @Override public NodeMetadata apply(InstanceInZone instanceInZone) {
-      Instance input = instanceInZone.instance();
-
-      String group = groupFromMapOrName(input.metadata().items(), input.name(), nodeNamingConvention);
-      FluentIterable<String> tags = FluentIterable.from(input.tags().items());
+   @Override public NodeMetadata apply(Instance input) {
+      String group = groupFromMapOrName(input.metadata().asMap(), input.name(), nodeNamingConvention);
+      Predicate<String> isFirewallTag = firewallTagNamingConvention.get(group).isFirewallTag();
       if (group != null) {
-         tags = tags.filter(Predicates.not(firewallTagNamingConvention.get(group).isFirewallTag()));
+         for (Iterator<String> tag = input.tags().items().iterator(); tag.hasNext(); ) {
+            if (isFirewallTag.apply(tag.next())) {
+               tag.remove();
+            }
+         }
       }
 
       NodeMetadataBuilder builder = new NodeMetadataBuilder();
@@ -82,35 +80,28 @@ public final class InstanceInZoneToNodeMetadata implements Function<InstanceInZo
          throw new IllegalStateException(
                String.format("zone %s not present in %s", input.zone(), locationsByUri.get().keySet()));
       }
-      builder.id(SlashEncodedIds.from(zone.getId(), input.name()).slashEncode())
-              .name(input.name())
-              .providerId(input.id())
-              .hostname(input.name())
-              .location(zone)
-              .hardware(hardwares.get().get(input.machineType()))
-              .status(toPortableNodeStatus.get(input.status()))
-              .tags(tags)
-              .uri(input.selfLink())
-              .userMetadata(input.metadata().items())
-              .group(group)
-              .privateAddresses(collectPrivateAddresses(input))
-              .publicAddresses(collectPublicAddresses(input));
 
-      if (input.metadata().items().containsKey(GCE_IMAGE_METADATA_KEY)) {
-         try {
-            URI imageUri = URI.create(input.metadata().items().get(GCE_IMAGE_METADATA_KEY));
+      // The boot disk is the first disk. It may have been created from an image, so look it up.
+      //
+      // Note: This will be present if we created the node. In the future we could choose to make diskToSourceImage
+      // a loading cache. That would be more expensive, but could ensure this isn't null.
+      URI bootImage = diskToSourceImage.get(input.disks().get(0).source());
 
-            Map<URI, Image> imagesMap = images.get();
-
-            Image image = checkNotNull(imagesMap.get(imageUri),
-                                       "no image for %s. images: %s", imageUri,
-                                       imagesMap.values());
-            builder.imageId(image.getId());
-         } catch (IllegalArgumentException e) {
-            // Swallow any exception here - it just means we don't actually have a valid image URI, so we skip it.
-         }
-      }
-
+      builder.id(input.selfLink().toString())
+             .providerId(input.id())
+             .name(input.name())
+             .providerId(input.id())
+             .hostname(input.name())
+             .location(zone)
+             .imageId(bootImage != null ? bootImage.toString() : null)
+             .hardware(hardwares.get().get(input.machineType()))
+             .status(toPortableNodeStatus.get(input.status()))
+             .tags(input.tags().items())
+             .uri(input.selfLink())
+             .userMetadata(input.metadata().asMap())
+             .group(group)
+             .privateAddresses(collectPrivateAddresses(input))
+             .publicAddresses(collectPublicAddresses(input));
       return builder.build();
    }
 

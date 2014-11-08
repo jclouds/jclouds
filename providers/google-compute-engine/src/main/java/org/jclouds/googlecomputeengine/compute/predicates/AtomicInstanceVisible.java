@@ -20,16 +20,16 @@ import java.util.concurrent.atomic.AtomicReference;
 
 import javax.inject.Inject;
 
-import org.jclouds.googlecomputeengine.compute.functions.ResourceFunctions;
+import org.jclouds.googlecomputeengine.compute.functions.Resources;
 import org.jclouds.googlecomputeengine.domain.Instance;
 
 import com.google.common.base.Predicate;
 
 public final class AtomicInstanceVisible implements Predicate<AtomicReference<Instance>> {
 
-   private final ResourceFunctions resources;
+   private final Resources resources;
 
-   @Inject AtomicInstanceVisible(ResourceFunctions resources) {
+   @Inject AtomicInstanceVisible(Resources resources) {
       this.resources = resources;
    }
 

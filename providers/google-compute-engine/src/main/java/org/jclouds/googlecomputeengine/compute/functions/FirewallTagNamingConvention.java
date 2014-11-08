@@ -50,7 +50,7 @@ public final class FirewallTagNamingConvention {
       return String.format("%s-port-%s", sharedResourceName, port);
    }
 
-   public Predicate<? super String> isFirewallTag() {
+   public Predicate<String> isFirewallTag() {
       return new Predicate<String>() {
          @Override
          public boolean apply(String input) {

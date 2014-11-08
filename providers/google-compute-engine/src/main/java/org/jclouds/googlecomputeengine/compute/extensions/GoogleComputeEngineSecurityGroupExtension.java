@@ -28,6 +28,7 @@ import static org.jclouds.googlecomputeengine.internal.ListPages.concat;
 import static org.jclouds.googlecomputeengine.options.ListOptions.Builder.filter;
 import static org.jclouds.util.Predicates2.retry;
 
+import java.net.URI;
 import java.util.Collection;
 import java.util.List;
 import java.util.Set;
@@ -42,7 +43,7 @@ import org.jclouds.compute.functions.GroupNamingConvention;
 import org.jclouds.domain.Location;
 import org.jclouds.googlecomputeengine.GoogleComputeEngineApi;
 import org.jclouds.googlecomputeengine.compute.domain.NetworkAndAddressRange;
-import org.jclouds.googlecomputeengine.compute.domain.SlashEncodedIds;
+import org.jclouds.googlecomputeengine.compute.functions.Resources;
 import org.jclouds.googlecomputeengine.config.UserProject;
 import org.jclouds.googlecomputeengine.domain.Firewall;
 import org.jclouds.googlecomputeengine.domain.Instance;
@@ -66,24 +67,27 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Multimap;
 import com.google.common.util.concurrent.Atomics;
 
+/** This implementation sets {@linkplain SecurityGroup#getId()} to {@link Network#name()}. */
 public final class GoogleComputeEngineSecurityGroupExtension implements SecurityGroupExtension {
 
+   private final GoogleComputeEngineApi api;
+   private final Resources resources;
    private final Supplier<String> userProject;
    private final GroupNamingConvention.Factory namingConvention;
    private final LoadingCache<NetworkAndAddressRange, Network> networkCreator;
    private final Function<Network, SecurityGroup> groupConverter;
-   private final GoogleComputeEngineApi api;
    private final Predicate<AtomicReference<Operation>> operationDone;
    private final long operationCompleteCheckInterval;
    private final long operationCompleteCheckTimeout;
 
-   @Inject GoogleComputeEngineSecurityGroupExtension(GoogleComputeEngineApi api,
+   @Inject GoogleComputeEngineSecurityGroupExtension(GoogleComputeEngineApi api, Resources resources,
          @UserProject Supplier<String> userProject, GroupNamingConvention.Factory namingConvention,
          LoadingCache<NetworkAndAddressRange, Network> networkCreator, Function<Network, SecurityGroup> groupConverter,
          Predicate<AtomicReference<Operation>> operationDone,
          @Named(OPERATION_COMPLETE_INTERVAL) Long operationCompleteCheckInterval,
          @Named(OPERATION_COMPLETE_TIMEOUT) Long operationCompleteCheckTimeout) {
       this.api = api;
+      this.resources = resources;
       this.userProject = userProject;
       this.namingConvention = namingConvention;
       this.networkCreator = networkCreator;
@@ -105,9 +109,7 @@ public final class GoogleComputeEngineSecurityGroupExtension implements Security
 
    @Override
    public Set<SecurityGroup> listSecurityGroupsForNode(String id) {
-      SlashEncodedIds zoneAndId = SlashEncodedIds.fromSlashEncoded(id);
-
-      Instance instance = api.getInstanceApi(userProject.get(), zoneAndId.left()).get(zoneAndId.right());
+      Instance instance = resources.instance(URI.create(checkNotNull(id, "id")));
 
       if (instance == null) {
          return ImmutableSet.of();
@@ -116,8 +118,7 @@ public final class GoogleComputeEngineSecurityGroupExtension implements Security
       ImmutableSet.Builder builder = ImmutableSet.builder();
 
       for (NetworkInterface nwInterface : instance.networkInterfaces()) {
-         String networkUrl = nwInterface.network().getPath();
-         Network nw = api.getNetworkApi(userProject.get()).get(networkUrl.substring(networkUrl.lastIndexOf('/') + 1));
+         Network nw = resources.network(nwInterface.network());
 
          SecurityGroup grp = groupForTagsInNetwork(nw, instance.tags().items());
          if (grp != null) {
@@ -239,7 +240,6 @@ public final class GoogleComputeEngineSecurityGroupExtension implements Security
    public SecurityGroup addIpPermission(IpProtocol protocol, int fromPort, int toPort,
          Multimap<String, String> tenantIdGroupNamePairs, Iterable<String> cidrBlocks, Iterable<String> groupIds,
          SecurityGroup group) {
-
       IpPermission.Builder permBuilder = IpPermission.builder();
       permBuilder.ipProtocol(protocol);
       permBuilder.fromPort(fromPort);
@@ -248,7 +248,6 @@ public final class GoogleComputeEngineSecurityGroupExtension implements Security
       permBuilder.cidrBlocks(cidrBlocks);
 
       return addIpPermission(permBuilder.build(), group);
-
    }
 
    @Override

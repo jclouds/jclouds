@@ -23,6 +23,7 @@ import static org.testng.Assert.assertEquals;
 import java.util.Iterator;
 import java.util.List;
 
+import org.jclouds.googlecomputeengine.GoogleComputeEngineApi;
 import org.jclouds.googlecomputeengine.config.GoogleComputeEngineParserModule;
 import org.jclouds.googlecomputeengine.domain.Address;
 import org.jclouds.googlecomputeengine.domain.Image;
@@ -31,7 +32,7 @@ import org.jclouds.googlecomputeengine.domain.ListPage;
 import org.jclouds.googlecomputeengine.features.AddressApi;
 import org.jclouds.googlecomputeengine.features.ImageApi;
 import org.jclouds.googlecomputeengine.features.InstanceApi;
-import org.jclouds.googlecomputeengine.internal.BaseGoogleComputeEngineApiExpectTest;
+import org.jclouds.googlecomputeengine.internal.BaseGoogleComputeEngineExpectTest;
 import org.jclouds.googlecomputeengine.parse.ParseAddressTest;
 import org.jclouds.googlecomputeengine.parse.ParseImageTest;
 import org.jclouds.googlecomputeengine.parse.ParseInstanceTest;
@@ -45,7 +46,7 @@ import com.google.common.collect.ImmutableList;
 import com.google.inject.Guice;
 
 @Test(groups = "unit", testName = "ToIteratorOfListPageTest")
-public class ToIteratorOfListPageExpectTest extends BaseGoogleComputeEngineApiExpectTest {
+public class ToIteratorOfListPageExpectTest extends BaseGoogleComputeEngineExpectTest<GoogleComputeEngineApi> {
 
    private final Json json = Guice.createInjector(new GsonModule(), new GoogleComputeEngineParserModule())
          .getInstance(Json.class);
@@ -54,7 +55,7 @@ public class ToIteratorOfListPageExpectTest extends BaseGoogleComputeEngineApiEx
       HttpRequest list = HttpRequest
               .builder()
               .method("GET")
-              .endpoint(BASE_URL + "/myproject/global/images")
+              .endpoint(BASE_URL + "/party/global/images")
               .addHeader("Accept", "application/json")
               .addHeader("Authorization", "Bearer " + TOKEN).build();
 
@@ -62,7 +63,7 @@ public class ToIteratorOfListPageExpectTest extends BaseGoogleComputeEngineApiEx
               .payload(payloadFromResource("/image_list_single_page.json")).build();
 
       ImageApi imageApi = requestsSendResponses(requestForScopes(COMPUTE_READONLY_SCOPE),
-              TOKEN_RESPONSE, list, operationResponse).getImageApi("myproject");
+              TOKEN_RESPONSE, list, operationResponse).getImageApi("party");
 
       Iterator<ListPage<Image>> images = imageApi.list();
 
@@ -73,15 +74,15 @@ public class ToIteratorOfListPageExpectTest extends BaseGoogleComputeEngineApiEx
       HttpRequest list1 = HttpRequest
               .builder()
               .method("GET")
-              .endpoint(BASE_URL + "/myproject/global/images?maxResults=1")
+              .endpoint(BASE_URL + "/party/global/images?maxResults=1")
               .addHeader("Accept", "application/json")
               .addHeader("Authorization", "Bearer " + TOKEN).build();
 
       HttpRequest list2 = list1.toBuilder()
-               .endpoint(BASE_URL + "/myproject/global/images?pageToken=token1&maxResults=1").build();
+               .endpoint(BASE_URL + "/party/global/images?pageToken=token1&maxResults=1").build();
 
       HttpRequest list3 = list1.toBuilder()
-               .endpoint(BASE_URL + "/myproject/global/images?pageToken=token2&maxResults=1").build();
+               .endpoint(BASE_URL + "/party/global/images?pageToken=token2&maxResults=1").build();
 
       List<Image> items = ImmutableList.of(new ParseImageTest().expected());
 
@@ -96,7 +97,7 @@ public class ToIteratorOfListPageExpectTest extends BaseGoogleComputeEngineApiEx
 
       ImageApi imageApi = orderedRequestsSendResponses(requestForScopes(COMPUTE_READONLY_SCOPE),
               TOKEN_RESPONSE, list1, list1Response, list2, list2Response, list3, list3Response)
-              .getImageApi("myproject");
+              .getImageApi("party");
 
       Iterator<ListPage<Image>> images = imageApi.list(maxResults(1));
 
@@ -111,15 +112,15 @@ public class ToIteratorOfListPageExpectTest extends BaseGoogleComputeEngineApiEx
       HttpRequest list1 = HttpRequest
             .builder()
             .method("GET")
-            .endpoint(BASE_URL + "/myproject/regions/us-central1/addresses?maxResults=1")
+            .endpoint(BASE_URL + "/party/regions/us-central1/addresses?maxResults=1")
             .addHeader("Accept", "application/json")
             .addHeader("Authorization", "Bearer " + TOKEN).build();
 
       HttpRequest list2 = list1.toBuilder()
-            .endpoint(BASE_URL + "/myproject/regions/us-central1/addresses?pageToken=token1&maxResults=1").build();
+            .endpoint(BASE_URL + "/party/regions/us-central1/addresses?pageToken=token1&maxResults=1").build();
 
       HttpRequest list3 = list1.toBuilder()
-            .endpoint(BASE_URL + "/myproject/regions/us-central1/addresses?pageToken=token2&maxResults=1").build();
+            .endpoint(BASE_URL + "/party/regions/us-central1/addresses?pageToken=token2&maxResults=1").build();
 
       List<Address> items = ImmutableList.of(new ParseAddressTest().expected());
 
@@ -134,7 +135,7 @@ public class ToIteratorOfListPageExpectTest extends BaseGoogleComputeEngineApiEx
 
       AddressApi addressApi = orderedRequestsSendResponses(requestForScopes(COMPUTE_READONLY_SCOPE),
             TOKEN_RESPONSE, list1, list1Response, list2, list2Response, list3, list3Response)
-            .getAddressApi("myproject", "us-central1");
+            .getAddressApi("party", "us-central1");
 
       Iterator<ListPage<Address>> addresses = addressApi.list(maxResults(1));
 
@@ -149,15 +150,15 @@ public class ToIteratorOfListPageExpectTest extends BaseGoogleComputeEngineApiEx
       HttpRequest list1 = HttpRequest
             .builder()
             .method("GET")
-            .endpoint(BASE_URL + "/myproject/zones/us-central1-a/instances?maxResults=1")
+            .endpoint(BASE_URL + "/party/zones/us-central1-a/instances?maxResults=1")
             .addHeader("Accept", "application/json")
             .addHeader("Authorization", "Bearer " + TOKEN).build();
 
       HttpRequest list2 = list1.toBuilder()
-            .endpoint(BASE_URL + "/myproject/zones/us-central1-a/instances?pageToken=token1&maxResults=1").build();
+            .endpoint(BASE_URL + "/party/zones/us-central1-a/instances?pageToken=token1&maxResults=1").build();
 
       HttpRequest list3 = list1.toBuilder()
-            .endpoint(BASE_URL + "/myproject/zones/us-central1-a/instances?pageToken=token2&maxResults=1").build();
+            .endpoint(BASE_URL + "/party/zones/us-central1-a/instances?pageToken=token2&maxResults=1").build();
 
       List<Instance> items = ImmutableList.of(new ParseInstanceTest().expected());
 
@@ -172,7 +173,7 @@ public class ToIteratorOfListPageExpectTest extends BaseGoogleComputeEngineApiEx
 
       InstanceApi instanceApi = orderedRequestsSendResponses(requestForScopes(COMPUTE_READONLY_SCOPE),
             TOKEN_RESPONSE, list1, list1Response, list2, list2Response, list3, list3Response)
-            .getInstanceApi("myproject", "us-central1-a");
+            .getInstanceApi("party", "us-central1-a");
 
       Iterator<ListPage<Instance>> instances = instanceApi.list(maxResults(1));
 

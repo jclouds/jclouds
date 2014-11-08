@@ -16,34 +16,22 @@
  */
 package org.jclouds.googlecomputeengine.compute.options;
 
-import static com.google.common.base.Optional.fromNullable;
-import static org.jclouds.googlecomputeengine.domain.Instance.ServiceAccount;
-
 import java.net.URI;
 import java.util.List;
 import java.util.Map;
 
 import org.jclouds.compute.options.TemplateOptions;
 import org.jclouds.domain.LoginCredentials;
-import org.jclouds.googlecomputeengine.domain.Instance;
-import org.jclouds.googlecomputeengine.domain.templates.InstanceTemplate.PersistentDisk;
+import org.jclouds.javax.annotation.Nullable;
 import org.jclouds.scriptbuilder.domain.Statement;
 
-import com.google.common.base.Optional;
-import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 
-/**
- * Instance options specific to Google Compute Engine.
- */
+/** Instance options specific to Google Compute Engine. */
 public final class GoogleComputeEngineTemplateOptions extends TemplateOptions {
 
-   private Optional<URI> network = Optional.absent();
-   private List<Instance.ServiceAccount> serviceAccounts = Lists.newArrayList();
-   private boolean enableNat = true;
-   private List<PersistentDisk> disks = Lists.newArrayList();
-   private Optional<Long> bootDiskSize = Optional.absent();
-   private boolean keepBootDisk = false;
+   private URI network = null;
+   private final List<URI> additionalDisks = Lists.newArrayList();
 
    @Override
    public GoogleComputeEngineTemplateOptions clone() {
@@ -57,89 +45,25 @@ public final class GoogleComputeEngineTemplateOptions extends TemplateOptions {
       super.copyTo(to);
       if (to instanceof GoogleComputeEngineTemplateOptions) {
          GoogleComputeEngineTemplateOptions eTo = GoogleComputeEngineTemplateOptions.class.cast(to);
-         eTo.network(getNetwork().orNull());
-         eTo.serviceAccounts(getServiceAccounts());
-         eTo.enableNat(isEnableNat());
-         eTo.disks(getDisks());
-         eTo.keepBootDisk(shouldKeepBootDisk());
+         eTo.network(network());
       }
    }
 
-   /**
-    * @deprecated See TemplateOptions#networks
-    * @see #getNetworkName()
-    */
-   @Deprecated
-   public GoogleComputeEngineTemplateOptions network(String networkName) {
-      return this.networks(networkName);
-   }
-
-   /**
-    * @see #getNetwork()
-    */
+   /** @see #network()  */
    public GoogleComputeEngineTemplateOptions network(URI network) {
-      this.network = fromNullable(network);
+      this.network = network;
       return this;
    }
 
-   /**
-    * @see #getServiceAccounts()
-    * @see ServiceAccount
-    */
-   public GoogleComputeEngineTemplateOptions addServiceAccount(ServiceAccount serviceAccout) {
-      this.serviceAccounts.add(serviceAccout);
-      return this;
+   /** The network instances will attach to. When absent, a new network will be created for the project. */
+   @Nullable public URI network() {
+      return network;
    }
 
-   /**
-    * @see #getServiceAccounts()
-    * @see ServiceAccount
-    */
-   public GoogleComputeEngineTemplateOptions serviceAccounts(List<ServiceAccount> serviceAccounts) {
-      this.serviceAccounts = Lists.newArrayList(serviceAccounts);
-      return this;
-   }
-
-   /**
-    * @see #getDisks()
-    * @see org.jclouds.googlecomputeengine.domain.templates.InstanceTemplate.PersistentDisk
-    */
-   public GoogleComputeEngineTemplateOptions addDisk(PersistentDisk disk) {
-      this.disks.add(disk);
-      return this;
-   }
-
-   /**
-    * @see #getDisks()
-    * @see org.jclouds.googlecomputeengine.domain.templates.InstanceTemplate.PersistentDisk
-    */
-   public GoogleComputeEngineTemplateOptions disks(List<PersistentDisk> disks) {
-      this.disks = Lists.newArrayList(disks);
-      return this;
-   }
-
-   /**
-    * @see #isEnableNat()
-    */
-   public GoogleComputeEngineTemplateOptions enableNat(boolean enableNat) {
-      this.enableNat = enableNat;
-      return this;
-   }
-
-   /**
-    * @see #getBootDiskSize()
-    */
-   public GoogleComputeEngineTemplateOptions bootDiskSize(Long bootDiskSize) {
-      this.bootDiskSize = fromNullable(bootDiskSize);
-      return this;
-   }
-
-   /**
-    * @see #shouldKeepBootDisk()
-    */
-   public GoogleComputeEngineTemplateOptions keepBootDisk(boolean keepBootDisk) {
-      this.keepBootDisk = keepBootDisk;
-      return this;
+   /** Additional disks to attach to this instance. */
+   // TODO: test me or remove me!
+   public List<URI> additionalDisks() {
+      return additionalDisks;
    }
 
    /**
@@ -324,58 +248,5 @@ public final class GoogleComputeEngineTemplateOptions extends TemplateOptions {
    @Override
    public GoogleComputeEngineTemplateOptions blockOnComplete(boolean blockOnComplete) {
       return GoogleComputeEngineTemplateOptions.class.cast(super.blockOnComplete(blockOnComplete));
-   }
-
-   /**
-    * @return the ServiceAccounts to enable in the instances.
-    */
-   public List<Instance.ServiceAccount> getServiceAccounts() {
-      return serviceAccounts;
-   }
-
-   /**
-    * @return the PersistentDisks for this instance.
-    */
-   public List<PersistentDisk> getDisks() {
-      return disks;
-   }
-
-   /**
-    * @return the URI of an existing network the instances will be attached to. If no network URI or network name are
-    *         provided a new network will be created for the project.
-    */
-   public Optional<URI> getNetwork() {
-      return network;
-   }
-
-   /**
-    * @return the name of an existing network the instances will be attached to, the network is assumed to belong to
-    *         user's project. If no network URI network name are provided a new network will be created for the project.
-    *         <b>Note that this is now pulling from the first element in the networks field from TemplateOptions.</b>
-    */
-   public Optional<String> getNetworkName() {
-      return fromNullable(Iterables.getFirst(getNetworks(), null));
-   }
-
-   /**
-    * @return whether an AccessConfig with Type ONE_TO_ONE_NAT should be enabled in the instances. When true
-    *         instances will have a NAT address that will be publicly accessible.
-    */
-   public boolean isEnableNat() {
-      return enableNat;
-   }
-
-   /**
-    * @return the boot disk size, if specified. Defaults to 10gb.
-    */
-   public Optional<Long> getBootDiskSize() {
-      return bootDiskSize;
-   }
-
-   /**
-    * @return whether we should keep the boot disk around when deleting the instance. Defaults to false.
-    */
-   public boolean shouldKeepBootDisk() {
-      return keepBootDisk;
    }
 }

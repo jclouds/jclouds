@@ -42,12 +42,12 @@ public class ParseSnapshotListTest extends BaseGoogleComputeEngineParseTest<List
       Snapshot snapshot1 = new ParseSnapshotTest().expected();
       Snapshot snapshot2 = Snapshot.create( //
             "13895715048576107883", // id
-            URI.create(BASE_URL + "/myproject/global/snapshots/test-snap2"), // selfLink
+            URI.create(BASE_URL + "/party/global/snapshots/test-snap2"), // selfLink
             "test-snap2", // name
             "", // description
             10, // sizeGb
             "READY", // status
-            URI.create(BASE_URL + "/myproject/zones/us-central1-a/disks/testimage1"), // sourceDisk
+            URI.create(BASE_URL + "/party/zones/us-central1-a/disks/testimage1"), // sourceDisk
             "8243603669926824540"// sourceDiskId
       );
       return ListPage.create( //

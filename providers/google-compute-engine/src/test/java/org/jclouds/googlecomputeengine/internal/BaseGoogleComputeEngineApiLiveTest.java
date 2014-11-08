@@ -29,9 +29,11 @@ import java.util.logging.Logger;
 
 import org.jclouds.apis.BaseApiLiveTest;
 import org.jclouds.googlecomputeengine.GoogleComputeEngineApi;
+import org.jclouds.googlecomputeengine.GoogleComputeEngineProviderMetadata;
 import org.jclouds.googlecomputeengine.config.UserProject;
 import org.jclouds.googlecomputeengine.domain.Operation;
 import org.jclouds.javax.annotation.Nullable;
+import org.jclouds.providers.ProviderMetadata;
 
 import com.google.common.base.Predicate;
 import com.google.common.base.Supplier;
@@ -63,12 +65,16 @@ public class BaseGoogleComputeEngineApiLiveTest extends BaseApiLiveTest<GoogleCo
       provider = "google-compute-engine";
    }
 
-    @Override
-    protected Properties setupProperties() {
-       Properties props = super.setupProperties();
-       setCredential(props, provider + ".credential");
-       return props;
-    }
+   @Override
+   protected Properties setupProperties() {
+      Properties props = super.setupProperties();
+      setCredential(props, provider + ".credential");
+      return props;
+   }
+
+   @Override protected ProviderMetadata createProviderMetadata() {
+      return new GoogleComputeEngineProviderMetadata();
+   }
 
    protected GoogleComputeEngineApi create(Properties props, Iterable<Module> modules) {
       Injector injector = newBuilder().modules(modules).overrides(props).buildInjector();

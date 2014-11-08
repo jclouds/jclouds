@@ -36,7 +36,8 @@ import com.google.common.collect.Lists;
 public final class GoogleComputeEngineImageToImage implements Function<Image, org.jclouds.compute.domain.Image> {
    @Override public org.jclouds.compute.domain.Image apply(Image image) {
       ImageBuilder builder = new ImageBuilder()
-              .id(image.name())
+              .id(image.selfLink().toString())
+              .providerId(image.id())
               .name(image.name())
               .providerId(image.id())
               .description(image.description())

@@ -23,7 +23,6 @@ import static org.jclouds.googlecomputeengine.domain.Instance.NetworkInterface.A
 import static org.jclouds.googlecomputeengine.domain.Instance.SerialPortOutput;
 
 import java.util.Iterator;
-import java.util.Map;
 
 import javax.inject.Named;
 import javax.ws.rs.Consumes;
@@ -38,11 +37,11 @@ import javax.ws.rs.QueryParam;
 import org.jclouds.Fallbacks.NullOnNotFoundOr404;
 import org.jclouds.googlecomputeengine.GoogleComputeEngineFallbacks.EmptyIteratorOnNotFoundOr404;
 import org.jclouds.googlecomputeengine.GoogleComputeEngineFallbacks.EmptyListPageOnNotFoundOr404;
-import org.jclouds.googlecomputeengine.binders.MetadataBinder;
 import org.jclouds.googlecomputeengine.domain.Instance;
 import org.jclouds.googlecomputeengine.domain.ListPage;
+import org.jclouds.googlecomputeengine.domain.Metadata;
+import org.jclouds.googlecomputeengine.domain.NewInstance;
 import org.jclouds.googlecomputeengine.domain.Operation;
-import org.jclouds.googlecomputeengine.domain.templates.InstanceTemplate;
 import org.jclouds.googlecomputeengine.functions.internal.ParseInstances;
 import org.jclouds.googlecomputeengine.options.AttachDiskOptions;
 import org.jclouds.googlecomputeengine.options.ListOptions;
@@ -85,7 +84,7 @@ public interface InstanceApi {
    @POST
    @Produces(APPLICATION_JSON)
    @OAuthScopes(COMPUTE_SCOPE)
-   Operation create(@BinderParam(BindToJsonPayload.class) InstanceTemplate template);
+   Operation create(@BinderParam(BindToJsonPayload.class) NewInstance template);
 
    /** Deletes an instance by name and returns the operation in progress, or null if not found. */
    @Named("Instances:delete")
@@ -231,17 +230,15 @@ public interface InstanceApi {
     * Sets metadata for an instance using the data included in the request.
     * <p/>
     * NOTE: This *sets* metadata items on the project (vs *adding* items to metadata),
-    * if there are pre-existing metadata items that must be kept these must be fetched first and then re-set on the
-    * new Metadata, e.g.
+    * if there are existing metadata that must be kept these must be fetched first and then re-sent on update.
     * <pre><tt>
-    *    Metadata.Builder current = instanceApi.get("us-central1-a", "myInstance").getMetadata().toBuilder();
-    *    current.addItem("newItem","newItemValue");
-    *    instanceApi.setMetadata("us-central1-a", "myInstance", current.build());
+    *    Metadata update = instanceApi.get("myInstance").metadata().clone();
+    *    update.put("newItem","newItemValue");
+    *    instanceApi.setMetadata("myInstance", update);
     * </tt></pre>
     *
     * @param instance The name of the instance
     * @param metadata the metadata to set
-    * @param fingerprint The current fingerprint for the items
     *
     * @return an Operations resource. To check on the status of an operation, poll the Operations resource returned
     *         to you, and look for the status field.
@@ -251,10 +248,8 @@ public interface InstanceApi {
    @Path("/{instance}/setMetadata")
    @OAuthScopes(COMPUTE_SCOPE)
    @Produces(APPLICATION_JSON)
-   @MapBinder(MetadataBinder.class)
    Operation setMetadata(@PathParam("instance") String instance,
-                         @PayloadParam("items") Map<String, String> metadata,
-                         @PayloadParam("fingerprint") String fingerprint);
+                         @BinderParam(BindToJsonPayload.class) Metadata metadata);
 
    /**
     * Lists items for an instance

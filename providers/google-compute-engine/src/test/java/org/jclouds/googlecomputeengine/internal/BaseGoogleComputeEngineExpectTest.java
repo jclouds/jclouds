@@ -19,33 +19,14 @@ package org.jclouds.googlecomputeengine.internal;
 import static com.google.common.base.Charsets.UTF_8;
 import static com.google.common.base.Throwables.propagate;
 import static com.google.common.io.BaseEncoding.base64Url;
-import static org.easymock.EasyMock.createMock;
-import static org.easymock.EasyMock.expect;
-import static org.easymock.EasyMock.expectLastCall;
-import static org.easymock.EasyMock.replay;
-import static org.jclouds.crypto.Pems.privateKeySpec;
-import static org.jclouds.crypto.Pems.publicKeySpec;
-import static org.jclouds.crypto.PemsTest.PRIVATE_KEY;
-import static org.jclouds.crypto.PemsTest.PUBLIC_KEY;
 import static org.jclouds.util.Strings2.toStringAndClose;
 
 import java.io.IOException;
 import java.net.URI;
-import java.security.KeyFactory;
-import java.security.KeyPair;
-import java.security.KeyPairGenerator;
-import java.security.NoSuchAlgorithmException;
-import java.security.PrivateKey;
-import java.security.PublicKey;
-import java.security.SecureRandom;
-import java.security.interfaces.RSAPublicKey;
-import java.security.spec.InvalidKeySpecException;
 import java.util.Properties;
-import java.util.concurrent.atomic.AtomicInteger;
 
 import javax.ws.rs.core.MediaType;
 
-import org.jclouds.crypto.Crypto;
 import org.jclouds.googlecomputeengine.GoogleComputeEngineProviderMetadata;
 import org.jclouds.http.HttpRequest;
 import org.jclouds.http.HttpResponse;
@@ -54,15 +35,9 @@ import org.jclouds.oauth.v2.OAuthConstants;
 import org.jclouds.oauth.v2.config.OAuthProperties;
 import org.jclouds.providers.ProviderMetadata;
 import org.jclouds.rest.internal.BaseRestApiExpectTest;
-import org.jclouds.ssh.SshKeys;
 
 import com.google.common.base.Joiner;
-import com.google.common.base.Supplier;
-import com.google.common.base.Suppliers;
-import com.google.common.io.ByteSource;
-import com.google.inject.Binder;
 import com.google.inject.Module;
-import com.google.inject.TypeLiteral;
 
 public class BaseGoogleComputeEngineExpectTest<T> extends BaseRestApiExpectTest<T> {
    protected static final String BASE_URL = "https://www.googleapis.com/compute/v1/projects";
@@ -70,7 +45,7 @@ public class BaseGoogleComputeEngineExpectTest<T> extends BaseRestApiExpectTest<
    private static final String header = "{\"alg\":\"none\",\"typ\":\"JWT\"}";
 
    private static final String CLAIMS_TEMPLATE = "{" +
-           "\"iss\":\"myproject\"," +
+           "\"iss\":\"party\"," +
            "\"scope\":\"%s\"," +
            "\"aud\":\"https://accounts.google.com/o/oauth2/token\"," +
            "\"exp\":3600," +
@@ -85,25 +60,9 @@ public class BaseGoogleComputeEngineExpectTest<T> extends BaseRestApiExpectTest<
                    "  \"expires_in\" : 3600\n" +
                    "}")).build();
 
-   private final KeyPair keyPair;
-   protected final String openSshKey;
-
    protected BaseGoogleComputeEngineExpectTest() {
       provider = "google-compute-engine";
-      try {
-         KeyFactory keyfactory = KeyFactory.getInstance("RSA");
-         PrivateKey privateKey = keyfactory
-               .generatePrivate(privateKeySpec(ByteSource.wrap(PRIVATE_KEY.getBytes(UTF_8))));
-         PublicKey publicKey = keyfactory.generatePublic(publicKeySpec(ByteSource.wrap(PUBLIC_KEY.getBytes(UTF_8))));
-         keyPair = new KeyPair(publicKey, privateKey);
-         openSshKey = SshKeys.encodeAsOpenSSH(RSAPublicKey.class.cast(publicKey));
-      } catch (NoSuchAlgorithmException e) {
-         throw propagate(e);
-      } catch (InvalidKeySpecException e) {
-         throw propagate(e);
-      } catch (IOException e) {
-         throw propagate(e);
-      }
+      identity = "party";
    }
 
    @Override protected ProviderMetadata createProviderMetadata(){
@@ -111,34 +70,7 @@ public class BaseGoogleComputeEngineExpectTest<T> extends BaseRestApiExpectTest<
    }
 
    @Override protected Module createModule() {
-
-      return new Module() {
-         @Override
-         public void configure(Binder binder) {
-            // Predictable time
-            binder.bind(new TypeLiteral<Supplier<Long>>() {}).toInstance(Suppliers.ofInstance(0L));
-            Crypto crypto = createMock(Crypto.class);
-            KeyPairGenerator rsaKeyPairGenerator = createMock(KeyPairGenerator.class);
-            SecureRandom secureRandom = createMock(SecureRandom.class);
-            expect(crypto.rsaKeyPairGenerator()).andReturn(rsaKeyPairGenerator).anyTimes();
-            rsaKeyPairGenerator.initialize(2048, secureRandom);
-            expectLastCall().anyTimes();
-            expect(rsaKeyPairGenerator.genKeyPair()).andReturn(keyPair).anyTimes();
-            replay(crypto, rsaKeyPairGenerator, secureRandom);
-            binder.bind(Crypto.class).toInstance(crypto);
-            binder.bind(SecureRandom.class).toInstance(secureRandom);
-
-            //  predictable node names
-            final AtomicInteger suffix = new AtomicInteger();
-            binder.bind(new TypeLiteral<Supplier<String>>() {
-            }).toInstance(new Supplier<String>() {
-               @Override
-               public String get() {
-                  return suffix.getAndIncrement() + "";
-               }
-            });
-         }
-      };
+      return GoogleComputeEngineTestModule.INSTANCE;
    }
 
    @Override

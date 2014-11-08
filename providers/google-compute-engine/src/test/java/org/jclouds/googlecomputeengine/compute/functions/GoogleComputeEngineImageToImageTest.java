@@ -32,7 +32,7 @@ public class GoogleComputeEngineImageToImageTest {
       Image image = image("arbitratyname");
       org.jclouds.compute.domain.Image transformed = imageToImage.apply(image);
       assertEquals(transformed.getName(), image.name());
-      assertEquals(transformed.getId(), image.name());
+      assertEquals(transformed.getId(), image.selfLink().toString());
       assertEquals(transformed.getProviderId(), image.id());
       assertSame(transformed.getOperatingSystem().getFamily(), OsFamily.LINUX);
    }
@@ -42,7 +42,7 @@ public class GoogleComputeEngineImageToImageTest {
       Image image = image("ubuntu-12-04-v123123");
       org.jclouds.compute.domain.Image transformed = imageToImage.apply(image);
       assertEquals(transformed.getName(), image.name());
-      assertEquals(transformed.getId(), image.name());
+      assertEquals(transformed.getId(), image.selfLink().toString());
       assertEquals(transformed.getProviderId(), image.id());
       assertSame(transformed.getOperatingSystem().getFamily(), OsFamily.UBUNTU);
       assertEquals(transformed.getOperatingSystem().getVersion(), "12.04");

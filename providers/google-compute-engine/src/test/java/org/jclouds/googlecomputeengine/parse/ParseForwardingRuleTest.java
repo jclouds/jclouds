@@ -38,14 +38,14 @@ public class ParseForwardingRuleTest extends BaseGoogleComputeEngineParseTest<Fo
    public ForwardingRule expected() {
       return ForwardingRule.create( //
             "6732523704970219884", // id
-            URI.create(BASE_URL + "/myproject/regions/europe-west1/forwardingRules/test-forwarding-rule"), // selfLink
+            URI.create(BASE_URL + "/party/regions/europe-west1/forwardingRules/test-forwarding-rule"), // selfLink
             "test-forwarding-rule", // name
             null, // description
-            URI.create(BASE_URL + "/myproject/regions/europe-west1"), // region
+            URI.create(BASE_URL + "/party/regions/europe-west1"), // region
             "23.251.129.77", // ipAddress
             ForwardingRule.IPProtocol.TCP, // ipProtocol
             "1-65535", // portRange
-            URI.create(BASE_URL + "/myproject/regions/europe-west1/targetPools/test-target-pool") // target
+            URI.create(BASE_URL + "/party/regions/europe-west1/targetPools/test-target-pool") // target
       );
    }
 }

@@ -20,8 +20,6 @@ import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 import static org.jclouds.googlecomputeengine.GoogleComputeEngineConstants.COMPUTE_READONLY_SCOPE;
 import static org.jclouds.googlecomputeengine.GoogleComputeEngineConstants.COMPUTE_SCOPE;
 
-import java.util.Map;
-
 import javax.inject.Named;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
@@ -31,16 +29,16 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 
 import org.jclouds.googlecomputeengine.GoogleComputeEngineFallbacks.NullOn400or404;
-import org.jclouds.googlecomputeengine.binders.MetadataBinder;
+import org.jclouds.googlecomputeengine.domain.Metadata;
 import org.jclouds.googlecomputeengine.domain.Operation;
 import org.jclouds.googlecomputeengine.domain.Project;
 import org.jclouds.oauth.v2.config.OAuthScopes;
 import org.jclouds.oauth.v2.filters.OAuthAuthenticationFilter;
+import org.jclouds.rest.annotations.BinderParam;
 import org.jclouds.rest.annotations.Fallback;
-import org.jclouds.rest.annotations.MapBinder;
-import org.jclouds.rest.annotations.PayloadParam;
 import org.jclouds.rest.annotations.RequestFilters;
 import org.jclouds.rest.annotations.SkipEncoding;
+import org.jclouds.rest.binders.BindToJsonPayload;
 
 @SkipEncoding({'/', '='})
 @RequestFilters(OAuthAuthenticationFilter.class)
@@ -60,17 +58,15 @@ public interface ProjectApi {
     * Sets metadata common to all instances within the specified project using the data included in the request.
     * <p/>
     * NOTE: This *sets* metadata items on the project (vs *adding* items to metadata),
-    * if there are pre-existing metadata items that must be kept these must be fetched first and then re-set on the
-    * new Metadata, e.g.
+    * if there are existing metadata that must be kept these must be fetched first and then re-sent on update.
     * <pre><tt>
-    *    Metadata.Builder current = projectApi.get("myProject").getCommonInstanceMetadata().toBuilder();
-    *    current.addItem("newItem","newItemValue");
-    *    projectApi.setCommonInstanceMetadata(current.build());
+    *    Metadata update = projectApi.get("myProject").getCommonInstanceMetadata().clone();
+    *    update.put("newItem","newItemValue");
+    *    projectApi.setCommonInstanceMetadata("myProject", update);
     * </tt></pre>
     *
-    * @param projectName            name of the project to return
-    * @param metadata the metadata to set
-    * @param fingerprint  The current fingerprint for the metadata
+    * @param projectName   name of the project to return
+    * @param metadata      the metadata to set
     * @return an Operations resource. To check on the status of an operation, poll the Operations resource returned
     *         to you, and look for the status field.
     */
@@ -79,8 +75,6 @@ public interface ProjectApi {
    @Path("/{project}/setCommonInstanceMetadata")
    @OAuthScopes(COMPUTE_SCOPE)
    @Produces(APPLICATION_JSON)
-   @MapBinder(MetadataBinder.class)
    Operation setCommonInstanceMetadata(@PathParam("project") String projectName,
-                                       @PayloadParam("items") Map<String, String> metadata,
-                                       @PayloadParam("fingerprint") String fingerprint);
+                                       @BinderParam(BindToJsonPayload.class) Metadata metadata);
 }

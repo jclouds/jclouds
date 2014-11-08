@@ -41,7 +41,7 @@ public class ParseMachineTypeListTest extends BaseGoogleComputeEngineParseTest<L
    public ListPage<MachineType> expected() {
       MachineType machineType1 = MachineType.create( //
             "4618642685664990776", // id
-            URI.create(BASE_URL + "/myproject/zones/us-central1-a/machineTypes/f1-micro"), // selfLink
+            URI.create(BASE_URL + "/party/zones/us-central1-a/machineTypes/f1-micro"), // selfLink
             "f1-micro", // name
             "1 vCPU (shared physical core) and 0.6 GB RAM", // description
             1, // guestCpus
@@ -54,7 +54,7 @@ public class ParseMachineTypeListTest extends BaseGoogleComputeEngineParseTest<L
       );
       MachineType machineType2 = MachineType.create( //
             "12907738072351752276", // id
-            URI.create(BASE_URL + "/myproject/zones/us-central1-a/machineTypes/n1-standard-1"), // selfLink
+            URI.create(BASE_URL + "/party/zones/us-central1-a/machineTypes/n1-standard-1"), // selfLink
             "n1-standard-1", // name
             "1 vCPU, 3.75 GB RAM, and a 10 GB ephemeral root disk", // description
             1, // guestCpus
@@ -67,7 +67,7 @@ public class ParseMachineTypeListTest extends BaseGoogleComputeEngineParseTest<L
       );
       MachineType machineType3 = MachineType.create( //
             "12908560709887590691", // id
-            URI.create(BASE_URL + "/myproject/zones/us-central1-a/machineTypes/n1-standard-8-d"), // selfLink
+            URI.create(BASE_URL + "/party/zones/us-central1-a/machineTypes/n1-standard-8-d"), // selfLink
             "n1-standard-8-d", // name
             "8 vCPUs, 30 GB RAM, a 10 GB ephemeral root disk, and 2 extra 1770 GB ephemeral disks", // description
             8, // guestCpus

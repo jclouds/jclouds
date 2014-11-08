@@ -20,7 +20,6 @@ import static com.google.common.base.Predicates.instanceOf;
 import static com.google.common.collect.Iterables.tryFind;
 
 import java.util.Iterator;
-import java.util.List;
 
 import org.jclouds.googlecomputeengine.domain.ListPage;
 import org.jclouds.googlecomputeengine.options.ListOptions;
@@ -34,7 +33,7 @@ import com.google.common.base.Optional;
 import com.google.common.collect.Iterators;
 
 @Beta
-abstract class BaseToIteratorOfListPage<T, I extends BaseToIteratorOfListPage<T, I>>
+public abstract class BaseToIteratorOfListPage<T, I extends BaseToIteratorOfListPage<T, I>>
       implements Function<ListPage<T>, Iterator<ListPage<T>>>, InvocationContext<I> {
 
    private GeneratedHttpRequest request;
@@ -42,18 +41,13 @@ abstract class BaseToIteratorOfListPage<T, I extends BaseToIteratorOfListPage<T,
    @Override
    public Iterator<ListPage<T>> apply(ListPage<T> input) {
       if (input.nextPageToken() == null) {
-         return Iterators.singletonIterator(input);
+         return input.isEmpty() ? Iterators.<ListPage<T>>emptyIterator() : Iterators.singletonIterator(input);
       }
-
-      List<Object> callerArgs = request.getCaller().get().getArgs();
-
-      assert callerArgs.size() == 1 : String.format("programming error, method %s should have 1 arg: project",
-            request.getCaller().get().getInvokable());
 
       Optional<Object> listOptions = tryFind(request.getInvocation().getArgs(), instanceOf(ListOptions.class));
 
       return new AdvancingIterator<T>(input,
-            fetchNextPage((String) callerArgs.get(0), (ListOptions) listOptions.orNull()));
+            fetchNextPage((String) request.getCaller().get().getArgs().get(0), (ListOptions) listOptions.orNull()));
    }
 
    protected abstract Function<String, ListPage<T>> fetchNextPage(String projectName, ListOptions listOptions);

@@ -29,8 +29,6 @@ import org.jclouds.compute.domain.Processor;
 import org.jclouds.compute.domain.Volume;
 import org.jclouds.compute.domain.VolumeBuilder;
 import org.jclouds.domain.Location;
-import org.jclouds.googlecomputeengine.compute.domain.MachineTypeInZone;
-import org.jclouds.googlecomputeengine.compute.domain.SlashEncodedIds;
 import org.jclouds.googlecomputeengine.domain.MachineType;
 
 import com.google.common.base.Function;
@@ -38,18 +36,18 @@ import com.google.common.base.Predicates;
 import com.google.common.base.Supplier;
 import com.google.common.collect.ImmutableSet;
 
-public final class MachineTypeInZoneToHardware implements Function<MachineTypeInZone, Hardware> {
+public final class MachineTypeToHardware implements Function<MachineType, Hardware> {
 
    private final Supplier<Map<URI, Location>> locationsByUri;
 
-   @Inject MachineTypeInZoneToHardware(@Memoized Supplier<Map<URI, Location>> locationsByUri) {
+   @Inject MachineTypeToHardware(@Memoized Supplier<Map<URI, Location>> locationsByUri) {
       this.locationsByUri = locationsByUri;
    }
 
    @Override
-   public Hardware apply(MachineTypeInZone input) {
+   public Hardware apply(MachineType input) {
       URI zoneLink = URI.create(
-            input.machineType().selfLink().toString().replace("/machineTypes/" + input.machineType().name(), ""));
+            input.selfLink().toString().replace("/machineTypes/" + input.name(), ""));
 
       Location zone = locationsByUri.get().get(zoneLink);
       if (zone == null) {
@@ -57,15 +55,16 @@ public final class MachineTypeInZoneToHardware implements Function<MachineTypeIn
                String.format("zone %s not present in %s", zoneLink, locationsByUri.get().keySet()));
       }
       return new HardwareBuilder()
-              .id(SlashEncodedIds.from(input.machineType().zone(), input.machineType().name()).slashEncode())
+              .id(input.selfLink().toString())
+              .providerId(input.id())
               .location(zone)
-              .name(input.machineType().name())
+              .name(input.name())
               .hypervisor("kvm")
-              .processor(new Processor(input.machineType().guestCpus(), 1.0))
-              .providerId(input.machineType().id())
-              .ram(input.machineType().memoryMb())
-              .uri(input.machineType().selfLink())
-              .volumes(collectVolumes(input.machineType()))
+              .processor(new Processor(input.guestCpus(), 1.0))
+              .providerId(input.id())
+              .ram(input.memoryMb())
+              .uri(input.selfLink())
+              .volumes(collectVolumes(input))
               .supportsImage(Predicates.<Image>alwaysTrue())
               .build();
    }

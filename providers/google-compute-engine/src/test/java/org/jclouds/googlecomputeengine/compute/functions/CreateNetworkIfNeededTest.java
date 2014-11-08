@@ -48,11 +48,11 @@ public class CreateNetworkIfNeededTest {
    public void testApply() {
       GoogleComputeEngineApi api = createMock(GoogleComputeEngineApi.class);
       NetworkApi nwApi = createMock(NetworkApi.class);
-      ResourceFunctions resources = createMock(ResourceFunctions.class);
+      Resources resources = createMock(Resources.class);
 
       Network network = Network.create( //
             "abcd", // id
-            URI.create(BASE_URL + "/myproject/global/networks/this-network"), // selfLink
+            URI.create(BASE_URL + "/party/global/networks/this-network"), // selfLink
             "this-network", // name
             null, // description
             "0.0.0.0/0", // rangeIPv4
@@ -61,7 +61,7 @@ public class CreateNetworkIfNeededTest {
 
       Operation createOp = new ParseGlobalOperationTest().expected();
 
-      Supplier<String> userProject = Suppliers.ofInstance("myproject");
+      Supplier<String> userProject = Suppliers.ofInstance("party");
 
       expect(api.getNetworkApi(userProject.get())).andReturn(nwApi).atLeastOnce();
 
@@ -86,11 +86,11 @@ public class CreateNetworkIfNeededTest {
    public void testApplyWithGateway() {
       GoogleComputeEngineApi api = createMock(GoogleComputeEngineApi.class);
       NetworkApi nwApi = createMock(NetworkApi.class);
-      ResourceFunctions resources = createMock(ResourceFunctions.class);
+      Resources resources = createMock(Resources.class);
 
       Network network = Network.create( //
             "abcd", // id
-            URI.create(BASE_URL + "/myproject/global/networks/this-network"), // selfLink
+            URI.create(BASE_URL + "/party/global/networks/this-network"), // selfLink
             "this-network", // name
             null, // description
             "0.0.0.0/0", // rangeIPv4
@@ -99,7 +99,7 @@ public class CreateNetworkIfNeededTest {
 
       Operation createOp = new ParseGlobalOperationTest().expected();
 
-      Supplier<String> userProject = Suppliers.ofInstance("myproject");
+      Supplier<String> userProject = Suppliers.ofInstance("party");
 
       expect(api.getNetworkApi(userProject.get())).andReturn(nwApi).atLeastOnce();
 
@@ -122,15 +122,15 @@ public class CreateNetworkIfNeededTest {
    }
 
    private AtomicOperationDone atomicOperationDone(final GoogleComputeEngineApi api,
-         final ResourceFunctions resources) {
+         final Resources resources) {
       return Guice.createInjector(new AbstractModule() { // Rather than opening ctor public
          @Override protected void configure() {
             bind(GoogleComputeEngineApi.class).toInstance(api);
-            bind(ResourceFunctions.class).toInstance(resources);
+            bind(Resources.class).toInstance(resources);
          }
 
          @Provides @UserProject Supplier<String> project() {
-            return Suppliers.ofInstance("myproject");
+            return Suppliers.ofInstance("party");
          }
       }).getInstance(AtomicOperationDone.class);
    }

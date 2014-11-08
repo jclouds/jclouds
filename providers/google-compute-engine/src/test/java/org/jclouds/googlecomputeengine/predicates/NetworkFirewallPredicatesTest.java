@@ -41,10 +41,10 @@ public class NetworkFirewallPredicatesTest {
    public static Firewall getFwForTestSourceTags() {
       return Firewall.create( //
             "abcd", // id
-            URI.create(BASE_URL + "/myproject/global/firewalls/jclouds-test"), // selfLink
+            URI.create(BASE_URL + "/party/global/firewalls/jclouds-test"), // selfLink
             "jclouds-test", // name
             null, // description
-            URI.create(BASE_URL + "/myproject/global/networks/jclouds-test"), // network
+            URI.create(BASE_URL + "/party/global/networks/jclouds-test"), // network
             null, // sourceRanges
             ImmutableList.of("tag-1"), // sourceTags
             null, // targetTags
@@ -57,10 +57,10 @@ public class NetworkFirewallPredicatesTest {
    public static Firewall getFwForTestSourceTagsExact() {
       return Firewall.create( //
             "abcd", // id
-            URI.create(BASE_URL + "/myproject/global/firewalls/jclouds-test"), // selfLink
+            URI.create(BASE_URL + "/party/global/firewalls/jclouds-test"), // selfLink
             "jclouds-test", // name
             null, // description
-            URI.create(BASE_URL + "/myproject/global/networks/jclouds-test"), // network
+            URI.create(BASE_URL + "/party/global/networks/jclouds-test"), // network
             null, // sourceRanges
             ImmutableList.of("tag-1"), // sourceTags
             null, // targetTags

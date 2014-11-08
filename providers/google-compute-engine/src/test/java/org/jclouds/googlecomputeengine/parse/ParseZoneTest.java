@@ -40,7 +40,7 @@ public class ParseZoneTest extends BaseGoogleComputeEngineParseTest<Zone> {
    public Zone expected() {
       return Zone.create( //
             "13020128040171887099", // id
-            URI.create(BASE_URL + "/myproject/zones/us-central1-a"), // selfLink
+            URI.create(BASE_URL + "/party/zones/us-central1-a"), // selfLink
             "us-central1-a", // name
             "us-central1-a", // description
             Zone.Status.DOWN, // status

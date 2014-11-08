@@ -41,10 +41,10 @@ public class ParseFirewallTest extends BaseGoogleComputeEngineParseTest<Firewall
    public Firewall expected() {
       return Firewall.create( //
             "12862241031274216284", // id
-            URI.create(BASE_URL + "/myproject/global/firewalls/jclouds-test"), // selfLink
+            URI.create(BASE_URL + "/party/global/firewalls/jclouds-test"), // selfLink
             "jclouds-test", // name
             "Internal traffic from default allowed", // description
-            URI.create(BASE_URL + "/myproject/global/networks/jclouds-test"), // network
+            URI.create(BASE_URL + "/party/global/networks/jclouds-test"), // network
             ImmutableList.of("10.0.0.0/8"), // sourceRanges
             null, // sourceTags
             null, // targetTags

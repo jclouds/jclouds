@@ -22,7 +22,8 @@ import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertNull;
 
-import org.jclouds.googlecomputeengine.internal.BaseGoogleComputeEngineApiExpectTest;
+import org.jclouds.googlecomputeengine.GoogleComputeEngineApi;
+import org.jclouds.googlecomputeengine.internal.BaseGoogleComputeEngineExpectTest;
 import org.jclouds.googlecomputeengine.parse.ParseDiskTypeListTest;
 import org.jclouds.googlecomputeengine.parse.ParseDiskTypeTest;
 import org.jclouds.http.HttpRequest;
@@ -30,12 +31,12 @@ import org.jclouds.http.HttpResponse;
 import org.testng.annotations.Test;
 
 @Test(groups = "unit", testName = "DiskTypeApiExpectTest")
-public class DiskTypeApiExpectTest extends BaseGoogleComputeEngineApiExpectTest {
+public class DiskTypeApiExpectTest extends BaseGoogleComputeEngineExpectTest<GoogleComputeEngineApi> {
 
    public static final HttpRequest LIST_DISK_TYPES_REQUEST = HttpRequest
            .builder()
            .method("GET")
-           .endpoint(BASE_URL + "/myproject/zones/us-central1-a/diskTypes")
+           .endpoint(BASE_URL + "/party/zones/us-central1-a/diskTypes")
            .addHeader("Accept", "application/json")
            .addHeader("Authorization", "Bearer " + TOKEN).build();
 
@@ -48,7 +49,7 @@ public class DiskTypeApiExpectTest extends BaseGoogleComputeEngineApiExpectTest 
       HttpRequest get = HttpRequest
               .builder()
               .method("GET")
-              .endpoint(BASE_URL + "/myproject/zones/us-central1-a/diskTypes/pd-standard")
+              .endpoint(BASE_URL + "/party/zones/us-central1-a/diskTypes/pd-standard")
               .addHeader("Accept", "application/json")
               .addHeader("Authorization", "Bearer " + TOKEN).build();
 
@@ -56,7 +57,7 @@ public class DiskTypeApiExpectTest extends BaseGoogleComputeEngineApiExpectTest 
               .payload(payloadFromResource("/disktype.json")).build();
 
       DiskTypeApi diskTypeApi = requestsSendResponses(requestForScopes(COMPUTE_READONLY_SCOPE),
-              TOKEN_RESPONSE, get, operationResponse).getDiskTypeApi("myproject", "us-central1-a");
+              TOKEN_RESPONSE, get, operationResponse).getDiskTypeApi("party", "us-central1-a");
 
       assertEquals(diskTypeApi.get("pd-standard"),
               new ParseDiskTypeTest().expected());
@@ -66,14 +67,14 @@ public class DiskTypeApiExpectTest extends BaseGoogleComputeEngineApiExpectTest 
       HttpRequest get = HttpRequest
               .builder()
               .method("GET")
-              .endpoint(BASE_URL + "/myproject/zones/us-central1-a/diskTypes/pd-standard")
+              .endpoint(BASE_URL + "/party/zones/us-central1-a/diskTypes/pd-standard")
               .addHeader("Accept", "application/json")
               .addHeader("Authorization", "Bearer " + TOKEN).build();
 
       HttpResponse operationResponse = HttpResponse.builder().statusCode(404).build();
 
       DiskTypeApi diskTypeApi = requestsSendResponses(requestForScopes(COMPUTE_READONLY_SCOPE),
-              TOKEN_RESPONSE, get, operationResponse).getDiskTypeApi("myproject", "us-central1-a");
+              TOKEN_RESPONSE, get, operationResponse).getDiskTypeApi("party", "us-central1-a");
 
       assertNull(diskTypeApi.get("pd-standard"));
    }
@@ -82,7 +83,7 @@ public class DiskTypeApiExpectTest extends BaseGoogleComputeEngineApiExpectTest 
 
       DiskTypeApi diskTypeApi = requestsSendResponses(requestForScopes(COMPUTE_READONLY_SCOPE),
             TOKEN_RESPONSE, LIST_DISK_TYPES_REQUEST, LIST_DISK_TYPES_RESPONSE).getDiskTypeApi
-            ("myproject", "us-central1-a");
+            ("party", "us-central1-a");
 
       assertEquals(diskTypeApi.list().next().toString(), new ParseDiskTypeListTest().expected().toString());
    }
@@ -95,7 +96,7 @@ public class DiskTypeApiExpectTest extends BaseGoogleComputeEngineApiExpectTest 
             .endpoint(LIST_DISK_TYPES_REQUEST.getEndpoint() + "?maxResults=1").build();
 
       DiskTypeApi diskTypeApi = requestsSendResponses(requestForScopes(COMPUTE_READONLY_SCOPE),
-              TOKEN_RESPONSE, listRequestWithOptions, operationResponse).getDiskTypeApi("myproject", "us-central1-a");
+              TOKEN_RESPONSE, listRequestWithOptions, operationResponse).getDiskTypeApi("party", "us-central1-a");
 
       assertFalse(diskTypeApi.list(maxResults(1)).hasNext());
    }

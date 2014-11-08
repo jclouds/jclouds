@@ -38,10 +38,10 @@ public class ParseGlobalOperationTest extends BaseGoogleComputeEngineParseTest<O
    public Operation expected() {
       return Operation.create( //
             "13053095055850848306", // id
-            URI.create(BASE_URL + "/myproject/global/operations/operation-1354084865060-4cf88735faeb8-bbbb12cb"),
-            "operation-1354084865060-4cf88735faeb8-bbbb12cb", // name
+            URI.create(BASE_URL + "/party/global/operations/operation-1354084865060"),
+            "operation-1354084865060", // name
             null, // description
-            URI.create(BASE_URL + "/myproject/global/firewalls/jclouds-test-delete"), // targetLink
+            URI.create(BASE_URL + "/party/global/firewalls/jclouds-test-delete"), // targetLink
             "13053094017547040099", // targetId
             null, // clientOperationId
             Operation.Status.DONE, // status

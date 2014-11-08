@@ -49,16 +49,10 @@ public final class GoogleComputeEngineHttpApiModule extends HttpApiModule<Google
    public GoogleComputeEngineHttpApiModule() {
    }
 
-   @Override
-   protected void bindErrorHandlers() {
+   @Override protected void bindErrorHandlers() {
       bind(HttpErrorHandler.class).annotatedWith(Redirection.class).to(GoogleComputeEngineErrorHandler.class);
       bind(HttpErrorHandler.class).annotatedWith(ClientError.class).to(GoogleComputeEngineErrorHandler.class);
       bind(HttpErrorHandler.class).annotatedWith(ServerError.class).to(GoogleComputeEngineErrorHandler.class);
-   }
-
-   @Override
-   protected void installLocations() {
-      install(new GoogleComputeEngineLocationModule());
    }
 
    /**

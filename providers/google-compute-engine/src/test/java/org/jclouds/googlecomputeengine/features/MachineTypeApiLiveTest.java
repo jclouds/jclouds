@@ -49,7 +49,6 @@ public class MachineTypeApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
       this.machineType = machineTypeAsList.get(0);
    }
 
-
    @Test(groups = "live", dependsOnMethods = "testListMachineType")
    public void testGetMachineType() {
       MachineType machineType = api().get(this.machineType.name());

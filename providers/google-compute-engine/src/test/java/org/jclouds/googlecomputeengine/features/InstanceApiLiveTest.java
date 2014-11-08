@@ -19,10 +19,10 @@ package org.jclouds.googlecomputeengine.features;
 import static org.jclouds.googlecomputeengine.options.ListOptions.Builder.filter;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
-import static org.testng.Assert.assertNull;
 import static org.testng.Assert.assertTrue;
 
 import java.net.URI;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
@@ -32,20 +32,20 @@ import org.jclouds.googlecomputeengine.domain.Image;
 import org.jclouds.googlecomputeengine.domain.Instance;
 import org.jclouds.googlecomputeengine.domain.Instance.AttachedDisk;
 import org.jclouds.googlecomputeengine.domain.ListPage;
+import org.jclouds.googlecomputeengine.domain.Metadata;
+import org.jclouds.googlecomputeengine.domain.NewInstance;
+import org.jclouds.googlecomputeengine.domain.NewInstance.Disk;
 import org.jclouds.googlecomputeengine.domain.Operation;
-import org.jclouds.googlecomputeengine.domain.templates.InstanceTemplate;
 import org.jclouds.googlecomputeengine.internal.BaseGoogleComputeEngineApiLiveTest;
 import org.jclouds.googlecomputeengine.options.AttachDiskOptions;
 import org.jclouds.googlecomputeengine.options.AttachDiskOptions.DiskMode;
 import org.jclouds.googlecomputeengine.options.AttachDiskOptions.DiskType;
-import org.jclouds.googlecomputeengine.options.DiskCreationOptions;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.Test;
 
 import com.google.common.base.Predicate;
 import com.google.common.collect.FluentIterable;
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Iterables;
 import com.google.inject.Module;
 
@@ -54,7 +54,6 @@ public class InstanceApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
 
    private static final String INSTANCE_NETWORK_NAME = "instance-api-live-test-network";
    private static final String INSTANCE_NAME = "test-1";
-   private static final String BOOT_DISK_NAME = INSTANCE_NAME + "-boot-disk";
    private static final String DISK_NAME = "instance-live-test-disk";
    private static final String IPV4_RANGE = "10.0.0.0/8";
    private static final String METADATA_ITEM_KEY = "instanceLiveTestTestProp";
@@ -64,7 +63,7 @@ public class InstanceApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
    private static final String ATTACH_DISK_DEVICE_NAME = "attach-disk-1";
    private static final int DEFAULT_DISK_SIZE_GB = 10;
 
-   private InstanceTemplate instance;
+   private NewInstance instance;
 
    @Override
    protected GoogleComputeEngineApi create(Properties props, Iterable<Module> modules) {
@@ -81,18 +80,16 @@ public class InstanceApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
                         .first()
                         .get()
                         .selfLink();
-      instance = new InstanceTemplate()
-              .name(INSTANCE_NAME)
-              .machineType(getDefaultMachineTypeUrl(userProject.get()))
-              .addNetworkInterface(getNetworkUrl(userProject.get(), INSTANCE_NETWORK_NAME),
-                                   Instance.NetworkInterface.AccessConfig.Type.ONE_TO_ONE_NAT)
-              .addMetadata("mykey", "myvalue")
-              .description("a description")
-              .addDisk(Instance.AttachedDisk.Mode.READ_WRITE, getDiskUrl(userProject.get(), BOOT_DISK_NAME),
-                       null, true, true)
-              .addDisk(Instance.AttachedDisk.Mode.READ_WRITE, getDiskUrl(userProject.get(), DISK_NAME))
-              .image(imageUri);
 
+      instance = NewInstance.create(
+            getDefaultMachineTypeUrl(userProject.get()), // machineType
+            INSTANCE_NAME, // name
+            getNetworkUrl(userProject.get(), INSTANCE_NETWORK_NAME), // network
+            Arrays.asList(Disk.newBootDisk(imageUri), Disk.existingDisk(getDiskUrl(userProject.get(), DISK_NAME))), // disks
+            "a description" // description
+      );
+      instance.tags().items().addAll(Arrays.asList("foo", "bar"));
+      instance.metadata().put("mykey", "myvalue");
       return api;
    }
 
@@ -106,13 +103,10 @@ public class InstanceApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
 
    @Test(groups = "live")
    public void testInsertInstance() {
-
       // need to insert the network first
       assertOperationDoneSuccessfully(api.getNetworkApi(userProject.get()).createInIPv4Range
               (INSTANCE_NETWORK_NAME, IPV4_RANGE));
 
-      DiskCreationOptions diskCreationOptions = new DiskCreationOptions().sourceImage(instance.image());
-      assertOperationDoneSuccessfully(diskApi().create(BOOT_DISK_NAME, DEFAULT_DISK_SIZE_GB, diskCreationOptions));
       assertOperationDoneSuccessfully(diskApi().create("instance-live-test-disk", DEFAULT_DISK_SIZE_GB));
       assertOperationDoneSuccessfully(api().create(instance));
    }
@@ -127,14 +121,14 @@ public class InstanceApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
    @Test(groups = "live", dependsOnMethods = "testListInstance")
    public void testSetMetadataForInstance() {
       Instance originalInstance = api().get(INSTANCE_NAME);
-      assertOperationDoneSuccessfully(api().setMetadata(INSTANCE_NAME,
-                  ImmutableMap.of(METADATA_ITEM_KEY, METADATA_ITEM_VALUE), originalInstance.metadata().fingerprint()));
+      Metadata update = Metadata.create(originalInstance.metadata().fingerprint())
+            .put(METADATA_ITEM_KEY, METADATA_ITEM_VALUE);
+      assertOperationDoneSuccessfully(api().setMetadata(INSTANCE_NAME, update));
 
       Instance modifiedInstance = api().get(INSTANCE_NAME);
 
-      assertTrue(modifiedInstance.metadata().items().containsKey(METADATA_ITEM_KEY));
-      assertEquals(modifiedInstance.metadata().items().get(METADATA_ITEM_KEY),
-              METADATA_ITEM_VALUE);
+      assertTrue(modifiedInstance.metadata().containsKey(METADATA_ITEM_KEY));
+      assertEquals(modifiedInstance.metadata().get(METADATA_ITEM_KEY), METADATA_ITEM_VALUE);
       assertNotNull(modifiedInstance.metadata().fingerprint());
    }
 
@@ -195,7 +189,6 @@ public class InstanceApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
       assertEquals(instancesAsList.size(), 1);
 
       assertInstanceEquals(instancesAsList.get(0), instance);
-
    }
 
    @Test(groups = "live", dependsOnMethods = "testDetachDiskFromInstance")
@@ -207,14 +200,14 @@ public class InstanceApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
    public void testDeleteInstance() {
       assertOperationDoneSuccessfully(api().delete(INSTANCE_NAME));
       assertOperationDoneSuccessfully(diskApi().delete(DISK_NAME));
-      assertNull(diskApi().get(BOOT_DISK_NAME)); // auto-delete!
       Operation deleteNetwork = api.getNetworkApi(userProject.get()).delete(INSTANCE_NETWORK_NAME);
       assertOperationDoneSuccessfully(deleteNetwork);
    }
 
-   private void assertInstanceEquals(Instance result, InstanceTemplate expected) {
+   private void assertInstanceEquals(Instance result, NewInstance expected) {
       assertEquals(result.name(), expected.name());
-      assertEquals(result.metadata().items(), expected.metadata());
+      assertEquals(result.metadata().asMap(), expected.metadata().asMap()); // ignore fingerprint!
+      assertEquals(result.tags().items(), expected.tags().items());
    }
 
    @AfterClass(groups = { "integration", "live" })

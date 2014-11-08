@@ -38,12 +38,12 @@ public class ParseAddressTest extends BaseGoogleComputeEngineParseTest<Address> 
    public Address expected() {
       return Address.create( //
             "4439373783165447583", // id
-            URI.create(BASE_URL + "/myproject/regions/us-central1/addresses/test-ip1"), // selfLink
+            URI.create(BASE_URL + "/party/regions/us-central1/addresses/test-ip1"), // selfLink
             "test-ip1", // name
             "", // description
             "RESERVED", // status
             null, // user
-            URI.create(BASE_URL + "/myproject/regions/us-central1"), // region
+            URI.create(BASE_URL + "/party/regions/us-central1"), // region
             "173.255.115.190" // address
       );
    }

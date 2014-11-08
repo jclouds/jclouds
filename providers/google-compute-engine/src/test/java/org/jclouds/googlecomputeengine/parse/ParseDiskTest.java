@@ -38,12 +38,12 @@ public class ParseDiskTest extends BaseGoogleComputeEngineParseTest<Disk> {
    public Disk expected() {
       return Disk.create( //
             "13050421646334304115", // id
-            URI.create(BASE_URL + "/myproject/zones/us-central1-a"), // zone
+            URI.create(BASE_URL + "/party/zones/us-central1-a"), // zone
             "READY", // status
             "testimage1", // name
             null, // description
             1, // sizeGb
-            URI.create(BASE_URL + "/myproject/zones/us-central1-a/disks/testimage1"), // selfLink
+            URI.create(BASE_URL + "/party/zones/us-central1-a/disks/testimage1"), // selfLink
             URI.create(BASE_URL + "/studied-point-720/zones/us-central1-a/diskTypes/pd-standard") // type
       );
    }

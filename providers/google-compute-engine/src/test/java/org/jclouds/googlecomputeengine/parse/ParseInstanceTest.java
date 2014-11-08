@@ -32,7 +32,6 @@ import org.jclouds.googlecomputeengine.internal.BaseGoogleComputeEngineParseTest
 import org.testng.annotations.Test;
 
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableMap;
 
 @Test(groups = "unit", testName = "ParseInstanceTest")
 public class ParseInstanceTest extends BaseGoogleComputeEngineParseTest<Instance> {
@@ -46,17 +45,17 @@ public class ParseInstanceTest extends BaseGoogleComputeEngineParseTest<Instance
    public Instance expected() {
       return Instance.create( //
             "13051190678907570425", // id
-            URI.create(BASE_URL + "/myproject/zones/us-central1-a/instances/test-0"), // selfLink
+            URI.create(BASE_URL + "/party/zones/us-central1-a/instances/test-0"), // selfLink
             "test-0", // name
             "desc", // description
-            Tags.create("abcd", ImmutableList.of("aTag", "Group-port-42")), // tags
-            URI.create(BASE_URL + "/myproject/zones/us-central1-a/machineTypes/n1-standard-1"), // machineType
+            Tags.create("abcd").add("aTag").add("Group-port-42"), // tags
+            URI.create(BASE_URL + "/party/zones/us-central1-a/machineTypes/n1-standard-1"), // machineType
             Instance.Status.RUNNING, // status
             null, // statusMessage
-            URI.create(BASE_URL + "/myproject/zones/us-central1-a"), // zone
+            URI.create(BASE_URL + "/party/zones/us-central1-a"), // zone
             ImmutableList.of(NetworkInterface.create( //
                   "nic0", // name
-                  URI.create(BASE_URL + "/myproject/global/networks/default"), // network
+                  URI.create(BASE_URL + "/party/global/networks/default"), // network
                   "10.240.121.115", // networkIP
                   null // accessConfigs
             )), // networkInterfaces
@@ -64,15 +63,15 @@ public class ParseInstanceTest extends BaseGoogleComputeEngineParseTest<Instance
                   0, // index
                   AttachedDisk.Type.PERSISTENT, // type
                   AttachedDisk.Mode.READ_WRITE, // mode
-                  URI.create(BASE_URL + "/myproject/zones/us-central1-a/disks/test"), // source
+                  URI.create(BASE_URL + "/party/zones/us-central1-a/disks/test"), // source
                   "test", // deviceName
                   false, // autoDelete
                   true// boot
             )), // disks
-            Metadata.create("efgh", ImmutableMap.<String, String>builder() //
-                  .put("aKey", "aValue") //
-                  .put("jclouds-image", BASE_URL + "/debian-cloud/global/images/debian-7-wheezy-v20140718") //
-                  .put("jclouds-delete-boot-disk", "true").build()), // metadata
+            Metadata.create("efgh")
+                    .put("aKey", "aValue")
+                    .put("jclouds-image", BASE_URL + "/debian-cloud/global/images/debian-7-wheezy-v20140718")
+                    .put("jclouds-delete-boot-disk", "true"), // metadata
             ImmutableList.of(ServiceAccount.create("default", ImmutableList.of("myscope"))) // serviceAccounts
       );
    }

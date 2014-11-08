@@ -21,7 +21,8 @@ import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertNull;
 
-import org.jclouds.googlecomputeengine.internal.BaseGoogleComputeEngineApiExpectTest;
+import org.jclouds.googlecomputeengine.GoogleComputeEngineApi;
+import org.jclouds.googlecomputeengine.internal.BaseGoogleComputeEngineExpectTest;
 import org.jclouds.googlecomputeengine.parse.ParseMachineTypeListTest;
 import org.jclouds.googlecomputeengine.parse.ParseMachineTypeTest;
 import org.jclouds.http.HttpRequest;
@@ -29,12 +30,12 @@ import org.jclouds.http.HttpResponse;
 import org.testng.annotations.Test;
 
 @Test(groups = "unit", testName = "MachineTypeApiExpectTest")
-public class MachineTypeApiExpectTest extends BaseGoogleComputeEngineApiExpectTest {
+public class MachineTypeApiExpectTest extends BaseGoogleComputeEngineExpectTest<GoogleComputeEngineApi> {
 
    public static final HttpRequest LIST_MACHINE_TYPES_REQUEST = HttpRequest
            .builder()
            .method("GET")
-           .endpoint(BASE_URL + "/myproject/zones/us-central1-a/machineTypes")
+           .endpoint(BASE_URL + "/party/zones/us-central1-a/machineTypes")
            .addHeader("Accept", "application/json")
            .addHeader("Authorization", "Bearer " + TOKEN).build();
 
@@ -46,7 +47,7 @@ public class MachineTypeApiExpectTest extends BaseGoogleComputeEngineApiExpectTe
    public static final HttpRequest LIST_CENTRAL1B_MACHINE_TYPES_REQUEST = HttpRequest
            .builder()
            .method("GET")
-           .endpoint(BASE_URL + "/myproject/zones/us-central1-b/machineTypes")
+           .endpoint(BASE_URL + "/party/zones/us-central1-b/machineTypes")
            .addHeader("Accept", "application/json")
            .addHeader("Authorization", "Bearer " + TOKEN).build();
 
@@ -59,7 +60,7 @@ public class MachineTypeApiExpectTest extends BaseGoogleComputeEngineApiExpectTe
       HttpRequest get = HttpRequest
               .builder()
               .method("GET")
-              .endpoint(BASE_URL + "/myproject/zones/us-central1-a/machineTypes/n1-standard-1")
+              .endpoint(BASE_URL + "/party/zones/us-central1-a/machineTypes/n1-standard-1")
               .addHeader("Accept", "application/json")
               .addHeader("Authorization", "Bearer " + TOKEN).build();
 
@@ -67,7 +68,7 @@ public class MachineTypeApiExpectTest extends BaseGoogleComputeEngineApiExpectTe
               .payload(payloadFromResource("/machinetype.json")).build();
 
       MachineTypeApi machineTypeApi = requestsSendResponses(requestForScopes(COMPUTE_READONLY_SCOPE),
-              TOKEN_RESPONSE, get, operationResponse).getMachineTypeApi("myproject", "us-central1-a");
+              TOKEN_RESPONSE, get, operationResponse).getMachineTypeApi("party", "us-central1-a");
 
       assertEquals(machineTypeApi.get("n1-standard-1"), new ParseMachineTypeTest().expected());
    }
@@ -76,14 +77,14 @@ public class MachineTypeApiExpectTest extends BaseGoogleComputeEngineApiExpectTe
       HttpRequest get = HttpRequest
               .builder()
               .method("GET")
-              .endpoint(BASE_URL + "/myproject/zones/us-central1-a/machineTypes/n1-standard-1")
+              .endpoint(BASE_URL + "/party/zones/us-central1-a/machineTypes/n1-standard-1")
               .addHeader("Accept", "application/json")
               .addHeader("Authorization", "Bearer " + TOKEN).build();
 
       HttpResponse operationResponse = HttpResponse.builder().statusCode(404).build();
 
       MachineTypeApi machineTypeApi = requestsSendResponses(requestForScopes(COMPUTE_READONLY_SCOPE),
-              TOKEN_RESPONSE, get, operationResponse).getMachineTypeApi("myproject", "us-central1-a");
+              TOKEN_RESPONSE, get, operationResponse).getMachineTypeApi("party", "us-central1-a");
 
       assertNull(machineTypeApi.get("n1-standard-1"));
    }
@@ -92,7 +93,7 @@ public class MachineTypeApiExpectTest extends BaseGoogleComputeEngineApiExpectTe
 
       MachineTypeApi machineTypeApi = requestsSendResponses(requestForScopes(COMPUTE_READONLY_SCOPE),
               TOKEN_RESPONSE, LIST_MACHINE_TYPES_REQUEST, LIST_MACHINE_TYPES_RESPONSE).getMachineTypeApi
-              ("myproject", "us-central1-a");
+              ("party", "us-central1-a");
 
       assertEquals(machineTypeApi.list().next().toString(), new ParseMachineTypeListTest().expected().toString());
    }
@@ -102,7 +103,7 @@ public class MachineTypeApiExpectTest extends BaseGoogleComputeEngineApiExpectTe
       HttpResponse operationResponse = HttpResponse.builder().statusCode(404).build();
 
       MachineTypeApi machineTypeApi = requestsSendResponses(requestForScopes(COMPUTE_READONLY_SCOPE), TOKEN_RESPONSE,
-            LIST_MACHINE_TYPES_REQUEST, operationResponse).getMachineTypeApi("myproject", "us-central1-a");
+            LIST_MACHINE_TYPES_REQUEST, operationResponse).getMachineTypeApi("party", "us-central1-a");
 
       assertFalse(machineTypeApi.list().hasNext());
    }

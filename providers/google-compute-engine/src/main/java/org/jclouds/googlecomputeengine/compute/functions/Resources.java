@@ -19,14 +19,20 @@ package org.jclouds.googlecomputeengine.compute.functions;
 import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 import static org.jclouds.Fallbacks.NullOnNotFoundOr404;
 import static org.jclouds.googlecomputeengine.GoogleComputeEngineConstants.COMPUTE_READONLY_SCOPE;
+import static org.jclouds.googlecomputeengine.GoogleComputeEngineConstants.COMPUTE_SCOPE;
 
 import java.net.URI;
 
 import javax.inject.Named;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
 
+import org.jclouds.googlecomputeengine.domain.Image;
 import org.jclouds.googlecomputeengine.domain.Instance;
+import org.jclouds.googlecomputeengine.domain.Network;
 import org.jclouds.googlecomputeengine.domain.Operation;
 import org.jclouds.javax.annotation.Nullable;
 import org.jclouds.oauth.v2.config.OAuthScopes;
@@ -39,7 +45,13 @@ import org.jclouds.rest.annotations.SkipEncoding;
 @SkipEncoding({'/', '='})
 @RequestFilters(OAuthAuthenticationFilter.class)
 @Consumes(APPLICATION_JSON)
-public interface ResourceFunctions {
+public interface Resources {
+
+   /** Returns an image by self-link or null if not found. */
+   @Named("Images:get")
+   @GET
+   @OAuthScopes(COMPUTE_READONLY_SCOPE)
+   @Fallback(NullOnNotFoundOr404.class) @Nullable Image image(@EndpointParam URI selfLink);
 
    /** Returns an instance by self-link or null if not found. */
    @Named("Instances:get")
@@ -47,9 +59,27 @@ public interface ResourceFunctions {
    @OAuthScopes(COMPUTE_READONLY_SCOPE)
    @Fallback(NullOnNotFoundOr404.class) @Nullable Instance instance(@EndpointParam URI selfLink);
 
+   /** Returns an network by self-link or null if not found. */
+   @Named("Networks:get")
+   @GET
+   @OAuthScopes(COMPUTE_READONLY_SCOPE)
+   @Fallback(NullOnNotFoundOr404.class) @Nullable Network network(@EndpointParam URI selfLink);
+
    /** Returns an operation by self-link or null if not found. */
    @Named("Operations:get")
    @GET
    @OAuthScopes(COMPUTE_READONLY_SCOPE)
    @Fallback(NullOnNotFoundOr404.class) @Nullable Operation operation(@EndpointParam URI selfLink);
+
+   /** Deletes any resource by self-link and returns the operation in progress, or null if not found. */
+   @Named("Resources:delete")
+   @DELETE
+   @OAuthScopes(COMPUTE_SCOPE)
+   @Fallback(NullOnNotFoundOr404.class) @Nullable Operation delete(@EndpointParam URI selfLink);
+
+   /** Hard-resets the instance by self-link and returns the operation in progres */
+   @Named("Instances:reset")
+   @POST
+   @Path("/reset")
+   @OAuthScopes(COMPUTE_SCOPE) Operation resetInstance(@EndpointParam URI selfLink);
 }

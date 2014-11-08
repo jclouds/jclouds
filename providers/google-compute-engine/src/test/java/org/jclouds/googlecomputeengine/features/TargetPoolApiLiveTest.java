@@ -16,7 +16,7 @@
  */
 package org.jclouds.googlecomputeengine.features;
 
-import static org.jclouds.googlecomputeengine.domain.Instance.NetworkInterface.AccessConfig.Type.ONE_TO_ONE_NAT;
+import static org.jclouds.googlecomputeengine.domain.NewInstance.Disk.newBootDisk;
 import static org.jclouds.googlecomputeengine.options.ListOptions.Builder.filter;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotEquals;
@@ -30,10 +30,9 @@ import org.jclouds.googlecomputeengine.domain.HttpHealthCheck;
 import org.jclouds.googlecomputeengine.domain.Image;
 import org.jclouds.googlecomputeengine.domain.Instance;
 import org.jclouds.googlecomputeengine.domain.ListPage;
+import org.jclouds.googlecomputeengine.domain.NewInstance;
 import org.jclouds.googlecomputeengine.domain.TargetPool;
-import org.jclouds.googlecomputeengine.domain.templates.InstanceTemplate;
 import org.jclouds.googlecomputeengine.internal.BaseGoogleComputeEngineApiLiveTest;
-import org.jclouds.googlecomputeengine.options.DiskCreationOptions;
 import org.jclouds.googlecomputeengine.options.HttpHealthCheckCreationOptions;
 import org.jclouds.googlecomputeengine.options.TargetPoolCreationOptions;
 import org.jclouds.googlecomputeengine.options.TargetPoolCreationOptions.SessionAffinityValue;
@@ -54,7 +53,6 @@ public class TargetPoolApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
 
    private static final String INSTANCE_NETWORK_NAME = "target-pool-api-live-test-network";
    private static final String INSTANCE_NAME = "target-pool-api-live-test-instance";
-   private static final String BOOT_DISK_NAME = INSTANCE_NAME + "-boot-disk";
    private static final String IPV4_RANGE = "10.0.0.0/8";
    private static final String HEALTHCHECK_NAME = "target-pool-test-health-check";
 
@@ -84,29 +82,19 @@ public class TargetPoolApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
             })
             .first().get().selfLink();
 
-      // Make and instanceTemplate
-      InstanceTemplate instanceTemplate = new InstanceTemplate()
-            .name(INSTANCE_NAME)
-            .machineType(getDefaultMachineTypeUrl(userProject.get()))
-            .addNetworkInterface(getNetworkUrl(userProject.get(), INSTANCE_NETWORK_NAME), ONE_TO_ONE_NAT)
-            .addMetadata("mykey", "myvalue")
-            .description("a description")
-            .addDisk(Instance.AttachedDisk.Mode.READ_WRITE, getDiskUrl(userProject.get(), BOOT_DISK_NAME),
-                     null, true, true)
-            .image(imageUri);
-
-
       // Insert a network.
-      assertOperationDoneSuccessfully(api.getNetworkApi(userProject.get()).createInIPv4Range
-              (INSTANCE_NETWORK_NAME, IPV4_RANGE));
-
-      // Create a disk.
-      DiskCreationOptions diskCreationOptions = new DiskCreationOptions().sourceImage(instanceTemplate.image());
-      assertOperationDoneSuccessfully(api.getDiskApi(userProject.get(), DEFAULT_ZONE_NAME)
-                  .create(BOOT_DISK_NAME, DEFAULT_DISK_SIZE_GB, diskCreationOptions));
+      assertOperationDoneSuccessfully(api.getNetworkApi(userProject.get()).createInIPv4Range(INSTANCE_NETWORK_NAME,
+            IPV4_RANGE));
 
       // Create an instance.
-      assertOperationDoneSuccessfully(instanceApi.create(instanceTemplate));
+      assertOperationDoneSuccessfully(
+            instanceApi.create(NewInstance.create(getDefaultMachineTypeUrl(userProject.get()), // machineType
+                  INSTANCE_NAME, // name
+                  getNetworkUrl(userProject.get(), INSTANCE_NETWORK_NAME), // network
+                  newBootDisk(imageUri), // disks
+                  null // description
+            )));
+
       Instance instance = instanceApi.get(INSTANCE_NAME);
       instances = new ArrayList<URI>();
       instances.add(instance.selfLink());
@@ -244,7 +232,6 @@ public class TargetPoolApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
 
       try {
          waitOperationDone(instanceApi.delete(INSTANCE_NAME));
-         waitOperationDone(api.getDiskApi(userProject.get(), DEFAULT_ZONE_NAME).delete(BOOT_DISK_NAME));
          waitOperationDone(api.getNetworkApi(userProject.get()).delete(INSTANCE_NETWORK_NAME));
          waitOperationDone(httpHealthCheckApi.delete(HEALTHCHECK_NAME));
       } catch (Exception e) {

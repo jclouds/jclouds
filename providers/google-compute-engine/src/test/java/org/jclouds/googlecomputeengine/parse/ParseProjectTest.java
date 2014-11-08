@@ -29,7 +29,6 @@ import org.jclouds.googlecomputeengine.internal.BaseGoogleComputeEngineParseTest
 import org.testng.annotations.Test;
 
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableMap;
 
 @Test(groups = "unit", testName = "ParseProjectTest")
 public class ParseProjectTest extends BaseGoogleComputeEngineParseTest<Project> {
@@ -43,10 +42,10 @@ public class ParseProjectTest extends BaseGoogleComputeEngineParseTest<Project> 
    public Project expected() {
       return Project.create( //
             "13024414184846275913", // id
-            URI.create(BASE_URL + "/myproject"), // selfLink
-            "myproject", // name
+            URI.create(BASE_URL + "/party"), // selfLink
+            "party", // name
             "", // description
-            Metadata.create("efgh", ImmutableMap.of("propA", "valueA", "propB", "valueB")), // commonInstanceMetadata
+            Metadata.create("efgh").put("propA", "valueA").put("propB", "valueB"), // commonInstanceMetadata
             ImmutableList.of( //
                   Quota.create("INSTANCES", 0, 8), //
                   Quota.create("CPUS", 0, 8), //

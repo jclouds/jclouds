@@ -26,7 +26,8 @@ import java.net.URI;
 
 import javax.ws.rs.core.MediaType;
 
-import org.jclouds.googlecomputeengine.internal.BaseGoogleComputeEngineApiExpectTest;
+import org.jclouds.googlecomputeengine.GoogleComputeEngineApi;
+import org.jclouds.googlecomputeengine.internal.BaseGoogleComputeEngineExpectTest;
 import org.jclouds.googlecomputeengine.options.RouteOptions;
 import org.jclouds.googlecomputeengine.parse.ParseGlobalOperationTest;
 import org.jclouds.googlecomputeengine.parse.ParseRouteListTest;
@@ -36,13 +37,13 @@ import org.jclouds.http.HttpResponse;
 import org.testng.annotations.Test;
 
 @Test(groups = "unit", testName = "RouteApiExpectTest")
-public class RouteApiExpectTest extends BaseGoogleComputeEngineApiExpectTest {
+public class RouteApiExpectTest extends BaseGoogleComputeEngineExpectTest<GoogleComputeEngineApi> {
 
    public void testGetRouteResponseIs2xx() throws Exception {
       HttpRequest get = HttpRequest
               .builder()
               .method("GET")
-              .endpoint(BASE_URL + "/myproject/global/routes/default-route-c99ebfbed0e1f375")
+              .endpoint(BASE_URL + "/party/global/routes/default-route-c99ebfbed0e1f375")
               .addHeader("Accept", "application/json")
               .addHeader("Authorization", "Bearer " + TOKEN).build();
 
@@ -50,7 +51,7 @@ public class RouteApiExpectTest extends BaseGoogleComputeEngineApiExpectTest {
               .payload(payloadFromResource("/route_get.json")).build();
 
       RouteApi api = requestsSendResponses(requestForScopes(COMPUTE_READONLY_SCOPE),
-              TOKEN_RESPONSE, get, operationResponse).getRouteApi("myproject");
+              TOKEN_RESPONSE, get, operationResponse).getRouteApi("party");
 
       assertEquals(api.get("default-route-c99ebfbed0e1f375"),
               new ParseRouteTest().expected());
@@ -60,14 +61,14 @@ public class RouteApiExpectTest extends BaseGoogleComputeEngineApiExpectTest {
       HttpRequest get = HttpRequest
               .builder()
               .method("GET")
-              .endpoint(BASE_URL + "/myproject/global/routes/default-route-c99ebfbed0e1f375")
+              .endpoint(BASE_URL + "/party/global/routes/default-route-c99ebfbed0e1f375")
               .addHeader("Accept", "application/json")
               .addHeader("Authorization", "Bearer " + TOKEN).build();
 
       HttpResponse operationResponse = HttpResponse.builder().statusCode(404).build();
 
       RouteApi api = requestsSendResponses(requestForScopes(COMPUTE_READONLY_SCOPE),
-              TOKEN_RESPONSE, get, operationResponse).getRouteApi("myproject");
+              TOKEN_RESPONSE, get, operationResponse).getRouteApi("party");
 
       assertNull(api.get("default-route-c99ebfbed0e1f375"));
    }
@@ -76,7 +77,7 @@ public class RouteApiExpectTest extends BaseGoogleComputeEngineApiExpectTest {
       HttpRequest insert = HttpRequest
               .builder()
               .method("POST")
-              .endpoint(BASE_URL + "/myproject/global/routes")
+              .endpoint(BASE_URL + "/party/global/routes")
               .addHeader("Accept", "application/json")
               .addHeader("Authorization", "Bearer " + TOKEN)
               .payload(payloadFromResourceWithContentType("/route_insert.json", MediaType.APPLICATION_JSON))
@@ -87,16 +88,16 @@ public class RouteApiExpectTest extends BaseGoogleComputeEngineApiExpectTest {
 
       RouteApi api = requestsSendResponses(requestForScopes(COMPUTE_SCOPE),
               TOKEN_RESPONSE, insert,
-              insertRouteResponse).getRouteApi("myproject");
+              insertRouteResponse).getRouteApi("party");
 
       assertEquals(api.createInNetwork("default-route-c99ebfbed0e1f375",
-              URI.create(BASE_URL + "/myproject/global/networks/default"),
+              URI.create(BASE_URL + "/party/global/networks/default"),
               new RouteOptions().addTag("fooTag")
                       .addTag("barTag")
                       .description("Default route to the virtual network.")
               .destRange("10.240.0.0/16")
               .priority(1000)
-              .nextHopNetwork(URI.create(BASE_URL + "/myproject/global/networks/default"))
+              .nextHopNetwork(URI.create(BASE_URL + "/party/global/networks/default"))
       ), new ParseGlobalOperationTest().expected());
    }
 
@@ -104,7 +105,7 @@ public class RouteApiExpectTest extends BaseGoogleComputeEngineApiExpectTest {
       HttpRequest delete = HttpRequest
               .builder()
               .method("DELETE")
-              .endpoint(BASE_URL + "/myproject/global/routes/default-route-c99ebfbed0e1f375")
+              .endpoint(BASE_URL + "/party/global/routes/default-route-c99ebfbed0e1f375")
               .addHeader("Accept", "application/json")
               .addHeader("Authorization", "Bearer " + TOKEN).build();
 
@@ -112,7 +113,7 @@ public class RouteApiExpectTest extends BaseGoogleComputeEngineApiExpectTest {
               .payload(payloadFromResource("/global_operation.json")).build();
 
       RouteApi api = requestsSendResponses(requestForScopes(COMPUTE_SCOPE),
-              TOKEN_RESPONSE, delete, deleteResponse).getRouteApi("myproject");
+              TOKEN_RESPONSE, delete, deleteResponse).getRouteApi("party");
 
       assertEquals(api.delete("default-route-c99ebfbed0e1f375"),
               new ParseGlobalOperationTest().expected());
@@ -122,14 +123,14 @@ public class RouteApiExpectTest extends BaseGoogleComputeEngineApiExpectTest {
       HttpRequest delete = HttpRequest
               .builder()
               .method("DELETE")
-              .endpoint(BASE_URL + "/myproject/global/routes/default-route-c99ebfbed0e1f375")
+              .endpoint(BASE_URL + "/party/global/routes/default-route-c99ebfbed0e1f375")
               .addHeader("Accept", "application/json")
               .addHeader("Authorization", "Bearer " + TOKEN).build();
 
       HttpResponse deleteResponse = HttpResponse.builder().statusCode(404).build();
 
       RouteApi api = requestsSendResponses(requestForScopes(COMPUTE_SCOPE),
-              TOKEN_RESPONSE, delete, deleteResponse).getRouteApi("myproject");
+              TOKEN_RESPONSE, delete, deleteResponse).getRouteApi("party");
 
       assertNull(api.delete("default-route-c99ebfbed0e1f375"));
    }
@@ -138,7 +139,7 @@ public class RouteApiExpectTest extends BaseGoogleComputeEngineApiExpectTest {
       HttpRequest list = HttpRequest
               .builder()
               .method("GET")
-              .endpoint(BASE_URL + "/myproject/global/routes")
+              .endpoint(BASE_URL + "/party/global/routes")
               .addHeader("Accept", "application/json")
               .addHeader("Authorization", "Bearer " + TOKEN).build();
 
@@ -146,7 +147,7 @@ public class RouteApiExpectTest extends BaseGoogleComputeEngineApiExpectTest {
               .payload(payloadFromResource("/route_list.json")).build();
 
       RouteApi api = requestsSendResponses(requestForScopes(COMPUTE_READONLY_SCOPE),
-              TOKEN_RESPONSE, list, operationResponse).getRouteApi("myproject");
+              TOKEN_RESPONSE, list, operationResponse).getRouteApi("party");
 
       assertEquals(api.list().next().toString(), new ParseRouteListTest().expected().toString());
    }
@@ -155,14 +156,14 @@ public class RouteApiExpectTest extends BaseGoogleComputeEngineApiExpectTest {
       HttpRequest list = HttpRequest
               .builder()
               .method("GET")
-              .endpoint(BASE_URL + "/myproject/global/routes")
+              .endpoint(BASE_URL + "/party/global/routes")
               .addHeader("Accept", "application/json")
               .addHeader("Authorization", "Bearer " + TOKEN).build();
 
       HttpResponse operationResponse = HttpResponse.builder().statusCode(404).build();
 
       RouteApi api = requestsSendResponses(requestForScopes(COMPUTE_READONLY_SCOPE),
-              TOKEN_RESPONSE, list, operationResponse).getRouteApi("myproject");
+              TOKEN_RESPONSE, list, operationResponse).getRouteApi("party");
 
       assertFalse(api.list().hasNext());
    }

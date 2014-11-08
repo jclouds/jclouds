@@ -23,16 +23,16 @@ import java.util.concurrent.atomic.AtomicReference;
 
 import javax.inject.Inject;
 
-import org.jclouds.googlecomputeengine.compute.functions.ResourceFunctions;
+import org.jclouds.googlecomputeengine.compute.functions.Resources;
 import org.jclouds.googlecomputeengine.domain.Operation;
 
 import com.google.common.base.Predicate;
 
 public final class AtomicOperationDone implements Predicate<AtomicReference<Operation>> {
 
-   private final ResourceFunctions resources;
+   private final Resources resources;
 
-   @Inject AtomicOperationDone(ResourceFunctions resources) {
+   @Inject AtomicOperationDone(Resources resources) {
       this.resources = resources;
    }
 

@@ -16,22 +16,23 @@
  */
 package org.jclouds.googlecomputeengine.features;
 
-import static java.net.URI.create;
 import static org.jclouds.googlecomputeengine.GoogleComputeEngineConstants.COMPUTE_READONLY_SCOPE;
 import static org.jclouds.googlecomputeengine.GoogleComputeEngineConstants.COMPUTE_SCOPE;
 import static org.jclouds.googlecomputeengine.features.ProjectApiExpectTest.GET_PROJECT_REQUEST;
 import static org.jclouds.googlecomputeengine.features.ProjectApiExpectTest.GET_PROJECT_RESPONSE;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertFalse;
-import static org.testng.AssertJUnit.assertNull;
+import static org.testng.Assert.assertNull;
 
 import java.net.URI;
 
 import javax.ws.rs.core.MediaType;
 
-import org.jclouds.googlecomputeengine.domain.Instance;
-import org.jclouds.googlecomputeengine.domain.templates.InstanceTemplate;
-import org.jclouds.googlecomputeengine.internal.BaseGoogleComputeEngineApiExpectTest;
+import org.jclouds.googlecomputeengine.GoogleComputeEngineApi;
+import org.jclouds.googlecomputeengine.domain.Metadata;
+import org.jclouds.googlecomputeengine.domain.NewInstance;
+import org.jclouds.googlecomputeengine.domain.NewInstance.Disk;
+import org.jclouds.googlecomputeengine.internal.BaseGoogleComputeEngineExpectTest;
 import org.jclouds.googlecomputeengine.options.AttachDiskOptions;
 import org.jclouds.googlecomputeengine.options.AttachDiskOptions.DiskMode;
 import org.jclouds.googlecomputeengine.options.AttachDiskOptions.DiskType;
@@ -48,12 +49,12 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 
 @Test(groups = "unit", testName = "InstanceApiExpectTest")
-public class InstanceApiExpectTest extends BaseGoogleComputeEngineApiExpectTest {
+public class InstanceApiExpectTest extends BaseGoogleComputeEngineExpectTest<GoogleComputeEngineApi> {
 
    public static final HttpRequest GET_INSTANCE_REQUEST = HttpRequest
            .builder()
            .method("GET")
-           .endpoint(BASE_URL + "/myproject/zones/us-central1-a/instances/test-1")
+           .endpoint(BASE_URL + "/party/zones/us-central1-a/instances/test-1")
            .addHeader("Accept", "application/json")
            .addHeader("Authorization", "Bearer " + TOKEN).build();
 
@@ -63,32 +64,21 @@ public class InstanceApiExpectTest extends BaseGoogleComputeEngineApiExpectTest 
    public static final HttpRequest LIST_INSTANCES_REQUEST = HttpRequest
            .builder()
            .method("GET")
-           .endpoint(BASE_URL + "/myproject/zones/us-central1-a/instances")
+           .endpoint(BASE_URL + "/party/zones/us-central1-a/instances")
            .addHeader("Accept", "application/json")
            .addHeader("Authorization", "Bearer " + TOKEN).build();
 
    public static final HttpResponse LIST_INSTANCES_RESPONSE = HttpResponse.builder().statusCode(200)
            .payload(staticPayloadFromResource("/instance_list.json")).build();
 
-   public static final HttpRequest LIST_CENTRAL1B_INSTANCES_REQUEST = HttpRequest
-           .builder()
-           .method("GET")
-           .endpoint(BASE_URL + "/myproject/zones/us-central1-b/instances")
-           .addHeader("Accept", "application/json")
-           .addHeader("Authorization", "Bearer " + TOKEN).build();
-
-   public static final HttpResponse LIST_CENTRAL1B_INSTANCES_RESPONSE = HttpResponse.builder().statusCode(200)
-           .payload(staticPayloadFromResource("/instance_list_central1b_empty.json")).build();
-
    public static final HttpResponse CREATE_INSTANCE_RESPONSE = HttpResponse.builder().statusCode(200)
            .payload(staticPayloadFromResource("/zone_operation.json")).build();
-
 
    public void testGetInstanceResponseIs2xx() throws Exception {
 
       InstanceApi api = requestsSendResponses(
               requestForScopes(COMPUTE_READONLY_SCOPE), TOKEN_RESPONSE,
-              GET_INSTANCE_REQUEST, GET_INSTANCE_RESPONSE).getInstanceApi("myproject", "us-central1-a");
+              GET_INSTANCE_REQUEST, GET_INSTANCE_RESPONSE).getInstanceApi("party", "us-central1-a");
 
       assertEquals(api.get("test-1"), new ParseInstanceTest().expected());
    }
@@ -98,7 +88,7 @@ public class InstanceApiExpectTest extends BaseGoogleComputeEngineApiExpectTest 
       HttpResponse operationResponse = HttpResponse.builder().statusCode(404).build();
 
       InstanceApi api = requestsSendResponses(requestForScopes(COMPUTE_READONLY_SCOPE),
-              TOKEN_RESPONSE, GET_INSTANCE_REQUEST, operationResponse).getInstanceApi("myproject", "us-central1-a");
+              TOKEN_RESPONSE, GET_INSTANCE_REQUEST, operationResponse).getInstanceApi("party", "us-central1-a");
 
       assertNull(api.get("test-1"));
    }
@@ -107,7 +97,7 @@ public class InstanceApiExpectTest extends BaseGoogleComputeEngineApiExpectTest 
       HttpRequest get = HttpRequest
               .builder()
               .method("GET")
-              .endpoint(BASE_URL + "/myproject/zones/us-central1-a/instances/test-1/serialPort")
+              .endpoint(BASE_URL + "/party/zones/us-central1-a/instances/test-1/serialPort")
               .addHeader("Accept", "application/json")
               .addHeader("Authorization", "Bearer " + TOKEN).build();
 
@@ -116,7 +106,7 @@ public class InstanceApiExpectTest extends BaseGoogleComputeEngineApiExpectTest 
 
 
       InstanceApi api = requestsSendResponses(requestForScopes(COMPUTE_READONLY_SCOPE),
-              TOKEN_RESPONSE, get, operationResponse).getInstanceApi("myproject", "us-central1-a");
+              TOKEN_RESPONSE, get, operationResponse).getInstanceApi("party", "us-central1-a");
 
       assertEquals(api.getSerialPortOutput("test-1"), new ParseInstanceSerialOutputTest().expected());
    }
@@ -125,7 +115,7 @@ public class InstanceApiExpectTest extends BaseGoogleComputeEngineApiExpectTest 
       HttpRequest insert = HttpRequest
               .builder()
               .method("POST")
-              .endpoint(BASE_URL + "/myproject/zones/us-central1-a/instances")
+              .endpoint(BASE_URL + "/party/zones/us-central1-a/instances")
               .addHeader("Accept", "application/json")
               .addHeader("Authorization", "Bearer " + TOKEN)
               .payload(payloadFromResourceWithContentType("/instance_insert_simple.json", MediaType.APPLICATION_JSON))
@@ -135,21 +125,24 @@ public class InstanceApiExpectTest extends BaseGoogleComputeEngineApiExpectTest 
               TOKEN_RESPONSE, GET_PROJECT_REQUEST, GET_PROJECT_RESPONSE,
               requestForScopes(COMPUTE_SCOPE),
               TOKEN_RESPONSE, insert,
-              CREATE_INSTANCE_RESPONSE)).getInstanceApi("myproject", "us-central1-a");
+              CREATE_INSTANCE_RESPONSE)).getInstanceApi("party", "us-central1-a");
 
-      InstanceTemplate options = new InstanceTemplate()
-              .name("test-1")
-              .machineType(URI.create(BASE_URL + "/myproject/zones/us-central1-a/machineTypes/n1-standard-1"))
-              .addNetworkInterface(URI.create(BASE_URL + "/myproject/global/networks/default"));
+      NewInstance newInstance = NewInstance.create(
+            URI.create(BASE_URL + "/party/zones/us-central1-a/machineTypes/n1-standard-1"), // machineType
+            "test-1", // name
+            URI.create(BASE_URL + "/party/global/networks/default"), // network
+            Disk.existingBootDisk(URI.create(BASE_URL + "/party/zones/us-central1-a/disks/test")), // bootDisk
+            null // description
+      );
 
-      assertEquals(api.create(options), new ParseZoneOperationTest().expected());
+      assertEquals(api.create(newInstance), new ParseZoneOperationTest().expected());
    }
 
    public void testInsertInstanceResponseIs2xxAllOptions() {
       HttpRequest insert = HttpRequest
               .builder()
               .method("POST")
-              .endpoint(BASE_URL + "/myproject/zones/us-central1-a/instances")
+              .endpoint(BASE_URL + "/party/zones/us-central1-a/instances")
               .addHeader("Accept", "application/json")
               .addHeader("Authorization", "Bearer " + TOKEN)
               .payload(payloadFromResourceWithContentType("/instance_insert.json", MediaType.APPLICATION_JSON))
@@ -161,29 +154,24 @@ public class InstanceApiExpectTest extends BaseGoogleComputeEngineApiExpectTest 
       InstanceApi api = requestsSendResponses(ImmutableMap.of(requestForScopes(COMPUTE_READONLY_SCOPE),
               TOKEN_RESPONSE, GET_PROJECT_REQUEST, GET_PROJECT_RESPONSE,
               requestForScopes(COMPUTE_SCOPE),
-              TOKEN_RESPONSE, insert, insertInstanceResponse)).getInstanceApi("myproject", "us-central1-a");
+              TOKEN_RESPONSE, insert, insertInstanceResponse)).getInstanceApi("party", "us-central1-a");
 
-      InstanceTemplate options = new InstanceTemplate()
-              .name("test-0")
-              .machineType(URI.create(BASE_URL + "/myproject/zones/us-central1-a/machineTypes/n1-standard-1"))
-              .addNetworkInterface(
-                    URI.create(BASE_URL + "/myproject/global/networks/default"),
-                    Instance.NetworkInterface.AccessConfig.Type.ONE_TO_ONE_NAT)
-              .description("desc")
-              .addDisk(Instance.AttachedDisk.Mode.READ_WRITE,
-                    create(BASE_URL + "/myproject/zones/us-central1-a/disks/test"),
-                    true)
-              .addServiceAccount(Instance.ServiceAccount.create("default", ImmutableList.of("myscope")))
-              .addMetadata("aKey", "aValue");
-
-      assertEquals(api.create(options), new ParseZoneOperationTest().expected());
+      NewInstance newInstance = NewInstance.create(
+            URI.create(BASE_URL + "/party/zones/us-central1-a/machineTypes/n1-standard-1"), // machineType
+            "test-1", // name
+            URI.create(BASE_URL + "/party/global/networks/default"), // network
+            Disk.existingBootDisk(URI.create(BASE_URL + "/party/zones/us-central1-a/disks/test")), // bootDisk
+            "desc" // description
+      );
+      newInstance.metadata().put("aKey", "aValue");
+      assertEquals(api.create(newInstance), new ParseZoneOperationTest().expected());
    }
 
    public void testDeleteInstanceResponseIs2xx() {
       HttpRequest delete = HttpRequest
               .builder()
               .method("DELETE")
-              .endpoint(BASE_URL + "/myproject/zones/us-central1-a/instances/test-1")
+              .endpoint(BASE_URL + "/party/zones/us-central1-a/instances/test-1")
               .addHeader("Accept", "application/json")
               .addHeader("Authorization", "Bearer " + TOKEN).build();
 
@@ -191,24 +179,23 @@ public class InstanceApiExpectTest extends BaseGoogleComputeEngineApiExpectTest 
               .payload(payloadFromResource("/zone_operation.json")).build();
 
       InstanceApi api = requestsSendResponses(requestForScopes(COMPUTE_SCOPE),
-              TOKEN_RESPONSE, delete, deleteResponse).getInstanceApi("myproject", "us-central1-a");
+              TOKEN_RESPONSE, delete, deleteResponse).getInstanceApi("party", "us-central1-a");
 
-      assertEquals(api.delete("test-1"),
-              new ParseZoneOperationTest().expected());
+      assertEquals(api.delete("test-1"), new ParseZoneOperationTest().expected());
    }
 
    public void testDeleteInstanceResponseIs4xx() {
       HttpRequest delete = HttpRequest
               .builder()
               .method("DELETE")
-              .endpoint(BASE_URL + "/myproject/zones/us-central1-a/instances/test-1")
+              .endpoint(BASE_URL + "/party/zones/us-central1-a/instances/test-1")
               .addHeader("Accept", "application/json")
               .addHeader("Authorization", "Bearer " + TOKEN).build();
 
       HttpResponse deleteResponse = HttpResponse.builder().statusCode(404).build();
 
       InstanceApi api = requestsSendResponses(requestForScopes(COMPUTE_SCOPE),
-              TOKEN_RESPONSE, delete, deleteResponse).getInstanceApi("myproject", "us-central1-a");
+              TOKEN_RESPONSE, delete, deleteResponse).getInstanceApi("party", "us-central1-a");
 
       assertNull(api.delete("test-1"));
    }
@@ -217,7 +204,7 @@ public class InstanceApiExpectTest extends BaseGoogleComputeEngineApiExpectTest 
 
       InstanceApi api = requestsSendResponses(
               requestForScopes(COMPUTE_READONLY_SCOPE), TOKEN_RESPONSE,
-              LIST_INSTANCES_REQUEST, LIST_INSTANCES_RESPONSE).getInstanceApi("myproject", "us-central1-a");
+              LIST_INSTANCES_REQUEST, LIST_INSTANCES_RESPONSE).getInstanceApi("party", "us-central1-a");
 
       assertEquals(api.list().next().toString(), new ParseInstanceListTest().expected().toString());
    }
@@ -226,14 +213,14 @@ public class InstanceApiExpectTest extends BaseGoogleComputeEngineApiExpectTest 
       HttpRequest list = HttpRequest
               .builder()
               .method("GET")
-              .endpoint(BASE_URL + "/myproject/zones/us-central1-a/instances")
+              .endpoint(BASE_URL + "/party/zones/us-central1-a/instances")
               .addHeader("Accept", "application/json")
               .addHeader("Authorization", "Bearer " + TOKEN).build();
 
       HttpResponse operationResponse = HttpResponse.builder().statusCode(404).build();
 
       InstanceApi api = requestsSendResponses(requestForScopes(COMPUTE_READONLY_SCOPE),
-              TOKEN_RESPONSE, list, operationResponse).getInstanceApi("myproject", "us-central1-a");
+              TOKEN_RESPONSE, list, operationResponse).getInstanceApi("party", "us-central1-a");
 
       assertFalse(api.list().hasNext());
    }
@@ -242,7 +229,7 @@ public class InstanceApiExpectTest extends BaseGoogleComputeEngineApiExpectTest 
       HttpRequest setMetadata = HttpRequest
               .builder()
               .method("POST")
-              .endpoint(BASE_URL + "/myproject/zones/us-central1-a/instances/test-1/setMetadata")
+              .endpoint(BASE_URL + "/party/zones/us-central1-a/instances/test-1/setMetadata")
               .addHeader("Accept", "application/json")
               .addHeader("Authorization", "Bearer " + TOKEN)
               .payload(payloadFromResourceWithContentType("/instance_set_metadata.json", MediaType.APPLICATION_JSON))
@@ -252,9 +239,9 @@ public class InstanceApiExpectTest extends BaseGoogleComputeEngineApiExpectTest 
               .payload(payloadFromResource("/zone_operation.json")).build();
 
       InstanceApi api = requestsSendResponses(requestForScopes(COMPUTE_SCOPE),
-              TOKEN_RESPONSE, setMetadata, setMetadataResponse).getInstanceApi("myproject", "us-central1-a");
+              TOKEN_RESPONSE, setMetadata, setMetadataResponse).getInstanceApi("party", "us-central1-a");
 
-      assertEquals(api.setMetadata("test-1", ImmutableMap.of("foo", "bar"), "efgh"),
+      assertEquals(api.setMetadata("test-1", Metadata.create("efgh").put("foo", "bar")),
               new ParseZoneOperationTest().expected());
    }
 
@@ -263,7 +250,7 @@ public class InstanceApiExpectTest extends BaseGoogleComputeEngineApiExpectTest 
       HttpRequest setMetadata = HttpRequest
               .builder()
               .method("POST")
-              .endpoint(BASE_URL + "/myproject/zones/us-central1-a/instances/test-1/setMetadata")
+              .endpoint(BASE_URL + "/party/zones/us-central1-a/instances/test-1/setMetadata")
               .addHeader("Accept", "application/json")
               .addHeader("Authorization", "Bearer " + TOKEN)
               .payload(payloadFromResourceWithContentType("/instance_set_metadata.json", MediaType.APPLICATION_JSON))
@@ -272,16 +259,16 @@ public class InstanceApiExpectTest extends BaseGoogleComputeEngineApiExpectTest 
       HttpResponse setMetadataResponse = HttpResponse.builder().statusCode(404).build();
 
       InstanceApi api = requestsSendResponses(requestForScopes(COMPUTE_SCOPE),
-              TOKEN_RESPONSE, setMetadata, setMetadataResponse).getInstanceApi("myproject", "us-central1-a");
+              TOKEN_RESPONSE, setMetadata, setMetadataResponse).getInstanceApi("party", "us-central1-a");
 
-      api.setMetadata("test-1", ImmutableMap.of("foo", "bar"), "efgh");
+      api.setMetadata("test-1", Metadata.create("efgh").put("foo", "bar"));
    }
 
    public void testSetInstanceTagsResponseIs2xx() {
       HttpRequest setTags = HttpRequest
               .builder()
               .method("POST")
-              .endpoint(BASE_URL + "/myproject/zones/us-central1-a/instances/test-1/setTags")
+              .endpoint(BASE_URL + "/party/zones/us-central1-a/instances/test-1/setTags")
               .addHeader("Accept", "application/json")
               .addHeader("Authorization", "Bearer " + TOKEN)
               .payload(payloadFromResourceWithContentType("/instance_set_tags.json", MediaType.APPLICATION_JSON))
@@ -291,7 +278,7 @@ public class InstanceApiExpectTest extends BaseGoogleComputeEngineApiExpectTest 
               .payload(payloadFromResource("/zone_operation.json")).build();
 
       InstanceApi api = requestsSendResponses(requestForScopes(COMPUTE_SCOPE),
-              TOKEN_RESPONSE, setTags, setTagsResponse).getInstanceApi("myproject", "us-central1-a");
+              TOKEN_RESPONSE, setTags, setTagsResponse).getInstanceApi("party", "us-central1-a");
 
       assertEquals(api.setTags("test-1", ImmutableList.of("foo", "bar"), "efgh"),
               new ParseZoneOperationTest().expected());
@@ -302,7 +289,7 @@ public class InstanceApiExpectTest extends BaseGoogleComputeEngineApiExpectTest 
       HttpRequest setTags = HttpRequest
               .builder()
               .method("POST")
-              .endpoint(BASE_URL + "/myproject/zones/us-central1-a/instances/test-1/setTags")
+              .endpoint(BASE_URL + "/party/zones/us-central1-a/instances/test-1/setTags")
               .addHeader("Accept", "application/json")
               .addHeader("Authorization", "Bearer " + TOKEN)
               .payload(payloadFromResourceWithContentType("/instance_set_tags.json", MediaType.APPLICATION_JSON))
@@ -311,7 +298,7 @@ public class InstanceApiExpectTest extends BaseGoogleComputeEngineApiExpectTest 
       HttpResponse setTagsResponse = HttpResponse.builder().statusCode(404).build();
 
       InstanceApi api = requestsSendResponses(requestForScopes(COMPUTE_SCOPE),
-              TOKEN_RESPONSE, setTags, setTagsResponse).getInstanceApi("myproject", "us-central1-a");
+              TOKEN_RESPONSE, setTags, setTagsResponse).getInstanceApi("party", "us-central1-a");
 
       api.setTags("test-1", ImmutableList.of("foo", "bar"), "efgh");
    }
@@ -320,7 +307,7 @@ public class InstanceApiExpectTest extends BaseGoogleComputeEngineApiExpectTest 
       HttpRequest reset = HttpRequest
               .builder()
               .method("POST")
-              .endpoint(BASE_URL + "/myproject/zones/us-central1-a/instances/test-1/reset")
+              .endpoint(BASE_URL + "/party/zones/us-central1-a/instances/test-1/reset")
               .addHeader("Accept", "application/json")
               .addHeader("Authorization", "Bearer " + TOKEN).build();
 
@@ -328,7 +315,7 @@ public class InstanceApiExpectTest extends BaseGoogleComputeEngineApiExpectTest 
               .payload(payloadFromResource("/zone_operation.json")).build();
 
       InstanceApi api = requestsSendResponses(requestForScopes(COMPUTE_SCOPE),
-              TOKEN_RESPONSE, reset, resetResponse).getInstanceApi("myproject", "us-central1-a");
+              TOKEN_RESPONSE, reset, resetResponse).getInstanceApi("party", "us-central1-a");
 
       assertEquals(api.reset("test-1"),
               new ParseZoneOperationTest().expected());
@@ -339,14 +326,14 @@ public class InstanceApiExpectTest extends BaseGoogleComputeEngineApiExpectTest 
       HttpRequest reset = HttpRequest
               .builder()
               .method("POST")
-              .endpoint(BASE_URL + "/myproject/zones/us-central1-a/instances/test-1/reset")
+              .endpoint(BASE_URL + "/party/zones/us-central1-a/instances/test-1/reset")
               .addHeader("Accept", "application/json")
               .addHeader("Authorization", "Bearer " + TOKEN).build();
 
       HttpResponse resetResponse = HttpResponse.builder().statusCode(404).build();
 
       InstanceApi api = requestsSendResponses(requestForScopes(COMPUTE_SCOPE),
-              TOKEN_RESPONSE, reset, resetResponse).getInstanceApi("myproject", "us-central1-a");
+              TOKEN_RESPONSE, reset, resetResponse).getInstanceApi("party", "us-central1-a");
 
       api.reset("test-1");
    }
@@ -355,7 +342,7 @@ public class InstanceApiExpectTest extends BaseGoogleComputeEngineApiExpectTest 
       HttpRequest attach = HttpRequest
               .builder()
               .method("POST")
-              .endpoint(BASE_URL + "/myproject/zones/us-central1-a/instances/test-1/attachDisk")
+              .endpoint(BASE_URL + "/party/zones/us-central1-a/instances/test-1/attachDisk")
               .addHeader("Accept", "application/json")
               .addHeader("Authorization", "Bearer " + TOKEN)
               .payload(payloadFromResourceWithContentType("/instance_attach_disk.json", MediaType.APPLICATION_JSON))
@@ -365,12 +352,12 @@ public class InstanceApiExpectTest extends BaseGoogleComputeEngineApiExpectTest 
               .payload(payloadFromResource("/zone_operation.json")).build();
 
       InstanceApi api = requestsSendResponses(requestForScopes(COMPUTE_SCOPE),
-              TOKEN_RESPONSE, attach, attachResponse).getInstanceApi("myproject", "us-central1-a");
+              TOKEN_RESPONSE, attach, attachResponse).getInstanceApi("party", "us-central1-a");
 
       assertEquals(api.attachDisk("test-1",
               new AttachDiskOptions()
                       .mode(DiskMode.READ_ONLY)
-                      .source(URI.create(BASE_URL + "/myproject/zones/us-central1-a/disks/testimage1"))
+                      .source(URI.create(BASE_URL + "/party/zones/us-central1-a/disks/testimage1"))
                       .type(DiskType.PERSISTENT)),
               new ParseZoneOperationTest().expected());
    }
@@ -380,7 +367,7 @@ public class InstanceApiExpectTest extends BaseGoogleComputeEngineApiExpectTest 
       HttpRequest attach = HttpRequest
               .builder()
               .method("POST")
-              .endpoint(BASE_URL + "/myproject/zones/us-central1-a/instances/test-1/attachDisk")
+              .endpoint(BASE_URL + "/party/zones/us-central1-a/instances/test-1/attachDisk")
               .addHeader("Accept", "application/json")
               .addHeader("Authorization", "Bearer " + TOKEN)
               .payload(payloadFromResourceWithContentType("/instance_attach_disk.json", MediaType.APPLICATION_JSON))
@@ -389,12 +376,12 @@ public class InstanceApiExpectTest extends BaseGoogleComputeEngineApiExpectTest 
       HttpResponse attachResponse = HttpResponse.builder().statusCode(404).build();
 
       InstanceApi api = requestsSendResponses(requestForScopes(COMPUTE_SCOPE),
-              TOKEN_RESPONSE, attach, attachResponse).getInstanceApi("myproject", "us-central1-a");
+              TOKEN_RESPONSE, attach, attachResponse).getInstanceApi("party", "us-central1-a");
 
       api.attachDisk("test-1",
               new AttachDiskOptions()
                       .mode(DiskMode.READ_ONLY)
-                      .source(URI.create(BASE_URL + "/myproject/zones/us-central1-a/disks/testimage1"))
+                      .source(URI.create(BASE_URL + "/party/zones/us-central1-a/disks/testimage1"))
                       .type(DiskType.PERSISTENT));
 
    }
@@ -403,7 +390,7 @@ public class InstanceApiExpectTest extends BaseGoogleComputeEngineApiExpectTest 
       HttpRequest detach = HttpRequest
               .builder()
               .method("POST")
-              .endpoint(BASE_URL + "/myproject/zones/us-central1-a/instances/test-1/detachDisk?deviceName=test-disk-1")
+              .endpoint(BASE_URL + "/party/zones/us-central1-a/instances/test-1/detachDisk?deviceName=test-disk-1")
               .addHeader("Accept", "application/json")
               .addHeader("Authorization", "Bearer " + TOKEN)
               .build();
@@ -412,7 +399,7 @@ public class InstanceApiExpectTest extends BaseGoogleComputeEngineApiExpectTest 
               .payload(payloadFromResource("/zone_operation.json")).build();
 
       InstanceApi api = requestsSendResponses(requestForScopes(COMPUTE_SCOPE),
-              TOKEN_RESPONSE, detach, detachResponse).getInstanceApi("myproject", "us-central1-a");
+              TOKEN_RESPONSE, detach, detachResponse).getInstanceApi("party", "us-central1-a");
 
       assertEquals(api.detachDisk("test-1", "test-disk-1"),
               new ParseZoneOperationTest().expected());
@@ -423,7 +410,7 @@ public class InstanceApiExpectTest extends BaseGoogleComputeEngineApiExpectTest 
       HttpRequest detach = HttpRequest
               .builder()
               .method("POST")
-              .endpoint(BASE_URL + "/myproject/zones/us-central1-a/instances/test-1/detachDisk?deviceName=test-disk-1")
+              .endpoint(BASE_URL + "/party/zones/us-central1-a/instances/test-1/detachDisk?deviceName=test-disk-1")
               .addHeader("Accept", "application/json")
               .addHeader("Authorization", "Bearer " + TOKEN)
               .build();
@@ -431,7 +418,7 @@ public class InstanceApiExpectTest extends BaseGoogleComputeEngineApiExpectTest 
       HttpResponse detachResponse = HttpResponse.builder().statusCode(404).build();
 
       InstanceApi api = requestsSendResponses(requestForScopes(COMPUTE_SCOPE),
-              TOKEN_RESPONSE, detach, detachResponse).getInstanceApi("myproject", "us-central1-a");
+              TOKEN_RESPONSE, detach, detachResponse).getInstanceApi("party", "us-central1-a");
 
       api.detachDisk("test-1", "test-disk-1");
    }

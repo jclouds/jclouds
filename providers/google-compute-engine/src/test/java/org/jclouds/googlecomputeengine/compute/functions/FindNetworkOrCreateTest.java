@@ -45,11 +45,11 @@ import com.google.inject.Guice;
 
 @Test
 public class FindNetworkOrCreateTest {
-   private static final Supplier<String> USER_PROJECT = Suppliers.ofInstance("myproject");
+   private static final Supplier<String> USER_PROJECT = Suppliers.ofInstance("party");
    private static final String BASE_URL = "https://www.googleapis.com/compute/v1/projects";
    private static final Network NETWORK = Network.create( //
          "abcd", // id
-         URI.create(BASE_URL + "/myproject/global/networks/this-network"), // selfLink
+         URI.create(BASE_URL + "/party/global/networks/this-network"), // selfLink
          "this-network", // name
          null, // description
          "0.0.0.0/0", // rangeIPv4
@@ -87,7 +87,7 @@ public class FindNetworkOrCreateTest {
    public void testLoadNew() {
       GoogleComputeEngineApi api = createMock(GoogleComputeEngineApi.class);
       NetworkApi nwApi = createMock(NetworkApi.class);
-      ResourceFunctions resources = createMock(ResourceFunctions.class);
+      Resources resources = createMock(Resources.class);
 
       Operation createOp = new ParseGlobalOperationTest().expected();
 
@@ -120,10 +120,10 @@ public class FindNetworkOrCreateTest {
       verify(api, nwApi, resources);
    }
 
-   private AtomicOperationDone atomicOperationDone(final ResourceFunctions resources) {
+   private AtomicOperationDone atomicOperationDone(final Resources resources) {
       return Guice.createInjector(new AbstractModule() { // Rather than opening ctor public
          @Override protected void configure() {
-            bind(ResourceFunctions.class).toInstance(resources);
+            bind(Resources.class).toInstance(resources);
          }
       }).getInstance(AtomicOperationDone.class);
    }

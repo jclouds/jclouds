@@ -27,7 +27,8 @@ import java.util.List;
 
 import javax.ws.rs.core.MediaType;
 
-import org.jclouds.googlecomputeengine.internal.BaseGoogleComputeEngineApiExpectTest;
+import org.jclouds.googlecomputeengine.GoogleComputeEngineApi;
+import org.jclouds.googlecomputeengine.internal.BaseGoogleComputeEngineExpectTest;
 import org.jclouds.googlecomputeengine.options.ListOptions;
 import org.jclouds.googlecomputeengine.options.TargetPoolCreationOptions;
 import org.jclouds.googlecomputeengine.parse.ParseRegionOperationTest;
@@ -41,21 +42,21 @@ import org.testng.annotations.Test;
 import com.google.common.collect.ImmutableList;
 
 @Test(groups = "unit", testName = "TargetPoolApiExpectTest")
-public class TargetPoolApiExpectTest extends BaseGoogleComputeEngineApiExpectTest {
+public class TargetPoolApiExpectTest extends BaseGoogleComputeEngineExpectTest<GoogleComputeEngineApi> {
 
    private static final List<URI> INSTANCES = ImmutableList
-         .of(URI.create(BASE_URL + "/myproject/zones/europe-west1-a/instances/test"));
+         .of(URI.create(BASE_URL + "/party/zones/europe-west1-a/instances/test"));
 
    private static final List<URI> HEALTH_CHECKS = ImmutableList
-         .of(URI.create(BASE_URL + "/myproject/global/httpHealthChecks/health-check-1"));
+         .of(URI.create(BASE_URL + "/party/global/httpHealthChecks/health-check-1"));
    
-   private static final URI TARGET_POOL = URI.create(BASE_URL + "/myproject/regions/us-central1/targetPools/tpool");
+   private static final URI TARGET_POOL = URI.create(BASE_URL + "/party/regions/us-central1/targetPools/tpool");
    
    public void testGetTargetPoolResponseIs2xx() throws Exception {
       HttpRequest get = HttpRequest
               .builder()
               .method("GET")
-              .endpoint(BASE_URL + "/myproject/regions/us-central1/targetPools/test")
+              .endpoint(BASE_URL + "/party/regions/us-central1/targetPools/test")
               .addHeader("Accept", "application/json")
               .addHeader("Authorization", "Bearer " + TOKEN).build();
 
@@ -63,7 +64,7 @@ public class TargetPoolApiExpectTest extends BaseGoogleComputeEngineApiExpectTes
               .payload(payloadFromResource("/targetpool_get.json")).build();
 
       TargetPoolApi api = requestsSendResponses(requestForScopes(COMPUTE_READONLY_SCOPE),
-              TOKEN_RESPONSE, get, operationResponse).getTargetPoolApi("myproject", "us-central1");
+              TOKEN_RESPONSE, get, operationResponse).getTargetPoolApi("party", "us-central1");
 
       assertEquals(api.get("test"), new ParseTargetPoolTest().expected());
    }
@@ -72,14 +73,14 @@ public class TargetPoolApiExpectTest extends BaseGoogleComputeEngineApiExpectTes
       HttpRequest get = HttpRequest
               .builder()
               .method("GET")
-              .endpoint(BASE_URL + "/myproject/regions/us-central1/targetPools/test")
+              .endpoint(BASE_URL + "/party/regions/us-central1/targetPools/test")
               .addHeader("Accept", "application/json")
               .addHeader("Authorization", "Bearer " + TOKEN).build();
 
       HttpResponse operationResponse = HttpResponse.builder().statusCode(404).build();
 
       TargetPoolApi api = requestsSendResponses(requestForScopes(COMPUTE_READONLY_SCOPE),
-              TOKEN_RESPONSE, get, operationResponse).getTargetPoolApi("myproject", "us-central1");
+              TOKEN_RESPONSE, get, operationResponse).getTargetPoolApi("party", "us-central1");
 
       assertNull(api.get("test"));
    }
@@ -88,7 +89,7 @@ public class TargetPoolApiExpectTest extends BaseGoogleComputeEngineApiExpectTes
       HttpRequest insert = HttpRequest
               .builder()
               .method("POST")
-              .endpoint(BASE_URL + "/myproject/regions/us-central1/targetPools")
+              .endpoint(BASE_URL + "/party/regions/us-central1/targetPools")
               .addHeader("Accept", "application/json")
               .addHeader("Authorization", "Bearer " + TOKEN)
               .payload(payloadFromResourceWithContentType("/targetpool_insert.json", MediaType.APPLICATION_JSON))
@@ -99,7 +100,7 @@ public class TargetPoolApiExpectTest extends BaseGoogleComputeEngineApiExpectTes
 
       TargetPoolApi api = requestsSendResponses(requestForScopes(COMPUTE_SCOPE),
               TOKEN_RESPONSE, insert,
-              insertTargetPoolResponse).getTargetPoolApi("myproject", "us-central1");
+              insertTargetPoolResponse).getTargetPoolApi("party", "us-central1");
       TargetPoolCreationOptions targetPoolCreationOptions = new TargetPoolCreationOptions();
       assertEquals(api.create("test", targetPoolCreationOptions), new ParseRegionOperationTest().expected());
    }
@@ -108,7 +109,7 @@ public class TargetPoolApiExpectTest extends BaseGoogleComputeEngineApiExpectTes
       HttpRequest delete = HttpRequest
               .builder()
               .method("DELETE")
-              .endpoint(BASE_URL + "/myproject/regions/us-central1/targetPools/test-targetPool")
+              .endpoint(BASE_URL + "/party/regions/us-central1/targetPools/test-targetPool")
               .addHeader("Accept", "application/json")
               .addHeader("Authorization", "Bearer " + TOKEN).build();
 
@@ -116,7 +117,7 @@ public class TargetPoolApiExpectTest extends BaseGoogleComputeEngineApiExpectTes
               .payload(payloadFromResource("/region_operation.json")).build();
 
       TargetPoolApi api = requestsSendResponses(requestForScopes(COMPUTE_SCOPE),
-              TOKEN_RESPONSE, delete, deleteResponse).getTargetPoolApi("myproject", "us-central1");
+              TOKEN_RESPONSE, delete, deleteResponse).getTargetPoolApi("party", "us-central1");
 
       assertEquals(api.delete("test-targetPool"),
               new ParseRegionOperationTest().expected());
@@ -126,14 +127,14 @@ public class TargetPoolApiExpectTest extends BaseGoogleComputeEngineApiExpectTes
       HttpRequest delete = HttpRequest
               .builder()
               .method("DELETE")
-              .endpoint(BASE_URL + "/myproject/regions/us-central1/targetPools/test-targetPool")
+              .endpoint(BASE_URL + "/party/regions/us-central1/targetPools/test-targetPool")
               .addHeader("Accept", "application/json")
               .addHeader("Authorization", "Bearer " + TOKEN).build();
 
       HttpResponse deleteResponse = HttpResponse.builder().statusCode(404).build();
 
       TargetPoolApi api = requestsSendResponses(requestForScopes(COMPUTE_SCOPE),
-              TOKEN_RESPONSE, delete, deleteResponse).getTargetPoolApi("myproject", "us-central1");
+              TOKEN_RESPONSE, delete, deleteResponse).getTargetPoolApi("party", "us-central1");
 
       assertNull(api.delete("test-targetPool"));
    }
@@ -142,7 +143,7 @@ public class TargetPoolApiExpectTest extends BaseGoogleComputeEngineApiExpectTes
       HttpRequest list = HttpRequest
               .builder()
               .method("GET")
-              .endpoint(BASE_URL + "/myproject/regions/us-central1/targetPools")
+              .endpoint(BASE_URL + "/party/regions/us-central1/targetPools")
               .addHeader("Accept", "application/json")
               .addHeader("Authorization", "Bearer " + TOKEN).build();
 
@@ -150,7 +151,7 @@ public class TargetPoolApiExpectTest extends BaseGoogleComputeEngineApiExpectTes
               .payload(payloadFromResource("/targetpool_list.json")).build();
 
       TargetPoolApi api = requestsSendResponses(requestForScopes(COMPUTE_READONLY_SCOPE),
-              TOKEN_RESPONSE, list, operationResponse).getTargetPoolApi("myproject", "us-central1");
+              TOKEN_RESPONSE, list, operationResponse).getTargetPoolApi("party", "us-central1");
 
       ListOptions options = new ListOptions();
       assertEquals(api.list(options).next().toString(), new ParseTargetPoolListTest().expected().toString());
@@ -160,14 +161,14 @@ public class TargetPoolApiExpectTest extends BaseGoogleComputeEngineApiExpectTes
       HttpRequest list = HttpRequest
               .builder()
               .method("GET")
-              .endpoint(BASE_URL + "/myproject/regions/us-central1/targetPools")
+              .endpoint(BASE_URL + "/party/regions/us-central1/targetPools")
               .addHeader("Accept", "application/json")
               .addHeader("Authorization", "Bearer " + TOKEN).build();
 
       HttpResponse operationResponse = HttpResponse.builder().statusCode(404).build();
 
       TargetPoolApi api = requestsSendResponses(requestForScopes(COMPUTE_READONLY_SCOPE),
-              TOKEN_RESPONSE, list, operationResponse).getTargetPoolApi("myproject", "us-central1");
+              TOKEN_RESPONSE, list, operationResponse).getTargetPoolApi("party", "us-central1");
 
       assertFalse(api.list().hasNext());
    }
@@ -178,7 +179,7 @@ public class TargetPoolApiExpectTest extends BaseGoogleComputeEngineApiExpectTes
               .payload(payloadFromResource("/region_operation.json")).build();
 
       TargetPoolApi api = requestsSendResponses(requestForScopes(COMPUTE_SCOPE),
-              TOKEN_RESPONSE, addInstance, operationResponse).getTargetPoolApi("myproject", "us-central1");
+              TOKEN_RESPONSE, addInstance, operationResponse).getTargetPoolApi("party", "us-central1");
 
       assertEquals(api.addInstance("test", INSTANCES),
               new ParseRegionOperationTest().expected());
@@ -190,7 +191,7 @@ public class TargetPoolApiExpectTest extends BaseGoogleComputeEngineApiExpectTes
       HttpResponse operationResponse = HttpResponse.builder().statusCode(404).build();
 
       TargetPoolApi api = requestsSendResponses(requestForScopes(COMPUTE_SCOPE),
-              TOKEN_RESPONSE, addInstance, operationResponse).getTargetPoolApi("myproject", "us-central1");
+              TOKEN_RESPONSE, addInstance, operationResponse).getTargetPoolApi("party", "us-central1");
 
       api.addInstance("test", INSTANCES);
    }
@@ -202,7 +203,7 @@ public class TargetPoolApiExpectTest extends BaseGoogleComputeEngineApiExpectTes
             .payload(payloadFromResource("/region_operation.json")).build();
 
       TargetPoolApi api = requestsSendResponses(requestForScopes(COMPUTE_SCOPE),
-            TOKEN_RESPONSE, removeInstance, operationResponse).getTargetPoolApi("myproject", "us-central1");
+            TOKEN_RESPONSE, removeInstance, operationResponse).getTargetPoolApi("party", "us-central1");
 
       assertEquals(api.removeInstance("test", INSTANCES),
             new ParseRegionOperationTest().expected());
@@ -214,7 +215,7 @@ public class TargetPoolApiExpectTest extends BaseGoogleComputeEngineApiExpectTes
       HttpResponse operationResponse = HttpResponse.builder().statusCode(404).build();
 
       TargetPoolApi api = requestsSendResponses(requestForScopes(COMPUTE_SCOPE),
-              TOKEN_RESPONSE, removeInstance, operationResponse).getTargetPoolApi("myproject", "us-central1");
+              TOKEN_RESPONSE, removeInstance, operationResponse).getTargetPoolApi("party", "us-central1");
 
       api.removeInstance("test", INSTANCES);
    }
@@ -226,7 +227,7 @@ public class TargetPoolApiExpectTest extends BaseGoogleComputeEngineApiExpectTes
             .payload(payloadFromResource("/region_operation.json")).build();
 
       TargetPoolApi api = requestsSendResponses(requestForScopes(COMPUTE_SCOPE),
-            TOKEN_RESPONSE, addHealthCheck, operationResponse).getTargetPoolApi("myproject", "us-central1");
+            TOKEN_RESPONSE, addHealthCheck, operationResponse).getTargetPoolApi("party", "us-central1");
 
       assertEquals(api.addHealthCheck("test", HEALTH_CHECKS), new ParseRegionOperationTest().expected());
    }
@@ -237,7 +238,7 @@ public class TargetPoolApiExpectTest extends BaseGoogleComputeEngineApiExpectTes
       HttpResponse operationResponse = HttpResponse.builder().statusCode(404).build();
 
       TargetPoolApi api = requestsSendResponses(requestForScopes(COMPUTE_SCOPE),
-              TOKEN_RESPONSE, addHealthCheck, operationResponse).getTargetPoolApi("myproject", "us-central1");
+              TOKEN_RESPONSE, addHealthCheck, operationResponse).getTargetPoolApi("party", "us-central1");
 
       api.addHealthCheck("test", HEALTH_CHECKS);
    }
@@ -249,7 +250,7 @@ public class TargetPoolApiExpectTest extends BaseGoogleComputeEngineApiExpectTes
             .payload(payloadFromResource("/region_operation.json")).build();
 
       TargetPoolApi api = requestsSendResponses(requestForScopes(COMPUTE_SCOPE),
-            TOKEN_RESPONSE, removeHealthCheck, operationResponse).getTargetPoolApi("myproject", "us-central1");
+            TOKEN_RESPONSE, removeHealthCheck, operationResponse).getTargetPoolApi("party", "us-central1");
 
       assertEquals(api.removeHealthCheck("test", HEALTH_CHECKS), new ParseRegionOperationTest().expected());
    }
@@ -260,7 +261,7 @@ public class TargetPoolApiExpectTest extends BaseGoogleComputeEngineApiExpectTes
       HttpResponse operationResponse = HttpResponse.builder().statusCode(404).build();
 
       TargetPoolApi api = requestsSendResponses(requestForScopes(COMPUTE_SCOPE),
-              TOKEN_RESPONSE, removeHealthCheck, operationResponse).getTargetPoolApi("myproject", "us-central1");
+              TOKEN_RESPONSE, removeHealthCheck, operationResponse).getTargetPoolApi("party", "us-central1");
 
       api.removeHealthCheck("test", HEALTH_CHECKS);
    }
@@ -269,7 +270,7 @@ public class TargetPoolApiExpectTest extends BaseGoogleComputeEngineApiExpectTes
       HttpRequest SetBackup = HttpRequest
             .builder()
             .method("POST")
-            .endpoint(BASE_URL + "/myproject/regions/us-central1/targetPools/testpool/setBackup")
+            .endpoint(BASE_URL + "/party/regions/us-central1/targetPools/testpool/setBackup")
             .addHeader("Accept", "application/json")
             .addHeader("Authorization", "Bearer " + TOKEN)
             .payload(payloadFromResourceWithContentType("/targetpool_setbackup.json", MediaType.APPLICATION_JSON))
@@ -278,7 +279,7 @@ public class TargetPoolApiExpectTest extends BaseGoogleComputeEngineApiExpectTes
             .payload(payloadFromResource("/region_operation.json")).build();
 
       TargetPoolApi api = requestsSendResponses(requestForScopes(COMPUTE_SCOPE),
-            TOKEN_RESPONSE, SetBackup, operationResponse).getTargetPoolApi("myproject", "us-central1");
+            TOKEN_RESPONSE, SetBackup, operationResponse).getTargetPoolApi("party", "us-central1");
 
       assertEquals(api.setBackup("testpool", TARGET_POOL), new ParseRegionOperationTest().expected());
    }
@@ -287,7 +288,7 @@ public class TargetPoolApiExpectTest extends BaseGoogleComputeEngineApiExpectTes
       HttpRequest SetBackup = HttpRequest
             .builder()
             .method("POST")
-            .endpoint(BASE_URL + "/myproject/regions/"
+            .endpoint(BASE_URL + "/party/regions/"
                     + "us-central1/targetPools/testpool/setBackup?failoverRatio=0.5")
             .addHeader("Accept", "application/json")
             .addHeader("Authorization", "Bearer " + TOKEN)
@@ -297,7 +298,7 @@ public class TargetPoolApiExpectTest extends BaseGoogleComputeEngineApiExpectTes
             .payload(payloadFromResource("/region_operation.json")).build();
 
       TargetPoolApi api = requestsSendResponses(requestForScopes(COMPUTE_SCOPE),
-            TOKEN_RESPONSE, SetBackup, operationResponse).getTargetPoolApi("myproject", "us-central1");
+            TOKEN_RESPONSE, SetBackup, operationResponse).getTargetPoolApi("party", "us-central1");
 
       Float failoverRatio = Float.valueOf("0.5");
       assertEquals(api.setBackup("testpool", failoverRatio, TARGET_POOL), new ParseRegionOperationTest().expected());
@@ -308,7 +309,7 @@ public class TargetPoolApiExpectTest extends BaseGoogleComputeEngineApiExpectTes
       HttpRequest SetBackup = HttpRequest
             .builder()
             .method("POST")
-            .endpoint(BASE_URL + "/myproject/regions/us-central1/targetPools/testpool/setBackup")
+            .endpoint(BASE_URL + "/party/regions/us-central1/targetPools/testpool/setBackup")
             .addHeader("Accept", "application/json")
             .addHeader("Authorization", "Bearer " + TOKEN)
             .payload(payloadFromResourceWithContentType("/targetpool_setbackup.json", MediaType.APPLICATION_JSON))
@@ -316,7 +317,7 @@ public class TargetPoolApiExpectTest extends BaseGoogleComputeEngineApiExpectTes
       HttpResponse operationResponse = HttpResponse.builder().statusCode(404).build();
 
       TargetPoolApi api = requestsSendResponses(requestForScopes(COMPUTE_SCOPE),
-            TOKEN_RESPONSE, SetBackup, operationResponse).getTargetPoolApi("myproject", "us-central1");
+            TOKEN_RESPONSE, SetBackup, operationResponse).getTargetPoolApi("party", "us-central1");
 
       api.setBackup("testpool", TARGET_POOL);
    }
@@ -325,7 +326,7 @@ public class TargetPoolApiExpectTest extends BaseGoogleComputeEngineApiExpectTes
       HttpRequest request = HttpRequest
             .builder()
             .method(method)
-            .endpoint(BASE_URL + "/myproject/regions/us-central1/targetPools/test/" + endpoint)
+            .endpoint(BASE_URL + "/party/regions/us-central1/targetPools/test/" + endpoint)
             .addHeader("Accept", "application/json")
             .addHeader("Authorization", "Bearer " + TOKEN)
             .payload(payloadFromResourceWithContentType(requestPayloadFile, MediaType.APPLICATION_JSON))

@@ -22,6 +22,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 
 import org.jclouds.googlecomputeengine.features.AddressApi;
+import org.jclouds.googlecomputeengine.features.AggregatedListApi;
 import org.jclouds.googlecomputeengine.features.DiskApi;
 import org.jclouds.googlecomputeengine.features.DiskTypeApi;
 import org.jclouds.googlecomputeengine.features.FirewallApi;
@@ -51,6 +52,15 @@ public interface GoogleComputeEngineApi extends Closeable {
    @Delegate
    @Path("/projects/{project}/regions/{region}")
    AddressApi getAddressApi(@PathParam("project") String projectName, @PathParam("region") String region);
+
+   /**
+    * Provides access to Aggregated list features
+    *
+    * @param projectName the name of the project
+    */
+   @Delegate
+   @Path("/projects/{project}")
+   AggregatedListApi aggregatedList(@PathParam("project") String projectName);
 
    /**
     * Provides access to Disk features

@@ -16,27 +16,115 @@
  */
 package org.jclouds.googlecomputeengine.domain;
 
-import static org.jclouds.googlecomputeengine.internal.NullSafeCopies.copyOf;
-
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 import org.jclouds.javax.annotation.Nullable;
+import org.jclouds.json.SerializedNames;
 
 import com.google.auto.value.AutoValue;
 
-/** Metadata for an instance or project, with their fingerprint. */
+/**
+ * Metadata for an instance or project, with their fingerprint.
+ * <p/>
+ * This object is mutable and not thread-safe.
+ */
 @AutoValue
-public abstract class Metadata {
+public abstract class Metadata implements Cloneable {
+
+   @AutoValue
+   abstract static class Entry {
+      abstract String key();
+
+      abstract String value();
+
+      @SerializedNames({ "key", "value" })
+      static Entry create(String key, String value) {
+         return new AutoValue_Metadata_Entry(key, value);
+      }
+   }
+
    /** The fingerprint for the items - needed for updating them. */
    @Nullable public abstract String fingerprint();
 
-   public abstract Map<String, String> items();
+   /** Adds or replaces a metadata entry. */
+   public Metadata put(String key, String value) {
+      remove(key);
+      items().add(Entry.create(key, value));
+      return this;
+   }
 
-   // No SerializedNames as custom-parsed.
-   public static Metadata create(String fingerprint, Map<String, String> items) {
-      return new AutoValue_Metadata(fingerprint, copyOf(items));
+   /** Adds or replaces metadata entries. */
+   public Metadata putAll(Map<String, String> input) {
+      for (Map.Entry<String, String> entry : input.entrySet()) {
+         put(entry.getKey(), entry.getValue());
+      }
+      return this;
+   }
+
+   /** Removes any entry with the supplied key. */
+   public Metadata remove(String key) {
+      for (int i = 0, length = items().size(); i < length; i++) {
+         if (items().get(i).key().equals(key)) {
+            items().remove(i);
+            return this;
+         }
+      }
+      return this;
+   }
+
+   /** Copies the metadata into a new mutable map. */
+   public Map<String, String> asMap() {
+      Map<String, String> result = new LinkedHashMap<String, String>();
+      ArrayList<Entry> items = items();
+      for (int i = 0, length = items.size(); i < length; i++) {
+         Entry item = items.get(i);
+         result.put(item.key(), item.value());
+      }
+      return result;
+   }
+
+   /** Returns the value with the supplied key, or null. */
+   @Nullable public String get(String key) {
+      ArrayList<Entry> items = items();
+      for (int i = 0, length = items.size(); i < length; i++) {
+         Entry item = items.get(i);
+         if (item.key().equals(key)) {
+            return item.value();
+         }
+      }
+      return null;
+   }
+
+   public boolean containsKey(String key) {
+      return get(key) != null;
+   }
+
+   public int size() {
+      return items().size();
+   }
+
+   /** Mutable list of metadata. */
+   abstract ArrayList<Entry> items();
+
+   public static Metadata create() {
+      return Metadata.create(null, null);
+   }
+
+   public static Metadata create(String fingerprint) {
+      return Metadata.create(fingerprint, null);
+   }
+
+   @SerializedNames({ "fingerprint", "items" })
+   static Metadata create(String fingerprint, ArrayList<Entry> items) { // Dictates the type when created from json!
+      return new AutoValue_Metadata(fingerprint, items != null ? items : new ArrayList<Entry>());
    }
 
    Metadata() {
+   }
+
+   @Override public Metadata clone() {
+      return Metadata.create(fingerprint(), new ArrayList<Entry>(items()));
    }
 }

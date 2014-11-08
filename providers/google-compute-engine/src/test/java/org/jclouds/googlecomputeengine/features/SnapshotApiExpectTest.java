@@ -21,7 +21,8 @@ import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertNull;
 
-import org.jclouds.googlecomputeengine.internal.BaseGoogleComputeEngineApiExpectTest;
+import org.jclouds.googlecomputeengine.GoogleComputeEngineApi;
+import org.jclouds.googlecomputeengine.internal.BaseGoogleComputeEngineExpectTest;
 import org.jclouds.googlecomputeengine.parse.ParseSnapshotListTest;
 import org.jclouds.googlecomputeengine.parse.ParseSnapshotTest;
 import org.jclouds.http.HttpRequest;
@@ -29,9 +30,9 @@ import org.jclouds.http.HttpResponse;
 import org.testng.annotations.Test;
 
 @Test(groups = "unit", testName = "SnapshotApiExpectTest")
-public class SnapshotApiExpectTest extends BaseGoogleComputeEngineApiExpectTest {
+public class SnapshotApiExpectTest extends BaseGoogleComputeEngineExpectTest<GoogleComputeEngineApi> {
 
-   public static final String SNAPSHOT_URL_PREFIX = BASE_URL + "/myproject/global/snapshots";
+   public static final String SNAPSHOT_URL_PREFIX = BASE_URL + "/party/global/snapshots";
 
    public static final HttpRequest GET_SNAPSHOT_REQ = HttpRequest
            .builder()
@@ -57,7 +58,7 @@ public class SnapshotApiExpectTest extends BaseGoogleComputeEngineApiExpectTest 
               .payload(payloadFromResource("/snapshot_get.json")).build();
 
       SnapshotApi api = requestsSendResponses(requestForScopes(COMPUTE_READONLY_SCOPE),
-              TOKEN_RESPONSE, GET_SNAPSHOT_REQ, operationResponse).getSnapshotApi("myproject");
+              TOKEN_RESPONSE, GET_SNAPSHOT_REQ, operationResponse).getSnapshotApi("party");
 
       assertEquals(api.get("test-snap"),
               new ParseSnapshotTest().expected());
@@ -68,7 +69,7 @@ public class SnapshotApiExpectTest extends BaseGoogleComputeEngineApiExpectTest 
       HttpResponse operationResponse = HttpResponse.builder().statusCode(404).build();
 
       SnapshotApi api = requestsSendResponses(requestForScopes(COMPUTE_READONLY_SCOPE),
-              TOKEN_RESPONSE, GET_SNAPSHOT_REQ, operationResponse).getSnapshotApi("myproject");
+              TOKEN_RESPONSE, GET_SNAPSHOT_REQ, operationResponse).getSnapshotApi("party");
 
       assertNull(api.get("test-snap"));
    }
@@ -76,7 +77,7 @@ public class SnapshotApiExpectTest extends BaseGoogleComputeEngineApiExpectTest 
    public void testListSnapshotNoOptionsResponseIs2xx() throws Exception {
 
       SnapshotApi api = requestsSendResponses(requestForScopes(COMPUTE_READONLY_SCOPE),
-              TOKEN_RESPONSE, LIST_SNAPSHOTS_REQ, LIST_SNAPSHOTS_RESPONSE).getSnapshotApi("myproject");
+              TOKEN_RESPONSE, LIST_SNAPSHOTS_REQ, LIST_SNAPSHOTS_RESPONSE).getSnapshotApi("party");
 
       assertEquals(api.list().next().toString(), new ParseSnapshotListTest().expected().toString());
    }
@@ -86,7 +87,7 @@ public class SnapshotApiExpectTest extends BaseGoogleComputeEngineApiExpectTest 
       HttpResponse operationResponse = HttpResponse.builder().statusCode(404).build();
 
       SnapshotApi api = requestsSendResponses(requestForScopes(COMPUTE_READONLY_SCOPE),
-              TOKEN_RESPONSE, LIST_SNAPSHOTS_REQ, operationResponse).getSnapshotApi("myproject");
+              TOKEN_RESPONSE, LIST_SNAPSHOTS_REQ, operationResponse).getSnapshotApi("party");
 
       assertFalse(api.list().hasNext());
    }
