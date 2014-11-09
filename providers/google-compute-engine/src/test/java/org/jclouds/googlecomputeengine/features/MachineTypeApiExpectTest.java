@@ -16,7 +16,7 @@
  */
 package org.jclouds.googlecomputeengine.features;
 
-import static org.jclouds.googlecomputeengine.GoogleComputeEngineConstants.COMPUTE_READONLY_SCOPE;
+import static org.jclouds.googlecomputeengine.config.GoogleComputeEngineScopes.COMPUTE_READONLY_SCOPE;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertNull;
@@ -64,11 +64,11 @@ public class MachineTypeApiExpectTest extends BaseGoogleComputeEngineExpectTest<
               .addHeader("Accept", "application/json")
               .addHeader("Authorization", "Bearer " + TOKEN).build();
 
-      HttpResponse operationResponse = HttpResponse.builder().statusCode(200)
+      HttpResponse response = HttpResponse.builder().statusCode(200)
               .payload(payloadFromResource("/machinetype.json")).build();
 
       MachineTypeApi machineTypeApi = requestsSendResponses(requestForScopes(COMPUTE_READONLY_SCOPE),
-              TOKEN_RESPONSE, get, operationResponse).getMachineTypeApi("party", "us-central1-a");
+              TOKEN_RESPONSE, get, response).machineTypesInZone("us-central1-a");
 
       assertEquals(machineTypeApi.get("n1-standard-1"), new ParseMachineTypeTest().expected());
    }
@@ -81,29 +81,29 @@ public class MachineTypeApiExpectTest extends BaseGoogleComputeEngineExpectTest<
               .addHeader("Accept", "application/json")
               .addHeader("Authorization", "Bearer " + TOKEN).build();
 
-      HttpResponse operationResponse = HttpResponse.builder().statusCode(404).build();
+      HttpResponse response = HttpResponse.builder().statusCode(404).build();
 
       MachineTypeApi machineTypeApi = requestsSendResponses(requestForScopes(COMPUTE_READONLY_SCOPE),
-              TOKEN_RESPONSE, get, operationResponse).getMachineTypeApi("party", "us-central1-a");
+              TOKEN_RESPONSE, get, response).machineTypesInZone("us-central1-a");
 
       assertNull(machineTypeApi.get("n1-standard-1"));
    }
 
-   public void testListMachineTypeNoOptionsResponseIs2xx() throws Exception {
+   public void list() throws Exception {
 
       MachineTypeApi machineTypeApi = requestsSendResponses(requestForScopes(COMPUTE_READONLY_SCOPE),
-              TOKEN_RESPONSE, LIST_MACHINE_TYPES_REQUEST, LIST_MACHINE_TYPES_RESPONSE).getMachineTypeApi
-              ("party", "us-central1-a");
+              TOKEN_RESPONSE, LIST_MACHINE_TYPES_REQUEST, LIST_MACHINE_TYPES_RESPONSE).machineTypesInZone(
+            "us-central1-a");
 
-      assertEquals(machineTypeApi.list().next().toString(), new ParseMachineTypeListTest().expected().toString());
+      assertEquals(machineTypeApi.list().next(), new ParseMachineTypeListTest().expected());
    }
 
-   public void testLisOperationWithPaginationOptionsResponseIs4xx() {
-
-      HttpResponse operationResponse = HttpResponse.builder().statusCode(404).build();
+   public void listEmpty() {
+      HttpResponse response = HttpResponse.builder().statusCode(200)
+            .payload(payloadFromResource("/list_empty.json")).build();
 
       MachineTypeApi machineTypeApi = requestsSendResponses(requestForScopes(COMPUTE_READONLY_SCOPE), TOKEN_RESPONSE,
-            LIST_MACHINE_TYPES_REQUEST, operationResponse).getMachineTypeApi("party", "us-central1-a");
+            LIST_MACHINE_TYPES_REQUEST, response).machineTypesInZone("us-central1-a");
 
       assertFalse(machineTypeApi.list().hasNext());
    }

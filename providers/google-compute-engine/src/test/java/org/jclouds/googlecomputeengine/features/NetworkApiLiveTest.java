@@ -35,7 +35,7 @@ public class NetworkApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
    private static final String IPV4_RANGE = "10.0.0.0/8";
 
    private NetworkApi api() {
-      return api.getNetworkApi(userProject.get());
+      return api.networks();
    }
 
    @Test(groups = "live")

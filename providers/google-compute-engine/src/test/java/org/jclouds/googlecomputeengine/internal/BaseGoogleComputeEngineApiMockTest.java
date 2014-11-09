@@ -20,10 +20,11 @@ import static com.google.common.base.Charsets.UTF_8;
 import static com.google.common.base.Throwables.propagate;
 import static com.google.common.util.concurrent.MoreExecutors.sameThreadExecutor;
 import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
-import static org.jclouds.googlecomputeengine.GoogleComputeEngineConstants.GCE_IMAGE_PROJECTS;
+import static org.jclouds.googlecomputeengine.config.GoogleComputeEngineProperties.CREDENTIAL_TYPE;
+import static org.jclouds.googlecomputeengine.config.GoogleComputeEngineProperties.IMAGE_PROJECTS;
+import static org.jclouds.googlecomputeengine.config.GoogleComputeEngineProperties.PROJECT_NAME;
 import static org.jclouds.oauth.v2.OAuthConstants.NO_ALGORITHM;
 import static org.jclouds.oauth.v2.config.CredentialType.BEARER_TOKEN_CREDENTIALS;
-import static org.jclouds.oauth.v2.config.OAuthProperties.CREDENTIAL_TYPE;
 import static org.jclouds.oauth.v2.config.OAuthProperties.SIGNATURE_OR_MAC_ALGORITHM;
 import static org.jclouds.util.Strings2.toStringAndClose;
 import static org.testng.Assert.assertEquals;
@@ -55,9 +56,8 @@ import com.squareup.okhttp.mockwebserver.RecordedRequest;
  */
 public class BaseGoogleComputeEngineApiMockTest {
 
-   protected final String identity = "party";
-   protected final String credential = "1/8xbJqaOZXSUZbHLl5EOtu1pxz3fmmetKx9W8CV4t79M";
-   protected final String openSshKey = GoogleComputeEngineTestModule.INSTANCE.openSshKey;
+   protected final String identity = "761326798069-r5mljlln1rd4lrbhg75efgigp36m78j5@developer.gserviceaccount.com";
+   protected final String credential = "1/8xbJqaOZXSUZbHLl5EOtu1pxz3fmmetKx9W8CV4t79M"; // Fake Bearer Token
 
    protected MockWebServer server;
 
@@ -69,14 +69,15 @@ public class BaseGoogleComputeEngineApiMockTest {
       return builder().buildView(ComputeServiceContext.class).getComputeService();
    }
 
-   private ContextBuilder builder() {
+   protected ContextBuilder builder() {
       Properties overrides = new Properties();
-      overrides.put(GCE_IMAGE_PROJECTS, "debian-cloud");
+      overrides.put(PROJECT_NAME, "party");
+      overrides.put(IMAGE_PROJECTS, "debian-cloud");
       overrides.put(CREDENTIAL_TYPE, BEARER_TOKEN_CREDENTIALS.toString());
       overrides.put(SIGNATURE_OR_MAC_ALGORITHM, NO_ALGORITHM); // TODO: this should be implied by the above.
       return ContextBuilder.newBuilder(new GoogleComputeEngineProviderMetadata())
             .credentials(identity, credential)
-            .endpoint(url("/"))
+            .endpoint(url(""))
             .overrides(overrides)
             .modules(modules);
    }

@@ -17,7 +17,6 @@
 package org.jclouds.googlecomputeengine.compute;
 
 import static com.google.common.collect.Iterables.contains;
-import static org.jclouds.oauth.v2.OAuthTestUtils.setCredential;
 import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertTrue;
 
@@ -27,19 +26,14 @@ import org.jclouds.compute.domain.Hardware;
 import org.jclouds.compute.domain.NodeMetadata;
 import org.jclouds.compute.internal.BaseComputeServiceLiveTest;
 import org.jclouds.googlecomputeengine.GoogleComputeEngineApi;
-import org.jclouds.googlecomputeengine.config.UserProject;
 import org.jclouds.googlecomputeengine.domain.MachineType;
-import org.jclouds.oauth.v2.config.CredentialType;
-import org.jclouds.oauth.v2.config.OAuthProperties;
+import org.jclouds.googlecomputeengine.internal.TestProperties;
 import org.jclouds.sshj.config.SshjSshClientModule;
 import org.testng.annotations.Test;
 
-import com.google.common.base.Supplier;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
-import com.google.inject.Key;
 import com.google.inject.Module;
-import com.google.inject.TypeLiteral;
 
 @Test(groups = "live", singleThreaded = true)
 public class GoogleComputeEngineServiceLiveTest extends BaseComputeServiceLiveTest {
@@ -50,22 +44,14 @@ public class GoogleComputeEngineServiceLiveTest extends BaseComputeServiceLiveTe
       provider = "google-compute-engine";
    }
 
-   @Override
-   protected Properties setupProperties() {
-      Properties props = super.setupProperties();
-      if (!System.getProperty(OAuthProperties.CREDENTIAL_TYPE, "")
-            .equalsIgnoreCase(CredentialType.BEARER_TOKEN_CREDENTIALS.toString())) {
-      setCredential(props, provider + ".credential");
-      }
-      return props;
+   @Override protected Properties setupProperties() {
+      return TestProperties.apply(super.setupProperties());
    }
 
    public void testListHardwareProfiles() throws Exception {
       GoogleComputeEngineApi api = client.getContext().unwrapApi(GoogleComputeEngineApi.class);
-      Supplier<String> userProject = context.utils().injector().getInstance(Key.get(new TypeLiteral<Supplier<String>>() {
-      }, UserProject.class));
       ImmutableSet.Builder<String> deprecatedMachineTypes = ImmutableSet.builder();
-      for (MachineType machine : api.getMachineTypeApi(userProject.get(), DEFAULT_ZONE_NAME).list().next()) {
+      for (MachineType machine : api.machineTypesInZone(DEFAULT_ZONE_NAME).list().next()) {
          if (machine.deprecated() != null) {
             deprecatedMachineTypes.add(machine.id());
          }

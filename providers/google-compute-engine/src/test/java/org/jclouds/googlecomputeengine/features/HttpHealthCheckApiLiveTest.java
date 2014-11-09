@@ -37,7 +37,7 @@ public class HttpHealthCheckApiLiveTest extends BaseGoogleComputeEngineApiLiveTe
    private HttpHealthCheckCreationOptions options;
 
    private HttpHealthCheckApi api() {
-      return api.getHttpHealthCheckApi(userProject.get());
+      return api.httpHeathChecks();
    }
 
    @Test(groups = "live")

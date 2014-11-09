@@ -27,18 +27,14 @@ import java.net.URI;
 import org.jclouds.googlecomputeengine.GoogleComputeEngineApi;
 import org.jclouds.googlecomputeengine.compute.domain.NetworkAndAddressRange;
 import org.jclouds.googlecomputeengine.compute.predicates.AtomicOperationDone;
-import org.jclouds.googlecomputeengine.config.UserProject;
 import org.jclouds.googlecomputeengine.domain.Network;
 import org.jclouds.googlecomputeengine.domain.Operation;
 import org.jclouds.googlecomputeengine.features.NetworkApi;
 import org.jclouds.googlecomputeengine.parse.ParseGlobalOperationTest;
 import org.testng.annotations.Test;
 
-import com.google.common.base.Supplier;
-import com.google.common.base.Suppliers;
 import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
-import com.google.inject.Provides;
 
 @Test
 public class CreateNetworkIfNeededTest {
@@ -61,9 +57,7 @@ public class CreateNetworkIfNeededTest {
 
       Operation createOp = new ParseGlobalOperationTest().expected();
 
-      Supplier<String> userProject = Suppliers.ofInstance("party");
-
-      expect(api.getNetworkApi(userProject.get())).andReturn(nwApi).atLeastOnce();
+      expect(api.networks()).andReturn(nwApi).atLeastOnce();
 
       expect(nwApi.createInIPv4Range("this-network", "0.0.0.0/0")) .andReturn(createOp);
       expect(resources.operation(createOp.selfLink())).andReturn(createOp);
@@ -76,7 +70,7 @@ public class CreateNetworkIfNeededTest {
 
       AtomicOperationDone pred = atomicOperationDone(api, resources);
 
-      CreateNetworkIfNeeded creator = new CreateNetworkIfNeeded(api, userProject, pred);
+      CreateNetworkIfNeeded creator = new CreateNetworkIfNeeded(api, pred);
 
       assertEquals(creator.apply(input), network);
 
@@ -99,9 +93,7 @@ public class CreateNetworkIfNeededTest {
 
       Operation createOp = new ParseGlobalOperationTest().expected();
 
-      Supplier<String> userProject = Suppliers.ofInstance("party");
-
-      expect(api.getNetworkApi(userProject.get())).andReturn(nwApi).atLeastOnce();
+      expect(api.networks()).andReturn(nwApi).atLeastOnce();
 
       expect(nwApi.createInIPv4RangeWithGateway("this-network", "0.0.0.0/0", "1.2.3.4")).andReturn(createOp);
       expect(resources.operation(createOp.selfLink())).andReturn(createOp);
@@ -114,7 +106,7 @@ public class CreateNetworkIfNeededTest {
 
       AtomicOperationDone pred = atomicOperationDone(api, resources);
 
-      CreateNetworkIfNeeded creator = new CreateNetworkIfNeeded(api, userProject, pred);
+      CreateNetworkIfNeeded creator = new CreateNetworkIfNeeded(api, pred);
 
       assertEquals(creator.apply(input), network);
 
@@ -127,10 +119,6 @@ public class CreateNetworkIfNeededTest {
          @Override protected void configure() {
             bind(GoogleComputeEngineApi.class).toInstance(api);
             bind(Resources.class).toInstance(resources);
-         }
-
-         @Provides @UserProject Supplier<String> project() {
-            return Suppliers.ofInstance("party");
          }
       }).getInstance(AtomicOperationDone.class);
    }

@@ -16,7 +16,6 @@
  */
 package org.jclouds.googlecomputeengine.features;
 
-import static org.jclouds.googlecomputeengine.domain.NewInstance.Disk.newBootDisk;
 import static org.jclouds.googlecomputeengine.options.ListOptions.Builder.filter;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotEquals;
@@ -62,15 +61,15 @@ public class TargetPoolApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
    private List<URI> httpHealthChecks;
 
    private TargetPoolApi api() {
-      return api.getTargetPoolApi(userProject.get(), DEFAULT_REGION_NAME);
+      return api.targetPoolsInRegion(DEFAULT_REGION_NAME);
    }
 
    @Test(groups = "live")
    public void testCreateInstanceAndHealthCheck(){
-      InstanceApi instanceApi = api.getInstanceApi(userProject.get(), DEFAULT_ZONE_NAME);
-      HttpHealthCheckApi httpHealthCheckApi = api.getHttpHealthCheckApi(userProject.get());
+      InstanceApi instanceApi = api.instancesInZone(DEFAULT_ZONE_NAME);
+      HttpHealthCheckApi httpHealthCheckApi = api.httpHeathChecks();
 
-      ListPage<Image> list = api.getImageApi("centos-cloud").list(filter("name eq centos.*")).next();
+      ListPage<Image> list = api.images().listInProject("centos-cloud", filter("name eq centos.*")).next();
       // Get an imageUri
       URI imageUri = FluentIterable.from(list)
             .filter(new Predicate<Image>() {
@@ -83,16 +82,16 @@ public class TargetPoolApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
             .first().get().selfLink();
 
       // Insert a network.
-      assertOperationDoneSuccessfully(api.getNetworkApi(userProject.get()).createInIPv4Range(INSTANCE_NETWORK_NAME,
+      assertOperationDoneSuccessfully(api.networks().createInIPv4Range(INSTANCE_NETWORK_NAME,
             IPV4_RANGE));
 
       // Create an instance.
       assertOperationDoneSuccessfully(
-            instanceApi.create(NewInstance.create(getDefaultMachineTypeUrl(userProject.get()), // machineType
+            instanceApi.create(NewInstance.create( //
                   INSTANCE_NAME, // name
-                  getNetworkUrl(userProject.get(), INSTANCE_NETWORK_NAME), // network
-                  newBootDisk(imageUri), // disks
-                  null // description
+                  getDefaultMachineTypeUrl(), // machineType
+                  getNetworkUrl(INSTANCE_NETWORK_NAME), // network
+                  imageUri // disks
             )));
 
       Instance instance = instanceApi.get(INSTANCE_NAME);
@@ -227,12 +226,12 @@ public class TargetPoolApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
 
    @AfterClass(groups = { "integration", "live" })
    public void testCleanup(){
-      InstanceApi instanceApi = api.getInstanceApi(userProject.get(), DEFAULT_ZONE_NAME);
-      HttpHealthCheckApi httpHealthCheckApi = api.getHttpHealthCheckApi(userProject.get());
+      InstanceApi instanceApi = api.instancesInZone(DEFAULT_ZONE_NAME);
+      HttpHealthCheckApi httpHealthCheckApi = api.httpHeathChecks();
 
       try {
          waitOperationDone(instanceApi.delete(INSTANCE_NAME));
-         waitOperationDone(api.getNetworkApi(userProject.get()).delete(INSTANCE_NETWORK_NAME));
+         waitOperationDone(api.networks().delete(INSTANCE_NETWORK_NAME));
          waitOperationDone(httpHealthCheckApi.delete(HEALTHCHECK_NAME));
       } catch (Exception e) {
          // we don't really care about any exception here, so just delete away.

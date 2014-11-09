@@ -17,7 +17,6 @@
 package org.jclouds.googlecomputeengine.domain;
 
 import static com.google.common.base.Preconditions.checkArgument;
-import static com.google.common.base.Preconditions.checkNotNull;
 import static org.jclouds.googlecomputeengine.domain.Instance.AttachedDisk.Type.PERSISTENT;
 
 import java.net.URI;
@@ -114,9 +113,9 @@ public abstract class NewInstance {
       }
    }
 
-   public abstract URI machineType();
-
    public abstract String name();
+
+   public abstract URI machineType();
 
    public abstract List<NetworkInterface> networkInterfaces();
 
@@ -129,11 +128,12 @@ public abstract class NewInstance {
    /** Add metadata via {@link Metadata#items()}. */
    public abstract Metadata metadata();
 
-   public static NewInstance create(URI machineType, String name, URI network, Disk bootDisk, String description) {
-      return create(machineType, name, network, Arrays.asList(checkNotNull(bootDisk, "bootDisk")), description);
+   /** Convenience for creating a new instance with only a boot disk and minimal parameters. */
+   public static NewInstance create(String name, URI machineType, URI network, URI sourceImage) {
+      return create(name, machineType, network, Arrays.asList(Disk.newBootDisk(sourceImage)), null);
    }
 
-   public static NewInstance create(URI machineType, String name, URI network, List<Disk> disks, String description) {
+   public static NewInstance create(String name, URI machineType, URI network, List<Disk> disks, String description) {
       checkArgument(disks.get(0).boot(), "disk 0 must be a boot disk! %s", disks);
       boolean foundBoot = false;
       for (Disk disk : disks) {
@@ -142,14 +142,14 @@ public abstract class NewInstance {
             foundBoot = true;
          }
       }
-      return create(machineType, name, ImmutableList.of(NetworkInterface.create(network)), ImmutableList.copyOf(disks),
+      return create(name, machineType, ImmutableList.of(NetworkInterface.create(network)), ImmutableList.copyOf(disks),
             description, Tags.create(), Metadata.create());
    }
 
-   @SerializedNames({ "machineType", "name", "networkInterfaces", "disks", "description", "tags", "metadata" })
-   static NewInstance create(URI machineType, String name, List<NetworkInterface> networkInterfaces, List<Disk> disks,
-         String description, Tags tags, Metadata metadata) {
-      return new AutoValue_NewInstance(machineType, name, networkInterfaces, disks, description, tags, metadata);
+   @SerializedNames({ "name", "machineType", "networkInterfaces", "disks", "description", "tags", "metadata" })
+   static NewInstance create(String name, URI machineType, List<NetworkInterface> networkInterfaces,
+         List<Disk> disks, String description, Tags tags, Metadata metadata) {
+      return new AutoValue_NewInstance(name, machineType, networkInterfaces, disks, description, tags, metadata);
    }
 
    NewInstance() {

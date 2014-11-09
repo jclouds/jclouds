@@ -38,8 +38,6 @@ import org.jclouds.net.domain.IpProtocol;
 import org.testng.annotations.Test;
 
 import com.google.common.base.Predicates;
-import com.google.common.base.Supplier;
-import com.google.common.base.Suppliers;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
 
@@ -47,16 +45,13 @@ public class NetworkToSecurityGroupTest {
 
    @Test
    public void testApply() {
-      Supplier<String> projectSupplier = Suppliers.ofInstance("party");
-
       FirewallToIpPermission fwToPerm = new FirewallToIpPermission();
 
       GoogleComputeEngineApi api = createMock(GoogleComputeEngineApi.class);
       FirewallApi fwApi = createMock(FirewallApi.class);
 
       ListOptions options = filter("network eq .*/party-test");
-      expect(api.getFirewallApi(projectSupplier.get()))
-              .andReturn(fwApi);
+      expect(api.firewalls()).andReturn(fwApi);
       expect(fwApi.list(options)).andReturn(
             singletonIterator(ListPage.create(ImmutableList.of(FirewallToIpPermissionTest.fwForTest()), null)));
 
@@ -71,7 +66,7 @@ public class NetworkToSecurityGroupTest {
             "1.2.3.4" // gatewayIPv4
       );
 
-      NetworkToSecurityGroup netToSg = new NetworkToSecurityGroup(fwToPerm, api, projectSupplier);
+      NetworkToSecurityGroup netToSg = new NetworkToSecurityGroup(fwToPerm, api);
 
       SecurityGroup group = netToSg.apply(network);
 

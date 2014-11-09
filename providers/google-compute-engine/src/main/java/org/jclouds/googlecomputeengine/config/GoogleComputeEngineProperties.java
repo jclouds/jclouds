@@ -14,28 +14,39 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jclouds.googlecomputeengine;
+package org.jclouds.googlecomputeengine.config;
+
+import org.jclouds.oauth.v2.config.OAuthProperties;
 
 import com.google.common.annotations.Beta;
 
-public final class GoogleComputeEngineConstants {
+/** Configuration properties keys used in {@link org.jclouds.ContextBuilder#overrides(java.util.Properties)}. */
+public final class GoogleComputeEngineProperties {
 
-   public static final String COMPUTE_SCOPE = "https://www.googleapis.com/auth/compute";
+   /**
+    * How requests are authorized using OAuth. Defaults to {@link org.jclouds.oauth.v2.config.CredentialType#SERVICE_ACCOUNT_CREDENTIALS}.
+    *
+    * @see org.jclouds.oauth.v2.config.CredentialType
+    */
+   public static final String CREDENTIAL_TYPE = OAuthProperties.CREDENTIAL_TYPE;
 
-   public static final String COMPUTE_READONLY_SCOPE = "https://www.googleapis.com/auth/compute.readonly";
+   /**
+    * Set this property to specify the <a href="https://cloud.google.com/compute/docs/projects">project name</a> this
+    * context applies to.
+    * <p/> This is an alternative to looking up the project name at runtime.
+    */
+   public static final String PROJECT_NAME = "jclouds.google-compute-engine.project-name";
 
    /** The total time, in msecs, to wait for an operation to complete. */
    @Beta
    public static final String OPERATION_COMPLETE_TIMEOUT = "jclouds.google-compute-engine.operation-complete-timeout";
-
-   /** The interval, in msecs, between calls to check whether an operation has completed.  */
+   /** The interval, in msecs, between calls to check whether an operation has completed. */
    @Beta
    public static final String OPERATION_COMPLETE_INTERVAL = "jclouds.google-compute-engine.operation-complete-interval";
-
    /** The list of projects that will be scanned looking for images. */
    @Beta
-   public static final String GCE_IMAGE_PROJECTS = "jclouds.google-compute-engine.image-projects";
+   public static final String IMAGE_PROJECTS = "jclouds.google-compute-engine.image-projects";
 
-   private GoogleComputeEngineConstants() {
+   private GoogleComputeEngineProperties() {
    }
 }

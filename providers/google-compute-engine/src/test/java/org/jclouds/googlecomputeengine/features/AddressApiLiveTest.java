@@ -32,7 +32,7 @@ public class AddressApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
    private static final String ADDRESS_NAME = "address-api-live-test-address";
 
    private AddressApi api() {
-      return api.getAddressApi(userProject.get(), DEFAULT_REGION_NAME);
+      return api.addressesInRegion(DEFAULT_REGION_NAME);
    }
 
    @Test(groups = "live")

@@ -32,7 +32,7 @@ import org.testng.annotations.Test;
 public class AggregatedListApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
 
    private AggregatedListApi api() {
-      return api.aggregatedList(userProject.get());
+      return api.aggregatedList();
    }
 
    public void machineTypes() {

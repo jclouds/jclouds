@@ -16,8 +16,8 @@
  */
 package org.jclouds.googlecomputeengine.features;
 
-import static org.jclouds.googlecomputeengine.GoogleComputeEngineConstants.COMPUTE_READONLY_SCOPE;
-import static org.jclouds.googlecomputeengine.GoogleComputeEngineConstants.COMPUTE_SCOPE;
+import static org.jclouds.googlecomputeengine.config.GoogleComputeEngineScopes.COMPUTE_READONLY_SCOPE;
+import static org.jclouds.googlecomputeengine.config.GoogleComputeEngineScopes.COMPUTE_SCOPE;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertFalse;
 import static org.testng.AssertJUnit.assertNull;
@@ -47,11 +47,11 @@ public class ForwardingRuleApiExpectTest extends BaseGoogleComputeEngineExpectTe
                   .addHeader("Accept", "application/json")
                   .addHeader("Authorization", "Bearer " + TOKEN).build();
 
-      HttpResponse operationResponse = HttpResponse.builder().statusCode(200)
+      HttpResponse response = HttpResponse.builder().statusCode(200)
             .payload(payloadFromResource("/forwardingrule_get.json")).build();
 
       ForwardingRuleApi api = requestsSendResponses(requestForScopes(COMPUTE_READONLY_SCOPE),
-            TOKEN_RESPONSE, get, operationResponse).getForwardingRuleApi("party", "us-central1");
+            TOKEN_RESPONSE, get, response).forwardingRulesInRegion("us-central1");
 
       assertEquals(api.get("test-forwarding-rule"), new ParseForwardingRuleTest().expected());
    }
@@ -64,10 +64,10 @@ public class ForwardingRuleApiExpectTest extends BaseGoogleComputeEngineExpectTe
                   .addHeader("Accept", "application/json")
                   .addHeader("Authorization", "Bearer " + TOKEN).build();
 
-      HttpResponse operationResponse = HttpResponse.builder().statusCode(404).build();
+      HttpResponse response = HttpResponse.builder().statusCode(404).build();
 
       ForwardingRuleApi api = requestsSendResponses(requestForScopes(COMPUTE_READONLY_SCOPE),
-            TOKEN_RESPONSE, get, operationResponse).getForwardingRuleApi("party", "us-central1");
+            TOKEN_RESPONSE, get, response).forwardingRulesInRegion("us-central1");
 
       assertNull(api.get("test-forwarding-rule"));
    }
@@ -87,7 +87,7 @@ public class ForwardingRuleApiExpectTest extends BaseGoogleComputeEngineExpectTe
 
       ForwardingRuleApi api = requestsSendResponses(requestForScopes(COMPUTE_SCOPE),
             TOKEN_RESPONSE, insert,
-            insertForwardingRuleResponse).getForwardingRuleApi("party", "us-central1");
+            insertForwardingRuleResponse).forwardingRulesInRegion("us-central1");
 
       ForwardingRuleCreationOptions forwardingRuleCreationOptions = new ForwardingRuleCreationOptions()
       .target(URI.create(BASE_URL + "/party/regions/europe-west1/targetPools/test-target-pool"));
@@ -107,7 +107,7 @@ public class ForwardingRuleApiExpectTest extends BaseGoogleComputeEngineExpectTe
             .payload(payloadFromResource("/region_operation.json")).build();
 
       ForwardingRuleApi api = requestsSendResponses(requestForScopes(COMPUTE_SCOPE),
-            TOKEN_RESPONSE, delete, deleteResponse).getForwardingRuleApi("party", "us-central1");
+            TOKEN_RESPONSE, delete, deleteResponse).forwardingRulesInRegion("us-central1");
 
       assertEquals(api.delete("test-forwarding-rule"), new ParseRegionOperationTest().expected());
    }
@@ -123,40 +123,34 @@ public class ForwardingRuleApiExpectTest extends BaseGoogleComputeEngineExpectTe
       HttpResponse deleteResponse = HttpResponse.builder().statusCode(404).build();
 
       ForwardingRuleApi api = requestsSendResponses(requestForScopes(COMPUTE_SCOPE),
-            TOKEN_RESPONSE, delete, deleteResponse).getForwardingRuleApi("party", "us-central1");
+            TOKEN_RESPONSE, delete, deleteResponse).forwardingRulesInRegion("us-central1");
 
       assertNull(api.delete("test-targetPool"));
    }
 
-   public void testListForwardingRulesResponseIs2xx() {
-      HttpRequest list = HttpRequest
-            .builder()
-            .method("GET")
-            .endpoint(BASE_URL + "/party/regions/us-central1/forwardingRules")
-            .addHeader("Accept", "application/json")
-            .addHeader("Authorization", "Bearer " + TOKEN).build();
+   HttpRequest list = HttpRequest
+         .builder()
+         .method("GET")
+         .endpoint(BASE_URL + "/party/regions/us-central1/forwardingRules")
+         .addHeader("Accept", "application/json")
+         .addHeader("Authorization", "Bearer " + TOKEN).build();
 
-      HttpResponse operationResponse = HttpResponse.builder().statusCode(200)
+   public void list() {
+      HttpResponse response = HttpResponse.builder().statusCode(200)
             .payload(payloadFromResource("/forwardingrule_list.json")).build();
 
       ForwardingRuleApi api = requestsSendResponses(requestForScopes(COMPUTE_READONLY_SCOPE),
-            TOKEN_RESPONSE, list, operationResponse).getForwardingRuleApi("party", "us-central1");
+            TOKEN_RESPONSE, list, response).forwardingRulesInRegion("us-central1");
 
-      assertEquals(api.list().next().toString(), new ParseForwardingRuleListTest().expected().toString());
+      assertEquals(api.list().next(), new ParseForwardingRuleListTest().expected());
    }
 
-   public void testListForwardingRulesResponseIs4xx() {
-      HttpRequest list = HttpRequest
-            .builder()
-            .method("GET")
-            .endpoint(BASE_URL + "/party/regions/us-central1/forwardingRules")
-            .addHeader("Accept", "application/json")
-            .addHeader("Authorization", "Bearer " + TOKEN).build();
-
-      HttpResponse operationResponse = HttpResponse.builder().statusCode(404).build();
+   public void listEmpty() {
+      HttpResponse response = HttpResponse.builder().statusCode(200)
+            .payload(payloadFromResource("/list_empty.json")).build();
 
       ForwardingRuleApi api = requestsSendResponses(requestForScopes(COMPUTE_READONLY_SCOPE),
-            TOKEN_RESPONSE, list, operationResponse).getForwardingRuleApi("party", "us-central1");
+            TOKEN_RESPONSE, list, response).forwardingRulesInRegion("us-central1");
 
       assertFalse(api.list().hasNext());
    }
@@ -176,7 +170,7 @@ public class ForwardingRuleApiExpectTest extends BaseGoogleComputeEngineExpectTe
             .payload(payloadFromResource("/region_operation.json")).build();
 
       ForwardingRuleApi api = requestsSendResponses(requestForScopes(COMPUTE_SCOPE),
-            TOKEN_RESPONSE, setTarget, setTargetResponse).getForwardingRuleApi("party", "us-central1");
+            TOKEN_RESPONSE, setTarget, setTargetResponse).forwardingRulesInRegion("us-central1");
 
       URI newTarget = URI.create(BASE_URL + "/party/regions/europe-west1/targetPools/test-target-pool");
       assertEquals(api.setTarget(ruleName, newTarget), new ParseRegionOperationTest().expected());

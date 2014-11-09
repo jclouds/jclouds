@@ -38,21 +38,21 @@ public class RouteApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
    private static final String ROUTE_NETWORK_NAME = "route-api-live-test-network";
 
    private RouteApi api() {
-      return api.getRouteApi(userProject.get());
+      return api.routes();
    }
 
    @Test(groups = "live")
    public void testInsertRoute() {
-      assertOperationDoneSuccessfully(api.getNetworkApi(userProject.get()).createInIPv4Range
+      assertOperationDoneSuccessfully(api.networks().createInIPv4Range
               (ROUTE_NETWORK_NAME, IPV4_RANGE));
       assertOperationDoneSuccessfully(api().createInNetwork(ROUTE_NAME,
-              getNetworkUrl(userProject.get(), ROUTE_NETWORK_NAME),
+              getNetworkUrl(ROUTE_NETWORK_NAME),
               new RouteOptions().addTag("footag")
                       .addTag("bartag")
                       .description("RouteApi Live Test")
                       .destRange(DEST_RANGE)
                       .priority(1000)
-                      .nextHopGateway(getGatewayUrl(userProject.get(), DEFAULT_GATEWAY_NAME))));
+                      .nextHopGateway(getGatewayUrl(DEFAULT_GATEWAY_NAME))));
    }
 
    @Test(groups = "live", dependsOnMethods = "testInsertRoute")
@@ -79,12 +79,12 @@ public class RouteApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
    @Test(groups = "live", dependsOnMethods = "testListRoute")
    public void testDeleteRoute() {
       assertOperationDoneSuccessfully(api().delete(ROUTE_NAME));
-      assertOperationDoneSuccessfully(api.getNetworkApi(userProject.get()).delete(ROUTE_NETWORK_NAME));
+      assertOperationDoneSuccessfully(api.networks().delete(ROUTE_NETWORK_NAME));
    }
 
    private void assertRouteEquals(Route result) {
       assertEquals(result.name(), ROUTE_NAME);
       assertEquals(result.destRange(), DEST_RANGE);
-      assertEquals(result.nextHopGateway(), getGatewayUrl(userProject.get(), DEFAULT_GATEWAY_NAME));
+      assertEquals(result.nextHopGateway(), getGatewayUrl(DEFAULT_GATEWAY_NAME));
    }
 }

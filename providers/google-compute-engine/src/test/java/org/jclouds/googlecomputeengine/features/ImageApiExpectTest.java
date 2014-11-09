@@ -16,8 +16,8 @@
  */
 package org.jclouds.googlecomputeengine.features;
 
-import static org.jclouds.googlecomputeengine.GoogleComputeEngineConstants.COMPUTE_READONLY_SCOPE;
-import static org.jclouds.googlecomputeengine.GoogleComputeEngineConstants.COMPUTE_SCOPE;
+import static org.jclouds.googlecomputeengine.config.GoogleComputeEngineScopes.COMPUTE_READONLY_SCOPE;
+import static org.jclouds.googlecomputeengine.config.GoogleComputeEngineScopes.COMPUTE_SCOPE;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertFalse;
 import static org.testng.AssertJUnit.assertNull;
@@ -34,68 +34,47 @@ import org.testng.annotations.Test;
 
 @Test(groups = "unit", testName = "ImageApiExpectTest")
 public class ImageApiExpectTest extends BaseGoogleComputeEngineExpectTest<GoogleComputeEngineApi> {
+   HttpRequest get = HttpRequest
+         .builder()
+         .method("GET")
+         .endpoint(BASE_URL + "/party/global/images/centos-6-2-v20120326")
+         .addHeader("Accept", "application/json")
+         .addHeader("Authorization", "Bearer " + TOKEN).build();
 
-   public static final HttpRequest LIST_PROJECT_IMAGES_REQUEST = HttpRequest
-           .builder()
-           .method("GET")
-           .endpoint(BASE_URL + "/party/global/images")
-           .addHeader("Accept", "application/json")
-           .addHeader("Authorization", "Bearer " + TOKEN).build();
-
-   public static final HttpResponse LIST_PROJECT_IMAGES_RESPONSE = HttpResponse.builder().statusCode(200)
-           .payload(staticPayloadFromResource("/image_list.json")).build();
-
-   public static final HttpRequest LIST_CENTOS_IMAGES_REQUEST = HttpRequest
-           .builder()
-           .method("GET")
-           .endpoint(BASE_URL + "/centos-cloud/global/images")
-           .addHeader("Accept", "application/json")
-           .addHeader("Authorization", "Bearer " + TOKEN).build();
-
-   public static final HttpResponse LIST_CENTOS_IMAGES_RESPONSE = HttpResponse.builder().statusCode(200)
-         .payload(staticPayloadFromResource("/image_list_centos.json")).build();
-
-   public static final HttpRequest LIST_DEBIAN_IMAGES_REQUEST = HttpRequest
-           .builder()
-           .method("GET")
-           .endpoint(BASE_URL + "/debian-cloud/global/images")
-           .addHeader("Accept", "application/json")
-           .addHeader("Authorization", "Bearer " + TOKEN).build();
-
-   public static final HttpResponse LIST_DEBIAN_IMAGES_RESPONSE =
-      HttpResponse.builder().statusCode(200)
-            .payload(staticPayloadFromResource("/image_list_debian.json")).build();
-
-   public void testGetImageResponseIs2xx() throws Exception {
-      HttpRequest get = HttpRequest
-              .builder()
-              .method("GET")
-              .endpoint(BASE_URL + "/centos-cloud/global/images/centos-6-2-v20120326")
-              .addHeader("Accept", "application/json")
-              .addHeader("Authorization", "Bearer " + TOKEN).build();
-
-      HttpResponse operationResponse = HttpResponse.builder().statusCode(200)
+   public void get() throws Exception {
+      HttpResponse response = HttpResponse.builder().statusCode(200)
               .payload(payloadFromResource("/image_get.json")).build();
 
       ImageApi imageApi = requestsSendResponses(requestForScopes(COMPUTE_READONLY_SCOPE),
-              TOKEN_RESPONSE, get, operationResponse).getImageApi("centos-cloud");
+              TOKEN_RESPONSE, get, response).images();
 
-      assertEquals(imageApi.get("centos-6-2-v20120326"),
-              new ParseImageTest().expected());
+      assertEquals(imageApi.get(get.getEndpoint()), new ParseImageTest().expected());
    }
 
-   public void testGetImageResponseIs4xx() throws Exception {
-      HttpRequest get = HttpRequest
-              .builder()
-              .method("GET")
-              .endpoint(BASE_URL + "/centos-cloud/global/images/centos-6-2-v20120326")
-              .addHeader("Accept", "application/json")
-              .addHeader("Authorization", "Bearer " + TOKEN).build();
-
-      HttpResponse operationResponse = HttpResponse.builder().statusCode(404).build();
+   public void getResponseIs4xx() throws Exception {
+      HttpResponse response = HttpResponse.builder().statusCode(404).build();
 
       ImageApi imageApi = requestsSendResponses(requestForScopes(COMPUTE_READONLY_SCOPE),
-              TOKEN_RESPONSE, get, operationResponse).getImageApi("centos-cloud");
+              TOKEN_RESPONSE, get, response).images();
+
+      assertNull(imageApi.get(get.getEndpoint()));
+   }
+
+   public void getByName() throws Exception {
+      HttpResponse response = HttpResponse.builder().statusCode(200)
+            .payload(payloadFromResource("/image_get.json")).build();
+
+      ImageApi imageApi = requestsSendResponses(requestForScopes(COMPUTE_READONLY_SCOPE),
+            TOKEN_RESPONSE, get, response).images();
+
+      assertEquals(imageApi.get("centos-6-2-v20120326"), new ParseImageTest().expected());
+   }
+
+   public void getByNameResponseIs4xx() throws Exception {
+      HttpResponse response = HttpResponse.builder().statusCode(404).build();
+
+      ImageApi imageApi = requestsSendResponses(requestForScopes(COMPUTE_READONLY_SCOPE),
+            TOKEN_RESPONSE, get, response).images();
 
       assertNull(imageApi.get("centos-6-2-v20120326"));
    }
@@ -112,10 +91,9 @@ public class ImageApiExpectTest extends BaseGoogleComputeEngineExpectTest<Google
               .payload(payloadFromResource("/operation.json")).build();
 
       ImageApi imageApi = requestsSendResponses(requestForScopes(COMPUTE_SCOPE),
-              TOKEN_RESPONSE, delete, deleteResponse).getImageApi("party");
+              TOKEN_RESPONSE, delete, deleteResponse).images();
 
-      assertEquals(imageApi.delete("centos-6-2-v20120326"),
-              new ParseOperationTest().expected());
+      assertEquals(imageApi.delete("centos-6-2-v20120326"), new ParseOperationTest().expected());
    }
 
    public void testDeleteImageResponseIs4xx() {
@@ -129,28 +107,62 @@ public class ImageApiExpectTest extends BaseGoogleComputeEngineExpectTest<Google
       HttpResponse deleteResponse = HttpResponse.builder().statusCode(404).build();
 
       ImageApi imageApi = requestsSendResponses(requestForScopes(COMPUTE_SCOPE),
-              TOKEN_RESPONSE, delete, deleteResponse).getImageApi("party");
+              TOKEN_RESPONSE, delete, deleteResponse).images();
 
       assertNull(imageApi.delete("centos-6-2-v20120326"));
    }
 
-   public void testListImagesResponseIs2xx() {
+   public static final HttpRequest LIST_PROJECT_IMAGES_REQUEST = HttpRequest
+         .builder()
+         .method("GET")
+         .endpoint(BASE_URL + "/party/global/images")
+         .addHeader("Accept", "application/json")
+         .addHeader("Authorization", "Bearer " + TOKEN).build();
+
+   public static final HttpResponse LIST_PROJECT_IMAGES_RESPONSE = HttpResponse.builder().statusCode(200)
+         .payload(staticPayloadFromResource("/image_list.json")).build();
+
+   public void list() {
 
       ImageApi imageApi = requestsSendResponses(requestForScopes(COMPUTE_READONLY_SCOPE),
-              TOKEN_RESPONSE, LIST_PROJECT_IMAGES_REQUEST, LIST_PROJECT_IMAGES_RESPONSE).getImageApi
-              ("party");
+              TOKEN_RESPONSE, LIST_PROJECT_IMAGES_REQUEST, LIST_PROJECT_IMAGES_RESPONSE).images();
 
-      assertEquals(imageApi.list().next().toString(), new ParseImageListTest().expected().toString());
+      assertEquals(imageApi.list().next(), new ParseImageListTest().expected());
    }
 
-   public void testListImagesResponseIs4xx() {
-
-      HttpResponse operationResponse = HttpResponse.builder().statusCode(404).build();
+   public void listEmpty() {
+      HttpResponse response = HttpResponse.builder().statusCode(200)
+            .payload(payloadFromResource("/list_empty.json")).build();
 
       ImageApi imageApi = requestsSendResponses(requestForScopes(COMPUTE_READONLY_SCOPE),
-              TOKEN_RESPONSE, LIST_PROJECT_IMAGES_REQUEST, operationResponse).getImageApi("party");
+              TOKEN_RESPONSE, LIST_PROJECT_IMAGES_REQUEST, response).images();
 
       assertFalse(imageApi.list().hasNext());
+   }
+
+   public static final HttpRequest LIST_CENTOS_IMAGES_REQUEST = HttpRequest
+         .builder()
+         .method("GET")
+         .endpoint(BASE_URL + "/centos-cloud/global/images")
+         .addHeader("Accept", "application/json")
+         .addHeader("Authorization", "Bearer " + TOKEN).build();
+
+   public void listInProject() {
+
+      ImageApi imageApi = requestsSendResponses(requestForScopes(COMPUTE_READONLY_SCOPE),
+            TOKEN_RESPONSE, LIST_CENTOS_IMAGES_REQUEST, LIST_PROJECT_IMAGES_RESPONSE).images();
+
+      assertEquals(imageApi.listInProject("centos-cloud").next(), new ParseImageListTest().expected());
+   }
+
+   public void listInProjectEmpty() {
+      HttpResponse response = HttpResponse.builder().statusCode(200)
+            .payload(payloadFromResource("/list_empty.json")).build();
+
+      ImageApi imageApi = requestsSendResponses(requestForScopes(COMPUTE_READONLY_SCOPE),
+            TOKEN_RESPONSE, LIST_CENTOS_IMAGES_REQUEST, response).images();
+
+      assertFalse(imageApi.listInProject("centos-cloud").hasNext());
    }
 
    public void testCreateImageFromPdResponseIs2xx(){
@@ -167,7 +179,7 @@ public class ImageApiExpectTest extends BaseGoogleComputeEngineExpectTest<Google
                                   .payload(payloadFromResource("/operation.json")).build();
 
       ImageApi imageApi = requestsSendResponses(requestForScopes(COMPUTE_SCOPE),
-            TOKEN_RESPONSE, createImage, createImageResponse).getImageApi("party");
+            TOKEN_RESPONSE, createImage, createImageResponse).images();
 
       assertEquals(imageApi.createFromDisk("my-image", BASE_URL + "/party/zones/us-central1-a/disks/mydisk"),
             new ParseOperationTest().expected());
@@ -187,7 +199,7 @@ public class ImageApiExpectTest extends BaseGoogleComputeEngineExpectTest<Google
       HttpResponse createImageResponse = HttpResponse.builder().statusCode(404).build();
 
       ImageApi imageApi = requestsSendResponses(requestForScopes(COMPUTE_SCOPE),
-              TOKEN_RESPONSE, createImage, createImageResponse).getImageApi("party");
+              TOKEN_RESPONSE, createImage, createImageResponse).images();
 
       imageApi.createFromDisk("my-image", BASE_URL + "/party/zones/us-central1-a/disks/mydisk");
    }

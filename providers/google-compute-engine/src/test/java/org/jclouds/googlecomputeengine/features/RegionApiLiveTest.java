@@ -34,7 +34,7 @@ public class RegionApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
    private Region region;
 
    private RegionApi api() {
-      return api.getRegionApi(userProject.get());
+      return api.regions();
    }
 
    @Test(groups = "live")

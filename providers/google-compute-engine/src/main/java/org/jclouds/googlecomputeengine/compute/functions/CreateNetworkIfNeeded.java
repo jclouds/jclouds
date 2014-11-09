@@ -25,24 +25,19 @@ import javax.inject.Inject;
 
 import org.jclouds.googlecomputeengine.GoogleComputeEngineApi;
 import org.jclouds.googlecomputeengine.compute.domain.NetworkAndAddressRange;
-import org.jclouds.googlecomputeengine.config.UserProject;
 import org.jclouds.googlecomputeengine.domain.Network;
 import org.jclouds.googlecomputeengine.domain.Operation;
 
 import com.google.common.base.Function;
 import com.google.common.base.Predicate;
-import com.google.common.base.Supplier;
 import com.google.common.util.concurrent.Atomics;
 
 public final class CreateNetworkIfNeeded implements Function<NetworkAndAddressRange, Network> {
    private final GoogleComputeEngineApi api;
-   private final Supplier<String> userProject;
    private final Predicate<AtomicReference<Operation>> operationDone;
 
-   @Inject CreateNetworkIfNeeded(GoogleComputeEngineApi api, @UserProject Supplier<String> userProject,
-         Predicate<AtomicReference<Operation>> operationDone) {
+   @Inject CreateNetworkIfNeeded(GoogleComputeEngineApi api, Predicate<AtomicReference<Operation>> operationDone) {
       this.api = api;
-      this.userProject = userProject;
       this.operationDone = operationDone;
    }
 
@@ -50,13 +45,13 @@ public final class CreateNetworkIfNeeded implements Function<NetworkAndAddressRa
    public Network apply(NetworkAndAddressRange input) {
       checkNotNull(input, "input");
 
-      Network nw = api.getNetworkApi(userProject.get()).get(input.name());
+      Network nw = api.networks().get(input.name());
       if (nw != null) {
          return nw;
       }
 
       if (input.gateway() != null) {
-         AtomicReference<Operation> operation = Atomics.newReference(api.getNetworkApi(userProject.get())
+         AtomicReference<Operation> operation = Atomics.newReference(api.networks()
                .createInIPv4RangeWithGateway(input.name(), input.rangeIPv4(), input.gateway()));
          operationDone.apply(operation);
 
@@ -64,13 +59,13 @@ public final class CreateNetworkIfNeeded implements Function<NetworkAndAddressRa
                "Could not insert network, operation failed" + operation);
       } else {
          AtomicReference<Operation> operation = Atomics
-               .newReference(api.getNetworkApi(userProject.get()).createInIPv4Range(input.name(), input.rangeIPv4()));
+               .newReference(api.networks().createInIPv4Range(input.name(), input.rangeIPv4()));
          operationDone.apply(operation);
 
          checkState(operation.get().httpErrorStatusCode() == null,
                "Could not insert network, operation failed" + operation);
       }
-      return checkNotNull(api.getNetworkApi(userProject.get()).get(input.name()), "no network with name %s was found",
+      return checkNotNull(api.networks().get(input.name()), "no network with name %s was found",
             input.name());
    }
 }

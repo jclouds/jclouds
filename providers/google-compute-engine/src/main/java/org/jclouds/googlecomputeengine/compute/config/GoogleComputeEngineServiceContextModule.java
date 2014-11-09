@@ -20,8 +20,8 @@ import static com.google.common.base.Suppliers.memoizeWithExpiration;
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
 import static java.util.concurrent.TimeUnit.SECONDS;
 import static org.jclouds.Constants.PROPERTY_SESSION_INTERVAL;
-import static org.jclouds.googlecomputeengine.GoogleComputeEngineConstants.OPERATION_COMPLETE_INTERVAL;
-import static org.jclouds.googlecomputeengine.GoogleComputeEngineConstants.OPERATION_COMPLETE_TIMEOUT;
+import static org.jclouds.googlecomputeengine.config.GoogleComputeEngineProperties.OPERATION_COMPLETE_INTERVAL;
+import static org.jclouds.googlecomputeengine.config.GoogleComputeEngineProperties.OPERATION_COMPLETE_TIMEOUT;
 import static org.jclouds.rest.config.BinderUtils.bindHttpApi;
 import static org.jclouds.util.Predicates2.retry;
 

@@ -33,7 +33,7 @@ public class DiskTypeApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
    private DiskType diskType;
 
    private DiskTypeApi api() {
-      return api.getDiskTypeApi(userProject.get(), DEFAULT_ZONE_NAME);
+      return api.diskTypesInZone(DEFAULT_ZONE_NAME);
    }
 
    @Test(groups = "live")

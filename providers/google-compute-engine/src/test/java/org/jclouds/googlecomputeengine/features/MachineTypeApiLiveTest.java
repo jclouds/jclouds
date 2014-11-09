@@ -34,7 +34,7 @@ public class MachineTypeApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
    private MachineType machineType;
 
    private MachineTypeApi api() {
-      return api.getMachineTypeApi(userProject.get(), DEFAULT_ZONE_NAME);
+      return api.machineTypesInZone(DEFAULT_ZONE_NAME);
    }
 
    @Test(groups = "live")

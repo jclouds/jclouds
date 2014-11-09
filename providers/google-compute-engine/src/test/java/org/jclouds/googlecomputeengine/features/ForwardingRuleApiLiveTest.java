@@ -47,15 +47,15 @@ public class ForwardingRuleApiLiveTest extends BaseGoogleComputeEngineApiLiveTes
     * @return
     */
    private ForwardingRuleApi api() {
-      return api.getForwardingRuleApi(userProject.get(), DEFAULT_REGION_NAME);
+      return api.forwardingRulesInRegion(DEFAULT_REGION_NAME);
    }
 
    private TargetPoolApi targetPoolApi() {
-      return api.getTargetPoolApi(userProject.get(), DEFAULT_REGION_NAME);
+      return api.targetPoolsInRegion(DEFAULT_REGION_NAME);
    }
 
    private AddressApi addressApi(){
-      return  api.getAddressApi(userProject.get(), DEFAULT_REGION_NAME);
+      return  api.addressesInRegion(DEFAULT_REGION_NAME);
    }
 
    @BeforeClass

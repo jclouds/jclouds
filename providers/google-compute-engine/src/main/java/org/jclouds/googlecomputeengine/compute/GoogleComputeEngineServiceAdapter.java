@@ -21,7 +21,7 @@ import static com.google.common.base.Preconditions.checkState;
 import static com.google.common.collect.Iterables.filter;
 import static com.google.common.collect.Lists.newArrayList;
 import static java.lang.String.format;
-import static org.jclouds.googlecomputeengine.GoogleComputeEngineConstants.GCE_IMAGE_PROJECTS;
+import static org.jclouds.googlecomputeengine.config.GoogleComputeEngineProperties.IMAGE_PROJECTS;
 import static org.jclouds.googlecomputeengine.domain.NewInstance.Disk;
 import static org.jclouds.googlecomputeengine.internal.ListPages.concat;
 
@@ -45,7 +45,6 @@ import org.jclouds.googlecomputeengine.GoogleComputeEngineApi;
 import org.jclouds.googlecomputeengine.compute.functions.FirewallTagNamingConvention;
 import org.jclouds.googlecomputeengine.compute.functions.Resources;
 import org.jclouds.googlecomputeengine.compute.options.GoogleComputeEngineTemplateOptions;
-import org.jclouds.googlecomputeengine.config.UserProject;
 import org.jclouds.googlecomputeengine.domain.Image;
 import org.jclouds.googlecomputeengine.domain.Instance;
 import org.jclouds.googlecomputeengine.domain.MachineType;
@@ -58,7 +57,6 @@ import org.jclouds.location.suppliers.all.JustProvider;
 
 import com.google.common.base.Predicate;
 import com.google.common.base.Splitter;
-import com.google.common.base.Supplier;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
@@ -82,7 +80,6 @@ public final class GoogleComputeEngineServiceAdapter
 
    private final JustProvider justProvider;
    private final GoogleComputeEngineApi api;
-   private final Supplier<String> userProject;
    private final Resources resources;
    private final Map<URI, URI> diskToSourceImage;
    private final Predicate<AtomicReference<Operation>> operationDone;
@@ -91,16 +88,14 @@ public final class GoogleComputeEngineServiceAdapter
    private final List<String> imageProjects;
 
    @Inject GoogleComputeEngineServiceAdapter(JustProvider justProvider, GoogleComputeEngineApi api,
-                                            @UserProject Supplier<String> userProject,
                                             Predicate<AtomicReference<Operation>> operationDone,
                                             Predicate<AtomicReference<Instance>> instanceVisible,
                                             Map<URI, URI> diskToSourceImage,
                                             Resources resources,
                                             FirewallTagNamingConvention.Factory firewallTagNamingConvention,
-                                            @Named(GCE_IMAGE_PROJECTS) String imageProjects) {
+                                            @Named(IMAGE_PROJECTS) String imageProjects) {
       this.justProvider = justProvider;
       this.api = api;
-      this.userProject = userProject;
       this.operationDone = operationDone;
       this.instanceVisible = instanceVisible;
       this.diskToSourceImage = diskToSourceImage;
@@ -128,8 +123,8 @@ public final class GoogleComputeEngineServiceAdapter
       }
 
       NewInstance newInstance = NewInstance.create(
-            hardware.getUri(), // machineType
             name, // name
+            hardware.getUri(), // machineType
             options.network(), // network
             disks, // disks
             group // description
@@ -150,7 +145,7 @@ public final class GoogleComputeEngineServiceAdapter
       }
 
       String zone = template.getLocation().getId();
-      InstanceApi instanceApi = api.getInstanceApi(userProject.get(), zone);
+      InstanceApi instanceApi = api.instancesInZone(zone);
       Operation create = instanceApi.create(newInstance);
 
       // We need to see the created instance so that we can access the newly created disk.
@@ -179,7 +174,7 @@ public final class GoogleComputeEngineServiceAdapter
    }
 
    @Override public Iterable<MachineType> listHardwareProfiles() {
-      return filter(concat(api.aggregatedList(userProject.get()).machineTypes()), new Predicate<MachineType>() {
+      return filter(concat(api.aggregatedList().machineTypes()), new Predicate<MachineType>() {
          @Override public boolean apply(MachineType input) {
             return input.deprecated() == null;
          }
@@ -189,24 +184,24 @@ public final class GoogleComputeEngineServiceAdapter
    @Override public Iterable<Image> listImages() {
       List<Iterable<Image>> images = newArrayList();
 
-      images.add(concat(api.getImageApi(userProject.get()).list()));
+      images.add(concat(api.images().list()));
 
       for (String project : imageProjects) {
-         images.add(concat(api.getImageApi(project).list()));
+         images.add(concat(api.images().listInProject(project)));
       }
 
       return Iterables.concat(images);
    }
 
    @Override public Image getImage(String selfLink) {
-      return resources.image(URI.create(checkNotNull(selfLink, "id")));
+      return api.images().get(URI.create(checkNotNull(selfLink, "id")));
    }
 
    /**  Unlike EC2, you cannot default GCE instances to a region. Hence, we constrain to zones. */
    @Override public Iterable<Location> listLocations() {
       Location provider = justProvider.get().iterator().next();
       ImmutableList.Builder<Location> zones = ImmutableList.builder();
-      for (Region region : concat(api.getRegionApi(userProject.get()).list())) {
+      for (Region region : concat(api.regions().list())) {
          Location regionLocation = new LocationBuilder()
                .scope(LocationScope.REGION)
                .id(region.name())
@@ -229,7 +224,7 @@ public final class GoogleComputeEngineServiceAdapter
    }
 
    @Override public Iterable<Instance> listNodes() {
-      return concat(api.aggregatedList(userProject.get()).instances());
+      return concat(api.aggregatedList().instances());
    }
 
    @Override public Iterable<Instance> listNodesByIds(final Iterable<String> selfLinks) {

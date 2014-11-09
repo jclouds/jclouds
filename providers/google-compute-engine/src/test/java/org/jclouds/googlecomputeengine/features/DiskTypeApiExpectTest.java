@@ -16,7 +16,7 @@
  */
 package org.jclouds.googlecomputeengine.features;
 
-import static org.jclouds.googlecomputeengine.GoogleComputeEngineConstants.COMPUTE_READONLY_SCOPE;
+import static org.jclouds.googlecomputeengine.config.GoogleComputeEngineScopes.COMPUTE_READONLY_SCOPE;
 import static org.jclouds.googlecomputeengine.options.ListOptions.Builder.maxResults;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertFalse;
@@ -53,11 +53,11 @@ public class DiskTypeApiExpectTest extends BaseGoogleComputeEngineExpectTest<Goo
               .addHeader("Accept", "application/json")
               .addHeader("Authorization", "Bearer " + TOKEN).build();
 
-      HttpResponse operationResponse = HttpResponse.builder().statusCode(200)
+      HttpResponse response = HttpResponse.builder().statusCode(200)
               .payload(payloadFromResource("/disktype.json")).build();
 
       DiskTypeApi diskTypeApi = requestsSendResponses(requestForScopes(COMPUTE_READONLY_SCOPE),
-              TOKEN_RESPONSE, get, operationResponse).getDiskTypeApi("party", "us-central1-a");
+              TOKEN_RESPONSE, get, response).diskTypesInZone("us-central1-a");
 
       assertEquals(diskTypeApi.get("pd-standard"),
               new ParseDiskTypeTest().expected());
@@ -71,32 +71,31 @@ public class DiskTypeApiExpectTest extends BaseGoogleComputeEngineExpectTest<Goo
               .addHeader("Accept", "application/json")
               .addHeader("Authorization", "Bearer " + TOKEN).build();
 
-      HttpResponse operationResponse = HttpResponse.builder().statusCode(404).build();
+      HttpResponse response = HttpResponse.builder().statusCode(404).build();
 
       DiskTypeApi diskTypeApi = requestsSendResponses(requestForScopes(COMPUTE_READONLY_SCOPE),
-              TOKEN_RESPONSE, get, operationResponse).getDiskTypeApi("party", "us-central1-a");
+              TOKEN_RESPONSE, get, response).diskTypesInZone("us-central1-a");
 
       assertNull(diskTypeApi.get("pd-standard"));
    }
 
-   public void testListDiskTypeNoOptionsResponseIs2xx() throws Exception {
+   public void list() throws Exception {
 
       DiskTypeApi diskTypeApi = requestsSendResponses(requestForScopes(COMPUTE_READONLY_SCOPE),
-            TOKEN_RESPONSE, LIST_DISK_TYPES_REQUEST, LIST_DISK_TYPES_RESPONSE).getDiskTypeApi
-            ("party", "us-central1-a");
+            TOKEN_RESPONSE, LIST_DISK_TYPES_REQUEST, LIST_DISK_TYPES_RESPONSE).diskTypesInZone("us-central1-a");
 
-      assertEquals(diskTypeApi.list().next().toString(), new ParseDiskTypeListTest().expected().toString());
+      assertEquals(diskTypeApi.list().next(), new ParseDiskTypeListTest().expected());
    }
 
-   public void testListDiskTypesWithPaginationOptionsResponseIs4xx() {
-
-      HttpResponse operationResponse = HttpResponse.builder().statusCode(404).build();
-
+   public void listWithOptionsEmpty() {
+      HttpResponse response = HttpResponse.builder().statusCode(200)
+            .payload(payloadFromResource("/list_empty.json")).build();
+      
       HttpRequest listRequestWithOptions = LIST_DISK_TYPES_REQUEST.toBuilder()
             .endpoint(LIST_DISK_TYPES_REQUEST.getEndpoint() + "?maxResults=1").build();
 
       DiskTypeApi diskTypeApi = requestsSendResponses(requestForScopes(COMPUTE_READONLY_SCOPE),
-              TOKEN_RESPONSE, listRequestWithOptions, operationResponse).getDiskTypeApi("party", "us-central1-a");
+              TOKEN_RESPONSE, listRequestWithOptions, response).diskTypesInZone("us-central1-a");
 
       assertFalse(diskTypeApi.list(maxResults(1)).hasNext());
    }

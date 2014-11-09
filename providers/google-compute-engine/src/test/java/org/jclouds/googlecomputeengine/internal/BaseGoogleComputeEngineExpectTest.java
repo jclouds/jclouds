@@ -19,20 +19,20 @@ package org.jclouds.googlecomputeengine.internal;
 import static com.google.common.base.Charsets.UTF_8;
 import static com.google.common.base.Throwables.propagate;
 import static com.google.common.io.BaseEncoding.base64Url;
+import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
+import static org.jclouds.googlecomputeengine.config.GoogleComputeEngineProperties.PROJECT_NAME;
+import static org.jclouds.oauth.v2.OAuthConstants.NO_ALGORITHM;
+import static org.jclouds.oauth.v2.config.OAuthProperties.SIGNATURE_OR_MAC_ALGORITHM;
 import static org.jclouds.util.Strings2.toStringAndClose;
 
 import java.io.IOException;
 import java.net.URI;
 import java.util.Properties;
 
-import javax.ws.rs.core.MediaType;
-
 import org.jclouds.googlecomputeengine.GoogleComputeEngineProviderMetadata;
 import org.jclouds.http.HttpRequest;
 import org.jclouds.http.HttpResponse;
 import org.jclouds.io.Payload;
-import org.jclouds.oauth.v2.OAuthConstants;
-import org.jclouds.oauth.v2.config.OAuthProperties;
 import org.jclouds.providers.ProviderMetadata;
 import org.jclouds.rest.internal.BaseRestApiExpectTest;
 
@@ -45,7 +45,7 @@ public class BaseGoogleComputeEngineExpectTest<T> extends BaseRestApiExpectTest<
    private static final String header = "{\"alg\":\"none\",\"typ\":\"JWT\"}";
 
    private static final String CLAIMS_TEMPLATE = "{" +
-           "\"iss\":\"party\"," +
+           "\"iss\":\"%s\"," +
            "\"scope\":\"%s\"," +
            "\"aud\":\"https://accounts.google.com/o/oauth2/token\"," +
            "\"exp\":3600," +
@@ -62,7 +62,7 @@ public class BaseGoogleComputeEngineExpectTest<T> extends BaseRestApiExpectTest<
 
    protected BaseGoogleComputeEngineExpectTest() {
       provider = "google-compute-engine";
-      identity = "party";
+      identity = "761326798069-r5mljlln1rd4lrbhg75efgigp36m78j5@developer.gserviceaccount.com";
    }
 
    @Override protected ProviderMetadata createProviderMetadata(){
@@ -76,8 +76,9 @@ public class BaseGoogleComputeEngineExpectTest<T> extends BaseRestApiExpectTest<
    @Override
    protected Properties setupProperties() {
       Properties props = super.setupProperties();
+      props.put(PROJECT_NAME, "party");
       // use no sig algorithm for expect tests (means no credential is required either)
-      props.put(OAuthProperties.SIGNATURE_OR_MAC_ALGORITHM, OAuthConstants.NO_ALGORITHM);
+      props.put(SIGNATURE_OR_MAC_ALGORITHM, NO_ALGORITHM);
       return props;
    }
 
@@ -85,7 +86,7 @@ public class BaseGoogleComputeEngineExpectTest<T> extends BaseRestApiExpectTest<
    protected HttpRequestComparisonType compareHttpRequestAsType(HttpRequest input) {
       HttpRequestComparisonType reqType = HttpRequestComparisonType.DEFAULT;
       if (input.getPayload() != null) {
-         if (input.getPayload().getContentMetadata().getContentType().equals(MediaType.APPLICATION_JSON)) {
+         if (input.getPayload().getContentMetadata().getContentType().equals(APPLICATION_JSON)) {
             reqType = HttpRequestComparisonType.JSON;
          }
       }
@@ -93,7 +94,7 @@ public class BaseGoogleComputeEngineExpectTest<T> extends BaseRestApiExpectTest<
    }
 
    protected HttpRequest requestForScopes(String... scopes) {
-      String claims = String.format(CLAIMS_TEMPLATE, Joiner.on(",").join(scopes));
+      String claims = String.format(CLAIMS_TEMPLATE, identity, Joiner.on(",").join(scopes));
 
       String payload = "grant_type=urn%3Aietf%3Aparams%3Aoauth%3Agrant-type%3Ajwt-bearer&" +
               // Base64 Encoded Header
@@ -104,7 +105,7 @@ public class BaseGoogleComputeEngineExpectTest<T> extends BaseRestApiExpectTest<
       return HttpRequest.builder()
               .method("POST")
               .endpoint(URI.create("https://accounts.google.com/o/oauth2/token"))
-              .addHeader("Accept", MediaType.APPLICATION_JSON)
+              .addHeader("Accept", APPLICATION_JSON)
               .payload(payloadFromStringWithContentType(payload, "application/x-www-form-urlencoded"))
               .build();
    }

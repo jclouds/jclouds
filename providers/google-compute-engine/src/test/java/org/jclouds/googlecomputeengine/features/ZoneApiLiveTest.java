@@ -34,7 +34,7 @@ public class ZoneApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
    private Zone zone;
 
    private ZoneApi api() {
-      return api.getZoneApi(userProject.get());
+      return api.zones();
    }
 
    @Test(groups = "live")

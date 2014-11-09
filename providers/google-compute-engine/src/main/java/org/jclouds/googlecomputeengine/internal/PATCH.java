@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jclouds.googlecomputeengine.functions.internal;
+package org.jclouds.googlecomputeengine.internal;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

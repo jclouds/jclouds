@@ -34,7 +34,7 @@ public class OperationApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
    private Operation operation;
 
    private OperationApi api() {
-      return api.getOperationApi(userProject.get());
+      return api.operations();
    }
 
    public void listWithOptions() {
@@ -44,7 +44,7 @@ public class OperationApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
       int count = 0;
       for (; count < 2 && operations.hasNext(); ) {
          ListPage<Operation> result = operations.next();
-         if (result.isEmpty()) {
+         if (!result.isEmpty()) {
             operation = result.get(0);
             count++;
          }
@@ -69,7 +69,7 @@ public class OperationApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
       int count = 0;
       for (; count < 2 && operations.hasNext(); ) {
          ListPage<Operation> result = operations.next();
-         if (result.isEmpty()) {
+         if (!result.isEmpty()) {
             count++;
          }
       }
@@ -86,7 +86,7 @@ public class OperationApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
       int count = 0;
       for (; count < 2 && operations.hasNext(); ) {
          ListPage<Operation> result = operations.next();
-         if (result.isEmpty()) {
+         if (!result.isEmpty()) {
             count++;
          }
       }

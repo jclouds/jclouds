@@ -18,9 +18,10 @@ package org.jclouds.googlecomputeengine;
 
 import static org.jclouds.Constants.PROPERTY_SESSION_INTERVAL;
 import static org.jclouds.compute.config.ComputeServiceProperties.TEMPLATE;
-import static org.jclouds.googlecomputeengine.GoogleComputeEngineConstants.GCE_IMAGE_PROJECTS;
-import static org.jclouds.googlecomputeengine.GoogleComputeEngineConstants.OPERATION_COMPLETE_INTERVAL;
-import static org.jclouds.googlecomputeengine.GoogleComputeEngineConstants.OPERATION_COMPLETE_TIMEOUT;
+import static org.jclouds.googlecomputeengine.config.GoogleComputeEngineProperties.IMAGE_PROJECTS;
+import static org.jclouds.googlecomputeengine.config.GoogleComputeEngineProperties.OPERATION_COMPLETE_INTERVAL;
+import static org.jclouds.googlecomputeengine.config.GoogleComputeEngineProperties.OPERATION_COMPLETE_TIMEOUT;
+import static org.jclouds.googlecomputeengine.config.GoogleComputeEngineProperties.PROJECT_NAME;
 import static org.jclouds.oauth.v2.config.OAuthProperties.AUDIENCE;
 import static org.jclouds.oauth.v2.config.OAuthProperties.SIGNATURE_OR_MAC_ALGORITHM;
 import static org.jclouds.reflect.Reflection2.typeToken;
@@ -40,7 +41,6 @@ import com.google.common.collect.ImmutableSet;
 import com.google.inject.Module;
 
 public class GoogleComputeEngineApiMetadata extends BaseHttpApiMetadata<GoogleComputeEngineApi> {
-
    @Override
    public Builder toBuilder() {
       return new Builder().fromApiMetadata(this);
@@ -63,7 +63,8 @@ public class GoogleComputeEngineApiMetadata extends BaseHttpApiMetadata<GoogleCo
       properties.put(OPERATION_COMPLETE_INTERVAL, 500);
       properties.put(OPERATION_COMPLETE_TIMEOUT, 600000);
       properties.put(TEMPLATE, "osFamily=DEBIAN,osVersionMatches=7\\..*,locationId=us-central1-a,loginUser=jclouds");
-      properties.put(GCE_IMAGE_PROJECTS, "centos-cloud,debian-cloud,rhel-cloud,suse-cloud,opensuse-cloud,gce-nvme,coreos-cloud");
+      properties.put(PROJECT_NAME, ""); // Defaulting to empty helps avoid temptation for optional inject!
+      properties.put(IMAGE_PROJECTS, "centos-cloud,debian-cloud,rhel-cloud,suse-cloud,opensuse-cloud,gce-nvme,coreos-cloud");
       return properties;
    }
 
@@ -72,8 +73,9 @@ public class GoogleComputeEngineApiMetadata extends BaseHttpApiMetadata<GoogleCo
       protected Builder() {
          id("google-compute-engine")
            .name("Google Compute Engine Api")
-           .identityName("Email associated with the Google API client_id")
-           .credentialName("Private key literal associated with the Google API client_id")
+           .identityName("client_email which usually looks like project_id@developer.gserviceaccount.com or " //
+                 + "project_id-extended_uid@developer.gserviceaccount.com")
+           .credentialName("PEM encoded P12 private key associated with client_email")
            .documentation(URI.create("https://developers.google.com/compute/docs"))
            .version("v1")
            .defaultEndpoint("https://www.googleapis.com/compute/v1")

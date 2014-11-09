@@ -17,10 +17,11 @@
 package org.jclouds.googlecomputeengine.features;
 
 import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
-import static org.jclouds.googlecomputeengine.GoogleComputeEngineConstants.COMPUTE_READONLY_SCOPE;
+import static org.jclouds.googlecomputeengine.config.GoogleComputeEngineScopes.COMPUTE_READONLY_SCOPE;
 
 import java.util.Iterator;
 
+import javax.inject.Inject;
 import javax.inject.Named;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
@@ -29,32 +30,32 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.QueryParam;
 
 import org.jclouds.Fallbacks.NullOnNotFoundOr404;
-import org.jclouds.googlecomputeengine.GoogleComputeEngineFallbacks.EmptyIteratorOnNotFoundOr404;
-import org.jclouds.googlecomputeengine.GoogleComputeEngineFallbacks.EmptyListPageOnNotFoundOr404;
+import org.jclouds.googlecomputeengine.GoogleComputeEngineApi;
 import org.jclouds.googlecomputeengine.domain.DiskType;
 import org.jclouds.googlecomputeengine.domain.ListPage;
-import org.jclouds.googlecomputeengine.functions.internal.ParseDiskTypes;
+import org.jclouds.googlecomputeengine.internal.BaseCallerArg0ToIteratorOfListPage;
 import org.jclouds.googlecomputeengine.options.ListOptions;
 import org.jclouds.javax.annotation.Nullable;
 import org.jclouds.oauth.v2.config.OAuthScopes;
 import org.jclouds.oauth.v2.filters.OAuthAuthenticationFilter;
 import org.jclouds.rest.annotations.Fallback;
 import org.jclouds.rest.annotations.RequestFilters;
-import org.jclouds.rest.annotations.ResponseParser;
 import org.jclouds.rest.annotations.SkipEncoding;
 import org.jclouds.rest.annotations.Transform;
+
+import com.google.common.base.Function;
 
 @SkipEncoding({'/', '='})
 @RequestFilters(OAuthAuthenticationFilter.class)
 @Path("/diskTypes")
 @Consumes(APPLICATION_JSON)
+@OAuthScopes(COMPUTE_READONLY_SCOPE)
 public interface DiskTypeApi {
 
    /** Returns a disk type by name or null if not found. */
    @Named("DiskTypes:get")
    @GET
    @Path("/{diskType}")
-   @OAuthScopes(COMPUTE_READONLY_SCOPE)
    @Fallback(NullOnNotFoundOr404.class)
    DiskType get(@PathParam("diskType") String diskType);
 
@@ -63,36 +64,41 @@ public interface DiskTypeApi {
     * By default the list as a maximum size of 100, if no options are provided or ListOptions#getMaxResults() has not
     * been set.
     *
-    * @param token       marks the beginning of the next list page
+    * @param pageToken   marks the beginning of the next list page
     * @param listOptions listing options
     * @return a page of the list
     */
    @Named("DiskTypes:list")
    @GET
-   @OAuthScopes(COMPUTE_READONLY_SCOPE)
-   @ResponseParser(ParseDiskTypes.class)
-   @Fallback(EmptyListPageOnNotFoundOr404.class)
-   ListPage<DiskType> listPage(@Nullable @QueryParam("pageToken") String token, ListOptions listOptions);
+   ListPage<DiskType> listPage(@Nullable @QueryParam("pageToken") String pageToken, ListOptions listOptions);
 
-   /**
-    * @see #list(org.jclouds.googlecomputeengine.options.ListOptions)
-    */
+   /** @see #listPage(String, ListOptions) */
    @Named("DiskTypes:list")
    @GET
-   @OAuthScopes(COMPUTE_READONLY_SCOPE)
-   @ResponseParser(ParseDiskTypes.class)
-   @Transform(ParseDiskTypes.ToIteratorOfListPage.class)
-   @Fallback(EmptyIteratorOnNotFoundOr404.class)
+   @Transform(DiskTypePages.class)
    Iterator<ListPage<DiskType>> list();
 
-   /**
-    * @see #list(org.jclouds.googlecomputeengine.options.ListOptions)
-    */
+   /** @see #listPage(String, ListOptions) */
    @Named("DiskTypes:list")
    @GET
-   @OAuthScopes(COMPUTE_READONLY_SCOPE)
-   @ResponseParser(ParseDiskTypes.class)
-   @Transform(ParseDiskTypes.ToIteratorOfListPage.class)
-   @Fallback(EmptyIteratorOnNotFoundOr404.class)
+   @Transform(DiskTypePages.class)
    Iterator<ListPage<DiskType>> list(ListOptions options);
+
+   static final class DiskTypePages extends BaseCallerArg0ToIteratorOfListPage<DiskType, DiskTypePages> {
+
+      private final GoogleComputeEngineApi api;
+
+      @Inject DiskTypePages(GoogleComputeEngineApi api) {
+         this.api = api;
+      }
+
+      @Override
+      protected Function<String, ListPage<DiskType>> fetchNextPage(final String zoneName, final ListOptions options) {
+         return new Function<String, ListPage<DiskType>>() {
+            @Override public ListPage<DiskType> apply(String pageToken) {
+               return api.diskTypesInZone(zoneName).listPage(pageToken, options);
+            }
+         };
+      }
+   }
 }

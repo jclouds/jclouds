@@ -16,7 +16,7 @@
  */
 package org.jclouds.googlecomputeengine.features;
 
-import static org.jclouds.googlecomputeengine.GoogleComputeEngineConstants.COMPUTE_READONLY_SCOPE;
+import static org.jclouds.googlecomputeengine.config.GoogleComputeEngineScopes.COMPUTE_READONLY_SCOPE;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertNull;
@@ -52,39 +52,38 @@ public class RegionApiExpectTest extends BaseGoogleComputeEngineExpectTest<Googl
            .payload(staticPayloadFromResource("/region_list.json")).build();
 
    public void testGetRegionResponseIs2xx() throws Exception {
-      HttpResponse operationResponse = HttpResponse.builder().statusCode(200)
+      HttpResponse response = HttpResponse.builder().statusCode(200)
               .payload(payloadFromResource("/region_get.json")).build();
 
       RegionApi api = requestsSendResponses(requestForScopes(COMPUTE_READONLY_SCOPE),
-              TOKEN_RESPONSE, GET_REGION_REQ, operationResponse).getRegionApi("party");
+              TOKEN_RESPONSE, GET_REGION_REQ, response).regions();
 
       assertEquals(api.get("us-central1"), new ParseRegionTest().expected());
    }
 
    public void testGetRegionResponseIs4xx() throws Exception {
 
-      HttpResponse operationResponse = HttpResponse.builder().statusCode(404).build();
+      HttpResponse response = HttpResponse.builder().statusCode(404).build();
 
       RegionApi api = requestsSendResponses(requestForScopes(COMPUTE_READONLY_SCOPE),
-              TOKEN_RESPONSE, GET_REGION_REQ, operationResponse).getRegionApi("party");
+              TOKEN_RESPONSE, GET_REGION_REQ, response).regions();
 
       assertNull(api.get("us-central1"));
    }
 
-   public void testListRegionNoOptionsResponseIs2xx() throws Exception {
-
+   public void list() throws Exception {
       RegionApi api = requestsSendResponses(requestForScopes(COMPUTE_READONLY_SCOPE),
-              TOKEN_RESPONSE, LIST_REGIONS_REQ, LIST_REGIONS_RESPONSE).getRegionApi("party");
+              TOKEN_RESPONSE, LIST_REGIONS_REQ, LIST_REGIONS_RESPONSE).regions();
 
-      assertEquals(api.list().next().toString(), new ParseRegionListTest().expected().toString());
+      assertEquals(api.list().next(), new ParseRegionListTest().expected());
    }
 
-   public void testListRegionWithPaginationOptionsResponseIs4xx() {
-
-      HttpResponse operationResponse = HttpResponse.builder().statusCode(404).build();
+   public void listEmpty() {
+      HttpResponse response = HttpResponse.builder().statusCode(200)
+            .payload(payloadFromResource("/list_empty.json")).build();
 
       RegionApi api = requestsSendResponses(requestForScopes(COMPUTE_READONLY_SCOPE),
-              TOKEN_RESPONSE, LIST_REGIONS_REQ, operationResponse).getRegionApi("party");
+              TOKEN_RESPONSE, LIST_REGIONS_REQ, response).regions();
 
       assertFalse(api.list().hasNext());
    }

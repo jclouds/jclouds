@@ -1,0 +1,5 @@
+{
+ "kind": "compute#forwardingRuleList",
+ "id": "projects/jclouds-dev/regions/asia-east1/forwardingRules",
+ "selfLink": "https://www.googleapis.com/compute/v1/projects/jclouds-dev/regions/asia-east1/forwardingRules"
+}

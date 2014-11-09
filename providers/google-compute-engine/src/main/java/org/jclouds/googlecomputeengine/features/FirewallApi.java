@@ -17,12 +17,13 @@
 package org.jclouds.googlecomputeengine.features;
 
 import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
-import static org.jclouds.googlecomputeengine.GoogleComputeEngineConstants.COMPUTE_READONLY_SCOPE;
-import static org.jclouds.googlecomputeengine.GoogleComputeEngineConstants.COMPUTE_SCOPE;
+import static org.jclouds.googlecomputeengine.config.GoogleComputeEngineScopes.COMPUTE_READONLY_SCOPE;
+import static org.jclouds.googlecomputeengine.config.GoogleComputeEngineScopes.COMPUTE_SCOPE;
 
 import java.net.URI;
 import java.util.Iterator;
 
+import javax.inject.Inject;
 import javax.inject.Named;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
@@ -35,14 +36,13 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 
 import org.jclouds.Fallbacks.NullOnNotFoundOr404;
-import org.jclouds.googlecomputeengine.GoogleComputeEngineFallbacks.EmptyIteratorOnNotFoundOr404;
-import org.jclouds.googlecomputeengine.GoogleComputeEngineFallbacks.EmptyListPageOnNotFoundOr404;
+import org.jclouds.googlecomputeengine.GoogleComputeEngineApi;
 import org.jclouds.googlecomputeengine.binders.FirewallBinder;
 import org.jclouds.googlecomputeengine.domain.Firewall;
 import org.jclouds.googlecomputeengine.domain.ListPage;
 import org.jclouds.googlecomputeengine.domain.Operation;
-import org.jclouds.googlecomputeengine.functions.internal.PATCH;
-import org.jclouds.googlecomputeengine.functions.internal.ParseFirewalls;
+import org.jclouds.googlecomputeengine.internal.BaseToIteratorOfListPage;
+import org.jclouds.googlecomputeengine.internal.PATCH;
 import org.jclouds.googlecomputeengine.options.FirewallOptions;
 import org.jclouds.googlecomputeengine.options.ListOptions;
 import org.jclouds.javax.annotation.Nullable;
@@ -53,10 +53,11 @@ import org.jclouds.rest.annotations.Fallback;
 import org.jclouds.rest.annotations.MapBinder;
 import org.jclouds.rest.annotations.PayloadParam;
 import org.jclouds.rest.annotations.RequestFilters;
-import org.jclouds.rest.annotations.ResponseParser;
 import org.jclouds.rest.annotations.SkipEncoding;
 import org.jclouds.rest.annotations.Transform;
 import org.jclouds.rest.binders.BindToJsonPayload;
+
+import com.google.common.base.Function;
 
 @SkipEncoding({'/', '='})
 @RequestFilters(OAuthAuthenticationFilter.class)
@@ -136,36 +137,43 @@ public interface FirewallApi {
     * By default the list as a maximum size of 100, if no options are provided or ListOptions#getMaxResults() has not
     * been set.
     *
-    * @param token       marks the beginning of the next list page
+    * @param pageToken   marks the beginning of the next list page
     * @param listOptions listing options
     * @return a page of the list
     */
    @Named("Firewalls:list")
    @GET
    @OAuthScopes(COMPUTE_READONLY_SCOPE)
-   @ResponseParser(ParseFirewalls.class)
-   @Fallback(EmptyListPageOnNotFoundOr404.class)
-   ListPage<Firewall> listPage(@Nullable @QueryParam("pageToken") String token, ListOptions listOptions);
+   ListPage<Firewall> listPage(@Nullable @QueryParam("pageToken") String pageToken, ListOptions listOptions);
 
-   /**
-    * @see #list(org.jclouds.googlecomputeengine.options.ListOptions)
-    */
+   /** @see #listPage(String, ListOptions) */
    @Named("Firewalls:list")
    @GET
    @OAuthScopes(COMPUTE_READONLY_SCOPE)
-   @ResponseParser(ParseFirewalls.class)
-   @Transform(ParseFirewalls.ToIteratorOfListPage.class)
-   @Fallback(EmptyIteratorOnNotFoundOr404.class)
+   @Transform(FirewallPages.class)
    Iterator<ListPage<Firewall>> list();
 
-   /**
-    * @see #list(org.jclouds.googlecomputeengine.options.ListOptions)
-    */
+   /** @see #listPage(String, ListOptions) */
    @Named("Firewalls:list")
    @GET
    @OAuthScopes(COMPUTE_READONLY_SCOPE)
-   @ResponseParser(ParseFirewalls.class)
-   @Transform(ParseFirewalls.ToIteratorOfListPage.class)
-   @Fallback(EmptyIteratorOnNotFoundOr404.class)
+   @Transform(FirewallPages.class)
    Iterator<ListPage<Firewall>> list(ListOptions options);
+
+   static final class FirewallPages extends BaseToIteratorOfListPage<Firewall, FirewallPages> {
+
+      private final GoogleComputeEngineApi api;
+
+      @Inject FirewallPages(GoogleComputeEngineApi api) {
+         this.api = api;
+      }
+
+      @Override protected Function<String, ListPage<Firewall>> fetchNextPage(final ListOptions options) {
+         return new Function<String, ListPage<Firewall>>() {
+            @Override public ListPage<Firewall> apply(String pageToken) {
+               return api.firewalls().listPage(pageToken, options);
+            }
+         };
+      }
+   }
 }

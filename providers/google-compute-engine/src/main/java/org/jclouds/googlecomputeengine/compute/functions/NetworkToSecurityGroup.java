@@ -24,32 +24,23 @@ import javax.inject.Inject;
 import org.jclouds.compute.domain.SecurityGroup;
 import org.jclouds.compute.domain.SecurityGroupBuilder;
 import org.jclouds.googlecomputeengine.GoogleComputeEngineApi;
-import org.jclouds.googlecomputeengine.config.UserProject;
 import org.jclouds.googlecomputeengine.domain.Firewall;
 import org.jclouds.googlecomputeengine.domain.Network;
 import org.jclouds.googlecomputeengine.options.ListOptions;
 import org.jclouds.net.domain.IpPermission;
 
 import com.google.common.base.Function;
-import com.google.common.base.Supplier;
 import com.google.common.collect.ImmutableList;
 
-/**
- * A function for transforming a GCE-specific Network into a generic
- * SecurityGroup object.
- */
 public final class NetworkToSecurityGroup implements Function<Network, SecurityGroup> {
 
    private final Function<Firewall, Iterable<IpPermission>> firewallToPerms;
    private final GoogleComputeEngineApi api;
-   private final Supplier<String> project;
 
    @Inject NetworkToSecurityGroup(Function<Firewall, Iterable<IpPermission>> firewallToPerms,
-                                 GoogleComputeEngineApi api,
-                                 @UserProject Supplier<String> project) {
+         GoogleComputeEngineApi api) {
       this.firewallToPerms = firewallToPerms;
       this.api = api;
-      this.project = project;
    }
 
    @Override public SecurityGroup apply(Network network)  {
@@ -64,7 +55,7 @@ public final class NetworkToSecurityGroup implements Function<Network, SecurityG
 
       ListOptions options = filter("network eq .*/" + network.name());
 
-      for (Firewall fw : concat(api.getFirewallApi(project.get()).list(options))) {
+      for (Firewall fw : concat(api.firewalls().list(options))) {
          permBuilder.addAll(firewallToPerms.apply(fw));
       }
 

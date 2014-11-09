@@ -20,15 +20,9 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Predicates.in;
 import static com.google.common.base.Throwables.propagate;
 import static com.google.common.primitives.Ints.asList;
-import static org.jclouds.Fallbacks.valOnNotFoundOr404;
 import static org.jclouds.http.HttpUtils.returnValueOnCodeOrNull;
 
-import java.util.Iterator;
-
 import org.jclouds.Fallback;
-import org.jclouds.googlecomputeengine.domain.ListPage;
-
-import com.google.common.collect.Iterators;
 
 public final class GoogleComputeEngineFallbacks {
    public static class NullOn400or404 implements Fallback<Object> {
@@ -37,18 +31,6 @@ public final class GoogleComputeEngineFallbacks {
          if (returnVal != null)
             return null;
          throw propagate(t);
-      }
-   }
-
-   public static final class EmptyListPageOnNotFoundOr404 implements Fallback<Object> {
-      @Override public ListPage<Object> createOrPropagate(Throwable t) throws Exception {
-         return valOnNotFoundOr404(ListPage.create(null, null), t);
-      }
-   }
-
-   public static final class EmptyIteratorOnNotFoundOr404 implements Fallback<Object> {
-      @Override public Iterator<Object> createOrPropagate(Throwable t) throws Exception {
-         return valOnNotFoundOr404(Iterators.emptyIterator(), t);
       }
    }
 }

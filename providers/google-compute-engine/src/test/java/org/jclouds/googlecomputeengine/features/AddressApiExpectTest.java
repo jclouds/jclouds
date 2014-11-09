@@ -16,8 +16,8 @@
  */
 package org.jclouds.googlecomputeengine.features;
 
-import static org.jclouds.googlecomputeengine.GoogleComputeEngineConstants.COMPUTE_READONLY_SCOPE;
-import static org.jclouds.googlecomputeengine.GoogleComputeEngineConstants.COMPUTE_SCOPE;
+import static org.jclouds.googlecomputeengine.config.GoogleComputeEngineScopes.COMPUTE_READONLY_SCOPE;
+import static org.jclouds.googlecomputeengine.config.GoogleComputeEngineScopes.COMPUTE_SCOPE;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertFalse;
 import static org.testng.AssertJUnit.assertNull;
@@ -44,11 +44,11 @@ public class AddressApiExpectTest extends BaseGoogleComputeEngineExpectTest<Goog
               .addHeader("Accept", "application/json")
               .addHeader("Authorization", "Bearer " + TOKEN).build();
 
-      HttpResponse operationResponse = HttpResponse.builder().statusCode(200)
+      HttpResponse response = HttpResponse.builder().statusCode(200)
               .payload(payloadFromResource("/address_get.json")).build();
 
       AddressApi api = requestsSendResponses(requestForScopes(COMPUTE_READONLY_SCOPE),
-              TOKEN_RESPONSE, get, operationResponse).getAddressApi("party", "us-central1");
+              TOKEN_RESPONSE, get, response).addressesInRegion("us-central1");
 
       assertEquals(api.get("test-ip1"), new ParseAddressTest().expected());
    }
@@ -61,10 +61,10 @@ public class AddressApiExpectTest extends BaseGoogleComputeEngineExpectTest<Goog
               .addHeader("Accept", "application/json")
               .addHeader("Authorization", "Bearer " + TOKEN).build();
 
-      HttpResponse operationResponse = HttpResponse.builder().statusCode(404).build();
+      HttpResponse response = HttpResponse.builder().statusCode(404).build();
 
       AddressApi api = requestsSendResponses(requestForScopes(COMPUTE_READONLY_SCOPE),
-              TOKEN_RESPONSE, get, operationResponse).getAddressApi("party", "us-central1");
+              TOKEN_RESPONSE, get, response).addressesInRegion("us-central1");
 
       assertNull(api.get("test-ip1"));
    }
@@ -84,7 +84,7 @@ public class AddressApiExpectTest extends BaseGoogleComputeEngineExpectTest<Goog
 
       AddressApi api = requestsSendResponses(requestForScopes(COMPUTE_SCOPE),
               TOKEN_RESPONSE, insert,
-              insertAddressResponse).getAddressApi("party", "us-central1");
+              insertAddressResponse).addressesInRegion("us-central1");
 
       assertEquals(api.create("test-ip1"), new ParseRegionOperationTest().expected());
    }
@@ -101,7 +101,7 @@ public class AddressApiExpectTest extends BaseGoogleComputeEngineExpectTest<Goog
               .payload(payloadFromResource("/region_operation.json")).build();
 
       AddressApi api = requestsSendResponses(requestForScopes(COMPUTE_SCOPE),
-              TOKEN_RESPONSE, delete, deleteResponse).getAddressApi("party", "us-central1");
+              TOKEN_RESPONSE, delete, deleteResponse).addressesInRegion("us-central1");
 
       assertEquals(api.delete("test-ip1"), new ParseRegionOperationTest().expected());
    }
@@ -117,40 +117,34 @@ public class AddressApiExpectTest extends BaseGoogleComputeEngineExpectTest<Goog
       HttpResponse deleteResponse = HttpResponse.builder().statusCode(404).build();
 
       AddressApi api = requestsSendResponses(requestForScopes(COMPUTE_SCOPE),
-              TOKEN_RESPONSE, delete, deleteResponse).getAddressApi("party", "us-central1");
+              TOKEN_RESPONSE, delete, deleteResponse).addressesInRegion("us-central1");
 
       assertNull(api.delete("test-ip1"));
    }
 
-   public void testListAddresssResponseIs2xx() {
-      HttpRequest list = HttpRequest
-              .builder()
-              .method("GET")
-              .endpoint(BASE_URL + "/party/regions/us-central1/addresses")
-              .addHeader("Accept", "application/json")
-              .addHeader("Authorization", "Bearer " + TOKEN).build();
+   HttpRequest list = HttpRequest
+         .builder()
+         .method("GET")
+         .endpoint(BASE_URL + "/party/regions/us-central1/addresses")
+         .addHeader("Accept", "application/json")
+         .addHeader("Authorization", "Bearer " + TOKEN).build();
 
-      HttpResponse operationResponse = HttpResponse.builder().statusCode(200)
+   public void list() {
+      HttpResponse response = HttpResponse.builder().statusCode(200)
               .payload(payloadFromResource("/address_list.json")).build();
 
       AddressApi api = requestsSendResponses(requestForScopes(COMPUTE_READONLY_SCOPE),
-              TOKEN_RESPONSE, list, operationResponse).getAddressApi("party", "us-central1");
+              TOKEN_RESPONSE, list, response).addressesInRegion("us-central1");
 
-      assertEquals(api.list().next().toString(), new ParseAddressListTest().expected().toString());
+      assertEquals(api.list().next(), new ParseAddressListTest().expected());
    }
 
-   public void testListAddresssResponseIs4xx() {
-      HttpRequest list = HttpRequest
-              .builder()
-              .method("GET")
-              .endpoint(BASE_URL + "/party/regions/us-central1/addresses")
-              .addHeader("Accept", "application/json")
-              .addHeader("Authorization", "Bearer " + TOKEN).build();
-
-      HttpResponse operationResponse = HttpResponse.builder().statusCode(404).build();
+   public void listEmpty() {
+      HttpResponse response = HttpResponse.builder().statusCode(200)
+            .payload(payloadFromResource("/list_empty.json")).build();
 
       AddressApi api = requestsSendResponses(requestForScopes(COMPUTE_READONLY_SCOPE),
-              TOKEN_RESPONSE, list, operationResponse).getAddressApi("party", "us-central1");
+              TOKEN_RESPONSE, list, response).addressesInRegion("us-central1");
 
       assertFalse(api.list().hasNext());
    }

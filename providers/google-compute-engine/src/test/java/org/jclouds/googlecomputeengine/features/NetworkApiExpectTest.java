@@ -16,8 +16,8 @@
  */
 package org.jclouds.googlecomputeengine.features;
 
-import static org.jclouds.googlecomputeengine.GoogleComputeEngineConstants.COMPUTE_READONLY_SCOPE;
-import static org.jclouds.googlecomputeengine.GoogleComputeEngineConstants.COMPUTE_SCOPE;
+import static org.jclouds.googlecomputeengine.config.GoogleComputeEngineScopes.COMPUTE_READONLY_SCOPE;
+import static org.jclouds.googlecomputeengine.config.GoogleComputeEngineScopes.COMPUTE_SCOPE;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertFalse;
 import static org.testng.AssertJUnit.assertNull;
@@ -49,7 +49,7 @@ public class NetworkApiExpectTest extends BaseGoogleComputeEngineExpectTest<Goog
    public void testGetNetworkResponseIs2xx() throws Exception {
 
       NetworkApi api = requestsSendResponses(requestForScopes(COMPUTE_READONLY_SCOPE),
-              TOKEN_RESPONSE, GET_NETWORK_REQUEST, GET_NETWORK_RESPONSE).getNetworkApi("party");
+              TOKEN_RESPONSE, GET_NETWORK_REQUEST, GET_NETWORK_RESPONSE).networks();
 
       assertEquals(api.get("jclouds-test"),
               new ParseNetworkTest().expected());
@@ -63,10 +63,10 @@ public class NetworkApiExpectTest extends BaseGoogleComputeEngineExpectTest<Goog
               .addHeader("Accept", "application/json")
               .addHeader("Authorization", "Bearer " + TOKEN).build();
 
-      HttpResponse operationResponse = HttpResponse.builder().statusCode(404).build();
+      HttpResponse response = HttpResponse.builder().statusCode(404).build();
 
       NetworkApi api = requestsSendResponses(requestForScopes(COMPUTE_READONLY_SCOPE),
-              TOKEN_RESPONSE, get, operationResponse).getNetworkApi("party");
+              TOKEN_RESPONSE, get, response).networks();
 
       assertNull(api.get("jclouds-test"));
    }
@@ -86,7 +86,7 @@ public class NetworkApiExpectTest extends BaseGoogleComputeEngineExpectTest<Goog
 
       NetworkApi api = requestsSendResponses(requestForScopes(COMPUTE_SCOPE),
               TOKEN_RESPONSE, insert,
-              insertNetworkResponse).getNetworkApi("party");
+              insertNetworkResponse).networks();
 
       assertEquals(api.createInIPv4Range("test-network", "10.0.0.0/8"), new ParseOperationTest().expected());
    }
@@ -103,7 +103,7 @@ public class NetworkApiExpectTest extends BaseGoogleComputeEngineExpectTest<Goog
               .payload(payloadFromResource("/operation.json")).build();
 
       NetworkApi api = requestsSendResponses(requestForScopes(COMPUTE_SCOPE),
-              TOKEN_RESPONSE, delete, deleteResponse).getNetworkApi("party");
+              TOKEN_RESPONSE, delete, deleteResponse).networks();
 
       assertEquals(api.delete("jclouds-test"),
               new ParseOperationTest().expected());
@@ -120,41 +120,35 @@ public class NetworkApiExpectTest extends BaseGoogleComputeEngineExpectTest<Goog
       HttpResponse deleteResponse = HttpResponse.builder().statusCode(404).build();
 
       NetworkApi api = requestsSendResponses(requestForScopes(COMPUTE_SCOPE),
-              TOKEN_RESPONSE, delete, deleteResponse).getNetworkApi("party");
+              TOKEN_RESPONSE, delete, deleteResponse).networks();
 
       assertNull(api.delete("jclouds-test"));
    }
 
-   public void testListNetworksResponseIs2xx() {
-      HttpRequest list = HttpRequest
-              .builder()
-              .method("GET")
-              .endpoint(BASE_URL + "/party/global/networks")
-              .addHeader("Accept", "application/json")
-              .addHeader("Authorization", "Bearer " + TOKEN).build();
+   HttpRequest list = HttpRequest
+         .builder()
+         .method("GET")
+         .endpoint(BASE_URL + "/party/global/networks")
+         .addHeader("Accept", "application/json")
+         .addHeader("Authorization", "Bearer " + TOKEN).build();
 
-      HttpResponse operationResponse = HttpResponse.builder().statusCode(200)
+   public void testListNetworksResponseIs2xx() {
+      HttpResponse response = HttpResponse.builder().statusCode(200)
               .payload(payloadFromResource("/network_list.json")).build();
 
       NetworkApi api = requestsSendResponses(requestForScopes(COMPUTE_READONLY_SCOPE),
-              TOKEN_RESPONSE, list, operationResponse).getNetworkApi("party");
+              TOKEN_RESPONSE, list, response).networks();
 
-      assertEquals(api.list().next().toString(),
-              new ParseNetworkListTest().expected().toString());
+      assertEquals(api.list().next(),
+              new ParseNetworkListTest().expected());
    }
 
-   public void testListNetworksResponseIs4xx() {
-      HttpRequest list = HttpRequest
-              .builder()
-              .method("GET")
-              .endpoint(BASE_URL + "/party/global/networks")
-              .addHeader("Accept", "application/json")
-              .addHeader("Authorization", "Bearer " + TOKEN).build();
-
-      HttpResponse operationResponse = HttpResponse.builder().statusCode(404).build();
+   public void listEmpty() {
+      HttpResponse response = HttpResponse.builder().statusCode(200)
+            .payload(payloadFromResource("/list_empty.json")).build();
 
       NetworkApi api = requestsSendResponses(requestForScopes(COMPUTE_READONLY_SCOPE), TOKEN_RESPONSE, list,
-            operationResponse).getNetworkApi("party");
+            response).networks();
 
       assertFalse(api.list().hasNext());
    }

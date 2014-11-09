@@ -14,10 +14,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jclouds.googlecomputeengine.functions.internal;
+package org.jclouds.googlecomputeengine.internal;
 
-import static com.google.common.base.Predicates.instanceOf;
-import static com.google.common.collect.Iterables.tryFind;
+import static org.jclouds.googlecomputeengine.internal.ListPages.listOptions;
+import static org.jclouds.googlecomputeengine.internal.ListPages.singletonOrEmptyIterator;
 
 import java.util.Iterator;
 
@@ -29,8 +29,6 @@ import org.jclouds.rest.internal.GeneratedHttpRequest;
 
 import com.google.common.annotations.Beta;
 import com.google.common.base.Function;
-import com.google.common.base.Optional;
-import com.google.common.collect.Iterators;
 
 @Beta
 public abstract class BaseToIteratorOfListPage<T, I extends BaseToIteratorOfListPage<T, I>>
@@ -41,20 +39,15 @@ public abstract class BaseToIteratorOfListPage<T, I extends BaseToIteratorOfList
    @Override
    public Iterator<ListPage<T>> apply(ListPage<T> input) {
       if (input.nextPageToken() == null) {
-         return input.isEmpty() ? Iterators.<ListPage<T>>emptyIterator() : Iterators.singletonIterator(input);
+         return singletonOrEmptyIterator(input);
       }
-
-      Optional<Object> listOptions = tryFind(request.getInvocation().getArgs(), instanceOf(ListOptions.class));
-
-      return new AdvancingIterator<T>(input,
-            fetchNextPage((String) request.getCaller().get().getArgs().get(0), (ListOptions) listOptions.orNull()));
+      return new AdvancingIterator<T>(input, fetchNextPage(listOptions(request.getInvocation().getArgs())));
    }
 
-   protected abstract Function<String, ListPage<T>> fetchNextPage(String projectName, ListOptions listOptions);
+   protected abstract Function<String, ListPage<T>> fetchNextPage(ListOptions listOptions);
 
    @SuppressWarnings("unchecked")
-   @Override
-   public I setContext(HttpRequest request) {
+   @Override public I setContext(HttpRequest request) {
       this.request = GeneratedHttpRequest.class.cast(request);
       return (I) this;
    }

@@ -16,7 +16,7 @@
  */
 package org.jclouds.googlecomputeengine.features;
 
-import static org.jclouds.googlecomputeengine.GoogleComputeEngineConstants.COMPUTE_READONLY_SCOPE;
+import static org.jclouds.googlecomputeengine.config.GoogleComputeEngineScopes.COMPUTE_READONLY_SCOPE;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertNull;
@@ -57,11 +57,11 @@ public class ZoneApiExpectTest extends BaseGoogleComputeEngineExpectTest<GoogleC
    public void testGetZoneResponseIs2xx() throws Exception {
 
 
-      HttpResponse operationResponse = HttpResponse.builder().statusCode(200)
+      HttpResponse response = HttpResponse.builder().statusCode(200)
               .payload(payloadFromResource("/zone_get.json")).build();
 
       ZoneApi api = requestsSendResponses(requestForScopes(COMPUTE_READONLY_SCOPE),
-              TOKEN_RESPONSE, GET_ZONE_REQ, operationResponse).getZoneApi("party");
+              TOKEN_RESPONSE, GET_ZONE_REQ, response).zones();
 
       assertEquals(api.get("us-central1-a"),
               new ParseZoneTest().expected());
@@ -69,28 +69,27 @@ public class ZoneApiExpectTest extends BaseGoogleComputeEngineExpectTest<GoogleC
 
    public void testGetZoneResponseIs4xx() throws Exception {
 
-      HttpResponse operationResponse = HttpResponse.builder().statusCode(404).build();
+      HttpResponse response = HttpResponse.builder().statusCode(404).build();
 
       ZoneApi api = requestsSendResponses(requestForScopes(COMPUTE_READONLY_SCOPE),
-              TOKEN_RESPONSE, GET_ZONE_REQ, operationResponse).getZoneApi("party");
+              TOKEN_RESPONSE, GET_ZONE_REQ, response).zones();
 
       assertNull(api.get("us-central1-a"));
    }
 
-   public void testListZoneNoOptionsResponseIs2xx() throws Exception {
-
+   public void list() throws Exception {
       ZoneApi api = requestsSendResponses(requestForScopes(COMPUTE_READONLY_SCOPE),
-              TOKEN_RESPONSE, LIST_ZONES_REQ, LIST_ZONES_RESPONSE).getZoneApi("party");
+              TOKEN_RESPONSE, LIST_ZONES_REQ, LIST_ZONES_RESPONSE).zones();
 
-      assertEquals(api.list().next().toString(), new ParseZoneListTest().expected().toString());
+      assertEquals(api.list().next(), new ParseZoneListTest().expected());
    }
 
-   public void testListZoneWithPaginationOptionsResponseIs4xx() {
-
-      HttpResponse operationResponse = HttpResponse.builder().statusCode(404).build();
+   public void listEmpty() {
+      HttpResponse response = HttpResponse.builder().statusCode(200)
+            .payload(payloadFromResource("/list_empty.json")).build();
 
       ZoneApi api = requestsSendResponses(requestForScopes(COMPUTE_READONLY_SCOPE),
-              TOKEN_RESPONSE, LIST_ZONES_REQ, operationResponse).getZoneApi("party");
+              TOKEN_RESPONSE, LIST_ZONES_REQ, response).zones();
 
       assertFalse(api.list().hasNext());
    }

@@ -16,7 +16,7 @@
  */
 package org.jclouds.googlecomputeengine.features;
 
-import static org.jclouds.googlecomputeengine.GoogleComputeEngineConstants.COMPUTE_READONLY_SCOPE;
+import static org.jclouds.googlecomputeengine.config.GoogleComputeEngineScopes.COMPUTE_READONLY_SCOPE;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertNull;
@@ -52,42 +52,38 @@ public class SnapshotApiExpectTest extends BaseGoogleComputeEngineExpectTest<Goo
            .payload(staticPayloadFromResource("/snapshot_list.json")).build();
 
    public void testGetSnapshotResponseIs2xx() throws Exception {
-
-
-      HttpResponse operationResponse = HttpResponse.builder().statusCode(200)
+      HttpResponse response = HttpResponse.builder().statusCode(200)
               .payload(payloadFromResource("/snapshot_get.json")).build();
 
       SnapshotApi api = requestsSendResponses(requestForScopes(COMPUTE_READONLY_SCOPE),
-              TOKEN_RESPONSE, GET_SNAPSHOT_REQ, operationResponse).getSnapshotApi("party");
+              TOKEN_RESPONSE, GET_SNAPSHOT_REQ, response).snapshots();
 
       assertEquals(api.get("test-snap"),
               new ParseSnapshotTest().expected());
    }
 
    public void testGetSnapshotResponseIs4xx() throws Exception {
-
-      HttpResponse operationResponse = HttpResponse.builder().statusCode(404).build();
+      HttpResponse response = HttpResponse.builder().statusCode(404).build();
 
       SnapshotApi api = requestsSendResponses(requestForScopes(COMPUTE_READONLY_SCOPE),
-              TOKEN_RESPONSE, GET_SNAPSHOT_REQ, operationResponse).getSnapshotApi("party");
+              TOKEN_RESPONSE, GET_SNAPSHOT_REQ, response).snapshots();
 
       assertNull(api.get("test-snap"));
    }
 
-   public void testListSnapshotNoOptionsResponseIs2xx() throws Exception {
-
+   public void list() throws Exception {
       SnapshotApi api = requestsSendResponses(requestForScopes(COMPUTE_READONLY_SCOPE),
-              TOKEN_RESPONSE, LIST_SNAPSHOTS_REQ, LIST_SNAPSHOTS_RESPONSE).getSnapshotApi("party");
+              TOKEN_RESPONSE, LIST_SNAPSHOTS_REQ, LIST_SNAPSHOTS_RESPONSE).snapshots();
 
-      assertEquals(api.list().next().toString(), new ParseSnapshotListTest().expected().toString());
+      assertEquals(api.list().next(), new ParseSnapshotListTest().expected());
    }
 
-   public void testListSnapshotWithPaginationOptionsResponseIs4xx() {
-
-      HttpResponse operationResponse = HttpResponse.builder().statusCode(404).build();
+   public void listEmpty() {
+      HttpResponse response = HttpResponse.builder().statusCode(200)
+            .payload(payloadFromResource("/list_empty.json")).build();
 
       SnapshotApi api = requestsSendResponses(requestForScopes(COMPUTE_READONLY_SCOPE),
-              TOKEN_RESPONSE, LIST_SNAPSHOTS_REQ, operationResponse).getSnapshotApi("party");
+              TOKEN_RESPONSE, LIST_SNAPSHOTS_REQ, response).snapshots();
 
       assertFalse(api.list().hasNext());
    }

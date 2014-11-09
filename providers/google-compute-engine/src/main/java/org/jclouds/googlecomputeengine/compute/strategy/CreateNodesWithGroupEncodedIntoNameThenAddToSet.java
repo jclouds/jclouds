@@ -41,7 +41,6 @@ import org.jclouds.googlecomputeengine.GoogleComputeEngineApi;
 import org.jclouds.googlecomputeengine.compute.domain.NetworkAndAddressRange;
 import org.jclouds.googlecomputeengine.compute.functions.FirewallTagNamingConvention;
 import org.jclouds.googlecomputeengine.compute.options.GoogleComputeEngineTemplateOptions;
-import org.jclouds.googlecomputeengine.config.UserProject;
 import org.jclouds.googlecomputeengine.domain.Firewall;
 import org.jclouds.googlecomputeengine.domain.Firewall.Rule;
 import org.jclouds.googlecomputeengine.domain.Network;
@@ -50,7 +49,6 @@ import org.jclouds.googlecomputeengine.features.FirewallApi;
 import org.jclouds.googlecomputeengine.options.FirewallOptions;
 
 import com.google.common.base.Predicate;
-import com.google.common.base.Supplier;
 import com.google.common.cache.LoadingCache;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
@@ -66,7 +64,6 @@ public final class CreateNodesWithGroupEncodedIntoNameThenAddToSet extends
    public static final String DEFAULT_INTERNAL_NETWORK_RANGE = "10.0.0.0/8";
 
    private final GoogleComputeEngineApi api;
-   private final Supplier<String> userProject;
    private final LoadingCache<NetworkAndAddressRange, Network> networkMap;
    private final Predicate<AtomicReference<Operation>> operationDone;
    private final FirewallTagNamingConvention.Factory firewallTagNamingConvention;
@@ -80,14 +77,12 @@ public final class CreateNodesWithGroupEncodedIntoNameThenAddToSet extends
            CustomizeNodeAndAddToGoodMapOrPutExceptionIntoBadMap.Factory
                    customizeNodeAndAddToGoodMapOrPutExceptionIntoBadMapFactory,
            GoogleComputeEngineApi api,
-           @UserProject Supplier<String> userProject,
            Predicate<AtomicReference<Operation>> operationDone,
            LoadingCache<NetworkAndAddressRange, Network> networkMap,
            FirewallTagNamingConvention.Factory firewallTagNamingConvention) {
       super(addNodeWithGroupStrategy, listNodesStrategy, namingConvention, userExecutor,
               customizeNodeAndAddToGoodMapOrPutExceptionIntoBadMapFactory);
       this.api = api;
-      this.userProject = userProject;
       this.operationDone = operationDone;
       this.networkMap = networkMap;
       this.firewallTagNamingConvention = firewallTagNamingConvention;
@@ -134,8 +129,7 @@ public final class CreateNodesWithGroupEncodedIntoNameThenAddToSet extends
    private void getOrCreateFirewalls(GoogleComputeEngineTemplateOptions templateOptions, Network network,
                                      FirewallTagNamingConvention naming) {
 
-      String projectName = userProject.get();
-      FirewallApi firewallApi = api.getFirewallApi(projectName);
+      FirewallApi firewallApi = api.firewalls();
       List<AtomicReference<Operation>> operations = Lists.newArrayList();
 
       for (Integer port : templateOptions.getInboundPorts()) {

@@ -17,11 +17,12 @@
 package org.jclouds.googlecomputeengine.features;
 
 import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
-import static org.jclouds.googlecomputeengine.GoogleComputeEngineConstants.COMPUTE_READONLY_SCOPE;
-import static org.jclouds.googlecomputeengine.GoogleComputeEngineConstants.COMPUTE_SCOPE;
+import static org.jclouds.googlecomputeengine.config.GoogleComputeEngineScopes.COMPUTE_READONLY_SCOPE;
+import static org.jclouds.googlecomputeengine.config.GoogleComputeEngineScopes.COMPUTE_SCOPE;
 
 import java.util.Iterator;
 
+import javax.inject.Inject;
 import javax.inject.Named;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
@@ -34,13 +35,12 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 
 import org.jclouds.Fallbacks.NullOnNotFoundOr404;
-import org.jclouds.googlecomputeengine.GoogleComputeEngineFallbacks.EmptyIteratorOnNotFoundOr404;
-import org.jclouds.googlecomputeengine.GoogleComputeEngineFallbacks.EmptyListPageOnNotFoundOr404;
+import org.jclouds.googlecomputeengine.GoogleComputeEngineApi;
 import org.jclouds.googlecomputeengine.binders.HttpHealthCheckCreationBinder;
 import org.jclouds.googlecomputeengine.domain.HttpHealthCheck;
 import org.jclouds.googlecomputeengine.domain.ListPage;
 import org.jclouds.googlecomputeengine.domain.Operation;
-import org.jclouds.googlecomputeengine.functions.internal.ParseHttpHealthChecks;
+import org.jclouds.googlecomputeengine.internal.BaseToIteratorOfListPage;
 import org.jclouds.googlecomputeengine.options.HttpHealthCheckCreationOptions;
 import org.jclouds.googlecomputeengine.options.ListOptions;
 import org.jclouds.javax.annotation.Nullable;
@@ -51,10 +51,11 @@ import org.jclouds.rest.annotations.MapBinder;
 import org.jclouds.rest.annotations.PATCH;
 import org.jclouds.rest.annotations.PayloadParam;
 import org.jclouds.rest.annotations.RequestFilters;
-import org.jclouds.rest.annotations.ResponseParser;
 import org.jclouds.rest.annotations.SkipEncoding;
 import org.jclouds.rest.annotations.Transform;
 import org.jclouds.rest.binders.BindToJsonPayload;
+
+import com.google.common.base.Function;
 
 @SkipEncoding({'/', '='})
 @RequestFilters(OAuthAuthenticator.class)
@@ -149,36 +150,43 @@ public interface HttpHealthCheckApi {
     * By default the list as a maximum size of 100, if no options are provided or ListOptions#getMaxResults() has not
     * been set.
     *
-    * @param token       marks the beginning of the next list page
+    * @param pageToken   marks the beginning of the next list page
     * @param listOptions listing options
     * @return a page of the list
     */
    @Named("HttpHealthChecks:list")
    @GET
    @OAuthScopes(COMPUTE_READONLY_SCOPE)
-   @ResponseParser(ParseHttpHealthChecks.class)
-   @Fallback(EmptyListPageOnNotFoundOr404.class)
-   ListPage<HttpHealthCheck> listPage(@Nullable @QueryParam("pageToken") String token, ListOptions listOptions);
+   ListPage<HttpHealthCheck> listPage(@Nullable @QueryParam("pageToken") String pageToken, ListOptions listOptions);
 
-   /**
-    * @see #list(org.jclouds.googlecomputeengine.options.ListOptions)
-    */
+   /** @see #listPage(String, ListOptions) */
    @Named("HttpHealthChecks:list")
    @GET
    @OAuthScopes(COMPUTE_READONLY_SCOPE)
-   @ResponseParser(ParseHttpHealthChecks.class)
-   @Transform(ParseHttpHealthChecks.ToIteratorOfListPage.class)
-   @Fallback(EmptyIteratorOnNotFoundOr404.class)
+   @Transform(HttpHealthCheckPages.class)
    Iterator<ListPage<HttpHealthCheck>> list();
 
-   /**
-    * @see #list(org.jclouds.googlecomputeengine.options.ListOptions)
-    */
+   /** @see #listPage(String, ListOptions) */
    @Named("HttpHealthChecks:list")
    @GET
    @OAuthScopes(COMPUTE_READONLY_SCOPE)
-   @ResponseParser(ParseHttpHealthChecks.class)
-   @Transform(ParseHttpHealthChecks.ToIteratorOfListPage.class)
-   @Fallback(EmptyIteratorOnNotFoundOr404.class)
+   @Transform(HttpHealthCheckPages.class)
    Iterator<ListPage<HttpHealthCheck>> list(ListOptions options);
+
+   static final class HttpHealthCheckPages extends BaseToIteratorOfListPage<HttpHealthCheck, HttpHealthCheckPages> {
+
+      private final GoogleComputeEngineApi api;
+
+      @Inject HttpHealthCheckPages(GoogleComputeEngineApi api) {
+         this.api = api;
+      }
+
+      @Override protected Function<String, ListPage<HttpHealthCheck>> fetchNextPage(final ListOptions options) {
+         return new Function<String, ListPage<HttpHealthCheck>>() {
+            @Override public ListPage<HttpHealthCheck> apply(String pageToken) {
+               return api.httpHeathChecks().listPage(pageToken, options);
+            }
+         };
+      }
+   }
 }

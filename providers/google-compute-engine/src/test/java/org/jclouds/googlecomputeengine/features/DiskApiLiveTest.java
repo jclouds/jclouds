@@ -37,7 +37,7 @@ public class DiskApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
    public static final int sizeGb = 1;
 
    private DiskApi api() {
-      return api.getDiskApi(userProject.get(), DEFAULT_ZONE_NAME);
+      return api.disksInZone(DEFAULT_ZONE_NAME);
    }
 
    @Test(groups = "live")
@@ -71,12 +71,12 @@ public class DiskApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
    private void assertDiskEquals(Disk result) {
       assertEquals(result.name(), DISK_NAME);
       assertEquals(result.sizeGb(), sizeGb);
-      assertEquals(result.zone(), getDefaultZoneUrl(userProject.get()));
+      assertEquals(result.zone(), getDefaultZoneUrl());
    }
 
    @Test(groups = "live")
    public void testInsertSSDDisk() {
-      URI diskType = getDiskTypeUrl(userProject.get(), DEFAULT_ZONE_NAME, "pd-ssd");
+      URI diskType = getDiskTypeUrl(DEFAULT_ZONE_NAME, "pd-ssd");
       DiskCreationOptions diskCreationOptions = new DiskCreationOptions().type(diskType);
       assertOperationDoneSuccessfully(api().create(SSD_DISK_NAME, sizeGb, diskCreationOptions));
    }
@@ -96,7 +96,7 @@ public class DiskApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
    private void assertSSDDiskEquals(Disk result) {
       assertEquals(result.name(), SSD_DISK_NAME);
       assertEquals(result.sizeGb(), sizeGb);
-      assertEquals(result.zone(), getDefaultZoneUrl(userProject.get()));
-      assertEquals(result.type(), getDiskTypeUrl(userProject.get(), DEFAULT_ZONE_NAME, "pd-ssd"));
+      assertEquals(result.zone(), getDefaultZoneUrl());
+      assertEquals(result.type(), getDiskTypeUrl(DEFAULT_ZONE_NAME, "pd-ssd"));
    }
 }

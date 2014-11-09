@@ -18,8 +18,8 @@ package org.jclouds.googlecomputeengine.compute.functions;
 
 import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 import static org.jclouds.Fallbacks.NullOnNotFoundOr404;
-import static org.jclouds.googlecomputeengine.GoogleComputeEngineConstants.COMPUTE_READONLY_SCOPE;
-import static org.jclouds.googlecomputeengine.GoogleComputeEngineConstants.COMPUTE_SCOPE;
+import static org.jclouds.googlecomputeengine.config.GoogleComputeEngineScopes.COMPUTE_READONLY_SCOPE;
+import static org.jclouds.googlecomputeengine.config.GoogleComputeEngineScopes.COMPUTE_SCOPE;
 
 import java.net.URI;
 
@@ -30,7 +30,6 @@ import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 
-import org.jclouds.googlecomputeengine.domain.Image;
 import org.jclouds.googlecomputeengine.domain.Instance;
 import org.jclouds.googlecomputeengine.domain.Network;
 import org.jclouds.googlecomputeengine.domain.Operation;
@@ -46,12 +45,6 @@ import org.jclouds.rest.annotations.SkipEncoding;
 @RequestFilters(OAuthAuthenticationFilter.class)
 @Consumes(APPLICATION_JSON)
 public interface Resources {
-
-   /** Returns an image by self-link or null if not found. */
-   @Named("Images:get")
-   @GET
-   @OAuthScopes(COMPUTE_READONLY_SCOPE)
-   @Fallback(NullOnNotFoundOr404.class) @Nullable Image image(@EndpointParam URI selfLink);
 
    /** Returns an instance by self-link or null if not found. */
    @Named("Instances:get")

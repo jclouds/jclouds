@@ -16,8 +16,8 @@
  */
 package org.jclouds.googlecomputeengine.features;
 
-import static org.jclouds.googlecomputeengine.GoogleComputeEngineConstants.COMPUTE_READONLY_SCOPE;
-import static org.jclouds.googlecomputeengine.GoogleComputeEngineConstants.COMPUTE_SCOPE;
+import static org.jclouds.googlecomputeengine.config.GoogleComputeEngineScopes.COMPUTE_READONLY_SCOPE;
+import static org.jclouds.googlecomputeengine.config.GoogleComputeEngineScopes.COMPUTE_SCOPE;
 import static org.jclouds.googlecomputeengine.options.ListOptions.Builder.filter;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertFalse;
@@ -57,7 +57,7 @@ public class OperationApiExpectTest extends BaseGoogleComputeEngineExpectTest<Go
    public void get() throws Exception {
 
       OperationApi api = requestsSendResponses(requestForScopes(COMPUTE_READONLY_SCOPE),
-              TOKEN_RESPONSE, GET_GLOBAL_OPERATION_REQUEST, GET_GLOBAL_OPERATION_RESPONSE).getOperationApi("party");
+              TOKEN_RESPONSE, GET_GLOBAL_OPERATION_REQUEST, GET_GLOBAL_OPERATION_RESPONSE).operations();
 
       assertEquals(api.get(GET_GLOBAL_OPERATION_REQUEST.getEndpoint()),
               new ParseGlobalOperationTest().expected());
@@ -65,10 +65,10 @@ public class OperationApiExpectTest extends BaseGoogleComputeEngineExpectTest<Go
 
    public void getResponseIs4xx() throws Exception {
 
-      HttpResponse operationResponse = HttpResponse.builder().statusCode(404).build();
+      HttpResponse response = HttpResponse.builder().statusCode(404).build();
 
       OperationApi api = requestsSendResponses(requestForScopes(COMPUTE_READONLY_SCOPE),
-              TOKEN_RESPONSE, GET_GLOBAL_OPERATION_REQUEST, operationResponse).getOperationApi("party");
+              TOKEN_RESPONSE, GET_GLOBAL_OPERATION_REQUEST, response).operations();
 
       assertNull(api.get(GET_GLOBAL_OPERATION_REQUEST.getEndpoint()));
    }
@@ -81,10 +81,10 @@ public class OperationApiExpectTest extends BaseGoogleComputeEngineExpectTest<Go
               .addHeader("Accept", "application/json")
               .addHeader("Authorization", "Bearer " + TOKEN).build();
 
-      HttpResponse operationResponse = HttpResponse.builder().statusCode(204).build();
+      HttpResponse response = HttpResponse.builder().statusCode(204).build();
 
       OperationApi api = requestsSendResponses(requestForScopes(COMPUTE_SCOPE),
-              TOKEN_RESPONSE, delete, operationResponse).getOperationApi("party");
+              TOKEN_RESPONSE, delete, response).operations();
 
       api.delete(delete.getEndpoint());
    }
@@ -97,49 +97,42 @@ public class OperationApiExpectTest extends BaseGoogleComputeEngineExpectTest<Go
               .addHeader("Accept", "application/json")
               .addHeader("Authorization", "Bearer " + TOKEN).build();
 
-      HttpResponse operationResponse = HttpResponse.builder().statusCode(404).build();
+      HttpResponse response = HttpResponse.builder().statusCode(404).build();
 
       OperationApi api = requestsSendResponses(requestForScopes(COMPUTE_SCOPE),
-              TOKEN_RESPONSE, delete, operationResponse).getOperationApi("party");
+              TOKEN_RESPONSE, delete, response).operations();
 
       api.delete(delete.getEndpoint());
    }
 
-   public void list() {
-      HttpRequest get = HttpRequest
-              .builder()
-              .method("GET")
-              .endpoint(OPERATIONS_URL_PREFIX)
-              .addHeader("Accept", "application/json")
-              .addHeader("Authorization", "Bearer " + TOKEN).build();
+   HttpRequest list = HttpRequest
+         .builder()
+         .method("GET")
+         .endpoint(OPERATIONS_URL_PREFIX)
+         .addHeader("Accept", "application/json")
+         .addHeader("Authorization", "Bearer " + TOKEN).build();
 
-      HttpResponse operationResponse = HttpResponse.builder().statusCode(200)
+   public void list() {
+      HttpResponse response = HttpResponse.builder().statusCode(200)
               .payload(payloadFromResource("/global_operation_list.json")).build();
 
       OperationApi api = requestsSendResponses(requestForScopes(COMPUTE_READONLY_SCOPE),
-              TOKEN_RESPONSE, get, operationResponse).getOperationApi("party");
+              TOKEN_RESPONSE, list, response).operations();
 
-      assertEquals(api.list().next().toString(),
-              new ParseGlobalOperationListTest().expected().toString());
+      assertEquals(api.list().next(), new ParseGlobalOperationListTest().expected());
    }
 
-   public void listResponseIs4xx() {
-      HttpRequest get = HttpRequest
-            .builder()
-            .method("GET")
-            .endpoint(OPERATIONS_URL_PREFIX)
-            .addHeader("Accept", "application/json")
-            .addHeader("Authorization", "Bearer " + TOKEN).build();
-
-      HttpResponse operationResponse = HttpResponse.builder().statusCode(404).build();
+   public void listEmpty() {
+      HttpResponse response = HttpResponse.builder().statusCode(200)
+            .payload(payloadFromResource("/list_empty.json")).build();
 
       OperationApi api = requestsSendResponses(requestForScopes(COMPUTE_READONLY_SCOPE),
-            TOKEN_RESPONSE, get, operationResponse).getOperationApi("party");
+            TOKEN_RESPONSE, list, response).operations();
 
       assertFalse(api.list().hasNext());
    }
 
-   public void listWithOptions() {
+   public void listPageWithOptions() {
       HttpRequest get = HttpRequest
               .builder()
               .method("GET")
@@ -152,16 +145,16 @@ public class OperationApiExpectTest extends BaseGoogleComputeEngineExpectTest<Go
               .addHeader("Accept", "application/json")
               .addHeader("Authorization", "Bearer " + TOKEN).build();
 
-      HttpResponse operationResponse = HttpResponse.builder().statusCode(200)
+      HttpResponse response = HttpResponse.builder().statusCode(200)
               .payload(payloadFromResource("/global_operation_list.json")).build();
 
       OperationApi api = requestsSendResponses(requestForScopes(COMPUTE_READONLY_SCOPE),
-              TOKEN_RESPONSE, get, operationResponse).getOperationApi("party");
+              TOKEN_RESPONSE, get, response).operations();
 
       assertEquals(api.listPage("CglPUEVSQVRJT04SOzU5MDQyMTQ4Nzg1Mi5vcGVyYXRpb24tMTM1Mj" +
               "I0NDI1ODAzMC00Y2RkYmU2YTJkNmIwLWVkMzIyMzQz",
-              filter("status eq done").maxResults(3)).toString(),
-              new ParseGlobalOperationListTest().expected().toString());
+              filter("status eq done").maxResults(3)),
+              new ParseGlobalOperationListTest().expected());
    }
 
    private ListPage<Operation> regionList() {
@@ -171,35 +164,29 @@ public class OperationApiExpectTest extends BaseGoogleComputeEngineExpectTest<Go
       );
    }
 
-   public void listInRegion() {
-      HttpRequest get = HttpRequest
-            .builder()
-            .method("GET")
-            .endpoint(REGION_OPERATIONS_URL_PREFIX)
-            .addHeader("Accept", "application/json")
-            .addHeader("Authorization", "Bearer " + TOKEN).build();
+   HttpRequest listInRegion = HttpRequest
+         .builder()
+         .method("GET")
+         .endpoint(REGION_OPERATIONS_URL_PREFIX)
+         .addHeader("Accept", "application/json")
+         .addHeader("Authorization", "Bearer " + TOKEN).build();
 
-      HttpResponse operationResponse = HttpResponse.builder().statusCode(200)
+   public void listInRegion() {
+      HttpResponse response = HttpResponse.builder().statusCode(200)
             .payload(payloadFromResource("/region_operation_list.json")).build();
 
       OperationApi api = requestsSendResponses(requestForScopes(COMPUTE_READONLY_SCOPE),
-            TOKEN_RESPONSE, get, operationResponse).getOperationApi("party");
+            TOKEN_RESPONSE, listInRegion, response).operations();
 
-      assertEquals(api.listInRegion("us-central1").next().toString(), regionList().toString());
+      assertEquals(api.listInRegion("us-central1").next(), regionList());
    }
 
-   public void listInRegionResponseIs4xx() {
-      HttpRequest get = HttpRequest
-            .builder()
-            .method("GET")
-            .endpoint(REGION_OPERATIONS_URL_PREFIX)
-            .addHeader("Accept", "application/json")
-            .addHeader("Authorization", "Bearer " + TOKEN).build();
-
-      HttpResponse operationResponse = HttpResponse.builder().statusCode(404).build();
+   public void listInRegionEmpty() {
+      HttpResponse response = HttpResponse.builder().statusCode(200)
+            .payload(payloadFromResource("/list_empty.json")).build();
 
       OperationApi api = requestsSendResponses(requestForScopes(COMPUTE_READONLY_SCOPE),
-            TOKEN_RESPONSE, get, operationResponse).getOperationApi("party");
+            TOKEN_RESPONSE, listInRegion, response).operations();
 
       assertFalse(api.listInRegion("us-central1").hasNext());
    }
@@ -217,17 +204,16 @@ public class OperationApiExpectTest extends BaseGoogleComputeEngineExpectTest<Go
             .addHeader("Accept", "application/json")
             .addHeader("Authorization", "Bearer " + TOKEN).build();
 
-      HttpResponse operationResponse = HttpResponse.builder().statusCode(200)
+      HttpResponse response = HttpResponse.builder().statusCode(200)
             .payload(payloadFromResource("/region_operation_list.json")).build();
 
       OperationApi api = requestsSendResponses(requestForScopes(COMPUTE_READONLY_SCOPE),
-            TOKEN_RESPONSE, get, operationResponse).getOperationApi("party");
+            TOKEN_RESPONSE, get, response).operations();
 
       assertEquals(api.listPageInRegion("us-central1",
                   "CglPUEVSQVRJT04SOzU5MDQyMTQ4Nzg1Mi5vcGVyYXRpb24tMTM1MjI0NDI1ODAzMC00Y2RkYmU2YTJkNmIwLWVkMzIyMzQz",
                   filter("status eq done").maxResults(3)).toString(), regionList().toString());
    }
-
 
    private ListPage<Operation> zoneList() {
       return ListPage.create( //
@@ -236,35 +222,29 @@ public class OperationApiExpectTest extends BaseGoogleComputeEngineExpectTest<Go
       );
    }
 
-   public void listInZone() {
-      HttpRequest get = HttpRequest
-            .builder()
-            .method("GET")
-            .endpoint(ZONE_OPERATIONS_URL_PREFIX)
-            .addHeader("Accept", "application/json")
-            .addHeader("Authorization", "Bearer " + TOKEN).build();
+   HttpRequest listInZone = HttpRequest
+         .builder()
+         .method("GET")
+         .endpoint(ZONE_OPERATIONS_URL_PREFIX)
+         .addHeader("Accept", "application/json")
+         .addHeader("Authorization", "Bearer " + TOKEN).build();
 
-      HttpResponse operationResponse = HttpResponse.builder().statusCode(200)
+   public void listInZone() {
+      HttpResponse response = HttpResponse.builder().statusCode(200)
             .payload(payloadFromResource("/zone_operation_list.json")).build();
 
       OperationApi api = requestsSendResponses(requestForScopes(COMPUTE_READONLY_SCOPE),
-            TOKEN_RESPONSE, get, operationResponse).getOperationApi("party");
+            TOKEN_RESPONSE, listInZone, response).operations();
 
-      assertEquals(api.listInZone("us-central1-a").next().toString(), zoneList().toString());
+      assertEquals(api.listInZone("us-central1-a").next(), zoneList());
    }
 
-   public void listInZoneResponseIs4xx() {
-      HttpRequest get = HttpRequest
-            .builder()
-            .method("GET")
-            .endpoint(ZONE_OPERATIONS_URL_PREFIX)
-            .addHeader("Accept", "application/json")
-            .addHeader("Authorization", "Bearer " + TOKEN).build();
-
-      HttpResponse operationResponse = HttpResponse.builder().statusCode(404).build();
+   public void listInZoneEmpty() {
+      HttpResponse response = HttpResponse.builder().statusCode(200)
+            .payload(payloadFromResource("/list_empty.json")).build();
 
       OperationApi api = requestsSendResponses(requestForScopes(COMPUTE_READONLY_SCOPE),
-            TOKEN_RESPONSE, get, operationResponse).getOperationApi("party");
+            TOKEN_RESPONSE, listInZone, response).operations();
 
       assertFalse(api.listInZone("us-central1-a").hasNext());
    }
@@ -282,11 +262,11 @@ public class OperationApiExpectTest extends BaseGoogleComputeEngineExpectTest<Go
             .addHeader("Accept", "application/json")
             .addHeader("Authorization", "Bearer " + TOKEN).build();
 
-      HttpResponse operationResponse = HttpResponse.builder().statusCode(200)
+      HttpResponse response = HttpResponse.builder().statusCode(200)
             .payload(payloadFromResource("/zone_operation_list.json")).build();
 
       OperationApi api = requestsSendResponses(requestForScopes(COMPUTE_READONLY_SCOPE),
-            TOKEN_RESPONSE, get, operationResponse).getOperationApi("party");
+            TOKEN_RESPONSE, get, response).operations();
 
       assertEquals(api.listPageInZone("us-central1-a",
             "CglPUEVSQVRJT04SOzU5MDQyMTQ4Nzg1Mi5vcGVyYXRpb24tMTM1MjI0NDI1ODAzMC00Y2RkYmU2YTJkNmIwLWVkMzIyMzQz",

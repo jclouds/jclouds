@@ -23,11 +23,9 @@ import java.lang.annotation.Target;
 
 import javax.inject.Qualifier;
 
-/**
- * Qualifies a property as the user's project id.
- */
+/** Associated bindings with the current <a href="https://cloud.google.com/compute/docs/projects">project</a>. */
 @Retention(value = RetentionPolicy.RUNTIME)
 @Target(value = {ElementType.TYPE, ElementType.FIELD, ElementType.PARAMETER, ElementType.METHOD})
 @Qualifier
-public @interface UserProject {
+public @interface CurrentProject {
 }

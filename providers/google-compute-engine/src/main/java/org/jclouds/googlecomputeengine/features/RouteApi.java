@@ -17,12 +17,13 @@
 package org.jclouds.googlecomputeengine.features;
 
 import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
-import static org.jclouds.googlecomputeengine.GoogleComputeEngineConstants.COMPUTE_READONLY_SCOPE;
-import static org.jclouds.googlecomputeengine.GoogleComputeEngineConstants.COMPUTE_SCOPE;
+import static org.jclouds.googlecomputeengine.config.GoogleComputeEngineScopes.COMPUTE_READONLY_SCOPE;
+import static org.jclouds.googlecomputeengine.config.GoogleComputeEngineScopes.COMPUTE_SCOPE;
 
 import java.net.URI;
 import java.util.Iterator;
 
+import javax.inject.Inject;
 import javax.inject.Named;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
@@ -34,13 +35,12 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 
 import org.jclouds.Fallbacks.NullOnNotFoundOr404;
-import org.jclouds.googlecomputeengine.GoogleComputeEngineFallbacks.EmptyIteratorOnNotFoundOr404;
-import org.jclouds.googlecomputeengine.GoogleComputeEngineFallbacks.EmptyListPageOnNotFoundOr404;
+import org.jclouds.googlecomputeengine.GoogleComputeEngineApi;
 import org.jclouds.googlecomputeengine.binders.RouteBinder;
 import org.jclouds.googlecomputeengine.domain.ListPage;
 import org.jclouds.googlecomputeengine.domain.Operation;
 import org.jclouds.googlecomputeengine.domain.Route;
-import org.jclouds.googlecomputeengine.functions.internal.ParseRoutes;
+import org.jclouds.googlecomputeengine.internal.BaseToIteratorOfListPage;
 import org.jclouds.googlecomputeengine.options.ListOptions;
 import org.jclouds.googlecomputeengine.options.RouteOptions;
 import org.jclouds.javax.annotation.Nullable;
@@ -50,9 +50,10 @@ import org.jclouds.rest.annotations.Fallback;
 import org.jclouds.rest.annotations.MapBinder;
 import org.jclouds.rest.annotations.PayloadParam;
 import org.jclouds.rest.annotations.RequestFilters;
-import org.jclouds.rest.annotations.ResponseParser;
 import org.jclouds.rest.annotations.SkipEncoding;
 import org.jclouds.rest.annotations.Transform;
+
+import com.google.common.base.Function;
 
 @SkipEncoding({'/', '='})
 @RequestFilters(OAuthAuthenticationFilter.class)
@@ -102,36 +103,43 @@ public interface RouteApi {
     * By default the list as a maximum size of 100, if no options are provided or ListOptions#getMaxResults() has not
     * been set.
     *
-    * @param token       marks the beginning of the next list page
+    * @param pageToken   marks the beginning of the next list page
     * @param listOptions listing options
     * @return a page of the list
     */
    @Named("Routes:list")
    @GET
    @OAuthScopes(COMPUTE_READONLY_SCOPE)
-   @ResponseParser(ParseRoutes.class)
-   @Fallback(EmptyListPageOnNotFoundOr404.class)
-   ListPage<Route> listPage(@Nullable @QueryParam("pageToken") String token, ListOptions listOptions);
+   ListPage<Route> listPage(@Nullable @QueryParam("pageToken") String pageToken, ListOptions listOptions);
 
-   /**
-    * @see #list(org.jclouds.googlecomputeengine.options.ListOptions)
-    */
+   /** @see #listPage(String, ListOptions) */
    @Named("Routes:list")
    @GET
    @OAuthScopes(COMPUTE_READONLY_SCOPE)
-   @ResponseParser(ParseRoutes.class)
-   @Transform(ParseRoutes.ToIteratorOfListPage.class)
-   @Fallback(EmptyIteratorOnNotFoundOr404.class)
+   @Transform(RoutePages.class)
    Iterator<ListPage<Route>> list();
 
-   /**
-    * @see #list(org.jclouds.googlecomputeengine.options.ListOptions)
-    */
+   /** @see #listPage(String, ListOptions) */
    @Named("Routes:list")
    @GET
    @OAuthScopes(COMPUTE_READONLY_SCOPE)
-   @ResponseParser(ParseRoutes.class)
-   @Transform(ParseRoutes.ToIteratorOfListPage.class)
-   @Fallback(EmptyIteratorOnNotFoundOr404.class)
+   @Transform(RoutePages.class)
    Iterator<ListPage<Route>> list(ListOptions options);
+
+   static final class RoutePages extends BaseToIteratorOfListPage<Route, RoutePages> {
+
+      private final GoogleComputeEngineApi api;
+
+      @Inject RoutePages(GoogleComputeEngineApi api) {
+         this.api = api;
+      }
+
+      @Override protected Function<String, ListPage<Route>> fetchNextPage(final ListOptions options) {
+         return new Function<String, ListPage<Route>>() {
+            @Override public ListPage<Route> apply(String pageToken) {
+               return api.routes().listPage(pageToken, options);
+            }
+         };
+      }
+   }
 }

@@ -16,7 +16,7 @@
  */
 package org.jclouds.googlecomputeengine.functions.internal;
 
-import static org.jclouds.googlecomputeengine.GoogleComputeEngineConstants.COMPUTE_READONLY_SCOPE;
+import static org.jclouds.googlecomputeengine.config.GoogleComputeEngineScopes.COMPUTE_READONLY_SCOPE;
 import static org.jclouds.googlecomputeengine.options.ListOptions.Builder.maxResults;
 import static org.testng.Assert.assertEquals;
 
@@ -63,7 +63,7 @@ public class ToIteratorOfListPageExpectTest extends BaseGoogleComputeEngineExpec
               .payload(payloadFromResource("/image_list_single_page.json")).build();
 
       ImageApi imageApi = requestsSendResponses(requestForScopes(COMPUTE_READONLY_SCOPE),
-              TOKEN_RESPONSE, list, operationResponse).getImageApi("party");
+              TOKEN_RESPONSE, list, operationResponse).images();
 
       Iterator<ListPage<Image>> images = imageApi.list();
 
@@ -96,8 +96,7 @@ public class ToIteratorOfListPageExpectTest extends BaseGoogleComputeEngineExpec
             .payload(json.toJson(ListPage.create(items, null))).build();
 
       ImageApi imageApi = orderedRequestsSendResponses(requestForScopes(COMPUTE_READONLY_SCOPE),
-              TOKEN_RESPONSE, list1, list1Response, list2, list2Response, list3, list3Response)
-              .getImageApi("party");
+              TOKEN_RESPONSE, list1, list1Response, list2, list2Response, list3, list3Response).images();
 
       Iterator<ListPage<Image>> images = imageApi.list(maxResults(1));
 
@@ -135,7 +134,7 @@ public class ToIteratorOfListPageExpectTest extends BaseGoogleComputeEngineExpec
 
       AddressApi addressApi = orderedRequestsSendResponses(requestForScopes(COMPUTE_READONLY_SCOPE),
             TOKEN_RESPONSE, list1, list1Response, list2, list2Response, list3, list3Response)
-            .getAddressApi("party", "us-central1");
+            .addressesInRegion("us-central1");
 
       Iterator<ListPage<Address>> addresses = addressApi.list(maxResults(1));
 
@@ -173,7 +172,7 @@ public class ToIteratorOfListPageExpectTest extends BaseGoogleComputeEngineExpec
 
       InstanceApi instanceApi = orderedRequestsSendResponses(requestForScopes(COMPUTE_READONLY_SCOPE),
             TOKEN_RESPONSE, list1, list1Response, list2, list2Response, list3, list3Response)
-            .getInstanceApi("party", "us-central1-a");
+            .instancesInZone("us-central1-a");
 
       Iterator<ListPage<Instance>> instances = instanceApi.list(maxResults(1));
 

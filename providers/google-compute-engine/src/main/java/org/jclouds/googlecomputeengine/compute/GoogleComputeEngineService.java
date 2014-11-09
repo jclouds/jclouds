@@ -57,7 +57,6 @@ import org.jclouds.domain.Credentials;
 import org.jclouds.domain.Location;
 import org.jclouds.googlecomputeengine.GoogleComputeEngineApi;
 import org.jclouds.googlecomputeengine.compute.options.GoogleComputeEngineTemplateOptions;
-import org.jclouds.googlecomputeengine.config.UserProject;
 import org.jclouds.googlecomputeengine.domain.Firewall;
 import org.jclouds.googlecomputeengine.domain.Network;
 import org.jclouds.googlecomputeengine.domain.Operation;
@@ -76,7 +75,6 @@ public final class GoogleComputeEngineService extends BaseComputeService {
    private final Function<Set<? extends NodeMetadata>, Set<String>> findOrphanedGroups;
    private final GroupNamingConvention.Factory namingConvention;
    private final GoogleComputeEngineApi api;
-   private final Supplier<String> project;
    private final Predicate<AtomicReference<Operation>> operationDone;
 
    @Inject GoogleComputeEngineService(ComputeServiceContext context,
@@ -111,7 +109,6 @@ public final class GoogleComputeEngineService extends BaseComputeService {
                                         Function<Set<? extends NodeMetadata>, Set<String>> findOrphanedGroups,
                                         GroupNamingConvention.Factory namingConvention,
                                         GoogleComputeEngineApi api,
-                                        @UserProject Supplier<String> project,
                                         Predicate<AtomicReference<Operation>> operationDone) {
       super(context, credentialStore, images, hardwareProfiles, locations, listNodesStrategy, getImageStrategy,
               getNodeMetadataStrategy, runNodesAndAddToSetStrategy, rebootNodeStrategy, destroyNodeStrategy,
@@ -121,7 +118,6 @@ public final class GoogleComputeEngineService extends BaseComputeService {
       this.findOrphanedGroups = findOrphanedGroups;
       this.namingConvention = namingConvention;
       this.api = api;
-      this.project = project;
       this.operationDone = operationDone;
    }
 
@@ -135,8 +131,8 @@ public final class GoogleComputeEngineService extends BaseComputeService {
 
    private void cleanUpNetworksAndFirewallsForGroup(final String groupName) {
       String resourceName = namingConvention.create().sharedNameForGroup(groupName);
-      Network network = api.getNetworkApi(project.get()).get(resourceName);
-      FirewallApi firewallApi = api.getFirewallApi(project.get());
+      Network network = api.networks().get(resourceName);
+      FirewallApi firewallApi = api.firewalls();
 
       for (Firewall firewall : concat(firewallApi.list())) {
          if (firewall == null || !firewall.network().equals(network.selfLink())) {
@@ -152,8 +148,7 @@ public final class GoogleComputeEngineService extends BaseComputeService {
          }
       }
 
-      AtomicReference<Operation> operation = Atomics
-            .newReference(api.getNetworkApi(project.get()).delete(resourceName));
+      AtomicReference<Operation> operation = Atomics.newReference(api.networks().delete(resourceName));
 
       operationDone.apply(operation);
 

@@ -18,7 +18,6 @@ package org.jclouds.googlecomputeengine.internal;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Preconditions.checkState;
-import static org.jclouds.oauth.v2.OAuthTestUtils.setCredential;
 import static org.testng.Assert.assertEquals;
 import static org.testng.AssertJUnit.assertTrue;
 
@@ -29,11 +28,9 @@ import java.util.logging.Logger;
 
 import org.jclouds.apis.BaseApiLiveTest;
 import org.jclouds.googlecomputeengine.GoogleComputeEngineApi;
-import org.jclouds.googlecomputeengine.GoogleComputeEngineProviderMetadata;
-import org.jclouds.googlecomputeengine.config.UserProject;
+import org.jclouds.googlecomputeengine.config.CurrentProject;
 import org.jclouds.googlecomputeengine.domain.Operation;
 import org.jclouds.javax.annotation.Nullable;
-import org.jclouds.providers.ProviderMetadata;
 
 import com.google.common.base.Predicate;
 import com.google.common.base.Supplier;
@@ -46,7 +43,6 @@ import com.google.inject.TypeLiteral;
 
 public class BaseGoogleComputeEngineApiLiveTest extends BaseApiLiveTest<GoogleComputeEngineApi> {
 
-   protected static final String API_URL_PREFIX = "https://www.googleapis.com/compute/v1/projects/";
    protected static final String ZONE_API_URL_SUFFIX = "/zones/";
    protected static final String DEFAULT_ZONE_NAME = "us-central1-a";
    protected static final String DEFAULT_REGION_NAME = "us-central1";
@@ -58,30 +54,23 @@ public class BaseGoogleComputeEngineApiLiveTest extends BaseApiLiveTest<GoogleCo
    protected static final String IMAGE_API_URL_SUFFIX = "/global/images/";
    protected static final String DISK_TYPE_API_URL_SUFFIX = "/diskTypes/";
 
-   protected Supplier<String> userProject;
    protected Predicate<AtomicReference<Operation>> operationDone;
+   protected URI projectUrl;
 
    public BaseGoogleComputeEngineApiLiveTest() {
       provider = "google-compute-engine";
    }
 
-   @Override
-   protected Properties setupProperties() {
-      Properties props = super.setupProperties();
-      setCredential(props, provider + ".credential");
-      return props;
+   @Override protected Properties setupProperties() {
+      return TestProperties.apply(super.setupProperties());
    }
 
-   @Override protected ProviderMetadata createProviderMetadata() {
-      return new GoogleComputeEngineProviderMetadata();
-   }
-
-   protected GoogleComputeEngineApi create(Properties props, Iterable<Module> modules) {
+   @Override protected GoogleComputeEngineApi create(Properties props, Iterable<Module> modules) {
       Injector injector = newBuilder().modules(modules).overrides(props).buildInjector();
-      userProject = injector.getInstance(Key.get(new TypeLiteral<Supplier<String>>() {
-      }, UserProject.class));
       operationDone = injector.getInstance(Key.get(new TypeLiteral<Predicate<AtomicReference<Operation>>>() {
       }));
+      projectUrl = injector.getInstance(Key.get(new TypeLiteral<Supplier<URI>>() {
+      }, CurrentProject.class)).get();
       return injector.getInstance(GoogleComputeEngineApi.class);
    }
 
@@ -101,41 +90,41 @@ public class BaseGoogleComputeEngineApiLiveTest extends BaseApiLiveTest<GoogleCo
       }
    }
 
-   protected URI getDiskTypeUrl(String project, String zone, String diskType){
-      return URI.create(API_URL_PREFIX + project + ZONE_API_URL_SUFFIX + zone + DISK_TYPE_API_URL_SUFFIX + diskType);
+   protected URI getDiskTypeUrl(String zone, String diskType){
+      return URI.create(projectUrl + ZONE_API_URL_SUFFIX + zone + DISK_TYPE_API_URL_SUFFIX + diskType);
    }
 
-   protected URI getDefaultZoneUrl(String project) {
-      return getZoneUrl(project, DEFAULT_ZONE_NAME);
+   protected URI getDefaultZoneUrl() {
+      return getZoneUrl(DEFAULT_ZONE_NAME);
    }
 
-   protected URI getZoneUrl(String project, String zone) {
-      return URI.create(API_URL_PREFIX + project + ZONE_API_URL_SUFFIX + zone);
+   protected URI getZoneUrl(String zone) {
+      return URI.create(projectUrl + ZONE_API_URL_SUFFIX + zone);
    }
 
-   protected URI getNetworkUrl(String project, String network) {
-      return URI.create(API_URL_PREFIX + project + NETWORK_API_URL_SUFFIX + network);
+   protected URI getNetworkUrl(String network) {
+      return URI.create(projectUrl + NETWORK_API_URL_SUFFIX + network);
    }
 
-   protected URI getGatewayUrl(String project, String gateway) {
-      return URI.create(API_URL_PREFIX + project + GATEWAY_API_URL_SUFFIX + gateway);
+   protected URI getGatewayUrl(String gateway) {
+      return URI.create(projectUrl + GATEWAY_API_URL_SUFFIX + gateway);
    }
 
-   protected URI getImageUrl(String project, String image){
-      return URI.create(API_URL_PREFIX + project + IMAGE_API_URL_SUFFIX + image);
+   protected URI getImageUrl(String image){
+      return URI.create(projectUrl + IMAGE_API_URL_SUFFIX + image);
    }
 
-   protected URI getDefaultMachineTypeUrl(String project) {
-      return getMachineTypeUrl(project, DEFAULT_MACHINE_TYPE_NAME);
+   protected URI getDefaultMachineTypeUrl() {
+      return getMachineTypeUrl(DEFAULT_MACHINE_TYPE_NAME);
    }
 
-   protected URI getMachineTypeUrl(String project, String machineType) {
-      return URI.create(API_URL_PREFIX + project + ZONE_API_URL_SUFFIX
+   protected URI getMachineTypeUrl(String machineType) {
+      return URI.create(projectUrl + ZONE_API_URL_SUFFIX
               + DEFAULT_ZONE_NAME + MACHINE_TYPE_API_URL_SUFFIX + machineType);
    }
 
-   protected URI getDiskUrl(String project, String diskName) {
-      return URI.create(API_URL_PREFIX + project + ZONE_API_URL_SUFFIX + DEFAULT_ZONE_NAME + "/disks/" + diskName);
+   protected URI getDiskUrl(String diskName) {
+      return URI.create(projectUrl + ZONE_API_URL_SUFFIX + DEFAULT_ZONE_NAME + "/disks/" + diskName);
    }
 }
 

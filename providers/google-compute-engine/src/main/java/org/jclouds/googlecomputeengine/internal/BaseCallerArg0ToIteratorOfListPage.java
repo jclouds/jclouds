@@ -14,13 +14,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jclouds.googlecomputeengine.functions.internal;
+package org.jclouds.googlecomputeengine.internal;
 
-import static com.google.common.base.Predicates.instanceOf;
-import static com.google.common.collect.Iterables.tryFind;
+import static org.jclouds.googlecomputeengine.internal.ListPages.listOptions;
+import static org.jclouds.googlecomputeengine.internal.ListPages.singletonOrEmptyIterator;
 
 import java.util.Iterator;
-import java.util.List;
 
 import org.jclouds.googlecomputeengine.domain.ListPage;
 import org.jclouds.googlecomputeengine.options.ListOptions;
@@ -30,38 +29,34 @@ import org.jclouds.rest.internal.GeneratedHttpRequest;
 
 import com.google.common.annotations.Beta;
 import com.google.common.base.Function;
-import com.google.common.base.Optional;
-import com.google.common.collect.Iterators;
 
 @Beta
-abstract class BaseWithZoneToIteratorOfListPage<T, I extends BaseWithZoneToIteratorOfListPage<T, I>>
+public abstract class BaseCallerArg0ToIteratorOfListPage<T, I extends BaseCallerArg0ToIteratorOfListPage<T, I>>
       implements Function<ListPage<T>, Iterator<ListPage<T>>>, InvocationContext<I> {
 
-   GeneratedHttpRequest request;
+   private GeneratedHttpRequest request;
 
    @Override public Iterator<ListPage<T>> apply(ListPage<T> input) {
       if (input.nextPageToken() == null) {
-         return Iterators.singletonIterator(input);
+         return singletonOrEmptyIterator(input);
       }
 
-      List<Object> callerArgs = request.getCaller().get().getArgs();
+      String arg0 = (String) request.getCaller().get().getArgs().get(0);
+      ListOptions options = listOptions(request.getInvocation().getArgs());
 
-      assert callerArgs.size() == 2 : String.format("programming error, method %s should have 2 args: project, zone",
-            request.getCaller().get().getInvokable());
-
-      Optional<Object> listOptions = tryFind(request.getInvocation().getArgs(), instanceOf(ListOptions.class));
-
-      return new AdvancingIterator<T>(input,
-            fetchNextPage((String) callerArgs.get(0), (String) callerArgs.get(1), (ListOptions) listOptions.orNull()));
+      return new AdvancingIterator<T>(input, fetchNextPage(arg0, options));
    }
 
-   protected abstract Function<String, ListPage<T>> fetchNextPage(String projectName,
-                                                                  String zoneName,
-                                                                  ListOptions listOptions);
+   /**
+    * This is used when you need to close over the argument that created the api.
+    *
+    * <p/> For example, {@code callerArg0} will become "myzone", which you can use to ensure the next page goes to the
+    * same zone: <pre>{@code api.instancesInZone("myzone").list()}</pre>
+    */
+   protected abstract Function<String, ListPage<T>> fetchNextPage(String callerArg0, ListOptions listOptions);
 
    @SuppressWarnings("unchecked")
-   @Override
-   public I setContext(HttpRequest request) {
+   @Override public I setContext(HttpRequest request) {
       this.request = GeneratedHttpRequest.class.cast(request);
       return (I) this;
    }

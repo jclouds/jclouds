@@ -16,9 +16,15 @@
  */
 package org.jclouds.googlecomputeengine.internal;
 
+import static com.google.common.base.Predicates.instanceOf;
+import static com.google.common.collect.Iterables.tryFind;
+
 import java.util.Iterator;
+import java.util.List;
 
 import org.jclouds.googlecomputeengine.domain.ListPage;
+import org.jclouds.googlecomputeengine.options.ListOptions;
+import org.jclouds.javax.annotation.Nullable;
 
 import com.google.common.collect.AbstractIterator;
 import com.google.common.collect.Iterators;
@@ -35,6 +41,14 @@ public final class ListPages {
             });
          }
       };
+   }
+
+   @Nullable static ListOptions listOptions(List<Object> args) {
+      return (ListOptions) tryFind(args, instanceOf(ListOptions.class)).orNull();
+   }
+
+   static <T> Iterator<ListPage<T>> singletonOrEmptyIterator(ListPage<T> input) {
+      return input.isEmpty() ? Iterators.<ListPage<T>>emptyIterator() : Iterators.singletonIterator(input);
    }
 
    private ListPages() {

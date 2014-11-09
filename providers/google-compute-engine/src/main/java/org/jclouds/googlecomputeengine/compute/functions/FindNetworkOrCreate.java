@@ -20,27 +20,22 @@ import javax.inject.Inject;
 
 import org.jclouds.googlecomputeengine.GoogleComputeEngineApi;
 import org.jclouds.googlecomputeengine.compute.domain.NetworkAndAddressRange;
-import org.jclouds.googlecomputeengine.config.UserProject;
 import org.jclouds.googlecomputeengine.domain.Network;
 
 import com.google.common.base.Function;
-import com.google.common.base.Supplier;
 import com.google.common.cache.CacheLoader;
 
 public final class FindNetworkOrCreate extends CacheLoader<NetworkAndAddressRange, Network> {
    private final GoogleComputeEngineApi api;
    private final Function<NetworkAndAddressRange, Network> networkCreator;
-   private final Supplier<String> userProject;
 
-   @Inject FindNetworkOrCreate(GoogleComputeEngineApi api, Function<NetworkAndAddressRange, Network> networkCreator,
-         @UserProject Supplier<String> userProject) {
+   @Inject FindNetworkOrCreate(GoogleComputeEngineApi api, Function<NetworkAndAddressRange, Network> networkCreator) {
       this.api = api;
       this.networkCreator = networkCreator;
-      this.userProject = userProject;
    }
 
    @Override public Network load(NetworkAndAddressRange in) {
-      Network network = api.getNetworkApi(userProject.get()).get(in.name());
+      Network network = api.networks().get(in.name());
       if (network != null) {
          return network;
       } else {

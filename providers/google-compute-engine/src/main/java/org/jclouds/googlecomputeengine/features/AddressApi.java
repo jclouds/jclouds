@@ -17,11 +17,12 @@
 package org.jclouds.googlecomputeengine.features;
 
 import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
-import static org.jclouds.googlecomputeengine.GoogleComputeEngineConstants.COMPUTE_READONLY_SCOPE;
-import static org.jclouds.googlecomputeengine.GoogleComputeEngineConstants.COMPUTE_SCOPE;
+import static org.jclouds.googlecomputeengine.config.GoogleComputeEngineScopes.COMPUTE_READONLY_SCOPE;
+import static org.jclouds.googlecomputeengine.config.GoogleComputeEngineScopes.COMPUTE_SCOPE;
 
 import java.util.Iterator;
 
+import javax.inject.Inject;
 import javax.inject.Named;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
@@ -33,12 +34,11 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 
 import org.jclouds.Fallbacks.NullOnNotFoundOr404;
-import org.jclouds.googlecomputeengine.GoogleComputeEngineFallbacks.EmptyIteratorOnNotFoundOr404;
-import org.jclouds.googlecomputeengine.GoogleComputeEngineFallbacks.EmptyListPageOnNotFoundOr404;
+import org.jclouds.googlecomputeengine.GoogleComputeEngineApi;
 import org.jclouds.googlecomputeengine.domain.Address;
 import org.jclouds.googlecomputeengine.domain.ListPage;
 import org.jclouds.googlecomputeengine.domain.Operation;
-import org.jclouds.googlecomputeengine.functions.internal.ParseAddresses;
+import org.jclouds.googlecomputeengine.internal.BaseCallerArg0ToIteratorOfListPage;
 import org.jclouds.googlecomputeengine.options.ListOptions;
 import org.jclouds.javax.annotation.Nullable;
 import org.jclouds.oauth.v2.config.OAuthScopes;
@@ -47,10 +47,11 @@ import org.jclouds.rest.annotations.Fallback;
 import org.jclouds.rest.annotations.MapBinder;
 import org.jclouds.rest.annotations.PayloadParam;
 import org.jclouds.rest.annotations.RequestFilters;
-import org.jclouds.rest.annotations.ResponseParser;
 import org.jclouds.rest.annotations.SkipEncoding;
 import org.jclouds.rest.annotations.Transform;
 import org.jclouds.rest.binders.BindToJsonPayload;
+
+import com.google.common.base.Function;
 
 @SkipEncoding({'/', '='})
 @RequestFilters(OAuthAuthenticationFilter.class)
@@ -69,7 +70,7 @@ public interface AddressApi {
 
    /**
     * Creates an address resource in the specified project specifying the size of the address.
-    * 
+    *
     * @param address the name of address.
     * @return an Operation resource. To check on the status of an operation, poll the Operations resource returned to
     *         you, and look for the status field.
@@ -95,36 +96,44 @@ public interface AddressApi {
     * By default the list as a maximum size of 100, if no options are provided or ListOptions#getMaxResults() has not
     * been set.
     *
-    * @param token       marks the beginning of the next list page
+    * @param pageToken   marks the beginning of the next list page
     * @param listOptions listing options
     * @return a page of the list
     */
    @Named("Addresses:list")
    @GET
    @OAuthScopes(COMPUTE_READONLY_SCOPE)
-   @ResponseParser(ParseAddresses.class)
-   @Fallback(EmptyListPageOnNotFoundOr404.class)
-   ListPage<Address> listPage(@Nullable @QueryParam("pageToken") String token, ListOptions listOptions);
+   ListPage<Address> listPage(@Nullable @QueryParam("pageToken") String pageToken, ListOptions listOptions);
 
-   /**
-    * @see #list(org.jclouds.googlecomputeengine.options.ListOptions)
-    */
+   /** @see #listPage(String, ListOptions) */
    @Named("Addresses:list")
    @GET
    @OAuthScopes(COMPUTE_READONLY_SCOPE)
-   @ResponseParser(ParseAddresses.class)
-   @Transform(ParseAddresses.ToIteratorOfListPage.class)
-   @Fallback(EmptyIteratorOnNotFoundOr404.class)
+   @Transform(AddressPages.class)
    Iterator<ListPage<Address>> list();
 
-   /**
-    * @see #list(org.jclouds.googlecomputeengine.options.ListOptions)
-    */
+   /** @see #listPage(String, ListOptions) */
    @Named("Addresses:list")
    @GET
    @OAuthScopes(COMPUTE_READONLY_SCOPE)
-   @ResponseParser(ParseAddresses.class)
-   @Transform(ParseAddresses.ToIteratorOfListPage.class)
-   @Fallback(EmptyIteratorOnNotFoundOr404.class)
+   @Transform(AddressPages.class)
    Iterator<ListPage<Address>> list(ListOptions options);
+
+   static final class AddressPages extends BaseCallerArg0ToIteratorOfListPage<Address, AddressPages> {
+
+      private final GoogleComputeEngineApi api;
+
+      @Inject AddressPages(GoogleComputeEngineApi api) {
+         this.api = api;
+      }
+
+      @Override
+      protected Function<String, ListPage<Address>> fetchNextPage(final String regionName, final ListOptions options) {
+         return new Function<String, ListPage<Address>>() {
+            @Override public ListPage<Address> apply(String pageToken) {
+               return api.addressesInRegion(regionName).listPage(pageToken, options);
+            }
+         };
+      }
+   }
 }

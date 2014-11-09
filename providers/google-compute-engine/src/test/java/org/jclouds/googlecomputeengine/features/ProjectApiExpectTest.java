@@ -17,8 +17,8 @@
 package org.jclouds.googlecomputeengine.features;
 
 import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
-import static org.jclouds.googlecomputeengine.GoogleComputeEngineConstants.COMPUTE_READONLY_SCOPE;
-import static org.jclouds.googlecomputeengine.GoogleComputeEngineConstants.COMPUTE_SCOPE;
+import static org.jclouds.googlecomputeengine.config.GoogleComputeEngineScopes.COMPUTE_READONLY_SCOPE;
+import static org.jclouds.googlecomputeengine.config.GoogleComputeEngineScopes.COMPUTE_SCOPE;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNull;
 
@@ -47,9 +47,9 @@ public class ProjectApiExpectTest extends BaseGoogleComputeEngineExpectTest<Goog
 
    public void testGetProjectResponseIs2xx() throws Exception {
       ProjectApi api = requestsSendResponses(requestForScopes(COMPUTE_READONLY_SCOPE), TOKEN_RESPONSE,
-            GET_PROJECT_REQUEST, GET_PROJECT_RESPONSE).getProjectApi();
+            GET_PROJECT_REQUEST, GET_PROJECT_RESPONSE).project();
 
-      assertEquals(api.get("party"), new ParseProjectTest().expected());
+      assertEquals(api.get(), new ParseProjectTest().expected());
    }
 
    public void testGetProjectResponseIs4xx() throws Exception {
@@ -63,9 +63,9 @@ public class ProjectApiExpectTest extends BaseGoogleComputeEngineExpectTest<Goog
       HttpResponse getProjectResponse = HttpResponse.builder().statusCode(404).build();
 
       ProjectApi api = requestsSendResponses(requestForScopes(COMPUTE_READONLY_SCOPE), TOKEN_RESPONSE,
-            getProjectRequest, getProjectResponse).getProjectApi();
+            getProjectRequest, getProjectResponse).project();
 
-      assertNull(api.get("party"));
+      assertNull(api.get());
    }
 
    public void testSetCommonInstanceMetadata() {
@@ -82,10 +82,9 @@ public class ProjectApiExpectTest extends BaseGoogleComputeEngineExpectTest<Goog
               .payload(payloadFromResource("/global_operation.json")).build();
 
       ProjectApi api = requestsSendResponses(requestForScopes(COMPUTE_SCOPE), TOKEN_RESPONSE, setMetadata,
-            setMetadataResponse).getProjectApi();
+            setMetadataResponse).project();
 
       Metadata expected = new ParseMetadataTest().expected();
-      assertEquals(api.setCommonInstanceMetadata("party", expected), new ParseGlobalOperationTest().expected());
+      assertEquals(api.setCommonInstanceMetadata(expected), new ParseGlobalOperationTest().expected());
    }
-
 }

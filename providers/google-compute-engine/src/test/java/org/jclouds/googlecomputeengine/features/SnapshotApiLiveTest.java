@@ -35,11 +35,11 @@ public class SnapshotApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
 
    private Disk disk;
    private SnapshotApi api() {
-      return api.getSnapshotApi(userProject.get());
+      return api.snapshots();
    }
 
    private DiskApi diskApi() {
-      return api.getDiskApi(userProject.get(), DEFAULT_ZONE_NAME);
+      return api.disksInZone(DEFAULT_ZONE_NAME);
    }
 
    @Test(groups = "live")

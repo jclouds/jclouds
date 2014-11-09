@@ -16,7 +16,10 @@
  */
 package org.jclouds.googlecomputeengine.compute.extensions;
 
+import java.util.Properties;
+
 import org.jclouds.compute.extensions.internal.BaseSecurityGroupExtensionLiveTest;
+import org.jclouds.googlecomputeengine.internal.TestProperties;
 import org.testng.annotations.Test;
 
 @Test(groups = "live", singleThreaded = true, testName = "GoogleComputeEngineSecurityGroupExtensionLiveTest")
@@ -24,5 +27,9 @@ public class GoogleComputeEngineSecurityGroupExtensionLiveTest extends BaseSecur
 
    public GoogleComputeEngineSecurityGroupExtensionLiveTest() {
       provider = "google-compute-engine";
+   }
+
+   @Override protected Properties setupProperties() {
+      return TestProperties.apply(super.setupProperties());
    }
 }

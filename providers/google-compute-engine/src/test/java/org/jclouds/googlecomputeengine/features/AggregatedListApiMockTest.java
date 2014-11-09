@@ -28,7 +28,7 @@ public class AggregatedListApiMockTest extends BaseGoogleComputeEngineApiMockTes
    public void machineTypes() throws Exception {
       server.enqueue(jsonResponse("/aggregated_machinetype_list.json"));
 
-      AggregatedListApi aggregatedList = api().aggregatedList("party");
+      AggregatedListApi aggregatedList = api().aggregatedList();
 
       assertTrue(aggregatedList.machineTypes().hasNext());
 
@@ -38,7 +38,7 @@ public class AggregatedListApiMockTest extends BaseGoogleComputeEngineApiMockTes
    public void machineTypesResponseIs4xx() throws Exception {
       server.enqueue(jsonResponse("/aggregated_instance_list_empty.json"));
 
-      AggregatedListApi aggregatedList = api().aggregatedList("party");
+      AggregatedListApi aggregatedList = api().aggregatedList();
 
       assertFalse(aggregatedList.machineTypes().hasNext());
 
@@ -48,7 +48,7 @@ public class AggregatedListApiMockTest extends BaseGoogleComputeEngineApiMockTes
    public void instances() throws Exception {
       server.enqueue(jsonResponse("/aggregated_instance_list.json"));
 
-      AggregatedListApi aggregatedList = api().aggregatedList("party");
+      AggregatedListApi aggregatedList = api().aggregatedList();
 
       assertTrue(aggregatedList.instances().hasNext());
 
@@ -58,7 +58,7 @@ public class AggregatedListApiMockTest extends BaseGoogleComputeEngineApiMockTes
    public void instancesResponseIs4xx() throws Exception {
       server.enqueue(jsonResponse("/aggregated_instance_list_empty.json"));
 
-      AggregatedListApi aggregatedList = api().aggregatedList("party");
+      AggregatedListApi aggregatedList = api().aggregatedList();
 
       assertFalse(aggregatedList.instances().hasNext());
 

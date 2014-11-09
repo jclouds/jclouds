@@ -19,8 +19,8 @@ package org.jclouds.googlecomputeengine.features;
 import static com.google.common.base.Joiner.on;
 import static com.google.common.collect.Iterables.transform;
 import static java.lang.String.format;
-import static org.jclouds.googlecomputeengine.GoogleComputeEngineConstants.COMPUTE_READONLY_SCOPE;
-import static org.jclouds.googlecomputeengine.GoogleComputeEngineConstants.COMPUTE_SCOPE;
+import static org.jclouds.googlecomputeengine.config.GoogleComputeEngineScopes.COMPUTE_READONLY_SCOPE;
+import static org.jclouds.googlecomputeengine.config.GoogleComputeEngineScopes.COMPUTE_SCOPE;
 import static org.jclouds.io.Payloads.newStringPayload;
 import static org.jclouds.util.Strings2.toStringAndClose;
 import static org.testng.Assert.assertEquals;
@@ -64,7 +64,7 @@ public class FirewallApiExpectTest extends BaseGoogleComputeEngineExpectTest<Goo
    public void testGetFirewallResponseIs2xx() throws Exception {
 
       FirewallApi api = requestsSendResponses(requestForScopes(COMPUTE_READONLY_SCOPE),
-              TOKEN_RESPONSE, GET_FIREWALL_REQUEST, GET_FIREWALL_RESPONSE).getFirewallApi("party");
+              TOKEN_RESPONSE, GET_FIREWALL_REQUEST, GET_FIREWALL_RESPONSE).firewalls();
 
       assertEquals(api.get("jclouds-test"), new ParseFirewallTest().expected());
    }
@@ -106,10 +106,10 @@ public class FirewallApiExpectTest extends BaseGoogleComputeEngineExpectTest<Goo
               .addHeader("Accept", "application/json")
               .addHeader("Authorization", "Bearer " + TOKEN).build();
 
-      HttpResponse operationResponse = HttpResponse.builder().statusCode(404).build();
+      HttpResponse response = HttpResponse.builder().statusCode(404).build();
 
       FirewallApi api = requestsSendResponses(requestForScopes(COMPUTE_READONLY_SCOPE),
-              TOKEN_RESPONSE, get, operationResponse).getFirewallApi("party");
+              TOKEN_RESPONSE, get, response).firewalls();
 
       assertNull(api.get("jclouds-test"));
    }
@@ -135,7 +135,7 @@ public class FirewallApiExpectTest extends BaseGoogleComputeEngineExpectTest<Goo
               .payload(payloadFromResource("/operation.json")).build();
 
       FirewallApi api = requestsSendResponses(requestForScopes(COMPUTE_SCOPE),
-              TOKEN_RESPONSE, request, insertFirewallResponse).getFirewallApi("party");
+              TOKEN_RESPONSE, request, insertFirewallResponse).firewalls();
 
       assertEquals(api.createInNetwork("myfw", URI.create(BASE_URL + "/party/global/networks/default"),
               new FirewallOptions()
@@ -167,7 +167,7 @@ public class FirewallApiExpectTest extends BaseGoogleComputeEngineExpectTest<Goo
 
       FirewallApi api = requestsSendResponses(requestForScopes(COMPUTE_SCOPE),
               TOKEN_RESPONSE, update,
-              updateFirewallResponse).getFirewallApi("party");
+              updateFirewallResponse).firewalls();
 
       assertEquals(api.update("myfw",
               new FirewallOptions()
@@ -200,7 +200,7 @@ public class FirewallApiExpectTest extends BaseGoogleComputeEngineExpectTest<Goo
 
       FirewallApi api = requestsSendResponses(requestForScopes(COMPUTE_SCOPE),
               TOKEN_RESPONSE, update,
-              updateFirewallResponse).getFirewallApi("party");
+              updateFirewallResponse).firewalls();
 
       assertEquals(api.patch("myfw",
               new FirewallOptions()
@@ -224,7 +224,7 @@ public class FirewallApiExpectTest extends BaseGoogleComputeEngineExpectTest<Goo
               .payload(payloadFromResource("/operation.json")).build();
 
       FirewallApi api = requestsSendResponses(requestForScopes(COMPUTE_SCOPE),
-              TOKEN_RESPONSE, delete, deleteResponse).getFirewallApi("party");
+              TOKEN_RESPONSE, delete, deleteResponse).firewalls();
 
       assertEquals(api.delete("default-allow-internal"),
               new ParseOperationTest().expected());
@@ -241,40 +241,34 @@ public class FirewallApiExpectTest extends BaseGoogleComputeEngineExpectTest<Goo
       HttpResponse deleteResponse = HttpResponse.builder().statusCode(404).build();
 
       FirewallApi api = requestsSendResponses(requestForScopes(COMPUTE_SCOPE),
-              TOKEN_RESPONSE, delete, deleteResponse).getFirewallApi("party");
+              TOKEN_RESPONSE, delete, deleteResponse).firewalls();
 
       assertNull(api.delete("default-allow-internal"));
    }
 
-   public void testListFirewallsResponseIs2xx() {
-      HttpRequest list = HttpRequest
-              .builder()
-              .method("GET")
-              .endpoint(BASE_URL + "/party/global/firewalls")
-              .addHeader("Accept", "application/json")
-              .addHeader("Authorization", "Bearer " + TOKEN).build();
+   HttpRequest list = HttpRequest
+         .builder()
+         .method("GET")
+         .endpoint(BASE_URL + "/party/global/firewalls")
+         .addHeader("Accept", "application/json")
+         .addHeader("Authorization", "Bearer " + TOKEN).build();
 
-      HttpResponse operationResponse = HttpResponse.builder().statusCode(200)
+   public void testListFirewallsResponseIs2xx() {
+      HttpResponse response = HttpResponse.builder().statusCode(200)
               .payload(payloadFromResource("/firewall_list.json")).build();
 
       FirewallApi api = requestsSendResponses(requestForScopes(COMPUTE_READONLY_SCOPE),
-              TOKEN_RESPONSE, list, operationResponse).getFirewallApi("party");
+              TOKEN_RESPONSE, list, response).firewalls();
 
-      assertEquals(api.list().next().toString(), new ParseFirewallListTest().expected().toString());
+      assertEquals(api.list().next(), new ParseFirewallListTest().expected());
    }
 
-   public void testListFirewallsResponseIs4xx() {
-      HttpRequest list = HttpRequest
-              .builder()
-              .method("GET")
-              .endpoint(BASE_URL + "/party/global/firewalls")
-              .addHeader("Accept", "application/json")
-              .addHeader("Authorization", "Bearer " + TOKEN).build();
-
-      HttpResponse operationResponse = HttpResponse.builder().statusCode(404).build();
+   public void listEmpty() {
+      HttpResponse response = HttpResponse.builder().statusCode(200)
+            .payload(payloadFromResource("/list_empty.json")).build();
 
       FirewallApi api = requestsSendResponses(requestForScopes(COMPUTE_READONLY_SCOPE),
-              TOKEN_RESPONSE, list, operationResponse).getFirewallApi("party");
+              TOKEN_RESPONSE, list, response).firewalls();
 
       assertFalse(api.list().hasNext());
    }

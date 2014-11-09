@@ -18,12 +18,13 @@ package org.jclouds.googlecomputeengine.features;
 
 import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 import static org.jclouds.Fallbacks.VoidOnNotFoundOr404;
-import static org.jclouds.googlecomputeengine.GoogleComputeEngineConstants.COMPUTE_READONLY_SCOPE;
-import static org.jclouds.googlecomputeengine.GoogleComputeEngineConstants.COMPUTE_SCOPE;
+import static org.jclouds.googlecomputeengine.config.GoogleComputeEngineScopes.COMPUTE_READONLY_SCOPE;
+import static org.jclouds.googlecomputeengine.config.GoogleComputeEngineScopes.COMPUTE_SCOPE;
 
 import java.net.URI;
 import java.util.Iterator;
 
+import javax.inject.Inject;
 import javax.inject.Named;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
@@ -33,23 +34,24 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.QueryParam;
 
 import org.jclouds.Fallbacks.NullOnNotFoundOr404;
-import org.jclouds.googlecomputeengine.GoogleComputeEngineFallbacks.EmptyIteratorOnNotFoundOr404;
-import org.jclouds.googlecomputeengine.GoogleComputeEngineFallbacks.EmptyListPageOnNotFoundOr404;
+import org.jclouds.googlecomputeengine.GoogleComputeEngineApi;
+import org.jclouds.googlecomputeengine.config.CurrentProject;
 import org.jclouds.googlecomputeengine.domain.ListPage;
 import org.jclouds.googlecomputeengine.domain.Operation;
-import org.jclouds.googlecomputeengine.functions.internal.ParseGlobalOperations;
-import org.jclouds.googlecomputeengine.functions.internal.ParseRegionOperations;
-import org.jclouds.googlecomputeengine.functions.internal.ParseZoneOperations;
+import org.jclouds.googlecomputeengine.internal.BaseArg0ToIteratorOfListPage;
+import org.jclouds.googlecomputeengine.internal.BaseToIteratorOfListPage;
 import org.jclouds.googlecomputeengine.options.ListOptions;
 import org.jclouds.javax.annotation.Nullable;
 import org.jclouds.oauth.v2.config.OAuthScopes;
 import org.jclouds.oauth.v2.filters.OAuthAuthenticationFilter;
+import org.jclouds.rest.annotations.Endpoint;
 import org.jclouds.rest.annotations.EndpointParam;
 import org.jclouds.rest.annotations.Fallback;
 import org.jclouds.rest.annotations.RequestFilters;
-import org.jclouds.rest.annotations.ResponseParser;
 import org.jclouds.rest.annotations.SkipEncoding;
 import org.jclouds.rest.annotations.Transform;
+
+import com.google.common.base.Function;
 
 @SkipEncoding({'/', '='})
 @RequestFilters(OAuthAuthenticationFilter.class)
@@ -76,123 +78,156 @@ public interface OperationApi {
     * By default the list as a maximum size of 100, if no options are provided or ListOptions#getMaxResults() has not
     * been set.
     *
-    * @param token       marks the beginning of the next list page
+    * @param pageToken   marks the beginning of the next list page
     * @param listOptions listing options
     * @return a page of the list
     */
    @Named("GlobalOperations:list")
    @GET
-   @Path("/projects/{project}/global/operations")
+   @Endpoint(CurrentProject.class)
+   @Path("/global/operations")
    @OAuthScopes(COMPUTE_READONLY_SCOPE)
-   @ResponseParser(ParseGlobalOperations.class)
-   @Fallback(EmptyListPageOnNotFoundOr404.class)
-   ListPage<Operation> listPage(@Nullable @QueryParam("pageToken") String token, ListOptions listOptions);
+   ListPage<Operation> listPage(@Nullable @QueryParam("pageToken") String pageToken, ListOptions listOptions);
 
-   /**
-    * @see #list(org.jclouds.googlecomputeengine.options.ListOptions)
-    */
+   /** @see #listPage(String, ListOptions) */
    @Named("GlobalOperations:list")
    @GET
-   @Path("/projects/{project}/global/operations")
+   @Endpoint(CurrentProject.class)
+   @Path("/global/operations")
    @OAuthScopes(COMPUTE_READONLY_SCOPE)
-   @ResponseParser(ParseGlobalOperations.class)
-   @Transform(ParseGlobalOperations.ToIteratorOfListPage.class)
-   @Fallback(EmptyIteratorOnNotFoundOr404.class)
+   @Transform(OperationPages.class)
    Iterator<ListPage<Operation>> list();
 
-   /**
-    * @see #listPage(String, ListOptions)
-    */
+   /** @see #listPage(String, ListOptions) */
    @Named("GlobalOperations:list")
    @GET
-   @Path("/projects/{project}/global/operations")
+   @Endpoint(CurrentProject.class)
+   @Path("/global/operations")
    @OAuthScopes(COMPUTE_READONLY_SCOPE)
-   @ResponseParser(ParseGlobalOperations.class)
-   @Transform(ParseGlobalOperations.ToIteratorOfListPage.class)
-   @Fallback(EmptyIteratorOnNotFoundOr404.class)
+   @Transform(OperationPages.class)
    Iterator<ListPage<Operation>> list(ListOptions options);
+
+   static final class OperationPages extends BaseToIteratorOfListPage<Operation, OperationPages> {
+
+      private final GoogleComputeEngineApi api;
+
+      @Inject OperationPages(GoogleComputeEngineApi api) {
+         this.api = api;
+      }
+
+      @Override protected Function<String, ListPage<Operation>> fetchNextPage(final ListOptions options) {
+         return new Function<String, ListPage<Operation>>() {
+            @Override public ListPage<Operation> apply(String pageToken) {
+               return api.operations().listPage(pageToken, options);
+            }
+         };
+      }
+   }
 
    /**
     * Retrieves the list of operation resources available in the specified region.
     * By default the list as a maximum size of 100, if no options are provided or ListOptions#getMaxResults() has not
     * been set.
     *
-    * @param token       marks the beginning of the next list page
+    * @param pageToken   marks the beginning of the next list page
     * @param listOptions listing options
     * @return a page of the list
     */
    @Named("RegionOperations:list")
    @GET
-   @Path("/projects/{project}/regions/{region}/operations")
+   @Endpoint(CurrentProject.class)
+   @Path("/regions/{region}/operations")
    @OAuthScopes(COMPUTE_READONLY_SCOPE)
-   @ResponseParser(ParseRegionOperations.class)
-   @Fallback(EmptyListPageOnNotFoundOr404.class)
    ListPage<Operation> listPageInRegion(@PathParam("region") String region,
-                                        @Nullable @QueryParam("pageToken") String token, ListOptions listOptions);
+                                        @Nullable @QueryParam("pageToken") String pageToken, ListOptions listOptions);
 
-   /**
-    * @see #listInRegion(String, org.jclouds.googlecomputeengine.options.ListOptions)
-    */
+   /** @see #listInRegion(String, org.jclouds.googlecomputeengine.options.ListOptions) */
    @Named("RegionOperations:list")
    @GET
-   @Path("/projects/{project}/regions/{region}/operations")
+   @Endpoint(CurrentProject.class)
+   @Path("/regions/{region}/operations")
    @OAuthScopes(COMPUTE_READONLY_SCOPE)
-   @ResponseParser(ParseRegionOperations.class)
-   @Transform(ParseRegionOperations.ToIteratorOfListPage.class)
-   @Fallback(EmptyIteratorOnNotFoundOr404.class)
+   @Transform(OperationPagesInRegion.class)
    Iterator<ListPage<Operation>> listInRegion(@PathParam("region") String region);
 
-   /**
-    * @see #listPageInRegion(String, String, ListOptions)
-    */
+   /** @see #listInRegion(String, org.jclouds.googlecomputeengine.options.ListOptions) */
    @Named("RegionOperations:list")
    @GET
-   @Path("/projects/{project}/regions/{region}/operations")
+   @Endpoint(CurrentProject.class)
+   @Path("/regions/{region}/operations")
    @OAuthScopes(COMPUTE_READONLY_SCOPE)
-   @ResponseParser(ParseRegionOperations.class)
-   @Transform(ParseRegionOperations.ToIteratorOfListPage.class)
-   @Fallback(EmptyIteratorOnNotFoundOr404.class)
+   @Transform(OperationPagesInRegion.class)
    Iterator<ListPage<Operation>> listInRegion(@PathParam("region") String region, ListOptions options);
+
+   static final class OperationPagesInRegion extends BaseArg0ToIteratorOfListPage<Operation, OperationPagesInRegion> {
+
+      private final GoogleComputeEngineApi api;
+
+      @Inject OperationPagesInRegion(GoogleComputeEngineApi api) {
+         this.api = api;
+      }
+
+      @Override
+      protected Function<String, ListPage<Operation>> fetchNextPage(final String regionName,
+            final ListOptions options) {
+         return new Function<String, ListPage<Operation>>() {
+            @Override public ListPage<Operation> apply(String pageToken) {
+               return api.operations().listPageInRegion(regionName, pageToken, options);
+            }
+         };
+      }
+   }
 
    /**
     * Retrieves the list of operation resources available in the specified zone.
     * By default the list as a maximum size of 100, if no options are provided or ListOptions#getMaxResults() has not
     * been set.
     *
-    * @param token       marks the beginning of the next list page
+    * @param pageToken   marks the beginning of the next list page
     * @param listOptions listing options
     * @return a page of the list
     */
    @Named("ZoneOperations:list")
    @GET
-   @Path("/projects/{project}/zones/{zone}/operations")
+   @Endpoint(CurrentProject.class)
+   @Path("/zones/{zone}/operations")
    @OAuthScopes(COMPUTE_READONLY_SCOPE)
-   @ResponseParser(ParseZoneOperations.class)
-   @Fallback(EmptyListPageOnNotFoundOr404.class)
    ListPage<Operation> listPageInZone(@PathParam("zone") String zone,
-         @Nullable @QueryParam("pageToken") String token, ListOptions listOptions);
+         @Nullable @QueryParam("pageToken") String pageToken, ListOptions listOptions);
 
-   /**
-    * @see #listInZone(String, org.jclouds.googlecomputeengine.options.ListOptions)
-    */
+   /** @see #listInZone(String, org.jclouds.googlecomputeengine.options.ListOptions) */
    @Named("ZoneOperations:list")
    @GET
-   @Path("/projects/{project}/zones/{zone}/operations")
+   @Endpoint(CurrentProject.class)
+   @Path("/zones/{zone}/operations")
    @OAuthScopes(COMPUTE_READONLY_SCOPE)
-   @ResponseParser(ParseZoneOperations.class)
-   @Transform(ParseZoneOperations.ToIteratorOfListPage.class)
-   @Fallback(EmptyIteratorOnNotFoundOr404.class)
+   @Transform(OperationPagesInZone.class)
    Iterator<ListPage<Operation>> listInZone(@PathParam("zone") String zone);
 
-   /**
-    * @see #listPageInZone(String, String, ListOptions)
-    */
+   /** @see #listInZone(String, org.jclouds.googlecomputeengine.options.ListOptions) */
    @Named("ZoneOperations:list")
    @GET
-   @Path("/projects/{project}/zones/{zone}/operations")
+   @Endpoint(CurrentProject.class)
+   @Path("/zones/{zone}/operations")
    @OAuthScopes(COMPUTE_READONLY_SCOPE)
-   @ResponseParser(ParseZoneOperations.class)
-   @Transform(ParseZoneOperations.ToIteratorOfListPage.class)
-   @Fallback(EmptyIteratorOnNotFoundOr404.class)
+   @Transform(OperationPagesInZone.class)
    Iterator<ListPage<Operation>> listInZone(@PathParam("zone") String zone, ListOptions options);
+
+   static final class OperationPagesInZone extends BaseArg0ToIteratorOfListPage<Operation, OperationPagesInZone> {
+
+      private final GoogleComputeEngineApi api;
+
+      @Inject OperationPagesInZone(GoogleComputeEngineApi api) {
+         this.api = api;
+      }
+
+      @Override
+      protected Function<String, ListPage<Operation>> fetchNextPage(final String zoneName, final ListOptions options) {
+         return new Function<String, ListPage<Operation>>() {
+            @Override public ListPage<Operation> apply(String pageToken) {
+               return api.operations().listPageInZone(zoneName, pageToken, options);
+            }
+         };
+      }
+   }
 }

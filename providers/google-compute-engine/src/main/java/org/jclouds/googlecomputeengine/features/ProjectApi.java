@@ -17,15 +17,14 @@
 package org.jclouds.googlecomputeengine.features;
 
 import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
-import static org.jclouds.googlecomputeengine.GoogleComputeEngineConstants.COMPUTE_READONLY_SCOPE;
-import static org.jclouds.googlecomputeengine.GoogleComputeEngineConstants.COMPUTE_SCOPE;
+import static org.jclouds.googlecomputeengine.config.GoogleComputeEngineScopes.COMPUTE_READONLY_SCOPE;
+import static org.jclouds.googlecomputeengine.config.GoogleComputeEngineScopes.COMPUTE_SCOPE;
 
 import javax.inject.Named;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 
 import org.jclouds.googlecomputeengine.GoogleComputeEngineFallbacks.NullOn400or404;
@@ -42,20 +41,18 @@ import org.jclouds.rest.binders.BindToJsonPayload;
 
 @SkipEncoding({'/', '='})
 @RequestFilters(OAuthAuthenticationFilter.class)
-@Path("/projects")
 @Consumes(APPLICATION_JSON)
 public interface ProjectApi {
 
-   /** Returns a project by name or null if not found. */
+   /** Get the current project. */
    @Named("Projects:get")
    @GET
    @OAuthScopes(COMPUTE_READONLY_SCOPE)
    @Fallback(NullOn400or404.class)
-   @Path("/{project}")
-   Project get(@PathParam("project") String projectName);
+   Project get();
 
    /**
-    * Sets metadata common to all instances within the specified project using the data included in the request.
+    * Sets metadata common to all instances within the current project using the data included in the request.
     * <p/>
     * NOTE: This *sets* metadata items on the project (vs *adding* items to metadata),
     * if there are existing metadata that must be kept these must be fetched first and then re-sent on update.
@@ -65,16 +62,14 @@ public interface ProjectApi {
     *    projectApi.setCommonInstanceMetadata("myProject", update);
     * </tt></pre>
     *
-    * @param projectName   name of the project to return
     * @param metadata      the metadata to set
     * @return an Operations resource. To check on the status of an operation, poll the Operations resource returned
     *         to you, and look for the status field.
     */
    @Named("Projects:setCommonInstanceMetadata")
    @POST
-   @Path("/{project}/setCommonInstanceMetadata")
+   @Path("/setCommonInstanceMetadata")
    @OAuthScopes(COMPUTE_SCOPE)
    @Produces(APPLICATION_JSON)
-   Operation setCommonInstanceMetadata(@PathParam("project") String projectName,
-                                       @BinderParam(BindToJsonPayload.class) Metadata metadata);
+   Operation setCommonInstanceMetadata(@BinderParam(BindToJsonPayload.class) Metadata metadata);
 }

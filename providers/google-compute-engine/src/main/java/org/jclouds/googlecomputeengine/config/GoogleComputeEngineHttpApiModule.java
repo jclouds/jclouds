@@ -16,37 +16,61 @@
  */
 package org.jclouds.googlecomputeengine.config;
 
+import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Suppliers.compose;
 import static java.util.concurrent.TimeUnit.SECONDS;
+import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 import static org.jclouds.Constants.PROPERTY_SESSION_INTERVAL;
+import static org.jclouds.googlecomputeengine.config.GoogleComputeEngineProperties.PROJECT_NAME;
+import static org.jclouds.googlecomputeengine.config.GoogleComputeEngineScopes.COMPUTE_READONLY_SCOPE;
+import static org.jclouds.rest.config.BinderUtils.bindHttpApi;
 
+import java.net.URI;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
+import javax.inject.Inject;
 import javax.inject.Named;
 import javax.inject.Singleton;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.GET;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 
 import org.jclouds.domain.Credentials;
 import org.jclouds.googlecomputeengine.GoogleComputeEngineApi;
+import org.jclouds.googlecomputeengine.domain.Project;
 import org.jclouds.googlecomputeengine.handlers.GoogleComputeEngineErrorHandler;
 import org.jclouds.http.HttpErrorHandler;
 import org.jclouds.http.annotation.ClientError;
 import org.jclouds.http.annotation.Redirection;
 import org.jclouds.http.annotation.ServerError;
 import org.jclouds.location.Provider;
+import org.jclouds.oauth.v2.config.OAuthScopes;
+import org.jclouds.oauth.v2.filters.OAuthAuthenticationFilter;
+import org.jclouds.providers.ProviderMetadata;
 import org.jclouds.rest.AuthorizationException;
 import org.jclouds.rest.ConfiguresHttpApi;
+import org.jclouds.rest.annotations.RequestFilters;
+import org.jclouds.rest.annotations.SkipEncoding;
 import org.jclouds.rest.config.HttpApiModule;
 import org.jclouds.rest.suppliers.MemoizedRetryOnTimeOutButNotOnAuthorizationExceptionSupplier;
 
 import com.google.common.base.Function;
-import com.google.common.base.Splitter;
+import com.google.common.base.Strings;
 import com.google.common.base.Supplier;
-import com.google.common.collect.Iterables;
+import com.google.common.base.Suppliers;
 import com.google.inject.Provides;
 
 @ConfiguresHttpApi
 public final class GoogleComputeEngineHttpApiModule extends HttpApiModule<GoogleComputeEngineApi> {
    public GoogleComputeEngineHttpApiModule() {
+   }
+
+   @Override protected void configure() {
+      super.configure();
+      bindHttpApi(binder(), UseApiToResolveProjectName.GetProject.class);
    }
 
    @Override protected void bindErrorHandlers() {
@@ -55,34 +79,68 @@ public final class GoogleComputeEngineHttpApiModule extends HttpApiModule<Google
       bind(HttpErrorHandler.class).annotatedWith(ServerError.class).to(GoogleComputeEngineErrorHandler.class);
    }
 
+   @Provides @Singleton @CurrentProject Supplier<URI> project(@Named(PROJECT_NAME) final String projectName,
+         @Provider Supplier<URI> defaultEndpoint, final UseApiToResolveProjectName useApiToResolveProjectName,
+         @Provider final Supplier<Credentials> creds, AtomicReference<AuthorizationException> authException,
+         @Named(PROPERTY_SESSION_INTERVAL) long seconds) {
+      // Try to avoid a runtime lookup by accepting a project name supplied in context overrides.
+      if (Strings.emptyToNull(projectName) != null) {
+         return Suppliers.memoizeWithExpiration(Suppliers.compose(new Function<URI, URI>() {
+            @Override public URI apply(URI input) {
+               return URI.create(String.format("%s/projects/%s", input, projectName));
+            }
+         }, defaultEndpoint), seconds, SECONDS);
+      }
+
+      // If the project name wasn't explicitly supplied, then we lookup via api.
+      // This supplier must be defensive against any auth exception.
+      return MemoizedRetryOnTimeOutButNotOnAuthorizationExceptionSupplier
+            .create(authException, compose(useApiToResolveProjectName, creds), seconds, SECONDS);
+   }
+
    /**
-    * Since this is caching a direct api call, we memoize, but short-circuit on any auth exception. This prevents
-    * excessive errors when things occur in parallel, or as peers on a function graph.
+    * Parse the project ID from the identity, use it to lookup the project name, return the project-scoped uri.
+    *
+    * <h3>Why are we looking up the project name? We already have the project ID!</h3>
+    * <a href="https://cloud.google.com/compute/docs/overview#projectids">Documentation</a> suggests that the
+    * project name is interchangeable with the project ID, which we already have. However, in practice, using the
+    * project ID leads to problems in POST requests.
+    *
+    * <p/> For example, inserting an instance using the project ID in the instances url, but the project name in
+    * the machineType url results in an error of
+    * <pre>{@code Cross-project references for this resource type are not allowed}.</pre>
+    *
+    * <p/>Similar errors occur in POST requests to other resources including at least forwardingRules, images,
+    * targetPools.
     */
-   @Provides
-   @Singleton
-   @UserProject Supplier<String> projectName(@Provider final Supplier<Credentials> creds,
-                                             final GoogleComputeEngineApi api,
-                                             AtomicReference<AuthorizationException> authException,
-                                             @Named(PROPERTY_SESSION_INTERVAL) long seconds) {
-      return MemoizedRetryOnTimeOutButNotOnAuthorizationExceptionSupplier.create(authException,
-              compose(new Function<Credentials, String>() {
-                 public String apply(Credentials in) {
-                    // ID should be of the form project_id@developer.gserviceaccount.com 
-                    // OR (increasingly often) project_id-extended_uid@developer.gserviceaccount.com
-                    // where project_id is the NUMBER;
-                    // HERE we also accept simply "project" as the identity, if no "@" is present;
-                    // this is used in tests, but not sure if it is valid in the wild.
-                    String projectName = in.identity;
-                    if (projectName.indexOf("@") != -1) {
-                       projectName = Iterables.get(Splitter.on("@").split(projectName), 0);
-                       if (projectName.indexOf("-") != -1) {
-                          // if ID is of the form project_id-extended_uid@developer.gserviceaccount.com
-                          projectName = Iterables.get(Splitter.on("-").split(projectName), 0);
-                       }
-                    }
-                    return api.getProjectApi().get(projectName).name();
-                 }
-              }, creds), seconds, SECONDS);
+   static final class UseApiToResolveProjectName implements Function<Credentials, URI> {
+      public static final Pattern PROJECT_NUMBER_PATTERN = Pattern.compile("^([0-9]+)[@-].*");
+
+      @SkipEncoding({ '/', '=' })
+      @RequestFilters(OAuthAuthenticationFilter.class)
+      @OAuthScopes(COMPUTE_READONLY_SCOPE)
+      @Consumes(APPLICATION_JSON)
+      interface GetProject {
+         @Named("Projects:get")
+         @GET
+         @Path("/projects/{projectNumber}") Project get(@PathParam("projectNumber") String projectNumber);
+      }
+
+      private final GetProject api;
+      private final Supplier<URI> defaultEndpoint;
+      private final String identityName;
+
+      @Inject
+      UseApiToResolveProjectName(GetProject api, @Provider Supplier<URI> defaultEndpoint, ProviderMetadata metadata) {
+         this.api = api;
+         this.defaultEndpoint = defaultEndpoint;
+         this.identityName = metadata.getApiMetadata().getIdentityName();
+      }
+
+      @Override public URI apply(Credentials in) {
+         Matcher matcher = PROJECT_NUMBER_PATTERN.matcher(in.identity);
+         checkArgument(matcher.find(), "Identity %s is malformed. Should be %s", in.identity, identityName);
+         return URI.create(defaultEndpoint.get() + "/projects/" + api.get(matcher.group(1)).name());
+      }
    }
 }

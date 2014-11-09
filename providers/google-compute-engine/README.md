@@ -26,7 +26,7 @@ FAQ:
 
 * Q. What is the identity for GCE?
 
-A. the identity is the developer email which can be obtained from the admin GUI. Its usually something in the form: <my account id>@developer.gserviceaccount.com
+A. the identity is the developer email which can be obtained from the admin GUI. Its usually something in the form: [PROJECT_ID](https://cloud.google.com/compute/docs/overview#projectids)@developer.gserviceaccount.com
 
 * Q. What is the credential for GCE
 
@@ -50,12 +50,19 @@ Running the live tests:
 
 1. Place the following in your ~/.m2/settings.xml in a profile enabled when live:
 ```
-    <test.google-compute-engine.identity>YOUR_ACCOUNT_NUMBER@developer.gserviceaccount.com</test.google-compute-engine.identity>
+    <test.google-compute-engine.identity>PROJECT_ID@developer.gserviceaccount.com</test.google-compute-engine.identity>
     <test.google-compute-engine.credential>-----BEGIN RSA PRIVATE KEY-----
 MIICXgIBAAKBgQRRbRqVDtJLN1MO/xJoKqZuphDeBh5jIKueW3aNIiWs1XFcct+h
 -- this text is literally from your <my_key>.pem
 aH7xmpHSTbbXmQkuuv+z8EKijigprd/FoJpTX1f5/R+4wQ==
 -----END RSA PRIVATE KEY-----</test.google-compute-engine.credential>
+  </properties>
+```
+Or, if using an existing OAuth Bearer Token for authentication.
+```
+    <test.google-compute-engine.identity>PROJECT_ID@developer.gserviceaccount.com</test.google-compute-engine.identity>
+    <test.google-compute-engine.credential>EXISTING_BEARER_TOKEN</test.google-compute-engine.credential>
+    <test.jclouds.oauth.credential-type>bearerTokenCredentials</test.jclouds.oauth.credential-type>
   </properties>
 ```
 

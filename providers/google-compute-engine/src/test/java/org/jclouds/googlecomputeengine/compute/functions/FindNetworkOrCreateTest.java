@@ -36,8 +36,6 @@ import org.testng.annotations.Test;
 
 import com.google.common.base.Predicate;
 import com.google.common.base.Predicates;
-import com.google.common.base.Supplier;
-import com.google.common.base.Suppliers;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.LoadingCache;
 import com.google.inject.AbstractModule;
@@ -45,7 +43,6 @@ import com.google.inject.Guice;
 
 @Test
 public class FindNetworkOrCreateTest {
-   private static final Supplier<String> USER_PROJECT = Suppliers.ofInstance("party");
    private static final String BASE_URL = "https://www.googleapis.com/compute/v1/projects";
    private static final Network NETWORK = Network.create( //
          "abcd", // id
@@ -60,7 +57,7 @@ public class FindNetworkOrCreateTest {
       GoogleComputeEngineApi api = createMock(GoogleComputeEngineApi.class);
       NetworkApi nwApi = createMock(NetworkApi.class);
 
-      expect(api.getNetworkApi(USER_PROJECT.get())).andReturn(nwApi).atLeastOnce();
+      expect(api.networks()).andReturn(nwApi).atLeastOnce();
 
       expect(nwApi.get("this-network")).andReturn(NETWORK);
 
@@ -70,9 +67,9 @@ public class FindNetworkOrCreateTest {
 
       Predicate<AtomicReference<Operation>> operationDone = Predicates.alwaysFalse(); // No op should be created!
 
-      CreateNetworkIfNeeded creator = new CreateNetworkIfNeeded(api, USER_PROJECT, operationDone);
+      CreateNetworkIfNeeded creator = new CreateNetworkIfNeeded(api, operationDone);
 
-      FindNetworkOrCreate loader = new FindNetworkOrCreate(api, creator, USER_PROJECT);
+      FindNetworkOrCreate loader = new FindNetworkOrCreate(api, creator);
 
       LoadingCache<NetworkAndAddressRange, Network> cache = CacheBuilder.newBuilder().build(loader);
 
@@ -91,7 +88,7 @@ public class FindNetworkOrCreateTest {
 
       Operation createOp = new ParseGlobalOperationTest().expected();
 
-      expect(api.getNetworkApi(USER_PROJECT.get())).andReturn(nwApi).atLeastOnce();
+      expect(api.networks()).andReturn(nwApi).atLeastOnce();
 
       expect(nwApi.createInIPv4Range("this-network", "0.0.0.0/0")).andReturn(createOp);
       expect(resources.operation(createOp.selfLink())).andReturn(createOp);
@@ -106,9 +103,9 @@ public class FindNetworkOrCreateTest {
 
       AtomicOperationDone pred = atomicOperationDone(resources);
 
-      CreateNetworkIfNeeded creator = new CreateNetworkIfNeeded(api, USER_PROJECT, pred);
+      CreateNetworkIfNeeded creator = new CreateNetworkIfNeeded(api, pred);
 
-      FindNetworkOrCreate loader = new FindNetworkOrCreate(api, creator, USER_PROJECT);
+      FindNetworkOrCreate loader = new FindNetworkOrCreate(api, creator);
 
       LoadingCache<NetworkAndAddressRange, Network> cache = CacheBuilder.newBuilder().build(loader);
 

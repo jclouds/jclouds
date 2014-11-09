@@ -42,7 +42,7 @@ public class ParseProjectTest extends BaseGoogleComputeEngineParseTest<Project> 
    public Project expected() {
       return Project.create( //
             "13024414184846275913", // id
-            URI.create(BASE_URL + "/party"), // selfLink
+            URI.create(BASE_URL + "/761326798069"), // selfLink
             "party", // name
             "", // description
             Metadata.create("efgh").put("propA", "valueA").put("propB", "valueB"), // commonInstanceMetadata

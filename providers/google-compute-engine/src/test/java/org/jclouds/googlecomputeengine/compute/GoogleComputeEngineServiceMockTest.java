@@ -46,10 +46,9 @@ import com.squareup.okhttp.mockwebserver.MockResponse;
 public class GoogleComputeEngineServiceMockTest extends BaseGoogleComputeEngineApiMockTest {
 
    public void templateMatch() throws Exception {
-      server.enqueue(jsonResponse("/project.json"));
       server.enqueue(singleRegionSingleZoneResponse());
       server.enqueue(jsonResponse("/image_list.json"));
-      server.enqueue(jsonResponse("/image_list_debian.json")); // per GCE_IMAGE_PROJECTS = "debian-cloud"
+      server.enqueue(jsonResponse("/image_list_debian.json")); // per IMAGE_PROJECTS = "debian-cloud"
       server.enqueue(jsonResponse("/aggregated_machinetype_list.json"));
 
       ComputeService computeService = computeService();
@@ -68,7 +67,6 @@ public class GoogleComputeEngineServiceMockTest extends BaseGoogleComputeEngineA
       Template toMatch = computeService.templateBuilder().imageId(template.getImage().getId()).build();
       assertEquals(toMatch.getImage(), template.getImage());
 
-      assertSent(server, "GET", "/projects/party");
       assertSent(server, "GET", "/projects/party/regions");
       assertSent(server, "GET", "/projects/party/global/images");
       assertSent(server, "GET", "/projects/debian-cloud/global/images");
@@ -77,7 +75,6 @@ public class GoogleComputeEngineServiceMockTest extends BaseGoogleComputeEngineA
 
    public void networksAndFirewallDeletedWhenAllGroupNodesAreTerminated() throws IOException, InterruptedException {
       server.enqueue(instanceWithNetworkAndStatus("test-delete-networks", "test-network", RUNNING));
-      server.enqueue(jsonResponse("/project.json"));
       server.enqueue(singleRegionSingleZoneResponse());
       server.enqueue(jsonResponse("/aggregated_machinetype_list.json"));
       server.enqueue(jsonResponse("/operation.json"));
@@ -95,7 +92,6 @@ public class GoogleComputeEngineServiceMockTest extends BaseGoogleComputeEngineA
       computeService.destroyNode(url("/jclouds/zones/us-central1-a/instances/test-delete-networks"));
 
       assertSent(server, "GET", "/jclouds/zones/us-central1-a/instances/test-delete-networks");
-      assertSent(server, "GET", "/projects/party");
       assertSent(server, "GET", "/projects/party/regions");
       assertSent(server, "GET", "/projects/party/aggregated/machineTypes");
       assertSent(server, "DELETE", "/jclouds/zones/us-central1-a/instances/test-delete-networks");
@@ -111,7 +107,6 @@ public class GoogleComputeEngineServiceMockTest extends BaseGoogleComputeEngineA
    }
 
    public void listAssignableLocations() throws Exception {
-      server.enqueue(jsonResponse("/project.json"));
       server.enqueue(singleRegionSingleZoneResponse());
 
       ComputeService computeService = computeService();
@@ -133,12 +128,10 @@ public class GoogleComputeEngineServiceMockTest extends BaseGoogleComputeEngineA
       assertTrue(firstZone.getIso3166Codes().isEmpty());
       assertTrue(firstZone.getParent().getIso3166Codes().isEmpty());
 
-      assertSent(server, "GET", "/projects/party");
       assertSent(server, "GET", "/projects/party/regions");
    }
 
    public void listNodes() throws Exception {
-      server.enqueue(jsonResponse("/project.json"));
       server.enqueue(aggregatedListWithInstanceNetworkAndStatus("test-0", "test-network", RUNNING));
       server.enqueue(singleRegionSingleZoneResponse());
       server.enqueue(jsonResponse("/aggregated_machinetype_list.json"));
@@ -148,17 +141,15 @@ public class GoogleComputeEngineServiceMockTest extends BaseGoogleComputeEngineA
       NodeMetadata node = (NodeMetadata) nodes.iterator().next();
       assertNull(node.getImageId()); // not pre-cached by createNodes
 
-      assertSent(server, "GET", "/projects/party");
       assertSent(server, "GET", "/projects/party/aggregated/instances");
       assertSent(server, "GET", "/projects/party/regions");
       assertSent(server, "GET", "/projects/party/aggregated/machineTypes");
    }
 
    public void createNodeWhenNetworkNorFirewallExistDoesNotExist() throws Exception {
-      server.enqueue(jsonResponse("/project.json"));
       server.enqueue(singleRegionSingleZoneResponse());
       server.enqueue(jsonResponse("/image_list.json"));
-      server.enqueue(jsonResponse("/image_list_debian.json")); // per GCE_IMAGE_PROJECTS = "debian-cloud"
+      server.enqueue(jsonResponse("/image_list_debian.json")); // per IMAGE_PROJECTS = "debian-cloud"
       server.enqueue(jsonResponse("/aggregated_machinetype_list.json"));
       server.enqueue(new MockResponse().setResponseCode(404)); // Network
       server.enqueue(new MockResponse().setResponseCode(404)); // Network again?
@@ -183,7 +174,6 @@ public class GoogleComputeEngineServiceMockTest extends BaseGoogleComputeEngineA
       // prove our caching works.
       assertEquals(node.getImageId(), template.getImage().getId());
 
-      assertSent(server, "GET", "/projects/party");
       assertSent(server, "GET", "/projects/party/regions");
       assertSent(server, "GET", "/projects/party/global/images");
       assertSent(server, "GET", "/projects/debian-cloud/global/images");
@@ -278,11 +268,6 @@ public class GoogleComputeEngineServiceMockTest extends BaseGoogleComputeEngineA
       return new MockResponse().setBody(
             stringFromResource("/aggregated_instance_list.json").replace("test-0", instanceName)
                   .replace("default", networkName).replace("RUNNING", status.toString()));
-   }
-
-   private MockResponse diskResponseForInstance(String instanceName) {
-      return new MockResponse().setBody(
-            stringFromResource("/disk_get.json").replace("testimage1", instanceName + "-" + "TODO"));
    }
 }
 

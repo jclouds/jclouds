@@ -68,7 +68,7 @@ public class InstanceApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
    @Override
    protected GoogleComputeEngineApi create(Properties props, Iterable<Module> modules) {
       GoogleComputeEngineApi api = super.create(props, modules);
-      List<Image> list = api.getImageApi("centos-cloud").list(filter("name eq centos.*")).next();
+      List<Image> list = api.images().listInProject("centos-cloud", filter("name eq centos.*")).next();
       URI imageUri = FluentIterable.from(list)
                         .filter(new Predicate<Image>() {
                            @Override
@@ -82,10 +82,10 @@ public class InstanceApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
                         .selfLink();
 
       instance = NewInstance.create(
-            getDefaultMachineTypeUrl(userProject.get()), // machineType
             INSTANCE_NAME, // name
-            getNetworkUrl(userProject.get(), INSTANCE_NETWORK_NAME), // network
-            Arrays.asList(Disk.newBootDisk(imageUri), Disk.existingDisk(getDiskUrl(userProject.get(), DISK_NAME))), // disks
+            getDefaultMachineTypeUrl(), // machineType
+            getNetworkUrl(INSTANCE_NETWORK_NAME), // network
+            Arrays.asList(Disk.newBootDisk(imageUri), Disk.existingDisk(getDiskUrl(DISK_NAME))), // disks
             "a description" // description
       );
       instance.tags().items().addAll(Arrays.asList("foo", "bar"));
@@ -94,17 +94,17 @@ public class InstanceApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
    }
 
    private InstanceApi api() {
-      return api.getInstanceApi(userProject.get(), DEFAULT_ZONE_NAME);
+      return api.instancesInZone(DEFAULT_ZONE_NAME);
    }
 
    private DiskApi diskApi() {
-      return api.getDiskApi(userProject.get(), DEFAULT_ZONE_NAME);
+      return api.disksInZone(DEFAULT_ZONE_NAME);
    }
 
    @Test(groups = "live")
    public void testInsertInstance() {
       // need to insert the network first
-      assertOperationDoneSuccessfully(api.getNetworkApi(userProject.get()).createInIPv4Range
+      assertOperationDoneSuccessfully(api.networks().createInIPv4Range
               (INSTANCE_NETWORK_NAME, IPV4_RANGE));
 
       assertOperationDoneSuccessfully(diskApi().create("instance-live-test-disk", DEFAULT_DISK_SIZE_GB));
@@ -151,7 +151,7 @@ public class InstanceApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
       Instance originalInstance = api().get(INSTANCE_NAME);
       assertOperationDoneSuccessfully(api().attachDisk(INSTANCE_NAME,
                   new AttachDiskOptions().type(DiskType.PERSISTENT)
-                        .source(getDiskUrl(userProject.get(), ATTACH_DISK_NAME)).mode(DiskMode.READ_ONLY)
+                        .source(getDiskUrl(ATTACH_DISK_NAME)).mode(DiskMode.READ_ONLY)
                         .deviceName(ATTACH_DISK_DEVICE_NAME)));
 
       Instance modifiedInstance = api().get(INSTANCE_NAME);
@@ -200,7 +200,7 @@ public class InstanceApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
    public void testDeleteInstance() {
       assertOperationDoneSuccessfully(api().delete(INSTANCE_NAME));
       assertOperationDoneSuccessfully(diskApi().delete(DISK_NAME));
-      Operation deleteNetwork = api.getNetworkApi(userProject.get()).delete(INSTANCE_NETWORK_NAME);
+      Operation deleteNetwork = api.networks().delete(INSTANCE_NETWORK_NAME);
       assertOperationDoneSuccessfully(deleteNetwork);
    }
 
@@ -215,7 +215,7 @@ public class InstanceApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
       try {
          waitOperationDone(api().delete(INSTANCE_NAME));
          waitOperationDone(diskApi().delete(DISK_NAME));
-         waitOperationDone(api.getNetworkApi(userProject.get()).delete(INSTANCE_NETWORK_NAME));
+         waitOperationDone(api.networks().delete(INSTANCE_NETWORK_NAME));
       } catch (Exception e) {
          // we don't really care about any exception here, so just delete away.
        }

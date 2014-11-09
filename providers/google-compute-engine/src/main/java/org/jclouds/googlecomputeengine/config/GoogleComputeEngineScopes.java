@@ -14,28 +14,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jclouds.googlecomputeengine;
+package org.jclouds.googlecomputeengine.config;
 
-import java.util.Properties;
+/** OAuth scopes needed for requests. */
+public final class GoogleComputeEngineScopes {
 
-import org.jclouds.googlecomputeengine.config.GoogleComputeEngineScopes;
-import org.jclouds.googlecomputeengine.internal.TestProperties;
-import org.jclouds.oauth.v2.internal.BaseOAuthAuthenticatedApiLiveTest;
-import org.testng.annotations.Test;
+   public static final String COMPUTE_SCOPE = "https://www.googleapis.com/auth/compute";
 
-@Test(groups = "live")
-public class GoogleComputeEngineAuthenticatedRestContextLiveTest extends BaseOAuthAuthenticatedApiLiveTest<GoogleComputeEngineApi> {
+   public static final String COMPUTE_READONLY_SCOPE = "https://www.googleapis.com/auth/compute.readonly";
 
-   public GoogleComputeEngineAuthenticatedRestContextLiveTest() {
-      provider = "google-compute-engine";
-   }
-
-   @Override
-   public String getScopes() {
-      return GoogleComputeEngineScopes.COMPUTE_SCOPE;
-   }
-
-   @Override protected Properties setupProperties() {
-      return TestProperties.apply(super.setupProperties());
+   private GoogleComputeEngineScopes() {
    }
 }

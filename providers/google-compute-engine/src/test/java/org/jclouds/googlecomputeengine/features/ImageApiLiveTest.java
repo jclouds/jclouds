@@ -18,7 +18,6 @@ package org.jclouds.googlecomputeengine.features;
 
 import static org.jclouds.googlecomputeengine.options.ListOptions.Builder.maxResults;
 import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertNotNull;
 
 import java.net.URI;
 import java.util.Iterator;
@@ -39,21 +38,17 @@ public class ImageApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
    private Image image;
    private URI diskURI;
 
-   private ImageApi api() {
-      return api.getImageApi("centos-cloud");
-   }
-
-   private ImageApi imageApi(){
-      return api.getImageApi(userProject.get());
+   private ImageApi api(){
+      return api.images();
    }
 
    private DiskApi diskApi() {
-      return api.getDiskApi(userProject.get(), DEFAULT_ZONE_NAME);
+      return api.disksInZone(DEFAULT_ZONE_NAME);
    }
 
    @Test(groups = "live")
    public void testListImage() {
-      Iterator<ListPage<Image>> images = api().list(maxResults(1));
+      Iterator<ListPage<Image>> images = api().listInProject("centos-cloud", maxResults(1));
 
       List<Image> imageAsList = images.next();
 
@@ -62,16 +57,9 @@ public class ImageApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
       this.image = imageAsList.get(0);
    }
 
-
    @Test(groups = "live", dependsOnMethods = "testListImage")
    public void testGetImage() {
-      Image image = api().get(this.image.name());
-      assertNotNull(image);
-      assertImageEquals(image, this.image);
-   }
-
-   private void assertImageEquals(Image result, Image expected) {
-      assertEquals(result.name(), expected.name());
+      assertEquals(image, api().get(image.selfLink()));
    }
 
    @Test(groups = "live")
@@ -83,25 +71,25 @@ public class ImageApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
 
    @Test(groups = "live", dependsOnMethods = "testInsertDisk")
    public void testCreateImageFromPD(){
-      assertOperationDoneSuccessfully(imageApi().createFromDisk(IMAGE_NAME, diskURI.toString()));
+      assertOperationDoneSuccessfully(api().createFromDisk(IMAGE_NAME, diskURI.toString()));
    }
 
    @Test(groups = "live", dependsOnMethods = "testCreateImageFromPD")
    public void testGetCreatedImage(){
-      Image image = imageApi().get(IMAGE_NAME);
+      Image image = api().get(IMAGE_NAME);
       assertImageEquals(image);
    }
 
    @Test(groups = "live", dependsOnMethods = "testGetCreatedImage")
    public void testCleanup(){
-      assertOperationDoneSuccessfully(imageApi().delete(IMAGE_NAME));
+      assertOperationDoneSuccessfully(api().delete(IMAGE_NAME));
       assertOperationDoneSuccessfully(diskApi().delete(DISK_NAME));
    }
 
    private void assertImageEquals(Image result) {
       assertEquals(result.name(), IMAGE_NAME);
       assertEquals(result.sourceType(), "RAW");
-      assertEquals(result.selfLink(), getImageUrl(userProject.get(), IMAGE_NAME) );
+      assertEquals(result.selfLink(), getImageUrl(IMAGE_NAME) );
    }
 }
 
