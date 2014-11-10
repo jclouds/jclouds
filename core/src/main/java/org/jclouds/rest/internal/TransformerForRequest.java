@@ -24,7 +24,6 @@ import static javax.ws.rs.core.MediaType.APPLICATION_XML;
 import java.io.InputStream;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
-import java.lang.reflect.WildcardType;
 import java.net.URI;
 import java.util.Set;
 
@@ -63,7 +62,6 @@ import com.google.common.base.Function;
 import com.google.common.base.Optional;
 import com.google.common.reflect.Invokable;
 import com.google.common.reflect.TypeToken;
-import com.google.common.util.concurrent.ListenableFuture;
 import com.google.inject.Injector;
 import com.google.inject.Key;
 import com.google.inject.TypeLiteral;
@@ -73,8 +71,7 @@ public class TransformerForRequest implements Function<HttpRequest, Function<Htt
    private final Injector injector;
    private final GetAcceptHeaders getAcceptHeaders;
 
-   @Inject
-   TransformerForRequest(Injector injector, Factory parserFactory, GetAcceptHeaders getAcceptHeaders) {
+   @Inject TransformerForRequest(Injector injector, Factory parserFactory, GetAcceptHeaders getAcceptHeaders) {
       this.injector = injector;
       this.parserFactory = parserFactory;
       this.getAcceptHeaders = getAcceptHeaders;
@@ -106,51 +103,29 @@ public class TransformerForRequest implements Function<HttpRequest, Function<Htt
       return transformer;
    }
 
-   private static final TypeToken<ListenableFuture<Boolean>> futureBooleanToken = new TypeToken<ListenableFuture<Boolean>>() {
-      private static final long serialVersionUID = 1L;
-   };
-   private static final TypeToken<ListenableFuture<String>> futureStringToken = new TypeToken<ListenableFuture<String>>() {
-      private static final long serialVersionUID = 1L;
-   };
-   private static final TypeToken<ListenableFuture<Void>> futureVoidToken = new TypeToken<ListenableFuture<Void>>() {
-      private static final long serialVersionUID = 1L;
-   };
-   private static final TypeToken<ListenableFuture<URI>> futureURIToken = new TypeToken<ListenableFuture<URI>>() {
-      private static final long serialVersionUID = 1L;
-   };
-   private static final TypeToken<ListenableFuture<InputStream>> futureInputStreamToken = new TypeToken<ListenableFuture<InputStream>>() {
-      private static final long serialVersionUID = 1L;
-   };
-   private static final TypeToken<ListenableFuture<HttpResponse>> futureHttpResponseToken = new TypeToken<ListenableFuture<HttpResponse>>() {
-      private static final long serialVersionUID = 1L;
-   };
-
    @SuppressWarnings("unchecked")
    @VisibleForTesting
-   protected Key<? extends Function<HttpResponse, ?>> getParserOrThrowException(Invocation invocation) {
+   Key<? extends Function<HttpResponse, ?>> getParserOrThrowException(Invocation invocation) {
       Invokable<?, ?> invoked = invocation.getInvokable();
       Set<String> acceptHeaders = getAcceptHeaders.apply(invocation);
       ResponseParser annotation = invoked.getAnnotation(ResponseParser.class);
       Class<?> rawReturnType = invoked.getReturnType().getRawType();
       if (annotation == null) {
-         if (rawReturnType.equals(void.class) || invoked.getReturnType().equals(futureVoidToken)) {
+         if (rawReturnType.equals(void.class)) {
             return Key.get(ReleasePayloadAndReturn.class);
-         } else if (rawReturnType.equals(boolean.class) || rawReturnType.equals(Boolean.class)
-               || invoked.getReturnType().equals(futureBooleanToken)) {
+         } else if (rawReturnType.equals(boolean.class) || rawReturnType.equals(Boolean.class)) {
             return Key.get(ReturnTrueIf2xx.class);
-         } else if (rawReturnType.equals(InputStream.class)
-               || invoked.getReturnType().equals(futureInputStreamToken)) {
+         } else if (rawReturnType.equals(InputStream.class)) {
             return Key.get(ReturnInputStream.class);
-         } else if (rawReturnType.equals(HttpResponse.class)
-               || invoked.getReturnType().equals(futureHttpResponseToken)) {
+         } else if (rawReturnType.equals(HttpResponse.class)) {
             return Key.get(Class.class.cast(IdentityFunction.class));
          } else if (acceptHeaders.contains(APPLICATION_JSON)) {
             return getJsonParserKeyForMethod(invoked);
          } else if (acceptHeaders.contains(APPLICATION_XML) || invoked.isAnnotationPresent(JAXBResponseParser.class)) {
             return getJAXBParserKeyForMethod(invoked);
-         } else if (rawReturnType.equals(String.class) || invoked.getReturnType().equals(futureStringToken)) {
+         } else if (rawReturnType.equals(String.class)) {
             return Key.get(ReturnStringIf2xx.class);
-         } else if (rawReturnType.equals(URI.class) || invoked.getReturnType().equals(futureURIToken)) {
+         } else if (rawReturnType.equals(URI.class)) {
             return Key.get(ParseURIFromListOrLocationHeaderIf20x.class);
          } else {
             throw new IllegalStateException("You must specify a ResponseParser annotation on: " + invoked.toString());
@@ -164,8 +139,9 @@ public class TransformerForRequest implements Function<HttpRequest, Function<Htt
       Optional<Type> configuredReturnVal = Optional.absent();
       if (invoked.isAnnotationPresent(JAXBResponseParser.class)) {
          Type configuredClass = invoked.getAnnotation(JAXBResponseParser.class).value();
-         configuredReturnVal = configuredClass.equals(NullType.class) ? Optional.<Type> absent() : Optional
-               .<Type> of(configuredClass);
+         configuredReturnVal = configuredClass.equals(NullType.class)
+               ? Optional.<Type>absent()
+               : Optional.<Type>of(configuredClass);
       }
       Type returnVal = configuredReturnVal.or(getReturnTypeFor(invoked.getReturnType()));
       Type parserType = newParameterizedType(ParseXMLWithJAXB.class, returnVal);
@@ -177,6 +153,11 @@ public class TransformerForRequest implements Function<HttpRequest, Function<Htt
       ParameterizedType parserType;
       if (invoked.isAnnotationPresent(Unwrap.class)) {
          parserType = newParameterizedType(UnwrapOnlyJsonValue.class, getReturnTypeFor(invoked.getReturnType()));
+      } else if (invoked.isAnnotationPresent(Transform.class)) {
+         // At this point, there's no user-configured response parser. Make a default one from Transform's input.
+         TypeToken<? extends Function> fn = TypeToken.of(invoked.getAnnotation(Transform.class).value());
+         Type fnInput = ((ParameterizedType) fn.getSupertype(Function.class).getType()).getActualTypeArguments()[0];
+         parserType = newParameterizedType(ParseJson.class, fnInput);
       } else {
          parserType = newParameterizedType(ParseJson.class, getReturnTypeFor(invoked.getReturnType()));
       }
@@ -187,11 +168,6 @@ public class TransformerForRequest implements Function<HttpRequest, Function<Htt
       Type returnVal = typeToken.getType();
       if (typeToken.getRawType().getTypeParameters().length == 0) {
          returnVal = typeToken.getRawType();
-      } else if (typeToken.getRawType().equals(ListenableFuture.class)) {
-         ParameterizedType futureType = (ParameterizedType) typeToken.getType();
-         returnVal = futureType.getActualTypeArguments()[0];
-         if (returnVal instanceof WildcardType)
-            returnVal = WildcardType.class.cast(returnVal).getUpperBounds()[0];
       }
       return returnVal;
    }

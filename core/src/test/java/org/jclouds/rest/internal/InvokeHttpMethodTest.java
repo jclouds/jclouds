@@ -44,7 +44,6 @@ import com.google.common.base.Functions;
 import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
-import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.TimeLimiter;
 
 @Test(groups = "unit", singleThreaded = true)
@@ -78,7 +77,6 @@ public class InvokeHttpMethodTest {
    private InvocationConfig config;
    private InvokeHttpMethod invokeHttpMethod;
 
-   private ListenableFuture<HttpResponse> future;
 
    @SuppressWarnings("unchecked")
    @BeforeMethod
@@ -87,7 +85,6 @@ public class InvokeHttpMethodTest {
       timeLimiter = createMock(TimeLimiter.class);
       fallback = createMock(org.jclouds.Fallback.class);
       config = createMock(InvocationConfig.class);
-      future = createMock(ListenableFuture.class);
       invokeHttpMethod = new InvokeHttpMethod(toRequest, http, transformerForRequest, timeLimiter, config);
       expect(config.getCommandName(get)).andReturn("ns:get");
       expect(config.getFallback(get)).andReturn(fallback);
@@ -95,21 +92,21 @@ public class InvokeHttpMethodTest {
 
    @AfterMethod
    void verifyMocks() {
-      verify(http, timeLimiter, fallback, config, future);
+      verify(http, timeLimiter, fallback, config);
    }
 
    public void testMethodWithTimeoutRunsTimeLimiter() throws Exception {
       expect(config.getTimeoutNanos(get)).andReturn(Optional.of(250000000l));
       InvokeAndTransform invoke = invokeHttpMethod.new InvokeAndTransform("ns:get", getCommand);
       expect(timeLimiter.callWithTimeout(invoke, 250000000, TimeUnit.NANOSECONDS, true)).andReturn(response);
-      replay(http, timeLimiter, fallback, config, future);
+      replay(http, timeLimiter, fallback, config);
       invokeHttpMethod.apply(get);
    }
 
    public void testMethodWithNoTimeoutCallGetDirectly() throws Exception {
       expect(config.getTimeoutNanos(get)).andReturn(Optional.<Long> absent());
       expect(http.invoke(new HttpCommand(getRequest))).andReturn(response);
-      replay(http, timeLimiter, fallback, config, future);
+      replay(http, timeLimiter, fallback, config);
       invokeHttpMethod.apply(get);
    }
 
@@ -120,7 +117,7 @@ public class InvokeHttpMethodTest {
       expect(config.getTimeoutNanos(get)).andReturn(Optional.<Long> absent());
       expect(http.invoke(new HttpCommand(getRequest))).andThrow(exception);
       expect(fallback.createOrPropagate(exception)).andReturn(fallbackResponse);
-      replay(http, timeLimiter, fallback, config, future);
+      replay(http, timeLimiter, fallback, config);
       assertEquals(invokeHttpMethod.apply(get), fallbackResponse);
    }
 
@@ -130,7 +127,7 @@ public class InvokeHttpMethodTest {
       InvokeAndTransform invoke = invokeHttpMethod.new InvokeAndTransform("ns:get", getCommand);
       expect(timeLimiter.callWithTimeout(invoke, 250000000, TimeUnit.NANOSECONDS, true)).andThrow(exception);
       expect(fallback.createOrPropagate(exception)).andReturn(fallbackResponse);
-      replay(http, timeLimiter, fallback, config, future);
+      replay(http, timeLimiter, fallback, config);
       assertEquals(invokeHttpMethod.apply(get), fallbackResponse);
    }
 }
