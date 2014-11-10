@@ -30,11 +30,8 @@ import javax.ws.rs.core.MediaType;
 import org.jclouds.googlecomputeengine.GoogleComputeEngineApi;
 import org.jclouds.googlecomputeengine.domain.Metadata;
 import org.jclouds.googlecomputeengine.domain.NewInstance;
-import org.jclouds.googlecomputeengine.domain.NewInstance.Disk;
+import org.jclouds.googlecomputeengine.domain.AttachDisk;
 import org.jclouds.googlecomputeengine.internal.BaseGoogleComputeEngineExpectTest;
-import org.jclouds.googlecomputeengine.options.AttachDiskOptions;
-import org.jclouds.googlecomputeengine.options.AttachDiskOptions.DiskMode;
-import org.jclouds.googlecomputeengine.options.AttachDiskOptions.DiskType;
 import org.jclouds.googlecomputeengine.parse.ParseInstanceListTest;
 import org.jclouds.googlecomputeengine.parse.ParseInstanceSerialOutputTest;
 import org.jclouds.googlecomputeengine.parse.ParseInstanceTest;
@@ -158,7 +155,7 @@ public class InstanceApiExpectTest extends BaseGoogleComputeEngineExpectTest<Goo
             "test-1", // name
             URI.create(BASE_URL + "/party/zones/us-central1-a/machineTypes/n1-standard-1"), // machineType
             URI.create(BASE_URL + "/party/global/networks/default"), // network
-            Arrays.asList(Disk.existingBootDisk(URI.create(BASE_URL + "/party/zones/us-central1-a/disks/test"))),
+            Arrays.asList(AttachDisk.existingBootDisk(URI.create(BASE_URL + "/party/zones/us-central1-a/disks/test"))),
             "desc" // description
       );
 
@@ -348,10 +345,13 @@ public class InstanceApiExpectTest extends BaseGoogleComputeEngineExpectTest<Goo
               TOKEN_RESPONSE, attach, attachResponse).instancesInZone("us-central1-a");
 
       assertEquals(api.attachDisk("test-1",
-              new AttachDiskOptions()
-                      .mode(DiskMode.READ_ONLY)
-                      .source(URI.create(BASE_URL + "/party/zones/us-central1-a/disks/testimage1"))
-                      .type(DiskType.PERSISTENT)),
+              AttachDisk.create(AttachDisk.Type.PERSISTENT,
+                                       AttachDisk.Mode.READ_ONLY,
+                                       URI.create(BASE_URL + "/party/zones/us-central1-a/disks/testimage1"),
+                                       null,
+                                       false,
+                                       null,
+                                       true)),
               new ParseZoneOperationTest().expected());
    }
 
@@ -371,12 +371,9 @@ public class InstanceApiExpectTest extends BaseGoogleComputeEngineExpectTest<Goo
       InstanceApi api = requestsSendResponses(requestForScopes(COMPUTE_SCOPE),
               TOKEN_RESPONSE, attach, attachResponse).instancesInZone("us-central1-a");
 
-      api.attachDisk("test-1",
-              new AttachDiskOptions()
-                      .mode(DiskMode.READ_ONLY)
-                      .source(URI.create(BASE_URL + "/party/zones/us-central1-a/disks/testimage1"))
-                      .type(DiskType.PERSISTENT));
-
+      api.attachDisk("test-1", AttachDisk.create(AttachDisk.Type.PERSISTENT, AttachDisk.Mode.READ_ONLY,
+                                                        URI.create(BASE_URL + "/party/zones/us-central1-a/disks/testimage1"),
+                                                        null, false, null, true));
    }
 
    public void testDetachDiskResponseIs2xx() {
@@ -416,4 +413,26 @@ public class InstanceApiExpectTest extends BaseGoogleComputeEngineExpectTest<Goo
       api.detachDisk("test-1", "test-disk-1");
    }
 
+   @Test(expectedExceptions = ResourceNotFoundException.class)
+   public void testSetDiskAutoDeleteResponseIs4xx() {
+      HttpRequest setTrue = HttpRequest
+            .builder()
+            .method("POST")
+            .endpoint("https://www.googleapis" +
+                    ".com/compute/v1/projects/party/zones/us-central1-a/instances/test-1/setDiskAutoDelete" +
+                    "?deviceName=test-disk-1&autoDelete=true")
+            .addHeader("Accept", "application/json")
+            .addHeader("Authorization", "Bearer " + TOKEN)
+            .build();
+
+      HttpResponse setTrueResponse = HttpResponse.builder().statusCode(404).build();
+
+      InstanceApi api = requestsSendResponses(requestForScopes(COMPUTE_SCOPE),
+              TOKEN_RESPONSE, setTrue, setTrueResponse).instancesInZone("us-central1-a");
+
+      api.setDiskAutoDelete("test-1", "test-disk-1", true);
+   }
+
 }
+
+

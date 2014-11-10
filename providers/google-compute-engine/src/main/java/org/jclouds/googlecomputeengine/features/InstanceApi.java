@@ -36,12 +36,12 @@ import javax.ws.rs.QueryParam;
 import org.jclouds.Fallbacks.NullOnNotFoundOr404;
 import org.jclouds.googlecloud.domain.ListPage;
 import org.jclouds.googlecomputeengine.GoogleComputeEngineApi;
+import org.jclouds.googlecomputeengine.domain.AttachDisk;
 import org.jclouds.googlecomputeengine.domain.Instance;
 import org.jclouds.googlecomputeengine.domain.Metadata;
 import org.jclouds.googlecomputeengine.domain.NewInstance;
 import org.jclouds.googlecomputeengine.domain.Operation;
 import org.jclouds.googlecomputeengine.internal.BaseCallerArg0ToIteratorOfListPage;
-import org.jclouds.googlecomputeengine.options.AttachDiskOptions;
 import org.jclouds.googlecomputeengine.options.ListOptions;
 import org.jclouds.javax.annotation.Nullable;
 import org.jclouds.oauth.v2.filters.OAuthAuthenticationFilter;
@@ -107,7 +107,7 @@ public interface InstanceApi {
                                   @BinderParam(BindToJsonPayload.class)
                                   AccessConfig accessConfig,
                                   @QueryParam("network_interface") String networkInterfaceName);
-  
+
    /**
     * Deletes an access config from an instance's network interface.
     *
@@ -161,7 +161,7 @@ public interface InstanceApi {
    @Produces(APPLICATION_JSON)
    @Path("/{instance}/attachDisk")
    Operation attachDisk(@PathParam("instance") String instance,
-                        @BinderParam(BindToJsonPayload.class) AttachDiskOptions attachDiskOptions);
+                        @BinderParam(BindToJsonPayload.class) AttachDisk attachDiskOptions);
 
    /**
     * Detaches an attached disk from an instance
@@ -219,6 +219,20 @@ public interface InstanceApi {
                      @PayloadParam("fingerprint") String fingerprint);
 
    /**
+    * Sets the auto-delete flag for a disk attached to an instance
+    *
+    * @param instanceName The name of the instance
+    * @param deviceName Disk device name to modify.
+    * @param autoDelete Whether to auto-delete the disk when the instance is deleted
+    */
+   @Named("Instances:setDiskAutoDelete")
+   @POST
+   @Path("/{instance}/setDiskAutoDelete")
+   Operation setDiskAutoDelete(@PathParam("instance") String instanceName,
+                               @QueryParam("deviceName") String deviceName,
+                               @QueryParam("autoDelete") boolean autoDelete);
+
+   /**
     * Retrieves the list of instance resources available to the specified project.
     * By default the list as a maximum size of 100, if no options are provided or ListOptions#getMaxResults() has not
     * been set.
@@ -260,5 +274,6 @@ public interface InstanceApi {
          };
       }
    }
+
 }
 

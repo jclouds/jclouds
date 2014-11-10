@@ -17,13 +17,11 @@
 package org.jclouds.googlecomputeengine.domain;
 
 import static com.google.common.base.Preconditions.checkArgument;
-import static org.jclouds.googlecomputeengine.domain.Instance.AttachedDisk.Type.PERSISTENT;
 
 import java.net.URI;
 import java.util.Arrays;
 import java.util.List;
 
-import org.jclouds.googlecomputeengine.domain.Instance.AttachedDisk;
 import org.jclouds.googlecomputeengine.domain.Instance.NetworkInterface.AccessConfig;
 import org.jclouds.javax.annotation.Nullable;
 import org.jclouds.json.SerializedNames;
@@ -53,73 +51,13 @@ public abstract class NewInstance {
       }
    }
 
-   @AutoValue
-   public abstract static class Disk {
-      @AutoValue
-      abstract static class InitializeParams {
-         /** Override the default naming convention. */
-         @Nullable public abstract String diskName();
-
-         /** Set to use a size larger than the {@link #sourceImage()}. You need to repartition when set. */
-         @Nullable public abstract Long diskSizeGb();
-
-         /** The {@link org.jclouds.googlecomputeengine.domain.Image#selfLink() source image}. */
-         public abstract URI sourceImage();
-
-         static InitializeParams create(URI sourceImage) {
-            return create(null, null, sourceImage);
-         }
-
-         @SerializedNames({ "diskName", "diskSizeGb", "sourceImage" })
-         static InitializeParams create(String diskName, Long diskSizeGb, URI sourceImage) {
-            return new AutoValue_NewInstance_Disk_InitializeParams(diskName, diskSizeGb, sourceImage);
-         }
-
-         InitializeParams() {
-         }
-      }
-
-      public abstract AttachedDisk.Type type();
-
-      /** Use an existingBootDisk {@link org.jclouds.googlecomputeengine.domain.Disk#selfLink() boot disk}. */
-      @Nullable public abstract URI source();
-
-      /** Set to automatically create a boot disk */
-      @Nullable public abstract InitializeParams initializeParams();
-
-      public abstract boolean boot();
-
-      public abstract boolean autoDelete();
-
-      public static Disk existingBootDisk(URI existingBootDisk) {
-         return create(PERSISTENT, existingBootDisk, null, true, false);
-      }
-
-      public static Disk newBootDisk(URI sourceImage) {
-         return create(PERSISTENT, null, InitializeParams.create(sourceImage), true, true);
-      }
-
-      public static Disk existingDisk(URI existingDisk) {
-         return create(PERSISTENT, existingDisk, null, false, false);
-      }
-
-      @SerializedNames({ "type", "source", "initializeParams", "boot", "autoDelete" })
-      static Disk create(AttachedDisk.Type type, URI source, InitializeParams initializeParams, boolean boot,
-            boolean autoDelete) {
-         return new AutoValue_NewInstance_Disk(type, source, initializeParams, boot, autoDelete);
-      }
-
-      Disk() {
-      }
-   }
-
    public abstract String name();
 
    public abstract URI machineType();
 
    public abstract List<NetworkInterface> networkInterfaces();
 
-   public abstract List<Disk> disks();
+   public abstract List<AttachDisk> disks();
 
    @Nullable public abstract String description();
 
@@ -130,13 +68,13 @@ public abstract class NewInstance {
 
    /** Convenience for creating a new instance with only a boot disk and minimal parameters. */
    public static NewInstance create(String name, URI machineType, URI network, URI sourceImage) {
-      return create(name, machineType, network, Arrays.asList(Disk.newBootDisk(sourceImage)), null);
+      return create(name, machineType, network, Arrays.asList(AttachDisk.newBootDisk(sourceImage)), null);
    }
 
-   public static NewInstance create(String name, URI machineType, URI network, List<Disk> disks, String description) {
+   public static NewInstance create(String name, URI machineType, URI network, List<AttachDisk> disks, String description) {
       checkArgument(disks.get(0).boot(), "disk 0 must be a boot disk! %s", disks);
       boolean foundBoot = false;
-      for (Disk disk : disks) {
+      for (AttachDisk disk : disks) {
          if (disk.boot()) {
             checkArgument(!foundBoot, "There must be only one boot disk! %s", disks);
             foundBoot = true;
@@ -148,7 +86,7 @@ public abstract class NewInstance {
 
    @SerializedNames({ "name", "machineType", "networkInterfaces", "disks", "description", "tags", "metadata" })
    static NewInstance create(String name, URI machineType, List<NetworkInterface> networkInterfaces,
-         List<Disk> disks, String description, Tags tags, Metadata metadata) {
+         List<AttachDisk> disks, String description, Tags tags, Metadata metadata) {
       return new AutoValue_NewInstance(name, machineType, networkInterfaces, disks, description, tags, metadata);
    }
 

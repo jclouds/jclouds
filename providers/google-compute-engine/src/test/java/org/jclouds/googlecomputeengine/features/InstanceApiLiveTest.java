@@ -34,12 +34,9 @@ import org.jclouds.googlecomputeengine.domain.Instance;
 import org.jclouds.googlecomputeengine.domain.Instance.AttachedDisk;
 import org.jclouds.googlecomputeengine.domain.Metadata;
 import org.jclouds.googlecomputeengine.domain.NewInstance;
-import org.jclouds.googlecomputeengine.domain.NewInstance.Disk;
+import org.jclouds.googlecomputeengine.domain.AttachDisk;
 import org.jclouds.googlecomputeengine.domain.Operation;
 import org.jclouds.googlecomputeengine.internal.BaseGoogleComputeEngineApiLiveTest;
-import org.jclouds.googlecomputeengine.options.AttachDiskOptions;
-import org.jclouds.googlecomputeengine.options.AttachDiskOptions.DiskMode;
-import org.jclouds.googlecomputeengine.options.AttachDiskOptions.DiskType;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.Test;
 
@@ -53,7 +50,7 @@ import com.google.inject.Module;
 public class InstanceApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
 
    private static final String INSTANCE_NETWORK_NAME = "instance-api-live-test-network";
-   private static final String INSTANCE_NAME = "test-1";
+   private static final String INSTANCE_NAME = "instance-api-test-instance-1";
    private static final String DISK_NAME = "instance-live-test-disk";
    private static final String IPV4_RANGE = "10.0.0.0/8";
    private static final String METADATA_ITEM_KEY = "instanceLiveTestTestProp";
@@ -62,6 +59,8 @@ public class InstanceApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
    private static final String ATTACH_DISK_NAME = "instance-api-live-test-attach-disk";
    private static final String ATTACH_DISK_DEVICE_NAME = "attach-disk-1";
    private static final int DEFAULT_DISK_SIZE_GB = 10;
+
+   private static final String DEFAULT_BOOT_DISK_NAME = "persistent-disk-0";
 
    private NewInstance instance;
 
@@ -85,7 +84,8 @@ public class InstanceApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
             INSTANCE_NAME, // name
             getDefaultMachineTypeUrl(), // machineType
             getNetworkUrl(INSTANCE_NETWORK_NAME), // network
-            Arrays.asList(Disk.newBootDisk(imageUri), Disk.existingDisk(getDiskUrl(DISK_NAME))), // disks
+            Arrays.asList(AttachDisk.newBootDisk(imageUri),
+                  AttachDisk.existingDisk(getDiskUrl(DISK_NAME))), // disks
             "a description" // description
       );
       instance.tags().items().addAll(Arrays.asList("foo", "bar"));
@@ -107,7 +107,7 @@ public class InstanceApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
       assertOperationDoneSuccessfully(api.networks().createInIPv4Range
               (INSTANCE_NETWORK_NAME, IPV4_RANGE));
 
-      assertOperationDoneSuccessfully(diskApi().create("instance-live-test-disk", DEFAULT_DISK_SIZE_GB));
+      assertOperationDoneSuccessfully(diskApi().create(DISK_NAME, DEFAULT_DISK_SIZE_GB));
       assertOperationDoneSuccessfully(api().create(instance));
    }
 
@@ -116,6 +116,35 @@ public class InstanceApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
       Instance instance = api().get(INSTANCE_NAME);
       assertNotNull(instance);
       assertInstanceEquals(instance, this.instance);
+   }
+
+   @Test(groups = "live", dependsOnMethods = "testInsertInstance")
+   public void testSetDiskAutoDelete(){
+
+      assertTrue(existsDiskWithNameAndAutoDelete(INSTANCE_NAME, DEFAULT_BOOT_DISK_NAME, true));
+
+      Operation o = api().setDiskAutoDelete(INSTANCE_NAME, DEFAULT_BOOT_DISK_NAME, false);
+      assertOperationDoneSuccessfully(o);
+
+      assertTrue(existsDiskWithNameAndAutoDelete(INSTANCE_NAME, DEFAULT_BOOT_DISK_NAME, false));
+
+      o = api().setDiskAutoDelete(INSTANCE_NAME, DEFAULT_BOOT_DISK_NAME, true);
+
+      assertOperationDoneSuccessfully(o);
+      assertTrue(existsDiskWithNameAndAutoDelete(INSTANCE_NAME, DEFAULT_BOOT_DISK_NAME, true));
+   }
+
+   private boolean existsDiskWithNameAndAutoDelete(String instanceName, final String diskName, final boolean autoDelete){
+      Instance revertedInstance = api().get(instanceName);
+
+      return Iterables.any(revertedInstance.disks(), new Predicate<AttachedDisk>() {
+         @Override
+         public boolean apply(AttachedDisk disk) {
+            return disk.type() == AttachedDisk.Type.PERSISTENT &&
+            diskName.equals(disk.deviceName()) &&
+            disk.autoDelete() == autoDelete;
+         }
+      });
    }
 
    @Test(groups = "live", dependsOnMethods = "testListInstance")
@@ -150,9 +179,13 @@ public class InstanceApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
 
       Instance originalInstance = api().get(INSTANCE_NAME);
       assertOperationDoneSuccessfully(api().attachDisk(INSTANCE_NAME,
-                  new AttachDiskOptions().type(DiskType.PERSISTENT)
-                        .source(getDiskUrl(ATTACH_DISK_NAME)).mode(DiskMode.READ_ONLY)
-                        .deviceName(ATTACH_DISK_DEVICE_NAME)));
+                  AttachDisk.create(AttachDisk.Type.PERSISTENT,
+                                    AttachDisk.Mode.READ_ONLY,
+                                    getDiskUrl(ATTACH_DISK_NAME),
+                                    ATTACH_DISK_DEVICE_NAME,
+                                    false,
+                                    null,
+                                    false)));
 
       Instance modifiedInstance = api().get(INSTANCE_NAME);
 
@@ -167,7 +200,7 @@ public class InstanceApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
       }));
    }
 
-   @Test(groups = "live", dependsOnMethods = "testAttachDiskToInstance")
+   @Test(groups = "live", dependsOnMethods = "testAttachDiskToInstance", alwaysRun = true)
    public void testDetachDiskFromInstance() {
       Instance originalInstance = api().get(INSTANCE_NAME);
       assertOperationDoneSuccessfully(api().detachDisk(INSTANCE_NAME, ATTACH_DISK_DEVICE_NAME));
@@ -196,7 +229,7 @@ public class InstanceApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
       assertOperationDoneSuccessfully(api().reset(INSTANCE_NAME));
    }
 
-   @Test(groups = "live", dependsOnMethods = "testResetInstance")
+   @Test(groups = "live", dependsOnMethods = {"testSetDiskAutoDelete", "testResetInstance"}, alwaysRun = true)
    public void testDeleteInstance() {
       assertOperationDoneSuccessfully(api().delete(INSTANCE_NAME));
       assertOperationDoneSuccessfully(diskApi().delete(DISK_NAME));

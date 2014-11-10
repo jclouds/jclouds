@@ -2,5 +2,6 @@
     "type": "PERSISTENT",
     "mode": "READ_ONLY",
     "source": "https://www.googleapis.com/compute/v1/projects/party/zones/us-central1-a/disks/testimage1",
-    "boot": false
+    "boot": false,
+    "autoDelete": true
 }

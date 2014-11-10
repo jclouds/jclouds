@@ -23,7 +23,6 @@ import static com.google.common.collect.Lists.newArrayList;
 import static java.lang.String.format;
 import static org.jclouds.googlecloud.internal.ListPages.concat;
 import static org.jclouds.googlecomputeengine.config.GoogleComputeEngineProperties.IMAGE_PROJECTS;
-import static org.jclouds.googlecomputeengine.domain.NewInstance.Disk;
 
 import java.net.URI;
 import java.util.List;
@@ -45,6 +44,7 @@ import org.jclouds.googlecomputeengine.GoogleComputeEngineApi;
 import org.jclouds.googlecomputeengine.compute.functions.FirewallTagNamingConvention;
 import org.jclouds.googlecomputeengine.compute.functions.Resources;
 import org.jclouds.googlecomputeengine.compute.options.GoogleComputeEngineTemplateOptions;
+import org.jclouds.googlecomputeengine.domain.AttachDisk;
 import org.jclouds.googlecomputeengine.domain.Image;
 import org.jclouds.googlecomputeengine.domain.Instance;
 import org.jclouds.googlecomputeengine.domain.MachineType;
@@ -116,10 +116,10 @@ public final class GoogleComputeEngineServiceAdapter
       checkNotNull(hardware.getUri(), "hardware must have a URI");
       checkNotNull(template.getImage().getUri(), "image URI is null");
 
-      List<Disk> disks = Lists.newArrayList();
-      disks.add(Disk.newBootDisk(template.getImage().getUri()));
+      List<AttachDisk> disks = Lists.newArrayList();
+      disks.add(AttachDisk.newBootDisk(template.getImage().getUri()));
       for (URI existingDisk : options.additionalDisks()) {
-         disks.add(Disk.existingDisk(existingDisk));
+         disks.add(AttachDisk.existingDisk(existingDisk));
       }
 
       NewInstance newInstance = NewInstance.create(
