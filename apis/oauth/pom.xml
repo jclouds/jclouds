@@ -35,7 +35,7 @@
     <test.oauth.identity>FIX_ME</test.oauth.identity>
     <test.oauth.credential>FIX_ME</test.oauth.credential>
     <test.oauth.endpoint>FIX_ME</test.oauth.endpoint>
-    <test.jclouds.oauth.signature-or-mac-algorithm>FIX_ME</test.jclouds.oauth.signature-or-mac-algorithm>
+    <test.jclouds.oauth.jws-alg>RS256</test.jclouds.oauth.jws-alg>
     <test.jclouds.oauth.audience>FIX_ME</test.jclouds.oauth.audience>
     <test.jclouds.oauth.scopes>FIX_ME</test.jclouds.oauth.scopes>
     <test.oauth.api-version>2</test.oauth.api-version>
@@ -121,7 +121,7 @@
                     <test.oauth.endpoint>${test.oauth.endpoint}</test.oauth.endpoint>
                     <test.oauth.api-version>${test.oauth.api-version}</test.oauth.api-version>
                     <test.oauth.build-version>${test.oauth.build-version}</test.oauth.build-version>
-                    <test.jclouds.oauth.signature-or-mac-algorithm>${test.jclouds.oauth.signature-or-mac-algorithm}</test.jclouds.oauth.signature-or-mac-algorithm>
+                    <test.jclouds.oauth.jws-alg>${test.jclouds.oauth.jws-alg}</test.jclouds.oauth.jws-alg>
                     <test.jclouds.oauth.audience>${test.jclouds.oauth.audience}</test.jclouds.oauth.audience>
                     <test.jclouds.oauth.scopes>${test.jclouds.oauth.scopes}</test.jclouds.oauth.scopes>
                   </systemPropertyVariables>

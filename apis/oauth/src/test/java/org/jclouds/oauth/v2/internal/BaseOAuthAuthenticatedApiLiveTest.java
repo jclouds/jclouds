@@ -21,7 +21,7 @@ import static com.google.common.base.Preconditions.checkState;
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
 import static java.util.concurrent.TimeUnit.SECONDS;
 import static org.jclouds.oauth.v2.config.OAuthProperties.AUDIENCE;
-import static org.jclouds.oauth.v2.config.OAuthProperties.SIGNATURE_OR_MAC_ALGORITHM;
+import static org.jclouds.oauth.v2.config.OAuthProperties.JWS_ALG;
 import static org.jclouds.oauth.v2.domain.Claims.EXPIRATION_TIME;
 import static org.jclouds.oauth.v2.domain.Claims.ISSUED_AT;
 import static org.testng.Assert.assertNotNull;
@@ -32,8 +32,8 @@ import java.util.Properties;
 
 import org.jclouds.apis.BaseApiLiveTest;
 import org.jclouds.config.ValueOfConfigurationKeyOrNull;
+import org.jclouds.oauth.v2.JWSAlgorithms;
 import org.jclouds.oauth.v2.OAuthApi;
-import org.jclouds.oauth.v2.OAuthConstants;
 import org.jclouds.oauth.v2.domain.Header;
 import org.jclouds.oauth.v2.domain.Token;
 import org.jclouds.oauth.v2.domain.TokenRequest;
@@ -51,7 +51,7 @@ import com.google.inject.Module;
  * <p/>
  * - oauth.endpoint
  * - oauth.audience
- * - oauth.signature-or-mac-algorithm
+ * - oauth.jws-alg
  * <p/>
  * - oauth.scopes is provided by the subclass
  * <p/>
@@ -68,18 +68,16 @@ public abstract class BaseOAuthAuthenticatedApiLiveTest<A extends Closeable> ext
 
    public void testAuthenticate() {
       // obtain the necessary properties from the context
-      String signatureAlgorithm = checkNotNull(propFunction.apply(SIGNATURE_OR_MAC_ALGORITHM),
-            SIGNATURE_OR_MAC_ALGORITHM);
+      String jwsAlg = checkNotNull(propFunction.apply(JWS_ALG), JWS_ALG);
 
-      checkState(OAuthConstants.OAUTH_ALGORITHM_NAMES_TO_SIGNATURE_ALGORITHM_NAMES.containsKey(signatureAlgorithm)
-              , String.format("Algorithm not supported: " + signatureAlgorithm));
+      checkState(JWSAlgorithms.supportedAlgs().contains(jwsAlg), "Algorithm not supported: %s", jwsAlg);
 
       String audience = checkNotNull(propFunction.apply(AUDIENCE), AUDIENCE);
 
       // obtain the scopes from the subclass
       String scopes = getScopes();
 
-      Header header = Header.create(signatureAlgorithm, "JWT");
+      Header header = Header.create(jwsAlg, "JWT");
 
       long now = SECONDS.convert(System.currentTimeMillis(), MILLISECONDS);
 

@@ -28,7 +28,7 @@ import com.google.auto.value.AutoValue;
 @AutoValue
 public abstract class Header {
 
-   /** The name of the algorithm used to compute the signature, e.g., {@code RS256}. */
+   /** The name of the algorithm used to compute the signature, e.g., {@code ES256}. */
    public abstract String signerAlgorithm();
 
    /** The type of the token, e.g., {@code JWT}. */

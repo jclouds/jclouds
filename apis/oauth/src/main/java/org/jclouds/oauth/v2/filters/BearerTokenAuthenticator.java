@@ -20,16 +20,17 @@ import static java.lang.String.format;
 
 import javax.inject.Inject;
 
+import org.jclouds.domain.Credentials;
 import org.jclouds.http.HttpException;
 import org.jclouds.http.HttpRequest;
-import org.jclouds.oauth.v2.domain.OAuthCredentials;
+import org.jclouds.location.Provider;
 
 import com.google.common.base.Supplier;
 
 public final class BearerTokenAuthenticator implements OAuthAuthenticationFilter {
-   private final Supplier<OAuthCredentials> creds;
+   private final Supplier<Credentials> creds;
 
-   @Inject BearerTokenAuthenticator(Supplier<OAuthCredentials> creds) {
+   @Inject BearerTokenAuthenticator(@Provider Supplier<Credentials> creds) {
       this.creds = creds;
    }
 

@@ -37,7 +37,7 @@ public class OAuthHttpApiModule extends HttpApiModule<OAuthApi> {
 
    @Provides
    @Singleton
-   @Authentication
+   @OAuth
    protected Supplier<URI> provideAuthenticationEndpoint(ProviderMetadata providerMetadata) {
       return Suppliers.ofInstance(URI.create(providerMetadata.getEndpoint()));
    }

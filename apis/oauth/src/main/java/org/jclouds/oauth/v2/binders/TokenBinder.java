@@ -30,6 +30,7 @@ import org.jclouds.oauth.v2.domain.TokenRequest;
 import org.jclouds.rest.Binder;
 
 import com.google.common.base.Function;
+import com.google.common.base.Supplier;
 import com.google.common.collect.ImmutableMultimap;
 
 /**
@@ -41,15 +42,15 @@ import com.google.common.collect.ImmutableMultimap;
  * <li>Creates the full url encoded payload as described in: <a href="https://developers.google.com/accounts/docs/OAuth2ServiceAccount">OAuth2ServiceAccount</a></li>
  * </ol>
  */
-public final class OAuthTokenBinder implements Binder {
+public final class TokenBinder implements Binder {
    private static final String ASSERTION_FORM_PARAM = "assertion";
    private static final String GRANT_TYPE_FORM_PARAM = "grant_type";
    private static final String GRANT_TYPE_JWT_BEARER = "urn:ietf:params:oauth:grant-type:jwt-bearer";
 
-   private final Function<byte[], byte[]> signer;
+   private final Supplier<Function<byte[], byte[]>> signer;
    private final Json json;
 
-   @Inject OAuthTokenBinder(Function<byte[], byte[]> signer, Json json) {
+   @Inject TokenBinder(Supplier<Function<byte[], byte[]>> signer, Json json) {
       this.signer = signer;
       this.json = json;
    }
@@ -62,7 +63,7 @@ public final class OAuthTokenBinder implements Binder {
       encodedHeader = base64Url().omitPadding().encode(encodedHeader.getBytes(UTF_8));
       encodedClaimSet = base64Url().omitPadding().encode(encodedClaimSet.getBytes(UTF_8));
 
-      byte[] signature = signer.apply(on(".").join(encodedHeader, encodedClaimSet).getBytes(UTF_8));
+      byte[] signature = signer.get().apply(on(".").join(encodedHeader, encodedClaimSet).getBytes(UTF_8));
       String encodedSignature = signature != null ?  base64Url().omitPadding().encode(signature) : "";
 
       // the final assertion in base 64 encoded {header}.{claimSet}.{signature} format

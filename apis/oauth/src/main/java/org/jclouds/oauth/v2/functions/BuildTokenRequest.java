@@ -17,21 +17,23 @@
 package org.jclouds.oauth.v2.functions;
 
 import static com.google.common.base.Preconditions.checkState;
-import static org.jclouds.oauth.v2.OAuthConstants.ADDITIONAL_CLAIMS;
+import static org.jclouds.Constants.PROPERTY_SESSION_INTERVAL;
 import static org.jclouds.oauth.v2.config.OAuthProperties.AUDIENCE;
-import static org.jclouds.oauth.v2.config.OAuthProperties.SCOPES;
-import static org.jclouds.oauth.v2.config.OAuthProperties.SIGNATURE_OR_MAC_ALGORITHM;
+import static org.jclouds.oauth.v2.config.OAuthProperties.JWS_ALG;
 import static org.jclouds.oauth.v2.domain.Claims.EXPIRATION_TIME;
 import static org.jclouds.oauth.v2.domain.Claims.ISSUED_AT;
 
-import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import org.jclouds.Constants;
+import javax.inject.Inject;
+import javax.inject.Named;
+
+import org.jclouds.domain.Credentials;
+import org.jclouds.http.HttpRequest;
+import org.jclouds.location.Provider;
 import org.jclouds.oauth.v2.config.OAuthScopes;
 import org.jclouds.oauth.v2.domain.Header;
-import org.jclouds.oauth.v2.domain.OAuthCredentials;
 import org.jclouds.oauth.v2.domain.TokenRequest;
 import org.jclouds.rest.internal.GeneratedHttpRequest;
 
@@ -39,83 +41,65 @@ import com.google.common.base.Function;
 import com.google.common.base.Joiner;
 import com.google.common.base.Supplier;
 import com.google.common.reflect.Invokable;
-import com.google.inject.Inject;
-import com.google.inject.name.Named;
 
-/**
- * The default authenticator.
- * <p/>
- * Builds the default token request with the following claims: iss,scope,aud,iat,exp.
- * <p/>
- * TODO scopes etc should come from the REST method and not from a global property
- */
-public final class BuildTokenRequest implements Function<GeneratedHttpRequest, TokenRequest> {
+/** Builds the default token request with the following claims: {@code iss,scope,aud,iat,exp}. */
+public class BuildTokenRequest implements Function<HttpRequest, TokenRequest> {
+   private static final Joiner ON_COMMA = Joiner.on(",");
+
    private final String assertionTargetDescription;
    private final String signatureAlgorithm;
-   private final Supplier<OAuthCredentials> credentialsSupplier;
+   private final Supplier<Credentials> credentialsSupplier;
    private final long tokenDuration;
 
-   @Inject(optional = true)
-   @Named(ADDITIONAL_CLAIMS)
-   private Map<String, String> additionalClaims = Collections.emptyMap();
-
-   @Inject(optional = true)
-   @Named(SCOPES)
-   private String globalScopes = null;
-
-   // injectable so expect tests can override with a predictable value
-   @Inject(optional = true)
-   private Supplier<Long> timeSourceMillisSinceEpoch = new Supplier<Long>() {
-      @Override
-      public Long get() {
-         return System.currentTimeMillis();
+   public static class TestBuildTokenRequest extends BuildTokenRequest {
+      @Inject TestBuildTokenRequest(@Named(AUDIENCE) String assertionTargetDescription,
+            @Named(JWS_ALG) String signatureAlgorithm, @Provider Supplier<Credentials> credentialsSupplier,
+            @Named(PROPERTY_SESSION_INTERVAL) long tokenDuration) {
+         super(assertionTargetDescription, signatureAlgorithm, credentialsSupplier, tokenDuration);
       }
-   };
+
+      public long currentTimeSeconds() {
+         return 0;
+      }
+   }
 
    @Inject BuildTokenRequest(@Named(AUDIENCE) String assertionTargetDescription,
-                            @Named(SIGNATURE_OR_MAC_ALGORITHM) String signatureAlgorithm,
-                            Supplier<OAuthCredentials> credentialsSupplier,
-                            @Named(Constants.PROPERTY_SESSION_INTERVAL) long tokenDuration) {
+         @Named(JWS_ALG) String signatureAlgorithm, @Provider Supplier<Credentials> credentialsSupplier,
+         @Named(PROPERTY_SESSION_INTERVAL) long tokenDuration) {
       this.assertionTargetDescription = assertionTargetDescription;
       this.signatureAlgorithm = signatureAlgorithm;
       this.credentialsSupplier = credentialsSupplier;
       this.tokenDuration = tokenDuration;
    }
 
-   @Override public TokenRequest apply(GeneratedHttpRequest request) {
-      long now = timeSourceMillisSinceEpoch.get() / 1000;
-
-      // fetch the token
+   @Override public TokenRequest apply(HttpRequest request) {
       Header header = Header.create(signatureAlgorithm, "JWT");
 
       Map<String, Object> claims = new LinkedHashMap<String, Object>();
       claims.put("iss", credentialsSupplier.get().identity);
-      claims.put("scope", getOAuthScopes(request));
+      claims.put("scope", getOAuthScopes((GeneratedHttpRequest) request));
       claims.put("aud", assertionTargetDescription);
+
+      long now = currentTimeSeconds();
       claims.put(EXPIRATION_TIME, now + tokenDuration);
       claims.put(ISSUED_AT, now);
-      claims.putAll(additionalClaims);
 
       return TokenRequest.create(header, claims);
    }
 
+   //TODO: Remove and switch to a request function.
    private String getOAuthScopes(GeneratedHttpRequest request) {
       Invokable<?, ?> invokable = request.getInvocation().getInvokable();
-      
       OAuthScopes classScopes = invokable.getOwnerType().getRawType().getAnnotation(OAuthScopes.class);
       OAuthScopes methodScopes = invokable.getAnnotation(OAuthScopes.class);
-
-      // if no annotations are present the rely on globally set scopes
-      if (classScopes == null && methodScopes == null) {
-         checkState(globalScopes != null, String.format("REST class or method should be annotated " +
-                 "with OAuthScopes specifying required permissions. Alternatively a global property " +
-                 "\"oauth.scopes\" may be set to define scopes globally. REST Class: %s, Method: %s",
-                 invokable.getOwnerType(),
-                 invokable.getName()));
-         return globalScopes;
-      }
-
+      checkState(classScopes != null || methodScopes != null, "Api interface or method should be annotated " //
+                  + "with OAuthScopes specifying required permissions. Api interface: %s, Method: %s", //
+            invokable.getOwnerType(), invokable.getName());
       OAuthScopes scopes = methodScopes != null ? methodScopes : classScopes;
-      return Joiner.on(",").join(scopes.value());
+      return ON_COMMA.join(scopes.value());
+   }
+
+   long currentTimeSeconds() {
+      return System.currentTimeMillis() / 1000;
    }
 }

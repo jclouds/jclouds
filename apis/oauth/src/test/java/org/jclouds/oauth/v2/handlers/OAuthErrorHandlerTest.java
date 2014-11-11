@@ -16,19 +16,19 @@
  */
 package org.jclouds.oauth.v2.handlers;
 
-import org.easymock.IArgumentMatcher;
-import org.jclouds.http.HttpCommand;
-import org.jclouds.http.HttpRequest;
-import org.jclouds.http.HttpResponse;
-import org.testng.annotations.Test;
-
-import java.net.URI;
-
 import static org.easymock.EasyMock.createMock;
 import static org.easymock.EasyMock.expect;
 import static org.easymock.EasyMock.replay;
 import static org.easymock.EasyMock.reportMatcher;
 import static org.easymock.EasyMock.verify;
+
+import java.net.URI;
+
+import org.easymock.IArgumentMatcher;
+import org.jclouds.http.HttpCommand;
+import org.jclouds.http.HttpRequest;
+import org.jclouds.http.HttpResponse;
+import org.testng.annotations.Test;
 
 @Test(groups = "unit")
 public class OAuthErrorHandlerTest {

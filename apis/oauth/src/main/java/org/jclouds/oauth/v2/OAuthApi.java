@@ -24,8 +24,8 @@ import javax.inject.Named;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
 
-import org.jclouds.oauth.v2.binders.OAuthTokenBinder;
-import org.jclouds.oauth.v2.config.Authentication;
+import org.jclouds.oauth.v2.binders.TokenBinder;
+import org.jclouds.oauth.v2.config.OAuth;
 import org.jclouds.oauth.v2.domain.Token;
 import org.jclouds.oauth.v2.domain.TokenRequest;
 import org.jclouds.rest.AuthorizationException;
@@ -39,7 +39,7 @@ import org.jclouds.rest.annotations.Endpoint;
  * OAuthAuthenticator as a request filter, which in turn uses this class to
  * perform token requests.
  */
-@Endpoint(Authentication.class)
+@Endpoint(OAuth.class)
 public interface OAuthApi extends Closeable {
 
    /**
@@ -57,5 +57,5 @@ public interface OAuthApi extends Closeable {
    @Named("authenticate")
    @POST
    @Consumes(APPLICATION_JSON)
-   Token authenticate(@BinderParam(OAuthTokenBinder.class) TokenRequest tokenRequest) throws AuthorizationException;
+   Token authenticate(@BinderParam(TokenBinder.class) TokenRequest tokenRequest) throws AuthorizationException;
 }

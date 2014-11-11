@@ -16,15 +16,12 @@
  */
 package org.jclouds.oauth.v2.filters;
 
-import static com.google.common.base.Preconditions.checkState;
-
 import javax.inject.Inject;
 
 import org.jclouds.http.HttpException;
 import org.jclouds.http.HttpRequest;
 import org.jclouds.oauth.v2.domain.Token;
 import org.jclouds.oauth.v2.domain.TokenRequest;
-import org.jclouds.rest.internal.GeneratedHttpRequest;
 
 import com.google.common.base.Function;
 import com.google.common.cache.LoadingCache;
@@ -36,21 +33,19 @@ import com.google.common.cache.LoadingCache;
  */
 public final class OAuthAuthenticator implements OAuthAuthenticationFilter {
 
-   private Function<GeneratedHttpRequest, TokenRequest> tokenRequestBuilder;
+   private Function<HttpRequest, TokenRequest> tokenRequestBuilder;
    private Function<TokenRequest, Token> tokenFetcher;
 
-   @Inject OAuthAuthenticator(Function<GeneratedHttpRequest, TokenRequest> tokenRequestBuilder,
+   @Inject OAuthAuthenticator(Function<HttpRequest, TokenRequest> tokenRequestBuilder,
          LoadingCache<TokenRequest, Token> tokenFetcher) {
       this.tokenRequestBuilder = tokenRequestBuilder;
       this.tokenFetcher = tokenFetcher;
    }
 
    @Override public HttpRequest filter(HttpRequest request) throws HttpException {
-      checkState(request instanceof GeneratedHttpRequest, "request must be an instance of GeneratedHttpRequest");
-      GeneratedHttpRequest generatedHttpRequest = GeneratedHttpRequest.class.cast(request);
-      TokenRequest tokenRequest = tokenRequestBuilder.apply(generatedHttpRequest);
+      TokenRequest tokenRequest = tokenRequestBuilder.apply(request);
       Token token = tokenFetcher.apply(tokenRequest);
-      return request.toBuilder().addHeader("Authorization", String.format("%s %s",
-              token.tokenType(), token.accessToken())).build();
+      String authorization = String.format("%s %s", token.tokenType(), token.accessToken());
+      return request.toBuilder().addHeader("Authorization", authorization).build();
    }
 }

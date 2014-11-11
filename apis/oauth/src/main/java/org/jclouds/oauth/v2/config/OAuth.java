@@ -16,12 +16,12 @@
  */
 package org.jclouds.oauth.v2.config;
 
-
-import javax.inject.Qualifier;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
+
+import javax.inject.Qualifier;
 
 /**
  * Qualifies OAuth related resources, such as Endpoint.
@@ -31,5 +31,5 @@ import java.lang.annotation.Target;
 @Retention(value = RetentionPolicy.RUNTIME)
 @Target(value = {ElementType.TYPE, ElementType.FIELD, ElementType.PARAMETER, ElementType.METHOD})
 @Qualifier
-public @interface Authentication {
+public @interface OAuth {
 }

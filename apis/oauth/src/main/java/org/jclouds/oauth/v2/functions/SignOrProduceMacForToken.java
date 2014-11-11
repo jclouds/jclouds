@@ -16,12 +16,9 @@
  */
 package org.jclouds.oauth.v2.functions;
 
-import static com.google.common.base.Preconditions.checkState;
 import static com.google.common.base.Throwables.propagate;
-import static java.lang.String.format;
-import static org.jclouds.oauth.v2.OAuthConstants.NO_ALGORITHM;
-import static org.jclouds.oauth.v2.OAuthConstants.OAUTH_ALGORITHM_NAMES_TO_SIGNATURE_ALGORITHM_NAMES;
-import static org.jclouds.oauth.v2.config.OAuthProperties.SIGNATURE_OR_MAC_ALGORITHM;
+import static org.jclouds.oauth.v2.JWSAlgorithms.macOrSignature;
+import static org.jclouds.oauth.v2.config.OAuthProperties.JWS_ALG;
 
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
@@ -29,55 +26,41 @@ import java.security.PrivateKey;
 import java.security.Signature;
 import java.security.SignatureException;
 
-import javax.annotation.PostConstruct;
 import javax.crypto.Mac;
 import javax.inject.Inject;
 import javax.inject.Named;
 
-import org.jclouds.oauth.v2.domain.OAuthCredentials;
+import org.jclouds.oauth.v2.config.OAuth;
+import org.jclouds.rest.AuthorizationException;
 
 import com.google.common.base.Function;
 import com.google.common.base.Supplier;
-import com.google.inject.Singleton;
 
 /**
  * Function that signs/produces mac's for  OAuth tokens, provided a {@link Signature} or a {@link Mac} algorithm and
  * {@link PrivateKey}
  */
-@Singleton // due to signatureOrMacFunction
-public final class SignOrProduceMacForToken implements Function<byte[], byte[]> {
+public final class SignOrProduceMacForToken implements Supplier<Function<byte[], byte[]>> {
 
-   private final Supplier<OAuthCredentials> credentials;
-   private final String signatureOrMacAlgorithm;
-   private Function<byte[], byte[]> signatureOrMacFunction;
+   private final String macOrSignature;
+   private final Supplier<PrivateKey> credentials;
 
-   @Inject SignOrProduceMacForToken(@Named(SIGNATURE_OR_MAC_ALGORITHM) String signatureOrMacAlgorithm,
-                                   Supplier<OAuthCredentials> credentials) {
-      checkState(OAUTH_ALGORITHM_NAMES_TO_SIGNATURE_ALGORITHM_NAMES.containsKey(signatureOrMacAlgorithm),
-              format("the signature algorithm %s is not supported", signatureOrMacAlgorithm));
-      this.signatureOrMacAlgorithm = OAUTH_ALGORITHM_NAMES_TO_SIGNATURE_ALGORITHM_NAMES.get(signatureOrMacAlgorithm);
+   @Inject SignOrProduceMacForToken(@Named(JWS_ALG) String jwsAlg, @OAuth Supplier<PrivateKey> credentials) {
+      this.macOrSignature = macOrSignature(jwsAlg);
       this.credentials = credentials;
    }
 
-   @PostConstruct
-   public void loadSignatureOrMacOrNone() throws InvalidKeyException, NoSuchAlgorithmException {
-      if (signatureOrMacAlgorithm.equals(NO_ALGORITHM)) {
-         this.signatureOrMacFunction = new Function<byte[], byte[]>() {
-            @Override
-            public byte[] apply(byte[] input) {
-               return null;
-            }
-         };
-      } else if (signatureOrMacAlgorithm.startsWith("SHA")) {
-         this.signatureOrMacFunction = new SignatureGenerator(signatureOrMacAlgorithm, credentials.get().privateKey);
-      } else {
-         this.signatureOrMacFunction = new MessageAuthenticationCodeGenerator(signatureOrMacAlgorithm,
-                 credentials.get().privateKey);
+   @Override public Function<byte[], byte[]> get() {
+      try {
+         if (macOrSignature.startsWith("SHA")) {
+            return new SignatureGenerator(macOrSignature, credentials.get());
+         }
+         return new MessageAuthenticationCodeGenerator(macOrSignature, credentials.get());
+      } catch (NoSuchAlgorithmException e) {
+         throw new AssertionError("Invalid contents in JWSAlgorithms! " + e.getMessage());
+      } catch (InvalidKeyException e) {
+         throw new AuthorizationException("cannot parse pk. " + e.getMessage(), e);
       }
-   }
-
-   @Override public byte[] apply(byte[] input) {
-      return signatureOrMacFunction.apply(input);
    }
 
    private static class MessageAuthenticationCodeGenerator implements Function<byte[], byte[]> {

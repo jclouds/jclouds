@@ -39,16 +39,15 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Iterables;
 
 @Test(groups = "unit", testName = "OAuthTokenBinderTest")
-public class OAuthTokenBinderTest {
+public class TokenBinderTest {
    public static final String STRING_THAT_GENERATES_URL_UNSAFE_BASE64_ENCODING = "§1234567890'+±!\"#$%&/()" +
          "=?*qwertyuiopº´WERTYUIOPªàsdfghjklç~ASDFGHJKLÇ^<zxcvbnm," +
          ".->ZXCVBNM;:_@€";
 
    public void testPayloadIsUrlSafe() throws IOException {
-
-      OAuthTokenBinder tokenRequestFormat = ContextBuilder.newBuilder(new OAuthApiMetadata()).overrides
+      TokenBinder tokenRequestFormat = ContextBuilder.newBuilder(new OAuthApiMetadata()).overrides
               (OAuthTestUtils.defaultProperties(null)).build().utils()
-              .injector().getInstance(OAuthTokenBinder.class);
+              .injector().getInstance(TokenBinder.class);
       Header header = Header.create("a", "b");
 
       Map<String, Object> claims = ImmutableMap.<String, Object>builder()

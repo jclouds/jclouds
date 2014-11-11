@@ -16,17 +16,12 @@
  */
 package org.jclouds.oauth.v2.config;
 
-/**
- * Configurable properties for jclouds OAuth
- */
+import org.jclouds.oauth.v2.JWSAlgorithms;
+
 public class OAuthProperties {
 
-   /**
-    * The selected signature algorithm to use to sign the requests.
-    * <p/>
-    * This refers to the name the oauth provider expects, i.e., "RSA
-    */
-   public static final String SIGNATURE_OR_MAC_ALGORITHM = "jclouds.oauth.signature-or-mac-algorithm";
+   /** The JSON Web Signature alg, from the {@link JWSAlgorithms#supportedAlgs() supported list}. */
+   public static final String JWS_ALG = "jclouds.oauth.jws-alg";
 
    /**
     * The oauth audience, who this token is intended for. For instance in JWT and for
@@ -35,11 +30,6 @@ public class OAuthProperties {
     * @see <a href="http://tools.ietf.org/html/draft-jones-json-web-token-04">doc</a>
     */
    public static final String AUDIENCE = "jclouds.oauth.audience";
-
-   /**
-    * Optional list of comma-separated scopes to use when no OAuthScopes annotation is present.
-    */
-   public static final String SCOPES = "jclouds.oauth.scopes";
 
    /**
     * Specify if credentials are id + private key or if you are reusing an oauth2 token.

@@ -16,11 +16,14 @@
  */
 package org.jclouds.oauth.v2.config;
 
+import static java.util.concurrent.TimeUnit.SECONDS;
 import static org.jclouds.Constants.PROPERTY_SESSION_INTERVAL;
+import static org.jclouds.oauth.v2.JWSAlgorithms.NONE;
+import static org.jclouds.oauth.v2.config.OAuthProperties.JWS_ALG;
 
-import java.util.concurrent.TimeUnit;
+import java.security.PrivateKey;
 
-import org.jclouds.oauth.v2.domain.OAuthCredentials;
+import org.jclouds.http.HttpRequest;
 import org.jclouds.oauth.v2.domain.Token;
 import org.jclouds.oauth.v2.domain.TokenRequest;
 import org.jclouds.oauth.v2.filters.BearerTokenAuthenticator;
@@ -28,12 +31,12 @@ import org.jclouds.oauth.v2.filters.OAuthAuthenticationFilter;
 import org.jclouds.oauth.v2.filters.OAuthAuthenticator;
 import org.jclouds.oauth.v2.functions.BuildTokenRequest;
 import org.jclouds.oauth.v2.functions.FetchToken;
-import org.jclouds.oauth.v2.functions.OAuthCredentialsSupplier;
+import org.jclouds.oauth.v2.functions.PrivateKeySupplier;
 import org.jclouds.oauth.v2.functions.SignOrProduceMacForToken;
-import org.jclouds.rest.internal.GeneratedHttpRequest;
 
 import com.google.common.base.Function;
 import com.google.common.base.Supplier;
+import com.google.common.base.Suppliers;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
@@ -48,11 +51,10 @@ import com.google.inject.name.Named;
 public class OAuthModule extends AbstractModule {
 
    @Override protected void configure() {
-      bind(new TypeLiteral<Function<byte[], byte[]>>() {}).to(SignOrProduceMacForToken.class);
       bind(CredentialType.class).toProvider(CredentialTypeFromPropertyOrDefault.class);
-      bind(new TypeLiteral<Supplier<OAuthCredentials>>() {}).to(OAuthCredentialsSupplier.class);
-      bind(new TypeLiteral<Function<GeneratedHttpRequest, TokenRequest>>() {}).to(BuildTokenRequest.class);
+      bind(new TypeLiteral<Function<HttpRequest, TokenRequest>>() {}).to(BuildTokenRequest.class);
       bind(new TypeLiteral<Function<TokenRequest, Token>>() {}).to(FetchToken.class);
+      bind(new TypeLiteral<Supplier<PrivateKey>>() {}).annotatedWith(OAuth.class).to(PrivateKeySupplier.class);
    }
 
    /**
@@ -65,21 +67,34 @@ public class OAuthModule extends AbstractModule {
    @Provides
    @Singleton
    public LoadingCache<TokenRequest, Token> provideAccessCache(Function<TokenRequest, Token> getAccess,
-                                                               @Named(PROPERTY_SESSION_INTERVAL) long
-                                                                       sessionIntervalInSeconds) {
+                                                               @Named(PROPERTY_SESSION_INTERVAL) long expirationSeconds) {
       // since the session interval is also the token expiration time requested to the server make the token expire a
       // bit before the deadline to make sure there aren't session expiration exceptions
-      sessionIntervalInSeconds = sessionIntervalInSeconds > 30 ? sessionIntervalInSeconds - 30 :
-              sessionIntervalInSeconds;
-      return CacheBuilder.newBuilder().expireAfterWrite(sessionIntervalInSeconds, TimeUnit.SECONDS).build(CacheLoader
-              .from(getAccess));
+      expirationSeconds = expirationSeconds > 30 ? expirationSeconds - 30 : expirationSeconds;
+      return CacheBuilder.newBuilder().expireAfterWrite(expirationSeconds, SECONDS).build(CacheLoader.from(getAccess));
+   }
+
+   /**
+    * Defers instantiation of {@linkplain SignOrProduceMacForToken} so as to avoid requiring private keys when the alg
+    * is set to {@linkplain org.jclouds.oauth.v2.JWSAlgorithms#NONE}.
+    */
+   @Provides @Singleton Supplier<Function<byte[], byte[]>> signOrProduceMacForToken(@Named(JWS_ALG) String jwsAlg,
+         Provider<SignOrProduceMacForToken> in) {
+      if (jwsAlg.equals(NONE)) { // Current implementation requires we return null on none.
+         return Suppliers.<Function<byte[], byte[]>>ofInstance(new Function<byte[], byte[]>() {
+            @Override public byte[] apply(byte[] input) {
+               return null;
+            }
+         });
+      }
+      return Suppliers.memoize(in.get());
    }
 
    @Singleton
    public static class CredentialTypeFromPropertyOrDefault implements Provider<CredentialType> {
       @Inject(optional = true)
       @Named(OAuthProperties.CREDENTIAL_TYPE)
-      String credentialType = CredentialType.SERVICE_ACCOUNT_CREDENTIALS.toString();
+      String credentialType = CredentialType.P12_PRIVATE_KEY_CREDENTIALS.toString();
 
       @Override
       public CredentialType get() {
@@ -93,7 +108,7 @@ public class OAuthModule extends AbstractModule {
                                                                              OAuthAuthenticator serviceAccountAuth,
                                                                              BearerTokenAuthenticator bearerTokenAuth) {
       switch (credentialType) {
-         case SERVICE_ACCOUNT_CREDENTIALS:
+         case P12_PRIVATE_KEY_CREDENTIALS:
             return serviceAccountAuth;
          case BEARER_TOKEN_CREDENTIALS:
             return bearerTokenAuth;

@@ -16,27 +16,23 @@
  */
 package org.jclouds.oauth.v2.config;
 
+import static com.google.common.base.CaseFormat.LOWER_CAMEL;
+import static com.google.common.base.CaseFormat.UPPER_UNDERSCORE;
 import static com.google.common.base.Preconditions.checkNotNull;
 
-import com.google.common.base.CaseFormat;
-
-/**
- * Decides what type of credentials createContext is supplied with.
- */
+/** Defines the contents of the credential field in {@link org.jclouds.ContextBuilder#credentials(String, String)}. */
 public enum CredentialType {
 
    BEARER_TOKEN_CREDENTIALS,
 
-   SERVICE_ACCOUNT_CREDENTIALS;
+   /** Contents are a PEM-encoded P12 Private Key. */
+   P12_PRIVATE_KEY_CREDENTIALS;
 
-   @Override
-   public String toString() {
-      return CaseFormat.UPPER_UNDERSCORE.to(CaseFormat.LOWER_CAMEL, name());
+   @Override public String toString() {
+      return UPPER_UNDERSCORE.to(LOWER_CAMEL, name());
    }
 
    public static CredentialType fromValue(String credentialType) {
-      return valueOf(CaseFormat.LOWER_CAMEL.to(CaseFormat.UPPER_UNDERSCORE, checkNotNull(credentialType,
-            "credentialType")));
+      return valueOf(LOWER_CAMEL.to(UPPER_UNDERSCORE, checkNotNull(credentialType, "credentialType")));
    }
-
 }

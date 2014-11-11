@@ -16,11 +16,12 @@
  */
 package org.jclouds.oauth.v2;
 
-import com.google.common.collect.ImmutableSet;
-import com.google.common.reflect.TypeToken;
 import org.jclouds.View;
 import org.jclouds.apis.internal.BaseApiMetadataTest;
 import org.testng.annotations.Test;
+
+import com.google.common.collect.ImmutableSet;
+import com.google.common.reflect.TypeToken;
 
 /**
  * Tests that OAuthApiMetadata is properly registered in ServiceLoader

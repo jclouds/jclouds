@@ -19,8 +19,7 @@ package org.jclouds.oauth.v2.features;
 import static com.google.common.base.Preconditions.checkState;
 import static org.jclouds.oauth.v2.OAuthTestUtils.getMandatoryProperty;
 import static org.jclouds.oauth.v2.config.OAuthProperties.AUDIENCE;
-import static org.jclouds.oauth.v2.config.OAuthProperties.SCOPES;
-import static org.jclouds.oauth.v2.config.OAuthProperties.SIGNATURE_OR_MAC_ALGORITHM;
+import static org.jclouds.oauth.v2.config.OAuthProperties.JWS_ALG;
 import static org.jclouds.oauth.v2.domain.Claims.EXPIRATION_TIME;
 import static org.jclouds.oauth.v2.domain.Claims.ISSUED_AT;
 import static org.testng.Assert.assertNotNull;
@@ -29,7 +28,7 @@ import static org.testng.Assert.assertTrue;
 import java.util.Map;
 import java.util.Properties;
 
-import org.jclouds.oauth.v2.OAuthConstants;
+import org.jclouds.oauth.v2.JWSAlgorithms;
 import org.jclouds.oauth.v2.domain.Header;
 import org.jclouds.oauth.v2.domain.Token;
 import org.jclouds.oauth.v2.domain.TokenRequest;
@@ -45,7 +44,7 @@ import com.google.common.collect.ImmutableMap;
  * - test.oauth.credential
  * - test.jclouds.oauth.audience
  * - test.jclouds.oauth.scopes
- * - test.jclouds.oauth.signature-or-mac-algorithm
+ * - test.jclouds.oauth.jws-alg
  */
 @Test(groups = "live", singleThreaded = true)
 public class OAuthApiLiveTest extends BaseOAuthApiLiveTest {
@@ -56,19 +55,17 @@ public class OAuthApiLiveTest extends BaseOAuthApiLiveTest {
    protected Properties setupProperties() {
       properties = super.setupProperties();
       return properties;
-
    }
 
    @Test(groups = "live", singleThreaded = true)
    public void testAuthenticateJWTToken() throws Exception {
       assertTrue(properties != null, "properties were not set");
-      String signatureAlgorithm = getMandatoryProperty(properties, SIGNATURE_OR_MAC_ALGORITHM);
-      checkState(OAuthConstants.OAUTH_ALGORITHM_NAMES_TO_SIGNATURE_ALGORITHM_NAMES.containsKey(signatureAlgorithm)
-              , String.format("Algorithm not supported: " + signatureAlgorithm));
+      String jwsAlg = getMandatoryProperty(properties, JWS_ALG);
+      checkState(JWSAlgorithms.supportedAlgs().contains(jwsAlg), "Algorithm not supported: %s", jwsAlg);
 
-      Header header = Header.create(signatureAlgorithm, "JWT");
+      Header header = Header.create(jwsAlg, "JWT");
 
-      String scopes = getMandatoryProperty(properties, SCOPES);
+      String scopes = getMandatoryProperty(properties, "jclouds.oauth.scopes");
       String audience = getMandatoryProperty(properties, AUDIENCE);
 
       long now = nowInSeconds();

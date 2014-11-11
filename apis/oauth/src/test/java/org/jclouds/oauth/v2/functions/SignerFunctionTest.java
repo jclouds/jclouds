@@ -29,9 +29,6 @@ import java.security.spec.InvalidKeySpecException;
 
 import org.testng.annotations.Test;
 
-/**
- * Tests the SignOrProduceMacForToken
- */
 @Test(groups = "unit")
 public class SignerFunctionTest {
 
@@ -50,10 +47,8 @@ public class SignerFunctionTest {
    public void testSignPayload() throws InvalidKeyException, IOException, NoSuchAlgorithmException,
            CertificateException, InvalidKeySpecException {
       SignOrProduceMacForToken signer = new SignOrProduceMacForToken("RS256",
-              ofInstance(OAuthCredentialsFromPKTest
-                      .loadOAuthCredentials()));
-      signer.loadSignatureOrMacOrNone();
-      byte[] payloadSignature = signer.apply(PAYLOAD.getBytes(UTF_8));
+            ofInstance(PrivateKeySupplierTest.loadPrivateKey()));
+      byte[] payloadSignature = signer.get().apply(PAYLOAD.getBytes(UTF_8));
       assertNotNull(payloadSignature);
 
       assertEquals(base64Url().omitPadding().encode(payloadSignature), SHA256withRSA_PAYLOAD_SIGNATURE_RESULT);

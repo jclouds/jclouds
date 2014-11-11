@@ -30,9 +30,6 @@ import com.google.common.base.Suppliers;
 import com.google.inject.AbstractModule;
 import com.google.inject.Provides;
 
-/**
- * An OAuth module to be used form other providers.
- */
 public class OAuthAuthenticationModule extends AbstractModule {
 
    @Override
@@ -40,13 +37,10 @@ public class OAuthAuthenticationModule extends AbstractModule {
       bindHttpApi(binder(), OAuthApi.class);
    }
 
-   /**
-    * When oauth is used as a module the oauth endpoint is a normal property
-    */
    @Provides
    @Singleton
-   @Authentication
-   protected Supplier<URI> provideAuthenticationEndpoint(@Named("oauth.endpoint") String endpoint) {
+   @OAuth
+   protected Supplier<URI> oauthEndpoint(@Named("oauth.endpoint") String endpoint) {
       return Suppliers.ofInstance(URI.create(endpoint));
    }
 }
