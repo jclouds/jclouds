@@ -21,7 +21,7 @@ import static org.jclouds.googlecloudstorage.reference.GoogleCloudStorageConstan
 import static org.jclouds.googlecloudstorage.reference.GoogleCloudStorageConstants.OPERATION_COMPLETE_INTERVAL;
 import static org.jclouds.googlecloudstorage.reference.GoogleCloudStorageConstants.OPERATION_COMPLETE_TIMEOUT;
 import static org.jclouds.oauth.v2.config.OAuthProperties.AUDIENCE;
-import static org.jclouds.oauth.v2.config.OAuthProperties.SIGNATURE_OR_MAC_ALGORITHM;
+import static org.jclouds.oauth.v2.config.OAuthProperties.JWS_ALG;
 import static org.jclouds.reflect.Reflection2.typeToken;
 
 import java.net.URI;
@@ -60,7 +60,7 @@ public class GoogleCloudStorageApiMetadata extends BaseHttpApiMetadata<GoogleClo
       Properties properties = BaseHttpApiMetadata.defaultProperties();
       properties.put("oauth.endpoint", "https://accounts.google.com/o/oauth2/token");
       properties.put(AUDIENCE, "https://accounts.google.com/o/oauth2/token");
-      properties.put(SIGNATURE_OR_MAC_ALGORITHM, "RS256");
+      properties.put(JWS_ALG, "RS256");
       properties.put(PROPERTY_SESSION_INTERVAL, 3600);
       properties.put(OPERATION_COMPLETE_INTERVAL, 2000);
       properties.put(OPERATION_COMPLETE_TIMEOUT, 600000);
