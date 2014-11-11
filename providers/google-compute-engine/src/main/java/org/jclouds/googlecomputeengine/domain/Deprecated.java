@@ -26,8 +26,15 @@ import com.google.auto.value.AutoValue;
 /** Deprecation information for an image or kernel */
 @AutoValue
 public abstract class Deprecated {
+
+   public enum State{
+      DELETED,
+      DEPRECATED,
+      OBSELETE;
+   }
+
    /** The deprecation state of this image. */
-   @Nullable public abstract String state();
+   @Nullable public abstract State state();
 
    /** A fully-qualified URL of the suggested replacement for the deprecated image. */
    @Nullable public abstract URI replacement();
@@ -48,7 +55,7 @@ public abstract class Deprecated {
    @Nullable public abstract String deleted();
 
    @SerializedNames({ "state", "replacement", "deprecated", "obsolete", "deleted" })
-   public static Deprecated create(String state, URI replacement, String deprecated, String obsolete, String deleted) {
+   public static Deprecated create(State state, URI replacement, String deprecated, String obsolete, String deleted) {
       return new AutoValue_Deprecated(state, replacement, deprecated, obsolete, deleted);
    }
 

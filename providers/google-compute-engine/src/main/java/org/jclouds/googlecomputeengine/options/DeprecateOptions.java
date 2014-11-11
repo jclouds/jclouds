@@ -18,6 +18,7 @@ package org.jclouds.googlecomputeengine.options;
 
 import java.net.URI;
 import java.util.Date;
+import org.jclouds.googlecomputeengine.domain.Deprecated.State;
 
 /**
  * Options to set the deprecation status of a resource. Currently only for images.
@@ -25,12 +26,6 @@ import java.util.Date;
  * @see <a href="https://developers.google.com/compute/docs/reference/latest/images/deprecate" />
  */
 public class DeprecateOptions {
-
-   public enum State {
-      DEPRECATED,
-      OBSOLETE,
-      DELETED
-   }
 
    private State state;
    private URI replacement;
@@ -92,7 +87,7 @@ public class DeprecateOptions {
    }
 
    /**
-    * @see org.jclouds.googlecomputeengine.options.DeprecateOptions#getReplacement()
+    * @see DeprecateOptions#getReplacement()
     */
    public DeprecateOptions replacement(URI replacement) {
       this.replacement = replacement;
@@ -116,7 +111,7 @@ public class DeprecateOptions {
    }
 
    /**
-    * @see org.jclouds.googlecomputeengine.options.DeprecateOptions#getDeleted()
+    * @see DeprecateOptions#getDeleted()
     */
    public DeprecateOptions deleted(Date deleted) {
       this.deleted = deleted;

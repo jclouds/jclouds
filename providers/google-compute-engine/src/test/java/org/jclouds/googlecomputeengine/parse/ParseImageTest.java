@@ -24,6 +24,7 @@ import java.net.URI;
 import javax.ws.rs.Consumes;
 
 import org.jclouds.googlecomputeengine.domain.Deprecated;
+import org.jclouds.googlecomputeengine.domain.Deprecated.State;
 import org.jclouds.googlecomputeengine.domain.Image;
 import org.jclouds.googlecomputeengine.internal.BaseGoogleComputeEngineParseTest;
 import org.testng.annotations.Test;
@@ -38,16 +39,21 @@ public class ParseImageTest extends BaseGoogleComputeEngineParseTest<Image> {
 
    @Override @Consumes(APPLICATION_JSON)
    public Image expected() {
+      return expected(BASE_URL);
+   }
+
+   @Consumes(APPLICATION_JSON)
+   public Image expected(String baseUrl) {
       return Image.create( //
             "12941197498378735318", // id
-            URI.create(BASE_URL + "/centos-cloud/global/images/centos-6-2-v20120326"), // selfLink
+            URI.create(baseUrl + "/centos-cloud/global/images/centos-6-2-v20120326"), // selfLink
             "centos-6-2-v20120326", // name
             "DEPRECATED. CentOS 6.2 image; Created Mon, 26 Mar 2012 21:19:09 +0000", // description
             "RAW", // sourceType
             RawDisk.create(URI.create(""), "TAR", null), // rawDisk
             Deprecated.create( // deprecated
-                  "DEPRECATED", // state
-                  URI.create(BASE_URL + "/centos-cloud/global/images/centos-6-v20130104"), // replacement
+                  State.DEPRECATED, // state
+                  URI.create(baseUrl + "/centos-cloud/global/images/centos-6-v20130104"), // replacement
                   null, // deprecated
                   null, // obsolete
                   null // deleted

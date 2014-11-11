@@ -27,6 +27,7 @@ import java.util.List;
 import org.jclouds.compute.domain.ImageBuilder;
 import org.jclouds.compute.domain.OperatingSystem;
 import org.jclouds.compute.domain.OsFamily;
+import org.jclouds.googlecomputeengine.domain.Deprecated.State;
 import org.jclouds.googlecomputeengine.domain.Image;
 
 import com.google.common.base.Function;
@@ -44,6 +45,13 @@ public final class GoogleComputeEngineImageToImage implements Function<Image, or
               .status(Status.AVAILABLE)
               .uri(image.selfLink());
 
+      if (image.deprecated() != null) {
+         builder.userMetadata(ImmutableMap.of("deprecatedState", image.deprecated().state().name()));
+         if (image.deprecated().state() == State.DELETED){
+            builder.status(Status.DELETED);
+         }
+      }
+
       List<String> splits = Lists.newArrayList(image.name().split("-"));
       OperatingSystem.Builder osBuilder = defaultOperatingSystem(image);
       if (splits == null || splits.size() == 0 || splits.size() < 3) {
@@ -58,9 +66,6 @@ public final class GoogleComputeEngineImageToImage implements Function<Image, or
       String version = on(".").join(limit(skip(splits, 1), splits.size() - 2));
       osBuilder.version(version);
 
-      if (image.deprecated() != null) {
-         builder.userMetadata(ImmutableMap.of("deprecatedState", image.deprecated().state()));
-      }
       builder.version(getLast(splits));
       return builder.operatingSystem(osBuilder.build()).build();
    }

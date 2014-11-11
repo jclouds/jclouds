@@ -37,8 +37,13 @@ public class ParseImageListTest extends BaseGoogleComputeEngineParseTest<ListPag
 
    @Override @Consumes(MediaType.APPLICATION_JSON)
    public ListPage<Image> expected() {
-      return ForwardingListPage.create( //
-            ImmutableList.of(new ParseImageTest().expected()), // items
+      return expected(BASE_URL);
+      }
+
+   @Consumes(MediaType.APPLICATION_JSON)
+   public ListPage<Image> expected(String baseUrl) {
+       return ForwardingListPage.create( //
+            ImmutableList.of(new ParseImageTest().expected(baseUrl)), // items
             null // nextPageToken
       );
    }

@@ -21,7 +21,10 @@ import static org.testng.Assert.assertSame;
 
 import java.net.URI;
 
+import org.jclouds.compute.domain.Image.Status;
 import org.jclouds.compute.domain.OsFamily;
+import org.jclouds.googlecomputeengine.domain.Deprecated;
+import org.jclouds.googlecomputeengine.domain.Deprecated.State;
 import org.jclouds.googlecomputeengine.domain.Image;
 import org.testng.annotations.Test;
 
@@ -29,7 +32,7 @@ import org.testng.annotations.Test;
 public class GoogleComputeEngineImageToImageTest {
    public void testArbitraryImageName() {
       GoogleComputeEngineImageToImage imageToImage = new GoogleComputeEngineImageToImage();
-      Image image = image("arbitratyname");
+      Image image = image("arbitratyname", null);
       org.jclouds.compute.domain.Image transformed = imageToImage.apply(image);
       assertEquals(transformed.getName(), image.name());
       assertEquals(transformed.getId(), image.selfLink().toString());
@@ -39,7 +42,7 @@ public class GoogleComputeEngineImageToImageTest {
 
    public void testWellFormedImageName() {
       GoogleComputeEngineImageToImage imageToImage = new GoogleComputeEngineImageToImage();
-      Image image = image("ubuntu-12-04-v123123");
+      Image image = image("ubuntu-12-04-v123123", null);
       org.jclouds.compute.domain.Image transformed = imageToImage.apply(image);
       assertEquals(transformed.getName(), image.name());
       assertEquals(transformed.getId(), image.selfLink().toString());
@@ -48,7 +51,38 @@ public class GoogleComputeEngineImageToImageTest {
       assertEquals(transformed.getOperatingSystem().getVersion(), "12.04");
    }
 
-   private static Image image(String name) {
+   public void testDeleted(){
+      GoogleComputeEngineImageToImage imageToImage = new GoogleComputeEngineImageToImage();
+      Deprecated deprecated =  Deprecated.create(
+         State.DELETED, // state
+         URI.create("http://baseurl/projects/centos-cloud/global/images/centos-6-2-v20120326test"), // replacement
+         "2014-07-16T22:16:13.468Z", // deprecated
+         "2015-07-16T22:16:13.468Z", // obsolete
+         "2016-07-16T22:16:13.468Z"); // deleted
+      Image image = image("test-deprecated", deprecated);
+      org.jclouds.compute.domain.Image transformed = imageToImage.apply(image);
+      assertEquals(transformed.getName(), image.name());
+      assertEquals(transformed.getId(), image.selfLink().toString());
+      assertEquals(transformed.getProviderId(), image.id());
+      assertSame(transformed.getOperatingSystem().getFamily(), OsFamily.LINUX);
+      assertEquals(transformed.getUserMetadata().get("deprecatedState"), image.deprecated().state().name());
+      assertEquals(transformed.getStatus(), Status.DELETED);
+   }
+
+   public void testDeprecated(){
+      GoogleComputeEngineImageToImage imageToImage = new GoogleComputeEngineImageToImage();
+      Deprecated deprecated =  Deprecated.create(
+         State.DEPRECATED, // state
+         URI.create("http://baseurl/projects/centos-cloud/global/images/centos-6-2-v20120326test"), // replacement
+         "2014-07-16T22:16:13.468Z", // deprecated
+         "2015-07-16T22:16:13.468Z", // obsolete
+         "2016-07-16T22:16:13.468Z"); // deleted
+      Image image = image("test-deprecated", deprecated);
+      org.jclouds.compute.domain.Image transformed = imageToImage.apply(image);
+      assertEquals(transformed.getStatus(), Status.AVAILABLE);
+   }
+
+   private static Image image(String name, Deprecated deprecated) {
       return Image.create( //
             "1234", // id
             URI.create("http://test.com/1234"), // selfLink
@@ -56,7 +90,7 @@ public class GoogleComputeEngineImageToImageTest {
             "", // description
             "RAW", // sourceType
             Image.RawDisk.create(URI.create("foo"), "TAR", null), // rawDisk
-            null // deprecated
+            deprecated // deprecated
       );
    }
 }

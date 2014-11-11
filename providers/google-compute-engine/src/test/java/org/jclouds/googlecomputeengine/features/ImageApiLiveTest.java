@@ -18,15 +18,19 @@ package org.jclouds.googlecomputeengine.features;
 
 import static org.jclouds.googlecomputeengine.options.ListOptions.Builder.maxResults;
 import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertNull;
 
 import java.net.URI;
 import java.util.Iterator;
 import java.util.List;
 
+import org.jclouds.date.internal.SimpleDateFormatDateService;
 import org.jclouds.googlecloud.domain.ListPage;
 import org.jclouds.googlecomputeengine.domain.Disk;
 import org.jclouds.googlecomputeengine.domain.Image;
+import org.jclouds.googlecomputeengine.domain.Deprecated.State;
 import org.jclouds.googlecomputeengine.internal.BaseGoogleComputeEngineApiLiveTest;
+import org.jclouds.googlecomputeengine.options.DeprecateOptions;
 import org.testng.annotations.Test;
 
 public class ImageApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
@@ -81,6 +85,32 @@ public class ImageApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
    }
 
    @Test(groups = "live", dependsOnMethods = "testGetCreatedImage")
+   public void testDeprecateImage(){
+      Image image = api().get(IMAGE_NAME);
+      assertNull(image.deprecated());
+      String deprecated = "2015-07-16T22:16:13.468Z";
+      String obsolete = "2016-10-16T22:16:13.468Z";
+      String deleted = "2017-01-16T22:16:13.468Z";
+
+      URI replacement = URI.create("https://www.googleapis.com/compute/v1/projects/centos-cloud/global/images/centos-6-2-v20120326test");
+
+      DeprecateOptions deprecateOptions = new DeprecateOptions().state(State.DEPRECATED)
+            .replacement(replacement)
+            .deprecated(new SimpleDateFormatDateService().iso8601DateParse(deprecated))
+            .obsolete(new SimpleDateFormatDateService().iso8601DateParse(obsolete))
+            .deleted(new SimpleDateFormatDateService().iso8601DateParse(deleted));
+
+      assertOperationDoneSuccessfully(api().deprecate(IMAGE_NAME, deprecateOptions));
+
+      image = api().get(IMAGE_NAME);
+      assertEquals(image.deprecated().state(), State.DEPRECATED);
+      assertEquals(image.deprecated().replacement(), replacement);
+      assertEquals(image.deprecated().deprecated(), deprecated);
+      assertEquals(image.deprecated().obsolete(), obsolete);
+      assertEquals(image.deprecated().deleted(), deleted);
+   }
+
+   @Test(groups = "live", dependsOnMethods = "testDeprecateImage", alwaysRun = true)
    public void testCleanup(){
       assertOperationDoneSuccessfully(api().delete(IMAGE_NAME));
       assertOperationDoneSuccessfully(diskApi().delete(DISK_NAME));

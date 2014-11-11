@@ -104,6 +104,10 @@ public class BaseGoogleComputeEngineApiMockTest {
       return new MockResponse().addHeader("Content-Type", "application/json").setBody(stringFromResource(resource));
    }
 
+   protected MockResponse response404(){
+      return new MockResponse().setStatus("HTTP/1.1 404 Not Found");
+   }
+
    protected String stringFromResource(String resourceName) {
       try {
          return toStringAndClose(getClass().getResourceAsStream(resourceName))

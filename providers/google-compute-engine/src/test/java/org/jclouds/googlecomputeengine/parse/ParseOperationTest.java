@@ -36,12 +36,17 @@ public class ParseOperationTest extends BaseGoogleComputeEngineParseTest<Operati
 
    @Override @Consumes(APPLICATION_JSON)
    public Operation expected() {
+      return expected(BASE_URL);
+   }
+
+   @Consumes(APPLICATION_JSON)
+   public Operation expected(String baseUrl) {
       return Operation.create( //
             "13053095055850848306", // id
-            URI.create(BASE_URL + "/party/zones/us-central1-a/operations/operation-1354084865060"),
+            URI.create(baseUrl + "/party/zones/us-central1-a/operations/operation-1354084865060"),
             "operation-1354084865060", // name
             null, // description
-            URI.create(BASE_URL + "/party/zones/us-central1-a/instances/test-1"), // targetLink
+            URI.create(baseUrl + "/party/zones/us-central1-a/instances/test-1"), // targetLink
             "13053094017547040099", // targetId
             null, // clientOperationId
             Operation.Status.DONE, // status
@@ -55,8 +60,8 @@ public class ParseOperationTest extends BaseGoogleComputeEngineParseTest<Operati
             null, // httpErrorMessage
             "insert", // operationType
             null, // errors
-            URI.create(BASE_URL + "/party/regions/us-central1"), // region
-            URI.create(BASE_URL + "/party/zones/us-central1-a") // zone
+            URI.create(baseUrl + "/party/regions/us-central1"), // region
+            URI.create(baseUrl + "/party/zones/us-central1-a") // zone
       );
    }
 }
