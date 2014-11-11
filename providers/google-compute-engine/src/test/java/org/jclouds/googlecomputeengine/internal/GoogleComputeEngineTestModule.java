@@ -37,10 +37,11 @@ import java.security.interfaces.RSAPublicKey;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import org.jclouds.crypto.Crypto;
+import org.jclouds.oauth.v2.functions.BuildTokenRequest;
+import org.jclouds.oauth.v2.functions.BuildTokenRequest.TestBuildTokenRequest;
 import org.jclouds.ssh.SshKeys;
 
 import com.google.common.base.Supplier;
-import com.google.common.base.Suppliers;
 import com.google.common.io.ByteSource;
 import com.google.inject.Binder;
 import com.google.inject.Module;
@@ -67,8 +68,7 @@ enum GoogleComputeEngineTestModule implements Module {
 
    @Override public void configure(Binder binder) {
       // Predictable time
-      binder.bind(new TypeLiteral<Supplier<Long>>() {
-      }).toInstance(Suppliers.ofInstance(0L));
+      binder.bind(BuildTokenRequest.class).to(TestBuildTokenRequest.class);
 
       // Predictable ssh keys
       Crypto crypto = createMock(Crypto.class);

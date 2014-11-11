@@ -23,7 +23,7 @@ import static org.jclouds.googlecomputeengine.config.GoogleComputeEngineProperti
 import static org.jclouds.googlecomputeengine.config.GoogleComputeEngineProperties.OPERATION_COMPLETE_TIMEOUT;
 import static org.jclouds.googlecomputeengine.config.GoogleComputeEngineProperties.PROJECT_NAME;
 import static org.jclouds.oauth.v2.config.OAuthProperties.AUDIENCE;
-import static org.jclouds.oauth.v2.config.OAuthProperties.SIGNATURE_OR_MAC_ALGORITHM;
+import static org.jclouds.oauth.v2.config.OAuthProperties.JWS_ALG;
 import static org.jclouds.reflect.Reflection2.typeToken;
 
 import java.net.URI;
@@ -58,7 +58,7 @@ public class GoogleComputeEngineApiMetadata extends BaseHttpApiMetadata<GoogleCo
       Properties properties = BaseHttpApiMetadata.defaultProperties();
       properties.put("oauth.endpoint", "https://accounts.google.com/o/oauth2/token");
       properties.put(AUDIENCE, "https://accounts.google.com/o/oauth2/token");
-      properties.put(SIGNATURE_OR_MAC_ALGORITHM, "RS256");
+      properties.put(JWS_ALG, "RS256");
       properties.put(PROPERTY_SESSION_INTERVAL, 3600);
       properties.put(OPERATION_COMPLETE_INTERVAL, 500);
       properties.put(OPERATION_COMPLETE_TIMEOUT, 600000);

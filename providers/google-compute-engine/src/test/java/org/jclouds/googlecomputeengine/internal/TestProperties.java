@@ -18,10 +18,8 @@ package org.jclouds.googlecomputeengine.internal;
 
 import static org.jclouds.googlecomputeengine.config.GoogleComputeEngineProperties.CREDENTIAL_TYPE;
 import static org.jclouds.googlecomputeengine.config.GoogleComputeEngineProperties.PROJECT_NAME;
-import static org.jclouds.oauth.v2.OAuthConstants.NO_ALGORITHM;
 import static org.jclouds.oauth.v2.OAuthTestUtils.setCredential;
-import static org.jclouds.oauth.v2.config.CredentialType.BEARER_TOKEN_CREDENTIALS;
-import static org.jclouds.oauth.v2.config.OAuthProperties.SIGNATURE_OR_MAC_ALGORITHM;
+import static org.jclouds.oauth.v2.config.CredentialType.P12_PRIVATE_KEY_CREDENTIALS;
 
 import java.util.Properties;
 
@@ -33,12 +31,9 @@ public final class TestProperties {
    public static Properties apply(Properties props) {
       setIfTestSystemPropertyPresent(props, PROJECT_NAME);
       setIfTestSystemPropertyPresent(props, CREDENTIAL_TYPE);
-      if (props.containsKey(CREDENTIAL_TYPE)) {
-         if (CredentialType.fromValue(props.getProperty(CREDENTIAL_TYPE)) == BEARER_TOKEN_CREDENTIALS) {
-            props.put(SIGNATURE_OR_MAC_ALGORITHM, NO_ALGORITHM); // TODO: this should be implied by the above.
-         } else {
-            setCredential(props, "google-compute-engine.credential");
-         }
+      if (props.containsKey(CREDENTIAL_TYPE)
+            && CredentialType.fromValue(props.getProperty(CREDENTIAL_TYPE)) == P12_PRIVATE_KEY_CREDENTIALS) {
+         setCredential(props, "google-compute-engine.credential");
       }
       return props;
    }

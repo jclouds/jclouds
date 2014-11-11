@@ -24,7 +24,7 @@ import com.google.common.annotations.Beta;
 public final class GoogleComputeEngineProperties {
 
    /**
-    * How requests are authorized using OAuth. Defaults to {@link org.jclouds.oauth.v2.config.CredentialType#SERVICE_ACCOUNT_CREDENTIALS}.
+    * How requests are authorized using OAuth. Defaults to {@link org.jclouds.oauth.v2.config.CredentialType#P12_PRIVATE_KEY_CREDENTIALS}.
     *
     * @see org.jclouds.oauth.v2.config.CredentialType
     */

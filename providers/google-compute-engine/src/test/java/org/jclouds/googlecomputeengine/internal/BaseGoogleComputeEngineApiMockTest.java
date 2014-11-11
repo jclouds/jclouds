@@ -23,9 +23,7 @@ import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 import static org.jclouds.googlecomputeengine.config.GoogleComputeEngineProperties.CREDENTIAL_TYPE;
 import static org.jclouds.googlecomputeengine.config.GoogleComputeEngineProperties.IMAGE_PROJECTS;
 import static org.jclouds.googlecomputeengine.config.GoogleComputeEngineProperties.PROJECT_NAME;
-import static org.jclouds.oauth.v2.OAuthConstants.NO_ALGORITHM;
 import static org.jclouds.oauth.v2.config.CredentialType.BEARER_TOKEN_CREDENTIALS;
-import static org.jclouds.oauth.v2.config.OAuthProperties.SIGNATURE_OR_MAC_ALGORITHM;
 import static org.jclouds.util.Strings2.toStringAndClose;
 import static org.testng.Assert.assertEquals;
 
@@ -74,7 +72,6 @@ public class BaseGoogleComputeEngineApiMockTest {
       overrides.put(PROJECT_NAME, "party");
       overrides.put(IMAGE_PROJECTS, "debian-cloud");
       overrides.put(CREDENTIAL_TYPE, BEARER_TOKEN_CREDENTIALS.toString());
-      overrides.put(SIGNATURE_OR_MAC_ALGORITHM, NO_ALGORITHM); // TODO: this should be implied by the above.
       return ContextBuilder.newBuilder(new GoogleComputeEngineProviderMetadata())
             .credentials(identity, credential)
             .endpoint(url(""))
