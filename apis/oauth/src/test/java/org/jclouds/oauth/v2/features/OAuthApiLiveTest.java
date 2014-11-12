@@ -65,14 +65,13 @@ public class OAuthApiLiveTest extends BaseOAuthApiLiveTest {
 
       Header header = Header.create(jwsAlg, "JWT");
 
-      String scopes = getMandatoryProperty(properties, "jclouds.oauth.scopes");
       String audience = getMandatoryProperty(properties, AUDIENCE);
 
-      long now = nowInSeconds();
+      long now = System.currentTimeMillis() / 1000;
 
       Map<String, Object> claims = ImmutableMap.<String, Object>builder()
          .put("iss", identity)
-         .put("scope", scopes)
+         .put("scope", scope)
          .put("aud", audience)
          .put(EXPIRATION_TIME, now + 3600)
          .put(ISSUED_AT, now).build();

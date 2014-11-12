@@ -29,9 +29,7 @@ import com.google.common.base.Supplier;
 import com.google.common.base.Suppliers;
 import com.google.inject.Provides;
 
-/**
- * OAuth module to when accessing OAuth stand-alone.
- */
+/** Api module to when accessing OAuth stand-alone. */
 @ConfiguresHttpApi
 public class OAuthHttpApiModule extends HttpApiModule<OAuthApi> {
 
@@ -41,5 +39,4 @@ public class OAuthHttpApiModule extends HttpApiModule<OAuthApi> {
    protected Supplier<URI> provideAuthenticationEndpoint(ProviderMetadata providerMetadata) {
       return Suppliers.ofInstance(URI.create(providerMetadata.getEndpoint()));
    }
-
 }

@@ -13,4 +13,4 @@ mvn clean install -Plive\
  -Dtest.oauth.credential=<accout pk in pem format>\
  -Dtest.oauth.endpoint=https://accounts.google.com/o/oauth2/token\
  -Dtest.jclouds.oauth.audience=https://accounts.google.com/o/oauth2/token\
- -Dtest.jclouds.oauth.scopes=https://www.googleapis.com/auth/prediction
+ -Dtest.jclouds.oauth.scope=https://www.googleapis.com/auth/prediction

@@ -35,6 +35,7 @@ import org.jclouds.oauth.v2.functions.PrivateKeySupplier;
 import org.jclouds.oauth.v2.functions.SignOrProduceMacForToken;
 
 import com.google.common.base.Function;
+import com.google.common.base.Functions;
 import com.google.common.base.Supplier;
 import com.google.common.base.Suppliers;
 import com.google.common.cache.CacheBuilder;
@@ -81,11 +82,7 @@ public class OAuthModule extends AbstractModule {
    @Provides @Singleton Supplier<Function<byte[], byte[]>> signOrProduceMacForToken(@Named(JWS_ALG) String jwsAlg,
          Provider<SignOrProduceMacForToken> in) {
       if (jwsAlg.equals(NONE)) { // Current implementation requires we return null on none.
-         return Suppliers.<Function<byte[], byte[]>>ofInstance(new Function<byte[], byte[]>() {
-            @Override public byte[] apply(byte[] input) {
-               return null;
-            }
-         });
+         return (Supplier) Suppliers.ofInstance(Functions.constant(null));
       }
       return Suppliers.memoize(in.get());
    }

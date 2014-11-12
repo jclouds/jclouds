@@ -16,7 +16,6 @@
  */
 package org.jclouds.oauth.v2.functions;
 
-import static com.google.common.base.Preconditions.checkState;
 import static org.jclouds.Constants.PROPERTY_SESSION_INTERVAL;
 import static org.jclouds.oauth.v2.config.OAuthProperties.AUDIENCE;
 import static org.jclouds.oauth.v2.config.OAuthProperties.JWS_ALG;
@@ -35,12 +34,10 @@ import org.jclouds.location.Provider;
 import org.jclouds.oauth.v2.config.OAuthScopes;
 import org.jclouds.oauth.v2.domain.Header;
 import org.jclouds.oauth.v2.domain.TokenRequest;
-import org.jclouds.rest.internal.GeneratedHttpRequest;
 
 import com.google.common.base.Function;
 import com.google.common.base.Joiner;
 import com.google.common.base.Supplier;
-import com.google.common.reflect.Invokable;
 
 /** Builds the default token request with the following claims: {@code iss,scope,aud,iat,exp}. */
 public class BuildTokenRequest implements Function<HttpRequest, TokenRequest> {
@@ -49,13 +46,14 @@ public class BuildTokenRequest implements Function<HttpRequest, TokenRequest> {
    private final String assertionTargetDescription;
    private final String signatureAlgorithm;
    private final Supplier<Credentials> credentialsSupplier;
+   private final OAuthScopes scopes;
    private final long tokenDuration;
 
    public static class TestBuildTokenRequest extends BuildTokenRequest {
       @Inject TestBuildTokenRequest(@Named(AUDIENCE) String assertionTargetDescription,
             @Named(JWS_ALG) String signatureAlgorithm, @Provider Supplier<Credentials> credentialsSupplier,
-            @Named(PROPERTY_SESSION_INTERVAL) long tokenDuration) {
-         super(assertionTargetDescription, signatureAlgorithm, credentialsSupplier, tokenDuration);
+            OAuthScopes scopes, @Named(PROPERTY_SESSION_INTERVAL) long tokenDuration) {
+         super(assertionTargetDescription, signatureAlgorithm, credentialsSupplier, scopes, tokenDuration);
       }
 
       public long currentTimeSeconds() {
@@ -65,10 +63,11 @@ public class BuildTokenRequest implements Function<HttpRequest, TokenRequest> {
 
    @Inject BuildTokenRequest(@Named(AUDIENCE) String assertionTargetDescription,
          @Named(JWS_ALG) String signatureAlgorithm, @Provider Supplier<Credentials> credentialsSupplier,
-         @Named(PROPERTY_SESSION_INTERVAL) long tokenDuration) {
+         OAuthScopes scopes, @Named(PROPERTY_SESSION_INTERVAL) long tokenDuration) {
       this.assertionTargetDescription = assertionTargetDescription;
       this.signatureAlgorithm = signatureAlgorithm;
       this.credentialsSupplier = credentialsSupplier;
+      this.scopes = scopes;
       this.tokenDuration = tokenDuration;
    }
 
@@ -77,7 +76,7 @@ public class BuildTokenRequest implements Function<HttpRequest, TokenRequest> {
 
       Map<String, Object> claims = new LinkedHashMap<String, Object>();
       claims.put("iss", credentialsSupplier.get().identity);
-      claims.put("scope", getOAuthScopes((GeneratedHttpRequest) request));
+      claims.put("scope", ON_COMMA.join(scopes.forRequest(request)));
       claims.put("aud", assertionTargetDescription);
 
       long now = currentTimeSeconds();
@@ -85,18 +84,6 @@ public class BuildTokenRequest implements Function<HttpRequest, TokenRequest> {
       claims.put(ISSUED_AT, now);
 
       return TokenRequest.create(header, claims);
-   }
-
-   //TODO: Remove and switch to a request function.
-   private String getOAuthScopes(GeneratedHttpRequest request) {
-      Invokable<?, ?> invokable = request.getInvocation().getInvokable();
-      OAuthScopes classScopes = invokable.getOwnerType().getRawType().getAnnotation(OAuthScopes.class);
-      OAuthScopes methodScopes = invokable.getAnnotation(OAuthScopes.class);
-      checkState(classScopes != null || methodScopes != null, "Api interface or method should be annotated " //
-                  + "with OAuthScopes specifying required permissions. Api interface: %s, Method: %s", //
-            invokable.getOwnerType(), invokable.getName());
-      OAuthScopes scopes = methodScopes != null ? methodScopes : classScopes;
-      return ON_COMMA.join(scopes.value());
    }
 
    long currentTimeSeconds() {

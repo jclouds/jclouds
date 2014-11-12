@@ -37,6 +37,8 @@ import org.jclouds.concurrent.config.ExecutorServiceModule;
 import org.jclouds.oauth.v2.OAuthApi;
 import org.jclouds.oauth.v2.OAuthApiMetadata;
 import org.jclouds.oauth.v2.OAuthTestUtils;
+import org.jclouds.oauth.v2.config.OAuthScopes;
+import org.jclouds.oauth.v2.config.OAuthScopes.SingleScope;
 import org.jclouds.oauth.v2.domain.Header;
 import org.jclouds.oauth.v2.domain.Token;
 import org.jclouds.oauth.v2.domain.TokenRequest;
@@ -46,6 +48,7 @@ import com.google.common.base.Joiner;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.io.BaseEncoding;
+import com.google.inject.Binder;
 import com.google.inject.Module;
 import com.squareup.okhttp.mockwebserver.MockResponse;
 import com.squareup.okhttp.mockwebserver.MockWebServer;
@@ -53,19 +56,19 @@ import com.squareup.okhttp.mockwebserver.RecordedRequest;
 
 @Test(groups = "unit", testName = "OAuthApiMockTest")
 public class OAuthApiMockTest {
+   private static final String SCOPE = "https://www.googleapis.com/auth/prediction";
 
    private static final String header = "{\"alg\":\"RS256\",\"typ\":\"JWT\"}";
 
    private static final String claims = "{\"iss\":\"761326798069-r5mljlln1rd4lrbhg75efgigp36m78j5@developer" +
-         ".gserviceaccount.com\"," +
-         "\"scope\":\"https://www.googleapis.com/auth/prediction\",\"aud\":\"https://accounts.google" +
+         ".gserviceaccount.com\",\"scope\":\"" + SCOPE + "\",\"aud\":\"https://accounts.google" +
          ".com/o/oauth2/token\",\"exp\":1328573381,\"iat\":1328569781}";
 
    private static final Token TOKEN = Token.create("1/8xbJqaOZXSUZbHLl5EOtu1pxz3fmmetKx9W8CV4t79M", "Bearer", 3600);
 
    private static final Map<String, Object> CLAIMS = ImmutableMap.<String, Object>builder()
          .put("iss", "761326798069-r5mljlln1rd4lrbhg75efgigp36m78j5@developer.gserviceaccount.com")
-         .put("scope", "https://www.googleapis.com/auth/prediction")
+         .put("scope", SCOPE)
          .put("aud", "https://accounts.google.com/o/oauth2/token")
          .put(EXPIRATION_TIME, 1328573381)
          .put(ISSUED_AT, 1328569781).build();
@@ -113,7 +116,11 @@ public class OAuthApiMockTest {
             .credentials("foo", toStringAndClose(OAuthTestUtils.class.getResourceAsStream("/testpk.pem")))
             .endpoint(url.toString())
             .overrides(overrides)
-            .modules(ImmutableSet.<Module>of(new ExecutorServiceModule(sameThreadExecutor())))
+            .modules(ImmutableSet.of(new ExecutorServiceModule(sameThreadExecutor()), new Module() {
+               @Override public void configure(Binder binder) {
+                  binder.bind(OAuthScopes.class).toInstance(SingleScope.create(SCOPE));
+               }
+            }))
             .buildApi(OAuthApi.class);
    }
 }

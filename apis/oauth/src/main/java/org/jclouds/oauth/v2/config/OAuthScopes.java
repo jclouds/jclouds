@@ -16,26 +16,57 @@
  */
 package org.jclouds.oauth.v2.config;
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import java.util.List;
 
-import javax.inject.Qualifier;
+import org.jclouds.http.HttpRequest;
+
+import com.google.auto.value.AutoValue;
+import com.google.common.collect.ImmutableList;
 
 /**
- * Used to annotate REST methods/ifaces that use OAuthAuthentication.
- * <p/>
- * Sets the scopes for the token request for that particular method.
+ * Implementations are api-specific, typically routing GET or HEAD requests to a read-only role, and others to a
+ * read-write one.
  */
-@Retention(value = RetentionPolicy.RUNTIME)
-@Target(value = {ElementType.TYPE, ElementType.METHOD})
-@Qualifier
-public @interface OAuthScopes {
+public interface OAuthScopes {
 
-   /**
-    * @return the OAuth scopes required to access the resource.
-    */
-   String[] value();
+   /** Returns a list of scopes needed to perform the request. */
+   List<String> forRequest(HttpRequest input);
 
+   @AutoValue public abstract static class SingleScope implements OAuthScopes {
+      abstract List<String> scopes();
+
+      public static SingleScope create(String scope) {
+         return new AutoValue_OAuthScopes_SingleScope(ImmutableList.of(scope));
+      }
+
+      @Override public List<String> forRequest(HttpRequest input) {
+         return scopes();
+      }
+
+      SingleScope() {
+      }
+   }
+
+   @AutoValue public abstract static class ReadOrWriteScopes implements OAuthScopes {
+      abstract List<String> readScopes();
+
+      abstract List<String> writeScopes();
+
+      public static ReadOrWriteScopes create(String readScope, String writeScope) {
+         return new AutoValue_OAuthScopes_ReadOrWriteScopes( //
+               ImmutableList.of(readScope), //
+               ImmutableList.of(writeScope) //
+         );
+      }
+
+      @Override public List<String> forRequest(HttpRequest input) {
+         if (input.getMethod().equals("GET") || input.getMethod().equals("HEAD")) {
+            return readScopes();
+         }
+         return writeScopes();
+      }
+
+      ReadOrWriteScopes() {
+      }
+   }
 }

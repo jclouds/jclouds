@@ -25,29 +25,31 @@ import static org.testng.Assert.assertTrue;
 import java.io.IOException;
 import java.util.Map;
 
-import org.jclouds.ContextBuilder;
 import org.jclouds.http.HttpRequest;
-import org.jclouds.oauth.v2.OAuthApiMetadata;
-import org.jclouds.oauth.v2.OAuthTestUtils;
+import org.jclouds.json.config.GsonModule;
 import org.jclouds.oauth.v2.domain.Header;
 import org.jclouds.oauth.v2.domain.TokenRequest;
 import org.jclouds.util.Strings2;
 import org.testng.annotations.Test;
 
+import com.google.common.base.Function;
+import com.google.common.base.Functions;
 import com.google.common.base.Splitter;
+import com.google.common.base.Supplier;
+import com.google.common.base.Suppliers;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Iterables;
+import com.google.inject.Binder;
+import com.google.inject.Guice;
+import com.google.inject.Module;
+import com.google.inject.Provides;
 
 @Test(groups = "unit", testName = "OAuthTokenBinderTest")
 public class TokenBinderTest {
    public static final String STRING_THAT_GENERATES_URL_UNSAFE_BASE64_ENCODING = "§1234567890'+±!\"#$%&/()" +
-         "=?*qwertyuiopº´WERTYUIOPªàsdfghjklç~ASDFGHJKLÇ^<zxcvbnm," +
-         ".->ZXCVBNM;:_@€";
+         "=?*qwertyuiopº´WERTYUIOPªàsdfghjklç~ASDFGHJKLÇ^<zxcvbnm,.->ZXCVBNM;:_@€";
 
    public void testPayloadIsUrlSafe() throws IOException {
-      TokenBinder tokenRequestFormat = ContextBuilder.newBuilder(new OAuthApiMetadata()).overrides
-              (OAuthTestUtils.defaultProperties(null)).build().utils()
-              .injector().getInstance(TokenBinder.class);
       Header header = Header.create("a", "b");
 
       Map<String, Object> claims = ImmutableMap.<String, Object>builder()
@@ -56,7 +58,7 @@ public class TokenBinderTest {
             .put("ist", STRING_THAT_GENERATES_URL_UNSAFE_BASE64_ENCODING).build();
 
       TokenRequest tokenRequest = TokenRequest.create(header, claims);
-      HttpRequest request = tokenRequestFormat.bindToRequest(
+      HttpRequest request = tokenBinder.bindToRequest(
             HttpRequest.builder().method("GET").endpoint("http://localhost").build(), tokenRequest);
 
       assertNotNull(request.getPayload());
@@ -71,4 +73,13 @@ public class TokenBinderTest {
       assertTrue(!payload.contains("+"));
       assertTrue(!payload.contains("/"));
    }
+
+   private final TokenBinder tokenBinder = Guice.createInjector(new GsonModule(), new Module() {
+      @Override public void configure(Binder binder) {
+      }
+
+      @Provides Supplier<Function<byte[], byte[]>> signer() {
+         return (Supplier) Suppliers.ofInstance(Functions.constant(null));
+      }
+   }).getInstance(TokenBinder.class);
 }
