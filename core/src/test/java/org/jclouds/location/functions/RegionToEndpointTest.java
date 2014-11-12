@@ -18,7 +18,6 @@ package org.jclouds.location.functions;
 
 import static org.testng.Assert.assertEquals;
 
-import java.io.File;
 import java.net.URI;
 import java.util.Map;
 
@@ -41,24 +40,10 @@ public class RegionToEndpointTest {
       assertEquals(fn.apply("1"), URI.create("http://1"));
    }
 
-   @Test(expectedExceptions = IllegalArgumentException.class)
-   public void testMustBeString() {
-      RegionToEndpoint fn = new RegionToEndpoint(Suppliers.<Map<String, Supplier<URI>>> ofInstance(ImmutableMap.of("1",
-               Suppliers.ofInstance(URI.create("http://1")))));
-      fn.apply(new File("foo"));
-   }
-
    @Test(expectedExceptions = IllegalStateException.class)
    public void testMustHaveEndpoints() {
       RegionToEndpoint fn = new RegionToEndpoint(Suppliers.<Map<String, Supplier<URI>>> ofInstance(ImmutableMap
                .<String, Supplier<URI>> of()));
       fn.apply("1");
-   }
-
-   @Test(expectedExceptions = IllegalArgumentException.class)
-   public void testNullIsIllegal() {
-      RegionToEndpoint fn = new RegionToEndpoint(Suppliers.<Map<String, Supplier<URI>>> ofInstance(ImmutableMap.of("1",
-               Suppliers.ofInstance(URI.create("http://1")))));
-      fn.apply(null);
    }
 }

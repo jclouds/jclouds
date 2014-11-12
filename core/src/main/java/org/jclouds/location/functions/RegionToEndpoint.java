@@ -26,7 +26,6 @@ import java.util.Map;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-import org.jclouds.javax.annotation.Nullable;
 import org.jclouds.location.Region;
 
 import com.google.common.base.Function;
@@ -43,8 +42,7 @@ public class RegionToEndpoint implements Function<Object, URI> {
    }
 
    @Override
-   public URI apply(@Nullable Object from) {
-      checkArgument(from != null && from instanceof String, "you must specify a region, as a String argument");
+   public URI apply(Object from) {
       Map<String, Supplier<URI>> regionToEndpoint = regionToEndpointSupplier.get();
       checkState(!regionToEndpoint.isEmpty(), "no region name to endpoint mappings configured!");
       checkArgument(regionToEndpoint.containsKey(from),
