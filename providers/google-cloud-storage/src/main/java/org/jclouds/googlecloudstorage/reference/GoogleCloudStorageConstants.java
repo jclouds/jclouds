@@ -16,10 +16,6 @@
  */
 package org.jclouds.googlecloudstorage.reference;
 
-import org.jclouds.domain.Location;
-import org.jclouds.domain.LocationBuilder;
-import org.jclouds.domain.LocationScope;
-
 import com.google.common.annotations.Beta;
 
 public final class GoogleCloudStorageConstants {
@@ -29,28 +25,15 @@ public final class GoogleCloudStorageConstants {
 
    public static final String GCS_PROVIDER_NAME = "google-cloud-storage";
 
-   public static final String STORAGE_READONLY_SCOPE = "https://www.googleapis.com/auth/devstorage.read_only";
-
-   public static final String STORAGE_WRITEONLY_SCOPE = "https://www.googleapis.com/auth/devstorage.write_only";
-
-   public static final String STORAGE_READWRITE_SCOPE = "https://www.googleapis.com/auth/devstorage.read_write";
-
-   public static final String STORAGE_FULLCONTROL_SCOPE = "https://www.googleapis.com/auth/devstorage.full_control";
-
    /**
     * The total time, in msecs, to wait for an operation to complete.
     */
-
    @Beta
    public static final String OPERATION_COMPLETE_TIMEOUT = "jclouds.google-cloud-storage.operation-complete-timeout";
 
    /**
     * The interval, in msecs, between calls to check whether an operation has completed.
     */
-
    @Beta
    public static final String OPERATION_COMPLETE_INTERVAL = "jclouds.google-cloud-storage.operation-complete-interval";
-
-   public static final Location GOOGLE_PROVIDER_LOCATION = new LocationBuilder().scope(LocationScope.PROVIDER).id
-            (GCS_PROVIDER_NAME).description(GCS_PROVIDER_NAME).build();
 }

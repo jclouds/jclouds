@@ -16,7 +16,7 @@
  */
 package org.jclouds.googlecloudstorage.features;
 
-import static org.jclouds.googlecloudstorage.reference.GoogleCloudStorageConstants.STORAGE_FULLCONTROL_SCOPE;
+import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 
 import java.util.List;
 
@@ -30,7 +30,6 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
-import javax.ws.rs.core.MediaType;
 
 import org.jclouds.Fallbacks.NullOnNotFoundOr404;
 import org.jclouds.googlecloudstorage.domain.DomainResourceReferences.ObjectRole;
@@ -38,7 +37,6 @@ import org.jclouds.googlecloudstorage.domain.ObjectAccessControls;
 import org.jclouds.googlecloudstorage.domain.templates.ObjectAccessControlsTemplate;
 import org.jclouds.http.HttpResponse;
 import org.jclouds.javax.annotation.Nullable;
-import org.jclouds.oauth.v2.config.OAuthScopes;
 import org.jclouds.oauth.v2.filters.OAuthAuthenticationFilter;
 import org.jclouds.rest.annotations.BinderParam;
 import org.jclouds.rest.annotations.Fallback;
@@ -56,6 +54,7 @@ import org.jclouds.rest.binders.BindToJsonPayload;
 
 @SkipEncoding({ '/', '=' })
 @RequestFilters(OAuthAuthenticationFilter.class)
+@Consumes(APPLICATION_JSON)
 public interface DefaultObjectAccessControlsApi {
 
    /**
@@ -69,12 +68,9 @@ public interface DefaultObjectAccessControlsApi {
     *
     * @return an DefaultObjectAccessControls resource
     */
-
    @Named("DefaultObjectAccessControls:get")
    @GET
-   @Consumes(MediaType.APPLICATION_JSON)
    @Path("/b/{bucket}/defaultObjectAcl/{entity}")
-   @OAuthScopes(STORAGE_FULLCONTROL_SCOPE)
    @Fallback(NullOnNotFoundOr404.class)
    @Nullable
    ObjectAccessControls getDefaultObjectAccessControls(@PathParam("bucket") String bucketName,
@@ -89,13 +85,10 @@ public interface DefaultObjectAccessControlsApi {
     *
     * @return If successful, this method returns a DefaultObjectAccessControls resource
     */
-
    @Named("DefaultObjectAccessControls:insert")
    @POST
-   @Consumes(MediaType.APPLICATION_JSON)
-   @Produces(MediaType.APPLICATION_JSON)
+   @Produces(APPLICATION_JSON)
    @Path("/b/{bucket}/defaultObjectAcl")
-   @OAuthScopes(STORAGE_FULLCONTROL_SCOPE)
    ObjectAccessControls createDefaultObjectAccessControls(@PathParam("bucket") String bucketName,
             @BinderParam(BindToJsonPayload.class) ObjectAccessControlsTemplate template);
 
@@ -112,9 +105,7 @@ public interface DefaultObjectAccessControlsApi {
     */
    @Named("DefaultObjectAccessControls:delete")
    @DELETE
-   @Consumes(MediaType.APPLICATION_JSON)
    @Path("/b/{bucket}/defaultObjectAcl/{entity}")
-   @OAuthScopes(STORAGE_FULLCONTROL_SCOPE)
    @Fallback(NullOnNotFoundOr404.class)
    @Nullable
    HttpResponse deleteDefaultObjectAccessControls(@PathParam("bucket") String bucketName,
@@ -129,13 +120,10 @@ public interface DefaultObjectAccessControlsApi {
     * @return ListObjectAccessControls resource
     *
     */
-
    @Named("DefaultObjectAccessControls:list")
    @GET
-   @Consumes(MediaType.APPLICATION_JSON)
-   @Produces(MediaType.APPLICATION_JSON)
+   @Produces(APPLICATION_JSON)
    @Path("/b/{bucket}/defaultObjectAcl")
-   @OAuthScopes(STORAGE_FULLCONTROL_SCOPE)
    @Fallback(NullOnNotFoundOr404.class)
    @Nullable
    @SelectJson("items")
@@ -152,10 +140,8 @@ public interface DefaultObjectAccessControlsApi {
     */
    @Named("DefaultObjectAccessControls:update")
    @PUT
-   @Consumes(MediaType.APPLICATION_JSON)
-   @Produces(MediaType.APPLICATION_JSON)
+   @Produces(APPLICATION_JSON)
    @Path("/b/{bucket}/defaultObjectAcl/{entity}")
-   @OAuthScopes(STORAGE_FULLCONTROL_SCOPE)
    @Fallback(NullOnNotFoundOr404.class)
    ObjectAccessControls updateDefaultObjectAccessControls(@PathParam("bucket") String bucketName,
             @PathParam("entity") String entity,
@@ -169,10 +155,8 @@ public interface DefaultObjectAccessControlsApi {
     */
    @Named("DefaultObjectAccessControls:update")
    @PUT
-   @Consumes(MediaType.APPLICATION_JSON)
-   @Produces(MediaType.APPLICATION_JSON)
+   @Produces(APPLICATION_JSON)
    @Path("/b/{bucket}/defaultObjectAcl/{entity}")
-   @OAuthScopes(STORAGE_FULLCONTROL_SCOPE)
    @Fallback(NullOnNotFoundOr404.class)
    ObjectAccessControls updateDefaultObjectAccessControls(@PathParam("bucket") String bucketName,
             @PathParam("entity") String entity,
@@ -187,10 +171,8 @@ public interface DefaultObjectAccessControlsApi {
     */
    @Named("DefaultObjectAccessControls:patch")
    @PATCH
-   @Consumes(MediaType.APPLICATION_JSON)
-   @Produces(MediaType.APPLICATION_JSON)
+   @Produces(APPLICATION_JSON)
    @Path("/b/{bucket}/defaultObjectAcl/{entity}")
-   @OAuthScopes(STORAGE_FULLCONTROL_SCOPE)
    @Fallback(NullOnNotFoundOr404.class)
    ObjectAccessControls patchDefaultObjectAccessControls(@PathParam("bucket") String bucketName,
             @PathParam("entity") String entity,

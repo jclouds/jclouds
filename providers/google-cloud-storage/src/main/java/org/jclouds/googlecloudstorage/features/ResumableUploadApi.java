@@ -16,7 +16,7 @@
  */
 package org.jclouds.googlecloudstorage.features;
 
-import static org.jclouds.googlecloudstorage.reference.GoogleCloudStorageConstants.STORAGE_FULLCONTROL_SCOPE;
+import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 
 import javax.inject.Named;
 import javax.ws.rs.Consumes;
@@ -27,7 +27,6 @@ import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.QueryParam;
-import javax.ws.rs.core.MediaType;
 
 import org.jclouds.googlecloudstorage.binders.UploadBinder;
 import org.jclouds.googlecloudstorage.domain.ResumableUpload;
@@ -35,7 +34,6 @@ import org.jclouds.googlecloudstorage.domain.templates.ObjectTemplate;
 import org.jclouds.googlecloudstorage.options.InsertObjectOptions;
 import org.jclouds.googlecloudstorage.parser.ParseToResumableUpload;
 import org.jclouds.io.Payload;
-import org.jclouds.oauth.v2.config.OAuthScopes;
 import org.jclouds.oauth.v2.filters.OAuthAuthenticator;
 import org.jclouds.rest.annotations.BinderParam;
 import org.jclouds.rest.annotations.MapBinder;
@@ -52,9 +50,9 @@ import org.jclouds.rest.binders.BindToJsonPayload;
  * @see <a href="https://developers.google.com/storage/docs/json_api/v1/objects"/>
  * @see <a href="https://developers.google.com/storage/docs/json_api/v1/how-tos/upload#resumable"/>
  */
-
 @SkipEncoding({ '/', '=' })
 @RequestFilters(OAuthAuthenticator.class)
+@Consumes(APPLICATION_JSON)
 public interface ResumableUploadApi {
 
    /**
@@ -76,9 +74,7 @@ public interface ResumableUploadApi {
    @Named("Object:initResumableUpload")
    @POST
    @QueryParams(keys = "uploadType", values = "resumable")
-   @Consumes(MediaType.APPLICATION_JSON)
    @Path("/upload/storage/v1/b/{bucket}/o")
-   @OAuthScopes(STORAGE_FULLCONTROL_SCOPE)
    @ResponseParser(ParseToResumableUpload.class)
    ResumableUpload initResumableUpload(@PathParam("bucket") String bucketName, @QueryParam("name") String objectName,
             @HeaderParam("X-Upload-Content-Type") String contentType,
@@ -103,9 +99,7 @@ public interface ResumableUploadApi {
    @Named("Object:resumableUpload")
    @POST
    @QueryParams(keys = "uploadType", values = "resumable")
-   @Consumes(MediaType.APPLICATION_JSON)
    @Path("/upload/storage/v1/b/{bucket}/o")
-   @OAuthScopes(STORAGE_FULLCONTROL_SCOPE)
    @ResponseParser(ParseToResumableUpload.class)
    ResumableUpload initResumableUpload(@PathParam("bucket") String bucketName,
             @HeaderParam("X-Upload-Content-Type") String contentType,
@@ -126,10 +120,8 @@ public interface ResumableUploadApi {
     */
    @Named("Object:resumableUpload")
    @PUT
-   @Consumes(MediaType.APPLICATION_JSON)
    @QueryParams(keys = "uploadType", values = "resumable")
    @Path("/upload/storage/v1/b/{bucket}/o")
-   @OAuthScopes(STORAGE_FULLCONTROL_SCOPE)
    @MapBinder(UploadBinder.class)
    @ResponseParser(ParseToResumableUpload.class)
    ResumableUpload upload(@PathParam("bucket") String bucketName, @QueryParam("upload_id") String uploadId,
@@ -158,10 +150,8 @@ public interface ResumableUploadApi {
     */
    @Named("Object:Upload")
    @PUT
-   @Consumes(MediaType.APPLICATION_JSON)
    @QueryParams(keys = "uploadType", values = "resumable")
    @Path("/upload/storage/v1/b/{bucket}/o")
-   @OAuthScopes(STORAGE_FULLCONTROL_SCOPE)
    @MapBinder(UploadBinder.class)
    @ResponseParser(ParseToResumableUpload.class)
    ResumableUpload chunkUpload(@PathParam("bucket") String bucketName, @QueryParam("upload_id") String uploadId,
@@ -185,11 +175,9 @@ public interface ResumableUploadApi {
 
    @Named("Object:Upload")
    @PUT
-   @Consumes(MediaType.APPLICATION_JSON)
    @DefaultValue("0")
    @QueryParams(keys = "uploadType", values = "resumable")
    @Path("/upload/storage/v1/b/{bucket}/o")
-   @OAuthScopes(STORAGE_FULLCONTROL_SCOPE)
    @ResponseParser(ParseToResumableUpload.class)
    ResumableUpload checkStatus(@PathParam("bucket") String bucketName, @QueryParam("upload_id") String uploadId,
             @HeaderParam("Content-Range") String contentRange);

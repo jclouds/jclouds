@@ -16,8 +16,7 @@
  */
 package org.jclouds.googlecloudstorage.features;
 
-import static org.jclouds.googlecloudstorage.reference.GoogleCloudStorageConstants.STORAGE_FULLCONTROL_SCOPE;
-import static org.jclouds.googlecloudstorage.reference.GoogleCloudStorageConstants.STORAGE_READONLY_SCOPE;
+import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 
 import javax.inject.Named;
 import javax.ws.rs.Consumes;
@@ -29,7 +28,6 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
-import javax.ws.rs.core.MediaType;
 
 import org.jclouds.Fallbacks.FalseOnNotFoundOr404;
 import org.jclouds.Fallbacks.NullOnNotFoundOr404;
@@ -46,7 +44,6 @@ import org.jclouds.googlecloudstorage.options.InsertBucketOptions;
 import org.jclouds.googlecloudstorage.options.ListOptions;
 import org.jclouds.googlecloudstorage.options.UpdateBucketOptions;
 import org.jclouds.javax.annotation.Nullable;
-import org.jclouds.oauth.v2.config.OAuthScopes;
 import org.jclouds.oauth.v2.filters.OAuthAuthenticationFilter;
 import org.jclouds.rest.annotations.BinderParam;
 import org.jclouds.rest.annotations.Fallback;
@@ -63,6 +60,7 @@ import org.jclouds.rest.binders.BindToJsonPayload;
 
 @SkipEncoding({ '/', '=' })
 @RequestFilters(OAuthAuthenticationFilter.class)
+@Consumes(APPLICATION_JSON)
 public interface BucketApi {
 
    /**
@@ -75,9 +73,7 @@ public interface BucketApi {
     */
    @Named("Bucket:get")
    @GET
-   @Consumes(MediaType.APPLICATION_JSON)
    @Path("/b/{bucket}")
-   @OAuthScopes(STORAGE_FULLCONTROL_SCOPE)
    @Fallback(FalseOnNotFoundOr404.class)
    boolean bucketExist(@PathParam("bucket") String bucketName);
 
@@ -91,10 +87,8 @@ public interface BucketApi {
     */
    @Named("Bucket:get")
    @GET
-   @Consumes(MediaType.APPLICATION_JSON)
-   @Produces(MediaType.APPLICATION_JSON)
+   @Produces(APPLICATION_JSON)
    @Path("/b/{bucket}")
-   @OAuthScopes(STORAGE_READONLY_SCOPE)
    @Fallback(NullOnNotFoundOr404.class)
    @Nullable
    Bucket getBucket(@PathParam("bucket") String bucketName);
@@ -111,10 +105,8 @@ public interface BucketApi {
     */
    @Named("Bucket:get")
    @GET
-   @Consumes(MediaType.APPLICATION_JSON)
-   @Produces(MediaType.APPLICATION_JSON)
+   @Produces(APPLICATION_JSON)
    @Path("/b/{bucket}")
-   @OAuthScopes(STORAGE_READONLY_SCOPE)
    @Fallback(NullOnNotFoundOr404.class)
    @Nullable
    Bucket getBucket(@PathParam("bucket") String bucketName, GetBucketOptions options);
@@ -131,9 +123,7 @@ public interface BucketApi {
     */
    @Named("Bucket:insert")
    @POST
-   @Consumes(MediaType.APPLICATION_JSON)
    @Path("/b")
-   @OAuthScopes(STORAGE_FULLCONTROL_SCOPE)
    @Fallback(NullOnBucketAlreadyExists.class)
    Bucket createBucket(@QueryParam("project") String projectId, @BinderParam(BindToJsonPayload.class) BucketTemplate bucketTemplate);
 
@@ -152,9 +142,7 @@ public interface BucketApi {
     */
    @Named("Bucket:insert")
    @POST
-   @Consumes(MediaType.APPLICATION_JSON)
    @Path("/b")
-   @OAuthScopes(STORAGE_FULLCONTROL_SCOPE)
    @Fallback(NullOnKeyAlreadyExists.class)
    Bucket createBucket(@QueryParam("project") String projectId,
             @BinderParam(BindToJsonPayload.class) BucketTemplate bucketTemplate, InsertBucketOptions options);
@@ -167,10 +155,8 @@ public interface BucketApi {
     */
    @Named("Bucket:delete")
    @DELETE
-   @Consumes(MediaType.APPLICATION_JSON)
    @Path("/b/{bucket}")
    @Fallback(TrueOnNotFoundOr404.class)
-   @OAuthScopes(STORAGE_FULLCONTROL_SCOPE)
    boolean deleteBucket(@PathParam("bucket") String bucketName);
 
    /**
@@ -183,10 +169,8 @@ public interface BucketApi {
     */
    @Named("Bucket:delete")
    @DELETE
-   @Consumes(MediaType.APPLICATION_JSON)
    @Path("/b/{bucket}")
    @Fallback(TrueOnNotFoundOr404.class)
-   @OAuthScopes(STORAGE_FULLCONTROL_SCOPE)
    boolean deleteBucket(@PathParam("bucket") String bucketName, DeleteBucketOptions options);
 
    /**
@@ -199,10 +183,8 @@ public interface BucketApi {
     */
    @Named("Bucket:list")
    @GET
-   @Consumes(MediaType.APPLICATION_JSON)
-   @Produces(MediaType.APPLICATION_JSON)
+   @Produces(APPLICATION_JSON)
    @Path("/b")
-   @OAuthScopes(STORAGE_FULLCONTROL_SCOPE)
    @Fallback(EmptyListPageOnNotFoundOr404.class)
    ListPage<Bucket> listBucket(@QueryParam("project") String projectId);
 
@@ -216,10 +198,8 @@ public interface BucketApi {
     */
    @Named("Bucket:list")
    @GET
-   @Consumes(MediaType.APPLICATION_JSON)
-   @Produces(MediaType.APPLICATION_JSON)
+   @Produces(APPLICATION_JSON)
    @Path("/b")
-   @OAuthScopes(STORAGE_FULLCONTROL_SCOPE)
    @Fallback(EmptyListPageOnNotFoundOr404.class)
    ListPage<Bucket> listBucket(@QueryParam("project") String projectId, ListOptions options);
 
@@ -235,10 +215,8 @@ public interface BucketApi {
     */
    @Named("Bucket:update")
    @PUT
-   @Consumes(MediaType.APPLICATION_JSON)
-   @Produces(MediaType.APPLICATION_JSON)
+   @Produces(APPLICATION_JSON)
    @Path("/b/{bucket}")
-   @OAuthScopes(STORAGE_FULLCONTROL_SCOPE)
    @Fallback(NullOnNotFoundOr404.class)
    Bucket updateBucket(@PathParam("bucket") String bucketName,
             @BinderParam(BindToJsonPayload.class) BucketTemplate bucketTemplate);
@@ -257,10 +235,8 @@ public interface BucketApi {
     */
    @Named("Bucket:update")
    @PUT
-   @Consumes(MediaType.APPLICATION_JSON)
-   @Produces(MediaType.APPLICATION_JSON)
+   @Produces(APPLICATION_JSON)
    @Path("/b/{bucket}")
-   @OAuthScopes(STORAGE_FULLCONTROL_SCOPE)
    @Fallback(NullOnNotFoundOr404.class)
    Bucket updateBucket(@PathParam("bucket") String bucketName,
             @BinderParam(BindToJsonPayload.class) BucketTemplate bucketTemplate, UpdateBucketOptions options);
@@ -279,10 +255,8 @@ public interface BucketApi {
     */
    @Named("Bucket:patch")
    @PATCH
-   @Consumes(MediaType.APPLICATION_JSON)
-   @Produces(MediaType.APPLICATION_JSON)
+   @Produces(APPLICATION_JSON)
    @Path("/b/{bucket}")
-   @OAuthScopes(STORAGE_FULLCONTROL_SCOPE)
    @Fallback(NullOnNotFoundOr404.class)
    Bucket patchBucket(@PathParam("bucket") String bucketName,
             @BinderParam(BindToJsonPayload.class) BucketTemplate bucketTemplate);
@@ -303,10 +277,8 @@ public interface BucketApi {
     */
    @Named("Bucket:patch")
    @PATCH
-   @Consumes(MediaType.APPLICATION_JSON)
-   @Produces(MediaType.APPLICATION_JSON)
+   @Produces(APPLICATION_JSON)
    @Path("/b/{bucket}")
-   @OAuthScopes(STORAGE_FULLCONTROL_SCOPE)
    @Fallback(NullOnNotFoundOr404.class)
    Bucket patchBucket(@PathParam("bucket") String bucketName,
             @BinderParam(BindToJsonPayload.class) BucketTemplate bucketTemplate, UpdateBucketOptions options);

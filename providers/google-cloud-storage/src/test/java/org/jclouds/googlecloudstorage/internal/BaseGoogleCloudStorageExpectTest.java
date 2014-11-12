@@ -46,7 +46,9 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import javax.ws.rs.core.MediaType;
 
+import org.jclouds.apis.ApiMetadata;
 import org.jclouds.crypto.Crypto;
+import org.jclouds.googlecloudstorage.GoogleCloudStorageApiMetadata;
 import org.jclouds.http.HttpRequest;
 import org.jclouds.http.HttpResponse;
 import org.jclouds.io.Payload;
@@ -65,6 +67,11 @@ import com.google.inject.Module;
 import com.google.inject.TypeLiteral;
 
 public class BaseGoogleCloudStorageExpectTest<T> extends BaseRestApiExpectTest<T> {
+   protected static final String STORAGE_READONLY_SCOPE = "https://www.googleapis.com/auth/devstorage.read_only";
+
+   protected static final String STORAGE_READWRITE_SCOPE = "https://www.googleapis.com/auth/devstorage.read_write";
+
+   protected static final String STORAGE_FULLCONTROL_SCOPE = "https://www.googleapis.com/auth/devstorage.full_control";
 
    private static final String header = "{\"alg\":\"none\",\"typ\":\"JWT\"}";
 
@@ -87,7 +94,6 @@ public class BaseGoogleCloudStorageExpectTest<T> extends BaseRestApiExpectTest<T
 
    @Override
    protected Module createModule() {
-
       return new Module() {
          @Override
          public void configure(Binder binder) {
@@ -129,7 +135,6 @@ public class BaseGoogleCloudStorageExpectTest<T> extends BaseRestApiExpectTest<T
             });
          }
       };
-
    }
 
    @Override
@@ -138,6 +143,10 @@ public class BaseGoogleCloudStorageExpectTest<T> extends BaseRestApiExpectTest<T
       // use no sig algorithm for expect tests (means no credential is required either)
       props.put(JWS_ALG, NONE);
       return props;
+   }
+
+   @Override protected ApiMetadata createApiMetadata(){
+      return new GoogleCloudStorageApiMetadata();
    }
 
    @Override
@@ -168,5 +177,4 @@ public class BaseGoogleCloudStorageExpectTest<T> extends BaseRestApiExpectTest<T
    protected Payload staticPayloadFromResource(String resource) {
       return new ByteSourcePayload(Resources.asByteSource(Resources.getResource(getClass(), resource)));
    }
-
 }

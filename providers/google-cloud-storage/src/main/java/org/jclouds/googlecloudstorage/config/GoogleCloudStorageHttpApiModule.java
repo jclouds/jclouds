@@ -33,6 +33,7 @@ import org.jclouds.http.annotation.ClientError;
 import org.jclouds.http.annotation.Redirection;
 import org.jclouds.http.annotation.ServerError;
 import org.jclouds.location.Provider;
+import org.jclouds.oauth.v2.config.OAuthScopes;
 import org.jclouds.rest.AuthorizationException;
 import org.jclouds.rest.ConfiguresHttpApi;
 import org.jclouds.rest.config.HttpApiModule;
@@ -44,12 +45,12 @@ import com.google.common.base.Supplier;
 import com.google.common.collect.Iterables;
 import com.google.inject.Provides;
 
-/**
- * Configures the GoogleCloud connection.
- */
 @ConfiguresHttpApi
 public class GoogleCloudStorageHttpApiModule extends HttpApiModule<GoogleCloudStorageApi> {
-   public GoogleCloudStorageHttpApiModule() {
+
+   @Override public void configure(){
+      super.configure();
+      bind(OAuthScopes.class).toInstance(GoogleCloudStorageOAuthScopes.create());
    }
 
    @Override

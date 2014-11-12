@@ -16,7 +16,6 @@
  */
 package org.jclouds.googlecloudstorage;
 
-import org.jclouds.googlecloudstorage.reference.GoogleCloudStorageConstants;
 import org.jclouds.oauth.v2.internal.BaseOAuthAuthenticatedApiLiveTest;
 import org.testng.annotations.Test;
 
@@ -30,6 +29,6 @@ public class GoogleCloudStorageAuthenticatedRestContextLiveTest extends
 
    @Override
    public String getScopes() {
-      return GoogleCloudStorageConstants.STORAGE_FULLCONTROL_SCOPE;
+      return "https://www.googleapis.com/auth/devstorage.full_control";
    }
 }

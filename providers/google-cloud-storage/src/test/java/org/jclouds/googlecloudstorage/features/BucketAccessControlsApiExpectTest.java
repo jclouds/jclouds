@@ -17,7 +17,6 @@
 
 package org.jclouds.googlecloudstorage.features;
 
-import static org.jclouds.googlecloudstorage.reference.GoogleCloudStorageConstants.STORAGE_FULLCONTROL_SCOPE;
 import static org.testng.Assert.assertEquals;
 import static org.testng.AssertJUnit.assertNull;
 
@@ -34,7 +33,7 @@ import org.jclouds.http.HttpRequest;
 import org.jclouds.http.HttpResponse;
 import org.testng.annotations.Test;
 
-@Test(groups = "unit")
+@Test(groups = "unit", testName = "BucketAccessControlsApiExpectTest")
 public class BucketAccessControlsApiExpectTest extends BaseGoogleCloudStorageApiExpectTest {
 
    private static final String EXPECTED_TEST_BUCKET = "jcloudtestbucket";

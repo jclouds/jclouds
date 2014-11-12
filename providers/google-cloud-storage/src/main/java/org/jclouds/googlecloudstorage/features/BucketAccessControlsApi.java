@@ -16,7 +16,7 @@
  */
 package org.jclouds.googlecloudstorage.features;
 
-import static org.jclouds.googlecloudstorage.reference.GoogleCloudStorageConstants.STORAGE_FULLCONTROL_SCOPE;
+import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 
 import java.util.List;
 
@@ -29,14 +29,12 @@ import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
-import javax.ws.rs.core.MediaType;
 
 import org.jclouds.Fallbacks.NullOnNotFoundOr404;
 import org.jclouds.googlecloudstorage.domain.BucketAccessControls;
 import org.jclouds.googlecloudstorage.domain.templates.BucketAccessControlsTemplate;
 import org.jclouds.http.HttpResponse;
 import org.jclouds.javax.annotation.Nullable;
-import org.jclouds.oauth.v2.config.OAuthScopes;
 import org.jclouds.oauth.v2.filters.OAuthAuthenticationFilter;
 import org.jclouds.rest.annotations.BinderParam;
 import org.jclouds.rest.annotations.Fallback;
@@ -54,6 +52,7 @@ import org.jclouds.rest.binders.BindToJsonPayload;
 
 @SkipEncoding({ '/', '=' })
 @RequestFilters(OAuthAuthenticationFilter.class)
+@Consumes(APPLICATION_JSON)
 public interface BucketAccessControlsApi {
 
    /**
@@ -70,9 +69,7 @@ public interface BucketAccessControlsApi {
 
    @Named("BucketAccessControls:get")
    @GET
-   @Consumes(MediaType.APPLICATION_JSON)
    @Path("/b/{bucket}/acl/{entity}")
-   @OAuthScopes(STORAGE_FULLCONTROL_SCOPE)
    @Fallback(NullOnNotFoundOr404.class)
    @Nullable
    BucketAccessControls getBucketAccessControls(@PathParam("bucket") String bucketName,
@@ -92,9 +89,7 @@ public interface BucketAccessControlsApi {
 
    @Named("BucketAccessControls:insert")
    @POST
-   @Consumes(MediaType.APPLICATION_JSON)
    @Path("/b/{bucket}/acl")
-   @OAuthScopes(STORAGE_FULLCONTROL_SCOPE)
    BucketAccessControls createBucketAccessControls(@PathParam("bucket") String bucketName,
             @BinderParam(BindToJsonPayload.class) BucketAccessControlsTemplate template);
 
@@ -108,9 +103,7 @@ public interface BucketAccessControlsApi {
 
    @Named("BucketAccessControls:delete")
    @DELETE
-   @Consumes(MediaType.APPLICATION_JSON)
    @Path("/b/{bucket}/acl/{entity}")
-   @OAuthScopes(STORAGE_FULLCONTROL_SCOPE)
    @Fallback(NullOnNotFoundOr404.class)
    @Nullable
    HttpResponse deleteBucketAccessControls(@PathParam("bucket") String bucketName, @PathParam("entity") String entity);
@@ -126,10 +119,8 @@ public interface BucketAccessControlsApi {
 
    @Named("BucketAccessControls:list")
    @GET
-   @Consumes(MediaType.APPLICATION_JSON)
-   @Produces(MediaType.APPLICATION_JSON)
+   @Produces(APPLICATION_JSON)
    @Path("/b/{bucket}/acl")
-   @OAuthScopes(STORAGE_FULLCONTROL_SCOPE)
    @Fallback(NullOnNotFoundOr404.class)
    @Nullable
    @SelectJson("items")
@@ -147,13 +138,10 @@ public interface BucketAccessControlsApi {
     *
     * @return If successful, this method returns a {@link BucketAccessControlsTemplate} resource in the response body
     */
-
    @Named("BucketAccessControls:update")
    @PUT
-   @Consumes(MediaType.APPLICATION_JSON)
-   @Produces(MediaType.APPLICATION_JSON)
+   @Produces(APPLICATION_JSON)
    @Path("/b/{bucket}/acl/{entity}")
-   @OAuthScopes(STORAGE_FULLCONTROL_SCOPE)
    @Fallback(NullOnNotFoundOr404.class)
    BucketAccessControls updateBucketAccessControls(@PathParam("bucket") String bucketName,
             @PathParam("entity") String entity,
@@ -173,13 +161,10 @@ public interface BucketAccessControlsApi {
     *
     * @return If successful, this method returns a BucketAccessControls resource in the response body
     */
-
    @Named("BucketAccessControls:patch")
    @PATCH
-   @Consumes(MediaType.APPLICATION_JSON)
-   @Produces(MediaType.APPLICATION_JSON)
+   @Produces(APPLICATION_JSON)
    @Path("/b/{bucket}/acl/{entity}")
-   @OAuthScopes(STORAGE_FULLCONTROL_SCOPE)
    @Fallback(NullOnNotFoundOr404.class)
    BucketAccessControls patchBucketAccessControls(@PathParam("bucket") String bucketName,
             @PathParam("entity") String entity,

@@ -177,7 +177,7 @@ public final class GCSBlobStore extends BaseBlobStore {
    public boolean blobExists(String container, String name) {
       try {
          String urlName = name.contains("/") ? URLEncoder.encode(name, Charsets.UTF_8.toString()) : name;
-         return api.getObjectApi().objectExist(container, urlName);
+         return api.getObjectApi().objectExists(container, urlName);
       } catch (UnsupportedEncodingException e) {
          throw Throwables.propagate(e);
       }

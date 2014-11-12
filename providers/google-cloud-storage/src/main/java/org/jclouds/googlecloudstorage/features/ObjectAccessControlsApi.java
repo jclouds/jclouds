@@ -16,7 +16,7 @@
  */
 package org.jclouds.googlecloudstorage.features;
 
-import static org.jclouds.googlecloudstorage.reference.GoogleCloudStorageConstants.STORAGE_FULLCONTROL_SCOPE;
+import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 
 import java.util.List;
 
@@ -30,13 +30,11 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
-import javax.ws.rs.core.MediaType;
 
 import org.jclouds.Fallbacks.NullOnNotFoundOr404;
 import org.jclouds.googlecloudstorage.domain.ObjectAccessControls;
 import org.jclouds.googlecloudstorage.domain.templates.ObjectAccessControlsTemplate;
 import org.jclouds.javax.annotation.Nullable;
-import org.jclouds.oauth.v2.config.OAuthScopes;
 import org.jclouds.oauth.v2.filters.OAuthAuthenticator;
 import org.jclouds.rest.annotations.BinderParam;
 import org.jclouds.rest.annotations.Fallback;
@@ -51,9 +49,9 @@ import org.jclouds.rest.binders.BindToJsonPayload;
  *
  * @see <a href = " https://developers.google.com/storage/docs/json_api/v1/objectAccessControls "/>
  */
-
 @SkipEncoding({ '/', '=' })
 @RequestFilters(OAuthAuthenticator.class)
+@Consumes(APPLICATION_JSON)
 public interface ObjectAccessControlsApi {
 
    /**
@@ -72,9 +70,7 @@ public interface ObjectAccessControlsApi {
 
    @Named("ObjectAccessControls:get")
    @GET
-   @Consumes(MediaType.APPLICATION_JSON)
    @Path("/b/{bucket}/o/{object}/acl/{entity}")
-   @OAuthScopes(STORAGE_FULLCONTROL_SCOPE)
    @Fallback(NullOnNotFoundOr404.class)
    @Nullable
    ObjectAccessControls getObjectAccessControls(@PathParam("bucket") String bucketName,
@@ -97,9 +93,7 @@ public interface ObjectAccessControlsApi {
     */
    @Named("ObjectAccessControls:get")
    @GET
-   @Consumes(MediaType.APPLICATION_JSON)
    @Path("/b/{bucket}/o/{object}/acl/{entity}")
-   @OAuthScopes(STORAGE_FULLCONTROL_SCOPE)
    @Fallback(NullOnNotFoundOr404.class)
    @Nullable
    ObjectAccessControls getObjectAccessControls(@PathParam("bucket") String bucketName,
@@ -119,10 +113,8 @@ public interface ObjectAccessControlsApi {
     */
    @Named("ObjectAccessControls:insert")
    @POST
-   @Consumes(MediaType.APPLICATION_JSON)
-   @Produces(MediaType.APPLICATION_JSON)
+   @Produces(APPLICATION_JSON)
    @Path("/b/{bucket}/o/{object}/acl")
-   @OAuthScopes(STORAGE_FULLCONTROL_SCOPE)
    ObjectAccessControls createObjectAccessControls(@PathParam("bucket") String bucketName,
             @PathParam("object") String objectName,
             @BinderParam(BindToJsonPayload.class) ObjectAccessControlsTemplate template);
@@ -142,10 +134,8 @@ public interface ObjectAccessControlsApi {
     */
    @Named("ObjectAccessControls:insert")
    @POST
-   @Consumes(MediaType.APPLICATION_JSON)
-   @Produces(MediaType.APPLICATION_JSON)
+   @Produces(APPLICATION_JSON)
    @Path("/b/{bucket}/o/{object}/acl")
-   @OAuthScopes(STORAGE_FULLCONTROL_SCOPE)
    ObjectAccessControls createObjectAccessControls(@PathParam("bucket") String bucketName,
             @PathParam("object") String objectName,
             @BinderParam(BindToJsonPayload.class) ObjectAccessControlsTemplate template,
@@ -162,12 +152,9 @@ public interface ObjectAccessControlsApi {
     *           The entity holding the permission. Can be user-userId, user-emailAddress, group-groupId,
     *           group-emailAddress, allUsers, or allAuthenticatedUsers
     */
-
    @Named("ObjectAccessControls:delete")
    @DELETE
-   @Consumes(MediaType.APPLICATION_JSON)
    @Path("/b/{bucket}/o/{object}/acl/{entity}")
-   @OAuthScopes(STORAGE_FULLCONTROL_SCOPE)
    void deleteObjectAccessControls(@PathParam("bucket") String bucketName, @PathParam("object") String objectName,
             @PathParam("entity") String entity);
 
@@ -186,9 +173,7 @@ public interface ObjectAccessControlsApi {
     */
    @Named("ObjectAccessControls:delete")
    @DELETE
-   @Consumes(MediaType.APPLICATION_JSON)
    @Path("/b/{bucket}/o/{object}/acl/{entity}")
-   @OAuthScopes(STORAGE_FULLCONTROL_SCOPE)
    void deleteObjectAccessControls(@PathParam("bucket") String bucketName, @PathParam("object") String objectName,
             @PathParam("entity") String entity, @QueryParam("generation") Long generation);
 
@@ -202,12 +187,10 @@ public interface ObjectAccessControlsApi {
     */
    @Named("ObjectAccessControls:list")
    @GET
-   @Consumes(MediaType.APPLICATION_JSON)
-   @Produces(MediaType.APPLICATION_JSON)
+   @Produces(APPLICATION_JSON)
    @Path("/b/{bucket}/o/{object}/acl")
-   @OAuthScopes(STORAGE_FULLCONTROL_SCOPE)
-   @Fallback(NullOnNotFoundOr404.class)
    @SelectJson("items")
+   @Fallback(NullOnNotFoundOr404.class)
    @Nullable
    List<ObjectAccessControls> listObjectAccessControls(@PathParam("bucket") String bucketName,
             @PathParam("object") String objectName);
@@ -225,12 +208,10 @@ public interface ObjectAccessControlsApi {
     */
    @Named("ObjectAccessControls:list")
    @GET
-   @Consumes(MediaType.APPLICATION_JSON)
-   @Produces(MediaType.APPLICATION_JSON)
+   @Produces(APPLICATION_JSON)
    @Path("/b/{bucket}/o/{object}/acl")
-   @OAuthScopes(STORAGE_FULLCONTROL_SCOPE)
-   @Fallback(NullOnNotFoundOr404.class)
    @SelectJson("items")
+   @Fallback(NullOnNotFoundOr404.class)
    @Nullable
    List<ObjectAccessControls> listObjectAccessControls(@PathParam("bucket") String bucketName,
             @PathParam("object") String objectName, @QueryParam("generation") Long generation);
@@ -253,12 +234,8 @@ public interface ObjectAccessControlsApi {
 
    @Named("ObjectAccessControls:update")
    @PUT
-   @Consumes(MediaType.APPLICATION_JSON)
-   @Produces(MediaType.APPLICATION_JSON)
+   @Produces(APPLICATION_JSON)
    @Path("/b/{bucket}/o/{object}/acl/{entity}")
-   @OAuthScopes(STORAGE_FULLCONTROL_SCOPE)
-   @Fallback(NullOnNotFoundOr404.class)
-   @Nullable
    ObjectAccessControls updateObjectAccessControls(@PathParam("bucket") String bucketName,
             @PathParam("object") String objectName, @PathParam("entity") String entity,
             @BinderParam(BindToJsonPayload.class) ObjectAccessControlsTemplate template);
@@ -280,14 +257,10 @@ public interface ObjectAccessControlsApi {
     *
     * @return {@link ObjectAccessControls }
     */
-
    @Named("ObjectAccessControls:update")
    @PUT
-   @Consumes(MediaType.APPLICATION_JSON)
-   @Produces(MediaType.APPLICATION_JSON)
+   @Produces(APPLICATION_JSON)
    @Path("/b/{bucket}/o/{object}/acl/{entity}")
-   @OAuthScopes(STORAGE_FULLCONTROL_SCOPE)
-   @Fallback(NullOnNotFoundOr404.class)
    ObjectAccessControls updateObjectAccessControls(@PathParam("bucket") String bucketName,
             @PathParam("object") String objectName, @PathParam("entity") String entity,
             @BinderParam(BindToJsonPayload.class) ObjectAccessControlsTemplate template,
@@ -308,14 +281,10 @@ public interface ObjectAccessControlsApi {
     *
     * @return an {@link ObjectAccessControls }
     */
-
    @Named("ObjectAccessControls:patch")
    @PATCH
-   @Consumes(MediaType.APPLICATION_JSON)
-   @Produces(MediaType.APPLICATION_JSON)
+   @Produces(APPLICATION_JSON)
    @Path("/b/{bucket}/o/{object}/acl/{entity}")
-   @OAuthScopes(STORAGE_FULLCONTROL_SCOPE)
-   @Fallback(NullOnNotFoundOr404.class)
    ObjectAccessControls patchObjectAccessControls(@PathParam("bucket") String bucketName,
             @PathParam("object") String objectName, @PathParam("entity") String entity,
             @BinderParam(BindToJsonPayload.class) ObjectAccessControlsTemplate template);
@@ -337,17 +306,12 @@ public interface ObjectAccessControlsApi {
     *
     * @return {@link ObjectAccessControls }
     */
-
    @Named("ObjectAccessControls:patch")
    @PATCH
-   @Consumes(MediaType.APPLICATION_JSON)
-   @Produces(MediaType.APPLICATION_JSON)
+   @Produces(APPLICATION_JSON)
    @Path("/b/{bucket}/o/{object}/acl/{entity}")
-   @OAuthScopes(STORAGE_FULLCONTROL_SCOPE)
-   @Fallback(NullOnNotFoundOr404.class)
    ObjectAccessControls patchObjectAccessControls(@PathParam("bucket") String bucketName,
             @PathParam("object") String objectName, @PathParam("entity") String entity,
             @BinderParam(BindToJsonPayload.class) ObjectAccessControlsTemplate template,
             @QueryParam("generation") Long generation);
-
 }
