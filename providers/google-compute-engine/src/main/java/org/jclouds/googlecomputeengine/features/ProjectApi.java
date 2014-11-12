@@ -17,8 +17,6 @@
 package org.jclouds.googlecomputeengine.features;
 
 import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
-import static org.jclouds.googlecomputeengine.config.GoogleComputeEngineScopes.COMPUTE_READONLY_SCOPE;
-import static org.jclouds.googlecomputeengine.config.GoogleComputeEngineScopes.COMPUTE_SCOPE;
 
 import javax.inject.Named;
 import javax.ws.rs.Consumes;
@@ -31,7 +29,6 @@ import org.jclouds.googlecomputeengine.GoogleComputeEngineFallbacks.NullOn400or4
 import org.jclouds.googlecomputeengine.domain.Metadata;
 import org.jclouds.googlecomputeengine.domain.Operation;
 import org.jclouds.googlecomputeengine.domain.Project;
-import org.jclouds.oauth.v2.config.OAuthScopes;
 import org.jclouds.oauth.v2.filters.OAuthAuthenticationFilter;
 import org.jclouds.rest.annotations.BinderParam;
 import org.jclouds.rest.annotations.Fallback;
@@ -47,7 +44,6 @@ public interface ProjectApi {
    /** Get the current project. */
    @Named("Projects:get")
    @GET
-   @OAuthScopes(COMPUTE_READONLY_SCOPE)
    @Fallback(NullOn400or404.class)
    Project get();
 
@@ -69,7 +65,6 @@ public interface ProjectApi {
    @Named("Projects:setCommonInstanceMetadata")
    @POST
    @Path("/setCommonInstanceMetadata")
-   @OAuthScopes(COMPUTE_SCOPE)
    @Produces(APPLICATION_JSON)
    Operation setCommonInstanceMetadata(@BinderParam(BindToJsonPayload.class) Metadata metadata);
 }

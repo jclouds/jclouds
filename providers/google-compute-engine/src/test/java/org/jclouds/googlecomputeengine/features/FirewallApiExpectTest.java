@@ -19,8 +19,6 @@ package org.jclouds.googlecomputeengine.features;
 import static com.google.common.base.Joiner.on;
 import static com.google.common.collect.Iterables.transform;
 import static java.lang.String.format;
-import static org.jclouds.googlecomputeengine.config.GoogleComputeEngineScopes.COMPUTE_READONLY_SCOPE;
-import static org.jclouds.googlecomputeengine.config.GoogleComputeEngineScopes.COMPUTE_SCOPE;
 import static org.jclouds.io.Payloads.newStringPayload;
 import static org.jclouds.util.Strings2.toStringAndClose;
 import static org.testng.Assert.assertEquals;

@@ -14,9 +14,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jclouds.googlecomputeengine.functions.internal;
+package org.jclouds.googlecomputeengine.internal;
 
-import static org.jclouds.googlecomputeengine.config.GoogleComputeEngineScopes.COMPUTE_READONLY_SCOPE;
 import static org.jclouds.googlecomputeengine.options.ListOptions.Builder.maxResults;
 import static org.testng.Assert.assertEquals;
 
@@ -32,7 +31,6 @@ import org.jclouds.googlecomputeengine.domain.ListPage;
 import org.jclouds.googlecomputeengine.features.AddressApi;
 import org.jclouds.googlecomputeengine.features.ImageApi;
 import org.jclouds.googlecomputeengine.features.InstanceApi;
-import org.jclouds.googlecomputeengine.internal.BaseGoogleComputeEngineExpectTest;
 import org.jclouds.googlecomputeengine.parse.ParseAddressTest;
 import org.jclouds.googlecomputeengine.parse.ParseImageTest;
 import org.jclouds.googlecomputeengine.parse.ParseInstanceTest;

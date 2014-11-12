@@ -17,8 +17,6 @@
 package org.jclouds.googlecomputeengine.features;
 
 import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
-import static org.jclouds.googlecomputeengine.config.GoogleComputeEngineScopes.COMPUTE_READONLY_SCOPE;
-import static org.jclouds.googlecomputeengine.config.GoogleComputeEngineScopes.COMPUTE_SCOPE;
 
 import java.net.URI;
 import java.util.Iterator;
@@ -44,7 +42,6 @@ import org.jclouds.googlecomputeengine.internal.BaseToIteratorOfListPage;
 import org.jclouds.googlecomputeengine.options.ListOptions;
 import org.jclouds.googlecomputeengine.options.RouteOptions;
 import org.jclouds.javax.annotation.Nullable;
-import org.jclouds.oauth.v2.config.OAuthScopes;
 import org.jclouds.oauth.v2.filters.OAuthAuthenticationFilter;
 import org.jclouds.rest.annotations.Fallback;
 import org.jclouds.rest.annotations.MapBinder;
@@ -65,16 +62,13 @@ public interface RouteApi {
    @Named("Routes:get")
    @GET
    @Path("/{route}")
-   @OAuthScopes(COMPUTE_READONLY_SCOPE)
    @Fallback(NullOnNotFoundOr404.class)
    Route get(@PathParam("route") String routeName);
 
    /** Deletes a route by name and returns the operation in progress, or null if not found. */
    @Named("Routes:delete")
    @DELETE
-   @Consumes(APPLICATION_JSON)
    @Path("/{route}")
-   @OAuthScopes(COMPUTE_SCOPE)
    @Fallback(NullOnNotFoundOr404.class)
    @Nullable
    Operation delete(@PathParam("route") String routeName);
@@ -90,9 +84,7 @@ public interface RouteApi {
     */
    @Named("Routes:insert")
    @POST
-   @Consumes(APPLICATION_JSON)
    @Produces(APPLICATION_JSON)
-   @OAuthScopes(COMPUTE_SCOPE)
    @MapBinder(RouteBinder.class)
    Operation createInNetwork(@PayloadParam("name") String name,
                              @PayloadParam("network") URI network,
@@ -109,20 +101,17 @@ public interface RouteApi {
     */
    @Named("Routes:list")
    @GET
-   @OAuthScopes(COMPUTE_READONLY_SCOPE)
    ListPage<Route> listPage(@Nullable @QueryParam("pageToken") String pageToken, ListOptions listOptions);
 
    /** @see #listPage(String, ListOptions) */
    @Named("Routes:list")
    @GET
-   @OAuthScopes(COMPUTE_READONLY_SCOPE)
    @Transform(RoutePages.class)
    Iterator<ListPage<Route>> list();
 
    /** @see #listPage(String, ListOptions) */
    @Named("Routes:list")
    @GET
-   @OAuthScopes(COMPUTE_READONLY_SCOPE)
    @Transform(RoutePages.class)
    Iterator<ListPage<Route>> list(ListOptions options);
 

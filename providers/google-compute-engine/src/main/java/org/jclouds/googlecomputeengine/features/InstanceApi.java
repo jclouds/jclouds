@@ -17,8 +17,6 @@
 package org.jclouds.googlecomputeengine.features;
 
 import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
-import static org.jclouds.googlecomputeengine.config.GoogleComputeEngineScopes.COMPUTE_READONLY_SCOPE;
-import static org.jclouds.googlecomputeengine.config.GoogleComputeEngineScopes.COMPUTE_SCOPE;
 import static org.jclouds.googlecomputeengine.domain.Instance.NetworkInterface.AccessConfig;
 import static org.jclouds.googlecomputeengine.domain.Instance.SerialPortOutput;
 
@@ -46,7 +44,6 @@ import org.jclouds.googlecomputeengine.internal.BaseCallerArg0ToIteratorOfListPa
 import org.jclouds.googlecomputeengine.options.AttachDiskOptions;
 import org.jclouds.googlecomputeengine.options.ListOptions;
 import org.jclouds.javax.annotation.Nullable;
-import org.jclouds.oauth.v2.config.OAuthScopes;
 import org.jclouds.oauth.v2.filters.OAuthAuthenticationFilter;
 import org.jclouds.rest.annotations.BinderParam;
 import org.jclouds.rest.annotations.Fallback;
@@ -69,7 +66,6 @@ public interface InstanceApi {
    @Named("Instances:get")
    @GET
    @Path("/{instance}")
-   @OAuthScopes(COMPUTE_READONLY_SCOPE)
    @Fallback(NullOnNotFoundOr404.class)
    @Nullable
    Instance get(@PathParam("instance") String instance);
@@ -84,14 +80,12 @@ public interface InstanceApi {
    @Named("Instances:insert")
    @POST
    @Produces(APPLICATION_JSON)
-   @OAuthScopes(COMPUTE_SCOPE)
    Operation create(@BinderParam(BindToJsonPayload.class) NewInstance template);
 
    /** Deletes an instance by name and returns the operation in progress, or null if not found. */
    @Named("Instances:delete")
    @DELETE
    @Path("/{instance}")
-   @OAuthScopes(COMPUTE_SCOPE)
    @Fallback(NullOnNotFoundOr404.class)
    @Nullable
    Operation delete(@PathParam("instance") String instance);
@@ -109,7 +103,6 @@ public interface InstanceApi {
    @POST
    @Produces(APPLICATION_JSON)
    @Path("/{instance}/addAccessConfig")
-   @OAuthScopes(COMPUTE_SCOPE)
    Operation addAccessConfigToNic(@PathParam("instance") String instance,
                                   @BinderParam(BindToJsonPayload.class)
                                   AccessConfig accessConfig,
@@ -127,7 +120,6 @@ public interface InstanceApi {
    @Named("Instances:deleteAccessConfig")
    @DELETE
    @Path("/{instance}/deleteAccessConfig")
-   @OAuthScopes(COMPUTE_SCOPE)
    Operation deleteAccessConfigFromNic(@PathParam("instance") String instance,
                                        @QueryParam("access_config") String accessConfigName,
                                        @QueryParam("network_interface") String networkInterfaceName);
@@ -141,7 +133,6 @@ public interface InstanceApi {
    @Named("Instances:serialPort")
    @GET
    @Path("/{instance}/serialPort")
-   @OAuthScopes(COMPUTE_READONLY_SCOPE)
    SerialPortOutput getSerialPortOutput(@PathParam("instance") String instance);
 
    /**
@@ -154,7 +145,6 @@ public interface InstanceApi {
    @Named("Instances:reset")
    @POST
    @Path("/{instance}/reset")
-   @OAuthScopes(COMPUTE_SCOPE)
    Operation reset(@PathParam("instance") String instance);
 
    /**
@@ -170,7 +160,6 @@ public interface InstanceApi {
    @POST
    @Produces(APPLICATION_JSON)
    @Path("/{instance}/attachDisk")
-   @OAuthScopes(COMPUTE_SCOPE)
    Operation attachDisk(@PathParam("instance") String instance,
                         @BinderParam(BindToJsonPayload.class) AttachDiskOptions attachDiskOptions);
 
@@ -186,7 +175,6 @@ public interface InstanceApi {
    @Named("Instances:detachDisk")
    @POST
    @Path("/{instance}/detachDisk")
-   @OAuthScopes(COMPUTE_SCOPE)
    Operation detachDisk(@PathParam("instance") String instance, @QueryParam("deviceName") String deviceName);
 
    /**
@@ -209,8 +197,6 @@ public interface InstanceApi {
    @Named("Instances:setMetadata")
    @POST
    @Path("/{instance}/setMetadata")
-   @OAuthScopes(COMPUTE_SCOPE)
-   @Produces(APPLICATION_JSON)
    Operation setMetadata(@PathParam("instance") String instance,
                          @BinderParam(BindToJsonPayload.class) Metadata metadata);
 
@@ -226,7 +212,6 @@ public interface InstanceApi {
    @Named("Instances:setTags")
    @POST
    @Path("/{instance}/setTags")
-   @OAuthScopes(COMPUTE_SCOPE)
    @Produces(APPLICATION_JSON)
    @MapBinder(BindToJsonPayload.class)
    Operation setTags(@PathParam("instance") String instance,
@@ -244,20 +229,17 @@ public interface InstanceApi {
     */
    @Named("Instances:list")
    @GET
-   @OAuthScopes(COMPUTE_READONLY_SCOPE)
    ListPage<Instance> listPage(@Nullable @QueryParam("pageToken") String pageToken, ListOptions listOptions);
 
    /** @see #listPage(String, ListOptions) */
    @Named("Instances:list")
    @GET
-   @OAuthScopes(COMPUTE_READONLY_SCOPE)
    @Transform(InstancePages.class)
    Iterator<ListPage<Instance>> list();
 
    /** @see #listPage(String, ListOptions) */
    @Named("Instances:list")
    @GET
-   @OAuthScopes(COMPUTE_READONLY_SCOPE)
    @Transform(InstancePages.class)
    Iterator<ListPage<Instance>> list(ListOptions options);
 

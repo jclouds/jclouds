@@ -17,8 +17,6 @@
 package org.jclouds.googlecomputeengine.features;
 
 import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
-import static org.jclouds.googlecomputeengine.config.GoogleComputeEngineScopes.COMPUTE_READONLY_SCOPE;
-import static org.jclouds.googlecomputeengine.config.GoogleComputeEngineScopes.COMPUTE_SCOPE;
 
 import java.util.Iterator;
 
@@ -39,7 +37,6 @@ import org.jclouds.googlecomputeengine.domain.Snapshot;
 import org.jclouds.googlecomputeengine.internal.BaseToIteratorOfListPage;
 import org.jclouds.googlecomputeengine.options.ListOptions;
 import org.jclouds.javax.annotation.Nullable;
-import org.jclouds.oauth.v2.config.OAuthScopes;
 import org.jclouds.oauth.v2.filters.OAuthAuthenticationFilter;
 import org.jclouds.rest.annotations.Fallback;
 import org.jclouds.rest.annotations.RequestFilters;
@@ -58,7 +55,6 @@ public interface SnapshotApi {
    @Named("Snapshots:get")
    @GET
    @Path("/{snapshot}")
-   @OAuthScopes(COMPUTE_READONLY_SCOPE)
    @Fallback(NullOnNotFoundOr404.class)
    @Nullable
    Snapshot get(@PathParam("snapshot") String snapshot);
@@ -67,7 +63,6 @@ public interface SnapshotApi {
    @Named("Snapshots:delete")
    @DELETE
    @Path("/{snapshot}")
-   @OAuthScopes(COMPUTE_SCOPE)
    @Fallback(NullOnNotFoundOr404.class)
    @Nullable
    Operation delete(@PathParam("snapshot") String snapshot);
@@ -83,20 +78,17 @@ public interface SnapshotApi {
     */
    @Named("Snapshots:list")
    @GET
-   @OAuthScopes(COMPUTE_READONLY_SCOPE)
    ListPage<Snapshot> listPage(@Nullable @QueryParam("pageToken") String pageToken, ListOptions listOptions);
 
    /** @see #listPage(String, ListOptions) */
    @Named("Snapshots:list")
    @GET
-   @OAuthScopes(COMPUTE_READONLY_SCOPE)
    @Transform(SnapshotPages.class)
    Iterator<ListPage<Snapshot>> list();
 
    /** @see #listPage(String, ListOptions) */
    @Named("Snapshots:list")
    @GET
-   @OAuthScopes(COMPUTE_READONLY_SCOPE)
    @Transform(SnapshotPages.class)
    Iterator<ListPage<Snapshot>> list(ListOptions options);
 

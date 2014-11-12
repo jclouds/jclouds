@@ -17,8 +17,6 @@
 package org.jclouds.googlecomputeengine.features;
 
 import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
-import static org.jclouds.googlecomputeengine.config.GoogleComputeEngineScopes.COMPUTE_READONLY_SCOPE;
-import static org.jclouds.googlecomputeengine.config.GoogleComputeEngineScopes.COMPUTE_SCOPE;
 
 import java.net.URI;
 import java.util.Iterator;
@@ -44,7 +42,6 @@ import org.jclouds.googlecomputeengine.internal.BaseArg0ToIteratorOfListPage;
 import org.jclouds.googlecomputeengine.internal.BaseToIteratorOfListPage;
 import org.jclouds.googlecomputeengine.options.ListOptions;
 import org.jclouds.javax.annotation.Nullable;
-import org.jclouds.oauth.v2.config.OAuthScopes;
 import org.jclouds.oauth.v2.filters.OAuthAuthenticationFilter;
 import org.jclouds.rest.annotations.Endpoint;
 import org.jclouds.rest.annotations.EndpointParam;
@@ -66,7 +63,6 @@ public interface ImageApi {
    /** Returns an image by self-link or null if not found. */
    @Named("Images:get")
    @GET
-   @OAuthScopes(COMPUTE_READONLY_SCOPE)
    @Fallback(NullOnNotFoundOr404.class)
    @Nullable
    Image get(@EndpointParam URI selfLink);
@@ -76,7 +72,6 @@ public interface ImageApi {
    @GET
    @Endpoint(CurrentProject.class)
    @Path("/global/images/{image}")
-   @OAuthScopes(COMPUTE_READONLY_SCOPE)
    @Fallback(NullOnNotFoundOr404.class)
    @Nullable
    Image get(@PathParam("image") String image);
@@ -86,7 +81,6 @@ public interface ImageApi {
    @DELETE
    @Endpoint(CurrentProject.class)
    @Path("/global/images/{image}")
-   @OAuthScopes(COMPUTE_SCOPE)
    @Fallback(NullOnNotFoundOr404.class)
    @Nullable
    Operation delete(@PathParam("image") String image);
@@ -104,7 +98,6 @@ public interface ImageApi {
    @Endpoint(CurrentProject.class)
    @Path("/global/images")
    @Produces(APPLICATION_JSON)
-   @OAuthScopes(COMPUTE_SCOPE)
    @MapBinder(BindToJsonPayload.class)
    Operation createFromDisk(@PayloadParam("name") String image, @PayloadParam("sourceDisk") String sourceDisk);
 
@@ -121,7 +114,6 @@ public interface ImageApi {
    @GET
    @Endpoint(CurrentProject.class)
    @Path("/global/images")
-   @OAuthScopes(COMPUTE_READONLY_SCOPE)
    ListPage<Image> listPage(@Nullable @QueryParam("pageToken") String pageToken, ListOptions listOptions);
 
    /** @see #listPage(String, ListOptions) */
@@ -129,7 +121,6 @@ public interface ImageApi {
    @GET
    @Endpoint(CurrentProject.class)
    @Path("/global/images")
-   @OAuthScopes(COMPUTE_READONLY_SCOPE)
    @Transform(ImagePages.class)
    Iterator<ListPage<Image>> list();
 
@@ -138,7 +129,6 @@ public interface ImageApi {
    @GET
    @Endpoint(CurrentProject.class)
    @Path("/global/images")
-   @OAuthScopes(COMPUTE_READONLY_SCOPE)
    @Transform(ImagePages.class)
    Iterator<ListPage<Image>> list(ListOptions options);
 
@@ -171,7 +161,6 @@ public interface ImageApi {
    @Named("Images:list")
    @GET
    @Path("/projects/{project}/global/images")
-   @OAuthScopes(COMPUTE_READONLY_SCOPE)
    ListPage<Image> listPageInProject(@PathParam("project") String projectName,
          @Nullable @QueryParam("pageToken") String pageToken, ListOptions listOptions);
 
@@ -181,7 +170,6 @@ public interface ImageApi {
    @Named("Images:list")
    @GET
    @Path("/projects/{project}/global/images")
-   @OAuthScopes(COMPUTE_READONLY_SCOPE)
    @Transform(ImagePagesInProject.class)
    Iterator<ListPage<Image>> listInProject(@PathParam("project") String projectName);
 
@@ -191,7 +179,6 @@ public interface ImageApi {
    @Named("Images:list")
    @GET
    @Path("/projects/{project}/global/images")
-   @OAuthScopes(COMPUTE_READONLY_SCOPE)
    @Transform(ImagePagesInProject.class)
    Iterator<ListPage<Image>> listInProject(@PathParam("project") String projectName, ListOptions options);
 

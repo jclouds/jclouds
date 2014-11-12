@@ -22,7 +22,6 @@ import static java.util.concurrent.TimeUnit.SECONDS;
 import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 import static org.jclouds.Constants.PROPERTY_SESSION_INTERVAL;
 import static org.jclouds.googlecomputeengine.config.GoogleComputeEngineProperties.PROJECT_NAME;
-import static org.jclouds.googlecomputeengine.config.GoogleComputeEngineScopes.COMPUTE_READONLY_SCOPE;
 import static org.jclouds.rest.config.BinderUtils.bindHttpApi;
 
 import java.net.URI;
@@ -48,6 +47,7 @@ import org.jclouds.http.annotation.Redirection;
 import org.jclouds.http.annotation.ServerError;
 import org.jclouds.location.Provider;
 import org.jclouds.oauth.v2.config.OAuthScopes;
+import org.jclouds.oauth.v2.config.OAuthScopes.ReadOrWriteScopes;
 import org.jclouds.oauth.v2.filters.OAuthAuthenticationFilter;
 import org.jclouds.providers.ProviderMetadata;
 import org.jclouds.rest.AuthorizationException;
@@ -65,12 +65,14 @@ import com.google.inject.Provides;
 
 @ConfiguresHttpApi
 public final class GoogleComputeEngineHttpApiModule extends HttpApiModule<GoogleComputeEngineApi> {
-   public GoogleComputeEngineHttpApiModule() {
-   }
 
    @Override protected void configure() {
       super.configure();
       bindHttpApi(binder(), UseApiToResolveProjectName.GetProject.class);
+      bind(OAuthScopes.class).toInstance(ReadOrWriteScopes.create( //
+            "https://www.googleapis.com/auth/compute.readonly", //
+            "https://www.googleapis.com/auth/compute" //
+      ));
    }
 
    @Override protected void bindErrorHandlers() {
@@ -118,7 +120,6 @@ public final class GoogleComputeEngineHttpApiModule extends HttpApiModule<Google
 
       @SkipEncoding({ '/', '=' })
       @RequestFilters(OAuthAuthenticationFilter.class)
-      @OAuthScopes(COMPUTE_READONLY_SCOPE)
       @Consumes(APPLICATION_JSON)
       interface GetProject {
          @Named("Projects:get")

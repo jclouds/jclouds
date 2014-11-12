@@ -17,7 +17,6 @@
 package org.jclouds.googlecomputeengine.features;
 
 import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
-import static org.jclouds.googlecomputeengine.config.GoogleComputeEngineScopes.COMPUTE_READONLY_SCOPE;
 
 import java.util.Iterator;
 
@@ -36,7 +35,6 @@ import org.jclouds.googlecomputeengine.domain.MachineType;
 import org.jclouds.googlecomputeengine.internal.BaseCallerArg0ToIteratorOfListPage;
 import org.jclouds.googlecomputeengine.options.ListOptions;
 import org.jclouds.javax.annotation.Nullable;
-import org.jclouds.oauth.v2.config.OAuthScopes;
 import org.jclouds.oauth.v2.filters.OAuthAuthenticationFilter;
 import org.jclouds.rest.annotations.Fallback;
 import org.jclouds.rest.annotations.RequestFilters;
@@ -55,7 +53,6 @@ public interface MachineTypeApi {
    @Named("MachineTypes:get")
    @GET
    @Path("/{machineType}")
-   @OAuthScopes(COMPUTE_READONLY_SCOPE)
    @Fallback(NullOnNotFoundOr404.class)
    MachineType get(@PathParam("machineType") String machineType);
 
@@ -70,20 +67,17 @@ public interface MachineTypeApi {
     */
    @Named("MachineTypes:list")
    @GET
-   @OAuthScopes(COMPUTE_READONLY_SCOPE)
    ListPage<MachineType> listPage(@Nullable @QueryParam("pageToken") String pageToken, ListOptions listOptions);
 
    /** @see #listPage(String, ListOptions) */
    @Named("MachineTypes:list")
    @GET
-   @OAuthScopes(COMPUTE_READONLY_SCOPE)
    @Transform(MachineTypePages.class)
    Iterator<ListPage<MachineType>> list();
 
    /** @see #listPage(String, ListOptions) */
    @Named("MachineTypes:list")
    @GET
-   @OAuthScopes(COMPUTE_READONLY_SCOPE)
    @Transform(MachineTypePages.class)
    Iterator<ListPage<MachineType>> list(ListOptions options);
 

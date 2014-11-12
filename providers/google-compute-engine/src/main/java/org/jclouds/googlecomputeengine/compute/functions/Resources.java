@@ -18,8 +18,6 @@ package org.jclouds.googlecomputeengine.compute.functions;
 
 import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 import static org.jclouds.Fallbacks.NullOnNotFoundOr404;
-import static org.jclouds.googlecomputeengine.config.GoogleComputeEngineScopes.COMPUTE_READONLY_SCOPE;
-import static org.jclouds.googlecomputeengine.config.GoogleComputeEngineScopes.COMPUTE_SCOPE;
 
 import java.net.URI;
 
@@ -34,7 +32,6 @@ import org.jclouds.googlecomputeengine.domain.Instance;
 import org.jclouds.googlecomputeengine.domain.Network;
 import org.jclouds.googlecomputeengine.domain.Operation;
 import org.jclouds.javax.annotation.Nullable;
-import org.jclouds.oauth.v2.config.OAuthScopes;
 import org.jclouds.oauth.v2.filters.OAuthAuthenticationFilter;
 import org.jclouds.rest.annotations.EndpointParam;
 import org.jclouds.rest.annotations.Fallback;
@@ -49,30 +46,26 @@ public interface Resources {
    /** Returns an instance by self-link or null if not found. */
    @Named("Instances:get")
    @GET
-   @OAuthScopes(COMPUTE_READONLY_SCOPE)
    @Fallback(NullOnNotFoundOr404.class) @Nullable Instance instance(@EndpointParam URI selfLink);
 
    /** Returns an network by self-link or null if not found. */
    @Named("Networks:get")
    @GET
-   @OAuthScopes(COMPUTE_READONLY_SCOPE)
    @Fallback(NullOnNotFoundOr404.class) @Nullable Network network(@EndpointParam URI selfLink);
 
    /** Returns an operation by self-link or null if not found. */
    @Named("Operations:get")
    @GET
-   @OAuthScopes(COMPUTE_READONLY_SCOPE)
    @Fallback(NullOnNotFoundOr404.class) @Nullable Operation operation(@EndpointParam URI selfLink);
 
    /** Deletes any resource by self-link and returns the operation in progress, or null if not found. */
    @Named("Resources:delete")
    @DELETE
-   @OAuthScopes(COMPUTE_SCOPE)
    @Fallback(NullOnNotFoundOr404.class) @Nullable Operation delete(@EndpointParam URI selfLink);
 
    /** Hard-resets the instance by self-link and returns the operation in progres */
    @Named("Instances:reset")
    @POST
    @Path("/reset")
-   @OAuthScopes(COMPUTE_SCOPE) Operation resetInstance(@EndpointParam URI selfLink);
+   Operation resetInstance(@EndpointParam URI selfLink);
 }

@@ -17,8 +17,6 @@
 package org.jclouds.googlecomputeengine.features;
 
 import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
-import static org.jclouds.googlecomputeengine.config.GoogleComputeEngineScopes.COMPUTE_READONLY_SCOPE;
-import static org.jclouds.googlecomputeengine.config.GoogleComputeEngineScopes.COMPUTE_SCOPE;
 
 import java.util.Iterator;
 
@@ -41,7 +39,6 @@ import org.jclouds.googlecomputeengine.domain.Operation;
 import org.jclouds.googlecomputeengine.internal.BaseToIteratorOfListPage;
 import org.jclouds.googlecomputeengine.options.ListOptions;
 import org.jclouds.javax.annotation.Nullable;
-import org.jclouds.oauth.v2.config.OAuthScopes;
 import org.jclouds.oauth.v2.filters.OAuthAuthenticationFilter;
 import org.jclouds.rest.annotations.Fallback;
 import org.jclouds.rest.annotations.MapBinder;
@@ -63,7 +60,6 @@ public interface NetworkApi {
    @Named("Networks:get")
    @GET
    @Path("/{network}")
-   @OAuthScopes(COMPUTE_READONLY_SCOPE)
    @Fallback(NullOnNotFoundOr404.class)
    Network get(@PathParam("network") String networkName);
 
@@ -78,7 +74,6 @@ public interface NetworkApi {
    @Named("Networks:insert")
    @POST
    @Produces(APPLICATION_JSON)
-   @OAuthScopes(COMPUTE_SCOPE)
    @MapBinder(BindToJsonPayload.class)
    Operation createInIPv4Range(@PayloadParam("name") String networkName,
                                @PayloadParam("IPv4Range") String IPv4Range);
@@ -95,7 +90,6 @@ public interface NetworkApi {
    @Named("Networks:insert")
    @POST
    @Produces(APPLICATION_JSON)
-   @OAuthScopes(COMPUTE_SCOPE)
    @MapBinder(BindToJsonPayload.class)
    Operation createInIPv4RangeWithGateway(@PayloadParam("name") String networkName,
                                           @PayloadParam("IPv4Range") String IPv4Range,
@@ -105,7 +99,6 @@ public interface NetworkApi {
    @Named("Networks:delete")
    @DELETE
    @Path("/{network}")
-   @OAuthScopes(COMPUTE_SCOPE)
    @Fallback(NullOnNotFoundOr404.class)
    Operation delete(@PathParam("network") String networkName);
 
@@ -120,20 +113,17 @@ public interface NetworkApi {
     */
    @Named("Networks:list")
    @GET
-   @OAuthScopes(COMPUTE_READONLY_SCOPE)
    ListPage<Network> listPage(@Nullable @QueryParam("pageToken") String pageToken, ListOptions listOptions);
 
    /** @see #listPage(String, ListOptions) */
    @Named("Networks:list")
    @GET
-   @OAuthScopes(COMPUTE_READONLY_SCOPE)
    @Transform(NetworkPages.class)
    Iterator<ListPage<Network>> list();
 
    /** @see #listPage(String, ListOptions) */
    @Named("Networks:list")
    @GET
-   @OAuthScopes(COMPUTE_READONLY_SCOPE)
    @Transform(NetworkPages.class)
    Iterator<ListPage<Network>> list(ListOptions options);
 

@@ -17,8 +17,6 @@
 package org.jclouds.googlecomputeengine.features;
 
 import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
-import static org.jclouds.googlecomputeengine.config.GoogleComputeEngineScopes.COMPUTE_READONLY_SCOPE;
-import static org.jclouds.googlecomputeengine.config.GoogleComputeEngineScopes.COMPUTE_SCOPE;
 
 import java.util.Iterator;
 
@@ -43,7 +41,6 @@ import org.jclouds.googlecomputeengine.internal.BaseCallerArg0ToIteratorOfListPa
 import org.jclouds.googlecomputeengine.options.DiskCreationOptions;
 import org.jclouds.googlecomputeengine.options.ListOptions;
 import org.jclouds.javax.annotation.Nullable;
-import org.jclouds.oauth.v2.config.OAuthScopes;
 import org.jclouds.oauth.v2.filters.OAuthAuthenticationFilter;
 import org.jclouds.rest.annotations.Fallback;
 import org.jclouds.rest.annotations.MapBinder;
@@ -65,7 +62,6 @@ public interface DiskApi {
    @Named("Disks:get")
    @GET
    @Path("/{disk}")
-   @OAuthScopes(COMPUTE_READONLY_SCOPE)
    @Fallback(NullOnNotFoundOr404.class)
    @Nullable
    Disk get(@PathParam("disk") String disk);
@@ -81,7 +77,6 @@ public interface DiskApi {
    @Named("Disks:insert")
    @POST
    @Produces(APPLICATION_JSON)
-   @OAuthScopes(COMPUTE_SCOPE)
    @MapBinder(BindToJsonPayload.class)
    Operation create(@PayloadParam("name") String diskName, @PayloadParam("sizeGb") int sizeGb);
 
@@ -97,7 +92,6 @@ public interface DiskApi {
    @Named("Disks:insert")
    @POST
    @Produces(APPLICATION_JSON)
-   @OAuthScopes(COMPUTE_SCOPE)
    @MapBinder(DiskCreationBinder.class)
    Operation create(@PayloadParam("name") String diskName,
                     @PayloadParam("sizeGb") int sizeGb,
@@ -107,7 +101,6 @@ public interface DiskApi {
    @Named("Disks:delete")
    @DELETE
    @Path("/{disk}")
-   @OAuthScopes(COMPUTE_SCOPE)
    @Fallback(NullOnNotFoundOr404.class)
    @Nullable
    Operation delete(@PathParam("disk") String disk);
@@ -124,7 +117,6 @@ public interface DiskApi {
    @Named("Disks:createSnapshot")
    @POST
    @Path("/{disk}/createSnapshot")
-   @OAuthScopes(COMPUTE_SCOPE)
    @MapBinder(BindToJsonPayload.class)
    Operation createSnapshot(@PathParam("disk") String diskName, @PayloadParam("name") String snapshotName);
 
@@ -139,20 +131,17 @@ public interface DiskApi {
     */
    @Named("Disks:list")
    @GET
-   @OAuthScopes(COMPUTE_READONLY_SCOPE)
    ListPage<Disk> listPage(@Nullable @QueryParam("pageToken") String pageToken, ListOptions listOptions);
 
    /** @see #listPage(String, ListOptions) */
    @Named("Disks:list")
    @GET
-   @OAuthScopes(COMPUTE_READONLY_SCOPE)
    @Transform(DiskPages.class)
    Iterator<ListPage<Disk>> list();
 
    /** @see #listPage(String, ListOptions) */
    @Named("Disks:list")
    @GET
-   @OAuthScopes(COMPUTE_READONLY_SCOPE)
    @Transform(DiskPages.class)
    Iterator<ListPage<Disk>> list(ListOptions options);
 

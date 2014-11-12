@@ -17,8 +17,6 @@
 package org.jclouds.googlecomputeengine.features;
 
 import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
-import static org.jclouds.googlecomputeengine.config.GoogleComputeEngineScopes.COMPUTE_READONLY_SCOPE;
-import static org.jclouds.googlecomputeengine.config.GoogleComputeEngineScopes.COMPUTE_SCOPE;
 
 import java.net.URI;
 import java.util.Iterator;
@@ -46,7 +44,6 @@ import org.jclouds.googlecomputeengine.internal.PATCH;
 import org.jclouds.googlecomputeengine.options.FirewallOptions;
 import org.jclouds.googlecomputeengine.options.ListOptions;
 import org.jclouds.javax.annotation.Nullable;
-import org.jclouds.oauth.v2.config.OAuthScopes;
 import org.jclouds.oauth.v2.filters.OAuthAuthenticationFilter;
 import org.jclouds.rest.annotations.BinderParam;
 import org.jclouds.rest.annotations.Fallback;
@@ -69,7 +66,6 @@ public interface FirewallApi {
    @Named("Firewalls:get")
    @GET
    @Path("/{firewall}")
-   @OAuthScopes(COMPUTE_READONLY_SCOPE)
    @Fallback(NullOnNotFoundOr404.class)
    @Nullable
    Firewall get(@PathParam("firewall") String firewall);
@@ -86,7 +82,6 @@ public interface FirewallApi {
    @Named("Firewalls:insert")
    @POST
    @Produces(APPLICATION_JSON)
-   @OAuthScopes(COMPUTE_SCOPE)
    @MapBinder(FirewallBinder.class)
    Operation createInNetwork(@PayloadParam("name") String name,
                              @PayloadParam("network") URI network,
@@ -104,7 +99,6 @@ public interface FirewallApi {
    @PUT
    @Produces(APPLICATION_JSON)
    @Path("/{firewall}")
-   @OAuthScopes(COMPUTE_SCOPE)
    Operation update(@PathParam("firewall") String firewall,
                     @BinderParam(BindToJsonPayload.class) FirewallOptions firewallOptions);
 
@@ -120,7 +114,6 @@ public interface FirewallApi {
    @PATCH
    @Produces(APPLICATION_JSON)
    @Path("/{firewall}")
-   @OAuthScopes(COMPUTE_SCOPE)
    Operation patch(@PathParam("firewall") String firewall,
                    @BinderParam(BindToJsonPayload.class) FirewallOptions firewallOptions);
 
@@ -128,7 +121,6 @@ public interface FirewallApi {
    @Named("Firewalls:delete")
    @DELETE
    @Path("/{firewall}")
-   @OAuthScopes(COMPUTE_SCOPE)
    @Fallback(NullOnNotFoundOr404.class)
    Operation delete(@PathParam("firewall") String firewall);
 
@@ -143,20 +135,17 @@ public interface FirewallApi {
     */
    @Named("Firewalls:list")
    @GET
-   @OAuthScopes(COMPUTE_READONLY_SCOPE)
    ListPage<Firewall> listPage(@Nullable @QueryParam("pageToken") String pageToken, ListOptions listOptions);
 
    /** @see #listPage(String, ListOptions) */
    @Named("Firewalls:list")
    @GET
-   @OAuthScopes(COMPUTE_READONLY_SCOPE)
    @Transform(FirewallPages.class)
    Iterator<ListPage<Firewall>> list();
 
    /** @see #listPage(String, ListOptions) */
    @Named("Firewalls:list")
    @GET
-   @OAuthScopes(COMPUTE_READONLY_SCOPE)
    @Transform(FirewallPages.class)
    Iterator<ListPage<Firewall>> list(ListOptions options);
 

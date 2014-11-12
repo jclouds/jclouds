@@ -40,6 +40,8 @@ import com.google.common.base.Joiner;
 import com.google.inject.Module;
 
 public class BaseGoogleComputeEngineExpectTest<T> extends BaseRestApiExpectTest<T> {
+   protected static final String COMPUTE_SCOPE = "https://www.googleapis.com/auth/compute";
+   protected static final String COMPUTE_READONLY_SCOPE = "https://www.googleapis.com/auth/compute.readonly";
    protected static final String BASE_URL = "https://www.googleapis.com/compute/v1/projects";
 
    private static final String header = "{\"alg\":\"none\",\"typ\":\"JWT\"}";

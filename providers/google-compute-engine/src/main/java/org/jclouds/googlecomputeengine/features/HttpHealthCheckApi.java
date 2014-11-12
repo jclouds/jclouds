@@ -17,8 +17,6 @@
 package org.jclouds.googlecomputeengine.features;
 
 import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
-import static org.jclouds.googlecomputeengine.config.GoogleComputeEngineScopes.COMPUTE_READONLY_SCOPE;
-import static org.jclouds.googlecomputeengine.config.GoogleComputeEngineScopes.COMPUTE_SCOPE;
 
 import java.util.Iterator;
 
@@ -44,7 +42,6 @@ import org.jclouds.googlecomputeengine.internal.BaseToIteratorOfListPage;
 import org.jclouds.googlecomputeengine.options.HttpHealthCheckCreationOptions;
 import org.jclouds.googlecomputeengine.options.ListOptions;
 import org.jclouds.javax.annotation.Nullable;
-import org.jclouds.oauth.v2.config.OAuthScopes;
 import org.jclouds.oauth.v2.filters.OAuthAuthenticator;
 import org.jclouds.rest.annotations.Fallback;
 import org.jclouds.rest.annotations.MapBinder;
@@ -67,7 +64,6 @@ public interface HttpHealthCheckApi {
    @Named("HttpHealthChecks:get")
    @GET
    @Path("/{httpHealthCheck}")
-   @OAuthScopes(COMPUTE_READONLY_SCOPE)
    @Fallback(NullOnNotFoundOr404.class)
    @Nullable
    HttpHealthCheck get(@PathParam("httpHealthCheck") String httpHealthCheck);
@@ -82,7 +78,6 @@ public interface HttpHealthCheckApi {
    @Named("HttpHealthChecks:insert")
    @POST
    @Produces(APPLICATION_JSON)
-   @OAuthScopes(COMPUTE_SCOPE)
    @MapBinder(BindToJsonPayload.class)
    Operation insert(@PayloadParam("name") String httpHealthCheckName);
 
@@ -96,7 +91,6 @@ public interface HttpHealthCheckApi {
    @Named("HttpHealthChecks:insert")
    @POST
    @Produces(APPLICATION_JSON)
-   @OAuthScopes(COMPUTE_SCOPE)
    @MapBinder(HttpHealthCheckCreationBinder.class)
    Operation insert(@PayloadParam("name") String name, @PayloadParam("options") HttpHealthCheckCreationOptions options);
 
@@ -104,7 +98,6 @@ public interface HttpHealthCheckApi {
    @Named("HttpHealthChecks:delete")
    @DELETE
    @Path("/{httpHealthCheck}")
-   @OAuthScopes(COMPUTE_SCOPE)
    @Fallback(NullOnNotFoundOr404.class)
    @Nullable
    Operation delete(@PathParam("httpHealthCheck") String httpHealthCheck);
@@ -121,7 +114,6 @@ public interface HttpHealthCheckApi {
    @Named("HttpHealthChecks:patch")
    @PATCH
    @Path("/{httpHealthCheck}")
-   @OAuthScopes(COMPUTE_SCOPE)
    @MapBinder(HttpHealthCheckCreationBinder.class)
    @Nullable
    Operation patch(@PathParam("httpHealthCheck") @PayloadParam("name") String name,
@@ -140,7 +132,6 @@ public interface HttpHealthCheckApi {
    @PUT
    @Path("/{httpHealthCheck}")
    @Produces(APPLICATION_JSON)
-   @OAuthScopes(COMPUTE_SCOPE)
    @MapBinder(HttpHealthCheckCreationBinder.class)
    Operation update(@PathParam("httpHealthCheck") @PayloadParam("name") String name,
                     @PayloadParam("options") HttpHealthCheckCreationOptions options);
@@ -156,20 +147,17 @@ public interface HttpHealthCheckApi {
     */
    @Named("HttpHealthChecks:list")
    @GET
-   @OAuthScopes(COMPUTE_READONLY_SCOPE)
    ListPage<HttpHealthCheck> listPage(@Nullable @QueryParam("pageToken") String pageToken, ListOptions listOptions);
 
    /** @see #listPage(String, ListOptions) */
    @Named("HttpHealthChecks:list")
    @GET
-   @OAuthScopes(COMPUTE_READONLY_SCOPE)
    @Transform(HttpHealthCheckPages.class)
    Iterator<ListPage<HttpHealthCheck>> list();
 
    /** @see #listPage(String, ListOptions) */
    @Named("HttpHealthChecks:list")
    @GET
-   @OAuthScopes(COMPUTE_READONLY_SCOPE)
    @Transform(HttpHealthCheckPages.class)
    Iterator<ListPage<HttpHealthCheck>> list(ListOptions options);
 

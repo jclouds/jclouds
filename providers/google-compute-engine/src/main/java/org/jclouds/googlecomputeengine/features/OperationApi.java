@@ -18,8 +18,6 @@ package org.jclouds.googlecomputeengine.features;
 
 import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 import static org.jclouds.Fallbacks.VoidOnNotFoundOr404;
-import static org.jclouds.googlecomputeengine.config.GoogleComputeEngineScopes.COMPUTE_READONLY_SCOPE;
-import static org.jclouds.googlecomputeengine.config.GoogleComputeEngineScopes.COMPUTE_SCOPE;
 
 import java.net.URI;
 import java.util.Iterator;
@@ -42,7 +40,6 @@ import org.jclouds.googlecomputeengine.internal.BaseArg0ToIteratorOfListPage;
 import org.jclouds.googlecomputeengine.internal.BaseToIteratorOfListPage;
 import org.jclouds.googlecomputeengine.options.ListOptions;
 import org.jclouds.javax.annotation.Nullable;
-import org.jclouds.oauth.v2.config.OAuthScopes;
 import org.jclouds.oauth.v2.filters.OAuthAuthenticationFilter;
 import org.jclouds.rest.annotations.Endpoint;
 import org.jclouds.rest.annotations.EndpointParam;
@@ -61,7 +58,6 @@ public interface OperationApi {
    /** Returns an operation by self-link or null if not found. */
    @Named("Operations:get")
    @GET
-   @OAuthScopes(COMPUTE_READONLY_SCOPE)
    @Fallback(NullOnNotFoundOr404.class)
    @Nullable
    Operation get(@EndpointParam URI operation);
@@ -69,7 +65,6 @@ public interface OperationApi {
    /** Deletes an operation by name. */
    @Named("Operations:delete")
    @DELETE
-   @OAuthScopes(COMPUTE_SCOPE)
    @Fallback(VoidOnNotFoundOr404.class)
    void delete(@EndpointParam URI operation);
 
@@ -86,7 +81,6 @@ public interface OperationApi {
    @GET
    @Endpoint(CurrentProject.class)
    @Path("/global/operations")
-   @OAuthScopes(COMPUTE_READONLY_SCOPE)
    ListPage<Operation> listPage(@Nullable @QueryParam("pageToken") String pageToken, ListOptions listOptions);
 
    /** @see #listPage(String, ListOptions) */
@@ -94,7 +88,6 @@ public interface OperationApi {
    @GET
    @Endpoint(CurrentProject.class)
    @Path("/global/operations")
-   @OAuthScopes(COMPUTE_READONLY_SCOPE)
    @Transform(OperationPages.class)
    Iterator<ListPage<Operation>> list();
 
@@ -103,7 +96,6 @@ public interface OperationApi {
    @GET
    @Endpoint(CurrentProject.class)
    @Path("/global/operations")
-   @OAuthScopes(COMPUTE_READONLY_SCOPE)
    @Transform(OperationPages.class)
    Iterator<ListPage<Operation>> list(ListOptions options);
 
@@ -137,7 +129,6 @@ public interface OperationApi {
    @GET
    @Endpoint(CurrentProject.class)
    @Path("/regions/{region}/operations")
-   @OAuthScopes(COMPUTE_READONLY_SCOPE)
    ListPage<Operation> listPageInRegion(@PathParam("region") String region,
                                         @Nullable @QueryParam("pageToken") String pageToken, ListOptions listOptions);
 
@@ -146,7 +137,6 @@ public interface OperationApi {
    @GET
    @Endpoint(CurrentProject.class)
    @Path("/regions/{region}/operations")
-   @OAuthScopes(COMPUTE_READONLY_SCOPE)
    @Transform(OperationPagesInRegion.class)
    Iterator<ListPage<Operation>> listInRegion(@PathParam("region") String region);
 
@@ -155,7 +145,6 @@ public interface OperationApi {
    @GET
    @Endpoint(CurrentProject.class)
    @Path("/regions/{region}/operations")
-   @OAuthScopes(COMPUTE_READONLY_SCOPE)
    @Transform(OperationPagesInRegion.class)
    Iterator<ListPage<Operation>> listInRegion(@PathParam("region") String region, ListOptions options);
 
@@ -191,7 +180,6 @@ public interface OperationApi {
    @GET
    @Endpoint(CurrentProject.class)
    @Path("/zones/{zone}/operations")
-   @OAuthScopes(COMPUTE_READONLY_SCOPE)
    ListPage<Operation> listPageInZone(@PathParam("zone") String zone,
          @Nullable @QueryParam("pageToken") String pageToken, ListOptions listOptions);
 
@@ -200,7 +188,6 @@ public interface OperationApi {
    @GET
    @Endpoint(CurrentProject.class)
    @Path("/zones/{zone}/operations")
-   @OAuthScopes(COMPUTE_READONLY_SCOPE)
    @Transform(OperationPagesInZone.class)
    Iterator<ListPage<Operation>> listInZone(@PathParam("zone") String zone);
 
@@ -209,7 +196,6 @@ public interface OperationApi {
    @GET
    @Endpoint(CurrentProject.class)
    @Path("/zones/{zone}/operations")
-   @OAuthScopes(COMPUTE_READONLY_SCOPE)
    @Transform(OperationPagesInZone.class)
    Iterator<ListPage<Operation>> listInZone(@PathParam("zone") String zone, ListOptions options);
 

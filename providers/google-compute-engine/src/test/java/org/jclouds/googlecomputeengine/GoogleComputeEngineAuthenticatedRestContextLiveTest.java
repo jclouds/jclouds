@@ -18,7 +18,6 @@ package org.jclouds.googlecomputeengine;
 
 import java.util.Properties;
 
-import org.jclouds.googlecomputeengine.config.GoogleComputeEngineScopes;
 import org.jclouds.googlecomputeengine.internal.TestProperties;
 import org.jclouds.oauth.v2.internal.BaseOAuthAuthenticatedApiLiveTest;
 import org.testng.annotations.Test;
@@ -32,7 +31,7 @@ public class GoogleComputeEngineAuthenticatedRestContextLiveTest extends BaseOAu
 
    @Override
    public String getScopes() {
-      return GoogleComputeEngineScopes.COMPUTE_SCOPE;
+      return "https://www.googleapis.com/auth/compute";
    }
 
    @Override protected Properties setupProperties() {

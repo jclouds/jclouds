@@ -17,7 +17,6 @@
 package org.jclouds.googlecomputeengine.features;
 
 import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
-import static org.jclouds.googlecomputeengine.config.GoogleComputeEngineScopes.COMPUTE_READONLY_SCOPE;
 
 import java.util.Iterator;
 
@@ -35,7 +34,6 @@ import org.jclouds.googlecomputeengine.domain.MachineType;
 import org.jclouds.googlecomputeengine.internal.BaseToIteratorOfListPage;
 import org.jclouds.googlecomputeengine.options.ListOptions;
 import org.jclouds.javax.annotation.Nullable;
-import org.jclouds.oauth.v2.config.OAuthScopes;
 import org.jclouds.oauth.v2.filters.OAuthAuthenticationFilter;
 import org.jclouds.rest.annotations.RequestFilters;
 import org.jclouds.rest.annotations.SkipEncoding;
@@ -47,7 +45,6 @@ import com.google.common.base.Function;
 @RequestFilters(OAuthAuthenticationFilter.class)
 @Path("/aggregated")
 @Consumes(APPLICATION_JSON)
-@OAuthScopes(COMPUTE_READONLY_SCOPE)
 public interface AggregatedListApi {
 
    /**

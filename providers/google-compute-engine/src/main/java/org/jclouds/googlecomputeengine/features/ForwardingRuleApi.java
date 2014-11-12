@@ -17,8 +17,6 @@
 package org.jclouds.googlecomputeengine.features;
 
 import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
-import static org.jclouds.googlecomputeengine.config.GoogleComputeEngineScopes.COMPUTE_READONLY_SCOPE;
-import static org.jclouds.googlecomputeengine.config.GoogleComputeEngineScopes.COMPUTE_SCOPE;
 
 import java.net.URI;
 import java.util.Iterator;
@@ -44,7 +42,6 @@ import org.jclouds.googlecomputeengine.internal.BaseCallerArg0ToIteratorOfListPa
 import org.jclouds.googlecomputeengine.options.ForwardingRuleCreationOptions;
 import org.jclouds.googlecomputeengine.options.ListOptions;
 import org.jclouds.javax.annotation.Nullable;
-import org.jclouds.oauth.v2.config.OAuthScopes;
 import org.jclouds.oauth.v2.filters.OAuthAuthenticator;
 import org.jclouds.rest.annotations.Fallback;
 import org.jclouds.rest.annotations.MapBinder;
@@ -66,7 +63,6 @@ public interface ForwardingRuleApi {
    @Named("ForwardingRules:get")
    @GET
    @Path("/{forwardingRule}")
-   @OAuthScopes(COMPUTE_READONLY_SCOPE)
    @Fallback(NullOnNotFoundOr404.class)
    @Nullable
    ForwardingRule get(@PathParam("forwardingRule") String forwardingRule);
@@ -81,7 +77,6 @@ public interface ForwardingRuleApi {
    @Named("ForwardingRules:insert")
    @POST
    @Produces(APPLICATION_JSON)
-   @OAuthScopes(COMPUTE_SCOPE)
    @MapBinder(ForwardingRuleCreationBinder.class)
    Operation create(@PayloadParam("name") String forwardingRuleName,
                     @PayloadParam("options") ForwardingRuleCreationOptions options);
@@ -91,7 +86,6 @@ public interface ForwardingRuleApi {
    @Named("ForwardingRules:delete")
    @DELETE
    @Path("/{forwardingRule}")
-   @OAuthScopes(COMPUTE_SCOPE)
    @Fallback(NullOnNotFoundOr404.class)
    @Nullable
    Operation delete(@PathParam("forwardingRule") String forwardingRule);
@@ -109,7 +103,6 @@ public interface ForwardingRuleApi {
    @Named("ForwardingRules:setTarget")
    @POST
    @Path("/{forwardingRule}/setTarget")
-   @OAuthScopes(COMPUTE_SCOPE)
    @Fallback(NullOnNotFoundOr404.class)
    @MapBinder(BindToJsonPayload.class)
    @Nullable
@@ -126,20 +119,17 @@ public interface ForwardingRuleApi {
     */
    @Named("ForwardingRules:list")
    @GET
-   @OAuthScopes(COMPUTE_READONLY_SCOPE)
    ListPage<ForwardingRule> listPage(@Nullable @QueryParam("pageToken") String pageToken, ListOptions listOptions);
 
    /** @see #listPage(String, ListOptions) */
    @Named("ForwardingRules:list")
    @GET
-   @OAuthScopes(COMPUTE_READONLY_SCOPE)
    @Transform(ForwardingRulePages.class)
    Iterator<ListPage<ForwardingRule>> list();
 
    /** @see #listPage(String, ListOptions) */
    @Named("ForwardingRules:list")
    @GET
-   @OAuthScopes(COMPUTE_READONLY_SCOPE)
    @Transform(ForwardingRulePages.class)
    Iterator<ListPage<ForwardingRule>> list(ListOptions options);
 

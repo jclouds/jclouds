@@ -17,8 +17,6 @@
 package org.jclouds.googlecomputeengine.features;
 
 import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
-import static org.jclouds.googlecomputeengine.config.GoogleComputeEngineScopes.COMPUTE_READONLY_SCOPE;
-import static org.jclouds.googlecomputeengine.config.GoogleComputeEngineScopes.COMPUTE_SCOPE;
 
 import java.net.URI;
 import java.util.Iterator;
@@ -47,7 +45,6 @@ import org.jclouds.googlecomputeengine.internal.BaseCallerArg0ToIteratorOfListPa
 import org.jclouds.googlecomputeengine.options.ListOptions;
 import org.jclouds.googlecomputeengine.options.TargetPoolCreationOptions;
 import org.jclouds.javax.annotation.Nullable;
-import org.jclouds.oauth.v2.config.OAuthScopes;
 import org.jclouds.oauth.v2.filters.OAuthAuthenticator;
 import org.jclouds.rest.annotations.Fallback;
 import org.jclouds.rest.annotations.MapBinder;
@@ -69,7 +66,6 @@ public interface TargetPoolApi {
    @Named("TargetPools:get")
    @GET
    @Path("/{targetPool}")
-   @OAuthScopes(COMPUTE_READONLY_SCOPE)
    @Fallback(NullOnNotFoundOr404.class)
    @Nullable
    TargetPool get(@PathParam("targetPool") String targetPool);
@@ -85,8 +81,6 @@ public interface TargetPoolApi {
    @Named("TargetPools:insert")
    @POST
    @Produces(APPLICATION_JSON)
-   @Path("")
-   @OAuthScopes(COMPUTE_SCOPE)
    @MapBinder(TargetPoolCreationBinder.class)
    Operation create(@PayloadParam("name") String name, @PayloadParam("options") TargetPoolCreationOptions options);
 
@@ -94,7 +88,6 @@ public interface TargetPoolApi {
    @Named("TargetPools:delete")
    @DELETE
    @Path("/{targetPool}")
-   @OAuthScopes(COMPUTE_SCOPE)
    @Fallback(NullOnNotFoundOr404.class)
    @Nullable
    Operation delete(@PathParam("targetPool") String targetPool);
@@ -111,7 +104,6 @@ public interface TargetPoolApi {
    @Named("TargetPools:addInstance")
    @POST
    @Path("/{targetPool}/addInstance")
-   @OAuthScopes(COMPUTE_SCOPE)
    @MapBinder(TargetPoolChangeInstancesBinder.class)
    @Nullable
    Operation addInstance(@PathParam("targetPool") String targetPool, @PayloadParam("instances") List<URI> instances);
@@ -128,7 +120,6 @@ public interface TargetPoolApi {
    @Named("TargetPools:removeInstance")
    @POST
    @Path("/{targetPool}/removeInstance")
-   @OAuthScopes(COMPUTE_SCOPE)
    @MapBinder(TargetPoolChangeInstancesBinder.class)
    @Nullable
    Operation removeInstance(@PathParam("targetPool") String targetPool, @PayloadParam("instances") List<URI> instances);
@@ -145,7 +136,6 @@ public interface TargetPoolApi {
    @Named("TargetPools:addHealthCheck")
    @POST
    @Path("/{targetPool}/addHealthCheck")
-   @OAuthScopes(COMPUTE_SCOPE)
    @MapBinder(TargetPoolChangeHealthChecksBinder.class)
    @Nullable
    Operation addHealthCheck(@PathParam("targetPool") String targetPool, @PayloadParam("healthChecks") List<URI> healthChecks);
@@ -163,7 +153,6 @@ public interface TargetPoolApi {
    @Named("TargetPools:removeHealthChek")
    @POST
    @Path("/{targetPool}/removeHealthCheck")
-   @OAuthScopes(COMPUTE_SCOPE)
    @MapBinder(TargetPoolChangeHealthChecksBinder.class)
    @Nullable
    Operation removeHealthCheck(@PathParam("targetPool") String targetPool, @PayloadParam("healthChecks") List<URI> healthChecks);
@@ -184,7 +173,6 @@ public interface TargetPoolApi {
    @Named("TargetPools:setBackup")
    @POST
    @Path("/{targetPool}/setBackup")
-   @OAuthScopes(COMPUTE_SCOPE)
    @MapBinder(BindToJsonPayload.class)
    @Nullable
    Operation setBackup(@PathParam("targetPool") String targetPool, @PayloadParam("target") URI target);
@@ -201,7 +189,6 @@ public interface TargetPoolApi {
    @Named("TargetPools:setBackup")
    @POST
    @Path("/{targetPool}/setBackup")
-   @OAuthScopes(COMPUTE_SCOPE)
    @MapBinder(BindToJsonPayload.class)
    @Nullable
    Operation setBackup(@PathParam("targetPool") String targetPool, @QueryParam("failoverRatio") Float failoverRatio, @PayloadParam("target") URI target);
@@ -217,20 +204,17 @@ public interface TargetPoolApi {
     */
    @Named("TargetPools:list")
    @GET
-   @OAuthScopes(COMPUTE_READONLY_SCOPE)
    ListPage<TargetPool> listPage(@Nullable @QueryParam("pageToken") String pageToken, ListOptions listOptions);
 
    /** @see #listPage(String, ListOptions) */
    @Named("TargetPools:list")
    @GET
-   @OAuthScopes(COMPUTE_READONLY_SCOPE)
    @Transform(TargetPoolPages.class)
    Iterator<ListPage<TargetPool>> list();
 
    /** @see #listPage(String, ListOptions) */
    @Named("TargetPools:list")
    @GET
-   @OAuthScopes(COMPUTE_READONLY_SCOPE)
    @Transform(TargetPoolPages.class)
    Iterator<ListPage<TargetPool>> list(ListOptions options);
 
