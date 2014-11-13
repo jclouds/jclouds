@@ -16,7 +16,7 @@
  */
 package org.jclouds.googlecomputeengine.domain;
 
-import static org.jclouds.googlecomputeengine.internal.NullSafeCopies.copyOf;
+import static org.jclouds.googlecloud.internal.NullSafeCopies.copyOf;
 
 import java.net.URI;
 import java.util.List;

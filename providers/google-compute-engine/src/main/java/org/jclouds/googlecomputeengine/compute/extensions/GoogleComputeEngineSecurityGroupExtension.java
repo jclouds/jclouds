@@ -19,12 +19,12 @@ package org.jclouds.googlecomputeengine.compute.extensions;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Preconditions.checkState;
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
+import static org.jclouds.googlecloud.internal.ListPages.concat;
 import static org.jclouds.googlecomputeengine.compute.predicates.NetworkFirewallPredicates.equalsIpPermission;
 import static org.jclouds.googlecomputeengine.compute.predicates.NetworkFirewallPredicates.providesIpPermission;
 import static org.jclouds.googlecomputeengine.compute.strategy.CreateNodesWithGroupEncodedIntoNameThenAddToSet.DEFAULT_INTERNAL_NETWORK_RANGE;
 import static org.jclouds.googlecomputeengine.config.GoogleComputeEngineProperties.OPERATION_COMPLETE_INTERVAL;
 import static org.jclouds.googlecomputeengine.config.GoogleComputeEngineProperties.OPERATION_COMPLETE_TIMEOUT;
-import static org.jclouds.googlecomputeengine.internal.ListPages.concat;
 import static org.jclouds.googlecomputeengine.options.ListOptions.Builder.filter;
 import static org.jclouds.util.Predicates2.retry;
 

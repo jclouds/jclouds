@@ -14,38 +14,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jclouds.googlecomputeengine.domain;
+package org.jclouds.googlecloud.domain;
 
-import static org.jclouds.googlecomputeengine.internal.NullSafeCopies.copyOf;
-
-import java.beans.ConstructorProperties;
 import java.util.List;
 
 import org.jclouds.javax.annotation.Nullable;
 
-import com.google.common.collect.ForwardingList;
-
 /** An immutable list that includes a token, if there is another page available. */
-public final class ListPage<T> extends ForwardingList<T> {
-
-   private final List<T> items;
-   private final String nextPageToken;
-
-   public static <T> ListPage<T> create(List<T> items, String nextPageToken) {
-      return new ListPage<T>(items, nextPageToken);
-   }
-
-   @ConstructorProperties({ "items", "nextPageToken" })
-   ListPage(List<T> items, String nextPageToken) {
-      this.items = copyOf(items);
-      this.nextPageToken = nextPageToken;
-   }
-
-   @Nullable public String nextPageToken() {
-      return nextPageToken;
-   }
-
-   @Override protected List<T> delegate() {
-      return items;
-   }
+public interface ListPage<T> extends List<T> {
+   /** Indicates more data is available. */
+   @Nullable String nextPageToken();
 }
+

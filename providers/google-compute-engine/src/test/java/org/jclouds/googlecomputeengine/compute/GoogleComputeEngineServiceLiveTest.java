@@ -25,9 +25,9 @@ import java.util.Properties;
 import org.jclouds.compute.domain.Hardware;
 import org.jclouds.compute.domain.NodeMetadata;
 import org.jclouds.compute.internal.BaseComputeServiceLiveTest;
+import org.jclouds.googlecloud.internal.TestProperties;
 import org.jclouds.googlecomputeengine.GoogleComputeEngineApi;
 import org.jclouds.googlecomputeengine.domain.MachineType;
-import org.jclouds.googlecomputeengine.internal.TestProperties;
 import org.jclouds.sshj.config.SshjSshClientModule;
 import org.testng.annotations.Test;
 
@@ -45,7 +45,7 @@ public class GoogleComputeEngineServiceLiveTest extends BaseComputeServiceLiveTe
    }
 
    @Override protected Properties setupProperties() {
-      return TestProperties.apply(super.setupProperties());
+      return TestProperties.apply(provider, super.setupProperties());
    }
 
    public void testListHardwareProfiles() throws Exception {

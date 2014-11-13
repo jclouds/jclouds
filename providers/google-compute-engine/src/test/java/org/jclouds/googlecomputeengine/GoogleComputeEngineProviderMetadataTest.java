@@ -26,7 +26,7 @@ import org.testng.annotations.Test;
  * META-INF/services/org.jclouds.providers.ProviderMetadata
  * </pre>
  */
-@Test(groups = "unit", testName = "GoogleComputeProviderMetadataTest")
+@Test(groups = "unit", testName = "GoogleComputeEngineProviderMetadataTest")
 public class GoogleComputeEngineProviderMetadataTest extends BaseProviderMetadataTest {
    public GoogleComputeEngineProviderMetadataTest() {
       super(new GoogleComputeEngineProviderMetadata(), new GoogleComputeEngineApiMetadata());

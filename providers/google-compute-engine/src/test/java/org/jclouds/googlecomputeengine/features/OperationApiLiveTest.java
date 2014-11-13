@@ -22,7 +22,7 @@ import static org.testng.Assert.assertNotNull;
 
 import java.util.Iterator;
 
-import org.jclouds.googlecomputeengine.domain.ListPage;
+import org.jclouds.googlecloud.domain.ListPage;
 import org.jclouds.googlecomputeengine.domain.Operation;
 import org.jclouds.googlecomputeengine.internal.BaseGoogleComputeEngineApiLiveTest;
 import org.testng.SkipException;

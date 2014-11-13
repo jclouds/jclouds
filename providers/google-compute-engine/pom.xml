@@ -36,7 +36,7 @@
         <test.google-compute-engine.identity>client_email which usually looks like project_id@developer.gserviceaccount.com</test.google-compute-engine.identity>
         <test.google-compute-engine.credential>Private key (PEM encoded PKCS12 file or literal) associated with the client_email</test.google-compute-engine.credential>
         <!-- Add this property to use a different project, or avoid looking up the project for each test. -->
-        <test.jclouds.google-compute-engine.project-name></test.jclouds.google-compute-engine.project-name>
+        <test.jclouds.googlecloud.project-name></test.jclouds.googlecloud.project-name>
         <test.jclouds.oauth.credential-type>p12PrivateKeyCredentials</test.jclouds.oauth.credential-type>
         <test.google-compute-engine.api-version>v1</test.google-compute-engine.api-version>
         <test.google-compute-engine.build-version/>
@@ -51,13 +51,13 @@
         </dependency>
         <dependency>
             <groupId>org.apache.jclouds.labs</groupId>
-            <artifactId>oauth</artifactId>
+            <artifactId>googlecloud</artifactId>
             <version>${project.version}</version>
             <type>jar</type>
         </dependency>
         <dependency>
             <groupId>org.apache.jclouds.labs</groupId>
-            <artifactId>oauth</artifactId>
+            <artifactId>googlecloud</artifactId>
             <version>${project.version}</version>
             <type>test-jar</type>
             <scope>test</scope>
@@ -142,7 +142,7 @@
                                     <systemPropertyVariables>
                                         <test.google-compute-engine.identity>${test.google-compute-engine.identity}</test.google-compute-engine.identity>
                                         <test.google-compute-engine.credential>${test.google-compute-engine.credential}</test.google-compute-engine.credential>
-                                        <test.jclouds.google-compute-engine.project-name>${test.jclouds.google-compute-engine.project-name}</test.jclouds.google-compute-engine.project-name>
+                                        <test.jclouds.googlecloud.project-name>${test.jclouds.googlecloud.project-name}</test.jclouds.googlecloud.project-name>
                                         <test.jclouds.oauth.credential-type>${test.jclouds.oauth.credential-type}</test.jclouds.oauth.credential-type>
                                         <test.google-compute-engine.api-version>${test.google-compute-engine.api-version}</test.google-compute-engine.api-version>
                                         <test.google-compute-engine.build-version>${test.google-compute-engine.build-version}</test.google-compute-engine.build-version>

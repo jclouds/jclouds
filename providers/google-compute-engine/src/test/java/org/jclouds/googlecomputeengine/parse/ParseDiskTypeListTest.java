@@ -22,8 +22,9 @@ import java.net.URI;
 
 import javax.ws.rs.Consumes;
 
+import org.jclouds.googlecloud.domain.ForwardingListPage;
+import org.jclouds.googlecloud.domain.ListPage;
 import org.jclouds.googlecomputeengine.domain.DiskType;
-import org.jclouds.googlecomputeengine.domain.ListPage;
 import org.jclouds.googlecomputeengine.internal.BaseGoogleComputeEngineParseTest;
 import org.testng.annotations.Test;
 
@@ -50,7 +51,7 @@ public class ParseDiskTypeListTest extends BaseGoogleComputeEngineParseTest<List
             500 // defaultDiskSizeGb
       );
       DiskType diskType2 = new ParseDiskTypeTest().expected();
-      return ListPage.create( //
+      return ForwardingListPage.create( //
             ImmutableList.of(diskType1, diskType2), // items
             null // nextPageToken
       );

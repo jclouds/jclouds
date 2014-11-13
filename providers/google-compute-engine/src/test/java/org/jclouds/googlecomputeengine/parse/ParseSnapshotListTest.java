@@ -22,7 +22,8 @@ import java.net.URI;
 
 import javax.ws.rs.Consumes;
 
-import org.jclouds.googlecomputeengine.domain.ListPage;
+import org.jclouds.googlecloud.domain.ForwardingListPage;
+import org.jclouds.googlecloud.domain.ListPage;
 import org.jclouds.googlecomputeengine.domain.Snapshot;
 import org.jclouds.googlecomputeengine.internal.BaseGoogleComputeEngineParseTest;
 import org.testng.annotations.Test;
@@ -50,7 +51,7 @@ public class ParseSnapshotListTest extends BaseGoogleComputeEngineParseTest<List
             URI.create(BASE_URL + "/party/zones/us-central1-a/disks/testimage1"), // sourceDisk
             "8243603669926824540"// sourceDiskId
       );
-      return ListPage.create( //
+      return ForwardingListPage.create( //
             ImmutableList.of(snapshot1, snapshot2), // items
             null // nextPageToken
       );

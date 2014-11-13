@@ -21,9 +21,9 @@ import static com.google.common.base.Preconditions.checkState;
 import static com.google.common.collect.Iterables.filter;
 import static com.google.common.collect.Lists.newArrayList;
 import static java.lang.String.format;
+import static org.jclouds.googlecloud.internal.ListPages.concat;
 import static org.jclouds.googlecomputeengine.config.GoogleComputeEngineProperties.IMAGE_PROJECTS;
 import static org.jclouds.googlecomputeengine.domain.NewInstance.Disk;
-import static org.jclouds.googlecomputeengine.internal.ListPages.concat;
 
 import java.net.URI;
 import java.util.List;

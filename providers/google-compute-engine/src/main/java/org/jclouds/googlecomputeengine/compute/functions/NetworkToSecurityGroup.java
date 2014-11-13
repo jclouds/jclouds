@@ -16,7 +16,7 @@
  */
 package org.jclouds.googlecomputeengine.compute.functions;
 
-import static org.jclouds.googlecomputeengine.internal.ListPages.concat;
+import static org.jclouds.googlecloud.internal.ListPages.concat;
 import static org.jclouds.googlecomputeengine.options.ListOptions.Builder.filter;
 
 import javax.inject.Inject;

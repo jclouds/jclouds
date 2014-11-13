@@ -20,8 +20,9 @@ import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 
 import javax.ws.rs.Consumes;
 
+import org.jclouds.googlecloud.domain.ForwardingListPage;
+import org.jclouds.googlecloud.domain.ListPage;
 import org.jclouds.googlecomputeengine.domain.Instance;
-import org.jclouds.googlecomputeengine.domain.ListPage;
 import org.jclouds.googlecomputeengine.internal.BaseGoogleComputeEngineParseTest;
 import org.testng.annotations.Test;
 
@@ -37,7 +38,7 @@ public class ParseInstanceListTest extends BaseGoogleComputeEngineParseTest<List
 
    @Override @Consumes(APPLICATION_JSON)
    public ListPage<Instance> expected() {
-      return ListPage.create( //
+      return ForwardingListPage.create( //
             ImmutableList.of(new ParseInstanceTest().expected()), // items
             null // nextPageToken
       );

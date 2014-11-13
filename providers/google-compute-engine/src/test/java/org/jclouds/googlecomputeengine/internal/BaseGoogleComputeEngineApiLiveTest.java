@@ -19,7 +19,7 @@ package org.jclouds.googlecomputeengine.internal;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Preconditions.checkState;
 import static org.testng.Assert.assertEquals;
-import static org.testng.AssertJUnit.assertTrue;
+import static org.testng.Assert.assertTrue;
 
 import java.net.URI;
 import java.util.Properties;
@@ -27,8 +27,9 @@ import java.util.concurrent.atomic.AtomicReference;
 import java.util.logging.Logger;
 
 import org.jclouds.apis.BaseApiLiveTest;
+import org.jclouds.googlecloud.config.CurrentProject;
+import org.jclouds.googlecloud.internal.TestProperties;
 import org.jclouds.googlecomputeengine.GoogleComputeEngineApi;
-import org.jclouds.googlecomputeengine.config.CurrentProject;
 import org.jclouds.googlecomputeengine.domain.Operation;
 import org.jclouds.javax.annotation.Nullable;
 
@@ -39,7 +40,6 @@ import com.google.inject.Injector;
 import com.google.inject.Key;
 import com.google.inject.Module;
 import com.google.inject.TypeLiteral;
-
 
 public class BaseGoogleComputeEngineApiLiveTest extends BaseApiLiveTest<GoogleComputeEngineApi> {
 
@@ -62,7 +62,7 @@ public class BaseGoogleComputeEngineApiLiveTest extends BaseApiLiveTest<GoogleCo
    }
 
    @Override protected Properties setupProperties() {
-      return TestProperties.apply(super.setupProperties());
+      return TestProperties.apply(provider, super.setupProperties());
    }
 
    @Override protected GoogleComputeEngineApi create(Properties props, Iterable<Module> modules) {

@@ -14,26 +14,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jclouds.googlecomputeengine.internal;
+package org.jclouds.googlecloud.options;
 
-import java.util.List;
-import java.util.Map;
+import static com.google.common.base.Preconditions.checkNotNull;
 
-import org.jclouds.javax.annotation.Nullable;
+import org.jclouds.http.options.BaseHttpRequestOptions;
 
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableMap;
-
-public final class NullSafeCopies {
-
-   public static <K, V> Map<K, V> copyOf(@Nullable Map<K, V> map) {
-      return map != null ? ImmutableMap.copyOf(map) : ImmutableMap.<K, V>of();
-   }
-
-   public static <E> List<E> copyOf(@Nullable List<E> list) {
-      return list != null ? ImmutableList.copyOf(list) : ImmutableList.<E>of();
-   }
-
-   private NullSafeCopies() {
+/** Base controls for listing resources in google cloud products. */
+public abstract class ListOptions extends BaseHttpRequestOptions {
+   /**  Sets Maximum count of results to be returned. Maximum value is product-specific. */
+   public ListOptions maxResults(Integer maxResults) {
+      this.queryParameters.put("maxResults", checkNotNull(maxResults, "maxResults").toString());
+      return this;
    }
 }

@@ -14,26 +14,32 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jclouds.googlecomputeengine.internal;
+package org.jclouds.googlecloud.internal;
 
-import static org.jclouds.googlecomputeengine.config.GoogleComputeEngineProperties.CREDENTIAL_TYPE;
-import static org.jclouds.googlecomputeengine.config.GoogleComputeEngineProperties.PROJECT_NAME;
-import static org.jclouds.oauth.v2.OAuthTestUtils.setCredential;
+import static com.google.common.base.Preconditions.checkNotNull;
+import static com.google.common.base.Throwables.propagate;
+import static org.jclouds.googlecloud.config.GoogleCloudProperties.CREDENTIAL_TYPE;
+import static org.jclouds.googlecloud.config.GoogleCloudProperties.PROJECT_NAME;
 import static org.jclouds.oauth.v2.config.CredentialType.P12_PRIVATE_KEY_CREDENTIALS;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.Properties;
 
 import org.jclouds.oauth.v2.config.CredentialType;
 
+import com.google.common.base.Charsets;
+import com.google.common.io.Files;
+
 /** Changes to this mandate changes to pom.xml and README.md */
 public final class TestProperties {
 
-   public static Properties apply(Properties props) {
+   public static Properties apply(String provider, Properties props) {
       setIfTestSystemPropertyPresent(props, PROJECT_NAME);
       setIfTestSystemPropertyPresent(props, CREDENTIAL_TYPE);
       if (props.containsKey(CREDENTIAL_TYPE)
             && CredentialType.fromValue(props.getProperty(CREDENTIAL_TYPE)) == P12_PRIVATE_KEY_CREDENTIALS) {
-         setCredential(props, "google-compute-engine.credential");
+         setCredential(props, provider + ".credential");
       }
       return props;
    }
@@ -46,6 +52,32 @@ public final class TestProperties {
          return val;
       }
       return null;
+   }
+
+   // TODO: move to jclouds-core
+   public static String setCredential(Properties overrides, String key) {
+      String val = null;
+      String credentialFromFile = null;
+      String testKey = "test." + key;
+
+      if (System.getProperties().containsKey(testKey)) {
+         val = System.getProperty(testKey);
+      }
+      checkNotNull(val,
+            String.format("the property %s must be set (pem private key file path or private key as a string)",
+                  testKey));
+
+      if (val.startsWith("-----BEGIN")) {
+         return val;
+      }
+
+      try {
+         credentialFromFile = Files.toString(new File(val), Charsets.UTF_8);
+      } catch (IOException e) {
+         throw propagate(e);
+      }
+      overrides.setProperty(key, credentialFromFile);
+      return credentialFromFile;
    }
 
    private TestProperties() {

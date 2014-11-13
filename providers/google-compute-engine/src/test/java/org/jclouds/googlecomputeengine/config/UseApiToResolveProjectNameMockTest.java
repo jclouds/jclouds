@@ -63,7 +63,7 @@ public class UseApiToResolveProjectNameMockTest extends BaseGoogleComputeEngineA
          fn().apply(new Credentials(projectNumber, credential));
          fail();
       } catch (IllegalArgumentException e) {
-         assertEquals(e.getMessage(), String.format("Identity %s is malformed. Should be %s", projectNumber,
+         assertEquals(e.getMessage(), String.format("Client email %s is malformed. Should be %s", projectNumber,
                new GoogleComputeEngineApiMetadata().getIdentityName()));
       }
 

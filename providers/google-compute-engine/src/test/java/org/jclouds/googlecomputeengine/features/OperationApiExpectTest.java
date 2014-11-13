@@ -21,8 +21,9 @@ import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertNull;
 
+import org.jclouds.googlecloud.domain.ForwardingListPage;
+import org.jclouds.googlecloud.domain.ListPage;
 import org.jclouds.googlecomputeengine.GoogleComputeEngineApi;
-import org.jclouds.googlecomputeengine.domain.ListPage;
 import org.jclouds.googlecomputeengine.domain.Operation;
 import org.jclouds.googlecomputeengine.internal.BaseGoogleComputeEngineExpectTest;
 import org.jclouds.googlecomputeengine.parse.ParseGlobalOperationListTest;
@@ -156,7 +157,7 @@ public class OperationApiExpectTest extends BaseGoogleComputeEngineExpectTest<Go
    }
 
    private ListPage<Operation> regionList() {
-      return ListPage.create( //
+      return ForwardingListPage.create( //
             ImmutableList.of(new ParseRegionOperationTest().expected()), // items
             null // nextPageToken
       );
@@ -214,7 +215,7 @@ public class OperationApiExpectTest extends BaseGoogleComputeEngineExpectTest<Go
    }
 
    private ListPage<Operation> zoneList() {
-      return ListPage.create( //
+      return ForwardingListPage.create( //
             ImmutableList.of(new ParseZoneOperationTest().expected()), // items
             null // nextPageToken
       );

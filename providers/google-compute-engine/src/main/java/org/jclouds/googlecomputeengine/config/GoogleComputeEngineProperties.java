@@ -16,26 +16,13 @@
  */
 package org.jclouds.googlecomputeengine.config;
 
-import org.jclouds.oauth.v2.config.OAuthProperties;
-
 import com.google.common.annotations.Beta;
 
-/** Configuration properties keys used in {@link org.jclouds.ContextBuilder#overrides(java.util.Properties)}. */
+/**
+ * Configuration properties keys used in {@link org.jclouds.ContextBuilder#overrides(java.util.Properties)}.
+ * <p/> Note that these are in addition to properties defined in {@link org.jclouds.googlecloud.config.GoogleCloudProperties}.
+ */
 public final class GoogleComputeEngineProperties {
-
-   /**
-    * How requests are authorized using OAuth. Defaults to {@link org.jclouds.oauth.v2.config.CredentialType#P12_PRIVATE_KEY_CREDENTIALS}.
-    *
-    * @see org.jclouds.oauth.v2.config.CredentialType
-    */
-   public static final String CREDENTIAL_TYPE = OAuthProperties.CREDENTIAL_TYPE;
-
-   /**
-    * Set this property to specify the <a href="https://cloud.google.com/compute/docs/projects">project name</a> this
-    * context applies to.
-    * <p/> This is an alternative to looking up the project name at runtime.
-    */
-   public static final String PROJECT_NAME = "jclouds.google-compute-engine.project-name";
 
    /** The total time, in msecs, to wait for an operation to complete. */
    @Beta

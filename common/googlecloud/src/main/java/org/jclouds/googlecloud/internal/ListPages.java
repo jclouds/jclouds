@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jclouds.googlecomputeengine.internal;
+package org.jclouds.googlecloud.internal;
 
 import static com.google.common.base.Predicates.instanceOf;
 import static com.google.common.collect.Iterables.tryFind;
@@ -22,8 +22,8 @@ import static com.google.common.collect.Iterables.tryFind;
 import java.util.Iterator;
 import java.util.List;
 
-import org.jclouds.googlecomputeengine.domain.ListPage;
-import org.jclouds.googlecomputeengine.options.ListOptions;
+import org.jclouds.googlecloud.domain.ListPage;
+import org.jclouds.googlecloud.options.ListOptions;
 import org.jclouds.javax.annotation.Nullable;
 
 import com.google.common.collect.AbstractIterator;
@@ -43,8 +43,9 @@ public final class ListPages {
       };
    }
 
-   @Nullable static ListOptions listOptions(List<Object> args) {
-      return (ListOptions) tryFind(args, instanceOf(ListOptions.class)).orNull();
+   /** Value of {@code <O>} is a final class in the cloud provider. Rather than playing with reflection, we trust it. */
+   @Nullable static <O extends ListOptions> O listOptions(List<Object> args) {
+      return (O) tryFind(args, instanceOf(ListOptions.class)).orNull();
    }
 
    static <T> Iterator<ListPage<T>> singletonOrEmptyIterator(ListPage<T> input) {

@@ -19,7 +19,7 @@ package org.jclouds.googlecomputeengine.compute;
 import static org.jclouds.compute.config.ComputeServiceProperties.TIMEOUT_NODE_RUNNING;
 import static org.jclouds.compute.config.ComputeServiceProperties.TIMEOUT_NODE_SUSPENDED;
 import static org.jclouds.compute.config.ComputeServiceProperties.TIMEOUT_NODE_TERMINATED;
-import static org.jclouds.googlecomputeengine.internal.ListPages.concat;
+import static org.jclouds.googlecloud.internal.ListPages.concat;
 
 import java.util.Map;
 import java.util.Set;

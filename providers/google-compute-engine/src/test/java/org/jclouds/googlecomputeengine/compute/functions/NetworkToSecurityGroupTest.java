@@ -29,8 +29,8 @@ import static org.testng.Assert.assertTrue;
 import java.net.URI;
 
 import org.jclouds.compute.domain.SecurityGroup;
+import org.jclouds.googlecloud.domain.ForwardingListPage;
 import org.jclouds.googlecomputeengine.GoogleComputeEngineApi;
-import org.jclouds.googlecomputeengine.domain.ListPage;
 import org.jclouds.googlecomputeengine.domain.Network;
 import org.jclouds.googlecomputeengine.features.FirewallApi;
 import org.jclouds.googlecomputeengine.options.ListOptions;
@@ -53,7 +53,7 @@ public class NetworkToSecurityGroupTest {
       ListOptions options = filter("network eq .*/party-test");
       expect(api.firewalls()).andReturn(fwApi);
       expect(fwApi.list(options)).andReturn(
-            singletonIterator(ListPage.create(ImmutableList.of(FirewallToIpPermissionTest.fwForTest()), null)));
+            singletonIterator(ForwardingListPage.create(ImmutableList.of(FirewallToIpPermissionTest.fwForTest()), null)));
 
       replay(api, fwApi);
 

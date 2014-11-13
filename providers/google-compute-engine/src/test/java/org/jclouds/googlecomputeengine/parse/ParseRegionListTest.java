@@ -22,7 +22,8 @@ import java.net.URI;
 
 import javax.ws.rs.Consumes;
 
-import org.jclouds.googlecomputeengine.domain.ListPage;
+import org.jclouds.googlecloud.domain.ForwardingListPage;
+import org.jclouds.googlecloud.domain.ListPage;
 import org.jclouds.googlecomputeengine.domain.Quota;
 import org.jclouds.googlecomputeengine.domain.Region;
 import org.jclouds.googlecomputeengine.internal.BaseGoogleComputeEngineParseTest;
@@ -59,7 +60,7 @@ public class ParseRegionListTest extends BaseGoogleComputeEngineParseTest<ListPa
                   Quota.create("FIREWALLS", 2, 100), //
                   Quota.create("IMAGES", 0, 100)) // quotas
       );
-      return ListPage.create( //
+      return ForwardingListPage.create( //
             ImmutableList.of(region1, region2), // items
             null // nextPageToken
       );

@@ -16,18 +16,15 @@
  */
 package org.jclouds.googlecomputeengine.config;
 
-import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Suppliers.compose;
 import static java.util.concurrent.TimeUnit.SECONDS;
 import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 import static org.jclouds.Constants.PROPERTY_SESSION_INTERVAL;
-import static org.jclouds.googlecomputeengine.config.GoogleComputeEngineProperties.PROJECT_NAME;
+import static org.jclouds.googlecloud.config.GoogleCloudProperties.PROJECT_NAME;
 import static org.jclouds.rest.config.BinderUtils.bindHttpApi;
 
 import java.net.URI;
 import java.util.concurrent.atomic.AtomicReference;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -38,6 +35,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 
 import org.jclouds.domain.Credentials;
+import org.jclouds.googlecloud.config.CurrentProject;
 import org.jclouds.googlecomputeengine.GoogleComputeEngineApi;
 import org.jclouds.googlecomputeengine.domain.Project;
 import org.jclouds.googlecomputeengine.handlers.GoogleComputeEngineErrorHandler;
@@ -116,7 +114,6 @@ public final class GoogleComputeEngineHttpApiModule extends HttpApiModule<Google
     * targetPools.
     */
    static final class UseApiToResolveProjectName implements Function<Credentials, URI> {
-      public static final Pattern PROJECT_NUMBER_PATTERN = Pattern.compile("^([0-9]+)[@-].*");
 
       @SkipEncoding({ '/', '=' })
       @RequestFilters(OAuthAuthenticationFilter.class)
@@ -139,9 +136,8 @@ public final class GoogleComputeEngineHttpApiModule extends HttpApiModule<Google
       }
 
       @Override public URI apply(Credentials in) {
-         Matcher matcher = PROJECT_NUMBER_PATTERN.matcher(in.identity);
-         checkArgument(matcher.find(), "Identity %s is malformed. Should be %s", in.identity, identityName);
-         return URI.create(defaultEndpoint.get() + "/projects/" + api.get(matcher.group(1)).name());
+         String projectNumber = CurrentProject.ClientEmail.toProjectNumber(in.identity);
+         return URI.create(defaultEndpoint.get() + "/projects/" + api.get(projectNumber).name());
       }
    }
 }

@@ -20,7 +20,7 @@ import static com.google.common.base.Charsets.UTF_8;
 import static com.google.common.base.Throwables.propagate;
 import static com.google.common.io.BaseEncoding.base64Url;
 import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
-import static org.jclouds.googlecomputeengine.config.GoogleComputeEngineProperties.PROJECT_NAME;
+import static org.jclouds.googlecloud.config.GoogleCloudProperties.PROJECT_NAME;
 import static org.jclouds.oauth.v2.JWSAlgorithms.NONE;
 import static org.jclouds.oauth.v2.config.OAuthProperties.JWS_ALG;
 import static org.jclouds.util.Strings2.toStringAndClose;

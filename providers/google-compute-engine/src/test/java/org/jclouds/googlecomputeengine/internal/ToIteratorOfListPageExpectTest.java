@@ -22,12 +22,13 @@ import static org.testng.Assert.assertEquals;
 import java.util.Iterator;
 import java.util.List;
 
+import org.jclouds.googlecloud.domain.ForwardingListPage;
+import org.jclouds.googlecloud.domain.ListPage;
 import org.jclouds.googlecomputeengine.GoogleComputeEngineApi;
 import org.jclouds.googlecomputeengine.config.GoogleComputeEngineParserModule;
 import org.jclouds.googlecomputeengine.domain.Address;
 import org.jclouds.googlecomputeengine.domain.Image;
 import org.jclouds.googlecomputeengine.domain.Instance;
-import org.jclouds.googlecomputeengine.domain.ListPage;
 import org.jclouds.googlecomputeengine.features.AddressApi;
 import org.jclouds.googlecomputeengine.features.ImageApi;
 import org.jclouds.googlecomputeengine.features.InstanceApi;
@@ -85,13 +86,13 @@ public class ToIteratorOfListPageExpectTest extends BaseGoogleComputeEngineExpec
       List<Image> items = ImmutableList.of(new ParseImageTest().expected());
 
       HttpResponse list1Response = HttpResponse.builder().statusCode(200)
-              .payload(json.toJson(ListPage.create(items, "token1"))).build();
+              .payload(json.toJson(ForwardingListPage.create(items, "token1"))).build();
 
       HttpResponse list2Response = HttpResponse.builder().statusCode(200)
-            .payload(json.toJson(ListPage.create(items, "token2"))).build();
+            .payload(json.toJson(ForwardingListPage.create(items, "token2"))).build();
 
       HttpResponse list3Response = HttpResponse.builder().statusCode(200)
-            .payload(json.toJson(ListPage.create(items, null))).build();
+            .payload(json.toJson(ForwardingListPage.create(items, null))).build();
 
       ImageApi imageApi = orderedRequestsSendResponses(requestForScopes(COMPUTE_READONLY_SCOPE),
               TOKEN_RESPONSE, list1, list1Response, list2, list2Response, list3, list3Response).images();
@@ -122,13 +123,13 @@ public class ToIteratorOfListPageExpectTest extends BaseGoogleComputeEngineExpec
       List<Address> items = ImmutableList.of(new ParseAddressTest().expected());
 
       HttpResponse list1Response = HttpResponse.builder().statusCode(200)
-            .payload(json.toJson(ListPage.create(items, "token1"))).build();
+            .payload(json.toJson(ForwardingListPage.create(items, "token1"))).build();
 
       HttpResponse list2Response = HttpResponse.builder().statusCode(200)
-            .payload(json.toJson(ListPage.create(items, "token2"))).build();
+            .payload(json.toJson(ForwardingListPage.create(items, "token2"))).build();
 
       HttpResponse list3Response = HttpResponse.builder().statusCode(200)
-            .payload(json.toJson(ListPage.create(items, null))).build();
+            .payload(json.toJson(ForwardingListPage.create(items, null))).build();
 
       AddressApi addressApi = orderedRequestsSendResponses(requestForScopes(COMPUTE_READONLY_SCOPE),
             TOKEN_RESPONSE, list1, list1Response, list2, list2Response, list3, list3Response)
@@ -160,13 +161,13 @@ public class ToIteratorOfListPageExpectTest extends BaseGoogleComputeEngineExpec
       List<Instance> items = ImmutableList.of(new ParseInstanceTest().expected());
 
       HttpResponse list1Response = HttpResponse.builder().statusCode(200)
-            .payload(json.toJson(ListPage.create(items, "token1"))).build();
+            .payload(json.toJson(ForwardingListPage.create(items, "token1"))).build();
 
       HttpResponse list2Response = HttpResponse.builder().statusCode(200)
-            .payload(json.toJson(ListPage.create(items, "token2"))).build();
+            .payload(json.toJson(ForwardingListPage.create(items, "token2"))).build();
 
       HttpResponse list3Response = HttpResponse.builder().statusCode(200)
-            .payload(json.toJson(ListPage.create(items, null))).build();
+            .payload(json.toJson(ForwardingListPage.create(items, null))).build();
 
       InstanceApi instanceApi = orderedRequestsSendResponses(requestForScopes(COMPUTE_READONLY_SCOPE),
             TOKEN_RESPONSE, list1, list1Response, list2, list2Response, list3, list3Response)

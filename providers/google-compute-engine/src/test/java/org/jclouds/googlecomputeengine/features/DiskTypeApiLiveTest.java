@@ -23,8 +23,8 @@ import static org.testng.Assert.assertTrue;
 
 import java.util.Iterator;
 
+import org.jclouds.googlecloud.domain.ListPage;
 import org.jclouds.googlecomputeengine.domain.DiskType;
-import org.jclouds.googlecomputeengine.domain.ListPage;
 import org.jclouds.googlecomputeengine.internal.BaseGoogleComputeEngineApiLiveTest;
 import org.testng.annotations.Test;
 

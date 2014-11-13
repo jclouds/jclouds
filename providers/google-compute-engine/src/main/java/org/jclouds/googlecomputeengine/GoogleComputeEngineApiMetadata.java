@@ -18,10 +18,10 @@ package org.jclouds.googlecomputeengine;
 
 import static org.jclouds.Constants.PROPERTY_SESSION_INTERVAL;
 import static org.jclouds.compute.config.ComputeServiceProperties.TEMPLATE;
+import static org.jclouds.googlecloud.config.GoogleCloudProperties.PROJECT_NAME;
 import static org.jclouds.googlecomputeengine.config.GoogleComputeEngineProperties.IMAGE_PROJECTS;
 import static org.jclouds.googlecomputeengine.config.GoogleComputeEngineProperties.OPERATION_COMPLETE_INTERVAL;
 import static org.jclouds.googlecomputeengine.config.GoogleComputeEngineProperties.OPERATION_COMPLETE_TIMEOUT;
-import static org.jclouds.googlecomputeengine.config.GoogleComputeEngineProperties.PROJECT_NAME;
 import static org.jclouds.oauth.v2.config.OAuthProperties.AUDIENCE;
 import static org.jclouds.oauth.v2.config.OAuthProperties.JWS_ALG;
 import static org.jclouds.reflect.Reflection2.typeToken;
@@ -30,6 +30,7 @@ import java.net.URI;
 import java.util.Properties;
 
 import org.jclouds.compute.ComputeServiceContext;
+import org.jclouds.googlecloud.config.CurrentProject;
 import org.jclouds.googlecomputeengine.compute.config.GoogleComputeEngineServiceContextModule;
 import org.jclouds.googlecomputeengine.config.GoogleComputeEngineHttpApiModule;
 import org.jclouds.googlecomputeengine.config.GoogleComputeEngineParserModule;
@@ -73,8 +74,7 @@ public class GoogleComputeEngineApiMetadata extends BaseHttpApiMetadata<GoogleCo
       protected Builder() {
          id("google-compute-engine")
            .name("Google Compute Engine Api")
-           .identityName("client_email which usually looks like project_id@developer.gserviceaccount.com or " //
-                 + "project_id-extended_uid@developer.gserviceaccount.com")
+           .identityName(CurrentProject.ClientEmail.DESCRIPTION)
            .credentialName("PEM encoded P12 private key associated with client_email")
            .documentation(URI.create("https://developers.google.com/compute/docs"))
            .version("v1")

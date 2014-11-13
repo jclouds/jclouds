@@ -21,7 +21,7 @@ import java.io.Closeable;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 
-import org.jclouds.googlecomputeengine.config.CurrentProject;
+import org.jclouds.googlecloud.config.CurrentProject;
 import org.jclouds.googlecomputeengine.features.AddressApi;
 import org.jclouds.googlecomputeengine.features.AggregatedListApi;
 import org.jclouds.googlecomputeengine.features.DiskApi;

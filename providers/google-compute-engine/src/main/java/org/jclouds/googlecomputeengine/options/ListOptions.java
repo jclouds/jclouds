@@ -18,12 +18,10 @@ package org.jclouds.googlecomputeengine.options;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
-import org.jclouds.http.options.BaseHttpRequestOptions;
-
 /**
- * Allows to optionally specify a filter, max results and a page token for <code>listFirstPage()</code> REST methods.
+ * Allows to optionally specify a filter, max results and a page token for <code>listPage</code> REST methods.
  */
-public final class ListOptions extends BaseHttpRequestOptions {
+public final class ListOptions extends org.jclouds.googlecloud.options.ListOptions {
 
    /**
     * Optional. Filter expression for filtering listed resources, in the form filter={expression}. Your {expression}
@@ -65,9 +63,8 @@ public final class ListOptions extends BaseHttpRequestOptions {
     * Sets Maximum count of results to be returned. Maximum and default value is 100. Acceptable items are 0 to
     * 100, inclusive. (Default: 100)
     */
-   public ListOptions maxResults(Integer maxResults) {
-      this.queryParameters.put("maxResults", checkNotNull(maxResults, "maxResults") + "");
-      return this;
+   @Override public ListOptions maxResults(Integer maxResults) {
+      return (ListOptions) super.maxResults(maxResults);
    }
 
    public static final class Builder {

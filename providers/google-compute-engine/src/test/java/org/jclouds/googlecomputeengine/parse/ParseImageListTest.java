@@ -19,8 +19,9 @@ package org.jclouds.googlecomputeengine.parse;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.core.MediaType;
 
+import org.jclouds.googlecloud.domain.ForwardingListPage;
+import org.jclouds.googlecloud.domain.ListPage;
 import org.jclouds.googlecomputeengine.domain.Image;
-import org.jclouds.googlecomputeengine.domain.ListPage;
 import org.jclouds.googlecomputeengine.internal.BaseGoogleComputeEngineParseTest;
 import org.testng.annotations.Test;
 
@@ -36,7 +37,7 @@ public class ParseImageListTest extends BaseGoogleComputeEngineParseTest<ListPag
 
    @Override @Consumes(MediaType.APPLICATION_JSON)
    public ListPage<Image> expected() {
-      return ListPage.create( //
+      return ForwardingListPage.create( //
             ImmutableList.of(new ParseImageTest().expected()), // items
             null // nextPageToken
       );

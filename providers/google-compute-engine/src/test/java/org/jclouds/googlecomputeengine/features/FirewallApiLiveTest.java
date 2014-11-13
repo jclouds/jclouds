@@ -23,8 +23,8 @@ import static org.testng.Assert.assertNotNull;
 
 import java.util.Iterator;
 
+import org.jclouds.googlecloud.domain.ListPage;
 import org.jclouds.googlecomputeengine.domain.Firewall;
-import org.jclouds.googlecomputeengine.domain.ListPage;
 import org.jclouds.googlecomputeengine.internal.BaseGoogleComputeEngineApiLiveTest;
 import org.jclouds.googlecomputeengine.options.FirewallOptions;
 import org.testng.annotations.Test;

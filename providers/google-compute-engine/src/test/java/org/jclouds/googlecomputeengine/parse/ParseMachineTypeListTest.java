@@ -22,7 +22,8 @@ import java.net.URI;
 
 import javax.ws.rs.Consumes;
 
-import org.jclouds.googlecomputeengine.domain.ListPage;
+import org.jclouds.googlecloud.domain.ForwardingListPage;
+import org.jclouds.googlecloud.domain.ListPage;
 import org.jclouds.googlecomputeengine.domain.MachineType;
 import org.jclouds.googlecomputeengine.internal.BaseGoogleComputeEngineParseTest;
 import org.testng.annotations.Test;
@@ -78,7 +79,7 @@ public class ParseMachineTypeListTest extends BaseGoogleComputeEngineParseTest<L
             "us-central1-a", // zone
             null // deprecated
       );
-      return ListPage.create( //
+      return ForwardingListPage.create( //
             ImmutableList.of(machineType1, machineType2, machineType3), // items
             null // nextPageToken
       );

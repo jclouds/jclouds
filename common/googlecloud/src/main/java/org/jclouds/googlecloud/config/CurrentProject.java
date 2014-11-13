@@ -14,12 +14,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jclouds.googlecomputeengine.config;
+package org.jclouds.googlecloud.config;
+
+import static com.google.common.base.Preconditions.checkArgument;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.inject.Qualifier;
 
@@ -28,4 +32,19 @@ import javax.inject.Qualifier;
 @Target(value = {ElementType.TYPE, ElementType.FIELD, ElementType.PARAMETER, ElementType.METHOD})
 @Qualifier
 public @interface CurrentProject {
+
+   /** Utilities related to the email associated with the service account of a project. */
+   public static final class ClientEmail {
+      public static final String DESCRIPTION = "" //
+            + "client_email which usually looks like project_id@developer.gserviceaccount.com or " //
+            + "project_id-extended_uid@developer.gserviceaccount.com";
+      private static final Pattern PROJECT_NUMBER_PATTERN = Pattern.compile("^([0-9]+)[@-].*");
+
+      /** Parses the project number from the client email or throws an {@linkplain IllegalArgumentException}. */
+      public static String toProjectNumber(String email) {
+         Matcher matcher = PROJECT_NUMBER_PATTERN.matcher(email);
+         checkArgument(matcher.find(), "Client email %s is malformed. Should be %s", email, DESCRIPTION);
+         return matcher.group(1);
+      }
+   }
 }

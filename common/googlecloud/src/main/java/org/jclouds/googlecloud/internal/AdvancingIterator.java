@@ -14,9 +14,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jclouds.googlecomputeengine.internal;
+package org.jclouds.googlecloud.internal;
 
-import org.jclouds.googlecomputeengine.domain.ListPage;
+import org.jclouds.googlecloud.domain.ListPage;
 
 import com.google.common.base.Function;
 import com.google.common.collect.AbstractIterator;
