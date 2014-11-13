@@ -22,13 +22,13 @@ import javax.ws.rs.Consumes;
 import javax.ws.rs.core.MediaType;
 
 import org.jclouds.date.internal.SimpleDateFormatDateService;
-import org.jclouds.googlecomputeengine.domain.ListPage;
-import org.jclouds.googlecomputeengine.domain.Resource;
+import org.jclouds.googlecloud.domain.ForwardingListPage;
+import org.jclouds.googlecloud.domain.ListPage;
 import org.jclouds.googlecomputeengine.domain.UrlMap;
 import org.jclouds.googlecomputeengine.internal.BaseGoogleComputeEngineParseTest;
 import org.testng.annotations.Test;
 
-import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.ImmutableList;
 
 @Test(groups = "unit")
 public class ParseUrlMapListTest extends BaseGoogleComputeEngineParseTest<ListPage<UrlMap>> {
@@ -41,21 +41,20 @@ public class ParseUrlMapListTest extends BaseGoogleComputeEngineParseTest<ListPa
    @Override
    @Consumes(MediaType.APPLICATION_JSON)
    public ListPage<UrlMap> expected() {
-      return ListPage.<UrlMap>builder()
-            .kind(Resource.Kind.URL_MAP_LIST)
-            .id("projects/myproject/global/urlMaps")
-            .selfLink(URI.create("https://www.googleapis.com/compute/v1/projects/myproject/global/urlMaps"))
-            .items(ImmutableSet.of(new ParseUrlMapTest().expected(),
-                                   UrlMap.builder()
-                                         .id("13741966667737398120")
-                                         .creationTimestamp(new SimpleDateFormatDateService().iso8601DateParse("2014-07-23T12:39:50.022-07:00"))
-                                         .selfLink(URI.create("https://www.googleapis" +
-                                               ".com/compute/v1/projects/myproject/global/urlMaps/jclouds-test-2"))
-                                         .name("jclouds-test-2")
-                                         .description("Basic url map")
-                                         .defaultService(URI.create("https://www.googleapis.com/compute/v1/projects/myproject/global/backendServices/jclouds-test"))
-                                         .fingerprint("EDqhvJucpz4=")
-                                         .build()))
-            .build();
+      return ForwardingListPage.create(
+            ImmutableList.of(new ParseUrlMapTest().expected(),
+                  UrlMap.create("13741966667737398120", // id
+                        new SimpleDateFormatDateService().iso8601DateParse("2014-07-23T12:39:50.022-07:00"), // creationTimestamp
+                        URI.create("https://www.googleapis" +
+                              ".com/compute/v1/projects/myproject/global/urlMaps/jclouds-test-2"), // selfLink
+                        "jclouds-test-2", // name
+                        "Basic url map", // description
+                        null, // hostRules
+                        null, // pathMatchers
+                        null, // urlMapTests
+                        URI.create("https://www.googleapis.com/compute/v1/projects/"
+                              + "myproject/global/backendServices/jclouds-test"), // defaultService
+                        "EDqhvJucpz4=")), // fingerprint
+            null);
    }
 }

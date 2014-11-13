@@ -1,9 +1,0 @@
-{
-   "kind": "compute#resourceView",
-   "id": "13050421646334304115",
-   "creationTime": "2012-11-25T01:38:48.306",
-   "selfLink": "https://www.googleapis.com/resourceviews/v1beta1/projects/myproject/zones/us-central1-a/resourceViews/jclouds-test",
-   "name": "jclouds-test",
-   "description": "Simple resource view",
-   "numMembers": 0
-}

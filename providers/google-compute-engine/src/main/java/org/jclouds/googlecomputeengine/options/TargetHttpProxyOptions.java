@@ -16,88 +16,60 @@
  */
 package org.jclouds.googlecomputeengine.options;
 
-import static com.google.common.base.Objects.equal;
-
 import java.net.URI;
 
-import com.google.common.base.Objects;
+import org.jclouds.javax.annotation.Nullable;
 
-/**
- * Options to create a target http proxy.
- *
- * @see org.jclouds.googlecomputeengine.domain.TargetHttpProxy
- */
-public final class TargetHttpProxyOptions extends ResourceOptions {
+public final class TargetHttpProxyOptions {
 
+   private String name;
+   @Nullable private String description;
    private URI urlMap;
-   
+
    /**
-    * {@inheritDoc}
+    * Name of the TargetHttpProxy resource.
+    * @return name, provided by the client.
     */
-   @Override
+   public String getName(){
+      return name;
+   }
+
+   /**
+    * @see TargetHttpProxyOptions#getName()
+    */
    public TargetHttpProxyOptions name(String name) {
       this.name = name;
       return this;
    }
 
    /**
-    * {@inheritDoc}
+    * An optional textual description of the TargetHttpProxy.
+    * @return description, provided by the client.
     */
-   @Override
+   public String getDescription(){
+      return description;
+   }
+
+   /**
+    * @see TargetHttpProxyOptions#getDescription()
+    */
    public TargetHttpProxyOptions description(String description) {
       this.description = description;
       return this;
    }
-   
+
    /**
-    * @see org.jclouds.googlecomputeengine.domain.TargetHttpProxy#getUrlMap()
+    * URL to the UrlMap resource that defines the mapping from URL to the BackendService.
     */
    public URI getUrlMap() {
       return urlMap;
    }
-   
+
    /**
-    * @see org.jclouds.googlecomputeengine.domain.TargetHttpProxy#getUrlMap()
+    * @see TargetHttpProxyOptions#getUrlMap()
     */
    public TargetHttpProxyOptions urlMap(URI urlMap) {
       this.urlMap = urlMap;
       return this;
-   }
-   
-   /**
-    *  {@inheritDoc}
-    */
-   @Override
-   public int hashCode() {
-      return Objects.hashCode(name, urlMap);
-   }
-
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public boolean equals(Object obj) {
-      if (this == obj) return true;
-      if (obj == null || getClass() != obj.getClass()) return false;
-      TargetHttpProxyOptions that = TargetHttpProxyOptions.class.cast(obj);
-      return equal(this.name, that.name)
-              && equal(this.urlMap, that.urlMap);
-   }
-
-   /**
-    * {@inheritDoc}
-    */
-   protected Objects.ToStringHelper string() {
-      return super.string()
-              .omitNullValues()
-              .add("urlMap", urlMap);
-   }
-
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public String toString() {
-      return string().toString();
    }
 }

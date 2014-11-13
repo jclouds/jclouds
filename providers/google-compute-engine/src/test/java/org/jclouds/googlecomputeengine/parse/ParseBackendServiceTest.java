@@ -24,10 +24,11 @@ import javax.ws.rs.core.MediaType;
 import org.jclouds.date.internal.SimpleDateFormatDateService;
 import org.jclouds.googlecomputeengine.domain.BackendService;
 import org.jclouds.googlecomputeengine.domain.BackendService.Backend;
+import org.jclouds.googlecomputeengine.domain.BackendService.Backend.BalancingModes;
 import org.jclouds.googlecomputeengine.internal.BaseGoogleComputeEngineParseTest;
 import org.testng.annotations.Test;
 
-import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.ImmutableList;
 
 @Test(groups = "unit")
 public class ParseBackendServiceTest extends BaseGoogleComputeEngineParseTest<BackendService> {
@@ -49,24 +50,24 @@ public class ParseBackendServiceTest extends BaseGoogleComputeEngineParseTest<Ba
       URI group = URI.create("https://www.googleapis.com/resourceviews/v1beta1"
                              + "/projects/myproject/zones/us-central1-a/"
                              + "resourceViews/jclouds-test");
-      Backend backend = Backend.builder()
-                               .balancingMode("UTILIZATION")
-                               .capacityScaler((float) 1.0)
-                               .description("A resource view")
-                               .group(group)
-                               .maxUtilization((float) 0.8).build();
-      return BackendService.builder()
-              .id("15448612110458377529")
-              .creationTimestamp(new SimpleDateFormatDateService().iso8601DateParse("2014-07-18T13:37:48.574-07:00"))
-              .selfLink(selfLink)
-              .name("jclouds-test")
-              .addHealthCheck(healthCheck)
-              .port(80)
-              .protocol("HTTP")
-              .timeoutSec(30)
-              .fingerprint("I6n5NPSXn8g=")
-              .description("Backend service")
-              .backends(ImmutableSet.of(backend))
-              .build();
+      Backend backend = Backend.create("A resource view", //description
+                                       group, //group
+                                       BalancingModes.UTILIZATION, //balancingMode
+                                       (float) 0.8, //maxUtilization
+                                       null, //maxRate
+                                       null, //maxRatePerInstance
+                                       (float) 1.0); // capacityScaler
+      return BackendService.create("15448612110458377529", //id
+            new SimpleDateFormatDateService().iso8601DateParse("2014-07-18T13:37:48.574-07:00"), //creationTimestamp
+            selfLink, //selfLink
+            "jclouds-test", //name
+            "Backend service", // description
+            ImmutableList.of(backend), //backends
+            ImmutableList.of(healthCheck), //healthChecks
+            30, //timeoutSec
+            80, //port
+            "HTTP", //protocol
+            "I6n5NPSXn8g=" //fingerprint
+            );
    }
 }

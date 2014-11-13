@@ -17,14 +17,16 @@
 package org.jclouds.googlecomputeengine.parse;
 
 import java.net.URI;
+import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 
 import javax.ws.rs.Consumes;
-import javax.ws.rs.core.MediaType;
 
 import org.jclouds.googlecomputeengine.domain.UrlMapValidateResult;
-import org.jclouds.googlecomputeengine.domain.UrlMapValidateResult.TestFailure;
+import org.jclouds.googlecomputeengine.domain.UrlMapValidateResult.UrlMapValidateResultInternal.TestFailure;
 import org.jclouds.googlecomputeengine.internal.BaseGoogleComputeEngineParseTest;
 import org.testng.annotations.Test;
+
+import com.google.common.collect.ImmutableList;
 
 @Test(groups = "unit")
 public class ParseUrlMapValidateTest extends BaseGoogleComputeEngineParseTest<UrlMapValidateResult> {
@@ -35,17 +37,15 @@ public class ParseUrlMapValidateTest extends BaseGoogleComputeEngineParseTest<Ur
    }
 
    @Override
-   @Consumes(MediaType.APPLICATION_JSON)
+   @Consumes(APPLICATION_JSON)
    public UrlMapValidateResult expected() {
-      return UrlMapValidateResult.builder()
-              .loadSucceeded(false)
-              .addLoadError("jclouds-test")
-              .testPassed(false)
-              .addTestFailure(TestFailure.builder().host("jclouds-test")
-                                                   .path("/test/path")
-                                                   .expectedService(URI.create("https://www.googleapis.com/compute/v1/projects/myproject/global/backendServices/jclouds-test"))
-                                                   .actualService(URI.create("https://www.googleapis.com/compute/v1/projects/myproject/global/backendServices/jclouds-test-2"))
-                                                   .build())
-              .build();
+      return UrlMapValidateResult.create(false, // loadSucceded
+            ImmutableList.of("jclouds-test"), // loadError
+            false, // testPassed
+            ImmutableList.of(TestFailure.create("jclouds-test", // host
+                  "/test/path", // path
+                  URI.create("https://www.googleapis.com/compute/v1/projects/myproject/global/backendServices/jclouds-test"), // expectedService
+                  URI.create("https://www.googleapis.com/compute/v1/projects/myproject/global/backendServices/jclouds-test-2") //actualService
+                  ))); //testFailures)
    }
 }

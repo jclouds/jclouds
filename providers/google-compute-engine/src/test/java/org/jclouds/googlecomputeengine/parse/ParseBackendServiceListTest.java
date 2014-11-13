@@ -16,19 +16,20 @@
  */
 package org.jclouds.googlecomputeengine.parse;
 
+import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
+
 import java.net.URI;
 
 import javax.ws.rs.Consumes;
-import javax.ws.rs.core.MediaType;
 
 import org.jclouds.date.internal.SimpleDateFormatDateService;
 import org.jclouds.googlecomputeengine.domain.BackendService;
-import org.jclouds.googlecomputeengine.domain.ListPage;
-import org.jclouds.googlecomputeengine.domain.Resource;
+import org.jclouds.googlecloud.domain.ForwardingListPage;
+import org.jclouds.googlecloud.domain.ListPage;
 import org.jclouds.googlecomputeengine.internal.BaseGoogleComputeEngineParseTest;
 import org.testng.annotations.Test;
 
-import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.ImmutableList;
 
 @Test(groups = "unit")
 public class ParseBackendServiceListTest extends BaseGoogleComputeEngineParseTest<ListPage<BackendService>> {
@@ -39,27 +40,24 @@ public class ParseBackendServiceListTest extends BaseGoogleComputeEngineParseTes
    }
 
    @Override
-   @Consumes(MediaType.APPLICATION_JSON)
+   @Consumes(APPLICATION_JSON)
    public ListPage<BackendService> expected() {
-      return ListPage.<BackendService>builder()
-              .kind(Resource.Kind.BACKEND_SERVICE_LIST)
-              .id("projects/myproject/backendServices")
-              .selfLink(URI.create("https://www.googleapis.com/compute/v1/projects/myproject/global/backendServices"))
-              .items(ImmutableSet.of(
-                      new ParseBackendServiceTest().expected(),
-                      BackendService.builder()
-                      .id("12862241067393040785")
-                      .creationTimestamp(new SimpleDateFormatDateService().iso8601DateParse("2012-04-13T03:05:04.365"))
-                      .selfLink(URI.create("https://www.googleapis" +
-                              ".com/compute/v1/projects/myproject/global/backendServices/jclouds-test-2"))
-                      .name("jclouds-test-2")
-                      .description("Backend Service 2")
-                      .port(80)
-                      .protocol("HTTP")
-                      .timeoutSec(45)
-                      .healthChecks(ImmutableSet.of(URI.create("https://www.googleapis.com/compute/v1/projects/myproject/global/httpHealthChecks/jclouds-test")))
-                      .build()
-              ))
-              .build();
+      return ForwardingListPage.create(
+            ImmutableList.of(
+                  new ParseBackendServiceTest().expected(),
+                  BackendService.create("12862241067393040785", //id
+                        new SimpleDateFormatDateService().iso8601DateParse("2012-04-13T03:05:04.365"), //creationTimestamp,
+                        URI.create("https://www.googleapis.com/compute/v1/projects/myproject/global/backendServices/jclouds-test-2"), //selfLink,
+                        "jclouds-test-2", //name,
+                        "Backend Service 2", //description
+                        null, // backends,
+                        ImmutableList.of(URI.create("https://www.googleapis.com/compute/v1/projects/myproject/global/httpHealthChecks/jclouds-test")), //healthChecks,
+                        45, //timeoutSec,
+                        80, //port,
+                        "HTTP", //protocol,
+                        null) //fingerprint
+                  ),
+            null
+      );
    }
 }

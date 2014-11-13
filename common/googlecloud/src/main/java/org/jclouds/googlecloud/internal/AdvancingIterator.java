@@ -18,8 +18,6 @@ package org.jclouds.googlecloud.internal;
 
 import org.jclouds.googlecloud.domain.ListPage;
 
-import org.jclouds.googlecomputeengine.internal.BaseGoogleComputeEngineExpectTest;
-
 import com.google.common.base.Function;
 import com.google.common.collect.AbstractIterator;
 

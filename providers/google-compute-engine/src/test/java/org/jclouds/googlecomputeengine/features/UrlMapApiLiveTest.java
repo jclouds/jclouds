@@ -16,55 +16,52 @@
  */
 package org.jclouds.googlecomputeengine.features;
 
+import static org.jclouds.googlecomputeengine.options.ListOptions.Builder.filter;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
 
 import java.net.URI;
-import java.util.HashSet;
 import java.util.List;
 
-import org.jclouds.collect.PagedIterable;
+import org.jclouds.googlecloud.domain.ListPage;
 import org.jclouds.googlecomputeengine.domain.UrlMap;
 import org.jclouds.googlecomputeengine.domain.UrlMap.HostRule;
 import org.jclouds.googlecomputeengine.domain.UrlMap.PathMatcher;
-import org.jclouds.googlecomputeengine.domain.UrlMap.PathRule;
+import org.jclouds.googlecomputeengine.domain.UrlMap.PathMatcher.PathRule;
+import org.jclouds.googlecomputeengine.domain.UrlMap.UrlMapTest;
 import org.jclouds.googlecomputeengine.domain.UrlMapValidateResult;
 import org.jclouds.googlecomputeengine.internal.BaseGoogleComputeEngineApiLiveTest;
 import org.jclouds.googlecomputeengine.options.BackendServiceOptions;
-import org.jclouds.googlecomputeengine.options.ListOptions;
 import org.jclouds.googlecomputeengine.options.UrlMapOptions;
 import org.testng.annotations.Test;
 
-import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
-import com.google.common.collect.Lists;
 
 public class UrlMapApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
 
    public static final String URL_MAP_NAME = "url-map-api-live-test-url-map";
    public static final String URL_MAP_BACKEND_SERVICE_NAME = "url-map-api-live-test-backend-service";
-   public static final String HEALTH_CHECK_NAME = "backend-service-api-live-test-health-check";
-   public static final int TIME_WAIT = 30;
+   public static final String HEALTH_CHECK_NAME = "url-map-api-live-test-health-check";
 
    private UrlMapApi api() {
-      return api.getUrlMapApiForProject(userProject.get());
+      return api.urlMaps();
    }
 
    @Test(groups = "live")
    public void testInsertUrlMap() {
       // Create extra resources needed for url maps
-      // TODO: (ashmrtnz) create health check once it is merged into project
-      HashSet<URI> healthChecks = new HashSet<URI>();
-      healthChecks.add(getHealthCheckUrl(userProject.get(), HEALTH_CHECK_NAME));
+      assertOperationDoneSuccessfully(api.httpHeathChecks().insert(HEALTH_CHECK_NAME));
+
+      List<URI> healthChecks = ImmutableList.of(getHealthCheckUrl(HEALTH_CHECK_NAME));
       BackendServiceOptions b = new BackendServiceOptions().name(URL_MAP_BACKEND_SERVICE_NAME)
                                                            .healthChecks(healthChecks);
-      assertGlobalOperationDoneSucessfully(api.getBackendServiceApiForProject(userProject.get())
-                                              .create(URL_MAP_BACKEND_SERVICE_NAME, b), TIME_WAIT);
-      
+      assertOperationDoneSuccessfully(api.backendServices().create(b));
+
       UrlMapOptions map = new UrlMapOptions().name(URL_MAP_NAME).description("simple url map")
-                                             .defaultService(getBackendServiceUrl(userProject.get(),
-                                                                                  URL_MAP_BACKEND_SERVICE_NAME));
-      assertGlobalOperationDoneSucessfully(api().create(URL_MAP_NAME, map), TIME_WAIT);
+                                             .defaultService(getBackendServiceUrl(URL_MAP_BACKEND_SERVICE_NAME));
+
+      assertOperationDoneSuccessfully(api().create(map));
 
    }
 
@@ -79,137 +76,129 @@ public class UrlMapApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
    @Test(groups = "live", dependsOnMethods = "testGetUrlMap")
    public void testListUrlMap() {
 
-      PagedIterable<UrlMap> urlMaps = api().list(new ListOptions.Builder()
-              .filter("name eq " + URL_MAP_NAME));
+      ListPage<UrlMap> urlMaps = api().list(filter("name eq " + URL_MAP_NAME)).next();
 
-      List<UrlMap> urlMapsAsList = Lists.newArrayList(urlMaps.concat());
+      assertEquals(urlMaps.size(), 1);
 
-      assertEquals(urlMapsAsList.size(), 1);
-
-      assertUrlMapEquals(Iterables.getOnlyElement(urlMapsAsList));
+      assertUrlMapEquals(Iterables.getOnlyElement(urlMaps));
 
    }
-   
+
    @Test(groups = "live", dependsOnMethods = "testGetUrlMap")
    public void testUpdateUrlMap() {
-      String fingerprint = api().get(URL_MAP_NAME).getFingerprint().get();
-      URI service = getBackendServiceUrl(userProject.get(), URL_MAP_BACKEND_SERVICE_NAME);
-      ImmutableSet<String> path = ImmutableSet.<String>of("/");
-      PathRule rule = PathRule.builder().service(service).paths(path).build();
-      ImmutableSet<PathRule> rules = ImmutableSet.<PathRule>of(rule);
-      ImmutableSet<PathMatcher> matchers = ImmutableSet.<PathMatcher>of(PathMatcher.builder().defaultService(service)
-                                                                                             .name("path")
-                                                                                             .pathRules(rules)
-                                                                                             .build());
-      ImmutableSet<String> hosts = ImmutableSet.<String>of("jclouds-test");
-      ImmutableSet<HostRule> hostRules = ImmutableSet.<HostRule>of(HostRule.builder().hosts(hosts)
-                                                                                     .pathMatcher("path")
-                                                                                     .build());
+      String fingerprint = api().get(URL_MAP_NAME).fingerprint();
+
+      URI service = getBackendServiceUrl(URL_MAP_BACKEND_SERVICE_NAME);
+
+      ImmutableList<String> paths = ImmutableList.<String>of("/");
+
+      PathRule rule = PathRule.create(paths, service);
+
+      ImmutableList<PathRule> rules = ImmutableList.<PathRule>of(rule);
+
+      ImmutableList<PathMatcher> matchers = ImmutableList.<PathMatcher>of(PathMatcher.create("test-path-matcher", "", service, rules));
+
+      ImmutableList<String> hosts = ImmutableList.<String>of("jclouds-test");
+      ImmutableList<HostRule> hostRules = ImmutableList.<HostRule>of(HostRule.create("", hosts, "test-path-matcher"));
       UrlMapOptions options = new UrlMapOptions().name(URL_MAP_NAME)
                                                  .pathMatchers(matchers)
                                                  .hostRules(hostRules)
                                                  .defaultService(service)
                                                  .fingerprint(fingerprint);
-      assertGlobalOperationDoneSucessfully(api().update(URL_MAP_NAME, options), TIME_WAIT);
-      
+
+      assertOperationDoneSuccessfully(api().update(URL_MAP_NAME, options));
+
       assertUrlMapEquals(api().get(URL_MAP_NAME), options);
    }
-   
+
    @Test(groups = "live", dependsOnMethods = "testUpdateUrlMap")
    public void testPatchUrlMap() {
-      String fingerprint = api().get(URL_MAP_NAME).getFingerprint().get();
-      URI service = getBackendServiceUrl(userProject.get(), URL_MAP_BACKEND_SERVICE_NAME);
-      ImmutableSet<UrlMap.UrlMapTest> urlMapTests = ImmutableSet.<UrlMap.UrlMapTest>of(UrlMap.UrlMapTest.builder()
-            .host("jclouds-test")
-            .path("/test/path")
-            .service(service)
-            .build());
+      String fingerprint = api().get(URL_MAP_NAME).fingerprint();
+      URI service = getBackendServiceUrl(URL_MAP_BACKEND_SERVICE_NAME);
+
+      UrlMapTest urlMapTest = UrlMapTest.create(null, "jclouds-test", "/test/path", service);
+      ImmutableList<UrlMap.UrlMapTest> urlMapTests = ImmutableList.<UrlMap.UrlMapTest>of(urlMapTest);
+
       UrlMapOptions options = new UrlMapOptions().urlMapTests(urlMapTests)
                                                  .fingerprint(fingerprint);
-      assertGlobalOperationDoneSucessfully(api().patch(URL_MAP_NAME, options), TIME_WAIT);
-      
+      assertOperationDoneSuccessfully(api().patch(URL_MAP_NAME, options));
+
       // Update options with settings it should have for later assertions.
-      ImmutableSet<String> path = ImmutableSet.<String>of("/");
-      PathRule rule = PathRule.builder().service(service).paths(path).build();
-      ImmutableSet<PathRule> rules = ImmutableSet.<PathRule>of(rule);
-      ImmutableSet<PathMatcher> matchers = ImmutableSet.<PathMatcher>of(PathMatcher.builder().defaultService(service)
-                                                                                             .name("path")
-                                                                                             .pathRules(rules)
-                                                                                             .build());
-      ImmutableSet<String> hosts = ImmutableSet.<String>of("jclouds-test");
-      ImmutableSet<HostRule> hostRules = ImmutableSet.<HostRule>of(HostRule.builder().hosts(hosts)
-                                                                                     .pathMatcher("path")
-                                                                                     .build());
+      ImmutableList<String> paths = ImmutableList.<String>of("/");
+      PathRule rule = PathRule.create(paths, service);
+
+      ImmutableList<PathRule> rules = ImmutableList.<PathRule>of(rule);
+      ImmutableList<PathMatcher> matchers = ImmutableList.<PathMatcher>of(PathMatcher.create("test-path-matcher", "", service, rules));
+
+      ImmutableList<String> hosts = ImmutableList.<String>of("jclouds-test");
+      ImmutableList<HostRule> hostRules = ImmutableList.<HostRule>of(HostRule.create("", hosts, "test-path-matcher"));
       options.name(URL_MAP_NAME)
              .description("simple url map")
              .pathMatchers(matchers)
              .hostRules(hostRules)
              .defaultService(service);
+
       assertUrlMapEquals(api().get(URL_MAP_NAME), options);
    }
-   
+
    @Test(groups = "live", dependsOnMethods = "testPatchUrlMap")
    public void testValidateUrlMap() {
       UrlMapValidateResult results = api().validate(URL_MAP_NAME, api().get(URL_MAP_NAME));
-      UrlMapValidateResult expected = UrlMapValidateResult.builder().testPassed(true).loadSucceeded(true).build();
+      UrlMapValidateResult expected = UrlMapValidateResult.allPass();
       assertEquals(results, expected);
    }
-   
+
    @Test(groups = "live", dependsOnMethods = "testPatchUrlMap")
    public void testValidateUrlMapWithOptions() {
+      URI service = getBackendServiceUrl(URL_MAP_BACKEND_SERVICE_NAME);
+      ImmutableList<String> paths = ImmutableList.<String>of("/");
+      PathRule rule = PathRule.create(paths, service);
+      ImmutableList<PathRule> rules = ImmutableList.<PathRule>of(rule);
+
+      ImmutableList<PathMatcher> matchers = ImmutableList.<PathMatcher>of(PathMatcher.create("test-path-matcher", "", service, rules));
+
+      ImmutableList<String> hosts = ImmutableList.<String>of("jclouds-test");
+
+      ImmutableList<HostRule> hostRules = ImmutableList.<HostRule>of(HostRule.create("", hosts, "test-path-matcher"));
+      UrlMapTest urlMapTest = UrlMapTest.create(null, "jclouds-test", "/test/path", service);
+      ImmutableList<UrlMap.UrlMapTest> urlMapTests = ImmutableList.<UrlMap.UrlMapTest>of(urlMapTest);
+
       UrlMapOptions options = new UrlMapOptions();
-      
-      URI service = getBackendServiceUrl(userProject.get(), URL_MAP_BACKEND_SERVICE_NAME);
-      ImmutableSet<UrlMap.UrlMapTest> urlMapTests = ImmutableSet.<UrlMap.UrlMapTest>of(UrlMap.UrlMapTest.builder()
-            .host("jclouds-test")
-            .path("/test/path")
-            .service(service)
-            .build());
-      ImmutableSet<String> path = ImmutableSet.<String>of("/");
-      PathRule rule = PathRule.builder().service(service).paths(path).build();
-      ImmutableSet<PathRule> rules = ImmutableSet.<PathRule>of(rule);
-      ImmutableSet<PathMatcher> matchers = ImmutableSet.<PathMatcher>of(PathMatcher.builder().defaultService(service)
-                                                                                             .name("path")
-                                                                                             .pathRules(rules)
-                                                                                             .build());
-      ImmutableSet<String> hosts = ImmutableSet.<String>of("jclouds-test");
-      ImmutableSet<HostRule> hostRules = ImmutableSet.<HostRule>of(HostRule.builder().hosts(hosts)
-                                                                                     .pathMatcher("path")
-                                                                                     .build());
+
       options.pathMatchers(matchers)
              .name(URL_MAP_NAME)
              .hostRules(hostRules)
              .urlMapTests(urlMapTests)
              .defaultService(service)
              .description("simple url map");
-      
+
       UrlMapValidateResult results = api().validate(URL_MAP_NAME, options);
-      UrlMapValidateResult expected = UrlMapValidateResult.builder().testPassed(true).loadSucceeded(true).build();
+      UrlMapValidateResult expected = UrlMapValidateResult.allPass();
       assertEquals(results, expected);
    }
 
-   @Test(groups = "live", dependsOnMethods = "testValidateUrlMapWithOptions")
+   @Test(groups = "live", dependsOnMethods = "testValidateUrlMapWithOptions", alwaysRun = true)
    public void testDeleteUrlMap() {
 
-      assertGlobalOperationDoneSucessfully(api().delete(URL_MAP_NAME), TIME_WAIT);
-      
+      assertOperationDoneSuccessfully(api().delete(URL_MAP_NAME));
+
       // remove extra resources created
-      assertGlobalOperationDoneSucessfully(api.getBackendServiceApiForProject(userProject.get())
-                                              .delete(URL_MAP_BACKEND_SERVICE_NAME), TIME_WAIT);
-      // TODO: delete health check once it is merged
+      assertOperationDoneSuccessfully(api.backendServices().delete(URL_MAP_BACKEND_SERVICE_NAME));
+
+      assertOperationDoneSuccessfully(api.httpHeathChecks().delete(HEALTH_CHECK_NAME));
+
    }
 
    private void assertUrlMapEquals(UrlMap result) {
-      assertEquals(result.getName(), URL_MAP_NAME);
-      assertEquals(result.getDefaultService(), getBackendServiceUrl(userProject.get(),
-                                                                        URL_MAP_BACKEND_SERVICE_NAME)); 
-      assertEquals(result.getDescription().get(), "simple url map");
+      assertEquals(result.name(), URL_MAP_NAME);
+      assertEquals(result.defaultService(), getBackendServiceUrl(URL_MAP_BACKEND_SERVICE_NAME));
+      assertEquals(result.description(), "simple url map");
    }
 
    private void assertUrlMapEquals(UrlMap result, UrlMapOptions expected) {
-      assertEquals(result.getName(), expected.getName());
-      assertEquals(result.getDefaultService(), expected.getDefaultService()); 
-      assertEquals(result.getPathMatchers(), expected.getPathMatchers());
-      assertEquals(result.getHostRules(), expected.getHostRules());
+      assertEquals(result.name(), expected.getName());
+      assertEquals(result.defaultService(), expected.getDefaultService());
+      assertEquals(result.pathMatchers(), expected.getPathMatchers());
+      assertEquals(result.hostRules(), expected.getHostRules());
    }
 }

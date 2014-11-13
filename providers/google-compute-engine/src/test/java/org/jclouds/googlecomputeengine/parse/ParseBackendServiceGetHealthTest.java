@@ -16,16 +16,17 @@
  */
 package org.jclouds.googlecomputeengine.parse;
 
-import java.net.URI;
+import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 
+import java.net.URI;
 import javax.ws.rs.Consumes;
-import javax.ws.rs.core.MediaType;
 
 import org.jclouds.googlecomputeengine.domain.BackendServiceGroupHealth;
+import org.jclouds.googlecomputeengine.domain.BackendServiceGroupHealth.HealthStatus;
 import org.jclouds.googlecomputeengine.internal.BaseGoogleComputeEngineParseTest;
 import org.testng.annotations.Test;
 
-import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.ImmutableList;
 
 @Test(groups = "unit")
 public class ParseBackendServiceGetHealthTest extends BaseGoogleComputeEngineParseTest<BackendServiceGroupHealth> {
@@ -36,16 +37,18 @@ public class ParseBackendServiceGetHealthTest extends BaseGoogleComputeEnginePar
    }
 
    @Override
-   @Consumes(MediaType.APPLICATION_JSON)
+   @Consumes(APPLICATION_JSON)
    public BackendServiceGroupHealth expected() {
       URI uri = URI.create("https://www.googleapis.com/compute/v1/projects/"
                            + "myproject/zones/us-central1-a/instances/"
                            + "jclouds-test");
-      return BackendServiceGroupHealth.builder()
-              .healthStatuses(ImmutableSet.of(BackendServiceGroupHealth.HealthStatus.builder()
-                              .healthState("HEALTHY")
-                              .instance(uri)
-                              .build())
-              ).build();
+      return BackendServiceGroupHealth.create(
+            ImmutableList.of(HealthStatus.create(
+                  null, // ipAddress
+                  80, // port
+                  uri, // instance
+                  "HEALTHY" //healthState
+                  )) //healthStatuses
+            );
    }
 }

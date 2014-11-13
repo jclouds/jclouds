@@ -37,12 +37,11 @@ public class ParseTargetHttpProxyTest extends BaseGoogleComputeEngineParseTest<T
    @Override
    @Consumes(MediaType.APPLICATION_JSON)
    public TargetHttpProxy expected() {
-      return TargetHttpProxy.builder()
-              .id("13050421646334304115")
-              .creationTimestamp(new SimpleDateFormatDateService().iso8601DateParse("2012-11-25T01:38:48.306"))
-              .selfLink(URI.create("https://www.googleapis.com/compute/v1/projects/myproject/global/targetHttpProxies/jclouds-test"))
-              .name("jclouds-test")
-              .urlMap(URI.create("https://www.googleapis.com/compute/v1/projects/myproject/global/urlMaps/jclouds-test"))
-              .build();
+      return TargetHttpProxy.create("13050421646334304115", // id
+            new SimpleDateFormatDateService().iso8601DateParse("2012-11-25T01:38:48.306"), // creationTimestamp
+            URI.create("https://www.googleapis.com/compute/v1/projects/myproject/global/targetHttpProxies/jclouds-test"), // selfLink
+            "jclouds-test", // name
+            null,
+            URI.create("https://www.googleapis.com/compute/v1/projects/myproject/global/urlMaps/jclouds-test")); // urlMap
    }
 }

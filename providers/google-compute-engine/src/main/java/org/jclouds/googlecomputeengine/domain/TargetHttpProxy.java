@@ -16,117 +16,32 @@
  */
 package org.jclouds.googlecomputeengine.domain;
 
-import static com.google.common.base.Objects.equal;
-import static com.google.common.base.Preconditions.checkNotNull;
-
-import java.beans.ConstructorProperties;
 import java.net.URI;
 import java.util.Date;
 
 import org.jclouds.javax.annotation.Nullable;
+import org.jclouds.json.SerializedNames;
 
+import com.google.auto.value.AutoValue;
 import com.google.common.annotations.Beta;
-import com.google.common.base.Objects;
 
-/**
- * A target http proxy resource.
- *
- * @see <a href="https://developers.google.com/compute/docs/reference/latest/targetHttpProxies"/>
- * @see <a href="https://developers.google.com/compute/docs/load-balancing/http/target-http-proxy"/>
- */
+@AutoValue
 @Beta
-public final class TargetHttpProxy extends Resource {
+public abstract class TargetHttpProxy {
 
-   private final URI urlMap;
+   public abstract String id();
+   public abstract Date creationTimestamp();
+   public abstract URI selfLink();
+   public abstract String name();
+   @Nullable public abstract String description();
+   public abstract URI urlMap();
 
-   @ConstructorProperties({
-           "id", "creationTimestamp", "selfLink", "name", "description", "urlMap",
-   })
-   private TargetHttpProxy(String id, Date creationTimestamp, URI selfLink, String name,
-                           @Nullable String description, URI urlMap) {
-      super(Kind.TARGET_HTTP_PROXY, id, creationTimestamp, selfLink, name, description);
-      this.urlMap = checkNotNull(urlMap, "urlMap");
+   @SerializedNames({"id", "creationTimestamp", "selfLink", "name", "description", "urlMap"})
+   public static TargetHttpProxy create(String id, Date creationTimestamp, URI selfLink, String name,
+         @Nullable String description, URI urlMap){
+      return new AutoValue_TargetHttpProxy(id, creationTimestamp, selfLink, name, description, urlMap);
    }
 
-   /**
-    * @return the url map this proxy points to.
-    */
-   public URI getUrlMap() {
-      return urlMap;
-   }
-   
-   /**
-    *  {@inheritDoc}
-    */
-   @Override
-   public int hashCode() {
-      return Objects.hashCode(kind, name, urlMap);
-   }
-
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public boolean equals(Object obj) {
-      if (this == obj) return true;
-      if (obj == null || getClass() != obj.getClass()) return false;
-      TargetHttpProxy that = TargetHttpProxy.class.cast(obj);
-      return equal(this.kind, that.kind)
-              && equal(this.name, that.name)
-              && equal(this.urlMap, that.urlMap);
-   }
-
-   /**
-    * {@inheritDoc}
-    */
-   protected Objects.ToStringHelper string() {
-      return super.string()
-              .omitNullValues()
-              .add("urlMap", urlMap);
-   }
-
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public String toString() {
-      return string().toString();
-   }
-
-   public static Builder builder() {
-      return new Builder();
-   }
-
-   public Builder toBuilder() {
-      return new Builder().fromTargetHttpProxy(this);
-   }
-
-   public static final class Builder extends Resource.Builder<Builder> {
-
-      private URI urlMap;
-      
-      /**
-       * @see TargetHttpProxy#getUrlMap()
-       */
-      public Builder urlMap(URI urlMap) {
-         this.urlMap = urlMap;
-         return this;
-      }
-      
-      @Override
-      protected Builder self() {
-         return this;
-      }
-
-      public TargetHttpProxy build() {
-         return new TargetHttpProxy(super.id, super.creationTimestamp, super.selfLink, super.name,
-                 super.description, urlMap);
-      }
-
-      public Builder fromTargetHttpProxy(TargetHttpProxy in) {
-         return super.fromResource(in)
-                 .urlMap(in.getUrlMap());
-      }
-
+   TargetHttpProxy(){
    }
 }

@@ -16,12 +16,12 @@
  */
 package org.jclouds.googlecomputeengine.features;
 
-import static org.jclouds.googlecomputeengine.GoogleComputeEngineConstants.COMPUTE_READONLY_SCOPE;
-import static org.jclouds.googlecomputeengine.GoogleComputeEngineConstants.COMPUTE_SCOPE;
+import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 
 import java.net.URI;
-import java.util.Set;
+import java.util.Iterator;
 
+import javax.inject.Inject;
 import javax.inject.Named;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
@@ -32,43 +32,33 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
-import javax.ws.rs.core.MediaType;
 
-import org.jclouds.Fallbacks.EmptyIterableWithMarkerOnNotFoundOr404;
-import org.jclouds.Fallbacks.EmptyPagedIterableOnNotFoundOr404;
 import org.jclouds.Fallbacks.NullOnNotFoundOr404;
-import org.jclouds.collect.PagedIterable;
+import org.jclouds.googlecloud.domain.ListPage;
+import org.jclouds.googlecomputeengine.GoogleComputeEngineApi;
 import org.jclouds.googlecomputeengine.domain.BackendService;
 import org.jclouds.googlecomputeengine.domain.BackendServiceGroupHealth;
-import org.jclouds.googlecomputeengine.domain.ListPage;
 import org.jclouds.googlecomputeengine.domain.Operation;
-import org.jclouds.googlecomputeengine.functions.internal.PATCH;
-import org.jclouds.googlecomputeengine.functions.internal.ParseBackendServices;
-import org.jclouds.googlecomputeengine.handlers.PayloadBinder;
+import org.jclouds.googlecomputeengine.internal.BaseToIteratorOfListPage;
 import org.jclouds.googlecomputeengine.options.BackendServiceOptions;
 import org.jclouds.googlecomputeengine.options.ListOptions;
 import org.jclouds.javax.annotation.Nullable;
-import org.jclouds.oauth.v2.config.OAuthScopes;
-import org.jclouds.oauth.v2.filters.OAuthAuthenticator;
+import org.jclouds.oauth.v2.filters.OAuthFilter;
 import org.jclouds.rest.annotations.BinderParam;
 import org.jclouds.rest.annotations.Fallback;
 import org.jclouds.rest.annotations.MapBinder;
+import org.jclouds.rest.annotations.PATCH;
 import org.jclouds.rest.annotations.PayloadParam;
 import org.jclouds.rest.annotations.RequestFilters;
-import org.jclouds.rest.annotations.ResponseParser;
 import org.jclouds.rest.annotations.SkipEncoding;
 import org.jclouds.rest.annotations.Transform;
 import org.jclouds.rest.binders.BindToJsonPayload;
 
-/**
- * Provides access to BackendServices via their REST API.
- * <p/>
- *
- * @see <a href="https://developers.google.com/compute/docs/reference/v1/backendServices"/>
- */
+import com.google.common.base.Function;
+
 @SkipEncoding({'/', '='})
-@RequestFilters(OAuthAuthenticator.class)
-@Consumes(MediaType.APPLICATION_JSON)
+@RequestFilters(OAuthFilter.class)
+@Consumes(APPLICATION_JSON)
 public interface BackendServiceApi {
    /**
     * Returns the specified backend service resource.
@@ -78,8 +68,7 @@ public interface BackendServiceApi {
     */
    @Named("BackendServices:get")
    @GET
-   @Path("/global/backendServices/{backendService}")
-   @OAuthScopes(COMPUTE_READONLY_SCOPE)
+   @Path("/{backendService}")
    @Fallback(NullOnNotFoundOr404.class)
    @Nullable
    BackendService get(@PathParam("backendService") String backendServiceName);
@@ -88,7 +77,6 @@ public interface BackendServiceApi {
     * Creates a backend service resource in the specified project using the data
     * included in the request.
     *
-    * @param name            the name of the backend service to be inserted.
     * @param backendService  options for this backend service.
     * @return an Operation resource. To check on the status of an operation,
     *         poll the Operations resource returned to you, and look for the
@@ -96,31 +84,8 @@ public interface BackendServiceApi {
     */
    @Named("BackendServices:insert")
    @POST
-   @Produces(MediaType.APPLICATION_JSON)
-   @Path("/global/backendServices")
-   @OAuthScopes({COMPUTE_SCOPE})
-   @MapBinder(PayloadBinder.class)
-   Operation create(@PayloadParam("name") String name,
-                    @PayloadParam("options") BackendServiceOptions backendService);
-   
-   /**
-    * Creates a backend service resource in the specified project using the data
-    * included in the request.
-    *
-    * @param name            the name of the backend service to be inserted.
-    * @param healthChecks    health checks to add to the backend service.
-    * @return an Operation resource. To check on the status of an operation,
-    *         poll the Operations resource returned to you, and look for the
-    *         status field.
-    */
-   @Named("BackendServices:insert")
-   @POST
-   @Produces(MediaType.APPLICATION_JSON)
-   @Path("/global/backendServices")
-   @OAuthScopes({COMPUTE_SCOPE})
-   @MapBinder(BindToJsonPayload.class)
-   Operation create(@PayloadParam("name") String name,
-                    @PayloadParam("healthChecks") Set<URI> healthChecks);
+   @Produces(APPLICATION_JSON)
+   Operation create(@BinderParam(BindToJsonPayload.class) BackendServiceOptions backendService);
 
    /**
     * Updates the specified backend service resource with the data included in
@@ -134,9 +99,8 @@ public interface BackendServiceApi {
     */
    @Named("BackendServices:update")
    @PUT
-   @Produces(MediaType.APPLICATION_JSON)
-   @Path("/global/backendServices/{backendService}")
-   @OAuthScopes({COMPUTE_SCOPE})
+   @Produces(APPLICATION_JSON)
+   @Path("/{backendService}")
    Operation update(@PathParam("backendService") String backendServiceName,
                     @BinderParam(BindToJsonPayload.class) BackendServiceOptions backendServiceOptions);
 
@@ -152,12 +116,11 @@ public interface BackendServiceApi {
     */
    @Named("BackendServices:patch")
    @PATCH
-   @Produces(MediaType.APPLICATION_JSON)
-   @Path("/global/backendServices/{backendService}")
-   @OAuthScopes({COMPUTE_SCOPE})
+   @Produces(APPLICATION_JSON)
+   @Path("/{backendService}")
    Operation patch(@PathParam("backendService") String backendServiceName,
-                   @BinderParam(PayloadBinder.class) BackendServiceOptions backendServiceOptions);
-   
+                   @BinderParam(BindToJsonPayload.class) BackendServiceOptions backendServiceOptions);
+
    /**
     * Gets the most recent health check results for this backend service. Note
     * that health check results will only be returned if the backend service has
@@ -168,14 +131,10 @@ public interface BackendServiceApi {
     * @return a BackendServiceGroupHealth resource denoting the health states of
     *         instances in the specified group.
     */
-   // The documentation does not reflect the fact that compute_scope is needed for this operation.
-   // Running getHealth with compute_readonly_scope will return with an error saying the 
-   // resource /projects/<project name> could not be found.
    @Named("BackendServices:getHealth")
    @POST
-   @Produces(MediaType.APPLICATION_JSON)
-   @Path("/global/backendServices/{backendService}/getHealth")
-   @OAuthScopes({COMPUTE_SCOPE})
+   @Produces(APPLICATION_JSON)
+   @Path("/{backendService}/getHealth")
    @MapBinder(BindToJsonPayload.class)
    BackendServiceGroupHealth getHealth(@PathParam("backendService") String backendServiceName,
                                        @PayloadParam("group") URI group);
@@ -190,78 +149,49 @@ public interface BackendServiceApi {
     */
    @Named("BackendServices:delete")
    @DELETE
-   @Path("/global/backendServices/{backendService}")
-   @OAuthScopes(COMPUTE_SCOPE)
+   @Path("/{backendService}")
    @Fallback(NullOnNotFoundOr404.class)
    Operation delete(@PathParam("backendService") String backendServiceName);
-
-   /**
-    * @see BackendServiceApi#listAtMarker(String, org.jclouds.googlecomputeengine.options.ListOptions)
-    */
-   @Named("BackendServices:list")
-   @GET
-   @Path("/global/backendServices")
-   @OAuthScopes(COMPUTE_READONLY_SCOPE)
-   @ResponseParser(ParseBackendServices.class)
-   @Fallback(EmptyIterableWithMarkerOnNotFoundOr404.class)
-   ListPage<BackendService> listFirstPage();
-
-   /**
-    * @see BackendServiceApi#listAtMarker(String, org.jclouds.googlecomputeengine.options.ListOptions)
-    */
-   @Named("BackendServices:list")
-   @GET
-   @Path("/global/backendServices")
-   @OAuthScopes(COMPUTE_READONLY_SCOPE)
-   @ResponseParser(ParseBackendServices.class)
-   @Fallback(EmptyIterableWithMarkerOnNotFoundOr404.class)
-   ListPage<BackendService> listAtMarker(@QueryParam("pageToken") @Nullable String marker);
 
    /**
     * Retrieves the list of backend service resources available to the specified
     * project. By default the list as a maximum size of 100, if no options are
     * provided or ListOptions#getMaxResults() has not been set.
     *
-    * @param marker      marks the beginning of the next list page.
-    * @param listOptions listing options.
-    * @return a page of the list.
-    * @see ListOptions
-    * @see org.jclouds.googlecomputeengine.domain.ListPage
+    * @param pageToken   marks the beginning of the next list page
+    * @param listOptions listing options
+    * @return a page of the list
     */
    @Named("BackendServices:list")
    @GET
-   @Path("/global/backendServices")
-   @OAuthScopes(COMPUTE_READONLY_SCOPE)
-   @ResponseParser(ParseBackendServices.class)
-   @Fallback(EmptyIterableWithMarkerOnNotFoundOr404.class)
-   ListPage<BackendService> listAtMarker(@QueryParam("pageToken") @Nullable String marker, ListOptions options);
+   ListPage<BackendService> listPage(@QueryParam("pageToken") @Nullable String pageToken, ListOptions options);
 
-   /**
-    * @see BackendServiceApi#list(org.jclouds.googlecomputeengine.options.ListOptions)
-    */
+   /** @see #listPage(String, ListOptions) */
    @Named("BackendServices:list")
    @GET
-   @Path("/global/backendServices")
-   @OAuthScopes(COMPUTE_READONLY_SCOPE)
-   @ResponseParser(ParseBackendServices.class)
-   @Transform(ParseBackendServices.ToPagedIterable.class)
-   @Fallback(EmptyPagedIterableOnNotFoundOr404.class)
-   PagedIterable<BackendService> list();
+   @Transform(BackendServicePages.class)
+   Iterator<ListPage<BackendService>> list();
 
-   /**
-    * A paged version of BackendserviceApi#list().
-    *
-    * @return a Paged, Fluent Iterable that is able to fetch additional pages
-    *         when required.
-    * @see PagedIterable
-    * @see BackendServiceApi#listAtMarker(String, org.jclouds.googlecomputeengine.options.ListOptions)
-    */
+   /** @see #listPage(String, ListOptions) */
    @Named("BackendServices:list")
    @GET
-   @Path("/global/backendServices")
-   @OAuthScopes(COMPUTE_READONLY_SCOPE)
-   @ResponseParser(ParseBackendServices.class)
-   @Transform(ParseBackendServices.ToPagedIterable.class)
-   @Fallback(EmptyPagedIterableOnNotFoundOr404.class)
-   PagedIterable<BackendService> list(ListOptions options);
+   @Transform(BackendServicePages.class)
+   Iterator<ListPage<BackendService>> list(ListOptions options);
+
+   static final class BackendServicePages extends BaseToIteratorOfListPage<BackendService, BackendServicePages> {
+
+      private final GoogleComputeEngineApi api;
+
+      @Inject BackendServicePages(GoogleComputeEngineApi api) {
+         this.api = api;
+      }
+
+      @Override protected Function<String, ListPage<BackendService>> fetchNextPage(final ListOptions options) {
+         return new Function<String, ListPage<BackendService>>() {
+            @Override public ListPage<BackendService> apply(String pageToken) {
+               return api.backendServices().listPage(pageToken, options);
+            }
+         };
+      }
+   }
 }

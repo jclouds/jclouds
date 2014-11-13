@@ -22,6 +22,7 @@ import java.net.URI;
 
 import javax.ws.rs.Consumes;
 
+import org.jclouds.date.internal.SimpleDateFormatDateService;
 import org.jclouds.googlecomputeengine.domain.ForwardingRule;
 import org.jclouds.googlecomputeengine.internal.BaseGoogleComputeEngineParseTest;
 import org.testng.annotations.Test;
@@ -41,6 +42,7 @@ public class ParseForwardingRuleTest extends BaseGoogleComputeEngineParseTest<Fo
             URI.create(BASE_URL + "/party/regions/europe-west1/forwardingRules/test-forwarding-rule"), // selfLink
             "test-forwarding-rule", // name
             null, // description
+            new SimpleDateFormatDateService().iso8601DateParse("2014-01-08T06:51:10.809-08:00"), // creationTimestamp
             URI.create(BASE_URL + "/party/regions/europe-west1"), // region
             "23.251.129.77", // ipAddress
             ForwardingRule.IPProtocol.TCP, // ipProtocol

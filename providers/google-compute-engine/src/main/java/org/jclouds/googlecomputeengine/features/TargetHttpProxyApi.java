@@ -16,11 +16,10 @@
  */
 package org.jclouds.googlecomputeengine.features;
 
-import static org.jclouds.googlecomputeengine.GoogleComputeEngineConstants.COMPUTE_READONLY_SCOPE;
-import static org.jclouds.googlecomputeengine.GoogleComputeEngineConstants.COMPUTE_SCOPE;
-
 import java.net.URI;
+import java.util.Iterator;
 
+import javax.inject.Inject;
 import javax.inject.Named;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
@@ -32,39 +31,32 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
-import org.jclouds.Fallbacks.EmptyIterableWithMarkerOnNotFoundOr404;
-import org.jclouds.Fallbacks.EmptyPagedIterableOnNotFoundOr404;
 import org.jclouds.Fallbacks.NullOnNotFoundOr404;
-import org.jclouds.collect.PagedIterable;
-import org.jclouds.googlecomputeengine.domain.ListPage;
+import org.jclouds.googlecomputeengine.GoogleComputeEngineApi;
+import org.jclouds.googlecloud.domain.ListPage;
 import org.jclouds.googlecomputeengine.domain.Operation;
 import org.jclouds.googlecomputeengine.domain.TargetHttpProxy;
-import org.jclouds.googlecomputeengine.functions.internal.ParseTargetHttpProxies;
-import org.jclouds.googlecomputeengine.handlers.PayloadBinder;
+import org.jclouds.googlecomputeengine.internal.BaseToIteratorOfListPage;
 import org.jclouds.googlecomputeengine.options.ListOptions;
 import org.jclouds.googlecomputeengine.options.TargetHttpProxyOptions;
 import org.jclouds.javax.annotation.Nullable;
-import org.jclouds.oauth.v2.config.OAuthScopes;
-import org.jclouds.oauth.v2.filters.OAuthAuthenticator;
+import org.jclouds.oauth.v2.filters.OAuthFilter;
+import org.jclouds.rest.annotations.BinderParam;
 import org.jclouds.rest.annotations.Fallback;
 import org.jclouds.rest.annotations.MapBinder;
 import org.jclouds.rest.annotations.PayloadParam;
 import org.jclouds.rest.annotations.RequestFilters;
-import org.jclouds.rest.annotations.ResponseParser;
 import org.jclouds.rest.annotations.SkipEncoding;
 import org.jclouds.rest.annotations.Transform;
 import org.jclouds.rest.binders.BindToJsonPayload;
 
-/**
- * Provides access to Target Http Proxies via their REST API.
- * <p/>
- *
- * @see <a href="https://developers.google.com/compute/docs/reference/latest/targetHttpProxies"/>
- */
+import com.google.common.base.Function;
+
 @SkipEncoding({'/', '='})
 @Consumes(MediaType.APPLICATION_JSON)
-@RequestFilters(OAuthAuthenticator.class)
+@RequestFilters(OAuthFilter.class)
 public interface TargetHttpProxyApi {
+
    /**
     * Returns the specified target http proxy resource.
     *
@@ -74,16 +66,14 @@ public interface TargetHttpProxyApi {
    @Named("TargetHttpProxys:get")
    @GET
    @Path("/global/targetHttpProxies/{targetHttpProxy}")
-   @OAuthScopes(COMPUTE_READONLY_SCOPE)
    @Fallback(NullOnNotFoundOr404.class)
    @Nullable
    TargetHttpProxy get(@PathParam("targetHttpProxy") String targetHttpProxyName);
 
    /**
     * Creates a TargetHttpProxy resource in the specified project using the data included in the request.
-    *
-    * @param name            the name of the targetHttpProxy to be inserted.
     * @param targetHttpProxyOptions the options of the targetHttpProxy to add.
+    *
     * @return an Operation resource. To check on the status of an operation, poll the Operations resource returned to
     *         you, and look for the status field.
     */
@@ -91,11 +81,8 @@ public interface TargetHttpProxyApi {
    @POST
    @Produces(MediaType.APPLICATION_JSON)
    @Path("/global/targetHttpProxies")
-   @OAuthScopes({COMPUTE_SCOPE})
-   @MapBinder(PayloadBinder.class)
-   Operation create(@PayloadParam("name") String name,
-                    @PayloadParam("options") TargetHttpProxyOptions targetHttpProxyOptions);
-   
+   Operation create(@BinderParam(BindToJsonPayload.class) TargetHttpProxyOptions targetHttpProxyOptions);
+
    /**
     * Creates a targetHttpProxy resource in the specified project using the given URI for the urlMap.
     *
@@ -108,7 +95,6 @@ public interface TargetHttpProxyApi {
    @POST
    @Produces(MediaType.APPLICATION_JSON)
    @Path("/global/targetHttpProxies")
-   @OAuthScopes({COMPUTE_SCOPE})
    @MapBinder(BindToJsonPayload.class)
    Operation create(@PayloadParam("name") String name, @PayloadParam("urlMap") URI urlMap);
 
@@ -124,7 +110,6 @@ public interface TargetHttpProxyApi {
    @POST
    @Produces(MediaType.APPLICATION_JSON)
    @Path("targetHttpProxies/{targetHttpProxy}/setUrlMap")
-   @OAuthScopes({COMPUTE_SCOPE})
    @MapBinder(BindToJsonPayload.class)
    Operation setUrlMap(@PathParam("targetHttpProxy") String targetHttpProxyName,
                        @PayloadParam("urlMap") URI urlMap);
@@ -139,76 +124,51 @@ public interface TargetHttpProxyApi {
    @Named("TargetHttpProxys:delete")
    @DELETE
    @Path("/global/targetHttpProxies/{targetHttpProxy}")
-   @OAuthScopes(COMPUTE_SCOPE)
    @Fallback(NullOnNotFoundOr404.class)
    Operation delete(@PathParam("targetHttpProxy") String targetHttpProxyName);
-
-   /**
-    * @see TargetHttpProxyApi#list(String, org.jclouds.googlecomputeengine.options.ListOptions)
-    */
-   @Named("TargetHttpProxys:list")
-   @GET
-   @Path("/global/targetHttpProxies")
-   @OAuthScopes(COMPUTE_READONLY_SCOPE)
-   @ResponseParser(ParseTargetHttpProxies.class)
-   @Fallback(EmptyIterableWithMarkerOnNotFoundOr404.class)
-   ListPage<TargetHttpProxy> listFirstPage();
-
-   /**
-    * @see TargetHttpProxyApi#list(String, org.jclouds.googlecomputeengine.options.ListOptions)
-    */
-   @Named("TargetHttpProxys:list")
-   @GET
-   @Path("/global/targetHttpProxies")
-   @OAuthScopes(COMPUTE_READONLY_SCOPE)
-   @ResponseParser(ParseTargetHttpProxies.class)
-   @Fallback(EmptyIterableWithMarkerOnNotFoundOr404.class)
-   ListPage<TargetHttpProxy> listAtMarker(@QueryParam("pageToken") @Nullable String marker);
 
    /**
     * Retrieves the list of targetHttpProxy resources available to the specified project.
     * By default the list as a maximum size of 100, if no options are provided or ListOptions#getMaxResults() has not
     * been set.
     *
-    * @param marker      marks the beginning of the next list page.
-    * @param listOptions listing options.
-    * @return a page of the list.
-    * @see ListOptions
-    * @see org.jclouds.googlecomputeengine.domain.ListPage
+    * @param pageToken   marks the beginning of the next list page
+    * @param listOptions listing options
+    * @return a page of the list
     */
    @Named("TargetHttpProxys:list")
    @GET
    @Path("/global/targetHttpProxies")
-   @OAuthScopes(COMPUTE_READONLY_SCOPE)
-   @ResponseParser(ParseTargetHttpProxies.class)
-   @Fallback(EmptyIterableWithMarkerOnNotFoundOr404.class)
-   ListPage<TargetHttpProxy> list(@QueryParam("pageToken") @Nullable String marker, ListOptions options);
+   ListPage<TargetHttpProxy> listPage(@Nullable @QueryParam("pageToken") String pageToken, ListOptions listOptions);
 
-   /**
-    * @see TargetHttpProxyApi#list(org.jclouds.googlecomputeengine.options.ListOptions)
-    */
+   /** @see #listPage(String, ListOptions) */
    @Named("TargetHttpProxys:list")
    @GET
    @Path("/global/targetHttpProxies")
-   @OAuthScopes(COMPUTE_READONLY_SCOPE)
-   @ResponseParser(ParseTargetHttpProxies.class)
-   @Transform(ParseTargetHttpProxies.ToPagedIterable.class)
-   @Fallback(EmptyPagedIterableOnNotFoundOr404.class)
-   PagedIterable<TargetHttpProxy> list();
+   @Transform(TargetHttpProxyPages.class)
+   Iterator<ListPage<TargetHttpProxy>> list();
 
-   /**
-    * A paged version of TargetHttpProxyApi#list().
-    *
-    * @return a Paged, Fluent Iterable that is able to fetch additional pages when required.
-    * @see PagedIterable
-    * @see TargetHttpProxyApi#list(String, org.jclouds.googlecomputeengine.options.ListOptions)
-    */
+   /** @see #listPage(String, ListOptions) */
    @Named("TargetHttpProxys:list")
    @GET
    @Path("/global/targetHttpProxies")
-   @OAuthScopes(COMPUTE_READONLY_SCOPE)
-   @ResponseParser(ParseTargetHttpProxies.class)
-   @Transform(ParseTargetHttpProxies.ToPagedIterable.class)
-   @Fallback(EmptyPagedIterableOnNotFoundOr404.class)
-   PagedIterable<TargetHttpProxy> list(ListOptions options);
+   @Transform(TargetHttpProxyPages.class)
+   Iterator<ListPage<TargetHttpProxy>> list(ListOptions listOptions);
+
+   static final class TargetHttpProxyPages extends BaseToIteratorOfListPage<TargetHttpProxy, TargetHttpProxyPages> {
+
+      private final GoogleComputeEngineApi api;
+
+      @Inject TargetHttpProxyPages(GoogleComputeEngineApi api) {
+         this.api = api;
+      }
+
+      @Override protected Function<String, ListPage<TargetHttpProxy>> fetchNextPage(final ListOptions options) {
+         return new Function<String, ListPage<TargetHttpProxy>>() {
+            @Override public ListPage<TargetHttpProxy> apply(String pageToken) {
+               return api.targetHttpProxies().listPage(pageToken, options);
+            }
+         };
+      }
+   }
 }

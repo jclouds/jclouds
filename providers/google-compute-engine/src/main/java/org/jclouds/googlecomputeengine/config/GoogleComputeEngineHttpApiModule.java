@@ -91,6 +91,7 @@ public final class GoogleComputeEngineHttpApiModule extends HttpApiModule<Google
             }
          }, defaultEndpoint), seconds, SECONDS);
       }
+
       // If the project name wasn't explicitly supplied, then we lookup via api.
       // This supplier must be defensive against any auth exception.
       return MemoizedRetryOnTimeOutButNotOnAuthorizationExceptionSupplier
@@ -138,17 +139,5 @@ public final class GoogleComputeEngineHttpApiModule extends HttpApiModule<Google
          String projectNumber = CurrentProject.ClientEmail.toProjectNumber(in.identity);
          return URI.create(defaultEndpoint.get() + "/projects/" + api.get(projectNumber).name());
       }
-   }
-
-   @Provides
-   @Singleton
-   @ResourceViewEndpoint
-   public Supplier<URI> provideResourceViewUrl() {
-      return new Supplier<URI>() {
-         @Override
-         public URI get() {
-            return URI.create("https://www.googleapis.com/resourceviews/v1beta1");
-         }
-      };
    }
 }

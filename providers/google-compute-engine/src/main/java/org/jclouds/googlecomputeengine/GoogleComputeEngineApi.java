@@ -24,6 +24,7 @@ import javax.ws.rs.PathParam;
 import org.jclouds.googlecloud.config.CurrentProject;
 import org.jclouds.googlecomputeengine.features.AddressApi;
 import org.jclouds.googlecomputeengine.features.AggregatedListApi;
+import org.jclouds.googlecomputeengine.features.BackendServiceApi;
 import org.jclouds.googlecomputeengine.features.DiskApi;
 import org.jclouds.googlecomputeengine.features.DiskTypeApi;
 import org.jclouds.googlecomputeengine.features.FirewallApi;
@@ -58,6 +59,11 @@ public interface GoogleComputeEngineApi extends Closeable {
 
    @Delegate
    @Endpoint(CurrentProject.class)
+   @Path("/global/backendServices")
+   BackendServiceApi backendServices();
+
+   @Delegate
+   @Endpoint(CurrentProject.class)
    @Path("/zones/{zone}")
    DiskApi disksInZone(@PathParam("zone") String zone);
 
@@ -75,6 +81,11 @@ public interface GoogleComputeEngineApi extends Closeable {
    @Endpoint(CurrentProject.class)
    @Path("/regions/{region}")
    ForwardingRuleApi forwardingRulesInRegion(@PathParam("region") String region);
+
+   @Delegate
+   @Endpoint(CurrentProject.class)
+   @Path("/global")
+   ForwardingRuleApi globalForwardingRules();
 
    @Delegate
    @Endpoint(CurrentProject.class)
@@ -122,10 +133,20 @@ public interface GoogleComputeEngineApi extends Closeable {
 
    @Delegate
    @Endpoint(CurrentProject.class)
+   TargetHttpProxyApi targetHttpProxies();
+
+   @Delegate
+   @Endpoint(CurrentProject.class)
    @Path("/regions/{region}")
    TargetPoolApi targetPoolsInRegion(@PathParam("region") String region);
 
    @Delegate
    @Endpoint(CurrentProject.class)
    ZoneApi zones();
+
+   @Delegate
+   @Endpoint(CurrentProject.class)
+   @Path("/global/urlMaps")
+   UrlMapApi urlMaps();
+
 }

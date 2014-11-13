@@ -17,6 +17,7 @@
 package org.jclouds.googlecomputeengine.domain;
 
 import java.net.URI;
+import java.util.Date;
 
 import org.jclouds.javax.annotation.Nullable;
 import org.jclouds.json.SerializedNames;
@@ -47,7 +48,10 @@ public abstract class ForwardingRule {
 
    @Nullable public abstract String description();
 
-   public abstract URI region();
+   public abstract Date creationTimestamp();
+
+   /** null when representing a GlobalForwardingRules */
+   @Nullable public abstract URI region();
 
    /**
     * The external IP address that this forwarding rule is serving on behalf of. If this is a reserved
@@ -71,10 +75,10 @@ public abstract class ForwardingRule {
    public abstract URI target();
 
    @SerializedNames(
-         { "id", "selfLink", "name", "description", "region", "IPAddress", "IPProtocol", "portRange", "target" })
-   public static ForwardingRule create(String id, URI selfLink, String name, String description, URI region,
+         { "id", "selfLink", "name", "description", "creationTimestamp", "region", "IPAddress", "IPProtocol", "portRange", "target" })
+   public static ForwardingRule create(String id, URI selfLink, String name, String description, Date creationTimestamp, URI region,
          String ipAddress, IPProtocol ipProtocol, String portRange, URI target) {
-      return new AutoValue_ForwardingRule(id, selfLink, name, description, region, ipAddress,
+      return new AutoValue_ForwardingRule(id, selfLink, name, description, creationTimestamp, region, ipAddress,
             ipProtocol == null ? IPProtocol.TCP : ipProtocol, portRange, target);
    }
 

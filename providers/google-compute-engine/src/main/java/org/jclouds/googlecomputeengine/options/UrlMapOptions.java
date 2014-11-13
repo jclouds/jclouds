@@ -16,199 +16,158 @@
  */
 package org.jclouds.googlecomputeengine.options;
 
-import static com.google.common.base.Objects.equal;
-import static com.google.common.base.Objects.toStringHelper;
-import static com.google.common.base.Preconditions.checkNotNull;
-
 import java.net.URI;
-import java.util.Set;
+import java.util.List;
 
-import org.jclouds.googlecomputeengine.domain.UrlMap;
 import org.jclouds.googlecomputeengine.domain.UrlMap.HostRule;
 import org.jclouds.googlecomputeengine.domain.UrlMap.PathMatcher;
 import org.jclouds.googlecomputeengine.domain.UrlMap.UrlMapTest;
+import org.jclouds.javax.annotation.Nullable;
 
-import com.google.common.base.Objects;
-import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.ImmutableList;
 
-/**
- * Options to create an urlMap.
- *
- * @see UrlMap
- */
-public class UrlMapOptions extends ResourceOptions {
-   
-   private ImmutableSet.Builder<HostRule> hostRules = ImmutableSet.builder();
-   private ImmutableSet.Builder<PathMatcher> pathMatchers = ImmutableSet.builder();
-   private ImmutableSet.Builder<UrlMapTest> urlMapTests = ImmutableSet.builder();
+public class UrlMapOptions {
+
+   private String name;
+   @Nullable private String description;
+   private List<HostRule> hostRules;
+   private List<PathMatcher> pathMatchers;
+   private List<UrlMapTest> tests;
    private URI defaultService;
    private String fingerprint;
 
    /**
-    **
-    * {@inheritDoc}
+    * Name of the UrlMap resource.
+    * @return name, provided by the client.
     */
-   @Override
+   public String getName(){
+      return name;
+   }
+
+   /**
+    * @see UrlMapOptions#getName()
+    */
    public UrlMapOptions name(String name) {
       this.name = name;
       return this;
    }
 
    /**
-    **
-    * {@inheritDoc}
+    * An optional textual description of the UrlMap.
+    * @return description, provided by the client.
     */
-   @Override
+   public String getDescription(){
+      return description;
+   }
+
+   /**
+    * @see UrlMapOptions#getDescription()
+    */
    public UrlMapOptions description(String description) {
       this.description = description;
       return this;
    }
-   
+
    /**
-    * @see org.jclouds.googlecomputeengine.domain.UrlMap#getHostRules()
+    * Rules for matching and directing incoming hosts.
     */
-   public UrlMapOptions addHostRule(HostRule hostRule) {
-      this.hostRules.add(checkNotNull(hostRule));
+   public List<HostRule> getHostRules() {
+      return hostRules;
+   }
+
+   /**
+    * @see UrlMapOptions#getHostRules()
+    */
+   public UrlMapOptions hostRules(List<HostRule> hostRules) {
+      this.hostRules = hostRules;
       return this;
    }
 
    /**
-    * @see org.jclouds.googlecomputeengine.domain.UrlMap#getHostRules()
+    * @see UrlMapOptions#getHostRules()
     */
-   public UrlMapOptions hostRules(Set<HostRule> hostRules) {
-      this.hostRules = ImmutableSet.builder();
-      this.hostRules.addAll(hostRules);
-      return this;
-   }
-   
-   /**
-    * @see org.jclouds.googlecomputeengine.domain.UrlMap#getHostRules()
-    */
-   public Set<HostRule> getHostRules() {
-      return hostRules.build();
-   }
-   
-   /**
-    * @see org.jclouds.googlecomputeengine.domain.UrlMap#getPathMatchers()
-    */
-   public UrlMapOptions addPathMatcher(PathMatcher pathMatcher) {
-      this.pathMatchers.add(checkNotNull(pathMatcher));
+   public UrlMapOptions hostRule(HostRule hostRule){
+      this.hostRules = ImmutableList.of(hostRule);
       return this;
    }
 
    /**
-    * @see org.jclouds.googlecomputeengine.domain.UrlMap#getPathMatchers()
+    * The list of named PathMatchers to use against the URL.
     */
-   public UrlMapOptions pathMatchers(Set<PathMatcher> pathMatchers) {
-      this.pathMatchers = ImmutableSet.builder();
-      this.pathMatchers.addAll(pathMatchers);
-      return this;
+   public List<PathMatcher> getPathMatchers() {
+      return pathMatchers;
    }
-   
+
    /**
-    * @see org.jclouds.googlecomputeengine.domain.UrlMap#getPathMatchers()
+    * @see UrlMapOptions#getPathMatchers()
     */
-   public Set<PathMatcher> getPathMatchers() {
-      return pathMatchers.build();
-   }
-   
-   /**
-    * @see org.jclouds.googlecomputeengine.domain.UrlMap#getTests()
-    */
-   public UrlMapOptions addTest(UrlMapTest urlMapTest) {
-      this.urlMapTests.add(checkNotNull(urlMapTest));
+   public UrlMapOptions pathMatcher(PathMatcher pathMatcher) {
+      this.pathMatchers = ImmutableList.of(pathMatcher);
       return this;
    }
 
    /**
-    * @see org.jclouds.googlecomputeengine.domain.UrlMap#getTests()
+    * @see UrlMapOptions#getPathMatchers()
     */
-   public UrlMapOptions urlMapTests(Set<UrlMapTest> urlMapTests) {
-      this.urlMapTests = ImmutableSet.builder();
-      this.urlMapTests.addAll(urlMapTests);
+   public UrlMapOptions pathMatchers(List<PathMatcher> pathMatchers) {
+      this.pathMatchers = pathMatchers;
       return this;
    }
-   
+
    /**
-    * @see org.jclouds.googlecomputeengine.domain.UrlMap#getTests()
+    * The list of expected URL mappings. Request to update this
+    * UrlMap will succeed only all of the test cases pass.
     */
-   public Set<UrlMapTest> getTests() {
-      return urlMapTests.build();
+   public List<UrlMapTest> getTests() {
+      return tests;
    }
-   
+
    /**
-    * @see org.jclouds.googlecomputeengine.domain.UrlMap#getDefaultService()
+    * @see UrlMapOptions#getTests()
+    */
+   public UrlMapOptions test(UrlMapTest urlMapTest) {
+      this.tests = ImmutableList.of(urlMapTest);
+      return this;
+   }
+
+   /**
+    * @see UrlMapOptions#getTests()
+    */
+   public UrlMapOptions urlMapTests(List<UrlMapTest> urlMapTests) {
+      this.tests = urlMapTests;
+      return this;
+   }
+
+   /**
+    * The URL of the BackendService resource if none of the hostRules match.
+    */
+   public URI getDefaultService() {
+      return defaultService;
+   }
+
+   /**
+    * @see UrlMapOptions#getDefaultService()
     */
    public UrlMapOptions defaultService(URI defaultService) {
       this.defaultService = defaultService;
       return this;
    }
-   
+
    /**
-    * @see org.jclouds.googlecomputeengine.domain.UrlMap#getDefaultService()
+    * Fingerprint of this resource. A hash of the contents stored in this object.
+    * This field is used in optimistic locking. This field will be ignored when
+    * inserting a UrlMap. An up-to-date fingerprint must be provided in order to
+    * update the UrlMap.
     */
-   public URI getDefaultService() {
-      return defaultService;
+   public String getFingerprint() {
+      return fingerprint;
    }
-   
+
    /**
-    * @see org.jclouds.googlecomputeengine.domain.UrlMap#getFingerprint()
+    * @see UrlMapOptions#getFingerprint()
     */
    public UrlMapOptions fingerprint(String fingerprint) {
       this.fingerprint = fingerprint;
       return this;
    }
-   
-   /**
-    * @see org.jclouds.googlecomputeengine.domain.UrlMap#getFingerprint()
-    */
-   public String getFingerprint() {
-      return fingerprint;
-   }
-   
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public int hashCode() {
-      return Objects.hashCode(name, hostRules, pathMatchers, urlMapTests,
-                              defaultService);
-   }
-
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public boolean equals(Object obj) {
-      if (this == obj) return true;
-      if (obj == null || getClass() != obj.getClass()) return false;
-      UrlMapOptions that = UrlMapOptions.class.cast(obj);
-      return equal(this.name, that.name)
-              && equal(this.hostRules, that.hostRules)
-              && equal(this.pathMatchers, that.pathMatchers)
-              && equal(this.urlMapTests, that.urlMapTests)
-              && equal(this.defaultService, that.defaultService);
-   }
-   
-   /**
-   **
-   * {@inheritDoc}
-   */
-   protected Objects.ToStringHelper string() {
-     return toStringHelper(this)
-             .omitNullValues()
-             .add("hostRules", hostRules.build())
-             .add("pathMatchers", pathMatchers.build())
-             .add("tests", urlMapTests.build())
-             .add("defaultService", defaultService)
-             .add("fingerprint", fingerprint);
-  }
-
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  public String toString() {
-     return string().toString();
-  }
 }

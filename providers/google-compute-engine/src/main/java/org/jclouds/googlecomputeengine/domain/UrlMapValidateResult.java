@@ -16,330 +16,69 @@
  */
 package org.jclouds.googlecomputeengine.domain;
 
-import static com.google.common.base.Objects.equal;
-import static com.google.common.base.Objects.toStringHelper;
-import static com.google.common.base.Optional.fromNullable;
-import static com.google.common.base.Preconditions.checkNotNull;
-
-import java.beans.ConstructorProperties;
 import java.net.URI;
-import java.util.Set;
+import java.util.List;
 
 import org.jclouds.javax.annotation.Nullable;
+import org.jclouds.json.SerializedNames;
 
-import com.google.common.base.Objects;
-import com.google.common.base.Optional;
-import com.google.common.collect.ImmutableSet;
+import com.google.auto.value.AutoValue;
 
-/**
- * Result of calling validate on an UrlMap resource.
- * 
- * @see <a href="https://developers.google.com/compute/docs/reference/latest/urlMaps/validate"/>
- */
-public class UrlMapValidateResult {
-   
-   private final Boolean loadSucceeded;
-   private final Set<String> loadErrors;
-   private final Optional<Boolean> testPassed;
-   private final Set<TestFailure> testFailures;
-   
-   @ConstructorProperties({
-           "loadSucceeded", "loadErrors", "testPassed", "testFailures"
-   })
-   private UrlMapValidateResult(Boolean loadSucceeded, @Nullable Set<String> loadErrors,
-                                @Nullable Boolean testPassed,
-                                @Nullable Set<TestFailure> testFailures) {
-      this.loadSucceeded = loadSucceeded;
-      this.loadErrors = loadErrors == null ? ImmutableSet.<String>of() : loadErrors;
-      this.testPassed = fromNullable(testPassed);
-      this.testFailures = testFailures == null ? ImmutableSet.<TestFailure>of() : testFailures;
-   }
-   
-   /**
-    * @return if the loadSucceeded.
-    */
-   public Boolean getLoadSucceeded() {
-      return loadSucceeded;
+@AutoValue
+public abstract class UrlMapValidateResult {
+
+   public abstract UrlMapValidateResultInternal result();
+
+   @SerializedNames({"result"})
+   public static UrlMapValidateResult create(UrlMapValidateResultInternal result){
+      return new AutoValue_UrlMapValidateResult(result);
    }
 
-   /**
-    * @return the loadErrors.
-    */
-   public Set<String> getLoadErrors() {
-      return loadErrors;
+   @SerializedNames({"loadSucceeded", "loadErrors", "testPassed", "testFailures"})
+   public static UrlMapValidateResult create(Boolean loadSucceeded, List<String> loadErrors,
+                              Boolean testPassed, List<UrlMapValidateResultInternal.TestFailure> testFailures) {
+      return create(UrlMapValidateResultInternal.create(loadSucceeded, loadErrors, testPassed, testFailures));
    }
 
-   /**
-    * @return if the testPassed.
-    */
-   public Optional<Boolean> getTestPassed() {
-      return testPassed;
+   public static UrlMapValidateResult allPass(){
+      return create(true, null, true, null);
    }
 
-   /**
-    * @return the testFailures.
-    */
-   public Set<TestFailure> getTestFailures() {
-      return testFailures;
-   }
-   
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public int hashCode() {
-      return Objects.hashCode(loadSucceeded, loadErrors, testPassed,
-                              testFailures);
-   }
-   
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public boolean equals(Object obj) {
-      if (this == obj) return true;
-      if (obj == null || getClass() != obj.getClass()) return false;
-      UrlMapValidateResult that = UrlMapValidateResult.class.cast(obj);
-      return equal(this.loadSucceeded, that.loadSucceeded)
-              && equal(this.loadErrors, that.loadErrors)
-              && equal(this.testPassed, that.testPassed)
-              && equal(this.testFailures, that.testFailures);
-   }
-   
-   /**
-    **
-    * {@inheritDoc}
-    */
-   protected Objects.ToStringHelper string() {
-      return toStringHelper(this)
-              .omitNullValues()
-              .add("loadSucceeded", loadSucceeded)
-              .add("loadErrors", loadErrors)
-              .add("testPassed", testPassed.orNull())
-              .add("testFailures", testFailures);
-   }
+   @AutoValue
+   public abstract static class UrlMapValidateResultInternal {
 
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public String toString() {
-      return string().toString();
-   }
-   
-   public static Builder builder() {
-      return new Builder();
-   }
-   
-   public Builder toBuilder() {
-      return new Builder().fromUrlMapValidateResult(this);
-   }
-   
-   public static class Builder {
-      
-      private Boolean loadSucceeded;
-      private ImmutableSet.Builder<String> loadErrors = ImmutableSet.<String>builder();
-      private Boolean testPassed;
-      private ImmutableSet.Builder<TestFailure> testFailures = ImmutableSet.<TestFailure>builder();
-      
-      /**
-       * @see UrlMapValidateResult#getLoadSucceeded()
-       */
-      public Builder loadSucceeded(Boolean loadSucceeded) {
-         this.loadSucceeded = loadSucceeded;
-         return this;
-      }
-      
-      /**
-       * @see UrlMapValidateResult#getLoadErrors()
-       */
-      public Builder addLoadError(String loadError) {
-         this.loadErrors.add(checkNotNull(loadError, "loadError"));
-         return this;
-      }
-      
-      /**
-       * @see UrlMapValidateResult#getLoadErrors()
-       */
-      public Builder loadErrors(Set<String> loadErrors) {
-         this.loadErrors = ImmutableSet.builder();
-         this.loadErrors.addAll(loadErrors);
-         return this;
-      }
-      
-      /**
-       * @see UrlMapValidateResult#getTestPassed()
-       */
-      public Builder testPassed(Boolean testPassed) {
-         this.testPassed = testPassed;
-         return this;
-      }
-      
-      /**
-       * @see UrlMapValidateResult#getTestFailure()
-       */
-      public Builder addTestFailure(TestFailure testFailure) {
-         this.testFailures.add(checkNotNull(testFailure, "testFailure"));
-         return this;
-      }
-      
-      /**
-       * @see UrlMapValidateResult#getTestFailure()
-       */
-      public Builder testFailures(Set<TestFailure> testFailures) {
-         this.testFailures = ImmutableSet.builder();
-         this.testFailures.addAll(testFailures);
-         return this;
-      }
-      
-      public UrlMapValidateResult build() {
-         return new UrlMapValidateResult(loadSucceeded, loadErrors.build(),
-                                         testPassed, testFailures.build());
-      }
-      
-      public Builder fromUrlMapValidateResult(UrlMapValidateResult in) {
-         return new Builder().loadErrors(in.getLoadErrors())
-                             .loadSucceeded(in.getLoadSucceeded())
-                             .testFailures(in.getTestFailures())
-                             .testPassed(in.getTestPassed().orNull());
-      }
-   }
+      public abstract Boolean loadSucceeded();
+      @Nullable public abstract List<String> loadErrors();
+      @Nullable public abstract Boolean testPassed();
+      @Nullable public abstract List<TestFailure> testFailures();
 
-   public final static class TestFailure {
-      
-      private final String host;
-      private final String path;
-      private final URI expectedService;
-      private final URI actualService;
-      
-      @ConstructorProperties({
-              "host", "path", "expectedService", "actualService"
-      })
-      private TestFailure(String host, String path, URI expectedService,
-                          URI actualService) {
-         this.host = checkNotNull(host);
-         this.path = checkNotNull(path);
-         this.expectedService = checkNotNull(expectedService);
-         this.actualService = checkNotNull(actualService);
+      @SerializedNames({"loadSucceeded", "loadErrors", "testPassed", "testFailures"})
+      public static UrlMapValidateResultInternal create(Boolean loadSucceeded, List<String> loadErrors,
+                                 Boolean testPassed, List<TestFailure> testFailures) {
+         return new AutoValue_UrlMapValidateResult_UrlMapValidateResultInternal(loadSucceeded, loadErrors, testPassed, testFailures);
       }
 
-      /**
-       * @return the host.
-       */
-      public String getHost() {
-         return host;
+       UrlMapValidateResultInternal(){
       }
 
-      /**
-       * @return the path.
-       */
-      public String getPath() {
-         return path;
-      }
+      @AutoValue
+      public abstract static class TestFailure {
 
-      /**
-       * @return the expectedService.
-       */
-      public URI getExpectedService() {
-         return expectedService;
-      }
+         public abstract String host();
+         public abstract String path();
+         public abstract URI expectedService();
+         public abstract URI actualService();
 
-      /**
-       * @return the actualService.
-       */
-      public URI getActualService() {
-         return actualService;
-      }
-      
-      /**
-       * {@inheritDoc}
-       */
-      @Override
-      public int hashCode() {
-         return Objects.hashCode(host, path, expectedService, actualService);
-      }
-      
-      /**
-       * {@inheritDoc}
-       */
-      @Override
-      public boolean equals(Object obj) {
-         if (this == obj) return true;
-         if (obj == null || getClass() != obj.getClass()) return false;
-         TestFailure that = TestFailure.class.cast(obj);
-         return equal(this.host, that.host)
-                 && equal(this.path, that.path)
-                 && equal(this.expectedService, that.expectedService)
-                 && equal(this.actualService, that.actualService);
-      }
-      
-      /**
-       **
-       * {@inheritDoc}
-       */
-      protected Objects.ToStringHelper string() {
-         return toStringHelper(this)
-                 .omitNullValues()
-                 .add("host", host)
-                 .add("path", path)
-                 .add("expectedService", expectedService)
-                 .add("actualService", actualService);
-      }
-
-      /**
-       * {@inheritDoc}
-       */
-      @Override
-      public String toString() {
-         return string().toString();
-      }
-      
-      public static Builder builder() {
-         return new Builder();
-      }
-      
-      public static class Builder {
-         
-         private String host;
-         private String path;
-         private URI expectedService;
-         private URI actualService;
-         
-         /**
-          * @see org.jclouds.googlecomputeengine.domain.UrlMapValidateResult.TestFailure#getHost()
-          */
-         public Builder host(String host) {
-            this.host = host;
-            return this;
+         @SerializedNames({"host", "path", "expectedService", "actualService"})
+         public static TestFailure create(String host, String path, URI expectedService, URI actualService){
+            return new AutoValue_UrlMapValidateResult_UrlMapValidateResultInternal_TestFailure(host, path, expectedService, actualService);
          }
-         
-         /**
-          * @see org.jclouds.googlecomputeengine.domain.UrlMapValidateResult.TestFailure#getPath()
-          */
-         public Builder path(String path) {
-            this.path = path;
-            return this;
-         }
-         
-         /**
-          * @see org.jclouds.googlecomputeengine.domain.UrlMapValidateResult.TestFailure#getExpectedService()
-          */
-         public Builder expectedService(URI expectedService) {
-            this.expectedService = expectedService;
-            return this;
-         }
-         
-         /**
-          * @see org.jclouds.googlecomputeengine.domain.UrlMapValidateResult.TestFailure#getActualService()
-          */
-         public Builder actualService(URI actualService) {
-            this.actualService = actualService;
-            return this;
-         }
-         
-         public TestFailure build() {
-            return new TestFailure(host, path, expectedService, actualService);
+
+         TestFailure(){
          }
       }
+   }
+
+   UrlMapValidateResult(){
    }
 }

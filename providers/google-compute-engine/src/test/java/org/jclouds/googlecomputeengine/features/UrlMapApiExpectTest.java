@@ -16,10 +16,8 @@
  */
 package org.jclouds.googlecomputeengine.features;
 
-import static org.jclouds.googlecomputeengine.GoogleComputeEngineConstants.COMPUTE_READONLY_SCOPE;
-import static org.jclouds.googlecomputeengine.GoogleComputeEngineConstants.COMPUTE_SCOPE;
 import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertTrue;
+import static org.testng.Assert.assertFalse;
 import static org.testng.AssertJUnit.assertNull;
 
 import java.io.IOException;
@@ -27,11 +25,12 @@ import java.net.URI;
 
 import javax.ws.rs.core.MediaType;
 
+import org.jclouds.googlecomputeengine.GoogleComputeEngineApi;
 import org.jclouds.googlecomputeengine.domain.UrlMap;
 import org.jclouds.googlecomputeengine.domain.UrlMap.HostRule;
 import org.jclouds.googlecomputeengine.domain.UrlMap.PathMatcher;
-import org.jclouds.googlecomputeengine.domain.UrlMap.PathRule;
-import org.jclouds.googlecomputeengine.internal.BaseGoogleComputeEngineApiExpectTest;
+import org.jclouds.googlecomputeengine.domain.UrlMap.PathMatcher.PathRule;
+import org.jclouds.googlecomputeengine.internal.BaseGoogleComputeEngineExpectTest;
 import org.jclouds.googlecomputeengine.options.UrlMapOptions;
 import org.jclouds.googlecomputeengine.parse.ParseOperationTest;
 import org.jclouds.googlecomputeengine.parse.ParseUrlMapListTest;
@@ -41,17 +40,19 @@ import org.jclouds.http.HttpRequest;
 import org.jclouds.http.HttpResponse;
 import org.testng.annotations.Test;
 
+import com.google.common.collect.ImmutableList;
+
 @Test(groups = "unit")
-public class UrlMapApiExpectTest extends BaseGoogleComputeEngineApiExpectTest {
+public class UrlMapApiExpectTest extends BaseGoogleComputeEngineExpectTest<GoogleComputeEngineApi> {
 
    private static final String ENDPOINT_BASE = "https://www.googleapis.com/"
-            + "compute/v1/projects/myproject/global/urlMaps";
-   
+            + "compute/v1/projects/party/global/urlMaps";
+
    private org.jclouds.http.HttpRequest.Builder<? extends HttpRequest.Builder<?>> getBasicRequest() {
       return HttpRequest.builder().addHeader("Accept", "application/json")
                                   .addHeader("Authorization", "Bearer " + TOKEN);
    }
-   
+
    private HttpResponse createResponse(String payloadFile) {
       return HttpResponse.builder().statusCode(200)
                                    .payload(payloadFromResource(payloadFile))
@@ -62,11 +63,11 @@ public class UrlMapApiExpectTest extends BaseGoogleComputeEngineApiExpectTest {
       HttpRequest request = getBasicRequest().method("GET")
                .endpoint(ENDPOINT_BASE + "/jclouds-test")
                .build();
-      
+
       HttpResponse response = createResponse("/url_map_get.json");
 
       UrlMapApi api = requestsSendResponses(requestForScopes(COMPUTE_READONLY_SCOPE),
-              TOKEN_RESPONSE, request, response).getUrlMapApiForProject("myproject");
+              TOKEN_RESPONSE, request, response).urlMaps();
 
       assertEquals(api.get("jclouds-test"), new ParseUrlMapTest().expected());
    }
@@ -79,7 +80,7 @@ public class UrlMapApiExpectTest extends BaseGoogleComputeEngineApiExpectTest {
       HttpResponse response = HttpResponse.builder().statusCode(404).build();
 
       UrlMapApi api = requestsSendResponses(requestForScopes(COMPUTE_READONLY_SCOPE),
-              TOKEN_RESPONSE, request, response).getUrlMapApiForProject("myproject");
+              TOKEN_RESPONSE, request, response).urlMaps();
 
       assertNull(api.get("jclouds-test"));
    }
@@ -93,9 +94,9 @@ public class UrlMapApiExpectTest extends BaseGoogleComputeEngineApiExpectTest {
       HttpResponse response = createResponse("/operation.json");
 
       UrlMapApi api = requestsSendResponses(requestForScopes(COMPUTE_SCOPE),
-              TOKEN_RESPONSE, request, response).getUrlMapApiForProject("myproject");
-      
-      assertEquals(api.create("jclouds-test", createBasicMap()), new ParseOperationTest().expected());
+              TOKEN_RESPONSE, request, response).urlMaps();
+
+      assertEquals(api.create(createBasicMap()), new ParseOperationTest().expected());
 
    }
 
@@ -108,8 +109,8 @@ public class UrlMapApiExpectTest extends BaseGoogleComputeEngineApiExpectTest {
       HttpResponse response = createResponse("/operation.json");
 
       UrlMapApi api = requestsSendResponses(requestForScopes(COMPUTE_SCOPE),
-              TOKEN_RESPONSE, request, response).getUrlMapApiForProject("myproject");
-      
+              TOKEN_RESPONSE, request, response).urlMaps();
+
       assertEquals(api.update("jclouds-test", createBasicMap()), new ParseOperationTest().expected());
    }
 
@@ -122,7 +123,7 @@ public class UrlMapApiExpectTest extends BaseGoogleComputeEngineApiExpectTest {
       HttpResponse response = createResponse("/operation.json");
 
       UrlMapApi api = requestsSendResponses(requestForScopes(COMPUTE_SCOPE),
-              TOKEN_RESPONSE, request, response).getUrlMapApiForProject("myproject");
+              TOKEN_RESPONSE, request, response).urlMaps();
 
       assertEquals(api.patch("jclouds-test", createBasicMap()), new ParseOperationTest().expected());
    }
@@ -135,7 +136,7 @@ public class UrlMapApiExpectTest extends BaseGoogleComputeEngineApiExpectTest {
       HttpResponse response = createResponse("/operation.json");
 
       UrlMapApi api = requestsSendResponses(requestForScopes(COMPUTE_SCOPE),
-              TOKEN_RESPONSE, request, response).getUrlMapApiForProject("myproject");
+              TOKEN_RESPONSE, request, response).urlMaps();
 
       assertEquals(api.delete("jclouds-test"), new ParseOperationTest().expected());
    }
@@ -148,38 +149,38 @@ public class UrlMapApiExpectTest extends BaseGoogleComputeEngineApiExpectTest {
       HttpResponse response = HttpResponse.builder().statusCode(404).build();
 
       UrlMapApi api = requestsSendResponses(requestForScopes(COMPUTE_SCOPE),
-              TOKEN_RESPONSE, request, response).getUrlMapApiForProject("myproject");
+              TOKEN_RESPONSE, request, response).urlMaps();
 
       assertNull(api.delete("jclouds-test"));
    }
 
-   public void testListUrlMapsResponseIs2xx() {
-      HttpRequest request = getBasicRequest().method("GET")
-               .endpoint(ENDPOINT_BASE)
-               .build();
+   HttpRequest list = HttpRequest
+         .builder()
+         .method("GET")
+         .endpoint(ENDPOINT_BASE)
+         .addHeader("Accept", "application/json")
+         .addHeader("Authorization", "Bearer " + TOKEN).build();
 
-      HttpResponse response = createResponse("/url_map_list.json");
-
-      UrlMapApi api = requestsSendResponses(requestForScopes(COMPUTE_READONLY_SCOPE),
-              TOKEN_RESPONSE, request, response).getUrlMapApiForProject("myproject");
-
-      assertEquals(api.listFirstPage().toString(),
-              new ParseUrlMapListTest().expected().toString());
-   }
-
-   public void testListUrlMapsResponseIs4xx() {
-      HttpRequest request = getBasicRequest().method("GET")
-               .endpoint(ENDPOINT_BASE)
-               .build();
-
-      HttpResponse response = HttpResponse.builder().statusCode(404).build();
+   public void list() {
+      HttpResponse response = HttpResponse.builder().statusCode(200)
+              .payload(payloadFromResource("/url_map_list.json")).build();
 
       UrlMapApi api = requestsSendResponses(requestForScopes(COMPUTE_READONLY_SCOPE),
-              TOKEN_RESPONSE, request, response).getUrlMapApiForProject("myproject");
+              TOKEN_RESPONSE, list, response).urlMaps();
 
-      assertTrue(api.list().concat().isEmpty());
+      assertEquals(api.list().next(), new ParseUrlMapListTest().expected());
    }
-   
+
+   public void listEmpty() {
+      HttpResponse response = HttpResponse.builder().statusCode(200)
+            .payload(payloadFromResource("/list_empty.json")).build();
+
+      UrlMapApi api = requestsSendResponses(requestForScopes(COMPUTE_READONLY_SCOPE),
+              TOKEN_RESPONSE, list, response).urlMaps();
+
+      assertFalse(api.list().hasNext());
+   }
+
    public void testValidateUrlMapsResponseIs2xx() {
       HttpRequest request = getBasicRequest().method("POST")
                .endpoint(ENDPOINT_BASE + "/jclouds-test/validate")
@@ -190,31 +191,24 @@ public class UrlMapApiExpectTest extends BaseGoogleComputeEngineApiExpectTest {
       HttpResponse response = createResponse("/url_map_validate.json");
 
       UrlMapApi api = requestsSendResponses(requestForScopes(COMPUTE_SCOPE),
-              TOKEN_RESPONSE, request, response).getUrlMapApiForProject("myproject");
+              TOKEN_RESPONSE, request, response).urlMaps();
 
       assertEquals(api.validate("jclouds-test", createBasicMap()), new ParseUrlMapValidateTest().expected());
    }
-   
+
    private UrlMapOptions createBasicMap() {
       URI service = URI.create("https://www.googleapis.com/compute/v1/projects/"
                + "myproject/global/backendServices/jclouds-test");
       return new UrlMapOptions().name("jclouds-test")
                                 .description("Sample url map")
-                                .addHostRule(HostRule.builder().addHost("jclouds-test")
-                                                               .pathMatcher("path")
-                                                               .build())
-                                .addPathMatcher(PathMatcher.builder()
-                                                           .name("path")
-                                                           .defaultService(service)
-                                                           .addPathRule(PathRule.builder()
-                                                                                .addPath("/")
-                                                                                .service(service)
-                                                                                .build())
-                                                           .build())
-                                .addTest(UrlMap.UrlMapTest.builder().host("jclouds-test")
-                                                              .path("/test/path")
-                                                              .service(service)
-                                                              .build())
+                                .hostRule(HostRule.create(null, ImmutableList.of("jclouds-test"), "path"))
+                                .pathMatcher(PathMatcher.create("path",
+                                                                null,
+                                                                service,
+                                                                ImmutableList.of(
+                                                                      PathRule.create(ImmutableList.of("/"),
+                                                                                      service))))
+                                .test(UrlMap.UrlMapTest.create(null, "jclouds-test", "/test/path", service))
                                 .defaultService(service);
    }
 }

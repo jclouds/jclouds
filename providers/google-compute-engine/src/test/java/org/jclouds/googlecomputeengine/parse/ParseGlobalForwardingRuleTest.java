@@ -23,6 +23,7 @@ import javax.ws.rs.core.MediaType;
 
 import org.jclouds.date.internal.SimpleDateFormatDateService;
 import org.jclouds.googlecomputeengine.domain.ForwardingRule;
+import org.jclouds.googlecomputeengine.domain.ForwardingRule.IPProtocol;
 import org.jclouds.googlecomputeengine.internal.BaseGoogleComputeEngineParseTest;
 
 public class ParseGlobalForwardingRuleTest extends BaseGoogleComputeEngineParseTest<ForwardingRule> {
@@ -35,16 +36,16 @@ public class ParseGlobalForwardingRuleTest extends BaseGoogleComputeEngineParseT
    @Override
    @Consumes(MediaType.APPLICATION_JSON)
    public ForwardingRule expected() {
-      return ForwardingRule.builder()
-              .id("8192211304399313984")
-              .creationTimestamp(new SimpleDateFormatDateService().iso8601DateParse("2014-07-18T09:47:30.826-07:00"))
-              .selfLink(URI.create("https://www.googleapis.com/compute/v1/projects/myproject/global/forwardingRules/jclouds-test"))
-              .name("jclouds-test")
-              .description("tcp forwarding rule")
-              .ipAddress("107.178.255.156")
-              .ipProtocol("TCP")
-              .portRanges("80-80")
-              .target(URI.create("https://www.googleapis.com/compute/v1/projects/myproject/global/targetHttpProxies/jclouds-test"))
-              .build();
+      return ForwardingRule.create("8192211304399313984", // id
+         URI.create("https://www.googleapis.com/compute/v1/projects/myproject/global/forwardingRules/jclouds-test"), // selfLink
+         "jclouds-test", // name
+         "tcp forwarding rule", // description
+         new SimpleDateFormatDateService().iso8601DateParse("2014-07-18T09:47:30.826-07:00"), // creationTimestamp
+         null, // region
+         "107.178.255.156", //IPAddress
+         IPProtocol.TCP, //IPProtocol
+         "80-80", // portRange
+         URI.create("https://www.googleapis.com/compute/v1/projects/myproject/global/targetHttpProxies/jclouds-test") // Target
+      );
    }
 }

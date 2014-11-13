@@ -16,106 +16,96 @@
  */
 package org.jclouds.googlecomputeengine.options;
 
-import static com.google.common.base.Objects.equal;
-
 import java.net.URI;
-import java.util.Set;
+import java.util.List;
 
 import org.jclouds.googlecomputeengine.domain.BackendService.Backend;
+import org.jclouds.javax.annotation.Nullable;
 
-import com.google.common.base.Objects;
-import com.google.common.collect.ImmutableSet;
+public class BackendServiceOptions {
 
-/**
- * Options to create a backend service resource.
- *
- * @see org.jclouds.googlecomputeengine.domain.BackendService
- */
-public class BackendServiceOptions extends ResourceOptions {
-
-   private ImmutableSet.Builder<URI> healthChecks = ImmutableSet.builder();
-   private ImmutableSet.Builder<Backend> backends = ImmutableSet.builder();
+   private String name;
+   @Nullable private String description;
+   private List<URI> healthChecks;
+   private List<Backend> backends;
    private Integer timeoutSec;
    private Integer port;
    private String protocol;
    private String fingerprint;
-   
 
    /**
-    * @see org.jclouds.googlecomputeengine.domain.BackendService#getBackends()
+    * Name of the BackendService resource.
+    * @return name, provided by the client.
     */
-   public Set<Backend> getBackends() {
-      return backends.build();
+   public String getName(){
+      return name;
    }
 
    /**
-    * @see org.jclouds.googlecomputeengine.domain.BackendService#getBackends()
+    * @see BackendServiceOptions#getName()
     */
-   public BackendServiceOptions addBackend(Backend backend) {
-      this.backends.add(backend);
-      return this;
-   }
-
-   /**
-    * @see org.jclouds.googlecomputeengine.domain.BackendService#getBackends()
-    */
-   public BackendServiceOptions backends(Set<Backend> backends) {
-      this.backends = ImmutableSet.builder();
-      this.backends.addAll(backends);
-      return this;
-   }
-
-   /**
-    * @see org.jclouds.googlecomputeengine.domain.Resource#getName()
-    */
-   @Override
    public BackendServiceOptions name(String name) {
       this.name = name;
       return this;
    }
-   
+
    /**
-    * @see org.jclouds.googlecomputeengine.domain.Resource#getDescription()
+    * An optional textual description of the BackendService.
+    * @return description, provided by the client.
     */
-   @Override
+   public String getDescription(){
+      return description;
+   }
+
+   /**
+    * @see BackendServiceOptions#getDescription()
+    */
    public BackendServiceOptions description(String description) {
       this.description = description;
       return this;
    }
 
    /**
-    * @see org.jclouds.googlecomputeengine.domain.BackendService#getHealthChecks()
+    * The list of {@link HttpHealthCheck#selfLink Links} to the HttpHealthCheck resource for health checking this BackendService.
+    * Currently at most one health check can be specified, and a health check is required.
     */
-   public Set<URI> getHealthChecks() {
-      return healthChecks.build();
+   public List<URI> getHealthChecks() {
+      return healthChecks;
    }
 
    /**
-    * @see org.jclouds.googlecomputeengine.domain.BackendService#getHealthChecks()
+    * @see BackendServiceOptions#getHealthChecks()
     */
-   public BackendServiceOptions addHealthCheck(URI healthCheck) {
-      this.healthChecks.add(healthCheck);
+   public BackendServiceOptions healthChecks(List<URI> healthChecks) {
+      this.healthChecks = healthChecks;
       return this;
    }
 
    /**
-    * @see org.jclouds.googlecomputeengine.domain.BackendService#getHealthChecks()
+    * The list of backends that serve this BackendService.
     */
-   public BackendServiceOptions healthChecks(Set<URI> healthChecks) {
-      this.healthChecks = ImmutableSet.builder();
-      this.healthChecks.addAll(healthChecks);
+   public List<Backend> getBackends() {
+      return backends;
+   }
+
+   /**
+    * @see BackendServiceOptions#getBackends()
+    */
+   public BackendServiceOptions backends(List<Backend> backends){
+      this.backends = backends;
       return this;
    }
 
    /**
-    * @see org.jclouds.googlecomputeengine.domain.BackendService#getTimeoutSec()
+    * How many seconds to wait for the backend before considering it a failed request.
+    * Default is 30 seconds.
     */
    public Integer getTimeoutSec() {
       return timeoutSec;
    }
 
    /**
-    * @see org.jclouds.googlecomputeengine.domain.BackendService#getTimeoutSec()
+    * @see BackendServiceOptions#getTimeoutSec()
     */
    public BackendServiceOptions timeoutSec(Integer timeoutSec) {
       this.timeoutSec = timeoutSec;
@@ -123,94 +113,52 @@ public class BackendServiceOptions extends ResourceOptions {
    }
 
    /**
-    * @see org.jclouds.googlecomputeengine.domain.BackendService#getPort()
+    * The TCP port to connect on the backend.
+    * The default value is 80.
     */
    public Integer getPort() {
       return port;
    }
 
    /**
-    * @see org.jclouds.googlecomputeengine.domain.BackendService#getPort()
+    * @see BackendServiceOptions#getPort()
     */
    public BackendServiceOptions port(Integer port) {
       this.port = port;
       return this;
    }
 
+
    /**
-    * @see org.jclouds.googlecomputeengine.domain.BackendService#getProtocol()
+    * The  protocol for incoming requests.
     */
    public String getProtocol() {
       return protocol;
    }
-   
+
    /**
-    * @see org.jclouds.googlecomputeengine.domain.BackendService#getProtocol()
+    * @see BackendServiceOptions#getProtocol()
     */
    public BackendServiceOptions protocol(String protocol) {
       this.protocol = protocol;
       return this;
    }
-   
+
    /**
-    * @see org.jclouds.googlecomputeengine.domain.BackendService#getFingerprint()
+    * Fingerprint of this resource. A hash of the contents stored in this object.
+    * This field is used in optimistic locking. This field will be ignored when
+    * inserting a BackendService. An up-to-date fingerprint must be provided in
+    * order to update the BackendService.
     */
    public String getFingerprint() {
       return fingerprint;
    }
-   
+
    /**
-    * @see org.jclouds.googlecomputeengine.domain.BackendService#getFingerprint()
+    * @see BackendServiceOptions#getFingerprint()
     */
    public BackendServiceOptions fingerprint(String fingerprint) {
       this.fingerprint = fingerprint;
       return this;
-   }
-   
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public int hashCode() {
-      return Objects.hashCode(name, backends, healthChecks, timeoutSec,
-                              port, protocol);
-   }
-
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public boolean equals(Object obj) {
-      if (this == obj) return true;
-      if (obj == null || getClass() != obj.getClass()) return false;
-      BackendServiceOptions that = BackendServiceOptions.class.cast(obj);
-      return equal(this.name, that.name)
-              && equal(this.backends, that.backends)
-              && equal(this.healthChecks, that.healthChecks)
-              && equal(this.timeoutSec, that.timeoutSec)
-              && equal(this.port, that.port)
-              && equal(this.protocol, that.protocol);
-   }
-   
-   /**
-    * {@inheritDoc}
-    */
-   protected Objects.ToStringHelper string() {
-      return super.string()
-              .omitNullValues()
-              .add("backends", backends)
-              .add("healthChecks", healthChecks)
-              .add("timeoutSec", timeoutSec)
-              .add("port", port)
-              .add("protocol", protocol)
-              .add("fingerprint", fingerprint);
-   }
-   
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public String toString() {
-      return string().toString();
    }
 }

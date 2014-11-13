@@ -17,19 +17,21 @@
 package org.jclouds.googlecomputeengine.parse;
 
 import java.net.URI;
+import java.util.List;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.core.MediaType;
 
 import org.jclouds.date.internal.SimpleDateFormatDateService;
 import org.jclouds.googlecomputeengine.domain.UrlMap;
+import org.jclouds.googlecomputeengine.domain.UrlMap.UrlMapTest;
 import org.jclouds.googlecomputeengine.domain.UrlMap.HostRule;
 import org.jclouds.googlecomputeengine.domain.UrlMap.PathMatcher;
-import org.jclouds.googlecomputeengine.domain.UrlMap.PathRule;
+import org.jclouds.googlecomputeengine.domain.UrlMap.PathMatcher.PathRule;
 import org.jclouds.googlecomputeengine.internal.BaseGoogleComputeEngineParseTest;
 import org.testng.annotations.Test;
 
-import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.ImmutableList;
 
 @Test(groups = "unit")
 public class ParseUrlMapTest extends BaseGoogleComputeEngineParseTest<UrlMap> {
@@ -43,25 +45,32 @@ public class ParseUrlMapTest extends BaseGoogleComputeEngineParseTest<UrlMap> {
    @Consumes(MediaType.APPLICATION_JSON)
    public UrlMap expected() {
       URI service = URI.create("https://www.googleapis.com/compute/v1/projects/myproject/global/backendServices/jclouds-test");
-      return UrlMap.builder()
-              .id("13741966667737398119")
-              .creationTimestamp(new SimpleDateFormatDateService().iso8601DateParse("2014-07-23T12:39:50.022-07:00"))
-              .selfLink(URI.create("https://www.googleapis.com/compute/v1/projects/myproject/global/urlMaps/jclouds-test"))
-              .name("jclouds-test")
-              .description("Sample url map")
-              .hostRules(ImmutableSet.<HostRule>of(HostRule.builder().hosts(ImmutableSet.<String>of("jclouds-test")).pathMatcher("path").build()))
-              .pathMatchers(ImmutableSet.<PathMatcher>of(PathMatcher.builder().name("path")
-                                                                    .defaultService(service)
-                                                                    .pathRules(ImmutableSet.<PathRule>of(PathRule.builder().service(service)
-                                                                                                                           .addPath("/")
-                                                                                                                           .build()))
-                                                                    .build()))
-              .urlMapTests(ImmutableSet.<UrlMap.UrlMapTest>of(UrlMap.UrlMapTest.builder().host("jclouds-test")
-                                                                       .path("/test/path")
-                                                                       .service(service)
-                                                                       .build()))
-              .defaultService(service)
-              .fingerprint("EDmhvJucpz4=")                          
-              .build();
+
+      List<HostRule> hostRules = ImmutableList.of(HostRule.create(null, // description
+            ImmutableList.of("jclouds-test"), // hosts
+            "path")); // pathMatcher
+
+      List<PathMatcher> pathMatchers = ImmutableList.of(PathMatcher.create("path", // name
+                                                                           null, // description
+                                                                           service, // defaultService
+            ImmutableList.of(PathRule.create(ImmutableList.of("/"), // paths
+                                             service // service
+                                             )))); // pathRules
+
+      List<UrlMapTest> urlMapTests = ImmutableList.of(UrlMapTest.create(null, // description
+            "jclouds-test", // host
+            "/test/path", // path
+            service)); // service
+
+      return UrlMap.create("13741966667737398119", // id
+            new SimpleDateFormatDateService().iso8601DateParse("2014-07-23T12:39:50.022-07:00"), // creationTimestamp
+            URI.create("https://www.googleapis.com/compute/v1/projects/myproject/global/urlMaps/jclouds-test"), // selfLink
+            "jclouds-test", // name
+            "Sample url map", // description
+            hostRules, // hostRules
+            pathMatchers, // pathMatchers
+            urlMapTests, // urlMapTests
+            service, // defaultService
+            "EDmhvJucpz4="); // fingerprint
    }
 }

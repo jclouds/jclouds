@@ -16,18 +16,17 @@
  */
 package org.jclouds.googlecomputeengine.features;
 
-import static org.jclouds.googlecomputeengine.GoogleComputeEngineConstants.COMPUTE_READONLY_SCOPE;
-import static org.jclouds.googlecomputeengine.GoogleComputeEngineConstants.COMPUTE_SCOPE;
+import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertTrue;
+import static org.testng.Assert.assertFalse;
 import static org.testng.AssertJUnit.assertNull;
 
 import java.io.IOException;
 import java.net.URI;
+import java.util.List;
 
-import javax.ws.rs.core.MediaType;
-
-import org.jclouds.googlecomputeengine.internal.BaseGoogleComputeEngineApiExpectTest;
+import org.jclouds.googlecomputeengine.GoogleComputeEngineApi;
+import org.jclouds.googlecomputeengine.internal.BaseGoogleComputeEngineExpectTest;
 import org.jclouds.googlecomputeengine.options.BackendServiceOptions;
 import org.jclouds.googlecomputeengine.parse.ParseBackendServiceGetHealthTest;
 import org.jclouds.googlecomputeengine.parse.ParseBackendServiceListTest;
@@ -37,17 +36,19 @@ import org.jclouds.http.HttpRequest;
 import org.jclouds.http.HttpResponse;
 import org.testng.annotations.Test;
 
+import com.google.common.collect.ImmutableList;
+
 @Test(groups = "unit")
-public class BackendServiceApiExpectTest extends BaseGoogleComputeEngineApiExpectTest {
-   
+public class BackendServiceApiExpectTest extends BaseGoogleComputeEngineExpectTest<GoogleComputeEngineApi> {
+
    private static final String ENDPOINT_BASE = "https://www.googleapis.com/"
-            + "compute/v1/projects/myproject/global/backendServices";
-   
+            + "compute/v1/projects/party/global/backendServices";
+
    private org.jclouds.http.HttpRequest.Builder<? extends HttpRequest.Builder<?>> getBasicRequest() {
       return HttpRequest.builder().addHeader("Accept", "application/json")
                                   .addHeader("Authorization", "Bearer " + TOKEN);
    }
-   
+
    private HttpResponse createResponse(String payloadFile) {
       return HttpResponse.builder().statusCode(200)
                                    .payload(payloadFromResource(payloadFile))
@@ -61,7 +62,7 @@ public class BackendServiceApiExpectTest extends BaseGoogleComputeEngineApiExpec
       HttpResponse response = createResponse("/backend_service_get.json");
       BackendServiceApi api = requestsSendResponses(requestForScopes(COMPUTE_READONLY_SCOPE),
               TOKEN_RESPONSE, request, response)
-              .getBackendServiceApiForProject("myproject");
+              .backendServices();
 
       assertEquals(api.get("jclouds-test"), new ParseBackendServiceTest().expected());
    }
@@ -75,7 +76,7 @@ public class BackendServiceApiExpectTest extends BaseGoogleComputeEngineApiExpec
 
       BackendServiceApi api = requestsSendResponses(requestForScopes(COMPUTE_READONLY_SCOPE),
               TOKEN_RESPONSE, request, response)
-              .getBackendServiceApiForProject("myproject");
+              .backendServices();
 
       assertNull(api.get("jclouds-test"));
    }
@@ -84,20 +85,20 @@ public class BackendServiceApiExpectTest extends BaseGoogleComputeEngineApiExpec
       HttpRequest request = getBasicRequest().method("POST")
                .endpoint(ENDPOINT_BASE)
                .payload(payloadFromResourceWithContentType("/backend_service_insert.json",
-                                                           MediaType.APPLICATION_JSON))
+                                                           APPLICATION_JSON))
                .build();
       HttpResponse response = createResponse("/operation.json");
 
       BackendServiceApi api = requestsSendResponses(requestForScopes(COMPUTE_SCOPE),
-              TOKEN_RESPONSE, request, response).getBackendServiceApiForProject("myproject");
+              TOKEN_RESPONSE, request, response).backendServices();
 
-      URI hc = URI.create("https://www.googleapis.com/compute/v1/projects/"
-                           + "myproject/global/httpHealthChecks/jclouds-test");
-      assertEquals(api.create("jclouds-test", new BackendServiceOptions().name("jclouds-test")
+      List<URI> healthChecks = ImmutableList.of(URI.create("https://www.googleapis.com/compute/v1/projects/"
+                           + "myproject/global/httpHealthChecks/jclouds-test"));
+      assertEquals(api.create( new BackendServiceOptions().name("jclouds-test")
                                                                          .protocol("HTTP")
                                                                          .port(80)
                                                                          .timeoutSec(30)
-                                                                         .addHealthCheck(hc)),
+                                                                         .healthChecks(healthChecks)),
                    new ParseOperationTest().expected());
 
    }
@@ -106,20 +107,20 @@ public class BackendServiceApiExpectTest extends BaseGoogleComputeEngineApiExpec
       HttpRequest request = getBasicRequest().method("PUT")
                .endpoint(ENDPOINT_BASE + "/jclouds-test")
                .payload(payloadFromResourceWithContentType("/backend_service_insert.json",
-                                                           MediaType.APPLICATION_JSON))
+                                                           APPLICATION_JSON))
                .build();
       HttpResponse response = createResponse("/operation.json");
 
       BackendServiceApi api = requestsSendResponses(requestForScopes(COMPUTE_SCOPE),
-              TOKEN_RESPONSE, request, response).getBackendServiceApiForProject("myproject");
+              TOKEN_RESPONSE, request, response).backendServices();
 
-      URI hc = URI.create("https://www.googleapis.com/compute/v1/projects/"
-                          + "myproject/global/httpHealthChecks/jclouds-test");
+      List<URI> healthChecks = ImmutableList.of(URI.create("https://www.googleapis.com/compute/v1/projects/"
+                          + "myproject/global/httpHealthChecks/jclouds-test"));
       assertEquals(api.update("jclouds-test", new BackendServiceOptions().name("jclouds-test")
                                                                          .protocol("HTTP")
                                                                          .port(80)
                                                                          .timeoutSec(30)
-                                                                         .addHealthCheck(hc)),
+                                                                         .healthChecks(healthChecks)),
                    new ParseOperationTest().expected());
    }
 
@@ -127,20 +128,20 @@ public class BackendServiceApiExpectTest extends BaseGoogleComputeEngineApiExpec
       HttpRequest request = getBasicRequest().method("PATCH")
                .endpoint(ENDPOINT_BASE + "/jclouds-test")
                .payload(payloadFromResourceWithContentType("/backend_service_insert.json",
-                                                           MediaType.APPLICATION_JSON))
+                                                           APPLICATION_JSON))
                .build();
       HttpResponse response = createResponse("/operation.json");
 
       BackendServiceApi api = requestsSendResponses(requestForScopes(COMPUTE_SCOPE),
-              TOKEN_RESPONSE, request, response).getBackendServiceApiForProject("myproject");
+              TOKEN_RESPONSE, request, response).backendServices();
 
-      URI hc = URI.create("https://www.googleapis.com/compute/v1/projects/"
-                          + "myproject/global/httpHealthChecks/jclouds-test");
+      List<URI> healthChecks = ImmutableList.of(URI.create("https://www.googleapis.com/compute/v1/projects/"
+                          + "myproject/global/httpHealthChecks/jclouds-test"));
       assertEquals(api.patch("jclouds-test", new BackendServiceOptions().name("jclouds-test")
                                                                          .protocol("HTTP")
                                                                          .port(80)
                                                                          .timeoutSec(30)
-                                                                         .addHealthCheck(hc)),
+                                                                         .healthChecks(healthChecks)),
                    new ParseOperationTest().expected());
    }
 
@@ -151,7 +152,7 @@ public class BackendServiceApiExpectTest extends BaseGoogleComputeEngineApiExpec
       HttpResponse response = createResponse("/operation.json");
 
       BackendServiceApi api = requestsSendResponses(requestForScopes(COMPUTE_SCOPE),
-              TOKEN_RESPONSE, request, response).getBackendServiceApiForProject("myproject");
+              TOKEN_RESPONSE, request, response).backendServices();
 
       assertEquals(api.delete("jclouds-test"), new ParseOperationTest().expected());
    }
@@ -164,7 +165,7 @@ public class BackendServiceApiExpectTest extends BaseGoogleComputeEngineApiExpec
       HttpResponse response = HttpResponse.builder().statusCode(404).build();
 
       BackendServiceApi api = requestsSendResponses(requestForScopes(COMPUTE_SCOPE),
-              TOKEN_RESPONSE, request, response).getBackendServiceApiForProject("myproject");
+              TOKEN_RESPONSE, request, response).backendServices();
 
       assertNull(api.delete("jclouds-test"));
    }
@@ -176,25 +177,28 @@ public class BackendServiceApiExpectTest extends BaseGoogleComputeEngineApiExpec
       HttpResponse response = createResponse("/backend_service_list.json");
 
       BackendServiceApi api = requestsSendResponses(requestForScopes(COMPUTE_READONLY_SCOPE),
-              TOKEN_RESPONSE, request, response).getBackendServiceApiForProject("myproject");
+              TOKEN_RESPONSE, request, response).backendServices();
 
-      assertEquals(api.listFirstPage().toString(),
-              new ParseBackendServiceListTest().expected().toString());
+      assertEquals(api.list().next(), new ParseBackendServiceListTest().expected());
    }
 
-   public void testListBackendServiceResponseIs4xx() {
-      HttpRequest request = getBasicRequest().method("GET")
-               .endpoint(ENDPOINT_BASE)
-               .build();
+   public void listEmpty() {
+      HttpRequest list = HttpRequest
+            .builder()
+            .method("GET")
+            .endpoint(BASE_URL + "/party/global/backendServices")
+            .addHeader("Accept", "application/json")
+            .addHeader("Authorization", "Bearer " + TOKEN).build();
 
-      HttpResponse response = HttpResponse.builder().statusCode(404).build();
+      HttpResponse response = HttpResponse.builder().statusCode(200)
+            .payload(payloadFromResource("/list_empty.json")).build();
 
       BackendServiceApi api = requestsSendResponses(requestForScopes(COMPUTE_READONLY_SCOPE),
-              TOKEN_RESPONSE, request, response).getBackendServiceApiForProject("myproject");
+            TOKEN_RESPONSE, list, response).backendServices();
 
-      assertTrue(api.list().concat().isEmpty());
+      assertFalse(api.list().hasNext());
    }
-   
+
    public void testGetHealthResponseIs2xx() throws IOException {
       HttpRequest request = getBasicRequest().method("POST")
                                              .endpoint(ENDPOINT_BASE
@@ -204,7 +208,7 @@ public class BackendServiceApiExpectTest extends BaseGoogleComputeEngineApiExpec
       HttpResponse response = createResponse("/backend_service_get_health.json");
 
       BackendServiceApi api = requestsSendResponses(requestForScopes(COMPUTE_SCOPE),
-              TOKEN_RESPONSE, request, response).getBackendServiceApiForProject("myproject");
+              TOKEN_RESPONSE, request, response).backendServices();
 
       URI group = URI.create("https://www.googleapis.com/resourceviews/v1beta1/"
                              + "projects/myproject/zones/us-central1-a/"

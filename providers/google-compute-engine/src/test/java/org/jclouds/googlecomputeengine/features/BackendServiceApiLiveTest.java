@@ -17,136 +17,116 @@
 package org.jclouds.googlecomputeengine.features;
 
 import static com.google.common.collect.Iterables.getOnlyElement;
+import static org.jclouds.googlecomputeengine.options.ListOptions.Builder.filter;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
 
 import java.net.URI;
-import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 
-import org.jclouds.collect.PagedIterable;
 import org.jclouds.googlecomputeengine.domain.BackendService;
-import org.jclouds.googlecomputeengine.domain.BackendService.Backend;
-import org.jclouds.googlecomputeengine.domain.BackendServiceGroupHealth;
+import org.jclouds.googlecloud.domain.ListPage;
 import org.jclouds.googlecomputeengine.internal.BaseGoogleComputeEngineApiLiveTest;
 import org.jclouds.googlecomputeengine.options.BackendServiceOptions;
-import org.jclouds.googlecomputeengine.options.ListOptions;
 import org.testng.annotations.Test;
 
-import com.google.common.collect.ImmutableSet;
-import com.google.common.collect.Lists;
+import com.google.common.collect.ImmutableList;
 
 public class BackendServiceApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
 
    private static final String BACKEND_SERVICE_NAME = "backend-service-api-live-test-backend-service";
    private static final String BACKEND_SERVICE_HEALTH_CHECK_NAME = "backend-service-api-live-test-health-check";
-   private static final String BACKEND_SERVICE_RESOURCE_VIEW_NAME = "backend-service-api-live-test-resource-view";
-   private static final int TIME_WAIT = 30;
 
    private BackendServiceApi api() {
-      return api.getBackendServiceApiForProject(userProject.get());
+      return api.backendServices();
    }
 
    @Test(groups = "live")
    public void testInsertBackendService() {
-      // TODO: (ashmrtnz) create health check here once it is merged into this project
-      HashSet<URI> healthChecks = new HashSet<URI>();
-      healthChecks.add(getHealthCheckUrl(userProject.get(), BACKEND_SERVICE_HEALTH_CHECK_NAME));
+      assertOperationDoneSuccessfully(api.httpHeathChecks().insert(BACKEND_SERVICE_HEALTH_CHECK_NAME));
+
+      List<URI> healthChecks = ImmutableList.of(getHealthCheckUrl(BACKEND_SERVICE_HEALTH_CHECK_NAME));
       BackendServiceOptions b = new BackendServiceOptions().name(BACKEND_SERVICE_NAME).healthChecks(healthChecks);
-      assertGlobalOperationDoneSucessfully(api().create(BACKEND_SERVICE_NAME, b), TIME_WAIT);
+      assertOperationDoneSuccessfully(api().create(b));
    }
-   
+
    @Test(groups = "live", dependsOnMethods = "testInsertBackendService")
    public void testGetBackendService() {
       BackendService service = api().get(BACKEND_SERVICE_NAME);
       assertNotNull(service);
       assertBackendServiceEquals(service);
    }
-   
+
    @Test(groups = "live", dependsOnMethods = "testGetBackendService")
    public void testPatchBackendService() {
-      String fingerprint = api().get(BACKEND_SERVICE_NAME).getFingerprint().get();
+      String fingerprint = api().get(BACKEND_SERVICE_NAME).fingerprint();
       BackendServiceOptions backendService = new BackendServiceOptions()
               .name(BACKEND_SERVICE_NAME)
-              .healthChecks(ImmutableSet.of(getHealthCheckUrl(userProject.get(), BACKEND_SERVICE_HEALTH_CHECK_NAME)))
+              .healthChecks(ImmutableList.of(getHealthCheckUrl(BACKEND_SERVICE_HEALTH_CHECK_NAME)))
               .timeoutSec(10)
               .fingerprint(fingerprint);
 
-      assertGlobalOperationDoneSucessfully(api().update(BACKEND_SERVICE_NAME, backendService), TIME_WAIT);
+      assertOperationDoneSuccessfully(api().update(BACKEND_SERVICE_NAME, backendService));
       assertBackendServiceEquals(api().get(BACKEND_SERVICE_NAME), backendService);
    }
-   
+
    @Test(groups = "live", dependsOnMethods = "testPatchBackendService")
    public void testUpdateBackendService() {
-      api.getResourceViewApiForProject(userProject.get()).createInZone(DEFAULT_ZONE_NAME,
-                                                                       BACKEND_SERVICE_RESOURCE_VIEW_NAME);
-      String fingerprint = api().get(BACKEND_SERVICE_NAME).getFingerprint().get();
-      Backend backend = Backend.builder()
-                               .group(getResourceViewInZoneUrl(userProject.get(),
-                                                               BACKEND_SERVICE_RESOURCE_VIEW_NAME))
-                               .build();
+      String fingerprint = api().get(BACKEND_SERVICE_NAME).fingerprint();
+
       BackendServiceOptions backendService = new BackendServiceOptions()
               .name(BACKEND_SERVICE_NAME)
-              .healthChecks(ImmutableSet.of(getHealthCheckUrl(userProject.get(),
-                                                              BACKEND_SERVICE_HEALTH_CHECK_NAME)))
+              .healthChecks(ImmutableList.of(getHealthCheckUrl(BACKEND_SERVICE_HEALTH_CHECK_NAME)))
               .timeoutSec(45)
               .port(8080)
-              .addBackend(backend)
               .fingerprint(fingerprint);
 
-      assertGlobalOperationDoneSucessfully(api().update(BACKEND_SERVICE_NAME,
-                                                        backendService),
-                                           TIME_WAIT);
+      assertOperationDoneSuccessfully(api().update(BACKEND_SERVICE_NAME, backendService));
       assertBackendServiceEquals(api().get(BACKEND_SERVICE_NAME),
                                  backendService);
    }
 
    @Test(groups = "live", dependsOnMethods = "testUpdateBackendService")
    public void testListBackendService() {
-      PagedIterable<BackendService> backendServices = api().list(new ListOptions.Builder()
-              .filter("name eq " + BACKEND_SERVICE_NAME));
+      Iterator<ListPage<BackendService>> backendServices = api().list(filter("name eq " + BACKEND_SERVICE_NAME));
 
-      List<BackendService> backendServicesAsList = Lists.newArrayList(backendServices.concat());
+      List<BackendService> backendServicesAsList = backendServices.next();
 
       assertEquals(backendServicesAsList.size(), 1);
 
    }
-   
+
+   /*
    @Test(groups = "live", dependsOnMethods = "testListBackendService")
    public void testGetHealthBackendService() {
-      // Check to see that the health check returned is empty because it can
-      // take several minutes to create all the resources needed and wait for
-      // the health check to return a health status.
-      assertGroupHealthEquals(api().getHealth(BACKEND_SERVICE_NAME,
-                                              getResourceViewInZoneUrl(userProject.get(),
-                                                                       BACKEND_SERVICE_RESOURCE_VIEW_NAME)));
+      // TODO: Once resourceViews are merged into the project. Test this actually works.
    }
+    */
 
-   @Test(groups = "live", dependsOnMethods = "testGetHealthBackendService")
+   @Test(groups = "live", dependsOnMethods = "testListBackendService")
    public void testDeleteBackendService() {
-      assertGlobalOperationDoneSucessfully(api().delete(BACKEND_SERVICE_NAME), TIME_WAIT);
-      api.getResourceViewApiForProject(userProject.get()).deleteInZone(DEFAULT_ZONE_NAME,
-                                                                       BACKEND_SERVICE_RESOURCE_VIEW_NAME);
+      assertOperationDoneSuccessfully(api().delete(BACKEND_SERVICE_NAME));
+
+      assertOperationDoneSuccessfully(api.httpHeathChecks().delete(BACKEND_SERVICE_HEALTH_CHECK_NAME));
+
    }
 
    private void assertBackendServiceEquals(BackendService result) {
-      assertEquals(result.getName(), BACKEND_SERVICE_NAME);
-      assertEquals(getOnlyElement(result.getHealthChecks()),
-                   getHealthCheckUrl(userProject.get(), BACKEND_SERVICE_HEALTH_CHECK_NAME));
+      assertEquals(result.name(), BACKEND_SERVICE_NAME);
+      assertEquals(getOnlyElement(result.healthChecks()),
+                   getHealthCheckUrl(BACKEND_SERVICE_HEALTH_CHECK_NAME));
    }
-   
+
    private void assertBackendServiceEquals(BackendService result, BackendServiceOptions expected) {
-      assertEquals(result.getName(), expected.getName());
-      assertEquals(result.getHealthChecks(), expected.getHealthChecks());
+      assertEquals(result.name(), expected.getName());
+      assertEquals(result.healthChecks(), expected.getHealthChecks());
       if (expected.getTimeoutSec() != null) {
-         assertEquals(result.getTimeoutSec().get(), expected.getTimeoutSec());
+         org.testng.Assert.assertEquals(result.timeoutSec(), expected.getTimeoutSec().intValue());
       }
       if (expected.getPort() != null) {
-         assertEquals(result.getPort().get(), expected.getPort());
+         org.testng.Assert.assertEquals(result.port(), expected.getPort().intValue());
       }
    }
-   
-   private void assertGroupHealthEquals(BackendServiceGroupHealth result) {
-      assert result.getHealthStatuses().size() == 0;
-   }
+
 }

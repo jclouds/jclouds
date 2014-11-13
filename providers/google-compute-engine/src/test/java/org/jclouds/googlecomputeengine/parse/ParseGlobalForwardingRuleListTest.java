@@ -16,18 +16,19 @@
  */
 package org.jclouds.googlecomputeengine.parse;
 
-import java.net.URI;
+import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 
 import javax.ws.rs.Consumes;
-import javax.ws.rs.core.MediaType;
 
-import org.jclouds.googlecomputeengine.domain.ListPage;
+import org.jclouds.googlecloud.domain.ForwardingListPage;
+import org.jclouds.googlecloud.domain.ListPage;
 import org.jclouds.googlecomputeengine.domain.ForwardingRule;
-import org.jclouds.googlecomputeengine.domain.Resource;
 import org.jclouds.googlecomputeengine.internal.BaseGoogleComputeEngineParseTest;
+import org.testng.annotations.Test;
 
-import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.ImmutableList;
 
+@Test(groups = "unit", testName = "ParseGlobalForwardingRuleListTest")
 public class ParseGlobalForwardingRuleListTest extends BaseGoogleComputeEngineParseTest<ListPage<ForwardingRule>> {
 
    @Override
@@ -35,15 +36,11 @@ public class ParseGlobalForwardingRuleListTest extends BaseGoogleComputeEnginePa
       return "/global_forwarding_rule_list.json";
    }
 
-   @Override
-   @Consumes(MediaType.APPLICATION_JSON)
+   @Override @Consumes(APPLICATION_JSON)
    public ListPage<ForwardingRule> expected() {
-      return ListPage.<ForwardingRule>builder()
-              .kind(Resource.Kind.FORWARDING_RULE_LIST)
-              .id("projects/myproject/global/forwardingRules")
-              .selfLink(URI.create("https://www.googleapis.com/compute/v1/projects/myproject/global/forwardingRules"))
-              .items(ImmutableSet.of(new ParseGlobalForwardingRuleTest().expected()))
-              .build();
-
+      return ForwardingListPage.create(
+            ImmutableList.of(new ParseGlobalForwardingRuleTest().expected()), // items
+            null // nextPageToken
+      );
    }
 }

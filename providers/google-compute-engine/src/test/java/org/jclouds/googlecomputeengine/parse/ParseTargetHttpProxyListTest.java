@@ -22,13 +22,13 @@ import javax.ws.rs.Consumes;
 import javax.ws.rs.core.MediaType;
 
 import org.jclouds.date.internal.SimpleDateFormatDateService;
-import org.jclouds.googlecomputeengine.domain.ListPage;
-import org.jclouds.googlecomputeengine.domain.Resource;
+import org.jclouds.googlecloud.domain.ForwardingListPage;
+import org.jclouds.googlecloud.domain.ListPage;
 import org.jclouds.googlecomputeengine.domain.TargetHttpProxy;
 import org.jclouds.googlecomputeengine.internal.BaseGoogleComputeEngineParseTest;
 import org.testng.annotations.Test;
 
-import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.ImmutableList;
 
 @Test(groups = "unit")
 public class ParseTargetHttpProxyListTest extends BaseGoogleComputeEngineParseTest<ListPage<TargetHttpProxy>> {
@@ -41,22 +41,17 @@ public class ParseTargetHttpProxyListTest extends BaseGoogleComputeEngineParseTe
    @Override
    @Consumes(MediaType.APPLICATION_JSON)
    public ListPage<TargetHttpProxy> expected() {
-      return ListPage.<TargetHttpProxy>builder()
-              .kind(Resource.Kind.TARGET_HTTP_PROXY_LIST)
-              .id("projects/myproject/targetHttpProxies")
-              .selfLink(URI.create("https://www.googleapis.com/compute/v1/projects/myproject/global/targetHttpProxies"))
-              .items(ImmutableSet.of(
-                      new ParseTargetHttpProxyTest().expected()
-                      , TargetHttpProxy.builder()
-                      .id("13050421646334304116")
-                      .creationTimestamp(new SimpleDateFormatDateService().iso8601DateParse("2012-11-25T01:38:48.306"))
-                      .selfLink(URI.create("https://www.googleapis" +
-                              ".com/compute/v1/projects/myproject/global/targetHttpProxies/jclouds-test-2"))
-                      .name("jclouds-test-2")
-                      .description("Simple proxy")
-                      .urlMap(URI.create("https://www.googleapis.com/compute/v1/projects/myproject/global/urlMaps/jclouds-test-2"))
-                      .build()
-              ))
-              .build();
+      return ForwardingListPage.create(
+            ImmutableList.of(
+                  new ParseTargetHttpProxyTest().expected(),
+                  TargetHttpProxy.create("13050421646334304116", // id
+                        new SimpleDateFormatDateService().iso8601DateParse("2012-11-25T01:38:48.306"), // creationTimestamp
+                        URI.create("https://www.googleapis" +
+                              ".com/compute/v1/projects/myproject/global/targetHttpProxies/jclouds-test-2"), // selfLink
+                        "jclouds-test-2", // name
+                        "Simple proxy", // description
+                        URI.create("https://www.googleapis.com/compute/v1/projects/myproject/global/urlMaps/jclouds-test-2"))), // urlMap
+                  null // nextPageToken d
+            );
    }
 }
