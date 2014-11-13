@@ -55,6 +55,7 @@ public class OAuthTestUtils {
       return properties;
    }
 
+   // TODO: move to jclouds-core
    public static String setCredential(Properties overrides, String key) {
       String val = null;
       String credentialFromFile = null;
