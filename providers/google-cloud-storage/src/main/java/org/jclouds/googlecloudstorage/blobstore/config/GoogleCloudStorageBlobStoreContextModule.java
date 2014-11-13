@@ -14,18 +14,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jclouds.googlecloudstorage;
+package org.jclouds.googlecloudstorage.blobstore.config;
 
-import org.jclouds.View;
-import org.jclouds.apis.internal.BaseApiMetadataTest;
-import org.testng.annotations.Test;
+import org.jclouds.blobstore.BlobStore;
+import org.jclouds.blobstore.attr.ConsistencyModel;
+import org.jclouds.googlecloudstorage.blobstore.GCSBlobStore;
 
-import com.google.common.collect.ImmutableSet;
-import com.google.common.reflect.TypeToken;
+import com.google.inject.AbstractModule;
+import com.google.inject.Scopes;
 
-@Test(groups = "unit", testName = "GoogleStorageApiMetadataTest")
-public class GoogleCloudStorageApiMetadataTest extends BaseApiMetadataTest {
-   public GoogleCloudStorageApiMetadataTest() {
-      super(new GoogleCloudStorageApiMetadata(), ImmutableSet.<TypeToken<? extends View>> of());
+public class GoogleCloudStorageBlobStoreContextModule extends AbstractModule {
+
+   @Override
+   protected void configure() {
+      bind(ConsistencyModel.class).toInstance(ConsistencyModel.EVENTUAL);
+      bind(BlobStore.class).to(GCSBlobStore.class).in(Scopes.SINGLETON);
    }
 }

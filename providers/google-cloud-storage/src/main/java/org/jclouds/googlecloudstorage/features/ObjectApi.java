@@ -32,11 +32,10 @@ import javax.ws.rs.Produces;
 import org.jclouds.Fallbacks.FalseOnNotFoundOr404;
 import org.jclouds.Fallbacks.NullOnNotFoundOr404;
 import org.jclouds.Fallbacks.TrueOnNotFoundOr404;
-import org.jclouds.googlecloudstorage.GoogleCloudStorageFallbacks.EmptyListPageOnNotFoundOr404;
 import org.jclouds.googlecloudstorage.binders.MultipartUploadBinder;
 import org.jclouds.googlecloudstorage.binders.UploadBinder;
 import org.jclouds.googlecloudstorage.domain.GCSObject;
-import org.jclouds.googlecloudstorage.domain.ListPage;
+import org.jclouds.googlecloudstorage.domain.ListPageWithPrefixes;
 import org.jclouds.googlecloudstorage.domain.templates.ComposeObjectTemplate;
 import org.jclouds.googlecloudstorage.domain.templates.ObjectTemplate;
 import org.jclouds.googlecloudstorage.options.ComposeObjectOptions;
@@ -212,7 +211,7 @@ public interface ObjectApi {
     * @param objectName
     *           Name of the object
     * @param options
-    *           Supply {@link DeletObjectOptions} with optional query parameters
+    *           Supply {@link DeleteObjectOptions} with optional query parameters
     */
    @Named("Object:delete")
    @DELETE
@@ -226,15 +225,12 @@ public interface ObjectApi {
     *
     * @param bucketName
     *           Name of the bucket in which to look for objects.
-    *
-    * @return a {@link ListPage<Object>}
     */
    @Named("Object:list")
    @GET
    @Consumes(APPLICATION_JSON)
    @Path("storage/v1/b/{bucket}/o")
-   @Fallback(EmptyListPageOnNotFoundOr404.class)
-   ListPage<GCSObject> listObjects(@PathParam("bucket") String bucketName);
+   ListPageWithPrefixes<GCSObject> listObjects(@PathParam("bucket") String bucketName);
 
    /**
     * Retrieves a list of objects matching the criteria.
@@ -249,8 +245,7 @@ public interface ObjectApi {
    @GET
    @Consumes(APPLICATION_JSON)
    @Path("storage/v1/b/{bucket}/o")
-   @Fallback(EmptyListPageOnNotFoundOr404.class)
-   ListPage<GCSObject> listObjects(@PathParam("bucket") String bucketName, ListObjectOptions options);
+   ListPageWithPrefixes<GCSObject> listObjects(@PathParam("bucket") String bucketName, ListObjectOptions options);
 
    /**
     * Updates an object metadata

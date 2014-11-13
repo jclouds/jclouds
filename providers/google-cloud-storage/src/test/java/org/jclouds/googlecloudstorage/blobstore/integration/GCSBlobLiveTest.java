@@ -21,10 +21,12 @@ import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
 
 import java.io.IOException;
+import java.util.Properties;
 
 import org.jclouds.blobstore.BlobStore;
 import org.jclouds.blobstore.domain.Blob;
 import org.jclouds.blobstore.integration.internal.BaseBlobLiveTest;
+import org.jclouds.googlecloud.internal.TestProperties;
 import org.jclouds.http.HttpRequest;
 import org.jclouds.http.HttpResponse;
 import org.jclouds.http.internal.PayloadEnclosingImpl;
@@ -48,6 +50,10 @@ public class GCSBlobLiveTest extends BaseBlobLiveTest {
 
    public GCSBlobLiveTest() {
       provider = "google-cloud-storage";
+   }
+
+   @Override protected Properties setupProperties() {
+      return TestProperties.apply(provider, super.setupProperties());
    }
 
    @Override

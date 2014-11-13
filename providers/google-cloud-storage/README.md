@@ -1,15 +1,18 @@
 jclouds Google Cloud Storage Provider
-===========================================================
+======
 Make sure both Google Cloud Storage and Google Cloud Storage JSON API are enabled for the project
 (check from Developers Console -> Api&auth -> APIs)
 
-* Q. What is the identity for GCE?
+FAQ:
+--------
 
-A. the identity is the developer email which can be obtained from the admin GUI. Its usually something in the form: <my account id>@developer.gserviceaccount.com
+* Q. What is the identity for Google Cloud Storage?
 
-* Q. What is the credential for GCE
+A. the identity is the developer email which can be obtained from the admin GUI. Its usually something in the form: [PROJECT_ID](https://cloud.google.com/compute/docs/overview#projectids)@developer.gserviceaccount.com
 
-A. the credential is a private key, in pem format. It can be extracted from the p12 keystore that is obtained when creating a "Service Account" (in the GUI: Developers Console(For the project) -> APIs and Auth -> Create New Client ID -> "Service Account"
+* Q. What is the credential for Google Cloud Storage
+
+A. the credential is a private key, in pem format. It can be extracted from the p12 keystore that is obtained when creating a "Service Account" (in the GUI: Google apis console > Api Access > Create another client ID > "Service Account"
 
 * Q. How to convert a p12 keystore into a pem format jclouds Google Cloud Storage can handle:
 
@@ -25,23 +28,24 @@ The last file (<my_key>.pem) should contain the pk that needs to be passed to `C
 
 
 Running the live tests:
----------------------------------------------------------------
+--------
 
 1. Place the following in your ~/.m2/settings.xml in a profile enabled when live:
-
 ```
-<properties>
-    <test.google-cloud-storage.identity>Email address associated with service account</test.google-cloud-storage.identity>
-    <!-- this text is literally from your <my_key>.pem -->
+    <test.google-cloud-storage.identity>PROJECT_ID@developer.gserviceaccount.com</test.google-cloud-storage.identity>
     <test.google-cloud-storage.credential>-----BEGIN RSA PRIVATE KEY-----
 MIICXgIBAAKBgQRRbRqVDtJLN1MO/xJoKqZuphDeBh5jIKueW3aNIiWs1XFcct+h
-...
+-- this text is literally from your <my_key>.pem
 aH7xmpHSTbbXmQkuuv+z8EKijigprd/FoJpTX1f5/R+4wQ==
 -----END RSA PRIVATE KEY-----</test.google-cloud-storage.credential>
-    <test.google-cloud-storage.project-number>123451234</test.google-cloud-storage.project-number>
-</properties>
+  </properties>
+```
+Or, if using an existing OAuth Bearer Token for authentication.
+```
+    <test.google-cloud-storage.identity>PROJECT_ID@developer.gserviceaccount.com</test.google-cloud-storage.identity>
+    <test.google-cloud-storage.credential>EXISTING_BEARER_TOKEN</test.google-cloud-storage.credential>
+    <test.jclouds.oauth.credential-type>bearerTokenCredentials</test.jclouds.oauth.credential-type>
+  </properties>
 ```
 
-Example identity :- 123451234-abcd01234efgh@developer.gserviceaccount.com (NUMERIC_PREFIX-ALPHANEUMERIC_SUFFIX@developer.gserviceaccount.com)
-
-2. mvn integration-test -pl google-cloud-storage -Plive
+2. mvn clean install -Plive 

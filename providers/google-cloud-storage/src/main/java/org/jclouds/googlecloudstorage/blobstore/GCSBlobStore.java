@@ -43,6 +43,8 @@ import org.jclouds.blobstore.strategy.internal.FetchBlobMetadata;
 import org.jclouds.blobstore.util.BlobUtils;
 import org.jclouds.collect.Memoized;
 import org.jclouds.domain.Location;
+import org.jclouds.googlecloud.config.CurrentProject;
+import org.jclouds.googlecloud.domain.ListPage;
 import org.jclouds.googlecloudstorage.GoogleCloudStorageApi;
 import org.jclouds.googlecloudstorage.blobstore.functions.BlobMetadataToObjectTemplate;
 import org.jclouds.googlecloudstorage.blobstore.functions.BlobStoreListContainerOptionsToListObjectOptions;
@@ -50,11 +52,10 @@ import org.jclouds.googlecloudstorage.blobstore.functions.BucketToStorageMetadat
 import org.jclouds.googlecloudstorage.blobstore.functions.ObjectListToStorageMetadata;
 import org.jclouds.googlecloudstorage.blobstore.functions.ObjectToBlobMetadata;
 import org.jclouds.googlecloudstorage.blobstore.strategy.internal.MultipartUploadStrategy;
-import org.jclouds.googlecloudstorage.config.UserProject;
 import org.jclouds.googlecloudstorage.domain.Bucket;
 import org.jclouds.googlecloudstorage.domain.DomainResourceReferences;
 import org.jclouds.googlecloudstorage.domain.GCSObject;
-import org.jclouds.googlecloudstorage.domain.ListPage;
+import org.jclouds.googlecloudstorage.domain.ListPageWithPrefixes;
 import org.jclouds.googlecloudstorage.domain.templates.BucketTemplate;
 import org.jclouds.googlecloudstorage.domain.templates.ObjectAccessControlsTemplate;
 import org.jclouds.googlecloudstorage.domain.templates.ObjectTemplate;
@@ -89,7 +90,7 @@ public final class GCSBlobStore extends BaseBlobStore {
             Provider<FetchBlobMetadata> fetchBlobMetadataProvider,
             BlobMetadataToObjectTemplate blobMetadataToObjectTemplate,
             BlobStoreListContainerOptionsToListObjectOptions listContainerOptionsToListObjectOptions,
-            MultipartUploadStrategy multipartUploadStrategy, @UserProject Supplier<String> projectId) {
+            MultipartUploadStrategy multipartUploadStrategy, @CurrentProject Supplier<String> projectId) {
       super(context, blobUtils, defaultLocation, locations);
       this.api = api;
       this.bucketToStorageMetadata = bucketToStorageMetadata;
@@ -152,7 +153,7 @@ public final class GCSBlobStore extends BaseBlobStore {
    /** Returns list of of all the objects */
    @Override
    public PageSet<? extends StorageMetadata> list(String container) {
-      ListPage<GCSObject> gcsList = api.getObjectApi().listObjects(container);
+      ListPageWithPrefixes<GCSObject> gcsList = api.getObjectApi().listObjects(container);
       PageSet<? extends StorageMetadata> list = objectListToStorageMetadata.apply(gcsList);
       return list;
    }
@@ -161,7 +162,7 @@ public final class GCSBlobStore extends BaseBlobStore {
    public PageSet<? extends StorageMetadata> list(String container, ListContainerOptions options) {
       if (options != null && options != ListContainerOptions.NONE) {
          ListObjectOptions listOptions = listContainerOptionsToListObjectOptions.apply(options);
-         ListPage<GCSObject> gcsList = api.getObjectApi().listObjects(container, listOptions);
+         ListPageWithPrefixes<GCSObject> gcsList = api.getObjectApi().listObjects(container, listOptions);
          PageSet<? extends StorageMetadata> list = objectListToStorageMetadata.apply(gcsList);
          return options.isDetailed() ? fetchBlobMetadataProvider.get().setContainerName(container).apply(list) : list;
       } else {
@@ -241,7 +242,7 @@ public final class GCSBlobStore extends BaseBlobStore {
 
    @Override
    protected boolean deleteAndVerifyContainerGone(String container) {
-      ListPage<GCSObject> list = api.getObjectApi().listObjects(container);
+      ListPageWithPrefixes<GCSObject> list = api.getObjectApi().listObjects(container);
       if (list == null) {
          return api.getBucketApi().deleteBucket(container);
       }

@@ -27,22 +27,23 @@ import org.jclouds.blobstore.domain.StorageType;
 import org.jclouds.blobstore.domain.internal.PageSetImpl;
 import org.jclouds.blobstore.domain.internal.StorageMetadataImpl;
 import org.jclouds.googlecloudstorage.domain.GCSObject;
-import org.jclouds.googlecloudstorage.domain.ListPage;
+import org.jclouds.googlecloudstorage.domain.ListPageWithPrefixes;
 
 import com.google.common.base.Function;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Iterables;
 
-public class ObjectListToStorageMetadata implements Function<ListPage<GCSObject>, PageSet<? extends StorageMetadata>> {
+public class ObjectListToStorageMetadata
+      implements Function<ListPageWithPrefixes<GCSObject>, PageSet<? extends StorageMetadata>> {
    private final ObjectToBlobMetadata object2blobMd;
 
    @Inject public ObjectListToStorageMetadata(ObjectToBlobMetadata object2blobMd) {
       this.object2blobMd = object2blobMd;
    }
 
-   public PageSet<? extends StorageMetadata> apply(ListPage<GCSObject> from) {
+   public PageSet<? extends StorageMetadata> apply(ListPageWithPrefixes<GCSObject> from) {
       if (from == null) {
-         from = ListPage.create(null, null, null);
+         from = ListPageWithPrefixes.create(null, null, null);
       }
 
       return new PageSetImpl<StorageMetadata>(Iterables.transform(Iterables.transform(from, object2blobMd),

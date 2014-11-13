@@ -16,12 +16,12 @@
  */
 package org.jclouds.googlecloudstorage.blobstore.integration;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotEquals;
 import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertNull;
 import static org.testng.Assert.assertTrue;
-import static org.assertj.core.api.Assertions.assertThat;
 
 import java.io.File;
 import java.io.IOException;
@@ -37,6 +37,7 @@ import org.jclouds.blobstore.domain.PageSet;
 import org.jclouds.blobstore.domain.StorageMetadata;
 import org.jclouds.blobstore.integration.internal.BaseBlobIntegrationTest;
 import org.jclouds.blobstore.options.PutOptions;
+import org.jclouds.googlecloud.internal.TestProperties;
 import org.jclouds.googlecloudstorage.blobstore.strategy.internal.MultipartUpload;
 import org.jclouds.io.Payloads;
 import org.jclouds.io.payloads.ByteSourcePayload;
@@ -58,15 +59,14 @@ public class GCSBlobIntegrationLiveTest extends BaseBlobIntegrationTest {
 
    private long PART_SIZE = MultipartUpload.MIN_PART_SIZE;
 
-   @Override
-   protected Properties setupProperties() {
-      Properties properties = super.setupProperties();
-      properties.put("jclouds.mpu.parts.size", 2 * 1024 * 1024);
-      return properties;
-   }
-
    public GCSBlobIntegrationLiveTest() throws IOException {
       provider = "google-cloud-storage";
+   }
+
+   @Override protected Properties setupProperties() {
+      Properties properties = super.setupProperties();
+      properties.put("jclouds.mpu.parts.size", 2 * 1024 * 1024);
+      return TestProperties.apply(provider, properties);
    }
 
    @Override

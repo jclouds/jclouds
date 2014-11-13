@@ -17,7 +17,6 @@
 package org.jclouds.googlecloudstorage;
 
 import static org.jclouds.Constants.PROPERTY_SESSION_INTERVAL;
-import static org.jclouds.googlecloudstorage.reference.GoogleCloudStorageConstants.GCS_PROVIDER_NAME;
 import static org.jclouds.googlecloudstorage.reference.GoogleCloudStorageConstants.OPERATION_COMPLETE_INTERVAL;
 import static org.jclouds.googlecloudstorage.reference.GoogleCloudStorageConstants.OPERATION_COMPLETE_TIMEOUT;
 import static org.jclouds.oauth.v2.config.OAuthProperties.AUDIENCE;
@@ -27,20 +26,18 @@ import static org.jclouds.reflect.Reflection2.typeToken;
 import java.net.URI;
 import java.util.Properties;
 
-import org.jclouds.apis.ApiMetadata;
 import org.jclouds.blobstore.BlobStoreContext;
-import org.jclouds.googlecloudstorage.blobstore.config.GCSBlobStoreContextModule;
+import org.jclouds.googlecloud.config.CurrentProject;
+import org.jclouds.googlecloudstorage.blobstore.config.GoogleCloudStorageBlobStoreContextModule;
 import org.jclouds.googlecloudstorage.config.GoogleCloudStorageHttpApiModule;
 import org.jclouds.googlecloudstorage.config.GoogleCloudStorageParserModule;
 import org.jclouds.oauth.v2.config.OAuthAuthenticationModule;
 import org.jclouds.oauth.v2.config.OAuthModule;
 import org.jclouds.rest.internal.BaseHttpApiMetadata;
 
-import com.google.auto.service.AutoService;
 import com.google.common.collect.ImmutableSet;
 import com.google.inject.Module;
 
-@AutoService(ApiMetadata.class)
 public class GoogleCloudStorageApiMetadata extends BaseHttpApiMetadata<GoogleCloudStorageApi> {
 
    @Override
@@ -69,20 +66,21 @@ public class GoogleCloudStorageApiMetadata extends BaseHttpApiMetadata<GoogleClo
 
    public static class Builder extends BaseHttpApiMetadata.Builder<GoogleCloudStorageApi, Builder> {
       protected Builder() {
-         id(GCS_PROVIDER_NAME)
-                  .name("Google Cloud Storage Api ")
-                  .identityName("Email associated with the Google API client_id")
-                  .credentialName("Private key literal associated with the Google API client_id")
-                  .documentation(URI.create("https://developers.google.com/storage/docs/json_api"))
-                  .version("v1")
-                  .defaultEndpoint("https://www.googleapis.com")
-                  .defaultProperties(GoogleCloudStorageApiMetadata.defaultProperties())
-                  .view(typeToken(BlobStoreContext.class))
-                  .defaultModules(
-                           ImmutableSet.<Class<? extends Module>> of(GoogleCloudStorageParserModule.class,
-                                 OAuthAuthenticationModule.class, OAuthModule.class,
-                                 GoogleCloudStorageHttpApiModule.class, GCSBlobStoreContextModule.class));
-
+         id("google-cloud-storage")
+         .name("Google Cloud Storage Api")
+         .identityName(CurrentProject.ClientEmail.DESCRIPTION)
+         .credentialName("PEM encoded P12 private key associated with client_email")
+         .documentation(URI.create("https://developers.google.com/storage/docs/json_api"))
+         .version("v1")
+         .defaultEndpoint("https://www.googleapis.com")
+         .defaultProperties(GoogleCloudStorageApiMetadata.defaultProperties())
+         .view(typeToken(BlobStoreContext.class))
+         .defaultModules(ImmutableSet.<Class<? extends Module>> builder()
+                 .add(GoogleCloudStorageParserModule.class)
+                 .add(OAuthAuthenticationModule.class)
+                 .add(OAuthModule.class)
+                 .add(GoogleCloudStorageHttpApiModule.class)
+                 .add(GoogleCloudStorageBlobStoreContextModule.class).build());
       }
 
       @Override

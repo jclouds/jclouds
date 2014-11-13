@@ -22,6 +22,7 @@ import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNull;
 
 import java.io.IOException;
+import java.util.Properties;
 
 import javax.ws.rs.core.MediaType;
 
@@ -30,6 +31,7 @@ import org.jclouds.blobstore.domain.PageSet;
 import org.jclouds.blobstore.domain.StorageMetadata;
 import org.jclouds.blobstore.integration.internal.BaseContainerIntegrationTest;
 import org.jclouds.blobstore.options.ListContainerOptions;
+import org.jclouds.googlecloud.internal.TestProperties;
 import org.testng.SkipException;
 import org.testng.annotations.Test;
 
@@ -41,6 +43,10 @@ public class GCSContainerIntegrationLiveTest extends BaseContainerIntegrationTes
 
    public GCSContainerIntegrationLiveTest() {
       provider = "google-cloud-storage";
+   }
+
+   @Override protected Properties setupProperties() {
+      return TestProperties.apply(provider, super.setupProperties());
    }
 
    @Override
@@ -93,5 +99,4 @@ public class GCSContainerIntegrationLiveTest extends BaseContainerIntegrationTes
       // GCS does not support directories, rather it supports prefixes which look like directories.
       throw new SkipException("directories are not supported in GCS");
    }
-
 }

@@ -33,7 +33,7 @@ import org.jclouds.googlecloudstorage.domain.DomainResourceReferences.Destinatio
 import org.jclouds.googlecloudstorage.domain.DomainResourceReferences.ObjectRole;
 import org.jclouds.googlecloudstorage.domain.DomainResourceReferences.Projection;
 import org.jclouds.googlecloudstorage.domain.GCSObject;
-import org.jclouds.googlecloudstorage.domain.ListPage;
+import org.jclouds.googlecloudstorage.domain.ListPageWithPrefixes;
 import org.jclouds.googlecloudstorage.domain.ObjectAccessControls;
 import org.jclouds.googlecloudstorage.domain.templates.BucketTemplate;
 import org.jclouds.googlecloudstorage.domain.templates.ComposeObjectTemplate;
@@ -262,7 +262,7 @@ public class ObjectApiLiveTest extends BaseGoogleCloudStorageApiLiveTest {
 
    @Test(groups = "live", dependsOnMethods = "testComposeObjectWithOptions")
    public void listObjects() {
-      ListPage<GCSObject> list = api().listObjects(BUCKET_NAME);
+      ListPageWithPrefixes<GCSObject> list = api().listObjects(BUCKET_NAME);
 
       assertNotNull(list);
       assertEquals(list.get(0) instanceof GCSObject, true);
@@ -271,7 +271,7 @@ public class ObjectApiLiveTest extends BaseGoogleCloudStorageApiLiveTest {
    @Test(groups = "live", dependsOnMethods = "testComposeObjectWithOptions")
    public void testListObjectsWithOptions() {
       ListObjectOptions options = new ListObjectOptions().maxResults(1);
-      ListPage<GCSObject> list = api().listObjects(BUCKET_NAME, options);
+      ListPageWithPrefixes<GCSObject> list = api().listObjects(BUCKET_NAME, options);
 
       while (list.nextPageToken() != null) {
          assertNotNull(list);

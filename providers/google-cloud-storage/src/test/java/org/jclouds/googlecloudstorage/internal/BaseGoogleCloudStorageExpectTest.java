@@ -39,24 +39,22 @@ import java.security.NoSuchAlgorithmException;
 import java.security.PrivateKey;
 import java.security.PublicKey;
 import java.security.SecureRandom;
-import java.security.interfaces.RSAPublicKey;
 import java.security.spec.InvalidKeySpecException;
 import java.util.Properties;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import javax.ws.rs.core.MediaType;
 
-import org.jclouds.apis.ApiMetadata;
 import org.jclouds.crypto.Crypto;
-import org.jclouds.googlecloudstorage.GoogleCloudStorageApiMetadata;
+import org.jclouds.googlecloudstorage.GoogleCloudStorageProviderMetadata;
 import org.jclouds.http.HttpRequest;
 import org.jclouds.http.HttpResponse;
 import org.jclouds.io.Payload;
 import org.jclouds.io.payloads.ByteSourcePayload;
 import org.jclouds.oauth.v2.functions.BuildTokenRequest;
 import org.jclouds.oauth.v2.functions.BuildTokenRequest.TestBuildTokenRequest;
+import org.jclouds.providers.ProviderMetadata;
 import org.jclouds.rest.internal.BaseRestApiExpectTest;
-import org.jclouds.ssh.SshKeys;
 
 import com.google.common.base.Joiner;
 import com.google.common.base.Supplier;
@@ -86,14 +84,11 @@ public class BaseGoogleCloudStorageExpectTest<T> extends BaseRestApiExpectTest<T
             .payload(payloadFromString("{\n" + "  \"access_token\" : \"" + TOKEN + "\",\n"
                      + "  \"token_type\" : \"Bearer\",\n" + "  \"expires_in\" : 3600\n" + "}")).build();
 
-   protected String openSshKey;
-
-   public BaseGoogleCloudStorageExpectTest() {
+   protected BaseGoogleCloudStorageExpectTest() {
       provider = "google-cloud-storage";
    }
 
-   @Override
-   protected Module createModule() {
+   @Override protected Module createModule() {
       return new Module() {
          @Override
          public void configure(Binder binder) {
@@ -106,7 +101,6 @@ public class BaseGoogleCloudStorageExpectTest<T> extends BaseRestApiExpectTest<T
                PublicKey publicKey = keyfactory
                         .generatePublic(publicKeySpec(ByteSource.wrap(PUBLIC_KEY.getBytes(UTF_8))));
                KeyPair keyPair = new KeyPair(publicKey, privateKey);
-               openSshKey = SshKeys.encodeAsOpenSSH(RSAPublicKey.class.cast(publicKey));
                final Crypto crypto = createMock(Crypto.class);
                KeyPairGenerator rsaKeyPairGenerator = createMock(KeyPairGenerator.class);
                final SecureRandom secureRandom = createMock(SecureRandom.class);
@@ -137,16 +131,15 @@ public class BaseGoogleCloudStorageExpectTest<T> extends BaseRestApiExpectTest<T
       };
    }
 
-   @Override
-   protected Properties setupProperties() {
+   @Override protected Properties setupProperties() {
       Properties props = super.setupProperties();
       // use no sig algorithm for expect tests (means no credential is required either)
       props.put(JWS_ALG, NONE);
       return props;
    }
 
-   @Override protected ApiMetadata createApiMetadata(){
-      return new GoogleCloudStorageApiMetadata();
+   @Override protected ProviderMetadata createProviderMetadata(){
+      return new GoogleCloudStorageProviderMetadata();
    }
 
    @Override

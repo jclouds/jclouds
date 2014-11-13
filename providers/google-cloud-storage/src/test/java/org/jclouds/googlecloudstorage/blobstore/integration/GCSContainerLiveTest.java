@@ -16,7 +16,10 @@
  */
 package org.jclouds.googlecloudstorage.blobstore.integration;
 
+import java.util.Properties;
+
 import org.jclouds.blobstore.integration.internal.BaseContainerLiveTest;
+import org.jclouds.googlecloud.internal.TestProperties;
 import org.testng.annotations.Test;
 
 @Test(groups = { "live" })
@@ -24,5 +27,9 @@ public class GCSContainerLiveTest extends BaseContainerLiveTest {
 
    public GCSContainerLiveTest() {
       provider = "google-cloud-storage";
+   }
+
+   @Override protected Properties setupProperties() {
+      return TestProperties.apply(provider, super.setupProperties());
    }
 }

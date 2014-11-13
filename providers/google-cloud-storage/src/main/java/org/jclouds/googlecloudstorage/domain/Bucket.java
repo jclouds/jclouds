@@ -17,7 +17,7 @@
 
 package org.jclouds.googlecloudstorage.domain;
 
-import static org.jclouds.googlecloudstorage.internal.NullSafeCopies.copyOf;
+import static org.jclouds.googlecloud.internal.NullSafeCopies.copyOf;
 
 import java.util.Date;
 import java.util.List;
@@ -151,7 +151,7 @@ public abstract class Bucket {
 
    public abstract List<ObjectAccessControls> defaultObjectAcl();
 
-   public abstract Owner owner();
+   @Nullable public abstract Owner owner();
 
    @Nullable public abstract Location location();
 

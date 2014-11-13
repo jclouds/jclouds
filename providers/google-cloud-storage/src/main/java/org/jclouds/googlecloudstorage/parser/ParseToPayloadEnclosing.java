@@ -18,6 +18,7 @@ package org.jclouds.googlecloudstorage.parser;
 
 import org.jclouds.http.HttpResponse;
 import org.jclouds.http.internal.PayloadEnclosingImpl;
+
 import com.google.common.base.Function;
 
 public class ParseToPayloadEnclosing implements Function<HttpResponse, PayloadEnclosingImpl> {

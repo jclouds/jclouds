@@ -118,8 +118,9 @@ public class BucketApiExpectTest extends BaseGoogleCloudStorageApiExpectTest {
 
    }
 
-   public void testListBucketResponseIs4xx() throws Exception {
-      HttpResponse listResponse = HttpResponse.builder().statusCode(404).build();
+   @Test(enabled = false)
+   public void listBucketEmpty() throws Exception {
+      HttpResponse listResponse = null; // TODO: get a copy of an empty bucket response
 
       BucketApi api = requestsSendResponses(requestForScopes(STORAGE_READONLY_SCOPE), TOKEN_RESPONSE,
                LIST_BUCKET_REQUEST, listResponse).getBucketApi();

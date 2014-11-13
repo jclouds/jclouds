@@ -22,10 +22,11 @@ import javax.ws.rs.Consumes;
 import javax.ws.rs.core.MediaType;
 
 import org.jclouds.date.internal.SimpleDateFormatDateService;
+import org.jclouds.googlecloud.domain.ForwardingListPage;
+import org.jclouds.googlecloud.domain.ListPage;
 import org.jclouds.googlecloudstorage.domain.Bucket;
 import org.jclouds.googlecloudstorage.domain.DomainResourceReferences.Location;
 import org.jclouds.googlecloudstorage.domain.DomainResourceReferences.StorageClass;
-import org.jclouds.googlecloudstorage.domain.ListPage;
 import org.jclouds.googlecloudstorage.domain.Owner;
 import org.jclouds.googlecloudstorage.internal.BaseGoogleCloudStorageParseTest;
 
@@ -55,6 +56,6 @@ public class NoAclBucketListTest extends BaseGoogleCloudStorageParseTest<ListPag
 
    @Override @Consumes(MediaType.APPLICATION_JSON)
    public ListPage<Bucket> expected() {
-      return ListPage.create(Arrays.asList(item1), "bhashbucket", null);
+      return ForwardingListPage.create(Arrays.asList(item1), "bhashbucket");
    }
 }

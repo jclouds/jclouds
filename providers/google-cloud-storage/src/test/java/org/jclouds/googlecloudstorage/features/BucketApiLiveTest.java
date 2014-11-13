@@ -26,6 +26,7 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
+import org.jclouds.googlecloud.domain.ListPage;
 import org.jclouds.googlecloudstorage.domain.Bucket;
 import org.jclouds.googlecloudstorage.domain.Bucket.Cors;
 import org.jclouds.googlecloudstorage.domain.Bucket.Logging;
@@ -36,7 +37,6 @@ import org.jclouds.googlecloudstorage.domain.DomainResourceReferences.Location;
 import org.jclouds.googlecloudstorage.domain.DomainResourceReferences.ObjectRole;
 import org.jclouds.googlecloudstorage.domain.DomainResourceReferences.Projection;
 import org.jclouds.googlecloudstorage.domain.DomainResourceReferences.StorageClass;
-import org.jclouds.googlecloudstorage.domain.ListPage;
 import org.jclouds.googlecloudstorage.domain.ObjectAccessControls;
 import org.jclouds.googlecloudstorage.domain.templates.BucketTemplate;
 import org.jclouds.googlecloudstorage.internal.BaseGoogleCloudStorageApiLiveTest;
@@ -182,7 +182,6 @@ public class BucketApiLiveTest extends BaseGoogleCloudStorageApiLiveTest {
 
       assertNotNull(iteratedBucket);
       assertSame(bucketAsList.size(), 1);
-
    }
 
    @Test(groups = "live", dependsOnMethods = "testCreateBucket")

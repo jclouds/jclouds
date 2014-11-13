@@ -14,26 +14,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jclouds.googlecloudstorage.internal;
+package org.jclouds.googlecloudstorage;
 
-import java.util.List;
-import java.util.Map;
+import org.jclouds.providers.internal.BaseProviderMetadataTest;
+import org.testng.annotations.Test;
 
-import org.jclouds.javax.annotation.Nullable;
-
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableMap;
-
-public class NullSafeCopies {
-
-   public static <K, V> Map<K, V> copyOf(@Nullable Map<K, V> map) {
-      return map != null ? ImmutableMap.copyOf(map) : ImmutableMap.<K, V>of();
-   }
-
-   public static <E> List<E> copyOf(@Nullable List<E> list) {
-      return list != null ? ImmutableList.copyOf(list) : ImmutableList.<E>of();
-   }
-
-   private NullSafeCopies() {
+/**
+ * Tests that GoogleComputeProviderMetadata is properly registered in ServiceLoader
+ * <p/>
+ * <pre>
+ * META-INF/services/org.jclouds.providers.ProviderMetadata
+ * </pre>
+ */
+@Test(groups = "unit", testName = "GoogleCloudStorageProviderMetadataTest")
+public class GoogleCloudStorageProviderMetadataTest extends BaseProviderMetadataTest {
+   public GoogleCloudStorageProviderMetadataTest() {
+      super(new GoogleCloudStorageProviderMetadata(), new GoogleCloudStorageApiMetadata());
    }
 }

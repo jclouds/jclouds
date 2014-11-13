@@ -23,8 +23,6 @@ public final class GoogleCloudStorageConstants {
    private GoogleCloudStorageConstants() {
    }
 
-   public static final String GCS_PROVIDER_NAME = "google-cloud-storage";
-
    /**
     * The total time, in msecs, to wait for an operation to complete.
     */

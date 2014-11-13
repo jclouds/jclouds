@@ -18,14 +18,8 @@ package org.jclouds.googlecloudstorage;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Throwables.propagate;
-import static org.jclouds.Fallbacks.valOnNotFoundOr404;
-
-import java.util.Iterator;
 
 import org.jclouds.Fallback;
-import org.jclouds.googlecloudstorage.domain.ListPage;
-
-import com.google.common.collect.Iterators;
 
 public final class GoogleCloudStorageFallbacks {
 
@@ -35,18 +29,6 @@ public final class GoogleCloudStorageFallbacks {
             return null;
          }
          throw propagate(t);
-      }
-   }
-
-   public static final class EmptyListPageOnNotFoundOr404 implements Fallback<Object> {
-      @Override public ListPage<Object> createOrPropagate(Throwable t) throws Exception {
-         return valOnNotFoundOr404(ListPage.create(null, null, null), t);
-      }
-   }
-
-   public static final class EmptyIteratorOnNotFoundOr404 implements Fallback<Object> {
-      @Override public Iterator<Object> createOrPropagate(Throwable t) throws Exception {
-         return valOnNotFoundOr404(Iterators.emptyIterator(), t);
       }
    }
 }

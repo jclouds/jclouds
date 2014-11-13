@@ -19,7 +19,11 @@ package org.jclouds.googlecloudstorage.internal;
 import java.util.Properties;
 
 import org.jclouds.apis.BaseApiLiveTest;
+import org.jclouds.googlecloud.internal.TestProperties;
 import org.jclouds.googlecloudstorage.GoogleCloudStorageApi;
+import org.jclouds.googlecloudstorage.GoogleCloudStorageProviderMetadata;
+import org.jclouds.providers.ProviderMetadata;
+
 import com.google.inject.Injector;
 import com.google.inject.Module;
 
@@ -27,13 +31,20 @@ public class BaseGoogleCloudStorageApiLiveTest extends BaseApiLiveTest<GoogleClo
 
    protected static final String PROJECT_NUMBER = System.getProperty("test.google-cloud-storage.project-number");
 
-   public BaseGoogleCloudStorageApiLiveTest() {
+   protected BaseGoogleCloudStorageApiLiveTest() {
       provider = "google-cloud-storage";
    }
 
-   protected GoogleCloudStorageApi create(Properties props, Iterable<Module> modules) {
+   @Override protected ProviderMetadata createProviderMetadata(){
+      return new GoogleCloudStorageProviderMetadata();
+   }
+
+   @Override protected Properties setupProperties() {
+      return TestProperties.apply(provider, super.setupProperties());
+   }
+
+   @Override protected GoogleCloudStorageApi create(Properties props, Iterable<Module> modules) {
       Injector injector = newBuilder().modules(modules).overrides(props).buildInjector();
       return injector.getInstance(GoogleCloudStorageApi.class);
    }
-
 }

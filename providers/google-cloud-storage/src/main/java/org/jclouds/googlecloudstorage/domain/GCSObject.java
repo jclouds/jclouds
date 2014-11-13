@@ -17,7 +17,7 @@
 
 package org.jclouds.googlecloudstorage.domain;
 
-import static org.jclouds.googlecloudstorage.internal.NullSafeCopies.copyOf;
+import static org.jclouds.googlecloud.internal.NullSafeCopies.copyOf;
 
 import java.net.URI;
 import java.util.Date;

@@ -19,18 +19,16 @@ package org.jclouds.googlecloudstorage.options;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 import org.jclouds.googlecloudstorage.domain.DomainResourceReferences.Projection;
-import org.jclouds.http.options.BaseHttpRequestOptions;
 
-public class ListOptions extends BaseHttpRequestOptions {
+public class ListOptions extends org.jclouds.googlecloud.options.ListOptions {
 
    public ListOptions pageToken(String pageToken) {
       this.queryParameters.put("pageToken", checkNotNull(pageToken, "pageToken"));
       return this;
    }
 
-   public ListOptions maxResults(Integer maxResults) {
-      this.queryParameters.put("maxResults", checkNotNull(maxResults, "maxResults") + "");
-      return this;
+   @Override public ListOptions maxResults(Integer maxResults) {
+      return (ListOptions) super.maxResults(maxResults);
    }
 
    public ListOptions projection(Projection projection) {

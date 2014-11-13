@@ -18,17 +18,21 @@ package org.jclouds.googlecloudstorage.config;
 
 import java.lang.reflect.Type;
 import java.util.Map;
+import java.util.Set;
 
 import javax.inject.Singleton;
 
+import org.jclouds.googlecloud.config.ListPageAdapterFactory;
 import org.jclouds.googlecloudstorage.domain.templates.BucketTemplate;
 import org.jclouds.json.config.GsonModule;
 
 import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.ImmutableSet;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
+import com.google.gson.TypeAdapterFactory;
 import com.google.inject.AbstractModule;
 import com.google.inject.Provides;
 
@@ -42,6 +46,11 @@ public class GoogleCloudStorageParserModule extends AbstractModule {
       return new ImmutableMap.Builder<Type, Object>()
                .put(BucketTemplate.class, new BucketTemplateTypeAdapter())
                .build();
+   }
+
+   // TODO: change jclouds core to use collaborative set bindings
+   @Provides @Singleton Set<TypeAdapterFactory> typeAdapterFactories() {
+      return ImmutableSet.<TypeAdapterFactory>of(new ListPageAdapterFactory());
    }
 
    private static class BucketTemplateTypeAdapter implements JsonSerializer<BucketTemplate> {
