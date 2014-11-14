@@ -43,9 +43,9 @@
     <test.rackspace-cloudfiles-uk.credential>${test.rackspace-uk.credential}</test.rackspace-cloudfiles-uk.credential>
     <jclouds.osgi.export>org.jclouds.rackspace.cloudfiles.uk*;version="${project.version}"</jclouds.osgi.export>
     <jclouds.osgi.import>
-      org.jclouds.rest.internal;version="${jclouds.version}",
+      org.jclouds.rest.internal;version="${project.version}",
       org.jclouds.labs*;version="${project.version}",
-      org.jclouds*;version="${jclouds.version}",
+      org.jclouds*;version="${project.version}",
       *
     </jclouds.osgi.import>
   </properties>

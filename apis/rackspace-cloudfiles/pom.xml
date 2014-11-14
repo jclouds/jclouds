@@ -42,7 +42,7 @@
     <test.rackspace-cloudfiles.identity>FIXME_IDENTITY</test.rackspace-cloudfiles.identity>
     <test.rackspace-cloudfiles.credential>FIXME_CREDENTIALS</test.rackspace-cloudfiles.credential>
     <jclouds.osgi.export>org.jclouds.rackspace.cloudfiles.v1*;version="${project.version}"</jclouds.osgi.export>
-    <jclouds.osgi.import>org.jclouds*;version="${jclouds.version}",*</jclouds.osgi.import>
+    <jclouds.osgi.import>org.jclouds*;version="${project.version}",*</jclouds.osgi.import>
   </properties>
 
   <repositories>
