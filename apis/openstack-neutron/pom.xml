@@ -43,13 +43,8 @@
     <test.openstack-neutron.identity>FIXME_IDENTITY</test.openstack-neutron.identity>
     <test.openstack-neutron.credential>FIXME_CREDENTIALS</test.openstack-neutron.credential>
     <test.jclouds.keystone.credential-type>passwordCredentials</test.jclouds.keystone.credential-type>
-    <jclouds.osgi.export>org.jclouds.openstack.neutron.v2_0*;version="${project.version}"</jclouds.osgi.export>
-    <jclouds.osgi.import>
-      org.jclouds.rest.internal;version="${jclouds.version}",
-      org.jclouds.labs*;version="${project.version}",
-      org.jclouds*;version="${jclouds.version}",
-      *
-    </jclouds.osgi.import>
+    <jclouds.osgi.export>org.jclouds.openstack.neutron.v2*;version="${project.version}"</jclouds.osgi.export>
+    <jclouds.osgi.import>org.jclouds*;version="${project.version}",*</jclouds.osgi.import>
   </properties>
 
   <repositories>
