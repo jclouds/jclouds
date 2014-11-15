@@ -30,6 +30,7 @@ import static org.testng.Assert.assertTrue;
 import static org.testng.Assert.fail;
 
 import java.io.File;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.Collections;
 import java.util.List;
@@ -85,6 +86,30 @@ public abstract class BaseChefApiLiveTest<A extends ChefApi> extends BaseChefLiv
    public void testCreateNewCookbook() throws Exception {
       // Define the file you want in the cookbook
       File file = new File(System.getProperty("user.dir"), "pom.xml");
+      FilePayload content = uploadAndGetFilePayload(file);
+
+      // Create the metadata of the cookbook
+      Metadata metadata = Metadata.builder() //
+            .name(PREFIX) //
+            .version("0.0.0") //
+            .description("Jclouds test uploaded cookbook") //
+            .maintainer("jclouds") //
+            .maintainerEmail("someone@jclouds.org") //
+            .license("Apache 2.0") //
+            .build();
+
+      // Create a new cookbook
+      CookbookVersion cookbook = CookbookVersion.builder(PREFIX, "0.0.0") //
+            .metadata(metadata) //
+            .rootFile(Resource.builder().fromPayload(content).build()) //
+            .attribute(Resource.builder().fromPayload(content).name("default.rb").build())
+            .build();
+
+      // upload the cookbook to the remote server
+      api.updateCookbook(PREFIX, "0.0.0", cookbook);
+   }
+
+   private FilePayload uploadAndGetFilePayload(File file) throws IOException {
       FilePayload content = Payloads.newFilePayload(file);
       content.getContentMetadata().setContentType("application/x-binary");
 
@@ -111,25 +136,7 @@ public abstract class BaseChefApiLiveTest<A extends ChefApi> extends BaseChefLiv
          api.commitSandbox(site.getSandboxId(), false);
          fail("Could not upload content");
       }
-
-      // Create the metadata of the cookbook
-      Metadata metadata = Metadata.builder() //
-            .name(PREFIX) //
-            .version("0.0.0") //
-            .description("Jclouds test uploaded cookbook") //
-            .maintainer("jclouds") //
-            .maintainerEmail("someone@jclouds.org") //
-            .license("Apache 2.0") //
-            .build();
-
-      // Create a new cookbook
-      CookbookVersion cookbook = CookbookVersion.builder(PREFIX, "0.0.0") //
-            .metadata(metadata) //
-            .rootFile(Resource.builder().fromPayload(content).build()) //
-            .build();
-
-      // upload the cookbook to the remote server
-      api.updateCookbook(PREFIX, "0.0.0", cookbook);
+      return content;
    }
 
    public void testListCookbooks() throws Exception {
@@ -158,9 +165,9 @@ public abstract class BaseChefApiLiveTest<A extends ChefApi> extends BaseChefLiv
       Iterable<? extends CookbookVersion> cookbooks = chefService.listCookbookVersions();
       for (CookbookVersion cookbook : cookbooks) {
          for (Resource resource : ImmutableList.<Resource> builder().addAll(cookbook.getDefinitions())
-               .addAll(cookbook.getFiles()).addAll(cookbook.getLibraries()).addAll(cookbook.getSuppliers())
-               .addAll(cookbook.getRecipes()).addAll(cookbook.getResources()).addAll(cookbook.getRootFiles())
-               .addAll(cookbook.getTemplates()).build()) {
+                 .addAll(cookbook.getFiles()).addAll(cookbook.getLibraries()).addAll(cookbook.getSuppliers())
+                 .addAll(cookbook.getRecipes()).addAll(cookbook.getResources()).addAll(cookbook.getRootFiles())
+                 .addAll(cookbook.getTemplates()).addAll(cookbook.getAttributes()).build()) {
 
             InputStream stream = api.getResourceContents(resource);
             assertNotNull(stream, "Resource contents are null for resource: " + resource.getName());
