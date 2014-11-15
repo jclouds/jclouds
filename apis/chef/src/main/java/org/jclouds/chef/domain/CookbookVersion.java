@@ -38,7 +38,7 @@ public class CookbookVersion {
    public static class Builder {
       private String cookbookName;
       private ImmutableSet.Builder<Resource> definitions = ImmutableSet.builder();
-      private ImmutableSet.Builder<Attribute> attributes = ImmutableSet.builder();
+      private ImmutableSet.Builder<Resource> attributes = ImmutableSet.builder();
       private ImmutableSet.Builder<Resource> files = ImmutableSet.builder();
       private Metadata metadata = Metadata.builder().build();
       private ImmutableSet.Builder<Resource> providers = ImmutableSet.builder();
@@ -69,12 +69,12 @@ public class CookbookVersion {
          return this;
       }
 
-      public Builder attribute(Attribute attribute) {
+      public Builder attribute(Resource attribute) {
          this.attributes.add(checkNotNull(attribute, "attribute"));
          return this;
       }
 
-      public Builder attributes(Iterable<Attribute> attributes) {
+      public Builder attributes(Iterable<Resource> attributes) {
          this.attributes.addAll(checkNotNull(attributes, "attributes"));
          return this;
       }
@@ -168,7 +168,7 @@ public class CookbookVersion {
 
    private final String name;
    private final Set<Resource> definitions;
-   private final Set<Attribute> attributes;
+   private final Set<Resource> attributes;
    private final Set<Resource> files;
    private final Metadata metadata;
    private final Set<Resource> providers;
@@ -190,7 +190,7 @@ public class CookbookVersion {
 
    @ConstructorProperties({ "name", "definitions", "attributes", "files", "metadata", "providers", "cookbook_name",
          "resources", "templates", "libraries", "version", "recipes", "root_files" })
-   protected CookbookVersion(String name, @Nullable Set<Resource> definitions, @Nullable Set<Attribute> attributes,
+   protected CookbookVersion(String name, @Nullable Set<Resource> definitions, @Nullable Set<Resource> attributes,
          @Nullable Set<Resource> files, Metadata metadata, @Nullable Set<Resource> providers, String cookbookName,
          @Nullable Set<Resource> resources, @Nullable Set<Resource> templates, @Nullable Set<Resource> libraries,
          String version, @Nullable Set<Resource> recipes, @Nullable Set<Resource> rootFiles) {
@@ -217,7 +217,7 @@ public class CookbookVersion {
       return definitions;
    }
 
-   public Set<Attribute> getAttributes() {
+   public Set<Resource> getAttributes() {
       return attributes;
    }
 
