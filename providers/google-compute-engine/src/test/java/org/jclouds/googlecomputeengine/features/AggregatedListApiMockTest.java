@@ -64,4 +64,84 @@ public class AggregatedListApiMockTest extends BaseGoogleComputeEngineApiMockTes
 
       assertSent(server, "GET", "/projects/party/aggregated/instances");
    }
+
+   public void addresses() throws Exception {
+      server.enqueue(jsonResponse("/aggregated_address_list.json"));
+
+      AggregatedListApi aggregatedList = api().aggregatedList();
+
+      assertTrue(aggregatedList.addresses().hasNext());
+
+      assertSent(server, "GET", "/projects/party/aggregated/addresses");
+   }
+
+   public void addressesResponseIs4xx() throws Exception {
+      server.enqueue(jsonResponse("/aggregated_address_list_empty.json"));
+
+      AggregatedListApi aggregatedList = api().aggregatedList();
+
+      assertFalse(aggregatedList.addresses().hasNext());
+
+      assertSent(server, "GET", "/projects/party/aggregated/addresses");
+   }
+
+   public void disks() throws Exception {
+      server.enqueue(jsonResponse("/aggregated_disk_list.json"));
+
+      AggregatedListApi aggregatedList = api().aggregatedList();
+
+      assertTrue(aggregatedList.disks().hasNext());
+
+      assertSent(server, "GET", "/projects/party/aggregated/disks");
+   }
+
+   public void disksResponseIs4xx() throws Exception {
+      server.enqueue(jsonResponse("/aggregated_disk_list_empty.json"));
+
+      AggregatedListApi aggregatedList = api().aggregatedList();
+
+      assertFalse(aggregatedList.disks().hasNext());
+
+      assertSent(server, "GET", "/projects/party/aggregated/disks");
+   }
+
+   public void diskTypes() throws Exception {
+      server.enqueue(jsonResponse("/aggregated_disktype_list.json"));
+
+      AggregatedListApi aggregatedList = api().aggregatedList();
+
+      assertTrue(aggregatedList.diskTypes().hasNext());
+
+      assertSent(server, "GET", "/projects/party/aggregated/diskTypes");
+   }
+
+   public void diskTypesResponseIs4xx() throws Exception {
+      server.enqueue(jsonResponse("/aggregated_disktype_list_empty.json"));
+
+      AggregatedListApi aggregatedList = api().aggregatedList();
+
+      assertFalse(aggregatedList.diskTypes().hasNext());
+
+      assertSent(server, "GET", "/projects/party/aggregated/diskTypes");
+   }
+
+   public void globalOperations() throws Exception {
+      server.enqueue(jsonResponse("/aggregated_global_operation_list.json"));
+
+      AggregatedListApi aggregatedList = api().aggregatedList();
+
+      assertTrue(aggregatedList.globalOperations().hasNext());
+
+      assertSent(server, "GET", "/projects/party/aggregated/operations");
+   }
+
+   public void globalOperationsResponseIs4xx() throws Exception {
+      server.enqueue(jsonResponse("/aggregated_global_operation_list_empty.json"));
+
+      AggregatedListApi aggregatedList = api().aggregatedList();
+
+      assertFalse(aggregatedList.globalOperations().hasNext());
+
+      assertSent(server, "GET", "/projects/party/aggregated/operations");
+   }
 }

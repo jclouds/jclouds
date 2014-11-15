@@ -24,12 +24,20 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.jclouds.googlecloud.domain.ListPage;
+import org.jclouds.googlecomputeengine.domain.Address;
+import org.jclouds.googlecomputeengine.domain.Disk;
+import org.jclouds.googlecomputeengine.domain.DiskType;
 import org.jclouds.googlecomputeengine.domain.MachineType;
+import org.jclouds.googlecomputeengine.domain.Operation;
 import org.jclouds.googlecomputeengine.internal.BaseGoogleComputeEngineApiLiveTest;
+import org.testng.SkipException;
 import org.testng.annotations.Test;
 
 @Test(groups = "live", testName = "AggregatedListApiLiveTest")
 public class AggregatedListApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
+
+   public static final String DISK_NAME = "aggregated-list-api-live-test-disk";
+   public static final int sizeGb = 1;
 
    private AggregatedListApi api() {
       return api.aggregatedList();
@@ -42,5 +50,65 @@ public class AggregatedListApiLiveTest extends BaseGoogleComputeEngineApiLiveTes
       List<MachineType> machineTypeAsList = pageIterator.next();
 
       assertEquals(machineTypeAsList.size(), 9); // zone count!
+   }
+
+   public void addresses() {
+      Iterator<ListPage<Address>> pageIterator = api().addresses(maxResults(1));
+      // make sure that in spite of having only one result per page we get at
+      // least two results
+      int count = 0;
+      for (; count < 2 && pageIterator.hasNext();) {
+         ListPage<Address> result = pageIterator.next();
+         if (!result.isEmpty()) {
+            count++;
+         }
+      }
+      if (count < 2) {
+         throw new SkipException("Not enough addresses");
+      }
+      assertEquals(count, 2);
+   }
+
+   public void disks() {
+      Iterator<ListPage<Disk>> pageIterator = api().disks(maxResults(1));
+      // make sure that in spite of having only one result per page we get at
+      // least two results
+      int count = 0;
+      for (; count < 2 && pageIterator.hasNext();) {
+         ListPage<Disk> result = pageIterator.next();
+         if (!result.isEmpty()) {
+            count++;
+         }
+      }
+      if (count < 2) {
+         throw new SkipException("Not enough disks");
+      }
+      assertEquals(count, 2);
+   }
+
+   public void diskTypes() {
+      Iterator<ListPage<DiskType>> pageIterator = api().diskTypes(maxResults(1));
+      assertTrue(pageIterator.hasNext());
+
+      List<DiskType> diskTypeAsList = pageIterator.next();
+
+      assertEquals(diskTypeAsList.size(), 1);
+   }
+
+   public void globalOperations() {
+      Iterator<ListPage<Operation>> pageIterator = api().globalOperations(maxResults(1));
+      // make sure that in spite of having only one result per page we get at
+      // least two results
+      int count = 0;
+      for (; count < 2 && pageIterator.hasNext();) {
+         ListPage<Operation> result = pageIterator.next();
+         if (!result.isEmpty()) {
+            count++;
+         }
+      }
+      if (count < 2) {
+         throw new SkipException("Not enough global operations");
+      }
+      assertEquals(count, 2);
    }
 }

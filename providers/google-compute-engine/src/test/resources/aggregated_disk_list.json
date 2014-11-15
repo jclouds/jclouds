@@ -1,0 +1,118 @@
+{
+ "kind": "compute#diskAggregatedList",
+ "selfLink": "https://www.googleapis.com/compute/v1/projects/party/aggregated/disks",
+ "id": "projects/party/aggregated/disks",
+ "items": {
+  "zones/asia-east1-a": {
+   "warning": {
+    "code": "NO_RESULTS_ON_PAGE",
+    "message": "There are no results for scope 'zones/asia-east1-a' on this page.",
+    "data": [
+     {
+      "key": "scope",
+      "value": "zones/asia-east1-a"
+     }
+    ]
+   }
+  },
+  "zones/asia-east1-b": {
+   "warning": {
+    "code": "NO_RESULTS_ON_PAGE",
+    "message": "There are no results for scope 'zones/asia-east1-b' on this page.",
+    "data": [
+     {
+      "key": "scope",
+      "value": "zones/asia-east1-b"
+     }
+    ]
+   }
+  },
+  "zones/asia-east1-c": {
+   "warning": {
+    "code": "NO_RESULTS_ON_PAGE",
+    "message": "There are no results for scope 'zones/asia-east1-c' on this page.",
+    "data": [
+     {
+      "key": "scope",
+      "value": "zones/asia-east1-c"
+     }
+    ]
+   }
+  },
+  "zones/europe-west1-a": {
+   "warning": {
+    "code": "NO_RESULTS_ON_PAGE",
+    "message": "There are no results for scope 'zones/europe-west1-a' on this page.",
+    "data": [
+     {
+      "key": "scope",
+      "value": "zones/europe-west1-a"
+     }
+    ]
+   }
+  },
+  "zones/europe-west1-b": {
+   "warning": {
+    "code": "NO_RESULTS_ON_PAGE",
+    "message": "There are no results for scope 'zones/europe-west1-b' on this page.",
+    "data": [
+     {
+      "key": "scope",
+      "value": "zones/europe-west1-b"
+     }
+    ]
+   }
+  },
+  "zones/europe-west1-c": {
+   "warning": {
+    "code": "NO_RESULTS_ON_PAGE",
+    "message": "There are no results for scope 'zones/europe-west1-c' on this page.",
+    "data": [
+     {
+      "key": "scope",
+      "value": "zones/europe-west1-c"
+     }
+    ]
+   }
+  },
+  "zones/us-central1-a": {
+   "disks": [
+    {
+	     "kind": "compute#disk",
+	     "id": "13050421646334304115",
+	     "creationTimestamp": "2012-11-25T01:38:48.306",
+	     "selfLink": "https://www.googleapis.com/compute/v1/projects/party/zones/us-central1-a/disks/testimage1",
+	     "name": "testimage1",
+	     "sizeGb": "1",
+	     "zone": "https://www.googleapis.com/compute/v1/projects/party/zones/us-central1-a",
+	     "status": "READY",
+	     "type": "https://www.googleapis.com/compute/v1/projects/studied-point-720/zones/us-central1-a/diskTypes/pd-standard"
+	}
+   ]
+  },
+  "zones/us-central1-b": {
+   "warning": {
+    "code": "NO_RESULTS_ON_PAGE",
+    "message": "There are no results for scope 'zones/us-central1-b' on this page.",
+    "data": [
+     {
+      "key": "scope",
+      "value": "zones/us-central1-b"
+     }
+    ]
+   }
+  },
+  "zones/us-central1-f": {
+   "warning": {
+    "code": "NO_RESULTS_ON_PAGE",
+    "message": "There are no results for scope 'zones/us-central1-f' on this page.",
+    "data": [
+     {
+      "key": "scope",
+      "value": "zones/us-central1-f"
+     }
+    ]
+   }
+  }
+ }
+}

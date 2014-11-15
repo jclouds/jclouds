@@ -81,7 +81,7 @@ public abstract class Operation {
    @Nullable public abstract String statusMessage();
 
    /** User who requested the operation, for example {@code user@example.com}. */
-   public abstract String user();
+   @Nullable public abstract String user();
 
    /**
     * A progress indicator that ranges from 0 to 100. This should not be used to guess at when the

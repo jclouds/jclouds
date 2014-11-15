@@ -1,0 +1,131 @@
+{
+ "kind": "compute#addressAggregatedList",
+ "selfLink": "https://www.googleapis.com/compute/v1/projects/party/aggregated/addresses",
+ "id": "projects/party/aggregated/addresses",
+ "items": {
+  "zones/asia-east1-a": {
+   "warning": {
+    "code": "NO_RESULTS_ON_PAGE",
+    "message": "There are no results for scope 'zones/asia-east1-a' on this page.",
+    "data": [
+     {
+      "key": "scope",
+      "value": "zones/asia-east1-a"
+     }
+    ]
+   }
+  },
+  "zones/asia-east1-b": {
+   "warning": {
+    "code": "NO_RESULTS_ON_PAGE",
+    "message": "There are no results for scope 'zones/asia-east1-b' on this page.",
+    "data": [
+     {
+      "key": "scope",
+      "value": "zones/asia-east1-b"
+     }
+    ]
+   }
+  },
+  "zones/asia-east1-c": {
+   "warning": {
+    "code": "NO_RESULTS_ON_PAGE",
+    "message": "There are no results for scope 'zones/asia-east1-c' on this page.",
+    "data": [
+     {
+      "key": "scope",
+      "value": "zones/asia-east1-c"
+     }
+    ]
+   }
+  },
+  "zones/europe-west1-a": {
+   "warning": {
+    "code": "NO_RESULTS_ON_PAGE",
+    "message": "There are no results for scope 'zones/europe-west1-a' on this page.",
+    "data": [
+     {
+      "key": "scope",
+      "value": "zones/europe-west1-a"
+     }
+    ]
+   }
+  },
+  "zones/europe-west1-b": {
+   "warning": {
+    "code": "NO_RESULTS_ON_PAGE",
+    "message": "There are no results for scope 'zones/europe-west1-b' on this page.",
+    "data": [
+     {
+      "key": "scope",
+      "value": "zones/europe-west1-b"
+     }
+    ]
+   }
+  },
+  "zones/europe-west1-c": {
+   "warning": {
+    "code": "NO_RESULTS_ON_PAGE",
+    "message": "There are no results for scope 'zones/europe-west1-c' on this page.",
+    "data": [
+     {
+      "key": "scope",
+      "value": "zones/europe-west1-c"
+     }
+    ]
+   }
+  },
+  "zones/us-central1-a": {
+   "addresses": [
+    {
+
+        "kind": "compute#address",
+        "id": "4439373783165447583",
+        "creationTimestamp": "2013-07-26T13:57:20.204-07:00",
+        "status": "RESERVED",
+        "region": "https://www.googleapis.com/compute/v1/projects/party/regions/us-central1",
+        "name": "test-ip1",
+        "description": "",
+        "address": "173.255.115.190",
+        "selfLink": "https://www.googleapis.com/compute/v1/projects/party/regions/us-central1/addresses/test-ip1"
+    },
+    {
+
+        "kind": "compute#address",
+        "id": "4881363978908129158",
+        "creationTimestamp": "2013-07-26T14:08:21.552-07:00",
+        "status": "RESERVED",
+        "region": "https://www.googleapis.com/compute/v1/projects/party/regions/us-central1",
+        "name": "test-ip2",
+        "description": "",
+        "address": "173.255.118.115",
+        "selfLink": "https://www.googleapis.com/compute/v1/projects/party/regions/us-central1/addresses/test-ip2"
+    }
+   ]
+  },
+  "zones/us-central1-b": {
+   "warning": {
+    "code": "NO_RESULTS_ON_PAGE",
+    "message": "There are no results for scope 'zones/us-central1-b' on this page.",
+    "data": [
+     {
+      "key": "scope",
+      "value": "zones/us-central1-b"
+     }
+    ]
+   }
+  },
+  "zones/us-central1-f": {
+   "warning": {
+    "code": "NO_RESULTS_ON_PAGE",
+    "message": "There are no results for scope 'zones/us-central1-f' on this page.",
+    "data": [
+     {
+      "key": "scope",
+      "value": "zones/us-central1-f"
+     }
+    ]
+   }
+  }
+ }
+}

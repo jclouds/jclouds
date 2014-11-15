@@ -29,8 +29,12 @@ import javax.ws.rs.QueryParam;
 
 import org.jclouds.googlecloud.domain.ListPage;
 import org.jclouds.googlecomputeengine.GoogleComputeEngineApi;
+import org.jclouds.googlecomputeengine.domain.Address;
+import org.jclouds.googlecomputeengine.domain.Disk;
+import org.jclouds.googlecomputeengine.domain.DiskType;
 import org.jclouds.googlecomputeengine.domain.Instance;
 import org.jclouds.googlecomputeengine.domain.MachineType;
+import org.jclouds.googlecomputeengine.domain.Operation;
 import org.jclouds.googlecomputeengine.internal.BaseToIteratorOfListPage;
 import org.jclouds.googlecomputeengine.options.ListOptions;
 import org.jclouds.javax.annotation.Nullable;
@@ -41,19 +45,21 @@ import org.jclouds.rest.annotations.Transform;
 
 import com.google.common.base.Function;
 
-@SkipEncoding({'/', '='})
+@SkipEncoding({ '/', '=' })
 @RequestFilters(OAuthAuthenticationFilter.class)
 @Path("/aggregated")
 @Consumes(APPLICATION_JSON)
 public interface AggregatedListApi {
 
    /**
-    * Retrieves the list of machine type resources available to the specified project.
-    * By default the list as a maximum size of 100, if no options are provided or ListOptions#getMaxResults() has not
-    * been set.
+    * Retrieves the list of machine type resources available to the specified
+    * project. By default the list as a maximum size of 100, if no options are
+    * provided or ListOptions#getMaxResults() has not been set.
     *
-    * @param pageToken   marks the beginning of the next list page
-    * @param listOptions listing options
+    * @param pageToken
+    *           marks the beginning of the next list page
+    * @param listOptions
+    *           listing options
     * @return a page of the list
     */
    @Named("MachineTypes:aggregatedList")
@@ -78,13 +84,16 @@ public interface AggregatedListApi {
    static final class MachineTypePages extends BaseToIteratorOfListPage<MachineType, MachineTypePages> {
       private final GoogleComputeEngineApi api;
 
-      @Inject MachineTypePages(GoogleComputeEngineApi api) {
+      @Inject
+      MachineTypePages(GoogleComputeEngineApi api) {
          this.api = api;
       }
 
-      @Override protected Function<String, ListPage<MachineType>> fetchNextPage(final ListOptions options) {
+      @Override
+      protected Function<String, ListPage<MachineType>> fetchNextPage(final ListOptions options) {
          return new Function<String, ListPage<MachineType>>() {
-            @Override public ListPage<MachineType> apply(String pageToken) {
+            @Override
+            public ListPage<MachineType> apply(String pageToken) {
                return api.aggregatedList().pageOfMachineTypes(pageToken, options);
             }
          };
@@ -92,12 +101,14 @@ public interface AggregatedListApi {
    }
 
    /**
-    * Retrieves the list of instance resources available to the specified project.
-    * By default the list as a maximum size of 100, if no options are provided or ListOptions#getMaxResults() has not
-    * been set.
+    * Retrieves the list of instance resources available to the specified
+    * project. By default the list as a maximum size of 100, if no options are
+    * provided or ListOptions#getMaxResults() has not been set.
     *
-    * @param pageToken   marks the beginning of the next list page
-    * @param listOptions listing options
+    * @param pageToken
+    *           marks the beginning of the next list page
+    * @param listOptions
+    *           listing options
     * @return a page of the list
     */
    @Named("Instances:aggregatedList")
@@ -122,14 +133,214 @@ public interface AggregatedListApi {
    static final class InstancePages extends BaseToIteratorOfListPage<Instance, InstancePages> {
       private final GoogleComputeEngineApi api;
 
-      @Inject InstancePages(GoogleComputeEngineApi api) {
+      @Inject
+      InstancePages(GoogleComputeEngineApi api) {
          this.api = api;
       }
 
-      @Override protected Function<String, ListPage<Instance>> fetchNextPage(final ListOptions options) {
+      @Override
+      protected Function<String, ListPage<Instance>> fetchNextPage(final ListOptions options) {
          return new Function<String, ListPage<Instance>>() {
-            @Override public ListPage<Instance> apply(String pageToken) {
+            @Override
+            public ListPage<Instance> apply(String pageToken) {
                return api.aggregatedList().pageOfInstances(pageToken, options);
+            }
+         };
+      }
+   }
+
+   /**
+    * Retrieves the list of address resources available to the specified
+    * project. By default the list as a maximum size of 100, if no options are
+    * provided or ListOptions#getMaxResults() has not been set.
+    *
+    * @param pageToken
+    *           marks the beginning of the next list page
+    * @param listOptions
+    *           listing options
+    * @return a page of the list
+    */
+   @Named("Addresses:aggregatedList")
+   @GET
+   @Path("/addresses")
+   ListPage<Address> pageOfAddresses(@Nullable @QueryParam("pageToken") String pageToken, ListOptions listOptions);
+
+   /** @see #pageOfAddresses(String, ListOptions) */
+   @Named("Addresses:aggregatedList")
+   @GET
+   @Path("/addresses")
+   @Transform(AddressPages.class)
+   Iterator<ListPage<Address>> addresses();
+
+   /** @see #pageOfAddresses(String, ListOptions) */
+   @Named("Addresses:aggregatedList")
+   @GET
+   @Path("/addresses")
+   @Transform(AddressPages.class)
+   Iterator<ListPage<Address>> addresses(ListOptions options);
+
+   static final class AddressPages extends BaseToIteratorOfListPage<Address, AddressPages> {
+      private final GoogleComputeEngineApi api;
+
+      @Inject
+      AddressPages(GoogleComputeEngineApi api) {
+         this.api = api;
+      }
+
+      @Override
+      protected Function<String, ListPage<Address>> fetchNextPage(final ListOptions options) {
+         return new Function<String, ListPage<Address>>() {
+            @Override
+            public ListPage<Address> apply(String pageToken) {
+               return api.aggregatedList().pageOfAddresses(pageToken, options);
+            }
+         };
+      }
+   }
+
+   /**
+    * Retrieves the list of disk resources available to the specified project.
+    * By default the list as a maximum size of 100, if no options are provided
+    * or ListOptions#getMaxResults() has not been set.
+    *
+    * @param pageToken
+    *           marks the beginning of the next list page
+    * @param listOptions
+    *           listing options
+    * @return a page of the list
+    */
+   @Named("Disks:aggregatedList")
+   @GET
+   @Path("/disks")
+   ListPage<Disk> pageOfDisks(@Nullable @QueryParam("pageToken") String pageToken, ListOptions listOptions);
+
+   /** @see #pageOfDisks(String, ListOptions) */
+   @Named("Disks:aggregatedList")
+   @GET
+   @Path("/disks")
+   @Transform(DiskPages.class)
+   Iterator<ListPage<Disk>> disks();
+
+   /** @see #pageOfDisks(String, ListOptions) */
+   @Named("Disks:aggregatedList")
+   @GET
+   @Path("/disks")
+   @Transform(DiskPages.class)
+   Iterator<ListPage<Disk>> disks(ListOptions options);
+
+   static final class DiskPages extends BaseToIteratorOfListPage<Disk, DiskPages> {
+      private final GoogleComputeEngineApi api;
+
+      @Inject
+      DiskPages(GoogleComputeEngineApi api) {
+         this.api = api;
+      }
+
+      @Override
+      protected Function<String, ListPage<Disk>> fetchNextPage(final ListOptions options) {
+         return new Function<String, ListPage<Disk>>() {
+            @Override
+            public ListPage<Disk> apply(String pageToken) {
+               return api.aggregatedList().pageOfDisks(pageToken, options);
+            }
+         };
+      }
+   }
+
+   /**
+    * Retrieves the list of disk type resources available to the specified
+    * project. By default the list as a maximum size of 100, if no options are
+    * provided or ListOptions#getMaxResults() has not been set.
+    *
+    * @param pageToken
+    *           marks the beginning of the next list page
+    * @param listOptions
+    *           listing options
+    * @return a page of the list
+    */
+   @Named("DiskTypes:aggregatedList")
+   @GET
+   @Path("/diskTypes")
+   ListPage<DiskType> pageOfDiskTypes(@Nullable @QueryParam("pageToken") String pageToken, ListOptions listOptions);
+
+   /** @see #pageOfDiskTypes(String, ListOptions) */
+   @Named("DiskTypes:aggregatedList")
+   @GET
+   @Path("/diskTypes")
+   @Transform(DiskTypePages.class)
+   Iterator<ListPage<DiskType>> diskTypes();
+
+   /** @see #pageOfDiskTypes(String, ListOptions) */
+   @Named("DiskTypes:aggregatedList")
+   @GET
+   @Path("/diskTypes")
+   @Transform(DiskTypePages.class)
+   Iterator<ListPage<DiskType>> diskTypes(ListOptions options);
+
+   static final class DiskTypePages extends BaseToIteratorOfListPage<DiskType, DiskTypePages> {
+      private final GoogleComputeEngineApi api;
+
+      @Inject
+      DiskTypePages(GoogleComputeEngineApi api) {
+         this.api = api;
+      }
+
+      @Override
+      protected Function<String, ListPage<DiskType>> fetchNextPage(final ListOptions options) {
+         return new Function<String, ListPage<DiskType>>() {
+            @Override
+            public ListPage<DiskType> apply(String pageToken) {
+               return api.aggregatedList().pageOfDiskTypes(pageToken, options);
+            }
+         };
+      }
+   }
+
+   /**
+    * Retrieves the list of global operations resources available to the
+    * specified project. By default the list as a maximum size of 100, if no
+    * options are provided or ListOptions#getMaxResults() has not been set.
+    *
+    * @param pageToken
+    *           marks the beginning of the next list page
+    * @param listOptions
+    *           listing options
+    * @return a page of the list
+    */
+   @Named("GlobalOperations:aggregatedList")
+   @GET
+   @Path("/operations")
+   ListPage<Operation> pageOfGlobalOperations(@Nullable @QueryParam("pageToken") String pageToken,
+         ListOptions listOptions);
+
+   /** @see #pageOfGlobalOperations(String, ListOptions) */
+   @Named("GlobalOperations:aggregatedList")
+   @GET
+   @Path("/operations")
+   @Transform(OperationPages.class)
+   Iterator<ListPage<Operation>> globalOperations();
+
+   /** @see #pageOfGlobalOperations(String, ListOptions) */
+   @Named("GlobalOperations:aggregatedList")
+   @GET
+   @Path("/operations")
+   @Transform(OperationPages.class)
+   Iterator<ListPage<Operation>> globalOperations(ListOptions options);
+
+   static final class OperationPages extends BaseToIteratorOfListPage<Operation, OperationPages> {
+      private final GoogleComputeEngineApi api;
+
+      @Inject
+      OperationPages(GoogleComputeEngineApi api) {
+         this.api = api;
+      }
+
+      @Override
+      protected Function<String, ListPage<Operation>> fetchNextPage(final ListOptions options) {
+         return new Function<String, ListPage<Operation>>() {
+            @Override
+            public ListPage<Operation> apply(String pageToken) {
+               return api.aggregatedList().pageOfGlobalOperations(pageToken, options);
             }
          };
       }
