@@ -18,33 +18,40 @@ package org.jclouds.ec2.suppliers;
 
 import java.net.URI;
 import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
 
 import javax.inject.Inject;
-import javax.inject.Singleton;
 
 import org.jclouds.ec2.EC2Api;
-import org.jclouds.ec2.features.AvailabilityZoneAndRegionApi;
-import org.jclouds.location.Region;
 import org.jclouds.location.suppliers.RegionIdToURISupplier;
-import org.jclouds.util.Suppliers2;
+import org.jclouds.location.suppliers.fromconfig.RegionIdsFromConfiguration;
 
 import com.google.common.base.Supplier;
-import com.google.common.collect.Maps;
+import com.google.common.base.Suppliers;
+import com.google.common.collect.ImmutableMap;
 
-@Singleton
-public class DescribeRegionsForRegionURIs implements RegionIdToURISupplier {
-   private final AvailabilityZoneAndRegionApi client;
+/**
+ * Uses the {@code DescribeRegions} call to return the regions endpoints, subject to any whitelist present in the
+ * property {@link org.jclouds.location.reference.LocationConstants#PROPERTY_REGIONS}.
+ */
+public final class DescribeRegionsForRegionURIs implements RegionIdToURISupplier {
+   private final EC2Api api;
+   private final Set<String> whitelistedRegionIds;
 
-   @Inject
-   public DescribeRegionsForRegionURIs(EC2Api client) {
-      this.client = client.getAvailabilityZoneAndRegionApi().get();
+   @Inject DescribeRegionsForRegionURIs(EC2Api api, RegionIdsFromConfiguration regionIdsFromConfiguration) {
+      this.api = api;
+      this.whitelistedRegionIds = regionIdsFromConfiguration.get();
    }
 
-   @Singleton
-   @Region
    @Override
    public Map<String, Supplier<URI>> get() {
-      Map<String, URI> regionToUris = client.describeRegions();
-      return Maps.transformValues(regionToUris, Suppliers2.<URI> ofInstanceFunction());
+      ImmutableMap.Builder<String, Supplier<URI>> result = ImmutableMap.builder();
+      for (Entry<String, URI> regionUrl : api.getAvailabilityZoneAndRegionApi().get().describeRegions().entrySet()) {
+         if (whitelistedRegionIds.isEmpty() || whitelistedRegionIds.contains(regionUrl.getKey())) {
+            result.put(regionUrl.getKey(), Suppliers.ofInstance(regionUrl.getValue()));
+         }
+      }
+      return result.build();
    }
 }

@@ -58,14 +58,15 @@ public class BaseEC2ApiMockTest {
    private Map<String, MockWebServer> regionToServers = Maps.newLinkedHashMap();
 
    protected EC2Api api() {
-      return builder().buildApi(EC2Api.class);
+      return builder(new Properties()).buildApi(EC2Api.class);
    }
 
-   protected ContextBuilder builder() {
-      Properties overrides = new Properties();
+   protected ContextBuilder builder(Properties overrides) {
       overrides.setProperty(Constants.PROPERTY_MAX_RETRIES, "1");
-      return ContextBuilder.newBuilder(new EC2ApiMetadata()).credentials(ACCESS_KEY, SECRET_KEY)
-            .endpoint("http://localhost:" + regionToServers.get(DEFAULT_REGION).getPort()).overrides(overrides)
+      return ContextBuilder.newBuilder(new EC2ApiMetadata())
+            .credentials(ACCESS_KEY, SECRET_KEY)
+            .endpoint("http://localhost:" + regionToServers.get(DEFAULT_REGION).getPort())
+            .overrides(overrides)
             .modules(modules);
    }
 
