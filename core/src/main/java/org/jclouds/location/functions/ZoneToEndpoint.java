@@ -17,38 +17,33 @@
 package org.jclouds.location.functions;
 
 import static com.google.common.base.Preconditions.checkArgument;
-import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Preconditions.checkState;
 
 import java.net.URI;
 import java.util.Map;
 
 import javax.inject.Inject;
-import javax.inject.Singleton;
 
-import org.jclouds.javax.annotation.Nullable;
 import org.jclouds.location.Zone;
 
 import com.google.common.base.Function;
 import com.google.common.base.Supplier;
 
-@Singleton
-public class ZoneToEndpoint implements Function<Object, URI> {
+public final class ZoneToEndpoint implements Function<Object, URI> {
 
-   private final Supplier<Map<String, Supplier<URI>>> zoneToEndpointSupplier;
+   private final Supplier<Map<String, Supplier<URI>>> zoneToEndpoints;
 
    @Inject
-   public ZoneToEndpoint(@Zone Supplier<Map<String, Supplier<URI>>> zoneToEndpointSupplier) {
-      this.zoneToEndpointSupplier = checkNotNull(zoneToEndpointSupplier, "zoneToEndpointSupplier");
+   ZoneToEndpoint(@Zone Supplier<Map<String, Supplier<URI>>> zoneToEndpoints) {
+      this.zoneToEndpoints = zoneToEndpoints;
    }
 
    @Override
-   public URI apply(@Nullable Object from) {
-      checkArgument(from != null && from instanceof String, "you must specify a zone, as a String argument");
-      Map<String, Supplier<URI>> zoneToEndpoint = zoneToEndpointSupplier.get();
+   public URI apply(Object from) {
+      Map<String, Supplier<URI>> zoneToEndpoint = zoneToEndpoints.get();
       checkState(!zoneToEndpoint.isEmpty(), "no zone name to endpoint mappings configured!");
       checkArgument(zoneToEndpoint.containsKey(from),
-               "requested location %s, which is not in the configured locations: %s", from, zoneToEndpoint);
+               "requested location %s, which is not a configured zone: %s", from, zoneToEndpoint);
       return zoneToEndpoint.get(from).get();
    }
 }
