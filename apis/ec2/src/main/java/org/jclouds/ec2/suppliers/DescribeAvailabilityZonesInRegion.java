@@ -19,74 +19,41 @@ package org.jclouds.ec2.suppliers;
 import java.util.Map;
 import java.util.Set;
 
-import javax.annotation.Resource;
 import javax.inject.Inject;
-import javax.inject.Singleton;
 
 import org.jclouds.ec2.EC2Api;
 import org.jclouds.ec2.domain.AvailabilityZoneInfo;
 import org.jclouds.ec2.features.AvailabilityZoneAndRegionApi;
-import org.jclouds.http.HttpResponseException;
 import org.jclouds.location.Region;
 import org.jclouds.location.suppliers.RegionIdToZoneIdsSupplier;
-import org.jclouds.logging.Logger;
-import org.jclouds.util.Suppliers2;
 
-import com.google.common.base.Function;
 import com.google.common.base.Supplier;
+import com.google.common.base.Suppliers;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableMap.Builder;
 import com.google.common.collect.ImmutableSet;
-import com.google.common.collect.Iterables;
-import com.google.common.collect.Maps;
 
-@Singleton
-public class DescribeAvailabilityZonesInRegion implements RegionIdToZoneIdsSupplier {
-   @Resource
-   protected Logger logger = Logger.NULL;
-
-   private final AvailabilityZoneAndRegionApi client;
+public final class DescribeAvailabilityZonesInRegion implements RegionIdToZoneIdsSupplier {
+   private final EC2Api api;
    private final Supplier<Set<String>> regions;
 
    @Inject
-   public DescribeAvailabilityZonesInRegion(EC2Api client, @Region Supplier<Set<String>> regions) {
-      this.client = client.getAvailabilityZoneAndRegionApi().get();
+   DescribeAvailabilityZonesInRegion(EC2Api api, @Region Supplier<Set<String>> regions) {
+      this.api = api;
       this.regions = regions;
    }
 
    @Override
    public Map<String, Supplier<Set<String>>> get() {
-      Builder<String, Set<String>> map = ImmutableMap.builder();
-      HttpResponseException exception = null;
-      // TODO: this should be parallel
+      AvailabilityZoneAndRegionApi zoneApi = api.getAvailabilityZoneAndRegionApi().get();
+      Builder<String, Supplier<Set<String>>> map = ImmutableMap.builder();
       for (String region : regions.get()) {
-         try {
-            ImmutableSet<String> zones = ImmutableSet.copyOf(Iterables.transform(client
-                     .describeAvailabilityZonesInRegion(region), new Function<AvailabilityZoneInfo, String>() {
-
-               @Override
-               public String apply(AvailabilityZoneInfo arg0) {
-                  return arg0.getZone();
-               }
-
-            }));
-            if (!zones.isEmpty())
-               map.put(region, zones);
-         } catch (HttpResponseException e) {
-            // TODO: this should be in retry handler, not here.
-            if (e.getMessage().contains("Unable to tunnel through proxy")) {
-               exception = e;
-               logger.error(e, "Could not describe availability zones in Region: %s", region);
-            } else {
-               throw e;
-            }
+         ImmutableSet.Builder<String> zoneBuilder = ImmutableSet.builder();
+         for (AvailabilityZoneInfo zone : zoneApi.describeAvailabilityZonesInRegion(region)) {
+            zoneBuilder.add(zone.getZone());
          }
+         map.put(region, Suppliers.<Set<String>>ofInstance(zoneBuilder.build()));
       }
-      ImmutableMap<String, Set<String>> result = map.build();
-      if (result.isEmpty() && exception != null) {
-         throw exception;
-      }
-      return Maps.transformValues(result, Suppliers2.<Set<String>> ofInstanceFunction());
+      return map.build();
    }
-
 }
