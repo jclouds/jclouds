@@ -17,34 +17,30 @@
 package org.jclouds.s3.functions;
 
 import static org.easymock.EasyMock.createMock;
-import static org.easymock.EasyMock.expect;
 import static org.easymock.EasyMock.replay;
 import static org.easymock.EasyMock.verify;
-
-import java.net.URI;
+import static org.jclouds.s3.functions.AssignCorrectHostnameForBucketTest.REGION_TO_ENDPOINT;
 
 import org.testng.annotations.Test;
 
+import com.google.common.base.Functions;
 import com.google.common.base.Optional;
 import com.google.common.cache.LoadingCache;
+import com.google.common.collect.ImmutableMap;
 
-@Test(testName = "DefaultEndpointThenInvalidateRegionTest")
 public class DefaultEndpointThenInvalidateRegionTest {
-
    @SuppressWarnings("unchecked")
    @Test
-   void testInvalidate() throws Exception {
-      AssignCorrectHostnameForBucket r2 = createMock(AssignCorrectHostnameForBucket.class);
+   public void testInvalidate() throws Exception {
       LoadingCache<String, Optional<String>> bucketToRegionCache = createMock(LoadingCache.class);
 
-      expect(r2.apply("mybucket")).andReturn(URI.create("http://east-url"));
       bucketToRegionCache.invalidate("mybucket");
+      replay(bucketToRegionCache);
 
-      replay(r2, bucketToRegionCache);
+      AssignCorrectHostnameForBucket delegate = new AssignCorrectHostnameForBucket(REGION_TO_ENDPOINT,
+            Functions.forMap(ImmutableMap.of("mybucket", Optional.of("us-west-1"))));
 
-      new DefaultEndpointThenInvalidateRegion(r2, bucketToRegionCache).apply("mybucket");
-      verify(r2, bucketToRegionCache);
-
+      new DefaultEndpointThenInvalidateRegion(delegate, bucketToRegionCache).apply("mybucket");
+      verify(bucketToRegionCache);
    }
-
 }

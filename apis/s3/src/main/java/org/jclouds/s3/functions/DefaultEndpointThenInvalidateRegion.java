@@ -19,7 +19,6 @@ package org.jclouds.s3.functions;
 import java.net.URI;
 
 import javax.inject.Inject;
-import javax.inject.Singleton;
 
 import org.jclouds.javax.annotation.Nullable;
 import org.jclouds.s3.Bucket;
@@ -28,23 +27,22 @@ import com.google.common.base.Function;
 import com.google.common.base.Optional;
 import com.google.common.cache.LoadingCache;
 
-@Singleton
-public class DefaultEndpointThenInvalidateRegion implements Function<Object, URI> {
+public final class DefaultEndpointThenInvalidateRegion implements Function<Object, URI> {
 
+   private final Function<Object, URI> delegate;
    private final LoadingCache<String, Optional<String>> bucketToRegionCache;
-   private final AssignCorrectHostnameForBucket r2;
 
    @Inject
-   public DefaultEndpointThenInvalidateRegion(AssignCorrectHostnameForBucket r2,
-            @Bucket LoadingCache<String, Optional<String>> bucketToRegionCache) {
-      this.r2 = r2;
+   DefaultEndpointThenInvalidateRegion(AssignCorrectHostnameForBucket delegate,
+         @Bucket LoadingCache<String, Optional<String>> bucketToRegionCache) {
+      this.delegate = delegate;
       this.bucketToRegionCache = bucketToRegionCache;
    }
 
    @Override
    public URI apply(@Nullable Object from) {
       try {
-         return r2.apply(from);
+         return delegate.apply(from);
       } finally {
          bucketToRegionCache.invalidate(from.toString());
       }

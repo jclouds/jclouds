@@ -16,14 +16,34 @@
  */
 package org.jclouds.openstack.keystone.v2_0.functions;
 
+import static com.google.common.base.Preconditions.checkArgument;
+import static com.google.common.base.Preconditions.checkState;
+
+import java.net.URI;
+import java.util.Map;
+
 import javax.inject.Inject;
 
-import org.jclouds.location.functions.RegionToEndpoint;
 import org.jclouds.openstack.keystone.v2_0.suppliers.RegionIdToAdminURISupplier;
 
-public class RegionToAdminEndpointURI extends RegionToEndpoint {
+import com.google.common.base.Function;
+import com.google.common.base.Supplier;
+
+public final class RegionToAdminEndpointURI implements Function<Object, URI> {
+
+   private final RegionIdToAdminURISupplier regionToAdminEndpoints;
+
    @Inject
-   public RegionToAdminEndpointURI(RegionIdToAdminURISupplier regionToEndpointSupplier) {
-      super(regionToEndpointSupplier);
+   RegionToAdminEndpointURI(RegionIdToAdminURISupplier regionToAdminEndpoints) {
+      this.regionToAdminEndpoints = regionToAdminEndpoints;
+   }
+
+   @Override
+   public URI apply(Object from) {
+      Map<String, Supplier<URI>> regionToAdminEndpoint = regionToAdminEndpoints.get();
+      checkState(!regionToAdminEndpoint.isEmpty(), "no region name to admin endpoint mappings in keystone!");
+      checkArgument(regionToAdminEndpoint.containsKey(from),
+            "requested location %s, which is not in the keystone admin endpoints: %s", from, regionToAdminEndpoint);
+      return regionToAdminEndpoint.get(from).get();
    }
 }

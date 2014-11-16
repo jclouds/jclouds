@@ -18,41 +18,33 @@ package org.jclouds.s3.functions;
 
 import java.net.URI;
 
-import javax.annotation.Resource;
 import javax.inject.Inject;
-import javax.inject.Singleton;
 
-import org.jclouds.javax.annotation.Nullable;
 import org.jclouds.location.functions.RegionToEndpointOrProviderIfNull;
-import org.jclouds.logging.Logger;
 import org.jclouds.s3.Bucket;
 
 import com.google.common.base.Function;
 import com.google.common.base.Optional;
 
-@Singleton
-public class AssignCorrectHostnameForBucket implements Function<Object, URI> {
-   @Resource
-   protected Logger logger = Logger.NULL;
+public final class AssignCorrectHostnameForBucket implements Function<Object, URI> {
 
-   protected final RegionToEndpointOrProviderIfNull r2;
-   protected final Function<String, Optional<String>> bucketToRegion;
+   private final RegionToEndpointOrProviderIfNull delegate;
+   private final Function<String, Optional<String>> bucketToRegion;
 
    @Inject
-   public AssignCorrectHostnameForBucket(RegionToEndpointOrProviderIfNull r2,
+   AssignCorrectHostnameForBucket(RegionToEndpointOrProviderIfNull delegate,
             @Bucket Function<String, Optional<String>> bucketToRegion) {
       this.bucketToRegion = bucketToRegion;
-      this.r2 = r2;
+      this.delegate = delegate;
    }
 
    @Override
-   public URI apply(@Nullable Object from) {
+   public URI apply(Object from) {
       String bucket = from.toString();
       Optional<String> region = bucketToRegion.apply(bucket);
       if (region.isPresent()) {
-         return r2.apply(region.get());
+         return delegate.apply(region.get());
       }
-      return r2.apply(null);
+      return delegate.apply(null);
    }
-
 }

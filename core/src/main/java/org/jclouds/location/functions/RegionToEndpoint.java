@@ -17,36 +17,33 @@
 package org.jclouds.location.functions;
 
 import static com.google.common.base.Preconditions.checkArgument;
-import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Preconditions.checkState;
 
 import java.net.URI;
 import java.util.Map;
 
 import javax.inject.Inject;
-import javax.inject.Singleton;
 
 import org.jclouds.location.Region;
 
 import com.google.common.base.Function;
 import com.google.common.base.Supplier;
 
-@Singleton
-public class RegionToEndpoint implements Function<Object, URI> {
+public final class RegionToEndpoint implements Function<Object, URI> {
 
-   private final Supplier<Map<String, Supplier<URI>>> regionToEndpointSupplier;
+   private final Supplier<Map<String, Supplier<URI>>> regionToEndpoints;
 
    @Inject
-   public RegionToEndpoint(@Region Supplier<Map<String, Supplier<URI>>> regionToEndpointSupplier) {
-      this.regionToEndpointSupplier = checkNotNull(regionToEndpointSupplier, "regionToEndpointSupplier");
+   RegionToEndpoint(@Region Supplier<Map<String, Supplier<URI>>> regionToEndpoints) {
+      this.regionToEndpoints = regionToEndpoints;
    }
 
    @Override
    public URI apply(Object from) {
-      Map<String, Supplier<URI>> regionToEndpoint = regionToEndpointSupplier.get();
-      checkState(regionToEndpoint.size() > 0, "no region name to endpoint mappings configured!");
+      Map<String, Supplier<URI>> regionToEndpoint = regionToEndpoints.get();
+      checkState(!regionToEndpoint.isEmpty(), "no region name to endpoint mappings configured!");
       checkArgument(regionToEndpoint.containsKey(from),
-               "requested location %s, which is not in the configured locations: %s", from, regionToEndpoint);
+               "requested location %s, which is not a configured region: %s", from, regionToEndpoint);
       return regionToEndpoint.get(from).get();
    }
 }
