@@ -16,13 +16,14 @@
  */
 package org.jclouds.location.suppliers.derived;
 
+import static com.google.common.base.Preconditions.checkState;
+
 import java.net.URI;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
 import javax.inject.Inject;
-import javax.inject.Singleton;
 
 import org.jclouds.location.Region;
 import org.jclouds.location.Zone;
@@ -32,31 +33,30 @@ import com.google.common.base.Supplier;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableMap.Builder;
 
-/**
- * 
- */
-@Singleton
-public class ZoneIdToURIFromJoinOnRegionIdToURI implements ZoneIdToURISupplier {
+public final class ZoneIdToURIFromJoinOnRegionIdToURI implements ZoneIdToURISupplier {
 
-   private final Supplier<Map<String, Supplier<URI>>> regionIdToURISupplier;
-   private final Supplier<Map<String, Supplier<Set<String>>>> regionIdToZoneIdsSupplier;
+   private final Supplier<Map<String, Supplier<URI>>> regionIdToURIs;
+   private final Supplier<Map<String, Supplier<Set<String>>>> regionIdToZoneIds;
 
    @Inject
-   protected ZoneIdToURIFromJoinOnRegionIdToURI(@Region Supplier<Map<String, Supplier<URI>>> regionIdToURISupplier,
-         @Zone Supplier<Map<String, Supplier<Set<String>>>> regionIdToZoneIdsSupplier) {
-      this.regionIdToURISupplier = regionIdToURISupplier;
-      this.regionIdToZoneIdsSupplier = regionIdToZoneIdsSupplier;
+   ZoneIdToURIFromJoinOnRegionIdToURI(@Region Supplier<Map<String, Supplier<URI>>> regionIdToURIs,
+         @Zone Supplier<Map<String, Supplier<Set<String>>>> regionIdToZoneIds) {
+      this.regionIdToURIs = regionIdToURIs;
+      this.regionIdToZoneIds = regionIdToZoneIds;
    }
 
    @Override
    public Map<String, Supplier<URI>> get() {
-      Builder<String, Supplier<URI>> builder = ImmutableMap.<String, Supplier<URI>> builder();
-      for (Entry<String, Supplier<URI>> regionToURI : regionIdToURISupplier.get().entrySet()) {
-         for (String zone : regionIdToZoneIdsSupplier.get().get(regionToURI.getKey()).get()) {
+      Map<String, Supplier<Set<String>>> regionIdToZoneIds = this.regionIdToZoneIds.get();
+      Builder<String, Supplier<URI>> builder = ImmutableMap.builder();
+      for (Entry<String, Supplier<URI>> regionToURI : regionIdToURIs.get().entrySet()) {
+         Supplier<Set<String>> zoneIds = regionIdToZoneIds.get(regionToURI.getKey());
+         checkState(zoneIds != null, "region %s is not in the configured region to zone mappings: %s",
+               regionToURI.getKey(), regionIdToZoneIds);
+         for (String zone : zoneIds.get()) {
             builder.put(zone, regionToURI.getValue());
          }
       }
       return builder.build();
    }
-
 }

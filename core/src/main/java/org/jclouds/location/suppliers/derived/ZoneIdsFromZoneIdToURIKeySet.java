@@ -20,29 +20,24 @@ import java.net.URI;
 import java.util.Map;
 import java.util.Set;
 
-import javax.inject.Singleton;
-
 import org.jclouds.location.Zone;
 import org.jclouds.location.suppliers.ZoneIdsSupplier;
 
 import com.google.common.base.Supplier;
 import com.google.inject.Inject;
 
-/**
- * as opposed to via properties, lets look up zones via api, as they are more likely to change
- */
-@Singleton
-public class ZoneIdsFromZoneIdToURIKeySet implements ZoneIdsSupplier {
+/** As opposed to via properties, lets look up zones via api, as they are more likely to change. */
+public final class ZoneIdsFromZoneIdToURIKeySet implements ZoneIdsSupplier {
 
-   private final Supplier<Map<String, Supplier<URI>>> zoneIdToURISupplier;
+   private final Supplier<Map<String, Supplier<URI>>> zoneIdToURIs;
 
    @Inject
-   protected ZoneIdsFromZoneIdToURIKeySet(@Zone Supplier<Map<String, Supplier<URI>>> zoneIdToURISupplier) {
-      this.zoneIdToURISupplier = zoneIdToURISupplier;
+   ZoneIdsFromZoneIdToURIKeySet(@Zone Supplier<Map<String, Supplier<URI>>> zoneIdToURIs) {
+      this.zoneIdToURIs = zoneIdToURIs;
    }
 
    @Override
    public Set<String> get() {
-      return zoneIdToURISupplier.get().keySet();
+      return zoneIdToURIs.get().keySet();
    }
 }

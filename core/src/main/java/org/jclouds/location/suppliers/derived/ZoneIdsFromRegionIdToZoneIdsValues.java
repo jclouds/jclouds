@@ -16,40 +16,33 @@
  */
 package org.jclouds.location.suppliers.derived;
 
-import java.util.Collection;
 import java.util.Map;
 import java.util.Set;
 
 import javax.inject.Inject;
-import javax.inject.Singleton;
 
 import org.jclouds.location.Zone;
 import org.jclouds.location.suppliers.ZoneIdsSupplier;
 
 import com.google.common.base.Supplier;
-import com.google.common.base.Suppliers;
 import com.google.common.collect.ImmutableSet;
-import com.google.common.collect.Iterables;
 
-/**
- * as opposed to via properties, lets look up zones via api, as they are more likely to change
- */
-@Singleton
-public class ZoneIdsFromRegionIdToZoneIdsValues implements ZoneIdsSupplier {
+/** As opposed to via properties, lets look up zones via api, as they are more likely to change. */
+public final class ZoneIdsFromRegionIdToZoneIdsValues implements ZoneIdsSupplier {
 
-   private final Supplier<Map<String, Supplier<Set<String>>>> regionIdToZoneIdsSupplier;
+   private final Supplier<Map<String, Supplier<Set<String>>>> regionIdToZoneIds;
 
    @Inject
-   protected ZoneIdsFromRegionIdToZoneIdsValues(
-            @Zone Supplier<Map<String, Supplier<Set<String>>>> regionIdToZoneIdsSupplier) {
-      this.regionIdToZoneIdsSupplier = regionIdToZoneIdsSupplier;
+   ZoneIdsFromRegionIdToZoneIdsValues(@Zone Supplier<Map<String, Supplier<Set<String>>>> regionIdToZoneIds) {
+      this.regionIdToZoneIds = regionIdToZoneIds;
    }
 
    @Override
    public Set<String> get() {
-      Collection<Supplier<Set<String>>> zones = regionIdToZoneIdsSupplier.get().values();
-      return ImmutableSet.copyOf(Iterables.concat(Iterables.transform(zones, Suppliers
-               .<Set<String>> supplierFunction())));
+      ImmutableSet.Builder<String> result = ImmutableSet.builder();
+      for (Supplier<Set<String>> zone : regionIdToZoneIds.get().values()) {
+         result.addAll(zone.get());
+      }
+      return result.build();
    }
-
 }

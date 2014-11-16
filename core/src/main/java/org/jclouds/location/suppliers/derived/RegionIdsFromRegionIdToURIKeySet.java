@@ -16,39 +16,35 @@
  */
 package org.jclouds.location.suppliers.derived;
 
+import static com.google.common.base.Throwables.propagate;
+
 import java.lang.reflect.UndeclaredThrowableException;
 import java.net.URI;
 import java.util.Map;
 import java.util.Set;
 
-import javax.inject.Singleton;
-
 import org.jclouds.location.Region;
 import org.jclouds.location.suppliers.RegionIdsSupplier;
 
 import com.google.common.base.Supplier;
-import com.google.common.base.Throwables;
 import com.google.inject.Inject;
 
-/**
- * as opposed to via properties, lets look up regions via api, as they are more likely to change
- */
-@Singleton
-public class RegionIdsFromRegionIdToURIKeySet implements RegionIdsSupplier {
+/** As opposed to via properties, lets look up regions via api, as they are more likely to change. */
+public final class RegionIdsFromRegionIdToURIKeySet implements RegionIdsSupplier {
 
-   private final Supplier<Map<String, Supplier<URI>>> regionIdToURISupplier;
+   private final Supplier<Map<String, Supplier<URI>>> regionIdToURIs;
 
    @Inject
-   protected RegionIdsFromRegionIdToURIKeySet(@Region Supplier<Map<String, Supplier<URI>>> regionIdToURISupplier) {
-      this.regionIdToURISupplier = regionIdToURISupplier;
+   RegionIdsFromRegionIdToURIKeySet(@Region Supplier<Map<String, Supplier<URI>>> regionIdToURIs) {
+      this.regionIdToURIs = regionIdToURIs;
    }
 
    @Override
    public Set<String> get() {
       try {
-         return regionIdToURISupplier.get().keySet();
+         return regionIdToURIs.get().keySet();
       } catch (UndeclaredThrowableException e) {
-         throw Throwables.propagate(e.getCause());
+         throw propagate(e.getCause());
       }
    }
 }
