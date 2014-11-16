@@ -21,6 +21,8 @@ import static org.testng.Assert.assertEquals;
 import java.net.URI;
 import java.util.Map;
 
+import org.jclouds.location.Provider;
+import org.jclouds.location.Region;
 import org.jclouds.location.functions.RegionToEndpointOrProviderIfNull;
 import org.testng.annotations.Test;
 
@@ -29,44 +31,41 @@ import com.google.common.base.Optional;
 import com.google.common.base.Supplier;
 import com.google.common.base.Suppliers;
 import com.google.common.collect.ImmutableMap;
+import com.google.inject.Binder;
+import com.google.inject.Guice;
+import com.google.inject.Module;
+import com.google.inject.Provides;
 
-/**
- * Tests behavior of {@code AssignCorrectHostnameForBucket}
- * 
- * @author Adrian Cole
- */
-// NOTE:without testName, this will not call @Before* and fail w/NPE during
-// surefire
-@Test(groups = "unit", testName = "AssignCorrectHostnameForBucketTest")
+@Test
 public class AssignCorrectHostnameForBucketTest {
+   static final RegionToEndpointOrProviderIfNull REGION_TO_ENDPOINT = Guice.createInjector(new Module() {
+      @Override public void configure(Binder binder) {
+         binder.bindConstant().annotatedWith(Provider.class).to("s3");
+      }
+
+      @Provides @Provider Supplier<URI> defaultUri() {
+         return Suppliers.ofInstance(URI.create("https://s3.amazonaws.com"));
+      }
+
+      @Provides @Region Supplier<Map<String, Supplier<URI>>> regionToEndpoints() {
+         Map<String, Supplier<URI>> regionToEndpoint = ImmutableMap.of( //
+               "us-standard", defaultUri(), //
+               "us-west-1", Suppliers.ofInstance(URI.create("https://s3-us-west-1.amazonaws.com")));
+         return Suppliers.ofInstance(regionToEndpoint);
+      }
+   }).getInstance(RegionToEndpointOrProviderIfNull.class);
 
    public void testWhenNoBucketRegionMappingInCache() {
-
-      AssignCorrectHostnameForBucket fn = new AssignCorrectHostnameForBucket(new RegionToEndpointOrProviderIfNull(
-               "aws-s3", Suppliers.ofInstance(URI.create("https://s3.amazonaws.com")),
-
-               Suppliers.<Map<String, Supplier<URI>>> ofInstance(ImmutableMap.of("us-standard",
-                        Suppliers.ofInstance(URI.create("https://s3.amazonaws.com")), "us-west-1",
-                        Suppliers.ofInstance(URI.create("https://s3-us-west-1.amazonaws.com"))))),
-                        
-               Functions.forMap(ImmutableMap.<String, Optional<String>> of("bucket", Optional.<String> absent())));
+      AssignCorrectHostnameForBucket fn = new AssignCorrectHostnameForBucket(REGION_TO_ENDPOINT,
+            Functions.forMap(ImmutableMap.of("bucket", Optional.<String>absent())));
 
       assertEquals(fn.apply("bucket"), URI.create("https://s3.amazonaws.com"));
-
    }
 
    public void testWhenBucketRegionMappingInCache() {
-
-      AssignCorrectHostnameForBucket fn = new AssignCorrectHostnameForBucket(new RegionToEndpointOrProviderIfNull(
-               "aws-s3", Suppliers.ofInstance(URI.create("https://s3.amazonaws.com")),
-
-               Suppliers.<Map<String, Supplier<URI>>> ofInstance(ImmutableMap.of("us-standard",
-                        Suppliers.ofInstance(URI.create("https://s3.amazonaws.com")), "us-west-1",
-                        Suppliers.ofInstance(URI.create("https://s3-us-west-1.amazonaws.com"))))),
-               
-               Functions.forMap(ImmutableMap.<String, Optional<String>> of("bucket", Optional.of("us-west-1"))));
+      AssignCorrectHostnameForBucket fn = new AssignCorrectHostnameForBucket(REGION_TO_ENDPOINT,
+            Functions.forMap(ImmutableMap.of("bucket", Optional.of("us-west-1"))));
 
       assertEquals(fn.apply("bucket"), URI.create("https://s3-us-west-1.amazonaws.com"));
-
    }
 }

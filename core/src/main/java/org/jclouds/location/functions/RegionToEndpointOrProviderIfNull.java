@@ -17,13 +17,11 @@
 package org.jclouds.location.functions;
 
 import static com.google.common.base.Preconditions.checkArgument;
-import static com.google.common.base.Preconditions.checkNotNull;
 
 import java.net.URI;
 import java.util.Map;
 
 import javax.inject.Inject;
-import javax.inject.Singleton;
 
 import org.jclouds.javax.annotation.Nullable;
 import org.jclouds.location.Provider;
@@ -38,25 +36,23 @@ import com.google.common.base.Supplier;
  * 
  * @author Adrian Cole
  */
-@Singleton
-public class RegionToEndpointOrProviderIfNull implements Function<Object, URI> {
+public final class RegionToEndpointOrProviderIfNull implements Function<Object, URI> {
    private final Supplier<URI> defaultUri;
    private final String defaultProvider;
    private final Supplier<Map<String, Supplier<URI>>> regionToEndpointSupplier;
 
    @Inject
-   public RegionToEndpointOrProviderIfNull(@Provider String defaultProvider, @Provider Supplier<URI> defaultUri,
+   RegionToEndpointOrProviderIfNull(@Provider String defaultProvider, @Provider Supplier<URI> defaultUri,
          @Region Supplier<Map<String, Supplier<URI>>> regionToEndpointSupplier) {
-      this.defaultProvider = checkNotNull(defaultProvider, "defaultProvider");
-      this.defaultUri = checkNotNull(defaultUri, "defaultUri");
-      this.regionToEndpointSupplier = checkNotNull(regionToEndpointSupplier, "regionToEndpointSupplier");
+      this.defaultProvider = defaultProvider;
+      this.defaultUri = defaultUri;
+      this.regionToEndpointSupplier = regionToEndpointSupplier;
    }
 
    @Override
    public URI apply(@Nullable Object from) {
       if (from == null)
          return defaultUri.get();
-      checkArgument(from instanceof String, "region is a String argument");
       Map<String, Supplier<URI>> regionToEndpoint = regionToEndpointSupplier.get();
       if (from.equals(defaultProvider)) {
          if (regionToEndpoint.containsKey(from))
