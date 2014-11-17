@@ -33,7 +33,6 @@ import org.jclouds.googlecomputeengine.parse.ParseTargetPoolListTest;
 import org.jclouds.googlecomputeengine.parse.ParseTargetPoolTest;
 import org.jclouds.http.HttpRequest;
 import org.jclouds.http.HttpResponse;
-import org.jclouds.rest.ResourceNotFoundException;
 import org.testng.annotations.Test;
 
 import com.google.common.collect.ImmutableList;
@@ -174,17 +173,6 @@ public class TargetPoolApiExpectTest extends BaseGoogleComputeEngineExpectTest<G
       assertEquals(api.addInstance("test", INSTANCES),
               new ParseRegionOperationTest().expected());
    }
-
-   @Test(expectedExceptions = ResourceNotFoundException.class)
-   public void testAddInstanceResponseIs4xx() throws Exception {
-      HttpRequest addInstance = makeGenericRequest("POST", "addInstance", "/targetpool_addinstance.json");
-      HttpResponse response = HttpResponse.builder().statusCode(404).build();
-
-      TargetPoolApi api = requestsSendResponses(requestForScopes(COMPUTE_SCOPE),
-              TOKEN_RESPONSE, addInstance, response).targetPoolsInRegion("us-central1");
-
-      api.addInstance("test", INSTANCES);
-   }
    
    public void testRemoveInstanceResponseIs2xx(){
       HttpRequest removeInstance = makeGenericRequest("POST", "removeInstance", "/targetpool_addinstance.json");
@@ -199,17 +187,6 @@ public class TargetPoolApiExpectTest extends BaseGoogleComputeEngineExpectTest<G
             new ParseRegionOperationTest().expected());
    }
    
-   @Test(expectedExceptions = ResourceNotFoundException.class)
-   public void testRemoveInstanceResponseIs4xx() throws Exception {
-      HttpRequest removeInstance = makeGenericRequest("POST", "removeInstance", "/targetpool_addinstance.json");
-      HttpResponse response = HttpResponse.builder().statusCode(404).build();
-
-      TargetPoolApi api = requestsSendResponses(requestForScopes(COMPUTE_SCOPE),
-              TOKEN_RESPONSE, removeInstance, response).targetPoolsInRegion("us-central1");
-
-      api.removeInstance("test", INSTANCES);
-   }
-   
    public void testAddHealthCheckResponseIs2xx(){
       HttpRequest addHealthCheck = makeGenericRequest("POST", "addHealthCheck", "/targetpool_changehealthcheck.json");
       
@@ -221,18 +198,7 @@ public class TargetPoolApiExpectTest extends BaseGoogleComputeEngineExpectTest<G
 
       assertEquals(api.addHealthCheck("test", HEALTH_CHECKS), new ParseRegionOperationTest().expected());
    }
-   
-   @Test(expectedExceptions = ResourceNotFoundException.class)
-   public void testAddHealthCheckResponseIs4xx() throws Exception {
-      HttpRequest addHealthCheck = makeGenericRequest("POST", "addHealthCheck", "/targetpool_changehealthcheck.json");
-      HttpResponse response = HttpResponse.builder().statusCode(404).build();
 
-      TargetPoolApi api = requestsSendResponses(requestForScopes(COMPUTE_SCOPE),
-              TOKEN_RESPONSE, addHealthCheck, response).targetPoolsInRegion("us-central1");
-
-      api.addHealthCheck("test", HEALTH_CHECKS);
-   }
-   
    public void testRemoveHealthCheckResponseIs2xx(){
       HttpRequest removeHealthCheck = makeGenericRequest("POST", "removeHealthCheck", "/targetpool_changehealthcheck.json");
       
@@ -244,18 +210,7 @@ public class TargetPoolApiExpectTest extends BaseGoogleComputeEngineExpectTest<G
 
       assertEquals(api.removeHealthCheck("test", HEALTH_CHECKS), new ParseRegionOperationTest().expected());
    }
-   
-   @Test(expectedExceptions = ResourceNotFoundException.class)
-   public void testRemoveHealthCheckResponseIs4xx() throws Exception {
-      HttpRequest removeHealthCheck = makeGenericRequest("POST", "removeHealthCheck", "/targetpool_changehealthcheck.json");
-      HttpResponse response = HttpResponse.builder().statusCode(404).build();
 
-      TargetPoolApi api = requestsSendResponses(requestForScopes(COMPUTE_SCOPE),
-              TOKEN_RESPONSE, removeHealthCheck, response).targetPoolsInRegion("us-central1");
-
-      api.removeHealthCheck("test", HEALTH_CHECKS);
-   }
-   
    public void testSetBackupResponseIs2xx(){
       HttpRequest SetBackup = HttpRequest
             .builder()
@@ -293,25 +248,7 @@ public class TargetPoolApiExpectTest extends BaseGoogleComputeEngineExpectTest<G
       Float failoverRatio = Float.valueOf("0.5");
       assertEquals(api.setBackup("testpool", failoverRatio, TARGET_POOL), new ParseRegionOperationTest().expected());
    }
-   
-   @Test(expectedExceptions = ResourceNotFoundException.class)
-   public void testSetBackupResponseIs4xx() throws Exception {
-      HttpRequest SetBackup = HttpRequest
-            .builder()
-            .method("POST")
-            .endpoint(BASE_URL + "/party/regions/us-central1/targetPools/testpool/setBackup")
-            .addHeader("Accept", "application/json")
-            .addHeader("Authorization", "Bearer " + TOKEN)
-            .payload(payloadFromResourceWithContentType("/targetpool_setbackup.json", MediaType.APPLICATION_JSON))
-            .build();
-      HttpResponse response = HttpResponse.builder().statusCode(404).build();
 
-      TargetPoolApi api = requestsSendResponses(requestForScopes(COMPUTE_SCOPE),
-            TOKEN_RESPONSE, SetBackup, response).targetPoolsInRegion("us-central1");
-
-      api.setBackup("testpool", TARGET_POOL);
-   }
-   
    public HttpRequest makeGenericRequest(String method, String endpoint, String requestPayloadFile){
       HttpRequest request = HttpRequest
             .builder()

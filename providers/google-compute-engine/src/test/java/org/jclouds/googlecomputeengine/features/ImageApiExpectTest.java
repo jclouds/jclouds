@@ -27,7 +27,6 @@ import org.jclouds.googlecomputeengine.parse.ParseImageTest;
 import org.jclouds.googlecomputeengine.parse.ParseOperationTest;
 import org.jclouds.http.HttpRequest;
 import org.jclouds.http.HttpResponse;
-import org.jclouds.rest.ResourceNotFoundException;
 import org.testng.annotations.Test;
 
 @Test(groups = "unit", testName = "ImageApiExpectTest")
@@ -181,24 +180,5 @@ public class ImageApiExpectTest extends BaseGoogleComputeEngineExpectTest<Google
 
       assertEquals(imageApi.createFromDisk("my-image", BASE_URL + "/party/zones/us-central1-a/disks/mydisk"),
             new ParseOperationTest().expected());
-   }
-
-   @Test(expectedExceptions = ResourceNotFoundException.class)
-   public void testCreateImageFromPdResponseIs4xx() {
-      HttpRequest createImage = HttpRequest
-            .builder()
-            .method("POST")
-            .endpoint(BASE_URL + "/party/global/images")
-            .addHeader("Accept", "application/json")
-            .addHeader("Authorization", "Bearer " + TOKEN)
-            .payload(payloadFromResource("/image_insert_from_pd.json"))
-            .build();
-
-      HttpResponse createImageResponse = HttpResponse.builder().statusCode(404).build();
-
-      ImageApi imageApi = requestsSendResponses(requestForScopes(COMPUTE_SCOPE),
-              TOKEN_RESPONSE, createImage, createImageResponse).images();
-
-      imageApi.createFromDisk("my-image", BASE_URL + "/party/zones/us-central1-a/disks/mydisk");
    }
 }

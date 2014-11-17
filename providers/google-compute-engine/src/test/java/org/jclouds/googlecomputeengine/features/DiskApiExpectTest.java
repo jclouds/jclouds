@@ -32,7 +32,6 @@ import org.jclouds.googlecomputeengine.parse.ParseDiskTest;
 import org.jclouds.googlecomputeengine.parse.ParseZoneOperationTest;
 import org.jclouds.http.HttpRequest;
 import org.jclouds.http.HttpResponse;
-import org.jclouds.rest.ResourceNotFoundException;
 import org.testng.annotations.Test;
 
 @Test(groups = "unit", testName = "DiskApiExpectTest")
@@ -54,8 +53,7 @@ public class DiskApiExpectTest extends BaseGoogleComputeEngineExpectTest<GoogleC
       DiskApi api = requestsSendResponses(requestForScopes(COMPUTE_READONLY_SCOPE),
               TOKEN_RESPONSE, get, response).disksInZone("us-central1-a");
 
-      assertEquals(api.get("testimage1"),
-              new ParseDiskTest().expected());
+      assertEquals(api.get("testimage1"), new ParseDiskTest().expected());
    }
 
    public void testGetDiskResponseIs4xx() throws Exception {
@@ -153,28 +151,7 @@ public class DiskApiExpectTest extends BaseGoogleComputeEngineExpectTest<GoogleC
               TOKEN_RESPONSE, createSnapshotRequest,
               createSnapshotResponse).disksInZone("us-central1-a");
 
-      assertEquals(api.createSnapshot("testimage1", "test-snap"),
-            new ParseZoneOperationTest().expected());
-   }
-
-   @Test(expectedExceptions = ResourceNotFoundException.class)
-   public void testCreateSnapshotResponseIs4xx() {
-      HttpRequest createSnapshotRequest = HttpRequest
-              .builder()
-              .method("POST")
-              .endpoint(BASE_URL + "/party/zones/us-central1-a/disks/testimage1/createSnapshot")
-              .addHeader("Accept", "application/json")
-              .addHeader("Authorization", "Bearer " + TOKEN)
-              .payload(payloadFromResourceWithContentType("/disk_create_snapshot.json", MediaType.APPLICATION_JSON))
-              .build();
-
-      HttpResponse createSnapshotResponse = HttpResponse.builder().statusCode(404).build();
-
-      DiskApi api = requestsSendResponses(requestForScopes(COMPUTE_SCOPE),
-              TOKEN_RESPONSE, createSnapshotRequest,
-              createSnapshotResponse).disksInZone("us-central1-a");
-
-      api.createSnapshot("testimage1", "test-snap");
+      assertEquals(api.createSnapshot("testimage1", "test-snap"), new ParseZoneOperationTest().expected());
    }
 
    public void testDeleteDiskResponseIs2xx() {

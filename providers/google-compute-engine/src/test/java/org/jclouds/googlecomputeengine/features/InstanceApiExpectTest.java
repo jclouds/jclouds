@@ -21,6 +21,7 @@ import static org.jclouds.googlecomputeengine.features.ProjectApiExpectTest.GET_
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertNull;
+import static org.testng.Assert.assertTrue;
 
 import java.net.URI;
 import java.util.Arrays;
@@ -28,17 +29,15 @@ import java.util.Arrays;
 import javax.ws.rs.core.MediaType;
 
 import org.jclouds.googlecomputeengine.GoogleComputeEngineApi;
+import org.jclouds.googlecomputeengine.domain.AttachDisk;
 import org.jclouds.googlecomputeengine.domain.Metadata;
 import org.jclouds.googlecomputeengine.domain.NewInstance;
-import org.jclouds.googlecomputeengine.domain.AttachDisk;
 import org.jclouds.googlecomputeengine.internal.BaseGoogleComputeEngineExpectTest;
-import org.jclouds.googlecomputeengine.parse.ParseInstanceListTest;
 import org.jclouds.googlecomputeengine.parse.ParseInstanceSerialOutputTest;
 import org.jclouds.googlecomputeengine.parse.ParseInstanceTest;
 import org.jclouds.googlecomputeengine.parse.ParseZoneOperationTest;
 import org.jclouds.http.HttpRequest;
 import org.jclouds.http.HttpResponse;
-import org.jclouds.rest.ResourceNotFoundException;
 import org.testng.annotations.Test;
 
 import com.google.common.collect.ImmutableList;
@@ -197,12 +196,11 @@ public class InstanceApiExpectTest extends BaseGoogleComputeEngineExpectTest<Goo
    }
 
    public void list() {
-
       InstanceApi api = requestsSendResponses(
               requestForScopes(COMPUTE_READONLY_SCOPE), TOKEN_RESPONSE,
               LIST_INSTANCES_REQUEST, LIST_INSTANCES_RESPONSE).instancesInZone("us-central1-a");
 
-      assertEquals(api.list().next(), new ParseInstanceListTest().expected());
+      assertTrue(api.list().hasNext());
    }
 
    public void listEmpty() {
@@ -235,25 +233,6 @@ public class InstanceApiExpectTest extends BaseGoogleComputeEngineExpectTest<Goo
               new ParseZoneOperationTest().expected());
    }
 
-   @Test(expectedExceptions = ResourceNotFoundException.class)
-   public void testSetInstanceMetadataResponseIs4xx() {
-      HttpRequest setMetadata = HttpRequest
-              .builder()
-              .method("POST")
-              .endpoint(BASE_URL + "/party/zones/us-central1-a/instances/test-1/setMetadata")
-              .addHeader("Accept", "application/json")
-              .addHeader("Authorization", "Bearer " + TOKEN)
-              .payload(payloadFromResourceWithContentType("/instance_set_metadata.json", MediaType.APPLICATION_JSON))
-              .build();
-
-      HttpResponse setMetadataResponse = HttpResponse.builder().statusCode(404).build();
-
-      InstanceApi api = requestsSendResponses(requestForScopes(COMPUTE_SCOPE),
-              TOKEN_RESPONSE, setMetadata, setMetadataResponse).instancesInZone("us-central1-a");
-
-      api.setMetadata("test-1", Metadata.create("efgh").put("foo", "bar"));
-   }
-
    public void testSetInstanceTagsResponseIs2xx() {
       HttpRequest setTags = HttpRequest
               .builder()
@@ -274,25 +253,6 @@ public class InstanceApiExpectTest extends BaseGoogleComputeEngineExpectTest<Goo
               new ParseZoneOperationTest().expected());
    }
 
-   @Test(expectedExceptions = ResourceNotFoundException.class)
-   public void testSetInstanceTagsResponseIs4xx() {
-      HttpRequest setTags = HttpRequest
-              .builder()
-              .method("POST")
-              .endpoint(BASE_URL + "/party/zones/us-central1-a/instances/test-1/setTags")
-              .addHeader("Accept", "application/json")
-              .addHeader("Authorization", "Bearer " + TOKEN)
-              .payload(payloadFromResourceWithContentType("/instance_set_tags.json", MediaType.APPLICATION_JSON))
-              .build();
-
-      HttpResponse setTagsResponse = HttpResponse.builder().statusCode(404).build();
-
-      InstanceApi api = requestsSendResponses(requestForScopes(COMPUTE_SCOPE),
-              TOKEN_RESPONSE, setTags, setTagsResponse).instancesInZone("us-central1-a");
-
-      api.setTags("test-1", ImmutableList.of("foo", "bar"), "efgh");
-   }
-
    public void testResetInstanceResponseIs2xx() {
       HttpRequest reset = HttpRequest
               .builder()
@@ -309,23 +269,6 @@ public class InstanceApiExpectTest extends BaseGoogleComputeEngineExpectTest<Goo
 
       assertEquals(api.reset("test-1"),
               new ParseZoneOperationTest().expected());
-   }
-
-   @Test(expectedExceptions = ResourceNotFoundException.class)
-   public void testResetInstanceResponseIs4xx() {
-      HttpRequest reset = HttpRequest
-              .builder()
-              .method("POST")
-              .endpoint(BASE_URL + "/party/zones/us-central1-a/instances/test-1/reset")
-              .addHeader("Accept", "application/json")
-              .addHeader("Authorization", "Bearer " + TOKEN).build();
-
-      HttpResponse resetResponse = HttpResponse.builder().statusCode(404).build();
-
-      InstanceApi api = requestsSendResponses(requestForScopes(COMPUTE_SCOPE),
-              TOKEN_RESPONSE, reset, resetResponse).instancesInZone("us-central1-a");
-
-      api.reset("test-1");
    }
 
    public void testAttachDiskResponseIs2xx() {
@@ -355,27 +298,6 @@ public class InstanceApiExpectTest extends BaseGoogleComputeEngineExpectTest<Goo
               new ParseZoneOperationTest().expected());
    }
 
-   @Test(expectedExceptions = ResourceNotFoundException.class)
-   public void testAttachDiskResponseIs4xx() {
-      HttpRequest attach = HttpRequest
-              .builder()
-              .method("POST")
-              .endpoint(BASE_URL + "/party/zones/us-central1-a/instances/test-1/attachDisk")
-              .addHeader("Accept", "application/json")
-              .addHeader("Authorization", "Bearer " + TOKEN)
-              .payload(payloadFromResourceWithContentType("/instance_attach_disk.json", MediaType.APPLICATION_JSON))
-              .build();
-
-      HttpResponse attachResponse = HttpResponse.builder().statusCode(404).build();
-
-      InstanceApi api = requestsSendResponses(requestForScopes(COMPUTE_SCOPE),
-              TOKEN_RESPONSE, attach, attachResponse).instancesInZone("us-central1-a");
-
-      api.attachDisk("test-1", AttachDisk.create(AttachDisk.Type.PERSISTENT, AttachDisk.Mode.READ_ONLY,
-                                                        URI.create(BASE_URL + "/party/zones/us-central1-a/disks/testimage1"),
-                                                        null, false, null, true));
-   }
-
    public void testDetachDiskResponseIs2xx() {
       HttpRequest detach = HttpRequest
               .builder()
@@ -394,45 +316,6 @@ public class InstanceApiExpectTest extends BaseGoogleComputeEngineExpectTest<Goo
       assertEquals(api.detachDisk("test-1", "test-disk-1"),
               new ParseZoneOperationTest().expected());
    }
-
-   @Test(expectedExceptions = ResourceNotFoundException.class)
-   public void testDetachDiskResponseIs4xx() {
-      HttpRequest detach = HttpRequest
-              .builder()
-              .method("POST")
-              .endpoint(BASE_URL + "/party/zones/us-central1-a/instances/test-1/detachDisk?deviceName=test-disk-1")
-              .addHeader("Accept", "application/json")
-              .addHeader("Authorization", "Bearer " + TOKEN)
-              .build();
-
-      HttpResponse detachResponse = HttpResponse.builder().statusCode(404).build();
-
-      InstanceApi api = requestsSendResponses(requestForScopes(COMPUTE_SCOPE),
-              TOKEN_RESPONSE, detach, detachResponse).instancesInZone("us-central1-a");
-
-      api.detachDisk("test-1", "test-disk-1");
-   }
-
-   @Test(expectedExceptions = ResourceNotFoundException.class)
-   public void testSetDiskAutoDeleteResponseIs4xx() {
-      HttpRequest setTrue = HttpRequest
-            .builder()
-            .method("POST")
-            .endpoint("https://www.googleapis" +
-                    ".com/compute/v1/projects/party/zones/us-central1-a/instances/test-1/setDiskAutoDelete" +
-                    "?deviceName=test-disk-1&autoDelete=true")
-            .addHeader("Accept", "application/json")
-            .addHeader("Authorization", "Bearer " + TOKEN)
-            .build();
-
-      HttpResponse setTrueResponse = HttpResponse.builder().statusCode(404).build();
-
-      InstanceApi api = requestsSendResponses(requestForScopes(COMPUTE_SCOPE),
-              TOKEN_RESPONSE, setTrue, setTrueResponse).instancesInZone("us-central1-a");
-
-      api.setDiskAutoDelete("test-1", "test-disk-1", true);
-   }
-
 }
 
 
