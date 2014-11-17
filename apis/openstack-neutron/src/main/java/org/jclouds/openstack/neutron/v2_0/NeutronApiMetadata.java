@@ -32,6 +32,7 @@ import org.jclouds.openstack.neutron.v2_0.config.NeutronHttpApiModule;
 import org.jclouds.openstack.v2_0.ServiceType;
 import org.jclouds.rest.internal.BaseHttpApiMetadata;
 
+import com.google.auto.service.AutoService;
 import com.google.common.collect.ImmutableSet;
 import com.google.inject.Module;
 
@@ -39,6 +40,7 @@ import com.google.inject.Module;
  * Implementation of {@link org.jclouds.apis.ApiMetadata} for Neutron 2.0 API
  */
 @Deprecated
+@AutoService(ApiMetadata.class)
 public class NeutronApiMetadata extends BaseHttpApiMetadata<NeutronApi> {
 
    @Override
