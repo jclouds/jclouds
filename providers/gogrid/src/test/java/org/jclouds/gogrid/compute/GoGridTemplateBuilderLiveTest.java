@@ -23,13 +23,10 @@ import java.io.IOException;
 import java.util.Set;
 
 import org.jclouds.compute.domain.OsFamily;
-import org.jclouds.compute.domain.OsFamilyVersion64Bit;
 import org.jclouds.compute.domain.Template;
 import org.jclouds.compute.internal.BaseTemplateBuilderLiveTest;
 import org.testng.annotations.Test;
 
-import com.google.common.base.Predicate;
-import com.google.common.base.Predicates;
 import com.google.common.collect.ImmutableSet;
 
 //NOTE:without testName, this will not call @Before* and fail w/NPE during surefire
@@ -38,29 +35,6 @@ public class GoGridTemplateBuilderLiveTest extends BaseTemplateBuilderLiveTest {
 
    public GoGridTemplateBuilderLiveTest() {
       provider = "gogrid";
-   }
-
-   @Override
-   protected Predicate<OsFamilyVersion64Bit> defineUnsupportedOperatingSystems() {
-      return Predicates.not(new Predicate<OsFamilyVersion64Bit>() {
-         @Override
-         public boolean apply(OsFamilyVersion64Bit input) {
-            switch (input.family) {
-               case RHEL:
-                  return input.version.equals("") || input.version.matches("5.[67]");
-               case DEBIAN:
-                  return input.version.equals("") || input.version.matches("[56].0");
-               case UBUNTU:
-                  return input.version.equals("") || input.version.equals("10.04");
-               case CENTOS:
-                  return input.version.equals("") || input.version.matches("5.[06]") || input.version.equals("6.0");
-               case WINDOWS:
-                  return input.version.equals("") || input.version.matches("200[38]");
-               default:
-                  return false;
-            }
-         }
-      });
    }
 
    @Test
@@ -74,6 +48,6 @@ public class GoGridTemplateBuilderLiveTest extends BaseTemplateBuilderLiveTest {
 
    @Override
    protected Set<String> getIso3166Codes() {
-      return ImmutableSet.<String> of("US-CA", "US-VA", "NL-NH");
+      return ImmutableSet.of("US-CA", "US-VA", "NL-NH");
    }
 }

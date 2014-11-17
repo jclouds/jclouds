@@ -32,7 +32,7 @@ public class StubTemplateBuilderIntegrationTest extends BaseTemplateBuilderLiveT
 
    @Override
    protected Set<String> getIso3166Codes() {
-      return ImmutableSet.<String> of();
+      return ImmutableSet.of();
    }
 
 }
