@@ -16,25 +16,21 @@
  */
 package org.jclouds.softlayer.compute;
 
-import com.google.common.base.Predicate;
-import com.google.common.base.Predicates;
-import org.jclouds.compute.ComputeServiceContext;
-import org.jclouds.compute.domain.OsFamily;
-import org.jclouds.compute.domain.OsFamilyVersion64Bit;
-import org.jclouds.compute.domain.Template;
-import org.jclouds.compute.domain.Volume;
-import org.jclouds.compute.internal.BaseTemplateBuilderLiveTest;
-import org.jclouds.softlayer.compute.options.SoftLayerTemplateOptions;
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.Test;
+import static org.jclouds.compute.util.ComputeServiceUtils.getCores;
+import static org.jclouds.compute.util.ComputeServiceUtils.getSpace;
+import static org.testng.Assert.assertEquals;
 
 import java.io.IOException;
 import java.util.Properties;
 import java.util.Set;
 
-import static org.jclouds.compute.util.ComputeServiceUtils.getCores;
-import static org.jclouds.compute.util.ComputeServiceUtils.getSpace;
-import static org.testng.Assert.assertEquals;
+import org.jclouds.compute.ComputeServiceContext;
+import org.jclouds.compute.domain.OsFamily;
+import org.jclouds.compute.domain.Template;
+import org.jclouds.compute.domain.Volume;
+import org.jclouds.compute.internal.BaseTemplateBuilderLiveTest;
+import org.jclouds.softlayer.compute.options.SoftLayerTemplateOptions;
+import org.testng.annotations.Test;
 
 @Test(groups = "live", alwaysRun = false)
 public class SoftLayerTemplateBuilderLiveTest extends BaseTemplateBuilderLiveTest {
@@ -43,38 +39,6 @@ public class SoftLayerTemplateBuilderLiveTest extends BaseTemplateBuilderLiveTes
 
    public SoftLayerTemplateBuilderLiveTest() {
       provider = "softlayer";
-   }
-
-   // / allows us to break when a new os is added
-   @Override
-   protected Predicate<OsFamilyVersion64Bit> defineUnsupportedOperatingSystems() {
-      return Predicates.not(new Predicate<OsFamilyVersion64Bit>() {
-
-         @Override
-         public boolean apply(OsFamilyVersion64Bit input) {
-            // For each os-type both 32- and 64-bit are supported.
-            switch (input.family) {
-            case UBUNTU:
-               return input.version.equals("") || input.version.equals("10.04") || input.version.equals("12.04") ||
-                       input.version.equals("8.04");
-            case DEBIAN:
-               return input.version.equals("") || input.version.matches("[56].0");
-            case FEDORA:
-               return input.version.equals("") || input.version.equals("13") || input.version.equals("15");
-            case RHEL:
-               return input.version.equals("") || input.version.equals("5") || input.version.equals("6") ||
-                       input.version.equals("6.1") || input.version.equals("5.4") || input.version.equals("5.7");
-            case CENTOS:
-               return input.version.equals("") || input.version.equals("5") || input.version.equals("6.0") ||
-                       input.version.equals("6.1") || input.version.equals("6.2") || input.version.equals("6");
-            case WINDOWS:
-               return input.version.equals("") || input.version.equals("2003") || input.version.equals("2008");
-            default:
-               return false;
-            }
-         }
-
-      });
    }
 
    @Test
@@ -163,11 +127,5 @@ public class SoftLayerTemplateBuilderLiveTest extends BaseTemplateBuilderLiveTes
    @Override
    protected Set<String> getIso3166Codes() {
       return createProviderMetadata().getIso3166Codes();
-   }
-
-   @BeforeClass(groups = "live")
-   @Override
-   public void setupContext() {
-      super.setupContext();
    }
 }

@@ -23,14 +23,11 @@ import static org.testng.Assert.assertNull;
 import java.util.Set;
 
 import org.jclouds.compute.domain.OsFamily;
-import org.jclouds.compute.domain.OsFamilyVersion64Bit;
 import org.jclouds.compute.domain.Template;
 import org.jclouds.compute.internal.BaseTemplateBuilderLiveTest;
 import org.jclouds.openstack.nova.v2_0.compute.options.NovaTemplateOptions;
 import org.testng.annotations.Test;
 
-import com.google.common.base.Predicate;
-import com.google.common.base.Predicates;
 import com.google.common.collect.ImmutableSet;
 
 @Test(groups = "live", singleThreaded = true, testName = "CloudServersUSTemplateBuilderLiveTest")
@@ -38,31 +35,6 @@ public class CloudServersUSTemplateBuilderLiveTest extends BaseTemplateBuilderLi
 
    public CloudServersUSTemplateBuilderLiveTest() {
       provider = "rackspace-cloudservers-us";
-   }
-
-   @Override
-   protected Predicate<OsFamilyVersion64Bit> defineUnsupportedOperatingSystems() {
-      return Predicates.not(new Predicate<OsFamilyVersion64Bit>() {
-
-         @Override
-         public boolean apply(OsFamilyVersion64Bit input) {
-            switch (input.family) {
-               case UBUNTU:
-                  return (input.version.equals("") || input.version.matches("(10.04)|(12.04)|(12.10)|(13.04)"))
-                           && input.is64Bit;
-               case DEBIAN:
-                  return input.is64Bit && !input.version.equals("5.0");
-               case CENTOS:
-                  return (input.version.equals("") || input.version.matches("(5.0)|(5.6)|(5.8)|(5.9)|(6.0)|(6.2)|(6.3)|(6.4)"))
-                           && input.is64Bit;
-               case WINDOWS:
-                  return input.is64Bit && input.version.equals("");
-               default:
-                  return false;
-            }
-         }
-
-      });
    }
 
    @Test
@@ -83,6 +55,6 @@ public class CloudServersUSTemplateBuilderLiveTest extends BaseTemplateBuilderLi
 
    @Override
    protected Set<String> getIso3166Codes() {
-      return ImmutableSet.<String> of("US-IL", "US-TX", "AU-NSW");
+      return ImmutableSet.of("US-IL", "US-TX", "AU-NSW");
    }
 }
