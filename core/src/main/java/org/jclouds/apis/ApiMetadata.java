@@ -142,7 +142,7 @@ public interface ApiMetadata {
 
    /**
     * 
-    * @return the api's unique identifier (ex. vcloud, virtualbox)
+    * @return the api's unique identifier (ex. ec2, openstack-nova)
     */
    String getId();
 
@@ -164,7 +164,7 @@ public interface ApiMetadata {
     * <p/>
     * 
     * @return the name (display name) of an endpoint to this api (ex. Keystone
-    *         url, vCloud Director URL).
+    *         url).
     */
    String getEndpointName();
    
@@ -193,8 +193,7 @@ public interface ApiMetadata {
     * running.
     * 
     * For example, for virtualbox, the api version may be {@code 4.1.8} while
-    * the build version is {@code 4.1.8r75467}. Or a vcloud endpoint may be api
-    * version {@code 1.0} while the build is {@code 1.5.0.0.124312}
+    * the build version is {@code 4.1.8r75467}.
     */
    Optional<String> getBuildVersion();
 

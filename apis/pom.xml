@@ -36,7 +36,6 @@
     <module>s3</module>
     <module>ec2</module>
     <module>sqs</module>
-    <module>vcloud</module>
     <module>elasticstack</module>
     <module>atmos</module>
     <module>swift</module>

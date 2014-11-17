@@ -19,8 +19,8 @@
   "A clojure binding to the jclouds ComputeService.
 
  jclouds supports many compute providers including Amazon EC2 (aws-ec2),
- Rackspace Cloud Servers (cloudservers-us), GoGrid (gogrid), and BlueLock
- vCloud (bluelock-vcloud-zone01).  There are over a dozen to choose from.  
+ Rackspace Cloud Servers (cloudservers-us), GoGrid (gogrid), 
+ There are over a dozen to choose from.  
 
  Current supported providers are available via the following dependency:
   org.jclouds/jclouds-allcompute
@@ -338,7 +338,7 @@ Here's an example of creating and running a small linux node in the group webser
   (merge
     (make-option-map
       kw-memfn-0arg
-      [;; ec2 trmk-ecloud trmk-vcloudexpress
+      [;; ec2
          :no-key-pair
        ;; aws-ec2
          :enable-monitoring :no-placement-group])
@@ -368,11 +368,7 @@ Here's an example of creating and running a small linux node in the group webser
        ;; cloudstack aws-ec2
          :security-group-ids
        ;; softlayer
-         :domain-name
-       ;; trmk-ecloud trmk-vcloudexpress
-         :ssh-key-fingerprint
-       ;; vcloud
-         :description :customization-script :ip-address-allocation-mode])
+         :domain-name])
     (make-option-map
       kw-memfn-varargs
       [;; from TemplateOptions

@@ -57,7 +57,7 @@ Here are the properties:
   * group          - primary group of the machine. ex. hadoop 
   * tags           - optional; list of arbitrary tags. 
                                * note this list is not yet in jclouds NodeMetadata 
-  * username       - primary login user. ex. ubuntu, vcloud, toor, root 
+  * username       - primary login user. ex. ubuntu, toor, root 
   * sudo_password  - optional; when a script is run with the "runAsRoot" option true, yet the
                                username is not root, a sudo command is invoked. If sudo_password
                                is set, the contents will be passed to sudo -S.  

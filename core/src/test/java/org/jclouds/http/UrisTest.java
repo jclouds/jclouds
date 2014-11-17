@@ -113,13 +113,7 @@ public class UrisTest {
 
    @Test
    public void testNoDoubleSlashInPath() {
-      assertEquals(uriBuilder("https://vcloud/api/").appendPath("/").build().toASCIIString(), "https://vcloud/api/");
-   }
-
-   @Test
-   public void testWhenUrnInPath() {
-      assertEquals(uriBuilder("https://vcloud/api").appendPath("urn::acme:foo").build(templateParams).toASCIIString(),
-            "https://vcloud/api/urn::acme:foo");
+      assertEquals(uriBuilder("https://cloud/api/").appendPath("/").build().toASCIIString(), "https://cloud/api/");
    }
 
    @Test

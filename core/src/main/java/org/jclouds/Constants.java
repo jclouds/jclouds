@@ -231,8 +231,7 @@ public final class Constants {
     * Explicitly identifies the build that the server jclouds connects to is running.
     * 
     * For example, for virtualbox, the api version may be {@code 4.1.8} while the build version is
-    * {@code 4.1.8r75467}. Or a vcloud endpoint may be api version {@code 1.0} while the build is
-    * {@code 1.5.0.0.124312}
+    * {@code 4.1.8r75467}.
     */
    public static final String PROPERTY_BUILD_VERSION = "jclouds.build-version";
    
