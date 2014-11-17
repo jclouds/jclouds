@@ -22,21 +22,21 @@ import org.jclouds.blobstore.domain.MutableBlobMetadata;
 import org.jclouds.blobstore.domain.StorageType;
 import org.jclouds.blobstore.domain.internal.MutableBlobMetadataImpl;
 import org.jclouds.blobstore.strategy.IfDirectoryReturnNameStrategy;
-import org.jclouds.googlecloudstorage.domain.GCSObject;
+import org.jclouds.googlecloudstorage.domain.GoogleCloudStorageObject;
 import org.jclouds.javax.annotation.Nullable;
 
 import com.google.common.base.Function;
 import com.google.common.hash.HashCode;
 import com.google.common.io.BaseEncoding;
 
-public class ObjectToBlobMetadata implements Function<GCSObject, MutableBlobMetadata> {
+public class ObjectToBlobMetadata implements Function<GoogleCloudStorageObject, MutableBlobMetadata> {
    private final IfDirectoryReturnNameStrategy ifDirectoryReturnName;
 
    @Inject public ObjectToBlobMetadata(IfDirectoryReturnNameStrategy ifDirectoryReturnName) {
       this.ifDirectoryReturnName = ifDirectoryReturnName;
    }
 
-   public MutableBlobMetadata apply(GCSObject from) {
+   public MutableBlobMetadata apply(GoogleCloudStorageObject from) {
       if (from == null) {
          return null;
       }

@@ -23,9 +23,9 @@ import org.jclouds.googlecloud.internal.TestProperties;
 import org.testng.annotations.Test;
 
 @Test(groups = { "live" })
-public class GCSContainerLiveTest extends BaseContainerLiveTest {
+public class GoogleCloudStorageContainerLiveTest extends BaseContainerLiveTest {
 
-   public GCSContainerLiveTest() {
+   public GoogleCloudStorageContainerLiveTest() {
       provider = "google-cloud-storage";
    }
 

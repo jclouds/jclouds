@@ -18,7 +18,7 @@ package org.jclouds.googlecloudstorage.blobstore.config;
 
 import org.jclouds.blobstore.BlobStore;
 import org.jclouds.blobstore.attr.ConsistencyModel;
-import org.jclouds.googlecloudstorage.blobstore.GCSBlobStore;
+import org.jclouds.googlecloudstorage.blobstore.GoogleCloudStorageBlobStore;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.Scopes;
@@ -28,6 +28,6 @@ public class GoogleCloudStorageBlobStoreContextModule extends AbstractModule {
    @Override
    protected void configure() {
       bind(ConsistencyModel.class).toInstance(ConsistencyModel.EVENTUAL);
-      bind(BlobStore.class).to(GCSBlobStore.class).in(Scopes.SINGLETON);
+      bind(BlobStore.class).to(GoogleCloudStorageBlobStore.class).in(Scopes.SINGLETON);
    }
 }

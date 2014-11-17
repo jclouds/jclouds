@@ -39,9 +39,9 @@ import com.google.common.base.Charsets;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.hash.Hashing;
 
-public class GCSContainerIntegrationLiveTest extends BaseContainerIntegrationTest {
+public class GoogleCloudStorageContainerIntegrationLiveTest extends BaseContainerIntegrationTest {
 
-   public GCSContainerIntegrationLiveTest() {
+   public GoogleCloudStorageContainerIntegrationLiveTest() {
       provider = "google-cloud-storage";
    }
 
@@ -96,7 +96,7 @@ public class GCSContainerIntegrationLiveTest extends BaseContainerIntegrationTes
 
    @Override
    public void testDirectory() throws InterruptedException {
-      // GCS does not support directories, rather it supports prefixes which look like directories.
-      throw new SkipException("directories are not supported in GCS");
+      // GoogleCloudStorage does not support directories, rather it supports prefixes which look like directories.
+      throw new SkipException("directories are not supported in GoogleCloudStorage");
    }
 }

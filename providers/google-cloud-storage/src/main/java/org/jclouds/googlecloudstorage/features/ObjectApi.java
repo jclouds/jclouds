@@ -34,7 +34,7 @@ import org.jclouds.Fallbacks.NullOnNotFoundOr404;
 import org.jclouds.Fallbacks.TrueOnNotFoundOr404;
 import org.jclouds.googlecloudstorage.binders.MultipartUploadBinder;
 import org.jclouds.googlecloudstorage.binders.UploadBinder;
-import org.jclouds.googlecloudstorage.domain.GCSObject;
+import org.jclouds.googlecloudstorage.domain.GoogleCloudStorageObject;
 import org.jclouds.googlecloudstorage.domain.ListPageWithPrefixes;
 import org.jclouds.googlecloudstorage.domain.templates.ComposeObjectTemplate;
 import org.jclouds.googlecloudstorage.domain.templates.ObjectTemplate;
@@ -103,7 +103,7 @@ public interface ObjectApi {
    @Consumes(APPLICATION_JSON)
    @Fallback(NullOnNotFoundOr404.class)
    @Nullable
-   GCSObject getObject(@PathParam("bucket") String bucketName, @PathParam("object") String objectName);
+   GoogleCloudStorageObject getObject(@PathParam("bucket") String bucketName, @PathParam("object") String objectName);
 
    /**
     * Retrieves objects metadata
@@ -115,7 +115,7 @@ public interface ObjectApi {
     * @param options
     *           Supply {@link GetObjectOptions} with optional query parameters
     *
-    * @return a {@link GCSObject}
+    * @return a {@link GoogleCloudStorageObject}
     */
    @Named("Object:get")
    @GET
@@ -123,7 +123,7 @@ public interface ObjectApi {
    @Consumes(APPLICATION_JSON)
    @Fallback(NullOnNotFoundOr404.class)
    @Nullable
-   GCSObject getObject(@PathParam("bucket") String bucketName, @PathParam("object") String objectName,
+   GoogleCloudStorageObject getObject(@PathParam("bucket") String bucketName, @PathParam("object") String objectName,
             GetObjectOptions options);
 
    /**
@@ -155,7 +155,7 @@ public interface ObjectApi {
     * @param options
     *           Supply {@link GetObjectOptions} with optional query parameters
     *
-    * @return a {@link GCSObject}
+    * @return a {@link GoogleCloudStorageObject}
     */
    @Named("Object:get")
    @GET
@@ -176,7 +176,7 @@ public interface ObjectApi {
     * @param options
     *           Supply an {@link InsertObjectOptions}. 'name' should not null.
     *
-    * @return a {@link GCSObject}
+    * @return a {@link GoogleCloudStorageObject}
     */
    @Named("Object:simpleUpload")
    @POST
@@ -184,7 +184,7 @@ public interface ObjectApi {
    @Consumes(APPLICATION_JSON)
    @Path("/upload/storage/v1/b/{bucket}/o")
    @MapBinder(UploadBinder.class)
-   GCSObject simpleUpload(@PathParam("bucket") String bucketName, @HeaderParam("Content-Type") String contentType,
+   GoogleCloudStorageObject simpleUpload(@PathParam("bucket") String bucketName, @HeaderParam("Content-Type") String contentType,
             @HeaderParam("Content-Length") Long contentLength, @PayloadParam("payload") Payload payload,
             InsertObjectOptions Options);
 
@@ -230,7 +230,7 @@ public interface ObjectApi {
    @GET
    @Consumes(APPLICATION_JSON)
    @Path("storage/v1/b/{bucket}/o")
-   ListPageWithPrefixes<GCSObject> listObjects(@PathParam("bucket") String bucketName);
+   ListPageWithPrefixes<GoogleCloudStorageObject> listObjects(@PathParam("bucket") String bucketName);
 
    /**
     * Retrieves a list of objects matching the criteria.
@@ -239,13 +239,13 @@ public interface ObjectApi {
     *           Name of the bucket in which to look for objects.
     * @param options
     *          Supply {@link ListObjectOptions}
-    * @return a {@link ListPage<GCSObject>}
+    * @return a {@link ListPage<GoogleCloudStorageObject>}
     */
    @Named("Object:list")
    @GET
    @Consumes(APPLICATION_JSON)
    @Path("storage/v1/b/{bucket}/o")
-   ListPageWithPrefixes<GCSObject> listObjects(@PathParam("bucket") String bucketName, ListObjectOptions options);
+   ListPageWithPrefixes<GoogleCloudStorageObject> listObjects(@PathParam("bucket") String bucketName, ListObjectOptions options);
 
    /**
     * Updates an object metadata
@@ -257,7 +257,7 @@ public interface ObjectApi {
     * @param objectTemplate
     *           Supply  an {@link ObjectTemplate}
     *
-    * @return a {@link GCSObject}
+    * @return a {@link GoogleCloudStorageObject}
     */
    @Named("Object:update")
    @PUT
@@ -265,7 +265,7 @@ public interface ObjectApi {
    @Produces(APPLICATION_JSON)
    @Path("storage/v1/b/{bucket}/o/{object}")
    @Fallback(NullOnNotFoundOr404.class)
-   GCSObject updateObject(@PathParam("bucket") String bucketName, @PathParam("object") String objectName,
+   GoogleCloudStorageObject updateObject(@PathParam("bucket") String bucketName, @PathParam("object") String objectName,
             @BinderParam(BindToJsonPayload.class) ObjectTemplate objectTemplate);
 
    /**
@@ -280,7 +280,7 @@ public interface ObjectApi {
     * @param options
     *           Supply {@link UpdateObjectOptions} with optional query parameters
     *
-    * @return a {@link GCSObject} .
+    * @return a {@link GoogleCloudStorageObject} .
     */
    @Named("Object:update")
    @PUT
@@ -288,7 +288,7 @@ public interface ObjectApi {
    @Produces(APPLICATION_JSON)
    @Path("storage/v1/b/{bucket}/o/{object}")
    @Fallback(NullOnNotFoundOr404.class)
-   GCSObject updateObject(@PathParam("bucket") String bucketName, @PathParam("object") String objectName,
+   GoogleCloudStorageObject updateObject(@PathParam("bucket") String bucketName, @PathParam("object") String objectName,
             @BinderParam(BindToJsonPayload.class) ObjectTemplate objectTemplate, UpdateObjectOptions options);
 
    /**
@@ -301,7 +301,7 @@ public interface ObjectApi {
     * @param objectTemplate
     *           Supply {@link ObjectTemplate} with optional query parameters
     *
-    * @return  a {@link GCSObject}
+    * @return  a {@link GoogleCloudStorageObject}
     */
    @Named("Object:patch")
    @PATCH
@@ -309,7 +309,7 @@ public interface ObjectApi {
    @Produces(APPLICATION_JSON)
    @Path("storage/v1/b/{bucket}/o/{object}")
    @Fallback(NullOnNotFoundOr404.class)
-   GCSObject patchObject(@PathParam("bucket") String bucketName, @PathParam("object") String objectName,
+   GoogleCloudStorageObject patchObject(@PathParam("bucket") String bucketName, @PathParam("object") String objectName,
             @BinderParam(BindToJsonPayload.class) ObjectTemplate objectTemplate);
 
    /**
@@ -324,7 +324,7 @@ public interface ObjectApi {
     * @param options
     *           Supply {@link UpdateObjectOptions} with optional query parameters
     *
-    * @return a {@link GCSObject}
+    * @return a {@link GoogleCloudStorageObject}
     */
    @Named("Object:patch")
    @PUT
@@ -332,7 +332,7 @@ public interface ObjectApi {
    @Produces(APPLICATION_JSON)
    @Path("storage/v1/b/{bucket}/o/{object}")
    @Fallback(NullOnNotFoundOr404.class)
-   GCSObject patchObject(@PathParam("bucket") String bucketName, @PathParam("object") String objectName,
+   GoogleCloudStorageObject patchObject(@PathParam("bucket") String bucketName, @PathParam("object") String objectName,
             @BinderParam(BindToJsonPayload.class) ObjectTemplate objectTemplate, UpdateObjectOptions options);
 
    /**
@@ -345,13 +345,13 @@ public interface ObjectApi {
     * @param composeObjectTemplate
     *           Supply a {@link ComposeObjectTemplate}
     *
-    * @return a {@link GCSObject}
+    * @return a {@link GoogleCloudStorageObject}
     */
    @Named("Object:compose")
    @POST
    @Consumes(APPLICATION_JSON)
    @Path("storage/v1/b/{destinationBucket}/o/{destinationObject}/compose")
-   GCSObject composeObjects(@PathParam("destinationBucket") String destinationBucket,
+   GoogleCloudStorageObject composeObjects(@PathParam("destinationBucket") String destinationBucket,
             @PathParam("destinationObject") String destinationObject,
             @BinderParam(BindToJsonPayload.class) ComposeObjectTemplate composeObjectTemplate);
 
@@ -367,13 +367,13 @@ public interface ObjectApi {
     * @param options
     *           Supply an {@link ComposeObjectOptions}
     *
-    * @return a {@link GCSObject}
+    * @return a {@link GoogleCloudStorageObject}
     */
    @Named("Object:compose")
    @POST
    @Consumes(APPLICATION_JSON)
    @Path("storage/v1/b/{destinationBucket}/o/{destinationObject}/compose")
-   GCSObject composeObjects(@PathParam("destinationBucket") String destinationBucket,
+   GoogleCloudStorageObject composeObjects(@PathParam("destinationBucket") String destinationBucket,
             @PathParam("destinationObject") String destinationObject,
             @BinderParam(BindToJsonPayload.class) ComposeObjectTemplate composeObjectTemplate,
             ComposeObjectOptions options);
@@ -390,13 +390,13 @@ public interface ObjectApi {
     * @param sourceObject
     *           Name of the source object
     *
-    * @return a {@link GCSObject}
+    * @return a {@link GoogleCloudStorageObject}
     */
    @Named("Object:copy")
    @POST
    @Consumes(APPLICATION_JSON)
    @Path("/storage/v1/b/{sourceBucket}/o/{sourceObject}/copyTo/b/{destinationBucket}/o/{destinationObject}")
-   GCSObject copyObject(@PathParam("destinationBucket") String destinationBucket,
+   GoogleCloudStorageObject copyObject(@PathParam("destinationBucket") String destinationBucket,
             @PathParam("destinationObject") String destinationObject, @PathParam("sourceBucket") String sourceBucket,
             @PathParam("sourceObject") String sourceObject);
 
@@ -414,13 +414,13 @@ public interface ObjectApi {
     * @param options
     *           Supply a {@link CopyObjectOptions}
     *
-    * @return a {@link GCSObject}
+    * @return a {@link GoogleCloudStorageObject}
     */
    @Named("Object:copy")
    @POST
    @Consumes(APPLICATION_JSON)
    @Path("/storage/v1/b/{sourceBucket}/o/{sourceObject}/copyTo/b/{destinationBucket}/o/{destinationObject}")
-   GCSObject copyObject(@PathParam("destinationBucket") String destinationBucket,
+   GoogleCloudStorageObject copyObject(@PathParam("destinationBucket") String destinationBucket,
             @PathParam("destinationObject") String destinationObject, @PathParam("sourceBucket") String sourceBucket,
             @PathParam("sourceObject") String sourceObject, CopyObjectOptions options);
 
@@ -434,7 +434,7 @@ public interface ObjectApi {
     * @param objectTemplate
     *           Supply an {@link ObjectTemplate}.
     *
-    * @return a {@link GCSObject}
+    * @return a {@link GoogleCloudStorageObject}
     */
    @Named("Object:multipartUpload")
    @POST
@@ -442,7 +442,7 @@ public interface ObjectApi {
    @Consumes(APPLICATION_JSON)
    @Path("/upload/storage/v1/b/{bucket}/o")
    @MapBinder(MultipartUploadBinder.class)
-   GCSObject multipartUpload(@PathParam("bucket") String bucketName,
+   GoogleCloudStorageObject multipartUpload(@PathParam("bucket") String bucketName,
             @PayloadParam("template") ObjectTemplate objectTemplate,
             @PayloadParam("payload") Payload payload);
 }

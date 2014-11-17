@@ -26,7 +26,7 @@ import org.jclouds.blobstore.domain.Blob;
 import org.jclouds.blobstore.domain.BlobBuilder;
 import org.jclouds.googlecloudstorage.GoogleCloudStorageApi;
 import org.jclouds.googlecloudstorage.blobstore.functions.BlobMetadataToObjectTemplate;
-import org.jclouds.googlecloudstorage.domain.GCSObject;
+import org.jclouds.googlecloudstorage.domain.GoogleCloudStorageObject;
 import org.jclouds.googlecloudstorage.domain.templates.ComposeObjectTemplate;
 import org.jclouds.googlecloudstorage.domain.templates.ObjectTemplate;
 import org.jclouds.io.Payload;
@@ -60,7 +60,7 @@ public final class SequentialMultipartUploadStrategy extends MultipartUploadStra
 
       ObjectTemplate destination = blob2ObjectTemplate.apply(blob.getMetadata());
 
-      List<GCSObject> sourceList = Lists.newArrayList();
+      List<GoogleCloudStorageObject> sourceList = Lists.newArrayList();
 
       String key = blob.getMetadata().getName();
       Payload payload = blob.getPayload();
@@ -81,7 +81,7 @@ public final class SequentialMultipartUploadStrategy extends MultipartUploadStra
             Blob blobPart = blobBuilders.get().name(partName).payload(part).contentDisposition(partName)
                      .contentLength(partSize).contentType(blob.getMetadata().getContentMetadata().getContentType())
                      .build();
-            GCSObject object = api.getObjectApi().multipartUpload(container,
+            GoogleCloudStorageObject object = api.getObjectApi().multipartUpload(container,
                      blob2ObjectTemplate.apply(blobPart.getMetadata()), blobPart.getPayload());
             sourceList.add(object);
          }

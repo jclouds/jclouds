@@ -44,11 +44,11 @@ import com.google.common.io.BaseEncoding;
 import com.google.common.io.ByteSource;
 
 @Test(groups = { "live" })
-public class GCSBlobLiveTest extends BaseBlobLiveTest {
+public class GoogleCloudStorageBlobLiveTest extends BaseBlobLiveTest {
    private static final String sysHttpStreamUrl = System.getProperty("jclouds.blobstore.httpstream.url");
    private static final String sysHttpStreamMD5 = System.getProperty("jclouds.blobstore.httpstream.md5");
 
-   public GCSBlobLiveTest() {
+   public GoogleCloudStorageBlobLiveTest() {
       provider = "google-cloud-storage";
    }
 

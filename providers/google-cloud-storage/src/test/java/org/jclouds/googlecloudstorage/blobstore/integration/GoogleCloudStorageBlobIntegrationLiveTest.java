@@ -55,11 +55,11 @@ import com.google.common.io.ByteSource;
 import com.google.common.io.Files;
 
 @Test(groups = { "live", "blobstorelive" })
-public class GCSBlobIntegrationLiveTest extends BaseBlobIntegrationTest {
+public class GoogleCloudStorageBlobIntegrationLiveTest extends BaseBlobIntegrationTest {
 
    private long PART_SIZE = MultipartUpload.MIN_PART_SIZE;
 
-   public GCSBlobIntegrationLiveTest() throws IOException {
+   public GoogleCloudStorageBlobIntegrationLiveTest() throws IOException {
       provider = "google-cloud-storage";
    }
 
@@ -72,13 +72,13 @@ public class GCSBlobIntegrationLiveTest extends BaseBlobIntegrationTest {
    @Override
    @Test(enabled = false)
    public void testGetTwoRanges() throws SkipException {
-      // not supported in GCS
+      // not supported in GoogleCloudStorage
    }
 
    @Override
    @Test(enabled = false)
    public void testGetRange() throws SkipException {
-      // not supported in GCS
+      // not supported in GoogleCloudStorage
    }
 
    @Override

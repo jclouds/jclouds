@@ -67,13 +67,11 @@ public interface GoogleCloudStorageApi extends Closeable {
     * Provides access to Google Cloud Storage Object features
     */
    @Delegate
-   @Path("")
    ObjectApi getObjectApi();
 
    /**
     * Provides access to Google Cloud Storage ResumableUpload features
     */
    @Delegate
-   @Path("")
    ResumableUploadApi getResumableUploadApi();
 }

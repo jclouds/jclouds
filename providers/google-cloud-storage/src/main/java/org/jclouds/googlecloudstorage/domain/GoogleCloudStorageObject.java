@@ -37,7 +37,7 @@ import com.google.auto.value.AutoValue;
  */
 @AutoValue
 // TODO: nullable sweep
-public abstract class GCSObject {
+public abstract class GoogleCloudStorageObject {
 
    public abstract String id();
    public abstract URI selfLink();
@@ -67,12 +67,12 @@ public abstract class GCSObject {
          { "id", "selfLink", "etag", "name", "bucket", "generation", "metageneration", "contentType", "updated",
                "timeDeleted", "storageClass", "size", "md5Hash", "mediaLink", "metadata", "contentEncoding",
                "contentDisposition", "contentLanguage", "cacheControl", "acl", "owner", "crc32c", "componentCount" })
-   public static GCSObject create(String id, URI selfLink, String etag, String name, String bucket, long generation,
+   public static GoogleCloudStorageObject create(String id, URI selfLink, String etag, String name, String bucket, long generation,
          long metageneration, String contentType, Date updated, Date timeDeleted, StorageClass storageClass, long size,
          String md5Hash, URI mediaLink, Map<String, String> metadata, String contentEncoding, String contentDisposition,
          String contentLanguage, String cacheControl, List<ObjectAccessControls> acl, Owner owner, String crc32c,
          Integer componentCount) {
-      return new AutoValue_GCSObject(id, selfLink, etag, name, bucket, generation, metageneration, contentType, updated,
+      return new AutoValue_GoogleCloudStorageObject(id, selfLink, etag, name, bucket, generation, metageneration, contentType, updated,
             timeDeleted, storageClass, size, md5Hash, mediaLink, copyOf(metadata), contentEncoding, contentDisposition,
             contentLanguage, cacheControl, copyOf(acl), owner, crc32c, componentCount);
    }

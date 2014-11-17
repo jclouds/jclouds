@@ -116,7 +116,7 @@ public interface ResumableUploadApi {
     * @param options
     *           Supply {@link InsertObjectOptions} with optional query parameters. 'name' is mandatory.
     *
-    * @return If successful, this method returns a {@link GCSObject} resource.
+    * @return If successful, this method returns a {@link GoogleCloudStorageObject} resource.
     */
    @Named("Object:resumableUpload")
    @PUT

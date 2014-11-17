@@ -19,7 +19,7 @@ package org.jclouds.googlecloudstorage.domain.templates;
 
 import java.util.List;
 
-import org.jclouds.googlecloudstorage.domain.GCSObject;
+import org.jclouds.googlecloudstorage.domain.GoogleCloudStorageObject;
 
 import com.google.auto.value.AutoValue;
 
@@ -28,11 +28,11 @@ public abstract class ComposeObjectTemplate {
 
    private final String kind = "storage/composeRequest";
 
-   public abstract List<GCSObject> sourceObjects();
+   public abstract List<GoogleCloudStorageObject> sourceObjects();
 
    public abstract ObjectTemplate destination();
 
-   public static ComposeObjectTemplate create(List<GCSObject> sourceObjects, ObjectTemplate destination) {
+   public static ComposeObjectTemplate create(List<GoogleCloudStorageObject> sourceObjects, ObjectTemplate destination) {
       return new AutoValue_ComposeObjectTemplate(sourceObjects, destination);
    }
 }

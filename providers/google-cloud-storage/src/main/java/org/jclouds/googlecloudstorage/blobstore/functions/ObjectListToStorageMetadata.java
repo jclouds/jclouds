@@ -26,7 +26,7 @@ import org.jclouds.blobstore.domain.StorageMetadata;
 import org.jclouds.blobstore.domain.StorageType;
 import org.jclouds.blobstore.domain.internal.PageSetImpl;
 import org.jclouds.blobstore.domain.internal.StorageMetadataImpl;
-import org.jclouds.googlecloudstorage.domain.GCSObject;
+import org.jclouds.googlecloudstorage.domain.GoogleCloudStorageObject;
 import org.jclouds.googlecloudstorage.domain.ListPageWithPrefixes;
 
 import com.google.common.base.Function;
@@ -34,14 +34,14 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Iterables;
 
 public class ObjectListToStorageMetadata
-      implements Function<ListPageWithPrefixes<GCSObject>, PageSet<? extends StorageMetadata>> {
+      implements Function<ListPageWithPrefixes<GoogleCloudStorageObject>, PageSet<? extends StorageMetadata>> {
    private final ObjectToBlobMetadata object2blobMd;
 
    @Inject public ObjectListToStorageMetadata(ObjectToBlobMetadata object2blobMd) {
       this.object2blobMd = object2blobMd;
    }
 
-   public PageSet<? extends StorageMetadata> apply(ListPageWithPrefixes<GCSObject> from) {
+   public PageSet<? extends StorageMetadata> apply(ListPageWithPrefixes<GoogleCloudStorageObject> from) {
       if (from == null) {
          from = ListPageWithPrefixes.create(null, null, null);
       }
