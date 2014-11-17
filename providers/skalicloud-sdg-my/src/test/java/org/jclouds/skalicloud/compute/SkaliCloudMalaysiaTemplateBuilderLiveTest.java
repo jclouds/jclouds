@@ -23,13 +23,10 @@ import java.io.IOException;
 import java.util.Set;
 
 import org.jclouds.compute.domain.OsFamily;
-import org.jclouds.compute.domain.OsFamilyVersion64Bit;
 import org.jclouds.compute.domain.Template;
 import org.jclouds.compute.internal.BaseTemplateBuilderLiveTest;
 import org.testng.annotations.Test;
 
-import com.google.common.base.Predicate;
-import com.google.common.base.Predicates;
 import com.google.common.collect.ImmutableSet;
 
 /**
@@ -37,36 +34,10 @@ import com.google.common.collect.ImmutableSet;
  * @author Adrian Cole
  */
 @Test(groups = "live")
-public class SkaliCloudMalaysiaTemplateBuilderLiveTest
-      extends
-      BaseTemplateBuilderLiveTest {
+public class SkaliCloudMalaysiaTemplateBuilderLiveTest extends BaseTemplateBuilderLiveTest {
 
    public SkaliCloudMalaysiaTemplateBuilderLiveTest() {
       provider = "skalicloud-sdg-my";
-   }
-
-   @Override
-   protected Predicate<OsFamilyVersion64Bit> defineUnsupportedOperatingSystems() {
-      return Predicates.not(new Predicate<OsFamilyVersion64Bit>() {
-
-         @Override
-         public boolean apply(OsFamilyVersion64Bit input) {
-            switch (input.family) {
-               case UBUNTU:
-                  return input.version.equals("") || input.version.matches("10.[01][04]");
-               case DEBIAN:
-                  return (input.version.equals("") || input.version.equals("5.0"))
-                           || (input.version.equals("6.0") && input.is64Bit);
-               case CENTOS:
-                  return input.version.equals("") || input.version.matches("5.[56]");
-               case WINDOWS:
-                  return (input.version.equals("") || input.version.equals("2008 R2")) && input.is64Bit;
-               default:
-                  return false;
-            }
-         }
-
-      });
    }
 
    @Override
@@ -81,6 +52,6 @@ public class SkaliCloudMalaysiaTemplateBuilderLiveTest
 
    @Override
    protected Set<String> getIso3166Codes() {
-      return ImmutableSet.<String> of("MY-10");
+      return ImmutableSet.of("MY-10");
    }
 }

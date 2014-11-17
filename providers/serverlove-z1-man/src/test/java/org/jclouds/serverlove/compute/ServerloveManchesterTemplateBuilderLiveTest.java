@@ -22,13 +22,10 @@ import static org.testng.Assert.assertEquals;
 import java.util.Set;
 
 import org.jclouds.compute.domain.OsFamily;
-import org.jclouds.compute.domain.OsFamilyVersion64Bit;
 import org.jclouds.compute.domain.Template;
 import org.jclouds.compute.internal.BaseTemplateBuilderLiveTest;
 import org.testng.annotations.Test;
 
-import com.google.common.base.Predicate;
-import com.google.common.base.Predicates;
 import com.google.common.collect.ImmutableSet;
 
 /**
@@ -40,29 +37,6 @@ public class ServerloveManchesterTemplateBuilderLiveTest extends BaseTemplateBui
 
    public ServerloveManchesterTemplateBuilderLiveTest() {
       provider = "serverlove-z1-man";
-   }
-
-   @Override
-   protected Predicate<OsFamilyVersion64Bit> defineUnsupportedOperatingSystems() {
-      return Predicates.not(new Predicate<OsFamilyVersion64Bit>() {
-
-         @Override
-         public boolean apply(OsFamilyVersion64Bit input) {
-            switch (input.family) {
-            case UBUNTU:
-               return (input.version.equals("") || input.version.equals("10.04") || input.version.equals("12.04")) && input.is64Bit;
-            case DEBIAN:
-               return (input.version.equals("") || input.version.equals("6.0")) && input.is64Bit;
-            case CENTOS:
-               return (input.version.equals("") || input.version.equals("5.7") || input.version.equals("6.2")) && input.is64Bit;
-            case WINDOWS:
-               return (input.version.equals("") || input.version.equals("2008 R2") || input.version.equals("2008 R2 SP1 SQL") || input.version.equals("2012") || input.version.equals("2008 R2 Web") || input.version.equals("2008 R2 SP1 Web SQL")) && input.is64Bit;
-            default:
-               return false;
-            }
-         }
-
-      });
    }
 
    @Test
@@ -77,6 +51,6 @@ public class ServerloveManchesterTemplateBuilderLiveTest extends BaseTemplateBui
 
    @Override
    protected Set<String> getIso3166Codes() {
-      return ImmutableSet.<String> of("GB-MAN");
+      return ImmutableSet.of("GB-MAN");
    }
 }

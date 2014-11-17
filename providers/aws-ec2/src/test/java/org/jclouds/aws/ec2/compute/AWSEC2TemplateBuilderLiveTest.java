@@ -31,7 +31,6 @@ import org.jclouds.aws.ec2.AWSEC2Api;
 import org.jclouds.aws.ec2.reference.AWSEC2Constants;
 import org.jclouds.compute.ComputeServiceContext;
 import org.jclouds.compute.domain.OsFamily;
-import org.jclouds.compute.domain.OsFamilyVersion64Bit;
 import org.jclouds.compute.domain.Template;
 import org.jclouds.ec2.EC2Api;
 import org.jclouds.ec2.compute.EC2TemplateBuilderLiveTest;
@@ -48,8 +47,6 @@ import org.jclouds.location.reference.LocationConstants;
 import org.jclouds.logging.log4j.config.Log4JLoggingModule;
 import org.testng.annotations.Test;
 
-import com.google.common.base.Predicate;
-import com.google.common.base.Predicates;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
 import com.google.inject.Module;
@@ -63,33 +60,6 @@ public class AWSEC2TemplateBuilderLiveTest extends EC2TemplateBuilderLiveTest {
 
    public AWSEC2TemplateBuilderLiveTest() {
       provider = "aws-ec2";
-   }
-
-   @Override
-   protected Predicate<OsFamilyVersion64Bit> defineUnsupportedOperatingSystems() {
-      return Predicates.not(new Predicate<OsFamilyVersion64Bit>() {
-         @Override
-         public boolean apply(OsFamilyVersion64Bit input) {
-            switch (input.family) {
-            case UBUNTU:
-               return true;
-            case DEBIAN:
-               return true;
-            case RHEL:
-                  return input.version.equals("5.6") || input.version.equals("")
-                           || (input.version.matches("[56].0") && input.is64Bit);
-            case CENTOS:
-               return input.version.matches("5.[0246]") || (input.version.equals("6.0") && input.is64Bit)
-                     || input.version.equals("");
-            case WINDOWS:
-               return input.version.matches("200[38]") || (input.version.equals("7") && !input.is64Bit)
-                     || input.version.equals("");
-            default:
-               return false;
-            }
-         }
-
-      });
    }
 
    @Test
@@ -361,7 +331,7 @@ public class AWSEC2TemplateBuilderLiveTest extends EC2TemplateBuilderLiveTest {
 
    @Override
    protected Set<String> getIso3166Codes() {
-      return ImmutableSet.<String> of("US-VA", "US-CA", "US-OR", "BR-SP", "IE", "SG", "AU-NSW", "JP-13");
+      return ImmutableSet.of("US-VA", "US-CA", "US-OR", "BR-SP", "IE", "SG", "AU-NSW", "JP-13");
    }
 
 }

@@ -24,13 +24,10 @@ import java.io.IOException;
 import java.util.Set;
 
 import org.jclouds.compute.domain.OsFamily;
-import org.jclouds.compute.domain.OsFamilyVersion64Bit;
 import org.jclouds.compute.domain.Template;
 import org.jclouds.compute.internal.BaseTemplateBuilderLiveTest;
 import org.testng.annotations.Test;
 
-import com.google.common.base.Predicate;
-import com.google.common.base.Predicates;
 import com.google.common.collect.ImmutableSet;
 
 /**
@@ -45,32 +42,6 @@ public class ElasticHostsPeer1LosAngelesTemplateBuilderLiveTest extends BaseTemp
    }
 
    @Override
-   protected Predicate<OsFamilyVersion64Bit> defineUnsupportedOperatingSystems() {
-      return Predicates.not(new Predicate<OsFamilyVersion64Bit>() {
-
-         @Override
-         public boolean apply(final OsFamilyVersion64Bit input) {
-            switch (input.family) {
-               case UBUNTU:
-                  return (input.version.equals("") || input.version.equals("12.04.1") || input.version.equals("13.10") || input.version
-                        .equals("14.04")) && input.is64Bit;
-               case DEBIAN:
-                  return (input.version.equals("") || input.version.matches("7.4")) && input.is64Bit;
-               case CENTOS:
-                  return (input.version.equals("") || input.version.equals("6.5")) && input.is64Bit;
-               case WINDOWS:
-                  return (input.version.equals("") || input.version.equals("2008 R2")
-                        || input.version.equals("2008 R2 + SQL") || input.version.equals("2012") || input.version
-                           .equals("2012 R2 + SQL")) && input.is64Bit;
-               default:
-                  return false;
-            }
-         }
-
-      });
-   }
-
-   @Override
    public void testDefaultTemplateBuilder() throws IOException {
       Template defaultTemplate = view.getComputeService().templateBuilder().build();
       assertTrue(defaultTemplate.getImage().getOperatingSystem().getVersion().matches("1[01234].[01][04].[0-9]*"));
@@ -81,6 +52,6 @@ public class ElasticHostsPeer1LosAngelesTemplateBuilderLiveTest extends BaseTemp
 
    @Override
    protected Set<String> getIso3166Codes() {
-      return ImmutableSet.<String> of("US-CA");
+      return ImmutableSet.of("US-CA");
    }
 }

@@ -29,13 +29,9 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.jclouds.compute.ComputeServiceContext;
-import org.jclouds.compute.config.BaseComputeServiceContextModule;
 import org.jclouds.compute.domain.Hardware;
 import org.jclouds.compute.domain.OsFamily;
-import org.jclouds.compute.domain.OsFamilyVersion64Bit;
 import org.jclouds.compute.domain.Template;
-import org.jclouds.compute.domain.TemplateBuilder;
-import org.jclouds.compute.reference.ComputeServiceConstants;
 import org.jclouds.domain.Location;
 import org.jclouds.domain.LocationScope;
 import org.jclouds.domain.LoginCredentials;
@@ -43,11 +39,8 @@ import org.jclouds.io.CopyInputStreamInputSupplierMap;
 import org.jclouds.json.Json;
 import org.jclouds.json.config.GsonModule;
 import org.jclouds.rest.config.CredentialStoreModule;
-import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
-import com.google.common.base.Predicate;
-import com.google.common.base.Predicates;
 import com.google.common.base.Splitter;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
@@ -70,10 +63,6 @@ public abstract class BaseTemplateBuilderLiveTest extends BaseComputeServiceCont
       Hardware fastest = view.getComputeService().templateBuilder().fastest().build().getHardware();
       Hardware biggest = view.getComputeService().templateBuilder().biggest().build().getHardware();
 
-      System.out.printf("smallest %s%n", smallest);
-      System.out.printf("fastest %s%n", fastest);
-      System.out.printf("biggest %s%n", biggest);
-
       assertEquals(defaultSize, smallest);
 
       assert getCores(smallest) <= getCores(fastest) : String.format("%s ! <= %s", smallest, fastest);
@@ -90,66 +79,6 @@ public abstract class BaseTemplateBuilderLiveTest extends BaseComputeServiceCont
       Template defaultTemplate = view.getComputeService().templateBuilder().build();
       assertEquals(view.getComputeService().templateBuilder().fromTemplate(defaultTemplate).build().toString(),
             defaultTemplate.toString());
-   }
-
-   @DataProvider(name = "osSupported")
-   public Object[][] osSupported() {
-      return convertToArray(Sets.filter(provideAllOperatingSystems(),
-            Predicates.not(defineUnsupportedOperatingSystems())));
-   }
-
-   protected Object[][] convertToArray(Set<OsFamilyVersion64Bit> supportedOperatingSystems) {
-      Object[][] returnVal = new Object[supportedOperatingSystems.size()][1];
-      int i = 0;
-      for (OsFamilyVersion64Bit config : supportedOperatingSystems)
-         returnVal[i++][0] = config;
-      return returnVal;
-   }
-
-   protected Predicate<OsFamilyVersion64Bit> defineUnsupportedOperatingSystems() {
-      return Predicates.alwaysFalse();
-   }
-
-   @DataProvider(name = "osNotSupported")
-   public Object[][] osNotSupported() {
-      return convertToArray(Sets.filter(provideAllOperatingSystems(), defineUnsupportedOperatingSystems()));
-   }
-
-   protected Set<OsFamilyVersion64Bit> provideAllOperatingSystems() {
-      Map<OsFamily, Map<String, String>> map = new BaseComputeServiceContextModule() {
-      }.provideOsVersionMap(new ComputeServiceConstants.ReferenceData(), Guice.createInjector(new GsonModule())
-            .getInstance(Json.class));
-
-      Set<OsFamilyVersion64Bit> supportedOperatingSystems = Sets.newHashSet();
-      for (Entry<OsFamily, Map<String, String>> osVersions : map.entrySet()) {
-         for (String version : Sets.newHashSet(osVersions.getValue().values())) {
-            supportedOperatingSystems.add(new OsFamilyVersion64Bit(osVersions.getKey(), version, false));
-            supportedOperatingSystems.add(new OsFamilyVersion64Bit(osVersions.getKey(), version, true));
-         }
-      }
-      return supportedOperatingSystems;
-   }
-
-   @Test(dataProvider = "osSupported")
-   public void testTemplateBuilderCanFind(OsFamilyVersion64Bit matrix) throws InterruptedException {
-      TemplateBuilder builder = view.getComputeService().templateBuilder().osFamily(matrix.family)
-            .os64Bit(matrix.is64Bit);
-      if (!matrix.version.equals(""))
-         builder.osVersionMatches("^" + matrix.version + "$");
-      Template template = builder.build();
-      if (!matrix.version.equals(""))
-         assertEquals(template.getImage().getOperatingSystem().getVersion(), matrix.version);
-      assertEquals(template.getImage().getOperatingSystem().is64Bit(), matrix.is64Bit);
-      assertEquals(template.getImage().getOperatingSystem().getFamily(), matrix.family);
-   }
-
-   @Test(dataProvider = "osNotSupported", expectedExceptions = NoSuchElementException.class)
-   public void testTemplateBuilderCannotFind(OsFamilyVersion64Bit matrix) throws InterruptedException {
-      TemplateBuilder builder = view.getComputeService().templateBuilder().osFamily(matrix.family)
-            .os64Bit(matrix.is64Bit);
-      if (!matrix.version.equals(""))
-         builder.osVersionMatches("^" + matrix.version + "$");
-      builder.build();
    }
 
    @Test
@@ -179,7 +108,6 @@ public abstract class BaseTemplateBuilderLiveTest extends BaseComputeServiceCont
    public void testGetAssignableLocations() throws Exception {
       assertProvider(view.unwrap());
       for (Location location : view.getComputeService().listAssignableLocations()) {
-         System.err.printf("location %s%n", location);
          assert location.getId() != null : location;
          assert location != location.getParent() : location;
          assert location.getScope() != null : location;

@@ -23,14 +23,11 @@ import static org.testng.Assert.assertTrue;
 import java.util.Set;
 
 import org.jclouds.compute.domain.OsFamily;
-import org.jclouds.compute.domain.OsFamilyVersion64Bit;
 import org.jclouds.compute.domain.Template;
 import org.jclouds.compute.internal.BaseTemplateBuilderLiveTest;
 import org.jclouds.openstack.nova.v2_0.compute.options.NovaTemplateOptions;
 import org.testng.annotations.Test;
 
-import com.google.common.base.Predicate;
-import com.google.common.base.Predicates;
 import com.google.common.collect.ImmutableSet;
 
 /**
@@ -42,29 +39,6 @@ public class HPCloudComputeTemplateBuilderLiveTest extends BaseTemplateBuilderLi
 
    public HPCloudComputeTemplateBuilderLiveTest() {
       provider = "hpcloud-compute";
-   }
-
-   @Override
-   protected Predicate<OsFamilyVersion64Bit> defineUnsupportedOperatingSystems() {
-      return Predicates.not(new Predicate<OsFamilyVersion64Bit>() {
-
-         @Override
-         public boolean apply(OsFamilyVersion64Bit input) {
-            switch (input.family) {
-               case UBUNTU:
-                  return (input.version.equals("") || input.version.matches("(10.04)|(11.10)|(12.04)|(12.10)|(13.04)|(13.10)")) && input.is64Bit;
-               case DEBIAN:
-                  return input.is64Bit && !input.version.matches("(5.[0-9])|(6.[0-9])|(7.[0-9])");
-               case CENTOS:
-                  return (input.version.equals("") || input.version.matches("(5.0)|(5.8)|(6.3)|(6.5)")) && input.is64Bit;
-               case WINDOWS:
-                  return input.version.equals("") || input.version.equals("2008") || (input.version.equals("2008 R2") && input.is64Bit);
-               default:
-                  return false;
-            }
-         }
-
-      });
    }
 
    @Test
@@ -84,6 +58,6 @@ public class HPCloudComputeTemplateBuilderLiveTest extends BaseTemplateBuilderLi
 
    @Override
    protected Set<String> getIso3166Codes() {
-      return ImmutableSet.<String> of("US-NV", "US-VA");
+      return ImmutableSet.of("US-NV", "US-VA");
    }
 }

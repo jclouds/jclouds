@@ -29,7 +29,6 @@ import java.util.Set;
 
 import org.jclouds.compute.ComputeServiceContext;
 import org.jclouds.compute.domain.OsFamily;
-import org.jclouds.compute.domain.OsFamilyVersion64Bit;
 import org.jclouds.compute.domain.Template;
 import org.jclouds.compute.domain.Volume;
 import org.jclouds.compute.internal.BaseTemplateBuilderLiveTest;
@@ -49,35 +48,6 @@ public class SoftLayerTemplateBuilderLiveTest extends BaseTemplateBuilderLiveTes
 
    public SoftLayerTemplateBuilderLiveTest() {
       provider = "softlayer";
-   }
-
-   // / allows us to break when a new os is added
-   @Override
-   protected Predicate<OsFamilyVersion64Bit> defineUnsupportedOperatingSystems() {
-      return Predicates.not(new Predicate<OsFamilyVersion64Bit>() {
-
-         @Override
-         public boolean apply(OsFamilyVersion64Bit input) {
-            // For each os-type both 32- and 64-bit are supported.
-            switch (input.family) {
-            case UBUNTU:
-               return input.version.equals("") || input.version.equals("10.04") || input.version.equals("12.04") || input.version.equals("8");
-            case DEBIAN:
-               return input.version.equals("") || input.version.matches("[56].0");
-            case FEDORA:
-               return input.version.equals("") || input.version.equals("13") || input.version.equals("15");
-            case RHEL:
-               return input.version.equals("") || input.version.equals("5") || input.version.equals("6");
-            case CENTOS:
-               return input.version.equals("") || input.version.equals("5") || input.version.equals("6.0");
-            case WINDOWS:
-               return input.version.equals("") || input.version.equals("2003") || input.version.equals("2008");
-            default:
-               return false;
-            }
-         }
-
-      });
    }
 
    @Test
@@ -212,5 +182,4 @@ public class SoftLayerTemplateBuilderLiveTest extends BaseTemplateBuilderLiveTes
    protected Set<String> getIso3166Codes() {
       return ImmutableSet.<String> of("SG", "US-CA", "US-TX", "US-VA", "US-WA", "NL");
    }
-
 }
