@@ -16,6 +16,7 @@
  */
 package org.jclouds.aws.ec2.compute;
 
+import static org.jclouds.compute.domain.OsFamily.AMZN_LINUX;
 import static org.jclouds.compute.util.ComputeServiceUtils.getCores;
 import static org.jclouds.http.internal.TrackingJavaUrlHttpCommandExecutorService.getInvokerOfRequestAtIndex;
 import static org.testng.Assert.assertEquals;
@@ -141,7 +142,7 @@ public class AWSEC2TemplateBuilderLiveTest extends EC2TemplateBuilderLiveTest {
               "Default template version should include 'pv-201' but is "
                       + defaultTemplate.getImage().getOperatingSystem().getVersion());
       assertEquals(defaultTemplate.getImage().getOperatingSystem().is64Bit(), true);
-      assertEquals(defaultTemplate.getImage().getOperatingSystem().getFamily(), OsFamily.AMZN_LINUX);
+      assertEquals(defaultTemplate.getImage().getOperatingSystem().getFamily(), AMZN_LINUX);
       assertEquals(defaultTemplate.getImage().getUserMetadata().get("rootDeviceType"), "ebs");
       assertEquals(defaultTemplate.getLocation().getId(), "us-east-1");
       assertEquals(getCores(defaultTemplate.getHardware()), 1.0d);
@@ -151,12 +152,12 @@ public class AWSEC2TemplateBuilderLiveTest extends EC2TemplateBuilderLiveTest {
    @Test
    public void testAmazonLinuxInstanceStore() throws IOException {
 
-      Template defaultTemplate = view.getComputeService().templateBuilder().osFamily(OsFamily.AMZN_LINUX)
+      Template defaultTemplate = view.getComputeService().templateBuilder().osFamily(AMZN_LINUX)
             .imageMatches(EC2ImagePredicates.rootDeviceType(RootDeviceType.INSTANCE_STORE)).build();
       assert defaultTemplate.getImage().getProviderId().startsWith("ami-") : defaultTemplate;
-      assertEquals(defaultTemplate.getImage().getOperatingSystem().getVersion(), "pv-2013.09.rc-1");
+      assertEquals(defaultTemplate.getImage().getOperatingSystem().getVersion(), "pv-2014.09.1");
       assertEquals(defaultTemplate.getImage().getOperatingSystem().is64Bit(), true);
-      assertEquals(defaultTemplate.getImage().getOperatingSystem().getFamily(), OsFamily.AMZN_LINUX);
+      assertEquals(defaultTemplate.getImage().getOperatingSystem().getFamily(), AMZN_LINUX);
       assertEquals(defaultTemplate.getImage().getUserMetadata().get("rootDeviceType"), "instance-store");
       assertEquals(defaultTemplate.getLocation().getId(), "us-east-1");
       assertEquals(getCores(defaultTemplate.getHardware()), 1.0d);
@@ -165,17 +166,16 @@ public class AWSEC2TemplateBuilderLiveTest extends EC2TemplateBuilderLiveTest {
 
    @Test
    public void testFastestTemplateBuilder() throws IOException {
-      Template fastestTemplate = view.getComputeService().templateBuilder().fastest().osFamily(OsFamily.AMZN_LINUX)
-            .build();
+      Template fastestTemplate = view.getComputeService().templateBuilder().fastest().osFamily(AMZN_LINUX).build();
       assert fastestTemplate.getImage().getProviderId().startsWith("ami-") : fastestTemplate;
-      assertEquals(fastestTemplate.getHardware().getProviderId(), InstanceType.CC2_8XLARGE);
-      assertEquals(fastestTemplate.getImage().getOperatingSystem().getVersion(), "2011.09.2");
+      assertEquals(fastestTemplate.getHardware().getProviderId(), InstanceType.C3_8XLARGE);
+      assertEquals(fastestTemplate.getImage().getOperatingSystem().getVersion(), "vpc-nat-pv-2014.09.1");
       assertEquals(fastestTemplate.getImage().getOperatingSystem().is64Bit(), true);
-      assertEquals(fastestTemplate.getImage().getOperatingSystem().getFamily(), OsFamily.AMZN_LINUX);
+      assertEquals(fastestTemplate.getImage().getOperatingSystem().getFamily(), AMZN_LINUX);
       assertEquals(fastestTemplate.getImage().getUserMetadata().get("rootDeviceType"), "ebs");
       assertEquals(fastestTemplate.getLocation().getId(), "us-east-1");
-      assertEquals(getCores(fastestTemplate.getHardware()), 16.0d);
-      assertEquals(fastestTemplate.getImage().getOperatingSystem().getArch(), "hvm");
+      assertEquals(getCores(fastestTemplate.getHardware()), 32.0d);
+      assertEquals(fastestTemplate.getImage().getOperatingSystem().getArch(), "paravirtual");
    }
 
    @Test
@@ -289,7 +289,7 @@ public class AWSEC2TemplateBuilderLiveTest extends EC2TemplateBuilderLiveTest {
          assert template.getImage().getProviderId().startsWith("ami-") : template;
          assertEquals(template.getImage().getOperatingSystem().getVersion(), "2011.09.2");
          assertEquals(template.getImage().getOperatingSystem().is64Bit(), true);
-         assertEquals(template.getImage().getOperatingSystem().getFamily(), OsFamily.AMZN_LINUX);
+         assertEquals(template.getImage().getOperatingSystem().getFamily(), AMZN_LINUX);
          assertEquals(template.getImage().getVersion(), "2011.09.2");
          assertEquals(template.getImage().getUserMetadata().get("rootDeviceType"), "instance-store");
          assertEquals(template.getLocation().getId(), "eu-west-1");
