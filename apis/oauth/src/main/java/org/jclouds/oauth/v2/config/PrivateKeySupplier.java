@@ -14,27 +14,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jclouds.oauth.v2.functions;
+package org.jclouds.oauth.v2.config;
 
 import static com.google.common.base.Charsets.UTF_8;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Throwables.propagate;
 import static org.jclouds.crypto.Pems.privateKeySpec;
-import static org.jclouds.oauth.v2.config.OAuthProperties.JWS_ALG;
 import static org.jclouds.util.Throwables2.getFirstThrowableOfType;
 
 import java.io.IOException;
 import java.security.KeyFactory;
+import java.security.NoSuchAlgorithmException;
 import java.security.PrivateKey;
 import java.security.spec.InvalidKeySpecException;
 
 import javax.inject.Inject;
-import javax.inject.Named;
 import javax.inject.Singleton;
 
 import org.jclouds.domain.Credentials;
 import org.jclouds.location.Provider;
-import org.jclouds.oauth.v2.JWSAlgorithms;
 import org.jclouds.rest.AuthorizationException;
 
 import com.google.common.annotations.VisibleForTesting;
@@ -46,11 +44,11 @@ import com.google.common.io.ByteSource;
 import com.google.common.util.concurrent.UncheckedExecutionException;
 
 /**
- * Loads {@link PrivateKey} from a pem private key using the KeyFactory obtained vi {@link
- * JWSAlgorithms#keyFactory(String)}. The pem pk algorithm must match the KeyFactory algorithm.
+ * Loads {@link PrivateKey} from a pem private key using and RSA KeyFactory. The pem pk algorithm must match the
+ * KeyFactory algorithm.
  */
 @Singleton // due to cache
-public final class PrivateKeySupplier implements Supplier<PrivateKey> {
+final class PrivateKeySupplier implements Supplier<PrivateKey> {
 
    private final Supplier<Credentials> creds;
    private final LoadingCache<Credentials, PrivateKey> keyCache;
@@ -68,17 +66,14 @@ public final class PrivateKeySupplier implements Supplier<PrivateKey> {
     */
    @VisibleForTesting
    static final class PrivateKeyForCredentials extends CacheLoader<Credentials, PrivateKey> {
-      private final String jwsAlg;
-
-      @Inject PrivateKeyForCredentials(@Named(JWS_ALG) String jwsAlg) {
-         this.jwsAlg = jwsAlg;
-      }
 
       @Override public PrivateKey load(Credentials in) {
          try {
-            String privateKeyInPemFormat = in.credential;
-            KeyFactory keyFactory = JWSAlgorithms.keyFactory(jwsAlg);
+            String privateKeyInPemFormat = checkNotNull(in.credential, "credential in PEM format");
+            KeyFactory keyFactory = KeyFactory.getInstance("RSA");
             return keyFactory.generatePrivate(privateKeySpec(ByteSource.wrap(privateKeyInPemFormat.getBytes(UTF_8))));
+         } catch (NoSuchAlgorithmException e) {
+            throw new AssertionError(e);
          } catch (IOException e) {
             throw propagate(e);
          } catch (InvalidKeySpecException e) {

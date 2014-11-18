@@ -16,18 +16,16 @@
  */
 package org.jclouds.oauth.v2.config;
 
-import org.jclouds.oauth.v2.JWSAlgorithms;
+public final class OAuthProperties {
 
-public class OAuthProperties {
-
-   /** The JSON Web Signature alg, from the {@link JWSAlgorithms#supportedAlgs() supported list}. */
+   /** The JSON Web Signature alg, must be {@code RS256} or {@code none}. */
    public static final String JWS_ALG = "jclouds.oauth.jws-alg";
 
    /**
     * The oauth audience, who this token is intended for. For instance in JWT and for
     * google API's this property maps to: {"aud","https://accounts.google.com/o/oauth2/token"}
     *
-    * @see <a href="http://tools.ietf.org/html/draft-jones-json-web-token-04">doc</a>
+    * @see <a href="https://tools.ietf.org/html/draft-ietf-oauth-json-web-token-30">doc</a>
     */
    public static final String AUDIENCE = "jclouds.oauth.audience";
 
@@ -38,4 +36,6 @@ public class OAuthProperties {
     */
    public static final String CREDENTIAL_TYPE = "jclouds.oauth.credential-type";
 
+   private OAuthProperties() {
+   }
 }

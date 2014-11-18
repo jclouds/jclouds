@@ -14,38 +14,35 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jclouds.oauth.v2.features;
+package org.jclouds.oauth.v2;
 
 import static com.google.common.base.Charsets.UTF_8;
 import static com.google.common.io.BaseEncoding.base64Url;
 import static com.google.common.util.concurrent.MoreExecutors.sameThreadExecutor;
 import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 import static org.jclouds.Constants.PROPERTY_MAX_RETRIES;
+import static org.jclouds.oauth.v2.config.CredentialType.P12_PRIVATE_KEY_CREDENTIALS;
 import static org.jclouds.oauth.v2.config.OAuthProperties.AUDIENCE;
-import static org.jclouds.oauth.v2.domain.Claims.EXPIRATION_TIME;
-import static org.jclouds.oauth.v2.domain.Claims.ISSUED_AT;
+import static org.jclouds.oauth.v2.config.OAuthProperties.CREDENTIAL_TYPE;
+import static org.jclouds.oauth.v2.config.OAuthProperties.JWS_ALG;
 import static org.jclouds.util.Strings2.toStringAndClose;
 import static org.testng.Assert.assertEquals;
 
 import java.io.IOException;
 import java.net.URL;
-import java.util.Map;
 import java.util.Properties;
 
 import org.jclouds.ContextBuilder;
 import org.jclouds.concurrent.config.ExecutorServiceModule;
-import org.jclouds.oauth.v2.OAuthApi;
-import org.jclouds.oauth.v2.OAuthApiMetadata;
-import org.jclouds.oauth.v2.OAuthTestUtils;
+import org.jclouds.oauth.v2.config.OAuthModule;
 import org.jclouds.oauth.v2.config.OAuthScopes;
 import org.jclouds.oauth.v2.config.OAuthScopes.SingleScope;
-import org.jclouds.oauth.v2.domain.Header;
+import org.jclouds.oauth.v2.domain.Claims;
 import org.jclouds.oauth.v2.domain.Token;
-import org.jclouds.oauth.v2.domain.TokenRequest;
+import org.jclouds.rest.AnonymousHttpApiMetadata;
 import org.testng.annotations.Test;
 
 import com.google.common.base.Joiner;
-import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.io.BaseEncoding;
 import com.google.inject.Binder;
@@ -55,7 +52,7 @@ import com.squareup.okhttp.mockwebserver.MockWebServer;
 import com.squareup.okhttp.mockwebserver.RecordedRequest;
 
 @Test(groups = "unit", testName = "OAuthApiMockTest")
-public class OAuthApiMockTest {
+public class AuthorizationApiMockTest {
    private static final String SCOPE = "https://www.googleapis.com/auth/prediction";
 
    private static final String header = "{\"alg\":\"RS256\",\"typ\":\"JWT\"}";
@@ -66,14 +63,13 @@ public class OAuthApiMockTest {
 
    private static final Token TOKEN = Token.create("1/8xbJqaOZXSUZbHLl5EOtu1pxz3fmmetKx9W8CV4t79M", "Bearer", 3600);
 
-   private static final Map<String, Object> CLAIMS = ImmutableMap.<String, Object>builder()
-         .put("iss", "761326798069-r5mljlln1rd4lrbhg75efgigp36m78j5@developer.gserviceaccount.com")
-         .put("scope", SCOPE)
-         .put("aud", "https://accounts.google.com/o/oauth2/token")
-         .put(EXPIRATION_TIME, 1328573381)
-         .put(ISSUED_AT, 1328569781).build();
-
-   private static final Header HEADER = Header.create("RS256", "JWT");
+   private static final Claims CLAIMS = Claims.create(
+         "761326798069-r5mljlln1rd4lrbhg75efgigp36m78j5@developer.gserviceaccount.com", // iss
+         SCOPE, // scope
+         "https://accounts.google.com/o/oauth2/token", // aud
+         1328573381, // exp
+         1328569781 // iat
+   );
 
    public void testGenerateJWTRequest() throws Exception {
       MockWebServer server = new MockWebServer();
@@ -84,9 +80,9 @@ public class OAuthApiMockTest {
                   "}"));
       server.play();
 
-      OAuthApi api = api(server.getUrl("/"));
+      AuthorizationApi api = api(server.getUrl("/"));
 
-      assertEquals(api.authenticate(TokenRequest.create(HEADER, CLAIMS)), TOKEN);
+      assertEquals(api.authorize(CLAIMS), TOKEN);
 
       RecordedRequest request = server.takeRequest();
       assertEquals(request.getMethod(), "POST");
@@ -107,20 +103,23 @@ public class OAuthApiMockTest {
 
    private final BaseEncoding encoding = base64Url().omitPadding();
 
-   private OAuthApi api(URL url) throws IOException {
+   private AuthorizationApi api(URL url) throws IOException {
       Properties overrides = new Properties();
-      overrides.put(AUDIENCE, "https://accounts.google.com/o/oauth2/token");
-      overrides.put(PROPERTY_MAX_RETRIES, "1");
+      overrides.setProperty("oauth.endpoint", url.toString());
+      overrides.setProperty(JWS_ALG, "RS256");
+      overrides.setProperty(CREDENTIAL_TYPE, P12_PRIVATE_KEY_CREDENTIALS.toString());
+      overrides.setProperty(AUDIENCE, "https://accounts.google.com/o/oauth2/token");
+      overrides.setProperty(PROPERTY_MAX_RETRIES, "1");
 
-      return ContextBuilder.newBuilder(new OAuthApiMetadata())
+      return ContextBuilder.newBuilder(AnonymousHttpApiMetadata.forApi(AuthorizationApi.class))
             .credentials("foo", toStringAndClose(OAuthTestUtils.class.getResourceAsStream("/testpk.pem")))
             .endpoint(url.toString())
             .overrides(overrides)
-            .modules(ImmutableSet.of(new ExecutorServiceModule(sameThreadExecutor()), new Module() {
+            .modules(ImmutableSet.of(new ExecutorServiceModule(sameThreadExecutor()), new OAuthModule(), new Module() {
                @Override public void configure(Binder binder) {
                   binder.bind(OAuthScopes.class).toInstance(SingleScope.create(SCOPE));
                }
             }))
-            .buildApi(OAuthApi.class);
+            .buildApi(AuthorizationApi.class);
    }
 }

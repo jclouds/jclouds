@@ -15,22 +15,17 @@
  * limitations under the License.
  */
 package org.jclouds.oauth.v2.functions;
-import static com.google.common.base.Charsets.UTF_8;
-import static com.google.common.base.Suppliers.ofInstance;
-import static com.google.common.io.BaseEncoding.base64Url;
-import static org.testng.Assert.assertNotNull;
-import static org.testng.AssertJUnit.assertEquals;
 
-import java.io.IOException;
-import java.security.InvalidKeyException;
-import java.security.NoSuchAlgorithmException;
-import java.security.cert.CertificateException;
-import java.security.spec.InvalidKeySpecException;
+import static com.google.common.base.Charsets.UTF_8;
+import static com.google.common.io.BaseEncoding.base64Url;
+import static org.jclouds.oauth.v2.config.PrivateKeySupplierTest.loadPrivateKey;
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertNotNull;
 
 import org.testng.annotations.Test;
 
 @Test(groups = "unit")
-public class SignerFunctionTest {
+public class ClaimsToAssertionTest {
 
    private static final String PAYLOAD = "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.\n" +
            "eyJpc3MiOiI3NjEzMjY3OTgwNjktcjVtbGpsbG4xcmQ0bHJiaGc3NWVmZ2lncDM2bTc4ajVAZ" +
@@ -44,11 +39,8 @@ public class SignerFunctionTest {
                    "I9-nj3oUGd1fQty2k4Lsd-Zdkz6es";
 
 
-   public void testSignPayload() throws InvalidKeyException, IOException, NoSuchAlgorithmException,
-           CertificateException, InvalidKeySpecException {
-      SignOrProduceMacForToken signer = new SignOrProduceMacForToken("RS256",
-            ofInstance(PrivateKeySupplierTest.loadPrivateKey()));
-      byte[] payloadSignature = signer.get().apply(PAYLOAD.getBytes(UTF_8));
+   public void sha256() throws Exception {
+      byte[] payloadSignature = ClaimsToAssertion.sha256(loadPrivateKey(), PAYLOAD.getBytes(UTF_8));
       assertNotNull(payloadSignature);
 
       assertEquals(base64Url().omitPadding().encode(payloadSignature), SHA256withRSA_PAYLOAD_SIGNATURE_RESULT);

@@ -14,25 +14,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jclouds.oauth.v2.functions;
+package org.jclouds.oauth.v2.config;
 
-import javax.inject.Inject;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
-import org.jclouds.oauth.v2.OAuthApi;
-import org.jclouds.oauth.v2.domain.Token;
-import org.jclouds.oauth.v2.domain.TokenRequest;
+import javax.inject.Qualifier;
 
-import com.google.common.base.Function;
-
-public final class FetchToken implements Function<TokenRequest, Token> {
-
-   private final OAuthApi oAuthApi;
-
-   @Inject FetchToken(OAuthApi oAuthApi) {
-      this.oAuthApi = oAuthApi;
-   }
-
-   @Override public Token apply(TokenRequest input) {
-      return this.oAuthApi.authenticate(input);
-   }
+@Retention(value = RetentionPolicy.RUNTIME)
+@Target(value = {ElementType.TYPE, ElementType.FIELD, ElementType.PARAMETER, ElementType.METHOD})
+@Qualifier
+public @interface Authorization {
 }

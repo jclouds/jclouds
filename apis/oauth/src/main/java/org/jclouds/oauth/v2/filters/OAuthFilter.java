@@ -14,26 +14,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jclouds.oauth.v2;
+package org.jclouds.oauth.v2.filters;
 
-import org.jclouds.View;
-import org.jclouds.apis.internal.BaseApiMetadataTest;
-import org.testng.annotations.Test;
+import org.jclouds.http.HttpRequestFilter;
 
-import com.google.common.collect.ImmutableSet;
-import com.google.common.reflect.TypeToken;
-
-/**
- * Tests that OAuthApiMetadata is properly registered in ServiceLoader
- * <p/>
- * <pre>
- * META-INF/services/org.jclouds.apis.ApiMetadata
- * </pre>
- */
-@Test(groups = "unit")
-public class OAuthApiMetadataTest extends BaseApiMetadataTest {
-
-   public OAuthApiMetadataTest() {
-      super(new OAuthApiMetadata(), ImmutableSet.<TypeToken<? extends View>>of());
-   }
+/** Indicates use of auth mechanism according to {@link org.jclouds.oauth.v2.config.OAuthProperties#CREDENTIAL_TYPE). */
+public interface OAuthFilter extends HttpRequestFilter {
 }

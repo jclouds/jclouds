@@ -14,27 +14,33 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jclouds.oauth.v2.parse;
+package org.jclouds.oauth.v2;
 
 import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 
+import java.io.Closeable;
+
+import javax.inject.Named;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.FormParam;
+import javax.ws.rs.POST;
 
-import org.jclouds.json.BaseItemParserTest;
+import org.jclouds.oauth.v2.functions.ClaimsToAssertion;
+import org.jclouds.oauth.v2.config.Authorization;
+import org.jclouds.oauth.v2.domain.Claims;
 import org.jclouds.oauth.v2.domain.Token;
-import org.testng.annotations.Test;
+import org.jclouds.rest.annotations.Endpoint;
+import org.jclouds.rest.annotations.FormParams;
+import org.jclouds.rest.annotations.ParamParser;
 
-@Test(groups = "unit", testName = "ParseTokenTest")
-public class ParseTokenTest extends BaseItemParserTest<Token> {
-
-   @Override
-   public String resource() {
-      return "/tokenResponse.json";
-   }
-
-   @Override
+/**
+ * Binds to an OAuth2 <a href="http://tools.ietf.org/html/rfc6749#section-3.1">authorization endpoint</a>.
+ */
+@Endpoint(Authorization.class)
+public interface AuthorizationApi extends Closeable {
+   @Named("oauth2:authorize")
+   @POST
+   @FormParams(keys = "grant_type", values = "urn:ietf:params:oauth:grant-type:jwt-bearer")
    @Consumes(APPLICATION_JSON)
-   public Token expected() {
-      return Token.create("1/8xbJqaOZXSUZbHLl5EOtu1pxz3fmmetKx9W8CV4t79M", "Bearer", 3600);
-   }
+   Token authorize(@FormParam("assertion") @ParamParser(ClaimsToAssertion.class) Claims claims);
 }

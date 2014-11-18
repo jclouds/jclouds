@@ -14,24 +14,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jclouds.oauth.v2.functions;
+package org.jclouds.oauth.v2.config;
 
 import static com.google.common.base.Suppliers.ofInstance;
-import static org.jclouds.oauth.v2.functions.PrivateKeySupplier.PrivateKeyForCredentials;
 import static org.testng.Assert.assertNotNull;
 
 import java.io.File;
-import java.io.IOException;
-import java.security.KeyStoreException;
-import java.security.NoSuchAlgorithmException;
 import java.security.PrivateKey;
-import java.security.UnrecoverableKeyException;
-import java.security.cert.CertificateException;
-import java.security.spec.InvalidKeySpecException;
 import java.util.Properties;
 
 import org.jclouds.domain.Credentials;
 import org.jclouds.oauth.v2.OAuthTestUtils;
+import org.jclouds.oauth.v2.config.PrivateKeySupplier.PrivateKeyForCredentials;
 import org.jclouds.rest.AuthorizationException;
 import org.testng.annotations.Test;
 
@@ -43,8 +37,7 @@ import com.google.common.io.Files;
 public class PrivateKeySupplierTest {
 
    /** Test loading the credentials by extracting a pk from a PKCS12 keystore. */
-   public void testLoadPKString() throws IOException, NoSuchAlgorithmException, KeyStoreException, CertificateException,
-         UnrecoverableKeyException, InvalidKeySpecException {
+   public void testLoadPKString() throws Exception {
       assertNotNull(loadPrivateKey());
    }
 
@@ -52,14 +45,7 @@ public class PrivateKeySupplierTest {
    public void testAuthorizationExceptionIsThrownOnBadKeys() {
       PrivateKeySupplier supplier = new PrivateKeySupplier(
             Suppliers.ofInstance(new Credentials("MOMMA", "FileNotFoundCredential")),
-            new PrivateKeyForCredentials("RS256"));
-      supplier.get();
-   }
-
-   @Test(expectedExceptions = AuthorizationException.class)
-   public void testGSEChildExceptionsPropagateAsAuthorizationException() {
-      PrivateKeySupplier supplier = new PrivateKeySupplier(Suppliers.ofInstance(new Credentials("MOMMA", "MIA")),
-            new PrivateKeyForCredentials("MOMMA"));
+            new PrivateKeyForCredentials());
       supplier.get();
    }
 
@@ -68,16 +54,14 @@ public class PrivateKeySupplierTest {
       Credentials validCredentials = new Credentials(propertied.getProperty("oauth.identity"),
               propertied.getProperty("oauth.credential"));
       PrivateKeySupplier supplier = new PrivateKeySupplier(Suppliers.ofInstance(validCredentials),
-            new PrivateKeyForCredentials("RS256"));
+            new PrivateKeyForCredentials());
       assertNotNull(supplier.get());
    }
 
-   public static PrivateKey loadPrivateKey()
-         throws IOException, NoSuchAlgorithmException, CertificateException, InvalidKeySpecException {
+   public static PrivateKey loadPrivateKey() throws Exception {
       PrivateKeySupplier supplier = new PrivateKeySupplier(ofInstance(new Credentials("foo",
             Files.asCharSource(new File("src/test/resources/testpk.pem"), Charsets.UTF_8).read())),
-            new PrivateKeyForCredentials("RS256"));
+            new PrivateKeyForCredentials());
       return supplier.get();
    }
-
 }

@@ -27,10 +27,14 @@ import org.jclouds.location.Provider;
 
 import com.google.common.base.Supplier;
 
-public final class BearerTokenAuthenticator implements OAuthAuthenticationFilter {
+/**
+ * When the user supplies {@link org.jclouds.oauth.v2.config.CredentialType#BEARER_TOKEN_CREDENTIALS}, the credential
+ * is a literal bearer token. This filter applies that to the request.
+ */
+public final class BearerTokenFromCredentials implements OAuthFilter {
    private final Supplier<Credentials> creds;
 
-   @Inject BearerTokenAuthenticator(@Provider Supplier<Credentials> creds) {
+   @Inject BearerTokenFromCredentials(@Provider Supplier<Credentials> creds) {
       this.creds = creds;
    }
 
