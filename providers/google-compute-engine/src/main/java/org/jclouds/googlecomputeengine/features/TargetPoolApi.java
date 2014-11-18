@@ -45,7 +45,7 @@ import org.jclouds.googlecomputeengine.internal.BaseCallerArg0ToIteratorOfListPa
 import org.jclouds.googlecomputeengine.options.ListOptions;
 import org.jclouds.googlecomputeengine.options.TargetPoolCreationOptions;
 import org.jclouds.javax.annotation.Nullable;
-import org.jclouds.oauth.v2.filters.OAuthAuthenticator;
+import org.jclouds.oauth.v2.filters.OAuthFilter;
 import org.jclouds.rest.annotations.Fallback;
 import org.jclouds.rest.annotations.MapBinder;
 import org.jclouds.rest.annotations.PayloadParam;
@@ -57,7 +57,7 @@ import org.jclouds.rest.binders.BindToJsonPayload;
 import com.google.common.base.Function;
 
 @SkipEncoding({'/', '='})
-@RequestFilters(OAuthAuthenticator.class)
+@RequestFilters(OAuthFilter.class)
 @Path("/targetPools")
 @Consumes(APPLICATION_JSON)
 public interface TargetPoolApi {

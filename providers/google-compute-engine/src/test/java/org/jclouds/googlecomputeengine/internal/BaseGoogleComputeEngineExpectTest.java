@@ -21,7 +21,6 @@ import static com.google.common.base.Throwables.propagate;
 import static com.google.common.io.BaseEncoding.base64Url;
 import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 import static org.jclouds.googlecloud.config.GoogleCloudProperties.PROJECT_NAME;
-import static org.jclouds.oauth.v2.JWSAlgorithms.NONE;
 import static org.jclouds.oauth.v2.config.OAuthProperties.JWS_ALG;
 import static org.jclouds.util.Strings2.toStringAndClose;
 
@@ -80,7 +79,7 @@ public class BaseGoogleComputeEngineExpectTest<T> extends BaseRestApiExpectTest<
       Properties props = super.setupProperties();
       props.put(PROJECT_NAME, "party");
       // use no sig algorithm for expect tests (means no credential is required either)
-      props.put(JWS_ALG, NONE);
+      props.put(JWS_ALG, "none");
       return props;
    }
 

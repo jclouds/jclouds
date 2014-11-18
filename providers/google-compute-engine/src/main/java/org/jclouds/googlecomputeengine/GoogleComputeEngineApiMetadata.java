@@ -34,7 +34,6 @@ import org.jclouds.googlecloud.config.CurrentProject;
 import org.jclouds.googlecomputeengine.compute.config.GoogleComputeEngineServiceContextModule;
 import org.jclouds.googlecomputeengine.config.GoogleComputeEngineHttpApiModule;
 import org.jclouds.googlecomputeengine.config.GoogleComputeEngineParserModule;
-import org.jclouds.oauth.v2.config.OAuthAuthenticationModule;
 import org.jclouds.oauth.v2.config.OAuthModule;
 import org.jclouds.rest.internal.BaseHttpApiMetadata;
 
@@ -84,7 +83,6 @@ public class GoogleComputeEngineApiMetadata extends BaseHttpApiMetadata<GoogleCo
            .defaultModules(ImmutableSet.<Class<? extends Module>>builder()
                    .add(GoogleComputeEngineHttpApiModule.class)
                    .add(GoogleComputeEngineParserModule.class)
-                   .add(OAuthAuthenticationModule.class)
                    .add(OAuthModule.class)
                    .add(GoogleComputeEngineServiceContextModule.class)
                    .build());

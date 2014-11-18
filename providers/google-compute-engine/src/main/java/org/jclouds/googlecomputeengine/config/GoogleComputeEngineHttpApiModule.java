@@ -46,7 +46,7 @@ import org.jclouds.http.annotation.ServerError;
 import org.jclouds.location.Provider;
 import org.jclouds.oauth.v2.config.OAuthScopes;
 import org.jclouds.oauth.v2.config.OAuthScopes.ReadOrWriteScopes;
-import org.jclouds.oauth.v2.filters.OAuthAuthenticationFilter;
+import org.jclouds.oauth.v2.filters.OAuthFilter;
 import org.jclouds.providers.ProviderMetadata;
 import org.jclouds.rest.AuthorizationException;
 import org.jclouds.rest.ConfiguresHttpApi;
@@ -116,7 +116,7 @@ public final class GoogleComputeEngineHttpApiModule extends HttpApiModule<Google
    static final class UseApiToResolveProjectName implements Function<Credentials, URI> {
 
       @SkipEncoding({ '/', '=' })
-      @RequestFilters(OAuthAuthenticationFilter.class)
+      @RequestFilters(OAuthFilter.class)
       @Consumes(APPLICATION_JSON)
       interface GetProject {
          @Named("Projects:get")
