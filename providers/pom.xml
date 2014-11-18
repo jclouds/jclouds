@@ -53,8 +53,6 @@
     <module>hpcloud-compute</module>
     <module>hpcloud-blockstorage</module>
     <module>hpcloud-objectstorage</module>
-    <module>cloudservers-us</module>
-    <module>cloudservers-uk</module>
     <module>cloudfiles-us</module>
     <module>cloudfiles-uk</module>
     <module>rackspace-clouddns-us</module>

@@ -46,7 +46,6 @@
     <module>openstack-swift</module>
     <module>openstack-trove</module>
     <module>cloudfiles</module>
-    <module>cloudservers</module>
     <module>rackspace-cloudidentity</module>
     <module>rackspace-cloudloadbalancers</module>
     <module>rackspace-clouddns</module>
