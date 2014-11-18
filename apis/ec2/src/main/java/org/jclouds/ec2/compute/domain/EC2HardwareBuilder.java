@@ -239,6 +239,33 @@ public class EC2HardwareBuilder extends HardwareBuilder {
    }
 
    /**
+    * @see InstanceType#T2_MICRO
+    */
+   public static EC2HardwareBuilder t2_micro() {
+      return new EC2HardwareBuilder(InstanceType.T2_MICRO)
+            .ram(1024)
+            .processors(ImmutableList.of(new Processor(1.0, 0.1))).rootDeviceType(RootDeviceType.EBS);
+   }
+
+   /**
+    * @see InstanceType#T2_SMALL
+    */
+   public static EC2HardwareBuilder t2_small() {
+      return new EC2HardwareBuilder(InstanceType.T2_SMALL)
+            .ram(2048)
+            .processors(ImmutableList.of(new Processor(1.0, 0.2))).rootDeviceType(RootDeviceType.EBS);
+   }
+
+   /**
+    * @see InstanceType#T2_MEDIUM
+    */
+   public static EC2HardwareBuilder t2_medium() {
+      return new EC2HardwareBuilder(InstanceType.T2_MEDIUM)
+            .ram(4096)
+            .processors(ImmutableList.of(new Processor(1.0, 0.4))).rootDeviceType(RootDeviceType.EBS);
+   }
+
+   /**
     * @see InstanceType#M1_LARGE
     */
    public static EC2HardwareBuilder m1_large() {
@@ -589,7 +616,68 @@ public class EC2HardwareBuilder extends HardwareBuilder {
             .volumes(all24Volumes.build())
             .virtualizationType(VirtualizationType.HVM);
    }
-   
+
+   /**
+    * @see InstanceType#R3_LARGE
+    */
+   public static EC2HardwareBuilder r3_large() {
+      return new EC2HardwareBuilder(InstanceType.R3_LARGE)
+            .ram(15616)
+            .processors(ImmutableList.of(new Processor(2.0, 2.5)))
+            .volumes(ImmutableList.<Volume> of(
+                  new VolumeBuilder().type(LOCAL).size(10.0f).device("/dev/sda1").bootDevice(true).durable(false).build(),
+                  new VolumeBuilder().type(LOCAL).size(32.0f).device("/dev/sdb").bootDevice(false).durable(false).build()));
+   }
+
+   /**
+    * @see InstanceType#R3_XLARGE
+    */
+   public static EC2HardwareBuilder r3_xlarge() {
+      return new EC2HardwareBuilder(InstanceType.R3_XLARGE)
+            .ram(31232)
+            .processors(ImmutableList.of(new Processor(4.0, 2.5)))
+            .volumes(ImmutableList.<Volume> of(
+                  new VolumeBuilder().type(LOCAL).size(10.0f).device("/dev/sda1").bootDevice(true).durable(false).build(),
+                  new VolumeBuilder().type(LOCAL).size(80.0f).device("/dev/sdb").bootDevice(false).durable(false).build()));
+   }
+
+   /**
+    * @see InstanceType#R3_2XLARGE
+    */
+   public static EC2HardwareBuilder r3_2xlarge() {
+      return new EC2HardwareBuilder(InstanceType.R3_2XLARGE)
+            .ram(62464)
+            .processors(ImmutableList.of(new Processor(8.0, 2.5)))
+            .volumes(ImmutableList.<Volume> of(
+                  new VolumeBuilder().type(LOCAL).size(10.0f).device("/dev/sda1").bootDevice(true).durable(false).build(),
+                  new VolumeBuilder().type(LOCAL).size(160.0f).device("/dev/sdb").bootDevice(false).durable(false).build()));
+   }
+
+   /**
+    * @see InstanceType#R3_4XLARGE
+    */
+   public static EC2HardwareBuilder r3_4xlarge() {
+      return new EC2HardwareBuilder(InstanceType.R3_4XLARGE)
+            .ram(124928)
+            .processors(ImmutableList.of(new Processor(16.0, 2.5)))
+            .volumes(ImmutableList.<Volume> of(
+                  new VolumeBuilder().type(LOCAL).size(10.0f).device("/dev/sda1").bootDevice(true).durable(false).build(),
+                  new VolumeBuilder().type(LOCAL).size(320.0f).device("/dev/sdb").bootDevice(false).durable(false).build()));
+   }
+
+   /**
+    * @see InstanceType#R3_8XLARGE
+    */
+   public static EC2HardwareBuilder r3_8xlarge() {
+      return new EC2HardwareBuilder(InstanceType.R3_8XLARGE)
+            .ram(249856)
+            .processors(ImmutableList.of(new Processor(32.0, 2.5)))
+            .volumes(ImmutableList.<Volume> of(
+                  new VolumeBuilder().type(LOCAL).size(10.0f).device("/dev/sda1").bootDevice(true).durable(false).build(),
+                  new VolumeBuilder().type(LOCAL).size(320.0f).device("/dev/sdb").bootDevice(false).durable(false).build(),
+                  new VolumeBuilder().type(LOCAL).size(320.0f).device("/dev/sdc").bootDevice(false).durable(false).build()));
+   }
+
    @SuppressWarnings("unchecked")
    @Override
    public Hardware build() {
