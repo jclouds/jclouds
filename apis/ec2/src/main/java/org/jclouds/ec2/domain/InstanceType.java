@@ -38,6 +38,39 @@ public class InstanceType {
    public static final String T1_MICRO = "t1.micro";
 
    /**
+    * Micro Burstable Performance Instance
+    * <ul>
+    * <li>1 GB memory</li>
+    * <li>1 vCPU / 10% baseline performance</li>
+    * <li>No instance storage (EBS storage only)</li>
+    * <li>64-bit platform</li>
+    * </ul>
+    */
+   public static final String T2_MICRO = "t2.micro";
+
+   /**
+    * Micro Burstable Performance Instance
+    * <ul>
+    * <li>2 GB memory</li>
+    * <li>1 vCPU / 20% baseline performance</li>
+    * <li>No instance storage (EBS storage only)</li>
+    * <li>64-bit platform</li>
+    * </ul>
+    */
+   public static final String T2_SMALL = "t2.small";
+
+   /**
+    * Micro Burstable Performance Instance
+    * <ul>
+    * <li>4 GB memory</li>
+    * <li>2 vCPU / 40% baseline performance</li>
+    * <li>No instance storage (EBS storage only)</li>
+    * <li>64-bit platform</li>
+    * </ul>
+    */
+   public static final String T2_MEDIUM = "t2.medium";
+
+    /**
     * Small Instance
     * <ul>
     * <li>1.7 GB memory</li>
@@ -383,4 +416,63 @@ public class InstanceType {
     * </ul>
     */
    public static final String I2_8XLARGE = "i2.8xlarge";
+
+
+   /**
+    * R3 Large Memory Optimized
+    * <ul>
+    * <li>15.25 GB memory</li>
+    * <li>2 vCPU</li>
+    * <li>1 SSD-based volume with 32 GiB of instance storage</li>
+    * <li>64-bit platform</li>
+    * </ul>
+    */
+   public static final String R3_LARGE = "r3.large";
+
+   /**
+    * R3 Extra Large Memory Optimized
+    * <ul>
+    * <li>30.5 GB memory</li>
+    * <li>4 vCPU</li>
+    * <li>1 SSD-based volume with 80 GiB of instance storage</li>
+    * <li>64-bit platform</li>
+    * </ul>
+    */
+   public static final String R3_XLARGE = "r3.xlarge";
+
+   /**
+    * R3 Double Extra Large Memory Optimized
+    * <ul>
+    * <li>61 GB memory</li>
+    * <li>8 vCPU</li>
+    * <li>1 SSD-based volume with 160 GiB of instance storage</li>
+    * <li>64-bit platform</li>
+    * <li>Network Performance: High</li>
+    * </ul>
+    */
+   public static final String R3_2XLARGE = "r3.2xlarge";
+
+   /**
+    * R3 Quadruple Extra Large Memory Optimized
+    * <ul>
+    * <li>122 GB memory</li>
+    * <li>16 vCPU</li>
+    * <li>1 SSD-based volume with 320 GiB of instance storage</li>
+    * <li>64-bit platform</li>
+    * <li>Network Performance: High</li>
+    * </ul>
+    */
+   public static final String R3_4XLARGE = "r3.4xlarge";
+
+   /**
+    * R3 Octuple Extra Large Memory Optimized
+    * <ul>
+    * <li>244 GB memory</li>
+    * <li>32 vCPU</li>
+    * <li>2 SSD-based volumes with 320 GiB of instance storage</li>
+    * <li>64-bit platform</li>
+    * <li>Network Performance: 10 Gigabit</li>
+    * </ul>
+    */
+   public static final String R3_8XLARGE = "r3.8xlarge";
 }
