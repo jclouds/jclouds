@@ -34,7 +34,7 @@ import org.jclouds.googlecloudstorage.domain.templates.ObjectTemplate;
 import org.jclouds.googlecloudstorage.options.InsertObjectOptions;
 import org.jclouds.googlecloudstorage.parser.ParseToResumableUpload;
 import org.jclouds.io.Payload;
-import org.jclouds.oauth.v2.filters.OAuthAuthenticator;
+import org.jclouds.oauth.v2.filters.OAuthFilter;
 import org.jclouds.rest.annotations.BinderParam;
 import org.jclouds.rest.annotations.MapBinder;
 import org.jclouds.rest.annotations.PayloadParam;
@@ -51,7 +51,7 @@ import org.jclouds.rest.binders.BindToJsonPayload;
  * @see <a href="https://developers.google.com/storage/docs/json_api/v1/how-tos/upload#resumable"/>
  */
 @SkipEncoding({ '/', '=' })
-@RequestFilters(OAuthAuthenticator.class)
+@RequestFilters(OAuthFilter.class)
 @Consumes(APPLICATION_JSON)
 public interface ResumableUploadApi {
 

@@ -35,7 +35,7 @@ import org.jclouds.Fallbacks.NullOnNotFoundOr404;
 import org.jclouds.googlecloudstorage.domain.ObjectAccessControls;
 import org.jclouds.googlecloudstorage.domain.templates.ObjectAccessControlsTemplate;
 import org.jclouds.javax.annotation.Nullable;
-import org.jclouds.oauth.v2.filters.OAuthAuthenticator;
+import org.jclouds.oauth.v2.filters.OAuthFilter;
 import org.jclouds.rest.annotations.BinderParam;
 import org.jclouds.rest.annotations.Fallback;
 import org.jclouds.rest.annotations.PATCH;
@@ -50,7 +50,7 @@ import org.jclouds.rest.binders.BindToJsonPayload;
  * @see <a href = " https://developers.google.com/storage/docs/json_api/v1/objectAccessControls "/>
  */
 @SkipEncoding({ '/', '=' })
-@RequestFilters(OAuthAuthenticator.class)
+@RequestFilters(OAuthFilter.class)
 @Consumes(APPLICATION_JSON)
 public interface ObjectAccessControlsApi {
 

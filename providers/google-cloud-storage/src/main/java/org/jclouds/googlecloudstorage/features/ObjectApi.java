@@ -49,7 +49,7 @@ import org.jclouds.googlecloudstorage.parser.ParseToPayloadEnclosing;
 import org.jclouds.io.Payload;
 import org.jclouds.io.PayloadEnclosing;
 import org.jclouds.javax.annotation.Nullable;
-import org.jclouds.oauth.v2.filters.OAuthAuthenticator;
+import org.jclouds.oauth.v2.filters.OAuthFilter;
 import org.jclouds.rest.annotations.BinderParam;
 import org.jclouds.rest.annotations.Fallback;
 import org.jclouds.rest.annotations.MapBinder;
@@ -67,7 +67,7 @@ import org.jclouds.rest.binders.BindToJsonPayload;
  * @see <a href="https://developers.google.com/storage/docs/json_api/v1/objects"/>
  */
 @SkipEncoding({ '/', '=' })
-@RequestFilters(OAuthAuthenticator.class)
+@RequestFilters(OAuthFilter.class)
 public interface ObjectApi {
 
    /**

@@ -27,7 +27,6 @@ import static org.jclouds.crypto.Pems.privateKeySpec;
 import static org.jclouds.crypto.Pems.publicKeySpec;
 import static org.jclouds.crypto.PemsTest.PRIVATE_KEY;
 import static org.jclouds.crypto.PemsTest.PUBLIC_KEY;
-import static org.jclouds.oauth.v2.JWSAlgorithms.NONE;
 import static org.jclouds.oauth.v2.config.OAuthProperties.JWS_ALG;
 
 import java.io.IOException;
@@ -51,8 +50,7 @@ import org.jclouds.http.HttpRequest;
 import org.jclouds.http.HttpResponse;
 import org.jclouds.io.Payload;
 import org.jclouds.io.payloads.ByteSourcePayload;
-import org.jclouds.oauth.v2.functions.BuildTokenRequest;
-import org.jclouds.oauth.v2.functions.BuildTokenRequest.TestBuildTokenRequest;
+import org.jclouds.oauth.v2.filters.JWTBearerTokenFlow;
 import org.jclouds.providers.ProviderMetadata;
 import org.jclouds.rest.internal.BaseRestApiExpectTest;
 
@@ -93,7 +91,7 @@ public class BaseGoogleCloudStorageExpectTest<T> extends BaseRestApiExpectTest<T
          @Override
          public void configure(Binder binder) {
             // Predictable time
-            binder.bind(BuildTokenRequest.class).to(TestBuildTokenRequest.class);
+            binder.bind(JWTBearerTokenFlow.class).to(JWTBearerTokenFlow.TestJWTBearerTokenFlow.class);
             try {
                KeyFactory keyfactory = KeyFactory.getInstance("RSA");
                PrivateKey privateKey = keyfactory.generatePrivate(privateKeySpec(ByteSource.wrap(PRIVATE_KEY
@@ -134,7 +132,7 @@ public class BaseGoogleCloudStorageExpectTest<T> extends BaseRestApiExpectTest<T
    @Override protected Properties setupProperties() {
       Properties props = super.setupProperties();
       // use no sig algorithm for expect tests (means no credential is required either)
-      props.put(JWS_ALG, NONE);
+      props.put(JWS_ALG, "none");
       return props;
    }
 

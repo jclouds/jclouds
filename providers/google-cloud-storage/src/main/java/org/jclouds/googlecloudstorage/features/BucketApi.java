@@ -43,7 +43,7 @@ import org.jclouds.googlecloudstorage.options.InsertBucketOptions;
 import org.jclouds.googlecloudstorage.options.ListOptions;
 import org.jclouds.googlecloudstorage.options.UpdateBucketOptions;
 import org.jclouds.javax.annotation.Nullable;
-import org.jclouds.oauth.v2.filters.OAuthAuthenticationFilter;
+import org.jclouds.oauth.v2.filters.OAuthFilter;
 import org.jclouds.rest.annotations.BinderParam;
 import org.jclouds.rest.annotations.Fallback;
 import org.jclouds.rest.annotations.PATCH;
@@ -58,7 +58,7 @@ import org.jclouds.rest.binders.BindToJsonPayload;
  */
 
 @SkipEncoding({ '/', '=' })
-@RequestFilters(OAuthAuthenticationFilter.class)
+@RequestFilters(OAuthFilter.class)
 @Consumes(APPLICATION_JSON)
 public interface BucketApi {
 
