@@ -54,5 +54,4 @@ public class SessionCredentialsHandlerTest extends BaseHandlerTest {
             .sessionToken("AQoEXAMPLEH4aoAH0gNCAPyJxz4BlCFFxWNE1OPTgk5TthT")
             .expiration(new SimpleDateFormatDateService().iso8601DateParse("2011-07-11T19:55:29.611Z")).build();
    }
-
 }

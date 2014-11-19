@@ -24,7 +24,6 @@ import org.jclouds.Fallbacks.EmptySetOnNotFoundOr404;
 import org.jclouds.Fallbacks.VoidOnNotFoundOr404;
 import org.jclouds.aws.ec2.xml.AWSEC2DescribeSecurityGroupsResponseHandler;
 import org.jclouds.ec2.util.IpPermissions;
-import org.jclouds.http.HttpRequest;
 import org.jclouds.http.functions.ParseSax;
 import org.jclouds.http.functions.ReleasePayloadAndReturn;
 import org.jclouds.net.domain.IpPermission;
@@ -99,13 +98,6 @@ public class AWSSecurityGroupApiTest extends BaseAWSEC2ApiTest<AWSSecurityGroupA
       checkFilters(request);
    }
 
-   HttpRequest createSecurityGroup = HttpRequest.builder().method("POST")
-                                                .endpoint("https://ec2.us-east-1.amazonaws.com/")
-                                                .addHeader("Host", "ec2.us-east-1.amazonaws.com")
-                                                .addFormParam("Action", "CreateSecurityGroup")
-                                                .addFormParam("GroupDescription", "description")
-                                                .addFormParam("GroupName", "name").build();
-
    public void testCreateSecurityGroup() throws SecurityException, NoSuchMethodException, IOException {
       Invokable<?, ?> method = method(AWSSecurityGroupApi.class, "createSecurityGroupInRegion", String.class,
             String.class, String.class);
@@ -115,7 +107,7 @@ public class AWSSecurityGroupApiTest extends BaseAWSEC2ApiTest<AWSSecurityGroupA
 
       assertRequestLineEquals(request, "POST https://ec2.us-east-1.amazonaws.com/ HTTP/1.1");
       assertNonPayloadHeadersEqual(request, "Host: ec2.us-east-1.amazonaws.com\n");
-      assertPayloadEquals(request, filter.filter(createSecurityGroup).getPayload().getRawContent().toString(),
+      assertPayloadEquals(request, "Action=CreateSecurityGroup&GroupName=name&GroupDescription=description&Version=2012-06-01",
             "application/x-www-form-urlencoded", false);
 
       assertResponseParserClassEquals(method, request, ReleasePayloadAndReturn.class);

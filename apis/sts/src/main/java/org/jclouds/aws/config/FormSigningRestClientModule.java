@@ -24,6 +24,7 @@ import javax.inject.Singleton;
 import org.jclouds.aws.filters.FormSigner;
 import org.jclouds.date.DateService;
 import org.jclouds.date.TimeStamp;
+import org.jclouds.http.HttpRequest;
 import org.jclouds.rest.ConfiguresRestClient;
 import org.jclouds.rest.RequestSigner;
 
@@ -59,10 +60,21 @@ public abstract class FormSigningRestClientModule<S, A> extends AWSRestClientMod
       return dateService.iso8601DateFormat(new Date(System.currentTimeMillis()));
    }
 
-   @Provides
-   @Singleton
-   RequestSigner provideRequestSigner(FormSigner in) {
-      return in;
+    @Provides
+    @Singleton
+    RequestSigner provideRequestSigner(FormSigner in) {
+      if (in instanceof RequestSigner) {
+         return (RequestSigner) in;
+      }
+      return new RequestSigner() {
+         @Override public String createStringToSign(HttpRequest input) {
+            return null;
+         }
+
+         @Override public String sign(String toSign) {
+            return null;
+         }
+      };
    }
 
 }

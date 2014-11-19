@@ -40,16 +40,11 @@ import org.jclouds.rest.internal.TransformerForRequest;
 
 import com.google.common.base.Function;
 import com.google.common.base.Predicate;
-import com.google.common.base.Supplier;
 import com.google.inject.AbstractModule;
 import com.google.inject.TypeLiteral;
 import com.google.inject.assistedinject.FactoryModuleBuilder;
 
 public class RestModule extends AbstractModule {
-
-   public static final TypeLiteral<Supplier<URI>> URI_SUPPLIER_TYPE = new TypeLiteral<Supplier<URI>>() {
-   };
-
    protected final AtomicReference<AuthorizationException> authException = newReference();
 
    protected void installLocations() {

@@ -29,6 +29,7 @@ import java.util.Set;
 
 import org.jclouds.aws.domain.Region;
 import org.jclouds.aws.ec2.AWSEC2Api;
+import org.jclouds.aws.ec2.AWSEC2ProviderMetadata;
 import org.jclouds.aws.ec2.reference.AWSEC2Constants;
 import org.jclouds.compute.ComputeServiceContext;
 import org.jclouds.compute.domain.OsFamily;
@@ -46,6 +47,7 @@ import org.jclouds.http.HttpCommand;
 import org.jclouds.http.internal.TrackingJavaUrlHttpCommandExecutorService;
 import org.jclouds.location.reference.LocationConstants;
 import org.jclouds.logging.log4j.config.Log4JLoggingModule;
+import org.jclouds.providers.ProviderMetadata;
 import org.testng.annotations.Test;
 
 import com.google.common.collect.ImmutableSet;
@@ -61,6 +63,10 @@ public class AWSEC2TemplateBuilderLiveTest extends EC2TemplateBuilderLiveTest {
 
    public AWSEC2TemplateBuilderLiveTest() {
       provider = "aws-ec2";
+   }
+
+   @Override public ProviderMetadata createProviderMetadata() {
+      return new AWSEC2ProviderMetadata();
    }
 
    @Test

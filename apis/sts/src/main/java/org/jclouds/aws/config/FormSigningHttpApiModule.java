@@ -23,6 +23,7 @@ import javax.inject.Singleton;
 import org.jclouds.aws.filters.FormSigner;
 import org.jclouds.date.DateService;
 import org.jclouds.date.TimeStamp;
+import org.jclouds.http.HttpRequest;
 import org.jclouds.rest.ConfiguresHttpApi;
 import org.jclouds.rest.RequestSigner;
 
@@ -53,7 +54,18 @@ public abstract class FormSigningHttpApiModule<A> extends AWSHttpApiModule<A> {
    @Provides
    @Singleton
    RequestSigner provideRequestSigner(FormSigner in) {
-      return in;
+      if (in instanceof RequestSigner) {
+         return (RequestSigner) in;
+      }
+      return new RequestSigner() {
+         @Override public String createStringToSign(HttpRequest input) {
+            return null;
+         }
+
+         @Override public String sign(String toSign) {
+            return null;
+         }
+      };
    }
 
 }

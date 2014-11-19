@@ -27,7 +27,7 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import org.jclouds.aws.domain.AWSError;
-import org.jclouds.aws.filters.FormSignerTest;
+import org.jclouds.aws.filters.FormSignerV2Test;
 import org.jclouds.domain.Credentials;
 import org.jclouds.http.HttpCommand;
 import org.jclouds.http.HttpRequest;
@@ -49,7 +49,7 @@ public class AWSUtilsTest {
    @BeforeTest
    protected void setUpInjector() throws IOException {
 
-      utils = FormSignerTest.injector(new Credentials("identity", "credential")).getInstance(AWSUtils.class);
+      utils = FormSignerV2Test.injector(new Credentials("identity", "credential")).getInstance(AWSUtils.class);
 
       command = createMock(HttpCommand.class);
       expect(command.getCurrentRequest()).andReturn(createMock(HttpRequest.class)).atLeastOnce();
