@@ -16,8 +16,12 @@
  */
 package org.jclouds.aws.ec2.compute.suppliers;
 
+import static com.google.common.base.Predicates.in;
+import static com.google.common.base.Throwables.propagate;
 import static com.google.common.collect.Iterables.concat;
+import static com.google.common.collect.Iterables.filter;
 import static com.google.common.collect.Iterables.transform;
+import static org.jclouds.Constants.PROPERTY_USER_THREADS;
 import static org.jclouds.aws.ec2.reference.AWSEC2Constants.PROPERTY_EC2_AMI_QUERY;
 import static org.jclouds.aws.ec2.reference.AWSEC2Constants.PROPERTY_EC2_CC_AMI_QUERY;
 import static org.jclouds.aws.ec2.reference.AWSEC2Constants.PROPERTY_EC2_CC_REGIONS;
@@ -28,9 +32,7 @@ import java.util.Set;
 import javax.annotation.Resource;
 import javax.inject.Inject;
 import javax.inject.Named;
-import javax.inject.Singleton;
 
-import org.jclouds.Constants;
 import org.jclouds.aws.ec2.compute.config.ClusterCompute;
 import org.jclouds.aws.ec2.compute.config.ImageQuery;
 import org.jclouds.compute.domain.Image;
@@ -43,7 +45,6 @@ import org.jclouds.logging.Logger;
 import com.google.common.base.Function;
 import com.google.common.base.Splitter;
 import com.google.common.base.Supplier;
-import com.google.common.base.Throwables;
 import com.google.common.cache.LoadingCache;
 import com.google.common.collect.ForwardingSet;
 import com.google.common.collect.ImmutableMultimap;
@@ -54,14 +55,11 @@ import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.ListeningExecutorService;
 
-@Singleton
-public class AWSEC2ImageSupplier implements Supplier<Set<? extends Image>> {
-   
-   // TODO could/should this sub-class EC2ImageSupplier? Or does that confuse guice?
-   
+public final class AWSEC2ImageSupplier implements Supplier<Set<? extends Image>> {
+
    @Resource
    @Named(ComputeServiceConstants.COMPUTE_LOGGER)
-   protected Logger logger = Logger.NULL;
+   private Logger logger = Logger.NULL;
    
    private final Set<String> clusterComputeIds;
    private final CallForImages.Factory factory;
@@ -72,12 +70,11 @@ public class AWSEC2ImageSupplier implements Supplier<Set<? extends Image>> {
    private final Iterable<String> clusterRegions;
    private final Supplier<LoadingCache<RegionAndName, ? extends Image>> cache;
    
-   @Inject
-   protected AWSEC2ImageSupplier(@Region Supplier<Set<String>> regions,
-            @ImageQuery Map<String, String> queries, @Named(PROPERTY_EC2_CC_REGIONS) String clusterRegions,
-            Supplier<LoadingCache<RegionAndName, ? extends Image>> cache,
-            CallForImages.Factory factory, @ClusterCompute Set<String> clusterComputeIds,
-            @Named(Constants.PROPERTY_USER_THREADS) ListeningExecutorService userExecutor) {
+   @Inject AWSEC2ImageSupplier(@Region Supplier<Set<String>> regions, @ImageQuery Map<String, String> queries,
+         @Named(PROPERTY_EC2_CC_REGIONS) String clusterRegions,
+         Supplier<LoadingCache<RegionAndName, ? extends Image>> cache, CallForImages.Factory factory,
+         @ClusterCompute Set<String> clusterComputeIds,
+         @Named(PROPERTY_USER_THREADS) ListeningExecutorService userExecutor) {
       this.factory = factory;
       this.regions = regions;
       this.queries = queries;
@@ -93,13 +90,16 @@ public class AWSEC2ImageSupplier implements Supplier<Set<? extends Image>> {
       String amiQuery = queries.get(PROPERTY_EC2_AMI_QUERY);
       String ccAmiQuery = queries.get(PROPERTY_EC2_CC_AMI_QUERY);
 
-      ListenableFuture<Iterable<Image>> normalImages = images(regions.get(), amiQuery, PROPERTY_EC2_AMI_QUERY);
+      Set<String> regionIds = regions.get();
+
+      ListenableFuture<Iterable<Image>> normalImages = images(regionIds, amiQuery, PROPERTY_EC2_AMI_QUERY);
       ImmutableSet<Image> clusterImages;
       try {
-         clusterImages = ImmutableSet.copyOf(images(clusterRegions, ccAmiQuery, PROPERTY_EC2_CC_AMI_QUERY).get());
+         clusterImages = ImmutableSet
+               .copyOf(images(filter(clusterRegions, in(regionIds)), ccAmiQuery, PROPERTY_EC2_CC_AMI_QUERY).get());
       } catch (Exception e) {
          logger.warn(e, "Error parsing images in query %s", ccAmiQuery);
-         throw Throwables.propagate(e);
+         throw propagate(e);
       }
       Iterables.addAll(clusterComputeIds, transform(clusterImages, new Function<Image, String>() {
 
@@ -109,20 +109,21 @@ public class AWSEC2ImageSupplier implements Supplier<Set<? extends Image>> {
          }
 
       }));
+
       Iterable<? extends Image> parsedImages;
       try {
          parsedImages = ImmutableSet.copyOf(concat(clusterImages, normalImages.get()));
       } catch (Exception e) {
          logger.warn(e, "Error parsing images in query %s", amiQuery);
-         throw Throwables.propagate(e);
+         throw propagate(e);
       }
 
-      final Map<RegionAndName, ? extends Image> imageMap = ImagesToRegionAndIdMap.imagesToMap(parsedImages);
+      Map<RegionAndName, ? extends Image> imageMap = ImagesToRegionAndIdMap.imagesToMap(parsedImages);
       cache.get().invalidateAll();
-      cache.get().asMap().putAll(Map.class.cast(imageMap));
+      cache.get().putAll(Map.class.cast(imageMap));
       logger.debug("<< images(%d)", imageMap.size());
-      
-      // TODO Used to be mutable; was this assumed anywhere?
+
+      // Forwarding so that later changes to the underlying cache are visible.
       return new ForwardingSet<Image>() {
          protected Set<Image> delegate() {
             return ImmutableSet.copyOf(cache.get().asMap().values());
