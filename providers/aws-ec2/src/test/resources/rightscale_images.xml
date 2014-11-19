@@ -90,5 +90,57 @@
             </blockDeviceMapping>
             <virtualizationType>hvm</virtualizationType>
         </item>
+        <item>
+            <imageId>ami-05ebd06c</imageId>
+            <imageLocation>411009282317/RightImage_CentOS_6.5_x64_v13.5.2.2_EBS</imageLocation>
+            <imageState>available</imageState>
+            <imageOwnerId>411009282317</imageOwnerId>
+            <isPublic>true</isPublic>
+            <architecture>x86_64</architecture>
+            <imageType>machine</imageType>
+            <kernelId>aki-88aa75e1</kernelId>
+            <name>RightImage_CentOS_6.5_x64_v13.5.2.2_EBS</name>
+            <description>RightImage_CentOS_6.5_x64_v13.5.2.2_EBS</description>
+            <rootDeviceType>ebs</rootDeviceType>
+            <rootDeviceName>/dev/sda1</rootDeviceName>
+            <blockDeviceMapping>
+                <item>
+                    <deviceName>/dev/sda1</deviceName>
+                    <ebs>
+                        <snapshotId>snap-f746a235</snapshotId>
+                        <volumeSize>10</volumeSize>
+                        <deleteOnTermination>true</deleteOnTermination>
+                    </ebs>
+                </item>
+            </blockDeviceMapping>
+            <virtualizationType>paravirtual</virtualizationType>
+            <hypervisor>xen</hypervisor>
+        </item>
+        <item>
+            <imageId>ami-08bffe61</imageId>
+            <imageLocation>411009282317/RightImage_Ubuntu_10.04_x64_v12.11.4_EBS</imageLocation>
+            <imageState>available</imageState>
+            <imageOwnerId>411009282317</imageOwnerId>
+            <isPublic>true</isPublic>
+            <architecture>x86_64</architecture>
+            <imageType>machine</imageType>
+            <kernelId>aki-88aa75e1</kernelId>
+            <name>RightImage_Ubuntu_10.04_x64_v12.11.4_EBS</name>
+            <description>RightImage_Ubuntu_10.04_x64_v12.11.4_EBS</description>
+            <rootDeviceType>ebs</rootDeviceType>
+            <rootDeviceName>/dev/sda1</rootDeviceName>
+            <blockDeviceMapping>
+                <item>
+                    <deviceName>/dev/sda1</deviceName>
+                    <ebs>
+                        <snapshotId>snap-3567d562</snapshotId>
+                        <volumeSize>10</volumeSize>
+                        <deleteOnTermination>true</deleteOnTermination>
+                    </ebs>
+                </item>
+            </blockDeviceMapping>
+            <virtualizationType>paravirtual</virtualizationType>
+            <hypervisor>xen</hypervisor>
+        </item>        
     </imagesSet>
 </DescribeImagesResponse>
