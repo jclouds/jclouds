@@ -42,7 +42,6 @@ import javax.annotation.Resource;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.inject.Provider;
-import javax.inject.Singleton;
 
 import org.jclouds.Constants;
 import org.jclouds.aws.domain.SessionCredentials;
@@ -66,154 +65,145 @@ import com.google.common.collect.Multimap;
 import com.google.common.collect.TreeMultimap;
 import com.google.common.io.ByteProcessor;
 import com.google.common.net.HttpHeaders;
+import com.google.inject.ImplementedBy;
 
-/**
- * 
- * @see <a href=
- *      "http://docs.amazonwebservices.com/AWSEC2/latest/APIReference/Query-Common-Parameters.html"
- *      />
- */
-@Singleton
-public class FormSigner implements HttpRequestFilter, RequestSigner {
+@ImplementedBy(FormSigner.FormSignerV2.class)
+public interface FormSigner extends HttpRequestFilter {
 
-   public static final Set<String> mandatoryParametersForSignature = ImmutableSet.of(ACTION, SIGNATURE_METHOD,
-         SIGNATURE_VERSION, VERSION);
+   static final class FormSignerV2 implements FormSigner, RequestSigner {
 
-   private final SignatureWire signatureWire;
-   private final String apiVersion;
-   private final Supplier<Credentials> creds;
-   private final Provider<String> dateService;
-   private final Crypto crypto;
-   private final HttpUtils utils;
+      public static final Set<String> mandatoryParametersForSignature = ImmutableSet
+            .of(ACTION, SIGNATURE_METHOD, SIGNATURE_VERSION, VERSION);
 
-   @Resource
-   @Named(Constants.LOGGER_SIGNATURE)
-   private Logger signatureLog = Logger.NULL;
+      private final SignatureWire signatureWire;
+      private final String apiVersion;
+      private final Supplier<Credentials> creds;
+      private final Provider<String> dateService;
+      private final Crypto crypto;
+      private final HttpUtils utils;
 
-   @Inject
-   public FormSigner(SignatureWire signatureWire, @ApiVersion String apiVersion,
-         @org.jclouds.location.Provider Supplier<Credentials> creds, @TimeStamp Provider<String> dateService,
-         Crypto crypto, HttpUtils utils) {
-      this.signatureWire = signatureWire;
-      this.apiVersion = apiVersion;
-      this.creds = creds;
-      this.dateService = dateService;
-      this.crypto = crypto;
-      this.utils = utils;
-   }
+      @Resource @Named(Constants.LOGGER_SIGNATURE)
+      private Logger signatureLog = Logger.NULL;
 
-   public HttpRequest filter(HttpRequest request) throws HttpException {
-      checkNotNull(request.getFirstHeaderOrNull(HttpHeaders.HOST), "request is not ready to sign; host not present");
-      Multimap<String, String> decodedParams = queryParser().apply(request.getPayload().getRawContent().toString()); 
-      decodedParams.replaceValues(VERSION, ImmutableSet.of(apiVersion));
-      addSigningParams(decodedParams);
-      validateParams(decodedParams);
-      String stringToSign = createStringToSign(request, decodedParams);
-      String signature = sign(stringToSign);
-      addSignature(decodedParams, signature);
-      request = setPayload(request, decodedParams);
-      utils.logRequest(signatureLog, request, "<<");
-      return request;
-   }
-   
-   HttpRequest setPayload(HttpRequest request, Multimap<String, String> decodedParams) {
-      String queryLine = buildQueryLine(decodedParams);
-      request.setPayload(queryLine);
-      request.getPayload().getContentMetadata().setContentType("application/x-www-form-urlencoded");
-      return request;
-   }
-
-   private static final Comparator<String> actionFirstAccessKeyLast = new Comparator<String>() {
-      static final int LEFT_IS_GREATER = 1;
-      static final int RIGHT_IS_GREATER = -1;
-
-      @Override
-      public int compare(String left, String right) {
-         if (left == right) {
-            return 0;
-         }
-         if ("Action".equals(right) || "AWSAccessKeyId".equals(left)) {
-            return LEFT_IS_GREATER;
-         }
-         if ("Action".equals(left) || "AWSAccessKeyId".equals(right)) {
-            return RIGHT_IS_GREATER;
-         }
-         return natural().compare(left, right);
+      @Inject FormSignerV2(SignatureWire signatureWire, @ApiVersion String apiVersion,
+            @org.jclouds.location.Provider Supplier<Credentials> creds, @TimeStamp Provider<String> dateService,
+            Crypto crypto, HttpUtils utils) {
+         this.signatureWire = signatureWire;
+         this.apiVersion = apiVersion;
+         this.creds = creds;
+         this.dateService = dateService;
+         this.crypto = crypto;
+         this.utils = utils;
       }
-   };
 
-   private static String buildQueryLine(Multimap<String, String> decodedParams) {
-      Multimap<String, String> sortedParams = TreeMultimap.create(actionFirstAccessKeyLast, natural());
-      sortedParams.putAll(decodedParams);
-      return encodeQueryLine(sortedParams);
-   }
-
-   @VisibleForTesting
-   void validateParams(Multimap<String, String> params) {
-      for (String parameter : mandatoryParametersForSignature) {
-         checkState(params.containsKey(parameter), "parameter " + parameter + " is required for signature");
+      public HttpRequest filter(HttpRequest request) throws HttpException {
+         checkNotNull(request.getFirstHeaderOrNull(HttpHeaders.HOST), "request is not ready to sign; host not present");
+         Multimap<String, String> decodedParams = queryParser().apply(request.getPayload().getRawContent().toString());
+         decodedParams.replaceValues(VERSION, ImmutableSet.of(apiVersion));
+         addSigningParams(decodedParams);
+         validateParams(decodedParams);
+         String stringToSign = createStringToSign(request, decodedParams);
+         String signature = sign(stringToSign);
+         addSignature(decodedParams, signature);
+         request = setPayload(request, decodedParams);
+         utils.logRequest(signatureLog, request, "<<");
+         return request;
       }
-   }
 
-   @VisibleForTesting
-   void addSignature(Multimap<String, String> params, String signature) {
-      params.replaceValues(SIGNATURE, ImmutableList.of(signature));
-   }
+      HttpRequest setPayload(HttpRequest request, Multimap<String, String> decodedParams) {
+         String queryLine = buildQueryLine(decodedParams);
+         request.setPayload(queryLine);
+         request.getPayload().getContentMetadata().setContentType("application/x-www-form-urlencoded");
+         return request;
+      }
 
-   @VisibleForTesting
-   public String sign(String toSign) {
-      String signature;
-      try {
-         ByteProcessor<byte[]> hmacSHA256 = asByteProcessor(crypto.hmacSHA256(creds.get().credential.getBytes(UTF_8)));
-         signature = base64().encode(readBytes(toInputStream(toSign), hmacSHA256));
+      private static final Comparator<String> actionFirstAccessKeyLast = new Comparator<String>() {
+         static final int LEFT_IS_GREATER = 1;
+         static final int RIGHT_IS_GREATER = -1;
+
+         @Override
+         public int compare(String left, String right) {
+            if (left == right) {
+               return 0;
+            }
+            if ("Action".equals(right) || "AWSAccessKeyId".equals(left)) {
+               return LEFT_IS_GREATER;
+            }
+            if ("Action".equals(left) || "AWSAccessKeyId".equals(right)) {
+               return RIGHT_IS_GREATER;
+            }
+            return natural().compare(left, right);
+         }
+      };
+
+      private static String buildQueryLine(Multimap<String, String> decodedParams) {
+         Multimap<String, String> sortedParams = TreeMultimap.create(actionFirstAccessKeyLast, natural());
+         sortedParams.putAll(decodedParams);
+         return encodeQueryLine(sortedParams);
+      }
+
+      @VisibleForTesting void validateParams(Multimap<String, String> params) {
+         for (String parameter : mandatoryParametersForSignature) {
+            checkState(params.containsKey(parameter), "parameter " + parameter + " is required for signature");
+         }
+      }
+
+      @VisibleForTesting void addSignature(Multimap<String, String> params, String signature) {
+         params.replaceValues(SIGNATURE, ImmutableList.of(signature));
+      }
+
+      @VisibleForTesting
+      public String sign(String toSign) {
+         String signature;
+         try {
+            ByteProcessor<byte[]> hmacSHA256 = asByteProcessor(
+                  crypto.hmacSHA256(creds.get().credential.getBytes(UTF_8)));
+            signature = base64().encode(readBytes(toInputStream(toSign), hmacSHA256));
+            if (signatureWire.enabled())
+               signatureWire.input(toInputStream(signature));
+         } catch (Exception e) {
+            throw new HttpException("error signing request", e);
+         }
+         return signature;
+      }
+
+      @VisibleForTesting
+      public String createStringToSign(HttpRequest request, Multimap<String, String> decodedParams) {
+         utils.logRequest(signatureLog, request, ">>");
+         StringBuilder stringToSign = new StringBuilder();
+         // StringToSign = HTTPVerb + "\n" +
+         stringToSign.append(request.getMethod()).append("\n");
+         // ValueOfHostHeaderInLowercase + "\n" +
+         stringToSign.append(request.getFirstHeaderOrNull(HttpHeaders.HOST).toLowerCase()).append("\n");
+         // HTTPRequestURI + "\n" +
+         stringToSign.append(request.getEndpoint().getPath()).append("\n");
+         // CanonicalizedFormString <from the preceding step>
+         stringToSign.append(buildCanonicalizedString(decodedParams));
          if (signatureWire.enabled())
-            signatureWire.input(toInputStream(signature));
-      } catch (Exception e) {
-         throw new HttpException("error signing request", e);
+            signatureWire.output(stringToSign.toString());
+         return stringToSign.toString();
       }
-      return signature;
-   }
 
-   @VisibleForTesting
-   public String createStringToSign(HttpRequest request, Multimap<String, String> decodedParams) {
-      utils.logRequest(signatureLog, request, ">>");
-      StringBuilder stringToSign = new StringBuilder();
-      // StringToSign = HTTPVerb + "\n" +
-      stringToSign.append(request.getMethod()).append("\n");
-      // ValueOfHostHeaderInLowercase + "\n" +
-      stringToSign.append(request.getFirstHeaderOrNull(HttpHeaders.HOST).toLowerCase()).append("\n");
-      // HTTPRequestURI + "\n" +
-      stringToSign.append(request.getEndpoint().getPath()).append("\n");
-      // CanonicalizedFormString <from the preceding step>
-      stringToSign.append(buildCanonicalizedString(decodedParams));
-      if (signatureWire.enabled())
-         signatureWire.output(stringToSign.toString());
-      return stringToSign.toString();
-   }
-
-   @VisibleForTesting
-   String buildCanonicalizedString(Multimap<String, String> decodedParams) {
-      // note that aws wants to percent encode the canonicalized string without skipping '/' and '?'
-      return encodeQueryLine(TreeMultimap.create(decodedParams), ImmutableList.<Character> of());
-   }
-
-
-   @VisibleForTesting
-   void addSigningParams(Multimap<String, String> params) {
-      params.removeAll(SIGNATURE);
-      params.removeAll(SECURITY_TOKEN);
-      Credentials current = creds.get();
-      if (current instanceof SessionCredentials) {
-         params.put(SECURITY_TOKEN, SessionCredentials.class.cast(current).getSessionToken());
+      @VisibleForTesting String buildCanonicalizedString(Multimap<String, String> decodedParams) {
+         // note that aws wants to percent encode the canonicalized string without skipping '/' and '?'
+         return encodeQueryLine(TreeMultimap.create(decodedParams), ImmutableList.<Character>of());
       }
-      params.replaceValues(SIGNATURE_METHOD, ImmutableList.of("HmacSHA256"));
-      params.replaceValues(SIGNATURE_VERSION, ImmutableList.of("2"));
-      params.replaceValues(TIMESTAMP, ImmutableList.of(dateService.get()));
-      params.replaceValues(AWS_ACCESS_KEY_ID, ImmutableList.of(creds.get().identity));
-   }
 
-   public String createStringToSign(HttpRequest input) {
-      return createStringToSign(input, queryParser().apply(input.getPayload().getRawContent().toString()));
-   }
+      @VisibleForTesting void addSigningParams(Multimap<String, String> params) {
+         params.removeAll(SIGNATURE);
+         params.removeAll(SECURITY_TOKEN);
+         Credentials current = creds.get();
+         if (current instanceof SessionCredentials) {
+            params.put(SECURITY_TOKEN, SessionCredentials.class.cast(current).getSessionToken());
+         }
+         params.replaceValues(SIGNATURE_METHOD, ImmutableList.of("HmacSHA256"));
+         params.replaceValues(SIGNATURE_VERSION, ImmutableList.of("2"));
+         params.replaceValues(TIMESTAMP, ImmutableList.of(dateService.get()));
+         params.replaceValues(AWS_ACCESS_KEY_ID, ImmutableList.of(creds.get().identity));
+      }
 
+      public String createStringToSign(HttpRequest input) {
+         return createStringToSign(input, queryParser().apply(input.getPayload().getRawContent().toString()));
+      }
+   }
 }

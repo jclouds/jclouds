@@ -18,6 +18,11 @@ package org.jclouds.rest;
 
 import org.jclouds.http.HttpRequest;
 
+/**
+ * @deprecated This is an internal interface historically used to debug signature logic. It currently is a broken
+ * abstraction as AWS Signature v4 requires multiple parameters to sign a request.
+ */
+@Deprecated
 public interface RequestSigner {
 
    String createStringToSign(HttpRequest input);

@@ -28,7 +28,7 @@ import javax.inject.Singleton;
 
 import org.jclouds.apis.ApiMetadata;
 import org.jclouds.aws.domain.Region;
-import org.jclouds.aws.filters.FormSigner;
+import org.jclouds.aws.filters.FormSigner.FormSignerV2;
 import org.jclouds.compute.domain.Image;
 import org.jclouds.date.DateService;
 import org.jclouds.ec2.EC2ApiMetadata;
@@ -115,19 +115,19 @@ public abstract class BaseEC2ApiTest<T> extends BaseRestAnnotationProcessingTest
       }
    }
 
-   protected FormSigner filter;
+   protected FormSignerV2 filter;
 
    @Override
    protected void checkFilters(HttpRequest request) {
       assertEquals(request.getFilters().size(), 1);
-      assertEquals(request.getFilters().get(0).getClass(), FormSigner.class);
+      assertEquals(request.getFilters().get(0).getClass(), FormSignerV2.class);
    }
 
    @Override
    @BeforeTest
    protected void setupFactory() throws IOException {
       super.setupFactory();
-      this.filter = injector.getInstance(FormSigner.class);
+      this.filter = injector.getInstance(FormSignerV2.class);
    }
 
    @Override
