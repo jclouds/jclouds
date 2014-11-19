@@ -21,21 +21,20 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.io.BaseEncoding.base64;
 
 import javax.inject.Inject;
-import javax.inject.Singleton;
 
-import org.jclouds.aws.filters.FormSigner;
+import org.jclouds.aws.filters.FormSigner.FormSignerV2;
 import org.jclouds.http.HttpRequest;
 import org.jclouds.rest.Binder;
 
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.ImmutableMultimap.Builder;
 
-@Singleton
+// TODO: see if this still exists in V4
 public class BindS3UploadPolicyAndSignature implements Binder {
-   private final FormSigner signer;
+   private final FormSignerV2 signer;
 
    @Inject
-   BindS3UploadPolicyAndSignature(FormSigner signer) {
+   BindS3UploadPolicyAndSignature(FormSignerV2 signer) {
       this.signer = signer;
    }
 
@@ -49,5 +48,4 @@ public class BindS3UploadPolicyAndSignature implements Binder {
       builder.put("Storage.S3.UploadPolicySignature", signature);
       return (R) request.toBuilder().replaceFormParams(builder.build()).build();
    }
-
 }

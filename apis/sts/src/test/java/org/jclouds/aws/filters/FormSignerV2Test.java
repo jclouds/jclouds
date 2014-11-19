@@ -22,6 +22,7 @@ import static org.jclouds.providers.AnonymousProviderMetadata.forApiOnEndpoint;
 import static org.testng.Assert.assertEquals;
 
 import org.jclouds.ContextBuilder;
+import org.jclouds.aws.filters.FormSigner.FormSignerV2;
 import org.jclouds.aws.xml.SessionCredentialsHandlerTest;
 import org.jclouds.date.TimeStamp;
 import org.jclouds.domain.Credentials;
@@ -40,13 +41,9 @@ import com.google.inject.AbstractModule;
 import com.google.inject.Injector;
 import com.google.inject.Module;
 import com.google.inject.name.Names;
-/**
- * Tests behavior of {@code FormSigner}
- */
-// NOTE:without testName, this will not call @Before* and fail w/NPE during
-// surefire
-@Test(groups = "unit", singleThreaded = true, testName = "FormSignerTest")
-public class FormSignerTest {
+
+@Test(groups = "unit", singleThreaded = true, testName = "FormSignerV2Test")
+public class FormSignerV2Test {
    public static Injector injector(Credentials creds) {
       return ContextBuilder
             .newBuilder(forApiOnEndpoint(IntegrationTestClient.class, "http://localhost"))
@@ -54,7 +51,7 @@ public class FormSignerTest {
             .modules(ImmutableList.<Module> of(new MockModule(), new NullLoggingModule(), new AbstractModule() {
                @Override
                protected void configure() {
-                  bind(RequestSigner.class).to(FormSigner.class);
+                  bind(RequestSigner.class).to(FormSignerV2.class);
                   bind(String.class).annotatedWith(Names.named(PROPERTY_HEADER_TAG)).toInstance("amz");
                   bind(String.class).annotatedWith(TimeStamp.class).toInstance("2009-11-08T15:54:08.897Z");
                }
@@ -62,11 +59,11 @@ public class FormSignerTest {
             })).buildInjector();
    }
 
-   public static FormSigner filter(Credentials creds) {
-      return injector(creds).getInstance(FormSigner.class);
+   public static FormSignerV2 filter(Credentials creds) {
+      return injector(creds).getInstance(FormSignerV2.class);
    }
 
-   public static FormSigner staticCredentialsFilter = filter(new Credentials("identity", "credential"));
+   public static FormSignerV2 staticCredentialsFilter = filter(new Credentials("identity", "credential"));
 
    HttpRequest request = HttpRequest.builder().method(GET)
          .endpoint("http://localhost")
@@ -98,5 +95,4 @@ public class FormSignerTest {
                   .put("Version", "2010-06-15").build()),
             "AWSAccessKeyId=foo&Action=DescribeImages&Expires=2008-02-10T12%3A00%3A00Z&ImageId.1=ami-2bb65342&SignatureMethod=HmacSHA256&SignatureVersion=2&Version=2010-06-15");
    }
-
 }

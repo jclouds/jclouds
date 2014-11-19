@@ -16,6 +16,9 @@
  */
 package org.jclouds.aws.ec2.config;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.TimeZone;
 
 import javax.inject.Singleton;
 
@@ -24,12 +27,15 @@ import org.jclouds.aws.ec2.domain.AWSRunningInstance;
 import org.jclouds.aws.ec2.domain.SpotInstanceRequest;
 import org.jclouds.aws.ec2.functions.SpotInstanceRequestToAWSRunningInstance;
 import org.jclouds.aws.ec2.options.AWSRunInstancesOptions;
+import org.jclouds.aws.filters.FormSigner;
+import org.jclouds.aws.filters.FormSignerV4;
+import org.jclouds.date.DateService;
 import org.jclouds.ec2.EC2Api;
 import org.jclouds.ec2.config.BaseEC2HttpApiModule;
-import org.jclouds.ec2.options.RunInstancesOptions;
 import org.jclouds.ec2.features.AMIApi;
 import org.jclouds.ec2.features.InstanceApi;
 import org.jclouds.ec2.features.SecurityGroupApi;
+import org.jclouds.ec2.options.RunInstancesOptions;
 import org.jclouds.rest.ConfiguresHttpApi;
 
 import com.google.common.base.Function;
@@ -42,8 +48,11 @@ import com.google.inject.TypeLiteral;
 @ConfiguresHttpApi
 public class AWSEC2HttpApiModule extends BaseEC2HttpApiModule<AWSEC2Api> {
 
+   private final SimpleDateFormat iso8601 = new SimpleDateFormat("yyyyMMdd'T'HHmmss'Z'");
+
    public AWSEC2HttpApiModule() {
       super(AWSEC2Api.class);
+      iso8601.setTimeZone(TimeZone.getTimeZone("GMT"));
    }
 
    @Singleton
@@ -72,9 +81,15 @@ public class AWSEC2HttpApiModule extends BaseEC2HttpApiModule<AWSEC2Api> {
 
    @Override
    protected void configure() {
+      bind(FormSigner.class).to(FormSignerV4.class);
       bind(RunInstancesOptions.class).to(AWSRunInstancesOptions.class);
       bind(new TypeLiteral<Function<SpotInstanceRequest, AWSRunningInstance>>() {
       }).to(SpotInstanceRequestToAWSRunningInstance.class);
       super.configure();
+   }
+
+   @Override protected String provideTimeStamp(DateService dateService) {
+      // 20120416T155408Z not 2012-04-16T15:54:08Z
+      return iso8601.format(new Date());
    }
 }

@@ -17,7 +17,10 @@
 package org.jclouds.aws.ec2.features;
 
 import static com.google.common.collect.Maps.transformValues;
+import static com.google.common.net.HttpHeaders.AUTHORIZATION;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertTrue;
 
 import java.io.IOException;
 import java.net.URI;
@@ -29,7 +32,8 @@ import javax.inject.Singleton;
 import org.jclouds.aws.domain.Region;
 import org.jclouds.aws.ec2.AWSEC2ProviderMetadata;
 import org.jclouds.aws.ec2.config.AWSEC2HttpApiModule;
-import org.jclouds.aws.filters.FormSigner;
+import org.jclouds.aws.filters.FormSignerV4;
+import org.jclouds.aws.filters.FormSignerV4.ServiceAndRegion;
 import org.jclouds.compute.domain.Image;
 import org.jclouds.date.DateService;
 import org.jclouds.ec2.compute.domain.RegionAndName;
@@ -49,18 +53,20 @@ import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.LinkedHashMultimap;
+import com.google.common.collect.Multimap;
 import com.google.inject.Module;
 import com.google.inject.Provides;
 
 @Test(groups = "unit")
 public abstract class BaseAWSEC2ApiTest<T> extends BaseRestAnnotationProcessingTest<T> {
 
-      @ConfiguresHttpApi
+   @ConfiguresHttpApi
    protected static class StubAWSEC2HttpApiModule extends AWSEC2HttpApiModule {
 
       @Override
       protected String provideTimeStamp(DateService dateService) {
-         return "2009-11-08T15:54:08.897Z";
+         return "20120416T155408Z";
       }
 
       @Provides
@@ -83,10 +89,10 @@ public abstract class BaseAWSEC2ApiTest<T> extends BaseRestAnnotationProcessingT
 
             @Override
             public Map<String, Supplier<URI>> get() {
-               return transformValues(ImmutableMap.<String, URI> of(Region.EU_WEST_1, URI
-                        .create("https://ec2.eu-west-1.amazonaws.com"), Region.US_EAST_1, URI
-                        .create("https://ec2.us-east-1.amazonaws.com"), Region.US_WEST_1, URI
-                        .create("https://ec2.us-west-1.amazonaws.com")), Suppliers2.<URI> ofInstanceFunction());
+               return transformValues(ImmutableMap
+                     .<String, URI>of(Region.EU_WEST_1, URI.create("https://ec2.eu-west-1.amazonaws.com"),
+                           Region.US_EAST_1, URI.create("https://ec2.us-east-1.amazonaws.com"), Region.US_WEST_1,
+                           URI.create("https://ec2.us-west-1.amazonaws.com")), Suppliers2.<URI>ofInstanceFunction());
             }
 
          });
@@ -100,21 +106,49 @@ public abstract class BaseAWSEC2ApiTest<T> extends BaseRestAnnotationProcessingT
 
          });
       }
+
+      @Provides ServiceAndRegion ServiceAndRegion(){
+         return new ServiceAndRegion() {
+            @Override public String service() {
+               return "ec2";
+            }
+
+            @Override public String region(String host) {
+               return "us-east-1";
+            }
+         };
+      }
    }
 
-   protected FormSigner filter;
+   @Override protected void assertNonPayloadHeadersEqual(HttpRequest request, String toMatch) {
+      Multimap<String, String> headersToCheck = LinkedHashMultimap.create();
+      for (String key : request.getHeaders().keySet()) {
+         if (key.equals("X-Amz-Date")) {
+            assertEquals(request.getFirstHeaderOrNull(key), "20120416T155408Z");
+         } else if (key.equals("Authorization")) {
+            assertThat(request.getFirstHeaderOrNull(AUTHORIZATION)).startsWith(
+                  "AWS4-HMAC-SHA256 Credential=identity/20120416/"
+                        + "us-east-1/ec2/aws4_request, SignedHeaders=content-type;host;x-amz-date, Signature=");
+         } else {
+            headersToCheck.putAll(key, request.getHeaders().get(key));
+         }
+      }
+      assertEquals(sortAndConcatHeadersIntoString(headersToCheck), toMatch);
+   }
+
+   protected FormSignerV4 filter;
 
    @Override
    protected void checkFilters(HttpRequest request) {
       assertEquals(request.getFilters().size(), 1);
-      assertEquals(request.getFilters().get(0).getClass(), FormSigner.class);
+      assertTrue(request.getFilters().get(0) instanceof FormSignerV4);
    }
 
    @Override
    @BeforeTest
    protected void setupFactory() throws IOException {
       super.setupFactory();
-      this.filter = injector.getInstance(FormSigner.class);
+      this.filter = injector.getInstance(FormSignerV4.class);
    }
 
    @Override
