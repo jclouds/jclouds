@@ -39,6 +39,7 @@ import org.jclouds.googlecomputeengine.features.ProjectApi;
 import org.jclouds.googlecomputeengine.features.RegionApi;
 import org.jclouds.googlecomputeengine.features.RouteApi;
 import org.jclouds.googlecomputeengine.features.SnapshotApi;
+import org.jclouds.googlecomputeengine.features.TargetInstanceApi;
 import org.jclouds.googlecomputeengine.features.TargetPoolApi;
 import org.jclouds.googlecomputeengine.features.TargetHttpProxyApi;
 import org.jclouds.googlecomputeengine.features.UrlMapApi;
@@ -134,6 +135,11 @@ public interface GoogleComputeEngineApi extends Closeable {
    @Delegate
    @Endpoint(CurrentProject.class)
    TargetHttpProxyApi targetHttpProxies();
+
+   @Delegate
+   @Endpoint(CurrentProject.class)
+   @Path("/zones/{zone}")
+   TargetInstanceApi targetInstancesInZone(@PathParam("zone") String zone);
 
    @Delegate
    @Endpoint(CurrentProject.class)

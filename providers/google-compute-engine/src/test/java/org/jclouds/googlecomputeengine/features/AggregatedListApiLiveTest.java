@@ -30,6 +30,7 @@ import org.jclouds.googlecomputeengine.domain.DiskType;
 import org.jclouds.googlecomputeengine.domain.ForwardingRule;
 import org.jclouds.googlecomputeengine.domain.MachineType;
 import org.jclouds.googlecomputeengine.domain.Operation;
+import org.jclouds.googlecomputeengine.domain.TargetInstance;
 import org.jclouds.googlecomputeengine.internal.BaseGoogleComputeEngineApiLiveTest;
 import org.testng.SkipException;
 import org.testng.annotations.Test;
@@ -126,6 +127,23 @@ public class AggregatedListApiLiveTest extends BaseGoogleComputeEngineApiLiveTes
       }
       if (count < 2) {
          throw new SkipException("Not enough forwarding rules");
+      }
+      assertEquals(count, 2);
+   }
+
+   public void targetInstances() {
+      Iterator<ListPage<TargetInstance>> pageIterator = api().targetInstances(maxResults(1));
+      // make sure that in spite of having only one result per page we get at
+      // least two results
+      int count = 0;
+      for (; count < 2 && pageIterator.hasNext();) {
+         ListPage<TargetInstance> result = pageIterator.next();
+         if (!result.isEmpty()) {
+            count++;
+         }
+      }
+      if (count < 2) {
+         throw new SkipException("Not enough target instances");
       }
       assertEquals(count, 2);
    }

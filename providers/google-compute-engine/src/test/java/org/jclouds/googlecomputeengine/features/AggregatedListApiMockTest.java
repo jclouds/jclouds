@@ -164,4 +164,24 @@ public class AggregatedListApiMockTest extends BaseGoogleComputeEngineApiMockTes
 
       assertSent(server, "GET", "/projects/party/aggregated/forwardingRules");
    }
+
+   public void targetInstances() throws Exception {
+      server.enqueue(jsonResponse("/aggregated_target_instance_list.json"));
+
+      AggregatedListApi aggregatedList = api().aggregatedList();
+
+      assertTrue(aggregatedList.targetInstances().hasNext());
+
+      assertSent(server, "GET", "/projects/party/aggregated/targetInstances");
+   }
+
+   public void targetInstancesResponseIs4xx() throws Exception {
+      server.enqueue(jsonResponse("/aggregated_target_instance_list_empty.json"));
+
+      AggregatedListApi aggregatedList = api().aggregatedList();
+
+      assertFalse(aggregatedList.targetInstances().hasNext());
+
+      assertSent(server, "GET", "/projects/party/aggregated/targetInstances");
+   }
 }

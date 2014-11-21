@@ -36,6 +36,7 @@ import org.jclouds.googlecomputeengine.domain.ForwardingRule;
 import org.jclouds.googlecomputeengine.domain.Instance;
 import org.jclouds.googlecomputeengine.domain.MachineType;
 import org.jclouds.googlecomputeengine.domain.Operation;
+import org.jclouds.googlecomputeengine.domain.TargetInstance;
 import org.jclouds.googlecomputeengine.internal.BaseToIteratorOfListPage;
 import org.jclouds.googlecomputeengine.options.ListOptions;
 import org.jclouds.javax.annotation.Nullable;
@@ -394,6 +395,56 @@ public interface AggregatedListApi {
                return api.aggregatedList().pageOfForwardingRules(pageToken, options);
             }
          };
+      }
+   }
+
+   /**
+    * Retrieves the list of TargetInstance resources available to the
+    * specified project. By default the list as a maximum size of 100, if no
+    * options are provided or ListOptions#getMaxResults() has not been set.
+    *
+    * @param pageToken
+    *           marks the beginning of the next list page
+    * @param listOptions
+    *           listing options
+    * @return a page of the list
+    */
+   @Named("TargetInstances:aggregatedList")
+   @GET
+   @Path("/targetInstances")
+   ListPage<TargetInstance> pageOfTargetInstances(@Nullable @QueryParam("pageToken") String pageToken,
+         ListOptions listOptions);
+
+   /** @see #pageOfTargetInstances(String, ListOptions) */
+   @Named("TargetInstances:aggregatedList")
+   @GET
+   @Path("/targetInstances")
+   @Transform(TargetInstancePages.class)
+   Iterator<ListPage<TargetInstance>> targetInstances();
+
+   /** @see #pageOfTargetInstances(String, ListOptions) */
+   @Named("TargetInstances:aggregatedList")
+   @GET
+   @Path("/targetInstances")
+   @Transform(TargetInstancePages.class)
+   Iterator<ListPage<TargetInstance>> targetInstances(ListOptions options);
+
+   static final class TargetInstancePages extends BaseToIteratorOfListPage<TargetInstance, TargetInstancePages> {
+      private final GoogleComputeEngineApi api;
+
+      @Inject
+      TargetInstancePages(GoogleComputeEngineApi api) {
+         this.api = api;
+      }
+
+      @Override
+      protected Function<String, ListPage<TargetInstance>> fetchNextPage(final ListOptions options) {
+            return new Function<String, ListPage<TargetInstance>>() {
+               @Override
+               public ListPage<TargetInstance> apply(String pageToken) {
+                  return api.aggregatedList().pageOfTargetInstances(pageToken, options);
+               }
+            };
       }
    }
 }
