@@ -84,7 +84,7 @@ public class BaseAWSEC2ApiMockTest {
    }
 
    private final Set<Module> modules = ImmutableSet
-         .<Module>of(new MockAWSEC2HttpApiModule(), new ExecutorServiceModule(sameThreadExecutor()));
+         .<Module>of(new MockAWSEC2HttpApiModule(), new ExecutorServiceModule(sameThreadExecutor(), sameThreadExecutor()));
 
    @ConfiguresHttpApi
    class MockAWSEC2HttpApiModule extends AWSEC2HttpApiModule {
