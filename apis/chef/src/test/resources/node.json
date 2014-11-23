@@ -1,0 +1,10 @@
+{ "automatic" : {  },
+  "chef_environment" : "prod",
+  "chef_type" : "node",
+  "default" : {  },
+  "json_class" : "Chef::Node",
+  "name" : "adrian-jcloudstest",
+  "normal" : { "tomcat6" : { "ssl_port" : 8433 } },
+  "override" : {  },
+  "run_list" : [ "recipe[java]" ]
+}

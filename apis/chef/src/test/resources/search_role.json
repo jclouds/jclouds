@@ -1,0 +1,34 @@
+{
+    "total": 1,
+    "start": 0,
+    "rows": [
+        {
+            "name": "webserver",
+            "description": "The base role for systems that serve HTTP traffic",
+            "json_class": "Chef::Role",
+            "default_attributes": {
+                "apache2": {
+                    "listen_ports": [
+                        "80",
+                        "443"
+                    ]
+                }
+            },
+            "override_attributes": {
+                "apache2": {
+                    "max_children": "50"
+                }
+            },
+            "chef_type": "role",
+            "run_list": [],
+            "env_run_lists": {
+                "prod": [
+                    "recipe[apache2]"
+                ],
+                "staging": [
+                    "recipe[apache2::staging]"
+                ]
+            }
+        }
+    ]
+}
