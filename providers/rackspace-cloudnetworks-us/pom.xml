@@ -42,9 +42,7 @@
     <test.rackspace-cloudnetworks-us.identity>${test.rackspace-us.identity}</test.rackspace-cloudnetworks-us.identity>
     <test.rackspace-cloudnetworks-us.credential>${test.rackspace-us.credential}</test.rackspace-cloudnetworks-us.credential>
     <jclouds.osgi.export>org.jclouds.rackspace.cloudnetworks.us*;version="${project.version}"</jclouds.osgi.export>
-    <jclouds.osgi.import>
-        org.jclouds*;version="${project.version}",*
-    </jclouds.osgi.import>
+    <jclouds.osgi.import>org.jclouds*;version="${project.version}",*</jclouds.osgi.import>
   </properties>
 
   <dependencies>
@@ -85,11 +83,10 @@
       <artifactId>logback-classic</artifactId>
       <scope>test</scope>
     </dependency>
-
     <dependency>
-        <groupId>com.google.auto.value</groupId>
-        <artifactId>auto-value</artifactId>
-        <scope>provided</scope>
+      <groupId>com.google.auto.service</groupId>
+      <artifactId>auto-service</artifactId>
+      <scope>provided</scope>
     </dependency>
   </dependencies>
 
