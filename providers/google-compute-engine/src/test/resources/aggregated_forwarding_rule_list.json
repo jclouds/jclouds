@@ -1,0 +1,60 @@
+{
+ "kind": "compute#forwardingRuleAggregatedList",
+ "id": "projects/party/aggregated/forwardingRules",
+ "items": {
+  "regions/asia-east1": {
+   "warning": {
+    "code": "NO_RESULTS_ON_PAGE",
+    "message": "There are no results for scope 'regions/asia-east1' on this page.",
+    "data": [
+     {
+      "key": "scope",
+      "value": "regions/asia-east1"
+     }
+    ]
+   }
+  },
+  "regions/europe-west1": {
+   "warning": {
+    "code": "NO_RESULTS_ON_PAGE",
+    "message": "There are no results for scope 'regions/europe-west1' on this page.",
+    "data": [
+     {
+      "key": "scope",
+      "value": "regions/europe-west1"
+     }
+    ]
+   }
+  },
+  "regions/us-central1": {
+   "forwardingRules": [
+    {
+
+     "kind": "compute#forwardingRule",
+     "id": "943206052144235641",
+     "creationTimestamp": "2014-11-24T15:33:26.664-08:00",
+     "name": "test-forwarding-rule",
+     "region": "https://www.googleapis.com/compute/v1/projects/party/regions/us-central1",
+     "IPAddress": "130.211.140.61",
+     "IPProtocol": "TCP",
+     "portRange": "1-65535",
+     "target": "https://www.googleapis.com/compute/v1/projects/party/regions/us-central1/targetPools/test",
+     "selfLink": "https://www.googleapis.com/compute/v1/projects/party/regions/us-central1/forwardingRules/test-forwarding-rule"
+    }
+   ]
+  },
+  "global": {
+   "warning": {
+    "code": "NO_RESULTS_ON_PAGE",
+    "message": "There are no results for scope 'global' on this page.",
+    "data": [
+     {
+      "key": "scope",
+      "value": "global"
+     }
+    ]
+   }
+  }
+ },
+ "selfLink": "https://www.googleapis.com/compute/v1/projects/party/aggregated/forwardingRules"
+}

@@ -1,0 +1,55 @@
+{
+ "kind": "compute#forwardingRuleAggregatedList",
+ "id": "projects/party/aggregated/forwardingRules",
+ "items": {
+  "regions/asia-east1": {
+   "warning": {
+    "code": "NO_RESULTS_ON_PAGE",
+    "message": "There are no results for scope 'regions/asia-east1' on this page.",
+    "data": [
+     {
+      "key": "scope",
+      "value": "regions/asia-east1"
+     }
+    ]
+   }
+  },
+  "regions/europe-west1": {
+   "warning": {
+    "code": "NO_RESULTS_ON_PAGE",
+    "message": "There are no results for scope 'regions/europe-west1' on this page.",
+    "data": [
+     {
+      "key": "scope",
+      "value": "regions/europe-west1"
+     }
+    ]
+   }
+  },
+  "regions/us-central1": {
+   "warning": {
+    "code": "NO_RESULTS_ON_PAGE",
+    "message": "There are no results for scope 'regions/us-central1' on this page.",
+    "data": [
+     {
+      "key": "scope",
+      "value": "regions/us-central1"
+     }
+    ]
+   }
+  },
+  "global": {
+   "warning": {
+    "code": "NO_RESULTS_ON_PAGE",
+    "message": "There are no results for scope 'global' on this page.",
+    "data": [
+     {
+      "key": "scope",
+      "value": "global"
+     }
+    ]
+   }
+  }
+ },
+ "selfLink": "https://www.googleapis.com/compute/v1/projects/party/aggregated/forwardingRules"
+}

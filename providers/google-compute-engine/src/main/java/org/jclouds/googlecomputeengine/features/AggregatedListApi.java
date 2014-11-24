@@ -32,6 +32,7 @@ import org.jclouds.googlecomputeengine.GoogleComputeEngineApi;
 import org.jclouds.googlecomputeengine.domain.Address;
 import org.jclouds.googlecomputeengine.domain.Disk;
 import org.jclouds.googlecomputeengine.domain.DiskType;
+import org.jclouds.googlecomputeengine.domain.ForwardingRule;
 import org.jclouds.googlecomputeengine.domain.Instance;
 import org.jclouds.googlecomputeengine.domain.MachineType;
 import org.jclouds.googlecomputeengine.domain.Operation;
@@ -341,6 +342,56 @@ public interface AggregatedListApi {
             @Override
             public ListPage<Operation> apply(String pageToken) {
                return api.aggregatedList().pageOfGlobalOperations(pageToken, options);
+            }
+         };
+      }
+   }
+
+   /**
+    * Retrieves the list of forwarding rule resources available to the
+    * specified project. By default the list as a maximum size of 100, if no
+    * options are provided or ListOptions#getMaxResults() has not been set.
+    *
+    * @param pageToken
+    *           marks the beginning of the next list page
+    * @param listOptions
+    *           listing options
+    * @return a page of the list
+    */
+   @Named("ForwardingRules:aggregatedList")
+   @GET
+   @Path("/forwardingRules")
+   ListPage<ForwardingRule> pageOfForwardingRules(@Nullable @QueryParam("pageToken") String pageToken,
+         ListOptions listOptions);
+
+   /** @see #pageOfForwardingRules(String, ListOptions) */
+   @Named("ForwardingRules:aggregatedList")
+   @GET
+   @Path("/forwardingRules")
+   @Transform(ForwardingRulePages.class)
+   Iterator<ListPage<ForwardingRule>> forwardingRules();
+
+   /** @see #pageOfForwardingRules(String, ListOptions) */
+   @Named("ForwardingRule:aggregatedList")
+   @GET
+   @Path("/forwardingRules")
+   @Transform(ForwardingRulePages.class)
+   Iterator<ListPage<ForwardingRule>> forwardingRules(ListOptions options);
+
+   static final class ForwardingRulePages extends BaseToIteratorOfListPage<ForwardingRule, ForwardingRulePages> {
+      private final GoogleComputeEngineApi api;
+
+      @Inject
+      ForwardingRulePages(GoogleComputeEngineApi api) {
+         this.api = api;
+      }
+
+      @Override
+      protected Function<String, ListPage<ForwardingRule>> fetchNextPage(final ListOptions options) {
+         return new Function<String, ListPage<ForwardingRule>>() {
+            @Override
+            public ListPage<ForwardingRule> apply(String pageToken) {
+               return api.aggregatedList().pageOfForwardingRules(pageToken, options);
             }
          };
       }

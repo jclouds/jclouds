@@ -144,4 +144,24 @@ public class AggregatedListApiMockTest extends BaseGoogleComputeEngineApiMockTes
 
       assertSent(server, "GET", "/projects/party/aggregated/operations");
    }
+
+   public void forwardingRules() throws Exception {
+      server.enqueue(jsonResponse("/aggregated_forwarding_rule_list.json"));
+
+      AggregatedListApi aggregatedList = api().aggregatedList();
+
+      assertTrue(aggregatedList.forwardingRules().hasNext());
+
+      assertSent(server, "GET", "/projects/party/aggregated/forwardingRules");
+   }
+
+   public void forwardingRules_4xx() throws Exception {
+      server.enqueue(jsonResponse("/aggregated_forwarding_rule_list_empty.json"));
+
+      AggregatedListApi aggregatedList = api().aggregatedList();
+
+      assertFalse(aggregatedList.forwardingRules().hasNext());
+
+      assertSent(server, "GET", "/projects/party/aggregated/forwardingRules");
+   }
 }
