@@ -40,9 +40,11 @@ import org.jclouds.rackspace.cloudidentity.v2_0.config.CloudIdentityAuthenticati
 import org.jclouds.rackspace.cloudidentity.v2_0.config.CloudIdentityAuthenticationModule;
 import org.jclouds.rackspace.cloudidentity.v2_0.config.CloudIdentityCredentialTypes;
 
+import com.google.auto.service.AutoService;
 import com.google.common.collect.ImmutableSet;
 import com.google.inject.Module;
 
+@AutoService(ProviderMetadata.class)
 public class CloudFilesUKProviderMetadata extends BaseProviderMetadata {
    
    public static Builder builder() {

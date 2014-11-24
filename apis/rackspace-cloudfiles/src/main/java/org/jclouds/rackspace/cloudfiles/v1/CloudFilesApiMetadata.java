@@ -23,6 +23,7 @@ import static org.jclouds.reflect.Reflection2.typeToken;
 import java.net.URI;
 import java.util.Properties;
 
+import org.jclouds.apis.ApiMetadata;
 import org.jclouds.openstack.keystone.v2_0.config.KeystoneAuthenticationModule.RegionModule;
 import org.jclouds.openstack.swift.v1.SwiftApiMetadata;
 import org.jclouds.openstack.swift.v1.blobstore.RegionScopedBlobStoreContext;
@@ -36,12 +37,14 @@ import org.jclouds.rackspace.cloudidentity.v2_0.config.CloudIdentityAuthenticati
 import org.jclouds.rackspace.cloudidentity.v2_0.config.CloudIdentityCredentialTypes;
 import org.jclouds.rest.internal.BaseHttpApiMetadata;
 
+import com.google.auto.service.AutoService;
 import com.google.common.collect.ImmutableSet;
 import com.google.inject.Module;
 
 /**
  * Implementation of {@link ApiMetadata} for Cloud Files.
  */
+@AutoService(ApiMetadata.class)
 public class CloudFilesApiMetadata extends BaseHttpApiMetadata<CloudFilesApi> {
 
    @Override
