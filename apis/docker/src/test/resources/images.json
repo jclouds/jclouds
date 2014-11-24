@@ -1,0 +1,42 @@
+[
+  {
+    "Created": 1416827360,
+    "Id": "cbba6639a342646deed70d7ea6162fa2a0acea9300f911f4e014555fe37d3456",
+    "ParentId": "05794515afd5724df1cdf0e674ae932455fce7dea3c70a94d77119ad1fa954ba",
+    "RepoTags": [
+      "test:latest"
+    ],
+    "Size": 0,
+    "VirtualSize": 808709069
+  },
+  {
+    "Created": 1416826851,
+    "Id": "e1e548b03259ae30ba12232b6c16ef5205cf71b0363848e78b0394e1ecba4f57",
+    "ParentId": "6f36bec79c7f184ceebf7000cfb7244c4bc9b397b6659ac7f420a53d114250d9",
+    "RepoTags": [
+      "<none>:<none>"
+    ],
+    "Size": 0,
+    "VirtualSize": 5609404
+  },
+  {
+    "Created": 1414247273,
+    "Id": "8201388d2b288539aab6aabf5d3b15ec269eba95c6baa9d6771f16540abf3a3f",
+    "ParentId": "4671e2c549c5b60063e349f520c801dc73b53d2226a5a8e5501845ebe94761ca",
+    "RepoTags": [
+      "dockerfile/java:openjdk-7-jdk"
+    ],
+    "Size": 0,
+    "VirtualSize": 755313702
+  },
+  {
+    "Created": 1414108439,
+    "Id": "5506de2b643be1e6febbf3b8a240760c6843244c41e12aa2f60ccbb7153d17f5",
+    "ParentId": "22093c35d77bb609b9257ffb2640845ec05018e3d96cb939f68d0e19127f1723",
+    "RepoTags": [
+      "ubuntu:14.04"
+    ],
+    "Size": 0,
+    "VirtualSize": 199257566
+  }
+]

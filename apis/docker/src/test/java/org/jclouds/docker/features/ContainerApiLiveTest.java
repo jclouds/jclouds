@@ -16,8 +16,11 @@
  */
 package org.jclouds.docker.features;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertNotNull;
+import static org.testng.Assert.assertNull;
 import static org.testng.Assert.assertTrue;
 
 import java.io.IOException;
@@ -29,8 +32,11 @@ import org.jclouds.docker.domain.Config;
 import org.jclouds.docker.domain.Container;
 import org.jclouds.docker.domain.ContainerSummary;
 import org.jclouds.docker.domain.Image;
+import org.jclouds.docker.domain.Resource;
+import org.jclouds.docker.options.AttachOptions;
 import org.jclouds.docker.options.CreateImageOptions;
 import org.jclouds.docker.options.ListContainerOptions;
+import org.jclouds.docker.options.RemoveContainerOptions;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
@@ -57,6 +63,11 @@ public class ContainerApiLiveTest extends BaseDockerApiLiveTest {
 
    @AfterClass
    protected void tearDown() {
+      if (container != null) {
+         if (api.getContainerApi().inspectContainer(container.id()) != null) {
+            api.getContainerApi().removeContainer(container.id(), RemoveContainerOptions.Builder.force(true));
+         }
+      }
       if (image != null) {
          api.getImageApi().deleteImage(BUSYBOX_IMAGE_TAG);
       }
@@ -64,7 +75,7 @@ public class ContainerApiLiveTest extends BaseDockerApiLiveTest {
 
    public void testCreateContainer() throws IOException, InterruptedException {
       Config containerConfig = Config.builder().image(image.id())
-              .cmd(ImmutableList.of("/bin/sh", "-c", "while true; do echo hello world; sleep 1; done"))
+              .cmd(ImmutableList.of("/bin/sh", "-c", "touch hello; while true; do echo hello world; sleep 1; done"))
               .build();
       container = api().createContainer("testCreateContainer", containerConfig);
       assertNotNull(container);
@@ -78,9 +89,52 @@ public class ContainerApiLiveTest extends BaseDockerApiLiveTest {
    }
 
    @Test(dependsOnMethods = "testStartContainer")
+   public void testAttachContainer() {
+      InputStream attachStream = api().attach(container.id(), AttachOptions.Builder.logs(true).stream(false).stdout(true));
+      String stream = consumeStream(attachStream);
+      assertThat(stream.trim()).contains("hello world");
+   }
+
+   @Test(dependsOnMethods = "testAttachContainer")
+   public void testCopyFileFromContainer() {
+      InputStream tarredStream = api().copy(container.id(), Resource.create("hello"));
+      assertNotNull(consumeStream(tarredStream));
+   }
+
+   @Test(dependsOnMethods = "testCopyFileFromContainer")
+   public void testPauseContainer() {
+      api().pause(container.id());
+      assertTrue(api().inspectContainer(container.id()).state().paused());
+   }
+
+   @Test(dependsOnMethods = "testPauseContainer")
+   public void testUnpauseContainer() {
+      api().unpause(container.id());
+      assertFalse(api().inspectContainer(container.id()).state().paused());
+   }
+
+   @Test(dependsOnMethods = "testUnpauseContainer")
    public void testStopContainer() {
       api().stopContainer(container.id());
       assertFalse(api().inspectContainer(container.id()).state().running());
+   }
+
+   @Test(dependsOnMethods = "testStopContainer")
+   public void testRestartContainer() {
+      api().restart(container.id());
+      assertTrue(api().inspectContainer(container.id()).state().running());
+   }
+
+   @Test(dependsOnMethods = "testRestartContainer")
+   public void testWaitContainer() {
+      api().stopContainer(container.id(), 1);
+      assertEquals(api().wait(container.id()).statusCode(), -1);
+   }
+
+   @Test(dependsOnMethods = "testWaitContainer")
+   public void testRemoveContainer() {
+      api().removeContainer(container.id());
+      assertNull(api().inspectContainer(container.id()));
    }
 
    @Test
@@ -91,12 +145,6 @@ public class ContainerApiLiveTest extends BaseDockerApiLiveTest {
          assertNotNull(containerSummary.image());
          assertFalse(containerSummary.names().isEmpty());
       }
-   }
-
-   @Test(dependsOnMethods = "testStopContainer", expectedExceptions = NullPointerException.class)
-   public void testRemoveContainer() {
-      api().removeContainer(container.id());
-      assertFalse(api().inspectContainer(container.id()).state().running());
    }
 
    private ContainerApi api() {

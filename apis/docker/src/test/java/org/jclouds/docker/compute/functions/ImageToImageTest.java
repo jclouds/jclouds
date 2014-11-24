@@ -21,8 +21,11 @@ import static org.easymock.EasyMock.replay;
 import static org.easymock.EasyMock.verify;
 import static org.testng.Assert.assertEquals;
 
+import java.util.Date;
+
 import org.easymock.EasyMock;
 import org.jclouds.compute.domain.Image;
+import org.jclouds.docker.domain.Config;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
@@ -41,16 +44,24 @@ public class ImageToImageTest {
    @BeforeMethod
    public void setup() {
       image = org.jclouds.docker.domain.Image.create(
-            "id", // id
-            "parent", // parent
-            "created", // created
-            null, // container
-            null, // dockerVersion
-            "x86_64", // architecture
-            null, // os
-            0l, // size
-            0l, // virtualSize
-            ImmutableList.of("repoTag1:version") // repoTags
+              "id", // id
+              "author",
+              "comment",
+              Config.builder()
+                      .image("imageId")
+                      .build(),
+              Config.builder()
+                      .image("imageId")
+                      .build(),
+              "parent", // parent
+              new Date(), // created
+              "containerId", // container
+              "1.3.1", // dockerVersion
+              "x86_64", // architecture
+              "os", // os
+              0l, // size
+              0l, // virtualSize
+              ImmutableList.of("repoTag1:version") // repoTags
       );
       function = new ImageToImage();
    }

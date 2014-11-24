@@ -16,6 +16,8 @@
  */
 package org.jclouds.docker.domain;
 
+import java.util.List;
+
 import org.jclouds.json.SerializedNames;
 
 import com.google.auto.value.AutoValue;
@@ -25,39 +27,52 @@ public abstract class Info {
 
    public abstract int containers();
 
-   public abstract int images();
+   public abstract int debug();
 
    public abstract String driver();
 
+   public abstract List<List<String>> driverStatus();
+
    public abstract String executionDriver();
+
+   public abstract int iPv4Forwarding();
+
+   public abstract int images();
+
+   public abstract String indexServerAddress();
+
+   public abstract String initPath();
+
+   public abstract String initSha1();
 
    public abstract String kernelVersion();
 
-   public abstract int debug();
+   public abstract int memoryLimit();
+
+   public abstract int nEventsListener();
 
    public abstract int nFd();
 
    public abstract int nGoroutines();
 
-   public abstract int nEventsListener();
-
-   public abstract String initPath();
-
-   public abstract String indexServerAddress();
-
-   public abstract int memoryLimit();
+   public abstract String operatingSystem();
 
    public abstract int swapLimit();
 
-   public abstract int iPv4Forwarding();
+   Info() {
+   }
 
-   @SerializedNames(
-           {"Containers", "Images", "Driver", "ExecutionDriver", "KernelVersion", "Debug", "NFd", "NGoroutines",
-                   "NEventsListener", "InitPath", "IndexServerAddress", "MemoryLimit", "SwapLimit", "IPv4Forwarding"})
-   public static Info create(int containers, int images, String driver, String executionDriver, String kernelVersion, int debug,
-                             int nFd, int nGoroutines, int nEventsListener, String initPath, String indexServerAddress,
-                             int memoryLimit, int swapLimit, int iPv4Forwarding) {
-      return new AutoValue_Info(containers, images, driver, executionDriver, kernelVersion, debug, nFd, nGoroutines,
-              nEventsListener, initPath, indexServerAddress, memoryLimit, swapLimit, iPv4Forwarding);
+   @SerializedNames({
+                   "Containers", "Debug", "Driver", "DriverStatus", "ExecutionDriver", "IPv4Forwarding", "Images",
+                   "IndexServerAddress", "InitPath", "InitSha1", "KernelVersion", "MemoryLimit", "NEventsListener",
+                   "NFd", "NGoroutines", "OperatingSystem", "SwapLimit"
+   })
+   public static Info create(int containers, int debug, String driver, List<List<String>> driverStatus,
+                             String executionDriver, int iPv4Forwarding, int images, String indexServerAddress,
+                             String initPath, String initSha1, String kernelVersion, int memoryLimit,
+                             int nEventsListener, int nFd, int nGoroutines, String operatingSystem, int swapLimit) {
+      return new AutoValue_Info(containers, debug, driver, driverStatus, executionDriver, iPv4Forwarding, images,
+              indexServerAddress, initPath, initSha1, kernelVersion, memoryLimit, nEventsListener, nFd, nGoroutines,
+              operatingSystem, swapLimit);
    }
 }

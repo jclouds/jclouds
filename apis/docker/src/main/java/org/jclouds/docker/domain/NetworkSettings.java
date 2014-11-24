@@ -42,6 +42,9 @@ public abstract class NetworkSettings {
 
    public abstract Map<String, List<Map<String, String>>> ports();
 
+   NetworkSettings() {
+   }
+
    @SerializedNames({ "IPAddress", "IPPrefixLen", "Gateway", "Bridge", "PortMapping", "Ports" })
    public static NetworkSettings create(String ipAddress, int ipPrefixLen, String gateway, String bridge,
          String portMapping, Map<String, List<Map<String, String>>> ports) {

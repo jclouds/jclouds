@@ -116,10 +116,4 @@ public class DockerComputeServiceAdapterLiveTest extends BaseDockerApiLiveTest {
       return ImmutableSet.<Module>of(getLoggingModule(), new SshjSshClientModule());
    }
 
-   @Override
-   protected Properties setupProperties() {
-      Properties properties = super.setupProperties();
-      properties.setProperty("jclouds.ssh.max-retries", "10");
-      return properties;
-   }
 }

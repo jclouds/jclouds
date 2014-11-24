@@ -16,32 +16,36 @@
  */
 package org.jclouds.docker.domain;
 
+import static org.jclouds.docker.internal.NullSafeCopies.copyOf;
+import java.util.List;
+
 import org.jclouds.json.SerializedNames;
 
 import com.google.auto.value.AutoValue;
 
+// TODO it may be redundant (we already have Image value class)
 @AutoValue
-public abstract class State {
-   public abstract int pid();
+public abstract class ImageSummary {
 
-   public abstract boolean running();
+   public abstract String id();
 
-   public abstract int exitCode();
+   public abstract long created();
 
-   public abstract String startedAt();
+   public abstract String parentId();
 
-   public abstract String finishedAt();
+   public abstract int size();
 
-   public abstract boolean paused();
+   public abstract int virtualSize();
 
-   public abstract boolean restarting();
+   public abstract List<String> repoTags();
 
-   State() {
+   ImageSummary() {
    }
 
-   @SerializedNames({ "Pid", "Running", "ExitCode", "StartedAt", "FinishedAt", "Paused", "Restarting" })
-   public static State create(int pid, boolean running, int exitCode, String startedAt, String finishedAt,
-         boolean paused, boolean restarting) {
-      return new AutoValue_State(pid, running, exitCode, startedAt, finishedAt, paused, restarting);
+   @SerializedNames({"Id", "Created", "ParentId", "Size", "VirtualSize", "RepoTags"})
+   public static ImageSummary create(String id, long created, String parentId, int size, int virtualSize,
+                                     List<String> repoTags) {
+      return new AutoValue_ImageSummary(id, created, parentId, size, virtualSize, copyOf(repoTags));
    }
+
 }

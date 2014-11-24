@@ -14,13 +14,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jclouds.docker.config;
+package org.jclouds.docker.domain;
 
-public class DockerProperties {
+import org.jclouds.json.SerializedNames;
 
-   /**
-    * default Docker host password
-    */
-   public static final String HOST_PASSWORD = "jclouds.docker.host.password";
+import com.google.auto.value.AutoValue;
 
+@AutoValue
+public abstract class StatusCode {
+
+   public abstract int statusCode();
+
+   StatusCode() {
+   }
+
+   @SerializedNames({ "StatusCode" })
+   public static StatusCode create(int statusCode) {
+      return new AutoValue_StatusCode(statusCode);
+   }
 }

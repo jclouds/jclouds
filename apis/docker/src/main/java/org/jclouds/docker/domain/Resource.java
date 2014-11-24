@@ -21,27 +21,15 @@ import org.jclouds.json.SerializedNames;
 import com.google.auto.value.AutoValue;
 
 @AutoValue
-public abstract class State {
-   public abstract int pid();
+public abstract class Resource {
 
-   public abstract boolean running();
+   public abstract String resource();
 
-   public abstract int exitCode();
-
-   public abstract String startedAt();
-
-   public abstract String finishedAt();
-
-   public abstract boolean paused();
-
-   public abstract boolean restarting();
-
-   State() {
+   Resource() {
    }
 
-   @SerializedNames({ "Pid", "Running", "ExitCode", "StartedAt", "FinishedAt", "Paused", "Restarting" })
-   public static State create(int pid, boolean running, int exitCode, String startedAt, String finishedAt,
-         boolean paused, boolean restarting) {
-      return new AutoValue_State(pid, running, exitCode, startedAt, finishedAt, paused, restarting);
+   @SerializedNames({ "Resource" })
+   public static Resource create(String resource) {
+      return new AutoValue_Resource(resource);
    }
 }

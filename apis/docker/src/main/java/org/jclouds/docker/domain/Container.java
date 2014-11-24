@@ -18,6 +18,7 @@ package org.jclouds.docker.domain;
 
 import static org.jclouds.docker.internal.NullSafeCopies.copyOf;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -32,11 +33,11 @@ import com.google.common.collect.ImmutableMap;
 public abstract class Container {
    public abstract String id();
 
-   @Nullable public abstract String name();
-
-   @Nullable public abstract String created();
+   @Nullable public abstract Date created();
 
    @Nullable public abstract String path();
+
+   @Nullable public abstract String name();
 
    public abstract List<String> args();
 
@@ -48,13 +49,17 @@ public abstract class Container {
 
    @Nullable public abstract NetworkSettings networkSettings();
 
+   @Nullable public abstract String sysInitPath();
+
    @Nullable public abstract String resolvConfPath();
+
+   public abstract Map<String, String> volumes();
+
+   @Nullable public abstract HostConfig hostConfig();
 
    @Nullable public abstract String driver();
 
    @Nullable public abstract String execDriver();
-
-   public abstract Map<String, String> volumes();
 
    public abstract Map<String, Boolean> volumesRW();
 
@@ -62,23 +67,34 @@ public abstract class Container {
 
    @Nullable public abstract String status();
 
-   @Nullable public abstract HostConfig hostConfig();
-
    public abstract List<Port> ports();
 
    @Nullable public abstract String hostnamePath();
 
+   @Nullable public abstract String hostsPath();
+
+   @Nullable public abstract String mountLabel();
+
+   @Nullable public abstract String processLabel();
+
+   Container() {
+   }
+
    @SerializedNames(
-         { "Id", "Name", "Created", "Path", "Args", "Config", "State", "Image", "NetworkSettings", "ResolvConfPath",
-               "Driver", "ExecDriver", "Volumes", "VolumesRW", "Command", "Status", "HostConfig", "Ports",
-               "HostnamePath" })
-   public static Container create(String id, String name, String created, String path, List<String> args, Config config,
-         State state, String image, NetworkSettings networkSettings, String resolvConfPath, String driver,
-         String execDriver, Map<String, String> volumes, Map<String, Boolean> volumesRW, String command, String status,
-         HostConfig hostConfig, List<Port> ports, String hostnamePath) {
-      return new AutoValue_Container(id, name, created, path, copyOf(args), config, state, image, networkSettings,
-            resolvConfPath, driver, execDriver, copyOf(volumes), copyOf(volumesRW), command, status, hostConfig,
-            copyOf(ports), hostnamePath);
+         {
+                 "Id", "Created", "Path", "Name", "Args", "Config", "State", "Image", "NetworkSettings", "SysInitPath",
+                 "ResolvConfPath", "Volumes", "HostConfig", "Driver", "ExecDriver", "VolumesRW", "Command", "Status",
+                 "Ports", "HostnamePath", "HostsPath", "MountLabel", "ProcessLabel"
+         })
+   public static Container create(String id, Date created, String path, String name, List<String> args, Config config,
+                                  State state, String image, NetworkSettings networkSettings, String sysInitPath,
+                                  String resolvConfPath, Map<String, String> volumes, HostConfig hostConfig,
+                                  String driver, String execDriver, Map<String, Boolean> volumesRW, String command,
+                                  String status, List<Port> ports, String hostnamePath, String hostsPath,
+                                  String mountLabel, String processLabel) {
+      return new AutoValue_Container(id, created, path, name, copyOf(args), config, state, image, networkSettings,
+              sysInitPath, resolvConfPath, copyOf(volumes), hostConfig, driver, execDriver, copyOf(volumesRW), command,
+              status, copyOf(ports), hostnamePath, hostsPath, mountLabel, processLabel);
    }
 
    public static Builder builder() {
@@ -92,42 +108,46 @@ public abstract class Container {
    public static final class Builder {
 
       private String id;
-      private String name;
-      private String created;
+      private Date created;
       private String path;
+      private String name;
       private List<String> args;
       private Config config;
       private State state;
       private String image;
       private NetworkSettings networkSettings;
+      private String sysInitPath;
       private String resolvConfPath;
+      private Map<String, String> volumes = ImmutableMap.of();
+      private HostConfig hostConfig;
       private String driver;
       private String execDriver;
-      private Map<String, String> volumes = ImmutableMap.of();
       private Map<String, Boolean> volumesRW = ImmutableMap.of();
       private String command;
       private String status;
-      private HostConfig hostConfig;
       private List<Port> ports = ImmutableList.of();
       private String hostnamePath;
+      private String hostsPath;
+      private String mountLabel;
+      private String processLabel;
 
       public Builder id(String id) {
          this.id = id;
          return this;
       }
 
-      public Builder name(String name) {
-         this.name = name;
-         return this;
-      }
-
-      public Builder created(String created) {
+      public Builder created(Date created) {
          this.created = created;
          return this;
       }
 
       public Builder path(String path) {
          this.path = path;
+         return this;
+      }
+
+      public Builder name(String name) {
+         this.name = name;
          return this;
       }
 
@@ -156,8 +176,23 @@ public abstract class Container {
          return this;
       }
 
+      public Builder sysInitPath(String sysInitPath) {
+         this.sysInitPath = sysInitPath;
+         return this;
+      }
+
       public Builder resolvConfPath(String resolvConfPath) {
          this.resolvConfPath = resolvConfPath;
+         return this;
+      }
+
+      public Builder volumes(Map<String, String> volumes) {
+         this.volumes = volumes;
+         return this;
+      }
+
+      public Builder hostConfig(HostConfig hostConfig) {
+         this.hostConfig = hostConfig;
          return this;
       }
 
@@ -168,11 +203,6 @@ public abstract class Container {
 
       public Builder execDriver(String execDriver) {
          this.execDriver = execDriver;
-         return this;
-      }
-
-      public Builder volumes(Map<String, String> volumes) {
-         this.volumes = volumes;
          return this;
       }
 
@@ -191,11 +221,6 @@ public abstract class Container {
          return this;
       }
 
-      public Builder hostConfig(HostConfig hostConfig) {
-         this.hostConfig = hostConfig;
-         return this;
-      }
-
       public Builder ports(List<Port> ports) {
          this.ports = ports;
          return this;
@@ -206,17 +231,34 @@ public abstract class Container {
          return this;
       }
 
+      public Builder hostsPath(String hostsPath) {
+         this.hostsPath = hostsPath;
+         return this;
+      }
+
+      public Builder mountLabel(String mountLabel) {
+         this.mountLabel = mountLabel;
+         return this;
+      }
+
+      public Builder processLabel(String processLabel) {
+         this.processLabel = processLabel;
+         return this;
+      }
+
       public Container build() {
-         return Container.create(id, name, created, path, args, config, state, image, networkSettings, resolvConfPath,
-                 driver, execDriver, volumes, volumesRW, command, status, hostConfig, ports, hostnamePath);
+         return Container.create(id, created, path, name, args, config, state, image, networkSettings,
+                 sysInitPath, resolvConfPath, volumes, hostConfig, driver, execDriver, volumesRW, command, status,
+                 ports, hostnamePath, hostsPath, mountLabel, processLabel);
       }
 
       public Builder fromContainer(Container in) {
          return this.id(in.id()).name(in.name()).created(in.created()).path(in.path()).args(in.args())
-               .config(in.config()).state(in.state()).image(in.image()).networkSettings(in.networkSettings())
-               .resolvConfPath(in.resolvConfPath()).driver(in.driver()).execDriver(in.execDriver())
-               .volumes(in.volumes()).volumesRW(in.volumesRW()).command(in.command()).status(in.status())
-               .hostConfig(in.hostConfig()).ports(in.ports()).hostnamePath(in.hostnamePath());
+                 .config(in.config()).state(in.state()).image(in.image()).networkSettings(in.networkSettings())
+                 .sysInitPath(in.sysInitPath()).resolvConfPath(in.resolvConfPath()).driver(in.driver())
+                 .execDriver(in.execDriver()).volumes(in.volumes()).hostConfig(in.hostConfig()).volumesRW(in.volumesRW())
+                 .command(in.command()).status(in.status()).ports(in.ports()).hostnamePath(in.hostnamePath())
+                 .hostsPath(in.hostsPath()).mountLabel(in.mountLabel()).processLabel(in.processLabel());
       }
    }
 }

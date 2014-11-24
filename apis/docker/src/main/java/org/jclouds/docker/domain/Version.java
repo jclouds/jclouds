@@ -37,6 +37,9 @@ public abstract class Version {
 
    public abstract String version();
 
+   Version() {
+   }
+
    @SerializedNames({ "ApiVersion", "Arch", "GitCommit", "GoVersion", "KernelVersion", "Os", "Version" })
    public static Version create(String apiVersion, String arch, String gitCommit, String goVersion,
                                 String kernelVersion, String os, String version) {

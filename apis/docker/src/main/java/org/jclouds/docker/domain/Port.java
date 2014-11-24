@@ -30,6 +30,9 @@ public abstract class Port {
 
    public abstract String type();
 
+   Port() {
+   }
+
    @SerializedNames({ "IP", "PrivatePort", "PublicPort", "Type" })
    public static Port create(String ip, int privatePort, int publicPort, String type) {
       return new AutoValue_Port(ip, privatePort, publicPort, type);

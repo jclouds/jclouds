@@ -35,7 +35,7 @@
 
   <properties>
     <test.docker.endpoint>https://localhost:4243</test.docker.endpoint>
-    <test.docker.api-version>1.10</test.docker.api-version>
+    <test.docker.api-version>1.15</test.docker.api-version>
     <test.docker.identity>FIXME</test.docker.identity>
     <test.docker.credential>FIXME</test.docker.credential>
     <jclouds.osgi.export>org.jclouds.docker*;version="${project.version}"</jclouds.osgi.export>
@@ -67,7 +67,16 @@
       <groupId>org.apache.jclouds.driver</groupId>
       <artifactId>jclouds-sshj</artifactId>
       <version>${project.version}</version>
-      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.jclouds.driver</groupId>
+      <artifactId>jclouds-bouncycastle</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.jclouds.driver</groupId>
+      <artifactId>jclouds-okhttp</artifactId>
+      <version>${project.version}</version>
     </dependency>
     <dependency>
       <groupId>org.apache.jclouds</groupId>

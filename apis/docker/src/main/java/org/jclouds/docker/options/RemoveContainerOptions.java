@@ -18,12 +18,7 @@ package org.jclouds.docker.options;
 
 import org.jclouds.http.options.BaseHttpRequestOptions;
 
-/**
- * Options to customize container removal.
- */
 public class RemoveContainerOptions extends BaseHttpRequestOptions {
-
-   public static final RemoveContainerOptions NONE = new RemoveContainerOptions();
 
    public RemoveContainerOptions verbose(Boolean verbose) {
       this.queryParameters.put("verbose", verbose.toString());

@@ -18,12 +18,7 @@ package org.jclouds.docker.options;
 
 import org.jclouds.http.options.BaseHttpRequestOptions;
 
-/**
- * Options to customize container creation.
- */
 public class CreateImageOptions extends BaseHttpRequestOptions {
-
-   public static final CreateImageOptions NONE = new CreateImageOptions();
 
    public CreateImageOptions fromImage(String fromImage) {
       this.queryParameters.put("fromImage", fromImage);

@@ -51,6 +51,9 @@ public abstract class HostConfig {
 
    public abstract List<String> volumesFrom();
 
+   HostConfig() {
+   }
+
    @SerializedNames({ "ContainerIDFile", "Binds", "LxcConf", "Privileged", "Dns", "DnsSearch", "PortBindings",
            "Links", "PublishAllPorts", "VolumesFrom" })
    public static HostConfig create(String containerIDFile, List<String> binds, List<Map<String, String>> lxcConf,

@@ -41,6 +41,9 @@ public abstract class ContainerSummary {
 
    public abstract String status();
 
+   ContainerSummary() {
+   }
+
    @SerializedNames({"Id", "Names", "Created", "Image", "Command", "Ports", "Status"})
    public static ContainerSummary create(String id, List<String> names, String created, String image, String command, List<Port> ports, String status) {
       return new AutoValue_ContainerSummary(id, copyOf(names), created, image, command, copyOf(ports), status);

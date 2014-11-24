@@ -18,12 +18,7 @@ package org.jclouds.docker.options;
 
 import org.jclouds.http.options.BaseHttpRequestOptions;
 
-/**
- * Options to customize image builder.
- */
 public class BuildOptions extends BaseHttpRequestOptions {
-
-   public static final BuildOptions NONE = new BuildOptions();
 
    public BuildOptions tag(String tag) {
       this.queryParameters.put("tag", tag);

@@ -18,12 +18,7 @@ package org.jclouds.docker.options;
 
 import org.jclouds.http.options.BaseHttpRequestOptions;
 
-/**
- * Options to customize container's listing.
- */
 public class ListContainerOptions extends BaseHttpRequestOptions {
-
-   public static final ListContainerOptions NONE = new ListContainerOptions();
 
    public ListContainerOptions all(Boolean all) {
       this.queryParameters.put("all", all.toString());

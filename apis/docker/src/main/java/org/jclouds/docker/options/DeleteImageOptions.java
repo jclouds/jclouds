@@ -18,15 +18,15 @@ package org.jclouds.docker.options;
 
 import org.jclouds.http.options.BaseHttpRequestOptions;
 
-/**
- * Options to customize image deletion.
- */
 public class DeleteImageOptions extends BaseHttpRequestOptions {
-
-   public static final DeleteImageOptions NONE = new DeleteImageOptions();
 
    public DeleteImageOptions force(Boolean force) {
       this.queryParameters.put("force", force.toString());
+      return this;
+   }
+
+   public DeleteImageOptions noPrune(Boolean noPrune) {
+      this.queryParameters.put("noPrune", noPrune.toString());
       return this;
    }
 
@@ -38,6 +38,14 @@ public class DeleteImageOptions extends BaseHttpRequestOptions {
       public static DeleteImageOptions force(Boolean force) {
          DeleteImageOptions options = new DeleteImageOptions();
          return options.force(force);
+      }
+
+      /**
+       * @see DeleteImageOptions#noPrune
+       */
+      public static DeleteImageOptions noPrune(Boolean noPrune) {
+         DeleteImageOptions options = new DeleteImageOptions();
+         return options.noPrune(noPrune);
       }
    }
 

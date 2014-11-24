@@ -30,6 +30,9 @@ public abstract class ExposedPorts {
 
    public abstract List<String> hostPorts();
 
+   ExposedPorts() {
+   }
+
    @SerializedNames({ "PortAndProtocol", "HostPorts" })
    public static ExposedPorts create(String portAndProtocol, List<String> hostPorts) {
       return new AutoValue_ExposedPorts(portAndProtocol, copyOf(hostPorts));

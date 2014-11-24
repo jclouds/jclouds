@@ -18,12 +18,7 @@ package org.jclouds.docker.options;
 
 import org.jclouds.http.options.BaseHttpRequestOptions;
 
-/**
- * Options to customize image's listing.
- */
 public class ListImageOptions extends BaseHttpRequestOptions {
-
-   public static final ListImageOptions NONE = new ListImageOptions();
 
    public ListImageOptions all(Boolean all) {
       this.queryParameters.put("all", all.toString());

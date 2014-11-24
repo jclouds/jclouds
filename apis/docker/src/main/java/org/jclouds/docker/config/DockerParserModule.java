@@ -21,7 +21,9 @@ import org.jclouds.json.config.GsonModule;
 import com.google.inject.AbstractModule;
 
 public class DockerParserModule extends AbstractModule {
+
    @Override protected void configure() {
       bind(GsonModule.DateAdapter.class).to(GsonModule.Iso8601DateAdapter.class);
    }
+
 }

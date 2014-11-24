@@ -1,0 +1,83 @@
+{
+  "Architecture": "amd64",
+  "Author": "author",
+  "Comment": "comment",
+  "Config": {
+    "AttachStderr": false,
+    "AttachStdin": false,
+    "AttachStdout": false,
+    "Cmd": [
+      "/bin/sh",
+      "-c",
+      "echo hello world"
+    ],
+    "CpuShares": 0,
+    "Cpuset": "",
+    "Domainname": "",
+    "Entrypoint": null,
+    "Env": [
+      "PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin",
+      "HOME=/root",
+      "JAVA_HOME=/usr/lib/jvm/java-7-openjdk-amd64"
+    ],
+    "ExposedPorts": {
+      "8081/tcp": {}
+    },
+    "Hostname": "f22711318734",
+    "Image": "05794515afd5724df1cdf0e674ae932455fce7dea3c70a94d77119ad1fa954ba",
+    "Memory": 0,
+    "MemorySwap": 0,
+    "NetworkDisabled": false,
+    "OnBuild": [],
+    "OpenStdin": false,
+    "PortSpecs": null,
+    "StdinOnce": false,
+    "Tty": false,
+    "User": "user",
+    "Volumes": null,
+    "WorkingDir": "/home/user"
+  },
+  "Container": "0d14967353dbbd2ee78abe209f026f71654da49692fa2b044296ec3c810027b3",
+  "ContainerConfig": {
+    "AttachStderr": false,
+    "AttachStdin": false,
+    "AttachStdout": false,
+    "Cmd": [
+      "/bin/sh",
+      "-c",
+      "echo hello world"
+    ],
+    "CpuShares": 0,
+    "Cpuset": "",
+    "Domainname": "",
+    "Entrypoint": null,
+    "Env": [
+      "PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin",
+      "HOME=/root",
+      "JAVA_HOME=/usr/lib/jvm/java-7-openjdk-amd64"
+    ],
+    "ExposedPorts": {
+      "8081/tcp": {}
+    },
+    "Hostname": "f22711318734",
+    "Image": "05794515afd5724df1cdf0e674ae932455fce7dea3c70a94d77119ad1fa954ba",
+    "Memory": 0,
+    "MemorySwap": 0,
+    "NetworkDisabled": false,
+    "OnBuild": [],
+    "OpenStdin": false,
+    "PortSpecs": null,
+    "StdinOnce": false,
+    "Tty": false,
+    "User": "user",
+    "Volumes": null,
+    "WorkingDir": "/home/user"
+  },
+  "Created": "2014-11-24T11:09:20.310023104Z",
+  "DockerVersion": "1.3.1",
+  "Id": "cbba6639a342646deed70d7ea6162fa2a0acea9300f911f4e014555fe37d3456",
+  "Os": "linux",
+  "Parent": "05794515afd5724df1cdf0e674ae932455fce7dea3c70a94d77119ad1fa954ba",
+  "Size": 0,
+  "VirtualSize": 808709069
+}

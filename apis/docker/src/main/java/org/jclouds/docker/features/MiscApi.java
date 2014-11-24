@@ -32,6 +32,7 @@ import org.jclouds.io.Payload;
 import org.jclouds.rest.annotations.Headers;
 
 @Consumes(MediaType.APPLICATION_JSON)
+@Path("/v{jclouds.api-version}")
 public interface MiscApi {
 
    /**
@@ -54,6 +55,18 @@ public interface MiscApi {
    @Path("/info")
    Info getInfo();
 
+   /**
+    * Build an image from Dockerfile via stdin
+    *
+    * @param inputStream The stream must be a tar archive compressed with one of the following algorithms: identity
+    *                    (no compression), gzip, bzip2, xz.
+    * @return a stream of the build execution
+    */
+   @Named("image:build")
+   @POST
+   @Path("/build")
+   @Headers(keys = "Content-Type", values = "application/tar")
+   InputStream build(Payload inputStream);
 
    /**
     * Build an image from Dockerfile via stdin

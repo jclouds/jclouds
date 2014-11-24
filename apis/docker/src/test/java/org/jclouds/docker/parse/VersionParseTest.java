@@ -14,34 +14,33 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jclouds.docker.domain;
+package org.jclouds.docker.parse;
 
-import org.jclouds.json.SerializedNames;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.core.MediaType;
 
-import com.google.auto.value.AutoValue;
+import org.jclouds.docker.domain.Version;
+import org.jclouds.docker.internal.BaseDockerParseTest;
+import org.testng.annotations.Test;
 
-@AutoValue
-public abstract class State {
-   public abstract int pid();
+@Test(groups = "unit")
+public class VersionParseTest extends BaseDockerParseTest<Version> {
 
-   public abstract boolean running();
-
-   public abstract int exitCode();
-
-   public abstract String startedAt();
-
-   public abstract String finishedAt();
-
-   public abstract boolean paused();
-
-   public abstract boolean restarting();
-
-   State() {
+   @Override
+   public String resource() {
+      return "/version.json";
    }
 
-   @SerializedNames({ "Pid", "Running", "ExitCode", "StartedAt", "FinishedAt", "Paused", "Restarting" })
-   public static State create(int pid, boolean running, int exitCode, String startedAt, String finishedAt,
-         boolean paused, boolean restarting) {
-      return new AutoValue_State(pid, running, exitCode, startedAt, finishedAt, paused, restarting);
+   @Override
+   @Consumes(MediaType.APPLICATION_JSON)
+   public Version expected() {
+      return Version.create(
+              "1.15",
+              "amd64",
+              "c78088f",
+              "go1.3.3",
+              "3.16.4-tinycore64",
+              "linux",
+              "1.3.0");
    }
 }

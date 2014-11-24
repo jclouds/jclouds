@@ -7,10 +7,16 @@ providers, it supports the same portable abstractions offered by jclouds.
 Please follow these steps to configure your workstation for jclouds-docker:
 
 - install the latest Docker release (please visit https://docs.docker.com/installation/)
-If you are using boot2docker, notice that from version v1.3.0 the Docker daemon is set to use an encrypted TCP socket (--tls, or --tlsverify), 
-then you need to create a p12 certificate using the following command:
+
+If you are using `boot2docker`, notice that from version v1.3.0 the Docker daemon is set to use an encrypted TCP
+socket (--tls, or --tlsverify),
+then you need to import CA certificate into Trusted Certs:
       
-      `openssl pkcs12 -export -out $HOME/.jclouds/docker.p12 -inkey $HOME/.boot2docker/certs/boot2docker-vm/key.pem -in $HOME/.boot2docker/certs/boot2docker-vm/cert.pem -certfile $HOME/.boot2docker/certs/boot2docker-vm/ca.pem`
+      ` keytool -import -trustcacerts -file /Users/andrea/.boot2docker/certs/boot2docker-vm/ca.pem -alias BOOT2DOCKER -keystore $JAVA_HOME/jre/lib/security/cacerts`
+
+by default the passoword is `changeit`
+
+N.B.: From `Docker 1.3.2+` the server doesn't accept sslv3 protocol (https://github.com/docker/docker/pull/8588/files)
 
 #How it works
 
@@ -45,8 +51,9 @@ then you need to create a p12 certificate using the following command:
 As jclouds docker support is quite new, issues may occasionally arise. Please follow these steps to get things going again:
 
 1. Remove all containers
-    
-    `$ docker ps -aq | xargs docker rm -f`
+
+    $ docker rm `docker ps -a`
+
 2. remove all the images
 
-    `$ docker images -q | xargs docker rmi -f`
+    $ docker rmi -f `docker images -q`

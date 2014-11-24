@@ -14,34 +14,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jclouds.docker.domain;
+package org.jclouds.docker.internal;
 
-import org.jclouds.json.SerializedNames;
+import org.jclouds.docker.config.DockerParserModule;
+import org.jclouds.json.BaseItemParserTest;
+import org.jclouds.json.config.GsonModule;
 
-import com.google.auto.value.AutoValue;
+import com.google.inject.Guice;
+import com.google.inject.Injector;
 
-@AutoValue
-public abstract class State {
-   public abstract int pid();
+public abstract class BaseDockerParseTest<T>  extends BaseItemParserTest<T> {
 
-   public abstract boolean running();
-
-   public abstract int exitCode();
-
-   public abstract String startedAt();
-
-   public abstract String finishedAt();
-
-   public abstract boolean paused();
-
-   public abstract boolean restarting();
-
-   State() {
+   @Override
+   protected Injector injector() {
+      return Guice.createInjector(new GsonModule(), new DockerParserModule());
    }
 
-   @SerializedNames({ "Pid", "Running", "ExitCode", "StartedAt", "FinishedAt", "Paused", "Restarting" })
-   public static State create(int pid, boolean running, int exitCode, String startedAt, String finishedAt,
-         boolean paused, boolean restarting) {
-      return new AutoValue_State(pid, running, exitCode, startedAt, finishedAt, paused, restarting);
-   }
 }

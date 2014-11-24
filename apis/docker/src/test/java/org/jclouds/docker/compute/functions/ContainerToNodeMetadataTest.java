@@ -34,6 +34,7 @@ import org.jclouds.compute.domain.NodeMetadata;
 import org.jclouds.compute.domain.OperatingSystem;
 import org.jclouds.compute.domain.OsFamily;
 import org.jclouds.compute.functions.GroupNamingConvention;
+import org.jclouds.date.internal.SimpleDateFormatDateService;
 import org.jclouds.docker.domain.Config;
 import org.jclouds.docker.domain.Container;
 import org.jclouds.docker.domain.HostConfig;
@@ -97,12 +98,13 @@ public class ContainerToNodeMetadataTest {
             0, // exitCode
             "2014-03-24T20:28:37.537659054Z", // startedAt
             "0001-01-01T00:00:00Z", // finishedAt
-            false // ghost
+            false, // paused
+            false  // restarting
       );
       container = Container.builder()
               .id("6d35806c1bd2b25cd92bba2d2c2c5169dc2156f53ab45c2b62d76e2d2fee14a9")
               .name("/hopeful_mclean")
-              .created("2014-03-22T07:16:45.784120972Z")
+              .created(new SimpleDateFormatDateService().iso8601DateParse("2014-03-22T07:16:45.784120972Z"))
               .path("/usr/sbin/sshd")
               .args(Arrays.asList("-D"))
               .config(containerConfig)

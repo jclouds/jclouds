@@ -18,12 +18,7 @@ package org.jclouds.docker.options;
 
 import org.jclouds.http.options.BaseHttpRequestOptions;
 
-/**
- * Options to customize image commit.
- */
 public class CommitOptions extends BaseHttpRequestOptions {
-
-   public static final CommitOptions NONE = new CommitOptions();
 
    public CommitOptions containerId(String containerId) {
       this.queryParameters.put("containerId", containerId);
