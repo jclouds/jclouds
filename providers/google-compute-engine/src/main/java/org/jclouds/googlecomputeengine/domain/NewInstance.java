@@ -23,6 +23,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.jclouds.googlecomputeengine.domain.Instance.NetworkInterface.AccessConfig;
+import org.jclouds.googlecomputeengine.domain.Instance.Scheduling;
 import org.jclouds.javax.annotation.Nullable;
 import org.jclouds.json.SerializedNames;
 
@@ -66,6 +67,8 @@ public abstract class NewInstance {
    /** Add metadata via {@link Metadata#items()}. */
    public abstract Metadata metadata();
 
+   @Nullable public abstract Scheduling scheduling();
+
    /** Convenience for creating a new instance with only a boot disk and minimal parameters. */
    public static NewInstance create(String name, URI machineType, URI network, URI sourceImage) {
       return create(name, machineType, network, Arrays.asList(AttachDisk.newBootDisk(sourceImage)), null);
@@ -81,13 +84,13 @@ public abstract class NewInstance {
          }
       }
       return create(name, machineType, ImmutableList.of(NetworkInterface.create(network)), ImmutableList.copyOf(disks),
-            description, Tags.create(), Metadata.create());
+            description, Tags.create(), Metadata.create(), null);
    }
 
-   @SerializedNames({ "name", "machineType", "networkInterfaces", "disks", "description", "tags", "metadata" })
+   @SerializedNames({ "name", "machineType", "networkInterfaces", "disks", "description", "tags", "metadata", "scheduling" })
    static NewInstance create(String name, URI machineType, List<NetworkInterface> networkInterfaces,
-         List<AttachDisk> disks, String description, Tags tags, Metadata metadata) {
-      return new AutoValue_NewInstance(name, machineType, networkInterfaces, disks, description, tags, metadata);
+         List<AttachDisk> disks, String description, Tags tags, Metadata metadata, Scheduling scheduling) {
+      return new AutoValue_NewInstance(name, machineType, networkInterfaces, disks, description, tags, metadata, scheduling);
    }
 
    NewInstance() {

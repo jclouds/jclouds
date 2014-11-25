@@ -26,6 +26,7 @@ import org.jclouds.googlecomputeengine.domain.Instance;
 import org.jclouds.googlecomputeengine.domain.Instance.AttachedDisk;
 import org.jclouds.googlecomputeengine.domain.Instance.NetworkInterface;
 import org.jclouds.googlecomputeengine.domain.Instance.ServiceAccount;
+import org.jclouds.googlecomputeengine.domain.Instance.Scheduling.OnHostMaintenance;
 import org.jclouds.googlecomputeengine.domain.Metadata;
 import org.jclouds.googlecomputeengine.domain.Tags;
 import org.jclouds.googlecomputeengine.internal.BaseGoogleComputeEngineParseTest;
@@ -72,7 +73,8 @@ public class ParseInstanceTest extends BaseGoogleComputeEngineParseTest<Instance
                     .put("aKey", "aValue")
                     .put("jclouds-image", BASE_URL + "/debian-cloud/global/images/debian-7-wheezy-v20140718")
                     .put("jclouds-delete-boot-disk", "true"), // metadata
-            ImmutableList.of(ServiceAccount.create("default", ImmutableList.of("myscope"))) // serviceAccounts
+            ImmutableList.of(ServiceAccount.create("default", ImmutableList.of("myscope"))), // serviceAccounts
+            Instance.Scheduling.create(OnHostMaintenance.MIGRATE, false) // scheduling
       );
    }
 }

@@ -38,6 +38,7 @@ import org.jclouds.googlecloud.domain.ListPage;
 import org.jclouds.googlecomputeengine.GoogleComputeEngineApi;
 import org.jclouds.googlecomputeengine.domain.AttachDisk;
 import org.jclouds.googlecomputeengine.domain.Instance;
+import org.jclouds.googlecomputeengine.domain.Instance.Scheduling;
 import org.jclouds.googlecomputeengine.domain.Metadata;
 import org.jclouds.googlecomputeengine.domain.NewInstance;
 import org.jclouds.googlecomputeengine.domain.Operation;
@@ -231,6 +232,25 @@ public interface InstanceApi {
    Operation setDiskAutoDelete(@PathParam("instance") String instanceName,
                                @QueryParam("deviceName") String deviceName,
                                @QueryParam("autoDelete") boolean autoDelete);
+
+   /**
+    * Sets an instance's scheduling options.
+    * @see <a href = "https://cloud.google.com/compute/docs/instances#onhostmaintenance"/>
+    *
+    * @param instanceName The name of the instance
+    * @param onHostMaintenance either MIGRATE or TERMINATE the default is MIGRATE (Live Migration).
+    * @param automaticRestart Defines whether the Instance should be automatically
+    *  restarted when it is terminated by Compute Engine (not terminated by user).
+    *  Used when onHostMaintenance is set to TERMINATE.
+    * @return
+    */
+   @Named("Instances:setScheduling")
+   @POST
+   @Path("/{instance}/setScheduling")
+   @MapBinder(BindToJsonPayload.class)
+   Operation setScheduling(@PathParam("instance") String instanceName,
+                           @PayloadParam("onHostMaintenance") Scheduling.OnHostMaintenance onHostMaintenance,
+                           @PayloadParam("automaticRestart") boolean automaticRestart);
 
    /**
     * Retrieves the list of instance resources available to the specified project.

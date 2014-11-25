@@ -32,6 +32,7 @@ import org.jclouds.googlecomputeengine.GoogleComputeEngineApi;
 import org.jclouds.googlecomputeengine.domain.Image;
 import org.jclouds.googlecomputeengine.domain.Instance;
 import org.jclouds.googlecomputeengine.domain.Instance.AttachedDisk;
+import org.jclouds.googlecomputeengine.domain.Instance.Scheduling;
 import org.jclouds.googlecomputeengine.domain.Metadata;
 import org.jclouds.googlecomputeengine.domain.NewInstance;
 import org.jclouds.googlecomputeengine.domain.AttachDisk;
@@ -119,7 +120,7 @@ public class InstanceApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
    }
 
    @Test(groups = "live", dependsOnMethods = "testInsertInstance")
-   public void testSetDiskAutoDelete(){
+   public void testSetDiskAutoDelete() {
 
       assertTrue(existsDiskWithNameAndAutoDelete(INSTANCE_NAME, DEFAULT_BOOT_DISK_NAME, true));
 
@@ -132,6 +133,19 @@ public class InstanceApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
 
       assertOperationDoneSuccessfully(o);
       assertTrue(existsDiskWithNameAndAutoDelete(INSTANCE_NAME, DEFAULT_BOOT_DISK_NAME, true));
+   }
+
+   @Test(groups = "live", dependsOnMethods = "testInsertInstance")
+   public void testSetScheduling() {
+      Instance instance = api().get(INSTANCE_NAME);
+      assertEquals(instance.scheduling().automaticRestart(), true);
+      assertEquals(instance.scheduling().onHostMaintenance(), Scheduling.OnHostMaintenance.MIGRATE);
+
+      assertOperationDoneSuccessfully(api().setScheduling(INSTANCE_NAME, Scheduling.OnHostMaintenance.TERMINATE, false));
+
+      Instance instanceAltered = api().get(INSTANCE_NAME);
+      assertEquals(instanceAltered.scheduling().automaticRestart(), false);
+      assertEquals(instanceAltered.scheduling().onHostMaintenance(), Scheduling.OnHostMaintenance.TERMINATE);
    }
 
    private boolean existsDiskWithNameAndAutoDelete(String instanceName, final String diskName, final boolean autoDelete){
@@ -229,7 +243,7 @@ public class InstanceApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
       assertOperationDoneSuccessfully(api().reset(INSTANCE_NAME));
    }
 
-   @Test(groups = "live", dependsOnMethods = {"testSetDiskAutoDelete", "testResetInstance"}, alwaysRun = true)
+   @Test(groups = "live", dependsOnMethods = {"testSetDiskAutoDelete", "testResetInstance", "testSetScheduling"}, alwaysRun = true)
    public void testDeleteInstance() {
       assertOperationDoneSuccessfully(api().delete(INSTANCE_NAME));
       assertOperationDoneSuccessfully(diskApi().delete(DISK_NAME));

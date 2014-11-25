@@ -64,6 +64,10 @@
                "Group-port-42"
             ],
             "fingerprint": "abcd"
+         },
+         "scheduling": {
+            "onHostMaintenance": "MIGRATE",
+            "automaticRestart": false
          }
       }
    ]

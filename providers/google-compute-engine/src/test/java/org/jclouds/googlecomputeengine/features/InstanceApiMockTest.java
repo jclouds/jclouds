@@ -19,6 +19,7 @@ package org.jclouds.googlecomputeengine.features;
 import static org.testng.Assert.assertEquals;
 
 import org.jclouds.googlecomputeengine.domain.Operation;
+import org.jclouds.googlecomputeengine.domain.Instance.Scheduling.OnHostMaintenance;
 import org.jclouds.googlecomputeengine.internal.BaseGoogleComputeEngineApiMockTest;
 import org.jclouds.googlecomputeengine.parse.ParseZoneOperationTest;
 import org.testng.annotations.Test;
@@ -38,5 +39,17 @@ public class InstanceApiMockTest extends BaseGoogleComputeEngineApiMockTest {
 
       assertSent(server, "POST", "/projects/party/zones/us-central1-a/instances/test-1/setDiskAutoDelete"
           + "?deviceName=test-disk-1&autoDelete=true");
+   }
+
+   public void setScheduling() throws Exception {
+      server.enqueue(jsonResponse("/zone_operation.json"));
+
+      InstanceApi instanceApi = api().instancesInZone("us-central1-a");
+
+      assertEquals(instanceApi.setScheduling("test-1", OnHostMaintenance.TERMINATE, true),
+            new ParseZoneOperationTest().expected(url("/projects")));
+
+      assertSent(server, "POST", "/projects/party/zones/us-central1-a/instances/test-1/setScheduling",
+            "{\"onHostMaintenance\": \"TERMINATE\",\"automaticRestart\": true}");
    }
 }

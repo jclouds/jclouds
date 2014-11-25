@@ -47,6 +47,8 @@ import org.jclouds.googlecomputeengine.compute.options.GoogleComputeEngineTempla
 import org.jclouds.googlecomputeengine.domain.AttachDisk;
 import org.jclouds.googlecomputeengine.domain.Image;
 import org.jclouds.googlecomputeengine.domain.Instance;
+import org.jclouds.googlecomputeengine.domain.Instance.Scheduling;
+import org.jclouds.googlecomputeengine.domain.Instance.Scheduling.OnHostMaintenance;
 import org.jclouds.googlecomputeengine.domain.MachineType;
 import org.jclouds.googlecomputeengine.domain.NewInstance;
 import org.jclouds.googlecomputeengine.domain.Operation;
@@ -162,7 +164,8 @@ public final class GoogleComputeEngineServiceAdapter
             null, // networkInterfaces
             null, // disks
             newInstance.metadata(), // metadata
-            null // serviceAccounts
+            null, // serviceAccounts
+            Scheduling.create(OnHostMaintenance.MIGRATE, true) // scheduling
       ));
       checkState(instanceVisible.apply(instance), "instance %s is not api visible!", instance.get());
 

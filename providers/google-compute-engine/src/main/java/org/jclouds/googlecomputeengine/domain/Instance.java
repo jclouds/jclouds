@@ -157,6 +157,38 @@ public abstract class Instance {
       }
    }
 
+   /**
+    * Defines the maintenance behavior for this instance. The default behavior is migrate.
+    */
+   @AutoValue
+   public abstract static class Scheduling {
+
+      public enum OnHostMaintenance {
+         /**
+          * Allows Compute Engine to automatically migrate instances out of the way of maintenance events.
+          */
+         MIGRATE,
+         /**
+          * Allows Compute Engine to terminate and restart the instance away from the maintenance activity.
+          * If you would like your instance to be restarted, set the automaticRestart flag to true.
+          * Your instance may be restarted more than once, and it may be restarted outside the window
+          * of maintenance events.
+          */
+         TERMINATE
+      }
+
+      public abstract OnHostMaintenance onHostMaintenance();
+      public abstract boolean automaticRestart();
+
+      @SerializedNames({ "onHostMaintenance", "automaticRestart" })
+      public static Scheduling create(OnHostMaintenance onHostMaintenance, boolean automaticRestart) {
+         return new AutoValue_Instance_Scheduling(onHostMaintenance, automaticRestart);
+      }
+
+      Scheduling() {
+      }
+   }
+
    public enum Status {
       PROVISIONING,
       STAGING,
@@ -197,13 +229,15 @@ public abstract class Instance {
 
    public abstract List<ServiceAccount> serviceAccounts();
 
+   public abstract Scheduling scheduling();
+
    @SerializedNames({ "id", "selfLink", "name", "description", "tags", "machineType", "status", "statusMessage", "zone",
-         "networkInterfaces", "disks", "metadata", "serviceAccounts" })
+         "networkInterfaces", "disks", "metadata", "serviceAccounts", "scheduling"})
    public static Instance create(String id, URI selfLink, String name, String description, Tags tags, URI machineType,
          Status status, String statusMessage, URI zone, List<NetworkInterface> networkInterfaces,
-         List<AttachedDisk> disks, Metadata metadata, List<ServiceAccount> serviceAccounts) {
+         List<AttachedDisk> disks, Metadata metadata, List<ServiceAccount> serviceAccounts, Scheduling scheduling) {
       return new AutoValue_Instance(id, selfLink, name, description, tags, machineType, status, statusMessage, zone,
-            copyOf(networkInterfaces), copyOf(disks), metadata, copyOf(serviceAccounts));
+            copyOf(networkInterfaces), copyOf(disks), metadata, copyOf(serviceAccounts), scheduling);
    }
 
    Instance() {

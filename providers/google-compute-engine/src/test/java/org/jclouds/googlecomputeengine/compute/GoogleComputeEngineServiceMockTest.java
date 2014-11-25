@@ -185,75 +185,14 @@ public class GoogleComputeEngineServiceMockTest extends BaseGoogleComputeEngineA
       assertSent(server, "GET", "/projects/party/zones/us-central1-a/operations/operation-1354084865060");
       assertSent(server, "GET", "/projects/party/global/networks/jclouds-test");
       assertSent(server, "GET", "/projects/party/global/firewalls/jclouds-test-port-22");
-      assertSent(server, "POST", "/projects/party/global/firewalls", "" //
-            + "{" //
-            + "  \"name\": \"jclouds-test-port-22\"," //
-            + "  \"network\": \"" + url("/projects/party/networks/jclouds-test") + "\","//
-            + "  \"sourceRanges\": [" //
-            + "    \"10.0.0.0/8\","//
-            + "    \"0.0.0.0/0\"" //
-            + "  ]," //
-            + "  \"sourceTags\": [" //
-            + "    \"aTag\"" //
-            + "  ]," //
-            + "  \"targetTags\": [" //
-            + "    \"jclouds-test-port-22\"" //
-            + "  ]," //
-            + "  \"allowed\": [" //
-            + "    {" //
-            + "      \"IPProtocol\": \"tcp\"," //
-            + "      \"ports\": [" //
-            + "        \"22\"" //
-            + "      ]" //
-            + "    }," //
-            + "    {" //
-            + "      \"IPProtocol\": \"udp\"," //
-            + "      \"ports\": [" //
-            + "        \"22\""//
-            + "      ]" //
-            + "    }" //
-            + "  ]" //
-            + "}");
+      assertSent(server, "POST", "/projects/party/global/firewalls",
+            stringFromResource("/firewall_insert_2.json"));
+
       assertSent(server, "GET", "/projects/party/zones/us-central1-a/operations/operation-1354084865060");
       assertSent(server, "GET", "/projects/party/aggregated/instances");
-      assertSent(server, "POST", "/projects/party/zones/us-central1-a/instances", "" //
-            + "{" //
-            + "  \"machineType\": \"" + template.getHardware().getId() + "\"," //
-            + "  \"name\": \"test-1\"," //
-            + "  \"networkInterfaces\": [" //
-            + "    {" //
-            + "      \"network\": \"" + url("/projects/party/networks/jclouds-test") + "\"," //
-            + "      \"accessConfigs\": [" //
-            + "        \"ONE_TO_ONE_NAT\"" //
-            + "      ]" //
-            + "    }" //
-            + "  ]," //
-            + "  \"disks\": [" //
-            + "    {" //
-            + "      \"type\": \"PERSISTENT\"," //
-            + "      \"initializeParams\": {" //
-            + "        \"sourceImage\": \"" + template.getImage().getId() + "\"" //
-            + "      }," //
-            + "      \"boot\": true," //
-            + "      \"autoDelete\": true" //
-            + "    }" //
-            + "  ]," //
-            + "  \"description\": \"test\"," //
-            + "  \"tags\": {" //
-            + "    \"items\": [" //
-            + "      \"aTag\"," //
-            + "      \"jclouds-test-port-22\"" //
-            + "    ]" //
-            + "  }," //
-            + "  \"metadata\": {" //
-            + "    \"items\": [" //
-            + "      {" //
-            + "        \"key\": \"jclouds-group\"," //
-            + "        \"value\": \"test\"" //
-            + "      }" //
-            + "    ]" //
-            + "  }" //
-            + "}");
+      assertSent(server, "POST", "/projects/party/zones/us-central1-a/instances",
+            String.format(stringFromResource("/instance_insert_2.json"), template.getHardware().getId(), template.getImage().getId()));
+
       assertSent(server, "GET", "/projects/party/zones/us-central1-a/instances/test-1");
    }
 
