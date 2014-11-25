@@ -65,5 +65,9 @@
          "usage": 0,
          "limit": 100
       }
-   ]
+   ],
+   "usageExportLocation": {
+       "bucketName": "test-bucket",
+       "reportNamePrefix": "report-prefix"
+  }
 }

@@ -22,9 +22,11 @@ import java.net.URI;
 
 import javax.ws.rs.Consumes;
 
+import org.jclouds.date.internal.SimpleDateFormatDateService;
 import org.jclouds.googlecomputeengine.domain.Metadata;
 import org.jclouds.googlecomputeengine.domain.Project;
 import org.jclouds.googlecomputeengine.domain.Quota;
+import org.jclouds.googlecomputeengine.domain.Project.UsageExportLocation;
 import org.jclouds.googlecomputeengine.internal.BaseGoogleComputeEngineParseTest;
 import org.testng.annotations.Test;
 
@@ -40,9 +42,14 @@ public class ParseProjectTest extends BaseGoogleComputeEngineParseTest<Project> 
 
    @Override @Consumes(APPLICATION_JSON)
    public Project expected() {
+      return expected(BASE_URL);
+   }
+
+   @Consumes(APPLICATION_JSON)
+   public Project expected(String baseUrl) {
       return Project.create( //
             "13024414184846275913", // id
-            URI.create(BASE_URL + "/761326798069"), // selfLink
+            URI.create(baseUrl + "/761326798069"), // selfLink
             "party", // name
             "", // description
             Metadata.create("efgh").put("propA", "valueA").put("propB", "valueB"), // commonInstanceMetadata
@@ -56,7 +63,9 @@ public class ParseProjectTest extends BaseGoogleComputeEngineParseTest<Project> 
                   Quota.create("NETWORKS", 1, 5), //
                   Quota.create("FIREWALLS", 2, 100), //
                   Quota.create("IMAGES", 0, 100)), // quotas
-            null // externalIpAddresses
+            null, // externalIpAddresses
+            new SimpleDateFormatDateService().iso8601DateParse("2012-10-24T20:13:16.252"), // creationTimestamp
+            UsageExportLocation.create("test-bucket", "report-prefix")// usageExportLocation
       );
    }
 }

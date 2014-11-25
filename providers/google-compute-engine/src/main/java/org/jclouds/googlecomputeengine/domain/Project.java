@@ -19,6 +19,7 @@ package org.jclouds.googlecomputeengine.domain;
 import static org.jclouds.googlecloud.internal.NullSafeCopies.copyOf;
 
 import java.net.URI;
+import java.util.Date;
 import java.util.List;
 
 import org.jclouds.javax.annotation.Nullable;
@@ -29,6 +30,22 @@ import com.google.auto.value.AutoValue;
 /** The root collection and settings resource for all Google Compute Engine resources. */
 @AutoValue
 public abstract class Project {
+
+   @AutoValue
+   public abstract static class UsageExportLocation {
+
+      public abstract String bucketName();
+
+      public abstract String reportNamePrefix();
+
+      @SerializedNames({"bucketName", "reportNamePrefix"})
+      public static UsageExportLocation create(String bucketName, String reporNamePrefix) {
+         return new AutoValue_Project_UsageExportLocation(bucketName, reporNamePrefix);
+      }
+
+      UsageExportLocation () {
+      }
+   }
 
    public abstract String id();
 
@@ -46,12 +63,16 @@ public abstract class Project {
    /** Available IP addresses available for use in this project. */
    public abstract List<String> externalIpAddresses();
 
+   public abstract Date creationTimestamp();
+
+   @Nullable public abstract UsageExportLocation usageExportLocation();
+
    @SerializedNames(
-         { "id", "selfLink", "name", "description", "commonInstanceMetadata", "quotas", "externalIpAddresses" })
+         { "id", "selfLink", "name", "description", "commonInstanceMetadata", "quotas", "externalIpAddresses", "creationTimestamp", "usageExportLocation"})
    public static Project create(String id, URI selfLink, String name, String description,
-         Metadata commonInstanceMetadata, List<Quota> quotas, List<String> externalIpAddresses) {
+         Metadata commonInstanceMetadata, List<Quota> quotas, List<String> externalIpAddresses, Date creationTimestamp, UsageExportLocation usageExportLocation) {
       return new AutoValue_Project(id, selfLink, name, description, commonInstanceMetadata, copyOf(quotas),
-            copyOf(externalIpAddresses));
+            copyOf(externalIpAddresses), creationTimestamp, usageExportLocation);
    }
 
    Project() {

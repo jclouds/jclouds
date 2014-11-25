@@ -22,6 +22,8 @@ import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertTrue;
 
 import org.jclouds.googlecomputeengine.domain.Metadata;
+import org.jclouds.googlecomputeengine.domain.Operation;
+import org.jclouds.googlecomputeengine.domain.Operation.Status;
 import org.jclouds.googlecomputeengine.domain.Project;
 import org.jclouds.googlecomputeengine.internal.BaseGoogleComputeEngineApiLiveTest;
 import org.testng.annotations.Test;
@@ -65,5 +67,16 @@ public class ProjectApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
       assertFalse(project.commonInstanceMetadata().containsKey(METADATA_ITEM_KEY));
       assertEquals(project.commonInstanceMetadata().size(), initialMetadataSize);
       assertEquals(project.commonInstanceMetadata().fingerprint(), initialFingerprint);
+   }
+
+   @Test(groups = "live", dependsOnMethods = "getProject")
+   public void testSetUsageExportBucket() {
+      Operation o = api.project().setUsageExportBucket("test-bucket", "test-");
+
+      while (o.status() == Status.PENDING) {
+         o = api.operations().get(o.selfLink());
+      }
+      assertEquals(o.error().errors().get(0).code(), "PERMISSIONS_ERROR");
+      assertEquals(o.error().errors().get(0).message(), "Required 'owner' permission for 'test-bucket'");
    }
 }

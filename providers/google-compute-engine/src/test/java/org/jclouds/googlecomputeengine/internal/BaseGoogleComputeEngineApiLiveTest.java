@@ -63,11 +63,6 @@ public class BaseGoogleComputeEngineApiLiveTest extends BaseApiLiveTest<GoogleCo
    protected Predicate<AtomicReference<Operation>> operationDone;
    protected URI projectUrl;
 
-   protected Supplier<String> userProject;
-   protected Predicate<AtomicReference<Operation>> globalOperationDonePredicate;
-   protected Predicate<AtomicReference<Operation>> regionOperationDonePredicate;
-   protected Predicate<AtomicReference<Operation>> zoneOperationDonePredicate;
-
    public BaseGoogleComputeEngineApiLiveTest() {
       provider = "google-compute-engine";
    }

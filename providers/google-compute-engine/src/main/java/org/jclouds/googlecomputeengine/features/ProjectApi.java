@@ -32,6 +32,8 @@ import org.jclouds.googlecomputeengine.domain.Project;
 import org.jclouds.oauth.v2.filters.OAuthFilter;
 import org.jclouds.rest.annotations.BinderParam;
 import org.jclouds.rest.annotations.Fallback;
+import org.jclouds.rest.annotations.MapBinder;
+import org.jclouds.rest.annotations.PayloadParam;
 import org.jclouds.rest.annotations.RequestFilters;
 import org.jclouds.rest.annotations.SkipEncoding;
 import org.jclouds.rest.binders.BindToJsonPayload;
@@ -67,4 +69,12 @@ public interface ProjectApi {
    @Path("/setCommonInstanceMetadata")
    @Produces(APPLICATION_JSON)
    Operation setCommonInstanceMetadata(@BinderParam(BindToJsonPayload.class) Metadata metadata);
+
+   @Named("Projects:setUsageExportBucket")
+   @POST
+   @Path("/setUsageExportBucket")
+   @Produces(APPLICATION_JSON)
+   @MapBinder(BindToJsonPayload.class)
+   Operation setUsageExportBucket(@PayloadParam("bucketName") String bucketName,
+                                  @PayloadParam("reportNamePrefix") String reportNamePrefix);
 }
