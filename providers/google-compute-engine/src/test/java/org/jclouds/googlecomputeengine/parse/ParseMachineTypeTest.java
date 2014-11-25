@@ -39,9 +39,14 @@ public class ParseMachineTypeTest extends BaseGoogleComputeEngineParseTest<Machi
 
    @Override @Consumes(APPLICATION_JSON)
    public MachineType expected() {
+      return expected(BASE_URL);
+   }
+
+   @Consumes(APPLICATION_JSON)
+   public MachineType expected(String baseUrl) {
       return MachineType.create( //
             "12907738072351752276", // id
-            URI.create(BASE_URL + "/party/zones/us-central1-a/machineTypes/n1-standard-1"), // selfLink
+            URI.create(baseUrl + "/party/zones/us-central1-a/machineTypes/n1-standard-1"), // selfLink
             "n1-standard-1", // name
             "1 vCPU, 3.75 GB RAM, and a 10 GB ephemeral root disk", // description
             1, // guestCpus

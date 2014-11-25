@@ -36,9 +36,14 @@ public class ParseHttpHealthCheckTest extends BaseGoogleComputeEngineParseTest<H
 
    @Override @Consumes(APPLICATION_JSON)
    public HttpHealthCheck expected() {
+      return expected(BASE_URL);
+   }
+
+   @Consumes(APPLICATION_JSON)
+   public HttpHealthCheck expected(String baseUrl) {
       return HttpHealthCheck.create( //
             "2761502483700014319", // id
-            URI.create(BASE_URL + "/party-gce/global/httpHealthChecks/http-health-check-api-live-test"), // selfLink
+            URI.create(baseUrl + "/party-gce/global/httpHealthChecks/http-health-check-api-live-test"), // selfLink
             "http-health-check-api-live-test", // name
             null, // description
             null, // host

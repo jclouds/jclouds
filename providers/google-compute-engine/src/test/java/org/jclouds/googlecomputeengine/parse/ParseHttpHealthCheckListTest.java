@@ -40,10 +40,15 @@ public class ParseHttpHealthCheckListTest extends BaseGoogleComputeEngineParseTe
 
    @Override @Consumes(APPLICATION_JSON)
    public ListPage<HttpHealthCheck> expected() {
-      HttpHealthCheck healthCheck1 = new ParseHttpHealthCheckTest().expected();
+      return expected(BASE_URL);
+   }
+
+   @Consumes(APPLICATION_JSON)
+   public ListPage<HttpHealthCheck> expected(String baseUrl) {
+      HttpHealthCheck healthCheck1 = new ParseHttpHealthCheckTest().expected(baseUrl);
       HttpHealthCheck healthCheck2 = HttpHealthCheck.create( //
             "1035854271083519643", // id
-            URI.create(BASE_URL + "/party-gce/global/httpHealthChecks/myname-andrea-kmzmi1bh-http-health-check"),
+            URI.create(baseUrl + "/party-gce/global/httpHealthChecks/myname-andrea-kmzmi1bh-http-health-check"),
             // selfLink
             "myname-andrea-kmzmi1bh-http-health-check", // name
             null, // description
@@ -57,7 +62,7 @@ public class ParseHttpHealthCheckListTest extends BaseGoogleComputeEngineParseTe
       );
       HttpHealthCheck healthCheck3 = HttpHealthCheck.create( //
             "7006563292274658743", // id
-            URI.create(BASE_URL + "/party-gce/global/httpHealthChecks/myname-andrea-zk7gadwq-http-health-check"),
+            URI.create(baseUrl + "/party-gce/global/httpHealthChecks/myname-andrea-zk7gadwq-http-health-check"),
             // selfLink
             "myname-andrea-zk7gadwq-http-health-check", // name
             null, // description

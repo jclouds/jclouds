@@ -38,8 +38,13 @@ public class ParseInstanceListTest extends BaseGoogleComputeEngineParseTest<List
 
    @Override @Consumes(APPLICATION_JSON)
    public ListPage<Instance> expected() {
+      return expected(BASE_URL);
+   }
+
+   @Consumes(APPLICATION_JSON)
+   public ListPage<Instance> expected(String baseUrl) {
       return ForwardingListPage.create( //
-            ImmutableList.of(new ParseInstanceTest().expected()), // items
+            ImmutableList.of(new ParseInstanceTest().expected(baseUrl)), // items
             null // nextPageToken
       );
    }

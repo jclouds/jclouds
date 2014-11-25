@@ -42,16 +42,21 @@ public class ParseBackendServiceListTest extends BaseGoogleComputeEngineParseTes
    @Override
    @Consumes(APPLICATION_JSON)
    public ListPage<BackendService> expected() {
+      return expected(BASE_URL);
+   }
+
+   @Consumes(APPLICATION_JSON)
+   public ListPage<BackendService> expected(String baseUrl) {
       return ForwardingListPage.create(
             ImmutableList.of(
-                  new ParseBackendServiceTest().expected(),
+                  new ParseBackendServiceTest().expected(baseUrl),
                   BackendService.create("12862241067393040785", //id
                         new SimpleDateFormatDateService().iso8601DateParse("2012-04-13T03:05:04.365"), //creationTimestamp,
-                        URI.create("https://www.googleapis.com/compute/v1/projects/myproject/global/backendServices/jclouds-test-2"), //selfLink,
+                        URI.create(baseUrl + "/myproject/global/backendServices/jclouds-test-2"), //selfLink,
                         "jclouds-test-2", //name,
                         "Backend Service 2", //description
                         null, // backends,
-                        ImmutableList.of(URI.create("https://www.googleapis.com/compute/v1/projects/myproject/global/httpHealthChecks/jclouds-test")), //healthChecks,
+                        ImmutableList.of(URI.create(baseUrl + "/myproject/global/httpHealthChecks/jclouds-test")), //healthChecks,
                         45, //timeoutSec,
                         80, //port,
                         "HTTP", //protocol,

@@ -40,13 +40,18 @@ public class ParseFirewallListTest extends BaseGoogleComputeEngineParseTest<List
 
    @Override @Consumes(APPLICATION_JSON)
    public ListPage<Firewall> expected() {
-      Firewall firewall1 = new ParseFirewallTest().expected();
+      return expected(BASE_URL);
+   }
+
+   @Consumes(APPLICATION_JSON)
+   public ListPage<Firewall> expected(String baseUrl) {
+      Firewall firewall1 = new ParseFirewallTest().expected(baseUrl);
       Firewall firewall2 = Firewall.create( //
             "12862241067393040785", // id
-            URI.create(BASE_URL + "/google/global/firewalls/default-ssh"), // selfLink
+            URI.create(baseUrl + "/google/global/firewalls/default-ssh"), // selfLink
             "default-ssh", // name
             "SSH allowed from anywhere", // description
-            URI.create(BASE_URL + "/google/global/networks/default"), // network
+            URI.create(baseUrl + "/google/global/networks/default"), // network
             ImmutableList.of("0.0.0.0/0"), // sourceRanges
             null, // sourceTags
             null, // targetTags

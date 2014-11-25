@@ -44,19 +44,24 @@ public class ParseInstanceTest extends BaseGoogleComputeEngineParseTest<Instance
 
    @Override @Consumes(APPLICATION_JSON)
    public Instance expected() {
+      return expected(BASE_URL);
+   }
+
+   @Consumes(APPLICATION_JSON)
+   public Instance expected(String baseUrl) {
       return Instance.create( //
             "13051190678907570425", // id
-            URI.create(BASE_URL + "/party/zones/us-central1-a/instances/test-0"), // selfLink
+            URI.create(baseUrl + "/party/zones/us-central1-a/instances/test-0"), // selfLink
             "test-0", // name
             "desc", // description
             Tags.create("abcd").add("aTag").add("Group-port-42"), // tags
-            URI.create(BASE_URL + "/party/zones/us-central1-a/machineTypes/n1-standard-1"), // machineType
+            URI.create(baseUrl + "/party/zones/us-central1-a/machineTypes/n1-standard-1"), // machineType
             Instance.Status.RUNNING, // status
             null, // statusMessage
-            URI.create(BASE_URL + "/party/zones/us-central1-a"), // zone
+            URI.create(baseUrl + "/party/zones/us-central1-a"), // zone
             ImmutableList.of(NetworkInterface.create( //
                   "nic0", // name
-                  URI.create(BASE_URL + "/party/global/networks/default"), // network
+                  URI.create(baseUrl + "/party/global/networks/default"), // network
                   "10.240.121.115", // networkIP
                   null // accessConfigs
             )), // networkInterfaces
@@ -64,14 +69,14 @@ public class ParseInstanceTest extends BaseGoogleComputeEngineParseTest<Instance
                   0, // index
                   AttachedDisk.Type.PERSISTENT, // type
                   AttachedDisk.Mode.READ_WRITE, // mode
-                  URI.create(BASE_URL + "/party/zones/us-central1-a/disks/test"), // source
+                  URI.create(baseUrl + "/party/zones/us-central1-a/disks/test"), // source
                   "test", // deviceName
                   false, // autoDelete
                   true// boot
             )), // disks
             Metadata.create("efgh")
                     .put("aKey", "aValue")
-                    .put("jclouds-image", BASE_URL + "/debian-cloud/global/images/debian-7-wheezy-v20140718")
+                    .put("jclouds-image", baseUrl + "/debian-cloud/global/images/debian-7-wheezy-v20140718")
                     .put("jclouds-delete-boot-disk", "true"), // metadata
             ImmutableList.of(ServiceAccount.create("default", ImmutableList.of("myscope"))), // serviceAccounts
             Instance.Scheduling.create(OnHostMaintenance.MIGRATE, false) // scheduling

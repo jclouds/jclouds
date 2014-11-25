@@ -39,8 +39,12 @@ public class ParseBackendServiceGetHealthTest extends BaseGoogleComputeEnginePar
    @Override
    @Consumes(APPLICATION_JSON)
    public BackendServiceGroupHealth expected() {
-      URI uri = URI.create("https://www.googleapis.com/compute/v1/projects/"
-                           + "myproject/zones/us-central1-a/instances/"
+      return expected(BASE_URL);
+   }
+
+   @Consumes(APPLICATION_JSON)
+   public BackendServiceGroupHealth expected(String baseUrl) {
+      URI uri = URI.create(baseUrl + "/myproject/zones/us-central1-a/instances/"
                            + "jclouds-test");
       return BackendServiceGroupHealth.create(
             ImmutableList.of(HealthStatus.create(

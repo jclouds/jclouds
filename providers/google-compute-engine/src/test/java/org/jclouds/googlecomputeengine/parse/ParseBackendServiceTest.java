@@ -41,12 +41,12 @@ public class ParseBackendServiceTest extends BaseGoogleComputeEngineParseTest<Ba
    @Override
    @Consumes(MediaType.APPLICATION_JSON)
    public BackendService expected() {
-      URI selfLink = URI.create("https://www.googleapis.com/compute/v1/"
-                                + "projects/myproject/global/backendServices/"
-                                + "jclouds-test");
-      URI healthCheck = URI.create("https://www.googleapis.com/compute/v1/"
-                                   + "projects/myproject/global/httpHealthChecks"
-                                   + "/jclouds-test");
+      return expected(BASE_URL);
+   }
+
+   public BackendService expected(String baseUrl) {
+      URI selfLink = URI.create(baseUrl + "/myproject/global/backendServices/jclouds-test");
+      URI healthCheck = URI.create(baseUrl + "/myproject/global/httpHealthChecks/jclouds-test");
       URI group = URI.create("https://www.googleapis.com/resourceviews/v1beta1"
                              + "/projects/myproject/zones/us-central1-a/"
                              + "resourceViews/jclouds-test");

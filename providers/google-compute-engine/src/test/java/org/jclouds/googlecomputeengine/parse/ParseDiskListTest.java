@@ -38,8 +38,13 @@ public class ParseDiskListTest extends BaseGoogleComputeEngineParseTest<ListPage
 
    @Override @Consumes(APPLICATION_JSON)
    public ListPage<Disk> expected() {
+      return expected(BASE_URL);
+   }
+
+   @Consumes(APPLICATION_JSON)
+   public ListPage<Disk> expected(String baseUrl) {
       return ForwardingListPage.create( //
-            ImmutableList.of(new ParseDiskTest().expected()), // items
+            ImmutableList.of(new ParseDiskTest().expected(baseUrl)), // items
             null // nextPageToken
       );
    }

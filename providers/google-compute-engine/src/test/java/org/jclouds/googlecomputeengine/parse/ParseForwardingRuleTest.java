@@ -37,17 +37,21 @@ public class ParseForwardingRuleTest extends BaseGoogleComputeEngineParseTest<Fo
 
    @Override @Consumes(APPLICATION_JSON)
    public ForwardingRule expected() {
+      return expected(BASE_URL);
+   }
+
+   public ForwardingRule expected(String baseUrl) {
       return ForwardingRule.create( //
             "6732523704970219884", // id
-            URI.create(BASE_URL + "/party/regions/europe-west1/forwardingRules/test-forwarding-rule"), // selfLink
+            URI.create(baseUrl + "/party/regions/europe-west1/forwardingRules/test-forwarding-rule"), // selfLink
             "test-forwarding-rule", // name
             null, // description
             new SimpleDateFormatDateService().iso8601DateParse("2014-01-08T06:51:10.809-08:00"), // creationTimestamp
-            URI.create(BASE_URL + "/party/regions/europe-west1"), // region
+            URI.create(baseUrl + "/party/regions/europe-west1"), // region
             "23.251.129.77", // ipAddress
             ForwardingRule.IPProtocol.TCP, // ipProtocol
             "1-65535", // portRange
-            URI.create(BASE_URL + "/party/regions/europe-west1/targetPools/test-target-pool") // target
+            URI.create(baseUrl + "/party/regions/europe-west1/targetPools/test-target-pool") // target
       );
    }
 }

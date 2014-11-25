@@ -36,14 +36,19 @@ public class ParseAddressTest extends BaseGoogleComputeEngineParseTest<Address> 
 
    @Override @Consumes(APPLICATION_JSON)
    public Address expected() {
-      return Address.create( //
+      return expected(BASE_URL);
+   }
+
+   @Consumes(APPLICATION_JSON)
+   public Address expected(String baseUrl) {
+      return Address.create( //d
             "4439373783165447583", // id
-            URI.create(BASE_URL + "/party/regions/us-central1/addresses/test-ip1"), // selfLink
+            URI.create(baseUrl + "/party/regions/us-central1/addresses/test-ip1"), // selfLink
             "test-ip1", // name
             "", // description
             "RESERVED", // status
             null, // user
-            URI.create(BASE_URL + "/party/regions/us-central1"), // region
+            URI.create(baseUrl + "/party/regions/us-central1"), // region
             "173.255.115.190" // address
       );
    }

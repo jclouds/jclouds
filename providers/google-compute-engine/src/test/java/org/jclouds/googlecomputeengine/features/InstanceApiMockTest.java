@@ -17,25 +17,165 @@
 package org.jclouds.googlecomputeengine.features;
 
 import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertFalse;
+import static org.testng.Assert.assertNull;
 
-import org.jclouds.googlecomputeengine.domain.Operation;
+import java.net.URI;
+import java.util.Arrays;
+
+import org.jclouds.googlecomputeengine.domain.AttachDisk;
+import org.jclouds.googlecomputeengine.domain.Metadata;
+import org.jclouds.googlecomputeengine.domain.NewInstance;
 import org.jclouds.googlecomputeengine.domain.Instance.Scheduling.OnHostMaintenance;
 import org.jclouds.googlecomputeengine.internal.BaseGoogleComputeEngineApiMockTest;
+import org.jclouds.googlecomputeengine.parse.ParseInstanceListTest;
+import org.jclouds.googlecomputeengine.parse.ParseInstanceSerialOutputTest;
+import org.jclouds.googlecomputeengine.parse.ParseInstanceTest;
 import org.jclouds.googlecomputeengine.parse.ParseZoneOperationTest;
 import org.testng.annotations.Test;
+
+import com.google.common.collect.ImmutableList;
 
 @Test(groups = "unit", testName = "InstanceApiMockTest", singleThreaded = true)
 public class InstanceApiMockTest extends BaseGoogleComputeEngineApiMockTest {
 
-   public void setDiskAutoDeleteResponseIs2xx() throws Exception {
+   public void get() throws Exception {
+      server.enqueue(jsonResponse("/instance_get.json"));
+
+      assertEquals(instanceApi().get("test-1"), new ParseInstanceTest().expected(url("/projects")));
+      assertSent(server, "GET", "/projects/party/zones/us-central1-a/instances/test-1");
+   }
+
+   public void get_4xx() throws Exception {
+      server.enqueue(response404());
+
+      assertNull(instanceApi().get("test-1"));
+      assertSent(server, "GET", "/projects/party/zones/us-central1-a/instances/test-1");
+   }
+
+   public void getInstanceSerialPortOutput() throws Exception {
+      server.enqueue(jsonResponse("/instance_serial_port.json"));
+
+      assertEquals(instanceApi().getSerialPortOutput("test-1"),
+            new ParseInstanceSerialOutputTest().expected());
+
+      assertSent(server, "GET", "/projects/party/zones/us-central1-a/instances/test-1/serialPort");
+   }
+
+   public void insert_noOptions() throws Exception {
       server.enqueue(jsonResponse("/zone_operation.json"));
 
-      InstanceApi instanceApi = api().instancesInZone("us-central1-a");
+      NewInstance newInstance = NewInstance.create(
+            "test-1", // name
+            URI.create(url("/projects/party/zones/us-central1-a/machineTypes/n1-standard-1")), // machineType
+            URI.create(url("/projects/party/global/networks/default")), // network
+            URI.create(url("/projects/party/global/images/centos-6-2-v20120326")) // sourceImage
+      );
 
-      Operation o = instanceApi.setDiskAutoDelete("test-1", "test-disk-1", true);
-      int port = server.getPort();
-      // Endpoint is different for URIs such as zone and selfLink.
-      assertEquals(o, new ParseZoneOperationTest().expected("http://localhost:" + port + "/projects"));
+      assertEquals(instanceApi().create(newInstance), new ParseZoneOperationTest().expected(url("/projects")));
+      assertSent(server, "POST", "/projects/party/zones/us-central1-a/instances",
+            stringFromResource("/instance_insert_simple.json"));
+   }
+
+   public void insert_allOptions() throws Exception {
+      server.enqueue(jsonResponse("/zone_operation.json"));
+
+      NewInstance newInstance = NewInstance.create(
+            "test-1", // name
+            URI.create(url("/projects/party/zones/us-central1-a/machineTypes/n1-standard-1")), // machineType
+            URI.create(url("/projects/party/global/networks/default")), // network
+            Arrays.asList(AttachDisk.existingBootDisk(URI.create(url("/projects/party/zones/us-central1-a/disks/test")))),
+            "desc" // description
+      );
+
+      newInstance.metadata().put("aKey", "aValue");
+      assertEquals(instanceApi().create(newInstance), new ParseZoneOperationTest().expected(url("/projects")));
+      assertSent(server, "POST", "/projects/party/zones/us-central1-a/instances",
+            stringFromResource("/instance_insert.json"));
+   }
+
+   public void delete() throws Exception {
+      server.enqueue(jsonResponse("/zone_operation.json"));
+
+      assertEquals(instanceApi().delete("test-1"),
+            new ParseZoneOperationTest().expected(url("/projects")));
+      assertSent(server, "DELETE", "/projects/party/zones/us-central1-a/instances/test-1");
+   }
+
+   public void delete_4xx() throws Exception {
+      server.enqueue(response404());
+
+      assertNull(instanceApi().delete("test-1"));
+      assertSent(server, "DELETE", "/projects/party/zones/us-central1-a/instances/test-1");
+   }
+
+   public void list() throws Exception {
+      server.enqueue(jsonResponse("/instance_list.json"));
+
+      assertEquals(instanceApi().list().next(), new ParseInstanceListTest().expected(url("/projects")));
+      assertSent(server, "GET", "/projects/party/zones/us-central1-a/instances");
+   }
+
+   public void list_empty() throws Exception {
+      server.enqueue(jsonResponse("/list_empty.json"));
+
+      assertFalse(instanceApi().list().hasNext());
+      assertSent(server, "GET", "/projects/party/zones/us-central1-a/instances");
+   }
+
+   public void setMetadata() throws Exception {
+      server.enqueue(jsonResponse("/zone_operation.json"));
+
+      assertEquals(instanceApi().setMetadata("test-1", Metadata.create("efgh").put("foo", "bar")),
+            new ParseZoneOperationTest().expected(url("/projects")));
+      assertSent(server, "POST", "/projects/party/zones/us-central1-a/instances/test-1/setMetadata",
+            stringFromResource("/instance_set_metadata.json"));
+   }
+
+   public void setTags() throws Exception {
+      server.enqueue(jsonResponse("/zone_operation.json"));
+
+      assertEquals(instanceApi().setTags("test-1", ImmutableList.of("foo", "bar"), "efgh"),
+            new ParseZoneOperationTest().expected(url("/projects")));
+      assertSent(server, "POST", "/projects/party/zones/us-central1-a/instances/test-1/setTags",
+            stringFromResource("/instance_set_tags.json"));
+   }
+
+   public void reset() throws Exception {
+      server.enqueue(jsonResponse("/zone_operation.json"));
+
+      assertEquals(instanceApi().reset("test-1"),
+            new ParseZoneOperationTest().expected(url("/projects")));
+
+      assertSent(server, "POST", "/projects/party/zones/us-central1-a/instances/test-1/reset");
+   }
+
+   public void attachDisk() throws Exception {
+      server.enqueue(jsonResponse("/zone_operation.json"));
+
+      assertEquals(instanceApi().attachDisk("test-1",
+            AttachDisk.create(AttachDisk.Type.PERSISTENT,
+                                     AttachDisk.Mode.READ_ONLY,
+                                     URI.create(url("/projects/party/zones/us-central1-a/disks/testimage1")),
+                                     null, false, null, true)),
+            new ParseZoneOperationTest().expected(url("/projects")));
+      assertSent(server, "POST", "/projects/party/zones/us-central1-a/instances/test-1/attachDisk",
+            stringFromResource("/instance_attach_disk.json"));
+   }
+
+   public void detatchDisk() throws Exception {
+      server.enqueue(jsonResponse("/zone_operation.json"));
+
+      assertEquals(instanceApi().detachDisk("test-1", "test-disk-1"),
+            new ParseZoneOperationTest().expected(url("/projects")));
+      assertSent(server, "POST", "/projects/party/zones/us-central1-a/instances/test-1/detachDisk?deviceName=test-disk-1");
+   }
+
+   public void setDiskAutoDelete() throws Exception {
+      server.enqueue(jsonResponse("/zone_operation.json"));
+
+      assertEquals(instanceApi().setDiskAutoDelete("test-1", "test-disk-1", true),
+            new ParseZoneOperationTest().expected(url("/projects")));
 
       assertSent(server, "POST", "/projects/party/zones/us-central1-a/instances/test-1/setDiskAutoDelete"
           + "?deviceName=test-disk-1&autoDelete=true");
@@ -44,12 +184,14 @@ public class InstanceApiMockTest extends BaseGoogleComputeEngineApiMockTest {
    public void setScheduling() throws Exception {
       server.enqueue(jsonResponse("/zone_operation.json"));
 
-      InstanceApi instanceApi = api().instancesInZone("us-central1-a");
-
-      assertEquals(instanceApi.setScheduling("test-1", OnHostMaintenance.TERMINATE, true),
+      assertEquals(instanceApi().setScheduling("test-1", OnHostMaintenance.TERMINATE, true),
             new ParseZoneOperationTest().expected(url("/projects")));
 
       assertSent(server, "POST", "/projects/party/zones/us-central1-a/instances/test-1/setScheduling",
             "{\"onHostMaintenance\": \"TERMINATE\",\"automaticRestart\": true}");
+   }
+
+   InstanceApi instanceApi(){
+      return api().instancesInZone("us-central1-a");
    }
 }

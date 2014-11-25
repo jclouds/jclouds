@@ -38,8 +38,13 @@ public class ParseForwardingRuleListTest extends BaseGoogleComputeEngineParseTes
 
    @Override @Consumes(APPLICATION_JSON)
    public ListPage<ForwardingRule> expected() {
+      return expected(BASE_URL);
+   }
+
+   @Consumes(APPLICATION_JSON)
+   public ListPage<ForwardingRule> expected(String baseUrl) {
       return ForwardingListPage.create( //
-            ImmutableList.of(new ParseForwardingRuleTest().expected()), // items
+            ImmutableList.of(new ParseForwardingRuleTest().expected(baseUrl)), // items
             null // nextPageToken
       );
    }

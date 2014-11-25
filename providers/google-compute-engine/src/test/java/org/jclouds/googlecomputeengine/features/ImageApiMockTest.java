@@ -78,35 +78,35 @@ public class ImageApiMockTest extends BaseGoogleComputeEngineApiMockTest {
       assertSent(server, "DELETE", "/projects/party/global/images/centos-6-2-v20120326");
    }
 
-   public void list() throws InterruptedException {
+   public void list() throws Exception {
       server.enqueue(jsonResponse("/image_list.json"));
 
       assertEquals(imageApi().list().next(), new ParseImageListTest().expected(url("/projects")));
       assertSent(server, "GET", "/projects/party/global/images");
    }
 
-   public void list_empty() throws InterruptedException {
+   public void list_empty() throws Exception {
       server.enqueue(jsonResponse("/list_empty.json"));
 
       assertFalse(imageApi().list().hasNext());
       assertSent(server, "GET", "/projects/party/global/images");
    }
 
-   public void listInProject() throws InterruptedException {
+   public void listInProject() throws Exception {
       server.enqueue(jsonResponse("/image_list.json"));
 
       assertEquals(imageApi().listInProject("centos-cloud").next(), new ParseImageListTest().expected(url("/projects")));
       assertSent(server, "GET", "/projects/centos-cloud/global/images");
    }
 
-   public void listInProject_empty() throws InterruptedException {
+   public void listInProject_empty() throws Exception {
       server.enqueue(jsonResponse("/list_empty.json"));
 
       assertFalse(imageApi().listInProject("centos-cloud").hasNext());
       assertSent(server, "GET", "/projects/centos-cloud/global/images");
    }
 
-   public void createImageFromPd_2xx() throws InterruptedException{
+   public void createImageFromPd_2xx() throws Exception{
       server.enqueue(jsonResponse("/operation.json"));
 
       assertEquals(imageApi().createFromDisk("my-image", url("/projects/party/zones/us-central1-a/disks/mydisk")),
@@ -114,7 +114,7 @@ public class ImageApiMockTest extends BaseGoogleComputeEngineApiMockTest {
       assertSent(server, "POST", "/projects/party/global/images", stringFromResource("/image_insert_from_pd.json"));
    }
 
-   public void deprecateImage_2xx() throws InterruptedException{
+   public void deprecateImage_2xx() throws Exception{
       String imageName = "test-image";
       server.enqueue(jsonResponse("/operation.json"));
 

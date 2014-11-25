@@ -36,12 +36,17 @@ public class ParseGlobalOperationTest extends BaseGoogleComputeEngineParseTest<O
 
    @Override @Consumes(APPLICATION_JSON)
    public Operation expected() {
+      return expected(BASE_URL);
+   }
+
+   @Consumes(APPLICATION_JSON)
+   public Operation expected(String baseUrl) {
       return Operation.create( //
             "13053095055850848306", // id
-            URI.create(BASE_URL + "/party/global/operations/operation-1354084865060"),
+            URI.create(baseUrl + "/party/global/operations/operation-1354084865060"),
             "operation-1354084865060", // name
             null, // description
-            URI.create(BASE_URL + "/party/global/firewalls/jclouds-test-delete"), // targetLink
+            URI.create(baseUrl + "/party/global/firewalls/jclouds-test-delete"), // targetLink
             "13053094017547040099", // targetId
             null, // clientOperationId
             Operation.Status.DONE, // status

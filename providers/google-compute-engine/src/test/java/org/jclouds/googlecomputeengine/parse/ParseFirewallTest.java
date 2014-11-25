@@ -39,12 +39,17 @@ public class ParseFirewallTest extends BaseGoogleComputeEngineParseTest<Firewall
 
    @Override @Consumes(APPLICATION_JSON)
    public Firewall expected() {
+      return expected(BASE_URL);
+   }
+
+   @Consumes(APPLICATION_JSON)
+   public Firewall expected(String base_url) {
       return Firewall.create( //
             "12862241031274216284", // id
-            URI.create(BASE_URL + "/party/global/firewalls/jclouds-test"), // selfLink
+            URI.create(base_url + "/party/global/firewalls/jclouds-test"), // selfLink
             "jclouds-test", // name
             "Internal traffic from default allowed", // description
-            URI.create(BASE_URL + "/party/global/networks/jclouds-test"), // network
+            URI.create(base_url + "/party/global/networks/jclouds-test"), // network
             ImmutableList.of("10.0.0.0/8"), // sourceRanges
             null, // sourceTags
             null, // targetTags

@@ -40,15 +40,20 @@ public class ParseAddressListTest extends BaseGoogleComputeEngineParseTest<ListP
 
    @Override @Consumes(APPLICATION_JSON)
    public ListPage<Address> expected() {
-      Address address1 = new ParseAddressTest().expected();
+      return expected(BASE_URL);
+   }
+
+   @Consumes(APPLICATION_JSON)
+   public ListPage<Address> expected(String baseUrl) {
+      Address address1 = new ParseAddressTest().expected(baseUrl);
       Address address2 = Address.create( //
             "4881363978908129158", // id
-            URI.create(BASE_URL + "/party/regions/us-central1/addresses/test-ip2"), // selfLink
+            URI.create(baseUrl + "/party/regions/us-central1/addresses/test-ip2"), // selfLink
             "test-ip2", // name
             "", // description
             "RESERVED", // status
             null, // user
-            URI.create(BASE_URL + "/party/regions/us-central1"), // region
+            URI.create(baseUrl + "/party/regions/us-central1"), // region
             "173.255.118.115" // address
       );
       return ForwardingListPage.create( //
