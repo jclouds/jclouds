@@ -92,7 +92,7 @@ public class BaseGoogleComputeEngineApiMockTest {
    }
 
    protected String url(String path) {
-      return "http://localhost:" + server.getPort() + path;
+      return server.getUrl(path).toString();
    }
 
    @AfterMethod(alwaysRun = true)
