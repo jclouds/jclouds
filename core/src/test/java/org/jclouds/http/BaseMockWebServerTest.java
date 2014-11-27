@@ -85,12 +85,19 @@ public abstract class BaseMockWebServerTest {
     * Creates a test api for the given class and URL.
     */
    protected <T extends Closeable> T api(Class<T> apiClass, String url) {
+      return api(apiClass, url, createConnectionModule());
+   }
+
+   /**
+    * Creates a test api for the given class, URI and Module.
+    */
+   protected <T extends Closeable> T api(Class<T> apiClass, String url, Module... connectionModules) {
       Properties properties = new Properties();
       properties.setProperty(PROPERTY_TRUST_ALL_CERTS, "true");
       properties.setProperty(PROPERTY_RELAX_HOSTNAME, "true");
       addOverrideProperties(properties);
       return ContextBuilder.newBuilder(AnonymousProviderMetadata.forApiOnEndpoint(apiClass, url))
-            .modules(ImmutableSet.<Module> of(createConnectionModule())).overrides(properties).buildApi(apiClass);
+            .modules(ImmutableSet.copyOf(connectionModules)).overrides(properties).buildApi(apiClass);
    }
 
    /**

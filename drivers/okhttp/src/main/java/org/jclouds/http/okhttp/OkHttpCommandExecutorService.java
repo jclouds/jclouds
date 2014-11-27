@@ -57,7 +57,7 @@ import com.squareup.okhttp.Response;
 
 public final class OkHttpCommandExecutorService extends BaseHttpCommandExecutorService<Request> {
 
-   private static final String DEFAULT_USER_AGENT = String.format("jclouds/%s java/%s", JcloudsVersion.get(),
+   private static final String DEFAULT_USER_AGENT = String.format("jclouds-okhttp/%s java/%s", JcloudsVersion.get(),
          System.getProperty("java.version"));
 
    private final Function<URI, Proxy> proxyForURI;

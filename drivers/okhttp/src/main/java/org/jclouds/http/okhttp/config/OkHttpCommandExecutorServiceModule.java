@@ -26,6 +26,7 @@ import org.jclouds.http.HttpCommandExecutorService;
 import org.jclouds.http.HttpUtils;
 import org.jclouds.http.config.ConfiguresHttpCommandExecutorService;
 import org.jclouds.http.config.SSLModule;
+import org.jclouds.http.okhttp.OkHttpClientSupplier;
 import org.jclouds.http.okhttp.OkHttpCommandExecutorService;
 
 import com.google.common.base.Supplier;
@@ -51,24 +52,23 @@ public class OkHttpCommandExecutorServiceModule extends AbstractModule {
    }
 
    private static final class OkHttpClientProvider implements Provider<OkHttpClient> {
-
-      @Inject(optional = true)
-      private Supplier<SSLContext> sslContextSupplier;
       private final HostnameVerifier verifier;
       private final Supplier<SSLContext> untrustedSSLContextProvider;
       private final HttpUtils utils;
+      private final OkHttpClientSupplier clientSupplier;
 
       @Inject
       OkHttpClientProvider(HttpUtils utils, @Named("untrusted") HostnameVerifier verifier,
-            @Named("untrusted") Supplier<SSLContext> untrustedSSLContextProvider) {
+            @Named("untrusted") Supplier<SSLContext> untrustedSSLContextProvider, OkHttpClientSupplier clientSupplier) {
          this.utils = utils;
          this.verifier = verifier;
          this.untrustedSSLContextProvider = untrustedSSLContextProvider;
+         this.clientSupplier = clientSupplier;
       }
 
       @Override
       public OkHttpClient get() {
-         OkHttpClient client = new OkHttpClient();
+         OkHttpClient client = clientSupplier.get();
          client.setConnectTimeout(utils.getConnectionTimeout(), TimeUnit.MILLISECONDS);
          client.setReadTimeout(utils.getSocketOpenTimeout(), TimeUnit.MILLISECONDS);
          // do not follow redirects since https redirects don't work properly
@@ -79,18 +79,12 @@ public class OkHttpCommandExecutorServiceModule extends AbstractModule {
          if (utils.relaxHostname()) {
             client.setHostnameVerifier(verifier);
          }
-         if (sslContextSupplier != null) {
-            // used for providers which e.g. use certs for authentication (like
-            // FGCP) Provider provides SSLContext impl (which inits context with
-            // key manager)
-            client.setSslSocketFactory(sslContextSupplier.get().getSocketFactory());
-         } else if (utils.trustAllCerts()) {
+         if (utils.trustAllCerts()) {
             client.setSslSocketFactory(untrustedSSLContextProvider.get().getSocketFactory());
          }
 
          return client;
       }
-
    }
 
 }
