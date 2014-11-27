@@ -32,6 +32,7 @@ import org.jclouds.googlecomputeengine.features.ForwardingRuleApi;
 import org.jclouds.googlecomputeengine.features.HttpHealthCheckApi;
 import org.jclouds.googlecomputeengine.features.ImageApi;
 import org.jclouds.googlecomputeengine.features.InstanceApi;
+import org.jclouds.googlecomputeengine.features.LicenseApi;
 import org.jclouds.googlecomputeengine.features.MachineTypeApi;
 import org.jclouds.googlecomputeengine.features.NetworkApi;
 import org.jclouds.googlecomputeengine.features.OperationApi;
@@ -100,6 +101,10 @@ public interface GoogleComputeEngineApi extends Closeable {
    @Endpoint(CurrentProject.class)
    @Path("/zones/{zone}")
    InstanceApi instancesInZone(@PathParam("zone") String zone);
+
+   @Delegate
+   @Path("/projects/{project}/global")
+   LicenseApi licensesInProject(@PathParam("project") String project);
 
    @Delegate
    @Endpoint(CurrentProject.class)
