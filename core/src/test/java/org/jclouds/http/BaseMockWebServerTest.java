@@ -33,14 +33,11 @@ import org.jclouds.providers.AnonymousProviderMetadata;
 import org.testng.annotations.BeforeClass;
 
 import com.google.common.collect.ImmutableSet;
-import com.google.common.net.HttpHeaders;
 import com.google.inject.Module;
 import com.squareup.okhttp.internal.SslContextBuilder;
 import com.squareup.okhttp.mockwebserver.Dispatcher;
 import com.squareup.okhttp.mockwebserver.MockResponse;
 import com.squareup.okhttp.mockwebserver.MockWebServer;
-import com.squareup.okhttp.mockwebserver.QueueDispatcher;
-import com.squareup.okhttp.mockwebserver.RecordedRequest;
 
 /**
  * Base class for integration tests that use {@link MockWebServer} to verify the
@@ -61,19 +58,6 @@ public abstract class BaseMockWebServerTest {
       }
    }
 
-   protected static class GlobalChecksRequestDispatcher extends QueueDispatcher {
-      @Override
-      public MockResponse dispatch(RecordedRequest request) throws InterruptedException {
-         MockResponse response = responseQueue.take();
-         if (!HttpRequest.NON_PAYLOAD_METHODS.contains(request.getMethod())
-               && request.getHeader(HttpHeaders.CONTENT_LENGTH) == null) {
-            response.setResponseCode(500);
-            response.setBody("No content length!");
-         }
-         return response;
-      }
-   }
-
    /**
     * Creates a {@link MockWebServer} that uses the
     * {@link GlobalChecksRequestDispatcher}.
@@ -81,7 +65,6 @@ public abstract class BaseMockWebServerTest {
    protected static MockWebServer mockWebServer(MockResponse... responses) throws IOException {
       MockWebServer server = new MockWebServer();
       server.play();
-      server.setDispatcher(new GlobalChecksRequestDispatcher());
       for (MockResponse response : responses) {
          server.enqueue(response);
       }
@@ -120,7 +103,7 @@ public abstract class BaseMockWebServerTest {
     * tests.
     * <p>
     * Unless a concrete HTTP is required, subclasses may want to use the
-    * {@link JavaUrlHttpCommandExecutorServiceModule}.
+    * {@link org.jclouds.http.config.JavaUrlHttpCommandExecutorServiceModule}.
     */
    protected abstract Module createConnectionModule();
 

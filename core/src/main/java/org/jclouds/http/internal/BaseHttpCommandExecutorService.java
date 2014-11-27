@@ -134,6 +134,6 @@ public abstract class BaseHttpCommandExecutorService<Q> implements HttpCommandEx
 
    protected abstract HttpResponse invoke(Q nativeRequest) throws IOException, InterruptedException;
 
-   protected abstract void cleanup(Q nativeResponse);
+   protected abstract void cleanup(Q nativeRequest);
 
 }

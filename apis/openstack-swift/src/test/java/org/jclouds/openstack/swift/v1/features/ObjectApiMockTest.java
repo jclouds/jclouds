@@ -339,7 +339,14 @@ public class ObjectApiMockTest extends BaseOpenStackMockTest<SwiftApi> {
 
          fail("testReplaceTimeout test should have failed with an HttpResponseException.");
       } finally {
-         server.shutdown();
+         try { 
+            server.shutdown();
+         } catch (IOException e) {
+            // MockWebServer 2.1.0 introduces an active wait for its executor termination.
+            // That active wait is a hardcoded value and throws an IOE if the executor has not
+            // terminated in that timeout. It is safe to ignore this exception as the functionality
+            // has been properly verified.
+         }
       }
    }
 

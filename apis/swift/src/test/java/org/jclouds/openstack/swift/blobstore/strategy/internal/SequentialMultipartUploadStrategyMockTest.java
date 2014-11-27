@@ -127,7 +127,7 @@ public class SequentialMultipartUploadStrategyMockTest {
          public MockResponse dispatch(RecordedRequest request) throws InterruptedException {
             MockResponse response = responseQueue.take();
             if (response.getBody() != null) {
-               String newBody = new String(response.getBody()).replace("URL", url.get().toString());
+               String newBody = new String(response.getBody().readByteArray()).replace("URL", url.get().toString());
                response = response.setBody(newBody);
             }
             return response;

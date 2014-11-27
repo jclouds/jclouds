@@ -112,7 +112,7 @@ public class RetryOnRenewTest {
       BackoffLimitedRetryHandler backoffHandler = createMock(BackoffLimitedRetryHandler.class);
 
       expect(response.getPayload()).andReturn(Payloads.newStringPayload(
-                  "The server has waited too long for the request to be sent by the client.")).times(2);
+                  "The server has waited too long for the request to be sent by the client.")).times(3);
       expect(backoffHandler.shouldRetryRequest(command, response)).andReturn(true).once();
       expect(response.getStatusCode()).andReturn(408).once();
 

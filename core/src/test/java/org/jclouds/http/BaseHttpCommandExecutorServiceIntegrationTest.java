@@ -619,14 +619,21 @@ public abstract class BaseHttpCommandExecutorServiceIntegrationTest extends Base
             .method("GET")
             .endpoint(server.getUrl("/").toURI())
             .build());
-         InputStream is = response.getPayload().getInput();
+         InputStream is = response.getPayload().openStream();
          long now = System.currentTimeMillis();
          is.close();
          long diff = System.currentTimeMillis() - now;
          assertTrue(diff < timeoutMillis / 2, "expected " + diff + " to be less than " + (timeoutMillis / 2));
       } finally {
          closeQuietly(client);
-         server.shutdown();
+         try {
+            server.shutdown();
+         } catch (IOException ex) {
+            // MockWebServer 2.1.0 introduces an active wait for its executor termination.
+            // That active wait is a hardcoded value and throws an IOE if the executor has not
+            // terminated in that timeout. It is safe to ignore this exception (related to how
+            // throttling works internally in MWS), as the functionality has been properly verified.
+         }
       }
    }
 }

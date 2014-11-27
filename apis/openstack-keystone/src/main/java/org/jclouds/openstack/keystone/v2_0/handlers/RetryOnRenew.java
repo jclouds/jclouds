@@ -17,7 +17,6 @@
 package org.jclouds.openstack.keystone.v2_0.handlers;
 
 import static org.jclouds.http.HttpUtils.closeClientButKeepContentStream;
-import static org.jclouds.http.HttpUtils.releasePayload;
 
 import java.util.concurrent.TimeUnit;
 
@@ -122,7 +121,11 @@ public class RetryOnRenew implements HttpRetryHandler {
          }
          return retry;
       } finally {
-         releasePayload(response);
+         // If the request is failed and is not going to be retried, the
+         // ErrorHandler will be invoked and it might need to read the payload.
+         // For some kind of payload sources, such as the OkHttp Source, if the
+         // payload is released, the upcoming operations will fail.
+         closeClientButKeepContentStream(response);
       }
    }
 

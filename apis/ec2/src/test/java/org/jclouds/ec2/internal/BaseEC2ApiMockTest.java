@@ -63,9 +63,10 @@ public class BaseEC2ApiMockTest {
 
    protected ContextBuilder builder(Properties overrides) {
       overrides.setProperty(Constants.PROPERTY_MAX_RETRIES, "1");
+      MockWebServer defaultServer = regionToServers.get(DEFAULT_REGION);
       return ContextBuilder.newBuilder(new EC2ApiMetadata())
             .credentials(ACCESS_KEY, SECRET_KEY)
-            .endpoint("http://localhost:" + regionToServers.get(DEFAULT_REGION).getPort())
+            .endpoint(defaultServer.getUrl("").toString())
             .overrides(overrides)
             .modules(modules);
    }
@@ -101,7 +102,8 @@ public class BaseEC2ApiMockTest {
             server.play();
             regionToServers.put(region, server);
          }
-         String regionEndpoint = "http://localhost:" + regionToServers.get(region).getPort();
+         MockWebServer server = regionToServers.get(region);
+         String regionEndpoint = server.getUrl("").toString();
          describeRegionsResponse.append("<regionEndpoint>").append(regionEndpoint).append("</regionEndpoint>");
          describeRegionsResponse.append("</item>");
       }

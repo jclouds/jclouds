@@ -43,19 +43,19 @@ public class TempAuthMockTest {
    private MockWebServer tempAuthServer;
 
 
-   public void testGenerateJWTRequest() throws Exception {
+   public void testGenerateJWTRequest() throws Exception { 
       tempAuthServer.enqueue(new MockResponse().setResponseCode(204)
             .addHeader("X-Auth-Token", "token")
-            .addHeader("X-Storage-Url", "http://127.0.0.1:" + swiftServer.getPort()));
+            .addHeader("X-Storage-Url", swiftServer.getUrl("").toString()));
 
       swiftServer.enqueue(new MockResponse().setBody("[{\"name\":\"test_container_1\",\"count\":2,\"bytes\":78}]"));
 
-      SwiftApi api = api("http://127.0.0.1:" + tempAuthServer.getPort());
+      SwiftApi api = api(tempAuthServer.getUrl("").toString());
 
       // Region name is derived from the swift server host.
-      assertEquals(api.getConfiguredRegions(), ImmutableSet.of("127.0.0.1"));
+      assertEquals(api.getConfiguredRegions(), ImmutableSet.of(tempAuthServer.getHostName()));
 
-      assertTrue(api.getContainerApi("127.0.0.1").list().iterator().hasNext());
+      assertTrue(api.getContainerApi(tempAuthServer.getHostName()).list().iterator().hasNext());
 
       RecordedRequest auth = tempAuthServer.takeRequest();
       assertEquals(auth.getMethod(), "GET");

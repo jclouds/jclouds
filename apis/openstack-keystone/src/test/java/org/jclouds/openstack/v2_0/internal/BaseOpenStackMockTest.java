@@ -108,7 +108,7 @@ public class BaseOpenStackMockTest<A extends Closeable> {
                 * access.json or accessRackspace.json) for the declared service
                 * endpoints.
                 */
-               String newBody = urlTokenPattern.matcher(new String(response.getBody())).replaceAll(": \"" + url.toString());
+               String newBody = urlTokenPattern.matcher(new String(response.getBody().readByteArray())).replaceAll(": \"" + url.toString());
 
                response = response.setBody(newBody);
             }

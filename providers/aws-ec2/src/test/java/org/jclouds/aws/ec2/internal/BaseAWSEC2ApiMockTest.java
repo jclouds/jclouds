@@ -75,10 +75,11 @@ public class BaseAWSEC2ApiMockTest {
    }
 
    protected ContextBuilder builder(Properties overrides) {
+      MockWebServer defaultServer = regionToServers.get(DEFAULT_REGION);
       overrides.setProperty(Constants.PROPERTY_MAX_RETRIES, "1");
       return ContextBuilder.newBuilder(new AWSEC2ProviderMetadata())
             .credentials(ACCESS_KEY, SECRET_KEY)
-            .endpoint("http://localhost:" + regionToServers.get(DEFAULT_REGION).getPort())
+            .endpoint(defaultServer.getUrl("").toString())
             .overrides(overrides)
             .modules(modules);
    }
@@ -102,7 +103,8 @@ public class BaseAWSEC2ApiMockTest {
 
             @Override public String region(String host) {
                for (Map.Entry<String, MockWebServer> regionToServer : regionToServers.entrySet()) {
-                  if (host.equals("localhost:" + regionToServer.getValue().getPort())) {
+                  MockWebServer server = regionToServer.getValue();
+                  if (host.equals(server.getHostName() + ":" + regionToServer.getValue().getPort())) {
                      return regionToServer.getKey();
                   }
                }
@@ -141,7 +143,8 @@ public class BaseAWSEC2ApiMockTest {
             server.play();
             regionToServers.put(region, server);
          }
-         String regionEndpoint = "http://localhost:" + regionToServers.get(region).getPort();
+         MockWebServer server = regionToServers.get(region);
+         String regionEndpoint = server.getUrl("").toString();
          describeRegionsResponse.append("<regionEndpoint>").append(regionEndpoint).append("</regionEndpoint>");
          describeRegionsResponse.append("</item>");
       }

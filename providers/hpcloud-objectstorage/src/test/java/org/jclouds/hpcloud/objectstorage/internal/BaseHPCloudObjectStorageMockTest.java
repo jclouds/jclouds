@@ -70,7 +70,7 @@ public class BaseHPCloudObjectStorageMockTest {
          public MockResponse dispatch(RecordedRequest request) throws InterruptedException {
             MockResponse response = responseQueue.take();
             if (response.getBody() != null) {
-               String newBody = new String(response.getBody()).replace(":\"URL", ":\"" + url.toString());
+               String newBody = new String(response.getBody().readByteArray()).replace(":\"URL", ":\"" + url.toString());
                response = response.setBody(newBody);
             }
             return response;

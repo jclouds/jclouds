@@ -16,17 +16,28 @@
  */
 package org.jclouds.http.okhttp.config;
 
+import java.util.concurrent.TimeUnit;
+
+import javax.inject.Named;
+import javax.net.ssl.HostnameVerifier;
+import javax.net.ssl.SSLContext;
+
 import org.jclouds.http.HttpCommandExecutorService;
+import org.jclouds.http.HttpUtils;
 import org.jclouds.http.config.ConfiguresHttpCommandExecutorService;
 import org.jclouds.http.config.SSLModule;
 import org.jclouds.http.okhttp.OkHttpCommandExecutorService;
 
+import com.google.common.base.Supplier;
 import com.google.inject.AbstractModule;
+import com.google.inject.Inject;
+import com.google.inject.Provider;
 import com.google.inject.Scopes;
+import com.squareup.okhttp.OkHttpClient;
 
 /**
  * Configures the {@link OkHttpCommandExecutorService}.
- * 
+ *
  * Note that this uses threads.
  */
 @ConfiguresHttpCommandExecutorService
@@ -36,6 +47,50 @@ public class OkHttpCommandExecutorServiceModule extends AbstractModule {
    protected void configure() {
       install(new SSLModule());
       bind(HttpCommandExecutorService.class).to(OkHttpCommandExecutorService.class).in(Scopes.SINGLETON);
+      bind(OkHttpClient.class).toProvider(OkHttpClientProvider.class).in(Scopes.SINGLETON);
+   }
+
+   private static final class OkHttpClientProvider implements Provider<OkHttpClient> {
+
+      @Inject(optional = true)
+      private Supplier<SSLContext> sslContextSupplier;
+      private final HostnameVerifier verifier;
+      private final Supplier<SSLContext> untrustedSSLContextProvider;
+      private final HttpUtils utils;
+
+      @Inject
+      OkHttpClientProvider(HttpUtils utils, @Named("untrusted") HostnameVerifier verifier,
+            @Named("untrusted") Supplier<SSLContext> untrustedSSLContextProvider) {
+         this.utils = utils;
+         this.verifier = verifier;
+         this.untrustedSSLContextProvider = untrustedSSLContextProvider;
+      }
+
+      @Override
+      public OkHttpClient get() {
+         OkHttpClient client = new OkHttpClient();
+         client.setConnectTimeout(utils.getConnectionTimeout(), TimeUnit.MILLISECONDS);
+         client.setReadTimeout(utils.getSocketOpenTimeout(), TimeUnit.MILLISECONDS);
+         // do not follow redirects since https redirects don't work properly
+         // ex. Caused by: java.io.IOException: HTTPS hostname wrong: should be
+         // <adriancole.s3int0.s3-external-3.amazonaws.com>
+         client.setFollowRedirects(false);
+
+         if (utils.relaxHostname()) {
+            client.setHostnameVerifier(verifier);
+         }
+         if (sslContextSupplier != null) {
+            // used for providers which e.g. use certs for authentication (like
+            // FGCP) Provider provides SSLContext impl (which inits context with
+            // key manager)
+            client.setSslSocketFactory(sslContextSupplier.get().getSocketFactory());
+         } else if (utils.trustAllCerts()) {
+            client.setSslSocketFactory(untrustedSSLContextProvider.get().getSocketFactory());
+         }
+
+         return client;
+      }
+
    }
 
 }
