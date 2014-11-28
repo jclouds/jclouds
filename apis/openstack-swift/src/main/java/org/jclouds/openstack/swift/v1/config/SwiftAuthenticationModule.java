@@ -122,7 +122,7 @@ public final class SwiftAuthenticationModule extends KeystoneAuthenticationModul
             if (header.equalsIgnoreCase(STORAGE_URL)) {
                storageUrl = getURI(entry.getValue());
             } else if (header.equalsIgnoreCase(AUTH_TOKEN)) {
-               authToken = entry.getKey();
+               authToken = entry.getValue();
             }
          }
          if (storageUrl == null || authToken == null) {
