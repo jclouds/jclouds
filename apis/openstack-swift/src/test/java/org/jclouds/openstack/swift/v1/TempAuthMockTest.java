@@ -43,7 +43,7 @@ public class TempAuthMockTest {
    private MockWebServer tempAuthServer;
 
 
-   public void testGenerateJWTRequest() throws Exception { 
+   public void testTempAuthRequest() throws Exception {
       tempAuthServer.enqueue(new MockResponse().setResponseCode(204)
             .addHeader("X-Auth-Token", "token")
             .addHeader("X-Storage-Url", swiftServer.getUrl("").toString()));
@@ -67,6 +67,7 @@ public class TempAuthMockTest {
       assertEquals(listContainers.getMethod(), "GET");
       assertEquals(listContainers.getPath(), "/");
       assertEquals(listContainers.getHeader("Accept"), APPLICATION_JSON);
+      assertEquals(listContainers.getHeader("X-Auth-Token"), "token");
    }
 
    private SwiftApi api(String authUrl) throws IOException {
