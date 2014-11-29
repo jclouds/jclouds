@@ -29,9 +29,8 @@ import org.jclouds.logging.Logger;
 
 import javax.annotation.Resource;
 import javax.inject.Named;
-
-import java.security.SecureRandom;
 import java.util.List;
+import java.util.UUID;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -62,23 +61,18 @@ public class AzureBlobBlockUploadStrategy implements MultipartUploadStrategy {
       checkNotNull(length,
             "please invoke payload.getContentMetadata().setContentLength(length) prior to azure block upload");
       checkArgument(length <= (MAX_NUMBER_OF_BLOCKS * MAX_BLOCK_SIZE));
-      long offset = 0L;
       List<String> blockIds = Lists.newArrayList();
       long bytesWritten = 0;
-      while (offset < length) {
-         long chunkSize = MAX_BLOCK_SIZE;
-         if (length - offset < MAX_BLOCK_SIZE) {
-            chunkSize = length % MAX_BLOCK_SIZE;
-         }
-         bytesWritten += chunkSize;
-         Payload block = slicer.slice(payload, offset, chunkSize);
-         offset += MultipartUploadStrategy.MAX_BLOCK_SIZE;
-         String blockName = blobName + "-" + offset + "-" + new SecureRandom().nextInt();
+
+      for (Payload block : slicer.slice(payload, MAX_BLOCK_SIZE)) {
+         String blockName = blobName + "-" + UUID.randomUUID().toString();
          byte blockIdBytes[] = Hashing.md5().hashBytes(blockName.getBytes()).asBytes();
          String blockId = BaseEncoding.base64().encode(blockIdBytes);
          blockIds.add(blockId);
          client.putBlock(container, blobName, blockId, block);
+         bytesWritten += block.getContentMetadata().getContentLength();
       }
+
       checkState(bytesWritten == length, "Wrote %s bytes, but we wanted to write %s bytes", bytesWritten, length);
       return client.putBlockList(container, blobName, blockIds);
    }
