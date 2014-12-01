@@ -25,9 +25,12 @@ import org.jclouds.elasticstack.ElasticStackApiMetadata;
 import org.jclouds.providers.ProviderMetadata;
 import org.jclouds.providers.internal.BaseProviderMetadata;
 
+import com.google.auto.service.AutoService;
+
 /**
- * Implementation of {@link org.jclouds.types.ProviderMetadata} for ElasticHosts Sydney.
+ * Implementation of {@link ProviderMetadata} for ElasticHosts Sydney.
  */
+@AutoService(ProviderMetadata.class)
 public class ElasticHostsSydneyProviderMetadata extends BaseProviderMetadata {
 
    public static Builder builder() {

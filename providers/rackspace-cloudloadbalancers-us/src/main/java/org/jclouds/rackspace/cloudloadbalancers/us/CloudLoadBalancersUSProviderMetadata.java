@@ -27,9 +27,12 @@ import org.jclouds.providers.ProviderMetadata;
 import org.jclouds.providers.internal.BaseProviderMetadata;
 import org.jclouds.rackspace.cloudloadbalancers.v1.CloudLoadBalancersApiMetadata;
 
+import com.google.auto.service.AutoService;
+
 /**
- * Implementation of {@link org.jclouds.types.ProviderMetadata} for Rackspace Cloud LoadBalancers US.
+ * Implementation of {@link ProviderMetadata} for Rackspace Cloud LoadBalancers US.
  */
+@AutoService(ProviderMetadata.class)
 public class CloudLoadBalancersUSProviderMetadata extends BaseProviderMetadata {
 
    public static Builder builder() {

@@ -37,15 +37,11 @@
     <test.chef.build-version />
     <test.chef.identity>chef-webui</test.chef.identity>
     <test.chef.credential>${user.home}/.chef/webui.pem</test.chef.credential>
-    <jclouds.osgi.import>
-      org.jclouds;version=${project.version},
-      org.jclouds*;version=${project.version},
-      *
-    </jclouds.osgi.import>
     <jclouds.osgi.export>
       org.jclouds.chef*;version=${project.version};-noimport:=true,
       org.jclouds.ohai*;version=${project.version};-noimport:=true,
     </jclouds.osgi.export>
+    <jclouds.osgi.import>org.jclouds*;version="${project.version}",*</jclouds.osgi.import>
   </properties>
 
   <dependencies>
@@ -97,6 +93,11 @@
       <artifactId>logback-classic</artifactId>
       <version>1.0.9</version>
       <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.google.auto.service</groupId>
+      <artifactId>auto-service</artifactId>
+      <optional>true</optional>
     </dependency>
   </dependencies>
 

@@ -28,18 +28,21 @@ import static org.jclouds.chef.config.ChefProperties.CHEF_USE_OMNIBUS;
 import java.net.URI;
 import java.util.Properties;
 
+import org.jclouds.apis.ApiMetadata;
 import org.jclouds.chef.config.ChefBootstrapModule;
 import org.jclouds.chef.config.ChefHttpApiModule;
 import org.jclouds.chef.config.ChefParserModule;
 import org.jclouds.ohai.config.JMXOhaiModule;
 import org.jclouds.rest.internal.BaseHttpApiMetadata;
 
+import com.google.auto.service.AutoService;
 import com.google.common.collect.ImmutableSet;
 import com.google.inject.Module;
 
 /**
  * Implementation of {@link ApiMetadata} for OpsCode's Chef api.
  */
+@AutoService(ApiMetadata.class)
 public class ChefApiMetadata extends BaseHttpApiMetadata<ChefApi> {
 
    /**

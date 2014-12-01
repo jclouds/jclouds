@@ -22,12 +22,16 @@ import static org.jclouds.aws.reference.AWSConstants.PROPERTY_HEADER_TAG;
 import java.net.URI;
 import java.util.Properties;
 
+import org.jclouds.apis.ApiMetadata;
 import org.jclouds.rest.internal.BaseHttpApiMetadata;
 import org.jclouds.route53.config.Route53HttpApiModule;
+
+import com.google.auto.service.AutoService;
 
 /**
  * Implementation of {@link ApiMetadata} for Amazon's Route53 api.
  */
+@AutoService(ApiMetadata.class)
 public class Route53ApiMetadata extends BaseHttpApiMetadata<Route53Api> {
 
    @Override

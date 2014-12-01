@@ -22,17 +22,20 @@ import static org.jclouds.reflect.Reflection2.typeToken;
 import java.net.URI;
 import java.util.Properties;
 
+import org.jclouds.apis.ApiMetadata;
 import org.jclouds.compute.ComputeServiceContext;
 import org.jclouds.elasticstack.compute.config.ElasticStackComputeServiceContextModule;
 import org.jclouds.elasticstack.config.ElasticStackHttpApiModule;
 import org.jclouds.rest.internal.BaseHttpApiMetadata;
 
+import com.google.auto.service.AutoService;
 import com.google.common.collect.ImmutableSet;
 import com.google.inject.Module;
 
 /**
  * Implementation of {@link ApiMetadata} for the ElasticStack API
  */
+@AutoService(ApiMetadata.class)
 public class ElasticStackApiMetadata extends BaseHttpApiMetadata<ElasticStackApi> {
 
    @Override

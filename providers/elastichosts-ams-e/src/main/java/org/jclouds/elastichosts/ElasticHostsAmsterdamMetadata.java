@@ -25,9 +25,12 @@ import org.jclouds.elasticstack.ElasticStackApiMetadata;
 import org.jclouds.providers.ProviderMetadata;
 import org.jclouds.providers.internal.BaseProviderMetadata;
 
+import com.google.auto.service.AutoService;
+
 /**
- * Implementation of {@link org.jclouds.types.ProviderMetadata} for ElasticHosts Amsterdam.
+ * Implementation of {@link ProviderMetadata} for ElasticHosts Amsterdam.
  */
+@AutoService(ProviderMetadata.class)
 public class ElasticHostsAmsterdamMetadata extends BaseProviderMetadata {
 
    public static Builder builder() {

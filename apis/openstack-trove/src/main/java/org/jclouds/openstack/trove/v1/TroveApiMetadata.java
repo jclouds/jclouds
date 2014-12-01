@@ -22,6 +22,7 @@ import static org.jclouds.openstack.keystone.v2_0.config.KeystoneProperties.SERV
 import java.net.URI;
 import java.util.Properties;
 
+import org.jclouds.apis.ApiMetadata;
 import org.jclouds.openstack.keystone.v2_0.config.AuthenticationApiModule;
 import org.jclouds.openstack.keystone.v2_0.config.CredentialTypes;
 import org.jclouds.openstack.keystone.v2_0.config.KeystoneAuthenticationModule;
@@ -31,12 +32,14 @@ import org.jclouds.openstack.trove.v1.config.TroveParserModule;
 import org.jclouds.openstack.v2_0.ServiceType;
 import org.jclouds.rest.internal.BaseHttpApiMetadata;
 
+import com.google.auto.service.AutoService;
 import com.google.common.collect.ImmutableSet;
 import com.google.inject.Module;
 
 /**
- * Implementation of {@link org.jclouds.apis.ApiMetadata} for the OpenStack Trove v1 API.
+ * Implementation of {@link ApiMetadata} for the OpenStack Trove v1 API.
  */
+@AutoService(ApiMetadata.class)
 public class TroveApiMetadata extends BaseHttpApiMetadata<TroveApi> {
 
    @Override

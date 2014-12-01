@@ -20,9 +20,12 @@ import org.jclouds.logging.Logger.LoggerFactory;
 import org.jclouds.logging.config.LoggingModule;
 import org.jclouds.logging.log4j.Log4JLogger;
 
+import com.google.auto.service.AutoService;
+
 /**
  * Configures logging of type {@link Log4JLogger}
  */
+@AutoService(LoggingModule.class)
 public class Log4JLoggingModule extends LoggingModule {
 
     @Override

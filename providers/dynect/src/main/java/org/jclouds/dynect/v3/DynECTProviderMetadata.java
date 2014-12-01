@@ -25,9 +25,12 @@ import java.util.Properties;
 import org.jclouds.providers.ProviderMetadata;
 import org.jclouds.providers.internal.BaseProviderMetadata;
 
+import com.google.auto.service.AutoService;
+
 /**
- * Implementation of {@link org.jclouds.types.ProviderMetadata} for DynECT Managed DNS.
+ * Implementation of {@link ProviderMetadata} for DynECT Managed DNS.
  */
+@AutoService(ProviderMetadata.class)
 public class DynECTProviderMetadata extends BaseProviderMetadata {
 
    public static Builder builder() {

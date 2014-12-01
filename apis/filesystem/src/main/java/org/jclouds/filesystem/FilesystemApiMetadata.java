@@ -18,13 +18,17 @@ package org.jclouds.filesystem;
 
 import java.net.URI;
 
+import org.jclouds.apis.ApiMetadata;
 import org.jclouds.apis.internal.BaseApiMetadata;
 import org.jclouds.blobstore.BlobStoreContext;
 import org.jclouds.filesystem.config.FilesystemBlobStoreContextModule;
 
+import com.google.auto.service.AutoService;
+
 /**
  * Implementation of {@link ApiMetadata} for jclouds Filesystem-based BlobStore
  */
+@AutoService(ApiMetadata.class)
 public class FilesystemApiMetadata extends BaseApiMetadata {
 
    @Override

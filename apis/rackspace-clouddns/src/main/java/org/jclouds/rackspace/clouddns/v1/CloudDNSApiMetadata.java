@@ -24,18 +24,21 @@ import static org.jclouds.rackspace.cloudidentity.v2_0.config.CloudIdentityCrede
 import java.net.URI;
 import java.util.Properties;
 
+import org.jclouds.apis.ApiMetadata;
 import org.jclouds.openstack.keystone.v2_0.config.KeystoneAuthenticationModule.ProviderModule;
 import org.jclouds.rackspace.clouddns.v1.config.CloudDNSHttpApiModule;
 import org.jclouds.rackspace.cloudidentity.v2_0.config.CloudIdentityAuthenticationApiModule;
 import org.jclouds.rackspace.cloudidentity.v2_0.config.CloudIdentityAuthenticationModule;
 import org.jclouds.rest.internal.BaseHttpApiMetadata;
 
+import com.google.auto.service.AutoService;
 import com.google.common.collect.ImmutableSet;
 import com.google.inject.Module;
 
 /**
  * Implementation of {@link ApiMetadata} for Rackspace Cloud DNS 1.0 API
  */
+@AutoService(ApiMetadata.class)
 public class CloudDNSApiMetadata extends BaseHttpApiMetadata<CloudDNSApi> {
 
    @Override

@@ -23,9 +23,12 @@ import org.jclouds.providers.ProviderMetadata;
 import org.jclouds.providers.internal.BaseProviderMetadata;
 import org.jclouds.rackspace.clouddns.v1.CloudDNSApiMetadata;
 
+import com.google.auto.service.AutoService;
+
 /**
- * Implementation of {@link org.jclouds.types.ProviderMetadata} for Rackspace DNS UK.
+ * Implementation of {@link ProviderMetadata} for Rackspace DNS UK.
  */
+@AutoService(ProviderMetadata.class)
 public class CloudDNSUKProviderMetadata extends BaseProviderMetadata {
 
    public static Builder builder() {

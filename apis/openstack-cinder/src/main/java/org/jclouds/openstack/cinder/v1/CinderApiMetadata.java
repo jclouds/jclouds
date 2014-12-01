@@ -22,6 +22,7 @@ import static org.jclouds.openstack.keystone.v2_0.config.KeystoneProperties.SERV
 import java.net.URI;
 import java.util.Properties;
 
+import org.jclouds.apis.ApiMetadata;
 import org.jclouds.openstack.cinder.v1.config.CinderHttpApiModule;
 import org.jclouds.openstack.cinder.v1.config.CinderParserModule;
 import org.jclouds.openstack.keystone.v2_0.config.AuthenticationApiModule;
@@ -31,12 +32,14 @@ import org.jclouds.openstack.keystone.v2_0.config.KeystoneAuthenticationModule.R
 import org.jclouds.openstack.v2_0.ServiceType;
 import org.jclouds.rest.internal.BaseHttpApiMetadata;
 
+import com.google.auto.service.AutoService;
 import com.google.common.collect.ImmutableSet;
 import com.google.inject.Module;
 
 /**
- * Implementation of {@link org.jclouds.apis.ApiMetadata} for Cinder v1 API
+ * Implementation of {@link ApiMetadata} for Cinder v1 API
  */
+@AutoService(ApiMetadata.class)
 public class CinderApiMetadata extends BaseHttpApiMetadata<CinderApi> {
 
    @Override

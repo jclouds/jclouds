@@ -21,11 +21,13 @@ import java.net.URI;
 import org.jclouds.apis.JcloudsTestComputeApiMetadata;
 import org.jclouds.providers.internal.BaseProviderMetadata;
 
+import com.google.auto.service.AutoService;
 import com.google.common.collect.ImmutableSet;
 
 /**
- * Implementation of @ link org.jclouds.types.ProviderMetadata} for testing.
+ * Implementation of {@link ProviderMetadata} for testing.
  */
+@AutoService(ProviderMetadata.class)
 public class JcloudsTestComputeProviderMetadata extends BaseProviderMetadata {
 
    public static Builder builder() {
@@ -36,7 +38,7 @@ public class JcloudsTestComputeProviderMetadata extends BaseProviderMetadata {
    public Builder toBuilder() {
       return Builder.class.cast(builder().fromProviderMetadata(this));
    }
-   
+
    public JcloudsTestComputeProviderMetadata() {
       super(builder());
    }

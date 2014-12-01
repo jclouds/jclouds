@@ -21,9 +21,12 @@ import java.net.URI;
 import org.jclouds.http.IntegrationTestClient;
 import org.jclouds.rest.internal.BaseHttpApiMetadata;
 
+import com.google.auto.service.AutoService;
+
 /**
- * Implementation of @ link org.jclouds.types.ApiMetadata} for testing.
+ * Implementation of {@link ApiMetadata} for testing.
  */
+@AutoService(ApiMetadata.class)
 public class JcloudsTestComputeApiMetadata extends BaseHttpApiMetadata {
 
    public static Builder builder() {

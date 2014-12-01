@@ -24,6 +24,7 @@ import static org.jclouds.reflect.Reflection2.typeToken;
 import java.net.URI;
 import java.util.Properties;
 
+import org.jclouds.apis.ApiMetadata;
 import org.jclouds.blobstore.BlobStoreContext;
 import org.jclouds.openstack.swift.blobstore.config.SwiftBlobStoreContextModule;
 import org.jclouds.openstack.swift.blobstore.config.TemporaryUrlExtensionModule.SwiftTemporaryUrlExtensionModule;
@@ -31,9 +32,11 @@ import org.jclouds.openstack.swift.config.SwiftHttpApiModule;
 import org.jclouds.openstack.swift.config.SwiftHttpApiModule.StorageEndpointModule;
 import org.jclouds.rest.internal.BaseHttpApiMetadata;
 
+import com.google.auto.service.AutoService;
 import com.google.common.collect.ImmutableSet;
 import com.google.inject.Module;
 
+@AutoService(ApiMetadata.class)
 public class SwiftApiMetadata extends BaseHttpApiMetadata {
 
    @Override
@@ -89,7 +92,7 @@ public class SwiftApiMetadata extends BaseHttpApiMetadata {
          return new SwiftApiMetadata(this);
       }
    }
-   
+
    private static class ConcreteBuilder extends Builder<SwiftClient, ConcreteBuilder> {
       @Override
       protected ConcreteBuilder self() {

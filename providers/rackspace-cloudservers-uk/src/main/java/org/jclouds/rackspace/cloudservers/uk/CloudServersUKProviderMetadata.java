@@ -35,12 +35,14 @@ import org.jclouds.rackspace.cloudidentity.v2_0.config.CloudIdentityAuthenticati
 import org.jclouds.rackspace.cloudidentity.v2_0.config.CloudIdentityCredentialTypes;
 import org.jclouds.rackspace.cloudservers.uk.config.CloudServersUKComputeServiceContextModule;
 
+import com.google.auto.service.AutoService;
 import com.google.common.collect.ImmutableSet;
 import com.google.inject.Module;
 
 /**
- * Implementation of {@link org.jclouds.types.ProviderMetadata} for Rackspace Next Generation Cloud Servers.
+ * Implementation of {@link ProviderMetadata} for Rackspace Next Generation Cloud Servers.
  */
+@AutoService(ProviderMetadata.class)
 public class CloudServersUKProviderMetadata extends BaseProviderMetadata {
 
    public static Builder builder() {

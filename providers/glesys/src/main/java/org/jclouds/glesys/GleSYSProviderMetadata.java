@@ -27,9 +27,12 @@ import java.util.Properties;
 import org.jclouds.providers.ProviderMetadata;
 import org.jclouds.providers.internal.BaseProviderMetadata;
 
+import com.google.auto.service.AutoService;
+
 /**
- * Implementation of {@link org.jclouds.types.ProviderMetadata} for GleSYS.
+ * Implementation of {@link ProviderMetadata} for GleSYS.
  */
+@AutoService(ProviderMetadata.class)
 public class GleSYSProviderMetadata extends BaseProviderMetadata {
 
    public static Builder builder() {

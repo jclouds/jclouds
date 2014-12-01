@@ -37,12 +37,14 @@ import org.jclouds.openstack.nova.v2_0.config.NovaParserModule;
 import org.jclouds.providers.ProviderMetadata;
 import org.jclouds.providers.internal.BaseProviderMetadata;
 
+import com.google.auto.service.AutoService;
 import com.google.common.collect.ImmutableSet;
 import com.google.inject.Module;
 
 /**
- * Implementation of {@link org.jclouds.types.ProviderMetadata} for HP Cloud Compute Services.
+ * Implementation of {@link ProviderMetadata} for HP Cloud Compute Services.
  */
+@AutoService(ProviderMetadata.class)
 public class HPCloudComputeProviderMetadata extends BaseProviderMetadata {
 
    public static Builder builder() {

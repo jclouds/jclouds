@@ -15,6 +15,7 @@
  * limitations under the License.
  */
 package org.jclouds.rackspace.cloudloadbalancers.v1;
+
 import static org.jclouds.openstack.keystone.v2_0.config.KeystoneProperties.CREDENTIAL_TYPE;
 import static org.jclouds.openstack.keystone.v2_0.config.KeystoneProperties.SERVICE_TYPE;
 import static org.jclouds.reflect.Reflection2.typeToken;
@@ -22,6 +23,7 @@ import static org.jclouds.reflect.Reflection2.typeToken;
 import java.net.URI;
 import java.util.Properties;
 
+import org.jclouds.apis.ApiMetadata;
 import org.jclouds.loadbalancer.LoadBalancerServiceContext;
 import org.jclouds.openstack.keystone.v2_0.config.KeystoneAuthenticationModule.RegionModule;
 import org.jclouds.rackspace.cloudidentity.v2_0.ServiceType;
@@ -32,11 +34,14 @@ import org.jclouds.rackspace.cloudloadbalancers.v1.config.CloudLoadBalancersHttp
 import org.jclouds.rackspace.cloudloadbalancers.v1.loadbalancer.config.CloudLoadBalancersLoadBalancerContextModule;
 import org.jclouds.rest.internal.BaseHttpApiMetadata;
 
+import com.google.auto.service.AutoService;
 import com.google.common.collect.ImmutableSet;
 import com.google.inject.Module;
+
 /**
- * Implementation of {@link org.jclouds.apis.ApiMetadata} for the Rackspace Cloud Load Balancers v1.0 API.
+ * Implementation of {@link ApiMetadata} for the Rackspace Cloud Load Balancers v1.0 API.
  */
+@AutoService(ApiMetadata.class)
 public class CloudLoadBalancersApiMetadata extends BaseHttpApiMetadata<CloudLoadBalancersApi> {
 
    @Override

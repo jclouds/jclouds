@@ -25,9 +25,12 @@ import org.jclouds.cloudfiles.CloudFilesApiMetadata;
 import org.jclouds.providers.ProviderMetadata;
 import org.jclouds.providers.internal.BaseProviderMetadata;
 
+import com.google.auto.service.AutoService;
+
 /**
- * Implementation of {@link org.jclouds.types.ProviderMetadata} for Rackspace Cloud Files US.
+ * Implementation of {@link ProviderMetadata} for Rackspace Cloud Files US.
  */
+@AutoService(ProviderMetadata.class)
 public class CloudFilesUSProviderMetadata extends BaseProviderMetadata {
 
    public static Builder builder() {

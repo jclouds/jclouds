@@ -23,11 +23,14 @@ import org.jclouds.route53.Route53ApiMetadata;
 import org.jclouds.providers.ProviderMetadata;
 import org.jclouds.providers.internal.BaseProviderMetadata;
 
+import com.google.auto.service.AutoService;
+
 /**
  * Implementation of @ link org.jclouds.types.ProviderMetadata} for Amazon's Route53
  * provider.
 *
 */
+@AutoService(ProviderMetadata.class)
 public class AWSRoute53ProviderMetadata extends BaseProviderMetadata {
 
    public static Builder builder() {
