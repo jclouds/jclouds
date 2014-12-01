@@ -21,33 +21,33 @@ import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 import java.net.URI;
 import javax.ws.rs.Consumes;
 
-import org.jclouds.googlecomputeengine.domain.BackendServiceGroupHealth;
-import org.jclouds.googlecomputeengine.domain.BackendServiceGroupHealth.HealthStatus;
+import org.jclouds.googlecomputeengine.domain.HealthStatus;
+import org.jclouds.googlecomputeengine.domain.HealthStatus.HealthStatusInternal;
 import org.jclouds.googlecomputeengine.internal.BaseGoogleComputeEngineParseTest;
 import org.testng.annotations.Test;
 
 import com.google.common.collect.ImmutableList;
 
 @Test(groups = "unit")
-public class ParseBackendServiceGetHealthTest extends BaseGoogleComputeEngineParseTest<BackendServiceGroupHealth> {
+public class ParseHealthStatusTest extends BaseGoogleComputeEngineParseTest<HealthStatus> {
 
    @Override
    public String resource() {
-      return "/backend_service_get_health.json";
+      return "/health_status_get_health.json";
    }
 
    @Override
    @Consumes(APPLICATION_JSON)
-   public BackendServiceGroupHealth expected() {
+   public HealthStatus expected() {
       return expected(BASE_URL);
    }
 
    @Consumes(APPLICATION_JSON)
-   public BackendServiceGroupHealth expected(String baseUrl) {
-      URI uri = URI.create(baseUrl + "/myproject/zones/us-central1-a/instances/"
+   public HealthStatus expected(String baseUrl) {
+      URI uri = URI.create(baseUrl + "/party/zones/us-central1-a/instances/"
                            + "jclouds-test");
-      return BackendServiceGroupHealth.create(
-            ImmutableList.of(HealthStatus.create(
+      return HealthStatus.create(
+            ImmutableList.of(HealthStatusInternal.create(
                   null, // ipAddress
                   80, // port
                   uri, // instance

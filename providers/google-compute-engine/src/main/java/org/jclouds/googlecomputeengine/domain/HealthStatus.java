@@ -25,20 +25,20 @@ import org.jclouds.json.SerializedNames;
 import com.google.auto.value.AutoValue;
 
 @AutoValue
-public abstract class BackendServiceGroupHealth {
+public abstract class HealthStatus {
 
-   public abstract List<HealthStatus> healthStatus();
+   public abstract List<HealthStatusInternal> healthStatus();
 
    @SerializedNames({"healthStatus"})
-   public static BackendServiceGroupHealth create(List<HealthStatus> healthStatus){
-      return new AutoValue_BackendServiceGroupHealth(healthStatus);
+   public static HealthStatus create(List<HealthStatusInternal> healthStatus){
+      return new AutoValue_HealthStatus(healthStatus);
    }
 
-   BackendServiceGroupHealth(){
+   HealthStatus(){
    }
 
    @AutoValue
-   public abstract static class HealthStatus {
+   public abstract static class HealthStatusInternal {
 
       @Nullable public abstract String ipAddress();
       public abstract Integer port();
@@ -46,11 +46,11 @@ public abstract class BackendServiceGroupHealth {
       public abstract String healthState();
 
       @SerializedNames({"ipAddress", "port", "instance", "healthState"})
-      public static HealthStatus create(String ipAddress, int port, URI instance, String healthState) {
-         return new AutoValue_BackendServiceGroupHealth_HealthStatus(ipAddress, port, instance, healthState);
+      public static HealthStatusInternal create(String ipAddress, int port, URI instance, String healthState) {
+         return new AutoValue_HealthStatus_HealthStatusInternal(ipAddress, port, instance, healthState);
       }
 
-      HealthStatus(){
+      HealthStatusInternal(){
       }
    }
 }

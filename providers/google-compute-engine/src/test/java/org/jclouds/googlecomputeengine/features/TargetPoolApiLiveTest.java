@@ -26,12 +26,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.jclouds.googlecloud.domain.ListPage;
+import org.jclouds.googlecomputeengine.domain.HealthStatus;
 import org.jclouds.googlecomputeengine.domain.HttpHealthCheck;
 import org.jclouds.googlecomputeengine.domain.Image;
 import org.jclouds.googlecomputeengine.domain.Instance;
 import org.jclouds.googlecomputeengine.domain.NewInstance;
 import org.jclouds.googlecomputeengine.domain.TargetPool;
+import org.jclouds.googlecomputeengine.domain.ForwardingRule.IPProtocol;
 import org.jclouds.googlecomputeengine.internal.BaseGoogleComputeEngineApiLiveTest;
+import org.jclouds.googlecomputeengine.options.ForwardingRuleCreationOptions;
 import org.jclouds.googlecomputeengine.options.HttpHealthCheckCreationOptions;
 import org.jclouds.googlecomputeengine.options.TargetPoolCreationOptions;
 import org.jclouds.googlecomputeengine.options.TargetPoolCreationOptions.SessionAffinityValue;
@@ -54,8 +57,7 @@ public class TargetPoolApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
    private static final String INSTANCE_NAME = "target-pool-api-live-test-instance";
    private static final String IPV4_RANGE = "10.0.0.0/8";
    private static final String HEALTHCHECK_NAME = "target-pool-test-health-check";
-
-   private static final int DEFAULT_DISK_SIZE_GB = 10;
+   private static final String FORWARDING_RULE_NAME = "target-pool-api-forwarding-rule";
 
    private List<URI> instances;
    private List<URI> httpHealthChecks;
@@ -64,7 +66,7 @@ public class TargetPoolApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
       return api.targetPoolsInRegion(DEFAULT_REGION_NAME);
    }
 
-   @Test(groups = "live")
+   @Test(groups = "live", dependsOnMethods = "testInsertTargetPool2")
    public void testCreateInstanceAndHealthCheck(){
       InstanceApi instanceApi = api.instancesInZone(DEFAULT_ZONE_NAME);
       HttpHealthCheckApi httpHealthCheckApi = api.httpHeathChecks();
@@ -99,14 +101,27 @@ public class TargetPoolApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
       instances.add(instance.selfLink());
 
       // Create a healthCheck
-      HttpHealthCheckCreationOptions options = new HttpHealthCheckCreationOptions()
-         .checkIntervalSec(30)
-         .timeoutSec(20)
-         .description("A test HealthCheck for adding to targetPools");
+      HttpHealthCheckCreationOptions options = new HttpHealthCheckCreationOptions.Builder()
+         .checkIntervalSec(3)
+         .timeoutSec(2)
+         .description("A test HealthCheck for adding to targetPools")
+         .buildWithDefaults();
       assertOperationDoneSuccessfully(httpHealthCheckApi.insert(HEALTHCHECK_NAME, options));
       HttpHealthCheck healthCheck = httpHealthCheckApi.get(HEALTHCHECK_NAME);
       httpHealthChecks = new ArrayList<URI>();
       httpHealthChecks.add(healthCheck.selfLink());
+
+      // Create a forwarding rule
+      TargetPool targetPool = api().get(TARGETPOOL_NAME);
+      URI target = targetPool.selfLink();
+
+      ForwardingRuleCreationOptions forwardingRuleOptions = new ForwardingRuleCreationOptions()
+         .ipProtocol(IPProtocol.TCP)
+         .portRange("80-80")
+         .target(target);
+
+      assertOperationDoneSuccessfully(api.forwardingRulesInRegion(DEFAULT_REGION_NAME)
+               .create(FORWARDING_RULE_NAME, forwardingRuleOptions));
    }
 
    @Test(groups = "live")
@@ -148,22 +163,11 @@ public class TargetPoolApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
 
    @Test(groups = "live", dependsOnMethods = {"testInsertTargetPool", "testCreateInstanceAndHealthCheck"})
    public void testAddInstanceTargetPool() {
-      assertOperationDoneSuccessfully(api().addInstance(BACKUP_TARGETPOOL_NAME, instances));
-      TargetPool targetPool = api().get(BACKUP_TARGETPOOL_NAME);
+      assertOperationDoneSuccessfully(api().addInstance(TARGETPOOL_NAME, instances));
+      TargetPool targetPool = api().get(TARGETPOOL_NAME);
       assertNotNull(targetPool);
-      assertEquals(targetPool.name(), BACKUP_TARGETPOOL_NAME);
+      assertEquals(targetPool.name(), TARGETPOOL_NAME);
       assertEquals(targetPool.instances(), instances);
-   }
-
-   @Test(groups = "live", dependsOnMethods = "testAddInstanceTargetPool")
-   public void testRemoveInstanceTargetPool() {
-      assertOperationDoneSuccessfully(api().removeInstance(BACKUP_TARGETPOOL_NAME, instances));
-
-      TargetPool targetPool = api().get(BACKUP_TARGETPOOL_NAME);
-
-      assertNotNull(targetPool);
-      assertEquals(targetPool.name(), BACKUP_TARGETPOOL_NAME);
-      assertNotEquals(targetPool.instances(), instances);
    }
 
    @Test(groups = "live", dependsOnMethods = {"testInsertTargetPool2", "testCreateInstanceAndHealthCheck"})
@@ -175,7 +179,31 @@ public class TargetPoolApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
       assertEquals(targetPool.healthChecks(), httpHealthChecks);
    }
 
-   @Test(groups = "live", dependsOnMethods = "testAddHealthCheckTargetPool")
+   @Test(groups = "live", dependsOnMethods = {"testAddHealthCheckTargetPool", "testAddInstanceTargetPool"} )
+   public void testGetHealthTargetPool() {
+      TargetPool targetPool = api().get(TARGETPOOL_NAME);
+      assertNotNull(targetPool);
+      assertEquals(targetPool.instances(), instances);
+      assertEquals(targetPool.healthChecks(), httpHealthChecks);
+
+      HealthStatus healthStatus = api().getHealth(TARGETPOOL_NAME, instances.get(0));
+      assertNotNull(healthStatus);
+      assertEquals(healthStatus.healthStatus().get(0).instance(), instances.get(0));
+      assertEquals(healthStatus.healthStatus().get(0).healthState(), "UNHEALTHY");
+   }
+
+   @Test(groups = "live", dependsOnMethods = "testGetHealthTargetPool")
+   public void testRemoveInstanceTargetPool() {
+      assertOperationDoneSuccessfully(api().removeInstance(TARGETPOOL_NAME, instances));
+
+      TargetPool targetPool = api().get(TARGETPOOL_NAME);
+
+      assertNotNull(targetPool);
+      assertEquals(targetPool.name(), TARGETPOOL_NAME);
+      assertNotEquals(targetPool.instances(), instances);
+   }
+
+   @Test(groups = "live", dependsOnMethods = "testGetHealthTargetPool")
    public void testRemoveHealthCheckTargetPool() {
       assertOperationDoneSuccessfully(api().removeHealthCheck(TARGETPOOL_NAME, httpHealthChecks));
 
@@ -220,6 +248,7 @@ public class TargetPoolApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
    public void testDeleteTargetPool() {
       // Note: This ordering matters due one being the backup of the other ect.
       assertOperationDoneSuccessfully(api().delete(THIRD_TARGETPOOL_NAME));
+      assertOperationDoneSuccessfully(api.forwardingRulesInRegion(DEFAULT_REGION_NAME).delete(FORWARDING_RULE_NAME));
       assertOperationDoneSuccessfully(api().delete(TARGETPOOL_NAME));
       assertOperationDoneSuccessfully(api().delete(BACKUP_TARGETPOOL_NAME));
    }

@@ -38,8 +38,13 @@ public class ParseTargetPoolListTest extends BaseGoogleComputeEngineParseTest<Li
 
    @Override @Consumes(APPLICATION_JSON)
    public ListPage<TargetPool> expected() {
+      return expected(BASE_URL);
+   }
+
+   @Consumes(APPLICATION_JSON)
+   public ListPage<TargetPool> expected(String baseUrl) {
       return ForwardingListPage.create( //
-            ImmutableList.of(new ParseTargetPoolTest().expected()), // items
+            ImmutableList.of(new ParseTargetPoolTest().expected(baseUrl)), // items
             null // nextPageToken
       );
    }

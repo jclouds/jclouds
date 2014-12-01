@@ -35,7 +35,7 @@ public class AggregatedListApiMockTest extends BaseGoogleComputeEngineApiMockTes
       assertSent(server, "GET", "/projects/party/aggregated/machineTypes");
    }
 
-   public void machineTypesResponseIs4xx() throws Exception {
+   public void machineTypes_4xx() throws Exception {
       server.enqueue(jsonResponse("/aggregated_instance_list_empty.json"));
 
       AggregatedListApi aggregatedList = api().aggregatedList();
@@ -55,7 +55,7 @@ public class AggregatedListApiMockTest extends BaseGoogleComputeEngineApiMockTes
       assertSent(server, "GET", "/projects/party/aggregated/instances");
    }
 
-   public void instancesResponseIs4xx() throws Exception {
+   public void instances_4xx() throws Exception {
       server.enqueue(jsonResponse("/aggregated_instance_list_empty.json"));
 
       AggregatedListApi aggregatedList = api().aggregatedList();
@@ -75,7 +75,7 @@ public class AggregatedListApiMockTest extends BaseGoogleComputeEngineApiMockTes
       assertSent(server, "GET", "/projects/party/aggregated/addresses");
    }
 
-   public void addressesResponseIs4xx() throws Exception {
+   public void addresses_4xx() throws Exception {
       server.enqueue(jsonResponse("/aggregated_address_list_empty.json"));
 
       AggregatedListApi aggregatedList = api().aggregatedList();
@@ -95,7 +95,7 @@ public class AggregatedListApiMockTest extends BaseGoogleComputeEngineApiMockTes
       assertSent(server, "GET", "/projects/party/aggregated/disks");
    }
 
-   public void disksResponseIs4xx() throws Exception {
+   public void disks_4xx() throws Exception {
       server.enqueue(jsonResponse("/aggregated_disk_list_empty.json"));
 
       AggregatedListApi aggregatedList = api().aggregatedList();
@@ -115,7 +115,7 @@ public class AggregatedListApiMockTest extends BaseGoogleComputeEngineApiMockTes
       assertSent(server, "GET", "/projects/party/aggregated/diskTypes");
    }
 
-   public void diskTypesResponseIs4xx() throws Exception {
+   public void diskTypes_4xx() throws Exception {
       server.enqueue(jsonResponse("/aggregated_disktype_list_empty.json"));
 
       AggregatedListApi aggregatedList = api().aggregatedList();
@@ -135,7 +135,7 @@ public class AggregatedListApiMockTest extends BaseGoogleComputeEngineApiMockTes
       assertSent(server, "GET", "/projects/party/aggregated/operations");
    }
 
-   public void globalOperationsResponseIs4xx() throws Exception {
+   public void globalOperations_4xx() throws Exception {
       server.enqueue(jsonResponse("/aggregated_global_operation_list_empty.json"));
 
       AggregatedListApi aggregatedList = api().aggregatedList();
@@ -175,7 +175,7 @@ public class AggregatedListApiMockTest extends BaseGoogleComputeEngineApiMockTes
       assertSent(server, "GET", "/projects/party/aggregated/targetInstances");
    }
 
-   public void targetInstancesResponseIs4xx() throws Exception {
+   public void targetInstances_4xx() throws Exception {
       server.enqueue(jsonResponse("/aggregated_target_instance_list_empty.json"));
 
       AggregatedListApi aggregatedList = api().aggregatedList();
@@ -183,5 +183,25 @@ public class AggregatedListApiMockTest extends BaseGoogleComputeEngineApiMockTes
       assertFalse(aggregatedList.targetInstances().hasNext());
 
       assertSent(server, "GET", "/projects/party/aggregated/targetInstances");
+   }
+
+   public void targetPools() throws Exception {
+      server.enqueue(jsonResponse("/aggregated_target_pool_list.json"));
+
+      AggregatedListApi aggregatedList = api().aggregatedList();
+
+      assertTrue(aggregatedList.targetPools().hasNext());
+
+      assertSent(server, "GET", "/projects/party/aggregated/targetPools");
+   }
+
+   public void targetPools_4xx() throws Exception {
+      server.enqueue(jsonResponse("/aggregated_target_pool_list_empty.json"));
+
+      AggregatedListApi aggregatedList = api().aggregatedList();
+
+      assertFalse(aggregatedList.targetPools().hasNext());
+
+      assertSent(server, "GET", "/projects/party/aggregated/targetPools");
    }
 }

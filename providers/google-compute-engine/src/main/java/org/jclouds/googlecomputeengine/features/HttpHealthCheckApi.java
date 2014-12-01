@@ -122,7 +122,7 @@ public interface HttpHealthCheckApi {
    /**
     * Updates a HttpHealthCheck resource in the specified project using the data included in the request.
     * Any options left blank will be overwritten!
-    * 
+    *
     * @param name the name of the forwarding rule.
     * @param options the options to set for the healthCheck
     * @return an Operation resource. To check on the status of an operation, poll the Operations resource returned to

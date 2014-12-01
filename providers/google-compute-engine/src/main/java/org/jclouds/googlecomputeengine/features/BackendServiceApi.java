@@ -37,7 +37,7 @@ import org.jclouds.Fallbacks.NullOnNotFoundOr404;
 import org.jclouds.googlecloud.domain.ListPage;
 import org.jclouds.googlecomputeengine.GoogleComputeEngineApi;
 import org.jclouds.googlecomputeengine.domain.BackendService;
-import org.jclouds.googlecomputeengine.domain.BackendServiceGroupHealth;
+import org.jclouds.googlecomputeengine.domain.HealthStatus;
 import org.jclouds.googlecomputeengine.domain.Operation;
 import org.jclouds.googlecomputeengine.internal.BaseToIteratorOfListPage;
 import org.jclouds.googlecomputeengine.options.BackendServiceOptions;
@@ -136,7 +136,7 @@ public interface BackendServiceApi {
    @Produces(APPLICATION_JSON)
    @Path("/{backendService}/getHealth")
    @MapBinder(BindToJsonPayload.class)
-   BackendServiceGroupHealth getHealth(@PathParam("backendService") String backendServiceName,
+   HealthStatus getHealth(@PathParam("backendService") String backendServiceName,
                                        @PayloadParam("group") URI group);
 
    /**

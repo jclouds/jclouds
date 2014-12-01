@@ -32,7 +32,7 @@ import com.google.gson.Gson;
 
 @Test(groups = "unit", testName = "HttpHealthCheckCreationBinderTest")
 public class HttpHealthCheckCreationBinderTest extends BaseGoogleComputeEngineExpectTest<Object>{
-   
+
    private String NAME = "testHttpHealthCheck";
    private Integer TIMEOUTSEC = 3;
    private Integer UNHEALTHYTHRESHOLD = 5;
@@ -40,15 +40,16 @@ public class HttpHealthCheckCreationBinderTest extends BaseGoogleComputeEngineEx
    private static String DESCRIPTION = "This is a test!";
 
    Json json = new GsonWrapper(new Gson());
- 
+
    @Test
    public void testMap() throws SecurityException, NoSuchMethodException {
       HttpHealthCheckCreationBinder binder = new HttpHealthCheckCreationBinder(json);
-      HttpHealthCheckCreationOptions httpHealthCheckCreationOptions = new HttpHealthCheckCreationOptions()
+      HttpHealthCheckCreationOptions httpHealthCheckCreationOptions = new HttpHealthCheckCreationOptions.Builder()
                                                                               .timeoutSec(TIMEOUTSEC)
                                                                               .unhealthyThreshold(UNHEALTHYTHRESHOLD)
                                                                               .healthyThreshold(HEALTHYTHRESHOLD)
-                                                                              .description(DESCRIPTION);
+                                                                              .description(DESCRIPTION)
+                                                                              .buildWithDefaults();
 
       HttpRequest request = HttpRequest.builder().method("GET").endpoint("http://momma").build();
       Map<String, Object> postParams = ImmutableMap.of("name", NAME, "options", httpHealthCheckCreationOptions);
@@ -56,8 +57,11 @@ public class HttpHealthCheckCreationBinderTest extends BaseGoogleComputeEngineEx
       binder.bindToRequest(request, postParams);
 
       assertEquals(request.getPayload().getRawContent(),
-            "{\""
-            + "name\":\"" + NAME + "\","
+            "{"
+            + "\"name\":\"" + NAME + "\","
+            + "\"requestPath\":\"/\","
+            + "\"port\":80,"
+            + "\"checkIntervalSec\":5,"
             + "\"timeoutSec\":" + TIMEOUTSEC + ","
             + "\"unhealthyThreshold\":" + UNHEALTHYTHRESHOLD + ","
             + "\"healthyThreshold\":" + HEALTHYTHRESHOLD + ","

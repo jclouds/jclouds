@@ -37,6 +37,7 @@ import org.jclouds.googlecomputeengine.domain.Instance;
 import org.jclouds.googlecomputeengine.domain.MachineType;
 import org.jclouds.googlecomputeengine.domain.Operation;
 import org.jclouds.googlecomputeengine.domain.TargetInstance;
+import org.jclouds.googlecomputeengine.domain.TargetPool;
 import org.jclouds.googlecomputeengine.internal.BaseToIteratorOfListPage;
 import org.jclouds.googlecomputeengine.options.ListOptions;
 import org.jclouds.javax.annotation.Nullable;
@@ -443,6 +444,56 @@ public interface AggregatedListApi {
                @Override
                public ListPage<TargetInstance> apply(String pageToken) {
                   return api.aggregatedList().pageOfTargetInstances(pageToken, options);
+               }
+            };
+      }
+   }
+
+   /**
+    * Retrieves the list of TargetPool resources available to the
+    * specified project. By default the list as a maximum size of 100, if no
+    * options are provided or ListOptions#getMaxResults() has not been set.
+    *
+    * @param pageToken
+    *           marks the beginning of the next list page
+    * @param listOptions
+    *           listing options
+    * @return a page of the list
+    */
+   @Named("TargetPool:aggregatedList")
+   @GET
+   @Path("/targetPools")
+   ListPage<TargetPool> pageOfTargetPools(@Nullable @QueryParam("pageToken") String pageToken,
+         ListOptions listOptions);
+
+   /** @see #pageOfTargetPools(String, ListOptions) */
+   @Named("TargetPool:aggregatedList")
+   @GET
+   @Path("/targetPools")
+   @Transform(TargetPoolPages.class)
+   Iterator<ListPage<TargetPool>> targetPools();
+
+   /** @see #pageOfTargetPools(String, ListOptions) */
+   @Named("TargetPool:aggregatedList")
+   @GET
+   @Path("/targetPools")
+   @Transform(TargetPoolPages.class)
+   Iterator<ListPage<TargetPool>> targetPools(ListOptions options);
+
+   static final class TargetPoolPages extends BaseToIteratorOfListPage<TargetPool, TargetPoolPages> {
+      private final GoogleComputeEngineApi api;
+
+      @Inject
+      TargetPoolPages(GoogleComputeEngineApi api) {
+         this.api = api;
+      }
+
+      @Override
+      protected Function<String, ListPage<TargetPool>> fetchNextPage(final ListOptions options) {
+            return new Function<String, ListPage<TargetPool>>() {
+               @Override
+               public ListPage<TargetPool> apply(String pageToken) {
+                  return api.aggregatedList().pageOfTargetPools(pageToken, options);
                }
             };
       }

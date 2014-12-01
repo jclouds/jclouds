@@ -25,7 +25,7 @@ import java.util.List;
 
 import org.jclouds.googlecomputeengine.internal.BaseGoogleComputeEngineApiMockTest;
 import org.jclouds.googlecomputeengine.options.BackendServiceOptions;
-import org.jclouds.googlecomputeengine.parse.ParseBackendServiceGetHealthTest;
+import org.jclouds.googlecomputeengine.parse.ParseHealthStatusTest;
 import org.jclouds.googlecomputeengine.parse.ParseBackendServiceListTest;
 import org.jclouds.googlecomputeengine.parse.ParseBackendServiceTest;
 import org.jclouds.googlecomputeengine.parse.ParseOperationTest;
@@ -118,13 +118,13 @@ public class BackendServiceApiMockTest extends BaseGoogleComputeEngineApiMockTes
    }
 
    public void getHealth() throws Exception {
-      server.enqueue(jsonResponse("/backend_service_get_health.json"));
+      server.enqueue(jsonResponse("/health_status_get_health.json"));
 
       URI group = URI.create("https://www.googleapis.com/resourceviews/v1beta1/"
             + "projects/myproject/zones/us-central1-a/"
             + "resourceViews/jclouds-test");
       assertEquals(backendServiceApi().getHealth("jclouds-test", group),
-            new ParseBackendServiceGetHealthTest().expected(url("/projects")));
+            new ParseHealthStatusTest().expected(url("/projects")));
 
       assertSent(server, "POST", "/projects/party/global/backendServices/jclouds-test/getHealth",
             stringFromResource("/backend_service_get_health_request.json"));

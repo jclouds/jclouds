@@ -36,12 +36,17 @@ public class ParseTargetPoolTest extends BaseGoogleComputeEngineParseTest<Target
 
    @Override @Consumes(MediaType.APPLICATION_JSON)
    public TargetPool expected() {
+      return expected(BASE_URL);
+   }
+
+   @Consumes(MediaType.APPLICATION_JSON)
+   public TargetPool expected(String baseUrl) {
       return TargetPool.create( //
             "5199309593612841404", // id
-            URI.create(BASE_URL + "/party/regions/us-central1/targetPools/test-targetpool"), // selfLink
+            URI.create(baseUrl + "/party/regions/us-central1/targetPools/test-targetpool"), // selfLink
             "test-targetpool", // name
             null, // description
-            URI.create(BASE_URL + "/party/regions/us-central1"), // region
+            URI.create(baseUrl + "/party/regions/us-central1"), // region
             null, // healthChecks
             null, // instances
             SessionAffinityValue.NONE, // sessionAffinity

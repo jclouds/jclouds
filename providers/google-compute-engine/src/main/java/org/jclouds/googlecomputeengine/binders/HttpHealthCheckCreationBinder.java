@@ -38,7 +38,7 @@ public class HttpHealthCheckCreationBinder extends BindToJsonPayload {
       HttpHealthCheckBinderHelper helper = new HttpHealthCheckBinderHelper(name, options);
       return super.bindToRequest(request, helper);
    }
-   
+
    private class HttpHealthCheckBinderHelper{
 
       /**
@@ -62,7 +62,7 @@ public class HttpHealthCheckCreationBinder extends BindToJsonPayload {
       private Integer healthyThreshold;
       @SuppressWarnings("unused")
       private String description;
-      
+
       private HttpHealthCheckBinderHelper(String name, HttpHealthCheckCreationOptions httpHealthCheckCreationOptions){
          this.name = name;
          this.host = httpHealthCheckCreationOptions.host();

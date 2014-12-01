@@ -39,7 +39,7 @@ public class HttpHealthCheckApiExpectTest extends BaseGoogleComputeEngineExpectT
             .endpoint(BASE_URL + "/party/global/httpHealthChecks/" + healthCheckName)
             .addHeader("Accept", "application/json")
             .addHeader("Authorization", "Bearer " + TOKEN)
-            .payload(payloadFromResourceWithContentType("/httphealthcheck_insert.json", MediaType.APPLICATION_JSON))
+            .payload(payloadFromResourceWithContentType("/httphealthcheck_patch.json", MediaType.APPLICATION_JSON))
             .build();
 
        HttpResponse insertHttpHealthCheckResponse = HttpResponse.builder().statusCode(200)
@@ -48,7 +48,7 @@ public class HttpHealthCheckApiExpectTest extends BaseGoogleComputeEngineExpectT
        HttpHealthCheckApi api = requestsSendResponses(requestForScopes(COMPUTE_SCOPE),
                TOKEN_RESPONSE, patch,
                insertHttpHealthCheckResponse).httpHeathChecks();
-       HttpHealthCheckCreationOptions options = new HttpHealthCheckCreationOptions().timeoutSec(0).unhealthyThreshold(0);
+       HttpHealthCheckCreationOptions options = new HttpHealthCheckCreationOptions.Builder().timeoutSec(0).unhealthyThreshold(0).buildNoDefaults();
        assertEquals(api.patch(healthCheckName, options), new ParseGlobalOperationTest().expected());
    }
 

@@ -40,31 +40,23 @@ public abstract class HttpHealthCheck {
     */
    @Nullable public abstract String host();
 
-   public abstract String requestPath();
+   @Nullable public abstract String requestPath();
 
    /** The TCP port number for the HTTP health check request. */
-   public abstract int port();
+   @Nullable public abstract Integer port();
 
    /** How often (in seconds) to send a health check. */
-   public abstract int checkIntervalSec();
+   @Nullable public abstract Integer checkIntervalSec();
 
    /** How long (in seconds) to wait before claiming failure. */
-   public abstract int timeoutSec();
+   @Nullable public abstract Integer timeoutSec();
 
    /** A so-far healthy VM will be marked unhealthy after this many consecutive failures. */
-   public abstract int unhealthyThreshold();
+   @Nullable public abstract Integer unhealthyThreshold();
 
    /** An unhealthy VM will be marked healthy after this many consecutive successes. */
-   public abstract int healthyThreshold();
+   @Nullable public abstract Integer healthyThreshold();
 
-   /**
-    * @param requestPath Defaults to "/" when null.
-    * @param port Defaults to 80 when null.
-    * @param checkIntervalSec Defaults to 5 when null.
-    * @param timeoutSec Defaults to 5 when null.
-    * @param unhealthyThreshold Defaults to 2 when null.
-    * @param healthyThreshold Defaults to 2 when null.
-    */
    @SerializedNames(
          { "id", "selfLink", "name", "description", "host", "requestPath", "port", "checkIntervalSec", "timeoutSec",
                "unhealthyThreshold", "healthyThreshold" })
@@ -72,9 +64,7 @@ public abstract class HttpHealthCheck {
          String requestPath, Integer port, Integer checkIntervalSec, Integer timeoutSec, Integer unhealthyThreshold,
          Integer healthyThreshold) {
       return new AutoValue_HttpHealthCheck(id, selfLink, name, description, host,
-            requestPath != null ? requestPath : "/", port != null ? port : 80,
-            checkIntervalSec != null ? checkIntervalSec : 5, timeoutSec != null ? timeoutSec : 5,
-            unhealthyThreshold != null ? unhealthyThreshold : 2, healthyThreshold != null ? healthyThreshold : 2);
+            requestPath, port, checkIntervalSec, timeoutSec, unhealthyThreshold, healthyThreshold);
    }
 
    HttpHealthCheck() {
