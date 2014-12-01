@@ -39,13 +39,9 @@
     <test.elasticstack.credential>FIXME_CREDENTIAL</test.elasticstack.credential>
     <test.elasticstack.template>imageId=38df0986-4d85-4b76-b502-3878ffc80161,loginUser=toor</test.elasticstack.template>
     <jclouds.osgi.export>org.jclouds.elasticstack*;version="${project.version}"</jclouds.osgi.export>
-    <jclouds.osgi.import>
-      org.jclouds.compute.internal;version="${project.version}",
-      org.jclouds.rest.internal;version="${project.version}",
-      org.jclouds*;version="${project.version}",
-      *
-    </jclouds.osgi.import>
+    <jclouds.osgi.import>org.jclouds*;version="${project.version}",*</jclouds.osgi.import>
   </properties>
+
   <dependencies>
     <dependency>
       <groupId>org.apache.jclouds</groupId>
@@ -90,7 +86,13 @@
         </exclusion>
       </exclusions>
     </dependency>
+    <dependency>
+      <groupId>com.google.auto.service</groupId>
+      <artifactId>auto-service</artifactId>
+      <optional>true</optional>
+    </dependency>
   </dependencies>
+
   <profiles>
     <profile>
       <id>live</id>

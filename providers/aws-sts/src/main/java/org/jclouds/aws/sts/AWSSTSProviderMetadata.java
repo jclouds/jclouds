@@ -23,11 +23,14 @@ import org.jclouds.sts.STSApiMetadata;
 import org.jclouds.providers.ProviderMetadata;
 import org.jclouds.providers.internal.BaseProviderMetadata;
 
+import com.google.auto.service.AutoService;
+
 /**
  * Implementation of @ link org.jclouds.types.ProviderMetadata} for Amazon's STS
  * provider.
 *
 */
+@AutoService(ProviderMetadata.class)
 public class AWSSTSProviderMetadata extends BaseProviderMetadata {
 
    public static Builder builder() {

@@ -15,6 +15,7 @@
  * limitations under the License.
  */
 package org.jclouds.aws.ec2;
+
 import static org.jclouds.aws.ec2.reference.AWSEC2Constants.PROPERTY_EC2_AMI_QUERY;
 import static org.jclouds.aws.ec2.reference.AWSEC2Constants.PROPERTY_EC2_CC_AMI_QUERY;
 import static org.jclouds.aws.ec2.reference.AWSEC2Constants.PROPERTY_EC2_CC_REGIONS;
@@ -28,10 +29,13 @@ import org.jclouds.aws.domain.Region;
 import org.jclouds.providers.ProviderMetadata;
 import org.jclouds.providers.internal.BaseProviderMetadata;
 
+import com.google.auto.service.AutoService;
+
 /**
  * Implementation of {@ link org.jclouds.types.ProviderMetadata} for Amazon's
  * Elastic Compute Cloud (EC2) provider.
  */
+@AutoService(ProviderMetadata.class)
 public class AWSEC2ProviderMetadata extends BaseProviderMetadata {
 
    public static Builder builder() {

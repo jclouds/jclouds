@@ -27,6 +27,7 @@ import static org.jclouds.reflect.Reflection2.typeToken;
 import java.net.URI;
 import java.util.Properties;
 
+import org.jclouds.apis.ApiMetadata;
 import org.jclouds.compute.ComputeServiceContext;
 import org.jclouds.openstack.keystone.v2_0.config.AuthenticationApiModule;
 import org.jclouds.openstack.keystone.v2_0.config.CredentialTypes;
@@ -38,12 +39,14 @@ import org.jclouds.openstack.nova.v2_0.config.NovaParserModule;
 import org.jclouds.openstack.v2_0.ServiceType;
 import org.jclouds.rest.internal.BaseHttpApiMetadata;
 
+import com.google.auto.service.AutoService;
 import com.google.common.collect.ImmutableSet;
 import com.google.inject.Module;
 
 /**
- * Implementation of {@link org.jclouds.apis.ApiMetadata} for Nova 2.0 API
+ * Implementation of {@link ApiMetadata} for Nova 2.0 API
  */
+@AutoService(ApiMetadata.class)
 public class NovaApiMetadata extends BaseHttpApiMetadata<NovaApi>  {
 
    @Override

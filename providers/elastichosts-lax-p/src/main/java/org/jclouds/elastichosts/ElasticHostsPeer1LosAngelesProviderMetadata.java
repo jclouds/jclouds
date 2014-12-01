@@ -25,10 +25,12 @@ import org.jclouds.elasticstack.ElasticStackApiMetadata;
 import org.jclouds.providers.ProviderMetadata;
 import org.jclouds.providers.internal.BaseProviderMetadata;
 
-/**
- * Implementation of {@link org.jclouds.types.ProviderMetadata} for ElasticHosts LA Peer1.
+import com.google.auto.service.AutoService;
 
+/**
+ * Implementation of {@link ProviderMetadata} for ElasticHosts LA Peer1.
  */
+@AutoService(ProviderMetadata.class)
 public class ElasticHostsPeer1LosAngelesProviderMetadata extends BaseProviderMetadata {
 
    public static Builder builder() {

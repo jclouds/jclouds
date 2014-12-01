@@ -22,9 +22,12 @@ import java.util.Properties;
 import org.jclouds.providers.ProviderMetadata;
 import org.jclouds.providers.internal.BaseProviderMetadata;
 
+import com.google.auto.service.AutoService;
+
 /**
- * Implementation of @ link org.jclouds.types.ProviderMetadata} for Enterprise Chef
+ * Implementation of @ link ProviderMetadata} for Enterprise Chef
  */
+@AutoService(ProviderMetadata.class)
 public class EnterpriseChefProviderMetadata extends BaseProviderMetadata
 {
 

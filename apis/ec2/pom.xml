@@ -44,12 +44,7 @@
     <!-- Windows_Server-2008-R2 with WinRM enabled (setup instructions at http://www.frontiertown.co.uk/2011/12/overthere-control-windows-from-java/) -->
     <test.ec2.windows-template>hardwareId=m1.small,imageId=us-east-1/ami-0cb76d65</test.ec2.windows-template>
     <jclouds.osgi.export>org.jclouds.ec2*;version="${project.version}"</jclouds.osgi.export>
-    <jclouds.osgi.import>
-      org.jclouds.compute.internal;version="${project.version}",
-      org.jclouds.rest.internal;version="${project.version}",
-      org.jclouds*;version="${project.version}",
-      *
-    </jclouds.osgi.import>
+    <jclouds.osgi.import>org.jclouds*;version="${project.version}",*</jclouds.osgi.import>
   </properties>
 
   <dependencies>
@@ -103,7 +98,13 @@
         </exclusion>
       </exclusions>
     </dependency>
+    <dependency>
+      <groupId>com.google.auto.service</groupId>
+      <artifactId>auto-service</artifactId>
+      <optional>true</optional>
+    </dependency>
   </dependencies>
+
   <build>
     <plugins>
       <plugin>
@@ -112,6 +113,7 @@
       </plugin>
     </plugins>
   </build>
+
   <profiles>
     <profile>
       <id>live</id>

@@ -29,10 +29,13 @@ import static org.jclouds.openstack.keystone.v2_0.config.KeystoneProperties.REQU
 import static org.jclouds.openstack.keystone.v2_0.config.KeystoneProperties.CREDENTIAL_TYPE;
 import static org.jclouds.openstack.keystone.v2_0.config.KeystoneProperties.SERVICE_TYPE;
 
+import com.google.auto.service.AutoService;
+
 /**
- * Implementation of {@link org.jclouds.types.ProviderMetadata} for HP Cloud Block Storage service.
+ * Implementation of {@link ProviderMetadata} for HP Cloud Block Storage service.
  * 
  */
+@AutoService(ProviderMetadata.class)
 public class HPCloudBlockStorageProviderMetadata extends BaseProviderMetadata {
 
    public static Builder builder() {

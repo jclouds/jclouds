@@ -23,14 +23,17 @@ import static org.jclouds.reflect.Reflection2.typeToken;
 import java.net.URI;
 import java.util.Properties;
 
+import org.jclouds.apis.ApiMetadata;
 import org.jclouds.atmos.blobstore.config.AtmosBlobStoreContextModule;
 import org.jclouds.atmos.config.AtmosHttpApiModule;
 import org.jclouds.blobstore.BlobStoreContext;
 import org.jclouds.rest.internal.BaseHttpApiMetadata;
 
+import com.google.auto.service.AutoService;
 import com.google.common.collect.ImmutableSet;
 import com.google.inject.Module;
 
+@AutoService(ApiMetadata.class)
 public class AtmosApiMetadata extends BaseHttpApiMetadata {
    
    private static Builder builder() {

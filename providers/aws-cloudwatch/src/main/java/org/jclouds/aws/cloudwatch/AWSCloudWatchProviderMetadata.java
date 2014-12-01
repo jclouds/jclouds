@@ -26,11 +26,14 @@ import org.jclouds.cloudwatch.CloudWatchApiMetadata;
 import org.jclouds.providers.ProviderMetadata;
 import org.jclouds.providers.internal.BaseProviderMetadata;
 
+import com.google.auto.service.AutoService;
+
 /**
  * Implementation of @ link org.jclouds.types.ProviderMetadata} for Amazon's CloudWatch
  * provider.
 *
 */
+@AutoService(ProviderMetadata.class)
 public class AWSCloudWatchProviderMetadata extends BaseProviderMetadata {
 
    public static Builder builder() {

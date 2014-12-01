@@ -23,18 +23,21 @@ import static org.jclouds.openstack.keystone.v2_0.config.KeystoneProperties.SERV
 
 import java.util.Properties;
 
+import org.jclouds.apis.ApiMetadata;
 import org.jclouds.openstack.keystone.v2_0.config.AuthenticationApiModule;
 import org.jclouds.openstack.keystone.v2_0.config.CredentialTypes;
 import org.jclouds.openstack.keystone.v2_0.config.KeystoneAuthenticationModule;
 import org.jclouds.openstack.services.ServiceType;
 import org.jclouds.openstack.swift.blobstore.config.SwiftBlobStoreContextModule;
 import org.jclouds.openstack.swift.blobstore.config.TemporaryUrlExtensionModule.SwiftKeystoneTemporaryUrlExtensionModule;
-import org.jclouds.openstack.swift.config.SwiftKeystoneHttpApiModule;
 import org.jclouds.openstack.swift.config.SwiftHttpApiModule.KeystoneStorageEndpointModule;
+import org.jclouds.openstack.swift.config.SwiftKeystoneHttpApiModule;
 
+import com.google.auto.service.AutoService;
 import com.google.common.collect.ImmutableSet;
 import com.google.inject.Module;
 
+@AutoService(ApiMetadata.class)
 public class SwiftKeystoneApiMetadata extends SwiftApiMetadata {
 
    @Override
@@ -89,7 +92,7 @@ public class SwiftKeystoneApiMetadata extends SwiftApiMetadata {
          return new SwiftKeystoneApiMetadata(this);
       }
    }
-   
+
    private static class ConcreteBuilder extends Builder<SwiftKeystoneClient, ConcreteBuilder> {
       @Override
       protected ConcreteBuilder self() {

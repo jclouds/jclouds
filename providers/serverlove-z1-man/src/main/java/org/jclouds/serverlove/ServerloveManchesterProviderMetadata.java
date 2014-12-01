@@ -24,12 +24,14 @@ import org.jclouds.providers.ProviderMetadata;
 import org.jclouds.providers.internal.BaseProviderMetadata;
 import org.jclouds.serverlove.config.ServerloveImagesModule;
 
+import com.google.auto.service.AutoService;
 import com.google.common.collect.ImmutableSet;
 import com.google.inject.Module;
 
 /**
- * Implementation of {@link org.jclouds.types.ProviderMetadata} for Serverlove Manchester.
+ * Implementation of {@link ProviderMetadata} for Serverlove Manchester.
  */
+@AutoService(ProviderMetadata.class)
 public class ServerloveManchesterProviderMetadata extends BaseProviderMetadata {
 
    public static Builder builder() {

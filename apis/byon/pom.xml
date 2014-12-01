@@ -35,13 +35,9 @@
     <test.byon.endpoint>file://c:/test.txt</test.byon.endpoint>
     <test.byon.sudo-password />
     <jclouds.osgi.export>org.jclouds.byon*;version="${project.version}"</jclouds.osgi.export>
-    <jclouds.osgi.import>
-      org.jclouds.compute.internal;version="${project.version}",
-      org.jclouds.rest.internal;version="${project.version}",
-      org.jclouds*;version="${project.version}",
-      *
-    </jclouds.osgi.import>
+    <jclouds.osgi.import>org.jclouds*;version="${project.version}",*</jclouds.osgi.import>
   </properties>
+
   <dependencies>
     <dependency>
       <groupId>org.apache.jclouds</groupId>
@@ -78,6 +74,11 @@
       <groupId>org.yaml</groupId>
       <artifactId>snakeyaml</artifactId>
       <version>1.11</version>
+    </dependency>
+    <dependency>
+      <groupId>com.google.auto.service</groupId>
+      <artifactId>auto-service</artifactId>
+      <optional>true</optional>
     </dependency>
   </dependencies>
 

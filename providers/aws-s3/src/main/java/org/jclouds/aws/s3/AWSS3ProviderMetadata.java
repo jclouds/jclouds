@@ -35,10 +35,13 @@ import org.jclouds.aws.domain.Region;
 import org.jclouds.providers.ProviderMetadata;
 import org.jclouds.providers.internal.BaseProviderMetadata;
 
+import com.google.auto.service.AutoService;
+
 /**
  * Implementation of {@link org.jclouds.providers.ProviderMetadata} for Amazon's Simple Storage Service
  * (S3) provider.
  */
+@AutoService(ProviderMetadata.class)
 public class AWSS3ProviderMetadata extends BaseProviderMetadata {
 
    public static Builder builder() {

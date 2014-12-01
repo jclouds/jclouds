@@ -18,13 +18,17 @@ package org.jclouds.servermanager;
 
 import java.net.URI;
 
+import org.jclouds.apis.ApiMetadata;
 import org.jclouds.apis.internal.BaseApiMetadata;
 import org.jclouds.compute.ComputeServiceContext;
 import org.jclouds.servermanager.compute.config.ServerManagerComputeServiceContextModule;
 
+import com.google.auto.service.AutoService;
+
 /**
  * Implementation of {@link ApiMetadata} for an example of library integration (ServerManager)
  */
+@AutoService(ApiMetadata.class)
 public class ServerManagerApiMetadata extends BaseApiMetadata {
 
    @Override

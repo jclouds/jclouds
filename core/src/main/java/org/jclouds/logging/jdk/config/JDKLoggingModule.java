@@ -20,11 +20,15 @@ import org.jclouds.logging.Logger;
 import org.jclouds.logging.config.LoggingModule;
 import org.jclouds.logging.jdk.JDKLogger;
 
+import com.google.auto.service.AutoService;
+
 /**
  * Configures logging of type {@link JDKLogger}
  */
+@AutoService(LoggingModule.class)
 public class JDKLoggingModule extends LoggingModule {
-    public Logger.LoggerFactory createLoggerFactory() {
-	return new JDKLogger.JDKLoggerFactory();
-    }
+   @Override
+   public Logger.LoggerFactory createLoggerFactory() {
+       return new JDKLogger.JDKLoggerFactory();
+   }
 }

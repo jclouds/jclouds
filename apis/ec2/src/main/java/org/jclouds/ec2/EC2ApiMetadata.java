@@ -34,9 +34,11 @@ import org.jclouds.ec2.compute.config.EC2ResolveImagesModule;
 import org.jclouds.ec2.config.EC2HttpApiModule;
 import org.jclouds.rest.internal.BaseHttpApiMetadata;
 
+import com.google.auto.service.AutoService;
 import com.google.common.collect.ImmutableSet;
 import com.google.inject.Module;
 
+@AutoService(ApiMetadata.class)
 public final class EC2ApiMetadata extends BaseHttpApiMetadata<EC2Api> {
 
    @Override

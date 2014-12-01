@@ -19,6 +19,7 @@ package org.jclouds.cloudfiles;
 import java.net.URI;
 import java.util.Properties;
 
+import org.jclouds.apis.ApiMetadata;
 import org.jclouds.blobstore.BlobRequestSigner;
 import org.jclouds.cloudfiles.blobstore.config.CloudFilesBlobStoreContextModule;
 import org.jclouds.cloudfiles.config.CloudFilesHttpApiModule;
@@ -27,10 +28,12 @@ import org.jclouds.openstack.swift.SwiftApiMetadata;
 import org.jclouds.openstack.swift.blobstore.SwiftBlobSigner;
 import org.jclouds.openstack.swift.blobstore.config.TemporaryUrlExtensionModule;
 
+import com.google.auto.service.AutoService;
 import com.google.common.collect.ImmutableSet;
 import com.google.inject.Module;
 import com.google.inject.TypeLiteral;
 
+@AutoService(ApiMetadata.class)
 public class CloudFilesApiMetadata extends SwiftApiMetadata {
 
    @Override

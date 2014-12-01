@@ -38,8 +38,8 @@
     <test.atmos.identity>FIXME_IDENTITY</test.atmos.identity>
     <test.atmos.credential>FIXME_CREDENTIAL</test.atmos.credential>
 
-    <jclouds.osgi.import>*</jclouds.osgi.import>
     <jclouds.osgi.export>org.jclouds.atmos*;version="${project.version}";-noimport:=true</jclouds.osgi.export>
+    <jclouds.osgi.import>*</jclouds.osgi.import>
   </properties>
 
   <dependencies>
@@ -73,7 +73,13 @@
       <version>${project.version}</version>
       <scope>test</scope>
     </dependency>
+    <dependency>
+      <groupId>com.google.auto.service</groupId>
+      <artifactId>auto-service</artifactId>
+      <optional>true</optional>
+    </dependency>
   </dependencies>
+
   <profiles>
     <profile>
       <id>live</id>

@@ -18,12 +18,16 @@ package org.jclouds.blobstore;
 
 import java.net.URI;
 
+import org.jclouds.apis.ApiMetadata;
 import org.jclouds.apis.internal.BaseApiMetadata;
 import org.jclouds.blobstore.config.TransientBlobStoreContextModule;
+
+import com.google.auto.service.AutoService;
 
 /**
  * Implementation of {@link ApiMetadata} for jclouds in-memory (Transient) API
  */
+@AutoService(ApiMetadata.class)
 public class TransientApiMetadata extends BaseApiMetadata {
 
    public static Builder builder() {

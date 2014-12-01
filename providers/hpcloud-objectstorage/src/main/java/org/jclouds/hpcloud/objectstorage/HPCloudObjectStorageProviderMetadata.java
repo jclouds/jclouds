@@ -26,9 +26,12 @@ import org.jclouds.openstack.keystone.v2_0.config.CredentialTypes;
 import org.jclouds.providers.ProviderMetadata;
 import org.jclouds.providers.internal.BaseProviderMetadata;
 
+import com.google.auto.service.AutoService;
+
 /**
- * Implementation of {@link org.jclouds.types.ProviderMetadata} for HP Cloud
+ * Implementation of {@link ProviderMetadata} for HP Cloud
  */
+@AutoService(ProviderMetadata.class)
 public class HPCloudObjectStorageProviderMetadata extends BaseProviderMetadata {
 
    public static Builder builder() {

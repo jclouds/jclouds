@@ -19,11 +19,13 @@ package org.jclouds.byon;
 import java.net.URI;
 
 import org.jclouds.JcloudsVersion;
+import org.jclouds.apis.ApiMetadata;
 import org.jclouds.apis.internal.BaseApiMetadata;
 import org.jclouds.byon.config.BYONComputeServiceContextModule;
 import org.jclouds.byon.config.YamlNodeStoreModule;
 import org.jclouds.compute.ComputeServiceContext;
 
+import com.google.auto.service.AutoService;
 import com.google.common.collect.ImmutableSet;
 import com.google.inject.Module;
 
@@ -35,6 +37,7 @@ import com.google.inject.Module;
  * This class is not setup to allow a subclasses to override the type of api,
  * asyncapi, or context. This is an optimization for s.
  */
+@AutoService(ApiMetadata.class)
 public class BYONApiMetadata extends BaseApiMetadata {
 
    @Override

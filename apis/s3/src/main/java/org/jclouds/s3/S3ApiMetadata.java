@@ -35,6 +35,7 @@ import org.jclouds.s3.blobstore.config.S3BlobStoreContextModule;
 import org.jclouds.s3.config.S3HttpApiModule;
 import org.jclouds.s3.reference.S3Headers;
 
+import com.google.auto.service.AutoService;
 import com.google.common.collect.ImmutableSet;
 import com.google.inject.Module;
 
@@ -52,6 +53,7 @@ import com.google.inject.Module;
  * not present in the base api. For example, you could make a subtype for
  * context, that exposes admin operations.
  */
+@AutoService(ApiMetadata.class)
 public class S3ApiMetadata extends BaseHttpApiMetadata {
 
    @Override

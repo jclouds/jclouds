@@ -26,6 +26,7 @@ import static org.jclouds.location.reference.LocationConstants.PROPERTY_REGIONS;
 import java.net.URI;
 import java.util.Properties;
 
+import org.jclouds.apis.ApiMetadata;
 import org.jclouds.ec2.EC2ApiMetadata;
 import org.jclouds.ec2.compute.EC2ComputeServiceContext;
 import org.jclouds.ec2.compute.config.EC2ResolveImagesModule;
@@ -34,9 +35,11 @@ import org.jclouds.openstack.nova.ec2.config.NovaEC2ComputeServiceContextModule;
 import org.jclouds.openstack.nova.ec2.config.NovaEC2HttpApiModule;
 import org.jclouds.rest.internal.BaseHttpApiMetadata;
 
+import com.google.auto.service.AutoService;
 import com.google.common.collect.ImmutableSet;
 import com.google.inject.Module;
 
+@AutoService(ApiMetadata.class)
 public final class NovaEC2ApiMetadata extends BaseHttpApiMetadata<NovaEC2Api> {
 
    @Override
