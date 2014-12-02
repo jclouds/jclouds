@@ -61,6 +61,7 @@ import org.jclouds.io.ByteStreams2;
 import org.jclouds.io.Payloads;
 import org.jclouds.io.payloads.RSADecryptingPayload;
 import org.jclouds.io.payloads.RSAEncryptingPayload;
+import org.jclouds.javax.annotation.Nullable;
 import org.jclouds.json.Json;
 import org.jclouds.logging.Logger;
 import org.jclouds.scriptbuilder.domain.Statement;
@@ -171,8 +172,13 @@ public class BaseChefService implements ChefService {
    }
 
    @Override
+   public Statement createBootstrapScriptForGroup(String group, @Nullable String nodeName) {
+      return groupToBootScript.apply(group, nodeName);
+   }
+
+   @Override
    public Statement createBootstrapScriptForGroup(String group) {
-      return groupToBootScript.apply(group);
+      return groupToBootScript.apply(group, null);
    }
 
    @Override
