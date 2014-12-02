@@ -25,6 +25,7 @@ import org.jclouds.chef.domain.Environment;
 import org.jclouds.chef.domain.Node;
 import org.jclouds.chef.internal.BaseChefService;
 import org.jclouds.domain.JsonBall;
+import org.jclouds.javax.annotation.Nullable;
 import org.jclouds.rest.annotations.SinceApiVersion;
 import org.jclouds.scriptbuilder.domain.Statement;
 
@@ -77,6 +78,17 @@ public interface ChefService {
     * @return The script used to bootstrap the node.
     */
    Statement createBootstrapScriptForGroup(String group);
+
+   /**
+    * Creates all steps necessary to bootstrap the node.
+    *
+    * @param group corresponds to a configured
+    *              {@link ChefProperties#CHEF_BOOTSTRAP_DATABAG} data bag where
+    *              run_list and other information are stored.
+    * @param nodeName The name of the node to create.
+    * @return The script used to bootstrap the node.
+    */
+   Statement createBootstrapScriptForGroup(String group, @Nullable String nodeName);
 
    /**
     * Configures how the nodes of a certain group will be bootstrapped

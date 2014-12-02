@@ -37,13 +37,13 @@ import org.jclouds.chef.config.InstallChef;
 import org.jclouds.chef.config.Validator;
 import org.jclouds.crypto.Pems;
 import org.jclouds.domain.JsonBall;
+import org.jclouds.javax.annotation.Nullable;
 import org.jclouds.json.Json;
 import org.jclouds.location.Provider;
 import org.jclouds.scriptbuilder.ExitInsteadOfReturn;
 import org.jclouds.scriptbuilder.domain.Statement;
 
 import com.google.common.annotations.VisibleForTesting;
-import com.google.common.base.Function;
 import com.google.common.base.Joiner;
 import com.google.common.base.Optional;
 import com.google.common.base.Splitter;
@@ -58,7 +58,7 @@ import com.google.inject.TypeLiteral;
  * Generates a bootstrap script relevant for a particular group
  */
 @Singleton
-public class GroupToBootScript implements Function<String, Statement> {
+public class GroupToBootScript {
    private static final Pattern newLinePattern = Pattern.compile("(\\r\\n)|(\\n)");
    
    @VisibleForTesting
@@ -84,8 +84,7 @@ public class GroupToBootScript implements Function<String, Statement> {
       this.validatorCredential = checkNotNull(validatorCredential, validatorCredential);
    }
 
-   @Override
-   public Statement apply(String group) {
+   public Statement apply(String group, @Nullable String nodeName) {
       checkNotNull(group, "group");
       String validatorClientName = validatorName.get();
       PrivateKey validatorKey = validatorCredential.get();
@@ -103,9 +102,14 @@ public class GroupToBootScript implements Function<String, Statement> {
 
       String chefConfigDir = "{root}etc{fs}chef";
       Statement createChefConfigDir = exec("{md} " + chefConfigDir);
+      String createNodeName;
+      if (nodeName != null) {
+        createNodeName = String.format("node_name \"%s\"", nodeName);
+      } else {
+        createNodeName = String.format("node_name \"%s-\" + o[:ipaddress]", group);
+      }
       Statement createClientRb = appendFile(chefConfigDir + "{fs}client.rb", ImmutableList.of("require 'rubygems'",
-            "require 'ohai'", "o = Ohai::System.new", "o.all_plugins",
-            String.format("node_name \"%s-\" + o[:ipaddress]", group), "log_level :info", "log_location STDOUT",
+            "require 'ohai'", "o = Ohai::System.new", "o.all_plugins", createNodeName, "log_level :info", "log_location STDOUT",
             String.format("validation_client_name \"%s\"", validatorClientName),
             String.format("chef_server_url \"%s\"", endpoint.get())));
 
