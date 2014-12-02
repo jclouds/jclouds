@@ -41,6 +41,7 @@ import org.jclouds.googlecomputeengine.domain.Operation;
 import org.jclouds.googlecomputeengine.internal.BaseArg0ToIteratorOfListPage;
 import org.jclouds.googlecomputeengine.internal.BaseToIteratorOfListPage;
 import org.jclouds.googlecomputeengine.options.DeprecateOptions;
+import org.jclouds.googlecomputeengine.options.ImageCreationOptions;
 import org.jclouds.googlecomputeengine.options.ListOptions;
 import org.jclouds.javax.annotation.Nullable;
 import org.jclouds.oauth.v2.filters.OAuthFilter;
@@ -102,6 +103,13 @@ public interface ImageApi {
    @Produces(APPLICATION_JSON)
    @MapBinder(BindToJsonPayload.class)
    Operation createFromDisk(@PayloadParam("name") String image, @PayloadParam("sourceDisk") String sourceDisk);
+
+   @Named("Images:insert")
+   @POST
+   @Endpoint(CurrentProject.class)
+   @Path("/global/images")
+   @Produces(APPLICATION_JSON)
+   Operation create(@BinderParam(BindToJsonPayload.class) ImageCreationOptions options);
 
    /**
     * Sets the deprecation status of an image. If no message body is given, clears the deprecation status instead.

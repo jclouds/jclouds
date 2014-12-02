@@ -49,6 +49,7 @@ public class ParseFirewallListTest extends BaseGoogleComputeEngineParseTest<List
       Firewall firewall2 = Firewall.create( //
             "12862241067393040785", // id
             URI.create(baseUrl + "/google/global/firewalls/default-ssh"), // selfLink
+            parse("2012-04-13T03:05:04.365"), // creationTimestamp
             "default-ssh", // name
             "SSH allowed from anywhere", // description
             URI.create(baseUrl + "/google/global/networks/default"), // network

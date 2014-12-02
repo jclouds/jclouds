@@ -21,6 +21,7 @@ import static org.testng.Assert.assertTrue;
 
 import java.net.URI;
 
+import org.jclouds.date.internal.SimpleDateFormatDateService;
 import org.jclouds.googlecomputeengine.domain.Firewall;
 import org.jclouds.net.domain.IpPermission;
 import org.jclouds.net.domain.IpProtocol;
@@ -56,6 +57,7 @@ public class FirewallToIpPermissionTest {
       return Firewall.create( //
             "abcd", // id
             URI.create(baseUrl + "/jclouds/global/firewalls/jclouds-test"), // selfLink
+            new SimpleDateFormatDateService().iso8601DateParse("2012-04-13T03:05:04.365"), // creationTimestamp
             "jclouds-test", // name
             null, // description
             URI.create(baseUrl + "/jclouds/global/networks/jclouds-test"), // network

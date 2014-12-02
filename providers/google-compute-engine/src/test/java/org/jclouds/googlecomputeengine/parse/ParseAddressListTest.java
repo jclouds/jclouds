@@ -25,6 +25,7 @@ import javax.ws.rs.Consumes;
 import org.jclouds.googlecloud.domain.ForwardingListPage;
 import org.jclouds.googlecloud.domain.ListPage;
 import org.jclouds.googlecomputeengine.domain.Address;
+import org.jclouds.googlecomputeengine.domain.Address.Status;
 import org.jclouds.googlecomputeengine.internal.BaseGoogleComputeEngineParseTest;
 import org.testng.annotations.Test;
 
@@ -50,9 +51,10 @@ public class ParseAddressListTest extends BaseGoogleComputeEngineParseTest<ListP
             "4881363978908129158", // id
             URI.create(baseUrl + "/party/regions/us-central1/addresses/test-ip2"), // selfLink
             "test-ip2", // name
+            parse("2013-07-26T14:08:21.552-07:00"), //creationTimestamp
             "", // description
-            "RESERVED", // status
-            null, // user
+            Status.RESERVED, // status
+            null, // users
             URI.create(baseUrl + "/party/regions/us-central1"), // region
             "173.255.118.115" // address
       );

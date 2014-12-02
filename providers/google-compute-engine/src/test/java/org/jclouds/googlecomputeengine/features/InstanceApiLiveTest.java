@@ -38,6 +38,7 @@ import org.jclouds.googlecomputeengine.domain.NewInstance;
 import org.jclouds.googlecomputeengine.domain.AttachDisk;
 import org.jclouds.googlecomputeengine.domain.Operation;
 import org.jclouds.googlecomputeengine.internal.BaseGoogleComputeEngineApiLiveTest;
+import org.jclouds.googlecomputeengine.options.DiskCreationOptions;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.Test;
 
@@ -108,7 +109,8 @@ public class InstanceApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
       assertOperationDoneSuccessfully(api.networks().createInIPv4Range
               (INSTANCE_NETWORK_NAME, IPV4_RANGE));
 
-      assertOperationDoneSuccessfully(diskApi().create(DISK_NAME, DEFAULT_DISK_SIZE_GB));
+      assertOperationDoneSuccessfully(diskApi().create(DISK_NAME,
+            new DiskCreationOptions().sizeGb(DEFAULT_DISK_SIZE_GB)));
       assertOperationDoneSuccessfully(api().create(instance));
    }
 
@@ -189,7 +191,8 @@ public class InstanceApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
 
    @Test(groups = "live", dependsOnMethods = "testSetMetadataForInstance")
    public void testAttachDiskToInstance() {
-      assertOperationDoneSuccessfully(diskApi().create(ATTACH_DISK_NAME, 1));
+      assertOperationDoneSuccessfully(diskApi().create(ATTACH_DISK_NAME,
+            new DiskCreationOptions().sizeGb(1)));
 
       Instance originalInstance = api().get(INSTANCE_NAME);
       assertOperationDoneSuccessfully(api().attachDisk(INSTANCE_NAME,

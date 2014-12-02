@@ -17,6 +17,8 @@
 package org.jclouds.googlecomputeengine.domain;
 
 import java.net.URI;
+import java.util.Date;
+import java.util.List;
 
 import org.jclouds.javax.annotation.Nullable;
 import org.jclouds.json.SerializedNames;
@@ -25,6 +27,12 @@ import com.google.auto.value.AutoValue;
 
 @AutoValue
 public abstract class Image {
+
+   public enum Status {
+        FAILED,
+        PENDING,
+        READY;
+   }
 
    @AutoValue
    public abstract static class RawDisk {
@@ -58,22 +66,39 @@ public abstract class Image {
 
    public abstract URI selfLink();
 
+   public abstract Date creationTimestamp();
+
    public abstract String name();
 
    @Nullable public abstract String description();
 
    /** Must be RAW; provided by the client when the disk image is created. */
    // TODO: if this is true, why bother listing it?
-   public abstract String sourceType();
+   @Nullable public abstract String sourceType();
 
    @Nullable public abstract RawDisk rawDisk();
 
    @Nullable public abstract Deprecated deprecated();
 
-   @SerializedNames({ "id", "selfLink", "name", "description", "sourceType", "rawDisk", "deprecated" })
-   public static Image create(String id, URI selfLink, String name, String description, String sourceType,
-         RawDisk rawDisk, Deprecated deprecated) {
-      return new AutoValue_Image(id, selfLink, name, description, sourceType, rawDisk, deprecated);
+   public abstract Status status();
+
+   public abstract Long archiveSizeBytes();
+
+   public abstract Long diskSizeGb();
+
+   @Nullable public abstract String sourceDisk();
+
+   @Nullable public abstract String sourceDiskId();
+
+   @Nullable public abstract List<String> licenses();
+
+   @SerializedNames({ "id", "selfLink", "creationTimestamp", "name", "description", "sourceType", "rawDisk", "deprecated",
+      "status", "archiveSizeBytes", "diskSizeGb", "sourceDisk", "sourceDiskId", "licenses"})
+   public static Image create(String id, URI selfLink, Date creationTimestamp, String name, String description, String sourceType,
+         RawDisk rawDisk, Deprecated deprecated, Status status, Long archiveSizeBytes, Long diskSizeGb,
+         String sourceDisk, String sourceDiskId, List<String> licenses) {
+      return new AutoValue_Image(id, selfLink, creationTimestamp, name, description, sourceType, rawDisk, deprecated, status,
+            archiveSizeBytes, diskSizeGb, sourceDisk, sourceDiskId, licenses);
    }
 
    Image() {

@@ -23,8 +23,11 @@ import java.net.URI;
 import javax.ws.rs.Consumes;
 
 import org.jclouds.googlecomputeengine.domain.Operation;
+import org.jclouds.googlecomputeengine.domain.Operation.Warning;
 import org.jclouds.googlecomputeengine.internal.BaseGoogleComputeEngineParseTest;
 import org.testng.annotations.Test;
+
+import com.google.common.collect.ImmutableList;
 
 @Test(groups = "unit", testName = "ParseOperationTest")
 public class ParseOperationTest extends BaseGoogleComputeEngineParseTest<Operation> {
@@ -43,6 +46,7 @@ public class ParseOperationTest extends BaseGoogleComputeEngineParseTest<Operati
    public Operation expected(String baseUrl) {
       return Operation.create( //
             "13053095055850848306", // id
+            parse("2013-07-26T13:57:20.204-07:00"), // creationTimestamp
             URI.create(baseUrl + "/party/zones/us-central1-a/operations/operation-1354084865060"),
             "operation-1354084865060", // name
             null, // description
@@ -56,10 +60,18 @@ public class ParseOperationTest extends BaseGoogleComputeEngineParseTest<Operati
             parse("2012-11-28T06:41:05.060"), // insertTime
             parse("2012-11-28T06:41:05.142"), // startTime
             parse("2012-11-28T06:41:06.142"), // endTime
-            null, // httpErrorStatusCode
-            null, // httpErrorMessage
+            400, // httpErrorStatusCode
+            "BAD REQUEST", // httpErrorMessage
             "insert", // operationType
-            null, // errors
+            Operation.Error.create(ImmutableList.of(Operation.Error.Entry
+                  .create("INVALID_FIELD_VALUE", null,
+                        "Invalid value for field 'resource.urlMaps': "
+                        + "'projects/party/global/urlMaps/target-http-proxy-api-live-test-url-map-2'."
+                        + " Resource was not found."))), // errors
+            ImmutableList.of(Warning
+                  .create("NO_RESULTS_ON_PAGE", "This is an example warning",
+                  ImmutableList.of(Warning.Entry
+                        .create("scope", "There are no results for scope 'zones/asia-east1-b' on this page.")))), // warnings
             URI.create(baseUrl + "/party/regions/us-central1"), // region
             URI.create(baseUrl + "/party/zones/us-central1-a") // zone
       );

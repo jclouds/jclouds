@@ -67,7 +67,8 @@ public class ParseBackendServiceTest extends BaseGoogleComputeEngineParseTest<Ba
             30, //timeoutSec
             80, //port
             "HTTP", //protocol
-            "I6n5NPSXn8g=" //fingerprint
+            "I6n5NPSXn8g=", //fingerprint
+            null // portName
             );
    }
 }

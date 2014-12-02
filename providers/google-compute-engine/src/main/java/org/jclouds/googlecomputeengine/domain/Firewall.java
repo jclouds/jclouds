@@ -19,6 +19,7 @@ package org.jclouds.googlecomputeengine.domain;
 import static org.jclouds.googlecloud.internal.NullSafeCopies.copyOf;
 
 import java.net.URI;
+import java.util.Date;
 import java.util.List;
 
 import org.jclouds.javax.annotation.Nullable;
@@ -54,6 +55,8 @@ public abstract class Firewall {
    public abstract String id();
 
    public abstract URI selfLink();
+
+   public abstract Date creationTimestamp();
 
    public abstract String name();
 
@@ -94,10 +97,10 @@ public abstract class Firewall {
    public abstract List<Rule> allowed();
 
    @SerializedNames(
-         { "id", "selfLink", "name", "description", "network", "sourceRanges", "sourceTags", "targetTags", "allowed" })
-   public static Firewall create(String id, URI selfLink, String name, String description, URI network,
+         { "id", "selfLink", "creationTimestamp", "name", "description", "network", "sourceRanges", "sourceTags", "targetTags", "allowed" })
+   public static Firewall create(String id, URI selfLink, Date creationTimestamp, String name, String description, URI network,
          List<String> sourceRanges, List<String> sourceTags, List<String> targetTags, List<Rule> allowed) {
-      return new AutoValue_Firewall(id, selfLink, name, description, network, copyOf(sourceRanges), copyOf(sourceTags),
+      return new AutoValue_Firewall(id, selfLink, creationTimestamp, name, description, network, copyOf(sourceRanges), copyOf(sourceTags),
             copyOf(targetTags), copyOf(allowed));
    }
 

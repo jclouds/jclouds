@@ -23,6 +23,7 @@ import java.net.URI;
 import javax.ws.rs.Consumes;
 
 import org.jclouds.googlecomputeengine.domain.Disk;
+import org.jclouds.googlecomputeengine.domain.Disk.Status;
 import org.jclouds.googlecomputeengine.internal.BaseGoogleComputeEngineParseTest;
 import org.testng.annotations.Test;
 
@@ -43,13 +44,19 @@ public class ParseDiskTest extends BaseGoogleComputeEngineParseTest<Disk> {
    public Disk expected(String baseUrl){
       return Disk.create( //
             "13050421646334304115", // id
+            parse("2012-11-25T01:38:48.306"), // creationTimestamp
             URI.create(baseUrl + "/party/zones/us-central1-a"), // zone
-            "READY", // status
+            Status.READY, // status
             "testimage1", // name
             null, // description
             1, // sizeGb
+            null, // sourceSnapshot
+            null, // sourceSnapshotId
             URI.create(baseUrl + "/party/zones/us-central1-a/disks/testimage1"), // selfLink
-            URI.create(baseUrl + "/studied-point-720/zones/us-central1-a/diskTypes/pd-standard") // type
+            null, // sourceImage
+            null, // sourceImageId
+            URI.create(baseUrl + "/studied-point-720/zones/us-central1-a/diskTypes/pd-standard"), // type
+            null // license
       );
    }
 }

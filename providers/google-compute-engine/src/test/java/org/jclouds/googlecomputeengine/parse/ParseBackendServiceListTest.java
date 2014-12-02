@@ -60,7 +60,8 @@ public class ParseBackendServiceListTest extends BaseGoogleComputeEngineParseTes
                         45, //timeoutSec,
                         80, //port,
                         "HTTP", //protocol,
-                        null) //fingerprint
+                        null, //fingerprint
+                        null) // portName
                   ),
             null
       );

@@ -67,20 +67,6 @@ public interface DiskApi {
    Disk get(@PathParam("disk") String disk);
 
    /**
-    * Creates a persistent disk resource in the specified project specifying the size of the disk.
-    *
-    * @param diskName the name of disk.
-    * @param sizeGb   the size of the disk
-    * @return an Operation resource. To check on the status of an operation, poll the Operations resource returned to
-    *         you, and look for the status field.
-    */
-   @Named("Disks:insert")
-   @POST
-   @Produces(APPLICATION_JSON)
-   @MapBinder(BindToJsonPayload.class)
-   Operation create(@PayloadParam("name") String diskName, @PayloadParam("sizeGb") int sizeGb);
-
-   /**
     * Creates a persistent disk resource, in the specified project, specifying the size of the disk and other options.
     *
     * @param diskName the name of disk.
@@ -94,7 +80,23 @@ public interface DiskApi {
    @Produces(APPLICATION_JSON)
    @MapBinder(DiskCreationBinder.class)
    Operation create(@PayloadParam("name") String diskName,
-                    @PayloadParam("sizeGb") int sizeGb,
+                    @PayloadParam("options") DiskCreationOptions options);
+
+   /**
+    * Creates a persistent disk resource, in the specified project, specifying the size of the disk and other options.
+    *
+    * @param diskName the name of disk.
+    * @param sourceImage Fully-qualified URL of the source image to apply to the disk.
+    * @param options the options of the disk to create.
+    * @return an Operation resource. To check on the status of an operation, poll the Operations resource returned to
+    *         you, and look for the status field.
+    */
+   @Named("Disks:insert")
+   @POST
+   @Produces(APPLICATION_JSON)
+   @MapBinder(DiskCreationBinder.class)
+   Operation create(@PayloadParam("name") String diskName,
+                    @QueryParam("sourceImage") String sourceImage,
                     @PayloadParam("options") DiskCreationOptions options);
 
    /** Deletes a persistent disk by name and returns the operation in progress, or null if not found. */
@@ -119,6 +121,14 @@ public interface DiskApi {
    @Path("/{disk}/createSnapshot")
    @MapBinder(BindToJsonPayload.class)
    Operation createSnapshot(@PathParam("disk") String diskName, @PayloadParam("name") String snapshotName);
+
+   /** @see #createSnapshot(String, String) */
+   @Named("Disks:createSnapshot")
+   @POST
+   @Path("/{disk}/createSnapshot")
+   @MapBinder(BindToJsonPayload.class)
+   Operation createSnapshot(@PathParam("disk") String diskName, @PayloadParam("name") String snapshotName,
+         @PayloadParam("description") String description);
 
    /**
     * Retrieves the list of persistent disk resources available to the specified project.

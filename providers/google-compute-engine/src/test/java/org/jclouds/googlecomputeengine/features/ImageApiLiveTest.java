@@ -31,6 +31,7 @@ import org.jclouds.googlecomputeengine.domain.Image;
 import org.jclouds.googlecomputeengine.domain.Deprecated.State;
 import org.jclouds.googlecomputeengine.internal.BaseGoogleComputeEngineApiLiveTest;
 import org.jclouds.googlecomputeengine.options.DeprecateOptions;
+import org.jclouds.googlecomputeengine.options.DiskCreationOptions;
 import org.testng.annotations.Test;
 
 public class ImageApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
@@ -68,7 +69,8 @@ public class ImageApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
 
    @Test(groups = "live")
    public void testInsertDisk() {
-      assertOperationDoneSuccessfully(diskApi().create(DISK_NAME, sizeGb));
+      assertOperationDoneSuccessfully(diskApi().create(DISK_NAME,
+            new DiskCreationOptions().sizeGb(sizeGb)));
       Disk disk = diskApi().get(DISK_NAME);
       diskURI = disk.selfLink();
    }

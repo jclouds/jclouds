@@ -16,12 +16,12 @@
  */
 package org.jclouds.googlecomputeengine.domain;
 
-import static org.jclouds.googlecloud.internal.NullSafeCopies.copyOf;
-
 import java.net.URI;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import org.jclouds.googlecomputeengine.domain.Metadata.Entry;
 import org.jclouds.javax.annotation.Nullable;
 import org.jclouds.json.SerializedNames;
 
@@ -32,20 +32,71 @@ public abstract class Operation {
 
    @AutoValue
    public abstract static class Error {
-      /** The error type identifier for this error. */
-      public abstract String code(); // TODO: enum?
 
-      /** The field in the request which caused the error. */
-      @Nullable public abstract String location();
+      @AutoValue
+      public abstract static class Entry {
 
-      @Nullable public abstract String message();
+         /** The error type identifier for this error. */
+         public abstract String code(); // TODO: enum?
 
-      @SerializedNames({ "code", "location", "message" })
-      public static Error create(String code, String location, String message) {
-         return new AutoValue_Operation_Error(code, location, message);
+         /** The field in the request which caused the error. */
+         @Nullable public abstract String location();
+
+         @Nullable public abstract String message();
+
+         @SerializedNames({ "code", "location", "message" })
+         public static Entry create(String code, String location, String message) {
+            return new AutoValue_Operation_Error_Entry(code, location, message);
+         }
+
+         Entry() {
+         }
       }
 
-      Error() {
+      public abstract List<Entry> errors();
+
+      @SerializedNames({ "errors" })
+      public static Error create(List<Entry> errors) {
+         return new AutoValue_Operation_Error(errors != null ? errors : new ArrayList<Entry>());
+      }
+
+      public static Error empty(){
+         return create(null);
+      }
+
+      Error(){
+      }
+   }
+
+   @AutoValue
+   public abstract static class Warning {
+
+      // TODO: combine this with Metadata.Entry
+      @AutoValue
+      public abstract static class Entry {
+         abstract String key();
+
+         abstract String value();
+
+         @SerializedNames({ "key", "value" })
+         public static Entry create(String key, String value) {
+            return new AutoValue_Operation_Warning_Entry(key, value);
+         }
+
+         Entry(){
+         }
+      }
+
+      public abstract String code();
+      @Nullable public abstract String message();
+      public abstract List<Entry> data();
+
+      @SerializedNames({"code", "message", "data"})
+      public static Warning create(String code, String message, List<Entry> data){
+         return new AutoValue_Operation_Warning(code, message, data);
+      }
+
+      Warning() {
       }
    }
 
@@ -56,6 +107,8 @@ public abstract class Operation {
    }
 
    public abstract String id();
+
+   @Nullable public abstract Date creationTimestamp();
 
    public abstract URI selfLink();
 
@@ -103,22 +156,24 @@ public abstract class Operation {
    /** Examples include insert, update, and delete. */
    public abstract String operationType(); // TODO: enum
 
-   public abstract List<Error> errors();
+   public abstract Error error();
+
+   @Nullable public abstract List<Warning> warnings();
 
    @Nullable public abstract URI region();
 
    @Nullable public abstract URI zone();
 
-   @SerializedNames({ "id", "selfLink", "name", "description", "targetLink", "targetId", "clientOperationId", "status",
+   @SerializedNames({ "id", "creationTimestamp", "selfLink", "name", "description", "targetLink", "targetId", "clientOperationId", "status",
          "statusMessage", "user", "progress", "insertTime", "startTime", "endTime", "httpErrorStatusCode",
-         "httpErrorMessage", "operationType", "errors", "region", "zone" })
-   public static Operation create(String id, URI selfLink, String name, String description, URI targetLink,
+         "httpErrorMessage", "operationType", "error", "warnings", "region", "zone" })
+   public static Operation create(String id, Date creationTimestamp, URI selfLink, String name, String description, URI targetLink,
          String targetId, String clientOperationId, Status status, String statusMessage, String user, Integer progress,
          Date insertTime, Date startTime, Date endTime, Integer httpErrorStatusCode, String httpErrorMessage,
-         String operationType, List<Error> errors, URI region, URI zone) {
-      return new AutoValue_Operation(id, selfLink, name, description, targetLink, targetId, clientOperationId, status,
+         String operationType, Error error, List<Warning> warnings, URI region, URI zone) {
+      return new AutoValue_Operation(id, creationTimestamp, selfLink, name, description, targetLink, targetId, clientOperationId, status,
             statusMessage, user, progress, insertTime, startTime, endTime, httpErrorStatusCode, httpErrorMessage,
-            operationType, copyOf(errors), region, zone);
+            operationType, error != null ? error : Error.empty(), warnings, region, zone);
    }
 
    Operation() {

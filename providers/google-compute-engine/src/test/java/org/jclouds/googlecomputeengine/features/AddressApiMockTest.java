@@ -21,6 +21,7 @@ import static org.testng.Assert.assertFalse;
 import static org.testng.AssertJUnit.assertNull;
 
 import org.jclouds.googlecomputeengine.internal.BaseGoogleComputeEngineApiMockTest;
+import org.jclouds.googlecomputeengine.options.AddressCreationOptions;
 import org.jclouds.googlecomputeengine.parse.ParseAddressListTest;
 import org.jclouds.googlecomputeengine.parse.ParseAddressTest;
 import org.jclouds.googlecomputeengine.parse.ParseRegionOperationTest;
@@ -50,6 +51,18 @@ public class AddressApiMockTest extends BaseGoogleComputeEngineApiMockTest {
             new ParseRegionOperationTest().expected(url("/projects")));
       assertSent(server, "POST", "/projects/party/regions/us-central1/addresses",
             stringFromResource("/address_insert.json"));
+   }
+
+   public void insert_options() throws Exception {
+      server.enqueue(jsonResponse("/region_operation.json"));
+
+      AddressCreationOptions options = new AddressCreationOptions.Builder("address-with-options")
+         .description("This is a test").address("1.1.1.1").build();
+      assertEquals(addressApi().create(options),
+            new ParseRegionOperationTest().expected(url("/projects")));
+
+      assertSent(server, "POST", "/projects/party/regions/us-central1/addresses",
+            "{\"name\": \"address-with-options\",\"description\":\"This is a test\",\"address\":\"1.1.1.1\"}");
    }
 
    public void delete() throws Exception {

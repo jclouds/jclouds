@@ -40,7 +40,7 @@ public final class AtomicOperationDone implements Predicate<AtomicReference<Oper
       checkNotNull(input.get(), "operation");
       Operation current = resources.operation(input.get().selfLink());
       input.set(current);
-      checkState(current.errors().isEmpty(), "Task ended in error %s", current); // ISE will break the loop.
+      checkState(current.error().errors().isEmpty(), "Task ended in error %s", current); // ISE will break the loop.
       switch (current.status()) {
          case DONE:
             return true;

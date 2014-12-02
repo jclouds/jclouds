@@ -17,6 +17,8 @@
 package org.jclouds.googlecomputeengine.domain;
 
 import java.net.URI;
+import java.util.Date;
+import java.util.List;
 
 import org.jclouds.javax.annotation.Nullable;
 import org.jclouds.json.SerializedNames;
@@ -25,11 +27,21 @@ import com.google.auto.value.AutoValue;
 
 @AutoValue
 public abstract class Disk {
+
+   public enum Status {
+      CREATING,
+      FAILED,
+      READY,
+      RESTORING;
+   }
+
    public abstract String id();
+
+   public abstract Date creationTimestamp();
 
    public abstract URI zone();
 
-   public abstract String status(); // TODO: enum
+   public abstract Status status();
 
    public abstract String name();
 
@@ -37,15 +49,27 @@ public abstract class Disk {
 
    public abstract int sizeGb();
 
+   @Nullable public abstract String sourceSnapshot();
+
+   @Nullable public abstract String sourceSnapshotId();
+
    public abstract URI selfLink();
+
+   @Nullable public abstract String sourceImage();
+
+   @Nullable public abstract String sourceImageId();
 
    /** URL of the corresponding disk type resource. */
    @Nullable public abstract URI type();
 
-   @SerializedNames({ "id", "zone", "status", "name", "description", "sizeGb", "selfLink", "type" })
-   public static Disk create(String id, URI zone, String status, String name, String description, int sizeGb,
-         URI selfLink, URI type) {
-      return new AutoValue_Disk(id, zone, status, name, description, sizeGb, selfLink, type);
+   @Nullable public abstract List<String> licenses();
+
+   @SerializedNames({ "id", "creationTimestamp", "zone", "status", "name", "description", "sizeGb", "sourceSnapshot",
+      "sourceSnapshotId", "selfLink", "sourceImage", "sourceImageId", "type", "licenses" })
+   public static Disk create(String id, Date creationTimestamp, URI zone, Status status, String name, String description, int sizeGb,
+         String sourceSnapshot, String sourceSnapshotId, URI selfLink, String sourceImage, String sourceImageId, URI type, List<String> licenses) {
+      return new AutoValue_Disk(id, creationTimestamp, zone, status, name, description, sizeGb,
+            sourceSnapshot, sourceSnapshotId, selfLink, sourceImage, sourceImageId, type, licenses);
    }
 
    Disk(){

@@ -32,6 +32,7 @@ public class FirewallOptions {
 
    private String name;
    private URI network;
+   private String description;
    private ImmutableList.Builder<String> sourceRanges = ImmutableList.builder();
    private ImmutableList.Builder<String> sourceTags = ImmutableList.builder();
    private ImmutableList.Builder<String> targetTags = ImmutableList.builder();
@@ -74,6 +75,21 @@ public class FirewallOptions {
     */
    public String name() {
       return name;
+   }
+
+   /**
+    * @see org.jclouds.googlecomputeengine.domain.Firewall#description()
+    */
+   public FirewallOptions description(String description) {
+      this.description = description;
+      return this;
+   }
+
+   /**
+    * @see org.jclouds.googlecomputeengine.domain.Firewall#description()
+    */
+   public String description() {
+      return description;
    }
 
    /**

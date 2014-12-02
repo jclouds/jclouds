@@ -17,6 +17,7 @@
 package org.jclouds.googlecomputeengine.domain;
 
 import java.net.URI;
+import java.util.Date;
 
 import org.jclouds.javax.annotation.Nullable;
 import org.jclouds.json.SerializedNames;
@@ -25,6 +26,8 @@ import com.google.auto.value.AutoValue;
 
 @AutoValue
 public abstract class DiskType {
+
+   public abstract Date creationTimestamp();
 
    public abstract String name();
 
@@ -42,10 +45,10 @@ public abstract class DiskType {
    /** Server defined default disk size in GB. */
    public abstract long defaultDiskSizeGb();
 
-   @SerializedNames({ "name", "description", "validDiskSize", "deprecated", "zone", "selfLink", "defaultDiskSizeGb" })
-   public static DiskType create(String name, String description, String validDiskSize, Deprecated deprecated, URI zone,
+   @SerializedNames({ "creationTimestamp", "name", "description", "validDiskSize", "deprecated", "zone", "selfLink", "defaultDiskSizeGb" })
+   public static DiskType create(Date creationTimestamp, String name, String description, String validDiskSize, Deprecated deprecated, URI zone,
          URI selfLink, long defaultDiskSizeGb) {
-      return new AutoValue_DiskType(name, description, validDiskSize, deprecated, zone, selfLink, defaultDiskSizeGb);
+      return new AutoValue_DiskType(creationTimestamp, name, description, validDiskSize, deprecated, zone, selfLink, defaultDiskSizeGb);
    }
 
    DiskType() {

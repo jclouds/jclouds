@@ -41,7 +41,8 @@ public class ParseDiskTypeListTest extends BaseGoogleComputeEngineParseTest<List
    @Override @Consumes(APPLICATION_JSON)
    public ListPage<DiskType> expected() {
       String contentBaseUrl = BASE_URL.replace("www", "content");
-      DiskType diskType1 = DiskType.create( //
+      DiskType diskType1 = DiskType.create(
+            parse("2014-06-02T11:07:28.530-07:00"), // creationTimestamp
             "pd-standard", // name
             "Standard Persistent Disk", // description
             "10GB-10TB", // validDiskSize

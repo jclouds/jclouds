@@ -23,10 +23,13 @@ import java.net.URI;
 
 import org.jclouds.compute.domain.Image.Status;
 import org.jclouds.compute.domain.OsFamily;
+import org.jclouds.date.internal.SimpleDateFormatDateService;
 import org.jclouds.googlecomputeengine.domain.Deprecated;
 import org.jclouds.googlecomputeengine.domain.Deprecated.State;
 import org.jclouds.googlecomputeengine.domain.Image;
 import org.testng.annotations.Test;
+
+import com.google.common.collect.ImmutableList;
 
 @Test(groups = "unit", testName = "GoogleComputeEngineImageToImageTest")
 public class GoogleComputeEngineImageToImageTest {
@@ -86,11 +89,18 @@ public class GoogleComputeEngineImageToImageTest {
       return Image.create( //
             "1234", // id
             URI.create("http://test.com/1234"), // selfLink
+            new SimpleDateFormatDateService().iso8601DateParse("2012-07-16T22:16:13.468"), // creationTimestamp
             name, // name
             "", // description
             "RAW", // sourceType
             Image.RawDisk.create(URI.create("foo"), "TAR", null), // rawDisk
-            deprecated // deprecated
+            deprecated, // deprecated
+            Image.Status.READY, // status
+            Long.parseLong("881210631", 10), // archivedSizeBytes
+            Long.parseLong("8", 10), // diskSizeGb
+            "https://www.googleapis.com/compute/v1/projects/party/zones/us-central1-a/disk/disk", // sourceDisk
+            "9598530021316715047", // sourceDiskId
+            ImmutableList.of("https://www.googleapis.com/compute/v1/projects/suse-cloud/global/licenses/sles-12") // license
       );
    }
 }

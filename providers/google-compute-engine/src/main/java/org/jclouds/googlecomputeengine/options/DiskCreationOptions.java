@@ -21,25 +21,27 @@ import java.net.URI;
 public final class DiskCreationOptions {
 
    private URI type;
-   private URI sourceImage;
+   private Integer sizeGb;
    private URI sourceSnapshot;
+   private String description;
+
 
    /**
     * The disk type, fully qualified URL for the disk type.
     *
     * @return the disk type
     */
-   public URI type(){
+   public URI type() {
       return type;
    }
 
    /**
-    * The source image
-    *
-    * @return sourceImage, fully qualified URL for the image to be copied.
+    * Size of the persistent disk, specified in GB.
+    * You can also specify this when creating a persistent disk
+    * using the sourceImage or sourceSnapshot parameter.
     */
-   public URI sourceImage(){
-      return sourceImage;
+   public Integer sizeGb() {
+      return sizeGb;
    }
 
    /**
@@ -47,31 +49,48 @@ public final class DiskCreationOptions {
     *
     * @return sourceSnapshot, fully qualified URL for the snapshot to be copied.
     */
-   public URI sourceSnapshot(){
+   public URI sourceSnapshot() {
       return sourceSnapshot;
+   }
+
+   /**
+    * The description
+    *
+    * @return description, An optional textual description of the resource.
+    */
+   public String description() {
+      return description;
    }
 
    /**
     * @see DiskCreationOptions#type()
     */
-   public DiskCreationOptions type(URI type){
+   public DiskCreationOptions type(URI type) {
       this.type = type;
       return this;
    }
 
    /**
-    * @see DiskCreationOptions#sourceImage()
+    * @see DiskCreationOptions#sizeGb()
     */
-   public DiskCreationOptions sourceImage(URI sourceImage){
-      this.sourceImage = sourceImage;
+   public DiskCreationOptions sizeGb(Integer sizeGb) {
+      this.sizeGb = sizeGb;
       return this;
    }
 
    /**
     * @see DiskCreationOptions#sourceSnapshot()
     */
-   public DiskCreationOptions sourceSnapshot(URI sourceSnapshot){
+   public DiskCreationOptions sourceSnapshot(URI sourceSnapshot) {
       this.sourceSnapshot = sourceSnapshot;
+      return this;
+   }
+
+   /**
+    * @see DiskCreationOptions#description()
+    */
+   public DiskCreationOptions description(String description) {
+      this.description = description;
       return this;
    }
 }

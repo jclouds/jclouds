@@ -23,8 +23,11 @@ import java.net.URI;
 import javax.ws.rs.Consumes;
 
 import org.jclouds.googlecomputeengine.domain.Address;
+import org.jclouds.googlecomputeengine.domain.Address.Status;
 import org.jclouds.googlecomputeengine.internal.BaseGoogleComputeEngineParseTest;
 import org.testng.annotations.Test;
+
+import com.google.common.collect.ImmutableList;
 
 @Test(groups = "unit", testName = "ParseAddressTest")
 public class ParseAddressTest extends BaseGoogleComputeEngineParseTest<Address> {
@@ -45,9 +48,10 @@ public class ParseAddressTest extends BaseGoogleComputeEngineParseTest<Address> 
             "4439373783165447583", // id
             URI.create(baseUrl + "/party/regions/us-central1/addresses/test-ip1"), // selfLink
             "test-ip1", // name
+            parse("2013-07-26T13:57:20.204-07:00"), // creationTimestamp
             "", // description
-            "RESERVED", // status
-            null, // user
+            Status.IN_USE, // status
+            ImmutableList.of(URI.create(baseUrl + "/party/regions/us-central1-a/forwardingRules/test-forwarding-rule")), // users
             URI.create(baseUrl + "/party/regions/us-central1"), // region
             "173.255.115.190" // address
       );

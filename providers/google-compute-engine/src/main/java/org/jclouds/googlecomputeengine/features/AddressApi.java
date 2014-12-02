@@ -37,9 +37,11 @@ import org.jclouds.googlecomputeengine.GoogleComputeEngineApi;
 import org.jclouds.googlecomputeengine.domain.Address;
 import org.jclouds.googlecomputeengine.domain.Operation;
 import org.jclouds.googlecomputeengine.internal.BaseCallerArg0ToIteratorOfListPage;
+import org.jclouds.googlecomputeengine.options.AddressCreationOptions;
 import org.jclouds.googlecomputeengine.options.ListOptions;
 import org.jclouds.javax.annotation.Nullable;
 import org.jclouds.oauth.v2.filters.OAuthFilter;
+import org.jclouds.rest.annotations.BinderParam;
 import org.jclouds.rest.annotations.Fallback;
 import org.jclouds.rest.annotations.MapBinder;
 import org.jclouds.rest.annotations.PayloadParam;
@@ -76,6 +78,12 @@ public interface AddressApi {
    @Produces(APPLICATION_JSON)
    @MapBinder(BindToJsonPayload.class)
    Operation create(@PayloadParam("name") String address);
+
+   /** @see #create(String) */
+   @Named("Addresses:insert")
+   @POST
+   @Produces(APPLICATION_JSON)
+   Operation create(@BinderParam(BindToJsonPayload.class) AddressCreationOptions options);
 
    /** Deletes an address by name and returns the operation in progress, or null if not found. */
    @Named("Addresses:delete")

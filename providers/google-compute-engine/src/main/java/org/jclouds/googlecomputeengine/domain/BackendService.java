@@ -76,6 +76,7 @@ public abstract class BackendService {
    @Nullable public abstract int port();
    @Nullable public abstract String protocol();
    @Nullable public abstract String fingerprint();
+   @Nullable public abstract String portName();
 
    /**
     * @param timeoutSec Defaults to 30 when null.
@@ -83,18 +84,18 @@ public abstract class BackendService {
     */
    @SerializedNames({ "id", "creationTimestamp", "selfLink", "name", "description",
       "backends", "healthChecks", "timeoutSec", "port", "protocol",
-      "fingerprint"})
+      "fingerprint", "portName"})
    public static BackendService create(String id, Date creationTimestamp, URI selfLink,
                           String name, @Nullable String description,
                           @Nullable List<Backend> backends, List<URI> healthChecks,
                           @Nullable Integer timeoutSec, @Nullable Integer port,
                           @Nullable String protocol,
-                          @Nullable String fingerprint){
+                          @Nullable String fingerprint, String portName){
       return new AutoValue_BackendService(id, creationTimestamp, selfLink, name, description,
                             backends, healthChecks,
                             timeoutSec != null ? timeoutSec : 30,
                             port != null ? port : 80,
-                            protocol, fingerprint);
+                            protocol, fingerprint, portName);
    }
 
    BackendService(){

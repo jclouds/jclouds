@@ -26,6 +26,7 @@ import org.jclouds.googlecloud.domain.ListPage;
 import org.jclouds.googlecomputeengine.domain.Disk;
 import org.jclouds.googlecomputeengine.domain.Snapshot;
 import org.jclouds.googlecomputeengine.internal.BaseGoogleComputeEngineApiLiveTest;
+import org.jclouds.googlecomputeengine.options.DiskCreationOptions;
 import org.testng.annotations.Test;
 
 public class SnapshotApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
@@ -44,7 +45,8 @@ public class SnapshotApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
 
    @Test(groups = "live")
    public void testCreateSnapshot() {
-      assertOperationDoneSuccessfully(diskApi().create(DISK_NAME, 1));
+      assertOperationDoneSuccessfully(diskApi().create(DISK_NAME,
+            new DiskCreationOptions().sizeGb(1)));
       disk = diskApi().get(DISK_NAME);
 
       assertOperationDoneSuccessfully(diskApi().createSnapshot(DISK_NAME, SNAPSHOT_NAME));

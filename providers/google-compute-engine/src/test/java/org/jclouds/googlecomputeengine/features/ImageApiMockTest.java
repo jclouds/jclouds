@@ -23,9 +23,11 @@ import static org.testng.Assert.assertNull;
 import java.net.URI;
 
 import org.jclouds.date.internal.SimpleDateFormatDateService;
+import org.jclouds.googlecomputeengine.domain.Deprecated;
 import org.jclouds.googlecomputeengine.domain.Deprecated.State;
 import org.jclouds.googlecomputeengine.internal.BaseGoogleComputeEngineApiMockTest;
 import org.jclouds.googlecomputeengine.options.DeprecateOptions;
+import org.jclouds.googlecomputeengine.options.ImageCreationOptions;
 import org.jclouds.googlecomputeengine.parse.ParseImageListTest;
 import org.jclouds.googlecomputeengine.parse.ParseImageTest;
 import org.jclouds.googlecomputeengine.parse.ParseOperationTest;
@@ -106,12 +108,28 @@ public class ImageApiMockTest extends BaseGoogleComputeEngineApiMockTest {
       assertSent(server, "GET", "/projects/centos-cloud/global/images");
    }
 
-   public void createImageFromPd_2xx() throws Exception{
+   public void createImageFromPd_2xx() throws Exception {
       server.enqueue(jsonResponse("/operation.json"));
 
       assertEquals(imageApi().createFromDisk("my-image", url("/projects/party/zones/us-central1-a/disks/mydisk")),
             new ParseOperationTest().expected(url("/projects")));
       assertSent(server, "POST", "/projects/party/global/images", stringFromResource("/image_insert_from_pd.json"));
+   }
+
+   public void createImage_options() throws Exception {
+      server.enqueue(jsonResponse("/operation.json"));
+
+      ImageCreationOptions options = new ImageCreationOptions.Builder("name")
+         .description("this is a test")
+         .sourceDisk("projects/project/zones/zone/disks/disks")
+         .deprecated(Deprecated.create(State.DEPRECATED, null, null, null, null)).build();
+      assertEquals(imageApi().create(options),
+            new ParseOperationTest().expected(url("/projects")));
+      assertSent(server, "POST", "/projects/party/global/images",
+            "{\"name\":\"name\",\"description\":\"this is a test\",\""
+            + "deprecated\":{\"state\":\"DEPRECATED\"},\"sourceDisk\":"
+            + "\"projects/project/zones/zone/disks/disks\"}");
+
    }
 
    public void deprecateImage_2xx() throws Exception{

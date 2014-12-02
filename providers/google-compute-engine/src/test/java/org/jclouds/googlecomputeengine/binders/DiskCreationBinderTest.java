@@ -31,22 +31,23 @@ import com.google.common.collect.ImmutableMap;
 @Test(groups = "unit", testName = "DiskCreationBinderTest")
 public class DiskCreationBinderTest extends BaseGoogleComputeEngineExpectTest<Object>{
 
-   private static final String FAKE_SOURCE_IMAGE = "https://www.googleapis.com/compute/v1/projects/" +
+   private static final String FAKE_SOURCE_SNAPSHOT = "https://www.googleapis.com/compute/v1/projects/" +
                                        "debian-cloud/global/images/backports-debian-7-wheezy-v20141017";
 
    DiskCreationBinder binder = new DiskCreationBinder();
- 
+
    @Test
    public void testMap() throws SecurityException, NoSuchMethodException {
-      DiskCreationOptions diskCreationOptions = new DiskCreationOptions().sourceImage(URI.create(FAKE_SOURCE_IMAGE));
+      DiskCreationOptions diskCreationOptions = new DiskCreationOptions()
+         .sourceSnapshot(URI.create(FAKE_SOURCE_SNAPSHOT)).sizeGb(15).description(null);
 
       HttpRequest request = HttpRequest.builder().method("GET").endpoint("http://momma").build();
-      Map<String, Object> postParams = ImmutableMap.of("name", "testName", "sizeGb", 15, "options", diskCreationOptions);
+      Map<String, Object> postParams = ImmutableMap.of("name", "testName", "options", diskCreationOptions);
 
       request = binder.bindToRequest(request, postParams);
 
       assertEquals(request.getPayload().getRawContent(),
-            "{\"name\":\"testName\",\"sizeGb\":15,\"sourceImage\":\"" + FAKE_SOURCE_IMAGE + "\"}");
+            "{\"name\":\"testName\",\"sizeGb\":15,\"sourceSnapshot\":\"" + FAKE_SOURCE_SNAPSHOT + "\"}");
       assertEquals(request.getPayload().getContentMetadata().getContentType(), "application/json");
    }
 }

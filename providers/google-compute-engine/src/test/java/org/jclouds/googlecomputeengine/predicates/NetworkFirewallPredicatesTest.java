@@ -27,6 +27,7 @@ import static org.testng.Assert.assertTrue;
 
 import java.net.URI;
 
+import org.jclouds.date.internal.SimpleDateFormatDateService;
 import org.jclouds.googlecomputeengine.domain.Firewall;
 import org.jclouds.net.domain.IpPermission;
 import org.jclouds.net.domain.IpProtocol;
@@ -42,6 +43,7 @@ public class NetworkFirewallPredicatesTest {
       return Firewall.create( //
             "abcd", // id
             URI.create(BASE_URL + "/party/global/firewalls/jclouds-test"), // selfLink
+            new SimpleDateFormatDateService().iso8601DateParse("2014-07-18T09:47:30.826-07:00"), // creationTimestamp
             "jclouds-test", // name
             null, // description
             URI.create(BASE_URL + "/party/global/networks/jclouds-test"), // network
@@ -58,6 +60,7 @@ public class NetworkFirewallPredicatesTest {
       return Firewall.create( //
             "abcd", // id
             URI.create(BASE_URL + "/party/global/firewalls/jclouds-test"), // selfLink
+            new SimpleDateFormatDateService().iso8601DateParse("2014-07-18T09:47:30.826-07:00"), // creationTimestamp
             "jclouds-test", // name
             null, // description
             URI.create(BASE_URL + "/party/global/networks/jclouds-test"), // network

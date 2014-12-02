@@ -89,7 +89,7 @@ public class BaseGoogleComputeEngineApiLiveTest extends BaseApiLiveTest<GoogleCo
       AtomicReference<Operation> ref = Atomics.newReference(checkNotNull(operation, "operation"));
       checkState(operationDone.apply(ref), "Timeout waiting for operation: %s", operation);
       assertEquals(ref.get().status(), Operation.Status.DONE);
-      assertTrue(ref.get().errors().isEmpty());
+      assertTrue(ref.get().error().errors().isEmpty());
    }
 
    protected void waitOperationDone(@Nullable Operation operation) {

@@ -32,6 +32,7 @@ public class BackendServiceOptions {
    private Integer port;
    private String protocol;
    private String fingerprint;
+   private String portName;
 
    /**
     * Name of the BackendService resource.
@@ -159,6 +160,15 @@ public class BackendServiceOptions {
     */
    public BackendServiceOptions fingerprint(String fingerprint) {
       this.fingerprint = fingerprint;
+      return this;
+   }
+
+   public String getPortName() {
+      return portName;
+   }
+
+   public BackendServiceOptions portName(String portName) {
+      this.portName = portName;
       return this;
    }
 }

@@ -37,11 +37,11 @@ public final class DiskCreationBinder implements MapBinder {
       try {
          json.beginObject();
          json.name("name").value(postParams.get("name").toString());
-         json.name("sizeGb").value((Integer) postParams.get("sizeGb"));
+         json.name("sizeGb").value(options.sizeGb());
          json.name("type").value(options.type() != null ? options.type().toString() : null);
-         json.name("sourceImage").value(options.sourceImage() != null ? options.sourceImage().toString() : null);
          json.name("sourceSnapshot")
                .value(options.sourceSnapshot() != null ? options.sourceSnapshot().toString() : null);
+         json.name("description").value(options.description());
          json.endObject();
          json.close();
       } catch (IOException e) {

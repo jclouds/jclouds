@@ -47,6 +47,7 @@ public class ParseFirewallTest extends BaseGoogleComputeEngineParseTest<Firewall
       return Firewall.create( //
             "12862241031274216284", // id
             URI.create(base_url + "/party/global/firewalls/jclouds-test"), // selfLink
+            parse("2012-04-13T03:05:02.855"), // creationTimestamp
             "jclouds-test", // name
             "Internal traffic from default allowed", // description
             URI.create(base_url + "/party/global/networks/jclouds-test"), // network

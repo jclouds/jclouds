@@ -26,8 +26,11 @@ import javax.ws.rs.Consumes;
 import org.jclouds.googlecomputeengine.domain.Deprecated;
 import org.jclouds.googlecomputeengine.domain.Deprecated.State;
 import org.jclouds.googlecomputeengine.domain.Image;
+import org.jclouds.googlecomputeengine.domain.Image.Status;
 import org.jclouds.googlecomputeengine.internal.BaseGoogleComputeEngineParseTest;
 import org.testng.annotations.Test;
+
+import com.google.common.collect.ImmutableList;
 
 @Test(groups = "unit", testName = "ParseImageTest")
 public class ParseImageTest extends BaseGoogleComputeEngineParseTest<Image> {
@@ -47,6 +50,7 @@ public class ParseImageTest extends BaseGoogleComputeEngineParseTest<Image> {
       return Image.create( //
             "12941197498378735318", // id
             URI.create(baseUrl + "/centos-cloud/global/images/centos-6-2-v20120326"), // selfLink
+            parse("2012-07-16T22:16:13.468"), // creationTimestamp
             "centos-6-2-v20120326", // name
             "DEPRECATED. CentOS 6.2 image; Created Mon, 26 Mar 2012 21:19:09 +0000", // description
             "RAW", // sourceType
@@ -57,6 +61,14 @@ public class ParseImageTest extends BaseGoogleComputeEngineParseTest<Image> {
                   null, // deprecated
                   null, // obsolete
                   null // deleted
-            ));
+           ),
+           Status.READY, // status
+           Long.parseLong("881210631", 10), // archivedSizeBytes
+           Long.parseLong("8", 10), // diskSizeGb
+           baseUrl + "/party/zones/us-central1-a/disk/disk", // sourceDisk
+           "9598530021316715047", // sourceDiskId
+           ImmutableList.of(baseUrl + "/suse-cloud/global/licenses/sles-12") // license
+            );
+
    }
 }

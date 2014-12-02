@@ -43,6 +43,7 @@ public class ParseRegionOperationTest extends BaseGoogleComputeEngineParseTest<O
    public Operation expected(String baseUrl) {
       return Operation.create( //
             "13053095055850848306", // id
+            parse("2013-07-26T13:57:20.204-07:00"), // creationTimestamp
             URI.create(baseUrl + "/party/regions/us-central1/operations/operation-1354084865060"), // selfLink
             "operation-1354084865060", // name
             null, // description
@@ -60,6 +61,7 @@ public class ParseRegionOperationTest extends BaseGoogleComputeEngineParseTest<O
             null, // httpErrorMessage
             "insert", // operationType
             null, // errors
+            null, // warnings
             URI.create(baseUrl + "/party/regions/us-central1"), // region
             null // zone
       );
