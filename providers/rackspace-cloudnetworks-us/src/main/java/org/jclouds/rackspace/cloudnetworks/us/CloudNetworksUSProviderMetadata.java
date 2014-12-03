@@ -28,6 +28,7 @@ import java.util.Properties;
 import org.jclouds.openstack.keystone.v2_0.config.KeystoneAuthenticationModule.RegionModule;
 import org.jclouds.openstack.neutron.v2.NeutronApiMetadata;
 import org.jclouds.openstack.neutron.v2.config.NeutronHttpApiModule;
+import org.jclouds.openstack.v2_0.ServiceType;
 import org.jclouds.providers.ProviderMetadata;
 import org.jclouds.providers.internal.BaseProviderMetadata;
 import org.jclouds.rackspace.cloudidentity.v2_0.config.CloudIdentityAuthenticationApiModule;
@@ -65,7 +66,7 @@ public class CloudNetworksUSProviderMetadata extends BaseProviderMetadata {
    public static Properties defaultProperties() {
       Properties properties = new Properties();
       properties.setProperty(CREDENTIAL_TYPE, CloudIdentityCredentialTypes.API_KEY_CREDENTIALS);
-      properties.setProperty(SERVICE_TYPE, "networks");
+      properties.setProperty(SERVICE_TYPE, ServiceType.NETWORK);
 
       properties.setProperty(PROPERTY_REGIONS, "ORD,DFW,IAD,SYD,HKG");
       properties.setProperty(PROPERTY_REGION + ".ORD." + ISO3166_CODES, "US-IL");
