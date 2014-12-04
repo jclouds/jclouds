@@ -41,14 +41,19 @@ public class ParseRegionListTest extends BaseGoogleComputeEngineParseTest<ListPa
 
    @Override @Consumes(APPLICATION_JSON)
    public ListPage<Region> expected() {
-      Region region1 = new ParseRegionTest().expected();
+      return expected(BASE_URL);
+   }
+
+   @Consumes(APPLICATION_JSON)
+   public ListPage<Region> expected(String baseUrl) {
+      Region region1 = new ParseRegionTest().expected(baseUrl);
       Region region2 = Region.create( //
             "6396763663251190992", // id
-            URI.create(BASE_URL + "/party/regions/us-central2"), // selfLink
+            URI.create(baseUrl + "/party/regions/us-central2"), // selfLink
             "us-central2", // name
             "us-central2", // description
             Region.Status.UP, // status
-            ImmutableList.of(URI.create(BASE_URL + "/party/zones/us-central2-a")), // zones
+            ImmutableList.of(URI.create(baseUrl + "/party/zones/us-central2-a")), // zones
             ImmutableList.of( //
                   Quota.create("INSTANCES", 0, 8), //
                   Quota.create("CPUS", 0, 8), //

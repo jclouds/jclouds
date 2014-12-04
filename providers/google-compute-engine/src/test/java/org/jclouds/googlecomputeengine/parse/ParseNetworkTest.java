@@ -36,9 +36,14 @@ public class ParseNetworkTest extends BaseGoogleComputeEngineParseTest<Network> 
 
    @Override @Consumes(APPLICATION_JSON)
    public Network expected() {
+      return expected(BASE_URL);
+   }
+
+   @Consumes(APPLICATION_JSON)
+   public Network expected(String baseUrl) {
       return Network.create( //
             "13024414170909937976", // id
-            URI.create(BASE_URL + "/party/networks/jclouds-test"), // selfLink
+            URI.create(baseUrl + "/party/networks/jclouds-test"), // selfLink
             "default", // name
             "Default network for the project", // description
             "10.0.0.0/8", // rangeIPv4

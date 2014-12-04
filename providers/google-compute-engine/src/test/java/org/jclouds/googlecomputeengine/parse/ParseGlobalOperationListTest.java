@@ -38,8 +38,13 @@ public class ParseGlobalOperationListTest extends BaseGoogleComputeEngineParseTe
 
    @Override @Consumes(APPLICATION_JSON)
    public ListPage<Operation> expected() {
+      return expected(BASE_URL);
+   }
+
+   @Consumes(APPLICATION_JSON)
+   public ListPage<Operation> expected(String baseUrl) {
       return ForwardingListPage.create( //
-            ImmutableList.of(new ParseGlobalOperationTest().expected()), // items
+            ImmutableList.of(new ParseGlobalOperationTest().expected(baseUrl)), // items
             null // nextPageToken
       );
    }

@@ -36,14 +36,19 @@ public class ParseSnapshotTest extends BaseGoogleComputeEngineParseTest<Snapshot
 
    @Override @Consumes(APPLICATION_JSON)
    public Snapshot expected() {
+      return expected(BASE_URL);
+   }
+
+   @Consumes(APPLICATION_JSON)
+   public Snapshot expected(String baseUrl) {
       return Snapshot.create( //
             "9734455566806191190", // id
-            URI.create(BASE_URL + "/party/global/snapshots/test-snap"), // selfLink
+            URI.create(baseUrl + "/party/global/snapshots/test-snap"), // selfLink
             "test-snap", // name
             "", // description
             10, // sizeGb
             "READY", // status
-            URI.create(BASE_URL + "/party/zones/us-central1-a/disks/testimage1"), // sourceDisk
+            URI.create(baseUrl + "/party/zones/us-central1-a/disks/testimage1"), // sourceDisk
             "8243603669926824540"// sourceDiskId
       );
    }

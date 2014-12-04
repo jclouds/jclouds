@@ -38,18 +38,23 @@ public class ParseRouteTest extends BaseGoogleComputeEngineParseTest<Route> {
 
    @Override @Consumes(APPLICATION_JSON)
    public Route expected() {
+      return expected(BASE_URL);
+   }
+
+   @Consumes(APPLICATION_JSON)
+   public Route expected(String baseUrl) {
       return Route.create( //
             "7241926205630356071", // id
-            URI.create(BASE_URL + "/party/global/routes/default-route-c99ebfbed0e1f375"), // selfLink
+            URI.create(baseUrl + "/party/global/routes/default-route-c99ebfbed0e1f375"), // selfLink
             "default-route-c99ebfbed0e1f375", // name
             "Default route to the virtual network.", // description
-            URI.create(BASE_URL + "/party/global/networks/default"), // network
+            URI.create(baseUrl + "/party/global/networks/default"), // network
             ImmutableList.of("fooTag", "barTag"), // tags
             "10.240.0.0/16", // destRange
             1000, // priority
             null, // nextHopInstance
             null, // nextHopIp
-            URI.create(BASE_URL + "/party/global/networks/default"), // nextHopNetwork
+            URI.create(baseUrl + "/party/global/networks/default"), // nextHopNetwork
             null, // nextHopGateway
             null // warnings
       );

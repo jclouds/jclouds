@@ -38,8 +38,13 @@ public class ParseNetworkListTest extends BaseGoogleComputeEngineParseTest<ListP
 
    @Override @Consumes(APPLICATION_JSON)
    public ListPage<Network> expected() {
+      return expected(BASE_URL);
+   }
+
+   @Consumes(APPLICATION_JSON)
+   public ListPage<Network> expected(String baseUrl) {
       return ForwardingListPage.create( //
-            ImmutableList.of(new ParseNetworkTest().expected()), // items
+            ImmutableList.of(new ParseNetworkTest().expected(baseUrl)), // items
             null // nextPageToken
       );
    }
