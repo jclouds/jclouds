@@ -33,6 +33,7 @@ import org.jclouds.googlecomputeengine.domain.Image;
 import org.jclouds.googlecomputeengine.domain.Instance;
 import org.jclouds.googlecomputeengine.domain.Instance.AttachedDisk;
 import org.jclouds.googlecomputeengine.domain.Instance.Scheduling;
+import org.jclouds.googlecomputeengine.domain.Instance.SerialPortOutput;
 import org.jclouds.googlecomputeengine.domain.Metadata;
 import org.jclouds.googlecomputeengine.domain.NewInstance;
 import org.jclouds.googlecomputeengine.domain.AttachDisk;
@@ -122,6 +123,14 @@ public class InstanceApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
    }
 
    @Test(groups = "live", dependsOnMethods = "testInsertInstance")
+   public void testGetSerialPortOutput() {
+      SerialPortOutput output = api().getSerialPortOutput(INSTANCE_NAME);
+      assertNotNull(output);
+      assertNotNull(output.selfLink());
+      assertNotNull(output.contents());
+   }
+
+   @Test(groups = "live", dependsOnMethods = "testInsertInstance")
    public void testSetDiskAutoDelete() {
 
       assertTrue(existsDiskWithNameAndAutoDelete(INSTANCE_NAME, DEFAULT_BOOT_DISK_NAME, true));
@@ -196,13 +205,16 @@ public class InstanceApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
 
       Instance originalInstance = api().get(INSTANCE_NAME);
       assertOperationDoneSuccessfully(api().attachDisk(INSTANCE_NAME,
-                  AttachDisk.create(AttachDisk.Type.PERSISTENT,
-                                    AttachDisk.Mode.READ_ONLY,
-                                    getDiskUrl(ATTACH_DISK_NAME),
-                                    ATTACH_DISK_DEVICE_NAME,
-                                    false,
-                                    null,
-                                    false)));
+                  AttachDisk.create(AttachDisk.Type.PERSISTENT, // type
+                                    AttachDisk.Mode.READ_ONLY, // mode
+                                    getDiskUrl(ATTACH_DISK_NAME), // source
+                                    ATTACH_DISK_DEVICE_NAME, // deviceName
+                                    false, // boot
+                                    null, // initializeParams
+                                    false, // autoDelete
+                                    null, // licenses
+                                    null // interface
+                                    )));
 
       Instance modifiedInstance = api().get(INSTANCE_NAME);
 
@@ -246,7 +258,7 @@ public class InstanceApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
       assertOperationDoneSuccessfully(api().reset(INSTANCE_NAME));
    }
 
-   @Test(groups = "live", dependsOnMethods = {"testSetDiskAutoDelete", "testResetInstance", "testSetScheduling"}, alwaysRun = true)
+   @Test(groups = "live", dependsOnMethods = {"testSetDiskAutoDelete", "testResetInstance", "testSetScheduling", "testGetInstance", "testGetSerialPortOutput"}, alwaysRun = true)
    public void testDeleteInstance() {
       assertOperationDoneSuccessfully(api().delete(INSTANCE_NAME));
       assertOperationDoneSuccessfully(diskApi().delete(DISK_NAME));

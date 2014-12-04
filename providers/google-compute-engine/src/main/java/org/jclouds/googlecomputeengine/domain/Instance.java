@@ -19,8 +19,11 @@ package org.jclouds.googlecomputeengine.domain;
 import static org.jclouds.googlecloud.internal.NullSafeCopies.copyOf;
 
 import java.net.URI;
+import java.util.Date;
 import java.util.List;
 
+import org.jclouds.googlecomputeengine.domain.AttachDisk.DiskInterface;
+import org.jclouds.googlecomputeengine.domain.AttachDisk.InitializeParams;
 import org.jclouds.javax.annotation.Nullable;
 import org.jclouds.json.SerializedNames;
 
@@ -63,10 +66,20 @@ public abstract class Instance {
 
       public abstract boolean boot();
 
-      @SerializedNames({ "index", "type", "mode", "source", "deviceName", "autoDelete", "boot" })
+      @Nullable public abstract InitializeParams initializeParams();
+
+      @Nullable public abstract List<String> licenses();
+
+      // Note: this is disks[].interface in the api docs but interface is a Java keyword.
+      @Nullable public abstract DiskInterface diskInterface();
+
+      @SerializedNames({ "index", "type", "mode", "source", "deviceName", "autoDelete", "boot",
+         "initializeParams", "licenses", "interface" })
       public static AttachedDisk create(int index, Type type, Mode mode, URI source, String deviceName,
-            boolean autoDelete, boolean boot) {
-         return new AutoValue_Instance_AttachedDisk(index, type, mode, source, deviceName, autoDelete, boot);
+            boolean autoDelete, boolean boot, InitializeParams initializeParams,
+            List<String> licenses, DiskInterface diskInterface) {
+         return new AutoValue_Instance_AttachedDisk(index, type, mode, source, deviceName, autoDelete,
+               boot, initializeParams, licenses, diskInterface);
       }
 
       AttachedDisk() {
@@ -124,7 +137,7 @@ public abstract class Instance {
    @AutoValue
    public abstract static class SerialPortOutput {
 
-      @Nullable public abstract URI selfLink(); // TODO: is this really nullable?!
+      public abstract URI selfLink();
 
       /** The contents of the console output. */
       public abstract String contents();
@@ -200,6 +213,8 @@ public abstract class Instance {
 
    public abstract String id();
 
+   @Nullable public abstract Date creationTimestamp();
+
    public abstract URI selfLink();
 
    public abstract String name();
@@ -221,6 +236,8 @@ public abstract class Instance {
     */
    public abstract URI zone();
 
+   @Nullable public abstract Boolean canIpForward();
+
    public abstract List<NetworkInterface> networkInterfaces();
 
    public abstract List<AttachedDisk> disks();
@@ -231,13 +248,13 @@ public abstract class Instance {
 
    public abstract Scheduling scheduling();
 
-   @SerializedNames({ "id", "selfLink", "name", "description", "tags", "machineType", "status", "statusMessage", "zone",
-         "networkInterfaces", "disks", "metadata", "serviceAccounts", "scheduling"})
-   public static Instance create(String id, URI selfLink, String name, String description, Tags tags, URI machineType,
-         Status status, String statusMessage, URI zone, List<NetworkInterface> networkInterfaces,
+   @SerializedNames({ "id", "creationTimestamp", "selfLink", "name", "description", "tags", "machineType", "status", "statusMessage", "zone",
+         "canIpForward", "networkInterfaces", "disks", "metadata", "serviceAccounts", "scheduling"})
+   public static Instance create(String id, Date creationTimestamp, URI selfLink, String name, String description, Tags tags, URI machineType,
+         Status status, String statusMessage, URI zone, Boolean canIpForward, List<NetworkInterface> networkInterfaces,
          List<AttachedDisk> disks, Metadata metadata, List<ServiceAccount> serviceAccounts, Scheduling scheduling) {
-      return new AutoValue_Instance(id, selfLink, name, description, tags, machineType, status, statusMessage, zone,
-            copyOf(networkInterfaces), copyOf(disks), metadata, copyOf(serviceAccounts), scheduling);
+      return new AutoValue_Instance(id, creationTimestamp, selfLink, name, description, tags, machineType, status, statusMessage, zone,
+            canIpForward, copyOf(networkInterfaces), copyOf(disks), metadata, copyOf(serviceAccounts), scheduling);
    }
 
    Instance() {

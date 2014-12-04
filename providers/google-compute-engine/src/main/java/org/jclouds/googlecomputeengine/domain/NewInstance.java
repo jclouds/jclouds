@@ -24,6 +24,7 @@ import java.util.List;
 
 import org.jclouds.googlecomputeengine.domain.Instance.NetworkInterface.AccessConfig;
 import org.jclouds.googlecomputeengine.domain.Instance.Scheduling;
+import org.jclouds.googlecomputeengine.domain.Instance.ServiceAccount;
 import org.jclouds.javax.annotation.Nullable;
 import org.jclouds.json.SerializedNames;
 
@@ -56,6 +57,8 @@ public abstract class NewInstance {
 
    public abstract URI machineType();
 
+   @Nullable public abstract Boolean canIpForward();
+
    public abstract List<NetworkInterface> networkInterfaces();
 
    public abstract List<AttachDisk> disks();
@@ -66,6 +69,8 @@ public abstract class NewInstance {
 
    /** Add metadata via {@link Metadata#items()}. */
    public abstract Metadata metadata();
+
+   @Nullable public abstract List<ServiceAccount> serviceAccounts();
 
    @Nullable public abstract Scheduling scheduling();
 
@@ -83,14 +88,15 @@ public abstract class NewInstance {
             foundBoot = true;
          }
       }
-      return create(name, machineType, ImmutableList.of(NetworkInterface.create(network)), ImmutableList.copyOf(disks),
-            description, Tags.create(), Metadata.create(), null);
+      return create(name, machineType, null, ImmutableList.of(NetworkInterface.create(network)), ImmutableList.copyOf(disks),
+            description, Tags.create(), Metadata.create(), null, null);
    }
 
-   @SerializedNames({ "name", "machineType", "networkInterfaces", "disks", "description", "tags", "metadata", "scheduling" })
-   static NewInstance create(String name, URI machineType, List<NetworkInterface> networkInterfaces,
-         List<AttachDisk> disks, String description, Tags tags, Metadata metadata, Scheduling scheduling) {
-      return new AutoValue_NewInstance(name, machineType, networkInterfaces, disks, description, tags, metadata, scheduling);
+   @SerializedNames({ "name", "machineType", "canIpForward", "networkInterfaces", "disks", "description", "tags", "metadata",
+      "serviceAccounts", "scheduling" })
+   static NewInstance create(String name, URI machineType, Boolean canIpForward, List<NetworkInterface> networkInterfaces,
+         List<AttachDisk> disks, String description, Tags tags, Metadata metadata, List<ServiceAccount> serviceAccounts, Scheduling scheduling) {
+      return new AutoValue_NewInstance(name, machineType, canIpForward, networkInterfaces, disks, description, tags, metadata, serviceAccounts, scheduling);
    }
 
    NewInstance() {

@@ -24,6 +24,9 @@ import java.net.URI;
 import java.util.Arrays;
 
 import org.jclouds.googlecomputeengine.domain.AttachDisk;
+import org.jclouds.googlecomputeengine.domain.AttachDisk.DiskInterface;
+import org.jclouds.googlecomputeengine.domain.Instance.NetworkInterface.AccessConfig;
+import org.jclouds.googlecomputeengine.domain.Instance.NetworkInterface.AccessConfig.Type;
 import org.jclouds.googlecomputeengine.domain.Metadata;
 import org.jclouds.googlecomputeengine.domain.NewInstance;
 import org.jclouds.googlecomputeengine.domain.Instance.Scheduling.OnHostMaintenance;
@@ -42,8 +45,8 @@ public class InstanceApiMockTest extends BaseGoogleComputeEngineApiMockTest {
    public void get() throws Exception {
       server.enqueue(jsonResponse("/instance_get.json"));
 
-      assertEquals(instanceApi().get("test-1"), new ParseInstanceTest().expected(url("/projects")));
-      assertSent(server, "GET", "/projects/party/zones/us-central1-a/instances/test-1");
+      assertEquals(instanceApi().get("test-instance"), new ParseInstanceTest().expected(url("/projects")));
+      assertSent(server, "GET", "/projects/party/zones/us-central1-a/instances/test-instance");
    }
 
    public void get_4xx() throws Exception {
@@ -57,7 +60,7 @@ public class InstanceApiMockTest extends BaseGoogleComputeEngineApiMockTest {
       server.enqueue(jsonResponse("/instance_serial_port.json"));
 
       assertEquals(instanceApi().getSerialPortOutput("test-1"),
-            new ParseInstanceSerialOutputTest().expected());
+            new ParseInstanceSerialOutputTest().expected(url("/projects")));
 
       assertSent(server, "GET", "/projects/party/zones/us-central1-a/instances/test-1/serialPort");
    }
@@ -92,6 +95,32 @@ public class InstanceApiMockTest extends BaseGoogleComputeEngineApiMockTest {
       assertEquals(instanceApi().create(newInstance), new ParseZoneOperationTest().expected(url("/projects")));
       assertSent(server, "POST", "/projects/party/zones/us-central1-a/instances",
             stringFromResource("/instance_insert.json"));
+   }
+
+   public void addAccessConfig() throws Exception {
+      server.enqueue(jsonResponse("/zone_operation.json"));
+
+      AccessConfig config = AccessConfig.create("test-access", Type.ONE_TO_ONE_NAT, "1.1.1.1");
+      assertEquals(instanceApi().addAccessConfigToNic("test-instance", config, "test-network"),
+            new ParseZoneOperationTest().expected(url("/projects")));
+
+      assertSent(server, "POST", "/projects/party/zones/us-central1-a/instances/test-instance/"
+            + "addAccessConfig?networkInterface=test-network",
+            "{" +
+            "  \"type\": \"ONE_TO_ONE_NAT\"," +
+            "  \"name\": \"test-access\"," +
+            "  \"natIP\": \"1.1.1.1\"" +
+            "}");
+   }
+
+   public void deleteAccessConfig() throws Exception {
+      server.enqueue(jsonResponse("/zone_operation.json"));
+
+      assertEquals(instanceApi().deleteAccessConfigFromNic("test-instance", "test-access", "test-network"),
+            new ParseZoneOperationTest().expected(url("/projects")));
+
+      assertSent(server, "DELETE", "/projects/party/zones/us-central1-a/instances/test-instance/"
+            + "deleteAccessConfig?accessConfig=test-access&networkInterface=test-network");
    }
 
    public void delete() throws Exception {
@@ -154,10 +183,21 @@ public class InstanceApiMockTest extends BaseGoogleComputeEngineApiMockTest {
       server.enqueue(jsonResponse("/zone_operation.json"));
 
       assertEquals(instanceApi().attachDisk("test-1",
-            AttachDisk.create(AttachDisk.Type.PERSISTENT,
-                                     AttachDisk.Mode.READ_ONLY,
-                                     URI.create(url("/projects/party/zones/us-central1-a/disks/testimage1")),
-                                     null, false, null, true)),
+            AttachDisk.create(AttachDisk.Type.PERSISTENT, // type
+                                     AttachDisk.Mode.READ_WRITE, // mode
+                                     URI.create(url("/projects/party/zones/us-central1-a/disks/test")), // source
+                                     "test", // deviceName
+                                     true, // boot
+                                     AttachDisk.InitializeParams.create(
+                                           "test", // diskName
+                                           Long.parseLong("100", 10), // diskSizeGb
+                                           URI.create(url("/projects/party/global/images/test")), // sourceImage
+                                           "pd-standard" // diskType
+                                           ), // initializeParams
+                                     true, // autoDelete
+                                     ImmutableList.of(url("/projects/suse-cloud/global/licenses/sles-12")), // licenses
+                                     DiskInterface.NVME // interface
+                                     )),
             new ParseZoneOperationTest().expected(url("/projects")));
       assertSent(server, "POST", "/projects/party/zones/us-central1-a/instances/test-1/attachDisk",
             stringFromResource("/instance_attach_disk.json"));

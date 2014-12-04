@@ -19,6 +19,8 @@ package org.jclouds.googlecomputeengine.parse;
 import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 import static org.jclouds.googlecomputeengine.domain.Instance.SerialPortOutput;
 
+import java.net.URI;
+
 import javax.ws.rs.Consumes;
 
 import org.jclouds.googlecomputeengine.internal.BaseGoogleComputeEngineParseTest;
@@ -34,6 +36,13 @@ public class ParseInstanceSerialOutputTest extends BaseGoogleComputeEngineParseT
 
    @Override @Consumes(APPLICATION_JSON)
    public SerialPortOutput expected() {
-      return SerialPortOutput.create(null, "console output");
+      return expected(BASE_URL);
+   }
+
+   @Consumes(APPLICATION_JSON)
+   public SerialPortOutput expected(String baseUrl) {
+      return SerialPortOutput.create(
+            URI.create(baseUrl + "/party/zones/us-central1-a/instances/test-instance/serialPort"),
+            "console output");
    }
 }

@@ -22,6 +22,8 @@ import java.net.URI;
 
 import javax.ws.rs.Consumes;
 
+import org.jclouds.googlecomputeengine.domain.AttachDisk;
+import org.jclouds.googlecomputeengine.domain.AttachDisk.DiskInterface;
 import org.jclouds.googlecomputeengine.domain.Instance;
 import org.jclouds.googlecomputeengine.domain.Instance.AttachedDisk;
 import org.jclouds.googlecomputeengine.domain.Instance.NetworkInterface;
@@ -51,6 +53,7 @@ public class ParseInstanceTest extends BaseGoogleComputeEngineParseTest<Instance
    public Instance expected(String baseUrl) {
       return Instance.create( //
             "13051190678907570425", // id
+            parse("2012-11-25T23:48:20.758"), // creationTimestamp
             URI.create(baseUrl + "/party/zones/us-central1-a/instances/test-0"), // selfLink
             "test-0", // name
             "desc", // description
@@ -59,6 +62,7 @@ public class ParseInstanceTest extends BaseGoogleComputeEngineParseTest<Instance
             Instance.Status.RUNNING, // status
             null, // statusMessage
             URI.create(baseUrl + "/party/zones/us-central1-a"), // zone
+            true, // canIpForward
             ImmutableList.of(NetworkInterface.create( //
                   "nic0", // name
                   URI.create(baseUrl + "/party/global/networks/default"), // network
@@ -72,7 +76,15 @@ public class ParseInstanceTest extends BaseGoogleComputeEngineParseTest<Instance
                   URI.create(baseUrl + "/party/zones/us-central1-a/disks/test"), // source
                   "test", // deviceName
                   false, // autoDelete
-                  true// boot
+                  true, // boot
+                  AttachDisk.InitializeParams.create(
+                        "test", // diskName
+                        Long.parseLong("100", 10), // diskSizeGb
+                        URI.create(baseUrl + "/party/global/images/test"), // sourceImage
+                        "pd-standard" // diskType
+                        ), // initializeParams
+                  ImmutableList.of(baseUrl + "/suse-cloud/global/licenses/sles-12"), // licenses
+                  DiskInterface.NVME // interface
             )), // disks
             Metadata.create("efgh")
                     .put("aKey", "aValue")

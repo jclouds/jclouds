@@ -153,6 +153,7 @@ public final class GoogleComputeEngineServiceAdapter
       // We need to see the created instance so that we can access the newly created disk.
       AtomicReference<Instance> instance = Atomics.newReference(Instance.create( //
             "0000000000000000000", // id can't be null, but isn't available until provisioning is done.
+            null, // creationTimestamp
             create.targetLink(), // selfLink
             newInstance.name(), // name
             newInstance.description(), // description
@@ -161,6 +162,7 @@ public final class GoogleComputeEngineServiceAdapter
             Instance.Status.PROVISIONING, // status
             null, // statusMessage
             create.zone(), // zone
+            null, // canIpForward
             null, // networkInterfaces
             null, // disks
             newInstance.metadata(), // metadata

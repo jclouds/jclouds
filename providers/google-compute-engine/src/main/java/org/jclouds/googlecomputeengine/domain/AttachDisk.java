@@ -17,6 +17,7 @@
 package org.jclouds.googlecomputeengine.domain;
 
 import java.net.URI;
+import java.util.List;
 
 import org.jclouds.javax.annotation.Nullable;
 import org.jclouds.json.SerializedNames;
@@ -26,7 +27,7 @@ import com.google.auto.value.AutoValue;
 @AutoValue
 public abstract class AttachDisk {
    @AutoValue
-   abstract static class InitializeParams {
+   public abstract static class InitializeParams {
       /** Override the default naming convention. */
       @Nullable public abstract String diskName();
 
@@ -36,13 +37,15 @@ public abstract class AttachDisk {
       /** The {@link org.jclouds.googlecomputeengine.domain.Image#selfLink() source image}. */
       public abstract URI sourceImage();
 
+      @Nullable public abstract String diskType();
+
       static InitializeParams create(URI sourceImage) {
-         return create(null, null, sourceImage);
+         return create(null, null, sourceImage, null);
       }
 
-      @SerializedNames({ "diskName", "diskSizeGb", "sourceImage" })
-      static InitializeParams create(String diskName, Long diskSizeGb, URI sourceImage) {
-         return new AutoValue_AttachDisk_InitializeParams(diskName, diskSizeGb, sourceImage);
+      @SerializedNames({ "diskName", "diskSizeGb", "sourceImage", "diskType" })
+      public static InitializeParams create(String diskName, Long diskSizeGb, URI sourceImage, String diskType) {
+         return new AutoValue_AttachDisk_InitializeParams(diskName, diskSizeGb, sourceImage, diskType);
       }
 
       InitializeParams() {
@@ -57,6 +60,11 @@ public abstract class AttachDisk {
    public enum Mode {
       READ_WRITE,
       READ_ONLY;
+   }
+
+   public enum DiskInterface {
+      NVME,
+      SCSI;
    }
 
    public abstract Type type();
@@ -82,6 +90,11 @@ public abstract class AttachDisk {
    /** True if this disk will be deleted when the instance is delete. */
    public abstract boolean autoDelete();
 
+   @Nullable public abstract List<String> licenses();
+
+   // Note: this is disks[].interface in the api docs but interface is a Java keyword.
+   @Nullable public abstract DiskInterface diskInterface();
+
    public static AttachDisk existingBootDisk(URI existingBootDisk) {
       return create(Type.PERSISTENT, existingBootDisk, null, true, false);
    }
@@ -96,13 +109,13 @@ public abstract class AttachDisk {
 
    static AttachDisk create(Type type, URI source, InitializeParams initializeParams, boolean boot,
             boolean autoDelete) {
-         return create(type, null, source, null, boot, initializeParams, autoDelete);
+         return create(type, null, source, null, boot, initializeParams, autoDelete, null, null);
       }
 
-   @SerializedNames({"type", "mode", "source", "deviceName", "boot", "initializeParams", "autoDelete" })
+   @SerializedNames({"type", "mode", "source", "deviceName", "boot", "initializeParams", "autoDelete", "licenses", "interface" })
    public static AttachDisk create(Type type, Mode mode, URI source, String deviceName, boolean boot, InitializeParams initializeParams,
-         boolean autoDelete) {
-      return new AutoValue_AttachDisk(type, mode, source, deviceName, boot, initializeParams, autoDelete);
+         boolean autoDelete, List<String> licenses, DiskInterface diskInterface) {
+      return new AutoValue_AttachDisk(type, mode, source, deviceName, boot, initializeParams, autoDelete, licenses, diskInterface);
    }
 
    AttachDisk() {

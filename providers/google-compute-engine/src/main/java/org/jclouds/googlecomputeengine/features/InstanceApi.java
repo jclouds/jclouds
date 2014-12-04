@@ -107,7 +107,7 @@ public interface InstanceApi {
    Operation addAccessConfigToNic(@PathParam("instance") String instance,
                                   @BinderParam(BindToJsonPayload.class)
                                   AccessConfig accessConfig,
-                                  @QueryParam("network_interface") String networkInterfaceName);
+                                  @QueryParam("networkInterface") String networkInterfaceName);
 
    /**
     * Deletes an access config from an instance's network interface.
@@ -122,8 +122,8 @@ public interface InstanceApi {
    @DELETE
    @Path("/{instance}/deleteAccessConfig")
    Operation deleteAccessConfigFromNic(@PathParam("instance") String instance,
-                                       @QueryParam("access_config") String accessConfigName,
-                                       @QueryParam("network_interface") String networkInterfaceName);
+                                       @QueryParam("accessConfig") String accessConfigName,
+                                       @QueryParam("networkInterface") String networkInterfaceName);
 
    /**
     * Returns the specified instance's serial port output.
@@ -131,7 +131,7 @@ public interface InstanceApi {
     * @param instance the instance name.
     * @return if successful, this method returns a SerialPortOutput containing the instance's serial output.
     */
-   @Named("Instances:serialPort")
+   @Named("Instances:getSerialPortOutput")
    @GET
    @Path("/{instance}/serialPort")
    SerialPortOutput getSerialPortOutput(@PathParam("instance") String instance);
