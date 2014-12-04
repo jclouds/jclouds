@@ -1,0 +1,58 @@
+{
+  "images": [
+    {
+      "status": "ACTIVE",
+      "updated": "2014-08-08T04:43:36Z",
+      "links": [
+        {
+          "href": "http://192.168.24.16:8774/v2/d312a9d1acee46499e04fc2c0cd7e540/images/cd9d57a9-0978-45f3-9cbc-edb99347be6b",
+          "rel": "self"
+        },
+        {
+          "href": "http://192.168.24.16:8774/d312a9d1acee46499e04fc2c0cd7e540/images/cd9d57a9-0978-45f3-9cbc-edb99347be6b",
+          "rel": "bookmark"
+        },
+        {
+          "href": "http://192.168.24.16:9292/d312a9d1acee46499e04fc2c0cd7e540/images/cd9d57a9-0978-45f3-9cbc-edb99347be6b",
+          "type": "application/vnd.openstack.image",
+          "rel": "alternate"
+        }
+      ],
+      "id": "cd9d57a9-0978-45f3-9cbc-edb99347be6b",
+      "OS-EXT-IMG-SIZE:size": 0,
+      "name": "t11",
+      "created": "2014-08-08T04:43:36Z",
+      "minDisk": 0,
+      "progress": 100,
+      "minRam": 0,
+      "metadata": {
+        "block_device_mapping": [
+          {
+            "guest_format": null,
+            "boot_index": 2,
+            "no_device": null,
+            "volume_id": null,
+            "volume_size": null,
+            "disk_bus": null,
+            "image_id": null,
+            "source_type": "snapshot",
+            "device_type": null,
+            "snapshot_id": "a900a56c-61b7-4438-9150-76312fa1aa10",
+            "destination_type": "volume",
+            "delete_on_termination": null
+          }
+        ],
+        "checksum": "32c08d302f9206668030d47789b77858",
+        "min_ram": "1",
+        "disk_format": "qcow2",
+        "image_name": "Ubuntu LTS 14.04",
+        "bdm_v2": "True",
+        "image_id": "cfefefc1-eba2-4b1e-9b07-a8c74a872d65",
+        "root_device_name": "/dev/vda",
+        "container_format": "bare",
+        "min_disk": "8",
+        "size": "254149120"
+      }
+    }
+  ]
+}

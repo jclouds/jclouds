@@ -18,17 +18,25 @@ package org.jclouds.openstack.nova.v2_0.config;
 
 import java.beans.ConstructorProperties;
 import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeMap;
 
 import javax.inject.Singleton;
 
+import com.google.common.collect.Maps;
+import com.google.gson.JsonObject;
+import com.google.gson.reflect.TypeToken;
 import org.jclouds.javax.annotation.Nullable;
 import org.jclouds.json.config.GsonModule;
 import org.jclouds.json.config.GsonModule.DateAdapter;
 import org.jclouds.openstack.nova.v2_0.domain.Address;
+import org.jclouds.openstack.nova.v2_0.domain.BlockDeviceMapping;
 import org.jclouds.openstack.nova.v2_0.domain.HostResourceUsage;
+import org.jclouds.openstack.nova.v2_0.domain.Image;
 import org.jclouds.openstack.nova.v2_0.domain.Server;
 import org.jclouds.openstack.nova.v2_0.domain.ServerExtendedAttributes;
 import org.jclouds.openstack.nova.v2_0.domain.ServerExtendedStatus;
@@ -56,9 +64,10 @@ public class NovaParserModule extends AbstractModule {
    @Singleton
    public Map<Type, Object> provideCustomAdapterBindings() {
       return ImmutableMap.<Type, Object>of(
-            HostResourceUsage.class, new HostResourceUsageAdapter(),
-            ServerWithSecurityGroups.class, new ServerWithSecurityGroupsAdapter(),
-            Server.class, new ServerAdapter()
+              HostResourceUsage.class, new HostResourceUsageAdapter(),
+              ServerWithSecurityGroups.class, new ServerWithSecurityGroupsAdapter(),
+              Server.class, new ServerAdapter(),
+              Image.class, new ImageAdapter()
       );
    }
 
@@ -90,7 +99,7 @@ public class NovaParserModule extends AbstractModule {
       private static class HostResourceUsageInternal extends HostResourceUsage {
 
          @ConstructorProperties({
-               "host", "project", "memory_mb", "cpu", "disk_gb"
+                 "host", "project", "memory_mb", "cpu", "disk_gb"
          })
          protected HostResourceUsageInternal(String host, @Nullable String project, int memoryMb, int cpu, int diskGb) {
             super(host, project, memoryMb, cpu, diskGb);
@@ -102,7 +111,7 @@ public class NovaParserModule extends AbstractModule {
    public static class ServerWithSecurityGroupsAdapter implements JsonDeserializer<ServerWithSecurityGroups> {
       @Override
       public ServerWithSecurityGroups deserialize(JsonElement jsonElement, Type type, JsonDeserializationContext context)
-            throws JsonParseException {
+              throws JsonParseException {
          Server server = context.deserialize(jsonElement, Server.class);
          ServerWithSecurityGroups.Builder<?> result = ServerWithSecurityGroups.builder().fromServer(server);
          Set<String> names = Sets.newLinkedHashSet();
@@ -121,7 +130,7 @@ public class NovaParserModule extends AbstractModule {
    public static class ServerAdapter implements JsonDeserializer<Server> {
       @Override
       public Server deserialize(JsonElement jsonElement, Type type, JsonDeserializationContext context)
-            throws JsonParseException {
+              throws JsonParseException {
          Server serverBase;
 
          // Servers can be created without an image so test if an image object is returned
@@ -149,7 +158,7 @@ public class NovaParserModule extends AbstractModule {
 
       private static class ServerInternal extends Server {
          @ConstructorProperties({
-               "id", "name", "links", "uuid", "tenant_id", "user_id", "updated", "created", "hostId", "accessIPv4", "accessIPv6", "status", "image", "flavor", "key_name", "config_drive", "addresses", "metadata", "extendedStatus", "extendedAttributes", "OS-DCF:diskConfig"
+                 "id", "name", "links", "uuid", "tenant_id", "user_id", "updated", "created", "hostId", "accessIPv4", "accessIPv6", "status", "image", "flavor", "key_name", "config_drive", "addresses", "metadata", "extendedStatus", "extendedAttributes", "OS-DCF:diskConfig"
          })
          protected ServerInternal(String id, @Nullable String name, java.util.Set<Link> links, @Nullable String uuid, String tenantId,
                                   String userId, Date updated, Date created, @Nullable String hostId, @Nullable String accessIPv4,
@@ -162,14 +171,71 @@ public class NovaParserModule extends AbstractModule {
 
       private static class ServerInternalWithoutImage extends Server {
          @ConstructorProperties({
-               "id", "name", "links", "uuid", "tenant_id", "user_id", "updated", "created", "hostId", "accessIPv4", "accessIPv6", "status", "flavor", "key_name", "config_drive", "addresses", "metadata", "extendedStatus", "extendedAttributes", "OS-DCF:diskConfig"
+                 "id", "name", "links", "uuid", "tenant_id", "user_id", "updated", "created", "hostId", "accessIPv4", "accessIPv6", "status", "flavor", "key_name", "config_drive", "addresses", "metadata", "extendedStatus", "extendedAttributes", "OS-DCF:diskConfig"
          })
          protected ServerInternalWithoutImage(String id, @Nullable String name, java.util.Set<Link> links, @Nullable String uuid, String tenantId,
-                                  String userId, Date updated, Date created, @Nullable String hostId, @Nullable String accessIPv4,
-                                  @Nullable String accessIPv6, Server.Status status, Resource flavor, @Nullable String keyName,
-                                  @Nullable String configDrive, Multimap<String, Address> addresses, Map<String, String> metadata,
-                                  @Nullable ServerExtendedStatus extendedStatus, @Nullable ServerExtendedAttributes extendedAttributes, @Nullable String diskConfig) {
+                                              String userId, Date updated, Date created, @Nullable String hostId, @Nullable String accessIPv4,
+                                              @Nullable String accessIPv6, Server.Status status, Resource flavor, @Nullable String keyName,
+                                              @Nullable String configDrive, Multimap<String, Address> addresses, Map<String, String> metadata,
+                                              @Nullable ServerExtendedStatus extendedStatus, @Nullable ServerExtendedAttributes extendedAttributes, @Nullable String diskConfig) {
             super(id, name, links, uuid, tenantId, userId, updated, created, hostId, accessIPv4, accessIPv6, status, null, flavor, keyName, configDrive, addresses, metadata, extendedStatus, extendedAttributes, diskConfig);
+         }
+      }
+   }
+
+   @Singleton
+   public static class ImageAdapter implements JsonDeserializer<Image> {
+      public static final String METADATA = "metadata";
+      public static final String BLOCK_DEVICE_MAPPING = "block_device_mapping";
+
+      @Override
+      public Image deserialize(JsonElement jsonElement, Type type, JsonDeserializationContext context)
+              throws JsonParseException {
+         JsonObject json = jsonElement.getAsJsonObject();
+         Map<String, String> metadata = null;
+         List<BlockDeviceMapping> blockDeviceMapping = null;
+
+         JsonElement meta = json.get(METADATA);
+         if (meta != null && meta.isJsonObject()) {
+            metadata = Maps.newTreeMap();
+            for (Map.Entry<String, JsonElement> e : meta.getAsJsonObject().entrySet()) {
+               Object value;
+               if (e.getValue().isJsonArray()) {
+                  value = context.deserialize(e.getValue().getAsJsonArray(), ArrayList.class);
+               } else if (e.getValue().isJsonObject()) {
+                  value = context.deserialize(e.getValue().getAsJsonObject(), TreeMap.class);
+               } else if (e.getValue().isJsonPrimitive()) {
+                  value = e.getValue().getAsJsonPrimitive().getAsString();
+               } else {
+                  continue;
+               }
+
+               //keep non-string members out of normal metadata
+               if (value instanceof String) {
+                  metadata.put(e.getKey(), (String) value);
+               } else if (value instanceof List && BLOCK_DEVICE_MAPPING.equals(e.getKey())) {
+                  blockDeviceMapping = context.deserialize(e.getValue(), new TypeToken<List<BlockDeviceMapping>>(){}.getType());
+               }
+            }
+            json.remove(METADATA);
+         }
+
+         return apply(context.<ImageInternal>deserialize(json, ImageInternal.class), metadata, blockDeviceMapping);
+      }
+
+      public Image apply(ImageInternal in, Map<String, String> metadata, List<BlockDeviceMapping> blockDeviceMapping) {
+         return in.toBuilder().metadata(metadata).blockDeviceMapping(blockDeviceMapping).build();
+      }
+
+      private static class ImageInternal extends Image {
+         @ConstructorProperties({
+                 "id", "name", "links", "updated", "created", "tenant_id", "user_id", "status", "progress", "minDisk", "minRam", "blockDeviceMapping", "server", "metadata"
+         })
+         protected ImageInternal(String id, @Nullable String name, java.util.Set<Link> links, @Nullable Date updated, @Nullable Date created,
+                                 String tenantId, @Nullable String userId, @Nullable Status status, int progress, int minDisk, int minRam,
+                                 @Nullable List<BlockDeviceMapping> blockDeviceMapping, @Nullable Resource server, @Nullable Map<String, String> metadata) {
+            super(id, name, links, updated, created, tenantId, userId, status, progress, minDisk, minRam, blockDeviceMapping, server, metadata);
+
          }
       }
    }
