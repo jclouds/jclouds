@@ -32,10 +32,12 @@ import javax.inject.Qualifier;
  * Chef Server version 0.9 and 0.10 return a different Json when rquesting the
  * cookbook versions. This annotation can be used to setup the cookbook versions
  * parser.
+ * @deprecated Support for Chef 0.9 and 0.10 will be removed in upcoming versions.
  */
 @Target({ METHOD, PARAMETER, FIELD })
 @Retention(RUNTIME)
 @Qualifier
+@Deprecated
 public @interface CookbookVersionsParser {
 
 }

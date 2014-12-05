@@ -30,8 +30,10 @@ import com.google.common.base.Function;
 /**
  * Parses a cookbook definition from a Json response, taking care of using the
  * appropriate parser.
+ * @deprecated Support for Chef 0.9 and 0.10 will be removed in upcoming verions.
  */
 @Singleton
+@Deprecated
 public class ParseCookbookDefinitionCheckingChefVersion implements Function<HttpResponse, Set<String>> {
 
    @VisibleForTesting

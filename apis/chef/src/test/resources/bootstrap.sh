@@ -1,5 +1,5 @@
 mkdir -p /etc/chef
-cat >> /etc/chef/client.rb <<-'END_OF_JCLOUDS_FILE'
+cat > /etc/chef/client.rb <<-'END_OF_JCLOUDS_FILE'
 	require 'rubygems'
 	require 'ohai'
 	o = Ohai::System.new
@@ -10,7 +10,7 @@ cat >> /etc/chef/client.rb <<-'END_OF_JCLOUDS_FILE'
 	validation_client_name "chef-validator"
 	chef_server_url "http://localhost:4000"
 END_OF_JCLOUDS_FILE
-cat >> /etc/chef/validation.pem <<-'END_OF_JCLOUDS_FILE'
+cat > /etc/chef/validation.pem <<-'END_OF_JCLOUDS_FILE'
 	-----BEGIN PRIVATE KEY-----
 	LS0tLS1CRUdJTiBSU0EgUFJJVkFURSBLRVktLS0tLQpNSUlFcFFJQkFBS0NBUUVB
 	eWIyWkpKcUdtMEtLUis4bmZRSk5zU2QrRjl0WE5NVjdDZk9jVzZqc3FzOEVaZ2lW
@@ -50,7 +50,7 @@ cat >> /etc/chef/validation.pem <<-'END_OF_JCLOUDS_FILE'
 	-----END PRIVATE KEY-----
 	
 END_OF_JCLOUDS_FILE
-cat >> /etc/chef/first-boot.json <<-'END_OF_JCLOUDS_FILE'
+cat > /etc/chef/first-boot.json <<-'END_OF_JCLOUDS_FILE'
 	{"tomcat6":{"ssl_port":8433},"run_list":["recipe[apache2]","role[webserver]"]}
 END_OF_JCLOUDS_FILE
 chef-client -j /etc/chef/first-boot.json

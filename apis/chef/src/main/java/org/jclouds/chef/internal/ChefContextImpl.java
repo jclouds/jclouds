@@ -24,6 +24,7 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import org.jclouds.Context;
+import org.jclouds.chef.ChefApi;
 import org.jclouds.chef.ChefContext;
 import org.jclouds.chef.ChefService;
 import org.jclouds.internal.BaseView;
@@ -31,7 +32,13 @@ import org.jclouds.location.Provider;
 
 import com.google.common.reflect.TypeToken;
 
+/**
+ * @deprecated Will be removed in next version. Directly create the
+ *             {@link ChefApi} instead and access the {@link ChefService} from
+ *             it.
+ */
 @Singleton
+@Deprecated
 public class ChefContextImpl extends BaseView implements ChefContext {
    private final ChefService chefService;
 

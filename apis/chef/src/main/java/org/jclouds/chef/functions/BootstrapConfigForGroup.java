@@ -16,46 +16,43 @@
  */
 package org.jclouds.chef.functions;
 
-import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Preconditions.checkState;
 import static org.jclouds.chef.config.ChefProperties.CHEF_BOOTSTRAP_DATABAG;
-
-import java.lang.reflect.Type;
-import java.util.Map;
 
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.inject.Singleton;
 
 import org.jclouds.chef.ChefApi;
+import org.jclouds.chef.domain.BootstrapConfig;
 import org.jclouds.chef.domain.DatabagItem;
-import org.jclouds.domain.JsonBall;
+import org.jclouds.json.Json;
 
 import com.google.common.base.Function;
-import com.google.inject.TypeLiteral;
 
 /**
- * 
  * Retrieves the bootstrap configuration for a specific group
  */
 @Singleton
-public class BootstrapConfigForGroup implements Function<String, DatabagItem> {
-   public static final Type BOOTSTRAP_CONFIG_TYPE = new TypeLiteral<Map<String, JsonBall>>() {
-   }.getType();
+public class BootstrapConfigForGroup implements Function<String, BootstrapConfig> {
+   
    private final ChefApi api;
    private final String databag;
+   private final Json json;
 
    @Inject
-   public BootstrapConfigForGroup(@Named(CHEF_BOOTSTRAP_DATABAG) String databag, ChefApi api) {
-      this.databag = checkNotNull(databag, "databag");
-      this.api = checkNotNull(api, "api");
+   BootstrapConfigForGroup(@Named(CHEF_BOOTSTRAP_DATABAG) String databag, ChefApi api, Json json) {
+      this.databag = databag;
+      this.api = api;
+      this.json = json;
    }
 
    @Override
-   public DatabagItem apply(String from) {
+   public BootstrapConfig apply(String from) {
       DatabagItem bootstrapConfig = api.getDatabagItem(databag, from);
       checkState(bootstrapConfig != null, "databag item %s/%s not found", databag, from);
-      return bootstrapConfig;
+      // A DatabagItem is already a JsonBall, to we can easily deserialize it
+      return json.fromJson(bootstrapConfig.toString(), BootstrapConfig.class);
    }
 
 }

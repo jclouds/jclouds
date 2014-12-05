@@ -25,50 +25,65 @@ import static org.testng.Assert.assertEquals;
 import java.io.IOException;
 
 import org.jclouds.chef.ChefApi;
+import org.jclouds.chef.domain.BootstrapConfig;
 import org.jclouds.chef.domain.Client;
 import org.jclouds.chef.domain.DatabagItem;
-import org.jclouds.rest.annotations.Api;
+import org.jclouds.json.Json;
+import org.jclouds.json.config.GsonModule;
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
+
+import com.google.inject.Guice;
+import com.google.inject.Injector;
 
 @Test(groups = "unit", testName = "BootstrapConfigForGroupTest")
 public class BootstrapConfigForGroupTest {
+
+   private Json json;
+
+   @BeforeClass
+   public void setup() {
+      Injector injector = Guice.createInjector(new GsonModule());
+      json = injector.getInstance(Json.class);
+   }
 
    @Test(expectedExceptions = IllegalStateException.class)
    public void testWhenNoDatabagItem() throws IOException {
       ChefApi chefApi = createMock(ChefApi.class);
       Client client = createMock(Client.class);
 
-      BootstrapConfigForGroup fn = new BootstrapConfigForGroup("jclouds", chefApi);
+      BootstrapConfigForGroup fn = new BootstrapConfigForGroup("jclouds", chefApi, json);
 
       expect(chefApi.getDatabagItem("jclouds", "foo")).andReturn(null);
-
-      replay(client);
-      replay(chefApi);
+      replay(client, chefApi);
 
       fn.apply("foo");
 
-      verify(client);
-      verify(chefApi);
+      verify(client, chefApi);
    }
 
    @Test
    public void testReturnsItem() throws IOException {
       ChefApi chefApi = createMock(ChefApi.class);
-      Api api = createMock(Api.class);
+      Client client = createMock(Client.class);
 
-      BootstrapConfigForGroup fn = new BootstrapConfigForGroup("jclouds", chefApi);
-      DatabagItem config = new DatabagItem("foo",
-            "{\"tomcat6\":{\"ssl_port\":8433},\"run_list\":[\"recipe[apache2]\",\"role[webserver]\"]}");
+      BootstrapConfigForGroup fn = new BootstrapConfigForGroup("jclouds", chefApi, json);
+      DatabagItem databag = new DatabagItem("foo",
+            "{\"environment\":\"development\",\"ssl_ca_file\":\"/etc/certs/chef-server.crt\","
+                  + "\"run_list\":[\"recipe[apache2]\",\"role[webserver]\"],"
+                  + "\"attributes\":{\"tomcat6\":{\"ssl_port\":8433}}}");
 
-      expect(chefApi.getDatabagItem("jclouds", "foo")).andReturn(config);
+      expect(chefApi.getDatabagItem("jclouds", "foo")).andReturn(databag);
+      replay(client, chefApi);
 
-      replay(api);
-      replay(chefApi);
+      BootstrapConfig config = fn.apply("foo");
+      assertEquals(config.getEnvironment(), "development");
+      assertEquals(config.getSslCAFile(), "/etc/certs/chef-server.crt");
+      assertEquals(config.getRunList().get(0), "recipe[apache2]");
+      assertEquals(config.getRunList().get(1), "role[webserver]");
+      assertEquals(config.getAttributes().toString(), "{\"tomcat6\":{\"ssl_port\":8433}}");
 
-      assertEquals(fn.apply("foo"), config);
-
-      verify(api);
-      verify(chefApi);
+      verify(client, chefApi);
    }
 
 }

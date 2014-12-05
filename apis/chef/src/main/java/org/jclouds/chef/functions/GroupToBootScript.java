@@ -17,17 +17,13 @@
 package org.jclouds.chef.functions;
 
 import static com.google.common.base.Preconditions.checkNotNull;
-import static com.google.common.base.Throwables.propagate;
-import static org.jclouds.scriptbuilder.domain.Statements.appendFile;
+import static com.google.common.collect.Iterables.transform;
+import static org.jclouds.scriptbuilder.domain.Statements.createOrOverwriteFile;
 import static org.jclouds.scriptbuilder.domain.Statements.exec;
-import static org.jclouds.scriptbuilder.domain.Statements.newStatementList;
 
-import java.lang.reflect.Type;
 import java.net.URI;
 import java.security.PrivateKey;
 import java.util.Collections;
-import java.util.List;
-import java.util.Map;
 import java.util.regex.Pattern;
 
 import javax.inject.Inject;
@@ -35,100 +31,119 @@ import javax.inject.Singleton;
 
 import org.jclouds.chef.config.InstallChef;
 import org.jclouds.chef.config.Validator;
+import org.jclouds.chef.domain.BootstrapConfig;
 import org.jclouds.crypto.Pems;
-import org.jclouds.domain.JsonBall;
 import org.jclouds.javax.annotation.Nullable;
-import org.jclouds.json.Json;
 import org.jclouds.location.Provider;
 import org.jclouds.scriptbuilder.ExitInsteadOfReturn;
 import org.jclouds.scriptbuilder.domain.Statement;
+import org.jclouds.scriptbuilder.domain.StatementList;
 
-import com.google.common.annotations.VisibleForTesting;
+import com.google.common.base.Function;
 import com.google.common.base.Joiner;
 import com.google.common.base.Optional;
 import com.google.common.base.Splitter;
 import com.google.common.base.Supplier;
+import com.google.common.base.Throwables;
 import com.google.common.cache.CacheLoader;
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableMap;
-import com.google.inject.TypeLiteral;
 
 /**
- * 
  * Generates a bootstrap script relevant for a particular group
  */
 @Singleton
 public class GroupToBootScript {
    private static final Pattern newLinePattern = Pattern.compile("(\\r\\n)|(\\n)");
-   
-   @VisibleForTesting
-   static final Type RUN_LIST_TYPE = new TypeLiteral<Map<String, List<String>>>() {
-   }.getType();
+
    private final Supplier<URI> endpoint;
-   private final Json json;
-   private final CacheLoader<String, ? extends JsonBall> bootstrapConfigForGroup;
+   private final CacheLoader<String, BootstrapConfig> bootstrapConfigForGroup;
    private final Statement installChef;
    private final Optional<String> validatorName;
    private final Optional<PrivateKey> validatorCredential;
 
    @Inject
-   public GroupToBootScript(@Provider Supplier<URI> endpoint, Json json,
-         CacheLoader<String, ? extends JsonBall> bootstrapConfigForGroup,
+   GroupToBootScript(@Provider Supplier<URI> endpoint, CacheLoader<String, BootstrapConfig> bootstrapConfigForGroup,
          @InstallChef Statement installChef, @Validator Optional<String> validatorName,
          @Validator Optional<PrivateKey> validatorCredential) {
-      this.endpoint = checkNotNull(endpoint, "endpoint");
-      this.json = checkNotNull(json, "json");
-      this.bootstrapConfigForGroup = checkNotNull(bootstrapConfigForGroup, "bootstrapConfigForGroup");
-      this.installChef = checkNotNull(installChef, "installChef");
-      this.validatorName = checkNotNull(validatorName, "validatorName");
-      this.validatorCredential = checkNotNull(validatorCredential, validatorCredential);
+      this.endpoint = endpoint;
+      this.bootstrapConfigForGroup = bootstrapConfigForGroup;
+      this.installChef = installChef;
+      this.validatorName = validatorName;
+      this.validatorCredential = validatorCredential;
    }
 
    public Statement apply(String group, @Nullable String nodeName) {
-      checkNotNull(group, "group");
-      String validatorClientName = validatorName.get();
-      PrivateKey validatorKey = validatorCredential.get();
-
-      JsonBall bootstrapConfig = null;
+      BootstrapConfig config = null;
       try {
-         bootstrapConfig = bootstrapConfigForGroup.load(group);
-      } catch (Exception e) {
-         throw propagate(e);
+         config = bootstrapConfigForGroup.load(checkNotNull(group, "group"));
+      } catch (Exception ex) {
+         throw Throwables.propagate(ex);
       }
-
-      Map<String, JsonBall> config = json.fromJson(bootstrapConfig.toString(),
-            BootstrapConfigForGroup.BOOTSTRAP_CONFIG_TYPE);
-      Optional<JsonBall> environment = Optional.fromNullable(config.get("environment"));
 
       String chefConfigDir = "{root}etc{fs}chef";
-      Statement createChefConfigDir = exec("{md} " + chefConfigDir);
-      String createNodeName;
-      if (nodeName != null) {
-        createNodeName = String.format("node_name \"%s\"", nodeName);
-      } else {
-        createNodeName = String.format("node_name \"%s-\" + o[:ipaddress]", group);
-      }
-      Statement createClientRb = appendFile(chefConfigDir + "{fs}client.rb", ImmutableList.of("require 'rubygems'",
-            "require 'ohai'", "o = Ohai::System.new", "o.all_plugins", createNodeName, "log_level :info", "log_location STDOUT",
-            String.format("validation_client_name \"%s\"", validatorClientName),
-            String.format("chef_server_url \"%s\"", endpoint.get())));
-
-      Statement createValidationPem = appendFile(chefConfigDir + "{fs}validation.pem",
-            Splitter.on(newLinePattern).split(Pems.pem(validatorKey)));
-
       String chefBootFile = chefConfigDir + "{fs}first-boot.json";
-      Statement createFirstBoot = appendFile(chefBootFile, Collections.singleton(json.toJson(bootstrapConfig)));
 
-      ImmutableMap.Builder<String, String> options = ImmutableMap.builder();
-      options.put("-j", chefBootFile);
-      if (environment.isPresent()) {
-         options.put("-E", environment.get().toString());
+      ImmutableList.Builder<Statement> statements = ImmutableList.builder();
+      statements.add(new ExitInsteadOfReturn(installChef));
+      statements.add(exec("{md} " + chefConfigDir));
+      if (config.getSslCAFile() != null) {
+         statements.add(createOrOverwriteFile(chefConfigDir + "{fs}chef-server.crt",
+               Splitter.on(newLinePattern).split(config.getSslCAFile())));
       }
-      String strOptions = Joiner.on(' ').withKeyValueSeparator(" ").join(options.build());
-      Statement runChef = exec("chef-client " + strOptions);
+      statements.add(createClientRbFile(chefConfigDir + "{fs}client.rb", group, nodeName, config));
+      statements.add(createOrOverwriteFile(chefConfigDir + "{fs}validation.pem",
+            Splitter.on(newLinePattern).split(Pems.pem(validatorCredential.get()))));
+      statements.add(createAttributesFile(chefBootFile, config));
+      statements.add(exec("chef-client -j " + chefBootFile));
 
-      return newStatementList(new ExitInsteadOfReturn(installChef), createChefConfigDir, createClientRb, createValidationPem,
-            createFirstBoot, runChef);
+      return new StatementList(statements.build());
+   }
+
+   private Statement createClientRbFile(String clientRbFile, String group, String nodeName, BootstrapConfig config) {
+      ImmutableList.Builder<String> clientRb = ImmutableList.builder();
+      clientRb.add("require 'rubygems'");
+      clientRb.add("require 'ohai'");
+      clientRb.add("o = Ohai::System.new");
+      clientRb.add("o.all_plugins");
+      clientRb.add("node_name \"" + (nodeName != null ? nodeName + "\"" : group + "-\" + o[:ipaddress]"));
+      clientRb.add("log_level :info");
+      clientRb.add("log_location STDOUT");
+      clientRb.add(String.format("validation_client_name \"%s\"", validatorName.get()));
+      clientRb.add(String.format("chef_server_url \"%s\"", endpoint.get()));
+      addIfPresent(clientRb, "environment", config.getEnvironment());
+      if (config.getSslCAFile() != null) {
+         addIfPresent(clientRb, "ssl_ca_file", "/etc/chef/chef-server.crt");
+      }
+      addIfPresent(clientRb, "ssl_ca_path", config.getSslCAPath());
+      addIfPresent(clientRb, "ssl_verify_mode", config.getSslVerifyMode());
+      addIfPresent(clientRb, "verify_api_cert", config.getVerifyApiCert());
+      return createOrOverwriteFile(clientRbFile, clientRb.build());
+   }
+
+   private Statement createAttributesFile(String chefBootFile, BootstrapConfig config) {
+      String attributes = config.getAttributes().toString();
+      String runlist = Joiner.on(',').join(transform(config.getRunList(), new Function<String, String>() {
+         @Override
+         public String apply(String input) {
+            return "\"" + input + "\"";
+         }
+      }));
+
+      // Append the runlist to the json attributes
+      StringBuilder sb = new StringBuilder();
+      // Strip the json ending character
+      sb.append(attributes.trim().substring(0, attributes.length() - 1));
+      sb.append(",\"run_list\":[").append(runlist).append("]");
+      sb.append("}");
+
+      return createOrOverwriteFile(chefBootFile, Collections.singleton(sb.toString()));
+   }
+
+   private void addIfPresent(ImmutableList.Builder<String> lines, String key, Object value) {
+      if (value != null) {
+         // Quote the value if it is a String
+         lines.add(String.format("%s %s", key, value instanceof String ? "\"" + value + "\"" : value.toString()));
+      }
    }
 
 }

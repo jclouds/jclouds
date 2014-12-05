@@ -288,7 +288,7 @@ public class ChefParserModule extends AbstractModule {
          return (TypeAdapter<T>) new KeepLastRepeatedKeyMapTypeAdapter<K, V>(keyAdapter, valueAdapter);
       }
    }
-
+   
    @Provides
    @Singleton
    public Map<Type, Object> provideCustomAdapterBindings(DataBagItemAdapter adapter, PrivateKeyAdapter privateAdapter,

@@ -16,23 +16,26 @@
  */
 package org.jclouds.chef;
 
-import com.google.common.io.InputSupplier;
-import com.google.inject.ImplementedBy;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.List;
+import java.util.concurrent.ExecutorService;
+
+import org.jclouds.chef.config.ChefProperties;
 import org.jclouds.chef.domain.BootstrapConfig;
 import org.jclouds.chef.domain.Client;
 import org.jclouds.chef.domain.CookbookVersion;
 import org.jclouds.chef.domain.Environment;
 import org.jclouds.chef.domain.Node;
 import org.jclouds.chef.internal.BaseChefService;
-import org.jclouds.domain.JsonBall;
+import org.jclouds.chef.util.ChefUtils;
 import org.jclouds.javax.annotation.Nullable;
+import org.jclouds.ohai.config.OhaiModule;
 import org.jclouds.rest.annotations.SinceApiVersion;
 import org.jclouds.scriptbuilder.domain.Statement;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.List;
-import java.util.concurrent.ExecutorService;
+import com.google.common.io.InputSupplier;
+import com.google.inject.ImplementedBy;
 
 /**
  * Provides high level Chef operations.
@@ -105,19 +108,18 @@ public interface ChefService {
     *
     * @param The group to get the configured run list for.
     * @return run list for all nodes bootstrapped with a certain group
+    * @deprecated USe {{@link #getBootstrapConfigForGroup(String)}.
     */
+   @Deprecated
    List<String> getRunListForGroup(String group);
 
    /**
     * Gets the bootstrap configuration for a given group.
-    * <p/>
-    * The bootstrap configuration is a Json object containing the run list and
-    * the configured attributes.
     *
     * @param group The name of the group.
     * @return The bootstrap configuration for the given group.
     */
-   JsonBall getBootstrapConfigForGroup(String group);
+   BootstrapConfig getBootstrapConfigForGroup(String group);
 
    // Nodes / Clients
 

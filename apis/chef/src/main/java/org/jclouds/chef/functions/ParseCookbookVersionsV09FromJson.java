@@ -30,8 +30,10 @@ import static com.google.common.collect.Iterables.getFirst;
 
 /**
  * Parses the cookbook versions in a Chef Server <= 0.9.8.
+ * @deprecated Support for Chef 0.9 and 0.10 will be removed in upcoming versions.
  */
 @Singleton
+@Deprecated
 public class ParseCookbookVersionsV09FromJson implements Function<HttpResponse, Set<String>> {
 
    private final ParseJson<Map<String, Set<String>>> json;

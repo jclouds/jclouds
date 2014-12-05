@@ -85,6 +85,8 @@ import org.jclouds.rest.annotations.SkipEncoding;
 import org.jclouds.rest.annotations.WrapWith;
 import org.jclouds.rest.binders.BindToJsonPayload;
 
+import com.google.inject.Provides;
+
 /**
  * Provides synchronous access to Chef.
  */
@@ -92,6 +94,12 @@ import org.jclouds.rest.binders.BindToJsonPayload;
 @Headers(keys = "X-Chef-Version", values = "{" + Constants.PROPERTY_API_VERSION + "}")
 @Consumes(MediaType.APPLICATION_JSON)
 public interface ChefApi extends Closeable {
+   
+   /**
+    * Provides access to high level Chef features.
+    */
+   @Provides
+   ChefService chefService();
 
    // Clients
 

@@ -25,8 +25,13 @@ import com.google.inject.ImplementedBy;
 
 /**
  * Provides an entry point to Chef features.
+ * 
+ * @deprecated Will be removed in next version. Directly create the
+ *             {@link ChefApi} instead and access the {@link ChefService} from
+ *             it.
  */
 @ImplementedBy(ChefContextImpl.class)
+@Deprecated
 public interface ChefContext extends View, Closeable {
 
    /**

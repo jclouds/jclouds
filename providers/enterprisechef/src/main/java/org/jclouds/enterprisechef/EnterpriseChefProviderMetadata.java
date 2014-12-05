@@ -23,64 +23,55 @@ import org.jclouds.providers.ProviderMetadata;
 import org.jclouds.providers.internal.BaseProviderMetadata;
 
 /**
- * Implementation of @ link org.jclouds.types.ProviderMetadata} for Enterprise Chef
+ * Implementation of @ link org.jclouds.types.ProviderMetadata} for Enterprise
+ * Chef
  */
-public class EnterpriseChefProviderMetadata extends BaseProviderMetadata
-{
+public class EnterpriseChefProviderMetadata extends BaseProviderMetadata {
 
-    public static Builder builder()
-    {
-        return new Builder();
-    }
+   public static Builder builder() {
+      return new Builder();
+   }
 
-    @Override
-    public Builder toBuilder()
-    {
-        return builder().fromProviderMetadata(this);
-    }
+   @Override
+   public Builder toBuilder() {
+      return builder().fromProviderMetadata(this);
+   }
 
-    public EnterpriseChefProviderMetadata()
-    {
-        super(builder());
-    }
+   public EnterpriseChefProviderMetadata() {
+      super(builder());
+   }
 
-    public EnterpriseChefProviderMetadata(Builder builder)
-    {
-        super(builder);
-    }
+   public EnterpriseChefProviderMetadata(final Builder builder) {
+      super(builder);
+   }
 
-    public static Properties defaultProperties()
-    {
-        Properties properties = new Properties();
-        return properties;
-    }
+   public static Properties defaultProperties() {
+      Properties properties = new Properties();
+      return properties;
+   }
 
-    public static class Builder extends BaseProviderMetadata.Builder
-    {
+   public static class Builder extends BaseProviderMetadata.Builder {
 
-        protected Builder()
-        {
-            id("enterprisechef") //
-                .name("OpsCode Enterprise Chef") //
-                .endpoint("https://api.opscode.com") //
-                .homepage(URI.create("https://manage.opscode.com")) //
-                .console(URI.create("https://manage.opscode.com")) //
-                .apiMetadata(new EnterpriseChefApiMetadata()) //
-                .defaultProperties(EnterpriseChefProviderMetadata.defaultProperties());
-        }
+      protected Builder() {
+         id("enterprisechef") //
+               .name("OpsCode Enterprise Chef") //
+               .endpoint("https://api.opscode.com") //
+               .homepage(URI.create("https://manage.opscode.com")) //
+               .console(URI.create("https://manage.opscode.com")) //
+               .apiMetadata(new EnterpriseChefApiMetadata()) //
+               .defaultProperties(EnterpriseChefProviderMetadata.defaultProperties());
+      }
 
-        @Override
-        public EnterpriseChefProviderMetadata build()
-        {
-            return new EnterpriseChefProviderMetadata(this);
-        }
+      @Override
+      public EnterpriseChefProviderMetadata build() {
+         return new EnterpriseChefProviderMetadata(this);
+      }
 
-        @Override
-        public Builder fromProviderMetadata(ProviderMetadata in)
-        {
-            super.fromProviderMetadata(in);
-            return this;
-        }
+      @Override
+      public Builder fromProviderMetadata(final ProviderMetadata in) {
+         super.fromProviderMetadata(in);
+         return this;
+      }
 
-    }
+   }
 }

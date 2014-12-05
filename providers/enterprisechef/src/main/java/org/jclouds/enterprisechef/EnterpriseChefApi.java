@@ -51,74 +51,78 @@ import org.jclouds.rest.annotations.WrapWith;
 @RequestFilters(SignedHeaderAuth.class)
 @Consumes(MediaType.APPLICATION_JSON)
 @Headers(keys = "X-Chef-Version", values = "{" + Constants.PROPERTY_API_VERSION + "}")
-public interface EnterpriseChefApi extends ChefApi
-{
-    /**
-     * Retrieves an existing user.
-     * 
-     * @param name The name of the user to get.
-     * @return The details of the user or <code>null</code> if not found.
-     */
-    @Named("user:get")
-    @GET
-    @Path("/users/{name}")
-    @Fallback(NullOnNotFoundOr404.class)
-    User getUser(@PathParam("name") String name);
+public interface EnterpriseChefApi extends ChefApi {
+   /**
+    * Retrieves an existing user.
+    * 
+    * @param name
+    *           The name of the user to get.
+    * @return The details of the user or <code>null</code> if not found.
+    */
+   @Named("user:get")
+   @GET
+   @Path("/users/{name}")
+   @Fallback(NullOnNotFoundOr404.class)
+   User getUser(@PathParam("name") String name);
 
-    /**
-     * List all existing groups.
-     * 
-     * @return The list of groups.
-     */
-    @Named("group:list")
-    @GET
-    @Path("/groups")
-    @ResponseParser(ParseKeySetFromJson.class)
-    Set<String> listGroups();
+   /**
+    * List all existing groups.
+    * 
+    * @return The list of groups.
+    */
+   @Named("group:list")
+   @GET
+   @Path("/groups")
+   @ResponseParser(ParseKeySetFromJson.class)
+   Set<String> listGroups();
 
-    /**
-     * Retrieves an existing group.
-     * 
-     * @param name The name of the group to get.
-     * @return The details of the group or <code>null</code> if not found.
-     */
-    @Named("group:get")
-    @GET
-    @Path("/groups/{name}")
-    @Fallback(NullOnNotFoundOr404.class)
-    Group getGroup(@PathParam("name") String name);
+   /**
+    * Retrieves an existing group.
+    * 
+    * @param name
+    *           The name of the group to get.
+    * @return The details of the group or <code>null</code> if not found.
+    */
+   @Named("group:get")
+   @GET
+   @Path("/groups/{name}")
+   @Fallback(NullOnNotFoundOr404.class)
+   Group getGroup(@PathParam("name") String name);
 
-    /**
-     * Creates a new group.
-     * 
-     * @param name The name of the group to create.
-     */
-    @Named("group:create")
-    @POST
-    @Path("/groups")
-    void createGroup(@WrapWith("groupname") String name);
+   /**
+    * Creates a new group.
+    * 
+    * @param name
+    *           The name of the group to create.
+    */
+   @Named("group:create")
+   @POST
+   @Path("/groups")
+   void createGroup(@WrapWith("groupname") String name);
 
-    /**
-     * Updates a group.
-     * <p>
-     * This method can be used to add actors (clients, groups) to the group.
-     * 
-     * @param group The group with the updated information.
-     */
-    @Named("group:update")
-    @PUT
-    @Path("/groups/{name}")
-    void updateGroup(
-        @PathParam("name") @ParamParser(GroupName.class) @BinderParam(BindGroupToUpdateRequestJsonPayload.class) Group group);
+   /**
+    * Updates a group.
+    * <p>
+    * This method can be used to add actors (clients, groups) to the group.
+    * 
+    * @param group
+    *           The group with the updated information.
+    */
+   @Named("group:update")
+   @PUT
+   @Path("/groups/{name}")
+   void updateGroup(
+         @PathParam("name") @ParamParser(GroupName.class) @BinderParam(BindGroupToUpdateRequestJsonPayload.class) Group group);
 
-    /**
-     * Deletes a group.
-     * 
-     * @param name The name of the group to delete.
-     */
-    @Named("group:delete")
-    @DELETE
-    @Path("/groups/{name}")
-    void deleteGroup(@PathParam("name") String name);
+   /**
+    * Deletes a group.
+    * 
+    * @param name
+    *           The name of the group to delete.
+    */
+   @Named("group:delete")
+   @DELETE
+   @Path("/groups/{name}")
+   void deleteGroup(@PathParam("name") String name);
 
 }

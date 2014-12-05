@@ -33,10 +33,11 @@ import org.jclouds.chef.ChefApiMetadata;
 import org.jclouds.chef.config.ChefBootstrapModule;
 import org.jclouds.chef.config.ChefParserModule;
 import org.jclouds.chef.config.InstallChef;
-import org.jclouds.chef.domain.DatabagItem;
+import org.jclouds.chef.domain.BootstrapConfig;
+import org.jclouds.chef.domain.BootstrapConfig.SSLVerifyMode;
+import org.jclouds.chef.util.RunListBuilder;
 import org.jclouds.crypto.PemsTest;
 import org.jclouds.domain.JsonBall;
-import org.jclouds.json.Json;
 import org.jclouds.json.config.GsonModule;
 import org.jclouds.rest.annotations.ApiVersion;
 import org.jclouds.scriptbuilder.domain.OsFamily;
@@ -61,7 +62,6 @@ import com.google.inject.name.Names;
 @Test(groups = "unit", testName = "GroupToBootScriptTest")
 public class GroupToBootScriptTest {
 
-   private Json json;
    private Statement installChefGems;
    private Statement installChefOmnibus;
    private Optional<String> validatorName;
@@ -88,7 +88,6 @@ public class GroupToBootScriptTest {
          }
       }, new ChefParserModule(), new GsonModule(), new ChefBootstrapModule());
 
-      json = injectorGems.getInstance(Json.class);
       installChefGems = injectorGems.getInstance(Key.get(Statement.class, InstallChef.class));
       installChefOmnibus = injectorOmnibus.getInstance(Key.get(Statement.class, InstallChef.class));
       validatorName = Optional.<String> of("chef-validator");
@@ -97,25 +96,25 @@ public class GroupToBootScriptTest {
    @Test(expectedExceptions = IllegalStateException.class)
    public void testMustHaveValidatorName() {
       Optional<PrivateKey> validatorCredential = Optional.of(createMock(PrivateKey.class));
-      GroupToBootScript fn = new GroupToBootScript(Suppliers.ofInstance(URI.create("http://localhost:4000")), json,
-            CacheLoader.from(Functions.forMap(ImmutableMap.<String, DatabagItem> of())), installChefGems,
-            Optional.<String> absent(), validatorCredential);
+      GroupToBootScript fn = new GroupToBootScript(Suppliers.ofInstance(URI.create("http://localhost:4000")),
+            CacheLoader.from(Functions.forMap(ImmutableMap.of("foo", BootstrapConfig.builder().build()))),
+            installChefOmnibus, Optional.<String> absent(), validatorCredential);
       fn.apply("foo", null);
    }
 
    @Test(expectedExceptions = IllegalStateException.class)
    public void testMustHaveValidatorCredential() {
-      GroupToBootScript fn = new GroupToBootScript(Suppliers.ofInstance(URI.create("http://localhost:4000")), json,
-            CacheLoader.from(Functions.forMap(ImmutableMap.<String, DatabagItem> of())), installChefGems,
-            validatorName, Optional.<PrivateKey> absent());
+      GroupToBootScript fn = new GroupToBootScript(Suppliers.ofInstance(URI.create("http://localhost:4000")),
+            CacheLoader.from(Functions.forMap(ImmutableMap.of("foo", BootstrapConfig.builder().build()))),
+            installChefOmnibus, validatorName, Optional.<PrivateKey> absent());
       fn.apply("foo", null);
    }
 
    @Test(expectedExceptions = IllegalArgumentException.class, expectedExceptionsMessageRegExp = "Key 'foo' not present in map")
    public void testMustHaveRunScriptsName() {
       Optional<PrivateKey> validatorCredential = Optional.of(createMock(PrivateKey.class));
-      GroupToBootScript fn = new GroupToBootScript(Suppliers.ofInstance(URI.create("http://localhost:4000")), json,
-            CacheLoader.from(Functions.forMap(ImmutableMap.<String, DatabagItem> of())), installChefGems,
+      GroupToBootScript fn = new GroupToBootScript(Suppliers.ofInstance(URI.create("http://localhost:4000")),
+            CacheLoader.from(Functions.forMap(ImmutableMap.<String, BootstrapConfig> of())), installChefOmnibus,
             validatorName, validatorCredential);
       fn.apply("foo", null);
    }
@@ -123,18 +122,18 @@ public class GroupToBootScriptTest {
    @Test(expectedExceptions = NullPointerException.class, expectedExceptionsMessageRegExp = "null value in entry: foo=null")
    public void testMustHaveRunScriptsValue() {
       Optional<PrivateKey> validatorCredential = Optional.of(createMock(PrivateKey.class));
-      GroupToBootScript fn = new GroupToBootScript(Suppliers.ofInstance(URI.create("http://localhost:4000")), json,
-            CacheLoader.from(Functions.forMap(ImmutableMap.<String, DatabagItem> of("foo", (DatabagItem) null))),
-            installChefGems, validatorName, validatorCredential);
+      GroupToBootScript fn = new GroupToBootScript(Suppliers.ofInstance(URI.create("http://localhost:4000")),
+            CacheLoader.from(Functions.forMap(ImmutableMap.of("foo", (BootstrapConfig) null))), installChefOmnibus,
+            validatorName, validatorCredential);
       fn.apply("foo", null);
    }
 
    public void testOneRecipe() throws IOException {
       Optional<PrivateKey> validatorCredential = Optional.of(createMock(PrivateKey.class));
-      GroupToBootScript fn = new GroupToBootScript(Suppliers.ofInstance(URI.create("http://localhost:4000")), json,
-            CacheLoader.from(Functions.forMap(ImmutableMap.<String, JsonBall> of("foo", new JsonBall(
-                  "{\"tomcat6\":{\"ssl_port\":8433},\"run_list\":[\"recipe[apache2]\",\"role[webserver]\"]}")))),
-            installChefGems, validatorName, validatorCredential);
+      BootstrapConfig config = BootstrapConfig.builder().attributes(new JsonBall("{\"tomcat6\":{\"ssl_port\":8433}}"))
+            .runList(new RunListBuilder().addRecipe("apache2").addRole("webserver").build()).build();
+
+      GroupToBootScript fn = groupToBootScriptFor(config, validatorCredential, false);
 
       PrivateKey validatorKey = validatorCredential.get();
       expect(validatorKey.getEncoded()).andReturn(PemsTest.PRIVATE_KEY.getBytes());
@@ -142,26 +141,19 @@ public class GroupToBootScriptTest {
 
       assertEquals(
             fn.apply("foo", null).render(OsFamily.UNIX),
-            exitInsteadOfReturn(
-                  OsFamily.UNIX,
-                  Resources.toString(Resources.getResource("test_install_ruby." + ShellToken.SH.to(OsFamily.UNIX)),
-                        Charsets.UTF_8)
-                        + Resources.toString(
-                              Resources.getResource("test_install_rubygems." + ShellToken.SH.to(OsFamily.UNIX)),
-                              Charsets.UTF_8)
-                        + "gem install chef --no-rdoc --no-ri\n"
-                        + Resources.toString(Resources.getResource("bootstrap.sh"), Charsets.UTF_8)));
+            exitInsteadOfReturn(OsFamily.UNIX, readContent("test_install_ruby.sh")
+                  + readContent("test_install_rubygems.sh"))
+                  + "gem install chef --no-rdoc --no-ri\n" + readContent("bootstrap.sh"));
 
       verify(validatorKey);
    }
 
    public void testOneRecipeAndEnvironment() throws IOException {
       Optional<PrivateKey> validatorCredential = Optional.of(createMock(PrivateKey.class));
-      GroupToBootScript fn = new GroupToBootScript(Suppliers.ofInstance(URI.create("http://localhost:4000")), json,
-            CacheLoader.from(Functions.forMap(ImmutableMap.<String, JsonBall> of("foo", new JsonBall(
-                  "{\"tomcat6\":{\"ssl_port\":8433},\"environment\":\"env\","
-                        + "\"run_list\":[\"recipe[apache2]\",\"role[webserver]\"]}")))), installChefGems,
-            validatorName, validatorCredential);
+      BootstrapConfig config = BootstrapConfig.builder().attributes(new JsonBall("{\"tomcat6\":{\"ssl_port\":8433}}"))
+            .environment("env").runList(new RunListBuilder().addRecipe("apache2").addRole("webserver").build()).build();
+
+      GroupToBootScript fn = groupToBootScriptFor(config, validatorCredential, false);
 
       PrivateKey validatorKey = validatorCredential.get();
       expect(validatorKey.getEncoded()).andReturn(PemsTest.PRIVATE_KEY.getBytes());
@@ -169,56 +161,83 @@ public class GroupToBootScriptTest {
 
       assertEquals(
             fn.apply("foo", null).render(OsFamily.UNIX),
-            exitInsteadOfReturn(
-                  OsFamily.UNIX,
-                  Resources.toString(Resources.getResource("test_install_ruby." + ShellToken.SH.to(OsFamily.UNIX)),
-                        Charsets.UTF_8)
-                        + Resources.toString(
-                              Resources.getResource("test_install_rubygems." + ShellToken.SH.to(OsFamily.UNIX)),
-                              Charsets.UTF_8)
-                        + "gem install chef --no-rdoc --no-ri\n"
-                        + Resources.toString(Resources.getResource("bootstrap-env.sh"), Charsets.UTF_8)));
+            exitInsteadOfReturn(OsFamily.UNIX, readContent("test_install_ruby.sh")
+                  + readContent("test_install_rubygems.sh") + "gem install chef --no-rdoc --no-ri\n"
+                  + readContent("bootstrap-env.sh")));
 
       verify(validatorKey);
    }
 
    public void testOneRecipeOmnibus() throws IOException {
       Optional<PrivateKey> validatorCredential = Optional.of(createMock(PrivateKey.class));
-      GroupToBootScript fn = new GroupToBootScript(Suppliers.ofInstance(URI.create("http://localhost:4000")), json,
-            CacheLoader.from(Functions.forMap(ImmutableMap.<String, JsonBall> of("foo", new JsonBall(
-                  "{\"tomcat6\":{\"ssl_port\":8433},\"run_list\":[\"recipe[apache2]\",\"role[webserver]\"]}")))),
-            installChefOmnibus, validatorName, validatorCredential);
+      BootstrapConfig config = BootstrapConfig.builder().attributes(new JsonBall("{\"tomcat6\":{\"ssl_port\":8433}}"))
+            .runList(new RunListBuilder().addRecipe("apache2").addRole("webserver").build()).build();
+
+      GroupToBootScript fn = groupToBootScriptFor(config, validatorCredential, true);
 
       PrivateKey validatorKey = validatorCredential.get();
       expect(validatorKey.getEncoded()).andReturn(PemsTest.PRIVATE_KEY.getBytes());
       replay(validatorKey);
 
-      assertEquals(
-            fn.apply("foo", null).render(OsFamily.UNIX),
+      assertEquals(fn.apply("foo", null).render(OsFamily.UNIX),
             "setupPublicCurl || exit 1\ncurl -q -s -S -L --connect-timeout 10 --max-time 600 --retry 20 "
-                  + "-X GET  https://www.opscode.com/chef/install.sh |(bash)\n"
-                  + Resources.toString(Resources.getResource("bootstrap.sh"), Charsets.UTF_8));
+                  + "-X GET  https://www.opscode.com/chef/install.sh |(bash)\n" + readContent("bootstrap.sh"));
 
       verify(validatorKey);
    }
 
    public void testOneRecipeAndEnvironmentOmnibus() throws IOException {
       Optional<PrivateKey> validatorCredential = Optional.of(createMock(PrivateKey.class));
-      GroupToBootScript fn = new GroupToBootScript(Suppliers.ofInstance(URI.create("http://localhost:4000")), json,
-            CacheLoader.from(Functions.forMap(ImmutableMap.<String, JsonBall> of("foo", new JsonBall(
-                  "{\"tomcat6\":{\"ssl_port\":8433},\"environment\":\"env\","
-                        + "\"run_list\":[\"recipe[apache2]\",\"role[webserver]\"]}")))), installChefOmnibus,
-            validatorName, validatorCredential);
+      BootstrapConfig config = BootstrapConfig.builder().attributes(new JsonBall("{\"tomcat6\":{\"ssl_port\":8433}}"))
+            .environment("env").runList(new RunListBuilder().addRecipe("apache2").addRole("webserver").build()).build();
+
+      GroupToBootScript fn = groupToBootScriptFor(config, validatorCredential, true);
 
       PrivateKey validatorKey = validatorCredential.get();
       expect(validatorKey.getEncoded()).andReturn(PemsTest.PRIVATE_KEY.getBytes());
       replay(validatorKey);
 
-      assertEquals(
-            fn.apply("foo", null).render(OsFamily.UNIX),
+      assertEquals(fn.apply("foo", null).render(OsFamily.UNIX),
             "setupPublicCurl || exit 1\ncurl -q -s -S -L --connect-timeout 10 --max-time 600 --retry 20 "
-                  + "-X GET  https://www.opscode.com/chef/install.sh |(bash)\n"
-                  + Resources.toString(Resources.getResource("bootstrap-env.sh"), Charsets.UTF_8));
+                  + "-X GET  https://www.opscode.com/chef/install.sh |(bash)\n" + readContent("bootstrap-env.sh"));
+
+      verify(validatorKey);
+   }
+
+   public void testCustomNodeName() throws IOException {
+      Optional<PrivateKey> validatorCredential = Optional.of(createMock(PrivateKey.class));
+      BootstrapConfig config = BootstrapConfig.builder().attributes(new JsonBall("{\"tomcat6\":{\"ssl_port\":8433}}"))
+            .environment("env").runList(new RunListBuilder().addRecipe("apache2").addRole("webserver").build()).build();
+
+      GroupToBootScript fn = groupToBootScriptFor(config, validatorCredential, true);
+
+      PrivateKey validatorKey = validatorCredential.get();
+      expect(validatorKey.getEncoded()).andReturn(PemsTest.PRIVATE_KEY.getBytes());
+      replay(validatorKey);
+
+      assertEquals(fn.apply("foo", "bar").render(OsFamily.UNIX),
+            "setupPublicCurl || exit 1\ncurl -q -s -S -L --connect-timeout 10 --max-time 600 --retry 20 "
+                  + "-X GET  https://www.opscode.com/chef/install.sh |(bash)\n" + readContent("bootstrap-node-env.sh"));
+
+      verify(validatorKey);
+   }
+
+   public void testCustomSecurityOptions() throws IOException {
+      Optional<PrivateKey> validatorCredential = Optional.of(createMock(PrivateKey.class));
+      BootstrapConfig config = BootstrapConfig.builder().attributes(new JsonBall("{\"tomcat6\":{\"ssl_port\":8433}}"))
+            .runList(new RunListBuilder().addRecipe("apache2").addRole("webserver").build())
+            .sslCAFile(readContent("chef.crt")).sslCAPath("/etc/chef").sslVerifyMode(SSLVerifyMode.PEER)
+            .verifyApiCert(true).build();
+
+      GroupToBootScript fn = groupToBootScriptFor(config, validatorCredential, true);
+
+      PrivateKey validatorKey = validatorCredential.get();
+      expect(validatorKey.getEncoded()).andReturn(PemsTest.PRIVATE_KEY.getBytes());
+      replay(validatorKey);
+
+      assertEquals(fn.apply("foo", null).render(OsFamily.UNIX),
+            "setupPublicCurl || exit 1\ncurl -q -s -S -L --connect-timeout 10 --max-time 600 --retry 20 "
+                  + "-X GET  https://www.opscode.com/chef/install.sh |(bash)\n" + readContent("bootstrap-ssl.sh"));
 
       verify(validatorKey);
    }
@@ -227,24 +246,14 @@ public class GroupToBootScriptTest {
       return input.replaceAll(ShellToken.RETURN.to(family), ShellToken.EXIT.to(family));
    }
 
-  public void testCustomNodeName() throws IOException {
-    Optional<PrivateKey> validatorCredential = Optional.of(createMock(PrivateKey.class));
-    GroupToBootScript fn = new GroupToBootScript(Suppliers.ofInstance(URI.create("http://localhost:4000")), json,
-            CacheLoader.from(Functions.forMap(ImmutableMap.<String, JsonBall> of("foo", new JsonBall(
-                    "{\"tomcat6\":{\"ssl_port\":8433},\"environment\":\"env\","
-                            + "\"run_list\":[\"recipe[apache2]\",\"role[webserver]\"]}")))), installChefOmnibus,
-            validatorName, validatorCredential);
+   private GroupToBootScript groupToBootScriptFor(BootstrapConfig config, Optional<PrivateKey> validatorCredential,
+         boolean useOmnibus) {
+      return new GroupToBootScript(Suppliers.ofInstance(URI.create("http://localhost:4000")),
+            CacheLoader.from(Functions.forMap(ImmutableMap.of("foo", config))), useOmnibus ? installChefOmnibus
+                  : installChefGems, validatorName, validatorCredential);
+   }
 
-    PrivateKey validatorKey = validatorCredential.get();
-    expect(validatorKey.getEncoded()).andReturn(PemsTest.PRIVATE_KEY.getBytes());
-    replay(validatorKey);
-
-    assertEquals(
-            fn.apply("foo", "bar").render(OsFamily.UNIX),
-            "setupPublicCurl || exit 1\ncurl -q -s -S -L --connect-timeout 10 --max-time 600 --retry 20 "
-                    + "-X GET  https://www.opscode.com/chef/install.sh |(bash)\n"
-                    + Resources.toString(Resources.getResource("bootstrap-node-env.sh"), Charsets.UTF_8));
-
-    verify(validatorKey);
-  }
+   private static String readContent(String resource) throws IOException {
+      return Resources.toString(Resources.getResource(resource), Charsets.UTF_8);
+   }
 }
