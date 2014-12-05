@@ -43,6 +43,7 @@ public class ParseNetworkTest extends BaseGoogleComputeEngineParseTest<Network> 
    public Network expected(String baseUrl) {
       return Network.create( //
             "13024414170909937976", // id
+            parse("2012-10-24T20:13:19.967"), // creationTimestamp
             URI.create(baseUrl + "/party/networks/jclouds-test"), // selfLink
             "default", // name
             "Default network for the project", // description

@@ -25,6 +25,7 @@ import static org.testng.Assert.assertEquals;
 import java.net.URI;
 import java.util.concurrent.atomic.AtomicReference;
 
+import org.jclouds.date.internal.SimpleDateFormatDateService;
 import org.jclouds.googlecomputeengine.GoogleComputeEngineApi;
 import org.jclouds.googlecomputeengine.compute.domain.NetworkAndAddressRange;
 import org.jclouds.googlecomputeengine.compute.predicates.AtomicOperationDone;
@@ -46,6 +47,7 @@ public class FindNetworkOrCreateTest {
    private static final String BASE_URL = "https://www.googleapis.com/compute/v1/projects";
    private static final Network NETWORK = Network.create( //
          "abcd", // id
+         new SimpleDateFormatDateService().iso8601DateParse("2014-07-18T09:47:30.826-07:00"), // creationTimestamp
          URI.create(BASE_URL + "/party/global/networks/this-network"), // selfLink
          "this-network", // name
          null, // description

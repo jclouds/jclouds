@@ -29,6 +29,7 @@ import static org.testng.Assert.assertTrue;
 import java.net.URI;
 
 import org.jclouds.compute.domain.SecurityGroup;
+import org.jclouds.date.internal.SimpleDateFormatDateService;
 import org.jclouds.googlecloud.domain.ForwardingListPage;
 import org.jclouds.googlecomputeengine.GoogleComputeEngineApi;
 import org.jclouds.googlecomputeengine.domain.Network;
@@ -59,6 +60,7 @@ public class NetworkToSecurityGroupTest {
 
       Network network = Network.create( //
             "abcd", // id
+            new SimpleDateFormatDateService().iso8601DateParse("2014-07-18T09:47:30.826-07:00"), // creationTimestamp
             URI.create("https://www.googleapis.com/compute/v1/projects/party/global/networks/party-test"),
             "party-test", // name
             "some description", // description

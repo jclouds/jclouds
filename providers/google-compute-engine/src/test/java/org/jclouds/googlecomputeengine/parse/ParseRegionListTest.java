@@ -49,6 +49,7 @@ public class ParseRegionListTest extends BaseGoogleComputeEngineParseTest<ListPa
       Region region1 = new ParseRegionTest().expected(baseUrl);
       Region region2 = Region.create( //
             "6396763663251190992", // id
+            parse("2013-07-08T14:40:37.939-07:00"), // creationTimestamp
             URI.create(baseUrl + "/party/regions/us-central2"), // selfLink
             "us-central2", // name
             "us-central2", // description

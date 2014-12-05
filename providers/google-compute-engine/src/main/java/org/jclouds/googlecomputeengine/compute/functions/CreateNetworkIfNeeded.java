@@ -27,6 +27,7 @@ import org.jclouds.googlecomputeengine.GoogleComputeEngineApi;
 import org.jclouds.googlecomputeengine.compute.domain.NetworkAndAddressRange;
 import org.jclouds.googlecomputeengine.domain.Network;
 import org.jclouds.googlecomputeengine.domain.Operation;
+import org.jclouds.googlecomputeengine.options.NetworkCreationOptions;
 
 import com.google.common.base.Function;
 import com.google.common.base.Predicate;
@@ -51,8 +52,10 @@ public final class CreateNetworkIfNeeded implements Function<NetworkAndAddressRa
       }
 
       if (input.gateway() != null) {
+         NetworkCreationOptions options = new NetworkCreationOptions.Builder(input.name(), input.rangeIPv4())
+            .gatewayIPv4(input.gateway()).build();
          AtomicReference<Operation> operation = Atomics.newReference(api.networks()
-               .createInIPv4RangeWithGateway(input.name(), input.rangeIPv4(), input.gateway()));
+               .createInIPv4Range(options));
          operationDone.apply(operation);
 
          checkState(operation.get().httpErrorStatusCode() == null,

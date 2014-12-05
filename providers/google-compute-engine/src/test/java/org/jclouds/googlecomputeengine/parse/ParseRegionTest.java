@@ -46,6 +46,7 @@ public class ParseRegionTest extends BaseGoogleComputeEngineParseTest<Region> {
    public Region expected(String baseUrl) {
       return Region.create( //
             "12912210600542709766", // id
+            parse("2013-07-08T14:40:37.939-07:00"), // creationTimestamp
             URI.create(baseUrl + "/party/regions/us-central1"), // selfLink
             "us-central1", // name
             "us-central1", // description

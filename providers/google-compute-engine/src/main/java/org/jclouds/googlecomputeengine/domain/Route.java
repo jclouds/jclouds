@@ -19,8 +19,8 @@ package org.jclouds.googlecomputeengine.domain;
 import static org.jclouds.googlecloud.internal.NullSafeCopies.copyOf;
 
 import java.net.URI;
+import java.util.Date;
 import java.util.List;
-import java.util.Map;
 
 import org.jclouds.javax.annotation.Nullable;
 import org.jclouds.json.SerializedNames;
@@ -34,12 +34,13 @@ public abstract class Route {
    public abstract static class Warning {
       public abstract String code(); // TODO: enum
 
+      // TODO: create common Warning resource.
       @Nullable public abstract String message();
 
-      public abstract Map<String, String> data();
+      public abstract List<Metadata.Entry> data();
 
       @SerializedNames({ "code", "message", "data" })
-      public static Warning create(String code, String message, Map<String, String> data) {
+      public static Warning create(String code, String message, List<Metadata.Entry> data) {
          return new AutoValue_Route_Warning(code, message, copyOf(data));
       }
 
@@ -48,6 +49,8 @@ public abstract class Route {
    }
 
    public abstract String id();
+
+   public abstract Date creationTimestamp();
 
    public abstract URI selfLink();
 
@@ -86,12 +89,12 @@ public abstract class Route {
    public abstract List<Warning> warnings();
 
    @SerializedNames(
-         { "id", "selfLink", "name", "description", "network", "tags", "destRange", "priority", "nextHopInstance",
+         { "id", "creationTimestamp", "selfLink", "name", "description", "network", "tags", "destRange", "priority", "nextHopInstance",
                "nextHopIp", "nextHopNetwork", "nextHopGateway", "warnings" })
-   public static Route create(String id, URI selfLink, String name, String description, URI network, List<String> tags,
+   public static Route create(String id, Date creationTimestamp, URI selfLink, String name, String description, URI network, List<String> tags,
          String destRange, int priority, URI nextHopInstance, String nextHopIp, URI nextHopNetwork, URI nextHopGateway,
          List<Warning> warnings) {
-      return new AutoValue_Route(id, selfLink, name, description, network, copyOf(tags), destRange, priority,
+      return new AutoValue_Route(id, creationTimestamp, selfLink, name, description, network, copyOf(tags), destRange, priority,
             nextHopInstance, nextHopIp, nextHopNetwork, nextHopGateway, copyOf(warnings));
    }
 

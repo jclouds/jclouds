@@ -38,8 +38,10 @@ import org.jclouds.googlecomputeengine.domain.Network;
 import org.jclouds.googlecomputeengine.domain.Operation;
 import org.jclouds.googlecomputeengine.internal.BaseToIteratorOfListPage;
 import org.jclouds.googlecomputeengine.options.ListOptions;
+import org.jclouds.googlecomputeengine.options.NetworkCreationOptions;
 import org.jclouds.javax.annotation.Nullable;
 import org.jclouds.oauth.v2.filters.OAuthFilter;
+import org.jclouds.rest.annotations.BinderParam;
 import org.jclouds.rest.annotations.Fallback;
 import org.jclouds.rest.annotations.MapBinder;
 import org.jclouds.rest.annotations.PayloadParam;
@@ -90,10 +92,7 @@ public interface NetworkApi {
    @Named("Networks:insert")
    @POST
    @Produces(APPLICATION_JSON)
-   @MapBinder(BindToJsonPayload.class)
-   Operation createInIPv4RangeWithGateway(@PayloadParam("name") String networkName,
-                                          @PayloadParam("IPv4Range") String IPv4Range,
-                                          @PayloadParam("gatewayIPv4") String gatewayIPv4);
+   Operation createInIPv4Range(@BinderParam(BindToJsonPayload.class) NetworkCreationOptions options);
 
    /** Deletes a network by name and returns the operation in progress, or null if not found. */
    @Named("Networks:delete")

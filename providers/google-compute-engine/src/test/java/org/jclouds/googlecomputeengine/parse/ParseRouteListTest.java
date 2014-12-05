@@ -47,6 +47,7 @@ public class ParseRouteListTest extends BaseGoogleComputeEngineParseTest<ListPag
       Route route1 = new ParseRouteTest().expected(baseUrl);
       Route route2 = Route.create( //
             "507025480040058551", // id
+            parse("2013-07-08T14:40:38.502-07:00"), // creationTimestamp
             URI.create(baseUrl + "/party/global/routes/default-route-fc92a41ecb5a8d17"), // selfLink
             "default-route-fc92a41ecb5a8d17", // name
             "Default route to the Internet.", // description

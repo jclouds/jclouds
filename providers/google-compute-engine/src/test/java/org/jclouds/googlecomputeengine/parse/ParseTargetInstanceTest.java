@@ -40,7 +40,9 @@ public class ParseTargetInstanceTest extends BaseGoogleComputeEngineParseTest<Ta
    }
 
    public TargetInstance expected(String baseUrl) {
-      return TargetInstance.create("2014-07-18T09:47:30.826-07:00", // creationTimestamp
+      return TargetInstance.create(
+            "13050421646334304115", // id
+            "2014-07-18T09:47:30.826-07:00", // creationTimestamp
             "target-instance-1", // name
             "A pretty cool target instance", // description
             URI.create(baseUrl + "/party/zones/us-central1-a"), // zone

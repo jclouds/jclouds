@@ -43,6 +43,7 @@ public class ParseZoneListTest extends BaseGoogleComputeEngineParseTest<ListPage
       Zone zone1 = new ParseZoneTest().expected();
       Zone zone2 = Zone.create( //
             "13024414164050619686", // id
+            parse("2012-10-24T20:13:19.271"), // creationTimestamp
             URI.create(BASE_URL + "/party/zones/us-central1-b"), // selfLink
             "us-central1-b", // name
             "us-central1-b", // description
@@ -54,6 +55,8 @@ public class ParseZoneListTest extends BaseGoogleComputeEngineParseTest<ListPage
                         parse("2013-02-17T08:00:00.000"), // beginTime
                         parse("2013-03-03T08:00:00.000") // endTime)
                   )), //
+            null, // deprecated
+            "us-central1", // region
             null // availableMachineTypes
       );
       return ForwardingListPage.create( //

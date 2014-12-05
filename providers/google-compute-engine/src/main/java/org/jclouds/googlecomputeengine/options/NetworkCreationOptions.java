@@ -14,10 +14,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jclouds.googlecomputeengine.domain;
+package org.jclouds.googlecomputeengine.options;
 
-import java.net.URI;
-import java.util.Date;
+import static com.google.common.base.Preconditions.checkNotNull;
 
 import org.jclouds.javax.annotation.Nullable;
 import org.jclouds.json.SerializedNames;
@@ -28,13 +27,7 @@ import com.google.auto.value.AutoValue;
  * Represents a network used to enable instance communication.
  */
 @AutoValue
-public abstract class Network {
-
-   public abstract String id();
-
-   public abstract Date creationTimestamp();
-
-   public abstract URI selfLink();
+public abstract class NetworkCreationOptions {
 
    public abstract String name();
 
@@ -52,12 +45,41 @@ public abstract class Network {
     */
    @Nullable public abstract String gatewayIPv4();
 
-   @SerializedNames({ "id", "creationTimestamp", "selfLink", "name", "description", "IPv4Range", "gatewayIPv4" })
-   public static Network create(String id, Date creationTimestamp, URI selfLink, String name, String description, String rangeIPv4,
+   @SerializedNames({ "name", "description", "IPv4Range", "gatewayIPv4" })
+   public static NetworkCreationOptions create(String name, String description, String rangeIPv4,
          String gatewayIPv4) {
-      return new AutoValue_Network(id, creationTimestamp, selfLink, name, description, rangeIPv4, gatewayIPv4);
+      return new AutoValue_NetworkCreationOptions(name, description, rangeIPv4, gatewayIPv4);
    }
 
-   Network() {
+   NetworkCreationOptions() {
+   }
+
+   public static class Builder {
+      private String name;
+      private String description;
+      private String rangeIPv4;
+      private String gatewayIPv4;
+
+      public Builder(String name, String rangeIPv4){
+         this.name = name;
+         this.rangeIPv4 = rangeIPv4;
+      }
+
+      public Builder description(String description) {
+         this.description = description;
+         return this;
+      }
+
+      public Builder gatewayIPv4(String gatewayIPv4) {
+         this.gatewayIPv4 = gatewayIPv4;
+         return this;
+      }
+
+      public NetworkCreationOptions build() {
+         checkNotNull(name, "NetworkCreationOptions name cannot be null");
+         checkNotNull(rangeIPv4, "NetworkCreationOptions rangeIPv4 cannot be null");
+         return create(name, description, rangeIPv4, gatewayIPv4);
+      }
+
    }
 }

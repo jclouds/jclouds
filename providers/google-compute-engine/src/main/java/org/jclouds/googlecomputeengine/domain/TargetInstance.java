@@ -27,6 +27,7 @@ import com.google.auto.value.AutoValue;
 @AutoValue
 public abstract class TargetInstance {
 
+   public abstract String id();
    public abstract String creationTimestamp();
    public abstract String name();
    @Nullable public abstract String description();
@@ -35,11 +36,11 @@ public abstract class TargetInstance {
    @Nullable public abstract URI instance();
    public abstract URI selfLink();
 
-   @SerializedNames({"creationTimestamp", "name", "description", "zone",
+   @SerializedNames({"id", "creationTimestamp", "name", "description", "zone",
       "natPolicy", "instance", "selfLink"})
-   public static TargetInstance create(String creationTimestamp, String name,
+   public static TargetInstance create(String id, String creationTimestamp, String name,
          String description, URI zone, String natPolicy, URI instance, URI selfLink){
-      return new AutoValue_TargetInstance(creationTimestamp, name, description, zone,
+      return new AutoValue_TargetInstance(id, creationTimestamp, name, description, zone,
             natPolicy, instance, selfLink);
    }
 

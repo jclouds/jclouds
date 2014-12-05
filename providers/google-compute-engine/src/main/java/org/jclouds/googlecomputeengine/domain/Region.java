@@ -19,6 +19,7 @@ package org.jclouds.googlecomputeengine.domain;
 import static org.jclouds.googlecloud.internal.NullSafeCopies.copyOf;
 
 import java.net.URI;
+import java.util.Date;
 import java.util.List;
 
 import org.jclouds.javax.annotation.Nullable;
@@ -36,6 +37,8 @@ public abstract class Region {
 
    public abstract String id();
 
+   public abstract Date creationTimestamp();
+
    public abstract URI selfLink();
 
    public abstract String name();
@@ -48,10 +51,10 @@ public abstract class Region {
 
    public abstract List<Quota> quotas();
 
-   @SerializedNames({ "id", "selfLink", "name", "description", "status", "zones", "quotas" })
-   public static Region create(String id, URI selfLink, String name, String description, Status status, List<URI> zones,
+   @SerializedNames({ "id", "creationTimestamp", "selfLink", "name", "description", "status", "zones", "quotas" })
+   public static Region create(String id, Date creationTimestamp, URI selfLink, String name, String description, Status status, List<URI> zones,
          List<Quota> quotas) {
-      return new AutoValue_Region(id, selfLink, name, description, status, copyOf(zones), copyOf(quotas));
+      return new AutoValue_Region(id, creationTimestamp, selfLink, name, description, status, copyOf(zones), copyOf(quotas));
    }
 
    Region() {

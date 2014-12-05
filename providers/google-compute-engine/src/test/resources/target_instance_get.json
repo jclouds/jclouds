@@ -1,6 +1,6 @@
 {
   "kind": "compute#targetInstance",
-  "id": 13050421646334304115,
+  "id": "13050421646334304115",
   "creationTimestamp": "2014-07-18T09:47:30.826-07:00",
   "name": "target-instance-1",
   "description": "A pretty cool target instance",

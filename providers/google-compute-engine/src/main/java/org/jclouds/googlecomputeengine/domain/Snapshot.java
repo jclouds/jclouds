@@ -17,6 +17,8 @@
 package org.jclouds.googlecomputeengine.domain;
 
 import java.net.URI;
+import java.util.Date;
+import java.util.List;
 
 import org.jclouds.javax.annotation.Nullable;
 import org.jclouds.json.SerializedNames;
@@ -29,6 +31,8 @@ public abstract class Snapshot {
    public abstract String id();
 
    public abstract URI selfLink();
+
+   public abstract Date creationTimestamp();
 
    public abstract String name();
 
@@ -52,10 +56,18 @@ public abstract class Snapshot {
     */
    public abstract String sourceDiskId();
 
-   @SerializedNames({ "id", "selfLink", "name", "description", "diskSizeGb", "status", "sourceDisk", "sourceDiskId" })
-   public static Snapshot create(String id, URI selfLink, String name, String description, int diskSizeGb, String status,
-         URI sourceDisk, String sourceDiskId) {
-      return new AutoValue_Snapshot(id, selfLink, name, description, diskSizeGb, status, sourceDisk, sourceDiskId);
+   @Nullable public abstract Long storageBytes();
+
+   @Nullable public abstract String storageByteStatus();
+
+   @Nullable public abstract List<String> licenses();
+
+   @SerializedNames({ "id", "selfLink", "creationTimestamp", "name", "description", "diskSizeGb", "status",
+      "sourceDisk", "sourceDiskId", "storageBytes", "storageByteStatus", "licenses" })
+   public static Snapshot create(String id, URI selfLink, Date creationTimestamp, String name, String description,
+         int diskSizeGb, String status, URI sourceDisk, String sourceDiskId, Long storageBytes, String storageByteStatus, List<String> licenses) {
+      return new AutoValue_Snapshot(id, selfLink, creationTimestamp, name, description, diskSizeGb, status,
+            sourceDisk, sourceDiskId, storageBytes, storageByteStatus, licenses);
    }
 
    Snapshot() {

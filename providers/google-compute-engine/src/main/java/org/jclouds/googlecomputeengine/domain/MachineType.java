@@ -19,6 +19,7 @@ package org.jclouds.googlecomputeengine.domain;
 import static org.jclouds.googlecloud.internal.NullSafeCopies.copyOf;
 
 import java.net.URI;
+import java.util.Date;
 import java.util.List;
 
 import org.jclouds.javax.annotation.Nullable;
@@ -46,6 +47,8 @@ public abstract class MachineType {
 
    public abstract String id();
 
+   public abstract Date creationTimestamp();
+
    public abstract URI selfLink();
 
    public abstract String name();
@@ -55,6 +58,8 @@ public abstract class MachineType {
    public abstract int guestCpus();
 
    public abstract int memoryMb();
+
+   @Nullable public abstract Integer imageSpaceGb();
 
    public abstract List<ScratchDisk> scratchDisks();
 
@@ -68,12 +73,12 @@ public abstract class MachineType {
    @Nullable public abstract Deprecated deprecated();
 
    @SerializedNames(
-         { "id", "selfLink", "name", "description", "guestCpus", "memoryMb", "scratchDisks", "maximumPersistentDisks",
+         { "id", "creationTimestamp", "selfLink", "name", "description", "guestCpus", "memoryMb", "imageSpaceGb", "scratchDisks", "maximumPersistentDisks",
                "maximumPersistentDisksSizeGb", "zone", "deprecated" })
-   public static MachineType create(String id, URI selfLink, String name, String description, int guestCpus,
-         int memoryMb, List<ScratchDisk> scratchDisks, int maximumPersistentDisks, long maximumPersistentDisksSizeGb,
+   public static MachineType create(String id, Date creationTimestamp, URI selfLink, String name, String description, int guestCpus,
+         int memoryMb, Integer imageSpaceGb, List<ScratchDisk> scratchDisks, int maximumPersistentDisks, long maximumPersistentDisksSizeGb,
          String zone, Deprecated deprecated) {
-      return new AutoValue_MachineType(id, selfLink, name, description, guestCpus, memoryMb, copyOf(scratchDisks),
+      return new AutoValue_MachineType(id, creationTimestamp, selfLink, name, description, guestCpus, memoryMb, imageSpaceGb, copyOf(scratchDisks),
             maximumPersistentDisks, maximumPersistentDisksSizeGb, zone, deprecated);
    }
 

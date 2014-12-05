@@ -44,12 +44,16 @@ public class ParseSnapshotTest extends BaseGoogleComputeEngineParseTest<Snapshot
       return Snapshot.create( //
             "9734455566806191190", // id
             URI.create(baseUrl + "/party/global/snapshots/test-snap"), // selfLink
+            parse("2013-07-26T12:54:23.173-07:00"), // creationTimestamp
             "test-snap", // name
             "", // description
             10, // sizeGb
             "READY", // status
             URI.create(baseUrl + "/party/zones/us-central1-a/disks/testimage1"), // sourceDisk
-            "8243603669926824540"// sourceDiskId
+            "8243603669926824540", // sourceDiskId
+            null, // storageBytes
+            null, // storageByteStatus
+            null // licenses
       );
    }
 }

@@ -49,12 +49,16 @@ public class ParseSnapshotListTest extends BaseGoogleComputeEngineParseTest<List
       Snapshot snapshot2 = Snapshot.create( //
             "13895715048576107883", // id
             URI.create(baseUrl + "/party/global/snapshots/test-snap2"), // selfLink
+            parse("2013-07-26T12:57:01.927-07:00"), // creationTimestamp
             "test-snap2", // name
             "", // description
             10, // sizeGb
             "READY", // status
             URI.create(baseUrl + "/party/zones/us-central1-a/disks/testimage1"), // sourceDisk
-            "8243603669926824540"// sourceDiskId
+            "8243603669926824540", // sourceDiskId
+            null, // storageBytes
+            null, // storageByteStatus
+            null // licenses
       );
       return ForwardingListPage.create( //
             ImmutableList.of(snapshot1, snapshot2), // items

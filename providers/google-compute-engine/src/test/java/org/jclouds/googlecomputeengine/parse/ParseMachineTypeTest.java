@@ -46,11 +46,13 @@ public class ParseMachineTypeTest extends BaseGoogleComputeEngineParseTest<Machi
    public MachineType expected(String baseUrl) {
       return MachineType.create( //
             "12907738072351752276", // id
+            parse("2012-06-07T20:48:14.670"), // creationTimestamp
             URI.create(baseUrl + "/party/zones/us-central1-a/machineTypes/n1-standard-1"), // selfLink
             "n1-standard-1", // name
             "1 vCPU, 3.75 GB RAM, and a 10 GB ephemeral root disk", // description
             1, // guestCpus
             3840, // memoryMb
+            null, // imageSpaceGb
             ImmutableList.of(ScratchDisk.create(1770), ScratchDisk.create(1770)), // scratchDisks
             16, // maximumPersistentDisks
             128, // maximumPersistentDisksSizeGb

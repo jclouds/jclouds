@@ -22,7 +22,9 @@ import java.net.URI;
 
 import javax.ws.rs.Consumes;
 
+import org.jclouds.googlecomputeengine.domain.Metadata;
 import org.jclouds.googlecomputeengine.domain.Route;
+import org.jclouds.googlecomputeengine.domain.Route.Warning;
 import org.jclouds.googlecomputeengine.internal.BaseGoogleComputeEngineParseTest;
 import org.testng.annotations.Test;
 
@@ -45,6 +47,7 @@ public class ParseRouteTest extends BaseGoogleComputeEngineParseTest<Route> {
    public Route expected(String baseUrl) {
       return Route.create( //
             "7241926205630356071", // id
+            parse("2013-07-08T14:40:38.502-07:00"), // creationTimestamp
             URI.create(baseUrl + "/party/global/routes/default-route-c99ebfbed0e1f375"), // selfLink
             "default-route-c99ebfbed0e1f375", // name
             "Default route to the virtual network.", // description
@@ -56,7 +59,8 @@ public class ParseRouteTest extends BaseGoogleComputeEngineParseTest<Route> {
             null, // nextHopIp
             URI.create(baseUrl + "/party/global/networks/default"), // nextHopNetwork
             null, // nextHopGateway
-            null // warnings
+            ImmutableList.of(Warning.create("NO_RESULTS_ON_PAGE", "This is an example warning", ImmutableList.of(
+                  Metadata.Entry.create("scope", "There are no results for scope 'zones/asia-east1-b' on this page.")))) // warnings
       );
    }
 }

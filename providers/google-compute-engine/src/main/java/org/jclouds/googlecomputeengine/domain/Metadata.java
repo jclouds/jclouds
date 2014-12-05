@@ -34,13 +34,13 @@ import com.google.auto.value.AutoValue;
 public abstract class Metadata implements Cloneable {
 
    @AutoValue
-   abstract static class Entry {
+   public abstract static class Entry {
       abstract String key();
 
       abstract String value();
 
       @SerializedNames({ "key", "value" })
-      static Entry create(String key, String value) {
+      public static Entry create(String key, String value) {
          return new AutoValue_Metadata_Entry(key, value);
       }
    }

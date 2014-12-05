@@ -24,12 +24,14 @@ import static org.testng.Assert.assertEquals;
 
 import java.net.URI;
 
+import org.jclouds.date.internal.SimpleDateFormatDateService;
 import org.jclouds.googlecomputeengine.GoogleComputeEngineApi;
 import org.jclouds.googlecomputeengine.compute.domain.NetworkAndAddressRange;
 import org.jclouds.googlecomputeengine.compute.predicates.AtomicOperationDone;
 import org.jclouds.googlecomputeengine.domain.Network;
 import org.jclouds.googlecomputeengine.domain.Operation;
 import org.jclouds.googlecomputeengine.features.NetworkApi;
+import org.jclouds.googlecomputeengine.options.NetworkCreationOptions;
 import org.jclouds.googlecomputeengine.parse.ParseGlobalOperationTest;
 import org.testng.annotations.Test;
 
@@ -48,6 +50,7 @@ public class CreateNetworkIfNeededTest {
 
       Network network = Network.create( //
             "abcd", // id
+            new SimpleDateFormatDateService().iso8601DateParse("2014-07-18T09:47:30.826-07:00"), // creationTimestamp
             URI.create(BASE_URL + "/party/global/networks/this-network"), // selfLink
             "this-network", // name
             null, // description
@@ -84,6 +87,7 @@ public class CreateNetworkIfNeededTest {
 
       Network network = Network.create( //
             "abcd", // id
+            new SimpleDateFormatDateService().iso8601DateParse("2014-07-18T09:47:30.826-07:00"), // creationTimestamp
             URI.create(BASE_URL + "/party/global/networks/this-network"), // selfLink
             "this-network", // name
             null, // description
@@ -95,7 +99,8 @@ public class CreateNetworkIfNeededTest {
 
       expect(api.networks()).andReturn(nwApi).atLeastOnce();
 
-      expect(nwApi.createInIPv4RangeWithGateway("this-network", "0.0.0.0/0", "1.2.3.4")).andReturn(createOp);
+      expect(nwApi.createInIPv4Range(new NetworkCreationOptions.Builder("this-network", "0.0.0.0/0")
+         .gatewayIPv4("1.2.3.4").build())).andReturn(createOp);
       expect(resources.operation(createOp.selfLink())).andReturn(createOp);
       expect(nwApi.get("this-network")).andReturn(null);
       expect(nwApi.get("this-network")).andReturn(network);

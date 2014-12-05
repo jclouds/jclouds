@@ -61,6 +61,8 @@ public abstract class Zone {
 
    public abstract String id();
 
+   public abstract Date creationTimestamp();
+
    public abstract URI selfLink();
 
    public abstract String name();
@@ -75,14 +77,18 @@ public abstract class Zone {
     */
    public abstract List<MaintenanceWindow> maintenanceWindows();
 
+   @Nullable public abstract Deprecated deprecated();
+
+   public abstract String region();
+
    /** The machine types that can be used in this zone. */
    public abstract List<String> availableMachineTypes();
 
    @SerializedNames(
-         { "id", "selfLink", "name", "description", "status", "maintenanceWindows", "availableMachineTypes" })
-   public static Zone create(String id, URI selfLink, String name, String description, Status status,
-         List<MaintenanceWindow> maintenanceWindows, List<String> availableMachineTypes) {
-      return new AutoValue_Zone(id, selfLink, name, description, status, copyOf(maintenanceWindows),
+         { "id", "creationTimestamp", "selfLink", "name", "description", "status", "maintenanceWindows", "deprecated", "region", "availableMachineTypes" })
+   public static Zone create(String id, Date creationTimestamp, URI selfLink, String name, String description, Status status,
+         List<MaintenanceWindow> maintenanceWindows, Deprecated deprecated, String region, List<String> availableMachineTypes) {
+      return new AutoValue_Zone(id, creationTimestamp, selfLink, name, description, status, copyOf(maintenanceWindows), deprecated, region,
             copyOf(availableMachineTypes));
    }
 

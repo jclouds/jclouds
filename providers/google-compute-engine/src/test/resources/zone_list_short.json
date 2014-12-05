@@ -11,6 +11,7 @@
          "name": "us-central1-a",
          "description": "us-central1-a",
          "status": "DOWN",
+         "region": "us-central1",
          "maintenanceWindows": [
             {
                "name": "2012-11-10-planned-outage",

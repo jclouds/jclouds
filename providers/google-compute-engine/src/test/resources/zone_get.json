@@ -5,6 +5,7 @@
    "selfLink": "https://www.googleapis.com/compute/v1/projects/party/zones/us-central1-a",
    "name": "us-central1-a",
    "description": "us-central1-a",
+   "region": "us-central1",
    "status": "DOWN",
    "maintenanceWindows": [
       {

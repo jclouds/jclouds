@@ -40,6 +40,7 @@ public class ParseZoneTest extends BaseGoogleComputeEngineParseTest<Zone> {
    public Zone expected() {
       return Zone.create( //
             "13020128040171887099", // id
+            parse("2012-10-19T16:42:54.131"), // creationTimestamp
             URI.create(BASE_URL + "/party/zones/us-central1-a"), // selfLink
             "us-central1-a", // name
             "us-central1-a", // description
@@ -51,6 +52,8 @@ public class ParseZoneTest extends BaseGoogleComputeEngineParseTest<Zone> {
                         parse("2012-11-10T20:00:00.000"), // beginTime
                         parse("2012-12-02T20:00:00.000") // endTime)
                   )), //
+            null, // deprecated
+            "us-central1", // region
             null // availableMachineTypes
       );
    }

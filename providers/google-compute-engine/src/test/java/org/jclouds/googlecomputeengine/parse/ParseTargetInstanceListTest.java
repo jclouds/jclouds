@@ -46,7 +46,9 @@ public class ParseTargetInstanceListTest extends BaseGoogleComputeEngineParseTes
    public ListPage<TargetInstance> expected(String baseURL){
       return ForwardingListPage.create( //
             ImmutableList.of(new ParseTargetInstanceTest().expected(baseURL),
-                  TargetInstance.create("2014-11-20T17:35:17.268-08:00", // creationTimestamp
+                  TargetInstance.create(
+                        "7362436693678237415", // id
+                        "2014-11-20T17:35:17.268-08:00", // creationTimestamp
                         "target-instance-2", // name
                         null, // description
                         URI.create(baseURL + "/party/zones/us-central1-a"), // zone
