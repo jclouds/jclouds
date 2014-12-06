@@ -27,9 +27,12 @@ import org.jclouds.blobstore.BlobStore;
 import org.jclouds.blobstore.domain.Blob;
 import org.jclouds.blobstore.integration.internal.BaseBlobIntegrationTest;
 import org.jclouds.blobstore.options.PutOptions;
+import org.jclouds.io.ByteStreams2;
 import org.jclouds.utils.TestUtils;
 import org.testng.SkipException;
 import org.testng.annotations.Test;
+
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.testng.Assert.assertEquals;
 
 import static com.google.common.hash.Hashing.md5;
@@ -87,6 +90,26 @@ public class AzureBlobIntegrationLiveTest extends BaseBlobIntegrationTest {
          String expected = blobStore.putBlob(containerName, blob, PutOptions.Builder.multipart());
          String etag = blobStore.blobMetadata(containerName, "const.txt").getETag();
          assertEquals(etag, expected);
+      } finally {
+         returnContainer(containerName);
+      }
+   }
+
+   public void testMultipartUploadInputStream() throws Exception {
+      long length = MultipartUploadStrategy.MAX_BLOCK_SIZE + 1;
+      ByteSource byteSource = TestUtils.randomByteSource().slice(0, length);
+      String containerName = getContainerName();
+      try {
+         BlobStore blobStore = view.getBlobStore();
+         blobStore.createContainerInLocation(null, containerName);
+         String blobName = "const.txt";
+         Blob blob = blobStore.blobBuilder(blobName)
+            .payload(byteSource.openStream())
+            .contentLength(length)
+            .build();
+         blobStore.putBlob(containerName, blob, PutOptions.Builder.multipart());
+         blob = blobStore.getBlob(containerName, blobName);
+         assertThat(ByteStreams2.toByteArrayAndClose(blob.getPayload().openStream())).isEqualTo(byteSource.read());
       } finally {
          returnContainer(containerName);
       }
