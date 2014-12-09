@@ -17,11 +17,13 @@
 package org.jclouds.softlayer.features;
 
 import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertNull;
 import static org.testng.Assert.assertTrue;
 
 import org.jclouds.http.HttpRequest;
 import org.jclouds.http.HttpResponse;
 import org.jclouds.softlayer.SoftLayerApi;
+import org.jclouds.softlayer.parse.GetVirtualGuestBlockDeviceTemplateGroupResponseTest;
 import org.jclouds.softlayer.parse.ListPublicImagesResponseTest;
 import org.testng.annotations.Test;
 
@@ -38,7 +40,7 @@ public class VirtualGuestBlockDeviceTemplateGroupApiExpectTest extends BaseSoftL
               .addHeader("Authorization", "Basic aWRlbnRpdHk6Y3JlZGVudGlhbA==").build();
 
       HttpResponse listPublicImagesResponse = HttpResponse.builder().statusCode(200)
-              .payload(payloadFromResource("/virtualGuestBlockDeviceTemplateGroup_public_images.json")).build();
+              .payload(payloadFromResource("/virtual_guest_block_device_template_group_get_public_images.json")).build();
 
       SoftLayerApi api = requestSendsResponse(listPublicImagesRequest, listPublicImagesResponse);
 
@@ -58,5 +60,32 @@ public class VirtualGuestBlockDeviceTemplateGroupApiExpectTest extends BaseSoftL
       assertTrue(Iterables.isEmpty(api.getVirtualGuestBlockDeviceTemplateGroupApi().getPublicImages()));
    }
 
+   public void testGetObjectWhenResponseIs2xx() {
+
+      HttpRequest getObject = HttpRequest.builder().method("GET")
+              .endpoint("https://api.softlayer.com/rest/v3/SoftLayer_Virtual_Guest_Block_Device_Template_Group/3001812/getObject?objectMask=children.blockDevices.diskImage.softwareReferences.softwareDescription")
+              .addHeader("Accept", "application/json")
+              .addHeader("Authorization", "Basic aWRlbnRpdHk6Y3JlZGVudGlhbA==").build();
+
+      HttpResponse getObjectResponse = HttpResponse.builder().statusCode(200)
+              .payload(payloadFromResource("/virtual_guest_block_device_template_group_get.json")).build();
+
+      SoftLayerApi api = requestSendsResponse(getObject, getObjectResponse);
+
+      assertEquals(api.getVirtualGuestBlockDeviceTemplateGroupApi().getObject("3001812"),
+              new GetVirtualGuestBlockDeviceTemplateGroupResponseTest().expected());
+   }
+
+   public void testGetObjectWhenResponseIs4xx() {
+
+      HttpRequest getObjectRequest = HttpRequest.builder().method("GET")
+              .endpoint("https://api.softlayer.com/rest/v3/SoftLayer_Virtual_Guest_Block_Device_Template_Group/3001812/getObject?objectMask=children.blockDevices.diskImage.softwareReferences.softwareDescription")
+              .addHeader("Accept", "application/json")
+              .addHeader("Authorization", "Basic aWRlbnRpdHk6Y3JlZGVudGlhbA==").build();
+
+      HttpResponse getObjectResponse = HttpResponse.builder().statusCode(404).build();
+      SoftLayerApi api = requestSendsResponse(getObjectRequest, getObjectResponse);
+      assertNull(api.getVirtualGuestBlockDeviceTemplateGroupApi().getObject("3001812"));
+   }
 
 }

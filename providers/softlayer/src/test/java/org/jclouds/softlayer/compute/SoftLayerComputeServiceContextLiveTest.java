@@ -62,16 +62,12 @@ public class SoftLayerComputeServiceContextLiveTest extends BaseComputeServiceCo
               .build(ComputeServiceContext.class);
 
       TemplateBuilder templateBuilder = context.getComputeService().templateBuilder();
-      templateBuilder.imageId("CENTOS_6_64");
-      templateBuilder.locationId("dal01");
 
       Template template = templateBuilder.build();
       // test passing custom options
       SoftLayerTemplateOptions options = template.getOptions().as(SoftLayerTemplateOptions.class);
       options.domainName("live.org");
-      // multi-disk option
-      //options.blockDevices(ImmutableList.of(25, 400, 400));
-      //options.diskType("SAN");
+
       //tags
       options.tags(ImmutableList.of("jclouds"));
       Set<? extends NodeMetadata> nodes = context.getComputeService().createNodesInGroup(name, numNodes, template);

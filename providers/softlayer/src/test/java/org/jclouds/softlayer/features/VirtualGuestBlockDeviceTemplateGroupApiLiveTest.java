@@ -16,22 +16,41 @@
  */
 package org.jclouds.softlayer.features;
 
+import static com.google.common.collect.Iterables.get;
 import static org.testng.Assert.assertNotNull;
 import java.util.Set;
 
 import org.jclouds.softlayer.domain.VirtualGuestBlockDeviceTemplateGroup;
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
+import com.beust.jcommander.internal.Sets;
+
 /**
- * Tests behavior of {@code VirtualGuestBlockDeviceTemplateGroupApi}
+ * Tests behavior of {@code VirtualGuestBlockDeviceTemplateGroupApi} which depends on the account
  */
 @Test(groups = "live")
 public class VirtualGuestBlockDeviceTemplateGroupApiLiveTest extends BaseSoftLayerApiLiveTest {
 
+   Set<VirtualGuestBlockDeviceTemplateGroup> publicImages = Sets.newHashSet();
+   @BeforeClass
+   void init() {
+      publicImages = api().getPublicImages();
+   }
+
    @Test
    public void testGetBlockDeviceTemplateGroups() {
-      Set<VirtualGuestBlockDeviceTemplateGroup> publicImages = api().getPublicImages();
-      assertNotNull(publicImages);
+      for (VirtualGuestBlockDeviceTemplateGroup publicImage : publicImages) {
+         assertNotNull(publicImage);
+      }
+   }
+
+   @Test(dependsOnMethods = "testGetBlockDeviceTemplateGroups")
+   public void testGetObject() {
+      if (!publicImages.isEmpty()) {
+         VirtualGuestBlockDeviceTemplateGroup virtualGuestBlockDeviceTemplateGroup = api().getObject(get(publicImages, 0).getGlobalIdentifier());
+         assertNotNull(virtualGuestBlockDeviceTemplateGroup);
+      }
    }
 
    private VirtualGuestBlockDeviceTemplateGroupApi api() {

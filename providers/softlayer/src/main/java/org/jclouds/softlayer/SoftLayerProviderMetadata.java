@@ -17,7 +17,6 @@
 package org.jclouds.softlayer;
 
 import static org.jclouds.compute.config.ComputeServiceProperties.TEMPLATE;
-import static org.jclouds.softlayer.reference.SoftLayerConstants.PROPERTY_SOFTLAYER_INCLUDE_PUBLIC_IMAGES;
 import static org.jclouds.softlayer.reference.SoftLayerConstants.PROPERTY_SOFTLAYER_VIRTUALGUEST_ACTIVE_TRANSACTIONS_DELAY;
 import static org.jclouds.softlayer.reference.SoftLayerConstants.PROPERTY_SOFTLAYER_VIRTUALGUEST_LOGIN_DETAILS_DELAY;
 
@@ -56,8 +55,7 @@ public class SoftLayerProviderMetadata extends BaseProviderMetadata {
       Properties properties = new Properties();
       properties.setProperty(PROPERTY_SOFTLAYER_VIRTUALGUEST_LOGIN_DETAILS_DELAY, "" + 60 * 60 * 1000);
       properties.setProperty(PROPERTY_SOFTLAYER_VIRTUALGUEST_ACTIVE_TRANSACTIONS_DELAY, "" + 3 * 60 * 1000);
-      properties.setProperty(PROPERTY_SOFTLAYER_INCLUDE_PUBLIC_IMAGES, "false");
-      properties.setProperty(TEMPLATE, "osFamily=UBUNTU,osVersionMatches=1[012].[01][04],os64Bit=true");
+      properties.setProperty(TEMPLATE, "osFamily=UBUNTU,osVersionMatches=1[01234].[01][04],os64Bit=true");
       return properties;
    }
 

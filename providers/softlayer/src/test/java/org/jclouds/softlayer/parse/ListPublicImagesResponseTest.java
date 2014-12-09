@@ -37,7 +37,7 @@ public class ListPublicImagesResponseTest extends
 
    @Override
    public String resource() {
-      return "/virtualGuestBlockDeviceTemplateGroup_public_images.json";
+      return "/virtual_guest_block_device_template_group_get_public_images.json";
    }
 
    @Override

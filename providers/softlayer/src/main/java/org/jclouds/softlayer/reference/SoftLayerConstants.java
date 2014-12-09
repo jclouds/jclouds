@@ -35,11 +35,6 @@ public final class SoftLayerConstants {
    public static final String PROPERTY_SOFTLAYER_VIRTUALGUEST_ACTIVE_TRANSACTIONS_DELAY = "jclouds.softlayer" +
            ".virtualguest.active_transactions_delay";
 
-   /**
-    * By default, list images will now consider the public images
-    */
-   public static final String PROPERTY_SOFTLAYER_INCLUDE_PUBLIC_IMAGES = "jclouds.softlayer.include_public_images";
-
    private SoftLayerConstants() {
       throw new AssertionError("intentionally unimplemented");
    }

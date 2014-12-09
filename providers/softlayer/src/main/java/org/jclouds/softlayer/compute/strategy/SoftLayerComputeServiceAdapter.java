@@ -21,7 +21,6 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Preconditions.checkState;
 import static com.google.common.collect.Iterables.contains;
 import static com.google.common.collect.Iterables.filter;
-import static com.google.common.collect.Iterables.find;
 import static com.google.common.collect.Iterables.get;
 import static com.google.common.collect.Iterables.tryFind;
 import static java.lang.Math.round;
@@ -29,13 +28,13 @@ import static java.lang.String.format;
 import static org.jclouds.compute.domain.Volume.Type;
 import static org.jclouds.compute.util.ComputeServiceUtils.getCores;
 import static org.jclouds.compute.util.ComputeServiceUtils.getSpace;
-import static org.jclouds.softlayer.reference.SoftLayerConstants.PROPERTY_SOFTLAYER_INCLUDE_PUBLIC_IMAGES;
 import static org.jclouds.softlayer.reference.SoftLayerConstants.PROPERTY_SOFTLAYER_VIRTUALGUEST_ACTIVE_TRANSACTIONS_DELAY;
 import static org.jclouds.softlayer.reference.SoftLayerConstants.PROPERTY_SOFTLAYER_VIRTUALGUEST_LOGIN_DETAILS_DELAY;
 import static org.jclouds.util.Predicates2.retry;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.TimeUnit;
 
 import javax.annotation.Resource;
 import javax.inject.Inject;
@@ -75,6 +74,7 @@ import org.jclouds.softlayer.domain.VirtualGuestNetworkComponent;
 import com.google.common.base.Function;
 import com.google.common.base.Optional;
 import com.google.common.base.Predicate;
+import com.google.common.base.Stopwatch;
 import com.google.common.base.Supplier;
 import com.google.common.collect.ComparisonChain;
 import com.google.common.collect.FluentIterable;
@@ -105,19 +105,16 @@ public class SoftLayerComputeServiceAdapter implements
    private final Predicate<VirtualGuest> loginDetailsTester;
    private final long guestLoginDelay;
    private final long activeTransactionsDelay;
-   private final boolean includePublicImages;
 
    @Inject
    public SoftLayerComputeServiceAdapter(SoftLayerApi api,
          VirtualGuestHasLoginDetailsPresent virtualGuestHasLoginDetailsPresent,
          @Memoized Supplier<ContainerVirtualGuestConfiguration> createObjectOptionsSupplier,
          @Named(PROPERTY_SOFTLAYER_VIRTUALGUEST_LOGIN_DETAILS_DELAY) long guestLoginDelay,
-         @Named(PROPERTY_SOFTLAYER_VIRTUALGUEST_ACTIVE_TRANSACTIONS_DELAY) long activeTransactionsDelay,
-         @Named(PROPERTY_SOFTLAYER_INCLUDE_PUBLIC_IMAGES) boolean includePublicImages) {
+         @Named(PROPERTY_SOFTLAYER_VIRTUALGUEST_ACTIVE_TRANSACTIONS_DELAY) long activeTransactionsDelay) {
       this.api = checkNotNull(api, "api");
       this.guestLoginDelay = checkNotNull(guestLoginDelay, "guestLoginDelay");
       this.activeTransactionsDelay = checkNotNull(activeTransactionsDelay, "activeTransactionsDelay");
-      this.includePublicImages = checkNotNull(includePublicImages, "includePublicImages");
       this.createObjectOptionsSupplier = checkNotNull(createObjectOptionsSupplier, "createObjectOptionsSupplier");
       checkArgument(guestLoginDelay > 500, "guestOrderDelay must be in milliseconds and greater than 500");
       this.loginDetailsTester = retry(virtualGuestHasLoginDetailsPresent, guestLoginDelay);
@@ -153,7 +150,7 @@ public class SoftLayerComputeServiceAdapter implements
       Optional<OperatingSystem> optionalOperatingSystem = tryExtractOperatingSystemFrom(imageId);
       if (optionalOperatingSystem.isPresent()) {
          virtualGuestBuilder.operatingSystem(optionalOperatingSystem.get());
-      // the imageId specified is a the id of a public/private/flex image
+      // the imageId specified is an id of a public/private/flex image
       } else {
          VirtualGuestBlockDeviceTemplateGroup blockDeviceTemplateGroup = VirtualGuestBlockDeviceTemplateGroup
                  .builder().globalIdentifier(imageId).build();
@@ -284,28 +281,8 @@ public class SoftLayerComputeServiceAdapter implements
    @Override
    public Set<OperatingSystem> listImages() {
       Set<OperatingSystem> result = Sets.newHashSet();
-      Set<SoftwareDescription> allObjects = api.getSoftwareDescriptionApi().getAllObjects();
-
-      // add private images
-      Set<VirtualGuestBlockDeviceTemplateGroup> privateImages = api.getAccountApi().getBlockDeviceTemplateGroups();
-      for (VirtualGuestBlockDeviceTemplateGroup privateImage : privateImages) {
-         Optional<OperatingSystem> operatingSystemOptional = tryExtractOperatingSystemFrom(privateImage);
-         if (operatingSystemOptional.isPresent()) {
-            result.add(operatingSystemOptional.get());
-         }
-      }
-
-      if (includePublicImages) {
-         Set<VirtualGuestBlockDeviceTemplateGroup> publicImages = api.getVirtualGuestBlockDeviceTemplateGroupApi().getPublicImages();
-         for (VirtualGuestBlockDeviceTemplateGroup publicImage : publicImages) {
-            Optional<OperatingSystem> operatingSystemOptional = tryExtractOperatingSystemFrom(publicImage);
-            if (operatingSystemOptional.isPresent()) {
-               result.add(operatingSystemOptional.get());
-            }
-         }
-      }
-
       // add allObjects filtered by the available OS
+      Set<SoftwareDescription> allObjects = api.getSoftwareDescriptionApi().getAllObjects();
       for (OperatingSystem os : createObjectOptionsSupplier.get().getVirtualGuestOperatingSystems()) {
          result.addAll(FluentIterable.from(allObjects)
                  .filter(new IsOperatingSystem())
@@ -318,13 +295,22 @@ public class SoftLayerComputeServiceAdapter implements
 
    @Override
    public OperatingSystem getImage(final String id) {
-      return find(listImages(), new Predicate<OperatingSystem>() {
+      // look for imageId among stock images
+      Optional<OperatingSystem> operatingSystemOptional = tryFind(listImages(),
+              new Predicate<OperatingSystem>() {
+                 @Override
+                 public boolean apply(OperatingSystem input) {
+                    return input.getId().equals(id);
+                 }
+              }
+      );
+      if (operatingSystemOptional.isPresent()) return operatingSystemOptional.get();
 
-         @Override
-         public boolean apply(OperatingSystem input) {
-            return input.getId().equals(id);
-         }
-      }, null);
+      // if imageId is not a stock image, it searches among private and public images
+      Stopwatch stopwatch = Stopwatch.createStarted();
+      VirtualGuestBlockDeviceTemplateGroup image = api.getVirtualGuestBlockDeviceTemplateGroupApi().getObject(id);
+      logger.trace("<< Image(%s) found in (%s)", id, stopwatch.elapsed(TimeUnit.SECONDS));
+      return tryExtractOperatingSystemFrom(image).orNull();
    }
 
    @Override
@@ -450,6 +436,7 @@ public class SoftLayerComputeServiceAdapter implements
    }
 
    private Optional<OperatingSystem> tryExtractOperatingSystemFrom(VirtualGuestBlockDeviceTemplateGroup image) {
+      if (image.getGlobalIdentifier() == null) return Optional.absent();
       return FluentIterable.from(image.getChildren())
               .transformAndConcat(new BlockDeviceTemplateGroupToBlockDeviceTemplateIterable())
               .filter(new IsBootableDevice())

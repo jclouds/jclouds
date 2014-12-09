@@ -1,0 +1,709 @@
+{
+  "accountId": 278462,
+  "createDate": "2015-01-26T23:36:05+00:00",
+  "id": 402456,
+  "name": "DST_Windows-2008_R2DC_x86-64_Base_ICOv2",
+  "note": "DST Standard Windows image for deploying into VSP in ICO 2.4",
+  "parentId": null,
+  "publicFlag": 1,
+  "statusId": 1,
+  "summary": "DST_Windows-2008_R2DC_x86-64_Base with preparation for ICO 2.4",
+  "transactionId": null,
+  "userRecordId": 146842,
+  "accountReferences": [],
+  "children": [
+    {
+      "accountId": 278462,
+      "createDate": "2015-01-26T23:36:10+00:00",
+      "id": 402458,
+      "name": "DST_Windows-2008_R2DC_x86-64_Base_ICOv2",
+      "note": "DST Standard Windows image for deploying into VSP in ICO 2.4",
+      "parentId": 402456,
+      "publicFlag": 1,
+      "statusId": 1,
+      "summary": "DST_Windows-2008_R2DC_x86-64_Base with preparation for ICO 2.4",
+      "transactionId": null,
+      "userRecordId": 146842,
+      "blockDevices": [
+        {
+          "device": "0",
+          "diskImageId": 6865056,
+          "diskSpace": 20926382592,
+          "groupId": 402458,
+          "id": 508130,
+          "units": "B",
+          "diskImage": {
+            "capacity": 25,
+            "createDate": "2015-01-26T23:36:10+00:00",
+            "description": "rrm-2k8r2dc-ico.dstdev.sl.edst.ibm.com",
+            "id": 6865056,
+            "modifyDate": null,
+            "name": "rrm-2k8r2dc-ico.dstdev.sl.edst.ibm.com",
+            "parentId": null,
+            "storageRepositoryId": 2330744,
+            "typeId": 241,
+            "units": "GB",
+            "uuid": "00c9bb78-9ac0-4f43-b4d8-35a6568c7db8",
+            "softwareReferences": [
+              {
+                "id": 4259392,
+                "softwareDescriptionId": 727,
+                "softwareDescription": {
+                  "controlPanel": 0,
+                  "id": 727,
+                  "longDescription": "Nimsoft / Nimsoft Robot / 5.0",
+                  "manufacturer": "Nimsoft",
+                  "name": "Nimsoft Robot",
+                  "operatingSystem": 0,
+                  "upgradeSoftwareDescriptionId": null,
+                  "upgradeSwDescId": null,
+                  "version": "5.0",
+                  "virtualLicense": 0,
+                  "virtualizationPlatform": 0,
+                  "requiredUser": "administrator"
+                }
+              },
+              {
+                "id": 4259394,
+                "softwareDescriptionId": 829,
+                "softwareDescription": {
+                  "controlPanel": 0,
+                  "id": 829,
+                  "longDescription": "Microsoft / Windows 2008 FULL DC 64 bit R2 SP1 / DC 64 bit",
+                  "manufacturer": "Microsoft",
+                  "name": "Windows 2008 FULL DC 64 bit R2 SP1",
+                  "operatingSystem": 1,
+                  "referenceCode": "WIN_2008-DC-R2-SP1_64",
+                  "upgradeSoftwareDescriptionId": null,
+                  "upgradeSwDescId": null,
+                  "version": "DC 64 bit",
+                  "virtualLicense": 0,
+                  "virtualizationPlatform": 0,
+                  "requiredUser": "Administrator"
+                }
+              }
+            ],
+            "storageRepository": {
+              "description": "SL278462 Public",
+              "id": 2330744,
+              "name": "SL278462 Public",
+              "publicFlag": 1,
+              "typeId": 181
+            }
+          }
+        },
+        {
+          "device": "1",
+          "diskImageId": 6865060,
+          "groupId": 402458,
+          "id": 508136,
+          "diskImage": {
+            "capacity": 2,
+            "createDate": "2015-01-26T23:36:11+00:00",
+            "description": "7903014-SWAP",
+            "id": 6865060,
+            "modifyDate": null,
+            "name": "7903014-SWAP",
+            "parentId": null,
+            "storageRepositoryId": 2330744,
+            "typeId": 246,
+            "units": "GB",
+            "uuid": "38eb1c23-0cf9-4325-b78a-95545829a36d",
+            "softwareReferences": [],
+            "storageRepository": {
+              "description": "SL278462 Public",
+              "id": 2330744,
+              "name": "SL278462 Public",
+              "publicFlag": 1,
+              "typeId": 181
+            }
+          }
+        }
+      ],
+      "parent": {
+        "accountId": 278462,
+        "createDate": "2015-01-26T23:36:05+00:00",
+        "id": 402456,
+        "name": "DST_Windows-2008_R2DC_x86-64_Base_ICOv2",
+        "note": "DST Standard Windows image for deploying into VSP in ICO 2.4",
+        "parentId": null,
+        "publicFlag": 1,
+        "statusId": 1,
+        "summary": "DST_Windows-2008_R2DC_x86-64_Base with preparation for ICO 2.4",
+        "transactionId": null,
+        "userRecordId": 146842,
+        "accountReferences": [],
+        "children": [
+          {
+            "accountId": 278462,
+            "createDate": "2015-01-26T23:36:10+00:00",
+            "id": 402458,
+            "name": "DST_Windows-2008_R2DC_x86-64_Base_ICOv2",
+            "note": "DST Standard Windows image for deploying into VSP in ICO 2.4",
+            "parentId": 402456,
+            "publicFlag": 1,
+            "statusId": 1,
+            "summary": "DST_Windows-2008_R2DC_x86-64_Base with preparation for ICO 2.4",
+            "transactionId": null,
+            "userRecordId": 146842,
+            "blockDevices": [
+              {
+                "device": "0",
+                "diskImageId": 6865056,
+                "diskSpace": 20926382592,
+                "groupId": 402458,
+                "id": 508130,
+                "units": "B",
+                "diskImage": {
+                  "capacity": 25,
+                  "createDate": "2015-01-26T23:36:10+00:00",
+                  "description": "rrm-2k8r2dc-ico.dstdev.sl.edst.ibm.com",
+                  "id": 6865056,
+                  "modifyDate": null,
+                  "name": "rrm-2k8r2dc-ico.dstdev.sl.edst.ibm.com",
+                  "parentId": null,
+                  "storageRepositoryId": 2330744,
+                  "typeId": 241,
+                  "units": "GB",
+                  "uuid": "00c9bb78-9ac0-4f43-b4d8-35a6568c7db8",
+                  "softwareReferences": [
+                    {
+                      "id": 4259392,
+                      "softwareDescriptionId": 727,
+                      "softwareDescription": {
+                        "controlPanel": 0,
+                        "id": 727,
+                        "longDescription": "Nimsoft / Nimsoft Robot / 5.0",
+                        "manufacturer": "Nimsoft",
+                        "name": "Nimsoft Robot",
+                        "operatingSystem": 0,
+                        "upgradeSoftwareDescriptionId": null,
+                        "upgradeSwDescId": null,
+                        "version": "5.0",
+                        "virtualLicense": 0,
+                        "virtualizationPlatform": 0,
+                        "requiredUser": "administrator"
+                      }
+                    },
+                    {
+                      "id": 4259394,
+                      "softwareDescriptionId": 829,
+                      "softwareDescription": {
+                        "controlPanel": 0,
+                        "id": 829,
+                        "longDescription": "Microsoft / Windows 2008 FULL DC 64 bit R2 SP1 / DC 64 bit",
+                        "manufacturer": "Microsoft",
+                        "name": "Windows 2008 FULL DC 64 bit R2 SP1",
+                        "operatingSystem": 1,
+                        "referenceCode": "WIN_2008-DC-R2-SP1_64",
+                        "upgradeSoftwareDescriptionId": null,
+                        "upgradeSwDescId": null,
+                        "version": "DC 64 bit",
+                        "virtualLicense": 0,
+                        "virtualizationPlatform": 0,
+                        "requiredUser": "Administrator"
+                      }
+                    }
+                  ],
+                  "storageRepository": {
+                    "description": "SL278462 Public",
+                    "id": 2330744,
+                    "name": "SL278462 Public",
+                    "publicFlag": 1,
+                    "typeId": 181
+                  }
+                }
+              },
+              {
+                "device": "1",
+                "diskImageId": 6865060,
+                "groupId": 402458,
+                "id": 508136,
+                "diskImage": {
+                  "capacity": 2,
+                  "createDate": "2015-01-26T23:36:11+00:00",
+                  "description": "7903014-SWAP",
+                  "id": 6865060,
+                  "modifyDate": null,
+                  "name": "7903014-SWAP",
+                  "parentId": null,
+                  "storageRepositoryId": 2330744,
+                  "typeId": 246,
+                  "units": "GB",
+                  "uuid": "38eb1c23-0cf9-4325-b78a-95545829a36d",
+                  "softwareReferences": [],
+                  "storageRepository": {
+                    "description": "SL278462 Public",
+                    "id": 2330744,
+                    "name": "SL278462 Public",
+                    "publicFlag": 1,
+                    "typeId": 181
+                  }
+                }
+              }
+            ],
+            "parent": null
+          },
+          {
+            "accountId": 278462,
+            "createDate": "2015-01-26T23:36:10+00:00",
+            "id": 402460,
+            "name": "DST_Windows-2008_R2DC_x86-64_Base_ICOv2",
+            "note": "DST Standard Windows image for deploying into VSP in ICO 2.4",
+            "parentId": 402456,
+            "publicFlag": 1,
+            "statusId": 1,
+            "summary": "DST_Windows-2008_R2DC_x86-64_Base with preparation for ICO 2.4",
+            "transactionId": null,
+            "userRecordId": 146842,
+            "blockDevices": [
+              {
+                "device": "0",
+                "diskImageId": 6865054,
+                "diskSpace": 20926382592,
+                "groupId": 402460,
+                "id": 508132,
+                "units": "B",
+                "diskImage": {
+                  "capacity": 25,
+                  "createDate": "2015-01-26T23:36:10+00:00",
+                  "description": "rrm-2k8r2dc-ico.dstdev.sl.edst.ibm.com",
+                  "id": 6865054,
+                  "modifyDate": null,
+                  "name": "rrm-2k8r2dc-ico.dstdev.sl.edst.ibm.com",
+                  "parentId": null,
+                  "storageRepositoryId": 2330746,
+                  "typeId": 241,
+                  "units": "GB",
+                  "uuid": "ef20e61c-6814-47bf-8cd9-9d26f84d3789",
+                  "softwareReferences": [
+                    {
+                      "id": 4259396,
+                      "softwareDescriptionId": 727,
+                      "softwareDescription": {
+                        "controlPanel": 0,
+                        "id": 727,
+                        "longDescription": "Nimsoft / Nimsoft Robot / 5.0",
+                        "manufacturer": "Nimsoft",
+                        "name": "Nimsoft Robot",
+                        "operatingSystem": 0,
+                        "upgradeSoftwareDescriptionId": null,
+                        "upgradeSwDescId": null,
+                        "version": "5.0",
+                        "virtualLicense": 0,
+                        "virtualizationPlatform": 0,
+                        "requiredUser": "administrator"
+                      }
+                    },
+                    {
+                      "id": 4259398,
+                      "softwareDescriptionId": 829,
+                      "softwareDescription": {
+                        "controlPanel": 0,
+                        "id": 829,
+                        "longDescription": "Microsoft / Windows 2008 FULL DC 64 bit R2 SP1 / DC 64 bit",
+                        "manufacturer": "Microsoft",
+                        "name": "Windows 2008 FULL DC 64 bit R2 SP1",
+                        "operatingSystem": 1,
+                        "referenceCode": "WIN_2008-DC-R2-SP1_64",
+                        "upgradeSoftwareDescriptionId": null,
+                        "upgradeSwDescId": null,
+                        "version": "DC 64 bit",
+                        "virtualLicense": 0,
+                        "virtualizationPlatform": 0,
+                        "requiredUser": "Administrator"
+                      }
+                    }
+                  ],
+                  "storageRepository": {
+                    "description": "SL278462 Public",
+                    "id": 2330746,
+                    "name": "SL278462 Public",
+                    "publicFlag": 1,
+                    "typeId": 181
+                  }
+                }
+              },
+              {
+                "device": "1",
+                "diskImageId": 6865058,
+                "groupId": 402460,
+                "id": 508134,
+                "diskImage": {
+                  "capacity": 2,
+                  "createDate": "2015-01-26T23:36:11+00:00",
+                  "description": "7903014-SWAP",
+                  "id": 6865058,
+                  "modifyDate": null,
+                  "name": "7903014-SWAP",
+                  "parentId": null,
+                  "storageRepositoryId": 2330746,
+                  "typeId": 246,
+                  "units": "GB",
+                  "uuid": "c84edb86-a9ce-4932-bf2c-c3e4b2b44ae9",
+                  "softwareReferences": [],
+                  "storageRepository": {
+                    "description": "SL278462 Public",
+                    "id": 2330746,
+                    "name": "SL278462 Public",
+                    "publicFlag": 1,
+                    "typeId": 181
+                  }
+                }
+              }
+            ],
+            "parent": null
+          }
+        ],
+        "globalIdentifier": "8df677d9-02a0-43b0-9cc8-88015fcb6ad7"
+      }
+    },
+    {
+      "accountId": 278462,
+      "createDate": "2015-01-26T23:36:10+00:00",
+      "id": 402460,
+      "name": "DST_Windows-2008_R2DC_x86-64_Base_ICOv2",
+      "note": "DST Standard Windows image for deploying into VSP in ICO 2.4",
+      "parentId": 402456,
+      "publicFlag": 1,
+      "statusId": 1,
+      "summary": "DST_Windows-2008_R2DC_x86-64_Base with preparation for ICO 2.4",
+      "transactionId": null,
+      "userRecordId": 146842,
+      "blockDevices": [
+        {
+          "device": "0",
+          "diskImageId": 6865054,
+          "diskSpace": 20926382592,
+          "groupId": 402460,
+          "id": 508132,
+          "units": "B",
+          "diskImage": {
+            "capacity": 25,
+            "createDate": "2015-01-26T23:36:10+00:00",
+            "description": "rrm-2k8r2dc-ico.dstdev.sl.edst.ibm.com",
+            "id": 6865054,
+            "modifyDate": null,
+            "name": "rrm-2k8r2dc-ico.dstdev.sl.edst.ibm.com",
+            "parentId": null,
+            "storageRepositoryId": 2330746,
+            "typeId": 241,
+            "units": "GB",
+            "uuid": "ef20e61c-6814-47bf-8cd9-9d26f84d3789",
+            "softwareReferences": [
+              {
+                "id": 4259396,
+                "softwareDescriptionId": 727,
+                "softwareDescription": {
+                  "controlPanel": 0,
+                  "id": 727,
+                  "longDescription": "Nimsoft / Nimsoft Robot / 5.0",
+                  "manufacturer": "Nimsoft",
+                  "name": "Nimsoft Robot",
+                  "operatingSystem": 0,
+                  "upgradeSoftwareDescriptionId": null,
+                  "upgradeSwDescId": null,
+                  "version": "5.0",
+                  "virtualLicense": 0,
+                  "virtualizationPlatform": 0,
+                  "requiredUser": "administrator"
+                }
+              },
+              {
+                "id": 4259398,
+                "softwareDescriptionId": 829,
+                "softwareDescription": {
+                  "controlPanel": 0,
+                  "id": 829,
+                  "longDescription": "Microsoft / Windows 2008 FULL DC 64 bit R2 SP1 / DC 64 bit",
+                  "manufacturer": "Microsoft",
+                  "name": "Windows 2008 FULL DC 64 bit R2 SP1",
+                  "operatingSystem": 1,
+                  "referenceCode": "WIN_2008-DC-R2-SP1_64",
+                  "upgradeSoftwareDescriptionId": null,
+                  "upgradeSwDescId": null,
+                  "version": "DC 64 bit",
+                  "virtualLicense": 0,
+                  "virtualizationPlatform": 0,
+                  "requiredUser": "Administrator"
+                }
+              }
+            ],
+            "storageRepository": {
+              "description": "SL278462 Public",
+              "id": 2330746,
+              "name": "SL278462 Public",
+              "publicFlag": 1,
+              "typeId": 181
+            }
+          }
+        },
+        {
+          "device": "1",
+          "diskImageId": 6865058,
+          "groupId": 402460,
+          "id": 508134,
+          "diskImage": {
+            "capacity": 2,
+            "createDate": "2015-01-26T23:36:11+00:00",
+            "description": "7903014-SWAP",
+            "id": 6865058,
+            "modifyDate": null,
+            "name": "7903014-SWAP",
+            "parentId": null,
+            "storageRepositoryId": 2330746,
+            "typeId": 246,
+            "units": "GB",
+            "uuid": "c84edb86-a9ce-4932-bf2c-c3e4b2b44ae9",
+            "softwareReferences": [],
+            "storageRepository": {
+              "description": "SL278462 Public",
+              "id": 2330746,
+              "name": "SL278462 Public",
+              "publicFlag": 1,
+              "typeId": 181
+            }
+          }
+        }
+      ],
+      "parent": {
+        "accountId": 278462,
+        "createDate": "2015-01-26T23:36:05+00:00",
+        "id": 402456,
+        "name": "DST_Windows-2008_R2DC_x86-64_Base_ICOv2",
+        "note": "DST Standard Windows image for deploying into VSP in ICO 2.4",
+        "parentId": null,
+        "publicFlag": 1,
+        "statusId": 1,
+        "summary": "DST_Windows-2008_R2DC_x86-64_Base with preparation for ICO 2.4",
+        "transactionId": null,
+        "userRecordId": 146842,
+        "accountReferences": [],
+        "children": [
+          {
+            "accountId": 278462,
+            "createDate": "2015-01-26T23:36:10+00:00",
+            "id": 402458,
+            "name": "DST_Windows-2008_R2DC_x86-64_Base_ICOv2",
+            "note": "DST Standard Windows image for deploying into VSP in ICO 2.4",
+            "parentId": 402456,
+            "publicFlag": 1,
+            "statusId": 1,
+            "summary": "DST_Windows-2008_R2DC_x86-64_Base with preparation for ICO 2.4",
+            "transactionId": null,
+            "userRecordId": 146842,
+            "blockDevices": [
+              {
+                "device": "0",
+                "diskImageId": 6865056,
+                "diskSpace": 20926382592,
+                "groupId": 402458,
+                "id": 508130,
+                "units": "B",
+                "diskImage": {
+                  "capacity": 25,
+                  "createDate": "2015-01-26T23:36:10+00:00",
+                  "description": "rrm-2k8r2dc-ico.dstdev.sl.edst.ibm.com",
+                  "id": 6865056,
+                  "modifyDate": null,
+                  "name": "rrm-2k8r2dc-ico.dstdev.sl.edst.ibm.com",
+                  "parentId": null,
+                  "storageRepositoryId": 2330744,
+                  "typeId": 241,
+                  "units": "GB",
+                  "uuid": "00c9bb78-9ac0-4f43-b4d8-35a6568c7db8",
+                  "softwareReferences": [
+                    {
+                      "id": 4259392,
+                      "softwareDescriptionId": 727,
+                      "softwareDescription": {
+                        "controlPanel": 0,
+                        "id": 727,
+                        "longDescription": "Nimsoft / Nimsoft Robot / 5.0",
+                        "manufacturer": "Nimsoft",
+                        "name": "Nimsoft Robot",
+                        "operatingSystem": 0,
+                        "upgradeSoftwareDescriptionId": null,
+                        "upgradeSwDescId": null,
+                        "version": "5.0",
+                        "virtualLicense": 0,
+                        "virtualizationPlatform": 0,
+                        "requiredUser": "administrator"
+                      }
+                    },
+                    {
+                      "id": 4259394,
+                      "softwareDescriptionId": 829,
+                      "softwareDescription": {
+                        "controlPanel": 0,
+                        "id": 829,
+                        "longDescription": "Microsoft / Windows 2008 FULL DC 64 bit R2 SP1 / DC 64 bit",
+                        "manufacturer": "Microsoft",
+                        "name": "Windows 2008 FULL DC 64 bit R2 SP1",
+                        "operatingSystem": 1,
+                        "referenceCode": "WIN_2008-DC-R2-SP1_64",
+                        "upgradeSoftwareDescriptionId": null,
+                        "upgradeSwDescId": null,
+                        "version": "DC 64 bit",
+                        "virtualLicense": 0,
+                        "virtualizationPlatform": 0,
+                        "requiredUser": "Administrator"
+                      }
+                    }
+                  ],
+                  "storageRepository": {
+                    "description": "SL278462 Public",
+                    "id": 2330744,
+                    "name": "SL278462 Public",
+                    "publicFlag": 1,
+                    "typeId": 181
+                  }
+                }
+              },
+              {
+                "device": "1",
+                "diskImageId": 6865060,
+                "groupId": 402458,
+                "id": 508136,
+                "diskImage": {
+                  "capacity": 2,
+                  "createDate": "2015-01-26T23:36:11+00:00",
+                  "description": "7903014-SWAP",
+                  "id": 6865060,
+                  "modifyDate": null,
+                  "name": "7903014-SWAP",
+                  "parentId": null,
+                  "storageRepositoryId": 2330744,
+                  "typeId": 246,
+                  "units": "GB",
+                  "uuid": "38eb1c23-0cf9-4325-b78a-95545829a36d",
+                  "softwareReferences": [],
+                  "storageRepository": {
+                    "description": "SL278462 Public",
+                    "id": 2330744,
+                    "name": "SL278462 Public",
+                    "publicFlag": 1,
+                    "typeId": 181
+                  }
+                }
+              }
+            ],
+            "parent": null
+          },
+          {
+            "accountId": 278462,
+            "createDate": "2015-01-26T23:36:10+00:00",
+            "id": 402460,
+            "name": "DST_Windows-2008_R2DC_x86-64_Base_ICOv2",
+            "note": "DST Standard Windows image for deploying into VSP in ICO 2.4",
+            "parentId": 402456,
+            "publicFlag": 1,
+            "statusId": 1,
+            "summary": "DST_Windows-2008_R2DC_x86-64_Base with preparation for ICO 2.4",
+            "transactionId": null,
+            "userRecordId": 146842,
+            "blockDevices": [
+              {
+                "device": "0",
+                "diskImageId": 6865054,
+                "diskSpace": 20926382592,
+                "groupId": 402460,
+                "id": 508132,
+                "units": "B",
+                "diskImage": {
+                  "capacity": 25,
+                  "createDate": "2015-01-26T23:36:10+00:00",
+                  "description": "rrm-2k8r2dc-ico.dstdev.sl.edst.ibm.com",
+                  "id": 6865054,
+                  "modifyDate": null,
+                  "name": "rrm-2k8r2dc-ico.dstdev.sl.edst.ibm.com",
+                  "parentId": null,
+                  "storageRepositoryId": 2330746,
+                  "typeId": 241,
+                  "units": "GB",
+                  "uuid": "ef20e61c-6814-47bf-8cd9-9d26f84d3789",
+                  "softwareReferences": [
+                    {
+                      "id": 4259396,
+                      "softwareDescriptionId": 727,
+                      "softwareDescription": {
+                        "controlPanel": 0,
+                        "id": 727,
+                        "longDescription": "Nimsoft / Nimsoft Robot / 5.0",
+                        "manufacturer": "Nimsoft",
+                        "name": "Nimsoft Robot",
+                        "operatingSystem": 0,
+                        "upgradeSoftwareDescriptionId": null,
+                        "upgradeSwDescId": null,
+                        "version": "5.0",
+                        "virtualLicense": 0,
+                        "virtualizationPlatform": 0,
+                        "requiredUser": "administrator"
+                      }
+                    },
+                    {
+                      "id": 4259398,
+                      "softwareDescriptionId": 829,
+                      "softwareDescription": {
+                        "controlPanel": 0,
+                        "id": 829,
+                        "longDescription": "Microsoft / Windows 2008 FULL DC 64 bit R2 SP1 / DC 64 bit",
+                        "manufacturer": "Microsoft",
+                        "name": "Windows 2008 FULL DC 64 bit R2 SP1",
+                        "operatingSystem": 1,
+                        "referenceCode": "WIN_2008-DC-R2-SP1_64",
+                        "upgradeSoftwareDescriptionId": null,
+                        "upgradeSwDescId": null,
+                        "version": "DC 64 bit",
+                        "virtualLicense": 0,
+                        "virtualizationPlatform": 0,
+                        "requiredUser": "Administrator"
+                      }
+                    }
+                  ],
+                  "storageRepository": {
+                    "description": "SL278462 Public",
+                    "id": 2330746,
+                    "name": "SL278462 Public",
+                    "publicFlag": 1,
+                    "typeId": 181
+                  }
+                }
+              },
+              {
+                "device": "1",
+                "diskImageId": 6865058,
+                "groupId": 402460,
+                "id": 508134,
+                "diskImage": {
+                  "capacity": 2,
+                  "createDate": "2015-01-26T23:36:11+00:00",
+                  "description": "7903014-SWAP",
+                  "id": 6865058,
+                  "modifyDate": null,
+                  "name": "7903014-SWAP",
+                  "parentId": null,
+                  "storageRepositoryId": 2330746,
+                  "typeId": 246,
+                  "units": "GB",
+                  "uuid": "c84edb86-a9ce-4932-bf2c-c3e4b2b44ae9",
+                  "softwareReferences": [],
+                  "storageRepository": {
+                    "description": "SL278462 Public",
+                    "id": 2330746,
+                    "name": "SL278462 Public",
+                    "publicFlag": 1,
+                    "typeId": 181
+                  }
+                }
+              }
+            ],
+            "parent": null
+          }
+        ],
+        "globalIdentifier": "8df677d9-02a0-43b0-9cc8-88015fcb6ad7"
+      }
+    }
+  ],
+  "globalIdentifier": "8df677d9-02a0-43b0-9cc8-88015fcb6ad7"
+}

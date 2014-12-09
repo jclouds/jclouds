@@ -71,7 +71,8 @@ public class SoftLayerComputeServiceContextModule extends
       }).to(DatacenterToLocation.class);
       bind(TemplateOptions.class).to(SoftLayerTemplateOptions.class);
       // to have the compute service adapter override default locations
-      install(new LocationsFromComputeServiceAdapterModule<VirtualGuest, Hardware, OperatingSystem, Datacenter>(){});
+      install(new LocationsFromComputeServiceAdapterModule<VirtualGuest, Hardware, OperatingSystem, Datacenter>() {
+      });
 
    }
 
