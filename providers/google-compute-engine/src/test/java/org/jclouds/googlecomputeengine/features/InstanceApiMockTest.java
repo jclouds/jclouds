@@ -119,7 +119,7 @@ public class InstanceApiMockTest extends BaseGoogleComputeEngineApiMockTest {
       assertEquals(instanceApi().deleteAccessConfigFromNic("test-instance", "test-access", "test-network"),
             new ParseZoneOperationTest().expected(url("/projects")));
 
-      assertSent(server, "DELETE", "/projects/party/zones/us-central1-a/instances/test-instance/"
+      assertSent(server, "POST", "/projects/party/zones/us-central1-a/instances/test-instance/"
             + "deleteAccessConfig?accessConfig=test-access&networkInterface=test-network");
    }
 

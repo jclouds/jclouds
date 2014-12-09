@@ -44,6 +44,7 @@ public class ParseTargetPoolTest extends BaseGoogleComputeEngineParseTest<Target
       return TargetPool.create( //
             "5199309593612841404", // id
             URI.create(baseUrl + "/party/regions/us-central1/targetPools/test-targetpool"), // selfLink
+            parse("2014-01-07T05:25:27.783-08:00"), // creationTimestamp
             "test-targetpool", // name
             null, // description
             URI.create(baseUrl + "/party/regions/us-central1"), // region

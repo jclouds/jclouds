@@ -17,6 +17,7 @@
 package org.jclouds.googlecomputeengine.domain;
 
 import java.net.URI;
+import java.util.Date;
 
 import org.jclouds.javax.annotation.Nullable;
 import org.jclouds.json.SerializedNames;
@@ -29,6 +30,8 @@ public abstract class HttpHealthCheck {
    public abstract String id();
 
    public abstract URI selfLink();
+
+   public abstract Date creationTimestamp();
 
    public abstract String name();
 
@@ -58,12 +61,12 @@ public abstract class HttpHealthCheck {
    @Nullable public abstract Integer healthyThreshold();
 
    @SerializedNames(
-         { "id", "selfLink", "name", "description", "host", "requestPath", "port", "checkIntervalSec", "timeoutSec",
+         { "id", "selfLink", "creationTimestamp", "name", "description", "host", "requestPath", "port", "checkIntervalSec", "timeoutSec",
                "unhealthyThreshold", "healthyThreshold" })
-   public static HttpHealthCheck create(String id, URI selfLink, String name, String description, String host,
+   public static HttpHealthCheck create(String id, URI selfLink, Date creationTimestamp, String name, String description, String host,
          String requestPath, Integer port, Integer checkIntervalSec, Integer timeoutSec, Integer unhealthyThreshold,
          Integer healthyThreshold) {
-      return new AutoValue_HttpHealthCheck(id, selfLink, name, description, host,
+      return new AutoValue_HttpHealthCheck(id, selfLink, creationTimestamp, name, description, host,
             requestPath, port, checkIntervalSec, timeoutSec, unhealthyThreshold, healthyThreshold);
    }
 

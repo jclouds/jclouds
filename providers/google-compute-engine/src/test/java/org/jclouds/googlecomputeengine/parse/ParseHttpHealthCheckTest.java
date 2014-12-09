@@ -44,15 +44,16 @@ public class ParseHttpHealthCheckTest extends BaseGoogleComputeEngineParseTest<H
       return HttpHealthCheck.create( //
             "2761502483700014319", // id
             URI.create(baseUrl + "/party-gce/global/httpHealthChecks/http-health-check-api-live-test"), // selfLink
+            parse("2014-01-14T05:55:54.910-08:00"), // creationTimestamp
             "http-health-check-api-live-test", // name
-            null, // description
+            "Test Health Check", // description
             null, // host
-            null, // requestPath
-            null,  // port
-            null,  // checkIntervalSec
-            null,  // timeoutSec
-            null,  // unhealthyThreshold
-            null // healthyThreshold
+            "/", // requestPath
+            80,  // port
+            5,  // checkIntervalSec
+            5,  // timeoutSec
+            2,  // unhealthyThreshold
+            2 // healthyThreshold
       );
    }
 }

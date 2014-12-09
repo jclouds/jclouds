@@ -22,8 +22,9 @@ import java.net.URI;
 
 import javax.ws.rs.Consumes;
 
+import org.jclouds.googlecomputeengine.domain.KeyValuePair;
 import org.jclouds.googlecomputeengine.domain.Operation;
-import org.jclouds.googlecomputeengine.domain.Operation.Warning;
+import org.jclouds.googlecomputeengine.domain.Warning;
 import org.jclouds.googlecomputeengine.internal.BaseGoogleComputeEngineParseTest;
 import org.testng.annotations.Test;
 
@@ -68,9 +69,8 @@ public class ParseOperationTest extends BaseGoogleComputeEngineParseTest<Operati
                         "Invalid value for field 'resource.urlMaps': "
                         + "'projects/party/global/urlMaps/target-http-proxy-api-live-test-url-map-2'."
                         + " Resource was not found."))), // errors
-            ImmutableList.of(Warning
-                  .create("NO_RESULTS_ON_PAGE", "This is an example warning",
-                  ImmutableList.of(Warning.Entry
+            ImmutableList.of(Warning.create("NO_RESULTS_ON_PAGE", "This is an example warning",
+                  ImmutableList.of(KeyValuePair
                         .create("scope", "There are no results for scope 'zones/asia-east1-b' on this page.")))), // warnings
             URI.create(baseUrl + "/party/regions/us-central1"), // region
             URI.create(baseUrl + "/party/zones/us-central1-a") // zone

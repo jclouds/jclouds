@@ -98,6 +98,16 @@ public class ForwardingRuleApiMockTest extends BaseGoogleComputeEngineApiMockTes
             stringFromResource("/forwardingrule_set_target.json"));
    }
 
+   public void setTarget_partialUrl() throws Exception {
+      server.enqueue(jsonResponse("/region_operation.json"));
+
+      URI newTarget = URI.create("projects/project-id/regions/region/targetPools/target-pool");
+      assertEquals(forwardingRuleApi().setTarget("testForwardingRule", newTarget), new ParseRegionOperationTest().expected(url("/projects")));
+
+      assertSent(server, "POST", "/projects/party/regions/us-central1/forwardingRules/testForwardingRule/setTarget",
+            "{\"target\":\"projects/project-id/regions/region/targetPools/target-pool\"}");
+   }
+
    ForwardingRuleApi forwardingRuleApi() {
       return api().forwardingRulesInRegion("us-central1");
    }

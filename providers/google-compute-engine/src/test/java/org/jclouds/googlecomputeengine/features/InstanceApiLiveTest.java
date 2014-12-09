@@ -32,8 +32,10 @@ import org.jclouds.googlecomputeengine.GoogleComputeEngineApi;
 import org.jclouds.googlecomputeengine.domain.Image;
 import org.jclouds.googlecomputeengine.domain.Instance;
 import org.jclouds.googlecomputeengine.domain.Instance.AttachedDisk;
+import org.jclouds.googlecomputeengine.domain.Instance.NetworkInterface.AccessConfig.Type;
 import org.jclouds.googlecomputeengine.domain.Instance.Scheduling;
 import org.jclouds.googlecomputeengine.domain.Instance.SerialPortOutput;
+import org.jclouds.googlecomputeengine.domain.Instance.NetworkInterface.AccessConfig;
 import org.jclouds.googlecomputeengine.domain.Metadata;
 import org.jclouds.googlecomputeengine.domain.NewInstance;
 import org.jclouds.googlecomputeengine.domain.AttachDisk;
@@ -120,6 +122,24 @@ public class InstanceApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
       Instance instance = api().get(INSTANCE_NAME);
       assertNotNull(instance);
       assertInstanceEquals(instance, this.instance);
+   }
+
+   @Test(groups = "live", dependsOnMethods = "testInsertInstance")
+   public void testAddAccessConfig() {
+      AccessConfig config = AccessConfig.create("test-config", Type.ONE_TO_ONE_NAT, null);
+      assertOperationDoneSuccessfully(api().addAccessConfigToNic(INSTANCE_NAME, config, "nic0"));
+      Instance instance = api().get(INSTANCE_NAME);
+      assertNotNull(instance);
+      assertEquals(instance.networkInterfaces().get(0).accessConfigs().get(0).name(), "test-config");
+   }
+
+   @Test(groups = "live", dependsOnMethods = "testAddAccessConfig")
+   public void testDeleteAccessConfig() {
+      Instance instance = api().get(INSTANCE_NAME);
+      assertOperationDoneSuccessfully(api().deleteAccessConfigFromNic(INSTANCE_NAME, "test-config", "nic0"));
+      instance = api().get(INSTANCE_NAME);
+      assertNotNull(instance);
+      assertTrue(instance.networkInterfaces().get(0).accessConfigs().isEmpty());
    }
 
    @Test(groups = "live", dependsOnMethods = "testInsertInstance")
@@ -258,7 +278,8 @@ public class InstanceApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
       assertOperationDoneSuccessfully(api().reset(INSTANCE_NAME));
    }
 
-   @Test(groups = "live", dependsOnMethods = {"testSetDiskAutoDelete", "testResetInstance", "testSetScheduling", "testGetInstance", "testGetSerialPortOutput"}, alwaysRun = true)
+   @Test(groups = "live", dependsOnMethods = {"testSetDiskAutoDelete", "testResetInstance", "testSetScheduling",
+         "testGetInstance", "testGetSerialPortOutput", "testDeleteAccessConfig"}, alwaysRun = true)
    public void testDeleteInstance() {
       assertOperationDoneSuccessfully(api().delete(INSTANCE_NAME));
       assertOperationDoneSuccessfully(diskApi().delete(DISK_NAME));

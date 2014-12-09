@@ -34,11 +34,11 @@ public abstract class HttpHealthCheckCreationOptions {
    @Nullable public abstract String description();
 
    static final String DEFAULT_REQUEST_PATH = "/";
-   static final Integer DEFAULT_PORT = 80;
-   static final Integer DEFAULT_CHECK_INTERVAL_SEC = 5;
-   static final Integer DEFAULT_TIMEOUT_SEC = 5;
-   static final Integer DEFAULT_UNHEALTHY_THRESHOLD = 2;
-   static final Integer DEFAULT_HEALTHY_THRESHOLD = 2;
+   static final int DEFAULT_PORT = 80;
+   static final int DEFAULT_CHECK_INTERVAL_SEC = 5;
+   static final int DEFAULT_TIMEOUT_SEC = 5;
+   static final int DEFAULT_UNHEALTHY_THRESHOLD = 2;
+   static final int DEFAULT_HEALTHY_THRESHOLD = 2;
 
    /*
     * Currently GCE is not setting the advertised defaults so we do so here.

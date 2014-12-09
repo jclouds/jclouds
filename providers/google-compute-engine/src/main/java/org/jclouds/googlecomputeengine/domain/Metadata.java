@@ -33,25 +33,13 @@ import com.google.auto.value.AutoValue;
 @AutoValue
 public abstract class Metadata implements Cloneable {
 
-   @AutoValue
-   public abstract static class Entry {
-      abstract String key();
-
-      abstract String value();
-
-      @SerializedNames({ "key", "value" })
-      public static Entry create(String key, String value) {
-         return new AutoValue_Metadata_Entry(key, value);
-      }
-   }
-
    /** The fingerprint for the items - needed for updating them. */
    @Nullable public abstract String fingerprint();
 
    /** Adds or replaces a metadata entry. */
    public Metadata put(String key, String value) {
       remove(key);
-      items().add(Entry.create(key, value));
+      items().add(KeyValuePair.create(key, value));
       return this;
    }
 
@@ -77,9 +65,9 @@ public abstract class Metadata implements Cloneable {
    /** Copies the metadata into a new mutable map. */
    public Map<String, String> asMap() {
       Map<String, String> result = new LinkedHashMap<String, String>();
-      ArrayList<Entry> items = items();
+      ArrayList<KeyValuePair> items = items();
       for (int i = 0, length = items.size(); i < length; i++) {
-         Entry item = items.get(i);
+         KeyValuePair item = items.get(i);
          result.put(item.key(), item.value());
       }
       return result;
@@ -87,9 +75,9 @@ public abstract class Metadata implements Cloneable {
 
    /** Returns the value with the supplied key, or null. */
    @Nullable public String get(String key) {
-      ArrayList<Entry> items = items();
+      ArrayList<KeyValuePair> items = items();
       for (int i = 0, length = items.size(); i < length; i++) {
-         Entry item = items.get(i);
+         KeyValuePair item = items.get(i);
          if (item.key().equals(key)) {
             return item.value();
          }
@@ -106,7 +94,7 @@ public abstract class Metadata implements Cloneable {
    }
 
    /** Mutable list of metadata. */
-   abstract ArrayList<Entry> items();
+   abstract ArrayList<KeyValuePair> items();
 
    public static Metadata create() {
       return Metadata.create(null, null);
@@ -117,14 +105,14 @@ public abstract class Metadata implements Cloneable {
    }
 
    @SerializedNames({ "fingerprint", "items" })
-   static Metadata create(String fingerprint, ArrayList<Entry> items) { // Dictates the type when created from json!
-      return new AutoValue_Metadata(fingerprint, items != null ? items : new ArrayList<Entry>());
+   static Metadata create(String fingerprint, ArrayList<KeyValuePair> items) { // Dictates the type when created from json!
+      return new AutoValue_Metadata(fingerprint, items != null ? items : new ArrayList<KeyValuePair>());
    }
 
    Metadata() {
    }
 
    @Override public Metadata clone() {
-      return Metadata.create(fingerprint(), new ArrayList<Entry>(items()));
+      return Metadata.create(fingerprint(), new ArrayList<KeyValuePair>(items()));
    }
 }

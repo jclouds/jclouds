@@ -50,6 +50,7 @@ public class ParseHttpHealthCheckListTest extends BaseGoogleComputeEngineParseTe
             "1035854271083519643", // id
             URI.create(baseUrl + "/party-gce/global/httpHealthChecks/myname-andrea-kmzmi1bh-http-health-check"),
             // selfLink
+            parse("2014-01-08T14:38:29.363-08:00"),
             "myname-andrea-kmzmi1bh-http-health-check", // name
             null, // description
             null, // host
@@ -64,6 +65,7 @@ public class ParseHttpHealthCheckListTest extends BaseGoogleComputeEngineParseTe
             "7006563292274658743", // id
             URI.create(baseUrl + "/party-gce/global/httpHealthChecks/myname-andrea-zk7gadwq-http-health-check"),
             // selfLink
+            parse("2014-01-08T14:48:03.276-08:00"), // creationTimestamp
             "myname-andrea-zk7gadwq-http-health-check", // name
             null, // description
             null, // host

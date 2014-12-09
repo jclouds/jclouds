@@ -19,6 +19,7 @@ package org.jclouds.googlecomputeengine.domain;
 import static org.jclouds.googlecloud.internal.NullSafeCopies.copyOf;
 
 import java.net.URI;
+import java.util.Date;
 import java.util.List;
 
 import org.jclouds.googlecomputeengine.options.TargetPoolCreationOptions.SessionAffinityValue;
@@ -33,6 +34,8 @@ public abstract class TargetPool {
    public abstract String id();
 
    public abstract URI selfLink();
+
+   public abstract Date creationTimestamp();
 
    public abstract String name();
 
@@ -83,12 +86,12 @@ public abstract class TargetPool {
     */
    @Nullable public abstract URI backupPool();
 
-   @SerializedNames({ "id", "selfLink", "name", "description", "region", "healthChecks", "instances", "sessionAffinity",
+   @SerializedNames({ "id", "selfLink", "creationTimestamp", "name", "description", "region", "healthChecks", "instances", "sessionAffinity",
          "failoverRatio", "backupPool" })
-   public static TargetPool create(String id, URI selfLink, String name, String description, URI region,
+   public static TargetPool create(String id, URI selfLink, Date creationTimestamp, String name, String description, URI region,
          List<URI> healthChecks, List<URI> instances, SessionAffinityValue sessionAffinity, Float failoverRatio,
          URI backupPool) {
-      return new AutoValue_TargetPool(id, selfLink, name, description, region, copyOf(healthChecks), copyOf(instances),
+      return new AutoValue_TargetPool(id, selfLink, creationTimestamp, name, description, region, copyOf(healthChecks), copyOf(instances),
             sessionAffinity, failoverRatio, backupPool);
    }
 

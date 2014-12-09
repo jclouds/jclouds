@@ -30,24 +30,6 @@ import com.google.auto.value.AutoValue;
 @AutoValue
 public abstract class Route {
 
-   @AutoValue
-   public abstract static class Warning {
-      public abstract String code(); // TODO: enum
-
-      // TODO: create common Warning resource.
-      @Nullable public abstract String message();
-
-      public abstract List<Metadata.Entry> data();
-
-      @SerializedNames({ "code", "message", "data" })
-      public static Warning create(String code, String message, List<Metadata.Entry> data) {
-         return new AutoValue_Route_Warning(code, message, copyOf(data));
-      }
-
-      Warning() {
-      }
-   }
-
    public abstract String id();
 
    public abstract Date creationTimestamp();
@@ -88,14 +70,17 @@ public abstract class Route {
    /** Potential misconfigurations are detected for this route. */
    public abstract List<Warning> warnings();
 
+   /** The URL to a VpnTunnel that should handle matching packets. */
+   @Nullable public abstract URI nextHopVpnTunnel();
+
    @SerializedNames(
          { "id", "creationTimestamp", "selfLink", "name", "description", "network", "tags", "destRange", "priority", "nextHopInstance",
-               "nextHopIp", "nextHopNetwork", "nextHopGateway", "warnings" })
+               "nextHopIp", "nextHopNetwork", "nextHopGateway", "warnings", "nextHopVpnTunnel" })
    public static Route create(String id, Date creationTimestamp, URI selfLink, String name, String description, URI network, List<String> tags,
          String destRange, int priority, URI nextHopInstance, String nextHopIp, URI nextHopNetwork, URI nextHopGateway,
-         List<Warning> warnings) {
+         List<Warning> warnings, URI nextHopVpnTunnel) {
       return new AutoValue_Route(id, creationTimestamp, selfLink, name, description, network, copyOf(tags), destRange, priority,
-            nextHopInstance, nextHopIp, nextHopNetwork, nextHopGateway, copyOf(warnings));
+            nextHopInstance, nextHopIp, nextHopNetwork, nextHopGateway, copyOf(warnings), nextHopVpnTunnel);
    }
 
    Route() {

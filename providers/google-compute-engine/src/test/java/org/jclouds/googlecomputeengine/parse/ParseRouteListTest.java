@@ -59,7 +59,8 @@ public class ParseRouteListTest extends BaseGoogleComputeEngineParseTest<ListPag
             null, // nextHopIp
             null, // nextHopNetwork
             URI.create(baseUrl + "/party/global/gateways/default-internet-gateway"), // nextHopGateway
-            null // warnings
+            null, // warnings
+            null // nextHopVpnTunnel
       );
       return ForwardingListPage.create( //
             ImmutableList.of(route1, route2), // items

@@ -21,7 +21,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import org.jclouds.googlecomputeengine.domain.Metadata.Entry;
 import org.jclouds.javax.annotation.Nullable;
 import org.jclouds.json.SerializedNames;
 
@@ -65,38 +64,6 @@ public abstract class Operation {
       }
 
       Error(){
-      }
-   }
-
-   @AutoValue
-   public abstract static class Warning {
-
-      // TODO: combine this with Metadata.Entry
-      @AutoValue
-      public abstract static class Entry {
-         abstract String key();
-
-         abstract String value();
-
-         @SerializedNames({ "key", "value" })
-         public static Entry create(String key, String value) {
-            return new AutoValue_Operation_Warning_Entry(key, value);
-         }
-
-         Entry(){
-         }
-      }
-
-      public abstract String code();
-      @Nullable public abstract String message();
-      public abstract List<Entry> data();
-
-      @SerializedNames({"code", "message", "data"})
-      public static Warning create(String code, String message, List<Entry> data){
-         return new AutoValue_Operation_Warning(code, message, data);
-      }
-
-      Warning() {
       }
    }
 

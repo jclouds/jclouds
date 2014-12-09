@@ -119,7 +119,7 @@ public interface InstanceApi {
     *         you, and look for the status field.
     */
    @Named("Instances:deleteAccessConfig")
-   @DELETE
+   @POST
    @Path("/{instance}/deleteAccessConfig")
    Operation deleteAccessConfigFromNic(@PathParam("instance") String instance,
                                        @QueryParam("accessConfig") String accessConfigName,

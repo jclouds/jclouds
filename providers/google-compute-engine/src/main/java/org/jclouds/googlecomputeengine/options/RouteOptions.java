@@ -37,6 +37,7 @@ public class RouteOptions {
    private URI nextHopGateway;
    private String description;
    private Integer priority;
+   private URI nextHopVpnTunnel;
 
    private ImmutableList.Builder<String> tags = ImmutableList.builder();
 
@@ -116,6 +117,14 @@ public class RouteOptions {
    }
 
    /**
+    * @see org.jclouds.googlecomputeengine.domain.Route#getNextHopVpnTunnel()
+    */
+   public RouteOptions nextHopVpnTunnel(URI nextHopVpnTunnel){
+      this.nextHopVpnTunnel = nextHopVpnTunnel;
+      return this;
+   }
+
+   /**
     * @see org.jclouds.googlecomputeengine.domain.Route#getNetwork()
     */
    public RouteOptions network(URI network) {
@@ -173,6 +182,13 @@ public class RouteOptions {
     */
    public URI getNextHopGateway() {
       return nextHopGateway;
+   }
+
+   /**
+    * @see org.jclouds.googlecomputeengine.domain.Route#getNextHopVpnTunnel()
+    */
+   public URI getNextHopVpnTunnel() {
+      return nextHopVpnTunnel;
    }
 
    /**

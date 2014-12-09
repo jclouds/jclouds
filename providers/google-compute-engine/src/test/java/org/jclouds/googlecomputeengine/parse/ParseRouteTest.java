@@ -22,9 +22,9 @@ import java.net.URI;
 
 import javax.ws.rs.Consumes;
 
-import org.jclouds.googlecomputeengine.domain.Metadata;
+import org.jclouds.googlecomputeengine.domain.KeyValuePair;
 import org.jclouds.googlecomputeengine.domain.Route;
-import org.jclouds.googlecomputeengine.domain.Route.Warning;
+import org.jclouds.googlecomputeengine.domain.Warning;
 import org.jclouds.googlecomputeengine.internal.BaseGoogleComputeEngineParseTest;
 import org.testng.annotations.Test;
 
@@ -60,7 +60,8 @@ public class ParseRouteTest extends BaseGoogleComputeEngineParseTest<Route> {
             URI.create(baseUrl + "/party/global/networks/default"), // nextHopNetwork
             null, // nextHopGateway
             ImmutableList.of(Warning.create("NO_RESULTS_ON_PAGE", "This is an example warning", ImmutableList.of(
-                  Metadata.Entry.create("scope", "There are no results for scope 'zones/asia-east1-b' on this page.")))) // warnings
+                  KeyValuePair.create("scope", "There are no results for scope 'zones/asia-east1-b' on this page.")))), // warnings
+            null // nextHopVpnTunnel
       );
    }
 }
