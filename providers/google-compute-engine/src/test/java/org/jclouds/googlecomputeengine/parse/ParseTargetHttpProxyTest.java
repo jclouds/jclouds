@@ -34,14 +34,18 @@ public class ParseTargetHttpProxyTest extends BaseGoogleComputeEngineParseTest<T
       return "/target_http_proxy_get.json";
    }
 
-   @Override
-   @Consumes(MediaType.APPLICATION_JSON)
+   @Override @Consumes(MediaType.APPLICATION_JSON)
    public TargetHttpProxy expected() {
+      return expected(BASE_URL);
+   }
+
+   @Consumes(MediaType.APPLICATION_JSON)
+   public TargetHttpProxy expected(String baseUrl) {
       return TargetHttpProxy.create("13050421646334304115", // id
             new SimpleDateFormatDateService().iso8601DateParse("2012-11-25T01:38:48.306"), // creationTimestamp
-            URI.create("https://www.googleapis.com/compute/v1/projects/myproject/global/targetHttpProxies/jclouds-test"), // selfLink
+            URI.create(baseUrl + "/myproject/global/targetHttpProxies/jclouds-test"), // selfLink
             "jclouds-test", // name
             null,
-            URI.create("https://www.googleapis.com/compute/v1/projects/myproject/global/urlMaps/jclouds-test")); // urlMap
+            URI.create(baseUrl + "/myproject/global/urlMaps/jclouds-test")); // urlMap
    }
 }

@@ -41,19 +41,22 @@ public class ParseUrlMapListTest extends BaseGoogleComputeEngineParseTest<ListPa
    @Override
    @Consumes(MediaType.APPLICATION_JSON)
    public ListPage<UrlMap> expected() {
+      return expected(BASE_URL);
+   }
+
+   @Consumes(MediaType.APPLICATION_JSON)
+   public ListPage<UrlMap> expected(String baseUrl) {
       return ForwardingListPage.create(
-            ImmutableList.of(new ParseUrlMapTest().expected(),
+            ImmutableList.of(new ParseUrlMapTest().expected(baseUrl),
                   UrlMap.create("13741966667737398120", // id
                         new SimpleDateFormatDateService().iso8601DateParse("2014-07-23T12:39:50.022-07:00"), // creationTimestamp
-                        URI.create("https://www.googleapis" +
-                              ".com/compute/v1/projects/myproject/global/urlMaps/jclouds-test-2"), // selfLink
+                        URI.create(baseUrl + "/myproject/global/urlMaps/jclouds-test-2"), // selfLink
                         "jclouds-test-2", // name
                         "Basic url map", // description
                         null, // hostRules
                         null, // pathMatchers
                         null, // urlMapTests
-                        URI.create("https://www.googleapis.com/compute/v1/projects/"
-                              + "myproject/global/backendServices/jclouds-test"), // defaultService
+                        URI.create(baseUrl + "/myproject/global/backendServices/jclouds-test"), // defaultService
                         "EDqhvJucpz4=")), // fingerprint
             null);
    }

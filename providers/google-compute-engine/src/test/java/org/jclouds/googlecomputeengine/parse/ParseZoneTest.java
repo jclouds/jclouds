@@ -38,10 +38,15 @@ public class ParseZoneTest extends BaseGoogleComputeEngineParseTest<Zone> {
 
    @Override @Consumes(APPLICATION_JSON)
    public Zone expected() {
+      return expected(BASE_URL);
+   }
+
+   @Consumes(APPLICATION_JSON)
+   public Zone expected(String baseUrl) {
       return Zone.create( //
             "13020128040171887099", // id
             parse("2012-10-19T16:42:54.131"), // creationTimestamp
-            URI.create(BASE_URL + "/party/zones/us-central1-a"), // selfLink
+            URI.create(baseUrl + "/party/zones/us-central1-a"), // selfLink
             "us-central1-a", // name
             "us-central1-a", // description
             Zone.Status.DOWN, // status

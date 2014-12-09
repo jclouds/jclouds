@@ -44,7 +44,12 @@ public class ParseUrlMapTest extends BaseGoogleComputeEngineParseTest<UrlMap> {
    @Override
    @Consumes(MediaType.APPLICATION_JSON)
    public UrlMap expected() {
-      URI service = URI.create("https://www.googleapis.com/compute/v1/projects/myproject/global/backendServices/jclouds-test");
+      return expected(BASE_URL);
+   }
+
+   @Consumes(MediaType.APPLICATION_JSON)
+   public UrlMap expected(String baseUrl) {
+      URI service = URI.create(baseUrl + "/myproject/global/backendServices/jclouds-test");
 
       List<HostRule> hostRules = ImmutableList.of(HostRule.create(null, // description
             ImmutableList.of("jclouds-test"), // hosts
@@ -64,7 +69,7 @@ public class ParseUrlMapTest extends BaseGoogleComputeEngineParseTest<UrlMap> {
 
       return UrlMap.create("13741966667737398119", // id
             new SimpleDateFormatDateService().iso8601DateParse("2014-07-23T12:39:50.022-07:00"), // creationTimestamp
-            URI.create("https://www.googleapis.com/compute/v1/projects/myproject/global/urlMaps/jclouds-test"), // selfLink
+            URI.create(baseUrl + "/myproject/global/urlMaps/jclouds-test"), // selfLink
             "jclouds-test", // name
             "Sample url map", // description
             hostRules, // hostRules

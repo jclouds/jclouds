@@ -38,19 +38,22 @@ public class ParseTargetHttpProxyListTest extends BaseGoogleComputeEngineParseTe
       return "/target_http_proxy_list.json";
    }
 
-   @Override
-   @Consumes(MediaType.APPLICATION_JSON)
+   @Override @Consumes(MediaType.APPLICATION_JSON)
    public ListPage<TargetHttpProxy> expected() {
+      return expected(BASE_URL);
+   }
+
+   @Consumes(MediaType.APPLICATION_JSON)
+   public ListPage<TargetHttpProxy> expected(String baseUrl) {
       return ForwardingListPage.create(
             ImmutableList.of(
-                  new ParseTargetHttpProxyTest().expected(),
+                  new ParseTargetHttpProxyTest().expected(baseUrl),
                   TargetHttpProxy.create("13050421646334304116", // id
                         new SimpleDateFormatDateService().iso8601DateParse("2012-11-25T01:38:48.306"), // creationTimestamp
-                        URI.create("https://www.googleapis" +
-                              ".com/compute/v1/projects/myproject/global/targetHttpProxies/jclouds-test-2"), // selfLink
+                        URI.create(baseUrl + "/myproject/global/targetHttpProxies/jclouds-test-2"), // selfLink
                         "jclouds-test-2", // name
                         "Simple proxy", // description
-                        URI.create("https://www.googleapis.com/compute/v1/projects/myproject/global/urlMaps/jclouds-test-2"))), // urlMap
+                        URI.create(baseUrl + "/myproject/global/urlMaps/jclouds-test-2"))), // urlMap
                   null // nextPageToken d
             );
    }

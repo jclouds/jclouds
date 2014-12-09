@@ -39,13 +39,18 @@ public class ParseUrlMapValidateTest extends BaseGoogleComputeEngineParseTest<Ur
    @Override
    @Consumes(APPLICATION_JSON)
    public UrlMapValidateResult expected() {
+      return expected(BASE_URL);
+   }
+
+   @Consumes(APPLICATION_JSON)
+   public UrlMapValidateResult expected(String baseUrl) {
       return UrlMapValidateResult.create(false, // loadSucceded
             ImmutableList.of("jclouds-test"), // loadError
             false, // testPassed
             ImmutableList.of(TestFailure.create("jclouds-test", // host
                   "/test/path", // path
-                  URI.create("https://www.googleapis.com/compute/v1/projects/myproject/global/backendServices/jclouds-test"), // expectedService
-                  URI.create("https://www.googleapis.com/compute/v1/projects/myproject/global/backendServices/jclouds-test-2") //actualService
+                  URI.create(baseUrl + "/myproject/global/backendServices/jclouds-test"), // expectedService
+                  URI.create(baseUrl + "/myproject/global/backendServices/jclouds-test-2") //actualService
                   ))); //testFailures)
    }
 }
