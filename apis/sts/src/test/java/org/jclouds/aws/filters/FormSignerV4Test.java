@@ -80,6 +80,25 @@ public class FormSignerV4Test {
       assertThat(filtered.getFirstHeaderOrNull("Authorization")).endsWith("Signature=" + sampleSignature);
    }
 
+   public void versionSampleRequest() {
+      HttpRequest request = HttpRequest.builder() //
+            .method("POST") //
+            .endpoint("https://iam.amazonaws.com/") //
+            .addHeader("Host", "iam.amazonaws.com") //
+            .payload("Action=CoolVersionWordAction")
+            .build();
+
+      request.getPayload().getContentMetadata().setContentType("application/x-www-form-urlencoded; charset=utf-8");
+
+      FormSignerV4 filter = new FormSignerV4(apiVersion, accessAndSecretKey, timestamp, serviceAndRegion);
+
+      HttpRequest filtered = filter.filter(request);
+
+      assertEquals(filtered.getFirstHeaderOrNull("X-Amz-Date"), timestamp.get());
+
+      assertThat(filtered.getPayload().getRawContent().toString().contains("&Version=2010-05-08"));
+   }
+
    public void sessionTokenRequest() {
       HttpRequest request = HttpRequest.builder() //
             .method("POST") //
