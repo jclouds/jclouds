@@ -23,9 +23,9 @@ import static com.google.common.hash.Hashing.sha256;
 import static com.google.common.io.BaseEncoding.base16;
 import static com.google.common.net.HttpHeaders.AUTHORIZATION;
 import static com.google.common.net.HttpHeaders.HOST;
-import static javax.ws.rs.core.MediaType.APPLICATION_FORM_URLENCODED;
 import static org.jclouds.aws.reference.FormParameters.ACTION;
 import static org.jclouds.aws.reference.FormParameters.VERSION;
+import static org.jclouds.http.utils.Queries.queryParser;
 
 import java.net.URI;
 import java.security.GeneralSecurityException;
@@ -41,8 +41,6 @@ import org.jclouds.date.TimeStamp;
 import org.jclouds.domain.Credentials;
 import org.jclouds.http.HttpException;
 import org.jclouds.http.HttpRequest;
-import org.jclouds.io.Payload;
-import org.jclouds.io.Payloads;
 import org.jclouds.location.Provider;
 import org.jclouds.providers.ProviderMetadata;
 import org.jclouds.rest.annotations.ApiVersion;
@@ -51,6 +49,7 @@ import com.google.common.base.Joiner;
 import com.google.common.base.Splitter;
 import com.google.common.base.Supplier;
 import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.Multimap;
 import com.google.inject.ImplementedBy;
 
 public final class FormSignerV4 implements FormSigner {
@@ -106,7 +105,8 @@ public final class FormSignerV4 implements FormSigner {
       checkArgument(request.getHeaders().containsKey(HOST), "request is not ready to sign; host not present");
       String host = request.getFirstHeaderOrNull(HOST);
       String form = request.getPayload().getRawContent().toString();
-      checkArgument(form.indexOf(ACTION) != -1, "request is not ready to sign; Action not present %s", form);
+      Multimap<String, String> decodedParams = queryParser().apply(form);
+      checkArgument(decodedParams.containsKey(ACTION), "request is not ready to sign; Action not present %s", form);
 
       String timestamp = iso8601Timestamp.get();
       String datestamp = timestamp.substring(0, 8);
@@ -125,8 +125,8 @@ public final class FormSignerV4 implements FormSigner {
             .removeHeader(AUTHORIZATION) //
             .replaceHeader("X-Amz-Date", timestamp);
 
-      if (form.indexOf(VERSION) == -1) {
-         requestBuilder.addFormParam("Version", apiVersion);
+      if (!decodedParams.containsKey(VERSION)) {
+         requestBuilder.addFormParam(VERSION, apiVersion);
       }
 
       Credentials credentials = creds.get();
@@ -149,17 +149,6 @@ public final class FormSignerV4 implements FormSigner {
       authorization.append("Signature=").append(signature);
 
       return requestBuilder.addHeader(AUTHORIZATION, authorization.toString()).build();
-   }
-
-   // TODO: change EC2 apis to add this themselves with @FormParams
-   private Payload addVersionIfNecessary(Payload payload, String form) {
-      if (form.indexOf(VERSION) == -1) {
-         form += "&Version=" + apiVersion;
-         payload = Payloads.newStringPayload(form);
-         payload.getContentMetadata().setContentType(APPLICATION_FORM_URLENCODED);
-         payload.getContentMetadata().setContentLength((long) form.length());
-      }
-      return payload;
    }
 
    static byte[] signatureKey(String secretKey, String datestamp, String region, String service) {
