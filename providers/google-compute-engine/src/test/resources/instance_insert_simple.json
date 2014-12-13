@@ -5,7 +5,9 @@
     {
       "network": "https://www.googleapis.com/compute/v1/projects/party/global/networks/default",
       "accessConfigs": [
-        "ONE_TO_ONE_NAT"
+        {
+          "type": "ONE_TO_ONE_NAT"
+        }
       ]
     }
   ],

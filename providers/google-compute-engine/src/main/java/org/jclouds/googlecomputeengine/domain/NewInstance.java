@@ -23,6 +23,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.jclouds.googlecomputeengine.domain.Instance.NetworkInterface.AccessConfig;
+import org.jclouds.googlecomputeengine.domain.Instance.NetworkInterface.AccessConfig.Type;
 import org.jclouds.googlecomputeengine.domain.Instance.Scheduling;
 import org.jclouds.googlecomputeengine.domain.Instance.ServiceAccount;
 import org.jclouds.javax.annotation.Nullable;
@@ -38,14 +39,14 @@ public abstract class NewInstance {
    abstract static class NetworkInterface {
       abstract URI network();
 
-      abstract List<AccessConfig.Type> accessConfigs();
+      abstract List<AccessConfig> accessConfigs();
 
       static NetworkInterface create(URI network) {
-         return create(network, Arrays.asList(AccessConfig.Type.ONE_TO_ONE_NAT));
+         return create(network, Arrays.asList(AccessConfig.create(null, Type.ONE_TO_ONE_NAT, null)));
       }
 
       @SerializedNames({ "network", "accessConfigs" })
-      static NetworkInterface create(URI network, List<AccessConfig.Type> accessConfigs) {
+      static NetworkInterface create(URI network, List<AccessConfig> accessConfigs) {
          return new AutoValue_NewInstance_NetworkInterface(network, accessConfigs);
       }
 

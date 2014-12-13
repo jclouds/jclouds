@@ -30,6 +30,7 @@ import org.jclouds.collect.Memoized;
 import org.jclouds.compute.domain.Hardware;
 import org.jclouds.compute.domain.NodeMetadata;
 import org.jclouds.compute.domain.NodeMetadataBuilder;
+import org.jclouds.compute.domain.NodeMetadata.Status;
 import org.jclouds.compute.functions.GroupNamingConvention;
 import org.jclouds.domain.Location;
 import org.jclouds.googlecomputeengine.domain.Instance;
@@ -95,7 +96,7 @@ public final class InstanceToNodeMetadata implements Function<Instance, NodeMeta
              .location(zone)
              .imageId(bootImage != null ? bootImage.toString() : null)
              .hardware(hardwares.get().get(input.machineType()))
-             .status(toPortableNodeStatus.get(input.status()))
+             .status(input.status() != null ? toPortableNodeStatus.get(input.status()) : Status.UNRECOGNIZED)
              .tags(input.tags().items())
              .uri(input.selfLink())
              .userMetadata(input.metadata().asMap())
