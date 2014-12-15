@@ -85,6 +85,23 @@ public class BackendServiceApiMockTest extends BaseGoogleComputeEngineApiMockTes
             stringFromResource("/backend_service_insert.json"));
    }
 
+   public void patch() throws Exception {
+      server.enqueue(jsonResponse("/operation.json"));
+
+      List<URI> healthChecks = ImmutableList.of(URI.create(url("/projects/"
+            + "myproject/global/httpHealthChecks/jclouds-test")));
+
+      assertEquals(backendServiceApi().patch("jclouds-test",
+            new BackendServiceOptions().name("jclouds-test")
+               .protocol("HTTP")
+               .port(80)
+               .timeoutSec(30)
+               .healthChecks(healthChecks)),
+            new ParseOperationTest().expected(url("/projects")));
+      assertSent(server, "PATCH", "/projects/party/global/backendServices/jclouds-test",
+            stringFromResource("/backend_service_insert.json"));
+   }
+
    public void delete() throws Exception {
       server.enqueue(jsonResponse("/operation.json"));
 
@@ -101,7 +118,6 @@ public class BackendServiceApiMockTest extends BaseGoogleComputeEngineApiMockTes
 
       assertSent(server, "DELETE", "/projects/party/global/backendServices/jclouds-test");
    }
-
 
    public void list() throws Exception {
       server.enqueue(jsonResponse("/backend_service_list.json"));

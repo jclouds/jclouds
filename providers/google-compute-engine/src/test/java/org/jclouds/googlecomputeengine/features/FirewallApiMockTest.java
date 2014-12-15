@@ -115,6 +115,24 @@ public class FirewallApiMockTest extends BaseGoogleComputeEngineApiMockTest {
             stringFromResource("/firewall_insert.json"));
    }
 
+   public void patch() throws Exception {
+      server.enqueue(jsonResponse("/operation.json"));
+
+      FirewallOptions options = new FirewallOptions()
+         .name("myfw")
+         .network(URI.create(url("/projects/party/global/networks/default")))
+         .addAllowedRule(Firewall.Rule.create("tcp", ImmutableList.of("22", "23-24")))
+         .addSourceTag("tag1")
+         .addSourceRange("10.0.1.0/32")
+         .addTargetTag("tag2");
+
+      assertEquals(firewallApi().patch("myfw", options),
+            new ParseOperationTest().expected(url("/projects")));
+
+      assertSent(server, "PATCH", "/projects/party/global/firewalls/myfw",
+            stringFromResource("/firewall_insert.json"));
+   }
+
    FirewallApi firewallApi(){
       return api().firewalls();
    }

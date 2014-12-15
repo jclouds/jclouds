@@ -70,9 +70,7 @@ public class UrlMapApiMockTest extends BaseGoogleComputeEngineApiMockTest {
             stringFromResource("/url_map_insert.json"));
    }
 
-/*
    public void patch() throws Exception {
-      // PATCH not yet supported
       server.enqueue(jsonResponse("/operation.json"));
 
       assertEquals(urlMapApi().patch("jclouds-test", createBasicMap()),
@@ -80,7 +78,7 @@ public class UrlMapApiMockTest extends BaseGoogleComputeEngineApiMockTest {
       assertSent(server, "PATCH", "/projects/party/global/urlMaps/jclouds-test",
             stringFromResource("/url_map_insert.json"));
    }
-*/
+
    public void delete() throws Exception {
       server.enqueue(jsonResponse("/operation.json"));
 

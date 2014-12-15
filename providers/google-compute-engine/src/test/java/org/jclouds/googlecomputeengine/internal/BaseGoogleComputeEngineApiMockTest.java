@@ -36,6 +36,7 @@ import org.jclouds.ContextBuilder;
 import org.jclouds.compute.ComputeService;
 import org.jclouds.compute.ComputeServiceContext;
 import org.jclouds.concurrent.config.ExecutorServiceModule;
+import org.jclouds.http.okhttp.config.OkHttpCommandExecutorServiceModule;
 import org.jclouds.googlecomputeengine.GoogleComputeEngineApi;
 import org.jclouds.googlecomputeengine.GoogleComputeEngineProviderMetadata;
 import org.testng.annotations.AfterMethod;
@@ -49,7 +50,7 @@ import com.squareup.okhttp.mockwebserver.MockWebServer;
 import com.squareup.okhttp.mockwebserver.RecordedRequest;
 
 /**
- * Tests need to run {@code singleThreaded = true) as otherwise tests will clash on the server field.
+ * Tests need to run {@code singleThreaded = true} as otherwise tests will clash on the server field.
  * Sharing the server field means less code to write.
  */
 public class BaseGoogleComputeEngineApiMockTest {
@@ -80,7 +81,7 @@ public class BaseGoogleComputeEngineApiMockTest {
    }
 
    private final Set<Module> modules = ImmutableSet
-         .of(new ExecutorServiceModule(sameThreadExecutor()), GoogleComputeEngineTestModule.INSTANCE);
+         .of(new ExecutorServiceModule(sameThreadExecutor()), GoogleComputeEngineTestModule.INSTANCE, new OkHttpCommandExecutorServiceModule());
 
    final AtomicInteger suffix = new AtomicInteger();
 

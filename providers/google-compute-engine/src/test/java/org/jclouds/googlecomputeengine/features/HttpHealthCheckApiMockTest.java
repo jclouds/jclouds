@@ -87,6 +87,18 @@ public class HttpHealthCheckApiMockTest extends BaseGoogleComputeEngineApiMockTe
             stringFromResource("/httphealthcheck_insert.json"));
    }
 
+   public void patch() throws Exception {
+      server.enqueue(jsonResponse("/global_operation.json"));
+
+      HttpHealthCheckCreationOptions options = new HttpHealthCheckCreationOptions.Builder()
+         .timeoutSec(0).unhealthyThreshold(0).buildNoDefaults();
+      assertEquals(httpHealthCheckApi().patch("http-health-check", options),
+            new ParseGlobalOperationTest().expected(url("/projects")));
+
+      assertSent(server, "PATCH", "/projects/party/global/httpHealthChecks/http-health-check",
+            stringFromResource("/httphealthcheck_patch.json"));
+   }
+
    public void list() throws Exception {
       server.enqueue(jsonResponse("/httphealthcheck_list.json"));
 
