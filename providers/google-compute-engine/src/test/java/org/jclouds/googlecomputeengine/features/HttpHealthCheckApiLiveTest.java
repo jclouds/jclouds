@@ -78,7 +78,7 @@ public class HttpHealthCheckApiLiveTest extends BaseGoogleComputeEngineApiLiveTe
          .port(options.port() + OFFSET)
          .checkIntervalSec(options.checkIntervalSec() + OFFSET)
          .timeoutSec(options.timeoutSec() + OFFSET)
-         .buildNoDefaults();
+         .buildForPatch();
       assertOperationDoneSuccessfully(api().patch(HTTP_HEALTH_CHECK_NAME, newOptions));
 
       // Check changes happened and others unchanged.

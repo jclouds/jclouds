@@ -83,6 +83,7 @@ public interface TargetHttpProxyApi {
    @Path("/global/targetHttpProxies")
    Operation create(@BinderParam(BindToJsonPayload.class) TargetHttpProxyOptions targetHttpProxyOptions);
 
+   //TODO (broudy) : Should we remove this because it is redundant?
    /**
     * Creates a targetHttpProxy resource in the specified project using the given URI for the urlMap.
     *

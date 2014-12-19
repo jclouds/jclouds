@@ -126,10 +126,11 @@ public class TargetPoolApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
 
    @Test(groups = "live")
    public void testInsertTargetPool() {
-      TargetPoolCreationOptions targetPoolCreationOptions = new TargetPoolCreationOptions()
+      TargetPoolCreationOptions targetPoolCreationOptions = new TargetPoolCreationOptions.Builder(BACKUP_TARGETPOOL_NAME)
       .description(DESCRIPTION_BACKUP)
-      .sessionAffinity(SessionAffinityValue.CLIENT_IP);
-      assertOperationDoneSuccessfully(api().create(BACKUP_TARGETPOOL_NAME, targetPoolCreationOptions));
+      .sessionAffinity(SessionAffinityValue.CLIENT_IP)
+      .build();
+      assertOperationDoneSuccessfully(api().create(targetPoolCreationOptions));
    }
 
    @Test(groups = "live", dependsOnMethods = "testInsertTargetPool")
@@ -137,12 +138,13 @@ public class TargetPoolApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
       TargetPool targetPool = api().get(BACKUP_TARGETPOOL_NAME);
       assertNotNull(targetPool);
       // Make a Target Pool with a backup and failoverRatio specified.
-      TargetPoolCreationOptions targetPoolCreationOptions = new TargetPoolCreationOptions()
+      TargetPoolCreationOptions targetPoolCreationOptions = new TargetPoolCreationOptions.Builder(TARGETPOOL_NAME)
          .description(DESCRIPTION)
          .sessionAffinity(SessionAffinityValue.CLIENT_IP)
          .backupPool(targetPool.selfLink())
-         .failoverRatio((float) 0.5);
-      assertOperationDoneSuccessfully(api().create(TARGETPOOL_NAME, targetPoolCreationOptions));
+         .failoverRatio((float) 0.5)
+         .build();
+      assertOperationDoneSuccessfully(api().create(targetPoolCreationOptions));
       TargetPool targetPool2 = api().get(TARGETPOOL_NAME);
       assertNotNull(targetPool2);
       assertEquals(targetPool2.name(), TARGETPOOL_NAME);
@@ -222,8 +224,9 @@ public class TargetPoolApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
 
    @Test(groups = "live", dependsOnMethods = {"testInsertTargetPool2"})
    public void testListBackupTargetPool() {
-      TargetPoolCreationOptions options = new TargetPoolCreationOptions().description("A targetPool for testing setBackup.");
-      assertOperationDoneSuccessfully(api().create(THIRD_TARGETPOOL_NAME, options));
+      TargetPoolCreationOptions options = new TargetPoolCreationOptions.Builder(THIRD_TARGETPOOL_NAME)
+      .description("A targetPool for testing setBackup.").build();
+      assertOperationDoneSuccessfully(api().create(options));
       TargetPool targetPool = api().get(THIRD_TARGETPOOL_NAME);
       assertNotNull(targetPool);
       assertEquals(targetPool.name(), THIRD_TARGETPOOL_NAME);

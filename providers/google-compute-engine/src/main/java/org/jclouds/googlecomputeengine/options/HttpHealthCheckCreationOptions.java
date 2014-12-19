@@ -161,7 +161,7 @@ public abstract class HttpHealthCheckCreationOptions {
        * Useful when performing a PATCH operation and you do not want to overwrite
        * unspecified values with the default values.
        */
-      public HttpHealthCheckCreationOptions buildNoDefaults() {
+      public HttpHealthCheckCreationOptions buildForPatch() {
          return HttpHealthCheckCreationOptions.create(host, requestPath, port,
                checkIntervalSec, timeoutSec, unhealthyThreshold, healthyThreshold, description);
       }

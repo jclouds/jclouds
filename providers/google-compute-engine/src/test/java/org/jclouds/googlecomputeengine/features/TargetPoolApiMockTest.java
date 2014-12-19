@@ -54,8 +54,8 @@ public class TargetPoolApiMockTest extends BaseGoogleComputeEngineApiMockTest {
    public void insert() throws Exception {
       server.enqueue(jsonResponse("/region_operation.json"));
 
-      TargetPoolCreationOptions targetPoolCreationOptions = new TargetPoolCreationOptions();
-      assertEquals(targetPoolApi().create("test", targetPoolCreationOptions),
+      TargetPoolCreationOptions targetPoolCreationOptions = new TargetPoolCreationOptions.Builder("test").build();
+      assertEquals(targetPoolApi().create(targetPoolCreationOptions),
             new ParseRegionOperationTest().expected(url("/projects")));
       assertSent(server, "POST", "/projects/party/regions/us-central1/targetPools",
             stringFromResource("/targetpool_insert.json"));

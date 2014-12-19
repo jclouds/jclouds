@@ -91,7 +91,7 @@ public class HttpHealthCheckApiMockTest extends BaseGoogleComputeEngineApiMockTe
       server.enqueue(jsonResponse("/global_operation.json"));
 
       HttpHealthCheckCreationOptions options = new HttpHealthCheckCreationOptions.Builder()
-         .timeoutSec(0).unhealthyThreshold(0).buildNoDefaults();
+         .timeoutSec(0).unhealthyThreshold(0).buildForPatch();
       assertEquals(httpHealthCheckApi().patch("http-health-check", options),
             new ParseGlobalOperationTest().expected(url("/projects")));
 

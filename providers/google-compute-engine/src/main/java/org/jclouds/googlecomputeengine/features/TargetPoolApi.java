@@ -38,7 +38,6 @@ import org.jclouds.googlecloud.domain.ListPage;
 import org.jclouds.googlecomputeengine.GoogleComputeEngineApi;
 import org.jclouds.googlecomputeengine.binders.TargetPoolChangeHealthChecksBinder;
 import org.jclouds.googlecomputeengine.binders.TargetPoolChangeInstancesBinder;
-import org.jclouds.googlecomputeengine.binders.TargetPoolCreationBinder;
 import org.jclouds.googlecomputeengine.domain.HealthStatus;
 import org.jclouds.googlecomputeengine.domain.Operation;
 import org.jclouds.googlecomputeengine.domain.TargetPool;
@@ -47,6 +46,7 @@ import org.jclouds.googlecomputeengine.options.ListOptions;
 import org.jclouds.googlecomputeengine.options.TargetPoolCreationOptions;
 import org.jclouds.javax.annotation.Nullable;
 import org.jclouds.oauth.v2.filters.OAuthFilter;
+import org.jclouds.rest.annotations.BinderParam;
 import org.jclouds.rest.annotations.Fallback;
 import org.jclouds.rest.annotations.MapBinder;
 import org.jclouds.rest.annotations.PayloadParam;
@@ -82,8 +82,7 @@ public interface TargetPoolApi {
    @Named("TargetPools:insert")
    @POST
    @Produces(APPLICATION_JSON)
-   @MapBinder(TargetPoolCreationBinder.class)
-   Operation create(@PayloadParam("name") String name, @PayloadParam("options") TargetPoolCreationOptions options);
+   Operation create(@BinderParam(BindToJsonPayload.class) TargetPoolCreationOptions options);
 
    /** Deletes a target pool by name and returns the operation in progress, or null if not found. */
    @Named("TargetPools:delete")

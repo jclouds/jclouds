@@ -16,60 +16,52 @@
  */
 package org.jclouds.googlecomputeengine.options;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 import java.net.URI;
 
 import org.jclouds.javax.annotation.Nullable;
+import org.jclouds.json.SerializedNames;
 
-public final class TargetHttpProxyOptions {
+import com.google.auto.value.AutoValue;
 
-   private String name;
-   @Nullable private String description;
-   private URI urlMap;
+@AutoValue
+public abstract class TargetHttpProxyOptions {
 
-   /**
-    * Name of the TargetHttpProxy resource.
-    * @return name, provided by the client.
-    */
-   public String getName(){
-      return name;
+   public abstract String name();
+   @Nullable public abstract String description();
+   public abstract URI urlMap();
+
+   @SerializedNames({ "name", "description", "urlMap"})
+   static TargetHttpProxyOptions create(String name, String description, URI urlMap) {
+      return new AutoValue_TargetHttpProxyOptions(name, description, urlMap);
    }
 
-   /**
-    * @see TargetHttpProxyOptions#getName()
-    */
-   public TargetHttpProxyOptions name(String name) {
-      this.name = name;
-      return this;
+   TargetHttpProxyOptions() {
    }
 
-   /**
-    * An optional textual description of the TargetHttpProxy.
-    * @return description, provided by the client.
-    */
-   public String getDescription(){
-      return description;
-   }
+   public static class Builder {
+      private String name;
+      private String description;
+      private URI urlMap;
 
-   /**
-    * @see TargetHttpProxyOptions#getDescription()
-    */
-   public TargetHttpProxyOptions description(String description) {
-      this.description = description;
-      return this;
-   }
+      public Builder(String name, URI urlMap) {
+         this.name = name;
+         this.urlMap = urlMap;
+      }
 
-   /**
-    * URL to the UrlMap resource that defines the mapping from URL to the BackendService.
-    */
-   public URI getUrlMap() {
-      return urlMap;
-   }
+      /**
+       * @see TargetHttpProxyOptions#getDescription()
+       */
+      public Builder description(String description) {
+         this.description = description;
+         return this;
+      }
 
-   /**
-    * @see TargetHttpProxyOptions#getUrlMap()
-    */
-   public TargetHttpProxyOptions urlMap(URI urlMap) {
-      this.urlMap = urlMap;
-      return this;
+      public TargetHttpProxyOptions build() {
+         checkNotNull(name, "TargetHttpProxyOptions name cannot be null");
+         checkNotNull(urlMap, "TargetHttpProxyOptions name cannot be null");
+         return create(name, description, urlMap);
+      }
    }
 }

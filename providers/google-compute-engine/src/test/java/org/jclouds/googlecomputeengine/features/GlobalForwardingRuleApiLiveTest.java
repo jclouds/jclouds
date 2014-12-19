@@ -66,9 +66,9 @@ public class GlobalForwardingRuleApiLiveTest extends BaseGoogleComputeEngineApiL
       assertOperationDoneSuccessfully(api.backendServices()
                                               .create(b));
 
-      UrlMapOptions map = new UrlMapOptions().name(GLOBAL_FORWARDING_RULE_URL_MAP_NAME)
+      UrlMapOptions map = new UrlMapOptions.Builder().name(GLOBAL_FORWARDING_RULE_URL_MAP_NAME)
                                              .description("simple url map")
-                                             .defaultService(getBackendServiceUrl(GLOBAL_FORWARDING_RULE_BACKEND_SERVICE_NAME));
+                                             .defaultService(getBackendServiceUrl(GLOBAL_FORWARDING_RULE_BACKEND_SERVICE_NAME)).build();
       assertOperationDoneSuccessfully(api.urlMaps()
                                               .create(map));
       assertOperationDoneSuccessfully(api.targetHttpProxies()

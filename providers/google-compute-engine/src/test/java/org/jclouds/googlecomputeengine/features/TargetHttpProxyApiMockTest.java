@@ -23,6 +23,7 @@ import static org.testng.AssertJUnit.assertNull;
 import java.net.URI;
 
 import org.jclouds.googlecomputeengine.internal.BaseGoogleComputeEngineApiMockTest;
+import org.jclouds.googlecomputeengine.options.TargetHttpProxyOptions;
 import org.jclouds.googlecomputeengine.parse.ParseOperationTest;
 import org.jclouds.googlecomputeengine.parse.ParseTargetHttpProxyListTest;
 import org.jclouds.googlecomputeengine.parse.ParseTargetHttpProxyTest;
@@ -53,6 +54,20 @@ public class TargetHttpProxyApiMockTest extends BaseGoogleComputeEngineApiMockTe
       assertEquals(targetHttpProxyApi().create("jclouds-test", urlMap), new ParseOperationTest().expected(url("/projects")));
       assertSent(server, "POST", "/projects/party/global/targetHttpProxies",
             stringFromResource("/target_http_proxy_insert.json"));
+   }
+
+   public void insert_options() throws Exception {
+      server.enqueue(jsonResponse("/operation.json"));
+
+      URI urlMap = URI.create(url("/projects/myproject/global/urlMaps/jclouds-test"));
+      TargetHttpProxyOptions options = new TargetHttpProxyOptions.Builder("jclouds-test", urlMap).description("test").build();
+      assertEquals(targetHttpProxyApi().create(options), new ParseOperationTest().expected(url("/projects")));
+      assertSent(server, "POST", "/projects/party/global/targetHttpProxies",
+            "{" +
+            "  \"name\": \"jclouds-test\"," +
+            "  \"urlMap\": \"" + url("/projects/myproject/global/urlMaps/jclouds-test") + "\"," +
+            "  \"description\": \"test\"" +
+            "}");
    }
 
    public void delete() throws Exception {

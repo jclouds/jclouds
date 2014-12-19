@@ -113,6 +113,7 @@ public interface UrlMapApi {
 
    /**
     * Updates the specified urlMap resource, with patch semantics, with the data included in the request.
+    * Note:{@link UrlMapOptions.Builder#buildForPatch()} may be helpful.
     *
     * @param urlMapName    the name urlMap to be updated.
     * @param urlMapOptions the new urlMap options.

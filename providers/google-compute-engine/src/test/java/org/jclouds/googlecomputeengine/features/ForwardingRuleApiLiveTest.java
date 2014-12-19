@@ -61,11 +61,12 @@ public class ForwardingRuleApiLiveTest extends BaseGoogleComputeEngineApiLiveTes
 
    @BeforeClass
    public void init() {
-      TargetPoolCreationOptions targetPoolCreationOptions = new TargetPoolCreationOptions();
-      assertOperationDoneSuccessfully(targetPoolApi().create(TARGETPOOL_NAME, targetPoolCreationOptions));
+      TargetPoolCreationOptions targetPoolCreationOptions = new TargetPoolCreationOptions.Builder(TARGETPOOL_NAME).build();
+      assertOperationDoneSuccessfully(targetPoolApi().create(targetPoolCreationOptions));
       targetPool = targetPoolApi().get(TARGETPOOL_NAME);
 
-      assertOperationDoneSuccessfully(targetPoolApi().create(TARGETPOOL_NAME_NEW, targetPoolCreationOptions));
+      targetPoolCreationOptions = new TargetPoolCreationOptions.Builder(TARGETPOOL_NAME_NEW).build();
+      assertOperationDoneSuccessfully(targetPoolApi().create(targetPoolCreationOptions));
       newTargetPool = targetPoolApi().get(TARGETPOOL_NAME_NEW);
 
       assertOperationDoneSuccessfully(addressApi().create(ADDRESS_NAME));

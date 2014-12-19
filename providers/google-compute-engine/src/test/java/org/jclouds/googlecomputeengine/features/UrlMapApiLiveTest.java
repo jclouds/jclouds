@@ -58,8 +58,8 @@ public class UrlMapApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
                                                            .healthChecks(healthChecks);
       assertOperationDoneSuccessfully(api.backendServices().create(b));
 
-      UrlMapOptions map = new UrlMapOptions().name(URL_MAP_NAME).description("simple url map")
-                                             .defaultService(getBackendServiceUrl(URL_MAP_BACKEND_SERVICE_NAME));
+      UrlMapOptions map = new UrlMapOptions.Builder().name(URL_MAP_NAME).description("simple url map")
+                                             .defaultService(getBackendServiceUrl(URL_MAP_BACKEND_SERVICE_NAME)).build();
 
       assertOperationDoneSuccessfully(api().create(map));
 
@@ -100,11 +100,11 @@ public class UrlMapApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
 
       ImmutableList<String> hosts = ImmutableList.<String>of("jclouds-test");
       ImmutableList<HostRule> hostRules = ImmutableList.<HostRule>of(HostRule.create("", hosts, "test-path-matcher"));
-      UrlMapOptions options = new UrlMapOptions().name(URL_MAP_NAME)
+      UrlMapOptions options = new UrlMapOptions.Builder().name(URL_MAP_NAME)
                                                  .pathMatchers(matchers)
                                                  .hostRules(hostRules)
                                                  .defaultService(service)
-                                                 .fingerprint(fingerprint);
+                                                 .fingerprint(fingerprint).build();
 
       assertOperationDoneSuccessfully(api().update(URL_MAP_NAME, options));
 
@@ -119,8 +119,8 @@ public class UrlMapApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
       UrlMapTest urlMapTest = UrlMapTest.create(null, "jclouds-test", "/test/path", service);
       ImmutableList<UrlMap.UrlMapTest> urlMapTests = ImmutableList.<UrlMap.UrlMapTest>of(urlMapTest);
 
-      UrlMapOptions options = new UrlMapOptions().urlMapTests(urlMapTests)
-                                                 .fingerprint(fingerprint);
+      UrlMapOptions options = new UrlMapOptions.Builder().tests(urlMapTests)
+                                                 .fingerprint(fingerprint).buildForPatch();
       assertOperationDoneSuccessfully(api().patch(URL_MAP_NAME, options));
 
       // Update options with settings it should have for later assertions.
@@ -132,11 +132,15 @@ public class UrlMapApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
 
       ImmutableList<String> hosts = ImmutableList.<String>of("jclouds-test");
       ImmutableList<HostRule> hostRules = ImmutableList.<HostRule>of(HostRule.create("", hosts, "test-path-matcher"));
-      options.name(URL_MAP_NAME)
+
+      options = new UrlMapOptions.Builder().name(URL_MAP_NAME)
              .description("simple url map")
              .pathMatchers(matchers)
              .hostRules(hostRules)
-             .defaultService(service);
+             .defaultService(service)
+             .tests(urlMapTests)
+             .fingerprint(fingerprint)
+             .build();
 
       assertUrlMapEquals(api().get(URL_MAP_NAME), options);
    }
@@ -163,14 +167,14 @@ public class UrlMapApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
       UrlMapTest urlMapTest = UrlMapTest.create(null, "jclouds-test", "/test/path", service);
       ImmutableList<UrlMap.UrlMapTest> urlMapTests = ImmutableList.<UrlMap.UrlMapTest>of(urlMapTest);
 
-      UrlMapOptions options = new UrlMapOptions();
-
-      options.pathMatchers(matchers)
+      UrlMapOptions options = new UrlMapOptions.Builder()
+             .pathMatchers(matchers)
              .name(URL_MAP_NAME)
              .hostRules(hostRules)
-             .urlMapTests(urlMapTests)
+             .tests(urlMapTests)
              .defaultService(service)
-             .description("simple url map");
+             .description("simple url map")
+             .build();
 
       UrlMapValidateResult results = api().validate(URL_MAP_NAME, options);
       UrlMapValidateResult expected = UrlMapValidateResult.allPass();
@@ -196,9 +200,9 @@ public class UrlMapApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
    }
 
    private void assertUrlMapEquals(UrlMap result, UrlMapOptions expected) {
-      assertEquals(result.name(), expected.getName());
-      assertEquals(result.defaultService(), expected.getDefaultService());
-      assertEquals(result.pathMatchers(), expected.getPathMatchers());
-      assertEquals(result.hostRules(), expected.getHostRules());
+      assertEquals(result.name(), expected.name());
+      assertEquals(result.defaultService(), expected.defaultService());
+      assertEquals(result.pathMatchers(), expected.pathMatchers());
+      assertEquals(result.hostRules(), expected.hostRules());
    }
 }

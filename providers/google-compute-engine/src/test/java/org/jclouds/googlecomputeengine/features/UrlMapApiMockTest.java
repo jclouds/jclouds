@@ -119,17 +119,18 @@ public class UrlMapApiMockTest extends BaseGoogleComputeEngineApiMockTest {
 
    private UrlMapOptions createBasicMap() {
       URI service = URI.create(url("/projects/myproject/global/backendServices/jclouds-test"));
-      return new UrlMapOptions().name("jclouds-test")
+      return new UrlMapOptions.Builder().name("jclouds-test")
                                 .description("Sample url map")
-                                .hostRule(HostRule.create(null, ImmutableList.of("jclouds-test"), "path"))
-                                .pathMatcher(PathMatcher.create("path",
+                                .hostRules(ImmutableList.of(HostRule.create(null, ImmutableList.of("jclouds-test"), "path")))
+                                .pathMatchers(ImmutableList.of(PathMatcher.create("path",
                                                                 null,
                                                                 service,
                                                                 ImmutableList.of(
                                                                       PathRule.create(ImmutableList.of("/"),
-                                                                                      service))))
-                                .test(UrlMap.UrlMapTest.create(null, "jclouds-test", "/test/path", service))
-                                .defaultService(service);
+                                                                                      service)))))
+                                .tests(ImmutableList.of(UrlMap.UrlMapTest.create(null, "jclouds-test", "/test/path", service)))
+                                .defaultService(service)
+                                .build();
    }
 
    UrlMapApi urlMapApi() {
