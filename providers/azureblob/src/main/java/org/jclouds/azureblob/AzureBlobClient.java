@@ -43,6 +43,7 @@ import org.jclouds.azure.storage.filters.SharedKeyLiteAuthentication;
 import org.jclouds.azure.storage.options.ListOptions;
 import org.jclouds.azure.storage.reference.AzureStorageHeaders;
 import org.jclouds.azureblob.binders.BindAzureBlobMetadataToRequest;
+import org.jclouds.azureblob.binders.BindAzureBlobMetadataToMultipartRequest;
 import org.jclouds.azureblob.binders.BindAzureBlocksToRequest;
 import org.jclouds.azureblob.domain.AzureBlob;
 import org.jclouds.azureblob.domain.BlobProperties;
@@ -347,7 +348,10 @@ public interface AzureBlobClient extends Closeable {
     *  The Put Block List assembles a list of blocks previously uploaded with Put Block into a single
     *  blob. Blocks are either already committed to a blob or uncommitted. The blocks ids passed here
     *  are searched for first in the uncommitted block list; then committed using the "latest" strategy.
+    *
+    *  @deprecated call putBlockList(String, AzureBlob, List&lt;String&gt;) instead
     */
+   @Deprecated
    @Named("PutBlockList")
    @PUT
    @Path("{container}/{name}")
@@ -355,6 +359,20 @@ public interface AzureBlobClient extends Closeable {
    @QueryParams(keys = { "comp" }, values = { "blocklist" })
    String putBlockList(@PathParam("container") @ParamValidators(ContainerNameValidator.class) String container,
          @PathParam("name") String name,
+         @BinderParam(BindAzureBlocksToRequest.class) List<String> blockIdList);
+
+   /**
+    *  The Put Block List assembles a list of blocks previously uploaded with Put Block into a single
+    *  blob. Blocks are either already committed to a blob or uncommitted. The blocks ids passed here
+    *  are searched for first in the uncommitted block list; then committed using the "latest" strategy.
+    */
+   @Named("PutBlockList")
+   @PUT
+   @Path("{container}/{name}")
+   @ResponseParser(ParseETagHeader.class)
+   @QueryParams(keys = { "comp" }, values = { "blocklist" })
+   String putBlockList(@PathParam("container") @ParamValidators(ContainerNameValidator.class) String container,
+         @PathParam("name") @ParamParser(BlobName.class) @BinderParam(BindAzureBlobMetadataToMultipartRequest.class) AzureBlob object,
          @BinderParam(BindAzureBlocksToRequest.class) List<String> blockIdList);
 
    @Named("GetBlockList")

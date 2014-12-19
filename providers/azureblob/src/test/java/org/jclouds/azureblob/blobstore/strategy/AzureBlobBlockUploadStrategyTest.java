@@ -22,6 +22,8 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.io.ByteSource;
 import org.easymock.EasyMock;
 import org.jclouds.azureblob.AzureBlobClient;
+import org.jclouds.azureblob.blobstore.functions.BlobToAzureBlob;
+import org.jclouds.azureblob.domain.AzureBlob;
 import org.jclouds.blobstore.domain.Blob;
 import org.jclouds.blobstore.domain.MutableBlobMetadata;
 import org.jclouds.blobstore.domain.internal.BlobImpl;
@@ -54,6 +56,7 @@ public class AzureBlobBlockUploadStrategyTest {
       byte[] blobData = "ABCD".getBytes(Charsets.UTF_8);
       AzureBlobClient client = createMock(AzureBlobClient.class);
       PayloadSlicer slicer = createMock(PayloadSlicer.class);
+      BlobToAzureBlob blobToAzureBlob = createMock(BlobToAzureBlob.class);
       MutableBlobMetadata metadata = new MutableBlobMetadataImpl();
       MutableContentMetadata contentMetadata = new BaseMutableContentMetadata();
       contentMetadata.setContentLength((long)blobData.length);
@@ -76,9 +79,9 @@ public class AzureBlobBlockUploadStrategyTest {
       client.putBlock(eq(container), eq(blobName), anyObject(String.class), eq(payloads.get(1)));
       client.putBlock(eq(container), eq(blobName), anyObject(String.class), eq(payloads.get(2)));
       client.putBlock(eq(container), eq(blobName), anyObject(String.class), eq(payloads.get(3)));
-      expect(client.putBlockList(eq(container), eq(blobName), EasyMock.<List<String>>anyObject())).andReturn("Fake ETAG");
+      expect(client.putBlockList(eq(container), anyObject(AzureBlob.class), EasyMock.<List<String>>anyObject())).andReturn("Fake ETAG");
 
-      AzureBlobBlockUploadStrategy strat = new AzureBlobBlockUploadStrategy(client, slicer);
+      AzureBlobBlockUploadStrategy strat = new AzureBlobBlockUploadStrategy(client, slicer, blobToAzureBlob);
       replay(slicer, client);
       String etag = strat.execute(container, blob);
       assertEquals(etag, "Fake ETAG");
@@ -93,6 +96,7 @@ public class AzureBlobBlockUploadStrategyTest {
 
       AzureBlobClient client = createNiceMock(AzureBlobClient.class);
       PayloadSlicer slicer = createNiceMock(PayloadSlicer.class);
+      BlobToAzureBlob blobToAzureBlob = createMock(BlobToAzureBlob.class);
 
       MutableBlobMetadata metadata = new MutableBlobMetadataImpl();
       MutableContentMetadata contentMetadata = new BaseMutableContentMetadata();
@@ -105,7 +109,7 @@ public class AzureBlobBlockUploadStrategyTest {
       payload.setContentMetadata(contentMetadata);
       blob.setPayload(payload);
 
-      AzureBlobBlockUploadStrategy strat = new AzureBlobBlockUploadStrategy(client, slicer);
+      AzureBlobBlockUploadStrategy strat = new AzureBlobBlockUploadStrategy(client, slicer, blobToAzureBlob);
       strat.execute(container, blob);
    }
 

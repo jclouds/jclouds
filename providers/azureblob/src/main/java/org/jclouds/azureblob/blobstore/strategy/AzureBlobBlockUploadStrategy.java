@@ -21,6 +21,7 @@ import com.google.common.hash.Hashing;
 import com.google.common.io.BaseEncoding;
 import com.google.inject.Inject;
 import org.jclouds.azureblob.AzureBlobClient;
+import org.jclouds.azureblob.blobstore.functions.BlobToAzureBlob;
 import org.jclouds.blobstore.domain.Blob;
 import org.jclouds.blobstore.reference.BlobStoreConstants;
 import org.jclouds.io.Payload;
@@ -46,11 +47,13 @@ public class AzureBlobBlockUploadStrategy implements MultipartUploadStrategy {
 
    private final AzureBlobClient client;
    private final PayloadSlicer slicer;
+   private final BlobToAzureBlob blobToAzureBlob;
 
    @Inject
-   public AzureBlobBlockUploadStrategy(AzureBlobClient client, PayloadSlicer slicer) {
-      this.client = checkNotNull(client, "client");
-      this.slicer = checkNotNull(slicer, "slicer");
+   AzureBlobBlockUploadStrategy(AzureBlobClient client, PayloadSlicer slicer, BlobToAzureBlob blobToAzureBlob) {
+      this.client = client;
+      this.slicer = slicer;
+      this.blobToAzureBlob = blobToAzureBlob;
    }
 
    @Override
@@ -74,6 +77,6 @@ public class AzureBlobBlockUploadStrategy implements MultipartUploadStrategy {
       }
 
       checkState(bytesWritten == length, "Wrote %s bytes, but we wanted to write %s bytes", bytesWritten, length);
-      return client.putBlockList(container, blobName, blockIds);
+      return client.putBlockList(container, blobToAzureBlob.apply(blob), blockIds);
    }
 }

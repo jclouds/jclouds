@@ -18,13 +18,16 @@ package org.jclouds.azureblob.blobstore.integration;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
+import com.google.common.collect.ImmutableMap;
 import com.google.common.io.ByteSource;
 import com.google.common.io.Files;
 import org.jclouds.azureblob.blobstore.strategy.MultipartUploadStrategy;
 import org.jclouds.blobstore.BlobStore;
 import org.jclouds.blobstore.domain.Blob;
+import org.jclouds.blobstore.domain.BlobMetadata;
 import org.jclouds.blobstore.integration.internal.BaseBlobIntegrationTest;
 import org.jclouds.blobstore.options.PutOptions;
 import org.jclouds.io.ByteStreams2;
@@ -129,6 +132,29 @@ public class AzureBlobIntegrationLiveTest extends BaseBlobIntegrationTest {
          String expected = blobStore.putBlob(containerName, blob, PutOptions.Builder.multipart());
          String etag = blobStore.blobMetadata(containerName, "const.txt").getETag();
          assertEquals(etag, expected);
+      } finally {
+         returnContainer(containerName);
+      }
+   }
+
+   public void testMultipartUserMetadata() throws Exception {
+      BlobStore blobStore = view.getBlobStore();
+      String containerName = getContainerName();
+      String blobName = "const.txt";
+      ByteSource byteSource = TestUtils.randomByteSource().slice(0, MultipartUploadStrategy.MAX_BLOCK_SIZE + 1);
+      Map<String, String> userMetadata = ImmutableMap.of("foo", "bar");
+
+      blobStore.createContainerInLocation(null, containerName);
+      try {
+         Blob blob = blobStore.blobBuilder(blobName)
+            .payload(byteSource)
+            .contentLength(byteSource.size())
+            .userMetadata(userMetadata)
+            .build();
+         blobStore.putBlob(containerName, blob, PutOptions.Builder.multipart());
+
+         BlobMetadata blobMetadata = blobStore.blobMetadata(containerName, blobName);
+         assertThat(blobMetadata.getUserMetadata()).isEqualTo(userMetadata);
       } finally {
          returnContainer(containerName);
       }
