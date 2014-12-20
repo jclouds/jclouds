@@ -299,7 +299,7 @@ public class AzureBlobClientTest extends BaseRestAnnotationProcessingTest<AzureB
                "x-ms-version: 2013-08-15\n");
       assertPayloadEquals(request, null, null, false);
 
-      assertResponseParserClassEquals(method, request, ReleasePayloadAndReturn.class);
+      assertResponseParserClassEquals(method, request, ParseETagHeader.class);
       assertSaxResponseParserClassEquals(method, null);
       assertFallbackClassEquals(method, null);
    }
