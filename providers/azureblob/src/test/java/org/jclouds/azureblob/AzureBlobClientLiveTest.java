@@ -231,32 +231,26 @@ public class AzureBlobClientLiveTest extends BaseBlobStoreIntegrationTest {
 
       // Test HEAD of object
       BlobProperties metadata = getApi().getBlobProperties(privateContainer, object.getProperties().getName());
-      // TODO assertEquals(metadata.getName(),
-      // object.getProperties().getName());
-      // we can't check this while hacking around lack of content-md5, as GET of
-      // the first byte will
-      // show incorrect length 1, the returned size, as opposed to the real
-      // length. This is an ok
-      // tradeoff, as a container list will contain the correct size of the
-      // objects in an
-      // inexpensive fashion
-      // http://code.google.com/p/jclouds/issues/detail?id=92
-      // assertEquals(metadata.getSize(), data.length());
+      assertEquals(metadata.getName(), object.getProperties().getName());
+      assertEquals(metadata.getContentMetadata().getContentLength(), Long.valueOf(data.length()));
       assertEquals(metadata.getContentMetadata().getContentType(), "text/plain");
-      // Azure doesn't return the Content-MD5 on head request..
-      assertEquals(base16().lowerCase().encode(md5),
+      assertEquals(base16().lowerCase().encode(metadata.getContentMetadata().getContentMD5()),
             base16().lowerCase().encode(object.getProperties().getContentMetadata().getContentMD5()));
       assertEquals(metadata.getETag(), newEtag);
       assertEquals(metadata.getMetadata().entrySet().size(), 1);
       assertEquals(metadata.getMetadata().get("mykey"), "metadata-value");
 
-      // // Test POST to update object's metadata
-      // Multimap<String, String> userMetadata = LinkedHashMultimap.create();
-      // userMetadata.put("New-Metadata-1", "value-1");
-      // userMetadata.put("New-Metadata-2", "value-2");
-      // assertTrue(getApi().setBlobProperties(privateContainer,
-      // object.getProperties().getName(),
-      // userMetadata));
+      // Test POST to update object's metadata
+      Map<String, String> userMetadata = ImmutableMap.<String, String>builder()
+            .put("new_metadata_1", "value-1")
+            .put("new_metadata_2", "value-2")
+            .build();
+      String eTag = getApi().setBlobMetadata(privateContainer, object.getProperties().getName(), userMetadata);
+      assertThat(eTag).isNotNull();
+
+      // Azure ETag are timestamps not content hash
+      String eTag2 = getApi().setBlobMetadata(privateContainer, object.getProperties().getName(), userMetadata);
+      assertThat(eTag2).isNotNull().isNotEqualTo(eTag);
 
       // Test GET of missing object
       assert getApi().getBlob(privateContainer, "non-existent-object") == null;
@@ -264,21 +258,14 @@ public class AzureBlobClientLiveTest extends BaseBlobStoreIntegrationTest {
       // Test GET of object (including updated metadata)
       AzureBlob getBlob = getApi().getBlob(privateContainer, object.getProperties().getName());
       assertEquals(Strings2.toStringAndClose(getBlob.getPayload().openStream()), data);
-      // TODO assertEquals(getBlob.getName(), object.getProperties().getName());
+      assertEquals(getBlob.getProperties().getName(), object.getProperties().getName());
       assertEquals(getBlob.getPayload().getContentMetadata().getContentLength(), Long.valueOf(data.length()));
       assertEquals(getBlob.getProperties().getContentMetadata().getContentType(), "text/plain");
       assertEquals(base16().lowerCase().encode(md5),
             base16().lowerCase().encode(getBlob.getProperties().getContentMetadata().getContentMD5()));
-      assertEquals(newEtag, getBlob.getProperties().getETag());
-      // wait until we can update metadata
-      // assertEquals(getBlob.getProperties().getMetadata().entries().size(),
-      // 2);
-      // assertEquals(
-      // Iterables.getLast(getBlob.getProperties().getMetadata().get("New-Metadata-1")),
-      // "value-1");
-      // assertEquals(
-      // Iterables.getLast(getBlob.getProperties().getMetadata().get("New-Metadata-2")),
-      // "value-2");
+      assertEquals(getBlob.getProperties().getMetadata().size(), 2);
+      assertEquals(getBlob.getProperties().getMetadata().get("new_metadata_1"), "value-1");
+      assertEquals(getBlob.getProperties().getMetadata().get("new_metadata_2"), "value-2");
       assertEquals(metadata.getMetadata().entrySet().size(), 1);
       assertEquals(metadata.getMetadata().get("mykey"), "metadata-value");
 
@@ -290,7 +277,9 @@ public class AzureBlobClientLiveTest extends BaseBlobStoreIntegrationTest {
                   .maxResults(1).includeMetadata());
       assertEquals(response.size(), 1);
       assertEquals(Iterables.getOnlyElement(response).getName(), object.getProperties().getName());
-      assertEquals(Iterables.getOnlyElement(response).getMetadata(), ImmutableMap.of("mykey", "metadata-value"));
+      assertEquals(Iterables.getOnlyElement(response).getMetadata().size(), 2);
+      assertEquals(Iterables.getOnlyElement(response).getMetadata().get("new_metadata_1"), "value-1");
+      assertEquals(Iterables.getOnlyElement(response).getMetadata().get("new_metadata_2"), "value-2");
 
       // Test PUT with invalid ETag (as if object's data was corrupted in
       // transit)
