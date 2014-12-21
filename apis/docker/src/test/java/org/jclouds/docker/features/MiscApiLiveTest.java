@@ -32,9 +32,9 @@ import com.google.common.collect.Iterables;
 @Test(groups = "live", testName = "MiscApiLiveTest", singleThreaded = true)
 public class MiscApiLiveTest extends BaseDockerApiLiveTest {
 
-   private static final String API_VERSION = "1.15";
-   private static final String VERSION = "1.3.2";
-   private static final String GIT_COMMIT = "39fa2fa";
+   private static final String API_VERSION = "1.16";
+   private static final String VERSION = "1.4.1";
+   private static final String GIT_COMMIT = "5bc2ff8";
    private static final String GO_VERSION = "go1.3.3";
    private static final String KERNEL_VERSION = "3.16.7-tinycore64";
    private static final String ARCH = "amd64";

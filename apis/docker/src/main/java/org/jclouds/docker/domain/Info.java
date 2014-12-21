@@ -18,6 +18,7 @@ package org.jclouds.docker.domain;
 
 import java.util.List;
 
+import org.jclouds.javax.annotation.Nullable;
 import org.jclouds.json.SerializedNames;
 
 import com.google.auto.value.AutoValue;
@@ -59,20 +60,49 @@ public abstract class Info {
 
    public abstract int swapLimit();
 
+   public abstract String dockerRootDir();
+
+   /**
+    * @return a list of daemon labels
+    */
+   @Nullable public abstract List<String> labels();
+
+   /**
+    * @return total memory available
+    */
+   public abstract long memTotal();
+
+   /**
+    * @return the number of CPUs available on the machine
+    */
+   public abstract int ncpu();
+
+   /**
+    * @return a unique ID identifying the daemon
+    */
+   public abstract String id();
+
+   /**
+    * @return a user-friendly name describing the running Docker daemon
+    */
+   public abstract String name();
+
    Info() {
    }
 
    @SerializedNames({
                    "Containers", "Debug", "Driver", "DriverStatus", "ExecutionDriver", "IPv4Forwarding", "Images",
                    "IndexServerAddress", "InitPath", "InitSha1", "KernelVersion", "MemoryLimit", "NEventsListener",
-                   "NFd", "NGoroutines", "OperatingSystem", "SwapLimit"
+                   "NFd", "NGoroutines", "OperatingSystem", "SwapLimit", "DockerRootDir", "Labels", "MemTotal", "NCPU",
+                   "ID", "Name"
    })
    public static Info create(int containers, int debug, String driver, List<List<String>> driverStatus,
                              String executionDriver, int iPv4Forwarding, int images, String indexServerAddress,
                              String initPath, String initSha1, String kernelVersion, int memoryLimit,
-                             int nEventsListener, int nFd, int nGoroutines, String operatingSystem, int swapLimit) {
+                             int nEventsListener, int nFd, int nGoroutines, String operatingSystem, int swapLimit,
+                             String dockerRootDir, List<String> labels, long memTotal, int ncpu, String id, String name) {
       return new AutoValue_Info(containers, debug, driver, driverStatus, executionDriver, iPv4Forwarding, images,
               indexServerAddress, initPath, initSha1, kernelVersion, memoryLimit, nEventsListener, nFd, nGoroutines,
-              operatingSystem, swapLimit);
+              operatingSystem, swapLimit, dockerRootDir, labels, memTotal, ncpu, id, name);
    }
 }

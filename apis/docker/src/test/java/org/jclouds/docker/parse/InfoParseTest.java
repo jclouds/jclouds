@@ -38,25 +38,33 @@ public class InfoParseTest extends BaseDockerParseTest<Info> {
    @Override
    @Consumes(MediaType.APPLICATION_JSON)
    public Info expected() {
-      return Info.create(0,
-              1,
-              "aufs",
+      return Info.create(
+              0, // containers
+              1, // debug
+              "aufs", // driver
               ImmutableList.<List<String>>of(
                       ImmutableList.of("Root Dir", "/mnt/sda1/var/lib/docker/aufs"),
-                      ImmutableList.of("Dirs", "15")
-              ),
-              "native-0.2",
-              1,
-              15,
-              "https://index.docker.io/v1/",
-              "/usr/local/bin/docker",
-              "",
-              "3.16.4-tinycore64",
-              1,
-              0,
-              10,
-              11,
-              "Boot2Docker 1.3.0 (TCL 5.4); master : a083df4 - Thu Oct 16 17:05:03 UTC 2014",
-              1);
+                      ImmutableList.of("Dirs", "46")
+              ), // driverStatus
+              "native-0.2", // ExecutionDriver
+              1, // IPv4Forwarding
+              46, // Images
+              "https://index.docker.io/v1/", // IndexServerAddress
+              "/usr/local/bin/docker", // InitPath
+              "", // InitSha1
+              "3.16.7-tinycore64", // KernelVersion
+              1, // MemoryLimit
+              0, // NEventsListener
+              10, // NFd
+              11, // NGoroutines
+              "Boot2Docker 1.3.0 (TCL 5.4); master : a083df4 - Thu Oct 16 17:05:03 UTC 2014", // OperatingSystem
+              1, // SwapLimit
+              "/mnt/sda1/var/lib/docker", // DockerRootDir
+              null, // Labels
+              2105585664, // MemTotal
+              8, // NCPU
+              "7V5Y:IQ2M:HWIL:AZJV:HKRD:Q7OZ:3EQA:ZHMO:4LAD:OSIY:YBAA:BSX6", // ID
+              "boot2docker" // name
+      );
    }
 }
