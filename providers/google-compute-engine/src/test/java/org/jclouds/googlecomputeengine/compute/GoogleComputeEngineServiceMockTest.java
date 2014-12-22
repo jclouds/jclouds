@@ -166,7 +166,8 @@ public class GoogleComputeEngineServiceMockTest extends BaseGoogleComputeEngineA
       ComputeService computeService = computeService();
 
       GoogleComputeEngineTemplateOptions options = computeService.templateOptions()
-            .as(GoogleComputeEngineTemplateOptions.class).tags(ImmutableSet.of("aTag")).blockUntilRunning(false);
+            .as(GoogleComputeEngineTemplateOptions.class).autoCreateKeyPair(false)
+            .tags(ImmutableSet.of("aTag")).blockUntilRunning(false);
 
       Template template = computeService.templateBuilder().options(options).build();
       NodeMetadata node = getOnlyElement(computeService.createNodesInGroup("test", 1, template));

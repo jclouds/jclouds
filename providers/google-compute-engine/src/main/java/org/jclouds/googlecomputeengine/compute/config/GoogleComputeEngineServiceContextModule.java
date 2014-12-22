@@ -43,7 +43,6 @@ import org.jclouds.compute.domain.SecurityGroup;
 import org.jclouds.compute.extensions.ImageExtension;
 import org.jclouds.compute.extensions.SecurityGroupExtension;
 import org.jclouds.compute.options.TemplateOptions;
-import org.jclouds.compute.strategy.PrioritizeCredentialsFromTemplate;
 import org.jclouds.domain.Location;
 import org.jclouds.googlecomputeengine.compute.GoogleComputeEngineService;
 import org.jclouds.googlecomputeengine.compute.GoogleComputeEngineServiceAdapter;
@@ -64,8 +63,6 @@ import org.jclouds.googlecomputeengine.compute.predicates.AllNodesInGroupTermina
 import org.jclouds.googlecomputeengine.compute.predicates.AtomicInstanceVisible;
 import org.jclouds.googlecomputeengine.compute.predicates.AtomicOperationDone;
 import org.jclouds.googlecomputeengine.compute.strategy.CreateNodesWithGroupEncodedIntoNameThenAddToSet;
-import org.jclouds.googlecomputeengine.compute.strategy.PopulateDefaultLoginCredentialsForImageStrategy;
-import org.jclouds.googlecomputeengine.compute.strategy.UseNodeCredentialsButOverrideFromTemplate;
 import org.jclouds.googlecomputeengine.domain.Firewall;
 import org.jclouds.googlecomputeengine.domain.Image;
 import org.jclouds.googlecomputeengine.domain.Instance;
@@ -125,9 +122,6 @@ public final class GoogleComputeEngineServiceContextModule
       bind(new TypeLiteral<Function<Network, SecurityGroup>>() {
       }).to(NetworkToSecurityGroup.class);
 
-      bind(org.jclouds.compute.strategy.PopulateDefaultLoginCredentialsForImageStrategy.class)
-            .to(PopulateDefaultLoginCredentialsForImageStrategy.class);
-
       bind(org.jclouds.compute.strategy.impl.CreateNodesWithGroupEncodedIntoNameThenAddToSet.class)
             .to(CreateNodesWithGroupEncodedIntoNameThenAddToSet.class);
 
@@ -146,10 +140,7 @@ public final class GoogleComputeEngineServiceContextModule
       }).to(FindNetworkOrCreate.class);
 
       bind(SecurityGroupExtension.class).to(GoogleComputeEngineSecurityGroupExtension.class);
-
-      bind(PrioritizeCredentialsFromTemplate.class).to(UseNodeCredentialsButOverrideFromTemplate.class);
       bind(FirewallTagNamingConvention.Factory.class).in(Scopes.SINGLETON);
-
       bindHttpApi(binder(), Resources.class);
    }
 

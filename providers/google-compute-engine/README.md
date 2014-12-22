@@ -6,7 +6,7 @@ Authenticating into the instances:
 --------
 
 User:
-If no user is provided in GoogleComputeEngineTemplateOptions when launching an instance by default "jclouds" is used.
+If no user is provided in GoogleComputeEngineTemplateOptions when launching an instance by default "root" is used.
 
 Credential:
 

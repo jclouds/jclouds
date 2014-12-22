@@ -36,6 +36,7 @@ import org.jclouds.compute.ComputeServiceAdapter;
 import org.jclouds.compute.domain.Hardware;
 import org.jclouds.compute.domain.NodeMetadata;
 import org.jclouds.compute.domain.Template;
+import org.jclouds.compute.options.TemplateOptions;
 import org.jclouds.domain.Location;
 import org.jclouds.domain.LocationBuilder;
 import org.jclouds.domain.LocationScope;
@@ -59,6 +60,7 @@ import org.jclouds.location.suppliers.all.JustProvider;
 
 import com.google.common.base.Predicate;
 import com.google.common.base.Splitter;
+import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
@@ -108,25 +110,17 @@ public final class GoogleComputeEngineServiceAdapter
 
    @Override public NodeAndInitialCredentials<Instance> createNodeWithGroupEncodedIntoName(String group, String name,
          Template template) {
-
-      checkNotNull(template, "template");
-
       GoogleComputeEngineTemplateOptions options = GoogleComputeEngineTemplateOptions.class.cast(template.getOptions());
       checkNotNull(options.network(), "template options must specify a network");
-      Hardware hardware = checkNotNull(template.getHardware(), "hardware must be set");
-
-      checkNotNull(hardware.getUri(), "hardware must have a URI");
+      checkNotNull(template.getHardware().getUri(), "hardware must have a URI");
       checkNotNull(template.getImage().getUri(), "image URI is null");
 
       List<AttachDisk> disks = Lists.newArrayList();
       disks.add(AttachDisk.newBootDisk(template.getImage().getUri()));
-      for (URI existingDisk : options.additionalDisks()) {
-         disks.add(AttachDisk.existingDisk(existingDisk));
-      }
 
       NewInstance newInstance = NewInstance.create(
             name, // name
-            hardware.getUri(), // machineType
+            template.getHardware().getUri(), // machineType
             options.network(), // network
             disks, // disks
             group // description
@@ -141,9 +135,11 @@ public final class GoogleComputeEngineServiceAdapter
 
       // Add metadata from template and for ssh key and image id
       newInstance.metadata().putAll(options.getUserMetadata());
-      if (options.getPublicKey() != null) { // TODO: why are we doing this?
-         newInstance.metadata().put("sshKeys", format("%s:%s %s@localhost", checkNotNull(options.getLoginUser(),
-               "loginUser cannot be null"), options.getPublicKey(), options.getLoginUser()));
+
+      LoginCredentials credentials = resolveNodeCredentials(template);
+      if (options.getPublicKey() != null) {
+         newInstance.metadata().put("sshKeys",
+               format("%s:%s %s@localhost", credentials.getUser(), options.getPublicKey(), credentials.getUser()));
       }
 
       String zone = template.getLocation().getId();
@@ -174,7 +170,6 @@ public final class GoogleComputeEngineServiceAdapter
       // Add lookup for InstanceToNodeMetadata
       diskToSourceImage.put(instance.get().disks().get(0).source(), template.getImage().getUri());
 
-      LoginCredentials credentials = getFromImageAndOverrideIfRequired(template.getImage(), options);
       return new NodeAndInitialCredentials<Instance>(instance.get(), instance.get().selfLink().toString(), credentials);
    }
 
@@ -256,40 +251,6 @@ public final class GoogleComputeEngineServiceAdapter
       throw new UnsupportedOperationException("suspend is not supported by GCE");
    }
 
-   // TODO: this entire method is questionable. needs a test case, or to be removed.
-   private static LoginCredentials getFromImageAndOverrideIfRequired(org.jclouds.compute.domain.Image image,
-                                                              GoogleComputeEngineTemplateOptions options) {
-      LoginCredentials defaultCredentials = image.getDefaultCredentials();
-      String[] keys = defaultCredentials.getPrivateKey().split(":");
-      String publicKey = keys[0];
-      String privateKey = keys[1];
-
-      LoginCredentials.Builder credentialsBuilder = defaultCredentials.toBuilder();
-      credentialsBuilder.privateKey(privateKey);
-
-      // LoginCredentials from image stores the public key along with the private key in the privateKey field
-      // @see GoogleComputePopulateDefaultLoginCredentialsForImageStrategy
-      // so if options doesn't have a public key set we set it from the default
-      if (options.getPublicKey() == null) {
-         options.authorizePublicKey(publicKey);
-      }
-      if (options.hasLoginPrivateKeyOption()) {
-         credentialsBuilder.privateKey(options.getPrivateKey());
-      }
-      if (options.getLoginUser() != null) {
-         credentialsBuilder.identity(options.getLoginUser());
-      }
-      if (options.hasLoginPasswordOption()) {
-         credentialsBuilder.password(options.getLoginPassword());
-      }
-      if (options.shouldAuthenticateSudo() != null) {
-         credentialsBuilder.authenticateSudo(options.shouldAuthenticateSudo());
-      }
-      LoginCredentials credentials = credentialsBuilder.build();
-      options.overrideLoginCredentials(credentials);
-      return credentials;
-   }
-
    private void waitOperationDone(Operation operation) {
       AtomicReference<Operation> operationRef = Atomics.newReference(operation);
 
@@ -304,6 +265,24 @@ public final class GoogleComputeEngineServiceAdapter
                "operation failed. Http Error Code: " + operationRef.get().httpErrorStatusCode() +
                      " HttpError: " + operationRef.get().httpErrorMessage());
       }
+   }
+
+   private LoginCredentials resolveNodeCredentials(Template template) {
+      TemplateOptions options = template.getOptions();
+      LoginCredentials.Builder credentials = LoginCredentials.builder(template.getImage().getDefaultCredentials());
+      if (!Strings.isNullOrEmpty(options.getLoginUser())) {
+         credentials.user(options.getLoginUser());
+      }
+      if (!Strings.isNullOrEmpty(options.getLoginPrivateKey())) {
+         credentials.privateKey(options.getLoginPrivateKey());
+      }
+      if (!Strings.isNullOrEmpty(options.getLoginPassword())) {
+         credentials.password(options.getLoginPassword());
+      }
+      if (options.shouldAuthenticateSudo() != null) {
+         credentials.authenticateSudo(options.shouldAuthenticateSudo());
+      }
+      return credentials.build();
    }
 
    private static String toName(URI link) {

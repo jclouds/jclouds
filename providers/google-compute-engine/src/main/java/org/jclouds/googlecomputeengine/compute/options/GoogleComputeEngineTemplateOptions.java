@@ -17,7 +17,6 @@
 package org.jclouds.googlecomputeengine.compute.options;
 
 import java.net.URI;
-import java.util.List;
 import java.util.Map;
 
 import org.jclouds.compute.options.TemplateOptions;
@@ -25,13 +24,11 @@ import org.jclouds.domain.LoginCredentials;
 import org.jclouds.javax.annotation.Nullable;
 import org.jclouds.scriptbuilder.domain.Statement;
 
-import com.google.common.collect.Lists;
-
 /** Instance options specific to Google Compute Engine. */
 public final class GoogleComputeEngineTemplateOptions extends TemplateOptions {
 
    private URI network = null;
-   private final List<URI> additionalDisks = Lists.newArrayList();
+   private boolean autoCreateKeyPair = true;
 
    @Override
    public GoogleComputeEngineTemplateOptions clone() {
@@ -46,6 +43,7 @@ public final class GoogleComputeEngineTemplateOptions extends TemplateOptions {
       if (to instanceof GoogleComputeEngineTemplateOptions) {
          GoogleComputeEngineTemplateOptions eTo = GoogleComputeEngineTemplateOptions.class.cast(to);
          eTo.network(network());
+         eTo.autoCreateKeyPair(autoCreateKeyPair());
       }
    }
 
@@ -60,10 +58,19 @@ public final class GoogleComputeEngineTemplateOptions extends TemplateOptions {
       return network;
    }
 
-   /** Additional disks to attach to this instance. */
-   // TODO: test me or remove me!
-   public List<URI> additionalDisks() {
-      return additionalDisks;
+   /**
+    * Sets whether an SSH key pair should be created automatically.
+    */
+   public GoogleComputeEngineTemplateOptions autoCreateKeyPair(boolean autoCreateKeyPair) {
+      this.autoCreateKeyPair = autoCreateKeyPair;
+      return this;
+   }
+
+   /**
+    * Sets whether an SSH key pair should be created automatically.
+    */
+   public boolean autoCreateKeyPair() {
+      return autoCreateKeyPair;
    }
 
    /**
