@@ -232,7 +232,7 @@ public class GoogleCloudStorageBlobIntegrationLiveTest extends BaseBlobIntegrati
    }
 
    protected void addMultipartBlobToContainer(String containerName, String key) throws IOException {
-      ByteSource sourceToUpload = TestUtils.randomByteSource().slice(0, (long) (PART_SIZE * 1.1));
+      ByteSource sourceToUpload = TestUtils.randomByteSource().slice(0, PART_SIZE + 1);
 
       BlobStore blobStore = view.getBlobStore();
       blobStore.createContainerInLocation(null, containerName);
