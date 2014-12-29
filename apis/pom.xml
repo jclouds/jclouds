@@ -57,7 +57,7 @@
     <profile>
       <id>jre1.7</id>
       <activation>
-        <jdk>1.7</jdk>
+        <jdk>[1.7,)</jdk>
       </activation>
       <modules>
         <module>filesystem</module>
