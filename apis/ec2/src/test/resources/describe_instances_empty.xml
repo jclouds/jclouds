@@ -1,0 +1,15 @@
+<DescribeInstancesResponse xmlns="http://ec2.amazonaws.com/doc/2009-11-30/">
+    <reservationSet>
+        <item>
+            <reservationId>r-44a5402d</reservationId>
+            <ownerId>UYY3TLBUXIEON5NQVUUX6OMPWBZIQNFM</ownerId>
+            <groupSet>
+                <item>
+                    <groupId>default</groupId>
+                </item>
+            </groupSet>
+            <instancesSet>
+            </instancesSet>
+        </item>
+    </reservationSet>
+</DescribeInstancesResponse>

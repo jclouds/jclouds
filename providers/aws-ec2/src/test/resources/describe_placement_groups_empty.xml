@@ -1,0 +1,5 @@
+<DescribePlacementGroupsResponse xmlns="http://ec2.amazonaws.com/doc/2010-06-15/">
+   <requestID>d4904fd9-82c2-4ea5-adfe-a9cc3EXAMPLE</requestID>
+   <placementGroupSet>
+   </placementGroupSet>
+</DescribePlacementGroupsResponse>
