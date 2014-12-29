@@ -22,7 +22,6 @@ import static com.google.common.collect.Iterables.concat;
 import static com.google.common.collect.Iterables.transform;
 import static com.google.common.collect.Lists.newArrayList;
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
-import static java.util.concurrent.TimeUnit.SECONDS;
 import static org.jclouds.compute.config.ComputeServiceProperties.RESOURCENAME_DELIMITER;
 import static org.jclouds.compute.config.ComputeServiceProperties.TIMEOUT_NODE_RUNNING;
 import static org.jclouds.compute.config.ComputeServiceProperties.TIMEOUT_NODE_SUSPENDED;
@@ -108,6 +107,7 @@ public class EC2ComputeService extends BaseComputeService {
    private final LoadingCache<RegionAndName, String> securityGroupMap;
    private final Factory namingConvention;
    private final boolean generateInstanceNames;
+   private final Timeouts timeouts;
 
    @Inject
    protected EC2ComputeService(ComputeServiceContext context, Map<String, Credentials> credentialStore,
@@ -140,6 +140,7 @@ public class EC2ComputeService extends BaseComputeService {
       this.securityGroupMap = securityGroupMap;
       this.namingConvention = namingConvention;
       this.generateInstanceNames = generateInstanceNames;
+      this.timeouts = timeouts;
    }
 
    @Override
@@ -301,6 +302,7 @@ public class EC2ComputeService extends BaseComputeService {
       // given security group, if called very soon after the VM's state reports terminated. Empirically, it seems that
       // waiting a small time (e.g. enabling logging or debugging!) then the tests pass. We therefore retry.
       // TODO: this could be moved to a config module, also the narrative above made more concise
+      long timeout = timeouts.cleanupIncidentalResources;
       retry(new Predicate<RegionAndName>() {
          public boolean apply(RegionAndName input) {
             try {
@@ -314,7 +316,7 @@ public class EC2ComputeService extends BaseComputeService {
                return false;
             }
          }
-      }, SECONDS.toMillis(3), 50, 1000, MILLISECONDS).apply(new RegionAndName(region, group));
+      }, timeout, 50, 1000, MILLISECONDS).apply(new RegionAndName(region, group));
    }
 
    /**

@@ -20,6 +20,7 @@ import static org.jclouds.compute.config.ComputeServiceProperties.INIT_STATUS_MA
 import static org.jclouds.compute.config.ComputeServiceProperties.OS_VERSION_MAP_JSON;
 import static org.jclouds.compute.config.ComputeServiceProperties.POLL_INITIAL_PERIOD;
 import static org.jclouds.compute.config.ComputeServiceProperties.POLL_MAX_PERIOD;
+import static org.jclouds.compute.config.ComputeServiceProperties.TIMEOUT_CLEANUP_INCIDENTAL_RESOURCES;
 import static org.jclouds.compute.config.ComputeServiceProperties.TIMEOUT_IMAGE_AVAILABLE;
 import static org.jclouds.compute.config.ComputeServiceProperties.TIMEOUT_IMAGE_DELETED;
 import static org.jclouds.compute.config.ComputeServiceProperties.TIMEOUT_NODE_RUNNING;
@@ -126,6 +127,14 @@ public final class ComputeServiceConstants {
       @Inject(optional = true)
       @Named(TIMEOUT_IMAGE_AVAILABLE)
       public long imageAvailable = TimeUnit.MINUTES.toMillis(45);
+      
+      /**
+       * current value of {@link ComputeServiceProperties#TIMEOUT_CLEANUP_INCIDENTAL_RESOURCES} defaults to 3
+       * seconds.
+       */
+      @Inject(optional = true)
+      @Named(TIMEOUT_CLEANUP_INCIDENTAL_RESOURCES)
+      public long cleanupIncidentalResources = TimeUnit.SECONDS.toMillis(3);
    }
 
    private ComputeServiceConstants() {

@@ -61,6 +61,15 @@ public final class ComputeServiceProperties {
    public static final String TIMEOUT_IMAGE_DELETED = "jclouds.compute.timeout.image-deleted";
 
    /**
+    * time in milliseconds to try to clean up incidental resources 
+    * (e.g. security groups, key-pairs, etc).
+    * 
+    * Override {@link Timeouts#cleanupIncidentalResources default} by setting this property using
+    * {@link ContextBuilder#overrides}
+    */
+   public static final String TIMEOUT_CLEANUP_INCIDENTAL_RESOURCES = "jclouds.compute.timeout.cleanup-incidental-resources";
+
+   /**
     * overrides the default specified in the subclass of
     * {@link BaseComputeServiceContextModule#provideTemplate}
     * 

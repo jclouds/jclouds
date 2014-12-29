@@ -22,7 +22,6 @@ import static com.google.common.net.HttpHeaders.CONTENT_TYPE;
 import static com.google.common.util.concurrent.MoreExecutors.sameThreadExecutor;
 import static javax.ws.rs.core.MediaType.APPLICATION_XML;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.jclouds.aws.filters.FormSignerV4.ServiceAndRegion;
 import static org.jclouds.util.Strings2.toStringAndClose;
 import static org.testng.Assert.assertEquals;
 
@@ -36,8 +35,10 @@ import org.jclouds.ContextBuilder;
 import org.jclouds.aws.ec2.AWSEC2Api;
 import org.jclouds.aws.ec2.AWSEC2ProviderMetadata;
 import org.jclouds.aws.ec2.config.AWSEC2HttpApiModule;
+import org.jclouds.aws.filters.FormSignerV4.ServiceAndRegion;
 import org.jclouds.compute.ComputeService;
 import org.jclouds.compute.ComputeServiceContext;
+import org.jclouds.compute.config.ComputeServiceProperties;
 import org.jclouds.concurrent.config.ExecutorServiceModule;
 import org.jclouds.date.DateService;
 import org.jclouds.rest.ConfiguresHttpApi;
@@ -77,6 +78,7 @@ public class BaseAWSEC2ApiMockTest {
    protected ContextBuilder builder(Properties overrides) {
       MockWebServer defaultServer = regionToServers.get(DEFAULT_REGION);
       overrides.setProperty(Constants.PROPERTY_MAX_RETRIES, "1");
+      overrides.setProperty(ComputeServiceProperties.TIMEOUT_CLEANUP_INCIDENTAL_RESOURCES, "0");
       return ContextBuilder.newBuilder(new AWSEC2ProviderMetadata())
             .credentials(ACCESS_KEY, SECRET_KEY)
             .endpoint(defaultServer.getUrl("").toString())

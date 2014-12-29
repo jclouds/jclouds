@@ -234,4 +234,61 @@ public class AWSEC2ComputeServiceApiMockTest extends BaseAWSEC2ApiMockTest {
       assertPosted(DEFAULT_REGION, "Action=DescribeImages&ImageId.1=ami-aecd60c7");
       assertPosted(DEFAULT_REGION, "Action=DescribeSpotInstanceRequests");
    }
+   
+   public void deleteIncidentalResourcesSuccessfully() throws Exception {
+      enqueueRegions(DEFAULT_REGION);
+      enqueueXml(DEFAULT_REGION, "/describe_securitygroups_extension_single.xml");
+      enqueueXml(DEFAULT_REGION, "/delete_securitygroup.xml");
+      enqueueXml(DEFAULT_REGION, "/describe_keypairs_jcloudssingle.xml");
+      enqueueXml(DEFAULT_REGION, "/describe_instances_empty.xml");
+      enqueueXml(DEFAULT_REGION, "/delete_keypair.xml");
+      enqueueXml(DEFAULT_REGION, "/describe_placement_groups.xml");
+      enqueueXml(DEFAULT_REGION, "/delete_placementgroup.xml");
+      enqueueXml(DEFAULT_REGION, "/describe_placement_groups_empty.xml");
+
+      AWSEC2ComputeService computeService = (AWSEC2ComputeService) computeService();
+
+      computeService.cleanUpIncidentalResources(DEFAULT_REGION, "sg-3c6ef654");
+
+      assertPosted(DEFAULT_REGION, "Action=DescribeRegions");
+      assertPosted(DEFAULT_REGION, "Action=DescribeSecurityGroups&GroupName.1=jclouds%23sg-3c6ef654");
+      assertPosted(DEFAULT_REGION, "Action=DeleteSecurityGroup&GroupName=jclouds%23sg-3c6ef654");
+      assertPosted(DEFAULT_REGION, "Action=DescribeKeyPairs&Filter.1.Name=key-name&Filter.1.Value.1=jclouds%23sg-3c6ef654%23us-east-1%2A");
+      assertPosted(DEFAULT_REGION, "Action=DescribeInstances&Filter.1.Name=instance-state-name&Filter.1.Value.1=terminated&Filter.1.Value.2=shutting-down&Filter.2.Name=key-name&Filter.2.Value.1=jclouds%23sg-3c6ef654");
+      assertPosted(DEFAULT_REGION, "Action=DeleteKeyPair&KeyName=jclouds%23sg-3c6ef654");
+      assertPosted(DEFAULT_REGION, "Action=DescribePlacementGroups&GroupName.1=jclouds%23sg-3c6ef654%23us-east-1");
+      assertPosted(DEFAULT_REGION, "Action=DeletePlacementGroup&GroupName=jclouds%23sg-3c6ef654%23us-east-1");
+      assertPosted(DEFAULT_REGION, "Action=DescribePlacementGroups&GroupName.1=jclouds%23sg-3c6ef654%23us-east-1");
+   }
+
+   public void deleteIncidentalResourcesGivingDependencyViolationForSecurityGroup() throws Exception {
+      runDeleteIncidentalResourcesGivingErrForSecurityGroup("DependencyViolation");
+   }
+   
+   public void deleteIncidentalResourcesGivingInUseForSecurityGroup() throws Exception {
+      runDeleteIncidentalResourcesGivingErrForSecurityGroup("InvalidGroup.InUse");
+   }
+   
+   protected void runDeleteIncidentalResourcesGivingErrForSecurityGroup(String errCode) throws Exception {
+      // Does not return delete_securitygroup.xml, but instead gives a 400 error.
+      // Because super.builder has set TIMEOUT_CLEANUP_INCIDENTAL_RESOURCES to 0, it will not retry.
+
+      enqueueRegions(DEFAULT_REGION);
+      enqueueXml(DEFAULT_REGION, "/describe_securitygroups_extension_single.xml");
+      enqueue(DEFAULT_REGION, new MockResponse().setResponseCode(400).setBody("<Response><Errors><Error><Code>" + errCode + "</Code><Message>resource sg-3c6ef654 has a dependent object</Message></Error></Errors><RequestID>e4f4c78f-4455-43dd-b5cb-9af0bc4bc804</RequestID></Response>"));
+      enqueueXml(DEFAULT_REGION, "/describe_placement_groups.xml");
+      enqueueXml(DEFAULT_REGION, "/delete_placementgroup.xml");
+      enqueueXml(DEFAULT_REGION, "/describe_placement_groups_empty.xml");
+
+      AWSEC2ComputeService computeService = (AWSEC2ComputeService) computeService();
+
+      computeService.cleanUpIncidentalResources(DEFAULT_REGION, "sg-3c6ef654");
+
+      assertPosted(DEFAULT_REGION, "Action=DescribeRegions");
+      assertPosted(DEFAULT_REGION, "Action=DescribeSecurityGroups&GroupName.1=jclouds%23sg-3c6ef654");
+      assertPosted(DEFAULT_REGION, "Action=DeleteSecurityGroup&GroupName=jclouds%23sg-3c6ef654");
+      assertPosted(DEFAULT_REGION, "Action=DescribePlacementGroups&GroupName.1=jclouds%23sg-3c6ef654%23us-east-1");
+      assertPosted(DEFAULT_REGION, "Action=DeletePlacementGroup&GroupName=jclouds%23sg-3c6ef654%23us-east-1");
+      assertPosted(DEFAULT_REGION, "Action=DescribePlacementGroups&GroupName.1=jclouds%23sg-3c6ef654%23us-east-1");
+   }
 }
