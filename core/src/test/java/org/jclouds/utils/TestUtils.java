@@ -71,16 +71,14 @@ public class TestUtils {
 
         @Override
         public synchronized int read(byte[] b) throws IOException {
-            random.nextBytes(b);
-            return b.length;
+            return read(b, 0, b.length);
         }
 
         @Override
         public synchronized int read(byte[] b, int off, int len) throws IOException {
-            // need extra array to cope with offset
-            byte[] srcBytes = new byte[len];
-            random.nextBytes(srcBytes);
-            System.arraycopy(srcBytes, 0, b, off, len);
+            for (int i = 0; i < len; ++i) {
+               b[off + i] = (byte) read();
+            }
             return len;
         }
     }
