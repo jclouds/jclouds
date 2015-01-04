@@ -40,6 +40,7 @@ import org.jclouds.azureblob.xml.ContainerNameEnumerationResultsHandler;
 import org.jclouds.blobstore.BlobStoreFallbacks.NullOnContainerNotFound;
 import org.jclouds.blobstore.BlobStoreFallbacks.NullOnKeyNotFound;
 import org.jclouds.http.HttpRequest;
+import org.jclouds.http.functions.ParseETagHeader;
 import org.jclouds.http.functions.ParseSax;
 import org.jclouds.http.functions.ReleasePayloadAndReturn;
 import org.jclouds.http.functions.ReturnTrueIf2xx;
@@ -230,6 +231,31 @@ public class AzureBlobClientTest extends BaseRestAnnotationProcessingTest<AzureB
       assertResponseParserClassEquals(method, request, ParsePublicAccessHeader.class);
       assertSaxResponseParserClassEquals(method, null);
       assertFallbackClassEquals(method, NullOnContainerNotFound.class);
+   }
+
+   public void testSetPublicAccessForContainer() throws SecurityException, NoSuchMethodException, IOException {
+      setAndVerifyPublicAccessForContainer(PublicAccess.CONTAINER,
+            "x-ms-blob-public-access: container\n");
+      setAndVerifyPublicAccessForContainer(PublicAccess.BLOB,
+            "x-ms-blob-public-access: blob\n");
+      setAndVerifyPublicAccessForContainer(PublicAccess.PRIVATE,
+            "");
+   }
+
+   private void setAndVerifyPublicAccessForContainer(PublicAccess access, String expectedHeader) {
+      Invokable<?, ?> method = method(AzureBlobClient.class, "setPublicAccessForContainer", String.class, PublicAccess.class);
+      GeneratedHttpRequest request = processor.createRequest(method, ImmutableList.<Object> of("container", access));
+
+      assertRequestLineEquals(request,
+               "PUT https://identity.blob.core.windows.net/container?restype=container&comp=acl HTTP/1.1");
+      assertNonPayloadHeadersEqual(request,
+               expectedHeader +
+               "x-ms-version: 2012-02-12\n");
+      assertPayloadEquals(request, null, null, false);
+
+      assertResponseParserClassEquals(method, request, ParseETagHeader.class);
+      assertSaxResponseParserClassEquals(method, null);
+      assertFallbackClassEquals(method, null);
    }
 
    public void testSetResourceMetadata() throws SecurityException, NoSuchMethodException, IOException {

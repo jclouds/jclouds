@@ -45,6 +45,7 @@ import org.jclouds.azure.storage.reference.AzureStorageHeaders;
 import org.jclouds.azureblob.binders.BindAzureBlobMetadataToRequest;
 import org.jclouds.azureblob.binders.BindAzureBlobMetadataToMultipartRequest;
 import org.jclouds.azureblob.binders.BindAzureBlocksToRequest;
+import org.jclouds.azureblob.binders.BindPublicAccessToRequest;
 import org.jclouds.azureblob.domain.AzureBlob;
 import org.jclouds.azureblob.domain.BlobProperties;
 import org.jclouds.azureblob.domain.ContainerProperties;
@@ -221,6 +222,17 @@ public interface AzureBlobClient extends Closeable {
    PublicAccess getPublicAccessForContainer(
          @PathParam("container") @ParamValidators(ContainerNameValidator.class) String container);
 
+   /**
+    * Returns whether data in the container may be accessed publicly and the level of access
+    */
+   @Named("SetContainerACL")
+   @PUT
+   @Path("{container}")
+   @QueryParams(keys = { "restype", "comp" }, values = { "container", "acl" })
+   @ResponseParser(ParseETagHeader.class)
+   String setPublicAccessForContainer(
+         @PathParam("container") @ParamValidators(ContainerNameValidator.class) String container,
+         @BinderParam(BindPublicAccessToRequest.class) PublicAccess access);
 
    /**
     * The Delete Container operation marks the specified container for deletion. The container and

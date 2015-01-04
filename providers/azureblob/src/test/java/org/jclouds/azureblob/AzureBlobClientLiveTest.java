@@ -17,6 +17,7 @@
 package org.jclouds.azureblob;
 
 import static com.google.common.io.BaseEncoding.base16;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.jclouds.azure.storage.options.ListOptions.Builder.includeMetadata;
 import static org.jclouds.azureblob.options.CreateContainerOptions.Builder.withMetadata;
 import static org.jclouds.azureblob.options.CreateContainerOptions.Builder.withPublicAccess;
@@ -371,5 +372,27 @@ public class AzureBlobClientLiveTest extends BaseBlobStoreIntegrationTest {
       assertEquals(1, blocks.getBlocks().get(1).getContentLength());
       assertEquals(1, blocks.getBlocks().get(2).getContentLength());
       getApi().deleteContainer(blockContainer);
+   }
+
+   @Test
+   public void testGetSetACL() throws Exception {
+      AzureBlobClient client = getApi();
+      String blockContainer = CONTAINER_PREFIX + new SecureRandom().nextInt();
+      client.createContainer(blockContainer);
+      try {
+         assertThat(client.getPublicAccessForContainer(blockContainer)).isEqualTo(PublicAccess.PRIVATE);
+
+         setAndVerifyACL(client, blockContainer, PublicAccess.CONTAINER);
+         setAndVerifyACL(client, blockContainer, PublicAccess.BLOB);
+         setAndVerifyACL(client, blockContainer, PublicAccess.PRIVATE);
+      } finally {
+         client.deleteContainer(blockContainer);
+      }
+   }
+
+   private static void setAndVerifyACL(AzureBlobClient client, String blockContainer, PublicAccess access)
+         throws Exception {
+      client.setPublicAccessForContainer(blockContainer, access);
+      assertThat(client.getPublicAccessForContainer(blockContainer)).isEqualTo(access);
    }
 }
