@@ -66,6 +66,11 @@ public final class ServiceType {
     */
    public static final String BIG_DATA = "rax:bigdata";
 
+   /**
+    * CDN
+    */
+   public static final String CDN = "rax:cdn";
+
    private ServiceType() {
       throw new AssertionError("intentionally unimplemented");
    }
