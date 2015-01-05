@@ -16,6 +16,7 @@
  */
 package org.jclouds.openstack.swift.v1.features;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertNotNull;
@@ -128,6 +129,20 @@ public class ContainerApiLiveTest extends BaseSwiftApiLiveTest<SwiftApi> {
          assertEquals(updatedContainer.getMetadata().get("web-error"), "__error.html");
 
          assertTrue(api.getContainerApi(regionId).deleteIfEmpty(name));
+      }
+   }
+
+   public void testUpdateContainer() throws Exception {
+      for (String regionId : regions) {
+         ContainerApi containerApi = api.getContainerApi(regionId);
+         assertThat(containerApi.create(name)).isTrue();
+
+         assertThat(containerApi.get(name).getAnybodyRead().get()).isFalse();
+
+         assertThat(containerApi.update(name, new UpdateContainerOptions().anybodyRead())).isTrue();
+         assertThat(containerApi.get(name).getAnybodyRead().get()).isTrue();
+
+         assertThat(containerApi.deleteIfEmpty(name)).isTrue();
       }
    }
 
