@@ -19,6 +19,7 @@ package org.jclouds.blobstore;
 import java.io.IOException;
 
 import org.jclouds.blobstore.domain.Blob;
+import org.jclouds.blobstore.domain.StorageMetadata;
 import org.jclouds.blobstore.options.ListContainerOptions;
 import org.jclouds.domain.Location;
 
@@ -71,6 +72,9 @@ public interface LocalStorageStrategy {
      *           recursion and path to clear
      */
     void clearContainer(String container, ListContainerOptions options);
+
+    /** @return StorageMetadata associated with a container name, e.g., creation date and location */
+    StorageMetadata getContainerMetadata(String container);
 
     /**
      * Return true if a blob named by key exists

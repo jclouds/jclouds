@@ -18,6 +18,7 @@ package org.jclouds.filesystem.strategy.internal;
 
 import static java.nio.file.Files.getFileAttributeView;
 import static java.nio.file.Files.getFileStore;
+import static java.nio.file.Files.readAttributes;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Strings.isNullOrEmpty;
@@ -28,6 +29,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.file.Path;
+import java.nio.file.attribute.BasicFileAttributes;
 import java.nio.file.attribute.UserDefinedFileAttributeView;
 import java.nio.charset.StandardCharsets;
 import java.util.Date;
@@ -42,6 +44,10 @@ import javax.inject.Provider;
 import org.jclouds.blobstore.LocalStorageStrategy;
 import org.jclouds.blobstore.domain.Blob;
 import org.jclouds.blobstore.domain.BlobBuilder;
+import org.jclouds.blobstore.domain.MutableStorageMetadata;
+import org.jclouds.blobstore.domain.StorageMetadata;
+import org.jclouds.blobstore.domain.StorageType;
+import org.jclouds.blobstore.domain.internal.MutableStorageMetadataImpl;
 import org.jclouds.blobstore.options.ListContainerOptions;
 import org.jclouds.domain.Location;
 import org.jclouds.filesystem.predicates.validators.FilesystemBlobKeyValidator;
@@ -161,6 +167,23 @@ public class FilesystemStorageStrategyImpl implements LocalStorageStrategy {
          logger.error(e, "An error occurred while clearing container %s", container);
          Throwables.propagate(e);
       }
+   }
+
+   @Override
+   public StorageMetadata getContainerMetadata(String container) {
+      MutableStorageMetadata metadata = new MutableStorageMetadataImpl();
+      metadata.setName(container);
+      metadata.setType(StorageType.CONTAINER);
+      metadata.setLocation(getLocation(container));
+      Path path = new File(buildPathStartingFromBaseDir(container)).toPath();
+      BasicFileAttributes attr;
+      try {
+         attr = readAttributes(path, BasicFileAttributes.class);
+      } catch (IOException e) {
+         throw Throwables.propagate(e);
+      }
+      metadata.setCreationDate(new Date(attr.creationTime().toMillis()));
+      return metadata;
    }
 
    @Override

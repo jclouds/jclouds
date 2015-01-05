@@ -30,6 +30,10 @@ import javax.inject.Inject;
 
 import org.jclouds.blobstore.domain.Blob;
 import org.jclouds.blobstore.domain.Blob.Factory;
+import org.jclouds.blobstore.domain.MutableStorageMetadata;
+import org.jclouds.blobstore.domain.StorageMetadata;
+import org.jclouds.blobstore.domain.StorageType;
+import org.jclouds.blobstore.domain.internal.MutableStorageMetadataImpl;
 import org.jclouds.blobstore.options.ListContainerOptions;
 import org.jclouds.blobstore.util.BlobStoreUtils;
 import org.jclouds.date.DateService;
@@ -53,7 +57,7 @@ import com.google.common.net.HttpHeaders;
 
 public class TransientStorageStrategy implements LocalStorageStrategy {
    private final ConcurrentMap<String, ConcurrentMap<String, Blob>> containerToBlobs = new ConcurrentHashMap<String, ConcurrentMap<String, Blob>>();
-   private final ConcurrentMap<String, Location> containerToLocation = new ConcurrentHashMap<String, Location>();
+   private final ConcurrentMap<String, StorageMetadata> containerMetadata = new ConcurrentHashMap<String, StorageMetadata>();
    private final Supplier<Location> defaultLocation;
    private final DateService dateService;
    private final Factory blobFactory;
@@ -85,7 +89,13 @@ public class TransientStorageStrategy implements LocalStorageStrategy {
       if (origValue != null) {
          return false;
       }
-      containerToLocation.put(containerName, location != null ? location : defaultLocation.get());
+
+      MutableStorageMetadata metadata = new MutableStorageMetadataImpl();
+      metadata.setName(containerName);
+      metadata.setType(StorageType.CONTAINER);
+      metadata.setLocation(location);
+      metadata.setCreationDate(new Date());
+      containerMetadata.put(containerName, metadata);
       return true;
    }
 
@@ -103,6 +113,11 @@ public class TransientStorageStrategy implements LocalStorageStrategy {
    public void clearContainer(String containerName, ListContainerOptions options) {
       // TODO implement options
       containerToBlobs.get(containerName).clear();
+   }
+
+   @Override
+   public StorageMetadata getContainerMetadata(String container) {
+      return containerMetadata.get(container);
    }
 
    @Override
@@ -154,7 +169,7 @@ public class TransientStorageStrategy implements LocalStorageStrategy {
 
    @Override
    public Location getLocation(final String containerName) {
-      return containerToLocation.get(containerName);
+      return containerMetadata.get(containerName).getLocation();
    }
 
    @Override

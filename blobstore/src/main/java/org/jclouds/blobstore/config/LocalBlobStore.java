@@ -345,17 +345,9 @@ public final class LocalBlobStore implements BlobStore {
       return new PageSetImpl<StorageMetadata>(transform(
             containers, new Function<String, StorageMetadata>() {
                public StorageMetadata apply(String name) {
-                  MutableStorageMetadata cmd = create();
-                  cmd.setName(name);
-                  cmd.setType(StorageType.CONTAINER);
-                  cmd.setLocation(storageStrategy.getLocation(name));
-                  return cmd;
+                  return storageStrategy.getContainerMetadata(name);
                }
             }), null);
-   }
-
-   private MutableStorageMetadata create() {
-      return new MutableStorageMetadataImpl();
    }
 
    @Override
