@@ -126,9 +126,14 @@ public class InstanceApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
 
    @Test(groups = "live", dependsOnMethods = "testInsertInstance")
    public void testAddAccessConfig() {
+      Instance instance = api().get(INSTANCE_NAME);
+      assertNotNull(instance);
+      assertOperationDoneSuccessfully(api().deleteAccessConfigFromNic(INSTANCE_NAME,
+            instance.networkInterfaces().get(0).accessConfigs().get(0).name(), "nic0"));
+
       AccessConfig config = AccessConfig.create("test-config", Type.ONE_TO_ONE_NAT, null);
       assertOperationDoneSuccessfully(api().addAccessConfigToNic(INSTANCE_NAME, config, "nic0"));
-      Instance instance = api().get(INSTANCE_NAME);
+      instance = api().get(INSTANCE_NAME);
       assertNotNull(instance);
       assertEquals(instance.networkInterfaces().get(0).accessConfigs().get(0).name(), "test-config");
    }

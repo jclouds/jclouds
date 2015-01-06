@@ -225,7 +225,7 @@ public abstract class Instance {
 
    public abstract URI machineType();
 
-   public abstract Status status();
+   @Nullable public abstract Status status();
 
    /** Human-readable explanation of the status. */
    @Nullable public abstract String statusMessage();
