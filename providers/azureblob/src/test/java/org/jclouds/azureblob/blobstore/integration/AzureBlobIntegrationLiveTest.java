@@ -45,6 +45,11 @@ public class AzureBlobIntegrationLiveTest extends BaseBlobIntegrationTest {
     private ByteSource oneHundredOneConstitutions;
     private byte[] oneHundredOneConstitutionsMD5;
 
+   @Override
+   protected long getMinimumMultipartBlobSize() {
+      return MultipartUploadStrategy.MAX_BLOCK_SIZE + 1;
+   }
+
    public AzureBlobIntegrationLiveTest() {
       provider = "azureblob";
    }

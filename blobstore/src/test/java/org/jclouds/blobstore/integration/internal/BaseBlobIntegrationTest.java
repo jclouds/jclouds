@@ -18,6 +18,7 @@ package org.jclouds.blobstore.integration.internal;
 
 import static com.google.common.base.Charsets.UTF_8;
 import static com.google.common.hash.Hashing.md5;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.jclouds.blobstore.options.GetOptions.Builder.ifETagDoesntMatch;
 import static org.jclouds.blobstore.options.GetOptions.Builder.ifETagMatches;
 import static org.jclouds.blobstore.options.GetOptions.Builder.ifModifiedSince;
@@ -32,6 +33,7 @@ import static org.testng.Assert.fail;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.security.NoSuchAlgorithmException;
 import java.security.cert.CertificateException;
 import java.util.Date;
@@ -53,15 +55,19 @@ import org.jclouds.blobstore.domain.BlobMetadata;
 import org.jclouds.blobstore.domain.PageSet;
 import org.jclouds.blobstore.domain.StorageMetadata;
 import org.jclouds.blobstore.domain.StorageType;
+import org.jclouds.blobstore.options.PutOptions;
 import org.jclouds.crypto.Crypto;
 import org.jclouds.encryption.internal.JCECrypto;
 import org.jclouds.http.HttpResponseException;
 import org.jclouds.io.Payload;
 import org.jclouds.io.Payloads;
 import org.jclouds.io.payloads.ByteSourcePayload;
+import org.jclouds.io.payloads.InputStreamPayload;
 import org.jclouds.logging.Logger;
+import org.jclouds.util.Closeables2;
 import org.jclouds.utils.TestUtils;
 import org.testng.ITestContext;
+import org.testng.SkipException;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
@@ -515,6 +521,77 @@ public class BaseBlobIntegrationTest extends BaseBlobStoreIntegrationTest {
       } finally {
          returnContainer(container);
       }
+   }
+
+   @Test(groups = { "integration", "live" })
+   public void testPutByteSource() throws Exception {
+      long length = 42;
+      ByteSource byteSource = TestUtils.randomByteSource().slice(0, length);
+      Payload payload = new ByteSourcePayload(byteSource);
+      testPut(payload, payload, length, new PutOptions());
+   }
+
+   @Test(groups = { "integration", "live" })
+   public void testPutInputStream() throws Exception {
+      long length = 42;
+      ByteSource byteSource = TestUtils.randomByteSource().slice(0, length);
+      Payload payload = new InputStreamPayload(byteSource.openStream());
+      testPut(payload, new ByteSourcePayload(byteSource), length, new PutOptions());
+   }
+
+   @Test(groups = { "integration", "live" })
+   public void testPutMultipartByteSource() throws Exception {
+      long length = getMinimumMultipartBlobSize();
+      ByteSource byteSource = TestUtils.randomByteSource().slice(0, length);
+      Payload payload = new ByteSourcePayload(byteSource);
+      testPut(payload, payload, length, new PutOptions().multipart(true));
+   }
+
+   @Test(groups = { "integration", "live" })
+   public void testPutMultipartInputStream() throws Exception {
+      long length = getMinimumMultipartBlobSize();
+      ByteSource byteSource = TestUtils.randomByteSource().slice(0, length);
+      Payload payload = new InputStreamPayload(byteSource.openStream());
+      testPut(payload, new ByteSourcePayload(byteSource), length, new PutOptions().multipart(true));
+   }
+
+   private void testPut(Payload payload, Payload expectedPayload, long length, PutOptions options)
+         throws IOException, InterruptedException {
+      BlobStore blobStore = view.getBlobStore();
+      String blobName = "multipart-upload";
+      Map<String, String> userMetadata = ImmutableMap.of("key1", "value1", "key2", "value2");
+      PayloadBlobBuilder blobBuilder = blobStore.blobBuilder(blobName)
+            .userMetadata(userMetadata)
+            .payload(payload)
+            .contentLength(length);
+      addContentMetadata(blobBuilder);
+
+      String container = getContainerName();
+      try {
+         String etag = blobStore.putBlob(container, blobBuilder.build(), options);
+         assertThat(etag).isNotNull();
+
+         Blob blob = blobStore.getBlob(container, blobName);
+         InputStream is = null;
+         try {
+            is = blob.getPayload().openStream();
+            assertThat(is).hasContentEqualTo(expectedPayload.openStream());
+         } finally {
+            Closeables2.closeQuietly(is);
+         }
+         validateMetadata(blob.getMetadata(), container, blob.getMetadata().getName());
+         checkContentMetadata(blob);
+         assertThat(blob.getMetadata().getUserMetadata()).isEqualTo(userMetadata);
+
+         PageSet<? extends StorageMetadata> set = blobStore.list(container);
+         assertThat(set).hasSize(1);
+      } finally {
+         returnContainer(container);
+      }
+   }
+
+   protected long getMinimumMultipartBlobSize() {
+      throw new SkipException("multipart upload not supported");
    }
 
    protected void checkContentMetadata(Blob blob) {

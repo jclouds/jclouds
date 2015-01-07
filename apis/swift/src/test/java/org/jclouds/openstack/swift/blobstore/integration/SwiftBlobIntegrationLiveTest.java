@@ -66,6 +66,11 @@ public class SwiftBlobIntegrationLiveTest extends BaseBlobIntegrationTest {
    }
 
    @Override
+   protected long getMinimumMultipartBlobSize() {
+      return PART_SIZE + 1;
+   }
+
+   @Override
    @Test(enabled = false)
    public void testGetTwoRanges() {
       // not supported in swift
