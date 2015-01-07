@@ -29,6 +29,7 @@ import static com.google.common.collect.Sets.newTreeSet;
 import static org.jclouds.blobstore.options.ListContainerOptions.Builder.recursive;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.IOException;
 import java.util.Date;
 import java.util.Set;
@@ -47,7 +48,6 @@ import org.jclouds.blobstore.LocalStorageStrategy;
 import org.jclouds.blobstore.domain.Blob;
 import org.jclouds.blobstore.domain.BlobBuilder;
 import org.jclouds.blobstore.domain.BlobMetadata;
-import org.jclouds.blobstore.domain.MutableBlobMetadata;
 import org.jclouds.blobstore.domain.MutableStorageMetadata;
 import org.jclouds.blobstore.domain.PageSet;
 import org.jclouds.blobstore.domain.StorageMetadata;
@@ -59,7 +59,6 @@ import org.jclouds.blobstore.options.CreateContainerOptions;
 import org.jclouds.blobstore.options.GetOptions;
 import org.jclouds.blobstore.options.ListContainerOptions;
 import org.jclouds.blobstore.options.PutOptions;
-import org.jclouds.blobstore.strategy.IfDirectoryReturnNameStrategy;
 import org.jclouds.blobstore.util.BlobStoreUtils;
 import org.jclouds.blobstore.util.BlobUtils;
 import org.jclouds.collect.Memoized;
@@ -92,7 +91,6 @@ public final class LocalBlobStore implements BlobStore {
    private final BlobUtils blobUtils;
    private final Supplier<Set<? extends Location>> locations;
    private final ContentMetadataCodec contentMetadataCodec;
-   private final IfDirectoryReturnNameStrategy ifDirectoryReturnName;
    private final Blob.Factory blobFactory;
    private final LocalStorageStrategy storageStrategy;
 
@@ -101,14 +99,12 @@ public final class LocalBlobStore implements BlobStore {
          BlobUtils blobUtils,
          @Memoized Supplier<Set<? extends Location>> locations,
          ContentMetadataCodec contentMetadataCodec,
-         IfDirectoryReturnNameStrategy ifDirectoryReturnName,
          Blob.Factory blobFactory, LocalStorageStrategy storageStrategy) {
       this.context = checkNotNull(context, "context");
       this.blobUtils = checkNotNull(blobUtils, "blobUtils");
       this.locations = checkNotNull(locations, "locations");
       this.blobFactory = blobFactory;
       this.contentMetadataCodec = contentMetadataCodec;
-      this.ifDirectoryReturnName = ifDirectoryReturnName;
       this.storageStrategy = storageStrategy;
    }
 
@@ -229,13 +225,7 @@ public final class LocalBlobStore implements BlobStore {
                   checkState(oldBlob != null, "blob " + key + " is not present although it was in the list of "
                         + containerName);
                   checkState(oldBlob.getMetadata() != null, "blob " + containerName + "/" + key + " has no metadata");
-                  MutableBlobMetadata md = BlobStoreUtils.copy(oldBlob.getMetadata());
-                  String directoryName = ifDirectoryReturnName.execute(md);
-                  if (directoryName != null) {
-                     md.setName(directoryName);
-                     md.setType(StorageType.RELATIVE_PATH);
-                  }
-                  return md;
+                  return BlobStoreUtils.copy(oldBlob.getMetadata());
                }
             }));
 
@@ -257,10 +247,13 @@ public final class LocalBlobStore implements BlobStore {
          }
 
          final String prefix = options.getDir();
-         if (prefix != null) {
+         if (prefix != null && !prefix.isEmpty()) {
+            final String dirPrefix = prefix.endsWith(File.separator) ?
+                    prefix :
+                    prefix + File.separator;
             contents = newTreeSet(filter(contents, new Predicate<StorageMetadata>() {
                public boolean apply(StorageMetadata o) {
-                  return o != null && o.getName().startsWith(prefix) && !o.getName().equals(prefix);
+                  return o != null && o.getName().startsWith(dirPrefix) && !o.getName().equals(dirPrefix);
                }
             }));
          }

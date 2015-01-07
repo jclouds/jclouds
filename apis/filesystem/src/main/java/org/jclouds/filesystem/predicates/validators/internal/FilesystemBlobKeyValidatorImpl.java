@@ -41,11 +41,6 @@ public class FilesystemBlobKeyValidatorImpl extends FilesystemBlobKeyValidator {
         if (name.startsWith(File.separator))
             throw new IllegalArgumentException(String.format(
                     "Blob key '%s' cannot start with character %s", name, File.separator));
-
-        //blobkey cannot end with / (or \ in Windows) character
-        if (name.endsWith(File.separator))
-            throw new IllegalArgumentException(String.format(
-                    "Blob key '%s' cannot end with character %s", name, File.separator));
     }
 
 }

@@ -32,6 +32,7 @@ import java.util.Iterator;
 import java.util.Properties;
 import java.util.Set;
 
+import com.google.common.collect.ImmutableSet;
 import org.jclouds.ContextBuilder;
 import org.jclouds.blobstore.BlobRequestSigner;
 import org.jclouds.blobstore.BlobStore;
@@ -230,6 +231,7 @@ public class FilesystemBlobStoreTest {
         blobsExpected.remove("4rrr.jpg");
 
         checkForContainerContent(CONTAINER_NAME, "rrr", blobsExpected);
+        checkForContainerContent(CONTAINER_NAME, "rrr" + File.separator, blobsExpected);
     }
 
     /**
@@ -457,6 +459,53 @@ public class FilesystemBlobStoreTest {
         blobStore.createContainerInLocation(null, CONTAINER_NAME);
         putBlobAndCheckIt(TestUtils.createRandomBlobKey("putBlob-", ".jpg"));
         putBlobAndCheckIt(TestUtils.createRandomBlobKey("putBlob-", ".jpg"));
+    }
+
+    @Test
+    public void testPutDirectoryBlobs() {
+        blobStore.createContainerInLocation(null, CONTAINER_NAME);
+
+        String parentKey = TestUtils.createRandomBlobKey("a/b/c/directory-", File.separator);
+        String childKey = TestUtils.createRandomBlobKey(parentKey + "directory-", File.separator);
+        blobStore.putBlob(CONTAINER_NAME, createDirBlob(parentKey));
+        assertTrue(blobStore.blobExists(CONTAINER_NAME, parentKey));
+
+        blobStore.putBlob(CONTAINER_NAME, createDirBlob(childKey));
+        assertTrue(blobStore.blobExists(CONTAINER_NAME, childKey));
+
+        blobStore.removeBlob(CONTAINER_NAME, parentKey);
+        assertFalse(blobStore.blobExists(CONTAINER_NAME, parentKey));
+        assertTrue(blobStore.blobExists(CONTAINER_NAME, childKey));
+    }
+
+    @Test
+    public void testGetDirectoryBlob() throws IOException {
+        blobStore.createContainerInLocation(null, CONTAINER_NAME);
+
+        String blobKey = TestUtils.createRandomBlobKey("a/b/c/directory-", File.separator);
+        blobStore.putBlob(CONTAINER_NAME, createDirBlob(blobKey));
+
+        assertTrue(blobStore.blobExists(CONTAINER_NAME, blobKey));
+
+        Blob blob = blobStore.getBlob(CONTAINER_NAME, blobKey);
+        assertEquals(blob.getMetadata().getName(), blobKey, "Created blob name is different");
+
+        assertTrue(!blobStore.blobExists(CONTAINER_NAME,
+                blobKey.substring(0, blobKey.length() - 1)));
+    }
+
+
+    public void testListDirectoryBlobs() {
+        blobStore.createContainerInLocation(null, CONTAINER_NAME);
+        checkForContainerContent(CONTAINER_NAME, null);
+
+        Set<String> dirs = ImmutableSet.of(TestUtils.createRandomBlobKey("directory-", File.separator));
+        for (String d : dirs) {
+            blobStore.putBlob(CONTAINER_NAME, createDirBlob(d));
+            assertTrue(blobStore.blobExists(CONTAINER_NAME, d));
+        }
+
+        checkForContainerContent(CONTAINER_NAME, dirs);
     }
 
     /**
@@ -748,6 +797,12 @@ public class FilesystemBlobStoreTest {
      */
     private Blob createBlob(String keyName, File filePayload) {
         return blobStore.blobBuilder(keyName).payload(filePayload).build();
+    }
+
+    private Blob createDirBlob(String keyName) {
+        return blobStore.blobBuilder(keyName)
+                .payload(ByteSource.empty())
+                .build();
     }
 
     /**

@@ -49,6 +49,7 @@ import org.jclouds.blobstore.domain.StorageMetadata;
 import org.jclouds.blobstore.domain.StorageType;
 import org.jclouds.blobstore.domain.internal.MutableStorageMetadataImpl;
 import org.jclouds.blobstore.options.ListContainerOptions;
+import org.jclouds.blobstore.reference.BlobStoreConstants;
 import org.jclouds.domain.Location;
 import org.jclouds.filesystem.predicates.validators.FilesystemBlobKeyValidator;
 import org.jclouds.filesystem.predicates.validators.FilesystemContainerNameValidator;
@@ -73,6 +74,13 @@ import com.google.common.io.ByteSource;
 import com.google.common.io.Files;
 import com.google.common.primitives.Longs;
 
+/**
+ * FilesystemStorageStrategyImpl implements a blob store that stores objects
+ * on the file system. Content metadata and user attributes are stored in
+ * extended attributes if the file system supports them. Directory blobs
+ * (blobs that end with a /) cannot have content, but otherwise appear in
+ * LIST like normal blobs.
+ */
 public class FilesystemStorageStrategyImpl implements LocalStorageStrategy {
 
    private static final String XATTR_CONTENT_DISPOSITION = "user.content-disposition";
@@ -82,6 +90,8 @@ public class FilesystemStorageStrategyImpl implements LocalStorageStrategy {
    private static final String XATTR_CONTENT_TYPE = "user.content-type";
    private static final String XATTR_EXPIRES = "user.expires";
    private static final String XATTR_USER_METADATA_PREFIX = "user.user-metadata.";
+   private static final byte[] DIRECTORY_MD5 =
+           Hashing.md5().hashBytes(new byte[0]).asBytes();
 
    private static final String BACK_SLASH = "\\";
 
@@ -190,7 +200,13 @@ public class FilesystemStorageStrategyImpl implements LocalStorageStrategy {
    public boolean blobExists(String container, String key) {
       filesystemContainerNameValidator.validate(container);
       filesystemBlobKeyValidator.validate(key);
-      return buildPathAndChecksIfFileExists(container, key);
+      try {
+         return buildPathAndChecksIfBlobExists(container, key);
+      } catch (IOException e) {
+         logger.error(e, "An error occurred while checking key %s in container %s",
+                 container, key);
+         throw Throwables.propagate(e);
+      }
    }
 
    /**
@@ -227,7 +243,14 @@ public class FilesystemStorageStrategyImpl implements LocalStorageStrategy {
       builder.name(key);
       File file = getFileForBlobKey(container, key);
       Path path = file.toPath();
-      ByteSource byteSource = Files.asByteSource(file);
+      ByteSource byteSource;
+
+      if (getDirectoryBlobSuffix(key) != null) {
+         logger.debug("%s - %s is a directory", container, key);
+         byteSource = ByteSource.empty();
+      } else {
+         byteSource = Files.asByteSource(file);
+      }
       try {
          String contentDisposition = null;
          String contentEncoding = null;
@@ -289,13 +312,57 @@ public class FilesystemStorageStrategyImpl implements LocalStorageStrategy {
       return blob;
    }
 
+   private void writeCommonMetadataAttr(UserDefinedFileAttributeView view, Blob blob) throws IOException {
+      ContentMetadata metadata = blob.getMetadata().getContentMetadata();
+      writeStringAttributeIfPresent(view, XATTR_CONTENT_DISPOSITION, metadata.getContentDisposition());
+      writeStringAttributeIfPresent(view, XATTR_CONTENT_ENCODING, metadata.getContentEncoding());
+      writeStringAttributeIfPresent(view, XATTR_CONTENT_LANGUAGE, metadata.getContentLanguage());
+      writeStringAttributeIfPresent(view, XATTR_CONTENT_TYPE, metadata.getContentType());
+      Date expires = metadata.getExpires();
+      if (expires != null) {
+         ByteBuffer buf = ByteBuffer.allocate(Longs.BYTES).putLong(expires.getTime());
+         buf.flip();
+         view.write(XATTR_EXPIRES, buf);
+      }
+      for (Map.Entry<String, String> entry : blob.getMetadata().getUserMetadata().entrySet()) {
+         writeStringAttributeIfPresent(view, XATTR_USER_METADATA_PREFIX + entry.getKey(), entry.getValue());
+      }
+   }
+
+   private String putDirectoryBlob(final String containerName, final Blob blob) throws IOException {
+      String blobKey = blob.getMetadata().getName();
+      ContentMetadata metadata = blob.getMetadata().getContentMetadata();
+      Long contentLength = metadata.getContentLength();
+      if (contentLength != null && contentLength != 0) {
+         throw new IllegalArgumentException(
+                 "Directory blob cannot have content: " + blobKey);
+      }
+      File outputFile = getFileForBlobKey(containerName, blobKey);
+      Path outputPath = outputFile.toPath();
+      if (!outputFile.isDirectory() && !outputFile.mkdirs()) {
+         throw new IOException("Unable to mkdir: " + outputPath);
+      }
+
+      UserDefinedFileAttributeView view = getUserDefinedFileAttributeView(outputPath);
+      if (view != null) {
+         view.write(XATTR_CONTENT_MD5, ByteBuffer.wrap(DIRECTORY_MD5));
+         writeCommonMetadataAttr(view, blob);
+      } else {
+         logger.warn("xattr not supported on %s", blobKey);
+      }
+
+      return base16().lowerCase().encode(DIRECTORY_MD5);
+   }
+
    @Override
    public String putBlob(final String containerName, final Blob blob) throws IOException {
       String blobKey = blob.getMetadata().getName();
       Payload payload = blob.getPayload();
-      ContentMetadata metadata = payload.getContentMetadata();
       filesystemContainerNameValidator.validate(containerName);
       filesystemBlobKeyValidator.validate(blobKey);
+      if (getDirectoryBlobSuffix(blobKey) != null) {
+         return putDirectoryBlob(containerName, blob);
+      }
       File outputFile = getFileForBlobKey(containerName, blobKey);
       Path outputPath = outputFile.toPath();
       HashingInputStream his = null;
@@ -315,19 +382,7 @@ public class FilesystemStorageStrategyImpl implements LocalStorageStrategy {
          if (getFileStore(outputPath).supportsFileAttributeView(UserDefinedFileAttributeView.class)) {
             UserDefinedFileAttributeView view = getFileAttributeView(outputPath, UserDefinedFileAttributeView.class);
             view.write(XATTR_CONTENT_MD5, ByteBuffer.wrap(actualHashCode.asBytes()));
-            writeStringAttributeIfPresent(view, XATTR_CONTENT_DISPOSITION, metadata.getContentDisposition());
-            writeStringAttributeIfPresent(view, XATTR_CONTENT_ENCODING, metadata.getContentEncoding());
-            writeStringAttributeIfPresent(view, XATTR_CONTENT_LANGUAGE, metadata.getContentLanguage());
-            writeStringAttributeIfPresent(view, XATTR_CONTENT_TYPE, metadata.getContentType());
-            Date expires = metadata.getExpires();
-            if (expires != null) {
-               ByteBuffer buf = ByteBuffer.allocate(Longs.BYTES).putLong(expires.getTime());
-               buf.flip();
-               view.write(XATTR_EXPIRES, buf);
-            }
-            for (Map.Entry<String, String> entry : blob.getMetadata().getUserMetadata().entrySet()) {
-               writeStringAttributeIfPresent(view, XATTR_USER_METADATA_PREFIX + entry.getKey(), entry.getValue());
-            }
+            writeCommonMetadataAttr(view, blob);
          }
          return base16().lowerCase().encode(actualHashCode.asBytes());
       } catch (IOException ex) {
@@ -351,7 +406,20 @@ public class FilesystemStorageStrategyImpl implements LocalStorageStrategy {
       logger.debug("Deleting blob %s", fileName);
       File fileToBeDeleted = new File(fileName);
       if (!fileToBeDeleted.delete()) {
-         logger.debug("Could not delete %s", fileToBeDeleted);
+         if (fileToBeDeleted.isDirectory()) {
+            try {
+               UserDefinedFileAttributeView view = getUserDefinedFileAttributeView(fileToBeDeleted.toPath());
+               if (view != null) {
+                  for (String s : view.list()) {
+                     view.delete(s);
+                  }
+               }
+            } catch (IOException e) {
+               logger.debug("Could not delete attributes from %s", fileToBeDeleted);
+            }
+         } else {
+            logger.debug("Could not delete %s", fileToBeDeleted);
+         }
       }
 
       // now examine if the key of the blob is a complex key (with a directory structure)
@@ -424,11 +492,43 @@ public class FilesystemStorageStrategyImpl implements LocalStorageStrategy {
 
    // ---------------------------------------------------------- Private methods
 
-   private boolean buildPathAndChecksIfFileExists(String... tokens) {
+   private boolean buildPathAndChecksIfBlobExists(String... tokens) throws IOException {
       String path = buildPathStartingFromBaseDir(tokens);
       File file = new File(path);
       boolean exists = file.exists() && file.isFile();
+      if (!exists && getDirectoryBlobSuffix(tokens[tokens.length - 1]) != null
+              && file.isDirectory()) {
+         UserDefinedFileAttributeView view = getUserDefinedFileAttributeView(file.toPath());
+         exists = view != null && view.list().contains(XATTR_CONTENT_MD5);
+      }
       return exists;
+   }
+
+   private static String getDirectoryBlobSuffix(String key) {
+      for (String suffix : BlobStoreConstants.DIRECTORY_SUFFIXES) {
+         if (key.endsWith(suffix)) {
+            return suffix;
+         }
+      }
+      return null;
+   }
+
+   private static String directoryBlobName(String key) {
+      String suffix = getDirectoryBlobSuffix(key);
+      if (suffix != null) {
+         if (!BlobStoreConstants.DIRECTORY_BLOB_SUFFIX.equals(suffix)) {
+            key = key.substring(0, key.lastIndexOf(suffix));
+         }
+         return key + BlobStoreConstants.DIRECTORY_BLOB_SUFFIX;
+      }
+      return null;
+   }
+
+   private UserDefinedFileAttributeView getUserDefinedFileAttributeView(Path path) throws IOException {
+      if (getFileStore(path).supportsFileAttributeView(UserDefinedFileAttributeView.class)) {
+         return getFileAttributeView(path, UserDefinedFileAttributeView.class);
+      }
+      return null;
    }
 
    /**
@@ -570,7 +670,7 @@ public class FilesystemStorageStrategyImpl implements LocalStorageStrategy {
          if (child.isFile()) {
             blobNames.add(function.apply(child.getAbsolutePath()));
          } else if (child.isDirectory()) {
-            blobNames.add(function.apply(child.getAbsolutePath()));
+            blobNames.add(function.apply(child.getAbsolutePath()) + File.separator);
             populateBlobKeysInContainer(child, blobNames, function);
          }
       }
@@ -615,5 +715,9 @@ public class FilesystemStorageStrategyImpl implements LocalStorageStrategy {
       if (value != null) {
          view.write(name, ByteBuffer.wrap(value.getBytes(StandardCharsets.UTF_8)));
       }
+   }
+
+   private static void copyStringAttributeIfPresent(UserDefinedFileAttributeView view, String name, Map<String, String> attrs) throws IOException {
+      writeStringAttributeIfPresent(view, name, attrs.get(name));
    }
 }

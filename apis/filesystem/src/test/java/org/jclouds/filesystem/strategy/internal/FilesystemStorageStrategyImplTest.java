@@ -341,6 +341,64 @@ public class FilesystemStorageStrategyImplTest {
       assertEquals(newBlob.getMetadata().getName(), blobKey, "Created blob name is different");
    }
 
+   public void testWriteDirectoryBlob() throws IOException {
+      String blobKey = TestUtils.createRandomBlobKey("a/b/c/directory-", File.separator);
+      Blob blob = storageStrategy.newBlob(blobKey);
+      storageStrategy.putBlob(CONTAINER_NAME, blob);
+      // verify that the files is equal
+      File blobFullPath = new File(TARGET_CONTAINER_NAME, blobKey);
+      assertTrue(blobFullPath.isDirectory());
+
+      assertTrue(storageStrategy.blobExists(CONTAINER_NAME, blobKey));
+   }
+
+   public void testGetDirectoryBlob() throws IOException {
+      String blobKey = TestUtils.createRandomBlobKey("a/b/c/directory-", File.separator);
+      Blob blob = storageStrategy.newBlob(blobKey);
+      storageStrategy.putBlob(CONTAINER_NAME, blob);
+
+      assertTrue(storageStrategy.blobExists(CONTAINER_NAME, blobKey));
+
+      blob = storageStrategy.getBlob(CONTAINER_NAME, blobKey);
+      assertEquals(blob.getMetadata().getName(), blobKey, "Created blob name is different");
+
+      assertTrue(!storageStrategy.blobExists(CONTAINER_NAME,
+              blobKey.substring(0, blobKey.length() - 1)));
+   }
+
+   public void testListDirectoryBlob() throws IOException {
+      String blobKey = TestUtils.createRandomBlobKey("directory-", File.separator);
+      Blob blob = storageStrategy.newBlob(blobKey);
+      storageStrategy.putBlob(CONTAINER_NAME, blob);
+
+      Iterable<String> keys = storageStrategy.getBlobKeysInsideContainer(CONTAINER_NAME);
+      Iterator<String> iter = keys.iterator();
+      assertTrue(iter.hasNext());
+      assertEquals(iter.next(), blobKey);
+      assertFalse(iter.hasNext());
+   }
+
+   public void testDeleteDirectoryBlob() throws IOException {
+      String blobKey = TestUtils.createRandomBlobKey("a/b/c/directory-", File.separator);
+      Blob blob = storageStrategy.newBlob(blobKey);
+      storageStrategy.putBlob(CONTAINER_NAME, blob);
+      File blobFullPath = new File(TARGET_CONTAINER_NAME, blobKey);
+      assertTrue(blobFullPath.isDirectory());
+
+      storageStrategy.removeBlob(CONTAINER_NAME, blobKey);
+   }
+
+   public void testDeleteIntermediateDirectoryBlob() throws IOException {
+      String parentKey = TestUtils.createRandomBlobKey("a/b/c/directory-", File.separator);
+      String childKey = TestUtils.createRandomBlobKey(parentKey + "directory-", File.separator);
+      storageStrategy.putBlob(CONTAINER_NAME, storageStrategy.newBlob(parentKey));
+      storageStrategy.putBlob(CONTAINER_NAME, storageStrategy.newBlob(childKey));
+
+      storageStrategy.removeBlob(CONTAINER_NAME, parentKey);
+      assertFalse(storageStrategy.blobExists(CONTAINER_NAME, parentKey));
+      assertTrue(storageStrategy.blobExists(CONTAINER_NAME, childKey));
+   }
+
    public void testWritePayloadOnFile() throws IOException {
       String blobKey = TestUtils.createRandomBlobKey("writePayload-", ".img");
       File sourceFile = TestUtils.getImageForBlobPayload();

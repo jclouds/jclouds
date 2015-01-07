@@ -54,6 +54,7 @@ public final class BlobStoreConstants {
    public static final String PROPERTY_USER_METADATA_PREFIX = "jclouds.blobstore.metaprefix";
 
    public static final String BLOBSTORE_LOGGER = "jclouds.blobstore";
+   public static final String DIRECTORY_BLOB_SUFFIX = "/";
 
    private BlobStoreConstants() {
       throw new AssertionError("intentionally unimplemented");

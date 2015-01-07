@@ -51,11 +51,6 @@ public class FilesystemBlobKeyValidatorTest {
             validator.validate(File.separator + "is" + File.separator + "" + "ok");
             fail("Blob key value incorrect, but was not recognized");
         } catch (IllegalArgumentException e) {}
-
-        try {
-            validator.validate("all" + File.separator + "is" + File.separator);
-            fail("Blob key value incorrect, but was not recognized");
-        } catch (IllegalArgumentException e) {}
     }
 
 
