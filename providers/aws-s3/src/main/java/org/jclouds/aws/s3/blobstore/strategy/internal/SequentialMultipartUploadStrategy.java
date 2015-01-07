@@ -81,19 +81,16 @@ public class SequentialMultipartUploadStrategy implements MultipartUploadStrateg
       if (partCount > 0) {
          ObjectMetadataBuilder builder = ObjectMetadataBuilder.create().key(key)
             .contentType(metadata.getContentType())
-            .contentDisposition(metadata.getContentDisposition());
+            .contentDisposition(metadata.getContentDisposition())
+            .contentEncoding(metadata.getContentEncoding())
+            .contentLanguage(metadata.getContentLanguage())
+            .userMetadata(blob.getMetadata().getUserMetadata());
          String uploadId = client.initiateMultipartUpload(container, builder.build());
          try {
             SortedMap<Integer, String> etags = Maps.newTreeMap();
-            int part;
-            while ((part = algorithm.getNextPart()) <= partCount) {
-               prepareUploadPart(container, key, uploadId, part, payload, algorithm.getNextChunkOffset(), chunkSize,
-                     etags);
-            }
-            long remaining = algorithm.getRemaining();
-            if (remaining > 0) {
-               prepareUploadPart(container, key, uploadId, part, payload, algorithm.getNextChunkOffset(), remaining,
-                     etags);
+            for (Payload part : slicer.slice(payload, chunkSize)) {
+               int partNum = algorithm.getNextPart();
+               prepareUploadPart(container, key, uploadId, partNum, part, algorithm.getNextChunkOffset(), etags);
             }
             return client.completeMultipartUpload(container, key, uploadId, etags);
          } catch (RuntimeException ex) {
@@ -107,9 +104,8 @@ public class SequentialMultipartUploadStrategy implements MultipartUploadStrateg
       }
    }
 
-   private void prepareUploadPart(String container, String key, String uploadId, int part, Payload payload,
-         long offset, long size, SortedMap<Integer, String> etags) {
-      Payload chunkedPart = slicer.slice(payload, offset, size);
+   private void prepareUploadPart(String container, String key, String uploadId, int part, Payload chunkedPart,
+         long offset, SortedMap<Integer, String> etags) {
       String eTag = null;
       try {
          eTag = client.uploadPart(container, key, part, uploadId, chunkedPart);

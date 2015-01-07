@@ -65,6 +65,12 @@ public class BindObjectMetadataToRequest implements Binder {
       if (md.getContentMetadata().getContentEncoding() != null) {
          headers.put("Content-Encoding", md.getContentMetadata().getContentEncoding());
       }
+
+      String contentLanguage = md.getContentMetadata().getContentLanguage();
+      if (contentLanguage != null) {
+         headers.put(HttpHeaders.CONTENT_LANGUAGE, contentLanguage);
+      }
+
       if (md.getContentMetadata().getContentType() != null) {
          headers.put(HttpHeaders.CONTENT_TYPE, md.getContentMetadata().getContentType());
       } else {
