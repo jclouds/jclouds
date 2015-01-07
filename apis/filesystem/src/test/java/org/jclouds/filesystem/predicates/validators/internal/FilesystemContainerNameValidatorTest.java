@@ -20,7 +20,7 @@ import static org.testng.Assert.fail;
 
 import java.io.File;
 
-import org.jclouds.filesystem.predicates.validators.FilesystemBlobKeyValidator;
+import org.jclouds.filesystem.predicates.validators.FilesystemContainerNameValidator;
 import org.testng.annotations.Test;
 
 
@@ -32,14 +32,14 @@ public class FilesystemContainerNameValidatorTest {
 
     @Test
     public void testNamesValidity() {
-        FilesystemBlobKeyValidator validator = new FilesystemBlobKeyValidatorImpl();
+        FilesystemContainerNameValidator validator = new FilesystemContainerNameValidatorImpl();
 
         validator.validate("all.img");
     }
 
     @Test
     public void testInvalidNames() {
-        FilesystemBlobKeyValidator validator = new FilesystemBlobKeyValidatorImpl();
+        FilesystemContainerNameValidator validator = new FilesystemContainerNameValidatorImpl();
 
         try {
             validator.validate("");
