@@ -21,10 +21,14 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 import javax.inject.Inject;
 
+import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.Multimaps;
+
 import org.jclouds.azureblob.blobstore.functions.AzureBlobToBlob;
 import org.jclouds.azureblob.domain.AzureBlob;
 import org.jclouds.blobstore.binders.BindUserMetadataToHeadersWithPrefix;
 import org.jclouds.http.HttpRequest;
+import org.jclouds.io.ContentMetadata;
 import org.jclouds.rest.Binder;
 
 public class BindAzureBlobMetadataToMultipartRequest implements Binder {
@@ -47,6 +51,24 @@ public class BindAzureBlobMetadataToMultipartRequest implements Binder {
 
       checkArgument(blob.getPayload().getContentMetadata().getContentLength() != null
             && blob.getPayload().getContentMetadata().getContentLength() >= 0, "size must be set");
+
+      // bind BlockList-specific headers
+      ImmutableMap.Builder<String, String> headers = ImmutableMap.builder();
+      ContentMetadata contentMetadata = blob.getProperties().getContentMetadata();
+      // TODO: bind x-ms-blob-content-disposition after upgrading to API 2013-08-15
+      String contentEncoding = contentMetadata.getContentEncoding();
+      if (contentEncoding != null) {
+         headers.put("x-ms-blob-content-encoding", contentEncoding);
+      }
+      String contentLanguage = contentMetadata.getContentLanguage();
+      if (contentLanguage != null) {
+         headers.put("x-ms-blob-content-language", contentLanguage);
+      }
+      String contentType = contentMetadata.getContentType();
+      if (contentType != null) {
+         headers.put("x-ms-blob-content-type", contentType);
+      }
+      request = (R) request.toBuilder().replaceHeaders(Multimaps.forMap(headers.build())).build();
 
       return blobBinder.bindToRequest(request, azureBlob2Blob.apply(blob));
    }
