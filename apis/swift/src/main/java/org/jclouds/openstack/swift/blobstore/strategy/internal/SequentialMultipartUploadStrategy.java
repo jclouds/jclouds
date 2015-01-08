@@ -30,6 +30,7 @@ import org.jclouds.io.PayloadSlicer;
 import org.jclouds.logging.Logger;
 import org.jclouds.openstack.swift.CommonSwiftClient;
 import org.jclouds.openstack.swift.blobstore.functions.BlobToObject;
+import org.jclouds.openstack.swift.domain.SwiftObject;
 
 import com.google.inject.Inject;
 
@@ -78,7 +79,11 @@ public class SequentialMultipartUploadStrategy implements MultipartUploadStrateg
                                         .build();
             client.putObject(container, blob2Object.apply(blobPart));
          }
-         return client.putObjectManifest(container, key);
+
+         SwiftObject manifest = blob2Object.apply(blob);
+         // put empty manifest object retaining existing metadata
+         manifest.getPayload().getContentMetadata().setContentLength(0L);
+         return client.putObjectManifest(container, manifest);
       } else {
          return client.putObject(container, blob2Object.apply(blob));
       }

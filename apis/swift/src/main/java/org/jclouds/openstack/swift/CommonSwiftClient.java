@@ -369,11 +369,23 @@ public interface CommonSwiftClient extends Closeable {
     *             {@link org.jclouds.openstack.swift.v1.features.ObjectApi#replaceManifest()}
     */
    @Deprecated
-
    @Named("PutObjectManifest")
    @PUT
    @Path("/{container}/{name}")
    @ResponseParser(ParseETagHeader.class)
    @Headers(keys = "X-Object-Manifest", values = "{container}/{name}/")
    String putObjectManifest(@PathParam("container") String container, @PathParam("name") String name);
+
+   /**
+    * @deprecated This method will be replaced by
+    *             {@link org.jclouds.openstack.swift.v1.features.ObjectApi#replaceManifest()}
+    */
+   @Deprecated
+   @Named("PutObjectManifest")
+   @PUT
+   @Path("/{container}/{name}")
+   @ResponseParser(ParseETagHeader.class)
+   @Headers(keys = "X-Object-Manifest", values = "{container}/{name}/")
+   String putObjectManifest(@PathParam("container") String container, @PathParam("name") @ParamParser(ObjectName.class)
+      @BinderParam(BindSwiftObjectMetadataToRequest.class) SwiftObject object);
 }
