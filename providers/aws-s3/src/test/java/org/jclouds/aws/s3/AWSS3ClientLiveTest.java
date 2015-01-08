@@ -25,7 +25,6 @@ import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertTrue;
 import static org.testng.Assert.fail;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.Set;
 import java.util.UUID;
@@ -37,7 +36,6 @@ import org.jclouds.blobstore.BlobStore;
 import org.jclouds.blobstore.KeyNotFoundException;
 import org.jclouds.blobstore.domain.Blob;
 import org.jclouds.blobstore.domain.StorageMetadata;
-import org.jclouds.blobstore.options.PutOptions;
 import org.jclouds.domain.Location;
 import org.jclouds.io.ByteStreams2;
 import org.jclouds.io.Payload;
@@ -57,7 +55,6 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.hash.HashCode;
 import com.google.common.io.ByteSource;
-import com.google.common.io.Files;
 
 /**
  * Tests behavior of {@code S3Client}
@@ -124,23 +121,6 @@ public class AWSS3ClientLiveTest extends S3ClientLiveTest {
       } finally {
          if (object != null)
             object.getPayload().close();
-         returnContainer(containerName);
-      }
-   }
-   
-   public void testMultipartChunkedFileStream() throws IOException, InterruptedException {
-      
-      File file = new File("target/const.txt");
-      oneHundredOneConstitutions.copyTo(Files.asByteSink(file));
-      String containerName = getContainerName();
-      
-      try {
-         BlobStore blobStore = view.getBlobStore();
-         blobStore.createContainerInLocation(null, containerName);
-         Blob blob = blobStore.blobBuilder("const.txt").payload(file).build();
-         blobStore.putBlob(containerName, blob, PutOptions.Builder.multipart());
-
-      } finally {
          returnContainer(containerName);
       }
    }

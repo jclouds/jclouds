@@ -21,7 +21,6 @@ import static org.testng.Assert.assertNotEquals;
 import static org.testng.Assert.assertTrue;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.Arrays;
 import java.util.Properties;
 
@@ -40,7 +39,6 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
-import com.google.common.hash.Hashing;
 import com.google.common.io.ByteSource;
 
 @Test(groups = "live")
@@ -161,31 +159,6 @@ public class SwiftBlobIntegrationLiveTest extends BaseBlobIntegrationTest {
          assertTrue(Arrays.equals(inputSource.read(), ByteStreams2.toByteArrayAndClose(readPayload.openStream())));
       } finally {
          returnContainer(containerName);
-      }
-   }
-
-   // InputStreamPayloads are handled differently than File; Test InputStreams too
-   @Test(groups = { "integration", "live" })
-   public void testMultipartChunkedInputStream() throws InterruptedException, IOException {
-      String container = getContainerName();
-      try {
-         BlobStore blobStore = view.getBlobStore();
-
-         blobStore.createContainerInLocation(null, container);
-
-         ByteSource input = createByteSourceBiggerThan(PART_SIZE);
-
-         Blob write = blobStore.blobBuilder("const.txt")
-             .payload(input.openStream())
-             .contentLength(input.size())
-             .build();
-         blobStore.putBlob(container, write, PutOptions.Builder.multipart());
-
-         Blob read = blobStore.getBlob(container, "const.txt");
-         InputStream is = read.getPayload().openStream();
-         assertEquals(ByteStreams2.hashAndClose(is, Hashing.md5()), input.hash(Hashing.md5()));
-      } finally {
-         returnContainer(container);
       }
    }
 

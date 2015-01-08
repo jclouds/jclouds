@@ -18,33 +18,23 @@ package org.jclouds.azureblob.blobstore.integration;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
-import com.google.common.collect.ImmutableMap;
 import com.google.common.io.ByteSource;
 import com.google.common.io.Files;
 import org.jclouds.azureblob.blobstore.strategy.MultipartUploadStrategy;
 import org.jclouds.blobstore.BlobStore;
 import org.jclouds.blobstore.domain.Blob;
-import org.jclouds.blobstore.domain.BlobMetadata;
 import org.jclouds.blobstore.integration.internal.BaseBlobIntegrationTest;
 import org.jclouds.blobstore.options.PutOptions;
-import org.jclouds.io.ByteStreams2;
 import org.jclouds.utils.TestUtils;
 import org.testng.SkipException;
 import org.testng.annotations.Test;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.testng.Assert.assertEquals;
-
-import static com.google.common.hash.Hashing.md5;
 
 @Test(groups = "live")
 public class AzureBlobIntegrationLiveTest extends BaseBlobIntegrationTest {
-    private ByteSource oneHundredOneConstitutions;
-    private byte[] oneHundredOneConstitutionsMD5;
-
    @Override
    protected long getMinimumMultipartBlobSize() {
       return MultipartUploadStrategy.MAX_BLOCK_SIZE + 1;
@@ -81,48 +71,6 @@ public class AzureBlobIntegrationLiveTest extends BaseBlobIntegrationTest {
       assert blob.getMetadata().getContentMetadata().getContentDisposition() == null;
    }
 
-   /**
-    * Essentially copied from the AWS multipart chucked stream test
-    */
-   public void testMultipartChunkedFileStream() throws IOException, InterruptedException {
-      oneHundredOneConstitutions = getTestDataSupplier();
-      oneHundredOneConstitutionsMD5 = oneHundredOneConstitutions.hash(md5()).asBytes();
-      File file = new File("target/const.txt");
-      oneHundredOneConstitutions.copyTo(Files.asByteSink(file));
-      String containerName = getContainerName();
-
-      try {
-         BlobStore blobStore = view.getBlobStore();
-         blobStore.createContainerInLocation(null, containerName);
-         Blob blob = blobStore.blobBuilder("const.txt").payload(file).build();
-         String expected = blobStore.putBlob(containerName, blob, PutOptions.Builder.multipart());
-         String etag = blobStore.blobMetadata(containerName, "const.txt").getETag();
-         assertEquals(etag, expected);
-      } finally {
-         returnContainer(containerName);
-      }
-   }
-
-   public void testMultipartUploadInputStream() throws Exception {
-      long length = MultipartUploadStrategy.MAX_BLOCK_SIZE + 1;
-      ByteSource byteSource = TestUtils.randomByteSource().slice(0, length);
-      String containerName = getContainerName();
-      try {
-         BlobStore blobStore = view.getBlobStore();
-         blobStore.createContainerInLocation(null, containerName);
-         String blobName = "const.txt";
-         Blob blob = blobStore.blobBuilder(blobName)
-            .payload(byteSource.openStream())
-            .contentLength(length)
-            .build();
-         blobStore.putBlob(containerName, blob, PutOptions.Builder.multipart());
-         blob = blobStore.getBlob(containerName, blobName);
-         assertThat(ByteStreams2.toByteArrayAndClose(blob.getPayload().openStream())).isEqualTo(byteSource.read());
-      } finally {
-         returnContainer(containerName);
-      }
-   }
-
    public void testMultipartChunkedFileStreamPowerOfTwoSize() throws IOException, InterruptedException {
       final long limit = MultipartUploadStrategy.MAX_BLOCK_SIZE;
       ByteSource input = TestUtils.randomByteSource().slice(0, limit);
@@ -137,29 +85,6 @@ public class AzureBlobIntegrationLiveTest extends BaseBlobIntegrationTest {
          String expected = blobStore.putBlob(containerName, blob, PutOptions.Builder.multipart());
          String etag = blobStore.blobMetadata(containerName, "const.txt").getETag();
          assertEquals(etag, expected);
-      } finally {
-         returnContainer(containerName);
-      }
-   }
-
-   public void testMultipartUserMetadata() throws Exception {
-      BlobStore blobStore = view.getBlobStore();
-      String containerName = getContainerName();
-      String blobName = "const.txt";
-      ByteSource byteSource = TestUtils.randomByteSource().slice(0, MultipartUploadStrategy.MAX_BLOCK_SIZE + 1);
-      Map<String, String> userMetadata = ImmutableMap.of("foo", "bar");
-
-      blobStore.createContainerInLocation(null, containerName);
-      try {
-         Blob blob = blobStore.blobBuilder(blobName)
-            .payload(byteSource)
-            .contentLength(byteSource.size())
-            .userMetadata(userMetadata)
-            .build();
-         blobStore.putBlob(containerName, blob, PutOptions.Builder.multipart());
-
-         BlobMetadata blobMetadata = blobStore.blobMetadata(containerName, blobName);
-         assertThat(blobMetadata.getUserMetadata()).isEqualTo(userMetadata);
       } finally {
          returnContainer(containerName);
       }
