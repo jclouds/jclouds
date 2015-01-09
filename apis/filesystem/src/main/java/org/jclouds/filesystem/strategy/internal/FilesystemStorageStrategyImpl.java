@@ -17,7 +17,6 @@
 package org.jclouds.filesystem.strategy.internal;
 
 import static java.nio.file.Files.getFileAttributeView;
-import static java.nio.file.Files.getFileStore;
 import static java.nio.file.Files.readAttributes;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -260,8 +259,8 @@ public class FilesystemStorageStrategyImpl implements LocalStorageStrategy {
          Date expires = null;
          ImmutableMap.Builder<String, String> userMetadata = ImmutableMap.builder();
 
-         if (getFileStore(file.toPath()).supportsFileAttributeView(UserDefinedFileAttributeView.class)) {
-            UserDefinedFileAttributeView view = getFileAttributeView(path, UserDefinedFileAttributeView.class);
+         UserDefinedFileAttributeView view = getUserDefinedFileAttributeView(file.toPath());
+         if (view != null) {
             Set<String> attributes = ImmutableSet.copyOf(view.list());
 
             contentDisposition = readStringAttributeIfPresent(view, attributes, XATTR_CONTENT_DISPOSITION);
@@ -346,8 +345,12 @@ public class FilesystemStorageStrategyImpl implements LocalStorageStrategy {
 
       UserDefinedFileAttributeView view = getUserDefinedFileAttributeView(outputPath);
       if (view != null) {
-         view.write(XATTR_CONTENT_MD5, ByteBuffer.wrap(DIRECTORY_MD5));
-         writeCommonMetadataAttr(view, blob);
+         try {
+            view.write(XATTR_CONTENT_MD5, ByteBuffer.wrap(DIRECTORY_MD5));
+            writeCommonMetadataAttr(view, blob);
+         } catch (IOException e) {
+            logger.debug("xattrs not supported on %s", outputPath);
+         }
       } else {
          logger.warn("xattr not supported on %s", blobKey);
       }
@@ -380,10 +383,14 @@ public class FilesystemStorageStrategyImpl implements LocalStorageStrategy {
          }
          payload.getContentMetadata().setContentMD5(actualHashCode);
 
-         if (getFileStore(outputPath).supportsFileAttributeView(UserDefinedFileAttributeView.class)) {
-            UserDefinedFileAttributeView view = getFileAttributeView(outputPath, UserDefinedFileAttributeView.class);
-            view.write(XATTR_CONTENT_MD5, ByteBuffer.wrap(actualHashCode.asBytes()));
-            writeCommonMetadataAttr(view, blob);
+         UserDefinedFileAttributeView view = getUserDefinedFileAttributeView(outputPath);
+         if (view != null) {
+            try {
+               view.write(XATTR_CONTENT_MD5, ByteBuffer.wrap(actualHashCode.asBytes()));
+               writeCommonMetadataAttr(view, blob);
+            } catch (IOException e) {
+               logger.debug("xattrs not supported on %s", outputPath);
+            }
          }
          return base16().lowerCase().encode(actualHashCode.asBytes());
       } catch (IOException ex) {
@@ -526,10 +533,7 @@ public class FilesystemStorageStrategyImpl implements LocalStorageStrategy {
    }
 
    private UserDefinedFileAttributeView getUserDefinedFileAttributeView(Path path) throws IOException {
-      if (getFileStore(path).supportsFileAttributeView(UserDefinedFileAttributeView.class)) {
-         return getFileAttributeView(path, UserDefinedFileAttributeView.class);
-      }
-      return null;
+      return getFileAttributeView(path, UserDefinedFileAttributeView.class);
    }
 
    /**
