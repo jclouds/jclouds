@@ -60,8 +60,10 @@ public class ChefBootstrapModule extends AbstractModule {
    @Provides
    @Named("installChefOmnibus")
    @Singleton
-   Statement installChefUsingOmnibus() {
-      return new InstallChefUsingOmnibus();
+   Statement installChefUsingOmnibus(BootstrapProperties bootstrapProperties) {
+      return bootstrapProperties.chefVersion().isPresent() ?
+            new InstallChefUsingOmnibus(bootstrapProperties.chefVersion().get())
+            : new InstallChefUsingOmnibus();
    }
 
    @Provides

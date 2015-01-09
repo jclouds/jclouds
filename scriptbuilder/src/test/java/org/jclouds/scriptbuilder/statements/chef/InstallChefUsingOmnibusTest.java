@@ -51,4 +51,18 @@ public class InstallChefUsingOmnibusTest {
             Resources.getResource("test_install_chef_omnibus_scriptbuilder." + ShellToken.SH.to(OsFamily.UNIX)),
             Charsets.UTF_8));
    }
+
+   public void installChefWithVersionUsingOmnibusInUnix() throws IOException {
+      assertEquals(new InstallChefUsingOmnibus("11.16.4").render(OsFamily.UNIX), "setupPublicCurl || return 1\n"
+            + "(mkdir -p /tmp && cd /tmp && [ ! -f install-chef.sh ] && "
+            + "curl -q -s -S -L --connect-timeout 10 --max-time 600 --retry 20 -C - -X GET  https://www.opscode.com/chef/install.sh >install-chef.sh)\n"
+            + "sh /tmp/install-chef.sh -v 11.16.4\n");
+   }
+
+   public void installChefWithVersionUsingOmnibusInUnixInScriptBuilder() throws IOException {
+      assertEquals(InitScript.builder().name("install_chef_omnibus").run(new InstallChefUsingOmnibus("11.16.4")).build()
+            .render(OsFamily.UNIX), Resources.toString(
+            Resources.getResource("test_install_chef_version_omnibus_scriptbuilder." + ShellToken.SH.to(OsFamily.UNIX)),
+            Charsets.UTF_8));
+   }
 }

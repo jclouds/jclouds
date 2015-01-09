@@ -17,7 +17,9 @@
 package org.jclouds.scriptbuilder.statements.chef;
 
 import static org.jclouds.scriptbuilder.domain.Statements.call;
+import static org.jclouds.scriptbuilder.domain.Statements.exec;
 import static org.jclouds.scriptbuilder.domain.Statements.pipeHttpResponseToBash;
+import static org.jclouds.scriptbuilder.domain.Statements.saveHttpResponseTo;
 
 import java.net.URI;
 
@@ -37,7 +39,7 @@ import com.google.common.collect.ImmutableMultimap;
  * 
  * 
  * @see InstallChefGems
- * @see InstallRuby
+ * @see org.jclouds.scriptbuilder.statements.ruby.InstallRuby
  */
 public class InstallChefUsingOmnibus extends StatementList {
 
@@ -49,4 +51,8 @@ public class InstallChefUsingOmnibus extends StatementList {
             ImmutableMultimap.<String, String> of()));
    }
 
+   public InstallChefUsingOmnibus(String chefVersion) {
+      super(call("setupPublicCurl"), saveHttpResponseTo(URI.create(OMNIBUS_INSTALLER), "/tmp", "install-chef.sh"),
+            exec("sh /tmp/install-chef.sh -v " + chefVersion));
+   }
 }
