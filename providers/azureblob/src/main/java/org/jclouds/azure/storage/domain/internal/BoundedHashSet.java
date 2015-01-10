@@ -17,13 +17,13 @@
 package org.jclouds.azure.storage.domain.internal;
 
 import java.net.URI;
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 
 import org.jclouds.azure.storage.domain.BoundedSet;
 
 import com.google.common.collect.Iterables;
 
-public class BoundedHashSet<T> extends HashSet<T> implements BoundedSet<T> {
+public class BoundedHashSet<T> extends LinkedHashSet<T> implements BoundedSet<T> {
 
    protected final URI url;
    protected final String prefix;
