@@ -159,7 +159,12 @@ public class RegionScopedSwiftBlobStore implements BlobStore {
          containerCache.put(container, Optional.of(objects.getContainer()));
          List<? extends StorageMetadata> list = transform(objects, toBlobMetadata(container));
          int limit = Optional.fromNullable(options.getMaxResults()).or(10000);
-         String marker = list.size() == limit ? list.get(limit - 1).getName() : null;
+         String marker = null;
+         if (list.isEmpty()) {
+            marker = options.getMarker();
+         } else if (list.size() == limit) {
+            marker = list.get(limit - 1).getName();
+         }
          // TODO: we should probably deprecate this option
          if (options.isDetailed()) {
             list = transform(list, new Function<StorageMetadata, StorageMetadata>() {
