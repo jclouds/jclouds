@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<S:Envelope xmlns:S="http://schemas.xmlsoap.org/soap/envelope/">
+    <S:Body>
+        <S:Fault xmlns:ns4="http://www.w3.org/2003/05/soap-envelope">
+            <faultcode>S:Server</faultcode>
+            <faultstring>RAM of requested server too small, 256 Mb is minimum</faultstring>
+            <detail>
+                <ns2:ProfitbricksServiceFault xmlns:ns2="http://ws.api.profitbricks.com/">
+                    <faultCode>BAD_REQUEST</faultCode>
+                    <httpCode>400</httpCode>
+                    <message>RAM of requested server too small, 256 Mb is minimum</message>
+                    <requestId>1045</requestId>
+                </ns2:ProfitbricksServiceFault>
+            </detail>
+        </S:Fault>
+    </S:Body>
+</S:Envelope>
