@@ -58,6 +58,7 @@ import org.jclouds.util.Closeables2;
 import org.jclouds.util.Strings2;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
 import com.google.common.collect.Sets;
@@ -461,7 +462,7 @@ public class FilesystemBlobStoreTest {
         putBlobAndCheckIt(TestUtils.createRandomBlobKey("putBlob-", ".jpg"));
     }
 
-    @Test
+    @Test(dataProvider = "ignoreOnMacOSX")
     public void testPutDirectoryBlobs() {
         blobStore.createContainerInLocation(null, CONTAINER_NAME);
 
@@ -478,7 +479,7 @@ public class FilesystemBlobStoreTest {
         assertTrue(blobStore.blobExists(CONTAINER_NAME, childKey));
     }
 
-    @Test
+    @Test(dataProvider = "ignoreOnMacOSX")
     public void testGetDirectoryBlob() throws IOException {
         blobStore.createContainerInLocation(null, CONTAINER_NAME);
 
@@ -494,7 +495,7 @@ public class FilesystemBlobStoreTest {
                 blobKey.substring(0, blobKey.length() - 1)));
     }
 
-
+    @Test(dataProvider = "ignoreOnMacOSX")
     public void testListDirectoryBlobs() {
         blobStore.createContainerInLocation(null, CONTAINER_NAME);
         checkForContainerContent(CONTAINER_NAME, null);
@@ -869,4 +870,9 @@ public class FilesystemBlobStoreTest {
         TestUtils.fileExists(TARGET_CONTAINER_NAME + File.separator + blobKey, true);
     }
 
+    @DataProvider
+    public Object[][] ignoreOnMacOSX() {
+        return org.jclouds.utils.TestUtils.isMacOSX() ? TestUtils.NO_INVOCATIONS
+                : TestUtils.SINGLE_NO_ARG_INVOCATION;
+    }
 }
