@@ -30,11 +30,6 @@ public class AtmosContainerIntegrationLiveTest extends BaseContainerIntegrationT
       provider = "atmos";
    }
 
-   @Override
-   public void testListContainerMarker() throws InterruptedException {
-      // Not currently working https://community.emc.com/thread/100545
-   }
-   
    protected void checkMD5(BlobMetadata metadata) throws IOException {
       // atmos doesn't support MD5
       assertEquals(metadata.getContentMetadata().getContentMD5(), null);
