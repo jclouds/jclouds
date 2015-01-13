@@ -29,10 +29,6 @@ public class AtmosContainerIntegrationLiveTest extends BaseContainerIntegrationT
    public AtmosContainerIntegrationLiveTest() {
       provider = "atmos";
    }
-   @Override
-   public void testListContainerMaxResults() throws InterruptedException {
-      // Not currently working
-   }
 
    @Override
    public void testListContainerMarker() throws InterruptedException {

@@ -41,6 +41,7 @@ import org.jclouds.blobstore.domain.Blob;
 import org.jclouds.blobstore.domain.BlobMetadata;
 import org.jclouds.blobstore.domain.PageSet;
 import org.jclouds.blobstore.domain.StorageMetadata;
+import org.jclouds.blobstore.options.ListContainerOptions;
 import org.testng.annotations.Test;
 
 import com.google.common.collect.ImmutableMap;
@@ -296,9 +297,20 @@ public class BaseContainerIntegrationTest extends BaseBlobStoreIntegrationTest {
       try {
          addAlphabetUnderRoot(containerName);
 
-         PageSet<? extends StorageMetadata> container = view.getBlobStore().list(containerName, maxResults(5));
-         assertEquals(container.size(), 5);
-         assert container.getNextMarker() != null;
+         PageSet<? extends StorageMetadata> container;
+         ListContainerOptions options = maxResults(10);
+
+         container = view.getBlobStore().list(containerName, options);
+         assertThat(container).hasSize(10);
+         assertThat(container.getNextMarker()).isNotNull();
+
+         container = view.getBlobStore().list(containerName, options.afterMarker(container.getNextMarker()));
+         assertThat(container).hasSize(10);
+         assertThat(container.getNextMarker()).isNotNull();
+
+         container = view.getBlobStore().list(containerName, options.afterMarker(container.getNextMarker()));
+         assertThat(container).hasSize(6);
+         assertThat(container.getNextMarker()).isNull();
       } finally {
          returnContainer(containerName);
       }
