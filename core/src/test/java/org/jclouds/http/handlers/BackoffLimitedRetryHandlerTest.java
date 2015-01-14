@@ -81,6 +81,42 @@ public class BackoffLimitedRetryHandlerTest {
    }
 
    @Test
+   void testExponentialBackoffDelaySmallInterval5() throws InterruptedException {
+      long period = 5;
+      long acceptableDelay = period - 1;
+
+      long startTime = System.nanoTime();
+      handler.imposeBackoffExponentialDelay(period, 2, 1, 5, "TEST FAILURE: 1");
+      long elapsedTime = (System.nanoTime() - startTime) / 1000000;
+      assert elapsedTime >= period - 1 : elapsedTime;
+      assertTrue(elapsedTime < period + acceptableDelay);
+   }
+
+   @Test
+   void testExponentialBackoffDelaySmallInterval1() throws InterruptedException {
+      long period = 1;
+      long acceptableDelay = 5;
+
+      long startTime = System.nanoTime();
+      handler.imposeBackoffExponentialDelay(period, 2, 1, 5, "TEST FAILURE: 1");
+      long elapsedTime = (System.nanoTime() - startTime) / 1000000;
+      assert elapsedTime >= period - 1 : elapsedTime;
+      assertTrue(elapsedTime < period + acceptableDelay);
+   }
+
+   @Test
+   void testExponentialBackoffDelaySmallInterval0() throws InterruptedException {
+      long period = 0;
+      long acceptableDelay = 5;
+
+      long startTime = System.nanoTime();
+      handler.imposeBackoffExponentialDelay(period, 2, 1, 5, "TEST FAILURE: 1");
+      long elapsedTime = (System.nanoTime() - startTime) / 1000000;
+      assert elapsedTime >= period - 1 : elapsedTime;
+      assertTrue(elapsedTime < period + acceptableDelay);
+   }
+
+   @Test
    void testClosesInputStream() throws InterruptedException, IOException, SecurityException, NoSuchMethodException {
       HttpCommand command = createCommand();
 
@@ -126,7 +162,7 @@ public class BackoffLimitedRetryHandlerTest {
    private final Function<Invocation, HttpRequest> processor = ContextBuilder
          .newBuilder(AnonymousProviderMetadata.forApiOnEndpoint(IntegrationTestClient.class, "http://localhost"))
          .buildInjector().getInstance(RestAnnotationProcessor.class);
-   
+
 
    private HttpCommand createCommand() throws SecurityException, NoSuchMethodException {
       Invokable<IntegrationTestClient, String> method = method(IntegrationTestClient.class, "download", String.class);
