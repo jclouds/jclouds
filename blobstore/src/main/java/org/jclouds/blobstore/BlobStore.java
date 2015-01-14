@@ -230,6 +230,7 @@ public interface BlobStore {
     * @throws ContainerNotFoundException
     *            if the container doesn't exist
     */
+   @Nullable
    BlobMetadata blobMetadata(String container, String name);
 
    /**
@@ -243,6 +244,7 @@ public interface BlobStore {
     * @throws ContainerNotFoundException
     *            if the container doesn't exist
     */
+   @Nullable
    Blob getBlob(String container, String name);
 
    /**
@@ -258,6 +260,7 @@ public interface BlobStore {
     * @throws ContainerNotFoundException
     *            if the container doesn't exist
     */
+   @Nullable
    Blob getBlob(String container, String name, GetOptions options);
 
    /**
