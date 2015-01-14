@@ -31,7 +31,6 @@ import javax.ws.rs.Produces;
 
 import org.jclouds.Fallbacks.FalseOnNotFoundOr404;
 import org.jclouds.Fallbacks.NullOnNotFoundOr404;
-import org.jclouds.Fallbacks.TrueOnNotFoundOr404;
 import org.jclouds.googlecloudstorage.binders.MultipartUploadBinder;
 import org.jclouds.googlecloudstorage.binders.UploadBinder;
 import org.jclouds.googlecloudstorage.domain.GoogleCloudStorageObject;
@@ -199,7 +198,7 @@ public interface ObjectApi {
    @Named("Object:delete")
    @DELETE
    @Path("storage/v1/b/{bucket}/o/{object}")
-   @Fallback(TrueOnNotFoundOr404.class)
+   @Fallback(FalseOnNotFoundOr404.class)
    boolean deleteObject(@PathParam("bucket") String bucketName, @PathParam("object") String objectName);
 
    /**
@@ -216,7 +215,7 @@ public interface ObjectApi {
    @Named("Object:delete")
    @DELETE
    @Path("storage/v1/b/{bucket}/o/{object}")
-   @Fallback(TrueOnNotFoundOr404.class)
+   @Fallback(FalseOnNotFoundOr404.class)
    boolean deleteObject(@PathParam("bucket") String bucketName, @PathParam("object") String objectName,
             DeleteObjectOptions options);
 

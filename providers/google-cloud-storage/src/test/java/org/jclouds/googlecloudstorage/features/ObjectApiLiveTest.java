@@ -20,7 +20,9 @@ import static com.google.common.io.BaseEncoding.base64;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.entry;
 import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertNotNull;
+import static org.testng.Assert.assertTrue;
 
 import java.io.IOException;
 import java.util.List;
@@ -73,6 +75,7 @@ public class ObjectApiLiveTest extends BaseGoogleCloudStorageApiLiveTest {
    private static final String COPIED_OBJECT_NAME = "copyofObjectOperation.txt";
    private static final String COMPOSED_OBJECT = "ComposedObject1.txt";
    private static final String COMPOSED_OBJECT2 = "ComposedObject2.json";
+   private static final String NONEXISTENT_OBJECT_NAME = "noSuchObject.txt";
 
    private PayloadEnclosing testPayload;
    private Long RANDOM_LONG = 100L;
@@ -284,7 +287,6 @@ public class ObjectApiLiveTest extends BaseGoogleCloudStorageApiLiveTest {
 
    @Test(groups = "live", dependsOnMethods = "testComposeObjectWithOptions")
    public void testUpdateObject() {
-
       ObjectAccessControls oacl = ObjectAccessControls.builder().bucket(BUCKET_NAME).entity("allUsers")
                .role(ObjectRole.OWNER).build();
 
@@ -403,13 +405,14 @@ public class ObjectApiLiveTest extends BaseGoogleCloudStorageApiLiveTest {
 
    @Test(groups = "live", dependsOnMethods = "testMultipartJpegUpload")
    public void testDeleteObject() {
-      api().deleteObject(BUCKET_NAME2, UPLOAD_OBJECT_NAME);
-      api().deleteObject(BUCKET_NAME2, COMPOSED_OBJECT2);
-      api().deleteObject(BUCKET_NAME2, COMPOSED_OBJECT);
-      api().deleteObject(BUCKET_NAME2, COPIED_OBJECT_NAME);
-      api().deleteObject(BUCKET_NAME, UPLOAD_OBJECT_NAME);
-      api().deleteObject(BUCKET_NAME, UPLOAD_OBJECT_NAME2);
-      api().deleteObject(BUCKET_NAME, MULTIPART_UPLOAD_OBJECT);
+      assertTrue(api().deleteObject(BUCKET_NAME2, UPLOAD_OBJECT_NAME));
+      assertTrue(api().deleteObject(BUCKET_NAME2, COMPOSED_OBJECT2));
+      assertTrue(api().deleteObject(BUCKET_NAME2, COMPOSED_OBJECT));
+      assertTrue(api().deleteObject(BUCKET_NAME2, COPIED_OBJECT_NAME));
+      assertFalse(api().deleteObject(BUCKET_NAME, UPLOAD_OBJECT_NAME));
+      assertTrue(api().deleteObject(BUCKET_NAME, UPLOAD_OBJECT_NAME2));
+      assertTrue(api().deleteObject(BUCKET_NAME, MULTIPART_UPLOAD_OBJECT));
+      assertFalse(api().deleteObject(BUCKET_NAME, NONEXISTENT_OBJECT_NAME));
    }
 
    @Test(groups = "live", dependsOnMethods = "testPatchObjectsWithOptions")

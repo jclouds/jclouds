@@ -31,7 +31,6 @@ import javax.ws.rs.QueryParam;
 
 import org.jclouds.Fallbacks.FalseOnNotFoundOr404;
 import org.jclouds.Fallbacks.NullOnNotFoundOr404;
-import org.jclouds.Fallbacks.TrueOnNotFoundOr404;
 import org.jclouds.blobstore.BlobStoreFallbacks.NullOnKeyAlreadyExists;
 import org.jclouds.googlecloud.domain.ListPage;
 import org.jclouds.googlecloudstorage.GoogleCloudStorageFallbacks.NullOnBucketAlreadyExists;
@@ -155,7 +154,7 @@ public interface BucketApi {
    @Named("Bucket:delete")
    @DELETE
    @Path("/b/{bucket}")
-   @Fallback(TrueOnNotFoundOr404.class)
+   @Fallback(FalseOnNotFoundOr404.class)
    boolean deleteBucket(@PathParam("bucket") String bucketName);
 
    /**
@@ -169,7 +168,7 @@ public interface BucketApi {
    @Named("Bucket:delete")
    @DELETE
    @Path("/b/{bucket}")
-   @Fallback(TrueOnNotFoundOr404.class)
+   @Fallback(FalseOnNotFoundOr404.class)
    boolean deleteBucket(@PathParam("bucket") String bucketName, DeleteBucketOptions options);
 
    /**

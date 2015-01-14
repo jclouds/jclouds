@@ -17,6 +17,7 @@
 package org.jclouds.googlecloudstorage.features;
 
 import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertNull;
 import static org.testng.Assert.assertSame;
@@ -204,7 +205,7 @@ public class BucketApiLiveTest extends BaseGoogleCloudStorageApiLiveTest {
 
    @Test(groups = "live", dependsOnMethods = { "testDeleteBucket" })
    public void testDeleteNotExistingBucket() {
-      assertTrue(api().deleteBucket(BUCKET_NAME));
+      assertFalse(api().deleteBucket(BUCKET_NAME));
    }
 
    @Test(groups = "live", dependsOnMethods = { "testGetBucketWithOptions" })
