@@ -57,7 +57,7 @@ public class InfoParseTest extends BaseDockerParseTest<Info> {
               0, // NEventsListener
               10, // NFd
               11, // NGoroutines
-              "Boot2Docker 1.3.0 (TCL 5.4); master : a083df4 - Thu Oct 16 17:05:03 UTC 2014", // OperatingSystem
+              "Boot2Docker 1.4.1 (TCL 5.4); master : 86f7ec8 - Tue Dec 16 23:11:29 UTC 2014", // OperatingSystem
               1, // SwapLimit
               "/mnt/sda1/var/lib/docker", // DockerRootDir
               null, // Labels
