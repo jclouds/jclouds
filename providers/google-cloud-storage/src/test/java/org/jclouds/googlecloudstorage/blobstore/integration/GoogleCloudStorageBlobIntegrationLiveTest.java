@@ -59,6 +59,11 @@ public class GoogleCloudStorageBlobIntegrationLiveTest extends BaseBlobIntegrati
 
    private long PART_SIZE = MultipartUpload.MIN_PART_SIZE;
 
+   @Override
+   protected long getMinimumMultipartBlobSize() {
+      return PART_SIZE + 1;
+   }
+
    public GoogleCloudStorageBlobIntegrationLiveTest() throws IOException {
       provider = "google-cloud-storage";
    }
