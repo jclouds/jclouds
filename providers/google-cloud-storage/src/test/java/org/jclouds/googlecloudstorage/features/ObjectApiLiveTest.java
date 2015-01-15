@@ -59,7 +59,6 @@ import org.testng.annotations.Test;
 
 import com.beust.jcommander.internal.Lists;
 import com.google.common.collect.ImmutableMap;
-import com.google.common.hash.HashCode;
 import com.google.common.hash.Hashing;
 import com.google.common.io.ByteSource;
 import com.google.common.primitives.Bytes;
@@ -396,9 +395,9 @@ public class ObjectApiLiveTest extends BaseGoogleCloudStorageApiLiveTest {
    }
 
    private void checkHashCodes(GoogleCloudStorageObject gcsObject) {
-      assertEquals(HashCode.fromBytes(base64().decode(gcsObject.md5Hash())), md5Hash);
+      assertEquals(gcsObject.md5Hash(), md5Hash);
       if (crc32c != null) {
-         assertEquals(HashCode.fromBytes(reverse(base64().decode(gcsObject.crc32c()))), crc32c);
+         assertEquals(gcsObject.crc32c(), crc32c);
       }
    }
 

@@ -96,7 +96,7 @@ public class ObjectTemplate {
    }
 
    public ObjectTemplate md5Hash(String md5Hash) {
-      this.md5Hash = crc32c;
+      this.md5Hash = md5Hash;
       return this;
    }
 
