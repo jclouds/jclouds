@@ -54,7 +54,8 @@ public class ObjectListToStorageMetadata
                      if (input.getContentMetadata().getContentType().equals("application/directory")) {
                         return new StorageMetadataImpl(StorageType.RELATIVE_PATH, input.getProviderId(), input
                                  .getName(), input.getLocation(), input.getUri(), input.getETag(), input
-                                 .getCreationDate(), input.getLastModified(), userMetaData);
+                                 .getCreationDate(), input.getLastModified(), userMetaData,
+                                 input.getSize());
                      }
                      return input;
                   }

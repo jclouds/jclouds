@@ -63,6 +63,7 @@ public class ObjectToBlobMetadata implements Function<GoogleCloudStorageObject, 
       } else {
          to.setType(StorageType.BLOB);
       }
+      to.setSize(from.size());
       return to;
    }
 
