@@ -99,4 +99,9 @@ public class GoogleCloudStorageContainerIntegrationLiveTest extends BaseContaine
       // GoogleCloudStorage does not support directories, rather it supports prefixes which look like directories.
       throw new SkipException("directories are not supported in GoogleCloudStorage");
    }
+
+   @Override
+   public void testListMarkerAfterLastKey() throws Exception {
+      throw new SkipException("cannot specify arbitrary markers");
+   }
 }
