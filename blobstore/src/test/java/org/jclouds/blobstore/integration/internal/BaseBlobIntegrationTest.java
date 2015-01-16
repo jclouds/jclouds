@@ -601,7 +601,7 @@ public class BaseBlobIntegrationTest extends BaseBlobStoreIntegrationTest {
       checkContentLanguage(blob, "en");
    }
 
-   private void addContentMetadata(PayloadBlobBuilder blobBuilder) {
+   protected void addContentMetadata(PayloadBlobBuilder blobBuilder) {
       blobBuilder.contentType("text/csv");
       blobBuilder.contentDisposition("attachment; filename=photo.jpg");
       blobBuilder.contentEncoding("gzip");
