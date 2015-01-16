@@ -230,6 +230,7 @@ public interface ObjectApi {
    @GET
    @Consumes(APPLICATION_JSON)
    @Path("storage/v1/b/{bucket}/o")
+   @Fallback(NullOnNotFoundOr404.class)
    ListPageWithPrefixes<GoogleCloudStorageObject> listObjects(@PathParam("bucket") String bucketName);
 
    /**
@@ -245,6 +246,7 @@ public interface ObjectApi {
    @GET
    @Consumes(APPLICATION_JSON)
    @Path("storage/v1/b/{bucket}/o")
+   @Fallback(NullOnNotFoundOr404.class)
    ListPageWithPrefixes<GoogleCloudStorageObject> listObjects(@PathParam("bucket") String bucketName, ListObjectOptions options);
 
    /**
