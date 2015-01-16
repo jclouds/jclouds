@@ -582,9 +582,6 @@ public class BaseBlobIntegrationTest extends BaseBlobStoreIntegrationTest {
          validateMetadata(blob.getMetadata(), container, blob.getMetadata().getName());
          checkContentMetadata(blob);
          assertThat(blob.getMetadata().getUserMetadata()).isEqualTo(userMetadata);
-
-         PageSet<? extends StorageMetadata> set = blobStore.list(container);
-         assertThat(set).hasSize(1);
       } finally {
          returnContainer(container);
       }
