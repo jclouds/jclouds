@@ -82,7 +82,7 @@ public final class SequentialMultipartUploadStrategy extends MultipartUploadStra
                      .contentLength(partSize).contentType(blob.getMetadata().getContentMetadata().getContentType())
                      .build();
             GoogleCloudStorageObject object = api.getObjectApi().multipartUpload(container,
-                     blob2ObjectTemplate.apply(blobPart.getMetadata()), blobPart.getPayload());
+                     blob2ObjectTemplate.apply(blobPart.getMetadata()), part);
             sourceList.add(object);
          }
          ComposeObjectTemplate template = ComposeObjectTemplate.create(sourceList, destination);
