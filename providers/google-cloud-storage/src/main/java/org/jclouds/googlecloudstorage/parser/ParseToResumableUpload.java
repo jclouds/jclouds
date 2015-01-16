@@ -49,11 +49,12 @@ public class ParseToResumableUpload implements Function<HttpResponse, ResumableU
          }
       }
 
-      return ResumableUpload.create(response.getStatusCode(), contentLength, uploadId, upperLimit, lowerLimit);
+      return ResumableUpload.create(response.getStatusCode(), uploadId, contentLength, upperLimit, lowerLimit);
    }
 
    // Return the Id of the Upload
    private String getUploadId(String sessionUri) {
+      // TODO: better way to parse query parameters?
       return Splitter.on(Pattern.compile("\\&")).trimResults().omitEmptyStrings().withKeyValueSeparator("=")
             .split(sessionUri).get("upload_id");
    }
