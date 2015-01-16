@@ -61,6 +61,7 @@ public class ToBlobMetadata implements Function<SwiftObject, MutableBlobMetadata
       } else {
          to.setType(StorageType.BLOB);
       }
+      to.setSize(from.getPayload().getContentMetadata().getContentLength());
       return to;
    }
 
