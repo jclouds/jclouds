@@ -234,21 +234,6 @@ public final class LocalBlobStore implements BlobStore {
 
       String marker = null;
       if (options != null) {
-         if (options.getMarker() != null) {
-            final String finalMarker = options.getMarker();
-            Optional<StorageMetadata> lastMarkerMetadata = tryFind(contents, new Predicate<StorageMetadata>() {
-               public boolean apply(StorageMetadata metadata) {
-                  return metadata.getName().compareTo(finalMarker) > 0;
-               }
-            });
-            if (lastMarkerMetadata.isPresent()) {
-               contents = contents.tailSet(lastMarkerMetadata.get());
-            } else {
-               // marker is after last key or container is empty
-               contents.clear();
-            }
-         }
-
          final String prefix = options.getDir();
          if (prefix != null && !prefix.isEmpty()) {
             final String dirPrefix = prefix.endsWith(File.separator) ?
@@ -259,16 +244,6 @@ public final class LocalBlobStore implements BlobStore {
                   return o != null && o.getName().startsWith(dirPrefix) && !o.getName().equals(dirPrefix);
                }
             }));
-         }
-
-         int maxResults = options.getMaxResults() != null ? options.getMaxResults() : 1000;
-         if (!contents.isEmpty()) {
-            StorageMetadata lastElement = contents.last();
-            contents = newTreeSet(Iterables.limit(contents, maxResults));
-            if (maxResults != 0 && !contents.contains(lastElement)) {
-               // Partial listing
-               marker = contents.last().getName();
-            }
          }
 
          if (!options.isRecursive()) {
@@ -282,8 +257,55 @@ public final class LocalBlobStore implements BlobStore {
             for (String o : commonPrefixes) {
                MutableStorageMetadata md = new MutableStorageMetadataImpl();
                md.setType(StorageType.RELATIVE_PATH);
+               if (prefix != null) {
+                  if (!prefix.endsWith(delimiter)) {
+                     o = prefix + delimiter + o;
+                  } else {
+                     o = prefix + o;
+                  }
+               }
                md.setName(o);
                contents.add(md);
+            }
+         }
+
+         if (options.getMarker() != null) {
+            final String finalMarker = options.getMarker();
+            String delimiter = storageStrategy.getSeparator();
+            Optional<StorageMetadata> lastMarkerMetadata;
+            if (finalMarker.endsWith(delimiter)) {
+               lastMarkerMetadata = tryFind(contents, new Predicate<StorageMetadata>() {
+                  public boolean apply(StorageMetadata metadata) {
+                     int length = finalMarker.length() - 1;
+                     return metadata.getName().substring(0, length).compareTo(finalMarker.substring(0, length)) > 0;
+                  }
+               });
+            } else {
+               lastMarkerMetadata = tryFind(contents, new Predicate<StorageMetadata>() {
+                  public boolean apply(StorageMetadata metadata) {
+                     return metadata.getName().compareTo(finalMarker) > 0;
+                  }
+               });
+            }
+            if (lastMarkerMetadata.isPresent()) {
+               contents = contents.tailSet(lastMarkerMetadata.get());
+            } else {
+               // marker is after last key or container is empty
+               contents.clear();
+            }
+         }
+
+         int maxResults = options.getMaxResults() != null ? options.getMaxResults() : 1000;
+         if (!contents.isEmpty()) {
+            StorageMetadata lastElement = contents.last();
+            contents = newTreeSet(Iterables.limit(contents, maxResults));
+            if (maxResults != 0 && !contents.contains(lastElement)) {
+               // Partial listing
+               lastElement = contents.last();
+               marker = lastElement.getName();
+               if (lastElement.getType() == StorageType.RELATIVE_PATH) {
+                  marker += "/";
+               }
             }
          }
 
