@@ -61,6 +61,11 @@
             <artifactId>auto-value</artifactId>
             <scope>provided</scope>
         </dependency>
+        <dependency>
+            <groupId>com.google.auto.service</groupId>
+            <artifactId>auto-service</artifactId>
+            <scope>provided</scope>
+        </dependency>
         <!-- Test dependencies -->
         <dependency>
             <groupId>org.apache.jclouds</groupId>
