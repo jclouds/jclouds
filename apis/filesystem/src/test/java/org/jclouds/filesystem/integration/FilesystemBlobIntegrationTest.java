@@ -17,6 +17,7 @@
 package org.jclouds.filesystem.integration;
 
 import java.io.IOException;
+import java.util.Map;
 import java.util.Properties;
 
 import org.jclouds.blobstore.domain.Blob;
@@ -75,4 +76,14 @@ public class FilesystemBlobIntegrationTest extends BaseBlobIntegrationTest {
    public void testCreateBlobWithExpiry() throws InterruptedException {
       super.testCreateBlobWithExpiry();
    }
+
+   /* Java on OS X does not support extended attributes, which the filesystem backend
+    * uses to implement user metadata */
+   @Override
+   protected void checkUserMetadata(Map<String, String> userMetadata1, Map<String, String> userMetadata2) {
+      if (!org.jclouds.utils.TestUtils.isMacOSX()) {
+         super.checkUserMetadata(userMetadata1, userMetadata2);
+      }
+   }
+
 }
