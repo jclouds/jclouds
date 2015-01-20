@@ -17,7 +17,7 @@
 package org.jclouds.azureblob.blobstore.functions;
 
 import java.util.Map;
-import java.util.Set;
+import java.util.SortedSet;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -55,7 +55,8 @@ public class ListBlobsResponseToResourceList implements
    }
 
    public PageSet<? extends StorageMetadata> apply(ListBlobsResponse from) {
-      Set<StorageMetadata> contents = Sets.<StorageMetadata> newHashSet(Iterables.transform(from,
+      // use sorted set to order relative paths correctly
+      SortedSet<StorageMetadata> contents = Sets.<StorageMetadata> newTreeSet(Iterables.transform(from,
                object2blobMd));
 
       Map<String, StorageMetadata> nameToMd = Maps.uniqueIndex(contents, indexer);

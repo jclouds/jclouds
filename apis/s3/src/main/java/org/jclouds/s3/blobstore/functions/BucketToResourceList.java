@@ -17,7 +17,7 @@
 package org.jclouds.s3.blobstore.functions;
 
 import java.util.Map;
-import java.util.Set;
+import java.util.SortedSet;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -54,7 +54,8 @@ public class BucketToResourceList implements
    }
 
    public PageSet<? extends StorageMetadata> apply(ListBucketResponse from) {
-      Set<StorageMetadata> contents = Sets.<StorageMetadata> newHashSet(Iterables.transform(from,
+      // S3 lists keys in sorted order; use sorted set to order relative paths correctly
+      SortedSet<StorageMetadata> contents = Sets.<StorageMetadata> newTreeSet(Iterables.transform(from,
                object2blobMd));
 
       Map<String, StorageMetadata> nameToMd = Maps.uniqueIndex(contents, indexer);
