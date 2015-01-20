@@ -29,6 +29,7 @@ import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertTrue;
 
 import java.io.IOException;
+import java.util.Iterator;
 import java.util.Set;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeoutException;
@@ -311,6 +312,65 @@ public class BaseContainerIntegrationTest extends BaseBlobStoreIntegrationTest {
          container = view.getBlobStore().list(containerName, options.afterMarker(container.getNextMarker()));
          assertThat(container).hasSize(6);
          assertThat(container.getNextMarker()).isNull();
+      } finally {
+         returnContainer(containerName);
+      }
+   }
+
+   @Test(groups = { "integration", "live" })
+   public void testDelimiter() throws Exception {
+      String containerName = getContainerName();
+      try {
+         for (String blobName : new String[] { "asdf", "boo/bar", "boo/baz/xyzzy", "cquux/thud", "cquux/bla" }) {
+            Blob blob = view.getBlobStore().blobBuilder(blobName).payload(TEST_STRING).build();
+            addBlobToContainer(containerName, blob);
+         }
+
+         // test root directory without marker
+         PageSet<? extends StorageMetadata> pageSet = view.getBlobStore().list(containerName);
+         assertThat(pageSet).hasSize(3);
+         assertThat(pageSet.getNextMarker()).isNull();
+
+         // list root directory with marker
+         ListContainerOptions options = new ListContainerOptions().maxResults(1);
+         pageSet = view.getBlobStore().list(containerName, options);
+         assertThat(pageSet).hasSize(1);
+         assertThat(pageSet.iterator().next().getName()).isEqualTo("asdf");
+         assertThat(pageSet.getNextMarker()).isEqualTo("asdf");
+
+         options.afterMarker(pageSet.getNextMarker());
+         pageSet = view.getBlobStore().list(containerName, options);
+         assertThat(pageSet).hasSize(1);
+         assertThat(pageSet.iterator().next().getName()).isEqualTo("boo");
+         assertThat(pageSet.getNextMarker()).isEqualTo("boo/");
+
+         options.afterMarker(pageSet.getNextMarker());
+         pageSet = view.getBlobStore().list(containerName, options);
+         assertThat(pageSet).hasSize(1);
+         assertThat(pageSet.iterator().next().getName()).isEqualTo("cquux");
+         assertThat(pageSet.getNextMarker()).isNull();
+
+         // list child directory with marker
+         options = new ListContainerOptions().inDirectory("boo").maxResults(1);
+         pageSet = view.getBlobStore().list(containerName, options);
+         assertThat(pageSet).hasSize(1);
+         assertThat(pageSet.iterator().next().getName()).isEqualTo("boo/bar");
+         assertThat(pageSet.getNextMarker()).isEqualTo("boo/bar");
+
+         options.afterMarker(pageSet.getNextMarker());
+         pageSet = view.getBlobStore().list(containerName, options);
+         assertThat(pageSet).hasSize(1);
+         assertThat(pageSet.iterator().next().getName()).isEqualTo("boo/baz");
+         assertThat(pageSet.getNextMarker()).isNull();
+
+         // list child directory without marker
+         options = new ListContainerOptions().inDirectory("boo").maxResults(2);
+         pageSet = view.getBlobStore().list(containerName, options);
+         assertThat(pageSet).hasSize(2);
+         Iterator<? extends StorageMetadata> it = pageSet.iterator();
+         assertThat(it.next().getName()).isEqualTo("boo/bar");
+         assertThat(it.next().getName()).isEqualTo("boo/baz");
+         assertThat(pageSet.getNextMarker()).isNull();
       } finally {
          returnContainer(containerName);
       }
