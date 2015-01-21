@@ -39,8 +39,7 @@ import com.google.inject.Provides;
  * Provides access to the OpenStack Networking (Neutron) v2 API.
  * <p/>
  *
- * @deprecated Please use {@link org.jclouds.openstack.neutron.v2.NeutronApi} as this
- *             interface will be removed in jclouds 3.0.
+ * @deprecated Please use {@link org.jclouds.openstack.neutron.v2.NeutronApi} instead. To be removed in jclouds 2.0.
  */
 @Deprecated
 public interface NeutronApi extends Closeable {
@@ -84,7 +83,7 @@ public interface NeutronApi extends Closeable {
 
    /**
     * @return the Zone codes configured
-    * @deprecated Please use {@link #getConfiguredRegions()} as this method will be removed in jclouds 3.0.
+    * @deprecated Please use {@link #getConfiguredRegions()} instead. To be removed in jclouds 2.0.
     */
    @Deprecated
    @Provides
@@ -93,7 +92,7 @@ public interface NeutronApi extends Closeable {
 
    /**
     * Provides access to Extension features.
-    * @deprecated Please use {@link #getExtensionApi(String)} as this method will be removed in jclouds 3.0.
+    * @deprecated Please use {@link #getExtensionApi(String)} instead. To be removed in jclouds 2.0.
     */
    @Deprecated
    @Delegate
@@ -102,7 +101,7 @@ public interface NeutronApi extends Closeable {
 
    /**
     * Provides access to Network features.
-    * @deprecated Please use {@link #getNetworkApi(String)} as this method will be removed in jclouds 3.0.
+    * @deprecated Please use {@link #getNetworkApi(String)} instead. To be removed in jclouds 2.0.
     */
    @Deprecated
    @Delegate
@@ -110,7 +109,7 @@ public interface NeutronApi extends Closeable {
 
    /**
     * Provides access to Subnet features.
-    * @deprecated Please use {@link #getSubnetApi(String)} as this method will be removed in jclouds 3.0.
+    * @deprecated Please use {@link #getSubnetApi(String)} instead. To be removed in jclouds 2.0.
     */
    @Deprecated
    @Delegate
@@ -118,7 +117,7 @@ public interface NeutronApi extends Closeable {
 
    /**
     * Provides access to Port features.
-    * @deprecated Please use {@link #getPortApi(String)} as this method will be removed in jclouds 3.0.
+    * @deprecated Please use {@link #getPortApi(String)} instead. To be removed in jclouds 2.0.
     */
    @Deprecated
    @Delegate
@@ -126,7 +125,7 @@ public interface NeutronApi extends Closeable {
 
    /**
     * Provides access to Router features.
-    * @deprecated Please use {@link #getRouterApi(String)} as this method will be removed in jclouds 3.0.
+    * @deprecated Please use {@link #getRouterApi(String)} instead. To be removed in jclouds 2.0.
     */
    @Deprecated
    @Delegate

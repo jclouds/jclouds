@@ -38,6 +38,7 @@ import com.google.inject.Module;
 
 /**
  * Implementation of {@link org.jclouds.apis.ApiMetadata} for Neutron 2.0 API
+ * @deprecated To be removed in jclouds 2.0.
  */
 @Deprecated
 @AutoService(ApiMetadata.class)

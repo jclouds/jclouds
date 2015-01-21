@@ -59,7 +59,8 @@ import static org.jclouds.openstack.keystone.v2_0.KeystoneFallbacks.EmptyPaginat
  *
  * @see <a href=
  *      "http://docs.openstack.org/api/openstack-network/2.0/content/Networks.html">api doc</a>
- * @deprecated Use v2 instead of v2_0
+ * @deprecated Please use {@link org.jclouds.openstack.neutron.v2.features.NetworkApi} instead.
+ *             To be removed in jclouds 2.0.
  */
 @Deprecated
 @Path("/v2.0/networks")

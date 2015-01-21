@@ -56,8 +56,8 @@ import org.jclouds.rest.annotations.Transform;
  * A logical entity for forwarding packets across internal subnets and NATting them on external
  * networks through an appropriate external gateway.
  *
- * @deprecated Please use {@link org.jclouds.openstack.neutron.v2.extensions.RouterApi} as this
- *             interface will be removed in jclouds 3.0.
+ * @deprecated Please use {@link org.jclouds.openstack.neutron.v2.extensions.RouterApi} instead.
+ *             To be removed in jclouds 2.0.
  */
 @Deprecated
 @Path("/v2.0/routers")
