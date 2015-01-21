@@ -76,7 +76,7 @@ public class SwiftObject implements Comparable<SwiftObject> {
 
    /**
     * @return The ETag of the content of this object.
-    * @deprecated Please use {@link #getETag()} as this method will be removed in jclouds 1.8.
+    * @deprecated Please use {@link #getETag()} instead. To be removed in jclouds 2.0.
     */
    @Deprecated
    public String getEtag() {

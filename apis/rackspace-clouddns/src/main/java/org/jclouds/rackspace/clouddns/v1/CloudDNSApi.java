@@ -101,7 +101,7 @@ public interface CloudDNSApi extends Closeable {
 
    /**
     * Provides access to Record features.
-    * @deprecated Please use {@link #getRecordApi(int)} as this method will be removed in jclouds 3.0.
+    * @deprecated Please use {@link #getRecordApi(int)} instead. To be removed in jclouds 2.0.
     */
    @Deprecated
    @Delegate
@@ -110,7 +110,7 @@ public interface CloudDNSApi extends Closeable {
 
    /**
     * Provides access to Reverse DNS features.
-    * @deprecated Please use {@link #getReverseDNSApi(String)} as this method will be removed in jclouds 3.0.
+    * @deprecated Please use {@link #getReverseDNSApi(String)} instead. To be removed in jclouds 2.0.
     */
    @Deprecated
    @Delegate

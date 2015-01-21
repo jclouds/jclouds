@@ -149,8 +149,7 @@ public class KeystoneAuthenticationModule extends AbstractModule {
    }
 
    /**
-    * @deprecated All OpenStack APIs rely on regions in jclouds 2.0 and this module will be removed
-    *             in jclouds 3.0.
+    * @deprecated All OpenStack APIs rely on regions in jclouds 2.0. To be removed in jclouds 2.0.
     */
    @Deprecated
    public static class ZoneModule extends AbstractModule {

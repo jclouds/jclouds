@@ -139,7 +139,7 @@ public interface CloudLoadBalancersApi extends Closeable {
 
    /**
     * @return the Zone codes configured
-    * @deprecated Please use {@link #getConfiguredRegions()} as this method will be removed in jclouds 3.0.
+    * @deprecated Please use {@link #getConfiguredRegions()} instead. To be removed in jclouds 2.0.
     */
    @Deprecated
    @Provides
@@ -148,7 +148,7 @@ public interface CloudLoadBalancersApi extends Closeable {
 
    /**
     * Provides access to Load Balancer features.
-    * @deprecated Please use {@link #getLoadBalancerApi(String region)} as this method will be removed in jclouds 3.0.
+    * @deprecated Please use {@link #getLoadBalancerApi(String region)} instead. To be removed in jclouds 2.0.
     */
    @Deprecated
    @Delegate
@@ -157,8 +157,8 @@ public interface CloudLoadBalancersApi extends Closeable {
 
    /**
     * Provides access to Node features.
-    * @deprecated Please use {@link #getNodeApiForLoadBalancer(String region. int lbId)} as this method will be removed
-    *             in jclouds 3.0.
+    * @deprecated Please use {@link #getNodeApi(String, int)} instead.
+    *             To be removed in jclouds 2.0.
     */
    @Deprecated
    @Delegate
@@ -168,8 +168,7 @@ public interface CloudLoadBalancersApi extends Closeable {
 
    /**
     * Provides access to Access Rule features.
-    * @deprecated Please use {@link #getAccessRuleApi(String region, int lbId)} as this method will be
-    *             removed in jclouds 3.0.
+    * @deprecated Please use {@link #getAccessRuleApi(String region, int lbId)} instead. To be removed in jclouds 2.0.
     */
    @Deprecated
    @Delegate
@@ -179,8 +178,7 @@ public interface CloudLoadBalancersApi extends Closeable {
 
    /**
     * Provides access to Virtual IP features.
-    * @deprecated Please use {@link #getVirtualIPApi(String region, int lbId)} as this method will be
-    *             removed in jclouds 3.0.
+    * @deprecated Please use {@link #getVirtualIPApi(String region, int lbId)} instead. To be removed in jclouds 2.0.
     */
    @Deprecated
    @Delegate
@@ -190,8 +188,7 @@ public interface CloudLoadBalancersApi extends Closeable {
 
    /**
     * Provides access to Connection features.
-    * @deprecated Please use {@link #getConnectionApi(String region, int lbId)} as this method will be
-    *             removed in jclouds 3.0.
+    * @deprecated Please use {@link #getConnectionApi(String region, int lbId)} instead. To be removed in jclouds 2.0.
     */
    @Deprecated
    @Delegate
@@ -201,8 +198,8 @@ public interface CloudLoadBalancersApi extends Closeable {
 
    /**
     * Provides access to Health Monitor features.
-    * @deprecated Please use {@link #getHealthMonitorApi(String region, int lbId)} as this method will be
-    *             removed in jclouds 3.0.
+    * @deprecated Please use {@link #getHealthMonitorApi(String region, int lbId)} instead. 
+    *             To be removed in jclouds 2.0.
     */
    @Deprecated
    @Delegate
@@ -212,8 +209,8 @@ public interface CloudLoadBalancersApi extends Closeable {
 
    /**
     * Provides access to Session Persistence features.
-    * @deprecated Please use {@link #getSessionPersistenceApi(String region, int lbId)} as this method
-    *             will be removed in jclouds 3.0.
+    * @deprecated Please use {@link #getSessionPersistenceApi(String region, int lbId)} instead.
+    *             To be removed in jclouds 2.0.
     */
    @Deprecated
    @Delegate
@@ -223,8 +220,8 @@ public interface CloudLoadBalancersApi extends Closeable {
 
    /**
     * Provides access to Content Caching features.
-    * @deprecated Please use {@link #getContentCachingApi(String region, int lbId)} as this method
-    *             will be removed in jclouds 3.0.
+    * @deprecated Please use {@link #getContentCachingApi(String region, int lbId)} instead.
+    *             To be removed in jclouds 2.0.
     */
    @Deprecated
    @Delegate
@@ -234,8 +231,8 @@ public interface CloudLoadBalancersApi extends Closeable {
 
    /**
     * Provides access to SSL Termination features.
-    * @deprecated Please use {@link #getSSLTerminationApi(String region, int lbId)} as this method
-    *             will be removed in jclouds 3.0.
+    * @deprecated Please use {@link #getSSLTerminationApi(String region, int lbId)} instead.
+    *             To be removed in jclouds 2.0.
     */
    @Deprecated
    @Delegate
@@ -245,8 +242,7 @@ public interface CloudLoadBalancersApi extends Closeable {
 
    /**
     * Provides access to Error Page features.
-    * @deprecated Please use {@link #getErrorPageApi(String region, int lbId)} as this method
-    *             will be removed in jclouds 3.0.
+    * @deprecated Please use {@link #getErrorPageApi(String region, int lbId)} instead. To be removed in jclouds 2.0.
     */
    @Deprecated
    @Delegate
@@ -256,7 +252,7 @@ public interface CloudLoadBalancersApi extends Closeable {
 
    /**
     * Provides access to Report features.
-    * @deprecated Please use {@link #getReportApi(String region)} as this method will be removed in jclouds 3.0.
+    * @deprecated Please use {@link #getReportApi(String region)} instead. To be removed in jclouds 2.0.
     */
    @Deprecated
    @Delegate

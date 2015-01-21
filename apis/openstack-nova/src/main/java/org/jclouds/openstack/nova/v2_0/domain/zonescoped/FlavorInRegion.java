@@ -22,8 +22,8 @@ import org.jclouds.openstack.nova.v2_0.domain.Flavor;
 
 /**
  * @deprecated This package has been replaced with {@link org.jclouds.openstack.nova.v2_0.domain.regionscoped}.
- *             Please use {@link org.jclouds.openstack.nova.v2_0.domain.regionscoped.FlavorInRegion FlavorInRegion},
- *             as this class will be removed in jclouds 2.1.0.
+ *             Please use {@link org.jclouds.openstack.nova.v2_0.domain.regionscoped.FlavorInRegion FlavorInRegion}
+ *             instead. To be removed in jclouds 2.0.
  */
 @Deprecated
 public class FlavorInRegion extends RegionAndId {

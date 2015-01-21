@@ -45,7 +45,7 @@ public class PaginationOptions extends BaseHttpRequestOptions {
     *
     * @deprecated The {@code changes-since} query does not apply to all OpenStack APIs. Please refer to the OpenStack
     *             Nova {@code ListOptions.changesSince(Date)} and Glance {@code ListImageOptions.changesSince(Date)}.
-    *             This option will be removed in 2.1.
+    *             To be removed in jclouds 2.0.
     */
    @Deprecated
    public PaginationOptions changesSince(Date changesSince) {
@@ -90,7 +90,7 @@ public class PaginationOptions extends BaseHttpRequestOptions {
        * @see PaginationOptions#changesSince(Date)
        * @deprecated The {@code changes-since} query does not apply to all OpenStack APIs. Please refer to the OpenStack
        *             Nova {@code ListOptions.changesSince(Date)} and Glance {@code ListImageOptions.changesSince(Date)}.
-       *             This option will be removed in 2.1.
+       *             To be removed in jclouds 2.0.
        */
       @Deprecated
       public static PaginationOptions changesSince(Date changesSince) {

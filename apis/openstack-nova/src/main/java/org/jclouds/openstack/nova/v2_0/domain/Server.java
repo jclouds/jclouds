@@ -61,7 +61,7 @@ public class Server extends Resource {
       DELETED, UNKNOWN, ERROR,
 
       /**
-       * @deprecated please use {@code Status.SHUTOFF} instead
+       * @deprecated please use {@code Status.SHUTOFF} instead. To be removed in jclouds 2.0.
        */
       @Deprecated STOPPED,
 

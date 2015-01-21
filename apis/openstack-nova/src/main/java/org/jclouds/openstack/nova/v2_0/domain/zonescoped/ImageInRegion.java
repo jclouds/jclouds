@@ -22,8 +22,8 @@ import org.jclouds.openstack.nova.v2_0.domain.Image;
 
 /**
  * @deprecated This package has been replaced with {@link org.jclouds.openstack.nova.v2_0.domain.regionscoped}.
- *             Please use {@link org.jclouds.openstack.nova.v2_0.domain.regionscoped.ImageInRegion ImageInRegion},
- *             as this class will be removed in jclouds 2.1.0.
+ *             Please use {@link org.jclouds.openstack.nova.v2_0.domain.regionscoped.ImageInRegion ImageInRegion}
+ *             instead. To be removed in jclouds 2.0.
  */
 @Deprecated
 public class ImageInRegion extends RegionAndId {

@@ -30,8 +30,8 @@ import com.google.common.collect.Iterables;
  * Helpful when looking for resources by region and name
  *
  * @deprecated This package has been replaced with {@link org.jclouds.openstack.nova.v2_0.domain.regionscoped}.
- *             Please use {@link org.jclouds.openstack.nova.v2_0.domain.regionscoped.RegionAndName RegionAndName},
- *             as this class will be removed in jclouds 2.1.0.
+ *             Please use {@link org.jclouds.openstack.nova.v2_0.domain.regionscoped.RegionAndName RegionAndName}
+ *             instead. To be removed in jclouds 2.0.
  */
 @Deprecated
 public class RegionAndName {

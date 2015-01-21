@@ -81,8 +81,7 @@ public interface TroveApi extends Closeable {
     * Provides a set of all zones available.
     *
     * @return the Zone codes configured
-    * @deprecated Please use {@link #getConfiguredRegions()} as this method will be removed
-    *             in jclouds 3.0.
+    * @deprecated Please use {@link #getConfiguredRegions()} instead. To be removed in jclouds 2.0.
     */
    @Deprecated
    @Provides
@@ -91,8 +90,7 @@ public interface TroveApi extends Closeable {
 
    /**
     * Provides access to Flavor features.
-    * @deprecated Please use {@link #getFlavorApi(String region)} as this method will be removed
-    *             in jclouds 3.0.
+    * @deprecated Please use {@link #getFlavorApi(String region)} instead. To be removed in jclouds 2.0.
     */
    @Deprecated
    @Delegate
@@ -101,8 +99,7 @@ public interface TroveApi extends Closeable {
 
    /**
     * Provides access to Instance features.
-    * @deprecated Please use {@link #getInstanceApi(String region)} as this method will be removed
-    *             in jclouds 3.0.
+    * @deprecated Please use {@link #getInstanceApi(String region)} instead. To be removed in jclouds 2.0.
     */
    @Deprecated
    @Delegate
@@ -111,8 +108,8 @@ public interface TroveApi extends Closeable {
 
    /**
     * Provides access to User features.
-    * @deprecated Please use {@link #getUserApi(String region, String instanceId)} as this method will be
-    *             removed in jclouds 3.0.
+    * @deprecated Please use {@link #getUserApi(String region, String instanceId)} instead.
+    *             To be removed in jclouds 2.0.
     */
    @Deprecated
    @Delegate
@@ -122,8 +119,8 @@ public interface TroveApi extends Closeable {
 
    /**
     * Provides access to Database features.
-    * @deprecated Please use {@link #getDatabaseApi(String region, String instanceId)} as this method will
-    *             be removed in jclouds 3.0.
+    * @deprecated Please use {@link #getDatabaseApi(String region, String instanceId)} instead.
+    *             To be removed in jclouds 2.0.
     */
    @Deprecated
    @Delegate

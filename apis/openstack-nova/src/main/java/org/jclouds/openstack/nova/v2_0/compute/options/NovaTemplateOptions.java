@@ -180,7 +180,7 @@ public class NovaTemplateOptions extends TemplateOptions implements Cloneable {
    /**
     *
     * @see org.jclouds.openstack.nova.v2_0.options.CreateServerOptions#getSecurityGroupNames
-    * @deprecated Use @link {@link TemplateOptions#securityGroups(String...)} instead.
+    * @deprecated Use @link {@link TemplateOptions#securityGroups(String...)} instead. To be removed in jclouds 2.0.
     */
    @Deprecated
    public NovaTemplateOptions securityGroupNames(String... securityGroupNames) {
@@ -189,7 +189,7 @@ public class NovaTemplateOptions extends TemplateOptions implements Cloneable {
 
    /**
     * @see org.jclouds.openstack.nova.v2_0.options.CreateServerOptions#getSecurityGroupNames
-    * @deprecated Use {@link TemplateOptions#securityGroups(Iterable)} instead.
+    * @deprecated Use {@link TemplateOptions#securityGroups(Iterable)} instead. To be removed in jclouds 2.0.
     */
    @Deprecated
    public NovaTemplateOptions securityGroupNames(Iterable<String> securityGroupNames) {
@@ -256,7 +256,7 @@ public class NovaTemplateOptions extends TemplateOptions implements Cloneable {
     * to {@link #getInboundPorts()}
     *
     * @see org.jclouds.openstack.nova.v2_0.options.CreateServerOptions#getSecurityGroupNames
-    * @deprecated Use {@link TemplateOptions#getGroups()} instead.
+    * @deprecated Use {@link TemplateOptions#getGroups()} instead. To be removed in jclouds 2.0.
     */
    @Deprecated
    public Optional<Set<String>> getSecurityGroupNames() {

@@ -94,7 +94,7 @@ public class ListOptions extends PaginationOptions {
       /**
        *
        * @see PaginationOptions#limit(int)
-       * @deprecated Please use {@link #limit(int)} as this builder method will be removed in 2.0.
+       * @deprecated Please use {@link #limit(int)} instead. To be removed in jclouds 2.0.
        */
       @Deprecated
       public static ListOptions maxResults(int maxKeys) {
