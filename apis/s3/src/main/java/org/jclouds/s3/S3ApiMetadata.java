@@ -94,7 +94,7 @@ public class S3ApiMetadata extends BaseHttpApiMetadata {
          .name("Amazon Simple Storage Service (S3) API")
          .identityName("Access Key ID")
          .credentialName("Secret Access Key")
-         .defaultEndpoint("https://s3.amazonaws.com")
+         .defaultEndpoint("http://localhost")
          .documentation(URI.create("http://docs.amazonwebservices.com/AmazonS3/latest/API"))
          .version("2006-03-01")
          .defaultProperties(S3ApiMetadata.defaultProperties())

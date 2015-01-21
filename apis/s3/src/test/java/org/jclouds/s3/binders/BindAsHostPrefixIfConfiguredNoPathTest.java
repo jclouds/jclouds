@@ -40,7 +40,7 @@ public class BindAsHostPrefixIfConfiguredNoPathTest extends BaseS3ClientTest<S3C
 
       Invokable<?, ?> method = method(S3Client.class, "deleteObject", String.class, String.class);
       GeneratedHttpRequest request = processor.createRequest(method, ImmutableList.<Object> of("testbucket.example.com", "test.jpg"));
-      assertRequestLineEquals(request, "DELETE https://s3.amazonaws.com/testbucket.example.com/test.jpg HTTP/1.1");
+      assertRequestLineEquals(request, "DELETE http://localhost/testbucket.example.com/test.jpg HTTP/1.1");
    }
 
 

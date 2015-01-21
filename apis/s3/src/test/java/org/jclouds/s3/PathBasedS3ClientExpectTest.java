@@ -43,7 +43,7 @@ public class PathBasedS3ClientExpectTest extends BaseS3ClientExpectTest {
    public void testBucketExistsReturnsTrueOn200AndFalseOn404() {
       
       HttpRequest bucketFooExists = HttpRequest.builder().method("HEAD")
-                                               .endpoint("https://s3.amazonaws.com/foo")
+                                               .endpoint("http://localhost/foo")
                                                .addHeader("Date", CONSTANT_DATE)
                                                .addHeader("Authorization", "AWS identity:lLD0mzo2bZPIWhxlFDZoT09MKUQ=")
                                                .build();
@@ -60,7 +60,7 @@ public class PathBasedS3ClientExpectTest extends BaseS3ClientExpectTest {
    public void testPutBucketReturnsTrueOn200() {
       
       HttpRequest bucketFooExists = HttpRequest.builder().method("PUT")
-                                               .endpoint("https://s3.amazonaws.com/foo")
+                                               .endpoint("http://localhost/foo")
                                                .addHeader("Date", CONSTANT_DATE)
                                                .addHeader("Authorization", "AWS identity:GeP4OqEL/eM+gQt+4Vtcm02gebc=")
                                                .build();
@@ -75,7 +75,7 @@ public class PathBasedS3ClientExpectTest extends BaseS3ClientExpectTest {
    public void testPutObjectReturnsETagOn200() {
       
       HttpRequest bucketFooExists = HttpRequest.builder().method("PUT")
-                                               .endpoint("https://s3.amazonaws.com/bucket/object")
+                                               .endpoint("http://localhost/bucket/object")
                                                .addHeader("Expect", "100-continue")
                                                .addHeader("Date", CONSTANT_DATE)
                                                .addHeader("Authorization", "AWS identity:6gC0m7SYFDPwkUqY5EHV/6i9DfM=")

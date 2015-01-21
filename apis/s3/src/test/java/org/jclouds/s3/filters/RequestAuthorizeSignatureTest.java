@@ -144,7 +144,7 @@ public class RequestAuthorizeSignatureTest extends BaseS3ClientTest<S3Client> {
             method(S3Client.class, "getBucketLocation", String.class),
             ImmutableList.<Object> of(bucketName));
       URI uri = request.getEndpoint();
-      assertEquals(uri.getHost(), "s3.amazonaws.com");
+      assertEquals(uri.getHost(), "localhost");
       assertEquals(uri.getPath(), "/" + bucketName);
    }
 

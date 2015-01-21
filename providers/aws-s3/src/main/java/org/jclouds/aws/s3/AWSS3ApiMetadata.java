@@ -58,6 +58,7 @@ public class AWSS3ApiMetadata extends S3ApiMetadata {
          super(AWSS3Client.class);
          id("aws-s3")
          .name("Amazon-specific S3 API")
+         .defaultEndpoint("https://s3.amazonaws.com")
          .defaultProperties(AWSS3ApiMetadata.defaultProperties())
          .view(typeToken(AWSS3BlobStoreContext.class))
          .defaultModules(ImmutableSet.<Class<? extends Module>>of(AWSS3HttpApiModule.class, AWSS3BlobStoreContextModule.class));
