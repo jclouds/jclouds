@@ -67,6 +67,11 @@ public final class ServiceType {
     */
    public static final String ORCHESTRATION = "orchestration";
 
+   /**
+    * CDN Service (Poppy)
+    */
+   public static final String CDN = "cdn";
+
    private ServiceType() {
       throw new AssertionError("intentionally unimplemented");
    }
