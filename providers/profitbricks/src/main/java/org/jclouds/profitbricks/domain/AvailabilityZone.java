@@ -14,14 +14,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jclouds.profitbricks.compute.internal;
+package org.jclouds.profitbricks.domain;
 
-/**
- * An enumeration of ProfitBricks domain classes containing a property 'ProvisioningState'.
- *
- * @see ProvisioningStatusPollingPredicate
- */
-public enum ProvisioningStatusAware {
+public enum AvailabilityZone {
 
-   DATACENTER, SERVER;
+   AUTO, ZONE_1, ZONE_2, UNRECOGNIZED;
+
+   public String value() {
+      return name();
+   }
+
+   public static AvailabilityZone fromValue( String v ) {
+      try {
+         return valueOf( v );
+      } catch ( Exception ex ) {
+         return UNRECOGNIZED;
+      }
+   }
+
 }

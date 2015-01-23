@@ -19,7 +19,6 @@ package org.jclouds.profitbricks.http.parser.datacenter;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
 
-import javax.xml.parsers.ParserConfigurationException;
 
 import org.jclouds.http.functions.ParseSax;
 import org.jclouds.profitbricks.domain.DataCenter;
@@ -37,7 +36,7 @@ public class DataCenterInfoResponseHandlerTest extends BaseResponseHandlerTest<D
    }
 
    @Test
-   public void testParseResponseFromGetDataCenter() throws ParserConfigurationException {
+   public void testParseResponseFromGetDataCenter() {
       ParseSax<DataCenter> parser = createParser();
       DataCenter actual = parser.parse(payloadFromResource("/datacenter/datacenter.xml"));
       assertNotNull(actual, "Parsed content returned null");

@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<S:Envelope xmlns:S="http://schemas.xmlsoap.org/soap/envelope/">
+    <S:Body>
+        <ns2:getImageResponse xmlns:ns2="http://ws.api.profitbricks.com/">
+            <return>
+                <bootable>true</bootable>
+                <cpuHotPlug>true</cpuHotPlug>
+                <cpuHotUnPlug>false</cpuHotUnPlug>
+                <discVirtioHotPlug>true</discVirtioHotPlug>
+                <discVirtioHotUnPlug>true</discVirtioHotUnPlug>
+                <imageId>5ad99c9e-9166-11e4-9d74-52540066fee9</imageId>
+                <imageName>Ubuntu-14.04-LTS-server-2015-01-01</imageName>
+                <imageSize>2048</imageSize>
+                <imageType>HDD</imageType>
+                <location>us/las</location>
+                <nicHotPlug>true</nicHotPlug>
+                <nicHotUnPlug>true</nicHotUnPlug>
+                <osType>LINUX</osType>
+                <public>true</public>
+                <ramHotPlug>true</ramHotPlug>
+                <ramHotUnPlug>false</ramHotUnPlug>
+                <writeable>true</writeable>
+            </return>
+        </ns2:getImageResponse>
+    </S:Body>
+</S:Envelope>

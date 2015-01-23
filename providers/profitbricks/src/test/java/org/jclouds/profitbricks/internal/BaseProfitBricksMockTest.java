@@ -46,6 +46,13 @@ public class BaseProfitBricksMockTest {
    protected static final String authHeader = BasicAuthentication.basic("username", "password");
    protected static final String provider = "profitbricks";
    protected static final String rootUrl = "/1.3";
+   
+   private static final String SOAP_PREFIX
+	   = "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:ws=\"http://ws.api.profitbricks.com/\">"
+	   + "<soapenv:Header/>"
+	   + "<soapenv:Body>";
+
+   private static final String SOAP_SUFFIX = "</soapenv:Body></soapenv:Envelope>";
 
    private final Set<Module> modules = ImmutableSet.<Module>of();
 
@@ -70,7 +77,7 @@ public class BaseProfitBricksMockTest {
       server.play();
       return server;
    }
-
+   
    public byte[] payloadFromResource(String resource) {
       try {
          return toStringAndClose(getClass().getResourceAsStream(resource)).getBytes(Charsets.UTF_8);
@@ -78,11 +85,20 @@ public class BaseProfitBricksMockTest {
          throw Throwables.propagate(e);
       }
    }
+   
+   protected static String payloadSoapWithBody(String body){
+      return SOAP_PREFIX.concat( body ).concat( SOAP_SUFFIX );
+   }
 
    protected static void assertRequestHasCommonProperties(final RecordedRequest request) {
       assertEquals(request.getMethod(), "POST");
       assertEquals(request.getPath(), rootUrl);
       assertEquals(request.getHeader(HttpHeaders.AUTHORIZATION), authHeader);
       assertEquals(request.getHeader(HttpHeaders.ACCEPT), MediaType.TEXT_XML);
+   }
+   
+   protected static void assertRequestHasCommonProperties(final RecordedRequest request, String content ){
+      assertEquals( new String( request.getBody() ), payloadSoapWithBody( content ) );
+      assertRequestHasCommonProperties( request );
    }
 }

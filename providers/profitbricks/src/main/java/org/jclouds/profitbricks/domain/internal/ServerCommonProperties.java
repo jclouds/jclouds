@@ -14,14 +14,36 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jclouds.profitbricks.compute.internal;
+package org.jclouds.profitbricks.domain.internal;
+
+import org.jclouds.javax.annotation.Nullable;
 
 /**
- * An enumeration of ProfitBricks domain classes containing a property 'ProvisioningState'.
- *
- * @see ProvisioningStatusPollingPredicate
+ * An interface used as common data type for {@link org.jclouds.profitbricks.domain.Server.Builder}
  */
-public enum ProvisioningStatusAware {
+public interface ServerCommonProperties {
 
-   DATACENTER, SERVER;
+   @Nullable
+   Boolean isCpuHotPlug();
+
+   @Nullable
+   Boolean isRamHotPlug();
+
+   @Nullable
+   Boolean isNicHotPlug();
+
+   @Nullable
+   Boolean isNicHotUnPlug();
+
+   @Nullable
+   Boolean isDiscVirtioHotPlug();
+
+   @Nullable
+   Boolean isDiscVirtioHotUnPlug();
+
+   String name();
+
+   int cores();
+
+   int ram(); // in MB
 }

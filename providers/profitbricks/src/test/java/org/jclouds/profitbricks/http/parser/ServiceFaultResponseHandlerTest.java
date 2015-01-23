@@ -40,8 +40,8 @@ public class ServiceFaultResponseHandlerTest extends BaseResponseHandlerTest<Ser
       ServiceFault expected = ServiceFault.builder()
 	      .faultCode(ServiceFault.FaultCode.RESOURCE_NOT_FOUND)
 	      .httpCode(404)
-	      .message("The requested resource could not be found. Please refer to Request Id : 11122416. [VDC-6-404] The requested data center does not exist or already deleted by the users. ResourceId ﻿random-non-existing-id")
-	      .requestId(11122416)
+	      .message("The requested resource could not be found. Please refer to Request Id : 16370720. [VDC-6-404] The requested resource does not exist or already deleted by the users. ResourceId ﻿random-non-existing-id")
+	      .requestId(16370720)
 	      .build();
 
       assertEquals(expected, actual);

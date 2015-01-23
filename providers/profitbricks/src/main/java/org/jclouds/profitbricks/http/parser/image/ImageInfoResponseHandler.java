@@ -14,14 +14,35 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jclouds.profitbricks.compute.internal;
+package org.jclouds.profitbricks.http.parser.image;
 
-/**
- * An enumeration of ProfitBricks domain classes containing a property 'ProvisioningState'.
- *
- * @see ProvisioningStatusPollingPredicate
- */
-public enum ProvisioningStatusAware {
+import com.google.inject.Inject;
+import org.jclouds.date.DateCodecFactory;
+import org.jclouds.profitbricks.domain.Image;
+import org.xml.sax.SAXException;
 
-   DATACENTER, SERVER;
+public class ImageInfoResponseHandler extends BaseImageResponseHandler<Image> {
+
+   private boolean done = false;
+
+   @Inject
+   ImageInfoResponseHandler(DateCodecFactory dateCodecFactory) {
+      super(dateCodecFactory);
+   }
+
+   @Override
+   public void endElement(String uri, String localName, String qName) throws SAXException {
+      if (done)
+         return;
+      setPropertyOnEndTag(qName);
+      if ("return".equals(qName))
+         done = true;
+      clearTextBuffer();
+   }
+
+   @Override
+   public Image getResult() {
+      return builder.build();
+   }
+
 }

@@ -19,10 +19,18 @@ package org.jclouds.profitbricks;
 import java.io.Closeable;
 
 import org.jclouds.profitbricks.features.DataCenterApi;
+import org.jclouds.profitbricks.features.ImageApi;
+import org.jclouds.profitbricks.features.ServerApi;
 import org.jclouds.rest.annotations.Delegate;
 
 public interface ProfitBricksApi extends Closeable {
 
    @Delegate
    DataCenterApi dataCenterApi();
+
+   @Delegate
+   ImageApi imageApi();
+
+   @Delegate
+   ServerApi serverApi();
 }

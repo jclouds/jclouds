@@ -14,14 +14,36 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jclouds.profitbricks.compute.internal;
+package org.jclouds.profitbricks.http.parser;
 
-/**
- * An enumeration of ProfitBricks domain classes containing a property 'ProvisioningState'.
- *
- * @see ProvisioningStatusPollingPredicate
- */
-public enum ProvisioningStatusAware {
+import com.google.inject.Inject;
+import org.jclouds.date.DateCodecFactory;
+import org.xml.sax.SAXException;
 
-   DATACENTER, SERVER;
+public class RequestIdOnlyResponseHandler extends BaseProfitBricksResponseHandler<String> {
+
+   private String requestId;
+
+   @Inject
+   RequestIdOnlyResponseHandler( DateCodecFactory dateCodec ) {
+      super( dateCodec );
+   }
+
+   @Override
+   public void endElement( String uri, String localName, String qName ) throws SAXException {
+      setPropertyOnEndTag( qName );
+      clearTextBuffer();
+   }
+
+   @Override
+   protected void setPropertyOnEndTag( String qName ) {
+      if ( "requestId".equals( qName ) )
+         requestId = textToStringValue();
+   }
+
+   @Override
+   public String getResult() {
+      return requestId;
+   }
+
 }

@@ -14,14 +14,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jclouds.profitbricks.compute.internal;
+package org.jclouds.profitbricks.domain;
 
-/**
- * An enumeration of ProfitBricks domain classes containing a property 'ProvisioningState'.
- *
- * @see ProvisioningStatusPollingPredicate
- */
-public enum ProvisioningStatusAware {
+public enum OsType {
 
-   DATACENTER, SERVER;
+   WINDOWS, LINUX, OTHER, UNRECOGNIZED;
+
+   public static OsType fromValue(String v) {
+      try {
+         return valueOf(v);
+      } catch (IllegalArgumentException ex) {
+         return UNRECOGNIZED;
+      }
+   }
 }
