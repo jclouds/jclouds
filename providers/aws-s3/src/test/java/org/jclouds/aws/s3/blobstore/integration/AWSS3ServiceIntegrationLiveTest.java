@@ -18,6 +18,7 @@ package org.jclouds.aws.s3.blobstore.integration;
 
 import java.util.Set;
 
+import org.jclouds.domain.Location;
 import org.jclouds.s3.blobstore.integration.S3ServiceIntegrationLiveTest;
 import org.testng.annotations.Test;
 
@@ -34,4 +35,17 @@ public class AWSS3ServiceIntegrationLiveTest extends S3ServiceIntegrationLiveTes
       return ImmutableSet.<String> of("US", "US-CA", "US-OR", "BR-SP", "IE", "SG", "AU-NSW", "JP-13");
    }
 
+   // Amazon returns null instead of us-standard in some situations
+   @Override
+   protected boolean locationEquals(Location location1, Location location2) {
+      Location usStandard = null;
+      for (Location location : view.getBlobStore().listAssignableLocations()) {
+         if (location.getId().equals("us-standard")) {
+            usStandard = location;
+            break;
+         }
+      }
+      return super.locationEquals(location1 == null ? usStandard : location1,
+                                  location2 == null ? usStandard : location2);
+   }
 }

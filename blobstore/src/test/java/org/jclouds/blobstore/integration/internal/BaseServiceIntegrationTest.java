@@ -56,7 +56,7 @@ public class BaseServiceIntegrationTest extends BaseBlobStoreIntegrationTest {
                   PageSet<? extends StorageMetadata> list = view.getBlobStore().list();
                   assert Iterables.any(list, new Predicate<StorageMetadata>() {
                      public boolean apply(StorageMetadata md) {
-                        return containerName.equals(md.getName()) && location.equals(md.getLocation());
+                        return containerName.equals(md.getName()) && locationEquals(location, md.getLocation());
                      }
                   }) : String.format("container %s/%s not found in list %s", location, containerName, list);
                   assertTrue(view.getBlobStore().containerExists(containerName), containerName);
@@ -119,4 +119,7 @@ public class BaseServiceIntegrationTest extends BaseBlobStoreIntegrationTest {
       assertEquals(provider.getIso3166Codes(), getIso3166Codes());
    }
 
+   protected boolean locationEquals(Location location1, Location location2) {
+      return location1.equals(location2);
+   }
 }
