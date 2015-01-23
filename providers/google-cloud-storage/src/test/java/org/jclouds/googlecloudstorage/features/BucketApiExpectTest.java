@@ -169,7 +169,7 @@ public class BucketApiExpectTest extends BaseGoogleCloudStorageApiExpectTest {
       HttpResponse updateResponse = HttpResponse.builder().statusCode(200)
                .payload(staticPayloadFromResource("/bucket_update_response.json")).build();
 
-      BucketApi api = requestsSendResponses(requestForScopes(STORAGE_READWRITE_SCOPE), TOKEN_RESPONSE,
+      BucketApi api = requestsSendResponses(requestForScopes(STORAGE_FULLCONTROL_SCOPE), TOKEN_RESPONSE,
                updateRequest, updateResponse).getBucketApi();
 
       assertEquals(api.updateBucket(EXPECTED_TEST_BUCKET, template), new BucketUpdateTest().expected());
@@ -197,7 +197,7 @@ public class BucketApiExpectTest extends BaseGoogleCloudStorageApiExpectTest {
       HttpResponse updateResponse = HttpResponse.builder().statusCode(200)
                .payload(staticPayloadFromResource("/bucket_update_response.json")).build();
 
-      BucketApi api = requestsSendResponses(requestForScopes(STORAGE_READWRITE_SCOPE), TOKEN_RESPONSE,
+      BucketApi api = requestsSendResponses(requestForScopes(STORAGE_FULLCONTROL_SCOPE), TOKEN_RESPONSE,
                updateRequest, updateResponse).getBucketApi();
 
       assertEquals(api.updateBucket(EXPECTED_TEST_BUCKET, template, options), new BucketUpdateTest().expected());
@@ -222,7 +222,7 @@ public class BucketApiExpectTest extends BaseGoogleCloudStorageApiExpectTest {
       HttpResponse patchResponse = HttpResponse.builder().statusCode(200)
                .payload(staticPayloadFromResource("/bucket_update_response.json")).build();
 
-      BucketApi api = requestsSendResponses(requestForScopes(STORAGE_READWRITE_SCOPE), TOKEN_RESPONSE, patchRequest,
+      BucketApi api = requestsSendResponses(requestForScopes(STORAGE_FULLCONTROL_SCOPE), TOKEN_RESPONSE, patchRequest,
                patchResponse).getBucketApi();
 
       assertEquals(api.patchBucket(EXPECTED_TEST_BUCKET, template), new BucketUpdateTest().expected());
@@ -250,7 +250,7 @@ public class BucketApiExpectTest extends BaseGoogleCloudStorageApiExpectTest {
       HttpResponse patchResponse = HttpResponse.builder().statusCode(200)
                .payload(staticPayloadFromResource("/bucket_update_response.json")).build();
 
-      BucketApi api = requestsSendResponses(requestForScopes(STORAGE_READWRITE_SCOPE), TOKEN_RESPONSE, patchRequest,
+      BucketApi api = requestsSendResponses(requestForScopes(STORAGE_FULLCONTROL_SCOPE), TOKEN_RESPONSE, patchRequest,
                patchResponse).getBucketApi();
 
       assertEquals(api.updateBucket(EXPECTED_TEST_BUCKET, template, options), new BucketUpdateTest().expected());

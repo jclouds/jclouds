@@ -45,6 +45,8 @@ import com.google.common.collect.ImmutableList;
       if (path.endsWith("/acl") || path.endsWith("/defaultObjectAcl") //
             || path.contains("/acl/") || path.contains("/defaultObjectAcl/")) {
          return fullControlScopes();
+      } else if (input.getMethod().equalsIgnoreCase("PUT") || input.getMethod().equalsIgnoreCase("PATCH")) {
+         return fullControlScopes();
       }
       return readOrWriteScopes().forRequest(input);
    }
