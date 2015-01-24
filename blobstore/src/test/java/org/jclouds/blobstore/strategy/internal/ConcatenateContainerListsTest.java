@@ -60,8 +60,7 @@ public class ConcatenateContainerListsTest {
          blobstore.putBlob("foo", blobstore.blobBuilder("dir/" + i + "").payload(i + "").build());
       }
       Iterable<? extends StorageMetadata> listing = concatter.execute("foo", new ListContainerOptions());
-      // TODO: this looks broke.  seems we should have 1002 (1001 + directory foo), not 1003
-      assertEquals(Iterables.size(listing), 1003);
+      assertEquals(Iterables.size(listing), 1002);
       listing = concatter.execute("foo", ListContainerOptions.Builder.inDirectory("dir"));
       assertEquals(Iterables.size(listing), 1001);
       listing = concatter.execute("foo", ListContainerOptions.Builder.recursive());
