@@ -18,10 +18,26 @@ package org.jclouds.azureblob.blobstore.integration;
 
 import org.jclouds.blobstore.integration.internal.BaseContainerIntegrationTest;
 import org.testng.annotations.Test;
+import org.testng.SkipException;
 
 @Test(groups = "live")
 public class AzureBlobContainerIntegrationLiveTest extends BaseContainerIntegrationTest {
    public AzureBlobContainerIntegrationLiveTest() {
       provider = "azureblob";
+   }
+
+   @Override
+   public void testDelimiter() throws Exception {
+      throw new SkipException("Azure does not use key names for markers");
+   }
+
+   @Override
+   public void testListMarkerAfterLastKey() throws Exception {
+      throw new SkipException("cannot specify arbitrary markers");
+   }
+
+   @Override
+   public void testListContainerWithZeroMaxResults() throws Exception {
+      throw new SkipException("Azure requires a positive integer for max results");
    }
 }
