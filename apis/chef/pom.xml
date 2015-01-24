@@ -41,7 +41,11 @@
       org.jclouds.chef*;version=${project.version};-noimport:=true,
       org.jclouds.ohai*;version=${project.version};-noimport:=true,
     </jclouds.osgi.export>
-    <jclouds.osgi.import>org.jclouds*;version="${project.version}",*</jclouds.osgi.import>
+    <jclouds.osgi.import>
+      org.jclouds.*;version="${project.version}",
+      org.jclouds;version="${project.version}",
+      *
+    </jclouds.osgi.import>
   </properties>
 
   <dependencies>
