@@ -20,7 +20,6 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Preconditions.checkState;
 import static com.google.common.base.Throwables.getCausalChain;
 import static com.google.common.base.Throwables.propagate;
-import static com.google.common.collect.Iterables.filter;
 import static com.google.common.collect.Iterables.size;
 import static com.google.common.collect.Iterables.transform;
 import static com.google.common.collect.Iterables.tryFind;
@@ -29,7 +28,6 @@ import static com.google.common.collect.Sets.newTreeSet;
 import static org.jclouds.blobstore.options.ListContainerOptions.Builder.recursive;
 
 import java.io.ByteArrayOutputStream;
-import java.io.File;
 import java.io.IOException;
 import java.util.Date;
 import java.util.Set;
@@ -236,9 +234,9 @@ public final class LocalBlobStore implements BlobStore {
       if (options != null) {
          final String prefix = options.getDir();
          if (prefix != null && !prefix.isEmpty()) {
-            final String dirPrefix = prefix.endsWith(File.separator) ?
+            final String dirPrefix = prefix.endsWith("/") ?
                     prefix :
-                    prefix + File.separator;
+                    prefix + "/";
             contents = newTreeSet(filter(contents, new Predicate<StorageMetadata>() {
                public boolean apply(StorageMetadata o) {
                   return o != null && o.getName().startsWith(dirPrefix) && !o.getName().equals(dirPrefix);
