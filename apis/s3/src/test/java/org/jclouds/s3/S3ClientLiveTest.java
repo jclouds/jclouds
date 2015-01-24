@@ -27,6 +27,7 @@ import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertTrue;
+import static org.testng.Assert.fail;
 
 import java.io.IOException;
 import java.net.URI;
@@ -359,14 +360,13 @@ public class S3ClientLiveTest extends BaseBlobStoreIntegrationTest {
       return etag;
    }
 
-   // TODO: fails on linux and windows
    public void testCopyIfModifiedSince() throws InterruptedException, ExecutionException, TimeoutException, IOException {
       String containerName = getContainerName();
       String destinationContainer = getContainerName();
       try {
-         Date before = new Date();
+         Date before = new Date(System.currentTimeMillis() - 10 * 1000);
          addToContainerAndValidate(containerName, sourceKey + "mod");
-         Date after = new Date(System.currentTimeMillis() + 1000);
+         Date after = new Date(System.currentTimeMillis() + 10 * 1000);
 
          getApi().copyObject(containerName, sourceKey + "mod", destinationContainer, destinationKey,
                   ifSourceModifiedSince(before));
@@ -375,6 +375,7 @@ public class S3ClientLiveTest extends BaseBlobStoreIntegrationTest {
          try {
             getApi().copyObject(containerName, sourceKey + "mod", destinationContainer, destinationKey,
                      ifSourceModifiedSince(after));
+            fail("should have thrown HttpResponseException");
          } catch (HttpResponseException ex) {
             assertEquals(ex.getResponse().getStatusCode(), 412);
          }
@@ -385,15 +386,14 @@ public class S3ClientLiveTest extends BaseBlobStoreIntegrationTest {
       }
    }
 
-   // TODO: fails on linux and windows
    public void testCopyIfUnmodifiedSince() throws InterruptedException, ExecutionException, TimeoutException,
             IOException {
       String containerName = getContainerName();
       String destinationContainer = getContainerName();
       try {
-         Date before = new Date();
+         Date before = new Date(System.currentTimeMillis() - 10 * 1000);
          addToContainerAndValidate(containerName, sourceKey + "un");
-         Date after = new Date(System.currentTimeMillis() + 1000);
+         Date after = new Date(System.currentTimeMillis() + 10 * 1000);
 
          getApi().copyObject(containerName, sourceKey + "un", destinationContainer, destinationKey,
                   ifSourceUnmodifiedSince(after));
@@ -401,7 +401,8 @@ public class S3ClientLiveTest extends BaseBlobStoreIntegrationTest {
 
          try {
             getApi().copyObject(containerName, sourceKey + "un", destinationContainer, destinationKey,
-                     ifSourceModifiedSince(before));
+                     ifSourceUnmodifiedSince(before));
+            fail("should have thrown HttpResponseException");
          } catch (HttpResponseException ex) {
             assertEquals(ex.getResponse().getStatusCode(), 412);
          }
