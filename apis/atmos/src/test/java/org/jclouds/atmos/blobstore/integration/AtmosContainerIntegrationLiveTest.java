@@ -23,6 +23,7 @@ import java.io.IOException;
 import org.jclouds.blobstore.domain.BlobMetadata;
 import org.jclouds.blobstore.integration.internal.BaseContainerIntegrationTest;
 import org.testng.annotations.Test;
+import org.testng.SkipException;
 
 @Test(groups = "live")
 public class AtmosContainerIntegrationLiveTest extends BaseContainerIntegrationTest {
@@ -33,5 +34,20 @@ public class AtmosContainerIntegrationLiveTest extends BaseContainerIntegrationT
    protected void checkMD5(BlobMetadata metadata) throws IOException {
       // atmos doesn't support MD5
       assertEquals(metadata.getContentMetadata().getContentMD5(), null);
+   }
+
+   @Override
+   public void testDelimiter() throws Exception {
+      throw new SkipException("Atmos does not use key names for markers");
+   }
+
+   @Override
+   public void testListMarkerAfterLastKey() throws Exception {
+      throw new SkipException("cannot specify arbitrary markers");
+   }
+
+   @Override
+   public void testListContainerWithZeroMaxResults() throws Exception {
+      throw new SkipException("Atmos requires a positive integer for max results");
    }
 }
