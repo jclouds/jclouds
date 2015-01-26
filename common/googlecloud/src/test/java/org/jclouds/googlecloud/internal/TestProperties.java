@@ -24,8 +24,11 @@ import static org.jclouds.oauth.v2.config.CredentialType.P12_PRIVATE_KEY_CREDENT
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.charset.Charset;
 import java.util.Properties;
 
+import org.jclouds.domain.Credentials;
+import org.jclouds.googlecloud.GoogleCredentialsFromJson;
 import org.jclouds.oauth.v2.config.CredentialType;
 
 import com.google.common.base.Charsets;
@@ -78,6 +81,26 @@ public final class TestProperties {
       }
       overrides.setProperty(key, credentialFromFile);
       return credentialFromFile;
+   }
+
+   /*
+    * Provides an easy way to pass in credentials using the json-key format.
+    * Just provide the path to the .json file as the system property test.google-cloud.json-key
+    * and this extracts and sets identity  and credentials from the json.
+    */
+   public static void setGoogleCredentialsFromJson(String provider) {
+      String key = "test.google-cloud.json-key";
+      if (System.getProperties().containsKey(key)) {
+         String val = System.getProperty(key);
+         try {
+            String fileContents = Files.toString(new File(val), Charset.defaultCharset());
+            Credentials creds = new GoogleCredentialsFromJson(fileContents).get();
+            System.setProperty("test." + provider + ".identity", creds.identity);
+            System.setProperty("test." + provider + ".credential", creds.credential);
+         } catch (IOException e) {
+            throw propagate(e);
+         }
+      }
    }
 
    private TestProperties() {

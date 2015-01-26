@@ -45,6 +45,7 @@ public class GoogleComputeEngineServiceLiveTest extends BaseComputeServiceLiveTe
    }
 
    @Override protected Properties setupProperties() {
+      TestProperties.setGoogleCredentialsFromJson(provider);
       return TestProperties.apply(provider, super.setupProperties());
    }
 
