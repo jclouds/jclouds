@@ -55,7 +55,7 @@ public class ImageAdapterTest {
 
       assertNotNull(container.image.getBlockDeviceMapping());
       assertEquals(container.image.getBlockDeviceMapping().size(), 1);
-      assertEquals(new Integer(2), getOnlyElement(container.image.getBlockDeviceMapping()).getBootIndex());
+      assertEquals(Integer.valueOf(2), getOnlyElement(container.image.getBlockDeviceMapping()).getBootIndex());
       assertEquals("snapshot", getOnlyElement(container.image.getBlockDeviceMapping()).getSourceType());
    }
 

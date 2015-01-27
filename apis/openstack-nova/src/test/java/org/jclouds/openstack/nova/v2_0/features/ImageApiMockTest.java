@@ -48,7 +48,7 @@ public class ImageApiMockTest extends BaseOpenStackMockTest<NovaApi> {
          assertEquals(1, img.getBlockDeviceMapping().size());
          BlockDeviceMapping blockDeviceMapping = img.getBlockDeviceMapping().get(0);
          assertEquals("snapshot", blockDeviceMapping.getSourceType());
-         assertEquals(new Integer(2), blockDeviceMapping.getBootIndex());
+         assertEquals(Integer.valueOf(2), blockDeviceMapping.getBootIndex());
       } finally {
          server.shutdown();
       }
