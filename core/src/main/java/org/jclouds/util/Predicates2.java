@@ -104,19 +104,30 @@ public class Predicates2 {
       
       @Override
       public boolean apply(T input) {
+         // Ensure that try one last time at the end (e.g. if timeout is 30 secs and last sleep
+         // takes us up to the 30 secs mark, then test again rather than returning immediately 
+         // after the sleep!).
+         // Always try at least once, even if timeout is 0 or negative.
+         // A timeout of 0 means 0 millis.
          try {
             long i = 1l;
-            for (Date end = new Date(System.currentTimeMillis() + timeout); before(end); Thread.sleep(nextMaxInterval(i++,
-                     end))) {
+            long now = System.currentTimeMillis();
+            long end = now + timeout;
+            while (now < end) {
                if (findOrBreak.apply(input)) {
                   return true;
-               } else if (atOrAfter(end)) {
-                  return false;
                }
+               long sleepTime = nextMaxInterval(i++, end);
+               if (sleepTime > 0) Thread.sleep(sleepTime);
+               now = System.currentTimeMillis();
             }
+
+            return findOrBreak.apply(input);
+
          } catch (InterruptedException e) {
             logger.warn(e, "predicate %s on %s interrupted, returning false", input, findOrBreak);
             Thread.currentThread().interrupt();
+            return false;
          } catch (RuntimeException e) {
             if (getFirstThrowableOfType(e, ExecutionException.class) != null) {
                logger.warn(e, "predicate %s on %s errored [%s], returning false", input, findOrBreak, e.getMessage());
@@ -133,7 +144,13 @@ public class Predicates2 {
             } else
                throw e;
          }
-         return false;
+      }
+
+      /**
+       * @deprecated since 1.9.0; use {@link #nextMaxInterval(long, long)}
+       */
+      protected long nextMaxInterval(long attempt, Date end) {
+         return nextMaxInterval(attempt, end.getTime());
       }
 
       /**
@@ -142,21 +159,27 @@ public class Predicates2 {
        * (where 1.5 is the backoff factor), to the maximum interval or specified timeout.
        * 
        * @param attempt number of this attempt (starting at 1 for the first retry)
-       * @param end timeout
+       * @param endTime timeout
        * @return time in milliseconds from now until the next attempt, or if negative, time lapsed
        * since the specified timeout
        */
-      protected long nextMaxInterval(long attempt, Date end) {
+      protected long nextMaxInterval(long attempt, long endTime) {
          long interval = (long) (period * Math.pow(1.5, attempt - 1));
          interval = interval > maxPeriod ? maxPeriod : interval;
-         long max = end.getTime() - System.currentTimeMillis();
+         long max = endTime - System.currentTimeMillis();
          return (interval > max) ? max : interval;
       }
 
+      /**
+       * @deprecated since 1.9.0; use {@link #nextMaxInterval(long, long)}
+       */
       protected boolean before(Date end) {
          return new Date().compareTo(end) <= 1;
       }
 
+      /**
+       * @deprecated since 1.9.0; use {@link #nextMaxInterval(long, long)}
+       */
       protected boolean atOrAfter(Date end) {
          return new Date().compareTo(end) >= 0;
       }
