@@ -28,6 +28,7 @@ import static com.google.common.collect.Sets.newTreeSet;
 import static org.jclouds.blobstore.options.ListContainerOptions.Builder.recursive;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.IOException;
 import java.util.Date;
 import java.util.Set;
@@ -231,15 +232,18 @@ public final class LocalBlobStore implements BlobStore {
             }));
 
       String marker = null;
+      String prefix;
       if (options != null) {
-         final String prefix = options.getDir();
+         prefix = options.getDir();
          if (prefix != null && !prefix.isEmpty()) {
             final String dirPrefix = prefix.endsWith("/") ?
                     prefix :
                     prefix + "/";
             contents = newTreeSet(filter(contents, new Predicate<StorageMetadata>() {
                public boolean apply(StorageMetadata o) {
-                  return o != null && o.getName().startsWith(dirPrefix) && !o.getName().equals(dirPrefix);
+                  return o != null
+                        && o.getName().replace(File.separatorChar, '/').startsWith(dirPrefix)
+                        && !o.getName().replace(File.separatorChar, '/').equals(dirPrefix);
                }
             }));
          }

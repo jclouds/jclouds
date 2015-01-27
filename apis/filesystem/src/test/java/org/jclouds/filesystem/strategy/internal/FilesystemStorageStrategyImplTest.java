@@ -93,7 +93,7 @@ public class FilesystemStorageStrategyImplTest {
    protected void tearDown() throws IOException {
       TestUtils.cleanDirectoryContent(TestUtils.TARGET_BASE_DIR);
    }
-   
+
    public void testCreateDirectory() {
       storageStrategy.createDirectory(CONTAINER_NAME, null);
       TestUtils.directoryExists(TARGET_CONTAINER_NAME, true);
@@ -344,7 +344,7 @@ public class FilesystemStorageStrategyImplTest {
 
    @Test(dataProvider = "ignoreOnMacOSX")
    public void testWriteDirectoryBlob() throws IOException {
-      String blobKey = TestUtils.createRandomBlobKey("a/b/c/directory-", File.separator);
+      String blobKey = TestUtils.createRandomBlobKey("a/b/c/directory-", "/");
       Blob blob = storageStrategy.newBlob(blobKey);
       storageStrategy.putBlob(CONTAINER_NAME, blob);
       // verify that the files is equal
@@ -356,7 +356,7 @@ public class FilesystemStorageStrategyImplTest {
 
    @Test(dataProvider = "ignoreOnMacOSX")
    public void testGetDirectoryBlob() throws IOException {
-      String blobKey = TestUtils.createRandomBlobKey("a/b/c/directory-", File.separator);
+      String blobKey = TestUtils.createRandomBlobKey("a/b/c/directory-", "/");
       Blob blob = storageStrategy.newBlob(blobKey);
       storageStrategy.putBlob(CONTAINER_NAME, blob);
 
@@ -382,7 +382,7 @@ public class FilesystemStorageStrategyImplTest {
    }
 
    public void testDeleteDirectoryBlob() throws IOException {
-      String blobKey = TestUtils.createRandomBlobKey("a/b/c/directory-", File.separator);
+      String blobKey = TestUtils.createRandomBlobKey("a/b/c/directory-", "/");
       Blob blob = storageStrategy.newBlob(blobKey);
       storageStrategy.putBlob(CONTAINER_NAME, blob);
       File blobFullPath = new File(TARGET_CONTAINER_NAME, blobKey);
@@ -393,8 +393,8 @@ public class FilesystemStorageStrategyImplTest {
 
    @Test(dataProvider = "ignoreOnMacOSX")
    public void testDeleteIntermediateDirectoryBlob() throws IOException {
-      String parentKey = TestUtils.createRandomBlobKey("a/b/c/directory-", File.separator);
-      String childKey = TestUtils.createRandomBlobKey(parentKey + "directory-", File.separator);
+      String parentKey = TestUtils.createRandomBlobKey("a/b/c/directory-", "/");
+      String childKey = TestUtils.createRandomBlobKey(parentKey + "directory-", "/");
       storageStrategy.putBlob(CONTAINER_NAME, storageStrategy.newBlob(parentKey));
       storageStrategy.putBlob(CONTAINER_NAME, storageStrategy.newBlob(childKey));
 
@@ -623,7 +623,7 @@ public class FilesystemStorageStrategyImplTest {
 
    /**
     * Calculates an absolute directory path that depends on operative system
-    * 
+    *
     * @return
     */
    private String getAbsoluteDirectory() throws IOException {

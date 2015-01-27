@@ -16,11 +16,11 @@
  */
 package org.jclouds.blobstore.integration.internal;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static com.google.common.base.Charsets.UTF_8;
 import static com.google.common.base.Throwables.propagateIfPossible;
 import static com.google.common.collect.Iterables.get;
 import static com.google.common.hash.Hashing.md5;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.jclouds.blobstore.options.ListContainerOptions.Builder.afterMarker;
 import static org.jclouds.blobstore.options.ListContainerOptions.Builder.inDirectory;
 import static org.jclouds.blobstore.options.ListContainerOptions.Builder.maxResults;
@@ -28,6 +28,7 @@ import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertTrue;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.Iterator;
 import java.util.Set;
@@ -35,8 +36,6 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeoutException;
 
 import javax.ws.rs.core.MediaType;
-
-import com.google.common.io.ByteSource;
 
 import org.jclouds.blobstore.domain.Blob;
 import org.jclouds.blobstore.domain.BlobMetadata;
@@ -46,6 +45,7 @@ import org.jclouds.blobstore.options.ListContainerOptions;
 import org.testng.annotations.Test;
 
 import com.google.common.collect.ImmutableMap;
+import com.google.common.io.ByteSource;
 
 public class BaseContainerIntegrationTest extends BaseBlobStoreIntegrationTest {
 
@@ -317,11 +317,13 @@ public class BaseContainerIntegrationTest extends BaseBlobStoreIntegrationTest {
       }
    }
 
-   @Test(groups = { "integration", "live" })
+   @Test(dataProvider = "ignoreOnWindows", groups = { "integration", "live" })
    public void testDelimiter() throws Exception {
       String containerName = getContainerName();
       try {
-         for (String blobName : new String[] { "asdf", "boo/bar", "boo/baz/xyzzy", "cquux/thud", "cquux/bla" }) {
+         for (String blobName : new String[] { "asdf", "boo" + File.separator + "bar", "boo" + File.separator
+               + "baz"  + File.separator + "xyzzy", "cquux" + File.separator + "thud", "cquux" + File.separator
+               + "bla" }) {
             Blob blob = view.getBlobStore().blobBuilder(blobName).payload(TEST_STRING).build();
             addBlobToContainer(containerName, blob);
          }

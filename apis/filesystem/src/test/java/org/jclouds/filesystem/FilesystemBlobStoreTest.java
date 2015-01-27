@@ -32,7 +32,6 @@ import java.util.Iterator;
 import java.util.Properties;
 import java.util.Set;
 
-import com.google.common.collect.ImmutableSet;
 import org.jclouds.ContextBuilder;
 import org.jclouds.blobstore.BlobRequestSigner;
 import org.jclouds.blobstore.BlobStore;
@@ -61,6 +60,7 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
+import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Sets;
 import com.google.common.io.ByteSource;
 import com.google.common.io.Files;
@@ -232,7 +232,7 @@ public class FilesystemBlobStoreTest {
         blobsExpected.remove("4rrr.jpg");
 
         checkForContainerContent(CONTAINER_NAME, "rrr", blobsExpected);
-        checkForContainerContent(CONTAINER_NAME, "rrr" + File.separator, blobsExpected);
+        checkForContainerContent(CONTAINER_NAME, "rrr/", blobsExpected);
     }
 
     /**
@@ -466,7 +466,7 @@ public class FilesystemBlobStoreTest {
     public void testPutDirectoryBlobs() {
         blobStore.createContainerInLocation(null, CONTAINER_NAME);
 
-        String parentKey = TestUtils.createRandomBlobKey("a/b/c/directory-", File.separator);
+        String parentKey = TestUtils.createRandomBlobKey("a/b/c/directory-", "/");
         String childKey = TestUtils.createRandomBlobKey(parentKey + "directory-", File.separator);
         blobStore.putBlob(CONTAINER_NAME, createDirBlob(parentKey));
         assertTrue(blobStore.blobExists(CONTAINER_NAME, parentKey));
@@ -483,7 +483,7 @@ public class FilesystemBlobStoreTest {
     public void testGetDirectoryBlob() throws IOException {
         blobStore.createContainerInLocation(null, CONTAINER_NAME);
 
-        String blobKey = TestUtils.createRandomBlobKey("a/b/c/directory-", File.separator);
+        String blobKey = TestUtils.createRandomBlobKey("a/b/c/directory-", "/");
         blobStore.putBlob(CONTAINER_NAME, createDirBlob(blobKey));
 
         assertTrue(blobStore.blobExists(CONTAINER_NAME, blobKey));

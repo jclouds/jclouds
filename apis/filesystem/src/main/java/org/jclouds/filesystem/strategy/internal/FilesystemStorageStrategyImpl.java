@@ -210,7 +210,7 @@ public class FilesystemStorageStrategyImpl implements LocalStorageStrategy {
 
    /**
     * Returns all the blobs key inside a container
-    * 
+    *
     * @param container
     * @return
     * @throws IOException
@@ -402,7 +402,9 @@ public class FilesystemStorageStrategyImpl implements LocalStorageStrategy {
          throw ex;
       } finally {
          closeQuietly(his);
-         payload.release();
+         if (payload != null) {
+            payload.release();
+         }
       }
    }
 
@@ -539,7 +541,7 @@ public class FilesystemStorageStrategyImpl implements LocalStorageStrategy {
    /**
     * Check if the file system resource whose name is obtained applying buildPath on the input path
     * tokens is a directory, otherwise a RuntimeException is thrown
-    * 
+    *
     * @param tokens
     *           the tokens that make up the name of the resource on the file system
     */
@@ -552,7 +554,7 @@ public class FilesystemStorageStrategyImpl implements LocalStorageStrategy {
 
    /**
     * Facility method used to concatenate path tokens normalizing separators
-    * 
+    *
     * @param pathTokens
     *           all the string in the proper order that must be concatenated in order to obtain the
     *           filename
@@ -575,7 +577,7 @@ public class FilesystemStorageStrategyImpl implements LocalStorageStrategy {
    /**
     * Substitutes all the file separator occurrences in the path with a file separator for the
     * current operative system
-    * 
+    *
     * @param pathToBeNormalized
     * @return
     */
@@ -599,7 +601,7 @@ public class FilesystemStorageStrategyImpl implements LocalStorageStrategy {
 
    /**
     * Remove leading and trailing {@link File.separator} character from the string.
-    * 
+    *
     * @param pathToBeCleaned
     * @param remove
     *           only trailing separator char from path
@@ -626,7 +628,7 @@ public class FilesystemStorageStrategyImpl implements LocalStorageStrategy {
    /**
     * Removes recursively the directory structure of a complex blob key, only if the directory is
     * empty
-    * 
+    *
     * @param container
     * @param normalizedKey
     */
@@ -673,9 +675,9 @@ public class FilesystemStorageStrategyImpl implements LocalStorageStrategy {
       File[] children = directory.listFiles();
       for (File child : children) {
          if (child.isFile()) {
-            blobNames.add(function.apply(child.getAbsolutePath()));
+            blobNames.add( function.apply(child.getAbsolutePath()) );
          } else if (child.isDirectory()) {
-            blobNames.add(function.apply(child.getAbsolutePath()) + File.separator);
+            blobNames.add(function.apply(child.getAbsolutePath()) + File.separator); // TODO: undo if failures
             populateBlobKeysInContainer(child, blobNames, function);
          }
       }
@@ -683,7 +685,7 @@ public class FilesystemStorageStrategyImpl implements LocalStorageStrategy {
 
    /**
     * Creates a directory and returns the result
-    * 
+    *
     * @param container
     * @param directory
     * @return true if the directory was created, otherwise false
