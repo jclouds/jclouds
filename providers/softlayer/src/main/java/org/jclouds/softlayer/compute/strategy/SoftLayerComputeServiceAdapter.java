@@ -147,7 +147,8 @@ public class SoftLayerComputeServiceAdapter implements
               .hourlyBillingFlag(hourlyBillingFlag)
               .startCpus(cores)
               .maxMemory(template.getHardware().getRam())
-              .datacenter(datacenter);
+              .datacenter(datacenter)
+              .localDiskFlag(isLocalDisk(diskType));
       // set operating system or blockDeviceTemplateGroup
       Optional<OperatingSystem> optionalOperatingSystem = tryExtractOperatingSystemFrom(imageId);
       if (optionalOperatingSystem.isPresent()) {
@@ -162,7 +163,6 @@ public class SoftLayerComputeServiceAdapter implements
       if (templateOptions.getBlockDevices().isPresent()) {
          List<VirtualGuestBlockDevice> blockDevices = getBlockDevices(templateOptions.getBlockDevices().get(), diskType);
          virtualGuestBuilder.blockDevices(blockDevices);
-         virtualGuestBuilder.localDiskFlag(isLocalDisk(diskType));
       }
       // set dedicatedAccountHostOnlyFlag
       if (templateOptions.isDedicatedAccountHostOnlyFlag().isPresent()) {

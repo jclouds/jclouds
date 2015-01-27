@@ -115,7 +115,7 @@ public class SoftLayerTemplateOptions extends TemplateOptions implements Cloneab
     * @see org.jclouds.softlayer.features.VirtualGuestApi#createVirtualGuest(org.jclouds.softlayer.domain.VirtualGuest)
     * @see InternetDomainName#hasPublicSuffix
     */
-   public TemplateOptions domainName(String domainName) {
+   public SoftLayerTemplateOptions domainName(String domainName) {
       checkNotNull(domainName, "domainName was null");
       checkArgument(InternetDomainName.from(domainName).hasPublicSuffix(), "domainName %s has no public suffix",
             domainName);
@@ -123,79 +123,79 @@ public class SoftLayerTemplateOptions extends TemplateOptions implements Cloneab
       return this;
    }
 
-   public TemplateOptions blockDevices(Iterable<Integer> capacities) {
+   public SoftLayerTemplateOptions blockDevices(Iterable<Integer> capacities) {
       for (Integer capacity : checkNotNull(capacities, "capacities"))
          checkNotNull(capacity, "all block devices must be non-empty");
       this.blockDevices = Optional.<List<Integer>> of(ImmutableList.copyOf(capacities));
       return this;
    }
 
-   public TemplateOptions blockDevices(Integer... capacities) {
+   public SoftLayerTemplateOptions blockDevices(Integer... capacities) {
       return blockDevices(ImmutableList.copyOf(checkNotNull(capacities, "capacities")));
    }
 
-   public TemplateOptions diskType(String diskType) {
+   public SoftLayerTemplateOptions diskType(String diskType) {
       checkNotNull(diskType, "diskType was null");
       this.diskType = Optional.of(diskType);
       return this;
    }
 
-   public TemplateOptions portSpeed(Integer portSpeed) {
+   public SoftLayerTemplateOptions portSpeed(Integer portSpeed) {
       checkNotNull(portSpeed, "portSpeed was null");
       this.portSpeed = Optional.of(portSpeed);
       return this;
    }
 
-   public TemplateOptions userData(String userData) {
+   public SoftLayerTemplateOptions userData(String userData) {
       checkNotNull(userData, "userData was null");
       this.userData = Optional.of(userData);
       return this;
    }
 
-   public TemplateOptions primaryNetworkComponentNetworkVlanId(Integer primaryNetworkComponentNetworkVlanId) {
+   public SoftLayerTemplateOptions primaryNetworkComponentNetworkVlanId(Integer primaryNetworkComponentNetworkVlanId) {
       checkNotNull(primaryNetworkComponentNetworkVlanId, "primaryNetworkComponentNetworkVlanId was null");
       this.primaryNetworkComponentNetworkVlanId = Optional.of(primaryNetworkComponentNetworkVlanId);
       return this;
    }
 
-   public TemplateOptions primaryBackendNetworkComponentNetworkVlanId(Integer primaryBackendNetworkComponentNetworkVlanId) {
+   public SoftLayerTemplateOptions primaryBackendNetworkComponentNetworkVlanId(Integer primaryBackendNetworkComponentNetworkVlanId) {
       checkNotNull(primaryBackendNetworkComponentNetworkVlanId, "primaryBackendNetworkComponentNetworkVlanId was null");
       this.primaryBackendNetworkComponentNetworkVlanId = Optional.of(primaryBackendNetworkComponentNetworkVlanId);
       return this;
    }
 
-   public TemplateOptions hourlyBillingFlag(boolean hourlyBillingFlag) {
+   public SoftLayerTemplateOptions hourlyBillingFlag(boolean hourlyBillingFlag) {
       checkNotNull(hourlyBillingFlag, "hourlyBillingFlag was null");
       this.hourlyBillingFlag = Optional.of(hourlyBillingFlag);
       return this;
    }
 
-   public TemplateOptions dedicatedAccountHostOnlyFlag(boolean dedicatedAccountHostOnlyFlag) {
+   public SoftLayerTemplateOptions dedicatedAccountHostOnlyFlag(boolean dedicatedAccountHostOnlyFlag) {
       checkNotNull(dedicatedAccountHostOnlyFlag, "dedicatedAccountHostOnlyFlag was null");
       this.dedicatedAccountHostOnlyFlag = Optional.of(dedicatedAccountHostOnlyFlag);
       return this;
    }
 
-   public TemplateOptions privateNetworkOnlyFlag(boolean privateNetworkOnlyFlag) {
+   public SoftLayerTemplateOptions privateNetworkOnlyFlag(boolean privateNetworkOnlyFlag) {
       checkNotNull(privateNetworkOnlyFlag, "privateNetworkOnlyFlag was null");
       this.privateNetworkOnlyFlag = Optional.of(privateNetworkOnlyFlag);
       return this;
    }
 
-   public TemplateOptions postInstallScriptUri(String postInstallScriptUri) {
+   public SoftLayerTemplateOptions postInstallScriptUri(String postInstallScriptUri) {
       checkNotNull(postInstallScriptUri, "postInstallScriptUri was null");
       this.postInstallScriptUri = Optional.of(postInstallScriptUri);
       return this;
    }
 
-   public TemplateOptions sshKeys(Iterable<Integer> sshKeys) {
+   public SoftLayerTemplateOptions sshKeys(Iterable<Integer> sshKeys) {
       for (Integer sshKey : checkNotNull(sshKeys, "sshKeys"))
          checkNotNull(sshKey, "sshKeys must be non-empty");
       this.sshKeys = Optional.<List<Integer>> of(ImmutableList.copyOf(sshKeys));
       return this;
    }
 
-   public TemplateOptions sshKeys(Integer... sshKeys) {
+   public SoftLayerTemplateOptions sshKeys(Integer... sshKeys) {
       return sshKeys(ImmutableList.copyOf(checkNotNull(sshKeys, "sshKeys")));
    }
 
