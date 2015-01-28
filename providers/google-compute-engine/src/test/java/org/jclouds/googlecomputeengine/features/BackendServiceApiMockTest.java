@@ -57,11 +57,11 @@ public class BackendServiceApiMockTest extends BaseGoogleComputeEngineApiMockTes
       List<URI> healthChecks = ImmutableList.of(URI.create(url("/projects/"
             + "myproject/global/httpHealthChecks/jclouds-test")));
 
-      assertEquals(backendServiceApi().create( new BackendServiceOptions().name("jclouds-test")
+      assertEquals(backendServiceApi().create( new BackendServiceOptions.Builder("jclouds-test", healthChecks)
             .protocol("HTTP")
             .port(80)
             .timeoutSec(30)
-            .healthChecks(healthChecks)),
+            .build()),
             new ParseOperationTest().expected(url("/projects")));
 
       assertSent(server, "POST", "/projects/party/global/backendServices",
@@ -75,11 +75,11 @@ public class BackendServiceApiMockTest extends BaseGoogleComputeEngineApiMockTes
             + "myproject/global/httpHealthChecks/jclouds-test")));
 
       assertEquals(backendServiceApi().update("jclouds-test",
-            new BackendServiceOptions().name("jclouds-test")
+            new BackendServiceOptions.Builder("jclouds-test", healthChecks)
                .protocol("HTTP")
                .port(80)
                .timeoutSec(30)
-               .healthChecks(healthChecks)),
+               .build()),
             new ParseOperationTest().expected(url("/projects")));
       assertSent(server, "PUT", "/projects/party/global/backendServices/jclouds-test",
             stringFromResource("/backend_service_insert.json"));
@@ -92,11 +92,11 @@ public class BackendServiceApiMockTest extends BaseGoogleComputeEngineApiMockTes
             + "myproject/global/httpHealthChecks/jclouds-test")));
 
       assertEquals(backendServiceApi().patch("jclouds-test",
-            new BackendServiceOptions().name("jclouds-test")
+            new BackendServiceOptions.Builder("jclouds-test", healthChecks)
                .protocol("HTTP")
                .port(80)
                .timeoutSec(30)
-               .healthChecks(healthChecks)),
+               .build()),
             new ParseOperationTest().expected(url("/projects")));
       assertSent(server, "PATCH", "/projects/party/global/backendServices/jclouds-test",
             stringFromResource("/backend_service_insert.json"));

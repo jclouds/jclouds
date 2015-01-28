@@ -61,8 +61,7 @@ public class GlobalForwardingRuleApiLiveTest extends BaseGoogleComputeEngineApiL
 
 
       List<URI> healthChecks = ImmutableList.of(getHealthCheckUrl(GLOBAL_FORWARDING_RULE_HEALTH_CHECK_NAME));
-      BackendServiceOptions b = new BackendServiceOptions().name(GLOBAL_FORWARDING_RULE_BACKEND_SERVICE_NAME)
-                                                           .healthChecks(healthChecks);
+      BackendServiceOptions b = new BackendServiceOptions.Builder(GLOBAL_FORWARDING_RULE_BACKEND_SERVICE_NAME, healthChecks).build();
       assertOperationDoneSuccessfully(api.backendServices()
                                               .create(b));
 

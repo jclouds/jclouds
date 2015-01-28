@@ -47,7 +47,8 @@ public class BackendServiceApiLiveTest extends BaseGoogleComputeEngineApiLiveTes
       assertOperationDoneSuccessfully(api.httpHeathChecks().insert(BACKEND_SERVICE_HEALTH_CHECK_NAME));
 
       List<URI> healthChecks = ImmutableList.of(getHealthCheckUrl(BACKEND_SERVICE_HEALTH_CHECK_NAME));
-      BackendServiceOptions b = new BackendServiceOptions().name(BACKEND_SERVICE_NAME).healthChecks(healthChecks);
+
+      BackendServiceOptions b = new BackendServiceOptions.Builder(BACKEND_SERVICE_NAME, healthChecks).build();
       assertOperationDoneSuccessfully(api().create(b));
    }
 
@@ -61,11 +62,10 @@ public class BackendServiceApiLiveTest extends BaseGoogleComputeEngineApiLiveTes
    @Test(groups = "live", dependsOnMethods = "testGetBackendService")
    public void testPatchBackendService() {
       String fingerprint = api().get(BACKEND_SERVICE_NAME).fingerprint();
-      BackendServiceOptions backendService = new BackendServiceOptions()
-              .name(BACKEND_SERVICE_NAME)
-              .healthChecks(ImmutableList.of(getHealthCheckUrl(BACKEND_SERVICE_HEALTH_CHECK_NAME)))
+      BackendServiceOptions backendService = new BackendServiceOptions.Builder(BACKEND_SERVICE_NAME, ImmutableList.of(getHealthCheckUrl(BACKEND_SERVICE_HEALTH_CHECK_NAME)))
               .timeoutSec(10)
-              .fingerprint(fingerprint);
+              .fingerprint(fingerprint)
+              .build();
 
       assertOperationDoneSuccessfully(api().update(BACKEND_SERVICE_NAME, backendService));
       assertBackendServiceEquals(api().get(BACKEND_SERVICE_NAME), backendService);
@@ -75,12 +75,11 @@ public class BackendServiceApiLiveTest extends BaseGoogleComputeEngineApiLiveTes
    public void testUpdateBackendService() {
       String fingerprint = api().get(BACKEND_SERVICE_NAME).fingerprint();
 
-      BackendServiceOptions backendService = new BackendServiceOptions()
-              .name(BACKEND_SERVICE_NAME)
-              .healthChecks(ImmutableList.of(getHealthCheckUrl(BACKEND_SERVICE_HEALTH_CHECK_NAME)))
+      BackendServiceOptions backendService = new BackendServiceOptions.Builder(BACKEND_SERVICE_NAME, ImmutableList.of(getHealthCheckUrl(BACKEND_SERVICE_HEALTH_CHECK_NAME)))
               .timeoutSec(45)
               .port(8080)
-              .fingerprint(fingerprint);
+              .fingerprint(fingerprint)
+              .build();
 
       assertOperationDoneSuccessfully(api().update(BACKEND_SERVICE_NAME, backendService));
       assertBackendServiceEquals(api().get(BACKEND_SERVICE_NAME),
@@ -119,13 +118,13 @@ public class BackendServiceApiLiveTest extends BaseGoogleComputeEngineApiLiveTes
    }
 
    private void assertBackendServiceEquals(BackendService result, BackendServiceOptions expected) {
-      assertEquals(result.name(), expected.getName());
-      assertEquals(result.healthChecks(), expected.getHealthChecks());
-      if (expected.getTimeoutSec() != null) {
-         org.testng.Assert.assertEquals(result.timeoutSec(), expected.getTimeoutSec().intValue());
+      assertEquals(result.name(), expected.name());
+      assertEquals(result.healthChecks(), expected.healthChecks());
+      if (expected.timeoutSec() != null) {
+         org.testng.Assert.assertEquals(result.timeoutSec(), expected.timeoutSec().intValue());
       }
-      if (expected.getPort() != null) {
-         org.testng.Assert.assertEquals(result.port(), expected.getPort().intValue());
+      if (expected.port() != null) {
+         org.testng.Assert.assertEquals(result.port(), expected.port().intValue());
       }
    }
 

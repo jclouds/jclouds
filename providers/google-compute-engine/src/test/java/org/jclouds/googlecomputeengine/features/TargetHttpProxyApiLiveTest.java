@@ -52,8 +52,8 @@ public class TargetHttpProxyApiLiveTest extends BaseGoogleComputeEngineApiLiveTe
       assertOperationDoneSuccessfully(api.httpHeathChecks().insert(HEALTH_CHECK_NAME));
 
       List<URI> healthChecks = ImmutableList.of(getHealthCheckUrl(HEALTH_CHECK_NAME));
-      BackendServiceOptions b = new BackendServiceOptions().name(URL_MAP_DEFAULT_SERVICE_NAME)
-                                                           .healthChecks(healthChecks);
+      BackendServiceOptions b = new BackendServiceOptions.Builder(URL_MAP_DEFAULT_SERVICE_NAME, healthChecks)
+                                                           .build();
 
       assertOperationDoneSuccessfully(api.backendServices().create(b));
 
