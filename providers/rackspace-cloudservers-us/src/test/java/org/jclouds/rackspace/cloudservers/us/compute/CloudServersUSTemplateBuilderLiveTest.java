@@ -39,11 +39,11 @@ public class CloudServersUSTemplateBuilderLiveTest extends BaseTemplateBuilderLi
 
    @Test
    public void testTemplateBuilder() {
-      Template defaultTemplate = this.view.getComputeService().templateBuilder().build();
+      Template defaultTemplate = this.view.getComputeService().templateBuilder().imageNameMatches(".*Ubuntu 14\\.10.*").build();
       assertEquals(defaultTemplate.getImage().getOperatingSystem().is64Bit(), true);
-      assertEquals(defaultTemplate.getImage().getOperatingSystem().getVersion(), "12.10");
+      assertEquals(defaultTemplate.getImage().getOperatingSystem().getVersion(), "14.10");
       assertEquals(defaultTemplate.getImage().getOperatingSystem().getFamily(), OsFamily.UBUNTU);
-      assertEquals(defaultTemplate.getImage().getName(), "Ubuntu 12.10 (Quantal Quetzal)");
+      assertEquals(defaultTemplate.getImage().getName(), "Ubuntu 14.10 (Utopic Unicorn) (PVHVM)");
       assertEquals(defaultTemplate.getImage().getDefaultCredentials().getUser(), "root");
       assertEquals(defaultTemplate.getLocation().getId(), "SYD");
       assertEquals(defaultTemplate.getImage().getLocation().getId(), "SYD");
