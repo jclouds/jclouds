@@ -97,7 +97,7 @@ public class CloudServersUSProviderMetadata extends BaseProviderMetadata {
          .homepage(URI.create("http://www.rackspace.com/cloud/nextgen"))
          .console(URI.create("https://mycloud.rackspace.com"))
          .linkedServices("rackspace-cloudservers-us", "cloudfiles-swift-us")
-         .iso3166Codes("US-IL", "US-TX", "AU-NSW")
+         .iso3166Codes("US-IL", "US-TX", "US-VA", "AU-NSW", "HK")
          .endpoint("https://identity.api.rackspacecloud.com/v2.0/")
          .defaultProperties(CloudServersUSProviderMetadata.defaultProperties());
       }

@@ -55,6 +55,6 @@ public class CloudServersUSTemplateBuilderLiveTest extends BaseTemplateBuilderLi
 
    @Override
    protected Set<String> getIso3166Codes() {
-      return ImmutableSet.of("US-IL", "US-TX", "AU-NSW");
+      return ImmutableSet.of("US-IL", "US-TX", "US-VA", "AU-NSW", "HK");
    }
 }
