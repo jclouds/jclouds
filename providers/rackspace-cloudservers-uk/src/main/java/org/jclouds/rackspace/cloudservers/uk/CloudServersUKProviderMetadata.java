@@ -16,6 +16,7 @@
  */
 package org.jclouds.rackspace.cloudservers.uk;
 
+import static org.jclouds.compute.config.ComputeServiceProperties.TEMPLATE;
 import static org.jclouds.location.reference.LocationConstants.ISO3166_CODES;
 import static org.jclouds.location.reference.LocationConstants.PROPERTY_REGION;
 import static org.jclouds.location.reference.LocationConstants.PROPERTY_REGIONS;
@@ -67,6 +68,7 @@ public class CloudServersUKProviderMetadata extends BaseProviderMetadata {
       properties.setProperty(CREDENTIAL_TYPE, CloudIdentityCredentialTypes.API_KEY_CREDENTIALS);
       properties.setProperty(PROPERTY_REGIONS, "LON");
       properties.setProperty(PROPERTY_REGION + ".LON." + ISO3166_CODES, "GB-SLG");
+      properties.setProperty(TEMPLATE, "imageNameMatches=.*Ubuntu 14\\.10.*");
       return properties;
    }
 

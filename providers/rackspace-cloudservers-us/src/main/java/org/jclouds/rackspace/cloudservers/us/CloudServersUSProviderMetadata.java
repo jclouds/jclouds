@@ -20,6 +20,7 @@ import static org.jclouds.location.reference.LocationConstants.ISO3166_CODES;
 import static org.jclouds.location.reference.LocationConstants.PROPERTY_REGION;
 import static org.jclouds.location.reference.LocationConstants.PROPERTY_REGIONS;
 import static org.jclouds.openstack.keystone.v2_0.config.KeystoneProperties.CREDENTIAL_TYPE;
+import static org.jclouds.compute.config.ComputeServiceProperties.TEMPLATE;
 
 import java.net.URI;
 import java.util.Properties;
@@ -71,6 +72,7 @@ public class CloudServersUSProviderMetadata extends BaseProviderMetadata {
       properties.setProperty(PROPERTY_REGION + ".IAD." + ISO3166_CODES, "US-VA");
       properties.setProperty(PROPERTY_REGION + ".SYD." + ISO3166_CODES, "AU-NSW");
       properties.setProperty(PROPERTY_REGION + ".HKG." + ISO3166_CODES, "HK");
+      properties.setProperty(TEMPLATE, "imageNameMatches=.*Ubuntu 14\\.10.*");
       return properties;
    }
 
