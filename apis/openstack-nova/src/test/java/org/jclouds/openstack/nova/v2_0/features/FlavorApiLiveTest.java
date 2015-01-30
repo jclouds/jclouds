@@ -67,12 +67,13 @@ public class FlavorApiLiveTest extends BaseNovaApiLiveTest {
          assertNotNull(response);
          assertFalse(response.isEmpty());
          for (Flavor flavor : response) {
-             assertNotNull(flavor.getId());
-             assertNotNull(flavor.getName());
-             assertNotNull(flavor.getLinks());
-             assertTrue(flavor.getRam() > 0);
-             assertTrue(flavor.getDisk() > 0);
-             assertTrue(flavor.getVcpus() > 0);
+            assertNotNull(flavor.getId());
+            assertNotNull(flavor.getName());
+            assertNotNull(flavor.getLinks());
+            assertTrue(flavor.getRam() > 0);
+            // Some flavors can potentially have 0 system disk sizes.
+            assertTrue(flavor.getDisk() >= 0);
+            assertTrue(flavor.getVcpus() > 0);
          }
       }
    }

@@ -82,7 +82,7 @@ public abstract class BaseTemplateBuilderLiveTest extends BaseComputeServiceCont
    @Test
    public void testDefaultTemplateBuilder() throws IOException {
       Template defaultTemplate = view.getComputeService().templateBuilder().build();
-      assert defaultTemplate.getImage().getOperatingSystem().getVersion().matches("1[012].[10][04]") : defaultTemplate
+      assert defaultTemplate.getImage().getOperatingSystem().getVersion().matches("\\d\\d\\.\\d\\d") : defaultTemplate
             .getImage().getOperatingSystem().getVersion();
       assertEquals(defaultTemplate.getImage().getOperatingSystem().is64Bit(), true);
       assertEquals(defaultTemplate.getImage().getOperatingSystem().getFamily(), OsFamily.UBUNTU);
