@@ -96,11 +96,12 @@ public class ImageApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
 
       URI replacement = URI.create("https://www.googleapis.com/compute/v1/projects/centos-cloud/global/images/centos-6-2-v20120326test");
 
-      DeprecateOptions deprecateOptions = new DeprecateOptions().state(State.DEPRECATED)
+      DeprecateOptions deprecateOptions = new DeprecateOptions.Builder().state(State.DEPRECATED)
             .replacement(replacement)
             .deprecated(new SimpleDateFormatDateService().iso8601DateParse(deprecated))
             .obsolete(new SimpleDateFormatDateService().iso8601DateParse(obsolete))
-            .deleted(new SimpleDateFormatDateService().iso8601DateParse(deleted));
+            .deleted(new SimpleDateFormatDateService().iso8601DateParse(deleted))
+            .build();
 
       assertOperationDoneSuccessfully(api().deprecate(IMAGE_NAME, deprecateOptions));
 

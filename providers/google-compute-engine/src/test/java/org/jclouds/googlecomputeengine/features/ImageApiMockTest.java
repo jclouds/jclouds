@@ -136,11 +136,12 @@ public class ImageApiMockTest extends BaseGoogleComputeEngineApiMockTest {
       String imageName = "test-image";
       server.enqueue(jsonResponse("/operation.json"));
 
-      DeprecateOptions options = new DeprecateOptions().state(State.DEPRECATED)
+      DeprecateOptions options = new DeprecateOptions.Builder().state(State.DEPRECATED)
             .replacement(URI.create(url("/projects/centos-cloud/global/images/centos-6-2-v20120326test")))
             .deprecated(new SimpleDateFormatDateService().iso8601DateParse("2014-07-16T22:16:13.468Z"))
             .obsolete(new SimpleDateFormatDateService().iso8601DateParse("2014-10-16T22:16:13.468Z"))
-            .deleted(new SimpleDateFormatDateService().iso8601DateParse("2015-01-16T22:16:13.468Z"));
+            .deleted(new SimpleDateFormatDateService().iso8601DateParse("2015-01-16T22:16:13.468Z"))
+            .build();
 
       assertEquals(imageApi().deprecate(imageName, options),
             new ParseOperationTest().expected(url("/projects")));
