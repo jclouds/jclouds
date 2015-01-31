@@ -45,8 +45,8 @@ public class ForwardingRuleCreationBinder extends BindToJsonPayload {
 
       /**
        * Values used to bind ForwardingRuleOptions to json request.
-       * Note: Two break convention of starting with lower case letters due to 
-       *       attributes on GCE starting with upper case letters. 
+       * Note: Two break convention of starting with lower case letters due to
+       *       attributes on GCE starting with upper case letters.
        */
       @SuppressWarnings("unused")
       private String name;
@@ -63,11 +63,11 @@ public class ForwardingRuleCreationBinder extends BindToJsonPayload {
 
       private ForwardingRuleCreationBinderHelper(String name, ForwardingRuleCreationOptions forwardingRuleCreationOptions){
          this.name = name;
-         this.description = forwardingRuleCreationOptions.getDescription();
-         this.IPAddress = forwardingRuleCreationOptions.getIPAddress();
-         this.IPProtocol = forwardingRuleCreationOptions.getIPProtocol();
-         this.portRange = forwardingRuleCreationOptions.getPortRange();
-         this.target = forwardingRuleCreationOptions.getTarget();
+         this.description = forwardingRuleCreationOptions.description();
+         this.IPAddress = forwardingRuleCreationOptions.ipAddress();
+         this.IPProtocol = forwardingRuleCreationOptions.ipProtocol();
+         this.portRange = forwardingRuleCreationOptions.portRange();
+         this.target = forwardingRuleCreationOptions.target();
       }
    }
 }

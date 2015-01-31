@@ -115,10 +115,11 @@ public class TargetPoolApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
       TargetPool targetPool = api().get(TARGETPOOL_NAME);
       URI target = targetPool.selfLink();
 
-      ForwardingRuleCreationOptions forwardingRuleOptions = new ForwardingRuleCreationOptions()
+      ForwardingRuleCreationOptions forwardingRuleOptions = new ForwardingRuleCreationOptions.Builder()
          .ipProtocol(IPProtocol.TCP)
          .portRange("80-80")
-         .target(target);
+         .target(target)
+         .build();
 
       assertOperationDoneSuccessfully(api.forwardingRulesInRegion(DEFAULT_REGION_NAME)
                .create(FORWARDING_RULE_NAME, forwardingRuleOptions));

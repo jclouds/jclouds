@@ -75,18 +75,19 @@ public class GlobalForwardingRuleApiLiveTest extends BaseGoogleComputeEngineApiL
                                                       getUrlMapUrl(GLOBAL_FORWARDING_RULE_URL_MAP_NAME)));
       assertOperationDoneSuccessfully(
             api().create(GLOBAL_FORWARDING_RULE_NAME,
-                         new ForwardingRuleCreationOptions().target(getTargetHttpProxyUrl(GLOBAL_FORWARDING_RULE_TARGET_HTTP_PROXY_NAME))
-                                                    .portRange(PORT_RANGE)));
+                         new ForwardingRuleCreationOptions.Builder().target(getTargetHttpProxyUrl(GLOBAL_FORWARDING_RULE_TARGET_HTTP_PROXY_NAME))
+                                                    .portRange(PORT_RANGE).build()));
    }
 
    @Test(groups = "live", dependsOnMethods = "testInsertGlobalForwardingRule")
    public void testGetGlobalForwardingRule() {
       ForwardingRule forwardingRule = api().get(GLOBAL_FORWARDING_RULE_NAME);
       assertNotNull(forwardingRule);
-      ForwardingRuleCreationOptions expected = new ForwardingRuleCreationOptions()
+      ForwardingRuleCreationOptions expected = new ForwardingRuleCreationOptions.Builder()
             .target(getTargetHttpProxyUrl(GLOBAL_FORWARDING_RULE_TARGET_HTTP_PROXY_NAME))
             .portRange("80-80")
-            .ipProtocol(IPProtocol.TCP);
+            .ipProtocol(IPProtocol.TCP)
+            .build();
       assertGlobalForwardingRuleEquals(forwardingRule, expected);
    }
 
@@ -127,10 +128,10 @@ public class GlobalForwardingRuleApiLiveTest extends BaseGoogleComputeEngineApiL
    }
 
    private void assertGlobalForwardingRuleEquals(ForwardingRule result, ForwardingRuleCreationOptions expected) {
-      assertEquals(result.target(), expected.getTarget());
-      assertEquals(result.ipProtocol(), expected.getIPProtocol());
-      assertEquals(result.description(), expected.getDescription());
-      assertEquals(result.portRange(), expected.getPortRange());
+      assertEquals(result.target(), expected.target());
+      assertEquals(result.ipProtocol(), expected.ipProtocol());
+      assertEquals(result.description(), expected.description());
+      assertEquals(result.portRange(), expected.portRange());
       assertTrue(result.ipAddress() != null);
    }
 

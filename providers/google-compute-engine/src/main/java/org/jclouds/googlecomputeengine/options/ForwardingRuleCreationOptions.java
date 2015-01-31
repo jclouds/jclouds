@@ -19,98 +19,91 @@ package org.jclouds.googlecomputeengine.options;
 import java.net.URI;
 
 import org.jclouds.googlecomputeengine.domain.ForwardingRule;
+import org.jclouds.javax.annotation.Nullable;
+import org.jclouds.json.SerializedNames;
+
+import com.google.auto.value.AutoValue;
 
 /**
  * Options for creating a Forwarding Rule
  */
-public class ForwardingRuleCreationOptions{
+@AutoValue
+public abstract class ForwardingRuleCreationOptions{
 
-   private String description;
-   private String ipAddress;
-   private ForwardingRule.IPProtocol ipProtocol;
-   private String portRange;
-   private URI target;
-   
-   /**
-    * An optional textual description of the TargetPool.
-    * @return description, provided by the client.
-    */
-   public String getDescription(){
-      return description;
+   @Nullable public abstract String description();
+   @Nullable public abstract String ipAddress();
+   @Nullable public abstract ForwardingRule.IPProtocol ipProtocol();
+   @Nullable public abstract String portRange();
+   @Nullable public abstract URI target();
+
+
+   @SerializedNames({"description", "ipAddress", "ipProtocol", "portRange", "target"})
+   static ForwardingRuleCreationOptions create(
+         String description, String ipAddress, ForwardingRule.IPProtocol ipProtocol,
+         String portRange, URI target){
+      return new AutoValue_ForwardingRuleCreationOptions(description, ipAddress, ipProtocol, portRange, target);
    }
 
-   /**
-    * The external IP address that this forwarding rule is serving on behalf of
-    * @return ipAddress
-    */
-   public String getIPAddress(){
-      return ipAddress;
+   ForwardingRuleCreationOptions(){
    }
 
-   /**
-    * The IP protocol to which this rule applies
-    * @return ipProtocol
-    */
-   public ForwardingRule.IPProtocol getIPProtocol(){
-      return ipProtocol;
-   }
+   public static class Builder {
 
-   /**
-    * If IPProtocol is TCP or UDP, packets addressed to ports in the specified range 
-    * will be forwarded to backend. By default, this is empty and all ports are allowed.
-    * @return portRange
-    */
-   public String getPortRange(){
-      return portRange;
-   }
+      private String description;
+      private String ipAddress;
+      private ForwardingRule.IPProtocol ipProtocol;
+      private String portRange;
+      private URI target;
 
-   /**
-    * The URL of the target resource to receive the matched traffic.
-    * The target resource must live in the same region as this forwarding rule.
-    * @return target
-    */
-   public URI getTarget(){
-      return target;
-   }
+      /**
+       * An optional textual description of the TargetPool.
+       * @return description, provided by the client.
+       */
+      public Builder description(String description){
+         this.description = description;
+         return this;
+      }
 
-   /**
-    * @see ForwardingRuleCreationOptions#getDescription()
-    */
-   public ForwardingRuleCreationOptions description(String description){
-      this.description = description;
-      return this;
-   }
+      /**
+       * The external IP address that this forwarding rule is serving on behalf of
+       * @return ipAddress
+       */
+      public Builder ipAddress(String ipAddress){
+         this.ipAddress = ipAddress;
+         return this;
+      }
 
-   /**
-    * @see ForwardingRuleCreationOptions#getIPAddress()
-    */
-   public ForwardingRuleCreationOptions ipAddress(String ipAddress){
-      this.ipAddress = ipAddress;
-      return this;
-   }
+      /**
+       * The IP protocol to which this rule applies
+       * @return ipProtocol
+       */
+      public Builder ipProtocol(ForwardingRule.IPProtocol ipProtocol){
+         this.ipProtocol = ipProtocol;
+         return this;
+      }
 
-   /**
-    * @see ForwardingRuleCreationOptions#getIPProtocol()
-    */
-   public ForwardingRuleCreationOptions ipProtocol(ForwardingRule.IPProtocol ipProtocol){
-      this.ipProtocol = ipProtocol;
-      return this;
-   }
+      /**
+       * If IPProtocol is TCP or UDP, packets addressed to ports in the specified range
+       * will be forwarded to backend. By default, this is empty and all ports are allowed.
+       * @return portRange
+       */
+      public Builder portRange(String portRange){
+         this.portRange = portRange;
+         return this;
+      }
 
-   /**
-    * @see ForwardingRuleCreationOptions#getPortRange()
-    */
-   public ForwardingRuleCreationOptions portRange(String portRange){
-      this.portRange = portRange;
-      return this;
-   }
+      /**
+       * The URL of the target resource to receive the matched traffic.
+       * The target resource must live in the same region as this forwarding rule.
+       * @return target
+       */
+      public Builder target(URI target){
+         this.target = target;
+         return this;
+      }
 
-   /**
-    * @see ForwardingRuleCreationOptions#getTarget()
-    */
-   public ForwardingRuleCreationOptions target(URI target){
-      this.target = target;
-      return this;
+      public ForwardingRuleCreationOptions build() {
+         return create(description, ipAddress, ipProtocol, portRange, target);
+      }
    }
-
 }

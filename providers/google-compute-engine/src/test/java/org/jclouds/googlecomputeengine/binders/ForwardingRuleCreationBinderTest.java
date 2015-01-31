@@ -45,12 +45,13 @@ public class ForwardingRuleCreationBinderTest extends BaseGoogleComputeEngineExp
    @Test
    public void testMap() throws SecurityException, NoSuchMethodException {
       ForwardingRuleCreationBinder binder = new ForwardingRuleCreationBinder(json);
-      ForwardingRuleCreationOptions forwardingRuleCreationOptions = new ForwardingRuleCreationOptions()
+      ForwardingRuleCreationOptions forwardingRuleCreationOptions = new ForwardingRuleCreationOptions.Builder()
                                                                   .description(DESCRIPTION)
                                                                   .ipAddress(IP_ADDRESS)
                                                                   .ipProtocol(ForwardingRule.IPProtocol.SCTP)
                                                                   .portRange(PORT_RANGE)
-                                                                  .target(TARGET);
+                                                                  .target(TARGET)
+                                                                  .build();
 
       HttpRequest request = HttpRequest.builder().method("GET").endpoint("http://momma").build();
       Map<String, Object> postParams = ImmutableMap.of("name", "testForwardingRuleName", "options", forwardingRuleCreationOptions);

@@ -50,8 +50,8 @@ public class GlobalForwardingRuleApiMockTest extends BaseGoogleComputeEngineApiM
    public void insert() throws Exception {
       server.enqueue(jsonResponse("/region_operation.json"));
 
-      ForwardingRuleCreationOptions forwardingRuleCreationOptions = new ForwardingRuleCreationOptions()
-      .target(URI.create(url("/projects/party/regions/europe-west1/targetPools/test-target-pool")));
+      ForwardingRuleCreationOptions forwardingRuleCreationOptions = new ForwardingRuleCreationOptions.Builder()
+      .target(URI.create(url("/projects/party/regions/europe-west1/targetPools/test-target-pool"))).build();
 
       assertEquals(globalForwardingRuleApi().create("test-forwarding-rule", forwardingRuleCreationOptions),
             new ParseRegionOperationTest().expected(url("/projects")));

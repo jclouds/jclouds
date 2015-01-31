@@ -82,11 +82,12 @@ public class ForwardingRuleApiLiveTest extends BaseGoogleComputeEngineApiLiveTes
 
    @Test(groups = "live")
    public void testInsertForwardingRule() {
-      ForwardingRuleCreationOptions forwardingRuleCreationOptions = new ForwardingRuleCreationOptions()
+      ForwardingRuleCreationOptions forwardingRuleCreationOptions = new ForwardingRuleCreationOptions.Builder()
                                                                            .description(DESCRIPTION)
                                                                            .ipAddress(address.address())
                                                                            .ipProtocol(ForwardingRule.IPProtocol.TCP)
-                                                                           .target(targetPool.selfLink());
+                                                                           .target(targetPool.selfLink())
+                                                                           .build();
       assertOperationDoneSuccessfully(api().create(FORWARDING_RULE_NAME, forwardingRuleCreationOptions));
    }
 
