@@ -35,6 +35,7 @@ import org.jclouds.openstack.v2_0.domain.Resource;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
+import com.google.common.base.Predicate;
 import com.google.common.base.Throwables;
 import com.google.common.collect.ComparisonChain;
 import com.google.common.collect.ImmutableSet;
@@ -106,7 +107,7 @@ public class BaseNovaApiLiveTest extends BaseApiLiveTest<NovaApi> {
                         .getTaskState() != null)); currentDetails = api.get(serverId)) {
          System.out.printf("blocking on status %s%n%s%n", status, currentDetails);
          try {
-            Thread.sleep(5 * 1000);
+            Thread.sleep(15 * 1000);
          } catch (InterruptedException e) {
             throw Throwables.propagate(e);
          }
@@ -122,7 +123,12 @@ public class BaseNovaApiLiveTest extends BaseApiLiveTest<NovaApi> {
 
    protected String flavorRefForRegion(String regionId) {
       FlavorApi flavorApi = api.getFlavorApi(regionId);
-      return DEFAULT_FLAVOR_ORDERING.min(flavorApi.listInDetail().concat()).getId();
+      return DEFAULT_FLAVOR_ORDERING.min(flavorApi.listInDetail().concat().filter(new Predicate<Flavor>() {
+         @Override
+         public boolean apply(Flavor in) {
+            return in.getDisk() >= 10 && in.getRam() >= 4 && in.getVcpus() >= 2;
+         }
+      })).getId();
    }
 
    static final Ordering<Flavor> DEFAULT_FLAVOR_ORDERING = new Ordering<Flavor>() {
