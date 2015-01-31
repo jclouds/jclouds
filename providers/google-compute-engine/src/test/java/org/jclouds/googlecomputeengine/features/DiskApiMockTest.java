@@ -52,7 +52,7 @@ public class DiskApiMockTest extends BaseGoogleComputeEngineApiMockTest {
    public void insert() throws Exception {
       server.enqueue(jsonResponse("/zone_operation.json"));
 
-      DiskCreationOptions options = new DiskCreationOptions().sizeGb(1);
+      DiskCreationOptions options = new DiskCreationOptions.Builder().sizeGb(1).build();
       assertEquals(diskApi().create("testimage1", options),
             new ParseZoneOperationTest().expected(url("/projects")));
 
@@ -63,7 +63,7 @@ public class DiskApiMockTest extends BaseGoogleComputeEngineApiMockTest {
    public void insertFromImage() throws Exception {
       server.enqueue(jsonResponse("/zone_operation.json"));
 
-      DiskCreationOptions diskCreationOptions = new DiskCreationOptions().sizeGb(1).description("testing 123");
+      DiskCreationOptions diskCreationOptions = new DiskCreationOptions.Builder().sizeGb(1).description("testing 123").build();
 
       assertEquals(diskApi().create("testimage1", url(IMAGE_URL), diskCreationOptions),
             new ParseZoneOperationTest().expected(url("/projects")));
@@ -76,8 +76,8 @@ public class DiskApiMockTest extends BaseGoogleComputeEngineApiMockTest {
    public void insertFromSSD() throws Exception {
       server.enqueue(jsonResponse("/zone_operation.json"));
 
-      DiskCreationOptions diskCreationOptions = new DiskCreationOptions()
-         .type(URI.create(url(SSD_URL))).sizeGb(1);
+      DiskCreationOptions diskCreationOptions = new DiskCreationOptions.Builder()
+         .type(URI.create(url(SSD_URL))).sizeGb(1).build();
 
       assertEquals(diskApi().create("testimage1", diskCreationOptions),
             new ParseZoneOperationTest().expected(url("/projects")));

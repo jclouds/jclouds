@@ -38,8 +38,8 @@ public class DiskCreationBinderTest extends BaseGoogleComputeEngineExpectTest<Ob
 
    @Test
    public void testMap() throws SecurityException, NoSuchMethodException {
-      DiskCreationOptions diskCreationOptions = new DiskCreationOptions()
-         .sourceSnapshot(URI.create(FAKE_SOURCE_SNAPSHOT)).sizeGb(15).description(null);
+      DiskCreationOptions diskCreationOptions = new DiskCreationOptions.Builder()
+         .sourceSnapshot(URI.create(FAKE_SOURCE_SNAPSHOT)).sizeGb(15).description(null).build();
 
       HttpRequest request = HttpRequest.builder().method("GET").endpoint("http://momma").build();
       Map<String, Object> postParams = ImmutableMap.of("name", "testName", "options", diskCreationOptions);

@@ -42,7 +42,7 @@ public abstract class ImageCreationOptions {
       return new AutoValue_ImageCreationOptions(name, description, sourceType, rawDisk, deprecated, sourceDisk);
    }
 
-   public static class Builder{
+   public static class Builder {
       public String name;
       public String description;
       public String sourceType;

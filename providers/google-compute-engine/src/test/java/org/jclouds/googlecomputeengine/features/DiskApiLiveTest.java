@@ -42,7 +42,7 @@ public class DiskApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
 
    @Test(groups = "live")
    public void testInsertDisk() {
-      DiskCreationOptions options = new DiskCreationOptions().sizeGb( SIZE_GB);
+      DiskCreationOptions options = new DiskCreationOptions.Builder().sizeGb( SIZE_GB).build();
       assertOperationDoneSuccessfully(api().create(DISK_NAME, options));
    }
 
@@ -78,7 +78,7 @@ public class DiskApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
    @Test(groups = "live")
    public void testInsertSSDDisk() {
       URI diskType = getDiskTypeUrl(DEFAULT_ZONE_NAME, "pd-ssd");
-      DiskCreationOptions diskCreationOptions = new DiskCreationOptions().type(diskType).sizeGb(SIZE_GB);
+      DiskCreationOptions diskCreationOptions = new DiskCreationOptions.Builder().type(diskType).sizeGb(SIZE_GB).build();
       assertOperationDoneSuccessfully(api().create(SSD_DISK_NAME, diskCreationOptions));
    }
 

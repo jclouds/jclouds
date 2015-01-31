@@ -122,7 +122,7 @@ public class InstanceApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
               (INSTANCE_NETWORK_NAME, IPV4_RANGE));
 
       assertOperationDoneSuccessfully(diskApi().create(DISK_NAME,
-            new DiskCreationOptions().sizeGb(DEFAULT_DISK_SIZE_GB)));
+            new DiskCreationOptions.Builder().sizeGb(DEFAULT_DISK_SIZE_GB).build()));
       assertOperationDoneSuccessfully(api().create(instance));
       assertOperationDoneSuccessfully(api().create(instance2));
    }
@@ -236,7 +236,7 @@ public class InstanceApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
    @Test(groups = "live", dependsOnMethods = "testSetMetadataForInstance")
    public void testAttachDiskToInstance() {
       assertOperationDoneSuccessfully(diskApi().create(ATTACH_DISK_NAME,
-            new DiskCreationOptions().sizeGb(1)));
+            new DiskCreationOptions.Builder().sizeGb(1).build()));
 
       Instance originalInstance = api().get(INSTANCE_NAME);
       assertOperationDoneSuccessfully(api().attachDisk(INSTANCE_NAME,

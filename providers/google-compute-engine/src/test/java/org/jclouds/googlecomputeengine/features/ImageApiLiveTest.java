@@ -70,7 +70,7 @@ public class ImageApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
    @Test(groups = "live")
    public void testInsertDisk() {
       assertOperationDoneSuccessfully(diskApi().create(DISK_NAME,
-            new DiskCreationOptions().sizeGb(sizeGb)));
+            new DiskCreationOptions.Builder().sizeGb(sizeGb).build()));
       Disk disk = diskApi().get(DISK_NAME);
       diskURI = disk.selfLink();
    }

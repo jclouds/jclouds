@@ -46,7 +46,7 @@ public class SnapshotApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
    @Test(groups = "live")
    public void testCreateSnapshot() {
       assertOperationDoneSuccessfully(diskApi().create(DISK_NAME,
-            new DiskCreationOptions().sizeGb(1)));
+            new DiskCreationOptions.Builder().sizeGb(1).build()));
       disk = diskApi().get(DISK_NAME);
 
       assertOperationDoneSuccessfully(diskApi().createSnapshot(DISK_NAME, SNAPSHOT_NAME));
