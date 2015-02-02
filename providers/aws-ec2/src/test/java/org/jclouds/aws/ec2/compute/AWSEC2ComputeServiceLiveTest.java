@@ -92,7 +92,7 @@ public class AWSEC2ComputeServiceLiveTest extends EC2ComputeServiceLiveTest {
       template.getOptions().userMetadata(userMetadata);
       template.getOptions().tags(tags);
       template.getOptions().as(AWSEC2TemplateOptions.class).enableMonitoring();
-      template.getOptions().as(AWSEC2TemplateOptions.class).spotPrice(0.3f);
+      template.getOptions().as(AWSEC2TemplateOptions.class).spotPrice(0.05f);
 
       String startedId = null;
       try {

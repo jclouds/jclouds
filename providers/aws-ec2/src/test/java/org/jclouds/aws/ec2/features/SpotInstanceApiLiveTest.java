@@ -144,9 +144,8 @@ public class SpotInstanceApiLiveTest  extends BaseComputeServiceContextLiveTest 
             assert in(
                      ImmutableSet.of("c1.medium", "c1.xlarge", "cc1.4xlarge", "cg1.4xlarge", "cc2.8xlarge", "m1.large",
                               "m1.small", "m1.medium", "m1.xlarge", "m2.2xlarge", "m2.4xlarge", "m2.xlarge", "m3.xlarge",
-                              "m3.2xlarge", "t1.micro", "cr1.8xlarge")).apply(
-                     spot.getInstanceType()) : spot;
-
+                              "m3.2xlarge", "t1.micro", "cr1.8xlarge", "c4.large", "c4.xlarge", "c4.2xlarge", "c4.4xlarge",
+                              "c4.8xlarge")).apply(spot.getInstanceType()) : spot;
          }
       }
 

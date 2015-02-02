@@ -28,6 +28,7 @@ import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.SSLContext;
 
 import org.jclouds.http.HttpCommand;
+import org.jclouds.http.HttpResponse;
 import org.jclouds.http.HttpUtils;
 import org.jclouds.http.IOExceptionRetryHandler;
 import org.jclouds.http.handlers.DelegatingErrorHandler;
@@ -91,4 +92,11 @@ public class TrackingJavaUrlHttpCommandExecutorService extends JavaUrlHttpComman
             untrustedSSLContextProvider, proxyForURI);
       this.commandsInvoked = commandsInvoked;
    }
+
+   @Override
+   public HttpResponse invoke(HttpCommand command) {
+      commandsInvoked.add(command);
+      return super.invoke(command);
+   }
+   
 }

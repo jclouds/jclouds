@@ -21,18 +21,17 @@ import static org.jclouds.http.internal.TrackingJavaUrlHttpCommandExecutorServic
 import static org.jclouds.http.internal.TrackingJavaUrlHttpCommandExecutorService.getInvokerOfRequestAtIndex;
 import static org.testng.Assert.assertEquals;
 
-import java.lang.reflect.Method;
 import java.util.Collection;
 import java.util.List;
 
 import org.jclouds.compute.ComputeServiceContext;
 import org.jclouds.compute.domain.Template;
 import org.jclouds.compute.internal.BaseTemplateBuilderLiveTest;
+import org.jclouds.ec2.features.AMIApi;
+import org.jclouds.ec2.features.AvailabilityZoneAndRegionApi;
 import org.jclouds.ec2.options.DescribeAvailabilityZonesOptions;
 import org.jclouds.ec2.options.DescribeImagesOptions;
 import org.jclouds.ec2.options.DescribeRegionsOptions;
-import org.jclouds.ec2.features.AMIApi;
-import org.jclouds.ec2.features.AvailabilityZoneAndRegionApi;
 import org.jclouds.http.HttpCommand;
 import org.jclouds.http.internal.TrackingJavaUrlHttpCommandExecutorService;
 import org.jclouds.logging.log4j.config.Log4JLoggingModule;
@@ -42,6 +41,7 @@ import com.google.common.base.Predicate;
 import com.google.common.collect.Collections2;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
+import com.google.common.reflect.Invokable;
 import com.google.inject.Module;
 
 public abstract class EC2TemplateBuilderLiveTest extends BaseTemplateBuilderLiveTest {
@@ -66,9 +66,10 @@ public abstract class EC2TemplateBuilderLiveTest extends BaseTemplateBuilderLive
          assertEquals(template.getImage(), defaultTemplate.getImage());
 
          Collection<HttpCommand> filteredCommandsInvoked = Collections2.filter(commandsInvoked, new Predicate<HttpCommand>() {
-            private final Collection<Method> ignored = ImmutableSet.of(
-                     AvailabilityZoneAndRegionApi.class.getMethod("describeRegions", DescribeRegionsOptions[].class),
-                     AvailabilityZoneAndRegionApi.class.getMethod("describeAvailabilityZonesInRegion", String.class, DescribeAvailabilityZonesOptions[].class));
+            private final Collection<Invokable<?, Object>> ignored = ImmutableSet.of(
+                     Invokable.from(AvailabilityZoneAndRegionApi.class.getMethod("describeRegions", DescribeRegionsOptions[].class)),
+                     Invokable.from(AvailabilityZoneAndRegionApi.class.getMethod("describeAvailabilityZonesInRegion",
+                           String.class, DescribeAvailabilityZonesOptions[].class)));
             @Override
             public boolean apply(HttpCommand input) {
                return !ignored.contains(getInvokerOfRequest(input));
@@ -76,8 +77,8 @@ public abstract class EC2TemplateBuilderLiveTest extends BaseTemplateBuilderLive
          });
          
          assert filteredCommandsInvoked.size() == 1 : commandsInvoked;
-         assertEquals(getInvokerOfRequestAtIndex(filteredCommandsInvoked, 0), AMIApi.class
-                  .getMethod("describeImagesInRegion", String.class, DescribeImagesOptions[].class));
+         assertInvokedCommand(getInvokerOfRequestAtIndex(filteredCommandsInvoked, 0), Invokable.from(AMIApi.class
+                  .getMethod("describeImagesInRegion", String.class, DescribeImagesOptions[].class)));
          assertDescribeImagesOptionsEquals((DescribeImagesOptions[])getArgsForRequestAtIndex(filteredCommandsInvoked, 0).get(1), 
                   defaultImageProviderId);
 
@@ -90,5 +91,18 @@ public abstract class EC2TemplateBuilderLiveTest extends BaseTemplateBuilderLive
    private static void assertDescribeImagesOptionsEquals(DescribeImagesOptions[] actual, String expectedImageId) {
       assertEquals(actual.length, 1);
       assertEquals(actual[0].getImageIds(), ImmutableSet.of(expectedImageId));
+   }
+   
+   protected static void assertInvokedCommand(Invokable<?, ?> actual, Invokable<?, ?> expected) {
+      // Invokables can be constructed by different meanings and be of different types. Since we
+      // only want to verify the "wrapped" types, let's ignore the invokable type and compare the
+      // types of the underlying methods
+      assertEquals(actual.getDeclaringClass(), expected.getDeclaringClass());
+      assertEquals(actual.getName(), expected.getName());
+      assertEquals(actual.getParameters().size(), expected.getParameters().size());
+      for (int i = 0; i < actual.getParameters().size(); i++) {
+         assertEquals(actual.getParameters().get(i).getType(), expected.getParameters().get(i).getType());
+      }
+      assertEquals(actual.getReturnType(), expected.getReturnType());
    }
 }

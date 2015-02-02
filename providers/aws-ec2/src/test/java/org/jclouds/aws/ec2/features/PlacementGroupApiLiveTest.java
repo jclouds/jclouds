@@ -17,7 +17,6 @@
 package org.jclouds.aws.ec2.features;
 
 import static com.google.common.collect.Iterables.getOnlyElement;
-import static com.google.common.collect.Lists.newArrayList;
 import static com.google.common.collect.Sets.newTreeSet;
 import static java.util.concurrent.TimeUnit.SECONDS;
 import static org.jclouds.util.Predicates2.retry;
@@ -25,7 +24,6 @@ import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.fail;
 
-import java.util.ArrayList;
 import java.util.Set;
 import java.util.SortedSet;
 
@@ -62,8 +60,7 @@ import com.google.inject.Module;
  */
 @Test(groups = "live", singleThreaded = true, testName = "PlacementGroupApiLiveTest")
 public class PlacementGroupApiLiveTest extends BaseComputeServiceContextLiveTest {
-   ArrayList<String> supportedRegions = newArrayList(Region.US_EAST_1, Region.US_WEST_2, Region.EU_WEST_1,
-           Region.US_WEST_2, Region.AP_NORTHEAST_1, Region.AP_SOUTHEAST_1, Region.AP_SOUTHEAST_2);
+   private final Set<String> supportedRegions = Region.DEFAULT_REGIONS;
 
    public PlacementGroupApiLiveTest() {
       provider = "aws-ec2";
@@ -136,10 +133,10 @@ public class PlacementGroupApiLiveTest extends BaseComputeServiceContextLiveTest
          assertNotNull(allResults);
          if (allResults.size() >= 1) {
             PlacementGroup group = allResults.last();
-            SortedSet<PlacementGroup> result = newTreeSet(client.getPlacementGroupApi().get()
+            client.getPlacementGroupApi().get()
                     .describePlacementGroupsInRegionWithFilter(region,
                             ImmutableMultimap.<String, String>builder()
-                                    .put("invalid-filter", group.getName()).build()));
+                                    .put("invalid-filter", group.getName()).build());
          }
       }
    }

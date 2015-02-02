@@ -52,6 +52,7 @@ import org.testng.annotations.Test;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
+import com.google.common.reflect.Invokable;
 import com.google.inject.Module;
 
 @Test(groups = "live", testName = "AWSEC2TemplateBuilderLiveTest")
@@ -157,7 +158,7 @@ public class AWSEC2TemplateBuilderLiveTest extends EC2TemplateBuilderLiveTest {
       Template defaultTemplate = view.getComputeService().templateBuilder().osFamily(AMZN_LINUX)
             .imageMatches(EC2ImagePredicates.rootDeviceType(RootDeviceType.INSTANCE_STORE)).build();
       assert defaultTemplate.getImage().getProviderId().startsWith("ami-") : defaultTemplate;
-      assertEquals(defaultTemplate.getImage().getOperatingSystem().getVersion(), "pv-2014.09.1");
+      assertEquals(defaultTemplate.getImage().getOperatingSystem().getVersion(), "pv-2014.09.2");
       assertEquals(defaultTemplate.getImage().getOperatingSystem().is64Bit(), true);
       assertEquals(defaultTemplate.getImage().getOperatingSystem().getFamily(), AMZN_LINUX);
       assertEquals(defaultTemplate.getImage().getUserMetadata().get("rootDeviceType"), "instance-store");
@@ -170,13 +171,13 @@ public class AWSEC2TemplateBuilderLiveTest extends EC2TemplateBuilderLiveTest {
    public void testFastestTemplateBuilder() throws IOException {
       Template fastestTemplate = view.getComputeService().templateBuilder().fastest().osFamily(AMZN_LINUX).build();
       assert fastestTemplate.getImage().getProviderId().startsWith("ami-") : fastestTemplate;
-      assertEquals(fastestTemplate.getHardware().getProviderId(), InstanceType.C3_8XLARGE);
+      assertEquals(fastestTemplate.getHardware().getProviderId(), InstanceType.C4_8XLARGE);
       assertEquals(fastestTemplate.getImage().getOperatingSystem().getVersion(), "vpc-nat-pv-2014.09.1");
       assertEquals(fastestTemplate.getImage().getOperatingSystem().is64Bit(), true);
       assertEquals(fastestTemplate.getImage().getOperatingSystem().getFamily(), AMZN_LINUX);
       assertEquals(fastestTemplate.getImage().getUserMetadata().get("rootDeviceType"), "ebs");
       assertEquals(fastestTemplate.getLocation().getId(), "us-east-1");
-      assertEquals(getCores(fastestTemplate.getHardware()), 32.0d);
+      assertEquals(getCores(fastestTemplate.getHardware()), 36.0d);
       assertEquals(fastestTemplate.getImage().getOperatingSystem().getArch(), "paravirtual");
    }
 
@@ -307,11 +308,11 @@ public class AWSEC2TemplateBuilderLiveTest extends EC2TemplateBuilderLiveTest {
    private static void assertOnlyOneRegionQueriedForAvailabilityZone(List<HttpCommand> commandsInvoked)
          throws NoSuchMethodException {
       assert commandsInvoked.size() == 2 : commandsInvoked;
-      assertEquals(getInvokerOfRequestAtIndex(commandsInvoked, 0),
-            AvailabilityZoneAndRegionApi.class.getMethod("describeRegions", DescribeRegionsOptions[].class));
-      assertEquals(getInvokerOfRequestAtIndex(commandsInvoked, 1),
+      assertInvokedCommand(getInvokerOfRequestAtIndex(commandsInvoked, 0), Invokable.from(
+            AvailabilityZoneAndRegionApi.class.getMethod("describeRegions", DescribeRegionsOptions[].class)));
+      assertInvokedCommand(getInvokerOfRequestAtIndex(commandsInvoked, 1), Invokable.from(
             AvailabilityZoneAndRegionApi.class.getMethod("describeAvailabilityZonesInRegion", String.class,
-                  DescribeAvailabilityZonesOptions[].class));
+                  DescribeAvailabilityZonesOptions[].class)));
    }
 
    @Test
@@ -333,7 +334,7 @@ public class AWSEC2TemplateBuilderLiveTest extends EC2TemplateBuilderLiveTest {
 
    @Override
    protected Set<String> getIso3166Codes() {
-      return ImmutableSet.of("US-VA", "US-CA", "US-OR", "BR-SP", "IE", "SG", "AU-NSW", "JP-13");
+      return ImmutableSet.of("US-VA", "US-CA", "US-OR", "BR-SP", "IE", "DE-HE", "SG", "AU-NSW", "JP-13");
    }
 
 }
