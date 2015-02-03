@@ -362,6 +362,61 @@ public class InstanceType {
    public static final String C3_8XLARGE = "c3.8xlarge";
 
    /**
+    * C4 Compute-optimized Extra Large
+    * <ul>
+    *    <li>7.5 GiB of memory</li>
+    *    <li>4 vCPU</li>
+    *    <li>No instance storage (EBS storage only)</li>
+    *    <li>750 Mbps Dedicated EBS Throughput</li>
+    * </ul>
+    */
+   public static final String C4_XLARGE = "c4.xlarge";
+
+   /**
+    * C4 Compute-optimized Double Extra Large
+    * <ul>
+    *    <li>8 GiB of memory</li>
+    *    <li>15 vCPU</li>
+    *    <li>No instance storage (EBS storage only)</li>
+    *    <li>1000 Mbps Dedicated EBS Throughput</li>
+    * </ul>
+    */
+   public static final String C4_2XLARGE = "c4.2xlarge";
+
+   /**
+    * C4 Compute-optimized Quadruple Extra Large
+    * <ul>
+    *    <li>30 GiB of memory</li>
+    *    <li>16 vCPU</li>
+    *    <li>No instance storage (EBS storage only)</li>
+    *    <li>2000 Mbps Dedicated EBS Throughput</li>
+    * </ul>
+    */
+   public static final String C4_4XLARGE = "c4.4xlarge";
+
+   /**
+    * C4 Compute-optimized Octuple Extra Large
+    * <ul>
+    *    <li>60 GiB of memory</li>
+    *    <li>36 vCPU</li>
+    *    <li>No instance storage (EBS storage only)</li>
+    *    <li>4000 Mbps Dedicated EBS Throughput</li>
+    * </ul>
+    */
+   public static final String C4_8XLARGE = "c4.8xlarge";
+
+   /**
+    * C4 Compute-optimized Large
+    * <ul>
+    *    <li>3.75 GiB of memory</li>
+    *    <li>2 vCPU</li>
+    *    <li>No instance storage (EBS storage only)</li>
+    *    <li>500 Mbps Dedicated EBS Throughput</li>
+    * </ul>
+    */
+   public static final String C4_LARGE = "c4.large";
+
+   /**
     * I2 Extra Large
     * <ul>
     *    <li>30.5 GiB of memory</li>
