@@ -30,6 +30,7 @@ import java.util.concurrent.TimeoutException;
 
 import org.jclouds.compute.domain.NodeMetadata;
 import org.jclouds.rest.HttpClient;
+import org.jclouds.ssh.SshKeys;
 
 import com.google.common.base.Charsets;
 import com.google.common.base.Throwables;
@@ -48,7 +49,12 @@ public class ComputeTestUtils {
       } catch (NullPointerException e) {
          secretKeyFile = System.getProperty("user.home") + "/.ssh/id_rsa";
       }
-      checkSecretKeyFile(secretKeyFile);
+      try {
+         checkSecretKeyFile(secretKeyFile);
+      }
+      catch (IllegalStateException e) {
+         return SshKeys.generate();
+      }
       try {
          String secret = Files.toString(new File(secretKeyFile), Charsets.UTF_8);
          assert secret.startsWith("-----BEGIN RSA PRIVATE KEY-----") : "invalid key:\n" + secret;
