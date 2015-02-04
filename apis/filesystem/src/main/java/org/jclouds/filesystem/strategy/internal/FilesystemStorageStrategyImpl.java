@@ -673,6 +673,9 @@ public class FilesystemStorageStrategyImpl implements LocalStorageStrategy {
    private static void populateBlobKeysInContainer(File directory, Set<String> blobNames,
          Function<String, String> function) {
       File[] children = directory.listFiles();
+      if (children == null) {
+         return;
+      }
       for (File child : children) {
          if (child.isFile()) {
             blobNames.add( function.apply(child.getAbsolutePath()) );
