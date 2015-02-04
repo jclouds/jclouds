@@ -51,7 +51,7 @@ public class VirtualGuestToNodeMetadataTest {
    VirtualGuestToHardware virtualGuestToHardware = Guice.createInjector().getInstance(VirtualGuestToHardware.class);
    GroupNamingConvention.Factory namingConvention = Guice.createInjector().getInstance(GroupNamingConvention.Factory.class);
 
-   Location location = new LocationBuilder().id("123456789")
+   Location location = new LocationBuilder().id("test")
                                             .description("example")
                                             .scope(LocationScope.ZONE)
                                             .build();
@@ -65,6 +65,8 @@ public class VirtualGuestToNodeMetadataTest {
               virtualGuestToImage, virtualGuestToHardware).apply(virtualGuest);
       assertNotNull(nodeMetadata);
       assertEquals(nodeMetadata.getName(), virtualGuest.getHostname());
+      assertNotNull(nodeMetadata.getLocation());
+      assertEquals(nodeMetadata.getLocation().getId(), location.getId());
       assertEquals(nodeMetadata.getHostname(), virtualGuest.getHostname() + virtualGuest.getDomain());
       assertEquals(nodeMetadata.getHardware().getRam(), virtualGuest.getMaxMemory());
       assertTrue(nodeMetadata.getHardware().getProcessors().size() == 1);
