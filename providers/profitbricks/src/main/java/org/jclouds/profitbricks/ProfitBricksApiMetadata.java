@@ -53,29 +53,29 @@ public class ProfitBricksApiMetadata extends BaseHttpApiMetadata<ProfitBricksApi
    public static class Builder extends BaseHttpApiMetadata.Builder<ProfitBricksApi, Builder> {
 
       protected Builder() {
-	 id("profitbricks")
-		 .name("ProfitBricks API")
-		 .identityName("API Username")
-		 .credentialName("API Password")
-		 .documentation(URI.create("https://www.profitbricks.com/sites/default/files/profitbricks_api_1_3.pdf"))
-		 .defaultEndpoint("https://api.profitbricks.com/1.3")
-		 .version("1.3")
-		 // .view(ComputeServiceContext.class)
-		 .defaultProperties(ProfitBricksApiMetadata.defaultProperties())
-		 .defaultModules(ImmutableSet.<Class<? extends Module>>of(
-				 ProfitBricksHttpApiModule.class,
-				 ProfitBricksHttpCommandExecutorServiceModule.class
-			 ));
+         id("profitbricks")
+                 .name("ProfitBricks API")
+                 .identityName("API Username")
+                 .credentialName("API Password")
+                 .documentation(URI.create("https://www.profitbricks.com/sites/default/files/profitbricks_api_1_3.pdf"))
+                 .defaultEndpoint("https://api.profitbricks.com/1.3")
+                 .version("1.3")
+                 // .view(ComputeServiceContext.class)
+                 .defaultProperties(ProfitBricksApiMetadata.defaultProperties())
+                 .defaultModules(ImmutableSet.<Class<? extends Module>>of(
+                                 ProfitBricksHttpApiModule.class,
+                                 ProfitBricksHttpCommandExecutorServiceModule.class
+                         ));
       }
 
       @Override
       public ProfitBricksApiMetadata build() {
-	 return new ProfitBricksApiMetadata(this);
+         return new ProfitBricksApiMetadata(this);
       }
 
       @Override
       protected Builder self() {
-	 return this;
+         return this;
       }
    }
 

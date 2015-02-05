@@ -58,8 +58,7 @@ public interface DataCenterApi {
 
    /**
     * @param identifier Data Center identifier
-    * @return Returns information about an existing virtual data center's state and configuration or <code>null</code>
-    * if it doesn't exist.
+    * @return Returns information about an existing virtual data center's state and configuration or <code>null</code> if it doesn't exist.
     */
    @POST
    @Named("datacenter:get")
@@ -69,8 +68,8 @@ public interface DataCenterApi {
    DataCenter getDataCenter(@PayloadParam("id") String identifier);
 
    /**
-    * This is a lightweight function for polling the current provisioning state of the Virtual Data Center. It is
-    * recommended to use this function for large Virtual Data Centers to query request results.
+    * This is a lightweight function for polling the current provisioning state of the Virtual Data Center. It is recommended to use this
+    * function for large Virtual Data Centers to query request results.
     * <p>
     * @param identifier Data Center identifier
     */
@@ -119,9 +118,8 @@ public interface DataCenterApi {
    DataCenter clearDataCenter(@PayloadParam("id") String identifier);
 
    /**
-    * Deletes an Virtual Data Center. If a previous request on the target data center is still in progress, the data
-    * center is going to be deleted after this request has been completed. Once a Data Center has been deleted, no
-    * further request can be performed on it.
+    * Deletes an Virtual Data Center. If a previous request on the target data center is still in progress, the data center is going to be
+    * deleted after this request has been completed. Once a Data Center has been deleted, no further request can be performed on it.
     * <p>
     * @param identifier Identifier of the virtual data center
     * @return Returns a boolean indicating whether delete operation was made

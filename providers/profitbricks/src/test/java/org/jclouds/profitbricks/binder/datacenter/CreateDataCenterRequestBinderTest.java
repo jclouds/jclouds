@@ -38,10 +38,10 @@ public class CreateDataCenterRequestBinderTest {
    }
 
    private final String expectedPayload
-	   = ("      <ws:createDataCenter>\n"
-	   + "         <request>\n"
-	   + "            <dataCenterName>JClouds-DC</dataCenterName>\n"
-	   + "            <location>de/fkb</location>\n"
-	   + "         </request>\n"
-	   + "      </ws:createDataCenter>\n").replaceAll("\\s+", "");
+           = ("      <ws:createDataCenter>\n"
+           + "         <request>\n"
+           + "            <dataCenterName>JClouds-DC</dataCenterName>\n"
+           + "            <location>de/fkb</location>\n"
+           + "         </request>\n"
+           + "      </ws:createDataCenter>\n").replaceAll("\\s+", "");
 }

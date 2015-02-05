@@ -39,19 +39,19 @@ import org.jclouds.rest.annotations.PayloadParam;
 import org.jclouds.rest.annotations.RequestFilters;
 import org.jclouds.rest.annotations.XMLResponseParser;
 
-@RequestFilters( { BasicAuthentication.class, ProfitBricksSoapMessageEnvelope.class } )
-@Consumes( MediaType.TEXT_XML )
-@Produces( MediaType.TEXT_XML )
+@RequestFilters({BasicAuthentication.class, ProfitBricksSoapMessageEnvelope.class})
+@Consumes(MediaType.TEXT_XML)
+@Produces(MediaType.TEXT_XML)
 public interface ServerApi {
 
    /**
     * @return Returns information about all virtual server, such as configuration, provisioning status, power status, etc.
     */
    @POST
-   @Named( "server:getall" )
-   @Payload( "<ws:getAllServers/>" )
-   @XMLResponseParser( ServerListResponseHandler.class )
-   @Fallback( Fallbacks.EmptyListOnNotFoundOr404.class )
+   @Named("server:getall")
+   @Payload("<ws:getAllServers/>")
+   @XMLResponseParser(ServerListResponseHandler.class)
+   @Fallback(Fallbacks.EmptyListOnNotFoundOr404.class)
    List<Server> getAllServers();
 
    /**
@@ -59,11 +59,11 @@ public interface ServerApi {
     * @return Returns information about a virtual server, such as configuration, provisioning status, power status, etc.
     */
    @POST
-   @Named( "server:get" )
-   @Payload( "<ws:getServer><serverId>{id}</serverId></ws:getServer>" )
-   @XMLResponseParser( ServerInfoResponseHandler.class )
-   @Fallback( Fallbacks.NullOnNotFoundOr404.class )
-   Server getServer( @PayloadParam( "id" ) String identifier );
+   @Named("server:get")
+   @Payload("<ws:getServer><serverId>{id}</serverId></ws:getServer>")
+   @XMLResponseParser(ServerInfoResponseHandler.class)
+   @Fallback(Fallbacks.NullOnNotFoundOr404.class)
+   Server getServer(@PayloadParam("id") String identifier);
 
    /**
     * Starts an existing virtual server
@@ -77,10 +77,10 @@ public interface ServerApi {
     * @return Identifier of current request
     */
    @POST
-   @Named( "server:start" )
-   @Payload( "<ws:startServer><serverId>{id}</serverId></ws:startServer>" )
-   @XMLResponseParser( RequestIdOnlyResponseHandler.class )
-   String startServer( @PayloadParam( "id" ) String id );
+   @Named("server:start")
+   @Payload("<ws:startServer><serverId>{id}</serverId></ws:startServer>")
+   @XMLResponseParser(RequestIdOnlyResponseHandler.class)
+   String startServer(@PayloadParam("id") String id);
 
    /**
     *
@@ -99,10 +99,10 @@ public interface ServerApi {
     * @return Identifier of current request
     */
    @POST
-   @Named( "server:stop" )
-   @Payload( "<ws:stopServer><serverId>{id}</serverId></ws:stopServer>" )
-   @XMLResponseParser( RequestIdOnlyResponseHandler.class )
-   String stopServer( @PayloadParam( "id" ) String id );
+   @Named("server:stop")
+   @Payload("<ws:stopServer><serverId>{id}</serverId></ws:stopServer>")
+   @XMLResponseParser(RequestIdOnlyResponseHandler.class)
+   String stopServer(@PayloadParam("id") String id);
 
    /**
     * Resets an existing virtual server (POWER CYCLE).
@@ -119,10 +119,10 @@ public interface ServerApi {
     * @return Identifier of current request
     */
    @POST
-   @Named( "server:reset" )
-   @Payload( "<ws:resetServer><serverId>{id}</serverId></ws:resetServer>" )
-   @XMLResponseParser( RequestIdOnlyResponseHandler.class )
-   String resetServer( @PayloadParam( "id" ) String id );
+   @Named("server:reset")
+   @Payload("<ws:resetServer><serverId>{id}</serverId></ws:resetServer>")
+   @XMLResponseParser(RequestIdOnlyResponseHandler.class)
+   String resetServer(@PayloadParam("id") String id);
 
    /**
     * Creates a Virtual Server within an existing data center. Parameters can be specified to set up a boot device and connect the server to
@@ -132,22 +132,22 @@ public interface ServerApi {
     * @return serverId of the created server
     */
    @POST
-   @Named( "server:create" )
-   @MapBinder( CreateServerRequestBinder.class )
-   @XMLResponseParser( ServerIdOnlyResponseHandler.class )
-   String createServer( @PayloadParam( "server" ) Server.Request.CreatePayload payload );
+   @Named("server:create")
+   @MapBinder(CreateServerRequestBinder.class)
+   @XMLResponseParser(ServerIdOnlyResponseHandler.class)
+   String createServer(@PayloadParam("server") Server.Request.CreatePayload payload);
 
    /**
     * Updates parameters of an existing virtual server device.
     *
-    * @param payload Paylaod
+    * @param payload Payload
     * @return Identifier of current request
     */
    @POST
-   @Named( "server:update" )
-   @MapBinder( UpdateServerRequestBinder.class )
-   @XMLResponseParser( RequestIdOnlyResponseHandler.class )
-   String updateServer( @PayloadParam( "server" ) Server.Request.UpdatePayload payload );
+   @Named("server:update")
+   @MapBinder(UpdateServerRequestBinder.class)
+   @XMLResponseParser(RequestIdOnlyResponseHandler.class)
+   String updateServer(@PayloadParam("server") Server.Request.UpdatePayload payload);
 
    /**
     * Deletes an existing Virtual Server.
@@ -156,9 +156,9 @@ public interface ServerApi {
     * @return Identifier of current request
     */
    @POST
-   @Named( "server:delete" )
-   @Payload( "<ws:deleteServer><serverId>{id}</serverId></ws:deleteServer>" )
-   @Fallback( Fallbacks.FalseOnNotFoundOr404.class )
-   boolean deleteServer( @PayloadParam( "id" ) String id );
+   @Named("server:delete")
+   @Payload("<ws:deleteServer><serverId>{id}</serverId></ws:deleteServer>")
+   @Fallback(Fallbacks.FalseOnNotFoundOr404.class)
+   boolean deleteServer(@PayloadParam("id") String id);
 
 }

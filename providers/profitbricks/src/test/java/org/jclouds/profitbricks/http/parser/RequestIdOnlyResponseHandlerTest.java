@@ -20,57 +20,57 @@ import org.jclouds.http.functions.ParseSax;
 import static org.testng.Assert.assertEquals;
 import org.testng.annotations.Test;
 
-@Test( groups = "unit", testName = "RequestIdOnlyResponseHandlerTest" )
+@Test(groups = "unit", testName = "RequestIdOnlyResponseHandlerTest")
 public class RequestIdOnlyResponseHandlerTest extends BaseResponseHandlerTest<String> {
 
    @Override
    protected ParseSax<String> createParser() {
-      return factory.create( injector.getInstance( RequestIdOnlyResponseHandler.class ) );
+      return factory.create(injector.getInstance(RequestIdOnlyResponseHandler.class));
    }
 
    @Test
    public void testParseResponseFromStartServer() {
       ParseSax<String> parser = createParser();
 
-      String requestId = parser.parse( payloadFromResource( "/server/server-start.xml" ) );
+      String requestId = parser.parse(payloadFromResource("/server/server-start.xml"));
 
-      assertEquals( requestId, "123456" );
+      assertEquals(requestId, "123456");
    }
 
    @Test
    public void testParseResponseFromStopServer() {
       ParseSax<String> parser = createParser();
 
-      String requestId = parser.parse( payloadFromResource( "/server/server-stop.xml" ) );
+      String requestId = parser.parse(payloadFromResource("/server/server-stop.xml"));
 
-      assertEquals( requestId, "123456" );
+      assertEquals(requestId, "123456");
    }
 
    @Test
    public void testParseResponseFromResetServer() {
       ParseSax<String> parser = createParser();
 
-      String requestId = parser.parse( payloadFromResource( "/server/server-reset.xml" ) );
+      String requestId = parser.parse(payloadFromResource("/server/server-reset.xml"));
 
-      assertEquals( requestId, "123456" );
+      assertEquals(requestId, "123456");
    }
 
    @Test
    public void testParseResponseFromUpdateServer() {
       ParseSax<String> parser = createParser();
 
-      String requestId = parser.parse( payloadFromResource( "/server/server-update.xml" ) );
+      String requestId = parser.parse(payloadFromResource("/server/server-update.xml"));
 
-      assertEquals( requestId, "102458" );
+      assertEquals(requestId, "102458");
    }
 
    @Test
    public void testParseResponseFromDeleteServer() {
       ParseSax<String> parser = createParser();
 
-      String requestId = parser.parse( payloadFromResource( "/server/server-delete.xml" ) );
+      String requestId = parser.parse(payloadFromResource("/server/server-delete.xml"));
 
-      assertEquals( requestId, "102459" );
+      assertEquals(requestId, "102459");
    }
 
 }

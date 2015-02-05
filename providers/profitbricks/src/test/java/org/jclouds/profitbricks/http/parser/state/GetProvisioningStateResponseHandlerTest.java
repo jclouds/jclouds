@@ -40,70 +40,70 @@ public class GetProvisioningStateResponseHandlerTest extends BaseResponseHandler
       ParseSax<ProvisioningState> parser = createParser();
 
       for (Map.Entry<ProvisioningState, String> pair : sampleResponses.entrySet()) {
-	 ProvisioningState actual = parser.parse(pair.getValue());
-	 assertNotNull(actual, "Parsed content returned null");
+         ProvisioningState actual = parser.parse(pair.getValue());
+         assertNotNull(actual, "Parsed content returned null");
 
-	 assertEquals(pair.getKey(), actual);
+         assertEquals(pair.getKey(), actual);
       }
 
    }
 
    private final Map<ProvisioningState, String> sampleResponses = new LinkedHashMap<ProvisioningState, String>() {
       {
-	 put(ProvisioningState.INACTIVE,
-		 "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:ws=\"http://ws.api.profitbricks.com/\">\n"
-		 + "   <soapenv:Header/>\n"
-		 + "   <soapenv:Body>\n"
-		 + "      <ws:getDataCenterStateResponse>\n"
-		 + "         <return>INACTIVE</return>\n"
-		 + "      </ws:getDataCenterStateResponse>\n"
-		 + "   </soapenv:Body>\n"
-		 + "</soapenv:Envelope>");
-	 put(ProvisioningState.INPROCESS,
-		 "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:ws=\"http://ws.api.profitbricks.com/\">\n"
-		 + "   <soapenv:Header/>\n"
-		 + "   <soapenv:Body>\n"
-		 + "      <ws:getDataCenterStateResponse>\n"
-		 + "         <return>INPROCESS</return>\n"
-		 + "      </ws:getDataCenterStateResponse>\n"
-		 + "   </soapenv:Body>\n"
-		 + "</soapenv:Envelope>");
-	 put(ProvisioningState.AVAILABLE,
-		 "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:ws=\"http://ws.api.profitbricks.com/\">\n"
-		 + "   <soapenv:Header/>\n"
-		 + "   <soapenv:Body>\n"
-		 + "      <ws:getDataCenterStateResponse>\n"
-		 + "         <return>AVAILABLE</return>\n"
-		 + "      </ws:getDataCenterStateResponse>\n"
-		 + "   </soapenv:Body>\n"
-		 + "</soapenv:Envelope>");
-	 put(ProvisioningState.DELETED,
-		 "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:ws=\"http://ws.api.profitbricks.com/\">\n"
-		 + "   <soapenv:Header/>\n"
-		 + "   <soapenv:Body>\n"
-		 + "      <ws:getDataCenterStateResponse>\n"
-		 + "         <return>DELETED</return>\n"
-		 + "      </ws:getDataCenterStateResponse>\n"
-		 + "   </soapenv:Body>\n"
-		 + "</soapenv:Envelope>");
-	 put(ProvisioningState.ERROR,
-		 "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:ws=\"http://ws.api.profitbricks.com/\">\n"
-		 + "   <soapenv:Header/>\n"
-		 + "   <soapenv:Body>\n"
-		 + "      <ws:getDataCenterStateResponse>\n"
-		 + "         <return>ERROR</return>\n"
-		 + "      </ws:getDataCenterStateResponse>\n"
-		 + "   </soapenv:Body>\n"
-		 + "</soapenv:Envelope>");
-	 put(ProvisioningState.UNRECOGNIZED,
-		 "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:ws=\"http://ws.api.profitbricks.com/\">\n"
-		 + "   <soapenv:Header/>\n"
-		 + "   <soapenv:Body>\n"
-		 + "      <ws:getDataCenterStateResponse>\n"
-		 + "         <return>MEH</return>\n"
-		 + "      </ws:getDataCenterStateResponse>\n"
-		 + "   </soapenv:Body>\n"
-		 + "</soapenv:Envelope>");
+         put(ProvisioningState.INACTIVE,
+                 "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:ws=\"http://ws.api.profitbricks.com/\">\n"
+                 + "   <soapenv:Header/>\n"
+                 + "   <soapenv:Body>\n"
+                 + "      <ws:getDataCenterStateResponse>\n"
+                 + "         <return>INACTIVE</return>\n"
+                 + "      </ws:getDataCenterStateResponse>\n"
+                 + "   </soapenv:Body>\n"
+                 + "</soapenv:Envelope>");
+         put(ProvisioningState.INPROCESS,
+                 "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:ws=\"http://ws.api.profitbricks.com/\">\n"
+                 + "   <soapenv:Header/>\n"
+                 + "   <soapenv:Body>\n"
+                 + "      <ws:getDataCenterStateResponse>\n"
+                 + "         <return>INPROCESS</return>\n"
+                 + "      </ws:getDataCenterStateResponse>\n"
+                 + "   </soapenv:Body>\n"
+                 + "</soapenv:Envelope>");
+         put(ProvisioningState.AVAILABLE,
+                 "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:ws=\"http://ws.api.profitbricks.com/\">\n"
+                 + "   <soapenv:Header/>\n"
+                 + "   <soapenv:Body>\n"
+                 + "      <ws:getDataCenterStateResponse>\n"
+                 + "         <return>AVAILABLE</return>\n"
+                 + "      </ws:getDataCenterStateResponse>\n"
+                 + "   </soapenv:Body>\n"
+                 + "</soapenv:Envelope>");
+         put(ProvisioningState.DELETED,
+                 "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:ws=\"http://ws.api.profitbricks.com/\">\n"
+                 + "   <soapenv:Header/>\n"
+                 + "   <soapenv:Body>\n"
+                 + "      <ws:getDataCenterStateResponse>\n"
+                 + "         <return>DELETED</return>\n"
+                 + "      </ws:getDataCenterStateResponse>\n"
+                 + "   </soapenv:Body>\n"
+                 + "</soapenv:Envelope>");
+         put(ProvisioningState.ERROR,
+                 "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:ws=\"http://ws.api.profitbricks.com/\">\n"
+                 + "   <soapenv:Header/>\n"
+                 + "   <soapenv:Body>\n"
+                 + "      <ws:getDataCenterStateResponse>\n"
+                 + "         <return>ERROR</return>\n"
+                 + "      </ws:getDataCenterStateResponse>\n"
+                 + "   </soapenv:Body>\n"
+                 + "</soapenv:Envelope>");
+         put(ProvisioningState.UNRECOGNIZED,
+                 "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:ws=\"http://ws.api.profitbricks.com/\">\n"
+                 + "   <soapenv:Header/>\n"
+                 + "   <soapenv:Body>\n"
+                 + "      <ws:getDataCenterStateResponse>\n"
+                 + "         <return>MEH</return>\n"
+                 + "      </ws:getDataCenterStateResponse>\n"
+                 + "   </soapenv:Body>\n"
+                 + "</soapenv:Envelope>");
       }
    };
 

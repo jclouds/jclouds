@@ -30,68 +30,68 @@ import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
 import org.testng.annotations.Test;
 
-@Test( groups = "unit", testName = "ServerListResponseHandlerTest" )
+@Test(groups = "unit", testName = "ServerListResponseHandlerTest")
 public class ServerListResponseHandlerTest extends BaseResponseHandlerTest<List<Server>> {
 
    @Override
    protected ParseSax<List<Server>> createParser() {
-      return factory.create( injector.getInstance( ServerListResponseHandler.class ) );
+      return factory.create(injector.getInstance(ServerListResponseHandler.class));
    }
 
    protected DateCodecFactory createDateParser() {
-      return injector.getInstance( DateCodecFactory.class );
+      return injector.getInstance(DateCodecFactory.class);
    }
 
    @Test
    public void testParseResponseFromGetAllServers() {
       ParseSax<List<Server>> parser = createParser();
 
-      List<Server> actual = parser.parse( payloadFromResource( "/server/servers.xml" ) );
-      assertNotNull( actual, "Parsed content returned null" );
+      List<Server> actual = parser.parse(payloadFromResource("/server/servers.xml"));
+      assertNotNull(actual, "Parsed content returned null");
 
       DateCodec dateParser = createDateParser().iso8601();
 
       List<Server> expected = ImmutableList.<Server>of(
               Server.builder()
-              .id( "qwertyui-qwer-qwer-qwer-qwertyyuiiop" )
-              .name( "facebook-node" )
-              .cores( 4 )
-              .ram( 4096 )
-              .hasInternetAccess( true )
-              .state( ProvisioningState.AVAILABLE )
-              .status( Server.Status.RUNNING )
-              .creationTime( dateParser.toDate( "2014-12-04T07:09:23.138Z" ) )
-              .lastModificationTime( dateParser.toDate( "2014-12-12T03:08:35.629Z" ) )
-              .osType( OsType.LINUX )
-              .availabilityZone( AvailabilityZone.AUTO )
-              .isCpuHotPlug( true )
-              .isRamHotPlug( true )
-              .isNicHotPlug( true )
-              .isNicHotUnPlug( true )
-              .isDiscVirtioHotPlug( true )
-              .isDiscVirtioHotUnPlug( true )
+              .id("qwertyui-qwer-qwer-qwer-qwertyyuiiop")
+              .name("facebook-node")
+              .cores(4)
+              .ram(4096)
+              .hasInternetAccess(true)
+              .state(ProvisioningState.AVAILABLE)
+              .status(Server.Status.RUNNING)
+              .creationTime(dateParser.toDate("2014-12-04T07:09:23.138Z"))
+              .lastModificationTime(dateParser.toDate("2014-12-12T03:08:35.629Z"))
+              .osType(OsType.LINUX)
+              .availabilityZone(AvailabilityZone.AUTO)
+              .isCpuHotPlug(true)
+              .isRamHotPlug(true)
+              .isNicHotPlug(true)
+              .isNicHotUnPlug(true)
+              .isDiscVirtioHotPlug(true)
+              .isDiscVirtioHotUnPlug(true)
               .build(),
               Server.builder()
-              .id( "asdfghjk-asdf-asdf-asdf-asdfghjklkjl" )
-              .name( "google-node" )
-              .cores( 1 )
-              .ram( 1024 )
-              .hasInternetAccess( false )
-              .state( ProvisioningState.AVAILABLE )
-              .status( Server.Status.RUNNING )
-              .creationTime( dateParser.toDate( "2014-11-12T07:01:00.441Z" ) )
-              .lastModificationTime( dateParser.toDate( "2014-11-12T07:01:00.441Z" ) )
-              .osType( OsType.LINUX )
-              .availabilityZone( AvailabilityZone.AUTO )
-              .isCpuHotPlug( true )
-              .isRamHotPlug( true )
-              .isNicHotPlug( true )
-              .isNicHotUnPlug( true )
-              .isDiscVirtioHotPlug( true )
-              .isDiscVirtioHotUnPlug( true )
+              .id("asdfghjk-asdf-asdf-asdf-asdfghjklkjl")
+              .name("google-node")
+              .cores(1)
+              .ram(1024)
+              .hasInternetAccess(false)
+              .state(ProvisioningState.AVAILABLE)
+              .status(Server.Status.RUNNING)
+              .creationTime(dateParser.toDate("2014-11-12T07:01:00.441Z"))
+              .lastModificationTime(dateParser.toDate("2014-11-12T07:01:00.441Z"))
+              .osType(OsType.LINUX)
+              .availabilityZone(AvailabilityZone.AUTO)
+              .isCpuHotPlug(true)
+              .isRamHotPlug(true)
+              .isNicHotPlug(true)
+              .isNicHotUnPlug(true)
+              .isDiscVirtioHotPlug(true)
+              .isDiscVirtioHotUnPlug(true)
               .build()
       );
 
-      assertEquals( actual, expected );
+      assertEquals(actual, expected);
    }
 }

@@ -47,9 +47,9 @@ public abstract class BaseResponseHandlerTest<T> {
 
    protected String payloadFromResource(String resource) {
       try {
-	 return toStringAndClose(getClass().getResourceAsStream(resource));
+         return toStringAndClose(getClass().getResourceAsStream(resource));
       } catch (IOException e) {
-	 throw Throwables.propagate(e);
+         throw Throwables.propagate(e);
       }
    }
 

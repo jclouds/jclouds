@@ -32,9 +32,9 @@ import org.jclouds.io.Payloads;
 public class ProfitBricksSoapMessageEnvelope implements HttpRequestFilter {
 
    private final String SOAP_PREFIX
-	   = "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:ws=\"http://ws.api.profitbricks.com/\">"
-	   + "<soapenv:Header/>"
-	   + "<soapenv:Body>";
+           = "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:ws=\"http://ws.api.profitbricks.com/\">"
+           + "<soapenv:Header/>"
+           + "<soapenv:Body>";
 
    private final String SOAP_SUFFIX = "</soapenv:Body></soapenv:Envelope>";
 

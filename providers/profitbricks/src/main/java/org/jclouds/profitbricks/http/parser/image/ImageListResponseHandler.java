@@ -17,9 +17,9 @@
 package org.jclouds.profitbricks.http.parser.image;
 
 import com.google.common.collect.Lists;
-import com.google.inject.Inject;
+
 import java.util.List;
-import org.jclouds.date.DateCodecFactory;
+
 import org.jclouds.profitbricks.domain.Image;
 import org.xml.sax.SAXException;
 
@@ -27,9 +27,7 @@ public class ImageListResponseHandler extends BaseImageResponseHandler<List<Imag
 
    private final List<Image> images;
 
-   @Inject
-   ImageListResponseHandler(DateCodecFactory dateCodecFactory) {
-      super(dateCodecFactory);
+   ImageListResponseHandler() {
       this.images = Lists.newArrayList();
    }
 

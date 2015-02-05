@@ -20,7 +20,7 @@ import java.util.Date;
 import static org.testng.Assert.assertEquals;
 import org.testng.annotations.Test;
 
-@Test( groups = "unit", testName = "ServerBuilderTest" )
+@Test(groups = "unit", testName = "ServerBuilderTest")
 public class ServerBuilderTest {
 
    private final Boolean _isCpuHotPlug = true;
@@ -46,119 +46,117 @@ public class ServerBuilderTest {
    private final String _bootFromStorageId = "some-random-storage-id";
    private final String _bootFromImageId = "some-random-image-id";
 
-   private final String _serverId = "some-random-server-id";
-
    @Test
    public void testAutoValueServerPropertiesSettingCorrectly() {
       Server actual = Server.builder()
-              .availabilityZone( _availabilityZone )
-              .creationTime( _creationTime )
-              .cores( _cores )
-              .hasInternetAccess( _hasInternetAccess )
-              .id( _id )
-              .name( _name )
-              .isCpuHotPlug( _isCpuHotPlug )
-              .isDiscVirtioHotPlug( _isDiscVirtioHotPlug )
-              .isDiscVirtioHotUnPlug( _isDiscVirtioHotUnPlug )
-              .isNicHotPlug( _isNicHotPlug )
-              .isNicHotUnPlug( _isNicHotUnPlug )
-              .isRamHotPlug( _isRamHotPlug )
-              .lastModificationTime( _lastModificationTime )
-              .ram( _ram )
-              .osType( _osType )
-              .state( _state )
-              .status( _status )
+              .availabilityZone(_availabilityZone)
+              .creationTime(_creationTime)
+              .cores(_cores)
+              .hasInternetAccess(_hasInternetAccess)
+              .id(_id)
+              .name(_name)
+              .isCpuHotPlug(_isCpuHotPlug)
+              .isDiscVirtioHotPlug(_isDiscVirtioHotPlug)
+              .isDiscVirtioHotUnPlug(_isDiscVirtioHotUnPlug)
+              .isNicHotPlug(_isNicHotPlug)
+              .isNicHotUnPlug(_isNicHotUnPlug)
+              .isRamHotPlug(_isRamHotPlug)
+              .lastModificationTime(_lastModificationTime)
+              .ram(_ram)
+              .osType(_osType)
+              .state(_state)
+              .status(_status)
               .build();
 
-      assertEquals( actual.availabilityZone(), _availabilityZone );
-      assertEquals( actual.cores(), _cores );
-      assertEquals( actual.creationTime(), _creationTime );
-      assertEquals( actual.hasInternetAccess(), _hasInternetAccess );
-      assertEquals( actual.id(), _id );
-      assertEquals( actual.name(), _name );
-      assertEquals( actual.isCpuHotPlug(), _isCpuHotPlug );
-      assertEquals( actual.isDiscVirtioHotPlug(), _isDiscVirtioHotPlug );
-      assertEquals( actual.isDiscVirtioHotUnPlug(), _isDiscVirtioHotUnPlug );
-      assertEquals( actual.isNicHotPlug(), _isNicHotPlug );
-      assertEquals( actual.isNicHotUnPlug(), _isNicHotUnPlug );
-      assertEquals( actual.isRamHotPlug(), _isRamHotPlug );
-      assertEquals( actual.lastModificationTime(), _lastModificationTime );
-      assertEquals( actual.ram(), _ram );
-      assertEquals( actual.osType(), _osType );
-      assertEquals( actual.state(), _state );
+      assertEquals(actual.availabilityZone(), _availabilityZone);
+      assertEquals(actual.cores(), _cores);
+      assertEquals(actual.creationTime(), _creationTime);
+      assertEquals(actual.hasInternetAccess(), _hasInternetAccess);
+      assertEquals(actual.id(), _id);
+      assertEquals(actual.name(), _name);
+      assertEquals(actual.isCpuHotPlug(), _isCpuHotPlug);
+      assertEquals(actual.isDiscVirtioHotPlug(), _isDiscVirtioHotPlug);
+      assertEquals(actual.isDiscVirtioHotUnPlug(), _isDiscVirtioHotUnPlug);
+      assertEquals(actual.isNicHotPlug(), _isNicHotPlug);
+      assertEquals(actual.isNicHotUnPlug(), _isNicHotUnPlug);
+      assertEquals(actual.isRamHotPlug(), _isRamHotPlug);
+      assertEquals(actual.lastModificationTime(), _lastModificationTime);
+      assertEquals(actual.ram(), _ram);
+      assertEquals(actual.osType(), _osType);
+      assertEquals(actual.state(), _state);
    }
 
    @Test
    public void testAutoValueServerRequestCreatePayloadPropertiesSettingCorrectly() {
       Server.Request.CreatePayload actual = Server.Request.creatingBuilder()
-              .availabilityZone( _availabilityZone )
-              .bootFromImageId( _bootFromImageId )
-              .bootFromStorageId( _bootFromStorageId )
-              .cores( _cores )
-              .dataCenterId( _dataCenterId )
-              .hasInternetAccess( _hasInternetAccess )
-              .name( _name )
-              .isCpuHotPlug( _isCpuHotPlug )
-              .isDiscVirtioHotPlug( _isDiscVirtioHotPlug )
-              .isDiscVirtioHotUnPlug( _isDiscVirtioHotUnPlug )
-              .isNicHotPlug( _isNicHotPlug )
-              .isNicHotUnPlug( _isNicHotUnPlug )
-              .isRamHotPlug( _isRamHotPlug )
-              .lanId( _lanId )
-              .ram( _ram )
-              .osType( _osType )
+              .availabilityZone(_availabilityZone)
+              .bootFromImageId(_bootFromImageId)
+              .bootFromStorageId(_bootFromStorageId)
+              .cores(_cores)
+              .dataCenterId(_dataCenterId)
+              .hasInternetAccess(_hasInternetAccess)
+              .name(_name)
+              .isCpuHotPlug(_isCpuHotPlug)
+              .isDiscVirtioHotPlug(_isDiscVirtioHotPlug)
+              .isDiscVirtioHotUnPlug(_isDiscVirtioHotUnPlug)
+              .isNicHotPlug(_isNicHotPlug)
+              .isNicHotUnPlug(_isNicHotUnPlug)
+              .isRamHotPlug(_isRamHotPlug)
+              .lanId(_lanId)
+              .ram(_ram)
+              .osType(_osType)
               .build();
 
-      assertEquals( actual.availabilityZone(), _availabilityZone );
-      assertEquals( actual.bootFromImageId(), _bootFromImageId );
-      assertEquals( actual.bootFromStorageId(), _bootFromStorageId );
-      assertEquals( actual.cores(), _cores );
-      assertEquals( actual.dataCenterId(), _dataCenterId );
-      assertEquals( actual.hasInternetAccess(), _hasInternetAccess );
-      assertEquals( actual.name(), _name );
-      assertEquals( actual.isCpuHotPlug(), _isCpuHotPlug );
-      assertEquals( actual.isDiscVirtioHotPlug(), _isDiscVirtioHotPlug );
-      assertEquals( actual.isDiscVirtioHotUnPlug(), _isDiscVirtioHotUnPlug );
-      assertEquals( actual.isNicHotPlug(), _isNicHotPlug );
-      assertEquals( actual.isNicHotUnPlug(), _isNicHotUnPlug );
-      assertEquals( actual.isRamHotPlug(), _isRamHotPlug );
-      assertEquals( actual.lanId(), _lanId );
-      assertEquals( actual.ram(), _ram );
-      assertEquals( actual.osType(), _osType );
+      assertEquals(actual.availabilityZone(), _availabilityZone);
+      assertEquals(actual.bootFromImageId(), _bootFromImageId);
+      assertEquals(actual.bootFromStorageId(), _bootFromStorageId);
+      assertEquals(actual.cores(), _cores);
+      assertEquals(actual.dataCenterId(), _dataCenterId);
+      assertEquals(actual.hasInternetAccess(), _hasInternetAccess);
+      assertEquals(actual.name(), _name);
+      assertEquals(actual.isCpuHotPlug(), _isCpuHotPlug);
+      assertEquals(actual.isDiscVirtioHotPlug(), _isDiscVirtioHotPlug);
+      assertEquals(actual.isDiscVirtioHotUnPlug(), _isDiscVirtioHotUnPlug);
+      assertEquals(actual.isNicHotPlug(), _isNicHotPlug);
+      assertEquals(actual.isNicHotUnPlug(), _isNicHotUnPlug);
+      assertEquals(actual.isRamHotPlug(), _isRamHotPlug);
+      assertEquals(actual.lanId(), _lanId);
+      assertEquals(actual.ram(), _ram);
+      assertEquals(actual.osType(), _osType);
    }
 
    @Test
    public void testAutoValueServerRequestUpdatePayloadPropertiesSettingCorrectly() {
       Server.Request.UpdatePayload actual = Server.Request.updatingBuilder()
-              .availabilityZone( _availabilityZone )
-              .bootFromImageId( _bootFromImageId )
-              .bootFromStorageId( _bootFromStorageId )
-              .cores( _cores )
-              .name( _name )
-              .id( _id )
-              .isCpuHotPlug( _isCpuHotPlug )
-              .isDiscVirtioHotPlug( _isDiscVirtioHotPlug )
-              .isDiscVirtioHotUnPlug( _isDiscVirtioHotUnPlug )
-              .isNicHotPlug( _isNicHotPlug )
-              .isNicHotUnPlug( _isNicHotUnPlug )
-              .isRamHotPlug( _isRamHotPlug )
-              .ram( _ram )
-              .osType( _osType )
+              .availabilityZone(_availabilityZone)
+              .bootFromImageId(_bootFromImageId)
+              .bootFromStorageId(_bootFromStorageId)
+              .cores(_cores)
+              .name(_name)
+              .id(_id)
+              .isCpuHotPlug(_isCpuHotPlug)
+              .isDiscVirtioHotPlug(_isDiscVirtioHotPlug)
+              .isDiscVirtioHotUnPlug(_isDiscVirtioHotUnPlug)
+              .isNicHotPlug(_isNicHotPlug)
+              .isNicHotUnPlug(_isNicHotUnPlug)
+              .isRamHotPlug(_isRamHotPlug)
+              .ram(_ram)
+              .osType(_osType)
               .build();
 
-      assertEquals( actual.availabilityZone(), _availabilityZone );
-      assertEquals( actual.bootFromImageId(), _bootFromImageId );
-      assertEquals( actual.bootFromStorageId(), _bootFromStorageId );
-      assertEquals( actual.cores(), _cores );
-      assertEquals( actual.name(), _name );
-      assertEquals( actual.id(), _id );
-      assertEquals( actual.isCpuHotPlug(), _isCpuHotPlug );
-      assertEquals( actual.isDiscVirtioHotPlug(), _isDiscVirtioHotPlug );
-      assertEquals( actual.isDiscVirtioHotUnPlug(), _isDiscVirtioHotUnPlug );
-      assertEquals( actual.isNicHotPlug(), _isNicHotPlug );
-      assertEquals( actual.isNicHotUnPlug(), _isNicHotUnPlug );
-      assertEquals( actual.isRamHotPlug(), _isRamHotPlug );
-      assertEquals( actual.ram(), _ram );
-      assertEquals( actual.osType(), _osType );
+      assertEquals(actual.availabilityZone(), _availabilityZone);
+      assertEquals(actual.bootFromImageId(), _bootFromImageId);
+      assertEquals(actual.bootFromStorageId(), _bootFromStorageId);
+      assertEquals(actual.cores(), _cores);
+      assertEquals(actual.name(), _name);
+      assertEquals(actual.id(), _id);
+      assertEquals(actual.isCpuHotPlug(), _isCpuHotPlug);
+      assertEquals(actual.isDiscVirtioHotPlug(), _isDiscVirtioHotPlug);
+      assertEquals(actual.isDiscVirtioHotUnPlug(), _isDiscVirtioHotUnPlug);
+      assertEquals(actual.isNicHotPlug(), _isNicHotPlug);
+      assertEquals(actual.isNicHotUnPlug(), _isNicHotUnPlug);
+      assertEquals(actual.isRamHotPlug(), _isRamHotPlug);
+      assertEquals(actual.ram(), _ram);
+      assertEquals(actual.osType(), _osType);
    }
 }

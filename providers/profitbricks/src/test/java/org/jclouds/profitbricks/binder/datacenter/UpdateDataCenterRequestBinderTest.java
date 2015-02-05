@@ -37,10 +37,10 @@ public class UpdateDataCenterRequestBinderTest {
    }
 
    private final String expectedPayload
-	   = ("      <ws:updateDataCenter>\n"
-	   + "         <request>\n"
-	   + "            <dataCenterId>aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee</dataCenterId>\n"
-	   + "            <dataCenterName>Apache-DC</dataCenterName>\n"
-	   + "         </request>\n"
-	   + "      </ws:updateDataCenter>").replaceAll("\\s+", "");
+           = ("      <ws:updateDataCenter>\n"
+           + "         <request>\n"
+           + "            <dataCenterId>aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee</dataCenterId>\n"
+           + "            <dataCenterName>Apache-DC</dataCenterName>\n"
+           + "         </request>\n"
+           + "      </ws:updateDataCenter>").replaceAll("\\s+", "");
 }

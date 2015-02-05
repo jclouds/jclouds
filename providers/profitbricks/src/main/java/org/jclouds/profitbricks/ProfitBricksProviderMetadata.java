@@ -44,23 +44,23 @@ public class ProfitBricksProviderMetadata extends BaseProviderMetadata {
    public static class Builder extends BaseProviderMetadata.Builder {
 
       protected Builder() {
-	 id("profitbricks")
-		 .name("ProfitBricks Cloud Compute 2.0")
-		 .homepage(URI.create("http://www.profitbricks.com"))
-		 .console(URI.create("https://my.profitbricks.com/dashboard/dcdr2/"))
-		 .linkedServices("profitbricks")
-		 .apiMetadata(new ProfitBricksApiMetadata());
+         id("profitbricks")
+                 .name("ProfitBricks Cloud Compute 2.0")
+                 .homepage(URI.create("http://www.profitbricks.com"))
+                 .console(URI.create("https://my.profitbricks.com/dashboard/dcdr2/"))
+                 .linkedServices("profitbricks")
+                 .apiMetadata(new ProfitBricksApiMetadata());
       }
 
       @Override
       public ProfitBricksProviderMetadata build() {
-	 return new ProfitBricksProviderMetadata(this);
+         return new ProfitBricksProviderMetadata(this);
       }
 
       @Override
       public Builder fromProviderMetadata(ProviderMetadata in) {
-	 super.fromProviderMetadata(in);
-	 return this;
+         super.fromProviderMetadata(in);
+         return this;
       }
    }
 }

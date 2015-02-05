@@ -90,7 +90,7 @@ public class DataCenterApiMockTest extends BaseProfitBricksMockTest {
       String content = "<ws:getDataCenter><dataCenterId>" + id + "</dataCenterId></ws:getDataCenter>";
       try {
          DataCenter dataCenter = api.getDataCenter(id);
-         assertRequestHasCommonProperties(server.takeRequest(), content );
+         assertRequestHasCommonProperties(server.takeRequest(), content);
          assertNotNull(dataCenter);
          assertEquals(dataCenter.id(), id);
       } finally {
@@ -130,7 +130,7 @@ public class DataCenterApiMockTest extends BaseProfitBricksMockTest {
       String content = "<ws:getDataCenterState><dataCenterId>" + id + "</dataCenterId></ws:getDataCenterState>";
       try {
          ProvisioningState state = api.getDataCenterState(id);
-         assertRequestHasCommonProperties(server.takeRequest(), content );
+         assertRequestHasCommonProperties(server.takeRequest(), content);
          assertNotNull(state);
          assertEquals(state, ProvisioningState.AVAILABLE);
       } finally {
@@ -155,7 +155,7 @@ public class DataCenterApiMockTest extends BaseProfitBricksMockTest {
          DataCenter dataCenter = api.createDataCenter(
                  DataCenter.Request.CreatePayload.create("JClouds-DC", Location.DE_FRA)
          );
-         assertRequestHasCommonProperties(server.takeRequest(), content );
+         assertRequestHasCommonProperties(server.takeRequest(), content);
          assertNotNull(dataCenter);
          assertEquals(dataCenter.id(), "aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee");
          assertEquals(dataCenter.version(), 1);
@@ -168,14 +168,13 @@ public class DataCenterApiMockTest extends BaseProfitBricksMockTest {
    @Test
    public void testCreateDataCenterWithIllegalArguments() throws Exception {
       String[] names = {"JCl@ouds", "JC|ouds", "^clouds", ""};
-      for (String name : names) {
+      for (String name : names)
          try {
             DataCenter.Request.CreatePayload.create(name, Location.US_LAS);
             fail("Should have failed for name: ".concat(name));
          } catch (IllegalArgumentException ex) {
             // expected exception
          }
-      }
    }
 
    @Test
@@ -185,10 +184,10 @@ public class DataCenterApiMockTest extends BaseProfitBricksMockTest {
 
       ProfitBricksApi pbApi = api(server.getUrl(rootUrl));
       DataCenterApi api = pbApi.dataCenterApi();
-      
+
       String id = "aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee";
       String newName = "Apache";
-      
+
       String content = "<ws:updateDataCenter><request>"
               + "<dataCenterId>" + id + "</dataCenterId>"
               + "<dataCenterName>" + newName + "</dataCenterName>"
@@ -216,7 +215,7 @@ public class DataCenterApiMockTest extends BaseProfitBricksMockTest {
       DataCenterApi api = pbApi.dataCenterApi();
 
       String id = "aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee";
-      
+
       String content = "<ws:clearDataCenter><dataCenterId>" + id + "</dataCenterId></ws:clearDataCenter>";
       try {
          DataCenter dataCenter = api.clearDataCenter(id);
@@ -240,7 +239,7 @@ public class DataCenterApiMockTest extends BaseProfitBricksMockTest {
       DataCenterApi api = pbApi.dataCenterApi();
 
       String id = "aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee";
-      
+
       String content = "<ws:deleteDataCenter><dataCenterId>" + id + "</dataCenterId></ws:deleteDataCenter>";
       try {
          boolean result = api.deleteDataCenter(id);
@@ -255,7 +254,7 @@ public class DataCenterApiMockTest extends BaseProfitBricksMockTest {
    @Test
    public void testDeleteNonExistingDataCenter() throws Exception {
       MockWebServer server = mockWebServer();
-      server.enqueue(new MockResponse().setResponseCode( 404 ));
+      server.enqueue(new MockResponse().setResponseCode(404));
 
       ProfitBricksApi pbApi = api(server.getUrl(rootUrl));
       DataCenterApi api = pbApi.dataCenterApi();

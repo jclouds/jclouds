@@ -16,8 +16,6 @@
  */
 package org.jclouds.profitbricks.http.parser.server;
 
-import com.google.inject.Inject;
-import org.jclouds.date.DateCodecFactory;
 import org.jclouds.profitbricks.http.parser.BaseProfitBricksResponseHandler;
 import org.xml.sax.SAXException;
 
@@ -30,20 +28,18 @@ public class ServerIdOnlyResponseHandler extends BaseProfitBricksResponseHandler
 
    private String serverId;
 
-   @Inject
-   ServerIdOnlyResponseHandler( DateCodecFactory dateCodec ) {
-      super( dateCodec );
+   ServerIdOnlyResponseHandler() {
    }
 
    @Override
-   public void endElement( String uri, String localName, String qName ) throws SAXException {
-      setPropertyOnEndTag( qName );
+   public void endElement(String uri, String localName, String qName) throws SAXException {
+      setPropertyOnEndTag(qName);
       clearTextBuffer();
    }
 
    @Override
-   protected void setPropertyOnEndTag( String qName ) {
-      if ( "serverId".equals( qName ) )
+   protected void setPropertyOnEndTag(String qName) {
+      if ("serverId".equals(qName))
          serverId = textToStringValue();
    }
 

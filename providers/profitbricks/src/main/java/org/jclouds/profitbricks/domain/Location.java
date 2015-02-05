@@ -35,16 +35,16 @@ public enum Location {
 
    public static Location fromValue(String v) {
       try {
-	 return valueOf(v);
+         return valueOf(v);
       } catch (IllegalArgumentException ex) {
-	 return UNRECOGNIZED;
+         return UNRECOGNIZED;
       }
    }
 
    public static Location fromId(String id) {
       for (Location location : values())
-	 if (location.id.equals(id))
-	    return location;
+         if (location.id.equals(id))
+            return location;
       return UNRECOGNIZED;
    }
 }

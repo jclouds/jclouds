@@ -23,6 +23,7 @@ import javax.inject.Singleton;
 import org.jclouds.http.HttpCommand;
 import org.jclouds.http.HttpErrorHandler;
 import org.jclouds.http.HttpResponse;
+import org.jclouds.http.HttpResponseException;
 import org.jclouds.rest.AuthorizationException;
 import org.jclouds.rest.InsufficientResourcesException;
 import org.jclouds.rest.ResourceNotFoundException;
@@ -40,31 +41,35 @@ public class ProfitBricksHttpErrorHandler implements HttpErrorHandler {
    public void handleError(final HttpCommand command, final HttpResponse response) {
       Exception exception = null;
       try {
-	 switch (response.getStatusCode()) {
-	    case 400:
-	    case 405:
-	       exception = new IllegalArgumentException(response.getMessage(), exception);
-	       break;
-	    case 401:
-	       exception = new AuthorizationException(response.getMessage(), exception);
-	       break;
-	    case 402:
-	    case 409:
-	       exception = new IllegalStateException(response.getMessage(), exception);
-	       break;
-	    case 404:
-	    case 410:
-	       if (!command.getCurrentRequest().getMethod().equals("DELETE"))
-		  exception = new ResourceNotFoundException(response.getMessage(), exception);
-	       break;
-	    case 413:
-	    case 503:
-	       exception = new InsufficientResourcesException(response.getMessage(), exception);
-	       break;
-	 }
+         switch (response.getStatusCode()) {
+            case 400:
+            case 405:
+               exception = new IllegalArgumentException(response.getMessage(), exception);
+               break;
+            case 401:
+               exception = new AuthorizationException("This request requires authentication.", exception);
+               break;
+            case 402:
+            case 409:
+               exception = new IllegalStateException(response.getMessage(), exception);
+               break;
+            case 404:
+            case 410:
+               if (!command.getCurrentRequest().getMethod().equals("DELETE"))
+                  exception = new ResourceNotFoundException(response.getMessage(), exception);
+               break;
+            case 413:
+            case 503:
+               // if nothing (default message was OK) was parsed from command executor, assume it was an 503 (Maintenance) html response.
+               if (response.getMessage().equals("OK"))
+                  exception = new HttpResponseException("The ProfitBricks team is currently carrying out maintenance.", command, response);
+               else
+                  exception = new InsufficientResourcesException(response.getMessage(), exception);
+               break;
+         }
       } finally {
-	 closeQuietly(response.getPayload());
-	 command.setException(exception);
+         closeQuietly(response.getPayload());
+         command.setException(exception);
       }
    }
 }

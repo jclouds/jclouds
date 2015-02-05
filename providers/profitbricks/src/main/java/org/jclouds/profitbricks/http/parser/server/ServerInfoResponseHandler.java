@@ -26,16 +26,16 @@ public class ServerInfoResponseHandler extends BaseServerResponseHandler<Server>
    private boolean done = false;
 
    @Inject
-   ServerInfoResponseHandler( DateCodecFactory dateCodec ) {
-      super( dateCodec );
+   ServerInfoResponseHandler(DateCodecFactory dateCodec) {
+      super(dateCodec);
    }
 
    @Override
-   public void endElement( String uri, String localName, String qName ) throws SAXException {
-      if ( done )
+   public void endElement(String uri, String localName, String qName) throws SAXException {
+      if (done)
          return;
-      setPropertyOnEndTag( qName );
-      if ( "return".equals( qName ) )
+      setPropertyOnEndTag(qName);
+      if ("return".equals(qName))
          done = true;
       clearTextBuffer();
    }

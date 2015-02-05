@@ -16,9 +16,6 @@
  */
 package org.jclouds.profitbricks.http.parser.image;
 
-import javax.inject.Inject;
-
-import org.jclouds.date.DateCodecFactory;
 import org.jclouds.profitbricks.domain.Image;
 import org.jclouds.profitbricks.domain.Image.Type;
 import org.jclouds.profitbricks.domain.Location;
@@ -29,9 +26,7 @@ public abstract class BaseImageResponseHandler<T> extends BaseProfitBricksRespon
 
    protected Image.Builder builder;
 
-   @Inject
-   BaseImageResponseHandler(DateCodecFactory dateCodecFactory) {
-      super(dateCodecFactory);
+   BaseImageResponseHandler() {
       this.builder = Image.builder();
    }
 

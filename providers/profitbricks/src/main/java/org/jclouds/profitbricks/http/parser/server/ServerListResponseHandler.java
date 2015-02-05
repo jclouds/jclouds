@@ -28,16 +28,16 @@ public class ServerListResponseHandler extends BaseServerResponseHandler<List<Se
    private final List<Server> servers;
 
    @Inject
-   ServerListResponseHandler( DateCodecFactory dateCodec ) {
-      super( dateCodec );
+   ServerListResponseHandler(DateCodecFactory dateCodec) {
+      super(dateCodec);
       this.servers = Lists.newArrayList();
    }
 
    @Override
-   public void endElement( String uri, String localName, String qName ) throws SAXException {
-      setPropertyOnEndTag( qName );
-      if ( "return".equals( qName ) ) {
-         servers.add( builder.build() );
+   public void endElement(String uri, String localName, String qName) throws SAXException {
+      setPropertyOnEndTag(qName);
+      if ("return".equals(qName)) {
+         servers.add(builder.build());
          builder = Server.builder();
       }
       clearTextBuffer();

@@ -55,14 +55,14 @@ public class ProfitBricksHttpApiModule extends HttpApiModule<ProfitBricksApi> {
 
       @Override
       protected void configure() {
-	 install(new SSLModule());
-	 bind(HttpCommandExecutorService.class).to(ResponseStatusFromPayloadHttpCommandExecutorService.class)
-		 .in(Scopes.SINGLETON);
+         install(new SSLModule());
+         bind(HttpCommandExecutorService.class).to(ResponseStatusFromPayloadHttpCommandExecutorService.class)
+                 .in(Scopes.SINGLETON);
       }
 
       @Provides
       public ParseSax<ServiceFault> serviceFaultParser(ParseSax.Factory factory, Injector injector) {
-	 return factory.create(injector.getInstance(ServiceFaultResponseHandler.class));
+         return factory.create(injector.getInstance(ServiceFaultResponseHandler.class));
       }
 
    }

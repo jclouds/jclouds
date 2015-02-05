@@ -25,31 +25,31 @@ public class UpdateServerRequestBinder extends BaseProfitBricksRequestBinder<Ser
    protected final StringBuilder requestBuilder;
 
    UpdateServerRequestBinder() {
-      super( "server" );
-      this.requestBuilder = new StringBuilder( 128 * 4 );
+      super("server");
+      this.requestBuilder = new StringBuilder(128 * 4);
 
    }
 
    @Override
-   protected String createPayload( Server.Request.UpdatePayload payload ) {
-      requestBuilder.append( "<ws:updateServer>" )
-              .append( "<request>" )
-              .append( format( "<serverId>%s</serverId>", payload.id() ) )
-              .append( format( "<cores>%s</cores>", payload.cores() ) )
-              .append( format( "<ram>%s</ram>", payload.ram() ) )
-              .append( formatIfNotEmpty( "<serverName>%s</serverName>", payload.name() ) )
-              .append( formatIfNotEmpty( "<bootFromStorageId>%s</bootFromStorageId>", payload.bootFromStorageId() ) )
-              .append( formatIfNotEmpty( "<bootFromImageId>%s</bootFromImageId>", payload.bootFromImageId() ) )
-              .append( formatIfNotEmpty( "<osType>%s</osType>", payload.osType() ) )
-              .append( formatIfNotEmpty( "<availabilityZone>%s</availabilityZone>", payload.availabilityZone() ) )
-              .append( formatIfNotEmpty( "<cpuHotPlug>%s</cpuHotPlug>", payload.isCpuHotPlug() ) )
-              .append( formatIfNotEmpty( "<ramHotPlug>%s</ramHotPlug>", payload.isRamHotPlug() ) )
-              .append( formatIfNotEmpty( "<nicHotPlug>%s</nicHotPlug>", payload.isNicHotPlug() ) )
-              .append( formatIfNotEmpty( "<nicHotUnPlug>%s</nicHotUnPlug>", payload.isNicHotUnPlug() ) )
-              .append( formatIfNotEmpty( "<discVirtioHotPlug>%s</discVirtioHotPlug>", payload.isDiscVirtioHotPlug() ) )
-              .append( formatIfNotEmpty( "<discVirtioHotUnPlug>%s</discVirtioHotUnPlug>", payload.isDiscVirtioHotUnPlug() ) )
-              .append( "</request>" )
-              .append( "</ws:updateServer>" );
+   protected String createPayload(Server.Request.UpdatePayload payload) {
+      requestBuilder.append("<ws:updateServer>")
+              .append("<request>")
+              .append(format("<serverId>%s</serverId>", payload.id()))
+              .append(format("<cores>%s</cores>", payload.cores()))
+              .append(format("<ram>%s</ram>", payload.ram()))
+              .append(formatIfNotEmpty("<serverName>%s</serverName>", payload.name()))
+              .append(formatIfNotEmpty("<bootFromStorageId>%s</bootFromStorageId>", payload.bootFromStorageId()))
+              .append(formatIfNotEmpty("<bootFromImageId>%s</bootFromImageId>", payload.bootFromImageId()))
+              .append(formatIfNotEmpty("<osType>%s</osType>", payload.osType()))
+              .append(formatIfNotEmpty("<availabilityZone>%s</availabilityZone>", payload.availabilityZone()))
+              .append(formatIfNotEmpty("<cpuHotPlug>%s</cpuHotPlug>", payload.isCpuHotPlug()))
+              .append(formatIfNotEmpty("<ramHotPlug>%s</ramHotPlug>", payload.isRamHotPlug()))
+              .append(formatIfNotEmpty("<nicHotPlug>%s</nicHotPlug>", payload.isNicHotPlug()))
+              .append(formatIfNotEmpty("<nicHotUnPlug>%s</nicHotUnPlug>", payload.isNicHotUnPlug()))
+              .append(formatIfNotEmpty("<discVirtioHotPlug>%s</discVirtioHotPlug>", payload.isDiscVirtioHotPlug()))
+              .append(formatIfNotEmpty("<discVirtioHotUnPlug>%s</discVirtioHotUnPlug>", payload.isDiscVirtioHotUnPlug()))
+              .append("</request>")
+              .append("</ws:updateServer>");
       return requestBuilder.toString();
    }
 

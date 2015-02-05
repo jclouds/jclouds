@@ -21,7 +21,7 @@ import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
 import org.testng.annotations.Test;
 
-@Test( groups = "unit", testName = "CreateServerRequestBinderTest" )
+@Test(groups = "unit", testName = "CreateServerRequestBinderTest")
 public class CreateServerRequestBinderTest {
 
    @Test
@@ -29,37 +29,37 @@ public class CreateServerRequestBinderTest {
       CreateServerRequestBinder binder = new CreateServerRequestBinder();
 
       Server.Request.CreatePayload payload = Server.Request.creatingBuilder()
-              .name( "jclouds-node" )
-              .cores( 4 )
-              .ram( 4 * 1024 )
-              .dataCenterId( "aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee" )
+              .name("jclouds-node")
+              .cores(4)
+              .ram(4 * 1024)
+              .dataCenterId("aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee")
               .build();
 
-      String actual = binder.createPayload( payload );
-      assertNotNull( actual, "Binder returned null payload" );
-      assertEquals( actual, expectedPayload );
+      String actual = binder.createPayload(payload);
+      assertNotNull(actual, "Binder returned null payload");
+      assertEquals(actual, expectedPayload);
    }
 
    private final String expectedPayload
-           = ( "      <ws:createServer>\n"
+           = ("      <ws:createServer>\n"
            + "         <request>\n"
            + "            <dataCenterId>aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee</dataCenterId>\n"
            + "            <cores>4</cores>\n"
            + "            <ram>4096</ram>\n"
            + "            <serverName>jclouds-node</serverName>\n"
-//           + "            <bootFromStorageId>?</bootFromStorageId>\n"
-//           + "            <bootFromImageId>?</bootFromImageId>\n"
-//           + "            <internetAccess>false</internetAccess>\n"
-//           + "            <lanId>?</lanId>\n"
-//           + "            <osType>?</osType>\n"
-//           + "            <availabilityZone>AUTO</availabilityZone>\n"
-//           + "            <cpuHotPlug>false</cpuHotPlug>\n"
-//           + "            <ramHotPlug>false</ramHotPlug>\n"
-//           + "            <nicHotPlug>false</nicHotPlug>\n"
-//           + "            <nicHotUnPlug>false</nicHotUnPlug>\n"
-//           + "            <discVirtioHotPlug>false</discVirtioHotPlug>\n"
-//           + "            <discVirtioHotUnPlug>false</discVirtioHotUnPlug>\n"
+           //           + "            <bootFromStorageId>?</bootFromStorageId>\n"
+           //           + "            <bootFromImageId>?</bootFromImageId>\n"
+           //           + "            <internetAccess>false</internetAccess>\n"
+           //           + "            <lanId>?</lanId>\n"
+           //           + "            <osType>?</osType>\n"
+           //           + "            <availabilityZone>AUTO</availabilityZone>\n"
+           //           + "            <cpuHotPlug>false</cpuHotPlug>\n"
+           //           + "            <ramHotPlug>false</ramHotPlug>\n"
+           //           + "            <nicHotPlug>false</nicHotPlug>\n"
+           //           + "            <nicHotUnPlug>false</nicHotUnPlug>\n"
+           //           + "            <discVirtioHotPlug>false</discVirtioHotPlug>\n"
+           //           + "            <discVirtioHotUnPlug>false</discVirtioHotUnPlug>\n"
            + "         </request>\n"
-           + "      </ws:createServer>" )
-           .replaceAll( "\\s+", "" );
+           + "      </ws:createServer>")
+           .replaceAll("\\s+", "");
 }

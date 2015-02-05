@@ -16,8 +16,6 @@
  */
 package org.jclouds.profitbricks.http.parser.image;
 
-import com.google.inject.Inject;
-import org.jclouds.date.DateCodecFactory;
 import org.jclouds.profitbricks.domain.Image;
 import org.xml.sax.SAXException;
 
@@ -25,9 +23,7 @@ public class ImageInfoResponseHandler extends BaseImageResponseHandler<Image> {
 
    private boolean done = false;
 
-   @Inject
-   ImageInfoResponseHandler(DateCodecFactory dateCodecFactory) {
-      super(dateCodecFactory);
+   ImageInfoResponseHandler() {
    }
 
    @Override

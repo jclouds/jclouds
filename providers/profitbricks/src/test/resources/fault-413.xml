@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<S:Envelope xmlns:S="http://schemas.xmlsoap.org/soap/envelope/">
+    <S:Body>
+        <S:Fault xmlns:ns4="http://www.w3.org/2003/05/soap-envelope">
+            <faultcode>S:Server</faultcode>
+            <faultstring>New request exceeds the current capacity settings of this user contract.  Please refer to Request Id : 16503940. [VDC-5-1020] Server  has 12,800 MiB configured RAM. Your personal limit is 10,240 MiB per server.</faultstring>
+            <detail>
+                <ns2:ProfitbricksServiceFault xmlns:ns2="http://ws.api.profitbricks.com/">
+                    <faultCode>OVER_LIMIT_SETTING</faultCode>
+                    <httpCode>413</httpCode>
+                    <message>New request exceeds the current capacity settings of this user contract.  Please refer to Request Id : 16503940. [VDC-5-1020] Server  has 12,800 MiB configured RAM. Your personal limit is 10,240 MiB per server.</message>
+                    <requestId>16503940</requestId>
+                </ns2:ProfitbricksServiceFault>
+            </detail>
+        </S:Fault>
+    </S:Body>
+</S:Envelope>

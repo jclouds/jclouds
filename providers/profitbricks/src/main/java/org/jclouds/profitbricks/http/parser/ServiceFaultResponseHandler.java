@@ -16,42 +16,37 @@
  */
 package org.jclouds.profitbricks.http.parser;
 
-import org.jclouds.date.DateCodecFactory;
 import org.jclouds.profitbricks.domain.ServiceFault;
 import org.xml.sax.SAXException;
-
-import com.google.inject.Inject;
 
 public class ServiceFaultResponseHandler extends BaseProfitBricksResponseHandler<ServiceFault> {
 
    private final ServiceFault.Builder builder;
    private boolean done = false;
 
-   @Inject
-   ServiceFaultResponseHandler(DateCodecFactory dateCodec) {
-      super(dateCodec);
+   ServiceFaultResponseHandler() {
       this.builder = ServiceFault.builder();
    }
 
    @Override
    protected void setPropertyOnEndTag(String qName) {
       if ("faultCode".equals(qName))
-	 builder.faultCode(ServiceFault.FaultCode.fromValue(textToStringValue()));
+         builder.faultCode(ServiceFault.FaultCode.fromValue(textToStringValue()));
       else if ("httpCode".equals(qName))
-	 builder.httpCode(textToIntValue());
+         builder.httpCode(textToIntValue());
       else if ("message".equals(qName))
-	 builder.message(textToStringValue());
+         builder.message(textToStringValue());
       else if ("requestId".equals(qName))
-	 builder.requestId(textToIntValue());
+         builder.requestId(textToIntValue());
    }
 
    @Override
    public void endElement(String uri, String localName, String qName) throws SAXException {
       if (done)
-	 return;
+         return;
       setPropertyOnEndTag(qName);
       if ("detail".equals(qName))
-	 done = true;
+         done = true;
       clearTextBuffer();
    }
 

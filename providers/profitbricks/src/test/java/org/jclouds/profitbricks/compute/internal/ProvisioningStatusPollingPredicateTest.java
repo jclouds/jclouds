@@ -39,7 +39,7 @@ import com.squareup.okhttp.mockwebserver.MockWebServer;
 public class ProvisioningStatusPollingPredicateTest extends BaseProfitBricksMockTest {
 
    @Test
-   public void testPredicate() throws Exception {
+   public void testDataCenterPredicate() throws Exception {
       MockWebServer server = mockWebServer();
 
       byte[] payloadInProcess = payloadFromResource("/datacenter/datacenter-state-inprocess.xml");
@@ -63,6 +63,72 @@ public class ProvisioningStatusPollingPredicateTest extends BaseProfitBricksMock
       try {
          waitUntilAvailable.apply(id);
          ProvisioningState finalState = pbApi.dataCenterApi().getDataCenterState(id);
+         assertRequestHasCommonProperties(server.takeRequest());
+         assertEquals(finalState, ProvisioningState.AVAILABLE);
+      } finally {
+         pbApi.close();
+         server.shutdown();
+      }
+   }
+
+   @Test
+   public void testServerPredicate() throws Exception {
+      MockWebServer server = mockWebServer();
+
+      byte[] payloadInProcess = payloadFromResource("/server/server-state-inprocess.xml");
+      byte[] payloadAvailable = payloadFromResource("/server/server.xml");
+
+      // wait 3 times
+      server.enqueue(new MockResponse().setBody(payloadInProcess));
+      server.enqueue(new MockResponse().setBody(payloadInProcess));
+      server.enqueue(new MockResponse().setBody(payloadInProcess));
+      server.enqueue(new MockResponse().setBody(payloadAvailable));
+
+      server.enqueue(new MockResponse().setBody(payloadAvailable));
+
+      ProfitBricksApi pbApi = api(server.getUrl(rootUrl));
+
+      Predicate<String> waitUntilAvailable = Predicates2.retry(
+              new ProvisioningStatusPollingPredicate(pbApi, ProvisioningStatusAware.SERVER, ProvisioningState.AVAILABLE),
+              30l, 1l, TimeUnit.SECONDS);
+
+      String id = "qwertyui-qwer-qwer-qwer-qwertyyuiiop";
+      try {
+         waitUntilAvailable.apply(id);
+         ProvisioningState finalState = pbApi.serverApi().getServer(id).state();
+         assertRequestHasCommonProperties(server.takeRequest());
+         assertEquals(finalState, ProvisioningState.AVAILABLE);
+      } finally {
+         pbApi.close();
+         server.shutdown();
+      }
+   }
+
+   @Test
+   public void testStoragePredicate() throws Exception {
+      MockWebServer server = mockWebServer();
+
+      byte[] payloadInProcess = payloadFromResource("/storage/storage-state-inprocess.xml");
+      byte[] payloadAvailable = payloadFromResource("/storage/storage.xml");
+
+      // wait 3 times
+      server.enqueue(new MockResponse().setBody(payloadInProcess));
+      server.enqueue(new MockResponse().setBody(payloadInProcess));
+      server.enqueue(new MockResponse().setBody(payloadInProcess));
+      server.enqueue(new MockResponse().setBody(payloadAvailable));
+
+      server.enqueue(new MockResponse().setBody(payloadAvailable));
+
+      ProfitBricksApi pbApi = api(server.getUrl(rootUrl));
+
+      Predicate<String> waitUntilAvailable = Predicates2.retry(
+              new ProvisioningStatusPollingPredicate(pbApi, ProvisioningStatusAware.STORAGE, ProvisioningState.AVAILABLE),
+              30l, 1l, TimeUnit.SECONDS);
+
+      String id = "qswdefrg-qaws-qaws-defe-rgrgdsvcxbrh";
+      try {
+         waitUntilAvailable.apply(id);
+         ProvisioningState finalState = pbApi.storageApi().getStorage(id).state();
          assertRequestHasCommonProperties(server.takeRequest());
          assertEquals(finalState, ProvisioningState.AVAILABLE);
       } finally {

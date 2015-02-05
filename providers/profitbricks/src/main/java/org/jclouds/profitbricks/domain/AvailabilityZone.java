@@ -24,10 +24,10 @@ public enum AvailabilityZone {
       return name();
    }
 
-   public static AvailabilityZone fromValue( String v ) {
+   public static AvailabilityZone fromValue(String v) {
       try {
-         return valueOf( v );
-      } catch ( Exception ex ) {
+         return valueOf(v);
+      } catch (Exception ex) {
          return UNRECOGNIZED;
       }
    }

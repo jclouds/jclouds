@@ -22,9 +22,9 @@ public enum ProvisioningState {
 
    public static ProvisioningState fromValue(String value) {
       try {
-	 return valueOf(value);
+         return valueOf(value);
       } catch (IllegalArgumentException e) {
-	 return UNRECOGNIZED;
+         return UNRECOGNIZED;
       }
    }
 }

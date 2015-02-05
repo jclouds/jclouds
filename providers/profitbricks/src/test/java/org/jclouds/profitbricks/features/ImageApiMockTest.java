@@ -81,7 +81,7 @@ public class ImageApiMockTest extends BaseProfitBricksMockTest {
       ImageApi api = pbApi.imageApi();
 
       String id = "5ad99c9e-9166-11e4-9d74-52540066fee9";
-      
+
       String content = "<ws:getImage><imageId>" + id + "</imageId></ws:getImage>";
       try {
          Image image = api.getImage(id);

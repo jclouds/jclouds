@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<S:Envelope xmlns:S="http://schemas.xmlsoap.org/soap/envelope/">
+    <S:Body>
+        <ns2:getServerResponse xmlns:ns2="http://ws.api.profitbricks.com/">
+            <return>
+                <requestId>16577212</requestId>
+                <dataCenterId>aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee</dataCenterId>
+                <dataCenterVersion>22</dataCenterVersion>
+                <serverId>qwertyui-qwer-qwer-qwer-qwertyyuiiop</serverId>
+                <cores>1</cores>
+                <ram>512</ram>
+                <internetAccess>false</internetAccess>
+                <provisioningState>INPROCESS</provisioningState>
+                <virtualMachineState>NOSTATE</virtualMachineState>
+                <creationTime>2015-01-29T00:37:49.096Z</creationTime>
+                <lastModificationTime>2015-01-29T00:37:49.096Z</lastModificationTime>
+                <osType>UNKNOWN</osType>
+                <availabilityZone>AUTO</availabilityZone>
+                <cpuHotPlug>false</cpuHotPlug>
+                <ramHotPlug>false</ramHotPlug>
+                <nicHotPlug>false</nicHotPlug>
+                <nicHotUnPlug>false</nicHotUnPlug>
+                <discVirtioHotPlug>false</discVirtioHotPlug>
+                <discVirtioHotUnPlug>false</discVirtioHotUnPlug>
+            </return>
+        </ns2:getServerResponse>
+    </S:Body>
+</S:Envelope>

@@ -33,11 +33,11 @@ public class CreateDataCenterRequestBinder extends BaseProfitBricksRequestBinder
    @Override
    protected String createPayload(DataCenter.Request.CreatePayload payload) {
       requestBuilder.append("<ws:createDataCenter>")
-	      .append("<request>")
-	      .append(format("<dataCenterName>%s</dataCenterName>", payload.name()))
-	      .append(format("<location>%s</location>", payload.location().value()))
-	      .append("</request>")
-	      .append("</ws:createDataCenter>");
+              .append("<request>")
+              .append(format("<dataCenterName>%s</dataCenterName>", payload.name()))
+              .append(format("<location>%s</location>", payload.location().value()))
+              .append("</request>")
+              .append("</ws:createDataCenter>");
       return requestBuilder.toString();
    }
 

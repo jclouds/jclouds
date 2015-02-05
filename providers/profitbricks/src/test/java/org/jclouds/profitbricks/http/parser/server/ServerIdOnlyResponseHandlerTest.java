@@ -21,20 +21,20 @@ import org.jclouds.profitbricks.http.parser.BaseResponseHandlerTest;
 import static org.testng.Assert.assertEquals;
 import org.testng.annotations.Test;
 
-@Test( groups = "unit", testName = "ServerIdOnlyResponseHandlerTest" )
+@Test(groups = "unit", testName = "ServerIdOnlyResponseHandlerTest")
 public class ServerIdOnlyResponseHandlerTest extends BaseResponseHandlerTest<String> {
 
    @Override
    protected ParseSax<String> createParser() {
-      return factory.create( injector.getInstance( ServerIdOnlyResponseHandler.class ) );
+      return factory.create(injector.getInstance(ServerIdOnlyResponseHandler.class));
    }
 
    @Test
    public void testParseResponseFromCreateServer() {
       ParseSax<String> parser = createParser();
 
-      String serverId = parser.parse( payloadFromResource( "/server/server-create.xml" ) );
+      String serverId = parser.parse(payloadFromResource("/server/server-create.xml"));
 
-      assertEquals( "qwertyui-qwer-qwer-qwer-qwertyyuiiop", serverId );
+      assertEquals("qwertyui-qwer-qwer-qwer-qwertyyuiiop", serverId);
    }
 }

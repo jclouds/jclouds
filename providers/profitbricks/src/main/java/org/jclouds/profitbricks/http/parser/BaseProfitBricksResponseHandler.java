@@ -16,33 +16,20 @@
  */
 package org.jclouds.profitbricks.http.parser;
 
-import static com.google.common.base.Preconditions.checkNotNull;
-
-import java.util.Date;
-
-import org.jclouds.date.DateCodec;
-import org.jclouds.date.DateCodecFactory;
 import org.jclouds.http.functions.ParseSax;
 import org.xml.sax.SAXException;
 
 public abstract class BaseProfitBricksResponseHandler<T> extends ParseSax.HandlerForGeneratedRequestWithResult<T> {
 
-   protected final DateCodec dateCodec;
-
    private final StringBuilder strBuilder;
 
-   public BaseProfitBricksResponseHandler(DateCodecFactory dateCodec) {
-      this.dateCodec = checkNotNull(checkNotNull(dateCodec, "dateCodecFactory null").iso8601(), "iso8601 date codec null");
+   public BaseProfitBricksResponseHandler() {
       this.strBuilder = new StringBuilder();
    }
 
    @Override
    public void characters(char ch[], int start, int length) {
       strBuilder.append(ch, start, length);
-   }
-
-   protected final Date textToIso8601Date() {
-      return dateCodec.toDate(textToStringValue());
    }
 
    protected String textToStringValue() {
@@ -52,9 +39,9 @@ public abstract class BaseProfitBricksResponseHandler<T> extends ParseSax.Handle
    protected Float textToFloatValue() {
       return Float.valueOf(textToStringValue());
    }
-   
-   protected Double textToDoubleValue(){
-      return Double.valueOf( textToStringValue());
+
+   protected Double textToDoubleValue() {
+      return Double.valueOf(textToStringValue());
    }
 
    protected int textToIntValue() {

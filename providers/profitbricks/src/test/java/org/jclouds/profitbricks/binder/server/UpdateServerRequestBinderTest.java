@@ -21,7 +21,7 @@ import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
 import org.testng.annotations.Test;
 
-@Test( groups = "unit", testName = "UpdateServerRequestBinderTest" )
+@Test(groups = "unit", testName = "UpdateServerRequestBinderTest")
 public class UpdateServerRequestBinderTest {
 
    @Test
@@ -29,36 +29,36 @@ public class UpdateServerRequestBinderTest {
       UpdateServerRequestBinder binder = new UpdateServerRequestBinder();
 
       Server.Request.UpdatePayload payload = Server.Request.updatingBuilder()
-              .id( "qwertyui-qwer-qwer-qwer-qwertyyuiiop" )
-              .cores( 8 )
-              .ram( 8 * 1024 )
-              .name( "apache-node")
+              .id("qwertyui-qwer-qwer-qwer-qwertyyuiiop")
+              .cores(8)
+              .ram(8 * 1024)
+              .name("apache-node")
               .build();
-      
-      String actual = binder.createPayload( payload );
+
+      String actual = binder.createPayload(payload);
       assertNotNull(actual, "Binder returned null payload");
       assertEquals(actual, expectedPayload);
    }
 
    private final String expectedPayload
-           = ( "      <ws:updateServer>\n"
+           = ("      <ws:updateServer>\n"
            + "         <request>\n"
            + "            <serverId>qwertyui-qwer-qwer-qwer-qwertyyuiiop</serverId>\n"
            + "            <cores>8</cores>\n"
            + "            <ram>8192</ram>\n"
            + "            <serverName>apache-node</serverName>\n"
-//           + "            <bootFromStorageId>?</bootFromStorageId>\n"
-//           + "            <bootFromImageId>?</bootFromImageId>\n"
-//           + "            <osType>?</osType>\n"
-//           + "            <availabilityZone>?</availabilityZone>\n"
-//           + "            <cpuHotPlug>?</cpuHotPlug>\n"
-//           + "            <ramHotPlug>?</ramHotPlug>\n"
-//           + "            <nicHotPlug>?</nicHotPlug>\n"
-//           + "            <nicHotUnPlug>?</nicHotUnPlug>\n"
-//           + "            <discVirtioHotPlug>?</discVirtioHotPlug>\n"
-//           + "            <discVirtioHotUnPlug>?</discVirtioHotUnPlug>\n"
+           //           + "            <bootFromStorageId>?</bootFromStorageId>\n"
+           //           + "            <bootFromImageId>?</bootFromImageId>\n"
+           //           + "            <osType>?</osType>\n"
+           //           + "            <availabilityZone>?</availabilityZone>\n"
+           //           + "            <cpuHotPlug>?</cpuHotPlug>\n"
+           //           + "            <ramHotPlug>?</ramHotPlug>\n"
+           //           + "            <nicHotPlug>?</nicHotPlug>\n"
+           //           + "            <nicHotUnPlug>?</nicHotUnPlug>\n"
+           //           + "            <discVirtioHotPlug>?</discVirtioHotPlug>\n"
+           //           + "            <discVirtioHotUnPlug>?</discVirtioHotUnPlug>\n"
            + "         </request>\n"
-           + "      </ws:updateServer>" )
-           .replaceAll( "\\s+", "" );
+           + "      </ws:updateServer>")
+           .replaceAll("\\s+", "");
 
 }

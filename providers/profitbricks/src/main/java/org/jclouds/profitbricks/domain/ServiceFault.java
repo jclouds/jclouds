@@ -36,11 +36,11 @@ public abstract class ServiceFault {
       UNRECOGNIZED;
 
       public static FaultCode fromValue(String v) {
-	 try {
-	    return valueOf(v);
-	 } catch (IllegalArgumentException ex) {
-	    return UNRECOGNIZED;
-	 }
+         try {
+            return valueOf(v);
+         } catch (IllegalArgumentException ex) {
+            return UNRECOGNIZED;
+         }
       }
    }
 
@@ -68,27 +68,27 @@ public abstract class ServiceFault {
       private int requestId;
 
       public Builder faultCode(FaultCode code) {
-	 this.faultCode = code;
-	 return this;
+         this.faultCode = code;
+         return this;
       }
 
       public Builder httpCode(int httpCode) {
-	 this.httpCode = httpCode;
-	 return this;
+         this.httpCode = httpCode;
+         return this;
       }
 
       public Builder message(String message) {
-	 this.message = message;
-	 return this;
+         this.message = message;
+         return this;
       }
 
       public Builder requestId(int requestId) {
-	 this.requestId = requestId;
-	 return this;
+         this.requestId = requestId;
+         return this;
       }
 
       public ServiceFault build() {
-	 return create(faultCode, httpCode, message, requestId);
+         return create(faultCode, httpCode, message, requestId);
       }
 
    }

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<S:Envelope xmlns:S="http://schemas.xmlsoap.org/soap/envelope/">
+    <S:Body>
+        <ns2:getAllStoragesResponse xmlns:ns2="http://ws.api.profitbricks.com/">
+            <return>
+                <dataCenterId>aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee</dataCenterId>
+                <dataCenterVersion>49</dataCenterVersion>
+                <storageId>qswdefrg-qaws-qaws-defe-rgrgdsvcxbrh</storageId>
+                <size>40</size>
+                <storageName>hdd-1</storageName>
+                <mountImage>
+                    <imageId>f0a59a5c-7940-11e4-8053-52540066fee9</imageId>
+                    <imageName>Ubuntu-14.04-LTS-server-2014-12-01</imageName>
+                </mountImage>
+                <serverIds>qwertyui-qwer-qwer-qwer-qwertyyuiiop</serverIds>
+                <provisioningState>AVAILABLE</provisioningState>
+                <creationTime>2014-12-04T07:09:23.138Z</creationTime>
+                <lastModificationTime>2014-12-12T03:14:48.316Z</lastModificationTime>
+            </return>
+            <return>
+                <dataCenterId>qqqqqqqq-wwww-rrrr-tttt-yyyyyyyyyyyy</dataCenterId>
+                <dataCenterVersion>238</dataCenterVersion>
+                <storageId>asfasfle-f23n-cu89-klfr-njkdsvwllkfa</storageId>
+                <size>100</size>
+                <storageName>hdd-2</storageName>
+                <mountImage>
+                    <imageId>f4742db0-9160-11e4-9d74-52540066fee9</imageId>
+                    <imageName>Fedora-19-server-2015-01-01</imageName>
+                </mountImage>
+                <serverIds>asdfghjk-asdf-asdf-asdf-asdfghjklkjl</serverIds>
+                <provisioningState>INPROCESS</provisioningState>
+                <creationTime>2014-11-04T07:09:23.138Z</creationTime>
+                <lastModificationTime>2014-11-12T03:14:48.316Z</lastModificationTime>
+            </return>
+        </ns2:getAllStoragesResponse>
+    </S:Body>
+</S:Envelope>

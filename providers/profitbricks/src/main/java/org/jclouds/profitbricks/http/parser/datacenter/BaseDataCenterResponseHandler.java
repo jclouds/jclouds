@@ -16,9 +16,6 @@
  */
 package org.jclouds.profitbricks.http.parser.datacenter;
 
-import javax.inject.Inject;
-
-import org.jclouds.date.DateCodecFactory;
 import org.jclouds.profitbricks.domain.DataCenter;
 import org.jclouds.profitbricks.http.parser.BaseProfitBricksResponseHandler;
 
@@ -26,18 +23,16 @@ public abstract class BaseDataCenterResponseHandler<T> extends BaseProfitBricksR
 
    protected DataCenter.Builder builder;
 
-   @Inject
-   BaseDataCenterResponseHandler(DateCodecFactory dateCodecFactory) {
-      super(dateCodecFactory);
+   BaseDataCenterResponseHandler() {
       this.builder = DataCenter.builder();
    }
 
    @Override
    protected void setPropertyOnEndTag(String qName) {
       if ("dataCenterId".equals(qName))
-	 builder.id(textToStringValue());
+         builder.id(textToStringValue());
       else if ("dataCenterVersion".equals(qName))
-	 builder.version(textToIntValue());
+         builder.version(textToIntValue());
    }
 
 }

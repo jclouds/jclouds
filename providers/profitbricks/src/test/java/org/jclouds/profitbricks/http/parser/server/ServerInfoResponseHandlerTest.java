@@ -16,7 +16,9 @@
  */
 package org.jclouds.profitbricks.http.parser.server;
 
-import java.text.ParseException;
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertNotNull;
+
 import org.jclouds.date.DateCodec;
 import org.jclouds.date.DateCodecFactory;
 import org.jclouds.http.functions.ParseSax;
@@ -25,52 +27,51 @@ import org.jclouds.profitbricks.domain.OsType;
 import org.jclouds.profitbricks.domain.ProvisioningState;
 import org.jclouds.profitbricks.domain.Server;
 import org.jclouds.profitbricks.http.parser.BaseResponseHandlerTest;
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertNotNull;
+
 import org.testng.annotations.Test;
 
-@Test( groups = "unit", testName = "ServerInfoResponseHandlerTest" )
+@Test(groups = "unit", testName = "ServerInfoResponseHandlerTest")
 public class ServerInfoResponseHandlerTest extends BaseResponseHandlerTest<Server> {
 
    @Override
    protected ParseSax<Server> createParser() {
-      return factory.create( injector.getInstance( ServerInfoResponseHandler.class ) );
+      return factory.create(injector.getInstance(ServerInfoResponseHandler.class));
    }
 
    protected DateCodecFactory createDateParser() {
-      return injector.getInstance( DateCodecFactory.class );
+      return injector.getInstance(DateCodecFactory.class);
    }
 
    @Test
-   public void testParseResponseFromGetServer() throws ParseException {
+   public void testParseResponseFromGetServer() {
       ParseSax<Server> parser = createParser();
 
-      Server actual = parser.parse( payloadFromResource( "/server/server.xml" ) );
-      assertNotNull( actual, "Parsed content returned null" );
+      Server actual = parser.parse(payloadFromResource("/server/server.xml"));
+      assertNotNull(actual, "Parsed content returned null");
 
       DateCodec dateParser = createDateParser().iso8601();
 
       Server expected = Server.builder()
-              .id( "qwertyui-qwer-qwer-qwer-qwertyyuiiop" )
-              .name( "facebook-node" )
-              .cores( 4 )
-              .ram( 4096 )
-              .hasInternetAccess( true )
-              .state( ProvisioningState.AVAILABLE )
-              .status( Server.Status.RUNNING )
-              .creationTime( dateParser.toDate( "2014-12-04T07:09:23.138Z" ) )
-              .lastModificationTime( dateParser.toDate( "2014-12-12T03:08:35.629Z" ) )
-              .osType( OsType.LINUX )
-              .availabilityZone( AvailabilityZone.AUTO )
-              .isCpuHotPlug( true )
-              .isRamHotPlug( true )
-              .isNicHotPlug( true )
-              .isNicHotUnPlug( true )
-              .isDiscVirtioHotPlug( true )
-              .isDiscVirtioHotUnPlug( true )
+              .id("qwertyui-qwer-qwer-qwer-qwertyyuiiop")
+              .name("facebook-node")
+              .cores(4)
+              .ram(4096)
+              .hasInternetAccess(true)
+              .state(ProvisioningState.AVAILABLE)
+              .status(Server.Status.RUNNING)
+              .creationTime(dateParser.toDate("2014-12-04T07:09:23.138Z"))
+              .lastModificationTime(dateParser.toDate("2014-12-12T03:08:35.629Z"))
+              .osType(OsType.LINUX)
+              .availabilityZone(AvailabilityZone.AUTO)
+              .isCpuHotPlug(true)
+              .isRamHotPlug(true)
+              .isNicHotPlug(true)
+              .isNicHotUnPlug(true)
+              .isDiscVirtioHotPlug(true)
+              .isDiscVirtioHotUnPlug(true)
               .build();
 
-      assertEquals( actual, expected );
+      assertEquals(actual, expected);
    }
 
 }

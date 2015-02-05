@@ -16,28 +16,24 @@
  */
 package org.jclouds.profitbricks.http.parser;
 
-import com.google.inject.Inject;
-import org.jclouds.date.DateCodecFactory;
 import org.xml.sax.SAXException;
 
 public class RequestIdOnlyResponseHandler extends BaseProfitBricksResponseHandler<String> {
 
    private String requestId;
 
-   @Inject
-   RequestIdOnlyResponseHandler( DateCodecFactory dateCodec ) {
-      super( dateCodec );
+   RequestIdOnlyResponseHandler() {
    }
 
    @Override
-   public void endElement( String uri, String localName, String qName ) throws SAXException {
-      setPropertyOnEndTag( qName );
+   public void endElement(String uri, String localName, String qName) throws SAXException {
+      setPropertyOnEndTag(qName);
       clearTextBuffer();
    }
 
    @Override
-   protected void setPropertyOnEndTag( String qName ) {
-      if ( "requestId".equals( qName ) )
+   protected void setPropertyOnEndTag(String qName) {
+      if ("requestId".equals(qName))
          requestId = textToStringValue();
    }
 

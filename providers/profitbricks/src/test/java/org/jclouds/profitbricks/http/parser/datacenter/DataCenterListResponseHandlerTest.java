@@ -45,8 +45,8 @@ public class DataCenterListResponseHandlerTest extends BaseResponseHandlerTest<L
       assertNotNull(actual, "Parsed content returned null");
 
       List<DataCenter> expected = ImmutableList.<DataCenter>of(
-	      DataCenter.builder().id("aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee").name("JClouds-DC").version(10).state(ProvisioningState.AVAILABLE).build(),
-	      DataCenter.builder().id("qqqqqqqq-wwww-rrrr-tttt-yyyyyyyyyyyy").name("Random DC").version(238).state(ProvisioningState.INPROCESS).build()
+              DataCenter.builder().id("aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee").name("JClouds-DC").version(10).state(ProvisioningState.AVAILABLE).build(),
+              DataCenter.builder().id("qqqqqqqq-wwww-rrrr-tttt-yyyyyyyyyyyy").name("Random DC").version(238).state(ProvisioningState.INPROCESS).build()
       );
       assertEquals(expected, actual);
    }

@@ -16,7 +16,12 @@
  */
 package org.jclouds.profitbricks.http.parser.server;
 
+import java.util.Date;
+
+import org.jclouds.date.DateCodec;
+
 import com.google.inject.Inject;
+
 import org.jclouds.date.DateCodecFactory;
 import org.jclouds.profitbricks.domain.AvailabilityZone;
 import org.jclouds.profitbricks.domain.OsType;
@@ -28,48 +33,54 @@ public abstract class BaseServerResponseHandler<T> extends BaseProfitBricksRespo
 
    protected Server.DescribingBuilder builder;
 
+   protected final DateCodec dateCodec;
+
    @Inject
-   BaseServerResponseHandler( DateCodecFactory dateCodec ) {
-      super( dateCodec );
+   BaseServerResponseHandler(DateCodecFactory dateCodec) {
+      this.dateCodec = dateCodec.iso8601();
       this.builder = Server.builder();
    }
 
+   protected final Date textToIso8601Date() {
+      return dateCodec.toDate(textToStringValue());
+   }
+
    @Override
-   protected void setPropertyOnEndTag( String qName ) {
-      if ( "serverId".equals( qName ) )
-         builder.id( textToStringValue() );
-      else if ( "serverName".equals( qName ) )
-         builder.name( textToStringValue() );
-      else if ( "cores".equals( qName ) )
-         builder.cores( textToIntValue() );
-      else if ( "ram".equals( qName ) )
-         builder.ram( textToIntValue() );
-      else if ( "provisioningState".equals( qName ) )
-         builder.state( ProvisioningState.fromValue( textToStringValue() ) );
-      else if ( "virtualMachineState".equals( qName ) )
-         builder.status( Server.Status.fromValue( textToStringValue() ) );
-      else if ( "osType".equals( qName ) )
-         builder.osType( OsType.fromValue( textToStringValue() ) );
-      else if ( "availabilityZone".equals( qName ) )
-         builder.availabilityZone( AvailabilityZone.fromValue( textToStringValue() ) );
-      else if ( "creationTime".equals( qName ) )
-         builder.creationTime( textToIso8601Date() );
-      else if ( "lastModificationTime".equals( qName ) )
-         builder.lastModificationTime( textToIso8601Date() );
-      else if ( "internetAccess".equals( qName ) )
-         builder.hasInternetAccess( textToBooleanValue() );
-      else if ( "cpuHotPlug".equals( qName ) )
-         builder.isCpuHotPlug( textToBooleanValue() );
-      else if ( "ramHotPlug".equals( qName ) )
-         builder.isRamHotPlug( textToBooleanValue() );
-      else if ( "nicHotPlug".equals( qName ) )
-         builder.isNicHotPlug( textToBooleanValue() );
-      else if ( "nicHotUnPlug".equals( qName ) )
-         builder.isNicHotUnPlug( textToBooleanValue() );
-      else if ( "discVirtioHotPlug".equals( qName ) )
-         builder.isDiscVirtioHotPlug( textToBooleanValue() );
-      else if ( "discVirtioHotUnPlug".equals( qName ) )
-         builder.isDiscVirtioHotUnPlug( textToBooleanValue() );
+   protected void setPropertyOnEndTag(String qName) {
+      if ("serverId".equals(qName))
+         builder.id(textToStringValue());
+      else if ("serverName".equals(qName))
+         builder.name(textToStringValue());
+      else if ("cores".equals(qName))
+         builder.cores(textToIntValue());
+      else if ("ram".equals(qName))
+         builder.ram(textToIntValue());
+      else if ("provisioningState".equals(qName))
+         builder.state(ProvisioningState.fromValue(textToStringValue()));
+      else if ("virtualMachineState".equals(qName))
+         builder.status(Server.Status.fromValue(textToStringValue()));
+      else if ("osType".equals(qName))
+         builder.osType(OsType.fromValue(textToStringValue()));
+      else if ("availabilityZone".equals(qName))
+         builder.availabilityZone(AvailabilityZone.fromValue(textToStringValue()));
+      else if ("creationTime".equals(qName))
+         builder.creationTime(textToIso8601Date());
+      else if ("lastModificationTime".equals(qName))
+         builder.lastModificationTime(textToIso8601Date());
+      else if ("internetAccess".equals(qName))
+         builder.hasInternetAccess(textToBooleanValue());
+      else if ("cpuHotPlug".equals(qName))
+         builder.isCpuHotPlug(textToBooleanValue());
+      else if ("ramHotPlug".equals(qName))
+         builder.isRamHotPlug(textToBooleanValue());
+      else if ("nicHotPlug".equals(qName))
+         builder.isNicHotPlug(textToBooleanValue());
+      else if ("nicHotUnPlug".equals(qName))
+         builder.isNicHotUnPlug(textToBooleanValue());
+      else if ("discVirtioHotPlug".equals(qName))
+         builder.isDiscVirtioHotPlug(textToBooleanValue());
+      else if ("discVirtioHotUnPlug".equals(qName))
+         builder.isDiscVirtioHotUnPlug(textToBooleanValue());
    }
 
 }
