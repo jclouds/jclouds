@@ -42,6 +42,7 @@ import org.jclouds.azureblob.options.ListBlobsOptions;
 import org.jclouds.blobstore.BlobStoreContext;
 import org.jclouds.blobstore.domain.Blob;
 import org.jclouds.blobstore.domain.BlobMetadata;
+import org.jclouds.blobstore.domain.ContainerAccess;
 import org.jclouds.blobstore.domain.PageSet;
 import org.jclouds.blobstore.domain.StorageMetadata;
 import org.jclouds.blobstore.domain.internal.PageSetImpl;
@@ -281,5 +282,24 @@ public class AzureBlobStore extends BaseBlobStore {
       if (options.isPublicRead())
          createContainerOptions.withPublicAccess(PublicAccess.CONTAINER);
       return sync.createContainer(container, createContainerOptions);
+   }
+
+   public ContainerAccess getContainerAccess(String container) {
+      PublicAccess access = sync.getPublicAccessForContainer(container);
+      if (access == PublicAccess.BLOB) {
+         return ContainerAccess.PUBLIC_READ;
+      } else {
+         return ContainerAccess.PRIVATE;
+      }
+   }
+
+   public void setContainerAccess(String container, ContainerAccess access) {
+      PublicAccess publicAccess;
+      if (access == ContainerAccess.PUBLIC_READ) {
+         publicAccess = PublicAccess.BLOB;
+      } else {
+         publicAccess = PublicAccess.PRIVATE;
+      }
+      sync.setPublicAccessForContainer(container, publicAccess);
    }
 }
