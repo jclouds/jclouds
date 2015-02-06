@@ -31,6 +31,8 @@ import org.jclouds.util.Strings2;
 import org.testng.SkipException;
 import org.testng.annotations.Test;
 
+import com.google.common.util.concurrent.Uninterruptibles;
+
 /**
  * Tests integrated functionality of all signature commands.
  * <p/>
@@ -79,7 +81,7 @@ public class BaseBlobSignerLiveTest extends BaseBlobStoreIntegrationTest {
    public void testSignGetUrlWithTime() throws InterruptedException, IOException {
       String name = "hello";
       String text = "fooooooooooooooooooooooo";
-      int timeout = 5;
+      int timeout = 10;
 
       Blob blob = view.getBlobStore().blobBuilder(name).payload(text).contentType("text/plain").build();
       String container = getContainerName();
@@ -87,8 +89,9 @@ public class BaseBlobSignerLiveTest extends BaseBlobStoreIntegrationTest {
          view.getBlobStore().putBlob(container, blob);
          assertConsistencyAwareContainerSize(container, 1);
          HttpRequest request = view.getSigner().signGetBlob(container, name, timeout);
-         
+
          assertEquals(request.getFilters().size(), 0);
+         Uninterruptibles.sleepUninterruptibly(timeout / 2, TimeUnit.SECONDS);
          assertEquals(Strings2.toStringAndClose(view.utils().http().invoke(request).getPayload().openStream()), text);
 
          TimeUnit.SECONDS.sleep(2 * timeout);
