@@ -85,6 +85,8 @@ public class AWSEC2TemplateOptions extends EC2TemplateOptions implements Cloneab
             eTo.spotPrice(getSpotPrice());
          if (getSpotOptions() != null)
             eTo.spotOptions(getSpotOptions());
+         if (getPrivateIpAddress() != null)
+            eTo.privateIpAddress(getPrivateIpAddress());
       }
    }
 
@@ -97,6 +99,7 @@ public class AWSEC2TemplateOptions extends EC2TemplateOptions implements Cloneab
    private Set<String> groupIds = ImmutableSet.of();
    private String iamInstanceProfileArn;
    private String iamInstanceProfileName;
+   private String privateIpAddress;
 
    @Override
    public boolean equals(Object o) {
@@ -110,13 +113,14 @@ public class AWSEC2TemplateOptions extends EC2TemplateOptions implements Cloneab
                && equal(this.noPlacementGroup, that.noPlacementGroup) && equal(this.subnetId, that.subnetId)
                && equal(this.spotPrice, that.spotPrice) && equal(this.spotOptions, that.spotOptions)
                && equal(this.groupIds, that.groupIds) && equal(this.iamInstanceProfileArn, that.iamInstanceProfileArn)
-               && equal(this.iamInstanceProfileName, that.iamInstanceProfileName);
+               && equal(this.iamInstanceProfileName, that.iamInstanceProfileName)
+               && equal(this.privateIpAddress, that.privateIpAddress);
    }
 
    @Override
    public int hashCode() {
       return Objects.hashCode(super.hashCode(), monitoringEnabled, placementGroup, noPlacementGroup, subnetId,
-               spotPrice, spotOptions, groupIds, iamInstanceProfileArn, iamInstanceProfileName);
+               spotPrice, spotOptions, groupIds, iamInstanceProfileArn, iamInstanceProfileName, privateIpAddress);
    }
 
    @Override
@@ -135,6 +139,7 @@ public class AWSEC2TemplateOptions extends EC2TemplateOptions implements Cloneab
          toString.add("groupIds", groupIds);
       toString.add("iamInstanceProfileArn", iamInstanceProfileArn);
       toString.add("iamInstanceProfileName", iamInstanceProfileName);
+      toString.add("privateIpAddress", privateIpAddress);
       return toString;
    }
 
@@ -192,6 +197,11 @@ public class AWSEC2TemplateOptions extends EC2TemplateOptions implements Cloneab
    @SinceApiVersion("2012-06-01")
    public AWSEC2TemplateOptions iamInstanceProfileName(String name) {
       this.iamInstanceProfileName = checkNotNull(emptyToNull(name), "name must be defined");
+      return this;
+   }
+
+   public AWSEC2TemplateOptions privateIpAddress(String address) {
+      this.privateIpAddress = checkNotNull(emptyToNull(address), "address must be defined");
       return this;
    }
 
@@ -440,6 +450,11 @@ public class AWSEC2TemplateOptions extends EC2TemplateOptions implements Cloneab
       public static AWSEC2TemplateOptions iamInstanceProfileName(String name) {
          AWSEC2TemplateOptions options = new AWSEC2TemplateOptions();
          return options.iamInstanceProfileName(name);
+      }
+
+      public static AWSEC2TemplateOptions privateIpAddress(String address) {
+         AWSEC2TemplateOptions options = new AWSEC2TemplateOptions();
+         return options.privateIpAddress(address);
       }
 
       /**
@@ -787,5 +802,9 @@ public class AWSEC2TemplateOptions extends EC2TemplateOptions implements Cloneab
    @SinceApiVersion("2012-06-01")
    public String getIAMInstanceProfileName() {
       return iamInstanceProfileName;
+   }
+
+   public String getPrivateIpAddress() {
+      return privateIpAddress;
    }
 }

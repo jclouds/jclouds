@@ -23,6 +23,7 @@ import static org.jclouds.aws.ec2.options.AWSRunInstancesOptions.Builder.withIAM
 import static org.jclouds.aws.ec2.options.AWSRunInstancesOptions.Builder.withIAMInstanceProfileName;
 import static org.jclouds.aws.ec2.options.AWSRunInstancesOptions.Builder.withKernelId;
 import static org.jclouds.aws.ec2.options.AWSRunInstancesOptions.Builder.withKeyName;
+import static org.jclouds.aws.ec2.options.AWSRunInstancesOptions.Builder.withPrivateIpAdress;
 import static org.jclouds.aws.ec2.options.AWSRunInstancesOptions.Builder.withRamdisk;
 import static org.jclouds.aws.ec2.options.AWSRunInstancesOptions.Builder.withSecurityGroup;
 import static org.jclouds.aws.ec2.options.AWSRunInstancesOptions.Builder.withSecurityGroupId;
@@ -369,6 +370,17 @@ public class AWSRunInstancesOptionsTest {
    @Test(expectedExceptions = NullPointerException.class)
    public void testWithBlockDeviceMappingNPE() {
       withBlockDeviceMappings(null);
+   }
+
+   @Test
+   public void testWithPrivateIpAddressStatic() {
+      AWSRunInstancesOptions options = withPrivateIpAdress("10.0.0.1");
+      assertEquals(options.buildFormParameters().get("PrivateIpAddress"), ImmutableList.of("10.0.0.1"));
+   }
+
+   @Test(expectedExceptions = NullPointerException.class)
+   public void testWithPrivateIpAddressStaticNPE() {
+      withPrivateIpAdress(null);
    }
 
 }
