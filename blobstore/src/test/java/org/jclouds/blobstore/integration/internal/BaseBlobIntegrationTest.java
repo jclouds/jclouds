@@ -106,11 +106,11 @@ public class BaseBlobIntegrationTest extends BaseBlobStoreIntegrationTest {
 
       File payloadFile = File.createTempFile("testPutFileParallel", "png");
       createTestInput(32 * 1024).copyTo(Files.asByteSink(payloadFile));
-      
+
       final Payload testPayload = Payloads.newFilePayload(payloadFile);
       final HashCode md5 = hashAndClose(testPayload.openStream(), md5());
       testPayload.getContentMetadata().setContentType("image/png");
-      
+
       final AtomicInteger blobCount = new AtomicInteger();
       final String container = getContainerName();
       try {
@@ -289,11 +289,11 @@ public class BaseBlobIntegrationTest extends BaseBlobStoreIntegrationTest {
 
          String name = "apples";
 
-         Date before = new Date(System.currentTimeMillis() - 5000);
+         Date before = new Date(System.currentTimeMillis() - 10000);
          addObjectAndValidateContent(container, name);
-         Date after = new Date(System.currentTimeMillis() + 5000);
+         Date after = new Date(System.currentTimeMillis() + 10000);
 
-         Uninterruptibles.sleepUninterruptibly(5, TimeUnit.SECONDS);
+         Uninterruptibles.sleepUninterruptibly(15, TimeUnit.SECONDS);
          view.getBlobStore().getBlob(container, name, ifUnmodifiedSince(after));
          validateContent(container, name);
 
