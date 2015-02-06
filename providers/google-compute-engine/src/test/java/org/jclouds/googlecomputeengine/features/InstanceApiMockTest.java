@@ -231,6 +231,24 @@ public class InstanceApiMockTest extends BaseGoogleComputeEngineApiMockTest {
             "{\"onHostMaintenance\": \"TERMINATE\",\"automaticRestart\": true}");
    }
 
+   public void start_test() throws Exception {
+      server.enqueue(jsonResponse("/zone_operation.json"));
+
+      assertEquals(instanceApi().start("test-1"),
+            new ParseZoneOperationTest().expected(url("/projects")));
+
+      assertSent(server, "POST", "/projects/party/zones/us-central1-a/instances/test-1/start");
+   }
+
+   public void stop_test() throws Exception {
+      server.enqueue(jsonResponse("/zone_operation.json"));
+
+      assertEquals(instanceApi().stop("test-1"),
+            new ParseZoneOperationTest().expected(url("/projects")));
+
+      assertSent(server, "POST", "/projects/party/zones/us-central1-a/instances/test-1/stop");
+   }
+
    InstanceApi instanceApi(){
       return api().instancesInZone("us-central1-a");
    }

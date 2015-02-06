@@ -253,6 +253,30 @@ public interface InstanceApi {
                            @PayloadParam("automaticRestart") boolean automaticRestart);
 
    /**
+    * This method starts an instance that was stopped using the using the {@link #stop(String)} method.
+    * @param instance - name of the instance to be started
+    */
+   @Named("Instances:start")
+   @POST
+   @Path("/{instance}/start")
+   @Produces(APPLICATION_JSON)
+   Operation start(@PathParam("instance") String instance);
+
+   /**
+    * This method stops a running instance, shutting it down cleanly, and allows you to restart
+    *  the instance at a later time. Stopped instances do not incur per-minute, virtual machine
+    *  usage charges while they are stopped, but any resources that the virtual machine is using,
+    *  such as persistent disks and static IP addresses,will continue to be charged until they are deleted.
+    * @param instance
+    * @return
+    */
+   @Named("Instances:stop")
+   @POST
+   @Path("/{instance}/stop")
+   @Produces(APPLICATION_JSON)
+   Operation stop(@PathParam("instance") String instance);
+
+   /**
     * Retrieves the list of instance resources available to the specified project.
     * By default the list as a maximum size of 100, if no options are provided or ListOptions#getMaxResults() has not
     * been set.

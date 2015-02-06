@@ -56,6 +56,7 @@ public class InstanceApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
 
    private static final String INSTANCE_NETWORK_NAME = "instance-api-live-test-network";
    private static final String INSTANCE_NAME = "instance-api-test-instance-1";
+   private static final String INSTANCE_NAME2 = "instance-api-test-instance-2";
    private static final String DISK_NAME = "instance-live-test-disk";
    private static final String IPV4_RANGE = "10.0.0.0/8";
    private static final String METADATA_ITEM_KEY = "instanceLiveTestTestProp";
@@ -68,6 +69,7 @@ public class InstanceApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
    private static final String DEFAULT_BOOT_DISK_NAME = "persistent-disk-0";
 
    private NewInstance instance;
+   private NewInstance instance2;
 
    @Override
    protected GoogleComputeEngineApi create(Properties props, Iterable<Module> modules) {
@@ -95,6 +97,13 @@ public class InstanceApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
       );
       instance.tags().items().addAll(Arrays.asList("foo", "bar"));
       instance.metadata().put("mykey", "myvalue");
+
+      instance2 = NewInstance.create(
+            INSTANCE_NAME2, // name
+            getDefaultMachineTypeUrl(), // machineType
+            getNetworkUrl(INSTANCE_NETWORK_NAME), // network
+            imageUri); // sourceImage
+
       return api;
    }
 
@@ -115,6 +124,7 @@ public class InstanceApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
       assertOperationDoneSuccessfully(diskApi().create(DISK_NAME,
             new DiskCreationOptions().sizeGb(DEFAULT_DISK_SIZE_GB)));
       assertOperationDoneSuccessfully(api().create(instance));
+      assertOperationDoneSuccessfully(api().create(instance2));
    }
 
    @Test(groups = "live", dependsOnMethods = "testInsertInstance")
@@ -283,10 +293,27 @@ public class InstanceApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
       assertOperationDoneSuccessfully(api().reset(INSTANCE_NAME));
    }
 
+   @Test(groups = "live", dependsOnMethods = "testInsertInstance")
+   public void testStopInstance() {
+      Instance originalInstance = api().get(INSTANCE_NAME2);
+      assertEquals(originalInstance.status(), Instance.Status.RUNNING);
+      assertOperationDoneSuccessfully(api().stop(INSTANCE_NAME2));
+   }
+
+   @Test(groups = "live", dependsOnMethods = "testStopInstance")
+   public void testStartInstance() {
+      Instance originalInstance = api().get(INSTANCE_NAME2);
+      assertEquals(originalInstance.status(), Instance.Status.TERMINATED);
+      assertOperationDoneSuccessfully(api().start(INSTANCE_NAME2));
+      originalInstance = api().get(INSTANCE_NAME2);
+      assertEquals(originalInstance.status(), Instance.Status.RUNNING);
+   }
+
    @Test(groups = "live", dependsOnMethods = {"testSetDiskAutoDelete", "testResetInstance", "testSetScheduling",
-         "testGetInstance", "testGetSerialPortOutput", "testDeleteAccessConfig"}, alwaysRun = true)
+         "testGetInstance", "testGetSerialPortOutput", "testDeleteAccessConfig", "testStartInstance"}, alwaysRun = true)
    public void testDeleteInstance() {
       assertOperationDoneSuccessfully(api().delete(INSTANCE_NAME));
+      assertOperationDoneSuccessfully(api().delete(INSTANCE_NAME2));
       assertOperationDoneSuccessfully(diskApi().delete(DISK_NAME));
       Operation deleteNetwork = api.networks().delete(INSTANCE_NETWORK_NAME);
       assertOperationDoneSuccessfully(deleteNetwork);
