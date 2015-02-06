@@ -30,6 +30,7 @@ import org.jclouds.blobstore.BlobStoreContext;
 import org.jclouds.blobstore.ContainerNotFoundException;
 import org.jclouds.blobstore.domain.Blob;
 import org.jclouds.blobstore.domain.BlobMetadata;
+import org.jclouds.blobstore.domain.ContainerAccess;
 import org.jclouds.blobstore.domain.PageSet;
 import org.jclouds.blobstore.domain.StorageMetadata;
 import org.jclouds.blobstore.functions.BlobToHttpGetOptions;
@@ -128,6 +129,31 @@ public class S3BlobStore extends BaseBlobStore {
    @Override
    public boolean createContainerInLocation(Location location, String container) {
       return createContainerInLocation(location, container, CreateContainerOptions.NONE);
+   }
+
+   @Override
+   public ContainerAccess getContainerAccess(String container) {
+      AccessControlList acl = sync.getBucketACL(container);
+      if (acl.hasPermission(GroupGranteeURI.ALL_USERS, Permission.READ)) {
+         return ContainerAccess.PUBLIC_READ;
+      } else {
+         return ContainerAccess.PRIVATE;
+      }
+   }
+
+   @Override
+   public void setContainerAccess(String container, ContainerAccess access) {
+      AccessControlList acl = sync.getBucketACL(container);
+      if (access == ContainerAccess.PUBLIC_READ) {
+         acl.revokePermission(GroupGranteeURI.ALL_USERS, Permission.FULL_CONTROL)
+               .revokePermission(GroupGranteeURI.ALL_USERS, Permission.WRITE)
+               .addPermission(GroupGranteeURI.ALL_USERS, Permission.READ);
+      } else if (access == ContainerAccess.PRIVATE) {
+         acl.revokePermission(GroupGranteeURI.ALL_USERS, Permission.FULL_CONTROL)
+               .revokePermission(GroupGranteeURI.ALL_USERS, Permission.READ)
+               .revokePermission(GroupGranteeURI.ALL_USERS, Permission.WRITE);
+      }
+      sync.putBucketACL(container, acl);
    }
 
    /**
