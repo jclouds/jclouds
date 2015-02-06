@@ -19,6 +19,7 @@ package org.jclouds.s3.domain;
 import java.net.URI;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -105,10 +106,10 @@ public class AccessControlList {
     * @param permission
     */
    public AccessControlList revokePermission(Grantee grantee, String permission) {
-      Collection<Grant> grantsForGrantee = findGrantsForGrantee(grantee.getIdentifier());
-      for (Grant grant : grantsForGrantee) {
-         if (grant.getPermission().equals(permission)) {
-            grants.remove(grant);
+      for (Iterator<Grant> it = grants.iterator(); it.hasNext();) {
+         Grant grant = it.next();
+         if (grant.getGrantee().equals(grantee) && grant.getPermission().equals(permission)) {
+            it.remove();
          }
       }
       return this;
