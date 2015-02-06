@@ -37,8 +37,10 @@ import java.util.concurrent.TimeoutException;
 
 import javax.ws.rs.core.MediaType;
 
+import org.jclouds.blobstore.BlobStore;
 import org.jclouds.blobstore.domain.Blob;
 import org.jclouds.blobstore.domain.BlobMetadata;
+import org.jclouds.blobstore.domain.ContainerAccess;
 import org.jclouds.blobstore.domain.PageSet;
 import org.jclouds.blobstore.domain.StorageMetadata;
 import org.jclouds.blobstore.options.ListContainerOptions;
@@ -472,6 +474,23 @@ public class BaseContainerIntegrationTest extends BaseBlobStoreIntegrationTest {
          }
       } finally {
          returnContainer(containerName);
+      }
+   }
+
+   @Test(groups = { "integration", "live" })
+   public void testSetContainerAccess() throws Exception {
+      BlobStore blobStore = view.getBlobStore();
+      String containerName = getContainerName();
+      try {
+         assertThat(blobStore.getContainerAccess(containerName)).isEqualTo(ContainerAccess.PRIVATE);
+
+         blobStore.setContainerAccess(containerName, ContainerAccess.PUBLIC_READ);
+         assertThat(blobStore.getContainerAccess(containerName)).isEqualTo(ContainerAccess.PUBLIC_READ);
+
+         blobStore.setContainerAccess(containerName, ContainerAccess.PRIVATE);
+         assertThat(blobStore.getContainerAccess(containerName)).isEqualTo(ContainerAccess.PRIVATE);
+      } finally {
+         recycleContainerAndAddToPool(containerName);
       }
    }
 

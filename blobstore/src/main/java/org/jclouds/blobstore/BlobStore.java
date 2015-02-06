@@ -21,6 +21,7 @@ import java.util.Set;
 import org.jclouds.blobstore.domain.Blob;
 import org.jclouds.blobstore.domain.BlobBuilder;
 import org.jclouds.blobstore.domain.BlobMetadata;
+import org.jclouds.blobstore.domain.ContainerAccess;
 import org.jclouds.blobstore.domain.PageSet;
 import org.jclouds.blobstore.domain.StorageMetadata;
 import org.jclouds.blobstore.options.CreateContainerOptions;
@@ -90,6 +91,10 @@ public interface BlobStore {
     * @see #createContainerInLocation(Location,String)
     */
    boolean createContainerInLocation(@Nullable Location location, String container, CreateContainerOptions options);
+
+   ContainerAccess getContainerAccess(String container);
+
+   void setContainerAccess(String container, ContainerAccess access);
 
    /**
     * Lists all resources in a container non-recursive.
