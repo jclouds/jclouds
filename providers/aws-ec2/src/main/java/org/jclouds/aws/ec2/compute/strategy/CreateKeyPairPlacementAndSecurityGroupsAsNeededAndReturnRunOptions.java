@@ -92,6 +92,8 @@ public class CreateKeyPairPlacementAndSecurityGroupsAsNeededAndReturnRunOptions 
          instanceOptions.withIAMInstanceProfileArn(awsTemplateOptions.getIAMInstanceProfileArn());
       if (awsTemplateOptions.getIAMInstanceProfileName() != null)
          instanceOptions.withIAMInstanceProfileName(awsTemplateOptions.getIAMInstanceProfileName());
+      if (awsTemplateOptions.getPrivateIpAddress() != null)
+         instanceOptions.withPrivateIpAddress(awsTemplateOptions.getPrivateIpAddress());
 
       return instanceOptions;
    }

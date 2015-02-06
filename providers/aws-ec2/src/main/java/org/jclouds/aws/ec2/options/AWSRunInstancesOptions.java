@@ -114,6 +114,16 @@ public class AWSRunInstancesOptions extends RunInstancesOptions {
       return this;
    }
 
+   /**
+    * The primary IP address for VPC instance. You must specify a value from the IP address range of the subnet.
+    *
+    * @see org.jclouds.aws.ec2.domain.AWSRunningInstance#getPrivateIpAddress()
+    */
+   public AWSRunInstancesOptions withPrivateIpAddress(String address) {
+      formParameters.put("PrivateIpAddress", checkNotNull(address, "address"));
+      return this;
+   }
+
    public static class Builder extends RunInstancesOptions.Builder {
 
       /**
@@ -218,6 +228,14 @@ public class AWSRunInstancesOptions extends RunInstancesOptions {
       public static AWSRunInstancesOptions withBlockDeviceMappings(Set<? extends BlockDeviceMapping> mappings) {
          AWSRunInstancesOptions options = new AWSRunInstancesOptions();
          return options.withBlockDeviceMappings(mappings);
+      }
+
+      /**
+       * @see AWSRunInstancesOptions#withPrivateIpAddress(String)
+       */
+      public static AWSRunInstancesOptions withPrivateIpAdress(String address) {
+         AWSRunInstancesOptions options = new AWSRunInstancesOptions();
+         return options.withPrivateIpAddress(address);
       }
 
    }

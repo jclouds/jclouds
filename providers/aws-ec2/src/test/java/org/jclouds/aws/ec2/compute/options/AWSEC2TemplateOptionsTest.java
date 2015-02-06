@@ -25,6 +25,7 @@ import static org.jclouds.aws.ec2.compute.AWSEC2TemplateOptions.Builder.inboundP
 import static org.jclouds.aws.ec2.compute.AWSEC2TemplateOptions.Builder.installPrivateKey;
 import static org.jclouds.aws.ec2.compute.AWSEC2TemplateOptions.Builder.keyPair;
 import static org.jclouds.aws.ec2.compute.AWSEC2TemplateOptions.Builder.noKeyPair;
+import static org.jclouds.aws.ec2.compute.AWSEC2TemplateOptions.Builder.privateIpAddress;
 import static org.jclouds.aws.ec2.compute.AWSEC2TemplateOptions.Builder.securityGroupIds;
 import static org.jclouds.aws.ec2.compute.AWSEC2TemplateOptions.Builder.securityGroups;
 import static org.testng.Assert.assertEquals;
@@ -412,5 +413,16 @@ public class AWSEC2TemplateOptionsTest {
    @Test(expectedExceptions = NullPointerException.class)
    public void testIAMInstanceProfileNameNPE() {
       iamInstanceProfileName(null);
+   }
+
+   @Test
+   public void testPrivateIpAddressStatic() {
+      AWSEC2TemplateOptions options = privateIpAddress("10.0.0.1");
+      assertEquals(options.getPrivateIpAddress(), "10.0.0.1");
+   }
+
+   @Test(expectedExceptions = NullPointerException.class)
+   public void testPrivateIpAddressNPE() {
+      privateIpAddress(null);
    }
 }
