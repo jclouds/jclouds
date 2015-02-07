@@ -34,6 +34,7 @@ import org.jclouds.blobstore.BlobStoreContext;
 import org.jclouds.blobstore.domain.Blob;
 import org.jclouds.blobstore.domain.BlobBuilder;
 import org.jclouds.blobstore.domain.BlobMetadata;
+import org.jclouds.blobstore.domain.ContainerAccess;
 import org.jclouds.blobstore.domain.MutableBlobMetadata;
 import org.jclouds.blobstore.domain.PageSet;
 import org.jclouds.blobstore.domain.StorageMetadata;
@@ -59,6 +60,8 @@ import org.jclouds.openstack.swift.v1.domain.Container;
 import org.jclouds.openstack.swift.v1.domain.ObjectList;
 import org.jclouds.openstack.swift.v1.domain.SwiftObject;
 import org.jclouds.openstack.swift.v1.features.ObjectApi;
+import org.jclouds.openstack.swift.v1.options.UpdateContainerOptions;
+import org.jclouds.openstack.swift.v1.reference.SwiftHeaders;
 
 import com.google.common.base.Function;
 import com.google.common.base.Optional;
@@ -68,6 +71,7 @@ import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
 import com.google.common.collect.FluentIterable;
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.io.ByteSource;
 import com.google.inject.AbstractModule;
@@ -137,6 +141,27 @@ public class RegionScopedSwiftBlobStore implements BlobStore {
          return api.getContainerApi(regionId).create(container, ANYBODY_READ);
       }
       return api.getContainerApi(regionId).create(container, BASIC_CONTAINER);
+   }
+
+   @Override
+   public ContainerAccess getContainerAccess(String name) {
+      Container container = api.getContainerApi(regionId).get(name);
+      if (container.getAnybodyRead().get()) {
+         return ContainerAccess.PUBLIC_READ;
+      } else {
+         return ContainerAccess.PRIVATE;
+      }
+   }
+
+   @Override
+   public void setContainerAccess(String name, ContainerAccess access) {
+      UpdateContainerOptions options = new UpdateContainerOptions();
+      if (access == ContainerAccess.PUBLIC_READ) {
+         options.anybodyRead();
+      } else {
+         options.headers(ImmutableMultimap.of(SwiftHeaders.CONTAINER_READ, SwiftHeaders.CONTAINER_ACL_PRIVATE));
+      }
+      api.getContainerApi(regionId).update(name, options);
    }
 
    private static final org.jclouds.openstack.swift.v1.options.CreateContainerOptions BASIC_CONTAINER = new org.jclouds.openstack.swift.v1.options.CreateContainerOptions();

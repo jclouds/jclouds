@@ -49,6 +49,7 @@ public final class SwiftHeaders {
    public static final String CONTAINER_READ = "X-Container-Read";
    public static final String CONTAINER_WRITE = "X-Container-Write";
    public static final String CONTAINER_ACL_ANYBODY_READ = ".r:*,.rlistings";
+   public static final String CONTAINER_ACL_PRIVATE = "";
    
    // CORS
    public static final String CONTAINER_ACCESS_CONTROL_ALLOW_ORIGIN = CONTAINER_METADATA_PREFIX + "Access-Control-Allow-Origin";
