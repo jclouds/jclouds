@@ -128,7 +128,7 @@ public class BaseBlobSignerLiveTest extends BaseBlobStoreIntegrationTest {
    public void testSignPutUrlWithTime() throws Exception {
       String name = "hello";
       String text = "fooooooooooooooooooooooo";
-      int timeout = 5;
+      int timeout = 30;
 
       Blob blob = view.getBlobStore().blobBuilder(name).payload(text).contentType("text/plain").build();
       String container = getContainerName();
@@ -140,6 +140,7 @@ public class BaseBlobSignerLiveTest extends BaseBlobStoreIntegrationTest {
          // Java 7+ will throw a ProtocolException instead of setting the response code:
          // http://www.docjar.com/html/api/sun/net/www/protocol/http/HttpURLConnection.java.html#1021
          request = request.toBuilder().removeHeader(EXPECT).build();
+         Uninterruptibles.sleepUninterruptibly(timeout / 2, TimeUnit.SECONDS);
          Strings2.toStringAndClose(view.utils().http().invoke(request).getPayload().openStream());
          assertConsistencyAwareContainerSize(container, 1);
 
