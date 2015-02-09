@@ -29,6 +29,7 @@ import javax.inject.Inject;
 import org.jclouds.blobstore.BlobStoreContext;
 import org.jclouds.blobstore.domain.Blob;
 import org.jclouds.blobstore.domain.BlobMetadata;
+import org.jclouds.blobstore.domain.ContainerAccess;
 import org.jclouds.blobstore.domain.MutableBlobMetadata;
 import org.jclouds.blobstore.domain.PageSet;
 import org.jclouds.blobstore.domain.StorageMetadata;
@@ -56,6 +57,7 @@ import org.jclouds.googlecloudstorage.domain.Bucket;
 import org.jclouds.googlecloudstorage.domain.DomainResourceReferences;
 import org.jclouds.googlecloudstorage.domain.GoogleCloudStorageObject;
 import org.jclouds.googlecloudstorage.domain.ListPageWithPrefixes;
+import org.jclouds.googlecloudstorage.domain.ObjectAccessControls;
 import org.jclouds.googlecloudstorage.domain.templates.BucketTemplate;
 import org.jclouds.googlecloudstorage.domain.templates.ObjectAccessControlsTemplate;
 import org.jclouds.googlecloudstorage.domain.templates.ObjectTemplate;
@@ -148,6 +150,27 @@ public final class GoogleCloudStorageBlobStore extends BaseBlobStore {
       }
 
       return bucket != null;
+   }
+
+   @Override
+   public ContainerAccess getContainerAccess(String container) {
+      ObjectAccessControls controls = api.getDefaultObjectAccessControlsApi().getDefaultObjectAccessControls(container, "allUsers");
+      if (controls == null || controls.role() == DomainResourceReferences.ObjectRole.OWNER) {
+         return ContainerAccess.PRIVATE;
+      } else {
+         return ContainerAccess.PUBLIC_READ;
+      }
+   }
+
+   @Override
+   public void setContainerAccess(String container, ContainerAccess access) {
+      ObjectAccessControlsTemplate doAclTemplate;
+      if (access == ContainerAccess.PUBLIC_READ) {
+         doAclTemplate = ObjectAccessControlsTemplate.create("allUsers", READER);
+         api.getDefaultObjectAccessControlsApi().createDefaultObjectAccessControls(container, doAclTemplate);
+      } else {
+         api.getDefaultObjectAccessControlsApi().deleteDefaultObjectAccessControls(container, "allUsers");
+      }
    }
 
    /** Returns list of of all the objects */
