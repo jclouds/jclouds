@@ -175,4 +175,12 @@ public interface AtmosClient extends Closeable {
    @Fallback(FalseOnNotFoundOr404.class)
    boolean isPublic(@PathParam("path") String path);
 
+   @Named("SetObjectMetadata")
+   @POST
+   @Path("/{path}")
+   @QueryParams(keys = "acl")
+   @Produces(MediaType.APPLICATION_OCTET_STREAM)
+   @Fallback(ThrowKeyNotFoundOn404.class)
+   @Consumes(MediaType.WILDCARD)
+   void setGroupAcl(@PathParam("path") String path, PutOptions options);
 }

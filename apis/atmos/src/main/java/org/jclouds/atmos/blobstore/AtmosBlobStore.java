@@ -36,6 +36,7 @@ import org.jclouds.atmos.util.AtmosUtils;
 import org.jclouds.blobstore.BlobStoreContext;
 import org.jclouds.blobstore.domain.Blob;
 import org.jclouds.blobstore.domain.BlobMetadata;
+import org.jclouds.blobstore.domain.ContainerAccess;
 import org.jclouds.blobstore.domain.PageSet;
 import org.jclouds.blobstore.domain.StorageMetadata;
 import org.jclouds.blobstore.functions.BlobToHttpGetOptions;
@@ -116,6 +117,26 @@ public class AtmosBlobStore extends BaseBlobStore {
    @Override
    public boolean createContainerInLocation(Location location, String container) {
       return sync.createDirectory(container) != null;
+   }
+
+   @Override
+   public ContainerAccess getContainerAccess(String container) {
+      if (sync.isPublic(container)) {
+         return ContainerAccess.PUBLIC_READ;
+      } else {
+         return ContainerAccess.PRIVATE;
+      }
+   }
+
+   @Override
+   public void setContainerAccess(String container, ContainerAccess access) {
+      org.jclouds.atmos.options.PutOptions options = new org.jclouds.atmos.options.PutOptions();
+      if (access == ContainerAccess.PUBLIC_READ) {
+         options.publicRead();
+      } else {
+         options.publicNone();
+      }
+      sync.setGroupAcl(container, options);
    }
 
    /**

@@ -177,7 +177,12 @@ public class SignRequest implements HttpRequestFilter {
    @VisibleForTesting
    void appendCanonicalizedResource(HttpRequest request, StringBuilder toSign) {
       // Path portion of the HTTP request URI, in lowercase.
-      toSign.append(request.getEndpoint().getRawPath().toLowerCase()).append("\n");
+      toSign.append(request.getEndpoint().getRawPath().toLowerCase());
+      String query = request.getEndpoint().getRawQuery();
+      if (query != null) {
+         toSign.append("?").append(query);
+      }
+      toSign.append("\n");
    }
 
 }
