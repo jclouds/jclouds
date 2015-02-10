@@ -78,7 +78,10 @@ public class ParseObjectInfoListFromJsonResponse extends ParseJson<PageSet<Objec
                   }
                }));
          boolean truncated = options.getMaxResults() == returnVal.size();
-         String marker = truncated ? returnVal.last().getName() : null;
+         String marker = null;
+         if (truncated && !returnVal.isEmpty()) {
+            marker = returnVal.last().getName();
+         }
          return new PageSetImpl<ObjectInfo>(returnVal, marker);
       } catch (IOException e) {
          throw new RuntimeException("problem reading response from request: " + request, e);
