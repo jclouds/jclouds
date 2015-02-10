@@ -16,9 +16,9 @@
  */
 package org.jclouds.compute.callables;
 
+import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 
-import java.io.File;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import javax.inject.Named;
@@ -47,7 +47,17 @@ public class InitScriptConfigurationForTasks {
    public InitScriptConfigurationForTasks initScriptPattern(
             @Named(PROPERTY_INIT_SCRIPT_PATTERN) String initScriptPattern) {
       this.initScriptPattern = checkNotNull(initScriptPattern, "initScriptPattern ex. /tmp/init-%s");
-      this.basedir = new File(initScriptPattern).getParent();
+      checkArgument(this.initScriptPattern.startsWith("/"), "initScriptPattern must be a UNIX-style path starting at the root (/)");
+
+      int lastSlash = initScriptPattern.lastIndexOf('/');
+      if (lastSlash == 0) {
+         // the only slash is at the beginning, so this is a filename but no subdirectories - e.g. "/foo"
+         this.basedir = "/";
+      } else {
+         // multiple path components - e.g. "/foo/bar"
+         this.basedir = initScriptPattern.substring(0, lastSlash);
+         // result: "/foo/bar" becomes "/foo"
+      }
       return this;
    }
 
