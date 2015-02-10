@@ -17,10 +17,12 @@
 package org.jclouds.s3.blobstore.integration;
 
 import java.io.IOException;
+import java.util.Properties;
 import java.util.concurrent.ExecutionException;
 
 import org.jclouds.blobstore.integration.internal.BaseBlobIntegrationTest;
 import org.jclouds.blobstore.integration.internal.BaseBlobStoreIntegrationTest;
+import org.jclouds.s3.blobstore.strategy.MultipartUpload;
 import org.testng.annotations.Test;
 
 @Test(groups = "live", testName = "S3BlobIntegrationLiveTest")
@@ -29,6 +31,18 @@ public class S3BlobIntegrationLiveTest extends BaseBlobIntegrationTest {
    public S3BlobIntegrationLiveTest() {
       provider = "s3";
       BaseBlobStoreIntegrationTest.SANITY_CHECK_RETURNED_BUCKET_NAME = true;
+   }
+
+   @Override
+   protected Properties setupProperties() {
+      Properties props = super.setupProperties();
+      props.setProperty("jclouds.mpu.parts.size", String.valueOf(MultipartUpload.MIN_PART_SIZE));
+      return props;
+   }
+
+   @Override
+   protected long getMinimumMultipartBlobSize() {
+      return MultipartUpload.MIN_PART_SIZE + 1;
    }
    
    @Override

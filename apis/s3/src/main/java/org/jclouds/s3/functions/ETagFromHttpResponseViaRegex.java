@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jclouds.aws.s3.functions;
+package org.jclouds.s3.functions;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -28,12 +28,13 @@ import org.jclouds.http.functions.ReturnStringIf2xx;
 import com.google.common.base.Function;
 
 @Singleton
-public class UploadIdFromHttpResponseViaRegex implements Function<HttpResponse, String> {
-   Pattern pattern = Pattern.compile("<UploadId>([\\S&&[^<]]+)</UploadId>");
+public class ETagFromHttpResponseViaRegex implements Function<HttpResponse, String> {
+   private static Pattern pattern = Pattern.compile("<ETag>([\\S&&[^<]]+)</ETag>");
+   private static String ESCAPED_QUOTE = "&quot;";
    private final ReturnStringIf2xx returnStringIf200;
 
    @Inject
-   UploadIdFromHttpResponseViaRegex(ReturnStringIf2xx returnStringIf200) {
+   ETagFromHttpResponseViaRegex(ReturnStringIf2xx returnStringIf200) {
       this.returnStringIf200 = returnStringIf200;
    }
 
@@ -45,6 +46,9 @@ public class UploadIdFromHttpResponseViaRegex implements Function<HttpResponse, 
          Matcher matcher = pattern.matcher(content);
          if (matcher.find()) {
             value = matcher.group(1);
+            if (value.indexOf(ESCAPED_QUOTE) != -1) {
+               value = value.replace(ESCAPED_QUOTE, "\"");
+            }
          }
       }
       return value;

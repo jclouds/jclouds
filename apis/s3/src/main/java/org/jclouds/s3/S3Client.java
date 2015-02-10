@@ -21,16 +21,19 @@ import static org.jclouds.blobstore.attr.BlobScopes.CONTAINER;
 import static org.jclouds.s3.S3Fallbacks.TrueOn404OrNotFoundFalseOnIllegalState;
 
 import java.io.Closeable;
+import java.util.Map;
 import java.util.Set;
 
 import javax.inject.Named;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.HEAD;
+import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
 import org.jclouds.Fallbacks.VoidOnNotFoundOr404;
@@ -42,6 +45,7 @@ import org.jclouds.blobstore.BlobStoreFallbacks.ThrowKeyNotFoundOn404;
 import org.jclouds.blobstore.attr.BlobScope;
 import org.jclouds.http.functions.ParseETagHeader;
 import org.jclouds.http.options.GetOptions;
+import org.jclouds.io.Payload;
 import org.jclouds.javax.annotation.Nullable;
 import org.jclouds.rest.annotations.BinderParam;
 import org.jclouds.rest.annotations.Endpoint;
@@ -59,6 +63,8 @@ import org.jclouds.s3.binders.BindACLToXMLPayload;
 import org.jclouds.s3.binders.BindAsHostPrefixIfConfigured;
 import org.jclouds.s3.binders.BindBucketLoggingToXmlPayload;
 import org.jclouds.s3.binders.BindNoBucketLoggingToXmlPayload;
+import org.jclouds.s3.binders.BindObjectMetadataToRequest;
+import org.jclouds.s3.binders.BindPartIdsAndETagsToRequest;
 import org.jclouds.s3.binders.BindPayerToXmlPayload;
 import org.jclouds.s3.binders.BindS3ObjectMetadataToRequest;
 import org.jclouds.s3.domain.AccessControlList;
@@ -73,9 +79,12 @@ import org.jclouds.s3.filters.RequestAuthorizeSignature;
 import org.jclouds.s3.functions.AssignCorrectHostnameForBucket;
 import org.jclouds.s3.functions.BindRegionToXmlPayload;
 import org.jclouds.s3.functions.DefaultEndpointThenInvalidateRegion;
+import org.jclouds.s3.functions.ETagFromHttpResponseViaRegex;
 import org.jclouds.s3.functions.ObjectKey;
+import org.jclouds.s3.functions.ObjectMetadataKey;
 import org.jclouds.s3.functions.ParseObjectFromHeadersAndHttpContent;
 import org.jclouds.s3.functions.ParseObjectMetadataFromHeaders;
+import org.jclouds.s3.functions.UploadIdFromHttpResponseViaRegex;
 import org.jclouds.s3.options.CopyObjectOptions;
 import org.jclouds.s3.options.ListBucketOptions;
 import org.jclouds.s3.options.PutBucketOptions;
@@ -545,4 +554,136 @@ public interface S3Client extends Closeable {
    @Produces(MediaType.TEXT_XML)
    void disableBucketLogging(@Bucket @EndpointParam(parser = AssignCorrectHostnameForBucket.class) @BinderParam(
                BindNoBucketLoggingToXmlPayload.class) @ParamValidators(BucketNameValidator.class) String bucketName);
+
+   /**
+    * This operation initiates a multipart upload and returns an upload ID. This upload ID is used
+    * to associate all the parts in the specific multipart upload. You specify this upload ID in
+    * each of your subsequent upload part requests (see Upload Part). You also include this upload
+    * ID in the final request to either complete or abort the multipart upload request.
+    *
+    * <h4>Note</h4> If you create an object using the multipart upload APIs, currently you cannot
+    * copy the object between regions.
+    *
+    *
+    * @param bucketName
+    *           namespace of the object you are to upload
+    * @param objectMetadata
+    *           metadata around the object you wish to upload
+    * @param options
+    *           controls optional parameters such as canned ACL
+    * @return ID for the initiated multipart upload.
+    */
+   @Named("PutObject")
+   @POST
+   @QueryParams(keys = "uploads")
+   @Path("/{key}")
+   @ResponseParser(UploadIdFromHttpResponseViaRegex.class)
+   String initiateMultipartUpload(@Bucket @EndpointParam(parser = AssignCorrectHostnameForBucket.class) @BinderParam(
+         BindAsHostPrefixIfConfigured.class) @ParamValidators(BucketNameValidator.class) String bucketName,
+         @PathParam("key") @ParamParser(ObjectMetadataKey.class) @BinderParam(BindObjectMetadataToRequest.class)
+         ObjectMetadata objectMetadata, PutObjectOptions... options);
+
+   /**
+    * This operation aborts a multipart upload. After a multipart upload is aborted, no additional
+    * parts can be uploaded using that upload ID. The storage consumed by any previously uploaded
+    * parts will be freed. However, if any part uploads are currently in progress, those part
+    * uploads might or might not succeed. As a result, it might be necessary to abort a given
+    * multipart upload multiple times in order to completely free all storage consumed by all parts.
+    *
+    *
+    * @param bucketName
+    *           namespace of the object you are deleting
+    * @param key
+    *           unique key in the s3Bucket identifying the object
+    * @param uploadId
+    *           id of the multipart upload in progress.
+    */
+   @Named("AbortMultipartUpload")
+   @DELETE
+   @Path("/{key}")
+   @Fallback(VoidOnNotFoundOr404.class)
+   void abortMultipartUpload(@Bucket @EndpointParam(parser = AssignCorrectHostnameForBucket.class) @BinderParam(
+         BindAsHostPrefixIfConfigured.class) @ParamValidators(BucketNameValidator.class) String bucketName,
+         @PathParam("key") String key, @QueryParam("uploadId") String uploadId);
+
+   /**
+    * This operation uploads a part in a multipart upload. You must initiate a multipart upload (see
+    * Initiate Multipart Upload) before you can upload any part. In response to your initiate
+    * request. Amazon S3 returns an upload ID, a unique identifier, that you must include in your
+    * upload part request.
+    *
+    * <p/>
+    * Part numbers can be any number from 1 to 10,000, inclusive. A part number uniquely identifies
+    * a part and also defines its position within the object being created. If you upload a new part
+    * using the same part number that was used with a previous part, the previously uploaded part is
+    * overwritten. Each part must be at least 5 MB in size, except the last part. There is no size
+    * limit on the last part of your multipart upload.
+    *
+    * <p/>
+    * To ensure that data is not corrupted when traversing the network, specify the Content-MD5
+    * header in the upload part request. Amazon S3 checks the part data against the provided MD5
+    * value. If they do not match, Amazon S3 returns an error.
+    *
+    *
+    * @param bucketName
+    *           namespace of the object you are storing
+    * @param key
+    *           unique key in the s3Bucket identifying the object
+    * @param partNumber
+    *           which part is this.
+    * @param uploadId
+    *           id of the multipart upload in progress.
+    * @param part
+    *           contains the data to create or overwrite
+    * @return ETag of the content uploaded
+    */
+   @Named("PutObject")
+   @PUT
+   @Path("/{key}")
+   @ResponseParser(ParseETagHeader.class)
+   String uploadPart(@Bucket @EndpointParam(parser = AssignCorrectHostnameForBucket.class) @BinderParam(
+         BindAsHostPrefixIfConfigured.class) @ParamValidators(BucketNameValidator.class) String bucketName,
+         @PathParam("key") String key, @QueryParam("partNumber") int partNumber,
+         @QueryParam("uploadId") String uploadId, Payload part);
+
+   /**
+    *
+    This operation completes a multipart upload by assembling previously uploaded parts.
+    * <p/>
+    * You first initiate the multipart upload and then upload all parts using the Upload Parts
+    * operation (see Upload Part). After successfully uploading all relevant parts of an upload, you
+    * call this operation to complete the upload. Upon receiving this request, Amazon S3
+    * concatenates all the parts in ascending order by part number to create a new object. In the
+    * Complete Multipart Upload request, you must provide the parts list. For each part in the list,
+    * you must provide the part number and the ETag header value, returned after that part was
+    * uploaded.
+    * <p/>
+    * Processing of a Complete Multipart Upload request could take several minutes to complete.
+    * After Amazon S3 begins processing the request, it sends an HTTP response header that specifies
+    * a 200 OK response. While processing is in progress, Amazon S3 periodically sends whitespace
+    * characters to keep the connection from timing out. Because a request could fail after the
+    * initial 200 OK response has been sent, it is important that you check the response body to
+    * determine whether the request succeeded.
+    * <p/>
+    * Note that if Complete Multipart Upload fails, applications should be prepared to retry the
+    * failed requests.
+    *
+    * @param bucketName
+    *           namespace of the object you are deleting
+    * @param key
+    *           unique key in the s3Bucket identifying the object
+    * @param uploadId
+    *           id of the multipart upload in progress.
+    * @param parts
+    *           a map of part id to eTag from the {@link #uploadPart} command.
+    * @return ETag of the content uploaded
+    */
+   @Named("PutObject")
+   @POST
+   @Path("/{key}")
+   @ResponseParser(ETagFromHttpResponseViaRegex.class)
+   String completeMultipartUpload(@Bucket @EndpointParam(parser = AssignCorrectHostnameForBucket.class) @BinderParam(
+         BindAsHostPrefixIfConfigured.class) @ParamValidators(BucketNameValidator.class) String bucketName,
+         @PathParam("key") String key, @QueryParam("uploadId") String uploadId,
+         @BinderParam(BindPartIdsAndETagsToRequest.class) Map<Integer, String> parts);
 }

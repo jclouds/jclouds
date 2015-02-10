@@ -16,6 +16,8 @@
  */
 package org.jclouds.s3;
 
+import static com.google.common.hash.Hashing.md5;
+import static org.jclouds.io.Payloads.newByteArrayPayload;
 import static org.jclouds.s3.options.CopyObjectOptions.Builder.ifSourceETagDoesntMatch;
 import static org.jclouds.s3.options.CopyObjectOptions.Builder.ifSourceETagMatches;
 import static org.jclouds.s3.options.CopyObjectOptions.Builder.ifSourceModifiedSince;
@@ -37,8 +39,11 @@ import java.util.Map;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeoutException;
 
+import org.jclouds.blobstore.KeyNotFoundException;
 import org.jclouds.blobstore.integration.internal.BaseBlobStoreIntegrationTest;
 import org.jclouds.http.HttpResponseException;
+import org.jclouds.io.ByteStreams2;
+import org.jclouds.io.Payload;
 import org.jclouds.s3.domain.AccessControlList;
 import org.jclouds.s3.domain.AccessControlList.CanonicalUserGrantee;
 import org.jclouds.s3.domain.AccessControlList.EmailAddressGrantee;
@@ -46,19 +51,25 @@ import org.jclouds.s3.domain.AccessControlList.GroupGranteeURI;
 import org.jclouds.s3.domain.AccessControlList.Permission;
 import org.jclouds.s3.domain.CannedAccessPolicy;
 import org.jclouds.s3.domain.ObjectMetadata;
+import org.jclouds.s3.domain.ObjectMetadataBuilder;
 import org.jclouds.s3.domain.S3Object;
 import org.jclouds.s3.options.PutObjectOptions;
 import org.jclouds.util.Strings2;
+import org.jclouds.utils.TestUtils;
 import org.testng.annotations.Test;
 
 import com.google.common.base.Throwables;
+import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
+import com.google.common.hash.HashCode;
+import com.google.common.io.ByteSource;
 
 @Test(groups = { "integration", "live" })
 public class S3ClientLiveTest extends BaseBlobStoreIntegrationTest {
    public static final String TEST_ACL_ID = "1a405254c932b52e5b5caaa88186bc431a1bacb9ece631f835daddaf0c47677c";
    public static final String TEST_ACL_EMAIL = "james@misterm.org";
    public static final String DEFAULT_OWNER_ID = "abc123";
+   private static final ByteSource oneHundredOneConstitutions = TestUtils.randomByteSource().slice(0, 5 * 1024 * 1024 + 1);
 
    public S3ClientLiveTest() {
       this.provider = "s3";
@@ -477,6 +488,53 @@ public class S3ClientLiveTest extends BaseBlobStoreIntegrationTest {
          returnContainer(containerName);
          returnContainer(destinationContainer);
 
+      }
+   }
+
+   public void testMultipartSynchronously() throws InterruptedException, IOException {
+      HashCode oneHundredOneConstitutionsMD5 = oneHundredOneConstitutions.hash(md5());
+      String containerName = getContainerName();
+      S3Object object = null;
+      try {
+         String key = "constitution.txt";
+         String uploadId = getApi().initiateMultipartUpload(containerName,
+                  ObjectMetadataBuilder.create().key(key).contentMD5(oneHundredOneConstitutionsMD5.asBytes()).build());
+         byte[] buffer = oneHundredOneConstitutions.read();
+         assertEquals(oneHundredOneConstitutions.size(), (long) buffer.length);
+
+         Payload part1 = newByteArrayPayload(buffer);
+         part1.getContentMetadata().setContentLength((long) buffer.length);
+         part1.getContentMetadata().setContentMD5(oneHundredOneConstitutionsMD5);
+
+         String eTagOf1 = null;
+         try {
+            eTagOf1 = getApi().uploadPart(containerName, key, 1, uploadId, part1);
+         } catch (KeyNotFoundException e) {
+            // note that because of eventual consistency, the upload id may not be present yet
+            // we may wish to add this condition to the retry handler
+
+            // we may also choose to implement ListParts and wait for the uploadId to become
+            // available there.
+            eTagOf1 = getApi().uploadPart(containerName, key, 1, uploadId, part1);
+         }
+
+         String eTag = getApi().completeMultipartUpload(containerName, key, uploadId, ImmutableMap.of(1, eTagOf1));
+
+         assert !eTagOf1.equals(eTag);
+
+         object = getApi().getObject(containerName, key);
+         assertEquals(ByteStreams2.toByteArrayAndClose(object.getPayload().openStream()), buffer);
+
+         // noticing amazon does not return content-md5 header or a parsable ETag after a multi-part
+         // upload is complete:
+         // https://forums.aws.amazon.com/thread.jspa?threadID=61344
+         assertEquals(object.getPayload().getContentMetadata().getContentMD5(), null);
+         assertEquals(getApi().headObject(containerName, key).getContentMetadata().getContentMD5(), null);
+
+      } finally {
+         if (object != null)
+            object.getPayload().close();
+         returnContainer(containerName);
       }
    }
 

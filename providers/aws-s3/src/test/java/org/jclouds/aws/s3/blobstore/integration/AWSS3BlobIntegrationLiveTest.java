@@ -16,9 +16,6 @@
  */
 package org.jclouds.aws.s3.blobstore.integration;
 
-import java.util.Properties;
-
-import org.jclouds.aws.s3.blobstore.strategy.MultipartUpload;
 import org.jclouds.s3.blobstore.integration.S3BlobIntegrationLiveTest;
 import org.testng.annotations.Test;
 
@@ -26,17 +23,5 @@ import org.testng.annotations.Test;
 public class AWSS3BlobIntegrationLiveTest extends S3BlobIntegrationLiveTest {
    public AWSS3BlobIntegrationLiveTest() {
       provider = "aws-s3";
-   }
-
-   @Override
-   protected Properties setupProperties() {
-      Properties props = super.setupProperties();
-      props.setProperty("jclouds.mpu.parts.size", String.valueOf(MultipartUpload.MIN_PART_SIZE));
-      return props;
-   }
-
-   @Override
-   protected long getMinimumMultipartBlobSize() {
-      return MultipartUpload.MIN_PART_SIZE + 1;
    }
 }

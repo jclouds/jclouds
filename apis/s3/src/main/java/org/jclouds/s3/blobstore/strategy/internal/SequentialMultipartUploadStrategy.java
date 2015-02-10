@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jclouds.aws.s3.blobstore.strategy.internal;
+package org.jclouds.s3.blobstore.strategy.internal;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -23,8 +23,7 @@ import java.util.SortedMap;
 import javax.annotation.Resource;
 import javax.inject.Named;
 
-import org.jclouds.aws.s3.AWSS3Client;
-import org.jclouds.aws.s3.blobstore.strategy.MultipartUploadStrategy;
+import org.jclouds.s3.blobstore.strategy.MultipartUploadStrategy;
 import org.jclouds.blobstore.KeyNotFoundException;
 import org.jclouds.blobstore.domain.Blob;
 import org.jclouds.blobstore.reference.BlobStoreConstants;
@@ -32,6 +31,7 @@ import org.jclouds.io.ContentMetadata;
 import org.jclouds.io.Payload;
 import org.jclouds.io.PayloadSlicer;
 import org.jclouds.logging.Logger;
+import org.jclouds.s3.S3Client;
 import org.jclouds.s3.blobstore.functions.BlobToObject;
 import org.jclouds.s3.domain.ObjectMetadataBuilder;
 
@@ -54,13 +54,13 @@ public class SequentialMultipartUploadStrategy implements MultipartUploadStrateg
    @Named(BlobStoreConstants.BLOBSTORE_LOGGER)
    private Logger logger = Logger.NULL;
 
-   private final AWSS3Client client;
+   private final S3Client client;
    private final BlobToObject blobToObject;
    private final MultipartUploadSlicingAlgorithm algorithm;
    private final PayloadSlicer slicer;
 
    @Inject
-   public SequentialMultipartUploadStrategy(AWSS3Client client, BlobToObject blobToObject,
+   public SequentialMultipartUploadStrategy(S3Client client, BlobToObject blobToObject,
          MultipartUploadSlicingAlgorithm algorithm, PayloadSlicer slicer) {
       this.client = checkNotNull(client, "client");
       this.blobToObject = checkNotNull(blobToObject, "blobToObject");

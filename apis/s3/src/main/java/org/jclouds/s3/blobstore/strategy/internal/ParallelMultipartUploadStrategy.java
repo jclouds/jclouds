@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jclouds.aws.s3.blobstore.strategy.internal;
+package org.jclouds.s3.blobstore.strategy.internal;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -36,9 +36,7 @@ import javax.annotation.Resource;
 import javax.inject.Named;
 
 import org.jclouds.Constants;
-import org.jclouds.aws.s3.AWSS3Client;
-import org.jclouds.aws.s3.blobstore.AWSS3BlobStore;
-import org.jclouds.aws.s3.blobstore.strategy.AsyncMultipartUploadStrategy;
+import org.jclouds.s3.blobstore.strategy.AsyncMultipartUploadStrategy;
 import org.jclouds.blobstore.domain.Blob;
 import org.jclouds.blobstore.internal.BlobRuntimeException;
 import org.jclouds.blobstore.options.PutOptions;
@@ -46,6 +44,8 @@ import org.jclouds.blobstore.reference.BlobStoreConstants;
 import org.jclouds.io.Payload;
 import org.jclouds.io.PayloadSlicer;
 import org.jclouds.logging.Logger;
+import org.jclouds.s3.S3Client;
+import org.jclouds.s3.blobstore.S3BlobStore;
 import org.jclouds.s3.domain.ObjectMetadataBuilder;
 import org.jclouds.util.Throwables2;
 
@@ -91,11 +91,11 @@ public class ParallelMultipartUploadStrategy implements AsyncMultipartUploadStra
    @Named(Constants.PROPERTY_REQUEST_TIMEOUT)
    protected Long maxTime;
 
-   protected final AWSS3BlobStore blobstore;
+   protected final S3BlobStore blobstore;
    protected final PayloadSlicer slicer;
 
    @Inject
-   public ParallelMultipartUploadStrategy(AWSS3BlobStore blobstore, PayloadSlicer slicer,
+   public ParallelMultipartUploadStrategy(S3BlobStore blobstore, PayloadSlicer slicer,
          @Named(Constants.PROPERTY_USER_THREADS) ListeningExecutorService executor) {
       this.blobstore = checkNotNull(blobstore, "blobstore");
       this.slicer = checkNotNull(slicer, "slicer");
@@ -114,7 +114,7 @@ public class ParallelMultipartUploadStrategy implements AsyncMultipartUploadStra
          latch.countDown();
          return;
       }
-      final AWSS3Client client = blobstore.getContext().unwrapApi(AWSS3Client.class);
+      final S3Client client = blobstore.getContext().unwrapApi(S3Client.class);
       final Payload chunkedPart = slicer.slice(payload, offset, size);
       logger.debug(String.format("async uploading part %s of %s to container %s with uploadId %s", part, key, container, uploadId));
       final long start = System.currentTimeMillis();
@@ -166,7 +166,7 @@ public class ParallelMultipartUploadStrategy implements AsyncMultipartUploadStra
                   long chunkSize = algorithm.getChunkSize();
                   long remaining = algorithm.getRemaining();
                   if (parts > 0) {
-                     final AWSS3Client client = blobstore.getContext().unwrapApi(AWSS3Client.class);
+                     final S3Client client = blobstore.getContext().unwrapApi(S3Client.class);
                      String uploadId = null;
                      final Map<Integer, ListenableFuture<String>> futureParts =
                         new ConcurrentHashMap<Integer, ListenableFuture<String>>();

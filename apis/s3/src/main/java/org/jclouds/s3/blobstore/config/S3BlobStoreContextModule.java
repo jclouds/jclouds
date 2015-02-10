@@ -31,6 +31,10 @@ import org.jclouds.s3.blobstore.S3BlobRequestSigner;
 import org.jclouds.s3.blobstore.S3BlobStore;
 import org.jclouds.s3.blobstore.functions.LocationFromBucketName;
 import org.jclouds.s3.blobstore.internal.BackoffOnNotFoundWhenGetBucketACL;
+import org.jclouds.s3.blobstore.strategy.AsyncMultipartUploadStrategy;
+import org.jclouds.s3.blobstore.strategy.MultipartUploadStrategy;
+import org.jclouds.s3.blobstore.strategy.internal.ParallelMultipartUploadStrategy;
+import org.jclouds.s3.blobstore.strategy.internal.SequentialMultipartUploadStrategy;
 import org.jclouds.s3.domain.AccessControlList;
 
 import com.google.common.base.Function;
@@ -49,6 +53,8 @@ public class S3BlobStoreContextModule extends AbstractModule {
       bind(new TypeLiteral<Function<String, Location>>() {
       }).to(LocationFromBucketName.class);
       bindRequestSigner();
+      bind(MultipartUploadStrategy.class).to(SequentialMultipartUploadStrategy.class);
+      bind(AsyncMultipartUploadStrategy.class).to(ParallelMultipartUploadStrategy.class);
    }
 
    protected void bindRequestSigner() {

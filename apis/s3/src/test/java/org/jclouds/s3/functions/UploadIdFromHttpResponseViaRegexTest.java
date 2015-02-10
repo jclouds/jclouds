@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jclouds.aws.s3.functions;
+package org.jclouds.s3.functions;
 
 import static org.testng.Assert.assertEquals;
 
@@ -24,21 +24,21 @@ import org.jclouds.io.Payloads;
 import org.testng.annotations.Test;
 
 /**
- * Tests behavior of {@code ETagFromHttpResponseViaRegex}
+ * Tests behavior of {@code UploadIdFromHttpResponseViaRegex}
  */
 // NOTE:without testName, this will not call @Before* and fail w/NPE during surefire
-@Test(groups = "unit", testName = "ETagFromHttpResponseViaRegexTest")
-public class ETagFromHttpResponseViaRegexTest {
+@Test(groups = "unit", testName = "UploadIdFromHttpResponseViaRegexTest")
+public class UploadIdFromHttpResponseViaRegexTest {
 
    @Test
    public void test() {
 
       HttpResponse response = HttpResponse.builder().statusCode(200).payload(
-               Payloads.newInputStreamPayload(getClass().getResourceAsStream("/complete-multipart-upload.xml")))
+               Payloads.newInputStreamPayload(getClass().getResourceAsStream("/initiate-multipart-upload.xml")))
                .build();
-      ETagFromHttpResponseViaRegex parser = new ETagFromHttpResponseViaRegex(new ReturnStringIf2xx());
+      UploadIdFromHttpResponseViaRegex parser = new UploadIdFromHttpResponseViaRegex(new ReturnStringIf2xx());
 
-      assertEquals(parser.apply(response), "\"3858f62230ac3c915f300c664312c11f-9\"");
+      assertEquals(parser.apply(response), "VXBsb2FkIElEIGZvciA2aWWpbmcncyBteS1tb3ZpZS5tMnRzIHVwbG9hZA");
    }
 
 }

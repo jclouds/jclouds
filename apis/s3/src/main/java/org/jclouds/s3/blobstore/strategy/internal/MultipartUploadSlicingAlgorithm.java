@@ -23,12 +23,12 @@
  *   History
  */
 
-package org.jclouds.aws.s3.blobstore.strategy.internal;
+package org.jclouds.s3.blobstore.strategy.internal;
 
 import javax.annotation.Resource;
 import javax.inject.Named;
 
-import org.jclouds.aws.s3.blobstore.strategy.MultipartUpload;
+import org.jclouds.s3.blobstore.strategy.MultipartUpload;
 import org.jclouds.blobstore.reference.BlobStoreConstants;
 import org.jclouds.logging.Logger;
 

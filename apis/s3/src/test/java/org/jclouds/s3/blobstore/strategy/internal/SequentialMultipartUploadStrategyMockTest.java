@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jclouds.aws.s3.blobstore.strategy.internal;
+package org.jclouds.s3.blobstore.strategy.internal;
 
 import static com.google.common.util.concurrent.MoreExecutors.sameThreadExecutor;
 import static org.jclouds.Constants.PROPERTY_MAX_RETRIES;
@@ -137,7 +137,7 @@ public class SequentialMultipartUploadStrategyMockTest {
       overrides.setProperty(PROPERTY_SO_TIMEOUT, "0");
       overrides.setProperty(PROPERTY_MAX_RETRIES, "1");
       overrides.setProperty("jclouds.mpu.parts.size", String.valueOf(partSize));
-      return ContextBuilder.newBuilder("aws-s3")
+      return ContextBuilder.newBuilder("s3")
                            .credentials("accessKey", "secretKey")
                            .endpoint(uri)
                            .overrides(overrides)

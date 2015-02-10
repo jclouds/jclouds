@@ -20,6 +20,7 @@ import static org.jclouds.reflect.Reflection2.method;
 import static org.testng.Assert.assertEquals;
 
 import java.io.IOException;
+import java.util.Map;
 
 import org.jclouds.Fallbacks.VoidOnNotFoundOr404;
 import org.jclouds.aws.domain.Region;
@@ -30,11 +31,14 @@ import org.jclouds.blobstore.BlobStoreFallbacks.ThrowContainerNotFoundOn404;
 import org.jclouds.blobstore.BlobStoreFallbacks.ThrowKeyNotFoundOn404;
 import org.jclouds.blobstore.binders.BindBlobToMultipartFormTest;
 import org.jclouds.date.TimeStamp;
+import org.jclouds.fallbacks.MapHttp4xxCodesToExceptions;
 import org.jclouds.http.functions.ParseETagHeader;
 import org.jclouds.http.functions.ParseSax;
 import org.jclouds.http.functions.ReleasePayloadAndReturn;
 import org.jclouds.http.functions.ReturnTrueIf2xx;
 import org.jclouds.http.options.GetOptions;
+import org.jclouds.io.Payload;
+import org.jclouds.io.Payloads;
 import org.jclouds.rest.ConfiguresHttpApi;
 import org.jclouds.rest.internal.GeneratedHttpRequest;
 import org.jclouds.s3.S3Fallbacks.TrueOn404OrNotFoundFalseOnIllegalState;
@@ -45,11 +49,15 @@ import org.jclouds.s3.domain.AccessControlList.Grant;
 import org.jclouds.s3.domain.AccessControlList.Permission;
 import org.jclouds.s3.domain.BucketLogging;
 import org.jclouds.s3.domain.CannedAccessPolicy;
+import org.jclouds.s3.domain.ObjectMetadata;
+import org.jclouds.s3.domain.ObjectMetadataBuilder;
 import org.jclouds.s3.domain.Payer;
 import org.jclouds.s3.domain.S3Object;
 import org.jclouds.s3.fallbacks.FalseIfBucketAlreadyOwnedByYouOrOperationAbortedWhenBucketExists;
+import org.jclouds.s3.functions.ETagFromHttpResponseViaRegex;
 import org.jclouds.s3.functions.ParseObjectFromHeadersAndHttpContent;
 import org.jclouds.s3.functions.ParseObjectMetadataFromHeaders;
+import org.jclouds.s3.functions.UploadIdFromHttpResponseViaRegex;
 import org.jclouds.s3.internal.BaseS3ClientTest;
 import org.jclouds.s3.options.CopyObjectOptions;
 import org.jclouds.s3.options.ListBucketOptions;
@@ -67,6 +75,7 @@ import org.testng.annotations.Test;
 
 import com.google.common.base.Supplier;
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
 import com.google.common.reflect.Invokable;
@@ -469,6 +478,95 @@ public abstract class S3ClientTest<T extends S3Client> extends BaseS3ClientTest<
       assertResponseParserClassEquals(method, request, ReleasePayloadAndReturn.class);
       assertSaxResponseParserClassEquals(method, null);
       assertFallbackClassEquals(method, null);
+
+      checkFilters(request);
+   }
+
+   public void testInitiateMultipartUpload() throws SecurityException, NegativeArraySizeException,
+         NoSuchMethodException {
+      Invokable<?, ?> method = method(S3Client.class, "initiateMultipartUpload", String.class, ObjectMetadata.class,
+            PutObjectOptions[].class);
+      GeneratedHttpRequest request = processor.createRequest(method, ImmutableList.<Object> of("bucket", ObjectMetadataBuilder.create().key("foo")
+            .contentMD5(new byte[16]).build()));
+
+      assertRequestLineEquals(request, "POST https://bucket." + url + "/foo?uploads HTTP/1.1");
+      assertNonPayloadHeadersEqual(request,
+            "Content-MD5: AAAAAAAAAAAAAAAAAAAAAA==\n" +
+            "Content-Type: binary/octet-stream\n" +
+            "Host: bucket." + url + "\n");
+      assertPayloadEquals(request, null, null, false);
+
+      // as this is a payload-related command, but with no payload, be careful
+      // that we check
+      // filtering and do not ignore if this fails later.
+      request = (GeneratedHttpRequest) request.getFilters().get(0).filter(request);
+
+      assertRequestLineEquals(request, "POST https://bucket." + url + "/foo?uploads HTTP/1.1");
+      assertNonPayloadHeadersEqual(request,
+            "Authorization: AWS identity:972m/Bqn2L5FIaB+wWDeY83mGvU=\n" +
+            "Content-MD5: AAAAAAAAAAAAAAAAAAAAAA==\n" +
+            "Content-Type: binary/octet-stream\n" +
+            "Date: 2009-11-08T15:54:08.897Z\n" +
+            "Host: bucket." + url + "\n");
+      assertPayloadEquals(request, null, null, false);
+
+      assertResponseParserClassEquals(method, request, UploadIdFromHttpResponseViaRegex.class);
+      assertSaxResponseParserClassEquals(method, null);
+      assertFallbackClassEquals(method, MapHttp4xxCodesToExceptions.class);
+
+      checkFilters(request);
+   }
+
+   public void testAbortMultipartUpload() throws SecurityException, NegativeArraySizeException, NoSuchMethodException {
+      Invokable<?, ?> method = method(S3Client.class, "abortMultipartUpload", String.class, String.class, String.class);
+      GeneratedHttpRequest request = processor.createRequest(method, ImmutableList.<Object> of("bucket", "foo", "asdsadasdas", 1,
+            Payloads.newStringPayload("")));
+
+      assertRequestLineEquals(request, "DELETE https://bucket." + url + "/foo?uploadId=asdsadasdas HTTP/1.1");
+      assertNonPayloadHeadersEqual(request, "Host: bucket." + url + "\n");
+      assertPayloadEquals(request, "", "application/unknown", false);
+
+      assertResponseParserClassEquals(method, request, ReleasePayloadAndReturn.class);
+      assertSaxResponseParserClassEquals(method, null);
+      assertFallbackClassEquals(method, VoidOnNotFoundOr404.class);
+
+      checkFilters(request);
+   }
+
+   public void testUploadPart() throws SecurityException, NegativeArraySizeException, NoSuchMethodException {
+      Invokable<?, ?> method = method(S3Client.class, "uploadPart", String.class, String.class, int.class,
+            String.class, Payload.class);
+      GeneratedHttpRequest request = processor.createRequest(method, ImmutableList.<Object> of("bucket", "foo", 1, "asdsadasdas",
+            Payloads.newStringPayload("")));
+
+      assertRequestLineEquals(request, "PUT https://bucket." + url + "/foo?partNumber=1&uploadId=asdsadasdas HTTP/1.1");
+      assertNonPayloadHeadersEqual(request, "Host: bucket." + url + "\n");
+      assertPayloadEquals(request, "", "application/unknown", false);
+
+      assertResponseParserClassEquals(method, request, ParseETagHeader.class);
+      assertSaxResponseParserClassEquals(method, null);
+      assertFallbackClassEquals(method, MapHttp4xxCodesToExceptions.class);
+
+      checkFilters(request);
+   }
+
+   public void testCompleteMultipartUpload() throws SecurityException, NegativeArraySizeException,
+         NoSuchMethodException {
+      Invokable<?, ?> method = method(S3Client.class, "completeMultipartUpload", String.class, String.class,
+            String.class, Map.class);
+      GeneratedHttpRequest request = processor.createRequest(method, ImmutableList.<Object> of("bucket", "foo", "asdsadasdas",
+            ImmutableMap.<Integer, String> of(1, "\"a54357aff0632cce46d942af68356b38\"")));
+
+      assertRequestLineEquals(request, "POST https://bucket." + url + "/foo?uploadId=asdsadasdas HTTP/1.1");
+      assertNonPayloadHeadersEqual(request, "Host: bucket." + url + "\n");
+      assertPayloadEquals(
+            request,
+            "<CompleteMultipartUpload><Part><PartNumber>1</PartNumber><ETag>\"a54357aff0632cce46d942af68356b38\"</ETag></Part></CompleteMultipartUpload>",
+            "text/xml", false);
+
+      assertResponseParserClassEquals(method, request, ETagFromHttpResponseViaRegex.class);
+      assertSaxResponseParserClassEquals(method, null);
+      assertFallbackClassEquals(method, MapHttp4xxCodesToExceptions.class);
 
       checkFilters(request);
    }

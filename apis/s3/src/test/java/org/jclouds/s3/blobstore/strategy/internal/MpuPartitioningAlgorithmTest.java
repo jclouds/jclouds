@@ -14,11 +14,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jclouds.aws.s3.blobstore.strategy.internal;
+package org.jclouds.s3.blobstore.strategy.internal;
 
 import static org.testng.Assert.assertEquals;
 
-import org.jclouds.aws.s3.blobstore.strategy.MultipartUpload;
+import org.jclouds.s3.blobstore.strategy.MultipartUpload;
 import org.testng.annotations.Test;
 
 /**

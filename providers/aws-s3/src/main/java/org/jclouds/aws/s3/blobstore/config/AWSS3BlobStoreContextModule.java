@@ -18,10 +18,6 @@ package org.jclouds.aws.s3.blobstore.config;
 
 import org.jclouds.aws.s3.blobstore.AWSS3BlobRequestSigner;
 import org.jclouds.aws.s3.blobstore.AWSS3BlobStore;
-import org.jclouds.aws.s3.blobstore.strategy.AsyncMultipartUploadStrategy;
-import org.jclouds.aws.s3.blobstore.strategy.MultipartUploadStrategy;
-import org.jclouds.aws.s3.blobstore.strategy.internal.ParallelMultipartUploadStrategy;
-import org.jclouds.aws.s3.blobstore.strategy.internal.SequentialMultipartUploadStrategy;
 import org.jclouds.blobstore.BlobRequestSigner;
 import org.jclouds.s3.blobstore.S3BlobStore;
 import org.jclouds.s3.blobstore.config.S3BlobStoreContextModule;
@@ -34,8 +30,6 @@ public class AWSS3BlobStoreContextModule extends S3BlobStoreContextModule {
    protected void configure() {
       super.configure();
       bind(S3BlobStore.class).to(AWSS3BlobStore.class).in(Scopes.SINGLETON);
-      bind(MultipartUploadStrategy.class).to(SequentialMultipartUploadStrategy.class);
-      bind(AsyncMultipartUploadStrategy.class).to(ParallelMultipartUploadStrategy.class);
    }
 
    @Override

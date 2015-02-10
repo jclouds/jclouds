@@ -14,10 +14,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jclouds.aws.s3.blobstore.strategy;
+package org.jclouds.s3.blobstore.strategy;
 
-import org.jclouds.aws.s3.blobstore.strategy.internal.SequentialMultipartUploadStrategy;
 import org.jclouds.blobstore.domain.Blob;
+import org.jclouds.s3.blobstore.strategy.internal.SequentialMultipartUploadStrategy;
 
 import com.google.inject.ImplementedBy;
 

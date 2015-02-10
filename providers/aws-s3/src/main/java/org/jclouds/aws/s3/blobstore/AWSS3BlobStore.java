@@ -27,7 +27,6 @@ import org.jclouds.aws.domain.Region;
 import org.jclouds.aws.s3.AWSS3Client;
 import org.jclouds.aws.s3.blobstore.options.AWSS3PutObjectOptions;
 import org.jclouds.aws.s3.blobstore.options.AWSS3PutOptions;
-import org.jclouds.aws.s3.blobstore.strategy.MultipartUploadStrategy;
 import org.jclouds.blobstore.BlobStoreContext;
 import org.jclouds.blobstore.domain.Blob;
 import org.jclouds.blobstore.domain.PageSet;
@@ -45,6 +44,7 @@ import org.jclouds.s3.blobstore.functions.BucketToResourceList;
 import org.jclouds.s3.blobstore.functions.ContainerToBucketListOptions;
 import org.jclouds.s3.blobstore.functions.ObjectToBlob;
 import org.jclouds.s3.blobstore.functions.ObjectToBlobMetadata;
+import org.jclouds.s3.blobstore.strategy.MultipartUploadStrategy;
 import org.jclouds.s3.domain.AccessControlList;
 import org.jclouds.s3.domain.BucketMetadata;
 import org.jclouds.s3.domain.CannedAccessPolicy;
@@ -60,7 +60,6 @@ import com.google.common.cache.LoadingCache;
  */
 public class AWSS3BlobStore extends S3BlobStore {
 
-   private final Provider<MultipartUploadStrategy> multipartUploadStrategy;
    private final LoadingCache<String, AccessControlList> bucketAcls;
    private final BlobToObject blob2Object;
 
@@ -75,8 +74,8 @@ public class AWSS3BlobStore extends S3BlobStore {
             Provider<MultipartUploadStrategy> multipartUploadStrategy) {
       super(context, blobUtils, defaultLocation, locations, sync, convertBucketsToStorageMetadata,
                container2BucketListOptions, bucket2ResourceList, object2Blob, blob2ObjectGetOptions, blob2Object,
-               object2BlobMd, fetchBlobMetadataProvider, bucketAcls);
-      this.multipartUploadStrategy = multipartUploadStrategy;
+               object2BlobMd, fetchBlobMetadataProvider, bucketAcls,
+               multipartUploadStrategy);
       this.bucketAcls = bucketAcls;
       this.blob2Object = blob2Object;
    }

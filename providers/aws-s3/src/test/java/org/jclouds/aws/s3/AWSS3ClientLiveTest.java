@@ -16,16 +16,13 @@
  */
 package org.jclouds.aws.s3;
 
-import static com.google.common.hash.Hashing.md5;
 import static org.jclouds.aws.s3.blobstore.options.AWSS3PutOptions.Builder.storageClass;
-import static org.jclouds.io.Payloads.newByteArrayPayload;
 import static org.jclouds.s3.options.ListBucketOptions.Builder.withPrefix;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertTrue;
 import static org.testng.Assert.fail;
 
-import java.io.IOException;
 import java.util.Set;
 import java.util.UUID;
 
@@ -33,28 +30,19 @@ import org.jclouds.aws.AWSResponseException;
 import org.jclouds.aws.domain.Region;
 import org.jclouds.aws.s3.domain.DeleteResult;
 import org.jclouds.blobstore.BlobStore;
-import org.jclouds.blobstore.KeyNotFoundException;
 import org.jclouds.blobstore.domain.Blob;
 import org.jclouds.blobstore.domain.StorageMetadata;
 import org.jclouds.domain.Location;
-import org.jclouds.io.ByteStreams2;
-import org.jclouds.io.Payload;
 import org.jclouds.s3.S3Client;
 import org.jclouds.s3.S3ClientLiveTest;
 import org.jclouds.s3.domain.ListBucketResponse;
 import org.jclouds.s3.domain.ObjectMetadata;
 import org.jclouds.s3.domain.ObjectMetadata.StorageClass;
-import org.jclouds.s3.domain.ObjectMetadataBuilder;
-import org.jclouds.s3.domain.S3Object;
-import org.jclouds.utils.TestUtils;
 import org.testng.ITestContext;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
-import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
-import com.google.common.hash.HashCode;
-import com.google.common.io.ByteSource;
 
 /**
  * Tests behavior of {@code S3Client}
@@ -65,8 +53,6 @@ public class AWSS3ClientLiveTest extends S3ClientLiveTest {
       provider = "aws-s3";
    }
 
-   private static final ByteSource oneHundredOneConstitutions = TestUtils.randomByteSource().slice(0, 5 * 1024 * 1024 + 1);
-
    @Override
    public AWSS3Client getApi() {
       return view.unwrapApi(AWSS3Client.class);
@@ -76,53 +62,6 @@ public class AWSS3ClientLiveTest extends S3ClientLiveTest {
    @Override
    public void setUpResourcesOnThisThread(ITestContext testContext) throws Exception {
       super.setUpResourcesOnThisThread(testContext);
-   }
-
-   public void testMultipartSynchronously() throws InterruptedException, IOException {
-      HashCode oneHundredOneConstitutionsMD5 = oneHundredOneConstitutions.hash(md5());
-      String containerName = getContainerName();
-      S3Object object = null;
-      try {
-         String key = "constitution.txt";
-         String uploadId = getApi().initiateMultipartUpload(containerName,
-                  ObjectMetadataBuilder.create().key(key).contentMD5(oneHundredOneConstitutionsMD5.asBytes()).build());
-         byte[] buffer = oneHundredOneConstitutions.read();
-         assertEquals(oneHundredOneConstitutions.size(), (long) buffer.length);
-
-         Payload part1 = newByteArrayPayload(buffer);
-         part1.getContentMetadata().setContentLength((long) buffer.length);
-         part1.getContentMetadata().setContentMD5(oneHundredOneConstitutionsMD5);
-
-         String eTagOf1 = null;
-         try {
-            eTagOf1 = getApi().uploadPart(containerName, key, 1, uploadId, part1);
-         } catch (KeyNotFoundException e) {
-            // note that because of eventual consistency, the upload id may not be present yet
-            // we may wish to add this condition to the retry handler
-
-            // we may also choose to implement ListParts and wait for the uploadId to become
-            // available there.
-            eTagOf1 = getApi().uploadPart(containerName, key, 1, uploadId, part1);
-         }
-
-         String eTag = getApi().completeMultipartUpload(containerName, key, uploadId, ImmutableMap.of(1, eTagOf1));
-
-         assert !eTagOf1.equals(eTag);
-
-         object = getApi().getObject(containerName, key);
-         assertEquals(ByteStreams2.toByteArrayAndClose(object.getPayload().openStream()), buffer);
-
-         // noticing amazon does not return content-md5 header or a parsable ETag after a multi-part
-         // upload is complete:
-         // https://forums.aws.amazon.com/thread.jspa?threadID=61344
-         assertEquals(object.getPayload().getContentMetadata().getContentMD5(), null);
-         assertEquals(getApi().headObject(containerName, key).getContentMetadata().getContentMD5(), null);
-
-      } finally {
-         if (object != null)
-            object.getPayload().close();
-         returnContainer(containerName);
-      }
    }
 
    public void testPutWithReducedRedundancyStorage() throws InterruptedException {
