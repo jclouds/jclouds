@@ -71,15 +71,15 @@ import com.google.inject.Provides;
 
 /**
  * Common features in OpenStack Swift.
- * 
- * 
+ *
+ *
  * @deprecated Please use {@code org.jclouds.openstack.swift.v1.SwiftApi} and related
  *             feature APIs in {@code org.jclouds.openstack.swift.v1.features.*} as noted in
  *             each method. This interface will be removed in jclouds 2.0.
  */
 @Deprecated
 public interface CommonSwiftClient extends Closeable {
-   
+
    /**
     * @deprecated This method will be replaced by
     *             {@link org.jclouds.openstack.swift.v1.domain.SwiftObject#builder()}
@@ -96,7 +96,7 @@ public interface CommonSwiftClient extends Closeable {
     * storage system is designed to store large amounts of data, care should be taken when
     * representing the total bytes response as an integer; when possible, convert it to a 64-bit
     * unsigned integer if your platform supports that primitive flavor.
-    * 
+    *
     * @return the {@link AccountMetadata}
     * @deprecated This method will be replaced by
     *             {@link org.jclouds.openstack.swift.v1.features.AccountApi#get()}
@@ -123,7 +123,7 @@ public interface CommonSwiftClient extends Closeable {
     * </ul>
     * <p/>
     * At this time, a prex query parameter is not supported at the Account level.
-    * 
+    *
     *<h4>Large Container Lists</h4>
     * The system will return a maximum of 10,000 Container names per request. To retrieve subsequent
     * container names, another request must be made with a marker parameter. The marker indicates
@@ -136,7 +136,7 @@ public interface CommonSwiftClient extends Closeable {
     * If the number of container names returned equals the limit given (or 10,000 if no limit is
     * given), it can be assumed there are more container names to be listed. If the container name
     * list is exactly divisible by the limit, the last request will simply have no content.
-    * 
+    *
     * @deprecated This method will be replaced by
     *             {@link org.jclouds.openstack.swift.v1.features.ContainerApi#list()} and
     *             {@link org.jclouds.openstack.swift.v1.features.ContainerApi#list(ListContainerOptions)}
@@ -151,7 +151,7 @@ public interface CommonSwiftClient extends Closeable {
 
    /**
     * Get the {@link ContainerMetadata} for the specified container.
-    * 
+    *
     * @param container
     *           the container to get the metadata from
     * @return the {@link ContainerMetadata}
@@ -166,10 +166,10 @@ public interface CommonSwiftClient extends Closeable {
    @ResponseParser(ParseContainerMetadataFromHeaders.class)
    @Fallback(NullOnContainerNotFound.class)
    ContainerMetadata getContainerMetadata(@PathParam("container") String container);
-   
+
    /**
     * Set the {@link ContainerMetadata} on the given container.
-    * 
+    *
     * @param container
     *           the container to set the metadata on
     * @param containerMetadata
@@ -187,10 +187,10 @@ public interface CommonSwiftClient extends Closeable {
    boolean setContainerMetadata(@PathParam("container") String container,
          @BinderParam(BindMapToHeadersWithContainerMetadataPrefix.class) Map<String, String> containerMetadata);
 
-   
+
    /**
     * Delete the metadata on the given container.
-    * 
+    *
     * @param container
     *           the container to delete the metadata from
     * @param metadataKeys
@@ -210,7 +210,7 @@ public interface CommonSwiftClient extends Closeable {
 
    /**
     * Create a container.
-    * 
+    *
     * @param container
     *           the name of the container
     * @return {@code true}
@@ -230,8 +230,12 @@ public interface CommonSwiftClient extends Closeable {
     *             {@link org.jclouds.openstack.swift.v1.features.ContainerApi#createIfAbsent()}
     */
    @Deprecated
-   boolean createContainer(String container, CreateContainerOptions... options);
-   
+   @Named("CreateContainer")
+   @PUT
+   @ResponseParser(ReturnTrueIf201.class)
+   @Path("/{container}")
+   boolean createContainer(@PathParam("container") String container, CreateContainerOptions... options);
+
    /**
     * @deprecated This method will be replaced by
     *             (@link org.jclouds.openstack.swift.v1.features.ContainerApi#deleteIfEmpty()}
