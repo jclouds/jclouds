@@ -30,6 +30,7 @@ public class GoogleCloudStorageContainerLiveTest extends BaseContainerLiveTest {
    }
 
    @Override protected Properties setupProperties() {
+      TestProperties.setGoogleCredentialsFromJson(provider);
       return TestProperties.apply(provider, super.setupProperties());
    }
 }

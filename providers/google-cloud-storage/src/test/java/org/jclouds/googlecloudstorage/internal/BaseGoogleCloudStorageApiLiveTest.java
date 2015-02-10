@@ -19,6 +19,7 @@ package org.jclouds.googlecloudstorage.internal;
 import java.util.Properties;
 
 import org.jclouds.apis.BaseApiLiveTest;
+import org.jclouds.googlecloud.config.CurrentProject;
 import org.jclouds.googlecloud.internal.TestProperties;
 import org.jclouds.googlecloudstorage.GoogleCloudStorageApi;
 import org.jclouds.googlecloudstorage.GoogleCloudStorageProviderMetadata;
@@ -29,7 +30,7 @@ import com.google.inject.Module;
 
 public class BaseGoogleCloudStorageApiLiveTest extends BaseApiLiveTest<GoogleCloudStorageApi> {
 
-   protected static final String PROJECT_NUMBER = System.getProperty("test.google-cloud-storage.project-number");
+   protected static String PROJECT_NUMBER;
 
    protected BaseGoogleCloudStorageApiLiveTest() {
       provider = "google-cloud-storage";
@@ -40,7 +41,10 @@ public class BaseGoogleCloudStorageApiLiveTest extends BaseApiLiveTest<GoogleClo
    }
 
    @Override protected Properties setupProperties() {
-      return TestProperties.apply(provider, super.setupProperties());
+      TestProperties.setGoogleCredentialsFromJson(provider);
+      Properties props = TestProperties.apply(provider, super.setupProperties());
+      PROJECT_NUMBER = CurrentProject.ClientEmail.toProjectNumber(System.getProperty("test.google-cloud-storage.identity"));
+      return props;
    }
 
    @Override protected GoogleCloudStorageApi create(Properties props, Iterable<Module> modules) {

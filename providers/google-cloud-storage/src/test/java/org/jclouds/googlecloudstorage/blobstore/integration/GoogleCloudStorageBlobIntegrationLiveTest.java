@@ -69,6 +69,7 @@ public class GoogleCloudStorageBlobIntegrationLiveTest extends BaseBlobIntegrati
    }
 
    @Override protected Properties setupProperties() {
+      TestProperties.setGoogleCredentialsFromJson(provider);
       Properties properties = super.setupProperties();
       properties.put("jclouds.mpu.parts.size", 2 * 1024 * 1024);
       return TestProperties.apply(provider, properties);
