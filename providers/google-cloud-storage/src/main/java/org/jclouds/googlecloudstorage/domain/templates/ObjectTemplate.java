@@ -37,8 +37,8 @@ public class ObjectTemplate {
    private String contentType;
    private String crc32c;
    private String md5Hash;
-   private Map<String, String> metadata = Maps.newLinkedHashMap();
-   private List<ObjectAccessControls> acl = Lists.newArrayList();
+   private Map<String, String> metadata;
+   private List<ObjectAccessControls> acl;
 
    public ObjectTemplate name(String name) {
       this.name = name;
@@ -81,11 +81,17 @@ public class ObjectTemplate {
    }
 
    public ObjectTemplate customMetadata(Map<String, String> metadata) {
+      if (this.metadata == null) {
+         this.metadata = Maps.newLinkedHashMap();
+      }
       this.metadata.putAll(metadata);
       return this;
    }
 
    public ObjectTemplate customMetadata(String key, String value) {
+      if (this.metadata == null) {
+         this.metadata = Maps.newLinkedHashMap();
+      }
       this.metadata.put(key, value);
       return this;
    }
@@ -101,11 +107,17 @@ public class ObjectTemplate {
    }
 
    public ObjectTemplate addAcl(ObjectAccessControls acl) {
+      if (this.acl == null) {
+         this.acl = Lists.newArrayList();
+      }
       this.acl.add(acl);
       return this;
    }
 
    public ObjectTemplate acl(List<ObjectAccessControls> acl) {
+      if (this.acl == null) {
+         this.acl = Lists.newArrayList();
+      }
       this.acl.addAll(acl);
       return this;
    }

@@ -38,7 +38,7 @@ public final class ListPageWithPrefixes<T> extends ForwardingList<T> implements 
    }
 
    @ConstructorProperties({ "items", "nextPageToken", "prefixes" })
-   ListPageWithPrefixes(List<T> items, String nextPageToken, List<String> prefixes) {
+   public ListPageWithPrefixes(List<T> items, String nextPageToken, List<String> prefixes) {
       this.items = copyOf(items);
       this.nextPageToken = nextPageToken;
       this.prefixes = copyOf(prefixes);

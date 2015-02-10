@@ -1,0 +1,54 @@
+{
+  "sourceObjects": [
+    {
+      "id": "test/file_name/1000",
+      "selfLink": "https://www.googleapis.com/storage/v1/b/test/o/file_name",
+      "etag": "etag",
+      "name": "file_name",
+      "bucket": "test",
+      "generation": 1000,
+      "metageneration": 8,
+      "contentType": "application/x-tar",
+      "updated": "2014-09-27T00:01:44.819Z",
+      "storageClass": "STANDARD",
+      "size": 1000,
+      "md5Hash": "md5Hash",
+      "mediaLink": "https://www.googleapis.com/download/storage/v1/b/test/o/file_name?generation=1000&alt=media",
+      "metadata": {},
+      "acl": [],
+      "owner": {
+        "entity": "entity",
+        "entityId": "entityId"
+      },
+      "crc32c": "crc32c"
+    },
+    {
+      "id": "test/file_name2/1000",
+      "selfLink": "https://www.googleapis.com/storage/v1/b/test/o/file_name2",
+      "etag": "etag",
+      "name": "file_name2",
+      "bucket": "test",
+      "generation": 1001,
+      "metageneration": 9,
+      "contentType": "image/png",
+      "updated": "2014-09-27T00:01:44.819Z",
+      "storageClass": "STANDARD",
+      "size": 10,
+      "md5Hash": "md5Hash",
+      "mediaLink": "https://www.googleapis.com/download/storage/v1/b/test/o/file_name2?generation=1001&alt=media",
+      "metadata": {},
+      "acl": [],
+      "owner": {
+        "entity": "entity",
+        "entityId": "entityId"
+      },
+      "crc32c": "crc32c"
+    }
+  ],
+  "destination": {
+    "name": "file_name",
+    "size": 1000,
+    "crc32c": "crc32c"
+  },
+  "kind": "storage/composeRequest"
+}

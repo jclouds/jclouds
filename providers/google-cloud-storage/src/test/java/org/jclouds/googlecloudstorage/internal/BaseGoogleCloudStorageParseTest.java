@@ -16,6 +16,9 @@
  */
 package org.jclouds.googlecloudstorage.internal;
 
+import java.util.Date;
+
+import org.jclouds.date.internal.SimpleDateFormatDateService;
 import org.jclouds.googlecloudstorage.config.GoogleCloudStorageParserModule;
 import org.jclouds.json.BaseItemParserTest;
 import org.jclouds.json.config.GsonModule;
@@ -27,5 +30,9 @@ public abstract class BaseGoogleCloudStorageParseTest<T> extends BaseItemParserT
 
    @Override protected Injector injector() {
       return Guice.createInjector(new GsonModule(), new GoogleCloudStorageParserModule());
+   }
+
+   protected static Date parse(String iso8601) {
+      return new SimpleDateFormatDateService().iso8601DateParse(iso8601);
    }
 }

@@ -97,6 +97,12 @@
             <scope>test</scope>
         </dependency>
         <dependency>
+            <groupId>org.apache.jclouds.driver</groupId>
+            <artifactId>jclouds-okhttp</artifactId>
+            <version>${project.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-classic</artifactId>
             <scope>test</scope>
