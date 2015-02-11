@@ -52,7 +52,7 @@ public class AggregatedListApiLiveTest extends BaseGoogleComputeEngineApiLiveTes
 
       List<MachineType> machineTypeAsList = pageIterator.next();
 
-      assertEquals(machineTypeAsList.size(), 9); // zone count!
+      assertEquals(machineTypeAsList.size(), 1);
    }
 
    public void addresses() {
