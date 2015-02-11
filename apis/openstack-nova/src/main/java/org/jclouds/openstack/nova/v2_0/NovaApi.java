@@ -274,12 +274,12 @@ public interface NovaApi extends Closeable {
    Optional<FloatingIPPoolApi> getFloatingIPPoolApi(
          @EndpointParam(parser = RegionToEndpoint.class) String region);
 
-	/**
-	 * Provides access to attach interface features.
-	 */
-	@Delegate
-	Optional<? extends AttachInterfaceApi> getAttachInterfaceApi(
-			@EndpointParam(parser = RegionToEndpoint.class) String region);
+   /**
+    * Provides access to attach interface features.
+    */
+   @Delegate
+   Optional<AttachInterfaceApi> getAttachInterfaceApi(
+         @EndpointParam(parser = RegionToEndpoint.class) String region);
 
    /**
     * @return the Zone codes configured
