@@ -26,6 +26,7 @@ import org.jclouds.s3.S3ApiMetadata;
 import org.jclouds.s3.S3Client;
 import org.jclouds.s3.blobstore.functions.BlobToObject;
 import org.jclouds.s3.filters.RequestAuthorizeSignature;
+import org.jclouds.s3.filters.RequestAuthorizeSignatureV2;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
@@ -47,7 +48,7 @@ public abstract class BaseS3ClientTest<T extends S3Client> extends BaseRestAnnot
    protected void setupFactory() throws IOException {
       super.setupFactory();
       blobToS3Object = injector.getInstance(BlobToObject.class);
-      filter = injector.getInstance(RequestAuthorizeSignature.class);
+      filter = injector.getInstance(RequestAuthorizeSignatureV2.class);
    }
 
    public BaseS3ClientTest() {

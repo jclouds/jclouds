@@ -40,17 +40,18 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.SortedSetMultimap;
 import com.google.common.collect.TreeMultimap;
 import com.google.common.net.HttpHeaders;
+
 /**
- * Tests behavior of {@code RequestAuthorizeSignature}
+ * Tests behavior of {@code RequestAuthorizeSignatureV2}
  */
 // NOTE:without testName, this will not call @Before* and fail w/NPE during surefire
-@Test(groups = "unit", testName = "RequestAuthorizeSignatureTest")
-public class RequestAuthorizeSignatureTest extends BaseS3ClientTest<S3Client> {
+@Test(groups = "unit", testName = "RequestAuthorizeSignatureV2Test")
+public class RequestAuthorizeSignatureV2Test extends BaseS3ClientTest<S3Client> {
    String bucketName = "bucket";
 
    @DataProvider(parallel = true)
    public Object[][] dataProvider() throws NoSuchMethodException {
-      return new Object[][] { { listOwnedBuckets() }, { putObject() }, { putBucketAcl() }
+      return new Object[][]{{listOwnedBuckets()}, {putObject()}, {putBucketAcl()}
 
       };
    }
@@ -71,23 +72,23 @@ public class RequestAuthorizeSignatureTest extends BaseS3ClientTest<S3Client> {
          request = filter.filter(request);
          if (request.getFirstHeaderOrNull(HttpHeaders.DATE).equals(date))
             assert signature.equals(request.getFirstHeaderOrNull(HttpHeaders.AUTHORIZATION)) : String.format(
-                     "sig: %s != %s on attempt %s", signature, request.getFirstHeaderOrNull(HttpHeaders.AUTHORIZATION),
-                     iterations);
+               "sig: %s != %s on attempt %s", signature, request.getFirstHeaderOrNull(HttpHeaders.AUTHORIZATION),
+               iterations);
          else
             iterations++;
 
       }
       System.out.printf("%s: %d iterations before the timestamp updated %n", Thread.currentThread().getName(),
-               iterations);
+         iterations);
    }
 
    @Test
    void testAppendBucketNameHostHeader() throws SecurityException, NoSuchMethodException {
       GeneratedHttpRequest request = processor.createRequest(
-            method(S3Client.class, "getBucketLocation", String.class),
-            ImmutableList.<Object> of("bucket"));
+         method(S3Client.class, "getBucketLocation", String.class),
+         ImmutableList.<Object>of("bucket"));
       StringBuilder builder = new StringBuilder();
-      filter.appendBucketName(request, builder);
+      ((RequestAuthorizeSignatureV2) filter).appendBucketName(request, builder);
       assertEquals(builder.toString(), "");
    }
 
@@ -95,15 +96,15 @@ public class RequestAuthorizeSignatureTest extends BaseS3ClientTest<S3Client> {
    void testAclQueryString() throws SecurityException, NoSuchMethodException {
       HttpRequest request = putBucketAcl();
       StringBuilder builder = new StringBuilder();
-      filter.appendUriPath(request, builder);
+      ((RequestAuthorizeSignatureV2) filter).appendUriPath(request, builder);
       assertEquals(builder.toString(), "/" + bucketName + "?acl");
    }
 
    private GeneratedHttpRequest putBucketAcl() throws NoSuchMethodException {
       return processor.createRequest(
-            method(S3Client.class, "putBucketACL", String.class, AccessControlList.class),
-            ImmutableList.<Object> of("bucket",
-                  AccessControlList.fromCannedAccessPolicy(CannedAccessPolicy.PRIVATE, "1234")));
+         method(S3Client.class, "putBucketACL", String.class, AccessControlList.class),
+         ImmutableList.<Object>of("bucket",
+            AccessControlList.fromCannedAccessPolicy(CannedAccessPolicy.PRIVATE, "1234")));
    }
 
    // "?acl", "?location", "?logging", "?uploads", or "?torrent"
@@ -112,22 +113,22 @@ public class RequestAuthorizeSignatureTest extends BaseS3ClientTest<S3Client> {
    void testAppendBucketNameHostHeaderService() throws SecurityException, NoSuchMethodException {
       HttpRequest request = listOwnedBuckets();
       StringBuilder builder = new StringBuilder();
-      filter.appendBucketName(request, builder);
+      ((RequestAuthorizeSignatureV2) filter).appendBucketName(request, builder);
       assertEquals(builder.toString(), "");
    }
 
    private GeneratedHttpRequest listOwnedBuckets() throws NoSuchMethodException {
       return processor.createRequest(method(S3Client.class, "listOwnedBuckets"),
-            ImmutableList.of());
+         ImmutableList.of());
    }
 
    @Test
    void testHeadersGoLowercase() throws SecurityException, NoSuchMethodException {
       HttpRequest request = putObject();
       SortedSetMultimap<String, String> canonicalizedHeaders = TreeMultimap.create();
-      filter.appendHttpHeaders(request, canonicalizedHeaders);
+      ((RequestAuthorizeSignatureV2) filter).appendHttpHeaders(request, canonicalizedHeaders);
       StringBuilder builder = new StringBuilder();
-      filter.appendAmzHeaders(canonicalizedHeaders, builder);
+      ((RequestAuthorizeSignatureV2) filter).appendAmzHeaders(canonicalizedHeaders, builder);
       assertEquals(builder.toString(), S3Headers.USER_METADATA_PREFIX + "adrian:foo\n");
    }
 
@@ -135,14 +136,14 @@ public class RequestAuthorizeSignatureTest extends BaseS3ClientTest<S3Client> {
       S3Object object = blobToS3Object.apply(BindBlobToMultipartFormTest.TEST_BLOB);
       object.getMetadata().getUserMetadata().put("Adrian", "foo");
       return processor.createRequest(method(S3Client.class, "putObject", String.class,
-            S3Object.class, PutObjectOptions[].class), ImmutableList.<Object> of("bucket", object));
+         S3Object.class, PutObjectOptions[].class), ImmutableList.<Object>of("bucket", object));
    }
 
    @Test
    void testAppendBucketNameInURIPath() throws SecurityException, NoSuchMethodException {
       GeneratedHttpRequest request = processor.createRequest(
-            method(S3Client.class, "getBucketLocation", String.class),
-            ImmutableList.<Object> of(bucketName));
+         method(S3Client.class, "getBucketLocation", String.class),
+         ImmutableList.<Object>of(bucketName));
       URI uri = request.getEndpoint();
       assertEquals(uri.getHost(), "localhost");
       assertEquals(uri.getPath(), "/" + bucketName);

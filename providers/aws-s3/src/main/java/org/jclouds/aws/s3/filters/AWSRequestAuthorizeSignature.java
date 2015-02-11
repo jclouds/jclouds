@@ -34,13 +34,13 @@ import org.jclouds.domain.Credentials;
 import org.jclouds.http.HttpRequest;
 import org.jclouds.http.HttpUtils;
 import org.jclouds.http.internal.SignatureWire;
-import org.jclouds.s3.filters.RequestAuthorizeSignature;
+import org.jclouds.s3.filters.RequestAuthorizeSignatureV2;
 
 import com.google.common.base.Supplier;
 
 /** Signs the AWS S3 request, supporting temporary signatures. */
 @Singleton
-public class AWSRequestAuthorizeSignature extends RequestAuthorizeSignature {
+public class AWSRequestAuthorizeSignature extends RequestAuthorizeSignatureV2 {
 
    @Inject
    public AWSRequestAuthorizeSignature(SignatureWire signatureWire, @Named(PROPERTY_AUTH_TAG) String authTag,

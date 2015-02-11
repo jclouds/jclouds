@@ -16,11 +16,8 @@
  */
 package org.jclouds.s3.filters;
 
-import org.jclouds.http.HttpRequestFilter;
-
-/**
- * Signs the S3 request.
- */
-
-public interface RequestAuthorizeSignature extends HttpRequestFilter {
+public class ChunkedUploadException extends RuntimeException {
+   public ChunkedUploadException(String error, Exception e) {
+      super(error, e);
+   }
 }

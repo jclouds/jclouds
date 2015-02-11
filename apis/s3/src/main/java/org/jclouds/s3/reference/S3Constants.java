@@ -31,6 +31,7 @@ public final class S3Constants {
    public static final String DELIMITER = "delimiter";
    public static final String PROPERTY_S3_SERVICE_PATH = "jclouds.s3.service-path";
    public static final String PROPERTY_S3_VIRTUAL_HOST_BUCKETS = "jclouds.s3.virtual-host-buckets";
+   public static final String PROPERTY_JCLOUDS_S3_CHUNKED_SIZE = "jclouds.s3.chunked.size";
 
    private S3Constants() {
       throw new AssertionError("intentionally unimplemented");
