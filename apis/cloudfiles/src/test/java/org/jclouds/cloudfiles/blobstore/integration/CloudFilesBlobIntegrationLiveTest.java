@@ -16,6 +16,8 @@
  */
 package org.jclouds.cloudfiles.blobstore.integration;
 
+import static org.testng.Assert.assertEquals;
+
 import java.io.IOException;
 
 import org.jclouds.blobstore.BlobStore;
@@ -23,14 +25,12 @@ import org.jclouds.blobstore.domain.Blob;
 import org.jclouds.openstack.swift.blobstore.integration.SwiftBlobIntegrationLiveTest;
 import org.testng.annotations.Test;
 
-import static org.testng.Assert.assertEquals;
-
-@Test(groups = "live")
+@Test(groups = "live", singleThreaded = true)
 public class CloudFilesBlobIntegrationLiveTest extends SwiftBlobIntegrationLiveTest {
    public CloudFilesBlobIntegrationLiveTest() {
       provider = "cloudfiles";
    }
-   
+
    @Override
    protected void checkContentDisposition(Blob blob, String contentDisposition) {
       assert blob.getPayload().getContentMetadata().getContentDisposition().startsWith(contentDisposition) : blob
