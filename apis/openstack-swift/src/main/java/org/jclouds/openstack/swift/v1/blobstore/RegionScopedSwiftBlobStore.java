@@ -59,6 +59,7 @@ import org.jclouds.openstack.swift.v1.blobstore.functions.ToResourceMetadata;
 import org.jclouds.openstack.swift.v1.domain.Container;
 import org.jclouds.openstack.swift.v1.domain.ObjectList;
 import org.jclouds.openstack.swift.v1.domain.SwiftObject;
+import org.jclouds.openstack.swift.v1.features.BulkApi;
 import org.jclouds.openstack.swift.v1.features.ObjectApi;
 import org.jclouds.openstack.swift.v1.options.UpdateContainerOptions;
 import org.jclouds.openstack.swift.v1.reference.SwiftHeaders;
@@ -73,6 +74,7 @@ import com.google.common.collect.FluentIterable;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.Iterables;
 import com.google.common.io.ByteSource;
 import com.google.inject.AbstractModule;
 import com.google.inject.Injector;
@@ -255,6 +257,18 @@ public class RegionScopedSwiftBlobStore implements BlobStore {
    @Override
    public void removeBlob(String container, String name) {
       api.getObjectApi(regionId, container).delete(name);
+   }
+
+   @Override
+   public void removeBlobs(String container, Iterable<String> names) {
+      BulkApi bulkApi = api.getBulkApi(regionId);
+      for (List<String> partition : Iterables.partition(names, 1000)) {
+         ImmutableList.Builder<String> builder = ImmutableList.builder();
+         for (String name : partition) {
+            builder.add(container + "/" + name);
+         }
+         bulkApi.bulkDelete(builder.build());
+      }
    }
 
    @Override
