@@ -101,4 +101,9 @@ public class SwiftContainerIntegrationLiveTest extends BaseContainerIntegrationT
       // use new Swift provider instead
       throw new SkipException("Intentionally not implemented for the legacy Swift provider");
    }
+
+   @Override
+   public void testSetContainerAccess() throws Exception {
+      throw new SkipException("Intentionally not implemented for the legacy Swift provider");
+   }
 }

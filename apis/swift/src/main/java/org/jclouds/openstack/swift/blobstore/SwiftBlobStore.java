@@ -31,6 +31,7 @@ import javax.inject.Singleton;
 import org.jclouds.blobstore.BlobStoreContext;
 import org.jclouds.blobstore.domain.Blob;
 import org.jclouds.blobstore.domain.BlobMetadata;
+import org.jclouds.blobstore.domain.ContainerAccess;
 import org.jclouds.blobstore.domain.PageSet;
 import org.jclouds.blobstore.domain.StorageMetadata;
 import org.jclouds.blobstore.domain.internal.PageSetImpl;
@@ -313,5 +314,15 @@ public class SwiftBlobStore extends BaseBlobStore {
       if (options.isPublicRead())
          throw new UnsupportedOperationException("publicRead");
       return createContainerInLocation(location, container);
+   }
+
+   @Override
+   public ContainerAccess getContainerAccess(String container) {
+      throw new UnsupportedOperationException("not implemented");
+   }
+
+   @Override
+   public void setContainerAccess(String container, ContainerAccess access) {
+      throw new UnsupportedOperationException("not implemented");
    }
 }
