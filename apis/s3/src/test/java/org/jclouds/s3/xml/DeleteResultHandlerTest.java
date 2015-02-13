@@ -14,14 +14,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jclouds.aws.s3.xml;
+package org.jclouds.s3.xml;
 
 import static org.testng.Assert.assertEquals;
 
 import java.io.InputStream;
 
-import org.jclouds.aws.s3.domain.DeleteResult;
 import org.jclouds.http.functions.BaseHandlerTest;
+import org.jclouds.s3.domain.DeleteResult;
 import org.testng.annotations.Test;
 
 // NOTE:without testName, this will not call @Before* and fail w/NPE during surefire

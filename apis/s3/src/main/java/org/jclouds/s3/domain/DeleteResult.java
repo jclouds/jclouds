@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jclouds.aws.s3.domain;
+package org.jclouds.s3.domain;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 

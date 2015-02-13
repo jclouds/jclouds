@@ -36,10 +36,13 @@ import java.net.URI;
 import java.net.URL;
 import java.util.Date;
 import java.util.Map;
+import java.util.Set;
+import java.util.UUID;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeoutException;
 
 import org.jclouds.blobstore.KeyNotFoundException;
+import org.jclouds.blobstore.domain.Blob;
 import org.jclouds.blobstore.integration.internal.BaseBlobStoreIntegrationTest;
 import org.jclouds.http.HttpResponseException;
 import org.jclouds.io.ByteStreams2;
@@ -50,6 +53,7 @@ import org.jclouds.s3.domain.AccessControlList.EmailAddressGrantee;
 import org.jclouds.s3.domain.AccessControlList.GroupGranteeURI;
 import org.jclouds.s3.domain.AccessControlList.Permission;
 import org.jclouds.s3.domain.CannedAccessPolicy;
+import org.jclouds.s3.domain.DeleteResult;
 import org.jclouds.s3.domain.ObjectMetadata;
 import org.jclouds.s3.domain.ObjectMetadataBuilder;
 import org.jclouds.s3.domain.S3Object;
@@ -60,6 +64,7 @@ import org.testng.annotations.Test;
 
 import com.google.common.base.Throwables;
 import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Maps;
 import com.google.common.hash.HashCode;
 import com.google.common.io.ByteSource;
@@ -535,6 +540,34 @@ public class S3ClientLiveTest extends BaseBlobStoreIntegrationTest {
          if (object != null)
             object.getPayload().close();
          returnContainer(containerName);
+      }
+   }
+
+   public void testDeleteMultipleObjects() throws InterruptedException {
+      String container = getContainerName();
+      try {
+         ImmutableSet.Builder<String> builder = ImmutableSet.builder();
+         for (int i = 0; i < 5; i++) {
+            String key = UUID.randomUUID().toString();
+
+            Blob blob = view.getBlobStore().blobBuilder(key).payload("").build();
+            view.getBlobStore().putBlob(container, blob);
+
+            builder.add(key);
+         }
+
+         Set<String> keys = builder.build();
+         DeleteResult result = getApi().deleteObjects(container, keys);
+
+         assertTrue(result.getDeleted().containsAll(keys));
+         assertEquals(result.getErrors().size(), 0);
+
+         for (String key : keys) {
+            assertConsistencyAwareBlobDoesntExist(container, key);
+         }
+
+      } finally {
+         returnContainer(container);
       }
    }
 

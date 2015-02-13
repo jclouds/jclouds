@@ -14,13 +14,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jclouds.aws.s3.xml;
+package org.jclouds.s3.xml;
 
 import static org.jclouds.util.SaxUtils.equalsOrSuffix;
 
 import java.util.Map;
 
-import org.jclouds.aws.s3.domain.DeleteResult;
+import org.jclouds.s3.domain.DeleteResult;
 import org.jclouds.http.functions.ParseSax;
 import org.xml.sax.SAXException;
 

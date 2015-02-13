@@ -62,6 +62,7 @@ import org.jclouds.rest.annotations.XMLResponseParser;
 import org.jclouds.s3.binders.BindACLToXMLPayload;
 import org.jclouds.s3.binders.BindAsHostPrefixIfConfigured;
 import org.jclouds.s3.binders.BindBucketLoggingToXmlPayload;
+import org.jclouds.s3.binders.BindIterableAsPayloadToDeleteRequest;
 import org.jclouds.s3.binders.BindNoBucketLoggingToXmlPayload;
 import org.jclouds.s3.binders.BindObjectMetadataToRequest;
 import org.jclouds.s3.binders.BindPartIdsAndETagsToRequest;
@@ -70,6 +71,7 @@ import org.jclouds.s3.binders.BindS3ObjectMetadataToRequest;
 import org.jclouds.s3.domain.AccessControlList;
 import org.jclouds.s3.domain.BucketLogging;
 import org.jclouds.s3.domain.BucketMetadata;
+import org.jclouds.s3.domain.DeleteResult;
 import org.jclouds.s3.domain.ListBucketResponse;
 import org.jclouds.s3.domain.ObjectMetadata;
 import org.jclouds.s3.domain.Payer;
@@ -93,6 +95,7 @@ import org.jclouds.s3.predicates.validators.BucketNameValidator;
 import org.jclouds.s3.xml.AccessControlListHandler;
 import org.jclouds.s3.xml.BucketLoggingHandler;
 import org.jclouds.s3.xml.CopyObjectHandler;
+import org.jclouds.s3.xml.DeleteResultHandler;
 import org.jclouds.s3.xml.ListAllMyBucketsHandler;
 import org.jclouds.s3.xml.ListBucketHandler;
 import org.jclouds.s3.xml.LocationConstraintHandler;
@@ -202,6 +205,34 @@ public interface S3Client extends Closeable {
    void deleteObject(@Bucket @EndpointParam(parser = AssignCorrectHostnameForBucket.class) @BinderParam(
          BindAsHostPrefixIfConfigured.class) @ParamValidators(BucketNameValidator.class) String bucketName,
          @PathParam("key") String key);
+
+   /**
+    * The Multi-Object Delete operation enables you to delete multiple objects from a bucket using a
+    * single HTTP request. If you know the object keys that you want to delete, then this operation
+    * provides a suitable alternative to sending individual delete requests (see DELETE Object),
+    * reducing per-request overhead.
+    *
+    * The Multi-Object Delete request contains a set of up to 1000 keys that you want to delete.
+    *
+    * If a key does not exist is considered to be deleted.
+    *
+    * The Multi-Object Delete operation supports two modes for the response; verbose and quiet.
+    * By default, the operation uses verbose mode in which the response includes the result of
+    * deletion of each key in your request.
+    *
+    * @param bucketName
+    *           namespace of the objects you are deleting
+    * @param keys
+    *           set of unique keys identifying objects
+    */
+   @Named("DeleteObject")
+   @POST
+   @Path("/")
+   @QueryParams(keys = "delete")
+   @XMLResponseParser(DeleteResultHandler.class)
+   DeleteResult deleteObjects(@Bucket @EndpointParam(parser = AssignCorrectHostnameForBucket.class) @BinderParam(
+         BindAsHostPrefixIfConfigured.class) @ParamValidators(BucketNameValidator.class) String bucketName,
+         @BinderParam(BindIterableAsPayloadToDeleteRequest.class) Iterable<String> keys);
 
    /**
     * Store data by creating or overwriting an object.
