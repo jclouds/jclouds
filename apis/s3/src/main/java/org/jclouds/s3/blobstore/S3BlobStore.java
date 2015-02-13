@@ -20,6 +20,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Preconditions.checkState;
 import static org.jclouds.util.Predicates2.retry;
 
+import java.util.List;
 import java.util.Set;
 
 import javax.inject.Inject;
@@ -65,6 +66,7 @@ import com.google.common.base.Predicate;
 import com.google.common.base.Supplier;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
+import com.google.common.collect.Iterables;
 
 @Singleton
 public class S3BlobStore extends BaseBlobStore {
@@ -281,6 +283,13 @@ public class S3BlobStore extends BaseBlobStore {
    @Override
    public void removeBlob(String container, String key) {
       sync.deleteObject(container, key);
+   }
+
+   @Override
+   public void removeBlobs(String container, Iterable<String> keys) {
+      for (List<String> partition : Iterables.partition(keys, 1000)) {
+         sync.deleteObjects(container, partition);
+      }
    }
 
    /**
