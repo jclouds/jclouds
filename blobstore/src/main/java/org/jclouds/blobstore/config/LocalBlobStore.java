@@ -47,6 +47,7 @@ import org.jclouds.blobstore.LocalStorageStrategy;
 import org.jclouds.blobstore.domain.Blob;
 import org.jclouds.blobstore.domain.BlobBuilder;
 import org.jclouds.blobstore.domain.BlobMetadata;
+import org.jclouds.blobstore.domain.ContainerAccess;
 import org.jclouds.blobstore.domain.MutableBlobMetadata;
 import org.jclouds.blobstore.domain.MutableStorageMetadata;
 import org.jclouds.blobstore.domain.PageSet;
@@ -373,6 +374,16 @@ public final class LocalBlobStore implements BlobStore {
    @Override
    public boolean createContainerInLocation(Location location, String name) {
       return storageStrategy.createContainerInLocation(name, location);
+   }
+
+   @Override
+   public ContainerAccess getContainerAccess(String container) {
+      throw new UnsupportedOperationException("not implemented");
+   }
+
+   @Override
+   public void setContainerAccess(String container, ContainerAccess access) {
+      throw new UnsupportedOperationException("not implemented");
    }
 
    private Blob loadBlob(final String container, final String key) {

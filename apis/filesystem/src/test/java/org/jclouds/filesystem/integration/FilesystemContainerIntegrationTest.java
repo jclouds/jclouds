@@ -36,6 +36,7 @@ import org.jclouds.filesystem.reference.FilesystemConstants;
 import org.jclouds.filesystem.utils.TestUtils;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
+import org.testng.SkipException;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Iterables;
@@ -165,5 +166,10 @@ public class FilesystemContainerIntegrationTest extends BaseContainerIntegration
    public Object[][] ignoreOnWindows() {
       return TestUtils.isWindowsOs() ? TestUtils.NO_INVOCATIONS
             : TestUtils.SINGLE_NO_ARG_INVOCATION;
+   }
+
+   @Override
+   public void testSetContainerAccess() throws Exception {
+      throw new SkipException("Intentionally not implemented for the transient provider");
    }
 }

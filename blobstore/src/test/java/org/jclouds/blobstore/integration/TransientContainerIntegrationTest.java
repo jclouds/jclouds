@@ -32,6 +32,7 @@ import org.jclouds.blobstore.domain.StorageMetadata;
 import org.jclouds.blobstore.integration.internal.BaseContainerIntegrationTest;
 import org.jclouds.domain.Location;
 import org.testng.annotations.Test;
+import org.testng.SkipException;
 
 import com.google.common.collect.ImmutableMap;
 
@@ -79,5 +80,10 @@ public class TransientContainerIntegrationTest extends BaseContainerIntegrationT
 
       created = blobStore.createContainerInLocation(location, container);
       assertFalse(created);
+   }
+
+   @Override
+   public void testSetContainerAccess() throws Exception {
+      throw new SkipException("Intentionally not implemented for the transient provider");
    }
 }
