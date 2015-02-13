@@ -338,6 +338,13 @@ public final class LocalBlobStore implements BlobStore {
    }
 
    @Override
+   public void removeBlobs(String container, Iterable<String> names) {
+      for (String name : names) {
+         removeBlob(container, name);
+      }
+   }
+
+   @Override
    public boolean deleteContainerIfEmpty(String containerName) {
       boolean returnVal = true;
       if (storageStrategy.containerExists(containerName)) {

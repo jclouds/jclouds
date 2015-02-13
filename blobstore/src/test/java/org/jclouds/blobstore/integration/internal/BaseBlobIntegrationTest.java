@@ -77,6 +77,7 @@ import com.google.common.base.Charsets;
 import com.google.common.base.Predicate;
 import com.google.common.base.Throwables;
 import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Maps;
 import com.google.common.hash.HashCode;
@@ -470,6 +471,20 @@ public class BaseBlobIntegrationTest extends BaseBlobStoreIntegrationTest {
       } catch (ContainerNotFoundException e) {
       }
 
+   }
+
+   @Test(groups = { "integration", "live" }, dataProvider = "delete")
+   public void deleteMultipleObjects(String name) throws InterruptedException {
+      String name2 = name + "2";
+      String container = getContainerName();
+      try {
+         addBlobToContainer(container, name, name, MediaType.TEXT_PLAIN);
+         addBlobToContainer(container, name2, name2, MediaType.TEXT_PLAIN);
+         view.getBlobStore().removeBlobs(container, ImmutableSet.of(name, name2));
+         assertContainerEmptyDeleting(container, name);
+      } finally {
+         returnContainer(container);
+      }
    }
 
    @DataProvider(name = "putTests")

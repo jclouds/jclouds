@@ -281,6 +281,18 @@ public interface BlobStore {
    void removeBlob(String container, String name);
 
    /**
+    * Deletes multiple {@code Blob}s representing the data at location {@code container/name}
+    *
+    * @param container
+    *           container where this exists.
+    * @param names
+    *           fully qualified names relative to the container.
+    * @throws ContainerNotFoundException
+    *            if the container doesn't exist
+    */
+   void removeBlobs(String container, Iterable<String> names);
+
+   /**
     * @return a count of all blobs in the container, excluding directory markers
     */
    long countBlobs(String container);

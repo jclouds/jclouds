@@ -107,6 +107,13 @@ public abstract class BaseBlobStore implements BlobStore {
       blobUtils.createDirectory(containerName, directory);
    }
 
+   @Override
+   public void removeBlobs(String container, Iterable<String> names) {
+      for (String name : names) {
+         removeBlob(container, name);
+      }
+   }
+
    /**
     * This implementation invokes {@link #countBlobs} with the
     * {@link ListContainerOptions#recursive} option.
