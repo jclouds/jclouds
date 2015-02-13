@@ -19,7 +19,7 @@ package org.jclouds.rackspace.cloudfiles.blobstore.integration;
 import org.jclouds.cloudfiles.blobstore.integration.CloudFilesBlobIntegrationLiveTest;
 import org.testng.annotations.Test;
 
-@Test(groups =  "live", testName = "CloudFilesUSBlobIntegrationLiveTest")
+@Test(groups =  "live", testName = "CloudFilesUSBlobIntegrationLiveTest", singleThreaded = true)
 public class CloudFilesUSBlobIntegrationLiveTest extends CloudFilesBlobIntegrationLiveTest {
    public CloudFilesUSBlobIntegrationLiveTest() {
       provider = "cloudfiles-us";

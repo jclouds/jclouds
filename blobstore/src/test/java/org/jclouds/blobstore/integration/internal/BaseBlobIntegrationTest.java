@@ -49,6 +49,7 @@ import javax.ws.rs.core.MediaType;
 
 import org.jclouds.blobstore.BlobStore;
 import org.jclouds.blobstore.ContainerNotFoundException;
+import org.jclouds.blobstore.attr.ConsistencyModel;
 import org.jclouds.blobstore.domain.Blob;
 import org.jclouds.blobstore.domain.BlobBuilder.PayloadBlobBuilder;
 import org.jclouds.blobstore.domain.BlobMetadata;
@@ -432,7 +433,13 @@ public class BaseBlobIntegrationTest extends BaseBlobStoreIntegrationTest {
       String container = getContainerName();
       try {
          addBlobToContainer(container, name, name, MediaType.TEXT_PLAIN);
+         if (view.getConsistencyModel() == ConsistencyModel.EVENTUAL) {
+            Uninterruptibles.sleepUninterruptibly(10, TimeUnit.SECONDS);
+         }
          view.getBlobStore().removeBlob(container, name);
+         if (view.getConsistencyModel() == ConsistencyModel.EVENTUAL) {
+            Uninterruptibles.sleepUninterruptibly(10, TimeUnit.SECONDS);
+         }
          assertContainerEmptyDeleting(container, name);
       } finally {
          returnContainer(container);
@@ -510,6 +517,9 @@ public class BaseBlobIntegrationTest extends BaseBlobStoreIntegrationTest {
       try {
 
          assertNotNull(view.getBlobStore().putBlob(container, blob));
+         if (view.getConsistencyModel() == ConsistencyModel.EVENTUAL) {
+            Uninterruptibles.sleepUninterruptibly(10, TimeUnit.SECONDS);
+         }
 
          blob = view.getBlobStore().getBlob(container, blob.getMetadata().getName());
          String returnedString = getContentAsStringOrNullAndClose(blob);

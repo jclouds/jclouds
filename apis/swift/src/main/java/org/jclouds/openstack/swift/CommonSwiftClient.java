@@ -246,6 +246,7 @@ public interface CommonSwiftClient extends Closeable {
    @Fallback(SwiftFallbacks.TrueOn404FalseOn409.class)
    @Path("/{container}")
    boolean deleteContainerIfEmpty(@PathParam("container") String container);
+
    /**
     * @deprecated This method will be replaced by
     *             {@link org.jclouds.openstack.swift.v1.features.ContainerApi#head()}

@@ -33,11 +33,13 @@ import java.io.IOException;
 import java.util.Iterator;
 import java.util.Set;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
 import javax.ws.rs.core.MediaType;
 
 import org.jclouds.blobstore.BlobStore;
+import org.jclouds.blobstore.attr.ConsistencyModel;
 import org.jclouds.blobstore.domain.Blob;
 import org.jclouds.blobstore.domain.BlobMetadata;
 import org.jclouds.blobstore.domain.ContainerAccess;
@@ -48,6 +50,7 @@ import org.testng.annotations.Test;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.io.ByteSource;
+import com.google.common.util.concurrent.Uninterruptibles;
 
 public class BaseContainerIntegrationTest extends BaseBlobStoreIntegrationTest {
 
@@ -224,6 +227,10 @@ public class BaseContainerIntegrationTest extends BaseBlobStoreIntegrationTest {
 
          addTenObjectsUnderPrefix(containerName, directory);
 
+         if (view.getConsistencyModel() == ConsistencyModel.EVENTUAL) {
+            Uninterruptibles.sleepUninterruptibly(10, TimeUnit.SECONDS);
+         }
+
          container = view.getBlobStore().list(containerName);
          // we should still have only the directory under root
          assert container.getNextMarker() == null;
@@ -237,6 +244,11 @@ public class BaseContainerIntegrationTest extends BaseBlobStoreIntegrationTest {
          // try 2 level deep directory
          assert !view.getBlobStore().directoryExists(containerName, directory + "/" + directory);
          view.getBlobStore().createDirectory(containerName, directory + "/" + directory);
+
+         if (view.getConsistencyModel() == ConsistencyModel.EVENTUAL) {
+            Uninterruptibles.sleepUninterruptibly(10, TimeUnit.SECONDS);
+         }
+
          assert view.getBlobStore().directoryExists(containerName, directory + "/" + directory);
 
          view.getBlobStore().clearContainer(containerName, inDirectory(directory));
@@ -445,6 +457,9 @@ public class BaseContainerIntegrationTest extends BaseBlobStoreIntegrationTest {
       String containerName = getContainerName();
       try {
          add15UnderRoot(containerName);
+         if (view.getConsistencyModel() == ConsistencyModel.EVENTUAL) {
+            Uninterruptibles.sleepUninterruptibly(10, TimeUnit.SECONDS);
+         }
          Set<? extends StorageMetadata> container = view.getBlobStore().list(containerName);
          assertEquals(container.size(), 15);
       } finally {

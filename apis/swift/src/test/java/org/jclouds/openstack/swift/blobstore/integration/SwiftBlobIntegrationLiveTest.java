@@ -23,6 +23,7 @@ import static org.testng.Assert.assertTrue;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Properties;
+import java.util.concurrent.TimeUnit;
 
 import org.jclouds.blobstore.BlobStore;
 import org.jclouds.blobstore.domain.Blob;
@@ -40,8 +41,9 @@ import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
 import com.google.common.io.ByteSource;
+import com.google.common.util.concurrent.Uninterruptibles;
 
-@Test(groups = "live")
+@Test(groups = "live", singleThreaded = true)
 public class SwiftBlobIntegrationLiveTest extends BaseBlobIntegrationTest {
    /**
     * Use the minimum part size to minimise the file size that we have to
@@ -56,7 +58,7 @@ public class SwiftBlobIntegrationLiveTest extends BaseBlobIntegrationTest {
       props.setProperty("jclouds.mpu.parts.size", String.valueOf(PART_SIZE));
       return props;
    }
-   
+
    private ByteSource oneHundredOneConstitutions;
 
    public SwiftBlobIntegrationLiveTest() {
@@ -100,7 +102,7 @@ public class SwiftBlobIntegrationLiveTest extends BaseBlobIntegrationTest {
       assert blob.getPayload().getContentMetadata().getContentLanguage() == null;
       assert blob.getMetadata().getContentMetadata().getContentLanguage() == null;
    }
-   
+
    // swift doesn't support quotes
    @Override
    @DataProvider(name = "delete")
@@ -108,7 +110,7 @@ public class SwiftBlobIntegrationLiveTest extends BaseBlobIntegrationTest {
       return new Object[][] { { "normal" }, { "sp ace" }, { "qu?stion" }, { "unic₪de" }, { "path/foo" }, { "colon:" },
                { "asteri*k" }, { "{great<r}" }, { "lesst>en" }, { "p|pe" } };
    }
-    
+
    @Test(groups = { "integration", "live" })
    public void testMultipartChunkedFileStream() throws IOException, InterruptedException {
       String containerName = getContainerName();
@@ -147,6 +149,7 @@ public class SwiftBlobIntegrationLiveTest extends BaseBlobIntegrationTest {
          ByteSource inputSource = createByteSource(PART_SIZE + 1);
          addMultipartBlobToContainer(containerName, objectName, inputSource);
 
+         Uninterruptibles.sleepUninterruptibly(15, TimeUnit.SECONDS);
          // did we create enough parts?
          long countAfter = blobStore.countBlobs(containerName);
          assertNotEquals(countAfter, countBefore, "No blob was created");

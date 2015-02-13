@@ -66,7 +66,7 @@ import com.google.common.util.concurrent.MoreExecutors;
 import com.google.inject.Module;
 
 public class BaseBlobStoreIntegrationTest extends BaseViewLiveTest<BlobStoreContext> {
-   
+
    protected static final String LOCAL_ENCODING = System.getProperty("file.encoding");
    protected static final String XML_STRING_FORMAT = "<apples><apple name=\"%s\"></apple> </apples>";
    protected static final String TEST_STRING = String.format(XML_STRING_FORMAT, "apple");
@@ -110,7 +110,7 @@ public class BaseBlobStoreIntegrationTest extends BaseViewLiveTest<BlobStoreCont
       view.close();
       view = null;
    }
-   
+
    protected Iterable<Module> setupModules() {
       return ImmutableSet.<Module> of(getLoggingModule(), createHttpModule());
    }
@@ -128,7 +128,7 @@ public class BaseBlobStoreIntegrationTest extends BaseViewLiveTest<BlobStoreCont
       exec = MoreExecutors.listeningDecorator(Executors.newCachedThreadPool());
    }
 
-   
+
    @AfterClass(groups = { "integration", "live" })
    @Override
    protected void tearDownContext() {
@@ -252,7 +252,7 @@ public class BaseBlobStoreIntegrationTest extends BaseViewLiveTest<BlobStoreCont
          throws InterruptedException {
       context.getBlobStore().createContainerInLocation(null, containerName);
       if (context.getConsistencyModel() == ConsistencyModel.EVENTUAL)
-         Thread.sleep(1000);
+         Thread.sleep(10000);
       context.getBlobStore().clearContainer(containerName);
    }
 
@@ -392,7 +392,7 @@ public class BaseBlobStoreIntegrationTest extends BaseViewLiveTest<BlobStoreCont
          }
       });
    }
-   
+
    protected void assertConsistencyAwareBlobExpiryMetadata(final String containerName, final String blobName,
             final Date expectedExpires) throws InterruptedException {
       assertConsistencyAware(new Runnable() {
@@ -415,7 +415,7 @@ public class BaseBlobStoreIntegrationTest extends BaseViewLiveTest<BlobStoreCont
          public void run() {
             try {
                Location actualLoc = view.getBlobStore().getBlob(containerName, blobName).getMetadata().getLocation();
-               
+
                assert loc.equals(actualLoc) : String.format(
                      "blob %s in %s, in location %s instead of %s", blobName, containerName, actualLoc, loc);
             } catch (Exception e) {
@@ -436,7 +436,7 @@ public class BaseBlobStoreIntegrationTest extends BaseViewLiveTest<BlobStoreCont
     * requestor will create a container using the name returned from this. This method will take
     * care not to exceed the maximum containers permitted by a provider by deleting an existing
     * container first.
-    * 
+    *
     * @throws InterruptedException
     */
    public String getScratchContainerName() throws InterruptedException {
@@ -450,7 +450,7 @@ public class BaseBlobStoreIntegrationTest extends BaseViewLiveTest<BlobStoreCont
           * Ensure that any returned container name actually exists on the server. Return of a
           * non-existent container introduces subtle testing bugs, where later unrelated tests will
           * fail.
-          * 
+          *
           * NOTE: This sanity check should only be run for Stub-based Integration testing -- it will
           * *substantially* slow down tests on a real server over a network.
           */
@@ -481,7 +481,7 @@ public class BaseBlobStoreIntegrationTest extends BaseViewLiveTest<BlobStoreCont
 
    /**
     * abandon old container name instead of waiting for the container to be created.
-    * 
+    *
     * @throws InterruptedException
     */
    public void destroyContainer(String scratchContainer) throws InterruptedException {
