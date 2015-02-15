@@ -21,7 +21,16 @@ import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.hash.Hashing.md5;
 
+import java.util.Properties;
+
 import javax.ws.rs.core.MediaType;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.OutputKeys;
+import javax.xml.transform.TransformerException;
+
+import com.google.common.base.Throwables;
+import com.google.common.collect.Iterables;
+import com.jamesmurty.utils.XMLBuilder;
 
 import org.jclouds.http.HttpRequest;
 import org.jclouds.io.Payload;
@@ -38,16 +47,25 @@ public class BindIterableAsPayloadToDeleteRequest implements Binder {
       checkNotNull(request, "request is null");
 
       Iterable<String> keys = (Iterable<String>) input;
-      StringBuilder builder = new StringBuilder();
-      for (String key : keys) {
-         builder.append(String.format("<Object><Key>%s</Key></Object>", key));
+      checkArgument(!Iterables.isEmpty(keys), "The list of keys should not be empty.");
+
+      String content;
+      try {
+         XMLBuilder rootBuilder = XMLBuilder.create("Delete");
+         for (String key : keys) {
+            XMLBuilder ownerBuilder = rootBuilder.elem("Object");
+            XMLBuilder keyBuilder = ownerBuilder.elem("Key").text(key);
+         }
+
+         Properties outputProperties = new Properties();
+         outputProperties.put(OutputKeys.OMIT_XML_DECLARATION, "yes");
+         content = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
+                rootBuilder.asString(outputProperties);
+      } catch (ParserConfigurationException pce) {
+         throw Throwables.propagate(pce);
+      } catch (TransformerException te) {
+         throw Throwables.propagate(te);
       }
-
-      final String objects = builder.toString();
-      checkArgument(!objects.isEmpty(), "The list of keys should not be empty.");
-
-      final String content = String.format("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
-         "<Delete>%s</Delete>", objects);
 
       Payload payload = Payloads.newStringPayload(content);
       payload.getContentMetadata().setContentType(MediaType.TEXT_XML);
