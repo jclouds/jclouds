@@ -408,6 +408,9 @@ public class BaseContainerIntegrationTest extends BaseBlobStoreIntegrationTest {
       try {
          addBlobToContainer(containerName, "test");
          view.getBlobStore().deleteContainer(containerName);
+         if (view.getConsistencyModel() == ConsistencyModel.EVENTUAL) {
+            Uninterruptibles.sleepUninterruptibly(10, TimeUnit.SECONDS);
+         }
          assertNotExists(containerName);
       } finally {
          recycleContainerAndAddToPool(containerName);
@@ -419,6 +422,9 @@ public class BaseContainerIntegrationTest extends BaseBlobStoreIntegrationTest {
       final String containerName = getContainerName();
       try {
          view.getBlobStore().deleteContainer(containerName);
+         if (view.getConsistencyModel() == ConsistencyModel.EVENTUAL) {
+            Uninterruptibles.sleepUninterruptibly(10, TimeUnit.SECONDS);
+         }
          assertNotExists(containerName);
       } finally {
          // this container is now deleted, so we can't reuse it directly
@@ -431,7 +437,13 @@ public class BaseContainerIntegrationTest extends BaseBlobStoreIntegrationTest {
       String containerName = getContainerName();
       try {
          addBlobToContainer(containerName, "test");
+         if (view.getConsistencyModel() == ConsistencyModel.EVENTUAL) {
+            Uninterruptibles.sleepUninterruptibly(10, TimeUnit.SECONDS);
+         }
          assertFalse(view.getBlobStore().deleteContainerIfEmpty(containerName));
+         if (view.getConsistencyModel() == ConsistencyModel.EVENTUAL) {
+            Uninterruptibles.sleepUninterruptibly(10, TimeUnit.SECONDS);
+         }
          assertTrue(view.getBlobStore().containerExists(containerName));
       } finally {
          recycleContainerAndAddToPool(containerName);
@@ -443,6 +455,9 @@ public class BaseContainerIntegrationTest extends BaseBlobStoreIntegrationTest {
       final String containerName = getContainerName();
       try {
          assertTrue(view.getBlobStore().deleteContainerIfEmpty(containerName));
+         if (view.getConsistencyModel() == ConsistencyModel.EVENTUAL) {
+            Uninterruptibles.sleepUninterruptibly(10, TimeUnit.SECONDS);
+         }
          assertNotExists(containerName);
          // verify that true is returned even if the container does not exist
          assertTrue(view.getBlobStore().deleteContainerIfEmpty(containerName));
