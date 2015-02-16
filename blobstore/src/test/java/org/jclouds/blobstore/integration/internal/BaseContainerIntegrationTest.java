@@ -71,6 +71,7 @@ public class BaseContainerIntegrationTest extends BaseBlobStoreIntegrationTest {
          view.getBlobStore().putBlob(containerName, blob);
 
          view.getBlobStore().createContainerInLocation(null, containerName);
+         awaitConsistency();
          assertEquals(view.getBlobStore().countBlobs(containerName), 1);
       } finally {
          returnContainer(containerName);
@@ -90,7 +91,7 @@ public class BaseContainerIntegrationTest extends BaseBlobStoreIntegrationTest {
                      .contentMD5(md5().hashString(TEST_STRING, UTF_8).asBytes())
                      .build());
          validateContent(containerName, key);
-
+         awaitConsistency();
          PageSet<? extends StorageMetadata> container = view.getBlobStore().list(containerName, afterMarker(key));
          assertThat(container).isEmpty();
       } finally {
@@ -110,6 +111,7 @@ public class BaseContainerIntegrationTest extends BaseBlobStoreIntegrationTest {
                      .payload(TEST_STRING).contentType(MediaType.TEXT_PLAIN)
                      .contentMD5(md5().hashString(TEST_STRING, UTF_8).asBytes())
                      .build());
+         awaitConsistency();
          validateContent(containerName, key);
 
          PageSet<? extends StorageMetadata> container = view.getBlobStore().list(containerName, maxResults(0));
@@ -131,6 +133,7 @@ public class BaseContainerIntegrationTest extends BaseBlobStoreIntegrationTest {
                      .payload(TEST_STRING).contentType(MediaType.TEXT_PLAIN)
                      .contentMD5(md5().hashString(TEST_STRING, UTF_8).asBytes())
                      .build());
+         awaitConsistency();
          validateContent(containerName, key);
 
          PageSet<? extends StorageMetadata> container = view.getBlobStore().list(containerName,
@@ -194,6 +197,7 @@ public class BaseContainerIntegrationTest extends BaseBlobStoreIntegrationTest {
          String prefix = "rootdelimiter";
          addTenObjectsUnderPrefix(containerName, prefix);
          add15UnderRoot(containerName);
+         awaitConsistency();
          PageSet<? extends StorageMetadata> container = view.getBlobStore().list(containerName);
          assert container.getNextMarker() == null;
          assertEquals(container.size(), 16);
@@ -227,9 +231,7 @@ public class BaseContainerIntegrationTest extends BaseBlobStoreIntegrationTest {
 
          addTenObjectsUnderPrefix(containerName, directory);
 
-         if (view.getConsistencyModel() == ConsistencyModel.EVENTUAL) {
-            Uninterruptibles.sleepUninterruptibly(10, TimeUnit.SECONDS);
-         }
+         awaitConsistency();
 
          container = view.getBlobStore().list(containerName);
          // we should still have only the directory under root
@@ -245,9 +247,7 @@ public class BaseContainerIntegrationTest extends BaseBlobStoreIntegrationTest {
          assert !view.getBlobStore().directoryExists(containerName, directory + "/" + directory);
          view.getBlobStore().createDirectory(containerName, directory + "/" + directory);
 
-         if (view.getConsistencyModel() == ConsistencyModel.EVENTUAL) {
-            Uninterruptibles.sleepUninterruptibly(10, TimeUnit.SECONDS);
-         }
+         awaitConsistency();
 
          assert view.getBlobStore().directoryExists(containerName, directory + "/" + directory);
 
@@ -296,7 +296,7 @@ public class BaseContainerIntegrationTest extends BaseBlobStoreIntegrationTest {
          String prefix = "containerprefix";
          addTenObjectsUnderPrefix(containerName, prefix);
          add15UnderRoot(containerName);
-
+         awaitConsistency();
          PageSet<? extends StorageMetadata> container = view.getBlobStore().list(containerName, inDirectory(prefix));
          assert container.getNextMarker() == null;
          assertEquals(container.size(), 10);
@@ -408,9 +408,7 @@ public class BaseContainerIntegrationTest extends BaseBlobStoreIntegrationTest {
       try {
          addBlobToContainer(containerName, "test");
          view.getBlobStore().deleteContainer(containerName);
-         if (view.getConsistencyModel() == ConsistencyModel.EVENTUAL) {
-            Uninterruptibles.sleepUninterruptibly(10, TimeUnit.SECONDS);
-         }
+         awaitConsistency();
          assertNotExists(containerName);
       } finally {
          recycleContainerAndAddToPool(containerName);
@@ -422,9 +420,7 @@ public class BaseContainerIntegrationTest extends BaseBlobStoreIntegrationTest {
       final String containerName = getContainerName();
       try {
          view.getBlobStore().deleteContainer(containerName);
-         if (view.getConsistencyModel() == ConsistencyModel.EVENTUAL) {
-            Uninterruptibles.sleepUninterruptibly(10, TimeUnit.SECONDS);
-         }
+         awaitConsistency();
          assertNotExists(containerName);
       } finally {
          // this container is now deleted, so we can't reuse it directly
@@ -437,13 +433,9 @@ public class BaseContainerIntegrationTest extends BaseBlobStoreIntegrationTest {
       String containerName = getContainerName();
       try {
          addBlobToContainer(containerName, "test");
-         if (view.getConsistencyModel() == ConsistencyModel.EVENTUAL) {
-            Uninterruptibles.sleepUninterruptibly(10, TimeUnit.SECONDS);
-         }
+         awaitConsistency();
          assertFalse(view.getBlobStore().deleteContainerIfEmpty(containerName));
-         if (view.getConsistencyModel() == ConsistencyModel.EVENTUAL) {
-            Uninterruptibles.sleepUninterruptibly(10, TimeUnit.SECONDS);
-         }
+         awaitConsistency();
          assertTrue(view.getBlobStore().containerExists(containerName));
       } finally {
          recycleContainerAndAddToPool(containerName);
@@ -455,9 +447,7 @@ public class BaseContainerIntegrationTest extends BaseBlobStoreIntegrationTest {
       final String containerName = getContainerName();
       try {
          assertTrue(view.getBlobStore().deleteContainerIfEmpty(containerName));
-         if (view.getConsistencyModel() == ConsistencyModel.EVENTUAL) {
-            Uninterruptibles.sleepUninterruptibly(10, TimeUnit.SECONDS);
-         }
+         awaitConsistency();
          assertNotExists(containerName);
          // verify that true is returned even if the container does not exist
          assertTrue(view.getBlobStore().deleteContainerIfEmpty(containerName));
@@ -472,9 +462,7 @@ public class BaseContainerIntegrationTest extends BaseBlobStoreIntegrationTest {
       String containerName = getContainerName();
       try {
          add15UnderRoot(containerName);
-         if (view.getConsistencyModel() == ConsistencyModel.EVENTUAL) {
-            Uninterruptibles.sleepUninterruptibly(10, TimeUnit.SECONDS);
-         }
+         awaitConsistency();
          Set<? extends StorageMetadata> container = view.getBlobStore().list(containerName);
          assertEquals(container.size(), 15);
       } finally {
@@ -556,6 +544,12 @@ public class BaseContainerIntegrationTest extends BaseBlobStoreIntegrationTest {
       for (int i = 0; i < 10; i++) {
          view.getBlobStore().putBlob(containerName,
                view.getBlobStore().blobBuilder(prefix + "/" + i).payload(i + "content").build());
+      }
+   }
+
+   protected void awaitConsistency() {
+      if (view.getConsistencyModel() == ConsistencyModel.EVENTUAL) {
+         Uninterruptibles.sleepUninterruptibly(10, TimeUnit.SECONDS);
       }
    }
 }
