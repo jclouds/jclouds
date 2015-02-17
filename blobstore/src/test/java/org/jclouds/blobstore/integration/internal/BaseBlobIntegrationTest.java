@@ -434,13 +434,9 @@ public class BaseBlobIntegrationTest extends BaseBlobStoreIntegrationTest {
       String container = getContainerName();
       try {
          addBlobToContainer(container, name, name, MediaType.TEXT_PLAIN);
-         if (view.getConsistencyModel() == ConsistencyModel.EVENTUAL) {
-            Uninterruptibles.sleepUninterruptibly(10, TimeUnit.SECONDS);
-         }
+         awaitConsistency();
          view.getBlobStore().removeBlob(container, name);
-         if (view.getConsistencyModel() == ConsistencyModel.EVENTUAL) {
-            Uninterruptibles.sleepUninterruptibly(10, TimeUnit.SECONDS);
-         }
+         awaitConsistency();
          assertContainerEmptyDeleting(container, name);
       } finally {
          returnContainer(container);
@@ -480,6 +476,7 @@ public class BaseBlobIntegrationTest extends BaseBlobStoreIntegrationTest {
       try {
          addBlobToContainer(container, name, name, MediaType.TEXT_PLAIN);
          addBlobToContainer(container, name2, name2, MediaType.TEXT_PLAIN);
+         awaitConsistency();
          view.getBlobStore().removeBlobs(container, ImmutableSet.of(name, name2));
          assertContainerEmptyDeleting(container, name);
       } finally {
@@ -532,9 +529,7 @@ public class BaseBlobIntegrationTest extends BaseBlobStoreIntegrationTest {
       try {
 
          assertNotNull(view.getBlobStore().putBlob(container, blob));
-         if (view.getConsistencyModel() == ConsistencyModel.EVENTUAL) {
-            Uninterruptibles.sleepUninterruptibly(10, TimeUnit.SECONDS);
-         }
+         awaitConsistency();
 
          blob = view.getBlobStore().getBlob(container, blob.getMetadata().getName());
          String returnedString = getContentAsStringOrNullAndClose(blob);
@@ -725,5 +720,11 @@ public class BaseBlobIntegrationTest extends BaseBlobStoreIntegrationTest {
    /** @return ByteSource containing a random length 0..length of random bytes. */
    private static ByteSource createTestInput(int length) {
       return TestUtils.randomByteSource().slice(0, new Random().nextInt(length));
+   }
+
+   protected void awaitConsistency() {
+      if (view.getConsistencyModel() == ConsistencyModel.EVENTUAL) {
+         Uninterruptibles.sleepUninterruptibly(10, TimeUnit.SECONDS);
+      }
    }
 }
