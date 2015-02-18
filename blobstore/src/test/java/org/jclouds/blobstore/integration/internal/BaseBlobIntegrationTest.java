@@ -51,6 +51,7 @@ import org.jclouds.blobstore.BlobStore;
 import org.jclouds.blobstore.ContainerNotFoundException;
 import org.jclouds.blobstore.attr.ConsistencyModel;
 import org.jclouds.blobstore.domain.Blob;
+import org.jclouds.blobstore.domain.BlobAccess;
 import org.jclouds.blobstore.domain.BlobBuilder.PayloadBlobBuilder;
 import org.jclouds.blobstore.domain.BlobMetadata;
 import org.jclouds.blobstore.domain.PageSet;
@@ -576,6 +577,26 @@ public class BaseBlobIntegrationTest extends BaseBlobStoreIntegrationTest {
       ByteSource byteSource = TestUtils.randomByteSource().slice(0, length);
       Payload payload = new InputStreamPayload(byteSource.openStream());
       testPut(payload, new ByteSourcePayload(byteSource), length, new PutOptions().multipart(true));
+   }
+
+   @Test(groups = { "integration", "live" })
+   public void testSetBlobAccess() throws Exception {
+      BlobStore blobStore = view.getBlobStore();
+      String containerName = getContainerName();
+      String blobName = "set-access-blob-name";
+      try {
+         addBlobToContainer(containerName, blobName, blobName, MediaType.TEXT_PLAIN);
+
+         assertThat(blobStore.getBlobAccess(containerName, blobName)).isEqualTo(BlobAccess.PRIVATE);
+
+         blobStore.setBlobAccess(containerName, blobName, BlobAccess.PUBLIC_READ);
+         assertThat(blobStore.getBlobAccess(containerName, blobName)).isEqualTo(BlobAccess.PUBLIC_READ);
+
+         blobStore.setBlobAccess(containerName, blobName, BlobAccess.PRIVATE);
+         assertThat(blobStore.getBlobAccess(containerName, blobName)).isEqualTo(BlobAccess.PRIVATE);
+      } finally {
+         returnContainer(containerName);
+      }
    }
 
    protected void checkUserMetadata(Map<String, String> userMetadata1, Map<String, String> userMetadata2) {

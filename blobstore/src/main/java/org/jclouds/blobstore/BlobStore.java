@@ -21,6 +21,7 @@ import java.util.Set;
 import com.google.common.annotations.Beta;
 
 import org.jclouds.blobstore.domain.Blob;
+import org.jclouds.blobstore.domain.BlobAccess;
 import org.jclouds.blobstore.domain.BlobBuilder;
 import org.jclouds.blobstore.domain.BlobMetadata;
 import org.jclouds.blobstore.domain.ContainerAccess;
@@ -295,6 +296,12 @@ public interface BlobStore {
     *            if the container doesn't exist
     */
    void removeBlobs(String container, Iterable<String> names);
+
+   @Beta
+   BlobAccess getBlobAccess(String container, String name);
+
+   @Beta
+   void setBlobAccess(String container, String name, BlobAccess access);
 
    /**
     * @return a count of all blobs in the container, excluding directory markers
