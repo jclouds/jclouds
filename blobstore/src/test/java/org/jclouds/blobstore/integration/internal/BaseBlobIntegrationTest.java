@@ -394,6 +394,7 @@ public class BaseBlobIntegrationTest extends BaseBlobStoreIntegrationTest {
    private String addObjectAndValidateContent(String sourcecontainer, String sourceKey) throws InterruptedException {
       String eTag = addBlobToContainer(sourcecontainer, sourceKey);
       validateContent(sourcecontainer, sourceKey);
+      awaitConsistency();
       return eTag;
    }
 
@@ -504,6 +505,8 @@ public class BaseBlobIntegrationTest extends BaseBlobStoreIntegrationTest {
       String container = getContainerName();
       try {
          assertNotNull(view.getBlobStore().putBlob(container, blob));
+         awaitConsistency();
+
          blob = view.getBlobStore().getBlob(container, blob.getMetadata().getName());
          validateMetadata(blob.getMetadata(), container, name);
          checkContentMetadata(blob);
