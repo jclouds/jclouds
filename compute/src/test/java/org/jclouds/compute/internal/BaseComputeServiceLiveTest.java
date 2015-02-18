@@ -112,6 +112,7 @@ import com.google.common.net.HostAndPort;
 import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.ListeningExecutorService;
+import com.google.common.util.concurrent.Uninterruptibles;
 import com.google.inject.Key;
 import com.google.inject.Module;
 import com.google.inject.name.Names;
@@ -650,6 +651,7 @@ public abstract class BaseComputeServiceLiveTest extends BaseComputeServiceConte
       int toDestroy = refreshNodes().size();
       Set<? extends NodeMetadata> destroyed = client.destroyNodesMatching(inGroup(group));
       assertEquals(toDestroy, destroyed.size());
+      Uninterruptibles.sleepUninterruptibly(10, TimeUnit.SECONDS);
       for (NodeMetadata node : filter(client.listNodesDetailsMatching(all()), inGroup(group))) {
          assert node.getStatus() == Status.TERMINATED : node;
          assert view.utils().credentialStore().get("node#" + node.getId()) == null : "credential should have been null for "

@@ -16,16 +16,17 @@
  */
 package org.jclouds.openstack.nova.v2_0.predicates;
 
-import com.google.common.base.Predicate;
-import org.jclouds.openstack.nova.v2_0.domain.Server;
-import org.jclouds.openstack.nova.v2_0.features.ServerApi;
-
 import static com.google.common.base.Preconditions.checkNotNull;
 import static java.util.concurrent.TimeUnit.SECONDS;
 import static org.jclouds.openstack.nova.v2_0.domain.Server.Status;
 import static org.jclouds.openstack.nova.v2_0.domain.Server.Status.ACTIVE;
 import static org.jclouds.openstack.nova.v2_0.domain.Server.Status.SHUTOFF;
 import static org.jclouds.util.Predicates2.retry;
+
+import org.jclouds.openstack.nova.v2_0.domain.Server;
+import org.jclouds.openstack.nova.v2_0.features.ServerApi;
+
+import com.google.common.base.Predicate;
 
 /**
  * This class tests to see if a Server or ServerCreated has reached a desired status. This class is most useful when
@@ -52,7 +53,7 @@ import static org.jclouds.util.Predicates2.retry;
  * </pre>
  */
 public class ServerPredicates {
-   private static final int TEN_MINUTES = 600;
+   private static final int THIRTY_MINUTES = 600 * 3;
    private static final int FIVE_SECONDS = 5;
 
    /**
@@ -62,7 +63,7 @@ public class ServerPredicates {
     * @return Predicate that will check the status every 5 seconds for a maximum of 10 minutes.
     */
    public static Predicate<String> awaitActive(ServerApi serverApi) {
-      return awaitStatus(serverApi, ACTIVE, TEN_MINUTES, FIVE_SECONDS);
+      return awaitStatus(serverApi, ACTIVE, THIRTY_MINUTES, FIVE_SECONDS);
    }
 
    /**
@@ -72,7 +73,7 @@ public class ServerPredicates {
     * @return Predicate that will check the status every 5 seconds for a maximum of 10 minutes.
     */
    public static Predicate<String> awaitShutoff(ServerApi serverApi) {
-      return awaitStatus(serverApi, SHUTOFF, TEN_MINUTES, FIVE_SECONDS);
+      return awaitStatus(serverApi, SHUTOFF, THIRTY_MINUTES, FIVE_SECONDS);
    }
 
    /**

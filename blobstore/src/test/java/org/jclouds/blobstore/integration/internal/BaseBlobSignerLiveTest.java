@@ -24,6 +24,7 @@ import static org.testng.Assert.fail;
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 
+import org.jclouds.blobstore.attr.ConsistencyModel;
 import org.jclouds.blobstore.domain.Blob;
 import org.jclouds.http.HttpRequest;
 import org.jclouds.rest.AuthorizationException;
@@ -169,6 +170,7 @@ public class BaseBlobSignerLiveTest extends BaseBlobStoreIntegrationTest {
       String container = getContainerName();
       try {
          view.getBlobStore().putBlob(container, blob);
+         awaitConsistency();
          assertConsistencyAwareContainerSize(container, 1);
          HttpRequest request = view.getSigner().signRemoveBlob(container, name);
          assertEquals(request.getFilters().size(), 0);
@@ -176,6 +178,12 @@ public class BaseBlobSignerLiveTest extends BaseBlobStoreIntegrationTest {
          assert !view.getBlobStore().blobExists(container, name);
       } finally {
          returnContainer(container);
+      }
+   }
+
+   protected void awaitConsistency() {
+      if (view.getConsistencyModel() == ConsistencyModel.EVENTUAL) {
+         Uninterruptibles.sleepUninterruptibly(10, TimeUnit.SECONDS);
       }
    }
 }
