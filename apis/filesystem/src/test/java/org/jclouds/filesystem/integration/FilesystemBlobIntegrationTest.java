@@ -27,6 +27,7 @@ import org.jclouds.blobstore.integration.internal.BaseBlobStoreIntegrationTest;
 import org.jclouds.filesystem.reference.FilesystemConstants;
 import org.jclouds.filesystem.utils.TestUtils;
 import org.testng.annotations.Test;
+import org.testng.SkipException;
 
 @Test(groups = { "integration" }, singleThreaded = true,  testName = "blobstore.FilesystemBlobIntegrationTest")
 public class FilesystemBlobIntegrationTest extends BaseBlobIntegrationTest {
@@ -86,4 +87,8 @@ public class FilesystemBlobIntegrationTest extends BaseBlobIntegrationTest {
       }
    }
 
+   @Override
+   public void testSetBlobAccess() throws Exception {
+      throw new SkipException("Intentionally not implemented for the transient provider");
+   }
 }

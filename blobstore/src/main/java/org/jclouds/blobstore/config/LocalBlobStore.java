@@ -45,6 +45,7 @@ import org.jclouds.blobstore.ContainerNotFoundException;
 import org.jclouds.blobstore.KeyNotFoundException;
 import org.jclouds.blobstore.LocalStorageStrategy;
 import org.jclouds.blobstore.domain.Blob;
+import org.jclouds.blobstore.domain.BlobAccess;
 import org.jclouds.blobstore.domain.BlobBuilder;
 import org.jclouds.blobstore.domain.BlobMetadata;
 import org.jclouds.blobstore.domain.ContainerAccess;
@@ -342,6 +343,16 @@ public final class LocalBlobStore implements BlobStore {
       for (String name : names) {
          removeBlob(container, name);
       }
+   }
+
+   @Override
+   public BlobAccess getBlobAccess(String container, String name) {
+      throw new UnsupportedOperationException("not implemented");
+   }
+
+   @Override
+   public void setBlobAccess(String container, String name, BlobAccess access) {
+      throw new UnsupportedOperationException("not implemented");
    }
 
    @Override
