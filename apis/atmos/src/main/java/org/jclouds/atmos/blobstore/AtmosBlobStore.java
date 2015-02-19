@@ -35,6 +35,7 @@ import org.jclouds.atmos.options.ListOptions;
 import org.jclouds.atmos.util.AtmosUtils;
 import org.jclouds.blobstore.BlobStoreContext;
 import org.jclouds.blobstore.domain.Blob;
+import org.jclouds.blobstore.domain.BlobAccess;
 import org.jclouds.blobstore.domain.BlobMetadata;
 import org.jclouds.blobstore.domain.ContainerAccess;
 import org.jclouds.blobstore.domain.PageSet;
@@ -252,6 +253,26 @@ public class AtmosBlobStore extends BaseBlobStore {
    @Override
    public void removeBlob(String container, String key) {
       sync.deletePath(container + "/" + key);
+   }
+
+   @Override
+   public BlobAccess getBlobAccess(String container, String key) {
+      if (sync.isPublic(container + "/" + key)) {
+         return BlobAccess.PUBLIC_READ;
+      } else {
+         return BlobAccess.PRIVATE;
+      }
+   }
+
+   @Override
+   public void setBlobAccess(String container, String key, BlobAccess access) {
+      org.jclouds.atmos.options.PutOptions options = new org.jclouds.atmos.options.PutOptions();
+      if (access == BlobAccess.PUBLIC_READ) {
+         options.publicRead();
+      } else {
+         options.publicNone();
+      }
+      sync.setGroupAcl(container + "/" + key, options);
    }
 
    @Override
