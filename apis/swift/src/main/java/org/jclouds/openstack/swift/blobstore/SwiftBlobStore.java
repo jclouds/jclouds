@@ -30,6 +30,7 @@ import javax.inject.Singleton;
 
 import org.jclouds.blobstore.BlobStoreContext;
 import org.jclouds.blobstore.domain.Blob;
+import org.jclouds.blobstore.domain.BlobAccess;
 import org.jclouds.blobstore.domain.BlobMetadata;
 import org.jclouds.blobstore.domain.ContainerAccess;
 import org.jclouds.blobstore.domain.PageSet;
@@ -323,6 +324,16 @@ public class SwiftBlobStore extends BaseBlobStore {
 
    @Override
    public void setContainerAccess(String container, ContainerAccess access) {
+      throw new UnsupportedOperationException("not implemented");
+   }
+
+   @Override
+   public BlobAccess getBlobAccess(String container, String name) {
+      throw new UnsupportedOperationException("not implemented");
+   }
+
+   @Override
+   public void setBlobAccess(String containe, String namer, BlobAccess access) {
       throw new UnsupportedOperationException("not implemented");
    }
 }

@@ -73,4 +73,9 @@ public class SwiftBlobIntegrationLiveTest extends BaseBlobIntegrationTest {
       assert blob.getPayload().getContentMetadata().getContentLanguage() == null;
       assert blob.getMetadata().getContentMetadata().getContentLanguage() == null;
    }
+
+   @Override
+   public void testSetBlobAccess() throws Exception {
+      throw new SkipException("unsupported in swift");
+   }
 }

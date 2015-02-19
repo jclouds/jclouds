@@ -166,6 +166,11 @@ public class SwiftBlobIntegrationLiveTest extends BaseBlobIntegrationTest {
    }
 
    @Override
+   public void testSetBlobAccess() throws Exception {
+      throw new SkipException("unsupported in swift");
+   }
+
+   @Override
    protected int getIncorrectContentMD5StatusCode() {
       return 422;
    }

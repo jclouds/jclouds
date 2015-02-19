@@ -32,6 +32,7 @@ import javax.inject.Inject;
 import org.jclouds.blobstore.BlobStore;
 import org.jclouds.blobstore.BlobStoreContext;
 import org.jclouds.blobstore.domain.Blob;
+import org.jclouds.blobstore.domain.BlobAccess;
 import org.jclouds.blobstore.domain.BlobBuilder;
 import org.jclouds.blobstore.domain.BlobMetadata;
 import org.jclouds.blobstore.domain.ContainerAccess;
@@ -269,6 +270,16 @@ public class RegionScopedSwiftBlobStore implements BlobStore {
          }
          bulkApi.bulkDelete(builder.build());
       }
+   }
+
+   @Override
+   public BlobAccess getBlobAccess(String container, String name) {
+      throw new UnsupportedOperationException("unsupported in swift");
+   }
+
+   @Override
+   public void setBlobAccess(String container, String name, BlobAccess access) {
+      throw new UnsupportedOperationException("unsupported in swift");
    }
 
    @Override
