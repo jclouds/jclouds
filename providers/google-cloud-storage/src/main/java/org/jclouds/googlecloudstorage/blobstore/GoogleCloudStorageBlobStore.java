@@ -28,6 +28,7 @@ import javax.inject.Inject;
 
 import org.jclouds.blobstore.BlobStoreContext;
 import org.jclouds.blobstore.domain.Blob;
+import org.jclouds.blobstore.domain.BlobAccess;
 import org.jclouds.blobstore.domain.BlobMetadata;
 import org.jclouds.blobstore.domain.ContainerAccess;
 import org.jclouds.blobstore.domain.MutableBlobMetadata;
@@ -261,6 +262,30 @@ public final class GoogleCloudStorageBlobStore extends BaseBlobStore {
          throw Throwables.propagate(uee);
       }
       api.getObjectApi().deleteObject(container, urlName);
+   }
+
+   @Override
+   public BlobAccess getBlobAccess(String container, String name) {
+      ObjectAccessControls controls = api.getObjectAccessControlsApi().getObjectAccessControls(container, name, "allUsers");
+      if (controls != null && controls.role() == DomainResourceReferences.ObjectRole.READER) {
+         return BlobAccess.PUBLIC_READ;
+      } else {
+         return BlobAccess.PRIVATE;
+      }
+   }
+
+   @Override
+   public void setBlobAccess(String container, String name, BlobAccess access) {
+      if (access == BlobAccess.PUBLIC_READ) {
+         ObjectAccessControls controls = ObjectAccessControls.builder()
+               .entity("allUsers")
+               .bucket(container)
+               .role(READER)
+               .build();
+         api.getObjectApi().patchObject(container, name, new ObjectTemplate().addAcl(controls));
+      } else {
+         api.getObjectAccessControlsApi().deleteObjectAccessControls(container, name, "allUsers");
+      }
    }
 
    @Override
