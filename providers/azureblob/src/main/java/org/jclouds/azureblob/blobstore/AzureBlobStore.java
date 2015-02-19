@@ -41,6 +41,7 @@ import org.jclouds.azureblob.domain.PublicAccess;
 import org.jclouds.azureblob.options.ListBlobsOptions;
 import org.jclouds.blobstore.BlobStoreContext;
 import org.jclouds.blobstore.domain.Blob;
+import org.jclouds.blobstore.domain.BlobAccess;
 import org.jclouds.blobstore.domain.BlobMetadata;
 import org.jclouds.blobstore.domain.ContainerAccess;
 import org.jclouds.blobstore.domain.PageSet;
@@ -303,5 +304,15 @@ public class AzureBlobStore extends BaseBlobStore {
          publicAccess = PublicAccess.PRIVATE;
       }
       sync.setPublicAccessForContainer(container, publicAccess);
+   }
+
+   @Override
+   public BlobAccess getBlobAccess(String container, String key) {
+      throw new UnsupportedOperationException("unsupported in Azure");
+   }
+
+   @Override
+   public void setBlobAccess(String container, String key, BlobAccess access) {
+      throw new UnsupportedOperationException("unsupported in Azure");
    }
 }

@@ -63,6 +63,11 @@ public class AzureBlobIntegrationLiveTest extends BaseBlobIntegrationTest {
       super.testPutObjectStream();
    }
 
+   @Test(groups = { "integration", "live" })
+   public void testSetBlobAccess() throws Exception {
+      throw new SkipException("unsupported in Azure");
+   }
+
    // according to docs, content disposition is not persisted
    // http://msdn.microsoft.com/en-us/library/dd179440.aspx
    @Override
