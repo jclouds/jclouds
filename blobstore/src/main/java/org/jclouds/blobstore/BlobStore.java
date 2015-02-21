@@ -16,6 +16,7 @@
  */
 package org.jclouds.blobstore;
 
+import java.util.List;
 import java.util.Set;
 
 import com.google.common.annotations.Beta;
@@ -25,6 +26,8 @@ import org.jclouds.blobstore.domain.BlobAccess;
 import org.jclouds.blobstore.domain.BlobBuilder;
 import org.jclouds.blobstore.domain.BlobMetadata;
 import org.jclouds.blobstore.domain.ContainerAccess;
+import org.jclouds.blobstore.domain.MultipartPart;
+import org.jclouds.blobstore.domain.MultipartUpload;
 import org.jclouds.blobstore.domain.PageSet;
 import org.jclouds.blobstore.domain.StorageMetadata;
 import org.jclouds.blobstore.options.CopyOptions;
@@ -33,6 +36,7 @@ import org.jclouds.blobstore.options.GetOptions;
 import org.jclouds.blobstore.options.ListContainerOptions;
 import org.jclouds.blobstore.options.PutOptions;
 import org.jclouds.domain.Location;
+import org.jclouds.io.Payload;
 import org.jclouds.javax.annotation.Nullable;
 
 /**
@@ -328,4 +332,28 @@ public interface BlobStore {
     */
    long countBlobs(String container, ListContainerOptions options);
 
+   @Beta
+   MultipartUpload initiateMultipartUpload(String container, BlobMetadata blob);
+
+   @Beta
+   // TODO: take parts?
+   void abortMultipartUpload(MultipartUpload mpu);
+
+   @Beta
+   String completeMultipartUpload(MultipartUpload mpu, List<MultipartPart> parts);
+
+   @Beta
+   MultipartPart uploadMultipartPart(MultipartUpload mpu, int partNumber, Payload payload);
+
+   @Beta
+   List<MultipartPart> listMultipartUpload(MultipartUpload mpu);
+
+   @Beta
+   long getMinimumMultipartPartSize();
+
+   @Beta
+   long getMaximumMultipartPartSize();
+
+   @Beta
+   int getMaximumNumberOfParts();
 }

@@ -19,6 +19,7 @@ package org.jclouds.blobstore.util;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
+import java.util.List;
 import java.util.Set;
 
 import com.google.common.collect.ForwardingObject;
@@ -30,6 +31,8 @@ import org.jclouds.blobstore.domain.BlobAccess;
 import org.jclouds.blobstore.domain.BlobBuilder;
 import org.jclouds.blobstore.domain.BlobMetadata;
 import org.jclouds.blobstore.domain.ContainerAccess;
+import org.jclouds.blobstore.domain.MultipartPart;
+import org.jclouds.blobstore.domain.MultipartUpload;
 import org.jclouds.blobstore.domain.PageSet;
 import org.jclouds.blobstore.domain.StorageMetadata;
 import org.jclouds.blobstore.options.CopyOptions;
@@ -38,6 +41,7 @@ import org.jclouds.blobstore.options.GetOptions;
 import org.jclouds.blobstore.options.ListContainerOptions;
 import org.jclouds.blobstore.options.PutOptions;
 import org.jclouds.domain.Location;
+import org.jclouds.io.Payload;
 
 public abstract class ForwardingBlobStore extends ForwardingObject
       implements BlobStore {
@@ -213,5 +217,45 @@ public abstract class ForwardingBlobStore extends ForwardingObject
    @Override
    public long countBlobs(String container, ListContainerOptions options) {
       return delegate().countBlobs(container, options);
+   }
+
+   @Override
+   public MultipartUpload initiateMultipartUpload(String container, BlobMetadata blobMetadata) {
+      return delegate().initiateMultipartUpload(container, blobMetadata);
+   }
+
+   @Override
+   public void abortMultipartUpload(MultipartUpload mpu) {
+      delegate().abortMultipartUpload(mpu);
+   }
+
+   @Override
+   public String completeMultipartUpload(MultipartUpload mpu, List<MultipartPart> parts) {
+      return delegate().completeMultipartUpload(mpu, parts);
+   }
+
+   @Override
+   public MultipartPart uploadMultipartPart(MultipartUpload mpu, int partNumber, Payload payload) {
+      return delegate().uploadMultipartPart(mpu, partNumber, payload);
+   }
+
+   @Override
+   public List<MultipartPart> listMultipartUpload(MultipartUpload mpu) {
+      return delegate().listMultipartUpload(mpu);
+   }
+
+   @Override
+   public long getMinimumMultipartPartSize() {
+      return delegate().getMinimumMultipartPartSize();
+   }
+
+   @Override
+   public long getMaximumMultipartPartSize() {
+      return delegate().getMaximumMultipartPartSize();
+   }
+
+   @Override
+   public int getMaximumNumberOfParts() {
+      return delegate().getMaximumNumberOfParts();
    }
 }

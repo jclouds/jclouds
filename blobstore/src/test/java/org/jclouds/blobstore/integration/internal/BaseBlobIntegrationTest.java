@@ -37,6 +37,7 @@ import java.io.InputStream;
 import java.security.NoSuchAlgorithmException;
 import java.security.cert.CertificateException;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import java.util.concurrent.Callable;
@@ -54,6 +55,8 @@ import org.jclouds.blobstore.domain.Blob;
 import org.jclouds.blobstore.domain.BlobAccess;
 import org.jclouds.blobstore.domain.BlobBuilder.PayloadBlobBuilder;
 import org.jclouds.blobstore.domain.BlobMetadata;
+import org.jclouds.blobstore.domain.MultipartPart;
+import org.jclouds.blobstore.domain.MultipartUpload;
 import org.jclouds.blobstore.domain.PageSet;
 import org.jclouds.blobstore.domain.StorageMetadata;
 import org.jclouds.blobstore.domain.StorageType;
@@ -63,6 +66,7 @@ import org.jclouds.crypto.Crypto;
 import org.jclouds.encryption.internal.JCECrypto;
 import org.jclouds.http.HttpResponseException;
 import org.jclouds.io.ContentMetadataBuilder;
+import org.jclouds.io.ByteStreams2;
 import org.jclouds.io.Payload;
 import org.jclouds.io.Payloads;
 import org.jclouds.io.payloads.ByteSourcePayload;
@@ -79,6 +83,7 @@ import org.testng.annotations.Test;
 import com.google.common.base.Charsets;
 import com.google.common.base.Predicate;
 import com.google.common.base.Throwables;
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
@@ -813,6 +818,99 @@ public class BaseBlobIntegrationTest extends BaseBlobStoreIntegrationTest {
       } finally {
          returnContainer(toContainer);
          returnContainer(fromContainer);
+      }
+   }
+
+   @Test(groups = { "integration", "live" })
+   public void testMultipartUploadNoPartsAbort() throws Exception {
+      BlobStore blobStore = view.getBlobStore();
+      String container = getContainerName();
+      try {
+         String name = "blob-name";
+         Blob blob = blobStore.blobBuilder(name).build();
+         MultipartUpload mpu = blobStore.initiateMultipartUpload(container, blob.getMetadata());
+
+         List<MultipartPart> parts = blobStore.listMultipartUpload(mpu);
+         assertThat(parts).isEqualTo(ImmutableList.of());
+
+         blobStore.abortMultipartUpload(mpu);
+
+         blob = blobStore.getBlob(container, name);
+         assertThat(blob).isNull();
+      } finally {
+         returnContainer(container);
+      }
+   }
+
+   @Test(groups = { "integration", "live" })
+   public void testMultipartUploadSinglePart() throws Exception {
+      BlobStore blobStore = view.getBlobStore();
+      String container = getContainerName();
+      try {
+         String name = "blob-name";
+         PayloadBlobBuilder blobBuilder = blobStore.blobBuilder(name)
+               .userMetadata(ImmutableMap.of("key1", "value1", "key2", "value2"))
+               // TODO: fake payload to add content metadata
+               .payload(new byte[0]);
+         addContentMetadata(blobBuilder);
+         Blob blob = blobBuilder.build();
+         MultipartUpload mpu = blobStore.initiateMultipartUpload(container, blob.getMetadata());
+
+         ByteSource byteSource = TestUtils.randomByteSource().slice(0, 1);
+         Payload payload = Payloads.newByteSourcePayload(byteSource);
+         payload.getContentMetadata().setContentLength(byteSource.size());
+         MultipartPart part = blobStore.uploadMultipartPart(mpu, 1, payload);
+
+         List<MultipartPart> parts = blobStore.listMultipartUpload(mpu);
+         assertThat(parts).isEqualTo(ImmutableList.of(part));
+
+         blobStore.completeMultipartUpload(mpu, ImmutableList.of(part));
+
+         Blob newBlob = blobStore.getBlob(container, name);
+         assertThat(newBlob).isNotNull();
+         assertThat(ByteStreams2.toByteArrayAndClose(newBlob.getPayload().openStream())).isEqualTo(byteSource.read());
+         checkContentMetadata(newBlob);
+         checkUserMetadata(newBlob.getMetadata().getUserMetadata(), blob.getMetadata().getUserMetadata());
+      } finally {
+         returnContainer(container);
+      }
+   }
+
+   @Test(groups = { "integration", "live" })
+   public void testMultipartUploadMultipleParts() throws Exception {
+      BlobStore blobStore = view.getBlobStore();
+      String container = getContainerName();
+      try {
+         String name = "blob-name";
+         PayloadBlobBuilder blobBuilder = blobStore.blobBuilder(name)
+               .userMetadata(ImmutableMap.of("key1", "value1", "key2", "value2"))
+               // TODO: fake payload to add content metadata
+               .payload(new byte[0]);
+         addContentMetadata(blobBuilder);
+         Blob blob = blobBuilder.build();
+         MultipartUpload mpu = blobStore.initiateMultipartUpload(container, blob.getMetadata());
+
+         ByteSource byteSource = TestUtils.randomByteSource().slice(0, blobStore.getMinimumMultipartPartSize() + 1);
+         ByteSource byteSource1 = byteSource.slice(0, blobStore.getMinimumMultipartPartSize());
+         ByteSource byteSource2 = byteSource.slice(blobStore.getMinimumMultipartPartSize(), 1);
+         Payload payload1 = Payloads.newByteSourcePayload(byteSource1);
+         Payload payload2 = Payloads.newByteSourcePayload(byteSource2);
+         payload1.getContentMetadata().setContentLength(byteSource1.size());
+         payload2.getContentMetadata().setContentLength(byteSource2.size());
+         MultipartPart part1 = blobStore.uploadMultipartPart(mpu, 1, payload1);
+         MultipartPart part2 = blobStore.uploadMultipartPart(mpu, 2, payload2);
+
+         List<MultipartPart> parts = blobStore.listMultipartUpload(mpu);
+         assertThat(parts).isEqualTo(ImmutableList.of(part1, part2));
+
+         blobStore.completeMultipartUpload(mpu, ImmutableList.of(part1, part2));
+
+         Blob newBlob = blobStore.getBlob(container, name);
+         assertThat(ByteStreams2.toByteArrayAndClose(newBlob.getPayload().openStream())).isEqualTo(byteSource.read());
+         checkContentMetadata(newBlob);
+         checkUserMetadata(newBlob.getMetadata().getUserMetadata(), blob.getMetadata().getUserMetadata());
+      } finally {
+         returnContainer(container);
       }
    }
 

@@ -17,17 +17,23 @@
 
 package org.jclouds.blobstore.util;
 
+import java.util.List;
+
 import org.jclouds.blobstore.BlobStore;
 import org.jclouds.blobstore.BlobStoreContext;
 import org.jclouds.blobstore.domain.Blob;
 import org.jclouds.blobstore.domain.BlobAccess;
 import org.jclouds.blobstore.domain.BlobBuilder;
+import org.jclouds.blobstore.domain.BlobMetadata;
 import org.jclouds.blobstore.domain.ContainerAccess;
+import org.jclouds.blobstore.domain.MultipartPart;
+import org.jclouds.blobstore.domain.MultipartUpload;
 import org.jclouds.blobstore.options.CopyOptions;
 import org.jclouds.blobstore.options.CreateContainerOptions;
 import org.jclouds.blobstore.options.ListContainerOptions;
 import org.jclouds.blobstore.options.PutOptions;
 import org.jclouds.domain.Location;
+import org.jclouds.io.Payload;
 
 public final class ReadOnlyBlobStore extends ForwardingBlobStore {
    public static BlobStore newReadOnlyBlobStore(BlobStore blobStore) {
@@ -126,6 +132,31 @@ public final class ReadOnlyBlobStore extends ForwardingBlobStore {
    @Override
    public void setBlobAccess(String container, String name,
          BlobAccess access) {
+      throw new UnsupportedOperationException("Read-only BlobStore");
+   }
+
+   @Override
+   public MultipartUpload initiateMultipartUpload(String container, BlobMetadata blobMetadata) {
+      throw new UnsupportedOperationException("Read-only BlobStore");
+   }
+
+   @Override
+   public void abortMultipartUpload(MultipartUpload mpu) {
+      throw new UnsupportedOperationException("Read-only BlobStore");
+   }
+
+   @Override
+   public String completeMultipartUpload(MultipartUpload mpu, List<MultipartPart> parts) {
+      throw new UnsupportedOperationException("Read-only BlobStore");
+   }
+
+   @Override
+   public MultipartPart uploadMultipartPart(MultipartUpload mpu, int partNumber, Payload payload) {
+      throw new UnsupportedOperationException("Read-only BlobStore");
+   }
+
+   @Override
+   public List<MultipartPart> listMultipartUpload(MultipartUpload mpu) {
       throw new UnsupportedOperationException("Read-only BlobStore");
    }
 }
