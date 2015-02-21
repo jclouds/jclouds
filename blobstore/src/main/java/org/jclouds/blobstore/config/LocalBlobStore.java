@@ -408,7 +408,7 @@ public final class LocalBlobStore implements BlobStore {
       }
 
       public boolean apply(StorageMetadata metadata) {
-         if (prefix == null)
+         if (prefix == null || prefix.isEmpty())
             return metadata.getName().indexOf(delimiter) == -1;
          // ensure we don't accidentally append twice
          String toMatch = prefix.endsWith("/") ? prefix : prefix + delimiter;

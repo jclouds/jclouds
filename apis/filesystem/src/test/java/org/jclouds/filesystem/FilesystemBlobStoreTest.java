@@ -174,6 +174,21 @@ public class FilesystemBlobStoreTest {
         checkForContainerContent(CONTAINER_NAME, blobsExpected);
     }
 
+    @Test
+    public void testList_RootNonRecursive() throws IOException {
+        blobStore.createContainerInLocation(null, CONTAINER_NAME);
+        // Testing list for an empty container
+        checkForContainerContent(CONTAINER_NAME, null);
+
+        TestUtils.createBlobsInContainer(CONTAINER_NAME, "a");
+        ListContainerOptions options = ListContainerOptions.Builder
+                .withDetails()
+                .inDirectory("");
+        PageSet<? extends StorageMetadata> res = blobStore.list(CONTAINER_NAME, options);
+        assertTrue(res.size() == 1);
+        assertEquals(res.iterator().next().getName(), "a");
+    }
+
     public void testList_NotExistingContainer() {
         // Testing list for a not existing container
         try {
