@@ -17,6 +17,9 @@
 
 package org.jclouds.blobstore.domain;
 
+import com.google.common.annotations.Beta;
+
+@Beta
 public enum ContainerAccess {
    /** Only allow bucket owner to read and write objects. */
    PRIVATE,

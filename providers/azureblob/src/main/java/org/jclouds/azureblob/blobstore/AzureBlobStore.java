@@ -284,6 +284,7 @@ public class AzureBlobStore extends BaseBlobStore {
       return sync.createContainer(container, createContainerOptions);
    }
 
+   @Override
    public ContainerAccess getContainerAccess(String container) {
       PublicAccess access = sync.getPublicAccessForContainer(container);
       if (access == PublicAccess.BLOB) {
@@ -293,6 +294,7 @@ public class AzureBlobStore extends BaseBlobStore {
       }
    }
 
+   @Override
    public void setContainerAccess(String container, ContainerAccess access) {
       PublicAccess publicAccess;
       if (access == ContainerAccess.PUBLIC_READ) {

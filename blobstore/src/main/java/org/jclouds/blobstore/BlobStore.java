@@ -18,6 +18,8 @@ package org.jclouds.blobstore;
 
 import java.util.Set;
 
+import com.google.common.annotations.Beta;
+
 import org.jclouds.blobstore.domain.Blob;
 import org.jclouds.blobstore.domain.BlobBuilder;
 import org.jclouds.blobstore.domain.BlobMetadata;
@@ -92,8 +94,10 @@ public interface BlobStore {
     */
    boolean createContainerInLocation(@Nullable Location location, String container, CreateContainerOptions options);
 
+   @Beta
    ContainerAccess getContainerAccess(String container);
 
+   @Beta
    void setContainerAccess(String container, ContainerAccess access);
 
    /**
