@@ -83,7 +83,7 @@ public final class GoogleCloudStorageBlobStore extends BaseBlobStore {
    private final Provider<FetchBlobMetadata> fetchBlobMetadataProvider;
    private final BlobMetadataToObjectTemplate blobMetadataToObjectTemplate;
    private final BlobStoreListContainerOptionsToListObjectOptions listContainerOptionsToListObjectOptions;
-   private final MultipartUploadStrategy multipartUploadStrategy;
+   private final Provider<MultipartUploadStrategy> multipartUploadStrategy;
    private final Supplier<String> projectId;
 
    @Inject GoogleCloudStorageBlobStore(BlobStoreContext context, BlobUtils blobUtils, Supplier<Location> defaultLocation,
@@ -93,7 +93,7 @@ public final class GoogleCloudStorageBlobStore extends BaseBlobStore {
             Provider<FetchBlobMetadata> fetchBlobMetadataProvider,
             BlobMetadataToObjectTemplate blobMetadataToObjectTemplate,
             BlobStoreListContainerOptionsToListObjectOptions listContainerOptionsToListObjectOptions,
-            MultipartUploadStrategy multipartUploadStrategy, @CurrentProject Supplier<String> projectId) {
+            Provider<MultipartUploadStrategy> multipartUploadStrategy, @CurrentProject Supplier<String> projectId) {
       super(context, blobUtils, defaultLocation, locations);
       this.api = api;
       this.bucketToStorageMetadata = bucketToStorageMetadata;
@@ -227,7 +227,7 @@ public final class GoogleCloudStorageBlobStore extends BaseBlobStore {
    @Override
    public String putBlob(String container, Blob blob, PutOptions options) {
       if (options.multipart().isMultipart()) {
-         return multipartUploadStrategy.execute(container, blob);
+         return multipartUploadStrategy.get().execute(container, blob);
       } else {
          return putBlob(container, blob);
       }
