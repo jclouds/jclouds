@@ -524,6 +524,24 @@ public class FilesystemBlobStoreTest {
         checkForContainerContent(CONTAINER_NAME, dirs);
     }
 
+    @Test(dataProvider = "ignoreOnMacOSX")
+    public void testListDirectoryBlobsS3FS() {
+        blobStore.createContainerInLocation(null, CONTAINER_NAME);
+        checkForContainerContent(CONTAINER_NAME, null);
+
+        String d = TestUtils.createRandomBlobKey("directory-", "");
+        blobStore.putBlob(CONTAINER_NAME, createDirBlob(d + File.separator));
+        assertTrue(blobStore.blobExists(CONTAINER_NAME, d + File.separator));
+
+        ListContainerOptions options = ListContainerOptions.Builder
+                .withDetails()
+                .inDirectory("");
+        PageSet<? extends StorageMetadata> res = blobStore.list(CONTAINER_NAME, options);
+        assertTrue(res.size() == 1);
+        assertEquals(res.iterator().next().getName(), d);
+    }
+
+
     /**
      * Test of putBlob method with a complex key, with path in the filename, eg
      * picture/filename.jpg

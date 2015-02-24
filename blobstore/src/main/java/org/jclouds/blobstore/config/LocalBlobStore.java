@@ -261,7 +261,7 @@ public final class LocalBlobStore implements BlobStore {
             for (String o : commonPrefixes) {
                MutableStorageMetadata md = new MutableStorageMetadataImpl();
                md.setType(StorageType.RELATIVE_PATH);
-               if (prefix != null) {
+               if (prefix != null && !prefix.isEmpty()) {
                   if (!prefix.endsWith(delimiter)) {
                      o = prefix + delimiter + o;
                   } else {
