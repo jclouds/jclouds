@@ -84,6 +84,7 @@
                         <provisioningState>INPROCESS</provisioningState>
                     </firewall>
                     <dhcpActive>false</dhcpActive>
+                    <gatewayIp>202.69.181.1</gatewayIp>
                     <provisioningState>AVAILABLE</provisioningState>
                 </nics>
                 <provisioningState>AVAILABLE</provisioningState>

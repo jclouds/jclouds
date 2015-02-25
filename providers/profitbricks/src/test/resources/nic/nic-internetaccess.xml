@@ -1,0 +1,11 @@
+<?xml version="1.0" ?>
+<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:ws="http://ws.api.profitbricks.com/">
+    <soapenv:Header/>
+    <soapenv:Body>
+        <ws:setInternetAccess>
+            <dataCenterId>datacenter-id</dataCenterId>
+            <lanId>1</lanId>
+            <internetAccess>internet-access</internetAccess>
+        </ws:setInternetAccess>
+    </soapenv:Body>
+</soapenv:Envelope>

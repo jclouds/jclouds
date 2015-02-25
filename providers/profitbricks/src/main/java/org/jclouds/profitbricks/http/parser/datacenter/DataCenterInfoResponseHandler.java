@@ -16,37 +16,29 @@
  */
 package org.jclouds.profitbricks.http.parser.datacenter;
 
-import java.util.List;
-
 import org.jclouds.profitbricks.domain.DataCenter;
 import org.jclouds.profitbricks.domain.Location;
 import org.jclouds.profitbricks.domain.ProvisioningState;
-import org.jclouds.profitbricks.domain.Server;
-import org.jclouds.profitbricks.domain.Storage;
-import org.jclouds.profitbricks.http.parser.server.ServerInfoResponseHandler;
-import org.jclouds.profitbricks.http.parser.storage.StorageInfoResponseHandler;
+import org.jclouds.profitbricks.http.parser.server.ServerListResponseHandler;
+import org.jclouds.profitbricks.http.parser.storage.StorageListResponseHandler;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
-import com.google.common.collect.Lists;
 import com.google.inject.Inject;
 
 public class DataCenterInfoResponseHandler extends BaseDataCenterResponseHandler<DataCenter> {
 
-   private final ServerInfoResponseHandler serverInfoResponseHandler;
-   private final StorageInfoResponseHandler storageInfoResponseHandler;
-
-   private final List<Server> servers = Lists.newArrayList();
-   private final List<Storage> storages = Lists.newArrayList();
+   private final ServerListResponseHandler serverListResponseHandler;
+   private final StorageListResponseHandler storageListResponseHandler;
 
    private boolean done = false;
    private boolean useServerParser = false;
    private boolean useStorageParser = false;
 
    @Inject
-   DataCenterInfoResponseHandler(ServerInfoResponseHandler serverInfoResponseHandler, StorageInfoResponseHandler storageInforResponseHandler) {
-      this.serverInfoResponseHandler = serverInfoResponseHandler;
-      this.storageInfoResponseHandler = storageInforResponseHandler;
+   DataCenterInfoResponseHandler(ServerListResponseHandler serverListResponseHandler, StorageListResponseHandler storageListResponseHandler) {
+      this.serverListResponseHandler = serverListResponseHandler;
+      this.storageListResponseHandler = storageListResponseHandler;
    }
 
    @Override
@@ -55,6 +47,13 @@ public class DataCenterInfoResponseHandler extends BaseDataCenterResponseHandler
          useServerParser = true;
       else if ("storages".equals(qName))
          useStorageParser = true;
+
+      if (useServerParser)
+         serverListResponseHandler.startElement(uri, localName, qName, attributes);
+      else if (useStorageParser)
+         storageListResponseHandler.startElement(uri, localName, qName, attributes);
+      else
+         super.startElement(uri, localName, qName, attributes);
    }
 
    @Override
@@ -71,9 +70,9 @@ public class DataCenterInfoResponseHandler extends BaseDataCenterResponseHandler
    @Override
    public void characters(char[] ch, int start, int length) {
       if (useServerParser)
-         serverInfoResponseHandler.characters(ch, start, length);
+         serverListResponseHandler.characters(ch, start, length);
       else if (useStorageParser)
-         storageInfoResponseHandler.characters(ch, start, length);
+         storageListResponseHandler.characters(ch, start, length);
       else
          super.characters(ch, start, length);
    }
@@ -83,27 +82,24 @@ public class DataCenterInfoResponseHandler extends BaseDataCenterResponseHandler
       if (done)
          return;
 
-      if ("servers".equals(qName)) {
-         useServerParser = false;
-         servers.add(serverInfoResponseHandler.getResult());
-      } else if ("storages".equals(qName)) {
-         useStorageParser = false;
-         storages.add(storageInfoResponseHandler.getResult());
-      }
-
       if (useServerParser)
-         serverInfoResponseHandler.endElement(uri, localName, qName);
+         serverListResponseHandler.endElement(uri, localName, qName);
       else if (useStorageParser)
-         storageInfoResponseHandler.endElement(uri, localName, qName);
+         storageListResponseHandler.endElement(uri, localName, qName);
       else {
          setPropertyOnEndTag(qName);
          if ("return".equals(qName)) {
             done = true;
-            builder.servers(servers);
-            builder.storages(storages);
+            builder.servers(serverListResponseHandler.getResult());
+            builder.storages(storageListResponseHandler.getResult());
          }
          clearTextBuffer();
       }
+
+      if ("servers".equals(qName))
+         useServerParser = false;
+      else if ("storages".equals(qName))
+         useStorageParser = false;
    }
 
    @Override

@@ -25,7 +25,7 @@ import org.xml.sax.SAXException;
 
 public class StorageListResponseHandler extends BaseStorageResponseHandler<List<Storage>> {
 
-   private final List<Storage> storages;
+   private List<Storage> storages;
 
    @Inject
    StorageListResponseHandler(DateCodecFactory dateCodec) {
@@ -36,7 +36,7 @@ public class StorageListResponseHandler extends BaseStorageResponseHandler<List<
    @Override
    public void endElement(String uri, String localName, String qName) throws SAXException {
       setPropertyOnEndTag(qName);
-      if ("return".equals(qName)) {
+      if ("return".equals(qName) || "connectedStorages".equals(qName) || "storages".equals(qName)) {
          storages.add(builder
                  .serverIds(serverIds)
                  .build());
@@ -44,6 +44,11 @@ public class StorageListResponseHandler extends BaseStorageResponseHandler<List<
          serverIds = Lists.newArrayList();
       }
       clearTextBuffer();
+   }
+
+   @Override
+   public void reset() {
+      this.storages = Lists.newArrayList();
    }
 
    @Override

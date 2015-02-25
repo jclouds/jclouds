@@ -56,6 +56,10 @@ public abstract class BaseProfitBricksResponseHandler<T> extends ParseSax.Handle
       strBuilder.setLength(0);
    }
 
+   public void reset() {
+
+   }
+
    @Override
    public abstract void endElement(String uri, String localName, String qName) throws SAXException;
 

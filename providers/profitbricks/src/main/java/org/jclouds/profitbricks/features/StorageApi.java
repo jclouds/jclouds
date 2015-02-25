@@ -71,8 +71,8 @@ public interface StorageApi {
    Storage getStorage(@PayloadParam("id") String id);
 
    /**
-    * Creates a virtual storage within an existing virtual data center. Additional parameters can be specified, e.g. for assigning a HDD
-    * image to the storage.
+    * Creates a virtual storage within an existing virtual data center. Additional parameters can be specified, e.g. for
+    * assigning a HDD image to the storage.
     *
     * @param payload Payload
     * @return storageId of the created storage
@@ -84,9 +84,10 @@ public interface StorageApi {
    String createStorage(@PayloadParam("storage") Storage.Request.CreatePayload payload);
 
    /**
-    * Updates parameters of an existing virtual storage device. It is possible to increase the storage size without reboot of an already
-    * provisioned storage. The additional capacity is not added to any partition. You have to partition the storage afterwards. Vice versa,
-    * it is not possible to decrease the storage size of an already provisioned storage.
+    * Updates parameters of an existing virtual storage device. It is possible to increase the storage size without
+    * reboot of an already provisioned storage. The additional capacity is not added to any partition. You have to
+    * partition the storage afterwards. Vice versa, it is not possible to decrease the storage size of an already
+    * provisioned storage.
     *
     * @param payload Payload
     * @return Identifier of current request

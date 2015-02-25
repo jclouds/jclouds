@@ -28,17 +28,55 @@ import org.jclouds.profitbricks.domain.OsType;
 import org.jclouds.profitbricks.domain.ProvisioningState;
 import org.jclouds.profitbricks.domain.Server;
 import org.jclouds.profitbricks.http.parser.BaseProfitBricksResponseHandler;
+import org.jclouds.profitbricks.http.parser.nic.NicListResponseHandler;
+import org.jclouds.profitbricks.http.parser.storage.StorageListResponseHandler;
+import org.xml.sax.Attributes;
+import org.xml.sax.SAXException;
 
 public abstract class BaseServerResponseHandler<T> extends BaseProfitBricksResponseHandler<T> {
+
+   protected final StorageListResponseHandler storageListResponseHandler;
+   protected final NicListResponseHandler nicListResponseHandler;
 
    protected Server.DescribingBuilder builder;
 
    protected final DateCodec dateCodec;
 
+   protected boolean useStorageParser = false;
+   protected boolean useNicParser = false;
+
    @Inject
-   BaseServerResponseHandler(DateCodecFactory dateCodec) {
+   BaseServerResponseHandler(DateCodecFactory dateCodec, StorageListResponseHandler storageListResponseHandler,
+           NicListResponseHandler nicListResponseHandler) {
       this.dateCodec = dateCodec.iso8601();
+      this.storageListResponseHandler = storageListResponseHandler;
+      this.nicListResponseHandler = nicListResponseHandler;
       this.builder = Server.builder();
+   }
+
+   @Override
+   public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
+      if ("connectedStorages".equals(qName))
+         useStorageParser = true;
+      else if ("nics".equals(qName))
+         useNicParser = true;
+
+      if (useStorageParser)
+         storageListResponseHandler.startElement(uri, localName, qName, attributes);
+      else if (useNicParser)
+         nicListResponseHandler.startElement(uri, localName, qName, attributes);
+      else
+         super.startElement(uri, localName, qName, attributes);
+   }
+
+   @Override
+   public void characters(char[] ch, int start, int length) {
+      if (useStorageParser)
+         storageListResponseHandler.characters(ch, start, length);
+      else if (useNicParser)
+         nicListResponseHandler.characters(ch, start, length);
+      else
+         super.characters(ch, start, length);
    }
 
    protected final Date textToIso8601Date() {

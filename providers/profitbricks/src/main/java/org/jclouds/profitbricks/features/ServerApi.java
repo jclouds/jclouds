@@ -45,7 +45,8 @@ import org.jclouds.rest.annotations.XMLResponseParser;
 public interface ServerApi {
 
    /**
-    * @return Returns information about all virtual server, such as configuration, provisioning status, power status, etc.
+    * @return Returns information about all virtual server, such as configuration, provisioning status, power status,
+    * etc.
     */
    @POST
    @Named("server:getall")
@@ -88,12 +89,13 @@ public interface ServerApi {
     * <ul>
     * <li>Server will be forcefully powered off. Any unsaved data may be lost! </li>
     * <li>Billing for this server will be stopped </li>
-    * <li>When restarting the server a new public IP gets assigned, alternatively, you can reserve IP addresses, see reservation of public
-    * IP blocks</li>
+    * <li>When restarting the server a new public IP gets assigned, alternatively, you can reserve IP addresses, see
+    * reservation of public IP blocks</li>
     * </ul>
     *
-    * A graceful stop of a server is not possible through the ProfitBricks API. We recommend to access and execute the command on the
-    * virtual server directly. Once the server was shutdown you still can use the "stopServer" method that will stop billing.
+    * A graceful stop of a server is not possible through the ProfitBricks API. We recommend to access and execute the
+    * command on the virtual server directly. Once the server was shutdown you still can use the "stopServer" method
+    * that will stop billing.
     *
     * @param id Identifier of the target virtual server
     * @return Identifier of current request
@@ -112,8 +114,8 @@ public interface ServerApi {
     * </ul>
     * <b>Graceful REBOOT</b>
     *
-    * A graceful reboot of a server is not possible through the ProfitBricks API. We recommend to access and execute the command on the
-    * virtual server directly.
+    * A graceful reboot of a server is not possible through the ProfitBricks API. We recommend to access and execute the
+    * command on the virtual server directly.
     *
     * @param id Identifier of the target virtual server
     * @return Identifier of current request
@@ -125,8 +127,8 @@ public interface ServerApi {
    String resetServer(@PayloadParam("id") String id);
 
    /**
-    * Creates a Virtual Server within an existing data center. Parameters can be specified to set up a boot device and connect the server to
-    * an existing LAN or the Internet.
+    * Creates a Virtual Server within an existing data center. Parameters can be specified to set up a boot device and
+    * connect the server to an existing LAN or the Internet.
     *
     * @param payload Payload
     * @return serverId of the created server

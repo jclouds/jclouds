@@ -17,8 +17,11 @@
 package org.jclouds.profitbricks.http.parser.server;
 
 import com.google.inject.Inject;
+
 import org.jclouds.date.DateCodecFactory;
 import org.jclouds.profitbricks.domain.Server;
+import org.jclouds.profitbricks.http.parser.nic.NicListResponseHandler;
+import org.jclouds.profitbricks.http.parser.storage.StorageListResponseHandler;
 import org.xml.sax.SAXException;
 
 public class ServerInfoResponseHandler extends BaseServerResponseHandler<Server> {
@@ -26,18 +29,35 @@ public class ServerInfoResponseHandler extends BaseServerResponseHandler<Server>
    private boolean done = false;
 
    @Inject
-   ServerInfoResponseHandler(DateCodecFactory dateCodec) {
-      super(dateCodec);
+   ServerInfoResponseHandler(DateCodecFactory dateCodec, StorageListResponseHandler storageListResponseHandler,
+           NicListResponseHandler nicListResponseHandler) {
+      super(dateCodec, storageListResponseHandler, nicListResponseHandler);
    }
 
    @Override
    public void endElement(String uri, String localName, String qName) throws SAXException {
       if (done)
          return;
-      setPropertyOnEndTag(qName);
-      if ("return".equals(qName))
-         done = true;
-      clearTextBuffer();
+
+      if (useStorageParser)
+         storageListResponseHandler.endElement(uri, localName, qName);
+      else if (useNicParser)
+         nicListResponseHandler.endElement(uri, localName, qName);
+      else {
+         setPropertyOnEndTag(qName);
+         if ("return".equals(qName)) {
+            done = true;
+            builder
+                    .storages(storageListResponseHandler.getResult())
+                    .nics(nicListResponseHandler.getResult());
+         }
+         clearTextBuffer();
+      }
+
+      if ("connectedStorages".equals(qName))
+         useStorageParser = false;
+      else if ("nics".equals(qName))
+         useNicParser = false;
    }
 
    @Override

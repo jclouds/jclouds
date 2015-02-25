@@ -64,10 +64,10 @@ public class ResponseStatusFromPayloadHttpCommandExecutorService extends JavaUrl
 
    @Inject
    ResponseStatusFromPayloadHttpCommandExecutorService(HttpUtils utils, ContentMetadataCodec contentMetadataCodec,
-	   DelegatingRetryHandler retryHandler, IOExceptionRetryHandler ioRetryHandler,
-	   DelegatingErrorHandler errorHandler, HttpWire wire, @Named("untrusted") HostnameVerifier verifier,
-	   @Named("untrusted") Supplier<SSLContext> untrustedSSLContextProvider, Function<URI, Proxy> proxyForURI,
-	   ParseSax<ServiceFault> faultHandler) {
+           DelegatingRetryHandler retryHandler, IOExceptionRetryHandler ioRetryHandler,
+           DelegatingErrorHandler errorHandler, HttpWire wire, @Named("untrusted") HostnameVerifier verifier,
+           @Named("untrusted") Supplier<SSLContext> untrustedSSLContextProvider, Function<URI, Proxy> proxyForURI,
+           ParseSax<ServiceFault> faultHandler) {
       super(utils, contentMetadataCodec, retryHandler, ioRetryHandler, errorHandler, wire, verifier, untrustedSSLContextProvider, proxyForURI);
       this.faultHandler = faultHandler;
    }
@@ -78,39 +78,39 @@ public class ResponseStatusFromPayloadHttpCommandExecutorService extends JavaUrl
       HttpResponse.Builder<?> responseBuilder = originalResponse.toBuilder();
 
       if (hasServerError(originalResponse) && hasPayload(originalResponse)) {
-	 // As we need to read the response body to determine if there are errors, but we may need to process the body
-	 // again later in the response parsers if everything is OK, we buffer the body into an InputStream we can reset
-	 InputStream in = null;
-	 InputStream originalInputStream = originalResponse.getPayload().openStream();
+         // As we need to read the response body to determine if there are errors, but we may need to process the body
+         // again later in the response parsers if everything is OK, we buffer the body into an InputStream we can reset
+         InputStream in = null;
+         InputStream originalInputStream = originalResponse.getPayload().openStream();
 
-	 if (originalInputStream instanceof ByteArrayInputStream)
-	    in = originalInputStream;
-	 else
-	    try {
-	       in = new ByteArrayInputStream(ByteStreams.toByteArray(originalInputStream));
-	    } finally {
-	       closeQuietly(originalInputStream);
-	    }
-	 try {
-	    if (isSoapPayload(in)) {
-	       ServiceFault fault = faultHandler.parse(in);
-	       if (fault != null)
-		  responseBuilder
-			  .statusCode(fault.httpCode())
-			  .message(fault.message());
-	    }
-	 } catch (Exception ex) {
-	    // ignore
-	 } finally {
-	    // Reset the input stream and set the payload, so it can be read again
-	    // by the response and error parsers
-	    if (in != null) {
-	       in.reset();
-	       Payload payload = Payloads.newInputStreamPayload(in);
-	       contentMetadataCodec.fromHeaders(payload.getContentMetadata(), originalResponse.getHeaders());
-	       responseBuilder.payload(payload);
-	    }
-	 }
+         if (originalInputStream instanceof ByteArrayInputStream)
+            in = originalInputStream;
+         else
+            try {
+               in = new ByteArrayInputStream(ByteStreams.toByteArray(originalInputStream));
+            } finally {
+               closeQuietly(originalInputStream);
+            }
+         try {
+            if (isSoapPayload(in)) {
+               ServiceFault fault = faultHandler.parse(in);
+               if (fault != null)
+                  responseBuilder
+                          .statusCode(fault.httpCode())
+                          .message(fault.message());
+            }
+         } catch (Exception ex) {
+            // ignore
+         } finally {
+            // Reset the input stream and set the payload, so it can be read again
+            // by the response and error parsers
+            if (in != null) {
+               in.reset();
+               Payload payload = Payloads.newInputStreamPayload(in);
+               contentMetadataCodec.fromHeaders(payload.getContentMetadata(), originalResponse.getHeaders());
+               responseBuilder.payload(payload);
+            }
+         }
       }
 
       return responseBuilder.build();
@@ -131,7 +131,7 @@ public class ResponseStatusFromPayloadHttpCommandExecutorService extends JavaUrl
 
       is.read(bytes, 0, size);
       for (int i = 0; i < size;)
-	 chars[i] = (char) (bytes[i++] & 0xff);
+         chars[i] = (char) (bytes[i++] & 0xff);
 
       is.reset(); // throws premature end of file w/o this
 

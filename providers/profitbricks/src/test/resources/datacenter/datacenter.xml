@@ -30,13 +30,12 @@
                         <nicId>zzzzzzzz-xxxx-cccc-vvvv-bbbbbbbbbbbb</nicId>
                         <lanId>1</lanId>
                         <internetAccess>true</internetAccess>
-                        <serverId>12345678-abcd-efgh-ijkl-987654321000</serverId>
+                        <serverId>qqqqqqqq-wwww-eeee-rrrr-tttttttttttt</serverId>
                         <ips>202.94.38.12</ips>
                         <macAddress>02:01:09:cd:f0:b0</macAddress>
                         <firewall>
                             <active>false</active>
                             <firewallId>llllllll-kkkk-jjjj-hhhh-gggggggggggg</firewallId>
-                            <firewallId>62383ec1-38c8-486b-8fa2-a3bb0a5edd97</firewallId>
                             <nicId>zzzzzzzz-xxxx-cccc-vvvv-bbbbbbbbbbbb</nicId>
                             <provisioningState>AVAILABLE</provisioningState>
                         </firewall>

@@ -58,6 +58,7 @@ public abstract class Storage {
    @Nullable
    public abstract Date lastModificationTime();
 
+   @Nullable
    public abstract ProvisioningState state();
 
    @Nullable

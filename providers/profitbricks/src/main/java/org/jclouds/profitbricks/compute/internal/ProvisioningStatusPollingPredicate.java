@@ -26,8 +26,9 @@ import com.google.common.base.Predicate;
 /**
  * A custom predicate for waiting until a virtual resource satisfies the given expected status
  * <p>
- * Performing api requests on a datacenter that is not {@link ProvisioningState#AVAILABLE} is not allowed. On some cases, the API user gets
- * blocked from further requests, and will then need to contact tech support for api lock release.
+ * Performing api requests on a datacenter that is not {@link ProvisioningState#AVAILABLE} is not allowed. On some
+ * cases, the API user gets blocked from further requests, and will then need to contact tech support for api lock
+ * release.
  */
 public class ProvisioningStatusPollingPredicate implements Predicate<String> {
 
@@ -51,6 +52,8 @@ public class ProvisioningStatusPollingPredicate implements Predicate<String> {
             return expect == api.serverApi().getServer(input).state();
          case STORAGE:
             return expect == api.storageApi().getStorage(input).state();
+         case NIC:
+            return expect == api.nicApi().getNic(input).state();
          default:
             throw new IllegalArgumentException("Unknown domain '" + domain + "'");
       }

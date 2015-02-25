@@ -24,7 +24,9 @@ import org.jclouds.date.DateCodecFactory;
 import org.jclouds.http.functions.ParseSax;
 import org.jclouds.profitbricks.domain.AvailabilityZone;
 import org.jclouds.profitbricks.domain.DataCenter;
+import org.jclouds.profitbricks.domain.Firewall;
 import org.jclouds.profitbricks.domain.Location;
+import org.jclouds.profitbricks.domain.Nic;
 import org.jclouds.profitbricks.domain.OsType;
 import org.jclouds.profitbricks.domain.ProvisioningState;
 import org.jclouds.profitbricks.domain.Server;
@@ -63,7 +65,7 @@ public class DataCenterInfoResponseHandlerTest extends BaseResponseHandlerTest<D
               .location(Location.US_LAS)
               .servers(ImmutableList.<Server>of(
                               Server.builder()
-                              .id("12345678-abcd-efgh-ijkl-987654321000")
+                              .id("qqqqqqqq-wwww-eeee-rrrr-tttttttttttt")
                               .name("jnode1")
                               .cores(4)
                               .ram(4096)
@@ -80,8 +82,43 @@ public class DataCenterInfoResponseHandlerTest extends BaseResponseHandlerTest<D
                               .isNicHotUnPlug(true)
                               .isDiscVirtioHotPlug(true)
                               .isDiscVirtioHotUnPlug(true)
+                              .storages(ImmutableList.<Storage>of(
+                                              Storage.builder()
+                                              .bootDevice(Boolean.TRUE)
+                                              .id("ssssssss-aaaa-ffff-gggg-hhhhhhhhhhhh")
+                                              .busType(Storage.BusType.VIRTIO)
+                                              .deviceNumber(1)
+                                              .size(40f)
+                                              .name("jnode1-disk1")
+                                              .build()
+                                      )
+                              )
+                              .nics(ImmutableList.<Nic>of(
+                                              Nic.builder()
+                                              .dataCenterId("12345678-abcd-efgh-ijkl-987654321000")
+                                              .id("zzzzzzzz-xxxx-cccc-vvvv-bbbbbbbbbbbb")
+                                              .lanId(1)
+                                              .internetAccess(true)
+                                              .serverId("qqqqqqqq-wwww-eeee-rrrr-tttttttttttt")
+                                              .ip("202.94.38.12")
+                                              .macAddress("02:01:09:cd:f0:b0")
+                                              .firewall(
+                                                      Firewall.builder()
+                                                      .active(false)
+                                                      .id("llllllll-kkkk-jjjj-hhhh-gggggggggggg")
+                                                      .nicId("zzzzzzzz-xxxx-cccc-vvvv-bbbbbbbbbbbb")
+                                                      .state(ProvisioningState.AVAILABLE)
+                                                      .build()
+                                              )
+                                              .dhcpActive(true)
+                                              .gatewayIp("202.94.38.1")
+                                              .state(ProvisioningState.AVAILABLE)
+                                              .build()
+                                      )
+                              )
                               .build()
-                      ))
+                      )
+              )
               .storages(ImmutableList.<Storage>of(
                               Storage.builder()
                               .id("ssssssss-aaaa-ffff-gggg-hhhhhhhhhhhh")
@@ -90,6 +127,9 @@ public class DataCenterInfoResponseHandlerTest extends BaseResponseHandlerTest<D
                               .state(ProvisioningState.AVAILABLE)
                               .creationTime(dateParser.toDate("2014-12-04T07:09:23.138Z"))
                               .lastModificationTime(dateParser.toDate("2014-12-12T03:14:48.316Z"))
+                              .serverIds(ImmutableList.of(
+                                              "qqqqqqqq-wwww-eeee-rrrr-tttttttttttt"
+                                      ))
                               .build()
                       ))
               .build();

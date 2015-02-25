@@ -81,14 +81,17 @@ public abstract class Server implements ServerCommonProperties {
    @Nullable
    public abstract List<Storage> storages();
 
-//   public abstract List<Nic> nics();
+   @Nullable
+   public abstract List<Nic> nics();
+
    public static Server create(String id, String name, int cores, int ram, Boolean hasInternetAccess, ProvisioningState state,
            Status status, OsType osType, AvailabilityZone availabilityZone, Date creationTime, Date lastModificationTime,
-           List<Storage> storages, Boolean isCpuHotPlug, Boolean isRamHotPlug, Boolean isNicHotPlug, Boolean isNicHotUnPlug,
-           Boolean isDiscVirtioHotPlug, Boolean isDiscVirtioHotUnPlug) {
+           List<Storage> storages, List<Nic> nics, Boolean isCpuHotPlug, Boolean isRamHotPlug, Boolean isNicHotPlug,
+           Boolean isNicHotUnPlug, Boolean isDiscVirtioHotPlug, Boolean isDiscVirtioHotUnPlug) {
       return new AutoValue_Server(isCpuHotPlug, isRamHotPlug, isNicHotPlug, isNicHotUnPlug, isDiscVirtioHotPlug, isDiscVirtioHotUnPlug,
               cores, ram, id, name, hasInternetAccess, state, status, osType, availabilityZone, creationTime, lastModificationTime,
-              storages != null ? ImmutableList.copyOf(storages) : Lists.<Storage>newArrayList());
+              storages != null ? ImmutableList.copyOf(storages) : Lists.<Storage>newArrayList(),
+              nics != null ? ImmutableList.copyOf(nics) : Lists.<Nic>newArrayList());
 
    }
 
@@ -174,6 +177,7 @@ public abstract class Server implements ServerCommonProperties {
       private Date lastModificationTime;
       private Boolean hasInternetAccess;
       private List<Storage> storages;
+      private List<Nic> nics;
 
       public DescribingBuilder id(String id) {
          this.id = id;
@@ -220,18 +224,25 @@ public abstract class Server implements ServerCommonProperties {
          return this;
       }
 
+      public DescribingBuilder nics(List<Nic> nics) {
+         this.nics = nics;
+         return this;
+      }
+
       @Override
       public Server build() {
          return Server.create(id, name, cores, ram, hasInternetAccess, state, status, osType, zone, creationTime,
-                 lastModificationTime, storages, cpuHotPlug, ramHotPlug, nicHotPlug, nicHotUnPlug, discVirtioHotPlug, discVirtioHotUnPlug);
+                 lastModificationTime, storages, nics, cpuHotPlug, ramHotPlug, nicHotPlug, nicHotUnPlug,
+                 discVirtioHotPlug, discVirtioHotUnPlug);
       }
 
       private DescribingBuilder fromServer(Server in) {
          return this.id(in.id()).cores(in.cores()).creationTime(in.creationTime()).hasInternetAccess(in.hasInternetAccess())
-                 .isCpuHotPlug(in.isCpuHotPlug()).isDiscVirtioHotPlug(in.isDiscVirtioHotPlug()).isDiscVirtioHotUnPlug(in.isDiscVirtioHotUnPlug())
-                 .isNicHotPlug(in.isNicHotPlug()).isNicHotUnPlug(in.isNicHotUnPlug()).isRamHotPlug(in.isRamHotPlug())
-                 .lastModificationTime(in.lastModificationTime()).name(in.name()).osType(in.osType()).ram(in.ram()).state(in.state())
-                 .status(in.status()).storages(in.storages());
+                 .isCpuHotPlug(in.isCpuHotPlug()).isDiscVirtioHotPlug(in.isDiscVirtioHotPlug())
+                 .isDiscVirtioHotUnPlug(in.isDiscVirtioHotUnPlug()).isNicHotPlug(in.isNicHotPlug())
+                 .isNicHotUnPlug(in.isNicHotUnPlug()).isRamHotPlug(in.isRamHotPlug())
+                 .lastModificationTime(in.lastModificationTime()).name(in.name()).osType(in.osType()).ram(in.ram())
+                 .state(in.state()).status(in.status()).storages(in.storages()).nics(in.nics());
       }
 
       @Override

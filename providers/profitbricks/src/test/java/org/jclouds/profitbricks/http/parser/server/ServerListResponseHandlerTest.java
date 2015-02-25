@@ -17,7 +17,9 @@
 package org.jclouds.profitbricks.http.parser.server;
 
 import com.google.common.collect.ImmutableList;
+
 import java.util.List;
+
 import org.jclouds.date.DateCodec;
 import org.jclouds.date.DateCodecFactory;
 import org.jclouds.http.functions.ParseSax;
@@ -26,8 +28,13 @@ import org.jclouds.profitbricks.domain.OsType;
 import org.jclouds.profitbricks.domain.ProvisioningState;
 import org.jclouds.profitbricks.domain.Server;
 import org.jclouds.profitbricks.http.parser.BaseResponseHandlerTest;
+
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
+
+import org.jclouds.profitbricks.domain.Firewall;
+import org.jclouds.profitbricks.domain.Nic;
+import org.jclouds.profitbricks.domain.Storage;
 import org.testng.annotations.Test;
 
 @Test(groups = "unit", testName = "ServerListResponseHandlerTest")
@@ -70,6 +77,38 @@ public class ServerListResponseHandlerTest extends BaseResponseHandlerTest<List<
               .isNicHotUnPlug(true)
               .isDiscVirtioHotPlug(true)
               .isDiscVirtioHotUnPlug(true)
+              .storages(ImmutableList.<Storage>of(
+                              Storage.builder()
+                              .bootDevice(Boolean.TRUE)
+                              .busType(Storage.BusType.VIRTIO)
+                              .deviceNumber(1)
+                              .size(40f)
+                              .id("qswdefrg-qaws-qaws-defe-rgrgdsvcxbrh")
+                              .name("facebook-storage")
+                              .build()
+                      )
+              )
+              .nics(ImmutableList.<Nic>of(
+                              Nic.builder()
+                              .dataCenterId("aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee")
+                              .id("qwqwqwqw-wewe-erer-rtrt-tytytytytyty")
+                              .lanId(1)
+                              .internetAccess(true)
+                              .serverId("qwertyui-qwer-qwer-qwer-qwertyyuiiop")
+                              .ip("173.252.120.6")
+                              .macAddress("02:01:09:cd:f0:b0")
+                              .firewall(Firewall.builder()
+                                      .active(false)
+                                      .id("wqwqwqwq-ewew-rere-trtr-ytytytytytyt")
+                                      .nicId("qwqwqwqw-wewe-erer-rtrt-tytytytytyty")
+                                      .state(ProvisioningState.AVAILABLE)
+                                      .build())
+                              .dhcpActive(true)
+                              .gatewayIp("173.252.120.1")
+                              .state(ProvisioningState.AVAILABLE)
+                              .build()
+                      )
+              )
               .build(),
               Server.builder()
               .id("asdfghjk-asdf-asdf-asdf-asdfghjklkjl")
@@ -89,6 +128,38 @@ public class ServerListResponseHandlerTest extends BaseResponseHandlerTest<List<
               .isNicHotUnPlug(true)
               .isDiscVirtioHotPlug(true)
               .isDiscVirtioHotUnPlug(true)
+              .storages(ImmutableList.<Storage>of(
+                              Storage.builder()
+                              .bootDevice(Boolean.TRUE)
+                              .busType(Storage.BusType.VIRTIO)
+                              .deviceNumber(1)
+                              .size(5f)
+                              .id("asfasfle-f23n-cu89-klfr-njkdsvwllkfa")
+                              .name("google-disk")
+                              .build()
+                      )
+              )
+              .nics(ImmutableList.<Nic>of(
+                              Nic.builder()
+                              .dataCenterId("qqqqqqqq-wwww-rrrr-tttt-yyyyyyyyyyyy")
+                              .id("mkl45h5e-sdgb-h6rh-235r-rfweshdfhreh")
+                              .lanId(3)
+                              .internetAccess(false)
+                              .serverId("asdfghjk-asdf-asdf-asdf-asdfghjklkjl")
+                              .ip("202.69.181.241")
+                              .macAddress("02:01:9e:5e:35:1e")
+                              .firewall(Firewall.builder()
+                                      .active(false)
+                                      .id("cvvdsgbd-sdgj-eger-h56j-wet43gvsgeg4")
+                                      .nicId("mkl45h5e-sdgb-h6rh-235r-rfweshdfhreh")
+                                      .state(ProvisioningState.INPROCESS)
+                                      .build())
+                              .dhcpActive(false)
+                              .gatewayIp("202.69.181.1")
+                              .state(ProvisioningState.AVAILABLE)
+                              .build()
+                      )
+              )
               .build()
       );
 

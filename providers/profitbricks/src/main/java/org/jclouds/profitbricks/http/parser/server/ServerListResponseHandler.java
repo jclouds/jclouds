@@ -18,29 +18,57 @@ package org.jclouds.profitbricks.http.parser.server;
 
 import com.google.common.collect.Lists;
 import com.google.inject.Inject;
+
 import java.util.List;
+
 import org.jclouds.date.DateCodecFactory;
 import org.jclouds.profitbricks.domain.Server;
+import org.jclouds.profitbricks.http.parser.nic.NicListResponseHandler;
+import org.jclouds.profitbricks.http.parser.storage.StorageListResponseHandler;
 import org.xml.sax.SAXException;
 
 public class ServerListResponseHandler extends BaseServerResponseHandler<List<Server>> {
 
-   private final List<Server> servers;
+   private List<Server> servers;
 
    @Inject
-   ServerListResponseHandler(DateCodecFactory dateCodec) {
-      super(dateCodec);
+   ServerListResponseHandler(DateCodecFactory dateCodec, StorageListResponseHandler storageListResponseHandler,
+           NicListResponseHandler nicListResponseHandler) {
+      super(dateCodec, storageListResponseHandler, nicListResponseHandler);
       this.servers = Lists.newArrayList();
    }
 
    @Override
    public void endElement(String uri, String localName, String qName) throws SAXException {
-      setPropertyOnEndTag(qName);
-      if ("return".equals(qName)) {
-         servers.add(builder.build());
-         builder = Server.builder();
+
+      if (useStorageParser)
+         storageListResponseHandler.endElement(uri, localName, qName);
+      else if (useNicParser)
+         nicListResponseHandler.endElement(uri, localName, qName);
+      else {
+         setPropertyOnEndTag(qName);
+         if ("return".equals(qName) || "servers".equals(qName)) {
+            servers.add(builder
+                    .storages(storageListResponseHandler.getResult())
+                    .nics(nicListResponseHandler.getResult())
+                    .build());
+            storageListResponseHandler.reset();
+            nicListResponseHandler.reset();
+
+            builder = Server.builder();
+         }
+         clearTextBuffer();
       }
-      clearTextBuffer();
+
+      if ("connectedStorages".equals(qName))
+         useStorageParser = false;
+      else if ("nics".equals(qName))
+         useNicParser = false;
+   }
+
+   @Override
+   public void reset() {
+      this.servers = Lists.newArrayList();
    }
 
    @Override

@@ -1,0 +1,15 @@
+<?xml version="1.0" ?>
+<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:ws="http://ws.api.profitbricks.com/">
+    <soapenv:Header/>
+    <soapenv:Body>
+        <ws:updateNic>
+            <request>
+                <nicId>nic-id</nicId>
+                <ip>ip</ip>
+                <nicName>nic-name</nicName>
+                <dhcpActive>true</dhcpActive>
+                <lanId>1</lanId>
+            </request>
+        </ws:updateNic>
+    </soapenv:Body>
+</soapenv:Envelope>

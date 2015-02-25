@@ -1,0 +1,9 @@
+<?xml version="1.0" ?>
+<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:ws="http://ws.api.profitbricks.com/">
+    <soapenv:Header/>
+    <soapenv:Body>
+        <ws:deleteNic>
+            <nicId>nic-id</nicId>
+        </ws:deleteNic>
+    </soapenv:Body>
+</soapenv:Envelope>
