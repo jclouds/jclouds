@@ -57,7 +57,7 @@ public abstract class AWSHttpApiModule<A> extends HttpApiModule<A> {
    @ServerError
    @Singleton
    protected Set<String> provideRetryableServerCodes() {
-      return ImmutableSet.of("RequestLimitExceeded");
+      return ImmutableSet.of("RequestLimitExceeded", "InternalError");
    }
 
    @Override

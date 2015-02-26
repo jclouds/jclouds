@@ -49,6 +49,7 @@ public class AWSServerErrorRetryHandler extends BackoffLimitedRetryHandler {
    @Override
    public boolean shouldRetryRequest(HttpCommand command, HttpResponse response) {
       switch (response.getStatusCode()) {
+      case 500:  // Internal Server Error
       case 503:  // Service Unavailable
          // Content can be null in the case of HEAD requests
          if (response.getPayload() != null) {

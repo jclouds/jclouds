@@ -46,7 +46,7 @@ import com.google.common.collect.ImmutableSet;
 @Test(groups = "unit", testName = "AWSServerErrorRetryHandlerTest")
 public class AWSServerErrorRetryHandlerTest {
    @Test
-   public void test500DoesNotRetry() {
+   public void testUnknown500DoesNotRetry() {
 
       AWSUtils utils = createMock(AWSUtils.class);
       HttpCommand command = createMock(HttpCommand.class);
@@ -64,11 +64,14 @@ public class AWSServerErrorRetryHandlerTest {
 
    @DataProvider(name = "codes")
    public Object[][] createData() {
-      return new Object[][] { { "RequestLimitExceeded" } };
+      return new Object[][] {
+              { SERVICE_UNAVAILABLE.getStatusCode(), "RequestLimitExceeded" },
+              { INTERNAL_SERVER_ERROR.getStatusCode(), "InternalError" }
+      };
    }
 
    @Test(dataProvider = "codes")
-   public void test503DoesBackoffAndRetryForCode(String code) {
+   public void testDoesBackoffAndRetryForHttpStatusCodeAndErrorCode(int httpStatusCode, String errorCode) {
 
       AWSUtils utils = createMock(AWSUtils.class);
       HttpCommand command = createMock(HttpCommand.class);
@@ -76,8 +79,8 @@ public class AWSServerErrorRetryHandlerTest {
       HttpRequest putBucket = HttpRequest.builder().method(PUT)
             .endpoint("https://adriancole-blobstore113.s3.amazonaws.com/").build();
 
-      HttpResponse limitExceeded = HttpResponse.builder().statusCode(SERVICE_UNAVAILABLE.getStatusCode())
-            .payload(Payloads.newStringPayload(String.format("<Error><Code>%s</Code></Error>", code))).build();
+      HttpResponse response = HttpResponse.builder().statusCode(httpStatusCode)
+            .payload(Payloads.newStringPayload(String.format("<Error><Code>%s</Code></Error>", errorCode))).build();
 
       expect(command.getCurrentRequest()).andReturn(putBucket);
       final AtomicInteger counter = new AtomicInteger();
@@ -96,16 +99,16 @@ public class AWSServerErrorRetryHandlerTest {
       }).anyTimes();
 
       AWSError error = new AWSError();
-      error.setCode(code);
+      error.setCode(errorCode);
 
-      expect(utils.parseAWSErrorFromContent(putBucket, limitExceeded)).andReturn(error);
+      expect(utils.parseAWSErrorFromContent(putBucket, response)).andReturn(error);
 
       replay(utils, command);
 
       AWSServerErrorRetryHandler retry = new AWSServerErrorRetryHandler(utils,
-            ImmutableSet.<String> of("RequestLimitExceeded"));
+            ImmutableSet.of("RequestLimitExceeded", "InternalError"));
 
-      assert retry.shouldRetryRequest(command, limitExceeded);
+      assert retry.shouldRetryRequest(command, response);
 
       verify(utils, command);
 
