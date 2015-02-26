@@ -28,16 +28,19 @@ import static org.jclouds.s3.reference.S3Constants.PROPERTY_S3_VIRTUAL_HOST_BUCK
 import java.net.URI;
 
 import org.easymock.IArgumentMatcher;
+import org.jclouds.apis.ApiMetadata;
 import org.jclouds.blobstore.ContainerNotFoundException;
 import org.jclouds.blobstore.KeyNotFoundException;
 import org.jclouds.http.HttpCommand;
 import org.jclouds.http.HttpRequest;
 import org.jclouds.http.HttpResponse;
 import org.jclouds.http.functions.config.SaxParserModule;
+import org.jclouds.providers.ProviderMetadata;
 import org.jclouds.rest.RequestSigner;
 import org.jclouds.s3.reference.S3Headers;
 import org.testng.annotations.Test;
 
+import com.google.common.base.Optional;
 import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
 import com.google.inject.name.Names;
@@ -65,11 +68,18 @@ public class ParseS3ErrorFromXmlContentTest {
    private void assertCodeMakes(String method, URI uri, int statusCode, String message, final boolean virtualHost,
             String content, Class<? extends Exception> expected) {
 
+      ApiMetadata apiMetadata = createMock(ApiMetadata.class);
+      expect(apiMetadata.getDefaultEndpoint()).andReturn(Optional.of("http://localhost")).atLeastOnce();
+
+      final ProviderMetadata providerMetadata = createMock(ProviderMetadata.class);
+      expect(providerMetadata.getApiMetadata()).andReturn(apiMetadata).atLeastOnce();
+
       ParseS3ErrorFromXmlContent function = Guice.createInjector(new SaxParserModule(), new AbstractModule() {
 
          @Override
          protected void configure() {
             bind(RequestSigner.class).toInstance(createMock(RequestSigner.class));
+            bind(ProviderMetadata.class).toInstance(providerMetadata);
             bindConstant().annotatedWith(Names.named(PROPERTY_HEADER_TAG)).to(S3Headers.DEFAULT_AMAZON_HEADERTAG);
             bindConstant().annotatedWith(Names.named(PROPERTY_S3_SERVICE_PATH)).to(SERVICE_PATH);
             bindConstant().annotatedWith(Names.named(PROPERTY_S3_VIRTUAL_HOST_BUCKETS)).to(virtualHost);
@@ -85,7 +95,7 @@ public class ParseS3ErrorFromXmlContentTest {
       expect(command.getCurrentRequest()).andReturn(request).atLeastOnce();
       command.setException(classEq(expected));
 
-      replay(command);
+      replay(apiMetadata, providerMetadata, command);
 
       function.handleError(command, response);
 
