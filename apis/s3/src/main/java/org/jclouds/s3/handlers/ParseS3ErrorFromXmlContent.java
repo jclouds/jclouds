@@ -34,8 +34,8 @@ import org.jclouds.blobstore.ContainerNotFoundException;
 import org.jclouds.blobstore.KeyNotFoundException;
 import org.jclouds.http.HttpCommand;
 import org.jclouds.http.HttpResponse;
+import org.jclouds.providers.ProviderMetadata;
 import org.jclouds.rest.ResourceNotFoundException;
-import org.jclouds.s3.S3ApiMetadata;
 
 import com.google.common.base.Joiner;
 import com.google.common.base.Splitter;
@@ -45,13 +45,15 @@ public class ParseS3ErrorFromXmlContent extends ParseAWSErrorFromXmlContent {
 
    private final String servicePath;
    private final boolean isVhostStyle;
+   private final ProviderMetadata providerMetadata;
 
    @Inject
    public ParseS3ErrorFromXmlContent(AWSUtils utils, @Named(PROPERTY_S3_VIRTUAL_HOST_BUCKETS) boolean isVhostStyle,
-            @Named(PROPERTY_S3_SERVICE_PATH) String servicePath) {
+            @Named(PROPERTY_S3_SERVICE_PATH) String servicePath, ProviderMetadata providerMetadata) {
       super(utils);
       this.servicePath = servicePath;
       this.isVhostStyle = isVhostStyle;
+      this.providerMetadata = providerMetadata;
    }
 
    protected Exception refineException(HttpCommand command, HttpResponse response, Exception exception, AWSError error,
@@ -59,13 +61,14 @@ public class ParseS3ErrorFromXmlContent extends ParseAWSErrorFromXmlContent {
       switch (response.getStatusCode()) {
          case 404:
             if (!command.getCurrentRequest().getMethod().equals("DELETE")) {
+               // TODO: parse NoSuchBucket and NoSuchKey from error?
                // If we have a payload/bucket/container that is not all lowercase, vhost-style URLs are not an option
                // and must be automatically converted to their path-based equivalent.  This should only be possible for
                // AWS-S3 since it is the only S3 implementation configured to allow uppercase payload/bucket/container
                // names.
                //
                // http://code.google.com/p/jclouds/issues/detail?id=992
-               URI defaultS3Endpoint = URI.create(new S3ApiMetadata().getDefaultEndpoint().get());
+               URI defaultS3Endpoint = URI.create(providerMetadata.getApiMetadata().getDefaultEndpoint().get());
                URI requestEndpoint = command.getCurrentRequest().getEndpoint();
                boolean wasPathBasedRequest = requestEndpoint.getHost().contains(defaultS3Endpoint.getHost()) &&
                      requestEndpoint.getHost().equals(defaultS3Endpoint.getHost());
