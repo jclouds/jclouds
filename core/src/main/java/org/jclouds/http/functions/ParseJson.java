@@ -62,7 +62,8 @@ public class ParseJson<T> implements Function<HttpResponse, T> {
          return apply(gson);
       } catch (Exception e) {
          StringBuilder message = new StringBuilder();
-         message.append("Error parsing input");
+         message.append("Error parsing input: ");
+         message.append(e.getMessage());
          logger.error(e, message.toString());
          throw new HttpResponseException(message.toString() + "\n" + from, null, from, e);
       } finally {
