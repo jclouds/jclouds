@@ -53,7 +53,7 @@ public class SecurityGroupApiLiveTest extends BaseNeutronApiLiveTest {
             assertNotNull(securityGroup);
 
             rule = sgApi.create(
-                  Rule.createBuilder(RuleDirection.EGRESS, securityGroup.getId())
+                  Rule.createBuilder(RuleDirection.INGRESS, securityGroup.getId())
                         .ethertype(RuleEthertype.IPV6)
                         .portRangeMax(90)
                         .portRangeMin(80)
@@ -68,7 +68,7 @@ public class SecurityGroupApiLiveTest extends BaseNeutronApiLiveTest {
             assertEquals(securityGroup.getName(), "jclouds-test");
             assertEquals(securityGroup.getDescription(), "jclouds test security group");
 
-            assertEquals(securityGroup.getRules().size(), 3);
+            assertEquals(securityGroup.getRules().size(), 1);
 
             Rule newSecGroupRule = null;
 
@@ -86,12 +86,16 @@ public class SecurityGroupApiLiveTest extends BaseNeutronApiLiveTest {
             assertEquals(rule.getProtocol(), RuleProtocol.TCP);
             assertEquals(rule.getPortRangeMax().intValue(), 90);
             assertEquals(rule.getPortRangeMin().intValue(), 80);
-            assertEquals(rule.getDirection(), RuleDirection.EGRESS);
+            assertEquals(rule.getDirection(), RuleDirection.INGRESS);
          } finally {
-            try {
-               assertTrue(sgApi.deleteRule(rule.getId()));
-            } finally {
-               assertTrue(sgApi.deleteSecurityGroup(securityGroup.getId()));
+            if (sgApi != null) {
+               try {
+                  if (rule != null) {
+                     assertTrue(sgApi.deleteRule(rule.getId()));
+                  }
+               } finally {
+                  assertTrue(sgApi.deleteSecurityGroup(securityGroup.getId()));
+               }
             }
          }
       }
