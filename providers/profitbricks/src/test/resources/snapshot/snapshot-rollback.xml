@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<S:Envelope xmlns:S="http://schemas.xmlsoap.org/soap/envelope/">
+    <S:Body>
+        <ns2:rollbackSnapshotResponse xmlns:ns2="http://ws.api.profitbricks.com/">
+            <return>
+                <requestId>1234567890</requestId>
+                <dataCenterId>qswdefrg-qaws-qaws-defe-rgrgdsvcxbrh</dataCenterId>
+                <dataCenterVersion>1</dataCenterVersion>
+            </return>
+        </ns2:rollbackSnapshotResponse>
+    </S:Body>
+</S:Envelope>

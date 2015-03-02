@@ -17,12 +17,12 @@
 package org.jclouds.profitbricks;
 
 import java.io.Closeable;
-
 import org.jclouds.profitbricks.features.DataCenterApi;
 import org.jclouds.profitbricks.features.FirewallApi;
 import org.jclouds.profitbricks.features.ImageApi;
 import org.jclouds.profitbricks.features.NicApi;
 import org.jclouds.profitbricks.features.ServerApi;
+import org.jclouds.profitbricks.features.SnapshotApi;
 import org.jclouds.profitbricks.features.StorageApi;
 import org.jclouds.rest.annotations.Delegate;
 
@@ -45,4 +45,7 @@ public interface ProfitBricksApi extends Closeable {
 
    @Delegate
    FirewallApi firewallApi();
+
+   @Delegate
+   SnapshotApi snapshotApi();
 }

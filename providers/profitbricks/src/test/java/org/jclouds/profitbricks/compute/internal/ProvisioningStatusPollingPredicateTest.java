@@ -136,5 +136,38 @@ public class ProvisioningStatusPollingPredicateTest extends BaseProfitBricksMock
          server.shutdown();
       }
    }
+   
+   @Test
+   public void testSnapshotPredicate() throws Exception{
+        MockWebServer server = mockWebServer();
+
+      byte[] payloadInProcess = payloadFromResource("/snapshot/snapshot-state-inprocess.xml");
+      byte[] payloadAvailable = payloadFromResource("/snapshot/snapshot.xml");
+
+      // wait 3 times
+      server.enqueue(new MockResponse().setBody(payloadInProcess));
+      server.enqueue(new MockResponse().setBody(payloadInProcess));
+      server.enqueue(new MockResponse().setBody(payloadInProcess));
+      server.enqueue(new MockResponse().setBody(payloadAvailable));
+
+      server.enqueue(new MockResponse().setBody(payloadAvailable));
+
+      ProfitBricksApi pbApi = api(server.getUrl(rootUrl));
+
+      Predicate<String> waitUntilAvailable = Predicates2.retry(
+              new ProvisioningStatusPollingPredicate(pbApi, ProvisioningStatusAware.SNAPSHOT, ProvisioningState.AVAILABLE),
+              30l, 1l, TimeUnit.SECONDS);
+
+      String id = "qswdefrg-qaws-qaws-defe-rgrgdsvcxbrh";
+      try {
+         waitUntilAvailable.apply(id);
+         ProvisioningState finalState = pbApi.snapshotApi().getSnapshot(id).state();
+         assertRequestHasCommonProperties(server.takeRequest());
+         assertEquals(finalState, ProvisioningState.AVAILABLE);
+      } finally {
+         pbApi.close();
+         server.shutdown();
+      }
+   }
 
 }

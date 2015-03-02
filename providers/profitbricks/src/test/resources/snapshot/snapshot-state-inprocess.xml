@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<S:Envelope xmlns:S="http://schemas.xmlsoap.org/soap/envelope/">
+    <S:Body>
+        <ns2:getSnapshotResponse xmlns:ns2="http://ws.api.profitbricks.com/">
+            <return>
+                <snapshotId>qswdefrg-qaws-qaws-defe-rgrgdsvcxbrh</snapshotId>
+                <description>description</description>
+                <snapshotSize>1024</snapshotSize>
+                <snapshotName>snapshot01</snapshotName>
+                <provisioningState>INPROCESS</provisioningState>
+                <bootable>true</bootable>
+                <osType>LINUX</osType>
+                <cpuHotPlug>true</cpuHotPlug>
+                <cpuHotUnPlug>true</cpuHotUnPlug>
+                <discVirtioHotPlug>true</discVirtioHotPlug>
+                <discVirtioHotUnPlug>true</discVirtioHotUnPlug>
+                <ramHotPlug>true</ramHotPlug>
+                <ramHotUnPlug>true</ramHotUnPlug>
+                <nicHotPlug>true</nicHotPlug>
+                <nicHotUnPlug>true</nicHotUnPlug>
+                <creationTimestamp>2015-01-26T07:09:23.138Z</creationTimestamp>
+                <modificationTimestamp>2015-01-26T07:09:23.138Z</modificationTimestamp>
+                <location>us/las</location>
+            </return>
+        </ns2:getSnapshotResponse>
+    </S:Body>
+</S:Envelope>
