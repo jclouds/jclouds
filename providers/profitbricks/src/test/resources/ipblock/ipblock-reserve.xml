@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<S:Envelope xmlns:S="http://schemas.xmlsoap.org/soap/envelope/">
+  <S:Body>
+    <ns2:reservePublicIpBlockResponse xmlns:ns2="http://ws.api.profitbricks.com/">
+      <return>
+        <requestId>request-id</requestId>
+        <blockId>block-id</blockId>
+        <location>us/las</location>
+        <ips>ip</ips>
+      </return>
+    </ns2:reservePublicIpBlockResponse>
+  </S:Body>
+</S:Envelope>

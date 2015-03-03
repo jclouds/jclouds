@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<S:Envelope xmlns:S="http://schemas.xmlsoap.org/soap/envelope/">
+  <S:Body>
+    <ns2:getAllPublicIpBlocksResponse xmlns:ns2="http://ws.api.profitbricks.com/">
+      <return>
+        <blockId>qwertyui-qwer-qwer-qwer-qwertyyuiiop</blockId>
+        <location>us/las</location>
+        <publicIps>
+          <ip>ip</ip>
+		  <nicId>nic-id</nicId>
+        </publicIps>
+        <publicIps>
+          <ip>ip</ip>
+        </publicIps>
+      </return>
+    </ns2:getAllPublicIpBlocksResponse>
+  </S:Body>
+</S:Envelope>
