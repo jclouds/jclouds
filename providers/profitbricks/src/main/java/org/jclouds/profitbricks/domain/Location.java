@@ -21,6 +21,7 @@ public enum Location {
    DE_FKB("de/fkb"),
    DE_FRA("de/fra"),
    US_LAS("us/las"),
+   US_LAS_DEV("us/lasdev"),
    UNRECOGNIZED("unknown");
 
    private final String id;

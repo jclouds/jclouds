@@ -18,6 +18,7 @@ package org.jclouds.profitbricks;
 
 import java.io.Closeable;
 import org.jclouds.profitbricks.features.DataCenterApi;
+import org.jclouds.profitbricks.features.DrivesApi;
 import org.jclouds.profitbricks.features.FirewallApi;
 import org.jclouds.profitbricks.features.ImageApi;
 import org.jclouds.profitbricks.features.IpBlockApi;
@@ -53,4 +54,6 @@ public interface ProfitBricksApi extends Closeable {
    @Delegate
    IpBlockApi ipBlockApi();
 
+   @Delegate
+   DrivesApi drivesApi();
 }

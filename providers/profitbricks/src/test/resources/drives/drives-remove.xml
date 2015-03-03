@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<S:Envelope xmlns:S="http://schemas.xmlsoap.org/soap/envelope/">
+  <S:Body>
+    <ns2:removeRomDriveFromServerResponse xmlns:ns2="http://ws.api.profitbricks.com/">
+      <return>
+        <requestId>request-id</requestId>
+        <dataCenterId>datacenter-id</dataCenterId>
+        <dataCenterVersion>datacenter-version</dataCenterVersion>
+      </return>
+    </ns2:removeRomDriveFromServerResponse>
+  </S:Body>
+</S:Envelope>
