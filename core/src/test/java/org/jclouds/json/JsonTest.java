@@ -98,7 +98,7 @@ public class JsonTest {
       assertEquals(obj2, obj);
       assertEquals(json.toJson(obj2), json.toJson(obj));
    }
-   
+
    static class ExcludeStringValue implements DefaultExclusionStrategy {
       public boolean shouldSkipClass(Class<?> clazz) {
         return false;
@@ -245,6 +245,87 @@ public class JsonTest {
       assertEquals(json.fromJson(spinalJson, SerializedNamesType.class), resource);
    }
 
+   public void autoValueWithBuilder() {
+      Json json = Guice.createInjector(new GsonModule()).getInstance(Json.class);
+
+      SerializedNamesWithBuilder resource = SerializedNamesWithBuilder.builder().id("1234").number(2).build();
+      String spinalJson = "{\"custom_id_name\":\"1234\",\"number\":2}";
+
+      assertEquals(json.toJson(resource), spinalJson);
+      assertEquals(json.fromJson(spinalJson, SerializedNamesWithBuilder.class), resource);
+   }
+
+   public void autoValueWithBuilderNested() {
+      Json json = Guice.createInjector(new GsonModule()).getInstance(Json.class);
+
+      SerializedNamesNestedWithBuilder resource = SerializedNamesNestedWithBuilder.builder().id("1234")
+            .snwb(ImmutableList.of(SerializedNamesWithBuilder.builder().id("5678").number(1).build())).build();
+
+      String spinalJson = "{\"nested_id_name\":\"1234\",\"serialized_name_with_builder\":[{\"custom_id_name\":\"5678\",\"number\":1}]}";
+
+      assertEquals(json.toJson(resource), spinalJson);
+      assertEquals(json.fromJson(spinalJson, SerializedNamesNestedWithBuilder.class), resource);
+   }
+
+   public void autoValueWithBuilderMissingNested() {
+      Json json = Guice.createInjector(new GsonModule()).getInstance(Json.class);
+
+      SerializedNamesNestedWithBuilder resource = SerializedNamesNestedWithBuilder.builder().id("1234")
+            .snwb(ImmutableList.<SerializedNamesWithBuilder>of()).build();
+
+      String spinalJson = "{\"nested_id_name\":\"1234\",\"serialized_name_with_builder\":[]}";
+
+      assertEquals(json.toJson(resource), spinalJson);
+      assertEquals(json.fromJson(spinalJson, SerializedNamesNestedWithBuilder.class), resource);
+   }
+
+   @AutoValue
+   abstract static class SerializedNamesNestedWithBuilder {
+      public abstract String getId();
+      @Nullable
+      public abstract List<SerializedNamesWithBuilder> getSnwb();
+
+      public static Builder builder() {
+         return new AutoValue_JsonTest_SerializedNamesNestedWithBuilder.Builder();
+      }
+      public abstract Builder toBuilder();
+
+      @AutoValue.Builder
+      public interface Builder {
+         Builder id(String id);
+         Builder snwb(List<SerializedNamesWithBuilder> snwb);
+         SerializedNamesNestedWithBuilder build();
+      }
+
+      @SerializedNames({"nested_id_name", "serialized_name_with_builder"})
+      private static SerializedNamesNestedWithBuilder create(String id, List<SerializedNamesWithBuilder> snwb) {
+         return builder().id(id).snwb(snwb).build();
+      }
+   }
+
+   @AutoValue
+   abstract static class SerializedNamesWithBuilder {
+      public abstract String getId();
+      public abstract int getNumber();
+
+      public static Builder builder() {
+         return new AutoValue_JsonTest_SerializedNamesWithBuilder.Builder();
+      }
+      public abstract Builder toBuilder();
+
+      @AutoValue.Builder
+      public interface Builder {
+         Builder id(String id);
+         Builder number(int number);
+         SerializedNamesWithBuilder build();
+      }
+
+      @SerializedNames({"custom_id_name", "number"})
+      private static SerializedNamesWithBuilder create(String id, int number) {
+         return builder().id(id).number(number).build();
+      }
+   }
+
    @AutoValue
    abstract static class SerializedNamesTooFewType {
       abstract String id();
@@ -274,7 +355,6 @@ public class JsonTest {
    @AutoValue
    abstract static class NestedSerializedNamesType {
       abstract SerializedNamesType item();
-
       abstract List<SerializedNamesType> items();
 
       @SerializedNames({ "Item", "Items" })
