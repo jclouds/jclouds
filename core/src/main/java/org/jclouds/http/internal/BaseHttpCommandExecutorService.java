@@ -19,6 +19,7 @@ package org.jclouds.http.internal;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Throwables.propagate;
 import static org.jclouds.http.HttpUtils.checkRequestHasContentLengthOrChunkedEncoding;
+import static org.jclouds.http.HttpUtils.releasePayload;
 import static org.jclouds.http.HttpUtils.wirePayloadIfEnabled;
 import static org.jclouds.util.Throwables2.getFirstThrowableOfType;
 
@@ -41,6 +42,8 @@ import org.jclouds.http.handlers.DelegatingErrorHandler;
 import org.jclouds.http.handlers.DelegatingRetryHandler;
 import org.jclouds.io.ContentMetadataCodec;
 import org.jclouds.logging.Logger;
+
+import com.google.common.annotations.VisibleForTesting;
 
 public abstract class BaseHttpCommandExecutorService<Q> implements HttpCommandExecutorService {
    protected final HttpUtils utils;
@@ -120,13 +123,17 @@ public abstract class BaseHttpCommandExecutorService<Q> implements HttpCommandEx
       return response;
    }
 
-   private boolean shouldContinue(HttpCommand command, HttpResponse response) {
+   @VisibleForTesting
+   boolean shouldContinue(HttpCommand command, HttpResponse response) {
       boolean shouldContinue = false;
       if (retryHandler.shouldRetryRequest(command, response)) {
          shouldContinue = true;
       } else {
          errorHandler.handleError(command, response);
       }
+      // At this point we are going to send a new request or we have just handled the error, so
+      // we should make sure that any open stream is closed.
+      releasePayload(response);
       return shouldContinue;
    }
 

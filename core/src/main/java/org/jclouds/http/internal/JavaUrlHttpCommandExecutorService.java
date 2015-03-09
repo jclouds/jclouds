@@ -18,7 +18,6 @@ package org.jclouds.http.internal;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Throwables.propagate;
-import static com.google.common.io.ByteStreams.toByteArray;
 import static com.google.common.net.HttpHeaders.CONTENT_LENGTH;
 import static com.google.common.net.HttpHeaders.HOST;
 import static com.google.common.net.HttpHeaders.USER_AGENT;
@@ -26,7 +25,6 @@ import static org.jclouds.http.HttpUtils.filterOutContentHeaders;
 import static org.jclouds.io.Payloads.newInputStreamPayload;
 import static org.jclouds.util.Closeables2.closeQuietly;
 
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Field;
@@ -96,7 +94,7 @@ public class JavaUrlHttpCommandExecutorService extends BaseHttpCommandExecutorSe
       try {
          in = connection.getInputStream();
       } catch (IOException e) {
-         in = bufferAndCloseStream(connection.getErrorStream());
+         in = connection.getErrorStream();
       } catch (RuntimeException e) {
          closeQuietly(in);
          throw e;
@@ -125,18 +123,6 @@ public class JavaUrlHttpCommandExecutorService extends BaseHttpCommandExecutorSe
       }
       builder.headers(filterOutContentHeaders(headers));
       return builder.build();
-   }
-
-   private InputStream bufferAndCloseStream(InputStream inputStream) throws IOException {
-      InputStream in = null;
-      try {
-         if (inputStream != null) {
-            in = new ByteArrayInputStream(toByteArray(inputStream));
-         }
-      } finally {
-         closeQuietly(inputStream);
-      }
-      return in;
    }
 
    @Override

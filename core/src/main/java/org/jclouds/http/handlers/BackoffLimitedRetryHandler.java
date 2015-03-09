@@ -17,7 +17,6 @@
 package org.jclouds.http.handlers;
 
 import static java.lang.Math.max;
-import static org.jclouds.http.HttpUtils.releasePayload;
 
 import java.io.IOException;
 import java.util.Random;
@@ -95,7 +94,6 @@ public class BackoffLimitedRetryHandler implements HttpRetryHandler, IOException
    }
 
    public boolean shouldRetryRequest(HttpCommand command, HttpResponse response) {
-      releasePayload(response);
       return ifReplayableBackoffAndReturnTrue(command);
    }
 

@@ -19,6 +19,7 @@ package org.jclouds.http.handlers;
 import static org.jclouds.reflect.Reflection2.method;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertTrue;
+import static org.testng.Assert.fail;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -117,46 +118,38 @@ public class BackoffLimitedRetryHandlerTest {
    }
 
    @Test
-   void testClosesInputStream() throws InterruptedException, IOException, SecurityException, NoSuchMethodException {
+   void testInputStreamIsNotClosed() throws SecurityException, NoSuchMethodException, IOException {
       HttpCommand command = createCommand();
-
-      HttpResponse response = HttpResponse.builder().statusCode(400).build();
+      HttpResponse response = HttpResponse.builder().statusCode(500).build();
 
       InputStream inputStream = new InputStream() {
-         boolean isOpen = true;
+         int count = 2;
 
          @Override
          public void close() {
-            this.isOpen = false;
+            fail("The retry handler should not close the response stream");
          }
-
-         int count = 1;
 
          @Override
          public int read() throws IOException {
-            if (this.isOpen)
-               return (count > -1) ? count-- : -1;
-            else
-               return -1;
+            return count < 0 ? -1 : --count;
          }
 
          @Override
          public int available() throws IOException {
-            if (this.isOpen)
-               return count;
-            else
-               return 0;
+            return count < 0 ? 0 : count;
          }
       };
+
       response.setPayload(Payloads.newInputStreamPayload(inputStream));
       response.getPayload().getContentMetadata().setContentLength(1l);
-      assertEquals(response.getPayload().getInput().available(), 1);
-      assertEquals(response.getPayload().getInput().read(), 1);
+      assertEquals(response.getPayload().openStream().available(), 2);
+      assertEquals(response.getPayload().openStream().read(), 1);
 
       handler.shouldRetryRequest(command, response);
 
-      assertEquals(response.getPayload().getInput().available(), 0);
-      assertEquals(response.getPayload().getInput().read(), -1);
+      assertEquals(response.getPayload().openStream().available(), 1);
+      assertEquals(response.getPayload().openStream().read(), 0);
    }
 
    private final Function<Invocation, HttpRequest> processor = ContextBuilder
