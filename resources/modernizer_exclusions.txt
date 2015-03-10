@@ -17,3 +17,5 @@ com/google/common/collect/Sets.newLinkedHashSet:()Ljava/util/LinkedHashSet;
 com/google/common/collect/Sets.newTreeSet:()Ljava/util/TreeSet;
 com/google/common/primitives/Ints.compare:(II)I
 com/google/common/primitives/Longs.compare:(JJ)I
+com/google/inject/Inject
+com/google/inject/Provider
