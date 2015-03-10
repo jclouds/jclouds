@@ -121,7 +121,7 @@ function ensure_hostname_in_hosts() {
     local ipaddr=`hostname -i`
   }
   # NOTE: we blindly trust existing hostname settings in /etc/hosts
-  egrep -q `hostname` /etc/hosts || echo "$ipaddr `hostname`" >> /etc/hosts
+  egrep -q `hostname -s` /etc/hosts || echo "$ipaddr `hostname -f` `hostname -s`" >> /etc/hosts
 }
 
 # download locations for many services are at public dns
