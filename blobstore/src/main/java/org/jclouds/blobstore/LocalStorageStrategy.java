@@ -19,7 +19,9 @@ package org.jclouds.blobstore;
 import java.io.IOException;
 
 import org.jclouds.blobstore.domain.Blob;
+import org.jclouds.blobstore.domain.ContainerAccess;
 import org.jclouds.blobstore.domain.StorageMetadata;
+import org.jclouds.blobstore.options.CreateContainerOptions;
 import org.jclouds.blobstore.options.ListContainerOptions;
 import org.jclouds.domain.Location;
 
@@ -47,7 +49,11 @@ public interface LocalStorageStrategy {
      * @param container
      * @return
      */
-    boolean createContainerInLocation(String container, Location location);
+    boolean createContainerInLocation(String container, Location location, CreateContainerOptions options);
+
+    ContainerAccess getContainerAccess(String container);
+
+    void setContainerAccess(String container, ContainerAccess access);
 
     /**
      * Deletes a container and all its content
