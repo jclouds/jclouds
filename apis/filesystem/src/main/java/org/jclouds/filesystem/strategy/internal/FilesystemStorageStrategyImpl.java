@@ -17,7 +17,9 @@
 package org.jclouds.filesystem.strategy.internal;
 
 import static java.nio.file.Files.getFileAttributeView;
+import static java.nio.file.Files.getPosixFilePermissions;
 import static java.nio.file.Files.readAttributes;
+import static java.nio.file.Files.setPosixFilePermissions;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Strings.isNullOrEmpty;
@@ -29,6 +31,7 @@ import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.file.Path;
 import java.nio.file.attribute.BasicFileAttributes;
+import java.nio.file.attribute.PosixFilePermission;
 import java.nio.file.attribute.UserDefinedFileAttributeView;
 import java.nio.charset.StandardCharsets;
 import java.util.Date;
@@ -43,10 +46,12 @@ import javax.inject.Provider;
 import org.jclouds.blobstore.LocalStorageStrategy;
 import org.jclouds.blobstore.domain.Blob;
 import org.jclouds.blobstore.domain.BlobBuilder;
+import org.jclouds.blobstore.domain.ContainerAccess;
 import org.jclouds.blobstore.domain.MutableStorageMetadata;
 import org.jclouds.blobstore.domain.StorageMetadata;
 import org.jclouds.blobstore.domain.StorageType;
 import org.jclouds.blobstore.domain.internal.MutableStorageMetadataImpl;
+import org.jclouds.blobstore.options.CreateContainerOptions;
 import org.jclouds.blobstore.options.ListContainerOptions;
 import org.jclouds.blobstore.reference.BlobStoreConstants;
 import org.jclouds.domain.Location;
@@ -136,11 +141,45 @@ public class FilesystemStorageStrategyImpl implements LocalStorageStrategy {
    }
 
    @Override
-   public boolean createContainerInLocation(String container, Location location) {
+   public boolean createContainerInLocation(String container, Location location, CreateContainerOptions options) {
       // TODO: implement location
       logger.debug("Creating container %s", container);
       filesystemContainerNameValidator.validate(container);
-      return createDirectoryWithResult(container, null);
+      boolean created = createDirectoryWithResult(container, null);
+      if (created) {
+         setContainerAccess(container, options.isPublicRead() ? ContainerAccess.PUBLIC_READ : ContainerAccess.PRIVATE);
+      }
+      return created;
+   }
+
+   @Override
+   public ContainerAccess getContainerAccess(String container) {
+      Path path = new File(buildPathStartingFromBaseDir(container)).toPath();
+      Set<PosixFilePermission> permissions;
+      try {
+         permissions = getPosixFilePermissions(path);
+      } catch (IOException ioe) {
+         throw Throwables.propagate(ioe);
+      }
+      return permissions.contains(PosixFilePermission.OTHERS_READ)
+            ? ContainerAccess.PUBLIC_READ : ContainerAccess.PRIVATE;
+   }
+
+   @Override
+   public void setContainerAccess(String container, ContainerAccess access) {
+      Path path = new File(buildPathStartingFromBaseDir(container)).toPath();
+      Set<PosixFilePermission> permissions;
+      try {
+         permissions = getPosixFilePermissions(path);
+         if (access == ContainerAccess.PRIVATE) {
+            permissions.remove(PosixFilePermission.OTHERS_READ);
+         } else if (access == ContainerAccess.PUBLIC_READ) {
+            permissions.add(PosixFilePermission.OTHERS_READ);
+         }
+         setPosixFilePermissions(path, permissions);
+      } catch (IOException ioe) {
+         throw Throwables.propagate(ioe);
+      }
    }
 
    @Override
@@ -449,7 +488,7 @@ public class FilesystemStorageStrategyImpl implements LocalStorageStrategy {
 
    public boolean createContainer(String container) {
       filesystemContainerNameValidator.validate(container);
-      return createContainerInLocation(container, null);
+      return createContainerInLocation(container, null, CreateContainerOptions.NONE);
    }
 
    public Blob newBlob(@ParamValidators({ FilesystemBlobKeyValidator.class }) String name) {
