@@ -391,17 +391,17 @@ public final class LocalBlobStore implements BlobStore {
 
    @Override
    public boolean createContainerInLocation(Location location, String name) {
-      return storageStrategy.createContainerInLocation(name, location);
+      return storageStrategy.createContainerInLocation(name, location, CreateContainerOptions.NONE);
    }
 
    @Override
    public ContainerAccess getContainerAccess(String container) {
-      throw new UnsupportedOperationException("not implemented");
+      return storageStrategy.getContainerAccess(container);
    }
 
    @Override
    public void setContainerAccess(String container, ContainerAccess access) {
-      throw new UnsupportedOperationException("not implemented");
+      storageStrategy.setContainerAccess(container, access);
    }
 
    private Blob loadBlob(final String container, final String key) {
@@ -624,8 +624,6 @@ public final class LocalBlobStore implements BlobStore {
 
    @Override
    public boolean createContainerInLocation(Location location, String container, CreateContainerOptions options) {
-      if (options.isPublicRead())
-         throw new UnsupportedOperationException("publicRead");
-      return createContainerInLocation(location, container);
+      return storageStrategy.createContainerInLocation(container, location, options);
    }
 }
