@@ -48,7 +48,11 @@ import com.google.common.collect.FluentIterable;
 
 /**
  * Provides access to the OpenStack Compute (Nova) Volume extension API.
+ *
+ * @deprecated Please use {@link org.jclouds.openstack.cinder.v1.features.VolumeApi} or
+ *             {@link org.jclouds.openstack.cinder.v1.features.VolumeApi} instead. To be removed in jclouds 2.0.
  */
+@Deprecated
 @Beta
 @Extension(of = ServiceType.COMPUTE, namespace = ExtensionNamespaces.VOLUMES)
 @RequestFilters(AuthenticateRequest.class)
@@ -57,8 +61,11 @@ public interface VolumeApi {
    /**
     * Returns a summary list of snapshots.
     *
+    * @deprecated Please use {@link org.jclouds.openstack.cinder.v1.features.VolumeApi#list()} instead.
+    *             To be removed in jclouds 2.0.
     * @return the list of snapshots
     */
+   @Deprecated
    @Named("volume:list")
    @GET
    @Path("/os-volumes")
@@ -69,8 +76,11 @@ public interface VolumeApi {
    /**
     * Returns a detailed list of volumes.
     *
+    * @deprecated Please use {@link org.jclouds.openstack.cinder.v1.features.VolumeApi#listInDetail()} instead.
+    *             To be removed in jclouds 2.0.
     * @return the list of volumes.
     */
+   @Deprecated
    @Named("volume:list")
    @GET
    @Path("/os-volumes/detail")
@@ -81,8 +91,11 @@ public interface VolumeApi {
    /**
     * Return data about the given volume.
     *
+    * @deprecated Please use {@link org.jclouds.openstack.cinder.v1.features.VolumeApi#get(String)} instead.
+    *             To be removed in jclouds 2.0.
     * @return details of a specific snapshot.
     */
+   @Deprecated
    @Named("volume:get")
    @GET
    @Path("/os-volumes/{id}")
@@ -94,8 +107,11 @@ public interface VolumeApi {
    /**
     * Creates a new Snapshot
     *
+    * @deprecated Please use {@link org.jclouds.openstack.cinder.v1.features.VolumeApi#create(int, CreateVolumeOptions)} instead.
+    *             To be removed in jclouds 2.0.
     * @return the new Snapshot
     */
+   @Deprecated
    @Named("volume:create")
    @POST
    @Path("/os-volumes")
@@ -107,8 +123,11 @@ public interface VolumeApi {
    /**
     * Delete a snapshot.
     *
+    * @deprecated Please use {@link org.jclouds.openstack.cinder.v1.features.VolumeApi#delete(String)} instead.
+    *             To be removed in jclouds 2.0.
     * @return true if successful
     */
+   @Deprecated
    @Named("volume:delete")
    @DELETE
    @Path("/os-volumes/{volumeId}")
@@ -120,8 +139,11 @@ public interface VolumeApi {
    /**
     * Returns a summary list of snapshots.
     *
+    * @deprecated Please use {@link org.jclouds.openstack.cinder.v1.features.SnapshotApi#list()} instead.
+    *             To be removed in jclouds 2.0.
     * @return the list of snapshots
     */
+   @Deprecated
    @Named("volume:listSnapshots")
    @GET
    @Path("/os-snapshots")
@@ -132,8 +154,11 @@ public interface VolumeApi {
    /**
     * Returns a summary list of snapshots.
     *
+    * @deprecated Please use {@link org.jclouds.openstack.cinder.v1.features.SnapshotApi#listInDetail()} instead.
+    *             To be removed in jclouds 2.0.
     * @return the list of snapshots
     */
+   @Deprecated
    @Named("volume:listSnapshots")
    @GET
    @Path("/os-snapshots/detail")
@@ -144,8 +169,11 @@ public interface VolumeApi {
    /**
     * Return data about the given snapshot.
     *
+    * @deprecated Please use {@link org.jclouds.openstack.cinder.v1.features.SnapshotApi#get(String)} instead.
+    *             To be removed in jclouds 2.0.
     * @return details of a specific snapshot.
     */
+   @Deprecated
    @Named("volume:getSnapshot")
    @GET
    @Path("/os-snapshots/{id}")
@@ -157,6 +185,8 @@ public interface VolumeApi {
    /**
     * Creates a new Snapshot.
     *
+    * @deprecated Please use {@link org.jclouds.openstack.cinder.v1.features.SnapshotApi#create(String, CreateVolumeSnapshotOptions)} instead.
+    *             To be removed in jclouds 2.0.
     * @return the new Snapshot
     */
    @Named("volume:createSnapshot")
@@ -170,6 +200,8 @@ public interface VolumeApi {
    /**
     * Delete a snapshot.
     *
+    * @deprecated Please use {@link org.jclouds.openstack.cinder.v1.features.SnapshotApi#delete(String)} instead.
+    *             To be removed in jclouds 2.0.
     * @return true if successful
     */
    @Named("volume:deleteSnapshot")
