@@ -252,6 +252,8 @@ public class BaseContainerIntegrationTest extends BaseBlobStoreIntegrationTest {
          assert view.getBlobStore().directoryExists(containerName, directory + "/" + directory);
 
          view.getBlobStore().clearContainer(containerName, inDirectory(directory));
+         awaitConsistency();
+
          assert view.getBlobStore().directoryExists(containerName, directory);
          assert view.getBlobStore().directoryExists(containerName, directory + "/" + directory);
 
@@ -261,6 +263,8 @@ public class BaseContainerIntegrationTest extends BaseBlobStoreIntegrationTest {
          assert container.size() == 1 : container;
 
          view.getBlobStore().createDirectory(containerName, directory + "/" + directory);
+
+         awaitConsistency();
 
          container = view.getBlobStore().list(containerName, inDirectory(directory).recursive());
          assert container.getNextMarker() == null;
