@@ -117,7 +117,7 @@ public class ServerApiLiveTest extends BaseNovaApiLiveTest {
                   // This network UUID must match an existing network.
                   ImmutableSet.of(Network.builder().networkUuid("bc4cfa2b-2b27-4671-8e8f-73009623def0").fixedIp("192.168.55.56").build())
             );
-            ServerCreated server = serverApi.create(hostName, imageIdForRegion(regionId), "1", options);
+            ServerCreated server = serverApi.create(hostName, imageId(regionId), "1", options);
             serverId = server.getId();
 
             awaitActive(serverApi).apply(server.getId());
@@ -239,7 +239,7 @@ public class ServerApiLiveTest extends BaseNovaApiLiveTest {
          options = options.availabilityZone(availabilityZoneId);
       }
 
-      ServerCreated server = serverApi.create(hostName, imageIdForRegion(regionId), flavorRefForRegion(regionId), options);
+      ServerCreated server = serverApi.create(hostName, imageId(regionId), flavorId(regionId), options);
 
       awaitActive(serverApi).apply(server.getId());
 

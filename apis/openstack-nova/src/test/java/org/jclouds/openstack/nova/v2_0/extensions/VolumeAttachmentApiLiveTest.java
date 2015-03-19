@@ -16,175 +16,153 @@
  */
 package org.jclouds.openstack.nova.v2_0.extensions;
 
-import static org.jclouds.util.Predicates2.retry;
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertNotNull;
-import static org.testng.Assert.assertTrue;
-
-import java.util.Set;
-
-import org.jclouds.openstack.nova.v2_0.domain.Volume;
+import com.google.common.collect.FluentIterable;
+import com.google.common.collect.Iterables;
+import org.jclouds.ContextBuilder;
+import org.jclouds.openstack.cinder.v1.CinderApi;
+import org.jclouds.openstack.cinder.v1.domain.Volume;
+import org.jclouds.openstack.cinder.v1.features.VolumeApi;
+import org.jclouds.openstack.cinder.v1.options.CreateVolumeOptions;
+import org.jclouds.openstack.cinder.v1.predicates.VolumePredicates;
+import org.jclouds.openstack.nova.v2_0.domain.Server;
 import org.jclouds.openstack.nova.v2_0.domain.VolumeAttachment;
 import org.jclouds.openstack.nova.v2_0.internal.BaseNovaApiLiveTest;
-import org.jclouds.openstack.nova.v2_0.options.CreateVolumeOptions;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
-import com.google.common.base.Objects;
-import com.google.common.base.Optional;
-import com.google.common.base.Predicate;
-import com.google.common.collect.Iterables;
+import java.util.concurrent.TimeoutException;
+
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertNull;
 
 /**
  * Tests behavior of Volume Attachment API
  */
 @Test(groups = "live", testName = "VolumeAttachmentApiLiveTest", singleThreaded = true)
 public class VolumeAttachmentApiLiveTest extends BaseNovaApiLiveTest {
-
-   private Optional<? extends VolumeApi> volumeApi;
-   private Optional<? extends VolumeAttachmentApi> volumeAttachmentApi;
+   private VolumeApi volumeApi;
+   private VolumeAttachmentApi volumeAttachmentApi;
 
    private String region;
-   private Volume testVolume;
+   private Volume volume;
+   private Server server;
 
    @BeforeClass(groups = {"integration", "live"})
    @Override
    public void setup() {
       super.setup();
-      region = Iterables.getLast(api.getConfiguredRegions(), "nova");
-      volumeApi = api.getVolumeApi(region);
-      volumeAttachmentApi = api.getVolumeAttachmentApi(region);
+
+      CinderApi cinderApi;
+
+      if ("openstack-cinder".equals(getVolumeProvider())) {
+         cinderApi = ContextBuilder.newBuilder(getVolumeProvider())
+               .endpoint(endpoint)
+               .credentials(identity, credential)
+               .buildApi(CinderApi.class);
+      }
+      else {
+         cinderApi = ContextBuilder.newBuilder(getVolumeProvider())
+               .credentials(identity, credential)
+               .buildApi(CinderApi.class);
+      }
+
+      region = Iterables.getFirst(regions, "RegionOne");
+      volumeApi = cinderApi.getVolumeApi(region);
+      volumeAttachmentApi = api.getVolumeAttachmentApi(region).get();
+
+      CreateVolumeOptions options = CreateVolumeOptions.Builder
+            .name("jclouds-test-volume")
+            .description("description of test volume");
+
+      volume = volumeApi.create(getVolumeSizeGB(), options);
+      VolumePredicates.awaitAvailable(volumeApi).apply(volume);
+
+      server = createServerInRegion(region);
    }
 
-   @AfterClass(groups = { "integration", "live" })
+   @AfterClass(groups = {"integration", "live"})
    @Override
-   protected void tearDown() {
-      if (volumeApi.isPresent()) {
-         if (testVolume != null) {
-            final String volumeId = testVolume.getId();
-            assertTrue(volumeApi.get().delete(volumeId));
-            assertTrue(retry(new Predicate<VolumeApi>() {
-               public boolean apply(VolumeApi volumeApi) {
-                  return volumeApi.get(volumeId) == null;
-               }
-            }, 180 * 1000L).apply(volumeApi.get()));
-         }
-      }
+   public void tearDown() {
+      volumeApi.delete(volume.getId());
+      api.getServerApi(region).delete(server.getId());
 
       super.tearDown();
    }
 
-   public void testCreateVolume() {
-      if (volumeApi.isPresent()) {
-         CreateVolumeOptions options = CreateVolumeOptions.Builder
-               .name("jclouds-test-volume")
-               .description("description of test volume")
-               .availabilityZone(region);
+   public String getVolumeProvider() {
+      String volumeProviderKey = "test." + provider + ".volume-provider";
 
-         testVolume = volumeApi.get().create(1, options);
-         assertTrue(retry(new Predicate<VolumeApi>() {
-            public boolean apply(VolumeApi volumeApi) {
-               return volumeApi.get(testVolume.getId()).getStatus() == Volume.Status.AVAILABLE;
-            }
-         }, 180 * 1000L).apply(volumeApi.get()));
+      if (System.getProperties().containsKey(volumeProviderKey)) {
+         return System.getProperty(volumeProviderKey);
+      }
+      else {
+         return "openstack-cinder";
       }
    }
 
-   @Test(dependsOnMethods = "testCreateVolume")
-   public void testAttachments() {
-      if (volumeApi.isPresent()) {
-         String server_id = null;
-         try {
-            final String serverId = server_id = createServerInRegion(region).getId();
+   public int getVolumeSizeGB() {
+      String volumeSizeKey = "test." + provider + ".volume-size-gb";
 
-            Set<? extends VolumeAttachment> attachments =
-                  volumeAttachmentApi.get().listAttachmentsOnServer(serverId).toSet();
-            assertNotNull(attachments);
-            final int before = attachments.size();
-
-            VolumeAttachment testAttachment = volumeAttachmentApi.get().attachVolumeToServerAsDevice(
-                  testVolume.getId(), serverId, "/dev/vdf");
-            assertNotNull(testAttachment.getId());
-            assertEquals(testAttachment.getVolumeId(), testVolume.getId());
-
-            assertTrue(retry(new Predicate<VolumeAttachmentApi>() {
-               public boolean apply(VolumeAttachmentApi volumeAttachmentApi) {
-                  return volumeAttachmentApi.listAttachmentsOnServer(serverId).size() > before;
-               }
-            }, 60 * 1000L).apply(volumeAttachmentApi.get()));
-
-            attachments = volumeAttachmentApi.get().listAttachmentsOnServer(serverId).toSet();
-            assertNotNull(attachments);
-            assertEquals(attachments.size(), before + 1);
-
-            assertEquals(volumeApi.get().get(testVolume.getId()).getStatus(), Volume.Status.IN_USE);
-
-            boolean foundIt = false;
-            for (VolumeAttachment att : attachments) {
-               VolumeAttachment details = volumeAttachmentApi.get()
-                        .getAttachmentForVolumeOnServer(att.getVolumeId(), serverId);
-               assertNotNull(details);
-               assertNotNull(details.getId());
-               assertNotNull(details.getServerId());
-               assertNotNull(details.getVolumeId());
-               if (Objects.equal(details.getVolumeId(), testVolume.getId())) {
-                  foundIt = true;
-                  assertEquals(details.getDevice(), "/dev/vdf");
-                  assertEquals(details.getServerId(), serverId);
-               }
-            }
-
-            assertTrue(foundIt, "Failed to find the attachment we created in listAttachments() response");
-
-            volumeAttachmentApi.get().detachVolumeFromServer(testVolume.getId(), serverId);
-            assertTrue(retry(new Predicate<VolumeAttachmentApi>() {
-               public boolean apply(VolumeAttachmentApi volumeAttachmentApi) {
-                  return volumeAttachmentApi.listAttachmentsOnServer(serverId).size() == before;
-               }
-            }, 60 * 1000L).apply(volumeAttachmentApi.get()));
-
-         } finally {
-            if (server_id != null)
-               api.getServerApi(region).delete(server_id);
-         }
+      if (System.getProperties().containsKey(volumeSizeKey)) {
+         return Integer.parseInt(System.getProperty(volumeSizeKey));
+      }
+      else {
+         return 1;
       }
    }
 
-   /*
-   @Test(dependsOnMethods = "testCreateVolume")
-   public void testAttachmentAtBoot() {
-      if (volumeApi.isPresent()) {
-         String server_id = null;
-         BlockDeviceMapping blockDeviceMapping = BlockDeviceMapping.createOptions(testVolume.getId(), "/dev/vdf").build();
-         try {
-            CreateServerOptions createServerOptions =
-               CreateServerOptions.Builder.blockDeviceMapping(ImmutableSet.of(blockDeviceMapping));
-            final String serverId = server_id = createServerInRegion(region, createServerOptions).getId();
+   @Test
+   public void testAttachVolume() throws TimeoutException {
+      VolumeAttachment volumeAttachment = volumeAttachmentApi
+            .attachVolumeToServerAsDevice(volume.getId(), server.getId(), "/dev/wtf");
 
-            Set<? extends VolumeAttachment> attachments = volumeAttachmentApi.get()
-                    .listAttachmentsOnServer(serverId).toSet();
-            VolumeAttachment attachment = Iterables.getOnlyElement(attachments);
-
-
-            VolumeAttachment details = volumeAttachmentApi.get()
-                    .getAttachmentForVolumeOnServer(attachment.getVolumeId(), serverId);
-            assertNotNull(details.getId()); // Probably same as volumeId? Not necessarily true though
-            assertEquals(details.getVolumeId(), testVolume.getId());
-            assertEquals(details.getDevice(), "/dev/vdf");
-            assertEquals(details.getServerId(), serverId);
-
-            assertEquals(volumeApi.get().get(testVolume.getId()).getStatus(), Volume.Status.IN_USE);
-
-            assertTrue(volumeAttachmentApi.get().detachVolumeFromServer(testVolume.getId(), serverId),
-               "Could not detach volume " + testVolume.getId() + " from server " + serverId);
-            assertEquals(volumeAttachmentApi.get().listAttachmentsOnServer(serverId).size(), 0,
-               "Number of volumes on server " + serverId + " was not zero.");
-         } finally {
-            if (server_id != null) {
-               api.getServerApi(region).delete(server_id);
-            }
-         }
+      // Wait for the volume to become Attached (aka In Use) before moving on
+      if (!VolumePredicates.awaitInUse(volumeApi).apply(volume)) {
+         throw new TimeoutException("Timeout on volume: " + volume);
       }
-   }*/
+
+      assertEquals(volumeAttachment.getVolumeId(), volume.getId());
+      assertEquals(volumeAttachment.getServerId(), server.getId());
+      // we can't assert the device because, depending on the implementation, the passed in device may be ignored
+      // and the implementation just picks a device itself
+   }
+
+   @Test(dependsOnMethods = "testAttachVolume")
+   public void testListAttachments() {
+      FluentIterable<VolumeAttachment> volumeAttachments = volumeAttachmentApi
+            .listAttachmentsOnServer(server.getId());
+
+      assertEquals(volumeAttachments.size(), 1);
+
+      VolumeAttachment volumeAttachment = volumeAttachments.get(0);
+
+      assertEquals(volumeAttachment.getVolumeId(), volume.getId());
+      assertEquals(volumeAttachment.getServerId(), server.getId());
+   }
+
+   @Test(dependsOnMethods = "testListAttachments")
+   public void testGetAttachment() {
+      VolumeAttachment volumeAttachment = volumeAttachmentApi
+            .getAttachmentForVolumeOnServer(volume.getId(), server.getId());
+
+      assertEquals(volumeAttachment.getVolumeId(), volume.getId());
+      assertEquals(volumeAttachment.getServerId(), server.getId());
+   }
+
+
+   @Test(dependsOnMethods = "testGetAttachment")
+   public void testDetachVolume() throws TimeoutException {
+      volumeAttachmentApi.detachVolumeFromServer(volume.getId(), server.getId());
+
+      // Wait for the volume to become Detached (aka Available) before moving on
+      if (!VolumePredicates.awaitAvailable(volumeApi).apply(volume)) {
+         throw new TimeoutException("Timeout on volume: " + volume);
+      }
+
+      VolumeAttachment volumeAttachment = volumeAttachmentApi
+            .getAttachmentForVolumeOnServer(volume.getId(), server.getId());
+
+      assertNull(volumeAttachment);
+   }
 }

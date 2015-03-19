@@ -91,7 +91,7 @@ public class BaseNovaApiLiveTest extends BaseApiLiveTest<NovaApi> {
 
    protected Server createServerInRegion(String regionId, CreateServerOptions options) {
       ServerApi serverApi = api.getServerApi(regionId);
-      ServerCreated server = serverApi.create(hostName, imageIdForRegion(regionId), flavorRefForRegion(regionId), options);
+      ServerCreated server = serverApi.create(hostName, imageId(regionId), flavorId(regionId), options);
       blockUntilServerInState(server.getId(), serverApi, Status.ACTIVE);
       return serverApi.get(server.getId());
    }
@@ -114,21 +114,35 @@ public class BaseNovaApiLiveTest extends BaseApiLiveTest<NovaApi> {
       }
    }
 
-   protected String imageIdForRegion(String regionId) {
-      ImageApi imageApi = api.getImageApi(regionId);
+   protected String imageId(String regionId) {
+      String imageIdKey = "test." + provider + ".image-id";
 
-      // Get the first image from the list as it tends to be "lighter" and faster to start
-      return Iterables.get(imageApi.list().concat(), 0).getId();
+      if (System.getProperties().containsKey(imageIdKey)) {
+         return System.getProperty(imageIdKey);
+      }
+      else {
+         ImageApi imageApi = api.getImageApi(regionId);
+
+         // Get the first image from the list as it tends to be "lighter" and faster to start
+         return Iterables.get(imageApi.list().concat(), 0).getId();
+      }
    }
 
-   protected String flavorRefForRegion(String regionId) {
-      FlavorApi flavorApi = api.getFlavorApi(regionId);
-      return DEFAULT_FLAVOR_ORDERING.min(flavorApi.listInDetail().concat().filter(new Predicate<Flavor>() {
-         @Override
-         public boolean apply(Flavor in) {
-            return in.getDisk() >= 10 && in.getRam() >= 4 && in.getVcpus() >= 2;
-         }
-      })).getId();
+   protected String flavorId(String regionId) {
+      String imageIdKey = "test." + provider + ".flavor-id";
+
+      if (System.getProperties().containsKey(imageIdKey)) {
+         return System.getProperty(imageIdKey);
+      }
+      else {
+         FlavorApi flavorApi = api.getFlavorApi(regionId);
+         return DEFAULT_FLAVOR_ORDERING.min(flavorApi.listInDetail().concat().filter(new Predicate<Flavor>() {
+            @Override
+            public boolean apply(Flavor in) {
+               return in.getDisk() >= 10 && in.getRam() >= 4 && in.getVcpus() >= 2;
+            }
+         })).getId();
+      }
    }
 
    static final Ordering<Flavor> DEFAULT_FLAVOR_ORDERING = new Ordering<Flavor>() {
