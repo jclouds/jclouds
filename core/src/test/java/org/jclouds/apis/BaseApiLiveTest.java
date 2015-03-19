@@ -73,6 +73,17 @@ public abstract class BaseApiLiveTest<A extends Closeable> {
       return null;
    }
 
+   protected String setIfTestSystemPropertyPresent(Properties overrides, String key, String defaultValue) {
+      String val = setIfTestSystemPropertyPresent(overrides, key);
+
+      if (val == null) {
+         val = defaultValue;
+         overrides.setProperty(key, val);
+      }
+
+      return val;
+   }
+
    /**
     * This helps live testing against specific regions only.
     * @param regions A list of regions, usually from getConfiguredRegions()

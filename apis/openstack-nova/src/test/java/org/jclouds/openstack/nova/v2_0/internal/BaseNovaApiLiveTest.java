@@ -54,16 +54,15 @@ public class BaseNovaApiLiveTest extends BaseApiLiveTest<NovaApi> {
    }
 
    protected Set<String> regions;
+   protected String singleRegion;
 
    @BeforeClass(groups = { "integration", "live" })
    @Override
    public void setup() {
       super.setup();
 
-      String testRegion = System.getProperty("test." + provider + ".region");
-
-      if (testRegion != null) {
-         regions = ImmutableSet.of(testRegion);
+      if (singleRegion != null) {
+         regions = ImmutableSet.of(singleRegion);
       } else {
          regions = api.getConfiguredRegions();
       }
@@ -82,6 +81,7 @@ public class BaseNovaApiLiveTest extends BaseApiLiveTest<NovaApi> {
       Properties props = super.setupProperties();
       setIfTestSystemPropertyPresent(props, KeystoneProperties.CREDENTIAL_TYPE);
       setIfTestSystemPropertyPresent(props, NovaProperties.AUTO_ALLOCATE_FLOATING_IPS);
+      singleRegion = setIfTestSystemPropertyPresent(props, provider + ".region");
       return props;
    }
 

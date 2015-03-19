@@ -27,7 +27,6 @@ import java.util.Properties;
 
 import org.jclouds.openstack.keystone.v2_0.config.KeystoneAuthenticationModule.RegionModule;
 import org.jclouds.openstack.nova.v2_0.NovaApiMetadata;
-import org.jclouds.openstack.nova.v2_0.config.NovaHttpApiModule;
 import org.jclouds.openstack.nova.v2_0.config.NovaParserModule;
 import org.jclouds.providers.ProviderMetadata;
 import org.jclouds.providers.internal.BaseProviderMetadata;
@@ -35,6 +34,7 @@ import org.jclouds.rackspace.cloudidentity.v2_0.config.CloudIdentityAuthenticati
 import org.jclouds.rackspace.cloudidentity.v2_0.config.CloudIdentityAuthenticationModule;
 import org.jclouds.rackspace.cloudidentity.v2_0.config.CloudIdentityCredentialTypes;
 import org.jclouds.rackspace.cloudservers.us.config.CloudServersUSComputeServiceContextModule;
+import org.jclouds.rackspace.cloudservers.us.config.CloudServersUSHttpApiModule;
 
 import com.google.auto.service.AutoService;
 import com.google.common.collect.ImmutableSet;
@@ -87,14 +87,15 @@ public class CloudServersUSProviderMetadata extends BaseProviderMetadata {
                   .version("2")
                   .defaultEndpoint("https://identity.api.rackspacecloud.com/v2.0/")
                   .endpointName("identity service url ending in /v2.0/")
-                  .documentation(URI.create("http://docs.rackspace.com/loadbalancers/api/v1.0/clb-devguide/content/index.html"))
+                  .documentation(
+                        URI.create("http://docs.rackspace.com/loadbalancers/api/v1.0/clb-devguide/content/index.html"))
                   .defaultModules(ImmutableSet.<Class<? extends Module>>builder()
-                                              .add(CloudIdentityAuthenticationApiModule.class)
-                                              .add(CloudIdentityAuthenticationModule.class)
-                                              .add(RegionModule.class)
-                                              .add(NovaParserModule.class)
-                                              .add(NovaHttpApiModule.class)
-                                              .add(CloudServersUSComputeServiceContextModule.class).build())
+                        .add(CloudIdentityAuthenticationApiModule.class)
+                        .add(CloudIdentityAuthenticationModule.class)
+                        .add(RegionModule.class)
+                        .add(NovaParserModule.class)
+                        .add(CloudServersUSHttpApiModule.class)
+                        .add(CloudServersUSComputeServiceContextModule.class).build())
                   .build())
          .homepage(URI.create("http://www.rackspace.com/cloud/nextgen"))
          .console(URI.create("https://mycloud.rackspace.com"))

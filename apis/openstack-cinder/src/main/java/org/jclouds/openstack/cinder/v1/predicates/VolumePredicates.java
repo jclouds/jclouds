@@ -112,16 +112,9 @@ public class VolumePredicates {
       @Override
       public boolean apply(Volume volume) {
          checkNotNull(volume, "volume must be defined");
-
-         if (status.equals(volume.getStatus())) {
-            return true;
-         }
-         else {
-            Volume volumeUpdated = volumeApi.get(volume.getId());
-            checkNotNull(volumeUpdated, "Volume %s not found.", volume.getId());
-
-            return status.equals(volumeUpdated.getStatus());
-         }
+         Volume volumeUpdated = volumeApi.get(volume.getId());
+         checkNotNull(volumeUpdated, "Volume %s not found.", volume.getId());
+         return status.equals(volumeUpdated.getStatus());
       }
    }
 
