@@ -41,9 +41,9 @@ public class HPCloudComputeTemplateBuilderLiveTest extends BaseTemplateBuilderLi
    public void testTemplateBuilder() {
       Template defaultTemplate = this.view.getComputeService().templateBuilder().build();
       assertEquals(defaultTemplate.getImage().getOperatingSystem().is64Bit(), true);
-      assertEquals(defaultTemplate.getImage().getOperatingSystem().getVersion(), "12.04");
+      assertEquals(defaultTemplate.getImage().getOperatingSystem().getVersion(), "14.04");
       assertEquals(defaultTemplate.getImage().getOperatingSystem().getFamily(), OsFamily.UBUNTU);
-      assertTrue(defaultTemplate.getImage().getName().startsWith("Ubuntu Server 12.04"));
+      assertTrue(defaultTemplate.getImage().getName().startsWith("Ubuntu Server 14.04"));
       assertEquals(defaultTemplate.getImage().getDefaultCredentials().getUser(), "ubuntu");
       assertEquals(defaultTemplate.getLocation().getId(), "region-a.geo-1");
       assertEquals(defaultTemplate.getImage().getLocation().getId(), "region-a.geo-1");
