@@ -71,6 +71,11 @@
       <artifactId>jclouds-core</artifactId>
       <version>${project.parent.version}</version>
     </dependency>
+    <!-- for the extension namespaces -->
+    <dependency>
+      <groupId>com.google.inject.extensions</groupId>
+      <artifactId>guice-multibindings</artifactId>
+    </dependency>
     <dependency>
       <groupId>org.apache.jclouds</groupId>
       <artifactId>jclouds-core</artifactId>

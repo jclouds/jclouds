@@ -16,6 +16,8 @@
  */
 package org.jclouds.openstack.neutron.v2.config;
 
+import static org.jclouds.openstack.keystone.v2_0.config.KeystoneHttpApiModule.aliasBinder;
+
 import java.net.URI;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
@@ -41,9 +43,8 @@ import org.jclouds.rest.functions.ImplicitOptionalConverter;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
-import com.google.common.collect.ImmutableMultimap;
-import com.google.common.collect.Multimap;
 import com.google.inject.Provides;
+import com.google.inject.multibindings.MapBinder;
 
 /**
  * Configures the Neutron connection.
@@ -57,19 +58,17 @@ public class NeutronHttpApiModule extends HttpApiModule<NeutronApi> {
       bind(DateAdapter.class).to(Iso8601DateAdapter.class);
       bind(ImplicitOptionalConverter.class).to(PresentWhenExtensionAnnotationNamespaceEqualsAnyNamespaceInExtensionsSet.class);
       super.configure();
+      bindAliases();
    }
 
-   @Provides
-   @Singleton
-   public Multimap<URI, URI> aliases() {
-       return ImmutableMultimap.<URI, URI>builder()
-          .put(URI.create(ExtensionNamespaces.L3_ROUTER),
-               URI.create("http://docs.openstack.org/ext/neutron/router/api/v1.0"))
-          .put(URI.create(ExtensionNamespaces.SECURITY_GROUPS),
-               URI.create("http://docs.openstack.org/ext/securitygroups/api/v2.0"))
-          .put(URI.create(ExtensionNamespaces.LBAAS),
-                  URI.create("http://docs.openstack.org/networking/ext/lbaas/api/v1.0"))
-          .build();
+   private void bindAliases() {
+      MapBinder<URI, URI> aliases = aliasBinder(binder());
+      aliases.addBinding(URI.create(ExtensionNamespaces.L3_ROUTER)).toInstance(
+            URI.create("http://docs.openstack.org/ext/neutron/router/api/v1.0"));
+      aliases.addBinding(URI.create(ExtensionNamespaces.SECURITY_GROUPS)).toInstance(
+            URI.create("http://docs.openstack.org/ext/securitygroups/api/v2.0"));
+      aliases.addBinding(URI.create(ExtensionNamespaces.LBAAS)).toInstance(
+            URI.create("http://docs.openstack.org/networking/ext/lbaas/api/v1.0"));
    }
 
    @Provides
