@@ -27,7 +27,6 @@ import java.util.Properties;
 
 import org.jclouds.openstack.keystone.v2_0.config.KeystoneAuthenticationModule.RegionModule;
 import org.jclouds.openstack.nova.v2_0.NovaApiMetadata;
-import org.jclouds.openstack.nova.v2_0.config.NovaHttpApiModule;
 import org.jclouds.openstack.nova.v2_0.config.NovaParserModule;
 import org.jclouds.providers.ProviderMetadata;
 import org.jclouds.providers.internal.BaseProviderMetadata;
@@ -35,6 +34,7 @@ import org.jclouds.rackspace.cloudidentity.v2_0.config.CloudIdentityAuthenticati
 import org.jclouds.rackspace.cloudidentity.v2_0.config.CloudIdentityAuthenticationModule;
 import org.jclouds.rackspace.cloudidentity.v2_0.config.CloudIdentityCredentialTypes;
 import org.jclouds.rackspace.cloudservers.uk.config.CloudServersUKComputeServiceContextModule;
+import org.jclouds.rackspace.cloudservers.uk.config.CloudServersUKHttpApiModule;
 
 import com.google.auto.service.AutoService;
 import com.google.common.collect.ImmutableSet;
@@ -89,7 +89,7 @@ public class CloudServersUKProviderMetadata extends BaseProviderMetadata {
                                               .add(CloudIdentityAuthenticationModule.class)
                                               .add(RegionModule.class)
                                               .add(NovaParserModule.class)
-                                              .add(NovaHttpApiModule.class)
+                                              .add(CloudServersUKHttpApiModule.class)
                                               .add(CloudServersUKComputeServiceContextModule.class).build())
                   .build())
          .homepage(URI.create("http://www.rackspace.co.uk/opencloud"))

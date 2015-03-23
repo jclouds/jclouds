@@ -26,13 +26,13 @@ import static org.jclouds.openstack.nova.v2_0.config.NovaProperties.AUTO_GENERAT
 import java.net.URI;
 import java.util.Properties;
 
+import org.jclouds.hpcloud.compute.config.HPCloudComputeHttpApiModule;
 import org.jclouds.hpcloud.compute.config.HPCloudComputeServiceContextModule;
 import org.jclouds.openstack.keystone.v2_0.config.AuthenticationApiModule;
 import org.jclouds.openstack.keystone.v2_0.config.CredentialTypes;
 import org.jclouds.openstack.keystone.v2_0.config.KeystoneAuthenticationModule;
 import org.jclouds.openstack.keystone.v2_0.config.KeystoneAuthenticationModule.RegionModule;
 import org.jclouds.openstack.nova.v2_0.NovaApiMetadata;
-import org.jclouds.openstack.nova.v2_0.config.NovaHttpApiModule;
 import org.jclouds.openstack.nova.v2_0.config.NovaParserModule;
 import org.jclouds.providers.ProviderMetadata;
 import org.jclouds.providers.internal.BaseProviderMetadata;
@@ -95,7 +95,7 @@ public class HPCloudComputeProviderMetadata extends BaseProviderMetadata {
                                               .add(KeystoneAuthenticationModule.class)
                                               .add(RegionModule.class)
                                               .add(NovaParserModule.class)
-                                              .add(NovaHttpApiModule.class)
+                                              .add(HPCloudComputeHttpApiModule.class)
                                               .add(HPCloudComputeServiceContextModule.class).build())
                   .build())
          .homepage(URI.create("http://hpcloud.com"))

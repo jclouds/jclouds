@@ -53,6 +53,11 @@
       <artifactId>openstack-keystone</artifactId>
       <version>${project.version}</version>
     </dependency>
+    <!-- for the extension namespaces -->
+    <dependency>
+      <groupId>com.google.inject.extensions</groupId>
+      <artifactId>guice-multibindings</artifactId>
+    </dependency>
     <dependency>
       <groupId>org.apache.jclouds</groupId>
       <artifactId>jclouds-compute</artifactId>

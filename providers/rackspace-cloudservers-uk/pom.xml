@@ -53,6 +53,11 @@
       <artifactId>openstack-nova</artifactId>
       <version>${project.version}</version>
     </dependency>
+    <!-- for the extension namespaces -->
+    <dependency>
+      <groupId>com.google.inject.extensions</groupId>
+      <artifactId>guice-multibindings</artifactId>
+    </dependency>
     <dependency>
       <groupId>org.apache.jclouds</groupId>
       <artifactId>jclouds-core</artifactId>
@@ -109,6 +114,12 @@
       <groupId>com.google.auto.service</groupId>
       <artifactId>auto-service</artifactId>
       <optional>true</optional>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.jclouds.provider</groupId>
+      <artifactId>rackspace-cloudblockstorage-uk</artifactId>
+      <version>${project.version}</version>
+      <scope>test</scope>
     </dependency>
   </dependencies>
 

@@ -75,9 +75,8 @@
     </dependency>
     <!--  for ohai -->
     <dependency>
-        <groupId>com.google.inject.extensions</groupId>
-        <artifactId>guice-multibindings</artifactId>
-        <version>3.0</version>
+      <groupId>com.google.inject.extensions</groupId>
+      <artifactId>guice-multibindings</artifactId>
     </dependency>
     <!--  for transient chef provider -->
     <dependency>

@@ -24,6 +24,7 @@ import java.util.concurrent.TimeoutException;
 
 import org.jclouds.ContextBuilder;
 import org.jclouds.openstack.cinder.v1.CinderApi;
+import org.jclouds.openstack.cinder.v1.CinderApiMetadata;
 import org.jclouds.openstack.cinder.v1.domain.Volume;
 import org.jclouds.openstack.cinder.v1.features.VolumeApi;
 import org.jclouds.openstack.cinder.v1.options.CreateVolumeOptions;
@@ -49,6 +50,7 @@ public class VolumeAttachmentApiLiveTest extends BaseNovaApiLiveTest {
    private Server server;
 
    protected String volumeProvider;
+   protected String volumeProviderVersion;
    protected int volumeSizeGB;
    protected String deviceId = "/dev/wtf";
 
@@ -56,6 +58,8 @@ public class VolumeAttachmentApiLiveTest extends BaseNovaApiLiveTest {
    protected Properties setupProperties() {
       Properties props = super.setupProperties();
       volumeProvider = setIfTestSystemPropertyPresent(props, provider + ".volume-provider", "openstack-cinder");
+      volumeProviderVersion = setIfTestSystemPropertyPresent(props, provider + ".volume-provider-version",
+          new CinderApiMetadata().getVersion());
       volumeSizeGB = Integer.parseInt(setIfTestSystemPropertyPresent(props, provider + ".volume-size-gb", "1"));
       singleRegion = setIfTestSystemPropertyPresent(props, provider + ".region", "RegionOne");
       return props;
@@ -71,6 +75,7 @@ public class VolumeAttachmentApiLiveTest extends BaseNovaApiLiveTest {
       if ("openstack-cinder".equals(volumeProvider)) {
          cinderApi = ContextBuilder.newBuilder(volumeProvider)
                .endpoint(endpoint)
+               .apiVersion(volumeProviderVersion)
                .credentials(identity, credential)
                .buildApi(CinderApi.class);
       }

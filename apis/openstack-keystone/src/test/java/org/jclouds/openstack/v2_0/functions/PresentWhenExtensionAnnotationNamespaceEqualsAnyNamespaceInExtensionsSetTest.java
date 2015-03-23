@@ -24,6 +24,7 @@ import java.util.List;
 import java.util.Set;
 
 import org.jclouds.date.internal.SimpleDateFormatDateService;
+import org.jclouds.openstack.keystone.v2_0.config.Aliases;
 import org.jclouds.openstack.v2_0.ServiceType;
 import org.jclouds.openstack.v2_0.domain.Extension;
 import org.jclouds.reflect.Invocation;
@@ -44,6 +45,7 @@ import com.google.common.collect.Multimap;
 import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
 import com.google.inject.Provides;
+import com.google.inject.multibindings.MapBinder;
 
 @Test(groups = "unit", testName = "PresentWhenExtensionAnnotationNamespaceEqualsAnyNamespaceInExtensionsSetTest")
 public class PresentWhenExtensionAnnotationNamespaceEqualsAnyNamespaceInExtensionsSetTest {
@@ -138,6 +140,13 @@ public class PresentWhenExtensionAnnotationNamespaceEqualsAnyNamespaceInExtensio
                new AbstractModule() {
                   @Override
                   protected void configure() {
+                     MapBinder<URI, URI> aliasBindings = MapBinder.newMapBinder(binder(),
+                           URI.class, URI.class, Aliases.class).permitDuplicates();
+                     for (URI key : aliases.keySet()) {
+                        for (URI value : aliases.get(key)) {
+                           aliasBindings.addBinding(key).toInstance(value);
+                        }
+                     }
                   }
 
                   @Provides
@@ -145,10 +154,6 @@ public class PresentWhenExtensionAnnotationNamespaceEqualsAnyNamespaceInExtensio
                      return extensionsForRegion;
                   }
 
-                  @Provides
-                  Multimap<URI, URI> getAliases() {
-                     return aliases;
-                  }
                }).getInstance(PresentWhenExtensionAnnotationNamespaceEqualsAnyNamespaceInExtensionsSet.class);
 
       return fn;

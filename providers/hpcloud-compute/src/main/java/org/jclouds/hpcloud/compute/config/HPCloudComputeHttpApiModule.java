@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jclouds.rackspace.cloudservers.us.config;
+package org.jclouds.hpcloud.compute.config;
 
 import static org.jclouds.openstack.keystone.v2_0.config.KeystoneHttpApiModule.aliasBinder;
 
@@ -26,12 +26,8 @@ import org.jclouds.rest.ConfiguresHttpApi;
 
 import com.google.inject.multibindings.MapBinder;
 
-/**
- * Configures the Rackspace connection.
- *
- */
 @ConfiguresHttpApi
-public class CloudServersUSHttpApiModule extends NovaHttpApiModule {
+public class HPCloudComputeHttpApiModule extends NovaHttpApiModule {
 
    @Override
    protected void configure() {

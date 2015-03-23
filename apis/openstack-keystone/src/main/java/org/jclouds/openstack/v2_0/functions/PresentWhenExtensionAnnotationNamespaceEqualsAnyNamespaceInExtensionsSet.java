@@ -23,18 +23,20 @@ import static org.jclouds.util.Optionals2.unwrapIfOptional;
 
 import java.net.URI;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import javax.inject.Inject;
 
+import org.jclouds.openstack.keystone.v2_0.config.Aliases;
 import org.jclouds.openstack.v2_0.domain.Extension;
 import org.jclouds.reflect.InvocationSuccess;
 import org.jclouds.rest.functions.ImplicitOptionalConverter;
 
 import com.google.common.base.Optional;
 import com.google.common.cache.LoadingCache;
-import com.google.common.collect.ImmutableMultimap;
-import com.google.common.collect.Multimap;
+import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.Sets;
 
 /**
  * We use the annotation {@link org.jclouds.openstack.services.Extension} to bind a class that implements an extension
@@ -43,13 +45,13 @@ import com.google.common.collect.Multimap;
 public class PresentWhenExtensionAnnotationNamespaceEqualsAnyNamespaceInExtensionsSet implements
       ImplicitOptionalConverter {
    private final LoadingCache<String, Set<? extends Extension>> extensions;
-   private final Multimap<URI, URI> aliases;
+   private final Map<URI, Set<URI>> aliases;
 
    @Inject
-   public PresentWhenExtensionAnnotationNamespaceEqualsAnyNamespaceInExtensionsSet(
-         LoadingCache<String, Set<? extends Extension>> extensions, Multimap<URI, URI> aliases) {
-      this.extensions = checkNotNull(extensions, "extensions");
-      this.aliases = aliases == null ? ImmutableMultimap.<URI, URI> of() : ImmutableMultimap.copyOf(aliases);
+   PresentWhenExtensionAnnotationNamespaceEqualsAnyNamespaceInExtensionsSet(
+         LoadingCache<String, Set<? extends Extension>> extensions, @Aliases Map<URI, Set<URI>> aliases) {
+      this.extensions = extensions;
+      this.aliases = aliases == null ? ImmutableMap.<URI, Set<URI>> of() : ImmutableMap.copyOf(aliases);
    }
 
    @Override
@@ -60,12 +62,13 @@ public class PresentWhenExtensionAnnotationNamespaceEqualsAnyNamespaceInExtensio
       if (ext.isPresent()) {
          URI namespace = URI.create(ext.get().namespace());
          List<Object> args = input.getInvocation().getArgs();
+         Set<URI> aliasesForNamespace = aliases.containsKey(namespace) ? aliases.get(namespace) : Sets.<URI> newHashSet();
          if (args.isEmpty()) {
-            if (any(extensions.getUnchecked(""), namespaceOrAliasEquals(namespace, aliases.get(namespace))))
+            if (any(extensions.getUnchecked(""), namespaceOrAliasEquals(namespace, aliasesForNamespace)))
                return input.getResult();
          } else if (args.size() == 1) {
             String arg0 = checkNotNull(args.get(0), "arg[0] in %s", input).toString();
-            if (any(extensions.getUnchecked(arg0), namespaceOrAliasEquals(namespace, aliases.get(namespace))))
+            if (any(extensions.getUnchecked(arg0), namespaceOrAliasEquals(namespace, aliasesForNamespace)))
                return input.getResult();
          } else {
             throw new RuntimeException(String.format("expecting zero or one args %s", input));

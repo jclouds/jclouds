@@ -49,11 +49,11 @@ import com.google.common.base.Suppliers;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
-import com.google.common.collect.ImmutableMultimap;
-import com.google.common.collect.Multimap;
 import com.google.inject.AbstractModule;
+import com.google.inject.Binder;
 import com.google.inject.Provides;
 import com.google.inject.assistedinject.FactoryModuleBuilder;
+import com.google.inject.multibindings.MapBinder;
 
 /**
  * Configures the Keystone API.
@@ -91,17 +91,16 @@ public class KeystoneHttpApiModule extends HttpApiModule<KeystoneApi> {
       }
    }
 
+   // Allow providers to cleanly contribute their own aliases
+   public static MapBinder<URI, URI> aliasBinder(Binder binder) {
+      return MapBinder.newMapBinder(binder, URI.class, URI.class, Aliases.class).permitDuplicates();
+   }
+
    @Override
    protected void configure() {
       bind(ImplicitOptionalConverter.class).to(PresentWhenExtensionAnnotationNamespaceEqualsAnyNamespaceInExtensionsSet.class);
       super.configure();
-   }
-
-   @Provides
-   @Singleton
-   public Multimap<URI, URI> aliases() {
-       return ImmutableMultimap.<URI, URI>builder()
-          .build();
+      aliasBinder(binder());
    }
 
    @Provides
