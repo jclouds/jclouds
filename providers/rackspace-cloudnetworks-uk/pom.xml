@@ -22,14 +22,14 @@
   <parent>
     <groupId>org.apache.jclouds</groupId>
     <artifactId>jclouds-project</artifactId>
-    <version>2.0.0-SNAPSHOT</version>
+    <version>1.9.0</version>
     <relativePath />
   </parent>
 
   <!-- TODO: when out of labs, switch to org.jclouds.provider -->
   <groupId>org.apache.jclouds.labs</groupId>
   <artifactId>rackspace-cloudnetworks-uk</artifactId>
-  <version>2.0.0-SNAPSHOT</version>
+  <version>1.9.0</version>
   <name>jclouds Rackspace Cloud Networks UK provider</name>
   <description>OpenStack Neutron implementation targeted to Rackspace Cloud Networks UK</description>
   <packaging>bundle</packaging>
