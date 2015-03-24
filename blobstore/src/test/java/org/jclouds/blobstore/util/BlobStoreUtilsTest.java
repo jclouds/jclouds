@@ -16,6 +16,7 @@
  */
 package org.jclouds.blobstore.util;
 
+import static org.assertj.core.api.Fail.failBecauseExceptionWasNotThrown;
 import static org.jclouds.blobstore.util.BlobStoreUtils.getNameFor;
 import static org.jclouds.reflect.Reflection2.method;
 import static org.testng.Assert.assertEquals;
@@ -29,6 +30,11 @@ import org.testng.annotations.Test;
 
 import com.google.common.base.Throwables;
 import com.google.common.collect.ImmutableList;
+
+import org.jclouds.ContextBuilder;
+import org.jclouds.blobstore.BlobStore;
+import org.jclouds.blobstore.BlobStoreContext;
+import org.jclouds.blobstore.domain.Blob;
 
 @Test(groups = "unit")
 public class BlobStoreUtilsTest {
@@ -45,6 +51,28 @@ public class BlobStoreUtilsTest {
             "https://storage4.clouddrive.com/v1/MossoCloudFS_dc1f419c-5059-4c87-a389-3f2e33a77b22/adriancole-blobstore0/four",
             ImmutableList.<Object> of("adriancole-blobstore0/four"));
       assertEquals(getNameFor(request), "four");
+   }
+
+   public void testReadOnlyBlobStore() {
+      BlobStoreContext context = ContextBuilder.newBuilder("transient").build(BlobStoreContext.class);
+      try {
+         BlobStore rwBlobStore = context.getBlobStore();
+         BlobStore roBlobStore = ReadOnlyBlobStore.newReadOnlyBlobStore(rwBlobStore);
+         String containerName = "name";
+         rwBlobStore.createContainerInLocation(null, containerName);
+         Blob blob = rwBlobStore.blobBuilder("blob")
+               .payload(new byte[0])
+               .build();
+         rwBlobStore.putBlob(containerName, blob);
+         try {
+            roBlobStore.putBlob(containerName, blob);
+            failBecauseExceptionWasNotThrown(UnsupportedOperationException.class);
+         } catch (UnsupportedOperationException uoe) {
+            // expected
+         }
+      } finally {
+         context.close();
+      }
    }
 
    GeneratedHttpRequest requestForEndpointAndArgs(String endpoint, List<Object> args) {
