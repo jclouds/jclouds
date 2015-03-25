@@ -167,7 +167,7 @@ public interface ObjectApi {
             GetObjectOptions options);
 
    /**
-    * Stores a new object.Bject metadata setting is not supported with simple uploads
+    * Stores a new object. Object metadata setting is not supported with simple uploads
     *
     * @see https://developers.google.com/storage/docs/json_api/v1/how-tos/upload#simple
     *
