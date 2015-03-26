@@ -226,7 +226,7 @@ public final class GoogleCloudStorageBlobStore extends BaseBlobStore {
 
    @Override
    public String putBlob(String container, Blob blob, PutOptions options) {
-      if (options.multipart().isMultipart()) {
+      if (options.isMultipart()) {
          return multipartUploadStrategy.get().execute(container, blob);
       } else {
          return putBlob(container, blob);
