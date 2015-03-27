@@ -29,6 +29,7 @@ import org.jclouds.googlecloudstorage.blobstore.functions.BlobMetadataToObjectTe
 import org.jclouds.googlecloudstorage.domain.GoogleCloudStorageObject;
 import org.jclouds.googlecloudstorage.domain.templates.ComposeObjectTemplate;
 import org.jclouds.googlecloudstorage.domain.templates.ObjectTemplate;
+import org.jclouds.googlecloudstorage.options.InsertObjectOptions;
 import org.jclouds.io.Payload;
 import org.jclouds.io.PayloadSlicer;
 
@@ -78,11 +79,12 @@ public final class SequentialMultipartUploadStrategy extends MultipartUploadStra
             int partNum = algorithm.getNextPart();
             String partName = namingStrategy.getPartName(key, partNum, partCount);
             long partSize = ((partCount + 1) == partNum) ? algorithm.getRemaining() : algorithm.getChunkSize();
-            Blob blobPart = blobBuilders.get().name(partName).payload(part).contentDisposition(partName)
-                     .contentLength(partSize).contentType(blob.getMetadata().getContentMetadata().getContentType())
-                     .build();
-            GoogleCloudStorageObject object = api.getObjectApi().multipartUpload(container,
-                     blob2ObjectTemplate.apply(blobPart.getMetadata()), part);
+
+            InsertObjectOptions insertOptions = new InsertObjectOptions().name(partName);
+
+            GoogleCloudStorageObject object = api.getObjectApi().simpleUpload(container,
+                     blob.getMetadata().getContentMetadata().getContentType(), partSize, part, insertOptions);
+
             sourceList.add(object);
          }
          ComposeObjectTemplate template = ComposeObjectTemplate.create(sourceList, destination);
