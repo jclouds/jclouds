@@ -54,7 +54,6 @@ public class ContainerNameEnumerationResultsHandler extends ParseSax.HandlerWith
    private String marker;
    private int maxResults;
    private String nextMarker;
-   private URI currentUrl;
    private URI containerUrl;
    private Date currentLastModified;
    private String currentETag;
@@ -103,7 +102,7 @@ public class ContainerNameEnumerationResultsHandler extends ParseSax.HandlerWith
          inBlob = true;
          inMetadata = true;
       } else if (qName.equals("EnumerationResults")) {
-         containerUrl = URI.create(attributes.getValue("ContainerName").toString().trim());
+         containerUrl = URI.create(attributes.getValue("ServiceEndpoint").trim() + attributes.getValue("ContainerName").trim());
       }
    }
 
@@ -131,6 +130,7 @@ public class ContainerNameEnumerationResultsHandler extends ParseSax.HandlerWith
       } else if (qName.equals("LeaseStatus")) {
          currentLeaseStatus = LeaseStatus.fromValue(currentText.toString().trim());
       } else if (qName.equals("Blob")) {
+         URI currentUrl = uriBuilder(containerUrl + "/" + currentName).build();
          BlobProperties md = new BlobPropertiesImpl(currentBlobType, currentName, containerUrl.getPath().replace("/",
                   ""), currentUrl, currentLastModified, currentETag, currentSize, currentContentType,
                   currentContentMD5, currentContentEncoding, currentContentLanguage, currentExpires, 
@@ -138,7 +138,6 @@ public class ContainerNameEnumerationResultsHandler extends ParseSax.HandlerWith
          blobMetadata.add(md);
          currentBlobType = null;
          currentName = null;
-         currentUrl = null;
          currentLastModified = null;
          currentETag = null;
          currentSize = -1;
@@ -149,8 +148,6 @@ public class ContainerNameEnumerationResultsHandler extends ParseSax.HandlerWith
          currentLeaseStatus = null;
          currentExpires = null;
          currentMetadata = Maps.newHashMap();
-      } else if (qName.equals("Url")) {
-         currentUrl = uriBuilder(currentText.toString().trim()).build();
       } else if (qName.equals("Last-Modified")) {
          currentLastModified = dateParser.rfc822DateParse(currentText.toString().trim());
       } else if (qName.equals("Etag")) {

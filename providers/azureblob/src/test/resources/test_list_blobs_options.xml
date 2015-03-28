@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <EnumerationResults
-    ContainerName="https://jclouds.blob.core.windows.net/adriancole-blobstore3">
+    ServiceEndpoint="https://jclouds.blob.core.windows.net/"
+    ContainerName="adriancole-blobstore3">
     <MaxResults>1</MaxResults>
     <Delimiter>/</Delimiter>
     <Blobs>

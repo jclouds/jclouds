@@ -16,7 +16,10 @@
  */
 package org.jclouds.azureblob.xml;
 
+import static com.google.common.base.Throwables.propagate;
+
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.Date;
 import java.util.Map;
 import java.util.SortedSet;
@@ -50,7 +53,7 @@ public class AccountNameEnumerationResultsHandler extends
    private String marker;
    private int maxResults;
    private String nextMarker;
-   private URI currentUrl;
+   private String currentName;
    private Date currentLastModified;
    private String currentETag;
    private boolean inMetadata;
@@ -75,7 +78,7 @@ public class AccountNameEnumerationResultsHandler extends
       } else if (qName.equals("Metadata")) {
          inMetadata = true;
       } else if (qName.equals("EnumerationResults")) {
-         accountUrl = URI.create(attributes.getValue("AccountName").toString().trim());
+         accountUrl = URI.create(attributes.getValue("ServiceEndpoint").trim());
       }
    }
 
@@ -101,14 +104,20 @@ public class AccountNameEnumerationResultsHandler extends
          nextMarker = currentText.toString().trim();
          nextMarker = (nextMarker.equals("")) ? null : nextMarker;
       } else if (qName.equals("Container")) {
+         URI currentUrl;
+         try {
+            currentUrl = new URI(accountUrl.getScheme(), accountUrl.getHost(), "/" + currentName, null);
+         } catch (URISyntaxException use) {
+            throw propagate(use);
+         }
          containerMetadata.add(new ContainerPropertiesImpl(currentUrl, currentLastModified,
                   currentETag, currentMetadata));
-         currentUrl = null;
+         currentName = null;
          currentLastModified = null;
          currentETag = null;
          currentMetadata = Maps.newHashMap();
-      } else if (qName.equals("Url")) {
-         currentUrl = URI.create(currentText.toString().trim());
+      } else if (qName.equals("Name")) {
+         currentName = currentText.toString().trim();
       } else if (qName.equals("Last-Modified")) {
          currentLastModified = dateParser.rfc822DateParse(currentText.toString().trim());
       } else if (qName.equals("Etag")) {
