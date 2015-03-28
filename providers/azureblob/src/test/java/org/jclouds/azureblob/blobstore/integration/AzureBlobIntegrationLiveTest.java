@@ -65,14 +65,6 @@ public class AzureBlobIntegrationLiveTest extends BaseBlobIntegrationTest {
       throw new SkipException("unsupported in Azure");
    }
 
-   // according to docs, content disposition is not persisted
-   // http://msdn.microsoft.com/en-us/library/dd179440.aspx
-   @Override
-   protected void checkContentDisposition(Blob blob, String contentDisposition) {
-      assert blob.getPayload().getContentMetadata().getContentDisposition() == null;
-      assert blob.getMetadata().getContentMetadata().getContentDisposition() == null;
-   }
-
    public void testMultipartChunkedFileStreamPowerOfTwoSize() throws IOException, InterruptedException {
       final long limit = MultipartUploadStrategy.MAX_BLOCK_SIZE;
       ByteSource input = TestUtils.randomByteSource().slice(0, limit);

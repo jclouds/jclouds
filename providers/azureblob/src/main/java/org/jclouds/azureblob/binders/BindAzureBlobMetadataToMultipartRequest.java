@@ -55,7 +55,10 @@ public class BindAzureBlobMetadataToMultipartRequest implements Binder {
       // bind BlockList-specific headers
       ImmutableMap.Builder<String, String> headers = ImmutableMap.builder();
       ContentMetadata contentMetadata = blob.getProperties().getContentMetadata();
-      // TODO: bind x-ms-blob-content-disposition after upgrading to API 2013-08-15
+      String contentDisposition = contentMetadata.getContentDisposition();
+      if (contentDisposition != null) {
+         headers.put("x-ms-blob-content-disposition", contentDisposition);
+      }
       String contentEncoding = contentMetadata.getContentEncoding();
       if (contentEncoding != null) {
          headers.put("x-ms-blob-content-encoding", contentEncoding);

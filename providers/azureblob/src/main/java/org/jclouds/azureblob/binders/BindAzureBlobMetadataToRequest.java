@@ -59,6 +59,11 @@ public class BindAzureBlobMetadataToRequest implements Binder {
 
       headers.put("x-ms-blob-type", blob.getProperties().getType().toString());
 
+      String contentDisposition = blob.getPayload().getContentMetadata().getContentDisposition();
+      if (contentDisposition != null) {
+         headers.put("x-ms-blob-content-disposition", contentDisposition);
+      }
+
       switch (blob.getProperties().getType()) {
       case PAGE_BLOB:
          headers.put(HttpHeaders.CONTENT_LENGTH, "0");
