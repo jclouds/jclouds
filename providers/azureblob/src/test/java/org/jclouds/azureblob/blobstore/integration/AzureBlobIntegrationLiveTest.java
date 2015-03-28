@@ -43,14 +43,11 @@ public class AzureBlobIntegrationLiveTest extends BaseBlobIntegrationTest {
    public AzureBlobIntegrationLiveTest() {
       provider = "azureblob";
    }
+
+   // TODO: Azure response has a quoted ETag but request requires unquoted ETag
    @Override
    public void testGetIfMatch() throws InterruptedException {
-      // this currently fails
-   }
-
-    @Override
-    public void testGetIfModifiedSince() throws InterruptedException {
-       // this currently fails!
+      throw new SkipException("not yet implemented");
    }
 
    public void testCreateBlobWithExpiry() throws InterruptedException {
@@ -58,9 +55,9 @@ public class AzureBlobIntegrationLiveTest extends BaseBlobIntegrationTest {
    }
 
    @Override
-   @Test(expectedExceptions = IllegalArgumentException.class)
+   @Test
    public void testPutObjectStream() throws InterruptedException, IOException, ExecutionException {
-      super.testPutObjectStream();
+      throw new SkipException("Azure requires a Content-Length");
    }
 
    @Test(groups = { "integration", "live" })
