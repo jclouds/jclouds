@@ -189,6 +189,7 @@ public interface VolumeApi {
     *             To be removed in jclouds 2.0.
     * @return the new Snapshot
     */
+   @Deprecated
    @Named("volume:createSnapshot")
    @POST
    @Path("/os-snapshots")
@@ -204,6 +205,7 @@ public interface VolumeApi {
     *             To be removed in jclouds 2.0.
     * @return true if successful
     */
+   @Deprecated
    @Named("volume:deleteSnapshot")
    @DELETE
    @Path("/os-snapshots/{id}")

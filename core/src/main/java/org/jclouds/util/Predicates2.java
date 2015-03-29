@@ -149,6 +149,7 @@ public class Predicates2 {
       /**
        * @deprecated since 1.9.0; use {@link #nextMaxInterval(long, long)}
        */
+      @Deprecated
       protected long nextMaxInterval(long attempt, Date end) {
          return nextMaxInterval(attempt, end.getTime());
       }
@@ -173,6 +174,7 @@ public class Predicates2 {
       /**
        * @deprecated since 1.9.0; use {@link #nextMaxInterval(long, long)}
        */
+      @Deprecated
       protected boolean before(Date end) {
          return new Date().compareTo(end) <= 1;
       }
@@ -180,6 +182,7 @@ public class Predicates2 {
       /**
        * @deprecated since 1.9.0; use {@link #nextMaxInterval(long, long)}
        */
+      @Deprecated
       protected boolean atOrAfter(Date end) {
          return new Date().compareTo(end) >= 0;
       }
