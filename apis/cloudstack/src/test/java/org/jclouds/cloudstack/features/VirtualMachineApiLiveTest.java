@@ -55,6 +55,7 @@ import org.testng.annotations.AfterGroups;
 import org.testng.annotations.Test;
 
 import com.google.common.base.Function;
+import com.google.common.base.Objects;
 import com.google.common.base.Predicate;
 import com.google.common.base.Throwables;
 import com.google.common.collect.ComparisonChain;
@@ -251,7 +252,7 @@ public class VirtualMachineApiLiveTest extends BaseCloudStackApiLiveTest {
 
          boolean hasStaticIpNic = false;
          for (NIC nic : vm.getNICs()) {
-            if (nic.getNetworkId() == network.getId()) {
+            if (Objects.equal(nic.getNetworkId(), network.getId())) {
                hasStaticIpNic = true;
                assertEquals(nic.getIPAddress(), ipAddress);
             }

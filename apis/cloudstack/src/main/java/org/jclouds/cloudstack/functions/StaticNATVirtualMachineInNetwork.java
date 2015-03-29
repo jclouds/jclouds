@@ -30,6 +30,7 @@ import org.jclouds.compute.reference.ComputeServiceConstants;
 import org.jclouds.logging.Logger;
 
 import com.google.common.base.Function;
+import com.google.common.base.Objects;
 import com.google.inject.assistedinject.Assisted;
 
 public class StaticNATVirtualMachineInNetwork implements Function<VirtualMachine, PublicIPAddress> {
@@ -55,10 +56,11 @@ public class StaticNATVirtualMachineInNetwork implements Function<VirtualMachine
 
    public PublicIPAddress apply(VirtualMachine vm) {
       PublicIPAddress ip;
-      for (ip = reuseOrAssociate.apply(network); !ip.isStaticNAT() || ip.getVirtualMachineId() != vm.getId(); ip = reuseOrAssociate
-            .apply(network)) {
+      for (ip = reuseOrAssociate.apply(network);
+            !ip.isStaticNAT() || !Objects.equal(ip.getVirtualMachineId(), vm.getId());
+            ip = reuseOrAssociate .apply(network)) {
          // check to see if someone already grabbed this ip
-         if (ip.getVirtualMachineId() != null && ip.getVirtualMachineId() != vm.getId())
+         if (ip.getVirtualMachineId() != null && !ip.getVirtualMachineId().equals(vm.getId()))
             continue;
          try {
             logger.debug(">> static NATing IPAddress(%s) to virtualMachine(%s)", ip.getId(), vm.getId());

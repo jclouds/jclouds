@@ -44,6 +44,7 @@ import org.testng.annotations.AfterGroups;
 import org.testng.annotations.BeforeGroups;
 import org.testng.annotations.Test;
 
+import com.google.common.base.Objects;
 import com.google.common.base.Predicate;
 import com.google.common.base.Predicates;
 import com.google.common.net.HostAndPort;
@@ -113,7 +114,7 @@ public class LoadBalancerApiLiveTest extends BaseCloudStackApiLiveTest {
          }
       }
       assertNotNull(rule, "Failed to get a load balancer rule after " + attempts + " attempts");
-      assert rule.getPublicIPId() == ip.getId() : rule;
+      assertEquals(rule.getPublicIPId(), ip.getId());
       assertEquals(rule.getPublicPort(), 22);
       assertEquals(rule.getPrivatePort(), 22);
       assertEquals(rule.getAlgorithm(), Algorithm.LEASTCONN);
@@ -203,7 +204,7 @@ public class LoadBalancerApiLiveTest extends BaseCloudStackApiLiveTest {
 
          @Override
          public boolean apply(LoadBalancerRule arg0) {
-            return arg0.getId() == id;
+            return Objects.equal(arg0.getId(), id);
          }
 
       });

@@ -58,6 +58,7 @@ import org.jclouds.rest.RequestSigner;
 import org.jclouds.rest.annotations.ApiVersion;
 
 import com.google.common.annotations.VisibleForTesting;
+import com.google.common.base.Objects;
 import com.google.common.base.Supplier;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
@@ -123,7 +124,7 @@ public interface FormSigner extends HttpRequestFilter {
 
          @Override
          public int compare(String left, String right) {
-            if (left == right) {
+            if (Objects.equal(left, right)) {
                return 0;
             }
             if ("Action".equals(right) || "AWSAccessKeyId".equals(left)) {

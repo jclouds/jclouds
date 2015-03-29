@@ -38,6 +38,7 @@ import org.testng.SkipException;
 import org.testng.annotations.AfterGroups;
 import org.testng.annotations.Test;
 
+import com.google.common.base.Objects;
 import com.google.common.base.Predicate;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
@@ -119,7 +120,7 @@ public class SecurityGroupApiLiveTest extends BaseCloudStackApiLiveTest {
 
          @Override
          public boolean apply(SecurityGroup input) {
-            return input.getId() == group.getId();
+            return Objects.equal(input.getId(), group.getId());
          }
 
       });
