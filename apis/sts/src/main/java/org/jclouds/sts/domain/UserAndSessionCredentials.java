@@ -76,7 +76,7 @@ public final class UserAndSessionCredentials {
    private UserAndSessionCredentials(User user, SessionCredentials credentials, int packedPolicySize) {
       this.user = checkNotNull(user, "user");
       this.credentials = checkNotNull(credentials, "credentials for %s", user);
-      this.packedPolicySize = checkNotNull(packedPolicySize, "packedPolicySize for %s", user);
+      this.packedPolicySize = packedPolicySize;
    }
 
    /**

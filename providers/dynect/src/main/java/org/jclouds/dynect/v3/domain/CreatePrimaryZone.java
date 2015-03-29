@@ -40,7 +40,7 @@ public final class CreatePrimaryZone {
    private CreatePrimaryZone(String fqdn, String contact, SerialStyle serialStyle, int defaultTTL) {
       this.fqdn = checkNotNull(fqdn, "fqdn");
       this.contact = checkNotNull(contact, "contact for %s", fqdn);
-      this.defaultTTL = checkNotNull(defaultTTL, "defaultTTL for %s", fqdn);
+      this.defaultTTL = defaultTTL;
       this.serialStyle = checkNotNull(serialStyle, "serialStyle for %s", serialStyle);
    }
 

@@ -35,8 +35,8 @@ public class GeoService {
 
    private GeoService(String name, boolean active, int ttl, List<Node> nodes, List<GeoRegionGroup> groups) {
       this.name = checkNotNull(name, "name");
-      this.active = checkNotNull(active, "active");
-      this.ttl = checkNotNull(ttl, "ttl");
+      this.active = active;
+      this.ttl = ttl;
       this.nodes = checkNotNull(nodes, "nodes of %s", name);
       this.groups = checkNotNull(groups, "groups of %s", name);
    }

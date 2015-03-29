@@ -97,7 +97,7 @@ public class ListAlarmsOptions extends BaseHttpRequestOptions {
     * @return this {@code ListAlarmsOptions} object
     */
    public ListAlarmsOptions maxRecords(int maxRecords) {
-      formParameters.put("MaxRecords", checkNotNull(maxRecords, "maxRecords").toString());
+      formParameters.put("MaxRecords", String.valueOf(maxRecords));
       return this;
    }
 

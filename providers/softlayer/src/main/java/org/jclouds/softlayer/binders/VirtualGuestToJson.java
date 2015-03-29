@@ -82,8 +82,8 @@ public class VirtualGuestToJson implements Binder {
       TemplateObject.Builder templateObjectBuilder = TemplateObject.builder();
       String hostname = checkNotNull(virtualGuest.getHostname(), "hostname");
       String domain = checkNotNull(virtualGuest.getDomain(), "domain");
-      int startCpus = checkNotNull(virtualGuest.getStartCpus(), "startCpus");
-      int maxMemory = checkNotNull(virtualGuest.getMaxMemory(), "maxMemory");
+      int startCpus = virtualGuest.getStartCpus();
+      int maxMemory = virtualGuest.getMaxMemory();
       boolean hourlyBillingFlag = virtualGuest.isHourlyBillingFlag();
       boolean localDisk = virtualGuest.isLocalDiskFlag();
 

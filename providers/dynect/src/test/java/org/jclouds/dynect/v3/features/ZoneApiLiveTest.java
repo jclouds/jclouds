@@ -36,7 +36,6 @@ public class ZoneApiLiveTest extends BaseDynECTApiLiveTest {
 
    private void checkZone(Zone zone) {
       checkNotNull(zone.getFQDN(), "FQDN cannot be null for a Zone: %s", zone);
-      checkNotNull(zone.getSerial(), "Serial cannot be null for a Zone: %s", zone);
    }
 
    @Test

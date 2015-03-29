@@ -47,9 +47,9 @@ public class ContainerCDNMetadata implements Comparable<ContainerCDNMetadata> {
    public ContainerCDNMetadata(String name, boolean cdnEnabled, boolean logRetention, long ttl,
          @Nullable URI cdnUri, @Nullable URI cdnSslUri, @Nullable URI cdnStreamingUri, @Nullable URI cdnIosUri) {
       this.name = checkNotNull(name, "name");
-      this.cdnEnabled = checkNotNull(cdnEnabled);
-      this.logRetention = checkNotNull(logRetention);
-      this.ttl = checkNotNull(ttl);
+      this.cdnEnabled = cdnEnabled;
+      this.logRetention = logRetention;
+      this.ttl = ttl;
       this.cdnUri = cdnUri;
       this.cdnSslUri = cdnSslUri;
       this.cdnStreamingUri = cdnStreamingUri;

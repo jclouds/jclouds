@@ -172,8 +172,6 @@ public class SecurityGroupPredicates {
     * @return predicate that matches startPort
     */
    public static Predicate<SecurityGroupRule> ruleStartPort(final int startPort) {
-      checkNotNull(startPort, "startPort must be defined");
-
       return new Predicate<SecurityGroupRule>() {
          @Override
          public boolean apply(SecurityGroupRule ext) {
@@ -194,8 +192,6 @@ public class SecurityGroupPredicates {
     * @return predicate that matches endPort
     */
    public static Predicate<SecurityGroupRule> ruleEndPort(final int endPort) {
-      checkNotNull(endPort, "endPort must be defined");
-
       return new Predicate<SecurityGroupRule>() {
          @Override
          public boolean apply(SecurityGroupRule ext) {

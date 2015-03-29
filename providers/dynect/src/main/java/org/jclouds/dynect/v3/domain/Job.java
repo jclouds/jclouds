@@ -34,7 +34,7 @@ public final class Job {
 
    @ConstructorProperties({ "job_id", "status" })
    private Job(long id, Status status) {
-      this.id = checkNotNull(id, "id");
+      this.id = id;
       this.status = checkNotNull(status, "status for %s", id);
    }
 

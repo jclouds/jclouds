@@ -33,7 +33,7 @@ public class RecordId extends Node {
    @ConstructorProperties({"zone", "fqdn", "record_type", "record_id" })
    RecordId(String zone, String fqdn, String type, long id) {
       super(zone, fqdn);
-      this.id = checkNotNull(id, "id");
+      this.id = id;
       this.type = checkNotNull(type, "type of %s", id);
    }
 

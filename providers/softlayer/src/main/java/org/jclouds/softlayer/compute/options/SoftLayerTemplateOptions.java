@@ -165,19 +165,16 @@ public class SoftLayerTemplateOptions extends TemplateOptions implements Cloneab
    }
 
    public SoftLayerTemplateOptions hourlyBillingFlag(boolean hourlyBillingFlag) {
-      checkNotNull(hourlyBillingFlag, "hourlyBillingFlag was null");
       this.hourlyBillingFlag = Optional.of(hourlyBillingFlag);
       return this;
    }
 
    public SoftLayerTemplateOptions dedicatedAccountHostOnlyFlag(boolean dedicatedAccountHostOnlyFlag) {
-      checkNotNull(dedicatedAccountHostOnlyFlag, "dedicatedAccountHostOnlyFlag was null");
       this.dedicatedAccountHostOnlyFlag = Optional.of(dedicatedAccountHostOnlyFlag);
       return this;
    }
 
    public SoftLayerTemplateOptions privateNetworkOnlyFlag(boolean privateNetworkOnlyFlag) {
-      checkNotNull(privateNetworkOnlyFlag, "privateNetworkOnlyFlag was null");
       this.privateNetworkOnlyFlag = Optional.of(privateNetworkOnlyFlag);
       return this;
    }

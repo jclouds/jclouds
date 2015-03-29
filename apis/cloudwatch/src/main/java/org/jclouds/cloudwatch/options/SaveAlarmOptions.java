@@ -49,7 +49,7 @@ public class SaveAlarmOptions extends BaseHttpRequestOptions {
     * @return this {@code SaveAlarmOptions} object
     */
    public SaveAlarmOptions actionsEnabled(boolean actionsEnabled) {
-      formParameters.put("ActionsEnabled", checkNotNull(actionsEnabled, "actionsEnabled").toString());
+      formParameters.put("ActionsEnabled", String.valueOf(actionsEnabled));
       return this;
    }
 
@@ -158,7 +158,7 @@ public class SaveAlarmOptions extends BaseHttpRequestOptions {
     * @return this {@code SaveAlarmOptions} object
     */
    public SaveAlarmOptions evaluationPeriods(int evaluationPeriods) {
-      formParameters.put("EvaluationPeriods", checkNotNull(evaluationPeriods, "evaluationPeriods").toString());
+      formParameters.put("EvaluationPeriods", String.valueOf(evaluationPeriods));
       return this;
    }
 
@@ -254,7 +254,7 @@ public class SaveAlarmOptions extends BaseHttpRequestOptions {
     * @return this {@code SaveAlarmOptions} object
     */
    public SaveAlarmOptions period(int period) {
-      formParameters.put("Period", checkNotNull(period, "period").toString());
+      formParameters.put("Period", String.valueOf(period));
       return this;
    }
 
@@ -280,7 +280,7 @@ public class SaveAlarmOptions extends BaseHttpRequestOptions {
     * @return this {@code SaveAlarmOptions} object
     */
    public SaveAlarmOptions threshold(double threshold) {
-      formParameters.put("Threshold", checkNotNull(threshold).toString());
+      formParameters.put("Threshold", String.valueOf(threshold));
       return this;
    }
 

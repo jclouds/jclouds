@@ -113,8 +113,8 @@ public class SoftLayerComputeServiceAdapter implements
          @Named(PROPERTY_SOFTLAYER_VIRTUALGUEST_LOGIN_DETAILS_DELAY) long guestLoginDelay,
          @Named(PROPERTY_SOFTLAYER_VIRTUALGUEST_ACTIVE_TRANSACTIONS_DELAY) long activeTransactionsDelay) {
       this.api = checkNotNull(api, "api");
-      this.guestLoginDelay = checkNotNull(guestLoginDelay, "guestLoginDelay");
-      this.activeTransactionsDelay = checkNotNull(activeTransactionsDelay, "activeTransactionsDelay");
+      this.guestLoginDelay = guestLoginDelay;
+      this.activeTransactionsDelay = activeTransactionsDelay;
       this.createObjectOptionsSupplier = checkNotNull(createObjectOptionsSupplier, "createObjectOptionsSupplier");
       checkArgument(guestLoginDelay > 500, "guestOrderDelay must be in milliseconds and greater than 500");
       this.loginDetailsTester = retry(virtualGuestHasLoginDetailsPresent, guestLoginDelay);

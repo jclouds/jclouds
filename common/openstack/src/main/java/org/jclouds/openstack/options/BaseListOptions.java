@@ -48,7 +48,7 @@ public class BaseListOptions extends BaseHttpRequestOptions {
     */
    public BaseListOptions startAt(long offset) {
       checkState(offset >= 0, "offset must be >= 0");
-      queryParameters.put("offset", Long.toString(checkNotNull(offset, "offset")));
+      queryParameters.put("offset", String.valueOf(offset));
       return this;
    }
 

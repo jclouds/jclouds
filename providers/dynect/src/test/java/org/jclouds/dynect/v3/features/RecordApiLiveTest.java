@@ -64,7 +64,6 @@ public class RecordApiLiveTest extends BaseDynECTApiLiveTest {
       checkRecordId(record);
       assertTrue(!record.getRData().isEmpty(), "RData entries should be present for cannot be zero for Record: "
             + record);
-      checkNotNull(record.getTTL(), "TTL cannot be null for RecordId: %s", record);
    }
 
    @Test
@@ -127,7 +126,6 @@ public class RecordApiLiveTest extends BaseDynECTApiLiveTest {
 
    private Record<MXData> checkMXRecord(Record<MXData> record) {
       MXData rdata = record.getRData();
-      checkNotNull(rdata.getPreference(), "rdata.preference cannot be null for MXRecord: %s", record);
       checkNotNull(rdata.getExchange(), "rdata.exchange cannot be null for MXRecord: %s", record);
       return record;
    }
@@ -149,11 +147,6 @@ public class RecordApiLiveTest extends BaseDynECTApiLiveTest {
       SOAData rdata = record.getRData();
       checkNotNull(rdata.getMname(), "rdata.mname cannot be null for SOARecord: %s", record);
       checkNotNull(rdata.getRname(), "rdata.rname cannot be null for SOARecord: %s", record);
-      checkNotNull(rdata.getSerial(), "rdata.serial cannot be null for SOARecord: %s", record);
-      checkNotNull(rdata.getRefresh(), "rdata.refresh cannot be null for SOARecord: %s", record);
-      checkNotNull(rdata.getRetry(), "rdata.retry cannot be null for SOARecord: %s", record);
-      checkNotNull(rdata.getExpire(), "rdata.expire cannot be null for SOARecord: %s", record);
-      checkNotNull(rdata.getMinimum(), "rdata.minimum cannot be null for SOARecord: %s", record);
       return record;
    }
 
@@ -165,17 +158,12 @@ public class RecordApiLiveTest extends BaseDynECTApiLiveTest {
 
    private Record<SRVData> checkSRVRecord(Record<SRVData> record) {
       SRVData rdata = record.getRData();
-      checkNotNull(rdata.getPriority(), "rdata.priority cannot be null for SRVRecord: %s", record);
-      checkNotNull(rdata.getWeight(), "rdata.weight cannot be null for SRVRecord: %s", record);
-      checkNotNull(rdata.getPort(), "rdata.port cannot be null for SRVRecord: %s", record);
       checkNotNull(rdata.getTarget(), "rdata.target cannot be null for SRVRecord: %s", record);
       return record;
    }
 
    private Record<SSHFPData> checkSSHFPRecord(Record<SSHFPData> record) {
       SSHFPData rdata = record.getRData();
-      checkNotNull(rdata.getAlgorithm(), "rdata.algorithm cannot be null for SSHFPRecord: %s", record);
-      checkNotNull(rdata.getType(), "rdata.type cannot be null for SSHFPRecord: %s", record);
       checkNotNull(rdata.getFingerprint(), "rdata.fingerprint cannot be null for SSHFPRecord: %s", record);
       return record;
    }

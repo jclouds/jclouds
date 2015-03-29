@@ -40,7 +40,7 @@ public class Segment {
    private Segment(String path, String etag, long sizeBytes) {
       this.path = checkNotNull(path, "path");
       this.etag = checkNotNull(etag, "etag of %s", path);
-      this.sizeBytes = checkNotNull(sizeBytes, "sizeBytes of %s", path);
+      this.sizeBytes = sizeBytes;
    }
 
    /**

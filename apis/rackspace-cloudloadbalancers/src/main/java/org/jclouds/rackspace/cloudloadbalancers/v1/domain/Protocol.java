@@ -29,7 +29,7 @@ public final class Protocol {
    @ConstructorProperties({ "name", "port" })
    protected Protocol(String name, int port) {
       this.name = checkNotNull(name, "name");
-      this.port = checkNotNull(port, "port");
+      this.port = port;
    }
 
    public String getName() {

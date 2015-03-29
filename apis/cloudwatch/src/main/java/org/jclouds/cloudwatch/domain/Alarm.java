@@ -78,7 +78,7 @@ public class Alarm {
                 int period, String stateReason, Optional<String> stateReasonData, Date stateUpdatedTimestamp,
                 State state, Statistics statistic, double threshold, Optional<Unit> unit) {
       this.alarmName = checkNotNull(alarmName, "alarmName");
-      this.areActionsEnabled = checkNotNull(areActionsEnabled, "actionsEnabled for %s", alarmName);
+      this.areActionsEnabled = areActionsEnabled;
       this.alarmActions = checkNotNull(alarmActions, "alarmActions for %s", alarmName);
       this.alarmARN = checkNotNull(alarmARN, "alarmArn for %s", alarmName);
       this.alarmConfigurationUpdatedTimestamp = checkNotNull(alarmConfigurationUpdatedTimestamp,
@@ -87,12 +87,12 @@ public class Alarm {
       this.comparisonOperator = checkNotNull(comparisonOperator, "comparisonOperator for %s", alarmName);
       checkArgument(comparisonOperator != ComparisonOperator.UNRECOGNIZED, "comparisonOperator unrecognized");
       this.dimensions = checkNotNull(dimensions, "dimensions for %s", alarmName);
-      this.evaluationPeriods = checkNotNull(evaluationPeriods, "evaluationPeriods for %s", alarmName);
+      this.evaluationPeriods = evaluationPeriods;
       this.insufficientDataActions = checkNotNull(insufficientDataActions, "insufficientDataActions for %s", alarmName);
       this.metricName = checkNotNull(metricName, "metricName for %s", alarmName);
       this.namespace = checkNotNull(namespace, "namespace for %s", alarmName);
       this.okActions = checkNotNull(okActions, "okActions for %s", alarmName);
-      this.period = checkNotNull(period, "period for %s", alarmName);
+      this.period = period;
       this.stateReason = checkNotNull(stateReason, "stateReason for %s", alarmName);
       this.stateReasonData = checkNotNull(stateReasonData, "stateReasonData for %s", alarmName);
       this.stateUpdatedTimestamp = checkNotNull(stateUpdatedTimestamp, "stateUpdatedTimestamp for %s", alarmName);
@@ -100,7 +100,7 @@ public class Alarm {
       checkArgument(state != State.UNRECOGNIZED, "state unrecognized");
       this.statistic = checkNotNull(statistic, "statistic for %s", alarmName);
       checkArgument(statistic != Statistics.UNRECOGNIZED, "statistic unrecognized");
-      this.threshold = checkNotNull(threshold, "threshold for %s", alarmName);
+      this.threshold = threshold;
       this.unit = checkNotNull(unit, "unit for %s", alarmName);
       if (unit.isPresent()) {
          checkArgument(unit.get() != Unit.UNRECOGNIZED, "unit unrecognized");

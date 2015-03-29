@@ -48,11 +48,11 @@ public class SRVData extends ForwardingMap<String, Object> {
    
    @ConstructorProperties({ "priority", "weight", "port", "target" })
    private SRVData(int priority, int weight, int port, String target) {
-      checkArgument(checkNotNull(priority, "priority of %s", target).intValue() <= 0xFFFF, "priority must be 0-65535");
+      checkArgument(priority <= 0xFFFF, "priority must be 0-65535");
       this.priority = priority;
-      checkArgument(checkNotNull(weight, "weight of %s", target).intValue() <= 0xFFFF, "weight must be 0-65535");
+      checkArgument(weight <= 0xFFFF, "weight must be 0-65535");
       this.weight = weight;
-      checkArgument(checkNotNull(port, "port of %s", target).intValue() <= 0xFFFF, "port must be 0-65535");
+      checkArgument(port <= 0xFFFF, "port must be 0-65535");
       this.port = port;
       this.target = checkNotNull(target, "target");
       this.delegate = ImmutableMap.<String, Object> builder()

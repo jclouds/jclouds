@@ -70,11 +70,12 @@ public class SOAData extends ForwardingMap<String, Object> {
       this.delegate = ImmutableMap.<String, Object> builder()
             .put("mname", checkNotNull(mname, "mname"))
             .put("rname", checkNotNull(rname, "rname of %s", mname))
-            .put("serial", checkNotNull(serial, "serial of %s", mname))
-            .put("refresh", checkNotNull(refresh, "refresh of %s", mname))
-            .put("retry", checkNotNull(retry, "retry of %s", mname))
-            .put("expire", checkNotNull(expire, "expire of %s", mname))
-            .put("minimum", checkNotNull(minimum, "minimum of %s", mname)).build();
+            .put("serial", serial)
+            .put("refresh", refresh)
+            .put("retry", retry)
+            .put("expire", expire)
+            .put("minimum", minimum)
+            .build();
    }
 
    /**

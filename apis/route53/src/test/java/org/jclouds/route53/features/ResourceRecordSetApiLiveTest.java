@@ -70,9 +70,6 @@ public class ResourceRecordSetApiLiveTest extends BaseRoute53ApiLiveTest {
       if (rrs instanceof RecordSubset) {
          checkNotNull(RecordSubset.class.cast(rrs).getId(), "Id: ResourceRecordSubset %s", rrs);
       }
-      if (rrs instanceof Weighted) {
-         checkNotNull(Weighted.class.cast(rrs).getWeight(), "Weight: ResourceRecordSubset %s", rrs);
-      }
       if (rrs instanceof Latency) {
          checkNotNull(Latency.class.cast(rrs).getRegion(), "Region: ResourceRecordSubset %s", rrs);
       }

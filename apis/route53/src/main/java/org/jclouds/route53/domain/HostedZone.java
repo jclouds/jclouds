@@ -35,7 +35,7 @@ public final class HostedZone {
       this.id = checkNotNull(id, "id");
       this.name = checkNotNull(name, "name");
       this.callerReference = checkNotNull(callerReference, "callerReference for %s", name);
-      this.resourceRecordSetCount = checkNotNull(resourceRecordSetCount, "resourceRecordSetCount for %s", name);
+      this.resourceRecordSetCount = resourceRecordSetCount;
       this.comment = checkNotNull(comment, "comment for %s", comment);
    }
 

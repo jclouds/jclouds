@@ -216,7 +216,7 @@ public class IpDetails {
                        @Nullable String netmask, @Nullable String broadcast, @Nullable String gateway,
                        List<String> nameServers, @Nullable String serverId, Cost cost, GleSYSBoolean reserved) {
       this.datacenter = checkNotNull(datacenter, "datacenter");
-      this.version = checkNotNull(version, "version");
+      this.version = version;
       this.ptr = checkNotNull(ptr, "ptr");
       this.platform = checkNotNull(platform, "platform");
       this.address = address;

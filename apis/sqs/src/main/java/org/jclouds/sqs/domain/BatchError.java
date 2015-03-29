@@ -91,7 +91,7 @@ public class BatchError {
 
    private BatchError(String id, boolean senderFault, String code, String message) {
       this.id = checkNotNull(id, "id");
-      this.senderFault = checkNotNull(senderFault, "senderFault of %s", id);
+      this.senderFault = senderFault;
       this.code = checkNotNull(code, "code of %s", id);
       this.message = checkNotNull(message, "message of %s", id);
    }

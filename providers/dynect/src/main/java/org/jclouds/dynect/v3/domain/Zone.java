@@ -90,7 +90,7 @@ public final class Zone {
    private Zone(String fqdn, Type type, int serial, SerialStyle serialStyle) {
       this.fqdn = checkNotNull(fqdn, "fqdn");
       this.type = checkNotNull(type, "type for %s", fqdn);
-      this.serial = checkNotNull(serial, "serial for %s", fqdn);
+      this.serial = serial;
       this.serialStyle = checkNotNull(serialStyle, "serialStyle for %s", serialStyle);
    }
 

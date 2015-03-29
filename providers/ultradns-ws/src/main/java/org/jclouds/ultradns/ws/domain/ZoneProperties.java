@@ -39,7 +39,7 @@ public final class ZoneProperties {
       this.typeCode = typeCode;
       this.type = checkNotNull(type, "type for %s", name);
       this.modified = checkNotNull(modified, "modified for %s", name);
-      this.resourceRecordCount = checkNotNull(resourceRecordCount, "resourceRecordCount for %s", name);
+      this.resourceRecordCount = resourceRecordCount;
    }
 
    /**

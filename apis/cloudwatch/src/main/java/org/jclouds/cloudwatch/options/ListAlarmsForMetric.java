@@ -103,7 +103,7 @@ public class ListAlarmsForMetric extends BaseHttpRequestOptions {
     * @return this {@code ListAlarmsForMetric} object
     */
    public ListAlarmsForMetric period(int period) {
-      formParameters.put("Period", checkNotNull(period, "period").toString());
+      formParameters.put("Period", String.valueOf(period));
       return this;
    }
 

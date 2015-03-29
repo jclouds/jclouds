@@ -193,7 +193,7 @@ public class Address {
                      @Nullable String address, @Nullable String city, @Nullable String contactName,
                      int isActive, int locationId, @Nullable String postalCode) {
       this.id = id;
-      this.accountId = checkNotNull(accountId, "accountId");
+      this.accountId = accountId;
       this.address = address;
       this.city = city;
       this.contactName = contactName;
