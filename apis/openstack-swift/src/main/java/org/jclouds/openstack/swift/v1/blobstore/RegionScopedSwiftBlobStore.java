@@ -25,6 +25,7 @@ import static org.jclouds.location.predicates.LocationPredicates.idEquals;
 import static org.jclouds.openstack.swift.v1.options.PutOptions.Builder.metadata;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import javax.inject.Inject;
@@ -44,6 +45,7 @@ import org.jclouds.blobstore.domain.internal.BlobBuilderImpl;
 import org.jclouds.blobstore.domain.internal.BlobImpl;
 import org.jclouds.blobstore.domain.internal.PageSetImpl;
 import org.jclouds.blobstore.functions.BlobToHttpGetOptions;
+import org.jclouds.blobstore.options.CopyOptions;
 import org.jclouds.blobstore.options.CreateContainerOptions;
 import org.jclouds.blobstore.options.GetOptions;
 import org.jclouds.blobstore.options.ListContainerOptions;
@@ -226,6 +228,32 @@ public class RegionScopedSwiftBlobStore implements BlobStore {
       }
       ObjectApi objectApi = api.getObjectApi(regionId, container);
       return objectApi.put(blob.getMetadata().getName(), blob.getPayload(), metadata(blob.getMetadata().getUserMetadata()));
+   }
+
+   @Override
+   public String copyBlob(String fromContainer, String fromName, String toContainer, String toName,
+         CopyOptions options) {
+      ObjectApi objectApi = api.getObjectApi(regionId, toContainer);
+
+      boolean copied = objectApi.copy(toName, fromContainer, fromName);
+      if (!copied) {
+         throw new RuntimeException("could not copy blob");
+      }
+
+      // TODO: content disposition
+      // TODO: content encoding
+      // TODO: content language
+      // TODO: content type
+
+      Optional<Map<String, String>> userMetadata = options.getUserMetadata();
+      if (userMetadata.isPresent()) {
+         boolean updated = objectApi.updateMetadata(toName, userMetadata.get());
+         if (!updated) {
+            throw new RuntimeException("could not copy blob");
+         }
+      }
+
+      return objectApi.getWithoutBody(toName).getETag();
    }
 
    @Override
