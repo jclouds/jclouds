@@ -19,6 +19,7 @@ package org.jclouds.blobstore;
 import java.io.IOException;
 
 import org.jclouds.blobstore.domain.Blob;
+import org.jclouds.blobstore.domain.BlobAccess;
 import org.jclouds.blobstore.domain.ContainerAccess;
 import org.jclouds.blobstore.domain.StorageMetadata;
 import org.jclouds.blobstore.options.CreateContainerOptions;
@@ -127,6 +128,10 @@ public interface LocalStorageStrategy {
      * @param key
      */
     void removeBlob(String container, String key);
+
+    BlobAccess getBlobAccess(String container, String key);
+
+    void setBlobAccess(String container, String key, BlobAccess access);
 
     /**
      * @param containerName name of container
