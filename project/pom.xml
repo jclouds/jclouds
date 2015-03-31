@@ -967,6 +967,7 @@
               EqualsOperandShouldHaveClassCompatibleWithThis,
               FindBadCast2,
               FindHEmismatch,
+              FindMaskedFields,
               FindNullDeref,
               FindReturnRef,
               FindUnsatisfiedObligation,

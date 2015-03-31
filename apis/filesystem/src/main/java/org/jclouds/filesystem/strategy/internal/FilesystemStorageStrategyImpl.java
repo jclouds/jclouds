@@ -241,7 +241,6 @@ public class FilesystemStorageStrategyImpl implements LocalStorageStrategy {
       BlobBuilder builder = blobBuilders.get();
       builder.name(key);
       File file = getFileForBlobKey(container, key);
-      Path path = file.toPath();
       ByteSource byteSource;
 
       if (getDirectoryBlobSuffix(key) != null) {

@@ -133,7 +133,7 @@ public class ServerInfoToNodeMetadata implements Function<ServerInfo, NodeMetada
          } catch (UncheckedExecutionException e) {
             logger.warn(e, "error finding drive %s: %s", input.getDriveUuid(), e.getMessage());
          }
-         return new VolumeBuilder().durable(true).type(Volume.Type.NAS).build();
+         return builder.durable(true).type(Volume.Type.NAS).build();
       }
    }
 
