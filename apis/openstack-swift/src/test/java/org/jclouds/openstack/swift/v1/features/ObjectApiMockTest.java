@@ -39,6 +39,7 @@ import static org.testng.Assert.fail;
 import java.io.IOException;
 import java.net.URI;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Properties;
@@ -193,7 +194,8 @@ public class ObjectApiMockTest extends BaseOpenStackMockTest<SwiftApi> {
    public void testCreateWithSpacesAndSpecialCharacters() throws Exception {
       MockWebServer server = mockOpenStackServer();
       server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/access.json"))));
-      server.enqueue(addCommonHeaders(new MockResponse().setResponseCode(201).addHeader("ETag", "d9f5eb4bba4e2f2f046e54611bc8196b")));
+      server.enqueue(addCommonHeaders(
+            new MockResponse().setResponseCode(201).addHeader("ETag", "d9f5eb4bba4e2f2f046e54611bc8196b")));
 
       final String containerName = "container # ! special";
       final String objectName = "object # ! special";
@@ -279,7 +281,8 @@ public class ObjectApiMockTest extends BaseOpenStackMockTest<SwiftApi> {
 
          assertEquals(server.getRequestCount(), 2);
          assertAuthentication(server);
-         assertRequest(server.takeRequest(), "HEAD", "/v1/MossoCloudFS_5bcf396e-39dd-45ff-93a1-712b9aba90a9/myContainer/myObject");
+         assertRequest(server.takeRequest(), "HEAD",
+               "/v1/MossoCloudFS_5bcf396e-39dd-45ff-93a1-712b9aba90a9/myContainer/myObject");
       } finally {
          server.shutdown();
       }
@@ -339,7 +342,7 @@ public class ObjectApiMockTest extends BaseOpenStackMockTest<SwiftApi> {
 
          fail("testReplaceTimeout test should have failed with an HttpResponseException.");
       } finally {
-         try { 
+         try {
             server.shutdown();
          } catch (IOException e) {
             // MockWebServer 2.1.0 introduces an active wait for its executor termination.
@@ -469,7 +472,7 @@ public class ObjectApiMockTest extends BaseOpenStackMockTest<SwiftApi> {
       try {
          SwiftApi api = api(server.getUrl("/").toString(), "openstack-swift");
          assertTrue(api.getObjectApi("DFW", "foo")
-            .copy("bar.txt", "bar", "foo.txt"));
+               .copy("bar.txt", "bar", "foo.txt"));
 
          assertEquals(server.getRequestCount(), 2);
          assertEquals(server.takeRequest().getRequestLine(), "POST /tokens HTTP/1.1");
@@ -493,6 +496,51 @@ public class ObjectApiMockTest extends BaseOpenStackMockTest<SwiftApi> {
          SwiftApi api = api(server.getUrl("/").toString(), "openstack-swift");
          // the following line will throw the CopyObjectException
          api.getObjectApi("DFW", "foo").copy("bar.txt", "bogus", "foo.txt");
+      } finally {
+         server.shutdown();
+      }
+   }
+
+   public void testCopyObjectWithMetadata() throws Exception {
+      MockWebServer server = mockOpenStackServer();
+      server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/access.json"))));
+      server.enqueue(addCommonHeaders(new MockResponse().setResponseCode(201)
+            .addHeader(SwiftHeaders.OBJECT_COPY_FROM, "/bar/foo.txt")));
+
+      try {
+         SwiftApi api = api(server.getUrl("/").toString(), "openstack-swift");
+         assertTrue(api.getObjectApi("DFW", "foo")
+               .copy("bar.txt", "bar", "foo.txt", ImmutableMap.of("someUserHeader", "someUserMetadataValue"),
+                     ImmutableMap.of("Content-Disposition", "attachment; filename=\"fname.ext\"")));
+
+         assertEquals(server.getRequestCount(), 2);
+         assertEquals(server.takeRequest().getRequestLine(), "POST /tokens HTTP/1.1");
+
+         RecordedRequest copyRequest = server.takeRequest();
+         assertEquals(copyRequest.getRequestLine(),
+               "PUT /v1/MossoCloudFS_5bcf396e-39dd-45ff-93a1-712b9aba90a9/foo/bar.txt HTTP/1.1");
+
+         List<String> requestHeaders = copyRequest.getHeaders();
+         assertTrue(requestHeaders.contains("X-Object-Meta-someuserheader: someUserMetadataValue"));
+         assertTrue(requestHeaders.contains("content-disposition: attachment; filename=\"fname.ext\""));
+         assertTrue(requestHeaders.contains(SwiftHeaders.OBJECT_COPY_FROM + ": /bar/foo.txt"));
+      } finally {
+         server.shutdown();
+      }
+   }
+
+   @Test(expectedExceptions = CopyObjectException.class)
+   public void testCopyObjectWithMetadataFail() throws Exception {
+      MockWebServer server = mockOpenStackServer();
+      server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/access.json"))));
+      server.enqueue(addCommonHeaders(new MockResponse().setResponseCode(404)
+            .addHeader(SwiftHeaders.OBJECT_COPY_FROM, "/bar/foo.txt")));
+
+      try {
+         SwiftApi api = api(server.getUrl("/").toString(), "openstack-swift");
+         assertTrue(api.getObjectApi("DFW", "foo")
+               .copy("bar.txt", "bar", "foo.txt", ImmutableMap.of("someUserHeader", "someUserMetadataValue"),
+                     ImmutableMap.of("Content-Disposition", "attachment; filename=\"fname.ext\"")));
       } finally {
          server.shutdown();
       }
