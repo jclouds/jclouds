@@ -41,6 +41,7 @@ import org.jclouds.http.options.GetOptions;
 import org.jclouds.io.Payload;
 import org.jclouds.javax.annotation.Nullable;
 import org.jclouds.openstack.keystone.v2_0.filters.AuthenticateRequest;
+import org.jclouds.openstack.swift.v1.binders.BindMetadataToHeaders.BindHeaderMetadataToHeaders;
 import org.jclouds.openstack.swift.v1.binders.BindMetadataToHeaders.BindObjectMetadataToHeaders;
 import org.jclouds.openstack.swift.v1.binders.BindMetadataToHeaders.BindRemoveObjectMetadataToHeaders;
 import org.jclouds.openstack.swift.v1.binders.SetPayload;
@@ -261,5 +262,37 @@ public interface ObjectApi {
    boolean copy(@PathParam("destinationObject") String destinationObject,
                 @PathParam("sourceContainer") String sourceContainer,
                 @PathParam("sourceObject") String sourceObject);
+
+   /**
+    * Copies an object from one container to another.
+    *
+    * <h3>NOTE</h3>
+    * This is a server side copy.
+    *
+    * @param destinationObject
+    *           the destination object name.
+    * @param sourceContainer
+    *           the source container name.
+    * @param sourceObject
+    *           the source object name.
+    * @param userMetadata
+    *           Freeform metadata for the object, automatically prefixed/escaped
+    * @param objectMetadata
+    *           Unprefixed/unescaped metadata, such as Content-Disposition
+    *
+    * @return {@code true} if the object was successfully copied, {@code false} if not.
+    *
+    * @throws org.jclouds.openstack.swift.v1.CopyObjectException if the source or destination container do not exist.
+    */
+   @Named("object:copy")
+   @PUT
+   @Path("/{destinationObject}")
+   @Headers(keys = OBJECT_COPY_FROM, values = "/{sourceContainer}/{sourceObject}")
+   @Fallback(FalseOnContainerNotFound.class)
+   boolean copy(@PathParam("destinationObject") String destinationObject,
+         @PathParam("sourceContainer") String sourceContainer,
+         @PathParam("sourceObject") String sourceObject,
+         @BinderParam(BindObjectMetadataToHeaders.class) Map<String, String> userMetadata,
+         @BinderParam(BindHeaderMetadataToHeaders.class) Map<String, String> objectMetadata);
 
 }
