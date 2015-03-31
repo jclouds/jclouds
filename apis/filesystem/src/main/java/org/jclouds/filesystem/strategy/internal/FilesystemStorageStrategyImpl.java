@@ -45,6 +45,7 @@ import javax.inject.Provider;
 
 import org.jclouds.blobstore.LocalStorageStrategy;
 import org.jclouds.blobstore.domain.Blob;
+import org.jclouds.blobstore.domain.BlobAccess;
 import org.jclouds.blobstore.domain.BlobBuilder;
 import org.jclouds.blobstore.domain.ContainerAccess;
 import org.jclouds.blobstore.domain.MutableStorageMetadata;
@@ -430,6 +431,7 @@ public class FilesystemStorageStrategyImpl implements LocalStorageStrategy {
                logger.debug("xattrs not supported on %s", outputPath);
             }
          }
+         setBlobAccess(containerName, blobKey, BlobAccess.PRIVATE);
          return base16().lowerCase().encode(actualHashCode.asBytes());
       } catch (IOException ex) {
          if (outputFile != null) {
@@ -473,6 +475,36 @@ public class FilesystemStorageStrategyImpl implements LocalStorageStrategy {
       // now examine if the key of the blob is a complex key (with a directory structure)
       // and eventually remove empty directory
       removeDirectoriesTreeOfBlobKey(container, blobKey);
+   }
+
+   @Override
+   public BlobAccess getBlobAccess(String containerName, String blobName) {
+      Path path = new File(buildPathStartingFromBaseDir(containerName, blobName)).toPath();
+      Set<PosixFilePermission> permissions;
+      try {
+         permissions = getPosixFilePermissions(path);
+      } catch (IOException ioe) {
+         throw Throwables.propagate(ioe);
+      }
+      return permissions.contains(PosixFilePermission.OTHERS_READ)
+            ? BlobAccess.PUBLIC_READ : BlobAccess.PRIVATE;
+   }
+
+   @Override
+   public void setBlobAccess(String container, String name, BlobAccess access) {
+      Path path = new File(buildPathStartingFromBaseDir(container, name)).toPath();
+      Set<PosixFilePermission> permissions;
+      try {
+         permissions = getPosixFilePermissions(path);
+         if (access == BlobAccess.PRIVATE) {
+            permissions.remove(PosixFilePermission.OTHERS_READ);
+         } else if (access == BlobAccess.PUBLIC_READ) {
+            permissions.add(PosixFilePermission.OTHERS_READ);
+         }
+         setPosixFilePermissions(path, permissions);
+      } catch (IOException ioe) {
+         throw Throwables.propagate(ioe);
+      }
    }
 
    @Override
