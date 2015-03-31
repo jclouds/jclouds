@@ -19,7 +19,9 @@ package org.jclouds.azureblob.blobstore;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static org.jclouds.azure.storage.options.ListOptions.Builder.includeMetadata;
 
+import java.net.URI;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import javax.inject.Inject;
@@ -38,6 +40,7 @@ import org.jclouds.azureblob.blobstore.strategy.MultipartUploadStrategy;
 import org.jclouds.azureblob.domain.ContainerProperties;
 import org.jclouds.azureblob.domain.ListBlobBlocksResponse;
 import org.jclouds.azureblob.domain.PublicAccess;
+import org.jclouds.azureblob.options.CopyBlobOptions;
 import org.jclouds.azureblob.options.ListBlobsOptions;
 import org.jclouds.blobstore.BlobStoreContext;
 import org.jclouds.blobstore.domain.Blob;
@@ -49,6 +52,7 @@ import org.jclouds.blobstore.domain.StorageMetadata;
 import org.jclouds.blobstore.domain.internal.PageSetImpl;
 import org.jclouds.blobstore.functions.BlobToHttpGetOptions;
 import org.jclouds.blobstore.internal.BaseBlobStore;
+import org.jclouds.blobstore.options.CopyOptions;
 import org.jclouds.blobstore.options.CreateContainerOptions;
 import org.jclouds.blobstore.options.ListContainerOptions;
 import org.jclouds.blobstore.options.PutOptions;
@@ -58,6 +62,7 @@ import org.jclouds.domain.Location;
 import org.jclouds.http.options.GetOptions;
 
 import com.google.common.base.Function;
+import com.google.common.base.Optional;
 import com.google.common.base.Supplier;
 import com.google.common.collect.Iterables;
 import org.jclouds.io.Payload;
@@ -213,6 +218,30 @@ public class AzureBlobStore extends BaseBlobStore {
          return multipartUploadStrategy.get().execute(container, blob);
       }
       return putBlob(container, blob);
+   }
+
+   @Override
+   public String copyBlob(String fromContainer, String fromName, String toContainer, String toName,
+         CopyOptions options) {
+      CopyBlobOptions.Builder azureOptions = CopyBlobOptions.builder();
+
+      Optional<Map<String, String>> userMetadata = options.getUserMetadata();
+      if (userMetadata.isPresent()) {
+         azureOptions.overrideUserMetadata(userMetadata.get());
+      }
+
+      URI source = context.getSigner().signGetBlob(fromContainer, fromName).getEndpoint();
+      sync.copyBlob(source, toContainer, toName, azureOptions.build());
+
+      String eTag = sync.getBlobProperties(toContainer, toName).getETag();
+
+      // TODO: Azure does not allow updating system metadata during copy - call SetBlobProperties (not yet implemented)
+      // TODO: content disposition
+      // TODO: content encoding
+      // TODO: content language
+      // TODO: content type
+
+      return eTag;
    }
 
    /**
