@@ -18,16 +18,10 @@ package org.jclouds.blobstore.integration;
 
 import org.jclouds.blobstore.integration.internal.BaseBlobIntegrationTest;
 import org.testng.annotations.Test;
-import org.testng.SkipException;
 
 @Test(groups = { "integration" })
 public class TransientBlobIntegrationTest extends BaseBlobIntegrationTest {
    public TransientBlobIntegrationTest() {
       provider = "transient";
-   }
-
-   @Override
-   public void testSetBlobAccess() throws Exception {
-      throw new SkipException("Intentionally not implemented for the transient provider");
    }
 }

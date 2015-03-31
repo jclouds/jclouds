@@ -347,12 +347,12 @@ public final class LocalBlobStore implements BlobStore {
 
    @Override
    public BlobAccess getBlobAccess(String container, String name) {
-      throw new UnsupportedOperationException("not implemented");
+      return storageStrategy.getBlobAccess(container, name);
    }
 
    @Override
    public void setBlobAccess(String container, String name, BlobAccess access) {
-      throw new UnsupportedOperationException("not implemented");
+      storageStrategy.setBlobAccess(container, name, access);
    }
 
    @Override
