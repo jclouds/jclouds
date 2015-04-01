@@ -16,6 +16,7 @@
  */
 package org.jclouds.googlecloudstorage.features;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertNotNull;
@@ -51,7 +52,13 @@ import com.google.common.collect.Lists;
 
 public class BucketApiLiveTest extends BaseGoogleCloudStorageApiLiveTest {
 
+   // TODO: what removes these buckets?
+
    private static final String BUCKET_NAME = "jcloudstestbucket" + (int) (Math.random() * 10000);
+
+   private static final String BUCKET_NAME_STANDARD = "jcloudstestbucketstandard" + (int) (Math.random() * 10000);
+
+   private static final String BUCKET_NAME_NEARLINE = "jcloudstestbucketnearline" + (int) (Math.random() * 10000);
 
    private static final String BUCKET_NAME_WITHOPTIONS = "jcloudtestbucketoptions" + (int) (Math.random() * 10000);
 
@@ -63,6 +70,7 @@ public class BucketApiLiveTest extends BaseGoogleCloudStorageApiLiveTest {
       return api.getBucketApi();
    }
 
+   // TODO: should this test use STANDARD storage class?
    @Test(groups = "live")
    public void testCreateBucket() {
 
@@ -91,7 +99,38 @@ public class BucketApiLiveTest extends BaseGoogleCloudStorageApiLiveTest {
       assertTrue(response.cors().size() == 1);
       assertEquals(response.name(), BUCKET_NAME);
       assertEquals(response.location(), Location.US_CENTRAL2);
+      assertThat(response.storageClass()).isEqualTo(StorageClass.DURABLE_REDUCED_AVAILABILITY);
       assertTrue(response.versioning().enabled());
+   }
+
+   @Test(groups = "live")
+   public void testCreateBucketStandard() {
+      BucketTemplate template = new BucketTemplate()
+               .name(BUCKET_NAME_STANDARD)
+               .location(Location.US)
+               .storageClass(StorageClass.STANDARD);
+
+      Bucket response = api().createBucket(PROJECT_NUMBER, template);
+
+      assertNotNull(response);
+      assertEquals(response.name(), BUCKET_NAME_STANDARD);
+      assertEquals(response.location(), Location.US);
+      assertThat(response.storageClass()).isEqualTo(StorageClass.STANDARD);
+   }
+
+   @Test(groups = "live")
+   public void testCreateBucketNearline() {
+      BucketTemplate template = new BucketTemplate()
+               .name(BUCKET_NAME_NEARLINE)
+               .location(Location.US)
+               .storageClass(StorageClass.NEARLINE);
+
+      Bucket response = api().createBucket(PROJECT_NUMBER, template);
+
+      assertNotNull(response);
+      assertEquals(response.name(), BUCKET_NAME_NEARLINE);
+      assertEquals(response.location(), Location.US);
+      assertThat(response.storageClass()).isEqualTo(StorageClass.NEARLINE);
    }
 
    @Test(groups = "live", dependsOnMethods = { "testCreateBucket" })
