@@ -45,6 +45,7 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.Multimap;
 import com.google.common.io.ByteSource;
 
 /**
@@ -96,6 +97,7 @@ public class ObjectApiLiveTest extends BaseSwiftApiLiveTest<SwiftApi> {
          api.getObjectApi(regionId, containerName).delete(objectName);
       }
    }
+
    public void testCopyObject() throws Exception {
       for (String regionId : regions) {
          // source
@@ -135,6 +137,85 @@ public class ObjectApiLiveTest extends BaseSwiftApiLiveTest<SwiftApi> {
          // now get a real SwiftObject
          SwiftObject destSwiftObject = destApi.get(destinationObject);
          assertEquals(toStringAndClose(destSwiftObject.getPayload().openStream()), "swifty");
+
+         // test exception thrown on bad source name
+         try {
+            destApi.copy(destinationObject, badSource, sourceObjectName);
+            fail("Expected CopyObjectException");
+         } catch (CopyObjectException e) {
+            assertEquals(e.getSourcePath(), "/" + badSource + "/" + sourceObjectName);
+            assertEquals(e.getDestinationPath(), destinationPath);
+         }
+
+         deleteAllObjectsInContainer(regionId, sourceContainer);
+         containerApi.deleteIfEmpty(sourceContainer);
+
+         deleteAllObjectsInContainer(regionId, destinationContainer);
+         containerApi.deleteIfEmpty(destinationContainer);
+      }
+   }
+
+   public void testCopyObjectWithMetadata() throws Exception {
+      for (String regionId : regions) {
+         // source
+         String sourceContainer = "src" + containerName;
+         String sourceObjectName = "original.txt";
+         String badSource = "badSource";
+
+         // destination
+         String destinationContainer = "dest" + containerName;
+         String destinationObject = "copy.txt";
+         String destinationPath = "/" + destinationContainer + "/" + destinationObject;
+
+         ContainerApi containerApi = api.getContainerApi(regionId);
+
+         // create source and destination dirs
+         containerApi.create(sourceContainer);
+         containerApi.create(destinationContainer);
+
+         // get the api for this region and container
+         ObjectApi srcApi = api.getObjectApi(regionId, sourceContainer);
+         ObjectApi destApi = api.getObjectApi(regionId, destinationContainer);
+
+         // Create source object
+         assertNotNull(srcApi.put(sourceObjectName, PAYLOAD));
+         SwiftObject sourceObject = srcApi.get(sourceObjectName);
+         checkObject(sourceObject);
+
+         srcApi.updateMetadata(sourceObjectName,
+               ImmutableMap.of("userProvidedMetadataKey", "userProvidedMetadataValue"));
+
+         // Create the destination object
+         assertNotNull(destApi.put(destinationObject, PAYLOAD));
+         SwiftObject object = destApi.get(destinationObject);
+         checkObject(object);
+
+         // check the copy operation
+         assertTrue(destApi.copy(destinationObject, sourceContainer, sourceObjectName,
+               ImmutableMap.<String, String>of("additionalUserMetakey", "additionalUserMetavalue"),
+               ImmutableMap.of("Content-Disposition", "attachment; filename=\"updatedname.txt\"")));
+         assertNotNull(destApi.get(destinationObject));
+
+         // now get a real SwiftObject
+         SwiftObject destSwiftObject = destApi.get(destinationObject);
+         assertEquals(toStringAndClose(destSwiftObject.getPayload().openStream()), "swifty");
+
+         /**
+          * Make sure all src metadata is in dest
+          * Make sure the new content disposition is in dest
+          */
+         Multimap<String, String> srcHeaders = null;
+         Multimap<String, String> destHeaders = null;
+         srcHeaders = srcApi.get(sourceObjectName).getHeaders();
+         destHeaders = destApi.get(destinationObject).getHeaders();
+         for (Entry<String, String> header : srcHeaders.entries()) {
+            if (header.getKey().equals("Date"))continue;
+            if (header.getKey().equals("Last-Modified"))continue;
+            if (header.getKey().equals("X-Trans-Id"))continue;
+            if (header.getKey().equals("X-Timestamp"))continue;
+            assertTrue(destHeaders.containsEntry(header.getKey(), header.getValue()), "Could not find: " + header);
+         }
+         assertEquals(destApi.get(destinationObject).getPayload().getContentMetadata().getContentDisposition(), "attachment; filename=\"updatedname.txt\"");
 
          // test exception thrown on bad source name
          try {
