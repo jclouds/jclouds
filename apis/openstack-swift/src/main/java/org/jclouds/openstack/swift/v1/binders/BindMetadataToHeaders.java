@@ -85,8 +85,8 @@ public class BindMetadataToHeaders implements Binder {
       }
    }
 
-   public static class BindHeaderMetadataToHeaders extends BindMetadataToHeaders {
-      BindHeaderMetadataToHeaders() {
+   public static class BindRawMetadataToHeaders extends BindMetadataToHeaders {
+      BindRawMetadataToHeaders() {
          super("");
       }
    }

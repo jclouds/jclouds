@@ -41,8 +41,8 @@ import org.jclouds.http.options.GetOptions;
 import org.jclouds.io.Payload;
 import org.jclouds.javax.annotation.Nullable;
 import org.jclouds.openstack.keystone.v2_0.filters.AuthenticateRequest;
-import org.jclouds.openstack.swift.v1.binders.BindMetadataToHeaders.BindHeaderMetadataToHeaders;
 import org.jclouds.openstack.swift.v1.binders.BindMetadataToHeaders.BindObjectMetadataToHeaders;
+import org.jclouds.openstack.swift.v1.binders.BindMetadataToHeaders.BindRawMetadataToHeaders;
 import org.jclouds.openstack.swift.v1.binders.BindMetadataToHeaders.BindRemoveObjectMetadataToHeaders;
 import org.jclouds.openstack.swift.v1.binders.SetPayload;
 import org.jclouds.openstack.swift.v1.domain.ObjectList;
@@ -208,6 +208,26 @@ public interface ObjectApi {
          @BinderParam(BindObjectMetadataToHeaders.class) Map<String, String> metadata);
 
    /**
+    * Creates or updates the metadata for a {@link SwiftObject} without escaping the key.
+    * This will also update metadata such as content-disposition.
+    *
+    * @param objectName
+    *           corresponds to {@link SwiftObject#getName()}.
+    * @param metadata
+    *           the metadata to create or update.
+    *
+    * @return {@code true} if the metadata was successfully created or updated,
+    *         {@code false} if not.
+    */
+   @Named("object:updateMetadata")
+   @POST
+   @Path("/{objectName}")
+   @Produces("")
+   @Fallback(FalseOnNotFoundOr404.class)
+   boolean updateRawMetadata(@PathParam("objectName") String objectName,
+         @BinderParam(BindRawMetadataToHeaders.class) Map<String, String> metadata);
+
+   /**
     * Deletes the metadata from a {@link SwiftObject}.
     *
     * @param objectName
@@ -293,6 +313,6 @@ public interface ObjectApi {
          @PathParam("sourceContainer") String sourceContainer,
          @PathParam("sourceObject") String sourceObject,
          @BinderParam(BindObjectMetadataToHeaders.class) Map<String, String> userMetadata,
-         @BinderParam(BindHeaderMetadataToHeaders.class) Map<String, String> objectMetadata);
+         @BinderParam(BindRawMetadataToHeaders.class) Map<String, String> objectMetadata);
 
 }
