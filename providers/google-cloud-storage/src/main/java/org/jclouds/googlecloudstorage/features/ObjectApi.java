@@ -380,7 +380,7 @@ public interface ObjectApi {
             ComposeObjectOptions options);
 
    /**
-    * Copies an object to a specified location. Optionally overrides metadata.
+    * Copies an object to a specified location.
     *
     * @param destinationBucket
     *           Name of the bucket in which to store the new object
@@ -400,6 +400,30 @@ public interface ObjectApi {
    GoogleCloudStorageObject copyObject(@PathParam("destinationBucket") String destinationBucket,
             @PathParam("destinationObject") String destinationObject, @PathParam("sourceBucket") String sourceBucket,
             @PathParam("sourceObject") String sourceObject);
+
+    /**
+     * Copies an object to a specified location with updated metadata.
+     *
+     * @param destinationBucket
+     *           Name of the bucket in which to store the new object
+     * @param destinationObject
+     *           Name of the new object.
+     * @param sourceBucket
+     *           Name of the bucket in which to find the source object
+     * @param sourceObject
+     *           Name of the source object
+     * @param template
+     *           Supply a {@link CopyObjectOptions}
+     *
+     * @return a {@link GoogleCloudStorageObject}
+     */
+    @Named("Object:copy")
+    @POST
+    @Consumes(APPLICATION_JSON)
+    @Path("/storage/v1/b/{sourceBucket}/o/{sourceObject}/copyTo/b/{destinationBucket}/o/{destinationObject}")
+    GoogleCloudStorageObject copyObject(@PathParam("destinationBucket") String destinationBucket,
+                                        @PathParam("destinationObject") String destinationObject, @PathParam("sourceBucket") String sourceBucket,
+                                        @PathParam("sourceObject") String sourceObject, @BinderParam(BindToJsonPayload.class) ObjectTemplate template);
 
    /**
     * Copies an object to a specified location. Optionally overrides metadata.

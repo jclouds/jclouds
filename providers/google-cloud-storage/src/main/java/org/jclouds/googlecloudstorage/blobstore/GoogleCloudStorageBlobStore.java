@@ -23,6 +23,7 @@ import static org.jclouds.googlecloudstorage.domain.DomainResourceReferences.Obj
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.Set;
+import java.util.Map;
 
 import javax.inject.Inject;
 
@@ -41,6 +42,7 @@ import org.jclouds.blobstore.options.CreateContainerOptions;
 import org.jclouds.blobstore.options.GetOptions;
 import org.jclouds.blobstore.options.ListContainerOptions;
 import org.jclouds.blobstore.options.PutOptions;
+import org.jclouds.blobstore.options.CopyOptions;
 import org.jclouds.blobstore.strategy.internal.FetchBlobMetadata;
 import org.jclouds.blobstore.util.BlobUtils;
 import org.jclouds.collect.Memoized;
@@ -302,4 +304,17 @@ public final class GoogleCloudStorageBlobStore extends BaseBlobStore {
 
       return false;
    }
+
+    @Override
+    public String copyBlob(String fromContainer, String fromName, String toContainer, String toName, CopyOptions options) {
+
+        if (options == CopyOptions.NONE) {
+           return api.getObjectApi().copyObject(toContainer, toName, fromContainer, fromName).etag();
+        } else {
+            Map<String, String> map = options.getUserMetadata().get();
+            String contentType = api.getObjectApi().getObject(fromContainer, fromName).contentType();
+            ObjectTemplate template = new ObjectTemplate().customMetadata(map).contentType(contentType);
+            return api.getObjectApi().copyObject(toContainer, toName, fromContainer, fromName, template).etag();
+        }
+    }
 }

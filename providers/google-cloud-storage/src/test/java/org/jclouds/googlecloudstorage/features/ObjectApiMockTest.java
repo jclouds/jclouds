@@ -210,6 +210,21 @@ public class ObjectApiMockTest extends BaseGoogleCloudStorageApiMockTest {
               "/b/destination_bucket/o/destination_object", APPLICATION_JSON);
    }
 
+    public void copy_update_metadata() throws Exception {
+        server.enqueue(jsonResponse("/object_get.json"));
+
+        ObjectTemplate template = new ObjectTemplate().name("file_name").size((long) 1000).crc32c("crc32c");
+
+        assertEquals(objectApi().copyObject("destination_bucket", "destination_object", "source_bucket", "source_object", template),
+                new ParseGoogleCloudStorageObject().expected());
+        assertSent(server, "POST", "/storage/v1/b/source_bucket/o/source_object/copyTo" +
+                "/b/destination_bucket/o/destination_object", APPLICATION_JSON, "{" +
+                "  \"name\": \"file_name\"," +
+                "  \"size\": 1000," +
+                "  \"crc32c\": \"crc32c\"" +
+                "}");
+    }
+
    public void copy_with_options() throws Exception {
       server.enqueue(jsonResponse("/object_get.json"));
 

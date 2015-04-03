@@ -73,6 +73,7 @@ public class ObjectApiLiveTest extends BaseGoogleCloudStorageApiLiveTest {
    private static final String UPLOAD_OBJECT_NAME2 = "jcloudslogo.jpg";
    private static final String MULTIPART_UPLOAD_OBJECT = "multipart_related.jpg";
    private static final String COPIED_OBJECT_NAME = "copyofObjectOperation.txt";
+   private static final String COPIED_OBJECT_NAME2 = "copyObjectWithMeta.txt";
    private static final String COMPOSED_OBJECT = "ComposedObject1.txt";
    private static final String COMPOSED_OBJECT2 = "ComposedObject2.json";
    private static final String NONEXISTENT_OBJECT_NAME = "noSuchObject.txt";
@@ -203,6 +204,31 @@ public class ObjectApiLiveTest extends BaseGoogleCloudStorageApiLiveTest {
       assertEquals(ByteStreams2.toByteArrayAndClose(impl.getPayload().openStream()),
                ByteStreams2.toByteArrayAndClose(testPayload.getPayload().openStream()));
 
+   }
+
+   @Test(groups = "live", dependsOnMethods = "testGetObject")
+   public void testCopyObjectWithUpdatedMetadata() throws IOException {
+      String METADATA_KEY = "key1";
+      String METADATA_VALUE = "value1";
+
+      ObjectTemplate template = new ObjectTemplate().contentLanguage("fr").contentType("text/plain")
+               .contentDisposition("attachment").customMetadata(METADATA_KEY, METADATA_VALUE);
+
+      GoogleCloudStorageObject gcsObject = api().copyObject(BUCKET_NAME2, COPIED_OBJECT_NAME2, BUCKET_NAME, UPLOAD_OBJECT_NAME, template);
+
+      assertNotNull(gcsObject);
+      assertEquals(gcsObject.bucket(), BUCKET_NAME2);
+      assertEquals(gcsObject.name(), COPIED_OBJECT_NAME2);
+      assertNotNull(gcsObject.acl());
+      assertEquals(gcsObject.contentType(), "text/plain");
+      assertEquals(gcsObject.metadata().get(METADATA_KEY), METADATA_VALUE);
+      assertEquals(gcsObject.contentLanguage(), "fr");
+      // Test for data
+
+      PayloadEnclosing impl = api().download(BUCKET_NAME2, COPIED_OBJECT_NAME2);
+      assertNotNull(impl);
+      assertEquals(ByteStreams2.toByteArrayAndClose(impl.getPayload().openStream()),
+               ByteStreams2.toByteArrayAndClose(testPayload.getPayload().openStream()));
    }
 
    @Test(groups = "live", dependsOnMethods = "testCopyObject")
