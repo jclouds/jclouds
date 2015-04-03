@@ -759,8 +759,7 @@ public class BaseBlobIntegrationTest extends BaseBlobStoreIntegrationTest {
          } finally {
             Closeables2.closeQuietly(is);
          }
-         // TODO: Swift does not preserve system metadata
-         //checkContentMetadata(toBlob);
+         checkContentMetadata(toBlob);
          assertThat(toBlob.getMetadata().getUserMetadata()).isEqualTo(userMetadata);
       } finally {
          returnContainer(toContainer);

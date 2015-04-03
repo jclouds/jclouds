@@ -53,6 +53,7 @@ import org.jclouds.blobstore.options.PutOptions;
 import org.jclouds.blobstore.strategy.ClearListStrategy;
 import org.jclouds.collect.Memoized;
 import org.jclouds.domain.Location;
+import org.jclouds.io.ContentMetadata;
 import org.jclouds.io.Payload;
 import org.jclouds.io.payloads.ByteSourcePayload;
 import org.jclouds.openstack.swift.v1.SwiftApi;
@@ -78,7 +79,9 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
+import com.google.common.collect.Maps;
 import com.google.common.io.ByteSource;
+import com.google.common.net.HttpHeaders;
 import com.google.inject.AbstractModule;
 import com.google.inject.Injector;
 import com.google.inject.assistedinject.Assisted;
@@ -234,24 +237,44 @@ public class RegionScopedSwiftBlobStore implements BlobStore {
    public String copyBlob(String fromContainer, String fromName, String toContainer, String toName,
          CopyOptions options) {
       ObjectApi objectApi = api.getObjectApi(regionId, toContainer);
+      SwiftObject metadata = api.getObjectApi(regionId, fromContainer).getWithoutBody(fromName);
 
-      boolean copied = objectApi.copy(toName, fromContainer, fromName);
+      Map<String, String> userMetadata;
+      if (options.getUserMetadata().isPresent()) {
+         userMetadata = options.getUserMetadata().get();
+      } else {
+         userMetadata = metadata.getMetadata();
+      }
+
+      // copy existing system metadata
+      Map<String, String> systemMetadata = Maps.newHashMap();
+      ContentMetadata contentMetadata = metadata.getPayload().getContentMetadata();
+      String contentDisposition = contentMetadata.getContentDisposition();
+      if (contentDisposition != null) {
+         systemMetadata.put(HttpHeaders.CONTENT_DISPOSITION, contentDisposition);
+      }
+      String contentEncoding = contentMetadata.getContentEncoding();
+      if (contentEncoding != null) {
+         systemMetadata.put(HttpHeaders.CONTENT_ENCODING, contentEncoding);
+      }
+      String contentLanguage = contentMetadata.getContentLanguage();
+      if (contentLanguage != null) {
+         systemMetadata.put(HttpHeaders.CONTENT_LANGUAGE, contentLanguage);
+      }
+      String contentType = contentMetadata.getContentType();
+      if (contentType != null) {
+         systemMetadata.put(HttpHeaders.CONTENT_TYPE, contentType);
+      }
+
+      boolean copied = objectApi.copy(toName, fromContainer, fromName, userMetadata, systemMetadata);
       if (!copied) {
          throw new RuntimeException("could not copy blob");
       }
 
-      // TODO: content disposition
-      // TODO: content encoding
-      // TODO: content language
-      // TODO: content type
-
-      Optional<Map<String, String>> userMetadata = options.getUserMetadata();
-      if (userMetadata.isPresent()) {
-         boolean updated = objectApi.updateMetadata(toName, userMetadata.get());
-         if (!updated) {
-            throw new RuntimeException("could not copy blob");
-         }
-      }
+      // TODO: override content disposition
+      // TODO: override content encoding
+      // TODO: override content language
+      // TODO: override content type
 
       return objectApi.getWithoutBody(toName).getETag();
    }
