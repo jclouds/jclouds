@@ -776,6 +776,7 @@ public class BaseBlobIntegrationTest extends BaseBlobStoreIntegrationTest {
       ByteSource payload = TestUtils.randomByteSource().slice(0, 1024);
       PayloadBlobBuilder blobBuilder = blobStore
             .blobBuilder(fromName)
+            .userMetadata(ImmutableMap.of("key1", "value1", "key2", "value2"))
             .payload(payload)
             .contentLength(payload.size());
       addContentMetadata(blobBuilder);
@@ -785,7 +786,7 @@ public class BaseBlobIntegrationTest extends BaseBlobStoreIntegrationTest {
       String toContainer = getContainerName();
       try {
          blobStore.putBlob(fromContainer, blob);
-         Map<String, String> userMetadata = ImmutableMap.of("key1", "value1", "key2", "value2");
+         Map<String, String> userMetadata = ImmutableMap.of("key3", "value3", "key4", "value4");
          blobStore.copyBlob(fromContainer, fromName, toContainer, toName,
                CopyOptions.builder().userMetadata(userMetadata).build());
          Blob toBlob = blobStore.getBlob(toContainer, toName);
