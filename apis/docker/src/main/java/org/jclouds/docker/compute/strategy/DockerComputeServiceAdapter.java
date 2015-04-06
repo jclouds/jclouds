@@ -19,6 +19,8 @@ package org.jclouds.docker.compute.strategy;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.collect.Iterables.find;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -49,7 +51,9 @@ import org.jclouds.logging.Logger;
 
 import com.google.common.base.Predicate;
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 
@@ -135,6 +139,14 @@ public class DockerComputeServiceAdapter implements
       HostConfig.Builder hostConfigBuilder = HostConfig.builder()
               .publishAllPorts(true)
               .privileged(true);
+
+      if (templateOptions.getDirectPorts().isPresent()) {
+         Map<String, List<Map<String, String>>> portBindings = Maps.newHashMap();
+         for (Integer port : templateOptions.getDirectPorts().get()) {
+            portBindings.put(port + "/tcp", Lists.<Map<String, String>>newArrayList(ImmutableMap.of("HostPort", Integer.toString(port))));
+         }
+         hostConfigBuilder.portBindings(portBindings);
+      }
 
       if (templateOptions.getDns().isPresent()) {
          hostConfigBuilder.dns(templateOptions.getDns().get());

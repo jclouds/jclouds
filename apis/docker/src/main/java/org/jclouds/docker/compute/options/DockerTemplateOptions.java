@@ -54,6 +54,7 @@ public class DockerTemplateOptions extends TemplateOptions implements Cloneable 
    protected Optional<List<String>> commands = Optional.absent();
    protected Optional<Map<String, String>> volumes = Optional.absent();
    protected Optional<List<String>> env = Optional.absent();
+   protected Optional<List<Integer>> directPorts = Optional.absent();
 
    @Override
    public DockerTemplateOptions clone() {
@@ -84,10 +85,13 @@ public class DockerTemplateOptions extends TemplateOptions implements Cloneable 
          }
          if (cpuShares.isPresent()) {
              eTo.cpuShares(cpuShares.get());
-          }
+         }
          if (env.isPresent()) {
              eTo.env(env.get());
-          }
+         }
+         if (directPorts.isPresent()) {
+             eTo.directPorts(directPorts.get());
+         }
       }
    }
 
@@ -104,12 +108,13 @@ public class DockerTemplateOptions extends TemplateOptions implements Cloneable 
               equal(this.memory, that.memory) &&
               equal(this.commands, that.commands) &&
               equal(this.cpuShares, that.cpuShares) &&
-              equal(this.env, that.env);
+              equal(this.env, that.env) &&
+              equal(this.directPorts, that.directPorts);
    }
 
    @Override
    public int hashCode() {
-      return Objects.hashCode(super.hashCode(), volumes, hostname, dns, memory, commands, cpuShares, env);
+      return Objects.hashCode(super.hashCode(), volumes, hostname, dns, memory, commands, cpuShares, env, directPorts);
    }
 
    @Override
@@ -122,6 +127,7 @@ public class DockerTemplateOptions extends TemplateOptions implements Cloneable 
               .add("commands", commands)
               .add("volumes", volumes)
               .add("env", env)
+              .add("directPorts", directPorts)
               .toString();
    }
 
@@ -168,9 +174,12 @@ public class DockerTemplateOptions extends TemplateOptions implements Cloneable 
       return this;
    }
 
-   public Optional<Map<String, String>> getVolumes() {
-      return volumes;
+   public DockerTemplateOptions directPorts(List<Integer> ports) {
+      this.directPorts = Optional.<List<Integer>> of(ImmutableList.copyOf(ports));
+      return this;
    }
+
+   public Optional<Map<String, String>> getVolumes() { return volumes; }
 
    public Optional<String> getDns() { return dns; }
 
@@ -178,25 +187,23 @@ public class DockerTemplateOptions extends TemplateOptions implements Cloneable 
 
    public Optional<Integer> getMemory() { return memory; }
 
-   public Optional<List<String>> getCommands() {
-      return commands;
-   }
+   public Optional<List<String>> getCommands() { return commands; }
 
    public Optional<Integer> getCpuShares() { return cpuShares; }
 
-   public Optional<List<String>> getEnv() {
-      return env;
-   }
+   public Optional<List<String>> getEnv() { return env; }
+
+   public Optional<List<Integer>> getDirectPorts() { return directPorts; }
 
    public static class Builder {
 
-       /**
-        * @see DockerTemplateOptions#volumes(java.util.Map)
-        */
-       public static DockerTemplateOptions volumes(Map<String, String> volumes) {
-          DockerTemplateOptions options = new DockerTemplateOptions();
-          return DockerTemplateOptions.class.cast(options.volumes(volumes));
-       }
+      /**
+       * @see DockerTemplateOptions#volumes(java.util.Map)
+       */
+      public static DockerTemplateOptions volumes(Map<String, String> volumes) {
+         DockerTemplateOptions options = new DockerTemplateOptions();
+         return DockerTemplateOptions.class.cast(options.volumes(volumes));
+      }
 
       /**
        * @see DockerTemplateOptions#dns(String)
@@ -249,6 +256,14 @@ public class DockerTemplateOptions extends TemplateOptions implements Cloneable 
       public static DockerTemplateOptions env(List<String> env) {
          DockerTemplateOptions options = new DockerTemplateOptions();
          return DockerTemplateOptions.class.cast(options.env(env));
+      }
+
+      /**
+       * @see DockerTemplateOptions#directPorts(java.util.List)
+       */
+      public static DockerTemplateOptions directPorts(List<Integer> directPorts) {
+         DockerTemplateOptions options = new DockerTemplateOptions();
+         return DockerTemplateOptions.class.cast(options.directPorts(directPorts));
       }
 
       // methods that only facilitate returning the correct object type
