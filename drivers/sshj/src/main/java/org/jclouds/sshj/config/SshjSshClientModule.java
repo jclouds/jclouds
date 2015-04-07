@@ -42,7 +42,6 @@ public class SshjSshClientModule extends AbstractModule {
       bind(SshClient.Factory.class).to(Factory.class).in(Scopes.SINGLETON);
    }
 
-
    private static class Factory implements SshClient.Factory {
       @Named(Constants.PROPERTY_CONNECTION_TIMEOUT)
       @Inject(optional = true)
@@ -51,8 +50,14 @@ public class SshjSshClientModule extends AbstractModule {
       Optional<Connector> agentConnector = getAgentConnector();
 
       Optional<Connector> getAgentConnector() {
+         ConnectorFactory sshAgentOverNetcatOnly = new ConnectorFactory() {
+               {
+                  setPreferredConnectors("ssh-agent");
+                  setPreferredUSocketFactories("nc");
+               }
+            };
          try {
-            return Optional.of(ConnectorFactory.getDefault().createConnector());
+            return Optional.of(sshAgentOverNetcatOnly.createConnector());
          } catch (final AgentProxyException e) {
             return Optional.absent();
          }
