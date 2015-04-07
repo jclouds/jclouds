@@ -237,33 +237,59 @@ public class RegionScopedSwiftBlobStore implements BlobStore {
    public String copyBlob(String fromContainer, String fromName, String toContainer, String toName,
          CopyOptions options) {
       ObjectApi objectApi = api.getObjectApi(regionId, toContainer);
-      SwiftObject metadata = api.getObjectApi(regionId, fromContainer).getWithoutBody(fromName);
 
       Map<String, String> userMetadata;
-      if (options.getUserMetadata().isPresent()) {
-         userMetadata = options.getUserMetadata().get();
-      } else {
-         userMetadata = metadata.getMetadata();
-      }
-
-      // copy existing system metadata
       Map<String, String> systemMetadata = Maps.newHashMap();
-      ContentMetadata contentMetadata = metadata.getPayload().getContentMetadata();
-      String contentDisposition = contentMetadata.getContentDisposition();
-      if (contentDisposition != null) {
-         systemMetadata.put(HttpHeaders.CONTENT_DISPOSITION, contentDisposition);
-      }
-      String contentEncoding = contentMetadata.getContentEncoding();
-      if (contentEncoding != null) {
-         systemMetadata.put(HttpHeaders.CONTENT_ENCODING, contentEncoding);
-      }
-      String contentLanguage = contentMetadata.getContentLanguage();
-      if (contentLanguage != null) {
-         systemMetadata.put(HttpHeaders.CONTENT_LANGUAGE, contentLanguage);
-      }
-      String contentType = contentMetadata.getContentType();
-      if (contentType != null) {
-         systemMetadata.put(HttpHeaders.CONTENT_TYPE, contentType);
+      ContentMetadata contentMetadata = options.getContentMetadata().orNull();
+
+      if (contentMetadata != null ||
+            options.getUserMetadata().isPresent()) {
+         if (contentMetadata != null) {
+            String contentDisposition = contentMetadata.getContentDisposition();
+            if (contentDisposition != null) {
+               systemMetadata.put(HttpHeaders.CONTENT_DISPOSITION, contentDisposition);
+            }
+
+            String contentEncoding = contentMetadata.getContentEncoding();
+            if (contentEncoding != null) {
+               systemMetadata.put(HttpHeaders.CONTENT_ENCODING, contentEncoding);
+            }
+
+            String contentLanguage = contentMetadata.getContentLanguage();
+            if (contentLanguage != null) {
+               systemMetadata.put(HttpHeaders.CONTENT_LANGUAGE, contentLanguage);
+            }
+
+            String contentType = contentMetadata.getContentType();
+            if (contentType != null) {
+               systemMetadata.put(HttpHeaders.CONTENT_TYPE, contentType);
+            }
+         }
+         if (options.getUserMetadata().isPresent()) {
+            userMetadata = options.getUserMetadata().get();
+         } else {
+            userMetadata = Maps.newHashMap();
+         }
+      } else {
+         SwiftObject metadata = api.getObjectApi(regionId, fromContainer).getWithoutBody(fromName);
+         contentMetadata = metadata.getPayload().getContentMetadata();
+         String contentDisposition = contentMetadata.getContentDisposition();
+         if (contentDisposition != null) {
+            systemMetadata.put(HttpHeaders.CONTENT_DISPOSITION, contentDisposition);
+         }
+         String contentEncoding = contentMetadata.getContentEncoding();
+         if (contentEncoding != null) {
+            systemMetadata.put(HttpHeaders.CONTENT_ENCODING, contentEncoding);
+         }
+         String contentLanguage = contentMetadata.getContentLanguage();
+         if (contentLanguage != null) {
+            systemMetadata.put(HttpHeaders.CONTENT_LANGUAGE, contentLanguage);
+         }
+         String contentType = contentMetadata.getContentType();
+         if (contentType != null) {
+            systemMetadata.put(HttpHeaders.CONTENT_TYPE, contentType);
+         }
+         userMetadata = metadata.getMetadata();
       }
 
       boolean copied = objectApi.copy(toName, fromContainer, fromName, userMetadata, systemMetadata);
@@ -271,11 +297,7 @@ public class RegionScopedSwiftBlobStore implements BlobStore {
          throw new RuntimeException("could not copy blob");
       }
 
-      // TODO: override content disposition
-      // TODO: override content encoding
-      // TODO: override content language
-      // TODO: override content type
-
+      // TODO: Swift copy object *appends* user metadata, does not overwrite
       return objectApi.getWithoutBody(toName).getETag();
    }
 

@@ -78,4 +78,9 @@ public class SwiftBlobIntegrationLiveTest extends BaseBlobIntegrationTest {
    public void testSetBlobAccess() throws Exception {
       throw new SkipException("unsupported in swift");
    }
+
+   @Override
+   public void testCopyBlobReplaceMetadata() throws Exception {
+      throw new SkipException("Swift only supports appending to user metadata, not replacing it");
+   }
 }
