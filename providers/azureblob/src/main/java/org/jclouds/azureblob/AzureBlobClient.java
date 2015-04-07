@@ -46,6 +46,7 @@ import org.jclouds.azure.storage.reference.AzureStorageHeaders;
 import org.jclouds.azureblob.binders.BindAzureBlobMetadataToRequest;
 import org.jclouds.azureblob.binders.BindAzureBlobMetadataToMultipartRequest;
 import org.jclouds.azureblob.binders.BindAzureBlocksToRequest;
+import org.jclouds.azureblob.binders.BindAzureContentMetadataToRequest;
 import org.jclouds.azureblob.binders.BindAzureCopyOptionsToRequest;
 import org.jclouds.azureblob.binders.BindPublicAccessToRequest;
 import org.jclouds.azureblob.domain.AzureBlob;
@@ -70,6 +71,7 @@ import org.jclouds.azureblob.xml.ContainerNameEnumerationResultsHandler;
 import org.jclouds.blobstore.binders.BindMapToHeadersWithPrefix;
 import org.jclouds.http.functions.ParseETagHeader;
 import org.jclouds.http.options.GetOptions;
+import org.jclouds.io.ContentMetadata;
 import org.jclouds.io.Payload;
 import org.jclouds.rest.annotations.BinderParam;
 import org.jclouds.rest.annotations.Fallback;
@@ -413,6 +415,15 @@ public interface AzureBlobClient extends Closeable {
          @PathParam("container") @ParamValidators(ContainerNameValidator.class) String container,
          @PathParam("name") String name);
 
+   @Named("SetBlobProperties")
+   @PUT
+   @Path("{container}/{name}")
+   @QueryParams(keys = { "comp" }, values = { "metadata" })
+   @ResponseParser(ParseETagHeader.class)
+   String setBlobProperties(
+         @PathParam("container") @ParamValidators(ContainerNameValidator.class) String container,
+         @PathParam("name") String name,
+         @BinderParam(BindAzureContentMetadataToRequest.class) ContentMetadata contentMetadata);
 
    @Named("SetBlobMetadata")
    @PUT
