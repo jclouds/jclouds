@@ -511,14 +511,35 @@ public final class LocalBlobStore implements BlobStore {
          is = blob.getPayload().openStream();
          ContentMetadata metadata = blob.getMetadata().getContentMetadata();
          BlobBuilder.PayloadBlobBuilder builder = blobBuilder(toName)
-               .payload(is)
-               .contentDisposition(metadata.getContentDisposition())
-               .contentEncoding(metadata.getContentEncoding())
-               .contentLanguage(metadata.getContentLanguage())
-               .contentType(metadata.getContentType());
+               .payload(is);
          Long contentLength = metadata.getContentLength();
          if (contentLength != null) {
             builder.contentLength(contentLength);
+         }
+
+         if (options.getContentMetadata().isPresent()) {
+            ContentMetadata contentMetadata = options.getContentMetadata().get();
+            String contentDisposition = contentMetadata.getContentDisposition();
+            if (contentDisposition != null) {
+               builder.contentDisposition(contentDisposition);
+            }
+            String contentEncoding = contentMetadata.getContentEncoding();
+            if (contentEncoding != null) {
+               builder.contentEncoding(contentEncoding);
+            }
+            String contentLanguage = contentMetadata.getContentLanguage();
+            if (contentLanguage != null) {
+               builder.contentLanguage(contentLanguage);
+            }
+            String contentType = contentMetadata.getContentType();
+            if (contentType != null) {
+               builder.contentType(contentType);
+            }
+         } else {
+            builder.contentDisposition(metadata.getContentDisposition())
+                   .contentEncoding(metadata.getContentEncoding())
+                   .contentLanguage(metadata.getContentLanguage())
+                   .contentType(metadata.getContentType());
          }
          Optional<Map<String, String>> userMetadata = options.getUserMetadata();
          if (userMetadata.isPresent()) {
