@@ -53,8 +53,14 @@ public class JschSshClientModule extends AbstractModule {
       Optional<Connector> agentConnector = getAgentConnector();
 
       Optional<Connector> getAgentConnector() {
+         ConnectorFactory sshAgentOverNetcatOnly = new ConnectorFactory() {
+               {
+                  setPreferredConnectors("ssh-agent");
+                  setPreferredUSocketFactories("nc");
+               }
+            };
          try {
-            return Optional.of(ConnectorFactory.getDefault().createConnector());
+            return Optional.of(sshAgentOverNetcatOnly.createConnector());
          } catch (final AgentProxyException e) {
             return Optional.absent();
          }
