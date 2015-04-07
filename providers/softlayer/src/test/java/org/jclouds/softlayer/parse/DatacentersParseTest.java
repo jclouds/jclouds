@@ -28,7 +28,7 @@ import org.testng.annotations.Test;
 import com.google.common.collect.ImmutableSet;
 
 @Test(groups = "unit")
-public class ListDatacentersResponseTest extends BaseSoftLayerParseTest<Set<Datacenter>> {
+public class DatacentersParseTest extends BaseSoftLayerParseTest<Set<Datacenter>> {
 
    @Override
    public String resource() {

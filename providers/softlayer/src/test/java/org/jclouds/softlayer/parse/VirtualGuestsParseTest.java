@@ -29,7 +29,7 @@ import org.testng.annotations.Test;
 import com.google.common.collect.ImmutableSet;
 
 @Test(groups = "unit")
-public class ListVirtualGuestsResponseTest extends BaseSoftLayerParseTest<Set<VirtualGuest>> {
+public class VirtualGuestsParseTest extends BaseSoftLayerParseTest<Set<VirtualGuest>> {
 
    @Override
    public String resource() {

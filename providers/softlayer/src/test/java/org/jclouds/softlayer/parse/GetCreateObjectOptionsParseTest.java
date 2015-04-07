@@ -30,7 +30,7 @@ import org.jclouds.softlayer.internal.BaseSoftLayerParseTest;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.core.MediaType;
 
-public class GetCreateObjectOptionsResponseTest extends BaseSoftLayerParseTest<ContainerVirtualGuestConfiguration> {
+public class GetCreateObjectOptionsParseTest extends BaseSoftLayerParseTest<ContainerVirtualGuestConfiguration> {
 
    @Override
    public String resource() {

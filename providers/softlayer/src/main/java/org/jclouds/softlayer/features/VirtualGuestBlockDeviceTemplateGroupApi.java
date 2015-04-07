@@ -16,6 +16,8 @@
  */
 package org.jclouds.softlayer.features;
 
+import static org.jclouds.Fallbacks.EmptySetOnNotFoundOr404;
+import static org.jclouds.Fallbacks.NullOnNotFoundOr404;
 import java.util.Set;
 
 import javax.inject.Named;
@@ -25,7 +27,6 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.core.MediaType;
 
-import org.jclouds.Fallbacks;
 import org.jclouds.http.filters.BasicAuthentication;
 import org.jclouds.rest.annotations.Fallback;
 import org.jclouds.rest.annotations.QueryParams;
@@ -53,7 +54,7 @@ public interface VirtualGuestBlockDeviceTemplateGroupApi {
    @GET
    @Path("/SoftLayer_Virtual_Guest_Block_Device_Template_Group/getPublicImages")
    @QueryParams(keys = "objectMask", values = MASK)
-   @Fallback(Fallbacks.EmptySetOnNotFoundOr404.class)
+   @Fallback(EmptySetOnNotFoundOr404.class)
    Set<VirtualGuestBlockDeviceTemplateGroup> getPublicImages();
 
    /**
@@ -68,6 +69,6 @@ public interface VirtualGuestBlockDeviceTemplateGroupApi {
    @GET
    @Path("/SoftLayer_Virtual_Guest_Block_Device_Template_Group/{id}/getObject")
    @QueryParams(keys = "objectMask", values = MASK)
-   @Fallback(Fallbacks.NullOnNotFoundOr404.class)
+   @Fallback(NullOnNotFoundOr404.class)
    VirtualGuestBlockDeviceTemplateGroup getObject(@PathParam("id") String id);
 }

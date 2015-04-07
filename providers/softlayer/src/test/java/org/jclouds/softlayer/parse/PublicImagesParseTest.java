@@ -32,7 +32,7 @@ import org.testng.annotations.Test;
 import com.google.common.collect.ImmutableSet;
 
 @Test(groups = "unit")
-public class ListPublicImagesResponseTest extends
+public class PublicImagesParseTest extends
         BaseSoftLayerParseTest<Set<VirtualGuestBlockDeviceTemplateGroup>> {
 
    @Override
