@@ -86,14 +86,17 @@ public class TemplateOptions extends RunScriptOptions implements Cloneable {
          to.blockUntilRunning(false);
       if (!this.shouldBlockOnComplete())
          to.blockOnComplete(false);
-      if (this.getLoginUser() != null)
-         to.overrideLoginUser(this.getLoginUser());
-      if (this.getLoginPassword() != null)
-         to.overrideLoginPassword(this.getLoginPassword());
-      if (this.getLoginPrivateKey() != null)
-         to.overrideLoginPrivateKey(this.getLoginPrivateKey());
-      if (this.shouldAuthenticateSudo() != null)
-         to.overrideAuthenticateSudo(this.shouldAuthenticateSudo());
+
+      LoginCredentials fromCreds = new LoginCredentials.Builder().
+            user(this.getLoginUser()).
+            password(this.hasLoginPassword() ? this.getLoginPassword() : null).
+            privateKey(this.hasLoginPrivateKeyOption() ? this.getLoginPrivateKey() : null).
+            authenticateSudo(authenticateSudo == null ? false : authenticateSudo).
+            build();
+      if (fromCreds != null) {
+         to.overrideLoginCredentials(fromCreds);
+      }
+
       if (this.getTaskName() != null)
          to.nameTask(this.getTaskName());
       if (!this.getNetworks().isEmpty())
