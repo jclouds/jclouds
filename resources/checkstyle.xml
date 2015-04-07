@@ -91,5 +91,6 @@
     <module name="RegexpMultiline">
         <property name="format" value="\r\n"/>
         <property name="message" value="Do not use Windows line endings"/>
+        <property name="fileExtensions" value="java,xml,json"/>
     </module>
 </module>
