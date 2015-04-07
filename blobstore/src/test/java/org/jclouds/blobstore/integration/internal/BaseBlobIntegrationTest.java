@@ -62,6 +62,7 @@ import org.jclouds.blobstore.options.PutOptions;
 import org.jclouds.crypto.Crypto;
 import org.jclouds.encryption.internal.JCECrypto;
 import org.jclouds.http.HttpResponseException;
+import org.jclouds.io.ContentMetadataBuilder;
 import org.jclouds.io.Payload;
 import org.jclouds.io.Payloads;
 import org.jclouds.io.payloads.ByteSourcePayload;
@@ -777,7 +778,11 @@ public class BaseBlobIntegrationTest extends BaseBlobStoreIntegrationTest {
             .blobBuilder(fromName)
             .userMetadata(ImmutableMap.of("key1", "value1", "key2", "value2"))
             .payload(payload)
-            .contentLength(payload.size());
+            .contentLength(payload.size())
+            .contentDisposition("attachment; filename=original.jpg")
+            .contentEncoding("compress")
+            .contentLanguage("fr")
+            .contentType("audio/ogg");
       addContentMetadata(blobBuilder);
       Blob blob = blobBuilder.build();
 
@@ -786,8 +791,15 @@ public class BaseBlobIntegrationTest extends BaseBlobStoreIntegrationTest {
       try {
          blobStore.putBlob(fromContainer, blob);
          Map<String, String> userMetadata = ImmutableMap.of("key3", "value3", "key4", "value4");
-         blobStore.copyBlob(fromContainer, fromName, toContainer, toName,
-               CopyOptions.builder().userMetadata(userMetadata).build());
+         blobStore.copyBlob(fromContainer, fromName, toContainer, toName, CopyOptions.builder()
+               .contentMetadata(ContentMetadataBuilder.create()
+                     .contentType("text/csv")
+                     .contentDisposition("attachment; filename=photo.jpg")
+                     .contentEncoding("gzip")
+                     .contentLanguage("en")
+                     .build())
+               .userMetadata(userMetadata)
+               .build());
          Blob toBlob = blobStore.getBlob(toContainer, toName);
          InputStream is = null;
          try {
@@ -796,9 +808,7 @@ public class BaseBlobIntegrationTest extends BaseBlobStoreIntegrationTest {
          } finally {
             Closeables2.closeQuietly(is);
          }
-         // TODO: S3 overrideMetadataWith also overrides system metadata
-         // TODO: Swift does not preserve system metadata
-         //checkContentMetadata(toBlob);
+         checkContentMetadata(toBlob);
          checkUserMetadata(toBlob.getMetadata().getUserMetadata(), userMetadata);
       } finally {
          returnContainer(toContainer);
