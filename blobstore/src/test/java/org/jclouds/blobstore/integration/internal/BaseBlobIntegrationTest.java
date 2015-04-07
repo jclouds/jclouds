@@ -760,7 +760,7 @@ public class BaseBlobIntegrationTest extends BaseBlobStoreIntegrationTest {
             Closeables2.closeQuietly(is);
          }
          checkContentMetadata(toBlob);
-         assertThat(toBlob.getMetadata().getUserMetadata()).isEqualTo(userMetadata);
+         checkUserMetadata(toBlob.getMetadata().getUserMetadata(), userMetadata);
       } finally {
          returnContainer(toContainer);
          returnContainer(fromContainer);
@@ -799,7 +799,7 @@ public class BaseBlobIntegrationTest extends BaseBlobStoreIntegrationTest {
          // TODO: S3 overrideMetadataWith also overrides system metadata
          // TODO: Swift does not preserve system metadata
          //checkContentMetadata(toBlob);
-         assertThat(toBlob.getMetadata().getUserMetadata()).isEqualTo(userMetadata);
+         checkUserMetadata(toBlob.getMetadata().getUserMetadata(), userMetadata);
       } finally {
          returnContainer(toContainer);
          returnContainer(fromContainer);
