@@ -43,6 +43,7 @@ import org.jclouds.s3.domain.CannedAccessPolicy;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
+import com.google.common.net.HttpHeaders;
 
 /**
  * Contains options supported in the REST API for the COPY object operation.
@@ -71,6 +72,10 @@ import com.google.common.collect.Multimap;
 public class CopyObjectOptions extends BaseHttpRequestOptions {
    private static final DateService dateService = new SimpleDateFormatDateService();
    public static final CopyObjectOptions NONE = new CopyObjectOptions();
+   private String contentDisposition;
+   private String contentEncoding;
+   private String contentLanguage;
+   private String contentType;
    private Map<String, String> metadata;
    private CannedAccessPolicy acl = CannedAccessPolicy.PRIVATE;
 
@@ -249,14 +254,54 @@ public class CopyObjectOptions extends BaseHttpRequestOptions {
       for (Entry<String, String> entry : headers.entries()) {
          returnVal.put(entry.getKey().replace(DEFAULT_AMAZON_HEADERTAG, headerTag), entry.getValue());
       }
+      boolean replace = false;
+      if (contentDisposition != null) {
+         returnVal.put(HttpHeaders.CONTENT_DISPOSITION, contentDisposition);
+         replace = true;
+      }
+      if (contentEncoding != null) {
+         returnVal.put(HttpHeaders.CONTENT_ENCODING, contentEncoding);
+         replace = true;
+      }
+      if (contentLanguage != null) {
+         returnVal.put(HttpHeaders.CONTENT_LANGUAGE, contentLanguage);
+         replace = true;
+      }
+      if (contentType != null) {
+         returnVal.put(HttpHeaders.CONTENT_TYPE, contentType);
+         replace = true;
+      }
       if (metadata != null) {
-         returnVal.put(METADATA_DIRECTIVE.replace(DEFAULT_AMAZON_HEADERTAG, headerTag), "REPLACE");
          for (Map.Entry<String, String> entry : metadata.entrySet()) {
             String key = entry.getKey();
             returnVal.put(key.startsWith(metadataPrefix) ? key : metadataPrefix + key, entry.getValue());
          }
+         replace = true;
+      }
+      if (replace) {
+         returnVal.put(METADATA_DIRECTIVE.replace(DEFAULT_AMAZON_HEADERTAG, headerTag), "REPLACE");
       }
       return returnVal.build();
+   }
+
+   public CopyObjectOptions contentDisposition(String contentDisposition) {
+      this.contentDisposition = checkNotNull(contentDisposition, "contentDisposition");
+      return this;
+   }
+
+   public CopyObjectOptions contentEncoding(String contentEncoding) {
+      this.contentEncoding = checkNotNull(contentEncoding, "contentEncoding");
+      return this;
+   }
+
+   public CopyObjectOptions contentLanguage(String contentLanguage) {
+      this.contentLanguage = checkNotNull(contentLanguage, "contentLanguage");
+      return this;
+   }
+
+   public CopyObjectOptions contentType(String contentType) {
+      this.contentType = checkNotNull(contentType, "contentType");
+      return this;
    }
 
    /**
@@ -307,6 +352,26 @@ public class CopyObjectOptions extends BaseHttpRequestOptions {
       public static CopyObjectOptions ifSourceETagDoesntMatch(String eTag) {
          CopyObjectOptions options = new CopyObjectOptions();
          return options.ifSourceETagDoesntMatch(eTag);
+      }
+
+      public static CopyObjectOptions contentDisposition(String contentDisposition) {
+         CopyObjectOptions options = new CopyObjectOptions();
+         return options.contentDisposition(contentDisposition);
+      }
+
+      public static CopyObjectOptions contentEncoding(String contentEncoding) {
+         CopyObjectOptions options = new CopyObjectOptions();
+         return options.contentEncoding(contentEncoding);
+      }
+
+      public static CopyObjectOptions contentLanguage(String contentLanguage) {
+         CopyObjectOptions options = new CopyObjectOptions();
+         return options.contentLanguage(contentLanguage);
+      }
+
+      public static CopyObjectOptions contentType(String contentType) {
+         CopyObjectOptions options = new CopyObjectOptions();
+         return options.contentType(contentType);
       }
 
       /**
