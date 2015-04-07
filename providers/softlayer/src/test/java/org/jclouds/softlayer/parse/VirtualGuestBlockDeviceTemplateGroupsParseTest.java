@@ -33,7 +33,7 @@ import com.google.common.collect.ImmutableSet;
 
 @Test(groups = "unit")
 public class
-        GetVirtualGuestBlockDeviceTemplateGroupsResponseTest extends
+        VirtualGuestBlockDeviceTemplateGroupsParseTest extends
         BaseSoftLayerParseTest<Set<VirtualGuestBlockDeviceTemplateGroup>> {
 
    @Override

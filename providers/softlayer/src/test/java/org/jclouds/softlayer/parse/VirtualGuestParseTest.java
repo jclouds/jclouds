@@ -25,7 +25,7 @@ import org.jclouds.softlayer.internal.BaseSoftLayerParseTest;
 import org.testng.annotations.Test;
 
 @Test(groups = "unit")
-public class GetVirtualGuestResponseTest extends BaseSoftLayerParseTest<VirtualGuest> {
+public class VirtualGuestParseTest extends BaseSoftLayerParseTest<VirtualGuest> {
 
    @Override
    public String resource() {

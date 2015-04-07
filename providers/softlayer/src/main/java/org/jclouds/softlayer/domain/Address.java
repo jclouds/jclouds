@@ -16,14 +16,14 @@
  */
 package org.jclouds.softlayer.domain;
 
-import com.google.common.base.Objects;
-import com.google.inject.name.Named;
-import org.jclouds.javax.annotation.Nullable;
-
-import java.beans.ConstructorProperties;
-
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Strings.emptyToNull;
+import java.beans.ConstructorProperties;
+
+import org.jclouds.javax.annotation.Nullable;
+
+import com.google.common.base.Objects;
+import com.google.inject.name.Named;
 
 /**
  * Class Address

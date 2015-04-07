@@ -16,6 +16,9 @@
  */
 package org.jclouds.softlayer.features;
 
+import static org.jclouds.Fallbacks.FalseOnNotFoundOr404;
+import static org.jclouds.Fallbacks.NullOnNotFoundOr404;
+import static org.jclouds.Fallbacks.VoidOnNotFoundOr404;
 import java.util.Set;
 
 import javax.inject.Named;
@@ -27,7 +30,6 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
-import org.jclouds.Fallbacks;
 import org.jclouds.http.filters.BasicAuthentication;
 import org.jclouds.rest.annotations.BinderParam;
 import org.jclouds.rest.annotations.Fallback;
@@ -78,7 +80,7 @@ public interface VirtualGuestApi {
    @GET
    @Path("/SoftLayer_Virtual_Guest/{id}/getObject")
    @QueryParams(keys = "objectMask", values = GUEST_MASK)
-   @Fallback(Fallbacks.NullOnNotFoundOr404.class)
+   @Fallback(NullOnNotFoundOr404.class)
    VirtualGuest getVirtualGuest(@PathParam("id") long id);
 
    /**
@@ -90,7 +92,7 @@ public interface VirtualGuestApi {
    @Named("VirtualGuests:delete")
    @GET
    @Path("/SoftLayer_Virtual_Guest/{id}/deleteObject")
-   @Fallback(Fallbacks.FalseOnNotFoundOr404.class)
+   @Fallback(FalseOnNotFoundOr404.class)
    boolean deleteVirtualGuest(@PathParam("id") long id);
 
    /**
@@ -100,7 +102,7 @@ public interface VirtualGuestApi {
    @Named("VirtualGuests:getCreateObjectOptions")
    @GET
    @Path("/SoftLayer_Virtual_Guest/getCreateObjectOptions")
-   @Fallback(Fallbacks.NullOnNotFoundOr404.class)
+   @Fallback(NullOnNotFoundOr404.class)
    ContainerVirtualGuestConfiguration getCreateObjectOptions();
 
    /**
@@ -112,7 +114,7 @@ public interface VirtualGuestApi {
    @Named("VirtualGuest:rebootHard")
    @GET
    @Path("/SoftLayer_Virtual_Guest/{id}/rebootHard.json")
-   @Fallback(Fallbacks.VoidOnNotFoundOr404.class)
+   @Fallback(VoidOnNotFoundOr404.class)
    void rebootHardVirtualGuest(@PathParam("id") long id);
 
    /**
@@ -124,7 +126,7 @@ public interface VirtualGuestApi {
    @Named("VirtualGuest:pause")
    @GET
    @Path("/SoftLayer_Virtual_Guest/{id}/pause.json")
-   @Fallback(Fallbacks.VoidOnNotFoundOr404.class)
+   @Fallback(VoidOnNotFoundOr404.class)
    void pauseVirtualGuest(@PathParam("id") long id);
 
    /**
@@ -136,7 +138,7 @@ public interface VirtualGuestApi {
    @Named("VirtualGuest:resume")
    @GET
    @Path("/SoftLayer_Virtual_Guest/{id}/resume.json")
-   @Fallback(Fallbacks.VoidOnNotFoundOr404.class)
+   @Fallback(VoidOnNotFoundOr404.class)
    void resumeVirtualGuest(@PathParam("id") long id);
 
    /**
@@ -149,6 +151,7 @@ public interface VirtualGuestApi {
    @POST
    @Path("/SoftLayer_Virtual_Guest/{id}/setTags")
    @Produces(MediaType.APPLICATION_JSON)
+   @Fallback(FalseOnNotFoundOr404.class)
    boolean setTags(@PathParam("id") long id, @BinderParam(TagToJson.class) Set<String> tags);
 
    /**
@@ -177,6 +180,6 @@ public interface VirtualGuestApi {
    @Path("/SoftLayer_Virtual_Guest/{id}/getObject")
    @Produces(MediaType.APPLICATION_JSON)
    @QueryParams(keys = "objectMask", values = NOTES_MASK)
-   @Fallback(Fallbacks.NullOnNotFoundOr404.class)
+   @Fallback(NullOnNotFoundOr404.class)
    VirtualGuest getNotes(@PathParam("id") long id);
 }
