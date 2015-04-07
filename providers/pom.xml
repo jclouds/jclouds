@@ -55,6 +55,8 @@
     <module>hpcloud-objectstorage</module>
     <module>cloudfiles-us</module>
     <module>cloudfiles-uk</module>
+    <module>rackspace-cloudfiles-us</module>
+    <module>rackspace-cloudfiles-uk</module>
     <module>rackspace-clouddns-us</module>
     <module>rackspace-clouddns-uk</module>
     <module>rackspace-clouddatabases-us</module>

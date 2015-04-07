@@ -23,11 +23,10 @@
     <groupId>org.apache.jclouds</groupId>
     <artifactId>jclouds-project</artifactId>
     <version>2.0.0-SNAPSHOT</version>
-    <relativePath />
+    <relativePath>../../project/pom.xml</relativePath>
   </parent>
 
-  <!-- TODO: when out of labs, switch to org.jclouds.provider -->
-  <groupId>org.apache.jclouds.labs</groupId>
+  <groupId>org.apache.jclouds.provider</groupId>
   <artifactId>rackspace-cloudfiles-us</artifactId>
   <version>2.0.0-SNAPSHOT</version>
   <name>jclouds Rackspace Cloud Files US provider</name>
@@ -44,19 +43,6 @@
     <jclouds.osgi.export>org.jclouds.rackspace.cloudfiles.us*;version="${project.version}"</jclouds.osgi.export>
     <jclouds.osgi.import>org.jclouds*;version="${project.version}",*</jclouds.osgi.import>
   </properties>
-
-  <repositories>
-    <repository>
-      <id>apache-snapshots</id>
-      <url>https://repository.apache.org/content/repositories/snapshots</url>
-      <releases>
-        <enabled>false</enabled>
-      </releases>
-      <snapshots>
-        <enabled>true</enabled>
-      </snapshots>
-    </repository>
-  </repositories>
 
   <dependencies>
     <dependency>
