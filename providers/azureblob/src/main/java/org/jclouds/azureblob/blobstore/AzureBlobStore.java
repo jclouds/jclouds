@@ -60,11 +60,13 @@ import org.jclouds.blobstore.util.BlobUtils;
 import org.jclouds.collect.Memoized;
 import org.jclouds.domain.Location;
 import org.jclouds.http.options.GetOptions;
+import org.jclouds.io.ContentMetadata;
 
 import com.google.common.base.Function;
 import com.google.common.base.Optional;
 import com.google.common.base.Supplier;
 import com.google.common.collect.Iterables;
+import org.jclouds.io.ContentMetadataBuilder;
 import org.jclouds.io.Payload;
 
 @Singleton
@@ -233,13 +235,32 @@ public class AzureBlobStore extends BaseBlobStore {
       URI source = context.getSigner().signGetBlob(fromContainer, fromName).getEndpoint();
       sync.copyBlob(source, toContainer, toName, azureOptions.build());
 
-      String eTag = sync.getBlobProperties(toContainer, toName).getETag();
+      ContentMetadataBuilder builder = ContentMetadataBuilder.create();
 
-      // TODO: Azure does not allow updating system metadata during copy - call SetBlobProperties (not yet implemented)
-      // TODO: content disposition
-      // TODO: content encoding
-      // TODO: content language
-      // TODO: content type
+      String eTag = null;
+
+      Optional<ContentMetadata> contentMetadata = options.getContentMetadata();
+      if (contentMetadata.isPresent()) {
+         String contentDisposition = contentMetadata.get().getContentDisposition();
+         if (contentDisposition != null) {
+            builder.contentDisposition(contentDisposition);
+         }
+
+         String contentType = contentMetadata.get().getContentType();
+         if (contentType != null) {
+            builder.contentType(contentType);
+         }
+
+         eTag = sync.setBlobProperties(toContainer, toName, builder.build());
+      }
+
+      if (userMetadata.isPresent()) {
+         eTag = sync.setBlobMetadata(toContainer, toName, userMetadata.get());
+      }
+
+      if (eTag == null) {
+         eTag = sync.getBlobProperties(toContainer, toName).getETag();
+      }
 
       return eTag;
    }
