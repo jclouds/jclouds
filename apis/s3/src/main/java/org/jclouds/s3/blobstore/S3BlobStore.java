@@ -47,6 +47,7 @@ import org.jclouds.blobstore.util.BlobUtils;
 import org.jclouds.collect.Memoized;
 import org.jclouds.domain.Location;
 import org.jclouds.http.options.GetOptions;
+import org.jclouds.io.ContentMetadata;
 import org.jclouds.s3.S3Client;
 import org.jclouds.s3.blobstore.functions.BlobToObject;
 import org.jclouds.s3.blobstore.functions.BucketToResourceList;
@@ -282,10 +283,28 @@ public class S3BlobStore extends BaseBlobStore {
          CopyOptions options) {
       CopyObjectOptions s3Options = new CopyObjectOptions();
 
-      // TODO: content disposition
-      // TODO: content encoding
-      // TODO: content language
-      // TODO: content type
+      Optional<ContentMetadata> contentMetadata = options.getContentMetadata();
+      if (contentMetadata.isPresent()) {
+         String contentDisposition = contentMetadata.get().getContentDisposition();
+         if (contentDisposition != null) {
+            s3Options.contentDisposition(contentDisposition);
+         }
+
+         String contentEncoding = contentMetadata.get().getContentEncoding();
+         if (contentEncoding != null) {
+            s3Options.contentEncoding(contentEncoding);
+         }
+
+         String contentLanguage = contentMetadata.get().getContentLanguage();
+         if (contentLanguage != null) {
+            s3Options.contentLanguage(contentLanguage);
+         }
+
+         String contentType = contentMetadata.get().getContentType();
+         if (contentType != null) {
+            s3Options.contentType(contentType);
+         }
+      }
 
       Optional<Map<String, String>> userMetadata = options.getUserMetadata();
       if (userMetadata.isPresent()) {
