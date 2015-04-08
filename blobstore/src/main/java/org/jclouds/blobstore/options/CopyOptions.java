@@ -19,9 +19,11 @@ package org.jclouds.blobstore.options;
 
 import java.util.Map;
 
+import com.google.common.annotations.Beta;
 import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableMap;
 
+@Beta
 public final class CopyOptions {
    public static final CopyOptions NONE = builder().build();
 

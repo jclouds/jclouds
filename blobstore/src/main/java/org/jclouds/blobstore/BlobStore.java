@@ -239,6 +239,7 @@ public interface BlobStore {
     * @return ETag of new blob
     * @throws ContainerNotFoundException if either container does not exist
     */
+   @Beta
    String copyBlob(String fromContainer, String fromName, String toContainer, String toName,
          CopyOptions options);
 
