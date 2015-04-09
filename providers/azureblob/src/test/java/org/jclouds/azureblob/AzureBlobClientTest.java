@@ -317,7 +317,7 @@ public class AzureBlobClientTest extends BaseRestAnnotationProcessingTest<AzureB
       checkFilters(request);
       assertNonPayloadHeadersEqual(request,
                "x-ms-copy-source: https://identity.blob.core.windows.net/fromcontainer/fromblob\n" +
-               "x-ms-version: 2013-08-15\n");
+               "x-ms-version: 2012-02-12\n");
       assertPayloadEquals(request, null, null, false);
    }
 
@@ -333,7 +333,7 @@ public class AzureBlobClientTest extends BaseRestAnnotationProcessingTest<AzureB
       assertNonPayloadHeadersEqual(request,
                "x-ms-copy-source: https://identity.blob.core.windows.net/fromcontainer/fromblob\n" +
                "x-ms-meta-foo: bar\n" +
-               "x-ms-version: 2013-08-15\n");
+               "x-ms-version: 2012-02-12\n");
       assertPayloadEquals(request, null, null, false);
    }
 
@@ -349,7 +349,7 @@ public class AzureBlobClientTest extends BaseRestAnnotationProcessingTest<AzureB
       assertNonPayloadHeadersEqual(request,
                "x-ms-copy-source: https://identity.blob.core.windows.net/fromcontainer/fromblob\n" +
                "x-ms-source-if-modified-since: Thu, 01 Jan 1970 00:00:01 GMT\n" +
-               "x-ms-version: 2013-08-15\n");
+               "x-ms-version: 2012-02-12\n");
       assertPayloadEquals(request, null, null, false);
    }
 
@@ -365,7 +365,7 @@ public class AzureBlobClientTest extends BaseRestAnnotationProcessingTest<AzureB
       assertNonPayloadHeadersEqual(request,
                "x-ms-copy-source: https://identity.blob.core.windows.net/fromcontainer/fromblob\n" +
                "x-ms-source-if-unmodified-since: Thu, 01 Jan 1970 00:00:01 GMT\n" +
-               "x-ms-version: 2013-08-15\n");
+               "x-ms-version: 2012-02-12\n");
       assertPayloadEquals(request, null, null, false);
    }
 
@@ -382,7 +382,7 @@ public class AzureBlobClientTest extends BaseRestAnnotationProcessingTest<AzureB
       assertNonPayloadHeadersEqual(request,
                "x-ms-copy-source: https://identity.blob.core.windows.net/fromcontainer/fromblob\n" +
                "x-ms-source-if-match: " + eTag + "\n" +
-               "x-ms-version: 2013-08-15\n");
+               "x-ms-version: 2012-02-12\n");
       assertPayloadEquals(request, null, null, false);
    }
 
@@ -399,7 +399,7 @@ public class AzureBlobClientTest extends BaseRestAnnotationProcessingTest<AzureB
       assertNonPayloadHeadersEqual(request,
                "x-ms-copy-source: https://identity.blob.core.windows.net/fromcontainer/fromblob\n" +
                "x-ms-source-if-none-match: " + eTag + "\n" +
-               "x-ms-version: 2013-08-15\n");
+               "x-ms-version: 2012-02-12\n");
       assertPayloadEquals(request, null, null, false);
    }
 
