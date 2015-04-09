@@ -1,0 +1,22 @@
+[
+    {
+        "cdn_streaming_uri": "http://streaming-id-3.stream.rackspace.com",
+        "name": "cdn-container-3",
+        "cdn_ios_uri": "http://ios-id-3.iosr.rackspace.com",
+        "cdn_ssl_uri": "https://ssl-id-3.ssl.rackspace.com",
+        "cdn_enabled": true,
+        "ttl": 259200,
+        "log_retention": false,
+        "cdn_uri": "http://id-3.cdn.rackspace.com"
+    },
+    {
+        "cdn_streaming_uri": "http://streaming-id-4.stream.rackspace.com",
+        "name": "cdn-container-4 with spaces",
+        "cdn_ios_uri": "http://ios-id-4.iosr.rackspace.com",
+        "cdn_ssl_uri": "https://ssl-id-4.ssl.rackspace.com",
+        "cdn_enabled": true,
+        "ttl": 777777,
+        "log_retention": true,
+        "cdn_uri": "http://id-4.cdn.rackspace.com"
+    }
+]
