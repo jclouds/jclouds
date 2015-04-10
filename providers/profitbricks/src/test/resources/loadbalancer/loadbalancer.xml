@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<S:Envelope xmlns:S="http://schemas.xmlsoap.org/soap/envelope/">
+    <S:Body>
+        <ns2:getLoadBalancerResponse xmlns:ns2="http://ws.api.profitbricks.com/">
+            <return>
+                <dataCenterId>datacenter-id</dataCenterId>
+                <dataCenterVersion>datacenter-version</dataCenterVersion>
+                <loadBalancerId>aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee</loadBalancerId>
+                <loadBalancerName>load-balancer-name</loadBalancerName>
+                <loadBalancerAlgorithm>ROUND_ROBIN</loadBalancerAlgorithm>
+                <internetAccess>true</internetAccess>
+                <ip>192.168.0.1</ip>
+                <lanId>lan-id</lanId>
+                <balancedServers>
+                    <activate>true</activate>
+                    <balancedNicId>balanced-nic-id</balancedNicId>
+                    <serverId>server-id</serverId>
+                    <serverName>server-name</serverName>
+                </balancedServers>
+                <provisioningState>AVAILABLE</provisioningState>
+                <creationTime>2014-12-12T03:08:35.629Z</creationTime>
+                <lastModificationTime>2014-12-12T03:08:35.629Z</lastModificationTime>
+                <firewall>
+                    <active>false</active>
+                    <firewallId>firewall-id</firewallId>
+                    <nicId>nic-id</nicId>
+                    <provisioningState>AVAILABLE</provisioningState>
+                </firewall>
+            </return>
+        </ns2:getLoadBalancerResponse>
+    </S:Body>
+</S:Envelope>

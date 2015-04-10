@@ -17,11 +17,7 @@
 package org.jclouds.profitbricks.http.parser.server;
 
 import java.util.Date;
-
 import org.jclouds.date.DateCodec;
-
-import com.google.inject.Inject;
-
 import org.jclouds.date.DateCodecFactory;
 import org.jclouds.profitbricks.domain.AvailabilityZone;
 import org.jclouds.profitbricks.domain.OsType;
@@ -35,8 +31,8 @@ import org.xml.sax.SAXException;
 
 public abstract class BaseServerResponseHandler<T> extends BaseProfitBricksResponseHandler<T> {
 
-   protected final StorageListResponseHandler storageListResponseHandler;
-   protected final NicListResponseHandler nicListResponseHandler;
+   protected StorageListResponseHandler storageListResponseHandler;
+   protected NicListResponseHandler nicListResponseHandler;
 
    protected Server.DescribingBuilder builder;
 
@@ -45,9 +41,15 @@ public abstract class BaseServerResponseHandler<T> extends BaseProfitBricksRespo
    protected boolean useStorageParser = false;
    protected boolean useNicParser = false;
 
-   @Inject
    BaseServerResponseHandler(DateCodecFactory dateCodec, StorageListResponseHandler storageListResponseHandler,
            NicListResponseHandler nicListResponseHandler) {
+      if (dateCodec == null)
+         throw new NullPointerException("DateCodecFactory cannot be null");
+      if (storageListResponseHandler == null)
+         throw new NullPointerException("StorageListResponseHandler cannot be null");
+      if (nicListResponseHandler == null)
+         throw new NullPointerException("NicListResponseHandler cannot be null");
+
       this.dateCodec = dateCodec.iso8601();
       this.storageListResponseHandler = storageListResponseHandler;
       this.nicListResponseHandler = nicListResponseHandler;
@@ -119,6 +121,10 @@ public abstract class BaseServerResponseHandler<T> extends BaseProfitBricksRespo
          builder.isDiscVirtioHotPlug(textToBooleanValue());
       else if ("discVirtioHotUnPlug".equals(qName))
          builder.isDiscVirtioHotUnPlug(textToBooleanValue());
+      else if ("activate".equals(qName))
+         builder.activate(textToBooleanValue());
+      else if ("balancedNicId".equals(qName))
+         builder.balancedNicId(textToStringValue());
    }
 
 }

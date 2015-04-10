@@ -28,7 +28,7 @@ import org.xml.sax.SAXException;
 
 public class FirewallListResponseHandler extends BaseFirewallResponseHandler<List<Firewall>> {
 
-   private final List<Firewall> firewalls;
+   private List<Firewall> firewalls;
 
    @Inject
    FirewallListResponseHandler(FirewallRuleListResponseHandler firewallRuleListResponseHandler) {
@@ -42,7 +42,7 @@ public class FirewallListResponseHandler extends BaseFirewallResponseHandler<Lis
          firewallRuleListResponseHandler.endElement(uri, localName, qName);
       else {
          setPropertyOnEndTag(qName);
-         if ("return".equals(qName)) {
+         if ("return".equals(qName) || "firewall".equals(qName)) {
             firewalls.add(builder
                     .rules(firewallRuleListResponseHandler.getResult())
                     .build());
@@ -54,6 +54,11 @@ public class FirewallListResponseHandler extends BaseFirewallResponseHandler<Lis
 
       if ("firewallRules".equals(qName))
          useFirewallRuleParser = false;
+   }
+
+   @Override
+   public void reset() {
+      this.firewalls = Lists.newArrayList();
    }
 
    @Override

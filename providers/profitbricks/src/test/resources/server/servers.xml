@@ -11,6 +11,8 @@
                 <ram>4096</ram>
                 <internetAccess>true</internetAccess>
                 <ips>173.252.120.6</ips>
+                <balancedNicId>qswdefrg-qaws-qaws-defe-rgrgdsvcxbrh</balancedNicId>
+                <activate>true</activate>
                 <connectedStorages>
                     <bootDevice>true</bootDevice>
                     <busType>VIRTIO</busType>
@@ -60,6 +62,8 @@
                 <ram>1024</ram>
                 <internetAccess>false</internetAccess>
                 <ips>202.69.181.241</ips>
+                <balancedNicId>qswdefrg-qaws-qaws-defe-rgrgdsvcxbrh</balancedNicId>
+                <activate>true</activate>
                 <connectedStorages>
                     <bootDevice>true</bootDevice>
                     <busType>VIRTIO</busType>

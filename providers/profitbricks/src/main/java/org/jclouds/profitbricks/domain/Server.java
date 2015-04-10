@@ -61,6 +61,7 @@ public abstract class Server implements ServerCommonProperties {
    @Nullable
    public abstract Boolean hasInternetAccess();
 
+   @Nullable
    public abstract ProvisioningState state();
 
    @Nullable
@@ -84,14 +85,20 @@ public abstract class Server implements ServerCommonProperties {
    @Nullable
    public abstract List<Nic> nics();
 
+   @Nullable
+   public abstract String balancedNicId();
+
+   @Nullable
+   public abstract Boolean activate();
+
    public static Server create(String id, String name, int cores, int ram, Boolean hasInternetAccess, ProvisioningState state,
            Status status, OsType osType, AvailabilityZone availabilityZone, Date creationTime, Date lastModificationTime,
            List<Storage> storages, List<Nic> nics, Boolean isCpuHotPlug, Boolean isRamHotPlug, Boolean isNicHotPlug,
-           Boolean isNicHotUnPlug, Boolean isDiscVirtioHotPlug, Boolean isDiscVirtioHotUnPlug) {
+           Boolean isNicHotUnPlug, Boolean isDiscVirtioHotPlug, Boolean isDiscVirtioHotUnPlug, String balancedNicId, boolean activate) {
       return new AutoValue_Server(isCpuHotPlug, isRamHotPlug, isNicHotPlug, isNicHotUnPlug, isDiscVirtioHotPlug, isDiscVirtioHotUnPlug,
               cores, ram, id, name, hasInternetAccess, state, status, osType, availabilityZone, creationTime, lastModificationTime,
               storages != null ? ImmutableList.copyOf(storages) : Lists.<Storage>newArrayList(),
-              nics != null ? ImmutableList.copyOf(nics) : Lists.<Nic>newArrayList());
+              nics != null ? ImmutableList.copyOf(nics) : Lists.<Nic>newArrayList(), balancedNicId, activate);
 
    }
 
@@ -178,6 +185,8 @@ public abstract class Server implements ServerCommonProperties {
       private Boolean hasInternetAccess;
       private List<Storage> storages;
       private List<Nic> nics;
+      private boolean activate;
+      private String balancedNicId;
 
       public DescribingBuilder id(String id) {
          this.id = id;
@@ -229,11 +238,21 @@ public abstract class Server implements ServerCommonProperties {
          return this;
       }
 
+      public DescribingBuilder balancedNicId(String balancedNicId) {
+         this.balancedNicId = balancedNicId;
+         return this;
+      }
+
+      public DescribingBuilder activate(boolean activate) {
+         this.activate = activate;
+         return this;
+      }
+
       @Override
       public Server build() {
          return Server.create(id, name, cores, ram, hasInternetAccess, state, status, osType, zone, creationTime,
                  lastModificationTime, storages, nics, cpuHotPlug, ramHotPlug, nicHotPlug, nicHotUnPlug,
-                 discVirtioHotPlug, discVirtioHotUnPlug);
+                 discVirtioHotPlug, discVirtioHotUnPlug, balancedNicId, activate);
       }
 
       private DescribingBuilder fromServer(Server in) {
@@ -242,7 +261,7 @@ public abstract class Server implements ServerCommonProperties {
                  .isDiscVirtioHotUnPlug(in.isDiscVirtioHotUnPlug()).isNicHotPlug(in.isNicHotPlug())
                  .isNicHotUnPlug(in.isNicHotUnPlug()).isRamHotPlug(in.isRamHotPlug())
                  .lastModificationTime(in.lastModificationTime()).name(in.name()).osType(in.osType()).ram(in.ram())
-                 .state(in.state()).status(in.status()).storages(in.storages()).nics(in.nics());
+                 .state(in.state()).status(in.status()).storages(in.storages()).nics(in.nics()).balancedNicId(in.balancedNicId()).activate(in.activate());
       }
 
       @Override

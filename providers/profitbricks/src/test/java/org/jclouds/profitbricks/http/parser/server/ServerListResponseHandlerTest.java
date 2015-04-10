@@ -77,6 +77,8 @@ public class ServerListResponseHandlerTest extends BaseResponseHandlerTest<List<
               .isNicHotUnPlug(true)
               .isDiscVirtioHotPlug(true)
               .isDiscVirtioHotUnPlug(true)
+              .activate(true)
+              .balancedNicId("qswdefrg-qaws-qaws-defe-rgrgdsvcxbrh")
               .storages(ImmutableList.<Storage>of(
                               Storage.builder()
                               .bootDevice(Boolean.TRUE)
@@ -128,6 +130,8 @@ public class ServerListResponseHandlerTest extends BaseResponseHandlerTest<List<
               .isNicHotUnPlug(true)
               .isDiscVirtioHotPlug(true)
               .isDiscVirtioHotUnPlug(true)
+              .activate(true)
+              .balancedNicId("qswdefrg-qaws-qaws-defe-rgrgdsvcxbrh")
               .storages(ImmutableList.<Storage>of(
                               Storage.builder()
                               .bootDevice(Boolean.TRUE)

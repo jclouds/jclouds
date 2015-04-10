@@ -74,6 +74,8 @@ public class ServerInfoResponseHandlerTest extends BaseResponseHandlerTest<Serve
               .isNicHotUnPlug(true)
               .isDiscVirtioHotPlug(true)
               .isDiscVirtioHotUnPlug(true)
+              .activate(true)
+              .balancedNicId("qswdefrg-qaws-qaws-defe-rgrgdsvcxbrh")
               .storages(ImmutableList.<Storage>of(
                               Storage.builder()
                               .bootDevice(Boolean.TRUE)

@@ -1,0 +1,15 @@
+<soapenv:Envelope
+  xmlns:soapenv='http://schemas.xmlsoap.org/soap/envelope/'
+  xmlns:ws='http://ws.api.profitbricks.com/'>
+    <soapenv:Header />
+    <soapenv:Body>
+        <ws:updateLoadBalancer>
+            <request>
+                <loadBalancerId>aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee</loadBalancerId>
+                <loadBalancerName>load-balancer-name</loadBalancerName>
+                <loadBalancerAlgorithm>ROUND_ROBIN</loadBalancerAlgorithm>
+                <ip>192.168.0.1</ip>              
+            </request>
+        </ws:updateLoadBalancer>
+    </soapenv:Body>
+</soapenv:Envelope>

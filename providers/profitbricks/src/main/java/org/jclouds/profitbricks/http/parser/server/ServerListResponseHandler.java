@@ -47,7 +47,7 @@ public class ServerListResponseHandler extends BaseServerResponseHandler<List<Se
          nicListResponseHandler.endElement(uri, localName, qName);
       else {
          setPropertyOnEndTag(qName);
-         if ("return".equals(qName) || "servers".equals(qName)) {
+         if ("return".equals(qName) || "servers".equals(qName) || "balancedServers".equals(qName)) {
             servers.add(builder
                     .storages(storageListResponseHandler.getResult())
                     .nics(nicListResponseHandler.getResult())
