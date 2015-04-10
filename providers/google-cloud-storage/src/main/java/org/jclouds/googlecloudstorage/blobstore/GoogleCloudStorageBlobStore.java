@@ -23,7 +23,6 @@ import static org.jclouds.googlecloudstorage.domain.DomainResourceReferences.Obj
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.Set;
-import java.util.Map;
 
 import javax.inject.Inject;
 
@@ -66,6 +65,7 @@ import org.jclouds.googlecloudstorage.domain.templates.ObjectAccessControlsTempl
 import org.jclouds.googlecloudstorage.domain.templates.ObjectTemplate;
 import org.jclouds.googlecloudstorage.options.ListObjectOptions;
 import org.jclouds.http.HttpResponseException;
+import org.jclouds.io.ContentMetadata;
 import org.jclouds.io.Payload;
 
 import com.google.common.base.Charsets;
@@ -305,16 +305,47 @@ public final class GoogleCloudStorageBlobStore extends BaseBlobStore {
       return false;
    }
 
-    @Override
-    public String copyBlob(String fromContainer, String fromName, String toContainer, String toName, CopyOptions options) {
+   @Override
+   public String copyBlob(String fromContainer, String fromName, String toContainer, String toName,
+         CopyOptions options) {
+      if (!options.getContentMetadata().isPresent() && !options.getUserMetadata().isPresent()) {
+         return api.getObjectApi().copyObject(toContainer, toName, fromContainer, fromName).etag();
+      }
 
-        if (options == CopyOptions.NONE) {
-           return api.getObjectApi().copyObject(toContainer, toName, fromContainer, fromName).etag();
-        } else {
-            Map<String, String> map = options.getUserMetadata().get();
-            String contentType = api.getObjectApi().getObject(fromContainer, fromName).contentType();
-            ObjectTemplate template = new ObjectTemplate().customMetadata(map).contentType(contentType);
-            return api.getObjectApi().copyObject(toContainer, toName, fromContainer, fromName, template).etag();
-        }
-    }
+      ObjectTemplate template = new ObjectTemplate();
+
+      if (options.getContentMetadata().isPresent()) {
+         ContentMetadata contentMetadata = options.getContentMetadata().get();
+
+         String contentDisposition = contentMetadata.getContentDisposition();
+         if (contentDisposition != null) {
+            template.contentDisposition(contentDisposition);
+         }
+
+         // TODO: causes failures with subsequent GET operations:
+         // HTTP/1.1 failed with response: HTTP/1.1 503 Service Unavailable; content: [Service Unavailable]
+/*
+         String contentEncoding = contentMetadata.getContentEncoding();
+         if (contentEncoding != null) {
+            template.contentEncoding(contentEncoding);
+         }
+*/
+
+         String contentLanguage = contentMetadata.getContentLanguage();
+         if (contentLanguage != null) {
+            template.contentLanguage(contentLanguage);
+         }
+
+         String contentType = contentMetadata.getContentType();
+         if (contentType != null) {
+            template.contentType(contentType);
+         }
+      }
+
+      if (options.getUserMetadata().isPresent()) {
+         template.customMetadata(options.getUserMetadata().get());
+      }
+
+      return api.getObjectApi().copyObject(toContainer, toName, fromContainer, fromName, template).etag();
+   }
 }
