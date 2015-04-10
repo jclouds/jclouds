@@ -16,20 +16,20 @@
  */
 package org.jclouds.docker.compute.options;
 
-import com.google.common.base.Objects;
-import com.google.common.base.Optional;
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableMap;
+import static com.google.common.base.Objects.equal;
+import static com.google.common.base.Preconditions.checkNotNull;
+import java.util.List;
+import java.util.Map;
+
 import org.jclouds.compute.options.TemplateOptions;
 import org.jclouds.domain.LoginCredentials;
 import org.jclouds.javax.annotation.Nullable;
 import org.jclouds.scriptbuilder.domain.Statement;
 
-import java.util.List;
-import java.util.Map;
-
-import static com.google.common.base.Objects.equal;
-import static com.google.common.base.Preconditions.checkNotNull;
+import com.google.common.base.Objects;
+import com.google.common.base.Optional;
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
 
 /**
  * Contains options supported in the {@code ComputeService#runNode} operation on the
@@ -138,31 +138,31 @@ public class DockerTemplateOptions extends TemplateOptions implements Cloneable 
       return this;
    }
 
-   public TemplateOptions dns(@Nullable String dns) {
+   public DockerTemplateOptions dns(@Nullable String dns) {
       this.dns = Optional.fromNullable(dns);
       return this;
    }
 
-   public TemplateOptions hostname(@Nullable String hostname) {
+   public DockerTemplateOptions hostname(@Nullable String hostname) {
       this.hostname = Optional.fromNullable(hostname);
       return this;
    }
 
-   public TemplateOptions memory(@Nullable Integer memory) {
+   public DockerTemplateOptions memory(@Nullable Integer memory) {
       this.memory = Optional.fromNullable(memory);
       return this;
    }
 
-   public TemplateOptions commands(Iterable<String> commands) {
+   public DockerTemplateOptions commands(Iterable<String> commands) {
       this.commands = Optional.<List<String>>of(ImmutableList.copyOf(checkNotNull(commands, "commands")));
       return this;
    }
 
-   public TemplateOptions commands(String...commands) {
+   public DockerTemplateOptions commands(String...commands) {
       return commands(ImmutableList.copyOf(checkNotNull(commands, "commands")));
    }
 
-   public TemplateOptions cpuShares(@Nullable Integer cpuShares) {
+   public DockerTemplateOptions cpuShares(@Nullable Integer cpuShares) {
       this.cpuShares = Optional.fromNullable(cpuShares);
       return this;
    }
@@ -214,7 +214,7 @@ public class DockerTemplateOptions extends TemplateOptions implements Cloneable 
        */
       public static DockerTemplateOptions volumes(Map<String, String> volumes) {
          DockerTemplateOptions options = new DockerTemplateOptions();
-         return DockerTemplateOptions.class.cast(options.volumes(volumes));
+         return options.volumes(volumes);
       }
 
       /**
@@ -222,7 +222,7 @@ public class DockerTemplateOptions extends TemplateOptions implements Cloneable 
        */
       public static DockerTemplateOptions dns(String dns) {
          DockerTemplateOptions options = new DockerTemplateOptions();
-         return DockerTemplateOptions.class.cast(options.dns(dns));
+         return options.dns(dns);
       }
 
       /**
@@ -230,15 +230,15 @@ public class DockerTemplateOptions extends TemplateOptions implements Cloneable 
        */
       public static DockerTemplateOptions hostname(String hostname) {
          DockerTemplateOptions options = new DockerTemplateOptions();
-         return DockerTemplateOptions.class.cast(options.hostname(hostname));
+         return options.hostname(hostname);
       }
 
       /**
-       * @see DockerTemplateOptions#memory(int)
+       * @see DockerTemplateOptions#memory
        */
       public static DockerTemplateOptions memory(int memory) {
          DockerTemplateOptions options = new DockerTemplateOptions();
-         return DockerTemplateOptions.class.cast(options.memory(memory));
+         return options.memory(memory);
       }
 
       /**
@@ -246,7 +246,7 @@ public class DockerTemplateOptions extends TemplateOptions implements Cloneable 
        */
       public static DockerTemplateOptions commands(String...commands) {
          DockerTemplateOptions options = new DockerTemplateOptions();
-         return DockerTemplateOptions.class.cast(options.commands(commands));
+         return options.commands(commands);
       }
 
       /**
@@ -258,11 +258,11 @@ public class DockerTemplateOptions extends TemplateOptions implements Cloneable 
       }
 
       /**
-       * @see DockerTemplateOptions#cpuShares(int)
+       * @see DockerTemplateOptions#cpuShares
        */
       public static DockerTemplateOptions cpuShares(int cpuShares) {
          DockerTemplateOptions options = new DockerTemplateOptions();
-         return DockerTemplateOptions.class.cast(options.cpuShares(cpuShares));
+         return options.cpuShares(cpuShares);
       }
 
       /**
@@ -278,7 +278,7 @@ public class DockerTemplateOptions extends TemplateOptions implements Cloneable 
        */
       public static DockerTemplateOptions env(Iterable<String> env) {
          DockerTemplateOptions options = new DockerTemplateOptions();
-         return DockerTemplateOptions.class.cast(options.env(env));
+         return options.env(env);
       }
 
       /**
@@ -286,17 +286,15 @@ public class DockerTemplateOptions extends TemplateOptions implements Cloneable 
        */
       public static DockerTemplateOptions portBindings(Map<Integer, Integer> portBindings) {
          DockerTemplateOptions options = new DockerTemplateOptions();
-         return DockerTemplateOptions.class.cast(options.portBindings(portBindings));
+         return options.portBindings(portBindings);
       }
-
-      // methods that only facilitate returning the correct object type
 
       /**
        * @see TemplateOptions#inboundPorts
        */
       public static DockerTemplateOptions inboundPorts(int... ports) {
          DockerTemplateOptions options = new DockerTemplateOptions();
-         return DockerTemplateOptions.class.cast(options.inboundPorts(ports));
+         return options.inboundPorts(ports);
       }
 
       /**
@@ -304,7 +302,7 @@ public class DockerTemplateOptions extends TemplateOptions implements Cloneable 
        */
       public static DockerTemplateOptions blockOnPort(int port, int seconds) {
          DockerTemplateOptions options = new DockerTemplateOptions();
-         return DockerTemplateOptions.class.cast(options.blockOnPort(port, seconds));
+         return options.blockOnPort(port, seconds);
       }
 
       /**
@@ -312,7 +310,7 @@ public class DockerTemplateOptions extends TemplateOptions implements Cloneable 
        */
       public static DockerTemplateOptions installPrivateKey(String rsaKey) {
          DockerTemplateOptions options = new DockerTemplateOptions();
-         return DockerTemplateOptions.class.cast(options.installPrivateKey(rsaKey));
+         return options.installPrivateKey(rsaKey);
       }
 
       /**
@@ -320,7 +318,7 @@ public class DockerTemplateOptions extends TemplateOptions implements Cloneable 
        */
       public static DockerTemplateOptions authorizePublicKey(String rsaKey) {
          DockerTemplateOptions options = new DockerTemplateOptions();
-         return DockerTemplateOptions.class.cast(options.authorizePublicKey(rsaKey));
+         return options.authorizePublicKey(rsaKey);
       }
 
       /**
@@ -328,7 +326,7 @@ public class DockerTemplateOptions extends TemplateOptions implements Cloneable 
        */
       public static DockerTemplateOptions userMetadata(Map<String, String> userMetadata) {
          DockerTemplateOptions options = new DockerTemplateOptions();
-         return DockerTemplateOptions.class.cast(options.userMetadata(userMetadata));
+         return options.userMetadata(userMetadata);
       }
 
       /**
@@ -336,7 +334,7 @@ public class DockerTemplateOptions extends TemplateOptions implements Cloneable 
        */
       public static DockerTemplateOptions nodeNames(Iterable<String> nodeNames) {
          DockerTemplateOptions options = new DockerTemplateOptions();
-         return DockerTemplateOptions.class.cast(options.nodeNames(nodeNames));
+         return options.nodeNames(nodeNames);
       }
 
       /**
@@ -344,7 +342,7 @@ public class DockerTemplateOptions extends TemplateOptions implements Cloneable 
        */
       public static DockerTemplateOptions networks(Iterable<String> networks) {
          DockerTemplateOptions options = new DockerTemplateOptions();
-         return DockerTemplateOptions.class.cast(options.networks(networks));
+         return options.networks(networks);
       }
 
       /**
