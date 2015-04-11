@@ -40,6 +40,7 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeoutException;
+import java.util.concurrent.TimeUnit;
 
 import org.jclouds.blobstore.KeyNotFoundException;
 import org.jclouds.blobstore.domain.Blob;
@@ -388,6 +389,9 @@ public class S3ClientLiveTest extends BaseBlobStoreIntegrationTest {
                   ifSourceModifiedSince(before));
          validateContent(destinationContainer, destinationKey);
 
+         // Sleep since Amazon returns 200 if the date is in the future:
+         // https://forums.aws.amazon.com/message.jspa?messageID=325930
+         TimeUnit.SECONDS.sleep(20);
          try {
             getApi().copyObject(containerName, sourceKey + "mod", destinationContainer, destinationKey,
                      ifSourceModifiedSince(after));
