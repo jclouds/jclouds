@@ -509,6 +509,8 @@
             <exclude>**/.gitattributes</exclude>
             <exclude>**/.java-version</exclude>
             <exclude>**/modernizer_exclusions.txt</exclude>
+            <exclude>**/.factorypath</exclude>
+            <exclude>**/.apt_generated/**</exclude>
 
             <!-- Temporary files generated on CloudBees slaves -->
             <exclude>.repository/**</exclude>
