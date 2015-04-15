@@ -46,8 +46,8 @@ public class HttpHealthCheckApiLiveTest extends BaseGoogleComputeEngineApiLiveTe
                      .port(56)
                      .checkIntervalSec(40)
                      .timeoutSec(40)
-                     .healthyThreshold(30)
-                     .unhealthyThreshold(15)
+                     .healthyThreshold(5)
+                     .unhealthyThreshold(3)
                      .description("A First Health Check!")
                      .buildWithDefaults();
       assertOperationDoneSuccessfully(api().insert(HTTP_HEALTH_CHECK_NAME, options));
