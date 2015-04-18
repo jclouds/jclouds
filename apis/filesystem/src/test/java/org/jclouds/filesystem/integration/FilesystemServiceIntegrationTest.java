@@ -25,8 +25,8 @@ import org.jclouds.filesystem.utils.TestUtils;
 import org.testng.annotations.Test;
 
 @Test(groups = { "integration", "live" }, testName = "blobstore.FilesystemServiceIntegrationTest")
-public class FilesystemServiceIntegrationTestDisabled extends BaseServiceIntegrationTest {
-   public FilesystemServiceIntegrationTestDisabled() {
+public class FilesystemServiceIntegrationTest extends BaseServiceIntegrationTest {
+   public FilesystemServiceIntegrationTest() {
       provider = "filesystem";
       BaseBlobStoreIntegrationTest.SANITY_CHECK_RETURNED_BUCKET_NAME = true;
    }

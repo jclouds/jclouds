@@ -73,6 +73,7 @@ import org.jclouds.logging.Logger;
 import org.jclouds.rest.annotations.ParamValidators;
 
 import com.google.common.base.Function;
+import com.google.common.base.Supplier;
 import com.google.common.base.Throwables;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
@@ -116,19 +117,22 @@ public class FilesystemStorageStrategyImpl implements LocalStorageStrategy {
    protected final boolean autoDetectContentType;
    protected final FilesystemContainerNameValidator filesystemContainerNameValidator;
    protected final FilesystemBlobKeyValidator filesystemBlobKeyValidator;
+   private final Supplier<Location> defaultLocation;
 
    @Inject
    protected FilesystemStorageStrategyImpl(Provider<BlobBuilder> blobBuilders,
          @Named(FilesystemConstants.PROPERTY_BASEDIR) String baseDir,
          @Named(FilesystemConstants.PROPERTY_AUTO_DETECT_CONTENT_TYPE) boolean autoDetectContentType,
          FilesystemContainerNameValidator filesystemContainerNameValidator,
-         FilesystemBlobKeyValidator filesystemBlobKeyValidator) {
+         FilesystemBlobKeyValidator filesystemBlobKeyValidator,
+         Supplier<Location> defaultLocation) {
       this.blobBuilders = checkNotNull(blobBuilders, "filesystem storage strategy blobBuilders");
       this.baseDirectory = checkNotNull(baseDir, "filesystem storage strategy base directory");
       this.autoDetectContentType = autoDetectContentType;
       this.filesystemContainerNameValidator = checkNotNull(filesystemContainerNameValidator,
             "filesystem container name validator");
       this.filesystemBlobKeyValidator = checkNotNull(filesystemBlobKeyValidator, "filesystem blob key validator");
+      this.defaultLocation = defaultLocation;
    }
 
    @Override
@@ -597,7 +601,7 @@ public class FilesystemStorageStrategyImpl implements LocalStorageStrategy {
 
    @Override
    public Location getLocation(final String containerName) {
-      return null;
+      return defaultLocation.get();
    }
 
    @Override

@@ -40,6 +40,7 @@ import org.jclouds.blobstore.domain.BlobBuilder;
 import org.jclouds.blobstore.domain.ContainerAccess;
 import org.jclouds.blobstore.domain.internal.BlobBuilderImpl;
 import org.jclouds.blobstore.options.ListContainerOptions;
+import org.jclouds.domain.Location;
 import org.jclouds.filesystem.predicates.validators.internal.FilesystemBlobKeyValidatorImpl;
 import org.jclouds.filesystem.predicates.validators.internal.FilesystemContainerNameValidatorImpl;
 import org.jclouds.filesystem.utils.TestUtils;
@@ -51,6 +52,7 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
+import com.google.common.base.Supplier;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
@@ -72,6 +74,12 @@ public class FilesystemStorageStrategyImplTest {
    private static final String LOGGING_CONFIG_VALUE = "src/main/resources/logging.properties";
 
    private static final String FS = File.separator;
+   private static final Supplier<Location> defaultLocation = new Supplier<Location>() {
+      @Override
+      public Location get() {
+         return null;
+      }
+   };
 
    static {
       System.setProperty(LOGGING_CONFIG_KEY, LOGGING_CONFIG_VALUE);
@@ -87,7 +95,7 @@ public class FilesystemStorageStrategyImplTest {
             return new BlobBuilderImpl();
          }
 
-      }, TestUtils.TARGET_BASE_DIR, false, new FilesystemContainerNameValidatorImpl(), new FilesystemBlobKeyValidatorImpl());
+      }, TestUtils.TARGET_BASE_DIR, false, new FilesystemContainerNameValidatorImpl(), new FilesystemBlobKeyValidatorImpl(), defaultLocation);
       TestUtils.cleanDirectoryContent(TestUtils.TARGET_BASE_DIR);
       TestUtils.createResources();
    }
@@ -386,7 +394,7 @@ public class FilesystemStorageStrategyImplTest {
              public BlobBuilder get() {
                 return new BlobBuilderImpl();
              }
-          }, TestUtils.TARGET_BASE_DIR, true, new FilesystemContainerNameValidatorImpl(), new FilesystemBlobKeyValidatorImpl());
+          }, TestUtils.TARGET_BASE_DIR, true, new FilesystemContainerNameValidatorImpl(), new FilesystemBlobKeyValidatorImpl(), defaultLocation);
 
       String blobKey = TestUtils.createRandomBlobKey("file-", ".jpg");
       TestUtils.createBlobsInContainer(CONTAINER_NAME, blobKey);
@@ -521,7 +529,7 @@ public class FilesystemStorageStrategyImplTest {
                   public BlobBuilder get() {
                      return new BlobBuilderImpl();
                   }
-               }, absoluteBasePath, false, new FilesystemContainerNameValidatorImpl(), new FilesystemBlobKeyValidatorImpl());
+               }, absoluteBasePath, false, new FilesystemContainerNameValidatorImpl(), new FilesystemBlobKeyValidatorImpl(), defaultLocation);
       TestUtils.cleanDirectoryContent(absoluteContainerPath);
 
       String blobKey;
