@@ -136,13 +136,15 @@ public class EC2HardwareBuilder extends HardwareBuilder {
    }
 
    public EC2HardwareBuilder virtualizationTypes(VirtualizationType ...virtualizationTypes) {
+      Preconditions.checkNotNull(virtualizationTypes, "virtualizationTypes");
       Preconditions.checkArgument(virtualizationTypes.length > 0, "At least one virtualization type is required.");
       if (virtualizationTypes.length == 1) {
          this.virtualizationType = new RequiresVirtualizationType(virtualizationTypes[0]);
       } else {
          List<RequiresVirtualizationType> supportedVirtualizationTypes = Lists.newArrayList();
          for (VirtualizationType virtualizationType : virtualizationTypes) {
-            supportedVirtualizationTypes.add(new RequiresVirtualizationType(virtualizationType));
+            supportedVirtualizationTypes.add(new RequiresVirtualizationType(
+                  Preconditions.checkNotNull(virtualizationType, "virtualizationType")));
          }
          this.virtualizationType = Predicates.or(supportedVirtualizationTypes);
       }
@@ -215,6 +217,15 @@ public class EC2HardwareBuilder extends HardwareBuilder {
 
    private EC2HardwareBuilder t2() {
       virtualizationTypes(VirtualizationType.HVM);
+      
+      // TODO T2 is not deprecated, but it requires that you are using a VPC
+      // until we have a way for hardware instances to be filtered based on network
+      // we do NOT want T2 selected automatically.
+      // You get: org.jclouds.aws.AWSResponseException: request POST https://ec2.eu-west-1.amazonaws.com/ HTTP/1.1 failed with code 400, error: AWSError{requestId='2300b99e-ddc0-42ab-b1ed-9d628a161be4', requestToken='null', code='VPCResourceNotSpecified', message='The specified instance type can only be used in a VPC. A subnet ID or network interface ID is required to carry out the request.', context='{Response=, Errors=}'}
+      // A user can explicitly request a t2.micro if they are also setting up a VPC,
+      // but the small default will now be m3.medium which supports VPC and "classic".
+      deprecated();
+      
       return this;
    }
    
@@ -264,21 +275,25 @@ public class EC2HardwareBuilder extends HardwareBuilder {
    // http://aws.amazon.com/ec2/previous-generation/
    private EC2HardwareBuilder m1() {
       virtualizationTypes(VirtualizationType.PARAVIRTUAL);
+      deprecated();
       return this;
    }
    
    private EC2HardwareBuilder c1() {
       virtualizationTypes(VirtualizationType.PARAVIRTUAL);
+      deprecated();
       return this;
    }
    
    private EC2HardwareBuilder cc2() {
       virtualizationTypes(VirtualizationType.HVM);
+      deprecated();
       return this;
    }
    
    private EC2HardwareBuilder m2() {
       virtualizationTypes(VirtualizationType.PARAVIRTUAL);
+      deprecated();
       return this;
    }
    
@@ -286,22 +301,26 @@ public class EC2HardwareBuilder extends HardwareBuilder {
    
    private EC2HardwareBuilder hi1() {
       virtualizationTypes(VirtualizationType.HVM, VirtualizationType.PARAVIRTUAL);
+      deprecated();
       return this;
    }
    
    private EC2HardwareBuilder t1() {
       virtualizationTypes(VirtualizationType.PARAVIRTUAL);
+      deprecated();
       return this;
    }
    
    private EC2HardwareBuilder cg1() {
       virtualizationTypes(VirtualizationType.HVM);
+      deprecated();
       return this;
    }
    
    private EC2HardwareBuilder cc1() {
       // often no longer available - not adding capacity (use cc2)
       virtualizationTypes(VirtualizationType.HVM);
+      deprecated();
       return this;
    }
    

@@ -38,6 +38,7 @@ public class HardwareBuilder extends ComputeMetadataBuilder {
    protected List<Volume> volumes = Lists.newArrayList();
    protected Predicate<Image> supportsImage = any();
    protected String hypervisor;
+   protected boolean deprecated = false;
 
    public HardwareBuilder() {
       super(ComputeType.HARDWARE);
@@ -78,6 +79,15 @@ public class HardwareBuilder extends ComputeMetadataBuilder {
       return this;
    }
 
+   public HardwareBuilder deprecated(boolean deprecated) {
+      this.deprecated = deprecated;
+      return this;
+   }
+   
+   public HardwareBuilder deprecated() {
+       return deprecated(true);
+   }
+   
    public HardwareBuilder is64Bit(boolean is64Bit) {
       supportsImage(is64Bit ? ImagePredicates.is64Bit() : not(ImagePredicates.is64Bit()));
       return this;
@@ -126,7 +136,7 @@ public class HardwareBuilder extends ComputeMetadataBuilder {
    @Override
    public Hardware build() {
       return new HardwareImpl(providerId, name, id, location, uri, userMetadata, tags, processors, ram, volumes,
-               supportsImage, hypervisor);
+               supportsImage, hypervisor, deprecated);
    }
 
    @SuppressWarnings("unchecked")

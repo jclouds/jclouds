@@ -21,6 +21,7 @@ import static org.easymock.EasyMock.expect;
 import static org.easymock.EasyMock.replay;
 import static org.easymock.EasyMock.verify;
 import static org.jclouds.ec2.compute.domain.EC2HardwareBuilder.c1_medium;
+import static org.jclouds.ec2.compute.domain.EC2HardwareBuilder.r3_large;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.fail;
 
@@ -109,7 +110,7 @@ public class EC2TemplateBuilderImplTest extends TemplateBuilderImplTest {
       Supplier<Set<? extends Image>> images = Suppliers.<Set<? extends Image>> ofInstance(Sets
             .<Image> newLinkedHashSet());
       Supplier<Set<? extends Hardware>> sizes = Suppliers.<Set<? extends Hardware>> ofInstance(ImmutableSet
-            .<Hardware> of(c1_medium().build()));
+            .<Hardware> of(c1_medium().build(), r3_large().build()));
 
       Provider<TemplateOptions> optionsProvider = createMock(Provider.class);
       Provider<TemplateBuilder> templateBuilderProvider = createMock(Provider.class);
@@ -133,6 +134,54 @@ public class EC2TemplateBuilderImplTest extends TemplateBuilderImplTest {
       expect(os.getVersion()).andReturn(null).atLeastOnce();
       expect(os.getFamily()).andReturn(null).atLeastOnce();
       expect(os.getDescription()).andReturn(null).atLeastOnce();
+      expect(os.getArch()).andReturn("hvm").atLeastOnce();
+      expect(os.is64Bit()).andReturn(false).atLeastOnce();
+
+      replay(knownImage, os, defaultOptions, optionsProvider, templateBuilderProvider, getImageStrategy);
+
+      TemplateBuilderImpl template = createTemplateBuilder(knownImage, locations, images, sizes, region,
+            optionsProvider, templateBuilderProvider, getImageStrategy);
+
+      assertEquals(template.imageId("us-east-1/ami").build().getImage(), knownImage);
+      assertEquals(template.imageId("us-east-1/ami").build().getHardware(), r3_large().build());
+
+      verify(knownImage, os, defaultOptions, optionsProvider, templateBuilderProvider, getImageStrategy);
+   }
+
+   @SuppressWarnings("unchecked")
+   @Test
+   public void testParseOnDemandUsesDeprecatedHardwareIfNeeded() {
+
+      Supplier<Set<? extends Location>> locations = Suppliers.<Set<? extends Location>> ofInstance(ImmutableSet
+            .<Location> of(region));
+      Supplier<Set<? extends Image>> images = Suppliers.<Set<? extends Image>> ofInstance(Sets
+            .<Image> newLinkedHashSet());
+      Supplier<Set<? extends Hardware>> sizes = Suppliers.<Set<? extends Hardware>> ofInstance(ImmutableSet
+            .<Hardware> of(c1_medium().build(), r3_large().build()));
+
+      Provider<TemplateOptions> optionsProvider = createMock(Provider.class);
+      Provider<TemplateBuilder> templateBuilderProvider = createMock(Provider.class);
+      TemplateOptions defaultOptions = createMock(TemplateOptions.class);
+      Image knownImage = createMock(Image.class);
+      OperatingSystem os = createMock(OperatingSystem.class);
+      GetImageStrategy getImageStrategy = createMock(GetImageStrategy.class);
+
+      expect(optionsProvider.get()).andReturn(defaultOptions);
+
+      expect(knownImage.getId()).andReturn("us-east-1/ami").atLeastOnce();
+      expect(knownImage.getLocation()).andReturn(region).atLeastOnce();
+      expect(knownImage.getName()).andReturn(null).atLeastOnce();
+      expect(knownImage.getDescription()).andReturn(null).atLeastOnce();
+      expect(knownImage.getVersion()).andReturn(null).atLeastOnce();
+      expect(knownImage.getProviderId()).andReturn("ami").atLeastOnce();
+
+      expect(knownImage.getOperatingSystem()).andReturn(os).atLeastOnce();
+
+      expect(os.getName()).andReturn(null).atLeastOnce();
+      expect(os.getVersion()).andReturn(null).atLeastOnce();
+      expect(os.getFamily()).andReturn(null).atLeastOnce();
+      expect(os.getDescription()).andReturn(null).atLeastOnce();
+      // paravirtual not compatible with r3 so deprecated c1 is forced
       expect(os.getArch()).andReturn("paravirtual").atLeastOnce();
       expect(os.is64Bit()).andReturn(false).atLeastOnce();
 
@@ -142,6 +191,7 @@ public class EC2TemplateBuilderImplTest extends TemplateBuilderImplTest {
             optionsProvider, templateBuilderProvider, getImageStrategy);
 
       assertEquals(template.imageId("us-east-1/ami").build().getImage(), knownImage);
+      assertEquals(template.imageId("us-east-1/ami").build().getHardware(), c1_medium().build());
 
       verify(knownImage, os, defaultOptions, optionsProvider, templateBuilderProvider, getImageStrategy);
    }

@@ -46,16 +46,18 @@ public class HardwareImpl extends ComputeMetadataImpl implements Hardware {
    private final List<Volume> volumes;
    private final Predicate<Image> supportsImage;
    private final String hypervisor;
+   private final boolean deprecated;
 
    public HardwareImpl(String providerId, String name, String id, @Nullable Location location, URI uri,
          Map<String, String> userMetadata, Set<String> tags, Iterable<? extends Processor> processors, int ram,
-         Iterable<? extends Volume> volumes, Predicate<Image> supportsImage, @Nullable String hypervisor) {
+         Iterable<? extends Volume> volumes, Predicate<Image> supportsImage, @Nullable String hypervisor, boolean deprecated) {
       super(ComputeType.HARDWARE, providerId, name, id, location, uri, userMetadata, tags);
       this.processors = ImmutableList.copyOf(checkNotNull(processors, "processors"));
       this.ram = ram;
       this.volumes = ImmutableList.copyOf(checkNotNull(volumes, "volumes"));
       this.supportsImage = supportsImage;
       this.hypervisor = hypervisor;
+      this.deprecated = deprecated;
    }
 
    /**
@@ -91,6 +93,14 @@ public class HardwareImpl extends ComputeMetadataImpl implements Hardware {
       return hypervisor;
    }
 
+   /**
+    * {@inheritDoc}
+    */
+   @Override
+   public boolean isDeprecated() {
+      return deprecated;
+   }
+   
    /**
     * {@inheritDoc}
     */

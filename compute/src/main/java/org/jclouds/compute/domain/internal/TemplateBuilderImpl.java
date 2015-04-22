@@ -483,6 +483,12 @@ public class TemplateBuilderImpl implements TemplateBuilder {
          return Doubles.compare(getCoresAndSpeed(left), getCoresAndSpeed(right));
       }
    };
+   static final Ordering<Hardware> NOT_DEPRECATED_ORDERING = new Ordering<Hardware>() {
+      public int compare(Hardware left, Hardware right) {
+         // we take max so deprecated items come first
+         return ComparisonChain.start().compareTrueFirst(left.isDeprecated(), right.isDeprecated()).result();
+      }
+   };
    static final Ordering<Image> DEFAULT_IMAGE_ORDERING = new Ordering<Image>() {
       public int compare(Image left, Image right) {
          /* This currently, and for some time, has *preferred* images whose fields are null,
@@ -819,6 +825,7 @@ public class TemplateBuilderImpl implements TemplateBuilder {
          hardwareOrdering = hardwareOrdering.reverse();
       if (fastest)
          hardwareOrdering = Ordering.compound(ImmutableList.of(BY_CORES_ORDERING, hardwareOrdering));
+      hardwareOrdering = Ordering.compound(ImmutableList.of(NOT_DEPRECATED_ORDERING, hardwareOrdering));
       return hardwareOrdering;
    }
 

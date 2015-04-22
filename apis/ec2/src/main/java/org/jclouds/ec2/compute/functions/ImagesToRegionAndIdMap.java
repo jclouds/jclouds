@@ -27,6 +27,7 @@ import org.jclouds.compute.domain.Image;
 import org.jclouds.ec2.compute.domain.RegionAndName;
 
 import com.google.common.base.Function;
+import com.google.common.base.Preconditions;
 
 @Singleton
 public class ImagesToRegionAndIdMap implements Function<Iterable<? extends Image>, Map<RegionAndName, ? extends Image>> {
@@ -43,7 +44,9 @@ public class ImagesToRegionAndIdMap implements Function<Iterable<? extends Image
          public RegionAndName apply(Image from) {
             checkState(from.getLocation() != null,
                      "in ec2, image locations cannot be null; typically, they are Region-scoped");
-            return new RegionAndName(from.getLocation().getId(), from.getProviderId());
+            String[] segments = from.getId().split("/");
+            Preconditions.checkArgument(segments.length == 2, "Wrong form for AWS image ID: " + from);
+            return new RegionAndName(segments[0], segments[1]);
          }
 
       });

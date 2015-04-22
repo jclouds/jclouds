@@ -45,7 +45,6 @@ import org.jclouds.compute.domain.Template;
 import org.jclouds.compute.functions.GroupNamingConvention;
 import org.jclouds.compute.options.TemplateOptions;
 import org.jclouds.domain.LoginCredentials;
-import org.jclouds.ec2.compute.EC2TemplateBuilderTest;
 import org.jclouds.ec2.compute.domain.EC2HardwareBuilder;
 import org.jclouds.ec2.compute.domain.RegionAndName;
 import org.jclouds.ec2.compute.domain.RegionNameAndIngressRules;
@@ -140,7 +139,7 @@ public class CreateKeyPairPlacementAndSecurityGroupsAsNeededAndReturnRunOptionsT
       // setup constants
       String region = Region.US_EAST_1;
       String group = "group";
-      Hardware size = EC2TemplateBuilderTest.CC1_4XLARGE;
+      Hardware size = EC2HardwareBuilder.cc1_4xlarge().build();
       String systemGeneratedKeyPairName = "systemGeneratedKeyPair";
       String generatedGroup = "group";
       Set<String> generatedGroups = ImmutableSet.of(generatedGroup);
@@ -205,7 +204,7 @@ public class CreateKeyPairPlacementAndSecurityGroupsAsNeededAndReturnRunOptionsT
       // setup constants
       String region = Region.US_EAST_1;
       String group = "group";
-      Hardware size = EC2TemplateBuilderTest.CC1_4XLARGE;
+      Hardware size = EC2HardwareBuilder.cc1_4xlarge().build();
       String systemGeneratedKeyPairName = "systemGeneratedKeyPair";
       String generatedGroup = "group";
       Set<String> generatedGroups = ImmutableSet.of(generatedGroup);
