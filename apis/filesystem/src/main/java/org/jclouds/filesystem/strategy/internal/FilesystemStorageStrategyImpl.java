@@ -16,24 +16,27 @@
  */
 package org.jclouds.filesystem.strategy.internal;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+import static com.google.common.base.Strings.isNullOrEmpty;
+import static com.google.common.io.BaseEncoding.base16;
 import static java.nio.file.Files.getFileAttributeView;
 import static java.nio.file.Files.getPosixFilePermissions;
 import static java.nio.file.Files.readAttributes;
 import static java.nio.file.Files.setPosixFilePermissions;
-
-import static com.google.common.base.Preconditions.checkNotNull;
-import static com.google.common.base.Strings.isNullOrEmpty;
-import static com.google.common.io.BaseEncoding.base16;
+import static org.jclouds.filesystem.util.Utils.isPrivate;
+import static org.jclouds.filesystem.util.Utils.isWindows;
+import static org.jclouds.filesystem.util.Utils.setPrivate;
+import static org.jclouds.filesystem.util.Utils.setPublic;
 import static org.jclouds.util.Closeables2.closeQuietly;
 
 import java.io.File;
 import java.io.IOException;
 import java.nio.ByteBuffer;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.nio.file.attribute.PosixFilePermission;
 import java.nio.file.attribute.UserDefinedFileAttributeView;
-import java.nio.charset.StandardCharsets;
 import java.util.Date;
 import java.util.Map;
 import java.util.Set;
@@ -156,30 +159,56 @@ public class FilesystemStorageStrategyImpl implements LocalStorageStrategy {
    @Override
    public ContainerAccess getContainerAccess(String container) {
       Path path = new File(buildPathStartingFromBaseDir(container)).toPath();
-      Set<PosixFilePermission> permissions;
-      try {
-         permissions = getPosixFilePermissions(path);
-      } catch (IOException ioe) {
-         throw Throwables.propagate(ioe);
+
+      if ( isWindows() ) {
+         try {
+            if (isPrivate(path)) {
+               return ContainerAccess.PRIVATE;
+            } else {
+               return ContainerAccess.PUBLIC_READ;
+            }
+         } catch (IOException e) {
+            throw new RuntimeException(e);
+         }
+      } else {
+         Set<PosixFilePermission> permissions;
+         try {
+            permissions = getPosixFilePermissions(path);
+         } catch (IOException ioe) {
+            throw Throwables.propagate(ioe);
+         }
+         return permissions.contains(PosixFilePermission.OTHERS_READ)
+               ? ContainerAccess.PUBLIC_READ : ContainerAccess.PRIVATE;
       }
-      return permissions.contains(PosixFilePermission.OTHERS_READ)
-            ? ContainerAccess.PUBLIC_READ : ContainerAccess.PRIVATE;
    }
 
    @Override
    public void setContainerAccess(String container, ContainerAccess access) {
       Path path = new File(buildPathStartingFromBaseDir(container)).toPath();
-      Set<PosixFilePermission> permissions;
-      try {
-         permissions = getPosixFilePermissions(path);
-         if (access == ContainerAccess.PRIVATE) {
-            permissions.remove(PosixFilePermission.OTHERS_READ);
-         } else if (access == ContainerAccess.PUBLIC_READ) {
-            permissions.add(PosixFilePermission.OTHERS_READ);
+
+      if ( isWindows() ) {
+         try {
+            if (access == ContainerAccess.PRIVATE) {
+               setPrivate(path);
+            } else {
+               setPublic(path);
+            }
+         } catch (IOException e) {
+            throw new RuntimeException(e);
          }
-         setPosixFilePermissions(path, permissions);
-      } catch (IOException ioe) {
-         throw Throwables.propagate(ioe);
+      } else {
+         Set<PosixFilePermission> permissions;
+         try {
+            permissions = getPosixFilePermissions(path);
+            if (access == ContainerAccess.PRIVATE) {
+               permissions.remove(PosixFilePermission.OTHERS_READ);
+            } else if (access == ContainerAccess.PUBLIC_READ) {
+               permissions.add(PosixFilePermission.OTHERS_READ);
+            }
+            setPosixFilePermissions(path, permissions);
+         } catch (IOException ioe) {
+            throw Throwables.propagate(ioe);
+         }
       }
    }
 
@@ -243,7 +272,7 @@ public class FilesystemStorageStrategyImpl implements LocalStorageStrategy {
          return buildPathAndChecksIfBlobExists(container, key);
       } catch (IOException e) {
          logger.error(e, "An error occurred while checking key %s in container %s",
-                 container, key);
+               container, key);
          throw Throwables.propagate(e);
       }
    }
@@ -480,30 +509,55 @@ public class FilesystemStorageStrategyImpl implements LocalStorageStrategy {
    @Override
    public BlobAccess getBlobAccess(String containerName, String blobName) {
       Path path = new File(buildPathStartingFromBaseDir(containerName, blobName)).toPath();
-      Set<PosixFilePermission> permissions;
-      try {
-         permissions = getPosixFilePermissions(path);
-      } catch (IOException ioe) {
-         throw Throwables.propagate(ioe);
+
+      if ( isWindows() ) {
+         try {
+            if (isPrivate(path)) {
+               return BlobAccess.PRIVATE;
+            } else {
+               return BlobAccess.PUBLIC_READ;
+            }
+         } catch (IOException e) {
+            throw new RuntimeException(e);
+         }
+      } else {
+         Set<PosixFilePermission> permissions;
+         try {
+            permissions = getPosixFilePermissions(path);
+         } catch (IOException ioe) {
+            throw Throwables.propagate(ioe);
+         }
+         return permissions.contains(PosixFilePermission.OTHERS_READ)
+               ? BlobAccess.PUBLIC_READ : BlobAccess.PRIVATE;
       }
-      return permissions.contains(PosixFilePermission.OTHERS_READ)
-            ? BlobAccess.PUBLIC_READ : BlobAccess.PRIVATE;
    }
 
    @Override
    public void setBlobAccess(String container, String name, BlobAccess access) {
       Path path = new File(buildPathStartingFromBaseDir(container, name)).toPath();
-      Set<PosixFilePermission> permissions;
-      try {
-         permissions = getPosixFilePermissions(path);
-         if (access == BlobAccess.PRIVATE) {
-            permissions.remove(PosixFilePermission.OTHERS_READ);
-         } else if (access == BlobAccess.PUBLIC_READ) {
-            permissions.add(PosixFilePermission.OTHERS_READ);
+      if ( isWindows() ) {
+         try {
+            if (access == BlobAccess.PRIVATE) {
+               setPrivate(path);
+            } else {
+               setPublic(path);
+            }
+         } catch (IOException e) {
+            throw new RuntimeException(e);
          }
-         setPosixFilePermissions(path, permissions);
-      } catch (IOException ioe) {
-         throw Throwables.propagate(ioe);
+      } else {
+         Set<PosixFilePermission> permissions;
+         try {
+            permissions = getPosixFilePermissions(path);
+            if (access == BlobAccess.PRIVATE) {
+               permissions.remove(PosixFilePermission.OTHERS_READ);
+            } else if (access == BlobAccess.PUBLIC_READ) {
+               permissions.add(PosixFilePermission.OTHERS_READ);
+            }
+            setPosixFilePermissions(path, permissions);
+         } catch (IOException ioe) {
+            throw Throwables.propagate(ioe);
+         }
       }
    }
 
