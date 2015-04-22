@@ -139,10 +139,11 @@ public class SpotInstanceApiLiveTest  extends BaseComputeServiceContextLiveTest 
             assert spot.getSpotPrice() > 0 : spots;
             assertEquals(spot.getRegion(), region);
             assert in(
-                     ImmutableSet.of("Linux/UNIX", "Linux/UNIX (Amazon VPC)", "SUSE Linux", "SUSE Linux (Amazon VPC)",
+                    ImmutableSet.of("Linux/UNIX", "Linux/UNIX (Amazon VPC)", "SUSE Linux", "SUSE Linux (Amazon VPC)",
                               "Windows", "Windows (Amazon VPC)")).apply(spot.getProductDescription()) : spot;
-            assert in(
-                     ImmutableSet.of("c1.medium", "c1.xlarge", "cc1.4xlarge", "cg1.4xlarge", "cc2.8xlarge", "m1.large",
+            assert // sometimes get D2 type, which we don't yet enumerate
+                    spot.getInstanceType().startsWith("d2.") ||
+                    in(ImmutableSet.of("c1.medium", "c1.xlarge", "cc1.4xlarge", "cg1.4xlarge", "cc2.8xlarge", "m1.large",
                               "m1.small", "m1.medium", "m1.xlarge", "m2.2xlarge", "m2.4xlarge", "m2.xlarge", "m3.xlarge",
                               "m3.2xlarge", "t1.micro", "cr1.8xlarge", "c4.large", "c4.xlarge", "c4.2xlarge", "c4.4xlarge",
                               "c4.8xlarge")).apply(spot.getInstanceType()) : spot;

@@ -93,7 +93,7 @@ public class AWSEC2TemplateBuilderLiveTest extends EC2TemplateBuilderLiveTest {
    }
 
    @Test
-   public void testUbuntuInstanceStoreGoesM1SmallNegativeLookaroundDoesntMatchTestImages() {
+   public void testUbuntuInstanceStoreGoesM3MediumNegativeLookaroundDoesntMatchTestImages() {
 
       Template template = view.getComputeService().templateBuilder()
             .imageMatches(EC2ImagePredicates.rootDeviceType(RootDeviceType.INSTANCE_STORE))
@@ -114,12 +114,12 @@ public class AWSEC2TemplateBuilderLiveTest extends EC2TemplateBuilderLiveTest {
       assertEquals(template.getImage().getUserMetadata().get("rootDeviceType"), "instance-store");
       assertEquals(template.getLocation().getId(), "us-east-1");
       assertEquals(getCores(template.getHardware()), 1.0d);
-      assertEquals(template.getHardware().getId(), InstanceType.M1_SMALL);
+      assertEquals(template.getHardware().getId(), InstanceType.M3_MEDIUM);  // smallest non-deprecated supporting PV
       assertEquals(template.getImage().getOperatingSystem().getArch(), "paravirtual");
    }
 
    @Test
-   public void testTemplateBuilderCanUseImageIdAndhardwareIdAndAZ() {
+   public void testTemplateBuilderCanUseImageIdAndHardwareIdAndAZ() {
 
       Template template = view.getComputeService().templateBuilder().imageId("us-east-1/ami-ccb35ea5")
             .hardwareId(InstanceType.M2_2XLARGE).locationId("us-east-1a").build();
@@ -141,15 +141,15 @@ public class AWSEC2TemplateBuilderLiveTest extends EC2TemplateBuilderLiveTest {
    public void testDefaultTemplateBuilder() throws IOException {
       Template defaultTemplate = view.getComputeService().templateBuilder().build();
       assert defaultTemplate.getImage().getProviderId().startsWith("ami-") : defaultTemplate;
-      assertTrue(defaultTemplate.getImage().getOperatingSystem().getVersion().contains("pv-201"),
-              "Default template version should include 'pv-201' but is "
+      assertTrue(defaultTemplate.getImage().getOperatingSystem().getVersion().contains("201"),
+              "Default template version should include '201' but is "
                       + defaultTemplate.getImage().getOperatingSystem().getVersion());
       assertEquals(defaultTemplate.getImage().getOperatingSystem().is64Bit(), true);
       assertEquals(defaultTemplate.getImage().getOperatingSystem().getFamily(), AMZN_LINUX);
       assertEquals(defaultTemplate.getImage().getUserMetadata().get("rootDeviceType"), "ebs");
       assertEquals(defaultTemplate.getLocation().getId(), "us-east-1");
       assertEquals(getCores(defaultTemplate.getHardware()), 1.0d);
-      assertEquals(defaultTemplate.getImage().getOperatingSystem().getArch(), "paravirtual");
+      assertEquals(defaultTemplate.getImage().getOperatingSystem().getArch(), "hvm");
    }
 
    @Test
@@ -158,7 +158,7 @@ public class AWSEC2TemplateBuilderLiveTest extends EC2TemplateBuilderLiveTest {
       Template defaultTemplate = view.getComputeService().templateBuilder().osFamily(AMZN_LINUX)
             .imageMatches(EC2ImagePredicates.rootDeviceType(RootDeviceType.INSTANCE_STORE)).build();
       assert defaultTemplate.getImage().getProviderId().startsWith("ami-") : defaultTemplate;
-      assertEquals(defaultTemplate.getImage().getOperatingSystem().getVersion(), "pv-2014.09.2");
+      assertEquals(defaultTemplate.getImage().getOperatingSystem().getVersion(), "pv-2015.03.rc-1");
       assertEquals(defaultTemplate.getImage().getOperatingSystem().is64Bit(), true);
       assertEquals(defaultTemplate.getImage().getOperatingSystem().getFamily(), AMZN_LINUX);
       assertEquals(defaultTemplate.getImage().getUserMetadata().get("rootDeviceType"), "instance-store");
@@ -172,13 +172,13 @@ public class AWSEC2TemplateBuilderLiveTest extends EC2TemplateBuilderLiveTest {
       Template fastestTemplate = view.getComputeService().templateBuilder().fastest().osFamily(AMZN_LINUX).build();
       assert fastestTemplate.getImage().getProviderId().startsWith("ami-") : fastestTemplate;
       assertEquals(fastestTemplate.getHardware().getProviderId(), InstanceType.C4_8XLARGE);
-      assertEquals(fastestTemplate.getImage().getOperatingSystem().getVersion(), "vpc-nat-pv-2014.09.1");
+      assertEquals(fastestTemplate.getImage().getOperatingSystem().getVersion(), "2011.09.2");
       assertEquals(fastestTemplate.getImage().getOperatingSystem().is64Bit(), true);
       assertEquals(fastestTemplate.getImage().getOperatingSystem().getFamily(), AMZN_LINUX);
       assertEquals(fastestTemplate.getImage().getUserMetadata().get("rootDeviceType"), "ebs");
       assertEquals(fastestTemplate.getLocation().getId(), "us-east-1");
       assertEquals(getCores(fastestTemplate.getHardware()), 36.0d);
-      assertEquals(fastestTemplate.getImage().getOperatingSystem().getArch(), "paravirtual");
+      assertEquals(fastestTemplate.getImage().getOperatingSystem().getArch(), "hvm");
    }
 
    @Test
@@ -219,7 +219,7 @@ public class AWSEC2TemplateBuilderLiveTest extends EC2TemplateBuilderLiveTest {
          assertEquals(template.getImage().getUserMetadata().get("rootDeviceType"), "instance-store");
          assertEquals(template.getLocation().getId(), "us-east-1");
          assertEquals(getCores(template.getHardware()), 1.0d);
-         assertEquals(template.getHardware().getId(), "m1.small");
+         assertEquals(template.getHardware().getId(), "m3.medium"); // smallest non-deprecated supporting PV
 
          // ensure we cache the new image for next time
          assertEquals(context.getComputeService().listImages().size(), 1);
@@ -252,7 +252,7 @@ public class AWSEC2TemplateBuilderLiveTest extends EC2TemplateBuilderLiveTest {
          assertEquals(template.getImage().getUserMetadata().get("rootDeviceType"), "instance-store");
          assertEquals(template.getLocation().getId(), "us-east-1");
          assertEquals(getCores(template.getHardware()), 1.0d);
-         assertEquals(template.getHardware().getId(), "m1.small");
+         assertEquals(template.getHardware().getId(), "m3.medium");  // smallest non-deprecated supporting PV
 
          // ensure we cache the new image for next time
          assertEquals(context.getComputeService().listImages().size(), 1);
@@ -297,7 +297,7 @@ public class AWSEC2TemplateBuilderLiveTest extends EC2TemplateBuilderLiveTest {
          assertEquals(template.getImage().getUserMetadata().get("rootDeviceType"), "instance-store");
          assertEquals(template.getLocation().getId(), "eu-west-1");
          assertEquals(getCores(template.getHardware()), 1.0d);
-         assertEquals(template.getHardware().getId(), "m1.small");
+         assertEquals(template.getHardware().getId(), "m3.medium");  // smallest non-deprecated supporting PV
 
       } finally {
          if (context != null)

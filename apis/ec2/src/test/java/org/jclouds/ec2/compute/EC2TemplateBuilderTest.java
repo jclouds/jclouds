@@ -22,7 +22,6 @@ import static org.easymock.EasyMock.expect;
 import static org.easymock.EasyMock.replay;
 import static org.jclouds.ec2.compute.domain.EC2HardwareBuilder.c1_medium;
 import static org.jclouds.ec2.compute.domain.EC2HardwareBuilder.c1_xlarge;
-import static org.jclouds.ec2.compute.domain.EC2HardwareBuilder.cc1_4xlarge;
 import static org.jclouds.ec2.compute.domain.EC2HardwareBuilder.g2_2xlarge;
 import static org.jclouds.ec2.compute.domain.EC2HardwareBuilder.m1_large;
 import static org.jclouds.ec2.compute.domain.EC2HardwareBuilder.m1_small;
@@ -47,6 +46,7 @@ import org.jclouds.compute.domain.OperatingSystem;
 import org.jclouds.compute.domain.OsFamily;
 import org.jclouds.compute.domain.Template;
 import org.jclouds.compute.domain.TemplateBuilder;
+import org.jclouds.compute.domain.internal.TemplateBuilderImpl;
 import org.jclouds.compute.options.TemplateOptions;
 import org.jclouds.compute.strategy.GetImageStrategy;
 import org.jclouds.compute.suppliers.ImageCacheSupplier;
@@ -57,6 +57,7 @@ import org.jclouds.domain.LoginCredentials;
 import org.jclouds.ec2.compute.domain.RegionAndName;
 import org.jclouds.ec2.compute.functions.ImagesToRegionAndIdMap;
 import org.jclouds.ec2.compute.internal.EC2TemplateBuilderImpl;
+import org.jclouds.ec2.domain.VirtualizationType;
 import org.testng.annotations.Test;
 
 import com.google.common.base.Function;
@@ -84,7 +85,9 @@ public class EC2TemplateBuilderTest {
    protected Location location = new LocationBuilder().scope(LocationScope.REGION).id("us-east-1").description("us-east-1")
          .parent(provider).build();
 
-   public static final Hardware CC1_4XLARGE = cc1_4xlarge().supportsImageIds(ImmutableSet.of("us-east-1/cc-image"))
+   public static final Hardware HARDWARE_SUPPORTING_BOGUS = g2_2xlarge().id("supporting-bogus")
+         .supportsImageIds(ImmutableSet.of("us-east-1/bogus-image"))
+         .virtualizationType(VirtualizationType.UNRECOGNIZED)
          .build();
 
    /**
@@ -94,23 +97,23 @@ public class EC2TemplateBuilderTest {
     * Expected size: m2.xlarge
     */
    @Test
-   public void testTemplateChoiceForInstanceByhardwareId() throws Exception {
+   public void testTemplateChoiceForInstanceByHardwareId() throws Exception {
       Template template = newTemplateBuilder().os64Bit(true).hardwareId("m2.xlarge").locationId("us-east-1").build();
 
       assert template != null : "The returned template was null, but it should have a value.";
       // assert m2_xlarge().build().equals(template.getHardware()) : format(
       // "Incorrect image determined by the template. Expected: %s. Found: %s.", "m2.xlarge",
       // String.valueOf(template.getHardware()));
-      assertEquals(m2_xlarge().build().getId(), template.getHardware().getId());
+      assertEquals(template.getHardware().getId(), m2_xlarge().build().getId());
    }
 
    @Test
-   public void testTemplateChoiceForInstanceByCChardwareId() throws Exception {
+   public void testTemplateChoiceForInstanceByFastest() throws Exception {
       Template template = newTemplateBuilder().fastest().build();
 
       assert template != null : "The returned template was null, but it should have a value.";
-      assert CC1_4XLARGE.equals(template.getHardware()) : format(
-               "Incorrect image determined by the template. Expected: %s. Found: %s.", CC1_4XLARGE.getId(), template
+      assert g2_2xlarge().build().equals(template.getHardware()) : format(
+               "Incorrect image determined by the template. Expected: %s. Found: %s.", g2_2xlarge(), template
                         .getHardware().getId());
    }
 
@@ -126,7 +129,7 @@ public class EC2TemplateBuilderTest {
                "us-east-1").build();
 
       assert template != null : "The returned template was null, but it should have a value.";
-      assertEquals(template.getHardware().getId(), "cc1.4xlarge");
+      assertEquals(template.getHardware().getId(), m2_4xlarge().build().getId());
    }
 
    /**
@@ -150,10 +153,11 @@ public class EC2TemplateBuilderTest {
 
    @Test
    public void testTemplateChoiceForInstanceByImageId() throws Exception {
-      Template template = newTemplateBuilder().imageId("us-east-1/cc-image").build();
+      Template template = newTemplateBuilder().imageId("us-east-1/bogus-image").build();
 
       assert template != null : "The returned template was null, but it should have a value.";
-      assertEquals(template.getImage().getId(), "us-east-1/cc-image");
+      assertEquals(template.getImage().getId(), "us-east-1/bogus-image");
+      assertEquals(template.getHardware().getId(), HARDWARE_SUPPORTING_BOGUS.getId());
    }
 
    @Test
@@ -162,22 +166,23 @@ public class EC2TemplateBuilderTest {
       Supplier<Set<? extends Image>> images = createMock(Supplier.class);
       replay(images);
       
-      final Image image = new ImageBuilder().providerId("cc-image").name("image").id("us-east-1/cc-image").location(location)
-               .operatingSystem(new OperatingSystem(OsFamily.UBUNTU, null, "1.0", "hvm", "ubuntu", true))
+      final Image image = new ImageBuilder().providerId("bogus-image-provider").name("image").id("us-east-1/bogus-image").location(location)
+               .operatingSystem(new OperatingSystem(OsFamily.UBUNTU, null, "1.0", "bogus", "ubuntu", true))
                .description("description").version("1.0").defaultCredentials(LoginCredentials.builder().user("root").build())
                .status(Image.Status.AVAILABLE)
                .build();
       Map<RegionAndName, Image> imageMap = ImmutableMap.of(
-               new RegionAndName(image.getLocation().getId(), image.getProviderId()), image);
+               new RegionAndName(image.getLocation().getId(), "bogus-image"), image);
       
       // weird compilation error means have to declare extra generics for call to build() - see https://bugs.eclipse.org/bugs/show_bug.cgi?id=365818
       Supplier<LoadingCache<RegionAndName, ? extends Image>> imageCache = Suppliers.<LoadingCache<RegionAndName, ? extends Image>> ofInstance(
                CacheBuilder.newBuilder().<RegionAndName, Image>build(CacheLoader.from(Functions.forMap(imageMap))));
 
-      Template template = newTemplateBuilder(images, imageCache).imageId("us-east-1/cc-image").build();
+      Template template = newTemplateBuilder(images, imageCache).imageId("us-east-1/bogus-image").build();
 
       assert template != null : "The returned template was null, but it should have a value.";
-      assertEquals(template.getImage().getId(), "us-east-1/cc-image");
+      assertEquals(template.getImage().getId(), "us-east-1/bogus-image");
+      assertEquals(template.getHardware().getId(), HARDWARE_SUPPORTING_BOGUS.getId());
    }
 
    @Test(expectedExceptions = {NoSuchElementException.class})
@@ -187,13 +192,18 @@ public class EC2TemplateBuilderTest {
 
    private TemplateBuilder newTemplateBuilder() {
       final Supplier<Set<? extends Image>> images = Suppliers.<Set<? extends Image>> ofInstance(ImmutableSet.<Image> of(
-               new ImageBuilder().providerId("cc-image").name("image").id("us-east-1/cc-image").location(location)
+               new ImageBuilder().providerId("hvm-image-provider").name("image").id("us-east-1/hvm-image").location(location)
                         .operatingSystem(new OperatingSystem(OsFamily.UBUNTU, null, "1.0", "hvm", "ubuntu", true))
                         .description("description").version("1.0").defaultCredentials(LoginCredentials.builder().user("root").build())
                         .status(Image.Status.AVAILABLE)
                         .build(), 
-               new ImageBuilder().providerId("normal-image").name("image").id("us-east-1/normal-image").location(location)
+               new ImageBuilder().providerId("pv-image-provider").name("image").id("us-east-1/pv-image").location(location)
                         .operatingSystem(new OperatingSystem(OsFamily.UBUNTU, null, "1.0", "paravirtual", "ubuntu", true))
+                        .description("description").version("1.0").defaultCredentials(LoginCredentials.builder().user("root").build())
+                        .status(Image.Status.AVAILABLE)
+                        .build(),
+               new ImageBuilder().providerId("bogus-image-provider").name("image").id("us-east-1/bogus-image").location(location)
+                        .operatingSystem(new OperatingSystem(OsFamily.UBUNTU, null, "1.0", "bogus", "ubuntu", true))
                         .description("description").version("1.0").defaultCredentials(LoginCredentials.builder().user("root").build())
                         .status(Image.Status.AVAILABLE)
                         .build()));
@@ -224,7 +234,7 @@ public class EC2TemplateBuilderTest {
       Supplier<Set<? extends Hardware>> sizes = Suppliers.<Set<? extends Hardware>> ofInstance(ImmutableSet
                .<Hardware> of(t1_micro().build(), c1_medium().build(), c1_xlarge().build(), m1_large().build(),
                         m1_small().build(), m1_xlarge().build(), m2_xlarge().build(), m2_2xlarge().build(),
-			      m2_4xlarge().build(), g2_2xlarge().build(), CC1_4XLARGE));
+                        m2_4xlarge().build(), g2_2xlarge().build(), HARDWARE_SUPPORTING_BOGUS));
 
       return new EC2TemplateBuilderImpl(locations, new ImageCacheSupplier(images, 60), sizes, Suppliers.ofInstance(location), optionsProvider,
                templateBuilderProvider, getImageStrategy, imageCache) {

@@ -55,4 +55,9 @@ public interface Hardware extends ComputeMetadata {
     */
    @Nullable
    String getHypervisor();
+   
+   /**
+    * True if usage of the hardware profile is now discouraged.
+    */
+   boolean isDeprecated();
 }

@@ -938,10 +938,11 @@ public class TemplateBuilderImplTest {
    public void testMatchesHardwareWithIdPredicate() {
       final Supplier<Set<? extends Location>> locations = Suppliers.<Set<? extends Location>> ofInstance(ImmutableSet
             .<Location> of(region));
+      String imageId = getProviderFormatId("Ubuntu 11.04 x64");
       final Supplier<Set<? extends Image>> images = Suppliers.<Set<? extends Image>> ofInstance(ImmutableSet
             .<Image> of(
                   new ImageBuilder()
-                        .ids("Ubuntu 11.04 x64")
+                        .ids(imageId)
                         .name("Ubuntu 11.04 x64")
                         .description("Ubuntu 11.04 x64")
                         .location(region)
@@ -950,7 +951,7 @@ public class TemplateBuilderImplTest {
                               OperatingSystem.builder().name("Ubuntu 11.04 x64").description("Ubuntu 11.04 x64")
                                     .is64Bit(true).version("11.04").family(OsFamily.UBUNTU).build()).build(),
                   new ImageBuilder()
-                        .ids("Ubuntu 11.04 64-bit")
+                        .ids(getProviderFormatId("Ubuntu 11.04 64-bit"))
                         .name("Ubuntu 11.04 64-bit")
                         .description("Ubuntu 11.04 64-bit")
                         .location(region)
@@ -967,14 +968,14 @@ public class TemplateBuilderImplTest {
                         .processors(ImmutableList.of(new Processor(1, 1.0)))
                         .volumes(ImmutableList.<Volume> of(new VolumeImpl((float) 5, true, true))).hypervisor("Xen")
                         .location(region)
-                        .supportsImage(ImagePredicates.idIn(ImmutableSet.of("Ubuntu 11.04 x64"))).build(),
+                        .supportsImage(ImagePredicates.idIn(ImmutableSet.of(imageId))).build(),
                   new HardwareBuilder()
                         .ids(String.format("datacenter(%s)platform(%s)cpuCores(%d)memorySizeMB(%d)diskSizeGB(%d)",
                               "Falkenberg", "OpenVZ", 1, 512, 5)).ram(512)
                         .processors(ImmutableList.of(new Processor(1, 1.0)))
                         .volumes(ImmutableList.<Volume> of(new VolumeImpl((float) 5, true, true))).hypervisor("OpenVZ")
                         .location(region)
-                        .supportsImage(ImagePredicates.idIn(ImmutableSet.of("Ubuntu 11.04 64-bit"))).build()));
+                        .supportsImage(ImagePredicates.idIn(ImmutableSet.of(imageId))).build()));
 
       final Provider<TemplateOptions> optionsProvider = new Provider<TemplateOptions>() {
 
@@ -1003,10 +1004,69 @@ public class TemplateBuilderImplTest {
 
       Template template = templateBuilder.build();
       assertEquals(template.getHardware().getHypervisor(), "OpenVZ");
-      assertEquals(template.getImage().getId(), "Ubuntu 11.04 64-bit");
+      assertEquals(template.getImage().getId(), imageId);
    }
    
+   @Test
+   public void testMatchesHardwarePrefersNonDeprecated() {
+      final Supplier<Set<? extends Location>> locations = Suppliers.<Set<? extends Location>> ofInstance(ImmutableSet
+            .<Location> of(region));
+      String imageId = getProviderFormatId("Ubuntu 11.04 x64");
+      final Supplier<Set<? extends Image>> images = Suppliers.<Set<? extends Image>> ofInstance(ImmutableSet
+            .<Image> of(
+                  new ImageBuilder()
+                        .ids(imageId)
+                        .name("Ubuntu 11.04 x64")
+                        .description("Ubuntu 11.04 x64")
+                        .location(region)
+                        .status(Status.AVAILABLE)
+                        .operatingSystem(
+                              OperatingSystem.builder().name("Ubuntu 11.04 x64").description("Ubuntu 11.04 x64")
+                                    .is64Bit(true).version("11.04").family(OsFamily.UBUNTU).build()).build()));
 
+      final Supplier<Set<? extends Hardware>> hardwares = Suppliers.<Set<? extends Hardware>> ofInstance(ImmutableSet
+            .<Hardware> of(
+                  new HardwareBuilder()
+                        .ids(String.format("hardware-deprecated")).ram(512)
+                        .processors(ImmutableList.of(new Processor(1, 1.0)))
+                        .volumes(ImmutableList.<Volume> of(new VolumeImpl((float) 5, true, true))).hypervisor("Xen")
+                        .location(region)
+                        .deprecated()
+                        .supportsImage(ImagePredicates.idIn(ImmutableSet.of(imageId))).build(),
+                    new HardwareBuilder()
+                        .ids(String.format("hardware-good")).ram(512)
+                        .processors(ImmutableList.of(new Processor(1, 1.0)))
+                        .volumes(ImmutableList.<Volume> of(new VolumeImpl((float) 5, true, true))).hypervisor("Xen")
+                        .location(region)
+                        .supportsImage(ImagePredicates.idIn(ImmutableSet.of(imageId))).build()));
+
+      final Provider<TemplateOptions> optionsProvider = new Provider<TemplateOptions>() {
+
+         @Override
+         public TemplateOptions get() {
+            return new TemplateOptions();
+         }
+
+      };
+
+      final GetImageStrategy getImageStrategy = createMock(GetImageStrategy.class);
+
+      Provider<TemplateBuilder> templateBuilderProvider = new Provider<TemplateBuilder>() {
+
+         @Override
+         public TemplateBuilder get() {
+            return createTemplateBuilder(null, locations, images, hardwares, region, optionsProvider, this, getImageStrategy);
+         }
+
+      };
+
+      TemplateBuilder templateBuilder = templateBuilderProvider.get().minRam(512).osFamily(OsFamily.UBUNTU);
+
+      Template template = templateBuilder.build();
+      assertEquals(template.getHardware().getId(), "hardware-good");
+      assertEquals(template.getImage().getId(), imageId);
+   }
+   
    @Test
    public void testImageLocationNonDefault() {
       final Supplier<Set<? extends Location>> locations = Suppliers.<Set<? extends Location>> ofInstance(ImmutableSet

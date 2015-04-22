@@ -165,13 +165,12 @@ public class PlacementGroupApiLiveTest extends BaseComputeServiceContextLiveTest
       assert availableTester.apply(group) : group;
    }
 
-   public void testStartCCInstance() throws Exception {
+   public void testStartHS1Instance() throws Exception {
 
       Template template = view.getComputeService().templateBuilder()
-               .fromHardware(EC2HardwareBuilder.cc2_8xlarge().build()).osFamily(OsFamily.AMZN_LINUX).build();
+               .fromHardware(EC2HardwareBuilder.hs1_8xlarge().build()).osFamily(OsFamily.AMZN_LINUX).build();
       assert template != null : "The returned template was null, but it should have a value.";
-      assertEquals(template.getHardware().getProviderId(), InstanceType.CC2_8XLARGE);
-      assertEquals(template.getImage().getUserMetadata().get("rootDeviceType"), "ebs");
+      assertEquals(template.getHardware().getProviderId(), InstanceType.HS1_8XLARGE);
       assertEquals(template.getImage().getUserMetadata().get("virtualizationType"), "hvm");
       assertEquals(template.getImage().getUserMetadata().get("hypervisor"), "xen");
 
