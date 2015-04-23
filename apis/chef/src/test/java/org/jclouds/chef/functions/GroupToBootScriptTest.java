@@ -204,6 +204,24 @@ public class GroupToBootScriptTest {
       verify(validatorKey);
    }
 
+   public void testNoAttribtues() throws IOException {
+      Optional<PrivateKey> validatorCredential = Optional.of(createMock(PrivateKey.class));
+      BootstrapConfig config = BootstrapConfig.builder()
+            .environment("env").runList(new RunListBuilder().addRecipe("apache2").addRole("webserver").build()).build();
+
+      GroupToBootScript fn = groupToBootScriptFor(config, validatorCredential, true);
+
+      PrivateKey validatorKey = validatorCredential.get();
+      expect(validatorKey.getEncoded()).andReturn(PemsTest.PRIVATE_KEY.getBytes());
+      replay(validatorKey);
+
+      assertEquals(fn.apply("foo", null).render(OsFamily.UNIX),
+            "setupPublicCurl || exit 1\ncurl -q -s -S -L --connect-timeout 10 --max-time 600 --retry 20 "
+                  + "-X GET  https://www.opscode.com/chef/install.sh |(bash)\n" + readContent("bootstrap-env-noattrs.sh"));
+
+      verify(validatorKey);
+   }
+
    public void testCustomNodeName() throws IOException {
       Optional<PrivateKey> validatorCredential = Optional.of(createMock(PrivateKey.class));
       BootstrapConfig config = BootstrapConfig.builder().attributes(new JsonBall("{\"tomcat6\":{\"ssl_port\":8433}}"))
