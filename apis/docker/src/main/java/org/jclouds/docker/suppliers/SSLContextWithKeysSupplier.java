@@ -18,6 +18,7 @@ package org.jclouds.docker.suppliers;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Throwables.propagate;
+
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
@@ -49,6 +50,7 @@ import org.jclouds.domain.Credentials;
 import org.jclouds.http.HttpUtils;
 import org.jclouds.http.config.SSLModule.TrustAllCerts;
 import org.jclouds.location.Provider;
+import org.jclouds.util.Closeables2;
 
 import com.google.common.base.Charsets;
 import com.google.common.base.Supplier;
@@ -95,9 +97,8 @@ public class SSLContextWithKeysSupplier implements Supplier<SSLContext> {
    }
 
    private static PrivateKey getKey(String privateKey) {
-
+      PEMParser pemParser = new PEMParser(new StringReader(privateKey));
       try {
-         PEMParser pemParser = new PEMParser(new StringReader(privateKey));
          Object object = pemParser.readObject();
          if (Security.getProvider("BC") == null) {
             Security.addProvider(new BouncyCastleProvider());
@@ -107,6 +108,8 @@ public class SSLContextWithKeysSupplier implements Supplier<SSLContext> {
          return keyPair.getPrivate();
       } catch (IOException ex) {
          throw new RuntimeException("Invalid private key", ex);
+      } finally {
+          Closeables2.closeQuietly(pemParser);
       }
    }
 

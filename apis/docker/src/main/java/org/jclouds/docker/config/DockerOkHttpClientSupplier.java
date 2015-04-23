@@ -40,10 +40,12 @@ public class DockerOkHttpClientSupplier implements OkHttpClientSupplier {
    @Override
    public OkHttpClient get() {
       OkHttpClient client = new OkHttpClient();
-      ConnectionSpec modernTLS = new ConnectionSpec.Builder(ConnectionSpec.MODERN_TLS)
+      ConnectionSpec tlsSpec = new ConnectionSpec.Builder(ConnectionSpec.MODERN_TLS)
               .tlsVersions(TlsVersion.TLS_1_0, TlsVersion.TLS_1_1, TlsVersion.TLS_1_2)
               .build();
-      client.setConnectionSpecs(ImmutableList.of(modernTLS, ConnectionSpec.CLEARTEXT));
+      ConnectionSpec cleartextSpec = new ConnectionSpec.Builder(ConnectionSpec.CLEARTEXT)
+              .build();
+      client.setConnectionSpecs(ImmutableList.of(tlsSpec, cleartextSpec));
       client.setSslSocketFactory(sslContextWithKeysSupplier.get().getSocketFactory());
       return client;
    }

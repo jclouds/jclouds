@@ -97,36 +97,26 @@ public class DockerComputeServiceAdapter implements
               .image(imageId)
               .exposedPorts(exposedPorts);
 
-      if (templateOptions.getCommands().isPresent()) {
-         containerConfigBuilder.cmd(templateOptions.getCommands().get());
+      if (!templateOptions.getCommands().isEmpty()) {
+         containerConfigBuilder.cmd(templateOptions.getCommands());
       }
 
-      if (templateOptions.getMemory().isPresent()) {
-         containerConfigBuilder.memory(templateOptions.getMemory().get());
+      containerConfigBuilder.memory(templateOptions.getMemory());
+
+      containerConfigBuilder.hostname(templateOptions.getHostname());
+
+      containerConfigBuilder.cpuShares(templateOptions.getCpuShares());
+
+      if (!templateOptions.getEnv().isEmpty()) {
+         containerConfigBuilder.env(templateOptions.getEnv());
       }
 
-      if (templateOptions.getHostname().isPresent()) {
-         containerConfigBuilder.hostname(templateOptions.getHostname().get());
-      }
-
-      if (templateOptions.getCpuShares().isPresent()) {
-         containerConfigBuilder.cpuShares(templateOptions.getCpuShares().get());
-      }
-
-      if (templateOptions.getEnv().isPresent()) {
-         containerConfigBuilder.env(templateOptions.getEnv().get());
-      }
-
-      if (templateOptions.getVolumes().isPresent()) {
+      if (!templateOptions.getVolumes().isEmpty()) {
          Map<String, Object> volumes = Maps.newLinkedHashMap();
-         for (String containerDir : templateOptions.getVolumes().get().values()) {
+         for (String containerDir : templateOptions.getVolumes().values()) {
             volumes.put(containerDir, Maps.newHashMap());
          }
          containerConfigBuilder.volumes(volumes);
-      }
-
-      if (templateOptions.getEnv().isPresent()) {
-         containerConfigBuilder.env(templateOptions.getEnv().get());
       }
 
       Config containerConfig = containerConfigBuilder.build();
@@ -139,21 +129,21 @@ public class DockerComputeServiceAdapter implements
               .publishAllPorts(true)
               .privileged(true);
 
-      if (templateOptions.getPortBindings().isPresent()) {
+      if (!templateOptions.getPortBindings().isEmpty()) {
          Map<String, List<Map<String, String>>> portBindings = Maps.newHashMap();
-         for (Map.Entry<Integer, Integer> entry : templateOptions.getPortBindings().get().entrySet()) {
+         for (Map.Entry<Integer, Integer> entry : templateOptions.getPortBindings().entrySet()) {
             portBindings.put(entry.getValue() + "/tcp",
                   Lists.<Map<String, String>>newArrayList(ImmutableMap.of("HostPort", Integer.toString(entry.getKey()))));
          }
          hostConfigBuilder.portBindings(portBindings);
       }
 
-      if (templateOptions.getDns().isPresent()) {
-         hostConfigBuilder.dns(templateOptions.getDns().get());
+      if (!templateOptions.getDns().isEmpty()) {
+         hostConfigBuilder.dns(templateOptions.getDns());
       }
 
-      if (templateOptions.getVolumes().isPresent()) {
-         for (Map.Entry<String, String> entry : templateOptions.getVolumes().get().entrySet()) {
+      if (!templateOptions.getVolumes().isEmpty()) {
+         for (Map.Entry<String, String> entry : templateOptions.getVolumes().entrySet()) {
             hostConfigBuilder.binds(ImmutableList.of(entry.getKey() + ":" + entry.getValue()));
          }
       }

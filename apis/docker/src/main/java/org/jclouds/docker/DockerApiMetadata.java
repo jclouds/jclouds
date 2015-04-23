@@ -65,7 +65,7 @@ public class DockerApiMetadata extends BaseHttpApiMetadata<DockerApi> {
          id("docker")
                  .name("Docker API")
                  .identityName("Path to certificate .pem file")
-                 .credentialName("Password to key .pem file")
+                 .credentialName("Path to key .pem file")
                  .documentation(URI.create("https://docs.docker.com/reference/api/docker_remote_api/"))
                  .version("1.16")
                  .defaultEndpoint("https://127.0.0.1:2376")

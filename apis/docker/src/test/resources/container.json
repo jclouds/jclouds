@@ -56,7 +56,7 @@
         "CapDrop": null,
         "ContainerIDFile": "",
         "Devices": [],
-        "Dns": null,
+        "Dns": [ "8.8.8.8", "8.8.4.4" ],
         "DnsSearch": null,
         "ExtraHosts": null,
         "Links": null,

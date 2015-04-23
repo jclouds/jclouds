@@ -82,6 +82,7 @@ public class ContainerParseTest extends BaseDockerParseTest<Container> {
                                       "6783/tcp", ImmutableList.<Map<String, String>>of(ImmutableMap.of("HostIp", "", "HostPort", "6783")),
                                       "6783/udp", ImmutableList.<Map<String, String>>of(ImmutableMap.of("HostIp", "", "HostPort", "6783")))
                       )
+                      .dns(ImmutableList.of("8.8.8.8", "8.8.4.4"))
                       .privileged(true)
                       .build())
               .driver("aufs")
