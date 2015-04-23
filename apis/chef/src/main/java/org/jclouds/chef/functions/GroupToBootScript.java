@@ -121,7 +121,6 @@ public class GroupToBootScript {
    }
 
    private Statement createAttributesFile(String chefBootFile, BootstrapConfig config) {
-      String attributes = config.getAttributes().toString();
       String runlist = Joiner.on(',').join(transform(config.getRunList(), new Function<String, String>() {
          @Override
          public String apply(String input) {
@@ -129,11 +128,17 @@ public class GroupToBootScript {
          }
       }));
 
-      // Append the runlist to the json attributes
       StringBuilder sb = new StringBuilder();
-      // Strip the json ending character
-      sb.append(attributes.trim().substring(0, attributes.length() - 1));
-      sb.append(",\"run_list\":[").append(runlist).append("]");
+      sb.append("{");
+
+      if (config.getAttributes() != null) {
+         String attributes = config.getAttributes().toString();
+         // Omit the opening and closing json characters
+         sb.append(attributes.trim().substring(1, attributes.length() - 1));
+         sb.append(",");
+      }
+
+      sb.append("\"run_list\":[").append(runlist).append("]");
       sb.append("}");
 
       return createOrOverwriteFile(chefBootFile, Collections.singleton(sb.toString()));
