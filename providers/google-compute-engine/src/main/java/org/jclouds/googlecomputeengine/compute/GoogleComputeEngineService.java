@@ -58,7 +58,6 @@ import org.jclouds.domain.Location;
 import org.jclouds.googlecomputeengine.GoogleComputeEngineApi;
 import org.jclouds.googlecomputeengine.compute.options.GoogleComputeEngineTemplateOptions;
 import org.jclouds.googlecomputeengine.domain.Firewall;
-import org.jclouds.googlecomputeengine.domain.Network;
 import org.jclouds.googlecomputeengine.domain.Operation;
 import org.jclouds.googlecomputeengine.features.FirewallApi;
 import org.jclouds.scriptbuilder.functions.InitAdminAccess;
@@ -125,36 +124,26 @@ public final class GoogleComputeEngineService extends BaseComputeService {
    protected synchronized void cleanUpIncidentalResourcesOfDeadNodes(Set<? extends NodeMetadata> deadNodes) {
       Set<String> orphanedGroups = findOrphanedGroups.apply(deadNodes);
       for (String orphanedGroup : orphanedGroups) {
-         cleanUpNetworksAndFirewallsForGroup(orphanedGroup);
+         cleanUpFirewallsForGroup(orphanedGroup);
       }
    }
 
-   private void cleanUpNetworksAndFirewallsForGroup(final String groupName) {
-      String resourceName = namingConvention.create().sharedNameForGroup(groupName);
-      Network network = api.networks().get(resourceName);
+   private void cleanUpFirewallsForGroup(final String groupName) {
+      GroupNamingConvention namingScheme = namingConvention.create();
       FirewallApi firewallApi = api.firewalls();
 
       for (Firewall firewall : concat(firewallApi.list())) {
-         if (firewall == null || !firewall.network().equals(network.selfLink())) {
-            continue;
+         String foundGroup = namingScheme.groupInUniqueNameOrNull(firewall.name());
+         if ((foundGroup != null) && foundGroup.equals(groupName)){
+            AtomicReference<Operation> operation = Atomics.newReference(firewallApi.delete(firewall.name()));
+            operationDone.apply(operation);
+
+            if (operation.get().httpErrorStatusCode() != null) {
+               logger.warn("delete orphaned firewall %s failed. Http Error Code: %d HttpError: %s",
+                     operation.get().targetId(), operation.get().httpErrorStatusCode(),
+                     operation.get().httpErrorMessage());
+            }
          }
-         AtomicReference<Operation> operation = Atomics.newReference(firewallApi.delete(firewall.name()));
-         operationDone.apply(operation);
-
-         if (operation.get().httpErrorStatusCode() != null) {
-            logger.warn("delete orphaned firewall %s failed. Http Error Code: %d HttpError: %s",
-                  operation.get().targetId(), operation.get().httpErrorStatusCode(),
-                  operation.get().httpErrorMessage());
-         }
-      }
-
-      AtomicReference<Operation> operation = Atomics.newReference(api.networks().delete(resourceName));
-
-      operationDone.apply(operation);
-
-      if (operation.get().httpErrorStatusCode() != null) {
-         logger.warn("delete orphaned network failed. Http Error Code: " + operation.get().httpErrorStatusCode() +
-               " HttpError: " + operation.get().httpErrorMessage());
       }
    }
 

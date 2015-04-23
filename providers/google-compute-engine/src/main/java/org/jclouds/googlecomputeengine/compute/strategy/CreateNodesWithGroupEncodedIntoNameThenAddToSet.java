@@ -16,10 +16,13 @@
  */
 package org.jclouds.googlecomputeengine.compute.strategy;
 
+import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkState;
 import static com.google.common.collect.ImmutableList.of;
 
-import java.net.URI;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -39,7 +42,6 @@ import org.jclouds.compute.strategy.CreateNodeWithGroupEncodedIntoName;
 import org.jclouds.compute.strategy.CustomizeNodeAndAddToGoodMapOrPutExceptionIntoBadMap;
 import org.jclouds.compute.strategy.ListNodesStrategy;
 import org.jclouds.googlecomputeengine.GoogleComputeEngineApi;
-import org.jclouds.googlecomputeengine.compute.domain.NetworkAndAddressRange;
 import org.jclouds.googlecomputeengine.compute.functions.FirewallTagNamingConvention;
 import org.jclouds.googlecomputeengine.compute.options.GoogleComputeEngineTemplateOptions;
 import org.jclouds.googlecomputeengine.domain.Firewall;
@@ -53,9 +55,8 @@ import org.jclouds.ssh.SshKeyPairGenerator;
 
 import com.google.common.base.Predicate;
 import com.google.common.base.Strings;
-import com.google.common.cache.LoadingCache;
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Lists;
+import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Multimap;
 import com.google.common.util.concurrent.Atomics;
 import com.google.common.util.concurrent.ListenableFuture;
@@ -67,8 +68,9 @@ public final class CreateNodesWithGroupEncodedIntoNameThenAddToSet extends
    public static final String EXTERIOR_RANGE = "0.0.0.0/0";
    public static final String DEFAULT_INTERNAL_NETWORK_RANGE = "10.0.0.0/8";
 
+   public static final String DEFAULT_NETWORK_NAME = "default";
+
    private final GoogleComputeEngineApi api;
-   private final LoadingCache<NetworkAndAddressRange, Network> networkMap;
    private final Predicate<AtomicReference<Operation>> operationDone;
    private final FirewallTagNamingConvention.Factory firewallTagNamingConvention;
    private final SshKeyPairGenerator keyGenerator;
@@ -85,13 +87,11 @@ public final class CreateNodesWithGroupEncodedIntoNameThenAddToSet extends
          @Named(Constants.PROPERTY_USER_THREADS) ListeningExecutorService userExecutor,
          CustomizeNodeAndAddToGoodMapOrPutExceptionIntoBadMap.Factory customizeNodeAndAddToGoodMapOrPutExceptionIntoBadMapFactory,
          GoogleComputeEngineApi api, Predicate<AtomicReference<Operation>> operationDone,
-         LoadingCache<NetworkAndAddressRange, Network> networkMap,
          FirewallTagNamingConvention.Factory firewallTagNamingConvention, SshKeyPairGenerator keyGenerator) {
       super(addNodeWithGroupStrategy, listNodesStrategy, namingConvention, userExecutor,
             customizeNodeAndAddToGoodMapOrPutExceptionIntoBadMapFactory);
       this.api = api;
       this.operationDone = operationDone;
-      this.networkMap = networkMap;
       this.firewallTagNamingConvention = firewallTagNamingConvention;
       this.keyGenerator = keyGenerator;
    }
@@ -101,17 +101,16 @@ public final class CreateNodesWithGroupEncodedIntoNameThenAddToSet extends
          Set<NodeMetadata> goodNodes, Map<NodeMetadata, Exception> badNodes,
          Multimap<NodeMetadata, CustomizationResponse> customizationResponses) {
 
-      String sharedResourceName = namingConvention.create().sharedNameForGroup(group);
-      Template mutableTemplate = template.clone();
+            Template mutableTemplate = template.clone();
       GoogleComputeEngineTemplateOptions templateOptions = GoogleComputeEngineTemplateOptions.class
             .cast(mutableTemplate.getOptions());
       assert template.getOptions().equals(templateOptions) : "options didn't clone properly";
 
-      // get or insert the network and insert a firewall with the users
-      // configuration
-      Network network = getOrCreateNetwork(templateOptions, sharedResourceName);
+      // Get Network
+      Network network = getNetwork(templateOptions.getNetworks());
+      // Setup Firewall rules
       getOrCreateFirewalls(templateOptions, network, firewallTagNamingConvention.get(group));
-      templateOptions.network(network.selfLink());
+      templateOptions.networks(ImmutableSet.of(network.selfLink().toString()));
       templateOptions.userMetadata(ComputeServiceConstants.NODE_GROUP_KEY, group);
 
       // Configure the default credentials, if needed
@@ -131,12 +130,22 @@ public final class CreateNodesWithGroupEncodedIntoNameThenAddToSet extends
    }
 
    /**
-    * Try and find a network either previously created by jclouds or user
-    * defined.
+    * Try and find a network previously created by the user.
     */
-   private Network getOrCreateNetwork(GoogleComputeEngineTemplateOptions templateOptions, String sharedResourceName) {
-      String networkName = templateOptions.network() != null ? toName(templateOptions.network()) : sharedResourceName;
-      return networkMap.getUnchecked(NetworkAndAddressRange.create(networkName, DEFAULT_INTERNAL_NETWORK_RANGE, null));
+   private Network getNetwork(Set<String> networks) {
+      String networkName;
+      if (networks == null || networks.isEmpty()){
+         networkName = DEFAULT_NETWORK_NAME;
+      }
+      else {
+         Iterator<String> iterator = networks.iterator();
+         networkName = nameFromNetworkString(iterator.next());
+         checkArgument(!iterator.hasNext(), "Error: Please specify only one network in TemplateOptions when using GCE.");
+
+      }
+      Network network = api.networks().get(networkName);
+      checkArgument(network != null, "Error: no network with name %s was found", networkName);
+      return network;
    }
 
    /**
@@ -147,7 +156,7 @@ public final class CreateNodesWithGroupEncodedIntoNameThenAddToSet extends
     * {@link FirewallTagNamingConvention}, with a target tag also following the
     * {@link FirewallTagNamingConvention}, which opens the requested port for
     * all sources on both TCP and UDP protocols.
-    * 
+    *
     * @see org.jclouds.googlecomputeengine.features.FirewallApi#patch(String,
     *      org.jclouds.googlecomputeengine.options.FirewallOptions)
     */
@@ -155,32 +164,70 @@ public final class CreateNodesWithGroupEncodedIntoNameThenAddToSet extends
          FirewallTagNamingConvention naming) {
 
       FirewallApi firewallApi = api.firewalls();
-      List<AtomicReference<Operation>> operations = Lists.newArrayList();
-
-      for (Integer port : templateOptions.getInboundPorts()) {
-         String name = naming.name(port);
-         Firewall firewall = firewallApi.get(name);
-         if (firewall == null) {
-            List<String> ports = ImmutableList.of(String.valueOf(port));
-            List<Rule> rules = ImmutableList.of(Rule.create("tcp", ports), Rule.create("udp", ports));
-            FirewallOptions firewallOptions = new FirewallOptions().name(name).network(network.selfLink())
-                  .allowedRules(rules).sourceTags(templateOptions.getTags())
-                  .sourceRanges(of(DEFAULT_INTERNAL_NETWORK_RANGE, EXTERIOR_RANGE)).targetTags(ImmutableList.of(name));
-            AtomicReference<Operation> operation = Atomics.newReference(firewallApi.createInNetwork(
-                  firewallOptions.name(), network.selfLink(), firewallOptions));
-            operations.add(operation);
-         }
+      int[] inboundPorts = templateOptions.getInboundPorts();
+      if ((inboundPorts == null) || inboundPorts.length == 0){
+         return;
       }
 
-      for (AtomicReference<Operation> operation : operations) {
+      List<String> ports = simplifyPorts(inboundPorts);
+      String name = naming.name(ports);
+      Firewall firewall = firewallApi.get(name);
+      AtomicReference<Operation> operation = null;
+      if (firewall == null) {
+         List<Rule> rules = ImmutableList.of(Rule.create("tcp", ports), Rule.create("udp", ports));
+         FirewallOptions firewallOptions = new FirewallOptions().name(name).network(network.selfLink())
+                  .allowedRules(rules).sourceTags(templateOptions.getTags())
+                  .sourceRanges(of(DEFAULT_INTERNAL_NETWORK_RANGE, EXTERIOR_RANGE))
+                  .targetTags(ImmutableList.of(name));
+
+         operation = Atomics.newReference(firewallApi
+               .createInNetwork(firewallOptions.name(), network.selfLink(), firewallOptions));
+
          operationDone.apply(operation);
          checkState(operation.get().httpErrorStatusCode() == null, "Could not insert firewall, operation failed %s",
                operation);
       }
    }
 
-   private static String toName(URI link) {
-      String path = link.getPath();
-      return path.substring(path.lastIndexOf('/') + 1);
+   // Helper function for simplifying an array of ports to a list of ranges FirewallOptions expects.
+   public static List<String> simplifyPorts(int[] ports){
+      if ((ports == null) || (ports.length == 0)) {
+         return null;
+      }
+      ArrayList<String> output = new ArrayList<String>();
+      Arrays.sort(ports);
+
+      int range_start = ports[0];
+      int range_end = ports[0];
+      for (int i = 1; i < ports.length; i++) {
+         if ((ports[i - 1] == ports[i] - 1) || (ports[i - 1] == ports[i])){
+            // Range continues.
+            range_end = ports[i];
+         }
+         else {
+            // Range ends.
+            output.add(formatRange(range_start, range_end));
+            range_start = ports[i];
+            range_end = ports[i];
+         }
+      }
+      // Make sure we get the last range.
+      output.add(formatRange(range_start, range_end));
+      return output;
+   }
+
+   // Helper function for simplifyPorts. Formats port range strings.
+   private static String formatRange(int start, int finish){
+      if (start == finish){
+         return Integer.toString(start);
+      }
+      else {
+         return String.format("%s-%s", Integer.toString(start), Integer.toString(finish));
+      }
+   }
+
+   // Helper function for getting the network name from the full URI.
+   public static String nameFromNetworkString(String networkString) {
+      return networkString.substring(networkString.lastIndexOf('/') + 1);
    }
 }

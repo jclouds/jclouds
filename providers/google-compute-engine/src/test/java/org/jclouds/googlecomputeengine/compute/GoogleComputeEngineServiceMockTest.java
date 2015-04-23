@@ -73,38 +73,33 @@ public class GoogleComputeEngineServiceMockTest extends BaseGoogleComputeEngineA
       assertSent(server, "GET", "/projects/party/aggregated/machineTypes");
    }
 
-   public void networksAndFirewallDeletedWhenAllGroupNodesAreTerminated() throws IOException, InterruptedException {
-      server.enqueue(instanceWithNetworkAndStatus("test-delete-networks", "test-network", RUNNING));
+   public void firewallDeletedWhenAllGroupNodesAreTerminated() throws IOException, InterruptedException {
+      server.enqueue(instanceWithNetworkAndStatus("test-delete-1", "default", RUNNING));
       server.enqueue(singleRegionSingleZoneResponse());
-      server.enqueue(jsonResponse("/aggregated_machinetype_list.json"));
-      server.enqueue(jsonResponse("/operation.json"));
+      server.enqueue(jsonResponse("/aggregated_machinetype_list.json")); // Why are we getting machineTypes to delete an instance?
+      server.enqueue(jsonResponse("/operation.json")); // instance delete
       server.enqueue(jsonResponse("/zone_operation.json"));
-      server.enqueue(instanceWithNetworkAndStatus("test-delete-networks", "test-network", TERMINATED));
-      server.enqueue(aggregatedListWithInstanceNetworkAndStatus("test-delete-networks", "test-network", TERMINATED));
-      server.enqueue(jsonResponse("/GoogleComputeEngineServiceExpectTest/network_get.json"));
+      server.enqueue(instanceWithNetworkAndStatus("test-delete-1", "default", TERMINATED));
+      server.enqueue(aggregatedListWithInstanceNetworkAndStatus("test-delete-1", "default", TERMINATED));
       server.enqueue(jsonResponse("/GoogleComputeEngineServiceExpectTest/firewall_list.json"));
-      server.enqueue(jsonResponse("/operation.json"));
-      server.enqueue(jsonResponse("/zone_operation.json"));
       server.enqueue(jsonResponse("/operation.json"));
       server.enqueue(jsonResponse("/zone_operation.json"));
 
       ComputeService computeService = computeService();
-      computeService.destroyNode(url("/jclouds/zones/us-central1-a/instances/test-delete-networks"));
+      computeService.destroyNode(url("/jclouds/zones/us-central1-a/instances/test-delete-1"));
 
-      assertSent(server, "GET", "/jclouds/zones/us-central1-a/instances/test-delete-networks");
+      assertSent(server, "GET", "/jclouds/zones/us-central1-a/instances/test-delete-1");
       assertSent(server, "GET", "/projects/party/regions");
-      assertSent(server, "GET", "/projects/party/aggregated/machineTypes");
-      assertSent(server, "DELETE", "/jclouds/zones/us-central1-a/instances/test-delete-networks");
+      assertSent(server, "GET", "/projects/party/aggregated/machineTypes"); // Why are we getting machineTypes to delete an instance?
+      assertSent(server, "DELETE", "/jclouds/zones/us-central1-a/instances/test-delete-1"); // instance delete
       assertSent(server, "GET", "/projects/party/zones/us-central1-a/operations/operation-1354084865060");
-      assertSent(server, "GET", "/projects/party/zones/us-central1-a/instances/test-delete-networks");
+      assertSent(server, "GET", "/projects/party/zones/us-central1-a/instances/test-delete-1"); // get instance
       assertSent(server, "GET", "/projects/party/aggregated/instances");
-      assertSent(server, "GET", "/projects/party/global/networks/jclouds-test-delete");
       assertSent(server, "GET", "/projects/party/global/firewalls");
-      assertSent(server, "DELETE", "/projects/party/global/firewalls/jclouds-test-delete");
-      assertSent(server, "GET", "/projects/party/zones/us-central1-a/operations/operation-1354084865060");
-      assertSent(server, "DELETE", "/projects/party/global/networks/jclouds-test-delete");
+      assertSent(server, "DELETE", "/projects/party/global/firewalls/jclouds-test-delete-34sf");
       assertSent(server, "GET", "/projects/party/zones/us-central1-a/operations/operation-1354084865060");
    }
+
 
    public void listAssignableLocations() throws Exception {
       server.enqueue(singleRegionSingleZoneResponse());
@@ -146,17 +141,13 @@ public class GoogleComputeEngineServiceMockTest extends BaseGoogleComputeEngineA
       assertSent(server, "GET", "/projects/party/aggregated/machineTypes");
    }
 
-   public void createNodeWhenNetworkNorFirewallExistDoesNotExist() throws Exception {
+   public void createNodeWhenFirewallDoesNotExist() throws Exception {
       server.enqueue(singleRegionSingleZoneResponse());
       server.enqueue(jsonResponse("/image_list.json"));
       server.enqueue(jsonResponse("/image_list_debian.json")); // per IMAGE_PROJECTS = "debian-cloud"
       server.enqueue(jsonResponse("/aggregated_machinetype_list.json"));
-      server.enqueue(new MockResponse().setResponseCode(404)); // Network
-      server.enqueue(new MockResponse().setResponseCode(404)); // Network again?
-      server.enqueue(jsonResponse("/operation.json")); // Create Network
-      server.enqueue(jsonResponse("/zone_operation.json"));
-      server.enqueue(jsonResponse("/network_get.json"));
-      server.enqueue(new MockResponse().setResponseCode(404)); // Firewall
+      server.enqueue(jsonResponse("/network_get_default.json"));
+      server.enqueue(new MockResponse().setResponseCode(404)); // Get Firewall
       server.enqueue(jsonResponse("/operation.json")); // Create Firewall
       server.enqueue(jsonResponse("/zone_operation.json"));
       server.enqueue(aggregatedListWithInstanceNetworkAndStatus("test-0", "test-network", RUNNING));
@@ -179,14 +170,9 @@ public class GoogleComputeEngineServiceMockTest extends BaseGoogleComputeEngineA
       assertSent(server, "GET", "/projects/party/global/images");
       assertSent(server, "GET", "/projects/debian-cloud/global/images");
       assertSent(server, "GET", "/projects/party/aggregated/machineTypes");
-      assertSent(server, "GET", "/projects/party/global/networks/jclouds-test");
-      assertSent(server, "GET", "/projects/party/global/networks/jclouds-test");
-      assertSent(server, "POST", "/projects/party/global/networks",
-            "{\"name\":\"jclouds-test\",\"IPv4Range\":\"10.0.0.0/8\"}");
-      assertSent(server, "GET", "/projects/party/zones/us-central1-a/operations/operation-1354084865060");
-      assertSent(server, "GET", "/projects/party/global/networks/jclouds-test");
-      assertSent(server, "GET", "/projects/party/global/firewalls/jclouds-test-port-22");
-      assertSent(server, "POST", "/projects/party/global/firewalls",
+      assertSent(server, "GET", "/projects/party/global/networks/default");
+      assertSent(server, "GET", "/projects/party/global/firewalls/jclouds-test-65f"); // Get Firewall
+      assertSent(server, "POST", "/projects/party/global/firewalls", // Create Firewall
             stringFromResource("/firewall_insert_2.json"));
 
       assertSent(server, "GET", "/projects/party/zones/us-central1-a/operations/operation-1354084865060");

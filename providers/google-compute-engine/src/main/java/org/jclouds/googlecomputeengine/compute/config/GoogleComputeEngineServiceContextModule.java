@@ -45,9 +45,6 @@ import org.jclouds.compute.options.TemplateOptions;
 import org.jclouds.domain.Location;
 import org.jclouds.googlecomputeengine.compute.GoogleComputeEngineService;
 import org.jclouds.googlecomputeengine.compute.GoogleComputeEngineServiceAdapter;
-import org.jclouds.googlecomputeengine.compute.domain.NetworkAndAddressRange;
-import org.jclouds.googlecomputeengine.compute.functions.CreateNetworkIfNeeded;
-import org.jclouds.googlecomputeengine.compute.functions.FindNetworkOrCreate;
 import org.jclouds.googlecomputeengine.compute.functions.FirewallTagNamingConvention;
 import org.jclouds.googlecomputeengine.compute.functions.GoogleComputeEngineImageToImage;
 import org.jclouds.googlecomputeengine.compute.functions.InstanceToNodeMetadata;
@@ -62,7 +59,6 @@ import org.jclouds.googlecomputeengine.compute.strategy.CreateNodesWithGroupEnco
 import org.jclouds.googlecomputeengine.domain.Image;
 import org.jclouds.googlecomputeengine.domain.Instance;
 import org.jclouds.googlecomputeengine.domain.MachineType;
-import org.jclouds.googlecomputeengine.domain.Network;
 import org.jclouds.googlecomputeengine.domain.Operation;
 import org.jclouds.location.suppliers.ImplicitLocationSupplier;
 import org.jclouds.location.suppliers.implicit.FirstZone;
@@ -72,9 +68,6 @@ import com.google.common.base.Functions;
 import com.google.common.base.Optional;
 import com.google.common.base.Predicate;
 import com.google.common.base.Supplier;
-import com.google.common.cache.CacheBuilder;
-import com.google.common.cache.CacheLoader;
-import com.google.common.cache.LoadingCache;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
 import com.google.inject.Injector;
@@ -121,12 +114,6 @@ public final class GoogleComputeEngineServiceContextModule
       bind(new TypeLiteral<Predicate<String>>() {
       }).to(AllNodesInGroupTerminated.class);
 
-      bind(new TypeLiteral<Function<NetworkAndAddressRange, Network>>() {
-      }).to(CreateNetworkIfNeeded.class);
-
-      bind(new TypeLiteral<CacheLoader<NetworkAndAddressRange, Network>>() {
-      }).to(FindNetworkOrCreate.class);
-
       bind(FirewallTagNamingConvention.Factory.class).in(Scopes.SINGLETON);
       bindHttpApi(binder(), Resources.class);
    }
@@ -171,11 +158,6 @@ public final class GoogleComputeEngineServiceContextModule
             return result.build();
          }
       }, seconds, SECONDS);
-   }
-
-   @Provides @Singleton
-   LoadingCache<NetworkAndAddressRange, Network> networkMap(CacheLoader<NetworkAndAddressRange, Network> in) {
-      return CacheBuilder.newBuilder().build(in);
    }
 
    @Override protected Optional<ImageExtension> provideImageExtension(Injector i) {

@@ -23,8 +23,10 @@ import static com.google.common.collect.Lists.newArrayList;
 import static java.lang.String.format;
 import static org.jclouds.googlecloud.internal.ListPages.concat;
 import static org.jclouds.googlecomputeengine.config.GoogleComputeEngineProperties.IMAGE_PROJECTS;
+import static org.jclouds.googlecomputeengine.compute.strategy.CreateNodesWithGroupEncodedIntoNameThenAddToSet.simplifyPorts;
 
 import java.net.URI;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicReference;
@@ -111,26 +113,35 @@ public final class GoogleComputeEngineServiceAdapter
    @Override public NodeAndInitialCredentials<Instance> createNodeWithGroupEncodedIntoName(String group, String name,
          Template template) {
       GoogleComputeEngineTemplateOptions options = GoogleComputeEngineTemplateOptions.class.cast(template.getOptions());
-      checkNotNull(options.network(), "template options must specify a network");
+
+      checkNotNull(options.getNetworks(), "template options must specify a network");
       checkNotNull(template.getHardware().getUri(), "hardware must have a URI");
       checkNotNull(template.getImage().getUri(), "image URI is null");
 
       List<AttachDisk> disks = Lists.newArrayList();
       disks.add(AttachDisk.newBootDisk(template.getImage().getUri()));
 
+      Iterator<String> networks = options.getNetworks().iterator();
+
+      URI network = URI.create(networks.next());
+      assert !networks.hasNext() : "Error: Options should specify only one network";
+
       NewInstance newInstance = NewInstance.create(
             name, // name
             template.getHardware().getUri(), // machineType
-            options.network(), // network
+            network, // network
             disks, // disks
             group // description
       );
 
-      // Add tags from template and for security groups
+      // Add tags from template
       newInstance.tags().items().addAll(options.getTags());
+
+      // Add tags for firewalls
       FirewallTagNamingConvention naming = firewallTagNamingConvention.get(group);
-      for (int port : options.getInboundPorts()) {
-         newInstance.tags().items().add(naming.name(port));
+      List<String> ports = simplifyPorts(options.getInboundPorts());
+      if (ports != null){
+         newInstance.tags().items().add(naming.name(ports));
       }
 
       // Add metadata from template and for ssh key and image id

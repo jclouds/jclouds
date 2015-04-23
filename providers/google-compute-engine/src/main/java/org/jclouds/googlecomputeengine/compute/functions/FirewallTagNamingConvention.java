@@ -16,6 +16,8 @@
  */
 package org.jclouds.googlecomputeengine.compute.functions;
 
+import java.util.List;
+
 import javax.inject.Inject;
 
 import org.jclouds.compute.functions.GroupNamingConvention;
@@ -46,9 +48,17 @@ public final class FirewallTagNamingConvention {
       this.sharedResourceName = sharedResourceName;
    }
 
-   public String name(int port) {
-      return String.format("%s-port-%s", sharedResourceName, port);
+   public String name(List<String> ports) {
+      final int prime = 31;
+      int result = 1;
+      for (String s : ports){
+         result = result * prime + s.hashCode();
+         // TODO(broudy): this may break between java versions! Consider a different implementation.
+      }
+
+      return String.format("%s-%s", sharedResourceName, Integer.toHexString(result));
    }
+
 
    public Predicate<String> isFirewallTag() {
       return new Predicate<String>() {

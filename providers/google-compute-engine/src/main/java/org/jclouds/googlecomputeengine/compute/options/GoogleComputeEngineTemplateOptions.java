@@ -16,18 +16,15 @@
  */
 package org.jclouds.googlecomputeengine.compute.options;
 
-import java.net.URI;
 import java.util.Map;
 
 import org.jclouds.compute.options.TemplateOptions;
 import org.jclouds.domain.LoginCredentials;
-import org.jclouds.javax.annotation.Nullable;
 import org.jclouds.scriptbuilder.domain.Statement;
 
 /** Instance options specific to Google Compute Engine. */
 public final class GoogleComputeEngineTemplateOptions extends TemplateOptions {
 
-   private URI network = null;
    private boolean autoCreateKeyPair = true;
 
    @Override
@@ -42,20 +39,8 @@ public final class GoogleComputeEngineTemplateOptions extends TemplateOptions {
       super.copyTo(to);
       if (to instanceof GoogleComputeEngineTemplateOptions) {
          GoogleComputeEngineTemplateOptions eTo = GoogleComputeEngineTemplateOptions.class.cast(to);
-         eTo.network(network());
          eTo.autoCreateKeyPair(autoCreateKeyPair());
       }
-   }
-
-   /** @see #network()  */
-   public GoogleComputeEngineTemplateOptions network(URI network) {
-      this.network = network;
-      return this;
-   }
-
-   /** The network instances will attach to. When absent, a new network will be created for the project. */
-   @Nullable public URI network() {
-      return network;
    }
 
    /**

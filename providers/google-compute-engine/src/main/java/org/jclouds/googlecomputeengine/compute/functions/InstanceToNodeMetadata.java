@@ -89,7 +89,6 @@ public final class InstanceToNodeMetadata implements Function<Instance, NodeMeta
       URI bootImage = diskToSourceImage.get(input.disks().get(0).source());
 
       builder.id(input.selfLink().toString())
-             .providerId(input.id())
              .name(input.name())
              .providerId(input.id())
              .hostname(input.name())

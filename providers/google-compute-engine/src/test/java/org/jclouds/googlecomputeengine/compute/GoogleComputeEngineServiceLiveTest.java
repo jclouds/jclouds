@@ -21,6 +21,7 @@ import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertTrue;
 
 import java.util.Properties;
+import java.util.Set;
 
 import org.jclouds.compute.domain.Hardware;
 import org.jclouds.compute.domain.NodeMetadata;
@@ -112,5 +113,13 @@ public class GoogleComputeEngineServiceLiveTest extends BaseComputeServiceLiveTe
    @Override
    protected Module getSshModule() {
       return new SshjSshClientModule();
+   }
+
+   @Override
+   protected void checkTagsInNodeEquals(NodeMetadata node, ImmutableSet<String> tags) {
+      Set<String> nodeTags = node.getTags();
+      for (String tag : tags){
+         assert nodeTags.contains(tag) : String.format("node tags did not match %s %s node:", tags, nodeTags, node);
+      }
    }
 }

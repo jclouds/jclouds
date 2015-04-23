@@ -45,8 +45,8 @@ public class ParseNetworkTest extends BaseGoogleComputeEngineParseTest<Network> 
             "13024414170909937976", // id
             parse("2012-10-24T20:13:19.967"), // creationTimestamp
             URI.create(baseUrl + "/party/networks/jclouds-test"), // selfLink
-            "default", // name
-            "Default network for the project", // description
+            "jclouds-test", // name
+            "A custom network for the project", // description
             "10.0.0.0/8", // rangeIPv4
             "10.0.0.1" // gatewayIPv4
       );
