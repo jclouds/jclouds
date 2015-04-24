@@ -17,6 +17,7 @@
 package org.jclouds.s3;
 
 import static com.google.common.hash.Hashing.md5;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.jclouds.io.Payloads.newByteArrayPayload;
 import static org.jclouds.s3.options.CopyObjectOptions.Builder.ifSourceETagDoesntMatch;
 import static org.jclouds.s3.options.CopyObjectOptions.Builder.ifSourceETagMatches;
@@ -508,6 +509,8 @@ public class S3ClientLiveTest extends BaseBlobStoreIntegrationTest {
          String key = "constitution.txt";
          String uploadId = getApi().initiateMultipartUpload(containerName,
                   ObjectMetadataBuilder.create().key(key).contentMD5(oneHundredOneConstitutionsMD5.asBytes()).build());
+         assertThat(getApi().listMultipartParts(containerName, key, uploadId)).isEmpty();
+
          byte[] buffer = oneHundredOneConstitutions.read();
          assertEquals(oneHundredOneConstitutions.size(), (long) buffer.length);
 
@@ -526,6 +529,7 @@ public class S3ClientLiveTest extends BaseBlobStoreIntegrationTest {
             // available there.
             eTagOf1 = getApi().uploadPart(containerName, key, 1, uploadId, part1);
          }
+         assertThat(getApi().listMultipartParts(containerName, key, uploadId)).containsOnlyKeys(1);
 
          String eTag = getApi().completeMultipartUpload(containerName, key, uploadId, ImmutableMap.of(1, eTagOf1));
 

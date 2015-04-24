@@ -99,6 +99,7 @@ import org.jclouds.s3.xml.DeleteResultHandler;
 import org.jclouds.s3.xml.ListAllMyBucketsHandler;
 import org.jclouds.s3.xml.ListBucketHandler;
 import org.jclouds.s3.xml.LocationConstraintHandler;
+import org.jclouds.s3.xml.PartIdsFromHttpResponse;
 import org.jclouds.s3.xml.PayerHandler;
 
 import com.google.inject.Provides;
@@ -717,4 +718,12 @@ public interface S3Client extends Closeable {
          BindAsHostPrefixIfConfigured.class) @ParamValidators(BucketNameValidator.class) String bucketName,
          @PathParam("key") String key, @QueryParam("uploadId") String uploadId,
          @BinderParam(BindPartIdsAndETagsToRequest.class) Map<Integer, String> parts);
+
+   @Named("ListMultipartParts")
+   @GET
+   @Path("/{key}")
+   @XMLResponseParser(PartIdsFromHttpResponse.class)
+   Map<Integer, String> listMultipartParts(@Bucket @EndpointParam(parser = AssignCorrectHostnameForBucket.class)
+         @BinderParam(BindAsHostPrefixIfConfigured.class) @ParamValidators(BucketNameValidator.class) String bucketName,
+         @PathParam("key") String key, @QueryParam("uploadId") String uploadId);
 }
