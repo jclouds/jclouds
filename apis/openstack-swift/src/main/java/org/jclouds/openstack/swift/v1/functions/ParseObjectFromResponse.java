@@ -65,6 +65,9 @@ public class ParseObjectFromResponse implements Function<HttpResponse, SwiftObje
 
       String etag = from.getFirstHeaderOrNull(ETAG);
       if (etag != null) {
+         if (etag.startsWith("\"") && etag.endsWith("\"") && etag.length() > 1) {
+            etag = etag.substring(1, etag.length() - 1);
+         }
          payload.getContentMetadata().setContentMD5(HashCode.fromBytes(base16().lowerCase().decode(etag)));
       }
 

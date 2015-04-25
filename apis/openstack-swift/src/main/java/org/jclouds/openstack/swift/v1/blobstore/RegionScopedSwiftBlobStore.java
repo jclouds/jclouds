@@ -27,6 +27,7 @@ import static org.jclouds.openstack.swift.v1.options.PutOptions.Builder.metadata
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.UUID;
 
 import javax.inject.Inject;
 
@@ -37,6 +38,8 @@ import org.jclouds.blobstore.domain.BlobAccess;
 import org.jclouds.blobstore.domain.BlobBuilder;
 import org.jclouds.blobstore.domain.BlobMetadata;
 import org.jclouds.blobstore.domain.ContainerAccess;
+import org.jclouds.blobstore.domain.MultipartPart;
+import org.jclouds.blobstore.domain.MultipartUpload;
 import org.jclouds.blobstore.domain.MutableBlobMetadata;
 import org.jclouds.blobstore.domain.PageSet;
 import org.jclouds.blobstore.domain.StorageMetadata;
@@ -62,6 +65,7 @@ import org.jclouds.openstack.swift.v1.blobstore.functions.ToListContainerOptions
 import org.jclouds.openstack.swift.v1.blobstore.functions.ToResourceMetadata;
 import org.jclouds.openstack.swift.v1.domain.Container;
 import org.jclouds.openstack.swift.v1.domain.ObjectList;
+import org.jclouds.openstack.swift.v1.domain.Segment;
 import org.jclouds.openstack.swift.v1.domain.SwiftObject;
 import org.jclouds.openstack.swift.v1.features.BulkApi;
 import org.jclouds.openstack.swift.v1.features.ObjectApi;
@@ -76,6 +80,7 @@ import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
 import com.google.common.collect.FluentIterable;
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
@@ -393,6 +398,72 @@ public class RegionScopedSwiftBlobStore implements BlobStore {
       Container container = api.getContainerApi(regionId).get(containerName);
       // undefined if container doesn't exist, so default to zero
       return container != null ? container.getObjectCount() : 0;
+   }
+
+   @Override
+   public MultipartUpload initiateMultipartUpload(String container, BlobMetadata blobMetadata) {
+      String uploadId = UUID.randomUUID().toString();
+      return MultipartUpload.create(container, blobMetadata.getName(), uploadId, blobMetadata);
+   }
+
+   @Override
+   public void abortMultipartUpload(MultipartUpload mpu) {
+      ImmutableList.Builder<String> names = ImmutableList.builder();
+      for (MultipartPart part : listMultipartUpload(mpu)) {
+         names.add(mpu.blobName() + "-" + part.partNumber());
+      }
+      removeBlobs(mpu.containerName(), names.build());
+   }
+
+   @Override
+   public String completeMultipartUpload(MultipartUpload mpu, List<MultipartPart> parts) {
+      ImmutableList.Builder<Segment> builder = ImmutableList.builder();
+      for (MultipartPart part : parts) {
+         String path = mpu.containerName() + "/" + mpu.blobName() + "-" + part.partNumber();
+         builder.add(Segment.builder().path(path).etag(part.partETag()).sizeBytes(part.partSize()).build());
+      }
+      Map<String, String> metadata = ImmutableMap.of();  // TODO: how to populate this from mpu.blobMetadata()?
+      return api.getStaticLargeObjectApi(regionId, mpu.containerName()).replaceManifest(mpu.blobName(),
+            builder.build(), metadata);
+   }
+
+   @Override
+   public MultipartPart uploadMultipartPart(MultipartUpload mpu, int partNumber, Payload payload) {
+      String partName = mpu.blobName() + "-" + partNumber;
+      String eTag = api.getObjectApi(regionId, mpu.containerName()).put(partName, payload);
+      long partSize = payload.getContentMetadata().getContentLength();
+      return MultipartPart.create(partNumber, partSize, eTag);
+   }
+
+   @Override
+   public List<MultipartPart> listMultipartUpload(MultipartUpload mpu) {
+      ImmutableList.Builder<MultipartPart> parts = ImmutableList.builder();
+      PageSet<? extends StorageMetadata> pageSet = list(mpu.containerName(),
+            new ListContainerOptions().afterMarker(mpu.blobName()));
+      // TODO: pagination
+      for (StorageMetadata sm : pageSet) {
+         if (!sm.getName().startsWith(mpu.blobName() + "-")) {
+            break;
+         }
+         int partNumber = Integer.parseInt(sm.getName().substring((mpu.blobName() + "-").length()));
+         parts.add(MultipartPart.create(partNumber, sm.getSize(), sm.getETag()));
+      }
+      return parts.build();
+   }
+
+   @Override
+   public long getMinimumMultipartPartSize() {
+      return 1024 * 1024;
+   }
+
+   @Override
+   public long getMaximumMultipartPartSize() {
+      return 5L * 1024L * 1024L * 1024L;
+   }
+
+   @Override
+   public int getMaximumNumberOfParts() {
+      return Integer.MAX_VALUE;
    }
 
    @Override
