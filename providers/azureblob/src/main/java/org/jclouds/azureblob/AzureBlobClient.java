@@ -396,7 +396,7 @@ public interface AzureBlobClient extends Closeable {
    @GET
    @Path("{container}/{name}")
    @XMLResponseParser(BlobBlocksResultsHandler.class)
-   @QueryParams(keys = { "comp" }, values = { "blocklist" })
+   @QueryParams(keys = { "comp", "blocklisttype" }, values = { "blocklist", "all" })
    ListBlobBlocksResponse getBlockList(
          @PathParam("container") @ParamValidators(ContainerNameValidator.class) String container,
          @PathParam("name") String name);
