@@ -40,6 +40,7 @@ import org.jclouds.collect.Memoized;
 import org.jclouds.domain.Location;
 import org.jclouds.s3.blobstore.S3BlobStore;
 import org.jclouds.s3.blobstore.functions.BlobToObject;
+import org.jclouds.s3.blobstore.functions.BlobToObjectMetadata;
 import org.jclouds.s3.blobstore.functions.BucketToResourceList;
 import org.jclouds.s3.blobstore.functions.ContainerToBucketListOptions;
 import org.jclouds.s3.blobstore.functions.ObjectToBlob;
@@ -69,12 +70,13 @@ public class AWSS3BlobStore extends S3BlobStore {
             Function<Set<BucketMetadata>, PageSet<? extends StorageMetadata>> convertBucketsToStorageMetadata,
             ContainerToBucketListOptions container2BucketListOptions, BucketToResourceList bucket2ResourceList,
             ObjectToBlob object2Blob, BlobToHttpGetOptions blob2ObjectGetOptions, BlobToObject blob2Object,
+            BlobToObjectMetadata blob2ObjectMetadata,
             ObjectToBlobMetadata object2BlobMd, Provider<FetchBlobMetadata> fetchBlobMetadataProvider,
             LoadingCache<String, AccessControlList> bucketAcls,
             Provider<MultipartUploadStrategy> multipartUploadStrategy) {
       super(context, blobUtils, defaultLocation, locations, sync, convertBucketsToStorageMetadata,
                container2BucketListOptions, bucket2ResourceList, object2Blob, blob2ObjectGetOptions, blob2Object,
-               object2BlobMd, fetchBlobMetadataProvider, bucketAcls,
+               blob2ObjectMetadata, object2BlobMd, fetchBlobMetadataProvider, bucketAcls,
                multipartUploadStrategy);
       this.bucketAcls = bucketAcls;
       this.blob2Object = blob2Object;

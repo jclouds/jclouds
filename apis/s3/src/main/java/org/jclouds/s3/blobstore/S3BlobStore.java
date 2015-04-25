@@ -34,6 +34,8 @@ import org.jclouds.blobstore.domain.Blob;
 import org.jclouds.blobstore.domain.BlobAccess;
 import org.jclouds.blobstore.domain.BlobMetadata;
 import org.jclouds.blobstore.domain.ContainerAccess;
+import org.jclouds.blobstore.domain.MultipartPart;
+import org.jclouds.blobstore.domain.MultipartUpload;
 import org.jclouds.blobstore.domain.PageSet;
 import org.jclouds.blobstore.domain.StorageMetadata;
 import org.jclouds.blobstore.functions.BlobToHttpGetOptions;
@@ -48,8 +50,10 @@ import org.jclouds.collect.Memoized;
 import org.jclouds.domain.Location;
 import org.jclouds.http.options.GetOptions;
 import org.jclouds.io.ContentMetadata;
+import org.jclouds.io.Payload;
 import org.jclouds.s3.S3Client;
 import org.jclouds.s3.blobstore.functions.BlobToObject;
+import org.jclouds.s3.blobstore.functions.BlobToObjectMetadata;
 import org.jclouds.s3.blobstore.functions.BucketToResourceList;
 import org.jclouds.s3.blobstore.functions.ContainerToBucketListOptions;
 import org.jclouds.s3.blobstore.functions.ObjectToBlob;
@@ -72,6 +76,8 @@ import com.google.common.base.Predicate;
 import com.google.common.base.Supplier;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Iterables;
 
 @Singleton
@@ -83,6 +89,7 @@ public class S3BlobStore extends BaseBlobStore {
    private final ObjectToBlob object2Blob;
    private final BlobToObject blob2Object;
    private final ObjectToBlobMetadata object2BlobMd;
+   private final BlobToObjectMetadata blob2ObjectMetadata;
    private final BlobToHttpGetOptions blob2ObjectGetOptions;
    private final Provider<FetchBlobMetadata> fetchBlobMetadataProvider;
    private final LoadingCache<String, AccessControlList> bucketAcls;
@@ -94,6 +101,7 @@ public class S3BlobStore extends BaseBlobStore {
             Function<Set<BucketMetadata>, PageSet<? extends StorageMetadata>> convertBucketsToStorageMetadata,
             ContainerToBucketListOptions container2BucketListOptions, BucketToResourceList bucket2ResourceList,
             ObjectToBlob object2Blob, BlobToHttpGetOptions blob2ObjectGetOptions, BlobToObject blob2Object,
+            BlobToObjectMetadata blob2ObjectMetadata,
             ObjectToBlobMetadata object2BlobMd, Provider<FetchBlobMetadata> fetchBlobMetadataProvider,
             LoadingCache<String, AccessControlList> bucketAcls,
             Provider<MultipartUploadStrategy> multipartUploadStrategy) {
@@ -106,6 +114,7 @@ public class S3BlobStore extends BaseBlobStore {
       this.object2Blob = checkNotNull(object2Blob, "object2Blob");
       this.blob2Object = checkNotNull(blob2Object, "blob2Object");
       this.object2BlobMd = checkNotNull(object2BlobMd, "object2BlobMd");
+      this.blob2ObjectMetadata = checkNotNull(blob2ObjectMetadata, "blob2ObjectMetadata");
       this.fetchBlobMetadataProvider = checkNotNull(fetchBlobMetadataProvider, "fetchBlobMetadataProvider");
       this.bucketAcls = checkNotNull(bucketAcls, "bucketAcls");
       this.multipartUploadStrategy = checkNotNull(multipartUploadStrategy, "multipartUploadStrategy");
@@ -357,6 +366,59 @@ public class S3BlobStore extends BaseBlobStore {
                .revokePermission(GroupGranteeURI.ALL_USERS, Permission.WRITE);
       }
       sync.putObjectACL(container, name, acl);
+   }
+
+   @Override
+   public MultipartUpload initiateMultipartUpload(String container, BlobMetadata blobMetadata) {
+      String id = sync.initiateMultipartUpload(container, blob2ObjectMetadata.apply(blobMetadata));
+      return MultipartUpload.create(container, blobMetadata.getName(), id, blobMetadata);
+   }
+
+   @Override
+   public void abortMultipartUpload(MultipartUpload mpu) {
+      sync.abortMultipartUpload(mpu.containerName(), mpu.blobName(), mpu.id());
+   }
+
+   @Override
+   public String completeMultipartUpload(MultipartUpload mpu, List<MultipartPart> parts) {
+      ImmutableMap.Builder<Integer, String> builder = ImmutableMap.builder();
+      for (MultipartPart part : parts) {
+         builder.put(part.partNumber(), part.partETag());
+      }
+      return sync.completeMultipartUpload(mpu.containerName(), mpu.blobName(), mpu.id(), builder.build());
+   }
+
+   @Override
+   public MultipartPart uploadMultipartPart(MultipartUpload mpu, int partNumber, Payload payload) {
+      long partSize = -1;  // TODO: how to get this from payload?
+      String eTag = sync.uploadPart(mpu.containerName(), mpu.blobName(), partNumber, mpu.id(), payload);
+      return MultipartPart.create(partNumber, partSize, eTag);
+   }
+
+   @Override
+   public List<MultipartPart> listMultipartUpload(MultipartUpload mpu) {
+      ImmutableList.Builder<MultipartPart> parts = ImmutableList.builder();
+      Map<Integer, String> s3Parts = sync.listMultipartParts(mpu.containerName(), mpu.blobName(), mpu.id());
+      for (Map.Entry<Integer, String> entry : s3Parts.entrySet()) {
+         long partSize = -1;  // TODO: could call getContentLength but did not above
+         parts.add(MultipartPart.create(entry.getKey(), partSize, "\"" + entry.getValue() + "\""));
+      }
+      return parts.build();
+   }
+
+   @Override
+   public long getMinimumMultipartPartSize() {
+      return 5 * 1024 * 1024;
+   }
+
+   @Override
+   public long getMaximumMultipartPartSize() {
+      return 5L * 1024L * 1024L * 1024L;
+   }
+
+   @Override
+   public int getMaximumNumberOfParts() {
+      return 10 * 1000;
    }
 
    /**
