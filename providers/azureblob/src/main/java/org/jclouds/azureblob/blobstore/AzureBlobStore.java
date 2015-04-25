@@ -23,6 +23,7 @@ import java.net.URI;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.UUID;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
@@ -37,16 +38,21 @@ import org.jclouds.azureblob.blobstore.functions.ContainerToResourceMetadata;
 import org.jclouds.azureblob.blobstore.functions.ListBlobsResponseToResourceList;
 import org.jclouds.azureblob.blobstore.functions.ListOptionsToListBlobsOptions;
 import org.jclouds.azureblob.blobstore.strategy.MultipartUploadStrategy;
+import org.jclouds.azureblob.domain.AzureBlob;
+import org.jclouds.azureblob.domain.BlobBlockProperties;
 import org.jclouds.azureblob.domain.ContainerProperties;
 import org.jclouds.azureblob.domain.ListBlobBlocksResponse;
 import org.jclouds.azureblob.domain.PublicAccess;
 import org.jclouds.azureblob.options.CopyBlobOptions;
 import org.jclouds.azureblob.options.ListBlobsOptions;
 import org.jclouds.blobstore.BlobStoreContext;
+import org.jclouds.blobstore.KeyNotFoundException;
 import org.jclouds.blobstore.domain.Blob;
 import org.jclouds.blobstore.domain.BlobAccess;
 import org.jclouds.blobstore.domain.BlobMetadata;
 import org.jclouds.blobstore.domain.ContainerAccess;
+import org.jclouds.blobstore.domain.MultipartPart;
+import org.jclouds.blobstore.domain.MultipartUpload;
 import org.jclouds.blobstore.domain.PageSet;
 import org.jclouds.blobstore.domain.StorageMetadata;
 import org.jclouds.blobstore.domain.internal.PageSetImpl;
@@ -61,11 +67,15 @@ import org.jclouds.collect.Memoized;
 import org.jclouds.domain.Location;
 import org.jclouds.http.options.GetOptions;
 import org.jclouds.io.ContentMetadata;
+import org.jclouds.io.MutableContentMetadata;
 
 import com.google.common.base.Function;
 import com.google.common.base.Optional;
 import com.google.common.base.Supplier;
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
+import com.google.common.io.BaseEncoding;
+import com.google.common.primitives.Ints;
 import org.jclouds.io.ContentMetadataBuilder;
 import org.jclouds.io.Payload;
 
@@ -364,5 +374,79 @@ public class AzureBlobStore extends BaseBlobStore {
    @Override
    public void setBlobAccess(String container, String key, BlobAccess access) {
       throw new UnsupportedOperationException("unsupported in Azure");
+   }
+
+   @Override
+   public MultipartUpload initiateMultipartUpload(String container, BlobMetadata blobMetadata) {
+      String uploadId = UUID.randomUUID().toString();
+      return MultipartUpload.create(container, blobMetadata.getName(), uploadId, blobMetadata);
+   }
+
+   @Override
+   public void abortMultipartUpload(MultipartUpload mpu) {
+      sync.deleteBlob(mpu.containerName(), mpu.blobName());
+   }
+
+   @Override
+   public String completeMultipartUpload(MultipartUpload mpu, List<MultipartPart> parts) {
+      AzureBlob azureBlob = sync.newBlob();
+
+      // fake values to satisfy BindAzureBlobMetadataToMultipartRequest
+      azureBlob.setPayload(new byte[0]);
+      azureBlob.getProperties().setContainer(mpu.containerName());
+      azureBlob.getProperties().setName(mpu.blobName());
+
+      azureBlob.getProperties().setContentMetadata((MutableContentMetadata) mpu.blobMetadata().getContentMetadata());
+      azureBlob.getProperties().setMetadata(mpu.blobMetadata().getUserMetadata());
+
+      ImmutableList.Builder<String> blocks = ImmutableList.builder();
+      for (MultipartPart part : parts) {
+         String blockId = BaseEncoding.base64().encode(Ints.toByteArray(part.partNumber()));
+         blocks.add(blockId);
+      }
+      return sync.putBlockList(mpu.containerName(), azureBlob, blocks.build());
+   }
+
+   @Override
+   public MultipartPart uploadMultipartPart(MultipartUpload mpu, int partNumber, Payload payload) {
+      String blockId = BaseEncoding.base64().encode(Ints.toByteArray(partNumber));
+      sync.putBlock(mpu.containerName(), mpu.blobName(), blockId, payload);
+      String eTag = "";  // putBlock does not return ETag
+      long partSize = -1;  // TODO: how to get this from payload?
+      return MultipartPart.create(partNumber, partSize, eTag);
+   }
+
+   @Override
+   public List<MultipartPart> listMultipartUpload(MultipartUpload mpu) {
+      ListBlobBlocksResponse response;
+      try {
+         response = sync.getBlockList(mpu.containerName(), mpu.blobName());
+      } catch (KeyNotFoundException knfe) {
+         return ImmutableList.<MultipartPart>of();
+      }
+
+      ImmutableList.Builder<MultipartPart> parts = ImmutableList.builder();
+      for (BlobBlockProperties properties : response.getBlocks()) {
+         int partNumber = Ints.fromByteArray(BaseEncoding.base64().decode(properties.getBlockName()));
+         String eTag = "";  // getBlockList does not return ETag
+         long partSize = -1;  // TODO: could call getContentLength but did not above
+         parts.add(MultipartPart.create(partNumber, partSize, eTag));
+      }
+      return parts.build();
+   }
+
+   @Override
+   public long getMinimumMultipartPartSize() {
+      return 1;
+   }
+
+   @Override
+   public long getMaximumMultipartPartSize() {
+      return 4 * 1024 * 1024;
+   }
+
+   @Override
+   public int getMaximumNumberOfParts() {
+      return 50 * 1000;
    }
 }
