@@ -31,10 +31,13 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.SequenceInputStream;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.SortedSet;
+import java.util.UUID;
 import java.util.regex.Pattern;
 
 import javax.annotation.Resource;
@@ -49,8 +52,11 @@ import org.jclouds.blobstore.LocalStorageStrategy;
 import org.jclouds.blobstore.domain.Blob;
 import org.jclouds.blobstore.domain.BlobAccess;
 import org.jclouds.blobstore.domain.BlobBuilder;
+import org.jclouds.blobstore.domain.BlobBuilder.PayloadBlobBuilder;
 import org.jclouds.blobstore.domain.BlobMetadata;
 import org.jclouds.blobstore.domain.ContainerAccess;
+import org.jclouds.blobstore.domain.MultipartPart;
+import org.jclouds.blobstore.domain.MultipartUpload;
 import org.jclouds.blobstore.domain.MutableBlobMetadata;
 import org.jclouds.blobstore.domain.MutableStorageMetadata;
 import org.jclouds.blobstore.domain.PageSet;
@@ -86,7 +92,9 @@ import com.google.common.base.Predicate;
 import com.google.common.base.Supplier;
 import com.google.common.base.Throwables;
 import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
+import com.google.common.collect.Iterators;
 
 @Singleton
 public final class LocalBlobStore implements BlobStore {
@@ -687,5 +695,111 @@ public final class LocalBlobStore implements BlobStore {
    @Override
    public boolean createContainerInLocation(Location location, String container, CreateContainerOptions options) {
       return storageStrategy.createContainerInLocation(container, location, options);
+   }
+
+   @Override
+   public MultipartUpload initiateMultipartUpload(String container, BlobMetadata blobMetadata) {
+      return MultipartUpload.create(container, blobMetadata.getName(), UUID.randomUUID().toString(),
+            blobMetadata);
+   }
+
+   @Override
+   public void abortMultipartUpload(MultipartUpload mpu) {
+      for (int i = 1; i <= 10 * 1000; ++i) {
+         storageStrategy.removeBlob(mpu.containerName(), mpu.blobName() + "-" + i);
+      }
+   }
+
+   @Override
+   public String completeMultipartUpload(MultipartUpload mpu, List<MultipartPart> parts) {
+      ImmutableList.Builder<InputStream> streams = ImmutableList.builder();
+      long contentLength = 0;
+      for (MultipartPart part : parts) {
+         Blob blobPart = getBlob(mpu.containerName(), mpu.blobName() + "-" + part.partNumber());
+         contentLength += blobPart.getMetadata().getContentMetadata().getContentLength();
+         InputStream is;
+         try {
+            is = blobPart.getPayload().openStream();
+         } catch (IOException ioe) {
+            throw propagate(ioe);
+         }
+         streams.add(is);
+      }
+      PayloadBlobBuilder blobBuilder = blobBuilder(mpu.blobName())
+            .userMetadata(mpu.blobMetadata().getUserMetadata())
+            .payload(new SequenceInputStream(Iterators.asEnumeration(streams.build().iterator())))
+            .contentLength(contentLength);
+      String contentDisposition = mpu.blobMetadata().getContentMetadata().getContentDisposition();
+      if (contentDisposition != null) {
+         blobBuilder.contentDisposition(contentDisposition);
+      }
+      String contentEncoding = mpu.blobMetadata().getContentMetadata().getContentEncoding();
+      if (contentEncoding != null) {
+         blobBuilder.contentEncoding(contentEncoding);
+      }
+      String contentLanguage = mpu.blobMetadata().getContentMetadata().getContentLanguage();
+      if (contentLanguage != null) {
+         blobBuilder.contentLanguage(contentLanguage);
+      }
+      // intentionally not copying MD5
+      String contentType = mpu.blobMetadata().getContentMetadata().getContentType();
+      if (contentType != null) {
+         blobBuilder.contentType(contentType);
+      }
+      Date expires = mpu.blobMetadata().getContentMetadata().getExpires();
+      if (expires != null) {
+         blobBuilder.expires(expires);
+      }
+
+      String eTag = putBlob(mpu.containerName(), blobBuilder.build());
+
+      for (MultipartPart part : parts) {
+         storageStrategy.removeBlob(mpu.containerName(), mpu.blobName() + "-" + part.partNumber());
+      }
+
+      return eTag;
+   }
+
+   @Override
+   public MultipartPart uploadMultipartPart(MultipartUpload mpu, int partNumber, Payload payload) {
+      String partName = mpu.blobName() + "-" + partNumber;
+      Blob blob = blobBuilder(partName)
+            .payload(payload)
+            .build();
+      String partETag = putBlob(mpu.containerName(), blob);
+      long partSize = -1;  // TODO: how to get this from payload?
+      return MultipartPart.create(partNumber, partSize, partETag);
+   }
+
+   @Override
+   public List<MultipartPart> listMultipartUpload(MultipartUpload mpu) {
+      ImmutableList.Builder<MultipartPart> parts = ImmutableList.builder();
+      PageSet<? extends StorageMetadata> pageSet = list(mpu.containerName(),
+            new ListContainerOptions().afterMarker(mpu.blobName()));
+      // TODO: pagination
+      for (StorageMetadata sm : pageSet) {
+         if (!sm.getName().startsWith(mpu.blobName() + "-")) {
+            break;
+         }
+         int partNumber = Integer.parseInt(sm.getName().substring((mpu.blobName() + "-").length()));
+         long partSize = -1;  // TODO: could call getContentMetadata but did not above
+         parts.add(MultipartPart.create(partNumber, partSize, sm.getETag()));
+      }
+      return parts.build();
+   }
+
+   @Override
+   public long getMinimumMultipartPartSize() {
+      return 1;
+   }
+
+   @Override
+   public long getMaximumMultipartPartSize() {
+      return 5 * 1024 * 1024;
+   }
+
+   @Override
+   public int getMaximumNumberOfParts() {
+      return Integer.MAX_VALUE;
    }
 }
