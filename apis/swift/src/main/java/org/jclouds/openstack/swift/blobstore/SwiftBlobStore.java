@@ -21,6 +21,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import static org.jclouds.Constants.PROPERTY_USER_THREADS;
 import static org.jclouds.openstack.swift.options.ListContainerOptions.Builder.withPrefix;
 
+import java.util.List;
 import java.util.Set;
 
 import javax.inject.Inject;
@@ -33,6 +34,8 @@ import org.jclouds.blobstore.domain.Blob;
 import org.jclouds.blobstore.domain.BlobAccess;
 import org.jclouds.blobstore.domain.BlobMetadata;
 import org.jclouds.blobstore.domain.ContainerAccess;
+import org.jclouds.blobstore.domain.MultipartPart;
+import org.jclouds.blobstore.domain.MultipartUpload;
 import org.jclouds.blobstore.domain.PageSet;
 import org.jclouds.blobstore.domain.StorageMetadata;
 import org.jclouds.blobstore.domain.internal.PageSetImpl;
@@ -47,6 +50,7 @@ import org.jclouds.blobstore.util.BlobUtils;
 import org.jclouds.collect.Memoized;
 import org.jclouds.domain.Location;
 import org.jclouds.http.options.GetOptions;
+import org.jclouds.io.Payload;
 import org.jclouds.openstack.swift.CommonSwiftClient;
 import org.jclouds.openstack.swift.blobstore.functions.BlobStoreListContainerOptionsToListContainerOptions;
 import org.jclouds.openstack.swift.blobstore.functions.BlobToObject;
@@ -335,5 +339,45 @@ public class SwiftBlobStore extends BaseBlobStore {
    @Override
    public void setBlobAccess(String containe, String namer, BlobAccess access) {
       throw new UnsupportedOperationException("not implemented");
+   }
+
+   @Override
+   public MultipartUpload initiateMultipartUpload(String container, BlobMetadata blobMetadata) {
+      throw new UnsupportedOperationException("Legacy Swift does not support multipart uploads");
+   }
+
+   @Override
+   public void abortMultipartUpload(MultipartUpload mpu) {
+      throw new UnsupportedOperationException("Legacy Swift does not support multipart uploads");
+   }
+
+   @Override
+   public String completeMultipartUpload(MultipartUpload mpu, List<MultipartPart> parts) {
+      throw new UnsupportedOperationException("Legacy Swift does not support multipart uploads");
+   }
+
+   @Override
+   public MultipartPart uploadMultipartPart(MultipartUpload mpu, int partNumber, Payload payload) {
+      throw new UnsupportedOperationException("Legacy Swift does not support multipart uploads");
+   }
+
+   @Override
+   public List<MultipartPart> listMultipartUpload(MultipartUpload mpu) {
+      throw new UnsupportedOperationException("Legacy Swift does not support multipart uploads");
+   }
+
+   @Override
+   public long getMinimumMultipartPartSize() {
+      throw new UnsupportedOperationException("Legacy Swift does not support multipart uploads");
+   }
+
+   @Override
+   public long getMaximumMultipartPartSize() {
+      throw new UnsupportedOperationException("Legacy Swift does not support multipart uploads");
+   }
+
+   @Override
+   public int getMaximumNumberOfParts() {
+      throw new UnsupportedOperationException("Legacy Swift does not support multipart uploads");
    }
 }
