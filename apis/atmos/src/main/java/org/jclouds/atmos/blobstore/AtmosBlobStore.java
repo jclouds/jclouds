@@ -19,6 +19,7 @@ package org.jclouds.atmos.blobstore;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static org.jclouds.atmos.options.PutOptions.Builder.publicRead;
 
+import java.util.List;
 import java.util.Set;
 
 import javax.inject.Inject;
@@ -38,6 +39,8 @@ import org.jclouds.blobstore.domain.Blob;
 import org.jclouds.blobstore.domain.BlobAccess;
 import org.jclouds.blobstore.domain.BlobMetadata;
 import org.jclouds.blobstore.domain.ContainerAccess;
+import org.jclouds.blobstore.domain.MultipartPart;
+import org.jclouds.blobstore.domain.MultipartUpload;
 import org.jclouds.blobstore.domain.PageSet;
 import org.jclouds.blobstore.domain.StorageMetadata;
 import org.jclouds.blobstore.functions.BlobToHttpGetOptions;
@@ -50,6 +53,7 @@ import org.jclouds.collect.Memoized;
 import org.jclouds.crypto.Crypto;
 import org.jclouds.domain.Location;
 import org.jclouds.http.options.GetOptions;
+import org.jclouds.io.Payload;
 
 import com.google.common.base.Supplier;
 import com.google.common.cache.CacheLoader;
@@ -281,5 +285,45 @@ public class AtmosBlobStore extends BaseBlobStore {
          return sync.createDirectory(container, publicRead()) != null;
       }
       return createContainerInLocation(location, container);
+   }
+
+   @Override
+   public MultipartUpload initiateMultipartUpload(String container, BlobMetadata blobMetadata) {
+      throw new UnsupportedOperationException("Atmos does not support multipart uploads");
+   }
+
+   @Override
+   public void abortMultipartUpload(MultipartUpload mpu) {
+      throw new UnsupportedOperationException("Atmos does not support multipart uploads");
+   }
+
+   @Override
+   public String completeMultipartUpload(MultipartUpload mpu, List<MultipartPart> parts) {
+      throw new UnsupportedOperationException("Atmos does not support multipart uploads");
+   }
+
+   @Override
+   public MultipartPart uploadMultipartPart(MultipartUpload mpu, int partNumber, Payload payload) {
+      throw new UnsupportedOperationException("Atmos does not support multipart uploads");
+   }
+
+   @Override
+   public List<MultipartPart> listMultipartUpload(MultipartUpload mpu) {
+      throw new UnsupportedOperationException("Atmos does not support multipart uploads");
+   }
+
+   @Override
+   public long getMinimumMultipartPartSize() {
+      throw new UnsupportedOperationException("Atmos does not support multipart uploads");
+   }
+
+   @Override
+   public long getMaximumMultipartPartSize() {
+      throw new UnsupportedOperationException("Atmos does not support multipart uploads");
+   }
+
+   @Override
+   public int getMaximumNumberOfParts() {
+      throw new UnsupportedOperationException("Atmos does not support multipart uploads");
    }
 }
