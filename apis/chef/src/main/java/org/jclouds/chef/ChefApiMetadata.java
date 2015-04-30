@@ -93,7 +93,6 @@ public class ChefApiMetadata extends BaseHttpApiMetadata<ChefApi> {
                .documentation(URI.create("http://wiki.opscode.com/display/chef/Server+API"))
                .defaultEndpoint("http://localhost:4000")
                .defaultProperties(ChefApiMetadata.defaultProperties())
-               .view(ChefContext.class)
                .defaultModules(
                      ImmutableSet.<Class<? extends Module>> of(ChefHttpApiModule.class, ChefParserModule.class,
                            ChefBootstrapModule.class, JMXOhaiModule.class));

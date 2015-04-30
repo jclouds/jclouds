@@ -18,7 +18,6 @@ package org.jclouds.chef;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.List;
 import java.util.concurrent.ExecutorService;
 
 import org.jclouds.chef.config.ChefProperties;
@@ -34,7 +33,6 @@ import org.jclouds.ohai.config.OhaiModule;
 import org.jclouds.rest.annotations.SinceApiVersion;
 import org.jclouds.scriptbuilder.domain.Statement;
 
-import com.google.common.io.InputSupplier;
 import com.google.inject.ImplementedBy;
 
 /**
@@ -43,32 +41,25 @@ import com.google.inject.ImplementedBy;
 @ImplementedBy(BaseChefService.class)
 public interface ChefService {
 
-   /**
-    * Gets the context that created this service.
-    *
-    * @return The context that created the service.
-    */
-   ChefContext getContext();
-
    // Crypto
 
    /**
     * Encrypts the given input stream.
     *
-    * @param supplier The input stream to encrypt.
+    * @param input The input stream to encrypt.
     * @return The encrypted bytes for the given input stream.
     * @throws IOException If there is an error reading from the input stream.
     */
-   byte[] encrypt(InputSupplier<? extends InputStream> supplier) throws IOException;
+   byte[] encrypt(InputStream input) throws IOException;
 
    /**
     * Decrypts the given input stream.
     *
-    * @param supplier The input stream to decrypt.
+    * @param input The input stream to decrypt.
     * @return The decrypted bytes for the given input stream.
     * @throws IOException If there is an error reading from the input stream.
     */
-   byte[] decrypt(InputSupplier<? extends InputStream> supplier) throws IOException;
+   byte[] decrypt(InputStream input) throws IOException;
 
    // Bootstrap
 
@@ -102,16 +93,6 @@ public interface ChefService {
     *                        group.
     */
    void updateBootstrapConfigForGroup(String group, BootstrapConfig bootstrapConfig);
-
-   /**
-    * Gets the run list for the given group.
-    *
-    * @param The group to get the configured run list for.
-    * @return run list for all nodes bootstrapped with a certain group
-    * @deprecated USe {{@link #getBootstrapConfigForGroup(String)}.
-    */
-   @Deprecated
-   List<String> getRunListForGroup(String group);
 
    /**
     * Gets the bootstrap configuration for a given group.

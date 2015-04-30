@@ -31,14 +31,15 @@ import org.jclouds.rest.annotations.ApiVersion;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 
+import com.google.common.collect.ImmutableSet;
 import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 
-@Test(groups = { "unit" }, singleThreaded = true)
-public class ParseCookbookDefinitionFromJsonv10Test {
-
-   private ParseCookbookDefinitionFromJsonv10 handler;
+@Test(groups = {"unit"}, singleThreaded = true)
+public class ParseCookbookDefinitionListFromJsonTest
+{
+   private ParseCookbookDefinitionListFromJson handler;
 
    @BeforeTest
    protected void setUpInjector() throws IOException {
@@ -49,17 +50,24 @@ public class ParseCookbookDefinitionFromJsonv10Test {
          }
       }, new ChefParserModule(), new GsonModule());
 
-      handler = injector.getInstance(ParseCookbookDefinitionFromJsonv10.class);
+      handler = injector.getInstance(ParseCookbookDefinitionListFromJson.class);
    }
 
-   public void testCookbokDefinitionParsing() throws URISyntaxException {
+   public void testCookbokDefinitionListParsing() throws URISyntaxException {
       CookbookDefinition.Version v510 = CookbookDefinition.Version.builder()
             .url(new URI("http://localhost:4000/cookbooks/apache2/5.1.0")).version("5.1.0").build();
       CookbookDefinition.Version v420 = CookbookDefinition.Version.builder()
             .url(new URI("http://localhost:4000/cookbooks/apache2/4.2.0")).version("4.2.0").build();
-      CookbookDefinition definition = CookbookDefinition.builder()
+      CookbookDefinition apache2 = CookbookDefinition.builder()
             .name("apache2").url(new URI("http://localhost:4000/cookbooks/apache2")).version(v510).version(v420).build();
-
+      
+      CookbookDefinition.Version v100 = CookbookDefinition.Version.builder()
+            .url(new URI("http://localhost:4000/cookbooks/nginx/1.0.0")).version("1.0.0").build();
+      CookbookDefinition.Version v030 = CookbookDefinition.Version.builder()
+            .url(new URI("http://localhost:4000/cookbooks/nginx/0.3.0")).version("0.3.0").build();
+      CookbookDefinition nginx = CookbookDefinition.builder()
+            .name("nginx").url(new URI("http://localhost:4000/cookbooks/nginx")).version(v100).version(v030).build();
+      
       assertEquals(handler.apply(HttpResponse
             .builder()
             .statusCode(200)
@@ -69,6 +77,16 @@ public class ParseCookbookDefinitionFromJsonv10Test {
                         + "\"versions\" => [" + "{\"url\" => \"http://localhost:4000/cookbooks/apache2/5.1.0\","
                         + "\"version\" => \"5.1.0\"},"
                         + "{\"url\" => \"http://localhost:4000/cookbooks/apache2/4.2.0\","
-                        + "\"version\" => \"4.2.0\"}" + "]" + "}" + "}").build()), definition);
+                        + "\"version\" => \"4.2.0\"}" + "]" + "},"
+                        + "\"nginx\" => {"
+                        + "\"url\" => \"http://localhost:4000/cookbooks/nginx\","
+                        + "\"versions\" => ["
+                        + "{\"url\" => \"http://localhost:4000/cookbooks/nginx/1.0.0\","
+                        + "\"version\" => \"1.0.0\"},"
+                        + "{\"url\" => \"http://localhost:4000/cookbooks/nginx/0.3.0\","
+                        + "\"version\" => \"0.3.0\"}"
+                        + "]}" +
+                        "}").build()),
+            ImmutableSet.of(apache2, nginx));
    }
 }

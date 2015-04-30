@@ -30,27 +30,19 @@ import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
 import java.security.spec.InvalidKeySpecException;
 import java.util.Map;
-import java.util.Set;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import org.jclouds.chef.domain.DatabagItem;
-import org.jclouds.chef.functions.ParseCookbookDefinitionFromJson;
-import org.jclouds.chef.functions.ParseCookbookVersionsV09FromJson;
-import org.jclouds.chef.functions.ParseCookbookVersionsV10FromJson;
-import org.jclouds.chef.functions.ParseKeySetFromJson;
-import org.jclouds.chef.suppliers.ChefVersionSupplier;
 import org.jclouds.crypto.Crypto;
 import org.jclouds.crypto.Pems;
-import org.jclouds.http.HttpResponse;
 import org.jclouds.json.config.GsonModule.DateAdapter;
 import org.jclouds.json.config.GsonModule.Iso8601DateAdapter;
 import org.jclouds.json.internal.NullFilteringTypeAdapterFactories.MapTypeAdapterFactory;
 import org.jclouds.json.internal.NullHackJsonLiteralAdapter;
 
 import com.google.common.base.Charsets;
-import com.google.common.base.Function;
 import com.google.common.base.Objects;
 import com.google.common.base.Throwables;
 import com.google.common.collect.ImmutableMap;
@@ -295,22 +287,6 @@ public class ChefParserModule extends AbstractModule {
          PublicKeyAdapter publicAdapter, X509CertificateAdapter certAdapter) {
       return ImmutableMap.<Type, Object> of(DatabagItem.class, adapter, PrivateKey.class, privateAdapter,
             PublicKey.class, publicAdapter, X509Certificate.class, certAdapter);
-   }
-
-   @Provides
-   @Singleton
-   @CookbookParser
-   public Function<HttpResponse, Set<String>> provideCookbookDefinitionAdapter(ChefVersionSupplier chefVersionSupplier,
-         ParseCookbookDefinitionFromJson v10parser, ParseKeySetFromJson v09parser) {
-      return chefVersionSupplier.get() >= 10 ? v10parser : v09parser;
-   }
-
-   @Provides
-   @Singleton
-   @CookbookVersionsParser
-   public Function<HttpResponse, Set<String>> provideCookbookDefinitionAdapter(ChefVersionSupplier chefVersionSupplier,
-         ParseCookbookVersionsV10FromJson v10parser, ParseCookbookVersionsV09FromJson v09parser) {
-      return chefVersionSupplier.get() >= 10 ? v10parser : v09parser;
    }
 
    @Override

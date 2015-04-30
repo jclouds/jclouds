@@ -40,6 +40,7 @@ public class UpdateAutomaticAttributesOnNodeImplLiveTest extends BaseChefLiveTes
    @Override
    protected void initialize() {
       super.initialize();
+      this.prefix = this.prefix + "-" + this.hashCode();
       this.currentUserProvider = injector.getInstance(CurrentUserProvider.class);
       this.strategy = injector.getInstance(UpdateAutomaticAttributesOnNodeImpl.class);
    }

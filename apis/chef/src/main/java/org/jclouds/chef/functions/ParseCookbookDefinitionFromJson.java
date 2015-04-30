@@ -16,24 +16,20 @@
  */
 package org.jclouds.chef.functions;
 
-import java.util.Map;
-import java.util.Set;
-
-import javax.inject.Inject;
-import javax.inject.Singleton;
-
+import com.google.common.base.Function;
 import org.jclouds.chef.domain.CookbookDefinition;
 import org.jclouds.http.HttpResponse;
 import org.jclouds.http.functions.ParseJson;
 
-import com.google.common.base.Function;
+import javax.inject.Inject;
+import javax.inject.Singleton;
+import java.util.Map;
 
 /**
- * Parses a cookbook definition from a Json response, assuming a Chef Server >=
- * 0.10.8.
+ * Parses the cookbook versions in a Chef Server >= 0.10.8.
  */
 @Singleton
-public class ParseCookbookDefinitionFromJson implements Function<HttpResponse, Set<String>> {
+public class ParseCookbookDefinitionFromJson implements Function<HttpResponse, CookbookDefinition> {
 
    /** Parser for responses from chef server >= 0.10.8 */
    private final ParseJson<Map<String, CookbookDefinition>> parser;
@@ -44,7 +40,13 @@ public class ParseCookbookDefinitionFromJson implements Function<HttpResponse, S
    }
 
    @Override
-   public Set<String> apply(HttpResponse response) {
-      return parser.apply(response).keySet();
+   public CookbookDefinition apply(HttpResponse response) {
+      Map<String, CookbookDefinition> result = parser.apply(response);
+      String cookbookName = result.keySet().iterator().next();
+      CookbookDefinition def = result.values().iterator().next();
+      return CookbookDefinition.builder() //
+             .from(def) //
+             .name(cookbookName) //
+             .build();
    }
 }

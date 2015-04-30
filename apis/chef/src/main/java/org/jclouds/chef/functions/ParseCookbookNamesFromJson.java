@@ -16,36 +16,35 @@
  */
 package org.jclouds.chef.functions;
 
+import java.util.Map;
 import java.util.Set;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-import org.jclouds.chef.config.CookbookParser;
+import org.jclouds.chef.domain.CookbookDefinition;
 import org.jclouds.http.HttpResponse;
+import org.jclouds.http.functions.ParseJson;
 
-import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Function;
 
 /**
- * Parses a cookbook definition from a Json response, taking care of using the
- * appropriate parser.
- * @deprecated Support for Chef 0.9 and 0.10 will be removed in upcoming verions.
+ * Parses a cookbook definition from a Json response, assuming a Chef Server >=
+ * 0.10.8.
  */
 @Singleton
-@Deprecated
-public class ParseCookbookDefinitionCheckingChefVersion implements Function<HttpResponse, Set<String>> {
+public class ParseCookbookNamesFromJson implements Function<HttpResponse, Set<String>> {
 
-   @VisibleForTesting
-   final Function<HttpResponse, Set<String>> parser;
+   /** Parser for responses from chef server >= 0.10.8 */
+   private final ParseJson<Map<String, CookbookDefinition>> parser;
 
    @Inject
-   ParseCookbookDefinitionCheckingChefVersion(@CookbookParser Function<HttpResponse, Set<String>> parser) {
+   ParseCookbookNamesFromJson(ParseJson<Map<String, CookbookDefinition>> parser) {
       this.parser = parser;
    }
 
    @Override
    public Set<String> apply(HttpResponse response) {
-      return parser.apply(response);
+      return parser.apply(response).keySet();
    }
 }

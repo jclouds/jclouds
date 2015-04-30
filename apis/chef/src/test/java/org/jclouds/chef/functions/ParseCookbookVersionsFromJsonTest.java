@@ -34,12 +34,12 @@ import com.google.inject.Guice;
 import com.google.inject.Injector;
 
 /**
- * Tests behavior of {@code ParseCookbookVersionsV09FromJson}
+ * Tests behavior of {@code ParseCookbookVersionsFromJson}
  */
 @Test(groups = { "unit" }, singleThreaded = true)
-public class ParseCookbookVersionsV09FromJsonTest {
-
-   private ParseCookbookVersionsV09FromJson handler;
+public class ParseCookbookVersionsFromJsonTest
+{
+   private ParseCookbookVersionsFromJson handler;
 
    @BeforeTest
    protected void setUpInjector() throws IOException {
@@ -50,12 +50,19 @@ public class ParseCookbookVersionsV09FromJsonTest {
          }
       }, new ChefParserModule(), new GsonModule());
 
-      handler = injector.getInstance(ParseCookbookVersionsV09FromJson.class);
+      handler = injector.getInstance(ParseCookbookVersionsFromJson.class);
    }
 
    public void testRegex() {
-      assertEquals(
-            handler.apply(HttpResponse.builder().statusCode(200).message("ok")
-                  .payload("{\"apache2\": [\"0.1.8\", \"0.2\"]}").build()), ImmutableSet.of("0.1.8", "0.2"));
+      assertEquals(handler.apply(HttpResponse
+            .builder()
+            .statusCode(200)
+            .message("ok")
+            .payload(
+                  "{" + "\"apache2\" => {" + "\"url\" => \"http://localhost:4000/cookbooks/apache2\","
+                        + "\"versions\" => [" + "{\"url\" => \"http://localhost:4000/cookbooks/apache2/5.1.0\","
+                        + "\"version\" => \"5.1.0\"},"
+                        + "{\"url\" => \"http://localhost:4000/cookbooks/apache2/4.2.0\","
+                        + "\"version\" => \"4.2.0\"}" + "]" + "}" + "}").build()), ImmutableSet.of("5.1.0", "4.2.0"));
    }
 }

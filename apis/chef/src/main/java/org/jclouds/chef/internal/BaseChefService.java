@@ -22,8 +22,6 @@ import static org.jclouds.chef.config.ChefProperties.CHEF_BOOTSTRAP_DATABAG;
 import java.io.IOException;
 import java.io.InputStream;
 import java.security.PrivateKey;
-import java.util.List;
-import java.util.Map;
 import java.util.concurrent.ExecutorService;
 
 import javax.annotation.Resource;
@@ -32,7 +30,6 @@ import javax.inject.Named;
 import javax.inject.Singleton;
 
 import org.jclouds.chef.ChefApi;
-import org.jclouds.chef.ChefContext;
 import org.jclouds.chef.ChefService;
 import org.jclouds.chef.config.ChefProperties;
 import org.jclouds.chef.domain.BootstrapConfig;
@@ -56,6 +53,7 @@ import org.jclouds.chef.strategy.ListNodesInEnvironment;
 import org.jclouds.chef.strategy.UpdateAutomaticAttributesOnNode;
 import org.jclouds.crypto.Crypto;
 import org.jclouds.io.ByteStreams2;
+import org.jclouds.io.Payload;
 import org.jclouds.io.Payloads;
 import org.jclouds.io.payloads.RSADecryptingPayload;
 import org.jclouds.io.payloads.RSAEncryptingPayload;
@@ -65,14 +63,11 @@ import org.jclouds.logging.Logger;
 import org.jclouds.scriptbuilder.domain.Statement;
 
 import com.google.common.annotations.VisibleForTesting;
-import com.google.common.base.Optional;
 import com.google.common.base.Supplier;
-import com.google.common.io.InputSupplier;
 
 @Singleton
 public class BaseChefService implements ChefService {
 
-   private final ChefContext chefContext;
    private final ChefApi api;
    private final CleanupStaleNodesAndClients cleanupStaleNodesAndClients;
    private final CreateNodeAndPopulateAutomaticAttributes createNodeAndPopulateAutomaticAttributes;
@@ -97,7 +92,7 @@ public class BaseChefService implements ChefService {
    protected Logger logger = Logger.NULL;
 
    @Inject
-   BaseChefService(ChefContext chefContext, ChefApi api, CleanupStaleNodesAndClients cleanupStaleNodesAndClients,
+   BaseChefService(ChefApi api, CleanupStaleNodesAndClients cleanupStaleNodesAndClients,
          CreateNodeAndPopulateAutomaticAttributes createNodeAndPopulateAutomaticAttributes,
          DeleteAllNodesInList deleteAllNodesInList, ListNodes listNodes, DeleteAllClientsInList deleteAllClientsInList,
          ListClients listClients, ListCookbookVersions listCookbookVersions,
@@ -106,7 +101,6 @@ public class BaseChefService implements ChefService {
          BootstrapConfigForGroup bootstrapConfigForGroup, ListEnvironments listEnvironments,
          ListNodesInEnvironment listNodesInEnvironment,
          ListCookbookVersionsInEnvironment listCookbookVersionsInEnvironment, Json json, Crypto crypto) {
-      this.chefContext = chefContext;
       this.api = api;
       this.cleanupStaleNodesAndClients = cleanupStaleNodesAndClients;
       this.createNodeAndPopulateAutomaticAttributes = createNodeAndPopulateAutomaticAttributes;
@@ -128,26 +122,17 @@ public class BaseChefService implements ChefService {
    }
 
    @Override
-   public ChefContext getContext() {
-      return chefContext;
+   public byte[] encrypt(InputStream input) throws IOException {
+      @SuppressWarnings("resource")
+      Payload payload = new RSAEncryptingPayload(crypto, Payloads.newPayload(input), privateKey.get());
+      return ByteStreams2.toByteArrayAndClose(payload.openStream());
    }
 
    @Override
-   public byte[] encrypt(InputSupplier<? extends InputStream> supplier) throws IOException {
-      return ByteStreams2.toByteArrayAndClose(new RSAEncryptingPayload(crypto,
-            Payloads.newPayload(supplier.getInput()), privateKey.get()).openStream());
-   }
-
-   @Override
-   public byte[] decrypt(InputSupplier<? extends InputStream> supplier) throws IOException {
-      return ByteStreams2.toByteArrayAndClose(new RSADecryptingPayload(crypto,
-            Payloads.newPayload(supplier.getInput()), privateKey.get()).openStream());
-   }
-
-   private static void putIfPresent(Map<String, Object> configMap, Optional<?> configProperty, String name) {
-      if (configProperty.isPresent()) {
-         configMap.put(name, configProperty.get().toString());
-      }
+   public byte[] decrypt(InputStream input) throws IOException {
+      @SuppressWarnings("resource")
+      Payload payload = new RSADecryptingPayload(crypto, Payloads.newPayload(input), privateKey.get());
+      return ByteStreams2.toByteArrayAndClose(payload.openStream());
    }
 
    @Override
@@ -182,15 +167,6 @@ public class BaseChefService implements ChefService {
    @VisibleForTesting
    String buildBootstrapConfiguration(BootstrapConfig config) {
       return json.toJson(config);
-   }
-
-   /**
-    * @deprecated Use {{@link #getBootstrapConfigForGroup(String)}.
-    */
-   @Override
-   @Deprecated
-   public List<String> getRunListForGroup(String group) {
-      return getBootstrapConfigForGroup(group).getRunList();
    }
 
    @Override

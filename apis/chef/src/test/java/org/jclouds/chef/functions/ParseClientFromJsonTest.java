@@ -79,6 +79,7 @@ public class ParseClientFromJsonTest {
       privateKey = crypto.rsaKeyFactory().generatePrivate(Pems.privateKeySpec(ByteSource.wrap(PRIVATE_KEY.getBytes(Charsets.UTF_8))));
    }
 
+   @SuppressWarnings("resource")
    public void test() throws IOException, CertificateException, NoSuchAlgorithmException {
 
       Client user = Client.builder().certificate(certificate).orgname("jclouds").clientname("adriancole-jcloudstest")

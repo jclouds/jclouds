@@ -16,19 +16,16 @@
  */
 package org.jclouds.chef.functions;
 
-import java.util.Map;
-import java.util.Set;
-
-import javax.inject.Inject;
-import javax.inject.Singleton;
-
+import com.google.common.base.Function;
 import org.jclouds.chef.domain.CookbookDefinition;
-import org.jclouds.chef.domain.CookbookDefinition.Version;
 import org.jclouds.http.HttpResponse;
 import org.jclouds.http.functions.ParseJson;
 
-import com.google.common.base.Function;
-import static com.google.common.collect.Iterables.getFirst;
+import javax.inject.Inject;
+import javax.inject.Singleton;
+import java.util.Map;
+import java.util.Set;
+
 import static com.google.common.collect.Iterables.transform;
 import static com.google.common.collect.Sets.newLinkedHashSet;
 
@@ -36,23 +33,30 @@ import static com.google.common.collect.Sets.newLinkedHashSet;
  * Parses the cookbook versions in a Chef Server >= 0.10.8.
  */
 @Singleton
-public class ParseCookbookVersionsV10FromJson implements Function<HttpResponse, Set<String>> {
+public class ParseCookbookDefinitionListFromJson implements Function<HttpResponse, Set<CookbookDefinition>> {
 
-   /** Parser for responses from chef server >= 0.10.8 */
+   /**
+    * Parser for responses from chef server >= 0.10.8
+    */
    private final ParseJson<Map<String, CookbookDefinition>> parser;
 
    @Inject
-   ParseCookbookVersionsV10FromJson(ParseJson<Map<String, CookbookDefinition>> parser) {
+   ParseCookbookDefinitionListFromJson(ParseJson<Map<String, CookbookDefinition>> parser) {
       this.parser = parser;
    }
 
    @Override
-   public Set<String> apply(HttpResponse response) {
-      CookbookDefinition def = getFirst(parser.apply(response).values(), null);
-      return newLinkedHashSet(transform(def.getVersions(), new Function<Version, String>() {
+   public Set<CookbookDefinition> apply(HttpResponse response) {
+      Set<Map.Entry<String, CookbookDefinition>> result = parser.apply(response).entrySet();
+      return newLinkedHashSet(transform(result, new Function<Map.Entry<String, CookbookDefinition>, CookbookDefinition>() {
          @Override
-         public String apply(Version input) {
-            return input.getVersion();
+         public CookbookDefinition apply(Map.Entry<String, CookbookDefinition> input) {
+            String cookbookName = input.getKey();
+            CookbookDefinition def = input.getValue();
+            return CookbookDefinition.builder() //
+                   .from(def) //              
+                   .name(cookbookName) //
+                   .build();
          }
       }));
    }

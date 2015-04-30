@@ -19,25 +19,25 @@ package org.jclouds.chef.functions;
 import static org.testng.Assert.assertEquals;
 
 import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 
 import org.jclouds.chef.ChefApiMetadata;
 import org.jclouds.chef.config.ChefParserModule;
+import org.jclouds.chef.domain.CookbookDefinition;
 import org.jclouds.http.HttpResponse;
 import org.jclouds.json.config.GsonModule;
 import org.jclouds.rest.annotations.ApiVersion;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 
-import com.google.common.collect.ImmutableSet;
 import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 
-/**
- * Tests behavior of {@code ParseCookbookDefinitionFromJson}.
- */
 @Test(groups = { "unit" }, singleThreaded = true)
-public class ParseCookbookDefinitionFromJsonTest {
+public class ParseCookbookDefinitionFromJsonTest
+{
 
    private ParseCookbookDefinitionFromJson handler;
 
@@ -53,7 +53,14 @@ public class ParseCookbookDefinitionFromJsonTest {
       handler = injector.getInstance(ParseCookbookDefinitionFromJson.class);
    }
 
-   public void testParse010Response() {
+   public void testCookbokDefinitionParsing() throws URISyntaxException {
+      CookbookDefinition.Version v510 = CookbookDefinition.Version.builder()
+            .url(new URI("http://localhost:4000/cookbooks/apache2/5.1.0")).version("5.1.0").build();
+      CookbookDefinition.Version v420 = CookbookDefinition.Version.builder()
+            .url(new URI("http://localhost:4000/cookbooks/apache2/4.2.0")).version("4.2.0").build();
+      CookbookDefinition definition = CookbookDefinition.builder()
+            .name("apache2").url(new URI("http://localhost:4000/cookbooks/apache2")).version(v510).version(v420).build();
+
       assertEquals(handler.apply(HttpResponse
             .builder()
             .statusCode(200)
@@ -63,10 +70,6 @@ public class ParseCookbookDefinitionFromJsonTest {
                         + "\"versions\" => [" + "{\"url\" => \"http://localhost:4000/cookbooks/apache2/5.1.0\","
                         + "\"version\" => \"5.1.0\"},"
                         + "{\"url\" => \"http://localhost:4000/cookbooks/apache2/4.2.0\","
-                        + "\"version\" => \"4.2.0\"}" + "]" + "}," + "\"nginx\" => {"
-                        + "\"url\" => \"http://localhost:4000/cookbooks/nginx\"," + "\"versions\" => ["
-                        + "{\"url\" => \"http://localhost:4000/cookbooks/nginx/1.0.0\"," + "\"version\" => \"1.0.0\"},"
-                        + "{\"url\" => \"http://localhost:4000/cookbooks/nginx/0.3.0\"," + "\"version\" => \"0.3.0\"}"
-                        + "]" + "}" + "}").build()), ImmutableSet.of("apache2", "nginx"));
+                        + "\"version\" => \"4.2.0\"}" + "]" + "}" + "}").build()), definition);
    }
 }

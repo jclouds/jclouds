@@ -39,7 +39,7 @@ import org.jclouds.chef.domain.Resource;
 import org.jclouds.chef.domain.Role;
 import org.jclouds.chef.filters.SignedHeaderAuth;
 import org.jclouds.chef.filters.SignedHeaderAuthTest;
-import org.jclouds.chef.functions.ParseCookbookVersionsCheckingChefVersion;
+import org.jclouds.chef.functions.ParseCookbookVersionsFromJson;
 import org.jclouds.chef.functions.ParseKeySetFromJson;
 import org.jclouds.chef.functions.ParseSearchClientsFromJson;
 import org.jclouds.chef.functions.ParseSearchDatabagFromJson;
@@ -199,7 +199,7 @@ public class ChefApiTest extends BaseRestAnnotationProcessingTest<ChefApi> {
             + "-test\n");
       assertPayloadEquals(httpRequest, null, null, false);
 
-      assertResponseParserClassEquals(method, httpRequest, ParseCookbookVersionsCheckingChefVersion.class);
+      assertResponseParserClassEquals(method, httpRequest, ParseCookbookVersionsFromJson.class);
       assertSaxResponseParserClassEquals(method, null);
       assertFallbackClassEquals(method, EmptySetOnNotFoundOr404.class);
 

@@ -37,6 +37,7 @@ public class DeleteAllApisAndNodesInListImplLiveTest extends BaseChefLiveTest<Ch
    @Override
    protected void initialize() {
       super.initialize();
+      this.prefix = this.prefix + "-" + this.hashCode();
       this.creator = injector.getInstance(CreateNodeAndPopulateAutomaticAttributesImpl.class);
       this.strategy = injector.getInstance(DeleteAllNodesInListImpl.class);
    }

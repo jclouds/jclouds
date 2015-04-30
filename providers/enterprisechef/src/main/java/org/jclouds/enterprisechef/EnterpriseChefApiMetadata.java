@@ -19,8 +19,8 @@ package org.jclouds.enterprisechef;
 import java.net.URI;
 import java.util.Properties;
 
+import org.jclouds.apis.ApiMetadata;
 import org.jclouds.chef.ChefApiMetadata;
-import org.jclouds.chef.ChefContext;
 import org.jclouds.chef.config.ChefBootstrapModule;
 import org.jclouds.chef.config.ChefParserModule;
 import org.jclouds.enterprisechef.config.EnterpriseChefHttpApiModule;
@@ -44,7 +44,7 @@ public class EnterpriseChefApiMetadata extends BaseHttpApiMetadata<EnterpriseChe
       this(new Builder());
    }
 
-   protected EnterpriseChefApiMetadata(Builder builder) {
+   protected EnterpriseChefApiMetadata(final Builder builder) {
       super(builder);
    }
 
@@ -62,7 +62,6 @@ public class EnterpriseChefApiMetadata extends BaseHttpApiMetadata<EnterpriseChe
                .version(ChefApiMetadata.DEFAULT_API_VERSION)
                .documentation(URI.create("http://www.opscode.com/support"))
                .defaultEndpoint("https://api.opscode.com")
-               .view(ChefContext.class)
                .defaultProperties(EnterpriseChefApiMetadata.defaultProperties())
                .defaultModules(
                      ImmutableSet.<Class<? extends Module>> of(EnterpriseChefHttpApiModule.class,

@@ -46,6 +46,7 @@ public class ListNodesInEnvironmentImplLiveTest extends BaseChefLiveTest<ChefApi
    @Override
    protected void initialize() {
       super.initialize();
+      this.prefix = this.prefix + "-" + this.hashCode();
       this.creator = injector.getInstance(CreateNodeAndPopulateAutomaticAttributesImpl.class);
       this.strategy = injector.getInstance(ListNodesInEnvironmentImpl.class);
       creator.execute(prefix, ImmutableSet.<String>of());

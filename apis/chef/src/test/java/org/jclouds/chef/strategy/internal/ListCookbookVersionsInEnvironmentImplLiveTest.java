@@ -53,8 +53,6 @@ public class ListCookbookVersionsInEnvironmentImplLiveTest extends BaseChefLiveT
    public static final String PREFIX = "jcloudstest-strategy-" + System.getProperty("user.name");
 
    private ListCookbookVersionsInEnvironmentImpl strategy;
-   private CreateNodeAndPopulateAutomaticAttributesImpl creator;
-
    private ExecutorService testExecutorService;
    private ListeningExecutorService testListeningExecutorService;
 
@@ -174,7 +172,7 @@ public class ListCookbookVersionsInEnvironmentImplLiveTest extends BaseChefLiveT
 
    private void createCookbooksWithMultipleVersions(String cookbookName) throws Exception {
       FilePayload v0content = uploadContent("pom.xml");
-      FilePayload v1content = uploadContent("../README.md");
+      FilePayload v1content = uploadContent("../../README.md");
 
       // Create the metadata of the cookbook
       Metadata metadata = Metadata.builder() //
