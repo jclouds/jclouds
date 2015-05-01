@@ -58,10 +58,10 @@ import org.jclouds.concurrent.config.ConfiguresExecutorService;
 import org.jclouds.concurrent.config.ExecutorServiceModule;
 import org.jclouds.config.BindApiContextWithWildcardExtendsExplicitAndRawType;
 import org.jclouds.config.BindNameToContext;
-import org.jclouds.config.BindPropertiesToExpandedValues;
 import org.jclouds.domain.Credentials;
 import org.jclouds.events.config.ConfiguresEventBus;
 import org.jclouds.events.config.EventBusModule;
+import org.jclouds.functions.ExpandProperties;
 import org.jclouds.http.config.ConfiguresHttpCommandExecutorService;
 import org.jclouds.http.config.JavaUrlHttpCommandExecutorServiceModule;
 import org.jclouds.javax.annotation.Nullable;
@@ -314,7 +314,7 @@ public class ContextBuilder {
 
       Properties resolved = resolveProperties(unexpanded, providerId, keysToResolve, optionalKeys);
 
-      Properties expanded = expandProperties(resolved);
+      Properties expanded = new ExpandProperties().apply(resolved);
 
       Supplier<Credentials> credentialsSupplier = buildCredentialsSupplier(expanded);
 
@@ -351,10 +351,10 @@ public class ContextBuilder {
    
    private Properties currentStateToUnexpandedProperties() {
       Properties defaults = new Properties();
-      defaults.putAll(apiMetadata.getDefaultProperties());
+      putAllAsString(apiMetadata.getDefaultProperties(), defaults);
       defaults.setProperty(PROPERTY_PROVIDER, providerId);
       if (providerMetadata.isPresent()) {
-         defaults.putAll(providerMetadata.get().getDefaultProperties());
+         putAllAsString(providerMetadata.get().getDefaultProperties(), defaults);
          defaults.setProperty(PROPERTY_ISO3166_CODES, Joiner.on(',').join(providerMetadata.get().getIso3166Codes()));
       }
       if (endpoint.isPresent())
@@ -367,19 +367,20 @@ public class ContextBuilder {
       if (credential != null)
          defaults.setProperty(PROPERTY_CREDENTIAL, credential);
       if (overrides.isPresent())
-         defaults.putAll(checkNotNull(overrides.get(), "overrides"));
-      defaults.putAll(propertiesPrefixedWithJcloudsApiOrProviderId(getSystemProperties(), apiMetadata.getId(), providerId));
+         putAllAsString(overrides.get(), defaults);
+      putAllAsString(propertiesPrefixedWithJcloudsApiOrProviderId(getSystemProperties(), apiMetadata.getId(), providerId), defaults);
       return defaults;
+   }
+
+   private static void putAllAsString(Map<?, ?> source, Properties target) {
+      for (Map.Entry<?, ?> entry : source.entrySet()) {
+         target.setProperty(entry.getKey().toString(), entry.getValue().toString());
+      }
    }
 
    @VisibleForTesting
    protected Properties getSystemProperties() {
       return System.getProperties();
-   }
-
-
-   private Properties expandProperties(final Properties resolved) {
-      return Guice.createInjector(GUICE_STAGE, new BindPropertiesToExpandedValues(resolved)).getInstance(Properties.class);
    }
 
    public static Injector buildInjector(String name, ProviderMetadata providerMetadata, Supplier<Credentials> creds, List<Module> inputModules) {

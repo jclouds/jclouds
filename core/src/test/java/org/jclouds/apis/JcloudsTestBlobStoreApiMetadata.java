@@ -27,7 +27,7 @@ import com.google.auto.service.AutoService;
  * Implementation of {@link ApiMetadata} for testing.
  */
 @AutoService(ApiMetadata.class)
-public class JcloudsTestBlobStoreApiMetadata extends BaseHttpApiMetadata {
+public class JcloudsTestBlobStoreApiMetadata extends BaseHttpApiMetadata<IntegrationTestClient> {
 
    public static Builder builder() {
       return new Builder();

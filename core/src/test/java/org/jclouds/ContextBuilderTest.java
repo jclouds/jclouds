@@ -74,13 +74,13 @@ public class ContextBuilderTest {
       assertEquals(endpoint, URI.create("http://foo.service.com"));
    }
 
-  @Test
-  public void testContextName() {
-    ContextBuilder withNoName = testContextBuilder().endpoint("http://${jclouds.identity}.service.com").name("mytest")
-            .credentials("foo", "bar");
-    Context context = withNoName.build();
-    assertEquals(context.getName(), "mytest");
-  }
+   @Test
+   public void testContextName() {
+     ContextBuilder withNoName = testContextBuilder().endpoint("http://${jclouds.identity}.service.com").name("mytest")
+              .credentials("foo", "bar");
+     Context context = withNoName.build();
+     assertEquals(context.getName(), "mytest");
+   }
 
    @Test
    public void testProviderMetadataBoundWithCorrectEndpoint() {
@@ -129,7 +129,28 @@ public class ContextBuilderTest {
       String version = withVersionInProps.buildInjector().getInstance(Key.get(String.class, ApiVersion.class));
       assertEquals(version, "1.1");
    }
-   
+
+   @Test
+   public void testAllPropertiesAreStrings() {
+      Properties overrides = new Properties();
+      overrides.setProperty("foo", "bar");
+      overrides.put("one", 1);
+      overrides.put("two", 2.0f);
+      overrides.put("true", true);
+      overrides.put("object", new Object() {
+         @Override
+         public String toString() {
+            return "object";
+         }
+      });
+      Context withObjectsInProps = testContextBuilder().overrides(overrides).build();
+      Properties resolved = withObjectsInProps.getProviderMetadata().getDefaultProperties();
+      assertEquals(resolved.getProperty("foo"), "bar");
+      assertEquals(resolved.getProperty("one"), "1");
+      assertEquals(resolved.getProperty("true"), "true");
+      assertEquals(resolved.getProperty("object"), "object");
+   }
+
    @Test
    public void testAddHttpModuleIfNotPresent() {
       List<Module> modules = Lists.newArrayList();

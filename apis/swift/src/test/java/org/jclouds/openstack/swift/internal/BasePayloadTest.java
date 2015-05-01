@@ -20,27 +20,31 @@ import static org.jclouds.reflect.Reflection2.method;
 
 import java.net.URI;
 import java.util.List;
+import java.util.Properties;
 
+import org.jclouds.functions.ExpandProperties;
 import org.jclouds.json.config.GsonModule;
 import org.jclouds.json.config.GsonModule.DateAdapter;
 import org.jclouds.json.config.GsonModule.Iso8601DateAdapter;
 import org.jclouds.openstack.swift.SwiftApiMetadata;
 import org.jclouds.reflect.Invocation;
 import org.jclouds.rest.internal.GeneratedHttpRequest;
-import org.nnsoft.guice.rocoto.Rocoto;
-import org.nnsoft.guice.rocoto.configuration.ConfigurationModule;
 
 import com.google.common.base.Throwables;
+import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
+import com.google.inject.name.Names;
 
 public class BasePayloadTest {
-   protected Injector i = Guice.createInjector(Rocoto.expandVariables(new ConfigurationModule() {
-      protected void bindConfigurations() {
-         bindProperties(new SwiftApiMetadata().getDefaultProperties());
+   protected Injector i = Guice.createInjector(new AbstractModule() {
+      @Override
+      protected void configure() {
+         Properties expanded = new ExpandProperties().apply(new SwiftApiMetadata().getDefaultProperties());
+         Names.bindProperties(binder(), expanded);
          bind(DateAdapter.class).to(Iso8601DateAdapter.class);
       }
-   }), new GsonModule());
+   }, new GsonModule());
 
    protected GeneratedHttpRequest requestForArgs(List<Object> args) {
       try {
