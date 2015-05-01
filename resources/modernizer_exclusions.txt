@@ -19,3 +19,4 @@ com/google/common/primitives/Ints.compare:(II)I
 com/google/common/primitives/Longs.compare:(JJ)I
 com/google/inject/Inject
 com/google/inject/Provider
+java/lang/StringBuffer."<init>":()V
