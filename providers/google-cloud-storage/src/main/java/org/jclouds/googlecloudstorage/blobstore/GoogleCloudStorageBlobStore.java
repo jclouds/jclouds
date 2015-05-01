@@ -22,6 +22,7 @@ import static org.jclouds.googlecloudstorage.domain.DomainResourceReferences.Obj
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.util.List;
 import java.util.Set;
 
 import javax.inject.Inject;
@@ -31,6 +32,8 @@ import org.jclouds.blobstore.domain.Blob;
 import org.jclouds.blobstore.domain.BlobAccess;
 import org.jclouds.blobstore.domain.BlobMetadata;
 import org.jclouds.blobstore.domain.ContainerAccess;
+import org.jclouds.blobstore.domain.MultipartPart;
+import org.jclouds.blobstore.domain.MultipartUpload;
 import org.jclouds.blobstore.domain.MutableBlobMetadata;
 import org.jclouds.blobstore.domain.PageSet;
 import org.jclouds.blobstore.domain.StorageMetadata;
@@ -347,5 +350,45 @@ public final class GoogleCloudStorageBlobStore extends BaseBlobStore {
       }
 
       return api.getObjectApi().copyObject(toContainer, toName, fromContainer, fromName, template).etag();
+   }
+
+   @Override
+   public MultipartUpload initiateMultipartUpload(String container, BlobMetadata blobMetadata) {
+      throw new UnsupportedOperationException("not yet implemented");
+   }
+
+   @Override
+   public void abortMultipartUpload(MultipartUpload mpu) {
+      throw new UnsupportedOperationException("not yet implemented");
+   }
+
+   @Override
+   public String completeMultipartUpload(MultipartUpload mpu, List<MultipartPart> parts) {
+      throw new UnsupportedOperationException("not yet implemented");
+   }
+
+   @Override
+   public MultipartPart uploadMultipartPart(MultipartUpload mpu, int partNumber, Payload payload) {
+      throw new UnsupportedOperationException("not yet implemented");
+   }
+
+   @Override
+   public List<MultipartPart> listMultipartUpload(MultipartUpload mpu) {
+      throw new UnsupportedOperationException("not yet implemented");
+   }
+
+   @Override
+   public long getMinimumMultipartPartSize() {
+      throw new UnsupportedOperationException("not yet implemented");
+   }
+
+   @Override
+   public long getMaximumMultipartPartSize() {
+      throw new UnsupportedOperationException("not yet implemented");
+   }
+
+   @Override
+   public int getMaximumNumberOfParts() {
+      throw new UnsupportedOperationException("not yet implemented");
    }
 }
