@@ -131,8 +131,6 @@ public class DockerTemplateOptions extends TemplateOptions implements Cloneable 
               .toString();
    }
 
-   public static final DockerTemplateOptions NONE = new DockerTemplateOptions();
-
    public DockerTemplateOptions volumes(Map<String, String> volumes) {
       this.volumes = Optional.<Map<String, String>>of(ImmutableMap.copyOf(checkNotNull(volumes, "volumes")));
       return this;

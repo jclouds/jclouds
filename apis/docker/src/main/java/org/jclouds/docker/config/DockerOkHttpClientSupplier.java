@@ -16,6 +16,9 @@
  */
 package org.jclouds.docker.config;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
 import org.jclouds.docker.suppliers.SSLContextWithKeysSupplier;
 import org.jclouds.http.okhttp.OkHttpClientSupplier;
 
@@ -23,8 +26,6 @@ import com.google.common.collect.ImmutableList;
 import com.squareup.okhttp.ConnectionSpec;
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.TlsVersion;
-import javax.inject.Inject;
-import javax.inject.Singleton;
 
 @Singleton
 public class DockerOkHttpClientSupplier implements OkHttpClientSupplier {
@@ -39,10 +40,10 @@ public class DockerOkHttpClientSupplier implements OkHttpClientSupplier {
    @Override
    public OkHttpClient get() {
       OkHttpClient client = new OkHttpClient();
-      ConnectionSpec connectionSpecs = new ConnectionSpec.Builder(ConnectionSpec.MODERN_TLS)
+      ConnectionSpec modernTLS = new ConnectionSpec.Builder(ConnectionSpec.MODERN_TLS)
               .tlsVersions(TlsVersion.TLS_1_0, TlsVersion.TLS_1_1, TlsVersion.TLS_1_2)
               .build();
-      client.setConnectionSpecs(ImmutableList.of(connectionSpecs));
+      client.setConnectionSpecs(ImmutableList.of(modernTLS, ConnectionSpec.CLEARTEXT));
       client.setSslSocketFactory(sslContextWithKeysSupplier.get().getSocketFactory());
       return client;
    }

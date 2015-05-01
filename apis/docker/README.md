@@ -12,7 +12,7 @@ If you are using `boot2docker`, notice that from version v1.3.0 the Docker daemo
 socket (--tls, or --tlsverify),
 then you need to import CA certificate into Trusted Certs:
       
-      ` keytool -import -trustcacerts -file /Users/andrea/.boot2docker/certs/boot2docker-vm/ca.pem -alias BOOT2DOCKER -keystore $JAVA_HOME/jre/lib/security/cacerts`
+      `keytool -import -trustcacerts -file /Users/andrea/.boot2docker/certs/boot2docker-vm/ca.pem -alias BOOT2DOCKER -keystore $JAVA_HOME/jre/lib/security/cacerts`
 
 by default the passoword is `changeit`
 
