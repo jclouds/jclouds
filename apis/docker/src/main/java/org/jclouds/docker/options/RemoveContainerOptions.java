@@ -29,6 +29,17 @@ public class RemoveContainerOptions extends BaseHttpRequestOptions {
       this.queryParameters.put("force", force.toString());
       return this;
    }
+   
+   /**
+    * Remove the volumes associated to the container
+    * 
+    * @param volume If set to true the volume associated to the container will be removed. 
+    * Otherwise it will not be removed.
+    */
+   public RemoveContainerOptions volume(Boolean volume) {
+       this.queryParameters.put("v", volume.toString());
+       return this;
+    }
 
    public static class Builder {
       /**
@@ -45,6 +56,14 @@ public class RemoveContainerOptions extends BaseHttpRequestOptions {
       public static RemoveContainerOptions force(Boolean force) {
          RemoveContainerOptions options = new RemoveContainerOptions();
          return options.force(force);
+      }
+      
+      /**
+       * @see RemoveContainerOptions#volume
+       */
+      public static RemoveContainerOptions volume(Boolean volume) {
+         RemoveContainerOptions options = new RemoveContainerOptions();
+         return options.volume(volume);
       }
    }
 }
