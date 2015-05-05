@@ -20,8 +20,8 @@ import org.jclouds.http.options.BaseHttpRequestOptions;
 
 public class ListImageOptions extends BaseHttpRequestOptions {
 
-   public ListImageOptions all(Boolean all) {
-      this.queryParameters.put("all", all.toString());
+   public ListImageOptions all(boolean all) {
+      this.queryParameters.put("all", String.valueOf(all));
       return this;
    }
 
@@ -29,7 +29,7 @@ public class ListImageOptions extends BaseHttpRequestOptions {
       /**
        * @see ListImageOptions#all
        */
-      public static ListImageOptions all(Boolean all) {
+      public static ListImageOptions all(boolean all) {
          ListImageOptions options = new ListImageOptions();
          return options.all(all);
       }

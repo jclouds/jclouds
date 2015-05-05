@@ -20,8 +20,8 @@ import org.jclouds.http.options.BaseHttpRequestOptions;
 
 public class ListContainerOptions extends BaseHttpRequestOptions {
 
-   public ListContainerOptions all(Boolean all) {
-      this.queryParameters.put("all", all.toString());
+   public ListContainerOptions all(boolean all) {
+      this.queryParameters.put("all", String.valueOf(all));
       return this;
    }
 
@@ -50,7 +50,7 @@ public class ListContainerOptions extends BaseHttpRequestOptions {
       /**
        * @see ListContainerOptions#all
        */
-      public static ListContainerOptions all(Boolean all) {
+      public static ListContainerOptions all(boolean all) {
          ListContainerOptions options = new ListContainerOptions();
          return options.all(all);
       }

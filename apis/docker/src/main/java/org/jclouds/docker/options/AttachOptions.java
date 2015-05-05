@@ -25,8 +25,8 @@ public class AttachOptions extends BaseHttpRequestOptions {
     *               When TTY is disabled, the stream is multiplexed to separate stdout and stderr.
     * @return AttachOptions
     */
-   public AttachOptions stream(Boolean stream) {
-      this.queryParameters.put("stream", stream.toString());
+   public AttachOptions stream(boolean stream) {
+      this.queryParameters.put("stream", String.valueOf(stream));
       return this;
    }
 
@@ -34,8 +34,8 @@ public class AttachOptions extends BaseHttpRequestOptions {
     * @param logs require logs to be attached. Default false.
     * @return AttachOptions
     */
-   public AttachOptions logs(Boolean logs) {
-      this.queryParameters.put("logs", logs.toString());
+   public AttachOptions logs(boolean logs) {
+      this.queryParameters.put("logs", String.valueOf(logs));
       return this;
    }
 
@@ -43,8 +43,8 @@ public class AttachOptions extends BaseHttpRequestOptions {
     * @param stdin if stream=true, attach to stdin. Default false
     * @return AttachOptions
     */
-   public AttachOptions stdin(Boolean stdin) {
-      this.queryParameters.put("stdin", stdin.toString());
+   public AttachOptions stdin(boolean stdin) {
+      this.queryParameters.put("stdin", String.valueOf(stdin));
       return this;
    }
 
@@ -52,8 +52,8 @@ public class AttachOptions extends BaseHttpRequestOptions {
     * @param stdout if logs=true, return stdout log, if stream=true, attach to stdout. Default false
     * @return
     */
-   public AttachOptions stdout(Boolean stdout) {
-      this.queryParameters.put("stdout", stdout.toString());
+   public AttachOptions stdout(boolean stdout) {
+      this.queryParameters.put("stdout", String.valueOf(stdout));
       return this;
    }
 
@@ -62,8 +62,8 @@ public class AttachOptions extends BaseHttpRequestOptions {
     * @param stderr if logs=true, return stderr log, if stream=true, attach to stderr. Default false
     * @return
     */
-   public AttachOptions stderr(Boolean stderr) {
-      this.queryParameters.put("stderr", stderr.toString());
+   public AttachOptions stderr(boolean stderr) {
+      this.queryParameters.put("stderr", String.valueOf(stderr));
       return this;
    }
 
@@ -72,7 +72,7 @@ public class AttachOptions extends BaseHttpRequestOptions {
       /**
        * @see org.jclouds.docker.options.AttachOptions#stream
        */
-      public static AttachOptions stream(Boolean stream) {
+      public static AttachOptions stream(boolean stream) {
          AttachOptions options = new AttachOptions();
          return options.stream(stream);
       }
@@ -80,7 +80,7 @@ public class AttachOptions extends BaseHttpRequestOptions {
       /**
        * @see org.jclouds.docker.options.AttachOptions#logs(Boolean)
        */
-      public static AttachOptions logs(Boolean logs) {
+      public static AttachOptions logs(boolean logs) {
          AttachOptions options = new AttachOptions();
          return options.logs(logs);
       }
@@ -88,7 +88,7 @@ public class AttachOptions extends BaseHttpRequestOptions {
       /**
        * @see org.jclouds.docker.options.AttachOptions#stdin(Boolean)
        */
-      public static AttachOptions stdin(Boolean stdin) {
+      public static AttachOptions stdin(boolean stdin) {
          AttachOptions options = new AttachOptions();
          return options.stdin(stdin);
       }
@@ -96,7 +96,7 @@ public class AttachOptions extends BaseHttpRequestOptions {
       /**
        * @see org.jclouds.docker.options.AttachOptions#stdout(Boolean)
        */
-      public static AttachOptions stdout(Boolean stdout) {
+      public static AttachOptions stdout(boolean stdout) {
          AttachOptions options = new AttachOptions();
          return options.stdout(stdout);
       }
@@ -104,7 +104,7 @@ public class AttachOptions extends BaseHttpRequestOptions {
       /**
        * @see org.jclouds.docker.options.AttachOptions#stderr(Boolean)
        */
-      public static AttachOptions stderr(Boolean stderr) {
+      public static AttachOptions stderr(boolean stderr) {
          AttachOptions options = new AttachOptions();
          return options.stderr(stderr);
       }

@@ -20,13 +20,13 @@ import org.jclouds.http.options.BaseHttpRequestOptions;
 
 public class DeleteImageOptions extends BaseHttpRequestOptions {
 
-   public DeleteImageOptions force(Boolean force) {
-      this.queryParameters.put("force", force.toString());
+   public DeleteImageOptions force(boolean force) {
+      this.queryParameters.put("force", String.valueOf(force));
       return this;
    }
 
-   public DeleteImageOptions noPrune(Boolean noPrune) {
-      this.queryParameters.put("noPrune", noPrune.toString());
+   public DeleteImageOptions noPrune(boolean noPrune) {
+      this.queryParameters.put("noPrune", String.valueOf(noPrune));
       return this;
    }
 
@@ -35,7 +35,7 @@ public class DeleteImageOptions extends BaseHttpRequestOptions {
       /**
        * @see DeleteImageOptions#force
        */
-      public static DeleteImageOptions force(Boolean force) {
+      public static DeleteImageOptions force(boolean force) {
          DeleteImageOptions options = new DeleteImageOptions();
          return options.force(force);
       }
@@ -43,7 +43,7 @@ public class DeleteImageOptions extends BaseHttpRequestOptions {
       /**
        * @see DeleteImageOptions#noPrune
        */
-      public static DeleteImageOptions noPrune(Boolean noPrune) {
+      public static DeleteImageOptions noPrune(boolean noPrune) {
          DeleteImageOptions options = new DeleteImageOptions();
          return options.noPrune(noPrune);
       }

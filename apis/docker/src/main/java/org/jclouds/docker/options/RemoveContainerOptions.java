@@ -20,13 +20,13 @@ import org.jclouds.http.options.BaseHttpRequestOptions;
 
 public class RemoveContainerOptions extends BaseHttpRequestOptions {
 
-   public RemoveContainerOptions verbose(Boolean verbose) {
-      this.queryParameters.put("verbose", verbose.toString());
+   public RemoveContainerOptions verbose(boolean verbose) {
+      this.queryParameters.put("verbose", String.valueOf(verbose));
       return this;
    }
 
-   public RemoveContainerOptions force(Boolean force) {
-      this.queryParameters.put("force", force.toString());
+   public RemoveContainerOptions force(boolean force) {
+      this.queryParameters.put("force", String.valueOf(force));
       return this;
    }
    
@@ -36,8 +36,8 @@ public class RemoveContainerOptions extends BaseHttpRequestOptions {
     * @param volume If set to true the volume associated to the container will be removed. 
     * Otherwise it will not be removed.
     */
-   public RemoveContainerOptions volume(Boolean volume) {
-       this.queryParameters.put("v", volume.toString());
+   public RemoveContainerOptions volume(boolean volume) {
+       this.queryParameters.put("v", String.valueOf(volume));
        return this;
     }
 
@@ -45,7 +45,7 @@ public class RemoveContainerOptions extends BaseHttpRequestOptions {
       /**
        * @see RemoveContainerOptions#verbose
        */
-      public static RemoveContainerOptions verbose(Boolean verbose) {
+      public static RemoveContainerOptions verbose(boolean verbose) {
          RemoveContainerOptions options = new RemoveContainerOptions();
          return options.verbose(verbose);
       }
@@ -53,7 +53,7 @@ public class RemoveContainerOptions extends BaseHttpRequestOptions {
       /**
        * @see RemoveContainerOptions#force
        */
-      public static RemoveContainerOptions force(Boolean force) {
+      public static RemoveContainerOptions force(boolean force) {
          RemoveContainerOptions options = new RemoveContainerOptions();
          return options.force(force);
       }
@@ -61,7 +61,7 @@ public class RemoveContainerOptions extends BaseHttpRequestOptions {
       /**
        * @see RemoveContainerOptions#volume
        */
-      public static RemoveContainerOptions volume(Boolean volume) {
+      public static RemoveContainerOptions volume(boolean volume) {
          RemoveContainerOptions options = new RemoveContainerOptions();
          return options.volume(volume);
       }

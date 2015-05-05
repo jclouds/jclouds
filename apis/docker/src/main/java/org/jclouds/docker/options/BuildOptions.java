@@ -25,13 +25,13 @@ public class BuildOptions extends BaseHttpRequestOptions {
       return this;
    }
 
-   public BuildOptions verbose(Boolean verbose) {
-      this.queryParameters.put("verbose", verbose.toString());
+   public BuildOptions verbose(boolean verbose) {
+      this.queryParameters.put("verbose", String.valueOf(verbose));
       return this;
    }
 
-   public BuildOptions nocache(Boolean nocache) {
-      this.queryParameters.put("nocache", nocache.toString());
+   public BuildOptions nocache(boolean nocache) {
+      this.queryParameters.put("nocache", String.valueOf(nocache));
       return this;
    }
 
@@ -48,7 +48,7 @@ public class BuildOptions extends BaseHttpRequestOptions {
       /**
        * @see BuildOptions#verbose(Boolean)
        */
-      public static BuildOptions verbose(Boolean verbose) {
+      public static BuildOptions verbose(boolean verbose) {
          BuildOptions options = new BuildOptions();
          return options.verbose(verbose);
       }
@@ -56,7 +56,7 @@ public class BuildOptions extends BaseHttpRequestOptions {
       /**
        * @see BuildOptions#nocache(Boolean)
        */
-      public static BuildOptions nocache(Boolean nocache) {
+      public static BuildOptions nocache(boolean nocache) {
          BuildOptions options = new BuildOptions();
          return options.nocache(nocache);
       }
