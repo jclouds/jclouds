@@ -253,7 +253,7 @@ public class AWSEC2ComputeServiceApiMockTest extends BaseAWSEC2ApiMockTest {
       assertPosted(DEFAULT_REGION, "Action=DescribeRegions");
       assertPosted(DEFAULT_REGION, "Action=DescribeSecurityGroups&GroupName.1=jclouds%23sg-3c6ef654");
       assertPosted(DEFAULT_REGION, "Action=DeleteSecurityGroup&GroupName=jclouds%23sg-3c6ef654");
-      assertPosted(DEFAULT_REGION, "Action=DescribeKeyPairs&Filter.1.Name=key-name&Filter.1.Value.1=jclouds%23sg-3c6ef654%23us-east-1%2A");
+      assertPosted(DEFAULT_REGION, "Action=DescribeKeyPairs&Filter.1.Name=key-name&Filter.1.Value.1=jclouds%23sg-3c6ef654%23%2A");
       assertPosted(DEFAULT_REGION, "Action=DescribeInstances&Filter.1.Name=instance-state-name&Filter.1.Value.1=terminated&Filter.1.Value.2=shutting-down&Filter.2.Name=key-name&Filter.2.Value.1=jclouds%23sg-3c6ef654");
       assertPosted(DEFAULT_REGION, "Action=DeleteKeyPair&KeyName=jclouds%23sg-3c6ef654");
       assertPosted(DEFAULT_REGION, "Action=DescribePlacementGroups&GroupName.1=jclouds%23sg-3c6ef654%23us-east-1");

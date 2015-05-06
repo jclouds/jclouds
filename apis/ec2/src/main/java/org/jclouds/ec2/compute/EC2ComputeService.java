@@ -235,7 +235,7 @@ public class EC2ComputeService extends BaseComputeService {
       for (KeyPair keyPair : client.getKeyPairApi().get().describeKeyPairsInRegionWithFilter(region,
               ImmutableMultimap.<String, String>builder()
                       .put("key-name", Strings2.urlEncode(
-                              String.format("jclouds#%s#%s*", group, region).replace('#', delimiter)))
+                              String.format("jclouds#%s#*", group).replace('#', delimiter)))
                       .build())) {
          String keyName = keyPair.getKeyName();
          Predicate<String> keyNameMatcher = namingConvention.create().containsGroup(group);
