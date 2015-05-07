@@ -48,12 +48,9 @@ import org.jclouds.rest.annotations.Unwrap;
 @QueryParams(keys = "response", values = "json")
 public interface VolumeApi {
    /**
-    * Create a volume with given name and diskOfferingId
+    * List volumes
     *
-    * @param name           name of the volume
-    * @param diskOfferingId the ID of the disk offering.
-    * @param zoneId         the ID of the availability zone
-    * @return AsyncCreateResponse job response used to track creation
+    * @return volume list, empty if not found
     */
    @Named("listVolumes")
    @GET
@@ -64,13 +61,10 @@ public interface VolumeApi {
    Set<Volume> listVolumes(ListVolumesOptions... options);
 
    /**
-    * Create a volume with given name, size and diskOfferingId
+    * Get volume by id
     *
-    * @param name           name of the volume
-    * @param diskOfferingId the ID of the disk offering (the offering should have the custom disk size flag set)
-    * @param zoneId         the ID of the availability zone
-    * @param size           the size of volume required (in GB)
-    * @return AsyncCreateResponse job response used to track creation
+    * @param id the volume id to retrieve
+    * @return volume or null if not found
     */
    @Named("listVolumes")
    @GET
@@ -81,6 +75,41 @@ public interface VolumeApi {
    @Fallback(NullOnNotFoundOr404.class)
    Volume getVolume(@QueryParam("id") String id);
 
+
+   /**
+    * Create a volume with given name and diskOfferingId
+    *
+    * @param name           name of the volume
+    * @param diskOfferingId the ID of the disk offering.
+    * @param zoneId         the ID of the availability zone
+    * @return AsyncCreateResponse job response used to track creation
+    */
+   @Named("createVolume")
+   @GET
+   @QueryParams(keys = "command", values = "createVolume")
+   @Unwrap
+   @Consumes(MediaType.APPLICATION_JSON)
+   AsyncCreateResponse createVolumeFromDiskOfferingInZone(@QueryParam("name") String name,
+                                                                            @QueryParam("diskofferingid") String diskOfferingId,
+                                                                            @QueryParam("zoneid") String zoneId);
+
+   /**
+    * Create a volume with given name, size and diskOfferingId
+    *
+    * @param name           name of the volume
+    * @param diskOfferingId the ID of the disk offering (the offering should have the custom disk size flag set)
+    * @param zoneId         the ID of the availability zone
+    * @param size           the size of volume required (in GB)
+    * @return AsyncCreateResponse job response used to track creation
+    */
+   @GET
+   @QueryParams(keys = "command", values = "createVolume")
+   @Unwrap
+   @Consumes(MediaType.APPLICATION_JSON)
+   AsyncCreateResponse createVolumeFromCustomDiskOfferingInZone(@QueryParam("name") String name,
+                                                                            @QueryParam("diskofferingid") String diskOfferingId,
+                                                                            @QueryParam("zoneid") String zoneId,
+                                                                            @QueryParam("size") int size);
 
    /**
     * Create a volume with given name and snapshotId
@@ -95,43 +124,16 @@ public interface VolumeApi {
    @QueryParams(keys = "command", values = "createVolume")
    @Unwrap
    @Consumes(MediaType.APPLICATION_JSON)
-   AsyncCreateResponse createVolumeFromDiskOfferingInZone(@QueryParam("name") String name,
-                                                                            @QueryParam("diskofferingid") String diskOfferingId,
-                                                                            @QueryParam("zoneid") String zoneId);
-
-   /**
-    * List volumes
-    *
-    * @return volume list, empty if not found
-    */
-   @GET
-   @QueryParams(keys = "command", values = "createVolume")
-   @Unwrap
-   @Consumes(MediaType.APPLICATION_JSON)
-   AsyncCreateResponse createVolumeFromCustomDiskOfferingInZone(@QueryParam("name") String name,
-                                                                            @QueryParam("diskofferingid") String diskOfferingId,
-                                                                            @QueryParam("zoneid") String zoneId,
-                                                                            @QueryParam("size") int size);
-
-   /**
-    * Get volume by id
-    *
-    * @param id the volume id to retrieve
-    * @return volume or null if not found
-    */
-   @Named("createVolume")
-   @GET
-   @QueryParams(keys = "command", values = "createVolume")
-   @Unwrap
-   @Consumes(MediaType.APPLICATION_JSON)
    AsyncCreateResponse createVolumeFromSnapshotInZone(@QueryParam("name") String name,
                                                                         @QueryParam("snapshotid") String snapshotId,
                                                                         @QueryParam("zoneid") String zoneId);
 
    /**
-    * Deletes a attached disk volume
+    * Attaches a disk volume to a virtual machine.
     *
-    * @param id id of the volume
+    * @param volumeId         the ID of the disk volume
+    * @param virtualMachineId the ID of the virtual machine
+    * @return AsyncCreateResponse job response used to track creation
     */
    @Named("attachVolume")
    @GET
@@ -142,10 +144,9 @@ public interface VolumeApi {
                                                       @QueryParam("virtualmachineid") String virtualMachineId);
 
    /**
-    * Attaches a disk volume to a virtual machine.
+    * Detaches a disk volume from a virtual machine.
     *
     * @param volumeId         the ID of the disk volume
-    * @param virtualMachineId the ID of the virtual machine
     * @return AsyncCreateResponse job response used to track creation
     */
    @Named("detachVolume")
@@ -156,10 +157,9 @@ public interface VolumeApi {
    AsyncCreateResponse detachVolume(@QueryParam("id") String volumeId);
 
    /**
-    * Detaches a disk volume to a virtual machine.
+    * Deletes a detached disk volume
     *
-    * @param volumeId         the ID of the disk volume
-    * @return AsyncCreateResponse job response used to track creation
+    * @param id id of the volume
     */
    @Named("deleteVolume")
    @GET
