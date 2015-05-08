@@ -81,6 +81,7 @@ import com.google.common.cache.LoadingCache;
 import com.google.common.collect.FluentIterable;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.ImmutableMap.Builder;
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
@@ -415,6 +416,26 @@ public class RegionScopedSwiftBlobStore implements BlobStore {
       removeBlobs(mpu.containerName(), names.build());
    }
 
+   private ImmutableMap<String, String> getContentMetadataForManifest(ContentMetadata contentMetadata) {
+      Builder<String, String> mapBuilder = ImmutableMap.builder();
+      if (contentMetadata.getContentType() != null) {
+         mapBuilder.put("content-type", contentMetadata.getContentType());
+      }
+      /**
+       * Do not set content-length. Set automatically to manifest json string length by BindManifestToJsonPayload
+       */
+      if (contentMetadata.getContentDisposition() != null) {
+         mapBuilder.put("content-disposition", contentMetadata.getContentDisposition());
+      }
+      if (contentMetadata.getContentEncoding() != null) {
+         mapBuilder.put("content-encoding", contentMetadata.getContentEncoding());
+      }
+      if (contentMetadata.getContentLanguage() != null) {
+         mapBuilder.put("content-language", contentMetadata.getContentLanguage());
+      }
+      return mapBuilder.build();
+   }
+
    @Override
    public String completeMultipartUpload(MultipartUpload mpu, List<MultipartPart> parts) {
       ImmutableList.Builder<Segment> builder = ImmutableList.builder();
@@ -422,9 +443,9 @@ public class RegionScopedSwiftBlobStore implements BlobStore {
          String path = mpu.containerName() + "/" + mpu.blobName() + "-" + part.partNumber();
          builder.add(Segment.builder().path(path).etag(part.partETag()).sizeBytes(part.partSize()).build());
       }
-      Map<String, String> metadata = ImmutableMap.of();  // TODO: how to populate this from mpu.blobMetadata()?
+
       return api.getStaticLargeObjectApi(regionId, mpu.containerName()).replaceManifest(mpu.blobName(),
-            builder.build(), metadata);
+            builder.build(), mpu.blobMetadata().getUserMetadata(), getContentMetadataForManifest(mpu.blobMetadata().getContentMetadata()));
    }
 
    @Override
@@ -453,7 +474,7 @@ public class RegionScopedSwiftBlobStore implements BlobStore {
 
    @Override
    public long getMinimumMultipartPartSize() {
-      return 1024 * 1024;
+      return 1024 * 1024 + 1;
    }
 
    @Override

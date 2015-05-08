@@ -85,12 +85,6 @@ public class BindMetadataToHeaders implements Binder {
       }
    }
 
-   public static class BindRawMetadataToHeaders extends BindMetadataToHeaders {
-      BindRawMetadataToHeaders() {
-         super("");
-      }
-   }
-
    public static class BindRemoveObjectMetadataToHeaders extends BindMetadataToHeaders.ForRemoval {
       BindRemoveObjectMetadataToHeaders() {
          super(OBJECT_METADATA_PREFIX);

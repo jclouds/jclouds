@@ -19,9 +19,13 @@ package org.jclouds.openstack.swift.v1.blobstore.integration;
 import static org.jclouds.openstack.keystone.v2_0.config.KeystoneProperties.CREDENTIAL_TYPE;
 
 import java.util.Properties;
+import java.util.concurrent.TimeUnit;
 
+import org.jclouds.blobstore.attr.ConsistencyModel;
 import org.jclouds.blobstore.integration.internal.BaseBlobSignerLiveTest;
 import org.testng.annotations.Test;
+
+import com.google.common.util.concurrent.Uninterruptibles;
 
 @Test(groups = "live", testName = "SwiftBlobSignerLiveTest")
 public class SwiftBlobSignerLiveTest extends BaseBlobSignerLiveTest {
@@ -35,5 +39,12 @@ public class SwiftBlobSignerLiveTest extends BaseBlobSignerLiveTest {
       Properties props = super.setupProperties();
       setIfTestSystemPropertyPresent(props, CREDENTIAL_TYPE);
       return props;
+   }
+
+   @Override
+   protected void awaitConsistency() {
+      if (view.getConsistencyModel() == ConsistencyModel.EVENTUAL) {
+         Uninterruptibles.sleepUninterruptibly(30, TimeUnit.SECONDS);
+      }
    }
 }

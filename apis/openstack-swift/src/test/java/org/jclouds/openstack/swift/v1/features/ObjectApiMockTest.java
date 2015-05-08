@@ -522,7 +522,7 @@ public class ObjectApiMockTest extends BaseOpenStackMockTest<SwiftApi> {
 
          List<String> requestHeaders = copyRequest.getHeaders();
          assertTrue(requestHeaders.contains("X-Object-Meta-someuserheader: someUserMetadataValue"));
-         assertTrue(requestHeaders.contains("content-disposition: attachment; filename=\"fname.ext\""));
+         assertTrue(requestHeaders.contains("Content-Disposition: attachment; filename=\"fname.ext\""));
          assertTrue(requestHeaders.contains(SwiftHeaders.OBJECT_COPY_FROM + ": /bar/foo.txt"));
       } finally {
          server.shutdown();

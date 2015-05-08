@@ -42,8 +42,8 @@ import org.jclouds.io.Payload;
 import org.jclouds.javax.annotation.Nullable;
 import org.jclouds.openstack.keystone.v2_0.filters.AuthenticateRequest;
 import org.jclouds.openstack.swift.v1.binders.BindMetadataToHeaders.BindObjectMetadataToHeaders;
-import org.jclouds.openstack.swift.v1.binders.BindMetadataToHeaders.BindRawMetadataToHeaders;
 import org.jclouds.openstack.swift.v1.binders.BindMetadataToHeaders.BindRemoveObjectMetadataToHeaders;
+import org.jclouds.openstack.swift.v1.binders.BindToHeaders;
 import org.jclouds.openstack.swift.v1.binders.SetPayload;
 import org.jclouds.openstack.swift.v1.domain.ObjectList;
 import org.jclouds.openstack.swift.v1.domain.SwiftObject;
@@ -224,8 +224,8 @@ public interface ObjectApi {
    @Path("/{objectName}")
    @Produces("")
    @Fallback(FalseOnNotFoundOr404.class)
-   boolean updateRawMetadata(@PathParam("objectName") String objectName,
-         @BinderParam(BindRawMetadataToHeaders.class) Map<String, String> metadata);
+   boolean updateHeaders(@PathParam("objectName") String objectName,
+         @BinderParam(BindToHeaders.class) Map<String, String> metadata);
 
    /**
     * Deletes the metadata from a {@link SwiftObject}.
@@ -313,6 +313,6 @@ public interface ObjectApi {
          @PathParam("sourceContainer") String sourceContainer,
          @PathParam("sourceObject") String sourceObject,
          @BinderParam(BindObjectMetadataToHeaders.class) Map<String, String> userMetadata,
-         @BinderParam(BindRawMetadataToHeaders.class) Map<String, String> objectMetadata);
+         @BinderParam(BindToHeaders.class) Map<String, String> objectMetadata);
 
 }

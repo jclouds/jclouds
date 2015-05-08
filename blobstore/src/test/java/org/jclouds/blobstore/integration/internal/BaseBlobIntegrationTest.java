@@ -488,6 +488,7 @@ public class BaseBlobIntegrationTest extends BaseBlobStoreIntegrationTest {
          addBlobToContainer(container, name2, name2, MediaType.TEXT_PLAIN);
          awaitConsistency();
          view.getBlobStore().removeBlobs(container, ImmutableSet.of(name, name2));
+         awaitConsistency();
          assertContainerEmptyDeleting(container, name);
       } finally {
          returnContainer(container);

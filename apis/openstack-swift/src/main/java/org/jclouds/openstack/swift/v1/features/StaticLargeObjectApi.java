@@ -24,13 +24,17 @@ import java.util.Map;
 import javax.inject.Named;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
+import javax.ws.rs.GET;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 
+import org.jclouds.Fallbacks.EmptyListOnNotFoundOr404;
 import org.jclouds.Fallbacks.VoidOnNotFoundOr404;
 import org.jclouds.openstack.keystone.v2_0.filters.AuthenticateRequest;
+import org.jclouds.openstack.swift.v1.binders.BindManifestToJsonPayload;
 import org.jclouds.openstack.swift.v1.binders.BindMetadataToHeaders.BindObjectMetadataToHeaders;
+import org.jclouds.openstack.swift.v1.binders.BindToHeaders;
 import org.jclouds.openstack.swift.v1.domain.Segment;
 import org.jclouds.openstack.swift.v1.functions.ETagHeader;
 import org.jclouds.rest.annotations.BinderParam;
@@ -77,6 +81,30 @@ public interface StaticLargeObjectApi {
          @BinderParam(BindObjectMetadataToHeaders.class) Map<String, String> metadata);
 
    /**
+    * Creates or updates a static large object's manifest.
+    *
+    * @param objectName
+    *           corresponds to {@link SwiftObject#getName()}.
+    * @param segments
+    *           ordered parts which will be concatenated upon download.
+    * @param metadata
+    *           corresponds to {@link SwiftObject#getMetadata()}.
+    * @param headers
+    *           Binds the map to headers, without prefixing/escaping the header name/key.
+    *
+    * @return {@link SwiftObject#getEtag()} of the object, which is the MD5
+    *         checksum of the concatenated ETag values of the {@code segments}.
+    */
+   @Named("staticLargeObject:replaceManifest")
+   @PUT
+   @ResponseParser(ETagHeader.class)
+   @QueryParams(keys = "multipart-manifest", values = "put")
+   String replaceManifest(@PathParam("objectName") String objectName,
+         @BinderParam(BindManifestToJsonPayload.class) List<Segment> segments,
+         @BinderParam(BindObjectMetadataToHeaders.class) Map<String, String> metadata,
+         @BinderParam(BindToHeaders.class) Map<String, String> headers);
+
+   /**
     * Deletes a static large object, if present, including all of its segments.
     *
     * @param objectName
@@ -87,4 +115,18 @@ public interface StaticLargeObjectApi {
    @Fallback(VoidOnNotFoundOr404.class)
    @QueryParams(keys = "multipart-manifest", values = "delete")
    void delete(@PathParam("objectName") String objectName);
+
+   /**
+    * Get a static large object's manifest.
+    *
+    * @param objectName
+    *           corresponds to {@link SwiftObject#getName()}.
+    *
+    * @return A list of the multipart segments
+    */
+   @Named("staticLargeObject:getManifest")
+   @GET
+   @Fallback(EmptyListOnNotFoundOr404.class)
+   @QueryParams(keys = "multipart-manifest", values = "get")
+   List<Segment> getManifest(@PathParam("objectName") String objectName);
 }

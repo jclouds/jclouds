@@ -19,16 +19,20 @@ package org.jclouds.openstack.swift.v1.blobstore.integration;
 import static org.jclouds.openstack.keystone.v2_0.config.KeystoneProperties.CREDENTIAL_TYPE;
 
 import java.util.Properties;
+import java.util.concurrent.TimeUnit;
 
+import org.jclouds.blobstore.attr.ConsistencyModel;
 import org.jclouds.blobstore.domain.Blob;
 import org.jclouds.blobstore.integration.internal.BaseBlobIntegrationTest;
 import org.testng.SkipException;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
+import com.google.common.util.concurrent.Uninterruptibles;
+
 @Test(groups = "live", testName = "SwiftBlobIntegrationLiveTest")
 public class SwiftBlobIntegrationLiveTest extends BaseBlobIntegrationTest {
-   
+
    public SwiftBlobIntegrationLiveTest() {
       provider = "openstack-swift";
    }
@@ -85,12 +89,9 @@ public class SwiftBlobIntegrationLiveTest extends BaseBlobIntegrationTest {
    }
 
    @Override
-   public void testMultipartUploadSinglePart() throws Exception {
-      throw new SkipException("openstack-swift does not support setting blob metadata during multipart upload");
-   }
-
-   @Override
-   public void testMultipartUploadMultipleParts() throws Exception {
-      throw new SkipException("openstack-swift does not support setting blob metadata during multipart upload");
+   protected void awaitConsistency() {
+      if (view.getConsistencyModel() == ConsistencyModel.EVENTUAL) {
+         Uninterruptibles.sleepUninterruptibly(30, TimeUnit.SECONDS);
+      }
    }
 }
