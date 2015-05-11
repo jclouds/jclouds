@@ -19,6 +19,7 @@ package org.jclouds.softlayer.domain;
 import com.google.common.base.Function;
 import com.google.common.base.Objects;
 import com.google.common.base.Predicate;
+import com.google.common.base.Predicates;
 import com.google.common.collect.FluentIterable;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
@@ -202,16 +203,21 @@ public class ContainerVirtualGuestConfiguration {
    }
 
    public Set<OperatingSystem> getVirtualGuestOperatingSystems() {
-      return Sets.newHashSet(Iterables.transform(operatingSystems,
-              new Function<ContainerVirtualGuestConfigurationOption, OperatingSystem>() {
+      return Sets.newHashSet(FluentIterable.from(operatingSystems)
+               .transform(new Function<ContainerVirtualGuestConfigurationOption, OperatingSystem>() {
          @Override
          public OperatingSystem apply(ContainerVirtualGuestConfigurationOption input) {
-            return OperatingSystem.builder()
-                    .id(input.getTemplate().getOperatingSystemReferenceCode())
-                    .operatingSystemReferenceCode(input.getTemplate().getOperatingSystemReferenceCode())
-                    .build();
+            String operatingSystemReferenceCode = input.getTemplate().getOperatingSystemReferenceCode();
+            if (operatingSystemReferenceCode == null) {
+               return null;
+            } else {
+               return OperatingSystem.builder()
+                       .id(operatingSystemReferenceCode)
+                       .operatingSystemReferenceCode(operatingSystemReferenceCode)
+                       .build();
+            }
          }
-      }));
+      }).filter(Predicates.notNull()));
    }
 
    public Set<VirtualGuestBlockDevice> getVirtualGuestBlockDevices() {
