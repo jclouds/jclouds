@@ -209,6 +209,7 @@ END_OF_JCLOUDS_SCRIPT
 	END_OF_JCLOUDS_FILE
 	chmod 0440 /etc/sudoers
 	mkdir -p /home/users
+	chmod 0755 /home/users
 	groupadd -f wheel
 	useradd -c 'web' -s /bin/bash -g wheel -m  -d /home/users/web -p 'crypt(randompassword)' web
 	mkdir -p /home/users/web/.ssh
