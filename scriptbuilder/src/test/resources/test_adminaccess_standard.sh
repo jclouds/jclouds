@@ -4,6 +4,7 @@ cat > /etc/sudoers <<-'END_OF_JCLOUDS_FILE'
 END_OF_JCLOUDS_FILE
 chmod 0440 /etc/sudoers
 mkdir -p /home/users
+chmod 0755 /home/users
 groupadd -f wheel
 useradd -c 'defaultAdminUsername' -s /bin/bash -g wheel -m  -d /home/users/defaultAdminUsername -p 'crypt(0)' defaultAdminUsername
 mkdir -p /home/users/defaultAdminUsername/.ssh
