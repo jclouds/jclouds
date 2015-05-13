@@ -27,6 +27,7 @@ import static org.jclouds.io.Payloads.newInputStreamPayload;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertTrue;
+import static org.testng.Assert.fail;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -36,7 +37,9 @@ import javax.inject.Inject;
 import org.easymock.EasyMock;
 import org.easymock.IAnswer;
 import org.jclouds.http.HttpCommand;
+import org.jclouds.http.HttpException;
 import org.jclouds.http.HttpRequest;
+import org.jclouds.http.HttpRequestFilter;
 import org.jclouds.http.HttpResponse;
 import org.jclouds.http.HttpUtils;
 import org.jclouds.http.IOExceptionRetryHandler;
@@ -196,6 +199,41 @@ public class BaseHttpCommandExecutorServiceTest {
       assertEquals(response.getPayload().openStream().read(), -1);
    }
 
+   public void testDoNotRetryPostOnException() throws IOException {
+      helperRetryOnlyIdempotent("POST");
+   }
+
+   public void testRetryGetOnException() throws IOException {
+      helperRetryOnlyIdempotent("GET");
+   }
+
+   private void helperRetryOnlyIdempotent(String method) throws IOException {
+      final IOException error = new IOException("test exception");
+      HttpRequestFilter throwingFilter = new HttpRequestFilter() {
+         @Override
+         public HttpRequest filter(HttpRequest request) throws HttpException {
+            throw new HttpException(error);
+         }
+      };
+      HttpCommand command = new HttpCommand(HttpRequest.builder().endpoint("http://localhost").method(method).filter(throwingFilter).build());
+
+      IOExceptionRetryHandler ioRetryHandler = EasyMock.createMock(IOExceptionRetryHandler.class);
+
+      if ("GET".equals(method)) {
+         expect(ioRetryHandler.shouldRetryRequest(command, error)).andReturn(true);
+         expect(ioRetryHandler.shouldRetryRequest(command, error)).andReturn(false);
+      }
+      replay(ioRetryHandler);
+
+      BaseHttpCommandExecutorService<?> service = mockHttpCommandExecutorService(ioRetryHandler);
+      try {
+         service.invoke(command);
+         fail("Expected to fail due to throwing filter");
+      } catch (Exception e) {}
+
+      verify(ioRetryHandler);
+   }
+
    private HttpCommand mockHttpCommand() {
       return new HttpCommand(HttpRequest.builder().endpoint("http://localhost").method("mock").build());
    }
@@ -208,6 +246,19 @@ public class BaseHttpCommandExecutorServiceTest {
             Names.bindProperties(binder(), BaseHttpApiMetadata.defaultProperties());
             bind(DelegatingRetryHandler.class).toInstance(retryHandler);
             bind(DelegatingErrorHandler.class).toInstance(errorHandler);
+            bind(BaseHttpCommandExecutorService.class).to(MockHttpCommandExecutorService.class);
+         }
+      });
+
+      return injector.getInstance(BaseHttpCommandExecutorService.class);
+   }
+
+   private BaseHttpCommandExecutorService<?> mockHttpCommandExecutorService(final IOExceptionRetryHandler ioRetryHandler) {
+      Injector injector = Guice.createInjector(new AbstractModule() {
+         @Override
+         protected void configure() {
+            Names.bindProperties(binder(), BaseHttpApiMetadata.defaultProperties());
+            bind(IOExceptionRetryHandler.class).toInstance(ioRetryHandler);
             bind(BaseHttpCommandExecutorService.class).to(MockHttpCommandExecutorService.class);
          }
       });

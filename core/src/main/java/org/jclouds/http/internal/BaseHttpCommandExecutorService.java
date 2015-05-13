@@ -24,6 +24,7 @@ import static org.jclouds.http.HttpUtils.wirePayloadIfEnabled;
 import static org.jclouds.util.Throwables2.getFirstThrowableOfType;
 
 import java.io.IOException;
+import java.util.Set;
 
 import javax.annotation.Resource;
 import javax.inject.Inject;
@@ -44,8 +45,11 @@ import org.jclouds.io.ContentMetadataCodec;
 import org.jclouds.logging.Logger;
 
 import com.google.common.annotations.VisibleForTesting;
+import com.google.common.collect.ImmutableSet;
 
 public abstract class BaseHttpCommandExecutorService<Q> implements HttpCommandExecutorService {
+   private static final Set<String> IDEMPOTENT_METHODS = ImmutableSet.of("GET", "HEAD", "OPTIONS", "PUT", "DELETE");
+
    protected final HttpUtils utils;
    protected final ContentMetadataCodec contentMetadataCodec;
 
@@ -107,7 +111,7 @@ public abstract class BaseHttpCommandExecutorService<Q> implements HttpCommandEx
             }
          } catch (Exception e) {
             IOException ioe = getFirstThrowableOfType(e, IOException.class);
-            if (ioe != null && ioRetryHandler.shouldRetryRequest(command, ioe)) {
+            if (ioe != null && shouldContinue(command, ioe)) {
                continue;
             }
             command.setException(new HttpResponseException(e.getMessage() + " connecting to "
@@ -135,6 +139,20 @@ public abstract class BaseHttpCommandExecutorService<Q> implements HttpCommandEx
       // we should make sure that any open stream is closed.
       releasePayload(response);
       return shouldContinue;
+   }
+
+   boolean shouldContinue(HttpCommand command, IOException response) {
+      return isIdempotent(command) && ioRetryHandler.shouldRetryRequest(command, response);
+   }
+
+   private boolean isIdempotent(HttpCommand command) {
+      String method = command.getCurrentRequest().getMethod();
+      if (!IDEMPOTENT_METHODS.contains(method)) {
+         logger.error("Command not considered safe to retry because request method is %1$s: %2$s", method, command);
+         return false;
+      } else {
+         return true;
+      }
    }
 
    protected abstract Q convert(HttpRequest request) throws IOException, InterruptedException;
