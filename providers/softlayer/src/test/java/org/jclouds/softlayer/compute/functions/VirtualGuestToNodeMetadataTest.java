@@ -67,7 +67,7 @@ public class VirtualGuestToNodeMetadataTest {
       assertEquals(nodeMetadata.getName(), virtualGuest.getHostname());
       assertNotNull(nodeMetadata.getLocation());
       assertEquals(nodeMetadata.getLocation().getId(), location.getId());
-      assertEquals(nodeMetadata.getHostname(), virtualGuest.getHostname() + virtualGuest.getDomain());
+      assertEquals(nodeMetadata.getHostname(), virtualGuest.getFullyQualifiedDomainName());
       assertEquals(nodeMetadata.getHardware().getRam(), virtualGuest.getMaxMemory());
       assertTrue(nodeMetadata.getHardware().getProcessors().size() == 1);
       assertEquals(Iterables.get(nodeMetadata.getHardware().getProcessors(), 0).getCores(), (double) virtualGuest.getStartCpus());
@@ -80,6 +80,7 @@ public class VirtualGuestToNodeMetadataTest {
       return VirtualGuest.builder()
               .domain("example.com")
               .hostname("host1")
+              .fullyQualifiedDomainName("host1.example.com")
               .id(1301396)
               .maxMemory(1024)
               .startCpus(1)
