@@ -70,7 +70,7 @@ public class VirtualGuestToNodeMetadata implements Function<VirtualGuest, NodeMe
       NodeMetadataBuilder builder = new NodeMetadataBuilder();
       builder.ids(from.getId() + "");
       builder.name(from.getHostname());
-      builder.hostname(from.getHostname() + from.getDomain());
+      builder.hostname(from.getFullyQualifiedDomainName());
       if (from.getDatacenter() != null) {
          builder.location(from(locations.get()).firstMatch(
                  LocationPredicates.idEquals(from.getDatacenter().getName())).orNull());
