@@ -40,6 +40,7 @@ import org.jclouds.googlecomputeengine.domain.Metadata;
 import org.jclouds.googlecomputeengine.domain.NewInstance;
 import org.jclouds.googlecomputeengine.domain.AttachDisk;
 import org.jclouds.googlecomputeengine.domain.Operation;
+import org.jclouds.googlecomputeengine.domain.Tags;
 import org.jclouds.googlecomputeengine.internal.BaseGoogleComputeEngineApiLiveTest;
 import org.jclouds.googlecomputeengine.options.DiskCreationOptions;
 import org.testng.annotations.AfterClass;
@@ -93,9 +94,9 @@ public class InstanceApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
             getNetworkUrl(INSTANCE_NETWORK_NAME), // network
             Arrays.asList(AttachDisk.newBootDisk(imageUri),
                   AttachDisk.existingDisk(getDiskUrl(DISK_NAME))), // disks
-            "a description" // description
+            "a description", // description
+            Tags.create(null, ImmutableList.of("foo", "bar")) // tags
       );
-      instance.tags().items().addAll(Arrays.asList("foo", "bar"));
       instance.metadata().put("mykey", "myvalue");
 
       instance2 = NewInstance.create(

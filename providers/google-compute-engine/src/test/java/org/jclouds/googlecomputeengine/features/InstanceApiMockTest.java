@@ -88,7 +88,8 @@ public class InstanceApiMockTest extends BaseGoogleComputeEngineApiMockTest {
             URI.create(url("/projects/party/zones/us-central1-a/machineTypes/n1-standard-1")), // machineType
             URI.create(url("/projects/party/global/networks/default")), // network
             Arrays.asList(AttachDisk.existingBootDisk(URI.create(url("/projects/party/zones/us-central1-a/disks/test")))),
-            "desc" // description
+            "desc", // description
+            null // tags
       );
 
       newInstance.metadata().put("aKey", "aValue");

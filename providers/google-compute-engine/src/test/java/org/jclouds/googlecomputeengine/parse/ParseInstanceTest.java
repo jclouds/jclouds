@@ -57,7 +57,7 @@ public class ParseInstanceTest extends BaseGoogleComputeEngineParseTest<Instance
             URI.create(baseUrl + "/party/zones/us-central1-a/instances/test-0"), // selfLink
             "test-0", // name
             "desc", // description
-            Tags.create("abcd").add("aTag").add("Group-port-42"), // tags
+            Tags.create("abcd", ImmutableList.of("aTag", "Group-port-42")), // tags
             URI.create(baseUrl + "/party/zones/us-central1-a/machineTypes/n1-standard-1"), // machineType
             Instance.Status.RUNNING, // status
             null, // statusMessage

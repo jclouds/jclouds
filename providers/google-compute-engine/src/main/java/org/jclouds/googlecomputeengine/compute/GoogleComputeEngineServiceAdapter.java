@@ -26,6 +26,7 @@ import static org.jclouds.googlecomputeengine.config.GoogleComputeEngineProperti
 import static org.jclouds.googlecomputeengine.compute.strategy.CreateNodesWithGroupEncodedIntoNameThenAddToSet.simplifyPorts;
 
 import java.net.URI;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -56,6 +57,7 @@ import org.jclouds.googlecomputeengine.domain.MachineType;
 import org.jclouds.googlecomputeengine.domain.NewInstance;
 import org.jclouds.googlecomputeengine.domain.Operation;
 import org.jclouds.googlecomputeengine.domain.Region;
+import org.jclouds.googlecomputeengine.domain.Tags;
 import org.jclouds.googlecomputeengine.domain.Zone;
 import org.jclouds.googlecomputeengine.features.InstanceApi;
 import org.jclouds.location.suppliers.all.JustProvider;
@@ -126,23 +128,25 @@ public final class GoogleComputeEngineServiceAdapter
       URI network = URI.create(networks.next());
       assert !networks.hasNext() : "Error: Options should specify only one network";
 
-      NewInstance newInstance = NewInstance.create(
-            name, // name
-            template.getHardware().getUri(), // machineType
-            network, // network
-            disks, // disks
-            group // description
-      );
-
       // Add tags from template
-      newInstance.tags().items().addAll(options.getTags());
+      ArrayList<String> tags = new ArrayList<String>(options.getTags());
 
       // Add tags for firewalls
       FirewallTagNamingConvention naming = firewallTagNamingConvention.get(group);
       List<String> ports = simplifyPorts(options.getInboundPorts());
       if (ports != null){
-         newInstance.tags().items().add(naming.name(ports));
+         tags.add(naming.name(ports));
       }
+
+      NewInstance newInstance = NewInstance.create(
+            name, // name
+            template.getHardware().getUri(), // machineType
+            network, // network
+            disks, // disks
+            group, // description
+            Tags.create(null, ImmutableList.copyOf(tags)) // tags
+      );
+
 
       // Add metadata from template and for ssh key and image id
       newInstance.metadata().putAll(options.getUserMetadata());

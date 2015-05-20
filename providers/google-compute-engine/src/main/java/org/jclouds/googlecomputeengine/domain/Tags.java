@@ -16,13 +16,11 @@
  */
 package org.jclouds.googlecomputeengine.domain;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.jclouds.javax.annotation.Nullable;
 import org.jclouds.json.SerializedNames;
 
 import com.google.auto.value.AutoValue;
+import com.google.common.collect.ImmutableList;
 
 /**
  * Tags for an instance or project, with their fingerprint. Each tag must be unique, must be 1-63 characters long, and
@@ -35,14 +33,8 @@ public abstract class Tags implements Cloneable {
    /** The fingerprint for the items - needed for updating them. */
    @Nullable public abstract String fingerprint();
 
-   /** Mutable list of tags. */
-   public abstract List<String> items();
-
-   /** Convenience method for chaining adds. */
-   public Tags add(String tag) {
-      items().add(tag);
-      return this;
-   }
+   /** Immutable list of tags. */
+   public abstract ImmutableList<String> items();
 
    public static Tags create() {
       return Tags.create(null, null);
@@ -53,14 +45,15 @@ public abstract class Tags implements Cloneable {
    }
 
    @SerializedNames({ "fingerprint", "items" })
-   static Tags create(String fingerprint, ArrayList<String> items) { // Dictates the type when created from json!
-      return new AutoValue_Tags(fingerprint, items != null ? items : new ArrayList<String>());
+   public static Tags create(String fingerprint, ImmutableList<String> items) { // Dictates the type when created from json!
+      ImmutableList<String> empty = ImmutableList.of();
+      return new AutoValue_Tags(fingerprint, items != null ? items : empty);
    }
 
    Tags() {
    }
 
    @Override public Tags clone() {
-      return Tags.create(fingerprint(), new ArrayList<String>(items()));
+      return Tags.create(fingerprint(), items());
    }
 }
