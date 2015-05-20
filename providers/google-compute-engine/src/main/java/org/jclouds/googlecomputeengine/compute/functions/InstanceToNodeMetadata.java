@@ -16,11 +16,9 @@
  */
 package org.jclouds.googlecomputeengine.compute.functions;
 
-import static com.google.common.base.Preconditions.checkNotNull;
 import static org.jclouds.compute.util.ComputeServiceUtils.groupFromMapOrName;
 
 import java.net.URI;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -36,7 +34,6 @@ import org.jclouds.domain.Location;
 import org.jclouds.googlecomputeengine.domain.Instance;
 
 import com.google.common.base.Function;
-import com.google.common.base.Predicate;
 import com.google.common.base.Supplier;
 import com.google.common.collect.ImmutableList;
 
@@ -47,33 +44,21 @@ public final class InstanceToNodeMetadata implements Function<Instance, NodeMeta
    private final Map<URI, URI> diskToSourceImage;
    private final Supplier<Map<URI, Hardware>> hardwares;
    private final Supplier<Map<URI, Location>> locationsByUri;
-   private final FirewallTagNamingConvention.Factory firewallTagNamingConvention;
 
    @Inject InstanceToNodeMetadata(Map<Instance.Status, NodeMetadata.Status> toPortableNodeStatus,
                                   GroupNamingConvention.Factory namingConvention,
                                   Map<URI, URI> diskToSourceImage,
                                   @Memoized Supplier<Map<URI, Hardware>> hardwares,
-                                  @Memoized Supplier<Map<URI, Location>> locationsByUri,
-                                  FirewallTagNamingConvention.Factory firewallTagNamingConvention) {
+                                  @Memoized Supplier<Map<URI, Location>> locationsByUri) {
       this.toPortableNodeStatus = toPortableNodeStatus;
       this.nodeNamingConvention = namingConvention.createWithoutPrefix();
       this.diskToSourceImage = diskToSourceImage;
       this.hardwares = hardwares;
       this.locationsByUri = locationsByUri;
-      this.firewallTagNamingConvention = checkNotNull(firewallTagNamingConvention, "firewallTagNamingConvention");
    }
 
    @Override public NodeMetadata apply(Instance input) {
       String group = groupFromMapOrName(input.metadata().asMap(), input.name(), nodeNamingConvention);
-      Predicate<String> isFirewallTag = firewallTagNamingConvention.get(group).isFirewallTag();
-      if (group != null) {
-         for (Iterator<String> tag = input.tags().items().iterator(); tag.hasNext(); ) {
-            if (isFirewallTag.apply(tag.next())) {
-               tag.remove();
-            }
-         }
-      }
-
       NodeMetadataBuilder builder = new NodeMetadataBuilder();
 
       Location zone = locationsByUri.get().get(input.zone());

@@ -22,8 +22,6 @@ import javax.inject.Inject;
 
 import org.jclouds.compute.functions.GroupNamingConvention;
 
-import com.google.common.base.Predicate;
-
 /**
  * The convention for naming instance tags that firewall rules recognise.
  */
@@ -57,15 +55,5 @@ public final class FirewallTagNamingConvention {
       }
 
       return String.format("%s-%s", sharedResourceName, Integer.toHexString(result));
-   }
-
-
-   public Predicate<String> isFirewallTag() {
-      return new Predicate<String>() {
-         @Override
-         public boolean apply(String input) {
-            return input != null && input.startsWith(sharedResourceName + "-port-");
-         }
-      };
    }
 }

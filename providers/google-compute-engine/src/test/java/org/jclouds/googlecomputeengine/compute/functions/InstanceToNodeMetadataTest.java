@@ -178,18 +178,7 @@ public class InstanceToNodeMetadataTest {
             namingConventionFactory,
             ImmutableMap.of(instance.disks().get(0).source(), imageUrl),
             hardwareSupplier,
-            locationSupplier,
-            new FirewallTagNamingConvention.Factory(namingConventionFactory));
-   }
-
-   @Test
-   public final void testTagFilteringWorks() {
-      NodeMetadata nodeMetadata = groupGroupNodeParser.apply(instance);
-      assertEquals(nodeMetadata.getId(), instance.selfLink().toString());
-      assertEquals(nodeMetadata.getTags(), ImmutableSet.of(
-            "aTag"  // "aTag" kept as a non firewall tag.
-            // "Group-port-42" filtered out as a firewall tag.
-      ));
+            locationSupplier);
    }
 
    @Test
