@@ -401,7 +401,7 @@ public class S3BlobStore extends BaseBlobStore {
       Map<Integer, String> s3Parts = sync.listMultipartParts(mpu.containerName(), mpu.blobName(), mpu.id());
       for (Map.Entry<Integer, String> entry : s3Parts.entrySet()) {
          long partSize = -1;  // TODO: could call getContentLength but did not above
-         parts.add(MultipartPart.create(entry.getKey(), partSize, "\"" + entry.getValue() + "\""));
+         parts.add(MultipartPart.create(entry.getKey(), partSize, entry.getValue()));
       }
       return parts.build();
    }
