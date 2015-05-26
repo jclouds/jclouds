@@ -59,13 +59,17 @@ public class TestUtils {
 
     private static class RandomInputStream extends InputStream {
         private final Random random;
+        private boolean closed = false;
 
         RandomInputStream(long seed) {
            this.random = new Random(seed);
         }
 
         @Override
-        public synchronized int read() {
+        public synchronized int read() throws IOException {
+            if (closed) {
+                throw new IOException("Stream already closed");
+            }
             return (byte) random.nextInt();
         }
 
@@ -80,6 +84,12 @@ public class TestUtils {
                b[off + i] = (byte) read();
             }
             return len;
+        }
+
+        @Override
+        public void close() throws IOException {
+            super.close();
+            closed = true;
         }
     }
 }
