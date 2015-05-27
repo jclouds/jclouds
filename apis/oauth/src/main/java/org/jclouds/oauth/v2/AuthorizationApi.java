@@ -25,11 +25,13 @@ import javax.ws.rs.Consumes;
 import javax.ws.rs.FormParam;
 import javax.ws.rs.POST;
 
-import org.jclouds.oauth.v2.functions.ClaimsToAssertion;
+import org.jclouds.oauth.v2.OAuthFallbacks.AuthorizationExceptionOn4xx;
 import org.jclouds.oauth.v2.config.Authorization;
 import org.jclouds.oauth.v2.domain.Claims;
 import org.jclouds.oauth.v2.domain.Token;
+import org.jclouds.oauth.v2.functions.ClaimsToAssertion;
 import org.jclouds.rest.annotations.Endpoint;
+import org.jclouds.rest.annotations.Fallback;
 import org.jclouds.rest.annotations.FormParams;
 import org.jclouds.rest.annotations.ParamParser;
 
@@ -42,5 +44,6 @@ public interface AuthorizationApi extends Closeable {
    @POST
    @FormParams(keys = "grant_type", values = "urn:ietf:params:oauth:grant-type:jwt-bearer")
    @Consumes(APPLICATION_JSON)
+   @Fallback(AuthorizationExceptionOn4xx.class)
    Token authorize(@FormParam("assertion") @ParamParser(ClaimsToAssertion.class) Claims claims);
 }

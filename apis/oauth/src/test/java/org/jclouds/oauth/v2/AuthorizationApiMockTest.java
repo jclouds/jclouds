@@ -27,6 +27,7 @@ import static org.jclouds.oauth.v2.config.OAuthProperties.CREDENTIAL_TYPE;
 import static org.jclouds.oauth.v2.config.OAuthProperties.JWS_ALG;
 import static org.jclouds.util.Strings2.toStringAndClose;
 import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.fail;
 
 import java.io.IOException;
 import java.net.URL;
@@ -40,6 +41,7 @@ import org.jclouds.oauth.v2.config.OAuthScopes.SingleScope;
 import org.jclouds.oauth.v2.domain.Claims;
 import org.jclouds.oauth.v2.domain.Token;
 import org.jclouds.rest.AnonymousHttpApiMetadata;
+import org.jclouds.rest.AuthorizationException;
 import org.testng.annotations.Test;
 
 import com.google.common.base.Joiner;
@@ -57,9 +59,9 @@ public class AuthorizationApiMockTest {
 
    private static final String header = "{\"alg\":\"RS256\",\"typ\":\"JWT\"}";
 
-   private static final String claims = "{\"iss\":\"761326798069-r5mljlln1rd4lrbhg75efgigp36m78j5@developer" +
-         ".gserviceaccount.com\",\"scope\":\"" + SCOPE + "\",\"aud\":\"https://accounts.google" +
-         ".com/o/oauth2/token\",\"exp\":1328573381,\"iat\":1328569781}";
+   private static final String claims = "{\"iss\":\"761326798069-r5mljlln1rd4lrbhg75efgigp36m78j5@developer"
+         + ".gserviceaccount.com\",\"scope\":\"" + SCOPE + "\",\"aud\":\"https://accounts.google"
+         + ".com/o/oauth2/token\",\"exp\":1328573381,\"iat\":1328569781}";
 
    private static final Token TOKEN = Token.create("1/8xbJqaOZXSUZbHLl5EOtu1pxz3fmmetKx9W8CV4t79M", "Bearer", 3600);
 
@@ -69,36 +71,58 @@ public class AuthorizationApiMockTest {
          "https://accounts.google.com/o/oauth2/token", // aud
          1328573381, // exp
          1328569781 // iat
-   );
+         );
 
    public void testGenerateJWTRequest() throws Exception {
       MockWebServer server = new MockWebServer();
-      server.enqueue(new MockResponse().setBody("{\n" +
-                  "  \"access_token\" : \"1/8xbJqaOZXSUZbHLl5EOtu1pxz3fmmetKx9W8CV4t79M\",\n" +
-                  "  \"token_type\" : \"Bearer\",\n" +
-                  "  \"expires_in\" : 3600\n" +
-                  "}"));
-      server.play();
 
-      AuthorizationApi api = api(server.getUrl("/"));
+      try {
+         server.enqueue(new MockResponse().setBody("{\n"
+               + "  \"access_token\" : \"1/8xbJqaOZXSUZbHLl5EOtu1pxz3fmmetKx9W8CV4t79M\",\n"
+               + "  \"token_type\" : \"Bearer\",\n" + "  \"expires_in\" : 3600\n" + "}"));
+         server.play();
 
-      assertEquals(api.authorize(CLAIMS), TOKEN);
+         AuthorizationApi api = api(server.getUrl("/"));
 
-      RecordedRequest request = server.takeRequest();
-      assertEquals(request.getMethod(), "POST");
-      assertEquals(request.getHeader("Accept"), APPLICATION_JSON);
-      assertEquals(request.getHeader("Content-Type"), "application/x-www-form-urlencoded");
+         assertEquals(api.authorize(CLAIMS), TOKEN);
 
-      assertEquals(new String(request.getBody(), UTF_8), //
-            "grant_type=urn%3Aietf%3Aparams%3Aoauth%3Agrant-type%3Ajwt-bearer&" +
-                  // Base64 Encoded Header
-                  "assertion=" +
-                  Joiner.on('.').join(encoding.encode(header.getBytes(UTF_8)), encoding.encode(claims.getBytes(UTF_8)),
-                  // Base64 encoded {header}.{claims} signature (using SHA256)
-                  "W2Lesr_98AzVYiMbzxFqmwcOjpIWlwqkC6pNn1fXND9oSDNNnFhy-AAR6DKH-x9ZmxbY80" +
-                  "R5fH-OCeWumXlVgceKN8Z2SmgQsu8ElTpypQA54j_5j8vUImJ5hsOUYPeyF1U2BUzZ3L5g" +
-                  "03PXBA0YWwRU9E1ChH28dQBYuGiUmYw"));
+         RecordedRequest request = server.takeRequest();
+         assertEquals(request.getMethod(), "POST");
+         assertEquals(request.getHeader("Accept"), APPLICATION_JSON);
+         assertEquals(request.getHeader("Content-Type"), "application/x-www-form-urlencoded");
 
+         assertEquals(
+               new String(request.getBody(), UTF_8), //
+               "grant_type=urn%3Aietf%3Aparams%3Aoauth%3Agrant-type%3Ajwt-bearer&"
+                     +
+                     // Base64 Encoded Header
+                     "assertion="
+                     + Joiner.on('.').join(encoding.encode(header.getBytes(UTF_8)),
+                           encoding.encode(claims.getBytes(UTF_8)),
+                           // Base64 encoded {header}.{claims} signature (using
+                           // SHA256)
+                           "W2Lesr_98AzVYiMbzxFqmwcOjpIWlwqkC6pNn1fXND9oSDNNnFhy-AAR6DKH-x9ZmxbY80"
+                                 + "R5fH-OCeWumXlVgceKN8Z2SmgQsu8ElTpypQA54j_5j8vUImJ5hsOUYPeyF1U2BUzZ3L5g"
+                                 + "03PXBA0YWwRU9E1ChH28dQBYuGiUmYw"));
+      } finally {
+         server.shutdown();
+      }
+   }
+
+   public void testAuthorizationExceptionIsPopulatedOn4xx() throws Exception {
+      MockWebServer server = new MockWebServer();
+      try {
+         server.enqueue(new MockResponse().setResponseCode(400));
+         server.play();
+
+         AuthorizationApi api = api(server.getUrl("/"));
+         api.authorize(CLAIMS);
+         fail("An AuthorizationException should have been raised");
+      } catch (AuthorizationException ex) {
+         // Success
+      } finally {
+         server.shutdown();
+      }
    }
 
    private final BaseEncoding encoding = base64Url().omitPadding();
