@@ -17,18 +17,21 @@
 package org.jclouds.googlecomputeengine.compute;
 
 import static com.google.common.collect.Iterables.contains;
+import static org.jclouds.util.Strings2.toStringAndClose;
 import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertTrue;
 
 import java.util.Properties;
 import java.util.Set;
 
+import org.jclouds.compute.ComputeServiceContext;
 import org.jclouds.compute.domain.Hardware;
 import org.jclouds.compute.domain.NodeMetadata;
 import org.jclouds.compute.internal.BaseComputeServiceLiveTest;
 import org.jclouds.googlecloud.internal.TestProperties;
 import org.jclouds.googlecomputeengine.GoogleComputeEngineApi;
 import org.jclouds.googlecomputeengine.domain.MachineType;
+import org.jclouds.rest.AuthorizationException;
 import org.jclouds.sshj.config.SshjSshClientModule;
 import org.testng.annotations.Test;
 
@@ -71,43 +74,28 @@ public class GoogleComputeEngineServiceLiveTest extends BaseComputeServiceLiveTe
       assertTrue(node.getUserMetadata().keySet().containsAll(userMetadata.keySet()));
    }
 
-   // do not run until the auth exception problem is figured out.
-   @Test(enabled = false)
+   @Test(expectedExceptions = AuthorizationException.class)
    @Override
    public void testCorrectAuthException() throws Exception {
-   }
-
-   // reboot is not supported by GCE
-   @Test(enabled = true, dependsOnMethods = "testGet")
-   public void testReboot() throws Exception {
-   }
-
-   // suspend/Resume is not supported by GCE
-   @Test(enabled = true, dependsOnMethods = "testReboot")
-   public void testSuspendResume() throws Exception {
-   }
-
-   @Test(enabled = true, dependsOnMethods = "testSuspendResume")
-   public void testListNodesByIds() throws Exception {
-      super.testGetNodesWithDetails();
-   }
-
-   @Test(enabled = true, dependsOnMethods = "testSuspendResume")
-   @Override
-   public void testGetNodesWithDetails() throws Exception {
-      super.testGetNodesWithDetails();
-   }
-
-   @Test(enabled = true, dependsOnMethods = "testSuspendResume")
-   @Override
-   public void testListNodes() throws Exception {
-      super.testListNodes();
-   }
-
-   @Test(enabled = true, dependsOnMethods = {"testListNodes", "testGetNodesWithDetails", "testListNodesByIds"})
-   @Override
-   public void testDestroyNodes() {
-      super.testDestroyNodes();
+      ComputeServiceContext context = null;
+      try {
+         String credential = toStringAndClose(getClass().getResourceAsStream("/test"));
+         Properties overrides = setupProperties();
+         overrides.setProperty(provider + ".identity", "000000000000@developer.gserviceaccount.com");
+         overrides.setProperty(provider + ".credential", credential);
+         context = newBuilder()
+               .modules(ImmutableSet.of(getLoggingModule(), credentialStoreModule))
+               .overrides(overrides).build(ComputeServiceContext.class);
+         context.getComputeService().listNodes();
+      } catch (AuthorizationException e) {
+         throw e;
+      } catch (RuntimeException e) {
+         e.printStackTrace();
+         throw e;
+      } finally {
+         if (context != null)
+            context.close();
+      }
    }
 
    @Override

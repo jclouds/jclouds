@@ -52,7 +52,7 @@ import org.jclouds.googlecomputeengine.compute.functions.MachineTypeToHardware;
 import org.jclouds.googlecomputeengine.compute.functions.OrphanedGroupsFromDeadNodes;
 import org.jclouds.googlecomputeengine.compute.functions.Resources;
 import org.jclouds.googlecomputeengine.compute.options.GoogleComputeEngineTemplateOptions;
-import org.jclouds.googlecomputeengine.compute.predicates.AllNodesInGroupTerminated;
+import org.jclouds.googlecomputeengine.compute.predicates.GroupIsEmpty;
 import org.jclouds.googlecomputeengine.compute.predicates.AtomicInstanceVisible;
 import org.jclouds.googlecomputeengine.compute.predicates.AtomicOperationDone;
 import org.jclouds.googlecomputeengine.compute.strategy.CreateNodesWithGroupEncodedIntoNameThenAddToSet;
@@ -112,7 +112,7 @@ public final class GoogleComputeEngineServiceContextModule
       }).to(OrphanedGroupsFromDeadNodes.class);
 
       bind(new TypeLiteral<Predicate<String>>() {
-      }).to(AllNodesInGroupTerminated.class);
+      }).to(GroupIsEmpty.class);
 
       bind(FirewallTagNamingConvention.Factory.class).in(Scopes.SINGLETON);
       bindHttpApi(binder(), Resources.class);
@@ -175,7 +175,7 @@ public final class GoogleComputeEngineServiceContextModule
                      .put(Instance.Status.RUNNING, NodeMetadata.Status.RUNNING)
                      .put(Instance.Status.STOPPING, NodeMetadata.Status.PENDING)
                      .put(Instance.Status.STOPPED, NodeMetadata.Status.SUSPENDED)
-                     .put(Instance.Status.TERMINATED, NodeMetadata.Status.TERMINATED).build();
+                     .put(Instance.Status.TERMINATED, NodeMetadata.Status.SUSPENDED).build();
 
    @Provides Map<Instance.Status, NodeMetadata.Status> toPortableNodeStatus() {
       return toPortableNodeStatus;

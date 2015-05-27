@@ -63,9 +63,21 @@ public interface Resources {
    @DELETE
    @Fallback(NullOnNotFoundOr404.class) @Nullable Operation delete(@EndpointParam URI selfLink);
 
-   /** Hard-resets the instance by self-link and returns the operation in progres */
+   /** Hard-resets the instance by self-link and returns the operation in progress */
    @Named("Instances:reset")
    @POST
    @Path("/reset")
    Operation resetInstance(@EndpointParam URI selfLink);
+   
+   /** Starts the instance by self-link and returns the operation in progress */
+   @Named("Instances:start")
+   @POST
+   @Path("/start")
+   Operation startInstance(@EndpointParam URI selfLink);
+   
+   /** Stops the instance by self-link and returns the operation in progress */
+   @Named("Instances:stop")
+   @POST
+   @Path("/stop")
+   Operation stopInstance(@EndpointParam URI selfLink);
 }

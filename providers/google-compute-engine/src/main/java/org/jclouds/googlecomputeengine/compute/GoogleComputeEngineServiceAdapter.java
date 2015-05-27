@@ -257,12 +257,12 @@ public final class GoogleComputeEngineServiceAdapter
       waitOperationDone(resources.resetInstance(URI.create(checkNotNull(selfLink, "id"))));
    }
 
-   @Override public void resumeNode(String name) {
-      throw new UnsupportedOperationException("resume is not supported by GCE");
+   @Override public void resumeNode(String selfLink) {
+      waitOperationDone(resources.startInstance(URI.create(checkNotNull(selfLink, "id"))));
    }
 
-   @Override  public void suspendNode(String name) {
-      throw new UnsupportedOperationException("suspend is not supported by GCE");
+   @Override public void suspendNode(String selfLink) {
+      waitOperationDone(resources.stopInstance(URI.create(checkNotNull(selfLink, "id"))));
    }
 
    private void waitOperationDone(Operation operation) {

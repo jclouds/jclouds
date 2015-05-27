@@ -20,6 +20,7 @@ import static com.google.common.base.Charsets.UTF_8;
 import static com.google.common.base.Throwables.propagate;
 import static com.google.common.util.concurrent.MoreExecutors.sameThreadExecutor;
 import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
+import static org.jclouds.compute.config.ComputeServiceProperties.TIMEOUT_NODE_TERMINATED;
 import static org.jclouds.googlecloud.config.GoogleCloudProperties.CREDENTIAL_TYPE;
 import static org.jclouds.googlecloud.config.GoogleCloudProperties.PROJECT_NAME;
 import static org.jclouds.googlecomputeengine.config.GoogleComputeEngineProperties.IMAGE_PROJECTS;
@@ -36,9 +37,9 @@ import org.jclouds.ContextBuilder;
 import org.jclouds.compute.ComputeService;
 import org.jclouds.compute.ComputeServiceContext;
 import org.jclouds.concurrent.config.ExecutorServiceModule;
-import org.jclouds.http.okhttp.config.OkHttpCommandExecutorServiceModule;
 import org.jclouds.googlecomputeengine.GoogleComputeEngineApi;
 import org.jclouds.googlecomputeengine.GoogleComputeEngineProviderMetadata;
+import org.jclouds.http.okhttp.config.OkHttpCommandExecutorServiceModule;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 
@@ -72,6 +73,7 @@ public class BaseGoogleComputeEngineApiMockTest {
       Properties overrides = new Properties();
       overrides.put(PROJECT_NAME, "party");
       overrides.put(IMAGE_PROJECTS, "debian-cloud");
+      overrides.put(TIMEOUT_NODE_TERMINATED, "0"); // Avoid retry & polling in mock tests
       overrides.put(CREDENTIAL_TYPE, BEARER_TOKEN_CREDENTIALS.toString());
       return ContextBuilder.newBuilder(new GoogleComputeEngineProviderMetadata())
             .credentials(identity, credential)
