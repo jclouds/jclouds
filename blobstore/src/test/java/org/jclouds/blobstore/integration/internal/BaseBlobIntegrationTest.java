@@ -61,6 +61,7 @@ import org.jclouds.blobstore.domain.PageSet;
 import org.jclouds.blobstore.domain.StorageMetadata;
 import org.jclouds.blobstore.domain.StorageType;
 import org.jclouds.blobstore.options.CopyOptions;
+import org.jclouds.blobstore.options.GetOptions;
 import org.jclouds.blobstore.options.PutOptions;
 import org.jclouds.crypto.Crypto;
 import org.jclouds.encryption.internal.JCECrypto;
@@ -365,6 +366,25 @@ public class BaseBlobIntegrationTest extends BaseBlobStoreIntegrationTest {
    }
 
    @Test(groups = { "integration", "live" })
+   public void testGetRangeOutOfRange() throws InterruptedException, IOException {
+      String container = getContainerName();
+      try {
+         String name = "apples";
+
+         addObjectAndValidateContent(container, name);
+         view.getBlobStore().getBlob(container, name, range(TEST_STRING.length(), TEST_STRING.length() + 1));
+         throw new AssertionError("Invalid range not caught");
+      } catch (HttpResponseException e) {
+         assertThat(e.getResponse().getStatusCode()).isEqualTo(416);
+      } catch (IllegalArgumentException e) {
+         assertThat(e.getMessage()).startsWith("illegal range: ");
+      } finally {
+         returnContainer(container);
+      }
+
+   }
+
+   @Test(groups = { "integration", "live" })
    public void testGetRange() throws InterruptedException, IOException {
       String container = getContainerName();
       try {
@@ -379,6 +399,13 @@ public class BaseBlobIntegrationTest extends BaseBlobStoreIntegrationTest {
          Blob blob2 = view.getBlobStore().getBlob(container, name, range(6, TEST_STRING.length()));
          validateMetadata(blob2.getMetadata(), container, name);
          assertEquals(getContentAsStringOrNullAndClose(blob2), TEST_STRING.substring(6, TEST_STRING.length()));
+
+         /* RFC 2616 14.35.1
+            "If the entity is shorter than the specified suffix-length, the
+            entire entity-body is used." */
+         Blob blob3 = view.getBlobStore().getBlob(container, name, new GetOptions().tail(TEST_STRING.length() + 10));
+         validateMetadata(blob3.getMetadata(), container, name);
+         assertEquals(getContentAsStringOrNullAndClose(blob3), TEST_STRING);
       } finally {
          returnContainer(container);
       }

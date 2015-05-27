@@ -633,6 +633,9 @@ public final class LocalBlobStore implements BlobStore {
                int last = data.length - 1;
                if (s.startsWith("-")) {
                   offset = last - Integer.parseInt(s.substring(1)) + 1;
+                  if (offset < 0) {
+                     offset = 0;
+                  }
                } else if (s.endsWith("-")) {
                   offset = Integer.parseInt(s.substring(0, s.length() - 1));
                } else if (s.contains("-")) {
@@ -643,7 +646,7 @@ public final class LocalBlobStore implements BlobStore {
                   throw new IllegalArgumentException("illegal range: " + s);
                }
 
-               if (offset > last) {
+               if (offset >= data.length) {
                   throw new IllegalArgumentException("illegal range: " + s);
                }
                if (last + 1 > data.length) {
