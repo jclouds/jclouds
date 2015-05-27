@@ -30,6 +30,10 @@ public class Strings2Test {
    public void testIsEncoded() {
       assert Strings2.isUrlEncoded("/read-tests/%73%6f%6d%65%20%66%69%6c%65");
       assert !Strings2.isUrlEncoded("/read-tests/ tep");
+      assert !Strings2.isUrlEncoded("/read-tests/dealde%2Fl04 011e%204c8df");
+      assert !Strings2.isUrlEncoded("/read-tests/%/");
+      assert !Strings2.isUrlEncoded("/read-tests/%ZZ");
+      assert Strings2.isUrlEncoded("/read-tests/%20");
    }
 
    public void testNoDoubleEncode() {
