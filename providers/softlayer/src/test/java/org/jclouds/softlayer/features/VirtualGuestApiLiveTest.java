@@ -36,6 +36,7 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 import com.google.common.base.Predicate;
+import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
 import com.google.inject.Injector;
@@ -125,6 +126,15 @@ public class VirtualGuestApiLiveTest extends BaseSoftLayerApiLiveTest {
    }
 
    @Test(dependsOnMethods = "testSetTagsOnVirtualGuest")
+   public void testSetNotesOnVirtualGuest() throws Exception {
+      // Test with maximum allowed notes length - 1000 characters.
+      String notes = Strings.padStart("", 1000, 'x');
+      assertTrue(virtualGuestApi.setNotes(virtualGuest.getId(), notes));
+      VirtualGuest found = virtualGuestApi.getNotes(virtualGuest.getId());
+      assertEquals(found.getNotes(), notes);
+   }
+
+   @Test(dependsOnMethods = "testSetNotesOnVirtualGuest")
    public void testPauseVirtualGuest() throws Exception {
       virtualGuestApi.pauseVirtualGuest(virtualGuest.getId());
       checkState(retry(new Predicate<VirtualGuest>() {
