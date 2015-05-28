@@ -85,21 +85,6 @@ public class VirtualGuestApiExpectTest extends BaseSoftLayerApiExpectTest {
       assertEquals(result, new CreateVirtualGuestResponseTest().expected());
    }
 
-   public void testCreateVirtualGuestWhenResponseIs4xx() {
-
-      HttpRequest createVirtualGuest = HttpRequest.builder().method("POST")
-              .endpoint("https://api.softlayer.com/rest/v3/SoftLayer_Virtual_Guest")
-              .addHeader("Accept", "application/json")
-              .addHeader("Authorization", "Basic aWRlbnRpdHk6Y3JlZGVudGlhbA==")
-              .payload(payloadFromResourceWithContentType("/virtual_guest_create.json", MediaType.APPLICATION_JSON))
-              .build();
-
-      HttpResponse createVirtualGuestResponse = HttpResponse.builder().statusCode(404).build();
-      SoftLayerApi api = requestSendsResponse(createVirtualGuest, createVirtualGuestResponse);
-      VirtualGuest virtualGuest = createVirtualGuest();
-      assertNull(api.getVirtualGuestApi().createVirtualGuest(virtualGuest));
-   }
-
    public void testDeleteVirtualGuestWhenResponseIs2xx() {
 
       HttpRequest deleteVirtualGuest = HttpRequest.builder().method("GET")
@@ -259,18 +244,20 @@ public class VirtualGuestApiExpectTest extends BaseSoftLayerApiExpectTest {
       assertTrue(api.getVirtualGuestApi().setTags(virtualGuest.getId(), ImmutableSet.of("test1", "test2", "test3")));
    }
 
-   public void testSetTagsOnVirtualGuestWhenResponseIs4xx() {
+   public void testSetNotesOnVirtualGuestWhenResponseIs2xx() {
 
-      HttpRequest setTagsOnVirtualGuest = HttpRequest.builder().method("POST")
-              .endpoint("https://api.softlayer.com/rest/v3/SoftLayer_Virtual_Guest/1301396/setTags")
+      HttpRequest setNodesOnVirtualGuest = HttpRequest.builder().method("POST")
+              .endpoint("https://api.softlayer.com/rest/v3/SoftLayer_Virtual_Guest/1301396/editObject")
               .addHeader("Accept", "application/json")
               .addHeader("Authorization", "Basic aWRlbnRpdHk6Y3JlZGVudGlhbA==")
-              .payload(payloadFromResourceWithContentType("/virtual_guest_set_tags.json", MediaType.APPLICATION_JSON))
+              .payload(payloadFromResourceWithContentType("/virtual_guest_set_notes.json", MediaType.APPLICATION_JSON))
               .build();
 
-      HttpResponse setTagsOnVirtualGuestResponse = HttpResponse.builder().statusCode(404).build();
-      SoftLayerApi api = requestSendsResponse(setTagsOnVirtualGuest, setTagsOnVirtualGuestResponse);
+      HttpResponse setNotesOnVirtualGuestResponse = HttpResponse.builder().statusCode(200)
+              .payload("true").build();
+
+      SoftLayerApi api = requestSendsResponse(setNodesOnVirtualGuest, setNotesOnVirtualGuestResponse);
       VirtualGuest virtualGuest = createVirtualGuest();
-      assertFalse(api.getVirtualGuestApi().setTags(virtualGuest.getId(), ImmutableSet.of("test1", "test2", "test3")));
+      assertTrue(api.getVirtualGuestApi().setNotes(virtualGuest.getId(), "some notes"));
    }
 }
