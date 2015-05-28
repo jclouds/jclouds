@@ -284,6 +284,7 @@ public class BaseBlobStoreIntegrationTest extends BaseViewLiveTest<BlobStoreCont
    protected <T extends BlobMetadata> T validateMetadata(T md, String container, String name) {
       assertEquals(md.getName(), name);
       assertEquals(md.getContainer(), container);
+      assertEquals(md.getSize(), md.getContentMetadata().getContentLength());
       return md;
    }
 

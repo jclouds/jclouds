@@ -658,7 +658,9 @@ public final class LocalBlobStore implements BlobStore {
             byte[] byteArray = out.toByteArray();
             blob.setPayload(byteArray);
             HttpUtils.copy(cmd, blob.getPayload().getContentMetadata());
-            blob.getPayload().getContentMetadata().setContentLength(Long.valueOf(byteArray.length));
+            Long size = Long.valueOf(byteArray.length);
+            blob.getPayload().getContentMetadata().setContentLength(size);
+            blob.getMetadata().setSize(size);
          }
       }
       checkNotNull(blob.getPayload(), "payload " + blob);

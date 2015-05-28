@@ -230,6 +230,7 @@ public class TransientStorageStrategy implements LocalStorageStrategy {
       MutableContentMetadata oldMd = in.getPayload().getContentMetadata();
       HttpUtils.copy(oldMd, payload.getContentMetadata());
       payload.getContentMetadata().setContentMD5(contentMd5);
+      payload.getContentMetadata().setContentLength((long) input.length);
       Blob blob = blobFactory.create(BlobStoreUtils.copy(in.getMetadata()));
       blob.setPayload(payload);
       blob.getMetadata().setContainer(containerName);
