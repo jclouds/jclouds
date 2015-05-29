@@ -59,7 +59,7 @@ public abstract class GoogleCloudStorageObject {
    @Nullable public abstract String contentLanguage();
    @Nullable public abstract String cacheControl();
    public abstract List<ObjectAccessControls> acl();
-   public abstract Owner owner();
+   @Nullable public abstract Owner owner();
    @Nullable public abstract String crc32c();
    @Nullable public abstract Integer componentCount();
 
