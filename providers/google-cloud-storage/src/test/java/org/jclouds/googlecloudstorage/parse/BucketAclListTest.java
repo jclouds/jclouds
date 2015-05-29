@@ -32,14 +32,14 @@ import com.google.common.collect.ImmutableList;
 
 public class BucketAclListTest extends BaseGoogleCloudStorageParseTest<List<BucketAccessControls>> {
 
-   private BucketAccessControls item_1 = BucketAccessControls.builder().id("jcloudtestbucket/allUsers")
-            .bucket("jcloudtestbucket").entity("allUsers").role(Role.READER).build();
+   private BucketAccessControls item_1 = BucketAccessControls.builder().id("jcloudstestbucket/allUsers")
+            .bucket("jcloudstestbucket").entity("allUsers").role(Role.READER).build();
 
    private BucketAccessControls item_2 = BucketAccessControls
             .builder()
-            .id("jcloudtestbucket/project-owners-1082289308625")
+            .id("jcloudstestbucket/project-owners-1082289308625")
             .projectTeam(ProjectTeam.create("1082289308625", Team.OWNERS))
-            .bucket("jcloudtestbucket").entity("project-owners-1082289308625").role(Role.OWNER).build();
+            .bucket("jcloudstestbucket").entity("project-owners-1082289308625").role(Role.OWNER).build();
 
    @Override
    public String resource() {

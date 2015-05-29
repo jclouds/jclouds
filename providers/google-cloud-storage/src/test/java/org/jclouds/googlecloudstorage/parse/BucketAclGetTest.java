@@ -33,7 +33,7 @@ public class BucketAclGetTest extends BaseGoogleCloudStorageParseTest<BucketAcce
    @Override
    @Consumes(MediaType.APPLICATION_JSON)
    public BucketAccessControls expected() {
-      return BucketAccessControls.builder().bucket("jcloudtestbucket").entity("allUsers").role(Role.READER)
-               .id("jcloudtestbucket/allUsers").build();
+      return BucketAccessControls.builder().bucket("jcloudstestbucket").entity("allUsers").role(Role.READER)
+               .id("jcloudstestbucket/allUsers").build();
    }
 }

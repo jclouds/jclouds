@@ -35,8 +35,8 @@ public class BucketAclInsertTest extends BaseGoogleCloudStorageParseTest<BucketA
    public BucketAccessControls expected() {
       return BucketAccessControls
                .builder()
-               .id("jcloudtestbucket/allAuthenticatedUsers")
-               .bucket("jcloudtestbucket").entity("allAuthenticatedUsers").role(Role.WRITER).build();
+               .id("jcloudstestbucket/allAuthenticatedUsers")
+               .bucket("jcloudstestbucket").entity("allAuthenticatedUsers").role(Role.WRITER).build();
 
    }
 }

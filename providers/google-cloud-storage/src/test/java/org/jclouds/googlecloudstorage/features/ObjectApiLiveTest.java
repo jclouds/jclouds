@@ -68,7 +68,7 @@ import com.google.common.primitives.Bytes;
 public class ObjectApiLiveTest extends BaseGoogleCloudStorageApiLiveTest {
 
    private static final String BUCKET_NAME = "jcloudsobjectoperations" + UUID.randomUUID();
-   private static final String BUCKET_NAME2 = "jcloudobjectdestination" + UUID.randomUUID();
+   private static final String BUCKET_NAME2 = "jcloudsobjectdestination" + UUID.randomUUID();
    private static final String UPLOAD_OBJECT_NAME = "objectOperation.txt";
    private static final String UPLOAD_OBJECT_NAME2 = "jcloudslogo.jpg";
    private static final String MULTIPART_UPLOAD_OBJECT = "multipart_related.jpg";

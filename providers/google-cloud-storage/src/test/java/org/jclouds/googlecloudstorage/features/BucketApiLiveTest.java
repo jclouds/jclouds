@@ -60,7 +60,7 @@ public class BucketApiLiveTest extends BaseGoogleCloudStorageApiLiveTest {
 
    private static final String BUCKET_NAME_NEARLINE = "jcloudstestbucketnearline" + (int) (Math.random() * 10000);
 
-   private static final String BUCKET_NAME_WITHOPTIONS = "jcloudtestbucketoptions" + (int) (Math.random() * 10000);
+   private static final String BUCKET_NAME_WITHOPTIONS = "jcloudstestbucketoptions" + (int) (Math.random() * 10000);
 
    private static final String LOG_BUCKET_NAME = "jcloudslogbucket" + (int) (Math.random() * 10000);
 

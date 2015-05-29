@@ -61,7 +61,7 @@ public class BucketApiExpectTest extends BaseGoogleCloudStorageApiExpectTest {
 
    public static final HttpRequest LIST_BUCKET_REQUEST_WITHOPTIONS = HttpRequest.builder().method("GET")
             .endpoint("https://www.googleapis.com/storage/v1/b").addQueryParam("project", EXPECTED_TEST_PROJECT_NUMBER)
-            .addQueryParam("maxResults", "2").addQueryParam("pageToken", "jcloudtestbucket500")
+            .addQueryParam("maxResults", "2").addQueryParam("pageToken", "jcloudstestbucket500")
             .addHeader("Accept", "application/json").addHeader("Authorization", "Bearer " + TOKEN).build();
 
    private final HttpResponse LIST_BUCKET_RESPONSE = HttpResponse.builder().statusCode(200)
@@ -112,7 +112,7 @@ public class BucketApiExpectTest extends BaseGoogleCloudStorageApiExpectTest {
       BucketApi api = requestsSendResponses(requestForScopes(STORAGE_READONLY_SCOPE), TOKEN_RESPONSE,
                LIST_BUCKET_REQUEST_WITHOPTIONS, LIST_BUCKET_RESPONSE).getBucketApi();
 
-      ListOptions options = new ListOptions().maxResults(2).pageToken("jcloudtestbucket500");
+      ListOptions options = new ListOptions().maxResults(2).pageToken("jcloudstestbucket500");
 
       assertEquals(api.listBucket(EXPECTED_TEST_PROJECT_NUMBER, options), new NoAclBucketListTest().expected());
 

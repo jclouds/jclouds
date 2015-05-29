@@ -39,8 +39,8 @@ public class FullBucketGetTest extends BaseGoogleCloudStorageParseTest<Bucket> {
 
    private final BucketAccessControls acl1 = BucketAccessControls
             .builder()
-            .id("jcloudtestbucket3500/project-owners-1082289308625")
-            .bucket("jcloudtestbucket3500").entity("project-owners-1082289308625").role(Role.OWNER)
+            .id("jcloudstestbucket3500/project-owners-1082289308625")
+            .bucket("jcloudstestbucket3500").entity("project-owners-1082289308625").role(Role.OWNER)
             .projectTeam(ProjectTeam.create("1082289308625", Team.OWNERS))
             .build();
 
@@ -60,8 +60,8 @@ public class FullBucketGetTest extends BaseGoogleCloudStorageParseTest<Bucket> {
    @Consumes(MediaType.APPLICATION_JSON)
    public Bucket expected() {
       return Bucket.create(
-            "jcloudtestbucket3500", // id
-            "jcloudtestbucket3500", // name
+            "jcloudstestbucket3500", // id
+            "jcloudstestbucket3500", // name
             1082289308625l, // projectNumber
             new SimpleDateFormatDateService().iso8601DateParse("2014-06-19T14:03:22.345Z"), // timeCreated
             10l, // metageneration

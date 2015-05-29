@@ -34,7 +34,7 @@ public class ObjectAclUpdateTest extends BaseGoogleCloudStorageParseTest<ObjectA
    @Consumes(MediaType.APPLICATION_JSON)
    public ObjectAccessControls expected() {
       return ObjectAccessControls.builder()
-               .bucket("jcloudtestbucket").object("foo.txt").entity("allUsers").role(ObjectRole.OWNER).build();
+               .bucket("jcloudstestbucket").object("foo.txt").entity("allUsers").role(ObjectRole.OWNER).build();
    }
 
 }

@@ -37,13 +37,13 @@ public class ObjectAclGetTest extends BaseGoogleCloudStorageParseTest<ObjectAcce
    public ObjectAccessControls expected() {
       return ObjectAccessControls
                .builder()
-               .bucket("jcloudtestbucket")
+               .bucket("jcloudstestbucket")
                .object("foo.txt")
                .generation(1394121608485000L)
                .entity("project-owners-1082289308625")
                .role(ObjectRole.OWNER)
                .projectTeam(ProjectTeam.create("1082289308625", Team.OWNERS))
-               .id("jcloudtestbucket/foo.txt/1394121608485000/project-owners-1082289308625").build();
+               .id("jcloudstestbucket/foo.txt/1394121608485000/project-owners-1082289308625").build();
    }
 
 }

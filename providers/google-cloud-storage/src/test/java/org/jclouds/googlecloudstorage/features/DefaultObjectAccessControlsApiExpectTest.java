@@ -36,14 +36,14 @@ import org.testng.annotations.Test;
 @Test(groups = "unit", testName = "DefaultObjectAccessControlsApiExpectTest")
 public class DefaultObjectAccessControlsApiExpectTest extends BaseGoogleCloudStorageApiExpectTest {
 
-   private static final String EXPECTED_TEST_BUCKET = "jcloudtestbucket";
+   private static final String EXPECTED_TEST_BUCKET = "jcloudstestbucket";
    private static final String EXPECTED_TEST_GROUP_ENTITY = "group-00b4903a971ec6cff233284d6d24f5bf5cba904c4ade4d43ebd6a5d33800e68b";
 
    private static final HttpRequest GET_DEFAULT_OBJECT_ACL_REQUEST = HttpRequest
             .builder()
             .method("GET")
             .endpoint(
-                     "https://www.googleapis.com/storage/v1/b/jcloudtestbucket/defaultObjectAcl/group-00b4903a971ec6cff233284d6d24f5bf5cba904c4ade4d43ebd6a5d33800e68b")
+                     "https://www.googleapis.com/storage/v1/b/jcloudstestbucket/defaultObjectAcl/group-00b4903a971ec6cff233284d6d24f5bf5cba904c4ade4d43ebd6a5d33800e68b")
             .addHeader("Accept", "application/json").addHeader("Authorization", "Bearer " + TOKEN).build();
 
    private final HttpResponse GET_DEFAULT_OBJECT_ACL_RESPONSE = HttpResponse.builder().statusCode(200)
@@ -53,7 +53,7 @@ public class DefaultObjectAccessControlsApiExpectTest extends BaseGoogleCloudSto
             .payload(staticPayloadFromResource("/default_object_acl_insert_response.json")).build();
 
    public  final HttpRequest LIST_DEFAULT_OBJECT_ACL_REQUEST = HttpRequest.builder().method("GET")
-            .endpoint("https://www.googleapis.com/storage/v1/b/jcloudtestbucket/defaultObjectAcl")
+            .endpoint("https://www.googleapis.com/storage/v1/b/jcloudstestbucket/defaultObjectAcl")
             .addHeader("Accept", "application/json").addHeader("Authorization", "Bearer " + TOKEN).build();
 
    private final HttpResponse LIST_DEFAULT_OBJECT_ACL_RESPONSE = HttpResponse.builder().statusCode(200)
@@ -105,7 +105,7 @@ public class DefaultObjectAccessControlsApiExpectTest extends BaseGoogleCloudSto
       HttpRequest insertRequest = HttpRequest
                .builder()
                .method("POST")
-               .endpoint("https://www.googleapis.com/storage/v1/b/jcloudtestbucket/defaultObjectAcl")
+               .endpoint("https://www.googleapis.com/storage/v1/b/jcloudstestbucket/defaultObjectAcl")
                .addHeader("Accept", "application/json")
                .addHeader("Authorization", "Bearer " + TOKEN)
                .payload(payloadFromResourceWithContentType("/default_object_acl_insert_request_payload.json",
@@ -123,7 +123,7 @@ public class DefaultObjectAccessControlsApiExpectTest extends BaseGoogleCloudSto
    // Test deleteDefaultObjectAccessControls
    public void testDeleteDefaultObjectAclResponseIs2xx() throws Exception {
       HttpRequest delete = HttpRequest.builder().method("DELETE")
-               .endpoint("https://www.googleapis.com/storage/v1/b/jcloudtestbucket/defaultObjectAcl/allUsers")
+               .endpoint("https://www.googleapis.com/storage/v1/b/jcloudstestbucket/defaultObjectAcl/allUsers")
                .addHeader("Accept", "application/json").addHeader("Authorization", "Bearer " + TOKEN).build();
 
       HttpResponse deleteResponse = HttpResponse.builder().statusCode(204).build();
@@ -136,7 +136,7 @@ public class DefaultObjectAccessControlsApiExpectTest extends BaseGoogleCloudSto
 
    public void testDeleteObjectAclResponseIs4xx() throws Exception {
       HttpRequest delete = HttpRequest.builder().method("DELETE")
-               .endpoint("https://www.googleapis.com/storage/v1/b/jcloudtestbucket/defaultObjectAcl/allUsers")
+               .endpoint("https://www.googleapis.com/storage/v1/b/jcloudstestbucket/defaultObjectAcl/allUsers")
                .addHeader("Accept", "application/json").addHeader("Authorization", "Bearer " + TOKEN).build();
 
       HttpResponse deleteResponse = HttpResponse.builder().statusCode(404).build();
@@ -152,7 +152,7 @@ public class DefaultObjectAccessControlsApiExpectTest extends BaseGoogleCloudSto
       HttpRequest update = HttpRequest
                .builder()
                .method("PUT")
-               .endpoint("https://www.googleapis.com/storage/v1/b/jcloudtestbucket/defaultObjectAcl/allUsers")
+               .endpoint("https://www.googleapis.com/storage/v1/b/jcloudstestbucket/defaultObjectAcl/allUsers")
                .addHeader("Accept", "application/json")
                .addHeader("Authorization", "Bearer " + TOKEN)
                .payload(payloadFromResourceWithContentType("/default_object_acl_update_request_payload.json",
@@ -175,7 +175,7 @@ public class DefaultObjectAccessControlsApiExpectTest extends BaseGoogleCloudSto
       HttpRequest update = HttpRequest
                .builder()
                .method("PUT")
-               .endpoint("https://www.googleapis.com/storage/v1/b/jcloudtestbucket/defaultObjectAcl/allUsers")
+               .endpoint("https://www.googleapis.com/storage/v1/b/jcloudstestbucket/defaultObjectAcl/allUsers")
                .addHeader("Accept", "application/json")
                .addHeader("Authorization", "Bearer " + TOKEN)
                .addQueryParam("role", ObjectRole.OWNER.toString())
@@ -199,7 +199,7 @@ public class DefaultObjectAccessControlsApiExpectTest extends BaseGoogleCloudSto
       HttpRequest update = HttpRequest
                .builder()
                .method("PATCH")
-               .endpoint("https://www.googleapis.com/storage/v1/b/jcloudtestbucket/defaultObjectAcl/allUsers")
+               .endpoint("https://www.googleapis.com/storage/v1/b/jcloudstestbucket/defaultObjectAcl/allUsers")
                .addHeader("Accept", "application/json")
                .addHeader("Authorization", "Bearer " + TOKEN)
                .payload(payloadFromResourceWithContentType("/default_object_acl_update_request_payload.json",

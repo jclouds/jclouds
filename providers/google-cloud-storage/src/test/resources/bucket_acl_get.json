@@ -1,8 +1,8 @@
 {
    "kind": "storage#bucketAccessControl",
-   "id": "jcloudtestbucket/allUsers",
-   "selfLink": "https://content.googleapis.com/storage/v1/b/jcloudtestbucket/acl/allUsers",
-   "bucket": "jcloudtestbucket",
+   "id": "jcloudstestbucket/allUsers",
+   "selfLink": "https://content.googleapis.com/storage/v1/b/jcloudstestbucket/acl/allUsers",
+   "bucket": "jcloudstestbucket",
    "entity": "allUsers",
    "role": "READER",
    "etag": "CAM="

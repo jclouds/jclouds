@@ -36,10 +36,10 @@ import org.testng.annotations.Test;
 @Test(groups = "unit", testName = "BucketAccessControlsApiExpectTest")
 public class BucketAccessControlsApiExpectTest extends BaseGoogleCloudStorageApiExpectTest {
 
-   private static final String EXPECTED_TEST_BUCKET = "jcloudtestbucket";
+   private static final String EXPECTED_TEST_BUCKET = "jcloudstestbucket";
 
    public static final HttpRequest GET_BUCKETACL_REQUEST = HttpRequest.builder().method("GET")
-            .endpoint("https://www.googleapis.com/storage/v1/b/jcloudtestbucket/acl/allUsers")
+            .endpoint("https://www.googleapis.com/storage/v1/b/jcloudstestbucket/acl/allUsers")
             .addHeader("Accept", "application/json").addHeader("Authorization", "Bearer " + TOKEN).build();
 
    private final HttpResponse GET_BUCKETACL_RESPONSE = HttpResponse.builder().statusCode(200)
@@ -49,7 +49,7 @@ public class BucketAccessControlsApiExpectTest extends BaseGoogleCloudStorageApi
             .payload(staticPayloadFromResource("/bucket_acl_insert_response.json")).build();
 
    private final HttpRequest LIST_BUCKETACL_REQUEST = HttpRequest.builder().method("GET")
-            .endpoint("https://www.googleapis.com/storage/v1/b/jcloudtestbucket/acl")
+            .endpoint("https://www.googleapis.com/storage/v1/b/jcloudstestbucket/acl")
             .addHeader("Accept", "application/json").addHeader("Authorization", "Bearer " + TOKEN).build();
 
    private final HttpResponse LIST_BUCKETACL_RESPONSE = HttpResponse.builder().statusCode(200)
@@ -91,7 +91,7 @@ public class BucketAccessControlsApiExpectTest extends BaseGoogleCloudStorageApi
       BucketAccessControlsApi api = requestsSendResponses(requestForScopes(STORAGE_FULLCONTROL_SCOPE), TOKEN_RESPONSE,
                LIST_BUCKETACL_REQUEST, listResponse).getBucketAccessControlsApi();
 
-      assertNull(api.listBucketAccessControls("jcloudtestbucket"));
+      assertNull(api.listBucketAccessControls("jcloudstestbucket"));
    }
 
    // Test insertBucketAccessControls
@@ -99,7 +99,7 @@ public class BucketAccessControlsApiExpectTest extends BaseGoogleCloudStorageApi
       HttpRequest insertRequest = HttpRequest
                .builder()
                .method("POST")
-               .endpoint("https://www.googleapis.com/storage/v1/b/jcloudtestbucket/acl")
+               .endpoint("https://www.googleapis.com/storage/v1/b/jcloudstestbucket/acl")
                .addHeader("Accept", "application/json")
                .addHeader("Authorization", "Bearer " + TOKEN)
                .payload(payloadFromResourceWithContentType("/bucket_acl_insert_initial.json",
@@ -116,7 +116,7 @@ public class BucketAccessControlsApiExpectTest extends BaseGoogleCloudStorageApi
    // Test deleteBucketAccessControls
    public void testDeleteBucketAclResponseIs2xx() throws Exception {
       HttpRequest delete = HttpRequest.builder().method("DELETE")
-               .endpoint("https://www.googleapis.com/storage/v1/b/jcloudtestbucket/acl/allAuthenticatedUsers")
+               .endpoint("https://www.googleapis.com/storage/v1/b/jcloudstestbucket/acl/allAuthenticatedUsers")
                .addHeader("Accept", "application/json").addHeader("Authorization", "Bearer " + TOKEN).build();
 
       HttpResponse deleteResponse = HttpResponse.builder().statusCode(204).build();
@@ -129,7 +129,7 @@ public class BucketAccessControlsApiExpectTest extends BaseGoogleCloudStorageApi
 
    public void testDeleteBucketAclResponseIs4xx() throws Exception {
       HttpRequest delete = HttpRequest.builder().method("DELETE")
-               .endpoint("https://www.googleapis.com/storage/v1/b/jcloudtestbucket/acl/allAuthenticatedUsers")
+               .endpoint("https://www.googleapis.com/storage/v1/b/jcloudstestbucket/acl/allAuthenticatedUsers")
                .addHeader("Accept", "application/json").addHeader("Authorization", "Bearer " + TOKEN).build();
 
       HttpResponse deleteResponse = HttpResponse.builder().statusCode(404).build();
@@ -145,7 +145,7 @@ public class BucketAccessControlsApiExpectTest extends BaseGoogleCloudStorageApi
       HttpRequest update = HttpRequest
                .builder()
                .method("PUT")
-               .endpoint("https://www.googleapis.com/storage/v1/b/jcloudtestbucket/acl/allUsers")
+               .endpoint("https://www.googleapis.com/storage/v1/b/jcloudstestbucket/acl/allUsers")
                .addHeader("Accept", "application/json")
                .addHeader("Authorization", "Bearer " + TOKEN)
                .payload(payloadFromResourceWithContentType("/bucket_acl_update_initial.json",
@@ -168,7 +168,7 @@ public class BucketAccessControlsApiExpectTest extends BaseGoogleCloudStorageApi
       HttpRequest patchRequest = HttpRequest
                .builder()
                .method("PATCH")
-               .endpoint("https://www.googleapis.com/storage/v1/b/jcloudtestbucket/acl/allUsers")
+               .endpoint("https://www.googleapis.com/storage/v1/b/jcloudstestbucket/acl/allUsers")
                .addHeader("Accept", "application/json")
                .addHeader("Authorization", "Bearer " + TOKEN)
                .payload(payloadFromResourceWithContentType("/bucket_acl_update_initial.json",

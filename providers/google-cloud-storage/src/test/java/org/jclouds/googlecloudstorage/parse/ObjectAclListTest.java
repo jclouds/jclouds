@@ -31,8 +31,8 @@ public class ObjectAclListTest extends BaseGoogleCloudStorageParseTest<List<Obje
 
    private ObjectAccessControls item1 = ObjectAccessControls
             .builder()
-            .id("jcloudtestbucket/foo.txt/1394121608485000/user-00b4903a97adfde729f0650133a7379693099d8d85d6b1b18255ca70bf89e31d")
-            .bucket("jcloudtestbucket").object("foo.txt").generation(Long.valueOf("1394121608485000"))
+            .id("jcloudstestbucket/foo.txt/1394121608485000/user-00b4903a97adfde729f0650133a7379693099d8d85d6b1b18255ca70bf89e31d")
+            .bucket("jcloudstestbucket").object("foo.txt").generation(Long.valueOf("1394121608485000"))
             .entity("user-00b4903a97adfde729f0650133a7379693099d8d85d6b1b18255ca70bf89e31d")
             .entityId("00b4903a97adfde729f0650133a7379693099d8d85d6b1b18255ca70bf89e31d").role(ObjectRole.OWNER)
             .build();
