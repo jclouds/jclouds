@@ -94,15 +94,24 @@ public class GoogleCloudStorageBlobIntegrationLiveTest extends BaseBlobIntegrati
    }
 
    @Override
-   @Test(enabled = false)
-   public void testFileGetParallel() throws SkipException {
-      // Implement Parallel uploads
+   @Test(groups = { "integration", "live" })
+   public void testMultipartUploadSinglePart() throws SkipException {
+      throw new SkipException("Implement MultipartUploads uploads");
+      // TODO: Implement MultipartUploads uploads
    }
 
    @Override
-   @Test(enabled = false)
-   public void testPutFileParallel() throws SkipException {
-      // Implement Parallel uploads
+   @Test(groups = { "integration", "live" })
+   public void testMultipartUploadMultipleParts() throws SkipException {
+      throw new SkipException("Implement MultipartUploads uploads");
+      // TODO: Implement MultipartUploads uploads
+   }
+
+   @Override
+   @Test(groups = { "integration", "live" })
+   public void testMultipartUploadNoPartsAbort() throws SkipException {
+      throw new SkipException("Implement MultipartUploads uploads");
+      // TODO: Implement MultipartUploads uploads
    }
 
    @Override
