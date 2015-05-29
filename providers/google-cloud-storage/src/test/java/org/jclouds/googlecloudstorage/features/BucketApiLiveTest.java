@@ -116,6 +116,8 @@ public class BucketApiLiveTest extends BaseGoogleCloudStorageApiLiveTest {
       assertEquals(response.name(), BUCKET_NAME_STANDARD);
       assertEquals(response.location(), Location.US);
       assertThat(response.storageClass()).isEqualTo(StorageClass.STANDARD);
+
+      api().deleteBucket(BUCKET_NAME_STANDARD);
    }
 
    @Test(groups = "live")
@@ -131,6 +133,8 @@ public class BucketApiLiveTest extends BaseGoogleCloudStorageApiLiveTest {
       assertEquals(response.name(), BUCKET_NAME_NEARLINE);
       assertEquals(response.location(), Location.US);
       assertThat(response.storageClass()).isEqualTo(StorageClass.NEARLINE);
+
+      api().deleteBucket(BUCKET_NAME_NEARLINE);
    }
 
    @Test(groups = "live", dependsOnMethods = { "testCreateBucket" })
