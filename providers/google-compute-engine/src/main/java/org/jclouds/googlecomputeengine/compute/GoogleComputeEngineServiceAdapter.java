@@ -138,15 +138,14 @@ public final class GoogleComputeEngineServiceAdapter
          tags.add(naming.name(ports));
       }
 
-      NewInstance newInstance = NewInstance.create(
-            name, // name
+      NewInstance newInstance = new NewInstance.Builder( name,
             template.getHardware().getUri(), // machineType
-            network, // network
-            disks, // disks
-            group, // description
-            Tags.create(null, ImmutableList.copyOf(tags)) // tags
-      );
-
+            network,
+            disks)
+            .description(group)
+            .tags(Tags.create(null, ImmutableList.copyOf(tags)))
+            .serviceAccounts(options.serviceAccounts())
+            .build();
 
       // Add metadata from template and for ssh key and image id
       newInstance.metadata().putAll(options.getUserMetadata());
@@ -177,7 +176,7 @@ public final class GoogleComputeEngineServiceAdapter
             null, // networkInterfaces
             null, // disks
             newInstance.metadata(), // metadata
-            null, // serviceAccounts
+            newInstance.serviceAccounts(), // serviceAccounts
             Scheduling.create(OnHostMaintenance.MIGRATE, true) // scheduling
       ));
       checkState(instanceVisible.apply(instance), "instance %s is not api visible!", instance.get());

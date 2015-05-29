@@ -34,7 +34,9 @@ import org.jclouds.googlecomputeengine.domain.Instance;
 import org.jclouds.googlecomputeengine.domain.Instance.AttachedDisk;
 import org.jclouds.googlecomputeengine.domain.Instance.NetworkInterface.AccessConfig.Type;
 import org.jclouds.googlecomputeengine.domain.Instance.Scheduling;
+import org.jclouds.googlecomputeengine.domain.Instance.Scheduling.OnHostMaintenance;
 import org.jclouds.googlecomputeengine.domain.Instance.SerialPortOutput;
+import org.jclouds.googlecomputeengine.domain.Instance.ServiceAccount;
 import org.jclouds.googlecomputeengine.domain.Instance.NetworkInterface.AccessConfig;
 import org.jclouds.googlecomputeengine.domain.Metadata;
 import org.jclouds.googlecomputeengine.domain.NewInstance;
@@ -99,11 +101,16 @@ public class InstanceApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
       );
       instance.metadata().put("mykey", "myvalue");
 
-      instance2 = NewInstance.create(
-            INSTANCE_NAME2, // name
+      instance2 = new NewInstance.Builder(INSTANCE_NAME2, // name
             getDefaultMachineTypeUrl(), // machineType
             getNetworkUrl(INSTANCE_NETWORK_NAME), // network
-            imageUri); // sourceImage
+            imageUri) // sourceImage
+            .canIpForward(true)
+            .description("description")
+            .tags(Tags.create(null, ImmutableList.of("tag1")))
+            .serviceAccounts(ImmutableList.of(ServiceAccount.create("default", ImmutableList.of("https://www.googleapis.com/auth/compute"))))
+            .scheduling(Scheduling.create(OnHostMaintenance.MIGRATE, true))
+            .build();
 
       return api;
    }
@@ -114,6 +121,18 @@ public class InstanceApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
 
    private DiskApi diskApi() {
       return api.disksInZone(DEFAULT_ZONE_NAME);
+   }
+
+   @Test(groups = "live", dependsOnMethods = "testInsertInstance")
+   public void testGetInstance2() {
+      Instance instance = api().get(INSTANCE_NAME2);
+      assertNotNull(instance);
+      assertInstanceEquals(instance, this.instance2);
+      assertTrue(instance.canIpForward());
+      assertEquals(instance.description(), "description");
+      assertEquals(instance.serviceAccounts().get(0).scopes(), ImmutableList.of("https://www.googleapis.com/auth/compute"));
+      assertTrue(instance.scheduling().automaticRestart());
+      assertEquals(instance.scheduling().onHostMaintenance(), OnHostMaintenance.MIGRATE);
    }
 
    @Test(groups = "live")
@@ -294,7 +313,7 @@ public class InstanceApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
       assertOperationDoneSuccessfully(api().reset(INSTANCE_NAME));
    }
 
-   @Test(groups = "live", dependsOnMethods = "testInsertInstance")
+   @Test(groups = "live", dependsOnMethods = "testGetInstance2")
    public void testStopInstance() {
       Instance originalInstance = api().get(INSTANCE_NAME2);
       assertEquals(originalInstance.status(), Instance.Status.RUNNING);

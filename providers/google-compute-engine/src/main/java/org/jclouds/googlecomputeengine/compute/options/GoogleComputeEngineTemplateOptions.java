@@ -16,16 +16,19 @@
  */
 package org.jclouds.googlecomputeengine.compute.options;
 
+import java.util.List;
 import java.util.Map;
 
 import org.jclouds.compute.options.TemplateOptions;
 import org.jclouds.domain.LoginCredentials;
 import org.jclouds.scriptbuilder.domain.Statement;
+import org.jclouds.googlecomputeengine.domain.Instance.ServiceAccount;
 
 /** Instance options specific to Google Compute Engine. */
 public final class GoogleComputeEngineTemplateOptions extends TemplateOptions {
 
    private boolean autoCreateKeyPair = true;
+   private List<ServiceAccount> serviceAccounts;
 
    @Override
    public GoogleComputeEngineTemplateOptions clone() {
@@ -40,6 +43,7 @@ public final class GoogleComputeEngineTemplateOptions extends TemplateOptions {
       if (to instanceof GoogleComputeEngineTemplateOptions) {
          GoogleComputeEngineTemplateOptions eTo = GoogleComputeEngineTemplateOptions.class.cast(to);
          eTo.autoCreateKeyPair(autoCreateKeyPair());
+         eTo.serviceAccounts(serviceAccounts());
       }
    }
 
@@ -52,10 +56,28 @@ public final class GoogleComputeEngineTemplateOptions extends TemplateOptions {
    }
 
    /**
-    * Sets whether an SSH key pair should be created automatically.
+    * Gets whether an SSH key pair should be created automatically.
     */
    public boolean autoCreateKeyPair() {
       return autoCreateKeyPair;
+   }
+
+   /**
+    * Sets a list of service accounts, with their specified scopes, to authorize on created instance.
+    * For example, to give a node the 'compute' scope you would add a service account with the email 'default'
+    * and the scope 'https://www.googleapis.com/auth/compute'
+    * These scopes will be given to all nodes created with these template options.
+    */
+   public GoogleComputeEngineTemplateOptions serviceAccounts(List<ServiceAccount> serviceAccounts){
+      this.serviceAccounts = serviceAccounts;
+      return this;
+   }
+
+   /**
+    * Gets the list of service accounts, with their specified scopes, that will be authorize on created instances.
+    */
+   public List<ServiceAccount> serviceAccounts(){
+      return serviceAccounts;
    }
 
    /**

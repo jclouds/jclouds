@@ -27,6 +27,8 @@ import org.jclouds.googlecomputeengine.domain.AttachDisk;
 import org.jclouds.googlecomputeengine.domain.AttachDisk.DiskInterface;
 import org.jclouds.googlecomputeengine.domain.Instance.NetworkInterface.AccessConfig;
 import org.jclouds.googlecomputeengine.domain.Instance.NetworkInterface.AccessConfig.Type;
+import org.jclouds.googlecomputeengine.domain.Instance.Scheduling;
+import org.jclouds.googlecomputeengine.domain.Instance.ServiceAccount;
 import org.jclouds.googlecomputeengine.domain.Metadata;
 import org.jclouds.googlecomputeengine.domain.NewInstance;
 import org.jclouds.googlecomputeengine.domain.Instance.Scheduling.OnHostMaintenance;
@@ -248,6 +250,41 @@ public class InstanceApiMockTest extends BaseGoogleComputeEngineApiMockTest {
             new ParseZoneOperationTest().expected(url("/projects")));
 
       assertSent(server, "POST", "/projects/party/zones/us-central1-a/instances/test-1/stop");
+   }
+
+   public void builderTest() throws Exception {
+      server.enqueue(jsonResponse("/zone_operation.json"));
+
+      NewInstance newInstance = new NewInstance.Builder("test-1", // name
+            URI.create(url("/projects/party/zones/us-central1-a/machineTypes/n1-standard-1")), // machineType
+            URI.create(url("/projects/party/global/networks/default")), // network
+            URI.create(url("/projects/party/global/images/centos-6-2-v20120326"))).build(); // sourceImage)
+
+      assertEquals(instanceApi().create(newInstance), new ParseZoneOperationTest().expected(url("/projects")));
+      assertSent(server, "POST", "/projects/party/zones/us-central1-a/instances",
+            stringFromResource("/instance_insert_simple.json"));
+   }
+
+   public void insert_builder_allOptions() throws Exception {
+      server.enqueue(jsonResponse("/zone_operation.json"));
+
+      NewInstance newInstance = new NewInstance.Builder(
+            "test-1", // name
+            URI.create(url("/projects/party/zones/us-central1-a/machineTypes/n1-standard-1")), // machineType
+            URI.create(url("/projects/party/global/networks/default")), // network
+            Arrays.asList(AttachDisk.existingBootDisk(URI.create(url("/projects/party/zones/us-central1-a/disks/test")))))
+            .canIpForward(true)
+            .description("desc")
+            .tags(null)
+            .metadata(Metadata.create().put("aKey", "aValue"))
+            .serviceAccounts(ImmutableList.of(ServiceAccount.create("default",
+                                              ImmutableList.of("https://www.googleapis.com/auth/compute"))))
+            .scheduling(Scheduling.create(OnHostMaintenance.MIGRATE, true))
+            .build();
+
+      assertEquals(instanceApi().create(newInstance), new ParseZoneOperationTest().expected(url("/projects")));
+      assertSent(server, "POST", "/projects/party/zones/us-central1-a/instances",
+            stringFromResource("/instance_insert_full.json"));
    }
 
    InstanceApi instanceApi(){

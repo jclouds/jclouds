@@ -40,10 +40,6 @@ public abstract class Tags implements Cloneable {
       return Tags.create(null, null);
    }
 
-   public static Tags create(String fingerprint) {
-      return Tags.create(fingerprint, null);
-   }
-
    @SerializedNames({ "fingerprint", "items" })
    public static Tags create(String fingerprint, ImmutableList<String> items) { // Dictates the type when created from json!
       ImmutableList<String> empty = ImmutableList.of();

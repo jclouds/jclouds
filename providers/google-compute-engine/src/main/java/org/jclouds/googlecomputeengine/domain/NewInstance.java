@@ -17,6 +17,7 @@
 package org.jclouds.googlecomputeengine.domain;
 
 import static com.google.common.base.Preconditions.checkArgument;
+import static com.google.common.base.Preconditions.checkNotNull;
 
 import java.net.URI;
 import java.util.Arrays;
@@ -80,7 +81,8 @@ public abstract class NewInstance {
       return create(name, machineType, network, Arrays.asList(AttachDisk.newBootDisk(sourceImage)), null, null);
    }
 
-   public static NewInstance create(String name, URI machineType, URI network, List<AttachDisk> disks, @Nullable String description, @Nullable Tags tags) {
+   public static NewInstance create(String name, URI machineType, URI network, List<AttachDisk> disks,
+                                    @Nullable String description, @Nullable Tags tags) {
       checkArgument(disks.get(0).boot(), "disk 0 must be a boot disk! %s", disks);
       boolean foundBoot = false;
       for (AttachDisk disk : disks) {
@@ -93,13 +95,86 @@ public abstract class NewInstance {
             description, tags != null ? tags : Tags.create(), Metadata.create(), null, null);
    }
 
-   @SerializedNames({ "name", "machineType", "canIpForward", "networkInterfaces", "disks", "description", "tags", "metadata",
-      "serviceAccounts", "scheduling" })
-   static NewInstance create(String name, URI machineType, Boolean canIpForward, List<NetworkInterface> networkInterfaces,
-         List<AttachDisk> disks, String description, Tags tags, Metadata metadata, List<ServiceAccount> serviceAccounts, Scheduling scheduling) {
-      return new AutoValue_NewInstance(name, machineType, canIpForward, networkInterfaces, disks, description, tags, metadata, serviceAccounts, scheduling);
+   @SerializedNames({ "name", "machineType", "canIpForward", "networkInterfaces", "disks", "description",
+                      "tags", "metadata", "serviceAccounts", "scheduling" })
+   static NewInstance create(String name, URI machineType, Boolean canIpForward,
+                             List<NetworkInterface> networkInterfaces, List<AttachDisk> disks, String description,
+                             Tags tags, Metadata metadata, List<ServiceAccount> serviceAccounts, Scheduling scheduling) {
+      return new AutoValue_NewInstance(name, machineType, canIpForward, networkInterfaces, disks, description,
+                                       tags, metadata, serviceAccounts, scheduling);
    }
 
    NewInstance() {
+   }
+
+   public static class Builder {
+      private String name;
+      private URI machineType;
+      private Boolean canIpForward;
+      private List<NetworkInterface> networkInterfaces;
+      private List<AttachDisk> disks;
+      private String description;
+      private Tags tags;
+      private Metadata metadata;
+      private List<ServiceAccount> serviceAccounts;
+      private Scheduling scheduling;
+
+      public Builder(String name, URI machineType, URI network, List<AttachDisk> disks) {
+         checkNotNull(name, "NewInstance name cannot be null");
+         this.name = name;
+         this.machineType = machineType;
+         this.networkInterfaces = ImmutableList.of(NetworkInterface.create(network));
+         this.disks = disks;
+      }
+
+      public Builder(String name, URI machineType, URI network, URI sourceImage) {
+         checkNotNull(name, "NewInstance name cannot be null");
+         this.name = name;
+         this.machineType = machineType;
+         this.networkInterfaces = ImmutableList.of(NetworkInterface.create(network));
+         this.disks = Arrays.asList(AttachDisk.newBootDisk(sourceImage));
+      }
+
+      public Builder canIpForward(Boolean canIpForward){
+         this.canIpForward = canIpForward;
+         return this;
+      }
+
+      public Builder description(String description){
+         this.description = description;
+         return this;
+      }
+
+      public Builder tags(Tags tags){
+         this.tags = tags;
+         return this;
+      }
+
+      public Builder metadata(Metadata metadata){
+         this.metadata = metadata;
+         return this;
+      }
+
+      /**
+       * A list of service accounts, with their specified scopes, authorized for this instance.
+       * Service accounts generate access tokens that can be accessed through the metadata server
+       * and used to authenticate applications on the instance.
+       * Note: to add scopes to the default service account on the VM you can use 'default' as
+       * a keyword for email.
+       */
+      public Builder serviceAccounts(List<ServiceAccount> serviceAccounts){
+         this.serviceAccounts = serviceAccounts;
+         return this;
+      }
+
+      public Builder scheduling(Scheduling scheduling){
+         this.scheduling = scheduling;
+         return this;
+      }
+
+      public NewInstance build() {
+         return create(name, machineType, canIpForward, networkInterfaces, disks, description, tags != null ? tags : Tags.create(),
+                       metadata != null ? metadata : Metadata.create(), serviceAccounts, scheduling);
+      }
    }
 }
