@@ -18,7 +18,6 @@ package org.jclouds.blobstore;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.io.BaseEncoding.base16;
-import static org.jclouds.http.Uris.uriBuilder;
 
 import java.io.IOException;
 import java.util.Date;
@@ -234,8 +233,6 @@ public class TransientStorageStrategy implements LocalStorageStrategy {
       Blob blob = blobFactory.create(BlobStoreUtils.copy(in.getMetadata()));
       blob.setPayload(payload);
       blob.getMetadata().setContainer(containerName);
-      blob.getMetadata().setUri(
-            uriBuilder(new StringBuilder("mem://").append(containerName)).path(in.getMetadata().getName()).build());
       blob.getMetadata().setLastModified(new Date());
       blob.getMetadata().setSize((long) input.length);
       String eTag = base16().lowerCase().encode(contentMd5.asBytes());
