@@ -157,12 +157,12 @@ public class SSHClientConnection implements Connection<SSHClient> {
          ssh.setTimeout(sessionTimeout);
       }
       ssh.connect(hostAndPort.getHostText(), hostAndPort.getPortOrDefault(22));
-      if (loginCredentials.getOptionalPassword().isPresent()) {
-         ssh.authPassword(loginCredentials.getUser(), loginCredentials.getOptionalPassword().get());
-      } else if (loginCredentials.hasUnencryptedPrivateKey()) {
+      if (loginCredentials.hasUnencryptedPrivateKey()) {
          OpenSSHKeyFile key = new OpenSSHKeyFile();
          key.init(loginCredentials.getOptionalPrivateKey().get(), null);
          ssh.authPublickey(loginCredentials.getUser(), key);
+      } else if (loginCredentials.getOptionalPassword().isPresent()) {
+         ssh.authPassword(loginCredentials.getUser(), loginCredentials.getOptionalPassword().get());
       } else if (agentConnector.isPresent()) {
          AgentProxy proxy = new AgentProxy(agentConnector.get());
          ssh.auth(loginCredentials.getUser(), getAuthMethods(proxy));
