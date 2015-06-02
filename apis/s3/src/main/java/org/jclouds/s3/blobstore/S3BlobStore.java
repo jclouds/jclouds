@@ -51,6 +51,7 @@ import org.jclouds.domain.Location;
 import org.jclouds.http.options.GetOptions;
 import org.jclouds.io.ContentMetadata;
 import org.jclouds.io.Payload;
+import org.jclouds.io.PayloadSlicer;
 import org.jclouds.s3.S3Client;
 import org.jclouds.s3.blobstore.functions.BlobToObject;
 import org.jclouds.s3.blobstore.functions.BlobToObjectMetadata;
@@ -58,7 +59,6 @@ import org.jclouds.s3.blobstore.functions.BucketToResourceList;
 import org.jclouds.s3.blobstore.functions.ContainerToBucketListOptions;
 import org.jclouds.s3.blobstore.functions.ObjectToBlob;
 import org.jclouds.s3.blobstore.functions.ObjectToBlobMetadata;
-import org.jclouds.s3.blobstore.strategy.MultipartUploadStrategy;
 import org.jclouds.s3.domain.AccessControlList;
 import org.jclouds.s3.domain.AccessControlList.GroupGranteeURI;
 import org.jclouds.s3.domain.AccessControlList.Permission;
@@ -93,19 +93,17 @@ public class S3BlobStore extends BaseBlobStore {
    private final BlobToHttpGetOptions blob2ObjectGetOptions;
    private final Provider<FetchBlobMetadata> fetchBlobMetadataProvider;
    private final LoadingCache<String, AccessControlList> bucketAcls;
-   protected final Provider<MultipartUploadStrategy> multipartUploadStrategy;
 
    @Inject
    protected S3BlobStore(BlobStoreContext context, BlobUtils blobUtils, Supplier<Location> defaultLocation,
-            @Memoized Supplier<Set<? extends Location>> locations, S3Client sync,
+            @Memoized Supplier<Set<? extends Location>> locations, PayloadSlicer slicer, S3Client sync,
             Function<Set<BucketMetadata>, PageSet<? extends StorageMetadata>> convertBucketsToStorageMetadata,
             ContainerToBucketListOptions container2BucketListOptions, BucketToResourceList bucket2ResourceList,
             ObjectToBlob object2Blob, BlobToHttpGetOptions blob2ObjectGetOptions, BlobToObject blob2Object,
             BlobToObjectMetadata blob2ObjectMetadata,
             ObjectToBlobMetadata object2BlobMd, Provider<FetchBlobMetadata> fetchBlobMetadataProvider,
-            LoadingCache<String, AccessControlList> bucketAcls,
-            Provider<MultipartUploadStrategy> multipartUploadStrategy) {
-      super(context, blobUtils, defaultLocation, locations);
+            LoadingCache<String, AccessControlList> bucketAcls) {
+      super(context, blobUtils, defaultLocation, locations, slicer);
       this.blob2ObjectGetOptions = checkNotNull(blob2ObjectGetOptions, "blob2ObjectGetOptions");
       this.sync = checkNotNull(sync, "sync");
       this.convertBucketsToStorageMetadata = checkNotNull(convertBucketsToStorageMetadata, "convertBucketsToStorageMetadata");
@@ -117,7 +115,6 @@ public class S3BlobStore extends BaseBlobStore {
       this.blob2ObjectMetadata = checkNotNull(blob2ObjectMetadata, "blob2ObjectMetadata");
       this.fetchBlobMetadataProvider = checkNotNull(fetchBlobMetadataProvider, "fetchBlobMetadataProvider");
       this.bucketAcls = checkNotNull(bucketAcls, "bucketAcls");
-      this.multipartUploadStrategy = checkNotNull(multipartUploadStrategy, "multipartUploadStrategy");
    }
 
    /**
@@ -271,8 +268,7 @@ public class S3BlobStore extends BaseBlobStore {
    @Override
    public String putBlob(String container, Blob blob, PutOptions overrides) {
       if (overrides.isMultipart()) {
-         // need to use a provider if the strategy object is stateful
-         return multipartUploadStrategy.get().execute(container, blob);
+         return putMultipartBlob(container, blob, overrides);
       }
 
       // TODO: Make use of options overrides
