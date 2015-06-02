@@ -63,7 +63,6 @@ import com.beust.jcommander.internal.Lists;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.hash.Hashing;
 import com.google.common.io.ByteSource;
-import com.google.common.primitives.Bytes;
 
 public class ObjectApiLiveTest extends BaseGoogleCloudStorageApiLiveTest {
 
@@ -435,6 +434,7 @@ public class ObjectApiLiveTest extends BaseGoogleCloudStorageApiLiveTest {
       assertTrue(api().deleteObject(BUCKET_NAME2, COMPOSED_OBJECT2));
       assertTrue(api().deleteObject(BUCKET_NAME2, COMPOSED_OBJECT));
       assertTrue(api().deleteObject(BUCKET_NAME2, COPIED_OBJECT_NAME));
+      assertTrue(api().deleteObject(BUCKET_NAME2, COPIED_OBJECT_NAME2));
       assertFalse(api().deleteObject(BUCKET_NAME, UPLOAD_OBJECT_NAME));
       assertTrue(api().deleteObject(BUCKET_NAME, UPLOAD_OBJECT_NAME2));
       assertTrue(api().deleteObject(BUCKET_NAME, MULTIPART_UPLOAD_OBJECT));
@@ -452,11 +452,5 @@ public class ObjectApiLiveTest extends BaseGoogleCloudStorageApiLiveTest {
    private void deleteBucket() {
       api.getBucketApi().deleteBucket(BUCKET_NAME);
       api.getBucketApi().deleteBucket(BUCKET_NAME2);
-   }
-
-   private static byte[] reverse(byte[] b) {
-      List<Byte> hashByte = Bytes.asList(b);
-      List<Byte> reversedList = com.google.common.collect.Lists.reverse(hashByte);
-      return Bytes.toArray(reversedList);
    }
 }

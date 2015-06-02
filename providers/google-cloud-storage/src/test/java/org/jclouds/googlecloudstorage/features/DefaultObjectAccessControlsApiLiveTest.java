@@ -32,7 +32,7 @@ import org.testng.annotations.Test;
 
 public class DefaultObjectAccessControlsApiLiveTest extends BaseGoogleCloudStorageApiLiveTest {
 
-   protected static final String BUCKET_NAME = "jcloudstestbucketdefaultoacl" + UUID.randomUUID();
+   protected static final String BUCKET_NAME = "jcloudsdefaultoacltest" + UUID.randomUUID();
 
    private DefaultObjectAccessControlsApi api() {
       return api.getDefaultObjectAccessControlsApi();

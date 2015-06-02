@@ -136,7 +136,7 @@ public class ResumableUploadApiLiveTest extends BaseGoogleCloudStorageApiLiveTes
       // Uploading First chunk
       ByteSourcePayload payload = Payloads.newByteSourcePayload(byteSource.slice(offset, chunkSize));
       long length = byteSource.slice(offset, chunkSize).size();
-      String Content_Range = generateContentRange(0L, length, totalSize);
+      String Content_Range = generateContentRange(0L, length - 1, totalSize);
       ResumableUpload uploadResponse = api().chunkUpload(BUCKET_NAME, uploadId, "application/pdf", length,
                Content_Range, payload);
 
