@@ -26,7 +26,6 @@ import java.util.Set;
 import java.util.UUID;
 
 import javax.inject.Inject;
-import javax.inject.Provider;
 import javax.inject.Singleton;
 
 import org.jclouds.azure.storage.domain.BoundedSet;
@@ -37,7 +36,6 @@ import org.jclouds.azureblob.blobstore.functions.BlobToAzureBlob;
 import org.jclouds.azureblob.blobstore.functions.ContainerToResourceMetadata;
 import org.jclouds.azureblob.blobstore.functions.ListBlobsResponseToResourceList;
 import org.jclouds.azureblob.blobstore.functions.ListOptionsToListBlobsOptions;
-import org.jclouds.azureblob.blobstore.strategy.MultipartUploadStrategy;
 import org.jclouds.azureblob.domain.AzureBlob;
 import org.jclouds.azureblob.domain.BlobBlockProperties;
 import org.jclouds.azureblob.domain.ContainerProperties;
@@ -68,6 +66,7 @@ import org.jclouds.domain.Location;
 import org.jclouds.http.options.GetOptions;
 import org.jclouds.io.ContentMetadata;
 import org.jclouds.io.MutableContentMetadata;
+import org.jclouds.io.PayloadSlicer;
 
 import com.google.common.base.Function;
 import com.google.common.base.Optional;
@@ -89,18 +88,17 @@ public class AzureBlobStore extends BaseBlobStore {
    private final BlobToAzureBlob blob2AzureBlob;
    private final BlobPropertiesToBlobMetadata blob2BlobMd;
    private final BlobToHttpGetOptions blob2ObjectGetOptions;
-   private final Provider<MultipartUploadStrategy> multipartUploadStrategy;
 
 
    @Inject
    AzureBlobStore(BlobStoreContext context, BlobUtils blobUtils, Supplier<Location> defaultLocation,
-            @Memoized Supplier<Set<? extends Location>> locations, AzureBlobClient sync,
+            @Memoized Supplier<Set<? extends Location>> locations, PayloadSlicer slicer, AzureBlobClient sync,
             ContainerToResourceMetadata container2ResourceMd,
             ListOptionsToListBlobsOptions blobStore2AzureContainerListOptions,
             ListBlobsResponseToResourceList azure2BlobStoreResourceList, AzureBlobToBlob azureBlob2Blob,
             BlobToAzureBlob blob2AzureBlob, BlobPropertiesToBlobMetadata blob2BlobMd,
-            BlobToHttpGetOptions blob2ObjectGetOptions, Provider<MultipartUploadStrategy> multipartUploadStrategy) {
-      super(context, blobUtils, defaultLocation, locations);
+            BlobToHttpGetOptions blob2ObjectGetOptions) {
+      super(context, blobUtils, defaultLocation, locations, slicer);
       this.sync = checkNotNull(sync, "sync");
       this.container2ResourceMd = checkNotNull(container2ResourceMd, "container2ResourceMd");
       this.blobStore2AzureContainerListOptions = checkNotNull(blobStore2AzureContainerListOptions,
@@ -110,7 +108,6 @@ public class AzureBlobStore extends BaseBlobStore {
       this.blob2AzureBlob = checkNotNull(blob2AzureBlob, "blob2AzureBlob");
       this.blob2BlobMd = checkNotNull(blob2BlobMd, "blob2BlobMd");
       this.blob2ObjectGetOptions = checkNotNull(blob2ObjectGetOptions, "blob2ObjectGetOptions");
-      this.multipartUploadStrategy = checkNotNull(multipartUploadStrategy, "multipartUploadStrategy");
    }
 
    /**
@@ -227,7 +224,7 @@ public class AzureBlobStore extends BaseBlobStore {
    @Override
    public String putBlob(String container, Blob blob, PutOptions options) {
       if (options.isMultipart()) {
-         return multipartUploadStrategy.get().execute(container, blob);
+         return putMultipartBlob(container, blob, options);
       }
       return putBlob(container, blob);
    }

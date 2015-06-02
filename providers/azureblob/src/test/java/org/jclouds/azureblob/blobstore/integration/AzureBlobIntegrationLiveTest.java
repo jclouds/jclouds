@@ -16,28 +16,18 @@
  */
 package org.jclouds.azureblob.blobstore.integration;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.concurrent.ExecutionException;
 
-import com.google.common.io.ByteSource;
-import com.google.common.io.Files;
-import org.jclouds.azureblob.blobstore.strategy.MultipartUploadStrategy;
-import org.jclouds.blobstore.BlobStore;
-import org.jclouds.blobstore.domain.Blob;
 import org.jclouds.blobstore.integration.internal.BaseBlobIntegrationTest;
-import org.jclouds.blobstore.options.PutOptions;
-import org.jclouds.utils.TestUtils;
 import org.testng.SkipException;
 import org.testng.annotations.Test;
-
-import static org.testng.Assert.assertEquals;
 
 @Test(groups = "live")
 public class AzureBlobIntegrationLiveTest extends BaseBlobIntegrationTest {
    @Override
    protected long getMinimumMultipartBlobSize() {
-      return MultipartUploadStrategy.MAX_BLOCK_SIZE + 1;
+      return view.getBlobStore().getMaximumMultipartPartSize() + 1;
    }
 
    public AzureBlobIntegrationLiveTest() {
@@ -63,24 +53,5 @@ public class AzureBlobIntegrationLiveTest extends BaseBlobIntegrationTest {
    @Test(groups = { "integration", "live" })
    public void testSetBlobAccess() throws Exception {
       throw new SkipException("unsupported in Azure");
-   }
-
-   public void testMultipartChunkedFileStreamPowerOfTwoSize() throws IOException, InterruptedException {
-      final long limit = MultipartUploadStrategy.MAX_BLOCK_SIZE;
-      ByteSource input = TestUtils.randomByteSource().slice(0, limit);
-      File file = new File("target/const.txt");
-      input.copyTo(Files.asByteSink(file));
-      String containerName = getContainerName();
-
-      try {
-         BlobStore blobStore = view.getBlobStore();
-         blobStore.createContainerInLocation(null, containerName);
-         Blob blob = blobStore.blobBuilder("const.txt").payload(file).build();
-         String expected = blobStore.putBlob(containerName, blob, PutOptions.Builder.multipart());
-         String etag = blobStore.blobMetadata(containerName, "const.txt").getETag();
-         assertEquals(etag, expected);
-      } finally {
-         returnContainer(containerName);
-      }
    }
 }
