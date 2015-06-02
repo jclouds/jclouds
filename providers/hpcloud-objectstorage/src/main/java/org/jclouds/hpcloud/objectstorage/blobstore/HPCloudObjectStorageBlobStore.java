@@ -34,6 +34,7 @@ import org.jclouds.collect.Memoized;
 import org.jclouds.domain.Location;
 import org.jclouds.hpcloud.objectstorage.HPCloudObjectStorageApi;
 import org.jclouds.hpcloud.objectstorage.blobstore.functions.EnableCDNAndCache;
+import org.jclouds.io.PayloadSlicer;
 import org.jclouds.openstack.swift.blobstore.SwiftBlobStore;
 import org.jclouds.openstack.swift.blobstore.functions.BlobStoreListContainerOptionsToListContainerOptions;
 import org.jclouds.openstack.swift.blobstore.functions.BlobToObject;
@@ -54,14 +55,14 @@ public class HPCloudObjectStorageBlobStore extends SwiftBlobStore {
    @Inject
    protected HPCloudObjectStorageBlobStore(@Named(PROPERTY_USER_THREADS) ListeningExecutorService userExecutor,
          BlobStoreContext context, BlobUtils blobUtils, Supplier<Location> defaultLocation,
-         @Memoized Supplier<Set<? extends Location>> locations, HPCloudObjectStorageApi sync,
+         @Memoized Supplier<Set<? extends Location>> locations, PayloadSlicer slicer, HPCloudObjectStorageApi sync,
          ContainerToResourceMetadata container2ResourceMd,
          BlobStoreListContainerOptionsToListContainerOptions container2ContainerListOptions,
          ContainerToResourceList container2ResourceList, ObjectToBlob object2Blob, BlobToObject blob2Object,
          ObjectToBlobMetadata object2BlobMd, BlobToHttpGetOptions blob2ObjectGetOptions,
          Provider<FetchBlobMetadata> fetchBlobMetadataProvider, EnableCDNAndCache enableCDNAndCache,
          Provider<MultipartUploadStrategy> multipartUploadStrategy) {
-      super(userExecutor, context, blobUtils, defaultLocation, locations, sync, container2ResourceMd,
+      super(userExecutor, context, blobUtils, defaultLocation, locations, slicer, sync, container2ResourceMd,
             container2ContainerListOptions, container2ResourceList, object2Blob, blob2Object, object2BlobMd,
             blob2ObjectGetOptions, fetchBlobMetadataProvider, multipartUploadStrategy);
       this.enableCDNAndCache = enableCDNAndCache;

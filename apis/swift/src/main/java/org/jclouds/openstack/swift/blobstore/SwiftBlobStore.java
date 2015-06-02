@@ -51,6 +51,7 @@ import org.jclouds.collect.Memoized;
 import org.jclouds.domain.Location;
 import org.jclouds.http.options.GetOptions;
 import org.jclouds.io.Payload;
+import org.jclouds.io.PayloadSlicer;
 import org.jclouds.openstack.swift.CommonSwiftClient;
 import org.jclouds.openstack.swift.blobstore.functions.BlobStoreListContainerOptionsToListContainerOptions;
 import org.jclouds.openstack.swift.blobstore.functions.BlobToObject;
@@ -87,14 +88,14 @@ public class SwiftBlobStore extends BaseBlobStore {
    @Inject
    protected SwiftBlobStore(@Named(PROPERTY_USER_THREADS) ListeningExecutorService userExecutor,
             BlobStoreContext context, BlobUtils blobUtils, Supplier<Location> defaultLocation,
-            @Memoized Supplier<Set<? extends Location>> locations, CommonSwiftClient sync,
+            @Memoized Supplier<Set<? extends Location>> locations, PayloadSlicer slicer, CommonSwiftClient sync,
             ContainerToResourceMetadata container2ResourceMd,
             BlobStoreListContainerOptionsToListContainerOptions container2ContainerListOptions,
             ContainerToResourceList container2ResourceList, ObjectToBlob object2Blob, BlobToObject blob2Object,
             ObjectToBlobMetadata object2BlobMd, BlobToHttpGetOptions blob2ObjectGetOptions,
             Provider<FetchBlobMetadata> fetchBlobMetadataProvider,
             Provider<MultipartUploadStrategy> multipartUploadStrategy) {
-      super(context, blobUtils, defaultLocation, locations);
+      super(context, blobUtils, defaultLocation, locations, slicer);
       this.userExecutor = userExecutor;
       this.sync = sync;
       this.container2ResourceMd = container2ResourceMd;

@@ -54,6 +54,7 @@ import org.jclouds.crypto.Crypto;
 import org.jclouds.domain.Location;
 import org.jclouds.http.options.GetOptions;
 import org.jclouds.io.Payload;
+import org.jclouds.io.PayloadSlicer;
 
 import com.google.common.base.Supplier;
 import com.google.common.cache.CacheLoader;
@@ -74,13 +75,13 @@ public class AtmosBlobStore extends BaseBlobStore {
 
    @Inject
    AtmosBlobStore(BlobStoreContext context, BlobUtils blobUtils, Supplier<Location> defaultLocation,
-            @Memoized Supplier<Set<? extends Location>> locations, AtmosClient sync, ObjectToBlob object2Blob,
-            ObjectToBlobMetadata object2BlobMd, BlobToObject blob2Object,
+            @Memoized Supplier<Set<? extends Location>> locations, PayloadSlicer slicer, AtmosClient sync,
+            ObjectToBlob object2Blob, ObjectToBlobMetadata object2BlobMd, BlobToObject blob2Object,
             BlobStoreListOptionsToListOptions container2ContainerListOptions,
             DirectoryEntryListToResourceMetadataList container2ResourceList, Crypto crypto,
             BlobToHttpGetOptions blob2ObjectGetOptions, Provider<FetchBlobMetadata> fetchBlobMetadataProvider,
             LoadingCache<String, Boolean> isPublic) {
-      super(context, blobUtils, defaultLocation, locations);
+      super(context, blobUtils, defaultLocation, locations, slicer);
       this.blob2ObjectGetOptions = checkNotNull(blob2ObjectGetOptions, "blob2ObjectGetOptions");
       this.sync = checkNotNull(sync, "sync");
       this.container2ContainerListOptions = checkNotNull(container2ContainerListOptions,
