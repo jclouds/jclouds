@@ -94,4 +94,9 @@ public class SwiftBlobIntegrationLiveTest extends BaseBlobIntegrationTest {
          Uninterruptibles.sleepUninterruptibly(30, TimeUnit.SECONDS);
       }
    }
+
+   @Override
+   protected long getMinimumMultipartBlobSize() {
+      return 1;
+   }
 }

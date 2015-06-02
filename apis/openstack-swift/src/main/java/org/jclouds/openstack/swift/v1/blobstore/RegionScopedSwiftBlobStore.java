@@ -58,6 +58,7 @@ import org.jclouds.collect.Memoized;
 import org.jclouds.domain.Location;
 import org.jclouds.io.ContentMetadata;
 import org.jclouds.io.Payload;
+import org.jclouds.io.PayloadSlicer;
 import org.jclouds.io.payloads.ByteSourcePayload;
 import org.jclouds.openstack.swift.v1.SwiftApi;
 import org.jclouds.openstack.swift.v1.blobstore.functions.ToBlobMetadata;
@@ -72,6 +73,7 @@ import org.jclouds.openstack.swift.v1.features.ObjectApi;
 import org.jclouds.openstack.swift.v1.options.UpdateContainerOptions;
 import org.jclouds.openstack.swift.v1.reference.SwiftHeaders;
 
+import com.google.common.annotations.Beta;
 import com.google.common.base.Function;
 import com.google.common.base.Optional;
 import com.google.common.base.Supplier;
@@ -85,6 +87,7 @@ import com.google.common.collect.ImmutableMap.Builder;
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
+import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.io.ByteSource;
 import com.google.common.net.HttpHeaders;
@@ -96,12 +99,14 @@ public class RegionScopedSwiftBlobStore implements BlobStore {
 
    @Inject
    protected RegionScopedSwiftBlobStore(Injector baseGraph, BlobStoreContext context, SwiftApi api,
-         @Memoized Supplier<Set<? extends Location>> locations, @Assisted String regionId) {
+         @Memoized Supplier<Set<? extends Location>> locations, @Assisted String regionId,
+         PayloadSlicer slicer) {
       checkNotNull(regionId, "regionId");
       Optional<? extends Location> found = tryFind(locations.get(), idEquals(regionId));
       checkArgument(found.isPresent(), "region %s not in %s", regionId, locations.get());
       this.region = found.get();
       this.regionId = regionId;
+      this.slicer = slicer;
       this.toResourceMetadata = new ToResourceMetadata(found.get());
       this.context = context;
       this.api = api;
@@ -122,6 +127,7 @@ public class RegionScopedSwiftBlobStore implements BlobStore {
    private final BlobToHttpGetOptions toGetOptions = new BlobToHttpGetOptions();
    private final ToListContainerOptions toListContainerOptions = new ToListContainerOptions();
    private final ToResourceMetadata toResourceMetadata;
+   protected final PayloadSlicer slicer;
 
    @Override
    public Set<? extends Location> listAssignableLocations() {
@@ -233,7 +239,7 @@ public class RegionScopedSwiftBlobStore implements BlobStore {
    @Override
    public String putBlob(String container, Blob blob, PutOptions options) {
       if (options.isMultipart()) {
-         throw new UnsupportedOperationException();
+         return putMultipartBlob(container, blob, options);
       }
       ObjectApi objectApi = api.getObjectApi(regionId, container);
       return objectApi.put(blob.getMetadata().getName(), blob.getPayload(), metadata(blob.getMetadata().getUserMetadata()));
@@ -528,5 +534,20 @@ public class RegionScopedSwiftBlobStore implements BlobStore {
    @Override
    public long countBlobs(String containerName, ListContainerOptions options) {
       throw new UnsupportedOperationException();
+   }
+
+   // copied from BaseBlobStore
+   @Beta
+   protected String putMultipartBlob(String container, Blob blob, PutOptions overrides) {
+      MultipartUpload mpu = initiateMultipartUpload(container, blob.getMetadata());
+      List<MultipartPart> parts = Lists.newArrayList();
+      long partSize = getMaximumMultipartPartSize();  // TODO: optimal?
+      int partNumber = 1;
+      for (Payload payload : slicer.slice(blob.getPayload(), partSize)) {
+         MultipartPart part = uploadMultipartPart(mpu, partNumber, payload);
+         parts.add(part);
+         ++partNumber;
+      }
+      return completeMultipartUpload(mpu, parts);
    }
 }
