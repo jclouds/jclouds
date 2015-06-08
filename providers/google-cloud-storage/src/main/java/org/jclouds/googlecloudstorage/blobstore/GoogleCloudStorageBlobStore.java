@@ -70,6 +70,7 @@ import org.jclouds.googlecloudstorage.options.ListObjectOptions;
 import org.jclouds.http.HttpResponseException;
 import org.jclouds.io.ContentMetadata;
 import org.jclouds.io.Payload;
+import org.jclouds.io.PayloadSlicer;
 
 import com.google.common.base.Charsets;
 import com.google.common.base.Function;
@@ -92,14 +93,14 @@ public final class GoogleCloudStorageBlobStore extends BaseBlobStore {
    private final Supplier<String> projectId;
 
    @Inject GoogleCloudStorageBlobStore(BlobStoreContext context, BlobUtils blobUtils, Supplier<Location> defaultLocation,
-            @Memoized Supplier<Set<? extends Location>> locations, GoogleCloudStorageApi api,
+            @Memoized Supplier<Set<? extends Location>> locations, PayloadSlicer slicer, GoogleCloudStorageApi api,
             BucketToStorageMetadata bucketToStorageMetadata, ObjectToBlobMetadata objectToBlobMetadata,
             ObjectListToStorageMetadata objectListToStorageMetadata,
             Provider<FetchBlobMetadata> fetchBlobMetadataProvider,
             BlobMetadataToObjectTemplate blobMetadataToObjectTemplate,
             BlobStoreListContainerOptionsToListObjectOptions listContainerOptionsToListObjectOptions,
             Provider<MultipartUploadStrategy> multipartUploadStrategy, @CurrentProject Supplier<String> projectId) {
-      super(context, blobUtils, defaultLocation, locations);
+      super(context, blobUtils, defaultLocation, locations, slicer);
       this.api = api;
       this.bucketToStorageMetadata = bucketToStorageMetadata;
       this.objectToBlobMetadata = objectToBlobMetadata;
