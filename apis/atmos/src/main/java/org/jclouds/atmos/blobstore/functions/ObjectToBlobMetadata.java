@@ -77,6 +77,7 @@ public class ObjectToBlobMetadata implements Function<AtmosObject, MutableBlobMe
             lowerKeyMetadata.put(key, entry.getValue());
       }
       to.setUserMetadata(lowerKeyMetadata);
+      to.setSize(from.getContentMetadata().getContentLength());
       return to;
    }
 }
