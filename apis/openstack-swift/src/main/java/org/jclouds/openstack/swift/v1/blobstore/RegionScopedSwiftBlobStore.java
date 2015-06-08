@@ -54,6 +54,7 @@ import org.jclouds.blobstore.options.GetOptions;
 import org.jclouds.blobstore.options.ListContainerOptions;
 import org.jclouds.blobstore.options.PutOptions;
 import org.jclouds.blobstore.strategy.ClearListStrategy;
+import org.jclouds.blobstore.strategy.internal.MultipartUploadSlicingAlgorithm;
 import org.jclouds.collect.Memoized;
 import org.jclouds.domain.Location;
 import org.jclouds.io.ContentMetadata;
@@ -541,7 +542,10 @@ public class RegionScopedSwiftBlobStore implements BlobStore {
    protected String putMultipartBlob(String container, Blob blob, PutOptions overrides) {
       MultipartUpload mpu = initiateMultipartUpload(container, blob.getMetadata());
       List<MultipartPart> parts = Lists.newArrayList();
-      long partSize = getMaximumMultipartPartSize();  // TODO: optimal?
+      long contentLength = blob.getMetadata().getContentMetadata().getContentLength();
+      MultipartUploadSlicingAlgorithm algorithm = new MultipartUploadSlicingAlgorithm(
+            getMinimumMultipartPartSize(), getMaximumMultipartPartSize(), getMaximumNumberOfParts());
+      long partSize = algorithm.calculateChunkSize(contentLength);
       int partNumber = 1;
       for (Payload payload : slicer.slice(blob.getPayload(), partSize)) {
          MultipartPart part = uploadMultipartPart(mpu, partNumber, payload);
