@@ -1,0 +1,14 @@
+{
+  "firewall_policy": {
+    "name": "myfirewallrule",
+    "firewall_rules": [
+      "3e5a4e53-4390-4b22-baea-75529dbeafb8",
+      "4e58f636-1ef1-4e8e-b3ad-5f7f9d1f9f23"
+    ],
+    "tenant_id": "e1defcdd823741c89afd5824040deed2",
+    "audited": false,
+    "shared": true,
+    "id": "18d2f4e5-afdd-4c10-87ea-d35f38faf98c",
+    "description": ""
+  }
+}

@@ -1,0 +1,5 @@
+{
+  "firewall": {
+    "admin_state_up": false
+  }
+}

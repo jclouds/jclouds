@@ -1,0 +1,19 @@
+{
+  "firewall_rule": {
+    "protocol": "tcp",
+    "description": "jclouds test fw rule",
+    "source_port": null,
+    "source_ip_address": null,
+    "destination_ip_address": "192.168.0.1",
+    "firewall_policy_id": null,
+    "position": null,
+    "destination_port": "22",
+    "id": "736b1686-3301-4a3d-9eaf-15e3c2682edc",
+    "name": "jclouds-test-org.jclouds.openstack.neutron.v2.extensions.fwaasapilivetest-fw-rule-22",
+    "tenant_id": "3e00d5716204446c8d3c47a466eec25a",
+    "enabled": true,
+    "action": "allow",
+    "ip_version": 4,
+    "shared": false
+  }
+}

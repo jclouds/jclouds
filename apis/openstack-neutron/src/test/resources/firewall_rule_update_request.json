@@ -1,0 +1,6 @@
+{
+  "firewall_rule": {
+    "shared": false,
+    "enabled": false
+  }
+}

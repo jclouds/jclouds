@@ -61,7 +61,7 @@ public class ExtensionApiMockTest extends BaseNeutronApiMockTest {
           * Check response
           */
          assertNotNull(extensions);
-         assertEquals(extensions.size(), 17);
+         assertEquals(extensions.size(), 15);
       } finally {
          server.shutdown();
       }

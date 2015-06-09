@@ -1,0 +1,13 @@
+{
+  "firewalls": [
+    {
+      "status": "ACTIVE",
+      "name": "fw",
+      "admin_state_up": true,
+      "tenant_id": "3e00d5716204446c8d3c47a466eec25a",
+      "firewall_policy_id": "5083ef0d-7ad2-4305-acd8-bd036c332e1e",
+      "id": "5eb708e7-3856-449a-99ac-fec27cd745f9",
+      "description": ""
+    }
+  ]
+}

@@ -17,40 +17,19 @@
     limitations under the License.
 
 -->
-<configuration scan="false">
-    <appender name="FILE" class="ch.qos.logback.core.FileAppender">
-        <file>target/test-data/jclouds.log</file>
-
+<configuration>
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
         <encoder>
-            <Pattern>%d %-5p [%c] [%thread] %m%n</Pattern>
+            <pattern>-  %msg%n</pattern>
         </encoder>
     </appender>
-
-    <appender name="WIREFILE" class="ch.qos.logback.core.FileAppender">
-        <file>target/test-data/jclouds-wire.log</file>
-
-        <encoder>
-            <Pattern>%d %-5p [%c] [%thread] %m%n</Pattern>
-        </encoder>
-    </appender>
-
-    <root>
-        <level value="warn" />
+    <root level="info">
+        <appender-ref ref="STDOUT"/>
     </root>
-
-    <logger name="org.jclouds">
-        <level value="DEBUG" />
-        <appender-ref ref="FILE" />
-    </logger>
-
-    <logger name="jclouds.wire">
-        <level value="DEBUG" />
-        <appender-ref ref="WIREFILE" />
-    </logger>
-
-    <logger name="jclouds.headers">
-        <level value="DEBUG" />
-        <appender-ref ref="WIREFILE" />
-    </logger>
-
+    <logger name="jclouds.compute" level="debug"/>
+    <logger name="net.schmizz" level="warn"/>
+    <logger name="jclouds.wire" level="debug"/>
+    <logger name="jclouds.headers" level="debug"/>
+    <logger name="jclouds.ssh" level="debug"/>
 </configuration>
+

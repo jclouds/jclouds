@@ -1,0 +1,12 @@
+{
+  "firewall_rule": {
+    "tenant_id": "3e00d5716204446c8d3c47a466eec25a",
+    "name": "jclouds-fw-rule_group-52-e8b_port-22",
+    "shared": false,
+    "protocol": "tcp",
+    "destination_ip_address": "192.168.0.117",
+    "destination_port": "22",
+    "action": "allow",
+    "enabled": true
+  }
+}
