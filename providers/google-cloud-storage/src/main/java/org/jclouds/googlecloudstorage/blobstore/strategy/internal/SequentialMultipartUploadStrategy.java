@@ -87,7 +87,9 @@ public final class SequentialMultipartUploadStrategy extends MultipartUploadStra
 
             sourceList.add(object);
          }
-         ComposeObjectTemplate template = ComposeObjectTemplate.create(sourceList, destination);
+         ComposeObjectTemplate template = ComposeObjectTemplate.builder().fromGoogleCloudStorageObject(sourceList)
+               .destination(destination).build();
+
          return api.getObjectApi().composeObjects(container, key, template).etag();
       } else {
          return api.getObjectApi()

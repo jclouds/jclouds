@@ -176,8 +176,9 @@ public class ObjectApiMockTest extends BaseGoogleCloudStorageApiMockTest {
 
       ObjectTemplate template = new ObjectTemplate().name("file_name").size((long) 1000).crc32c("crc32c");
 
-      ComposeObjectTemplate composeTemplate = ComposeObjectTemplate.create(
-            new ParseGoogleCloudStorageObjectListTest().expected(), template);
+      ComposeObjectTemplate composeTemplate = ComposeObjectTemplate.builder()
+      .fromGoogleCloudStorageObject(new ParseGoogleCloudStorageObjectListTest().expected())
+      .destination(template).build();
 
       assertEquals(objectApi().composeObjects("destination_bucket", "destination_object", composeTemplate),
             new ParseGoogleCloudStorageObject().expected());
@@ -189,8 +190,9 @@ public class ObjectApiMockTest extends BaseGoogleCloudStorageApiMockTest {
       server.enqueue(jsonResponse("/object_get.json"));
 
       ObjectTemplate template = new ObjectTemplate().name("file_name").size((long) 1000).crc32c("crc32c");
-      ComposeObjectTemplate composeTemplate = ComposeObjectTemplate.create(
-            new ParseGoogleCloudStorageObjectListTest().expected(), template);
+      ComposeObjectTemplate composeTemplate = ComposeObjectTemplate.builder()
+      .fromGoogleCloudStorageObject(new ParseGoogleCloudStorageObjectListTest().expected())
+      .destination(template).build();
 
       ComposeObjectOptions options = new ComposeObjectOptions()
          .destinationPredefinedAcl(DestinationPredefinedAcl.BUCKET_OWNER_FULLCONTROL)

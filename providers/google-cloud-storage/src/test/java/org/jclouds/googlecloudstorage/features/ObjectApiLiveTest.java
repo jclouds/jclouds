@@ -255,7 +255,10 @@ public class ObjectApiLiveTest extends BaseGoogleCloudStorageApiLiveTest {
       sourceList.add(api().getObject(BUCKET_NAME2, UPLOAD_OBJECT_NAME));
       sourceList.add(api().getObject(BUCKET_NAME2, COPIED_OBJECT_NAME));
 
-      ComposeObjectTemplate requestTemplate = ComposeObjectTemplate.create(sourceList, destination);
+      ComposeObjectTemplate requestTemplate = ComposeObjectTemplate.builder()
+         .fromGoogleCloudStorageObject(sourceList)
+         .destination(destination)
+         .build();
 
       GoogleCloudStorageObject gcsObject = api().composeObjects(BUCKET_NAME2, COMPOSED_OBJECT, requestTemplate);
 
@@ -273,8 +276,10 @@ public class ObjectApiLiveTest extends BaseGoogleCloudStorageApiLiveTest {
       sourceList.add(api().getObject(BUCKET_NAME2, UPLOAD_OBJECT_NAME));
       sourceList.add(api().getObject(BUCKET_NAME2, COPIED_OBJECT_NAME));
 
-      ComposeObjectTemplate requestTemplate = ComposeObjectTemplate.create(sourceList, destination);
-
+      ComposeObjectTemplate requestTemplate =  ComposeObjectTemplate.builder()
+         .fromGoogleCloudStorageObject(sourceList)
+         .destination(destination)
+         .build();
       ComposeObjectOptions options = new ComposeObjectOptions().destinationPredefinedAcl(
                DestinationPredefinedAcl.BUCKET_OWNER_READ).ifMetagenerationNotMatch(RANDOM_LONG);
 
