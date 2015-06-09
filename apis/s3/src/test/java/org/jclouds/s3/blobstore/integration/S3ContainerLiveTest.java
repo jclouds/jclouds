@@ -18,6 +18,7 @@ package org.jclouds.s3.blobstore.integration;
 
 import org.jclouds.blobstore.integration.internal.BaseBlobStoreIntegrationTest;
 import org.jclouds.blobstore.integration.internal.BaseContainerLiveTest;
+import org.testng.SkipException;
 import org.testng.annotations.Test;
 
 @Test(groups = "live", testName = "S3ContainerLiveTest")
@@ -26,5 +27,11 @@ public class S3ContainerLiveTest extends BaseContainerLiveTest {
    public S3ContainerLiveTest() {
       provider = "s3";
       BaseBlobStoreIntegrationTest.SANITY_CHECK_RETURNED_BUCKET_NAME = true;
+   }
+
+   @Override
+   @Test
+   public void testDelimiterList() {
+      throw new SkipException("not yet implemented");
    }
 }

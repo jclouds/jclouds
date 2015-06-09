@@ -382,6 +382,9 @@ public class DeleteAllKeysInList implements ClearListStrategy, ClearContainerStr
 
    public void execute(final String containerName,
          ListContainerOptions listOptions) {
+      if (listOptions.getDelimiter() != null || listOptions.getPrefix() != null) {
+         throw new IllegalArgumentException("Prefix and delimiter support has not yet been added");
+      }
       final AtomicBoolean deleteFailure = new AtomicBoolean();
       int retries = maxErrors;
 

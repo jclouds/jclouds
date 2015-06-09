@@ -133,6 +133,29 @@ public class BaseContainerLiveTest extends BaseBlobStoreIntegrationTest {
          blobStore.putBlob(containerName, blobStore.blobBuilder("foo").payload("").build());
          checkEqualNames(ImmutableSet.of(prefix, prefix + "foo", prefix + "bar"),
                blobStore.list(containerName, ListContainerOptions.Builder.prefix(prefix)));
+      }
+      finally {
+         returnContainer(containerName);
+      }
+   }
+
+   @Test(groups = "live")
+   public void testDelimiterList() throws InterruptedException {
+      final String containerName = getContainerName();
+      BlobStore blobStore = view.getBlobStore();
+      String payload = "foo";
+      try {
+         blobStore.putBlob(containerName, blobStore.blobBuilder("test/foo/foo").payload(payload).build());
+         blobStore.putBlob(containerName, blobStore.blobBuilder("test/bar/foo").payload(payload).build());
+         blobStore.putBlob(containerName, blobStore.blobBuilder("foo").payload(payload).build());
+         blobStore.putBlob(containerName, blobStore.blobBuilder("test-foo").payload(payload).build());
+         blobStore.putBlob(containerName, blobStore.blobBuilder("test-bar").payload(payload).build());
+         checkEqualNames(ImmutableSet.of("foo", "test/", "test-foo", "test-bar"), blobStore.list(
+               containerName, ListContainerOptions.Builder.delimiter("/")));
+         checkEqualNames(ImmutableSet.of("test/foo/foo", "test/bar/foo", "foo", "test-foo", "test-bar"),
+               blobStore.list(containerName, ListContainerOptions.Builder.delimiter("\\")));
+         checkEqualNames(ImmutableSet.of("test-", "test/foo/foo", "test/bar/foo", "foo"), blobStore.list(
+               containerName, ListContainerOptions.Builder.delimiter("-")));
       } finally {
          returnContainer(containerName);
       }
@@ -173,5 +196,4 @@ public class BaseContainerLiveTest extends BaseBlobStoreIntegrationTest {
          recycleContainerAndAddToPool(containerName);
       }
    }
-
 }

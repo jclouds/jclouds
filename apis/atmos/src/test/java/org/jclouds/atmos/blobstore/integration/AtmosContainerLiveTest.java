@@ -30,4 +30,9 @@ public class AtmosContainerLiveTest extends BaseContainerLiveTest {
    public void testContainerListWithPrefix() {
       throw new SkipException("Prefix option has not been plumbed down to Atmos");
    }
+
+   @Override
+   public void testDelimiterList() {
+      throw new SkipException("Delimiter support is not yet implemented");
+   }
 }

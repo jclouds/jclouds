@@ -39,6 +39,7 @@ public class ListContainerOptions extends ListOptions implements Cloneable {
    public static final ImmutableListContainerOptions NONE = new ImmutableListContainerOptions(
             new ListContainerOptions());
 
+   private String delimiter;
    private String dir;
    private String prefix;
    private boolean recursive;
@@ -48,12 +49,13 @@ public class ListContainerOptions extends ListOptions implements Cloneable {
    }
 
    ListContainerOptions(Integer maxKeys, String marker, String dir, boolean recursive,
-            boolean detailed, String prefix) {
+            boolean detailed, String prefix, String delimiter) {
       super(maxKeys, marker);
       this.dir = dir;
       this.recursive = recursive;
       this.detailed = detailed;
       this.prefix = prefix;
+      this.delimiter = delimiter;
    }
 
    public static class ImmutableListContainerOptions extends ListContainerOptions {
@@ -125,6 +127,16 @@ public class ListContainerOptions extends ListOptions implements Cloneable {
       }
 
       @Override
+      public ListContainerOptions delimiter(String delimiterString) {
+         throw new UnsupportedOperationException();
+      }
+
+      @Override
+      public String getDelimiter() {
+         return delegate.getDelimiter();
+      }
+
+      @Override
       public String toString() {
          return delegate.toString();
       }
@@ -133,6 +145,10 @@ public class ListContainerOptions extends ListOptions implements Cloneable {
 
    public String getDir() {
       return dir;
+   }
+
+   public String getDelimiter() {
+      return delimiter;
    }
 
    public boolean isRecursive() {
@@ -149,7 +165,7 @@ public class ListContainerOptions extends ListOptions implements Cloneable {
 
    /**
     * This will list the contents of a virtual or real directory path.
-    * 
+    *
     */
    public ListContainerOptions inDirectory(String dir) {
       checkNotNull(dir, "dir");
@@ -197,6 +213,15 @@ public class ListContainerOptions extends ListOptions implements Cloneable {
     */
    public ListContainerOptions prefix(String prefix) {
       this.prefix = prefix;
+      return this;
+   }
+
+   /**
+    * specify the delimiter to be used when listing
+    *
+    */
+   public ListContainerOptions delimiter(String delimiterString) {
+      this.delimiter = delimiterString;
       return this;
    }
 
@@ -249,11 +274,18 @@ public class ListContainerOptions extends ListOptions implements Cloneable {
          ListContainerOptions options = new ListContainerOptions();
          return options.prefix(prefix);
       }
+      /**
+        * @see ListContainerOptions#delimiter(String)
+        */
+      public static ListContainerOptions delimiter(String delimiterString) {
+         ListContainerOptions options = new ListContainerOptions();
+         return options.delimiter(delimiterString);
+      }
    }
 
    @Override
    public ListContainerOptions clone() {
-      return new ListContainerOptions(getMaxResults(), getMarker(), dir, recursive, detailed, prefix);
+      return new ListContainerOptions(getMaxResults(), getMarker(), dir, recursive, detailed, prefix, delimiter);
    }
 
    @Override
@@ -282,6 +314,6 @@ public class ListContainerOptions extends ListOptions implements Cloneable {
                Objects.equal(getMarker(), other.getMarker()) &&
                Objects.equal(getMaxResults(), other.getMaxResults());
    }
-   
-   
+
+
 }

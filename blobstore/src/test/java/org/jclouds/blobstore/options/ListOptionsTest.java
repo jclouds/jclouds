@@ -50,6 +50,13 @@ public class ListOptionsTest {
    }
 
    @Test
+   public void testDelimiter() {
+      ListContainerOptions options = new ListContainerOptions();
+      options.delimiter("-");
+      assertEquals(options.getDelimiter(), "-");
+   }
+
+   @Test
    public void testPathStatic() {
       ListContainerOptions options = inDirectory("test");
       assertEquals(options.getDir(), "test");
