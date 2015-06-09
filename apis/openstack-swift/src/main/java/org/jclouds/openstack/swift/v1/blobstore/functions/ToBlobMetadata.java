@@ -25,6 +25,7 @@ import org.jclouds.blobstore.strategy.IfDirectoryReturnNameStrategy;
 import org.jclouds.blobstore.strategy.internal.MarkersIfDirectoryReturnNameStrategy;
 import org.jclouds.openstack.swift.v1.domain.Container;
 import org.jclouds.openstack.swift.v1.domain.SwiftObject;
+import org.jclouds.openstack.swift.v1.functions.ParseObjectListFromResponse;
 
 import com.google.common.base.Function;
 
@@ -54,9 +55,7 @@ public class ToBlobMetadata implements Function<SwiftObject, MutableBlobMetadata
       to.getContentMetadata().setContentMD5(from.getPayload().getContentMetadata().getContentMD5AsHashCode());
       to.getContentMetadata().setExpires(from.getPayload().getContentMetadata().getExpires());
       to.setUserMetadata(from.getMetadata());
-      String directoryName = ifDirectoryReturnName.execute(to);
-      if (directoryName != null) {
-         to.setName(directoryName);
+      if (from.getETag().equals(ParseObjectListFromResponse.SUBDIR_ETAG)) {
          to.setType(StorageType.RELATIVE_PATH);
       } else {
          to.setType(StorageType.BLOB);

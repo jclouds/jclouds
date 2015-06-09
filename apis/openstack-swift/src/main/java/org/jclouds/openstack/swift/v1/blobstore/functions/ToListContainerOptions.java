@@ -31,15 +31,25 @@ public class ToListContainerOptions implements
       if (from.getDir() != null && from.getPrefix() != null) {
          throw new IllegalArgumentException("Cannot set both directory and prefix");
       }
+      if ((from.getDir() != null || from.isRecursive()) && (from.getDelimiter() != null)) {
+         throw new IllegalArgumentException("Cannot set both delimiter and recursive or directory");
+      }
       org.jclouds.openstack.swift.v1.options.ListContainerOptions options = new org.jclouds.openstack.swift.v1.options.ListContainerOptions();
-      if (from.getDir() == null && !from.isRecursive()) {
+
+      if (from.getDir() != null) {
+         if (from.isRecursive()) {
+            options.prefix(from.getDir().endsWith("/") ? from.getDir() : from.getDir() + "/");
+         } else {
+            options.path(from.getDir());
+         }
+      } else if (!from.isRecursive()) {
          options.delimiter('/');
       }
-      if ((from.getDir() != null) && (from.isRecursive())) {
-         options.prefix(from.getDir().endsWith("/") ? from.getDir() : from.getDir() + "/");
-      }
-      if ((from.getDir() != null) && (!from.isRecursive())) {
-         options.path(from.getDir());
+      if (from.getDelimiter() != null) {
+         if (from.getDelimiter().length() != 1) {
+            throw new IllegalArgumentException("Delimiter must be a single character");
+         }
+         options.delimiter(from.getDelimiter().charAt(0));
       }
       if (from.getPrefix() != null) {
          options.prefix(from.getPrefix());

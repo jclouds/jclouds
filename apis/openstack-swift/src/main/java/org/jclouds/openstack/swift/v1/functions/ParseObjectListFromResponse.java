@@ -43,6 +43,8 @@ import com.google.common.io.ByteSource;
 public class ParseObjectListFromResponse implements Function<HttpResponse, ObjectList>,
       InvocationContext<ParseObjectListFromResponse> {
 
+   public static final String SUBDIR_ETAG = "deadbeef";
+
    private static final class InternalObject {
       String name;
       String hash;
@@ -73,8 +75,6 @@ public class ParseObjectListFromResponse implements Function<HttpResponse, Objec
    }
 
    static class ToSwiftObject implements Function<InternalObject, SwiftObject> {
-      private static final String SUBDIR_ETAG = "deadbeef";
-
       private final String containerUri;
 
       ToSwiftObject(String containerUri) {
