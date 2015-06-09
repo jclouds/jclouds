@@ -44,7 +44,7 @@ import com.google.inject.TypeLiteral;
 public class BaseGoogleComputeEngineApiLiveTest extends BaseApiLiveTest<GoogleComputeEngineApi> {
 
    protected static final String ZONE_API_URL_SUFFIX = "/zones/";
-   protected static final String DEFAULT_ZONE_NAME = "us-central1-a";
+   protected static final String DEFAULT_ZONE_NAME = "us-central1-f";
    protected static final String DEFAULT_REGION_NAME = "us-central1";
    protected static final String NETWORK_API_URL_SUFFIX = "/global/networks/";
    protected static final String MACHINE_TYPE_API_URL_SUFFIX = "/machineTypes/";
