@@ -30,8 +30,8 @@ public class BucketToContainerListOptions implements Function<ListBucketOptions[
       if (optionsList.length != 0) {
          if (optionsList[0].getDelimiter() == null) {
             options.recursive();
-         } else if (!optionsList[0].getDelimiter().equals("/")) {
-            throw new IllegalArgumentException("only '/' is allowed as a blobstore delimiter");
+         } else {
+            options.delimiter(optionsList[0].getDelimiter());
          }
          if (optionsList[0].getMarker() != null) {
             options.afterMarker(optionsList[0].getMarker());
