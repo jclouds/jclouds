@@ -81,10 +81,12 @@ public class ObjectApiMockTest extends BaseGoogleCloudStorageApiMockTest {
       server.enqueue(jsonResponse("/object_get.json"));
 
       GetObjectOptions options = new GetObjectOptions().ifGenerationMatch((long) 1000);
+      options.range(0, 1023);
 
       assertEquals(objectApi().getObject("test", "file_name", options),
             new ParseGoogleCloudStorageObject().expected());
-      assertSent(server, "GET", "/storage/v1/b/test/o/file_name?ifGenerationMatch=1000");
+      RecordedRequest request = assertSent(server, "GET", "/storage/v1/b/test/o/file_name?ifGenerationMatch=1000");
+      assertEquals(request.getHeader("Range"), "bytes=0-1023");
    }
 
    public void simpleUpload() throws Exception {

@@ -45,6 +45,7 @@ import org.jclouds.googlecloudstorage.options.InsertObjectOptions;
 import org.jclouds.googlecloudstorage.options.ListObjectOptions;
 import org.jclouds.googlecloudstorage.options.UpdateObjectOptions;
 import org.jclouds.googlecloudstorage.parser.ParseToPayloadEnclosing;
+import org.jclouds.http.options.HttpRequestOptions;
 import org.jclouds.io.Payload;
 import org.jclouds.io.PayloadEnclosing;
 import org.jclouds.javax.annotation.Nullable;
@@ -123,7 +124,7 @@ public interface ObjectApi {
    @Fallback(NullOnNotFoundOr404.class)
    @Nullable
    GoogleCloudStorageObject getObject(@PathParam("bucket") String bucketName, @PathParam("object") String objectName,
-            GetObjectOptions options);
+         HttpRequestOptions options);
 
    /**
     * Retrieve an object or their metadata
@@ -163,7 +164,7 @@ public interface ObjectApi {
    @ResponseParser(ParseToPayloadEnclosing.class)
    @Fallback(NullOnNotFoundOr404.class)
    @Nullable PayloadEnclosing download(@PathParam("bucket") String bucketName, @PathParam("object") String objectName,
-            GetObjectOptions options);
+         HttpRequestOptions options);
 
    /**
     * Stores a new object. Object metadata setting is not supported with simple uploads

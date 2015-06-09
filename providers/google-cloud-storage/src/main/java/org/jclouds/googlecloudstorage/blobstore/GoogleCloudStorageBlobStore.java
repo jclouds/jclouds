@@ -39,6 +39,7 @@ import org.jclouds.blobstore.domain.PageSet;
 import org.jclouds.blobstore.domain.StorageMetadata;
 import org.jclouds.blobstore.domain.internal.BlobImpl;
 import org.jclouds.blobstore.domain.internal.PageSetImpl;
+import org.jclouds.blobstore.functions.BlobToHttpGetOptions;
 import org.jclouds.blobstore.internal.BaseBlobStore;
 import org.jclouds.blobstore.options.CreateContainerOptions;
 import org.jclouds.blobstore.options.GetOptions;
@@ -91,6 +92,7 @@ public final class GoogleCloudStorageBlobStore extends BaseBlobStore {
    private final BlobStoreListContainerOptionsToListObjectOptions listContainerOptionsToListObjectOptions;
    private final Provider<MultipartUploadStrategy> multipartUploadStrategy;
    private final Supplier<String> projectId;
+   private final BlobToHttpGetOptions blob2ObjectGetOptions;
 
    @Inject GoogleCloudStorageBlobStore(BlobStoreContext context, BlobUtils blobUtils, Supplier<Location> defaultLocation,
             @Memoized Supplier<Set<? extends Location>> locations, PayloadSlicer slicer, GoogleCloudStorageApi api,
@@ -99,7 +101,8 @@ public final class GoogleCloudStorageBlobStore extends BaseBlobStore {
             Provider<FetchBlobMetadata> fetchBlobMetadataProvider,
             BlobMetadataToObjectTemplate blobMetadataToObjectTemplate,
             BlobStoreListContainerOptionsToListObjectOptions listContainerOptionsToListObjectOptions,
-            Provider<MultipartUploadStrategy> multipartUploadStrategy, @CurrentProject Supplier<String> projectId) {
+            Provider<MultipartUploadStrategy> multipartUploadStrategy, @CurrentProject Supplier<String> projectId,
+            BlobToHttpGetOptions blob2ObjectGetOptions) {
       super(context, blobUtils, defaultLocation, locations, slicer);
       this.api = api;
       this.bucketToStorageMetadata = bucketToStorageMetadata;
@@ -110,6 +113,7 @@ public final class GoogleCloudStorageBlobStore extends BaseBlobStore {
       this.listContainerOptionsToListObjectOptions = listContainerOptionsToListObjectOptions;
       this.projectId = projectId;
       this.multipartUploadStrategy = multipartUploadStrategy;
+      this.blob2ObjectGetOptions = checkNotNull(blob2ObjectGetOptions, "blob2ObjectGetOptions");
    }
 
    @Override
@@ -250,10 +254,11 @@ public final class GoogleCloudStorageBlobStore extends BaseBlobStore {
       if (gcsObject == null) {
          return null;
       }
+      org.jclouds.http.options.GetOptions httpOptions = blob2ObjectGetOptions.apply(options);
       MutableBlobMetadata metadata = objectToBlobMetadata.apply(gcsObject);
       Blob blob = new BlobImpl(metadata);
       // TODO: Does getObject not get the payload?!
-      Payload payload = api.getObjectApi().download(container, name).getPayload();
+      Payload payload = api.getObjectApi().download(container, name, httpOptions).getPayload();
       payload.setContentMetadata(metadata.getContentMetadata()); // Doing this first retains it on setPayload.
       blob.setPayload(payload);
       return blob;

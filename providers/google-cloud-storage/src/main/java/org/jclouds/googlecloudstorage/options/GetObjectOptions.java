@@ -19,12 +19,12 @@ package org.jclouds.googlecloudstorage.options;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 import org.jclouds.googlecloudstorage.domain.DomainResourceReferences.Projection;
-import org.jclouds.http.options.BaseHttpRequestOptions;
+import org.jclouds.http.options.GetOptions;
 
 /**
  * Allows to optionally specify generation,ifGenerationMatch,ifGenerationNotMatch, ifMetagenerationMatch,ifMetagenerationNotMatch and projection which used in Bucket
  */
-public class GetObjectOptions extends BaseHttpRequestOptions {
+public class GetObjectOptions extends GetOptions {
 
    public GetObjectOptions ifGenerationMatch(Long ifGenerationMatch) {
       this.queryParameters.put("ifGenerationMatch", checkNotNull(ifGenerationMatch, "ifGenerationMatch") + "");
