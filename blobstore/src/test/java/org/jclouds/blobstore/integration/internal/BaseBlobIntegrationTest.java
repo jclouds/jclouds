@@ -42,7 +42,6 @@ import java.util.Map;
 import java.util.Random;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
-import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -51,7 +50,6 @@ import javax.ws.rs.core.MediaType;
 import com.google.common.hash.Hashing;
 import org.jclouds.blobstore.BlobStore;
 import org.jclouds.blobstore.ContainerNotFoundException;
-import org.jclouds.blobstore.attr.ConsistencyModel;
 import org.jclouds.blobstore.domain.Blob;
 import org.jclouds.blobstore.domain.BlobAccess;
 import org.jclouds.blobstore.domain.BlobBuilder.PayloadBlobBuilder;
@@ -96,7 +94,6 @@ import com.google.common.io.ByteStreams;
 import com.google.common.io.ByteSource;
 import com.google.common.io.Files;
 import com.google.common.util.concurrent.ListenableFuture;
-import com.google.common.util.concurrent.Uninterruptibles;
 
 public class BaseBlobIntegrationTest extends BaseBlobStoreIntegrationTest {
    private static final ByteSource oneHundredOneConstitutions = TestUtils.randomByteSource().slice(0, 101 * 45118);
@@ -307,7 +304,7 @@ public class BaseBlobIntegrationTest extends BaseBlobStoreIntegrationTest {
          addObjectAndValidateContent(container, name);
          Date after = new Date(System.currentTimeMillis() + 10000);
 
-         Uninterruptibles.sleepUninterruptibly(15, TimeUnit.SECONDS);
+         awaitConsistency();
          view.getBlobStore().getBlob(container, name, ifUnmodifiedSince(after));
          validateContent(container, name);
 
@@ -969,11 +966,5 @@ public class BaseBlobIntegrationTest extends BaseBlobStoreIntegrationTest {
    /** @return ByteSource containing a random length 0..length of random bytes. */
    private static ByteSource createTestInput(int length) {
       return TestUtils.randomByteSource().slice(0, new Random().nextInt(length));
-   }
-
-   protected void awaitConsistency() {
-      if (view.getConsistencyModel() == ConsistencyModel.EVENTUAL) {
-         Uninterruptibles.sleepUninterruptibly(10, TimeUnit.SECONDS);
-      }
    }
 }

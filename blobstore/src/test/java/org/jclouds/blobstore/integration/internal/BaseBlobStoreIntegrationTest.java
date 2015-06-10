@@ -36,6 +36,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import javax.ws.rs.core.MediaType;
 
+import com.google.common.util.concurrent.Uninterruptibles;
 import org.jclouds.apis.BaseViewLiveTest;
 import org.jclouds.blobstore.BlobStoreContext;
 import org.jclouds.blobstore.attr.ConsistencyModel;
@@ -248,11 +249,10 @@ public class BaseBlobStoreIntegrationTest extends BaseViewLiveTest<BlobStoreCont
       assertConsistencyAware(view, assertion);
    }
 
-   protected static void createContainerAndEnsureEmpty(BlobStoreContext context, final String containerName)
+   protected void createContainerAndEnsureEmpty(BlobStoreContext context, final String containerName)
          throws InterruptedException {
       context.getBlobStore().createContainerInLocation(null, containerName);
-      if (context.getConsistencyModel() == ConsistencyModel.EVENTUAL)
-         Thread.sleep(10000);
+      awaitConsistency();
       context.getBlobStore().clearContainer(containerName);
    }
 
@@ -527,4 +527,9 @@ public class BaseBlobStoreIntegrationTest extends BaseViewLiveTest<BlobStoreCont
       return typeToken(BlobStoreContext.class);
    }
 
+   protected void awaitConsistency() {
+      if (view.getConsistencyModel() == ConsistencyModel.EVENTUAL) {
+         Uninterruptibles.sleepUninterruptibly(10, TimeUnit.SECONDS);
+      }
+   }
 }
