@@ -426,6 +426,32 @@ public class BaseBlobIntegrationTest extends BaseBlobStoreIntegrationTest {
       }
    }
 
+   @Test(groups = { "integration", "live" })
+   public void testGetRangeMultipart() throws InterruptedException, IOException {
+      String container = getContainerName();
+      InputStream expect = null;
+      InputStream actual = null;
+      try {
+         String name = "apples";
+         long length = getMinimumMultipartBlobSize();
+         ByteSource byteSource = TestUtils.randomByteSource().slice(0, length);
+         Blob blob = view.getBlobStore().blobBuilder(name)
+                 .payload(byteSource)
+                 .contentLength(length)
+                 .build();
+         view.getBlobStore().putBlob(container, blob, new PutOptions().multipart(true));
+         blob = view.getBlobStore().getBlob(container, name, range(0, 5));
+         validateMetadata(blob.getMetadata(), container, name);
+         expect = byteSource.slice(0, 6).openStream();
+         actual = blob.getPayload().openStream();
+         assertThat(actual).hasContentEqualTo(expect);
+      } finally {
+         Closeables2.closeQuietly(expect);
+         Closeables2.closeQuietly(actual);
+         returnContainer(container);
+      }
+   }
+
    private String addObjectAndValidateContent(String sourcecontainer, String sourceKey) throws InterruptedException {
       String eTag = addBlobToContainer(sourcecontainer, sourceKey);
       validateContent(sourcecontainer, sourceKey);

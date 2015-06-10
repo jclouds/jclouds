@@ -53,7 +53,7 @@ public class SwiftObject implements Comparable<SwiftObject> {
          Multimap<String, String> headers, Map<String, String> metadata, Payload payload) {
       this.name = checkNotNull(name, "name");
       this.uri = checkNotNull(uri, "uri of %s", uri);
-      this.etag = checkNotNull(etag, "etag of %s", name).replace("\"", "");
+      this.etag = etag != null ? etag.replace("\"", "") : null;
       this.lastModified = checkNotNull(lastModified, "lastModified of %s", name);
       this.headers = headers == null ? ImmutableMultimap.<String, String> of() : checkNotNull(headers, "headers of %s", name);
       this.metadata = metadata == null ? ImmutableMap.<String, String> of() : metadata;
