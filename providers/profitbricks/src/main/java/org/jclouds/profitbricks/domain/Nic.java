@@ -18,8 +18,6 @@ package org.jclouds.profitbricks.domain;
 
 import static com.google.common.base.Preconditions.checkArgument;
 
-import autovalue.shaded.com.google.common.common.collect.Lists;
-
 import com.google.auto.value.AutoValue;
 
 import java.util.List;
@@ -27,6 +25,8 @@ import java.util.List;
 import org.jclouds.javax.annotation.Nullable;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Lists;
+
 import static com.google.common.net.InetAddresses.isInetAddress;
 
 @AutoValue

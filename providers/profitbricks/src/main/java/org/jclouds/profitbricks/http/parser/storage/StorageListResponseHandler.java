@@ -16,9 +16,11 @@
  */
 package org.jclouds.profitbricks.http.parser.storage;
 
-import autovalue.shaded.com.google.common.common.collect.Lists;
+import com.google.common.collect.Lists;
 import com.google.inject.Inject;
+
 import java.util.List;
+
 import org.jclouds.date.DateCodecFactory;
 import org.jclouds.profitbricks.domain.Storage;
 import org.xml.sax.SAXException;

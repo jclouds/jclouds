@@ -27,8 +27,8 @@ import org.jclouds.javax.annotation.Nullable;
 import org.jclouds.profitbricks.domain.internal.FirewallRuleCommonProperties;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Lists;
 
-import autovalue.shaded.com.google.common.common.collect.Lists;
 import static com.google.common.net.InetAddresses.isInetAddress;
 
 @AutoValue

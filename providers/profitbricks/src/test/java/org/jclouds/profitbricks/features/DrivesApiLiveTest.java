@@ -16,15 +16,19 @@
  */
 package org.jclouds.profitbricks.features;
 
-import autovalue.shaded.com.google.common.common.collect.Iterables;
 import java.util.List;
+
 import org.jclouds.profitbricks.BaseProfitBricksLiveTest;
 import org.jclouds.profitbricks.domain.Drive;
 import org.jclouds.profitbricks.domain.Image;
 import org.jclouds.profitbricks.domain.Server;
+
 import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertNotNull;
+
 import org.testng.annotations.Test;
+
+import com.google.common.collect.Iterables;
 
 @Test(groups = "live", testName = "DrivesApiLiveTest", singleThreaded = true)
 public class DrivesApiLiveTest extends BaseProfitBricksLiveTest {

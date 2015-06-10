@@ -16,8 +16,7 @@
  */
 package org.jclouds.profitbricks.http.parser.firewall;
 
-import autovalue.shaded.com.google.common.common.collect.Lists;
-
+import com.google.common.collect.Lists;
 import com.google.inject.Inject;
 
 import java.util.List;

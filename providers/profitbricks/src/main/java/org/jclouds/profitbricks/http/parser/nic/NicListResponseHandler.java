@@ -16,12 +16,14 @@
  */
 package org.jclouds.profitbricks.http.parser.nic;
 
-import autovalue.shaded.com.google.common.common.collect.Lists;
+import com.google.common.collect.Lists;
 import com.google.inject.Inject;
+
 import org.jclouds.profitbricks.domain.Nic;
 import org.xml.sax.SAXException;
 
 import java.util.List;
+
 import org.jclouds.profitbricks.http.parser.firewall.FirewallResponseHandler;
 
 public class NicListResponseHandler extends BaseNicResponseHandler<List<Nic>> {
