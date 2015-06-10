@@ -16,8 +16,8 @@
  */
 package org.jclouds.googlecomputeengine.compute;
 
-import static autovalue.shaded.com.google.common.common.collect.Sets.newHashSet;
 import static com.google.common.collect.Iterables.filter;
+import static com.google.common.collect.Sets.newHashSet;
 import static org.jclouds.compute.config.ComputeServiceProperties.TIMEOUT_NODE_RUNNING;
 import static org.jclouds.compute.config.ComputeServiceProperties.TIMEOUT_NODE_SUSPENDED;
 import static org.jclouds.compute.config.ComputeServiceProperties.TIMEOUT_NODE_TERMINATED;
@@ -65,12 +65,11 @@ import org.jclouds.googlecomputeengine.domain.Operation;
 import org.jclouds.googlecomputeengine.features.FirewallApi;
 import org.jclouds.scriptbuilder.functions.InitAdminAccess;
 
-import autovalue.shaded.com.google.common.common.collect.ImmutableSet;
-
 import com.google.common.base.Function;
 import com.google.common.base.Optional;
 import com.google.common.base.Predicate;
 import com.google.common.base.Supplier;
+import com.google.common.collect.ImmutableSet;
 import com.google.common.util.concurrent.Atomics;
 import com.google.common.util.concurrent.ListeningExecutorService;
 

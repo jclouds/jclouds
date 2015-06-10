@@ -16,7 +16,7 @@
  */
 package org.jclouds.googlecomputeengine.compute.predicates;
 
-import static autovalue.shaded.com.google.common.common.collect.Iterables.isEmpty;
+import static com.google.common.collect.Iterables.isEmpty;
 import static com.google.common.collect.Sets.filter;
 import static org.jclouds.compute.predicates.NodePredicates.all;
 import static org.jclouds.compute.predicates.NodePredicates.inGroup;
