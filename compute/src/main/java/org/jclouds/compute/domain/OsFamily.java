@@ -25,7 +25,7 @@ import static com.google.common.base.CaseFormat.UPPER_UNDERSCORE;
  * Running Operating system
  */
 public enum OsFamily {
-   UNRECOGNIZED, AIX, ARCH, CENTOS, DARWIN, DEBIAN, ESX, FEDORA, FREEBSD, GENTOO, HPUX, LINUX, 
+   UNRECOGNIZED, AIX, ARCH, CENTOS, DARWIN, DEBIAN, ESX, FEDORA, FREEBSD, GENTOO, HPUX, LINUX, COREOS, 
    /**
     * @see <a href="http://smartos.org">SmartOS</a>
     */
