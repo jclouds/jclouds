@@ -27,7 +27,6 @@ import static org.jclouds.openstack.swift.v1.options.PutOptions.Builder.metadata
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.UUID;
 
 import javax.inject.Inject;
 
@@ -410,7 +409,14 @@ public class RegionScopedSwiftBlobStore implements BlobStore {
 
    @Override
    public MultipartUpload initiateMultipartUpload(String container, BlobMetadata blobMetadata) {
-      String uploadId = UUID.randomUUID().toString();
+      return initiateMultipartUpload(container, blobMetadata, 0);
+   }
+
+   private MultipartUpload initiateMultipartUpload(String container, BlobMetadata blobMetadata, long partSize) {
+      Long contentLength = blobMetadata.getContentMetadata().getContentLength();
+      String uploadId = String.format("%s/slo/%.6f/%s/%s", blobMetadata.getName(),
+              System.currentTimeMillis() / 1000.0, contentLength == null ? 0 : contentLength,
+              partSize);
       return MultipartUpload.create(container, blobMetadata.getName(), uploadId, blobMetadata);
    }
 
@@ -418,7 +424,7 @@ public class RegionScopedSwiftBlobStore implements BlobStore {
    public void abortMultipartUpload(MultipartUpload mpu) {
       ImmutableList.Builder<String> names = ImmutableList.builder();
       for (MultipartPart part : listMultipartUpload(mpu)) {
-         names.add(mpu.blobName() + "-" + part.partNumber());
+         names.add(getMPUPartName(mpu, part.partNumber()));
       }
       removeBlobs(mpu.containerName(), names.build());
    }
@@ -443,11 +449,15 @@ public class RegionScopedSwiftBlobStore implements BlobStore {
       return mapBuilder.build();
    }
 
+   private String getMPUPartName(MultipartUpload mpu, int partNumber) {
+      return String.format("%s/%08d", mpu.id(), partNumber);
+   }
+
    @Override
    public String completeMultipartUpload(MultipartUpload mpu, List<MultipartPart> parts) {
       ImmutableList.Builder<Segment> builder = ImmutableList.builder();
       for (MultipartPart part : parts) {
-         String path = mpu.containerName() + "/" + mpu.blobName() + "-" + part.partNumber();
+         String path = mpu.containerName() + "/" + getMPUPartName(mpu, part.partNumber());
          builder.add(Segment.builder().path(path).etag(part.partETag()).sizeBytes(part.partSize()).build());
       }
 
@@ -457,7 +467,7 @@ public class RegionScopedSwiftBlobStore implements BlobStore {
 
    @Override
    public MultipartPart uploadMultipartPart(MultipartUpload mpu, int partNumber, Payload payload) {
-      String partName = mpu.blobName() + "-" + partNumber;
+      String partName = getMPUPartName(mpu, partNumber);
       String eTag = api.getObjectApi(regionId, mpu.containerName()).put(partName, payload);
       long partSize = payload.getContentMetadata().getContentLength();
       return MultipartPart.create(partNumber, partSize, eTag);
@@ -467,13 +477,14 @@ public class RegionScopedSwiftBlobStore implements BlobStore {
    public List<MultipartPart> listMultipartUpload(MultipartUpload mpu) {
       ImmutableList.Builder<MultipartPart> parts = ImmutableList.builder();
       PageSet<? extends StorageMetadata> pageSet = list(mpu.containerName(),
-            new ListContainerOptions().afterMarker(mpu.blobName()));
+            new ListContainerOptions().afterMarker(mpu.blobName() + '/').recursive());
       // TODO: pagination
       for (StorageMetadata sm : pageSet) {
-         if (!sm.getName().startsWith(mpu.blobName() + "-")) {
+         if (!sm.getName().startsWith(mpu.blobName() + '/')) {
             break;
          }
-         int partNumber = Integer.parseInt(sm.getName().substring((mpu.blobName() + "-").length()));
+         int lastSlash = sm.getName().lastIndexOf('/');
+         int partNumber = Integer.parseInt(sm.getName().substring(lastSlash + 1));
          parts.add(MultipartPart.create(partNumber, sm.getSize(), sm.getETag()));
       }
       return parts.build();
@@ -540,12 +551,12 @@ public class RegionScopedSwiftBlobStore implements BlobStore {
    // copied from BaseBlobStore
    @Beta
    protected String putMultipartBlob(String container, Blob blob, PutOptions overrides) {
-      MultipartUpload mpu = initiateMultipartUpload(container, blob.getMetadata());
       List<MultipartPart> parts = Lists.newArrayList();
       long contentLength = blob.getMetadata().getContentMetadata().getContentLength();
       MultipartUploadSlicingAlgorithm algorithm = new MultipartUploadSlicingAlgorithm(
             getMinimumMultipartPartSize(), getMaximumMultipartPartSize(), getMaximumNumberOfParts());
       long partSize = algorithm.calculateChunkSize(contentLength);
+      MultipartUpload mpu = initiateMultipartUpload(container, blob.getMetadata(), partSize);
       int partNumber = 1;
       for (Payload payload : slicer.slice(blob.getPayload(), partSize)) {
          MultipartPart part = uploadMultipartPart(mpu, partNumber, payload);
