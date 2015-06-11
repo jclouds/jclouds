@@ -316,7 +316,7 @@ public class RegionScopedSwiftBlobStore implements BlobStore {
 
    @Override
    public BlobMetadata blobMetadata(String container, String name) {
-      SwiftObject object = api.getObjectApi(regionId, container).get(name);
+      SwiftObject object = api.getObjectApi(regionId, container).getWithoutBody(name);
       if (object == null) {
          return null;
       }
