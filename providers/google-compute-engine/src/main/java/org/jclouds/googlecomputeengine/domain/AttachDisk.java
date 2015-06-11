@@ -37,14 +37,14 @@ public abstract class AttachDisk {
       /** The {@link org.jclouds.googlecomputeengine.domain.Image#selfLink() source image}. */
       public abstract URI sourceImage();
 
-      @Nullable public abstract String diskType();
+      @Nullable public abstract URI diskType();
 
       static InitializeParams create(URI sourceImage) {
          return create(null, null, sourceImage, null);
       }
 
       @SerializedNames({ "diskName", "diskSizeGb", "sourceImage", "diskType" })
-      public static InitializeParams create(String diskName, Long diskSizeGb, URI sourceImage, String diskType) {
+      public static InitializeParams create(String diskName, Long diskSizeGb, URI sourceImage, URI diskType) {
          return new AutoValue_AttachDisk_InitializeParams(diskName, diskSizeGb, sourceImage, diskType);
       }
 

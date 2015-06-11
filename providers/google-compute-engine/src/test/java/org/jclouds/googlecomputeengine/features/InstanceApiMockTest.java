@@ -195,7 +195,7 @@ public class InstanceApiMockTest extends BaseGoogleComputeEngineApiMockTest {
                                            "test", // diskName
                                            Long.parseLong("100", 10), // diskSizeGb
                                            URI.create(url("/projects/party/global/images/test")), // sourceImage
-                                           "pd-standard" // diskType
+                                           URI.create(url("/projects/party/zones/us-central1-a/diskTypes/pd-standard")) // diskType
                                            ), // initializeParams
                                      true, // autoDelete
                                      ImmutableList.of(url("/projects/suse-cloud/global/licenses/sles-12")), // licenses

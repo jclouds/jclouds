@@ -30,7 +30,7 @@
             "diskName": "test",
             "sourceImage": "https://www.googleapis.com/compute/v1/projects/party/global/images/test",
             "diskSizeGb": "100",
-            "diskType": "pd-standard"
+            "diskType": "https://www.googleapis.com/compute/v1/projects/party/zones/us-central1-a/diskTypes/pd-standard"
          },
          "licenses": [
             "https://www.googleapis.com/compute/v1/projects/suse-cloud/global/licenses/sles-12"

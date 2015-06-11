@@ -18,23 +18,21 @@ package org.jclouds.googlecomputeengine.parse;
 
 import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 
+import javax.ws.rs.Consumes;
 import java.net.URI;
 
-import javax.ws.rs.Consumes;
-
+import com.google.common.collect.ImmutableList;
 import org.jclouds.googlecomputeengine.domain.AttachDisk;
 import org.jclouds.googlecomputeengine.domain.AttachDisk.DiskInterface;
 import org.jclouds.googlecomputeengine.domain.Instance;
 import org.jclouds.googlecomputeengine.domain.Instance.AttachedDisk;
 import org.jclouds.googlecomputeengine.domain.Instance.NetworkInterface;
-import org.jclouds.googlecomputeengine.domain.Instance.ServiceAccount;
 import org.jclouds.googlecomputeengine.domain.Instance.Scheduling.OnHostMaintenance;
+import org.jclouds.googlecomputeengine.domain.Instance.ServiceAccount;
 import org.jclouds.googlecomputeengine.domain.Metadata;
 import org.jclouds.googlecomputeengine.domain.Tags;
 import org.jclouds.googlecomputeengine.internal.BaseGoogleComputeEngineParseTest;
 import org.testng.annotations.Test;
-
-import com.google.common.collect.ImmutableList;
 
 @Test(groups = "unit", testName = "ParseInstanceTest")
 public class ParseInstanceTest extends BaseGoogleComputeEngineParseTest<Instance> {
@@ -81,7 +79,7 @@ public class ParseInstanceTest extends BaseGoogleComputeEngineParseTest<Instance
                         "test", // diskName
                         Long.parseLong("100", 10), // diskSizeGb
                         URI.create(baseUrl + "/party/global/images/test"), // sourceImage
-                        "pd-standard" // diskType
+                        URI.create(baseUrl + "/party/zones/us-central1-a/diskTypes/pd-standard") // diskType
                         ), // initializeParams
                   ImmutableList.of(baseUrl + "/suse-cloud/global/licenses/sles-12"), // licenses
                   DiskInterface.NVME // interface
