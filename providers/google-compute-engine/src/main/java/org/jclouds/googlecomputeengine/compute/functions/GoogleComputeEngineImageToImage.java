@@ -16,25 +16,24 @@
  */
 package org.jclouds.googlecomputeengine.compute.functions;
 
-import static com.google.common.base.Joiner.on;
-import static com.google.common.collect.Iterables.getLast;
-import static com.google.common.collect.Iterables.limit;
-import static com.google.common.collect.Iterables.skip;
-import static org.jclouds.compute.domain.Image.Status;
+import javax.inject.Inject;
 
-import java.util.List;
-
+import org.jclouds.compute.domain.Image.Status;
 import org.jclouds.compute.domain.ImageBuilder;
 import org.jclouds.compute.domain.OperatingSystem;
-import org.jclouds.compute.domain.OsFamily;
 import org.jclouds.googlecomputeengine.domain.Deprecated.State;
 import org.jclouds.googlecomputeengine.domain.Image;
 
 import com.google.common.base.Function;
 import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.Lists;
 
 public final class GoogleComputeEngineImageToImage implements Function<Image, org.jclouds.compute.domain.Image> {
+   private final Function<String, OperatingSystem> nameToOperatingSystem;
+   
+   @Inject GoogleComputeEngineImageToImage(Function<String, OperatingSystem> nameToOperatingSystem) {
+      this.nameToOperatingSystem = nameToOperatingSystem;
+   }
+
    @Override public org.jclouds.compute.domain.Image apply(Image image) {
       ImageBuilder builder = new ImageBuilder()
               .id(image.selfLink().toString())
@@ -52,25 +51,9 @@ public final class GoogleComputeEngineImageToImage implements Function<Image, or
          }
       }
 
-      List<String> splits = Lists.newArrayList(image.name().split("-"));
-      OperatingSystem.Builder osBuilder = defaultOperatingSystem(image);
-      if (splits == null || splits.size() == 0 || splits.size() < 3) {
-         return builder.operatingSystem(osBuilder.build()).build();
-      }
-
-      OsFamily family = OsFamily.fromValue(splits.get(0));
-      if (family != OsFamily.UNRECOGNIZED) {
-         osBuilder.family(family);
-      }
-
-      String version = on(".").join(limit(skip(splits, 1), splits.size() - 2));
-      osBuilder.version(version);
-
-      builder.version(getLast(splits));
-      return builder.operatingSystem(osBuilder.build()).build();
-   }
-
-   private OperatingSystem.Builder defaultOperatingSystem(Image image) {
-      return OperatingSystem.builder().family(OsFamily.LINUX).is64Bit(true).description(image.name());
+      builder.version(image.name().substring(image.name().lastIndexOf('-') + 1));
+      builder.operatingSystem(nameToOperatingSystem.apply(image.name()));
+      
+      return builder.build();
    }
 }

@@ -6,7 +6,7 @@ Authenticating into the instances:
 --------
 
 User:
-If no user is provided in GoogleComputeEngineTemplateOptions when launching an instance by default "root" is used.
+If no user is specified in the template options when launching instances, the default one will be used: "jclouds" for all instances, "core" for CoreOS images, and "Administrator" for Windows images.
 
 Credential:
 

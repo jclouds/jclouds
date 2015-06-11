@@ -34,7 +34,7 @@ import com.google.common.collect.ImmutableList;
 @Test(groups = "unit", testName = "GoogleComputeEngineImageToImageTest")
 public class GoogleComputeEngineImageToImageTest {
    public void testArbitraryImageName() {
-      GoogleComputeEngineImageToImage imageToImage = new GoogleComputeEngineImageToImage();
+      GoogleComputeEngineImageToImage imageToImage = new GoogleComputeEngineImageToImage(new ImageNameToOperatingSystem());
       Image image = image("arbitratyname", null);
       org.jclouds.compute.domain.Image transformed = imageToImage.apply(image);
       assertEquals(transformed.getName(), image.name());
@@ -44,7 +44,7 @@ public class GoogleComputeEngineImageToImageTest {
    }
 
    public void testWellFormedImageName() {
-      GoogleComputeEngineImageToImage imageToImage = new GoogleComputeEngineImageToImage();
+      GoogleComputeEngineImageToImage imageToImage = new GoogleComputeEngineImageToImage(new ImageNameToOperatingSystem());
       Image image = image("ubuntu-12-04-v123123", null);
       org.jclouds.compute.domain.Image transformed = imageToImage.apply(image);
       assertEquals(transformed.getName(), image.name());
@@ -55,7 +55,7 @@ public class GoogleComputeEngineImageToImageTest {
    }
 
    public void testDeleted(){
-      GoogleComputeEngineImageToImage imageToImage = new GoogleComputeEngineImageToImage();
+      GoogleComputeEngineImageToImage imageToImage = new GoogleComputeEngineImageToImage(new ImageNameToOperatingSystem());
       Deprecated deprecated =  Deprecated.create(
          State.DELETED, // state
          URI.create("http://baseurl/projects/centos-cloud/global/images/centos-6-2-v20120326test"), // replacement
@@ -73,7 +73,7 @@ public class GoogleComputeEngineImageToImageTest {
    }
 
    public void testDeprecated(){
-      GoogleComputeEngineImageToImage imageToImage = new GoogleComputeEngineImageToImage();
+      GoogleComputeEngineImageToImage imageToImage = new GoogleComputeEngineImageToImage(new ImageNameToOperatingSystem());
       Deprecated deprecated =  Deprecated.create(
          State.DEPRECATED, // state
          URI.create("http://baseurl/projects/centos-cloud/global/images/centos-6-2-v20120326test"), // replacement
