@@ -47,7 +47,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import javax.ws.rs.core.MediaType;
 
-import com.google.common.hash.Hashing;
 import org.jclouds.blobstore.BlobStore;
 import org.jclouds.blobstore.ContainerNotFoundException;
 import org.jclouds.blobstore.attr.ConsistencyModel;
@@ -60,7 +59,6 @@ import org.jclouds.blobstore.domain.StorageMetadata;
 import org.jclouds.blobstore.domain.StorageType;
 import org.jclouds.blobstore.options.CopyOptions;
 import org.jclouds.blobstore.options.PutOptions;
-import org.jclouds.blobstore.strategy.internal.MultipartUploadSlicingAlgorithm;
 import org.jclouds.crypto.Crypto;
 import org.jclouds.encryption.internal.JCECrypto;
 import org.jclouds.http.HttpResponseException;
@@ -557,7 +555,7 @@ public class BaseBlobIntegrationTest extends BaseBlobStoreIntegrationTest {
       long length = 42;
       ByteSource byteSource = TestUtils.randomByteSource().slice(0, length);
       Payload payload = new ByteSourcePayload(byteSource);
-      testPut(payload, null, payload, length, new PutOptions());
+      testPut(payload, payload, length, new PutOptions());
    }
 
    @Test(groups = { "integration", "live" })
@@ -565,22 +563,15 @@ public class BaseBlobIntegrationTest extends BaseBlobStoreIntegrationTest {
       long length = 42;
       ByteSource byteSource = TestUtils.randomByteSource().slice(0, length);
       Payload payload = new InputStreamPayload(byteSource.openStream());
-      testPut(payload, null, new ByteSourcePayload(byteSource), length, new PutOptions());
+      testPut(payload, new ByteSourcePayload(byteSource), length, new PutOptions());
    }
 
    @Test(groups = { "integration", "live" })
    public void testPutMultipartByteSource() throws Exception {
-      long length = 32 * 1024 * 1024 + 1; // MultipartUploadSlicingAlgorithm.DEFAULT_PART_SIZE + 1
-      BlobStore blobStore = view.getBlobStore();
-      MultipartUploadSlicingAlgorithm algorithm = new MultipartUploadSlicingAlgorithm(
-              blobStore.getMinimumMultipartPartSize(), blobStore.getMaximumMultipartPartSize(),
-              blobStore.getMaximumNumberOfParts());
-      // make sure that we are creating multiple parts
-      assertThat(algorithm.calculateChunkSize(length)).isLessThan(length);
+      long length = getMinimumMultipartBlobSize();
       ByteSource byteSource = TestUtils.randomByteSource().slice(0, length);
       Payload payload = new ByteSourcePayload(byteSource);
-      HashCode hashCode = byteSource.hash(Hashing.md5());
-      testPut(payload, hashCode, payload, length, new PutOptions().multipart(true));
+      testPut(payload, payload, length, new PutOptions().multipart(true));
    }
 
    @Test(groups = { "integration", "live" })
@@ -588,7 +579,7 @@ public class BaseBlobIntegrationTest extends BaseBlobStoreIntegrationTest {
       long length = getMinimumMultipartBlobSize();
       ByteSource byteSource = TestUtils.randomByteSource().slice(0, length);
       Payload payload = new InputStreamPayload(byteSource.openStream());
-      testPut(payload, null, new ByteSourcePayload(byteSource), length, new PutOptions().multipart(true));
+      testPut(payload, new ByteSourcePayload(byteSource), length, new PutOptions().multipart(true));
    }
 
    @Test(groups = { "integration", "live" })
@@ -615,7 +606,7 @@ public class BaseBlobIntegrationTest extends BaseBlobStoreIntegrationTest {
       assertThat(userMetadata1).isEqualTo(userMetadata2);
    }
 
-   private void testPut(Payload payload, HashCode hashCode, Payload expectedPayload, long length, PutOptions options)
+   private void testPut(Payload payload, Payload expectedPayload, long length, PutOptions options)
          throws IOException, InterruptedException {
       BlobStore blobStore = view.getBlobStore();
       String blobName = "multipart-upload";
@@ -625,9 +616,6 @@ public class BaseBlobIntegrationTest extends BaseBlobStoreIntegrationTest {
             .payload(payload)
             .contentLength(length);
       addContentMetadata(blobBuilder);
-      if (hashCode != null) {
-         blobBuilder.contentMD5(payload.getContentMetadata().getContentMD5AsHashCode());
-      }
 
       String container = getContainerName();
       try {
