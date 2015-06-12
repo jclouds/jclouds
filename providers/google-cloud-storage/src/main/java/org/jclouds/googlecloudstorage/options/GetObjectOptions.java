@@ -22,7 +22,8 @@ import org.jclouds.googlecloudstorage.domain.DomainResourceReferences.Projection
 import org.jclouds.http.options.GetOptions;
 
 /**
- * Allows to optionally specify generation,ifGenerationMatch,ifGenerationNotMatch, ifMetagenerationMatch,ifMetagenerationNotMatch and projection which used in Bucket
+ * Allows to optionally specify generation, ifGenerationMatch, ifGenerationNotMatch, ifMetagenerationMatch,
+ * ifMetagenerationNotMatch and projection, in addition to the values in {@link GetOptions}.
  */
 public class GetObjectOptions extends GetOptions {
 

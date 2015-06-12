@@ -113,7 +113,8 @@ public interface ObjectApi {
     * @param objectName
     *           Name of the object
     * @param options
-    *           Supply {@link GetObjectOptions} with optional query parameters
+    *           A class that implements {@link HttpRequestOptions}
+    *           such as {@link GetObjectOptions} with optional query parameters
     *
     * @return a {@link GoogleCloudStorageObject}
     */
@@ -153,7 +154,8 @@ public interface ObjectApi {
     * @param objectName
     *           Name of the object
     * @param options
-    *           Supply {@link GetObjectOptions} with optional query parameters
+    *           A class that implements {@link HttpRequestOptions}
+    *           such as {@link GetObjectOptions} with optional query parameters
     *
     * @return a {@link GoogleCloudStorageObject}
     */
