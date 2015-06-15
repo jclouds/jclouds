@@ -162,12 +162,7 @@ public abstract class BaseImageExtensionLiveTest extends BaseComputeServiceConte
    }
 
    private Optional<? extends Image> getImage() {
-      return Iterables.tryFind(listImages(), new Predicate<Image>() {
-         @Override
-         public boolean apply(Image input) {
-            return input.getId().equals(imageId);
-         }
-      });
+      return Optional.fromNullable(view.getComputeService().getImage(imageId));
    }
 
    private void checkReachable(NodeMetadata node) {
