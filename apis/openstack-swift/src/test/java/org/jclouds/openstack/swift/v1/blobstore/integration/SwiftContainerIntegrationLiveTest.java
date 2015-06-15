@@ -20,14 +20,10 @@ import static org.jclouds.openstack.keystone.v2_0.config.KeystoneProperties.CRED
 import static org.testng.Assert.assertTrue;
 
 import java.util.Properties;
-import java.util.concurrent.TimeUnit;
 
-import org.jclouds.blobstore.attr.ConsistencyModel;
 import org.jclouds.blobstore.integration.internal.BaseContainerIntegrationTest;
 import org.testng.annotations.Test;
 import org.testng.SkipException;
-
-import com.google.common.util.concurrent.Uninterruptibles;
 
 @Test(groups = "live", testName = "SwiftContainerIntegrationLiveTest")
 public class SwiftContainerIntegrationLiveTest extends BaseContainerIntegrationTest {
@@ -60,12 +56,5 @@ public class SwiftContainerIntegrationLiveTest extends BaseContainerIntegrationT
    @Override
    public void testDelimiter() throws Exception {
       throw new SkipException("openstack-swift does not implement pseudo-directories");
-   }
-
-   @Override
-   protected void awaitConsistency() {
-      if (view.getConsistencyModel() == ConsistencyModel.EVENTUAL) {
-         Uninterruptibles.sleepUninterruptibly(30, TimeUnit.SECONDS);
-      }
    }
 }

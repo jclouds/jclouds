@@ -553,7 +553,7 @@ public class BaseContainerIntegrationTest extends BaseBlobStoreIntegrationTest {
 
    protected void awaitConsistency() {
       if (view.getConsistencyModel() == ConsistencyModel.EVENTUAL) {
-         Uninterruptibles.sleepUninterruptibly(10, TimeUnit.SECONDS);
+         Uninterruptibles.sleepUninterruptibly(AWAIT_CONSISTENCY_TIMEOUT_SECONDS, TimeUnit.SECONDS);
       }
    }
 }

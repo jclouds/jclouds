@@ -92,6 +92,9 @@ public class BaseBlobStoreIntegrationTest extends BaseViewLiveTest<BlobStoreCont
     */
    private static volatile BlockingQueue<String> containerNames = new ArrayBlockingQueue<String>(containerCount);
 
+   protected static final int AWAIT_CONSISTENCY_TIMEOUT_SECONDS = Integer.parseInt(System.getProperty(
+         "test.blobstore.await-consistency-timeout-seconds", "10"));
+
    /**
     * There are a lot of retries here mainly from experience running inside amazon EC2.
     */
@@ -529,7 +532,7 @@ public class BaseBlobStoreIntegrationTest extends BaseViewLiveTest<BlobStoreCont
 
    protected void awaitConsistency() {
       if (view.getConsistencyModel() == ConsistencyModel.EVENTUAL) {
-         Uninterruptibles.sleepUninterruptibly(10, TimeUnit.SECONDS);
+         Uninterruptibles.sleepUninterruptibly(AWAIT_CONSISTENCY_TIMEOUT_SECONDS, TimeUnit.SECONDS);
       }
    }
 }

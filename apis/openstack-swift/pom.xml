@@ -44,6 +44,7 @@
     <jclouds.blobstore.httpstream.md5>e5de09672af9b386c30a311654d8541a</jclouds.blobstore.httpstream.md5>
     <jclouds.osgi.export>org.jclouds.openstack.swift.v1*;version="${project.version}"</jclouds.osgi.export>
     <jclouds.osgi.import>org.jclouds*;version="${project.version}",*</jclouds.osgi.import>
+    <test.blobstore.await-consistency-timeout-seconds>30</test.blobstore.await-consistency-timeout-seconds>
   </properties>
 
   <dependencies>
