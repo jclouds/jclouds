@@ -22,9 +22,11 @@ import static com.google.common.collect.Iterables.filter;
 import static com.google.common.collect.Lists.newArrayList;
 import static java.lang.String.format;
 import static org.jclouds.googlecloud.internal.ListPages.concat;
-import static org.jclouds.googlecomputeengine.config.GoogleComputeEngineProperties.IMAGE_PROJECTS;
 import static org.jclouds.googlecomputeengine.compute.strategy.CreateNodesWithGroupEncodedIntoNameThenAddToSet.simplifyPorts;
+import static org.jclouds.googlecomputeengine.config.GoogleComputeEngineProperties.IMAGE_PROJECTS;
 
+import javax.inject.Inject;
+import javax.inject.Named;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -32,9 +34,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicReference;
 
-import javax.inject.Inject;
-import javax.inject.Named;
-
+import com.google.common.base.Predicate;
+import com.google.common.base.Splitter;
+import com.google.common.base.Strings;
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Iterables;
+import com.google.common.collect.Lists;
+import com.google.common.util.concurrent.Atomics;
+import com.google.common.util.concurrent.UncheckedTimeoutException;
 import org.jclouds.compute.ComputeServiceAdapter;
 import org.jclouds.compute.domain.Hardware;
 import org.jclouds.compute.domain.NodeMetadata;
@@ -49,6 +56,7 @@ import org.jclouds.googlecomputeengine.compute.functions.FirewallTagNamingConven
 import org.jclouds.googlecomputeengine.compute.functions.Resources;
 import org.jclouds.googlecomputeengine.compute.options.GoogleComputeEngineTemplateOptions;
 import org.jclouds.googlecomputeengine.domain.AttachDisk;
+import org.jclouds.googlecomputeengine.domain.DiskType;
 import org.jclouds.googlecomputeengine.domain.Image;
 import org.jclouds.googlecomputeengine.domain.Instance;
 import org.jclouds.googlecomputeengine.domain.Instance.Scheduling;
@@ -61,15 +69,6 @@ import org.jclouds.googlecomputeengine.domain.Tags;
 import org.jclouds.googlecomputeengine.domain.Zone;
 import org.jclouds.googlecomputeengine.features.InstanceApi;
 import org.jclouds.location.suppliers.all.JustProvider;
-
-import com.google.common.base.Predicate;
-import com.google.common.base.Splitter;
-import com.google.common.base.Strings;
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Iterables;
-import com.google.common.collect.Lists;
-import com.google.common.util.concurrent.Atomics;
-import com.google.common.util.concurrent.UncheckedTimeoutException;
 
 /**
  * This implementation maps the following:
@@ -120,8 +119,10 @@ public final class GoogleComputeEngineServiceAdapter
       checkNotNull(template.getHardware().getUri(), "hardware must have a URI");
       checkNotNull(template.getImage().getUri(), "image URI is null");
 
+      String zone = template.getLocation().getId();
+
       List<AttachDisk> disks = Lists.newArrayList();
-      disks.add(AttachDisk.newBootDisk(template.getImage().getUri()));
+      disks.add(AttachDisk.newBootDisk(template.getImage().getUri(), getDiskTypeArgument(options, zone)));
 
       Iterator<String> networks = options.getNetworks().iterator();
 
@@ -156,7 +157,6 @@ public final class GoogleComputeEngineServiceAdapter
                format("%s:%s %s@localhost", credentials.getUser(), options.getPublicKey(), credentials.getUser()));
       }
 
-      String zone = template.getLocation().getId();
       InstanceApi instanceApi = api.instancesInZone(zone);
       Operation create = instanceApi.create(newInstance);
 
@@ -302,5 +302,16 @@ public final class GoogleComputeEngineServiceAdapter
    private static String toName(URI link) {
       String path = link.getPath();
       return path.substring(path.lastIndexOf('/') + 1);
+   }
+
+   private URI getDiskTypeArgument(GoogleComputeEngineTemplateOptions options, String zone) {
+      if (options.bootDiskType() != null) {
+         DiskType diskType = api.diskTypesInZone(zone).get(options.bootDiskType());
+         if (diskType != null) {
+            return diskType.selfLink();
+         }
+      }
+
+      return null;
    }
 }

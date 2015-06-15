@@ -21,14 +21,15 @@ import java.util.Map;
 
 import org.jclouds.compute.options.TemplateOptions;
 import org.jclouds.domain.LoginCredentials;
-import org.jclouds.scriptbuilder.domain.Statement;
 import org.jclouds.googlecomputeengine.domain.Instance.ServiceAccount;
+import org.jclouds.scriptbuilder.domain.Statement;
 
 /** Instance options specific to Google Compute Engine. */
 public final class GoogleComputeEngineTemplateOptions extends TemplateOptions {
 
    private boolean autoCreateKeyPair = true;
    private List<ServiceAccount> serviceAccounts;
+   private String bootDiskType;
 
    @Override
    public GoogleComputeEngineTemplateOptions clone() {
@@ -44,7 +45,23 @@ public final class GoogleComputeEngineTemplateOptions extends TemplateOptions {
          GoogleComputeEngineTemplateOptions eTo = GoogleComputeEngineTemplateOptions.class.cast(to);
          eTo.autoCreateKeyPair(autoCreateKeyPair());
          eTo.serviceAccounts(serviceAccounts());
+         eTo.bootDiskType(bootDiskType());
       }
+   }
+
+   /**
+    * Sets the boot disk type.
+    */
+   public GoogleComputeEngineTemplateOptions bootDiskType(String diskType) {
+      this.bootDiskType = diskType;
+      return this;
+   }
+
+   /**
+    * Gets the boot disk type.
+    */
+   public String bootDiskType() {
+      return bootDiskType;
    }
 
    /**

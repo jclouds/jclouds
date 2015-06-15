@@ -1,0 +1,40 @@
+{
+  "machineType": "%s",
+  "name": "test-1",
+  "networkInterfaces": [
+    {
+      "network": "https://www.googleapis.com/compute/v1/projects/party/networks/default",
+      "accessConfigs": [
+        {
+          "type": "ONE_TO_ONE_NAT"
+        }
+      ]
+    }
+  ],
+  "disks": [
+    {
+      "type": "PERSISTENT",
+      "initializeParams": {
+        "sourceImage": "%s",
+        "diskType": "https://content.googleapis.com/compute/v1/projects/party/zones/us-central1-a/diskTypes/pd-ssd"
+      },
+      "boot": true,
+      "autoDelete": true
+    }
+  ],
+  "description": "test",
+  "tags": {
+    "items": [
+      "aTag",
+      "jclouds-test-65f"
+    ]
+  },
+  "metadata": {
+    "items": [
+      {
+        "key": "jclouds-group",
+        "value": "test"
+      }
+    ]
+  }
+}
