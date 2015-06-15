@@ -26,12 +26,14 @@ import static org.testng.Assert.assertTrue;
 
 import java.io.IOException;
 import java.util.Map;
+import java.util.Properties;
 import java.util.Set;
 
 import org.jclouds.compute.domain.Image;
 import org.jclouds.compute.domain.OsFamily;
 import org.jclouds.compute.domain.Template;
 import org.jclouds.compute.internal.BaseTemplateBuilderLiveTest;
+import org.jclouds.googlecloud.internal.TestProperties;
 import org.testng.annotations.Test;
 
 import com.google.common.collect.ImmutableMap;
@@ -43,7 +45,12 @@ public class GoogleComputeEngineTemplateBuilderLiveTest extends BaseTemplateBuil
    public GoogleComputeEngineTemplateBuilderLiveTest() {
       provider = "google-compute-engine";
    }
-   
+
+   @Override protected Properties setupProperties() {
+      TestProperties.setGoogleCredentialsFromJson(provider);
+      return TestProperties.apply(provider, super.setupProperties());
+   }
+
    @Test
    @Override
    public void testDefaultTemplateBuilder() throws IOException {
@@ -53,7 +60,7 @@ public class GoogleComputeEngineTemplateBuilderLiveTest extends BaseTemplateBuil
       assertEquals(defaultTemplate.getImage().getOperatingSystem().getFamily(), DEBIAN);
       assertEquals(getCores(defaultTemplate.getHardware()), 1.0d);
    }
-   
+
    @Test
    public void testDefaultCredentials() {
       Map<OsFamily, String> defaultUsernames = ImmutableMap.of(COREOS, "core", WINDOWS, "Administrator");
@@ -63,7 +70,7 @@ public class GoogleComputeEngineTemplateBuilderLiveTest extends BaseTemplateBuil
                firstNonNull(defaultUsernames.get(image.getOperatingSystem().getFamily()), "jclouds"));
       }
    }
-   
+
    @Override
    protected Set<String> getIso3166Codes() {
       return ImmutableSet.<String> of();
