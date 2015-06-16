@@ -48,9 +48,7 @@ public interface SshClient {
    ExecResponse exec(String command);
 
    /**
-    * Execute a process and allow the user to interact with it. Note that this will allow the
-    * session to exist indefinitely, and its connection is not closed when {@link #disconnect()} is
-    * called.
+    * Execute a process and allow the user to interact with it.
     * 
     * @param command
     *           command line to invoke

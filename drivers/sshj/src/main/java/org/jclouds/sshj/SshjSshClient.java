@@ -500,8 +500,8 @@ public class SshjSshClient implements SshClient {
 
    class ExecChannelConnection implements Connection<ExecChannel> {
       private final String command;
-      private SessionChannel session;
       private Command output;
+      private Connection<Session> connection;
 
       ExecChannelConnection(String command) {
          this.command = checkNotNull(command, "command");
@@ -510,13 +510,19 @@ public class SshjSshClient implements SshClient {
       @Override
       public void clear() {
          Closeables2.closeQuietly(output);
-         Closeables2.closeQuietly(session);
+         try {
+             if (connection != null) {
+                 connection.clear();
+             }
+         } catch (Throwable e) {
+             Throwables.propagate(e);
+         }
       }
 
       @Override
       public ExecChannel create() throws Exception {
-         session = SessionChannel.class.cast(acquire(noPTYConnection()));
-         output = session.exec(command);
+         connection = noPTYConnection();
+         output = SessionChannel.class.cast(acquire(connection)).exec(command);
          return new ExecChannel(output.getOutputStream(), output.getInputStream(), output.getErrorStream(),
                   new Supplier<Integer>() {
 
