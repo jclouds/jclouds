@@ -371,12 +371,14 @@ public class BaseBlobIntegrationTest extends BaseBlobStoreIntegrationTest {
          String name = "apples";
 
          addObjectAndValidateContent(container, name);
-         view.getBlobStore().getBlob(container, name, range(TEST_STRING.length(), TEST_STRING.length() + 1));
-         throw new AssertionError("Invalid range not caught");
-      } catch (HttpResponseException e) {
-         assertThat(e.getResponse().getStatusCode()).isEqualTo(416);
-      } catch (IllegalArgumentException e) {
-         assertThat(e.getMessage()).startsWith("illegal range: ");
+         try {
+            view.getBlobStore().getBlob(container, name, range(TEST_STRING.length(), TEST_STRING.length() + 1));
+            throw new AssertionError("Invalid range not caught");
+         } catch (HttpResponseException e) {
+            assertThat(e.getResponse().getStatusCode()).isEqualTo(416);
+         } catch (IllegalArgumentException e) {
+            // expected
+         }
       } finally {
          returnContainer(container);
       }

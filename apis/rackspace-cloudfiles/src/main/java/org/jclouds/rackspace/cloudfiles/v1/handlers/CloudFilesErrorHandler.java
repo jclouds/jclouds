@@ -85,6 +85,9 @@ public class CloudFilesErrorHandler implements HttpErrorHandler {
          case 413:
             exception = new InsufficientResourcesException(exception.getMessage(), exception);
             break;
+         case 416:
+            exception = new IllegalArgumentException(exception.getMessage(), exception);
+            break;
       }
       command.setException(exception);
    }
