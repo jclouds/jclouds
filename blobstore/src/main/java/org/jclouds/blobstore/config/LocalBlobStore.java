@@ -95,6 +95,7 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Iterators;
+import com.google.common.net.HttpHeaders;
 
 @Singleton
 public final class LocalBlobStore implements BlobStore {
@@ -653,6 +654,8 @@ public final class LocalBlobStore implements BlobStore {
                   last = data.length - 1;
                }
                out.write(data, offset, last - offset + 1);
+               blob.getAllHeaders().put(HttpHeaders.CONTENT_RANGE,
+                     offset + "-" + last + "/" + data.length);
             }
             ContentMetadata cmd = blob.getPayload().getContentMetadata();
             byte[] byteArray = out.toByteArray();
