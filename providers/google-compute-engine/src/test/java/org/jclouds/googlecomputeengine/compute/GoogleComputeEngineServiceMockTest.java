@@ -20,12 +20,13 @@ import static com.google.common.collect.Iterables.getOnlyElement;
 import static org.jclouds.googlecomputeengine.domain.Instance.Status.RUNNING;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
-import static org.testng.Assert.assertNull;
 import static org.testng.Assert.assertTrue;
 
 import java.io.IOException;
 import java.util.Set;
 
+import com.google.common.collect.ImmutableSet;
+import com.squareup.okhttp.mockwebserver.MockResponse;
 import org.jclouds.compute.ComputeService;
 import org.jclouds.compute.domain.ComputeMetadata;
 import org.jclouds.compute.domain.Hardware;
@@ -37,9 +38,6 @@ import org.jclouds.googlecomputeengine.compute.options.GoogleComputeEngineTempla
 import org.jclouds.googlecomputeengine.domain.Instance;
 import org.jclouds.googlecomputeengine.internal.BaseGoogleComputeEngineApiMockTest;
 import org.testng.annotations.Test;
-
-import com.google.common.collect.ImmutableSet;
-import com.squareup.okhttp.mockwebserver.MockResponse;
 
 @Test(groups = "unit", testName = "GoogleComputeEngineServiceMockTest", singleThreaded = true)
 public class GoogleComputeEngineServiceMockTest extends BaseGoogleComputeEngineApiMockTest {
@@ -75,6 +73,8 @@ public class GoogleComputeEngineServiceMockTest extends BaseGoogleComputeEngineA
    public void firewallDeletedWhenAllGroupNodesAreTerminated() throws IOException, InterruptedException {
       server.enqueue(instanceWithNetworkAndStatus("test-delete-1", "default", RUNNING));
       server.enqueue(singleRegionSingleZoneResponse());
+      server.enqueue(jsonResponse("/disk_get_with_source_image.json"));
+      server.enqueue(jsonResponse("/image_get_for_source_image.json"));
       server.enqueue(jsonResponse("/aggregated_machinetype_list.json")); // Why are we getting machineTypes to delete an instance?
       server.enqueue(instanceWithNetworkAndStatus("test-delete-1", "default", RUNNING));
       server.enqueue(jsonResponse("/operation.json")); // instance delete
@@ -90,6 +90,8 @@ public class GoogleComputeEngineServiceMockTest extends BaseGoogleComputeEngineA
 
       assertSent(server, "GET", "/jclouds/zones/us-central1-a/instances/test-delete-1");
       assertSent(server, "GET", "/projects/party/regions");
+      assertSent(server, "GET", "/projects/party/zones/us-central1-a/disks/test");
+      assertSent(server, "GET", "/projects/debian-cloud/global/images/debian-7-wheezy-v20140718");
       assertSent(server, "GET", "/projects/party/aggregated/machineTypes"); // Why are we getting machineTypes to delete an instance?
       assertSent(server, "GET", "/jclouds/zones/us-central1-a/instances/test-delete-1");
       assertSent(server, "DELETE", "/jclouds/zones/us-central1-a/instances/test-delete-1"); // instance delete
@@ -130,15 +132,19 @@ public class GoogleComputeEngineServiceMockTest extends BaseGoogleComputeEngineA
    public void listNodes() throws Exception {
       server.enqueue(aggregatedListWithInstanceNetworkAndStatus("test-0", "test-network", RUNNING));
       server.enqueue(singleRegionSingleZoneResponse());
+      server.enqueue(jsonResponse("/disk_get_with_source_image.json"));
+      server.enqueue(jsonResponse("/image_get_for_source_image.json"));
       server.enqueue(jsonResponse("/aggregated_machinetype_list.json"));
 
       Set<? extends ComputeMetadata> nodes = computeService().listNodes();
       assertEquals(nodes.size(), 1);
       NodeMetadata node = (NodeMetadata) nodes.iterator().next();
-      assertNull(node.getImageId()); // not pre-cached by createNodes
+      assertNotNull(node.getImageId());
 
       assertSent(server, "GET", "/projects/party/aggregated/instances");
       assertSent(server, "GET", "/projects/party/regions");
+      assertSent(server, "GET", "/projects/party/zones/us-central1-a/disks/test");
+      assertSent(server, "GET", "/projects/debian-cloud/global/images/debian-7-wheezy-v20140718");
       assertSent(server, "GET", "/projects/party/aggregated/machineTypes");
    }
 
@@ -152,6 +158,8 @@ public class GoogleComputeEngineServiceMockTest extends BaseGoogleComputeEngineA
       server.enqueue(jsonResponse("/operation.json")); // Create Firewall
       server.enqueue(jsonResponse("/zone_operation.json"));
       server.enqueue(aggregatedListWithInstanceNetworkAndStatus("test-0", "test-network", RUNNING));
+      server.enqueue(jsonResponse("/disk_get_with_source_image.json"));
+      server.enqueue(jsonResponse("/image_get_for_source_image.json"));
       server.enqueue(jsonResponse("/operation.json")); // Create Instance
       server.enqueue(instanceWithNetworkAndStatus("test-1", "test-network", RUNNING));
 
@@ -178,6 +186,8 @@ public class GoogleComputeEngineServiceMockTest extends BaseGoogleComputeEngineA
 
       assertSent(server, "GET", "/projects/party/zones/us-central1-a/operations/operation-1354084865060");
       assertSent(server, "GET", "/projects/party/aggregated/instances");
+      assertSent(server, "GET", "/projects/party/zones/us-central1-a/disks/test");
+      assertSent(server, "GET", "/projects/debian-cloud/global/images/debian-7-wheezy-v20140718");
       assertSent(server, "POST", "/projects/party/zones/us-central1-a/instances",
             String.format(stringFromResource("/instance_insert_2.json"), template.getHardware().getId(), template.getImage().getId()));
 
@@ -194,6 +204,8 @@ public class GoogleComputeEngineServiceMockTest extends BaseGoogleComputeEngineA
       server.enqueue(jsonResponse("/operation.json")); // Create Firewall
       server.enqueue(jsonResponse("/zone_operation.json"));
       server.enqueue(aggregatedListWithInstanceNetworkAndStatus("test-0", "test-network", RUNNING));
+      server.enqueue(jsonResponse("/disk_get_with_source_image.json"));
+      server.enqueue(jsonResponse("/image_get_for_source_image.json"));
       server.enqueue(jsonResponse("/disktype_ssd.json"));
       server.enqueue(jsonResponse("/operation.json")); // Create Instance
       server.enqueue(instanceWithNetworkAndStatusAndSsd("test-1", "test-network", RUNNING));
@@ -223,6 +235,8 @@ public class GoogleComputeEngineServiceMockTest extends BaseGoogleComputeEngineA
 
       assertSent(server, "GET", "/projects/party/zones/us-central1-a/operations/operation-1354084865060");
       assertSent(server, "GET", "/projects/party/aggregated/instances");
+      assertSent(server, "GET", "/projects/party/zones/us-central1-a/disks/test");
+      assertSent(server, "GET", "/projects/debian-cloud/global/images/debian-7-wheezy-v20140718");
       assertSent(server, "GET", "/projects/party/zones/us-central1-a/diskTypes/pd-ssd");
       assertSent(server, "POST", "/projects/party/zones/us-central1-a/instances",
             String.format(stringFromResource("/instance_insert_ssd.json"), template.getHardware().getId(), template.getImage().getId()));

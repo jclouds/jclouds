@@ -18,41 +18,41 @@ package org.jclouds.googlecomputeengine.compute.functions;
 
 import static org.jclouds.compute.util.ComputeServiceUtils.groupFromMapOrName;
 
+import javax.inject.Inject;
 import java.net.URI;
 import java.util.List;
 import java.util.Map;
 
-import javax.inject.Inject;
-
+import com.google.common.base.Function;
+import com.google.common.base.Supplier;
+import com.google.common.cache.LoadingCache;
+import com.google.common.collect.ImmutableList;
 import org.jclouds.collect.Memoized;
 import org.jclouds.compute.domain.Hardware;
 import org.jclouds.compute.domain.NodeMetadata;
-import org.jclouds.compute.domain.NodeMetadataBuilder;
 import org.jclouds.compute.domain.NodeMetadata.Status;
+import org.jclouds.compute.domain.NodeMetadataBuilder;
 import org.jclouds.compute.functions.GroupNamingConvention;
 import org.jclouds.domain.Location;
+import org.jclouds.googlecomputeengine.domain.Image;
 import org.jclouds.googlecomputeengine.domain.Instance;
-
-import com.google.common.base.Function;
-import com.google.common.base.Supplier;
-import com.google.common.collect.ImmutableList;
 
 public final class InstanceToNodeMetadata implements Function<Instance, NodeMetadata> {
 
    private final Map<Instance.Status, NodeMetadata.Status> toPortableNodeStatus;
    private final GroupNamingConvention nodeNamingConvention;
-   private final Map<URI, URI> diskToSourceImage;
+   private final LoadingCache<URI, Image> diskURIToImage;
    private final Supplier<Map<URI, Hardware>> hardwares;
    private final Supplier<Map<URI, Location>> locationsByUri;
 
    @Inject InstanceToNodeMetadata(Map<Instance.Status, NodeMetadata.Status> toPortableNodeStatus,
                                   GroupNamingConvention.Factory namingConvention,
-                                  Map<URI, URI> diskToSourceImage,
+                                  LoadingCache<URI, Image> diskURIToImage,
                                   @Memoized Supplier<Map<URI, Hardware>> hardwares,
                                   @Memoized Supplier<Map<URI, Location>> locationsByUri) {
       this.toPortableNodeStatus = toPortableNodeStatus;
       this.nodeNamingConvention = namingConvention.createWithoutPrefix();
-      this.diskToSourceImage = diskToSourceImage;
+      this.diskURIToImage = diskURIToImage;
       this.hardwares = hardwares;
       this.locationsByUri = locationsByUri;
    }
@@ -71,14 +71,14 @@ public final class InstanceToNodeMetadata implements Function<Instance, NodeMeta
       //
       // Note: This will be present if we created the node. In the future we could choose to make diskToSourceImage
       // a loading cache. That would be more expensive, but could ensure this isn't null.
-      URI bootImage = diskToSourceImage.get(input.disks().get(0).source());
+      Image image = diskURIToImage.getUnchecked(input.disks().get(0).source());
 
       builder.id(input.selfLink().toString())
              .name(input.name())
              .providerId(input.id())
              .hostname(input.name())
              .location(zone)
-             .imageId(bootImage != null ? bootImage.toString() : null)
+             .imageId(image != null ? image.selfLink().toString() : null)
              .hardware(hardwares.get().get(input.machineType()))
              .status(input.status() != null ? toPortableNodeStatus.get(input.status()) : Status.UNRECOGNIZED)
              .tags(input.tags().items())

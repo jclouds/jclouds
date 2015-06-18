@@ -55,7 +55,7 @@ public abstract class Disk {
 
    public abstract URI selfLink();
 
-   @Nullable public abstract String sourceImage();
+   @Nullable public abstract URI sourceImage();
 
    @Nullable public abstract String sourceImageId();
 
@@ -67,7 +67,7 @@ public abstract class Disk {
    @SerializedNames({ "id", "creationTimestamp", "zone", "status", "name", "description", "sizeGb", "sourceSnapshot",
       "sourceSnapshotId", "selfLink", "sourceImage", "sourceImageId", "type", "licenses" })
    public static Disk create(String id, Date creationTimestamp, URI zone, Status status, String name, String description, int sizeGb,
-         String sourceSnapshot, String sourceSnapshotId, URI selfLink, String sourceImage, String sourceImageId, URI type, List<String> licenses) {
+         String sourceSnapshot, String sourceSnapshotId, URI selfLink, URI sourceImage, String sourceImageId, URI type, List<String> licenses) {
       return new AutoValue_Disk(id, creationTimestamp, zone, status, name, description, sizeGb,
             sourceSnapshot, sourceSnapshotId, selfLink, sourceImage, sourceImageId, type, licenses);
    }

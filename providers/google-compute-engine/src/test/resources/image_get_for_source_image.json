@@ -1,0 +1,25 @@
+{
+  "kind": "compute#image",
+  "id": "12941197498378735318",
+  "creationTimestamp": "2012-07-16T22:16:13.468",
+  "selfLink": "https://www.googleapis.com/compute/v1/projects/debian-cloud/global/images/debian-7-wheezy-v20140718",
+  "name": "debian-7-wheezy-v20140718",
+  "description": "DEPRECATED. CentOS 6.2 image; Created Mon, 26 Mar 2012 21:19:09 +0000",
+  "sourceType": "RAW",
+  "deprecated": {
+    "state": "DEPRECATED",
+    "replacement": "https://www.googleapis.com/compute/v1/projects/party/global/images/centos-6-v20130104"
+  },
+  "rawDisk": {
+    "source": "",
+    "containerType": "TAR"
+  },
+  "status": "READY",
+  "archiveSizeBytes": "881210631",
+  "diskSizeGb": "8",
+  "sourceDisk": "https://www.googleapis.com/compute/v1/projects/party/zones/us-central1-a/disk/disk",
+  "sourceDiskId": "9598530021316715047",
+  "licenses": [
+    "https://www.googleapis.com/compute/v1/projects/suse-cloud/global/licenses/sles-12"
+  ]
+}

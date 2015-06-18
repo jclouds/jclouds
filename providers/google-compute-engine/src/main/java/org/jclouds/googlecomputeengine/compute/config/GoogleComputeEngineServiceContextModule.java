@@ -25,14 +25,26 @@ import static org.jclouds.googlecomputeengine.config.GoogleComputeEngineProperti
 import static org.jclouds.rest.config.BinderUtils.bindHttpApi;
 import static org.jclouds.util.Predicates2.retry;
 
+import javax.inject.Named;
+import javax.inject.Singleton;
 import java.net.URI;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicReference;
 
-import javax.inject.Named;
-import javax.inject.Singleton;
-
+import com.google.common.base.Function;
+import com.google.common.base.Functions;
+import com.google.common.base.Optional;
+import com.google.common.base.Predicate;
+import com.google.common.base.Supplier;
+import com.google.common.cache.CacheBuilder;
+import com.google.common.cache.CacheLoader;
+import com.google.common.cache.LoadingCache;
+import com.google.common.collect.ImmutableMap;
+import com.google.inject.Injector;
+import com.google.inject.Provides;
+import com.google.inject.Scopes;
+import com.google.inject.TypeLiteral;
 import org.jclouds.collect.Memoized;
 import org.jclouds.compute.ComputeService;
 import org.jclouds.compute.ComputeServiceAdapter;
@@ -55,10 +67,11 @@ import org.jclouds.googlecomputeengine.compute.functions.InstanceToNodeMetadata;
 import org.jclouds.googlecomputeengine.compute.functions.MachineTypeToHardware;
 import org.jclouds.googlecomputeengine.compute.functions.OrphanedGroupsFromDeadNodes;
 import org.jclouds.googlecomputeengine.compute.functions.Resources;
+import org.jclouds.googlecomputeengine.compute.loaders.DiskURIToImage;
 import org.jclouds.googlecomputeengine.compute.options.GoogleComputeEngineTemplateOptions;
-import org.jclouds.googlecomputeengine.compute.predicates.GroupIsEmpty;
 import org.jclouds.googlecomputeengine.compute.predicates.AtomicInstanceVisible;
 import org.jclouds.googlecomputeengine.compute.predicates.AtomicOperationDone;
+import org.jclouds.googlecomputeengine.compute.predicates.GroupIsEmpty;
 import org.jclouds.googlecomputeengine.compute.strategy.CreateNodesWithGroupEncodedIntoNameThenAddToSet;
 import org.jclouds.googlecomputeengine.domain.Image;
 import org.jclouds.googlecomputeengine.domain.Instance;
@@ -66,18 +79,6 @@ import org.jclouds.googlecomputeengine.domain.MachineType;
 import org.jclouds.googlecomputeengine.domain.Operation;
 import org.jclouds.location.suppliers.ImplicitLocationSupplier;
 import org.jclouds.location.suppliers.implicit.FirstZone;
-
-import com.google.common.base.Function;
-import com.google.common.base.Functions;
-import com.google.common.base.Optional;
-import com.google.common.base.Predicate;
-import com.google.common.base.Supplier;
-import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.Maps;
-import com.google.inject.Injector;
-import com.google.inject.Provides;
-import com.google.inject.Scopes;
-import com.google.inject.TypeLiteral;
 
 public final class GoogleComputeEngineServiceContextModule
       extends ComputeServiceAdapterContextModule<Instance, MachineType, Image, Location> {
@@ -122,6 +123,10 @@ public final class GoogleComputeEngineServiceContextModule
       }).to(ImageNameToOperatingSystem.class);
 
       bind(FirewallTagNamingConvention.Factory.class).in(Scopes.SINGLETON);
+
+      bind(new TypeLiteral<CacheLoader<URI, Image>>() {
+      }).to(DiskURIToImage.class);
+
       bindHttpApi(binder(), Resources.class);
    }
 
@@ -134,10 +139,6 @@ public final class GoogleComputeEngineServiceContextModule
    @Provides Predicate<AtomicReference<Instance>> instanceVisible(AtomicInstanceVisible input,
          @Named(OPERATION_COMPLETE_TIMEOUT) long timeout, @Named(OPERATION_COMPLETE_INTERVAL) long interval) {
       return retry(input, timeout, interval, MILLISECONDS);
-   }
-
-   @Provides @Singleton Map<URI, URI> diskToSourceImage() {
-      return Maps.newConcurrentMap();
    }
 
    @Provides @Singleton @Memoized Supplier<Map<URI, Hardware>> hardwareByUri(
@@ -157,7 +158,8 @@ public final class GoogleComputeEngineServiceContextModule
    @Provides @Singleton @Memoized Supplier<Map<URI, Location>> locationsByUri(
          @Memoized final Supplier<Set<? extends Location>> locations, @Named(PROPERTY_SESSION_INTERVAL) long seconds) {
       return memoizeWithExpiration(new Supplier<Map<URI, Location>>() {
-         @Override public Map<URI, Location> get() {
+         @Override
+         public Map<URI, Location> get() {
             ImmutableMap.Builder<URI, Location> result = ImmutableMap.builder();
             for (Location location : locations.get()) {
                result.put(URI.create(location.getDescription()), location);
@@ -187,6 +189,14 @@ public final class GoogleComputeEngineServiceContextModule
       }
       return builder.build();
    }
+
+   @Provides
+   @Singleton
+   protected LoadingCache<URI, Image> diskURIToImageMap(
+         CacheLoader<URI, Image> in) {
+      return CacheBuilder.newBuilder().build(in);
+   }
+
 
    @Override protected Optional<ImageExtension> provideImageExtension(Injector i) {
       return Optional.absent();

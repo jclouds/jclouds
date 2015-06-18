@@ -23,6 +23,15 @@ import java.net.URI;
 import java.util.Map;
 import java.util.Set;
 
+import com.google.common.base.Function;
+import com.google.common.base.Functions;
+import com.google.common.base.Predicate;
+import com.google.common.base.Supplier;
+import com.google.common.base.Suppliers;
+import com.google.common.cache.CacheBuilder;
+import com.google.common.cache.CacheLoader;
+import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.ImmutableSet;
 import org.jclouds.compute.domain.Hardware;
 import org.jclouds.compute.domain.HardwareBuilder;
 import org.jclouds.compute.domain.NodeMetadata;
@@ -33,18 +42,12 @@ import org.jclouds.compute.functions.GroupNamingConvention;
 import org.jclouds.domain.Location;
 import org.jclouds.domain.LocationBuilder;
 import org.jclouds.domain.LocationScope;
+import org.jclouds.googlecomputeengine.domain.Image;
 import org.jclouds.googlecomputeengine.domain.Instance;
 import org.jclouds.googlecomputeengine.parse.ParseImageTest;
 import org.jclouds.googlecomputeengine.parse.ParseInstanceTest;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
-
-import com.google.common.base.Function;
-import com.google.common.base.Predicate;
-import com.google.common.base.Supplier;
-import com.google.common.base.Suppliers;
-import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.ImmutableSet;
 
 @Test(groups = "unit", testName = "InstanceToNodeMetadataTest", singleThreaded = true) // BeforeMethod = singleThreaded
 public class InstanceToNodeMetadataTest {
@@ -172,11 +175,14 @@ public class InstanceToNodeMetadataTest {
             }
          };
 
+      Map<URI, Image> imageMap = ImmutableMap.of(instance.disks().get(0).source(),
+            new ParseImageTest().expected());
+
       return new InstanceToNodeMetadata(
          ImmutableMap.<Instance.Status, NodeMetadata.Status>builder()
             .put(Instance.Status.RUNNING, NodeMetadata.Status.PENDING).build(),
             namingConventionFactory,
-            ImmutableMap.of(instance.disks().get(0).source(), imageUrl),
+            CacheBuilder.newBuilder().build(CacheLoader.from(Functions.forMap(imageMap))),
             hardwareSupplier,
             locationSupplier);
    }

@@ -19,10 +19,14 @@ package org.jclouds.googlecomputeengine.compute.functions;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNull;
 
+import org.jclouds.googlecomputeengine.domain.Disk;
+import org.jclouds.googlecomputeengine.domain.Image;
 import org.jclouds.googlecomputeengine.domain.Instance;
 import org.jclouds.googlecomputeengine.domain.Network;
 import org.jclouds.googlecomputeengine.domain.Operation;
 import org.jclouds.googlecomputeengine.internal.BaseGoogleComputeEngineApiMockTest;
+import org.jclouds.googlecomputeengine.parse.ParseDiskTest;
+import org.jclouds.googlecomputeengine.parse.ParseImageTest;
 import org.jclouds.googlecomputeengine.parse.ParseInstanceTest;
 import org.jclouds.googlecomputeengine.parse.ParseNetworkTest;
 import org.jclouds.googlecomputeengine.parse.ParseOperationTest;
@@ -62,7 +66,39 @@ public class ResourcesMockTest extends BaseGoogleComputeEngineApiMockTest {
       assertNull(network);
       assertSent(server, "GET", "/foo/bar");
    }
-   
+
+   public void testDisk() throws Exception {
+      server.enqueue(jsonResponse("/disk_get.json"));
+
+      Disk disk = resourceApi().disk(server.getUrl("/foo/bar").toURI());
+      assertEquals(disk, new ParseDiskTest().expected(url("/projects")));
+      assertSent(server, "GET", "/foo/bar");
+   }
+
+   public void testDiskReturns404() throws Exception {
+      server.enqueue(response404());
+
+      Disk disk = resourceApi().disk(server.getUrl("/foo/bar").toURI());
+      assertNull(disk);
+      assertSent(server, "GET", "/foo/bar");
+   }
+
+   public void testImage() throws Exception {
+      server.enqueue(jsonResponse("/image_get.json"));
+
+      Image image = resourceApi().image(server.getUrl("/foo/bar").toURI());
+      assertEquals(image, new ParseImageTest().expected(url("/projects")));
+      assertSent(server, "GET", "/foo/bar");
+   }
+
+   public void testImageReturns404() throws Exception {
+      server.enqueue(response404());
+
+      Image image = resourceApi().image(server.getUrl("/foo/bar").toURI());
+      assertNull(image);
+      assertSent(server, "GET", "/foo/bar");
+   }
+
    public void testOperation() throws Exception {
       server.enqueue(jsonResponse("/operation.json"));
 

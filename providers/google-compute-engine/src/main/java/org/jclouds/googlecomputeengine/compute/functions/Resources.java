@@ -19,15 +19,16 @@ package org.jclouds.googlecomputeengine.compute.functions;
 import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 import static org.jclouds.Fallbacks.NullOnNotFoundOr404;
 
-import java.net.URI;
-
 import javax.inject.Named;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
+import java.net.URI;
 
+import org.jclouds.googlecomputeengine.domain.Disk;
+import org.jclouds.googlecomputeengine.domain.Image;
 import org.jclouds.googlecomputeengine.domain.Instance;
 import org.jclouds.googlecomputeengine.domain.Network;
 import org.jclouds.googlecomputeengine.domain.Operation;
@@ -80,4 +81,14 @@ public interface Resources {
    @POST
    @Path("/stop")
    Operation stopInstance(@EndpointParam URI selfLink);
+
+   /** Returns a disk by self-link or null if not found. */
+   @Named("Disks:get")
+   @GET
+   @Fallback(NullOnNotFoundOr404.class) @Nullable Disk disk(@EndpointParam URI selfLink);
+
+   /** Returns an image by self-link or null if not found. */
+   @Named("Images:get")
+   @GET
+   @Fallback(NullOnNotFoundOr404.class) @Nullable Image image(@EndpointParam URI selfLink);
 }

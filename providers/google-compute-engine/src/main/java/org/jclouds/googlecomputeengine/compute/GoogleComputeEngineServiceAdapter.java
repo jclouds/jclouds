@@ -31,12 +31,12 @@ import java.net.URI;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.atomic.AtomicReference;
 
 import com.google.common.base.Predicate;
 import com.google.common.base.Splitter;
 import com.google.common.base.Strings;
+import com.google.common.cache.LoadingCache;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
@@ -88,27 +88,27 @@ public final class GoogleComputeEngineServiceAdapter
    private final JustProvider justProvider;
    private final GoogleComputeEngineApi api;
    private final Resources resources;
-   private final Map<URI, URI> diskToSourceImage;
    private final Predicate<AtomicReference<Operation>> operationDone;
    private final Predicate<AtomicReference<Instance>> instanceVisible;
    private final FirewallTagNamingConvention.Factory firewallTagNamingConvention;
    private final List<String> imageProjects;
+   private final LoadingCache<URI, Image> diskURIToImage;
 
    @Inject GoogleComputeEngineServiceAdapter(JustProvider justProvider, GoogleComputeEngineApi api,
                                             Predicate<AtomicReference<Operation>> operationDone,
                                             Predicate<AtomicReference<Instance>> instanceVisible,
-                                            Map<URI, URI> diskToSourceImage,
                                             Resources resources,
                                             FirewallTagNamingConvention.Factory firewallTagNamingConvention,
-                                            @Named(IMAGE_PROJECTS) String imageProjects) {
+                                            @Named(IMAGE_PROJECTS) String imageProjects,
+                                            LoadingCache<URI, Image> diskURIToImage) {
       this.justProvider = justProvider;
       this.api = api;
       this.operationDone = operationDone;
       this.instanceVisible = instanceVisible;
-      this.diskToSourceImage = diskToSourceImage;
       this.resources = resources;
       this.firewallTagNamingConvention = firewallTagNamingConvention;
       this.imageProjects = Splitter.on(',').omitEmptyStrings().splitToList(imageProjects);
+      this.diskURIToImage = diskURIToImage;
    }
 
    @Override public NodeAndInitialCredentials<Instance> createNodeWithGroupEncodedIntoName(String group, String name,
@@ -182,14 +182,15 @@ public final class GoogleComputeEngineServiceAdapter
       checkState(instanceVisible.apply(instance), "instance %s is not api visible!", instance.get());
 
       // Add lookup for InstanceToNodeMetadata
-      diskToSourceImage.put(instance.get().disks().get(0).source(), template.getImage().getUri());
+      diskURIToImage.getUnchecked(instance.get().disks().get(0).source());
 
       return new NodeAndInitialCredentials<Instance>(instance.get(), instance.get().selfLink().toString(), credentials);
    }
 
    @Override public Iterable<MachineType> listHardwareProfiles() {
       return filter(concat(api.aggregatedList().machineTypes()), new Predicate<MachineType>() {
-         @Override public boolean apply(MachineType input) {
+         @Override
+         public boolean apply(MachineType input) {
             return input.deprecated() == null;
          }
       });

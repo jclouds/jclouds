@@ -78,7 +78,7 @@ public class ParseInstanceTest extends BaseGoogleComputeEngineParseTest<Instance
                   AttachDisk.InitializeParams.create(
                         "test", // diskName
                         Long.parseLong("100", 10), // diskSizeGb
-                        URI.create(baseUrl + "/party/global/images/test"), // sourceImage
+                        URI.create(baseUrl + "/debian-cloud/global/images/debian-7-wheezy-v20140718"), // sourceImage
                         URI.create(baseUrl + "/party/zones/us-central1-a/diskTypes/pd-standard") // diskType
                         ), // initializeParams
                   ImmutableList.of(baseUrl + "/suse-cloud/global/licenses/sles-12"), // licenses
@@ -86,7 +86,6 @@ public class ParseInstanceTest extends BaseGoogleComputeEngineParseTest<Instance
             )), // disks
             Metadata.create("efgh")
                     .put("aKey", "aValue")
-                    .put("jclouds-image", baseUrl + "/debian-cloud/global/images/debian-7-wheezy-v20140718")
                     .put("jclouds-delete-boot-disk", "true"), // metadata
             ImmutableList.of(ServiceAccount.create("default", ImmutableList.of("myscope"))), // serviceAccounts
             Instance.Scheduling.create(OnHostMaintenance.MIGRATE, false) // scheduling
