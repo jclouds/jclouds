@@ -655,7 +655,7 @@ public final class LocalBlobStore implements BlobStore {
                }
                out.write(data, offset, last - offset + 1);
                blob.getAllHeaders().put(HttpHeaders.CONTENT_RANGE,
-                     offset + "-" + last + "/" + data.length);
+                     "bytes " + offset + "-" + last + "/" + data.length);
             }
             ContentMetadata cmd = blob.getPayload().getContentMetadata();
             byte[] byteArray = out.toByteArray();

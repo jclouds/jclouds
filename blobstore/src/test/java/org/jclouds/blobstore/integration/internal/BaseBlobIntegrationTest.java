@@ -397,12 +397,12 @@ public class BaseBlobIntegrationTest extends BaseBlobStoreIntegrationTest {
          Blob blob1 = view.getBlobStore().getBlob(container, name, range(0, 5));
          validateMetadata(blob1.getMetadata(), container, name);
          assertEquals(getContentAsStringOrNullAndClose(blob1), TEST_STRING.substring(0, 6));
-         assertThat(blob1.getAllHeaders().get(HttpHeaders.CONTENT_RANGE)).containsExactly("0-5/46");
+         assertThat(blob1.getAllHeaders().get(HttpHeaders.CONTENT_RANGE)).containsExactly("bytes 0-5/46");
 
          Blob blob2 = view.getBlobStore().getBlob(container, name, range(6, TEST_STRING.length()));
          validateMetadata(blob2.getMetadata(), container, name);
          assertEquals(getContentAsStringOrNullAndClose(blob2), TEST_STRING.substring(6, TEST_STRING.length()));
-         assertThat(blob2.getAllHeaders().get(HttpHeaders.CONTENT_RANGE)).containsExactly("6-45/46");
+         assertThat(blob2.getAllHeaders().get(HttpHeaders.CONTENT_RANGE)).containsExactly("bytes 6-45/46");
 
          /* RFC 2616 14.35.1
             "If the entity is shorter than the specified suffix-length, the
@@ -410,7 +410,7 @@ public class BaseBlobIntegrationTest extends BaseBlobStoreIntegrationTest {
          Blob blob3 = view.getBlobStore().getBlob(container, name, new GetOptions().tail(TEST_STRING.length() + 10));
          validateMetadata(blob3.getMetadata(), container, name);
          assertEquals(getContentAsStringOrNullAndClose(blob3), TEST_STRING);
-         assertThat(blob3.getAllHeaders().get(HttpHeaders.CONTENT_RANGE)).containsExactly("0-45/46");
+         assertThat(blob3.getAllHeaders().get(HttpHeaders.CONTENT_RANGE)).containsExactly("bytes 0-45/46");
       } finally {
          returnContainer(container);
       }
