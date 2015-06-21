@@ -21,6 +21,7 @@ import static com.google.common.base.Strings.isNullOrEmpty;
 import static com.google.common.io.BaseEncoding.base16;
 import static java.nio.file.Files.getFileAttributeView;
 import static java.nio.file.Files.getPosixFilePermissions;
+import static java.nio.file.Files.probeContentType;
 import static java.nio.file.Files.readAttributes;
 import static java.nio.file.Files.setPosixFilePermissions;
 import static org.jclouds.filesystem.util.Utils.isPrivate;
@@ -108,16 +109,19 @@ public class FilesystemStorageStrategyImpl implements LocalStorageStrategy {
 
    protected final Provider<BlobBuilder> blobBuilders;
    protected final String baseDirectory;
+   protected final boolean autoDetectContentType;
    protected final FilesystemContainerNameValidator filesystemContainerNameValidator;
    protected final FilesystemBlobKeyValidator filesystemBlobKeyValidator;
 
    @Inject
    protected FilesystemStorageStrategyImpl(Provider<BlobBuilder> blobBuilders,
          @Named(FilesystemConstants.PROPERTY_BASEDIR) String baseDir,
+         @Named(FilesystemConstants.PROPERTY_AUTO_DETECT_CONTENT_TYPE) boolean autoDetectContentType,
          FilesystemContainerNameValidator filesystemContainerNameValidator,
          FilesystemBlobKeyValidator filesystemBlobKeyValidator) {
       this.blobBuilders = checkNotNull(blobBuilders, "filesystem storage strategy blobBuilders");
       this.baseDirectory = checkNotNull(baseDir, "filesystem storage strategy base directory");
+      this.autoDetectContentType = autoDetectContentType;
       this.filesystemContainerNameValidator = checkNotNull(filesystemContainerNameValidator,
             "filesystem container name validator");
       this.filesystemBlobKeyValidator = checkNotNull(filesystemBlobKeyValidator, "filesystem blob key validator");
@@ -335,6 +339,9 @@ public class FilesystemStorageStrategyImpl implements LocalStorageStrategy {
             contentEncoding = readStringAttributeIfPresent(view, attributes, XATTR_CONTENT_ENCODING);
             contentLanguage = readStringAttributeIfPresent(view, attributes, XATTR_CONTENT_LANGUAGE);
             contentType = readStringAttributeIfPresent(view, attributes, XATTR_CONTENT_TYPE);
+            if (contentType == null && autoDetectContentType) {
+               contentType = probeContentType(file.toPath());
+            }
             if (attributes.contains(XATTR_CONTENT_MD5)) {
                ByteBuffer buf = ByteBuffer.allocate(view.size(XATTR_CONTENT_MD5));
                view.read(XATTR_CONTENT_MD5, buf);

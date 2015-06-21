@@ -24,6 +24,9 @@ public final class FilesystemConstants {
     /** Specify the base directory where provider starts its file operations - must exists */
     public static final String PROPERTY_BASEDIR = "jclouds.filesystem.basedir";
 
+    /** Specify if the Content-Type of a file should be autodetected if it is not set */
+    public static final String PROPERTY_AUTO_DETECT_CONTENT_TYPE = "jclouds.filesystem.auto-detect-content-type";
+
     private FilesystemConstants() {
         throw new AssertionError("intentionally unimplemented");
     }

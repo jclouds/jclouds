@@ -84,7 +84,7 @@ public class FilesystemStorageStrategyImplTest {
             return new BlobBuilderImpl();
          }
 
-      }, TestUtils.TARGET_BASE_DIR, new FilesystemContainerNameValidatorImpl(), new FilesystemBlobKeyValidatorImpl());
+      }, TestUtils.TARGET_BASE_DIR, false, new FilesystemContainerNameValidatorImpl(), new FilesystemBlobKeyValidatorImpl());
       TestUtils.cleanDirectoryContent(TestUtils.TARGET_BASE_DIR);
       TestUtils.createResources();
    }
@@ -369,6 +369,38 @@ public class FilesystemStorageStrategyImplTest {
               blobKey.substring(0, blobKey.length() - 1)));
    }
 
+   public void testGetBlobContentType_AutoDetect_True() throws IOException {
+      FilesystemStorageStrategyImpl storageStrategyAutoDetectContentType = new FilesystemStorageStrategyImpl(
+          new Provider<BlobBuilder>() {
+             @Override
+             public BlobBuilder get() {
+                return new BlobBuilderImpl();
+             }
+          }, TestUtils.TARGET_BASE_DIR, true, new FilesystemContainerNameValidatorImpl(), new FilesystemBlobKeyValidatorImpl());
+
+      String blobKey = TestUtils.createRandomBlobKey("file-", ".jpg");
+      TestUtils.createBlobsInContainer(CONTAINER_NAME, blobKey);
+      Blob blob = storageStrategyAutoDetectContentType.getBlob(CONTAINER_NAME, blobKey);
+      assertEquals(blob.getMetadata().getContentMetadata().getContentType(), "image/jpeg");
+
+      blobKey = TestUtils.createRandomBlobKey("file-", ".pdf");
+      TestUtils.createBlobsInContainer(CONTAINER_NAME, blobKey);
+      blob = storageStrategyAutoDetectContentType.getBlob(CONTAINER_NAME, blobKey);
+      assertEquals(blob.getMetadata().getContentMetadata().getContentType(), "application/pdf");
+
+      blobKey = TestUtils.createRandomBlobKey("file-", ".mp4");
+      TestUtils.createBlobsInContainer(CONTAINER_NAME, blobKey);
+      blob = storageStrategyAutoDetectContentType.getBlob(CONTAINER_NAME, blobKey);
+      assertEquals(blob.getMetadata().getContentMetadata().getContentType(), "video/mp4");
+   }
+
+   public void testGetBlobContentType_AutoDetect_False() throws IOException {
+      String blobKey = TestUtils.createRandomBlobKey("file-", ".jpg");
+      TestUtils.createBlobsInContainer(CONTAINER_NAME, blobKey);
+      Blob blob = storageStrategy.getBlob(CONTAINER_NAME, blobKey);
+      assertEquals(blob.getMetadata().getContentMetadata().getContentType(), null);
+   }
+
    public void testListDirectoryBlob() throws IOException {
       String blobKey = TestUtils.createRandomBlobKey("directory-", File.separator);
       Blob blob = storageStrategy.newBlob(blobKey);
@@ -477,7 +509,7 @@ public class FilesystemStorageStrategyImplTest {
                   public BlobBuilder get() {
                      return new BlobBuilderImpl();
                   }
-               }, absoluteBasePath, new FilesystemContainerNameValidatorImpl(), new FilesystemBlobKeyValidatorImpl());
+               }, absoluteBasePath, false, new FilesystemContainerNameValidatorImpl(), new FilesystemBlobKeyValidatorImpl());
       TestUtils.cleanDirectoryContent(absoluteContainerPath);
 
       String blobKey;

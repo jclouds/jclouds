@@ -88,6 +88,7 @@ public class FilesystemBlobStoreTest {
         // create context for filesystem container
         Properties prop = new Properties();
         prop.setProperty(FilesystemConstants.PROPERTY_BASEDIR, TestUtils.TARGET_BASE_DIR);
+        prop.setProperty(FilesystemConstants.PROPERTY_AUTO_DETECT_CONTENT_TYPE, "false");
         context = ContextBuilder.newBuilder(PROVIDER).overrides(prop).build(BlobStoreContext.class);
         // create a container in the default location
         blobStore = context.getBlobStore();
