@@ -16,7 +16,6 @@
  */
 package org.jclouds.filesystem.strategy.internal;
 
-import static java.nio.file.Files.getFileStore;
 import static org.jclouds.utils.TestUtils.randomByteSource;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertFalse;
@@ -27,8 +26,6 @@ import static org.testng.Assert.fail;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.nio.file.Paths;
-import java.nio.file.attribute.UserDefinedFileAttributeView;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
@@ -47,7 +44,6 @@ import org.jclouds.io.payloads.InputStreamPayload;
 import org.jclouds.util.Throwables2;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
-import org.testng.SkipException;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
@@ -369,6 +365,7 @@ public class FilesystemStorageStrategyImplTest {
               blobKey.substring(0, blobKey.length() - 1)));
    }
 
+   @Test(dataProvider = "ignoreOnMacOSX")
    public void testGetBlobContentType_AutoDetect_True() throws IOException {
       FilesystemStorageStrategyImpl storageStrategyAutoDetectContentType = new FilesystemStorageStrategyImpl(
           new Provider<BlobBuilder>() {
@@ -394,6 +391,7 @@ public class FilesystemStorageStrategyImplTest {
       assertEquals(blob.getMetadata().getContentMetadata().getContentType(), "video/mp4");
    }
 
+   @Test(dataProvider = "ignoreOnMacOSX")
    public void testGetBlobContentType_AutoDetect_False() throws IOException {
       String blobKey = TestUtils.createRandomBlobKey("file-", ".jpg");
       TestUtils.createBlobsInContainer(CONTAINER_NAME, blobKey);
@@ -622,10 +620,8 @@ public class FilesystemStorageStrategyImplTest {
       }
    }
 
+   @Test(dataProvider = "ignoreOnMacOSX")
    public void testOverwriteBlobMetadata() throws Exception {
-      if (!getFileStore(Paths.get(TestUtils.TARGET_BASE_DIR)).supportsFileAttributeView(UserDefinedFileAttributeView.class)) {
-         throw new SkipException("Filesystem does not support xattr");
-      }
       String blobKey = TestUtils.createRandomBlobKey("writePayload-", ".img");
 
       // write blob
