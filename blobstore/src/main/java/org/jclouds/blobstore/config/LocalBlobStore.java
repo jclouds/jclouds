@@ -32,6 +32,8 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.SequenceInputStream;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -393,7 +395,8 @@ public final class LocalBlobStore implements BlobStore {
 
    @Override
    public PageSet<? extends StorageMetadata> list() {
-      Iterable<String> containers = storageStrategy.getAllContainerNames();
+      ArrayList<String> containers = new ArrayList<String>(storageStrategy.getAllContainerNames());
+      Collections.sort(containers);
 
       return new PageSetImpl<StorageMetadata>(transform(
             containers, new Function<String, StorageMetadata>() {

@@ -38,6 +38,7 @@ import java.nio.file.Path;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.nio.file.attribute.PosixFilePermission;
 import java.nio.file.attribute.UserDefinedFileAttributeView;
+import java.util.Collection;
 import java.util.Date;
 import java.util.Map;
 import java.util.Set;
@@ -134,7 +135,7 @@ public class FilesystemStorageStrategyImpl implements LocalStorageStrategy {
    }
 
    @Override
-   public Iterable<String> getAllContainerNames() {
+   public Collection<String> getAllContainerNames() {
       File[] files = new File(buildPathStartingFromBaseDir()).listFiles();
       if (files == null) {
          return ImmutableList.of();

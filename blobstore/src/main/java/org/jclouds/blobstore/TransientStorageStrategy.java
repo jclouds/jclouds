@@ -20,6 +20,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.io.BaseEncoding.base16;
 
 import java.io.IOException;
+import java.util.Collection;
 import java.util.Date;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -82,7 +83,7 @@ public class TransientStorageStrategy implements LocalStorageStrategy {
    }
 
    @Override
-   public Iterable<String> getAllContainerNames() {
+   public Collection<String> getAllContainerNames() {
       return containerToBlobs.keySet();
    }
 
