@@ -37,6 +37,7 @@ import org.jclouds.googlecloudstorage.domain.DomainResourceReferences.Projection
 import org.jclouds.googlecloudstorage.domain.GoogleCloudStorageObject;
 import org.jclouds.googlecloudstorage.domain.ListPageWithPrefixes;
 import org.jclouds.googlecloudstorage.domain.ObjectAccessControls;
+import org.jclouds.googlecloudstorage.domain.RewriteResponse;
 import org.jclouds.googlecloudstorage.domain.templates.BucketTemplate;
 import org.jclouds.googlecloudstorage.domain.templates.ComposeObjectTemplate;
 import org.jclouds.googlecloudstorage.domain.templates.ObjectTemplate;
@@ -76,6 +77,7 @@ public class ObjectApiLiveTest extends BaseGoogleCloudStorageApiLiveTest {
    private static final String COMPOSED_OBJECT = "ComposedObject1.txt";
    private static final String COMPOSED_OBJECT2 = "ComposedObject2.json";
    private static final String NONEXISTENT_OBJECT_NAME = "noSuchObject.txt";
+   private static final String REWRITE_OBJECT_NAME = "rewriteObject.txt";
 
    private PayloadEnclosing testPayload;
    private Long RANDOM_LONG = 100L;
@@ -124,6 +126,20 @@ public class ObjectApiLiveTest extends BaseGoogleCloudStorageApiLiveTest {
    }
 
    @Test(groups = "live", dependsOnMethods = "testSimpleUpload")
+   public void testRewrite() throws IOException {
+      GoogleCloudStorageObject gcsObject = api().getObject(BUCKET_NAME, UPLOAD_OBJECT_NAME);
+      System.out.println(gcsObject);
+
+      RewriteResponse response = api().rewriteObjects(BUCKET_NAME, REWRITE_OBJECT_NAME, BUCKET_NAME, UPLOAD_OBJECT_NAME);
+      assertNotNull(response);
+      assertTrue(response.done());
+      assertEquals(response.objectSize(), 512);
+      assertEquals(response.totalBytesRewritten(), 512);
+      assertEquals(response.rewriteToken(), null);
+      assertNotNull(response.resource());
+   }
+
+   @Test(groups = "live", dependsOnMethods = "testRewrite")
    public void testDownload() throws IOException {
       PayloadEnclosing impl = api().download(BUCKET_NAME, UPLOAD_OBJECT_NAME);
       ContentMetadata meta = impl.getPayload().getContentMetadata();
@@ -443,6 +459,7 @@ public class ObjectApiLiveTest extends BaseGoogleCloudStorageApiLiveTest {
       assertFalse(api().deleteObject(BUCKET_NAME, UPLOAD_OBJECT_NAME));
       assertTrue(api().deleteObject(BUCKET_NAME, UPLOAD_OBJECT_NAME2));
       assertTrue(api().deleteObject(BUCKET_NAME, MULTIPART_UPLOAD_OBJECT));
+      assertTrue(api().deleteObject(BUCKET_NAME, REWRITE_OBJECT_NAME));
       assertFalse(api().deleteObject(BUCKET_NAME, NONEXISTENT_OBJECT_NAME));
    }
 

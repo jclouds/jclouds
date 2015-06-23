@@ -34,8 +34,10 @@ import org.jclouds.googlecloudstorage.options.CopyObjectOptions;
 import org.jclouds.googlecloudstorage.options.GetObjectOptions;
 import org.jclouds.googlecloudstorage.options.InsertObjectOptions;
 import org.jclouds.googlecloudstorage.options.ListObjectOptions;
+import org.jclouds.googlecloudstorage.options.RewriteObjectOptions;
 import org.jclouds.googlecloudstorage.parse.ParseGoogleCloudStorageObject;
 import org.jclouds.googlecloudstorage.parse.ParseGoogleCloudStorageObjectListTest;
+import org.jclouds.googlecloudstorage.parse.ParseObjectRewriteResponse;
 import org.jclouds.http.internal.PayloadEnclosingImpl;
 import org.jclouds.io.PayloadEnclosing;
 import org.testng.annotations.Test;
@@ -259,6 +261,25 @@ public class ObjectApiMockTest extends BaseGoogleCloudStorageApiMockTest {
       //TODO: this should be a more robust assertion about the formatting of the payload
    }
 
+   public void rewrite() throws Exception {
+      server.enqueue(jsonResponse("/object_rewrite.json"));
+
+      assertEquals(objectApi().rewriteObjects("destinationBucket", "destinationObject", "sourceBucket", "sourceObject"),
+            new ParseObjectRewriteResponse().expected());
+
+      assertSent(server, "POST", "/storage/v1/b/sourceBucket/o/sourceObject/rewriteTo/b/destinationBucket/o/destinationObject");
+   }
+
+   public void rewriteWithOptions() throws Exception {
+      server.enqueue(jsonResponse("/object_rewrite.json"));
+
+      RewriteObjectOptions options = new RewriteObjectOptions.Builder().rewriteToken("rewriteToken");
+      assertEquals(objectApi().rewriteObjects("destinationBucket", "destinationObject", "sourceBucket", "sourceObject", options),
+            new ParseObjectRewriteResponse().expected());
+
+      assertSent(server, "POST",
+            "/storage/v1/b/sourceBucket/o/sourceObject/rewriteTo/b/destinationBucket/o/destinationObject?rewriteToken=rewriteToken");
+   }
 
    public ObjectApi objectApi(){
       return api().getObjectApi();

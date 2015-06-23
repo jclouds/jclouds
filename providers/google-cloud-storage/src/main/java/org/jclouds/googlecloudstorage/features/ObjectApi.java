@@ -35,6 +35,7 @@ import org.jclouds.googlecloudstorage.binders.MultipartUploadBinder;
 import org.jclouds.googlecloudstorage.binders.UploadBinder;
 import org.jclouds.googlecloudstorage.domain.GoogleCloudStorageObject;
 import org.jclouds.googlecloudstorage.domain.ListPageWithPrefixes;
+import org.jclouds.googlecloudstorage.domain.RewriteResponse;
 import org.jclouds.googlecloudstorage.domain.templates.ComposeObjectTemplate;
 import org.jclouds.googlecloudstorage.domain.templates.ObjectTemplate;
 import org.jclouds.googlecloudstorage.options.ComposeObjectOptions;
@@ -43,6 +44,7 @@ import org.jclouds.googlecloudstorage.options.DeleteObjectOptions;
 import org.jclouds.googlecloudstorage.options.GetObjectOptions;
 import org.jclouds.googlecloudstorage.options.InsertObjectOptions;
 import org.jclouds.googlecloudstorage.options.ListObjectOptions;
+import org.jclouds.googlecloudstorage.options.RewriteObjectOptions;
 import org.jclouds.googlecloudstorage.options.UpdateObjectOptions;
 import org.jclouds.googlecloudstorage.parser.ParseToPayloadEnclosing;
 import org.jclouds.http.options.HttpRequestOptions;
@@ -473,4 +475,53 @@ public interface ObjectApi {
    GoogleCloudStorageObject multipartUpload(@PathParam("bucket") String bucketName,
             @PayloadParam("template") ObjectTemplate objectTemplate,
             @PayloadParam("payload") Payload payload);
+
+   /**
+    * Rewrites a source object to a destination object.
+    *
+    * @param destinationBucket
+    *           Name of the bucket in which the object to be stored
+    * @param destinationObject
+    *           Name of the new object.
+    * @param sourceBucket
+    *           Name of the bucket in which to find the source object.
+    * @param sourceObject
+    *           Name of the source object.
+    *
+    * @return a {@link RewriteResponse}
+    */
+   @Named("Object:rewrite")
+   @POST
+   @Consumes(APPLICATION_JSON)
+   @Path("/storage/v1/b/{sourceBucket}/o/{sourceObject}/rewriteTo/b/{destinationBucket}/o/{destinationObject}")
+   RewriteResponse rewriteObjects(@PathParam("destinationBucket") String destinationBucket,
+            @PathParam("destinationObject") String destinationObject,
+            @PathParam("sourceBucket") String sourceBucket,
+            @PathParam("sourceObject") String sourceObject);
+
+   /**
+    * Rewrites a source object to a destination object.
+    *
+    * @param destinationBucket
+    *           Name of the bucket in which the object to be stored
+    * @param destinationObject
+    *           Name of the new object.
+    * @param sourceBucket
+    *           Name of the bucket in which to find the source object.
+    * @param sourceObject
+    *           Name of the source object.
+    * @param options
+    *           Supply an {@link RewriteObjectOptions}
+    *
+    * @return a {@link RewriteResponse}
+    */
+   @Named("Object:rewrite")
+   @POST
+   @Consumes(APPLICATION_JSON)
+   @Path("/storage/v1/b/{sourceBucket}/o/{sourceObject}/rewriteTo/b/{destinationBucket}/o/{destinationObject}")
+   RewriteResponse rewriteObjects(@PathParam("destinationBucket") String destinationBucket,
+            @PathParam("destinationObject") String destinationObject,
+            @PathParam("sourceBucket") String sourceBucket,
+            @PathParam("sourceObject") String sourceObject,
+            RewriteObjectOptions options);
 }
