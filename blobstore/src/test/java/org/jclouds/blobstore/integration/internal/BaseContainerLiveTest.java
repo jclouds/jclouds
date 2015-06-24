@@ -17,6 +17,8 @@
 package org.jclouds.blobstore.integration.internal;
 
 import static java.util.concurrent.TimeUnit.SECONDS;
+
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.jclouds.blobstore.options.CreateContainerOptions.Builder.publicRead;
 import static org.jclouds.util.Predicates2.retry;
 import static org.testng.Assert.assertEquals;
@@ -141,7 +143,7 @@ public class BaseContainerLiveTest extends BaseBlobStoreIntegrationTest {
          names.add(sm.getName());
       }
 
-      assertEquals(expectedSet, names);
+      assertThat(names).containsExactlyElementsOf(expectedSet);
    }
 
    private void runCreateContainerInLocation(String payload, Location nonDefault) throws InterruptedException,

@@ -216,6 +216,9 @@ public final class LocalBlobStore implements BlobStore {
     */
    @Override
    public PageSet<? extends StorageMetadata> list(final String containerName, ListContainerOptions options) {
+      if (options.getDir() != null && options.getPrefix() != null) {
+         throw new IllegalArgumentException("Cannot set both prefix and directory");
+      }
 
       // Check if the container exists
       if (!storageStrategy.containerExists(containerName))
@@ -254,6 +257,8 @@ public final class LocalBlobStore implements BlobStore {
 
          if (options.getDir() != null && !options.getDir().isEmpty()) {
             contents = filterDirectory(contents, options);
+         } else if (options.getPrefix() != null) {
+            contents = filterPrefix(contents, options);
          } else if (!options.isRecursive()) {
             contents = extractCommonPrefixes(contents, storageStrategy.getSeparator(), null);
          }
@@ -324,7 +329,22 @@ public final class LocalBlobStore implements BlobStore {
       }));
 
       if (!options.isRecursive()) {
-         return extractCommonPrefixes(contents, storageStrategy.getSeparator(), prefix);
+         return extractCommonPrefixes(contents, storageStrategy.getSeparator(), dirPrefix);
+      }
+
+      return contents;
+   }
+
+   private SortedSet<StorageMetadata> filterPrefix(SortedSet<StorageMetadata> contents, final ListContainerOptions
+                                                   options) {
+      contents = newTreeSet(filter(contents, new Predicate<StorageMetadata>() {
+         public boolean apply(StorageMetadata o) {
+            return o != null && o.getName().replace(File.separatorChar, '/').startsWith(options.getPrefix());
+         }
+      }));
+
+      if (!options.isRecursive()) {
+         return extractCommonPrefixes(contents, storageStrategy.getSeparator(), options.getPrefix());
       }
 
       return contents;
@@ -341,12 +361,9 @@ public final class LocalBlobStore implements BlobStore {
       for (String o : commonPrefixes) {
          MutableStorageMetadata md = new MutableStorageMetadataImpl();
          md.setType(StorageType.RELATIVE_PATH);
-         if (prefix != null && !prefix.isEmpty()) {
-            if (!prefix.endsWith(delimiter)) {
-               o = prefix + delimiter + o;
-            } else {
-               o = prefix + o;
-            }
+
+         if (prefix != null) {
+            o = prefix + o;
          }
          md.setName(o);
          contents.add(md);
@@ -450,12 +467,23 @@ public final class LocalBlobStore implements BlobStore {
       }
 
       public boolean apply(StorageMetadata metadata) {
+         String name = metadata.getName();
+         if (metadata.getType() == StorageType.RELATIVE_PATH) {
+            // For directories, we need to make sure to include the separator character, as that is what the common
+            // prefix will include.
+            name += '/';
+         }
          if (prefix == null || prefix.isEmpty())
-            return metadata.getName().indexOf(delimiter) == -1;
-         // ensure we don't accidentally append twice
-         String toMatch = prefix.endsWith("/") ? prefix : prefix + delimiter;
-         if (metadata.getName().startsWith(toMatch)) {
-            String unprefixedName = metadata.getName().replaceFirst(Pattern.quote(toMatch), "");
+            return name.indexOf(delimiter) == -1;
+         String prefixMatch;
+         if (prefix.endsWith(delimiter)) {
+            prefixMatch = "^" + Pattern.quote(prefix) + ".*";
+         } else {
+            // We should correctly match strings like "foobar/" where the prefix is only "foo"
+            prefixMatch = "^" + Pattern.quote(prefix) + ".*" + Pattern.quote(delimiter) + ".*";
+         }
+         if (name.matches(prefixMatch)) {
+            String unprefixedName = name.replaceFirst(prefix, "");
             if (unprefixedName.equals("")) {
                // we are the prefix in this case, return false
                return false;
@@ -479,16 +507,18 @@ public final class LocalBlobStore implements BlobStore {
       public String apply(StorageMetadata metadata) {
          String working = metadata.getName();
          if (prefix != null) {
-            // ensure we don't accidentally append twice
-            String toMatch = prefix.endsWith("/") ? prefix : prefix + delimiter;
-            if (working.startsWith(toMatch)) {
-               working = working.replaceFirst(Pattern.quote(toMatch), "");
+            if (working.startsWith(prefix)) {
+               working = working.replaceFirst(Pattern.quote(prefix), "");
+            } else {
+               return NO_PREFIX;
             }
          }
-         if (working.contains(delimiter)) {
-            return working.substring(0, working.indexOf(delimiter));
+         if (working.indexOf(delimiter) >= 0) {
+            // include the delimiter in the result
+            return working.substring(0, working.indexOf(delimiter) + 1);
+         } else {
+            return NO_PREFIX;
          }
-         return NO_PREFIX;
       }
    }
 
