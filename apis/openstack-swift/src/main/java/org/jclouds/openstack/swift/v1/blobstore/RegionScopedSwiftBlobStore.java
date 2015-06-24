@@ -477,12 +477,9 @@ public class RegionScopedSwiftBlobStore implements BlobStore {
    public List<MultipartPart> listMultipartUpload(MultipartUpload mpu) {
       ImmutableList.Builder<MultipartPart> parts = ImmutableList.builder();
       PageSet<? extends StorageMetadata> pageSet = list(mpu.containerName(),
-            new ListContainerOptions().afterMarker(mpu.blobName() + '/').recursive());
+            new ListContainerOptions().inDirectory(mpu.blobName()).recursive());
       // TODO: pagination
       for (StorageMetadata sm : pageSet) {
-         if (!sm.getName().startsWith(mpu.blobName() + '/')) {
-            break;
-         }
          int lastSlash = sm.getName().lastIndexOf('/');
          int partNumber = Integer.parseInt(sm.getName().substring(lastSlash + 1));
          parts.add(MultipartPart.create(partNumber, sm.getSize(), sm.getETag()));
