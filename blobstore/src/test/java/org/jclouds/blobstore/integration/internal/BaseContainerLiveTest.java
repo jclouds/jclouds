@@ -75,8 +75,9 @@ public class BaseContainerLiveTest extends BaseBlobStoreIntegrationTest {
          assertNotNull(metadata.getPublicUri(), metadata.toString());
 
          SocketOpen socketOpen = context.utils().injector().getInstance(SocketOpen.class);
-         Predicate<HostAndPort> socketTester = retry(socketOpen, 1200, 10, SECONDS);
-         assertTrue(socketTester.apply(HostAndPort.fromParts(metadata.getPublicUri().getHost(), 80)), metadata.getPublicUri().toString());
+         Predicate<HostAndPort> socketTester = retry(socketOpen, 60, 5, SECONDS);
+         HostAndPort hostAndPort = HostAndPort.fromParts(metadata.getPublicUri().getHost(), metadata.getPublicUri().getPort());
+         assertTrue(socketTester.apply(hostAndPort), metadata.getPublicUri().toString());
 
          assertEquals(Strings2.toStringAndClose(view.utils().http().get(metadata.getPublicUri())), TEST_STRING);
 
