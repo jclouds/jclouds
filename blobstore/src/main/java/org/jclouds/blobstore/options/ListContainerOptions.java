@@ -40,6 +40,7 @@ public class ListContainerOptions extends ListOptions implements Cloneable {
             new ListContainerOptions());
 
    private String dir;
+   private String prefix;
    private boolean recursive;
    private boolean detailed;
 
@@ -47,11 +48,12 @@ public class ListContainerOptions extends ListOptions implements Cloneable {
    }
 
    ListContainerOptions(Integer maxKeys, String marker, String dir, boolean recursive,
-            boolean detailed) {
+            boolean detailed, String prefix) {
       super(maxKeys, marker);
       this.dir = dir;
       this.recursive = recursive;
       this.detailed = detailed;
+      this.prefix = prefix;
    }
 
    public static class ImmutableListContainerOptions extends ListContainerOptions {
@@ -108,6 +110,16 @@ public class ListContainerOptions extends ListOptions implements Cloneable {
       }
 
       @Override
+      public String getPrefix() {
+         return delegate.getPrefix();
+      }
+
+      @Override
+      public ListContainerOptions prefix(String prefix) {
+         throw new UnsupportedOperationException();
+      }
+
+      @Override
       public ListContainerOptions clone() {
          return delegate.clone();
       }
@@ -129,6 +141,10 @@ public class ListContainerOptions extends ListOptions implements Cloneable {
 
    public boolean isDetailed() {
       return detailed;
+   }
+
+   public String getPrefix() {
+      return prefix;
    }
 
    /**
@@ -176,6 +192,14 @@ public class ListContainerOptions extends ListOptions implements Cloneable {
       return this;
    }
 
+   /**
+    * Only list keys that start with the supplied prefix
+    */
+   public ListContainerOptions prefix(String prefix) {
+      this.prefix = prefix;
+      return this;
+   }
+
    public static class Builder {
 
       /**
@@ -217,11 +241,19 @@ public class ListContainerOptions extends ListOptions implements Cloneable {
          ListContainerOptions options = new ListContainerOptions();
          return options.withDetails();
       }
+
+      /**
+       * @see ListContainerOptions#prefix(String)
+       */
+      public static ListContainerOptions prefix(String prefix) {
+         ListContainerOptions options = new ListContainerOptions();
+         return options.prefix(prefix);
+      }
    }
 
    @Override
    public ListContainerOptions clone() {
-      return new ListContainerOptions(getMaxResults(), getMarker(), dir, recursive, detailed);
+      return new ListContainerOptions(getMaxResults(), getMarker(), dir, recursive, detailed, prefix);
    }
 
    @Override

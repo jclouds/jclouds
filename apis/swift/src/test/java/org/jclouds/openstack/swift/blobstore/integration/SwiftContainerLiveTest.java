@@ -22,6 +22,7 @@ import java.util.Properties;
 
 import org.jclouds.blobstore.integration.internal.BaseContainerLiveTest;
 import org.jclouds.openstack.keystone.v2_0.config.KeystoneProperties;
+import org.testng.SkipException;
 import org.testng.annotations.Test;
 
 @Test(groups = "live", testName = "SwiftContainerLiveTest" )
@@ -51,5 +52,10 @@ public class SwiftContainerLiveTest extends BaseContainerLiveTest {
    public void testPublicAccessInNonDefaultLocationWithBigBlob() throws InterruptedException, MalformedURLException,
             IOException {
       super.testPublicAccessInNonDefaultLocationWithBigBlob();
+   }
+
+   @Override
+   public void testContainerListWithPrefix() {
+      throw new SkipException("Prefix option has not been plumbed down to Swift");
    }
 }

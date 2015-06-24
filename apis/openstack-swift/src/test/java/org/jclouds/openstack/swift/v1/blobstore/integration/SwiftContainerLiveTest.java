@@ -21,6 +21,7 @@ import static org.jclouds.openstack.keystone.v2_0.config.KeystoneProperties.CRED
 import java.util.Properties;
 
 import org.jclouds.blobstore.integration.internal.BaseContainerLiveTest;
+import org.testng.SkipException;
 import org.testng.annotations.Test;
 
 @Test(groups = "live", testName = "SwiftContainerLiveTest")
@@ -35,5 +36,10 @@ public class SwiftContainerLiveTest extends BaseContainerLiveTest {
       Properties props = super.setupProperties();
       setIfTestSystemPropertyPresent(props, CREDENTIAL_TYPE);
       return props;
+   }
+
+   @Override
+   public void testContainerListWithPrefix() {
+      throw new SkipException("Prefix option has not been plumbed down to Swift");
    }
 }

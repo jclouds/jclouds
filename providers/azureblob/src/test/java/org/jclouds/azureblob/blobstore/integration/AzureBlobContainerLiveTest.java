@@ -17,11 +17,17 @@
 package org.jclouds.azureblob.blobstore.integration;
 
 import org.jclouds.blobstore.integration.internal.BaseContainerLiveTest;
+import org.testng.SkipException;
 import org.testng.annotations.Test;
 
 @Test(groups = { "live" })
 public class AzureBlobContainerLiveTest extends BaseContainerLiveTest {
    public AzureBlobContainerLiveTest() {
       provider = "azureblob";
+   }
+
+   @Override
+   public void testContainerListWithPrefix() {
+      throw new SkipException("Prefix option has not been plumbed down to Azure");
    }
 }

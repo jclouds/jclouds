@@ -26,13 +26,17 @@ import static org.testng.Assert.assertTrue;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.logging.Logger;
 
 import com.google.common.net.HostAndPort;
 import org.jclouds.blobstore.BlobStore;
 import org.jclouds.blobstore.domain.BlobMetadata;
+import org.jclouds.blobstore.domain.PageSet;
 import org.jclouds.blobstore.domain.StorageMetadata;
+import org.jclouds.blobstore.options.ListContainerOptions;
 import org.jclouds.domain.Location;
 import org.jclouds.javax.annotation.Nullable;
 import org.jclouds.predicates.SocketOpen;
@@ -43,6 +47,7 @@ import org.testng.annotations.Test;
 import com.google.common.base.Predicate;
 import com.google.common.base.Predicates;
 import com.google.common.base.Strings;
+import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 
@@ -111,6 +116,32 @@ public class BaseContainerLiveTest extends BaseBlobStoreIntegrationTest {
       Location nonDefault = findNonDefaultLocationOrSkip(view.getBlobStore(), defaultLocation);
       String payload = Strings.repeat("a", 1024 * 1024); // 1MB
       runCreateContainerInLocation(payload, nonDefault);
+   }
+
+   @Test(groups = "live", dependsOnMethods = "testPublicAccess")
+   public void testContainerListWithPrefix() throws InterruptedException {
+      final String containerName = getContainerName();
+      BlobStore blobStore = view.getBlobStore();
+      String prefix = "blob";
+      try {
+         blobStore.putBlob(containerName, blobStore.blobBuilder(prefix).payload("").build());
+         blobStore.putBlob(containerName, blobStore.blobBuilder(prefix + "foo").payload("").build());
+         blobStore.putBlob(containerName, blobStore.blobBuilder(prefix + "bar").payload("").build());
+         blobStore.putBlob(containerName, blobStore.blobBuilder("foo").payload("").build());
+         checkEqualNames(ImmutableSet.of(prefix, prefix + "foo", prefix + "bar"),
+               blobStore.list(containerName, ListContainerOptions.Builder.prefix(prefix)));
+      } finally {
+         returnContainer(containerName);
+      }
+   }
+
+   private void checkEqualNames(ImmutableSet<String> expectedSet, PageSet<? extends StorageMetadata> results) {
+      Set<String> names = new HashSet<String>();
+      for (StorageMetadata sm : results) {
+         names.add(sm.getName());
+      }
+
+      assertEquals(expectedSet, names);
    }
 
    private void runCreateContainerInLocation(String payload, Location nonDefault) throws InterruptedException,
