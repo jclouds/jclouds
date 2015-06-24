@@ -250,43 +250,12 @@ public final class LocalBlobStore implements BlobStore {
             }));
 
       String marker = null;
-      String prefix;
       if (options != null) {
-         prefix = options.getDir();
-         if (prefix != null && !prefix.isEmpty()) {
-            final String dirPrefix = prefix.endsWith("/") ?
-                    prefix :
-                    prefix + "/";
-            contents = newTreeSet(filter(contents, new Predicate<StorageMetadata>() {
-               public boolean apply(StorageMetadata o) {
-                  return o != null
-                        && o.getName().replace(File.separatorChar, '/').startsWith(dirPrefix)
-                        && !o.getName().replace(File.separatorChar, '/').equals(dirPrefix);
-               }
-            }));
-         }
 
-         if (!options.isRecursive()) {
-            String delimiter = storageStrategy.getSeparator();
-            SortedSet<String> commonPrefixes = newTreeSet(
-                  transform(contents, new CommonPrefixes(prefix, delimiter)));
-            commonPrefixes.remove(CommonPrefixes.NO_PREFIX);
-
-            contents = newTreeSet(filter(contents, new DelimiterFilter(prefix, delimiter)));
-
-            for (String o : commonPrefixes) {
-               MutableStorageMetadata md = new MutableStorageMetadataImpl();
-               md.setType(StorageType.RELATIVE_PATH);
-               if (prefix != null && !prefix.isEmpty()) {
-                  if (!prefix.endsWith(delimiter)) {
-                     o = prefix + delimiter + o;
-                  } else {
-                     o = prefix + o;
-                  }
-               }
-               md.setName(o);
-               contents.add(md);
-            }
+         if (options.getDir() != null && !options.getDir().isEmpty()) {
+            contents = filterDirectory(contents, options);
+         } else if (!options.isRecursive()) {
+            contents = extractCommonPrefixes(contents, storageStrategy.getSeparator(), null);
          }
 
          if (options.getMarker() != null) {
@@ -338,6 +307,51 @@ public final class LocalBlobStore implements BlobStore {
       }
 
       return new PageSetImpl<StorageMetadata>(contents, marker);
+   }
+
+   private SortedSet<StorageMetadata> filterDirectory(SortedSet<StorageMetadata> contents, ListContainerOptions
+           options) {
+      String prefix = options.getDir();
+      final String dirPrefix = prefix.endsWith("/") ?
+              prefix :
+              prefix + "/";
+      contents = newTreeSet(filter(contents, new Predicate<StorageMetadata>() {
+         public boolean apply(StorageMetadata o) {
+            return o != null
+                    && o.getName().replace(File.separatorChar, '/').startsWith(dirPrefix)
+                    && !o.getName().replace(File.separatorChar, '/').equals(dirPrefix);
+         }
+      }));
+
+      if (!options.isRecursive()) {
+         return extractCommonPrefixes(contents, storageStrategy.getSeparator(), prefix);
+      }
+
+      return contents;
+   }
+
+   private SortedSet<StorageMetadata> extractCommonPrefixes(SortedSet<StorageMetadata> contents, String delimiter,
+                                                            String prefix) {
+      SortedSet<String> commonPrefixes = newTreeSet(
+              transform(contents, new CommonPrefixes(prefix, delimiter)));
+      commonPrefixes.remove(CommonPrefixes.NO_PREFIX);
+
+      contents = newTreeSet(filter(contents, new DelimiterFilter(prefix, delimiter)));
+
+      for (String o : commonPrefixes) {
+         MutableStorageMetadata md = new MutableStorageMetadataImpl();
+         md.setType(StorageType.RELATIVE_PATH);
+         if (prefix != null && !prefix.isEmpty()) {
+            if (!prefix.endsWith(delimiter)) {
+               o = prefix + delimiter + o;
+            } else {
+               o = prefix + o;
+            }
+         }
+         md.setName(o);
+         contents.add(md);
+      }
+      return contents;
    }
 
    private ContainerNotFoundException cnfe(final String name) {
