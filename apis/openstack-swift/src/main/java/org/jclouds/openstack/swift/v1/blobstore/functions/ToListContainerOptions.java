@@ -28,18 +28,21 @@ public class ToListContainerOptions implements
    @Override
    public org.jclouds.openstack.swift.v1.options.ListContainerOptions apply(ListContainerOptions from) {
       checkNotNull(from, "set options to instance NONE instead of passing null");
-      org.jclouds.openstack.swift.v1.options.ListContainerOptions options = new org.jclouds.openstack.swift.v1.options.ListContainerOptions();
-      if ((from.getDir() == null) && (from.isRecursive())) {
-         options.prefix("");
+      if (from.getDir() != null && from.getPrefix() != null) {
+         throw new IllegalArgumentException("Cannot set both directory and prefix");
       }
-      if ((from.getDir() == null) && (!from.isRecursive())) {
-         options.path("");
+      org.jclouds.openstack.swift.v1.options.ListContainerOptions options = new org.jclouds.openstack.swift.v1.options.ListContainerOptions();
+      if (from.getDir() == null && !from.isRecursive()) {
+         options.delimiter('/');
       }
       if ((from.getDir() != null) && (from.isRecursive())) {
          options.prefix(from.getDir().endsWith("/") ? from.getDir() : from.getDir() + "/");
       }
       if ((from.getDir() != null) && (!from.isRecursive())) {
          options.path(from.getDir());
+      }
+      if (from.getPrefix() != null) {
+         options.prefix(from.getPrefix());
       }
       if (from.getMarker() != null) {
          options.marker(from.getMarker());
