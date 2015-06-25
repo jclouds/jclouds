@@ -156,7 +156,7 @@ public class BaseBlobStoreIntegrationTest extends BaseViewLiveTest<BlobStoreCont
                      containerCount++;
                   } else {
                      try {
-                        createContainerAndEnsureEmpty(context, containerName);
+                        createContainerAndEnsureEmpty(context, containerName, false);
                         if (context.getBlobStore().containerExists(containerName))
                            containerNames.put(containerName);
                         else {
@@ -172,6 +172,7 @@ public class BaseBlobStoreIntegrationTest extends BaseViewLiveTest<BlobStoreCont
                      }
                   }
                }
+               awaitConsistency();
                testContext.setAttribute("containerNames", containerNames);
                System.err.printf("*** containers to test: %s%n", containerNames);
                // careful not to keep too many files open
@@ -252,15 +253,17 @@ public class BaseBlobStoreIntegrationTest extends BaseViewLiveTest<BlobStoreCont
       assertConsistencyAware(view, assertion);
    }
 
-   protected void createContainerAndEnsureEmpty(BlobStoreContext context, final String containerName)
-         throws InterruptedException {
+   protected void createContainerAndEnsureEmpty(BlobStoreContext context, final String containerName,
+         boolean ensureConsistent) throws InterruptedException {
       context.getBlobStore().createContainerInLocation(null, containerName);
-      awaitConsistency();
+      if (ensureConsistent) {
+         awaitConsistency();
+      }
       context.getBlobStore().clearContainer(containerName);
    }
 
    protected void createContainerAndEnsureEmpty(String containerName) throws InterruptedException {
-      createContainerAndEnsureEmpty(view, containerName);
+      createContainerAndEnsureEmpty(view, containerName, true);
    }
 
    protected String addBlobToContainer(String sourceContainer, String key) {
