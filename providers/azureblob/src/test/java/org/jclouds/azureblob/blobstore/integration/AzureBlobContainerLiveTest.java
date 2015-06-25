@@ -17,18 +17,11 @@
 package org.jclouds.azureblob.blobstore.integration;
 
 import org.jclouds.blobstore.integration.internal.BaseContainerLiveTest;
-import org.testng.SkipException;
 import org.testng.annotations.Test;
 
 @Test(groups = { "live" })
 public class AzureBlobContainerLiveTest extends BaseContainerLiveTest {
    public AzureBlobContainerLiveTest() {
       provider = "azureblob";
-   }
-
-   @Override
-   @Test
-   public void testDelimiterList() {
-      throw new SkipException("The delimiter support has not been plumbed through to Azure blob");
    }
 }

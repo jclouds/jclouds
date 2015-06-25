@@ -33,8 +33,15 @@ public class ListOptionsToListBlobsOptions implements
       if (from.getDir() != null && from.getPrefix() != null) {
          throw new IllegalArgumentException("Cannot set both directory and prefix");
       }
+      if (((from.getDir() != null) || from.isRecursive()) && from.getDelimiter() != null) {
+         throw new IllegalArgumentException("Cannot set delimiter and directory or recursive options together");
+      }
+
       ListBlobsOptions httpOptions = new ListBlobsOptions();
-      if (!from.isRecursive()) {
+      if (from.getDelimiter() != null) {
+         httpOptions.delimiter(from.getDelimiter());
+      }
+      if (!from.isRecursive() && httpOptions.getDelimiter() == null) {
          httpOptions.delimiter("/");
       }
       if (from.getDir() != null) {
