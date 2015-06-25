@@ -231,6 +231,7 @@
     <auto-factory.version>0.1-beta1</auto-factory.version>
     <auto-service.version>1.0-rc2</auto-service.version>
     <auto-value.version>1.1</auto-value.version>
+    <java-xmlbuilder.version>1.1</java-xmlbuilder.version>
     <http.proxyHost />
     <http.proxyPort />
     <jclouds.wire.httpstream.url>http://archive.apache.org/dist/commons/logging/binaries/commons-logging-1.1.1-bin.tar.gz</jclouds.wire.httpstream.url>
@@ -354,6 +355,11 @@
         <groupId>com.google.auto.value</groupId>
         <artifactId>auto-value</artifactId>
         <version>${auto-value.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.jamesmurty.utils</groupId>
+        <artifactId>java-xmlbuilder</artifactId>
+        <version>${java-xmlbuilder.version}</version>
       </dependency>
     </dependencies>
   </dependencyManagement>

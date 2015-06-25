@@ -46,7 +46,6 @@
     <dependency>
       <groupId>com.jamesmurty.utils</groupId>
       <artifactId>java-xmlbuilder</artifactId>
-      <version>0.4</version>
     </dependency>
     <dependency>
       <groupId>org.apache.jclouds.api</groupId>
