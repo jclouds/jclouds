@@ -30,12 +30,18 @@ public class ListOptionsToListBlobsOptions implements
          Function<ListContainerOptions, ListBlobsOptions> {
    public ListBlobsOptions apply(ListContainerOptions from) {
       checkNotNull(from, "set options to instance NONE instead of passing null");
+      if (from.getDir() != null && from.getPrefix() != null) {
+         throw new IllegalArgumentException("Cannot set both directory and prefix");
+      }
       ListBlobsOptions httpOptions = new ListBlobsOptions();
       if (!from.isRecursive()) {
          httpOptions.delimiter("/");
       }
       if (from.getDir() != null) {
          httpOptions.prefix(from.getDir().endsWith("/") ? from.getDir() : from.getDir() + "/");
+      }
+      if (from.getPrefix() != null) {
+         httpOptions.prefix(from.getPrefix());
       }
       if (from.getMarker() != null) {
          httpOptions.marker(from.getMarker());
