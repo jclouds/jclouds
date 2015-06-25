@@ -21,7 +21,10 @@ import static com.google.common.base.Preconditions.checkState;
 import static com.google.common.collect.Iterables.contains;
 import static com.google.common.collect.Iterables.filter;
 import static com.google.common.collect.Iterables.transform;
+import static java.lang.String.format;
+import static java.util.concurrent.TimeUnit.SECONDS;
 import static org.jclouds.compute.util.ComputeServiceUtils.metadataAndTagsAsCommaDelimitedValue;
+import static org.jclouds.util.Predicates2.retry;
 
 import java.util.Set;
 
@@ -127,16 +130,27 @@ public class NovaComputeServiceAdapter implements
          }
       }
 
-      String regionId = template.getLocation().getId();
+      final String regionId = template.getLocation().getId();
       String imageId = template.getImage().getProviderId();
       String flavorId = template.getHardware().getProviderId();
 
       logger.debug(">> creating new server region(%s) name(%s) image(%s) flavor(%s) options(%s)", regionId, name, imageId, flavorId, options);
-      ServerCreated lightweightServer = novaApi.getServerApi(regionId).create(name, imageId, flavorId, options);
+      final ServerCreated lightweightServer = novaApi.getServerApi(regionId).create(name, imageId, flavorId, options);
+      if (!retry(new Predicate<String>() {
+         @Override
+         public boolean apply(String serverId) {
+            Server server = novaApi.getServerApi(regionId).get(serverId);
+            return server != null && server.getAddresses() != null && !server.getAddresses().isEmpty();
+         }
+      }, 30 * 60, 1, SECONDS).apply(lightweightServer.getId())) {
+         final String message = format("Server %s was not created within %sms so it will be destroyed.", name, "30 * 60");
+         logger.warn(message);
+         destroyNode(lightweightServer.getId());
+         throw new IllegalStateException(message);
+      }
+      logger.trace("<< server(%s)", lightweightServer.getId());
+
       Server server = novaApi.getServerApi(regionId).get(lightweightServer.getId());
-
-      logger.trace("<< server(%s)", server.getId());
-
       ServerInRegion serverInRegion = new ServerInRegion(server, regionId);
       if (!privateKey.isPresent() && lightweightServer.getAdminPass().isPresent())
          credentialsBuilder.password(lightweightServer.getAdminPass().get());

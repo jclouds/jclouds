@@ -64,9 +64,9 @@ public class ApplyNovaTemplateOptionsCreateNodesWithGroupEncodedIntoNameThenAddT
          CreateNodesWithGroupEncodedIntoNameThenAddToSet {
 
    private final AllocateAndAddFloatingIpToNode createAndAddFloatingIpToNode;
-   private final LoadingCache<RegionAndName, SecurityGroupInRegion> securityGroupCache;
-   private final LoadingCache<RegionAndName, KeyPair> keyPairCache;
-   private final NovaApi novaApi;
+   protected final LoadingCache<RegionAndName, SecurityGroupInRegion> securityGroupCache;
+   protected final LoadingCache<RegionAndName, KeyPair> keyPairCache;
+   protected final NovaApi novaApi;
 
    @Inject
    protected ApplyNovaTemplateOptionsCreateNodesWithGroupEncodedIntoNameThenAddToSet(

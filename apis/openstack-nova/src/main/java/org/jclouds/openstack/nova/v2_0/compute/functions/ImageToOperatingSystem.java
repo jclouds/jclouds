@@ -57,7 +57,7 @@ public class ImageToOperatingSystem implements Function<Image, OperatingSystem> 
    @Named(ComputeServiceConstants.COMPUTE_LOGGER)
    protected Logger logger = Logger.NULL;
 
-   private final Map<OsFamily, Map<String, String>> osVersionMap;
+   protected final Map<OsFamily, Map<String, String>> osVersionMap;
 
    @Inject
    public ImageToOperatingSystem(Map<OsFamily, Map<String, String>> osVersionMap) {

@@ -64,10 +64,10 @@ public abstract class BaseAuthenticator<C> implements Function<Credentials, Acce
       String usernameOrAccessKey = input.identity;
 
       if (!tenantName.isPresent() && input.identity.indexOf(':') != -1) {
-         tenantName = Optional.of(input.identity.substring(0, input.identity.indexOf(':')));
-         usernameOrAccessKey = input.identity.substring(input.identity.indexOf(':') + 1);
+         tenantName = Optional.of(input.identity.substring(0, input.identity.lastIndexOf(':')));
+         usernameOrAccessKey = input.identity.substring(input.identity.lastIndexOf(':') + 1);
       }
-      
+
       String passwordOrSecretKey = input.credential;
 
       C creds = createCredentials(usernameOrAccessKey, passwordOrSecretKey);
