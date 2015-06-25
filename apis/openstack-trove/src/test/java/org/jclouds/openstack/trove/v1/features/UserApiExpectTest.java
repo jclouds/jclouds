@@ -32,10 +32,10 @@ import org.jclouds.openstack.trove.v1.domain.User;
 import org.jclouds.openstack.trove.v1.internal.BaseTroveApiExpectTest;
 import org.testng.annotations.Test;
 import org.testng.collections.Lists;
-import org.testng.internal.annotations.Sets;
 
 import com.google.common.collect.ImmutableSortedSet;
 import com.google.common.collect.ImmutableSortedSet.Builder;
+import com.google.common.collect.Sets;
 
 /**
  * Tests UserApi Guice wiring and parsing
