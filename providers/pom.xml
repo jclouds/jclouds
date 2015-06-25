@@ -49,6 +49,7 @@
     <module>serverlove-z1-man</module>
     <module>skalicloud-sdg-my</module>
     <module>go2cloud-jhb1</module>
+    <module>google-compute-engine</module>
     <module>softlayer</module>
     <module>hpcloud-compute</module>
     <module>hpcloud-blockstorage</module>
