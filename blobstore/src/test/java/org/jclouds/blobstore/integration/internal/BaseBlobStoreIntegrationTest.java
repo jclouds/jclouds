@@ -168,7 +168,9 @@ public class BaseBlobStoreIntegrationTest extends BaseViewLiveTest<BlobStoreCont
                      }
                   }
                }
-               awaitConsistency();
+               if (context.getConsistencyModel() == ConsistencyModel.EVENTUAL) {
+                  Thread.sleep(10000);
+               }
                testContext.setAttribute("containerNames", containerNames);
                System.err.printf("*** containers to test: %s%n", containerNames);
                // careful not to keep too many files open
