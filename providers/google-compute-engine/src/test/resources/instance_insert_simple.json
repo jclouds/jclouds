@@ -1,0 +1,30 @@
+{
+  "name": "test-1",
+  "machineType": "https://www.googleapis.com/compute/v1/projects/party/zones/us-central1-a/machineTypes/n1-standard-1",
+  "networkInterfaces": [
+    {
+      "network": "https://www.googleapis.com/compute/v1/projects/party/global/networks/default",
+      "accessConfigs": [
+        {
+          "type": "ONE_TO_ONE_NAT"
+        }
+      ]
+    }
+  ],
+  "disks": [
+    {
+      "type": "PERSISTENT",
+      "initializeParams": {
+        "sourceImage": "https://www.googleapis.com/compute/v1/projects/party/global/images/centos-6-2-v20120326"
+      },
+      "boot": true,
+      "autoDelete": true
+    }
+  ],
+  "tags": {
+    "items": []
+  },
+  "metadata": {
+    "items": []
+  }
+}

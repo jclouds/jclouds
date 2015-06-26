@@ -1,0 +1,12 @@
+{
+    "kind": "compute#forwardingRule",
+    "id": "6732523704970219884",
+    "creationTimestamp": "2014-01-08T06:51:10.809-08:00",
+    "name": "test-forwarding-rule",
+    "region": "https://www.googleapis.com/compute/v1/projects/party/regions/europe-west1",
+    "IPAddress": "23.251.129.77",
+    "IPProtocol": "TCP",
+    "portRange": "1-65535",
+    "target": "https://www.googleapis.com/compute/v1/projects/party/regions/europe-west1/targetPools/test-target-pool",
+    "selfLink": "https://www.googleapis.com/compute/v1/projects/party/regions/europe-west1/forwardingRules/test-forwarding-rule"
+}

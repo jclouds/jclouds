@@ -1,0 +1,6 @@
+{
+   "kind": "compute#imageList",
+   "id": "projects/debian-cloud/global/images",
+   "selfLink": "https://www.googleapis.com/compute/v1/projects/debian-cloud/global/images",
+   "items": [ ]
+}

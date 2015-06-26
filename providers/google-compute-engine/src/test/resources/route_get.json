@@ -1,0 +1,28 @@
+{
+  "kind": "compute#route",
+  "selfLink": "https://www.googleapis.com/compute/v1/projects/party/global/routes/default-route-c99ebfbed0e1f375",
+  "id": "7241926205630356071",
+  "creationTimestamp": "2013-07-08T14:40:38.502-07:00",
+  "name": "default-route-c99ebfbed0e1f375",
+  "description": "Default route to the virtual network.",
+  "network": "https://www.googleapis.com/compute/v1/projects/party/global/networks/default",
+  "destRange": "10.240.0.0/16",
+  "priority": 1000,
+  "nextHopNetwork": "https://www.googleapis.com/compute/v1/projects/party/global/networks/default",
+  "tags": [
+    "fooTag",
+    "barTag"
+  ],
+  "warnings": [
+    {
+      "code": "NO_RESULTS_ON_PAGE",
+      "message": "This is an example warning",
+      "data": [
+        {
+          "key": "scope",
+          "value": "There are no results for scope 'zones/asia-east1-b' on this page."
+        }
+      ]
+    }
+  ]
+}

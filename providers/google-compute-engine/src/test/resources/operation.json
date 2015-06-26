@@ -1,0 +1,40 @@
+{
+  "kind": "compute#operation",
+  "id": "13053095055850848306",
+  "creationTimestamp": "2013-07-26T13:57:20.204-07:00",
+  "selfLink": "https://www.googleapis.com/compute/v1/projects/party/zones/us-central1-a/operations/operation-1354084865060",
+  "name": "operation-1354084865060",
+  "targetLink": "https://www.googleapis.com/compute/v1/projects/party/zones/us-central1-a/instances/test-1",
+  "targetId": "13053094017547040099",
+  "status": "DONE",
+  "user": "user@developer.gserviceaccount.com",
+  "progress": 100,
+  "insertTime": "2012-11-28T06:41:05.060",
+  "startTime": "2012-11-28T06:41:05.142",
+  "endTime": "2012-11-28T06:41:06.142",
+  "operationType": "insert",
+  "error": {
+    "errors": [
+      {
+        "code": "INVALID_FIELD_VALUE",
+        "message": "Invalid value for field 'resource.urlMaps': 'projects/party/global/urlMaps/target-http-proxy-api-live-test-url-map-2'. Resource was not found."
+      }
+    ]
+  },
+  "warnings": [
+    {
+      "code": "NO_RESULTS_ON_PAGE",
+      "message": "This is an example warning",
+      "data": [
+        {
+          "key": "scope",
+          "value": "There are no results for scope 'zones/asia-east1-b' on this page."
+        }
+      ]
+    }
+  ],
+  "httpErrorStatusCode": 400,
+  "httpErrorMessage": "BAD REQUEST",
+  "region": "https://www.googleapis.com/compute/v1/projects/party/regions/us-central1",
+  "zone": "https://www.googleapis.com/compute/v1/projects/party/zones/us-central1-a"
+}

@@ -1,0 +1,7 @@
+{
+  "state": "DEPRECATED",
+  "replacement": "https://www.googleapis.com/compute/v1/projects/centos-cloud/global/images/centos-6-2-v20120326test",
+  "deprecated": "2014-07-16T22:16:13.468Z",
+  "obsolete": "2014-10-16T22:16:13.468Z",
+  "deleted": "2015-01-16T22:16:13.468Z"
+}

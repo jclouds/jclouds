@@ -1,0 +1,46 @@
+{
+ "kind": "compute#targetPoolAggregatedList",
+ "selfLink": "https://www.googleapis.com/compute/v1/projects/party/aggregated/targetPools",
+ "id": "projects/party/aggregated/targetPools",
+ "items": {
+  "regions/asia-east1": {
+   "warning": {
+    "code": "NO_RESULTS_ON_PAGE",
+    "message": "There are no results for scope 'regions/asia-east1' on this page.",
+    "data": [
+     {
+      "key": "scope",
+      "value": "regions/asia-east1"
+     }
+    ]
+   }
+  },
+  "regions/europe-west1": {
+   "warning": {
+    "code": "NO_RESULTS_ON_PAGE",
+    "message": "There are no results for scope 'regions/europe-west1' on this page.",
+    "data": [
+     {
+      "key": "scope",
+      "value": "regions/europe-west1"
+     }
+    ]
+   }
+  },
+  "regions/us-central1": {
+   "targetPools": [
+    {
+
+     "kind": "compute#targetPool",
+     "id": "17592955481805765508",
+     "creationTimestamp": "2014-12-01T11:51:15.611-08:00",
+     "name": "test",
+     "description": "a Pool!",
+     "region": "https://www.googleapis.com/compute/v1/projects/party/regions/us-central1",
+     "sessionAffinity": "NONE",
+     "selfLink": "https://www.googleapis.com/compute/v1/projects/party/regions/us-central1/targetPools/test"
+    }
+   ]
+  }
+ }
+}

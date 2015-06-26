@@ -1,0 +1,14 @@
+{
+  "kind": "compute#httpHealthCheck",
+  "selfLink": "https://www.googleapis.com/compute/v1/projects/party-gce/global/httpHealthChecks/http-health-check-api-live-test",
+  "id": "2761502483700014319",
+  "creationTimestamp": "2014-01-14T05:55:54.910-08:00",
+  "name": "http-health-check-api-live-test",
+  "description": "Test Health Check",
+  "requestPath": "/",
+  "port": 80,
+  "checkIntervalSec": 5,
+  "timeoutSec": 5,
+  "unhealthyThreshold": 2,
+  "healthyThreshold": 2
+}

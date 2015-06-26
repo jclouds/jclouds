@@ -1,0 +1,6 @@
+{
+ "name": "test-target-instance",
+ "description": "This is a test",
+ "natPolicy": "NO_NAT",
+ "instance": "https://www.googleapis.com/compute/v1/projects/party/zones/us-central1-a/instances/instance-1"
+}

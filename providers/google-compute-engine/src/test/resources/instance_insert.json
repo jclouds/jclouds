@@ -1,0 +1,34 @@
+{
+  "machineType": "https://www.googleapis.com/compute/v1/projects/party/zones/us-central1-a/machineTypes/n1-standard-1",
+  "name": "test-1",
+  "networkInterfaces": [
+    {
+      "network": "https://www.googleapis.com/compute/v1/projects/party/global/networks/default",
+      "accessConfigs": [
+        {
+          "type": "ONE_TO_ONE_NAT"
+        }
+      ]
+    }
+  ],
+  "disks": [
+    {
+      "type": "PERSISTENT",
+      "source": "https://www.googleapis.com/compute/v1/projects/party/zones/us-central1-a/disks/test",
+      "boot": true,
+      "autoDelete": false
+    }
+  ],
+  "description": "desc",
+  "tags": {
+    "items": []
+  },
+  "metadata": {
+    "items": [
+      {
+        "key": "aKey",
+        "value": "aValue"
+      }
+    ]
+  }
+}

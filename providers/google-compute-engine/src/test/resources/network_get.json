@@ -1,0 +1,10 @@
+{
+   "kind": "compute#network",
+   "id": "13024414170909937976",
+   "creationTimestamp": "2012-10-24T20:13:19.967",
+   "selfLink": "https://www.googleapis.com/compute/v1/projects/party/networks/jclouds-test",
+   "name": "jclouds-test",
+   "description": "A custom network for the project",
+   "IPv4Range": "10.0.0.0/8",
+   "gatewayIPv4": "10.0.0.1"
+}

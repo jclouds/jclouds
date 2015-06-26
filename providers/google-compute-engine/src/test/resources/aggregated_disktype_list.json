@@ -1,0 +1,127 @@
+{
+ "kind": "compute#diskTypeAggregatedList",
+ "selfLink": "https://www.googleapis.com/compute/v1/projects/party/aggregated/diskTypes",
+ "id": "projects/party/aggregated/diskTypes",
+ "items": {
+  "zones/asia-east1-a": {
+   "warning": {
+    "code": "NO_RESULTS_ON_PAGE",
+    "message": "There are no results for scope 'zones/asia-east1-a' on this page.",
+    "data": [
+     {
+      "key": "scope",
+      "value": "zones/asia-east1-a"
+     }
+    ]
+   }
+  },
+  "zones/asia-east1-b": {
+   "warning": {
+    "code": "NO_RESULTS_ON_PAGE",
+    "message": "There are no results for scope 'zones/asia-east1-b' on this page.",
+    "data": [
+     {
+      "key": "scope",
+      "value": "zones/asia-east1-b"
+     }
+    ]
+   }
+  },
+  "zones/asia-east1-c": {
+   "warning": {
+    "code": "NO_RESULTS_ON_PAGE",
+    "message": "There are no results for scope 'zones/asia-east1-c' on this page.",
+    "data": [
+     {
+      "key": "scope",
+      "value": "zones/asia-east1-c"
+     }
+    ]
+   }
+  },
+  "zones/europe-west1-a": {
+   "warning": {
+    "code": "NO_RESULTS_ON_PAGE",
+    "message": "There are no results for scope 'zones/europe-west1-a' on this page.",
+    "data": [
+     {
+      "key": "scope",
+      "value": "zones/europe-west1-a"
+     }
+    ]
+   }
+  },
+  "zones/europe-west1-b": {
+   "warning": {
+    "code": "NO_RESULTS_ON_PAGE",
+    "message": "There are no results for scope 'zones/europe-west1-b' on this page.",
+    "data": [
+     {
+      "key": "scope",
+      "value": "zones/europe-west1-b"
+     }
+    ]
+   }
+  },
+  "zones/europe-west1-c": {
+   "warning": {
+    "code": "NO_RESULTS_ON_PAGE",
+    "message": "There are no results for scope 'zones/europe-west1-c' on this page.",
+    "data": [
+     {
+      "key": "scope",
+      "value": "zones/europe-west1-c"
+     }
+    ]
+   }
+  },
+  "zones/us-central1-a": {
+   "diskTypes": [
+	  {
+	   "kind": "compute#diskType",
+	   "creationTimestamp": "2014-06-02T11:07:28.530-07:00",
+	   "name": "pd-standard",
+	   "description": "Standard Persistent Disk",
+	   "validDiskSize": "10GB-10TB",
+	   "zone": "https://content.googleapis.com/compute/v1/projects/studied-point-720/zones/us-central1-a",
+	   "selfLink": "https://content.googleapis.com/compute/v1/projects/studied-point-720/zones/us-central1-a/diskTypes/pd-standard",
+	   "defaultDiskSizeGb": "500"
+	  },
+	  {
+	   "kind": "compute#diskType",
+	   "creationTimestamp": "2014-06-02T11:07:28.529-07:00",
+	   "name": "pd-ssd",
+	   "description": "SSD Persistent Disk",
+	   "validDiskSize": "10GB-1TB",
+	   "zone": "https://content.googleapis.com/compute/v1/projects/studied-point-720/zones/us-central1-a",
+	   "selfLink": "https://content.googleapis.com/compute/v1/projects/studied-point-720/zones/us-central1-a/diskTypes/pd-ssd",
+	   "defaultDiskSizeGb": "100"
+	  }
+   ]
+  },
+  "zones/us-central1-b": {
+   "warning": {
+    "code": "NO_RESULTS_ON_PAGE",
+    "message": "There are no results for scope 'zones/us-central1-b' on this page.",
+    "data": [
+     {
+      "key": "scope",
+      "value": "zones/us-central1-b"
+     }
+    ]
+   }
+  },
+  "zones/us-central1-f": {
+   "warning": {
+    "code": "NO_RESULTS_ON_PAGE",
+    "message": "There are no results for scope 'zones/us-central1-f' on this page.",
+    "data": [
+     {
+      "key": "scope",
+      "value": "zones/us-central1-f"
+     }
+    ]
+   }
+  }
+ }
+}

@@ -1,0 +1,10 @@
+{
+   "kind": "compute#backendServiceGroupHealth",
+   "healthStatus": [
+      {
+         "port": 80,         
+         "instance": "https://www.googleapis.com/compute/v1/projects/party/zones/us-central1-a/instances/jclouds-test",
+         "healthState": "HEALTHY"
+      }
+   ]
+}

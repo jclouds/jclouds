@@ -1,0 +1,71 @@
+{
+ "kind": "compute#imageList",
+ "selfLink": "https://www.googleapis.com/compute/v1/projects/centos-cloud/global/images",
+ "id": "projects/centos-cloud/global/images",
+ "items": [
+  {
+
+   "kind": "compute#image",
+   "selfLink": "https://www.googleapis.com/compute/v1/projects/centos-cloud/global/images/centos-6-v20131120",
+   "id": "11748647391859510935",
+   "creationTimestamp": "2013-11-25T15:13:50.611-08:00",
+   "name": "centos-6-v20131120",
+   "description": "SCSI-enabled CentOS 6 built on 2013-11-20",
+   "sourceType": "RAW",
+   "rawDisk": {
+    "source": "",
+    "containerType": "TAR"
+   },
+   "deprecated": {
+    "state": "DEPRECATED",
+    "replacement": "https://content.googleapis.com/compute/v1/projects/centos-cloud/global/images/centos-6-v20140318"
+   },
+   "status": "READY",
+   "archiveSizeBytes": "269993565",
+   "diskSizeGb": "10"
+  },
+  {
+
+   "kind": "compute#image",
+   "selfLink": "https://www.googleapis.com/compute/v1/projects/centos-cloud/global/images/centos-6-v20140318",
+   "id": "11743140967858608122",
+   "creationTimestamp": "2014-03-19T15:01:13.388-07:00",
+   "name": "centos-6-v20140318",
+   "description": "CentOS 6.5 x86_64 built on 2014-03-18",
+   "sourceType": "RAW",
+   "rawDisk": {
+    "source": "",
+    "containerType": "TAR"
+   },
+   "deprecated": {
+    "state": "DEPRECATED",
+    "replacement": "https://content.googleapis.com/compute/v1/projects/centos-cloud/global/images/centos-6-v20140408"
+   },
+   "status": "READY",
+   "archiveSizeBytes": "341230444",
+   "diskSizeGb": "10"
+  },
+  {
+
+   "kind": "compute#image",
+   "selfLink": "https://www.googleapis.com/compute/v1/projects/centos-cloud/global/images/centos-6-v20140408",
+   "id": "18033188469723077298",
+   "creationTimestamp": "2014-04-09T10:31:57.518-07:00",
+   "name": "centos-6-v20140408",
+   "description": "CentOS 6.5 x86_64 built on 2014-04-08",
+   "sourceType": "RAW",
+   "rawDisk": {
+    "source": "",
+    "containerType": "TAR"
+   },
+   "deprecated": {
+    "state": "DEPRECATED",
+    "replacement": "https://content.googleapis.com/compute/v1/projects/centos-cloud/global/images/centos-6-v20140415"
+   },
+   "status": "READY",
+   "archiveSizeBytes": "342252847",
+   "diskSizeGb": "10"
+  }
+ ],
+ "nextPageToken": "CkcIjf6H7sqqwgI6PAoCGAEKAiAACgIYAgoHIJT6lOrjDQoCGAYKFCoSY2VudG9zLTYtdjIwMTQwNDA4CgsgsrWOzOirsKH6AQ=="
+}

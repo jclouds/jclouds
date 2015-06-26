@@ -1,0 +1,39 @@
+{
+  "kind": "compute#httpHealthCheckList",
+  "selfLink": "https://www.googleapis.com/compute/v1/projects/party-gce/global/httpHealthChecks",
+  "id": "projects/party-gce/global/httpHealthChecks",
+  "items": [
+    {
+      "kind": "compute#httpHealthCheck",
+      "selfLink": "https://www.googleapis.com/compute/v1/projects/party-gce/global/httpHealthChecks/http-health-check-api-live-test",
+      "id": "2761502483700014319",
+      "creationTimestamp": "2014-01-14T05:55:54.910-08:00",
+      "name": "http-health-check-api-live-test",
+      "description": "Test Health Check",
+      "requestPath": "/",
+      "port": 80,
+      "checkIntervalSec": 5,
+      "timeoutSec": 5,
+      "unhealthyThreshold": 2,
+      "healthyThreshold": 2
+    },
+    {
+      "kind": "compute#httpHealthCheck",
+      "selfLink": "https://www.googleapis.com/compute/v1/projects/party-gce/global/httpHealthChecks/myname-andrea-kmzmi1bh-http-health-check",
+      "id": "1035854271083519643",
+      "creationTimestamp": "2014-01-08T14:38:29.363-08:00",
+      "name": "myname-andrea-kmzmi1bh-http-health-check",
+      "timeoutSec": 5,
+      "unhealthyThreshold": 2
+    },
+    {
+      "kind": "compute#httpHealthCheck",
+      "selfLink": "https://www.googleapis.com/compute/v1/projects/party-gce/global/httpHealthChecks/myname-andrea-zk7gadwq-http-health-check",
+      "id": "7006563292274658743",
+      "creationTimestamp": "2014-01-08T14:48:03.276-08:00",
+      "name": "myname-andrea-zk7gadwq-http-health-check",
+      "timeoutSec": 5,
+      "unhealthyThreshold": 2
+    }
+  ]
+}

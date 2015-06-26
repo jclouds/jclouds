@@ -1,0 +1,28 @@
+{
+  "name": "jclouds-test-65f",
+  "network": "https://www.googleapis.com/compute/v1/projects/party/networks/default",
+  "sourceRanges": [
+    "10.0.0.0/8",
+    "0.0.0.0/0"
+  ],
+  "sourceTags": [
+    "aTag"
+  ],
+  "targetTags": [
+    "jclouds-test-65f"
+  ],
+  "allowed": [
+    {
+      "IPProtocol": "tcp",
+      "ports": [
+        "22"
+      ]
+    },
+    {
+      "IPProtocol": "udp",
+      "ports": [
+        "22"
+      ]
+    }
+  ]
+}

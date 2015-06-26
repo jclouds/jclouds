@@ -1,0 +1,5 @@
+{
+  "kind": "compute#serialPortOutput",
+  "contents": "console output",
+  "selfLink": "https://www.googleapis.com/compute/v1/projects/party/zones/us-central1-a/instances/test-instance/serialPort"
+}

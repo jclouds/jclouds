@@ -1,0 +1,14 @@
+{
+  "kind": "compute#address",
+  "id": "4439373783165447583",
+  "creationTimestamp": "2013-07-26T13:57:20.204-07:00",
+  "status": "IN_USE",
+  "region": "https://www.googleapis.com/compute/v1/projects/party/regions/us-central1",
+  "name": "test-ip1",
+  "description": "",
+  "address": "173.255.115.190",
+  "selfLink": "https://www.googleapis.com/compute/v1/projects/party/regions/us-central1/addresses/test-ip1",
+  "users": [
+    "https://www.googleapis.com/compute/v1/projects/party/regions/us-central1-a/forwardingRules/test-forwarding-rule"
+  ]
+}

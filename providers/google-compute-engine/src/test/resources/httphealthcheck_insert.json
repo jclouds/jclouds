@@ -1,0 +1,1 @@
+{"name":"http-health-check","requestPath":"/","port":80,"checkIntervalSec":5,"timeoutSec":0,"unhealthyThreshold":0,"healthyThreshold":2}

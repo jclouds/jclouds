@@ -1,0 +1,174 @@
+{
+ "kind": "compute#instanceAggregatedList",
+ "selfLink": "https://www.googleapis.com/compute/v1/projects/party/aggregated/instances",
+ "id": "projects/party/aggregated/instances",
+ "items": {
+  "zones/asia-east1-a": {
+   "warning": {
+    "code": "NO_RESULTS_ON_PAGE",
+    "message": "There are no results for scope 'zones/asia-east1-a' on this page.",
+    "data": [
+     {
+      "key": "scope",
+      "value": "zones/asia-east1-a"
+     }
+    ]
+   }
+  },
+  "zones/asia-east1-b": {
+   "warning": {
+    "code": "NO_RESULTS_ON_PAGE",
+    "message": "There are no results for scope 'zones/asia-east1-b' on this page.",
+    "data": [
+     {
+      "key": "scope",
+      "value": "zones/asia-east1-b"
+     }
+    ]
+   }
+  },
+  "zones/asia-east1-c": {
+   "warning": {
+    "code": "NO_RESULTS_ON_PAGE",
+    "message": "There are no results for scope 'zones/asia-east1-c' on this page.",
+    "data": [
+     {
+      "key": "scope",
+      "value": "zones/asia-east1-c"
+     }
+    ]
+   }
+  },
+  "zones/europe-west1-a": {
+   "warning": {
+    "code": "NO_RESULTS_ON_PAGE",
+    "message": "There are no results for scope 'zones/europe-west1-a' on this page.",
+    "data": [
+     {
+      "key": "scope",
+      "value": "zones/europe-west1-a"
+     }
+    ]
+   }
+  },
+  "zones/europe-west1-b": {
+   "warning": {
+    "code": "NO_RESULTS_ON_PAGE",
+    "message": "There are no results for scope 'zones/europe-west1-b' on this page.",
+    "data": [
+     {
+      "key": "scope",
+      "value": "zones/europe-west1-b"
+     }
+    ]
+   }
+  },
+  "zones/europe-west1-c": {
+   "warning": {
+    "code": "NO_RESULTS_ON_PAGE",
+    "message": "There are no results for scope 'zones/europe-west1-c' on this page.",
+    "data": [
+     {
+      "key": "scope",
+      "value": "zones/europe-west1-c"
+     }
+    ]
+   }
+  },
+  "zones/us-central1-a": {
+   "instances": [
+      {
+         "kind": "compute#instance",
+         "id": "13051190678907570425",
+         "description": "desc",
+         "creationTimestamp": "2012-11-25T23:48:20.758",
+         "selfLink": "https://www.googleapis.com/compute/v1/projects/party/zones/us-central1-a/instances/test-0",
+         "name": "test-0",
+         "machineType": "https://www.googleapis.com/compute/v1/projects/party/zones/us-central1-a/machineTypes/n1-standard-1",
+         "status": "RUNNING",
+         "zone": "https://www.googleapis.com/compute/v1/projects/party/zones/us-central1-a",
+         "networkInterfaces": [
+            {
+               "kind": "compute#instanceNetworkInterface",
+               "name": "nic0",
+               "networkIP": "10.240.121.115",
+               "network": "https://www.googleapis.com/compute/v1/projects/party/global/networks/default"
+            }
+         ],
+         "disks": [
+            {
+               "kind": "compute#instanceDisk",
+               "type": "PERSISTENT",
+               "mode": "READ_WRITE",
+               "deviceName": "test",
+               "source": "https://www.googleapis.com/compute/v1/projects/party/zones/us-central1-a/disks/test",
+               "index": 0,
+               "boot": true
+            }
+         ],
+         "serviceAccounts": [
+            {
+               "kind": "compute#serviceAccount",
+               "email": "default",
+               "scopes": [
+                  "myscope"
+               ]
+            }
+         ],
+         "metadata": {
+            "items": [
+               {
+                  "key": "aKey",
+                  "value": "aValue"
+               },
+               {
+                  "key": "jclouds-image",
+                  "value": "https://www.googleapis.com/compute/v1/projects/debian-cloud/global/images/debian-7-wheezy-v20140718"
+               },
+               {
+                  "key": "jclouds-delete-boot-disk",
+                  "value": "true"
+               }
+            ],
+            "fingerprint": "efgh"
+         },
+         "tags": {
+            "items": [
+               "aTag",
+               "Group-port-42"
+            ],
+            "fingerprint": "abcd"
+         },
+        "scheduling": {
+            "onHostMaintenance": "MIGRATE",
+            "automaticRestart": false
+         }
+      }
+   ]
+  },
+  "zones/us-central1-b": {
+   "warning": {
+    "code": "NO_RESULTS_ON_PAGE",
+    "message": "There are no results for scope 'zones/us-central1-b' on this page.",
+    "data": [
+     {
+      "key": "scope",
+      "value": "zones/us-central1-b"
+     }
+    ]
+   }
+  },
+  "zones/us-central1-f": {
+   "warning": {
+    "code": "NO_RESULTS_ON_PAGE",
+    "message": "There are no results for scope 'zones/us-central1-f' on this page.",
+    "data": [
+     {
+      "key": "scope",
+      "value": "zones/us-central1-f"
+     }
+    ]
+   }
+  }
+ }
+}

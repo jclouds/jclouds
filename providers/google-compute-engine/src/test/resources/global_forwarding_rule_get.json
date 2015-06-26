@@ -1,0 +1,12 @@
+{
+   "kind": "compute#forwardingRule",
+   "id": "8192211304399313984",
+   "creationTimestamp": "2014-07-18T09:47:30.826-07:00",
+   "selfLink": "https://www.googleapis.com/compute/v1/projects/myproject/global/forwardingRules/jclouds-test",
+   "name": "jclouds-test",
+   "description": "tcp forwarding rule",
+   "IPAddress": "107.178.255.156",
+   "IPProtocol": "TCP",
+   "portRange": "80-80",
+   "target": "https://www.googleapis.com/compute/v1/projects/myproject/global/targetHttpProxies/jclouds-test"
+}
