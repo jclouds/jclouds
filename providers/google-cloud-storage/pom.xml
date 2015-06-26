@@ -49,13 +49,13 @@
             <version>${jclouds.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.apache.jclouds.labs</groupId>
+            <groupId>org.apache.jclouds.common</groupId>
             <artifactId>googlecloud</artifactId>
             <version>${project.version}</version>
             <type>jar</type>
         </dependency>
         <dependency>
-            <groupId>org.apache.jclouds.labs</groupId>
+            <groupId>org.apache.jclouds.common</groupId>
             <artifactId>googlecloud</artifactId>
             <version>${project.version}</version>
             <type>test-jar</type>
