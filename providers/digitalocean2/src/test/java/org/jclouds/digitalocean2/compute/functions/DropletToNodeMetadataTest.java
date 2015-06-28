@@ -83,7 +83,7 @@ public class DropletToNodeMetadataTest {
       region = Region.create("sfo1", "San Francisco 1", ImmutableList.of("2gb"), true, ImmutableList.<String> of());
       
       images = ImmutableSet.of(new ImageBuilder()
-            .id("ubuntu-1404-x86")
+            .id("sfo1/ubuntu-1404-x86")
             .providerId("1")
             .name("mock image")
             .status(AVAILABLE)
@@ -132,7 +132,7 @@ public class DropletToNodeMetadataTest {
                   ImmutableList.<Networks.Address> of()), null);
 
       NodeMetadata expected = new NodeMetadataBuilder().ids("1").hardware(getOnlyElement(hardwares))
-            .imageId("ubuntu-1404-x86").status(RUNNING).location(getOnlyElement(locations)).name("mock-droplet")
+            .imageId("sfo1/ubuntu-1404-x86").status(RUNNING).location(getOnlyElement(locations)).name("mock-droplet")
             .hostname("mock-droplet").group("mock").credentials(credentials)
             .publicAddresses(ImmutableSet.of("84.45.69.3")).privateAddresses(ImmutableSet.of("192.168.2.5"))
             .providerId("1").backendStatus(ACTIVE.name()).operatingSystem(getOnlyElement(images).getOperatingSystem())

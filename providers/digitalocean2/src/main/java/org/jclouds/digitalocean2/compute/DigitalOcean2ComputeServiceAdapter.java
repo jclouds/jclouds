@@ -17,12 +17,18 @@
 package org.jclouds.digitalocean2.compute;
 
 import static com.google.common.base.Preconditions.checkState;
+import static com.google.common.base.Predicates.notNull;
+import static com.google.common.collect.Iterables.concat;
 import static com.google.common.collect.Iterables.contains;
 import static com.google.common.collect.Iterables.filter;
 import static com.google.common.collect.Iterables.getOnlyElement;
+import static com.google.common.collect.Iterables.transform;
+import static com.google.common.collect.Sets.newHashSet;
 import static org.jclouds.compute.config.ComputeServiceProperties.TIMEOUT_NODE_RUNNING;
 import static org.jclouds.compute.config.ComputeServiceProperties.TIMEOUT_NODE_SUSPENDED;
 import static org.jclouds.compute.config.ComputeServiceProperties.TIMEOUT_NODE_TERMINATED;
+
+import java.util.Set;
 
 import javax.annotation.Resource;
 import javax.inject.Inject;
@@ -32,6 +38,7 @@ import org.jclouds.compute.ComputeServiceAdapter;
 import org.jclouds.compute.domain.Template;
 import org.jclouds.compute.reference.ComputeServiceConstants;
 import org.jclouds.digitalocean2.DigitalOcean2Api;
+import org.jclouds.digitalocean2.compute.internal.ImageInRegion;
 import org.jclouds.digitalocean2.compute.options.DigitalOcean2TemplateOptions;
 import org.jclouds.digitalocean2.domain.Action;
 import org.jclouds.digitalocean2.domain.Droplet;
@@ -43,13 +50,14 @@ import org.jclouds.digitalocean2.domain.options.CreateDropletOptions;
 import org.jclouds.domain.LoginCredentials;
 import org.jclouds.logging.Logger;
 
+import com.google.common.base.Function;
 import com.google.common.base.Predicate;
 import com.google.common.primitives.Ints;
 
 /**
  * Implementation of the Compute Service for the DigitalOcean API.
  */
-public class DigitalOcean2ComputeServiceAdapter implements ComputeServiceAdapter<Droplet, Size, Image, Region> {
+public class DigitalOcean2ComputeServiceAdapter implements ComputeServiceAdapter<Droplet, Size, ImageInRegion, Region> {
 
    @Resource
    @Named(ComputeServiceConstants.COMPUTE_LOGGER)
@@ -101,8 +109,30 @@ public class DigitalOcean2ComputeServiceAdapter implements ComputeServiceAdapter
    }
 
    @Override
-   public Iterable<Image> listImages() {
-      return api.imageApi().list().concat();
+   public Iterable<ImageInRegion> listImages() {
+      // Images can claim to be available in a region that is currently marked as "unavailable". We shouldn't return
+      // the images scoped to those regions.
+      final Set<String> availableRegionsIds = newHashSet(transform(listLocations(), new Function<Region, String>() {
+         @Override
+         public String apply(Region input) {
+            return input.slug();
+         }
+      }));
+
+      // Public images re globally available, but non-public ones can only be available in certain regions.
+      // For these kind of images, return one instance of an ImageInRegion for each region where the image is
+      // available. This way we can properly scope global and concrete images so they can be properly looked up.
+      return concat(filter(api.imageApi().list().concat().transform(new Function<Image, Iterable<ImageInRegion>>() {
+         @Override
+         public Iterable<ImageInRegion> apply(final Image image) {
+            return transform(image.regions(), new Function<String, ImageInRegion>() {
+               @Override
+               public ImageInRegion apply(String region) {
+                  return availableRegionsIds.contains(region) ? ImageInRegion.create(image, region) : null;
+               }
+            });
+         }
+      }), notNull()));
    }
 
    @Override
@@ -142,11 +172,14 @@ public class DigitalOcean2ComputeServiceAdapter implements ComputeServiceAdapter
    }
 
    @Override
-   public Image getImage(String id) {
+   public ImageInRegion getImage(String id) {
+      String region = ImageInRegion.extractRegion(id);
+      String imageId = ImageInRegion.extractImageId(id);
       // The id of the image can be an id or a slug. Use the corresponding method of the API depending on what is
       // provided. If it can be parsed as a number, use the method to get by ID. Otherwise, get by slug.
-      Integer imageId = Ints.tryParse(id);
-      return imageId != null ? api.imageApi().get(imageId) : api.imageApi().get(id);
+      Integer numericId = Ints.tryParse(imageId);
+      Image image = numericId == null ? api.imageApi().get(imageId) : api.imageApi().get(numericId);
+      return ImageInRegion.create(image, region);
    }
 
    @Override

@@ -18,10 +18,11 @@ package org.jclouds.digitalocean2.compute.functions;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.collect.Iterables.find;
-import static com.google.common.collect.Iterables.tryFind;
+import static org.jclouds.digitalocean2.compute.internal.ImageInRegion.encodeId;
 
 import java.util.Map;
 import java.util.Set;
+
 import javax.annotation.Resource;
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -35,6 +36,7 @@ import org.jclouds.compute.domain.NodeMetadata.Status;
 import org.jclouds.compute.domain.NodeMetadataBuilder;
 import org.jclouds.compute.functions.GroupNamingConvention;
 import org.jclouds.compute.reference.ComputeServiceConstants;
+import org.jclouds.digitalocean2.compute.internal.ImageInRegion;
 import org.jclouds.digitalocean2.domain.Droplet;
 import org.jclouds.digitalocean2.domain.Networks;
 import org.jclouds.digitalocean2.domain.Region;
@@ -42,6 +44,7 @@ import org.jclouds.domain.Credentials;
 import org.jclouds.domain.Location;
 import org.jclouds.domain.LoginCredentials;
 import org.jclouds.logging.Logger;
+
 import com.google.common.base.Function;
 import com.google.common.base.Optional;
 import com.google.common.base.Predicate;
@@ -91,7 +94,7 @@ public class DropletToNodeMetadata implements Function<Droplet, NodeMetadata> {
       builder.hardware(getHardware(input.sizeSlug()));
       builder.location(getLocation(input.region()));
 
-      Optional<? extends Image> image = findImage(input.image().id());
+      Optional<? extends Image> image = findImage(input.image(), input.region().slug());
       if (image.isPresent()) {
          builder.imageId(image.get().getId());
          builder.operatingSystem(image.get().getOperatingSystem());
@@ -138,22 +141,8 @@ public class DropletToNodeMetadata implements Function<Droplet, NodeMetadata> {
       return builder.build();
    }
 
-   protected Optional<? extends Image> findImage(Integer id) {
-      // Try to find the image by ID in the cache. The cache is indexed by slug (for public images) and by id (for
-      // private ones).
-      final String imageId = String.valueOf(id);
-      Optional<? extends Image> image = Optional.fromNullable(images.get().get(imageId));
-      if (!image.isPresent()) {
-         // If it is a public image (indexed by slug) but the "int" form of the id was provided, try to find it in the
-         // whole list of cached images
-         image = tryFind(images.get().values(), new Predicate<Image>() {
-            @Override
-            public boolean apply(Image input) {
-               return input.getProviderId().equals(imageId);
-            }
-         });
-      }
-      return image;
+   protected Optional<? extends Image> findImage(org.jclouds.digitalocean2.domain.Image image, String region) {
+      return Optional.fromNullable(images.get().get(encodeId(ImageInRegion.create(image, region))));
    }
 
    protected Hardware getHardware(final String slug) {

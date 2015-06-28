@@ -36,7 +36,7 @@
         <test.digitalocean2.api-version>2</test.digitalocean2.api-version>
         <test.digitalocean2.identity>FIXME</test.digitalocean2.identity>
         <test.digitalocean2.credential>FIXME</test.digitalocean2.credential>
-        <test.digitalocean2.template>imageId=ubuntu-14-04-x64</test.digitalocean2.template>
+        <test.digitalocean2.template>osFamily=UBUNTU,os64Bit=true</test.digitalocean2.template>
     </properties>
 
     <dependencies>

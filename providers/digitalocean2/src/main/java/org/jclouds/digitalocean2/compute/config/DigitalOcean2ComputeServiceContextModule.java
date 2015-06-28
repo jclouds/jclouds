@@ -28,6 +28,7 @@ import javax.inject.Singleton;
 import org.jclouds.compute.ComputeServiceAdapter;
 import org.jclouds.compute.config.ComputeServiceAdapterContextModule;
 import org.jclouds.compute.domain.Hardware;
+import org.jclouds.compute.domain.Image;
 import org.jclouds.compute.domain.NodeMetadata;
 import org.jclouds.compute.domain.NodeMetadata.Status;
 import org.jclouds.compute.extensions.ImageExtension;
@@ -41,15 +42,15 @@ import org.jclouds.digitalocean2.compute.DigitalOcean2ComputeServiceAdapter;
 import org.jclouds.digitalocean2.compute.extensions.DigitalOcean2ImageExtension;
 import org.jclouds.digitalocean2.compute.functions.DropletStatusToStatus;
 import org.jclouds.digitalocean2.compute.functions.DropletToNodeMetadata;
-import org.jclouds.digitalocean2.compute.functions.ImageToImage;
+import org.jclouds.digitalocean2.compute.functions.ImageInRegionToImage;
 import org.jclouds.digitalocean2.compute.functions.RegionToLocation;
 import org.jclouds.digitalocean2.compute.functions.SizeToHardware;
 import org.jclouds.digitalocean2.compute.functions.TemplateOptionsToStatementWithoutPublicKey;
+import org.jclouds.digitalocean2.compute.internal.ImageInRegion;
 import org.jclouds.digitalocean2.compute.options.DigitalOcean2TemplateOptions;
 import org.jclouds.digitalocean2.compute.strategy.CreateKeyPairsThenCreateNodes;
 import org.jclouds.digitalocean2.domain.Action;
 import org.jclouds.digitalocean2.domain.Droplet;
-import org.jclouds.digitalocean2.domain.Image;
 import org.jclouds.digitalocean2.domain.Region;
 import org.jclouds.digitalocean2.domain.Size;
 import org.jclouds.domain.Location;
@@ -67,19 +68,19 @@ import com.google.inject.name.Named;
  * Configures the compute service classes for the DigitalOcean API.
  */
 public class DigitalOcean2ComputeServiceContextModule extends
-      ComputeServiceAdapterContextModule<Droplet, Size, Image, Region> {
+      ComputeServiceAdapterContextModule<Droplet, Size, ImageInRegion, Region> {
 
    @Override
    protected void configure() {
       super.configure();
 
-      bind(new TypeLiteral<ComputeServiceAdapter<Droplet, Size, Image, Region>>() {
+      bind(new TypeLiteral<ComputeServiceAdapter<Droplet, Size, ImageInRegion, Region>>() {
       }).to(DigitalOcean2ComputeServiceAdapter.class);
 
       bind(new TypeLiteral<Function<Droplet, NodeMetadata>>() {
       }).to(DropletToNodeMetadata.class);
-      bind(new TypeLiteral<Function<Image, org.jclouds.compute.domain.Image>>() {
-      }).to(ImageToImage.class);
+      bind(new TypeLiteral<Function<ImageInRegion, Image>>() {
+      }).to(ImageInRegionToImage.class);
       bind(new TypeLiteral<Function<Region, Location>>() {
       }).to(RegionToLocation.class);
       bind(new TypeLiteral<Function<Size, Hardware>>() {
@@ -87,7 +88,7 @@ public class DigitalOcean2ComputeServiceContextModule extends
       bind(new TypeLiteral<Function<Droplet.Status, Status>>() {
       }).to(DropletStatusToStatus.class);
 
-      install(new LocationsFromComputeServiceAdapterModule<Droplet, Size, Image, Region>() {
+      install(new LocationsFromComputeServiceAdapterModule<Droplet, Size, ImageInRegion, Region>() {
       });
 
       bind(CreateNodesInGroupThenAddToSet.class).to(CreateKeyPairsThenCreateNodes.class);

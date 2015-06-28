@@ -35,6 +35,7 @@ import org.jclouds.compute.domain.ImageTemplateBuilder;
 import org.jclouds.compute.extensions.ImageExtension;
 import org.jclouds.compute.reference.ComputeServiceConstants;
 import org.jclouds.digitalocean2.DigitalOcean2Api;
+import org.jclouds.digitalocean2.compute.internal.ImageInRegion;
 import org.jclouds.digitalocean2.domain.Action;
 import org.jclouds.digitalocean2.domain.Droplet;
 import org.jclouds.digitalocean2.domain.Droplet.Status;
@@ -58,12 +59,12 @@ public class DigitalOcean2ImageExtension implements ImageExtension {
    private final DigitalOcean2Api api;
    private final Predicate<Integer> imageAvailablePredicate;
    private final Predicate<Integer> nodeStoppedPredicate;
-   private final Function<org.jclouds.digitalocean2.domain.Image, Image> imageTransformer;
+   private final Function<ImageInRegion, Image> imageTransformer;
 
    @Inject DigitalOcean2ImageExtension(DigitalOcean2Api api,
          @Named(TIMEOUT_IMAGE_AVAILABLE) Predicate<Integer> imageAvailablePredicate,
          @Named(TIMEOUT_NODE_SUSPENDED) Predicate<Integer> nodeStoppedPredicate,
-         Function<org.jclouds.digitalocean2.domain.Image, Image> imageTransformer) {
+         Function<ImageInRegion, Image> imageTransformer) {
       this.api = api;
       this.imageAvailablePredicate = imageAvailablePredicate;
       this.nodeStoppedPredicate = nodeStoppedPredicate;
@@ -111,7 +112,8 @@ public class DigitalOcean2ImageExtension implements ImageExtension {
                }
             }).get();
 
-      return immediateFuture(imageTransformer.apply(snapshot));
+      // By default snapshots are only available in the Droplet's region
+      return immediateFuture(imageTransformer.apply(ImageInRegion.create(snapshot, droplet.region().slug())));
    }
 
    @Override
