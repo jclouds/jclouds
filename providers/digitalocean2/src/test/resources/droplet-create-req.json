@@ -1,0 +1,12 @@
+{
+    "name": "digitalocean2-s-d5e",
+    "region": "sfo1",
+    "size": "512mb",
+    "image": "6374124",
+    "ssh_keys": [
+        421192
+    ],
+    "backups": false,
+    "ipv6": false,
+    "private_networking": false
+}

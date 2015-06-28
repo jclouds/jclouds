@@ -1,0 +1,98 @@
+{
+   "meta" : {
+      "total" : 9
+   },
+   "links" : {
+      "pages" : {
+         "prev" : "https://api.digitalocean.com/v2/sizes?page=1&per_page=5",
+         "first" : "https://api.digitalocean.com/v2/sizes?page=1&per_page=5"
+      }
+   },
+   "sizes" : [
+      {
+         "regions" : [
+            "sgp1",
+            "nyc1",
+            "nyc3",
+            "lon1",
+            "nyc2",
+            "ams1",
+            "ams3",
+            "ams2",
+            "sfo1",
+            "fra1"
+         ],
+         "transfer" : 6,
+         "price_monthly" : 160,
+         "available" : true,
+         "vcpus" : 8,
+         "disk" : 160,
+         "slug" : "16gb",
+         "memory" : 16384,
+         "price_hourly" : 0.2381
+      },
+      {
+         "price_hourly" : 0.47619,
+         "price_monthly" : 320,
+         "available" : true,
+         "transfer" : 7,
+         "regions" : [
+            "nyc2",
+            "sgp1",
+            "nyc1",
+            "lon1",
+            "ams3",
+            "nyc3",
+            "ams2",
+            "sfo1",
+            "fra1"
+         ],
+         "memory" : 32768,
+         "slug" : "32gb",
+         "disk" : 320,
+         "vcpus" : 12
+      },
+      {
+         "price_monthly" : 480,
+         "available" : true,
+         "transfer" : 8,
+         "regions" : [
+            "sgp1",
+            "nyc1",
+            "lon1",
+            "nyc2",
+            "ams3",
+            "nyc3",
+            "ams2",
+            "sfo1",
+            "fra1"
+         ],
+         "memory" : 49152,
+         "slug" : "48gb",
+         "disk" : 480,
+         "vcpus" : 16,
+         "price_hourly" : 0.71429
+      },
+      {
+         "price_hourly" : 0.95238,
+         "price_monthly" : 640,
+         "available" : true,
+         "transfer" : 9,
+         "regions" : [
+            "sgp1",
+            "nyc1",
+            "nyc2",
+            "lon1",
+            "ams3",
+            "nyc3",
+            "ams2",
+            "sfo1",
+            "fra1"
+         ],
+         "memory" : 65536,
+         "slug" : "64gb",
+         "disk" : 640,
+         "vcpus" : 20
+      }
+   ]
+}

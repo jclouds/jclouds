@@ -1,0 +1,111 @@
+{
+   "links" : {
+      "pages" : {
+         "next" : "https://api.digitalocean.com/v2/regions?page=2&per_page=5",
+         "last" : "https://api.digitalocean.com/v2/regions?page=2&per_page=5"
+      }
+   },
+   "meta" : {
+      "total" : 10
+   },
+   "regions" : [
+      {
+         "sizes" : [
+            "32gb",
+            "16gb",
+            "2gb",
+            "1gb",
+            "4gb",
+            "8gb",
+            "512mb",
+            "64gb",
+            "48gb"
+         ],
+         "name" : "New York 1",
+         "slug" : "nyc1",
+         "features" : [
+            "virtio",
+            "backups",
+            "metadata"
+         ],
+         "available" : true
+      },
+      {
+         "slug" : "ams1",
+         "name" : "Amsterdam 1",
+         "available" : false,
+         "features" : [
+            "virtio",
+            "backups"
+         ],
+         "sizes" : []
+      },
+      {
+         "sizes" : [
+            "32gb",
+            "16gb",
+            "2gb",
+            "1gb",
+            "4gb",
+            "8gb",
+            "512mb",
+            "64gb",
+            "48gb"
+         ],
+         "name" : "San Francisco 1",
+         "slug" : "sfo1",
+         "features" : [
+            "virtio",
+            "private_networking",
+            "backups",
+            "ipv6",
+            "metadata"
+         ],
+         "available" : true
+      },
+      {
+         "sizes" : [
+            "32gb",
+            "16gb",
+            "2gb",
+            "1gb",
+            "4gb",
+            "8gb",
+            "512mb",
+            "64gb",
+            "48gb"
+         ],
+         "available" : true,
+         "features" : [
+            "virtio",
+            "private_networking",
+            "backups"
+         ],
+         "name" : "New York 2",
+         "slug" : "nyc2"
+      },
+      {
+         "features" : [
+            "virtio",
+            "private_networking",
+            "backups",
+            "ipv6",
+            "metadata"
+         ],
+         "available" : true,
+         "slug" : "ams2",
+         "name" : "Amsterdam 2",
+         "sizes" : [
+            "32gb",
+            "16gb",
+            "2gb",
+            "1gb",
+            "4gb",
+            "8gb",
+            "512mb",
+            "64gb",
+            "48gb"
+         ]
+      }
+   ]
+}

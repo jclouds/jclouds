@@ -1,0 +1,168 @@
+{
+   "actions" : [
+      {
+         "region" : {
+            "name" : "New York 1",
+            "available" : true,
+            "slug" : "nyc1",
+            "features" : [
+               "virtio",
+               "backups",
+               "metadata"
+            ],
+            "sizes" : [
+               "512mb",
+               "8gb",
+               "16gb",
+               "32gb",
+               "48gb",
+               "64gb",
+               "1gb",
+               "2gb",
+               "4gb"
+            ]
+         },
+         "started_at" : "2015-05-19T15:17:55Z",
+         "status" : "completed",
+         "resource_type" : "droplet",
+         "resource_id" : 5347489,
+         "region_slug" : "nyc1",
+         "id" : 50900149,
+         "completed_at" : "2015-05-19T15:18:01Z",
+         "type" : "destroy"
+      },
+      {
+         "started_at" : "2015-05-19T15:07:55Z",
+         "region" : {
+            "sizes" : [
+               "512mb",
+               "8gb",
+               "16gb",
+               "32gb",
+               "48gb",
+               "64gb",
+               "1gb",
+               "2gb",
+               "4gb"
+            ],
+            "features" : [
+               "virtio",
+               "backups",
+               "metadata"
+            ],
+            "available" : true,
+            "slug" : "nyc1",
+            "name" : "New York 1"
+         },
+         "status" : "completed",
+         "resource_type" : "droplet",
+         "region_slug" : "nyc1",
+         "id" : 50899364,
+         "resource_id" : 5346565,
+         "completed_at" : "2015-05-19T15:08:04Z",
+         "type" : "destroy"
+      },
+      {
+         "completed_at" : "2015-05-19T13:39:59Z",
+         "type" : "create",
+         "region" : {
+            "name" : "New York 1",
+            "sizes" : [
+               "512mb",
+               "8gb",
+               "16gb",
+               "32gb",
+               "48gb",
+               "64gb",
+               "1gb",
+               "2gb",
+               "4gb"
+            ],
+            "features" : [
+               "virtio",
+               "backups",
+               "metadata"
+            ],
+            "available" : true,
+            "slug" : "nyc1"
+         },
+         "started_at" : "2015-05-19T13:39:12Z",
+         "resource_type" : "droplet",
+         "status" : "completed",
+         "resource_id" : 5347489,
+         "region_slug" : "nyc1",
+         "id" : 50892713
+      },
+      {
+         "resource_id" : 5346565,
+         "region_slug" : "nyc1",
+         "id" : 50888077,
+         "status" : "completed",
+         "resource_type" : "droplet",
+         "region" : {
+            "name" : "New York 1",
+            "features" : [
+               "virtio",
+               "backups",
+               "metadata"
+            ],
+            "available" : true,
+            "slug" : "nyc1",
+            "sizes" : [
+               "512mb",
+               "8gb",
+               "16gb",
+               "32gb",
+               "48gb",
+               "64gb",
+               "1gb",
+               "2gb",
+               "4gb"
+            ]
+         },
+         "started_at" : "2015-05-19T12:37:23Z",
+         "type" : "create",
+         "completed_at" : "2015-05-19T12:38:13Z"
+      },
+      {
+         "completed_at" : "2015-05-19T11:33:00Z",
+         "type" : "destroy",
+         "status" : "completed",
+         "resource_type" : "droplet",
+         "started_at" : "2015-05-19T11:32:55Z",
+         "region" : {
+            "available" : true,
+            "features" : [
+               "virtio",
+               "backups",
+               "metadata"
+            ],
+            "slug" : "nyc1",
+            "sizes" : [
+               "512mb",
+               "8gb",
+               "16gb",
+               "32gb",
+               "48gb",
+               "64gb",
+               "1gb",
+               "2gb",
+               "4gb"
+            ],
+            "name" : "New York 1"
+         },
+         "region_slug" : "nyc1",
+         "id" : 50884032,
+         "resource_id" : 5344505
+      }
+   ],
+   "links" : {
+      "pages" : {
+         "last" : "https://api.digitalocean.com/v2/actions?page=2&per_page=5",
+         "next" : "https://api.digitalocean.com/v2/actions?page=2&per_page=5"
+      }
+   },
+   "meta" : {
+      "total" : 8
+   }
+}

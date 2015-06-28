@@ -1,0 +1,128 @@
+{
+   "links" : {
+      "pages" : {
+         "first" : "https://api.digitalocean.com/v2/regions?page=1&per_page=5",
+         "prev" : "https://api.digitalocean.com/v2/regions?page=1&per_page=5"
+      }
+   },
+   "meta" : {
+      "total" : 10
+   },
+   "regions" : [
+      {
+         "available" : true,
+         "features" : [
+            "virtio",
+            "private_networking",
+            "backups",
+            "ipv6",
+            "metadata"
+         ],
+         "name" : "Singapore 1",
+         "sizes" : [
+            "32gb",
+            "16gb",
+            "2gb",
+            "1gb",
+            "4gb",
+            "8gb",
+            "512mb",
+            "64gb",
+            "48gb"
+         ],
+         "slug" : "sgp1"
+      },
+      {
+         "available" : true,
+         "features" : [
+            "virtio",
+            "private_networking",
+            "backups",
+            "ipv6",
+            "metadata"
+         ],
+         "name" : "London 1",
+         "sizes" : [
+            "32gb",
+            "16gb",
+            "2gb",
+            "1gb",
+            "4gb",
+            "8gb",
+            "512mb",
+            "64gb",
+            "48gb"
+         ],
+         "slug" : "lon1"
+      },
+      {
+         "sizes" : [
+            "32gb",
+            "16gb",
+            "2gb",
+            "1gb",
+            "4gb",
+            "8gb",
+            "512mb",
+            "64gb",
+            "48gb"
+         ],
+         "name" : "New York 3",
+         "features" : [
+            "virtio",
+            "private_networking",
+            "backups",
+            "ipv6",
+            "metadata"
+         ],
+         "available" : true,
+         "slug" : "nyc3"
+      },
+      {
+         "available" : true,
+         "features" : [
+            "virtio",
+            "private_networking",
+            "backups",
+            "ipv6",
+            "metadata"
+         ],
+         "name" : "Amsterdam 3",
+         "sizes" : [
+            "32gb",
+            "16gb",
+            "2gb",
+            "1gb",
+            "4gb",
+            "8gb",
+            "512mb",
+            "64gb",
+            "48gb"
+         ],
+         "slug" : "ams3"
+      },
+      {
+         "available" : true,
+         "features" : [
+            "virtio",
+            "private_networking",
+            "backups",
+            "ipv6",
+            "metadata"
+         ],
+         "name" : "Frankfurt 1",
+         "sizes" : [
+            "32gb",
+            "16gb",
+            "2gb",
+            "1gb",
+            "4gb",
+            "8gb",
+            "512mb",
+            "64gb",
+            "48gb"
+         ],
+         "slug" : "fra1"
+      }
+   ]
+}

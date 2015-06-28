@@ -1,0 +1,108 @@
+{
+   "meta" : {
+      "total" : 54
+   },
+   "links" : {
+      "pages" : {
+         "next" : "https://api.digitalocean.com/v2/images?page=2&per_page=5&type=distribution",
+         "last" : "https://api.digitalocean.com/v2/images?page=11&per_page=5&type=distribution"
+      }
+   },
+   "images" : [
+      {
+         "type" : "snapshot",
+         "id" : 11732785,
+         "name" : "Maintenance Mode",
+         "min_disk_size" : 20,
+         "distribution" : "Debian",
+         "created_at" : "2015-05-05T21:21:25Z",
+         "regions" : [
+            "nyc1",
+            "ams1",
+            "sfo1",
+            "nyc2",
+            "ams2",
+            "sgp1",
+            "lon1",
+            "nyc3",
+            "ams3",
+            "fra1"
+         ],
+         "slug" : null,
+         "public" : true
+      },
+      {
+         "type" : "snapshot",
+         "id" : 11833262,
+         "distribution" : "CoreOS",
+         "created_at" : "2015-05-12T17:41:36Z",
+         "regions" : [
+            "nyc1",
+            "sfo1",
+            "ams2",
+            "sgp1",
+            "lon1",
+            "nyc3",
+            "ams3",
+            "fra1"
+         ],
+         "public" : true,
+         "slug" : "coreos-stable",
+         "name" : "647.0.0 (stable)",
+         "min_disk_size" : 20
+      },
+      {
+         "min_disk_size" : 20,
+         "name" : "668.3.0 (beta)",
+         "created_at" : "2015-05-18T18:14:12Z",
+         "public" : true,
+         "regions" : [
+            "nyc1",
+            "sfo1",
+            "ams2",
+            "sgp1",
+            "lon1",
+            "nyc3",
+            "ams3",
+            "fra1"
+         ],
+         "slug" : "coreos-beta",
+         "distribution" : "CoreOS",
+         "id" : 11919888,
+         "type" : "snapshot"
+      },
+      {
+         "type" : "snapshot",
+         "id" : 11919908,
+         "distribution" : "CoreOS",
+         "created_at" : "2015-05-18T18:20:08Z",
+         "public" : true,
+         "regions" : [
+            "nyc1",
+            "sfo1",
+            "ams2",
+            "sgp1",
+            "lon1",
+            "nyc3",
+            "ams3",
+            "fra1"
+         ],
+         "slug" : "coreos-alpha",
+         "name" : "681.0.0 (alpha)",
+         "min_disk_size" : 20
+      },
+      {
+         "min_disk_size" : 30,
+         "name" : "vum-easter-move",
+         "slug" : null,
+         "regions" : [
+            "ams1"
+         ],
+         "public" : true,
+         "created_at" : "2015-04-10T07:31:20Z",
+         "distribution" : "Debian",
+         "id" : 11385199,
+         "type" : "snapshot"
+      }
+   ]
+}

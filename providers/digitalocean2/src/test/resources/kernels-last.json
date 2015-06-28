@@ -1,0 +1,38 @@
+{
+   "links" : {
+      "pages" : {
+         "first" : "https://api.digitalocean.com/v2/droplets/5425561/kernels?page=2",
+         "prev" : "https://api.digitalocean.com/v2/droplets/5425561/kernels?page=2"
+      }
+   },
+   "meta" : {
+      "total" : 10
+   },
+   "kernels" : [
+      {
+         "id" : 2311,
+         "version" : "3.8.0-25-generic",
+         "name" : "DO-recovery-static-fsck"
+      },
+      {
+         "name" : "Ubuntu 10.04 x32 vmlinuz-2.6.32-41-generic-pae",
+         "version" : "2.6.32-41-generic-pae",
+         "id" : 6111
+      },
+      {
+         "name" : "Ubuntu 10.04 x32 vmlinuz-2.6.32-56-generic-pae",
+         "id" : 94611,
+         "version" : "2.6.32-56-generic-pae"
+      },
+      {
+         "name" : "Ubuntu 10.04 x32 vmlinuz-2.6.32-57-generic-pae",
+         "id" : 98711,
+         "version" : "2.6.32-57-generic-pae"
+      },
+      {
+         "name" : "Ubuntu 10.04 x32 vmlinuz-2.6.32-58-generic-pae",
+         "id" : 1269,
+         "version" : "2.6.32-58-generic-pae"
+      }
+   ]
+}
