@@ -21,7 +21,8 @@ import com.google.inject.Inject;
 
 import java.util.List;
 
-import org.jclouds.date.DateCodecFactory;
+import org.jclouds.date.DateService;
+import org.jclouds.profitbricks.domain.DataCenter;
 import org.jclouds.profitbricks.domain.Server;
 import org.jclouds.profitbricks.http.parser.nic.NicListResponseHandler;
 import org.jclouds.profitbricks.http.parser.storage.StorageListResponseHandler;
@@ -32,9 +33,9 @@ public class ServerListResponseHandler extends BaseServerResponseHandler<List<Se
    private List<Server> servers;
 
    @Inject
-   ServerListResponseHandler(DateCodecFactory dateCodec, StorageListResponseHandler storageListResponseHandler,
+   ServerListResponseHandler(DateService dateService, StorageListResponseHandler storageListResponseHandler,
            NicListResponseHandler nicListResponseHandler) {
-      super(dateCodec, storageListResponseHandler, nicListResponseHandler);
+      super(dateService, storageListResponseHandler, nicListResponseHandler);
       this.servers = Lists.newArrayList();
    }
 
@@ -48,10 +49,18 @@ public class ServerListResponseHandler extends BaseServerResponseHandler<List<Se
       else {
          setPropertyOnEndTag(qName);
          if ("return".equals(qName) || "servers".equals(qName) || "balancedServers".equals(qName)) {
-            servers.add(builder
-                    .storages(storageListResponseHandler.getResult())
-                    .nics(nicListResponseHandler.getResult())
-                    .build());
+            Server.DescribingBuilder sdb = null;
+            try {
+               sdb = builder
+                       .storages(storageListResponseHandler.getResult())
+                       .nics(nicListResponseHandler.getResult());
+               servers.add(sdb
+                       // For LoadBalancer's case, there's no DataCenter (may throw NPE on #build()). 
+                       .dataCenter(dataCenterBuilder.build())
+                       .build());
+            } catch (NullPointerException ex) {
+               servers.add(sdb.build());
+            }
             storageListResponseHandler.reset();
             nicListResponseHandler.reset();
 
@@ -69,6 +78,7 @@ public class ServerListResponseHandler extends BaseServerResponseHandler<List<Se
    @Override
    public void reset() {
       this.servers = Lists.newArrayList();
+      this.dataCenterBuilder = DataCenter.builder();
    }
 
    @Override

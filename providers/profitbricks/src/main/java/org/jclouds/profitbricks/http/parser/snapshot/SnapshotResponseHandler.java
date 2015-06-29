@@ -17,7 +17,8 @@
 package org.jclouds.profitbricks.http.parser.snapshot;
 
 import com.google.inject.Inject;
-import org.jclouds.date.DateCodecFactory;
+
+import org.jclouds.date.DateService;
 import org.jclouds.profitbricks.domain.Snapshot;
 import org.xml.sax.SAXException;
 
@@ -26,17 +27,17 @@ public class SnapshotResponseHandler extends BaseSnapshotResponseHandler<Snapsho
    private boolean done = false;
 
    @Inject
-   SnapshotResponseHandler(DateCodecFactory dateCodec) {
-      super(dateCodec);
+   SnapshotResponseHandler(DateService dateService) {
+      super(dateService);
    }
 
    @Override
    public void endElement(String uri, String localName, String qName) throws SAXException {
       if (done)
-	 return;
+         return;
       setPropertyOnEndTag(qName);
       if ("return".equals(qName))
-	 done = true;
+         done = true;
       clearTextBuffer();
    }
 

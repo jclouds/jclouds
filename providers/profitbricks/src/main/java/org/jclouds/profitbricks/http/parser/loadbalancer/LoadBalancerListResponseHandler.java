@@ -21,7 +21,8 @@ import com.google.inject.Inject;
 
 import java.util.List;
 
-import org.jclouds.date.DateCodecFactory;
+import org.jclouds.date.DateService;
+import org.jclouds.profitbricks.domain.DataCenter;
 import org.jclouds.profitbricks.domain.LoadBalancer;
 import org.jclouds.profitbricks.http.parser.firewall.FirewallListResponseHandler;
 import org.jclouds.profitbricks.http.parser.server.ServerListResponseHandler;
@@ -32,37 +33,43 @@ public class LoadBalancerListResponseHandler extends BaseLoadBalancerResponseHan
    private final List<LoadBalancer> loadBalancers;
 
    @Inject
-   LoadBalancerListResponseHandler(DateCodecFactory dateCodec, ServerListResponseHandler balancedServerResponseHandler, FirewallListResponseHandler firewallListResponseHandler) {
-      super(dateCodec, balancedServerResponseHandler, firewallListResponseHandler);
+   LoadBalancerListResponseHandler(DateService dateService, ServerListResponseHandler balancedServerResponseHandler, FirewallListResponseHandler firewallListResponseHandler) {
+      super(dateService, balancedServerResponseHandler, firewallListResponseHandler);
       this.loadBalancers = Lists.newArrayList();
    }
 
    @Override
    public void endElement(String uri, String localName, String qName) throws SAXException {
-      if (useBalancedServerParser) {
+      if (useBalancedServerParser)
          balancedServerResponseHandler.endElement(uri, localName, qName);
-      } else if (useFirewallParser) {
+      else if (useFirewallParser)
          firewallListResponseHandler.endElement(uri, localName, qName);
-      } else {
+      else {
          setPropertyOnEndTag(qName);
          if ("return".equals(qName)) {
             loadBalancers.add(builder
+                    .dataCenter(dataCenterBuilder.build())
                     .firewalls(firewallListResponseHandler.getResult())
                     .balancedServers(balancedServerResponseHandler.getResult())
                     .build());
 
             balancedServerResponseHandler.reset();
             firewallListResponseHandler.reset();
+
             builder = LoadBalancer.builder();
          }
          clearTextBuffer();
       }
-      if ("firewall".equals(qName)) {
+      if ("firewall".equals(qName))
          useFirewallParser = false;
-      } else if ("balancedServers".equals(qName)) {
+      else if ("balancedServers".equals(qName))
          useBalancedServerParser = false;
-      }
 
+   }
+
+   @Override
+   public void reset() {
+      this.dataCenterBuilder = DataCenter.builder();
    }
 
    @Override

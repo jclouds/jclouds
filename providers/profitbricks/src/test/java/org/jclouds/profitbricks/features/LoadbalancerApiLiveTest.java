@@ -128,7 +128,7 @@ public class LoadbalancerApiLiveTest extends BaseProfitBricksLiveTest {
 
    @AfterClass(alwaysRun = true)
    public void testDeleteLoadBalancer() {
-      boolean result = api.loadBalancerApi().deleteLoadbalancer(loadBalancerID);
+      boolean result = api.loadBalancerApi().deleteLoadBalancer(loadBalancerID);
 
       Assert.assertTrue(result);
    }

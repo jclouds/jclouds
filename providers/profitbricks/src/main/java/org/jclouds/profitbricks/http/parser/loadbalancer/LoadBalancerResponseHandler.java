@@ -17,7 +17,8 @@
 package org.jclouds.profitbricks.http.parser.loadbalancer;
 
 import com.google.inject.Inject;
-import org.jclouds.date.DateCodecFactory;
+
+import org.jclouds.date.DateService;
 import org.jclouds.profitbricks.domain.LoadBalancer;
 import org.jclouds.profitbricks.http.parser.firewall.FirewallListResponseHandler;
 import org.jclouds.profitbricks.http.parser.server.ServerListResponseHandler;
@@ -28,8 +29,9 @@ public class LoadBalancerResponseHandler extends BaseLoadBalancerResponseHandler
    private boolean done = false;
 
    @Inject
-   LoadBalancerResponseHandler(DateCodecFactory dateCodec, ServerListResponseHandler serverListResponseHandler, FirewallListResponseHandler firewallListResponseHandler) {
-      super(dateCodec, serverListResponseHandler, firewallListResponseHandler);
+   LoadBalancerResponseHandler(DateService dateService, ServerListResponseHandler serverListResponseHandler,
+           FirewallListResponseHandler firewallListResponseHandler) {
+      super(dateService, serverListResponseHandler, firewallListResponseHandler);
    }
 
    @Override
@@ -45,8 +47,9 @@ public class LoadBalancerResponseHandler extends BaseLoadBalancerResponseHandler
          setPropertyOnEndTag(qName);
          if ("return".equals(qName)) {
             done = true;
-            builder.balancedServers(balancedServerResponseHandler.getResult());
-            builder.firewalls(firewallListResponseHandler.getResult());
+            builder.dataCenter(dataCenterBuilder.build())
+                    .balancedServers(balancedServerResponseHandler.getResult())
+                    .firewalls(firewallListResponseHandler.getResult());
          }
          clearTextBuffer();
       }

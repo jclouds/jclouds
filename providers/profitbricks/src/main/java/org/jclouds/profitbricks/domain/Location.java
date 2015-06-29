@@ -18,20 +18,26 @@ package org.jclouds.profitbricks.domain;
 
 public enum Location {
 
-   DE_FKB("de/fkb"),
-   DE_FRA("de/fra"),
-   US_LAS("us/las"),
-   US_LAS_DEV("us/lasdev"),
-   UNRECOGNIZED("unknown");
+   DE_FKB("de/fkb", "Germany, Karlsruhe"),
+   DE_FRA("de/fra", "Germany, Frankfurt (M)"),
+   US_LAS("us/las", "USA, Las Vegas"),
+   US_LASDEV("us/lasdev", "USA Developer cluster"),
+   UNRECOGNIZED("unrecognized", "Unrecognized location");
 
    private final String id;
+   private final String description;
 
-   Location(String id) {
+   Location(String id, String description) {
       this.id = id;
+      this.description = description;
    }
 
-   public String value() {
+   public String getId() {
       return id;
+   }
+
+   public String getDescription() {
+      return description;
    }
 
    public static Location fromValue(String v) {

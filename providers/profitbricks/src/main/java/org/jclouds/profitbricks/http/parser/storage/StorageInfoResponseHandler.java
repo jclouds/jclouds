@@ -17,7 +17,8 @@
 package org.jclouds.profitbricks.http.parser.storage;
 
 import com.google.inject.Inject;
-import org.jclouds.date.DateCodecFactory;
+
+import org.jclouds.date.DateService;
 import org.jclouds.profitbricks.domain.Storage;
 import org.xml.sax.SAXException;
 
@@ -26,8 +27,8 @@ public class StorageInfoResponseHandler extends BaseStorageResponseHandler<Stora
    private boolean done = false;
 
    @Inject
-   StorageInfoResponseHandler(DateCodecFactory dateCodec) {
-      super(dateCodec);
+   StorageInfoResponseHandler(DateService dateService) {
+      super(dateService);
    }
 
    @Override

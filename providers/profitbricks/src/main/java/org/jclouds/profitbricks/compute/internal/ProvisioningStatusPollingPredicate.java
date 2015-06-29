@@ -22,6 +22,7 @@ import org.jclouds.profitbricks.ProfitBricksApi;
 import org.jclouds.profitbricks.domain.ProvisioningState;
 
 import com.google.common.base.Predicate;
+import org.jclouds.rest.ResourceNotFoundException;
 
 /**
  * A custom predicate for waiting until a virtual resource satisfies the given expected status
@@ -45,19 +46,24 @@ public class ProvisioningStatusPollingPredicate implements Predicate<String> {
    @Override
    public boolean apply(String input) {
       checkNotNull(input, "Virtual item id can't be null.");
-      switch (domain) {
-         case DATACENTER:
-            return expect == api.dataCenterApi().getDataCenterState(input);
-         case SERVER:
-            return expect == api.serverApi().getServer(input).state();
-         case STORAGE:
-            return expect == api.storageApi().getStorage(input).state();
-         case NIC:
-            return expect == api.nicApi().getNic(input).state();
-         case SNAPSHOT:
-            return expect == api.snapshotApi().getSnapshot(input).state();
-         default:
-            throw new IllegalArgumentException("Unknown domain '" + domain + "'");
+      try {
+         switch (domain) {
+            case DATACENTER:
+               return expect == api.dataCenterApi().getDataCenterState(input);
+            case SERVER:
+               return expect == api.serverApi().getServer(input).state();
+            case STORAGE:
+               return expect == api.storageApi().getStorage(input).state();
+            case NIC:
+               return expect == api.nicApi().getNic(input).state();
+            case SNAPSHOT:
+               return expect == api.snapshotApi().getSnapshot(input).state();
+            default:
+               throw new IllegalArgumentException("Unknown domain '" + domain + "'");
+         }
+      } catch (ResourceNotFoundException ex) {
+         // After provisioning, a node might still not be "fetchable" via API
+         return false;
       }
    }
 

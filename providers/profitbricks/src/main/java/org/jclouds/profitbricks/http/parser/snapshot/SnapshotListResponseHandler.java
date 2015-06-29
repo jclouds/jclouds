@@ -18,19 +18,21 @@ package org.jclouds.profitbricks.http.parser.snapshot;
 
 import com.google.common.collect.Lists;
 import com.google.inject.Inject;
+
 import org.jclouds.profitbricks.domain.Snapshot;
 import org.xml.sax.SAXException;
 
 import java.util.List;
-import org.jclouds.date.DateCodecFactory;
+
+import org.jclouds.date.DateService;
 
 public class SnapshotListResponseHandler extends BaseSnapshotResponseHandler<List<Snapshot>> {
 
    private final List<Snapshot> snapshots;
 
    @Inject
-   SnapshotListResponseHandler(DateCodecFactory dateCodec) {
-      super(dateCodec);
+   SnapshotListResponseHandler(DateService dateService) {
+      super(dateService);
       this.snapshots = Lists.newArrayList();
    }
 
@@ -38,8 +40,8 @@ public class SnapshotListResponseHandler extends BaseSnapshotResponseHandler<Lis
    public void endElement(String uri, String localName, String qName) throws SAXException {
       setPropertyOnEndTag(qName);
       if ("return".equals(qName)) {
-	 snapshots.add(builder.build());
-	 builder = Snapshot.builder();
+         snapshots.add(builder.build());
+         builder = Snapshot.builder();
       }
       clearTextBuffer();
    }

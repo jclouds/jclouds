@@ -16,22 +16,22 @@
  */
 package org.jclouds.profitbricks.http.parser.storage;
 
-import com.google.common.collect.Lists;
-import com.google.inject.Inject;
-
 import java.util.List;
 
-import org.jclouds.date.DateCodecFactory;
+import org.jclouds.date.DateService;
 import org.jclouds.profitbricks.domain.Storage;
 import org.xml.sax.SAXException;
+
+import com.google.inject.Inject;
+import com.google.common.collect.Lists;
 
 public class StorageListResponseHandler extends BaseStorageResponseHandler<List<Storage>> {
 
    private List<Storage> storages;
 
    @Inject
-   StorageListResponseHandler(DateCodecFactory dateCodec) {
-      super(dateCodec);
+   StorageListResponseHandler(DateService dateService) {
+      super(dateService);
       this.storages = Lists.newArrayList();
    }
 

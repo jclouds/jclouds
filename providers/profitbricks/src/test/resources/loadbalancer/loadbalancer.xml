@@ -4,7 +4,7 @@
         <ns2:getLoadBalancerResponse xmlns:ns2="http://ws.api.profitbricks.com/">
             <return>
                 <dataCenterId>datacenter-id</dataCenterId>
-                <dataCenterVersion>datacenter-version</dataCenterVersion>
+                <dataCenterVersion>4</dataCenterVersion>
                 <loadBalancerId>aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee</loadBalancerId>
                 <loadBalancerName>load-balancer-name</loadBalancerName>
                 <loadBalancerAlgorithm>ROUND_ROBIN</loadBalancerAlgorithm>

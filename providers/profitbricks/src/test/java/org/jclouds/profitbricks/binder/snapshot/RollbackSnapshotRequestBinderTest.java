@@ -29,9 +29,9 @@ public class RollbackSnapshotRequestBinderTest {
       RollbackSnapshotRequestBinder binder = new RollbackSnapshotRequestBinder();
 
       Snapshot.Request.RollbackPayload payload = Snapshot.Request.rollbackBuilder()
-	      .snapshotId("snapshot-id")
-	      .storageId("storage-id")
-	      .build();
+              .snapshotId("snapshot-id")
+              .storageId("storage-id")
+              .build();
 
       String actual = binder.createPayload(payload);
       assertNotNull(actual, "Binder returned null payload");
@@ -39,9 +39,9 @@ public class RollbackSnapshotRequestBinderTest {
    }
 
    private final String expectedPayload = "<ws:rollbackSnapshot>"
-	   + "<request>"
-	   + "<snapshotId>snapshot-id</snapshotId>"
-	   + "<storageId>storage-id</storageId>"
-	   + "</request>"
-	   + "</ws:rollbackSnapshot>".replaceAll("\\s", "");
+           + "<request>"
+           + "<snapshotId>snapshot-id</snapshotId>"
+           + "<storageId>storage-id</storageId>"
+           + "</request>"
+           + "</ws:rollbackSnapshot>".replaceAll("\\s", "");
 }

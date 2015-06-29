@@ -17,9 +17,9 @@
 package org.jclouds.profitbricks.http.parser.loadbalancer;
 
 import com.google.common.collect.Lists;
+
 import java.util.List;
-import org.jclouds.date.DateCodec;
-import org.jclouds.date.DateCodecFactory;
+
 import org.jclouds.http.functions.ParseSax;
 import org.jclouds.profitbricks.domain.Firewall;
 import org.jclouds.profitbricks.domain.LoadBalancer;
@@ -28,8 +28,12 @@ import org.jclouds.profitbricks.domain.ProvisioningState;
 import org.jclouds.profitbricks.domain.Server;
 import org.jclouds.profitbricks.domain.Storage;
 import org.jclouds.profitbricks.http.parser.BaseResponseHandlerTest;
+
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
+
+import org.jclouds.date.DateService;
+import org.jclouds.profitbricks.domain.DataCenter;
 import org.testng.annotations.Test;
 
 @Test(groups = "unit", testName = "LoadBalancerResponseHandlerTest")
@@ -40,8 +44,8 @@ public class LoadBalancerResponseHandlerTest extends BaseResponseHandlerTest<Loa
       return factory.create(injector.getInstance(LoadBalancerResponseHandler.class));
    }
 
-   protected DateCodecFactory createDateParser() {
-      return injector.getInstance(DateCodecFactory.class);
+   protected DateService createDateParser() {
+      return injector.getInstance(DateService.class);
    }
 
    @Test
@@ -51,13 +55,13 @@ public class LoadBalancerResponseHandlerTest extends BaseResponseHandlerTest<Loa
       LoadBalancer actual = parser.parse(payloadFromResource("/loadbalancer/loadbalancer.xml"));
       assertNotNull(actual, "Parsed content returned null");
 
-      DateCodec dateParser = createDateParser().iso8601();
+      DateService dateParser = createDateParser();
 
       List<Storage> emptyStorages = Lists.newArrayList();
 
       List<Server> balancedServers = Lists.newArrayList();
       balancedServers.add(Server.builder()
-              .activate(true)
+              .loadBalanced(true)
               .balancedNicId("balanced-nic-id")
               .id("server-id")
               .name("server-name")
@@ -73,16 +77,18 @@ public class LoadBalancerResponseHandlerTest extends BaseResponseHandlerTest<Loa
 
       LoadBalancer expected = LoadBalancer.builder()
               .id("aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee")
-              .loadBalancerAlgorithm(Algorithm.ROUND_ROBIN)
+              .algorithm(Algorithm.ROUND_ROBIN)
               .name("load-balancer-name")
-              .dataCenterId("datacenter-id")
-              .dataCenterVersion("datacenter-version")
+              .dataCenter(DataCenter.builder()
+                      .id("datacenter-id")
+                      .version(4)
+                      .build())
               .internetAccess(true)
               .ip("192.168.0.1")
               .lanId("lan-id")
               .state(ProvisioningState.AVAILABLE)
-              .creationTime(dateParser.toDate("2014-12-12T03:08:35.629Z"))
-              .lastModificationTime(dateParser.toDate("2014-12-12T03:08:35.629Z"))
+              .creationTime(dateParser.iso8601DateOrSecondsDateParse("2014-12-12T03:08:35.629Z"))
+              .lastModificationTime(dateParser.iso8601DateOrSecondsDateParse("2014-12-12T03:08:35.629Z"))
               .firewalls(firewalls)
               .balancedServers(balancedServers)
               .build();

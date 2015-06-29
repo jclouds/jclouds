@@ -17,19 +17,17 @@
 package org.jclouds.profitbricks.domain;
 
 import static com.google.common.base.Preconditions.checkArgument;
+import static com.google.common.net.InetAddresses.isInetAddress;
 import static org.jclouds.profitbricks.util.MacAddresses.isMacAddress;
-
-import com.google.auto.value.AutoValue;
 
 import java.util.List;
 
 import org.jclouds.javax.annotation.Nullable;
 import org.jclouds.profitbricks.domain.internal.FirewallRuleCommonProperties;
 
+import com.google.auto.value.AutoValue;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
-
-import static com.google.common.net.InetAddresses.isInetAddress;
 
 @AutoValue
 public abstract class Firewall {

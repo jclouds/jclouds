@@ -23,8 +23,7 @@ import com.google.common.collect.ImmutableList;
 
 import java.util.List;
 
-import org.jclouds.date.DateCodec;
-import org.jclouds.date.DateCodecFactory;
+import org.jclouds.date.DateService;
 import org.jclouds.http.functions.ParseSax;
 import org.jclouds.profitbricks.domain.ProvisioningState;
 import org.jclouds.profitbricks.domain.Storage;
@@ -40,8 +39,8 @@ public class StorageListResponseHandlerTest extends BaseResponseHandlerTest<List
       return factory.create(injector.getInstance(StorageListResponseHandler.class));
    }
 
-   protected DateCodecFactory createDateParser() {
-      return injector.getInstance(DateCodecFactory.class);
+   protected DateService createDateParser() {
+      return injector.getInstance(DateService.class);
    }
 
    @Test
@@ -51,7 +50,7 @@ public class StorageListResponseHandlerTest extends BaseResponseHandlerTest<List
       List<Storage> actual = parser.parse(payloadFromResource("/storage/storages.xml"));
       assertNotNull(actual, "Parsed content returned null");
 
-      DateCodec dateParser = createDateParser().iso8601();
+      DateService dateParser = createDateParser();
 
       List<Storage> expected = ImmutableList.<Storage>of(
               Storage.builder()
@@ -60,8 +59,8 @@ public class StorageListResponseHandlerTest extends BaseResponseHandlerTest<List
               .name("hdd-1")
               .state(ProvisioningState.AVAILABLE)
               .serverIds(ImmutableList.<String>of("qwertyui-qwer-qwer-qwer-qwertyyuiiop"))
-              .creationTime(dateParser.toDate("2014-12-04T07:09:23.138Z"))
-              .lastModificationTime(dateParser.toDate("2014-12-12T03:14:48.316Z"))
+              .creationTime(dateParser.iso8601DateOrSecondsDateParse("2014-12-04T07:09:23.138Z"))
+              .lastModificationTime(dateParser.iso8601DateOrSecondsDateParse("2014-12-12T03:14:48.316Z"))
               .build(),
               Storage.builder()
               .id("asfasfle-f23n-cu89-klfr-njkdsvwllkfa")
@@ -69,8 +68,8 @@ public class StorageListResponseHandlerTest extends BaseResponseHandlerTest<List
               .name("hdd-2")
               .state(ProvisioningState.INPROCESS)
               .serverIds(ImmutableList.<String>of("asdfghjk-asdf-asdf-asdf-asdfghjklkjl"))
-              .creationTime(dateParser.toDate("2014-11-04T07:09:23.138Z"))
-              .lastModificationTime(dateParser.toDate("2014-11-12T03:14:48.316Z"))
+              .creationTime(dateParser.iso8601DateOrSecondsDateParse("2014-11-04T07:09:23.138Z"))
+              .lastModificationTime(dateParser.iso8601DateOrSecondsDateParse("2014-11-12T03:14:48.316Z"))
               .build()
       );
 

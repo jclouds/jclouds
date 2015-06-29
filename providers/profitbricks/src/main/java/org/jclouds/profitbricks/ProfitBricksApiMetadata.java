@@ -19,8 +19,10 @@ package org.jclouds.profitbricks;
 import java.net.URI;
 import java.util.Properties;
 
+import org.jclouds.profitbricks.compute.config.ProfitBricksComputeServiceContextModule;
 import org.jclouds.profitbricks.config.ProfitBricksHttpApiModule;
 import org.jclouds.apis.ApiMetadata;
+import org.jclouds.compute.ComputeServiceContext;
 import org.jclouds.profitbricks.config.ProfitBricksHttpApiModule.ProfitBricksHttpCommandExecutorServiceModule;
 import org.jclouds.rest.internal.BaseHttpApiMetadata;
 
@@ -60,11 +62,12 @@ public class ProfitBricksApiMetadata extends BaseHttpApiMetadata<ProfitBricksApi
                  .documentation(URI.create("https://www.profitbricks.com/sites/default/files/profitbricks_api_1_3.pdf"))
                  .defaultEndpoint("https://api.profitbricks.com/1.3")
                  .version("1.3")
-                 // .view(ComputeServiceContext.class)
+                 .view(ComputeServiceContext.class)
                  .defaultProperties(ProfitBricksApiMetadata.defaultProperties())
                  .defaultModules(ImmutableSet.<Class<? extends Module>>of(
                                  ProfitBricksHttpApiModule.class,
-                                 ProfitBricksHttpCommandExecutorServiceModule.class
+                                 ProfitBricksHttpCommandExecutorServiceModule.class,
+                                 ProfitBricksComputeServiceContextModule.class
                          ));
       }
 

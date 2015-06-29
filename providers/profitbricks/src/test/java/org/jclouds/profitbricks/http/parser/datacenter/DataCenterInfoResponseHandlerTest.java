@@ -19,8 +19,7 @@ package org.jclouds.profitbricks.http.parser.datacenter;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
 
-import org.jclouds.date.DateCodec;
-import org.jclouds.date.DateCodecFactory;
+import org.jclouds.date.DateService;
 import org.jclouds.http.functions.ParseSax;
 import org.jclouds.profitbricks.domain.AvailabilityZone;
 import org.jclouds.profitbricks.domain.DataCenter;
@@ -44,8 +43,8 @@ public class DataCenterInfoResponseHandlerTest extends BaseResponseHandlerTest<D
       return factory.create(injector.getInstance(DataCenterInfoResponseHandler.class));
    }
 
-   protected DateCodecFactory createDateParser() {
-      return injector.getInstance(DateCodecFactory.class);
+   protected DateService createDateParser() {
+      return injector.getInstance(DateService.class);
    }
 
    @Test
@@ -55,7 +54,7 @@ public class DataCenterInfoResponseHandlerTest extends BaseResponseHandlerTest<D
       DataCenter actual = parser.parse(payloadFromResource("/datacenter/datacenter.xml"));
       assertNotNull(actual, "Parsed content returned null");
 
-      DateCodec dateParser = createDateParser().iso8601();
+      DateService dateParser = createDateParser();
 
       DataCenter expected = DataCenter.builder()
               .id("12345678-abcd-efgh-ijkl-987654321000")
@@ -65,6 +64,11 @@ public class DataCenterInfoResponseHandlerTest extends BaseResponseHandlerTest<D
               .location(Location.US_LAS)
               .servers(ImmutableList.<Server>of(
                               Server.builder()
+                              .dataCenter(DataCenter.builder()
+                                      .id("12345678-abcd-efgh-ijkl-987654321000")
+                                      .version(10)
+                                      .build()
+                              )
                               .id("qqqqqqqq-wwww-eeee-rrrr-tttttttttttt")
                               .name("jnode1")
                               .cores(4)
@@ -72,8 +76,8 @@ public class DataCenterInfoResponseHandlerTest extends BaseResponseHandlerTest<D
                               .hasInternetAccess(true)
                               .state(ProvisioningState.AVAILABLE)
                               .status(Server.Status.RUNNING)
-                              .creationTime(dateParser.toDate("2014-12-04T07:09:23.138Z"))
-                              .lastModificationTime(dateParser.toDate("2014-12-12T03:08:35.629Z"))
+                              .creationTime(dateParser.iso8601DateOrSecondsDateParse("2014-12-04T07:09:23.138Z"))
+                              .lastModificationTime(dateParser.iso8601DateOrSecondsDateParse("2014-12-12T03:08:35.629Z"))
                               .osType(OsType.LINUX)
                               .availabilityZone(AvailabilityZone.AUTO)
                               .isCpuHotPlug(true)
@@ -125,8 +129,8 @@ public class DataCenterInfoResponseHandlerTest extends BaseResponseHandlerTest<D
                               .size(40)
                               .name("jnode1-disk1")
                               .state(ProvisioningState.AVAILABLE)
-                              .creationTime(dateParser.toDate("2014-12-04T07:09:23.138Z"))
-                              .lastModificationTime(dateParser.toDate("2014-12-12T03:14:48.316Z"))
+                              .creationTime(dateParser.iso8601DateOrSecondsDateParse("2014-12-04T07:09:23.138Z"))
+                              .lastModificationTime(dateParser.iso8601DateOrSecondsDateParse("2014-12-12T03:14:48.316Z"))
                               .serverIds(ImmutableList.of(
                                               "qqqqqqqq-wwww-eeee-rrrr-tttttttttttt"
                                       ))

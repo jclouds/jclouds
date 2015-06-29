@@ -27,6 +27,7 @@ import java.util.Date;
 import java.util.List;
 
 import org.jclouds.javax.annotation.Nullable;
+import org.jclouds.profitbricks.domain.internal.HotPluggable;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
@@ -50,6 +51,9 @@ public abstract class Server implements ServerCommonProperties {
          }
       }
    }
+
+   @Nullable
+   public abstract DataCenter dataCenter();
 
    @Nullable
    public abstract String id();
@@ -89,17 +93,23 @@ public abstract class Server implements ServerCommonProperties {
    public abstract String balancedNicId();
 
    @Nullable
-   public abstract Boolean activate();
+   public abstract Boolean loadBalanced();
 
-   public static Server create(String id, String name, int cores, int ram, Boolean hasInternetAccess, ProvisioningState state,
-           Status status, OsType osType, AvailabilityZone availabilityZone, Date creationTime, Date lastModificationTime,
-           List<Storage> storages, List<Nic> nics, Boolean isCpuHotPlug, Boolean isRamHotPlug, Boolean isNicHotPlug,
-           Boolean isNicHotUnPlug, Boolean isDiscVirtioHotPlug, Boolean isDiscVirtioHotUnPlug, String balancedNicId, boolean activate) {
-      return new AutoValue_Server(isCpuHotPlug, isRamHotPlug, isNicHotPlug, isNicHotUnPlug, isDiscVirtioHotPlug, isDiscVirtioHotUnPlug,
-              cores, ram, id, name, hasInternetAccess, state, status, osType, availabilityZone, creationTime, lastModificationTime,
+   @Nullable
+   public abstract String hostname(); // Non-profitbricks property; Added to hold hostname parsed from image temporarily
+
+   public static Server create(DataCenter dataCenter, String id, String name, int cores, int ram,
+           Boolean hasInternetAccess, ProvisioningState state, Status status, OsType osType,
+           AvailabilityZone availabilityZone, Date creationTime, Date lastModificationTime, List<Storage> storages,
+           List<Nic> nics, Boolean isCpuHotPlug, Boolean isRamHotPlug, Boolean isNicHotPlug, Boolean isNicHotUnPlug,
+           Boolean isDiscVirtioHotPlug, Boolean isDiscVirtioHotUnPlug, String balancedNicId, Boolean loadBalanced,
+           String hostname) {
+      return new AutoValue_Server(isCpuHotPlug, null, isRamHotPlug, null, isNicHotPlug, isNicHotUnPlug, isDiscVirtioHotPlug,
+              isDiscVirtioHotUnPlug, cores, ram, dataCenter, id, name, hasInternetAccess, state, status, osType,
+              availabilityZone, creationTime, lastModificationTime,
               storages != null ? ImmutableList.copyOf(storages) : Lists.<Storage>newArrayList(),
-              nics != null ? ImmutableList.copyOf(nics) : Lists.<Nic>newArrayList(), balancedNicId, activate);
-
+              nics != null ? ImmutableList.copyOf(nics) : Lists.<Nic>newArrayList(),
+              balancedNicId, loadBalanced, hostname);
    }
 
    public static DescribingBuilder builder() {
@@ -110,17 +120,11 @@ public abstract class Server implements ServerCommonProperties {
       return builder().fromServer(this);
    }
 
-   public abstract static class Builder<B extends Builder, D extends ServerCommonProperties> {
+   public abstract static class Builder<B extends Builder, D extends ServerCommonProperties> extends HotPluggable.Builder<B, D> {
 
       protected String name;
       protected int cores;
       protected int ram;
-      protected Boolean cpuHotPlug;
-      protected Boolean ramHotPlug;
-      protected Boolean nicHotPlug;
-      protected Boolean nicHotUnPlug;
-      protected Boolean discVirtioHotPlug;
-      protected Boolean discVirtioHotUnPlug;
 
       public B name(String name) {
          this.name = name;
@@ -136,45 +140,11 @@ public abstract class Server implements ServerCommonProperties {
          this.ram = ram;
          return self();
       }
-
-      public B isCpuHotPlug(Boolean cpuHotPlug) {
-         this.cpuHotPlug = cpuHotPlug;
-         return self();
-      }
-
-      public B isRamHotPlug(Boolean ramHotPlug) {
-         this.ramHotPlug = ramHotPlug;
-         return self();
-
-      }
-
-      public B isNicHotPlug(Boolean nicHotPlug) {
-         this.nicHotPlug = nicHotPlug;
-         return self();
-      }
-
-      public B isNicHotUnPlug(Boolean nicHotUnPlug) {
-         this.nicHotUnPlug = nicHotUnPlug;
-         return self();
-      }
-
-      public B isDiscVirtioHotPlug(Boolean discVirtioHotPlug) {
-         this.discVirtioHotPlug = discVirtioHotPlug;
-         return self();
-      }
-
-      public B isDiscVirtioHotUnPlug(Boolean discVirtioHotUnPlug) {
-         this.discVirtioHotUnPlug = discVirtioHotUnPlug;
-         return self();
-      }
-
-      public abstract B self();
-
-      public abstract D build();
    }
 
    public static class DescribingBuilder extends Builder<DescribingBuilder, Server> {
 
+      private DataCenter dataCenter;
       private String id;
       private ProvisioningState state;
       private Status status;
@@ -185,8 +155,14 @@ public abstract class Server implements ServerCommonProperties {
       private Boolean hasInternetAccess;
       private List<Storage> storages;
       private List<Nic> nics;
-      private boolean activate;
+      private Boolean loadBalanced;
       private String balancedNicId;
+      private String hostname;
+
+      public DescribingBuilder dataCenter(DataCenter dataCenter) {
+         this.dataCenter = dataCenter;
+         return this;
+      }
 
       public DescribingBuilder id(String id) {
          this.id = id;
@@ -243,16 +219,21 @@ public abstract class Server implements ServerCommonProperties {
          return this;
       }
 
-      public DescribingBuilder activate(boolean activate) {
-         this.activate = activate;
+      public DescribingBuilder loadBalanced(Boolean loadBalanced) {
+         this.loadBalanced = loadBalanced;
+         return this;
+      }
+
+      public DescribingBuilder hostname(String hostname) {
+         this.hostname = hostname;
          return this;
       }
 
       @Override
       public Server build() {
-         return Server.create(id, name, cores, ram, hasInternetAccess, state, status, osType, zone, creationTime,
+         return Server.create(dataCenter, id, name, cores, ram, hasInternetAccess, state, status, osType, zone, creationTime,
                  lastModificationTime, storages, nics, cpuHotPlug, ramHotPlug, nicHotPlug, nicHotUnPlug,
-                 discVirtioHotPlug, discVirtioHotUnPlug, balancedNicId, activate);
+                 discVirtioHotPlug, discVirtioHotUnPlug, balancedNicId, loadBalanced, hostname);
       }
 
       private DescribingBuilder fromServer(Server in) {
@@ -261,7 +242,8 @@ public abstract class Server implements ServerCommonProperties {
                  .isDiscVirtioHotUnPlug(in.isDiscVirtioHotUnPlug()).isNicHotPlug(in.isNicHotPlug())
                  .isNicHotUnPlug(in.isNicHotUnPlug()).isRamHotPlug(in.isRamHotPlug())
                  .lastModificationTime(in.lastModificationTime()).name(in.name()).osType(in.osType()).ram(in.ram())
-                 .state(in.state()).status(in.status()).storages(in.storages()).nics(in.nics()).balancedNicId(in.balancedNicId()).activate(in.activate());
+                 .state(in.state()).status(in.status()).storages(in.storages()).nics(in.nics()).dataCenter(in.dataCenter())
+                 .balancedNicId(balancedNicId).loadBalanced(loadBalanced).hostname(hostname);
       }
 
       @Override
@@ -308,14 +290,15 @@ public abstract class Server implements ServerCommonProperties {
             return create(dataCenterId, name, core, ram, "", "", null, false, null, null, null, null, null, null, null, null);
          }
 
-         public static CreatePayload create(String dataCenterId, String name, int cores, int ram, String bootFromStorageId, String bootFromImageId,
-                 Integer lanId, Boolean hasInternetAccess, AvailabilityZone availabilityZone, OsType osType, Boolean isCpuHotPlug, Boolean isRamHotPlug,
-                 Boolean isNicHotPlug, Boolean isNicHotUnPlug, Boolean isDiscVirtioHotPlug, Boolean isDiscVirtioHotUnPlug) {
+         public static CreatePayload create(String dataCenterId, String name, int cores, int ram, String bootFromStorageId,
+                 String bootFromImageId, Integer lanId, Boolean hasInternetAccess, AvailabilityZone availabilityZone,
+                 OsType osType, Boolean isCpuHotPlug, Boolean isRamHotPlug, Boolean isNicHotPlug, Boolean isNicHotUnPlug,
+                 Boolean isDiscVirtioHotPlug, Boolean isDiscVirtioHotUnPlug) {
             validateCores(cores);
             validateRam(ram, isRamHotPlug);
-            return new AutoValue_Server_Request_CreatePayload(isCpuHotPlug, isRamHotPlug, isNicHotPlug, isNicHotUnPlug, isDiscVirtioHotPlug,
-                    isDiscVirtioHotUnPlug, name, cores, ram, dataCenterId, bootFromStorageId, bootFromImageId, lanId, hasInternetAccess,
-                    availabilityZone, osType);
+            return new AutoValue_Server_Request_CreatePayload(isCpuHotPlug, null, isRamHotPlug, null, isNicHotPlug,
+                    isNicHotUnPlug, isDiscVirtioHotPlug, isDiscVirtioHotUnPlug, name, cores, ram, dataCenterId,
+                    bootFromStorageId, bootFromImageId, lanId, hasInternetAccess, availabilityZone, osType);
          }
 
          public static class Builder extends Server.Builder<Builder, CreatePayload> {
@@ -406,8 +389,9 @@ public abstract class Server implements ServerCommonProperties {
          public static UpdatePayload create(String id, String name, int cores, int ram, String bootFromStorageId, String bootFromImageId,
                  AvailabilityZone availabilityZone, OsType osType, Boolean isCpuHotPlug, Boolean isRamHotPlug, Boolean isNicHotPlug,
                  Boolean isNicHotUnPlug, Boolean isDiscVirtioHotPlug, Boolean isDiscVirtioHotUnPlug) {
-            return new AutoValue_Server_Request_UpdatePayload(isCpuHotPlug, isRamHotPlug, isNicHotPlug, isNicHotUnPlug, isDiscVirtioHotPlug,
-                    isDiscVirtioHotUnPlug, cores, ram, name, id, bootFromStorageId, bootFromImageId, availabilityZone, osType);
+            return new AutoValue_Server_Request_UpdatePayload(isCpuHotPlug, null, isRamHotPlug, null, isNicHotPlug,
+                    isNicHotUnPlug, isDiscVirtioHotPlug, isDiscVirtioHotUnPlug, cores, ram, name, id, bootFromStorageId,
+                    bootFromImageId, availabilityZone, osType);
          }
 
          public static class Builder extends Server.Builder<Builder, UpdatePayload> {

@@ -16,16 +16,15 @@
  */
 package org.jclouds.profitbricks.features;
 
+import static org.testng.Assert.assertFalse;
+import static org.testng.Assert.assertNotNull;
+
 import java.util.List;
 
 import org.jclouds.profitbricks.BaseProfitBricksLiveTest;
 import org.jclouds.profitbricks.domain.Drive;
 import org.jclouds.profitbricks.domain.Image;
 import org.jclouds.profitbricks.domain.Server;
-
-import static org.testng.Assert.assertFalse;
-import static org.testng.Assert.assertNotNull;
-
 import org.testng.annotations.Test;
 
 import com.google.common.collect.Iterables;
@@ -67,7 +66,7 @@ public class DrivesApiLiveTest extends BaseProfitBricksLiveTest {
       assertNotNull(requestId);
    }
 
-   @Test (dependsOnMethods = "addRomDriveToServerTest")
+   @Test(dependsOnMethods = "addRomDriveToServerTest")
    public void removeRomDriveFromServerTest() {
       String requestId = api.drivesApi().removeRomDriveFromServer(imageId, serverId);
 

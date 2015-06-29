@@ -18,7 +18,7 @@ package org.jclouds.profitbricks.http.parser.server;
 
 import com.google.inject.Inject;
 
-import org.jclouds.date.DateCodecFactory;
+import org.jclouds.date.DateService;
 import org.jclouds.profitbricks.domain.Server;
 import org.jclouds.profitbricks.http.parser.nic.NicListResponseHandler;
 import org.jclouds.profitbricks.http.parser.storage.StorageListResponseHandler;
@@ -29,9 +29,9 @@ public class ServerInfoResponseHandler extends BaseServerResponseHandler<Server>
    private boolean done = false;
 
    @Inject
-   ServerInfoResponseHandler(DateCodecFactory dateCodec, StorageListResponseHandler storageListResponseHandler,
+   ServerInfoResponseHandler(DateService dateService, StorageListResponseHandler storageListResponseHandler,
            NicListResponseHandler nicListResponseHandler) {
-      super(dateCodec, storageListResponseHandler, nicListResponseHandler);
+      super(dateService, storageListResponseHandler, nicListResponseHandler);
    }
 
    @Override
@@ -48,6 +48,7 @@ public class ServerInfoResponseHandler extends BaseServerResponseHandler<Server>
          if ("return".equals(qName)) {
             done = true;
             builder
+                    .dataCenter(dataCenterBuilder.build())
                     .storages(storageListResponseHandler.getResult())
                     .nics(nicListResponseHandler.getResult());
          }

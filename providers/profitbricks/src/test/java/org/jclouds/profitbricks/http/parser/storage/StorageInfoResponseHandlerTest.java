@@ -19,8 +19,7 @@ package org.jclouds.profitbricks.http.parser.storage;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
 
-import org.jclouds.date.DateCodec;
-import org.jclouds.date.DateCodecFactory;
+import org.jclouds.date.DateService;
 import org.jclouds.http.functions.ParseSax;
 import org.jclouds.profitbricks.domain.ProvisioningState;
 import org.jclouds.profitbricks.domain.Storage;
@@ -37,8 +36,8 @@ public class StorageInfoResponseHandlerTest extends BaseResponseHandlerTest<Stor
       return factory.create(injector.getInstance(StorageInfoResponseHandler.class));
    }
 
-   protected DateCodecFactory createDateParser() {
-      return injector.getInstance(DateCodecFactory.class);
+   protected DateService createDateParser() {
+      return injector.getInstance(DateService.class);
    }
 
    @Test
@@ -48,7 +47,7 @@ public class StorageInfoResponseHandlerTest extends BaseResponseHandlerTest<Stor
       Storage actual = parser.parse(payloadFromResource("/storage/storage.xml"));
       assertNotNull(actual, "Parsed content returned null");
 
-      DateCodec dateParser = createDateParser().iso8601();
+      DateService dateParser = createDateParser();
 
       Storage expected = Storage.builder()
               .id("qswdefrg-qaws-qaws-defe-rgrgdsvcxbrh")
@@ -56,8 +55,8 @@ public class StorageInfoResponseHandlerTest extends BaseResponseHandlerTest<Stor
               .name("hdd-1")
               .state(ProvisioningState.AVAILABLE)
               .serverIds(ImmutableList.<String>of("qwertyui-qwer-qwer-qwer-qwertyyuiiop"))
-              .creationTime(dateParser.toDate("2014-12-04T07:09:23.138Z"))
-              .lastModificationTime(dateParser.toDate("2014-12-12T03:14:48.316Z"))
+              .creationTime(dateParser.iso8601DateOrSecondsDateParse("2014-12-04T07:09:23.138Z"))
+              .lastModificationTime(dateParser.iso8601DateOrSecondsDateParse("2014-12-12T03:14:48.316Z"))
               .build();
 
       assertEquals(actual, expected);

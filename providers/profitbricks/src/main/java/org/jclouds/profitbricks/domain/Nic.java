@@ -17,17 +17,15 @@
 package org.jclouds.profitbricks.domain;
 
 import static com.google.common.base.Preconditions.checkArgument;
-
-import com.google.auto.value.AutoValue;
+import static com.google.common.net.InetAddresses.isInetAddress;
 
 import java.util.List;
 
-import org.jclouds.javax.annotation.Nullable;
-
+import com.google.auto.value.AutoValue;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 
-import static com.google.common.net.InetAddresses.isInetAddress;
+import org.jclouds.javax.annotation.Nullable;
 
 @AutoValue
 public abstract class Nic {

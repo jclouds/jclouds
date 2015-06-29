@@ -35,7 +35,7 @@ public class CreateDataCenterRequestBinder extends BaseProfitBricksRequestBinder
       requestBuilder.append("<ws:createDataCenter>")
               .append("<request>")
               .append(format("<dataCenterName>%s</dataCenterName>", payload.name()))
-              .append(format("<location>%s</location>", payload.location().value()))
+              .append(format("<location>%s</location>", payload.location().getId()))
               .append("</request>")
               .append("</ws:createDataCenter>");
       return requestBuilder.toString();

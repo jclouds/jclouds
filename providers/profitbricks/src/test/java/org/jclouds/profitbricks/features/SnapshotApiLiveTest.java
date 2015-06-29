@@ -89,20 +89,20 @@ public class SnapshotApiLiveTest extends BaseProfitBricksLiveTest {
       String newName = "new name";
 
       api.snapshotApi().updateSnapshot(Snapshot.Request.updatingBuilder()
-	      .snapshotId(snapshotId)
-	      .description("new description")
-	      .name(newName)
-	      .bootable(true)
-	      .osType(OsType.LINUX)
-	      .cpuHotplug(true)
-	      .cpuHotunplug(true)
-	      .discVirtioHotplug(true)
-	      .discVirtioHotunplug(true)
-	      .nicHotplug(true)
-	      .nicHotunplug(true)
-	      .ramHotplug(true)
-	      .ramHotunplug(true)
-	      .build());
+              .snapshotId(snapshotId)
+              .description("new description")
+              .name(newName)
+              .bootable(true)
+              .osType(OsType.LINUX)
+              .isCpuHotPlug(true)
+              .isCpuHotUnPlug(true)
+              .isDiscVirtioHotPlug(true)
+              .isDiscVirtioHotUnPlug(true)
+              .isNicHotPlug(true)
+              .isNicHotUnPlug(true)
+              .isRamHotPlug(true)
+              .isRamHotUnPlug(true)
+              .build());
 
       Snapshot snapshot = api.snapshotApi().getSnapshot(snapshotId);
 
@@ -126,7 +126,7 @@ public class SnapshotApiLiveTest extends BaseProfitBricksLiveTest {
 
    private void initializeWaitPredicate() {
       this.snapshotWaitingPredicate = Predicates2.retry(
-	      new ProvisioningStatusPollingPredicate(api, ProvisioningStatusAware.SNAPSHOT, ProvisioningState.AVAILABLE),
-	      2l * 60l, 2l, TimeUnit.SECONDS);
+              new ProvisioningStatusPollingPredicate(api, ProvisioningStatusAware.SNAPSHOT, ProvisioningState.AVAILABLE),
+              2l * 60l, 2l, TimeUnit.SECONDS);
    }
 }

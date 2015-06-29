@@ -136,10 +136,10 @@ public class ProvisioningStatusPollingPredicateTest extends BaseProfitBricksMock
          server.shutdown();
       }
    }
-   
+
    @Test
-   public void testSnapshotPredicate() throws Exception{
-        MockWebServer server = mockWebServer();
+   public void testSnapshotPredicate() throws Exception {
+      MockWebServer server = mockWebServer();
 
       byte[] payloadInProcess = payloadFromResource("/snapshot/snapshot-state-inprocess.xml");
       byte[] payloadAvailable = payloadFromResource("/snapshot/snapshot.xml");

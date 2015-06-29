@@ -32,22 +32,22 @@ public class UpdateSnapshotRequestBinder extends BaseProfitBricksRequestBinder<S
    @Override
    protected String createPayload(Snapshot.Request.UpdatePayload payload) {
       requestBuilder.append("<ws:updateSnapshot>")
-	      .append("<request>")
-	      .append(format("<snapshotId>%s</snapshotId>", payload.snapshotId()))
-	      .append(format("<description>%s</description>", payload.description()))
-	      .append(format("<snapshotName>%s</snapshotName>", payload.name()))
-	      .append(formatIfNotEmpty("<bootable>%s</bootable>", payload.bootable()))
-	      .append(formatIfNotEmpty("<osType>%s</osType>", payload.osType()))
-	      .append(formatIfNotEmpty("<cpuHotPlug>%s</cpuHotPlug>", payload.cpuHotplug()))
-	      .append(formatIfNotEmpty("<cpuHotUnPlug>%s</cpuHotUnPlug>", payload.cpuHotunplug()))
-	      .append(formatIfNotEmpty("<ramHotPlug>%s</ramHotPlug>", payload.ramHotplug()))
-	      .append(formatIfNotEmpty("<ramHotUnPlug>%s</ramHotUnPlug>", payload.ramHotunplug()))
-	      .append(formatIfNotEmpty("<nicHotPlug>%s</nicHotPlug>", payload.nicHotplug()))
-	      .append(formatIfNotEmpty("<nicHotUnPlug>%s</nicHotUnPlug>", payload.nicHotunplug()))
-	      .append(formatIfNotEmpty("<discVirtioHotPlug>%s</discVirtioHotPlug>", payload.discVirtioHotplug()))
-	      .append(formatIfNotEmpty("<discVirtioHotUnPlug>%s</discVirtioHotUnPlug>", payload.discVirtioHotunplug()))
-	      .append("</request>")
-	      .append("</ws:updateSnapshot>");
+              .append("<request>")
+              .append(format("<snapshotId>%s</snapshotId>", payload.snapshotId()))
+              .append(format("<description>%s</description>", payload.description()))
+              .append(format("<snapshotName>%s</snapshotName>", payload.name()))
+              .append(formatIfNotEmpty("<bootable>%s</bootable>", payload.bootable()))
+              .append(formatIfNotEmpty("<osType>%s</osType>", payload.osType()))
+              .append(formatIfNotEmpty("<cpuHotPlug>%s</cpuHotPlug>", payload.isCpuHotPlug()))
+              .append(formatIfNotEmpty("<cpuHotUnPlug>%s</cpuHotUnPlug>", payload.isCpuHotUnPlug()))
+              .append(formatIfNotEmpty("<ramHotPlug>%s</ramHotPlug>", payload.isRamHotPlug()))
+              .append(formatIfNotEmpty("<ramHotUnPlug>%s</ramHotUnPlug>", payload.isRamHotUnPlug()))
+              .append(formatIfNotEmpty("<nicHotPlug>%s</nicHotPlug>", payload.isNicHotPlug()))
+              .append(formatIfNotEmpty("<nicHotUnPlug>%s</nicHotUnPlug>", payload.isNicHotUnPlug()))
+              .append(formatIfNotEmpty("<discVirtioHotPlug>%s</discVirtioHotPlug>", payload.isDiscVirtioHotPlug()))
+              .append(formatIfNotEmpty("<discVirtioHotUnPlug>%s</discVirtioHotUnPlug>", payload.isDiscVirtioHotUnPlug()))
+              .append("</request>")
+              .append("</ws:updateSnapshot>");
       return requestBuilder.toString();
    }
 }

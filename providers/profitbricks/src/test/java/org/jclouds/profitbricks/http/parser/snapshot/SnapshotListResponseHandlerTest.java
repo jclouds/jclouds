@@ -17,17 +17,20 @@
 package org.jclouds.profitbricks.http.parser.snapshot;
 
 import com.google.common.collect.Lists;
+
 import java.util.List;
-import org.jclouds.date.DateCodec;
-import org.jclouds.date.DateCodecFactory;
+
 import org.jclouds.http.functions.ParseSax;
 import org.jclouds.profitbricks.domain.Location;
 import org.jclouds.profitbricks.domain.OsType;
 import org.jclouds.profitbricks.domain.ProvisioningState;
 import org.jclouds.profitbricks.domain.Snapshot;
 import org.jclouds.profitbricks.http.parser.BaseResponseHandlerTest;
+
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
+
+import org.jclouds.date.DateService;
 import org.testng.annotations.Test;
 
 @Test(groups = "unit", testName = "SnapshotListResponseHandlerTest")
@@ -38,8 +41,8 @@ public class SnapshotListResponseHandlerTest extends BaseResponseHandlerTest<Lis
       return factory.create(injector.getInstance(SnapshotListResponseHandler.class));
    }
 
-   protected DateCodecFactory createDateParser() {
-      return injector.getInstance(DateCodecFactory.class);
+   protected DateService createDateParser() {
+      return injector.getInstance(DateService.class);
    }
 
    @Test
@@ -49,51 +52,51 @@ public class SnapshotListResponseHandlerTest extends BaseResponseHandlerTest<Lis
       List<Snapshot> actual = parser.parse(payloadFromResource("/snapshot/snapshots.xml"));
       assertNotNull(actual);
 
-      DateCodec dateParser = createDateParser().iso8601();
+      DateService dateParser = createDateParser();
 
       List<Snapshot> expected = Lists.newArrayList();
 
       expected.add(Snapshot.builder()
-	      .id("aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee")
-	      .description("description")
-	      .size(1024)
-	      .name("snapshot01")
-	      .state(ProvisioningState.AVAILABLE)
-	      .bootable(true)
-	      .osType(OsType.LINUX)
-	      .cpuHotPlug(true)
-	      .cpuHotUnPlug(true)
-	      .discVirtioHotPlug(true)
-	      .discVirtioHotUnPlug(true)
-	      .ramHotPlug(true)
-	      .ramHotUnPlug(true)
-	      .nicHotPlug(true)
-	      .nicHotUnPlug(true)
-	      .location(Location.US_LAS)
-	      .creationTime(dateParser.toDate("2015-01-26T07:09:23.138Z"))
-	      .lastModificationTime(dateParser.toDate("2015-01-26T07:09:23.138Z"))
-	      .build());
+              .id("aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee")
+              .description("description")
+              .size(1024)
+              .name("snapshot01")
+              .state(ProvisioningState.AVAILABLE)
+              .isBootable(true)
+              .osType(OsType.LINUX)
+              .isCpuHotPlug(true)
+              .isCpuHotUnPlug(true)
+              .isDiscVirtioHotPlug(true)
+              .isDiscVirtioHotUnPlug(true)
+              .isRamHotPlug(true)
+              .isRamHotUnPlug(true)
+              .isNicHotPlug(true)
+              .isNicHotUnPlug(true)
+              .location(Location.US_LAS)
+              .creationTime(dateParser.iso8601DateOrSecondsDateParse("2015-01-26T07:09:23.138Z"))
+              .lastModificationTime(dateParser.iso8601DateOrSecondsDateParse("2015-01-26T07:09:23.138Z"))
+              .build());
 
       expected.add(Snapshot.builder()
-	      .id("qqqqqqqq-wwww-rrrr-tttt-yyyyyyyyyyyy")
-	      .description("description")
-	      .size(1024)
-	      .name("snapshot02")
-	      .state(ProvisioningState.AVAILABLE)
-	      .bootable(true)
-	      .osType(OsType.LINUX)
-	      .cpuHotPlug(true)
-	      .cpuHotUnPlug(true)
-	      .discVirtioHotPlug(true)
-	      .discVirtioHotUnPlug(true)
-	      .ramHotPlug(true)
-	      .ramHotUnPlug(true)
-	      .nicHotPlug(true)
-	      .nicHotUnPlug(true)
-	      .location(Location.US_LAS)
-	      .creationTime(dateParser.toDate("2015-01-26T07:09:23.138Z"))
-	      .lastModificationTime(dateParser.toDate("2015-01-26T07:09:23.138Z"))
-	      .build());
+              .id("qqqqqqqq-wwww-rrrr-tttt-yyyyyyyyyyyy")
+              .description("description")
+              .size(1024)
+              .name("snapshot02")
+              .state(ProvisioningState.AVAILABLE)
+              .isBootable(true)
+              .osType(OsType.LINUX)
+              .isCpuHotPlug(true)
+              .isCpuHotUnPlug(true)
+              .isDiscVirtioHotPlug(true)
+              .isDiscVirtioHotUnPlug(true)
+              .isRamHotPlug(true)
+              .isRamHotUnPlug(true)
+              .isNicHotPlug(true)
+              .isNicHotUnPlug(true)
+              .location(Location.US_LAS)
+              .creationTime(dateParser.iso8601DateOrSecondsDateParse("2015-01-26T07:09:23.138Z"))
+              .lastModificationTime(dateParser.iso8601DateOrSecondsDateParse("2015-01-26T07:09:23.138Z"))
+              .build());
 
       assertEquals(actual, expected);
    }

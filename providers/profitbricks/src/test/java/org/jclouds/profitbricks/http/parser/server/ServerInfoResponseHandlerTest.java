@@ -19,10 +19,10 @@ package org.jclouds.profitbricks.http.parser.server;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
 
-import org.jclouds.date.DateCodec;
-import org.jclouds.date.DateCodecFactory;
+import org.jclouds.date.DateService;
 import org.jclouds.http.functions.ParseSax;
 import org.jclouds.profitbricks.domain.AvailabilityZone;
+import org.jclouds.profitbricks.domain.DataCenter;
 import org.jclouds.profitbricks.domain.Firewall;
 import org.jclouds.profitbricks.domain.Nic;
 import org.jclouds.profitbricks.domain.OsType;
@@ -43,8 +43,8 @@ public class ServerInfoResponseHandlerTest extends BaseResponseHandlerTest<Serve
       return factory.create(injector.getInstance(ServerInfoResponseHandler.class));
    }
 
-   protected DateCodecFactory createDateParser() {
-      return injector.getInstance(DateCodecFactory.class);
+   protected DateService createDateParser() {
+      return injector.getInstance(DateService.class);
    }
 
    @Test
@@ -54,18 +54,22 @@ public class ServerInfoResponseHandlerTest extends BaseResponseHandlerTest<Serve
       Server actual = parser.parse(payloadFromResource("/server/server.xml"));
       assertNotNull(actual, "Parsed content returned null");
 
-      DateCodec dateParser = createDateParser().iso8601();
+      DateService dateParser = createDateParser();
 
       Server expected = Server.builder()
               .id("qwertyui-qwer-qwer-qwer-qwertyyuiiop")
+              .dataCenter(DataCenter.builder()
+                      .id("aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee")
+                      .version(10)
+                      .build())
               .name("facebook-node")
               .cores(4)
               .ram(4096)
               .hasInternetAccess(true)
               .state(ProvisioningState.AVAILABLE)
               .status(Server.Status.RUNNING)
-              .creationTime(dateParser.toDate("2014-12-04T07:09:23.138Z"))
-              .lastModificationTime(dateParser.toDate("2014-12-12T03:08:35.629Z"))
+              .creationTime(dateParser.iso8601DateOrSecondsDateParse("2014-12-04T07:09:23.138Z"))
+              .lastModificationTime(dateParser.iso8601DateOrSecondsDateParse("2014-12-12T03:08:35.629Z"))
               .osType(OsType.LINUX)
               .availabilityZone(AvailabilityZone.AUTO)
               .isCpuHotPlug(true)
@@ -74,7 +78,7 @@ public class ServerInfoResponseHandlerTest extends BaseResponseHandlerTest<Serve
               .isNicHotUnPlug(true)
               .isDiscVirtioHotPlug(true)
               .isDiscVirtioHotUnPlug(true)
-              .activate(true)
+              .loadBalanced(true)
               .balancedNicId("qswdefrg-qaws-qaws-defe-rgrgdsvcxbrh")
               .storages(ImmutableList.<Storage>of(
                               Storage.builder()

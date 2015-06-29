@@ -37,11 +37,11 @@ public class CreateSnapshotRequestBinderTest {
    }
 
    private final String expectedPayload
-	   = ("      <ws:createSnapshot>\n"
-	   + "<request>\n"
-	   + "<storageId>123-1233-1324</storageId>\n"
-	   + "<description>describing the snapshot</description>\n"
-	   + "<snapshotName>snapshot name</snapshotName>\n"
-	   + "</request>\n"
-	   + "</ws:createSnapshot>").replaceAll("\\s+", "");
+           = ("      <ws:createSnapshot>\n"
+           + "<request>\n"
+           + "<storageId>123-1233-1324</storageId>\n"
+           + "<description>describing the snapshot</description>\n"
+           + "<snapshotName>snapshot name</snapshotName>\n"
+           + "</request>\n"
+           + "</ws:createSnapshot>").replaceAll("\\s+", "");
 }

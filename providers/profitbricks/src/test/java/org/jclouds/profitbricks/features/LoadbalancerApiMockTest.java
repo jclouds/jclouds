@@ -273,7 +273,7 @@ public class LoadbalancerApiMockTest extends BaseProfitBricksMockTest {
       String content = "<ws:deleteLoadBalancer><loadBalancerId>" + loadBalancerId + "</loadBalancerId></ws:deleteLoadBalancer>";
 
       try {
-         boolean done = api.deleteLoadbalancer(loadBalancerId);
+         boolean done = api.deleteLoadBalancer(loadBalancerId);
 
          assertRequestHasCommonProperties(server.takeRequest(), content);
          assertTrue(done);

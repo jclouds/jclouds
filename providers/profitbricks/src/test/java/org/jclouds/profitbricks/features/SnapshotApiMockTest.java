@@ -47,13 +47,13 @@ public class SnapshotApiMockTest extends BaseProfitBricksMockTest {
       SnapshotApi api = pbApi.snapshotApi();
 
       try {
-	 List<Snapshot> snapshots = api.getAllSnapshots();
-	 assertRequestHasCommonProperties(server.takeRequest(), "<ws:getAllSnapshots/>");
-	 assertNotNull(snapshots);
-	 assertEquals(snapshots.size(), 2);
+         List<Snapshot> snapshots = api.getAllSnapshots();
+         assertRequestHasCommonProperties(server.takeRequest(), "<ws:getAllSnapshots/>");
+         assertNotNull(snapshots);
+         assertEquals(snapshots.size(), 2);
       } finally {
-	 pbApi.close();
-	 server.shutdown();
+         pbApi.close();
+         server.shutdown();
       }
    }
 
@@ -66,12 +66,12 @@ public class SnapshotApiMockTest extends BaseProfitBricksMockTest {
       SnapshotApi api = pbApi.snapshotApi();
 
       try {
-	 List<Snapshot> snapshots = api.getAllSnapshots();
-	 assertRequestHasCommonProperties(server.takeRequest());
-	 assertTrue(snapshots.isEmpty());
+         List<Snapshot> snapshots = api.getAllSnapshots();
+         assertRequestHasCommonProperties(server.takeRequest());
+         assertTrue(snapshots.isEmpty());
       } finally {
-	 pbApi.close();
-	 server.shutdown();
+         pbApi.close();
+         server.shutdown();
       }
    }
 
@@ -88,13 +88,13 @@ public class SnapshotApiMockTest extends BaseProfitBricksMockTest {
       String content = "<ws:getSnapshot><snapshotId>" + id + "</snapshotId></ws:getSnapshot>";
 
       try {
-	 Snapshot snapshot = api.getSnapshot(id);
-	 assertRequestHasCommonProperties(server.takeRequest(), content);
-	 assertNotNull(snapshot);
-	 assertEquals(snapshot.id(), id);
+         Snapshot snapshot = api.getSnapshot(id);
+         assertRequestHasCommonProperties(server.takeRequest(), content);
+         assertNotNull(snapshot);
+         assertEquals(snapshot.id(), id);
       } finally {
-	 pbApi.close();
-	 server.shutdown();
+         pbApi.close();
+         server.shutdown();
       }
    }
 
@@ -108,12 +108,12 @@ public class SnapshotApiMockTest extends BaseProfitBricksMockTest {
 
       String id = "random-non-existing-id";
       try {
-	 Snapshot snapshot = api.getSnapshot(id);
-	 assertRequestHasCommonProperties(server.takeRequest());
-	 assertNull(snapshot);
+         Snapshot snapshot = api.getSnapshot(id);
+         assertRequestHasCommonProperties(server.takeRequest());
+         assertNull(snapshot);
       } finally {
-	 pbApi.close();
-	 server.shutdown();
+         pbApi.close();
+         server.shutdown();
       }
    }
 
@@ -128,27 +128,27 @@ public class SnapshotApiMockTest extends BaseProfitBricksMockTest {
       String storageId = "aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee";
 
       String content = "<ws:createSnapshot>"
-	      + "<request>"
-	      + "<storageId>" + storageId + "</storageId>"
-	      + "<description>description</description>"
-	      + "<snapshotName>snapshot-name</snapshotName>"
-	      + "</request>"
-	      + "</ws:createSnapshot>";
+              + "<request>"
+              + "<storageId>" + storageId + "</storageId>"
+              + "<description>description</description>"
+              + "<snapshotName>snapshot-name</snapshotName>"
+              + "</request>"
+              + "</ws:createSnapshot>";
 
       try {
-	 Snapshot snapshot = api.createSnapshot(
-		 Snapshot.Request.creatingBuilder()
-		 .storageId(storageId)
-		 .description("description")
-		 .name("snapshot-name")
-		 .build());
-	 assertRequestHasCommonProperties(server.takeRequest(), content);
-	 assertNotNull(snapshot.id());
-	 assertEquals(snapshot.id(), "aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee");
+         Snapshot snapshot = api.createSnapshot(
+                 Snapshot.Request.creatingBuilder()
+                 .storageId(storageId)
+                 .description("description")
+                 .name("snapshot-name")
+                 .build());
+         assertRequestHasCommonProperties(server.takeRequest(), content);
+         assertNotNull(snapshot.id());
+         assertEquals(snapshot.id(), "aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee");
 
       } finally {
-	 pbApi.close();
-	 server.shutdown();
+         pbApi.close();
+         server.shutdown();
       }
    }
 
@@ -163,35 +163,43 @@ public class SnapshotApiMockTest extends BaseProfitBricksMockTest {
       String snapshotId = "aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee";
 
       String content = "<ws:updateSnapshot>"
-	      + "<request>"
-	      + "<snapshotId>" + snapshotId + "</snapshotId>"
-	      + "<description>description</description>"
-	      + "<snapshotName>snapshot-name</snapshotName>"
-	      + "<bootable>false</bootable>"
-	      + "<osType>LINUX</osType>"
-	      + "<cpuHotPlug>false</cpuHotPlug>"
-	      + "<cpuHotUnPlug>false</cpuHotUnPlug>"
-	      + "<ramHotPlug>false</ramHotPlug>"
-	      + "<ramHotUnPlug>false</ramHotUnPlug>"
-	      + "<nicHotPlug>false</nicHotPlug>"
-	      + "<nicHotUnPlug>false</nicHotUnPlug>"
-	      + "<discVirtioHotPlug>false</discVirtioHotPlug>"
-	      + "<discVirtioHotUnPlug>false</discVirtioHotUnPlug>"
-	      + "</request>"
-	      + "</ws:updateSnapshot>";
+              + "<request>"
+              + "<snapshotId>" + snapshotId + "</snapshotId>"
+              + "<description>description</description>"
+              + "<snapshotName>snapshot-name</snapshotName>"
+              + "<bootable>false</bootable>"
+              + "<osType>LINUX</osType>"
+              + "<cpuHotPlug>false</cpuHotPlug>"
+              + "<cpuHotUnPlug>false</cpuHotUnPlug>"
+              + "<ramHotPlug>false</ramHotPlug>"
+              + "<ramHotUnPlug>false</ramHotUnPlug>"
+              + "<nicHotPlug>false</nicHotPlug>"
+              + "<nicHotUnPlug>false</nicHotUnPlug>"
+              + "<discVirtioHotPlug>false</discVirtioHotPlug>"
+              + "<discVirtioHotUnPlug>false</discVirtioHotUnPlug>"
+              + "</request>"
+              + "</ws:updateSnapshot>";
 
       try {
-	 String requestId = api.updateSnapshot(Snapshot.Request.updatingBuilder()
-		 .snapshotId(snapshotId)
-		 .name("snapshot-name")
-		 .description("description")
-		 .osType(OsType.LINUX)
-		 .build());
-	 assertRequestHasCommonProperties(server.takeRequest(), content);
-	 assertNotNull(requestId);
+         String requestId = api.updateSnapshot(Snapshot.Request.updatingBuilder()
+                 .snapshotId(snapshotId)
+                 .name("snapshot-name")
+                 .description("description")
+                 .osType(OsType.LINUX)
+                 .isCpuHotPlug(false)
+                 .isCpuHotUnPlug(false)
+                 .isDiscVirtioHotPlug(false)
+                 .isDiscVirtioHotUnPlug(false)
+                 .isNicHotPlug(false)
+                 .isNicHotUnPlug(false)
+                 .isRamHotPlug(false)
+                 .isRamHotUnPlug(false)
+                 .build());
+         assertRequestHasCommonProperties(server.takeRequest(), content);
+         assertNotNull(requestId);
       } finally {
-	 pbApi.close();
-	 server.shutdown();
+         pbApi.close();
+         server.shutdown();
       }
    }
 
@@ -207,12 +215,12 @@ public class SnapshotApiMockTest extends BaseProfitBricksMockTest {
       String content = "<ws:deleteSnapshot><snapshotId>" + snapshotId + "</snapshotId></ws:deleteSnapshot>";
 
       try {
-	 boolean result = api.deleteSnapshot(snapshotId);
-	 assertRequestHasCommonProperties(server.takeRequest(), content);
-	 assertTrue(result);
+         boolean result = api.deleteSnapshot(snapshotId);
+         assertRequestHasCommonProperties(server.takeRequest(), content);
+         assertTrue(result);
       } finally {
-	 pbApi.close();
-	 server.shutdown();
+         pbApi.close();
+         server.shutdown();
       }
    }
 
@@ -226,12 +234,12 @@ public class SnapshotApiMockTest extends BaseProfitBricksMockTest {
 
       String id = "random-non-existing-id";
       try {
-	 boolean result = api.deleteSnapshot(id);
-	 assertRequestHasCommonProperties(server.takeRequest());
-	 Assert.assertFalse(result);
+         boolean result = api.deleteSnapshot(id);
+         assertRequestHasCommonProperties(server.takeRequest());
+         Assert.assertFalse(result);
       } finally {
-	 pbApi.close();
-	 server.shutdown();
+         pbApi.close();
+         server.shutdown();
       }
    }
 
@@ -248,15 +256,15 @@ public class SnapshotApiMockTest extends BaseProfitBricksMockTest {
 
       String content = "<ws:rollbackSnapshot><request><snapshotId>" + snapshotId + "</snapshotId><storageId>" + storageId + "</storageId></request></ws:rollbackSnapshot>";
       try {
-	 String result = api.rollbackSnapshot(Snapshot.Request.rollbackBuilder()
-		 .snapshotId(snapshotId)
-		 .storageId(storageId)
-		 .build());
-	 assertRequestHasCommonProperties(server.takeRequest(), content);
-	 assertNotNull(result);
+         String result = api.rollbackSnapshot(Snapshot.Request.rollbackBuilder()
+                 .snapshotId(snapshotId)
+                 .storageId(storageId)
+                 .build());
+         assertRequestHasCommonProperties(server.takeRequest(), content);
+         assertNotNull(result);
       } finally {
-	 pbApi.close();
-	 server.shutdown();
+         pbApi.close();
+         server.shutdown();
       }
    }
 }

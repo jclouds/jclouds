@@ -19,11 +19,9 @@ package org.jclouds.profitbricks.http.parser.storage;
 import java.util.Date;
 import java.util.List;
 
-import org.jclouds.date.DateCodec;
-
 import com.google.inject.Inject;
 
-import org.jclouds.date.DateCodecFactory;
+import org.jclouds.date.DateService;
 import org.jclouds.profitbricks.domain.ProvisioningState;
 import org.jclouds.profitbricks.domain.Storage;
 import org.jclouds.profitbricks.domain.Storage.BusType;
@@ -33,20 +31,20 @@ import com.google.common.collect.Lists;
 
 public abstract class BaseStorageResponseHandler<T> extends BaseProfitBricksResponseHandler<T> {
 
-   protected final DateCodec dateCodec;
+   protected final DateService dateService;
 
    protected Storage.Builder builder;
    protected List<String> serverIds;
 
    @Inject
-   BaseStorageResponseHandler(DateCodecFactory dateCodec) {
-      this.dateCodec = dateCodec.iso8601();
+   BaseStorageResponseHandler(DateService dateService) {
+      this.dateService = dateService;
       this.builder = Storage.builder();
       this.serverIds = Lists.newArrayList();
    }
 
    protected final Date textToIso8601Date() {
-      return dateCodec.toDate(textToStringValue());
+      return dateService.iso8601DateOrSecondsDateParse(textToStringValue());
    }
 
    @Override

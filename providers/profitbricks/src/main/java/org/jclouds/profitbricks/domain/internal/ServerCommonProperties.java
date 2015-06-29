@@ -16,30 +16,10 @@
  */
 package org.jclouds.profitbricks.domain.internal;
 
-import org.jclouds.javax.annotation.Nullable;
-
 /**
  * An interface used as common data type for {@link org.jclouds.profitbricks.domain.Server.Builder}
  */
-public interface ServerCommonProperties {
-
-   @Nullable
-   Boolean isCpuHotPlug();
-
-   @Nullable
-   Boolean isRamHotPlug();
-
-   @Nullable
-   Boolean isNicHotPlug();
-
-   @Nullable
-   Boolean isNicHotUnPlug();
-
-   @Nullable
-   Boolean isDiscVirtioHotPlug();
-
-   @Nullable
-   Boolean isDiscVirtioHotUnPlug();
+public interface ServerCommonProperties extends HotPluggable {
 
    String name();
 

@@ -17,8 +17,8 @@
 package org.jclouds.profitbricks.http.parser.snapshot;
 
 import java.util.Date;
-import org.jclouds.date.DateCodec;
-import org.jclouds.date.DateCodecFactory;
+
+import org.jclouds.date.DateService;
 import org.jclouds.profitbricks.domain.Location;
 import org.jclouds.profitbricks.domain.OsType;
 import org.jclouds.profitbricks.domain.ProvisioningState;
@@ -29,55 +29,55 @@ public abstract class BaseSnapshotResponseHandler<T> extends BaseProfitBricksRes
 
    protected Snapshot.Builder builder;
 
-   protected final DateCodec dateCodec;
+   protected final DateService dateService;
 
-   BaseSnapshotResponseHandler(DateCodecFactory dateCodec) {
-      this.dateCodec = dateCodec.iso8601();
+   BaseSnapshotResponseHandler(DateService dateService) {
+      this.dateService = dateService;
       this.builder = Snapshot.builder();
    }
 
    protected final Date textToIso8601Date() {
-      return dateCodec.toDate(textToStringValue());
+      return dateService.iso8601DateOrSecondsDateParse(textToStringValue());
    }
 
    @Override
    protected void setPropertyOnEndTag(String qName) {
       if ("snapshotId".equals(qName))
-	 builder.id(textToStringValue());
+         builder.id(textToStringValue());
       else if ("snapshotName".equals(qName))
-	 builder.name(textToStringValue());
+         builder.name(textToStringValue());
       else if ("snapshotSize".equals(qName))
-	 builder.size(textToFloatValue());
+         builder.size(textToFloatValue());
       else if ("osType".equals(qName))
-	 builder.osType(OsType.fromValue(textToStringValue()));
+         builder.osType(OsType.fromValue(textToStringValue()));
       else if ("location".equals(qName))
-	 builder.location(Location.fromId(textToStringValue()));
+         builder.location(Location.fromId(textToStringValue()));
       else if ("description".equals(qName))
-	 builder.description(qName);
+         builder.description(qName);
       else if ("bootable".equals(qName))
-	 builder.bootable(textToBooleanValue());
+         builder.isBootable(textToBooleanValue());
       else if ("cpuHotPlug".equals(qName))
-	 builder.cpuHotPlug(textToBooleanValue());
+         builder.isCpuHotPlug(textToBooleanValue());
       else if ("cpuHotUnPlug".equals(qName))
-	 builder.cpuHotUnPlug(textToBooleanValue());
+         builder.isCpuHotUnPlug(textToBooleanValue());
       else if ("ramHotPlug".equals(qName))
-	 builder.ramHotPlug(textToBooleanValue());
+         builder.isRamHotPlug(textToBooleanValue());
       else if ("ramHotUnPlug".equals(qName))
-	 builder.ramHotUnPlug(textToBooleanValue());
+         builder.isRamHotUnPlug(textToBooleanValue());
       else if ("nicHotPlug".equals(qName))
-	 builder.nicHotPlug(textToBooleanValue());
+         builder.isNicHotPlug(textToBooleanValue());
       else if ("nicHotUnPlug".equals(qName))
-	 builder.nicHotUnPlug(textToBooleanValue());
+         builder.isNicHotUnPlug(textToBooleanValue());
       else if ("discVirtioHotPlug".equals(qName))
-	 builder.discVirtioHotPlug(textToBooleanValue());
+         builder.isDiscVirtioHotPlug(textToBooleanValue());
       else if ("discVirtioHotUnPlug".equals(qName))
-	 builder.discVirtioHotUnPlug(textToBooleanValue());
+         builder.isDiscVirtioHotUnPlug(textToBooleanValue());
       else if ("provisioningState".equals(qName))
-	 builder.state(ProvisioningState.fromValue(textToStringValue()));
+         builder.state(ProvisioningState.fromValue(textToStringValue()));
       else if ("creationTimestamp".equals(qName))
-	 builder.creationTime(textToIso8601Date());
+         builder.creationTime(textToIso8601Date());
       else if ("modificationTimestamp".equals(qName))
-	 builder.lastModificationTime(textToIso8601Date());
+         builder.lastModificationTime(textToIso8601Date());
    }
 
 }

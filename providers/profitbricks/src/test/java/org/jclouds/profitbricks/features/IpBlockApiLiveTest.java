@@ -47,7 +47,7 @@ public class IpBlockApiLiveTest extends BaseProfitBricksLiveTest {
 
    @Test
    public void testReservePublicIpBlock() {
-      newIpBlock = api.ipBlockApi().reservePublicIpBlock("2", Location.US_LAS.value());
+      newIpBlock = api.ipBlockApi().reservePublicIpBlock("2", Location.US_LAS.getId());
 
       assertNotNull(newIpBlock);
       assertNotNull(newIpBlock.ips());

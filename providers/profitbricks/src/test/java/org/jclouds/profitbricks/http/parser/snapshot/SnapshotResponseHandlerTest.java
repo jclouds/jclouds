@@ -16,16 +16,17 @@
  */
 package org.jclouds.profitbricks.http.parser.snapshot;
 
-import org.jclouds.date.DateCodec;
-import org.jclouds.date.DateCodecFactory;
 import org.jclouds.http.functions.ParseSax;
 import org.jclouds.profitbricks.domain.Location;
 import org.jclouds.profitbricks.domain.OsType;
 import org.jclouds.profitbricks.domain.ProvisioningState;
 import org.jclouds.profitbricks.domain.Snapshot;
 import org.jclouds.profitbricks.http.parser.BaseResponseHandlerTest;
+
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
+
+import org.jclouds.date.DateService;
 import org.testng.annotations.Test;
 
 @Test(groups = "unit", testName = "ServerResponseHandlerTest")
@@ -36,8 +37,8 @@ public class SnapshotResponseHandlerTest extends BaseResponseHandlerTest<Snapsho
       return factory.create(injector.getInstance(SnapshotResponseHandler.class));
    }
 
-   protected DateCodecFactory createDateParser() {
-      return injector.getInstance(DateCodecFactory.class);
+   protected DateService createDateParser() {
+      return injector.getInstance(DateService.class);
    }
 
    @Test
@@ -47,28 +48,28 @@ public class SnapshotResponseHandlerTest extends BaseResponseHandlerTest<Snapsho
       Snapshot actual = parser.parse(payloadFromResource("/snapshot/snapshot.xml"));
       assertNotNull(actual, "Parsed content returned null");
 
-      DateCodec dateParser = createDateParser().iso8601();
+      DateService dateParser = createDateParser();
 
       Snapshot expected = Snapshot.builder()
-	      .id("qswdefrg-qaws-qaws-defe-rgrgdsvcxbrh")
-	      .description("description")
-	      .size(1024)
-	      .name("snapshot01")
-	      .state(ProvisioningState.AVAILABLE)
-	      .bootable(true)
-	      .osType(OsType.LINUX)
-	      .cpuHotPlug(true)
-	      .cpuHotUnPlug(true)
-	      .discVirtioHotPlug(true)
-	      .discVirtioHotUnPlug(true)
-	      .ramHotPlug(true)
-	      .ramHotUnPlug(true)
-	      .nicHotPlug(true)
-	      .nicHotUnPlug(true)
-	      .location(Location.US_LAS)
-	      .creationTime(dateParser.toDate("2015-01-26T07:09:23.138Z"))
-	      .lastModificationTime(dateParser.toDate("2015-01-26T07:09:23.138Z"))
-	      .build();
+              .id("qswdefrg-qaws-qaws-defe-rgrgdsvcxbrh")
+              .description("description")
+              .size(1024)
+              .name("snapshot01")
+              .state(ProvisioningState.AVAILABLE)
+              .isBootable(true)
+              .osType(OsType.LINUX)
+              .isCpuHotPlug(true)
+              .isCpuHotUnPlug(true)
+              .isDiscVirtioHotPlug(true)
+              .isDiscVirtioHotUnPlug(true)
+              .isRamHotPlug(true)
+              .isRamHotUnPlug(true)
+              .isNicHotPlug(true)
+              .isNicHotUnPlug(true)
+              .location(Location.US_LAS)
+              .creationTime(dateParser.iso8601DateOrSecondsDateParse("2015-01-26T07:09:23.138Z"))
+              .lastModificationTime(dateParser.iso8601DateOrSecondsDateParse("2015-01-26T07:09:23.138Z"))
+              .build();
 
       assertEquals(actual, expected);
 

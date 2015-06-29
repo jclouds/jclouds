@@ -28,6 +28,7 @@ import org.jclouds.javax.annotation.Nullable;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
+import static org.jclouds.profitbricks.util.Passwords.isValidPassword;
 
 @AutoValue
 public abstract class Storage {
@@ -194,7 +195,8 @@ public abstract class Storage {
          public abstract String profitBricksImagePassword();
 
          public static CreatePayload create(String dataCenterId, float size, String name, String mountImageId, String imagePassword) {
-            validateSize(size);
+            checkSize(size);
+            checkPassword(imagePassword);
             return new AutoValue_Storage_Request_CreatePayload(dataCenterId, size, name, mountImageId, imagePassword);
          }
 
@@ -258,7 +260,7 @@ public abstract class Storage {
          public abstract String mountImageId();
 
          public static UpdatePayload create(String id, Float size, String name, String mountImageId) {
-            validateSize(size);
+            checkSize(size);
             return new AutoValue_Storage_Request_UpdatePayload(id, size, name, mountImageId);
          }
 
@@ -346,10 +348,15 @@ public abstract class Storage {
          }
       }
 
-      private static void validateSize(Float size) {
+      private static void checkSize(Float size) {
          if (size != null)
             checkArgument(size > 1, "Storage size must be > 1GB");
+      }
 
+      private static void checkPassword(String password) {
+         if (password != null)
+            checkArgument(isValidPassword(password), "Password must be between 8 and 50 characters, "
+                    + "only a-z, A-Z, 0-9 without  characters i, I, l, o, O, w, W, y, Y, z, Z and 1, 0");
       }
    }
 

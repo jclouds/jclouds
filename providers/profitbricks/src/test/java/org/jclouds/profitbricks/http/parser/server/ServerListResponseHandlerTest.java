@@ -20,8 +20,6 @@ import com.google.common.collect.ImmutableList;
 
 import java.util.List;
 
-import org.jclouds.date.DateCodec;
-import org.jclouds.date.DateCodecFactory;
 import org.jclouds.http.functions.ParseSax;
 import org.jclouds.profitbricks.domain.AvailabilityZone;
 import org.jclouds.profitbricks.domain.OsType;
@@ -32,6 +30,8 @@ import org.jclouds.profitbricks.http.parser.BaseResponseHandlerTest;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
 
+import org.jclouds.date.DateService;
+import org.jclouds.profitbricks.domain.DataCenter;
 import org.jclouds.profitbricks.domain.Firewall;
 import org.jclouds.profitbricks.domain.Nic;
 import org.jclouds.profitbricks.domain.Storage;
@@ -45,8 +45,8 @@ public class ServerListResponseHandlerTest extends BaseResponseHandlerTest<List<
       return factory.create(injector.getInstance(ServerListResponseHandler.class));
    }
 
-   protected DateCodecFactory createDateParser() {
-      return injector.getInstance(DateCodecFactory.class);
+   protected DateService createDateParser() {
+      return injector.getInstance(DateService.class);
    }
 
    @Test
@@ -56,10 +56,15 @@ public class ServerListResponseHandlerTest extends BaseResponseHandlerTest<List<
       List<Server> actual = parser.parse(payloadFromResource("/server/servers.xml"));
       assertNotNull(actual, "Parsed content returned null");
 
-      DateCodec dateParser = createDateParser().iso8601();
+      DateService dateParser = createDateParser();
 
       List<Server> expected = ImmutableList.<Server>of(
               Server.builder()
+              .dataCenter(DataCenter.builder()
+                      .id("aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee")
+                      .version(10)
+                      .build()
+              )
               .id("qwertyui-qwer-qwer-qwer-qwertyyuiiop")
               .name("facebook-node")
               .cores(4)
@@ -67,8 +72,8 @@ public class ServerListResponseHandlerTest extends BaseResponseHandlerTest<List<
               .hasInternetAccess(true)
               .state(ProvisioningState.AVAILABLE)
               .status(Server.Status.RUNNING)
-              .creationTime(dateParser.toDate("2014-12-04T07:09:23.138Z"))
-              .lastModificationTime(dateParser.toDate("2014-12-12T03:08:35.629Z"))
+              .creationTime(dateParser.iso8601DateOrSecondsDateParse("2014-12-04T07:09:23.138Z"))
+              .lastModificationTime(dateParser.iso8601DateOrSecondsDateParse("2014-12-12T03:08:35.629Z"))
               .osType(OsType.LINUX)
               .availabilityZone(AvailabilityZone.AUTO)
               .isCpuHotPlug(true)
@@ -77,7 +82,7 @@ public class ServerListResponseHandlerTest extends BaseResponseHandlerTest<List<
               .isNicHotUnPlug(true)
               .isDiscVirtioHotPlug(true)
               .isDiscVirtioHotUnPlug(true)
-              .activate(true)
+              .loadBalanced(true)
               .balancedNicId("qswdefrg-qaws-qaws-defe-rgrgdsvcxbrh")
               .storages(ImmutableList.<Storage>of(
                               Storage.builder()
@@ -113,6 +118,11 @@ public class ServerListResponseHandlerTest extends BaseResponseHandlerTest<List<
               )
               .build(),
               Server.builder()
+              .dataCenter(DataCenter.builder()
+                      .id("qqqqqqqq-wwww-rrrr-tttt-yyyyyyyyyyyy")
+                      .version(238)
+                      .build()
+              )
               .id("asdfghjk-asdf-asdf-asdf-asdfghjklkjl")
               .name("google-node")
               .cores(1)
@@ -120,8 +130,8 @@ public class ServerListResponseHandlerTest extends BaseResponseHandlerTest<List<
               .hasInternetAccess(false)
               .state(ProvisioningState.AVAILABLE)
               .status(Server.Status.RUNNING)
-              .creationTime(dateParser.toDate("2014-11-12T07:01:00.441Z"))
-              .lastModificationTime(dateParser.toDate("2014-11-12T07:01:00.441Z"))
+              .creationTime(dateParser.iso8601DateOrSecondsDateParse("2014-11-12T07:01:00.441Z"))
+              .lastModificationTime(dateParser.iso8601DateOrSecondsDateParse("2014-11-12T07:01:00.441Z"))
               .osType(OsType.LINUX)
               .availabilityZone(AvailabilityZone.AUTO)
               .isCpuHotPlug(true)
@@ -130,7 +140,7 @@ public class ServerListResponseHandlerTest extends BaseResponseHandlerTest<List<
               .isNicHotUnPlug(true)
               .isDiscVirtioHotPlug(true)
               .isDiscVirtioHotUnPlug(true)
-              .activate(true)
+              .loadBalanced(true)
               .balancedNicId("qswdefrg-qaws-qaws-defe-rgrgdsvcxbrh")
               .storages(ImmutableList.<Storage>of(
                               Storage.builder()

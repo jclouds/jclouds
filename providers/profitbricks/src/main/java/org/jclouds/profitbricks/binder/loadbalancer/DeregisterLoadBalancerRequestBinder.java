@@ -33,9 +33,8 @@ public class DeregisterLoadBalancerRequestBinder extends BaseProfitBricksRequest
    protected String createPayload(LoadBalancer.Request.DeregisterPayload payload) {
       requestBuilder.append("<ws:deregisterServersOnLoadBalancer>")
               .append("<request>");
-      for (String s : payload.serverIds()) {
+      for (String s : payload.serverIds())
          requestBuilder.append(format("<serverIds>%s</serverIds>", s));
-      }
       requestBuilder.append(format("<loadBalancerId>%s</loadBalancerId>", payload.id()))
               .append("</request>")
               .append("</ws:deregisterServersOnLoadBalancer>");

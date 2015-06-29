@@ -1,14 +1,14 @@
 <soapenv:Envelope
-  xmlns:soapenv='http://schemas.xmlsoap.org/soap/envelope/'
-  xmlns:ws='http://ws.api.profitbricks.com/'>
+    xmlns:soapenv='http://schemas.xmlsoap.org/soap/envelope/'
+    xmlns:ws='http://ws.api.profitbricks.com/'>
     <soapenv:Header />
     <soapenv:Body>
         <ws:deregisterServersOnLoadBalancer>
-			<request>
+            <request>
                 <serverIds>1</serverIds>
                 <serverIds>2</serverIds>
                 <loadBalancerId>load-balancer-id</loadBalancerId>
-			<request>
+                <request>
         </ws:deregisterServersOnLoadBalancer>
     </soapenv:Body>
 </soapenv:Envelope>

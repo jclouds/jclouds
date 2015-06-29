@@ -16,10 +16,13 @@
  */
 package org.jclouds.profitbricks.http.parser.server;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 import java.util.Date;
-import org.jclouds.date.DateCodec;
-import org.jclouds.date.DateCodecFactory;
+
+import org.jclouds.date.DateService;
 import org.jclouds.profitbricks.domain.AvailabilityZone;
+import org.jclouds.profitbricks.domain.DataCenter;
 import org.jclouds.profitbricks.domain.OsType;
 import org.jclouds.profitbricks.domain.ProvisioningState;
 import org.jclouds.profitbricks.domain.Server;
@@ -31,29 +34,28 @@ import org.xml.sax.SAXException;
 
 public abstract class BaseServerResponseHandler<T> extends BaseProfitBricksResponseHandler<T> {
 
-   protected StorageListResponseHandler storageListResponseHandler;
-   protected NicListResponseHandler nicListResponseHandler;
+   protected final StorageListResponseHandler storageListResponseHandler;
+   protected final NicListResponseHandler nicListResponseHandler;
 
+   protected DataCenter.Builder dataCenterBuilder;
    protected Server.DescribingBuilder builder;
 
-   protected final DateCodec dateCodec;
+   protected final DateService dateService;
 
    protected boolean useStorageParser = false;
    protected boolean useNicParser = false;
 
-   BaseServerResponseHandler(DateCodecFactory dateCodec, StorageListResponseHandler storageListResponseHandler,
+   BaseServerResponseHandler(DateService dateService, StorageListResponseHandler storageListResponseHandler,
            NicListResponseHandler nicListResponseHandler) {
-      if (dateCodec == null)
-         throw new NullPointerException("DateCodecFactory cannot be null");
-      if (storageListResponseHandler == null)
-         throw new NullPointerException("StorageListResponseHandler cannot be null");
-      if (nicListResponseHandler == null)
-         throw new NullPointerException("NicListResponseHandler cannot be null");
+      checkNotNull(dateService, "DateService cannot be null");
+      checkNotNull(storageListResponseHandler, "StorageListResponseHandler cannot be null");
+      checkNotNull(nicListResponseHandler, "NicListResponseHandler cannot be null");
 
-      this.dateCodec = dateCodec.iso8601();
+      this.dateService = dateService;
       this.storageListResponseHandler = storageListResponseHandler;
       this.nicListResponseHandler = nicListResponseHandler;
       this.builder = Server.builder();
+      this.dataCenterBuilder = DataCenter.builder();
    }
 
    @Override
@@ -82,12 +84,16 @@ public abstract class BaseServerResponseHandler<T> extends BaseProfitBricksRespo
    }
 
    protected final Date textToIso8601Date() {
-      return dateCodec.toDate(textToStringValue());
+      return dateService.iso8601DateOrSecondsDateParse(textToStringValue());
    }
 
    @Override
    protected void setPropertyOnEndTag(String qName) {
-      if ("serverId".equals(qName))
+      if ("dataCenterId".equals(qName))
+         dataCenterBuilder.id(textToStringValue());
+      else if ("dataCenterVersion".equals(qName))
+         dataCenterBuilder.version(textToIntValue());
+      else if ("serverId".equals(qName))
          builder.id(textToStringValue());
       else if ("serverName".equals(qName))
          builder.name(textToStringValue());
@@ -122,7 +128,7 @@ public abstract class BaseServerResponseHandler<T> extends BaseProfitBricksRespo
       else if ("discVirtioHotUnPlug".equals(qName))
          builder.isDiscVirtioHotUnPlug(textToBooleanValue());
       else if ("activate".equals(qName))
-         builder.activate(textToBooleanValue());
+         builder.loadBalanced(textToBooleanValue());
       else if ("balancedNicId".equals(qName))
          builder.balancedNicId(textToStringValue());
    }

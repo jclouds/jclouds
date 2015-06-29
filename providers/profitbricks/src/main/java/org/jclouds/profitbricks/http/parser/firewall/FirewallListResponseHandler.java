@@ -16,14 +16,14 @@
  */
 package org.jclouds.profitbricks.http.parser.firewall;
 
-import com.google.common.collect.Lists;
-import com.google.inject.Inject;
-
 import java.util.List;
 
 import org.jclouds.profitbricks.domain.Firewall;
 import org.jclouds.profitbricks.http.parser.firewall.rule.FirewallRuleListResponseHandler;
 import org.xml.sax.SAXException;
+
+import com.google.inject.Inject;
+import com.google.common.collect.Lists;
 
 public class FirewallListResponseHandler extends BaseFirewallResponseHandler<List<Firewall>> {
 

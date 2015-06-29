@@ -16,7 +16,6 @@
  */
 package org.jclouds.profitbricks.features;
 
-import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
 
 import java.util.List;
@@ -41,6 +40,7 @@ import org.testng.annotations.AfterClass;
 import org.testng.annotations.Test;
 
 import com.google.common.base.Predicate;
+import com.google.common.collect.ImmutableList;
 
 @Test(groups = "live", testName = "FirewallApiLiveTest", singleThreaded = true)
 public class FirewallApiLiveTest extends BaseProfitBricksLiveTest {

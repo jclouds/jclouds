@@ -16,9 +16,12 @@
  */
 package org.jclouds.profitbricks.http.parser.loadbalancer;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 import java.util.Date;
-import org.jclouds.date.DateCodec;
-import org.jclouds.date.DateCodecFactory;
+
+import org.jclouds.date.DateService;
+import org.jclouds.profitbricks.domain.DataCenter;
 import org.jclouds.profitbricks.domain.LoadBalancer;
 import org.jclouds.profitbricks.domain.LoadBalancer.Algorithm;
 import org.jclouds.profitbricks.domain.ProvisioningState;
@@ -34,23 +37,23 @@ public abstract class BaseLoadBalancerResponseHandler<T> extends BaseProfitBrick
    protected final FirewallListResponseHandler firewallListResponseHandler;
 
    protected LoadBalancer.Builder builder;
-   protected final DateCodec dateCodec;
+   protected DataCenter.Builder dataCenterBuilder;
+
+   protected final DateService dateService;
 
    protected boolean useBalancedServerParser = false;
    protected boolean useFirewallParser = false;
 
-   protected BaseLoadBalancerResponseHandler(DateCodecFactory dateCodec,
+   protected BaseLoadBalancerResponseHandler(DateService dateService,
            ServerListResponseHandler balancedServerResponseHandler, FirewallListResponseHandler firewallResponseHandler) {
 
-      if (dateCodec == null)
-         throw new NullPointerException("DateCodecFactory cannot be null");
-      if (balancedServerResponseHandler == null)
-         throw new NullPointerException("BalancedServerResponseHandler cannot be null");
-      if (firewallResponseHandler == null)
-         throw new NullPointerException("FirewallListResponseHandler cannot be null");
+      checkNotNull(dateService, "DateService cannot be null");
+      checkNotNull(balancedServerResponseHandler, "BalancedServerResponseHandler cannot be null");
+      checkNotNull(firewallResponseHandler, "FirewallListResponseHandler cannot be null");
 
-      this.dateCodec = dateCodec.iso8601();
+      this.dateService = dateService;
       this.builder = LoadBalancer.builder();
+      this.dataCenterBuilder = DataCenter.builder();
 
       this.balancedServerResponseHandler = balancedServerResponseHandler;
       this.firewallListResponseHandler = firewallResponseHandler;
@@ -80,7 +83,7 @@ public abstract class BaseLoadBalancerResponseHandler<T> extends BaseProfitBrick
    }
 
    protected final Date textToIso8601Date() {
-      return dateCodec.toDate(textToStringValue());
+      return dateService.iso8601DateOrSecondsDateParse(textToStringValue());
    }
 
    @Override
@@ -90,11 +93,11 @@ public abstract class BaseLoadBalancerResponseHandler<T> extends BaseProfitBrick
       else if ("loadBalancerName".equals(qName))
          builder.name(textToStringValue());
       else if ("loadBalancerAlgorithm".equals(qName))
-         builder.loadBalancerAlgorithm(Algorithm.fromValue(textToStringValue()));
+         builder.algorithm(Algorithm.fromValue(textToStringValue()));
       else if ("dataCenterId".equals(qName))
-         builder.dataCenterId(textToStringValue());
+         dataCenterBuilder.id(textToStringValue());
       else if ("dataCenterVersion".equals(qName))
-         builder.dataCenterVersion(textToStringValue());
+         dataCenterBuilder.version(textToIntValue());
       else if ("internetAccess".equals(qName))
          builder.internetAccess(textToBooleanValue());
       else if ("ip".equals(qName))

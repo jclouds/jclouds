@@ -35,9 +35,8 @@ public class RegisterLoadBalancerRequestBinder extends BaseProfitBricksRequestBi
               .append("<ws:registerServersOnLoadBalancer>").append("<request>")
               .append(format("<loadBalancerId>%s</loadBalancerId>", payload.id()));
 
-      for (String s : payload.serverIds()) {
+      for (String s : payload.serverIds())
          requestBuilder.append(format("<serverIds>%s</serverIds>", s));
-      }
       requestBuilder
               .append("</request>")
               .append("</ws:registerServersOnLoadBalancer>");

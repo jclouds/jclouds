@@ -47,13 +47,10 @@ public abstract class LoadBalancer {
    public abstract String name();
 
    @Nullable
-   public abstract Algorithm loadBalancerAlgorithm();
+   public abstract Algorithm algorithm();
 
    @Nullable
-   public abstract String dataCenterId();
-
-   @Nullable
-   public abstract String dataCenterVersion();
+   public abstract DataCenter dataCenter();
 
    @Nullable
    public abstract Boolean internetAccess();
@@ -79,10 +76,11 @@ public abstract class LoadBalancer {
    @Nullable
    public abstract List<Firewall> firewalls();
 
-   public static LoadBalancer create(String id, String name, Algorithm loadBalancerAlgorithm,
-           String dataCenterId, String dataCenterVersion, boolean internetAccess,
-           String ip, String lanId, ProvisioningState state, Date creationTime, Date lastModificationTime, List<Server> balancedServers, List<Firewall> firewalls) {
-      return new AutoValue_LoadBalancer(id, name, loadBalancerAlgorithm, dataCenterId, dataCenterVersion, internetAccess, ip, lanId, state, creationTime, lastModificationTime,
+   public static LoadBalancer create(String id, String name, Algorithm algorithm, DataCenter dataCenter,
+           boolean internetAccess, String ip, String lanId, ProvisioningState state, Date creationTime,
+           Date lastModificationTime, List<Server> balancedServers, List<Firewall> firewalls) {
+      return new AutoValue_LoadBalancer(id, name, algorithm, dataCenter,
+              internetAccess, ip, lanId, state, creationTime, lastModificationTime,
               balancedServers != null ? ImmutableList.copyOf(balancedServers) : ImmutableList.<Server>of(),
               firewalls != null ? ImmutableList.copyOf(firewalls) : ImmutableList.<Firewall>of());
    }
@@ -102,11 +100,9 @@ public abstract class LoadBalancer {
 
       private String name;
 
-      private Algorithm loadBalancerAlgorithm;
+      private Algorithm algorithm;
 
-      private String dataCenterId;
-
-      private String dataCenterVersion;
+      private DataCenter dataCenter;
 
       private boolean internetAccess;
 
@@ -134,18 +130,13 @@ public abstract class LoadBalancer {
          return this;
       }
 
-      public Builder loadBalancerAlgorithm(Algorithm loadBalancerAlgorithm) {
-         this.loadBalancerAlgorithm = loadBalancerAlgorithm;
+      public Builder algorithm(Algorithm algorithm) {
+         this.algorithm = algorithm;
          return this;
       }
 
-      public Builder dataCenterId(String dataCenterId) {
-         this.dataCenterId = dataCenterId;
-         return this;
-      }
-
-      public Builder dataCenterVersion(String dataCenterVersion) {
-         this.dataCenterVersion = dataCenterVersion;
+      public Builder dataCenter(DataCenter dataCenter) {
+         this.dataCenter = dataCenter;
          return this;
       }
 
@@ -191,13 +182,16 @@ public abstract class LoadBalancer {
 
       public LoadBalancer build() {
          checkIp(ip);
-         return LoadBalancer.create(id, name, loadBalancerAlgorithm, dataCenterId, dataCenterVersion, internetAccess, ip, lanId, state, creationTime, lastModificationTime, balancedServers, firewalls);
+         return LoadBalancer.create(id, name, algorithm, dataCenter, internetAccess,
+                 ip, lanId, state, creationTime, lastModificationTime, balancedServers, firewalls);
       }
 
       public Builder fromLoadBalancer(LoadBalancer in) {
-         return this.id(in.id()).name(in.name()).loadBalancerAlgorithm(in.loadBalancerAlgorithm())
-                 .dataCenterId(in.dataCenterId()).dataCenterVersion(in.dataCenterVersion()).internetAccess(in.internetAccess())
-                 .ip(in.ip()).lanId(in.lanId()).state(in.state()).creationTime(in.creationTime()).lastModificationTime(in.lastModificationTime()).balancedServers(in.balancedServers()).firewalls(in.firewalls());
+         return this.id(in.id()).name(in.name()).algorithm(in.algorithm())
+                 .dataCenter(in.dataCenter()).internetAccess(in.internetAccess())
+                 .ip(in.ip()).lanId(in.lanId()).state(in.state()).creationTime(in.creationTime())
+                 .lastModificationTime(in.lastModificationTime()).balancedServers(in.balancedServers())
+                 .firewalls(in.firewalls());
       }
    }
 

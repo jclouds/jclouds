@@ -80,7 +80,7 @@ public interface LoadBalancerApi {
    @POST
    @Named("loadbalancer:delete")
    @Payload("<ws:deleteLoadBalancer><loadBalancerId>{id}</loadBalancerId></ws:deleteLoadBalancer>")
-   boolean deleteLoadbalancer(@PayloadParam("id") String id);
+   boolean deleteLoadBalancer(@PayloadParam("id") String id);
 
    @POST
    @Named("loadbalancer:update")

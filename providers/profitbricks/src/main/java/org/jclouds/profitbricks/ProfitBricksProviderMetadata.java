@@ -16,8 +16,17 @@
  */
 package org.jclouds.profitbricks;
 
+import static org.jclouds.Constants.PROPERTY_CONNECTION_TIMEOUT;
+import static org.jclouds.Constants.PROPERTY_SO_TIMEOUT;
+import static org.jclouds.profitbricks.config.ProfitBricksComputeProperties.POLL_PERIOD;
+import static org.jclouds.profitbricks.config.ProfitBricksComputeProperties.POLL_MAX_PERIOD;
+import static org.jclouds.profitbricks.config.ProfitBricksComputeProperties.POLL_TIMEOUT;
+
 import com.google.auto.service.AutoService;
+
 import java.net.URI;
+import java.util.Properties;
+
 import org.jclouds.providers.ProviderMetadata;
 import org.jclouds.providers.internal.BaseProviderMetadata;
 
@@ -41,6 +50,19 @@ public class ProfitBricksProviderMetadata extends BaseProviderMetadata {
       return new Builder();
    }
 
+   public static Properties defaultProperties() {
+      Properties properties = ProfitBricksApiMetadata.defaultProperties();
+      long defaultTimeout = 60l * 60l; // 1 hour
+      properties.put(POLL_TIMEOUT, defaultTimeout);
+      properties.put(POLL_PERIOD, 2l);
+      properties.put(POLL_MAX_PERIOD, 2l * 10l);
+
+      properties.put(PROPERTY_SO_TIMEOUT, 60000 * 5);
+      properties.put(PROPERTY_CONNECTION_TIMEOUT, 60000 * 5);
+
+      return properties;
+   }
+
    public static class Builder extends BaseProviderMetadata.Builder {
 
       protected Builder() {
@@ -49,7 +71,8 @@ public class ProfitBricksProviderMetadata extends BaseProviderMetadata {
                  .homepage(URI.create("http://www.profitbricks.com"))
                  .console(URI.create("https://my.profitbricks.com/dashboard/dcdr2/"))
                  .linkedServices("profitbricks")
-                 .apiMetadata(new ProfitBricksApiMetadata());
+                 .apiMetadata(new ProfitBricksApiMetadata())
+                 .defaultProperties(ProfitBricksProviderMetadata.defaultProperties());
       }
 
       @Override
