@@ -297,9 +297,6 @@ public final class LocalBlobStore implements BlobStore {
                // Partial listing
                lastElement = contents.last();
                marker = lastElement.getName();
-               if (lastElement.getType() == StorageType.RELATIVE_PATH) {
-                  marker += "/";
-               }
             }
          }
 

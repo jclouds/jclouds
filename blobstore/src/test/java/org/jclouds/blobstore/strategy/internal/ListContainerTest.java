@@ -23,6 +23,7 @@ import com.google.inject.Injector;
 
 import org.jclouds.ContextBuilder;
 import org.jclouds.blobstore.BlobStore;
+import org.jclouds.blobstore.domain.PageSet;
 import org.jclouds.blobstore.domain.StorageMetadata;
 import org.jclouds.blobstore.domain.StorageType;
 import org.jclouds.blobstore.options.ListContainerOptions;
@@ -124,5 +125,24 @@ public class ListContainerTest {
       Iterable<? extends StorageMetadata> results = concatter.execute(containerName, ListContainerOptions.NONE);
       assertThat(results).hasSize(1);
       assertThat(Iterables.get(results, 0).getName()).isEqualTo(directory + '/');
+   }
+
+   public void testListMarkers() {
+      String containerName = "testListMarkers";
+      blobStore.createContainerInLocation(null, containerName);
+      blobStore.putBlob(containerName, blobStore.blobBuilder("abc").payload("").build());
+      blobStore.putBlob(containerName, blobStore.blobBuilder("foo/bar").payload("").build());
+      blobStore.putBlob(containerName, blobStore.blobBuilder("foo/baz").payload("").build());
+      blobStore.putBlob(containerName, blobStore.blobBuilder("qux").payload("").build());
+
+      PageSet<? extends StorageMetadata> results = blobStore.list(
+              containerName, ListContainerOptions.Builder.maxResults(1));
+      assertThat(results.getNextMarker()).isEqualTo("abc");
+      results = blobStore.list(containerName,
+              ListContainerOptions.Builder.maxResults(1).afterMarker(results.getNextMarker()));
+      assertThat(results.getNextMarker()).isEqualTo("foo/");
+      results = blobStore.list(containerName,
+              ListContainerOptions.Builder.maxResults(1).afterMarker(results.getNextMarker()));
+      assertThat(results.getNextMarker()).isEqualTo(null);
    }
 }
