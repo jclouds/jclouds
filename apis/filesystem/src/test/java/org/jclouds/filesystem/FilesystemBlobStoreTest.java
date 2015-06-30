@@ -525,8 +525,7 @@ public class FilesystemBlobStoreTest {
         checkForContainerContent(CONTAINER_NAME, dirs);
     }
 
-    // TODO: disable test due to unexpected trailing slash
-    @Test(dataProvider = "ignoreOnMacOSX", enabled = false)
+    @Test(dataProvider = "ignoreOnMacOSX")
     public void testListDirectoryBlobsS3FS() {
         blobStore.createContainerInLocation(null, CONTAINER_NAME);
         checkForContainerContent(CONTAINER_NAME, null);
@@ -540,7 +539,7 @@ public class FilesystemBlobStoreTest {
                 .inDirectory("");
         PageSet<? extends StorageMetadata> res = blobStore.list(CONTAINER_NAME, options);
         assertTrue(res.size() == 1);
-        assertEquals(res.iterator().next().getName(), d);
+        assertEquals(res.iterator().next().getName(), d + '/');
     }
 
 
