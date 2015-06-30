@@ -20,6 +20,7 @@ import java.util.Properties;
 
 import org.jclouds.blobstore.integration.internal.BaseContainerLiveTest;
 import org.jclouds.googlecloud.internal.TestProperties;
+import org.testng.SkipException;
 import org.testng.annotations.Test;
 
 @Test(groups = { "live" })
@@ -32,5 +33,10 @@ public class GoogleCloudStorageContainerLiveTest extends BaseContainerLiveTest {
    @Override protected Properties setupProperties() {
       TestProperties.setGoogleCredentialsFromJson(provider);
       return TestProperties.apply(provider, super.setupProperties());
+   }
+
+   @Override
+   public void testContainerListWithPrefix() {
+      throw new SkipException("Prefix option has not been plumbed down to GCS");
    }
 }
