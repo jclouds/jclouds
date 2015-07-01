@@ -361,13 +361,13 @@ public class BaseContainerIntegrationTest extends BaseBlobStoreIntegrationTest {
          options.afterMarker(pageSet.getNextMarker());
          pageSet = view.getBlobStore().list(containerName, options);
          assertThat(pageSet).hasSize(1);
-         assertThat(pageSet.iterator().next().getName()).isEqualTo("boo");
+         assertThat(pageSet.iterator().next().getName()).isEqualTo("boo/");
          assertThat(pageSet.getNextMarker()).isEqualTo("boo/");
 
          options.afterMarker(pageSet.getNextMarker());
          pageSet = view.getBlobStore().list(containerName, options);
          assertThat(pageSet).hasSize(1);
-         assertThat(pageSet.iterator().next().getName()).isEqualTo("cquux");
+         assertThat(pageSet.iterator().next().getName()).isEqualTo("cquux/");
          assertThat(pageSet.getNextMarker()).isNull();
 
          // list child directory with marker
@@ -380,7 +380,7 @@ public class BaseContainerIntegrationTest extends BaseBlobStoreIntegrationTest {
          options.afterMarker(pageSet.getNextMarker());
          pageSet = view.getBlobStore().list(containerName, options);
          assertThat(pageSet).hasSize(1);
-         assertThat(pageSet.iterator().next().getName()).isEqualTo("boo/baz");
+         assertThat(pageSet.iterator().next().getName()).isEqualTo("boo/baz/");
          assertThat(pageSet.getNextMarker()).isNull();
 
          // list child directory without marker
@@ -389,7 +389,7 @@ public class BaseContainerIntegrationTest extends BaseBlobStoreIntegrationTest {
          assertThat(pageSet).hasSize(2);
          Iterator<? extends StorageMetadata> it = pageSet.iterator();
          assertThat(it.next().getName()).isEqualTo("boo/bar");
-         assertThat(it.next().getName()).isEqualTo("boo/baz");
+         assertThat(it.next().getName()).isEqualTo("boo/baz/");
          assertThat(pageSet.getNextMarker()).isNull();
       } finally {
          returnContainer(containerName);
