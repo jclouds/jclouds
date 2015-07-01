@@ -34,7 +34,6 @@ public abstract class UrlMapValidateResult {
       return new AutoValue_UrlMapValidateResult(result);
    }
 
-   @SerializedNames({"loadSucceeded", "loadErrors", "testPassed", "testFailures"})
    public static UrlMapValidateResult create(Boolean loadSucceeded, List<String> loadErrors,
                               Boolean testPassed, List<UrlMapValidateResultInternal.TestFailure> testFailures) {
       return create(UrlMapValidateResultInternal.create(loadSucceeded, loadErrors, testPassed, testFailures));
