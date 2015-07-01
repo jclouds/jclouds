@@ -353,7 +353,7 @@ public final class LocalBlobStore implements BlobStore {
               transform(contents, new CommonPrefixes(prefix, delimiter)));
       commonPrefixes.remove(CommonPrefixes.NO_PREFIX);
 
-      contents = newTreeSet(filter(contents, new DelimiterFilter(prefix, delimiter)));
+      contents = newTreeSet(filter(contents, new DelimiterFilter(prefix, delimiter, commonPrefixes)));
 
       for (String o : commonPrefixes) {
          MutableStorageMetadata md = new MutableStorageMetadataImpl();
@@ -362,7 +362,7 @@ public final class LocalBlobStore implements BlobStore {
          if (prefix != null) {
             o = prefix + o;
          }
-         md.setName(o);
+         md.setName(o + delimiter);
          contents.add(md);
       }
       return contents;
@@ -457,21 +457,22 @@ public final class LocalBlobStore implements BlobStore {
    private static class DelimiterFilter implements Predicate<StorageMetadata> {
       private final String prefix;
       private final String delimiter;
+      private final Set<String> commonPrefixes;
 
-      public DelimiterFilter(String prefix, String delimiter) {
+      public DelimiterFilter(String prefix, String delimiter, final Set<String> commonPrefixes) {
          this.prefix = prefix;
          this.delimiter = delimiter;
+         this.commonPrefixes = commonPrefixes;
       }
 
       public boolean apply(StorageMetadata metadata) {
          String name = metadata.getName();
-         if (metadata.getType() == StorageType.RELATIVE_PATH) {
-            // For directories, we need to make sure to include the separator character, as that is what the common
-            // prefix will include.
-            name += '/';
-         }
-         if (prefix == null || prefix.isEmpty())
+         if (prefix == null || prefix.isEmpty()) {
+            if (commonPrefixes.contains(name)) {
+               return false;
+            }
             return name.indexOf(delimiter) == -1;
+         }
          String prefixMatch;
          if (prefix.endsWith(delimiter)) {
             prefixMatch = "^" + Pattern.quote(prefix) + ".*";
@@ -481,7 +482,7 @@ public final class LocalBlobStore implements BlobStore {
          }
          if (name.matches(prefixMatch)) {
             String unprefixedName = name.replaceFirst(prefix, "");
-            if (unprefixedName.equals("")) {
+            if (unprefixedName.equals("") || commonPrefixes.contains(unprefixedName)) {
                // we are the prefix in this case, return false
                return false;
             }
@@ -512,7 +513,7 @@ public final class LocalBlobStore implements BlobStore {
          }
          if (working.indexOf(delimiter) >= 0) {
             // include the delimiter in the result
-            return working.substring(0, working.indexOf(delimiter) + 1);
+            return working.substring(0, working.indexOf(delimiter));
          } else {
             return NO_PREFIX;
          }

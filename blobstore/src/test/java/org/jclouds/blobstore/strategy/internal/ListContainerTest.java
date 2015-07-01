@@ -145,4 +145,24 @@ public class ListContainerTest {
               ListContainerOptions.Builder.maxResults(1).afterMarker(results.getNextMarker()));
       assertThat(results.getNextMarker()).isEqualTo(null);
    }
+
+   public void testDirectoryListing() {
+      String containerName = "testDirectoryListing";
+      blobStore.createContainerInLocation(null, containerName);
+      blobStore.createDirectory(containerName, "dir");
+      blobStore.createDirectory(containerName, "dir/dir");
+
+      PageSet<? extends StorageMetadata> results = blobStore.list(containerName);
+      assertThat(results.size()).isEqualTo(1);
+      assertThat(Iterables.get(results, 0).getName()).isEqualTo("dir/");
+
+      results = blobStore.list(containerName, ListContainerOptions.Builder.inDirectory("dir"));
+      assertThat(results.size()).isEqualTo(1);
+      assertThat(Iterables.get(results, 0).getName()).isEqualTo("dir/dir");
+
+      blobStore.putBlob(containerName, blobStore.blobBuilder("dir/dir/blob").payload("").build());
+      results = blobStore.list(containerName, ListContainerOptions.Builder.inDirectory("dir"));
+      assertThat(results.size()).isEqualTo(1);
+      assertThat(Iterables.get(results, 0).getName()).isEqualTo("dir/dir/");
+   }
 }
