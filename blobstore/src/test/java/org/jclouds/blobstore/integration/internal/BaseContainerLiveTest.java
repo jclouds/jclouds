@@ -120,7 +120,7 @@ public class BaseContainerLiveTest extends BaseBlobStoreIntegrationTest {
       runCreateContainerInLocation(payload, nonDefault);
    }
 
-   @Test(groups = "live", dependsOnMethods = "testPublicAccess")
+   @Test(groups = "live")
    public void testContainerListWithPrefix() throws InterruptedException {
       final String containerName = getContainerName();
       BlobStore blobStore = view.getBlobStore();
