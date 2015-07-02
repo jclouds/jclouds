@@ -46,6 +46,7 @@ public class ParseObjectListFromResponse implements Function<HttpResponse, Objec
    private static final class InternalObject {
       String name;
       String hash;
+      String subdir;
       long bytes;
       String content_type;
       Date last_modified;
@@ -66,11 +67,14 @@ public class ParseObjectListFromResponse implements Function<HttpResponse, Objec
    @Override
    public ObjectList apply(HttpResponse from) {
       List<SwiftObject> objects = Lists.transform(json.apply(from), toSwiftObject);
+
       Container container = parseContainer.apply(from);
       return ObjectList.create(objects, container);
    }
 
    static class ToSwiftObject implements Function<InternalObject, SwiftObject> {
+      private static final String SUBDIR_ETAG = "deadbeef";
+
       private final String containerUri;
 
       ToSwiftObject(String containerUri) {
@@ -79,6 +83,14 @@ public class ParseObjectListFromResponse implements Function<HttpResponse, Objec
 
       @Override
       public SwiftObject apply(InternalObject input) {
+         if (input.subdir != null) {
+            return SwiftObject.builder()
+                  .uri(uriBuilder(containerUri).clearQuery().appendPath(input.subdir).build())
+                  .name(input.subdir)
+                  .etag(SUBDIR_ETAG)
+                  .payload(payload(input.bytes, input.hash, "application/directory", input.expires))
+                  .lastModified(new Date(0)).build();
+         }
          return SwiftObject.builder()
                .uri(uriBuilder(containerUri).clearQuery().appendPath(input.name).build())
                .name(input.name)

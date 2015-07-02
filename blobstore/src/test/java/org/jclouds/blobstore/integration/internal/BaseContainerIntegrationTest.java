@@ -234,9 +234,9 @@ public class BaseContainerIntegrationTest extends BaseBlobStoreIntegrationTest {
          awaitConsistency();
 
          container = view.getBlobStore().list(containerName);
-         // we should still have only the directory under root
+         // we should get back the subdir entry and the directory marker
          assert container.getNextMarker() == null;
-         assert container.size() == 1 : container;
+         assertThat(container).hasSize(2);
 
          container = view.getBlobStore().list(containerName, inDirectory(directory));
          // we should have only the 10 items under the directory
