@@ -140,4 +140,14 @@ public class AtmosIntegrationLiveTest extends BaseBlobIntegrationTest {
    public void testMultipartUploadMultipleParts() throws Exception {
       throw new SkipException("Atmos does not support multipart uploads");
    }
+
+   @Override
+   public void testPutMultipartByteSource() throws Exception {
+      throw new SkipException("Atmos does not support multipart uploads");
+   }
+
+   @Override
+   public void testPutMultipartInputStream() throws Exception {
+      throw new SkipException("Atmos does not support multipart uploads");
+   }
 }
