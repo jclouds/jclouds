@@ -19,7 +19,6 @@ package org.jclouds.openstack.nova.v2_0.compute.functions;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Preconditions.checkState;
 import static org.jclouds.compute.config.ComputeServiceProperties.TIMEOUT_NODE_RUNNING;
-
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
@@ -87,6 +86,7 @@ public class AllocateAndAddFloatingIpToNode implements
       logger.debug(">> adding floatingIp(%s) to node(%s)", ip.get().getIp(), node.getId());
 
       floatingIpApi.addToServer(ip.get().getIp(), node.getProviderId());
+
       input.get().getNodeMetadata().set(NodeMetadataBuilder.fromNodeMetadata(node).publicAddresses(ImmutableSet.of(ip.get().getIp())).build());
       floatingIpCache.invalidate(RegionAndId.fromSlashEncoded(node.getId()));
       return input.get().getNodeMetadata();
@@ -100,7 +100,7 @@ public class AllocateAndAddFloatingIpToNode implements
     * @param nodeID optional id of the Node we are trying to allocate a FloatingIP for. Used here only for logging purposes
     * @return Optional<FloatingIP>
     */
-   private Optional<FloatingIP> allocateFloatingIPForNode(FloatingIPApi floatingIpApi, Optional<Set<String>> poolNames, String nodeID) {
+   private synchronized Optional<FloatingIP> allocateFloatingIPForNode(FloatingIPApi floatingIpApi, Optional<Set<String>> poolNames, String nodeID) {
 
       FloatingIP ip = null;
 
