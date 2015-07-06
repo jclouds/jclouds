@@ -144,7 +144,7 @@ public class BaseContainerLiveTest extends BaseBlobStoreIntegrationTest {
          names.add(sm.getName());
       }
 
-      assertThat(names).containsExactlyElementsOf(expectedSet);
+      assertThat(names).containsOnlyElementsOf(expectedSet);
    }
 
    private void runCreateContainerInLocation(String payload, Location nonDefault) throws InterruptedException,
