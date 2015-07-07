@@ -34,6 +34,7 @@ import org.jclouds.blobstore.integration.internal.BaseBlobStoreIntegrationTest;
 import org.jclouds.blobstore.integration.internal.BaseContainerIntegrationTest;
 import org.jclouds.filesystem.reference.FilesystemConstants;
 import org.jclouds.filesystem.utils.TestUtils;
+import org.testng.SkipException;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
@@ -153,6 +154,11 @@ public class FilesystemContainerIntegrationTest extends BaseContainerIntegration
    @Test(dataProvider = "ignoreOnWindows")
    public void testListContainerMaxResults() throws InterruptedException {
       super.testListContainerMaxResults();
+   }
+
+   @Override
+   public void testDirectory() {
+      throw new SkipException("There is no notion of marker blobs in the file system blob store");
    }
 
    @DataProvider
