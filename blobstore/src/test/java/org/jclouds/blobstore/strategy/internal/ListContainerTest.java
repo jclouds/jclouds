@@ -123,8 +123,9 @@ public class ListContainerTest {
       blobStore.putBlob(containerName, blobStore.blobBuilder(directory + "/foo").payload("").build());
       blobStore.putBlob(containerName, blobStore.blobBuilder(directory + "/bar").payload("").build());
       Iterable<? extends StorageMetadata> results = concatter.execute(containerName, ListContainerOptions.NONE);
-      assertThat(results).hasSize(1);
-      assertThat(Iterables.get(results, 0).getName()).isEqualTo(directory + '/');
+      assertThat(results).hasSize(2);
+      assertThat(Iterables.get(results, 0).getName()).isEqualTo(directory);
+      assertThat(Iterables.get(results, 1).getName()).isEqualTo(directory + '/');
    }
 
    public void testListMarkers() {
@@ -153,8 +154,9 @@ public class ListContainerTest {
       blobStore.createDirectory(containerName, "dir/dir");
 
       PageSet<? extends StorageMetadata> results = blobStore.list(containerName);
-      assertThat(results.size()).isEqualTo(1);
-      assertThat(Iterables.get(results, 0).getName()).isEqualTo("dir/");
+      assertThat(results.size()).isEqualTo(2);
+      assertThat(Iterables.get(results, 0).getName()).isEqualTo("dir");
+      assertThat(Iterables.get(results, 1).getName()).isEqualTo("dir/");
 
       results = blobStore.list(containerName, ListContainerOptions.Builder.inDirectory("dir"));
       assertThat(results.size()).isEqualTo(1);
@@ -162,7 +164,8 @@ public class ListContainerTest {
 
       blobStore.putBlob(containerName, blobStore.blobBuilder("dir/dir/blob").payload("").build());
       results = blobStore.list(containerName, ListContainerOptions.Builder.inDirectory("dir"));
-      assertThat(results.size()).isEqualTo(1);
-      assertThat(Iterables.get(results, 0).getName()).isEqualTo("dir/dir/");
+      assertThat(results.size()).isEqualTo(2);
+      assertThat(Iterables.get(results, 0).getName()).isEqualTo("dir/dir");
+      assertThat(Iterables.get(results, 1).getName()).isEqualTo("dir/dir/");
    }
 }

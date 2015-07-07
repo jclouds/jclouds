@@ -73,11 +73,14 @@
   (create-directory blobstore-stub "container" "dir")
   (is (put-blob blobstore-stub "container"
                 (blob "dir/blob2" :payload "blob2")))
-  (is (= 3 (count-blobs blobstore-stub "container")))
-  (is (= 3 (count (blobs blobstore-stub "container"))))
-  (is (= 4 (count (blobs blobstore-stub "container" :recursive true))))
-  (is (= 3 (count (blobs blobstore-stub "container" :with-details true))))
-  (is (= 1 (count (blobs blobstore-stub "container" :in-directory "dir")))))
+  (is (put-blob blobstore-stub "container"
+                (blob "dir/blob3" :payload "blob3")))
+  (is (= 4 (count-blobs blobstore-stub "container")))
+  (is (= 4 (count (blobs blobstore-stub "container"))))
+  (is (= 5 (count (blobs blobstore-stub "container" :recursive true))))
+  (is (= 4 (count (blobs blobstore-stub "container" :with-details true))))
+  ;; jclouds will list dir and dir/
+  (is (= 2 (count (blobs blobstore-stub "container" :in-directory "dir")))))
 
 (deftest large-container-list-test
   (let [container-name "test"
