@@ -25,7 +25,6 @@ import javax.inject.Singleton;
 import org.jclouds.azureblob.domain.ListBlobsResponse;
 import org.jclouds.blobstore.domain.PageSet;
 import org.jclouds.blobstore.domain.StorageMetadata;
-import org.jclouds.blobstore.domain.StorageType;
 import org.jclouds.blobstore.domain.internal.PageSetImpl;
 import org.jclouds.blobstore.functions.PrefixToResourceMetadata;
 
@@ -61,10 +60,7 @@ public class ListBlobsResponseToResourceList implements
 
       Map<String, StorageMetadata> nameToMd = Maps.uniqueIndex(contents, indexer);
       for (String prefix : from.getBlobPrefixes()) {
-         prefix = prefix.endsWith("/") ? prefix.substring(0, prefix.lastIndexOf('/')) : prefix;
-         if (!nameToMd.containsKey(prefix)
-                  || nameToMd.get(prefix).getType() != StorageType.RELATIVE_PATH)
-            contents.add(prefix2ResourceMd.apply(prefix));
+         contents.add(prefix2ResourceMd.apply(prefix));
       }
       return new PageSetImpl<StorageMetadata>(contents, from.getNextMarker());
    }
