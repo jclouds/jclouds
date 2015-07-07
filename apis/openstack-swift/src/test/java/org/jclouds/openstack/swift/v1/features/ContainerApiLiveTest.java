@@ -36,6 +36,7 @@ import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
+import com.google.common.base.Predicate;
 import com.google.common.collect.FluentIterable;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableMultimap;
@@ -98,8 +99,12 @@ public class ContainerApiLiveTest extends BaseSwiftApiLiveTest<SwiftApi> {
       String lexicographicallyBeforeName = name.substring(0, name.length() - 1);
       for (String regionId : regions) {
          ListContainerOptions options = ListContainerOptions.Builder.marker(lexicographicallyBeforeName);
-         Container container = api.getContainerApi(regionId).list(options).get(0);
-         assertEquals(container.getName(), name);
+         Container container = api.getContainerApi(regionId).list(options).firstMatch(new Predicate<Container>() {
+            @Override
+            public boolean apply(Container container) {
+               return container.getName().equals(name);
+            }
+         }).get();
          assertTrue(container.getObjectCount() == 0);
          assertTrue(container.getBytesUsed() == 0);
       }
