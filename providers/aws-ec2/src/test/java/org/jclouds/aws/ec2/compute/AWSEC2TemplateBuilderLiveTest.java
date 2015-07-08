@@ -32,6 +32,7 @@ import org.jclouds.aws.ec2.AWSEC2Api;
 import org.jclouds.aws.ec2.AWSEC2ProviderMetadata;
 import org.jclouds.aws.ec2.reference.AWSEC2Constants;
 import org.jclouds.compute.ComputeServiceContext;
+import org.jclouds.compute.domain.Hardware;
 import org.jclouds.compute.domain.OsFamily;
 import org.jclouds.compute.domain.Template;
 import org.jclouds.ec2.EC2Api;
@@ -122,7 +123,7 @@ public class AWSEC2TemplateBuilderLiveTest extends EC2TemplateBuilderLiveTest {
    public void testTemplateBuilderCanUseImageIdAndHardwareIdAndAZ() {
 
       Template template = view.getComputeService().templateBuilder().imageId("us-east-1/ami-ccb35ea5")
-            .hardwareId(InstanceType.M2_2XLARGE).locationId("us-east-1a").build();
+            .hardwareId(InstanceType.M2_2XLARGE).locationId("us-east-1b").build();
 
       assert template.getImage().getProviderId().startsWith("ami-") : template;
       assertEquals(template.getImage().getOperatingSystem().getVersion(), "5.4");
@@ -130,7 +131,7 @@ public class AWSEC2TemplateBuilderLiveTest extends EC2TemplateBuilderLiveTest {
       assertEquals(template.getImage().getOperatingSystem().getFamily(), OsFamily.CENTOS);
       assertEquals(template.getImage().getVersion(), "4.4.10");
       assertEquals(template.getImage().getUserMetadata().get("rootDeviceType"), "instance-store");
-      assertEquals(template.getLocation().getId(), "us-east-1a");
+      assertEquals(template.getLocation().getId(), "us-east-1b");
       assertEquals(template.getImage().getLocation().getId(), "us-east-1");
       assertEquals(getCores(template.getHardware()), 4.0d);
       assertEquals(template.getHardware().getId(), InstanceType.M2_2XLARGE);
@@ -324,6 +325,27 @@ public class AWSEC2TemplateBuilderLiveTest extends EC2TemplateBuilderLiveTest {
             .imageMatches(EC2ImagePredicates.rootDeviceType(RootDeviceType.INSTANCE_STORE)).build();
       assert defaultTemplate.getImage().getProviderId().startsWith("ami-") : defaultTemplate;
       assertEquals(defaultTemplate.getImage().getId(), imageId);
+   }
+   
+   @Override
+   public void testCompareSizes() throws Exception {
+      Hardware defaultSize = view.getComputeService().templateBuilder().build().getHardware();
+
+      Hardware smallest = view.getComputeService().templateBuilder().smallest().build().getHardware();
+      Hardware fastest = view.getComputeService().templateBuilder().fastest().build().getHardware();
+      Hardware biggest = view.getComputeService().templateBuilder().biggest().build().getHardware();
+
+      assertEquals(defaultSize, smallest);
+
+      assert getCores(smallest) <= getCores(fastest) : String.format("%s ! <= %s", smallest, fastest);
+      // m4.10xlarge is slower but has more cores than c4.8xlarge
+      // assert getCores(biggest) <= getCores(fastest) : String.format("%s ! <= %s", biggest, fastest);
+      // assert getCores(fastest) >= getCores(biggest) : String.format("%s ! >= %s", fastest, biggest);
+
+      assert biggest.getRam() >= fastest.getRam() : String.format("%s ! >= %s", biggest, fastest);
+      assert biggest.getRam() >= smallest.getRam() : String.format("%s ! >= %s", biggest, smallest);
+
+      assert getCores(fastest) >= getCores(smallest) : String.format("%s ! >= %s", fastest, smallest);
    }
    
    @Test
