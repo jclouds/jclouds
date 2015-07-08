@@ -104,7 +104,7 @@ public class EC2TemplateOptions extends TemplateOptions implements Cloneable {
       EC2TemplateOptions that = EC2TemplateOptions.class.cast(o);
       return super.equals(that) && equal(this.groupNames, that.groupNames) && equal(this.keyPair, that.keyPair)
               && equal(this.noKeyPair, that.noKeyPair) && equal(this.userData, that.userData)
-              && equal(this.blockDeviceMappings, that.blockDeviceMappings)
+              && equal(this.blockDeviceMappings.build(), that.blockDeviceMappings.build())
               && equal(this.maxCount, that.maxCount)
               && equal(this.clientToken, that.clientToken);
    }
@@ -112,7 +112,7 @@ public class EC2TemplateOptions extends TemplateOptions implements Cloneable {
    @Override
    public int hashCode() {
       return Objects
-               .hashCode(super.hashCode(), groupNames, keyPair, noKeyPair, userData, userData, blockDeviceMappings,
+               .hashCode(super.hashCode(), groupNames, keyPair, noKeyPair, userData, userData, blockDeviceMappings.build(),
                        maxCount, clientToken);
    }
 

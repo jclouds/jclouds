@@ -852,6 +852,11 @@ public abstract class BaseComputeServiceLiveTest extends BaseComputeServiceConte
 
    @Test(enabled = true)
    public void testCompareSizes() throws Exception {
+      // Allow to override the comparison but keeping testng dependencies happy
+      doCompareSizes();
+   }
+   
+   protected void doCompareSizes() throws Exception {
       Hardware defaultSize = client.templateBuilder().build().getHardware();
 
       Hardware smallest = client.templateBuilder().smallest().build().getHardware();

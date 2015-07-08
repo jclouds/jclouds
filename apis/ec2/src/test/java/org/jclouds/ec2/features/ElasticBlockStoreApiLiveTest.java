@@ -17,6 +17,7 @@
 package org.jclouds.ec2.features;
 
 import static com.google.common.base.Preconditions.checkNotNull;
+import static com.google.common.collect.Iterables.getOnlyElement;
 import static java.util.concurrent.TimeUnit.SECONDS;
 import static org.jclouds.ec2.options.CreateVolumeOptions.Builder.fromSnapshotId;
 import static org.jclouds.ec2.options.CreateVolumeOptions.Builder.withSize;
@@ -25,27 +26,29 @@ import static org.jclouds.util.Predicates2.retry;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertNotNull;
+import static org.testng.Assert.assertTrue;
 
 import java.util.Set;
 import java.util.SortedSet;
 
-import com.google.common.base.Predicate;
-import com.google.common.base.Strings;
-import com.google.common.collect.ImmutableMultimap;
-import com.google.common.collect.ImmutableSet;
-import com.google.common.collect.Iterables;
-import com.google.common.collect.Sets;
 import org.jclouds.aws.AWSResponseException;
 import org.jclouds.compute.internal.BaseComputeServiceContextLiveTest;
 import org.jclouds.ec2.EC2Api;
 import org.jclouds.ec2.domain.AvailabilityZoneInfo;
 import org.jclouds.ec2.domain.Snapshot;
 import org.jclouds.ec2.domain.Volume;
+import org.jclouds.ec2.domain.Volume.Status;
 import org.jclouds.ec2.predicates.SnapshotCompleted;
 import org.jclouds.ec2.predicates.VolumeAvailable;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
+
+import com.google.common.base.Predicate;
+import com.google.common.base.Strings;
+import com.google.common.collect.ImmutableMultimap;
+import com.google.common.collect.Iterables;
+import com.google.common.collect.Sets;
 
 /**
  * Tests behavior of {@code ElasticBlockStoreApi}
@@ -112,9 +115,9 @@ public class ElasticBlockStoreApiLiveTest extends BaseComputeServiceContextLiveT
       assertNotNull(allResults);
       assertFalse(allResults.isEmpty());
       Volume volume = allResults.last();
-      SortedSet<Volume> result = Sets.newTreeSet(client.describeVolumesInRegionWithFilter(region,
+      client.describeVolumesInRegionWithFilter(region,
               ImmutableMultimap.<String, String>builder()
-                      .put("invalid-filter", volume.getId()).build()));
+                      .put("invalid-filter", volume.getId()).build());
    }
 
    @Test
@@ -139,7 +142,7 @@ public class ElasticBlockStoreApiLiveTest extends BaseComputeServiceContextLiveT
       Predicate<Snapshot> snapshotted = retry(new SnapshotCompleted(client), 600, 10, SECONDS);
       assert snapshotted.apply(snapshot);
 
-      Snapshot result = Iterables.getOnlyElement(client.describeSnapshotsInRegion(snapshot.getRegion(),
+      Snapshot result = Iterables.getOnlyElement(client.describeSnapshotsInRegion(defaultRegion,
             snapshotIds(snapshot.getId())));
 
       assertEquals(result.getProgress(), 100);
@@ -154,13 +157,13 @@ public class ElasticBlockStoreApiLiveTest extends BaseComputeServiceContextLiveT
       Predicate<Volume> availabile = retry(new VolumeAvailable(client), 600, 10, SECONDS);
       assert availabile.apply(volume);
 
-      Volume result = Iterables.getOnlyElement(client.describeVolumesInRegion(snapshot.getRegion(), volume.getId()));
+      Volume result = Iterables.getOnlyElement(client.describeVolumesInRegion(defaultRegion, volume.getId()));
       assertEquals(volume.getId(), result.getId());
       assertEquals(volume.getSnapshotId(), snapshot.getId());
       assertEquals(volume.getAvailabilityZone(), defaultZone);
       assertEquals(result.getStatus(), Volume.Status.AVAILABLE);
 
-      client.deleteVolumeInRegion(snapshot.getRegion(), result.getId());
+      client.deleteVolumeInRegion(defaultRegion, result.getId());
    }
 
    @Test(dependsOnMethods = "testCreateVolumeFromSnapshotInAvailabilityZone")
@@ -172,13 +175,13 @@ public class ElasticBlockStoreApiLiveTest extends BaseComputeServiceContextLiveT
       Predicate<Volume> availabile = retry(new VolumeAvailable(client), 600, 10, SECONDS);
       assert availabile.apply(volume);
 
-      Volume result = Iterables.getOnlyElement(client.describeVolumesInRegion(snapshot.getRegion(), volume.getId()));
+      Volume result = Iterables.getOnlyElement(client.describeVolumesInRegion(defaultRegion, volume.getId()));
       assertEquals(volume.getId(), result.getId());
       assertEquals(volume.getSnapshotId(), snapshot.getId());
       assertEquals(volume.getAvailabilityZone(), defaultZone);
       assertEquals(result.getStatus(), Volume.Status.AVAILABLE);
 
-      client.deleteVolumeInRegion(snapshot.getRegion(), result.getId());
+      client.deleteVolumeInRegion(defaultRegion, result.getId());
    }
 
    @Test(dependsOnMethods = "testCreateVolumeFromSnapshotInAvailabilityZoneWithOptions")
@@ -189,14 +192,14 @@ public class ElasticBlockStoreApiLiveTest extends BaseComputeServiceContextLiveT
       Predicate<Volume> availabile = retry(new VolumeAvailable(client), 600, 10, SECONDS);
       assert availabile.apply(volume);
 
-      Volume result = Iterables.getOnlyElement(client.describeVolumesInRegion(snapshot.getRegion(), volume.getId()));
+      Volume result = Iterables.getOnlyElement(client.describeVolumesInRegion(defaultRegion, volume.getId()));
       assertEquals(volume.getId(), result.getId());
       assertEquals(volume.getSnapshotId(), snapshot.getId());
       assertEquals(volume.getAvailabilityZone(), defaultZone);
       assertEquals(volume.getSize(), 2);
       assertEquals(result.getStatus(), Volume.Status.AVAILABLE);
 
-      client.deleteVolumeInRegion(snapshot.getRegion(), result.getId());
+      client.deleteVolumeInRegion(defaultRegion, result.getId());
    }
 
    @Test
@@ -245,9 +248,9 @@ public class ElasticBlockStoreApiLiveTest extends BaseComputeServiceContextLiveT
       assertNotNull(allResults);
       if (!allResults.isEmpty()) {
          Snapshot snapshot = allResults.last();
-         Snapshot result = Iterables.getOnlyElement(client.describeSnapshotsInRegionWithFilter(region,
+         client.describeSnapshotsInRegionWithFilter(region,
                  ImmutableMultimap.<String, String>builder()
-                         .put("invalid-filter", snapshot.getId()).build()));
+                         .put("invalid-filter", snapshot.getId()).build());
       }
    }
 
@@ -277,29 +280,30 @@ public class ElasticBlockStoreApiLiveTest extends BaseComputeServiceContextLiveT
 
    @Test(dependsOnMethods = "testCreateVolumeFromSnapshotInAvailabilityZoneWithSize")
    public void testGetCreateVolumePermissionForSnapshot() {
-      client.getCreateVolumePermissionForSnapshotInRegion(snapshot.getRegion(), snapshot.getId());
+      client.getCreateVolumePermissionForSnapshotInRegion(defaultRegion, snapshot.getId());
    }
 
    @Test(dependsOnMethods = "testGetCreateVolumePermissionForSnapshot")
    void testDeleteVolumeInRegion() {
       client.deleteVolumeInRegion(defaultRegion, volumeId);
-      assertEquals(client.describeVolumesInRegionWithFilter(defaultRegion,
-                      ImmutableMultimap.<String, String>builder()
-                              .put("volume-id", volumeId).build()),
-              ImmutableSet.of());
+      Set<Volume> volumes = client.describeVolumesInRegionWithFilter(defaultRegion, ImmutableMultimap
+            .<String, String> builder().put("volume-id", volumeId).build());
+      // The volume may not exist or remain in "deleting" state for a while
+      Volume volume = getOnlyElement(volumes, null);
+      assertTrue(volume == null || Status.DELETING == volume.getStatus());
    }
 
    @Test(dependsOnMethods = "testDeleteVolumeInRegion")
    void testDeleteSnapshotInRegion() {
-      client.deleteSnapshotInRegion(snapshot.getRegion(), snapshot.getId());
-      assert client.describeSnapshotsInRegion(snapshot.getRegion(), snapshotIds(snapshot.getId())).size() == 0;
+      client.deleteSnapshotInRegion(defaultRegion, snapshot.getId());
+      assert client.describeSnapshotsInRegion(defaultRegion, snapshotIds(snapshot.getId())).size() == 0;
    }
 
    @AfterClass(groups = { "integration", "live" })
    @Override
    protected void tearDownContext() {
       try {
-         client.deleteSnapshotInRegion(snapshot.getRegion(), snapshot.getId());
+         client.deleteSnapshotInRegion(defaultRegion, snapshot.getId());
          client.deleteVolumeInRegion(defaultRegion, volumeId);
       } catch (Exception e) {
          // we don't really care about any exception here, so just delete away.
