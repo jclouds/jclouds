@@ -32,9 +32,9 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.concurrent.TimeUnit;
 
+import org.jclouds.blobstore.KeyNotFoundException;
 import org.jclouds.http.options.GetOptions;
 import org.jclouds.io.Payload;
-import org.jclouds.openstack.swift.v1.CopyObjectException;
 import org.jclouds.openstack.swift.v1.SwiftApi;
 import org.jclouds.openstack.swift.v1.domain.ObjectList;
 import org.jclouds.openstack.swift.v1.domain.SwiftObject;
@@ -141,17 +141,16 @@ public class ObjectApiLiveTest extends BaseSwiftApiLiveTest<SwiftApi> {
          // test exception thrown on bad source name
          try {
             destApi.copy(destinationObject, badSource, sourceObjectName);
-            fail("Expected CopyObjectException");
-         } catch (CopyObjectException e) {
-            assertEquals(e.getSourcePath(), "/" + badSource + "/" + sourceObjectName);
-            assertEquals(e.getDestinationPath(), destinationPath);
+         } catch (KeyNotFoundException e) {
+            continue;
+         } finally {
+            deleteAllObjectsInContainer(regionId, sourceContainer);
+            containerApi.deleteIfEmpty(sourceContainer);
+
+            deleteAllObjectsInContainer(regionId, destinationContainer);
+            containerApi.deleteIfEmpty(destinationContainer);
          }
-
-         deleteAllObjectsInContainer(regionId, sourceContainer);
-         containerApi.deleteIfEmpty(sourceContainer);
-
-         deleteAllObjectsInContainer(regionId, destinationContainer);
-         containerApi.deleteIfEmpty(destinationContainer);
+         fail("Expected KeyNotFoundException");
       }
    }
 
@@ -220,17 +219,16 @@ public class ObjectApiLiveTest extends BaseSwiftApiLiveTest<SwiftApi> {
          // test exception thrown on bad source name
          try {
             destApi.copy(destinationObject, badSource, sourceObjectName);
-            fail("Expected CopyObjectException");
-         } catch (CopyObjectException e) {
-            assertEquals(e.getSourcePath(), "/" + badSource + "/" + sourceObjectName);
-            assertEquals(e.getDestinationPath(), destinationPath);
+         } catch (KeyNotFoundException e) {
+            continue;
+         } finally {
+            deleteAllObjectsInContainer(regionId, sourceContainer);
+            containerApi.deleteIfEmpty(sourceContainer);
+
+            deleteAllObjectsInContainer(regionId, destinationContainer);
+            containerApi.deleteIfEmpty(destinationContainer);
          }
-
-         deleteAllObjectsInContainer(regionId, sourceContainer);
-         containerApi.deleteIfEmpty(sourceContainer);
-
-         deleteAllObjectsInContainer(regionId, destinationContainer);
-         containerApi.deleteIfEmpty(destinationContainer);
+         fail("Expected KeyNotFoundException");
       }
    }
 

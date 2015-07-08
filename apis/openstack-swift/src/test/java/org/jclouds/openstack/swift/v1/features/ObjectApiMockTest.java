@@ -33,6 +33,7 @@ import static org.jclouds.openstack.swift.v1.reference.SwiftHeaders.OBJECT_METAD
 import static org.jclouds.openstack.swift.v1.reference.SwiftHeaders.OBJECT_REMOVE_METADATA_PREFIX;
 import static org.jclouds.util.Strings2.toStringAndClose;
 import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertTrue;
 import static org.testng.Assert.fail;
 
@@ -44,11 +45,11 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Properties;
 
+import org.jclouds.blobstore.KeyNotFoundException;
 import org.jclouds.date.internal.SimpleDateFormatDateService;
 import org.jclouds.http.HttpResponseException;
 import org.jclouds.io.Payload;
 import org.jclouds.io.payloads.ByteSourcePayload;
-import org.jclouds.openstack.swift.v1.CopyObjectException;
 import org.jclouds.openstack.swift.v1.SwiftApi;
 import org.jclouds.openstack.swift.v1.domain.ObjectList;
 import org.jclouds.openstack.swift.v1.domain.SwiftObject;
@@ -485,7 +486,7 @@ public class ObjectApiMockTest extends BaseOpenStackMockTest<SwiftApi> {
       }
    }
 
-   @Test(expectedExceptions = CopyObjectException.class)
+   @Test(expectedExceptions = KeyNotFoundException.class)
    public void testCopyObjectFail() throws InterruptedException, IOException {
       MockWebServer server = mockOpenStackServer();
       server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/access.json"))));
@@ -494,7 +495,7 @@ public class ObjectApiMockTest extends BaseOpenStackMockTest<SwiftApi> {
 
       try {
          SwiftApi api = api(server.getUrl("/").toString(), "openstack-swift");
-         // the following line will throw the CopyObjectException
+         // the following line will throw the KeyNotFoundException
          api.getObjectApi("DFW", "foo").copy("bar.txt", "bogus", "foo.txt");
       } finally {
          server.shutdown();
@@ -529,7 +530,6 @@ public class ObjectApiMockTest extends BaseOpenStackMockTest<SwiftApi> {
       }
    }
 
-   @Test(expectedExceptions = CopyObjectException.class)
    public void testCopyObjectWithMetadataFail() throws Exception {
       MockWebServer server = mockOpenStackServer();
       server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/access.json"))));
@@ -538,7 +538,7 @@ public class ObjectApiMockTest extends BaseOpenStackMockTest<SwiftApi> {
 
       try {
          SwiftApi api = api(server.getUrl("/").toString(), "openstack-swift");
-         assertTrue(api.getObjectApi("DFW", "foo")
+         assertFalse(api.getObjectApi("DFW", "foo")
                .copy("bar.txt", "bar", "foo.txt", ImmutableMap.of("someUserHeader", "someUserMetadataValue"),
                      ImmutableMap.of("Content-Disposition", "attachment; filename=\"fname.ext\"")));
       } finally {

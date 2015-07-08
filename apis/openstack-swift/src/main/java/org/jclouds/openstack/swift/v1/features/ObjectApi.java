@@ -37,6 +37,8 @@ import org.jclouds.Fallbacks.FalseOnNotFoundOr404;
 import org.jclouds.Fallbacks.NullOnNotFoundOr404;
 import org.jclouds.Fallbacks.VoidOnNotFoundOr404;
 import org.jclouds.blobstore.BlobStoreFallbacks.FalseOnContainerNotFound;
+import org.jclouds.blobstore.BlobStoreFallbacks.FalseOnKeyNotFound;
+import org.jclouds.blobstore.KeyNotFoundException;
 import org.jclouds.http.options.GetOptions;
 import org.jclouds.io.Payload;
 import org.jclouds.javax.annotation.Nullable;
@@ -272,7 +274,7 @@ public interface ObjectApi {
     *
     * @return {@code true} if the object was successfully copied, {@code false} if not.
     *
-    * @throws org.jclouds.openstack.swift.v1.CopyObjectException if the source or destination container do not exist.
+    * @throws KeyNotFoundException if the source or destination container do not exist.
     */
    @Named("object:copy")
    @PUT
@@ -302,13 +304,13 @@ public interface ObjectApi {
     *
     * @return {@code true} if the object was successfully copied, {@code false} if not.
     *
-    * @throws org.jclouds.openstack.swift.v1.CopyObjectException if the source or destination container do not exist.
+    * @throws KeyNotFoundException if the source or destination container do not exist.
     */
    @Named("object:copy")
    @PUT
    @Path("/{destinationObject}")
    @Headers(keys = OBJECT_COPY_FROM, values = "/{sourceContainer}/{sourceObject}")
-   @Fallback(FalseOnContainerNotFound.class)
+   @Fallback(FalseOnKeyNotFound.class)
    boolean copy(@PathParam("destinationObject") String destinationObject,
          @PathParam("sourceContainer") String sourceContainer,
          @PathParam("sourceObject") String sourceObject,

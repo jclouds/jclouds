@@ -39,6 +39,7 @@ import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 
+import org.jclouds.blobstore.KeyNotFoundException;
 import org.jclouds.blobstore.binders.BindMapToHeadersWithPrefix;
 import org.jclouds.blobstore.domain.PageSet;
 import org.jclouds.http.functions.ParseETagHeader;
@@ -328,7 +329,7 @@ public interface CommonSwiftClient extends Closeable {
 
    /**
     * @return True If the object was copied
-    * @throws CopyObjectException If the object was not copied
+    * @throws KeyNotFoundException If the object was not copied
     * @deprecated This method will be replaced by
     *             {@link org.jclouds.openstack.swift.v1.features.ObjectApi#copy()}
     */
@@ -337,7 +338,7 @@ public interface CommonSwiftClient extends Closeable {
    @PUT
    @Path("/{destinationContainer}/{destinationObject}")
    @Headers(keys = OBJECT_COPY_FROM, values = "/{sourceContainer}/{sourceObject}")
-   @Fallback(FalseOnContainerNotFound.class)
+   @Fallback(FalseOnKeyNotFound.class)
    boolean copyObject(@PathParam("sourceContainer") String sourceContainer,
                       @PathParam("sourceObject") String sourceObject,
                       @PathParam("destinationContainer") String destinationContainer,

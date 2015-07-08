@@ -47,9 +47,9 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import javax.ws.rs.core.MediaType;
 
-import com.google.common.hash.Hashing;
 import org.jclouds.blobstore.BlobStore;
 import org.jclouds.blobstore.ContainerNotFoundException;
+import org.jclouds.blobstore.KeyNotFoundException;
 import org.jclouds.blobstore.domain.Blob;
 import org.jclouds.blobstore.domain.BlobAccess;
 import org.jclouds.blobstore.domain.BlobBuilder.PayloadBlobBuilder;
@@ -66,8 +66,8 @@ import org.jclouds.blobstore.strategy.internal.MultipartUploadSlicingAlgorithm;
 import org.jclouds.crypto.Crypto;
 import org.jclouds.encryption.internal.JCECrypto;
 import org.jclouds.http.HttpResponseException;
-import org.jclouds.io.ContentMetadataBuilder;
 import org.jclouds.io.ByteStreams2;
+import org.jclouds.io.ContentMetadataBuilder;
 import org.jclouds.io.Payload;
 import org.jclouds.io.Payloads;
 import org.jclouds.io.payloads.ByteSourcePayload;
@@ -90,8 +90,9 @@ import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Maps;
 import com.google.common.hash.HashCode;
-import com.google.common.io.ByteStreams;
+import com.google.common.hash.Hashing;
 import com.google.common.io.ByteSource;
+import com.google.common.io.ByteStreams;
 import com.google.common.io.Files;
 import com.google.common.net.HttpHeaders;
 import com.google.common.util.concurrent.ListenableFuture;
@@ -978,6 +979,29 @@ public class BaseBlobIntegrationTest extends BaseBlobStoreIntegrationTest {
          assertThat(ByteStreams2.toByteArrayAndClose(newBlob.getPayload().openStream())).isEqualTo(byteSource.read());
          checkContentMetadata(newBlob);
          checkUserMetadata(newBlob.getMetadata().getUserMetadata(), blob.getMetadata().getUserMetadata());
+      } finally {
+         returnContainer(container);
+      }
+   }
+
+   @Test(groups = { "integration", "live" }, expectedExceptions = {KeyNotFoundException.class})
+   public void testCopy404BlobFail() throws Exception {
+      BlobStore blobStore = view.getBlobStore();
+      String container = getContainerName();
+      try {
+         blobStore.copyBlob(container, "blob", container, "blob2", CopyOptions.NONE);
+      } finally {
+         returnContainer(container);
+      }
+   }
+
+   @Test(groups = { "integration", "live" }, expectedExceptions = {KeyNotFoundException.class})
+   public void testCopy404BlobMetaFail() throws Exception {
+      BlobStore blobStore = view.getBlobStore();
+      String container = getContainerName();
+      try {
+         blobStore.copyBlob(container, "blob", container, "blob2",
+               CopyOptions.builder().userMetadata(ImmutableMap.of("x", "1")).build());
       } finally {
          returnContainer(container);
       }

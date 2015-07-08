@@ -32,6 +32,7 @@ import javax.inject.Inject;
 
 import org.jclouds.blobstore.BlobStore;
 import org.jclouds.blobstore.BlobStoreContext;
+import org.jclouds.blobstore.KeyNotFoundException;
 import org.jclouds.blobstore.domain.Blob;
 import org.jclouds.blobstore.domain.BlobAccess;
 import org.jclouds.blobstore.domain.BlobBuilder;
@@ -284,6 +285,9 @@ public class RegionScopedSwiftBlobStore implements BlobStore {
          }
       } else {
          SwiftObject metadata = api.getObjectApi(regionId, fromContainer).getWithoutBody(fromName);
+         if (metadata == null) {
+            throw new KeyNotFoundException(fromContainer, fromName, "Swift could not find the specified source key");
+         }
          contentMetadata = metadata.getPayload().getContentMetadata();
          String contentDisposition = contentMetadata.getContentDisposition();
          if (contentDisposition != null) {
@@ -306,7 +310,7 @@ public class RegionScopedSwiftBlobStore implements BlobStore {
 
       boolean copied = objectApi.copy(toName, fromContainer, fromName, userMetadata, systemMetadata);
       if (!copied) {
-         throw new RuntimeException("could not copy blob");
+         throw new KeyNotFoundException(fromContainer, fromName, "Swift could not find the specified key");
       }
 
       // TODO: Swift copy object *appends* user metadata, does not overwrite
