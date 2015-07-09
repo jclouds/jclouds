@@ -539,7 +539,7 @@ public class FilesystemBlobStoreTest {
                 .inDirectory("");
         PageSet<? extends StorageMetadata> res = blobStore.list(CONTAINER_NAME, options);
         assertTrue(res.size() == 1);
-        assertEquals(res.iterator().next().getName(), d + '/');
+        assertEquals(res.iterator().next().getName(), d + File.separator);
     }
 
 
