@@ -22,7 +22,6 @@ import static org.jclouds.reflect.Reflection2.typeToken;
 import static org.testng.Assert.assertEquals;
 
 import java.io.IOException;
-import java.security.SecureRandom;
 import java.util.Date;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -82,7 +81,7 @@ public class BaseBlobStoreIntegrationTest extends BaseViewLiveTest<BlobStoreCont
          String.format(XML_STRING_FORMAT, "emma"));
 
    public static long INCONSISTENCY_WINDOW = 10000;
-   protected static volatile AtomicInteger containerIndex = new AtomicInteger(0);
+   protected static final AtomicInteger containerIndex = new AtomicInteger(0);
 
    protected static volatile int containerCount = Integer.parseInt(System.getProperty("test.blobstore.container-count",
          "10"));
@@ -514,7 +513,7 @@ public class BaseBlobStoreIntegrationTest extends BaseViewLiveTest<BlobStoreCont
             deleteContainerOrWarnIfUnable(view, container);
          }
       });
-      String newScratchContainer = CONTAINER_PREFIX + new SecureRandom().nextLong();
+      String newScratchContainer = CONTAINER_PREFIX + containerIndex.incrementAndGet();
       System.err.printf("*** allocated new container %s...%n", newScratchContainer);
       return newScratchContainer;
    }

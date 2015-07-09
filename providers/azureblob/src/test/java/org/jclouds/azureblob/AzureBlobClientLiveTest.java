@@ -94,7 +94,8 @@ public class AzureBlobClientLiveTest extends BaseBlobStoreIntegrationTest {
    public void testCreateContainer() throws Exception {
       boolean created = false;
       while (!created) {
-         privateContainer = CONTAINER_PREFIX + new SecureRandom().nextInt();
+         // testListOwnedContainers requires a unique prefix
+         privateContainer = CONTAINER_PREFIX + "unique-" + containerIndex.incrementAndGet();
          try {
             created = getApi().createContainer(privateContainer, withMetadata(ImmutableMultimap.of("foo", "bar")));
          } catch (UndeclaredThrowableException e) {
@@ -118,7 +119,7 @@ public class AzureBlobClientLiveTest extends BaseBlobStoreIntegrationTest {
    public void testCreatePublicContainer() throws Exception {
       boolean created = false;
       while (!created) {
-         publicContainer = CONTAINER_PREFIX + new SecureRandom().nextInt();
+         publicContainer = CONTAINER_PREFIX + containerIndex.incrementAndGet();
          try {
             created = getApi().createContainer(publicContainer, withPublicAccess(PublicAccess.BLOB));
          } catch (UndeclaredThrowableException e) {
@@ -342,7 +343,7 @@ public class AzureBlobClientLiveTest extends BaseBlobStoreIntegrationTest {
 
    @Test(timeOut = 5 * 60 * 1000)
    public void testBlockOperations() throws Exception {
-      String blockContainer = CONTAINER_PREFIX + new SecureRandom().nextInt();
+      String blockContainer = CONTAINER_PREFIX + containerIndex.incrementAndGet();
       String blockBlob = "myblockblob-" + new SecureRandom().nextInt();
       String A = "A";
       String B = "B";
@@ -380,7 +381,7 @@ public class AzureBlobClientLiveTest extends BaseBlobStoreIntegrationTest {
    @Test
    public void testGetSetACL() throws Exception {
       AzureBlobClient client = getApi();
-      String blockContainer = CONTAINER_PREFIX + new SecureRandom().nextInt();
+      String blockContainer = CONTAINER_PREFIX + containerIndex.incrementAndGet();
       client.createContainer(blockContainer);
       try {
          assertThat(client.getPublicAccessForContainer(blockContainer)).isEqualTo(PublicAccess.PRIVATE);
