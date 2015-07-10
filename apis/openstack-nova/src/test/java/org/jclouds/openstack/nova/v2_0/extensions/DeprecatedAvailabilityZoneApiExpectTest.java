@@ -22,17 +22,15 @@ import com.google.common.collect.ImmutableSet;
 import org.jclouds.http.HttpRequest;
 import org.jclouds.http.HttpResponse;
 import org.jclouds.openstack.nova.v2_0.NovaApi;
-import org.jclouds.openstack.nova.v2_0.domain.regionscoped.AvailabilityZone;
+import org.jclouds.openstack.nova.v2_0.domain.zonescoped.AvailabilityZone;
 import org.jclouds.openstack.nova.v2_0.internal.BaseNovaApiExpectTest;
 import org.testng.annotations.Test;
-
-import java.util.Date;
 
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertTrue;
 
-@Test(groups = "unit", testName = "AvailabilityZoneApiExpectTest")
-public class AvailabilityZoneApiExpectTest extends BaseNovaApiExpectTest {
+@Test(groups = "unit", testName = "DeprecatedAvailabilityZoneApiExpectTest")
+public class DeprecatedAvailabilityZoneApiExpectTest extends BaseNovaApiExpectTest {
 
    public void testAvailabilityZonesList() throws Exception {
       HttpRequest list = HttpRequest
@@ -50,27 +48,13 @@ public class AvailabilityZoneApiExpectTest extends BaseNovaApiExpectTest {
 
       assertEquals(availabilityZonesApi.getConfiguredRegions(), ImmutableSet.of("az-1.region-a.geo-1", "az-2.region-a.geo-1", "az-3.region-a.geo-1"));
 
-      FluentIterable<? extends AvailabilityZone> zones = availabilityZonesApi.getAvailabilityZoneApi("az-1.region-a.geo-1").get().listAvailabilityZones();
+      FluentIterable<? extends AvailabilityZone> zones = availabilityZonesApi.getAvailabilityZoneApi("az-1.region-a.geo-1").get().list();
 
       Optional<? extends AvailabilityZone> zone = zones.first();
 
       assertTrue(zone.isPresent(), "Couldn't find zone");
-      assertEquals(zone.get()
-            .getName(), "internal", "Expected zone name to be internal but it was: " + zone.get()
-            .getName());
-      assertTrue(zone.get()
-            .getState()
-            .isAvailable(), "Zone: " + zone.get()
-            .getName() + " is not available.");
-      String hostName = zone.get().getHosts().keySet().iterator().next();
-      assertEquals(hostName, "os-controller", "Expected host name to be os-controller but it was: " + hostName);
-      String hostServiceName = zone.get().getHosts().get(hostName).keySet().iterator().next();
-      assertEquals(hostServiceName, "nova-conductor",
-            "Expected host service name to be nova-conductor but it was: " + hostServiceName);
-      AvailabilityZone.HostService hostService = zone.get().getHosts().get(hostName).get(hostServiceName);
-      assertTrue(hostService.isAvailable(), "Couldn't find host service availability");
-      assertTrue(hostService.isActive(), "Couldn't find host service state");
-      assertEquals(hostService.getUpdated(), new Date(1436509815000L),
-            "Expected Updated time: " + new Date(1436509815000L) + " does match Updated time : " + hostService.getUpdated());
+      assertEquals(zone.get().getName(), "internal",
+            "Expected zone name to be internal but it was: " + zone.get().getName());
+      assertTrue(zone.get().getState().available(), "Zone: " + zone.get().getName() + " is not available.");
    }
 }

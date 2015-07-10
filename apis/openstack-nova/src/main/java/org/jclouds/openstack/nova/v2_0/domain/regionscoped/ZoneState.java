@@ -14,55 +14,34 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jclouds.openstack.nova.v2_0.domain.zonescoped;
+package org.jclouds.openstack.nova.v2_0.domain.regionscoped;
 
 import com.google.common.base.Objects;
-import com.google.gson.annotations.SerializedName;
 
-import java.beans.ConstructorProperties;
+public class ZoneState {
 
-/**
- * @deprecated This package has been replaced with {@link org.jclouds.openstack.nova.v2_0.domain.regionscoped}.
- *             Please use {@link org.jclouds.openstack.nova.v2_0.domain.regionscoped.AvailabilityZone AvailabilityZone}
- *             instead. To be removed in jclouds 2.0.
- */
-public class AvailabilityZone {
+   private final boolean available;
 
-   @SerializedName("zoneName")
-   private final String name;
-   private final ZoneState state;
+   protected ZoneState(boolean available) { this.available = available; }
 
-   @ConstructorProperties({"zoneName" , "zoneState"})
-   protected AvailabilityZone(String name, ZoneState state) {
-      this.name = name;
-      this.state = state;
-   }
-
-   public String getName() {
-      return name;
-   }
-
-   public ZoneState getState() {
-      return state;
-   }
+   public boolean isAvailable() { return this.available; }
 
    @Override
    public int hashCode() {
-      return Objects.hashCode(name, state);
+      return Objects.hashCode(available);
    }
 
    @Override
    public boolean equals(Object obj) {
       if (this != obj) return false;
       if (obj == null || getClass() != obj.getClass()) return false;
-      AvailabilityZone that = AvailabilityZone.class.cast(obj);
-      return Objects.equal(this.name, that.name) && Objects.equal(this.state, that.state);
+      ZoneState that = ZoneState.class.cast(obj);
+      return Objects.equal(this.available, that.available);
    }
 
    protected Objects.ToStringHelper string() {
       return Objects.toStringHelper(this)
-            .add("name", name)
-            .add("state", state);
+            .add("available", available);
    }
 
    @Override
