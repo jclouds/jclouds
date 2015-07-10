@@ -4,7 +4,52 @@
             "zoneState": {
                 "available": true
             },
-            "hosts": null,
+            "hosts": {
+                "os-controller": {
+                    "nova-conductor": {
+                        "available": true,
+                        "active": true,
+                        "updated_at": "2015-07-10T06:30:15.000000"
+                    },
+                    "nova-consoleauth": {
+                        "available": true,
+                        "active": true,
+                        "updated_at": "2015-07-10T06:30:20.000000"
+                    },
+                    "nova-cert": {
+                        "available": true,
+                        "active": true,
+                        "updated_at": "2015-07-10T06:30:19.000000"
+                    },
+                    "nova-scheduler": {
+                        "available": true,
+                        "active": true,
+                        "updated_at": "2015-07-10T06:30:12.000000"
+                    }
+                }
+            },
+            "zoneName": "internal"
+        },
+        {
+            "zoneState": {
+                "available": true
+            },
+            "hosts": {
+                "os-compute02": {
+                    "nova-compute": {
+                        "available": true,
+                        "active": true,
+                        "updated_at": "2015-07-10T06:30:16.000000"
+                    }
+                },
+                "os-compute01": {
+                    "nova-compute": {
+                        "available": true,
+                        "active": true,
+                        "updated_at": "2015-07-10T06:30:12.000000"
+                    }
+                }
+            },
             "zoneName": "nova"
         }
     ]

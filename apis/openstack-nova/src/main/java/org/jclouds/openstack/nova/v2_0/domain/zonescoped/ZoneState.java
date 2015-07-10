@@ -18,6 +18,11 @@ package org.jclouds.openstack.nova.v2_0.domain.zonescoped;
 
 import com.google.common.base.Objects;
 
+/**
+ * @deprecated This package has been replaced with {@link org.jclouds.openstack.nova.v2_0.domain.regionscoped}.
+ *             Please use {@link org.jclouds.openstack.nova.v2_0.domain.regionscoped.ZoneState ZoneState}
+ *             instead. To be removed in jclouds 2.0.
+ */
 public class ZoneState {
 
    private final boolean available;

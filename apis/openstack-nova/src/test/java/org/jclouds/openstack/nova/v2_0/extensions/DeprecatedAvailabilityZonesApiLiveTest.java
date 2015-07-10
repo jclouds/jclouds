@@ -18,36 +18,26 @@ package org.jclouds.openstack.nova.v2_0.extensions;
 
 import com.google.common.base.Optional;
 import com.google.common.collect.FluentIterable;
-import org.jclouds.openstack.nova.v2_0.domain.regionscoped.AvailabilityZone;
+import org.jclouds.openstack.nova.v2_0.domain.zonescoped.AvailabilityZone;
 import org.jclouds.openstack.nova.v2_0.internal.BaseNovaApiLiveTest;
 import org.testng.annotations.Test;
 
 import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertTrue;
 
-@Test(groups = "live", testName = "AvailabilityZonesApiLiveTest")
-public class AvailabilityZonesApiLiveTest extends BaseNovaApiLiveTest {
+@Test(groups = "live", testName = "DeprecatedAvailabilityZonesApiLiveTest")
+public class DeprecatedAvailabilityZonesApiLiveTest extends BaseNovaApiLiveTest {
 
    @Test
    public void testListAvailabilityZones() throws Exception {
 
       Optional<? extends AvailabilityZoneApi> availabilityZoneApi = api.getAvailabilityZoneApi("RegionOne");
       if (availabilityZoneApi.isPresent()) {
-         FluentIterable<? extends AvailabilityZone> zones = availabilityZoneApi.get().listAvailabilityZones();
+         FluentIterable<? extends AvailabilityZone> zones = availabilityZoneApi.get().list();
 
          for (AvailabilityZone zone : zones) {
             assertNotNull(zone.getName());
-            assertTrue(zone.getState()
-                  .isAvailable(), "zone: " + zone.getName() + " is not available.");
-            String hostName = zone.getHosts().keySet().iterator().next();
-            assertNotNull(hostName, "Expected host name to be not null");
-            String hostServiceName = zone.getHosts().get(hostName).keySet().iterator().next();
-            assertNotNull(hostServiceName, "Expected host service name to be not null");
-            AvailabilityZone.HostService hostService = zone.getHosts().get(hostName).get(hostServiceName);
-            assertTrue(hostService.isAvailable(), "Couldn't find host service availability");
-            assertTrue(hostService.isActive(), "Couldn't find host service state");
-            assertNotNull(hostService.getUpdated(), "Expected Updated time, but none received ");
-
+            assertTrue(zone.getState().available(), "zone: " + zone.getName() + " is not available.");
          }
       }
    }

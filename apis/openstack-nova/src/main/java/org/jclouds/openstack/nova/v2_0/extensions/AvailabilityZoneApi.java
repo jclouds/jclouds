@@ -16,23 +16,22 @@
  */
 package org.jclouds.openstack.nova.v2_0.extensions;
 
-import javax.inject.Named;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.core.MediaType;
-
+import com.google.common.annotations.Beta;
+import com.google.common.collect.FluentIterable;
 import org.jclouds.Fallbacks.EmptyFluentIterableOnNotFoundOr404;
 import org.jclouds.openstack.keystone.v2_0.filters.AuthenticateRequest;
-import org.jclouds.openstack.nova.v2_0.domain.zonescoped.AvailabilityZone;
+import org.jclouds.openstack.nova.v2_0.domain.regionscoped.AvailabilityZone;
 import org.jclouds.openstack.v2_0.ServiceType;
 import org.jclouds.openstack.v2_0.services.Extension;
 import org.jclouds.rest.annotations.Fallback;
 import org.jclouds.rest.annotations.RequestFilters;
 import org.jclouds.rest.annotations.SelectJson;
 
-import com.google.common.annotations.Beta;
-import com.google.common.collect.FluentIterable;
+import javax.inject.Named;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.GET;
+import javax.ws.rs.Path;
+import javax.ws.rs.core.MediaType;
 
 /**
  * Provides access to the OpenStack Compute (Nova) Availability Zone Extension API.
@@ -43,6 +42,18 @@ import com.google.common.collect.FluentIterable;
 @Consumes(MediaType.APPLICATION_JSON)
 @Path("/os-availability-zone")
 public interface AvailabilityZoneApi {
+
+   /**
+    * @return all availability zones
+    * @deprecated Please use {@link #listAvailabilityZones()} instead. To be removed in jclouds 2.0.
+    */
+   @Deprecated
+   @Named("availabilityZone:list")
+   @GET
+   @SelectJson("availabilityZoneInfo")
+   @Fallback(EmptyFluentIterableOnNotFoundOr404.class)
+   FluentIterable<org.jclouds.openstack.nova.v2_0.domain.zonescoped.AvailabilityZone> list();
+
    /**
     * @return all availability zones
     */
@@ -50,5 +61,5 @@ public interface AvailabilityZoneApi {
    @GET
    @SelectJson("availabilityZoneInfo")
    @Fallback(EmptyFluentIterableOnNotFoundOr404.class)
-   FluentIterable<AvailabilityZone> list();
+   FluentIterable<AvailabilityZone> listAvailabilityZones();
 }
