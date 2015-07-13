@@ -39,4 +39,9 @@ public class GoogleCloudStorageContainerLiveTest extends BaseContainerLiveTest {
    public void testContainerListWithPrefix() {
       throw new SkipException("Prefix option has not been plumbed down to GCS");
    }
+
+   @Override
+   public void testDelimiterList() {
+      throw new SkipException("Prefix option has not been plumbed down to GCS");
+   }
 }
