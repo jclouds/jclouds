@@ -156,6 +156,11 @@ public class BaseContainerLiveTest extends BaseBlobStoreIntegrationTest {
                blobStore.list(containerName, ListContainerOptions.Builder.delimiter("\\")));
          checkEqualNames(ImmutableSet.of("test-", "test/foo/foo", "test/bar/foo", "foo"), blobStore.list(
                containerName, ListContainerOptions.Builder.delimiter("-")));
+
+         blobStore.putBlob(containerName, blobStore.blobBuilder("bar").payload(payload).build());
+         blobStore.putBlob(containerName, blobStore.blobBuilder("bazar").payload(payload).build());
+         checkEqualNames(ImmutableSet.of("bar", "baza"), blobStore.list(containerName,
+               ListContainerOptions.Builder.delimiter("a").prefix("ba")));
       } finally {
          returnContainer(containerName);
       }
