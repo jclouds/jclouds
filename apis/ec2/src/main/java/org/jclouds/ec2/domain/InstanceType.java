@@ -62,6 +62,17 @@ public class InstanceType {
     */
    public static final String T2_MEDIUM = "t2.medium";
 
+   /**
+    * Micro Burstable Performance Instance
+    * <ul>
+    * <li>8 GB memory</li>
+    * <li>2 vCPU / 40% baseline performance</li>
+    * <li>No instance storage (EBS storage only)</li>
+    * <li>64-bit platform</li>
+    * </ul>
+    */
+   public static final String T2_LARGE = "t2.large";
+
     /**
     * Small Instance
     * <ul>
@@ -196,6 +207,66 @@ public class InstanceType {
     * </ul>
     */
    public static final String M3_2XLARGE = "m3.2xlarge";
+   
+   /**
+    * M4 Large Instance
+    * <ul>
+    * <li>8 GiB memory</li>
+    * <li>6.5 EC2 Compute Units (2 virtual cores with 3.25 EC2 Compute Units each)</li>
+    * <li>EBS storage only</li>
+    * <li>64-bit platform</li>
+    * <li>I/O Performance: Moderate</li>
+    * </ul>
+    */
+   public static final String M4_LARGE = "m4.large";
+
+   /**
+    * M4 Extra Large Instance
+    * <ul>
+    * <li>16 GiB memory</li>
+    * <li>13 EC2 Compute Units (4 virtual cores with 3.25 EC2 Compute Units each)</li>
+    * <li>EBS storage only</li>
+    * <li>64-bit platform</li>
+    * <li>I/O Performance: High</li>
+    * </ul>
+    */
+   public static final String M4_XLARGE = "m4.xlarge";
+
+   /**
+    * M4 Double Extra Large Instance
+    * <ul>
+    * <li>32 GiB memory</li>
+    * <li>26 EC2 Compute Units (8 virtual cores with 3.25 EC2 Compute Units each)</li>
+    * <li>EBS storage only</li>
+    * <li>64-bit platform</li>
+    * <li>I/O Performance: High</li>
+    * </ul>
+    */
+   public static final String M4_2XLARGE = "m4.2xlarge";
+
+   /**
+    * M4 Quadruple Extra Large Instance
+    * <ul>
+    * <li>64 GiB memory</li>
+    * <li>53.5 EC2 Compute Units (16 virtual cores with 3.34375 EC2 Compute Units each)</li>
+    * <li>EBS storage only</li>
+    * <li>64-bit platform</li>
+    * <li>I/O Performance: High</li>
+    * </ul>
+    */
+   public static final String M4_4XLARGE = "m4.4xlarge";
+
+   /**
+    * M4 Decuple Extra Large Instance
+    * <ul>
+    * <li>160 GiB memory</li>
+    * <li>124.5 EC2 Compute Units (40 virtual cores with 3.1125 EC2 Compute Units each)</li>
+    * <li>EBS storage only</li>
+    * <li>64-bit platform</li>
+    * <li>I/O Performance: High</li>
+    * </ul>
+    */
+   public static final String M4_10XLARGE = "m4.10xlarge";
 
    /**
     * High-CPU Medium Instance
@@ -415,6 +486,46 @@ public class InstanceType {
     * </ul>
     */
    public static final String C4_LARGE = "c4.large";
+
+   /**
+    * D2 Dense Storage Extra Large
+    * <ul>
+    *    <li>30.5 GiB of memory</li>
+    *    <li>4 vCPU</li>
+    *    <li>3 x 2000gb HDD</li>
+    * </ul>
+    */
+   public static final String D2_XLARGE = "d2.xlarge";
+
+   /**
+    * D2 Dense Storage Double Extra Large
+    * <ul>
+    *    <li>61 GiB of memory</li>
+    *    <li>8 vCPU</li>
+    *    <li>6 x 2000gb HDD</li>
+    * </ul>
+    */
+   public static final String D2_2XLARGE = "d2.2xlarge";
+
+   /**
+    * D2 Dense Storage Quadruple Extra Large
+    * <ul>
+    *    <li>122 GiB of memory</li>
+    *    <li>16 vCPU</li>
+    *    <li>12 x 2000gb HDD</li>
+    * </ul>
+    */
+   public static final String D2_4XLARGE = "d2.4xlarge";
+
+   /**
+    * D2 Dense Storage Octuple Extra Large
+    * <ul>
+    *    <li>244 GiB of memory</li>
+    *    <li>36 vCPU</li>
+    *    <li>24 x 2000gb HDD</li>
+    * </ul>
+    */
+   public static final String D2_8XLARGE = "d2.8xlarge";
 
    /**
     * I2 Extra Large
