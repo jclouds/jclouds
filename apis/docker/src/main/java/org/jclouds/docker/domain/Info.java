@@ -28,7 +28,7 @@ public abstract class Info {
 
    public abstract int containers();
 
-   public abstract int debug();
+   public abstract boolean debug();
 
    public abstract String driver();
 
@@ -36,7 +36,7 @@ public abstract class Info {
 
    public abstract String executionDriver();
 
-   public abstract int iPv4Forwarding();
+   public abstract boolean iPv4Forwarding();
 
    public abstract int images();
 
@@ -48,7 +48,7 @@ public abstract class Info {
 
    public abstract String kernelVersion();
 
-   public abstract int memoryLimit();
+   public abstract boolean memoryLimit();
 
    public abstract int nEventsListener();
 
@@ -58,7 +58,7 @@ public abstract class Info {
 
    public abstract String operatingSystem();
 
-   public abstract int swapLimit();
+   public abstract boolean swapLimit();
 
    public abstract String dockerRootDir();
 
@@ -96,10 +96,10 @@ public abstract class Info {
                    "NFd", "NGoroutines", "OperatingSystem", "SwapLimit", "DockerRootDir", "Labels", "MemTotal", "NCPU",
                    "ID", "Name"
    })
-   public static Info create(int containers, int debug, String driver, List<List<String>> driverStatus,
-                             String executionDriver, int iPv4Forwarding, int images, String indexServerAddress,
-                             String initPath, String initSha1, String kernelVersion, int memoryLimit,
-                             int nEventsListener, int nFd, int nGoroutines, String operatingSystem, int swapLimit,
+   public static Info create(int containers, boolean debug, String driver, List<List<String>> driverStatus,
+                             String executionDriver, boolean iPv4Forwarding, int images, String indexServerAddress,
+                             String initPath, String initSha1, String kernelVersion, boolean memoryLimit,
+                             int nEventsListener, int nFd, int nGoroutines, String operatingSystem, boolean swapLimit,
                              String dockerRootDir, List<String> labels, long memTotal, int ncpu, String id, String name) {
       return new AutoValue_Info(containers, debug, driver, driverStatus, executionDriver, iPv4Forwarding, images,
               indexServerAddress, initPath, initSha1, kernelVersion, memoryLimit, nEventsListener, nFd, nGoroutines,

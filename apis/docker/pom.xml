@@ -34,10 +34,11 @@
   <packaging>bundle</packaging>
 
   <properties>
-    <test.docker.endpoint>https://localhost:4243</test.docker.endpoint>
-    <test.docker.api-version>1.15</test.docker.api-version>
-    <test.docker.identity>FIXME</test.docker.identity>
-    <test.docker.credential>FIXME</test.docker.credential>
+    <test.docker.api-version>1.19</test.docker.api-version>
+    <test.docker.identity>${env.DOCKER_CERT_PATH}/cert.pem</test.docker.identity>
+    <test.docker.credential>${env.DOCKER_CERT_PATH}/key.pem</test.docker.credential>
+    <test.docker.cacert.path>${env.DOCKER_CERT_PATH}/ca.pem</test.docker.cacert.path>
+    <test.jclouds.trust-all-certs>false</test.jclouds.trust-all-certs>
     <jclouds.osgi.export>org.jclouds.docker*;version="${project.version}"</jclouds.osgi.export>
     <jclouds.osgi.import>
       org.jclouds.compute.internal;version="${project.version}",
@@ -135,6 +136,26 @@
       <build>
         <plugins>
           <plugin>
+            <groupId>org.codehaus.mojo</groupId>
+            <artifactId>build-helper-maven-plugin</artifactId>
+            <version>1.9.1</version>
+            <executions>
+              <execution>
+                <id>regex-property</id>
+                <goals>
+                  <goal>regex-property</goal>
+                </goals>
+                <configuration>
+                  <name>test.docker.endpoint</name>
+                  <value>${env.DOCKER_HOST}</value>
+                  <regex>tcp</regex>
+                  <replacement>https</replacement>
+                  <failIfNoMatch>false</failIfNoMatch>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+          <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-surefire-plugin</artifactId>
             <executions>
@@ -149,8 +170,10 @@
                   <systemPropertyVariables>
                     <test.docker.endpoint>${test.docker.endpoint}</test.docker.endpoint>
                     <test.docker.api-version>${test.docker.api-version}</test.docker.api-version>
-                    <test.docker.credential>${test.docker.identity}</test.docker.credential>
+                    <test.docker.identity>${test.docker.identity}</test.docker.identity>
                     <test.docker.credential>${test.docker.credential}</test.docker.credential>
+                    <test.docker.cacert.path>${test.docker.cacert.path}</test.docker.cacert.path>
+                    <test.jclouds.trust-all-certs>${test.jclouds.trust-all-certs}</test.jclouds.trust-all-certs>
                   </systemPropertyVariables>
                 </configuration>
               </execution>

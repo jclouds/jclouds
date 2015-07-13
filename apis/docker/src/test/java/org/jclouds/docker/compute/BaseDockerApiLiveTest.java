@@ -29,6 +29,7 @@ import org.jboss.shrinkwrap.api.GenericArchive;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.asset.ClassLoaderAsset;
 import org.jboss.shrinkwrap.api.exporter.TarExporter;
+import org.jclouds.Constants;
 import org.jclouds.apis.BaseApiLiveTest;
 import org.jclouds.compute.config.ComputeServiceProperties;
 import org.jclouds.docker.DockerApi;
@@ -56,8 +57,9 @@ public class BaseDockerApiLiveTest extends BaseApiLiveTest<DockerApi> {
    @Override
    protected Properties setupProperties() {
       Properties overrides = super.setupProperties();
-      overrides.setProperty("jclouds.trust-all-certs", "false");
       overrides.setProperty(ComputeServiceProperties.IMAGE_LOGIN_USER, "root:password");
+      setIfTestSystemPropertyPresent(overrides,  provider + ".cacert.path");
+      setIfTestSystemPropertyPresent(overrides, Constants.PROPERTY_TRUST_ALL_CERTS);
       return overrides;
    }
 

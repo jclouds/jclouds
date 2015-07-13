@@ -40,25 +40,25 @@ public class InfoParseTest extends BaseDockerParseTest<Info> {
    public Info expected() {
       return Info.create(
               0, // containers
-              1, // debug
+              true, // debug
               "aufs", // driver
               ImmutableList.<List<String>>of(
                       ImmutableList.of("Root Dir", "/mnt/sda1/var/lib/docker/aufs"),
                       ImmutableList.of("Dirs", "46")
               ), // driverStatus
               "native-0.2", // ExecutionDriver
-              1, // IPv4Forwarding
+              true, // IPv4Forwarding
               46, // Images
               "https://index.docker.io/v1/", // IndexServerAddress
               "/usr/local/bin/docker", // InitPath
               "", // InitSha1
               "3.16.7-tinycore64", // KernelVersion
-              1, // MemoryLimit
+              true, // MemoryLimit
               0, // NEventsListener
               10, // NFd
               11, // NGoroutines
               "Boot2Docker 1.4.1 (TCL 5.4); master : 86f7ec8 - Tue Dec 16 23:11:29 UTC 2014", // OperatingSystem
-              1, // SwapLimit
+              true, // SwapLimit
               "/mnt/sda1/var/lib/docker", // DockerRootDir
               null, // Labels
               2105585664, // MemTotal

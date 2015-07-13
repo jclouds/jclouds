@@ -1,6 +1,6 @@
 {
     "Containers": 0,
-    "Debug": 1,
+    "Debug": true,
     "DockerRootDir": "/mnt/sda1/var/lib/docker",
     "Driver": "aufs",
     "DriverStatus": [
@@ -15,7 +15,7 @@
     ],
     "ExecutionDriver": "native-0.2",
     "ID": "7V5Y:IQ2M:HWIL:AZJV:HKRD:Q7OZ:3EQA:ZHMO:4LAD:OSIY:YBAA:BSX6",
-    "IPv4Forwarding": 1,
+    "IPv4Forwarding": true,
     "Images": 46,
     "IndexServerAddress": "https://index.docker.io/v1/",
     "InitPath": "/usr/local/bin/docker",
@@ -23,12 +23,12 @@
     "KernelVersion": "3.16.7-tinycore64",
     "Labels": null,
     "MemTotal": 2105585664,
-    "MemoryLimit": 1,
+    "MemoryLimit": true,
     "NCPU": 8,
     "NEventsListener": 0,
     "NFd": 10,
     "NGoroutines": 11,
     "Name": "boot2docker",
     "OperatingSystem": "Boot2Docker 1.4.1 (TCL 5.4); master : 86f7ec8 - Tue Dec 16 23:11:29 UTC 2014",
-    "SwapLimit": 1
+    "SwapLimit": true
 }

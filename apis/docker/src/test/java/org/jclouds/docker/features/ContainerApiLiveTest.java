@@ -128,7 +128,7 @@ public class ContainerApiLiveTest extends BaseDockerApiLiveTest {
    @Test(dependsOnMethods = "testRestartContainer")
    public void testWaitContainer() {
       api().stopContainer(container.id(), 1);
-      assertEquals(api().wait(container.id()).statusCode(), -1);
+      assertEquals(api().wait(container.id()).statusCode(), 137);
    }
 
    @Test(dependsOnMethods = "testWaitContainer")

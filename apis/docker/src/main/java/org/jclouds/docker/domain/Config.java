@@ -101,8 +101,6 @@ public abstract class Config {
 
    @Nullable public abstract String networkMode();
 
-   public abstract Map<String, String> devices();
-
    Config() {
    }
 
@@ -112,7 +110,7 @@ public abstract class Config {
                  "AttachStderr", "Tty", "OpenStdin", "StdinOnce", "Env", "Cmd", "Entrypoint", "Image", "Volumes",
                  "WorkingDir", "NetworkDisabled", "ExposedPorts", "SecurityOpts", "HostConfig", "Binds", "Links",
                  "LxcConf", "PortBindings", "PublishAllPorts", "Privileged", "Dns", "DnsSearch", "VolumesFrom",
-                 "CapAdd", "CapDrop", "RestartPolicy", "NetworkMode", "Devices"
+                 "CapAdd", "CapDrop", "RestartPolicy", "NetworkMode"
          })
    public static Config create(String hostname, String domainname, String user, int memory, int memorySwap,
          int cpuShares, boolean attachStdin, boolean attachStdout, boolean attachStderr, boolean tty,
@@ -121,13 +119,12 @@ public abstract class Config {
          Map<String, ?> exposedPorts, List<String> securityOpts, HostConfig hostConfig, List<String> binds,
          List<String> links, List<Map<String, String>> lxcConf, Map<String, List<Map<String, String>>> portBindings,
          boolean publishAllPorts, boolean privileged, List<String> dns, String dnsSearch, String volumesFrom,
-         List<String> capAdd, List<String> capDrop, Map<String, String> restartPolicy, String networkMode, Map<String, String> devices) {
+         List<String> capAdd, List<String> capDrop, Map<String, String> restartPolicy, String networkMode) {
       return new AutoValue_Config(hostname, domainname, user, memory, memorySwap, cpuShares, attachStdin,
               attachStdout, attachStderr, tty, openStdin, stdinOnce, copyOf(env), copyOf(cmd), copyOf(entrypoint),
               image, copyOf(volumes), workingDir, networkDisabled, copyOf(exposedPorts), copyOf(securityOpts), hostConfig,
               copyOf(binds), copyOf(links), copyOf(lxcConf), copyOf(portBindings), publishAllPorts, privileged,
-              copyOf(dns), dnsSearch, volumesFrom, copyOf(capAdd), copyOf(capDrop), copyOf(restartPolicy), networkMode,
-              copyOf(devices));
+              copyOf(dns), dnsSearch, volumesFrom, copyOf(capAdd), copyOf(capDrop), copyOf(restartPolicy), networkMode);
    }
 
    public static Builder builder() {
@@ -174,7 +171,6 @@ public abstract class Config {
       private List<String> capDrop = Lists.newArrayList();
       private Map<String, String> restartPolicy = Maps.newHashMap();
       private String networkMode;
-      private Map<String, String> devices = Maps.newHashMap();
 
       public Builder hostname(String hostname) {
          this.hostname = hostname;
@@ -191,18 +187,24 @@ public abstract class Config {
          return this;
       }
 
-      public Builder memory(int memory) {
-         this.memory = memory;
+      public Builder memory(Integer memory) {
+         if (memory != null) {
+            this.memory = memory;
+         }
          return this;
       }
 
-      public Builder memorySwap(int memorySwap) {
-         this.memorySwap = memorySwap;
+      public Builder memorySwap(Integer memorySwap) {
+         if (memorySwap != null) {
+            this.memorySwap = memorySwap;
+         }
          return this;
       }
 
-      public Builder cpuShares(int cpuShares) {
-         this.cpuShares = cpuShares;
+      public Builder cpuShares(Integer cpuShares) {
+         if (cpuShares != null) {
+            this.cpuShares = cpuShares;
+         }
          return this;
       }
 
@@ -351,17 +353,12 @@ public abstract class Config {
          return this;
       }
 
-      public Builder devices(Map<String, String> devices) {
-         this.devices = devices;
-         return this;
-      }
-
       public Config build() {
          return Config.create(hostname, domainname, user, memory, memorySwap, cpuShares, attachStdin, attachStdout,
                  attachStderr, tty, openStdin, stdinOnce, env, cmd, entrypoint, image, volumes, workingDir,
                  networkDisabled, exposedPorts, securityOpts, hostConfig, binds, links, lxcConf, portBindings,
                  publishAllPorts, privileged, dns, dnsSearch, volumesFrom, capAdd, capDrop, restartPolicy,
-                 networkMode, devices);
+                 networkMode);
       }
 
       public Builder fromConfig(Config in) {
@@ -373,7 +370,7 @@ public abstract class Config {
                  .hostConfig(in.hostConfig()).binds(in.binds()).links(in.links()).lxcConf(in.lxcConf())
                  .portBindings(in.portBindings()).publishAllPorts(in.publishAllPorts()).privileged(in.privileged())
                  .dns(in.dns()).dnsSearch(in.dnsSearch()).volumesFrom(in.volumesFrom()).capAdd(in.capAdd())
-                 .capDrop(in.capDrop()).restartPolicy(in.restartPolicy()).networkMode(in.networkMode()).devices(in.devices());
+                 .capDrop(in.capDrop()).restartPolicy(in.restartPolicy()).networkMode(in.networkMode());
       }
 
    }

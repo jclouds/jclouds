@@ -19,7 +19,7 @@ package org.jclouds.docker.config;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-import org.jclouds.docker.suppliers.SSLContextWithKeysSupplier;
+import org.jclouds.docker.suppliers.DockerSSLContextSupplier;
 import org.jclouds.http.okhttp.OkHttpClientSupplier;
 
 import com.google.common.collect.ImmutableList;
@@ -30,24 +30,24 @@ import com.squareup.okhttp.TlsVersion;
 @Singleton
 public class DockerOkHttpClientSupplier implements OkHttpClientSupplier {
 
-   private final SSLContextWithKeysSupplier sslContextWithKeysSupplier;
+    private final DockerSSLContextSupplier dockerSSLContextSupplier;
 
-   @Inject
-   DockerOkHttpClientSupplier(SSLContextWithKeysSupplier sslContextWithKeysSupplier) {
-      this.sslContextWithKeysSupplier = sslContextWithKeysSupplier;
-   }
+    @Inject
+    DockerOkHttpClientSupplier(DockerSSLContextSupplier dockerSSLContextSupplier) {
+        this.dockerSSLContextSupplier = dockerSSLContextSupplier;
+    }
 
-   @Override
-   public OkHttpClient get() {
-      OkHttpClient client = new OkHttpClient();
-      ConnectionSpec tlsSpec = new ConnectionSpec.Builder(ConnectionSpec.MODERN_TLS)
-              .tlsVersions(TlsVersion.TLS_1_0, TlsVersion.TLS_1_1, TlsVersion.TLS_1_2)
-              .build();
-      ConnectionSpec cleartextSpec = new ConnectionSpec.Builder(ConnectionSpec.CLEARTEXT)
-              .build();
-      client.setConnectionSpecs(ImmutableList.of(tlsSpec, cleartextSpec));
-      client.setSslSocketFactory(sslContextWithKeysSupplier.get().getSocketFactory());
-      return client;
-   }
+    @Override
+    public OkHttpClient get() {
+        OkHttpClient client = new OkHttpClient();
+        ConnectionSpec tlsSpec = new ConnectionSpec.Builder(ConnectionSpec.MODERN_TLS)
+                .tlsVersions(TlsVersion.TLS_1_0, TlsVersion.TLS_1_1, TlsVersion.TLS_1_2)
+                .build();
+        ConnectionSpec cleartextSpec = new ConnectionSpec.Builder(ConnectionSpec.CLEARTEXT)
+                .build();
+        client.setConnectionSpecs(ImmutableList.of(tlsSpec, cleartextSpec));
+        client.setSslSocketFactory(dockerSSLContextSupplier.get().getSocketFactory());
+        return client;
+    }
 
 }

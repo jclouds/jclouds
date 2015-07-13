@@ -37,6 +37,8 @@ import static org.jclouds.reflect.Reflection2.typeToken;
 @AutoService(ApiMetadata.class)
 public class DockerApiMetadata extends BaseHttpApiMetadata<DockerApi> {
 
+    public static final String DOCKER_CA_CERT_PATH = "docker.cacert.path";
+
    @Override
    public Builder toBuilder() {
       return new Builder().fromApiMetadata(this);
@@ -55,6 +57,7 @@ public class DockerApiMetadata extends BaseHttpApiMetadata<DockerApi> {
       properties.setProperty(Constants.PROPERTY_CONNECTION_TIMEOUT, "1200000"); // 15 minutes
       properties.setProperty(ComputeServiceProperties.IMAGE_LOGIN_USER, "root:password");
       properties.setProperty(TEMPLATE, "osFamily=UBUNTU,os64Bit=true");
+      properties.setProperty(DOCKER_CA_CERT_PATH, "");
       return properties;
    }
 

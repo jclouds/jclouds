@@ -8,15 +8,11 @@ Please follow these steps to configure your workstation for jclouds-docker:
 
 - install the latest Docker release (please visit https://docs.docker.com/installation/)
 
-If you are using `boot2docker`, notice that from version v1.3.0 the Docker daemon is set to use an encrypted TCP
-socket (--tls, or --tlsverify),
-then you need to import CA certificate into Trusted Certs:
-      
-      `keytool -import -trustcacerts -file /Users/andrea/.boot2docker/certs/boot2docker-vm/ca.pem -alias BOOT2DOCKER -keystore $JAVA_HOME/jre/lib/security/cacerts`
+If you are using `boot2docker` then it can also manage certificates and help you setup `DOCKER_CERT_PATH` and `DOCKER_HOST` environment variables. (See `boot2docker shellinit`)
 
-by default the passoword is `changeit`
+Assuming these environment variables are setup correctly there are no further setups steps are required.
 
-N.B.: From `Docker 1.3.2+` the server doesn't accept sslv3 protocol (https://github.com/docker/docker/pull/8588/files)
+Live tests then can now be run: `mvn -Plive integration-test`
 
 #How it works
 
