@@ -18,7 +18,6 @@ package org.jclouds.blobstore.integration.internal;
 
 import static java.util.concurrent.TimeUnit.SECONDS;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.jclouds.blobstore.options.CreateContainerOptions.Builder.publicRead;
 import static org.jclouds.util.Predicates2.retry;
 import static org.testng.Assert.assertEquals;
@@ -28,17 +27,12 @@ import static org.testng.Assert.assertTrue;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 import java.util.logging.Logger;
 
-import com.google.common.net.HostAndPort;
 import org.jclouds.blobstore.BlobStore;
 import org.jclouds.blobstore.domain.BlobMetadata;
-import org.jclouds.blobstore.domain.PageSet;
 import org.jclouds.blobstore.domain.StorageMetadata;
-import org.jclouds.blobstore.options.ListContainerOptions;
 import org.jclouds.domain.Location;
 import org.jclouds.javax.annotation.Nullable;
 import org.jclouds.predicates.SocketOpen;
@@ -49,9 +43,9 @@ import org.testng.annotations.Test;
 import com.google.common.base.Predicate;
 import com.google.common.base.Predicates;
 import com.google.common.base.Strings;
-import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
+import com.google.common.net.HostAndPort;
 
 public class BaseContainerLiveTest extends BaseBlobStoreIntegrationTest {
 
@@ -119,60 +113,6 @@ public class BaseContainerLiveTest extends BaseBlobStoreIntegrationTest {
       Location nonDefault = findNonDefaultLocationOrSkip(view.getBlobStore(), defaultLocation);
       String payload = Strings.repeat("a", 1024 * 1024); // 1MB
       runCreateContainerInLocation(payload, nonDefault);
-   }
-
-   @Test(groups = "live")
-   public void testContainerListWithPrefix() throws InterruptedException {
-      final String containerName = getContainerName();
-      BlobStore blobStore = view.getBlobStore();
-      String prefix = "blob";
-      try {
-         blobStore.putBlob(containerName, blobStore.blobBuilder(prefix).payload("").build());
-         blobStore.putBlob(containerName, blobStore.blobBuilder(prefix + "foo").payload("").build());
-         blobStore.putBlob(containerName, blobStore.blobBuilder(prefix + "bar").payload("").build());
-         blobStore.putBlob(containerName, blobStore.blobBuilder("foo").payload("").build());
-         checkEqualNames(ImmutableSet.of(prefix, prefix + "foo", prefix + "bar"),
-               blobStore.list(containerName, ListContainerOptions.Builder.prefix(prefix)));
-      }
-      finally {
-         returnContainer(containerName);
-      }
-   }
-
-   @Test(groups = "live")
-   public void testDelimiterList() throws InterruptedException {
-      final String containerName = getContainerName();
-      BlobStore blobStore = view.getBlobStore();
-      String payload = "foo";
-      try {
-         blobStore.putBlob(containerName, blobStore.blobBuilder("test/foo/foo").payload(payload).build());
-         blobStore.putBlob(containerName, blobStore.blobBuilder("test/bar/foo").payload(payload).build());
-         blobStore.putBlob(containerName, blobStore.blobBuilder("foo").payload(payload).build());
-         blobStore.putBlob(containerName, blobStore.blobBuilder("test-foo").payload(payload).build());
-         blobStore.putBlob(containerName, blobStore.blobBuilder("test-bar").payload(payload).build());
-         checkEqualNames(ImmutableSet.of("foo", "test/", "test-foo", "test-bar"), blobStore.list(
-               containerName, ListContainerOptions.Builder.delimiter("/")));
-         checkEqualNames(ImmutableSet.of("test/foo/foo", "test/bar/foo", "foo", "test-foo", "test-bar"),
-               blobStore.list(containerName, ListContainerOptions.Builder.delimiter("\\")));
-         checkEqualNames(ImmutableSet.of("test-", "test/foo/foo", "test/bar/foo", "foo"), blobStore.list(
-               containerName, ListContainerOptions.Builder.delimiter("-")));
-
-         blobStore.putBlob(containerName, blobStore.blobBuilder("bar").payload(payload).build());
-         blobStore.putBlob(containerName, blobStore.blobBuilder("bazar").payload(payload).build());
-         checkEqualNames(ImmutableSet.of("bar", "baza"), blobStore.list(containerName,
-               ListContainerOptions.Builder.delimiter("a").prefix("ba")));
-      } finally {
-         returnContainer(containerName);
-      }
-   }
-
-   private void checkEqualNames(ImmutableSet<String> expectedSet, PageSet<? extends StorageMetadata> results) {
-      Set<String> names = new HashSet<String>();
-      for (StorageMetadata sm : results) {
-         names.add(sm.getName());
-      }
-
-      assertThat(names).containsOnlyElementsOf(expectedSet);
    }
 
    private void runCreateContainerInLocation(String payload, Location nonDefault) throws InterruptedException,

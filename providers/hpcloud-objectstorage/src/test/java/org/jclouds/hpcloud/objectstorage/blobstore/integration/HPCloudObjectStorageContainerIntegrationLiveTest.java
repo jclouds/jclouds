@@ -17,6 +17,7 @@
 package org.jclouds.hpcloud.objectstorage.blobstore.integration;
 
 import org.jclouds.openstack.swift.blobstore.integration.SwiftContainerIntegrationLiveTest;
+import org.testng.SkipException;
 import org.testng.annotations.Test;
 
 @Test(groups = "live")
@@ -25,4 +26,9 @@ public class HPCloudObjectStorageContainerIntegrationLiveTest extends SwiftConta
       provider = "hpcloud-objectstorage";
    }
 
+   @Override
+   @Test
+   public void testDelimiterList() {
+      throw new SkipException("\"path\" parameter elides subdirectories");
+   }
 }

@@ -50,4 +50,14 @@ public class AtmosContainerIntegrationLiveTest extends BaseContainerIntegrationT
    public void testListContainerWithZeroMaxResults() throws Exception {
       throw new SkipException("Atmos requires a positive integer for max results");
    }
+
+   @Override
+   public void testContainerListWithPrefix() {
+      throw new SkipException("Prefix option has not been plumbed down to Atmos");
+   }
+
+   @Override
+   public void testDelimiterList() {
+      throw new SkipException("Delimiter support is not yet implemented");
+   }
 }

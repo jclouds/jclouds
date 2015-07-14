@@ -30,6 +30,7 @@ import static org.testng.Assert.assertTrue;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 import java.util.concurrent.ExecutionException;
@@ -49,6 +50,7 @@ import org.jclouds.blobstore.options.ListContainerOptions;
 import org.testng.annotations.Test;
 
 import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.ImmutableSet;
 import com.google.common.io.ByteSource;
 import com.google.common.util.concurrent.Uninterruptibles;
 
@@ -514,6 +516,59 @@ public class BaseContainerIntegrationTest extends BaseBlobStoreIntegrationTest {
       } finally {
          recycleContainerAndAddToPool(containerName);
       }
+   }
+
+   @Test(groups = {"integration", "live"})
+   public void testContainerListWithPrefix() throws InterruptedException {
+      final String containerName = getContainerName();
+      BlobStore blobStore = view.getBlobStore();
+      String prefix = "blob";
+      try {
+         blobStore.putBlob(containerName, blobStore.blobBuilder(prefix).payload("").build());
+         blobStore.putBlob(containerName, blobStore.blobBuilder(prefix + "foo").payload("").build());
+         blobStore.putBlob(containerName, blobStore.blobBuilder(prefix + "bar").payload("").build());
+         blobStore.putBlob(containerName, blobStore.blobBuilder("foo").payload("").build());
+         checkEqualNames(ImmutableSet.of(prefix, prefix + "foo", prefix + "bar"),
+               blobStore.list(containerName, ListContainerOptions.Builder.prefix(prefix)));
+      }
+      finally {
+         returnContainer(containerName);
+      }
+   }
+
+   @Test(groups = {"integration", "live"})
+   public void testDelimiterList() throws InterruptedException {
+      final String containerName = getContainerName();
+      BlobStore blobStore = view.getBlobStore();
+      String payload = "foo";
+      try {
+         blobStore.putBlob(containerName, blobStore.blobBuilder("test-foo-foo").payload(payload).build());
+         blobStore.putBlob(containerName, blobStore.blobBuilder("test-bar-foo").payload(payload).build());
+         blobStore.putBlob(containerName, blobStore.blobBuilder("foo").payload(payload).build());
+         // NOTE: the test does not work if we use a file separator character ("/" or "\"), as the file system blob
+         // store will create directories when putting such a blob. When listing results, these directories will also
+         // show up in the result set.
+         checkEqualNames(ImmutableSet.of("foo", "test-"), blobStore.list(containerName,
+               ListContainerOptions.Builder.delimiter("-")));
+         checkEqualNames(ImmutableSet.of("test-foo-foo", "test-bar-foo", "foo"),
+               blobStore.list(containerName, ListContainerOptions.Builder.delimiter(".")));
+
+         blobStore.putBlob(containerName, blobStore.blobBuilder("bar").payload(payload).build());
+         blobStore.putBlob(containerName, blobStore.blobBuilder("bazar").payload(payload).build());
+         checkEqualNames(ImmutableSet.of("bar", "baza"), blobStore.list(containerName,
+               ListContainerOptions.Builder.delimiter("a").prefix("ba")));
+      } finally {
+         returnContainer(containerName);
+      }
+   }
+
+   private void checkEqualNames(ImmutableSet<String> expectedSet, PageSet<? extends StorageMetadata> results) {
+      Set<String> names = new HashSet<String>();
+      for (StorageMetadata sm : results) {
+         names.add(sm.getName());
+      }
+
+      assertThat(names).containsOnlyElementsOf(expectedSet);
    }
 
    protected void addAlphabetUnderRoot(String containerName) throws InterruptedException {

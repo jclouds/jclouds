@@ -33,10 +33,4 @@ public class HPCloudObjectStorageContainerLiveTest extends BaseContainerLiveTest
    @Override
    @Test
    public void testPublicAccessInNonDefaultLocationWithBigBlob() { throw new SkipException("Locations are ignored"); }
-
-   @Override
-   @Test
-   public void testDelimiterList() {
-      throw new SkipException("\"path\" parameter elides subdirectories");
-   }
 }

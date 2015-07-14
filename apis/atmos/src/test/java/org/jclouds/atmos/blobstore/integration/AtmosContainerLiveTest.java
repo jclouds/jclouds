@@ -17,22 +17,11 @@
 package org.jclouds.atmos.blobstore.integration;
 
 import org.jclouds.blobstore.integration.internal.BaseContainerLiveTest;
-import org.testng.SkipException;
 import org.testng.annotations.Test;
 
 @Test(groups = { "live" })
 public class AtmosContainerLiveTest extends BaseContainerLiveTest {
    public AtmosContainerLiveTest() {
       provider = "atmos";
-   }
-
-   @Override
-   public void testContainerListWithPrefix() {
-      throw new SkipException("Prefix option has not been plumbed down to Atmos");
-   }
-
-   @Override
-   public void testDelimiterList() {
-      throw new SkipException("Delimiter support is not yet implemented");
    }
 }

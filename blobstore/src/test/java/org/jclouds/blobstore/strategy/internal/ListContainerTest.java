@@ -71,25 +71,25 @@ public class ListContainerTest {
       assertThat(Iterables.get(results, 2).getType()).isEqualTo(StorageType.BLOB);
    }
 
-   public void testListWithPrefixAndSeparator() {
+   public void testListWithPrefixAndDelimiter() {
       String containerName = "prefixWithSeparator";
       String prefix = "foo";
       blobStore.createContainerInLocation(null, containerName);
-      blobStore.putBlob(containerName, blobStore.blobBuilder(prefix + "/object").payload("").build());
-      blobStore.putBlob(containerName, blobStore.blobBuilder(prefix + "bar/object").payload("")
+      blobStore.putBlob(containerName, blobStore.blobBuilder(prefix + "-object").payload("").build());
+      blobStore.putBlob(containerName, blobStore.blobBuilder(prefix + "bar-object").payload("")
             .build());
-      blobStore.putBlob(containerName, blobStore.blobBuilder(prefix + "baz/object").payload("")
+      blobStore.putBlob(containerName, blobStore.blobBuilder(prefix + "baz-object").payload("")
             .build());
-      blobStore.putBlob(containerName, blobStore.blobBuilder("bar/object").payload("").build());
+      blobStore.putBlob(containerName, blobStore.blobBuilder("bar-object").payload("").build());
 
       Iterable<? extends StorageMetadata> results = concatter.execute(containerName,
-            ListContainerOptions.Builder.prefix(prefix));
+            ListContainerOptions.Builder.prefix(prefix).delimiter("-"));
       assertThat(Iterables.size(results)).isEqualTo(3);
       assertThat(Iterables.get(results, 0).getType()).isEqualTo(StorageType.RELATIVE_PATH);
-      assertThat(Iterables.get(results, 0).getName()).isEqualTo(prefix + "/");
-      assertThat(Iterables.get(results, 1).getName()).isEqualTo(prefix + "bar/");
+      assertThat(Iterables.get(results, 0).getName()).isEqualTo(prefix + "-");
+      assertThat(Iterables.get(results, 1).getName()).isEqualTo(prefix + "bar-");
       assertThat(Iterables.get(results, 1).getType()).isEqualTo(StorageType.RELATIVE_PATH);
-      assertThat(Iterables.get(results, 2).getName()).isEqualTo(prefix + "baz/");
+      assertThat(Iterables.get(results, 2).getName()).isEqualTo(prefix + "baz-");
       assertThat(Iterables.get(results, 2).getType()).isEqualTo(StorageType.RELATIVE_PATH);
    }
 
