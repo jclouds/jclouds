@@ -83,8 +83,8 @@ public abstract class BaseTemplateBuilderLiveTest extends BaseComputeServiceCont
    @Test
    public void testDefaultTemplateBuilder() throws IOException {
       Template defaultTemplate = view.getComputeService().templateBuilder().build();
-      assert defaultTemplate.getImage().getOperatingSystem().getVersion().matches("\\d\\d\\.\\d\\d") : defaultTemplate
-            .getImage().getOperatingSystem().getVersion();
+      assertTrue(defaultTemplate.getImage().getOperatingSystem().getVersion().matches("\\d\\d\\.\\d\\d"),
+            "Version mismatch, expected dd.dd, found: " + defaultTemplate.getImage().getOperatingSystem().getVersion());
       assertEquals(defaultTemplate.getImage().getOperatingSystem().is64Bit(), true);
       assertEquals(defaultTemplate.getImage().getOperatingSystem().getFamily(), OsFamily.UBUNTU);
       assertEquals(getCores(defaultTemplate.getHardware()), 1.0d);
@@ -215,7 +215,7 @@ public abstract class BaseTemplateBuilderLiveTest extends BaseComputeServiceCont
       assertEquals(provider.getParent(), null);
       assertEquals(provider.getIso3166Codes(), getIso3166Codes());
    }
-   
+
    static void assertEqualsTemplate(Template actual, Template expected){
       assertEquals(actual.getImage(), expected.getImage());
       assertEquals(actual.getHardware(), expected.getHardware());

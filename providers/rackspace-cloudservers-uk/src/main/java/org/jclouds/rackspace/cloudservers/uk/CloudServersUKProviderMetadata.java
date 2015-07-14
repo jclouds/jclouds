@@ -68,7 +68,7 @@ public class CloudServersUKProviderMetadata extends BaseProviderMetadata {
       properties.setProperty(CREDENTIAL_TYPE, CloudIdentityCredentialTypes.API_KEY_CREDENTIALS);
       properties.setProperty(PROPERTY_REGIONS, "LON");
       properties.setProperty(PROPERTY_REGION + ".LON." + ISO3166_CODES, "GB-SLG");
-      properties.setProperty(TEMPLATE, "imageNameMatches=.*Ubuntu 14\\.10.*");
+      properties.setProperty(TEMPLATE, "imageNameMatches=.*Ubuntu.*");
       return properties;
    }
 

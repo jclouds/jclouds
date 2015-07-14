@@ -72,7 +72,7 @@ public class CloudServersUSProviderMetadata extends BaseProviderMetadata {
       properties.setProperty(PROPERTY_REGION + ".IAD." + ISO3166_CODES, "US-VA");
       properties.setProperty(PROPERTY_REGION + ".SYD." + ISO3166_CODES, "AU-NSW");
       properties.setProperty(PROPERTY_REGION + ".HKG." + ISO3166_CODES, "HK");
-      properties.setProperty(TEMPLATE, "imageNameMatches=.*Ubuntu 14\\.10.*");
+      properties.setProperty(TEMPLATE, "imageNameMatches=.*Ubuntu.*");
       return properties;
    }
 
