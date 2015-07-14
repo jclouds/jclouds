@@ -19,6 +19,7 @@ package org.jclouds.rackspace.cloudservers.uk.compute;
 import static org.jclouds.compute.util.ComputeServiceUtils.getCores;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNull;
+import static org.testng.Assert.assertTrue;
 
 import java.util.Set;
 
@@ -41,9 +42,8 @@ public class CloudServersUKTemplateBuilderLiveTest extends BaseTemplateBuilderLi
    public void testTemplateBuilder() {
       Template defaultTemplate = this.view.getComputeService().templateBuilder().build();
       assertEquals(defaultTemplate.getImage().getOperatingSystem().is64Bit(), true);
-      assertEquals(defaultTemplate.getImage().getOperatingSystem().getVersion(), "12.10");
       assertEquals(defaultTemplate.getImage().getOperatingSystem().getFamily(), OsFamily.UBUNTU);
-      assertEquals(defaultTemplate.getImage().getName(), "Ubuntu 12.10 (Quantal Quetzal)");
+      assertTrue(defaultTemplate.getImage().getName().contains("Ubuntu"));
       assertEquals(defaultTemplate.getImage().getDefaultCredentials().getUser(), "root");
       assertEquals(defaultTemplate.getLocation().getId(), "LON");
       assertEquals(defaultTemplate.getImage().getLocation().getId(), "LON");
@@ -51,7 +51,7 @@ public class CloudServersUKTemplateBuilderLiveTest extends BaseTemplateBuilderLi
       assertEquals(defaultTemplate.getOptions().as(NovaTemplateOptions.class).shouldAutoAssignFloatingIp(), false);
       assertNull(defaultTemplate.getOptions().as(NovaTemplateOptions.class).getDiskConfig());
       assertEquals(getCores(defaultTemplate.getHardware()), 1.0d);
-   }   
+   }
 
    @Override
    protected Set<String> getIso3166Codes() {
