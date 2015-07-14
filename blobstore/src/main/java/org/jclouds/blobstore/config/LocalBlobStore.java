@@ -344,8 +344,8 @@ public final class LocalBlobStore implements BlobStore {
          }
       }));
 
-      if (!options.isRecursive()) {
-         return extractCommonPrefixes(contents, storageStrategy.getSeparator(), options.getPrefix());
+      if (options.getDelimiter() != null) {
+         return extractCommonPrefixes(contents, options.getDelimiter(), options.getPrefix());
       }
 
       return contents;
@@ -472,14 +472,7 @@ public final class LocalBlobStore implements BlobStore {
          if (prefix == null || prefix.isEmpty()) {
             return name.indexOf(delimiter) == -1;
          }
-         String prefixMatch;
-         if (prefix.endsWith(delimiter)) {
-            prefixMatch = "^" + Pattern.quote(prefix) + ".*";
-         } else {
-            // We should correctly match strings like "foobar/" where the prefix is only "foo"
-            prefixMatch = "^" + Pattern.quote(prefix) + ".*" + Pattern.quote(delimiter) + ".*";
-         }
-         if (name.matches(prefixMatch)) {
+         if (name.startsWith(prefix)) {
             String unprefixedName = name.replaceFirst(prefix, "");
             if (unprefixedName.equals("")) {
                // we are the prefix in this case, return false
