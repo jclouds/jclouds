@@ -23,6 +23,7 @@ import com.google.common.base.Objects;
  *             Please use {@link org.jclouds.openstack.nova.v2_0.domain.regionscoped.ZoneState ZoneState}
  *             instead. To be removed in jclouds 2.0.
  */
+@Deprecated
 public class ZoneState {
 
    private final boolean available;
