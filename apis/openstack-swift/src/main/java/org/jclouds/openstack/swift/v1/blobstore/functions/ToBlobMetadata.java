@@ -47,15 +47,16 @@ public class ToBlobMetadata implements Function<SwiftObject, MutableBlobMetadata
       if (container.getAnybodyRead().isPresent()) {
          to.setPublicUri(from.getUri());
       }
+      String eTag = from.getETag();
       to.setUri(from.getUri());
-      to.setETag(from.getETag());
+      to.setETag(eTag);
       to.setName(from.getName());
       to.setLastModified(from.getLastModified());
       to.setContentMetadata(from.getPayload().getContentMetadata());
       to.getContentMetadata().setContentMD5(from.getPayload().getContentMetadata().getContentMD5AsHashCode());
       to.getContentMetadata().setExpires(from.getPayload().getContentMetadata().getExpires());
       to.setUserMetadata(from.getMetadata());
-      if (from.getETag().equals(ParseObjectListFromResponse.SUBDIR_ETAG)) {
+      if (eTag != null && eTag.equals(ParseObjectListFromResponse.SUBDIR_ETAG)) {
          to.setType(StorageType.RELATIVE_PATH);
       } else {
          to.setType(StorageType.BLOB);
