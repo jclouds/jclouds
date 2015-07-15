@@ -21,6 +21,7 @@ import com.google.common.collect.FluentIterable;
 import org.jclouds.Fallbacks.EmptyFluentIterableOnNotFoundOr404;
 import org.jclouds.openstack.keystone.v2_0.filters.AuthenticateRequest;
 import org.jclouds.openstack.nova.v2_0.domain.regionscoped.AvailabilityZone;
+import org.jclouds.openstack.nova.v2_0.domain.regionscoped.AvailabilityZoneDetails;
 import org.jclouds.openstack.v2_0.ServiceType;
 import org.jclouds.openstack.v2_0.services.Extension;
 import org.jclouds.rest.annotations.Fallback;
@@ -54,12 +55,16 @@ public interface AvailabilityZoneApi {
    @Fallback(EmptyFluentIterableOnNotFoundOr404.class)
    FluentIterable<org.jclouds.openstack.nova.v2_0.domain.zonescoped.AvailabilityZone> list();
 
-   /**
-    * @return all availability zones
-    */
    @Named("availabilityZone:list")
    @GET
    @SelectJson("availabilityZoneInfo")
    @Fallback(EmptyFluentIterableOnNotFoundOr404.class)
    FluentIterable<AvailabilityZone> listAvailabilityZones();
+
+   @Named("availabilityZone:list")
+   @GET
+   @Path("/detail")
+   @SelectJson("availabilityZoneInfo")
+   @Fallback(EmptyFluentIterableOnNotFoundOr404.class)
+   FluentIterable<AvailabilityZoneDetails> listInDetail();
 }

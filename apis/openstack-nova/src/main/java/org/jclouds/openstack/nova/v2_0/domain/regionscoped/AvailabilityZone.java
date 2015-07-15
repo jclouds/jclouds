@@ -17,58 +17,23 @@
 package org.jclouds.openstack.nova.v2_0.domain.regionscoped;
 
 import com.google.common.base.Objects;
-import com.google.common.collect.ImmutableMap;
 import com.google.gson.annotations.SerializedName;
 
 import java.beans.ConstructorProperties;
-import java.util.Date;
-import java.util.Map;
 
+/**
+ * Availability Zone which shows name and state
+ */
 public class AvailabilityZone {
-
-   public static final class HostService {
-
-      private final boolean available;
-      private final boolean active;
-      @SerializedName("updated_at")
-      private final Date updated;
-
-      @ConstructorProperties({"available", "active", "updated_at"})
-      protected HostService(boolean available, boolean active, Date updated) {
-         this.available = available;
-         this.active = active;
-         this.updated = updated;
-      }
-
-      public boolean isAvailable() { return available; }
-
-      public boolean isActive() { return active; }
-
-      public Date getUpdated() { return updated; }
-
-      protected Objects.ToStringHelper string() {
-         return Objects.toStringHelper(this)
-               .add("available", available)
-               .add("active", active)
-               .add("updated", updated);
-      }
-
-      @Override
-      public String toString() {
-         return string().toString();
-      }
-   }
 
    @SerializedName("zoneName")
    private final String name;
    private final ZoneState state;
-   private final Map<String, Map<String, HostService>> hosts;
 
-   @ConstructorProperties({"zoneName" , "zoneState", "hosts"})
-   protected AvailabilityZone(String name, ZoneState state, Map<String, Map<String, HostService>> hosts) {
+   @ConstructorProperties({"zoneName" , "zoneState"})
+   protected AvailabilityZone(String name, ZoneState state) {
       this.name = name;
       this.state = state;
-      this.hosts = hosts == null ? ImmutableMap.<String, Map<String, HostService>>of() : ImmutableMap.copyOf(hosts);
    }
 
    public String getName() {
@@ -79,16 +44,9 @@ public class AvailabilityZone {
       return state;
    }
 
-   /**
-    * @return returns a map of host name and Host service objects
-    */
-   public Map<String, Map<String, HostService>> getHosts() {
-      return this.hosts;
-   }
-
    @Override
    public int hashCode() {
-      return Objects.hashCode(name, state, hosts);
+      return Objects.hashCode(name, state);
    }
 
    @Override
@@ -97,15 +55,13 @@ public class AvailabilityZone {
          return false;
       if (obj == null || getClass() != obj.getClass()) return false;
       AvailabilityZone that = AvailabilityZone.class.cast(obj);
-      return Objects.equal(this.name, that.name) && Objects.equal(this.state, that.state) && Objects.equal(this.hosts,
-            that.hosts);
+      return Objects.equal(this.name, that.name) && Objects.equal(this.state, that.state);
    }
 
    protected Objects.ToStringHelper string() {
       return Objects.toStringHelper(this)
             .add("name", name)
-            .add("state", state)
-            .add("Hosts", hosts);
+            .add("state", state);
    }
 
    @Override
