@@ -30,7 +30,7 @@ public abstract class Deprecated {
    public enum State{
       DELETED,
       DEPRECATED,
-      OBSELETE;
+      OBSOLETE;
    }
 
    /** The deprecation state of this image. */
