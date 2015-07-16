@@ -37,6 +37,9 @@ public abstract class LoggingModule extends AbstractModule {
 
    @Provides
    @Singleton
-   public abstract Logger.LoggerFactory createLoggerFactory();
+   public final Logger.LoggerFactory provideLoggerFactory() {
+       return createLoggerFactory();
+   }
 
+   public abstract Logger.LoggerFactory createLoggerFactory();
 }
