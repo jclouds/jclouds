@@ -76,7 +76,7 @@ public class ComputeServiceAdapterContextModule<N, H, I, L> extends BaseComputeS
 
       @Provides
       @Singleton
-      protected LocationsSupplier supplyLocationsFromComputeServiceAdapter(
+      protected final LocationsSupplier supplyLocationsFromComputeServiceAdapter(
             final ComputeServiceAdapter<N, H, I, L> adapter, final Function<L, Location> transformer) {
          return new LocationsSupplier() {
             @Override
@@ -93,7 +93,7 @@ public class ComputeServiceAdapterContextModule<N, H, I, L> extends BaseComputeS
 
    @Provides
    @Singleton
-   protected Supplier<Set<? extends Hardware>> provideHardware(final ComputeServiceAdapter<N, H, I, L> adapter,
+   protected final Supplier<Set<? extends Hardware>> provideHardware(final ComputeServiceAdapter<N, H, I, L> adapter,
          final Function<H, Hardware> transformer) {
       return new Supplier<Set<? extends Hardware>>() {
          @Override
@@ -113,7 +113,7 @@ public class ComputeServiceAdapterContextModule<N, H, I, L> extends BaseComputeS
 
    @Provides
    @Singleton
-   protected Supplier<Set<? extends Image>> provideImages(final ComputeServiceAdapter<N, H, I, L> adapter,
+   protected final Supplier<Set<? extends Image>> provideImages(final ComputeServiceAdapter<N, H, I, L> adapter,
          final Function<I, Image> transformer, final AddDefaultCredentialsToImage addDefaultCredentialsToImage) {
       return new Supplier<Set<? extends Image>>() {
          @Override
@@ -152,50 +152,50 @@ public class ComputeServiceAdapterContextModule<N, H, I, L> extends BaseComputeS
 
    @Provides
    @Singleton
-   protected CreateNodeWithGroupEncodedIntoName defineAddNodeWithTagStrategy(
+   protected final CreateNodeWithGroupEncodedIntoName defineAddNodeWithTagStrategy(
          AdaptingComputeServiceStrategies<N, H, I, L> in) {
       return in;
    }
 
    @Provides
    @Singleton
-   protected DestroyNodeStrategy defineDestroyNodeStrategy(AdaptingComputeServiceStrategies<N, H, I, L> in) {
+   protected final DestroyNodeStrategy defineDestroyNodeStrategy(AdaptingComputeServiceStrategies<N, H, I, L> in) {
       return in;
    }
 
    @Provides
    @Singleton
-   protected GetNodeMetadataStrategy defineGetNodeMetadataStrategy(AdaptingComputeServiceStrategies<N, H, I, L> in) {
+   protected final GetNodeMetadataStrategy defineGetNodeMetadataStrategy(AdaptingComputeServiceStrategies<N, H, I, L> in) {
       return in;
    }
 
    @Provides
    @Singleton
-   protected GetImageStrategy defineGetImageStrategy(AdaptingComputeServiceStrategies<N, H, I, L> in) {
+   protected final GetImageStrategy defineGetImageStrategy(AdaptingComputeServiceStrategies<N, H, I, L> in) {
       return in;
    }
 
    @Provides
    @Singleton
-   protected ListNodesStrategy defineListNodesStrategy(AdaptingComputeServiceStrategies<N, H, I, L> in) {
+   protected final ListNodesStrategy defineListNodesStrategy(AdaptingComputeServiceStrategies<N, H, I, L> in) {
       return in;
    }
 
    @Provides
    @Singleton
-   protected RebootNodeStrategy defineRebootNodeStrategy(AdaptingComputeServiceStrategies<N, H, I, L> in) {
+   protected final RebootNodeStrategy defineRebootNodeStrategy(AdaptingComputeServiceStrategies<N, H, I, L> in) {
       return in;
    }
 
    @Provides
    @Singleton
-   protected ResumeNodeStrategy defineStartNodeStrategy(AdaptingComputeServiceStrategies<N, H, I, L> in) {
+   protected final ResumeNodeStrategy defineStartNodeStrategy(AdaptingComputeServiceStrategies<N, H, I, L> in) {
       return in;
    }
 
    @Provides
    @Singleton
-   protected SuspendNodeStrategy defineStopNodeStrategy(AdaptingComputeServiceStrategies<N, H, I, L> in) {
+   protected final SuspendNodeStrategy defineStopNodeStrategy(AdaptingComputeServiceStrategies<N, H, I, L> in) {
       return in;
    }
 }

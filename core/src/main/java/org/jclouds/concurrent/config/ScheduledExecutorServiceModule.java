@@ -48,7 +48,7 @@ public class ScheduledExecutorServiceModule extends AbstractModule {
    @Provides
    @Singleton
    @Named(PROPERTY_SCHEDULER_THREADS)
-   ListeningScheduledExecutorService provideListeningScheduledExecutorService(
+   final ListeningScheduledExecutorService provideListeningScheduledExecutorService(
          @Named(PROPERTY_SCHEDULER_THREADS) int count, Closer closer) {
       return shutdownOnClose(WithSubmissionTrace.wrap(newScheduledThreadPoolNamed("scheduler thread %d", count)),
             closer);
@@ -57,7 +57,7 @@ public class ScheduledExecutorServiceModule extends AbstractModule {
    @Provides
    @Singleton
    @Named(PROPERTY_SCHEDULER_THREADS)
-   ScheduledExecutorService provideScheduledExecutor(
+   final ScheduledExecutorService provideScheduledExecutor(
          @Named(PROPERTY_SCHEDULER_THREADS) ListeningScheduledExecutorService in) {
       return in;
    }

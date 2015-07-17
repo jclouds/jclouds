@@ -283,7 +283,7 @@ public class ChefParserModule extends AbstractModule {
    
    @Provides
    @Singleton
-   public Map<Type, Object> provideCustomAdapterBindings(DataBagItemAdapter adapter, PrivateKeyAdapter privateAdapter,
+   public final Map<Type, Object> provideCustomAdapterBindings(DataBagItemAdapter adapter, PrivateKeyAdapter privateAdapter,
          PublicKeyAdapter publicAdapter, X509CertificateAdapter certAdapter) {
       return ImmutableMap.<Type, Object> of(DatabagItem.class, adapter, PrivateKey.class, privateAdapter,
             PublicKey.class, publicAdapter, X509Certificate.class, certAdapter);

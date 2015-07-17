@@ -95,7 +95,7 @@ public class KeystoneAuthenticationModule extends AbstractModule {
 
       @Provides
       @Singleton
-      protected Supplier<URI> provideZoneIdToURISupplierForApiVersion(
+      protected final Supplier<URI> provideZoneIdToURISupplierForApiVersion(
             @Named(KeystoneProperties.SERVICE_TYPE) String serviceType, @ApiVersion String apiVersion,
             LocationIdToURIFromAccessForTypeAndVersion.Factory factory) {
          return getLastValueInMap(factory.createForApiTypeAndVersion(serviceType, apiVersion));
@@ -103,8 +103,9 @@ public class KeystoneAuthenticationModule extends AbstractModule {
 
       @Provides
       @Singleton
-      Function<Endpoint, String> provideProvider(@Provider final String provider) {
+      final Function<Endpoint, String> provideProvider(@Provider final String provider) {
          return new Function<Endpoint, String>() {
+            @Override
             public String apply(Endpoint in) {
                return provider;
             }
@@ -125,21 +126,33 @@ public class KeystoneAuthenticationModule extends AbstractModule {
          bind(LocationsSupplier.class).to(RegionToProvider.class).in(Scopes.SINGLETON);
       }
 
-      // supply the region to id map from keystone, based on the servicetype and api version in
-      // config
       @Provides
       @Singleton
+      protected final RegionIdToURISupplier guiceProvideRegionIdToURISupplierForApiVersion(
+              @Named(KeystoneProperties.SERVICE_TYPE) String serviceType, @ApiVersion String apiVersion,
+              RegionIdToURISupplier.Factory factory) {
+         return provideRegionIdToURISupplierForApiVersion(serviceType, apiVersion, factory);
+      }
+
+      // supply the region to id map from keystone, based on the servicetype and api version in
+      // config
       protected RegionIdToURISupplier provideRegionIdToURISupplierForApiVersion(
             @Named(KeystoneProperties.SERVICE_TYPE) String serviceType, @ApiVersion String apiVersion,
             RegionIdToURISupplier.Factory factory) {
          return factory.createForApiTypeAndVersion(serviceType, apiVersion);
       }
 
+      @Provides
+      @Singleton
+      protected final RegionIdToAdminURISupplier guiceProvideRegionIdToAdminURISupplierForApiVersion(
+              @Named(KeystoneProperties.SERVICE_TYPE) String serviceType, @ApiVersion String apiVersion,
+              RegionIdToAdminURISupplier.Factory factory) {
+         return provideRegionIdToAdminURISupplierForApiVersion(serviceType, apiVersion, factory);
+      }
+
       // supply the region to id to AdminURL map from keystone, based on the servicetype and api
       // version in
       // config
-      @Provides
-      @Singleton
       protected RegionIdToAdminURISupplier provideRegionIdToAdminURISupplierForApiVersion(
             @Named(KeystoneProperties.SERVICE_TYPE) String serviceType, @ApiVersion String apiVersion,
             RegionIdToAdminURISupplier.Factory factory) {
@@ -167,7 +180,7 @@ public class KeystoneAuthenticationModule extends AbstractModule {
       // config
       @Provides
       @Singleton
-      protected ZoneIdToURISupplier provideZoneIdToURISupplierForApiVersion(
+      protected final ZoneIdToURISupplier provideZoneIdToURISupplierForApiVersion(
             @Named(KeystoneProperties.SERVICE_TYPE) String serviceType, @ApiVersion String apiVersion,
             ZoneIdToURISupplier.Factory factory) {
          return factory.createForApiTypeAndVersion(serviceType, apiVersion);
@@ -186,9 +199,10 @@ public class KeystoneAuthenticationModule extends AbstractModule {
    @Provides
    @Singleton
    @Authentication
-   protected Supplier<String> provideAuthenticationTokenCache(final Supplier<Access> supplier)
+   protected final Supplier<String> provideAuthenticationTokenCache(final Supplier<Access> supplier)
          throws InterruptedException, ExecutionException, TimeoutException {
       return new Supplier<String>() {
+         @Override
          public String get() {
             return supplier.get().getToken().getId();
          }
@@ -197,6 +211,10 @@ public class KeystoneAuthenticationModule extends AbstractModule {
 
    @Provides
    @Singleton
+   protected final Map<String, Function<Credentials, Access>> provideAuthenticationMethods(Injector i) {
+      return authenticationMethods(i);
+   }
+
    protected Map<String, Function<Credentials, Access>> authenticationMethods(Injector i) {
       Builder<Function<Credentials, Access>> fns = ImmutableSet.<Function<Credentials, Access>> builder();
       fns.add(i.getInstance(AuthenticatePasswordCredentials.class));
@@ -206,7 +224,7 @@ public class KeystoneAuthenticationModule extends AbstractModule {
 
    @Provides
    @Singleton
-   protected Function<Credentials, Access> authenticationMethodForCredentialType(
+   protected final Function<Credentials, Access> authenticationMethodForCredentialType(
          @Named(KeystoneProperties.CREDENTIAL_TYPE) String credentialType,
          Map<String, Function<Credentials, Access>> authenticationMethods) {
       checkArgument(authenticationMethods.containsKey(credentialType), "credential type %s not in supported list: %s",
@@ -218,7 +236,7 @@ public class KeystoneAuthenticationModule extends AbstractModule {
    // PROPERTY_SESSION_INTERVAL is default to 60 seconds, but we have this here at 11 hours for now.
    @Provides
    @Singleton
-   public LoadingCache<Credentials, Access> provideAccessCache(Function<Credentials, Access> getAccess) {
+   public final LoadingCache<Credentials, Access> provideAccessCache(Function<Credentials, Access> getAccess) {
       return CacheBuilder.newBuilder().expireAfterWrite(11, TimeUnit.HOURS).build(CacheLoader.from(getAccess));
    }
 
@@ -226,7 +244,7 @@ public class KeystoneAuthenticationModule extends AbstractModule {
    // http://code.google.com/p/guava-libraries/issues/detail?id=872
    @Provides
    @Singleton
-   protected Supplier<Access> provideAccessSupplier(final LoadingCache<Credentials, Access> cache,
+   protected final Supplier<Access> provideAccessSupplier(final LoadingCache<Credentials, Access> cache,
          @Provider final Supplier<Credentials> creds) {
       return new Supplier<Access>() {
          @Override

@@ -59,15 +59,21 @@ public class OpenStackAuthenticationModule extends AbstractModule {
       bind(HttpRetryHandler.class).annotatedWith(ClientError.class).to(RetryOnRenew.class);
    }
 
-   /**
-    * borrowing concurrency code to ensure that caching takes place properly
-    */
    @Provides
    @Singleton
    @Authentication
+   protected final Supplier<String> guiceProvideAuthenticationTokenCache(final Supplier<AuthenticationResponse> supplier)
+            throws InterruptedException, ExecutionException, TimeoutException {
+      return provideAuthenticationTokenCache(supplier);
+   }
+
+   /**
+    * borrowing concurrency code to ensure that caching takes place properly
+    */
    protected Supplier<String> provideAuthenticationTokenCache(final Supplier<AuthenticationResponse> supplier)
             throws InterruptedException, ExecutionException, TimeoutException {
       return new Supplier<String>() {
+         @Override
          public String get() {
             return supplier.get().getAuthToken();
          }
@@ -97,14 +103,14 @@ public class OpenStackAuthenticationModule extends AbstractModule {
 
    @Provides
    @Singleton
-   public LoadingCache<Credentials, AuthenticationResponse> provideAuthenticationResponseCache(
+   public final LoadingCache<Credentials, AuthenticationResponse> provideAuthenticationResponseCache(
          GetAuthenticationResponse getAuthenticationResponse) {
       return CacheBuilder.newBuilder().expireAfterWrite(23, TimeUnit.HOURS).build(getAuthenticationResponse);
    }
 
    @Provides
    @Singleton
-   protected Supplier<AuthenticationResponse> provideAuthenticationResponseSupplier(
+   protected final Supplier<AuthenticationResponse> provideAuthenticationResponseSupplier(
          final LoadingCache<Credentials, AuthenticationResponse> cache, @Provider final Supplier<Credentials> creds) {
       return new Supplier<AuthenticationResponse>() {
          @Override
@@ -117,8 +123,13 @@ public class OpenStackAuthenticationModule extends AbstractModule {
    @Provides
    @Singleton
    @TimeStamp
+   protected final Supplier<Date> guiceProvideCacheBusterDate() {
+      return provideCacheBusterDate();
+   }
+
    protected Supplier<Date> provideCacheBusterDate() {
       return memoizeWithExpiration(new Supplier<Date>() {
+         @Override
          public Date get() {
             return new Date();
          }

@@ -75,7 +75,7 @@ public class LocationModule extends AbstractModule {
    @Provides
    @Singleton
    @Iso3166
-   protected Supplier<Map<String, Supplier<Set<String>>>> isoCodesSupplier(
+   protected final Supplier<Map<String, Supplier<Set<String>>>> isoCodesSupplier(
             AtomicReference<AuthorizationException> authException, @Named(PROPERTY_SESSION_INTERVAL) long seconds,
             LocationIdToIso3166CodesSupplier uncached) {
       return MemoizedRetryOnTimeOutButNotOnAuthorizationExceptionSupplier.create(authException, uncached, seconds,
@@ -85,7 +85,7 @@ public class LocationModule extends AbstractModule {
    @Provides
    @Singleton
    @Provider
-   protected Supplier<URI> provideProvider(AtomicReference<AuthorizationException> authException,
+   protected final Supplier<URI> provideProvider(AtomicReference<AuthorizationException> authException,
             @Named(PROPERTY_SESSION_INTERVAL) long seconds, ProviderURISupplier uncached) {
       return MemoizedRetryOnTimeOutButNotOnAuthorizationExceptionSupplier.create(authException, uncached, seconds,
                TimeUnit.SECONDS);
@@ -93,7 +93,7 @@ public class LocationModule extends AbstractModule {
 
    @Provides
    @Singleton
-   protected Supplier<Location> implicitLocationSupplier(AtomicReference<AuthorizationException> authException,
+   protected final Supplier<Location> implicitLocationSupplier(AtomicReference<AuthorizationException> authException,
             @Named(PROPERTY_SESSION_INTERVAL) long seconds, ImplicitLocationSupplier uncached) {
       return MemoizedRetryOnTimeOutButNotOnAuthorizationExceptionSupplier.create(authException, uncached, seconds,
                TimeUnit.SECONDS);
@@ -103,7 +103,7 @@ public class LocationModule extends AbstractModule {
    @Singleton
    // TODO: we should eventually get rid of memoized as an annotation, as it is confusing
    @Memoized
-   protected Supplier<Set<? extends Location>> memoizedLocationsSupplier(
+   protected final Supplier<Set<? extends Location>> memoizedLocationsSupplier(
             AtomicReference<AuthorizationException> authException, @Named(PROPERTY_SESSION_INTERVAL) long seconds,
             LocationsSupplier uncached) {
       return MemoizedRetryOnTimeOutButNotOnAuthorizationExceptionSupplier.create(authException, uncached, seconds,
@@ -113,7 +113,7 @@ public class LocationModule extends AbstractModule {
    @Provides
    @Singleton
    @Region
-   protected Supplier<Set<String>> regionIdsSupplier(AtomicReference<AuthorizationException> authException,
+   protected final Supplier<Set<String>> regionIdsSupplier(AtomicReference<AuthorizationException> authException,
             @Named(PROPERTY_SESSION_INTERVAL) long seconds, RegionIdFilter filter, RegionIdsSupplier uncached) {
       return MemoizedRetryOnTimeOutButNotOnAuthorizationExceptionSupplier.create(authException,
                Suppliers.compose(new FilterStrings(filter), uncached), seconds, TimeUnit.SECONDS);
@@ -122,7 +122,7 @@ public class LocationModule extends AbstractModule {
    @Provides
    @Singleton
    @Zone
-   protected Supplier<Set<String>> zoneIdsSupplier(
+   protected final Supplier<Set<String>> zoneIdsSupplier(
             AtomicReference<AuthorizationException> authException, @Named(PROPERTY_SESSION_INTERVAL) long seconds,
             ZoneIdFilter filter, ZoneIdsSupplier uncached) {
       return MemoizedRetryOnTimeOutButNotOnAuthorizationExceptionSupplier.create(authException,
@@ -152,7 +152,7 @@ public class LocationModule extends AbstractModule {
    @Provides
    @Singleton
    @Region
-   protected Supplier<Map<String, Supplier<URI>>> regionIdToURISupplier(
+   protected final Supplier<Map<String, Supplier<URI>>> regionIdToURISupplier(
             AtomicReference<AuthorizationException> authException, @Named(PROPERTY_SESSION_INTERVAL) long seconds,
             RegionIdToURISupplier uncached) {
       return MemoizedRetryOnTimeOutButNotOnAuthorizationExceptionSupplier.create(authException, uncached, seconds,
@@ -162,7 +162,7 @@ public class LocationModule extends AbstractModule {
    @Provides
    @Singleton
    @Region
-   protected Supplier<String> implicitRegionIdSupplier(AtomicReference<AuthorizationException> authException,
+   protected final Supplier<String> implicitRegionIdSupplier(AtomicReference<AuthorizationException> authException,
             @Named(PROPERTY_SESSION_INTERVAL) long seconds, ImplicitRegionIdSupplier uncached) {
       return MemoizedRetryOnTimeOutButNotOnAuthorizationExceptionSupplier.create(authException, uncached, seconds,
                TimeUnit.SECONDS);
@@ -172,7 +172,7 @@ public class LocationModule extends AbstractModule {
    @Provides
    @Singleton
    @Zone
-   protected Supplier<Map<String, Supplier<Set<String>>>> regionIdToZoneIdsSupplier(
+   protected final Supplier<Map<String, Supplier<Set<String>>>> regionIdToZoneIdsSupplier(
             AtomicReference<AuthorizationException> authException, @Named(PROPERTY_SESSION_INTERVAL) long seconds,
             RegionIdToZoneIdsSupplier uncached) {
       return MemoizedRetryOnTimeOutButNotOnAuthorizationExceptionSupplier.create(authException, uncached, seconds,
@@ -182,7 +182,7 @@ public class LocationModule extends AbstractModule {
    @Provides
    @Singleton
    @Zone
-   protected Supplier<Map<String, Supplier<URI>>> zoneIdToURISupplier(
+   protected final Supplier<Map<String, Supplier<URI>>> zoneIdToURISupplier(
             AtomicReference<AuthorizationException> authException, @Named(PROPERTY_SESSION_INTERVAL) long seconds,
             ZoneIdToURISupplier uncached) {
       return MemoizedRetryOnTimeOutButNotOnAuthorizationExceptionSupplier.create(authException, uncached, seconds,

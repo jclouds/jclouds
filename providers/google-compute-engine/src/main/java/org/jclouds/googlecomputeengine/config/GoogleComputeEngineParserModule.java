@@ -16,8 +16,6 @@
  */
 package org.jclouds.googlecomputeengine.config;
 
-import static org.jclouds.googlecomputeengine.domain.Firewall.Rule;
-
 import java.lang.reflect.Type;
 import java.util.Map;
 import java.util.Set;
@@ -26,6 +24,7 @@ import javax.inject.Singleton;
 
 import org.jclouds.googlecloud.config.ListPageAdapterFactory;
 import org.jclouds.googlecomputeengine.domain.Firewall;
+import org.jclouds.googlecomputeengine.domain.Firewall.Rule;
 import org.jclouds.googlecomputeengine.options.FirewallOptions;
 import org.jclouds.googlecomputeengine.options.RouteOptions;
 import org.jclouds.json.config.GsonModule;

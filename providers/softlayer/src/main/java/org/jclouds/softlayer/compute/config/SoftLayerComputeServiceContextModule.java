@@ -79,7 +79,7 @@ public class SoftLayerComputeServiceContextModule extends
    @Provides
    @Singleton
    @Memoized
-   public Supplier<ContainerVirtualGuestConfiguration> getCreateObjectOptions(
+   public final Supplier<ContainerVirtualGuestConfiguration> getCreateObjectOptions(
            AtomicReference<AuthorizationException> authException, @Named(PROPERTY_SESSION_INTERVAL) long seconds,
            final SoftLayerApi api) {
       return MemoizedRetryOnTimeOutButNotOnAuthorizationExceptionSupplier.create(authException,

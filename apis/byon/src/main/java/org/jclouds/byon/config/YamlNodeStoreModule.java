@@ -81,14 +81,14 @@ public class YamlNodeStoreModule extends AbstractModule {
 
    @Provides
    @Singleton
-   protected LoadingCache<String, Node> provideNodeStore(Map<String, YamlNode> backing, Function<Node, YamlNode> yamlSerializer,
+   protected final LoadingCache<String, Node> provideNodeStore(Map<String, YamlNode> backing, Function<Node, YamlNode> yamlSerializer,
          Function<YamlNode, Node> yamlDeserializer) {
       return CacheBuilder.newBuilder().build(CacheLoader.from(Functions.forMap(new TransformingMap<String, YamlNode, Node>(backing, yamlDeserializer, yamlSerializer))));
    }
 
    @Provides
    @Singleton
-   protected Map<String, YamlNode> provideYamlStore(@Named("yaml") Map<String, ByteSource> backing,
+   protected final Map<String, YamlNode> provideYamlStore(@Named("yaml") Map<String, ByteSource> backing,
          Function<YamlNode, ByteSource> yamlSerializer, Function<ByteSource, YamlNode> yamlDeserializer) {
       return new TransformingMap<String, ByteSource, YamlNode>(backing, yamlDeserializer, yamlSerializer);
    }

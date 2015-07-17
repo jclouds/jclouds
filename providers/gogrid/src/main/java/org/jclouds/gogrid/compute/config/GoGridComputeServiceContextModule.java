@@ -92,7 +92,7 @@ public class GoGridComputeServiceContextModule extends
 
    @Singleton
    @Provides
-   Map<ServerState, Status> toPortableNodeStatus() {
+   final Map<ServerState, Status> toPortableNodeStatus() {
       return toPortableNodeStatus;
    }
    
@@ -106,7 +106,7 @@ public class GoGridComputeServiceContextModule extends
 
    @Singleton
    @Provides
-   Map<ServerImageState, Image.Status> toPortableImageStatus() {
+   final Map<ServerImageState, Image.Status> toPortableImageStatus() {
       return toPortableImageStatus;
    }
    
@@ -121,7 +121,7 @@ public class GoGridComputeServiceContextModule extends
     */
    @Singleton
    @Provides
-   Function<Hardware, String> provideSizeToRam() {
+   final Function<Hardware, String> provideSizeToRam() {
       return new Function<Hardware, String>() {
          @Override
          public String apply(Hardware hardware) {

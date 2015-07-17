@@ -168,7 +168,7 @@ public abstract class BaseComputeServiceContextModule extends AbstractModule {
 
    @Provides
    @Singleton
-   public Map<OsFamily, Map<String, String>> provideOsVersionMap(ComputeServiceConstants.ReferenceData data, Json json) {
+   public final Map<OsFamily, Map<String, String>> provideOsVersionMap(ComputeServiceConstants.ReferenceData data, Json json) {
       return json.fromJson(data.osVersionMapJson, new TypeLiteral<Map<OsFamily, Map<String, String>>>() {
       }.getType());
    }
@@ -178,7 +178,7 @@ public abstract class BaseComputeServiceContextModule extends AbstractModule {
     */
    @Provides
    @Named("DEFAULT")
-   protected TemplateBuilder provideTemplateOptionallyFromProperties(Injector injector, TemplateBuilder template,
+   protected final TemplateBuilder provideTemplateOptionallyFromProperties(Injector injector, TemplateBuilder template,
          @Provider String provider, ValueOfConfigurationKeyOrNull config) {
       String templateString = config.apply(provider + ".template");
       if (templateString == null)
@@ -198,6 +198,10 @@ public abstract class BaseComputeServiceContextModule extends AbstractModule {
    
    @Provides
    @Singleton
+   protected final Map<OsFamily, LoginCredentials> provideOsFamilyToCredentials(Injector injector) {
+      return osFamilyToCredentials(injector);
+   }
+
    protected Map<OsFamily, LoginCredentials> osFamilyToCredentials(Injector injector) {
       return ImmutableMap.of(OsFamily.WINDOWS, LoginCredentials.builder().user("Administrator").build());
    }
@@ -207,13 +211,17 @@ public abstract class BaseComputeServiceContextModule extends AbstractModule {
     */
    @Provides
    @Named("DEFAULT")
+   protected final TemplateOptions guiceProvideTemplateOptions(Injector injector, TemplateOptions options) {
+      return provideTemplateOptions(injector, options);
+   }
+
    protected TemplateOptions provideTemplateOptions(Injector injector, TemplateOptions options) {
       return options;
    }
 
    @Provides
    @Singleton
-   protected Supplier<Map<String, ? extends Image>> provideImageMap(@Memoized Supplier<Set<? extends Image>> images) {
+   protected final Supplier<Map<String, ? extends Image>> provideImageMap(@Memoized Supplier<Set<? extends Image>> images) {
       return Suppliers.compose(new Function<Set<? extends Image>, Map<String, ? extends Image>>() {
 
          @Override
@@ -234,7 +242,7 @@ public abstract class BaseComputeServiceContextModule extends AbstractModule {
    @Provides
    @Singleton
    @Named("imageCache")
-   protected Supplier<Set<? extends Image>> supplyImageCache(AtomicReference<AuthorizationException> authException, @Named(PROPERTY_SESSION_INTERVAL) long seconds,
+   protected final Supplier<Set<? extends Image>> supplyImageCache(AtomicReference<AuthorizationException> authException, @Named(PROPERTY_SESSION_INTERVAL) long seconds,
          final Supplier<Set<? extends Image>> imageSupplier, Injector injector) {
       if (shouldEagerlyParseImages(injector)) {
          return supplyImageCache(authException, seconds, imageSupplier);
@@ -263,7 +271,7 @@ public abstract class BaseComputeServiceContextModule extends AbstractModule {
 
    @Provides
    @Singleton
-   protected Supplier<Map<String, ? extends Hardware>> provideSizeMap(@Memoized Supplier<Set<? extends Hardware>> sizes) {
+   protected final Supplier<Map<String, ? extends Hardware>> provideSizeMap(@Memoized Supplier<Set<? extends Hardware>> sizes) {
       return Suppliers.compose(new Function<Set<? extends Hardware>, Map<String, ? extends Hardware>>() {
 
          @Override
@@ -284,7 +292,7 @@ public abstract class BaseComputeServiceContextModule extends AbstractModule {
    @Provides
    @Singleton
    @Memoized
-   protected Supplier<Set<? extends Hardware>> supplySizeCache(AtomicReference<AuthorizationException> authException, @Named(PROPERTY_SESSION_INTERVAL) long seconds,
+   protected final Supplier<Set<? extends Hardware>> supplySizeCache(AtomicReference<AuthorizationException> authException, @Named(PROPERTY_SESSION_INTERVAL) long seconds,
          final Supplier<Set<? extends Hardware>> hardwareSupplier) {
       return MemoizedRetryOnTimeOutButNotOnAuthorizationExceptionSupplier.create(authException, hardwareSupplier,
                seconds, TimeUnit.SECONDS);
@@ -292,7 +300,7 @@ public abstract class BaseComputeServiceContextModule extends AbstractModule {
 
    @Provides
    @Singleton
-   protected Function<ComputeMetadata, String> indexer() {
+   protected final Function<ComputeMetadata, String> indexer() {
       return new Function<ComputeMetadata, String>() {
          @Override
          public String apply(ComputeMetadata from) {
@@ -304,7 +312,7 @@ public abstract class BaseComputeServiceContextModule extends AbstractModule {
    @Provides
    @Singleton
    public final Optional<ImageExtension> guiceProvideImageExtension(Injector i) {
-       return provideImageExtension(i);
+      return provideImageExtension(i);
    }
 
    protected Optional<ImageExtension> provideImageExtension(Injector i) {
@@ -313,8 +321,8 @@ public abstract class BaseComputeServiceContextModule extends AbstractModule {
 
    @Provides
    @Singleton
-   protected Optional<SecurityGroupExtension> guiceProvideSecurityGroupExtension(Injector i)
-       return provideSecurityGroupExtension(i);
+   protected final Optional<SecurityGroupExtension> guiceProvideSecurityGroupExtension(Injector i) {
+      return provideSecurityGroupExtension(i);
    }
 
    protected Optional<SecurityGroupExtension> provideSecurityGroupExtension(Injector i) {

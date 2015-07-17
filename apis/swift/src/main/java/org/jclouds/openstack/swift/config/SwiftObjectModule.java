@@ -54,7 +54,7 @@ public class SwiftObjectModule extends AbstractModule {
    }
 
    @Provides
-   SwiftObject provideSwiftObject(SwiftObject.Factory factory) {
+   final SwiftObject provideSwiftObject(SwiftObject.Factory factory) {
       return factory.create(null);
    }
 

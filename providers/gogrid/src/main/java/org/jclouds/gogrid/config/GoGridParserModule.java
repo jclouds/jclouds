@@ -47,7 +47,7 @@ public class GoGridParserModule extends AbstractModule {
 
    @Provides
    @Singleton
-   public Map<Type, Object> provideCustomAdapterBindings() {
+   public final Map<Type, Object> provideCustomAdapterBindings() {
       Map<Type, Object> bindings = Maps.newHashMap();
       bindings.put(ObjectType.class, new CustomDeserializers.ObjectTypeAdapter());
       bindings.put(LoadBalancerOs.class, new CustomDeserializers.LoadBalancerOsAdapter());

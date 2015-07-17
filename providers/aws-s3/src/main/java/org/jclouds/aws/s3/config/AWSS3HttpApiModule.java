@@ -63,7 +63,7 @@ public class AWSS3HttpApiModule extends S3HttpApiModule<AWSS3Client> {
 
    @Singleton
    @Provides
-   S3Client provide(AWSS3Client in) {
+   final S3Client provide(AWSS3Client in) {
       return in;
    }
 }

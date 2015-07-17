@@ -41,7 +41,7 @@ public class CinderParserModule extends AbstractModule {
 
    @Provides
    @Singleton
-   public Map<Type, Object> provideCustomAdapterBindings() {
+   public final Map<Type, Object> provideCustomAdapterBindings() {
       return ImmutableMap.<Type, Object>of(
             Snapshot.class, new SnapshotAdapter()
       );

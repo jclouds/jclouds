@@ -62,7 +62,7 @@ public class NovaParserModule extends AbstractModule {
 
    @Provides
    @Singleton
-   public Map<Type, Object> provideCustomAdapterBindings() {
+   public final Map<Type, Object> provideCustomAdapterBindings() {
       return ImmutableMap.<Type, Object>of(
               HostResourceUsage.class, new HostResourceUsageAdapter(),
               ServerWithSecurityGroups.class, new ServerWithSecurityGroupsAdapter(),

@@ -57,25 +57,25 @@ public class AWSEC2HttpApiModule extends BaseEC2HttpApiModule<AWSEC2Api> {
 
    @Singleton
    @Provides
-   EC2Api provide(AWSEC2Api in) {
+   final EC2Api provide(AWSEC2Api in) {
       return in;
    }
 
    @Singleton
    @Provides
-   InstanceApi getInstanceApi(AWSEC2Api in) {
+   final InstanceApi getInstanceApi(AWSEC2Api in) {
       return in.getInstanceApi().get();
    }
 
    @Singleton
    @Provides
-   SecurityGroupApi getSecurityGroupApi(AWSEC2Api in) {
+   final SecurityGroupApi getSecurityGroupApi(AWSEC2Api in) {
       return in.getSecurityGroupApi().get();
    }
 
    @Singleton
    @Provides
-   AMIApi getAMIApi(AWSEC2Api in) {
+   final AMIApi getAMIApi(AWSEC2Api in) {
       return in.getAMIApi().get();
    }
 

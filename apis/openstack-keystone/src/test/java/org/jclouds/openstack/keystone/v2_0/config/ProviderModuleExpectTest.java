@@ -82,7 +82,7 @@ public class ProviderModuleExpectTest extends BaseRestApiExpectTest<ProviderModu
       @Provides
       @Singleton
       @DNS
-      protected Supplier<URI> provideCDNUrl(RegionIdToURISupplier.Factory factory, @ApiVersion String apiVersion) {
+      protected final Supplier<URI> provideCDNUrl(RegionIdToURISupplier.Factory factory, @ApiVersion String apiVersion) {
          return getLastValueInMap(factory.createForApiTypeAndVersion("dns", apiVersion));
       }
    }

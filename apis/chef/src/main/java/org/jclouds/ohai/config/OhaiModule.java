@@ -59,13 +59,17 @@ public class OhaiModule extends AbstractModule {
 
    @Provides
    @Automatic
+   protected final Supplier<Map<String, JsonBall>> guiceProvideAutomatic(AutomaticSupplier in) {
+      return provideAutomatic(in);
+   }
+
    protected Supplier<Map<String, JsonBall>> provideAutomatic(AutomaticSupplier in) {
       return in;
    }
 
    @Provides
    @Automatic
-   Multimap<String, Supplier<JsonBall>> provideAutomatic(MapSetToMultimap<String, Supplier<JsonBall>> converter,
+   final Multimap<String, Supplier<JsonBall>> provideAutomatic(MapSetToMultimap<String, Supplier<JsonBall>> converter,
          @Automatic Map<String, Set<Supplier<JsonBall>>> input) {
       return converter.apply(input);
 
@@ -73,6 +77,10 @@ public class OhaiModule extends AbstractModule {
 
    @Named("systemProperties")
    @Provides
+   protected final Properties provideSystemProperties() {
+      return systemProperties();
+   }
+
    protected Properties systemProperties() {
       return System.getProperties();
    }
@@ -104,6 +112,10 @@ public class OhaiModule extends AbstractModule {
    }
 
    @Provides
+   protected final Long provideMillis() {
+      return millis();
+   }
+
    protected Long millis() {
       return System.currentTimeMillis();
    }

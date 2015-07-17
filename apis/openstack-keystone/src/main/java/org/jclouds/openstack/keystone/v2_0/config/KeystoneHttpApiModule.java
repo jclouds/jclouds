@@ -79,7 +79,7 @@ public class KeystoneHttpApiModule extends HttpApiModule<KeystoneApi> {
       @Provides
       @Singleton
       @Identity
-      protected Supplier<URI> provideStorageUrl(final RegionIdToAdminURISupplier.Factory factory,
+      protected final Supplier<URI> provideStorageUrl(final RegionIdToAdminURISupplier.Factory factory,
                @ApiVersion final String version, @Provider final Supplier<URI> providerURI) {
          Supplier<URI> identityServiceForVersion = getLastValueInMap(factory.createForApiTypeAndVersion(
                   ServiceType.IDENTITY, version));
@@ -105,7 +105,7 @@ public class KeystoneHttpApiModule extends HttpApiModule<KeystoneApi> {
 
    @Provides
    @Singleton
-   public LoadingCache<String, Set<? extends Extension>> provideExtensionsByRegion(final javax.inject.Provider<KeystoneApi> keystoneApi) {
+   public final LoadingCache<String, Set<? extends Extension>> provideExtensionsByRegion(final javax.inject.Provider<KeystoneApi> keystoneApi) {
       return CacheBuilder.newBuilder().expireAfterWrite(23, TimeUnit.HOURS)
             .build(CacheLoader.from(Suppliers.memoize(new Supplier<Set<? extends Extension>>() {
                @Override

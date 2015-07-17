@@ -87,7 +87,7 @@ public class GsonModule extends AbstractModule {
    @SuppressWarnings("rawtypes")
    @Provides
    @Singleton
-   Gson provideGson(TypeAdapter<JsonBall> jsonAdapter, DateAdapter adapter, ByteListAdapter byteListAdapter,
+   final Gson provideGson(TypeAdapter<JsonBall> jsonAdapter, DateAdapter adapter, ByteListAdapter byteListAdapter,
          ByteArrayAdapter byteArrayAdapter, PropertiesAdapter propertiesAdapter, JsonAdapterBindings bindings,
          CredentialsAdapterFactory credentialsAdapterFactory, OptionalTypeAdapterFactory optional,
          SetTypeAdapterFactory set, ImmutableSetTypeAdapterFactory immutableSet, MapTypeAdapterFactory map,
@@ -165,7 +165,7 @@ public class GsonModule extends AbstractModule {
 
    @Provides
    @Singleton
-   protected TypeAdapter<JsonBall> provideJsonBallAdapter(NullHackJsonBallAdapter in) {
+   protected final TypeAdapter<JsonBall> provideJsonBallAdapter(NullHackJsonBallAdapter in) {
       return in;
    }
 

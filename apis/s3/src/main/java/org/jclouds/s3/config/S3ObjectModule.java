@@ -53,7 +53,7 @@ public class S3ObjectModule extends AbstractModule {
    }
 
    @Provides
-   S3Object provideS3Object(S3Object.Factory factory) {
+   final S3Object provideS3Object(S3Object.Factory factory) {
       return factory.create(null);
    }
 

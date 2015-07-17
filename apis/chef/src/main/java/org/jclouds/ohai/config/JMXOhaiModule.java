@@ -36,10 +36,15 @@ public class JMXOhaiModule extends OhaiModule {
 
    @Provides
    @Singleton
+   protected final RuntimeMXBean guiceProvideRuntimeMXBean() {
+      return provideRuntimeMXBean();
+   }
+
    protected RuntimeMXBean provideRuntimeMXBean() {
       return ManagementFactory.getRuntimeMXBean();
    }
 
+   @Override
    public MapBinder<String, Supplier<JsonBall>> bindOhai() {
       MapBinder<String, Supplier<JsonBall>> mapBinder = super.bindOhai();
       mapBinder.addBinding("uptime_seconds").to(UptimeSecondsSupplier.class);

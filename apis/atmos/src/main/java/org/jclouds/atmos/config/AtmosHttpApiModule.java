@@ -56,6 +56,10 @@ public class AtmosHttpApiModule extends HttpApiModule<AtmosClient> {
 
    @Provides
    @TimeStamp
+   protected final String guiceProvideTimeStamp(@TimeStamp Supplier<String> cache) {
+      return provideTimeStamp(cache);
+   }
+
    protected String provideTimeStamp(@TimeStamp Supplier<String> cache) {
       return cache.get();
    }
@@ -65,9 +69,10 @@ public class AtmosHttpApiModule extends HttpApiModule<AtmosClient> {
     */
    @Provides
    @TimeStamp
-   Supplier<String> provideTimeStampCache(@Named(Constants.PROPERTY_SESSION_INTERVAL) long seconds,
+   final Supplier<String> provideTimeStampCache(@Named(Constants.PROPERTY_SESSION_INTERVAL) long seconds,
             final DateService dateService) {
       return Suppliers.memoizeWithExpiration(new Supplier<String>() {
+         @Override
          public String get() {
             return dateService.rfc822DateFormat();
          }
@@ -76,7 +81,7 @@ public class AtmosHttpApiModule extends HttpApiModule<AtmosClient> {
 
    @Provides
    @TimeStamp
-   protected Long provideShareableUrlTimeout() {
+   protected final Long provideShareableUrlTimeout() {
       return new Date().getTime() + TimeUnit.HOURS.toMillis(1);
    }
 

@@ -119,7 +119,7 @@ public class AWSEC2ComputeServiceDependenciesModule extends EC2ComputeServiceDep
    @Provides
    @Singleton
    @ImageQuery
-   protected Map<String, String> imageQuery(ValueOfConfigurationKeyOrNull config) {
+   protected final Map<String, String> imageQuery(ValueOfConfigurationKeyOrNull config) {
       String amiQuery = Strings.emptyToNull(config.apply(PROPERTY_EC2_AMI_QUERY));
       String owners = config.apply(PROPERTY_EC2_AMI_OWNERS);
       if ("".equals(owners)) {
@@ -147,28 +147,28 @@ public class AWSEC2ComputeServiceDependenciesModule extends EC2ComputeServiceDep
    @Provides
    @Singleton
    @Named("AVAILABLE")
-   protected Predicate<PlacementGroup> placementGroupAvailable(PlacementGroupAvailable available) {
+   protected final Predicate<PlacementGroup> placementGroupAvailable(PlacementGroupAvailable available) {
       return retry(available, 60, 1, SECONDS);
    }
 
    @Provides
    @Singleton
    @Named("DELETED")
-   protected Predicate<PlacementGroup> placementGroupDeleted(PlacementGroupDeleted deleted) {
+   protected final Predicate<PlacementGroup> placementGroupDeleted(PlacementGroupDeleted deleted) {
       return retry(deleted, 60, 1, SECONDS);
    }
 
    @Provides
    @Singleton
    @Named("PLACEMENT")
-   protected LoadingCache<RegionAndName, String> placementGroupMap(CreatePlacementGroupIfNeeded in) {
+   protected final LoadingCache<RegionAndName, String> placementGroupMap(CreatePlacementGroupIfNeeded in) {
       return CacheBuilder.newBuilder().build(in);
    }
 
    @Provides
    @ClusterCompute
    @Singleton
-   protected Set<String> provideClusterComputeIds() {
+   protected final Set<String> provideClusterComputeIds() {
       return Sets.newLinkedHashSet();
    }
 

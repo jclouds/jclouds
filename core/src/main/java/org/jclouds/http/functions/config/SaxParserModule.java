@@ -68,7 +68,7 @@ public class SaxParserModule extends AbstractModule {
 
    @Provides
    @Singleton
-   SAXParserFactory provideSAXParserFactory() {
+   final SAXParserFactory provideSAXParserFactory() {
       SAXParserFactory factory = SAXParserFactory.newInstance();
       factory.setNamespaceAware(false);
       factory.setValidating(false);

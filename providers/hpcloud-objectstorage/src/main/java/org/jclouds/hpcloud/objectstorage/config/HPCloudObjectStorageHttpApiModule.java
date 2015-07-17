@@ -68,7 +68,7 @@ public class HPCloudObjectStorageHttpApiModule extends SwiftHttpApiModule<HPClou
    @Singleton
    @HPExtensionCDN
    @Nullable
-   protected Supplier<URI> provideCDNUrl(RegionIdToURISupplier.Factory factory,
+   protected final Supplier<URI> provideCDNUrl(RegionIdToURISupplier.Factory factory,
                                          @ApiVersion String apiVersion,
                                          @Named(LocationConstants.PROPERTY_REGION) String region) {
 
@@ -81,7 +81,7 @@ public class HPCloudObjectStorageHttpApiModule extends SwiftHttpApiModule<HPClou
       @Singleton
       @Storage
       @Nullable
-      protected Supplier<URI> provideStorageUrl(RegionIdToURISupplier.Factory factory,
+      protected final Supplier<URI> provideStorageUrl(RegionIdToURISupplier.Factory factory,
                                                 @ApiVersion String apiVersion,
                                                 @Named(LocationConstants.PROPERTY_REGION) String region) {
 

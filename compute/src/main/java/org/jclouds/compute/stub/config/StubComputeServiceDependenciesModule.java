@@ -72,7 +72,7 @@ public class StubComputeServiceDependenciesModule extends AbstractModule {
 
    @Provides
    @Singleton
-   protected ConcurrentMap<String, NodeMetadata> provideNodesForIdentity(@Provider Supplier<Credentials> creds)
+   protected final ConcurrentMap<String, NodeMetadata> provideNodesForIdentity(@Provider Supplier<Credentials> creds)
             throws ExecutionException {
       return backing.get(creds.get().identity);
    }
@@ -89,7 +89,7 @@ public class StubComputeServiceDependenciesModule extends AbstractModule {
 
    @Provides
    @Singleton
-   protected ConcurrentMap<String, SecurityGroup> provideGroups(@Provider Supplier<Credentials> creds)
+   protected final ConcurrentMap<String, SecurityGroup> provideGroups(@Provider Supplier<Credentials> creds)
             throws ExecutionException {
       return groupBacking.get(creds.get().identity);
    }
@@ -106,7 +106,7 @@ public class StubComputeServiceDependenciesModule extends AbstractModule {
 
    @Provides
    @Singleton
-   protected Multimap<String, SecurityGroup> provideGroupsForNode(@Provider Supplier<Credentials> creds)
+   protected final Multimap<String, SecurityGroup> provideGroupsForNode(@Provider Supplier<Credentials> creds)
             throws ExecutionException {
       return groupsForNodeBacking.get(creds.get().identity);
    }
@@ -123,7 +123,7 @@ public class StubComputeServiceDependenciesModule extends AbstractModule {
 
    @Provides
    @Named("NODE_ID")
-   protected Integer provideNodeIdForIdentity(@Provider Supplier<Credentials> creds) throws ExecutionException {
+   protected final Integer provideNodeIdForIdentity(@Provider Supplier<Credentials> creds) throws ExecutionException {
       return nodeIds.get(creds.get().identity).incrementAndGet();
    }
 
@@ -139,34 +139,34 @@ public class StubComputeServiceDependenciesModule extends AbstractModule {
 
    @Provides
    @Named("GROUP_ID")
-   protected Integer provideGroupIdForIdentity(@Provider Supplier<Credentials> creds) throws ExecutionException {
+   protected final Integer provideGroupIdForIdentity(@Provider Supplier<Credentials> creds) throws ExecutionException {
       return groupIds.get(creds.get().identity).incrementAndGet();
    }
 
    @Singleton
    @Provides
    @Named("PUBLIC_IP_PREFIX")
-   String publicIpPrefix() {
+   final String publicIpPrefix() {
       return "144.175.1.";
    }
 
    @Singleton
    @Provides
    @Named("PRIVATE_IP_PREFIX")
-   String privateIpPrefix() {
+   final String privateIpPrefix() {
       return "10.1.1.";
    }
 
    @Singleton
    @Provides
    @Named("PASSWORD_PREFIX")
-   String passwordPrefix() {
+   final String passwordPrefix() {
       return "password";
    }
 
    @Singleton
    @Provides
-   SocketOpen socketOpen(StubSocketOpen in) {
+   final SocketOpen socketOpen(StubSocketOpen in) {
       return in;
    }
 

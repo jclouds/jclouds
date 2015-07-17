@@ -80,7 +80,7 @@ public class GoogleAppEngineConfigurationModule extends AbstractModule {
    }
 
    @Provides
-   protected URLFetchService provideURLFetchService() {
+   protected final URLFetchService provideURLFetchService() {
       return URLFetchServiceFactory.getURLFetchService();
    }
 }

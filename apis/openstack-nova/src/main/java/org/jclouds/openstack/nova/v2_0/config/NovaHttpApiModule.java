@@ -100,7 +100,7 @@ public class NovaHttpApiModule extends HttpApiModule<NovaApi> {
 
    @Provides
    @Singleton
-   public LoadingCache<String, Set<? extends Extension>> provideExtensionsByRegion(final Provider<NovaApi> novaApi) {
+   public final LoadingCache<String, Set<? extends Extension>> provideExtensionsByRegion(final Provider<NovaApi> novaApi) {
       return CacheBuilder.newBuilder().expireAfterWrite(23, TimeUnit.HOURS)
             .build(new CacheLoader<String, Set<? extends Extension>>() {
                @Override

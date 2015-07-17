@@ -75,6 +75,10 @@ public abstract class BaseChefHttpApiModule<S> extends HttpApiModule<S> {
 
    @Provides
    @TimeStamp
+   protected final String guiceProvideTimeStamp(@TimeStamp Supplier<String> cache) {
+      return provideTimeStamp(cache);
+   }
+
    protected String provideTimeStamp(@TimeStamp Supplier<String> cache) {
       return cache.get();
    }
@@ -84,7 +88,7 @@ public abstract class BaseChefHttpApiModule<S> extends HttpApiModule<S> {
     */
    @Provides
    @TimeStamp
-   Supplier<String> provideTimeStampCache(@Named(PROPERTY_SESSION_INTERVAL) long seconds, final DateService dateService) {
+   final Supplier<String> provideTimeStampCache(@Named(PROPERTY_SESSION_INTERVAL) long seconds, final DateService dateService) {
       return memoizeWithExpiration(new Supplier<String>() {
          @Override
          public String get() {
@@ -96,7 +100,7 @@ public abstract class BaseChefHttpApiModule<S> extends HttpApiModule<S> {
    // TODO: potentially change this
    @Provides
    @Singleton
-   public Supplier<PrivateKey> supplyKey(final LoadingCache<Credentials, PrivateKey> keyCache,
+   public final Supplier<PrivateKey> supplyKey(final LoadingCache<Credentials, PrivateKey> keyCache,
          @org.jclouds.location.Provider final Supplier<Credentials> creds) {
       return compose(new Function<Credentials, PrivateKey>() {
          @Override
@@ -108,7 +112,7 @@ public abstract class BaseChefHttpApiModule<S> extends HttpApiModule<S> {
 
    @Provides
    @Singleton
-   LoadingCache<Credentials, PrivateKey> privateKeyCache(PrivateKeyForCredentials loader) {
+   final LoadingCache<Credentials, PrivateKey> privateKeyCache(PrivateKeyForCredentials loader) {
       // throw out the private key related to old credentials
       return CacheBuilder.newBuilder().maximumSize(2).build(loader);
    }
@@ -144,7 +148,7 @@ public abstract class BaseChefHttpApiModule<S> extends HttpApiModule<S> {
    @Provides
    @Singleton
    @Validator
-   public Optional<String> provideValidatorName(Injector injector) {
+   public final Optional<String> provideValidatorName(Injector injector) {
       // Named properties can not be injected as optional here, so let's use the
       // injector to bypass it
       Key<String> key = Key.get(String.class, Names.named(CHEF_VALIDATOR_NAME));
@@ -158,7 +162,7 @@ public abstract class BaseChefHttpApiModule<S> extends HttpApiModule<S> {
    @Provides
    @Singleton
    @Validator
-   public Optional<PrivateKey> provideValidatorCredential(Crypto crypto, Injector injector)
+   public final Optional<PrivateKey> provideValidatorCredential(Crypto crypto, Injector injector)
          throws InvalidKeySpecException, IOException {
       // Named properties can not be injected as optional here, so let's use the
       // injector to bypass it
@@ -175,13 +179,13 @@ public abstract class BaseChefHttpApiModule<S> extends HttpApiModule<S> {
 
    @Provides
    @Singleton
-   CacheLoader<String, BootstrapConfig> bootstrapConfigForGroup(BootstrapConfigForGroup bootstrapConfigForGroup) {
+   final CacheLoader<String, BootstrapConfig> bootstrapConfigForGroup(BootstrapConfigForGroup bootstrapConfigForGroup) {
       return CacheLoader.from(bootstrapConfigForGroup);
    }
 
    @Provides
    @Singleton
-   CacheLoader<String, Client> groupToClient(ClientForGroup clientForGroup) {
+   final CacheLoader<String, Client> groupToClient(ClientForGroup clientForGroup) {
       return CacheLoader.from(clientForGroup);
    }
 

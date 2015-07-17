@@ -124,6 +124,11 @@ public class AWSEC2ComputeServiceContextModule extends BaseComputeServiceContext
    // duplicates EC2ComputeServiceContextModule; but that's easiest thing to do with guice; could extract to common util
    @Provides
    @Singleton
+   protected final Supplier<CacheLoader<RegionAndName, Image>> guiceProvideRegionAndNameToImageSupplierCacheLoader(
+           final RegionAndIdToImage delegate) {
+      return provideRegionAndNameToImageSupplierCacheLoader(delegate);
+   }
+
    protected Supplier<CacheLoader<RegionAndName, Image>> provideRegionAndNameToImageSupplierCacheLoader(
             final RegionAndIdToImage delegate) {
       return Suppliers.<CacheLoader<RegionAndName, Image>>ofInstance(new CacheLoader<RegionAndName, Image>() {
@@ -149,7 +154,7 @@ public class AWSEC2ComputeServiceContextModule extends BaseComputeServiceContext
 
    @Provides
    @Singleton
-   protected Supplier<LoadingCache<RegionAndName, ? extends Image>> provideRegionAndNameToImageSupplierCache(
+   protected final Supplier<LoadingCache<RegionAndName, ? extends Image>> provideRegionAndNameToImageSupplierCache(
             final RegionAndNameToImageSupplier supplier) {
       return supplier;
    }

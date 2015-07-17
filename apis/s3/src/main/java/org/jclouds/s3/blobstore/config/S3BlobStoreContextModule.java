@@ -58,7 +58,7 @@ public class S3BlobStoreContextModule extends AbstractModule {
 
    @Provides
    @Singleton
-   protected LoadingCache<String, AccessControlList> bucketAcls(BackoffOnNotFoundWhenGetBucketACL loader) {
+   protected final LoadingCache<String, AccessControlList> bucketAcls(BackoffOnNotFoundWhenGetBucketACL loader) {
       return CacheBuilder.newBuilder().expireAfterWrite(30, TimeUnit.SECONDS).build(loader);
    }
 }

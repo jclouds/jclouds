@@ -101,7 +101,7 @@ public class ElasticStackComputeServiceContextModule extends
 
    @Provides
    @Singleton
-   protected LoadingCache<String, DriveInfo> cache(GetDrive getDrive) {
+   protected final LoadingCache<String, DriveInfo> cache(GetDrive getDrive) {
       return CacheBuilder.newBuilder().build(getDrive);
    }
 
@@ -123,7 +123,7 @@ public class ElasticStackComputeServiceContextModule extends
    @Singleton
    @Provides
    @Memoized
-   protected Supplier<Map<String, WellKnownImage>> provideImages(@Named(PROPERTY_SESSION_INTERVAL) long seconds,
+   protected final Supplier<Map<String, WellKnownImage>> provideImages(@Named(PROPERTY_SESSION_INTERVAL) long seconds,
          @Memoized final Supplier<List<WellKnownImage>> wellKnownImageSupplier) throws IOException {
       // The image map won't change. Memoize it during the session.
       // This map can't be created directly as a singleton, as Guice needs it to construct the ElasticStackComputeServiceAdapter
@@ -144,7 +144,7 @@ public class ElasticStackComputeServiceContextModule extends
    @Singleton
    @Provides
    @Memoized
-   protected Supplier<List<WellKnownImage>> provideWellKnownImageSupplier(AtomicReference<AuthorizationException> authException,
+   protected final Supplier<List<WellKnownImage>> provideWellKnownImageSupplier(AtomicReference<AuthorizationException> authException,
          @Named(PROPERTY_SESSION_INTERVAL) long seconds, WellKnownImageSupplier uncached)
          throws IOException {
       return MemoizedRetryOnTimeOutButNotOnAuthorizationExceptionSupplier.create(authException, uncached, seconds,
@@ -153,7 +153,7 @@ public class ElasticStackComputeServiceContextModule extends
 
    @Provides
    @Singleton
-   protected Predicate<DriveInfo> supplyDriveUnclaimed(DriveClaimed driveClaimed, Timeouts timeouts) {
+   protected final Predicate<DriveInfo> supplyDriveUnclaimed(DriveClaimed driveClaimed, Timeouts timeouts) {
       return retry(Predicates.not(driveClaimed), timeouts.nodeRunning, 1000, MILLISECONDS);
    }
 }

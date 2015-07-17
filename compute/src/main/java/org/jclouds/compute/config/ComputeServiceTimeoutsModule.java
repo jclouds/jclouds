@@ -54,6 +54,11 @@ public class ComputeServiceTimeoutsModule extends AbstractModule {
    @Provides
    @Singleton
    @Named(TIMEOUT_NODE_RUNNING)
+   protected final Predicate<AtomicReference<NodeMetadata>> provideNodeRunning(AtomicNodeRunning statusRunning, Timeouts timeouts,
+           PollPeriod period) {
+      return nodeRunning(statusRunning, timeouts, period);
+   }
+
    protected Predicate<AtomicReference<NodeMetadata>> nodeRunning(AtomicNodeRunning statusRunning, Timeouts timeouts,
          PollPeriod period) {
       return timeouts.nodeRunning == 0 ? statusRunning : RetryablePredicateGuardingNull.create(statusRunning,
@@ -63,6 +68,11 @@ public class ComputeServiceTimeoutsModule extends AbstractModule {
    @Provides
    @Singleton
    @Named(TIMEOUT_NODE_TERMINATED)
+   protected final Predicate<AtomicReference<NodeMetadata>> provideServerTerminated(AtomicNodeTerminated statusTerminated,
+           Timeouts timeouts, PollPeriod period) {
+      return serverTerminated(statusTerminated, timeouts, period);
+   }
+
    protected Predicate<AtomicReference<NodeMetadata>> serverTerminated(AtomicNodeTerminated statusTerminated,
          Timeouts timeouts, PollPeriod period) {
       return timeouts.nodeTerminated == 0 ? statusTerminated : retry(statusTerminated, timeouts.nodeTerminated,
@@ -72,6 +82,11 @@ public class ComputeServiceTimeoutsModule extends AbstractModule {
    @Provides
    @Singleton
    @Named(TIMEOUT_NODE_SUSPENDED)
+   protected final Predicate<AtomicReference<NodeMetadata>> provideserverSuspended(AtomicNodeSuspended statusSuspended,
+           Timeouts timeouts, PollPeriod period) {
+      return serverSuspended(statusSuspended, timeouts, period);
+   }
+
    protected Predicate<AtomicReference<NodeMetadata>> serverSuspended(AtomicNodeSuspended statusSuspended,
          Timeouts timeouts, PollPeriod period) {
       return timeouts.nodeSuspended == 0 ? statusSuspended : RetryablePredicateGuardingNull.create(statusSuspended,
@@ -81,6 +96,10 @@ public class ComputeServiceTimeoutsModule extends AbstractModule {
    @Provides
    @Singleton
    @Named(TIMEOUT_SCRIPT_COMPLETE)
+   protected final Predicate<CommandUsingClient> provideRunScriptRunning(ScriptStatusReturnsZero statusRunning, Timeouts timeouts) {
+      return runScriptRunning(statusRunning, timeouts);
+   }
+
    protected Predicate<CommandUsingClient> runScriptRunning(ScriptStatusReturnsZero statusRunning, Timeouts timeouts) {
       return timeouts.scriptComplete == 0 ? not(statusRunning) : retry(not(statusRunning), timeouts.scriptComplete);
    }
@@ -88,7 +107,7 @@ public class ComputeServiceTimeoutsModule extends AbstractModule {
    @Provides
    @Singleton
    @Named(TIMEOUT_IMAGE_AVAILABLE)
-   protected Predicate<AtomicReference<Image>> imageAvailable(AtomicImageAvailable statusAvailable, Timeouts timeouts,
+   protected final Predicate<AtomicReference<Image>> imageAvailable(AtomicImageAvailable statusAvailable, Timeouts timeouts,
          PollPeriod period) {
       return timeouts.imageAvailable == 0 ? statusAvailable : retry(statusAvailable, timeouts.imageAvailable,
             period.pollInitialPeriod, period.pollMaxPeriod);
@@ -97,7 +116,7 @@ public class ComputeServiceTimeoutsModule extends AbstractModule {
    @Provides
    @Singleton
    @Named(TIMEOUT_IMAGE_DELETED)
-   protected Predicate<AtomicReference<Image>> serverDeleted(AtomicImageDeleted statusDeleted, Timeouts timeouts,
+   protected final Predicate<AtomicReference<Image>> serverDeleted(AtomicImageDeleted statusDeleted, Timeouts timeouts,
          PollPeriod period) {
       return timeouts.imageDeleted == 0 ? statusDeleted : retry(statusDeleted, timeouts.imageDeleted,
             period.pollInitialPeriod, period.pollMaxPeriod);

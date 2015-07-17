@@ -54,7 +54,7 @@ public class AzureBlobModule extends AbstractModule {
    }
 
    @Provides
-   AzureBlob provideAzureBlob(AzureBlob.Factory factory) {
+   final AzureBlob provideAzureBlob(AzureBlob.Factory factory) {
       return factory.create(null);
    }
 

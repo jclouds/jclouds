@@ -45,7 +45,7 @@ public class AtmosBlobStoreContextModule extends AbstractModule {
 
    @Provides
    @Singleton
-   protected LoadingCache<String, Boolean> isPublic(final AtmosClient client) {
+   protected final LoadingCache<String, Boolean> isPublic(final AtmosClient client) {
       return CacheBuilder.newBuilder().expireAfterWrite(30, TimeUnit.SECONDS).build(new CacheLoader<String, Boolean>() {
 
          @Override

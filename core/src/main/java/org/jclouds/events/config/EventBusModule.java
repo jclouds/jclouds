@@ -50,7 +50,7 @@ public class EventBusModule extends AbstractModule {
     */
    @Provides
    @Singleton
-   AsyncEventBus provideAsyncEventBus(@Named(PROPERTY_USER_THREADS) ListeningExecutorService userExecutor,
+   final AsyncEventBus provideAsyncEventBus(@Named(PROPERTY_USER_THREADS) ListeningExecutorService userExecutor,
          DeadEventLoggingHandler deadEventsHandler) {// NO_UCD
       AsyncEventBus asyncBus = new AsyncEventBus("jclouds-async-event-bus", userExecutor);
       asyncBus.register(deadEventsHandler);
@@ -62,7 +62,7 @@ public class EventBusModule extends AbstractModule {
     */
    @Provides
    @Singleton
-   EventBus provideSyncEventBus(DeadEventLoggingHandler deadEventsHandler) { // NO_UCD
+   final EventBus provideSyncEventBus(DeadEventLoggingHandler deadEventsHandler) { // NO_UCD
       EventBus syncBus = new EventBus("jclouds-sync-event-bus");
       syncBus.register(deadEventsHandler);
       return syncBus;

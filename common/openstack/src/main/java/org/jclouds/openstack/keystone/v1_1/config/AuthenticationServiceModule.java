@@ -67,7 +67,7 @@ public class AuthenticationServiceModule extends AbstractModule {
    @Provides
    @Singleton
    @Authentication
-   protected Supplier<String> provideAuthenticationTokenCache(final Supplier<Auth> supplier)
+   protected final Supplier<String> provideAuthenticationTokenCache(final Supplier<Auth> supplier)
             throws InterruptedException, ExecutionException, TimeoutException {
       return new Supplier<String>() {
          public String get() {
@@ -99,14 +99,14 @@ public class AuthenticationServiceModule extends AbstractModule {
 
    @Provides
    @Singleton
-   protected LoadingCache<Credentials, Auth> provideAuthCache(GetAuth getAuth,
+   protected final LoadingCache<Credentials, Auth> provideAuthCache(GetAuth getAuth,
          @Named(PROPERTY_SESSION_INTERVAL) long sessionInterval) {
       return CacheBuilder.newBuilder().expireAfterWrite(sessionInterval, TimeUnit.SECONDS).build(getAuth);
    }
 
    @Provides
    @Singleton
-   protected Supplier<Auth> provideAuthSupplier(final LoadingCache<Credentials, Auth> cache,
+   protected final Supplier<Auth> provideAuthSupplier(final LoadingCache<Credentials, Auth> cache,
          @Provider final Supplier<Credentials> creds) {
       return new Supplier<Auth>() {
          @Override

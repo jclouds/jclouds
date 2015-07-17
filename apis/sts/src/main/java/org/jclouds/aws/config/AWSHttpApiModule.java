@@ -49,14 +49,14 @@ public abstract class AWSHttpApiModule<A> extends HttpApiModule<A> {
    @Provides
    @ClientError
    @Singleton
-   protected Set<String> provideRetryableCodes() {
+   protected final Set<String> provideRetryableCodes() {
       return ImmutableSet.of("RequestTimeout", "OperationAborted", "SignatureDoesNotMatch");
    }
    
    @Provides
    @ServerError
    @Singleton
-   protected Set<String> provideRetryableServerCodes() {
+   protected final Set<String> provideRetryableServerCodes() {
       return ImmutableSet.of("RequestLimitExceeded", "InternalError");
    }
 

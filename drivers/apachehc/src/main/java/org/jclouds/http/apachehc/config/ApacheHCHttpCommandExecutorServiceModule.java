@@ -74,7 +74,7 @@ public class ApacheHCHttpCommandExecutorServiceModule extends AbstractModule {
 
    @Singleton
    @Provides
-   HttpParams newBasicHttpParams(HttpUtils utils) {
+   final HttpParams newBasicHttpParams(HttpUtils utils) {
       BasicHttpParams params = new BasicHttpParams();
 
       params.setIntParameter(CoreConnectionPNames.SOCKET_BUFFER_SIZE, 8 * 1024).setBooleanParameter(
@@ -102,14 +102,14 @@ public class ApacheHCHttpCommandExecutorServiceModule extends AbstractModule {
 
    @Singleton
    @Provides
-   X509HostnameVerifier newHostnameVerifier(HttpUtils utils) {
+   final X509HostnameVerifier newHostnameVerifier(HttpUtils utils) {
       return utils.relaxHostname() ? SSLSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER
                : SSLSocketFactory.STRICT_HOSTNAME_VERIFIER;
    }
 
    @Singleton
    @Provides
-   SSLContext newSSLContext(HttpUtils utils, @Named("untrusted") Supplier<SSLContext> untrustedSSLContextProvider)
+   final SSLContext newSSLContext(HttpUtils utils, @Named("untrusted") Supplier<SSLContext> untrustedSSLContextProvider)
             throws NoSuchAlgorithmException, KeyManagementException {
       if (utils.trustAllCerts())
          return untrustedSSLContextProvider.get();
@@ -121,7 +121,7 @@ public class ApacheHCHttpCommandExecutorServiceModule extends AbstractModule {
 
    @Singleton
    @Provides
-   ClientConnectionManager newClientConnectionManager(HttpParams params, X509HostnameVerifier verifier,
+   final ClientConnectionManager newClientConnectionManager(HttpParams params, X509HostnameVerifier verifier,
             SSLContext context, Closer closer) throws NoSuchAlgorithmException, KeyManagementException {
 
       SchemeRegistry schemeRegistry = new SchemeRegistry();
@@ -143,7 +143,7 @@ public class ApacheHCHttpCommandExecutorServiceModule extends AbstractModule {
 
    @Provides
    @Singleton
-   HttpClient newDefaultHttpClient(ProxyConfig config, BasicHttpParams params, ClientConnectionManager cm) {
+   final HttpClient newDefaultHttpClient(ProxyConfig config, BasicHttpParams params, ClientConnectionManager cm) {
       DefaultHttpClient client = new DefaultHttpClient(cm, params);
       if (config.useSystem()) {
          ProxySelectorRoutePlanner routePlanner = new ProxySelectorRoutePlanner(client.getConnectionManager()

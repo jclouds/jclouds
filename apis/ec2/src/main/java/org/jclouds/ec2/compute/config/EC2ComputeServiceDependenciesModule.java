@@ -93,7 +93,7 @@ public class EC2ComputeServiceDependenciesModule extends AbstractModule {
    
    @Singleton
    @Provides
-   protected Map<InstanceState, NodeMetadata.Status> toPortableNodeStatus() {
+   protected final Map<InstanceState, NodeMetadata.Status> toPortableNodeStatus() {
       return toPortableNodeStatus;
    }
    
@@ -106,7 +106,7 @@ public class EC2ComputeServiceDependenciesModule extends AbstractModule {
 
    @Singleton
    @Provides
-   protected Map<ImageState, Image.Status> toPortableImageStatus() {
+   protected final Map<ImageState, Image.Status> toPortableImageStatus() {
       return toPortableImageStatus;
    }
    
@@ -146,7 +146,7 @@ public class EC2ComputeServiceDependenciesModule extends AbstractModule {
     */
    @Provides
    @Singleton
-   public Function<RunningInstance, NodeMetadata> bindNodeConverter(RunningInstanceToNodeMetadata baseConverter,
+   public final Function<RunningInstance, NodeMetadata> bindNodeConverter(RunningInstanceToNodeMetadata baseConverter,
               AddElasticIpsToNodemetadata addElasticIpsToNodemetadata,
             @Named(EC2Constants.PROPERTY_EC2_AUTO_ALLOCATE_ELASTIC_IPS) boolean autoAllocateElasticIps) {
       if (!autoAllocateElasticIps)
@@ -156,20 +156,20 @@ public class EC2ComputeServiceDependenciesModule extends AbstractModule {
 
    @Provides
    @Singleton
-   protected LoadingCache<RunningInstance, Optional<LoginCredentials>> credentialsMap(CacheLoader<RunningInstance, Optional<LoginCredentials>> in) {
+   protected final LoadingCache<RunningInstance, Optional<LoginCredentials>> credentialsMap(CacheLoader<RunningInstance, Optional<LoginCredentials>> in) {
       return CacheBuilder.newBuilder().build(in);
    }
 
    @Provides
    @Singleton
-   protected ConcurrentMap<RegionAndName, KeyPair> keypairMap(Injector i) {
+   protected final ConcurrentMap<RegionAndName, KeyPair> keypairMap(Injector i) {
       return Maps.newConcurrentMap();
    }
 
    @Provides
    @Singleton
    @Named("SECURITY")
-   protected LoadingCache<RegionAndName, String> securityGroupMap(
+   protected final LoadingCache<RegionAndName, String> securityGroupMap(
             @Named("SECURITY") CacheLoader<RegionAndName, String> in) {
       return CacheBuilder.newBuilder().build(in);
    }
@@ -177,7 +177,7 @@ public class EC2ComputeServiceDependenciesModule extends AbstractModule {
    @Provides
    @Singleton
    @Named("ELASTICIP")
-   protected LoadingCache<RegionAndName, String> instanceToElasticIp(
+   protected final LoadingCache<RegionAndName, String> instanceToElasticIp(
             @Named("ELASTICIP") CacheLoader<RegionAndName, String> in) {
       return CacheBuilder.newBuilder().build(in);
    }
@@ -185,7 +185,7 @@ public class EC2ComputeServiceDependenciesModule extends AbstractModule {
    @Provides
    @Singleton
    @Named("SECURITY")
-   protected Predicate<RegionAndName> securityGroupEventualConsistencyDelay(SecurityGroupPresent in,
+   protected final Predicate<RegionAndName> securityGroupEventualConsistencyDelay(SecurityGroupPresent in,
          @Named(PROPERTY_EC2_TIMEOUT_SECURITYGROUP_PRESENT) long msDelay) {
       return retry(in, msDelay, 100l, MILLISECONDS);
    }

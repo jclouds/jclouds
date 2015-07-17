@@ -44,7 +44,7 @@ public class SwiftBlobStoreContextModule extends AbstractModule {
    }
 
    @Provides
-   Function<String, BlobStore> blobStore(FactoryFunction in) {
+   final Function<String, BlobStore> blobStore(FactoryFunction in) {
       return in;
    }
 

@@ -99,7 +99,7 @@ public class CurrentRequestExecutorServiceModule extends AbstractModule {
    @Provides
    @Singleton
    @Named(Constants.PROPERTY_USER_THREADS)
-   protected ListeningExecutorService userExecutor() {
+   protected final ListeningExecutorService userExecutor() {
       return memoizedCurrentRequestExecutorService.get();
    }
 }

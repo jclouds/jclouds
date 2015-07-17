@@ -174,14 +174,14 @@ public class NovaComputeServiceContextModule extends
    @Provides
    @Singleton
    @Named("FLOATINGIP")
-   protected LoadingCache<RegionAndId, Iterable<? extends FloatingIP>> instanceToFloatingIps(
+   protected final LoadingCache<RegionAndId, Iterable<? extends FloatingIP>> instanceToFloatingIps(
             @Named("FLOATINGIP") CacheLoader<RegionAndId, Iterable<? extends FloatingIP>> in) {
       return CacheBuilder.newBuilder().build(in);
    }
 
    @Provides
    @Singleton
-   protected LoadingCache<RegionAndName, SecurityGroupInRegion> securityGroupMap(
+   protected final LoadingCache<RegionAndName, SecurityGroupInRegion> securityGroupMap(
             CacheLoader<RegionAndName, SecurityGroupInRegion> in) {
       return CacheBuilder.newBuilder().build(in);
    }
@@ -195,7 +195,7 @@ public class NovaComputeServiceContextModule extends
    @Provides
    @Singleton
    @Named("SECURITYGROUP_PRESENT")
-   protected Predicate<AtomicReference<RegionAndName>> securityGroupEventualConsistencyDelay(
+   protected final Predicate<AtomicReference<RegionAndName>> securityGroupEventualConsistencyDelay(
             FindSecurityGroupWithNameAndReturnTrue in,
             @Named(TIMEOUT_SECURITYGROUP_PRESENT) long msDelay) {
       return retry(in, msDelay, 100l, MILLISECONDS);
@@ -203,14 +203,14 @@ public class NovaComputeServiceContextModule extends
 
    @Provides
    @Singleton
-   protected LoadingCache<RegionAndName, KeyPair> keyPairMap(
+   protected final LoadingCache<RegionAndName, KeyPair> keyPairMap(
          CacheLoader<RegionAndName, KeyPair> in) {
       return CacheBuilder.newBuilder().build(in);
    }
 
    @Provides
    @Singleton
-   protected Supplier<Map<String, Location>> createLocationIndexedById(
+   protected final Supplier<Map<String, Location>> createLocationIndexedById(
             @Memoized Supplier<Set<? extends Location>> locations) {
       return Suppliers.compose(new Function<Set<? extends Location>, Map<String, Location>>() {
 
@@ -261,7 +261,7 @@ public class NovaComputeServiceContextModule extends
 
    @Singleton
    @Provides
-   protected Map<Server.Status, NodeMetadata.Status> toPortableNodeStatus() {
+   protected final Map<Server.Status, NodeMetadata.Status> toPortableNodeStatus() {
       return toPortableNodeStatus;
    }
 
@@ -277,7 +277,7 @@ public class NovaComputeServiceContextModule extends
 
    @Singleton
    @Provides
-   protected Map<org.jclouds.openstack.nova.v2_0.domain.Image.Status, Image.Status> toPortableImageStatus() {
+   protected final Map<org.jclouds.openstack.nova.v2_0.domain.Image.Status, Image.Status> toPortableImageStatus() {
       return toPortableImageStatus;
    }
 

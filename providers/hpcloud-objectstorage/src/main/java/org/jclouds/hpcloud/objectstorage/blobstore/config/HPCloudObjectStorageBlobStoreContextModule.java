@@ -85,7 +85,7 @@ public class HPCloudObjectStorageBlobStoreContextModule extends SwiftBlobStoreCo
 
    @Provides
    @Singleton
-   protected LoadingCache<String, URI> cdnContainer(GetCDNMetadata loader) {
+   protected final LoadingCache<String, URI> cdnContainer(GetCDNMetadata loader) {
       return CacheBuilder.newBuilder().expireAfterWrite(30, TimeUnit.SECONDS).build(loader);
    }
 

@@ -39,7 +39,7 @@ public class AtmosObjectModule extends AbstractModule {
    }
 
    @Provides
-   AtmosObject provideAtmosObject(AtmosObject.Factory factory) {
+   final AtmosObject provideAtmosObject(AtmosObject.Factory factory) {
       return factory.create((MutableContentMetadata) null);
    }
 

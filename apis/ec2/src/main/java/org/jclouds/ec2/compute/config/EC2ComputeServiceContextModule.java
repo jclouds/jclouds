@@ -27,10 +27,12 @@ import java.util.concurrent.atomic.AtomicReference;
 import javax.inject.Named;
 import javax.inject.Singleton;
 
+import org.jclouds.compute.ComputeServiceContext;
 import org.jclouds.compute.config.BaseComputeServiceContextModule;
 import org.jclouds.compute.domain.Image;
 import org.jclouds.compute.extensions.ImageExtension;
 import org.jclouds.compute.extensions.SecurityGroupExtension;
+import org.jclouds.ec2.compute.EC2ComputeService;
 import org.jclouds.ec2.compute.domain.RegionAndName;
 import org.jclouds.ec2.compute.loaders.RegionAndIdToImage;
 import org.jclouds.ec2.compute.suppliers.RegionAndNameToImageSupplier;
@@ -63,11 +65,11 @@ public class EC2ComputeServiceContextModule extends BaseComputeServiceContextMod
       install(new EC2BindComputeSuppliersByClass());
       super.configure();
    }
-   
+
    protected void installDependencies() {
       install(new EC2ComputeServiceDependenciesModule());
    }
-   
+
    @Override
    protected boolean shouldEagerlyParseImages(Injector injector) {
       // If no owners to query, then will never lookup all images
@@ -90,13 +92,18 @@ public class EC2ComputeServiceContextModule extends BaseComputeServiceContextMod
 
    @Provides
    @Singleton
-   protected Supplier<LoadingCache<RegionAndName, ? extends Image>> provideRegionAndNameToImageSupplierCache(
+   protected final Supplier<LoadingCache<RegionAndName, ? extends Image>> provideRegionAndNameToImageSupplierCache(
             final RegionAndNameToImageSupplier supplier) {
       return supplier;
    }
 
    @Provides
    @Singleton
+   protected final Supplier<CacheLoader<RegionAndName, Image>> guiceProvideRegionAndNameToImageSupplierCacheLoader(
+           final RegionAndIdToImage delegate) {
+      return provideRegionAndNameToImageSupplierCacheLoader(delegate);
+   }
+
    protected Supplier<CacheLoader<RegionAndName, Image>> provideRegionAndNameToImageSupplierCacheLoader(
             final RegionAndIdToImage delegate) {
       return Suppliers.<CacheLoader<RegionAndName, Image>>ofInstance(new CacheLoader<RegionAndName, Image>() {
@@ -116,19 +123,19 @@ public class EC2ComputeServiceContextModule extends BaseComputeServiceContextMod
             };
             return new SetAndThrowAuthorizationExceptionSupplier<Image>(rawSupplier, authException).get();
          }
-         
+
       });
    }
 
    @Provides
    @Singleton
    @Named(PROPERTY_EC2_AMI_OWNERS)
-   String[] amiOwners(@Named(PROPERTY_EC2_AMI_OWNERS) String amiOwners) {
+   final String[] amiOwners(@Named(PROPERTY_EC2_AMI_OWNERS) String amiOwners) {
       if (amiOwners.trim().equals(""))
          return new String[] {};
       return toArray(Splitter.on(',').split(amiOwners), String.class);
    }
-   
+
    @Override
    protected Optional<ImageExtension> provideImageExtension(Injector i) {
       return Optional.of(i.getInstance(ImageExtension.class));

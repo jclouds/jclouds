@@ -49,7 +49,7 @@ public class CinderHttpApiModule extends HttpApiModule<CinderApi> {
    
    @Provides
    @Singleton
-   public Multimap<URI, URI> aliases() {
+   public final Multimap<URI, URI> aliases() {
       return ImmutableMultimap.<URI, URI>builder().build();
    }
 

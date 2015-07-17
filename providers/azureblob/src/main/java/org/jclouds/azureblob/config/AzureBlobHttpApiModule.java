@@ -17,8 +17,6 @@
 package org.jclouds.azureblob.config;
 
 import static org.jclouds.Constants.PROPERTY_SESSION_INTERVAL;
-import static org.jclouds.json.config.GsonModule.DateAdapter;
-import static org.jclouds.json.config.GsonModule.Iso8601DateAdapter;
 
 import java.util.concurrent.TimeUnit;
 
@@ -34,6 +32,8 @@ import org.jclouds.http.HttpRetryHandler;
 import org.jclouds.http.annotation.ClientError;
 import org.jclouds.http.annotation.Redirection;
 import org.jclouds.http.annotation.ServerError;
+import org.jclouds.json.config.GsonModule.DateAdapter;
+import org.jclouds.json.config.GsonModule.Iso8601DateAdapter;
 import org.jclouds.rest.ConfiguresHttpApi;
 import org.jclouds.rest.config.HttpApiModule;
 
@@ -56,6 +56,10 @@ public class AzureBlobHttpApiModule extends HttpApiModule<AzureBlobClient> {
 
    @Provides
    @TimeStamp
+   protected final String guiceProvideTimeStamp(@TimeStamp Supplier<String> cache) {
+      return provideTimeStamp(cache);
+   }
+
    protected String provideTimeStamp(@TimeStamp Supplier<String> cache) {
       return cache.get();
    }
@@ -68,6 +72,7 @@ public class AzureBlobHttpApiModule extends HttpApiModule<AzureBlobClient> {
    protected Supplier<String> provideTimeStampCache(@Named(PROPERTY_SESSION_INTERVAL) long seconds,
          final DateService dateService) {
       return Suppliers.memoizeWithExpiration(new Supplier<String>() {
+         @Override
          public String get() {
             return dateService.rfc822DateFormat();
          }

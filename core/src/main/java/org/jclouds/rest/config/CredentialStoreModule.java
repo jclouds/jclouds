@@ -104,7 +104,7 @@ public class CredentialStoreModule extends AbstractModule {
 
    @Provides
    @Singleton
-   protected Map<String, Credentials> provideCredentialStore(Map<String, ByteSource> backing,
+   protected final Map<String, Credentials> provideCredentialStore(Map<String, ByteSource> backing,
          Function<Credentials, ByteSource> credentialsSerializer,
          Function<ByteSource, Credentials> credentialsDeserializer) {
       return new TransformingMap<String, ByteSource, Credentials>(backing, credentialsDeserializer,

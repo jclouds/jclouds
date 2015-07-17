@@ -45,7 +45,7 @@ public class ChefBootstrapModule extends AbstractModule {
    @Provides
    @Named("installChefGems")
    @Singleton
-   Statement installChefGems(BootstrapProperties bootstrapProperties) {
+   final Statement installChefGems(BootstrapProperties bootstrapProperties) {
       InstallRubyGems installRubyGems = InstallRubyGems.builder()
             .version(bootstrapProperties.gemSystemVersion().orNull())
             .updateSystem(bootstrapProperties.updateGemSystem(), bootstrapProperties.gemSystemVersion().orNull())
@@ -60,7 +60,7 @@ public class ChefBootstrapModule extends AbstractModule {
    @Provides
    @Named("installChefOmnibus")
    @Singleton
-   Statement installChefUsingOmnibus(BootstrapProperties bootstrapProperties) {
+   final Statement installChefUsingOmnibus(BootstrapProperties bootstrapProperties) {
       return bootstrapProperties.chefVersion().isPresent() ?
             new InstallChefUsingOmnibus(bootstrapProperties.chefVersion().get())
             : new InstallChefUsingOmnibus();
@@ -69,7 +69,7 @@ public class ChefBootstrapModule extends AbstractModule {
    @Provides
    @InstallChef
    @Singleton
-   Statement installChef(BootstrapProperties bootstrapProperties, @Named("installChefGems") Statement installChefGems,
+   final Statement installChef(BootstrapProperties bootstrapProperties, @Named("installChefGems") Statement installChefGems,
          @Named("installChefOmnibus") Statement installChefOmnibus) {
       return bootstrapProperties.useOmnibus() ? installChefOmnibus : installChefGems;
    }

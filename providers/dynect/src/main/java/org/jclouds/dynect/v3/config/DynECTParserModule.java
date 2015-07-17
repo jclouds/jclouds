@@ -51,7 +51,7 @@ public class DynECTParserModule extends AbstractModule {
 
    @Provides
    @Singleton
-   public Map<Type, Object> provideCustomAdapterBindings() {
+   public final Map<Type, Object> provideCustomAdapterBindings() {
       return new ImmutableMap.Builder<Type, Object>()
             .put(SessionCredentials.class, new SessionCredentialsTypeAdapter())
             .put(GeoRegionGroup.class, new GeoRegionGroupTypeAdapter())

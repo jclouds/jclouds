@@ -66,7 +66,7 @@ public class SwiftHttpApiModule<S extends CommonSwiftClient> extends HttpApiModu
       @Provides
       @Singleton
       @Storage
-      protected Supplier<URI> provideStorageUrl(URIFromAuthenticationResponseForService.Factory factory) {
+      protected final Supplier<URI> provideStorageUrl(URIFromAuthenticationResponseForService.Factory factory) {
          return factory.create(AuthHeaders.STORAGE_URL);
       }
    }
@@ -75,7 +75,7 @@ public class SwiftHttpApiModule<S extends CommonSwiftClient> extends HttpApiModu
       @Provides
       @Singleton
       @Storage
-      protected Supplier<URI> provideStorageUrl(RegionIdToURISupplier.Factory factory,
+      protected final Supplier<URI> provideStorageUrl(RegionIdToURISupplier.Factory factory,
             @ApiVersion String apiVersion,
             @Named(LocationConstants.PROPERTY_REGION) String region) {
 

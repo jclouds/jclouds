@@ -45,13 +45,17 @@ public abstract class FormSigningHttpApiModule<A> extends AWSHttpApiModule<A> {
 
    @Provides
    @TimeStamp
+   protected final String guiceProvideTimeStamp(DateService dateService) {
+      return provideTimeStamp(dateService);
+   }
+
    protected String provideTimeStamp(DateService dateService) {
       return dateService.iso8601DateFormat(new Date(System.currentTimeMillis()));
    }
 
    @Provides
    @Singleton
-   RequestSigner provideRequestSigner(FormSigner in) {
+   final RequestSigner provideRequestSigner(FormSigner in) {
       if (in instanceof RequestSigner) {
          return (RequestSigner) in;
       }

@@ -42,16 +42,20 @@ import com.google.inject.Provides;
 public class Route53HttpApiModule extends AWSHttpApiModule<Route53Api> {
    public Route53HttpApiModule() {
    }
-   
+
    @Provides
    @TimeStamp
+   protected final String guiceProvideTimeStamp(DateService dateService) {
+      return provideTimeStamp(dateService);
+   }
+
    protected String provideTimeStamp(DateService dateService) {
       return dateService.rfc1123DateFormat(new Date(System.currentTimeMillis()));
    }
 
    @Provides
    @Singleton
-   RequestSigner provideRequestSigner(RestAuthentication in) {
+   final RequestSigner provideRequestSigner(RestAuthentication in) {
       return in;
    }
 

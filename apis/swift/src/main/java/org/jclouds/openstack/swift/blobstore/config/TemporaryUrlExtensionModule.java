@@ -64,6 +64,7 @@ public abstract class TemporaryUrlExtensionModule<A extends CommonSwiftClient> e
    public static class SwiftKeystoneTemporaryUrlExtensionModule extends
          TemporaryUrlExtensionModule<SwiftKeystoneClient> {
 
+      @Override
       protected void bindTemporaryUrlKeyApi() {
          bindHttpApi(binder(), KeystoneTemporaryUrlKeyApi.class);
          bind(TemporaryUrlKeyApi.class).to(KeystoneTemporaryUrlKeyApi.class);
@@ -79,6 +80,10 @@ public abstract class TemporaryUrlExtensionModule<A extends CommonSwiftClient> e
 
    @Provides
    @TimeStamp
+   protected final Long guiceUnixEpochTimestampProvider() {
+      return unixEpochTimestampProvider();
+   }
+
    protected Long unixEpochTimestampProvider() {
       return System.currentTimeMillis() / 1000; /* convert to seconds */
    }

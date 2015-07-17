@@ -112,14 +112,14 @@ public class ExecutorServiceModule extends AbstractModule {
 
    @Provides
    @Singleton
-   TimeLimiter timeLimiter(@Named(PROPERTY_USER_THREADS) ListeningExecutorService userExecutor) {
+   final TimeLimiter timeLimiter(@Named(PROPERTY_USER_THREADS) ListeningExecutorService userExecutor) {
       return new SimpleTimeLimiter(userExecutor);
    }
 
    @Provides
    @Singleton
    @Named(PROPERTY_USER_THREADS)
-   ListeningExecutorService provideListeningUserExecutorService(@Named(PROPERTY_USER_THREADS) int count, Closer closer) { // NO_UCD
+   final ListeningExecutorService provideListeningUserExecutorService(@Named(PROPERTY_USER_THREADS) int count, Closer closer) { // NO_UCD
       if (userExecutorFromConstructor != null)
          return userExecutorFromConstructor;
       return shutdownOnClose(WithSubmissionTrace.wrap(newThreadPoolNamed("user thread %d", count)), closer);
@@ -128,7 +128,7 @@ public class ExecutorServiceModule extends AbstractModule {
    @Provides
    @Singleton
    @Named(PROPERTY_USER_THREADS)
-   ExecutorService provideUserExecutorService(@Named(PROPERTY_USER_THREADS) ListeningExecutorService in) { // NO_UCD
+   final ExecutorService provideUserExecutorService(@Named(PROPERTY_USER_THREADS) ListeningExecutorService in) { // NO_UCD
       return in;
    }
 

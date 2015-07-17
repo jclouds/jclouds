@@ -55,7 +55,7 @@ public class TroveHttpApiModule extends HttpApiModule<TroveApi> {
    
    @Provides
    @Singleton
-   public Multimap<URI, URI> aliases() {
+   public final Multimap<URI, URI> aliases() {
       return ImmutableMultimap.<URI, URI>builder().build();
    }
 
@@ -67,7 +67,7 @@ public class TroveHttpApiModule extends HttpApiModule<TroveApi> {
    }
    
    @Provides
-   Supplier<Optional<Tenant>> supplyTenant(Supplier<Access> access) {
+   final Supplier<Optional<Tenant>> supplyTenant(Supplier<Access> access) {
       return Suppliers.compose(GetTenant.INSTANCE, access);
    }
    

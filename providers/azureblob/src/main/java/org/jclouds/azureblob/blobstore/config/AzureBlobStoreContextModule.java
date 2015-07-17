@@ -46,7 +46,7 @@ public class AzureBlobStoreContextModule extends AbstractModule {
 
    @Provides
    @Singleton
-   protected LoadingCache<String, PublicAccess> containerAcls(final AzureBlobClient client) {
+   protected final LoadingCache<String, PublicAccess> containerAcls(final AzureBlobClient client) {
       return CacheBuilder.newBuilder().expireAfterWrite(30, TimeUnit.SECONDS).build(
                new CacheLoader<String, PublicAccess>() {
                   @Override

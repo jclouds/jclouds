@@ -52,7 +52,7 @@ public class BlobStoreObjectModule extends AbstractModule {
    }
 
    @Provides
-   Blob provideBlob(Blob.Factory factory) {
+   final Blob provideBlob(Blob.Factory factory) {
       return factory.create(null);
    }
 

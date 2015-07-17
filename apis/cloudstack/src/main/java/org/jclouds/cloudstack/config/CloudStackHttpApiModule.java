@@ -117,7 +117,7 @@ public class CloudStackHttpApiModule extends HttpApiModule<CloudStackApi> {
     */
    @Provides
    @Singleton
-   protected AuthenticationFilter authenticationFilterForCredentialType(CredentialType credentialType,
+   protected final AuthenticationFilter authenticationFilterForCredentialType(CredentialType credentialType,
             AddSessionKeyAndJSessionIdToRequest addSessionKeyAndJSessionIdToRequest, QuerySigner querySigner) {
       switch (credentialType) {
          case PASSWORD_CREDENTIALS:
@@ -132,7 +132,7 @@ public class CloudStackHttpApiModule extends HttpApiModule<CloudStackApi> {
    // PROPERTY_SESSION_INTERVAL is default to 60 seconds
    @Provides
    @Singleton
-   protected LoadingCache<Credentials, LoginResponse> provideLoginResponseCache(
+   protected final LoadingCache<Credentials, LoginResponse> provideLoginResponseCache(
             LoginWithPasswordCredentials getLoginResponse,
             @Named(Constants.PROPERTY_SESSION_INTERVAL) int seconds) {
       return CacheBuilder.newBuilder().expireAfterWrite(seconds, TimeUnit.SECONDS).build(getLoginResponse);
@@ -142,7 +142,7 @@ public class CloudStackHttpApiModule extends HttpApiModule<CloudStackApi> {
    // http://code.google.com/p/guava-libraries/issues/detail?id=872
    @Provides
    @Singleton
-   protected Supplier<LoginResponse> provideLoginResponseSupplier(final LoadingCache<Credentials, LoginResponse> cache,
+   protected final Supplier<LoginResponse> provideLoginResponseSupplier(final LoadingCache<Credentials, LoginResponse> cache,
          @Provider final Supplier<Credentials> creds) {
       return new Supplier<LoginResponse>() {
          @Override

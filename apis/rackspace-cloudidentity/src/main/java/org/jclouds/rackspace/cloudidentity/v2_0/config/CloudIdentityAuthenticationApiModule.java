@@ -33,7 +33,7 @@ public class CloudIdentityAuthenticationApiModule extends AbstractModule  {
    }
 
    @Provides
-   private AuthenticationApi provideAuthenticationApi(CloudIdentityAuthenticationApi in){ 
+   private AuthenticationApi provideAuthenticationApi(CloudIdentityAuthenticationApi in){
       return in;
    }
 }
