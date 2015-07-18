@@ -303,6 +303,14 @@
             "namespace": "http://docs.openstack.org/compute/ext/interfaces/api/v1.1",
             "alias": "os-attach-interfaces",
             "description": "Attach interface support."
+        },
+        {
+          "updated": "2012-06-21T00:00:00Z",
+          "name": "Hypervisors",
+          "links": [],
+          "namespace": "http://docs.openstack.org/compute/ext/hypervisors/api/v1.1",
+          "alias": "os-hypervisors",
+          "description": "Admin-only hypervisor administration."
         }
     ]
 }

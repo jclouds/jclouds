@@ -1,0 +1,12 @@
+{
+  "hypervisors": [
+    {
+      "id": 1,
+      "hypervisor_hostname": "os-compute1"
+    },
+    {
+      "id": 4,
+      "hypervisor_hostname": "os-compute02"
+    }
+  ]
+}
