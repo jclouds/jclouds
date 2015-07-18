@@ -41,6 +41,20 @@
                         "internalURL": "URL/v2/da0d12be20394afb851716e10a49e4a7",
                         "region": "RegionOne",
                         "adminURL": "URL/v2/da0d12be20394afb851716e10a49e4a7"
+                    },
+                    {
+                        "publicURL": "URL/v2/ba0d12be20394afb851716e10a49e4a8",
+                        "id": "2122bcaa704343c19ad2578410d4961d",
+                        "internalURL": "URL/v2/ba0d12be20394afb851716e10a49e4a8",
+                        "region": "RegionTwo",
+                        "adminURL": "URL/v2/ba0d12be20394afb851716e10a49e4a8"
+                    },
+                    {
+                        "publicURL": "URL/v2/ca0d12be20394afb851716e10a49e4a9",
+                        "id": "2122bcaa704343c19ad2578410d4961d",
+                        "internalURL": "URL/v2/ca0d12be20394afb851716e10a49e4a9",
+                        "region": "RegionThree",
+                        "adminURL": "URL/v2/ca0d12be20394afb851716e10a49e4a9"
                     }
                 ]
             },

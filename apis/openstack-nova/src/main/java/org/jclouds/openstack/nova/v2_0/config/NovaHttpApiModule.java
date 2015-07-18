@@ -16,15 +16,11 @@
  */
 package org.jclouds.openstack.nova.v2_0.config;
 
-import static org.jclouds.openstack.keystone.v2_0.config.KeystoneHttpApiModule.aliasBinder;
-
-import java.net.URI;
-import java.util.Set;
-import java.util.concurrent.TimeUnit;
-
-import javax.inject.Provider;
-import javax.inject.Singleton;
-
+import com.google.common.cache.CacheBuilder;
+import com.google.common.cache.CacheLoader;
+import com.google.common.cache.LoadingCache;
+import com.google.inject.Provides;
+import com.google.inject.multibindings.MapBinder;
 import org.jclouds.http.HttpErrorHandler;
 import org.jclouds.http.annotation.ClientError;
 import org.jclouds.http.annotation.Redirection;
@@ -38,11 +34,13 @@ import org.jclouds.rest.ConfiguresHttpApi;
 import org.jclouds.rest.config.HttpApiModule;
 import org.jclouds.rest.functions.ImplicitOptionalConverter;
 
-import com.google.common.cache.CacheBuilder;
-import com.google.common.cache.CacheLoader;
-import com.google.common.cache.LoadingCache;
-import com.google.inject.Provides;
-import com.google.inject.multibindings.MapBinder;
+import javax.inject.Provider;
+import javax.inject.Singleton;
+import java.net.URI;
+import java.util.Set;
+import java.util.concurrent.TimeUnit;
+
+import static org.jclouds.openstack.keystone.v2_0.config.KeystoneHttpApiModule.aliasBinder;
 
 /**
  * Configures the Nova connection.
@@ -96,6 +94,8 @@ public class NovaHttpApiModule extends HttpApiModule<NovaApi> {
             URI.create("http://docs.openstack.org/compute/ext/os-volume-attachment-update/api/v2"));
       aliases.addBinding(URI.create(ExtensionNamespaces.ATTACH_INTERFACES)).toInstance(
             URI.create("http://docs.openstack.org/compute/ext/interfaces/api/v1.1"));
+      aliases.addBinding(URI.create(ExtensionNamespaces.HYPERVISORS)).toInstance(
+            URI.create("http://docs.openstack.org/compute/ext/hypervisors/api/v1.1"));
    }
 
    @Provides

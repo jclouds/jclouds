@@ -1,0 +1,40 @@
+{
+  "hypervisors": [
+    {
+      "vcpus_used": 5,
+      "hypervisor_type": "QEMU",
+      "local_gb_used": 51,
+      "vcpus": 16,
+      "hypervisor_hostname": "os-compute1",
+      "memory_mb_used": 7168,
+      "memory_mb": 20079,
+      "current_workload": 0,
+      "cpu_info": "{\"vendor\": \"Intel\", \"model\": \"Westmere\", \"arch\": \"x86_64\", \"features\": [\"pge\", \"avx\", \"clflush\", \"sep\", \"syscall\", \"vme\", \"tsc\", \"xsave\", \"vmx\", \"cmov\", \"ssse3\", \"pat\", \"lm\", \"msr\", \"nx\", \"fxsr\", \"sse4.1\", \"pae\", \"sse4.2\", \"pclmuldq\", \"mmx\", \"osxsave\", \"cx8\", \"mce\", \"de\", \"aes\", \"ht\", \"pse\", \"lahf_lm\", \"popcnt\", \"mca\", \"apic\", \"sse\", \"ds\", \"pni\", \"rdtscp\", \"sse2\", \"ss\", \"hypervisor\", \"pcid\", \"fpu\", \"cx16\", \"pse36\", \"mtrr\", \"x2apic\"], \"topology\": {\"cores\": 4, \"threads\": 1, \"sockets\": 1}}",
+      "running_vms": 2,
+      "free_disk_gb": 144,
+      "hypervisor_version": 2000000,
+      "disk_available_least": 131,
+      "local_gb": 195,
+      "free_ram_mb": 12911,
+      "id": 1
+    },
+    {
+      "vcpus_used": 8,
+      "hypervisor_type": "QEMU",
+      "local_gb_used": 130,
+      "vcpus": 16,
+      "hypervisor_hostname": "os-compute02",
+      "memory_mb_used": 14848,
+      "memory_mb": 20079,
+      "current_workload": 0,
+      "cpu_info": "{\"vendor\": \"Intel\", \"model\": \"Westmere\", \"arch\": \"x86_64\", \"features\": [\"pge\", \"avx\", \"clflush\", \"sep\", \"syscall\", \"vme\", \"tsc\", \"xsave\", \"vmx\", \"cmov\", \"ssse3\", \"pat\", \"lm\", \"msr\", \"nx\", \"fxsr\", \"sse4.1\", \"pae\", \"sse4.2\", \"pclmuldq\", \"mmx\", \"osxsave\", \"cx8\", \"mce\", \"de\", \"aes\", \"ht\", \"pse\", \"lahf_lm\", \"popcnt\", \"mca\", \"apic\", \"sse\", \"ds\", \"pni\", \"rdtscp\", \"sse2\", \"ss\", \"hypervisor\", \"pcid\", \"fpu\", \"cx16\", \"pse36\", \"mtrr\", \"x2apic\"], \"topology\": {\"cores\": 4, \"threads\": 1, \"sockets\": 1}}",
+      "running_vms": 3,
+      "free_disk_gb": 65,
+      "hypervisor_version": 2000000,
+      "disk_available_least": 38,
+      "local_gb": 195,
+      "free_ram_mb": 5231,
+      "id": 4
+    }
+  ]
+}

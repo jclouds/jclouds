@@ -16,9 +16,8 @@
  */
 package org.jclouds.openstack.nova.v2_0;
 
-import java.io.Closeable;
-import java.util.Set;
-
+import com.google.common.base.Optional;
+import com.google.inject.Provides;
 import org.jclouds.location.Region;
 import org.jclouds.location.functions.RegionToEndpoint;
 import org.jclouds.openstack.nova.v2_0.extensions.AttachInterfaceApi;
@@ -29,6 +28,7 @@ import org.jclouds.openstack.nova.v2_0.extensions.FloatingIPApi;
 import org.jclouds.openstack.nova.v2_0.extensions.FloatingIPPoolApi;
 import org.jclouds.openstack.nova.v2_0.extensions.HostAdministrationApi;
 import org.jclouds.openstack.nova.v2_0.extensions.HostAggregateApi;
+import org.jclouds.openstack.nova.v2_0.extensions.HypervisorApi;
 import org.jclouds.openstack.nova.v2_0.extensions.KeyPairApi;
 import org.jclouds.openstack.nova.v2_0.extensions.QuotaApi;
 import org.jclouds.openstack.nova.v2_0.extensions.SecurityGroupApi;
@@ -46,8 +46,8 @@ import org.jclouds.openstack.v2_0.features.ExtensionApi;
 import org.jclouds.rest.annotations.Delegate;
 import org.jclouds.rest.annotations.EndpointParam;
 
-import com.google.common.base.Optional;
-import com.google.inject.Provides;
+import java.io.Closeable;
+import java.util.Set;
 
 /**
  * Provides access to the OpenStack Compute (Nova) v2 API.
@@ -217,6 +217,17 @@ public interface NovaApi extends Closeable {
     */
    @Delegate
    Optional<QuotaApi> getQuotaApi(
+         @EndpointParam(parser = RegionToEndpoint.class) String region);
+
+   /**
+    * Provides access to Hypervisor features.
+    *
+    * <h3>NOTE</h3>
+    * This API is an extension that may or may not be present in your OpenStack cloud. Use the Optional return type
+    * to determine if it is present.
+    */
+   @Delegate
+   Optional<HypervisorApi> getHypervisorApi(
          @EndpointParam(parser = RegionToEndpoint.class) String region);
 
    /**
