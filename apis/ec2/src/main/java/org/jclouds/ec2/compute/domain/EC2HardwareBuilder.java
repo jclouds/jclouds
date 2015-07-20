@@ -233,7 +233,12 @@ public class EC2HardwareBuilder extends HardwareBuilder {
       virtualizationTypes(VirtualizationType.HVM, VirtualizationType.PARAVIRTUAL);
       return this;
    }
-   
+
+   private EC2HardwareBuilder m4() {
+      virtualizationTypes(VirtualizationType.HVM);
+      return this;
+   }
+
    private EC2HardwareBuilder c3() {
       virtualizationTypes(VirtualizationType.HVM, VirtualizationType.PARAVIRTUAL);
       return this;
@@ -391,7 +396,7 @@ public class EC2HardwareBuilder extends HardwareBuilder {
     * @see InstanceType#T2_LARGE
     */
    public static EC2HardwareBuilder t2_large() {
-      return new EC2HardwareBuilder(InstanceType.T2_LARGE)
+      return new EC2HardwareBuilder(InstanceType.T2_LARGE).t2()
             .ram(8192)
             .processors(ImmutableList.of(new Processor(1.0, 0.4))).rootDeviceType(RootDeviceType.EBS);
    }
@@ -521,7 +526,8 @@ public class EC2HardwareBuilder extends HardwareBuilder {
     * @see InstanceType#M4_XLARGE
     */
    public static EC2HardwareBuilder m4_xlarge() {
-      return new EC2HardwareBuilder(InstanceType.M4_XLARGE).ram(16384)
+      return new EC2HardwareBuilder(InstanceType.M4_XLARGE).m4()
+            .ram(16384)
             .processors(ImmutableList.of(new Processor(4, 3.25)))
             .is64Bit(true)
             .rootDeviceType(RootDeviceType.EBS);
@@ -531,7 +537,8 @@ public class EC2HardwareBuilder extends HardwareBuilder {
     * @see InstanceType#M4_LARGE
     */
    public static EC2HardwareBuilder m4_large() {
-      return new EC2HardwareBuilder(InstanceType.M4_LARGE).ram(8192)
+      return new EC2HardwareBuilder(InstanceType.M4_LARGE).m4()
+            .ram(8192)
             .processors(ImmutableList.of(new Processor(2, 3.25)))
             .is64Bit(true)
             .rootDeviceType(RootDeviceType.EBS);
@@ -541,7 +548,8 @@ public class EC2HardwareBuilder extends HardwareBuilder {
     * @see InstanceType#M4_2XLARGE
     */
    public static EC2HardwareBuilder m4_2xlarge() {
-      return new EC2HardwareBuilder(InstanceType.M4_2XLARGE).ram(32768)
+      return new EC2HardwareBuilder(InstanceType.M4_2XLARGE).m4()
+            .ram(32768)
             .processors(ImmutableList.of(new Processor(8, 3.25)))
             .is64Bit(true)
             .rootDeviceType(RootDeviceType.EBS);
@@ -551,7 +559,8 @@ public class EC2HardwareBuilder extends HardwareBuilder {
     * @see InstanceType#M4_4XLARGE
     */
    public static EC2HardwareBuilder m4_4xlarge() {
-      return new EC2HardwareBuilder(InstanceType.M4_4XLARGE).ram(65536)
+      return new EC2HardwareBuilder(InstanceType.M4_4XLARGE).m4()
+            .ram(65536)
             .processors(ImmutableList.of(new Processor(16, 3.34375)))
             .is64Bit(true)
             .rootDeviceType(RootDeviceType.EBS);
@@ -561,7 +570,8 @@ public class EC2HardwareBuilder extends HardwareBuilder {
     * @see InstanceType#M4_10XLARGE
     */
    public static EC2HardwareBuilder m4_10xlarge() {
-      return new EC2HardwareBuilder(InstanceType.M4_10XLARGE).ram(163840)
+      return new EC2HardwareBuilder(InstanceType.M4_10XLARGE).m4()
+            .ram(163840)
             .processors(ImmutableList.of(new Processor(40.0, 3.1125)))
             .is64Bit(true)
             .rootDeviceType(RootDeviceType.EBS);
@@ -719,7 +729,7 @@ public class EC2HardwareBuilder extends HardwareBuilder {
     * @see InstanceType#D2_XLARGE
     */
    public static EC2HardwareBuilder d2_xlarge() {
-      return new EC2HardwareBuilder(InstanceType.D2_XLARGE)
+      return new EC2HardwareBuilder(InstanceType.D2_XLARGE).d2()
             .ram(31232)
             .processors(ImmutableList.of(new Processor(4.0, 3.5)))
             .volumes(ImmutableList.<Volume>of(
@@ -734,7 +744,7 @@ public class EC2HardwareBuilder extends HardwareBuilder {
     * @see InstanceType#D2_2XLARGE
     */
    public static EC2HardwareBuilder d2_2xlarge() {
-      return new EC2HardwareBuilder(InstanceType.D2_2XLARGE)
+      return new EC2HardwareBuilder(InstanceType.D2_2XLARGE).d2()
             .ram(62464)
             .processors(ImmutableList.of(new Processor(8.0, 3.5)))
             .volumes(ImmutableList.<Volume>of(
@@ -752,7 +762,7 @@ public class EC2HardwareBuilder extends HardwareBuilder {
     * @see InstanceType#D2_4XLARGE
     */
    public static EC2HardwareBuilder d2_4xlarge() {
-      return new EC2HardwareBuilder(InstanceType.D2_4XLARGE)
+      return new EC2HardwareBuilder(InstanceType.D2_4XLARGE).d2()
             .ram(124928)
             .processors(ImmutableList.of(new Processor(16.0, 3.5)))
             .volumes(ImmutableList.<Volume>of(
@@ -776,7 +786,7 @@ public class EC2HardwareBuilder extends HardwareBuilder {
     * @see InstanceType#D2_8XLARGE
     */
    public static EC2HardwareBuilder d2_8xlarge() {
-      return new EC2HardwareBuilder(InstanceType.D2_8XLARGE)
+      return new EC2HardwareBuilder(InstanceType.D2_8XLARGE).d2()
             .ram(249856)
             .processors(ImmutableList.of(new Processor(36.0, 3.5)))
             .volumes(ImmutableList.<Volume>of(
