@@ -27,11 +27,6 @@ public class AzureBlobContainerIntegrationLiveTest extends BaseContainerIntegrat
    }
 
    @Override
-   public void testDelimiter() throws Exception {
-      throw new SkipException("Azure does not use key names for markers");
-   }
-
-   @Override
    public void testListMarkerAfterLastKey() throws Exception {
       throw new SkipException("cannot specify arbitrary markers");
    }

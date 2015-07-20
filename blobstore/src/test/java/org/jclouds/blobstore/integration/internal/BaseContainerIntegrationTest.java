@@ -360,13 +360,13 @@ public class BaseContainerIntegrationTest extends BaseBlobStoreIntegrationTest {
          pageSet = view.getBlobStore().list(containerName, options);
          assertThat(pageSet).hasSize(1);
          assertThat(pageSet.iterator().next().getName()).isEqualTo("asdf");
-         assertThat(pageSet.getNextMarker()).isEqualTo("asdf");
+         assertThat(pageSet.getNextMarker()).isNotNull();
 
          options.afterMarker(pageSet.getNextMarker());
          pageSet = view.getBlobStore().list(containerName, options);
          assertThat(pageSet).hasSize(1);
          assertThat(pageSet.iterator().next().getName()).isEqualTo("boo/");
-         assertThat(pageSet.getNextMarker()).isEqualTo("boo/");
+         assertThat(pageSet.getNextMarker()).isNotNull();
 
          options.afterMarker(pageSet.getNextMarker());
          pageSet = view.getBlobStore().list(containerName, options);
@@ -379,7 +379,7 @@ public class BaseContainerIntegrationTest extends BaseBlobStoreIntegrationTest {
          pageSet = view.getBlobStore().list(containerName, options);
          assertThat(pageSet).hasSize(1);
          assertThat(pageSet.iterator().next().getName()).isEqualTo("boo/bar");
-         assertThat(pageSet.getNextMarker()).isEqualTo("boo/bar");
+         assertThat(pageSet.getNextMarker()).isNotNull();
 
          options.afterMarker(pageSet.getNextMarker());
          pageSet = view.getBlobStore().list(containerName, options);

@@ -22,7 +22,8 @@ public interface PageSet<T> extends Set<T> {
 
    /**
     * If there is a next marker, then the set is incomplete and you should issue another command to
-    * retrieve the rest, setting the option {@code marker} to this value 
+    * retrieve the rest, setting the option {@code marker} to this value.  Some providers like Azure
+    * have opaque markers so portable code should not rely on the actual values.
     * 
     * @return next marker, or null if list is complete
     */
