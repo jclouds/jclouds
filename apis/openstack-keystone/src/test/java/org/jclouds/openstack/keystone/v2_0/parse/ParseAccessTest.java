@@ -39,6 +39,7 @@ import static org.jclouds.openstack.v2_0.ServiceType.IMAGE;
 import static org.jclouds.openstack.v2_0.ServiceType.NETWORK;
 import static org.jclouds.openstack.v2_0.ServiceType.OBJECT_STORE;
 import static org.jclouds.openstack.v2_0.ServiceType.QUEUES;
+import static org.jclouds.openstack.v2_0.ServiceType.SHARED_FILESYSTEM;
 
 
 @Test(groups = "unit", testName = "ParseAccessTest")
@@ -128,6 +129,13 @@ public class ParseAccessTest extends BaseItemParserTest<Access> {
                         .publicURL("http://172.16.0.1:8776/v1/50cdb4c60374463198695d9f798fa34d")
                         .internalURL("http://10.0.2.15:8776/v1/50cdb4c60374463198695d9f798fa34d")
                         .adminURL("http://10.0.2.15:8776/v1/50cdb4c60374463198695d9f798fa34d")
+                        .region("RegionOne").build()).build())
+            .service(Service.builder().name("manila").type(SHARED_FILESYSTEM)
+                  .endpoint(Endpoint.builder()
+                        .id("c06b43bc23e44be6b079ac319718014e")
+                        .publicURL("http://172.16.0.1:8786/v1/50cdb4c60374463198695d9f798fa34d")
+                        .internalURL("http://10.0.2.15:8786/v1/50cdb4c60374463198695d9f798fa34d")
+                        .adminURL("http://10.0.2.15:8786/v1/50cdb4c60374463198695d9f798fa34d")
                         .region("RegionOne").build()).build())
             .service(Service.builder().name("trove").type(DATABASE)
                   .endpoint(Endpoint.builder()

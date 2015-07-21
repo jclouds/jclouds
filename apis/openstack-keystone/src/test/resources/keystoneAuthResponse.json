@@ -155,6 +155,20 @@
                 "endpoints_links": []
             },
             {
+                "type": "share",
+                "name": "manila",
+                "endpoints": [
+                    {
+                        "adminURL": "http://10.0.2.15:8786/v1/50cdb4c60374463198695d9f798fa34d",
+                        "region": "RegionOne",
+                        "internalURL": "http://10.0.2.15:8786/v1/50cdb4c60374463198695d9f798fa34d",
+                        "id": "c06b43bc23e44be6b079ac319718014e",
+                        "publicURL": "http://172.16.0.1:8786/v1/50cdb4c60374463198695d9f798fa34d"
+                    }
+                ],
+                "endpoints_links": []
+            },
+            {
                 "type": "database",
                 "name": "trove",
                 "endpoints": [

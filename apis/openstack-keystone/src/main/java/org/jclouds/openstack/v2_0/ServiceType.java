@@ -72,6 +72,11 @@ public final class ServiceType {
     */
    public static final String CDN = "cdn";
 
+   /**
+    * Shared Filsystem Service (Manila)
+    */
+   public static final String SHARED_FILESYSTEM = "share";
+
    private ServiceType() {
       throw new AssertionError("intentionally unimplemented");
    }
