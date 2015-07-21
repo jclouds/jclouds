@@ -187,6 +187,8 @@ public class BaseContainerIntegrationTest extends BaseBlobStoreIntegrationTest {
                container);
          assert container.getNextMarker() == null;
 
+         container = view.getBlobStore().list(containerName, afterMarker("z"));
+         assertThat(container.getNextMarker()).isNull();
       } finally {
          returnContainer(containerName);
       }
