@@ -16,19 +16,23 @@
  */
 package org.jclouds.softlayer.binders;
 
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.ImmutableSet;
-import com.google.common.collect.Lists;
-import com.google.common.collect.Sets;
+import static com.google.common.base.Preconditions.checkArgument;
+import static com.google.common.base.Preconditions.checkNotNull;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
+import javax.inject.Inject;
 
 import org.jclouds.http.HttpRequest;
 import org.jclouds.json.Json;
 import org.jclouds.rest.Binder;
-import org.jclouds.softlayer.compute.strategy.SoftLayerComputeServiceAdapter;
 import org.jclouds.softlayer.domain.SecuritySshKey;
 import org.jclouds.softlayer.domain.VirtualGuest;
 import org.jclouds.softlayer.domain.VirtualGuestBlockDevice;
+import org.jclouds.softlayer.domain.VirtualGuestNetworkComponent;
 import org.jclouds.softlayer.domain.internal.BlockDevice;
 import org.jclouds.softlayer.domain.internal.BlockDeviceTemplateGroup;
 import org.jclouds.softlayer.domain.internal.Datacenter;
@@ -38,20 +42,18 @@ import org.jclouds.softlayer.domain.internal.PrimaryBackendNetworkComponent;
 import org.jclouds.softlayer.domain.internal.PrimaryNetworkComponent;
 import org.jclouds.softlayer.domain.internal.TemplateObject;
 
-import javax.inject.Inject;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
-import static com.google.common.base.Preconditions.checkArgument;
-import static com.google.common.base.Preconditions.checkNotNull;
+import com.google.common.base.Function;
+import com.google.common.collect.FluentIterable;
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.Lists;
+import com.google.common.collect.Sets;
 
 /**
  * Converts a VirtualGuest into a json string valid for creating a CCI via softlayer api
  * The string is set into the payload of the HttpRequest
- * 
+ *
  */
 public class VirtualGuestToJson implements Binder {
 
@@ -88,7 +90,17 @@ public class VirtualGuestToJson implements Binder {
       boolean localDisk = virtualGuest.isLocalDiskFlag();
 
       String datacenterName = checkNotNull(virtualGuest.getDatacenter().getName(), "datacenterName");
-      Set<NetworkComponent> networkComponents = createNetworkComponents(virtualGuest);
+      Set<VirtualGuestNetworkComponent> virtualGuestNetworkComponents = virtualGuest.getVirtualGuestNetworkComponents();
+      Set<NetworkComponent> networkComponents = Sets.newHashSet();
+      if (virtualGuestNetworkComponents != null) {
+         networkComponents = FluentIterable.from(virtualGuestNetworkComponents)
+                 .transform(new Function<VirtualGuestNetworkComponent, NetworkComponent>() {
+                    @Override
+                    public NetworkComponent apply(VirtualGuestNetworkComponent virtualGuestNetworkComponent) {
+                       return new NetworkComponent(virtualGuestNetworkComponent.getSpeed());
+                    }
+                 }).toSet();
+      }
 
       templateObjectBuilder.hostname(hostname)
                            .domain(domain)
@@ -98,9 +110,11 @@ public class VirtualGuestToJson implements Binder {
                            .localDiskFlag(localDisk)
                            .dedicatedAccountHostOnlyFlag(virtualGuest.isDedicatedAccountHostOnly())
                            .privateNetworkOnlyFlag(virtualGuest.isPrivateNetworkOnly())
-                           .datacenter(new Datacenter(datacenterName))
-                           .networkComponents(networkComponents);
+                           .datacenter(new Datacenter(datacenterName));
 
+      if (!networkComponents.isEmpty()) {
+         templateObjectBuilder.networkComponents(networkComponents);
+      }
       if (virtualGuest.getOperatingSystem() != null) {
          String operatingSystemReferenceCode = checkNotNull(virtualGuest.getOperatingSystem()
                  .getOperatingSystemReferenceCode(), "operatingSystemReferenceCode");
@@ -152,23 +166,6 @@ public class VirtualGuestToJson implements Binder {
       }
       Collections.sort(blockDevices, new BlockDevicesComparator());
       return ImmutableList.copyOf(blockDevices);
-   }
-
-   private Set<NetworkComponent> createNetworkComponents(VirtualGuest virtualGuest) {
-      if (virtualGuest.getPrimaryNetworkComponent() == null && virtualGuest.getPrimaryBackendNetworkComponent() == null) {
-         return null;
-      }
-      ImmutableSet.Builder networkComponents = ImmutableSet.builder();
-      int maxSpeed = SoftLayerComputeServiceAdapter.DEFAULT_MAX_PORT_SPEED;
-
-      if (virtualGuest.getPrimaryNetworkComponent() != null && virtualGuest.getPrimaryNetworkComponent().getMaxSpeed() > maxSpeed) {
-         maxSpeed = virtualGuest.getPrimaryNetworkComponent().getMaxSpeed();
-      }
-      if (virtualGuest.getPrimaryBackendNetworkComponent() != null && virtualGuest.getPrimaryBackendNetworkComponent().getMaxSpeed() > maxSpeed) {
-         maxSpeed = virtualGuest.getPrimaryBackendNetworkComponent().getMaxSpeed();
-      }
-      networkComponents.add(new NetworkComponent(maxSpeed));
-      return networkComponents.build();
    }
 
    public class BlockDevicesComparator implements Comparator<BlockDevice> {

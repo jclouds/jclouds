@@ -22,8 +22,10 @@ import java.util.List;
 import java.util.Map;
 
 import org.jclouds.compute.options.TemplateOptions;
+import org.jclouds.domain.LoginCredentials;
+import org.jclouds.javax.annotation.Nullable;
+import org.jclouds.scriptbuilder.domain.Statement;
 
-import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableList;
 import com.google.common.net.InternetDomainName;
 
@@ -32,35 +34,35 @@ import com.google.common.net.InternetDomainName;
  * {@link org.jclouds.compute.ComputeService#createNodesInGroup(String, int, TemplateOptions)} and
  * {@link org.jclouds.compute.ComputeService#createNodesInGroup(String, int, TemplateOptions)}
  * operations on the <em>gogrid</em> provider.
- * 
+ *
  * <h2>Usage</h2> The recommended way to instantiate a
  * {@link SoftLayerTemplateOptions} object is to statically import
  * {@code SoftLayerTemplateOptions.*} and invoke a static creation method
  * followed by an instance mutator (if needed):
  * <p>
- * 
+ *
  * <pre>
  * import static org.jclouds.compute.options.SoftLayerTemplateOptions.Builder.*;
  * ComputeService client = // get connection
  * templateBuilder.options(inboundPorts(22, 80, 8080, 443));
  * Set&lt;? extends NodeMetadata&gt; set = client.createNodesInGroup(tag, 2, templateBuilder.build());
  * </pre>
- * 
+ *
  */
 public class SoftLayerTemplateOptions extends TemplateOptions implements Cloneable {
 
    protected String domainName = "jclouds.org";
-   protected Optional<List<Integer>> blockDevices = Optional.absent();
-   protected Optional<String> diskType = Optional.absent();
-   protected Optional<Integer> portSpeed = Optional.absent();
-   protected Optional<String> userData = Optional.absent();
-   protected Optional<Integer> primaryNetworkComponentNetworkVlanId = Optional.absent();
-   protected Optional<Integer> primaryBackendNetworkComponentNetworkVlanId = Optional.absent();
-   protected Optional<Boolean> hourlyBillingFlag = Optional.absent();
-   protected Optional<Boolean> dedicatedAccountHostOnlyFlag = Optional.absent();
-   protected Optional<Boolean> privateNetworkOnlyFlag = Optional.absent();
-   protected Optional<String> postInstallScriptUri = Optional.absent();
-   protected Optional<List<Integer>> sshKeys = Optional.absent();
+   protected List<Integer> blockDevices = ImmutableList.of();
+   protected String diskType;
+   protected Integer portSpeed;
+   protected String userData;
+   protected Integer primaryNetworkComponentNetworkVlanId;
+   protected Integer primaryBackendNetworkComponentNetworkVlanId;
+   protected Boolean hourlyBillingFlag;
+   protected Boolean dedicatedAccountHostOnlyFlag;
+   protected Boolean privateNetworkOnlyFlag;
+   protected String postInstallScriptUri;
+   protected List<Integer> sshKeys = ImmutableList.of();
 
    @Override
    public SoftLayerTemplateOptions clone() {
@@ -75,35 +77,19 @@ public class SoftLayerTemplateOptions extends TemplateOptions implements Cloneab
       if (to instanceof SoftLayerTemplateOptions) {
          SoftLayerTemplateOptions eTo = SoftLayerTemplateOptions.class.cast(to);
          eTo.domainName(domainName);
-         if (blockDevices.isPresent()) {
-            eTo.blockDevices(blockDevices.get());
+         if (!blockDevices.isEmpty()) {
+            eTo.blockDevices(blockDevices);
          }
-         if (diskType.isPresent()) {
-            eTo.diskType(diskType.get());
-         }
-         if (portSpeed.isPresent()) {
-            eTo.portSpeed(portSpeed.get());
-         }
-         if (userData.isPresent()) {
-            eTo.userData(userData.get());
-         }
-         if (primaryNetworkComponentNetworkVlanId.isPresent()) {
-            eTo.primaryNetworkComponentNetworkVlanId(primaryNetworkComponentNetworkVlanId.get());
-         }
-         if (primaryBackendNetworkComponentNetworkVlanId.isPresent()) {
-            eTo.primaryBackendNetworkComponentNetworkVlanId(primaryBackendNetworkComponentNetworkVlanId.get());
-         }
-         if (hourlyBillingFlag.isPresent()) {
-            eTo.hourlyBillingFlag(hourlyBillingFlag.get());
-         }
-         if (dedicatedAccountHostOnlyFlag.isPresent()) {
-            eTo.dedicatedAccountHostOnlyFlag(dedicatedAccountHostOnlyFlag.get());
-         }
-         if (privateNetworkOnlyFlag.isPresent()) {
-            eTo.privateNetworkOnlyFlag(privateNetworkOnlyFlag.get());
-         }
-         if (sshKeys.isPresent()) {
-            eTo.sshKeys(sshKeys.get());
+         eTo.diskType(diskType);
+         eTo.portSpeed(portSpeed);
+         eTo.userData(userData);
+         eTo.primaryNetworkComponentNetworkVlanId(primaryNetworkComponentNetworkVlanId);
+         eTo.primaryBackendNetworkComponentNetworkVlanId(primaryBackendNetworkComponentNetworkVlanId);
+         eTo.hourlyBillingFlag(hourlyBillingFlag);
+         eTo.dedicatedAccountHostOnlyFlag(dedicatedAccountHostOnlyFlag);
+         eTo.privateNetworkOnlyFlag(privateNetworkOnlyFlag);
+         if (!sshKeys.isEmpty()) {
+            eTo.sshKeys(sshKeys);
          }
       }
    }
@@ -111,7 +97,7 @@ public class SoftLayerTemplateOptions extends TemplateOptions implements Cloneab
    /**
     * will replace the default domain used when ordering virtual guests. Note
     * this needs to contain a public suffix!
-    * 
+    *
     * @see org.jclouds.softlayer.features.VirtualGuestApi#createVirtualGuest(org.jclouds.softlayer.domain.VirtualGuest)
     * @see InternetDomainName#hasPublicSuffix
     */
@@ -126,7 +112,7 @@ public class SoftLayerTemplateOptions extends TemplateOptions implements Cloneab
    public SoftLayerTemplateOptions blockDevices(Iterable<Integer> capacities) {
       for (Integer capacity : checkNotNull(capacities, "capacities"))
          checkNotNull(capacity, "all block devices must be non-empty");
-      this.blockDevices = Optional.<List<Integer>> of(ImmutableList.copyOf(capacities));
+      this.blockDevices = ImmutableList.copyOf(capacities);
       return this;
    }
 
@@ -134,61 +120,55 @@ public class SoftLayerTemplateOptions extends TemplateOptions implements Cloneab
       return blockDevices(ImmutableList.copyOf(checkNotNull(capacities, "capacities")));
    }
 
-   public SoftLayerTemplateOptions diskType(String diskType) {
-      checkNotNull(diskType, "diskType was null");
-      this.diskType = Optional.of(diskType);
+   public SoftLayerTemplateOptions diskType(@Nullable String diskType) {
+      this.diskType = diskType;
       return this;
    }
 
-   public SoftLayerTemplateOptions portSpeed(Integer portSpeed) {
-      checkNotNull(portSpeed, "portSpeed was null");
-      this.portSpeed = Optional.of(portSpeed);
+   public SoftLayerTemplateOptions portSpeed(@Nullable Integer portSpeed) {
+      this.portSpeed = portSpeed;
       return this;
    }
 
-   public SoftLayerTemplateOptions userData(String userData) {
-      checkNotNull(userData, "userData was null");
-      this.userData = Optional.of(userData);
+   public SoftLayerTemplateOptions userData(@Nullable String userData) {
+      this.userData = userData;
       return this;
    }
 
-   public SoftLayerTemplateOptions primaryNetworkComponentNetworkVlanId(Integer primaryNetworkComponentNetworkVlanId) {
-      checkNotNull(primaryNetworkComponentNetworkVlanId, "primaryNetworkComponentNetworkVlanId was null");
-      this.primaryNetworkComponentNetworkVlanId = Optional.of(primaryNetworkComponentNetworkVlanId);
+   public SoftLayerTemplateOptions primaryNetworkComponentNetworkVlanId(@Nullable Integer primaryNetworkComponentNetworkVlanId) {
+      this.primaryNetworkComponentNetworkVlanId = primaryNetworkComponentNetworkVlanId;
       return this;
    }
 
-   public SoftLayerTemplateOptions primaryBackendNetworkComponentNetworkVlanId(Integer primaryBackendNetworkComponentNetworkVlanId) {
-      checkNotNull(primaryBackendNetworkComponentNetworkVlanId, "primaryBackendNetworkComponentNetworkVlanId was null");
-      this.primaryBackendNetworkComponentNetworkVlanId = Optional.of(primaryBackendNetworkComponentNetworkVlanId);
+   public SoftLayerTemplateOptions primaryBackendNetworkComponentNetworkVlanId(@Nullable Integer primaryBackendNetworkComponentNetworkVlanId) {
+      this.primaryBackendNetworkComponentNetworkVlanId = primaryBackendNetworkComponentNetworkVlanId;
       return this;
    }
 
-   public SoftLayerTemplateOptions hourlyBillingFlag(boolean hourlyBillingFlag) {
-      this.hourlyBillingFlag = Optional.of(hourlyBillingFlag);
+   public SoftLayerTemplateOptions hourlyBillingFlag(@Nullable Boolean hourlyBillingFlag) {
+      this.hourlyBillingFlag = hourlyBillingFlag;
       return this;
    }
 
-   public SoftLayerTemplateOptions dedicatedAccountHostOnlyFlag(boolean dedicatedAccountHostOnlyFlag) {
-      this.dedicatedAccountHostOnlyFlag = Optional.of(dedicatedAccountHostOnlyFlag);
+   public SoftLayerTemplateOptions dedicatedAccountHostOnlyFlag(@Nullable Boolean dedicatedAccountHostOnlyFlag) {
+      this.dedicatedAccountHostOnlyFlag = dedicatedAccountHostOnlyFlag;
       return this;
    }
 
-   public SoftLayerTemplateOptions privateNetworkOnlyFlag(boolean privateNetworkOnlyFlag) {
-      this.privateNetworkOnlyFlag = Optional.of(privateNetworkOnlyFlag);
+   public SoftLayerTemplateOptions privateNetworkOnlyFlag(@Nullable Boolean privateNetworkOnlyFlag) {
+      this.privateNetworkOnlyFlag = privateNetworkOnlyFlag;
       return this;
    }
 
-   public SoftLayerTemplateOptions postInstallScriptUri(String postInstallScriptUri) {
-      checkNotNull(postInstallScriptUri, "postInstallScriptUri was null");
-      this.postInstallScriptUri = Optional.of(postInstallScriptUri);
+   public SoftLayerTemplateOptions postInstallScriptUri(@Nullable String postInstallScriptUri) {
+      this.postInstallScriptUri = postInstallScriptUri;
       return this;
    }
 
    public SoftLayerTemplateOptions sshKeys(Iterable<Integer> sshKeys) {
       for (Integer sshKey : checkNotNull(sshKeys, "sshKeys"))
          checkNotNull(sshKey, "sshKeys must be non-empty");
-      this.sshKeys = Optional.<List<Integer>> of(ImmutableList.copyOf(sshKeys));
+      this.sshKeys = ImmutableList.copyOf(sshKeys);
       return this;
    }
 
@@ -200,37 +180,35 @@ public class SoftLayerTemplateOptions extends TemplateOptions implements Cloneab
       return domainName;
    }
 
-   public Optional<List<Integer>> getBlockDevices() {
+   public List<Integer> getBlockDevices() {
       return blockDevices;
    }
 
-   public Optional<String> getDiskType() {
+   public String getDiskType() {
       return diskType;
    }
 
-   public Optional<Integer> getPortSpeed() {
+   public Integer getPortSpeed() {
       return portSpeed;
    }
 
-   public Optional<String> getUserData() { return userData; }
+   public String getUserData() { return userData; }
 
-   public Optional<Integer> getPrimaryNetworkComponentNetworkVlanId() { return primaryNetworkComponentNetworkVlanId; }
+   public Integer getPrimaryNetworkComponentNetworkVlanId() { return primaryNetworkComponentNetworkVlanId; }
 
-   public Optional<Integer> getPrimaryBackendNetworkComponentNetworkVlanId() { return primaryBackendNetworkComponentNetworkVlanId; }
+   public Integer getPrimaryBackendNetworkComponentNetworkVlanId() { return primaryBackendNetworkComponentNetworkVlanId; }
 
-   public Optional<Boolean> isHourlyBillingFlag() { return hourlyBillingFlag; }
+   public Boolean isHourlyBillingFlag() { return hourlyBillingFlag; }
 
-   public Optional<Boolean> isDedicatedAccountHostOnlyFlag() { return dedicatedAccountHostOnlyFlag; }
+   public Boolean isDedicatedAccountHostOnlyFlag() { return dedicatedAccountHostOnlyFlag; }
 
-   public Optional<Boolean> isPrivateNetworkOnlyFlag() { return privateNetworkOnlyFlag; }
+   public Boolean isPrivateNetworkOnlyFlag() { return privateNetworkOnlyFlag; }
 
-   public Optional<String> getPostInstallScriptUri() { return postInstallScriptUri; }
+   public String getPostInstallScriptUri() { return postInstallScriptUri; }
 
-   public Optional<List<Integer>> getSshKeys() {
+   public List<Integer> getSshKeys() {
       return sshKeys;
    }
-
-   public static final SoftLayerTemplateOptions NONE = new SoftLayerTemplateOptions();
 
    public static class Builder {
 
@@ -239,7 +217,7 @@ public class SoftLayerTemplateOptions extends TemplateOptions implements Cloneab
        */
       public static SoftLayerTemplateOptions domainName(String domainName) {
          SoftLayerTemplateOptions options = new SoftLayerTemplateOptions();
-         return SoftLayerTemplateOptions.class.cast(options.domainName(domainName));
+         return options.domainName(domainName);
       }
 
       /**
@@ -247,12 +225,12 @@ public class SoftLayerTemplateOptions extends TemplateOptions implements Cloneab
        */
       public static SoftLayerTemplateOptions blockDevices(Integer... capacities) {
          SoftLayerTemplateOptions options = new SoftLayerTemplateOptions();
-         return SoftLayerTemplateOptions.class.cast(options.blockDevices(capacities));
+         return options.blockDevices(capacities);
       }
 
       public static SoftLayerTemplateOptions blockDevices(Iterable<Integer> capacities) {
          SoftLayerTemplateOptions options = new SoftLayerTemplateOptions();
-         return SoftLayerTemplateOptions.class.cast(options.blockDevices(capacities));
+         return options.blockDevices(capacities);
       }
 
       /**
@@ -260,7 +238,7 @@ public class SoftLayerTemplateOptions extends TemplateOptions implements Cloneab
        */
       public static SoftLayerTemplateOptions diskType(String diskType) {
          SoftLayerTemplateOptions options = new SoftLayerTemplateOptions();
-         return SoftLayerTemplateOptions.class.cast(options.diskType(diskType));
+         return options.diskType(diskType);
       }
 
       /**
@@ -268,7 +246,7 @@ public class SoftLayerTemplateOptions extends TemplateOptions implements Cloneab
        */
       public static SoftLayerTemplateOptions portSpeed(Integer portSpeed) {
          SoftLayerTemplateOptions options = new SoftLayerTemplateOptions();
-         return SoftLayerTemplateOptions.class.cast(options.portSpeed(portSpeed));
+         return options.portSpeed(portSpeed);
       }
 
       /**
@@ -276,7 +254,7 @@ public class SoftLayerTemplateOptions extends TemplateOptions implements Cloneab
        */
       public static SoftLayerTemplateOptions userData(String userData) {
          SoftLayerTemplateOptions options = new SoftLayerTemplateOptions();
-         return SoftLayerTemplateOptions.class.cast(options.userData(userData));
+         return options.userData(userData);
       }
 
       /**
@@ -284,7 +262,7 @@ public class SoftLayerTemplateOptions extends TemplateOptions implements Cloneab
        */
       public static SoftLayerTemplateOptions primaryNetworkComponentNetworkVlanId(Integer primaryNetworkComponentNetworkVlanId) {
          SoftLayerTemplateOptions options = new SoftLayerTemplateOptions();
-         return SoftLayerTemplateOptions.class.cast(options.primaryNetworkComponentNetworkVlanId(primaryNetworkComponentNetworkVlanId));
+         return options.primaryNetworkComponentNetworkVlanId(primaryNetworkComponentNetworkVlanId);
       }
 
       /**
@@ -292,7 +270,7 @@ public class SoftLayerTemplateOptions extends TemplateOptions implements Cloneab
        */
       public static SoftLayerTemplateOptions primaryBackendNetworkComponentNetworkVlanId(Integer primaryBackendNetworkComponentNetworkVlanId) {
          SoftLayerTemplateOptions options = new SoftLayerTemplateOptions();
-         return SoftLayerTemplateOptions.class.cast(options.primaryBackendNetworkComponentNetworkVlanId(primaryBackendNetworkComponentNetworkVlanId));
+         return options.primaryBackendNetworkComponentNetworkVlanId(primaryBackendNetworkComponentNetworkVlanId);
       }
 
       /**
@@ -300,7 +278,7 @@ public class SoftLayerTemplateOptions extends TemplateOptions implements Cloneab
        */
       public static SoftLayerTemplateOptions hourlyBillingFlag(boolean hourlyBillingFlag) {
          SoftLayerTemplateOptions options = new SoftLayerTemplateOptions();
-         return SoftLayerTemplateOptions.class.cast(options.hourlyBillingFlag(hourlyBillingFlag));
+         return options.hourlyBillingFlag(hourlyBillingFlag);
       }
 
       /**
@@ -308,7 +286,7 @@ public class SoftLayerTemplateOptions extends TemplateOptions implements Cloneab
        */
       public static SoftLayerTemplateOptions dedicatedAccountHostOnlyFlag(boolean dedicatedAccountHostOnlyFlag) {
          SoftLayerTemplateOptions options = new SoftLayerTemplateOptions();
-         return SoftLayerTemplateOptions.class.cast(options.dedicatedAccountHostOnlyFlag(dedicatedAccountHostOnlyFlag));
+         return options.dedicatedAccountHostOnlyFlag(dedicatedAccountHostOnlyFlag);
       }
 
       /**
@@ -316,7 +294,7 @@ public class SoftLayerTemplateOptions extends TemplateOptions implements Cloneab
        */
       public static SoftLayerTemplateOptions privateNetworkOnlyFlag(boolean privateNetworkOnlyFlag) {
          SoftLayerTemplateOptions options = new SoftLayerTemplateOptions();
-         return SoftLayerTemplateOptions.class.cast(options.privateNetworkOnlyFlag(privateNetworkOnlyFlag));
+         return options.privateNetworkOnlyFlag(privateNetworkOnlyFlag);
       }
 
       /**
@@ -324,7 +302,7 @@ public class SoftLayerTemplateOptions extends TemplateOptions implements Cloneab
        */
       public static SoftLayerTemplateOptions postInstallScriptUri(String postInstallScriptUri) {
          SoftLayerTemplateOptions options = new SoftLayerTemplateOptions();
-         return SoftLayerTemplateOptions.class.cast(options.postInstallScriptUri(postInstallScriptUri));
+         return options.postInstallScriptUri(postInstallScriptUri);
       }
 
       /**
@@ -332,22 +310,20 @@ public class SoftLayerTemplateOptions extends TemplateOptions implements Cloneab
        */
       public static SoftLayerTemplateOptions sshKeys(Integer... sshKeys) {
          SoftLayerTemplateOptions options = new SoftLayerTemplateOptions();
-         return SoftLayerTemplateOptions.class.cast(options.sshKeys(sshKeys));
+         return options.sshKeys(sshKeys);
       }
 
       public static SoftLayerTemplateOptions sshKeys(Iterable<Integer> sshKeys) {
          SoftLayerTemplateOptions options = new SoftLayerTemplateOptions();
-         return SoftLayerTemplateOptions.class.cast(options.blockDevices(sshKeys));
+         return options.blockDevices(sshKeys);
       }
-
-      // methods that only facilitate returning the correct object type
 
       /**
        * @see TemplateOptions#inboundPorts(int...)
        */
       public static SoftLayerTemplateOptions inboundPorts(int... ports) {
          SoftLayerTemplateOptions options = new SoftLayerTemplateOptions();
-         return SoftLayerTemplateOptions.class.cast(options.inboundPorts(ports));
+         return options.inboundPorts(ports);
       }
 
       /**
@@ -355,7 +331,23 @@ public class SoftLayerTemplateOptions extends TemplateOptions implements Cloneab
        */
       public static SoftLayerTemplateOptions blockOnPort(int port, int seconds) {
          SoftLayerTemplateOptions options = new SoftLayerTemplateOptions();
-         return SoftLayerTemplateOptions.class.cast(options.blockOnPort(port, seconds));
+         return options.blockOnPort(port, seconds);
+      }
+
+      /**
+       * @see TemplateOptions#installPrivateKey(String)
+       */
+      public static SoftLayerTemplateOptions installPrivateKey(String rsaKey) {
+         SoftLayerTemplateOptions options = new SoftLayerTemplateOptions();
+         return options.installPrivateKey(rsaKey);
+      }
+
+      /**
+       * @see TemplateOptions#authorizePublicKey(String)
+       */
+      public static SoftLayerTemplateOptions authorizePublicKey(String rsaKey) {
+         SoftLayerTemplateOptions options = new SoftLayerTemplateOptions();
+         return options.authorizePublicKey(rsaKey);
       }
 
       /**
@@ -363,15 +355,7 @@ public class SoftLayerTemplateOptions extends TemplateOptions implements Cloneab
        */
       public static SoftLayerTemplateOptions userMetadata(Map<String, String> userMetadata) {
          SoftLayerTemplateOptions options = new SoftLayerTemplateOptions();
-         return SoftLayerTemplateOptions.class.cast(options.userMetadata(userMetadata));
-      }
-
-      /**
-       * @see TemplateOptions#userMetadata(String, String)
-       */
-      public static SoftLayerTemplateOptions userMetadata(String key, String value) {
-         SoftLayerTemplateOptions options = new SoftLayerTemplateOptions();
-         return SoftLayerTemplateOptions.class.cast(options.userMetadata(key, value));
+         return options.userMetadata(userMetadata);
       }
 
       /**
@@ -379,7 +363,7 @@ public class SoftLayerTemplateOptions extends TemplateOptions implements Cloneab
        */
       public static SoftLayerTemplateOptions nodeNames(Iterable<String> nodeNames) {
          SoftLayerTemplateOptions options = new SoftLayerTemplateOptions();
-         return SoftLayerTemplateOptions.class.cast(options.nodeNames(nodeNames));
+         return options.nodeNames(nodeNames);
       }
 
       /**
@@ -387,14 +371,62 @@ public class SoftLayerTemplateOptions extends TemplateOptions implements Cloneab
        */
       public static SoftLayerTemplateOptions networks(Iterable<String> networks) {
          SoftLayerTemplateOptions options = new SoftLayerTemplateOptions();
-         return SoftLayerTemplateOptions.class.cast(options.networks(networks));
+         return options.networks(networks);
       }
-   }
 
+      /**
+       * @see TemplateOptions#overrideLoginUser(String)
+       */
+      public static SoftLayerTemplateOptions overrideLoginUser(String user) {
+         SoftLayerTemplateOptions options = new SoftLayerTemplateOptions();
+         return options.overrideLoginUser(user);
+      }
+
+      /**
+       * @see TemplateOptions#overrideLoginPassword(String)
+       */
+      public static SoftLayerTemplateOptions overrideLoginPassword(String password) {
+         SoftLayerTemplateOptions options = new SoftLayerTemplateOptions();
+         return options.overrideLoginPassword(password);
+      }
+
+      /**
+       * @see TemplateOptions#overrideLoginPrivateKey(String)
+       */
+      public static SoftLayerTemplateOptions overrideLoginPrivateKey(String privateKey) {
+         SoftLayerTemplateOptions options = new SoftLayerTemplateOptions();
+         return options.overrideLoginPrivateKey(privateKey);
+      }
+
+      /**
+       * @see TemplateOptions#overrideAuthenticateSudo(boolean)
+       */
+      public static SoftLayerTemplateOptions overrideAuthenticateSudo(boolean authenticateSudo) {
+         SoftLayerTemplateOptions options = new SoftLayerTemplateOptions();
+         return options.overrideAuthenticateSudo(authenticateSudo);
+      }
+
+      /**
+       * @see TemplateOptions#overrideLoginCredentials(LoginCredentials)
+       */
+      public static SoftLayerTemplateOptions overrideLoginCredentials(LoginCredentials credentials) {
+         SoftLayerTemplateOptions options = new SoftLayerTemplateOptions();
+         return options.overrideLoginCredentials(credentials);
+      }
+
+      /**
+       * @see TemplateOptions#blockUntilRunning(boolean)
+       */
+      public static SoftLayerTemplateOptions blockUntilRunning(boolean blockUntilRunning) {
+         SoftLayerTemplateOptions options = new SoftLayerTemplateOptions();
+         return options.blockUntilRunning(blockUntilRunning);
+      }
+
+   }
    // methods that only facilitate returning the correct object type
 
    /**
-    * @see TemplateOptions#blockOnPort(int, int)
+    * {@inheritDoc}
     */
    @Override
    public SoftLayerTemplateOptions blockOnPort(int port, int seconds) {
@@ -402,7 +434,7 @@ public class SoftLayerTemplateOptions extends TemplateOptions implements Cloneab
    }
 
    /**
-    * @see TemplateOptions#inboundPorts(int...)
+    * {@inheritDoc}
     */
    @Override
    public SoftLayerTemplateOptions inboundPorts(int... ports) {
@@ -410,7 +442,7 @@ public class SoftLayerTemplateOptions extends TemplateOptions implements Cloneab
    }
 
    /**
-    * @see TemplateOptions#authorizePublicKey(String)
+    * {@inheritDoc}
     */
    @Override
    public SoftLayerTemplateOptions authorizePublicKey(String publicKey) {
@@ -418,11 +450,91 @@ public class SoftLayerTemplateOptions extends TemplateOptions implements Cloneab
    }
 
    /**
-    * @see TemplateOptions#installPrivateKey(String)
+    * {@inheritDoc}
     */
    @Override
    public SoftLayerTemplateOptions installPrivateKey(String privateKey) {
       return SoftLayerTemplateOptions.class.cast(super.installPrivateKey(privateKey));
+   }
+
+   /**
+    * {@inheritDoc}
+    */
+   @Override
+   public SoftLayerTemplateOptions blockUntilRunning(boolean blockUntilRunning) {
+      return SoftLayerTemplateOptions.class.cast(super.blockUntilRunning(blockUntilRunning));
+   }
+
+   /**
+    * {@inheritDoc}
+    */
+   @Override
+   public SoftLayerTemplateOptions dontAuthorizePublicKey() {
+      return SoftLayerTemplateOptions.class.cast(super.dontAuthorizePublicKey());
+   }
+
+   /**
+    * {@inheritDoc}
+    */
+   @Override
+   public SoftLayerTemplateOptions nameTask(String name) {
+      return SoftLayerTemplateOptions.class.cast(super.nameTask(name));
+   }
+
+   /**
+    * {@inheritDoc}
+    */
+   @Override
+   public SoftLayerTemplateOptions runAsRoot(boolean runAsRoot) {
+      return SoftLayerTemplateOptions.class.cast(super.runAsRoot(runAsRoot));
+   }
+
+   /**
+    * {@inheritDoc}
+    */
+   @Override
+   public SoftLayerTemplateOptions runScript(Statement script) {
+      return SoftLayerTemplateOptions.class.cast(super.runScript(script));
+   }
+
+   /**
+    * {@inheritDoc}
+    */
+   @Override
+   public SoftLayerTemplateOptions overrideLoginCredentials(LoginCredentials overridingCredentials) {
+      return SoftLayerTemplateOptions.class.cast(super.overrideLoginCredentials(overridingCredentials));
+   }
+
+   /**
+    * {@inheritDoc}
+    */
+   @Override
+   public SoftLayerTemplateOptions overrideLoginPassword(String password) {
+      return SoftLayerTemplateOptions.class.cast(super.overrideLoginPassword(password));
+   }
+
+   /**
+    * {@inheritDoc}
+    */
+   @Override
+   public SoftLayerTemplateOptions overrideLoginPrivateKey(String privateKey) {
+      return SoftLayerTemplateOptions.class.cast(super.overrideLoginPrivateKey(privateKey));
+   }
+
+   /**
+    * {@inheritDoc}
+    */
+   @Override
+   public SoftLayerTemplateOptions overrideLoginUser(String loginUser) {
+      return SoftLayerTemplateOptions.class.cast(super.overrideLoginUser(loginUser));
+   }
+
+   /**
+    * {@inheritDoc}
+    */
+   @Override
+   public SoftLayerTemplateOptions overrideAuthenticateSudo(boolean authenticateSudo) {
+      return SoftLayerTemplateOptions.class.cast(super.overrideAuthenticateSudo(authenticateSudo));
    }
 
    /**
