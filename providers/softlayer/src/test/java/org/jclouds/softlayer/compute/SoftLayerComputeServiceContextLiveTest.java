@@ -67,9 +67,11 @@ public class SoftLayerComputeServiceContextLiveTest extends BaseComputeServiceCo
       // test passing custom options
       SoftLayerTemplateOptions options = template.getOptions().as(SoftLayerTemplateOptions.class);
       options.domainName("live.org");
+      options.portSpeed(100);
 
       //tags
       options.tags(ImmutableList.of("jclouds"));
+
       Set<? extends NodeMetadata> nodes = context.getComputeService().createNodesInGroup(name, numNodes, template);
       assertEquals(numNodes, nodes.size(), "wrong number of nodes");
       for (NodeMetadata node : nodes) {

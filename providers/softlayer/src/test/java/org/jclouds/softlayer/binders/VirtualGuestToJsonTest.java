@@ -25,9 +25,11 @@ import org.jclouds.softlayer.domain.Datacenter;
 import org.jclouds.softlayer.domain.OperatingSystem;
 import org.jclouds.softlayer.domain.VirtualGuest;
 import org.jclouds.softlayer.domain.VirtualGuestBlockDeviceTemplateGroup;
+import org.jclouds.softlayer.domain.VirtualGuestNetworkComponent;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
+import com.google.common.collect.ImmutableSet;
 import com.google.gson.Gson;
 
 @Test(groups = "unit", testName = "VirtualGuestToJsonTest")
@@ -56,6 +58,7 @@ public class VirtualGuestToJsonTest {
                       .operatingSystemReferenceCode("UBUNTU_12_64")
                       .build())
               .localDiskFlag(true)
+              .networkComponents(ImmutableSet.<VirtualGuestNetworkComponent>of())
               .build();
 
       request = binder.bindToRequest(request, virtualGuestWithOS);
@@ -80,6 +83,7 @@ public class VirtualGuestToJsonTest {
                       .globalIdentifier("ffaafa98-4b4a-4fa7-b9f7-b1bad5ec50f0")
                       .build())
               .localDiskFlag(true)
+              .networkComponents(ImmutableSet.<VirtualGuestNetworkComponent>of())
               .build();
 
       request = binder.bindToRequest(request, virtualGuestWithVirtualGuestBlockDeviceTemplateGroup);
