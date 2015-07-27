@@ -20,6 +20,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 import java.beans.ConstructorProperties;
 import java.security.PrivateKey;
+import java.security.PublicKey;
 import java.security.cert.X509Certificate;
 
 import org.jclouds.javax.annotation.Nullable;
@@ -41,6 +42,7 @@ public class Client {
       private String clientname;
       private String name;
       private boolean validator;
+      private PublicKey publicKey;
 
       public Builder certificate(X509Certificate certificate) {
          this.certificate = checkNotNull(certificate, "certificate");
@@ -49,6 +51,11 @@ public class Client {
 
       public Builder privateKey(PrivateKey privateKey) {
          this.privateKey = checkNotNull(privateKey, "privateKey");
+         return this;
+      }
+
+      public Builder publicKey(PublicKey publicKey) {
+         this.publicKey = checkNotNull(publicKey, "publicKey");
          return this;
       }
 
@@ -73,27 +80,34 @@ public class Client {
       }
 
       public Client build() {
-         return new Client(certificate, orgname, clientname, name, validator, privateKey);
+         return new Client(certificate, orgname, clientname, name, validator, privateKey, publicKey);
       }
    }
 
    private final X509Certificate certificate;
    @SerializedName("private_key")
    private final PrivateKey privateKey;
+   @SerializedName("public_key")
+   private final PublicKey publicKey;
    private final String orgname;
    private final String clientname;
    private final String name;
    private final boolean validator;
 
-   @ConstructorProperties({ "certificate", "orgname", "clientname", "name", "validator", "private_key" })
+   @ConstructorProperties({ "certificate", "orgname", "clientname", "name", "validator", "private_key", "public_key"})
    protected Client(X509Certificate certificate, String orgname, String clientname, String name, boolean validator,
-         @Nullable PrivateKey privateKey) {
+         @Nullable PrivateKey privateKey, @Nullable PublicKey publicKey) {
       this.certificate = certificate;
       this.orgname = orgname;
       this.clientname = clientname;
       this.name = name;
       this.validator = validator;
       this.privateKey = privateKey;
+      this.publicKey = publicKey;
+   }
+
+   public PublicKey getPublicKey() {
+     return publicKey;
    }
 
    public PrivateKey getPrivateKey() {
@@ -129,6 +143,7 @@ public class Client {
       result = prime * result + ((name == null) ? 0 : name.hashCode());
       result = prime * result + ((orgname == null) ? 0 : orgname.hashCode());
       result = prime * result + ((privateKey == null) ? 0 : privateKey.hashCode());
+      result = prime * result + ((publicKey == null) ? 0 : publicKey.hashCode());
       result = prime * result + (validator ? 1231 : 1237);
       return result;
    }
@@ -162,6 +177,11 @@ public class Client {
             return false;
       } else if (!orgname.equals(other.orgname))
          return false;
+      if (publicKey == null) {
+        if (other.publicKey != null)
+          return false;
+      } else if (!publicKey.equals(other.publicKey))
+        return false;
       if (privateKey == null) {
          if (other.privateKey != null)
             return false;
@@ -175,7 +195,7 @@ public class Client {
    @Override
    public String toString() {
       return "Client [name=" + name + ", clientname=" + clientname + ", orgname=" + orgname + ", isValidator="
-            + validator + ", certificate=" + certificate + ", privateKey=" + (privateKey == null ? "not " : "")
+            + validator + ", certificate=" + certificate + ", publicKey=" + publicKey + ", privateKey=" + (privateKey == null ? "not " : "")
             + "present]";
    }
 

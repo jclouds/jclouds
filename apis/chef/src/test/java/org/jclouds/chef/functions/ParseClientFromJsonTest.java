@@ -21,6 +21,7 @@ import static org.testng.Assert.assertEquals;
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 import java.security.PrivateKey;
+import java.security.PublicKey;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
 import java.security.spec.InvalidKeySpecException;
@@ -50,6 +51,9 @@ import com.google.inject.Injector;
 import com.google.inject.Key;
 import com.google.inject.TypeLiteral;
 
+import java.security.interfaces.RSAPrivateCrtKey;
+import java.security.spec.RSAPublicKeySpec;
+
 /**
  * Tests behavior of {@code ParseClientFromJson}
  */
@@ -62,9 +66,10 @@ public class ParseClientFromJsonTest {
    private Crypto crypto;
    private PrivateKey privateKey;
    private X509Certificate certificate;
+   private PublicKey publicKey;
 
    @BeforeTest
-   protected void setUpInjector() throws IOException, CertificateException, InvalidKeySpecException {
+   protected void setUpInjector() throws IOException, CertificateException, InvalidKeySpecException, NoSuchAlgorithmException {
       Injector injector = Guice.createInjector(new AbstractModule() {
          @Override
          protected void configure() {
@@ -77,23 +82,51 @@ public class ParseClientFromJsonTest {
       crypto = injector.getInstance(Crypto.class);
       certificate = Pems.x509Certificate(ByteSource.wrap(CERTIFICATE.getBytes(Charsets.UTF_8)), null);
       privateKey = crypto.rsaKeyFactory().generatePrivate(Pems.privateKeySpec(ByteSource.wrap(PRIVATE_KEY.getBytes(Charsets.UTF_8))));
+
+      RSAPrivateCrtKey privk = (RSAPrivateCrtKey)privateKey;
+      RSAPublicKeySpec publicKeySpec = new java.security.spec.RSAPublicKeySpec(privk.getModulus(), privk.getPublicExponent());
+      publicKey = crypto.rsaKeyFactory().generatePublic(publicKeySpec);
    }
 
    @SuppressWarnings("resource")
-   public void test() throws IOException, CertificateException, NoSuchAlgorithmException {
+   public void testClientWithPubKey() throws IOException, CertificateException, NoSuchAlgorithmException {
 
       Client user = Client.builder().certificate(certificate).orgname("jclouds").clientname("adriancole-jcloudstest")
-            .name("adriancole-jcloudstest").isValidator(false).privateKey(privateKey).build();
-
-      byte[] encrypted = ByteStreams2.toByteArrayAndClose(new RSAEncryptingPayload(new JCECrypto(), Payloads.newPayload("fooya"), user
-            .getCertificate().getPublicKey()).openStream());
-
-      assertEquals(
-            ByteStreams2.toByteArrayAndClose(new RSADecryptingPayload(new JCECrypto(), Payloads.newPayload(encrypted), user.getPrivateKey()).openStream()),
-            "fooya".getBytes());
+            .name("adriancole-jcloudstest").isValidator(false).privateKey(privateKey).publicKey(publicKey).build();
 
       assertEquals(
             handler.apply(HttpResponse.builder().statusCode(200).message("ok")
                   .payload(ParseClientFromJsonTest.class.getResourceAsStream("/client.json")).build()), user);
    }
+
+   @SuppressWarnings("resource")
+   public void testClientWithoutPubKey() throws IOException, CertificateException, NoSuchAlgorithmException {
+
+      Client user = Client.builder().certificate(certificate).orgname("jclouds").clientname("adriancole-jcloudstest")
+              .name("adriancole-jcloudstest").isValidator(false).privateKey(privateKey).build();
+
+      assertEquals(
+              handler.apply(HttpResponse.builder().statusCode(200).message("ok")
+                      .payload(ParseClientFromJsonTest.class.getResourceAsStream("/client-no-pub-key.json")).build()), user);
+   }
+
+   @SuppressWarnings("resource")
+   public void testEncryptionWithClientPriv() throws IOException, CertificateException, NoSuchAlgorithmException {
+
+      Client user = Client.builder().certificate(certificate).orgname("jclouds").clientname("adriancole-jcloudstest")
+              .name("adriancole-jcloudstest").isValidator(false).privateKey(privateKey).publicKey(publicKey).build();
+
+      byte[] encrypted = ByteStreams2.toByteArrayAndClose(new RSAEncryptingPayload(new JCECrypto(), Payloads.newPayload("fooya"), user
+              .getCertificate().getPublicKey()).openStream());
+
+      assertEquals(
+              ByteStreams2.toByteArrayAndClose(new RSADecryptingPayload(new JCECrypto(), Payloads.newPayload(encrypted), user.getPrivateKey()).openStream()),
+              "fooya".getBytes());
+
+      assertEquals(
+              handler.apply(HttpResponse.builder().statusCode(200).message("ok")
+                      .payload(ParseClientFromJsonTest.class.getResourceAsStream("/client.json")).build()), user);
+   }
+
+
 }
