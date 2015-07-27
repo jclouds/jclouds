@@ -1,5 +1,7 @@
 rm /etc/sudoers
 cat >> /etc/sudoers <<'END_OF_FILE'
+Defaults    env_reset
+Defaults    secure_path="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
 root ALL = (ALL) ALL
 %wheel ALL = (ALL) NOPASSWD:ALL
 END_OF_FILE
