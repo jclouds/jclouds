@@ -40,6 +40,8 @@ public class SpotInstanceHandler extends ParseSax.HandlerForGeneratedRequestWith
    protected final DateCodec dateCodec;
    protected final Supplier<String> defaultRegion;
    protected final Builder builder;
+   protected boolean inFault;
+   protected boolean inStatus;
    protected boolean inLaunchSpecification;
    protected final LaunchSpecificationHandler launchSpecificationHandler;
    protected boolean inTagSet;
@@ -73,6 +75,10 @@ public class SpotInstanceHandler extends ParseSax.HandlerForGeneratedRequestWith
          inLaunchSpecification = true;
       } else if (equalsOrSuffix(qName, "tagSet")) {
          inTagSet = true;
+      } else if (equalsOrSuffix(qName, "fault")) {
+         inFault = true;
+      } else if (equalsOrSuffix(qName, "status")) {
+         inStatus = true;
       }
       if (inLaunchSpecification) {
           launchSpecificationHandler.startElement(uri, name, qName, attrs);
@@ -97,6 +103,14 @@ public class SpotInstanceHandler extends ParseSax.HandlerForGeneratedRequestWith
          launchSpecificationHandler.endElement(uri, name, qName);
       }
 
+      if (qName.equals("fault")) {
+         inFault = false;
+      }
+
+      if (qName.equals("status")) {
+         inStatus = false;
+      }
+
       if (qName.equals("spotInstanceRequestId")) {
          builder.id(currentOrNull(currentText));
       } else if (qName.equals("instanceId")) {
@@ -107,10 +121,6 @@ public class SpotInstanceHandler extends ParseSax.HandlerForGeneratedRequestWith
          builder.availabilityZoneGroup(currentOrNull(currentText));
       } else if (qName.equals("launchGroup")) {
          builder.launchGroup(currentOrNull(currentText));
-      } else if (qName.equals("code")) {
-         builder.faultCode(currentOrNull(currentText));
-      } else if (qName.equals("message")) {
-         builder.faultMessage(currentOrNull(currentText));
       } else if (qName.equals("spotPrice")) {
          String price = currentOrNull(currentText);
          if (price != null)
@@ -131,6 +141,30 @@ public class SpotInstanceHandler extends ParseSax.HandlerForGeneratedRequestWith
             builder.createTime(dateCodec.toDate(createTime));
       } else if (qName.equals("productDescription")) {
          builder.productDescription(currentOrNull(currentText));
+      } else if (inFault) {
+         if (qName.equals("code")) {
+            builder.faultCode(currentOrNull(currentText));
+         } else if (qName.equals("message")) {
+            builder.faultMessage(currentOrNull(currentText));
+         }
+      } else if (inStatus) {
+         if (qName.equals("code")) {
+            builder.statusCode(currentOrNull(currentText));
+         } else if (qName.equals("message")) {
+            builder.statusMessage(currentOrNull(currentText));
+         } else if (qName.equals("updateTime")) {
+            String updateTime = currentOrNull(currentText);
+            if (updateTime != null)
+               builder.statusUpdateTime(dateCodec.toDate(updateTime));
+         }
+      } else if (qName.equals("validFrom")) {
+         String validFrom = currentOrNull(currentText);
+         if (validFrom != null)
+            builder.validFrom(dateCodec.toDate(validFrom));
+      } else if (qName.equals("validUntil")) {
+         String validUntil = currentOrNull(currentText);
+         if (validUntil != null)
+            builder.validUntil(dateCodec.toDate(validUntil));
       }
       currentText.setLength(0);
    }
