@@ -23,7 +23,14 @@
                 </monitoring>
             </launchSpecification>
             <instanceId>i-ef308e8e</instanceId>
+            <status>
+                <code>fulfilled</code>
+                <message>Fulfilled</message>
+                <updateTime>2011-07-29T05:27:39.000Z</updateTime>
+            </status>
             <createTime>2011-07-29T05:27:39.000Z</createTime>
+            <validFrom>2011-07-29T05:27:39.000Z</validFrom>
+            <validUntil>2011-07-29T05:27:39.000Z</validUntil>
             <productDescription>Linux/UNIX</productDescription>
             <tagSet>
                 <item>

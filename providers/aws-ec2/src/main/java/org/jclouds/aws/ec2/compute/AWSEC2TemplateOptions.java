@@ -22,6 +22,8 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Preconditions.checkState;
 import static com.google.common.base.Strings.emptyToNull;
 
+import java.util.Calendar;
+import java.util.Date;
 import java.util.Map;
 import java.util.Set;
 
@@ -217,7 +219,10 @@ public class AWSEC2TemplateOptions extends EC2TemplateOptions implements Cloneab
     * Options for starting spot instances
     */
    public AWSEC2TemplateOptions spotOptions(RequestSpotInstancesOptions spotOptions) {
-      this.spotOptions = spotOptions != null ? spotOptions : RequestSpotInstancesOptions.NONE;
+      Calendar cal = Calendar.getInstance();
+      cal.setTime(new Date());
+      cal.add(Calendar.MINUTE, 30);
+      this.spotOptions = spotOptions != null ? spotOptions : RequestSpotInstancesOptions.Builder.validUntil(cal.getTime());
       return this;
    }
 

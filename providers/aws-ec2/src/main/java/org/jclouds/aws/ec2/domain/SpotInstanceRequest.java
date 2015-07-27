@@ -21,12 +21,11 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import java.util.Date;
 import java.util.Map;
 
-import org.jclouds.javax.annotation.Nullable;
-
 import com.google.common.base.CaseFormat;
 import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
+import org.jclouds.javax.annotation.Nullable;
 
 public class SpotInstanceRequest implements Comparable<SpotInstanceRequest> {
    public static Builder builder() {
@@ -51,6 +50,9 @@ public class SpotInstanceRequest implements Comparable<SpotInstanceRequest> {
       private Type type;
       private Date validFrom;
       private Date validUntil;
+      private String statusCode;
+      private String statusMessage;
+      private Date statusUpdateTime;
       private Map<String, String> tags = Maps.newLinkedHashMap();
 
       public Builder clear() {
@@ -71,6 +73,9 @@ public class SpotInstanceRequest implements Comparable<SpotInstanceRequest> {
          this.type = null;
          this.validFrom = null;
          this.validUntil = null;
+         this.statusCode = null;
+         this.statusMessage = null;
+         this.statusUpdateTime = null;
          tags = Maps.newLinkedHashMap();
          return this;
       }
@@ -170,10 +175,25 @@ public class SpotInstanceRequest implements Comparable<SpotInstanceRequest> {
          return this;
       }
 
+      public Builder statusCode(String statusCode) {
+         this.statusCode = statusCode;
+         return this;
+      }
+
+      public Builder statusMessage(String statusMessage) {
+         this.statusMessage = statusMessage;
+         return this;
+      }
+
+      public Builder statusUpdateTime(Date statusUpdateTime) {
+         this.statusUpdateTime = statusUpdateTime;
+         return this;
+      }
+
       public SpotInstanceRequest build() {
          return new SpotInstanceRequest(region, availabilityZoneGroup, launchedAvailabilityZone, createTime, faultCode,
                   faultMessage, instanceId, launchGroup, launchSpecification, productDescription, id, spotPrice, state,
-                  rawState, type, validFrom, validUntil, tags);
+                  rawState, type, validFrom, validUntil, statusCode, statusMessage, statusUpdateTime, tags);
       }
    }
 
@@ -236,12 +256,16 @@ public class SpotInstanceRequest implements Comparable<SpotInstanceRequest> {
    private final Type type;
    private final Date validFrom;
    private final Date validUntil;
+   private final String statusCode;
+   private final String statusMessage;
+   private final Date statusUpdateTime;
    private final Map<String, String> tags;
 
    public SpotInstanceRequest(String region, String availabilityZoneGroup, @Nullable String launchedAvailabilityZone,
             Date createTime, String faultCode, String faultMessage, String instanceId, String launchGroup,
             LaunchSpecification launchSpecification, String productDescription, String id, float spotPrice,
-            State state, String rawState, Type type, Date validFrom, Date validUntil, Map<String, String> tags) {
+            State state, String rawState, Type type, Date validFrom, Date validUntil, String statusCode,
+            String statusMessage, Date statusUpdateTime, Map<String, String> tags) {
       this.region = checkNotNull(region, "region");
       this.availabilityZoneGroup = availabilityZoneGroup;
       this.launchedAvailabilityZone = launchedAvailabilityZone;
@@ -259,6 +283,9 @@ public class SpotInstanceRequest implements Comparable<SpotInstanceRequest> {
       this.type = checkNotNull(type, "type");
       this.validFrom = validFrom;
       this.validUntil = validUntil;
+      this.statusCode = statusCode;
+      this.statusMessage = statusMessage;
+      this.statusUpdateTime = statusUpdateTime;
       this.tags = ImmutableMap.<String, String> copyOf(checkNotNull(tags, "tags"));
    }
 
@@ -333,6 +360,18 @@ public class SpotInstanceRequest implements Comparable<SpotInstanceRequest> {
       return validUntil;
    }
 
+   public String getStatusCode() {
+      return statusCode;
+   }
+
+   public String getStatusMessage() {
+      return statusMessage;
+   }
+
+   public Date getStatusUpdateTime() {
+      return statusUpdateTime;
+   }
+
    /**
     * tags that are present in the instance
     */
@@ -360,6 +399,9 @@ public class SpotInstanceRequest implements Comparable<SpotInstanceRequest> {
       result = prime * result + ((type == null) ? 0 : type.hashCode());
       result = prime * result + ((validFrom == null) ? 0 : validFrom.hashCode());
       result = prime * result + ((validUntil == null) ? 0 : validUntil.hashCode());
+      result = prime * result + ((statusCode == null) ? 0 : statusCode.hashCode());
+      result = prime * result + ((statusMessage == null) ? 0 : statusMessage.hashCode());
+      result = prime * result + ((statusUpdateTime == null) ? 0 : statusUpdateTime.hashCode());
       result = prime * result + ((tags == null) ? 0 : tags.hashCode());
       return result;
    }
@@ -444,6 +486,21 @@ public class SpotInstanceRequest implements Comparable<SpotInstanceRequest> {
             return false;
       } else if (!validUntil.equals(other.validUntil))
          return false;
+      if (statusCode == null) {
+         if (other.statusCode != null)
+            return false;
+      } else if (!statusCode.equals(other.statusCode))
+         return false;
+      if (statusMessage == null) {
+         if (other.statusMessage != null)
+            return false;
+      } else if (!statusMessage.equals(other.statusMessage))
+         return false;
+      if (statusUpdateTime == null) {
+         if (other.statusUpdateTime != null)
+            return false;
+      } else if (!statusUpdateTime.equals(other.statusUpdateTime))
+         return false;
       if (tags == null) {
          if (other.tags != null)
             return false;
@@ -459,7 +516,8 @@ public class SpotInstanceRequest implements Comparable<SpotInstanceRequest> {
             + faultMessage + ", instanceId=" + instanceId + ", launchGroup=" + launchGroup + ", launchSpecification="
             + launchSpecification + ", productDescription=" + productDescription + ", id=" + id + ", spotPrice="
             + spotPrice + ", state=" + rawState + ", type=" + type + ", validFrom=" + validFrom + ", validUntil="
-            + validUntil + ", tags=" + tags + "]";
+            + validUntil + ", statusCode=" + statusCode + ", statusMessage=" + statusMessage + ", statusUpdateTime="
+            + statusUpdateTime + ", tags=" + tags + "]";
    }
 
    @Override
