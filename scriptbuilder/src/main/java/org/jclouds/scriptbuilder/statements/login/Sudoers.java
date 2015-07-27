@@ -41,7 +41,12 @@ public class Sudoers implements Statement {
       if (family == OsFamily.WINDOWS)
          throw new UnsupportedOperationException("windows not yet implemented");
       Builder<Statement> statements = ImmutableList.builder();
-      statements.add(createOrOverwriteFile(sudoers, ImmutableSet.of("root ALL = (ALL) ALL", "%wheel ALL = (ALL) NOPASSWD:ALL")));
+      statements.add(createOrOverwriteFile(sudoers, ImmutableSet.of(
+            "Defaults    env_reset",
+            "Defaults    secure_path=\"/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin\"",
+            "root ALL = (ALL) ALL", 
+            "%wheel ALL = (ALL) NOPASSWD:ALL"))
+      );
       statements.add(exec("chmod 0440 " + sudoers));
       return new StatementList(statements.build()).render(family);
    }

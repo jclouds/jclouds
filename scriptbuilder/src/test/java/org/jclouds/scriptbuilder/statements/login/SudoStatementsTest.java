@@ -28,6 +28,8 @@ public class SudoStatementsTest {
       assertEquals(
                SudoStatements.createWheel().render(OsFamily.UNIX),
                "cat > /etc/sudoers <<-'END_OF_JCLOUDS_FILE'\n" +
+               "\tDefaults    env_reset\n" +
+               "\tDefaults    secure_path=\"/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin\"\n" +
                "\troot ALL = (ALL) ALL\n" +
                "\t%wheel ALL = (ALL) NOPASSWD:ALL\n" +
                "END_OF_JCLOUDS_FILE\n" +
