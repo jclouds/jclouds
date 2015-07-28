@@ -17,6 +17,7 @@
 package org.jclouds.openstack.nova.v2_0.functions;
 
 import static org.jclouds.Constants.PROPERTY_CONNECTION_TIMEOUT;
+import static org.testng.Assert.assertNotNull;
 
 import java.util.Properties;
 
@@ -42,7 +43,7 @@ public class InternalURLLiveTest extends BaseNovaApiLiveTest {
       String region = api.getConfiguredRegions().iterator().next();
       // List current servers to ensure that can reach nova with internalUrl ip
       try {
-         api.getServerApi(region).list().concat().toList();
+         assertNotNull(api.getServerApi(region).list().concat().toList());
       } catch (Exception e) {
          Assert.fail("Could not retrieve servers list using the internalUrl", e);
       }
