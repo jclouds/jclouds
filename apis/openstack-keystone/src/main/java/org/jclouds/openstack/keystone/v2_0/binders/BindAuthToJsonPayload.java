@@ -16,14 +16,11 @@
  */
 package org.jclouds.openstack.keystone.v2_0.binders;
 
-import static com.google.common.base.Preconditions.checkArgument;
-import static com.google.common.base.Preconditions.checkNotNull;
-
-import java.util.Map;
-
-import javax.inject.Inject;
-import javax.inject.Singleton;
-
+import com.google.common.base.Predicates;
+import com.google.common.base.Strings;
+import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.ImmutableMap.Builder;
+import com.google.common.collect.Iterables;
 import org.jclouds.http.HttpRequest;
 import org.jclouds.json.Json;
 import org.jclouds.openstack.keystone.v2_0.config.CredentialType;
@@ -31,11 +28,12 @@ import org.jclouds.rest.MapBinder;
 import org.jclouds.rest.binders.BindToJsonPayload;
 import org.jclouds.rest.internal.GeneratedHttpRequest;
 
-import com.google.common.base.Predicates;
-import com.google.common.base.Strings;
-import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.ImmutableMap.Builder;
-import com.google.common.collect.Iterables;
+import javax.inject.Inject;
+import javax.inject.Singleton;
+import java.util.Map;
+
+import static com.google.common.base.Preconditions.checkArgument;
+import static com.google.common.base.Preconditions.checkNotNull;
 
 @Singleton
 public class BindAuthToJsonPayload extends BindToJsonPayload implements MapBinder {
@@ -71,7 +69,9 @@ public class BindAuthToJsonPayload extends BindToJsonPayload implements MapBinde
          builder.put("tenantName", postParams.get("tenantName"));
       else if (!Strings.isNullOrEmpty((String) postParams.get("tenantId")))
           builder.put("tenantId", postParams.get("tenantId"));
-      return super.bindToRequest(request, ImmutableMap.of("auth", builder.build()));
+      R authRequest = super.bindToRequest(request, ImmutableMap.of("auth", builder.build()));
+      authRequest.getPayload().setSensitive(true);
+      return authRequest;
    }
 
 }

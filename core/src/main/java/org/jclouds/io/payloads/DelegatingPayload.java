@@ -16,19 +16,19 @@
  */
 package org.jclouds.io.payloads;
 
-import static com.google.common.base.Preconditions.checkNotNull;
+import com.google.common.base.Throwables;
+import org.jclouds.io.MutableContentMetadata;
+import org.jclouds.io.Payload;
 
 import java.io.IOException;
 import java.io.InputStream;
 
-import com.google.common.base.Throwables;
-
-import org.jclouds.io.MutableContentMetadata;
-import org.jclouds.io.Payload;
+import static com.google.common.base.Preconditions.checkNotNull;
 
 public class DelegatingPayload implements Payload {
 
    private final Payload delegate;
+   private boolean isSensitive;
 
    public DelegatingPayload(Payload delegate) {
       this.delegate = checkNotNull(delegate, "delegate");
@@ -109,5 +109,15 @@ public class DelegatingPayload implements Payload {
    @Override
    public void setContentMetadata(MutableContentMetadata in) {
        delegate.setContentMetadata(in);
+   }
+
+   @Override
+   public void setSensitive(boolean isSensitive) {
+      this.isSensitive = isSensitive;
+   }
+
+   @Override
+   public boolean isSensitive() {
+      return this.isSensitive;
    }
 }

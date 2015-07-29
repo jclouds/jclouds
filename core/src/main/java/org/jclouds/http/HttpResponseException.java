@@ -16,11 +16,12 @@
  */
 package org.jclouds.http;
 
-import java.io.IOException;
-
+import org.jclouds.io.Payload;
 import org.jclouds.io.payloads.StringPayload;
 import org.jclouds.javax.annotation.Nullable;
 import org.jclouds.util.Strings2;
+
+import java.io.IOException;
 
 /**
  * Represents an error obtained from an HttpResponse.
@@ -71,20 +72,34 @@ public class HttpResponseException extends RuntimeException {
    }
 
    public HttpResponseException(HttpCommand command, HttpResponse response) {
+      this(command, response, false);
+   }
+   public HttpResponseException(HttpCommand command, HttpResponse response, boolean logSensitiveInformation) {
       this(String.format("request: %s %sfailed with response: %s", command.getCurrentRequest().getRequestLine(),
-            requestPayloadIfStringOrFormIfNotReturnEmptyString(command.getCurrentRequest()),
+            requestPayloadIfStringOrFormIfNotReturnEmptyString(command.getCurrentRequest(), logSensitiveInformation),
             response.getStatusLine()), command, response);
    }
 
    static String requestPayloadIfStringOrFormIfNotReturnEmptyString(HttpRequest request) {
-      if (request.getPayload() != null
-            && ("application/x-www-form-urlencoded".equals(request.getPayload().getContentMetadata().getContentType()) || request
-                  .getPayload() instanceof StringPayload)
-            && request.getPayload().getContentMetadata().getContentLength() != null
-            && request.getPayload().getContentMetadata().getContentLength() < 1024) {
+      return requestPayloadIfStringOrFormIfNotReturnEmptyString(request, false);
+   }
+
+   static String requestPayloadIfStringOrFormIfNotReturnEmptyString(HttpRequest request, boolean logSensitiveInformation) {
+      Payload payload = request.getPayload();
+      if (payload != null
+            && ("application/x-www-form-urlencoded".equals(payload.getContentMetadata().getContentType()) || payload instanceof StringPayload)
+            && payload.getContentMetadata().getContentLength() != null
+            && payload.getContentMetadata().getContentLength() < 1024) {
          try {
-            return String.format(" [%s] ", request.getPayload() instanceof StringPayload ? request.getPayload()
-                  .getRawContent() : Strings2.toStringAndClose(request.getPayload().openStream()));
+            String logStatement;
+            if (payload.isSensitive() && !logSensitiveInformation) {
+               logStatement = "Sensitive data in payload, use PROPERTY_LOGGER_WIRE_LOG_SENSITIVE_INFO override to enable logging this data.";
+            } else if (payload instanceof StringPayload) {
+               logStatement = payload.getRawContent().toString();
+            } else {
+               logStatement = Strings2.toStringAndClose(payload.openStream());
+            }
+            return String.format(" [%s] ", logStatement);
          } catch (IOException e) {
          }
       }

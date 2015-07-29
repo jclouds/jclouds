@@ -16,14 +16,18 @@
  */
 package org.jclouds.http.internal;
 
-import static org.testng.Assert.assertEquals;
+import org.jclouds.http.HttpRequest;
+import org.jclouds.io.PayloadEnclosing;
+import org.jclouds.io.payloads.StringPayload;
+import org.jclouds.logging.Logger;
+import org.jclouds.util.Strings2;
+import org.testng.annotations.Test;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 
-import org.jclouds.logging.Logger;
-import org.jclouds.util.Strings2;
-import org.testng.annotations.Test;
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertNotEquals;
 
 @Test(groups = "unit", sequential = true)
 public class WireTest {
@@ -129,5 +133,49 @@ public class WireTest {
       HttpWire wire = setUp();
       wire.output("foo");
       assertEquals(((BufferLogger) wire.getWireLog()).buff.toString(), ">> \"foo\"");
+   }
+
+   @Test
+   public void testInputPayload() throws Exception {
+      HttpWire wire = setUp();
+      StringPayload payload = new StringPayload("foo");
+      PayloadEnclosing request = HttpRequest.builder().method("foo").endpoint("http://foo").payload(payload).build();
+      wire.input(request);
+      BufferLogger wireLog = (BufferLogger) wire.getWireLog();
+      assertEquals(wireLog.buff.toString(), "<< \"foo\"", "Expected payload to be printed in logs");
+      wireLog.buff.setLength(0);
+
+      payload.setSensitive(true);
+      request = HttpRequest.builder().method("foo").endpoint("http://foo").payload(payload).build();
+      wire.input(request);
+      assertNotEquals(wireLog.buff.toString(), "<< \"foo\"", "Expected payload to NOT be printed in logs");
+      wireLog.buff.setLength(0);
+
+      wire.logSensitiveInformation = true;
+      request = HttpRequest.builder().method("foo").endpoint("http://foo").payload(payload).build();
+      wire.input(request);
+      assertEquals(wireLog.buff.toString(), "<< \"foo\"", "Expected payload to be printed in logs");
+   }
+
+   @Test
+   public void testOutputPayload() throws Exception {
+      HttpWire wire = setUp();
+      StringPayload payload = new StringPayload("foo");
+      PayloadEnclosing request = HttpRequest.builder().method("foo").endpoint("http://foo").payload(payload).build();
+      wire.output(request);
+      BufferLogger wireLog = (BufferLogger) wire.getWireLog();
+      assertEquals(wireLog.buff.toString(), ">> \"foo\"", "Expected payload to be printed in logs");
+      wireLog.buff.setLength(0);
+
+      payload.setSensitive(true);
+      request = HttpRequest.builder().method("foo").endpoint("http://foo").payload(payload).build();
+      wire.output(request);
+      assertNotEquals(wireLog.buff.toString(), ">> \"foo\"", "Expected payload to NOT be printed in logs");
+      wireLog.buff.setLength(0);
+
+      wire.logSensitiveInformation = true;
+      request = HttpRequest.builder().method("foo").endpoint("http://foo").payload(payload).build();
+      wire.output(request);
+      assertEquals(wireLog.buff.toString(), ">> \"foo\"", "Expected payload to be printed in logs");
    }
 }

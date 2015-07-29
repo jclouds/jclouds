@@ -16,10 +16,8 @@
  */
 package org.jclouds.openstack.keystone.v2_0.handlers;
 
-import static org.jclouds.http.HttpUtils.closeClientButKeepContentStream;
-
-import javax.inject.Singleton;
-
+import com.google.inject.Inject;
+import org.jclouds.Constants;
 import org.jclouds.http.HttpCommand;
 import org.jclouds.http.HttpErrorHandler;
 import org.jclouds.http.HttpResponse;
@@ -27,19 +25,29 @@ import org.jclouds.http.HttpResponseException;
 import org.jclouds.rest.AuthorizationException;
 import org.jclouds.rest.ResourceNotFoundException;
 
+import javax.inject.Named;
+import javax.inject.Singleton;
+
+import static org.jclouds.http.HttpUtils.closeClientButKeepContentStream;
+
 /**
  * This will parse and set an appropriate exception on the command object.
  */
 // TODO: is there error spec someplace? let's type errors, etc.
 @Singleton
 public class KeystoneErrorHandler implements HttpErrorHandler {
+
+   @Inject(optional = true)
+   @Named(Constants.PROPERTY_LOGGER_WIRE_LOG_SENSITIVE_INFO)
+   private boolean logSensitiveInformation = false;
+
    public void handleError(HttpCommand command, HttpResponse response) {
       // it is important to always read fully and close streams
       byte[] data = closeClientButKeepContentStream(response);
       String message = data != null ? new String(data) : null;
 
       Exception exception = message != null ? new HttpResponseException(command, response, message)
-               : new HttpResponseException(command, response);
+               : new HttpResponseException(command, response, logSensitiveInformation);
       message = message != null ? message : String.format("%s -> %s", command.getCurrentRequest().getRequestLine(),
                response.getStatusLine());
       switch (response.getStatusCode()) {
