@@ -272,7 +272,7 @@ public class SoftLayerComputeServiceAdapter implements
                     .compare(getBootableDeviceType(h1), getBootableDeviceType(h2));
             if (!volumes1.isEmpty() && !volumes2.isEmpty() && volumes1.size() == volumes2.size()) {
                for (int i = 0; i < volumes1.size(); i++) {
-                  comparisonChain.compare(volumes1.get(i).getType(), volumes2.get(i).getType());
+                  comparisonChain = comparisonChain.compare(volumes1.get(i).getType(), volumes2.get(i).getType());
                }
             }
             return comparisonChain.result();
