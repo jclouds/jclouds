@@ -96,9 +96,7 @@ public class VirtualGuestToNodeMetadata implements Function<VirtualGuest, NodeMe
       // TODO simplify once we move domain classes to AutoValue
       if (from.getOperatingSystem() != null && from.getOperatingSystem().getPasswords() != null && !from.getOperatingSystem().getPasswords().isEmpty()) {
          Password password = Iterables.getOnlyElement(from.getOperatingSystem().getPasswords());
-         if (password != null) {
-            builder.credentials(LoginCredentials.builder().identity(password.getUsername()).credential(password.getPassword()).build());
-         }
+         builder.credentials(LoginCredentials.builder().identity(password.getUsername()).credential(password.getPassword()).build());
       }
       if (from.getTagReferences() != null && !from.getTagReferences().isEmpty()) {
          List<String> tags = Lists.newArrayList();

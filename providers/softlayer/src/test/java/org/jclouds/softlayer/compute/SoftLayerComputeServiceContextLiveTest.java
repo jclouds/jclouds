@@ -22,25 +22,18 @@ import java.util.Set;
 import javax.annotation.Resource;
 import javax.inject.Named;
 
-import org.jclouds.ContextBuilder;
-import org.jclouds.compute.ComputeServiceContext;
 import org.jclouds.compute.RunNodesException;
-import org.jclouds.compute.domain.ComputeMetadata;
 import org.jclouds.compute.domain.ExecResponse;
 import org.jclouds.compute.domain.NodeMetadata;
 import org.jclouds.compute.domain.Template;
-import org.jclouds.compute.domain.TemplateBuilder;
 import org.jclouds.compute.internal.BaseComputeServiceContextLiveTest;
 import org.jclouds.compute.reference.ComputeServiceConstants;
 import org.jclouds.logging.Logger;
-import org.jclouds.logging.slf4j.config.SLF4JLoggingModule;
 import org.jclouds.softlayer.compute.options.SoftLayerTemplateOptions;
 import org.jclouds.ssh.SshClient;
-import org.jclouds.sshj.config.SshjSshClientModule;
 import org.testng.annotations.Test;
 
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableSet;
 
 @Test(groups = "live", testName = "SoftLayerComputeServiceContextLiveTest")
 public class SoftLayerComputeServiceContextLiveTest extends BaseComputeServiceContextLiveTest {
@@ -57,14 +50,7 @@ public class SoftLayerComputeServiceContextLiveTest extends BaseComputeServiceCo
    public void testLaunchClusterWithDomainName() throws RunNodesException {
       int numNodes = 1;
       final String name = "node";
-      ComputeServiceContext context = ContextBuilder.newBuilder("softlayer").credentials(identity, credential)
-              .modules(ImmutableSet.of(new SLF4JLoggingModule(),
-                      new SshjSshClientModule()))
-              .build(ComputeServiceContext.class);
-
-      TemplateBuilder templateBuilder = context.getComputeService().templateBuilder();
-
-      Template template = templateBuilder.build();
+      Template template = view.getComputeService().templateBuilder().build();
       // test passing custom options
       SoftLayerTemplateOptions options = template.getOptions().as(SoftLayerTemplateOptions.class);
       options.domainName("live.org");
@@ -72,19 +58,15 @@ public class SoftLayerComputeServiceContextLiveTest extends BaseComputeServiceCo
       //tags
       options.tags(ImmutableList.of("jclouds"));
 
-      for (ComputeMetadata computeMetadata : context.getComputeService().listNodes()) {
-         System.out.println(context.getComputeService().getNodeMetadata(computeMetadata.getId()).getStatus());
-      }
-
-      Set<? extends NodeMetadata> nodes = context.getComputeService().createNodesInGroup(name, numNodes, template);
+      Set<? extends NodeMetadata> nodes = view.getComputeService().createNodesInGroup(name, numNodes, template);
       assertEquals(numNodes, nodes.size(), "wrong number of nodes");
       for (NodeMetadata node : nodes) {
          logger.debug("Created Node: %s", node);
-         SshClient client = context.utils().sshForNode().apply(node);
+         SshClient client = view.utils().sshForNode().apply(node);
          client.connect();
          ExecResponse hello = client.exec("mount");
          logger.debug(hello.getOutput().trim());
-         context.getComputeService().destroyNode(node.getId());
+         view.getComputeService().destroyNode(node.getId());
       }
    }
 

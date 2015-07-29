@@ -31,7 +31,6 @@ import org.jclouds.softlayer.domain.Datacenter;
 import org.jclouds.softlayer.domain.OperatingSystem;
 import org.jclouds.softlayer.domain.TagReference;
 import org.jclouds.softlayer.domain.VirtualGuest;
-import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
@@ -63,7 +62,7 @@ public class VirtualGuestApiLiveTest extends BaseSoftLayerApiLiveTest {
       super.setup();
       virtualGuestApi = api.getVirtualGuestApi();
       datacenter = Iterables.get(api.getDatacenterApi().listDatacenters(), 0);
-      if (datacenter == null) Assert.fail();
+      assertNotNull(datacenter, "Datacenter must not be null");
    }
 
    @AfterClass(groups = {"integration", "live"})
