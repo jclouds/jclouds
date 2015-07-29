@@ -16,12 +16,14 @@
  */
 package org.jclouds.http.internal;
 
-import javax.annotation.Resource;
-import javax.inject.Named;
-
+import com.google.common.annotations.VisibleForTesting;
+import com.google.inject.Inject;
 import org.jclouds.Constants;
 import org.jclouds.logging.Logger;
 import org.jclouds.logging.internal.Wire;
+
+import javax.annotation.Resource;
+import javax.inject.Named;
 
 public class HttpWire extends Wire {
 
@@ -29,8 +31,17 @@ public class HttpWire extends Wire {
    @Named(Constants.LOGGER_HTTP_WIRE)
    Logger wireLog = Logger.NULL;
 
+   @VisibleForTesting
+   @Inject(optional = true)
+   @Named(Constants.PROPERTY_LOGGER_WIRE_LOG_SENSITIVE_INFO)
+   boolean logSensitiveInformation = false;
+
    public Logger getWireLog() {
       return wireLog;
    }
 
+   @Override
+   protected boolean isLogSensitiveInformation() {
+      return logSensitiveInformation;
+   }
 }

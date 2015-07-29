@@ -16,20 +16,20 @@
  */
 package org.jclouds.io.payloads;
 
-import static com.google.common.base.Preconditions.checkNotNull;
+import com.google.common.base.Throwables;
+import org.jclouds.io.MutableContentMetadata;
+import org.jclouds.io.Payload;
 
 import java.io.IOException;
 import java.io.InputStream;
 
-import com.google.common.base.Throwables;
-
-import org.jclouds.io.MutableContentMetadata;
-import org.jclouds.io.Payload;
+import static com.google.common.base.Preconditions.checkNotNull;
 
 public abstract class BasePayload<V> implements Payload {
    protected final V content;
    protected transient volatile boolean written;
    protected MutableContentMetadata contentMetadata;
+   private boolean isSensitive;
 
    protected BasePayload(V content) {
       this(content, new BaseMutableContentMetadata());
@@ -84,7 +84,7 @@ public abstract class BasePayload<V> implements Payload {
 
    @Override
    public String toString() {
-      return "[content=" + (content != null) + ", contentMetadata=" + contentMetadata + ", written=" + written + "]";
+      return "[content=" + (content != null) + ", contentMetadata=" + contentMetadata + ", written=" + written + ", isSensitive=" + isSensitive + "]";
    }
 
    /**
@@ -128,4 +128,13 @@ public abstract class BasePayload<V> implements Payload {
       this.contentMetadata = in;
    }
 
+   @Override
+   public void setSensitive(boolean isSensitive) {
+      this.isSensitive = isSensitive;
+   }
+
+   @Override
+   public boolean isSensitive() {
+      return this.isSensitive;
+   }
 }
