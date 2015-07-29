@@ -34,7 +34,7 @@ public class OperatingSystemToImageTest {
    @Test
    public void testOperatingSystemToImage() {
       OperatingSystem operatingSystem = OperatingSystem.builder()
-              .id("123456789")
+              .id("UBUNTU_12_64")
               .softwareLicense(SoftwareLicense.builder()
                       .softwareDescription(SoftwareDescription.builder()
                               .version("12.04-64 Minimal for CCI")

@@ -25,6 +25,7 @@ import javax.inject.Named;
 import org.jclouds.ContextBuilder;
 import org.jclouds.compute.ComputeServiceContext;
 import org.jclouds.compute.RunNodesException;
+import org.jclouds.compute.domain.ComputeMetadata;
 import org.jclouds.compute.domain.ExecResponse;
 import org.jclouds.compute.domain.NodeMetadata;
 import org.jclouds.compute.domain.Template;
@@ -53,7 +54,7 @@ public class SoftLayerComputeServiceContextLiveTest extends BaseComputeServiceCo
    }
 
    @Test
-   public void testLaunchClusterWithMinDisk() throws RunNodesException {
+   public void testLaunchClusterWithDomainName() throws RunNodesException {
       int numNodes = 1;
       final String name = "node";
       ComputeServiceContext context = ContextBuilder.newBuilder("softlayer").credentials(identity, credential)
@@ -67,10 +68,13 @@ public class SoftLayerComputeServiceContextLiveTest extends BaseComputeServiceCo
       // test passing custom options
       SoftLayerTemplateOptions options = template.getOptions().as(SoftLayerTemplateOptions.class);
       options.domainName("live.org");
-      options.portSpeed(100);
 
       //tags
       options.tags(ImmutableList.of("jclouds"));
+
+      for (ComputeMetadata computeMetadata : context.getComputeService().listNodes()) {
+         System.out.println(context.getComputeService().getNodeMetadata(computeMetadata.getId()).getStatus());
+      }
 
       Set<? extends NodeMetadata> nodes = context.getComputeService().createNodesInGroup(name, numNodes, template);
       assertEquals(numNodes, nodes.size(), "wrong number of nodes");

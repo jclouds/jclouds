@@ -83,7 +83,8 @@ public class OperatingSystemToImage implements Function<OperatingSystem, Image> 
               .build();
 
       return new ImageBuilder()
-              .ids(operatingSystem.getId())
+              .ids(optOSReferenceCode.or(operatingSystem.getId()))
+              //.ids(operatingSystem.getId())
               .description(optOSReferenceCode.or(UNRECOGNIZED))
               .operatingSystem(os)
               .status(Image.Status.AVAILABLE)

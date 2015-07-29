@@ -16,10 +16,8 @@
  */
 package org.jclouds.softlayer.compute.functions;
 
-import com.google.common.base.Function;
-import com.google.common.base.Predicate;
-import com.google.common.collect.FluentIterable;
-import com.google.common.collect.ImmutableList;
+import javax.inject.Singleton;
+
 import org.jclouds.compute.domain.Hardware;
 import org.jclouds.compute.domain.HardwareBuilder;
 import org.jclouds.compute.domain.Processor;
@@ -28,7 +26,10 @@ import org.jclouds.compute.domain.internal.VolumeImpl;
 import org.jclouds.softlayer.domain.VirtualGuest;
 import org.jclouds.softlayer.domain.VirtualGuestBlockDevice;
 
-import javax.inject.Singleton;
+import com.google.common.base.Function;
+import com.google.common.base.Predicate;
+import com.google.common.collect.FluentIterable;
+import com.google.common.collect.ImmutableList;
 
 @Singleton
 public class VirtualGuestToHardware implements Function<VirtualGuest, Hardware> {
@@ -52,7 +53,10 @@ public class VirtualGuestToHardware implements Function<VirtualGuest, Hardware> 
                          .transform(new Function<VirtualGuestBlockDevice, Volume>() {
                             @Override
                             public Volume apply(VirtualGuestBlockDevice item) {
-                               float volumeSize = item.getVirtualDiskImage().getCapacity();
+                               float volumeSize = -1;
+                               if (item.getVirtualDiskImage() != null) {
+                                  volumeSize = item.getVirtualDiskImage().getCapacity();
+                               }
                                return new VolumeImpl(
                                        item.getId() + "",
                                        from.isLocalDiskFlag() ? Volume.Type.LOCAL : Volume.Type.SAN,

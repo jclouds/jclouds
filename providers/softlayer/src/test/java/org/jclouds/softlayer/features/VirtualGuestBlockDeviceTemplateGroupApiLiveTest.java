@@ -33,6 +33,7 @@ import com.beust.jcommander.internal.Sets;
 public class VirtualGuestBlockDeviceTemplateGroupApiLiveTest extends BaseSoftLayerApiLiveTest {
 
    Set<VirtualGuestBlockDeviceTemplateGroup> publicImages = Sets.newHashSet();
+
    @BeforeClass
    void init() {
       publicImages = api().getPublicImages();

@@ -46,7 +46,7 @@ public class DatacenterToLocation implements Function<Datacenter, Location> {
    public DatacenterToLocation(JustProvider provider) {
       this.provider = checkNotNull(provider, "provider");
    }
-   
+
     @Override
     public Location apply(Datacenter datacenter) {
         return new LocationBuilder().id(datacenter.getName())
@@ -69,6 +69,6 @@ public class DatacenterToLocation implements Function<Datacenter, Location> {
 
       return ImmutableSet.<String> of("" + country + "-" + state);
 
-               
+
    }
 }

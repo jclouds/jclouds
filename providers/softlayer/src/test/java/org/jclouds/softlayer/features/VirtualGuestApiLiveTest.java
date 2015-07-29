@@ -31,6 +31,7 @@ import org.jclouds.softlayer.domain.Datacenter;
 import org.jclouds.softlayer.domain.OperatingSystem;
 import org.jclouds.softlayer.domain.TagReference;
 import org.jclouds.softlayer.domain.VirtualGuest;
+import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
@@ -48,20 +49,21 @@ import com.google.inject.Module;
 @Test(groups = "live")
 public class VirtualGuestApiLiveTest extends BaseSoftLayerApiLiveTest {
 
-   public static final String DATACENTER = "dal05";
-
    private VirtualGuestApi virtualGuestApi;
    private Predicate<VirtualGuest> loginDetailsTester;
    private VirtualGuestHasLoginDetailsPresent virtualGuestHasLoginDetailsPresent;
    private long guestLoginDelay = 60 * 60 * 1000;
 
    private VirtualGuest virtualGuest = null;
+   private Datacenter datacenter = null;
 
    @BeforeClass(groups = {"integration", "live"})
    @Override
    public void setup() {
       super.setup();
       virtualGuestApi = api.getVirtualGuestApi();
+      datacenter = Iterables.get(api.getDatacenterApi().listDatacenters(), 0);
+      if (datacenter == null) Assert.fail();
    }
 
    @AfterClass(groups = {"integration", "live"})
@@ -94,7 +96,7 @@ public class VirtualGuestApiLiveTest extends BaseSoftLayerApiLiveTest {
               .startCpus(1)
               .maxMemory(1024)
               .operatingSystem(OperatingSystem.builder().id("CENTOS_6_64").operatingSystemReferenceCode("CENTOS_6_64").build())
-              .datacenter(Datacenter.builder().name(DATACENTER).build())
+              .datacenter(Datacenter.builder().name(datacenter.getName()).build())
               .build();
 
       virtualGuest = virtualGuestApi.createVirtualGuest(virtualGuestRequest);
