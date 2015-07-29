@@ -26,10 +26,6 @@ import org.testng.annotations.Test;
 import com.google.common.collect.ImmutableMap;
 import com.google.inject.Module;
 
-/**
- *
- * Generally disabled, as it incurs higher fees.
- */
 @Test(groups = "live", enabled = true, singleThreaded = true)
 public class SoftLayerComputeServiceLiveTest extends BaseComputeServiceLiveTest {
 

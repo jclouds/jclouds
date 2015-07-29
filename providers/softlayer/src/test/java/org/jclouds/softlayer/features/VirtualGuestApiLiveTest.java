@@ -48,20 +48,21 @@ import com.google.inject.Module;
 @Test(groups = "live")
 public class VirtualGuestApiLiveTest extends BaseSoftLayerApiLiveTest {
 
-   public static final String DATACENTER = "dal05";
-
    private VirtualGuestApi virtualGuestApi;
    private Predicate<VirtualGuest> loginDetailsTester;
    private VirtualGuestHasLoginDetailsPresent virtualGuestHasLoginDetailsPresent;
    private long guestLoginDelay = 60 * 60 * 1000;
 
    private VirtualGuest virtualGuest = null;
+   private Datacenter datacenter = null;
 
    @BeforeClass(groups = {"integration", "live"})
    @Override
    public void setup() {
       super.setup();
       virtualGuestApi = api.getVirtualGuestApi();
+      datacenter = Iterables.get(api.getDatacenterApi().listDatacenters(), 0);
+      assertNotNull(datacenter, "Datacenter must not be null");
    }
 
    @AfterClass(groups = {"integration", "live"})
@@ -94,7 +95,7 @@ public class VirtualGuestApiLiveTest extends BaseSoftLayerApiLiveTest {
               .startCpus(1)
               .maxMemory(1024)
               .operatingSystem(OperatingSystem.builder().id("CENTOS_6_64").operatingSystemReferenceCode("CENTOS_6_64").build())
-              .datacenter(Datacenter.builder().name(DATACENTER).build())
+              .datacenter(Datacenter.builder().name(datacenter.getName()).build())
               .build();
 
       virtualGuest = virtualGuestApi.createVirtualGuest(virtualGuestRequest);

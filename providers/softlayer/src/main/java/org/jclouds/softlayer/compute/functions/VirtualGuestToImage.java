@@ -16,8 +16,12 @@
  */
 package org.jclouds.softlayer.compute.functions;
 
-import com.google.common.base.Function;
-import com.google.inject.Inject;
+import static com.google.common.base.Preconditions.checkNotNull;
+
+import javax.annotation.Resource;
+import javax.inject.Named;
+import javax.inject.Singleton;
+
 import org.jclouds.compute.domain.Image;
 import org.jclouds.compute.domain.ImageBuilder;
 import org.jclouds.compute.domain.OperatingSystem;
@@ -26,11 +30,8 @@ import org.jclouds.compute.reference.ComputeServiceConstants;
 import org.jclouds.logging.Logger;
 import org.jclouds.softlayer.domain.VirtualGuest;
 
-import javax.annotation.Resource;
-import javax.inject.Named;
-import javax.inject.Singleton;
-
-import static com.google.common.base.Preconditions.checkNotNull;
+import com.google.common.base.Function;
+import com.google.inject.Inject;
 
 @Singleton
 public class VirtualGuestToImage implements Function<VirtualGuest, Image> {
@@ -52,7 +53,7 @@ public class VirtualGuestToImage implements Function<VirtualGuest, Image> {
    public Image apply(VirtualGuest from) {
       checkNotNull(from, "from");
       if (from.getOperatingSystem() == null) {
-         return new ImageBuilder().ids(from.getId() + "")
+         return new ImageBuilder().ids(getReferenceCodeOrId(from))
                  .name(from.getHostname())
                  .status(Image.Status.UNRECOGNIZED)
                  .operatingSystem(OperatingSystem.builder()
@@ -64,5 +65,13 @@ public class VirtualGuestToImage implements Function<VirtualGuest, Image> {
       } else {
          return operatingSystemToImage.apply(from.getOperatingSystem());
       }
+   }
+
+   public String getReferenceCodeOrId(VirtualGuest from) {
+      String val = from.getSoftwareLicense() != null &&
+              from.getSoftwareLicense().getSoftwareDescription() != null ?
+              from.getSoftwareLicense().getSoftwareDescription().getReferenceCode() :
+              from.getId() + "";
+      return val;
    }
 }
