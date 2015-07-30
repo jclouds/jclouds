@@ -29,12 +29,14 @@ import org.jclouds.softlayer.domain.OperatingSystem;
 import org.jclouds.softlayer.domain.VirtualGuest;
 import org.jclouds.softlayer.internal.BaseSoftLayerMockTest;
 import org.jclouds.softlayer.parse.GetCreateObjectOptionsParseTest;
+import org.jclouds.softlayer.parse.VirtualGuestFilteredParseTest;
 import org.jclouds.softlayer.parse.VirtualGuestParseTest;
 import org.testng.annotations.Test;
 
-import com.google.common.collect.ImmutableSet;
 import com.squareup.okhttp.mockwebserver.MockResponse;
 import com.squareup.okhttp.mockwebserver.MockWebServer;
+
+import com.google.common.collect.ImmutableSet;
 
 /**
  * Mock tests for the {@link org.jclouds.softlayer.features.VirtualGuestApi} class.
@@ -42,17 +44,29 @@ import com.squareup.okhttp.mockwebserver.MockWebServer;
 @Test(groups = "unit", testName = "VirtualGuestApiMockTest")
 public class VirtualGuestApiMockTest extends BaseSoftLayerMockTest {
 
-   public void testGetVirtualGuest() throws Exception {
-      MockWebServer server = mockWebServer(new MockResponse().setBody(payloadFromResource("/virtual_guest_get.json")));
-      VirtualGuestApi api = getVirtualGuestApi(server);
+    public void testGetVirtualGuest() throws Exception {
+       MockWebServer server = mockWebServer(new MockResponse().setBody(payloadFromResource("/virtual_guest_get.json")));
+       VirtualGuestApi api = getVirtualGuestApi(server);
 
-      try {
-         assertEquals(api.getVirtualGuest(3001812), new VirtualGuestParseTest().expected());
-         assertSent(server, "GET", "/SoftLayer_Virtual_Guest/3001812/getObject?objectMask=id%3Bhostname%3Bdomain%3BfullyQualifiedDomainName%3BpowerState%3BmaxCpu%3BmaxMemory%3BstatusId%3BoperatingSystem.passwords%3BprimaryBackendIpAddress%3BprimaryIpAddress%3BactiveTransactionCount%3BblockDevices.diskImage%3Bdatacenter%3BtagReferences%3BprivateNetworkOnlyFlag%3BsshKeys");
-      } finally {
-         server.shutdown();
-      }
-   }
+       try {
+          assertEquals(api.getVirtualGuest(3001812), new VirtualGuestParseTest().expected());
+          assertSent(server, "GET", "/SoftLayer_Virtual_Guest/3001812/getObject?objectMask=id%3Bhostname%3Bdomain%3BfullyQualifiedDomainName%3BpowerState%3BmaxCpu%3BmaxMemory%3BstatusId%3BoperatingSystem.passwords%3BprimaryBackendIpAddress%3BprimaryIpAddress%3BactiveTransactionCount%3BblockDevices.diskImage%3Bdatacenter%3BtagReferences%3BprivateNetworkOnlyFlag%3BsshKeys");
+       } finally {
+          server.shutdown();
+       }
+    }
+
+    public void testGetVirtualGuestFiltered() throws Exception {
+       MockWebServer server = mockWebServer(new MockResponse().setBody(payloadFromResource("/virtual_guest_get_filtered.json")));
+       VirtualGuestApi api = getVirtualGuestApi(server);
+
+       try {
+          assertEquals(api.getVirtualGuestFiltered(3001812, "id;primaryBackendNetworkComponent;primaryBackendNetworkComponent.networkVlan"), new VirtualGuestFilteredParseTest().expected());
+          assertSent(server, "GET", "/SoftLayer_Virtual_Guest/3001812/getObject?objectMask=id%3BprimaryBackendNetworkComponent%3BprimaryBackendNetworkComponent.networkVlan");
+       } finally {
+          server.shutdown();
+       }
+    }
 
    public void testGetNullVirtualGuest() throws Exception {
       MockWebServer server = mockWebServer(new MockResponse().setResponseCode(404));

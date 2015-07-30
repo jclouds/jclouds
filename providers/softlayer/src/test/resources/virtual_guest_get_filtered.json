@@ -1,0 +1,10 @@
+{
+    "primaryBackendNetworkComponent": {
+        "networkId" : 123456,
+        "networkVlan": {
+            "id": 1234,
+            "name": "abc"
+        }
+    },
+    "id": 3001812
+}
