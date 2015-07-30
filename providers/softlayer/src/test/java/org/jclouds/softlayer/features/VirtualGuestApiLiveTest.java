@@ -21,6 +21,7 @@ import static org.jclouds.softlayer.compute.strategy.SoftLayerComputeServiceAdap
 import static org.jclouds.util.Predicates2.retry;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
+import static org.testng.Assert.assertNull;
 import static org.testng.Assert.assertTrue;
 import java.util.Properties;
 import java.util.Set;
@@ -112,9 +113,19 @@ public class VirtualGuestApiLiveTest extends BaseSoftLayerApiLiveTest {
    public void testGetVirtualGuest() throws Exception {
       VirtualGuest found = virtualGuestApi.getVirtualGuest(virtualGuest.getId());
       assertEquals(found, virtualGuest);
+      assertNull(found.getPrimaryBackendNetworkComponent(), "backendNetworkComponent should be null");
    }
 
    @Test(dependsOnMethods = "testGetVirtualGuest")
+   public void testGetVirtualGuestFiltered() throws Exception {
+      VirtualGuest found = virtualGuestApi.getVirtualGuestFiltered(virtualGuest.getId(), "id;primaryBackendNetworkComponent;primaryBackendNetworkComponent.networkVlan");
+      assertEquals(found.getId(), virtualGuest.getId());
+      assertNotNull(found.getPrimaryBackendNetworkComponent(), "backendNetworkComponent must be returned");
+      assertNotNull(found.getPrimaryBackendNetworkComponent().getNetworkVlan(), "backendNetworkComponent networkVlan must be returned");
+      assertTrue(found.getPrimaryBackendNetworkComponent().getNetworkVlan().getId() > 0, "backendNetworkComponent must have a valid networkVlan ID");
+   }
+
+   @Test(dependsOnMethods = "testGetVirtualGuestFiltered")
    public void testSetTagsOnVirtualGuest() throws Exception {
       ImmutableSet<String> tags = ImmutableSet.of("test", "jclouds");
       assertTrue(virtualGuestApi.setTags(virtualGuest.getId(), tags));

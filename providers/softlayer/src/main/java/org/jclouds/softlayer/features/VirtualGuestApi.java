@@ -19,6 +19,7 @@ package org.jclouds.softlayer.features;
 import static org.jclouds.Fallbacks.FalseOnNotFoundOr404;
 import static org.jclouds.Fallbacks.NullOnNotFoundOr404;
 import static org.jclouds.Fallbacks.VoidOnNotFoundOr404;
+
 import java.util.Set;
 
 import javax.inject.Named;
@@ -28,6 +29,7 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
 import org.jclouds.http.filters.BasicAuthentication;
@@ -71,8 +73,7 @@ public interface VirtualGuestApi {
    VirtualGuest createVirtualGuest(@BinderParam(VirtualGuestToJson.class) VirtualGuest virtualGuest);
 
    /**
-    * @param id
-    *           id of the virtual guest
+    * @param id id of the virtual guest
     * @return virtual guest or null if not found
     * @see <a href="http://sldn.softlayer.com/reference/services/SoftLayer_Virtual_Guest/getObject" />
     */
@@ -82,6 +83,20 @@ public interface VirtualGuestApi {
    @QueryParams(keys = "objectMask", values = GUEST_MASK)
    @Fallback(NullOnNotFoundOr404.class)
    VirtualGuest getVirtualGuest(@PathParam("id") long id);
+
+   /**
+    * Returns a {@link VirtualGuest} with <b>only</b> the fields listed in the filter string.
+    * @param id id of the virtual guest
+    * @param filter semicolon separated list of fields to return in the resulting object
+    * @return virtual guest or null if not found
+    * @see <a href="http://sldn.softlayer.com/reference/services/SoftLayer_Virtual_Guest/getObject" />
+    * @see <a href="http://sldn.softlayer.com/article/object-masks" />
+    */
+   @Named("VirtualGuests:get")
+   @GET
+   @Path("/SoftLayer_Virtual_Guest/{id}/getObject")
+   @Fallback(NullOnNotFoundOr404.class)
+   VirtualGuest getVirtualGuestFiltered(@PathParam("id") long id, @QueryParam("objectMask") String filter);
 
    /**
     * Delete a computing instance
