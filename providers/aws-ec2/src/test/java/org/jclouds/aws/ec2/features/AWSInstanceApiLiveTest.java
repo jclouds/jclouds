@@ -52,7 +52,7 @@ public class AWSInstanceApiLiveTest extends BaseComputeServiceContextLiveTest {
       for (String region : view.unwrapApi(AWSEC2Api.class).getAvailabilityZoneAndRegionApi().get().describeRegions().keySet()) {
          Set<? extends Reservation<? extends RunningInstance>> allResults = client.describeInstancesInRegion(region);
          assertNotNull(allResults);
-         assert allResults.size() >= 0 : allResults.size();
+         assert allResults.size() > 0 : allResults.size();
       }
    }
 }

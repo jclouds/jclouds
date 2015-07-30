@@ -38,7 +38,7 @@ public class GuestOSApiLiveTest extends BaseCloudStackApiLiveTest {
    public void testListOSTypes() throws Exception {
       Set<OSType> response = client.getGuestOSApi().listOSTypes();
       assert null != response;
-      assertTrue(response.size() >= 0);
+      assertTrue(response.size() > 0);
       for (OSType type : response) {
          OSType newDetails = getOnlyElement(client.getGuestOSApi().listOSTypes(
                ListOSTypesOptions.Builder.id(type.getId())));
@@ -50,7 +50,7 @@ public class GuestOSApiLiveTest extends BaseCloudStackApiLiveTest {
    public void testListOSCategories() throws Exception {
       Map<String, String> response = client.getGuestOSApi().listOSCategories();
       assert null != response;
-      assertTrue(response.size() >= 0);
+      assertTrue(response.size() > 0);
       for (Entry<String, String> category : response.entrySet()) {
          checkOSCategory(category);
       }

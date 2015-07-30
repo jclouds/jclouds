@@ -33,7 +33,7 @@ public class SoftwareDescriptionApiLiveTest extends BaseSoftLayerApiLiveTest {
    public void testGetAllObjects() {
       Set<SoftwareDescription> response = api().getAllObjects();
       assertNotNull(response);
-      assertTrue(response.size() >= 0);
+      assertTrue(response.size() > 0);
    }
 
    private SoftwareDescriptionApi api() {

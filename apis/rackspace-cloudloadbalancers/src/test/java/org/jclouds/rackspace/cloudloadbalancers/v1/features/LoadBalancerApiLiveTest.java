@@ -109,7 +109,7 @@ public class LoadBalancerApiLiveTest extends BaseCloudLoadBalancersApiLiveTest {
          Set<LoadBalancer> response = api.getLoadBalancerApi(region).list().concat().toSet();
 
          assertNotNull(response);
-         assertTrue(response.size() >= 0);
+         assertTrue(response.size() > 0);
 
          for (LoadBalancer lb : response) {
             if (!lbs.contains(lb))

@@ -38,7 +38,7 @@ public class GlobalAlertApiLiveTest extends BaseCloudStackApiLiveTest {
 
       final Set<Alert> response = globalAdminClient.getAlertClient().listAlerts();
       assert null != response;
-      assertTrue(response.size() >= 0);
+      assertTrue(response.size() > 0);
       int count = 0;
       for (Alert alert : response) {
          assertNotNull(alert.getDescription());

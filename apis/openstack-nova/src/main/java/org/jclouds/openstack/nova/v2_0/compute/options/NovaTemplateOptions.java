@@ -113,7 +113,7 @@ public class NovaTemplateOptions extends TemplateOptions implements Cloneable {
    @Override
    public int hashCode() {
       return Objects.hashCode(super.hashCode(), autoAssignFloatingIp, floatingIpPoolNames, generateKeyPair, keyPairName, 
-              userData, diskConfig, configDrive, novaNetworks, availabilityZone);
+              Arrays.hashCode(userData), diskConfig, configDrive, novaNetworks, availabilityZone);
    }
 
    @Override

@@ -844,7 +844,7 @@ public abstract class BaseComputeServiceLiveTest extends BaseComputeServiceConte
       for (Hardware hardware : client.listHardwareProfiles()) {
          assert hardware.getProviderId() != null : hardware;
          assert getCores(hardware) > 0 : hardware;
-         assert hardware.getVolumes().size() >= 0 : hardware;
+         assert hardware.getVolumes().size() > 0 : hardware;
          assert hardware.getRam() > 0 : hardware;
          assertEquals(hardware.getType(), ComputeType.HARDWARE);
       }

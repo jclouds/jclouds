@@ -39,7 +39,7 @@ public class DatacenterApiLiveTest extends BaseSoftLayerApiLiveTest {
    public void testListDatacenters() {
       Set<Datacenter> response = api().listDatacenters();
       assertNotNull(response);
-      assertTrue(response.size() >= 0);
+      assertTrue(response.size() > 0);
       for (Datacenter vg : response) {
          Datacenter newDetails = api().getDatacenter(vg.getId());
          assertEquals(vg.getId(), newDetails.getId());

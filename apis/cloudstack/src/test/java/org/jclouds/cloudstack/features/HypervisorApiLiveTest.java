@@ -33,7 +33,7 @@ public class HypervisorApiLiveTest extends BaseCloudStackApiLiveTest {
    public void testListHypervisors() throws Exception {
       Set<String> response = client.getHypervisorApi().listHypervisors();
       assert null != response;
-      assertTrue(response.size() >= 0);
+      assertTrue(response.size() > 0);
       for (Zone zone : client.getZoneApi().listZones()) {
          Set<String> zoneHype = client.getHypervisorApi().listHypervisorsInZone(zone.getId());
          assert response.containsAll(zoneHype);

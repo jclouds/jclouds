@@ -335,7 +335,7 @@ public class VirtualMachineApiLiveTest extends BaseCloudStackApiLiveTest {
    public void testListVirtualMachines() throws Exception {
       Set<VirtualMachine> response = client.getVirtualMachineApi().listVirtualMachines();
       assert null != response;
-      assertTrue(response.size() >= 0);
+      assertTrue(response.size() > 0);
       for (VirtualMachine vm : response) {
          VirtualMachine newDetails = getOnlyElement(client.getVirtualMachineApi().listVirtualMachines(
                ListVirtualMachinesOptions.Builder.id(vm.getId())));
@@ -392,7 +392,7 @@ public class VirtualMachineApiLiveTest extends BaseCloudStackApiLiveTest {
          }
 
       }
-      assert vm.getSecurityGroups() != null && vm.getSecurityGroups().size() >= 0 : vm;
+      assert vm.getSecurityGroups() != null && vm.getSecurityGroups().size() > 0 : vm;
       assert vm.getHypervisor() != null : vm;
    }
 }

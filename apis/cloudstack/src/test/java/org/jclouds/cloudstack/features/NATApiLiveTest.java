@@ -38,7 +38,7 @@ public class NATApiLiveTest extends BaseCloudStackApiLiveTest {
    public void testListIPForwardingRules() throws Exception {
       Set<IPForwardingRule> response = client.getNATApi().listIPForwardingRules();
       assert null != response;
-      assertTrue(response.size() >= 0);
+      assertTrue(response.size() > 0);
       for (IPForwardingRule rule : response) {
          IPForwardingRule newDetails = getOnlyElement(client.getNATApi().listIPForwardingRules(
                ListIPForwardingRulesOptions.Builder.id(rule.getId())));

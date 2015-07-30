@@ -107,7 +107,7 @@ public class NodeApiLiveTest extends BaseCloudLoadBalancersApiLiveTest {
       for (LoadBalancer lb : nodes.keySet()) {
          Set<Node> response = api.getNodeApi(lb.getRegion(), lb.getId()).list().concat().toSet();
          assert null != response;
-         assertTrue(response.size() >= 0);
+         assertTrue(response.size() > 0);
          for (Node n : response) {
             assert n.getId() != -1 : n;
             assert n.getCondition() != null : n;

@@ -71,7 +71,7 @@ public class AddressApiLiveTest extends BaseCloudStackApiLiveTest {
          return;
       Set<PublicIPAddress> response = client.getAddressApi().listPublicIPAddresses();
       assert null != response;
-      assertTrue(response.size() >= 0);
+      assertTrue(response.size() > 0);
       for (PublicIPAddress ip : response) {
          PublicIPAddress newDetails = getOnlyElement(client.getAddressApi().listPublicIPAddresses(
                ListPublicIPAddressesOptions.Builder.id(ip.getId())));

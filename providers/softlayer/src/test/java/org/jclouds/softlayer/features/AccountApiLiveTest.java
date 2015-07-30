@@ -45,7 +45,7 @@ public class AccountApiLiveTest extends BaseSoftLayerApiLiveTest {
    @Test
    public void testListVirtualGuests() throws Exception {
       Set<VirtualGuest> response = api().listVirtualGuests();
-      assertTrue(response.size() >= 0);
+      assertTrue(response.size() > 0);
       for (VirtualGuest vg : response) {
          checkVirtualGuest(vg);
       }

@@ -115,7 +115,7 @@ public class FirewallApiLiveTest extends BaseCloudStackApiLiveTest {
    public void testListPortForwardingRules() throws Exception {
       Set<PortForwardingRule> response = client.getFirewallApi().listPortForwardingRules();
       assert null != response;
-      assertTrue(response.size() >= 0);
+      assertTrue(response.size() > 0);
       for (final PortForwardingRule rule : response) {
          checkPortForwardingRule(rule);
       }

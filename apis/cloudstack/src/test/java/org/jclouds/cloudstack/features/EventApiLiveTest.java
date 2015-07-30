@@ -33,7 +33,7 @@ public class EventApiLiveTest extends BaseCloudStackApiLiveTest {
    public void testlistEventTypes() throws Exception {
       final Set<String> response = client.getEventApi().listEventTypes();
       assert null != response;
-      assertTrue(response.size() >= 0);
+      assertTrue(response.size() > 0);
       for (String type : response) {
          checkEventType(type);
       }
@@ -42,7 +42,7 @@ public class EventApiLiveTest extends BaseCloudStackApiLiveTest {
    public void testlistEvents() throws Exception {
       final Set<Event> response = client.getEventApi().listEvents();
       assert null != response;
-      assertTrue(response.size() >= 0);
+      assertTrue(response.size() > 0);
       for (Event event : response) {
          checkEvent(event);
       }

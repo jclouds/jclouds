@@ -50,7 +50,7 @@ public class FloatingIPApiLiveTest extends BaseNovaApiLiveTest {
          FloatingIPApi api = apiOption.get();
          Set<? extends FloatingIP> response = api.list().toSet();
          assert null != response;
-         assertTrue(response.size() >= 0);
+         assertTrue(response.size() > 0);
          for (FloatingIP ip : response) {
             FloatingIP newDetails = api.get(ip.getId());
 

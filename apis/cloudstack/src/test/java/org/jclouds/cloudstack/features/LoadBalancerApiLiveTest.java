@@ -191,7 +191,7 @@ public class LoadBalancerApiLiveTest extends BaseCloudStackApiLiveTest {
    public void testListLoadBalancerRules() throws Exception {
       Set<LoadBalancerRule> response = client.getLoadBalancerApi().listLoadBalancerRules();
       assert null != response;
-      assertTrue(response.size() >= 0);
+      assertTrue(response.size() > 0);
       for (LoadBalancerRule rule : response) {
          LoadBalancerRule newDetails = findRuleWithId(rule.getId());
          assertEquals(rule.getId(), newDetails.getId());

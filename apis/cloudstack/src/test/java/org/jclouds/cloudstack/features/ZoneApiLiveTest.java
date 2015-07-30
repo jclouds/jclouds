@@ -58,8 +58,8 @@ public class ZoneApiLiveTest extends BaseCloudStackApiLiveTest {
             break;
          case BASIC:
             assert zone.getVLAN() == null : zone;
-            assert zone.getDNS().size() >= 0 : zone;
-            assert zone.getInternalDNS().size() >= 0 : zone;
+            assert zone.getDNS().size() > 0 : zone;
+            assert zone.getInternalDNS().size() > 0 : zone;
             assert zone.getDomain() == null : zone;
             assert zone.getDomainId() == null : zone;
             assert zone.getGuestCIDRAddress() == null : zone;
