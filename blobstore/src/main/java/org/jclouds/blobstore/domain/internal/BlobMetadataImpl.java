@@ -22,6 +22,7 @@ import java.net.URI;
 import java.util.Date;
 import java.util.Map;
 
+import com.google.common.base.Objects;
 import org.jclouds.blobstore.domain.BlobMetadata;
 import org.jclouds.blobstore.domain.StorageType;
 import org.jclouds.domain.Location;
@@ -71,4 +72,23 @@ public class BlobMetadataImpl extends StorageMetadataImpl implements BlobMetadat
       return contentMetadata;
    }
 
+   @Override
+   public boolean equals(Object object) {
+      if (object == this) {
+         return true;
+      }
+      if (!(object instanceof BlobMetadataImpl)) {
+         return false;
+      }
+      BlobMetadataImpl that = (BlobMetadataImpl) object;
+      return super.equals(that) &&
+            Objects.equal(publicUri, that.publicUri) &&
+            Objects.equal(container, that.container) &&
+            Objects.equal(contentMetadata, that.contentMetadata);
+   }
+
+   @Override
+   public int hashCode() {
+      return Objects.hashCode(super.hashCode(), publicUri, container, contentMetadata);
+   }
 }

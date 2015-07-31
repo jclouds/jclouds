@@ -18,6 +18,7 @@ package org.jclouds.blobstore.domain.internal;
 
 import java.net.URI;
 
+import com.google.common.base.Objects;
 import org.jclouds.blobstore.domain.BlobMetadata;
 import org.jclouds.blobstore.domain.MutableBlobMetadata;
 import org.jclouds.blobstore.domain.StorageType;
@@ -95,4 +96,23 @@ public class MutableBlobMetadataImpl extends MutableStorageMetadataImpl implemen
       this.container = container;
    }
 
+   @Override
+   public boolean equals(Object object) {
+      if (object == this) {
+         return true;
+      }
+      if (!(object instanceof MutableBlobMetadataImpl)) {
+         return false;
+      }
+      MutableBlobMetadataImpl that = (MutableBlobMetadataImpl) object;
+      return super.equals(that) &&
+            Objects.equal(contentMetadata, that.contentMetadata) &&
+            Objects.equal(publicUri, that.publicUri) &&
+            Objects.equal(container, that.container);
+   }
+
+   @Override
+   public int hashCode() {
+      return Objects.hashCode(super.hashCode(), contentMetadata, publicUri, container);
+   }
 }
