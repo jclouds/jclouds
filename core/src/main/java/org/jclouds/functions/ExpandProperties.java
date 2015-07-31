@@ -84,9 +84,10 @@ public class ExpandProperties implements Function<Properties, Properties> {
 
    private boolean resolveProperties(Map<String, String> properties, Map<String, String> variables) {
       boolean anyReplacementDone = false;
-      for (String key : properties.keySet()) {
+      for (Map.Entry<String, String> entry : properties.entrySet()) {
+         String key = entry.getKey();
          StringBuffer sb = new StringBuffer();
-         Matcher m = VAR.matcher(properties.get(key));
+         Matcher m = VAR.matcher(entry.getValue());
          while (m.find()) {
             String match = m.group();
             // Remove the ${} from the matched variable

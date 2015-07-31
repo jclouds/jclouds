@@ -78,7 +78,7 @@ public class JWTBearerTokenFlow implements OAuthFilter {
       // since the session interval is also the token expiration time requested to the server make the token expire a
       // bit before the deadline to make sure there aren't session expiration exceptions
       long cacheExpirationSeconds = tokenDuration > 30 ? tokenDuration - 30 : tokenDuration;
-      this.tokenCache = CacheBuilder.newBuilder().expireAfterWrite(tokenDuration, SECONDS).build(loader);
+      this.tokenCache = CacheBuilder.newBuilder().expireAfterWrite(cacheExpirationSeconds, SECONDS).build(loader);
    }
 
    static final class AuthorizeToken extends CacheLoader<Claims, Token> {

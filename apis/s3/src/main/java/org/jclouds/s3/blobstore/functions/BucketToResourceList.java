@@ -57,7 +57,6 @@ public class BucketToResourceList implements
       SortedSet<StorageMetadata> contents = Sets.<StorageMetadata> newTreeSet(Iterables.transform(from,
                object2blobMd));
 
-      Map<String, StorageMetadata> nameToMd = Maps.uniqueIndex(contents, indexer);
       for (String prefix : from.getCommonPrefixes()) {
          contents.add(prefix2ResourceMd.apply(prefix));
       }

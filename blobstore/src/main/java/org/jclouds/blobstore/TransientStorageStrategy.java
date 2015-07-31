@@ -122,7 +122,7 @@ public class TransientStorageStrategy implements LocalStorageStrategy {
    @Override
    public void deleteContainer(final String containerName) {
       containerToBlobs.remove(containerName);
-      containerToBlobAccess.remove(containerToBlobAccess);
+      containerToBlobAccess.remove(containerName);
    }
 
    @Override

@@ -417,7 +417,7 @@ public class RegionScopedSwiftBlobStore implements BlobStore {
    private MultipartUpload initiateMultipartUpload(String container, BlobMetadata blobMetadata, long partSize) {
       Long contentLength = blobMetadata.getContentMetadata().getContentLength();
       String uploadId = String.format("%s/slo/%.6f/%s/%s", blobMetadata.getName(),
-              System.currentTimeMillis() / 1000.0, contentLength == null ? 0 : contentLength,
+              System.currentTimeMillis() / 1000.0, contentLength == null ? Long.valueOf(0) : contentLength,
               partSize);
       return MultipartUpload.create(container, blobMetadata.getName(), uploadId, blobMetadata);
    }

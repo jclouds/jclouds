@@ -58,7 +58,6 @@ public class ListBlobsResponseToResourceList implements
       SortedSet<StorageMetadata> contents = Sets.<StorageMetadata> newTreeSet(Iterables.transform(from,
                object2blobMd));
 
-      Map<String, StorageMetadata> nameToMd = Maps.uniqueIndex(contents, indexer);
       for (String prefix : from.getBlobPrefixes()) {
          contents.add(prefix2ResourceMd.apply(prefix));
       }
