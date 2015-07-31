@@ -16,7 +16,6 @@
  */
 package org.jclouds.azureblob.blobstore.functions;
 
-import java.util.Map;
 import java.util.SortedSet;
 
 import javax.inject.Inject;
@@ -30,7 +29,6 @@ import org.jclouds.blobstore.functions.PrefixToResourceMetadata;
 
 import com.google.common.base.Function;
 import com.google.common.collect.Iterables;
-import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 
 @Singleton
