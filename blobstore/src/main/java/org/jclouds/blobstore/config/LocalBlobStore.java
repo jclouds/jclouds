@@ -80,9 +80,12 @@ import org.jclouds.http.HttpRequest;
 import org.jclouds.http.HttpResponse;
 import org.jclouds.http.HttpResponseException;
 import org.jclouds.http.HttpUtils;
+import org.jclouds.io.ByteStreams2;
 import org.jclouds.io.ContentMetadata;
 import org.jclouds.io.ContentMetadataCodec;
 import org.jclouds.io.Payload;
+import org.jclouds.io.payloads.ByteArrayPayload;
+import org.jclouds.io.payloads.FilePayload;
 import org.jclouds.logging.Logger;
 import org.jclouds.util.Closeables2;
 
@@ -684,9 +687,18 @@ public final class LocalBlobStore implements BlobStore {
                if (last + 1 > blob.getPayload().getContentMetadata().getContentLength()) {
                   last = blob.getPayload().getContentMetadata().getContentLength() - 1;
                }
-               // We must call getRawContent to work around Blob.setPayload calling ByteSourcePayload.release.  Local
-               // blobstores always return either a ByteArrayPayload or FilePayload.
-               ByteSource byteSource = (ByteSource) blob.getPayload().getRawContent();
+               // We must call getRawContent to work around Blob.setPayload calling ByteSourcePayload.release. If the
+               // Local blobstore returns a ByteArrayPayload or FilePayload it uses a stream, otherwise it uses a
+               // byte array.
+               ByteSource byteSource;
+               try {
+                  Object inputStream = blob.getPayload().getRawContent();
+                  byteSource = (inputStream instanceof ByteArrayPayload || inputStream instanceof FilePayload) ?
+                        (ByteSource) blob.getPayload().getRawContent()
+                        : ByteSource.wrap(ByteStreams2.toByteArrayAndClose(blob.getPayload().openStream()));
+               } catch (IOException e) {
+                  throw new RuntimeException(e);
+               }
                streams.add(byteSource.slice(offset, last - offset + 1));
                size += last - offset + 1;
                blob.getAllHeaders().put(HttpHeaders.CONTENT_RANGE,
