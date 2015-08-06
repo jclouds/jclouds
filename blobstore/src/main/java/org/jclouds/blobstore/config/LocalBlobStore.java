@@ -661,6 +661,20 @@ public final class LocalBlobStore implements BlobStore {
          if (options.getRanges() != null && !options.getRanges().isEmpty()) {
             long size = 0;
             ImmutableList.Builder<ByteSource> streams = ImmutableList.builder();
+
+            // We must call getRawContent to work around Blob.setPayload calling ByteSourcePayload.release. If the
+            // Local blobstore returns a ByteArrayPayload or FilePayload it uses a stream, otherwise it uses a
+            // byte array.
+            ByteSource byteSource;
+            try {
+               Object inputStream = blob.getPayload().getRawContent();
+               byteSource = (inputStream instanceof ByteArrayPayload || inputStream instanceof FilePayload) ?
+                     (ByteSource) blob.getPayload().getRawContent()
+                     : ByteSource.wrap(ByteStreams2.toByteArrayAndClose(blob.getPayload().openStream()));
+            } catch (IOException e) {
+               throw new RuntimeException(e);
+            }
+
             for (String s : options.getRanges()) {
                // HTTP uses a closed interval while Java array indexing uses a
                // half-open interval.
@@ -686,18 +700,6 @@ public final class LocalBlobStore implements BlobStore {
                }
                if (last + 1 > blob.getPayload().getContentMetadata().getContentLength()) {
                   last = blob.getPayload().getContentMetadata().getContentLength() - 1;
-               }
-               // We must call getRawContent to work around Blob.setPayload calling ByteSourcePayload.release. If the
-               // Local blobstore returns a ByteArrayPayload or FilePayload it uses a stream, otherwise it uses a
-               // byte array.
-               ByteSource byteSource;
-               try {
-                  Object inputStream = blob.getPayload().getRawContent();
-                  byteSource = (inputStream instanceof ByteArrayPayload || inputStream instanceof FilePayload) ?
-                        (ByteSource) blob.getPayload().getRawContent()
-                        : ByteSource.wrap(ByteStreams2.toByteArrayAndClose(blob.getPayload().openStream()));
-               } catch (IOException e) {
-                  throw new RuntimeException(e);
                }
                streams.add(byteSource.slice(offset, last - offset + 1));
                size += last - offset + 1;
