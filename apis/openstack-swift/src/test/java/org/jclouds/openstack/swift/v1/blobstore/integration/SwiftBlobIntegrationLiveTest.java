@@ -80,11 +80,6 @@ public class SwiftBlobIntegrationLiveTest extends BaseBlobIntegrationTest {
    }
 
    @Override
-   public void testCopyBlobReplaceMetadata() throws Exception {
-      throw new SkipException("Swift only supports appending to user metadata, not replacing it");
-   }
-
-   @Override
    protected long getMinimumMultipartBlobSize() {
       return 1;
    }

@@ -19,6 +19,7 @@ package org.jclouds.openstack.swift.v1.features;
 import static com.google.common.net.HttpHeaders.EXPECT;
 import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 import static org.jclouds.openstack.swift.v1.reference.SwiftHeaders.OBJECT_COPY_FROM;
+import static org.jclouds.openstack.swift.v1.reference.SwiftHeaders.OBJECT_COPY_FRESH_METADATA;
 
 import java.util.Map;
 
@@ -309,7 +310,7 @@ public interface ObjectApi {
    @Named("object:copy")
    @PUT
    @Path("/{destinationObject}")
-   @Headers(keys = OBJECT_COPY_FROM, values = "/{sourceContainer}/{sourceObject}")
+   @Headers(keys = {OBJECT_COPY_FROM, OBJECT_COPY_FRESH_METADATA}, values = {"/{sourceContainer}/{sourceObject}", "True"})
    @Fallback(FalseOnKeyNotFound.class)
    boolean copy(@PathParam("destinationObject") String destinationObject,
          @PathParam("sourceContainer") String sourceContainer,

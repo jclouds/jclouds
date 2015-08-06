@@ -71,6 +71,7 @@ public final class SwiftHeaders {
    public static final String CONTAINER_WEB_MODE = "X-Web-Mode";
 
    public static final String OBJECT_COPY_FROM = "X-Copy-From";
+   public static final String OBJECT_COPY_FRESH_METADATA = "X-Fresh-Metadata";
    public static final String OBJECT_DELETE_AFTER = "X-Delete-After";
    public static final String OBJECT_DELETE_AT = "X-Delete-At";
    public static final String OBJECT_MANIFEST = "X-Object-Manifest";
