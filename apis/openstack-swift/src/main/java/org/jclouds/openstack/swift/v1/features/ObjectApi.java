@@ -287,7 +287,7 @@ public interface ObjectApi {
                 @PathParam("sourceObject") String sourceObject);
 
    /**
-    * Copies an object from one container to another.
+    * Copies an object from one container to another, replacing metadata.
     *
     * <h3>NOTE</h3>
     * This is a server side copy.
@@ -318,4 +318,36 @@ public interface ObjectApi {
          @BinderParam(BindObjectMetadataToHeaders.class) Map<String, String> userMetadata,
          @BinderParam(BindToHeaders.class) Map<String, String> objectMetadata);
 
+
+   /**
+    * Copies an object from one container to another, appending metadata.
+    *
+    * <h3>NOTE</h3>
+    * This is a server side copy.
+    *
+    * @param destinationObject
+    *           the destination object name.
+    * @param sourceContainer
+    *           the source container name.
+    * @param sourceObject
+    *           the source object name.
+    * @param userMetadata
+    *           Freeform metadata for the object, automatically prefixed/escaped
+    * @param objectMetadata
+    *           Unprefixed/unescaped metadata, such as Content-Disposition
+    *
+    * @return {@code true} if the object was successfully copied, {@code false} if not.
+    *
+    * @throws KeyNotFoundException if the source or destination container do not exist.
+    */
+   @Named("object:copy")
+   @PUT
+   @Path("/{destinationObject}")
+   @Headers(keys = OBJECT_COPY_FROM, values = "/{sourceContainer}/{sourceObject}")
+   @Fallback(FalseOnKeyNotFound.class)
+   boolean copyAppendMetadata(@PathParam("destinationObject") String destinationObject,
+         @PathParam("sourceContainer") String sourceContainer,
+         @PathParam("sourceObject") String sourceObject,
+         @BinderParam(BindObjectMetadataToHeaders.class) Map<String, String> userMetadata,
+         @BinderParam(BindToHeaders.class) Map<String, String> objectMetadata);
 }
