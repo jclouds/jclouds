@@ -90,12 +90,12 @@
     <dependency>
       <groupId>com.jcraft</groupId>
       <artifactId>jsch.agentproxy.jsch</artifactId>
-      <version>0.0.8</version>
+      <version>0.0.9</version>
     </dependency>
     <dependency>
       <groupId>com.jcraft</groupId>
       <artifactId>jsch.agentproxy.connector-factory</artifactId>
-      <version>0.0.8</version>
+      <version>0.0.9</version>
     </dependency>
   </dependencies>
 

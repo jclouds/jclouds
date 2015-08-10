@@ -87,15 +87,9 @@
       <scope>test</scope>
     </dependency>
     <dependency>
-      <groupId>net.schmizz</groupId>
+      <groupId>com.hierynomus</groupId>
       <artifactId>sshj</artifactId>
-      <version>0.8.1</version>
-    </dependency>
-    <!-- required by sshj -->
-    <dependency>
-      <groupId>org.bouncycastle</groupId>
-      <artifactId>bcpkix-jdk15on</artifactId>
-      <version>1.49</version>
+      <version>0.12.0</version>
       <exclusions>
         <!-- provided by the jclouds-bouncycastle driver -->
         <exclusion>
@@ -107,12 +101,19 @@
     <dependency>
       <groupId>com.jcraft</groupId>
       <artifactId>jsch.agentproxy.sshj</artifactId>
-      <version>0.0.8</version>
+      <version>0.0.9</version>
+      <exclusions>
+        <!-- required due to sshj group ID change -->
+        <exclusion>
+          <groupId>net.schmizz</groupId>
+          <artifactId>sshj</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
     <dependency>
       <groupId>com.jcraft</groupId>
       <artifactId>jsch.agentproxy.connector-factory</artifactId>
-      <version>0.0.8</version>
+      <version>0.0.9</version>
     </dependency>
   </dependencies>
 

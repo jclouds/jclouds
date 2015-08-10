@@ -48,6 +48,7 @@ import net.schmizz.sshj.connection.channel.direct.PTYMode;
 import net.schmizz.sshj.connection.channel.direct.Session;
 import net.schmizz.sshj.connection.channel.direct.Session.Command;
 import net.schmizz.sshj.connection.channel.direct.SessionChannel;
+import net.schmizz.sshj.sftp.RemoteFile;
 import net.schmizz.sshj.sftp.SFTPClient;
 import net.schmizz.sshj.sftp.SFTPException;
 import net.schmizz.sshj.transport.TransportException;
@@ -271,8 +272,18 @@ public class SshjSshClient implements SshClient {
       @Override
       public Payload create() throws Exception {
          sftp = acquire(sftpConnection);
-         return Payloads.newInputStreamPayload(new CloseFtpChannelOnCloseInputStream(sftp.getSFTPEngine().open(path)
-                  .getInputStream(), sftp));
+         final RemoteFile remoteFile = sftp.getSFTPEngine().open(path);
+         final InputStream in = remoteFile.new RemoteFileInputStream() {
+            @Override
+            public void close() throws IOException {
+               try {
+                  super.close();
+               } finally {
+                  remoteFile.close();
+               }
+            }
+         };
+         return Payloads.newInputStreamPayload(new CloseFtpChannelOnCloseInputStream(in, sftp));
       }
 
       @Override
