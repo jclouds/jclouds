@@ -16,7 +16,6 @@
  */
 package org.jclouds.rackspace.cloudfiles.v1.features;
 
-import org.jclouds.rackspace.cloudfiles.v1.features.CloudFilesObjectApiLiveTest;
 import org.testng.annotations.Test;
 
 /**
