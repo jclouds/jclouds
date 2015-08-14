@@ -16,12 +16,17 @@
  */
 package org.jclouds.docker.config;
 
+import java.io.File;
+
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import org.jclouds.docker.suppliers.DockerSSLContextSupplier;
+import org.jclouds.domain.Credentials;
 import org.jclouds.http.okhttp.OkHttpClientSupplier;
+import org.jclouds.location.Provider;
 
+import com.google.common.base.Supplier;
 import com.google.common.collect.ImmutableList;
 import com.squareup.okhttp.ConnectionSpec;
 import com.squareup.okhttp.OkHttpClient;
@@ -31,10 +36,12 @@ import com.squareup.okhttp.TlsVersion;
 public class DockerOkHttpClientSupplier implements OkHttpClientSupplier {
 
     private final DockerSSLContextSupplier dockerSSLContextSupplier;
+    private final Supplier<Credentials> creds;
 
     @Inject
-    DockerOkHttpClientSupplier(DockerSSLContextSupplier dockerSSLContextSupplier) {
+    DockerOkHttpClientSupplier(DockerSSLContextSupplier dockerSSLContextSupplier, @Provider Supplier<Credentials> creds) {
         this.dockerSSLContextSupplier = dockerSSLContextSupplier;
+        this.creds = creds;
     }
 
     @Override
@@ -46,7 +53,10 @@ public class DockerOkHttpClientSupplier implements OkHttpClientSupplier {
         ConnectionSpec cleartextSpec = new ConnectionSpec.Builder(ConnectionSpec.CLEARTEXT)
                 .build();
         client.setConnectionSpecs(ImmutableList.of(tlsSpec, cleartextSpec));
-        client.setSslSocketFactory(dockerSSLContextSupplier.get().getSocketFactory());
+        // check if identity and credential are files, to set up sslContext
+        if (new File(creds.get().identity).isFile() && new File(creds.get().credential).isFile()) {
+           client.setSslSocketFactory(dockerSSLContextSupplier.get().getSocketFactory());
+        }
         return client;
     }
 
