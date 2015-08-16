@@ -92,4 +92,22 @@ public class DockerTemplateOptionsTest {
       assertEquals(options.as(DockerTemplateOptions.class).getCpuShares(), Integer.valueOf(4));
    }
 
+   @Test
+   public void testCopyTo() {
+      DockerTemplateOptions options = DockerTemplateOptions.Builder
+            .memory(512)
+            .cpuShares(4)
+            .commands("test")
+            .portBindings(
+                  ImmutableMap.<Integer, Integer> builder()
+                        .put(8443, 443).build()).hostname("hostname")
+            .userMetadata(ImmutableMap.of("key", "value"))
+            .env(ImmutableList.of("HOST=abc", "PORT=1234"))
+            .dns("8.8.8.8", "8.8.4.4")
+            .volumes(ImmutableMap.of("/tmp", "/tmp"));
+      DockerTemplateOptions optionsCopy = new DockerTemplateOptions();
+      options.copyTo(optionsCopy);
+      assertEquals(optionsCopy, options);
+   }
+
 }

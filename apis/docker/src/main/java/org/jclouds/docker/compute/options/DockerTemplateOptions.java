@@ -80,7 +80,7 @@ public class DockerTemplateOptions extends TemplateOptions implements Cloneable 
          }
          eTo.memory(memory);
          eTo.cpuShares(cpuShares);
-         if (commands.isEmpty()) {
+         if (!commands.isEmpty()) {
             eTo.commands(commands);
          }
          if (!env.isEmpty()) {
