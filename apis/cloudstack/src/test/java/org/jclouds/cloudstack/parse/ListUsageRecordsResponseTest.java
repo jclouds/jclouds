@@ -60,7 +60,8 @@ public class ListUsageRecordsResponseTest extends BaseSetParserTest<UsageRecord>
                .accountName("admin").accountId("2").domainId("1").zoneId("1")
                .description("Template Id:203 Size:3117171712")
                .usage("24 Hrs").usageType(UsageRecord.UsageType.TEMPLATE).rawUsageHours(24)
-            .templateId("0").id("203").startDate(start).endDate(end).build());
+               .size(3117171712l).templateId("0").id("203")
+               .startDate(start).endDate(end).build());
 
    }
    
