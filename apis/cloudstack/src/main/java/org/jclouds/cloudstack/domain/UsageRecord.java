@@ -111,6 +111,7 @@ public class UsageRecord {
       protected boolean isSourceNAT;
       protected double rawUsageHours;
       protected String usage;
+      protected Long size;
       protected String type;
       protected UsageType usageType;
 
@@ -257,6 +258,14 @@ public class UsageRecord {
          this.usage = usage;
          return self();
       }
+      
+      /**
+       * @see UsageRecord#getSize()
+       */
+      public T size(Long size) {
+         this.size = size;
+         return self();
+      }
 
       /**
        * @see UsageRecord#getType()
@@ -277,7 +286,7 @@ public class UsageRecord {
       public UsageRecord build() {
          return new UsageRecord(id, description, accountId, accountName, domainId, startDate, endDate, assignDate, releaseDate,
                zoneId, virtualMachineId, virtualMachineName, serviceOfferingId, templateId, ipAddress, isSourceNAT, rawUsageHours,
-               usage, type, usageType);
+               usage, size, type, usageType);
       }
 
       public T fromUsageRecord(UsageRecord in) {
@@ -300,6 +309,7 @@ public class UsageRecord {
                .isSourceNAT(in.isSourceNAT())
                .rawUsageHours(in.getRawUsageHours())
                .usage(in.getUsage())
+               .size(in.getSize())
                .type(in.getType())
                .usageType(in.getUsageType());
       }
@@ -330,19 +340,21 @@ public class UsageRecord {
    private final boolean isSourceNAT;
    private final double rawUsageHours;
    private final String usage;
+   private final Long size;
    private final String type;
    private final UsageType usageType;
 
    @ConstructorProperties({
          "usageid", "description", "accountid", "account", "domainid", "startdate", "enddate", "assigndate", "releasedate",
          "zoneid", "virtualmachineid", "name", "offeringid", "templateid", "ipaddress", "issourcenat", "rawusage", "usage",
-         "type", "usagetype"
+         "size", "type", "usagetype"
    })
    protected UsageRecord(String id, @Nullable String description, @Nullable String accountId, @Nullable String accountName,
                          @Nullable String domainId, @Nullable Date startDate, @Nullable Date endDate, @Nullable Date assignDate,
                          @Nullable String releaseDate, @Nullable String zoneId, @Nullable String virtualMachineId, @Nullable String virtualMachineName,
                          @Nullable String serviceOfferingId, @Nullable String templateId, @Nullable String ipAddress,
-                         boolean isSourceNAT, double rawUsageHours, @Nullable String usage, @Nullable String type, @Nullable UsageType usageType) {
+                         boolean isSourceNAT, double rawUsageHours, @Nullable String usage, @Nullable Long size,
+                         @Nullable String type, @Nullable UsageType usageType) {
       this.id = id;
       this.description = description;
       this.accountId = accountId;
@@ -361,6 +373,7 @@ public class UsageRecord {
       this.isSourceNAT = isSourceNAT;
       this.rawUsageHours = rawUsageHours;
       this.usage = usage;
+      this.size = size;
       this.type = type;
       this.usageType = usageType;
    }
@@ -451,6 +464,10 @@ public class UsageRecord {
    public String getUsage() {
       return this.usage;
    }
+   
+   public Long getSize() {
+      return this.size;
+   }
 
    @Nullable
    public String getType() {
@@ -466,7 +483,7 @@ public class UsageRecord {
    public int hashCode() {
       return Objects.hashCode(id, description, accountId, accountName, domainId, startDate, endDate, assignDate, releaseDate,
             zoneId, virtualMachineId, virtualMachineName, serviceOfferingId, templateId, ipAddress, isSourceNAT, rawUsageHours,
-            usage, type, usageType);
+            size, usage, type, usageType);
    }
 
    @Override
@@ -492,6 +509,7 @@ public class UsageRecord {
             && Objects.equal(this.isSourceNAT, that.isSourceNAT)
             && Objects.equal(this.rawUsageHours, that.rawUsageHours)
             && Objects.equal(this.usage, that.usage)
+            && Objects.equal(this.size, that.size)
             && Objects.equal(this.type, that.type)
             && Objects.equal(this.usageType, that.usageType);
    }
@@ -503,7 +521,7 @@ public class UsageRecord {
             .add("releaseDate", releaseDate).add("zoneId", zoneId).add("virtualMachineId", virtualMachineId)
             .add("virtualMachineName", virtualMachineName).add("serviceOfferingId", serviceOfferingId).add("templateId", templateId)
             .add("ipAddress", ipAddress).add("isSourceNAT", isSourceNAT).add("rawUsageHours", rawUsageHours).add("usage", usage)
-            .add("type", type).add("usageType", usageType);
+            .add("size", size).add("type", type).add("usageType", usageType);
    }
 
    @Override
