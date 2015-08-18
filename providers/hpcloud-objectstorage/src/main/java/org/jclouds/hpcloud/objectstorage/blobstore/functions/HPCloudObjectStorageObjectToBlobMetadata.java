@@ -20,7 +20,6 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import org.jclouds.blobstore.domain.MutableBlobMetadata;
-import org.jclouds.blobstore.strategy.IfDirectoryReturnNameStrategy;
 import org.jclouds.openstack.swift.blobstore.functions.ObjectToBlobMetadata;
 import org.jclouds.openstack.swift.domain.ObjectInfo;
 
@@ -30,9 +29,8 @@ public class HPCloudObjectStorageObjectToBlobMetadata extends ObjectToBlobMetada
    private final PublicUriForObjectInfo publicUriForObjectInfo;
 
    @Inject
-   public HPCloudObjectStorageObjectToBlobMetadata(IfDirectoryReturnNameStrategy ifDirectoryReturnName,
-            PublicUriForObjectInfo publicUriForObjectInfo) {
-      super(ifDirectoryReturnName);
+   public HPCloudObjectStorageObjectToBlobMetadata(PublicUriForObjectInfo publicUriForObjectInfo) {
+      super();
       this.publicUriForObjectInfo = publicUriForObjectInfo;
 
    }
