@@ -256,7 +256,7 @@ public class BaseContainerIntegrationTest extends BaseBlobStoreIntegrationTest {
          awaitConsistency();
 
          assert view.getBlobStore().directoryExists(containerName, directory);
-         assert view.getBlobStore().directoryExists(containerName, directory + "/" + directory);
+         assertThat(view.getBlobStore().directoryExists(containerName, directory + "/" + directory)).isFalse();
 
          // should have only the 2 level-deep directory above
          container = view.getBlobStore().list(containerName, inDirectory(directory));
