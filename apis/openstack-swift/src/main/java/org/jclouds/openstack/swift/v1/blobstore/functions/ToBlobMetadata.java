@@ -21,8 +21,6 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import org.jclouds.blobstore.domain.MutableBlobMetadata;
 import org.jclouds.blobstore.domain.StorageType;
 import org.jclouds.blobstore.domain.internal.MutableBlobMetadataImpl;
-import org.jclouds.blobstore.strategy.IfDirectoryReturnNameStrategy;
-import org.jclouds.blobstore.strategy.internal.MarkersIfDirectoryReturnNameStrategy;
 import org.jclouds.openstack.swift.v1.domain.Container;
 import org.jclouds.openstack.swift.v1.domain.SwiftObject;
 import org.jclouds.openstack.swift.v1.functions.ParseObjectListFromResponse;
@@ -31,7 +29,6 @@ import com.google.common.base.Function;
 
 public class ToBlobMetadata implements Function<SwiftObject, MutableBlobMetadata> {
 
-   private final IfDirectoryReturnNameStrategy ifDirectoryReturnName = new MarkersIfDirectoryReturnNameStrategy();
    private final Container container;
 
    public ToBlobMetadata(Container container) {
@@ -57,7 +54,7 @@ public class ToBlobMetadata implements Function<SwiftObject, MutableBlobMetadata
       to.getContentMetadata().setExpires(from.getPayload().getContentMetadata().getExpires());
       to.setUserMetadata(from.getMetadata());
       if (eTag != null && eTag.equals(ParseObjectListFromResponse.SUBDIR_ETAG)) {
-         to.setType(StorageType.RELATIVE_PATH);
+         to.setType(StorageType.FOLDER);
       } else {
          to.setType(StorageType.BLOB);
       }
