@@ -26,7 +26,6 @@ import org.jclouds.azureblob.domain.PublicAccess;
 import org.jclouds.blobstore.domain.MutableBlobMetadata;
 import org.jclouds.blobstore.domain.StorageType;
 import org.jclouds.blobstore.domain.internal.MutableBlobMetadataImpl;
-import org.jclouds.blobstore.strategy.IfDirectoryReturnNameStrategy;
 import org.jclouds.http.HttpUtils;
 
 import com.google.common.base.Function;
@@ -35,13 +34,10 @@ import com.google.common.cache.LoadingCache;
 
 @Singleton
 public class BlobPropertiesToBlobMetadata implements Function<BlobProperties, MutableBlobMetadata> {
-   private final IfDirectoryReturnNameStrategy ifDirectoryReturnName;
    private final LoadingCache<String, PublicAccess> containerAcls;
 
    @Inject
-   public BlobPropertiesToBlobMetadata(IfDirectoryReturnNameStrategy ifDirectoryReturnName,
-            LoadingCache<String, PublicAccess> containerAcls) {
-      this.ifDirectoryReturnName = checkNotNull(ifDirectoryReturnName, "ifDirectoryReturnName");
+   public BlobPropertiesToBlobMetadata(LoadingCache<String, PublicAccess> containerAcls) {
       this.containerAcls = checkNotNull(containerAcls, "containerAcls");
    }
 
@@ -64,10 +60,9 @@ public class BlobPropertiesToBlobMetadata implements Function<BlobProperties, Mu
          } catch (CacheLoader.InvalidCacheLoadException e) {
             // nulls not permitted from cache loader
          }
-      String directoryName = ifDirectoryReturnName.execute(to);
-      if (directoryName != null) {
-         to.setName(directoryName);
-         to.setType(StorageType.RELATIVE_PATH);
+      if (to.getContentMetadata() != null && to.getContentMetadata().getContentType() != null &&
+            to.getContentMetadata().getContentType().equals("application/directory")) {
+         to.setType(StorageType.FOLDER);
       } else {
          to.setType(StorageType.BLOB);
       }
