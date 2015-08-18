@@ -18,13 +18,11 @@ package org.jclouds.openstack.swift.blobstore.functions;
 
 import static com.google.common.io.BaseEncoding.base16;
 
-import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import org.jclouds.blobstore.domain.MutableBlobMetadata;
 import org.jclouds.blobstore.domain.StorageType;
 import org.jclouds.blobstore.domain.internal.MutableBlobMetadataImpl;
-import org.jclouds.blobstore.strategy.IfDirectoryReturnNameStrategy;
 import org.jclouds.openstack.swift.domain.MutableObjectInfoWithMetadata;
 import org.jclouds.openstack.swift.domain.ObjectInfo;
 
@@ -32,13 +30,6 @@ import com.google.common.base.Function;
 
 @Singleton
 public class ObjectToBlobMetadata implements Function<ObjectInfo, MutableBlobMetadata> {
-   private final IfDirectoryReturnNameStrategy ifDirectoryReturnName;
-
-   @Inject
-   public ObjectToBlobMetadata(IfDirectoryReturnNameStrategy ifDirectoryReturnName) {
-      this.ifDirectoryReturnName = ifDirectoryReturnName;
-   }
-
    public MutableBlobMetadata apply(ObjectInfo from) {
       if (from == null)
          return null;
@@ -56,13 +47,7 @@ public class ObjectToBlobMetadata implements Function<ObjectInfo, MutableBlobMet
          to.setLastModified(from.getLastModified());
       if (from instanceof MutableObjectInfoWithMetadata)
          to.setUserMetadata(((MutableObjectInfoWithMetadata) from).getMetadata());
-      String directoryName = ifDirectoryReturnName.execute(to);
-      if (directoryName != null) {
-         to.setName(directoryName);
-         to.setType(StorageType.RELATIVE_PATH);
-      } else {
-         to.setType(StorageType.BLOB);
-      }
+      to.setType(StorageType.BLOB);
       return to;
    }
 }
