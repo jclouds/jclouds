@@ -186,9 +186,6 @@ public class BaseContainerIntegrationTest extends BaseBlobStoreIntegrationTest {
          assert container.size() == 25 : String.format("size should have been 25, but was %d: %s", container.size(),
                container);
          assert container.getNextMarker() == null;
-
-         container = view.getBlobStore().list(containerName, afterMarker("z"));
-         assertThat(container.getNextMarker()).isNull();
       } finally {
          returnContainer(containerName);
       }
