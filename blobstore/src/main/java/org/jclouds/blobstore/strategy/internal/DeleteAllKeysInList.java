@@ -241,6 +241,7 @@ public class DeleteAllKeysInList implements ClearListStrategy, ClearContainerStr
 
          final ListenableFuture<Void> blobDelFuture;
          switch (md.getType()) {
+         case FOLDER:
          case BLOB:
             blobDelFuture = executorService.submit(new Callable<Void>() {
                @Override
@@ -249,9 +250,6 @@ public class DeleteAllKeysInList implements ClearListStrategy, ClearContainerStr
                   return null;
                }
             });
-            break;
-         case FOLDER:
-            blobDelFuture = deleteDirectory(options, containerName, fullPath);
             break;
          case RELATIVE_PATH:
             blobDelFuture = deleteDirectory(options, containerName,
@@ -415,7 +413,7 @@ public class DeleteAllKeysInList implements ClearListStrategy, ClearContainerStr
       // TODO: Remove this retry loop.
       while (retries > 0) {
          deleteFailure.set(false);
-         executeOneIteration(containerName, listOptions.clone(), semaphore,
+         executeOneIteration(containerName, listOptions, semaphore,
                outstandingFutures, deleteFailure, /*blocking=*/ false);
          waitForCompletion(semaphore, outstandingFutures);
 

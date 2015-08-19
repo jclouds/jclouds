@@ -261,7 +261,7 @@ public class BaseContainerIntegrationTest extends BaseBlobStoreIntegrationTest {
          // should have only the 2 level-deep directory above
          container = view.getBlobStore().list(containerName, inDirectory(directory));
          assert container.getNextMarker() == null;
-         assert container.size() == 1 : container;
+         assertThat(container).hasSize(0);
 
          view.getBlobStore().createDirectory(containerName, directory + "/" + directory);
 

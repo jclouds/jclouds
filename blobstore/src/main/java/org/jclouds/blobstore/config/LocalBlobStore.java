@@ -477,8 +477,8 @@ public final class LocalBlobStore implements BlobStore {
          if (name.startsWith(prefix)) {
             String unprefixedName = name.replaceFirst(prefix, "");
             if (unprefixedName.equals("")) {
-               // we are the prefix in this case, return false
-               return false;
+               // a blob that matches the prefix should also be returned
+               return true;
             }
             return unprefixedName.indexOf(delimiter) == -1;
          }

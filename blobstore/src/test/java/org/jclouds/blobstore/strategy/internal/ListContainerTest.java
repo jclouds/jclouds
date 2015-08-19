@@ -18,9 +18,6 @@ package org.jclouds.blobstore.strategy.internal;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.google.common.collect.Iterables;
-import com.google.inject.Injector;
-
 import org.jclouds.ContextBuilder;
 import org.jclouds.blobstore.BlobStore;
 import org.jclouds.blobstore.domain.PageSet;
@@ -31,6 +28,10 @@ import org.jclouds.util.Closeables2;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
+
+import com.google.common.collect.Iterables;
+import com.google.common.io.ByteSource;
+import com.google.inject.Injector;
 
 @Test(testName = "PrefixTest", singleThreaded = true)
 public class ListContainerTest {
@@ -49,6 +50,16 @@ public class ListContainerTest {
       if (blobStore != null) {
          Closeables2.closeQuietly(blobStore.getContext());
       }
+   }
+
+   public void testListBlobWithPrefixAndDelimiter() {
+      String containerName = "test";
+      String name = "asdf/";
+      blobStore.createContainerInLocation(null, containerName);
+      blobStore.putBlob(containerName, blobStore.blobBuilder(name).payload("").build());
+      Iterable<? extends StorageMetadata> results = concatter.execute(containerName,
+            ListContainerOptions.Builder.prefix(name).delimiter(name));
+      assertThat(results).hasSize(1);
    }
 
    public void testListWithPrefix() {
@@ -125,7 +136,9 @@ public class ListContainerTest {
       Iterable<? extends StorageMetadata> results = concatter.execute(containerName, ListContainerOptions.NONE);
       assertThat(results).hasSize(2);
       assertThat(Iterables.get(results, 0).getName()).isEqualTo(directory);
+      assertThat(Iterables.get(results, 0).getType()).isEqualTo(StorageType.FOLDER);
       assertThat(Iterables.get(results, 1).getName()).isEqualTo(directory + '/');
+      assertThat(Iterables.get(results, 1).getType()).isEqualTo(StorageType.RELATIVE_PATH);
    }
 
    public void testListMarkers() {
@@ -147,6 +160,17 @@ public class ListContainerTest {
       assertThat(results.getNextMarker()).isEqualTo(null);
    }
 
+   public void testListBlobEndsWithDelimiter() {
+      String containerName = "testListBlobEndsWithDelimiter";
+      blobStore.createContainerInLocation(null, containerName);
+      blobStore.putBlob(containerName, blobStore.blobBuilder("foo/").payload(ByteSource.empty()).build());
+      PageSet<? extends StorageMetadata> results = blobStore.list(containerName,
+            ListContainerOptions.Builder.prefix("foo/"));
+      assertThat(results.size()).isEqualTo(1);
+      assertThat(Iterables.get(results, 0).getName()).isEqualTo("foo/");
+      assertThat(Iterables.get(results, 0).getType()).isNotEqualTo(StorageType.RELATIVE_PATH);
+   }
+
    public void testDirectoryListing() {
       String containerName = "testDirectoryListing";
       blobStore.createContainerInLocation(null, containerName);
@@ -161,11 +185,14 @@ public class ListContainerTest {
       results = blobStore.list(containerName, ListContainerOptions.Builder.inDirectory("dir"));
       assertThat(results.size()).isEqualTo(1);
       assertThat(Iterables.get(results, 0).getName()).isEqualTo("dir/dir");
+      assertThat(Iterables.get(results, 0).getType()).isEqualTo(StorageType.FOLDER);
 
       blobStore.putBlob(containerName, blobStore.blobBuilder("dir/dir/blob").payload("").build());
       results = blobStore.list(containerName, ListContainerOptions.Builder.inDirectory("dir"));
       assertThat(results.size()).isEqualTo(2);
       assertThat(Iterables.get(results, 0).getName()).isEqualTo("dir/dir");
+      assertThat(Iterables.get(results, 0).getType()).isEqualTo(StorageType.FOLDER);
       assertThat(Iterables.get(results, 1).getName()).isEqualTo("dir/dir/");
+      assertThat(Iterables.get(results, 1).getType()).isEqualTo(StorageType.RELATIVE_PATH);
    }
 }

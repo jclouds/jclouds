@@ -49,7 +49,7 @@ public class MarkerFileMkdirStrategy implements MkdirStrategy {
    public void execute(String containerName, String directory) {
       blobStore.putBlob(
             containerName,
-            blobStore.blobBuilder(directory + directorySuffix).type(StorageType.RELATIVE_PATH)
+            blobStore.blobBuilder(directory + directorySuffix).type(StorageType.FOLDER)
                   .payload(newByteArrayPayload(new byte[] {})).contentType("application/directory").build());
    }
 }
