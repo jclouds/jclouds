@@ -16,12 +16,10 @@
  */
 package org.jclouds.googlecloudstorage.blobstore.functions;
 
-import javax.inject.Inject;
 
 import org.jclouds.blobstore.domain.MutableBlobMetadata;
 import org.jclouds.blobstore.domain.StorageType;
 import org.jclouds.blobstore.domain.internal.MutableBlobMetadataImpl;
-import org.jclouds.blobstore.strategy.IfDirectoryReturnNameStrategy;
 import org.jclouds.googlecloudstorage.domain.GoogleCloudStorageObject;
 import org.jclouds.javax.annotation.Nullable;
 
@@ -30,11 +28,6 @@ import com.google.common.hash.HashCode;
 import com.google.common.io.BaseEncoding;
 
 public class ObjectToBlobMetadata implements Function<GoogleCloudStorageObject, MutableBlobMetadata> {
-   private final IfDirectoryReturnNameStrategy ifDirectoryReturnName;
-
-   @Inject public ObjectToBlobMetadata(IfDirectoryReturnNameStrategy ifDirectoryReturnName) {
-      this.ifDirectoryReturnName = ifDirectoryReturnName;
-   }
 
    public MutableBlobMetadata apply(GoogleCloudStorageObject from) {
       if (from == null) {
@@ -55,14 +48,7 @@ public class ObjectToBlobMetadata implements Function<GoogleCloudStorageObject, 
       to.setUri(from.selfLink());
       to.setId(from.id());
       to.setPublicUri(from.mediaLink());
-
-      String directoryName = ifDirectoryReturnName.execute(to);
-      if (directoryName != null) {
-         to.setName(directoryName);
-         to.setType(StorageType.RELATIVE_PATH);
-      } else {
-         to.setType(StorageType.BLOB);
-      }
+      to.setType(StorageType.BLOB);
       to.setSize(from.size());
       return to;
    }
