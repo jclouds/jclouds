@@ -105,14 +105,4 @@ public class GoogleCloudStorageContainerIntegrationLiveTest extends BaseContaine
    public void testListMarkerAfterLastKey() throws Exception {
       throw new SkipException("cannot specify arbitrary markers");
    }
-
-   @Override
-   public void testContainerListWithPrefix() {
-      throw new SkipException("Prefix option has not been plumbed down to GCS");
-   }
-
-   @Override
-   public void testDelimiterList() {
-      throw new SkipException("Prefix option has not been plumbed down to GCS");
-   }
 }

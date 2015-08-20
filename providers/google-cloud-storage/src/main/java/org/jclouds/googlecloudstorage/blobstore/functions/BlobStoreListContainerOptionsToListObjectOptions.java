@@ -26,17 +26,26 @@ import com.google.common.base.Function;
 public class BlobStoreListContainerOptionsToListObjectOptions implements
          Function<ListContainerOptions, ListObjectOptions> {
    public ListObjectOptions apply(ListContainerOptions from) {
+      if (from.getDir() != null && (from.getPrefix() != null || from.getDelimiter() != null)) {
+         throw new IllegalArgumentException("Cannot pass both directory and prefix/delimiter");
+      }
       checkNotNull(from, "set options to instance NONE instead of passing null");
       ListObjectOptions httpOptions = new ListObjectOptions();
 
-      if (!from.isRecursive()) {
+      if (!from.isRecursive() && from.getDelimiter() == null) {
          httpOptions = httpOptions.delimiter("/");
+      }
+      if (from.getDelimiter() != null) {
+         httpOptions = httpOptions.delimiter(from.getDelimiter());
       }
       if (from.getDir() != null) {
          String path = from.getDir();
          if (!path.endsWith("/"))
             path += "/";
          httpOptions = httpOptions.prefix(path);
+      }
+      if (from.getPrefix() != null) {
+         httpOptions.prefix(from.getPrefix());
       }
       if (from.getMarker() != null) {
          httpOptions = httpOptions.pageToken(from.getMarker());

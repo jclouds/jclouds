@@ -16,22 +16,22 @@
  */
 package org.jclouds.googlecloudstorage.blobstore.functions;
 
-import java.util.Map;
+import java.util.SortedSet;
 
 import javax.inject.Inject;
 
-import org.jclouds.blobstore.domain.BlobMetadata;
+import org.jclouds.blobstore.domain.MutableStorageMetadata;
 import org.jclouds.blobstore.domain.PageSet;
 import org.jclouds.blobstore.domain.StorageMetadata;
 import org.jclouds.blobstore.domain.StorageType;
+import org.jclouds.blobstore.domain.internal.MutableStorageMetadataImpl;
 import org.jclouds.blobstore.domain.internal.PageSetImpl;
-import org.jclouds.blobstore.domain.internal.StorageMetadataImpl;
 import org.jclouds.googlecloudstorage.domain.GoogleCloudStorageObject;
 import org.jclouds.googlecloudstorage.domain.ListPageWithPrefixes;
 
 import com.google.common.base.Function;
-import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Iterables;
+import com.google.common.collect.Sets;
 
 public class ObjectListToStorageMetadata
       implements Function<ListPageWithPrefixes<GoogleCloudStorageObject>, PageSet<? extends StorageMetadata>> {
@@ -46,19 +46,13 @@ public class ObjectListToStorageMetadata
          from = ListPageWithPrefixes.create(null, null, null);
       }
 
-      return new PageSetImpl<StorageMetadata>(Iterables.transform(Iterables.transform(from, object2blobMd),
-               new Function<BlobMetadata, StorageMetadata>() {
-                  public StorageMetadata apply(BlobMetadata input) {
-                     Map<String, String> userMetaData = (input != null && input.getUserMetadata() != null) ? input
-                              .getUserMetadata() : ImmutableMap.<String, String> of();
-                     if (input.getContentMetadata().getContentType().equals("application/directory")) {
-                        return new StorageMetadataImpl(StorageType.RELATIVE_PATH, input.getProviderId(), input
-                                 .getName(), input.getLocation(), input.getUri(), input.getETag(), input
-                                 .getCreationDate(), input.getLastModified(), userMetaData,
-                                 input.getSize());
-                     }
-                     return input;
-                  }
-               }), from.nextPageToken());
+      SortedSet<StorageMetadata> results = Sets.<StorageMetadata> newTreeSet(Iterables.transform(from, object2blobMd));
+      for (String prefix : from.prefixes()) {
+          MutableStorageMetadata metadata = new MutableStorageMetadataImpl();
+          metadata.setType(StorageType.RELATIVE_PATH);
+          metadata.setName(prefix);
+          results.add(metadata);
+      }
+      return new PageSetImpl<StorageMetadata>(results, from.nextPageToken());
    }
 }
