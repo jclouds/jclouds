@@ -97,7 +97,8 @@ public class GoogleCloudStorageContainerIntegrationLiveTest extends BaseContaine
 
    @Override
    public void testDirectory() throws InterruptedException {
-      // GoogleCloudStorage does not support directories, rather it supports prefixes which look like directories.
+      // TODO: testDirectory fails when querying blob with name "directory/directory"; querying "directory%2Fdirectory"
+      // succeeds, however. I believe this is an escaping issue that should be addressed.
       throw new SkipException("directories are not supported in GoogleCloudStorage");
    }
 
