@@ -187,21 +187,15 @@ public final class GoogleCloudStorageBlobStore extends BaseBlobStore {
    /** Returns list of of all the objects */
    @Override
    public PageSet<? extends StorageMetadata> list(String container) {
-      ListPageWithPrefixes<GoogleCloudStorageObject> gcsList = api.getObjectApi().listObjects(container);
-      PageSet<? extends StorageMetadata> list = objectListToStorageMetadata.apply(gcsList);
-      return list;
+      return list(container, ListContainerOptions.NONE);
    }
 
    @Override
    public PageSet<? extends StorageMetadata> list(String container, ListContainerOptions options) {
-      if (options != null && options != ListContainerOptions.NONE) {
-         ListObjectOptions listOptions = listContainerOptionsToListObjectOptions.apply(options);
-         ListPageWithPrefixes<GoogleCloudStorageObject> gcsList = api.getObjectApi().listObjects(container, listOptions);
-         PageSet<? extends StorageMetadata> list = objectListToStorageMetadata.apply(gcsList);
-         return options.isDetailed() ? fetchBlobMetadataProvider.get().setContainerName(container).apply(list) : list;
-      } else {
-         return list(container);
-      }
+      ListObjectOptions listOptions = listContainerOptionsToListObjectOptions.apply(options);
+      ListPageWithPrefixes<GoogleCloudStorageObject> gcsList = api.getObjectApi().listObjects(container, listOptions);
+      PageSet<? extends StorageMetadata> list = objectListToStorageMetadata.apply(gcsList);
+      return options.isDetailed() ? fetchBlobMetadataProvider.get().setContainerName(container).apply(list) : list;
    }
 
    /**
