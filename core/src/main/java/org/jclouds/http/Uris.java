@@ -144,7 +144,6 @@ public final class Uris {
       }
 
       public UriBuilder appendPath(String path) {
-         path = urlDecode(checkNotNull(path, "path"));
          if (this.path == null) {
             path(path);
          } else {

@@ -47,6 +47,7 @@ import org.jclouds.blobstore.domain.ContainerAccess;
 import org.jclouds.blobstore.domain.PageSet;
 import org.jclouds.blobstore.domain.StorageMetadata;
 import org.jclouds.blobstore.options.ListContainerOptions;
+import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
 import com.google.common.collect.ImmutableMap;
@@ -561,7 +562,31 @@ public class BaseContainerIntegrationTest extends BaseBlobStoreIntegrationTest {
       }
    }
 
-   private void checkEqualNames(ImmutableSet<String> expectedSet, PageSet<? extends StorageMetadata> results) {
+   @DataProvider
+   public Object[][] getBlobsToEscape() {
+      ImmutableSet<String> testNames = ImmutableSet.of("%20", "%20 ", " %20", " ");
+      Object[][] result = new Object[1][1];
+      result[0][0] = testNames;
+      return result;
+   }
+
+   @Test(dataProvider = "getBlobsToEscape", groups = {"integration", "live"})
+   public void testBlobNameEscaping(Set<String> blobNames) throws InterruptedException {
+      final String containerName = getContainerName();
+      BlobStore blobStore = view.getBlobStore();
+      try {
+         for (String name : blobNames) {
+            Blob blob = blobStore.blobBuilder(name).payload(ByteSource.wrap("test".getBytes())).contentLength(4)
+                  .build();
+            blobStore.putBlob(containerName, blob);
+         }
+         checkEqualNames(blobNames, blobStore.list(containerName));
+      } finally {
+         returnContainer(containerName);
+      }
+   }
+
+   private void checkEqualNames(Set<String> expectedSet, PageSet<? extends StorageMetadata> results) {
       Set<String> names = new HashSet<String>();
       for (StorageMetadata sm : results) {
          names.add(sm.getName());

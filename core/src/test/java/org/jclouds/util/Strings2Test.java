@@ -32,12 +32,6 @@ public class Strings2Test {
       assert !Strings2.isUrlEncoded("/read-tests/ tep");
    }
 
-   public void testNoDoubleEncode() {
-      assertEquals(urlEncode("/read-tests/%73%6f%6d%65%20%66%69%6c%65", '/'),
-            "/read-tests/%73%6f%6d%65%20%66%69%6c%65");
-      assertEquals(urlEncode("/read-tests/ tep", '/'), "/read-tests/%20tep");
-   }
-
    public void testNoDoubleDecode() {
       assertEquals(urlDecode("foo%20bar%2Bbaz"), "foo bar+baz");
       assertEquals(urlDecode("foo bar+baz"), "foo bar+baz");

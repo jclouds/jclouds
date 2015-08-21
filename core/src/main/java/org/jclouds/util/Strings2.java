@@ -53,8 +53,6 @@ public class Strings2 {
    }
 
    public static String urlEncode(String in, Iterable<Character> skipEncode) {
-      if (isUrlEncoded(in))
-         return in;
       try {
          String returnVal = URLEncoder.encode(in, "UTF-8");
          returnVal = returnVal.replace("+", "%20");
@@ -109,11 +107,10 @@ public class Strings2 {
    public static String urlDecode(@Nullable String in) {
       if (in == null)
          return null;
-      String input = in.toString();
-      // Don't double decode
-      if (!isUrlEncoded(input)) {
-         return input;
+      if (!isUrlEncoded(in)) {
+         return in;
       }
+      String input = in.toString();
       try {
          return URLDecoder.decode(input, "UTF-8");
       } catch (UnsupportedEncodingException e) {
