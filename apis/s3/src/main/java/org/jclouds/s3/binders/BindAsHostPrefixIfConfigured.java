@@ -63,7 +63,7 @@ public class BindAsHostPrefixIfConfigured implements Binder {
          }
          return (R) request.toBuilder().replaceHeader(HttpHeaders.HOST, host).build();
       } else {
-         StringBuilder path = new StringBuilder(request.getEndpoint().getPath());
+         StringBuilder path = new StringBuilder(request.getEndpoint().getRawPath());
          if (servicePath.equals("/")) {
             if (path.toString().equals("/"))
                path.append(payloadAsString);

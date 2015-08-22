@@ -32,6 +32,7 @@ import org.jclouds.s3.domain.ListBucketResponse;
 import org.jclouds.s3.domain.ObjectMetadata;
 import org.jclouds.s3.domain.ObjectMetadataBuilder;
 import org.jclouds.s3.domain.internal.ListBucketResponseImpl;
+import org.jclouds.util.Strings2;
 import org.xml.sax.Attributes;
 
 import com.google.common.collect.ImmutableSet;
@@ -81,6 +82,7 @@ public class ListBucketHandler extends ParseSax.HandlerWithResult<ListBucketResp
       if (qName.equals("CommonPrefixes")) {
          inCommonPrefixes = true;
       }
+      currentText.setLength(0);
    }
 
    public void endElement(String uri, String name, String qName) {
@@ -89,9 +91,13 @@ public class ListBucketHandler extends ParseSax.HandlerWithResult<ListBucketResp
       } else if (qName.equals("DisplayName")) {
          currentOwner.setDisplayName(currentOrNull(currentText));
       } else if (qName.equals("Key")) { // content stuff
-         currentKey = currentOrNull(currentText);
+         if (currentText.length() == 0) {
+            throw new RuntimeException("Object store returned empty key name");
+         }
+         currentKey = currentText.toString();
          builder.key(currentKey);
-         builder.uri(uriBuilder(getRequest().getEndpoint()).clearQuery().appendPath(currentKey).build());
+         builder.uri(uriBuilder(getRequest().getEndpoint()).clearQuery().appendPath(Strings2.urlEncode(currentKey))
+               .build());
       } else if (qName.equals("LastModified")) {
          builder.lastModified(dateParser
                .iso8601DateOrSecondsDateParse(currentOrNull(currentText)));
@@ -132,7 +138,6 @@ public class ListBucketHandler extends ParseSax.HandlerWithResult<ListBucketResp
       } else if (qName.equals("IsTruncated")) {
          this.isTruncated = Boolean.parseBoolean(currentOrNull(currentText));
       }
-      currentText.setLength(0);
    }
 
    public void characters(char ch[], int start, int length) {

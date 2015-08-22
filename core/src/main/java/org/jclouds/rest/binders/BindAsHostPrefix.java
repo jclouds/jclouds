@@ -22,6 +22,8 @@ import static com.google.common.net.InternetDomainName.from;
 import static com.google.common.net.InternetDomainName.isValid;
 import static org.jclouds.http.Uris.uriBuilder;
 
+import java.net.URI;
+
 import javax.inject.Singleton;
 
 import org.jclouds.http.HttpRequest;
@@ -38,6 +40,7 @@ public class BindAsHostPrefix implements Binder {
       checkNotNull(payload, "hostprefix");
       checkArgument(isValid(request.getEndpoint().getHost()), "this is only valid for hostnames: " + request);
       InternetDomainName name = from(request.getEndpoint().getHost()).child(payload.toString());
-      return (R) request.toBuilder().endpoint(uriBuilder(request.getEndpoint()).host(name.toString()).build()).build();
+      URI newEndpoint = uriBuilder(request.getEndpoint()).host(name.toString()).build();
+      return (R) request.toBuilder().endpoint(newEndpoint).replacePath(request.getEndpoint().getRawPath()).build();
    }
 }
