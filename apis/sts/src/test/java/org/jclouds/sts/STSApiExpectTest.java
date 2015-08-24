@@ -40,10 +40,10 @@ public class STSApiExpectTest extends BaseSTSApiExpectTest {
          .endpoint("https://sts.amazonaws.com/")
          .addHeader(HOST, "sts.amazonaws.com")
          .addFormParam("Action", "GetSessionToken")
-         .addFormParam("Signature", "ntC%2BPKAcmYTJ5Py5tjICG4KX5y00Pl2L0XJrLbSgLEs%3D")
+         .addFormParam("Signature", "ntC+PKAcmYTJ5Py5tjICG4KX5y00Pl2L0XJrLbSgLEs=")
          .addFormParam("SignatureMethod", "HmacSHA256")
          .addFormParam("SignatureVersion", "2")
-         .addFormParam("Timestamp", "2009-11-08T15%3A54%3A08.897Z")
+         .addFormParam("Timestamp", "2009-11-08T15:54:08.897Z")
          .addFormParam("Version", "2011-06-15")
          .addFormParam("AWSAccessKeyId", "identity").build();
 
@@ -65,10 +65,10 @@ public class STSApiExpectTest extends BaseSTSApiExpectTest {
          .addFormParam("Action", "GetSessionToken")
          .addFormParam("DurationSeconds", "900")
          .addFormParam("SerialNumber", "YourMFADeviceSerialNumber")
-         .addFormParam("Signature", "e4HEkfKrw7EuLEQhe4/lK1l7ZmaynO3snsIMU/cdarI%3D")
+         .addFormParam("Signature", "e4HEkfKrw7EuLEQhe4/lK1l7ZmaynO3snsIMU/cdarI=")
          .addFormParam("SignatureMethod", "HmacSHA256")
          .addFormParam("SignatureVersion", "2")
-         .addFormParam("Timestamp", "2009-11-08T15%3A54%3A08.897Z")
+         .addFormParam("Timestamp", "2009-11-08T15:54:08.897Z")
          .addFormParam("TokenCode", "1234")
          .addFormParam("Version", "2011-06-15")
          .addFormParam("AWSAccessKeyId", "identity").build();
@@ -89,10 +89,10 @@ public class STSApiExpectTest extends BaseSTSApiExpectTest {
          .addFormParam("Action", "AssumeRole")
          .addFormParam("RoleArn", "arn:aws:iam::123456789012:role/demo")
          .addFormParam("RoleSessionName", "Bob")
-         .addFormParam("Signature", "0G1%2B6GX4cSU9Tjf2SyQ9oW5ivFri4BQPif/24FoRiWY%3D")
+         .addFormParam("Signature", "0G1+6GX4cSU9Tjf2SyQ9oW5ivFri4BQPif/24FoRiWY=")
          .addFormParam("SignatureMethod", "HmacSHA256")
          .addFormParam("SignatureVersion", "2")
-         .addFormParam("Timestamp", "2009-11-08T15%3A54%3A08.897Z")
+         .addFormParam("Timestamp", "2009-11-08T15:54:08.897Z")
          .addFormParam("Version", "2011-06-15")
          .addFormParam("AWSAccessKeyId", "identity").build();
 
@@ -118,10 +118,10 @@ public class STSApiExpectTest extends BaseSTSApiExpectTest {
          .addFormParam("Policy", policy)
          .addFormParam("RoleArn", "arn:aws:iam::123456789012:role/demo")
          .addFormParam("RoleSessionName", "Bob")
-         .addFormParam("Signature", "9qffV6zHRbTX8E9IYbEFeQPWrHEdSbwUfjJpg1SMaBo%3D")
+         .addFormParam("Signature", "9qffV6zHRbTX8E9IYbEFeQPWrHEdSbwUfjJpg1SMaBo=")
          .addFormParam("SignatureMethod", "HmacSHA256")
          .addFormParam("SignatureVersion", "2")
-         .addFormParam("Timestamp", "2009-11-08T15%3A54%3A08.897Z")
+         .addFormParam("Timestamp", "2009-11-08T15:54:08.897Z")
          .addFormParam("Version", "2011-06-15")
          .addFormParam("AWSAccessKeyId", "identity").build();
 
@@ -140,10 +140,10 @@ public class STSApiExpectTest extends BaseSTSApiExpectTest {
          .addHeader(HOST, "sts.amazonaws.com")
          .addFormParam("Action", "GetFederationToken")
          .addFormParam("Name", "Bob")
-         .addFormParam("Signature", "Z7AtGK4X9IAx/zMtLD7baNiyltNl%2BF%2BSHqjIGUidzOc%3D")
+         .addFormParam("Signature", "Z7AtGK4X9IAx/zMtLD7baNiyltNl+F+SHqjIGUidzOc=")
          .addFormParam("SignatureMethod", "HmacSHA256")
          .addFormParam("SignatureVersion", "2")
-         .addFormParam("Timestamp", "2009-11-08T15%3A54%3A08.897Z")
+         .addFormParam("Timestamp", "2009-11-08T15:54:08.897Z")
          .addFormParam("Version", "2011-06-15")
          .addFormParam("AWSAccessKeyId", "identity").build();
 
@@ -165,10 +165,10 @@ public class STSApiExpectTest extends BaseSTSApiExpectTest {
          .addFormParam("DurationSeconds", "900")
          .addFormParam("Name", "Bob")
          .addFormParam("Policy", policy)
-         .addFormParam("Signature", "%2BWGvCNtmb1UPmQHxXPMvcK6vH/TJ9r/wCuxdz03n/2w%3D")
+         .addFormParam("Signature", "+WGvCNtmb1UPmQHxXPMvcK6vH/TJ9r/wCuxdz03n/2w=")
          .addFormParam("SignatureMethod", "HmacSHA256")
          .addFormParam("SignatureVersion", "2")
-         .addFormParam("Timestamp", "2009-11-08T15%3A54%3A08.897Z")
+         .addFormParam("Timestamp", "2009-11-08T15:54:08.897Z")
          .addFormParam("Version", "2011-06-15")
          .addFormParam("AWSAccessKeyId", "identity").build();
 
