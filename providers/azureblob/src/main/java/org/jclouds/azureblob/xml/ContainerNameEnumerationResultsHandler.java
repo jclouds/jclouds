@@ -35,6 +35,7 @@ import org.jclouds.azureblob.domain.internal.HashSetListBlobsResponse;
 import org.jclouds.date.DateService;
 import org.jclouds.http.functions.ParseSax;
 import org.jclouds.io.ContentMetadataCodec;
+import org.jclouds.util.Strings2;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
@@ -104,36 +105,37 @@ public class ContainerNameEnumerationResultsHandler extends ParseSax.HandlerWith
       } else if (qName.equals("EnumerationResults")) {
          containerUrl = URI.create(attributes.getValue("ServiceEndpoint").trim() + attributes.getValue("ContainerName").trim());
       }
+      currentText.setLength(0);
    }
 
    public void endElement(String uri, String name, String qName) {
       if (inMetadata && !qName.equals("Metadata")) {
-         currentMetadata.put(qName, currentText.toString().trim());
+         currentMetadata.put(qName, currentText.toString());
       } else if (qName.equals("Metadata")) {
          inMetadata = false;
       } else if (qName.equals("MaxResults")) {
-         maxResults = Integer.parseInt(currentText.toString().trim());
+         maxResults = Integer.parseInt(currentText.toString());
       } else if (qName.equals("Marker")) {
-         marker = currentText.toString().trim();
+         marker = currentText.toString();
          marker = (marker.equals("")) ? null : marker;
       } else if (qName.equals("Prefix")) {
-         prefix = currentText.toString().trim();
+         prefix = currentText.toString();
          prefix = (prefix.equals("")) ? null : prefix;
       } else if (qName.equals("Delimiter")) {
-         delimiter = currentText.toString().trim();
+         delimiter = currentText.toString();
          delimiter = (delimiter.equals("")) ? null : delimiter;
       } else if (qName.equals("NextMarker")) {
-         nextMarker = currentText.toString().trim();
+         nextMarker = currentText.toString();
          nextMarker = (nextMarker.equals("")) ? null : nextMarker;
       } else if (qName.equals("BlobType")) {
-         currentBlobType = BlobType.fromValue(currentText.toString().trim());
+         currentBlobType = BlobType.fromValue(currentText.toString());
       } else if (qName.equals("LeaseStatus")) {
-         currentLeaseStatus = LeaseStatus.fromValue(currentText.toString().trim());
+         currentLeaseStatus = LeaseStatus.fromValue(currentText.toString());
       } else if (qName.equals("Blob")) {
-         URI currentUrl = uriBuilder(containerUrl + "/" + currentName).build();
+         URI currentUrl = uriBuilder(containerUrl).appendPath(Strings2.urlEncode(currentName)).build();
          BlobProperties md = new BlobPropertiesImpl(currentBlobType, currentName, containerUrl.getPath().replace("/",
                   ""), currentUrl, currentLastModified, currentETag, currentSize, currentContentType,
-                  currentContentMD5, currentContentEncoding, currentContentLanguage, currentExpires, 
+                  currentContentMD5, currentContentEncoding, currentContentLanguage, currentExpires,
                   currentLeaseStatus, currentMetadata);
          blobMetadata.add(md);
          currentBlobType = null;
@@ -149,38 +151,37 @@ public class ContainerNameEnumerationResultsHandler extends ParseSax.HandlerWith
          currentExpires = null;
          currentMetadata = Maps.newHashMap();
       } else if (qName.equals("Last-Modified")) {
-         currentLastModified = dateParser.rfc822DateParse(currentText.toString().trim());
+         currentLastModified = dateParser.rfc822DateParse(currentText.toString());
       } else if (qName.equals("Etag")) {
-         currentETag = currentText.toString().trim();
+         currentETag = currentText.toString();
       } else if (qName.equals("Name")) {
          if (inBlob)
-            currentName = currentText.toString().trim();
+            currentName = currentText.toString();
          else if (inBlobPrefix)
-            blobPrefixes.add(currentText.toString().trim());
+            blobPrefixes.add(currentText.toString());
       } else if (qName.equals("Content-Length")) {
-         currentSize = Long.parseLong(currentText.toString().trim());
+         currentSize = Long.parseLong(currentText.toString());
       } else if (qName.equals("Content-MD5")) {
-         if (!currentText.toString().trim().equals(""))
-            currentContentMD5 = base64().decode(currentText.toString().trim());
+         if (!currentText.toString().equals(""))
+            currentContentMD5 = base64().decode(currentText.toString());
       } else if (qName.equals("Content-Type")) {
-         currentContentType = currentText.toString().trim();
+         currentContentType = currentText.toString();
       } else if (qName.equals("Content-Encoding")) {
-         currentContentEncoding = currentText.toString().trim();
+         currentContentEncoding = currentText.toString();
          if (currentContentEncoding.equals(""))
             currentContentEncoding = null;
       } else if (qName.equals("Content-Language")) {
-         currentContentLanguage = currentText.toString().trim();
+         currentContentLanguage = currentText.toString();
          if (currentContentLanguage.equals(""))
             currentContentLanguage = null;
       } else if (qName.equals("Expires")) {
-         String trimmedCurrentText = currentText.toString().trim();
-         if (trimmedCurrentText.equals("")) {
+         String expiration = currentText.toString();
+         if (expiration.equals("")) {
             currentExpires = null;
          } else {
-            currentExpires = contentMetadataCodec.parseExpires(trimmedCurrentText);
+            currentExpires = contentMetadataCodec.parseExpires(expiration);
          }
       }
-      currentText.setLength(0);
    }
 
    public void characters(char ch[], int start, int length) {
