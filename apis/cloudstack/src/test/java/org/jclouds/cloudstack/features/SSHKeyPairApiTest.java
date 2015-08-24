@@ -20,7 +20,6 @@ import static org.jclouds.reflect.Reflection2.method;
 import static org.testng.Assert.assertEquals;
 
 import java.io.IOException;
-import java.net.URLEncoder;
 
 import org.jclouds.Fallbacks.EmptySetOnNotFoundOr404;
 import org.jclouds.Fallbacks.NullOnNotFoundOr404;
@@ -34,6 +33,7 @@ import org.jclouds.http.functions.ParseFirstJsonValueNamed;
 import org.jclouds.http.functions.ReleasePayloadAndReturn;
 import org.jclouds.rest.internal.GeneratedHttpRequest;
 import org.jclouds.ssh.SshKeys;
+import org.jclouds.util.Strings2;
 import org.testng.annotations.Test;
 
 import com.google.common.base.Functions;
@@ -99,11 +99,11 @@ public class SSHKeyPairApiTest extends BaseCloudStackApiTest<SSHKeyPairApi> {
 
    public void testRegisterSSHKeyPair() throws SecurityException, NoSuchMethodException, IOException {
       Invokable<?, ?> method = method(SSHKeyPairApi.class, "registerSSHKeyPair", String.class, String.class);
-      String publicKey = URLEncoder.encode(SshKeys.generate().get("public"), "UTF-8");
+      String publicKey = SshKeys.generate().get("public");
       GeneratedHttpRequest httpRequest = processor.createRequest(method, ImmutableList.<Object> of("jclouds-keypair", publicKey));
       assertRequestLineEquals(httpRequest,
             "GET http://localhost:8080/client/api?response=json&command=registerSSHKeyPair&name=jclouds-keypair&publickey="
-                  + publicKey
+                  + Strings2.urlEncode(publicKey, '/')
                   + " HTTP/1.1");
       assertNonPayloadHeadersEqual(httpRequest, "Accept: application/json\n");
       assertPayloadEquals(httpRequest, null, null, false);
