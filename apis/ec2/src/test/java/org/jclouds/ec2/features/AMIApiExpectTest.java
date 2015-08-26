@@ -38,10 +38,10 @@ public class AMIApiExpectTest extends BaseEC2ApiExpectTest<EC2Api> {
            .addFormParam("Action", "DescribeImages")
            .addFormParam("Filter.1.Name", "owner-id")
            .addFormParam("Filter.1.Value.1", "206029621532")
-           .addFormParam("Signature", "BxOCrCYJujtaUqSPagRvv1ki76veVBiKK3yWHvRWgR0%3D")
+           .addFormParam("Signature", "BxOCrCYJujtaUqSPagRvv1ki76veVBiKK3yWHvRWgR0=")
            .addFormParam("SignatureMethod", "HmacSHA256")
            .addFormParam("SignatureVersion", "2")
-           .addFormParam("Timestamp", "2012-04-16T15%3A54%3A08.897Z")
+           .addFormParam("Timestamp", "2012-04-16T15:54:08.897Z")
            .addFormParam("Version", "2010-08-31")
            .addFormParam("AWSAccessKeyId", "identity").build();
 

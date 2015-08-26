@@ -52,10 +52,10 @@ public class AMIApiTest extends BaseEC2ApiTest<AMIApi> {
                                         .addFormParam("Action", "CreateImage")
                                         .addFormParam("InstanceId", "instanceId")
                                         .addFormParam("Name", "name")
-                                        .addFormParam("Signature", "MuMtOMs697BLVks2RUZUNeLdVCo6NXPHuDhh0nmNtvc%3D")
+                                        .addFormParam("Signature", "MuMtOMs697BLVks2RUZUNeLdVCo6NXPHuDhh0nmNtvc=")
                                         .addFormParam("SignatureMethod", "HmacSHA256")
                                         .addFormParam("SignatureVersion", "2")
-                                        .addFormParam("Timestamp", "2009-11-08T15%3A54%3A08.897Z")
+                                        .addFormParam("Timestamp", "2009-11-08T15:54:08.897Z")
                                         .addFormParam("Version", "2010-08-31")
                                         .addFormParam("AWSAccessKeyId", "identity").build();
 
@@ -85,10 +85,10 @@ public class AMIApiTest extends BaseEC2ApiTest<AMIApi> {
                                                .addFormParam("InstanceId", "instanceId")
                                                .addFormParam("Name", "name")
                                                .addFormParam("NoReboot", "true")
-                                               .addFormParam("Signature", "8SgbaWihxOICMXDLvwk3ahy/99nhZvTvbno%2B8dMyvJg%3D")
+                                               .addFormParam("Signature", "8SgbaWihxOICMXDLvwk3ahy/99nhZvTvbno+8dMyvJg=")
                                                .addFormParam("SignatureMethod", "HmacSHA256")
                                                .addFormParam("SignatureVersion", "2")
-                                               .addFormParam("Timestamp", "2009-11-08T15%3A54%3A08.897Z")
+                                               .addFormParam("Timestamp", "2009-11-08T15:54:08.897Z")
                                                .addFormParam("Version", "2010-08-31")
                                                .addFormParam("AWSAccessKeyId", "identity").build();
 
@@ -116,10 +116,10 @@ public class AMIApiTest extends BaseEC2ApiTest<AMIApi> {
                                            .endpoint("https://ec2.us-east-1.amazonaws.com/")
                                            .addHeader("Host", "ec2.us-east-1.amazonaws.com")
                                            .addFormParam("Action", "DescribeImages")
-                                           .addFormParam("Signature", "hQxNAaRVX6OvXV0IKgx1vV0FoNbRyuHQ2fhRhaPJnS8%3D")
+                                           .addFormParam("Signature", "hQxNAaRVX6OvXV0IKgx1vV0FoNbRyuHQ2fhRhaPJnS8=")
                                            .addFormParam("SignatureMethod", "HmacSHA256")
                                            .addFormParam("SignatureVersion", "2")
-                                           .addFormParam("Timestamp", "2009-11-08T15%3A54%3A08.897Z")
+                                           .addFormParam("Timestamp", "2009-11-08T15:54:08.897Z")
                                            .addFormParam("Version", "2010-08-31")
                                            .addFormParam("AWSAccessKeyId", "identity").build();
 
@@ -151,10 +151,10 @@ public class AMIApiTest extends BaseEC2ApiTest<AMIApi> {
                                                   .addFormParam("ImageId.2", "2")
                                                   .addFormParam("Owner.1", "fred")
                                                   .addFormParam("Owner.2", "nancy")
-                                                  .addFormParam("Signature", "cIft3g1fwMu52NgB0En9NtHyXjVhmeSx7TBP7YR%2BTvI%3D")
+                                                  .addFormParam("Signature", "cIft3g1fwMu52NgB0En9NtHyXjVhmeSx7TBP7YR+TvI=")
                                                   .addFormParam("SignatureMethod", "HmacSHA256")
                                                   .addFormParam("SignatureVersion", "2")
-                                                  .addFormParam("Timestamp", "2009-11-08T15%3A54%3A08.897Z")
+                                                  .addFormParam("Timestamp", "2009-11-08T15:54:08.897Z")
                                                   .addFormParam("Version", "2010-08-31")
                                                   .addFormParam("AWSAccessKeyId", "identity").build();
 
@@ -183,10 +183,10 @@ public class AMIApiTest extends BaseEC2ApiTest<AMIApi> {
                                             .addHeader("Host", "ec2.us-east-1.amazonaws.com")
                                             .addFormParam("Action", "DeregisterImage")
                                             .addFormParam("ImageId", "imageId")
-                                            .addFormParam("Signature", "tm6nGoPPJh7xt5TSdV5Ov0DJvcGTAW%2BYSfXL7j%2BTkOA%3D")
+                                            .addFormParam("Signature", "tm6nGoPPJh7xt5TSdV5Ov0DJvcGTAW+YSfXL7j+TkOA=")
                                             .addFormParam("SignatureMethod", "HmacSHA256")
                                             .addFormParam("SignatureVersion", "2")
-                                            .addFormParam("Timestamp", "2009-11-08T15%3A54%3A08.897Z")
+                                            .addFormParam("Timestamp", "2009-11-08T15:54:08.897Z")
                                             .addFormParam("Version", "2010-08-31")
                                             .addFormParam("AWSAccessKeyId", "identity").build();
 
@@ -214,10 +214,10 @@ public class AMIApiTest extends BaseEC2ApiTest<AMIApi> {
                                                       .addFormParam("Action", "RegisterImage")
                                                       .addFormParam("ImageLocation", "pathToManifest")
                                                       .addFormParam("Name", "name")
-                                                      .addFormParam("Signature", "Ie7k7w4Bdki3uCGeSFGdJ5EKrp/ohkHvWwivbIaVLEM%3D")
+                                                      .addFormParam("Signature", "Ie7k7w4Bdki3uCGeSFGdJ5EKrp/ohkHvWwivbIaVLEM=")
                                                       .addFormParam("SignatureMethod", "HmacSHA256")
                                                       .addFormParam("SignatureVersion", "2")
-                                                      .addFormParam("Timestamp", "2009-11-08T15%3A54%3A08.897Z")
+                                                      .addFormParam("Timestamp", "2009-11-08T15:54:08.897Z")
                                                       .addFormParam("Version", "2010-08-31")
                                                       .addFormParam("AWSAccessKeyId", "identity").build();
 
@@ -246,10 +246,10 @@ public class AMIApiTest extends BaseEC2ApiTest<AMIApi> {
                                                              .addFormParam("Description", "description")
                                                              .addFormParam("ImageLocation", "pathToManifest")
                                                              .addFormParam("Name", "name")
-                                                             .addFormParam("Signature", "ilWV1eAWW6kTK/jHliQ%2BIkzJR4DRNy4ye%2BSKtnUjjDs%3D")
+                                                             .addFormParam("Signature", "ilWV1eAWW6kTK/jHliQ+IkzJR4DRNy4ye+SKtnUjjDs=")
                                                              .addFormParam("SignatureMethod", "HmacSHA256")
                                                              .addFormParam("SignatureVersion", "2")
-                                                             .addFormParam("Timestamp", "2009-11-08T15%3A54%3A08.897Z")
+                                                             .addFormParam("Timestamp", "2009-11-08T15:54:08.897Z")
                                                              .addFormParam("Version", "2010-08-31")
                                                              .addFormParam("AWSAccessKeyId", "identity").build();
 
@@ -281,10 +281,10 @@ public class AMIApiTest extends BaseEC2ApiTest<AMIApi> {
                                                      .addFormParam("BlockDeviceMapping.0.Ebs.SnapshotId", "snapshotId")
                                                      .addFormParam("Name", "imageName")
                                                      .addFormParam("RootDeviceName", "/dev/sda1")
-                                                     .addFormParam("Signature", "ZbZcY6uwxPbD65jFmiNZXoWeHY/2zqRuGuDmTfkt84A%3D")
+                                                     .addFormParam("Signature", "ZbZcY6uwxPbD65jFmiNZXoWeHY/2zqRuGuDmTfkt84A=")
                                                      .addFormParam("SignatureMethod", "HmacSHA256")
                                                      .addFormParam("SignatureVersion", "2")
-                                                     .addFormParam("Timestamp", "2009-11-08T15%3A54%3A08.897Z")
+                                                     .addFormParam("Timestamp", "2009-11-08T15:54:08.897Z")
                                                      .addFormParam("Version", "2010-08-31")
                                                      .addFormParam("AWSAccessKeyId", "identity").build();
 
@@ -322,10 +322,10 @@ public class AMIApiTest extends BaseEC2ApiTest<AMIApi> {
                                                             .addFormParam("Description", "description")
                                                             .addFormParam("Name", "imageName")
                                                             .addFormParam("RootDeviceName", "/dev/sda1")
-                                                            .addFormParam("Signature", "DrNujyZMGrKvuw73A7ObFTThXvc/MRfNqjvIy8gey5g%3D")
+                                                            .addFormParam("Signature", "DrNujyZMGrKvuw73A7ObFTThXvc/MRfNqjvIy8gey5g=")
                                                             .addFormParam("SignatureMethod", "HmacSHA256")
                                                             .addFormParam("SignatureVersion", "2")
-                                                            .addFormParam("Timestamp", "2009-11-08T15%3A54%3A08.897Z")
+                                                            .addFormParam("Timestamp", "2009-11-08T15:54:08.897Z")
                                                             .addFormParam("Version", "2010-08-31")
                                                             .addFormParam("AWSAccessKeyId", "identity").build();
 
@@ -356,10 +356,10 @@ public class AMIApiTest extends BaseEC2ApiTest<AMIApi> {
                                                            .addFormParam("Action", "DescribeImageAttribute")
                                                            .addFormParam("Attribute", "blockDeviceMapping")
                                                            .addFormParam("ImageId", "imageId")
-                                                           .addFormParam("Signature", "MJCIc1roG%2BnIWxRSUqV9KP9Wc4AWuuiNkxeDSih5/mI%3D")
+                                                           .addFormParam("Signature", "MJCIc1roG+nIWxRSUqV9KP9Wc4AWuuiNkxeDSih5/mI=")
                                                            .addFormParam("SignatureMethod", "HmacSHA256")
                                                            .addFormParam("SignatureVersion", "2")
-                                                           .addFormParam("Timestamp", "2009-11-08T15%3A54%3A08.897Z")
+                                                           .addFormParam("Timestamp", "2009-11-08T15:54:08.897Z")
                                                            .addFormParam("Version", "2010-08-31")
                                                            .addFormParam("AWSAccessKeyId", "identity").build();
 
@@ -388,10 +388,10 @@ public class AMIApiTest extends BaseEC2ApiTest<AMIApi> {
                                                         .addFormParam("Action", "DescribeImageAttribute")
                                                         .addFormParam("Attribute", "launchPermission")
                                                         .addFormParam("ImageId", "imageId")
-                                                        .addFormParam("Signature", "iN7JbsAhM1NAES3o%2BOw8BaaFJ%2B1g9imBjcU4mFCyrxM%3D")
+                                                        .addFormParam("Signature", "iN7JbsAhM1NAES3o+Ow8BaaFJ+1g9imBjcU4mFCyrxM=")
                                                         .addFormParam("SignatureMethod", "HmacSHA256")
                                                         .addFormParam("SignatureVersion", "2")
-                                                        .addFormParam("Timestamp", "2009-11-08T15%3A54%3A08.897Z")
+                                                        .addFormParam("Timestamp", "2009-11-08T15:54:08.897Z")
                                                         .addFormParam("Version", "2010-08-31")
                                                         .addFormParam("AWSAccessKeyId", "identity").build();
 
@@ -420,10 +420,10 @@ public class AMIApiTest extends BaseEC2ApiTest<AMIApi> {
                                                           .addFormParam("Attribute", "launchPermission")
                                                           .addFormParam("ImageId", "imageId")
                                                           .addFormParam("OperationType", "add")
-                                                          .addFormParam("Signature", "ZuMuzW/iQDRURhUJaBzvoAdNJrE454y6X0jM24lcxxk%3D")
+                                                          .addFormParam("Signature", "ZuMuzW/iQDRURhUJaBzvoAdNJrE454y6X0jM24lcxxk=")
                                                           .addFormParam("SignatureMethod", "HmacSHA256")
                                                           .addFormParam("SignatureVersion", "2")
-                                                          .addFormParam("Timestamp", "2009-11-08T15%3A54%3A08.897Z")
+                                                          .addFormParam("Timestamp", "2009-11-08T15:54:08.897Z")
                                                           .addFormParam("UserGroup.1", "all")
                                                           .addFormParam("UserId.1", "bob")
                                                           .addFormParam("UserId.2", "sue")
@@ -457,10 +457,10 @@ public class AMIApiTest extends BaseEC2ApiTest<AMIApi> {
                                                    .addFormParam("Attribute", "launchPermission")
                                                    .addFormParam("ImageId", "imageId")
                                                    .addFormParam("OperationType", "remove")
-                                                   .addFormParam("Signature", "HreSEawbVaUp/UMicCJbhrx%2BmoX01f2pEphJCPz8/5g%3D")
+                                                   .addFormParam("Signature", "HreSEawbVaUp/UMicCJbhrx+moX01f2pEphJCPz8/5g=")
                                                    .addFormParam("SignatureMethod", "HmacSHA256")
                                                    .addFormParam("SignatureVersion", "2")
-                                                   .addFormParam("Timestamp", "2009-11-08T15%3A54%3A08.897Z")
+                                                   .addFormParam("Timestamp", "2009-11-08T15:54:08.897Z")
                                                    .addFormParam("UserGroup.1", "all")
                                                    .addFormParam("UserId.1", "bob")
                                                    .addFormParam("UserId.2", "sue")
@@ -492,10 +492,10 @@ public class AMIApiTest extends BaseEC2ApiTest<AMIApi> {
                                                           .addFormParam("Action", "ResetImageAttribute")
                                                           .addFormParam("Attribute", "launchPermission")
                                                           .addFormParam("ImageId", "imageId")
-                                                          .addFormParam("Signature", "fVCR9aGYvNX/Jt1/uqBGcUQRLrHwxtcvmNYKzpul1P4%3D")
+                                                          .addFormParam("Signature", "fVCR9aGYvNX/Jt1/uqBGcUQRLrHwxtcvmNYKzpul1P4=")
                                                           .addFormParam("SignatureMethod", "HmacSHA256")
                                                           .addFormParam("SignatureVersion", "2")
-                                                          .addFormParam("Timestamp", "2009-11-08T15%3A54%3A08.897Z")
+                                                          .addFormParam("Timestamp", "2009-11-08T15:54:08.897Z")
                                                           .addFormParam("Version", "2010-08-31")
                                                           .addFormParam("AWSAccessKeyId", "identity").build();
 

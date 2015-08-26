@@ -38,10 +38,10 @@ public class KeyPairApiExpectTest extends BaseEC2ApiExpectTest<EC2Api> {
            .addFormParam("Action", "DescribeKeyPairs")
            .addFormParam("Filter.1.Name", "key-name")
            .addFormParam("Filter.1.Value.1", "gsg-keypair")
-           .addFormParam("Signature", "xg8vGx%2Bv9UEG0%2BFGy%2BhincdI2ziWLbwPJvW85l%2Bvqwg%3D")
+           .addFormParam("Signature", "xg8vGx+v9UEG0+FGy+hincdI2ziWLbwPJvW85l+vqwg=")
            .addFormParam("SignatureMethod", "HmacSHA256")
            .addFormParam("SignatureVersion", "2")
-           .addFormParam("Timestamp", "2012-04-16T15%3A54%3A08.897Z")
+           .addFormParam("Timestamp", "2012-04-16T15:54:08.897Z")
            .addFormParam("Version", "2010-08-31")
            .addFormParam("AWSAccessKeyId", "identity").build();
 

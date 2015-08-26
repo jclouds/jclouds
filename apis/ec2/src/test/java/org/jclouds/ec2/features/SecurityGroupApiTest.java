@@ -63,10 +63,10 @@ public class SecurityGroupApiTest extends BaseEC2ApiTest<SecurityGroupApi> {
                                                 .addFormParam("Action", "CreateSecurityGroup")
                                                 .addFormParam("GroupDescription", "description")
                                                 .addFormParam("GroupName", "name")
-                                                .addFormParam("Signature", "msp9zFJLrRXYsVu/vbSZE8tQVS/TEvF0Cu/ldYVFdcA%3D")
+                                                .addFormParam("Signature", "msp9zFJLrRXYsVu/vbSZE8tQVS/TEvF0Cu/ldYVFdcA=")
                                                 .addFormParam("SignatureMethod", "HmacSHA256")
                                                 .addFormParam("SignatureVersion", "2")
-                                                .addFormParam("Timestamp", "2009-11-08T15%3A54%3A08.897Z")
+                                                .addFormParam("Timestamp", "2009-11-08T15:54:08.897Z")
                                                 .addFormParam("Version", "2010-08-31")
                                                 .addFormParam("AWSAccessKeyId", "identity").build();
 
@@ -151,10 +151,10 @@ public class SecurityGroupApiTest extends BaseEC2ApiTest<SecurityGroupApi> {
                                                               .addFormParam("FromPort", "6000")
                                                               .addFormParam("GroupName", "group")
                                                               .addFormParam("IpProtocol", "tcp")
-                                                              .addFormParam("Signature", "xeaZpQ1Lvhp%2BqETpEzOPGHW6isAWYwgtBdCnTqWzkAw%3D")
+                                                              .addFormParam("Signature", "xeaZpQ1Lvhp+qETpEzOPGHW6isAWYwgtBdCnTqWzkAw=")
                                                               .addFormParam("SignatureMethod", "HmacSHA256")
                                                               .addFormParam("SignatureVersion", "2")
-                                                              .addFormParam("Timestamp", "2009-11-08T15%3A54%3A08.897Z")
+                                                              .addFormParam("Timestamp", "2009-11-08T15:54:08.897Z")
                                                               .addFormParam("ToPort", "7000")
                                                               .addFormParam("Version", "2010-08-31")
                                                               .addFormParam("AWSAccessKeyId", "identity").build();
@@ -205,10 +205,10 @@ public class SecurityGroupApiTest extends BaseEC2ApiTest<SecurityGroupApi> {
                                                            .addFormParam("FromPort", "6000")
                                                            .addFormParam("GroupName", "group")
                                                            .addFormParam("IpProtocol", "tcp")
-                                                           .addFormParam("Signature", "P5lxCXMwz6FE8Wo79nEMh8clgLDK3rZxCPRTOKssKKQ%3D")
+                                                           .addFormParam("Signature", "P5lxCXMwz6FE8Wo79nEMh8clgLDK3rZxCPRTOKssKKQ=")
                                                            .addFormParam("SignatureMethod", "HmacSHA256")
                                                            .addFormParam("SignatureVersion", "2")
-                                                           .addFormParam("Timestamp", "2009-11-08T15%3A54%3A08.897Z")
+                                                           .addFormParam("Timestamp", "2009-11-08T15:54:08.897Z")
                                                            .addFormParam("ToPort", "7000")
                                                            .addFormParam("Version", "2010-08-31")
                                                            .addFormParam("AWSAccessKeyId", "identity").build();

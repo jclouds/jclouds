@@ -57,10 +57,10 @@ public class WindowsApiExpectTest extends BaseEC2ApiExpectTest<EC2Api> {
            .addFormParam("Action", "DescribeBundleTasks")
            .addFormParam("Filter.1.Name", "instance-id")
            .addFormParam("Filter.1.Value.1", "i-12345678")
-           .addFormParam("Signature", "y0y3UBUKU/uYwbWPTCbkXzprU%2B8fMhg5LfF%2B5hWU2F4%3D")
+           .addFormParam("Signature", "y0y3UBUKU/uYwbWPTCbkXzprU+8fMhg5LfF+5hWU2F4=")
            .addFormParam("SignatureMethod", "HmacSHA256")
            .addFormParam("SignatureVersion", "2")
-           .addFormParam("Timestamp", "2012-04-16T15%3A54%3A08.897Z")
+           .addFormParam("Timestamp", "2012-04-16T15:54:08.897Z")
            .addFormParam("Version", "2010-08-31")
            .addFormParam("AWSAccessKeyId", "identity").build();
 

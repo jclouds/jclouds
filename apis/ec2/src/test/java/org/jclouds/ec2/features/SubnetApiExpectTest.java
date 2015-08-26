@@ -42,19 +42,19 @@ public class SubnetApiExpectTest extends BaseEC2ApiExpectTest<EC2Api> {
       props.put(Constants.PROPERTY_API_VERSION, "2011-01-01");
       return props;
    }
-   
+
    HttpRequest list = HttpRequest.builder().method("POST")
                                  .endpoint("https://ec2.us-east-1.amazonaws.com/")
                                  .addHeader("Host", "ec2.us-east-1.amazonaws.com")
                                  .addFormParam("Action", "DescribeSubnets")
-                                 .addFormParam("Signature", "Uuafp9lnYQmMUcf/JE1epPTQVCSMPqfns%2BwlZssUsi4%3D")
+                                 .addFormParam("Signature", "Uuafp9lnYQmMUcf/JE1epPTQVCSMPqfns+wlZssUsi4=")
                                  .addFormParam("SignatureMethod", "HmacSHA256")
                                  .addFormParam("SignatureVersion", "2")
-                                 .addFormParam("Timestamp", "2012-04-16T15%3A54%3A08.897Z")
+                                 .addFormParam("Timestamp", "2012-04-16T15:54:08.897Z")
                                  .addFormParam("Version", "2011-01-01")
                                  .addFormParam("AWSAccessKeyId", "identity")
                                  .build();
-   
+
    public void testListWhenResponseIs2xx() throws Exception {
 
       HttpResponse listResponse = HttpResponse.builder().statusCode(200)
@@ -82,10 +82,10 @@ public class SubnetApiExpectTest extends BaseEC2ApiExpectTest<EC2Api> {
                                    .addFormParam("Action", "DescribeSubnets")
                                    .addFormParam("Filter.1.Name", "subnet-id")
                                    .addFormParam("Filter.1.Value.1", "subnet-9d4a7b6c")
-                                   .addFormParam("Signature", "%2Bp34YACfLk9km1H3eALnDmrkst9FhJttojVSf7VztLk%3D")
+                                   .addFormParam("Signature", "+p34YACfLk9km1H3eALnDmrkst9FhJttojVSf7VztLk=")
                                    .addFormParam("SignatureMethod", "HmacSHA256")
                                    .addFormParam("SignatureVersion", "2")
-                                   .addFormParam("Timestamp", "2012-04-16T15%3A54%3A08.897Z")
+                                   .addFormParam("Timestamp", "2012-04-16T15:54:08.897Z")
                                    .addFormParam("Version", "2011-01-01")
                                    .addFormParam("AWSAccessKeyId", "identity").build();
 

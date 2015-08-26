@@ -98,7 +98,6 @@ import org.jclouds.ec2.domain.RunningInstance;
 import org.jclouds.ec2.domain.Tag;
 import org.jclouds.ec2.util.TagFilterBuilder;
 import org.jclouds.scriptbuilder.functions.InitAdminAccess;
-import org.jclouds.util.Strings2;
 
 @Singleton
 public class EC2ComputeService extends BaseComputeService {
@@ -234,8 +233,7 @@ public class EC2ComputeService extends BaseComputeService {
    void deleteKeyPair(String region, String group) {
       for (KeyPair keyPair : client.getKeyPairApi().get().describeKeyPairsInRegionWithFilter(region,
               ImmutableMultimap.<String, String>builder()
-                      .put("key-name", Strings2.urlEncode(
-                              String.format("jclouds#%s#*", group).replace('#', delimiter)))
+                      .put("key-name", String.format("jclouds#%s#*", group).replace('#', delimiter))
                       .build())) {
          String keyName = keyPair.getKeyName();
          Predicate<String> keyNameMatcher = namingConvention.create().containsGroup(group);

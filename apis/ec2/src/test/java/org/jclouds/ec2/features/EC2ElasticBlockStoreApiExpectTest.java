@@ -57,7 +57,16 @@ public class EC2ElasticBlockStoreApiExpectTest extends BaseEC2ApiExpectTest<EC2A
                        .method("POST")
                        .endpoint("https://ec2.us-east-1.amazonaws.com/")
                        .addHeader("Host", "ec2.us-east-1.amazonaws.com")
-                       .payload(payloadFromStringWithContentType("Action=CreateVolume&AvailabilityZone=us-east-1a&Signature=NCu8HU8u0A385rTgj%2BN5lq606jkc1eu88jof9yAxb6s%3D&SignatureMethod=HmacSHA256&SignatureVersion=2&Size=4&Timestamp=2012-04-16T15%3A54%3A08.897Z&Version=2010-08-31&AWSAccessKeyId=identity", "application/x-www-form-urlencoded")).build(),
+                       .payload(payloadFromStringWithContentType("Action=CreateVolume" +
+                             "&AvailabilityZone=us-east-1a" +
+                             "&Signature=NCu8HU8u0A385rTgj%2BN5lq606jkc1eu88jof9yAxb6s%3D" +
+                             "&SignatureMethod=HmacSHA256" +
+                             "&SignatureVersion=2" +
+                             "&Size=4" +
+                             "&Timestamp=2012-04-16T15%3A54%3A08.897Z" +
+                             "&Version=2010-08-31" +
+                             "&AWSAccessKeyId=identity",
+                             "application/x-www-form-urlencoded")).build(),
             HttpResponse.builder()
                         .statusCode(200)
                         .payload(payloadFromResource("/created_volume.xml")).build());
@@ -129,10 +138,10 @@ public class EC2ElasticBlockStoreApiExpectTest extends BaseEC2ApiExpectTest<EC2A
            .addFormParam("Action", "DescribeVolumes")
            .addFormParam("Filter.1.Name", "snapshot-id")
            .addFormParam("Filter.1.Value.1", "snap-536d1b3a")
-           .addFormParam("Signature", "7g2ySW39nIVfxtIbuVttUBom7sssmQknxX/9SThkm2Y%3D")
+           .addFormParam("Signature", "7g2ySW39nIVfxtIbuVttUBom7sssmQknxX/9SThkm2Y=")
            .addFormParam("SignatureMethod", "HmacSHA256")
            .addFormParam("SignatureVersion", "2")
-           .addFormParam("Timestamp", "2012-04-16T15%3A54%3A08.897Z")
+           .addFormParam("Timestamp", "2012-04-16T15:54:08.897Z")
            .addFormParam("Version", "2010-08-31")
            .addFormParam("AWSAccessKeyId", "identity").build();
 
@@ -169,10 +178,10 @@ public class EC2ElasticBlockStoreApiExpectTest extends BaseEC2ApiExpectTest<EC2A
            .addFormParam("Action", "DescribeSnapshots")
            .addFormParam("Filter.1.Name", "volume-id")
            .addFormParam("Filter.1.Value.1", "4d826724")
-           .addFormParam("Signature", "vT7R4YmfQJPNLSojXEMY1qcErMh0OzrOTYxbGYSZ4Uw%3D")
+           .addFormParam("Signature", "vT7R4YmfQJPNLSojXEMY1qcErMh0OzrOTYxbGYSZ4Uw=")
            .addFormParam("SignatureMethod", "HmacSHA256")
            .addFormParam("SignatureVersion", "2")
-           .addFormParam("Timestamp", "2012-04-16T15%3A54%3A08.897Z")
+           .addFormParam("Timestamp", "2012-04-16T15:54:08.897Z")
            .addFormParam("Version", "2010-08-31")
            .addFormParam("AWSAccessKeyId", "identity").build();
 
