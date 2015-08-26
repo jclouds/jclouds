@@ -29,6 +29,7 @@ import org.jclouds.openstack.nova.v2_0.parse.ParseImageListTest;
 import org.jclouds.openstack.nova.v2_0.parse.ParseImageTest;
 import org.jclouds.openstack.nova.v2_0.parse.ParseMetadataListTest;
 import org.jclouds.openstack.nova.v2_0.parse.ParseMetadataUpdateTest;
+import org.jclouds.util.Strings2;
 import org.testng.annotations.Test;
 
 import com.google.common.collect.ImmutableMap;
@@ -265,11 +266,12 @@ public class ImageApiExpectTest extends BaseNovaApiExpectTest {
 
    public void testGetMetadataItemWhenResponseIs2xx() throws Exception {
       String imageId = "52415800-8b69-11e0-9b19-734f5736d2a2";
-      String key = "Image%20Version";
+      String key = "Image Version";
 
       HttpRequest getMetadata = HttpRequest.builder()
             .method("GET")
-            .endpoint("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v2/3456/images/" + imageId + "/metadata/" + key)
+            .endpoint("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v2/3456/images/" + imageId + "/metadata/" +
+                  Strings2.urlEncode(key))
             .addHeader("Accept", "application/json")
             .addHeader("X-Auth-Token", authToken)
             .build();
@@ -286,11 +288,12 @@ public class ImageApiExpectTest extends BaseNovaApiExpectTest {
 
    public void testGetMetadataItemWhenResponseIs404() throws Exception {
       String imageId = "52415800-8b69-11e0-9b19-734f5736d2a2";
-      String key = "Image%20Version";
+      String key = "Image Version";
 
       HttpRequest getMetadata = HttpRequest.builder()
             .method("GET")
-            .endpoint("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v2/3456/images/" + imageId + "/metadata/" + key)
+            .endpoint("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v2/3456/images/" + imageId + "/metadata/" +
+                  Strings2.urlEncode(key))
             .addHeader("Accept", "application/json")
             .addHeader("X-Auth-Token", authToken)
             .build();
@@ -328,11 +331,12 @@ public class ImageApiExpectTest extends BaseNovaApiExpectTest {
 
    public void testDeleteMetadataItemWhenResponseIs2xx() throws Exception {
       String imageId = "52415800-8b69-11e0-9b19-734f5736d2a2";
-      String key = "Image%20Version";
+      String key = "Image Version";
 
       HttpRequest deleteMetadata = HttpRequest.builder()
             .method("DELETE")
-            .endpoint("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v2/3456/images/" + imageId + "/metadata/" + key)
+            .endpoint("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v2/3456/images/" + imageId + "/metadata/" +
+                  Strings2.urlEncode(key))
             .addHeader("Accept", "application/json")
             .addHeader("X-Auth-Token", authToken)
             .build();
@@ -347,11 +351,12 @@ public class ImageApiExpectTest extends BaseNovaApiExpectTest {
 
    public void testDeleteMetadataItemWhenResponseIs404() throws Exception {
       String imageId = "52415800-8b69-11e0-9b19-734f5736d2a2";
-      String key = "Image%20Version";
+      String key = "Image Version";
 
       HttpRequest deleteMetadata = HttpRequest.builder()
             .method("DELETE")
-            .endpoint("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v2/3456/images/" + imageId + "/metadata/" + key)
+            .endpoint("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v2/3456/images/" + imageId + "/metadata/" +
+                  Strings2.urlEncode(key))
             .addHeader("Accept", "application/json")
             .addHeader("X-Auth-Token", authToken)
             .build();

@@ -34,6 +34,7 @@ import org.jclouds.openstack.nova.v2_0.parse.ParseMetadataUpdateTest;
 import org.jclouds.openstack.nova.v2_0.parse.ParseServerDetailsStatesTest;
 import org.jclouds.openstack.nova.v2_0.parse.ParseServerDiagnostics;
 import org.jclouds.openstack.nova.v2_0.parse.ParseServerListTest;
+import org.jclouds.util.Strings2;
 import org.testng.annotations.Test;
 
 import com.google.common.collect.ImmutableMap;
@@ -618,7 +619,8 @@ public class ServerApiExpectTest extends BaseNovaApiExpectTest {
       HttpRequest getMetadata = HttpRequest
             .builder()
             .method("GET")
-            .endpoint("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v2/3456/servers/" + serverId + "/metadata/" + "Server%20Label")
+            .endpoint("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v2/3456/servers/" + serverId + "/metadata/"
+                  + Strings2.urlEncode(key))
             .addHeader("Accept", "application/json")
             .addHeader("X-Auth-Token", authToken)
             .build();
@@ -720,11 +722,12 @@ public class ServerApiExpectTest extends BaseNovaApiExpectTest {
 
    public void testDeleteMetadataItemWhenResponseIs2xx() throws Exception {
       String serverId = "123";
-      String key = "Server%20Label";
+      String key = "Server Label";
 
       HttpRequest updateMetadata = HttpRequest.builder()
             .method("DELETE")
-            .endpoint("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v2/3456/servers/" + serverId + "/metadata/" + key)
+            .endpoint("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v2/3456/servers/" + serverId + "/metadata/" +
+                  Strings2.urlEncode(key))
             .addHeader("Accept", "application/json")
             .addHeader("X-Auth-Token", authToken)
             .build();
@@ -739,11 +742,12 @@ public class ServerApiExpectTest extends BaseNovaApiExpectTest {
 
    public void testDeleteMetadataItemWhenResponseIs404() throws Exception {
       String serverId = "123";
-      String key = "Server%20Label";
+      String key = "Server Label";
 
       HttpRequest deleteMetadata = HttpRequest.builder()
             .method("DELETE")
-            .endpoint("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v2/3456/servers/" + serverId + "/metadata/" + key)
+            .endpoint("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v2/3456/servers/" + serverId + "/metadata/" +
+                  Strings2.urlEncode(key))
             .addHeader("Accept", "application/json")
             .addHeader("X-Auth-Token", authToken)
             .build();
