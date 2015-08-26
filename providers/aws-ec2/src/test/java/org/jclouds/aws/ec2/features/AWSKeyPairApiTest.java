@@ -59,7 +59,7 @@ public class AWSKeyPairApiTest extends BaseAWSEC2ApiTest<AWSKeyPairApi> {
                                           .addHeader("Host", "ec2.us-east-1.amazonaws.com")
                                           .addFormParam("Action", "ImportKeyPair")
                                           .addFormParam("KeyName", "mykey")
-                                          .addFormParam("PublicKeyMaterial", "c3NoLXJzYSBBQQ%3D%3D").build();
+                                          .addFormParam("PublicKeyMaterial", "c3NoLXJzYSBBQQ==").build();
 
    public void testImportKeyPair() throws SecurityException, NoSuchMethodException, IOException {
       Invokable<?, ?> method = method(AWSKeyPairApi.class, "importKeyPairInRegion", String.class, String.class,

@@ -345,7 +345,7 @@ public class AWSInstanceApiTest extends BaseAWSEC2ApiTest<AWSInstanceApi> {
                                                    .addFormParam("Action", "ModifyInstanceAttribute")
                                                    .addFormParam("Attribute", "userData")
                                                    .addFormParam("InstanceId", "1")
-                                                   .addFormParam("Value", "dGVzdA%3D%3D").build();
+                                                   .addFormParam("Value", "dGVzdA==").build();
 
    public void testSetUserDataForInstanceInRegion() throws SecurityException, NoSuchMethodException, IOException {
       Invokable<?, ?> method = method(AWSInstanceApi.class, "setUserDataForInstanceInRegion", String.class, String.class,
