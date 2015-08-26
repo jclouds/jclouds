@@ -58,15 +58,16 @@ import org.jclouds.googlecloudstorage.blobstore.functions.BlobStoreListContainer
 import org.jclouds.googlecloudstorage.blobstore.functions.BucketToStorageMetadata;
 import org.jclouds.googlecloudstorage.blobstore.functions.ObjectListToStorageMetadata;
 import org.jclouds.googlecloudstorage.blobstore.functions.ObjectToBlobMetadata;
-import org.jclouds.googlecloudstorage.blobstore.strategy.internal.MultipartUploadStrategy;
 import org.jclouds.googlecloudstorage.domain.Bucket;
 import org.jclouds.googlecloudstorage.domain.DomainResourceReferences;
 import org.jclouds.googlecloudstorage.domain.GoogleCloudStorageObject;
 import org.jclouds.googlecloudstorage.domain.ListPageWithPrefixes;
 import org.jclouds.googlecloudstorage.domain.ObjectAccessControls;
 import org.jclouds.googlecloudstorage.domain.templates.BucketTemplate;
+import org.jclouds.googlecloudstorage.domain.templates.ComposeObjectTemplate;
 import org.jclouds.googlecloudstorage.domain.templates.ObjectAccessControlsTemplate;
 import org.jclouds.googlecloudstorage.domain.templates.ObjectTemplate;
+import org.jclouds.googlecloudstorage.options.InsertObjectOptions;
 import org.jclouds.googlecloudstorage.options.ListObjectOptions;
 import org.jclouds.http.HttpResponseException;
 import org.jclouds.io.ContentMetadata;
@@ -77,6 +78,7 @@ import com.google.common.base.Charsets;
 import com.google.common.base.Function;
 import com.google.common.base.Supplier;
 import com.google.common.base.Throwables;
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
 import com.google.common.hash.HashCode;
 import com.google.inject.Provider;
@@ -90,7 +92,6 @@ public final class GoogleCloudStorageBlobStore extends BaseBlobStore {
    private final Provider<FetchBlobMetadata> fetchBlobMetadataProvider;
    private final BlobMetadataToObjectTemplate blobMetadataToObjectTemplate;
    private final BlobStoreListContainerOptionsToListObjectOptions listContainerOptionsToListObjectOptions;
-   private final Provider<MultipartUploadStrategy> multipartUploadStrategy;
    private final Supplier<String> projectId;
    private final BlobToHttpGetOptions blob2ObjectGetOptions;
 
@@ -101,7 +102,7 @@ public final class GoogleCloudStorageBlobStore extends BaseBlobStore {
             Provider<FetchBlobMetadata> fetchBlobMetadataProvider,
             BlobMetadataToObjectTemplate blobMetadataToObjectTemplate,
             BlobStoreListContainerOptionsToListObjectOptions listContainerOptionsToListObjectOptions,
-            Provider<MultipartUploadStrategy> multipartUploadStrategy, @CurrentProject Supplier<String> projectId,
+            @CurrentProject Supplier<String> projectId,
             BlobToHttpGetOptions blob2ObjectGetOptions) {
       super(context, blobUtils, defaultLocation, locations, slicer);
       this.api = api;
@@ -112,7 +113,6 @@ public final class GoogleCloudStorageBlobStore extends BaseBlobStore {
       this.blobMetadataToObjectTemplate = blobMetadataToObjectTemplate;
       this.listContainerOptionsToListObjectOptions = listContainerOptionsToListObjectOptions;
       this.projectId = projectId;
-      this.multipartUploadStrategy = multipartUploadStrategy;
       this.blob2ObjectGetOptions = checkNotNull(blob2ObjectGetOptions, "blob2ObjectGetOptions");
    }
 
@@ -231,7 +231,7 @@ public final class GoogleCloudStorageBlobStore extends BaseBlobStore {
    @Override
    public String putBlob(String container, Blob blob, PutOptions options) {
       if (options.isMultipart()) {
-         return multipartUploadStrategy.get().execute(container, blob);
+         return putMultipartBlob(container, blob, options);
       } else {
          return putBlob(container, blob);
       }
@@ -354,41 +354,74 @@ public final class GoogleCloudStorageBlobStore extends BaseBlobStore {
 
    @Override
    public MultipartUpload initiateMultipartUpload(String container, BlobMetadata blobMetadata) {
-      throw new UnsupportedOperationException("not yet implemented");
+      String uploadId = blobMetadata.getName();
+      return MultipartUpload.create(container, blobMetadata.getName(), uploadId, blobMetadata);
    }
 
    @Override
    public void abortMultipartUpload(MultipartUpload mpu) {
-      throw new UnsupportedOperationException("not yet implemented");
+      ImmutableList.Builder<String> builder = ImmutableList.builder();
+      List<MultipartPart> parts = listMultipartUpload(mpu);
+      for (MultipartPart part : parts) {
+         builder.add(getMPUPartName(mpu, part.partNumber()));
+      }
+      removeBlobs(mpu.containerName(), builder.build());
    }
 
    @Override
    public String completeMultipartUpload(MultipartUpload mpu, List<MultipartPart> parts) {
-      throw new UnsupportedOperationException("not yet implemented");
+      ImmutableList.Builder<GoogleCloudStorageObject> builder = ImmutableList.builder();
+      for (MultipartPart part : parts) {
+         builder.add(api.getObjectApi().getObject(mpu.containerName(), getMPUPartName(mpu, part.partNumber())));
+      }
+      ObjectTemplate destination = blobMetadataToObjectTemplate.apply(mpu.blobMetadata());
+      ComposeObjectTemplate template = ComposeObjectTemplate.builder().fromGoogleCloudStorageObject(builder.build())
+            .destination(destination).build();
+      return api.getObjectApi().composeObjects(mpu.containerName(), mpu.blobName(), template).etag();
+      // TODO: delete components?
    }
 
    @Override
    public MultipartPart uploadMultipartPart(MultipartUpload mpu, int partNumber, Payload payload) {
-      throw new UnsupportedOperationException("not yet implemented");
+      String partName = getMPUPartName(mpu, partNumber);
+      long partSize = payload.getContentMetadata().getContentLength();
+      InsertObjectOptions insertOptions = new InsertObjectOptions().name(partName);
+      GoogleCloudStorageObject object = api.getObjectApi().simpleUpload(mpu.containerName(),
+            mpu.blobMetadata().getContentMetadata().getContentType(), partSize, payload, insertOptions);
+      return MultipartPart.create(partNumber, partSize, object.etag());
    }
 
    @Override
    public List<MultipartPart> listMultipartUpload(MultipartUpload mpu) {
-      throw new UnsupportedOperationException("not yet implemented");
+      ImmutableList.Builder<MultipartPart> parts = ImmutableList.builder();
+      PageSet<? extends StorageMetadata> pageSet = list(mpu.containerName(),
+            new ListContainerOptions().prefix(mpu.blobName() + "_"));
+      // TODO: pagination
+      for (StorageMetadata sm : pageSet) {
+         int lastUnderscore = sm.getName().lastIndexOf('_');
+         int partNumber = Integer.parseInt(sm.getName().substring(lastUnderscore + 1));
+         parts.add(MultipartPart.create(partNumber, sm.getSize(), sm.getETag()));
+      }
+      return parts.build();
    }
 
    @Override
    public long getMinimumMultipartPartSize() {
-      throw new UnsupportedOperationException("not yet implemented");
+      return 5L * 1024L * 1024L;
    }
 
    @Override
    public long getMaximumMultipartPartSize() {
-      throw new UnsupportedOperationException("not yet implemented");
+      return 5L * 1024L * 1024L * 1024L;
    }
 
    @Override
    public int getMaximumNumberOfParts() {
-      throw new UnsupportedOperationException("not yet implemented");
+      // TODO: should this be 32?  See: https://cloud.google.com/storage/docs/composite-objects
+      return 10 * 1000;
+   }
+
+   private static String getMPUPartName(MultipartUpload mpu, int partNumber) {
+      return String.format("%s_%08d", mpu.id(), partNumber);
    }
 }

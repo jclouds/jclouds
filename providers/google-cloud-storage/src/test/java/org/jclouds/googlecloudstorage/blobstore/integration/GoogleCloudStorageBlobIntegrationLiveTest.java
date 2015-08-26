@@ -38,7 +38,6 @@ import org.jclouds.blobstore.domain.StorageMetadata;
 import org.jclouds.blobstore.integration.internal.BaseBlobIntegrationTest;
 import org.jclouds.blobstore.options.PutOptions;
 import org.jclouds.googlecloud.internal.TestProperties;
-import org.jclouds.googlecloudstorage.blobstore.strategy.internal.MultipartUpload;
 import org.jclouds.io.Payloads;
 import org.jclouds.io.payloads.ByteSourcePayload;
 import org.jclouds.utils.TestUtils;
@@ -57,7 +56,7 @@ import com.google.common.io.Files;
 @Test(groups = { "live", "blobstorelive" })
 public class GoogleCloudStorageBlobIntegrationLiveTest extends BaseBlobIntegrationTest {
 
-   private long PART_SIZE = MultipartUpload.MIN_PART_SIZE;
+   private long PART_SIZE = 5L * 1024L * 1024L;
 
    @Override
    protected long getMinimumMultipartBlobSize() {
@@ -91,27 +90,6 @@ public class GoogleCloudStorageBlobIntegrationLiveTest extends BaseBlobIntegrati
    @Test(enabled = false)
    public void testCreateBlobWithExpiry() throws SkipException {
       // not supported in object level.
-   }
-
-   @Override
-   @Test(groups = { "integration", "live" })
-   public void testMultipartUploadSinglePart() throws SkipException {
-      throw new SkipException("Implement MultipartUploads uploads");
-      // TODO: Implement MultipartUploads uploads
-   }
-
-   @Override
-   @Test(groups = { "integration", "live" })
-   public void testMultipartUploadMultipleParts() throws SkipException {
-      throw new SkipException("Implement MultipartUploads uploads");
-      // TODO: Implement MultipartUploads uploads
-   }
-
-   @Override
-   @Test(groups = { "integration", "live" })
-   public void testMultipartUploadNoPartsAbort() throws SkipException {
-      throw new SkipException("Implement MultipartUploads uploads");
-      // TODO: Implement MultipartUploads uploads
    }
 
    @Override
