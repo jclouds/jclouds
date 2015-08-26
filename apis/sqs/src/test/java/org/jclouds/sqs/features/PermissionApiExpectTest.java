@@ -34,10 +34,10 @@ public class PermissionApiExpectTest extends BaseSQSApiExpectTest {
          .addFormParam("AWSAccountId.1", "125074342641")
          .addFormParam("ActionName.1", "ReceiveMessage")
          .addFormParam("Label", "testLabel")
-         .addFormParam("Signature", "J9sV4q1rJ7dWYJDQp9JxsfEKNXQhpQBYIwBYi1IeXV0%3D")
+         .addFormParam("Signature", "J9sV4q1rJ7dWYJDQp9JxsfEKNXQhpQBYIwBYi1IeXV0=")
          .addFormParam("SignatureMethod", "HmacSHA256")
          .addFormParam("SignatureVersion", "2")
-         .addFormParam("Timestamp", "2009-11-08T15%3A54%3A08.897Z")
+         .addFormParam("Timestamp", "2009-11-08T15:54:08.897Z")
          .addFormParam("Version", "2011-10-01")
          .addFormParam("AWSAccessKeyId", "identity").build();
 
@@ -61,10 +61,10 @@ public class PermissionApiExpectTest extends BaseSQSApiExpectTest {
          .addHeader("Host", "sqs.us-east-1.amazonaws.com")
          .addFormParam("Action", "RemovePermission")
          .addFormParam("Label", "testLabel")
-         .addFormParam("Signature", "VOA0L1uRVKQDQL1Klt0cYUajGoxN4Ur%2B7ISQ2I4RpRs%3D")
+         .addFormParam("Signature", "VOA0L1uRVKQDQL1Klt0cYUajGoxN4Ur+7ISQ2I4RpRs=")
          .addFormParam("SignatureMethod", "HmacSHA256")
          .addFormParam("SignatureVersion", "2")
-         .addFormParam("Timestamp", "2009-11-08T15%3A54%3A08.897Z")
+         .addFormParam("Timestamp", "2009-11-08T15:54:08.897Z")
          .addFormParam("Version", "2011-10-01")
          .addFormParam("AWSAccessKeyId", "identity").build();
 

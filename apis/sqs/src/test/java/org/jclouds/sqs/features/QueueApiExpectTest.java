@@ -40,10 +40,10 @@ public class QueueApiExpectTest extends BaseSQSApiExpectTest {
          .addHeader("Host", "sqs.us-east-1.amazonaws.com")
          .addFormParam("Action", "GetQueueUrl")
          .addFormParam("QueueName", "queueName")
-         .addFormParam("Signature", "ZjHLpNl6NLqK%2BsqOyEFqEJMWGeOLuNBd3%2B0Z9RGPYWU%3D")
+         .addFormParam("Signature", "ZjHLpNl6NLqK+sqOyEFqEJMWGeOLuNBd3+0Z9RGPYWU=")
          .addFormParam("SignatureMethod", "HmacSHA256")
          .addFormParam("SignatureVersion", "2")
-         .addFormParam("Timestamp", "2009-11-08T15%3A54%3A08.897Z")
+         .addFormParam("Timestamp", "2009-11-08T15:54:08.897Z")
          .addFormParam("Version", "2011-10-01")
          .addFormParam("AWSAccessKeyId", "identity").build();
 
@@ -66,10 +66,10 @@ public class QueueApiExpectTest extends BaseSQSApiExpectTest {
          .addFormParam("Action", "GetQueueUrl")
          .addFormParam("QueueName", "queueName")
          .addFormParam("QueueOwnerAWSAccountId", "120908098979")
-         .addFormParam("Signature", "O0E%2B3jh2vN6bKqmb4/XPTHUmPO1iat9o8YnIFH463g8%3D")
+         .addFormParam("Signature", "O0E+3jh2vN6bKqmb4/XPTHUmPO1iat9o8YnIFH463g8=")
          .addFormParam("SignatureMethod", "HmacSHA256")
          .addFormParam("SignatureVersion", "2")
-         .addFormParam("Timestamp", "2009-11-08T15%3A54%3A08.897Z")
+         .addFormParam("Timestamp", "2009-11-08T15:54:08.897Z")
          .addFormParam("Version", "2011-10-01")
          .addFormParam("AWSAccessKeyId", "identity").build();
 
@@ -106,10 +106,10 @@ public class QueueApiExpectTest extends BaseSQSApiExpectTest {
          .addHeader("Host", "sqs.us-east-1.amazonaws.com")
          .addFormParam("Action", "CreateQueue")
          .addFormParam("QueueName", "queueName")
-         .addFormParam("Signature", "I7tmwiCzJ9cvw79pmlz1rOILh2C2ZV6OpLk23JGx6AU%3D")
+         .addFormParam("Signature", "I7tmwiCzJ9cvw79pmlz1rOILh2C2ZV6OpLk23JGx6AU=")
          .addFormParam("SignatureMethod", "HmacSHA256")
          .addFormParam("SignatureVersion", "2")
-         .addFormParam("Timestamp", "2009-11-08T15%3A54%3A08.897Z")
+         .addFormParam("Timestamp", "2009-11-08T15:54:08.897Z")
          .addFormParam("Version", "2011-10-01")
          .addFormParam("AWSAccessKeyId", "identity").build();
 
@@ -130,10 +130,10 @@ public class QueueApiExpectTest extends BaseSQSApiExpectTest {
          .addHeader("Host", "sqs.us-east-1.amazonaws.com")
          .addFormParam("Action", "GetQueueAttributes")
          .addFormParam("AttributeName.1", "VisibilityTimeout")
-         .addFormParam("Signature", "AfydayBBaIk4UGikHHY1CFNmOOAcTnogpFWydZyNass%3D")
+         .addFormParam("Signature", "AfydayBBaIk4UGikHHY1CFNmOOAcTnogpFWydZyNass=")
          .addFormParam("SignatureMethod", "HmacSHA256")
          .addFormParam("SignatureVersion", "2")
-         .addFormParam("Timestamp", "2009-11-08T15%3A54%3A08.897Z")
+         .addFormParam("Timestamp", "2009-11-08T15:54:08.897Z")
          .addFormParam("Version", "2011-10-01")
          .addFormParam("AWSAccessKeyId", "identity").build();
 
@@ -157,10 +157,10 @@ public class QueueApiExpectTest extends BaseSQSApiExpectTest {
          .addHeader("Host", "sqs.us-east-1.amazonaws.com")
          .addFormParam("Action", "GetQueueAttributes")
          .addFormParam("AttributeName.1", "All")
-         .addFormParam("Signature", "welFLn0TV6JlH6s6s60XZTJeJfFXGiXN4qNPrBx7aHc%3D")
+         .addFormParam("Signature", "welFLn0TV6JlH6s6s60XZTJeJfFXGiXN4qNPrBx7aHc=")
          .addFormParam("SignatureMethod", "HmacSHA256")
          .addFormParam("SignatureVersion", "2")
-         .addFormParam("Timestamp", "2009-11-08T15%3A54%3A08.897Z")
+         .addFormParam("Timestamp", "2009-11-08T15:54:08.897Z")
          .addFormParam("Version", "2011-10-01")
          .addFormParam("AWSAccessKeyId", "identity").build();
 
@@ -182,10 +182,10 @@ public class QueueApiExpectTest extends BaseSQSApiExpectTest {
          .addFormParam("Action", "GetQueueAttributes")
          .addFormParam("AttributeName.1", "VisibilityTimeout")
          .addFormParam("AttributeName.2", "DelaySeconds")
-         .addFormParam("Signature", "9KaiOOWWyFPTVMOnyHA3ZoXbPBPSD4AZ4q460UNMfDs%3D")
+         .addFormParam("Signature", "9KaiOOWWyFPTVMOnyHA3ZoXbPBPSD4AZ4q460UNMfDs=")
          .addFormParam("SignatureMethod", "HmacSHA256")
          .addFormParam("SignatureVersion", "2")
-         .addFormParam("Timestamp", "2009-11-08T15%3A54%3A08.897Z")
+         .addFormParam("Timestamp", "2009-11-08T15:54:08.897Z")
          .addFormParam("Version", "2011-10-01")
          .addFormParam("AWSAccessKeyId", "identity").build();
 
@@ -208,10 +208,10 @@ public class QueueApiExpectTest extends BaseSQSApiExpectTest {
          .addFormParam("Action", "SetQueueAttributes")
          .addFormParam("Attribute.Name", "MaximumMessageSize")
          .addFormParam("Attribute.Value", "1")
-         .addFormParam("Signature", "ktBkQ3c/rwGcBSec0fkckfo73xmcoTuub5fxudM1qh0%3D")
+         .addFormParam("Signature", "ktBkQ3c/rwGcBSec0fkckfo73xmcoTuub5fxudM1qh0=")
          .addFormParam("SignatureMethod", "HmacSHA256")
          .addFormParam("SignatureVersion", "2")
-         .addFormParam("Timestamp", "2009-11-08T15%3A54%3A08.897Z")
+         .addFormParam("Timestamp", "2009-11-08T15:54:08.897Z")
          .addFormParam("Version", "2011-10-01")
          .addFormParam("AWSAccessKeyId", "identity").build();
 

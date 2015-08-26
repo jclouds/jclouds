@@ -43,10 +43,10 @@ public class MessageApiExpectTest extends BaseSQSApiExpectTest {
          .addHeader("Host", "sqs.us-east-1.amazonaws.com")
          .addFormParam("Action", "SendMessage")
          .addFormParam("MessageBody", "hardyharhar")
-         .addFormParam("Signature", "PVzszzgIcT1xt9%2BEzGzWB2Bt8zDadBc48HsgF89AoJE%3D")
+         .addFormParam("Signature", "PVzszzgIcT1xt9+EzGzWB2Bt8zDadBc48HsgF89AoJE=")
          .addFormParam("SignatureMethod", "HmacSHA256")
          .addFormParam("SignatureVersion", "2")
-         .addFormParam("Timestamp", "2009-11-08T15%3A54%3A08.897Z")
+         .addFormParam("Timestamp", "2009-11-08T15:54:08.897Z")
          .addFormParam("Version", "2011-10-01")
          .addFormParam("AWSAccessKeyId", "identity").build();
 
@@ -70,10 +70,10 @@ public class MessageApiExpectTest extends BaseSQSApiExpectTest {
          .addFormParam("SendMessageBatchRequestEntry.1.MessageBody", "payload1")
          .addFormParam("SendMessageBatchRequestEntry.2.Id", "2")
          .addFormParam("SendMessageBatchRequestEntry.2.MessageBody", "payload2")
-         .addFormParam("Signature", "2AYMDMLhoLncALJgBfHBGfOkaTB5ut3PeFRJeWffxdI%3D")
+         .addFormParam("Signature", "2AYMDMLhoLncALJgBfHBGfOkaTB5ut3PeFRJeWffxdI=")
          .addFormParam("SignatureMethod", "HmacSHA256")
          .addFormParam("SignatureVersion", "2")
-         .addFormParam("Timestamp", "2009-11-08T15%3A54%3A08.897Z")
+         .addFormParam("Timestamp", "2009-11-08T15:54:08.897Z")
          .addFormParam("Version", "2011-10-01")
          .addFormParam("AWSAccessKeyId", "identity").build();
 
@@ -98,10 +98,10 @@ public class MessageApiExpectTest extends BaseSQSApiExpectTest {
          .addFormParam("SendMessageBatchRequestEntry.1.MessageBody", "payload1")
          .addFormParam("SendMessageBatchRequestEntry.2.Id", "foo2")
          .addFormParam("SendMessageBatchRequestEntry.2.MessageBody", "payload2")
-         .addFormParam("Signature", "f9v8e/rPXTI3zhBYMhg7U8yCfvPqHjAV8bFjhGL6%2BXc%3D")
+         .addFormParam("Signature", "f9v8e/rPXTI3zhBYMhg7U8yCfvPqHjAV8bFjhGL6+Xc=")
          .addFormParam("SignatureMethod", "HmacSHA256")
          .addFormParam("SignatureVersion", "2")
-         .addFormParam("Timestamp", "2009-11-08T15%3A54%3A08.897Z")
+         .addFormParam("Timestamp", "2009-11-08T15:54:08.897Z")
          .addFormParam("Version", "2011-10-01")
          .addFormParam("AWSAccessKeyId", "identity").build();
    
@@ -130,10 +130,10 @@ public class MessageApiExpectTest extends BaseSQSApiExpectTest {
          .addFormParam("SendMessageBatchRequestEntry.2.DelaySeconds", "10")
          .addFormParam("SendMessageBatchRequestEntry.2.Id", "foo2")
          .addFormParam("SendMessageBatchRequestEntry.2.MessageBody", "payload2")
-         .addFormParam("Signature", "COjjEaJ76EwziEFtkT2FuSRSbrCIu/hlJf1Zmu7cYoU%3D")
+         .addFormParam("Signature", "COjjEaJ76EwziEFtkT2FuSRSbrCIu/hlJf1Zmu7cYoU=")
          .addFormParam("SignatureMethod", "HmacSHA256")
          .addFormParam("SignatureVersion", "2")
-         .addFormParam("Timestamp", "2009-11-08T15%3A54%3A08.897Z")
+         .addFormParam("Timestamp", "2009-11-08T15:54:08.897Z")
          .addFormParam("Version", "2011-10-01")
          .addFormParam("AWSAccessKeyId", "identity").build();
 
@@ -163,10 +163,10 @@ public class MessageApiExpectTest extends BaseSQSApiExpectTest {
          .addFormParam("SendMessageBatchRequestEntry.2.DelaySeconds", "10")
          .addFormParam("SendMessageBatchRequestEntry.2.Id", "2")
          .addFormParam("SendMessageBatchRequestEntry.2.MessageBody", "payload2")
-         .addFormParam("Signature", "8AVNvSVXPSnoXjJAc6h1rysMBBZPnSycbnmD2/qpdV8%3D")
+         .addFormParam("Signature", "8AVNvSVXPSnoXjJAc6h1rysMBBZPnSycbnmD2/qpdV8=")
          .addFormParam("SignatureMethod", "HmacSHA256")
          .addFormParam("SignatureVersion", "2")
-         .addFormParam("Timestamp", "2009-11-08T15%3A54%3A08.897Z")
+         .addFormParam("Timestamp", "2009-11-08T15:54:08.897Z")
          .addFormParam("Version", "2011-10-01")
          .addFormParam("AWSAccessKeyId", "identity").build();
    
@@ -193,10 +193,10 @@ public class MessageApiExpectTest extends BaseSQSApiExpectTest {
          .addFormParam("SendMessageBatchRequestEntry.2.DelaySeconds", "10")
          .addFormParam("SendMessageBatchRequestEntry.2.Id", "foo2")
          .addFormParam("SendMessageBatchRequestEntry.2.MessageBody", "payload2")
-         .addFormParam("Signature", "M2X8Al%2BbyyDM%2B9kdN28rMn1yJWl78hJ5i4GnaMZ1sYg%3D")
+         .addFormParam("Signature", "M2X8Al+byyDM+9kdN28rMn1yJWl78hJ5i4GnaMZ1sYg=")
          .addFormParam("SignatureMethod", "HmacSHA256")
          .addFormParam("SignatureVersion", "2")
-         .addFormParam("Timestamp", "2009-11-08T15%3A54%3A08.897Z")
+         .addFormParam("Timestamp", "2009-11-08T15:54:08.897Z")
          .addFormParam("Version", "2011-10-01")
          .addFormParam("AWSAccessKeyId", "identity").build();
 
@@ -226,10 +226,10 @@ public class MessageApiExpectTest extends BaseSQSApiExpectTest {
          .addFormParam("SendMessageBatchRequestEntry.2.DelaySeconds", "10")
          .addFormParam("SendMessageBatchRequestEntry.2.Id", "2")
          .addFormParam("SendMessageBatchRequestEntry.2.MessageBody", "payload2")
-         .addFormParam("Signature", "nbA4UnKDAuQCiCcvQHH/1UjMMeo2s3d94A27Q3t9SlI%3D")
+         .addFormParam("Signature", "nbA4UnKDAuQCiCcvQHH/1UjMMeo2s3d94A27Q3t9SlI=")
          .addFormParam("SignatureMethod", "HmacSHA256")
          .addFormParam("SignatureVersion", "2")
-         .addFormParam("Timestamp", "2009-11-08T15%3A54%3A08.897Z")
+         .addFormParam("Timestamp", "2009-11-08T15:54:08.897Z")
          .addFormParam("Version", "2011-10-01")
          .addFormParam("AWSAccessKeyId", "identity").build();
    
@@ -251,10 +251,10 @@ public class MessageApiExpectTest extends BaseSQSApiExpectTest {
          .endpoint("https://sqs.us-east-1.amazonaws.com/993194456877/adrian-sqs11/")
          .addHeader("Host", "sqs.us-east-1.amazonaws.com")
          .addFormParam("Action", "ReceiveMessage")
-         .addFormParam("Signature", "UURXsAjggoaz5P1h2EFswRd8Ji9euHmXhHvrAmIqM1E%3D")
+         .addFormParam("Signature", "UURXsAjggoaz5P1h2EFswRd8Ji9euHmXhHvrAmIqM1E=")
          .addFormParam("SignatureMethod", "HmacSHA256")
          .addFormParam("SignatureVersion", "2")
-         .addFormParam("Timestamp", "2009-11-08T15%3A54%3A08.897Z")
+         .addFormParam("Timestamp", "2009-11-08T15:54:08.897Z")
          .addFormParam("Version", "2011-10-01")
          .addFormParam("AWSAccessKeyId", "identity").build();
 
@@ -276,10 +276,10 @@ public class MessageApiExpectTest extends BaseSQSApiExpectTest {
          .addHeader("Host", "sqs.us-east-1.amazonaws.com")
          .addFormParam("Action", "ReceiveMessage")
          .addFormParam("MaxNumberOfMessages", "10")
-         .addFormParam("Signature", "pZ9B4%2BTBvQA4n0joP4t8ue5x0xmKMd9prpVLVoT/7qU%3D")
+         .addFormParam("Signature", "pZ9B4+TBvQA4n0joP4t8ue5x0xmKMd9prpVLVoT/7qU=")
          .addFormParam("SignatureMethod", "HmacSHA256")
          .addFormParam("SignatureVersion", "2")
-         .addFormParam("Timestamp", "2009-11-08T15%3A54%3A08.897Z")
+         .addFormParam("Timestamp", "2009-11-08T15:54:08.897Z")
          .addFormParam("Version", "2011-10-01")
          .addFormParam("AWSAccessKeyId", "identity").build();
 
@@ -293,17 +293,17 @@ public class MessageApiExpectTest extends BaseSQSApiExpectTest {
       assertEquals(apiWhenExist.getMessageApiForQueue(queue).receive(10).toString(), new ReceiveMessageResponseTest()
             .expected().toString());
    }
-   
+
    public HttpRequest deleteMessage = HttpRequest.builder()
          .method("POST")
          .endpoint("https://sqs.us-east-1.amazonaws.com/993194456877/adrian-sqs11/")
          .addHeader("Host", "sqs.us-east-1.amazonaws.com")
          .addFormParam("Action", "DeleteMessage")
          .addFormParam("ReceiptHandle", "eXJYhj5rDr9cAe")
-         .addFormParam("Signature", "9/kuCc2i78gMsmul%2BRsOPcdQ1OLUKrItqgGIRRBJb8M%3D")
+         .addFormParam("Signature", "9/kuCc2i78gMsmul+RsOPcdQ1OLUKrItqgGIRRBJb8M=")
          .addFormParam("SignatureMethod", "HmacSHA256")
          .addFormParam("SignatureVersion", "2")
-         .addFormParam("Timestamp", "2009-11-08T15%3A54%3A08.897Z")
+         .addFormParam("Timestamp", "2009-11-08T15:54:08.897Z")
          .addFormParam("Version", "2011-10-01")
          .addFormParam("AWSAccessKeyId", "identity").build();
 
@@ -330,10 +330,10 @@ public class MessageApiExpectTest extends BaseSQSApiExpectTest {
          .addFormParam("DeleteMessageBatchRequestEntry.1.ReceiptHandle", "eXJYhj5rDr9cAe")
          .addFormParam("DeleteMessageBatchRequestEntry.2.Id", "2")
          .addFormParam("DeleteMessageBatchRequestEntry.2.ReceiptHandle", "fffeeerrr")
-         .addFormParam("Signature", "S4xIobjm3LOkJvibeI2X54nxKJw9r1a5zj/dvHlfDMY%3D")
+         .addFormParam("Signature", "S4xIobjm3LOkJvibeI2X54nxKJw9r1a5zj/dvHlfDMY=")
          .addFormParam("SignatureMethod", "HmacSHA256")
          .addFormParam("SignatureVersion", "2")
-         .addFormParam("Timestamp", "2009-11-08T15%3A54%3A08.897Z")
+         .addFormParam("Timestamp", "2009-11-08T15:54:08.897Z")
          .addFormParam("Version", "2011-10-01")
          .addFormParam("AWSAccessKeyId", "identity").build();
 
@@ -358,10 +358,10 @@ public class MessageApiExpectTest extends BaseSQSApiExpectTest {
          .addFormParam("DeleteMessageBatchRequestEntry.1.ReceiptHandle", "eXJYhj5rDr9cAe")
          .addFormParam("DeleteMessageBatchRequestEntry.2.Id", "foo2")
          .addFormParam("DeleteMessageBatchRequestEntry.2.ReceiptHandle", "fffeeerrr")
-         .addFormParam("Signature", "kwHC3F3ZoJvfibhZWVTeIwFHUzoaVMR4OViyJbsmuV0%3D")
+         .addFormParam("Signature", "kwHC3F3ZoJvfibhZWVTeIwFHUzoaVMR4OViyJbsmuV0=")
          .addFormParam("SignatureMethod", "HmacSHA256")
          .addFormParam("SignatureVersion", "2")
-         .addFormParam("Timestamp", "2009-11-08T15%3A54%3A08.897Z")
+         .addFormParam("Timestamp", "2009-11-08T15:54:08.897Z")
          .addFormParam("Version", "2011-10-01")
          .addFormParam("AWSAccessKeyId", "identity").build();
 
@@ -385,10 +385,10 @@ public class MessageApiExpectTest extends BaseSQSApiExpectTest {
          .addHeader("Host", "sqs.us-east-1.amazonaws.com")
          .addFormParam("Action", "ChangeMessageVisibility")
          .addFormParam("ReceiptHandle", "eXJYhj5rDr9cAe")
-         .addFormParam("Signature", "gvmSHleGLkmszYU6aURCBImuec2k0O3pg3tAYhDvkNs%3D")
+         .addFormParam("Signature", "gvmSHleGLkmszYU6aURCBImuec2k0O3pg3tAYhDvkNs=")
          .addFormParam("SignatureMethod", "HmacSHA256")
          .addFormParam("SignatureVersion", "2")
-         .addFormParam("Timestamp", "2009-11-08T15%3A54%3A08.897Z")
+         .addFormParam("Timestamp", "2009-11-08T15:54:08.897Z")
          .addFormParam("Version", "2011-10-01")
          .addFormParam("VisibilityTimeout", "10")
          .addFormParam("AWSAccessKeyId", "identity").build();
@@ -418,10 +418,10 @@ public class MessageApiExpectTest extends BaseSQSApiExpectTest {
          .addFormParam("ChangeMessageVisibilityBatchRequestEntry.2.Id", "foo2")
          .addFormParam("ChangeMessageVisibilityBatchRequestEntry.2.ReceiptHandle", "bbbbbbbbb")
          .addFormParam("ChangeMessageVisibilityBatchRequestEntry.2.VisibilityTimeout", "10")
-         .addFormParam("Signature", "KjDusYiiC3hTdy3ZxLwBRHryrNoNaFb2AHJqUDu3mtQ%3D")
+         .addFormParam("Signature", "KjDusYiiC3hTdy3ZxLwBRHryrNoNaFb2AHJqUDu3mtQ=")
          .addFormParam("SignatureMethod", "HmacSHA256")
          .addFormParam("SignatureVersion", "2")
-         .addFormParam("Timestamp", "2009-11-08T15%3A54%3A08.897Z")
+         .addFormParam("Timestamp", "2009-11-08T15:54:08.897Z")
          .addFormParam("Version", "2011-10-01")
          .addFormParam("AWSAccessKeyId", "identity").build();
 
@@ -451,10 +451,10 @@ public class MessageApiExpectTest extends BaseSQSApiExpectTest {
          .addFormParam("ChangeMessageVisibilityBatchRequestEntry.2.Id", "2")
          .addFormParam("ChangeMessageVisibilityBatchRequestEntry.2.ReceiptHandle", "bbbbbbbbb")
          .addFormParam("ChangeMessageVisibilityBatchRequestEntry.2.VisibilityTimeout", "10")
-         .addFormParam("Signature", "zj2cftkpHtiYb9iOjPR3AhcVhoobi0JvOy22PvQJtho%3D")
+         .addFormParam("Signature", "zj2cftkpHtiYb9iOjPR3AhcVhoobi0JvOy22PvQJtho=")
          .addFormParam("SignatureMethod", "HmacSHA256")
          .addFormParam("SignatureVersion", "2")
-         .addFormParam("Timestamp", "2009-11-08T15%3A54%3A08.897Z")
+         .addFormParam("Timestamp", "2009-11-08T15:54:08.897Z")
          .addFormParam("Version", "2011-10-01")
          .addFormParam("AWSAccessKeyId", "identity").build();
    
@@ -481,10 +481,10 @@ public class MessageApiExpectTest extends BaseSQSApiExpectTest {
                                                                            .addFormParam("ChangeMessageVisibilityBatchRequestEntry.2.Id", "foo2")
                                                                            .addFormParam("ChangeMessageVisibilityBatchRequestEntry.2.ReceiptHandle", "bbbbbbbbb")
                                                                            .addFormParam("ChangeMessageVisibilityBatchRequestEntry.2.VisibilityTimeout", "10")
-                                                                           .addFormParam("Signature", "y/gaaxoE5wrG2P7NIAyfDo7DTgRx2PLJUi9/zNnWQ6A%3D")
+                                                                           .addFormParam("Signature", "y/gaaxoE5wrG2P7NIAyfDo7DTgRx2PLJUi9/zNnWQ6A=")
                                                                            .addFormParam("SignatureMethod", "HmacSHA256")
                                                                            .addFormParam("SignatureVersion", "2")
-                                                                           .addFormParam("Timestamp", "2009-11-08T15%3A54%3A08.897Z")
+                                                                           .addFormParam("Timestamp", "2009-11-08T15:54:08.897Z")
                                                                            .addFormParam("Version", "2011-10-01")
                                                                            .addFormParam("AWSAccessKeyId", "identity").build();
 
@@ -513,10 +513,10 @@ public class MessageApiExpectTest extends BaseSQSApiExpectTest {
                                                                       .addFormParam("ChangeMessageVisibilityBatchRequestEntry.2.Id", "2")
                                                                       .addFormParam("ChangeMessageVisibilityBatchRequestEntry.2.ReceiptHandle", "bbbbbbbbb")
                                                                       .addFormParam("ChangeMessageVisibilityBatchRequestEntry.2.VisibilityTimeout", "10")
-                                                                      .addFormParam("Signature", "f5aq7zdKFErM3%2BIdtDX5NOzPO7mqCRzPGj2wUUEWjgE%3D")
+                                                                      .addFormParam("Signature", "f5aq7zdKFErM3+IdtDX5NOzPO7mqCRzPGj2wUUEWjgE=")
                                                                       .addFormParam("SignatureMethod", "HmacSHA256")
                                                                       .addFormParam("SignatureVersion", "2")
-                                                                      .addFormParam("Timestamp", "2009-11-08T15%3A54%3A08.897Z")
+                                                                      .addFormParam("Timestamp", "2009-11-08T15:54:08.897Z")
                                                                       .addFormParam("Version", "2011-10-01")
                                                                       .addFormParam("AWSAccessKeyId", "identity").build();
    
