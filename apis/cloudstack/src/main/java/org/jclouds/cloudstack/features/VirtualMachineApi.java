@@ -32,6 +32,7 @@ import org.jclouds.cloudstack.filters.AuthenticationFilter;
 import org.jclouds.cloudstack.options.AssignVirtualMachineOptions;
 import org.jclouds.cloudstack.options.DeployVirtualMachineOptions;
 import org.jclouds.cloudstack.options.ListVirtualMachinesOptions;
+import org.jclouds.cloudstack.options.UpdateVirtualMachineOptions;
 import org.jclouds.cloudstack.options.StopVirtualMachineOptions;
 import org.jclouds.rest.annotations.Fallback;
 import org.jclouds.rest.annotations.OnlyElement;
@@ -198,6 +199,8 @@ public interface VirtualMachineApi {
     * 
     * @param id
     *           The ID of the virtual machine
+    * @param serviceOfferingId
+    *           The service offering ID to apply to the virtual machine
     * @return job id related to destroying the VM
     */
    @Named("changeServiceForVirtualMachine")
@@ -205,7 +208,8 @@ public interface VirtualMachineApi {
    @QueryParams(keys = "command", values = "changeServiceForVirtualMachine")
    @SelectJson("jobid")
    @Consumes(MediaType.APPLICATION_JSON)
-   String changeServiceForVirtualMachine(@QueryParam("id") String id);
+   String changeServiceForVirtualMachine(@QueryParam("id") String id,
+                                         @QueryParam("serviceofferingid") String serviceOfferingId);
 
    /**
     * Updates parameters of a virtual machine.
@@ -219,7 +223,8 @@ public interface VirtualMachineApi {
    @QueryParams(keys = "command", values = "updateVirtualMachine")
    @SelectJson("jobid")
    @Consumes(MediaType.APPLICATION_JSON)
-   String updateVirtualMachine(@QueryParam("id") String id);
+   String updateVirtualMachine(@QueryParam("id") String id,
+                               UpdateVirtualMachineOptions options);
 
    /**
     * Destroys a virtual machine. Once destroyed, only the administrator can
