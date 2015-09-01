@@ -26,6 +26,7 @@ import java.util.concurrent.TimeoutException;
 
 import javax.ws.rs.core.MediaType;
 
+import com.google.common.collect.ImmutableSet;
 import org.jclouds.blobstore.domain.Blob;
 import org.jclouds.blobstore.domain.BlobMetadata;
 import org.jclouds.blobstore.domain.PageSet;
@@ -171,5 +172,16 @@ public class FilesystemContainerIntegrationTest extends BaseContainerIntegration
    public Object[][] ignoreOnWindows() {
       return TestUtils.isWindowsOs() ? TestUtils.NO_INVOCATIONS
             : TestUtils.SINGLE_NO_ARG_INVOCATION;
+   }
+
+   @Override
+   @DataProvider
+   public Object[][] getBlobsToEscape() {
+      if (TestUtils.isWindowsOs()) {
+         Object[][] result = new Object[1][1];
+         result[0][0] = ImmutableSet.of("%20", " %20");
+         return result;
+      }
+      return super.getBlobsToEscape();
    }
 }
