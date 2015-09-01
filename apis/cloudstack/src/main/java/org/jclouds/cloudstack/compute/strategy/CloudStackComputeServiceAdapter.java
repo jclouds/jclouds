@@ -183,6 +183,10 @@ public class CloudStackComputeServiceAdapter implements
          options.ipsToNetworks(templateOptions.getIpsToNetworks());
       }
 
+      if (templateOptions.getUserData() != null) {
+         options.userData(templateOptions.getUserData());
+      }
+
       if (templateOptions.getKeyPair() != null) {
          SshKeyPair keyPair = null;
          if (templateOptions.getLoginPrivateKey() != null) {
