@@ -46,6 +46,7 @@ import org.jclouds.cloudstack.domain.Zone;
 import org.jclouds.cloudstack.internal.BaseCloudStackApiLiveTest;
 import org.jclouds.cloudstack.options.CreateNetworkOptions;
 import org.jclouds.cloudstack.options.DeployVirtualMachineOptions;
+import org.jclouds.cloudstack.options.UpdateVirtualMachineOptions;
 import org.jclouds.cloudstack.options.ListNetworkOfferingsOptions;
 import org.jclouds.cloudstack.options.ListNetworksOptions;
 import org.jclouds.cloudstack.options.ListTemplatesOptions;
@@ -319,6 +320,15 @@ public class VirtualMachineApiLiveTest extends BaseCloudStackApiLiveTest {
       assertTrue(jobComplete.apply(job));
       vm = client.getVirtualMachineApi().getVirtualMachine(vm.getId());
       assertEquals(vm.getState(), VirtualMachine.State.RUNNING);
+   }
+
+   @Test(dependsOnMethods = "testCreateVirtualMachine")
+   public void testVirtualMachineUpdate() throws Exception {
+      UpdateVirtualMachineOptions options = UpdateVirtualMachineOptions.Builder.displayName("updated-name");
+      String job = client.getVirtualMachineApi().updateVirtualMachine(vm.getId(), options);
+      assertTrue(jobComplete.apply(job));
+      vm = client.getVirtualMachineApi().getVirtualMachine(vm.getId());
+      assertEquals(vm.getDisplayName(), "updated-name");
    }
 
    @AfterGroups(groups = "live")
