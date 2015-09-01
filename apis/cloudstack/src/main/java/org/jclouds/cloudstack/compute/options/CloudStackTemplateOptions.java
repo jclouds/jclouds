@@ -32,13 +32,13 @@ import com.google.common.collect.Sets;
  * {@link ComputeService#createNodesInGroup(String, int, TemplateOptions)} and
  * {@link ComputeService#createNodesInGroup(String, int, TemplateOptions)}
  * operations on the <em>gogrid</em> provider.
- * 
+ *
  * <h2>Usage</h2> The recommended way to instantiate a
  * {@link CloudStackTemplateOptions} object is to statically import
  * {@code CloudStackTemplateOptions.*} and invoke a static creation method
  * followed by an instance mutator (if needed):
  * <p>
- * 
+ *
  * <pre>
  * import static org.jclouds.compute.options.CloudStackTemplateOptions.Builder.*;
  * ComputeService client = // get connection
@@ -59,7 +59,8 @@ public class CloudStackTemplateOptions extends TemplateOptions implements Clonea
    protected boolean generateSecurityGroup = false;
    protected String diskOfferingId;
    protected int dataDiskSize;
-   
+   protected byte[] unencodedData;
+
    @Override
    public CloudStackTemplateOptions clone() {
       CloudStackTemplateOptions options = new CloudStackTemplateOptions();
@@ -83,6 +84,7 @@ public class CloudStackTemplateOptions extends TemplateOptions implements Clonea
          eTo.setupStaticNat(setupStaticNat);
          eTo.diskOfferingId(diskOfferingId);
          eTo.dataDiskSize(dataDiskSize);
+         eTo.userData(unencodedData);
       }
    }
 
@@ -108,6 +110,18 @@ public class CloudStackTemplateOptions extends TemplateOptions implements Clonea
 
    public int getDataDiskSize() {
       return dataDiskSize;
+   }
+
+   /**
+    * @see DeployVirtualMachineOptions#userData
+    */
+   public CloudStackTemplateOptions userData(byte[] unencodedData) {
+      this.unencodedData = unencodedData;
+      return this;
+   }
+
+   public byte[] getUserData() {
+      return unencodedData;
    }
 
    /**
@@ -279,6 +293,14 @@ public class CloudStackTemplateOptions extends TemplateOptions implements Clonea
       }
 
       /**
+       * @see CloudStackTemplateOptions#userData
+       */
+      public static CloudStackTemplateOptions userData(byte[] unencodedData) {
+         CloudStackTemplateOptions options = new CloudStackTemplateOptions();
+         return options.userData(unencodedData);
+      }
+
+      /**
        * @see CloudStackTemplateOptions#securityGroupId
        */
       public static CloudStackTemplateOptions securityGroupId(String id) {
@@ -295,7 +317,7 @@ public class CloudStackTemplateOptions extends TemplateOptions implements Clonea
       }
 
       /**
-       * @see CloudStackTemplateOptions#shouldGenerateSecurityGroup() 
+       * @see CloudStackTemplateOptions#shouldGenerateSecurityGroup()
        */
       public static CloudStackTemplateOptions generateSecurityGroup(boolean enable) {
          return new CloudStackTemplateOptions().generateSecurityGroup(enable);
@@ -352,7 +374,7 @@ public class CloudStackTemplateOptions extends TemplateOptions implements Clonea
       }
 
       /**
-       * @see CloudStackTemplateOptions#shouldGenerateKeyPair() 
+       * @see CloudStackTemplateOptions#shouldGenerateKeyPair()
        */
       public static CloudStackTemplateOptions generateKeyPair(boolean enable) {
          return new CloudStackTemplateOptions().generateKeyPair(enable);
