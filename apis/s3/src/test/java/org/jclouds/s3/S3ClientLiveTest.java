@@ -623,4 +623,42 @@ public class S3ClientLiveTest extends BaseBlobStoreIntegrationTest {
       acl.addPermission(new CanonicalUserGrantee(ownerId), Permission.WRITE_ACP);
    }
 
+   public void testUpdateBucketCannedACL() throws Exception {
+      String containerName = getContainerName();
+      try {
+         getApi().updateBucketCannedACL(containerName, CannedAccessPolicy.PUBLIC_READ);
+         AccessControlList acl = getApi().getBucketACL(containerName);
+         assertThat(acl.hasPermission(GroupGranteeURI.ALL_USERS, Permission.READ)).isTrue();
+
+         getApi().updateBucketCannedACL(containerName, CannedAccessPolicy.PRIVATE);
+         acl = getApi().getBucketACL(containerName);
+         assertThat(acl.hasPermission(GroupGranteeURI.ALL_USERS, Permission.READ)).isFalse();
+      } finally {
+         recycleContainerAndAddToPool(containerName);
+      }
+   }
+
+   public void testUpdateObjectCannedACL() throws Exception {
+      String containerName = getContainerName();
+      try {
+         String key = "testUpdateObjectCannedACL";
+         S3Object object = getApi().newS3Object();
+         object.getMetadata().setKey(key);
+         object.setPayload(TEST_STRING);
+         getApi().putObject(containerName, object);
+
+         getApi().updateObjectCannedACL(containerName, key, CannedAccessPolicy.PUBLIC_READ);
+         AccessControlList acl = getApi().getObjectACL(containerName, key);
+         assertThat(acl.hasPermission(GroupGranteeURI.ALL_USERS, Permission.READ)).isTrue();
+
+         getApi().updateObjectCannedACL(containerName, key, CannedAccessPolicy.PRIVATE);
+         acl = getApi().getObjectACL(containerName, key);
+         assertThat(acl.hasPermission(GroupGranteeURI.ALL_USERS, Permission.READ)).isFalse();
+
+         object = getApi().getObject(containerName, key);
+         assertThat(Strings2.toStringAndClose(object.getPayload().openStream())).isEqualTo(TEST_STRING);
+      } finally {
+         returnContainer(containerName);
+      }
+   }
 }

@@ -377,6 +377,23 @@ public abstract class S3ClientTest<T extends S3Client> extends BaseS3ClientTest<
       checkFilters(request);
    }
 
+   public void testUpdateBucketCannedACL() throws Exception {
+      Invokable<?, ?> method = method(S3Client.class, "updateBucketCannedACL", String.class, CannedAccessPolicy.class);
+      GeneratedHttpRequest request = processor.createRequest(method, ImmutableList.<Object> of("bucket", CannedAccessPolicy.PUBLIC_READ));
+
+      assertRequestLineEquals(request, "PUT https://bucket." + url + "/?acl HTTP/1.1");
+      assertNonPayloadHeadersEqual(request,
+            "Host: bucket." + url + "\n" +
+            "x-amz-acl: public-read\n");
+      assertPayloadEquals(request, null, "text/xml", false);
+
+      assertResponseParserClassEquals(method, request, ReturnTrueIf2xx.class);
+      assertSaxResponseParserClassEquals(method, null);
+      assertFallbackClassEquals(method, null);
+
+      checkFilters(request);
+   }
+
    public void testPutBucketDefault() throws ArrayIndexOutOfBoundsException, SecurityException,
             IllegalArgumentException, NoSuchMethodException, IOException {
       Invokable<?, ?> method = method(S3Client.class, "putBucketInRegion", String.class, String.class,
@@ -425,6 +442,24 @@ public abstract class S3ClientTest<T extends S3Client> extends BaseS3ClientTest<
                         + url
                         + "/doc/2006-03-01/\"><Owner><ID>1234</ID></Owner><AccessControlList><Grant><Grantee xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:type=\"CanonicalUser\"><ID>1234</ID></Grantee><Permission>FULL_CONTROL</Permission></Grant></AccessControlList></AccessControlPolicy>",
                "text/xml", false);
+
+      assertResponseParserClassEquals(method, request, ReturnTrueIf2xx.class);
+      assertSaxResponseParserClassEquals(method, null);
+      assertFallbackClassEquals(method, null);
+
+      checkFilters(request);
+   }
+
+   public void testUpdateObjectCannedACL() throws SecurityException, NoSuchMethodException, IOException {
+      Invokable<?, ?> method = method(S3Client.class, "updateObjectCannedACL", String.class, String.class, CannedAccessPolicy.class);
+      GeneratedHttpRequest request = processor.createRequest(
+              method, ImmutableList.<Object> of("bucket", "key", CannedAccessPolicy.PUBLIC_READ));
+
+      assertRequestLineEquals(request, "PUT https://bucket." + url + "/key?acl HTTP/1.1");
+      assertNonPayloadHeadersEqual(request,
+            "Host: bucket." + url + "\n" +
+            "x-amz-acl: public-read\n");
+      assertPayloadEquals(request, null, "text/xml", false);
 
       assertResponseParserClassEquals(method, request, ReturnTrueIf2xx.class);
       assertSaxResponseParserClassEquals(method, null);

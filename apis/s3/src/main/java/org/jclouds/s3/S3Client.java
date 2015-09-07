@@ -62,6 +62,7 @@ import org.jclouds.rest.annotations.XMLResponseParser;
 import org.jclouds.s3.binders.BindACLToXMLPayload;
 import org.jclouds.s3.binders.BindAsHostPrefixIfConfigured;
 import org.jclouds.s3.binders.BindBucketLoggingToXmlPayload;
+import org.jclouds.s3.binders.BindCannedAclToRequest;
 import org.jclouds.s3.binders.BindIterableAsPayloadToDeleteRequest;
 import org.jclouds.s3.binders.BindNoBucketLoggingToXmlPayload;
 import org.jclouds.s3.binders.BindObjectMetadataToRequest;
@@ -71,6 +72,7 @@ import org.jclouds.s3.binders.BindS3ObjectMetadataToRequest;
 import org.jclouds.s3.domain.AccessControlList;
 import org.jclouds.s3.domain.BucketLogging;
 import org.jclouds.s3.domain.BucketMetadata;
+import org.jclouds.s3.domain.CannedAccessPolicy;
 import org.jclouds.s3.domain.DeleteResult;
 import org.jclouds.s3.domain.ListBucketResponse;
 import org.jclouds.s3.domain.ObjectMetadata;
@@ -427,6 +429,28 @@ public interface S3Client extends Closeable {
          @BinderParam(BindACLToXMLPayload.class) AccessControlList acl);
 
    /**
+    * Update a bucket's Access Control List settings.
+    * <p/>
+    * A PUT request operation directed at a bucket URI with the "acl" parameter sets the Access
+    * Control List (ACL) settings for that S3 item.
+    * <p />
+    * To set a bucket or object's ACL, you must have WRITE_ACP or FULL_CONTROL access to the item.
+    *
+    * @param bucketName
+    *           the bucket whose Access Control List settings will be updated.
+    * @param acl
+    *           the ACL to apply to the bucket.
+    * @return true if the bucket's Access Control List was updated successfully.
+    */
+   @Named("UpdateBucketCannedAcl")
+   @PUT
+   @Path("/")
+   @QueryParams(keys = "acl")
+   boolean updateBucketCannedACL(@Bucket @EndpointParam(parser = AssignCorrectHostnameForBucket.class) @BinderParam(
+         BindAsHostPrefixIfConfigured.class) @ParamValidators(BucketNameValidator.class) String bucketName,
+         @BinderParam(BindCannedAclToRequest.class) CannedAccessPolicy acl);
+
+   /**
     * A GET request operation directed at an object or bucket URI with the "acl" parameter retrieves
     * the Access Control List (ACL) settings for that S3 item.
     * <p />
@@ -469,6 +493,29 @@ public interface S3Client extends Closeable {
          BindAsHostPrefixIfConfigured.class) @ParamValidators(BucketNameValidator.class) String bucketName,
          @PathParam("key") String key, @BinderParam(BindACLToXMLPayload.class) AccessControlList acl);
 
+   /**
+    * Update an object's Access Control List settings.
+    * <p/>
+    * A PUT request operation directed at an object URI with the "acl" parameter sets the Access
+    * Control List (ACL) settings for that S3 item.
+    * <p />
+    * To set a bucket or object's ACL, you must have WRITE_ACP or FULL_CONTROL access to the item.
+    *
+    * @param bucketName
+    *           the bucket containing the object to be updated
+    * @param key
+    *           the key of the object whose Access Control List settings will be updated.
+    * @param acl
+    *           the ACL to apply to the object.
+    * @return true if the object's Access Control List was updated successfully.
+    */
+   @Named("UpdateObjectCannedAcl")
+   @PUT
+   @QueryParams(keys = "acl")
+   @Path("/{key}")
+   boolean updateObjectCannedACL(@Bucket @EndpointParam(parser = AssignCorrectHostnameForBucket.class) @BinderParam(
+         BindAsHostPrefixIfConfigured.class) @ParamValidators(BucketNameValidator.class) String bucketName,
+         @PathParam("key") String key, @BinderParam(BindCannedAclToRequest.class) CannedAccessPolicy acl);
 
    /**
     * A GET location request operation using a bucket URI lists the location constraint of the
