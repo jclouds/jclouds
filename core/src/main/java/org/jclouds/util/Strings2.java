@@ -88,12 +88,6 @@ public class Strings2 {
    public static boolean isCidrFormat(String in) {
       return CIDR_PATTERN.matcher(in).matches();
    }
-      
-   private static final Pattern URL_ENCODED_PATTERN = Pattern.compile(".*%[a-fA-F0-9][a-fA-F0-9].*");
-
-   public static boolean isUrlEncoded(String in) {
-      return URL_ENCODED_PATTERN.matcher(in).matches();
-   }
 
    /**
     * url decodes the input param, if set.
@@ -107,9 +101,6 @@ public class Strings2 {
    public static String urlDecode(@Nullable String in) {
       if (in == null)
          return null;
-      if (!isUrlEncoded(in)) {
-         return in;
-      }
       String input = in.toString();
       try {
          return URLDecoder.decode(input, "UTF-8");

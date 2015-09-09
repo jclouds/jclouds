@@ -28,17 +28,13 @@ import static org.jclouds.util.Strings2.urlEncode;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.Map;
 
 import org.jclouds.javax.annotation.Nullable;
 
 import com.google.common.annotations.Beta;
-import com.google.common.base.Function;
-import com.google.common.collect.ForwardingMultimap;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
-import com.google.common.collect.Iterables;
 import com.google.common.collect.LinkedHashMultimap;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Multimap;
@@ -103,7 +99,7 @@ public final class Uris {
       private String host;
       private Integer port;
       private String path;
-      private Multimap<String, Object> query = DecodingMultimap.create();
+      private Multimap<String, Object> query = LinkedHashMultimap.create();
 
       /**
        * override default of {@code / : ; =}
@@ -274,10 +270,12 @@ public final class Uris {
          this.scheme = uri.getScheme();
          this.host = uri.getHost();
          this.port = uri.getPort() == -1 ? null : uri.getPort();
-         if (uri.getPath() != null)
-            path(unescapeSpecialChars(uri.getPath()));
-         if (uri.getQuery() != null)
-            query(queryParser().apply(unescapeSpecialChars(uri.getQuery())));
+         if (uri.getRawPath() != null)
+            // path decodes the string, so we need to get at the raw (encoded) string
+            path(unescapeSpecialChars(uri.getRawPath()));
+         if (uri.getRawQuery() != null)
+            // The query parser decodes the strings that are passed to it; we should pass raw (encoded) queries
+            query(queryParser().apply(unescapeSpecialChars(uri.getRawQuery())));
       }
 
       public URI build() {
@@ -372,53 +370,4 @@ public final class Uris {
          return new StringBuilder().append('/').append(in).toString();
       return in;
    }
-
-   /**
-    * Mutable and permits null values. Url decodes all mutations except {@link Multimap#putAll(Multimap)}
-    *
-    *
-    */
-   static final class DecodingMultimap extends ForwardingMultimap<String, Object> {
-
-      private static Multimap<String, Object> create() {
-         return new DecodingMultimap();
-      }
-
-      private final Multimap<String, Object> delegate = LinkedHashMultimap.create();
-      private final Function<Object, Object> urlDecoder = new Function<Object, Object>() {
-         public Object apply(Object in) {
-            if (in == null) {
-               return null;
-            }
-            return urlDecode(in.toString());
-         }
-      };
-
-      @Override
-      public boolean put(String key, Object value) {
-         return super.put(urlDecode(key), urlDecoder.apply(value));
-      }
-
-      @Override
-      public boolean putAll(String key, Iterable<? extends Object> values) {
-         return super.putAll(urlDecode(key), Iterables.transform(values, urlDecoder));
-      }
-
-      @Override
-      public boolean putAll(Multimap<? extends String, ? extends Object> multimap) {
-         return super.putAll(multimap);
-      }
-
-      @Override
-      public Collection<Object> replaceValues(String key, Iterable<? extends Object> values) {
-         return super.replaceValues(urlDecode(key), Iterables.transform(values, urlDecoder));
-      }
-
-      @Override
-      protected Multimap<String, Object> delegate() {
-         return delegate;
-      }
-
-   }
-
 }

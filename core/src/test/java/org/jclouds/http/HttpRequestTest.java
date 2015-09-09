@@ -23,6 +23,7 @@ import java.net.URI;
 
 import org.jclouds.io.Payload;
 import org.jclouds.io.Payloads;
+import org.jclouds.util.Strings2;
 import org.testng.annotations.Test;
 
 import com.google.common.collect.ImmutableMultimap;
@@ -67,8 +68,8 @@ public class HttpRequestTest {
 
    // note that + ends up encoded as %2B (plus) and %2F converts back into slash
    public void testAddBase64AndUrlEncodedQueryParams() {
-      String base64Chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789%2B%2F%3D";
-      URI uri = URI.create("http://goo.com:443?header1=" + base64Chars);
+      String base64Chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=";
+      URI uri = URI.create("http://goo.com:443?header1=" + Strings2.urlEncode(base64Chars));
       HttpRequest request = HttpRequest.builder()
             .method("GET")
             .endpoint(uri)

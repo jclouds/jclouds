@@ -27,16 +27,6 @@ import com.google.common.collect.ImmutableMap;
 @Test(groups = "unit")
 public class Strings2Test {
 
-   public void testIsEncoded() {
-      assert Strings2.isUrlEncoded("/read-tests/%73%6f%6d%65%20%66%69%6c%65");
-      assert !Strings2.isUrlEncoded("/read-tests/ tep");
-   }
-
-   public void testNoDoubleDecode() {
-      assertEquals(urlDecode("foo%20bar%2Bbaz"), "foo bar+baz");
-      assertEquals(urlDecode("foo bar+baz"), "foo bar+baz");
-   }
-
    public void testReplaceTokens() {
       assertEquals(Strings2.replaceTokens("hello {where}", ImmutableMap.of("where", "world")), "hello world");
    }
