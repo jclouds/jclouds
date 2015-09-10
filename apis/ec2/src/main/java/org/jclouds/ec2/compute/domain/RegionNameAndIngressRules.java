@@ -19,11 +19,13 @@ package org.jclouds.ec2.compute.domain;
 public class RegionNameAndIngressRules extends RegionAndName {
    private final int[] ports;
    private final boolean authorizeSelf;
-
-   public RegionNameAndIngressRules(String region, String tag, int[] ports, boolean authorizeSelf) {
+   private final String vpcId;
+   
+   public RegionNameAndIngressRules(String region, String tag, int[] ports, boolean authorizeSelf, String vpcId) {
       super(region, tag);
       this.ports = ports;
       this.authorizeSelf = authorizeSelf;
+      this.vpcId = vpcId;
    }
 
    // intentionally not overriding equals or hash-code so that we can search only by region/tag in a
@@ -37,4 +39,8 @@ public class RegionNameAndIngressRules extends RegionAndName {
       return authorizeSelf;
    }
 
+   public String getVpcId() {
+      return vpcId;
+   }
+   
 }

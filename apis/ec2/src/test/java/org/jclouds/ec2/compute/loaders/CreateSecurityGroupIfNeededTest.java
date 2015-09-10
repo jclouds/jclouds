@@ -63,7 +63,7 @@ public class CreateSecurityGroupIfNeededTest {
 
       CreateSecurityGroupIfNeeded function = new CreateSecurityGroupIfNeeded(client, tester);
 
-      assertEquals("group", function.load(new RegionNameAndIngressRules("region", "group", new int[] { 22 }, true)));
+      assertEquals("group", function.load(new RegionNameAndIngressRules("region", "group", new int[] { 22 }, true, null)));
 
       verify(client);
       verify(group);
@@ -83,7 +83,7 @@ public class CreateSecurityGroupIfNeededTest {
 
       CreateSecurityGroupIfNeeded function = new CreateSecurityGroupIfNeeded(client, tester);
 
-      assertEquals("group", function.load(new RegionNameAndIngressRules("region", "group", new int[] { 22 }, true)));
+      assertEquals("group", function.load(new RegionNameAndIngressRules("region", "group", new int[] { 22 }, true, null)));
 
       verify(client);
 
@@ -100,6 +100,6 @@ public class CreateSecurityGroupIfNeededTest {
       replay(client);
 
       CreateSecurityGroupIfNeeded function = new CreateSecurityGroupIfNeeded(client, tester);
-      function.load(new RegionNameAndIngressRules("region", "group", new int[] { 22 }, true));
+      function.load(new RegionNameAndIngressRules("region", "group", new int[] { 22 }, true, null));
    }
 }

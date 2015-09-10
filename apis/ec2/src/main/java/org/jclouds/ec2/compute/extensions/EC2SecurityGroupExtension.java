@@ -158,7 +158,7 @@ public class EC2SecurityGroupExtension implements SecurityGroupExtension {
    public SecurityGroup createSecurityGroup(String name, String region) {
       String markerGroup = namingConvention.create().sharedNameForGroup(name);
       RegionNameAndIngressRules regionAndName = new RegionNameAndIngressRules(region, markerGroup, new int[] {},
-                                                                              false);
+                                                                              false, null);
 
       groupCreator.getUnchecked(regionAndName);
 
@@ -175,7 +175,7 @@ public class EC2SecurityGroupExtension implements SecurityGroupExtension {
       if (!client.getSecurityGroupApi().get().describeSecurityGroupsInRegion(region, groupName).isEmpty()) {
          client.getSecurityGroupApi().get().deleteSecurityGroupInRegion(region, groupName);
          // TODO: test this clear happens
-         groupCreator.invalidate(new RegionNameAndIngressRules(region, groupName, null, false));
+         groupCreator.invalidate(new RegionNameAndIngressRules(region, groupName, null, false, null));
          return true;
       }
 

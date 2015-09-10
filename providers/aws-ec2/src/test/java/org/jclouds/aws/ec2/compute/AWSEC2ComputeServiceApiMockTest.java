@@ -51,6 +51,11 @@ public class AWSEC2ComputeServiceApiMockTest extends BaseAWSEC2ApiMockTest {
       enqueueXml(DEFAULT_REGION, "/availabilityZones.xml");
       enqueueXml(DEFAULT_REGION, "/describe_images.xml");
       enqueueXml(DEFAULT_REGION, "/describe_images_cc.xml");
+      enqueueXml(DEFAULT_REGION, "/describe_subnets.xml");
+      enqueueXml(DEFAULT_REGION, "/created_securitygroup.xml");
+      enqueueXml(DEFAULT_REGION, "/new_securitygroup.xml");
+      enqueueXml(DEFAULT_REGION, "/new_securitygroup.xml");
+      enqueueXml(DEFAULT_REGION, "/authorize_securitygroup_ingress_response.xml");
       enqueueXml(DEFAULT_REGION, "/request_spot_instances-ebs.xml");
       enqueueXml(DEFAULT_REGION, "/request_spot_instances-ebs.xml");
       enqueueXml(DEFAULT_REGION, "/describe_images_ebs.xml");
@@ -61,7 +66,7 @@ public class AWSEC2ComputeServiceApiMockTest extends BaseAWSEC2ApiMockTest {
       Template template = computeService.templateBuilder().locationId("us-east-1a").build();
 
       template.getOptions().as(AWSEC2TemplateOptions.class)
-            .spotPrice(1f).subnetId("subnet-xyz").keyPair("Demo").blockUntilRunning(false);
+            .spotPrice(1f).subnetId("subnet-9d4a7b6c").keyPair("Demo").blockUntilRunning(false);
 
       NodeMetadata node = Iterables.getOnlyElement(computeService.createNodesInGroup("test", 1, template));
       assertEquals(node.getId(), "us-east-1/sir-228e6406");
@@ -70,7 +75,12 @@ public class AWSEC2ComputeServiceApiMockTest extends BaseAWSEC2ApiMockTest {
       assertPosted(DEFAULT_REGION, "Action=DescribeAvailabilityZones");
       assertPosted(DEFAULT_REGION, "Action=DescribeImages&Filter.1.Name=owner-id&Filter.1.Value.1=137112412989&Filter.1.Value.2=801119661308&Filter.1.Value.3=063491364108&Filter.1.Value.4=099720109477&Filter.1.Value.5=411009282317&Filter.2.Name=state&Filter.2.Value.1=available&Filter.3.Name=image-type&Filter.3.Value.1=machine");
       assertPosted(DEFAULT_REGION, "Action=DescribeImages&Filter.1.Name=virtualization-type&Filter.1.Value.1=hvm&Filter.2.Name=architecture&Filter.2.Value.1=x86_64&Filter.3.Name=owner-id&Filter.3.Value.1=137112412989&Filter.3.Value.2=099720109477&Filter.4.Name=hypervisor&Filter.4.Value.1=xen&Filter.5.Name=state&Filter.5.Value.1=available&Filter.6.Name=image-type&Filter.6.Value.1=machine&Filter.7.Name=root-device-type&Filter.7.Value.1=ebs");
-      assertPosted(DEFAULT_REGION, "Action=RequestSpotInstances&SpotPrice=1.0&InstanceCount=1&LaunchSpecification.ImageId=ami-" + getDefaultImageId() + "&LaunchSpecification.Placement.AvailabilityZone=us-east-1a&LaunchSpecification.InstanceType=" + getDefaultSmallestInstanceType() + "&LaunchSpecification.SubnetId=subnet-xyz&LaunchSpecification.KeyName=Demo&LaunchSpecification.UserData=I2Nsb3VkLWNvbmZpZwpyZXBvX3VwZ3JhZGU6IG5vbmUK");
+      assertPosted(DEFAULT_REGION, "Action=DescribeSubnets&Filter.1.Name=subnet-id&Filter.1.Value.1=subnet-9d4a7b6c");
+      assertPosted(DEFAULT_REGION, "Action=CreateSecurityGroup&GroupName=jclouds%23test&GroupDescription=jclouds%23test&VpcId=vpc-1a2b3c4d");
+      assertPosted(DEFAULT_REGION, "Action=DescribeSecurityGroups&GroupName.1=jclouds%23test");
+      assertPosted(DEFAULT_REGION, "Action=DescribeSecurityGroups&GroupName.1=jclouds%23test");
+      assertPosted(DEFAULT_REGION, "Action=AuthorizeSecurityGroupIngress&GroupId=sg-3c6ef654&IpPermissions.0.IpProtocol=tcp&IpPermissions.0.FromPort=22&IpPermissions.0.ToPort=22&IpPermissions.0.IpRanges.0.CidrIp=0.0.0.0/0&IpPermissions.1.IpProtocol=tcp&IpPermissions.1.FromPort=0&IpPermissions.1.ToPort=65535&IpPermissions.1.Groups.0.UserId=993194456877&IpPermissions.1.Groups.0.GroupId=sg-3c6ef654&IpPermissions.2.IpProtocol=udp&IpPermissions.2.FromPort=0&IpPermissions.2.ToPort=65535&IpPermissions.2.Groups.0.UserId=993194456877&IpPermissions.2.Groups.0.GroupId=sg-3c6ef654");
+      assertPosted(DEFAULT_REGION, "Action=RequestSpotInstances&SpotPrice=1.0&InstanceCount=1&LaunchSpecification.ImageId=ami-" + getDefaultImageId() + "&LaunchSpecification.Placement.AvailabilityZone=us-east-1a&LaunchSpecification.SecurityGroupId.1=sg-3c6ef654&LaunchSpecification.InstanceType=" + getDefaultSmallestInstanceType() + "&LaunchSpecification.SubnetId=subnet-9d4a7b6c&LaunchSpecification.KeyName=Demo&LaunchSpecification.UserData=I2Nsb3VkLWNvbmZpZwpyZXBvX3VwZ3JhZGU6IG5vbmUK");
       assertPosted(DEFAULT_REGION, "Action=DescribeSpotInstanceRequests&SpotInstanceRequestId.1=sir-228e6406");
       assertPosted(DEFAULT_REGION, "Action=DescribeImages&ImageId.1=ami-595a0a1c");
       assertPosted(DEFAULT_REGION, "Action=CreateTags&Tag.1.Key=Name&Tag.1.Value=test-228e6406&ResourceId.1=sir-228e6406");
@@ -84,7 +94,6 @@ public class AWSEC2ComputeServiceApiMockTest extends BaseAWSEC2ApiMockTest {
       enqueueXml(DEFAULT_REGION, "/describe_images.xml");
       enqueueXml(DEFAULT_REGION, "/describe_images_cc.xml");
       enqueueXml(DEFAULT_REGION, "/created_securitygroup.xml");
-      enqueueXml(DEFAULT_REGION, "/new_securitygroup.xml");
       enqueueXml(DEFAULT_REGION, "/new_securitygroup.xml");
       enqueueXml(DEFAULT_REGION, "/new_securitygroup.xml");
       enqueueXml(DEFAULT_REGION, "/authorize_securitygroup_ingress_response.xml");
@@ -110,9 +119,8 @@ public class AWSEC2ComputeServiceApiMockTest extends BaseAWSEC2ApiMockTest {
       assertPosted(DEFAULT_REGION, "Action=CreateSecurityGroup&GroupName=jclouds%23test&GroupDescription=jclouds%23test");
       assertPosted(DEFAULT_REGION, "Action=DescribeSecurityGroups&GroupName.1=jclouds%23test");
       assertPosted(DEFAULT_REGION, "Action=DescribeSecurityGroups&GroupName.1=jclouds%23test");
-      assertPosted(DEFAULT_REGION, "Action=DescribeSecurityGroups&GroupName.1=jclouds%23test");
       assertPosted(DEFAULT_REGION, "Action=AuthorizeSecurityGroupIngress&GroupId=sg-3c6ef654&IpPermissions.0.IpProtocol=tcp&IpPermissions.0.FromPort=22&IpPermissions.0.ToPort=22&IpPermissions.0.IpRanges.0.CidrIp=0.0.0.0/0&IpPermissions.1.IpProtocol=tcp&IpPermissions.1.FromPort=0&IpPermissions.1.ToPort=65535&IpPermissions.1.Groups.0.UserId=993194456877&IpPermissions.1.Groups.0.GroupId=sg-3c6ef654&IpPermissions.2.IpProtocol=udp&IpPermissions.2.FromPort=0&IpPermissions.2.ToPort=65535&IpPermissions.2.Groups.0.UserId=993194456877&IpPermissions.2.Groups.0.GroupId=sg-3c6ef654");
-      assertPosted(DEFAULT_REGION, "Action=RequestSpotInstances&SpotPrice=1.0&InstanceCount=1&LaunchSpecification.ImageId=ami-" + getDefaultImageId() + "&LaunchSpecification.Placement.AvailabilityZone=us-east-1a&LaunchSpecification.SecurityGroup.1=jclouds%23test&LaunchSpecification.InstanceType=" + getDefaultSmallestInstanceType() + "&LaunchSpecification.UserData=I2Nsb3VkLWNvbmZpZwpyZXBvX3VwZ3JhZGU6IG5vbmUK&LaunchSpecification.IamInstanceProfile.Arn=arn%3Aaws%3Aiam%3A%3A123456789012%3Ainstance-profile/application_abc/component_xyz/Webserver");
+      assertPosted(DEFAULT_REGION, "Action=RequestSpotInstances&SpotPrice=1.0&InstanceCount=1&LaunchSpecification.ImageId=ami-" + getDefaultImageId() + "&LaunchSpecification.Placement.AvailabilityZone=us-east-1a&LaunchSpecification.SecurityGroupId.1=sg-3c6ef654&LaunchSpecification.InstanceType=" + getDefaultSmallestInstanceType() + "&LaunchSpecification.UserData=I2Nsb3VkLWNvbmZpZwpyZXBvX3VwZ3JhZGU6IG5vbmUK&LaunchSpecification.IamInstanceProfile.Arn=arn%3Aaws%3Aiam%3A%3A123456789012%3Ainstance-profile/application_abc/component_xyz/Webserver");
       assertPosted(DEFAULT_REGION, "Action=DescribeSpotInstanceRequests&SpotInstanceRequestId.1=sir-228e6406");
       assertPosted(DEFAULT_REGION, "Action=DescribeImages&ImageId.1=ami-595a0a1c");
       assertPosted(DEFAULT_REGION, "Action=CreateTags&Tag.1.Key=Name&Tag.1.Value=test-228e6406&ResourceId.1=sir-228e6406");
@@ -124,7 +132,6 @@ public class AWSEC2ComputeServiceApiMockTest extends BaseAWSEC2ApiMockTest {
       enqueueXml(DEFAULT_REGION, "/describe_images.xml");
       enqueueXml(DEFAULT_REGION, "/describe_images_cc.xml");
       enqueueXml(DEFAULT_REGION, "/created_securitygroup.xml");
-      enqueueXml(DEFAULT_REGION, "/new_securitygroup.xml");
       enqueueXml(DEFAULT_REGION, "/new_securitygroup.xml");
       enqueueXml(DEFAULT_REGION, "/new_securitygroup.xml");
       enqueueXml(DEFAULT_REGION, "/authorize_securitygroup_ingress_response.xml");
@@ -150,9 +157,8 @@ public class AWSEC2ComputeServiceApiMockTest extends BaseAWSEC2ApiMockTest {
       assertPosted(DEFAULT_REGION, "Action=CreateSecurityGroup&GroupName=jclouds%23test&GroupDescription=jclouds%23test");
       assertPosted(DEFAULT_REGION, "Action=DescribeSecurityGroups&GroupName.1=jclouds%23test");
       assertPosted(DEFAULT_REGION, "Action=DescribeSecurityGroups&GroupName.1=jclouds%23test");
-      assertPosted(DEFAULT_REGION, "Action=DescribeSecurityGroups&GroupName.1=jclouds%23test");
       assertPosted(DEFAULT_REGION, "Action=AuthorizeSecurityGroupIngress&GroupId=sg-3c6ef654&IpPermissions.0.IpProtocol=tcp&IpPermissions.0.FromPort=22&IpPermissions.0.ToPort=22&IpPermissions.0.IpRanges.0.CidrIp=0.0.0.0/0&IpPermissions.1.IpProtocol=tcp&IpPermissions.1.FromPort=0&IpPermissions.1.ToPort=65535&IpPermissions.1.Groups.0.UserId=993194456877&IpPermissions.1.Groups.0.GroupId=sg-3c6ef654&IpPermissions.2.IpProtocol=udp&IpPermissions.2.FromPort=0&IpPermissions.2.ToPort=65535&IpPermissions.2.Groups.0.UserId=993194456877&IpPermissions.2.Groups.0.GroupId=sg-3c6ef654");
-      assertPosted(DEFAULT_REGION, "Action=RequestSpotInstances&SpotPrice=1.0&InstanceCount=1&LaunchSpecification.ImageId=ami-" + getDefaultImageId() + "&LaunchSpecification.Placement.AvailabilityZone=us-east-1a&LaunchSpecification.SecurityGroup.1=jclouds%23test&LaunchSpecification.InstanceType=" + getDefaultSmallestInstanceType() + "&LaunchSpecification.UserData=I2Nsb3VkLWNvbmZpZwpyZXBvX3VwZ3JhZGU6IG5vbmUK&LaunchSpecification.IamInstanceProfile.Name=Webserver");
+      assertPosted(DEFAULT_REGION, "Action=RequestSpotInstances&SpotPrice=1.0&InstanceCount=1&LaunchSpecification.ImageId=ami-" + getDefaultImageId() + "&LaunchSpecification.Placement.AvailabilityZone=us-east-1a&LaunchSpecification.SecurityGroupId.1=sg-3c6ef654&LaunchSpecification.InstanceType=" + getDefaultSmallestInstanceType() + "&LaunchSpecification.UserData=I2Nsb3VkLWNvbmZpZwpyZXBvX3VwZ3JhZGU6IG5vbmUK&LaunchSpecification.IamInstanceProfile.Name=Webserver");
       assertPosted(DEFAULT_REGION, "Action=DescribeSpotInstanceRequests&SpotInstanceRequestId.1=sir-228e6406");
       assertPosted(DEFAULT_REGION, "Action=DescribeImages&ImageId.1=ami-595a0a1c");
       assertPosted(DEFAULT_REGION, "Action=CreateTags&Tag.1.Key=Name&Tag.1.Value=test-228e6406&ResourceId.1=sir-228e6406");
@@ -164,7 +170,6 @@ public class AWSEC2ComputeServiceApiMockTest extends BaseAWSEC2ApiMockTest {
       enqueueXml(DEFAULT_REGION, "/describe_images_cc.xml");
       enqueueXml(DEFAULT_REGION, "/availabilityZones.xml");
       enqueueXml(DEFAULT_REGION, "/created_securitygroup.xml");
-      enqueueXml(DEFAULT_REGION, "/new_securitygroup.xml");
       enqueueXml(DEFAULT_REGION, "/new_securitygroup.xml");
       enqueueXml(DEFAULT_REGION, "/new_securitygroup.xml");
       enqueueXml(DEFAULT_REGION, "/authorize_securitygroup_ingress_response.xml");
@@ -186,9 +191,8 @@ public class AWSEC2ComputeServiceApiMockTest extends BaseAWSEC2ApiMockTest {
       assertPosted(DEFAULT_REGION, "Action=CreateSecurityGroup&GroupName=jclouds%23test&GroupDescription=jclouds%23test");
       assertPosted(DEFAULT_REGION, "Action=DescribeSecurityGroups&GroupName.1=jclouds%23test");
       assertPosted(DEFAULT_REGION, "Action=DescribeSecurityGroups&GroupName.1=jclouds%23test");
-      assertPosted(DEFAULT_REGION, "Action=DescribeSecurityGroups&GroupName.1=jclouds%23test");
       assertPosted(DEFAULT_REGION, "Action=AuthorizeSecurityGroupIngress&GroupId=sg-3c6ef654&IpPermissions.0.IpProtocol=tcp&IpPermissions.0.FromPort=22&IpPermissions.0.ToPort=22&IpPermissions.0.IpRanges.0.CidrIp=0.0.0.0/0&IpPermissions.1.IpProtocol=tcp&IpPermissions.1.FromPort=0&IpPermissions.1.ToPort=65535&IpPermissions.1.Groups.0.UserId=993194456877&IpPermissions.1.Groups.0.GroupId=sg-3c6ef654&IpPermissions.2.IpProtocol=udp&IpPermissions.2.FromPort=0&IpPermissions.2.ToPort=65535&IpPermissions.2.Groups.0.UserId=993194456877&IpPermissions.2.Groups.0.GroupId=sg-3c6ef654");
-      assertPosted(DEFAULT_REGION, "Action=RunInstances&ImageId=ami-8ce4b5c9&MinCount=1&MaxCount=1&InstanceType=" + getDefaultParavirtualInstanceType() + "&SecurityGroup.1=jclouds%23test&UserData=I2Nsb3VkLWNvbmZpZwpyZXBvX3VwZ3JhZGU6IG5vbmUK&IamInstanceProfile.Arn=arn%3Aaws%3Aiam%3A%3A123456789012%3Ainstance-profile/application_abc/component_xyz/Webserver");
+      assertPosted(DEFAULT_REGION, "Action=RunInstances&ImageId=ami-8ce4b5c9&MinCount=1&MaxCount=1&InstanceType=" + getDefaultParavirtualInstanceType() + "&SecurityGroupId.1=sg-3c6ef654&UserData=I2Nsb3VkLWNvbmZpZwpyZXBvX3VwZ3JhZGU6IG5vbmUK&IamInstanceProfile.Arn=arn%3Aaws%3Aiam%3A%3A123456789012%3Ainstance-profile/application_abc/component_xyz/Webserver");
       assertPosted(DEFAULT_REGION, "Action=DescribeInstances&InstanceId.1=i-2baa5550");
       assertPosted(DEFAULT_REGION, "Action=DescribeImages&ImageId.1=ami-aecd60c7");
       assertPosted(DEFAULT_REGION, "Action=CreateTags&Tag.1.Key=Name&Tag.1.Value=test-2baa5550&ResourceId.1=i-2baa5550");
@@ -200,7 +204,6 @@ public class AWSEC2ComputeServiceApiMockTest extends BaseAWSEC2ApiMockTest {
       enqueueXml(DEFAULT_REGION, "/describe_images_cc.xml");
       enqueueXml(DEFAULT_REGION, "/availabilityZones.xml");
       enqueueXml(DEFAULT_REGION, "/created_securitygroup.xml");
-      enqueueXml(DEFAULT_REGION, "/new_securitygroup.xml");
       enqueueXml(DEFAULT_REGION, "/new_securitygroup.xml");
       enqueueXml(DEFAULT_REGION, "/new_securitygroup.xml");
       enqueueXml(DEFAULT_REGION, "/authorize_securitygroup_ingress_response.xml");
@@ -222,9 +225,8 @@ public class AWSEC2ComputeServiceApiMockTest extends BaseAWSEC2ApiMockTest {
       assertPosted(DEFAULT_REGION, "Action=CreateSecurityGroup&GroupName=jclouds%23test&GroupDescription=jclouds%23test");
       assertPosted(DEFAULT_REGION, "Action=DescribeSecurityGroups&GroupName.1=jclouds%23test");
       assertPosted(DEFAULT_REGION, "Action=DescribeSecurityGroups&GroupName.1=jclouds%23test");
-      assertPosted(DEFAULT_REGION, "Action=DescribeSecurityGroups&GroupName.1=jclouds%23test");
       assertPosted(DEFAULT_REGION, "Action=AuthorizeSecurityGroupIngress&GroupId=sg-3c6ef654&IpPermissions.0.IpProtocol=tcp&IpPermissions.0.FromPort=22&IpPermissions.0.ToPort=22&IpPermissions.0.IpRanges.0.CidrIp=0.0.0.0/0&IpPermissions.1.IpProtocol=tcp&IpPermissions.1.FromPort=0&IpPermissions.1.ToPort=65535&IpPermissions.1.Groups.0.UserId=993194456877&IpPermissions.1.Groups.0.GroupId=sg-3c6ef654&IpPermissions.2.IpProtocol=udp&IpPermissions.2.FromPort=0&IpPermissions.2.ToPort=65535&IpPermissions.2.Groups.0.UserId=993194456877&IpPermissions.2.Groups.0.GroupId=sg-3c6ef654");
-      assertPosted(DEFAULT_REGION, "Action=RunInstances&ImageId=ami-8ce4b5c9&MinCount=1&MaxCount=1&InstanceType=" + getDefaultParavirtualInstanceType() + "&SecurityGroup.1=jclouds%23test&UserData=I2Nsb3VkLWNvbmZpZwpyZXBvX3VwZ3JhZGU6IG5vbmUK&IamInstanceProfile.Name=Webserver");
+      assertPosted(DEFAULT_REGION, "Action=RunInstances&ImageId=ami-8ce4b5c9&MinCount=1&MaxCount=1&InstanceType=" + getDefaultParavirtualInstanceType() + "&SecurityGroupId.1=sg-3c6ef654&UserData=I2Nsb3VkLWNvbmZpZwpyZXBvX3VwZ3JhZGU6IG5vbmUK&IamInstanceProfile.Name=Webserver");
       assertPosted(DEFAULT_REGION, "Action=DescribeInstances&InstanceId.1=i-2baa5550");
       assertPosted(DEFAULT_REGION, "Action=DescribeImages&ImageId.1=ami-aecd60c7");
       assertPosted(DEFAULT_REGION, "Action=CreateTags&Tag.1.Key=Name&Tag.1.Value=test-2baa5550&ResourceId.1=i-2baa5550");

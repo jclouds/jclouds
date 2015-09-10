@@ -35,6 +35,7 @@ import java.util.concurrent.ConcurrentMap;
 import javax.inject.Provider;
 
 import org.jclouds.aws.domain.Region;
+import org.jclouds.aws.ec2.AWSEC2Api;
 import org.jclouds.aws.ec2.compute.AWSEC2TemplateOptions;
 import org.jclouds.aws.ec2.domain.PlacementGroup;
 import org.jclouds.aws.ec2.domain.RegionNameAndPublicKeyMaterial;
@@ -95,7 +96,8 @@ public class CreateKeyPairPlacementAndSecurityGroupsAsNeededAndReturnRunOptionsT
                         "createNewPlacementGroupUnlessUserSpecifiedOtherwise", String.class, String.class,
                         TemplateOptions.class),
                   CreateKeyPairAndSecurityGroupsAsNeededAndReturnRunOptions.class.getDeclaredMethod(
-                        "getSecurityGroupsForTagAndOptions", String.class, String.class, TemplateOptions.class) });
+                        "getSecurityGroupsForTagAndOptions", String.class, String.class, String.class,
+                        TemplateOptions.class) });
 
       AWSEC2TemplateOptions options = createMock(AWSEC2TemplateOptions.class);
       Template template = createMock(Template.class);
@@ -107,7 +109,7 @@ public class CreateKeyPairPlacementAndSecurityGroupsAsNeededAndReturnRunOptionsT
       expect(options.getBlockDeviceMappings()).andReturn(ImmutableSet.<BlockDeviceMapping> of()).atLeastOnce();
       expect(strategy.createNewKeyPairUnlessUserSpecifiedOtherwise(region, group, options)).andReturn(
             systemGeneratedKeyPairName);
-      expect(strategy.getSecurityGroupsForTagAndOptions(region, group, options)).andReturn(generatedGroups);
+      expect(strategy.getSecurityGroupsForTagAndOptions(region, group, null, options)).andReturn(generatedGroups);
       expect(options.getGroupIds()).andReturn(ImmutableSet.<String> of());
       expect(options.getSubnetId()).andReturn(null);
       expect(options.getUserData()).andReturn(null);
@@ -157,7 +159,8 @@ public class CreateKeyPairPlacementAndSecurityGroupsAsNeededAndReturnRunOptionsT
                         "createNewPlacementGroupUnlessUserSpecifiedOtherwise", String.class, String.class,
                         TemplateOptions.class),
                   CreateKeyPairAndSecurityGroupsAsNeededAndReturnRunOptions.class.getDeclaredMethod(
-                        "getSecurityGroupsForTagAndOptions", String.class, String.class, TemplateOptions.class) });
+                        "getSecurityGroupsForTagAndOptions", String.class, String.class, String.class,
+                        TemplateOptions.class) });
 
       AWSEC2TemplateOptions options = createMock(AWSEC2TemplateOptions.class);
       Template template = createMock(Template.class);
@@ -171,7 +174,7 @@ public class CreateKeyPairPlacementAndSecurityGroupsAsNeededAndReturnRunOptionsT
             systemGeneratedKeyPairName);
       expect(strategy.createNewPlacementGroupUnlessUserSpecifiedOtherwise(region, group, options)).andReturn(
             generatedGroup);
-      expect(strategy.getSecurityGroupsForTagAndOptions(region, group, options)).andReturn(generatedGroups);
+      expect(strategy.getSecurityGroupsForTagAndOptions(region, group, null, options)).andReturn(generatedGroups);
       expect(options.getGroupIds()).andReturn(ImmutableSet.<String> of());
       expect(options.getSubnetId()).andReturn(null);
       expect(options.getUserData()).andReturn(null);
@@ -222,7 +225,8 @@ public class CreateKeyPairPlacementAndSecurityGroupsAsNeededAndReturnRunOptionsT
                         "createNewPlacementGroupUnlessUserSpecifiedOtherwise", String.class, String.class,
                         TemplateOptions.class),
                   CreateKeyPairAndSecurityGroupsAsNeededAndReturnRunOptions.class.getDeclaredMethod(
-                        "getSecurityGroupsForTagAndOptions", String.class, String.class, TemplateOptions.class) });
+                        "getSecurityGroupsForTagAndOptions", String.class, String.class, String.class,
+                        TemplateOptions.class) });
 
       AWSEC2TemplateOptions options = createMock(AWSEC2TemplateOptions.class);
       Template template = createMock(Template.class);
@@ -236,7 +240,7 @@ public class CreateKeyPairPlacementAndSecurityGroupsAsNeededAndReturnRunOptionsT
             systemGeneratedKeyPairName);
       expect(strategy.createNewPlacementGroupUnlessUserSpecifiedOtherwise(region, group, options)).andReturn(
             generatedGroup);
-      expect(strategy.getSecurityGroupsForTagAndOptions(region, group, options)).andReturn(generatedGroups);
+      expect(strategy.getSecurityGroupsForTagAndOptions(region, group, null, options)).andReturn(generatedGroups);
       expect(options.getGroupIds()).andReturn(ImmutableSet.<String> of());
       expect(options.getSubnetId()).andReturn(null);
       expect(options.getUserData()).andReturn(null);
@@ -285,7 +289,10 @@ public class CreateKeyPairPlacementAndSecurityGroupsAsNeededAndReturnRunOptionsT
                         "createNewPlacementGroupUnlessUserSpecifiedOtherwise", String.class, String.class,
                         TemplateOptions.class),
                   CreateKeyPairAndSecurityGroupsAsNeededAndReturnRunOptions.class.getDeclaredMethod(
-                        "getSecurityGroupsForTagAndOptions", String.class, String.class, TemplateOptions.class) });
+                        "getSecurityGroupsForTagAndOptions", String.class, String.class, String.class,
+                        TemplateOptions.class),
+                  CreateKeyPairAndSecurityGroupsAsNeededAndReturnRunOptions.class.getDeclaredMethod(
+                        "vpcIdForSubnet", String.class)});
 
       AWSEC2TemplateOptions options = createMock(AWSEC2TemplateOptions.class);
       Template template = createMock(Template.class);
@@ -301,6 +308,7 @@ public class CreateKeyPairPlacementAndSecurityGroupsAsNeededAndReturnRunOptionsT
       expect(options.getSubnetId()).andReturn("1");
       expect(options.getUserData()).andReturn(null);
       expect(options.isMonitoringEnabled()).andReturn(false);
+      expect(strategy.vpcIdForSubnet("1")).andReturn("vpc1");
 
       // replay mocks
       replay(options);
@@ -346,7 +354,8 @@ public class CreateKeyPairPlacementAndSecurityGroupsAsNeededAndReturnRunOptionsT
                         "createNewPlacementGroupUnlessUserSpecifiedOtherwise", String.class, String.class,
                         TemplateOptions.class),
                   CreateKeyPairAndSecurityGroupsAsNeededAndReturnRunOptions.class.getDeclaredMethod(
-                        "getSecurityGroupsForTagAndOptions", String.class, String.class, TemplateOptions.class) });
+                        "getSecurityGroupsForTagAndOptions", String.class, String.class, String.class,
+                        TemplateOptions.class) });
 
       AWSEC2TemplateOptions options = createMock(AWSEC2TemplateOptions.class);
       Template template = createMock(Template.class);
@@ -358,7 +367,7 @@ public class CreateKeyPairPlacementAndSecurityGroupsAsNeededAndReturnRunOptionsT
       expect(options.getBlockDeviceMappings()).andReturn(ImmutableSet.<BlockDeviceMapping> of()).atLeastOnce();
       expect(strategy.createNewKeyPairUnlessUserSpecifiedOtherwise(region, group, options)).andReturn(
             systemGeneratedKeyPairName);
-      expect(strategy.getSecurityGroupsForTagAndOptions(region, group, options)).andReturn(generatedGroups);
+      expect(strategy.getSecurityGroupsForTagAndOptions(region, group, null, options)).andReturn(generatedGroups);
       expect(options.getGroupIds()).andReturn(ImmutableSet.<String> of());
       expect(options.getSubnetId()).andReturn(null);
       expect(options.getUserData()).andReturn("hello".getBytes());
@@ -654,7 +663,7 @@ public class CreateKeyPairPlacementAndSecurityGroupsAsNeededAndReturnRunOptionsT
       Set<String> groupNames = ImmutableSet.<String> of();
       int[] ports = {};
       boolean shouldAuthorizeSelf = true;
-      Set<String> returnVal = ImmutableSet.<String> of(generatedMarkerGroup);
+      Set<String> returnVal = ImmutableSet.<String> of("sg-12345");
 
       // create mocks
       CreateKeyPairPlacementAndSecurityGroupsAsNeededAndReturnRunOptions strategy = setupStrategy();
@@ -665,15 +674,15 @@ public class CreateKeyPairPlacementAndSecurityGroupsAsNeededAndReturnRunOptionsT
       expect(options.getGroups()).andReturn(groupNames).atLeastOnce();
       expect(options.getInboundPorts()).andReturn(ports).atLeastOnce();
       RegionNameAndIngressRules regionNameAndIngressRules = new RegionNameAndIngressRules(region, generatedMarkerGroup,
-            ports, shouldAuthorizeSelf);
-      expect(strategy.securityGroupMap.getUnchecked(regionNameAndIngressRules)).andReturn(group);
+            ports, shouldAuthorizeSelf, null);
+      expect(strategy.securityGroupMap.getUnchecked(regionNameAndIngressRules)).andReturn("sg-12345");
 
       // replay mocks
       replay(options);
       replayStrategy(strategy);
 
       // run
-      assertEquals(strategy.getSecurityGroupsForTagAndOptions(region, group, options), returnVal);
+      assertEquals(strategy.getSecurityGroupsForTagAndOptions(region, group, null, options), returnVal);
 
       // verify mocks
       verify(options);
@@ -688,7 +697,7 @@ public class CreateKeyPairPlacementAndSecurityGroupsAsNeededAndReturnRunOptionsT
       Set<String> groupNames = ImmutableSet.<String> of();
       int[] ports = { 22, 80 };
       boolean shouldAuthorizeSelf = true;
-      Set<String> returnVal = ImmutableSet.<String> of(generatedMarkerGroup);
+      Set<String> returnVal = ImmutableSet.<String> of("sg-12345");
 
       // create mocks
       CreateKeyPairPlacementAndSecurityGroupsAsNeededAndReturnRunOptions strategy = setupStrategy();
@@ -699,15 +708,15 @@ public class CreateKeyPairPlacementAndSecurityGroupsAsNeededAndReturnRunOptionsT
       expect(options.getGroups()).andReturn(groupNames).atLeastOnce();
       expect(options.getInboundPorts()).andReturn(ports).atLeastOnce();
       RegionNameAndIngressRules regionNameAndIngressRules = new RegionNameAndIngressRules(region, generatedMarkerGroup,
-            ports, shouldAuthorizeSelf);
-      expect(strategy.securityGroupMap.getUnchecked(regionNameAndIngressRules)).andReturn(generatedMarkerGroup);
+            ports, shouldAuthorizeSelf, null);
+      expect(strategy.securityGroupMap.getUnchecked(regionNameAndIngressRules)).andReturn("sg-12345");
 
       // replay mocks
       replay(options);
       replayStrategy(strategy);
 
       // run
-      assertEquals(strategy.getSecurityGroupsForTagAndOptions(region, group, options), returnVal);
+      assertEquals(strategy.getSecurityGroupsForTagAndOptions(region, group, null, options), returnVal);
 
       // verify mocks
       verify(options);
@@ -722,7 +731,7 @@ public class CreateKeyPairPlacementAndSecurityGroupsAsNeededAndReturnRunOptionsT
       Set<String> groupNames = ImmutableSet.<String> of();
       int[] ports = {};
       boolean shouldAuthorizeSelf = true;
-      Set<String> returnVal = ImmutableSet.<String> of(generatedMarkerGroup);
+      Set<String> returnVal = ImmutableSet.<String> of("sg-12345");
 
       // create mocks
       CreateKeyPairPlacementAndSecurityGroupsAsNeededAndReturnRunOptions strategy = setupStrategy();
@@ -733,15 +742,15 @@ public class CreateKeyPairPlacementAndSecurityGroupsAsNeededAndReturnRunOptionsT
       expect(options.getGroups()).andReturn(groupNames).atLeastOnce();
       expect(options.getInboundPorts()).andReturn(ports).atLeastOnce();
       RegionNameAndIngressRules regionNameAndIngressRules = new RegionNameAndIngressRules(region, generatedMarkerGroup,
-            ports, shouldAuthorizeSelf);
-      expect(strategy.securityGroupMap.getUnchecked(regionNameAndIngressRules)).andReturn(generatedMarkerGroup);
+            ports, shouldAuthorizeSelf, null);
+      expect(strategy.securityGroupMap.getUnchecked(regionNameAndIngressRules)).andReturn("sg-12345");
 
       // replay mocks
       replay(options);
       replayStrategy(strategy);
 
       // run
-      assertEquals(strategy.getSecurityGroupsForTagAndOptions(region, group, options), returnVal);
+      assertEquals(strategy.getSecurityGroupsForTagAndOptions(region, group, null, options), returnVal);
 
       // verify mocks
       verify(options);
@@ -757,7 +766,7 @@ public class CreateKeyPairPlacementAndSecurityGroupsAsNeededAndReturnRunOptionsT
       int[] ports = {};
       boolean shouldAuthorizeSelf = true;
       boolean groupExisted = true;
-      Set<String> returnVal = ImmutableSet.<String> of(generatedMarkerGroup, "group1", "group2");
+      Set<String> returnVal = ImmutableSet.<String> of("sg-12345", "group1", "group2");
 
       // create mocks
       CreateKeyPairPlacementAndSecurityGroupsAsNeededAndReturnRunOptions strategy = setupStrategy();
@@ -767,17 +776,17 @@ public class CreateKeyPairPlacementAndSecurityGroupsAsNeededAndReturnRunOptionsT
       expect(options.getGroupIds()).andReturn(ImmutableSet.<String> of());
       expect(options.getGroups()).andReturn(groupNames).atLeastOnce();
       RegionNameAndIngressRules regionNameAndIngressRules = new RegionNameAndIngressRules(region, generatedMarkerGroup,
-            ports, shouldAuthorizeSelf);
+            ports, shouldAuthorizeSelf, null);
 
       expect(strategy.securityGroupMap.getUnchecked(regionNameAndIngressRules))
-            .andReturn(groupExisted ? "group" : null);
+            .andReturn(groupExisted ? "sg-12345" : null);
 
       // replay mocks
       replay(options);
       replayStrategy(strategy);
 
       // run
-      assertEquals(strategy.getSecurityGroupsForTagAndOptions(region, group, options), returnVal);
+      assertEquals(strategy.getSecurityGroupsForTagAndOptions(region, group, null, options), returnVal);
 
       // verify mocks
       verify(options);
@@ -793,7 +802,7 @@ public class CreateKeyPairPlacementAndSecurityGroupsAsNeededAndReturnRunOptionsT
       int[] ports = {};
       boolean shouldAuthorizeSelf = true;
       boolean groupExisted = true;
-      Set<String> returnVal = ImmutableSet.<String> of(generatedMarkerGroup);
+      Set<String> returnVal = ImmutableSet.<String> of("sg-12345");
 
       // create mocks
       CreateKeyPairPlacementAndSecurityGroupsAsNeededAndReturnRunOptions strategy = setupStrategy();
@@ -803,17 +812,17 @@ public class CreateKeyPairPlacementAndSecurityGroupsAsNeededAndReturnRunOptionsT
       expect(options.getGroupIds()).andReturn(ImmutableSet.<String> of("group1", "group2"));
       expect(options.getGroups()).andReturn(groupNames).atLeastOnce();
       RegionNameAndIngressRules regionNameAndIngressRules = new RegionNameAndIngressRules(region, generatedMarkerGroup,
-            ports, shouldAuthorizeSelf);
+            ports, shouldAuthorizeSelf, null);
 
       expect(strategy.securityGroupMap.getUnchecked(regionNameAndIngressRules))
-            .andReturn(groupExisted ? "group" : null);
+            .andReturn(groupExisted ? "sg-12345" : null);
 
       // replay mocks
       replay(options);
       replayStrategy(strategy);
 
       // run
-      assertEquals(strategy.getSecurityGroupsForTagAndOptions(region, group, options), returnVal);
+      assertEquals(strategy.getSecurityGroupsForTagAndOptions(region, group, null, options), returnVal);
 
       // verify mocks
       verify(options);
@@ -931,6 +940,7 @@ public class CreateKeyPairPlacementAndSecurityGroupsAsNeededAndReturnRunOptionsT
       CreatePlacementGroupIfNeeded createPlacementGroupIfNeeded = createMock(CreatePlacementGroupIfNeeded.class);
       GroupNamingConvention.Factory namingConventionFactory = createMock(GroupNamingConvention.Factory.class);
       GroupNamingConvention namingConvention = createMock(GroupNamingConvention.class);
+      AWSEC2Api api = createMock(AWSEC2Api.class);
       expect(namingConventionFactory.create()).andReturn(namingConvention).anyTimes();
       expect(namingConvention.sharedNameForGroup("group")).andReturn("jclouds#group").anyTimes();
       expect(makeKeyPair.apply(anyObject(RegionAndName.class))).andReturn(null).anyTimes();
@@ -939,7 +949,7 @@ public class CreateKeyPairPlacementAndSecurityGroupsAsNeededAndReturnRunOptionsT
 
       return new CreateKeyPairPlacementAndSecurityGroupsAsNeededAndReturnRunOptions(makeKeyPair, credentialsMap,
             securityGroupMap, OPTIONS_PROVIDER, placementGroupMap, createPlacementGroupIfNeeded, importExistingKeyPair,
-            namingConventionFactory);
+            namingConventionFactory, api);
    }
 
    private void replayStrategy(CreateKeyPairPlacementAndSecurityGroupsAsNeededAndReturnRunOptions strategy) {

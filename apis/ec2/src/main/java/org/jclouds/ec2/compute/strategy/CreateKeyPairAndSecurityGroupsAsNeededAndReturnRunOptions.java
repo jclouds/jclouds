@@ -106,7 +106,7 @@ public class CreateKeyPairAndSecurityGroupsAsNeededAndReturnRunOptions {
    }
 
    protected void addSecurityGroups(String region, String group, Template template, RunInstancesOptions instanceOptions) {
-      Set<String> groups = getSecurityGroupsForTagAndOptions(region, group, template.getOptions());
+      Set<String> groups = getSecurityGroupsForTagAndOptions(region, group, null, template.getOptions());
       instanceOptions.withSecurityGroups(groups);
    }
 
@@ -161,26 +161,24 @@ public class CreateKeyPairAndSecurityGroupsAsNeededAndReturnRunOptions {
    }
 
    @VisibleForTesting
-   public Set<String> getSecurityGroupsForTagAndOptions(String region, @Nullable String group, TemplateOptions options) {
+   public Set<String> getSecurityGroupsForTagAndOptions(String region, @Nullable String group, @Nullable String vpcId, TemplateOptions options) {
       Builder<String> groups = ImmutableSet.builder();
 
       if (group != null) {
          String markerGroup = namingConvention.create().sharedNameForGroup(group);
 
-         groups.add(markerGroup);
-
          RegionNameAndIngressRules regionNameAndIngressRulesForMarkerGroup;
 
          if (userSpecifiedTheirOwnGroups(options)) {
             regionNameAndIngressRulesForMarkerGroup = new RegionNameAndIngressRules(region, markerGroup, new int[] {},
-                     false);
+                     false, vpcId);
             groups.addAll(EC2TemplateOptions.class.cast(options).getGroups());
          } else {
             regionNameAndIngressRulesForMarkerGroup = new RegionNameAndIngressRules(region, markerGroup, options
-                     .getInboundPorts(), true);
+                     .getInboundPorts(), true, vpcId);
          }
          // this will create if not yet exists.
-         securityGroupMap.getUnchecked(regionNameAndIngressRulesForMarkerGroup);
+         groups.add(securityGroupMap.getUnchecked(regionNameAndIngressRulesForMarkerGroup));
       }
       return groups.build();
    }

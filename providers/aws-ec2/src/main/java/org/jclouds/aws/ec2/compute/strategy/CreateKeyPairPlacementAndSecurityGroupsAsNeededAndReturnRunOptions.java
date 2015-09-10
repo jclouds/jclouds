@@ -19,6 +19,7 @@ package org.jclouds.aws.ec2.compute.strategy;
 import static com.google.common.base.Predicates.and;
 import static com.google.common.base.Predicates.or;
 
+import java.util.Set;
 import java.util.concurrent.ConcurrentMap;
 
 import javax.annotation.Resource;
@@ -27,6 +28,7 @@ import javax.inject.Named;
 import javax.inject.Provider;
 import javax.inject.Singleton;
 
+import org.jclouds.aws.ec2.AWSEC2Api;
 import org.jclouds.aws.ec2.compute.AWSEC2TemplateOptions;
 import org.jclouds.aws.ec2.domain.RegionNameAndPublicKeyMaterial;
 import org.jclouds.aws.ec2.functions.CreatePlacementGroupIfNeeded;
@@ -39,11 +41,14 @@ import org.jclouds.ec2.compute.domain.RegionAndName;
 import org.jclouds.ec2.compute.options.EC2TemplateOptions;
 import org.jclouds.ec2.compute.strategy.CreateKeyPairAndSecurityGroupsAsNeededAndReturnRunOptions;
 import org.jclouds.ec2.domain.KeyPair;
+import org.jclouds.ec2.domain.Subnet;
 import org.jclouds.ec2.options.RunInstancesOptions;
+import org.jclouds.ec2.util.SubnetFilterBuilder;
 import org.jclouds.logging.Logger;
 
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Function;
+import com.google.common.base.Optional;
 import com.google.common.base.Predicate;
 import com.google.common.cache.LoadingCache;
 
@@ -59,6 +64,7 @@ public class CreateKeyPairPlacementAndSecurityGroupsAsNeededAndReturnRunOptions 
    final CreatePlacementGroupIfNeeded createPlacementGroupIfNeeded;
    @VisibleForTesting
    final Function<RegionNameAndPublicKeyMaterial, KeyPair> importExistingKeyPair;
+   private final AWSEC2Api awsEC2Api;
 
    @Inject
    public CreateKeyPairPlacementAndSecurityGroupsAsNeededAndReturnRunOptions(
@@ -68,11 +74,13 @@ public class CreateKeyPairPlacementAndSecurityGroupsAsNeededAndReturnRunOptions 
          @Named("PLACEMENT") LoadingCache<RegionAndName, String> placementGroupMap,
          CreatePlacementGroupIfNeeded createPlacementGroupIfNeeded,
          Function<RegionNameAndPublicKeyMaterial, KeyPair> importExistingKeyPair,
-         GroupNamingConvention.Factory namingConvention) {
+         GroupNamingConvention.Factory namingConvention,
+         AWSEC2Api awsEC2Api) {
       super(makeKeyPair, credentialsMap, securityGroupMap, optionsProvider, namingConvention);
       this.placementGroupMap = placementGroupMap;
       this.createPlacementGroupIfNeeded = createPlacementGroupIfNeeded;
       this.importExistingKeyPair = importExistingKeyPair;
+      this.awsEC2Api = awsEC2Api;
    }
 
    public AWSRunInstancesOptions execute(String region, String group, Template template) {
@@ -180,9 +188,21 @@ public class CreateKeyPairPlacementAndSecurityGroupsAsNeededAndReturnRunOptions 
          awsInstanceOptions.withSecurityGroupIds(awsTemplateOptions.getGroupIds());
       String subnetId = awsTemplateOptions.getSubnetId();
       if (subnetId != null) {
-         AWSRunInstancesOptions.class.cast(instanceOptions).withSubnetId(subnetId);
+         Set<String> groups = getSecurityGroupsForTagAndOptions(region, group, vpcIdForSubnet(subnetId), template.getOptions());
+         awsInstanceOptions.withSubnetId(subnetId);
+         awsInstanceOptions.withSecurityGroupIds(groups);
       } else {
-         super.addSecurityGroups(region, group, template, instanceOptions);
+         Set<String> groups = getSecurityGroupsForTagAndOptions(region, group, null, template.getOptions());
+         awsInstanceOptions.withSecurityGroupIds(groups);
       }
+   }
+   
+   @VisibleForTesting
+   String vpcIdForSubnet(String subnetId) {
+      Optional<Subnet> subnet = awsEC2Api.getSubnetApi().get().filter(new SubnetFilterBuilder().subnetId(subnetId).build()).first();
+      if (!subnet.isPresent()) {
+         throw new IllegalArgumentException("Subnet " + subnetId + " not found");
+      }
+      return subnet.get().getVpcId();
    }
 }

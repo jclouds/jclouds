@@ -224,7 +224,7 @@ public class EC2ComputeService extends BaseComputeService {
          logger.debug(">> deleting securityGroup(%s)", groupName);
          client.getSecurityGroupApi().get().deleteSecurityGroupInRegion(region, groupName);
          // TODO: test this clear happens
-         securityGroupMap.invalidate(new RegionNameAndIngressRules(region, groupName, null, false));
+         securityGroupMap.invalidate(new RegionNameAndIngressRules(region, groupName, null, false, null));
          logger.debug("<< deleted securityGroup(%s)", groupName);
       }
    }

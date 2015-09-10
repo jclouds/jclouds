@@ -27,6 +27,7 @@ import java.util.Set;
 import java.util.concurrent.ExecutionException;
 
 import org.jclouds.aws.ec2.features.AWSSecurityGroupApi;
+import org.jclouds.aws.ec2.options.CreateSecurityGroupOptions;
 import org.jclouds.ec2.compute.domain.RegionAndName;
 import org.jclouds.ec2.compute.domain.RegionNameAndIngressRules;
 import org.jclouds.ec2.compute.functions.EC2SecurityGroupIdFromName;
@@ -76,9 +77,10 @@ public class AWSEC2CreateSecurityGroupIfNeededTest {
                       .tenantIdGroupNamePair("ownerId", "sg-123456")
                       .build());
       
-      client.createSecurityGroupInRegion("region", "group", "group");
+      expect(
+            client.createSecurityGroupInRegionAndReturnId("region", "group", "group",
+                  new CreateSecurityGroupOptions().vpcId("vpc"))).andReturn("sg-123456");
       expect(group.getOwnerId()).andReturn("ownerId");
-      expect(groupIdFromName.apply("region/group")).andReturn("sg-123456");
       client.authorizeSecurityGroupIngressInRegion("region", "sg-123456", permissions.build());
       expect(client.describeSecurityGroupsInRegion("region", "group")).andReturn(Set.class.cast(groups));
 
@@ -89,7 +91,7 @@ public class AWSEC2CreateSecurityGroupIfNeededTest {
 
       AWSEC2CreateSecurityGroupIfNeeded function = new AWSEC2CreateSecurityGroupIfNeeded(client, groupIdFromName, tester);
 
-      assertEquals("group", function.load(new RegionNameAndIngressRules("region", "group", new int[] { 22 }, true)));
+      assertEquals("sg-123456", function.load(new RegionNameAndIngressRules("region", "group", new int[] { 22 }, true, "vpc")));
 
       verify(client);
       verify(group);
