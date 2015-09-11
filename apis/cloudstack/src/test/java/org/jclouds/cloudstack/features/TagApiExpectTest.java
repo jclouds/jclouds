@@ -16,10 +16,8 @@
  */
 package org.jclouds.cloudstack.features;
 
-import static org.jclouds.util.Strings2.urlEncode;
 import static org.testng.Assert.assertEquals;
 
-import java.net.URI;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
@@ -48,7 +46,7 @@ public class TagApiExpectTest extends BaseCloudStackExpectTest<TagApi> {
                   .addQueryParam("command", "listTags")
                   .addQueryParam("listAll", "true")
                   .addQueryParam("apiKey", "identity")
-                  .addQueryParam("signature", "amvtC2a0VHzzDF5SUAIOZpXHd0A%3D")
+                  .addQueryParam("signature", "amvtC2a0VHzzDF5SUAIOZpXHd0A=")
                   .addHeader("Accept", "application/json")
                   .build(),
             HttpResponse.builder()
@@ -73,17 +71,19 @@ public class TagApiExpectTest extends BaseCloudStackExpectTest<TagApi> {
 
    public void testListTagsWhenResponseIs404() {
       TagApi client = requestSendsResponse(
-         HttpRequest.builder()
-            .method("GET")
-            .endpoint(
-                  URI.create("http://localhost:8080/client/api?response=json&" +
-                        "command=listTags&listAll=true&apiKey=identity&signature=amvtC2a0VHzzDF5SUAIOZpXHd0A%3D")
-            )
-            .addHeader("Accept", "application/json")
-            .build(),
-         HttpResponse.builder()
-            .statusCode(404)
-            .build());
+            HttpRequest.builder()
+                  .method("GET")
+                  .endpoint("http://localhost:8080/client/api")
+                  .addQueryParam("response", "json")
+                  .addQueryParam("command", "listTags")
+                  .addQueryParam("listAll", "true")
+                  .addQueryParam("apiKey", "identity")
+                  .addQueryParam("signature", "amvtC2a0VHzzDF5SUAIOZpXHd0A=")
+                  .addHeader("Accept", "application/json")
+                  .build(),
+            HttpResponse.builder()
+                  .statusCode(404)
+                  .build());
 
       assertEquals(client.listTags(), ImmutableSet.of());
    }
@@ -96,10 +96,10 @@ public class TagApiExpectTest extends BaseCloudStackExpectTest<TagApi> {
                   .addQueryParam("command", "createTags")
                   .addQueryParam("resourcetype", "Template")
                   .addQueryParam("resourceids", "52d89d5d-6070-4fd4-8131-c6c9ca4b062e")
-                  .addQueryParam(urlEncode("tags[0].key"), "some-tag")
-                  .addQueryParam(urlEncode("tags[0].value"), "some-value")
+                  .addQueryParam("tags[0].key", "some-tag")
+                  .addQueryParam("tags[0].value", "some-value")
                   .addQueryParam("apiKey", "identity")
-                  .addQueryParam("signature", "HDGTKGG9kONEwh5xlLe9R72z%2B9Q%3D")
+                  .addQueryParam("signature", "HDGTKGG9kONEwh5xlLe9R72z+9Q=")
                   .addHeader("Accept", "application/json")
                   .build(),
             HttpResponse.builder()
@@ -125,10 +125,10 @@ public class TagApiExpectTest extends BaseCloudStackExpectTest<TagApi> {
                   .addQueryParam("command", "deleteTags")
                   .addQueryParam("resourcetype", "Template")
                   .addQueryParam("resourceids", "52d89d5d-6070-4fd4-8131-c6c9ca4b062e")
-                  .addQueryParam(urlEncode("tags[0].key"), "some-tag")
-                  .addQueryParam(urlEncode("tags[0].value"), "some-value")
+                  .addQueryParam("tags[0].key", "some-tag")
+                  .addQueryParam("tags[0].value", "some-value")
                   .addQueryParam("apiKey", "identity")
-                  .addQueryParam("signature", "inAqWH/GkkGipkZFG5Wfmxa8vOE%3D")
+                  .addQueryParam("signature", "inAqWH/GkkGipkZFG5Wfmxa8vOE=")
                   .addHeader("Accept", "application/json")
                   .build(),
             HttpResponse.builder()

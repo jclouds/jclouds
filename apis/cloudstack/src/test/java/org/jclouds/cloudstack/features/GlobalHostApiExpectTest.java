@@ -97,14 +97,14 @@ public class GlobalHostApiExpectTest extends BaseCloudStackExpectTest<GlobalHost
                                     .addQueryParam("response", "json")
                                     .addQueryParam("command", "addHost")
                                     .addQueryParam("zoneid", "1")
-                                    .addQueryParam("url", "http%3A//example.com")
+                                    .addQueryParam("url", "http://example.com")
                                     .addQueryParam("hypervisor", "XenServer")
                                     .addQueryParam("username", "fred")
                                     .addQueryParam("password", "sekrit")
                                     .addQueryParam("hosttags", "")
                                     .addQueryParam("allocationstate", "Enabled")
                                     .addQueryParam("clusterid", "1")
-                                    .addQueryParam("clustername", "Xen%20Clust%201")
+                                    .addQueryParam("clustername", "Xen Clust 1")
                                     .addQueryParam("podid", "1")
                                     .addQueryParam("apiKey", "identity")
                                     .addQueryParam("signature", "ExGaljKKQIlVbWk5hd0BnnjmBzs=")
@@ -334,7 +334,7 @@ public class GlobalHostApiExpectTest extends BaseCloudStackExpectTest<GlobalHost
                                                   .addQueryParam("username", "fred")
                                                   .addQueryParam("password", "sekrit")
                                                   .addQueryParam("apiKey", "identity")
-                                                  .addQueryParam("signature", "xwc83%2BoYK0cuAiFQAlg/7/1IVHE=")
+                                                  .addQueryParam("signature", "xwc83+oYK0cuAiFQAlg/7/1IVHE=")
                                                   .addHeader("Accept", "application/json").build();
 
    @Test

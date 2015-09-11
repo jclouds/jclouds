@@ -76,7 +76,7 @@ public class ISOApiExpectTest extends BaseCloudStackExpectTest<ISOApi> {
                                      .addQueryParam("command", "listIsos")
                                      .addQueryParam("listAll", "true")
                                      .addQueryParam("apiKey", "identity")
-                                     .addQueryParam("signature", "qUUF6hCDc57Bc/nHriS9umbZBKA%3D")
+                                     .addQueryParam("signature", "qUUF6hCDc57Bc/nHriS9umbZBKA=")
                                      .addHeader("Accept", "application/json")
                                      .build();
    
@@ -113,10 +113,10 @@ public class ISOApiExpectTest extends BaseCloudStackExpectTest<ISOApi> {
                                             .addQueryParam("ispublic", "true")
                                             .addQueryParam("isready", "true")
                                             .addQueryParam("keyword", "bob")
-                                            .addQueryParam("name", "bob%27s%20iso")
+                                            .addQueryParam("name", "bob's iso")
                                             .addQueryParam("zoneid", "7")
                                             .addQueryParam("apiKey", "identity")
-                                            .addQueryParam("signature", "4S5ustbaBErEnpymWLSj1rEJ/nk%3D")
+                                            .addQueryParam("signature", "4S5ustbaBErEnpymWLSj1rEJ/nk=")
                                             .addHeader("Accept", "application/json")
                                             .build();
    
@@ -137,7 +137,7 @@ public class ISOApiExpectTest extends BaseCloudStackExpectTest<ISOApi> {
                                      .addQueryParam("listAll", "true")
                                      .addQueryParam("id", "018e0928-8205-4d8e-9329-f731a9ccd488")
                                      .addQueryParam("apiKey", "identity")
-                                     .addQueryParam("signature", "uZyPUJt6ThMDcQSDa%2BEv5LMs%2B2U%3D")
+                                     .addQueryParam("signature", "uZyPUJt6ThMDcQSDa+Ev5LMs+2U=")
                                      .addHeader("Accept", "application/json")
                                      .build();
    
@@ -176,8 +176,8 @@ public class ISOApiExpectTest extends BaseCloudStackExpectTest<ISOApi> {
                                         .addQueryParam("ispublic", "true")
                                         .addQueryParam("ostypeid", "1234-abcd")
                                         .addQueryParam("apiKey", "identity")
-                                        .addQueryParam("signature", "YpFMYUUu0daLgwxNFubVfkV0Nw8%3D")
-                                        .addHeader("Accept", "application/json") 
+                                        .addQueryParam("signature", "YpFMYUUu0daLgwxNFubVfkV0Nw8=")
+                                        .addHeader("Accept", "application/json")
                                         .build();
    
    RegisterISOOptions registerISOOptions = RegisterISOOptions.Builder
@@ -192,8 +192,8 @@ public class ISOApiExpectTest extends BaseCloudStackExpectTest<ISOApi> {
             .statusCode(200)
             .payload(payloadFromResource("/registerisoresponse.json"))
             .build());
-      
-      assertEquals(client.registerISO("ubuntu10.10", "ubuntu 10.10 (32 bit)", "http://ubuntu/ubuntu-10.10.iso", "1e0335d9-b6cc-4805-bddf-0828e66a0d01", 
+
+      assertEquals(client.registerISO("ubuntu10.10", "ubuntu 10.10 (32 bit)", "http://ubuntu/ubuntu-10.10.iso", "1e0335d9-b6cc-4805-bddf-0828e66a0d01",
               registerISOOptions),
             ISO.builder().id("b52c509d-c6e2-452c-b6ec-aa00720ed6cd").name("ubuntu10.10").displayText("ubuntu 10.10 (32 bit)").isPublic(true)
                 .isReady(false).bootable(true).isFeatured(false).crossZones(false).osTypeId("0e0335d9-b6cc-4808-bddf-0828e66a0d03")
@@ -210,7 +210,7 @@ public class ISOApiExpectTest extends BaseCloudStackExpectTest<ISOApi> {
              .statusCode(404)
              .build());
 
-       assertNull(client.registerISO("ubuntu10.10", "ubuntu 10.10 (32 bit)", "http://ubuntu/ubuntu-10.10.iso", "1e0335d9-b6cc-4805-bddf-0828e66a0d01", 
+       assertNull(client.registerISO("ubuntu10.10", "ubuntu 10.10 (32 bit)", "http://ubuntu/ubuntu-10.10.iso", "1e0335d9-b6cc-4805-bddf-0828e66a0d01",
                registerISOOptions));
     }
    

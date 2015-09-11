@@ -56,13 +56,18 @@ public class VirtualMachineApiExpectTest extends BaseCloudStackExpectTest<Virtua
 
       VirtualMachineApi client = requestSendsResponse(
          HttpRequest.builder().method("GET")
-            .endpoint("http://localhost:8080/client/api?response=json&command=getVMPassword&id=1&apiKey=identity&signature=SVA2r1KRj4yG03rATMLPZWS%2BKnw%3D")
-            .addHeader("Accept", "application/json")
-            .build(),
+               .endpoint("http://localhost:8080/client/api")
+               .addQueryParam("response", "json")
+               .addQueryParam("command", "getVMPassword")
+               .addQueryParam("id", "1")
+               .addQueryParam("apiKey", "identity")
+               .addQueryParam("signature", "SVA2r1KRj4yG03rATMLPZWS+Knw=")
+               .addHeader("Accept", "application/json")
+               .build(),
          HttpResponse.builder()
-            .statusCode(200)
-            .payload(payloadFromResource("/getvmpasswordresponse.json"))
-            .build());
+               .statusCode(200)
+               .payload(payloadFromResource("/getvmpasswordresponse.json"))
+               .build());
 
       String actual = client.getEncryptedPasswordForVirtualMachine("1");
       String expected = "EFOwm8icZ4sEib4y6ntVHUKHZJQrGBdyPkL1L9lpFHYhs3JfAtL5E5bxBP5Er27bJyOZPjKFcInX\r\n" +
@@ -85,7 +90,7 @@ public class VirtualMachineApiExpectTest extends BaseCloudStackExpectTest<Virtua
       .addQueryParam("serviceofferingid", "serviceOffering1")
       .addQueryParam("templateid", "template1")
       .addQueryParam("apiKey", "identity")
-      .addQueryParam("signature", "pBjjnTq7/ezN94Uj0gpy2T//cJQ%3D")
+      .addQueryParam("signature", "pBjjnTq7/ezN94Uj0gpy2T//cJQ=")
       .addHeader("Accept", "application/json")
       .build();
 

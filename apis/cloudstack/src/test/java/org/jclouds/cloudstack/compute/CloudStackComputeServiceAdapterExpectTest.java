@@ -56,7 +56,7 @@ public class CloudStackComputeServiceAdapterExpectTest extends BaseCloudStackCom
         .addQueryParam("command", "queryAsyncJobResult")
         .addQueryParam("jobid", "50006")
         .addQueryParam("apiKey", "APIKEY")
-        .addQueryParam("signature", "v8BWKMxd%2BIzHIuTaZ9sNSzCWqFI%3D")
+        .addQueryParam("signature", "v8BWKMxd+IzHIuTaZ9sNSzCWqFI=")
         .addHeader("Accept", "application/json")
         .build();
 
@@ -74,7 +74,7 @@ public class CloudStackComputeServiceAdapterExpectTest extends BaseCloudStackCom
         .addQueryParam("command", "queryAsyncJobResult")
         .addQueryParam("jobid", "13330fc9-8b3e-4582-aa3e-90883c041010")
         .addQueryParam("apiKey", "APIKEY")
-        .addQueryParam("signature", "y4gk3ckWAMPDNZM26LUK0gAhfiE%3D")
+        .addQueryParam("signature", "y4gk3ckWAMPDNZM26LUK0gAhfiE=")
         .addHeader("Accept", "application/json")
         .build();
 
@@ -86,8 +86,8 @@ public class CloudStackComputeServiceAdapterExpectTest extends BaseCloudStackCom
      .endpoint("http://localhost:8080/client/api")
      .addQueryParam("response", "json")
      .addQueryParam("command", "listCapabilities")
-     .addQueryParam("apiKey", "APIKEY")      
-     .addQueryParam("signature", "l3PVoJnKK2G2gHk3HPHtpwWjlW4%3D")
+     .addQueryParam("apiKey", "APIKEY")
+     .addQueryParam("signature", "l3PVoJnKK2G2gHk3HPHtpwWjlW4=")
      .addHeader("Accept", "application/json")
      .build();
 
@@ -104,7 +104,7 @@ public class CloudStackComputeServiceAdapterExpectTest extends BaseCloudStackCom
               .addQueryParam("networkids", "204")
               .addQueryParam("group", "test")
               .addQueryParam("apiKey", "APIKEY")
-              .addQueryParam("signature", "M2Wx0CgOeH9vYHhbcbblwziqpwI%3D")
+              .addQueryParam("signature", "M2Wx0CgOeH9vYHhbcbblwziqpwI=")
               .addHeader("Accept", "application/json")
               .build();
   
@@ -149,7 +149,7 @@ public class CloudStackComputeServiceAdapterExpectTest extends BaseCloudStackCom
               .addQueryParam("group", "test")
               .addQueryParam("keypair", "mykeypair")
               .addQueryParam("apiKey", "APIKEY")
-              .addQueryParam("signature", "D3qQlTNjxrBXeG82C7YPrwU1jMc%3D")
+              .addQueryParam("signature", "D3qQlTNjxrBXeG82C7YPrwU1jMc=")
               .addHeader("Accept", "application/json")
               .build();
   
@@ -197,7 +197,7 @@ public class CloudStackComputeServiceAdapterExpectTest extends BaseCloudStackCom
               .addQueryParam("group", "test")
               .addQueryParam("keypair", "jclouds-test")
               .addQueryParam("apiKey", "APIKEY")
-              .addQueryParam("signature", "kfU/J/REa4DdYj0b/pSjuB3h3Qc%3D")
+              .addQueryParam("signature", "kfU/J/REa4DdYj0b/pSjuB3h3Qc=")
               .addHeader("Accept", "application/json")
               .build();
   
@@ -244,7 +244,7 @@ public class CloudStackComputeServiceAdapterExpectTest extends BaseCloudStackCom
               .addQueryParam("group", "test")
               .addQueryParam("keypair", "mykeypair")
               .addQueryParam("apiKey", "APIKEY")
-              .addQueryParam("signature", "5qkUSGh0y%2BP/t04/j3%2BEN9PAeFI%3D")
+              .addQueryParam("signature", "5qkUSGh0y+P/t04/j3+EN9PAeFI=")
               .addHeader("Accept", "application/json")
               .build();
   
@@ -297,7 +297,7 @@ public class CloudStackComputeServiceAdapterExpectTest extends BaseCloudStackCom
               .addQueryParam("diskofferingid", "5678")
               .addQueryParam("size", "10")
               .addQueryParam("apiKey", "APIKEY")
-              .addQueryParam("signature", "lDzBXtVKCktueskyI/haID9ohJU%3D")
+              .addQueryParam("signature", "lDzBXtVKCktueskyI/haID9ohJU=")
               .addHeader("Accept", "application/json")
               .build();
 
@@ -352,7 +352,7 @@ public class CloudStackComputeServiceAdapterExpectTest extends BaseCloudStackCom
               .addQueryParam("keypair", "mykeypair")
               .addQueryParam("securitygroupids", "30")
               .addQueryParam("apiKey", "APIKEY")
-              .addQueryParam("signature", "rz8V/tMk/UbxUhNqp7Bq3CrSg/k%3D")
+              .addQueryParam("signature", "rz8V/tMk/UbxUhNqp7Bq3CrSg/k=")
               .addHeader("Accept", "application/json")
               .build();
   
@@ -411,7 +411,7 @@ public class CloudStackComputeServiceAdapterExpectTest extends BaseCloudStackCom
               .addQueryParam("group", "test")
               .addQueryParam("keypair", "mykeypair")
               .addQueryParam("apiKey", "APIKEY")
-              .addQueryParam("signature", "hGV6gZZakwvNKhTJurkm48%2Bzgso%3D")
+              .addQueryParam("signature", "hGV6gZZakwvNKhTJurkm48+zgso=")
               .addHeader("Accept", "application/json")
               .build();
 

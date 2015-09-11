@@ -42,7 +42,7 @@ public class GlobalUserApiTest extends BaseCloudStackApiTest<GlobalUserApi> {
                                        .addQueryParam("command", "createUser")
                                        .addQueryParam("username", "user")
                                        .addQueryParam("account", "account")
-                                       .addQueryParam("email", "email%40example.com")
+                                       .addQueryParam("email", "email@example.com")
                                        .addQueryParam("password", "hashed-password")
                                        .addQueryParam("firstname", "FirstName")
                                        .addQueryParam("lastname", "LastName").build();

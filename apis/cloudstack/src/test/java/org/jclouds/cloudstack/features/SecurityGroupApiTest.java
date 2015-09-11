@@ -173,12 +173,12 @@ public class SecurityGroupApiTest extends BaseCloudStackApiTest<SecurityGroupApi
                                                            .addQueryParam("protocol", "tcp")
                                                            .addQueryParam("startport", "22")
                                                            .addQueryParam("endport", "22")
-                                                           .addQueryParam("usersecuritygrouplist%5B0%5D.account", "adrian")
-                                                           .addQueryParam("usersecuritygrouplist%5B0%5D.group", "group1")
-                                                           .addQueryParam("usersecuritygrouplist%5B1%5D.account", "adrian")
-                                                           .addQueryParam("usersecuritygrouplist%5B1%5D.group", "group2")
-                                                           .addQueryParam("usersecuritygrouplist%5B2%5D.account", "bob")
-                                                           .addQueryParam("usersecuritygrouplist%5B2%5D.group", "group1").build();
+                                                           .addQueryParam("usersecuritygrouplist[0].account", "adrian")
+                                                           .addQueryParam("usersecuritygrouplist[0].group", "group1")
+                                                           .addQueryParam("usersecuritygrouplist[1].account", "adrian")
+                                                           .addQueryParam("usersecuritygrouplist[1].group", "group2")
+                                                           .addQueryParam("usersecuritygrouplist[2].account", "bob")
+                                                           .addQueryParam("usersecuritygrouplist[2].group", "group1").build();
 
    public void testAuthorizeIngressPortsToSecurityGroups() throws SecurityException, NoSuchMethodException, IOException {
       Invokable<?, ?> method = method(SecurityGroupApi.class, "authorizeIngressPortsToSecurityGroups", String.class,
@@ -233,12 +233,12 @@ public class SecurityGroupApiTest extends BaseCloudStackApiTest<SecurityGroupApi
                                                            .addQueryParam("securitygroupid", "2")
                                                            .addQueryParam("icmpcode", "22")
                                                            .addQueryParam("icmptype", "22")
-                                                           .addQueryParam("usersecuritygrouplist%5B0%5D.account", "adrian")
-                                                           .addQueryParam("usersecuritygrouplist%5B0%5D.group", "group1")
-                                                           .addQueryParam("usersecuritygrouplist%5B1%5D.account", "adrian")
-                                                           .addQueryParam("usersecuritygrouplist%5B1%5D.group", "group2")
-                                                           .addQueryParam("usersecuritygrouplist%5B2%5D.account", "bob")
-                                                           .addQueryParam("usersecuritygrouplist%5B2%5D.group", "group1").build();
+                                                           .addQueryParam("usersecuritygrouplist[0].account", "adrian")
+                                                           .addQueryParam("usersecuritygrouplist[0].group", "group1")
+                                                           .addQueryParam("usersecuritygrouplist[1].account", "adrian")
+                                                           .addQueryParam("usersecuritygrouplist[1].group", "group2")
+                                                           .addQueryParam("usersecuritygrouplist[2].account", "bob")
+                                                           .addQueryParam("usersecuritygrouplist[2].group", "group1").build();
 
    public void testAuthorizeIngressICMPToSecurityGroups() throws SecurityException, NoSuchMethodException, IOException {
       Invokable<?, ?> method = method(SecurityGroupApi.class, "authorizeIngressICMPToSecurityGroups", String.class,

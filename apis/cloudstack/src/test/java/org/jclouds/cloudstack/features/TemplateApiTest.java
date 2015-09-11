@@ -92,7 +92,7 @@ public class TemplateApiTest extends BaseCloudStackApiTest<TemplateApi> {
                                              .addQueryParam("command", "registerTemplate")
                                              .addQueryParam("format", "QCOW2")
                                              .addQueryParam("hypervisor", "xen")
-                                             .addQueryParam("url", "http%3A//example.com/")
+                                             .addQueryParam("url", "http://example.com/")
                                              .addQueryParam("zoneid", "20")
                                              .addQueryParam("name", "thename")
                                              .addQueryParam("ostypeid", "10")
@@ -119,7 +119,7 @@ public class TemplateApiTest extends BaseCloudStackApiTest<TemplateApi> {
                                                     .addQueryParam("command", "registerTemplate")
                                                     .addQueryParam("format", "QCOW2")
                                                     .addQueryParam("hypervisor", "xen")
-                                                    .addQueryParam("url", "http%3A//example.com/")
+                                                    .addQueryParam("url", "http://example.com/")
                                                     .addQueryParam("zoneid", "20")
                                                     .addQueryParam("account", "mydomain")
                                                     .addQueryParam("domainid", "3")
@@ -381,7 +381,7 @@ public class TemplateApiTest extends BaseCloudStackApiTest<TemplateApi> {
                                                    .addQueryParam("id", "3")
                                                    .addQueryParam("mode", "HTTP_DOWNLOAD")
                                                    .addQueryParam("zoneid", "5")
-                                                   .addQueryParam("url", "http%3A//example.com/").build();
+                                                   .addQueryParam("url", "http://example.com/").build();
 
    public void testExtractTemplateOptions() throws NoSuchMethodException {
       Invokable<?, ?> method = method(TemplateApi.class, "extractTemplate", String.class, ExtractMode.class, String.class, ExtractTemplateOptions[].class);

@@ -67,7 +67,7 @@ public class CloudStackSecurityGroupExtensionExpectTest extends BaseCloudStackCo
            .addQueryParam("command", "queryAsyncJobResult")
            .addQueryParam("jobid", "13330fc9-8b3e-4582-aa3e-90883c041010")
            .addQueryParam("apiKey", "APIKEY")
-           .addQueryParam("signature", "y4gk3ckWAMPDNZM26LUK0gAhfiE%3D")
+           .addQueryParam("signature", "y4gk3ckWAMPDNZM26LUK0gAhfiE=")
            .addHeader("Accept", "application/json")
            .build();
 
@@ -82,7 +82,7 @@ public class CloudStackSecurityGroupExtensionExpectTest extends BaseCloudStackCo
            .addQueryParam("listAll", "true")
            .addQueryParam("id", "13")
            .addQueryParam("apiKey", "APIKEY")
-           .addQueryParam("signature", "TmlGaO2ICM%2BiXQr88%2BZCyWUniSw%3D")
+           .addQueryParam("signature", "TmlGaO2ICM+iXQr88+ZCyWUniSw=")
            .addHeader("Accept", "application/json")
            .build();
 
@@ -104,7 +104,7 @@ public class CloudStackSecurityGroupExtensionExpectTest extends BaseCloudStackCo
               .addQueryParam("command", "listSecurityGroups")
               .addQueryParam("listAll", "true")
               .addQueryParam("apiKey", "APIKEY")
-              .addQueryParam("signature", "o%2Bd8xxWT1Pa%2BI57SG2caFAblBYA%3D")
+              .addQueryParam("signature", "o+d8xxWT1Pa+I57SG2caFAblBYA=")
               .addHeader("Accept", "application/json")
               .build();
 
@@ -138,7 +138,7 @@ public class CloudStackSecurityGroupExtensionExpectTest extends BaseCloudStackCo
               .addQueryParam("listAll", "true")
               .addQueryParam("virtualmachineid", "some-node")
               .addQueryParam("apiKey", "APIKEY")
-              .addQueryParam("signature", "x4f9fGMjIHXl5biaaFK5oOEONcg%3D")
+              .addQueryParam("signature", "x4f9fGMjIHXl5biaaFK5oOEONcg=")
               .addHeader("Accept", "application/json")
               .build();
 
@@ -172,7 +172,7 @@ public class CloudStackSecurityGroupExtensionExpectTest extends BaseCloudStackCo
               .addQueryParam("listAll", "true")
               .addQueryParam("id", "13")
               .addQueryParam("apiKey", "APIKEY")
-              .addQueryParam("signature", "TmlGaO2ICM%2BiXQr88%2BZCyWUniSw%3D")
+              .addQueryParam("signature", "TmlGaO2ICM+iXQr88+ZCyWUniSw=")
               .addHeader("Accept", "application/json")
               .build();
 
@@ -207,7 +207,7 @@ public class CloudStackSecurityGroupExtensionExpectTest extends BaseCloudStackCo
               .addQueryParam("listAll", "true")
               .addQueryParam("securitygroupname", "jclouds-test")
               .addQueryParam("apiKey", "APIKEY")
-              .addQueryParam("signature", "zGp2rfHY6fBIGkgODRxyNzFfPFI%3D")
+              .addQueryParam("signature", "zGp2rfHY6fBIGkgODRxyNzFfPFI=")
               .addHeader("Accept", "application/json")
               .build();
 
@@ -245,7 +245,7 @@ public class CloudStackSecurityGroupExtensionExpectTest extends BaseCloudStackCo
               .addQueryParam("listAll", "true")
               .addQueryParam("securitygroupname", "jclouds-test")
               .addQueryParam("apiKey", "APIKEY")
-              .addQueryParam("signature", "zGp2rfHY6fBIGkgODRxyNzFfPFI%3D")
+              .addQueryParam("signature", "zGp2rfHY6fBIGkgODRxyNzFfPFI=")
               .addHeader("Accept", "application/json")
               .build();
 
@@ -281,7 +281,7 @@ public class CloudStackSecurityGroupExtensionExpectTest extends BaseCloudStackCo
               .addQueryParam("listAll", "true")
               .addQueryParam("id", "13")
               .addQueryParam("apiKey", "APIKEY")
-              .addQueryParam("signature", "TmlGaO2ICM%2BiXQr88%2BZCyWUniSw%3D")
+              .addQueryParam("signature", "TmlGaO2ICM+iXQr88+ZCyWUniSw=")
               .addHeader("Accept", "application/json")
               .build();
 
@@ -295,7 +295,7 @@ public class CloudStackSecurityGroupExtensionExpectTest extends BaseCloudStackCo
               .addQueryParam("command", "deleteSecurityGroup")
               .addQueryParam("id", "13")
               .addQueryParam("apiKey", "APIKEY")
-              .addQueryParam("signature", "S1A2lYR/ibf4%2BHGFxVLdZvXZujQ%3D")
+              .addQueryParam("signature", "S1A2lYR/ibf4+HGFxVLdZvXZujQ=")
               .addHeader("Accept", "application/json")
               .build();
 
@@ -329,7 +329,7 @@ public class CloudStackSecurityGroupExtensionExpectTest extends BaseCloudStackCo
               .addQueryParam("listAll", "true")
               .addQueryParam("id", "14")
               .addQueryParam("apiKey", "APIKEY")
-              .addQueryParam("signature", "pWQ30A6l5qh4eaNypGwM9FoLnUM%3D")
+              .addQueryParam("signature", "pWQ30A6l5qh4eaNypGwM9FoLnUM=")
               .addHeader("Accept", "application/json")
               .build();
 
@@ -364,7 +364,7 @@ public class CloudStackSecurityGroupExtensionExpectTest extends BaseCloudStackCo
               .addQueryParam("endport", "11")
               .addQueryParam("cidrlist", "1.1.1.1/24")
               .addQueryParam("apiKey", "APIKEY")
-              .addQueryParam("signature", "XyokGNutHwcyU7KQVFZOTHvc4RY%3D")
+              .addQueryParam("signature", "XyokGNutHwcyU7KQVFZOTHvc4RY=")
               .addHeader("Accept", "application/json")
               .build();
 
@@ -413,7 +413,7 @@ public class CloudStackSecurityGroupExtensionExpectTest extends BaseCloudStackCo
               .addQueryParam("endport", "11")
               .addQueryParam("cidrlist", "1.1.1.1/24")
               .addQueryParam("apiKey", "APIKEY")
-              .addQueryParam("signature", "XyokGNutHwcyU7KQVFZOTHvc4RY%3D")
+              .addQueryParam("signature", "XyokGNutHwcyU7KQVFZOTHvc4RY=")
               .addHeader("Accept", "application/json")
               .build();
 
@@ -455,7 +455,7 @@ public class CloudStackSecurityGroupExtensionExpectTest extends BaseCloudStackCo
               .addQueryParam("usersecuritygrouplist[0].account", "adrian")
               .addQueryParam("usersecuritygrouplist[0].group", "adriancole")
               .addQueryParam("apiKey", "APIKEY")
-              .addQueryParam("signature", "v2OgKc2IftwX9pfKq2Pw/Z2xh9w%3D")
+              .addQueryParam("signature", "v2OgKc2IftwX9pfKq2Pw/Z2xh9w=")
               .addHeader("Accept", "application/json")
               .build();
 
@@ -507,7 +507,7 @@ public class CloudStackSecurityGroupExtensionExpectTest extends BaseCloudStackCo
               .addQueryParam("usersecuritygrouplist[0].account", "adrian")
               .addQueryParam("usersecuritygrouplist[0].group", "adriancole")
               .addQueryParam("apiKey", "APIKEY")
-              .addQueryParam("signature", "v2OgKc2IftwX9pfKq2Pw/Z2xh9w%3D")
+              .addQueryParam("signature", "v2OgKc2IftwX9pfKq2Pw/Z2xh9w=")
               .addHeader("Accept", "application/json")
               .build();
 
@@ -549,7 +549,7 @@ public class CloudStackSecurityGroupExtensionExpectTest extends BaseCloudStackCo
               .addQueryParam("command", "revokeSecurityGroupIngress")
               .addQueryParam("id", "6")
               .addQueryParam("apiKey", "APIKEY")
-              .addQueryParam("signature", "H7cY/MEYGN7df1hiz0mMAFVBfa8%3D")
+              .addQueryParam("signature", "H7cY/MEYGN7df1hiz0mMAFVBfa8=")
               .addHeader("Accept", "application/json")
               .build();
 
@@ -586,7 +586,7 @@ public class CloudStackSecurityGroupExtensionExpectTest extends BaseCloudStackCo
               .addQueryParam("command", "revokeSecurityGroupIngress")
               .addQueryParam("id", "6")
               .addQueryParam("apiKey", "APIKEY")
-              .addQueryParam("signature", "H7cY/MEYGN7df1hiz0mMAFVBfa8%3D")
+              .addQueryParam("signature", "H7cY/MEYGN7df1hiz0mMAFVBfa8=")
               .addHeader("Accept", "application/json")
               .build();
 
@@ -616,7 +616,7 @@ public class CloudStackSecurityGroupExtensionExpectTest extends BaseCloudStackCo
               .addQueryParam("command", "revokeSecurityGroupIngress")
               .addQueryParam("id", "5")
               .addQueryParam("apiKey", "APIKEY")
-              .addQueryParam("signature", "bEzvrLtO7aEWkIqJgUeTnd%2B0XbY%3D")
+              .addQueryParam("signature", "bEzvrLtO7aEWkIqJgUeTnd+0XbY=")
               .addHeader("Accept", "application/json")
               .build();
 
@@ -653,7 +653,7 @@ public class CloudStackSecurityGroupExtensionExpectTest extends BaseCloudStackCo
               .addQueryParam("command", "revokeSecurityGroupIngress")
               .addQueryParam("id", "5")
               .addQueryParam("apiKey", "APIKEY")
-              .addQueryParam("signature", "bEzvrLtO7aEWkIqJgUeTnd%2B0XbY%3D")
+              .addQueryParam("signature", "bEzvrLtO7aEWkIqJgUeTnd+0XbY=")
               .addHeader("Accept", "application/json")
               .build();
 

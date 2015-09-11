@@ -20,8 +20,6 @@ import static org.jclouds.cloudstack.options.UpdateZoneOptions.Builder.name;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNull;
 
-import java.net.URI;
-
 import org.jclouds.cloudstack.CloudStackContext;
 import org.jclouds.cloudstack.domain.AllocationState;
 import org.jclouds.cloudstack.domain.NetworkType;
@@ -49,7 +47,7 @@ public class GlobalZoneApiExpectTest extends BaseCloudStackExpectTest<GlobalZone
                                        .addQueryParam("dns1", "8.8.8.8")
                                        .addQueryParam("internaldns1", "10.10.10.10")
                                        .addQueryParam("apiKey", "identity")
-                                       .addQueryParam("signature", "hWNmM2%2BTsfb5DelQa/GJLN5DVWE=")
+                                       .addQueryParam("signature", "hWNmM2+Tsfb5DelQa/GJLN5DVWE=")
                                        .addHeader("Accept", "application/json").build();
    
    public void testCreateZoneWhenResponseIs2xxAnd404() {
@@ -77,15 +75,17 @@ public class GlobalZoneApiExpectTest extends BaseCloudStackExpectTest<GlobalZone
 
    public void testUpdateZoneWhenResponseIs2xxAnd404() {
       HttpRequest request = HttpRequest.builder()
-         .method("GET")
-         .endpoint(
-            URI.create("http://localhost:8080/client/api?response=json&command=updateZone&" +
-               "id=6&name=test-zone&dns1=8.8.8.8&apiKey=identity&signature=v19FdHKHztdT0IRloYFFn0eNbWM%3D"))
-         .headers(
-            ImmutableMultimap.<String, String>builder()
-               .put("Accept", "application/json")
-               .build())
-         .build();
+            .method("GET")
+            .endpoint("http://localhost:8080/client/api")
+            .addQueryParam("response", "json")
+            .addQueryParam("command", "updateZone")
+            .addQueryParam("id", "6")
+            .addQueryParam("name", "test-zone")
+            .addQueryParam("dns1", "8.8.8.8")
+            .addQueryParam("apiKey", "identity")
+            .addQueryParam("signature", "v19FdHKHztdT0IRloYFFn0eNbWM=")
+            .headers(ImmutableMultimap.<String, String>builder().put("Accept", "application/json").build())
+            .build();
 
       GlobalZoneApi client = requestSendsResponse(request,
          HttpResponse.builder()
@@ -112,16 +112,19 @@ public class GlobalZoneApiExpectTest extends BaseCloudStackExpectTest<GlobalZone
    public void testDeleteZone() {
       GlobalZoneApi client = requestSendsResponse(
          HttpRequest.builder()
-            .method("GET")
-            .endpoint(
-               URI.create("http://localhost:8080/client/api?response=json&" +
-                  "command=deleteZone&id=6&apiKey=identity&signature=TfkzSIK8kzGJnIYo3DofECyuOII%3D"))
-            .addHeader("Accept", "application/json")
-            .build(),
+               .method("GET")
+               .endpoint("http://localhost:8080/client/api")
+               .addQueryParam("response", "json")
+               .addQueryParam("command", "deleteZone")
+               .addQueryParam("id", "6")
+               .addQueryParam("apiKey", "identity")
+               .addQueryParam("signature", "TfkzSIK8kzGJnIYo3DofECyuOII=")
+               .addHeader("Accept", "application/json")
+               .build(),
          HttpResponse.builder()
-            .statusCode(200)
-            .payload(payloadFromResource("/deletezoneresponse.json"))
-            .build());
+               .statusCode(200)
+               .payload(payloadFromResource("/deletezoneresponse.json"))
+               .build());
 
       client.deleteZone("6");
    }

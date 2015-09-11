@@ -118,7 +118,15 @@ public class SnapshotApiTest extends BaseCloudStackApiTest<SnapshotApi> {
 
    public void testListSnapshotsOptions() throws NoSuchMethodException {
       Invokable<?, ?> method = method(SnapshotApi.class, "listSnapshots", ListSnapshotsOptions[].class);
-      GeneratedHttpRequest httpRequest = processor.createRequest(method, ImmutableList.<Object> of(ListSnapshotsOptions.Builder.accountInDomain("acc", "7").id("5").interval(Snapshot.Interval.MONTHLY).isRecursive(true).keyword("fred").name("fred's snapshot").snapshotType(Snapshot.Type.RECURRING).volumeId("11")));
+      GeneratedHttpRequest httpRequest = processor.createRequest(method,
+            ImmutableList.<Object> of(ListSnapshotsOptions.Builder.accountInDomain("acc", "7")
+                  .id("5")
+                  .interval(Snapshot.Interval.MONTHLY)
+                  .isRecursive(true)
+                  .keyword("fred")
+                  .name("fred's snapshot")
+                  .snapshotType(Snapshot.Type.RECURRING)
+                  .volumeId("11")));
 
       assertRequestLineEquals(httpRequest,
             "GET http://localhost:8080/client/api?response=json&command=listSnapshots&listAll=true&account=acc&domainid=7&id=5&intervaltype=MONTHLY&isrecursive=true&keyword=fred&name=fred%27s%20snapshot&snapshottype=RECURRING&volumeid=11 HTTP/1.1");
@@ -156,7 +164,7 @@ public class SnapshotApiTest extends BaseCloudStackApiTest<SnapshotApi> {
                                        .addQueryParam("timezone", "UTC")
                                        .addQueryParam("volumeid", "12")
                                        .addQueryParam("intervaltype", "MONTHLY")
-                                       .addQueryParam("schedule", "07%3A06%3A05").build();
+                                       .addQueryParam("schedule", "07:06:05").build();
 
    public void testCreateSnapshotPolicy() throws NoSuchMethodException {
       Invokable<?, ?> method = method(SnapshotApi.class, "createSnapshotPolicy", SnapshotPolicySchedule.class, String.class, String.class, String.class);

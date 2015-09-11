@@ -38,7 +38,7 @@ public abstract class BaseCloudStackComputeServiceContextExpectTest<T> extends B
       .addQueryParam("listAll", "true")
       .addQueryParam("templatefilter", "executable")
       .addQueryParam("apiKey", "APIKEY")
-      .addQueryParam("signature", "Xk6lF/v3SbhrxTKqaC2IWoBPKHo%3D")
+      .addQueryParam("signature", "Xk6lF/v3SbhrxTKqaC2IWoBPKHo=")
       .addHeader("Accept", "application/json")
       .build();
 
@@ -55,7 +55,7 @@ public abstract class BaseCloudStackComputeServiceContextExpectTest<T> extends B
            .addQueryParam("account", "jclouds")
            .addQueryParam("domainid", "457")
            .addQueryParam("apiKey", "APIKEY")
-           .addQueryParam("signature", "yAx1XbtjeEhdBQCNP0OLyWWAFCw%3D")
+           .addQueryParam("signature", "yAx1XbtjeEhdBQCNP0OLyWWAFCw=")
            .addHeader("Accept", "application/json")
            .build();
 
@@ -68,7 +68,7 @@ public abstract class BaseCloudStackComputeServiceContextExpectTest<T> extends B
       .addQueryParam("command", "listOsTypes")
       .addQueryParam("listAll", "true")
       .addQueryParam("apiKey", "APIKEY")
-      .addQueryParam("signature", "8BsE8MsOAhUzo1Q4Y3UD/e96u84%3D")
+      .addQueryParam("signature", "8BsE8MsOAhUzo1Q4Y3UD/e96u84=")
       .addHeader("Accept", "application/json")
       .build();
 
@@ -82,7 +82,7 @@ public abstract class BaseCloudStackComputeServiceContextExpectTest<T> extends B
       .addQueryParam("command", "listOsCategories")
       .addQueryParam("listAll", "true")
       .addQueryParam("apiKey", "APIKEY")
-      .addQueryParam("signature", "OojW4ssh/RQ3CubAzXue4svlofM%3D")
+      .addQueryParam("signature", "OojW4ssh/RQ3CubAzXue4svlofM=")
 //      .addHeader("Accept", "application/json") //TODO: why are we not passing this?
       .build();
 
@@ -96,7 +96,7 @@ public abstract class BaseCloudStackComputeServiceContextExpectTest<T> extends B
       .addQueryParam("command", "listZones")
       .addQueryParam("listAll", "true")
       .addQueryParam("apiKey", "APIKEY")
-      .addQueryParam("signature", "GTUgn/LHDioJRq48kurOdCAYueo%3D")
+      .addQueryParam("signature", "GTUgn/LHDioJRq48kurOdCAYueo=")
       .addHeader("Accept", "application/json")
       .build();
 
@@ -110,7 +110,7 @@ public abstract class BaseCloudStackComputeServiceContextExpectTest<T> extends B
       .addQueryParam("command", "listServiceOfferings")
       .addQueryParam("listAll", "true")
       .addQueryParam("apiKey", "APIKEY")
-      .addQueryParam("signature", "jUien8oeEan7bjKKQbBlzvFuMjw%3D")
+      .addQueryParam("signature", "jUien8oeEan7bjKKQbBlzvFuMjw=")
       .addHeader("Accept", "application/json")
       .build();
 
@@ -124,7 +124,7 @@ public abstract class BaseCloudStackComputeServiceContextExpectTest<T> extends B
       .addQueryParam("command", "listAccounts")
       .addQueryParam("listAll", "true")
       .addQueryParam("apiKey", "APIKEY")
-      .addQueryParam("signature", "E4wuKXCkioaNIiL8hL8FD9K5K2c%3D")
+      .addQueryParam("signature", "E4wuKXCkioaNIiL8hL8FD9K5K2c=")
       .addHeader("Accept", "application/json")
       .build();
 
@@ -140,7 +140,7 @@ public abstract class BaseCloudStackComputeServiceContextExpectTest<T> extends B
       .addQueryParam("account", "jclouds") // account and domain came from above
       .addQueryParam("domainid", "457")
       .addQueryParam("apiKey", "APIKEY")
-      .addQueryParam("signature", "FDiGGBiG/sVj0k6DmZIgMNU8SqI%3D")
+      .addQueryParam("signature", "FDiGGBiG/sVj0k6DmZIgMNU8SqI=")
       .addHeader("Accept", "application/json")
       .build();
 
@@ -159,7 +159,7 @@ public abstract class BaseCloudStackComputeServiceContextExpectTest<T> extends B
       .addQueryParam("listAll", "true")
       .addQueryParam("id", "1")
       .addQueryParam("apiKey", "APIKEY")
-      .addQueryParam("signature", "q5GMO9iUYIFs5S58DdAuYAy8yu0%3D")
+      .addQueryParam("signature", "q5GMO9iUYIFs5S58DdAuYAy8yu0=")
       .addHeader("Accept", "application/json")
       .build();
 
@@ -174,7 +174,7 @@ public abstract class BaseCloudStackComputeServiceContextExpectTest<T> extends B
       .addQueryParam("listAll", "true")
       .addQueryParam("id", "2")
       .addQueryParam("apiKey", "APIKEY")
-      .addQueryParam("signature", "FnYX25207fVLLRz5GhOfRrWuUek%3D")
+      .addQueryParam("signature", "FnYX25207fVLLRz5GhOfRrWuUek=")
       .addHeader("Accept", "application/json")
       .build();
 
@@ -185,10 +185,10 @@ public abstract class BaseCloudStackComputeServiceContextExpectTest<T> extends B
    protected final HttpRequest listCapabilities = HttpRequest.builder().method("GET")
       .endpoint("http://localhost:8080/client/api")
       .addQueryParam("response", "json")
-      .addQueryParam("listAll", "true")      
+      .addQueryParam("listAll", "true")
       .addQueryParam("command", "listCapabilities")
-      .addQueryParam("apiKey", "APIKEY")      
-      .addQueryParam("signature", "vVdhtet/zG59FXgkYkAzEQQ4q1o%3D")
+      .addQueryParam("apiKey", "APIKEY")
+      .addQueryParam("signature", "vVdhtet/zG59FXgkYkAzEQQ4q1o=")
       .addHeader("Accept", "application/json")
       .build();
 
@@ -200,10 +200,10 @@ public abstract class BaseCloudStackComputeServiceContextExpectTest<T> extends B
       .endpoint("http://localhost:8080/client/api")
       .addQueryParam("response", "json")
       .addQueryParam("command", "listSecurityGroups")
-      .addQueryParam("listAll", "true")      
-      .addQueryParam("securitygroupname", "jclouds-test")      
-      .addQueryParam("apiKey", "APIKEY")      
-      .addQueryParam("signature", "zGp2rfHY6fBIGkgODRxyNzFfPFI%3D")
+      .addQueryParam("listAll", "true")
+      .addQueryParam("securitygroupname", "jclouds-test")
+      .addQueryParam("apiKey", "APIKEY")
+      .addQueryParam("signature", "zGp2rfHY6fBIGkgODRxyNzFfPFI=")
       .addHeader("Accept", "application/json")
       .build();
 
@@ -215,9 +215,9 @@ public abstract class BaseCloudStackComputeServiceContextExpectTest<T> extends B
       .endpoint("http://localhost:8080/client/api")
       .addQueryParam("response", "json")
       .addQueryParam("command", "createSecurityGroup")
-      .addQueryParam("name", "jclouds-test")      
-      .addQueryParam("apiKey", "APIKEY")      
-      .addQueryParam("signature", "BdgmqGsvjPmP4PxsEKEpq6buwuA%3D")
+      .addQueryParam("name", "jclouds-test")
+      .addQueryParam("apiKey", "APIKEY")
+      .addQueryParam("signature", "BdgmqGsvjPmP4PxsEKEpq6buwuA=")
       .addHeader("Accept", "application/json")
       .build();
 
@@ -229,13 +229,13 @@ public abstract class BaseCloudStackComputeServiceContextExpectTest<T> extends B
       .endpoint("http://localhost:8080/client/api")
       .addQueryParam("response", "json")
       .addQueryParam("command", "authorizeSecurityGroupIngress")
-      .addQueryParam("securitygroupid", "30")      
+      .addQueryParam("securitygroupid", "30")
       .addQueryParam("protocol", "TCP")
       .addQueryParam("startport", "22")
       .addQueryParam("endport", "22")
       .addQueryParam("cidrlist", "0.0.0.0/0")
-      .addQueryParam("apiKey", "APIKEY")      
-      .addQueryParam("signature", "GVtXzAl/Q7z4wnvKEHtdV0lxv2o%3D")
+      .addQueryParam("apiKey", "APIKEY")
+      .addQueryParam("signature", "GVtXzAl/Q7z4wnvKEHtdV0lxv2o=")
       .addHeader("Accept", "application/json")
       .build();
 
@@ -247,9 +247,9 @@ public abstract class BaseCloudStackComputeServiceContextExpectTest<T> extends B
       .endpoint("http://localhost:8080/client/api")
       .addQueryParam("response", "json")
       .addQueryParam("command", "createSSHKeyPair")
-      .addQueryParam("name", "jclouds-test")      
-      .addQueryParam("apiKey", "APIKEY")      
-      .addQueryParam("signature", "er6YjvUjPFwxy/x/aAVNW9Z8yo8%3D")
+      .addQueryParam("name", "jclouds-test")
+      .addQueryParam("apiKey", "APIKEY")
+      .addQueryParam("signature", "er6YjvUjPFwxy/x/aAVNW9Z8yo8=")
       .addHeader("Accept", "application/json")
       .build();
 

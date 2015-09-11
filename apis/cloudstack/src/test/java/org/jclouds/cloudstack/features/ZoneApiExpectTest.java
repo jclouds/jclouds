@@ -18,8 +18,6 @@ package org.jclouds.cloudstack.features;
 
 import static org.testng.Assert.assertEquals;
 
-import java.net.URI;
-
 import org.jclouds.cloudstack.CloudStackContext;
 import org.jclouds.cloudstack.domain.NetworkType;
 import org.jclouds.cloudstack.domain.Tag;
@@ -46,7 +44,7 @@ public class ZoneApiExpectTest extends BaseCloudStackExpectTest<ZoneApi> {
                     .addQueryParam("command", "listZones")
                     .addQueryParam("listAll", "true")
                     .addQueryParam("apiKey", "identity")
-                    .addQueryParam("signature", "8iHCtck0qfxFTqJ8reyAObRf31I%3D")
+                    .addQueryParam("signature", "8iHCtck0qfxFTqJ8reyAObRf31I=")
                     .addHeader("Accept", "application/json")
                     .build(),
          HttpResponse.builder()
@@ -80,12 +78,15 @@ public class ZoneApiExpectTest extends BaseCloudStackExpectTest<ZoneApi> {
 
    public void testListZonesWhenResponseIs404() {
       ZoneApi client = requestSendsResponse(
-         HttpRequest.builder()
-            .method("GET")
-            .endpoint(
-               URI.create("http://localhost:8080/client/api?response=json&" +
-                  "command=listZones&listAll=true&apiKey=identity&signature=8iHCtck0qfxFTqJ8reyAObRf31I%3D"))
-            .addHeader("Accept", "application/json")
+            HttpRequest.builder()
+                  .method("GET")
+                  .endpoint("http://localhost:8080/client/api")
+                  .addQueryParam("response", "json")
+                  .addQueryParam("command", "listZones")
+                  .addQueryParam("listAll", "true")
+                  .addQueryParam("apiKey", "identity")
+                  .addQueryParam("signature", "8iHCtck0qfxFTqJ8reyAObRf31I=")
+                  .addHeader("Accept", "application/json")
             .build(),
          HttpResponse.builder()
             .statusCode(404)

@@ -54,9 +54,9 @@ public class CloudStackImageExtensionExpectTest extends BaseCloudStackComputeSer
          .addQueryParam("listAll", "true")
          .addQueryParam("id", "3239ade9-fd25-405c-8eda-59f0313a3fb0")
          .addQueryParam("apiKey", "APIKEY")
-         .addQueryParam("signature", "Qq7Br3qNsyr5ifWZHIrLAslhwm0%3D")
+         .addQueryParam("signature", "Qq7Br3qNsyr5ifWZHIrLAslhwm0=")
          .addHeader("Accept", "application/json")
-         .build(); 
+         .build();
 
       HttpResponse listVMResponse = HttpResponse.builder().statusCode(200)
          .payload(payloadFromResource("/listvirtualmachinesresponse-imageextension.json"))
@@ -68,9 +68,9 @@ public class CloudStackImageExtensionExpectTest extends BaseCloudStackComputeSer
          .addQueryParam("command", "stopVirtualMachine")
          .addQueryParam("id", "3239ade9-fd25-405c-8eda-59f0313a3fb0")
          .addQueryParam("apiKey", "APIKEY")
-         .addQueryParam("signature", "y9vxRK61K8sDoWtvSJHIx5WO9AE%3D")
+         .addQueryParam("signature", "y9vxRK61K8sDoWtvSJHIx5WO9AE=")
          .addHeader("Accept", "application/json")
-         .build(); 
+         .build();
 
       HttpResponse stopVMResponse = HttpResponse.builder().statusCode(200)
          .payload(payloadFromResource("/stopvirtualmachineresponse-imageextension.json"))
@@ -82,7 +82,7 @@ public class CloudStackImageExtensionExpectTest extends BaseCloudStackComputeSer
          .addQueryParam("command", "queryAsyncJobResult")
          .addQueryParam("jobid", "a7d5127b-24a2-4a44-a4a7-25a6d057b453")
          .addQueryParam("apiKey", "APIKEY")
-         .addQueryParam("signature", "CVpnN%2FSbx%2FMCOOyj%2FoVAt3bn684%3D")
+         .addQueryParam("signature", "CVpnN/Sbx/MCOOyj/oVAt3bn684=")
          .addHeader("Accept", "application/json")
          .build();
 
@@ -97,9 +97,9 @@ public class CloudStackImageExtensionExpectTest extends BaseCloudStackComputeSer
          .addQueryParam("listAll", "true")
          .addQueryParam("virtualmachineid", "3239ade9-fd25-405c-8eda-59f0313a3fb0")
          .addQueryParam("apiKey", "APIKEY")
-         .addQueryParam("signature", "drLPf9NE9ROZPOfeDkASiKa50t8%3D")
+         .addQueryParam("signature", "drLPf9NE9ROZPOfeDkASiKa50t8=")
          .addHeader("Accept", "application/json")
-         .build(); 
+         .build();
 
       HttpResponse listVolumesResponse = HttpResponse.builder().statusCode(200)
          .payload(payloadFromResource("/listvolumesresponse-imageextension.json"))
@@ -115,9 +115,9 @@ public class CloudStackImageExtensionExpectTest extends BaseCloudStackComputeSer
          .addQueryParam("ostypeid", "45de18f1-87c6-4646-8099-95c61f2a300a")
          .addQueryParam("displaytext", "temp-template-ignore")
          .addQueryParam("apiKey", "APIKEY")
-         .addQueryParam("signature", "madHsBgxjYbM6JnZKYWajOlfPlY%3D")
+         .addQueryParam("signature", "madHsBgxjYbM6JnZKYWajOlfPlY=")
          .addHeader("Accept", "application/json")
-         .build(); 
+         .build();
 
       HttpResponse createTemplateResponse = HttpResponse.builder().statusCode(200)
          .payload(payloadFromResource("/createtemplateresponse-imageextension.json"))
@@ -129,7 +129,7 @@ public class CloudStackImageExtensionExpectTest extends BaseCloudStackComputeSer
          .addQueryParam("command", "queryAsyncJobResult")
          .addQueryParam("jobid", "4e345230-8fcc-48a3-8a37-c5fe960df671")
          .addQueryParam("apiKey", "APIKEY")
-         .addQueryParam("signature", "6mTKL9fjz7bn6C7tOaZBzKdZwHs%3D")
+         .addQueryParam("signature", "6mTKL9fjz7bn6C7tOaZBzKdZwHs=")
          .addHeader("Accept", "application/json")
          .build();
 
@@ -145,9 +145,9 @@ public class CloudStackImageExtensionExpectTest extends BaseCloudStackComputeSer
          .addQueryParam("templatefilter", "executable")
          .addQueryParam("id", "3dc6ce25-a6cf-4d60-a664-3499993b511b")
          .addQueryParam("apiKey", "APIKEY")
-         .addQueryParam("signature", "dXv%2Bl04EDd7hmrWv5CdW8v298RE%3D")
+         .addQueryParam("signature", "dXv+l04EDd7hmrWv5CdW8v298RE=")
          .addHeader("Accept", "application/json")
-         .build(); 
+         .build();
 
       HttpResponse getTemplateResponse = HttpResponse.builder().statusCode(200)
          .payload(payloadFromResource("/listtemplatesresponse-imageextension.json"))
