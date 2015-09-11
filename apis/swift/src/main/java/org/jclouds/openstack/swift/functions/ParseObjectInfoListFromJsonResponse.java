@@ -38,6 +38,7 @@ import org.jclouds.openstack.swift.domain.internal.ObjectInfoImpl;
 import org.jclouds.openstack.swift.options.ListContainerOptions;
 import org.jclouds.rest.InvocationContext;
 import org.jclouds.rest.internal.GeneratedHttpRequest;
+import org.jclouds.util.Strings2;
 
 import com.google.common.base.Function;
 import com.google.common.collect.Iterables;
@@ -72,8 +73,10 @@ public class ParseObjectInfoListFromJsonResponse extends ParseJson<PageSet<Objec
          SortedSet<ObjectInfo> returnVal = Sets.newTreeSet(Iterables.transform(list,
                new Function<ObjectInfoImpl, ObjectInfo>() {
                   public ObjectInfo apply(ObjectInfoImpl from) {
+                     // appendPath decodes the argument and we should pass an encoded string
                      return from.toBuilder().container(container)
-                           .uri(uriBuilder(request.getEndpoint()).clearQuery().appendPath(from.getName()).build())
+                           .uri(uriBuilder(request.getEndpoint()).clearQuery().appendPath(
+                                 Strings2.urlEncode(from.getName())).build())
                            .build();
                   }
                }));
