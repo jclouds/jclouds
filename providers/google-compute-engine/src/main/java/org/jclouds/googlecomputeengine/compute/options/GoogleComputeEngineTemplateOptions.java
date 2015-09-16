@@ -30,6 +30,7 @@ public final class GoogleComputeEngineTemplateOptions extends TemplateOptions {
    private boolean autoCreateKeyPair = true;
    private List<ServiceAccount> serviceAccounts;
    private String bootDiskType;
+   private boolean preemptible = false;
 
    @Override
    public GoogleComputeEngineTemplateOptions clone() {
@@ -46,6 +47,7 @@ public final class GoogleComputeEngineTemplateOptions extends TemplateOptions {
          eTo.autoCreateKeyPair(autoCreateKeyPair());
          eTo.serviceAccounts(serviceAccounts());
          eTo.bootDiskType(bootDiskType());
+         eTo.preemptible(preemptible());
       }
    }
 
@@ -88,6 +90,21 @@ public final class GoogleComputeEngineTemplateOptions extends TemplateOptions {
    public GoogleComputeEngineTemplateOptions serviceAccounts(List<ServiceAccount> serviceAccounts){
       this.serviceAccounts = serviceAccounts;
       return this;
+   }
+
+   /**
+    * Sets whether the resulting instance should be preemptible.
+    */
+   public GoogleComputeEngineTemplateOptions preemptible(boolean preemptible) {
+      this.preemptible = preemptible;
+      return this;
+   }
+
+   /**
+    * Gets whether the resulting instance should be preemptible.
+    */
+   public boolean preemptible() {
+      return preemptible;
    }
 
    /**

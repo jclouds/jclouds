@@ -74,12 +74,12 @@ public class GoogleComputeEngineServiceLiveTest extends BaseComputeServiceLiveTe
       }
    }
 
-   public void testCreateNodeWithSsd() throws Exception {
+   public void testCreatePreemptibleNodeWithSsd() throws Exception {
       String group = this.group + "ssd";
       try {
          TemplateOptions options = client.templateOptions();
 
-         options.as(GoogleComputeEngineTemplateOptions.class).bootDiskType("pd-ssd");
+         options.as(GoogleComputeEngineTemplateOptions.class).bootDiskType("pd-ssd").preemptible(true);
 
          // create a node
          Set<? extends NodeMetadata> nodes =
@@ -92,6 +92,7 @@ public class GoogleComputeEngineServiceLiveTest extends BaseComputeServiceLiveTe
          Instance instance = api.instancesInZone(node.getLocation().getId()).get(node.getName());
          Disk disk = api.disksInZone(node.getLocation().getId()).get(toName(instance.disks().get(0).source()));
          assertTrue(disk.type().toString().endsWith("pd-ssd"));
+         assertTrue(instance.scheduling().preemptible());
 
       } finally {
          client.destroyNodesMatching(NodePredicates.inGroup(group));

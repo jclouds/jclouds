@@ -227,11 +227,11 @@ public class InstanceApiMockTest extends BaseGoogleComputeEngineApiMockTest {
    public void setScheduling() throws Exception {
       server.enqueue(jsonResponse("/zone_operation.json"));
 
-      assertEquals(instanceApi().setScheduling("test-1", OnHostMaintenance.TERMINATE, true),
+      assertEquals(instanceApi().setScheduling("test-1", OnHostMaintenance.TERMINATE, true, false),
             new ParseZoneOperationTest().expected(url("/projects")));
 
       assertSent(server, "POST", "/projects/party/zones/us-central1-a/instances/test-1/setScheduling",
-            "{\"onHostMaintenance\": \"TERMINATE\",\"automaticRestart\": true}");
+            "{\"onHostMaintenance\": \"TERMINATE\",\"automaticRestart\": true,\"preemptible\": false}");
    }
 
    public void start_test() throws Exception {
@@ -279,7 +279,7 @@ public class InstanceApiMockTest extends BaseGoogleComputeEngineApiMockTest {
             .metadata(Metadata.create().put("aKey", "aValue"))
             .serviceAccounts(ImmutableList.of(ServiceAccount.create("default",
                                               ImmutableList.of("https://www.googleapis.com/auth/compute"))))
-            .scheduling(Scheduling.create(OnHostMaintenance.MIGRATE, true))
+            .scheduling(Scheduling.create(OnHostMaintenance.MIGRATE, true, false))
             .build();
 
       assertEquals(instanceApi().create(newInstance), new ParseZoneOperationTest().expected(url("/projects")));

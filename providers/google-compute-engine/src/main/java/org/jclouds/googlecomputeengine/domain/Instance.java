@@ -186,16 +186,19 @@ public abstract class Instance {
           * If you would like your instance to be restarted, set the automaticRestart flag to true.
           * Your instance may be restarted more than once, and it may be restarted outside the window
           * of maintenance events.
+          * If you would like your instance to be preemptible, set the preemptible flag to true.
           */
          TERMINATE
       }
 
       public abstract OnHostMaintenance onHostMaintenance();
       public abstract boolean automaticRestart();
+      public abstract boolean preemptible();
 
-      @SerializedNames({ "onHostMaintenance", "automaticRestart" })
-      public static Scheduling create(OnHostMaintenance onHostMaintenance, boolean automaticRestart) {
-         return new AutoValue_Instance_Scheduling(onHostMaintenance, automaticRestart);
+      @SerializedNames({ "onHostMaintenance", "automaticRestart", "preemptible" })
+      public static Scheduling create(OnHostMaintenance onHostMaintenance, boolean automaticRestart,
+         boolean preemptible) {
+         return new AutoValue_Instance_Scheduling(onHostMaintenance, automaticRestart, preemptible);
       }
 
       Scheduling() {

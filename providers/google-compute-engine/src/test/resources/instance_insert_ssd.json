@@ -36,5 +36,10 @@
         "value": "test"
       }
     ]
+  },
+  "scheduling": {
+    "onHostMaintenance": "MIGRATE",
+    "automaticRestart": true,
+    "preemptible": false
   }
 }

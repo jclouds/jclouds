@@ -139,6 +139,8 @@ public final class GoogleComputeEngineServiceAdapter
          tags.add(naming.name(ports));
       }
 
+      Scheduling scheduling = getScheduling(options);
+
       NewInstance newInstance = new NewInstance.Builder( name,
             template.getHardware().getUri(), // machineType
             network,
@@ -146,6 +148,7 @@ public final class GoogleComputeEngineServiceAdapter
             .description(group)
             .tags(Tags.create(null, ImmutableList.copyOf(tags)))
             .serviceAccounts(options.serviceAccounts())
+            .scheduling(scheduling)
             .build();
 
       // Add metadata from template and for ssh key and image id
@@ -177,8 +180,8 @@ public final class GoogleComputeEngineServiceAdapter
             null, // disks
             newInstance.metadata(), // metadata
             newInstance.serviceAccounts(), // serviceAccounts
-            Scheduling.create(OnHostMaintenance.MIGRATE, true) // scheduling
-      ));
+            scheduling) // scheduling
+      );
       checkState(instanceVisible.apply(instance), "instance %s is not api visible!", instance.get());
 
       // Add lookup for InstanceToNodeMetadata
@@ -314,5 +317,18 @@ public final class GoogleComputeEngineServiceAdapter
       }
 
       return null;
+   }
+
+   public Scheduling getScheduling(GoogleComputeEngineTemplateOptions options) {
+      OnHostMaintenance onHostMaintenance = OnHostMaintenance.MIGRATE;
+      boolean automaticRestart = true;
+
+      // Preemptible instances cannot use a MIGRATE maintenance strategy or automatic restarts
+      if (options.preemptible()) {
+         onHostMaintenance = OnHostMaintenance.TERMINATE;
+         automaticRestart = false;
+      }
+
+      return Scheduling.create(onHostMaintenance, automaticRestart, options.preemptible());
    }
 }

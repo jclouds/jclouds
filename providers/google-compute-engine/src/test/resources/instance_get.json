@@ -69,6 +69,7 @@
    },
     "scheduling": {
         "onHostMaintenance": "MIGRATE",
-        "automaticRestart": false
+        "automaticRestart": false,
+        "preemptible": false
    }
 }

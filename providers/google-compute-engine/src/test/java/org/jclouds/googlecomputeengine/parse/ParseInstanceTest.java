@@ -88,7 +88,7 @@ public class ParseInstanceTest extends BaseGoogleComputeEngineParseTest<Instance
                     .put("aKey", "aValue")
                     .put("jclouds-delete-boot-disk", "true"), // metadata
             ImmutableList.of(ServiceAccount.create("default", ImmutableList.of("myscope"))), // serviceAccounts
-            Instance.Scheduling.create(OnHostMaintenance.MIGRATE, false) // scheduling
+            Instance.Scheduling.create(OnHostMaintenance.MIGRATE, false, false) // scheduling
       );
    }
 }

@@ -18,6 +18,7 @@ package org.jclouds.googlecomputeengine.features;
 
 import static org.jclouds.googlecomputeengine.options.ListOptions.Builder.filter;
 import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertTrue;
 
@@ -109,7 +110,7 @@ public class InstanceApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
             .description("description")
             .tags(Tags.create(null, ImmutableList.of("tag1")))
             .serviceAccounts(ImmutableList.of(ServiceAccount.create("default", ImmutableList.of("https://www.googleapis.com/auth/compute"))))
-            .scheduling(Scheduling.create(OnHostMaintenance.MIGRATE, true))
+            .scheduling(Scheduling.create(OnHostMaintenance.MIGRATE, true, false))
             .build();
 
       return api;
@@ -132,6 +133,7 @@ public class InstanceApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
       assertEquals(instance.description(), "description");
       assertEquals(instance.serviceAccounts().get(0).scopes(), ImmutableList.of("https://www.googleapis.com/auth/compute"));
       assertTrue(instance.scheduling().automaticRestart());
+      assertFalse(instance.scheduling().preemptible());
       assertEquals(instance.scheduling().onHostMaintenance(), OnHostMaintenance.MIGRATE);
    }
 
@@ -205,12 +207,15 @@ public class InstanceApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
    public void testSetScheduling() {
       Instance instance = api().get(INSTANCE_NAME);
       assertEquals(instance.scheduling().automaticRestart(), true);
+      assertEquals(instance.scheduling().preemptible(), false);
       assertEquals(instance.scheduling().onHostMaintenance(), Scheduling.OnHostMaintenance.MIGRATE);
 
-      assertOperationDoneSuccessfully(api().setScheduling(INSTANCE_NAME, Scheduling.OnHostMaintenance.TERMINATE, false));
+      assertOperationDoneSuccessfully(api().setScheduling(INSTANCE_NAME, Scheduling.OnHostMaintenance.TERMINATE, false,
+          false));
 
       Instance instanceAltered = api().get(INSTANCE_NAME);
       assertEquals(instanceAltered.scheduling().automaticRestart(), false);
+      assertEquals(instanceAltered.scheduling().preemptible(), false);
       assertEquals(instanceAltered.scheduling().onHostMaintenance(), Scheduling.OnHostMaintenance.TERMINATE);
    }
 

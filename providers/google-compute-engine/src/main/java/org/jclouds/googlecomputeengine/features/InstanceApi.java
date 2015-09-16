@@ -242,6 +242,7 @@ public interface InstanceApi {
     * @param automaticRestart Defines whether the Instance should be automatically
     *  restarted when it is terminated by Compute Engine (not terminated by user).
     *  Used when onHostMaintenance is set to TERMINATE.
+    * @param preemptible Defines whether the Instance should be launched as spot instance
     * @return
     */
    @Named("Instances:setScheduling")
@@ -250,7 +251,8 @@ public interface InstanceApi {
    @MapBinder(BindToJsonPayload.class)
    Operation setScheduling(@PathParam("instance") String instanceName,
                            @PayloadParam("onHostMaintenance") Scheduling.OnHostMaintenance onHostMaintenance,
-                           @PayloadParam("automaticRestart") boolean automaticRestart);
+                           @PayloadParam("automaticRestart") boolean automaticRestart,
+                           @PayloadParam("preemptible") boolean preemptible);
 
    /**
     * This method starts an instance that was stopped using the using the {@link #stop(String)} method.
