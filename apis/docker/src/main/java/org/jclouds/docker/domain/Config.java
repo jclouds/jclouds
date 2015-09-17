@@ -99,8 +99,6 @@ public abstract class Config {
 
    public abstract Map<String, String> restartPolicy();
 
-   @Nullable public abstract String networkMode();
-
    Config() {
    }
 
@@ -110,7 +108,7 @@ public abstract class Config {
                  "AttachStderr", "Tty", "OpenStdin", "StdinOnce", "Env", "Cmd", "Entrypoint", "Image", "Volumes",
                  "WorkingDir", "NetworkDisabled", "ExposedPorts", "SecurityOpts", "HostConfig", "Binds", "Links",
                  "LxcConf", "PortBindings", "PublishAllPorts", "Privileged", "Dns", "DnsSearch", "VolumesFrom",
-                 "CapAdd", "CapDrop", "RestartPolicy", "NetworkMode"
+                 "CapAdd", "CapDrop", "RestartPolicy"
          })
    public static Config create(String hostname, String domainname, String user, int memory, int memorySwap,
          int cpuShares, boolean attachStdin, boolean attachStdout, boolean attachStderr, boolean tty,
@@ -119,12 +117,12 @@ public abstract class Config {
          Map<String, ?> exposedPorts, List<String> securityOpts, HostConfig hostConfig, List<String> binds,
          List<String> links, List<Map<String, String>> lxcConf, Map<String, List<Map<String, String>>> portBindings,
          boolean publishAllPorts, boolean privileged, List<String> dns, String dnsSearch, String volumesFrom,
-         List<String> capAdd, List<String> capDrop, Map<String, String> restartPolicy, String networkMode) {
+         List<String> capAdd, List<String> capDrop, Map<String, String> restartPolicy) {
       return new AutoValue_Config(hostname, domainname, user, memory, memorySwap, cpuShares, attachStdin,
               attachStdout, attachStderr, tty, openStdin, stdinOnce, copyOf(env), copyOf(cmd), copyOf(entrypoint),
               image, copyOf(volumes), workingDir, networkDisabled, copyOf(exposedPorts), copyOf(securityOpts), hostConfig,
               copyOf(binds), copyOf(links), copyOf(lxcConf), copyOf(portBindings), publishAllPorts, privileged,
-              copyOf(dns), dnsSearch, volumesFrom, copyOf(capAdd), copyOf(capDrop), copyOf(restartPolicy), networkMode);
+              copyOf(dns), dnsSearch, volumesFrom, copyOf(capAdd), copyOf(capDrop), copyOf(restartPolicy));
    }
 
    public static Builder builder() {
@@ -170,7 +168,6 @@ public abstract class Config {
       private List<String> capAdd = Lists.newArrayList();
       private List<String> capDrop = Lists.newArrayList();
       private Map<String, String> restartPolicy = Maps.newHashMap();
-      private String networkMode;
 
       public Builder hostname(String hostname) {
          this.hostname = hostname;
@@ -348,17 +345,11 @@ public abstract class Config {
          return this;
       }
 
-      public Builder networkMode(String networkMode) {
-         this.networkMode = networkMode;
-         return this;
-      }
-
       public Config build() {
          return Config.create(hostname, domainname, user, memory, memorySwap, cpuShares, attachStdin, attachStdout,
                  attachStderr, tty, openStdin, stdinOnce, env, cmd, entrypoint, image, volumes, workingDir,
                  networkDisabled, exposedPorts, securityOpts, hostConfig, binds, links, lxcConf, portBindings,
-                 publishAllPorts, privileged, dns, dnsSearch, volumesFrom, capAdd, capDrop, restartPolicy,
-                 networkMode);
+                 publishAllPorts, privileged, dns, dnsSearch, volumesFrom, capAdd, capDrop, restartPolicy);
       }
 
       public Builder fromConfig(Config in) {
@@ -370,7 +361,7 @@ public abstract class Config {
                  .hostConfig(in.hostConfig()).binds(in.binds()).links(in.links()).lxcConf(in.lxcConf())
                  .portBindings(in.portBindings()).publishAllPorts(in.publishAllPorts()).privileged(in.privileged())
                  .dns(in.dns()).dnsSearch(in.dnsSearch()).volumesFrom(in.volumesFrom()).capAdd(in.capAdd())
-                 .capDrop(in.capDrop()).restartPolicy(in.restartPolicy()).networkMode(in.networkMode());
+                 .capDrop(in.capDrop()).restartPolicy(in.restartPolicy());
       }
 
    }

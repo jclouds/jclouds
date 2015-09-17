@@ -84,6 +84,7 @@ public class ContainerParseTest extends BaseDockerParseTest<Container> {
                       )
                       .dns(ImmutableList.of("8.8.8.8", "8.8.4.4"))
                       .privileged(true)
+                      .networkMode("bridge")
                       .build())
               .driver("aufs")
               .execDriver("native-0.2")

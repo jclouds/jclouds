@@ -148,6 +148,8 @@ public class DockerComputeServiceAdapter implements
          }
       }
 
+      hostConfigBuilder.networkMode(templateOptions.getNetworkMode());
+
       HostConfig hostConfig = hostConfigBuilder.build();
 
       api.getContainerApi().startContainer(container.id(), hostConfig);

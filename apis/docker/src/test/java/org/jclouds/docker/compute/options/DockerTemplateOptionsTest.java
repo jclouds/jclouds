@@ -78,6 +78,13 @@ public class DockerTemplateOptionsTest {
       assertEquals(options.as(DockerTemplateOptions.class).getPortBindings(), ImmutableMap.<Integer, Integer>builder().put(8443,  443).put(8080, 80).build());
    }
 
+
+   @Test
+   public void testNetworkMode() {
+      TemplateOptions options = DockerTemplateOptions.Builder.networkMode("host");
+      assertEquals(options.as(DockerTemplateOptions.class).getNetworkMode(), "host");
+   }
+
    @Test
    public void testNonDockerOptions() {
       TemplateOptions options = DockerTemplateOptions.Builder.userMetadata(ImmutableMap.of("key", "value")).cpuShares(1);
@@ -100,7 +107,9 @@ public class DockerTemplateOptionsTest {
             .commands("test")
             .portBindings(
                   ImmutableMap.<Integer, Integer> builder()
-                        .put(8443, 443).build()).hostname("hostname")
+                        .put(8443, 443).build())
+            .hostname("hostname")
+            .networkMode("host")
             .userMetadata(ImmutableMap.of("key", "value"))
             .env(ImmutableList.of("HOST=abc", "PORT=1234"))
             .dns("8.8.8.8", "8.8.4.4")

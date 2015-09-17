@@ -58,6 +58,7 @@ public class DockerTemplateOptions extends TemplateOptions implements Cloneable 
    protected Map<String, String> volumes = ImmutableMap.of();
    protected List<String> env = ImmutableList.of();
    protected Map<Integer, Integer> portBindings = ImmutableMap.of();
+   protected String networkMode;
 
    @Override
    public DockerTemplateOptions clone() {
@@ -89,6 +90,7 @@ public class DockerTemplateOptions extends TemplateOptions implements Cloneable 
          if (!portBindings.isEmpty()) {
             eTo.portBindings(portBindings);
          }
+         eTo.networkMode(networkMode);
       }
    }
 
@@ -190,6 +192,17 @@ public class DockerTemplateOptions extends TemplateOptions implements Cloneable 
       return this;
    }
 
+
+   /**
+    * Sets the networking mode for the container. Supported values are: bridge, host, and container:[name|id]
+    * @param networkMode
+    * @return this instance
+    */
+   public DockerTemplateOptions networkMode(@Nullable String networkMode) {
+      this.networkMode = networkMode;
+      return this;
+   }
+
    public Map<String, String> getVolumes() { return volumes; }
 
    public List<String> getDns() { return dns; }
@@ -205,6 +218,8 @@ public class DockerTemplateOptions extends TemplateOptions implements Cloneable 
    public List<String> getEnv() { return env; }
 
    public Map<Integer, Integer> getPortBindings() { return portBindings; }
+
+   public String getNetworkMode() { return networkMode; }
 
    public static class Builder {
 
@@ -294,6 +309,14 @@ public class DockerTemplateOptions extends TemplateOptions implements Cloneable 
       public static DockerTemplateOptions portBindings(Map<Integer, Integer> portBindings) {
          DockerTemplateOptions options = new DockerTemplateOptions();
          return options.portBindings(portBindings);
+      }
+
+      /**
+       * @see DockerTemplateOptions#hostname(String)
+       */
+      public static DockerTemplateOptions networkMode(@Nullable String networkMode) {
+         DockerTemplateOptions options = new DockerTemplateOptions();
+         return options.networkMode(networkMode);
       }
 
       /**

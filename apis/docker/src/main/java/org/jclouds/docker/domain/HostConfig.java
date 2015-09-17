@@ -51,16 +51,19 @@ public abstract class HostConfig {
 
    public abstract List<String> volumesFrom();
 
+   @Nullable
+   public abstract String networkMode();
+
    HostConfig() {
    }
 
    @SerializedNames({ "ContainerIDFile", "Binds", "LxcConf", "Privileged", "Dns", "DnsSearch", "PortBindings",
-           "Links", "PublishAllPorts", "VolumesFrom" })
+         "Links", "PublishAllPorts", "VolumesFrom", "NetworkMode" })
    public static HostConfig create(String containerIDFile, List<String> binds, List<Map<String, String>> lxcConf,
          boolean privileged, List<String> dns, String dnsSearch, Map<String, List<Map<String, String>>> portBindings,
-         List<String> links, boolean publishAllPorts, List<String> volumesFrom) {
+         List<String> links, boolean publishAllPorts, List<String> volumesFrom, String networkMode) {
       return new AutoValue_HostConfig(containerIDFile, copyOf(binds), copyOf(lxcConf), privileged, copyOf(dns), dnsSearch,
-            copyOf(portBindings), copyOf(links), publishAllPorts, copyOf(volumesFrom));
+            copyOf(portBindings), copyOf(links), publishAllPorts, copyOf(volumesFrom), networkMode);
    }
 
    public static Builder builder() {
@@ -83,6 +86,7 @@ public abstract class HostConfig {
       private List<String> links = Lists.newArrayList();
       private boolean publishAllPorts;
       private List<String> volumesFrom = Lists.newArrayList();
+      private String networkMode;
 
       public Builder containerIDFile(String containerIDFile) {
          this.containerIDFile = containerIDFile;
@@ -134,15 +138,21 @@ public abstract class HostConfig {
          return this;
       }
 
+      public Builder networkMode(String networkMode) {
+         this.networkMode = networkMode;
+         return this;
+      }
+
       public HostConfig build() {
          return HostConfig.create(containerIDFile, binds, lxcConf, privileged, dns, dnsSearch, portBindings, links,
-               publishAllPorts, volumesFrom);
+               publishAllPorts, volumesFrom, networkMode);
       }
 
       public Builder fromHostConfig(HostConfig in) {
          return this.containerIDFile(in.containerIDFile()).binds(in.binds()).lxcConf(in.lxcConf())
                .privileged(in.privileged()).dns(in.dns()).dnsSearch(in.dnsSearch()).links(in.links())
-               .portBindings(in.portBindings()).publishAllPorts(in.publishAllPorts()).volumesFrom(in.volumesFrom());
+               .portBindings(in.portBindings()).publishAllPorts(in.publishAllPorts()).volumesFrom(in.volumesFrom())
+               .networkMode(in.networkMode());
       }
    }
 }
