@@ -18,6 +18,7 @@ package org.jclouds.docker.domain;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static org.jclouds.docker.internal.NullSafeCopies.copyOf;
+import static org.jclouds.docker.internal.NullSafeCopies.copyWithNullOf;
 
 import java.util.List;
 import java.util.Map;
@@ -55,11 +56,11 @@ public abstract class Config {
 
    public abstract boolean stdinOnce();
 
-   public abstract List<String> env();
+   @Nullable public abstract List<String> env();
 
-   public abstract List<String> cmd();
+   @Nullable public abstract List<String> cmd();
 
-   public abstract List<String> entrypoint();
+   @Nullable public abstract List<String> entrypoint();
 
    public abstract String image();
 
@@ -119,10 +120,11 @@ public abstract class Config {
          boolean publishAllPorts, boolean privileged, List<String> dns, String dnsSearch, String volumesFrom,
          List<String> capAdd, List<String> capDrop, Map<String, String> restartPolicy) {
       return new AutoValue_Config(hostname, domainname, user, memory, memorySwap, cpuShares, attachStdin,
-              attachStdout, attachStderr, tty, openStdin, stdinOnce, copyOf(env), copyOf(cmd), copyOf(entrypoint),
-              image, copyOf(volumes), workingDir, networkDisabled, copyOf(exposedPorts), copyOf(securityOpts), hostConfig,
+              attachStdout, attachStderr, tty, openStdin, stdinOnce, copyWithNullOf(env), copyWithNullOf(cmd),
+              copyWithNullOf(entrypoint), image, copyOf(volumes), workingDir, networkDisabled,
+              copyOf(exposedPorts), copyOf(securityOpts), hostConfig,
               copyOf(binds), copyOf(links), copyOf(lxcConf), copyOf(portBindings), publishAllPorts, privileged,
-              copyOf(dns), dnsSearch, volumesFrom, copyOf(capAdd), copyOf(capDrop), copyOf(restartPolicy));
+              copyWithNullOf(dns), dnsSearch, volumesFrom, copyOf(capAdd), copyOf(capDrop), copyOf(restartPolicy));
    }
 
    public static Builder builder() {
@@ -146,9 +148,9 @@ public abstract class Config {
       private boolean tty;
       private boolean openStdin;
       private boolean stdinOnce;
-      private List<String> env = Lists.newArrayList();
-      private List<String> cmd = Lists.newArrayList();
-      private List<String> entrypoint = Lists.newArrayList();
+      private List<String> env;
+      private List<String> cmd;
+      private List<String> entrypoint;
       private String image;
       private Map<String, ?> volumes = Maps.newHashMap();
       private String workingDir;
@@ -281,7 +283,7 @@ public abstract class Config {
       }
 
       public Builder hostConfig(HostConfig hostConfig) {
-         this.hostConfig = checkNotNull(hostConfig, "hostConfig");
+         this.hostConfig = hostConfig;
          return this;
       }
 
@@ -356,7 +358,8 @@ public abstract class Config {
          return hostname(in.hostname()).domainname(in.domainname()).user(in.user()).memory(in.memory())
                  .memorySwap(in.memorySwap()).cpuShares(in.cpuShares()).attachStdin(in.attachStdin())
                  .attachStdout(in.attachStdout()).attachStderr(in.attachStderr()).tty(in.tty())
-                 .image(in.image()).volumes(in.volumes()).workingDir(in.workingDir())
+                 .openStdin(in.openStdin()).stdinOnce(in.stdinOnce()).env(in.env()).cmd(in.cmd())
+                 .entrypoint(in.entrypoint()).image(in.image()).volumes(in.volumes()).workingDir(in.workingDir())
                  .networkDisabled(in.networkDisabled()).exposedPorts(in.exposedPorts()).securityOpts(in.securityOpts())
                  .hostConfig(in.hostConfig()).binds(in.binds()).links(in.links()).lxcConf(in.lxcConf())
                  .portBindings(in.portBindings()).publishAllPorts(in.publishAllPorts()).privileged(in.privileged())

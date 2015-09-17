@@ -61,6 +61,12 @@ public class DockerTemplateOptionsTest {
    }
 
    @Test
+   public void testEntrypoint() {
+      TemplateOptions options = DockerTemplateOptions.Builder.entrypoint("/bin/sh", "-c");
+      assertEquals(options.as(DockerTemplateOptions.class).getEntrypoint(), ImmutableList.of("/bin/sh", "-c"));
+   }
+
+   @Test
    public void testCommands() {
       TemplateOptions options = DockerTemplateOptions.Builder.commands("chmod 666 /etc/*", "rm -rf /var/run");
       assertEquals(options.as(DockerTemplateOptions.class).getCommands(), ImmutableList.of("chmod 666 /etc/*", "rm -rf /var/run"));
@@ -104,7 +110,8 @@ public class DockerTemplateOptionsTest {
       DockerTemplateOptions options = DockerTemplateOptions.Builder
             .memory(512)
             .cpuShares(4)
-            .commands("test")
+            .entrypoint("entry", "point")
+            .commands("test", "abc")
             .portBindings(
                   ImmutableMap.<Integer, Integer> builder()
                         .put(8443, 443).build())
