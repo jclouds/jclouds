@@ -59,6 +59,7 @@ public class DockerTemplateOptions extends TemplateOptions implements Cloneable 
    protected List<String> env = ImmutableList.of();
    protected Map<Integer, Integer> portBindings = ImmutableMap.of();
    protected String networkMode;
+   protected Map<String, String> extraHosts = ImmutableMap.of();
 
    @Override
    public DockerTemplateOptions clone() {
@@ -91,6 +92,9 @@ public class DockerTemplateOptions extends TemplateOptions implements Cloneable 
             eTo.portBindings(portBindings);
          }
          eTo.networkMode(networkMode);
+         if (!extraHosts.isEmpty()) {
+            eTo.extraHosts(extraHosts);
+         }
       }
    }
 
@@ -108,12 +112,13 @@ public class DockerTemplateOptions extends TemplateOptions implements Cloneable 
               equal(this.commands, that.commands) &&
               equal(this.cpuShares, that.cpuShares) &&
               equal(this.env, that.env) &&
-              equal(this.portBindings, that.portBindings);
+              equal(this.portBindings, that.portBindings) &&
+              equal(this.extraHosts, that.extraHosts);
    }
 
    @Override
    public int hashCode() {
-      return Objects.hashCode(super.hashCode(), volumes, hostname, dns, memory, commands, cpuShares, env, portBindings);
+      return Objects.hashCode(super.hashCode(), volumes, hostname, dns, memory, commands, cpuShares, env, portBindings, extraHosts);
    }
 
    @Override
@@ -127,6 +132,7 @@ public class DockerTemplateOptions extends TemplateOptions implements Cloneable 
               .add("volumes", volumes)
               .add("env", env)
               .add("portBindings", portBindings)
+              .add("extraHosts", extraHosts)
               .toString();
    }
 
@@ -192,7 +198,6 @@ public class DockerTemplateOptions extends TemplateOptions implements Cloneable 
       return this;
    }
 
-
    /**
     * Sets the networking mode for the container. Supported values are: bridge, host, and container:[name|id]
     * @param networkMode
@@ -200,6 +205,20 @@ public class DockerTemplateOptions extends TemplateOptions implements Cloneable 
     */
    public DockerTemplateOptions networkMode(@Nullable String networkMode) {
       this.networkMode = networkMode;
+      return this;
+   }
+
+   /**
+    * Set extra hosts file entries for a container.
+    * <p>
+    * The {@link Map} keys are host names, and the value is an IP address that
+    * can be accessed by the container. This is the same order as the arguments for the
+    * {@code --add-host} command-line option to {@code docker run}.
+    *
+    * @param extraHosts the map of host names to IP addresses
+    */
+   public DockerTemplateOptions extraHosts(Map<String, String> extraHosts) {
+      this.extraHosts = ImmutableMap.copyOf(checkNotNull(extraHosts, "extraHosts"));
       return this;
    }
 
@@ -220,6 +239,8 @@ public class DockerTemplateOptions extends TemplateOptions implements Cloneable 
    public Map<Integer, Integer> getPortBindings() { return portBindings; }
 
    public String getNetworkMode() { return networkMode; }
+
+   public Map<String, String> getExtraHosts() { return extraHosts; }
 
    public static class Builder {
 
@@ -312,11 +333,19 @@ public class DockerTemplateOptions extends TemplateOptions implements Cloneable 
       }
 
       /**
-       * @see DockerTemplateOptions#hostname(String)
+       * @see DockerTemplateOptions#networkMode(String)
        */
       public static DockerTemplateOptions networkMode(@Nullable String networkMode) {
          DockerTemplateOptions options = new DockerTemplateOptions();
          return options.networkMode(networkMode);
+      }
+
+      /**
+       * @see DockerTemplateOptions#extraHosts(Map)
+       */
+      public static DockerTemplateOptions extraHosts(Map<String, String> extraHosts) {
+         DockerTemplateOptions options = new DockerTemplateOptions();
+         return options.extraHosts(extraHosts);
       }
 
       /**

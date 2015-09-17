@@ -58,7 +58,7 @@
         "Devices": [],
         "Dns": [ "8.8.8.8", "8.8.4.4" ],
         "DnsSearch": null,
-        "ExtraHosts": null,
+        "ExtraHosts": [ "extra:169.254.0.1" ],
         "Links": null,
         "LxcConf": [],
         "NetworkMode": "bridge",

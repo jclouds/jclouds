@@ -142,6 +142,14 @@ public class DockerComputeServiceAdapter implements
          hostConfigBuilder.dns(templateOptions.getDns());
       }
 
+      if (!templateOptions.getExtraHosts().isEmpty()) {
+         List<String> extraHosts = Lists.newArrayList();
+         for (Map.Entry<String, String> entry : templateOptions.getExtraHosts().entrySet()) {
+            extraHosts.add(entry.getKey() + ":" + entry.getValue());
+         }
+         hostConfigBuilder.extraHosts(extraHosts);
+      }
+
       if (!templateOptions.getVolumes().isEmpty()) {
          for (Map.Entry<String, String> entry : templateOptions.getVolumes().entrySet()) {
             hostConfigBuilder.binds(ImmutableList.of(entry.getKey() + ":" + entry.getValue()));
