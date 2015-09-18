@@ -97,6 +97,14 @@ public class NovaErrorHandler implements HttpErrorHandler {
                exception = new ResourceNotFoundException(message, exception);
             }
             break;
+         case 500:
+            // this is needed as FloatingIPApi.allocateFromPool returns 500 when floating ips are over quota
+            if (command.getCurrentRequest().getMethod().equals("POST") &&
+                    message.indexOf("The server has either erred or is incapable of performing the requested operation.") != -1 &&
+                    command.getCurrentRequest().getEndpoint().getPath().indexOf("os-floating-ips") != -1) {
+             exception = new InsufficientResourcesException(message, exception);
+           }
+           break;
          case 413:
             if (content == null) {
                exception = new InsufficientResourcesException(message, exception);
@@ -111,7 +119,7 @@ public class NovaErrorHandler implements HttpErrorHandler {
     * Build an exception from the response. If it contains the JSON payload then
     * that is parsed to create a {@link RetryAfterException}, otherwise a
     * {@link InsufficientResourcesException} is returned
-    * 
+    *
     */
    private Exception parseAndBuildRetryException(String json, String message, Exception exception) {
       Set<String> retryFields = ImmutableSet.of("retryAfter", "retryAt");

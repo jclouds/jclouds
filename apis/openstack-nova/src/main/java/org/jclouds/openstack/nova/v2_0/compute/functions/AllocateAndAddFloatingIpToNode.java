@@ -44,6 +44,7 @@ import com.google.common.base.Objects;
 import com.google.common.base.Optional;
 import com.google.common.base.Predicate;
 import com.google.common.cache.LoadingCache;
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
@@ -61,13 +62,15 @@ public class AllocateAndAddFloatingIpToNode implements
    private final Predicate<AtomicReference<NodeMetadata>> nodeRunning;
    private final NovaApi novaApi;
    private final LoadingCache<RegionAndId, Iterable<? extends FloatingIP>> floatingIpCache;
+   private final CleanupServer cleanupServer;
 
    @Inject
    public AllocateAndAddFloatingIpToNode(@Named(TIMEOUT_NODE_RUNNING) Predicate<AtomicReference<NodeMetadata>> nodeRunning,
-            NovaApi novaApi, @Named("FLOATINGIP") LoadingCache<RegionAndId, Iterable<? extends FloatingIP>> floatingIpCache) {
+            NovaApi novaApi, @Named("FLOATINGIP") LoadingCache<RegionAndId, Iterable<? extends FloatingIP>> floatingIpCache, CleanupServer cleanupServer) {
       this.nodeRunning = checkNotNull(nodeRunning, "nodeRunning");
       this.novaApi = checkNotNull(novaApi, "novaApi");
       this.floatingIpCache = checkNotNull(floatingIpCache, "floatingIpCache");
+      this.cleanupServer = checkNotNull(cleanupServer, "cleanupServer");
    }
 
    @Override
@@ -81,6 +84,7 @@ public class AllocateAndAddFloatingIpToNode implements
 
       Optional<FloatingIP> ip = allocateFloatingIPForNode(floatingIpApi, poolNames, node.getId());
       if (!ip.isPresent()) {
+         cleanupServer.apply(node.getId());
          throw new InsufficientResourcesException("Failed to allocate a FloatingIP for node(" + node.getId() + ")");
       }
       logger.debug(">> adding floatingIp(%s) to node(%s)", ip.get().getIp(), node.getId());
@@ -88,7 +92,7 @@ public class AllocateAndAddFloatingIpToNode implements
       floatingIpApi.addToServer(ip.get().getIp(), node.getProviderId());
 
       input.get().getNodeMetadata().set(NodeMetadataBuilder.fromNodeMetadata(node).publicAddresses(ImmutableSet.of(ip.get().getIp())).build());
-      floatingIpCache.invalidate(RegionAndId.fromSlashEncoded(node.getId()));
+      floatingIpCache.asMap().putIfAbsent(RegionAndId.fromSlashEncoded(node.getId()), ImmutableList.of(ip.get()));
       return input.get().getNodeMetadata();
    }
 
@@ -112,7 +116,7 @@ public class AllocateAndAddFloatingIpToNode implements
                ip = floatingIpApi.allocateFromPool(poolName);
                if (ip != null)
                   return Optional.of(ip);
-            } catch (InsufficientResourcesException ire){
+            } catch (InsufficientResourcesException ire) {
                logger.trace("<< [%s] failed to allocate floating IP from pool %s for node(%s)", ire.getMessage(), poolName, nodeID);
             }
          }
@@ -140,6 +144,9 @@ public class AllocateAndAddFloatingIpToNode implements
 
       }));
       // try to prevent multiple parallel launches from choosing the same ip.
+      if (unassignedIps.isEmpty()) {
+         return Optional.absent();
+      }
       Collections.shuffle(unassignedIps);
       ip = Iterables.getLast(unassignedIps);
       return Optional.fromNullable(ip);

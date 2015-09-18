@@ -238,8 +238,7 @@ public class NovaComputeServiceExpectTest extends BaseNovaComputeServiceExpectTe
             .addHeader("X-Auth-Token", authToken)
             .payload(
                   payloadFromStringWithContentType(
-                        "{\"server\":{\"name\":\"test-1\",\"imageRef\":\"14\",\"flavorRef\":\"1\"," +
-                        "\"metadata\":{\"jclouds-group\":\"test\"},\"key_name\":\"jclouds-test-0\",\"security_groups\":[{\"name\":\"jclouds-test\"}]}}",
+                        "{\"server\":{\"name\":\"test-1\",\"imageRef\":\"14\",\"flavorRef\":\"1\",\"metadata\":{\"jclouds-group\":\"test\",\"jclouds_tags\":\"jclouds_keyPair,jclouds_securityGroup\"},\"key_name\":\"jclouds-test-0\",\"security_groups\":[{\"name\":\"jclouds-test\"}]}}",
                         "application/json")).build();
 
       HttpResponse createdServer = HttpResponse.builder().statusCode(202).message("HTTP/1.1 202 Accepted")
@@ -293,8 +292,7 @@ public class NovaComputeServiceExpectTest extends BaseNovaComputeServiceExpectTe
             .addHeader("X-Auth-Token", authToken)
             .payload(
                   payloadFromStringWithContentType(
-                        "{\"server\":{\"name\":\"test-0\",\"imageRef\":\"14\",\"flavorRef\":\"1\"," +
-                                "\"metadata\":{\"jclouds-group\":\"test\"},\"key_name\":\"fooPair\",\"security_groups\":[{\"name\":\"jclouds-test\"}]}}",
+                        "{\"server\":{\"name\":\"test-0\",\"imageRef\":\"14\",\"flavorRef\":\"1\",\"metadata\":{\"jclouds-group\":\"test\",\"jclouds_tags\":\"jclouds_securityGroup\"},\"key_name\":\"fooPair\",\"security_groups\":[{\"name\":\"jclouds-test\"}]}}",
                         "application/json")).build();
 
       HttpResponse createdServer = HttpResponse.builder().statusCode(202).message("HTTP/1.1 202 Accepted")
