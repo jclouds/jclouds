@@ -20,9 +20,6 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import static org.jclouds.compute.config.ComputeServiceProperties.TIMEOUT_NODE_RUNNING;
 import static org.jclouds.compute.config.ComputeServiceProperties.TIMEOUT_NODE_SUSPENDED;
 import static org.jclouds.compute.config.ComputeServiceProperties.TIMEOUT_NODE_TERMINATED;
-import static org.jclouds.openstack.nova.v2_0.predicates.KeyPairPredicates.nameMatches;
-
-import java.util.Collection;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicReference;
@@ -42,7 +39,6 @@ import org.jclouds.compute.domain.NodeMetadata;
 import org.jclouds.compute.domain.TemplateBuilder;
 import org.jclouds.compute.extensions.ImageExtension;
 import org.jclouds.compute.extensions.SecurityGroupExtension;
-import org.jclouds.compute.functions.GroupNamingConvention;
 import org.jclouds.compute.internal.BaseComputeService;
 import org.jclouds.compute.internal.PersistNodeCredentials;
 import org.jclouds.compute.options.TemplateOptions;
@@ -58,34 +54,18 @@ import org.jclouds.compute.strategy.ResumeNodeStrategy;
 import org.jclouds.compute.strategy.SuspendNodeStrategy;
 import org.jclouds.domain.Credentials;
 import org.jclouds.domain.Location;
-import org.jclouds.openstack.nova.v2_0.NovaApi;
+import org.jclouds.openstack.nova.v2_0.compute.functions.CleanupServer;
 import org.jclouds.openstack.nova.v2_0.compute.options.NovaTemplateOptions;
-import org.jclouds.openstack.nova.v2_0.domain.KeyPair;
-import org.jclouds.openstack.nova.v2_0.domain.SecurityGroup;
-import org.jclouds.openstack.nova.v2_0.domain.regionscoped.RegionAndName;
-import org.jclouds.openstack.nova.v2_0.domain.regionscoped.SecurityGroupInRegion;
-import org.jclouds.openstack.nova.v2_0.extensions.KeyPairApi;
-import org.jclouds.openstack.nova.v2_0.extensions.SecurityGroupApi;
-import org.jclouds.openstack.nova.v2_0.predicates.SecurityGroupPredicates;
 import org.jclouds.scriptbuilder.functions.InitAdminAccess;
 
-import com.google.common.base.Function;
 import com.google.common.base.Optional;
 import com.google.common.base.Predicate;
 import com.google.common.base.Supplier;
-import com.google.common.cache.LoadingCache;
-import com.google.common.collect.ImmutableSet;
-import com.google.common.collect.Iterables;
-import com.google.common.collect.Multimap;
 import com.google.common.util.concurrent.ListeningExecutorService;
 
 @Singleton
 public class NovaComputeService extends BaseComputeService {
-   protected final NovaApi novaApi;
-   protected final LoadingCache<RegionAndName, SecurityGroupInRegion> securityGroupMap;
-   protected final LoadingCache<RegionAndName, KeyPair> keyPairCache;
-   protected final Function<Set<? extends NodeMetadata>, Multimap<String, String>> orphanedGroupsByRegionId;
-   protected final GroupNamingConvention.Factory namingConvention;
+   protected final CleanupServer cleanupServer;
 
    @Inject
    protected NovaComputeService(ComputeServiceContext context, Map<String, Credentials> credentialStore,
@@ -102,69 +82,23 @@ public class NovaComputeService extends BaseComputeService {
             InitializeRunScriptOnNodeOrPlaceInBadMap.Factory initScriptRunnerFactory,
             RunScriptOnNode.Factory runScriptOnNodeFactory, InitAdminAccess initAdminAccess,
             PersistNodeCredentials persistNodeCredentials, Timeouts timeouts,
-            @Named(Constants.PROPERTY_USER_THREADS) ListeningExecutorService userExecutor, NovaApi novaApi,
-            LoadingCache<RegionAndName, SecurityGroupInRegion> securityGroupMap,
-            LoadingCache<RegionAndName, KeyPair> keyPairCache,
-            Function<Set<? extends NodeMetadata>, Multimap<String, String>> orphanedGroupsByRegionId,
-            GroupNamingConvention.Factory namingConvention, Optional<ImageExtension> imageExtension,
+            @Named(Constants.PROPERTY_USER_THREADS) ListeningExecutorService userExecutor,
+            CleanupServer cleanupServer,
+            Optional<ImageExtension> imageExtension,
             Optional<SecurityGroupExtension> securityGroupExtension) {
       super(context, credentialStore, images, sizes, locations, listNodesStrategy, getImageStrategy,
                getNodeMetadataStrategy, runNodesAndAddToSetStrategy, rebootNodeStrategy, destroyNodeStrategy,
                startNodeStrategy, stopNodeStrategy, templateBuilderProvider, templateOptionsProvider, nodeRunning,
                nodeTerminated, nodeSuspended, initScriptRunnerFactory, initAdminAccess, runScriptOnNodeFactory,
                persistNodeCredentials, timeouts, userExecutor, imageExtension, securityGroupExtension);
-      this.novaApi = checkNotNull(novaApi, "novaApi");
-      this.securityGroupMap = checkNotNull(securityGroupMap, "securityGroupMap");
-      this.keyPairCache = checkNotNull(keyPairCache, "keyPairCache");
-      this.orphanedGroupsByRegionId = checkNotNull(orphanedGroupsByRegionId, "orphanedGroupsByRegionId");
-      this.namingConvention = checkNotNull(namingConvention, "namingConvention");
+      this.cleanupServer = checkNotNull(cleanupServer, "cleanupServer");
+
    }
 
    @Override
    protected void cleanUpIncidentalResourcesOfDeadNodes(Set<? extends NodeMetadata> deadNodes) {
-      Multimap<String, String> regionToRegionAndGroupNames = orphanedGroupsByRegionId.apply(deadNodes);
-      for (Map.Entry<String, Collection<String>> entry : regionToRegionAndGroupNames.asMap().entrySet()) {
-         cleanOrphanedGroupsInRegion(ImmutableSet.copyOf(entry.getValue()), entry.getKey());
-      }
-   }
-
-   protected void cleanOrphanedGroupsInRegion(Set<String> groups, String regionId) {
-      cleanupOrphanedSecurityGroupsInRegion(groups, regionId);
-      cleanupOrphanedKeyPairsInRegion(groups, regionId);
-   }
-
-   private void cleanupOrphanedSecurityGroupsInRegion(Set<String> groups, String regionId) {
-      Optional<? extends SecurityGroupApi> securityGroupApi = novaApi.getSecurityGroupApi(regionId);
-      if (securityGroupApi.isPresent()) {
-         for (String group : groups) {
-            for (SecurityGroup securityGroup : Iterables.filter(securityGroupApi.get().list(),
-                     SecurityGroupPredicates.nameMatches(namingConvention.create().containsGroup(group)))) {
-               RegionAndName regionAndName = RegionAndName.fromRegionAndName(regionId, securityGroup.getName());
-               logger.debug(">> deleting securityGroup(%s)", regionAndName);
-               securityGroupApi.get().delete(securityGroup.getId());
-               // TODO: test this clear happens
-               securityGroupMap.invalidate(regionAndName);
-               logger.debug("<< deleted securityGroup(%s)", regionAndName);
-            }
-         }
-      }
-   }
-
-   private void cleanupOrphanedKeyPairsInRegion(Set<String> groups, String regionId) {
-      Optional<? extends KeyPairApi> keyPairApi = novaApi.getKeyPairApi(regionId);
-      if (keyPairApi.isPresent()) {
-         for (String group : groups) {
-            for (KeyPair pair : keyPairApi.get().list().filter(nameMatches(namingConvention.create().containsGroup(group)))) {
-               RegionAndName regionAndName = RegionAndName.fromRegionAndName(regionId, pair.getName());
-               logger.debug(">> deleting keypair(%s)", regionAndName);
-               keyPairApi.get().delete(pair.getName());
-               // TODO: test this clear happens
-               keyPairCache.invalidate(regionAndName);
-               logger.debug("<< deleted keypair(%s)", regionAndName);
-            }
-            keyPairCache.invalidate(RegionAndName.fromRegionAndName(regionId,
-                     namingConvention.create().sharedNameForGroup(group)));
-         }
+      for (NodeMetadata deadNode : deadNodes) {
+         cleanupServer.apply(deadNode.getId());
       }
    }
 

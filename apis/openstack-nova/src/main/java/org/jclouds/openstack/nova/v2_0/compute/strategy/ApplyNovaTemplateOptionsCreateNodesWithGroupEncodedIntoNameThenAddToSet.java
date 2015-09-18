@@ -52,6 +52,7 @@ import org.jclouds.openstack.nova.v2_0.domain.regionscoped.SecurityGroupInRegion
 import com.google.common.base.Function;
 import com.google.common.base.Throwables;
 import com.google.common.cache.LoadingCache;
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Multimap;
 import com.google.common.primitives.Ints;
 import com.google.common.util.concurrent.Atomics;
@@ -62,6 +63,9 @@ import com.google.common.util.concurrent.ListeningExecutorService;
 @Singleton
 public class ApplyNovaTemplateOptionsCreateNodesWithGroupEncodedIntoNameThenAddToSet extends
          CreateNodesWithGroupEncodedIntoNameThenAddToSet {
+
+   public static final String JCLOUDS_SG = "jclouds_securityGroup";
+   public static final String JCLOUDS_KP = "jclouds_keyPair";
 
    private final AllocateAndAddFloatingIpToNode createAndAddFloatingIpToNode;
    protected final LoadingCache<RegionAndName, SecurityGroupInRegion> securityGroupCache;
@@ -98,11 +102,12 @@ public class ApplyNovaTemplateOptionsCreateNodesWithGroupEncodedIntoNameThenAddT
       assert template.getOptions().equals(templateOptions) : "options didn't clone properly";
 
       String region = mutableTemplate.getLocation().getId();
+      ImmutableList.Builder<String> tagsBuilder = ImmutableList.builder();
 
       if (templateOptions.shouldAutoAssignFloatingIp()) {
          checkArgument(novaApi.getFloatingIPApi(region).isPresent(),
-                  "Floating IPs are required by options, but the extension is not available! options: %s",
-                  templateOptions);
+                 "Floating IPs are required by options, but the extension is not available! options: %s",
+                 templateOptions);
       }
 
       boolean keyPairExtensionPresent = novaApi.getKeyPairApi(region).isPresent();
@@ -113,6 +118,7 @@ public class ApplyNovaTemplateOptionsCreateNodesWithGroupEncodedIntoNameThenAddT
                   .sharedNameForGroup(group)));
          keyPairCache.asMap().put(RegionAndName.fromRegionAndName(region, keyPair.getName()), keyPair);
          templateOptions.keyPairName(keyPair.getName());
+         tagsBuilder.add(JCLOUDS_KP);
       } else if (templateOptions.getKeyPairName() != null) {
          checkArgument(keyPairExtensionPresent,
                   "Key Pairs are required by options, but the extension is not available! options: %s", templateOptions);
@@ -139,9 +145,11 @@ public class ApplyNovaTemplateOptionsCreateNodesWithGroupEncodedIntoNameThenAddT
                throw Throwables.propagate(e.getCause());
             }
             templateOptions.securityGroups(securityGroupName);
+            tagsBuilder.add(JCLOUDS_SG);
          }
       }
       templateOptions.userMetadata(ComputeServiceConstants.NODE_GROUP_KEY, group);
+      templateOptions.tags(tagsBuilder.build());
 
       return super.execute(group, count, mutableTemplate, goodNodes, badNodes, customizationResponses);
    }
@@ -168,4 +176,5 @@ public class ApplyNovaTemplateOptionsCreateNodesWithGroupEncodedIntoNameThenAddT
          return future;
       }
    }
+
 }

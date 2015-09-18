@@ -25,7 +25,6 @@ import static java.lang.String.format;
 import static java.util.concurrent.TimeUnit.SECONDS;
 import static org.jclouds.compute.util.ComputeServiceUtils.metadataAndTagsAsCommaDelimitedValue;
 import static org.jclouds.util.Predicates2.retry;
-
 import java.util.Set;
 
 import javax.annotation.Resource;
@@ -40,6 +39,7 @@ import org.jclouds.domain.LoginCredentials;
 import org.jclouds.location.Region;
 import org.jclouds.logging.Logger;
 import org.jclouds.openstack.nova.v2_0.NovaApi;
+import org.jclouds.openstack.nova.v2_0.compute.functions.CleanupServer;
 import org.jclouds.openstack.nova.v2_0.compute.functions.RemoveFloatingIpFromNodeAndDeallocate;
 import org.jclouds.openstack.nova.v2_0.compute.options.NovaTemplateOptions;
 import org.jclouds.openstack.nova.v2_0.compute.strategy.ApplyNovaTemplateOptionsCreateNodesWithGroupEncodedIntoNameThenAddToSet;
@@ -81,16 +81,19 @@ public class NovaComputeServiceAdapter implements
    protected final Supplier<Set<String>> regionIds;
    protected final RemoveFloatingIpFromNodeAndDeallocate removeFloatingIpFromNodeAndDeallocate;
    protected final LoadingCache<RegionAndName, KeyPair> keyPairCache;
+   protected final CleanupServer cleanupServer;
+
 
    @Inject
    public NovaComputeServiceAdapter(NovaApi novaApi, @Region Supplier<Set<String>> regionIds,
             RemoveFloatingIpFromNodeAndDeallocate removeFloatingIpFromNodeAndDeallocate,
-            LoadingCache<RegionAndName, KeyPair> keyPairCache) {
+            LoadingCache<RegionAndName, KeyPair> keyPairCache, CleanupServer cleanupServer) {
       this.novaApi = checkNotNull(novaApi, "novaApi");
       this.regionIds = checkNotNull(regionIds, "regionIds");
       this.removeFloatingIpFromNodeAndDeallocate = checkNotNull(removeFloatingIpFromNodeAndDeallocate,
                "removeFloatingIpFromNodeAndDeallocate");
       this.keyPairCache = checkNotNull(keyPairCache, "keyPairCache");
+      this.cleanupServer = checkNotNull(cleanupServer, "cleanupServer");
    }
 
    /**
@@ -130,6 +133,7 @@ public class NovaComputeServiceAdapter implements
          }
       }
 
+
       final String regionId = template.getLocation().getId();
       String imageId = template.getImage().getProviderId();
       String flavorId = template.getHardware().getProviderId();
@@ -158,7 +162,7 @@ public class NovaComputeServiceAdapter implements
                .build());
    }
 
-   @Override
+  @Override
    public Iterable<FlavorInRegion> listHardwareProfiles() {
       Builder<FlavorInRegion> builder = ImmutableSet.builder();
       for (final String regionId : regionIds.get()) {
@@ -262,15 +266,7 @@ public class NovaComputeServiceAdapter implements
 
    @Override
    public void destroyNode(String id) {
-      RegionAndId regionAndId = RegionAndId.fromSlashEncoded(id);
-      if (novaApi.getFloatingIPApi(regionAndId.getRegion()).isPresent()) {
-         try {
-            removeFloatingIpFromNodeAndDeallocate.apply(regionAndId);
-         } catch (RuntimeException e) {
-            logger.warn(e, "<< error removing and deallocating ip from node(%s): %s", id, e.getMessage());
-         }
-      }
-      novaApi.getServerApi(regionAndId.getRegion()).delete(regionAndId.getId());
+      checkState(cleanupServer.apply(id), "server(%s) still there after deleting!?", id);
    }
 
    @Override

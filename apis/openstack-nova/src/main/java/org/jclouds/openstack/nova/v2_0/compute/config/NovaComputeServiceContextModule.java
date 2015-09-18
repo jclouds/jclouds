@@ -51,6 +51,7 @@ import org.jclouds.openstack.nova.v2_0.compute.NovaComputeService;
 import org.jclouds.openstack.nova.v2_0.compute.NovaComputeServiceAdapter;
 import org.jclouds.openstack.nova.v2_0.compute.extensions.NovaImageExtension;
 import org.jclouds.openstack.nova.v2_0.compute.extensions.NovaSecurityGroupExtension;
+import org.jclouds.openstack.nova.v2_0.compute.functions.CleanupServer;
 import org.jclouds.openstack.nova.v2_0.compute.functions.CreateSecurityGroupIfNeeded;
 import org.jclouds.openstack.nova.v2_0.compute.functions.FlavorInRegionToHardware;
 import org.jclouds.openstack.nova.v2_0.compute.functions.ImageInRegionToImage;
@@ -160,6 +161,9 @@ public class NovaComputeServiceContextModule extends
 
       bind(new TypeLiteral<SecurityGroupExtension>() {
       }).to(NovaSecurityGroupExtension.class);
+
+      bind(new TypeLiteral<Function<String, Boolean>>() {
+      }).to(CleanupServer.class);
    }
 
    @Override
