@@ -53,9 +53,7 @@ public class Go2CloudJohannesburg1ProviderMetadata extends BaseProviderMetadata 
       return properties;
    }
 
-   public static class Builder
-         extends
-         BaseProviderMetadata.Builder {
+   public static class Builder extends BaseProviderMetadata.Builder {
 
       protected Builder() {
          id("go2cloud-jhb1")
@@ -64,7 +62,7 @@ public class Go2CloudJohannesburg1ProviderMetadata extends BaseProviderMetadata 
          .homepage(URI.create("https://jhb1.go2cloud.co.za"))
          .console(URI.create("https://jhb1.go2cloud.co.za/accounts"))
          .iso3166Codes("ZA-GP")
-         .endpoint("https://api.jhb1.go2cloud.co.za")
+         .endpoint("https://api-jhb1.go2cloud.co.za")
          .defaultProperties(Go2CloudJohannesburg1ProviderMetadata.defaultProperties());
       }
 
@@ -74,8 +72,7 @@ public class Go2CloudJohannesburg1ProviderMetadata extends BaseProviderMetadata 
       }
 
       @Override
-      public Builder fromProviderMetadata(
-            ProviderMetadata in) {
+      public Builder fromProviderMetadata(ProviderMetadata in) {
          super.fromProviderMetadata(in);
          return this;
       }
