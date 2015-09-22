@@ -40,7 +40,7 @@ public class Go2CloudJohannesburg1TemplateBuilderLiveTest extends BaseTemplateBu
    public void testDefaultTemplateBuilder() throws IOException {
       Template defaultTemplate = this.view.getComputeService().templateBuilder().build();
       assertEquals(defaultTemplate.getImage().getOperatingSystem().is64Bit(), true);
-      assertEquals(defaultTemplate.getImage().getOperatingSystem().getVersion(), "10.10");
+      assertEquals(defaultTemplate.getImage().getOperatingSystem().getVersion(), "12.04");
       assertEquals(defaultTemplate.getImage().getOperatingSystem().getFamily(), OsFamily.UBUNTU);
       assertEquals(defaultTemplate.getLocation().getId(), "go2cloud-jhb1");
       assertEquals(getCores(defaultTemplate.getHardware()), 1.0d);
