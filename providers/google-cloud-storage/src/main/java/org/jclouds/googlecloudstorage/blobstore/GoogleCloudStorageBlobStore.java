@@ -20,8 +20,6 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.io.BaseEncoding.base64;
 import static org.jclouds.googlecloudstorage.domain.DomainResourceReferences.ObjectRole.READER;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 import java.util.List;
 import java.util.Set;
 
@@ -41,11 +39,11 @@ import org.jclouds.blobstore.domain.internal.BlobImpl;
 import org.jclouds.blobstore.domain.internal.PageSetImpl;
 import org.jclouds.blobstore.functions.BlobToHttpGetOptions;
 import org.jclouds.blobstore.internal.BaseBlobStore;
+import org.jclouds.blobstore.options.CopyOptions;
 import org.jclouds.blobstore.options.CreateContainerOptions;
 import org.jclouds.blobstore.options.GetOptions;
 import org.jclouds.blobstore.options.ListContainerOptions;
 import org.jclouds.blobstore.options.PutOptions;
-import org.jclouds.blobstore.options.CopyOptions;
 import org.jclouds.blobstore.strategy.internal.FetchBlobMetadata;
 import org.jclouds.blobstore.util.BlobUtils;
 import org.jclouds.collect.Memoized;
@@ -73,11 +71,10 @@ import org.jclouds.http.HttpResponseException;
 import org.jclouds.io.ContentMetadata;
 import org.jclouds.io.Payload;
 import org.jclouds.io.PayloadSlicer;
+import org.jclouds.util.Strings2;
 
-import com.google.common.base.Charsets;
 import com.google.common.base.Function;
 import com.google.common.base.Supplier;
-import com.google.common.base.Throwables;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
 import com.google.common.hash.HashCode;
@@ -204,12 +201,7 @@ public final class GoogleCloudStorageBlobStore extends BaseBlobStore {
     */
    @Override
    public boolean blobExists(String container, String name) {
-      try {
-         String urlName = name.contains("/") ? URLEncoder.encode(name, Charsets.UTF_8.toString()) : name;
-         return api.getObjectApi().objectExists(container, urlName);
-      } catch (UnsupportedEncodingException e) {
-         throw Throwables.propagate(e);
-      }
+      return api.getObjectApi().objectExists(container, Strings2.urlEncode(name));
    }
 
    /**
@@ -239,12 +231,12 @@ public final class GoogleCloudStorageBlobStore extends BaseBlobStore {
 
    @Override
    public BlobMetadata blobMetadata(String container, String name) {
-      return objectToBlobMetadata.apply(api.getObjectApi().getObject(container, name));
+      return objectToBlobMetadata.apply(api.getObjectApi().getObject(container, Strings2.urlEncode(name)));
    }
 
    @Override
    public Blob getBlob(String container, String name, GetOptions options) {
-      GoogleCloudStorageObject gcsObject = api.getObjectApi().getObject(container, name);
+      GoogleCloudStorageObject gcsObject = api.getObjectApi().getObject(container, Strings2.urlEncode(name));
       if (gcsObject == null) {
          return null;
       }
@@ -252,7 +244,7 @@ public final class GoogleCloudStorageBlobStore extends BaseBlobStore {
       MutableBlobMetadata metadata = objectToBlobMetadata.apply(gcsObject);
       Blob blob = new BlobImpl(metadata);
       // TODO: Does getObject not get the payload?!
-      Payload payload = api.getObjectApi().download(container, name, httpOptions).getPayload();
+      Payload payload = api.getObjectApi().download(container, Strings2.urlEncode(name), httpOptions).getPayload();
       payload.setContentMetadata(metadata.getContentMetadata()); // Doing this first retains it on setPayload.
       blob.setPayload(payload);
       return blob;
@@ -260,18 +252,13 @@ public final class GoogleCloudStorageBlobStore extends BaseBlobStore {
 
    @Override
    public void removeBlob(String container, String name) {
-      String urlName;
-      try {
-         urlName = name.contains("/") ? URLEncoder.encode(name, Charsets.UTF_8.toString()) : name;
-      } catch (UnsupportedEncodingException uee) {
-         throw Throwables.propagate(uee);
-      }
-      api.getObjectApi().deleteObject(container, urlName);
+      api.getObjectApi().deleteObject(container, Strings2.urlEncode(name));
    }
 
    @Override
    public BlobAccess getBlobAccess(String container, String name) {
-      ObjectAccessControls controls = api.getObjectAccessControlsApi().getObjectAccessControls(container, name, "allUsers");
+      ObjectAccessControls controls = api.getObjectAccessControlsApi().getObjectAccessControls(container,
+            Strings2.urlEncode(name), "allUsers");
       if (controls != null && controls.role() == DomainResourceReferences.ObjectRole.READER) {
          return BlobAccess.PUBLIC_READ;
       } else {
@@ -287,9 +274,9 @@ public final class GoogleCloudStorageBlobStore extends BaseBlobStore {
                .bucket(container)
                .role(READER)
                .build();
-         api.getObjectApi().patchObject(container, name, new ObjectTemplate().addAcl(controls));
+         api.getObjectApi().patchObject(container, Strings2.urlEncode(name), new ObjectTemplate().addAcl(controls));
       } else {
-         api.getObjectAccessControlsApi().deleteObjectAccessControls(container, name, "allUsers");
+         api.getObjectAccessControlsApi().deleteObjectAccessControls(container, Strings2.urlEncode(name), "allUsers");
       }
    }
 
@@ -312,7 +299,8 @@ public final class GoogleCloudStorageBlobStore extends BaseBlobStore {
    public String copyBlob(String fromContainer, String fromName, String toContainer, String toName,
          CopyOptions options) {
       if (!options.getContentMetadata().isPresent() && !options.getUserMetadata().isPresent()) {
-         return api.getObjectApi().copyObject(toContainer, toName, fromContainer, fromName).etag();
+         return api.getObjectApi().copyObject(toContainer, Strings2.urlEncode(toName), fromContainer,
+               Strings2.urlEncode(fromName)).etag();
       }
 
       ObjectTemplate template = new ObjectTemplate();
@@ -349,7 +337,8 @@ public final class GoogleCloudStorageBlobStore extends BaseBlobStore {
          template.customMetadata(options.getUserMetadata().get());
       }
 
-      return api.getObjectApi().copyObject(toContainer, toName, fromContainer, fromName, template).etag();
+      return api.getObjectApi().copyObject(toContainer, Strings2.urlEncode(toName), fromContainer,
+            Strings2.urlEncode(fromName), template).etag();
    }
 
    @Override
@@ -372,12 +361,14 @@ public final class GoogleCloudStorageBlobStore extends BaseBlobStore {
    public String completeMultipartUpload(MultipartUpload mpu, List<MultipartPart> parts) {
       ImmutableList.Builder<GoogleCloudStorageObject> builder = ImmutableList.builder();
       for (MultipartPart part : parts) {
-         builder.add(api.getObjectApi().getObject(mpu.containerName(), getMPUPartName(mpu, part.partNumber())));
+         builder.add(api.getObjectApi().getObject(mpu.containerName(),
+               Strings2.urlEncode(getMPUPartName(mpu, part.partNumber()))));
       }
       ObjectTemplate destination = blobMetadataToObjectTemplate.apply(mpu.blobMetadata());
       ComposeObjectTemplate template = ComposeObjectTemplate.builder().fromGoogleCloudStorageObject(builder.build())
             .destination(destination).build();
-      return api.getObjectApi().composeObjects(mpu.containerName(), mpu.blobName(), template).etag();
+      return api.getObjectApi().composeObjects(mpu.containerName(), Strings2.urlEncode(mpu.blobName()), template)
+            .etag();
       // TODO: delete components?
    }
 

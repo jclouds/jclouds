@@ -23,6 +23,7 @@ import java.util.List;
 import javax.inject.Named;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
+import javax.ws.rs.Encoded;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
@@ -41,7 +42,6 @@ import org.jclouds.rest.annotations.Fallback;
 import org.jclouds.rest.annotations.PATCH;
 import org.jclouds.rest.annotations.RequestFilters;
 import org.jclouds.rest.annotations.SelectJson;
-import org.jclouds.rest.annotations.SkipEncoding;
 import org.jclouds.rest.binders.BindToJsonPayload;
 
 /**
@@ -49,7 +49,6 @@ import org.jclouds.rest.binders.BindToJsonPayload;
  *
  * @see <a href = " https://developers.google.com/storage/docs/json_api/v1/objectAccessControls "/>
  */
-@SkipEncoding({ '/', '=' })
 @RequestFilters(OAuthFilter.class)
 @Consumes(APPLICATION_JSON)
 public interface ObjectAccessControlsApi {
@@ -74,7 +73,7 @@ public interface ObjectAccessControlsApi {
    @Fallback(NullOnNotFoundOr404.class)
    @Nullable
    ObjectAccessControls getObjectAccessControls(@PathParam("bucket") String bucketName,
-            @PathParam("object") String objectName, @PathParam("entity") String entity);
+            @PathParam("object") @Encoded String objectName, @PathParam("entity") String entity);
 
    /**
     * Returns the acl entry for the specified entity on the specified object.
@@ -97,7 +96,7 @@ public interface ObjectAccessControlsApi {
    @Fallback(NullOnNotFoundOr404.class)
    @Nullable
    ObjectAccessControls getObjectAccessControls(@PathParam("bucket") String bucketName,
-            @PathParam("object") String objectName, @PathParam("entity") String entity,
+            @PathParam("object") @Encoded String objectName, @PathParam("entity") String entity,
             @QueryParam("generation") Long generation);
 
    /**
@@ -116,7 +115,7 @@ public interface ObjectAccessControlsApi {
    @Produces(APPLICATION_JSON)
    @Path("/b/{bucket}/o/{object}/acl")
    ObjectAccessControls createObjectAccessControls(@PathParam("bucket") String bucketName,
-            @PathParam("object") String objectName,
+            @PathParam("object") @Encoded String objectName,
             @BinderParam(BindToJsonPayload.class) ObjectAccessControlsTemplate template);
 
    /**
@@ -137,7 +136,7 @@ public interface ObjectAccessControlsApi {
    @Produces(APPLICATION_JSON)
    @Path("/b/{bucket}/o/{object}/acl")
    ObjectAccessControls createObjectAccessControls(@PathParam("bucket") String bucketName,
-            @PathParam("object") String objectName,
+            @PathParam("object") @Encoded String objectName,
             @BinderParam(BindToJsonPayload.class) ObjectAccessControlsTemplate template,
             @QueryParam("generation") Long generation);
 
@@ -155,8 +154,8 @@ public interface ObjectAccessControlsApi {
    @Named("ObjectAccessControls:delete")
    @DELETE
    @Path("/b/{bucket}/o/{object}/acl/{entity}")
-   void deleteObjectAccessControls(@PathParam("bucket") String bucketName, @PathParam("object") String objectName,
-            @PathParam("entity") String entity);
+   void deleteObjectAccessControls(@PathParam("bucket") String bucketName,
+         @PathParam("object") @Encoded String objectName, @PathParam("entity") String entity);
 
    /**
     * Permanently deletes the acl entry for the specified entity on the specified bucket.
@@ -174,8 +173,9 @@ public interface ObjectAccessControlsApi {
    @Named("ObjectAccessControls:delete")
    @DELETE
    @Path("/b/{bucket}/o/{object}/acl/{entity}")
-   void deleteObjectAccessControls(@PathParam("bucket") String bucketName, @PathParam("object") String objectName,
-            @PathParam("entity") String entity, @QueryParam("generation") Long generation);
+   void deleteObjectAccessControls(@PathParam("bucket") String bucketName,
+         @PathParam("object") @Encoded String objectName, @PathParam("entity") String entity,
+         @QueryParam("generation") Long generation);
 
    /**
     * Retrieves acl entries on a specified object
@@ -193,7 +193,7 @@ public interface ObjectAccessControlsApi {
    @Fallback(NullOnNotFoundOr404.class)
    @Nullable
    List<ObjectAccessControls> listObjectAccessControls(@PathParam("bucket") String bucketName,
-            @PathParam("object") String objectName);
+            @PathParam("object") @Encoded String objectName);
 
    /**
     * Retrieves acl entries on a specified object
@@ -214,7 +214,7 @@ public interface ObjectAccessControlsApi {
    @Fallback(NullOnNotFoundOr404.class)
    @Nullable
    List<ObjectAccessControls> listObjectAccessControls(@PathParam("bucket") String bucketName,
-            @PathParam("object") String objectName, @QueryParam("generation") Long generation);
+            @PathParam("object") @Encoded String objectName, @QueryParam("generation") Long generation);
 
    /**
     * Updates an acl entry on the specified object
@@ -237,7 +237,7 @@ public interface ObjectAccessControlsApi {
    @Produces(APPLICATION_JSON)
    @Path("/b/{bucket}/o/{object}/acl/{entity}")
    ObjectAccessControls updateObjectAccessControls(@PathParam("bucket") String bucketName,
-            @PathParam("object") String objectName, @PathParam("entity") String entity,
+            @PathParam("object") @Encoded String objectName, @PathParam("entity") String entity,
             @BinderParam(BindToJsonPayload.class) ObjectAccessControlsTemplate template);
 
    /**
@@ -262,7 +262,7 @@ public interface ObjectAccessControlsApi {
    @Produces(APPLICATION_JSON)
    @Path("/b/{bucket}/o/{object}/acl/{entity}")
    ObjectAccessControls updateObjectAccessControls(@PathParam("bucket") String bucketName,
-            @PathParam("object") String objectName, @PathParam("entity") String entity,
+            @PathParam("object") @Encoded String objectName, @PathParam("entity") String entity,
             @BinderParam(BindToJsonPayload.class) ObjectAccessControlsTemplate template,
             @QueryParam("generation") Long generation);
 
@@ -286,7 +286,7 @@ public interface ObjectAccessControlsApi {
    @Produces(APPLICATION_JSON)
    @Path("/b/{bucket}/o/{object}/acl/{entity}")
    ObjectAccessControls patchObjectAccessControls(@PathParam("bucket") String bucketName,
-            @PathParam("object") String objectName, @PathParam("entity") String entity,
+            @PathParam("object") @Encoded String objectName, @PathParam("entity") String entity,
             @BinderParam(BindToJsonPayload.class) ObjectAccessControlsTemplate template);
 
    /**
@@ -311,7 +311,7 @@ public interface ObjectAccessControlsApi {
    @Produces(APPLICATION_JSON)
    @Path("/b/{bucket}/o/{object}/acl/{entity}")
    ObjectAccessControls patchObjectAccessControls(@PathParam("bucket") String bucketName,
-            @PathParam("object") String objectName, @PathParam("entity") String entity,
+            @PathParam("object") @Encoded String objectName, @PathParam("entity") String entity,
             @BinderParam(BindToJsonPayload.class) ObjectAccessControlsTemplate template,
             @QueryParam("generation") Long generation);
 }

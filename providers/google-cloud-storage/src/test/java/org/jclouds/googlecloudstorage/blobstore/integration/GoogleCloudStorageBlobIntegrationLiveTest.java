@@ -143,6 +143,7 @@ public class GoogleCloudStorageBlobIntegrationLiveTest extends BaseBlobIntegrati
 
       return new Object[][] { { "file.xml", "text/xml", file, realObject },
                { "string.xml", "text/xml", realObject, realObject },
+               { "stringwith/slash.xml", "text/xml", realObject, realObject },
                { "bytes.xml", "application/octet-stream", realObject.getBytes(), realObject } };
    }
 

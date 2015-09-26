@@ -40,6 +40,7 @@ import org.jclouds.googlecloudstorage.parse.ParseGoogleCloudStorageObjectListTes
 import org.jclouds.googlecloudstorage.parse.ParseObjectRewriteResponse;
 import org.jclouds.http.internal.PayloadEnclosingImpl;
 import org.jclouds.io.PayloadEnclosing;
+import org.jclouds.util.Strings2;
 import org.testng.annotations.Test;
 
 import com.google.common.net.MediaType;
@@ -55,6 +56,13 @@ public class ObjectApiMockTest extends BaseGoogleCloudStorageApiMockTest {
 
       assertTrue(objectApi().objectExists("test", "file_name"));
       assertSent(server, "GET", "/storage/v1/b/test/o/file_name", null);
+   }
+
+   public void existsEncoded() throws Exception {
+      server.enqueue(jsonResponse("/object_encoded_get.json"));
+
+      assertTrue(objectApi().objectExists("test", Strings2.urlEncode("dir/file name")));
+      assertSent(server, "GET", "/storage/v1/b/test/o/dir%2Ffile%20name", null);
    }
 
    public void exists_4xx() throws Exception {
@@ -118,6 +126,14 @@ public class ObjectApiMockTest extends BaseGoogleCloudStorageApiMockTest {
       // TODO: Should this be returning True on not found?
       assertTrue(objectApi().deleteObject("test", "object_name"));
       assertSent(server, "DELETE", "/storage/v1/b/test/o/object_name", null);
+   }
+
+   public void delete_encoded() throws Exception {
+      server.enqueue(new MockResponse());
+
+      // TODO: Should this be returning True on not found?
+      assertTrue(objectApi().deleteObject("test", Strings2.urlEncode("dir/object name")));
+      assertSent(server, "DELETE", "/storage/v1/b/test/o/dir%2Fobject%20name", null);
    }
 
    public void list() throws Exception {
