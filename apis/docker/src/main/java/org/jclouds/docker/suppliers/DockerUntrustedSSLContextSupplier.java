@@ -33,32 +33,33 @@ import static com.google.common.base.Throwables.propagate;
 
 @Singleton
 public class DockerUntrustedSSLContextSupplier implements Supplier<SSLContext> {
-    private final Supplier<Credentials> creds;
-    private final SSLModule.TrustAllCerts insecureTrustManager;
+   private final Supplier<Credentials> creds;
+   private final SSLModule.TrustAllCerts insecureTrustManager;
 
+   @Inject
+   DockerUntrustedSSLContextSupplier(@Provider Supplier<Credentials> creds,
+         SSLModule.TrustAllCerts insecureTrustManager) {
+      this.creds = creds;
+      this.insecureTrustManager = insecureTrustManager;
+   }
 
-    @Inject
-    DockerUntrustedSSLContextSupplier(@Provider Supplier<Credentials> creds, SSLModule.TrustAllCerts insecureTrustManager) {
-        this.creds = creds;
-        this.insecureTrustManager = insecureTrustManager;
-    }
-
-    @Override
-    public SSLContext get() {
-        Credentials currentCreds = creds.get();
-        try {
-            SSLContextBuilder builder = new SSLContextBuilder();
-            // check if identity and credential are files, to set up sslContext
-            if (currentCreds!=null && new File(currentCreds.identity).isFile() && new File(currentCreds.credential).isFile()) {
-               builder.clientKeyAndCertificate(currentCreds.credential, currentCreds.identity);
-            }
-            builder.trustManager(insecureTrustManager);
-            return builder.build();
-        } catch (GeneralSecurityException e) {
-            throw propagate(e);
-        } catch (IOException e) {
-            throw propagate(e);
-        }
-    }
+   @Override
+   public SSLContext get() {
+      Credentials currentCreds = creds.get();
+      try {
+         SSLContextBuilder builder = new SSLContextBuilder();
+         // check if identity and credential are files, to set up sslContext
+         if (currentCreds != null && new File(currentCreds.identity).isFile()
+               && new File(currentCreds.credential).isFile()) {
+            builder.clientKeyAndCertificate(currentCreds.credential, currentCreds.identity);
+         }
+         builder.trustManager(insecureTrustManager);
+         return builder.build();
+      } catch (GeneralSecurityException e) {
+         throw propagate(e);
+      } catch (IOException e) {
+         throw propagate(e);
+      }
+   }
 
 }
