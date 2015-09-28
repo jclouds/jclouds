@@ -54,6 +54,7 @@ import java.util.Set;
 
 import javax.annotation.Resource;
 import javax.inject.Named;
+import javax.ws.rs.Encoded;
 import javax.ws.rs.FormParam;
 import javax.ws.rs.HeaderParam;
 import javax.ws.rs.Path;
@@ -101,6 +102,7 @@ import org.jclouds.rest.annotations.VirtualHost;
 import org.jclouds.rest.annotations.WrapWith;
 import org.jclouds.rest.binders.BindMapToStringPayload;
 import org.jclouds.rest.binders.BindToJsonPayloadWrappedWith;
+import org.jclouds.util.Strings2;
 
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Function;
@@ -229,9 +231,10 @@ public class RestAnnotationProcessor implements Function<Invocation, HttpRequest
 
       overridePathEncoding(uriBuilder, invocation);
 
+      boolean encodedParams = isEncodedUsed(invocation);
       if (caller != null)
-         tokenValues.putAll(addPathAndGetTokens(caller, uriBuilder));
-      tokenValues.putAll(addPathAndGetTokens(invocation, uriBuilder));
+         tokenValues.putAll(addPathAndGetTokens(caller, uriBuilder, encodedParams));
+      tokenValues.putAll(addPathAndGetTokens(invocation, uriBuilder, encodedParams));
       Multimap<String, Object> formParams;
       if (caller != null) {
          formParams = addFormParams(tokenValues, caller);
@@ -288,7 +291,11 @@ public class RestAnnotationProcessor implements Function<Invocation, HttpRequest
 
       requestBuilder.headers(filterOutContentHeaders(headers));
 
-      requestBuilder.endpoint(uriBuilder.build(convertUnsafe(tokenValues)));
+      if (encodedParams) {
+         requestBuilder.endpoint(uriBuilder.buildNoEncoding(convertUnsafe(tokenValues)));
+      } else {
+         requestBuilder.endpoint(uriBuilder.build(convertUnsafe(tokenValues)));
+      }
 
       if (payload == null) {
          PayloadEnclosing payloadEnclosing = findOrNull(invocation.getArgs(), PayloadEnclosing.class);
@@ -388,12 +395,12 @@ public class RestAnnotationProcessor implements Function<Invocation, HttpRequest
       return endpoint;
    }
 
-   private Multimap<String, Object> addPathAndGetTokens(Invocation invocation, UriBuilder uriBuilder) {
+   private Multimap<String, Object> addPathAndGetTokens(Invocation invocation, UriBuilder uriBuilder, boolean encoded) {
       if (invocation.getInvokable().getOwnerType().getRawType().isAnnotationPresent(Path.class))
          uriBuilder.appendPath(invocation.getInvokable().getOwnerType().getRawType().getAnnotation(Path.class).value());
       if (invocation.getInvokable().isAnnotationPresent(Path.class))
          uriBuilder.appendPath(invocation.getInvokable().getAnnotation(Path.class).value());
-      return getPathParamKeyValues(invocation);
+      return getPathParamKeyValues(invocation, encoded);
    }
 
    private Multimap<String, Object> addFormParams(Multimap<String, ?> tokenValues, Invocation invocation) {
@@ -757,15 +764,24 @@ public class RestAnnotationProcessor implements Function<Invocation, HttpRequest
       return parts.build();
    }
 
-   private Multimap<String, Object> getPathParamKeyValues(Invocation invocation) {
+   private boolean isEncodedUsed(Invocation invocation) {
+      return !parametersWithAnnotation(invocation.getInvokable(), Encoded.class).isEmpty();
+   }
+
+   private Multimap<String, Object> getPathParamKeyValues(Invocation invocation, boolean encodedParams) {
       Multimap<String, Object> pathParamValues = LinkedHashMultimap.create();
       for (Parameter param : parametersWithAnnotation(invocation.getInvokable(), PathParam.class)) {
          PathParam pathParam = param.getAnnotation(PathParam.class);
          String paramKey = pathParam.value();
          Optional<?> paramValue = getParamValue(invocation, param.getAnnotation(ParamParser.class), param.hashCode(),
                paramKey);
-         if (paramValue.isPresent())
-            pathParamValues.put(paramKey, paramValue.get().toString());
+         if (paramValue.isPresent()) {
+            if (encodedParams && !param.isAnnotationPresent(Encoded.class)) {
+               pathParamValues.put(paramKey, Strings2.urlEncode(paramValue.get().toString()));
+            } else {
+               pathParamValues.put(paramKey, paramValue.get().toString());
+            }
+         }
       }
       return pathParamValues;
    }

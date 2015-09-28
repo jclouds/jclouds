@@ -55,6 +55,7 @@ import javax.inject.Named;
 import javax.inject.Qualifier;
 import javax.inject.Singleton;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.Encoded;
 import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
 import javax.ws.rs.HeaderParam;
@@ -1525,6 +1526,12 @@ public class RestAnnotationProcessorTest extends BaseRestApiTest {
       }
 
       @GET
+      @Path("/{paramA}/{paramB}/{paramC}")
+      public void encodedParams(@PathParam("paramA") @Encoded String a, @PathParam("paramB") String b,
+                                        @PathParam("paramC") @Encoded String c) {
+      }
+
+      @GET
       @Path("/{path}")
       public void onePathNullable(@Nullable @PathParam("path") String path) {
       }
@@ -1569,6 +1576,26 @@ public class RestAnnotationProcessorTest extends BaseRestApiTest {
       assertRequestLineEquals(request, "GET http://localhost:9999/l HTTP/1.1");
       assertNonPayloadHeadersEqual(request, "");
       assertPayloadEquals(request, null, null, false);
+   }
+
+   @Test
+   public void testPathParamEncoding() throws Exception {
+      Invokable<?, ?> method = method(TestPath.class, "onePath", String.class);
+      // By default, "/" should not be encoded
+      GeneratedHttpRequest request = processor.apply(Invocation.create(method,
+            ImmutableList.<Object> of("foo/bar")));
+      assertRequestLineEquals(request, "GET http://localhost:9999/foo/bar HTTP/1.1");
+
+      // If we pass an encoded string, it should be encoded twice
+      request = processor.apply(Invocation.create(method, ImmutableList.<Object> of("foo%2Fbar")));
+      assertRequestLineEquals(request, "GET http://localhost:9999/foo%252Fbar HTTP/1.1");
+
+      // If we pass in a pre-encoded param, it should not be double encoded
+      method = method(TestPath.class, "encodedParams", String.class, String.class, String.class);
+      request = processor.apply(Invocation.create(method, ImmutableList.<Object>of("encoded%2Fparam", "encode%2Fdouble",
+            "foo%20bar")));
+      assertRequestLineEquals(request,
+            "GET http://localhost:9999/encoded%2Fparam/encode%252Fdouble/foo%20bar HTTP/1.1");
    }
 
    @Test

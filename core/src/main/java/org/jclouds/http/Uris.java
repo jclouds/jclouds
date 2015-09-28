@@ -282,19 +282,27 @@ public final class Uris {
          return build(ImmutableMap.<String, Object> of());
       }
 
+      public URI buildNoEncoding(Map<String, ?> variables) {
+         try {
+            return new URI(expand(variables, false));
+         } catch (URISyntaxException e) {
+            throw new IllegalArgumentException(e);
+         }
+      }
+
       /**
        * @throws IllegalArgumentException
        *            if there's a problem parsing the URI
        */
       public URI build(Map<String, ?> variables) {
          try {
-            return new URI(expand(variables));
+            return new URI(expand(variables, true));
          } catch (URISyntaxException e) {
             throw new IllegalArgumentException(e);
          }
       }
 
-      private String expand(Map<String, ?> variables) {
+      private String expand(Map<String, ?> variables, boolean shouldEncode) {
          StringBuilder b = new StringBuilder();
          if (scheme != null)
             b.append(scheme).append("://");
@@ -302,8 +310,13 @@ public final class Uris {
             b.append(UriTemplates.expand(host, variables));
          if (port != null)
             b.append(':').append(port);
-         if (path != null)
-            b.append(urlEncode(UriTemplates.expand(path, variables), skipPathEncoding));
+         if (path != null) {
+            if (shouldEncode) {
+               b.append(urlEncode(UriTemplates.expand(path, variables), skipPathEncoding));
+            } else {
+               b.append(UriTemplates.expand(path, variables));
+            }
+         }
          if (!query.isEmpty())
             b.append('?').append(encodeQueryLine(query));
          return b.toString();
