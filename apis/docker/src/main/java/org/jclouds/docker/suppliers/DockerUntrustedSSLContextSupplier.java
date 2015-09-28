@@ -24,10 +24,11 @@ import org.jclouds.location.Provider;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import javax.net.ssl.SSLContext;
+
+import java.io.File;
 import java.io.IOException;
 import java.security.GeneralSecurityException;
 
-import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Throwables.propagate;
 
 @Singleton
@@ -44,10 +45,13 @@ public class DockerUntrustedSSLContextSupplier implements Supplier<SSLContext> {
 
     @Override
     public SSLContext get() {
-        Credentials currentCreds = checkNotNull(creds.get(), "credential supplier returned null");
+        Credentials currentCreds = creds.get();
         try {
             SSLContextBuilder builder = new SSLContextBuilder();
-            builder.clientKeyAndCertificate(currentCreds.credential, currentCreds.identity);
+            // check if identity and credential are files, to set up sslContext
+            if (currentCreds!=null && new File(currentCreds.identity).isFile() && new File(currentCreds.credential).isFile()) {
+               builder.clientKeyAndCertificate(currentCreds.credential, currentCreds.identity);
+            }
             builder.trustManager(insecureTrustManager);
             return builder.build();
         } catch (GeneralSecurityException e) {
