@@ -16,9 +16,11 @@
  */
 package org.jclouds.utils;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Random;
+import java.util.zip.GZIPOutputStream;
 
 import com.google.common.io.ByteSource;
 
@@ -89,5 +91,13 @@ public class TestUtils {
          super.close();
          closed = true;
       }
+   }
+
+   public static byte[] gzip(byte[] data) throws IOException {
+      ByteArrayOutputStream baos = new ByteArrayOutputStream(data.length);
+      GZIPOutputStream gos = new GZIPOutputStream(baos);
+      gos.write(data, 0, data.length);
+      gos.finish();
+      return baos.toByteArray();
    }
 }
