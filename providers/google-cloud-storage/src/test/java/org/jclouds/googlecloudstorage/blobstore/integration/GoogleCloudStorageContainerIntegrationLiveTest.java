@@ -19,7 +19,6 @@ package org.jclouds.googlecloudstorage.blobstore.integration;
 import static com.google.common.collect.Iterables.get;
 import static org.jclouds.blobstore.options.ListContainerOptions.Builder.maxResults;
 import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertNull;
 
 import java.io.IOException;
 import java.util.Properties;
@@ -30,7 +29,6 @@ import org.jclouds.blobstore.domain.BlobMetadata;
 import org.jclouds.blobstore.domain.PageSet;
 import org.jclouds.blobstore.domain.StorageMetadata;
 import org.jclouds.blobstore.integration.internal.BaseContainerIntegrationTest;
-import org.jclouds.blobstore.options.ListContainerOptions;
 import org.jclouds.googlecloud.internal.TestProperties;
 import org.testng.SkipException;
 import org.testng.annotations.Test;
@@ -73,23 +71,6 @@ public class GoogleCloudStorageContainerIntegrationLiveTest extends BaseContaine
          assertEquals(metadata.getContentMetadata().getContentLength(), Long.valueOf(TEST_STRING.length()));
          assertEquals(metadata.getUserMetadata().get("adrian"), "powderpuff");
          checkMD5(metadata);
-      } finally {
-         returnContainer(containerName);
-      }
-   }
-
-   /** Google Cloud Storage lists prefixes and objects in two different lists */
-   @Override
-   public void testListRootUsesDelimiter() throws InterruptedException {
-      String containerName = getContainerName();
-      try {
-         String prefix = "rootdelimiter";
-         addTenObjectsUnderPrefix(containerName, prefix);
-         add15UnderRoot(containerName);
-         PageSet<? extends StorageMetadata> container = view.getBlobStore().list(containerName,
-                  new ListContainerOptions());
-         assertNull(container.getNextMarker());
-         assertEquals(container.size(), 15);
       } finally {
          returnContainer(containerName);
       }
