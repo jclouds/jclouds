@@ -18,6 +18,7 @@ package org.jclouds.apis.internal;
 
 import static com.google.common.base.Objects.equal;
 import static com.google.common.base.Preconditions.checkNotNull;
+import static org.jclouds.Constants.PROPERTY_CONNECTION_CLOSE_HEADER;
 import static org.jclouds.Constants.PROPERTY_CONNECTION_TIMEOUT;
 import static org.jclouds.Constants.PROPERTY_ISO3166_CODES;
 import static org.jclouds.Constants.PROPERTY_MAX_CONNECTIONS_PER_CONTEXT;
@@ -73,6 +74,7 @@ public abstract class BaseApiMetadata implements ApiMetadata {
       props.setProperty(PROPERTY_SESSION_INTERVAL, 60 + "");
       props.setProperty(PROPERTY_PRETTY_PRINT_PAYLOADS, "true");
       props.setProperty(PROPERTY_STRIP_EXPECT_HEADER, "false");
+      props.setProperty(PROPERTY_CONNECTION_CLOSE_HEADER, "false");
 
       // By default, we allow maximum parallel deletes to be equal to the number
       // of user threads since one thread is used to delete on blob.

@@ -78,6 +78,7 @@ import org.jclouds.http.HttpRequest;
 import org.jclouds.http.HttpRequestFilter;
 import org.jclouds.http.HttpResponse;
 import org.jclouds.http.IOExceptionRetryHandler;
+import org.jclouds.http.filters.ConnectionCloseHeader;
 import org.jclouds.http.filters.StripExpectHeader;
 import org.jclouds.http.functions.ParseFirstJsonValueNamed;
 import org.jclouds.http.functions.ParseJson;
@@ -1438,6 +1439,34 @@ public class RestAnnotationProcessorTest extends BaseRestApiTest {
       request = newProcessor.apply(invocation);
       assertEquals(request.getFilters().size(), 2);
       assertEquals(request.getFilters().get(1).getClass(), StripExpectHeader.class);
+   }
+
+   @Test
+   public void testRequestFilterAddConnection() {
+      // First, verify that by default, the StripExpectHeader filter is not applied
+      Invokable<?, ?> method = method(TestRequestFilter.class, "post");
+      Invocation invocation = Invocation.create(method,
+         ImmutableList.<Object>of(HttpRequest.builder().method("POST").endpoint("http://localhost").build()));
+      GeneratedHttpRequest request = processor.apply(invocation);
+      assertEquals(request.getFilters().size(), 1);
+      assertEquals(request.getFilters().get(0).getClass(), TestRequestFilter1.class);
+
+      // Now let's create a new injector with the property set. Use that to create the annotation processor.
+      Properties overrides = new Properties();
+      overrides.setProperty(Constants.PROPERTY_CONNECTION_CLOSE_HEADER, "true");
+      Injector injector = ContextBuilder.newBuilder(forApiOnEndpoint(Callee.class, "http://localhost:9999"))
+         .modules(ImmutableSet.<Module> of(new MockModule(), new NullLoggingModule(), new AbstractModule() {
+            protected void configure() {
+               bind(new TypeLiteral<Supplier<URI>>() {
+               }).annotatedWith(Localhost2.class).toInstance(
+                  Suppliers.ofInstance(URI.create("http://localhost:1111")));
+            }}))
+         .overrides(overrides).buildInjector();
+      RestAnnotationProcessor newProcessor = injector.getInstance(RestAnnotationProcessor.class);
+      // Verify that this time the filter is indeed applied as expected.
+      request = newProcessor.apply(invocation);
+      assertEquals(request.getFilters().size(), 2);
+      assertEquals(request.getFilters().get(1).getClass(), ConnectionCloseHeader.class);
    }
 
    public class TestEncoding {

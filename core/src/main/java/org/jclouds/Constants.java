@@ -308,6 +308,12 @@ public final class Constants {
    public static final String PROPERTY_STRIP_EXPECT_HEADER = "jclouds.strip-expect-header";
 
    /**
+    * When true, add the Connection: close header. Useful when interacting with
+    * providers that don't properly support persistent connections. Defaults to false.
+    */
+   public static final String PROPERTY_CONNECTION_CLOSE_HEADER = "jclouds.connection-close-header";
+
+   /**
     * The maximum number of blob deletes happening in parallel at any point in time.
     */
    public static final String PROPERTY_MAX_PARALLEL_DELETES = "jclouds.max-parallel-deletes";
