@@ -18,6 +18,8 @@ package org.jclouds.docker.features;
 
 import com.squareup.okhttp.mockwebserver.MockResponse;
 import com.squareup.okhttp.mockwebserver.MockWebServer;
+import com.squareup.okhttp.mockwebserver.RecordedRequest;
+
 import org.jclouds.docker.DockerApi;
 import org.jclouds.docker.internal.BaseDockerMockTest;
 import org.jclouds.docker.parse.InfoParseTest;
@@ -26,10 +28,13 @@ import org.jclouds.io.Payload;
 import org.jclouds.io.Payloads;
 import org.testng.annotations.Test;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.jclouds.docker.compute.BaseDockerApiLiveTest.tarredDockerfile;
 import static org.testng.Assert.assertEquals;
 import java.io.File;
 import java.io.FileInputStream;
+
+import javax.ws.rs.core.HttpHeaders;
 
 /**
  * Mock tests for the {@link org.jclouds.docker.features.MiscApi} class.
@@ -64,7 +69,8 @@ public class MiscApiMockTest extends BaseDockerMockTest {
       MiscApi api = api(DockerApi.class, server.getUrl("/").toString()).getMiscApi();
       try {
          api.build(tarredDockerfile());
-         assertSent(server, "POST", "/build");
+         RecordedRequest request = assertSent(server, "POST", "/build");
+         assertDockerBuildHttpHeaders(request);
       } finally {
          server.shutdown();
       }
@@ -79,10 +85,22 @@ public class MiscApiMockTest extends BaseDockerMockTest {
       payload.getContentMetadata().setContentLength(file.length());
       try {
          api.build(payload);
-         assertSent(server, "POST", "/build");
+         RecordedRequest request = assertSent(server, "POST", "/build");
+         assertDockerBuildHttpHeaders(request);
       } finally {
          server.shutdown();
       }
+   }
+
+   /**
+    * Asserts that correct values of HTTP headers are used in Docker build REST
+    * API calls.
+    *
+    * @param request
+    */
+   private void assertDockerBuildHttpHeaders(RecordedRequest request) {
+      assertThat(request.getHeader("Connection")).isEqualTo("close");
+      assertThat(request.getHeader(HttpHeaders.CONTENT_TYPE)).isEqualTo("application/tar");
    }
 
 }

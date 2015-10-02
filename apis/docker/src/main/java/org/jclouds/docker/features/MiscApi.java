@@ -65,7 +65,7 @@ public interface MiscApi {
    @Named("image:build")
    @POST
    @Path("/build")
-   @Headers(keys = "Content-Type", values = "application/tar")
+   @Headers(keys = { "Content-Type", "Connection" }, values = { "application/tar", "close" })
    InputStream build(Payload inputStream);
 
    /**
@@ -79,7 +79,7 @@ public interface MiscApi {
    @Named("image:build")
    @POST
    @Path("/build")
-   @Headers(keys = "Content-Type", values = "application/tar")
+   @Headers(keys = { "Content-Type", "Connection" }, values = { "application/tar", "close" })
    InputStream build(Payload inputStream, BuildOptions options);
 
 }
