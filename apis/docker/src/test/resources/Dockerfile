@@ -14,19 +14,21 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-FROM ubuntu:14.04
-MAINTAINER Sven Dowideit <SvenDowideit@docker.com>
 
-RUN apt-get update && apt-get install -y openssh-server
-RUN mkdir /var/run/sshd
+
+FROM alpine:3.2
+MAINTAINER JClouds Dev <dev@jclouds.apache.org>
+
+ENV DROPBEAR_CONF=/etc/dropbear
+
+RUN apk add --update dropbear \
+    && mkdir -p ${DROPBEAR_CONF} \
+    && dropbearkey -t dss -f ${DROPBEAR_CONF}/dropbear_dss_host_key \
+    && dropbearkey -t rsa -f ${DROPBEAR_CONF}/dropbear_rsa_host_key -s 2048 \
+    && dropbearkey -t ecdsa -f ${DROPBEAR_CONF}/dropbear_ecdsa_host_key
+
 RUN echo 'root:screencast' | chpasswd
-RUN sed -i 's/PermitRootLogin without-password/PermitRootLogin yes/' /etc/ssh/sshd_config
-
-# SSH login fix. Otherwise user is kicked off after login
-RUN sed 's@session\s*required\s*pam_loginuid.so@session optional pam_loginuid.so@g' -i /etc/pam.d/sshd
-
-ENV NOTVISIBLE "in users profile"
-RUN echo "export VISIBLE=now" >> /etc/profile
 
 EXPOSE 22
-CMD ["/usr/sbin/sshd", "-D"]
+
+CMD ["/usr/sbin/dropbear", "-E", "-F"]
