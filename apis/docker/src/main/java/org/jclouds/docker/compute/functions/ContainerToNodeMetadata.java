@@ -16,9 +16,6 @@
  */
 package org.jclouds.docker.compute.functions;
 
-import static com.google.common.base.Preconditions.checkNotNull;
-import static com.google.common.collect.Iterables.getOnlyElement;
-
 import java.net.URI;
 import java.util.List;
 import java.util.Map;
@@ -34,7 +31,6 @@ import org.jclouds.compute.domain.NodeMetadataBuilder;
 import org.jclouds.compute.domain.Processor;
 import org.jclouds.compute.functions.GroupNamingConvention;
 import org.jclouds.docker.domain.Container;
-import org.jclouds.docker.domain.Port;
 import org.jclouds.docker.domain.State;
 import org.jclouds.domain.Location;
 import org.jclouds.providers.ProviderMetadata;
@@ -54,24 +50,26 @@ public class ContainerToNodeMetadata implements Function<Container, NodeMetadata
     * started outside jclouds. Client code should check for this value
     * when accessing NodeMetadata from Docker.
     */
-   public static final Integer NO_LOGIN_PORT = Integer.valueOf(-1);
+   private static final Integer NO_LOGIN_PORT = Integer.valueOf(-1);
 
    private final ProviderMetadata providerMetadata;
    private final Function<State, NodeMetadata.Status> toPortableStatus;
    private final GroupNamingConvention nodeNamingConvention;
    private final Supplier<Map<String, ? extends Image>> images;
    private final Supplier<Set<? extends Location>> locations;
+   private final LoginPortForContainer loginPortForContainer;
 
    @Inject
-   public ContainerToNodeMetadata(ProviderMetadata providerMetadata, Function<State,
-           NodeMetadata.Status> toPortableStatus, GroupNamingConvention.Factory namingConvention,
-                                  Supplier<Map<String, ? extends Image>> images,
-                                  @Memoized Supplier<Set<? extends Location>> locations) {
-      this.providerMetadata = checkNotNull(providerMetadata, "providerMetadata");
-      this.toPortableStatus = checkNotNull(toPortableStatus, "toPortableStatus cannot be null");
-      this.nodeNamingConvention = checkNotNull(namingConvention, "namingConvention").createWithoutPrefix();
-      this.images = checkNotNull(images, "images cannot be null");
-      this.locations = checkNotNull(locations, "locations");
+   ContainerToNodeMetadata(ProviderMetadata providerMetadata,
+         Function<State, NodeMetadata.Status> toPortableStatus, GroupNamingConvention.Factory namingConvention,
+         Supplier<Map<String, ? extends Image>> images, @Memoized Supplier<Set<? extends Location>> locations,
+         LoginPortForContainer loginPortForContainer) {
+      this.providerMetadata = providerMetadata;
+      this.toPortableStatus = toPortableStatus;
+      this.nodeNamingConvention = namingConvention.createWithoutPrefix();
+      this.images = images;
+      this.locations = locations;
+      this.loginPortForContainer = loginPortForContainer;
    }
 
    @Override
@@ -90,7 +88,7 @@ public class ContainerToNodeMetadata implements Function<Container, NodeMetadata
                       .processor(new Processor(container.config().cpuShares(), container.config().cpuShares()))
                       .build());
       builder.status(toPortableStatus.apply(container.state()));
-      builder.loginPort(getLoginPort(container));
+      builder.loginPort(loginPortForContainer.apply(container).or(NO_LOGIN_PORT));
       builder.publicAddresses(getPublicIpAddresses());
       builder.privateAddresses(getPrivateIpAddresses(container));
       builder.location(Iterables.getOnlyElement(locations.get()));
@@ -117,20 +115,4 @@ public class ContainerToNodeMetadata implements Function<Container, NodeMetadata
       return ImmutableList.of(dockerIpAddress);
    }
 
-   protected static int getLoginPort(Container container) {
-      if (container.networkSettings() != null) {
-          Map<String, List<Map<String, String>>> ports = container.networkSettings().ports();
-          if (ports != null && ports.containsKey("22/tcp")) {
-            return Integer.parseInt(getOnlyElement(ports.get("22/tcp")).get("HostPort"));
-          }
-      // this is needed in case the container list is coming from listContainers
-      } else if (container.ports() != null) {
-         for (Port port : container.ports()) {
-            if (port.privatePort() == 22) {
-               return port.publicPort();
-            }
-         }
-      }
-      return NO_LOGIN_PORT;
-   }
 }

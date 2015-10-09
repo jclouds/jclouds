@@ -44,7 +44,6 @@ import org.jclouds.docker.domain.State;
 import org.jclouds.domain.Location;
 import org.jclouds.domain.LocationBuilder;
 import org.jclouds.domain.LocationScope;
-import org.jclouds.domain.LoginCredentials;
 import org.jclouds.providers.ProviderMetadata;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
@@ -61,8 +60,6 @@ import com.google.inject.Guice;
  */
 @Test(groups = "unit", testName = "ContainerToNodeMetadataTest")
 public class ContainerToNodeMetadataTest {
-
-   private LoginCredentials credentials;
 
    private ContainerToNodeMetadata function;
 
@@ -170,9 +167,8 @@ public class ContainerToNodeMetadataTest {
          }
       };
 
-      credentials = LoginCredentials.builder().user("foo").password("bar").build();
-
-      function = new ContainerToNodeMetadata(providerMetadata, toPortableStatus(), namingConvention, images, locations);
+      function = new ContainerToNodeMetadata(providerMetadata, toPortableStatus(), namingConvention, images, locations,
+            new LoginPortForContainer.LoginPortLookupChain(null));
    }
 
    private Function<State, NodeMetadata.Status> toPortableStatus() {

@@ -16,8 +16,6 @@
  */
 package org.jclouds.docker.compute.config;
 
-import com.google.common.base.Function;
-import com.google.inject.TypeLiteral;
 import org.jclouds.compute.ComputeServiceAdapter;
 import org.jclouds.compute.config.ComputeServiceAdapterContextModule;
 import org.jclouds.compute.domain.Hardware;
@@ -34,8 +32,11 @@ import org.jclouds.docker.domain.State;
 import org.jclouds.domain.Location;
 import org.jclouds.functions.IdentityFunction;
 
+import com.google.common.base.Function;
+import com.google.inject.TypeLiteral;
+
 public class DockerComputeServiceContextModule extends
-        ComputeServiceAdapterContextModule<Container, Hardware, Image, Location> {
+      ComputeServiceAdapterContextModule<Container, Hardware, Image, Location> {
 
    @SuppressWarnings("unchecked")
    @Override
@@ -54,6 +55,8 @@ public class DockerComputeServiceContextModule extends
       bind(new TypeLiteral<Function<State, NodeMetadata.Status>>() {
       }).to(StateToStatus.class);
       bind(TemplateOptions.class).to(DockerTemplateOptions.class);
+
+      install(new LoginPortLookupModule());
    }
 
 }
