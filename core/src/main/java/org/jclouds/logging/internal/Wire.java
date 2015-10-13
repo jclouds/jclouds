@@ -18,6 +18,7 @@ package org.jclouds.logging.internal;
 
 import com.google.common.io.ByteStreams;
 import com.google.common.io.FileBackedOutputStream;
+import org.jclouds.Constants;
 import org.jclouds.io.MutableContentMetadata;
 import org.jclouds.io.Payload;
 import org.jclouds.io.PayloadEnclosing;
@@ -147,7 +148,7 @@ public abstract class Wire {
          } catch (UnsupportedOperationException e) {
             wiredPayload = newPayload(oldContent.getInput());
          }
-         output("Sensitive data in payload, use PROPERTY_LOGGER_WIRE_LOG_SENSITIVE_INFO override to enable logging this data.");
+         output("Sensitive data in payload, use " + Constants.PROPERTY_LOGGER_WIRE_LOG_SENSITIVE_INFO + " override to enable logging this data.");
       }
       wiredPayload.setSensitive(oldContent.isSensitive());
       copyPayloadMetadata(oldContent, wiredPayload);

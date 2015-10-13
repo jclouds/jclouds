@@ -16,6 +16,7 @@
  */
 package org.jclouds.http;
 
+import org.jclouds.Constants;
 import org.jclouds.io.Payload;
 import org.jclouds.io.payloads.StringPayload;
 import org.jclouds.javax.annotation.Nullable;
@@ -93,7 +94,7 @@ public class HttpResponseException extends RuntimeException {
          try {
             String logStatement;
             if (payload.isSensitive() && !logSensitiveInformation) {
-               logStatement = "Sensitive data in payload, use PROPERTY_LOGGER_WIRE_LOG_SENSITIVE_INFO override to enable logging this data.";
+               logStatement = "Sensitive data in payload, use " + Constants.PROPERTY_LOGGER_WIRE_LOG_SENSITIVE_INFO + " override to enable logging this data.";
             } else if (payload instanceof StringPayload) {
                logStatement = payload.getRawContent().toString();
             } else {
