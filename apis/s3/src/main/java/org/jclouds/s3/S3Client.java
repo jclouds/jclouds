@@ -678,6 +678,18 @@ public interface S3Client extends Closeable {
          @PathParam("key") String key, @QueryParam("partNumber") int partNumber,
          @QueryParam("uploadId") String uploadId, Payload part);
 
+   @Named("UploadPartCopy")
+   @PUT
+   @Path("/{key}")
+   @Headers(keys = {"x-amz-copy-source", "x-amz-copy-source-range"}, values = {"/{sourceBucket}/{sourceObject}", "bytes={startOffset}-{endOffset}"})
+   @ResponseParser(ETagFromHttpResponseViaRegex.class)
+   String uploadPartCopy(@Bucket @EndpointParam(parser = AssignCorrectHostnameForBucket.class) @BinderParam(
+         BindAsHostPrefixIfConfigured.class) @ParamValidators(BucketNameValidator.class) String bucketName,
+         @PathParam("key") String key, @QueryParam("partNumber") int partNumber,
+         @QueryParam("uploadId") String uploadId,
+         @PathParam("sourceBucket") String sourceBucket, @PathParam("sourceObject") String sourceObject,
+         @PathParam("startOffset") long startOffset, @PathParam("endOffset") long endOffset);
+
    /**
     *
     This operation completes a multipart upload by assembling previously uploaded parts.

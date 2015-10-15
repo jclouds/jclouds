@@ -550,6 +550,25 @@ public abstract class S3ClientTest<T extends S3Client> extends BaseS3ClientTest<
       checkFilters(request);
    }
 
+   public void testUploadPartCopy() throws SecurityException, NegativeArraySizeException, NoSuchMethodException {
+      Invokable<?, ?> method = method(S3Client.class, "uploadPartCopy", String.class, String.class, int.class,
+            String.class, String.class, String.class, long.class, long.class);
+      GeneratedHttpRequest request = processor.createRequest(method, ImmutableList.<Object> of("bucket", "foo", 1, "asdsadasdas",
+            "anotherBucket", "anotherObject", 2, 10 * 1024 * 1024));
+
+      assertRequestLineEquals(request, "PUT https://bucket." + url + "/foo?partNumber=1&uploadId=asdsadasdas HTTP/1.1");
+      assertNonPayloadHeadersEqual(request, "Host: bucket." + url + "\n" +
+            "x-amz-copy-source: /anotherBucket/anotherObject\n" +
+            "x-amz-copy-source-range: bytes=2-10485760\n");
+      assertPayloadEquals(request, null, "application/unknown", false);
+
+      assertResponseParserClassEquals(method, request, ETagFromHttpResponseViaRegex.class);
+      assertSaxResponseParserClassEquals(method, null);
+      assertFallbackClassEquals(method, MapHttp4xxCodesToExceptions.class);
+
+      checkFilters(request);
+   }
+
    public void testCompleteMultipartUpload() throws SecurityException, NegativeArraySizeException,
          NoSuchMethodException {
       Invokable<?, ?> method = method(S3Client.class, "completeMultipartUpload", String.class, String.class,

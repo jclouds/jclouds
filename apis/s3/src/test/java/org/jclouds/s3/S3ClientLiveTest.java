@@ -551,6 +551,31 @@ public class S3ClientLiveTest extends BaseBlobStoreIntegrationTest {
       }
    }
 
+   public void testMultipartCopy() throws Exception {
+      String containerName = getContainerName();
+      try {
+         String fromObject = "fromObject";
+         S3Object object = getApi().newS3Object();
+         object.getMetadata().setKey(fromObject);
+         object.setPayload(oneHundredOneConstitutions);
+         object.getMetadata().getContentMetadata().setContentLength(oneHundredOneConstitutions.size());
+         getApi().putObject(containerName, object);
+
+         String toObject = "toObject";
+         String uploadId = getApi().initiateMultipartUpload(containerName, ObjectMetadataBuilder.create().key(toObject).build());
+
+         String eTagOf1 = getApi().uploadPartCopy(containerName, toObject, 1, uploadId, containerName, fromObject, 1, oneHundredOneConstitutions.size() - 1);
+
+         String eTag = getApi().completeMultipartUpload(containerName, toObject, uploadId, ImmutableMap.of(1, eTagOf1));
+         assertThat(eTag).isNotEqualTo(eTagOf1);
+
+         object = getApi().getObject(containerName, toObject);
+         assertEquals(ByteStreams2.toByteArrayAndClose(object.getPayload().openStream()), oneHundredOneConstitutions.slice(1, oneHundredOneConstitutions.size() - 1).read());
+      } finally {
+         returnContainer(containerName);
+      }
+   }
+
    public void testDeleteMultipleObjects() throws InterruptedException {
       String container = getContainerName();
       try {
