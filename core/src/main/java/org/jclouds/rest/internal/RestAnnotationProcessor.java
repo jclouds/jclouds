@@ -40,6 +40,7 @@ import static org.jclouds.http.Uris.uriBuilder;
 import static org.jclouds.io.Payloads.newPayload;
 import static org.jclouds.reflect.Reflection2.getInvokableParameters;
 import static org.jclouds.util.Strings2.replaceTokens;
+import static org.jclouds.util.Strings2.urlEncode;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Array;
@@ -102,7 +103,6 @@ import org.jclouds.rest.annotations.VirtualHost;
 import org.jclouds.rest.annotations.WrapWith;
 import org.jclouds.rest.binders.BindMapToStringPayload;
 import org.jclouds.rest.binders.BindToJsonPayloadWrappedWith;
-import org.jclouds.util.Strings2;
 
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Function;
@@ -231,10 +231,10 @@ public class RestAnnotationProcessor implements Function<Invocation, HttpRequest
 
       overridePathEncoding(uriBuilder, invocation);
 
-      boolean encodedParams = isEncodedUsed(invocation);
+      boolean encodeFullPath = !isEncodedUsed(invocation);
       if (caller != null)
-         tokenValues.putAll(addPathAndGetTokens(caller, uriBuilder, encodedParams));
-      tokenValues.putAll(addPathAndGetTokens(invocation, uriBuilder, encodedParams));
+         tokenValues.putAll(addPathAndGetTokens(caller, uriBuilder, encodeFullPath));
+      tokenValues.putAll(addPathAndGetTokens(invocation, uriBuilder, encodeFullPath));
       Multimap<String, Object> formParams;
       if (caller != null) {
          formParams = addFormParams(tokenValues, caller);
@@ -270,7 +270,8 @@ public class RestAnnotationProcessor implements Function<Invocation, HttpRequest
             headers.put(header.getKey(), replaceTokens(header.getValue(), tokenValues));
          }
          for (Entry<String, String> query : options.buildQueryParameters().entries()) {
-            queryParams.put(query.getKey(), replaceTokens(query.getValue(), tokenValues));
+            queryParams.put(urlEncode(query.getKey(), '/', ','),
+                  urlEncode(replaceTokens(query.getValue(), tokenValues), '/', ','));
          }
          for (Entry<String, String> form : options.buildFormParameters().entries()) {
             formParams.put(form.getKey(), replaceTokens(form.getValue(), tokenValues));
@@ -291,11 +292,9 @@ public class RestAnnotationProcessor implements Function<Invocation, HttpRequest
 
       requestBuilder.headers(filterOutContentHeaders(headers));
 
-      if (encodedParams) {
-         requestBuilder.endpoint(uriBuilder.buildNoEncoding(convertUnsafe(tokenValues)));
-      } else {
-         requestBuilder.endpoint(uriBuilder.build(convertUnsafe(tokenValues)));
-      }
+      // Query parameter encoding is handled in the annotation processor
+      requestBuilder.endpoint(uriBuilder.build(convertUnsafe(tokenValues), /*encodePath=*/encodeFullPath,
+            /*encodeQuery=*/ false));
 
       if (payload == null) {
          PayloadEnclosing payloadEnclosing = findOrNull(invocation.getArgs(), PayloadEnclosing.class);
@@ -395,12 +394,13 @@ public class RestAnnotationProcessor implements Function<Invocation, HttpRequest
       return endpoint;
    }
 
-   private Multimap<String, Object> addPathAndGetTokens(Invocation invocation, UriBuilder uriBuilder, boolean encoded) {
+   private Multimap<String, Object> addPathAndGetTokens(Invocation invocation, UriBuilder uriBuilder,
+                                                        boolean encodeFullPath) {
       if (invocation.getInvokable().getOwnerType().getRawType().isAnnotationPresent(Path.class))
          uriBuilder.appendPath(invocation.getInvokable().getOwnerType().getRawType().getAnnotation(Path.class).value());
       if (invocation.getInvokable().isAnnotationPresent(Path.class))
          uriBuilder.appendPath(invocation.getInvokable().getAnnotation(Path.class).value());
-      return getPathParamKeyValues(invocation, encoded);
+      return getPathParamKeyValues(invocation, encodeFullPath);
    }
 
    private Multimap<String, Object> addFormParams(Multimap<String, ?> tokenValues, Invocation invocation) {
@@ -452,11 +452,12 @@ public class RestAnnotationProcessor implements Function<Invocation, HttpRequest
 
    private void addQuery(Multimap<String, Object> queryParams, QueryParams query, Multimap<String, ?> tokenValues) {
       for (int i = 0; i < query.keys().length; i++) {
+         String key = urlEncode(query.keys()[i], '/', ',');
          if (query.values()[i].equals(QueryParams.NULL)) {
-            queryParams.removeAll(query.keys()[i]);
-            queryParams.put(query.keys()[i], null);
+            queryParams.removeAll(key);
+            queryParams.put(key, null);
          } else {
-            queryParams.put(query.keys()[i], replaceTokens(query.values()[i], tokenValues));
+            queryParams.put(key, urlEncode(replaceTokens(query.values()[i], tokenValues), '/', ','));
          }
       }
    }
@@ -768,7 +769,7 @@ public class RestAnnotationProcessor implements Function<Invocation, HttpRequest
       return !parametersWithAnnotation(invocation.getInvokable(), Encoded.class).isEmpty();
    }
 
-   private Multimap<String, Object> getPathParamKeyValues(Invocation invocation, boolean encodedParams) {
+   private Multimap<String, Object> getPathParamKeyValues(Invocation invocation, boolean encodeFullPath) {
       Multimap<String, Object> pathParamValues = LinkedHashMultimap.create();
       for (Parameter param : parametersWithAnnotation(invocation.getInvokable(), PathParam.class)) {
          PathParam pathParam = param.getAnnotation(PathParam.class);
@@ -776,8 +777,8 @@ public class RestAnnotationProcessor implements Function<Invocation, HttpRequest
          Optional<?> paramValue = getParamValue(invocation, param.getAnnotation(ParamParser.class), param.hashCode(),
                paramKey);
          if (paramValue.isPresent()) {
-            if (encodedParams && !param.isAnnotationPresent(Encoded.class)) {
-               pathParamValues.put(paramKey, Strings2.urlEncode(paramValue.get().toString()));
+            if (!encodeFullPath && !param.isAnnotationPresent(Encoded.class)) {
+               pathParamValues.put(paramKey, urlEncode(paramValue.get().toString()));
             } else {
                pathParamValues.put(paramKey, paramValue.get().toString());
             }
@@ -821,16 +822,28 @@ public class RestAnnotationProcessor implements Function<Invocation, HttpRequest
       Multimap<String, Object> queryParamValues = LinkedHashMultimap.create();
       for (Parameter param : parametersWithAnnotation(invocation.getInvokable(), QueryParam.class)) {
          QueryParam queryParam = param.getAnnotation(QueryParam.class);
-         String paramKey = queryParam.value();
+         String paramKey = urlEncode(queryParam.value(), '/', ',');
          Optional<?> paramValue = getParamValue(invocation, param.getAnnotation(ParamParser.class), param.hashCode(),
                paramKey);
          if (paramValue.isPresent())
             if (paramValue.get() instanceof Iterable) {
                @SuppressWarnings("unchecked")
                Iterable<String> iterableStrings = transform(Iterable.class.cast(paramValue.get()), toStringFunction());
+               if (!param.isAnnotationPresent(Encoded.class)) {
+                  iterableStrings = transform(iterableStrings, new Function<String, String>() {
+                     @Override
+                     public String apply(@Nullable String s) {
+                        return urlEncode(s, '/', ',');
+                     }
+                  });
+               }
                queryParamValues.putAll(paramKey, iterableStrings);
             } else {
-               queryParamValues.put(paramKey, paramValue.get().toString());
+               String value = paramValue.get().toString();
+               if (!param.isAnnotationPresent(Encoded.class)) {
+                  value = urlEncode(value, '/', ',');
+               }
+               queryParamValues.put(paramKey, value);
             }
       }
       return queryParamValues;

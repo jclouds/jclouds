@@ -282,9 +282,9 @@ public final class Uris {
          return build(ImmutableMap.<String, Object> of());
       }
 
-      public URI buildNoEncoding(Map<String, ?> variables) {
+      public URI build(Map<String, ?> variables, boolean encodePath, boolean encodeQuery) {
          try {
-            return new URI(expand(variables, false));
+            return new URI(expand(variables, encodePath, encodeQuery));
          } catch (URISyntaxException e) {
             throw new IllegalArgumentException(e);
          }
@@ -296,13 +296,13 @@ public final class Uris {
        */
       public URI build(Map<String, ?> variables) {
          try {
-            return new URI(expand(variables, true));
+            return new URI(expand(variables, true, true));
          } catch (URISyntaxException e) {
             throw new IllegalArgumentException(e);
          }
       }
 
-      private String expand(Map<String, ?> variables, boolean shouldEncode) {
+      private String expand(Map<String, ?> variables, boolean encodePath, boolean encodeQuery) {
          StringBuilder b = new StringBuilder();
          if (scheme != null)
             b.append(scheme).append("://");
@@ -311,14 +311,19 @@ public final class Uris {
          if (port != null)
             b.append(':').append(port);
          if (path != null) {
-            if (shouldEncode) {
+            if (encodePath) {
                b.append(urlEncode(UriTemplates.expand(path, variables), skipPathEncoding));
             } else {
                b.append(UriTemplates.expand(path, variables));
             }
          }
-         if (!query.isEmpty())
-            b.append('?').append(encodeQueryLine(query));
+         if (!query.isEmpty()) {
+            if (encodeQuery) {
+               b.append('?').append(encodeQueryLine(query));
+            } else {
+               b.append('?').append(buildQueryLine(query));
+            }
+         }
          return b.toString();
       }
 

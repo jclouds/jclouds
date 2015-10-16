@@ -24,6 +24,7 @@ import static org.jclouds.io.Payloads.newInputStreamPayload;
 import static org.jclouds.io.Payloads.newStringPayload;
 import static org.jclouds.providers.AnonymousProviderMetadata.forApiOnEndpoint;
 import static org.jclouds.reflect.Reflection2.method;
+import static org.jclouds.util.Strings2.urlEncode;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNull;
 import static org.testng.Assert.assertTrue;
@@ -483,6 +484,12 @@ public class RestAnnotationProcessorTest extends BaseRestApiTest {
       @Path("/")
       public void queryParamIterable(@Nullable @QueryParam("foo") Iterable<String> bars) {
       }
+
+      @FOO
+      @Path("/")
+      @QueryParams(keys = { "test param"}, values = { "foo bar" })
+      public void queryKeyEncoded() {
+      }
    }
 
    public void testQuery() throws SecurityException, NoSuchMethodException {
@@ -575,6 +582,30 @@ public class RestAnnotationProcessorTest extends BaseRestApiTest {
       assertEquals(request.getMethod(), "FOO");
    }
 
+   public void testQueryEncodedKey() throws SecurityException, NoSuchMethodException {
+      GeneratedHttpRequest request = processor.apply(Invocation.create(method(TestQuery.class, "queryKeyEncoded")));
+      assertEquals(request.getEndpoint().getHost(), "localhost");
+      assertEquals(request.getEndpoint().getPath(), "/");
+      assertEquals(request.getEndpoint().getRawQuery(), "x-ms-version=2009-07-17&test%20param=foo%20bar");
+      assertEquals(request.getMethod(), "FOO");
+   }
+
+   @QueryParams(keys = "test%param", values = "percent%")
+   public class TestInterfaceQueryParam {
+      @FOO
+      @Path("/")
+      public void query() {
+      }
+   }
+
+   public void testInterfaceEncodedKey() throws SecurityException, NoSuchMethodException {
+      GeneratedHttpRequest request = processor.apply(Invocation.create(method(TestInterfaceQueryParam.class, "query")));
+      assertEquals(request.getEndpoint().getHost(), "localhost");
+      assertEquals(request.getEndpoint().getPath(), "/");
+      assertEquals(request.getEndpoint().getRawQuery(), "test%25param=percent%25");
+      assertEquals(request.getMethod(), "FOO");
+   }
+
    interface TestPayloadParamVarargs {
       @POST
       void varargs(HttpRequestOptions... options);
@@ -661,6 +692,16 @@ public class RestAnnotationProcessorTest extends BaseRestApiTest {
       assertRequestLineEquals(request, "POST http://localhost:9999?key=value HTTP/1.1");
       assertNonPayloadHeadersEqual(request, "X-header-1: fooya\n");
       assertPayloadEquals(request, "fooya", "application/unknown", false);
+   }
+
+   public void testQueryVarargsEncoding() throws Exception {
+      Invokable<?, ?> method = method(TestPayloadParamVarargs.class, "varargsWithReq", String.class,
+            HttpRequestOptions[].class);
+      GeneratedHttpRequest request = processor.apply(
+            Invocation.create(method,
+                  ImmutableList.<Object> of("required param",
+                        new TestHttpRequestOptions().queryParams(ImmutableMultimap.of("key", "foo bar")))));
+      assertRequestLineEquals(request, "POST http://localhost:9999?key=foo%20bar HTTP/1.1");
    }
 
    public void testDuplicateHeaderAndQueryVarargs() throws Exception {
@@ -1556,6 +1597,21 @@ public class RestAnnotationProcessorTest extends BaseRestApiTest {
       public void oneQueryParamExtractor(@QueryParam("one") @ParamParser(FirstCharacter.class) String one) {
       }
 
+      @GET
+      @Path("/")
+      public void oneQueryParam(@QueryParam("one") String one) {
+      }
+
+      @GET
+      @Path("/")
+      public void encodedQueryParam(@QueryParam("encoded") @Encoded String encoded) {
+      }
+
+      @GET
+      @Path("/")
+      public void encodedQueryListParam(@QueryParam("encoded") @Encoded List<String> encodedStrings) {
+      }
+
       @POST
       @Path("/")
       public void oneFormParamExtractor(@FormParam("one") @ParamParser(FirstCharacter.class) String one) {
@@ -1604,6 +1660,41 @@ public class RestAnnotationProcessorTest extends BaseRestApiTest {
       GeneratedHttpRequest request = processor.apply(Invocation.create(method,
             ImmutableList.<Object> of("localhost")));
       assertRequestLineEquals(request, "GET http://localhost:9999/?one=l HTTP/1.1");
+      assertNonPayloadHeadersEqual(request, "");
+      assertPayloadEquals(request, null, null, false);
+   }
+
+   @Test
+   public void testEncodedQueryParam() throws Exception {
+      Invokable<?, ?> method = method(TestPath.class, "encodedQueryParam", String.class);
+      GeneratedHttpRequest request = processor.apply(Invocation.create(method,
+            ImmutableList.<Object> of("foo%20bar")));
+      assertRequestLineEquals(request, "GET http://localhost:9999/?encoded=foo%20bar HTTP/1.1");
+      assertNonPayloadHeadersEqual(request, "");
+      assertPayloadEquals(request, null, null, false);
+
+      method = method(TestPath.class, "encodedQueryListParam", List.class);
+      String [] args = {"foo%20bar", "foo/bar"};
+      request = processor.apply(Invocation.create(method,
+            ImmutableList.<Object> of(ImmutableList.of("foo%20bar", "foo/bar"))));
+      assertRequestLineEquals(request, "GET http://localhost:9999/?encoded=foo%20bar&encoded=foo/bar HTTP/1.1");
+      assertNonPayloadHeadersEqual(request, "");
+      assertPayloadEquals(request, null, null, false);
+   }
+
+   @DataProvider(name = "queryStrings")
+   public Object[][] createQueryData() {
+      return new Object[][] { { "normal" }, { "sp ace" }, { "qu?stion" }, { "unic₪de" }, { "path/foo" }, { "colon:" },
+            { "asteri*k" }, { "quote\"" }, { "great<r" }, { "lesst>en" }, { "p|pe" } };
+   }
+
+   @Test(dataProvider = "queryStrings")
+   public void testQueryParam(String val) {
+      Invokable<?, ?> method = method(TestPath.class, "oneQueryParam", String.class);
+      GeneratedHttpRequest request = processor.apply(Invocation.create(method,
+            ImmutableList.<Object> of(val)));
+      assertRequestLineEquals(request, String.format("GET http://localhost:9999/?one=%s HTTP/1.1",
+            urlEncode(val, '/', ',')));
       assertNonPayloadHeadersEqual(request, "");
       assertPayloadEquals(request, null, null, false);
    }
