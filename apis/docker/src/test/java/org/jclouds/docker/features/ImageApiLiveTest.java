@@ -16,19 +16,29 @@
  */
 package org.jclouds.docker.features;
 
+import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertNull;
+
 import java.io.InputStream;
+import java.util.List;
 
 import org.jclouds.docker.compute.BaseDockerApiLiveTest;
+import org.jclouds.docker.domain.Image;
+import org.jclouds.docker.domain.ImageSummary;
 import org.jclouds.docker.options.CreateImageOptions;
 import org.testng.annotations.Test;
 
-@Test(groups = "live", testName = "RemoteApiLiveTest", singleThreaded = true)
+import com.google.common.base.Predicate;
+import com.google.common.collect.Iterables;
+
+@Test(groups = "live", testName = "ImageApiLiveTest", singleThreaded = true)
 public class ImageApiLiveTest extends BaseDockerApiLiveTest {
 
    private static final String DEFAULT_IMAGE = "busybox";
    private static final String DEFAULT_TAG = "ubuntu-14.04";
+
+   private Image image;
 
    @Test
    public void testCreateImage() {
@@ -38,18 +48,38 @@ public class ImageApiLiveTest extends BaseDockerApiLiveTest {
 
    @Test(dependsOnMethods = "testCreateImage")
    public void testInspectImage() {
-      assertNotNull(api.getImageApi().inspectImage(String.format("%s:%s", DEFAULT_IMAGE, DEFAULT_TAG)));
+      image = api.getImageApi().inspectImage(String.format("%s:%s", DEFAULT_IMAGE, DEFAULT_TAG));
+      assertNotNull(image);
    }
 
    @Test(dependsOnMethods = "testInspectImage")
-   public void testListImages() {
-      assertNotNull(api().listImages());
+   public void testTagImage() {
+      api.getImageApi().tagImage(image.id(), "jclouds", "testTag", true);
+      Image taggedImage = api.getImageApi().inspectImage("jclouds:testTag");
+      assertEquals(taggedImage.id(), image.id(), "Newly added image tag should point to the same image ID.");
    }
 
-   @Test(dependsOnMethods = "testListImages")
+   @Test(dependsOnMethods = "testTagImage")
+   public void testListImages() {
+      List<ImageSummary> listImages = api().listImages();
+      assertNotNull(listImages);
+
+      Iterables.find(listImages, new Predicate<ImageSummary>() {
+         @Override
+         public boolean apply(ImageSummary input) {
+            return input.repoTags().contains("jclouds:testTag");
+         }
+      });
+   }
+
+   @Test(dependsOnMethods = "testListImages", alwaysRun = true)
    public void testDeleteImage() {
       consumeStream(api().deleteImage(String.format("%s:%s", DEFAULT_IMAGE, DEFAULT_TAG)));
       assertNull(api().inspectImage(String.format("%s:%s", DEFAULT_IMAGE, DEFAULT_TAG)));
+
+      assertNotNull(api().inspectImage(image.id()), "Image should should still exist after removing original tag. There is a newly added tag referencing it.");
+      consumeStream(api().deleteImage("jclouds:testTag"));
+      assertNull(api().inspectImage("jclouds:testTag"));
    }
 
    private ImageApi api() {

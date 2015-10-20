@@ -69,6 +69,18 @@ public class ImageApiMockTest extends BaseDockerMockTest {
       }
    }
 
+   public void testTagImage() throws Exception {
+      MockWebServer server = mockWebServer(new MockResponse().setResponseCode(201));
+      ImageApi api = api(DockerApi.class, server.getUrl("/").toString()).getImageApi();
+      try {
+         api.tagImage("633fcd11259e8d6bccfbb59a4086b95b0d0fb44edfc3912000ef1f70e8a7bfc6", "jclouds", "testTag", true);
+         assertSent(server, "POST",
+               "/images/633fcd11259e8d6bccfbb59a4086b95b0d0fb44edfc3912000ef1f70e8a7bfc6/tag?repo=jclouds&tag=testTag&force=true");
+      } finally {
+         server.shutdown();
+      }
+   }
+
    public void testDeleteImage() throws Exception {
       MockWebServer server = mockWebServer(new MockResponse().setResponseCode(204));
       ImageApi api = api(DockerApi.class, server.getUrl("/").toString()).getImageApi();
