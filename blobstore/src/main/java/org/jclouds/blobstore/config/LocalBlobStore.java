@@ -829,13 +829,19 @@ public final class LocalBlobStore implements BlobStore {
    @Override
    public List<MultipartPart> listMultipartUpload(MultipartUpload mpu) {
       ImmutableList.Builder<MultipartPart> parts = ImmutableList.builder();
-      PageSet<? extends StorageMetadata> pageSet = list(mpu.containerName(),
-            new ListContainerOptions().prefix(mpu.blobName() + "-").recursive());
-      // TODO: pagination
-      for (StorageMetadata sm : pageSet) {
-         int partNumber = Integer.parseInt(sm.getName().substring((mpu.blobName() + "-").length()));
-         long partSize = -1;  // TODO: could call getContentMetadata but did not above
-         parts.add(MultipartPart.create(partNumber, partSize, sm.getETag()));
+      ListContainerOptions options =
+            new ListContainerOptions().prefix(mpu.blobName() + "-").recursive();
+      while (true) {
+         PageSet<? extends StorageMetadata> pageSet = list(mpu.containerName(), options);
+         for (StorageMetadata sm : pageSet) {
+            int partNumber = Integer.parseInt(sm.getName().substring((mpu.blobName() + "-").length()));
+            long partSize = -1;  // TODO: could call getContentMetadata but did not above
+            parts.add(MultipartPart.create(partNumber, partSize, sm.getETag()));
+         }
+         if (pageSet.isEmpty() || pageSet.getNextMarker() == null) {
+            break;
+         }
+         options.afterMarker(pageSet.getNextMarker());
       }
       return parts.build();
    }
