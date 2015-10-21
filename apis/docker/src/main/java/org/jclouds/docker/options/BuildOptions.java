@@ -21,7 +21,7 @@ import org.jclouds.http.options.BaseHttpRequestOptions;
 public class BuildOptions extends BaseHttpRequestOptions {
 
    public BuildOptions tag(String tag) {
-      this.queryParameters.put("tag", tag);
+      this.queryParameters.put("t", tag);
       return this;
    }
 
