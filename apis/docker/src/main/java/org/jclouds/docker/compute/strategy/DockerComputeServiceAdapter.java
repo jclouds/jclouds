@@ -174,6 +174,12 @@ public class DockerComputeServiceAdapter implements
       return hardware;
    }
 
+   /**
+    * Method based on {@link org.jclouds.docker.features.ImageApi#listImages()}. It retrieves additional
+    * information by inspecting each image.
+    *
+    * @see org.jclouds.compute.ComputeServiceAdapter#listImages()
+    */
    @Override
    public Set<Image> listImages() {
       Set<Image> images = Sets.newHashSet();

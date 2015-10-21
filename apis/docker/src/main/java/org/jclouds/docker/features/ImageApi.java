@@ -63,6 +63,9 @@ public interface ImageApi {
    List<ImageSummary> listImages(ListImageOptions options);
 
    /**
+    * Return low-level information on the image with given name. Not all fields from the returned {@link Image} instance
+    * are populated by this method (e.g. {@link Image#repoTags()}).
+    *
     * @param imageName The id of the image to inspect.
     * @return low-level information on the image name
     */

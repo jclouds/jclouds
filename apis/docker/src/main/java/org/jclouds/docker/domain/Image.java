@@ -26,6 +26,9 @@ import org.jclouds.json.SerializedNames;
 
 import com.google.auto.value.AutoValue;
 
+/**
+ * Represents a response from Docker "Inspect an image" call (<code>GET /images/(name)/json</code>).
+ */
 @AutoValue
 public abstract class Image {
 
@@ -55,6 +58,17 @@ public abstract class Image {
 
    public abstract long virtualSize();
 
+   /**
+    * Tags of the image. The value is <code>null</code> when the instance comes
+    * from {@link org.jclouds.docker.features.ImageApi#inspectImage(String)}.
+    * Other methods can populate the content (e.g.
+    * {@link org.jclouds.docker.compute.strategy.DockerComputeServiceAdapter#listImages()}
+    * call.
+    * <p>
+    * The tags are in form "ubuntu:12.10", "docker.io/busybox:1.23.2", ...
+    * </p>
+    * @return list of tags or <code>null</code>
+    */
    @Nullable public abstract List<String> repoTags();
 
    Image() {
