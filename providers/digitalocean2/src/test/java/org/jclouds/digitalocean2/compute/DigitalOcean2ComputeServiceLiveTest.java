@@ -18,8 +18,10 @@ package org.jclouds.digitalocean2.compute;
 
 import org.jclouds.compute.domain.NodeMetadata;
 import org.jclouds.compute.internal.BaseComputeServiceLiveTest;
+import org.jclouds.digitalocean2.config.DigitalOcean2RateLimitModule;
 import org.jclouds.sshj.config.SshjSshClientModule;
 import org.testng.annotations.Test;
+
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import com.google.inject.Module;
@@ -37,6 +39,12 @@ public class DigitalOcean2ComputeServiceLiveTest extends BaseComputeServiceLiveT
    @Override
    protected Module getSshModule() {
       return new SshjSshClientModule();
+   }
+
+   @Override
+   protected Iterable<Module> setupModules() {
+      return ImmutableSet.<Module> builder().addAll(super.setupModules()).add(new DigitalOcean2RateLimitModule())
+            .build();
    }
 
    @Override

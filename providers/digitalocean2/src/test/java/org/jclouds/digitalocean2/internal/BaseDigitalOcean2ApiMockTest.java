@@ -23,6 +23,7 @@ import static org.testng.Assert.assertEquals;
 
 import java.io.IOException;
 import java.util.Map;
+import java.util.Properties;
 import java.util.Set;
 
 import org.jclouds.ContextBuilder;
@@ -59,7 +60,6 @@ public class BaseDigitalOcean2ApiMockTest {
    // So that we can ignore formatting.
    private final JsonParser parser = new JsonParser();
    
-   
    @BeforeMethod
    public void start() throws IOException {
       server = new MockWebServer();
@@ -68,6 +68,7 @@ public class BaseDigitalOcean2ApiMockTest {
             .credentials("", MOCK_BEARER_TOKEN)
             .endpoint(url(""))
             .modules(modules)
+            .overrides(overrides())
             .build();
       json = ctx.utils().injector().getInstance(Json.class);
       api = ctx.getApi();
@@ -79,6 +80,10 @@ public class BaseDigitalOcean2ApiMockTest {
       api.close();
    }
    
+   protected Properties overrides() {
+      return new Properties();
+   }
+
    protected String url(String path) {
       return server.getUrl(path).toString();
    }

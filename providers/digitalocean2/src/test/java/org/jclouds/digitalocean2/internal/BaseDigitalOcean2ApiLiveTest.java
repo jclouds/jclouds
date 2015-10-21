@@ -28,6 +28,7 @@ import org.jclouds.apis.BaseApiLiveTest;
 import org.jclouds.compute.config.ComputeServiceProperties;
 import org.jclouds.compute.domain.NodeMetadata;
 import org.jclouds.digitalocean2.DigitalOcean2Api;
+import org.jclouds.digitalocean2.config.DigitalOcean2RateLimitModule;
 import org.jclouds.digitalocean2.domain.Action;
 import org.jclouds.digitalocean2.domain.Image;
 import org.jclouds.digitalocean2.domain.Region;
@@ -35,6 +36,7 @@ import org.jclouds.digitalocean2.domain.Size;
 
 import com.google.common.base.Predicate;
 import com.google.common.collect.ComparisonChain;
+import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Ordering;
 import com.google.inject.Injector;
 import com.google.inject.Key;
@@ -66,6 +68,11 @@ public class BaseDigitalOcean2ApiLiveTest extends BaseApiLiveTest<DigitalOcean2A
       nodeTerminated = injector.getInstance(Key.get(new TypeLiteral<Predicate<Integer>>(){},
             Names.named(TIMEOUT_NODE_TERMINATED)));
       return injector.getInstance(DigitalOcean2Api.class);
+   }
+
+   @Override protected Iterable<Module> setupModules() {
+      return ImmutableSet.<Module> builder().addAll(super.setupModules()).add(new DigitalOcean2RateLimitModule())
+            .build();
    }
 
    protected void assertActionCompleted(int actionId) {

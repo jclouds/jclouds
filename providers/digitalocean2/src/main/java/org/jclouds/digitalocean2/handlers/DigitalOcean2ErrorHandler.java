@@ -20,6 +20,7 @@ import static org.jclouds.http.HttpUtils.closeClientButKeepContentStream;
 
 import javax.inject.Singleton;
 
+import org.jclouds.digitalocean2.exceptions.DigitalOcean2RateLimitExceededException;
 import org.jclouds.http.HttpCommand;
 import org.jclouds.http.HttpErrorHandler;
 import org.jclouds.http.HttpResponse;
@@ -33,15 +34,16 @@ import org.jclouds.rest.ResourceNotFoundException;
  */
 @Singleton
 public class DigitalOcean2ErrorHandler implements HttpErrorHandler {
+
    public void handleError(HttpCommand command, HttpResponse response) {
       // it is important to always read fully and close streams
       byte[] data = closeClientButKeepContentStream(response);
       String message = data != null ? new String(data) : null;
 
       Exception exception = message != null ? new HttpResponseException(command, response, message)
-              : new HttpResponseException(command, response);
+            : new HttpResponseException(command, response);
       message = message != null ? message : String.format("%s -> %s", command.getCurrentRequest().getRequestLine(),
-              response.getStatusLine());
+            response.getStatusLine());
       switch (response.getStatusCode()) {
          case 400:
             break;
@@ -60,6 +62,9 @@ public class DigitalOcean2ErrorHandler implements HttpErrorHandler {
             break;
          case 409:
             exception = new IllegalStateException(message, exception);
+            break;
+         case 429:
+            exception = new DigitalOcean2RateLimitExceededException(response, exception);
             break;
       }
       command.setException(exception);
