@@ -6,7 +6,7 @@
                 <requestId>request-id</requestId>
                 <blockId>block-id</blockId>
                 <location>us/las</location>
-                <ips>ip</ips>
+                <ips>10.0.0.1</ips>
             </return>
         </ns2:reservePublicIpBlockResponse>
     </S:Body>

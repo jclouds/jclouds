@@ -28,10 +28,7 @@ public class RollbackSnapshotRequestBinderTest {
    public void testRollbackPayload() {
       RollbackSnapshotRequestBinder binder = new RollbackSnapshotRequestBinder();
 
-      Snapshot.Request.RollbackPayload payload = Snapshot.Request.rollbackBuilder()
-              .snapshotId("snapshot-id")
-              .storageId("storage-id")
-              .build();
+      Snapshot.Request.RollbackPayload payload = Snapshot.Request.createRollbackPayload("snapshot-id", "storage-id");
 
       String actual = binder.createPayload(payload);
       assertNotNull(actual, "Binder returned null payload");

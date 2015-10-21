@@ -41,8 +41,8 @@ public class IpBlockResponseHandler extends BaseIpBlockResponseHandler<IpBlock> 
          setPropertyOnEndTag(qName);
          if ("return".equals(qName)) {
             done = true;
-            builder.publicIps(publicIpListResponseHandler.getResult());
-            builder.ips(ips);
+            builder.publicIps(publicIpListResponseHandler.getResult())
+                    .ips(ips);
          }
          clearTextBuffer();
       }

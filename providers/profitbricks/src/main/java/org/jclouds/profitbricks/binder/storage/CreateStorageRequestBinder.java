@@ -37,7 +37,7 @@ public class CreateStorageRequestBinder extends BaseProfitBricksRequestBinder<St
               .append(formatIfNotEmpty("<storageName>%s</storageName>", payload.name()))
               .append(format("<size>%.0f</size>", payload.size()))
               .append(formatIfNotEmpty("<mountImageId>%s</mountImageId>", payload.mountImageId()))
-              .append(formatIfNotEmpty("<profitBricksImagePassword>%s</profitBricksImagePassword>", payload.profitBricksImagePassword()))
+              .append(formatIfNotEmpty("<profitBricksImagePassword>%s</profitBricksImagePassword>", payload.imagePassword()))
               .append("</request>")
               .append("</ws:createStorage>");
       return requestBuilder.toString();

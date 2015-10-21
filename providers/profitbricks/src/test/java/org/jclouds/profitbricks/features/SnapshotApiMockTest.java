@@ -182,9 +182,10 @@ public class SnapshotApiMockTest extends BaseProfitBricksMockTest {
 
       try {
          String requestId = api.updateSnapshot(Snapshot.Request.updatingBuilder()
-                 .snapshotId(snapshotId)
-                 .name("snapshot-name")
+                 .id(snapshotId)
                  .description("description")
+                 .name("snapshot-name")
+                 .bootable(false)
                  .osType(OsType.LINUX)
                  .isCpuHotPlug(false)
                  .isCpuHotUnPlug(false)
@@ -256,10 +257,7 @@ public class SnapshotApiMockTest extends BaseProfitBricksMockTest {
 
       String content = "<ws:rollbackSnapshot><request><snapshotId>" + snapshotId + "</snapshotId><storageId>" + storageId + "</storageId></request></ws:rollbackSnapshot>";
       try {
-         String result = api.rollbackSnapshot(Snapshot.Request.rollbackBuilder()
-                 .snapshotId(snapshotId)
-                 .storageId(storageId)
-                 .build());
+         String result = api.rollbackSnapshot(Snapshot.Request.createRollbackPayload(snapshotId, storageId));
          assertRequestHasCommonProperties(server.takeRequest(), content);
          assertNotNull(result);
       } finally {

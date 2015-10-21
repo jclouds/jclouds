@@ -85,7 +85,7 @@ public class LoadBalancerResponseHandlerTest extends BaseResponseHandlerTest<Loa
                       .build())
               .internetAccess(true)
               .ip("192.168.0.1")
-              .lanId("lan-id")
+              .lanId(2)
               .state(ProvisioningState.AVAILABLE)
               .creationTime(dateParser.iso8601DateOrSecondsDateParse("2014-12-12T03:08:35.629Z"))
               .lastModificationTime(dateParser.iso8601DateOrSecondsDateParse("2014-12-12T03:08:35.629Z"))

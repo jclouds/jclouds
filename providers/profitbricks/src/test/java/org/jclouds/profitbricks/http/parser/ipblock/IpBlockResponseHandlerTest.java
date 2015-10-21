@@ -49,12 +49,11 @@ public class IpBlockResponseHandlerTest extends BaseResponseHandlerTest<IpBlock>
               .location(Location.US_LAS)
               .publicIps(ImmutableList.<PublicIp>of(
                               PublicIp.builder()
-                              .ip("ip")
+                              .ip("10.0.0.2")
                               .nicId("nic-id")
                               .build(),
                               PublicIp.builder()
-                              .ip("ip")
-                              .nicId("nic-id")
+                              .ip("10.0.0.3")
                               .build()))
               .ips(emptyIpList)
               .build();

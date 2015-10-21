@@ -6,11 +6,11 @@
                 <blockId>qwertyui-qwer-qwer-qwer-qwertyyuiiop</blockId>
                 <location>us/las</location>
                 <publicIps>
-                    <ip>ip</ip>
+                    <ip>10.0.0.2</ip>
                     <nicId>nic-id</nicId>
                 </publicIps>
                 <publicIps>
-                    <ip>ip</ip>
+                    <ip>10.0.0.3</ip>
                 </publicIps>
             </return>
         </ns2:getAllPublicIpBlocksResponse>

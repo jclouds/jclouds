@@ -30,7 +30,21 @@ public class UpdateSnapshotRequestBinderTest {
    public void testUpdatePayload() {
       UpdateSnapshotRequestBinder binder = new UpdateSnapshotRequestBinder();
 
-      Snapshot.Request.UpdatePayload payload = Snapshot.Request.UpdatePayload.create("qswdefrg-qaws-qaws-defe-rgrgdsvcxbrh", "description", "snapshot-name", true, OsType.LINUX, true, true, true, true, true, true, true, true);
+      Snapshot.Request.UpdatePayload payload = Snapshot.Request.updatingBuilder()
+              .id("qswdefrg-qaws-qaws-defe-rgrgdsvcxbrh")
+              .description("description")
+              .name("snapshot-name")
+              .bootable(true)
+              .osType(OsType.LINUX)
+              .isCpuHotPlug(true)
+              .isCpuHotUnPlug(true)
+              .isRamHotPlug(true)
+              .isRamHotUnPlug(true)
+              .isNicHotPlug(true)
+              .isNicHotUnPlug(true)
+              .isDiscVirtioHotPlug(true)
+              .isDiscVirtioHotUnPlug(true)
+              .build();
 
       String actual = binder.createPayload(payload);
       assertNotNull(actual, "Binder returned null payload");

@@ -75,13 +75,13 @@ public class FirewallApiLiveTest extends BaseProfitBricksLiveTest {
    @Test
    public void testAddFirewallRuleToNic() {
       Firewall firewall = api.firewallApi().addFirewallRuleToNic(
-              Firewall.Request.ruleAddingBuilder()
-              .nicId(nic.id())
-              .newRule()
-              .name("test-rule-tcp")
-              .protocol(Protocol.TCP)
-              .endRule()
-              .build());
+              Firewall.Request.createAddRulePayload(nic.id(), ImmutableList.of(
+                              Firewall.Rule.builder()
+                              .name("test-rule-tcp")
+                              .protocol(Protocol.TCP)
+                              .build()
+                      ))
+      );
 
       assertNotNull(firewall);
       assertNotNull(firewall.rules());

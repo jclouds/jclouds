@@ -98,7 +98,7 @@ public class ServerInfoResponseHandlerTest extends BaseResponseHandlerTest<Serve
                               .lanId(1)
                               .internetAccess(true)
                               .serverId("qwertyui-qwer-qwer-qwer-qwertyyuiiop")
-                              .ip("173.252.120.6")
+                              .ips(ImmutableList.of("173.252.120.6"))
                               .macAddress("02:01:09:cd:f0:b0")
                               .firewall(Firewall.builder()
                                       .active(false)

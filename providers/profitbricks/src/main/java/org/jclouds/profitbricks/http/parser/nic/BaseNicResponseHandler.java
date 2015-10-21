@@ -16,6 +16,9 @@
  */
 package org.jclouds.profitbricks.http.parser.nic;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.google.inject.Inject;
 
 import org.jclouds.profitbricks.domain.Nic;
@@ -31,11 +34,13 @@ public abstract class BaseNicResponseHandler<T> extends BaseProfitBricksResponse
 
    protected boolean useFirewallParser = false;
    protected Nic.Builder builder;
+   protected List<String> ips;
 
    @Inject
    BaseNicResponseHandler(FirewallResponseHandler firewallResponseHandler) {
       this.builder = Nic.builder();
       this.firewallResponseHandler = firewallResponseHandler;
+      this.ips = new ArrayList<String>();
    }
 
    @Override
@@ -69,7 +74,7 @@ public abstract class BaseNicResponseHandler<T> extends BaseProfitBricksResponse
       else if ("serverId".equals(qName))
          builder.serverId(textToStringValue());
       else if ("ips".equals(qName))
-         builder.ip(textToStringValue());
+         ips.add(textToStringValue());
       else if ("macAddress".equals(qName))
          builder.macAddress(textToStringValue());
       else if ("dhcpActive".equals(qName))

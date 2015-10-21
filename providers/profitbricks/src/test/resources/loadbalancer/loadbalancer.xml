@@ -10,7 +10,7 @@
                 <loadBalancerAlgorithm>ROUND_ROBIN</loadBalancerAlgorithm>
                 <internetAccess>true</internetAccess>
                 <ip>192.168.0.1</ip>
-                <lanId>lan-id</lanId>
+                <lanId>2</lanId>
                 <balancedServers>
                     <activate>true</activate>
                     <balancedNicId>balanced-nic-id</balancedNicId>

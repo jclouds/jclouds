@@ -29,7 +29,7 @@ import org.jclouds.domain.Location;
 import org.jclouds.profitbricks.domain.OsType;
 import org.jclouds.profitbricks.domain.ProvisioningState;
 import org.jclouds.profitbricks.domain.Snapshot;
-import org.jclouds.profitbricks.domain.internal.Provisionable;
+import org.jclouds.profitbricks.domain.Provisionable;
 
 import com.google.common.base.Function;
 import com.google.common.base.Strings;

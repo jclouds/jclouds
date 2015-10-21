@@ -73,7 +73,7 @@ public class ResponseStatusFromPayloadHttpCommandExecutorServiceTest extends Bas
       DataCenterApi api = pbApi.dataCenterApi();
 
       try {
-         api.createDataCenter(DataCenter.Request.CreatePayload.create("D@tacenter", Location.DE_FKB));
+         api.createDataCenter(DataCenter.Request.creatingPayload("D@tacenter", Location.DE_FKB));
          fail("Request should have failed");
       } catch (Exception ex) {
          assertTrue(ex instanceof IllegalArgumentException, "Exception should be an IllegalArgumentException");
@@ -111,7 +111,13 @@ public class ResponseStatusFromPayloadHttpCommandExecutorServiceTest extends Bas
       ServerApi api = pbApi.serverApi();
 
       try {
-         api.createServer(Server.Request.CreatePayload.create("some-datacenter-id", "node1", 99, 12800));
+         api.createServer(
+                 Server.Request.creatingBuilder()
+                 .dataCenterId("some-datacenter-id")
+                 .name("node1")
+                 .cores(99)
+                 .ram(12800)
+                 .build());
          fail("Request should have failed.");
       } catch (Exception ex) {
          assertTrue(ex instanceof InsufficientResourcesException, "Exception should be InsufficientResourcesException");

@@ -58,7 +58,7 @@ public class FirewallRuleBuilderTest {
 
    @Test
    public void testAutoValueFirewallRuleWithIcmpPropertiesSettingCorrectly() {
-      Firewall.RuleWithIcmp actual = Firewall.RuleWithIcmp.builder()
+      Firewall.Rule actual = Firewall.Rule.builder()
               .name(_name)
               .icmpCode(_icmpCode)
               .icmpType(_icmpType)

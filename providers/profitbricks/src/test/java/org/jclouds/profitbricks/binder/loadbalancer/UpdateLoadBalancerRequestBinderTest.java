@@ -16,11 +16,14 @@
  */
 package org.jclouds.profitbricks.binder.loadbalancer;
 
-import com.google.common.collect.Lists;
-import java.util.List;
-import org.jclouds.profitbricks.domain.LoadBalancer;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
+
+import java.util.List;
+
+import com.google.common.collect.Lists;
+
+import org.jclouds.profitbricks.domain.LoadBalancer;
 import org.testng.annotations.Test;
 
 @Test(groups = "unit", testName = "UpdateLoadBalancerRequestBinderTest")
@@ -33,8 +36,12 @@ public class UpdateLoadBalancerRequestBinderTest {
       serverIds.add("1");
       serverIds.add("2");
 
-      LoadBalancer.Request.UpdatePayload payload = LoadBalancer.Request.UpdatePayload.create("aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee", "load-balancer-name",
-              LoadBalancer.Algorithm.ROUND_ROBIN, "ip");
+      LoadBalancer.Request.UpdatePayload payload = LoadBalancer.Request.updatingBuilder()
+              .id("aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee")
+              .name("load-balancer-name")
+              .algorithm(LoadBalancer.Algorithm.ROUND_ROBIN)
+              .ip("10.0.0.2")
+              .build();
 
       String actual = binder.createPayload(payload);
 
@@ -48,7 +55,7 @@ public class UpdateLoadBalancerRequestBinderTest {
            + "                <loadBalancerId>aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee</loadBalancerId>\n"
            + "                <loadBalancerName>load-balancer-name</loadBalancerName>\n"
            + "                <loadBalancerAlgorithm>ROUND_ROBIN</loadBalancerAlgorithm>\n"
-           + "                <ip>ip</ip>              \n"
+           + "                <ip>10.0.0.2</ip>              \n"
            + "            </request>\n"
            + "        </ws:updateLoadBalancer>").replaceAll("\\s+", "");
 }

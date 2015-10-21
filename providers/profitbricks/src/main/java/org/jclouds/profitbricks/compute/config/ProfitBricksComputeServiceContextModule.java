@@ -52,7 +52,7 @@ import org.jclouds.profitbricks.compute.function.StorageToVolume;
 import org.jclouds.profitbricks.compute.internal.ProvisioningStatusAware;
 import org.jclouds.profitbricks.compute.internal.ProvisioningStatusPollingPredicate;
 import org.jclouds.profitbricks.domain.ProvisioningState;
-import org.jclouds.profitbricks.domain.internal.Provisionable;
+import org.jclouds.profitbricks.domain.Provisionable;
 import org.jclouds.util.Predicates2;
 
 import com.google.common.base.Function;

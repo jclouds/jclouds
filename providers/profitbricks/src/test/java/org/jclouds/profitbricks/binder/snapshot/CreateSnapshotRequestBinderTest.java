@@ -29,7 +29,11 @@ public class CreateSnapshotRequestBinderTest {
    public void testCreatePayload() {
       CreateSnapshotRequestBinder binder = new CreateSnapshotRequestBinder();
 
-      Snapshot.Request.CreatePayload payload = Snapshot.Request.CreatePayload.create("123-1233-1324", "describingthesnapshot", "snapshotname");
+      Snapshot.Request.CreatePayload payload = Snapshot.Request.creatingBuilder()
+              .storageId("123-1233-1324")
+              .name("snapshot-name")
+              .description("describing-the-snapshot")
+              .build();
 
       String actual = binder.createPayload(payload);
       assertNotNull(actual, "Binder returned null payload");
@@ -40,8 +44,8 @@ public class CreateSnapshotRequestBinderTest {
            = ("      <ws:createSnapshot>\n"
            + "<request>\n"
            + "<storageId>123-1233-1324</storageId>\n"
-           + "<description>describing the snapshot</description>\n"
-           + "<snapshotName>snapshot name</snapshotName>\n"
+           + "<description>describing-the-snapshot</description>\n"
+           + "<snapshotName>snapshot-name</snapshotName>\n"
            + "</request>\n"
            + "</ws:createSnapshot>").replaceAll("\\s+", "");
 }

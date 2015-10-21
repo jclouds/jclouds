@@ -104,7 +104,7 @@ public class DataCenterInfoResponseHandlerTest extends BaseResponseHandlerTest<D
                                               .lanId(1)
                                               .internetAccess(true)
                                               .serverId("qqqqqqqq-wwww-eeee-rrrr-tttttttttttt")
-                                              .ip("202.94.38.12")
+                                              .ips(ImmutableList.of("202.94.38.12"))
                                               .macAddress("02:01:09:cd:f0:b0")
                                               .firewall(
                                                       Firewall.builder()

@@ -36,7 +36,7 @@ public class UpdateLoadBalancerRequestBinder extends BaseProfitBricksRequestBind
               .append("<request>")
               .append(format("<loadBalancerId>%s</loadBalancerId>", payload.id()))
               .append(formatIfNotEmpty("<loadBalancerName>%s</loadBalancerName>", payload.name()))
-              .append(formatIfNotEmpty("<loadBalancerAlgorithm>%s</loadBalancerAlgorithm>", payload.loadBalancerAlgorithm()))
+              .append(formatIfNotEmpty("<loadBalancerAlgorithm>%s</loadBalancerAlgorithm>", payload.algorithm()))
               .append(formatIfNotEmpty("<ip>%s</ip>", payload.ip()))
               .append("</request>")
               .append("</ws:updateLoadBalancer>").toString();

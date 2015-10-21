@@ -11,7 +11,7 @@
                 <internetAccess>true</internetAccess>
                 <serverId>server-id</serverId>
                 <ips>192.168.0.1</ips>
-                <macAddress>mac-address</macAddress>
+                <macAddress>aa:bb:cc:dd:ee:ff</macAddress>
                 <firewall>
                     <active>true</active>
                     <firewallId>firewall-id</firewallId>
@@ -19,7 +19,7 @@
                     <provisioningState>AVAILABLE</provisioningState>
                 </firewall>
                 <dhcpActive>true</dhcpActive>
-                <gatewayIp>gateway-ip</gatewayIp>
+                <gatewayIp>10.0.0.1</gatewayIp>
                 <provisioningState>AVAILABLE</provisioningState>
             </return>
         </ns2:getNicResponse>

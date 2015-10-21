@@ -5,7 +5,7 @@
             <return>
                 <requestId>request-id</requestId>
                 <dataCenterId>datacenter-id</dataCenterId>
-                <dataCenterVersion>datacenter-version</dataCenterVersion>
+                <dataCenterVersion>123</dataCenterVersion>
             </return>
         </ns2:deleteLoadBalancerResponse>
     </S:Body>

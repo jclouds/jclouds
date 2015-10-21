@@ -16,7 +16,10 @@
  */
 package org.jclouds.profitbricks.http.parser.nic;
 
+import java.util.ArrayList;
+
 import com.google.inject.Inject;
+
 import org.jclouds.profitbricks.domain.Nic;
 import org.jclouds.profitbricks.http.parser.firewall.FirewallResponseHandler;
 import org.xml.sax.SAXException;
@@ -41,7 +44,9 @@ public class NicResponseHandler extends BaseNicResponseHandler<Nic> {
          setPropertyOnEndTag(qName);
          if ("return".equals(qName)) {
             done = true;
-            builder.firewall(firewallResponseHandler.getResult());
+            builder.ips(ips)
+                    .firewall(firewallResponseHandler.getResult());
+            ips = new ArrayList<String>();
             firewallResponseHandler.reset();
          }
          clearTextBuffer();

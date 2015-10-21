@@ -49,7 +49,7 @@ public class ServerListResponseHandler extends BaseServerResponseHandler<List<Se
       else {
          setPropertyOnEndTag(qName);
          if ("return".equals(qName) || "servers".equals(qName) || "balancedServers".equals(qName)) {
-            Server.DescribingBuilder sdb = null;
+            Server.Builder sdb = null;
             try {
                sdb = builder
                        .storages(storageListResponseHandler.getResult())
@@ -58,7 +58,7 @@ public class ServerListResponseHandler extends BaseServerResponseHandler<List<Se
                        // For LoadBalancer's case, there's no DataCenter (may throw NPE on #build()). 
                        .dataCenter(dataCenterBuilder.build())
                        .build());
-            } catch (NullPointerException ex) {
+            } catch (Exception ex) {
                servers.add(sdb.build());
             }
             storageListResponseHandler.reset();

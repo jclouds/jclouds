@@ -33,7 +33,7 @@ public class RegisterLoadBalancerRequestBinderTest {
       serverIds.add("1");
       serverIds.add("2");
 
-      LoadBalancer.Request.RegisterPayload payload = LoadBalancer.Request.RegisterPayload.create(serverIds, "load-balancer-id");
+      LoadBalancer.Request.RegisterPayload payload = LoadBalancer.Request.createRegisteringPaylod("load-balancer-id", serverIds);
 
       String actual = binder.createPayload(payload);
 

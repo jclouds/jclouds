@@ -29,7 +29,7 @@ public class AddRomDriveToServerRequestBinderTest {
 
       Drive.Request.AddRomDriveToServerPayload payload = Drive.Request.AddRomDriveToServerPayload.builder()
               .serverId("server-id")
-              .storageId("image-id")
+              .imageId("image-id")
               .deviceNumber("device-number")
               .build();
 

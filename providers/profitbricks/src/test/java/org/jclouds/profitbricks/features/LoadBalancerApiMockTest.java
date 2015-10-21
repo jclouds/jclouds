@@ -16,22 +16,24 @@
  */
 package org.jclouds.profitbricks.features;
 
-import com.google.common.collect.Lists;
-import com.squareup.okhttp.mockwebserver.MockResponse;
-import com.squareup.okhttp.mockwebserver.MockWebServer;
-import java.util.List;
-import org.jclouds.profitbricks.ProfitBricksApi;
-import org.jclouds.profitbricks.domain.LoadBalancer;
-import org.jclouds.profitbricks.domain.LoadBalancer.Algorithm;
-import org.jclouds.profitbricks.internal.BaseProfitBricksMockTest;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertNull;
 import static org.testng.AssertJUnit.assertTrue;
+
+import java.util.List;
+
+import com.google.common.collect.Lists;
+import com.squareup.okhttp.mockwebserver.MockResponse;
+import com.squareup.okhttp.mockwebserver.MockWebServer;
+import org.jclouds.profitbricks.ProfitBricksApi;
+import org.jclouds.profitbricks.domain.LoadBalancer;
+import org.jclouds.profitbricks.domain.LoadBalancer.Algorithm;
+import org.jclouds.profitbricks.internal.BaseProfitBricksMockTest;
 import org.testng.annotations.Test;
 
-@Test(groups = "unit", testName = "LoadbalancerApiMockTest")
-public class LoadbalancerApiMockTest extends BaseProfitBricksMockTest {
+@Test(groups = "unit", testName = "LoadBalancerApiMockTest")
+public class LoadBalancerApiMockTest extends BaseProfitBricksMockTest {
 
    @Test
    public void testGetAllLoadBalancers() throws Exception {
@@ -132,7 +134,7 @@ public class LoadbalancerApiMockTest extends BaseProfitBricksMockTest {
               + "<loadBalancerName>load-balancer-name</loadBalancerName>"
               + "<loadBalancerAlgorithm>ROUND_ROBIN</loadBalancerAlgorithm>"
               + "<ip>192.168.0.1</ip>"
-              + "<lanId>lan-id</lanId>"
+              + "<lanId>3</lanId>"
               + "<serverIds>server-ids</serverIds>"
               + "</request>"
               + "</ws:createLoadBalancer>";
@@ -142,10 +144,10 @@ public class LoadbalancerApiMockTest extends BaseProfitBricksMockTest {
          serverIds.add("server-ids");
          String requestId = api.createLoadBalancer(LoadBalancer.Request.creatingBuilder()
                  .dataCenterId("aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeeee")
-                 .loadBalancerName("load-balancer-name")
-                 .loadBalancerAlgorithm(Algorithm.ROUND_ROBIN)
+                 .name("load-balancer-name")
+                 .algorithm(Algorithm.ROUND_ROBIN)
                  .ip("192.168.0.1")
-                 .lanId("lan-id")
+                 .lanId(3)
                  .serverIds(serverIds)
                  .build());
 
@@ -180,8 +182,8 @@ public class LoadbalancerApiMockTest extends BaseProfitBricksMockTest {
       try {
          LoadBalancer.Request.UpdatePayload toUpdate = LoadBalancer.Request.updatingBuilder()
                  .id(id)
-                 .loadBalancerName("load-balancer-name")
-                 .loadBalancerAlgorithm(Algorithm.ROUND_ROBIN)
+                 .name("load-balancer-name")
+                 .algorithm(Algorithm.ROUND_ROBIN)
                  .ip("192.168.0.1")
                  .build();
 
@@ -216,14 +218,13 @@ public class LoadbalancerApiMockTest extends BaseProfitBricksMockTest {
          List<String> serverIds = Lists.newArrayList();
          serverIds.add("1");
          serverIds.add("2");
-         LoadBalancer.Request.RegisterPayload payload = LoadBalancer.Request.registerBuilder()
-                 .id("1234")
-                 .serverIds(serverIds)
-                 .build();
+         LoadBalancer.Request.RegisterPayload payload = LoadBalancer.Request
+                 .createRegisteringPaylod("1234", serverIds);
 
-         LoadBalancer loadbalancer = api.registerLoadBalancer(payload);
+         LoadBalancer loadBalancer = api.registerLoadBalancer(payload);
 
          assertRequestHasCommonProperties(server.takeRequest(), content);
+         assertNotNull(loadBalancer);
       } finally {
          pbApi.close();
          server.shutdown();
@@ -250,10 +251,14 @@ public class LoadbalancerApiMockTest extends BaseProfitBricksMockTest {
          List<String> serverIds = Lists.newArrayList();
          serverIds.add("1");
          serverIds.add("2");
-         LoadBalancer loadbalancer = api.deregisterLoadBalancer(LoadBalancer.Request.DeregisterPayload.create(serverIds, "load-balancer-id"));
+
+         LoadBalancer.Request.DeregisterPayload payload = LoadBalancer.Request
+                 .createDeregisteringPayload("load-balancer-id", serverIds);
+
+         LoadBalancer loadBalancer = api.deregisterLoadBalancer(payload);
 
          assertRequestHasCommonProperties(server.takeRequest(), content);
-         assertNotNull(loadbalancer);
+         assertNotNull(loadBalancer);
       } finally {
          pbApi.close();
          server.shutdown();

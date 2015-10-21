@@ -16,9 +16,14 @@
  */
 package org.jclouds.profitbricks.domain;
 
+import static org.jclouds.profitbricks.util.Preconditions.checkIp;
+import static org.jclouds.profitbricks.util.Preconditions.checkIps;
+
 import com.google.auto.value.AutoValue;
 import com.google.common.collect.ImmutableList;
+
 import java.util.List;
+
 import org.jclouds.javax.annotation.Nullable;
 
 @AutoValue
@@ -30,51 +35,39 @@ public abstract class IpBlock {
 
    public abstract List<PublicIp> publicIps();
 
+   @Nullable
    public abstract List<String> ips();
 
-   public static IpBlock create(String id, Location location, List<PublicIp> publicIps, List<String> ips) {
-      return new AutoValue_IpBlock(id, location, publicIps, ips != null ? ImmutableList.copyOf(ips) : ImmutableList.<String>of());
-   }
-
    public static Builder builder() {
-      return new Builder();
+      return new AutoValue_IpBlock.Builder()
+              .publicIps(ImmutableList.<PublicIp>of())
+              .ips(ImmutableList.<String>of());
    }
 
-   public static final class Builder {
+   public abstract Builder toBuilder();
 
-      private String id;
-      private Location location;
-      private List<PublicIp> publicIps;
-      private List<String> ips;
+   @AutoValue.Builder
+   public abstract static class Builder {
 
-      public Builder id(String id) {
-         this.id = id;
-         return this;
-      }
+      public abstract Builder id(String id);
 
-      public Builder location(Location location) {
-         this.location = location;
-         return this;
-      }
+      public abstract Builder location(Location location);
 
-      public Builder publicIps(List<PublicIp> publicIps) {
-         this.publicIps = publicIps;
-         return this;
-      }
+      public abstract Builder publicIps(List<PublicIp> publicIps);
 
-      public Builder ips(List<String> ips) {
-         this.ips = ips;
-         return this;
-      }
+      public abstract Builder ips(List<String> ips);
+
+      abstract IpBlock autoBuild();
 
       public IpBlock build() {
-         return IpBlock.create(id, location, publicIps, ips);
-      }
+         IpBlock ipBlock = autoBuild();
+         checkIps(ipBlock.ips());
 
-      public Builder fromIpBlock(IpBlock in) {
-         return this.id(in.id()).location(in.location()).publicIps(in.publicIps()).ips(in.ips());
+         return ipBlock.toBuilder()
+                 .publicIps(ImmutableList.copyOf(ipBlock.publicIps()))
+                 .ips(ImmutableList.copyOf(ipBlock.ips()))
+                 .autoBuild();
       }
-
    }
 
    @AutoValue
@@ -85,41 +78,26 @@ public abstract class IpBlock {
       @Nullable
       public abstract String nicId();
 
-      public static PublicIp create(String ip, String nicId) {
-         return new AutoValue_IpBlock_PublicIp(ip, nicId);
-      }
-
       public static Builder builder() {
-         return new Builder();
+         return new AutoValue_IpBlock_PublicIp.Builder();
       }
 
-      public Builder toBuilder() {
-         return builder().fromPublicIp(this);
-      }
+      @AutoValue.Builder
+      public abstract static class Builder {
 
-      public static final class Builder {
+         public abstract Builder ip(String ip);
 
-         private String ip;
-         private String nicId;
+         public abstract Builder nicId(String nicId);
 
-         public Builder ip(String ip) {
-            this.ip = ip;
-            return this;
-         }
-
-         public Builder nicId(String nicId) {
-            this.nicId = nicId;
-            return this;
-         }
+         abstract PublicIp autoBuild();
 
          public PublicIp build() {
-            return PublicIp.create(ip, nicId);
-         }
+            PublicIp publicIp = autoBuild();
+            checkIp(publicIp.ip());
 
-         public Builder fromPublicIp(PublicIp in) {
-            return this.ip(in.ip()).nicId(in.nicId());
+            return publicIp;
          }
       }
-   }
 
+   }
 }

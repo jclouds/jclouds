@@ -16,14 +16,15 @@
  */
 package org.jclouds.profitbricks.domain;
 
-import static com.google.common.base.Preconditions.checkArgument;
-import static com.google.common.net.InetAddresses.isInetAddress;
+import static org.jclouds.profitbricks.util.Preconditions.checkIp;
+import static org.jclouds.profitbricks.util.Preconditions.checkIps;
+import static org.jclouds.profitbricks.util.Preconditions.checkLanId;
+import static org.jclouds.profitbricks.util.Preconditions.checkMacAddress;
 
 import java.util.List;
 
 import com.google.auto.value.AutoValue;
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Lists;
 
 import org.jclouds.javax.annotation.Nullable;
 
@@ -39,9 +40,11 @@ public abstract class Nic {
    @Nullable
    public abstract String dataCenterId();
 
-   public abstract int lanId();
+   @Nullable
+   public abstract Integer lanId();
 
-   public abstract boolean internetAccess();
+   @Nullable
+   public abstract Boolean internetAccess();
 
    @Nullable
    public abstract String serverId();
@@ -53,9 +56,10 @@ public abstract class Nic {
    public abstract String macAddress();
 
    @Nullable
-   public abstract Firewall firewalls();
+   public abstract Firewall firewall();
 
-   public abstract boolean dhcpActive();
+   @Nullable
+   public abstract Boolean dhcpActive();
 
    @Nullable
    public abstract String gatewayIp();
@@ -63,157 +67,80 @@ public abstract class Nic {
    @Nullable
    public abstract ProvisioningState state();
 
-   public static Nic create(String id, String name, String dataCenterId, int lanId, boolean internetAccess,
-           String serverId, List<String> ips, String macAddress, Firewall firewall, boolean dhcpActive,
-           String gatewayIp, ProvisioningState state) {
-      return new AutoValue_Nic(id, name, dataCenterId, lanId, internetAccess, serverId,
-              ips != null ? ImmutableList.copyOf(ips) : ImmutableList.<String>of(), macAddress,
-              firewall, dhcpActive, gatewayIp, state);
-   }
-
    public static Builder builder() {
-      return new Builder();
+      return new AutoValue_Nic.Builder()
+              .ips(ImmutableList.<String>of());
    }
 
-   public Builder toBuilder() {
-      return builder().fromNic(this);
-   }
+   public abstract Builder toBuilder();
 
-   private static void checkIp(String ip) {
-      if (ip != null)
-         checkArgument(isInetAddress(ip), "Invalid IP");
-   }
+   @AutoValue.Builder
+   public abstract static class Builder {
 
-   private static void checkIps(List<String> ips) {
-      for (String ip : ips)
-         checkIp(ip);
-   }
+      public abstract Builder id(String id);
 
-   public static class Builder {
+      public abstract Builder name(String name);
 
-      public String id;
+      public abstract Builder dataCenterId(String dataCenterId);
 
-      public String name;
+      public abstract Builder lanId(Integer lanId);
 
-      public String dataCenterId;
+      public abstract Builder internetAccess(Boolean internetAccess);
 
-      public int lanId;
+      public abstract Builder serverId(String serverId);
 
-      public boolean internetAccess;
+      public abstract Builder ips(List<String> ips);
 
-      public String serverId;
+      public abstract Builder macAddress(String macAddress);
 
-      @Nullable
-      public List<String> ips;
+      public abstract Builder firewall(Firewall firewall);
 
-      public String macAddress;
+      public abstract Builder dhcpActive(Boolean dhcpActive);
 
-      public Firewall firewall;
+      public abstract Builder gatewayIp(String gatewayIp);
 
-      public boolean dhcpActive;
+      public abstract Builder state(ProvisioningState state);
 
-      public String gatewayIp;
-
-      public ProvisioningState state;
-
-      public Builder() {
-         this.ips = Lists.newArrayList();
-      }
-
-      public Builder id(String id) {
-         this.id = id;
-         return this;
-      }
-
-      public Builder name(String name) {
-         this.name = name;
-         return this;
-      }
-
-      public Builder dataCenterId(String dataCenterId) {
-         this.dataCenterId = dataCenterId;
-         return this;
-      }
-
-      public Builder lanId(int lanId) {
-         this.lanId = lanId;
-         return this;
-      }
-
-      public Builder internetAccess(boolean internetAccess) {
-         this.internetAccess = internetAccess;
-         return this;
-      }
-
-      public Builder serverId(String serverId) {
-         this.serverId = serverId;
-         return this;
-      }
-
-      public Builder ips(List<String> ips) {
-         this.ips = ips;
-         return this;
-      }
-
-      public Builder ip(String ip) {
-         this.ips.add(ip);
-         return this;
-      }
-
-      public Builder macAddress(String macAddress) {
-         this.macAddress = macAddress;
-         return this;
-      }
-
-      public Builder dhcpActive(boolean dhcpActive) {
-         this.dhcpActive = dhcpActive;
-         return this;
-      }
-
-      public Builder gatewayIp(String gatewayIp) {
-         this.gatewayIp = gatewayIp;
-         return this;
-      }
-
-      public Builder state(ProvisioningState state) {
-         this.state = state;
-         return this;
-      }
-
-      public Builder firewall(Firewall firewall) {
-         this.firewall = firewall;
-         return this;
-      }
+      abstract Nic autoBuild();
 
       public Nic build() {
-         checkIps(ips);
-         return Nic.create(id, name, dataCenterId, lanId, internetAccess, serverId, ips,
-                 macAddress, firewall, dhcpActive, gatewayIp, state);
+         Nic nic = autoBuild();
+         if (nic.ips() != null)
+            checkIps(nic.ips());
+         if (nic.gatewayIp() != null)
+            checkIp(nic.gatewayIp());
+         if (nic.lanId() != null)
+            checkLanId(nic.lanId());
+         if (nic.macAddress() != null)
+            checkMacAddress(nic.macAddress());
+
+         return nic.toBuilder()
+                 .ips(ImmutableList.copyOf(nic.ips()))
+                 .autoBuild();
       }
 
-      private Builder fromNic(Nic in) {
-         return this.id(in.id()).name(in.name()).lanId(in.lanId()).internetAccess(in.internetAccess())
-                 .serverId(in.serverId()).ips(in.ips()).macAddress(in.macAddress()).dhcpActive(in.dhcpActive())
-                 .gatewayIp(in.gatewayIp()).dataCenterId(dataCenterId);
-      }
    }
 
    public static final class Request {
 
       public static CreatePayload.Builder creatingBuilder() {
-         return new CreatePayload.Builder();
+         return new AutoValue_Nic_Request_CreatePayload.Builder();
       }
 
       public static UpdatePayload.Builder updatingBuilder() {
-         return new UpdatePayload.Builder();
+         return new AutoValue_Nic_Request_UpdatePayload.Builder();
       }
 
       public static SetInternetAccessPayload.Builder setInternetAccessBuilder() {
-         return new SetInternetAccessPayload.Builder();
+         return new AutoValue_Nic_Request_SetInternetAccessPayload.Builder();
       }
 
       @AutoValue
       public abstract static class CreatePayload {
+
+         public abstract String serverId();
+
+         public abstract int lanId();
 
          @Nullable
          public abstract String ip();
@@ -224,54 +151,30 @@ public abstract class Nic {
          @Nullable
          public abstract Boolean dhcpActive();
 
-         public abstract String serverId();
+         @AutoValue.Builder
+         public abstract static class Builder {
 
-         public abstract int lanId();
+            public abstract Builder serverId(String serverId);
 
-         public static CreatePayload create(String ip, String name, Boolean dhcpActive, String serverId, int lanId) {
-            return new AutoValue_Nic_Request_CreatePayload(ip, name, dhcpActive, serverId, lanId);
-         }
+            public abstract Builder lanId(int lanId);
 
-         public static class Builder {
+            public abstract Builder ip(String ip);
 
-            private String ip;
-            private String name;
-            private Boolean dhcpActive;
-            private String serverId;
-            private int lanId;
+            public abstract Builder name(String name);
 
-            public Builder ip(String ip) {
-               this.ip = ip;
-               return this;
-            }
+            public abstract Builder dhcpActive(Boolean dhcpActive);
 
-            public Builder name(String name) {
-               this.name = name;
-               return this;
-            }
-
-            public Builder dhcpActive(Boolean dhcpActive) {
-               this.dhcpActive = dhcpActive;
-               return this;
-            }
-
-            public Builder serverId(String serverId) {
-               this.serverId = serverId;
-               return this;
-            }
-
-            public Builder lanId(int lanId) {
-               this.lanId = lanId;
-               return this;
-            }
+            abstract CreatePayload autoBuild();
 
             public CreatePayload build() {
-               checkIp(ip);
-               return CreatePayload.create(ip, name, dhcpActive, serverId, lanId);
+               CreatePayload payload = autoBuild();
+               if (payload.ip() != null)
+                  checkIp(payload.ip());
+               checkLanId(payload.lanId());
+
+               return payload;
             }
-
          }
-
       }
 
       @AutoValue
@@ -288,48 +191,32 @@ public abstract class Nic {
          @Nullable
          public abstract Boolean dhcpActive();
 
-         public abstract int lanId();
+         @Nullable
+         public abstract Integer lanId();
 
-         public static UpdatePayload create(String id, String ip, String name, Boolean dhcpActive, int lanId) {
-            return new AutoValue_Nic_Request_UpdatePayload(id, ip, name, dhcpActive, lanId);
-         }
+         @AutoValue.Builder
+         public abstract static class Builder {
 
-         public static class Builder {
+            public abstract Builder id(String id);
 
-            private String id;
-            private String ip;
-            private String name;
-            private Boolean dhcpActive;
-            private int lanId;
+            public abstract Builder ip(String ip);
 
-            public Builder ip(String ip) {
-               this.ip = ip;
-               return this;
-            }
+            public abstract Builder name(String name);
 
-            public Builder name(String name) {
-               this.name = name;
-               return this;
-            }
+            public abstract Builder dhcpActive(Boolean dhcpActive);
 
-            public Builder dhcpActive(Boolean dhcpActive) {
-               this.dhcpActive = dhcpActive;
-               return this;
-            }
+            public abstract Builder lanId(Integer lanId);
 
-            public Builder lanId(int lanId) {
-               this.lanId = lanId;
-               return this;
-            }
-
-            public Builder id(String id) {
-               this.id = id;
-               return this;
-            }
+            abstract UpdatePayload autoBuild();
 
             public UpdatePayload build() {
-               checkIp(ip);
-               return UpdatePayload.create(id, ip, name, dhcpActive, lanId);
+               UpdatePayload payload = autoBuild();
+               if (payload.ip() != null)
+                  checkIp(payload.ip());
+               if (payload.lanId() != null)
+                  checkLanId(payload.lanId());
+
+               return payload;
             }
          }
       }
@@ -343,35 +230,19 @@ public abstract class Nic {
 
          public abstract boolean internetAccess();
 
-         public static SetInternetAccessPayload create(String dataCenterId, int lanId, boolean internetAccess) {
-            return new AutoValue_Nic_Request_SetInternetAccessPayload(dataCenterId, lanId, internetAccess);
-         }
+         @AutoValue.Builder
+         public abstract static class Builder {
 
-         public static class Builder {
+            public abstract Builder dataCenterId(String dataCenterId);
 
-            public String dataCenterId;
-            public int lanId;
-            public boolean internetAccess;
+            public abstract Builder lanId(int lanId);
 
-            public Builder dataCenterId(String dataCenterId) {
-               this.dataCenterId = dataCenterId;
-               return this;
-            }
+            public abstract Builder internetAccess(boolean internetAccess);
 
-            public Builder lanId(int lanId) {
-               this.lanId = lanId;
-               return this;
-            }
+            public abstract SetInternetAccessPayload build();
 
-            public Builder internetAccess(boolean internetAccess) {
-               this.internetAccess = internetAccess;
-               return this;
-            }
-
-            public SetInternetAccessPayload build() {
-               return SetInternetAccessPayload.create(dataCenterId, lanId, internetAccess);
-            }
          }
       }
    }
+
 }

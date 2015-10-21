@@ -66,7 +66,7 @@ public class StorageApiLiveTest extends BaseProfitBricksLiveTest {
    public void testUberStorage() {
       api.storageApi().createStorage(
               Storage.Request.creatingBuilder()
-              .dataCenterId(dataCenter)
+              .dataCenterId(dataCenter.id())
               .name("Uber Storage")
               .size(9999999f)
               .build());
@@ -76,7 +76,7 @@ public class StorageApiLiveTest extends BaseProfitBricksLiveTest {
    public void testCreateStorage() {
       String storageId = api.storageApi().createStorage(
               Storage.Request.creatingBuilder()
-              .dataCenterId(dataCenter)
+              .dataCenterId(dataCenter.id())
               .name("hdd-1")
               .size(2f)
               .build());
@@ -114,7 +114,7 @@ public class StorageApiLiveTest extends BaseProfitBricksLiveTest {
               Storage.Request.updatingBuilder()
               .id(createdStorageId)
               .name("hdd-2")
-              .size(5l)
+              .size(5f)
               .build());
 
       assertNotNull(requestId);

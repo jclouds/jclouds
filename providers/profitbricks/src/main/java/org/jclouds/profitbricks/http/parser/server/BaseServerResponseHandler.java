@@ -38,7 +38,7 @@ public abstract class BaseServerResponseHandler<T> extends BaseProfitBricksRespo
    protected final NicListResponseHandler nicListResponseHandler;
 
    protected DataCenter.Builder dataCenterBuilder;
-   protected Server.DescribingBuilder builder;
+   protected Server.Builder builder;
 
    protected final DateService dateService;
 

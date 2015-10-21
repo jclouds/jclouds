@@ -19,6 +19,8 @@ package org.jclouds.profitbricks.http.parser.nic;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
 
+import com.google.common.collect.ImmutableList;
+
 import org.jclouds.http.functions.ParseSax;
 import org.jclouds.profitbricks.domain.Firewall;
 import org.jclouds.profitbricks.domain.Nic;
@@ -47,10 +49,10 @@ public class NicResponseHandlerTest extends BaseResponseHandlerTest<Nic> {
               .lanId(1)
               .internetAccess(true)
               .serverId("server-id")
-              .ip("192.168.0.1")
-              .macAddress("mac-address")
+              .ips(ImmutableList.of("192.168.0.1"))
+              .macAddress("aa:bb:cc:dd:ee:ff")
               .dhcpActive(true)
-              .gatewayIp("gateway-ip")
+              .gatewayIp("10.0.0.1")
               .state(ProvisioningState.AVAILABLE)
               .firewall(
                       Firewall.builder()

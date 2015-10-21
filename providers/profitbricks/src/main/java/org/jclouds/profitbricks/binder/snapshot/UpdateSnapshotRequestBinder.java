@@ -33,7 +33,7 @@ public class UpdateSnapshotRequestBinder extends BaseProfitBricksRequestBinder<S
    protected String createPayload(Snapshot.Request.UpdatePayload payload) {
       requestBuilder.append("<ws:updateSnapshot>")
               .append("<request>")
-              .append(format("<snapshotId>%s</snapshotId>", payload.snapshotId()))
+              .append(format("<snapshotId>%s</snapshotId>", payload.id()))
               .append(format("<description>%s</description>", payload.description()))
               .append(format("<snapshotName>%s</snapshotName>", payload.name()))
               .append(formatIfNotEmpty("<bootable>%s</bootable>", payload.bootable()))

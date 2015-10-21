@@ -58,7 +58,11 @@ public class SnapshotApiLiveTest extends BaseProfitBricksLiveTest {
 
    @Test
    public void testCreateSnapshot() {
-      Snapshot snapshot = api.snapshotApi().createSnapshot(Snapshot.Request.CreatePayload.create(storageId, "my description", "test snapshot"));
+      Snapshot snapshot = api.snapshotApi().createSnapshot(Snapshot.Request.creatingBuilder()
+              .storageId(storageId)
+              .description("my description")
+              .name("test snapshot")
+              .build());
 
       assertNotNull(snapshot);
 
@@ -89,7 +93,7 @@ public class SnapshotApiLiveTest extends BaseProfitBricksLiveTest {
       String newName = "new name";
 
       api.snapshotApi().updateSnapshot(Snapshot.Request.updatingBuilder()
-              .snapshotId(snapshotId)
+              .id(snapshotId)
               .description("new description")
               .name(newName)
               .bootable(true)
@@ -112,7 +116,7 @@ public class SnapshotApiLiveTest extends BaseProfitBricksLiveTest {
 
    @Test(dependsOnMethods = "testCreateSnapshot")
    public void testRollbackSnapshot() {
-      String result = api.snapshotApi().rollbackSnapshot(Snapshot.Request.RollbackPayload.create(snapshotId, storageId));
+      String result = api.snapshotApi().rollbackSnapshot(Snapshot.Request.createRollbackPayload(snapshotId, storageId));
 
       assertNotNull(result);
    }

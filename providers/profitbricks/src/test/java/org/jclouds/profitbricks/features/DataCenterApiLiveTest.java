@@ -41,7 +41,7 @@ public class DataCenterApiLiveTest extends BaseProfitBricksLiveTest {
    @Test
    public void testCreateDataCenter() {
       DataCenter dc = api.dataCenterApi().createDataCenter(
-              DataCenter.Request.CreatePayload.create("JClouds", Location.DE_FKB)
+              DataCenter.Request.creatingPayload("JClouds", Location.DE_FKB)
       );
 
       assertNotNull(dc);
@@ -83,7 +83,7 @@ public class DataCenterApiLiveTest extends BaseProfitBricksLiveTest {
 
       final String newName = "Apache";
       DataCenter dataCenter = api.dataCenterApi().updateDataCenter(
-              DataCenter.Request.UpdatePayload.create(dcId, newName)
+              DataCenter.Request.updatingPayload(dcId, newName)
       );
 
       assertNotNull(dataCenter);

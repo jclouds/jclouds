@@ -33,8 +33,10 @@ public class PublicIpListResponseHandler extends BasePublicIpResponseHandler<Lis
    public void endElement(String uri, String localName, String qName) throws SAXException {
       setPropertyOnEndTag(qName);
 
-      if ("publicIps".equals(qName))
+      if ("publicIps".equals(qName)){
          publicIps.add(builder.build());
+         this.builder = PublicIp.builder();
+      }
       clearTextBuffer();
    }
 

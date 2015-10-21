@@ -17,6 +17,7 @@
 package org.jclouds.profitbricks.domain;
 
 import com.google.auto.value.AutoValue;
+import com.google.common.base.Enums;
 
 @AutoValue
 public abstract class ServiceFault {
@@ -36,11 +37,7 @@ public abstract class ServiceFault {
       UNRECOGNIZED;
 
       public static FaultCode fromValue(String v) {
-         try {
-            return valueOf(v);
-         } catch (IllegalArgumentException ex) {
-            return UNRECOGNIZED;
-         }
+         return Enums.getIfPresent(FaultCode.class, v).or(UNRECOGNIZED);
       }
    }
 
@@ -52,44 +49,22 @@ public abstract class ServiceFault {
 
    public abstract int requestId();
 
-   public static ServiceFault create(FaultCode faultCode, int httpCode, String message, int requestId) {
-      return new AutoValue_ServiceFault(faultCode, httpCode, message, requestId);
-   }
-
    public static Builder builder() {
-      return new Builder();
+      return new AutoValue_ServiceFault.Builder();
    }
 
-   public static final class Builder {
+   @AutoValue.Builder
+   public abstract static class Builder {
 
-      private FaultCode faultCode;
-      private int httpCode;
-      private String message;
-      private int requestId;
+      public abstract Builder faultCode(FaultCode faultCode);
 
-      public Builder faultCode(FaultCode code) {
-         this.faultCode = code;
-         return this;
-      }
+      public abstract Builder httpCode(int httpCode);
 
-      public Builder httpCode(int httpCode) {
-         this.httpCode = httpCode;
-         return this;
-      }
+      public abstract Builder message(String message);
 
-      public Builder message(String message) {
-         this.message = message;
-         return this;
-      }
+      public abstract Builder requestId(int requestId);
 
-      public Builder requestId(int requestId) {
-         this.requestId = requestId;
-         return this;
-      }
-
-      public ServiceFault build() {
-         return create(faultCode, httpCode, message, requestId);
-      }
+      public abstract ServiceFault build();
 
    }
 }

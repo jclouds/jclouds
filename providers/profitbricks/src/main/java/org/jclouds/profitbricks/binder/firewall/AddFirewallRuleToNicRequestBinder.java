@@ -33,7 +33,7 @@ public class AddFirewallRuleToNicRequestBinder extends BaseProfitBricksRequestBi
    protected String createPayload(Firewall.Request.AddRulePayload payload) {
       requestBuilder.append("<ws:addFirewallRulesToNic>")
               .append(format("<nicId>%s</nicId>", payload.nicId()));
-      for (Firewall.RuleWithIcmp rule : payload.rules())
+      for (Firewall.Rule rule : payload.rules())
          requestBuilder
                  .append("<request>")
                  .append(formatIfNotEmpty("<icmpCode>%s</icmpCode>", rule.icmpCode()))

@@ -9,7 +9,7 @@
                 <loadBalancerName>load-balancer-name</loadBalancerName>
                 <loadBalancerAlgorithm>ROUND_ROBIN</loadBalancerAlgorithm>
                 <ip>192.168.0.1</ip>
-                <lanId>lan-id</lanId>
+                <lanId>1</lanId>
                 <serverIds>server-ids</serverIds>
             </request>
         </ws:createLoadBalancer>

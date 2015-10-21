@@ -16,15 +16,13 @@
  */
 package org.jclouds.profitbricks.domain;
 
+import com.google.common.base.Enums;
+
 public enum ProvisioningState {
 
    INACTIVE, INPROCESS, AVAILABLE, DELETED, ERROR, UNRECOGNIZED;
 
    public static ProvisioningState fromValue(String value) {
-      try {
-         return valueOf(value);
-      } catch (IllegalArgumentException e) {
-         return UNRECOGNIZED;
-      }
+      return Enums.getIfPresent(ProvisioningState.class, value).or(UNRECOGNIZED);
    }
 }

@@ -29,7 +29,7 @@ public class UpdateDataCenterRequestBinderTest {
    public void testCreatePayload() {
       UpdateDataCenterRequestBinder binder = new UpdateDataCenterRequestBinder();
 
-      DataCenter.Request.UpdatePayload payload = DataCenter.Request.UpdatePayload.create("aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee", "Apache-DC");
+      DataCenter.Request.UpdatePayload payload = DataCenter.Request.updatingPayload("aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee", "Apache-DC");
 
       String actual = binder.createPayload(payload);
       assertNotNull(actual, "Binder returned null payload");

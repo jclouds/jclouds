@@ -153,7 +153,7 @@ public class DataCenterApiMockTest extends BaseProfitBricksMockTest {
               + "</request></ws:createDataCenter>";
       try {
          DataCenter dataCenter = api.createDataCenter(
-                 DataCenter.Request.CreatePayload.create("JClouds-DC", Location.DE_FRA)
+                 DataCenter.Request.creatingPayload("JClouds-DC", Location.DE_FRA)
          );
          assertRequestHasCommonProperties(server.takeRequest(), content);
          assertNotNull(dataCenter);
@@ -170,7 +170,7 @@ public class DataCenterApiMockTest extends BaseProfitBricksMockTest {
       String[] names = {"JCl@ouds", "JC|ouds", "^clouds", ""};
       for (String name : names)
          try {
-            DataCenter.Request.CreatePayload.create(name, Location.US_LAS);
+            DataCenter.Request.creatingPayload(name, Location.US_LAS);
             fail("Should have failed for name: ".concat(name));
          } catch (IllegalArgumentException ex) {
             // expected exception
@@ -194,7 +194,7 @@ public class DataCenterApiMockTest extends BaseProfitBricksMockTest {
               + "</request></ws:updateDataCenter>";
       try {
          DataCenter dataCenter = api.updateDataCenter(
-                 DataCenter.Request.UpdatePayload.create(id, newName)
+                 DataCenter.Request.updatingPayload(id, newName)
          );
          assertRequestHasCommonProperties(server.takeRequest(), content);
          assertNotNull(dataCenter);

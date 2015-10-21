@@ -33,7 +33,7 @@ public class DeregisterLoadBalancerRequestBinderTest {
       serverIds.add("1");
       serverIds.add("2");
 
-      LoadBalancer.Request.DeregisterPayload payload = LoadBalancer.Request.DeregisterPayload.create(serverIds, "load-balancer-id");
+      LoadBalancer.Request.DeregisterPayload payload = LoadBalancer.Request.createDeregisteringPayload("load-balancer-id", serverIds);
 
       String actual = binder.createPayload(payload);
 

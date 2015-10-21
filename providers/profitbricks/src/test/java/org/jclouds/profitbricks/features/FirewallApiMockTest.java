@@ -128,18 +128,18 @@ public class FirewallApiMockTest extends BaseProfitBricksMockTest {
               + "</request>"
               + "</ws:addFirewallRulesToNic>";
       try {
-         Firewall.Request.AddRulePayload payload = Firewall.Request.ruleAddingBuilder()
-                 .nicId("nic-id")
-                 .newRule()
-                 .name("name")
-                 .portRangeEnd(45678)
-                 .portRangeStart(12345)
-                 .protocol(Protocol.TCP)
-                 .sourceIp("192.168.0.1")
-                 .sourceMac("aa:bb:cc:dd:ee:ff")
-                 .targetIp("192.168.0.2")
-                 .endRule()
-                 .build();
+         Firewall.Request.AddRulePayload payload = Firewall.Request.createAddRulePayload(
+                 "nic-id", ImmutableList.of(
+                         Firewall.Rule.builder()
+                         .name("name")
+                         .portRangeEnd(45678)
+                         .portRangeStart(12345)
+                         .protocol(Protocol.TCP)
+                         .sourceIp("192.168.0.1")
+                         .sourceMac("aa:bb:cc:dd:ee:ff")
+                         .targetIp("192.168.0.2")
+                         .build()
+                 ));
          Firewall response = api.addFirewallRuleToNic(payload);
 
          assertRequestHasCommonProperties(server.takeRequest(), content);

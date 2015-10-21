@@ -53,7 +53,7 @@ public class SnapshotResponseHandlerTest extends BaseResponseHandlerTest<Snapsho
       Snapshot expected = Snapshot.builder()
               .id("qswdefrg-qaws-qaws-defe-rgrgdsvcxbrh")
               .description("description")
-              .size(1024)
+              .size(1024f)
               .name("snapshot01")
               .state(ProvisioningState.AVAILABLE)
               .isBootable(true)

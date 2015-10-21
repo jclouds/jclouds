@@ -29,8 +29,8 @@ public class ServerBuilderTest {
    private final Boolean _isNicHotUnPlug = false;
    private final Boolean _isDiscVirtioHotPlug = true;
    private final Boolean _isDiscVirtioHotUnPlug = false;
-   private final int _cores = 8;
-   private final int _ram = 8 * 1024;
+   private final Integer _cores = 8;
+   private final Integer _ram = 8 * 1024;
    private final String _id = "some-random-server-id";
    private final String _name = "jclouds-node";
    private final Boolean _hasInternetAccess = true;
@@ -110,7 +110,7 @@ public class ServerBuilderTest {
       assertEquals(actual.availabilityZone(), _availabilityZone);
       assertEquals(actual.bootFromImageId(), _bootFromImageId);
       assertEquals(actual.bootFromStorageId(), _bootFromStorageId);
-      assertEquals(actual.cores(), _cores);
+      assertEquals(actual.cores(), _cores.intValue());
       assertEquals(actual.dataCenterId(), _dataCenterId);
       assertEquals(actual.hasInternetAccess(), _hasInternetAccess);
       assertEquals(actual.name(), _name);
@@ -121,7 +121,7 @@ public class ServerBuilderTest {
       assertEquals(actual.isNicHotUnPlug(), _isNicHotUnPlug);
       assertEquals(actual.isRamHotPlug(), _isRamHotPlug);
       assertEquals(actual.lanId(), _lanId);
-      assertEquals(actual.ram(), _ram);
+      assertEquals(actual.ram(), _ram.intValue());
       assertEquals(actual.osType(), _osType);
    }
 

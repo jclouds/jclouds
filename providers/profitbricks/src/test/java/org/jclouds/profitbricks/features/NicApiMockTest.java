@@ -140,15 +140,22 @@ public class NicApiMockTest extends BaseProfitBricksMockTest {
       String content = "<ws:updateNic>"
               + "<request>"
               + "<nicId>nic-id</nicId>"
-              + "<ip>ip</ip>"
+              + "<ip>10.0.0.1</ip>"
               + "<nicName>nic-name</nicName>"
               + "<dhcpActive>true</dhcpActive>"
               + "<lanId>1</lanId>"
               + "</request>"
               + "</ws:updateNic>";
       try {
-         Nic nic = api.updateNic(Nic.Request.UpdatePayload.create("nic-id", "ip", "nic-name", true, 1));
+         Nic nic = api.updateNic(Nic.Request.updatingBuilder()
+                 .id("nic-id")
+                 .ip("10.0.0.1")
+                 .name("nic-name")
+                 .dhcpActive(true)
+                 .lanId(1)
+                 .build());
          assertRequestHasCommonProperties(server.takeRequest(), content);
+         assertNotNull(nic);
       } finally {
          pbApi.close();
          server.shutdown();
@@ -169,8 +176,13 @@ public class NicApiMockTest extends BaseProfitBricksMockTest {
               + "<internetAccess>true</internetAccess>"
               + "</ws:setInternetAccess>";
       try {
-         Nic nic = api.setInternetAccess(Nic.Request.SetInternetAccessPayload.create("datacenter-id", 1, true));
+         Nic nic = api.setInternetAccess(Nic.Request.setInternetAccessBuilder()
+                 .dataCenterId("datacenter-id")
+                 .lanId(1)
+                 .internetAccess(true)
+                 .build());
          assertRequestHasCommonProperties(server.takeRequest(), content);
+         assertNotNull(nic);
       } finally {
          pbApi.close();
          server.shutdown();

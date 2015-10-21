@@ -16,8 +16,13 @@
  */
 package org.jclouds.profitbricks.features;
 
-import com.google.common.collect.Iterables;
+import static org.testng.Assert.assertFalse;
+import static org.testng.Assert.assertNotNull;
+
 import java.util.List;
+
+import com.google.common.collect.Iterables;
+
 import org.assertj.core.util.Lists;
 import org.jclouds.profitbricks.BaseProfitBricksLiveTest;
 import org.jclouds.profitbricks.domain.DataCenter;
@@ -25,16 +30,14 @@ import org.jclouds.profitbricks.domain.LoadBalancer;
 import org.jclouds.profitbricks.domain.LoadBalancer.Algorithm;
 import org.jclouds.profitbricks.domain.Server;
 import org.testng.Assert;
-import static org.testng.Assert.assertFalse;
-import static org.testng.Assert.assertNotNull;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.Test;
 
-@Test(groups = "unit", testName = "LoadbalancerApiLiveTest")
-public class LoadbalancerApiLiveTest extends BaseProfitBricksLiveTest {
+@Test(groups = "unit", testName = "LoadBalancerApiLiveTest")
+public class LoadBalancerApiLiveTest extends BaseProfitBricksLiveTest {
 
    private String dataCenterId;
-   private String loadBalancerID;
+   private String loadBalancerId;
    private String serverId;
 
    @Override
@@ -58,10 +61,10 @@ public class LoadbalancerApiLiveTest extends BaseProfitBricksLiveTest {
 
       LoadBalancer.Request.CreatePayload payload = LoadBalancer.Request.creatingBuilder()
               .dataCenterId(dataCenterId)
-              .loadBalancerName("testName")
-              .loadBalancerAlgorithm(Algorithm.ROUND_ROBIN)
+              .name("testName")
+              .algorithm(Algorithm.ROUND_ROBIN)
               .ip("0.0.0.1")
-              .lanId("1")
+              .lanId(1)
               .serverIds(serverIds)
               .build();
 
@@ -79,7 +82,7 @@ public class LoadbalancerApiLiveTest extends BaseProfitBricksLiveTest {
 
    @Test(dependsOnMethods = "testCreateLoadBalancer")
    public void testGetLoadBalancer() {
-      LoadBalancer loadBalancer = api.loadBalancerApi().getLoadBalancer(loadBalancerID);
+      LoadBalancer loadBalancer = api.loadBalancerApi().getLoadBalancer(loadBalancerId);
 
       assertNotNull(loadBalancer);
    }
@@ -89,10 +92,8 @@ public class LoadbalancerApiLiveTest extends BaseProfitBricksLiveTest {
       List<String> serverIds = Lists.newArrayList();
       serverIds.add(serverId);
 
-      LoadBalancer.Request.RegisterPayload payload = LoadBalancer.Request.registerBuilder()
-              .id(loadBalancerID)
-              .serverIds(serverIds)
-              .build();
+      LoadBalancer.Request.RegisterPayload payload = LoadBalancer.Request
+              .createRegisteringPaylod(loadBalancerId, serverIds);
 
       LoadBalancer loadBalancer = api.loadBalancerApi().registerLoadBalancer(payload);
 
@@ -104,10 +105,8 @@ public class LoadbalancerApiLiveTest extends BaseProfitBricksLiveTest {
       List<String> serverIds = Lists.newArrayList();
       serverIds.add(serverId);
 
-      LoadBalancer.Request.DeregisterPayload payload = LoadBalancer.Request.deregisterBuilder()
-              .id(loadBalancerID)
-              .serverIds(serverIds)
-              .build();
+      LoadBalancer.Request.DeregisterPayload payload = LoadBalancer.Request
+              .createDeregisteringPayload(loadBalancerId, serverIds);
 
       LoadBalancer loadBalancer = api.loadBalancerApi().deregisterLoadBalancer(payload);
 
@@ -117,8 +116,8 @@ public class LoadbalancerApiLiveTest extends BaseProfitBricksLiveTest {
    @Test(dependsOnMethods = "testCreateLoadBalancer")
    public void testUpdateLoadBalancer() {
       LoadBalancer.Request.UpdatePayload payload = LoadBalancer.Request.updatingBuilder()
-              .id(loadBalancerID)
-              .loadBalancerName("whatever")
+              .id(loadBalancerId)
+              .name("whatever")
               .build();
 
       LoadBalancer loadBalancer = api.loadBalancerApi().updateLoadBalancer(payload);
@@ -128,7 +127,7 @@ public class LoadbalancerApiLiveTest extends BaseProfitBricksLiveTest {
 
    @AfterClass(alwaysRun = true)
    public void testDeleteLoadBalancer() {
-      boolean result = api.loadBalancerApi().deleteLoadBalancer(loadBalancerID);
+      boolean result = api.loadBalancerApi().deleteLoadBalancer(loadBalancerId);
 
       Assert.assertTrue(result);
    }

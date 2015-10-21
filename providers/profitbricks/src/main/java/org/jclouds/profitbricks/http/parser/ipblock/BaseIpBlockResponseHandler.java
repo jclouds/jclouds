@@ -16,8 +16,10 @@
  */
 package org.jclouds.profitbricks.http.parser.ipblock;
 
-import com.google.common.collect.Lists;
 import java.util.List;
+
+import com.google.common.collect.Lists;
+
 import org.jclouds.profitbricks.domain.IpBlock;
 import org.jclouds.profitbricks.domain.Location;
 import org.jclouds.profitbricks.http.parser.BaseProfitBricksResponseHandler;
@@ -28,7 +30,6 @@ import org.xml.sax.SAXException;
 public abstract class BaseIpBlockResponseHandler<T> extends BaseProfitBricksResponseHandler<T> {
 
    protected final PublicIpListResponseHandler publicIpListResponseHandler;
-   protected final List<IpBlock.PublicIp> publicIps = Lists.newArrayList();
    protected List<String> ips;
 
    protected IpBlock.Builder builder;
@@ -37,7 +38,7 @@ public abstract class BaseIpBlockResponseHandler<T> extends BaseProfitBricksResp
    BaseIpBlockResponseHandler(PublicIpListResponseHandler publicIpListResponseHandler) {
       this.builder = IpBlock.builder();
       this.publicIpListResponseHandler = publicIpListResponseHandler;
-      ips = Lists.newArrayList();
+      this.ips = Lists.newArrayList();
    }
 
    @Override

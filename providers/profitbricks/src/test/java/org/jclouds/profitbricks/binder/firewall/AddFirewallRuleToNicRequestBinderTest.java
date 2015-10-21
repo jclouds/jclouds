@@ -21,7 +21,8 @@ import org.jclouds.profitbricks.domain.Firewall;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
 
-import org.jclouds.profitbricks.domain.Firewall.Protocol;
+import com.google.common.collect.ImmutableList;
+
 import org.testng.annotations.Test;
 
 @Test(groups = "unit", testName = "AddFirewallRuleToNicRequestBinderTest")
@@ -31,18 +32,18 @@ public class AddFirewallRuleToNicRequestBinderTest {
    public void testCreatePayload() {
       AddFirewallRuleToNicRequestBinder binder = new AddFirewallRuleToNicRequestBinder();
 
-      Firewall.Request.AddRulePayload payload = Firewall.Request.ruleAddingBuilder()
-              .nicId("nic-id")
-              .newRule()
-              .name("name")
-              .portRangeEnd(45678)
-              .portRangeStart(12345)
-              .protocol(Protocol.TCP)
-              .sourceIp("192.168.0.1")
-              .sourceMac("aa:bb:cc:dd:ee:ff")
-              .targetIp("192.168.0.2")
-              .endRule()
-              .build();
+      Firewall.Request.AddRulePayload payload = Firewall.Request.createAddRulePayload(
+              "nic-id", ImmutableList.of(
+                      Firewall.Rule.builder()
+                      .name("name")
+                      .portRangeEnd(45678)
+                      .portRangeStart(12345)
+                      .protocol(Firewall.Protocol.TCP)
+                      .sourceIp("192.168.0.1")
+                      .sourceMac("aa:bb:cc:dd:ee:ff")
+                      .targetIp("192.168.0.2")
+                      .build()
+              ));
 
       String actual = binder.createPayload(payload);
       assertNotNull(actual, "Binder returned null payload");

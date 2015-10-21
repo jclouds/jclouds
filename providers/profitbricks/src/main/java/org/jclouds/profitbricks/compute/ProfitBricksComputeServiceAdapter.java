@@ -54,7 +54,7 @@ import org.jclouds.profitbricks.features.ServerApi;
 import org.jclouds.profitbricks.compute.concurrent.ProvisioningJob;
 import org.jclouds.profitbricks.compute.concurrent.ProvisioningManager;
 import org.jclouds.profitbricks.domain.Snapshot;
-import org.jclouds.profitbricks.domain.internal.Provisionable;
+import org.jclouds.profitbricks.domain.Provisionable;
 import org.jclouds.profitbricks.util.Passwords;
 import org.jclouds.rest.ResourceNotFoundException;
 

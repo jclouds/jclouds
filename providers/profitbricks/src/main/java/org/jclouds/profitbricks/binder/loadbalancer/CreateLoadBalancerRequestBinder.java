@@ -35,8 +35,8 @@ public class CreateLoadBalancerRequestBinder extends BaseProfitBricksRequestBind
       requestBuilder.append("<ws:createLoadBalancer>")
               .append("<request>")
               .append(format("<dataCenterId>%s</dataCenterId>", payload.dataCenterId()))
-              .append(format("<loadBalancerName>%s</loadBalancerName>", payload.loadBalancerName()))
-              .append(format("<loadBalancerAlgorithm>%s</loadBalancerAlgorithm>", payload.loadBalancerAlgorithm()))
+              .append(format("<loadBalancerName>%s</loadBalancerName>", payload.name()))
+              .append(format("<loadBalancerAlgorithm>%s</loadBalancerAlgorithm>", payload.algorithm()))
               .append(format("<ip>%s</ip>", payload.ip()))
               .append(format("<lanId>%s</lanId>", payload.lanId()));
       for (String serverId : payload.serverIds())

@@ -16,9 +16,10 @@
  */
 package org.jclouds.profitbricks.domain;
 
-import org.jclouds.profitbricks.domain.internal.Provisionable;
-
 import com.google.auto.value.AutoValue;
+import com.google.common.base.Enums;
+
+import org.jclouds.javax.annotation.Nullable;
 
 @AutoValue
 public abstract class Image implements Provisionable {
@@ -28,84 +29,99 @@ public abstract class Image implements Provisionable {
       HDD, CDROM, UNRECOGNIZED;
 
       public static Type fromValue(String v) {
-         try {
-            return valueOf(v);
-         } catch (IllegalArgumentException ex) {
-            return UNRECOGNIZED;
-         }
+         return Enums.getIfPresent(Type.class, v).or(UNRECOGNIZED);
       }
    }
+
+   public abstract String id();
+
+   public abstract String name();
+
+   public abstract float size(); // MB
+
+   public abstract Location location();
+
+   public abstract OsType osType();
 
    public abstract Type type();
 
-   public abstract boolean isPublic();
+   @Nullable
+   public abstract Boolean isPublic();
 
-   public abstract boolean isWriteable();
+   @Nullable
+   public abstract Boolean isWriteable();
 
-   public abstract boolean isBootable();
+   @Nullable
+   public abstract Boolean isBootable();
 
-   public static Image create(String id, String name, float size, Type type, Location location, OsType osType,
-           boolean isPublic, Boolean isWriteable, Boolean isBootable, Boolean cpuHotPlug, Boolean cpuHotUnPlug,
-           Boolean ramHotPlug, Boolean ramHotUnPlug, Boolean nicHotPlug, Boolean nicHotUnPlug,
-           Boolean discVirtioHotPlug, Boolean discVirtioHotUnPlug) {
-      return new AutoValue_Image(cpuHotPlug, cpuHotUnPlug, ramHotPlug, ramHotUnPlug, nicHotPlug, nicHotUnPlug,
-              discVirtioHotPlug, discVirtioHotUnPlug, id, name, size, location, osType, type, isPublic, isWriteable,
-              isBootable);
-   }
+   @Nullable
+   public abstract Boolean isCpuHotPlug();
+
+   @Nullable
+   public abstract Boolean isCpuHotUnPlug();
+
+   @Nullable
+   public abstract Boolean isRamHotPlug();
+
+   @Nullable
+   public abstract Boolean isRamHotUnPlug();
+
+   @Nullable
+   public abstract Boolean isNicHotPlug();
+
+   @Nullable
+   public abstract Boolean isNicHotUnPlug();
+
+   @Nullable
+   public abstract Boolean isDiscVirtioHotPlug();
+
+   @Nullable
+   public abstract Boolean isDiscVirtioHotUnPlug();
 
    public static Builder builder() {
-      return new Builder();
+      return new AutoValue_Image.Builder();
    }
 
-   public Builder toBuilder() {
-      return builder().fromImage(this);
-   }
+   public abstract Builder toBuilder();
 
-   public static class Builder extends Provisionable.Builder<Builder, Image> {
+   @AutoValue.Builder
+   public abstract static class Builder {
 
-      private Type type;
-      private boolean isPublic;
-      private boolean isWriteable;
-      private boolean isBootable;
+      public abstract Builder id(String id);
 
-      public Builder type(Type type) {
-         this.type = type;
-         return this;
-      }
+      public abstract Builder name(String name);
 
-      public Builder isPublic(boolean isPublic) {
-         this.isPublic = isPublic;
-         return this;
-      }
+      public abstract Builder size(float size);
 
-      public Builder isWriteable(boolean isWriteable) {
-         this.isWriteable = isWriteable;
-         return this;
-      }
+      public abstract Builder location(Location location);
 
-      public Builder isBootable(boolean isBootable) {
-         this.isBootable = isBootable;
-         return this;
-      }
+      public abstract Builder osType(OsType osType);
 
-      @Override
-      public Image build() {
-         return Image.create(id, name, size, type, location, osType, isPublic, isWriteable, isBootable, cpuHotPlug, cpuHotUnPlug,
-                 ramHotPlug, ramHotUnPlug, nicHotPlug, nicHotUnPlug, discVirtioHotPlug, discVirtioHotUnPlug);
-      }
+      public abstract Builder type(Type type);
 
-      public Builder fromImage(Image in) {
-         return this.id(in.id()).isBootable(in.isBootable()).isCpuHotPlug(in.isCpuHotPlug()).isCpuHotUnPlug(in.isCpuHotUnPlug())
-                 .isDiscVirtioHotPlug(in.isDiscVirtioHotPlug()).isDiscVirtioHotUnPlug(in.isDiscVirtioHotUnPlug())
-                 .isNicHotPlug(in.isNicHotPlug()).isNicHotUnPlug(in.isNicHotUnPlug()).isPublic(in.isPublic())
-                 .isRamHotPlug(in.isRamHotPlug()).isRamHotUnPlug(in.isRamHotUnPlug()).isWriteable(in.isWriteable())
-                 .location(in.location()).name(in.name()).osType(in.osType()).size(in.size()).type(in.type());
-      }
+      public abstract Builder isPublic(Boolean isPublic);
 
-      @Override
-      public Builder self() {
-         return this;
-      }
+      public abstract Builder isWriteable(Boolean isWriteable);
+
+      public abstract Builder isBootable(Boolean isBootable);
+
+      public abstract Builder isCpuHotPlug(Boolean isCpuHotPlug);
+
+      public abstract Builder isCpuHotUnPlug(Boolean isCpuHotUnPlug);
+
+      public abstract Builder isRamHotPlug(Boolean isRamHotPlug);
+
+      public abstract Builder isRamHotUnPlug(Boolean isRamHotUnPlug);
+
+      public abstract Builder isNicHotPlug(Boolean isNicHotPlug);
+
+      public abstract Builder isNicHotUnPlug(Boolean isNicHotUnPlug);
+
+      public abstract Builder isDiscVirtioHotPlug(Boolean isDiscVirtioHotPlug);
+
+      public abstract Builder isDiscVirtioHotUnPlug(Boolean isDiscVirtioHotUnPlug);
+
+      public abstract Image build();
 
    }
 

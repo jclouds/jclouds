@@ -16,19 +16,17 @@
  */
 package org.jclouds.profitbricks.domain;
 
-import com.google.auto.value.AutoValue;
-
-import static com.google.common.base.Preconditions.checkArgument;
-import static com.google.common.base.Preconditions.checkNotNull;
+import static org.jclouds.profitbricks.util.Preconditions.checkPassword;
+import static org.jclouds.profitbricks.util.Preconditions.checkSize;
 
 import java.util.Date;
 import java.util.List;
 
+import com.google.auto.value.AutoValue;
+import com.google.common.base.Enums;
+import com.google.common.collect.ImmutableList;
 import org.jclouds.javax.annotation.Nullable;
 
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Lists;
-import static org.jclouds.profitbricks.util.Passwords.isValidPassword;
 
 @AutoValue
 public abstract class Storage {
@@ -38,11 +36,7 @@ public abstract class Storage {
       IDE, SCSI, VIRTIO, UNRECOGNIZED;
 
       public static BusType fromValue(String value) {
-         try {
-            return valueOf(value);
-         } catch (IllegalArgumentException ex) {
-            return UNRECOGNIZED;
-         }
+         return Enums.getIfPresent(BusType.class, value).or(UNRECOGNIZED);
       }
    }
 
@@ -74,92 +68,43 @@ public abstract class Storage {
    @Nullable
    public abstract Integer deviceNumber();
 
-   public static Storage create(String id, String name, float size, Date creationTime, Date lastModificationTime,
-           ProvisioningState state, List<String> serverIds, Boolean bootDevice, BusType busType, Integer deviceNumber) {
-      return new AutoValue_Storage(id, name, size, creationTime, lastModificationTime, state,
-              serverIds != null ? ImmutableList.copyOf(serverIds) : Lists.<String>newArrayList(),
-              bootDevice, busType, deviceNumber);
-   }
-
    public static Builder builder() {
-      return new Builder();
+      return new AutoValue_Storage.Builder()
+              .serverIds(ImmutableList.<String>of());
    }
 
-   public Builder toBuilder() {
-      return builder().fromStorage(this);
-   }
+   public abstract Builder toBuilder();
 
-   public static class Builder {
+   @AutoValue.Builder
+   public abstract static class Builder {
 
-      private String id;
-      private String name;
-      private float size;
-      private Date creationTime;
-      private Date lastModificationTime;
-      private ProvisioningState state;
-      private List<String> serverIds;
-      private Boolean bootDevice;
-      private BusType busType;
-      private Integer deviceNumber;
+      public abstract Builder id(String id);
 
-      public Builder id(String id) {
-         this.id = id;
-         return this;
-      }
+      public abstract Builder name(String name);
 
-      public Builder name(String name) {
-         this.name = name;
-         return this;
-      }
+      public abstract Builder size(float size);
 
-      public Builder size(float size) {
-         this.size = size;
-         return this;
-      }
+      public abstract Builder creationTime(Date creationTime);
 
-      public Builder creationTime(Date creationTime) {
-         this.creationTime = creationTime;
-         return this;
-      }
+      public abstract Builder lastModificationTime(Date lastModificationTime);
 
-      public Builder lastModificationTime(Date lastModificationTime) {
-         this.lastModificationTime = lastModificationTime;
-         return this;
-      }
+      public abstract Builder state(ProvisioningState state);
 
-      public Builder state(ProvisioningState state) {
-         this.state = state;
-         return this;
-      }
+      public abstract Builder serverIds(List<String> serverIds);
 
-      public Builder serverIds(List<String> serverIds) {
-         this.serverIds = serverIds;
-         return this;
-      }
+      public abstract Builder bootDevice(Boolean bootDevice);
 
-      public Builder bootDevice(Boolean bootDevice) {
-         this.bootDevice = bootDevice;
-         return this;
-      }
+      public abstract Builder busType(BusType busType);
 
-      public Builder busType(BusType busType) {
-         this.busType = busType;
-         return this;
-      }
+      public abstract Builder deviceNumber(Integer deviceNumber);
 
-      public Builder deviceNumber(Integer deviceNumber) {
-         this.deviceNumber = deviceNumber;
-         return this;
-      }
-
-      private Builder fromStorage(Storage in) {
-         return this.id(in.id()).name(in.name()).size(in.size()).creationTime(in.creationTime())
-                 .lastModificationTime(in.lastModificationTime()).state(in.state()).serverIds(in.serverIds())
-                 .bootDevice(in.bootDevice()).busType(in.busType()).deviceNumber(in.deviceNumber());
-      }
-
-      public Storage build() {
-         return Storage.create(id, name, size, creationTime, lastModificationTime, state, serverIds, bootDevice, busType, deviceNumber);
+      abstract Storage autoBuild();
+      
+      public Storage build(){
+         Storage built = autoBuild();
+         return built.toBuilder()
+                 .serverIds(ImmutableList.copyOf(built.serverIds()))
+                 .autoBuild();
       }
 
    }
@@ -167,15 +112,15 @@ public abstract class Storage {
    public static final class Request {
 
       public static CreatePayload.Builder creatingBuilder() {
-         return new CreatePayload.Builder();
+         return new AutoValue_Storage_Request_CreatePayload.Builder();
       }
 
       public static UpdatePayload.Builder updatingBuilder() {
-         return new UpdatePayload.Builder();
+         return new AutoValue_Storage_Request_UpdatePayload.Builder();
       }
 
       public static ConnectPayload.Builder connectingBuilder() {
-         return new ConnectPayload.Builder();
+         return new AutoValue_Storage_Request_ConnectPayload.Builder();
       }
 
       @AutoValue
@@ -192,57 +137,32 @@ public abstract class Storage {
          public abstract String mountImageId();
 
          @Nullable
-         public abstract String profitBricksImagePassword();
+         public abstract String imagePassword();
 
-         public static CreatePayload create(String dataCenterId, float size, String name, String mountImageId, String imagePassword) {
-            checkSize(size);
-            checkPassword(imagePassword);
-            return new AutoValue_Storage_Request_CreatePayload(dataCenterId, size, name, mountImageId, imagePassword);
-         }
+         @AutoValue.Builder
+         public abstract static class Builder {
 
-         public static class Builder {
+            public abstract Builder dataCenterId(String dataCenterId);
 
-            private String dataCenterId;
-            private float size;
-            private String name;
-            private String mountImageId;
-            private String profitBricksImagePassword;
+            public abstract Builder size(float size);
 
-            public Builder dataCenterId(String dataCenterId) {
-               this.dataCenterId = dataCenterId;
-               return this;
-            }
+            public abstract Builder name(String name);
 
-            public Builder dataCenterId(DataCenter dataCenter) {
-               this.dataCenterId = checkNotNull(dataCenter, "Cannot pass null datacenter").id();
-               return this;
-            }
+            public abstract Builder mountImageId(String mountImageId);
 
-            public Builder size(float size) {
-               this.size = size;
-               return this;
-            }
+            public abstract Builder imagePassword(String profitBricksImagePassword);
 
-            public Builder mountImageId(String mountImageId) {
-               this.mountImageId = mountImageId;
-               return this;
-            }
-
-            public Builder name(String name) {
-               this.name = name;
-               return this;
-            }
-
-            public Builder imagePassword(String password) {
-               this.profitBricksImagePassword = password;
-               return this;
-            }
+            abstract CreatePayload autoBuild();
 
             public CreatePayload build() {
-               return CreatePayload.create(dataCenterId, size, name, mountImageId, profitBricksImagePassword);
+               CreatePayload payload = autoBuild();
+               if (payload.imagePassword() != null)
+                  checkPassword(payload.imagePassword());
+               checkSize(payload.size());
+
+               return payload;
             }
          }
-
       }
 
       @AutoValue
@@ -259,40 +179,25 @@ public abstract class Storage {
          @Nullable
          public abstract String mountImageId();
 
-         public static UpdatePayload create(String id, Float size, String name, String mountImageId) {
-            checkSize(size);
-            return new AutoValue_Storage_Request_UpdatePayload(id, size, name, mountImageId);
-         }
+         @AutoValue.Builder
+         public abstract static class Builder {
 
-         public static class Builder {
+            public abstract Builder id(String id);
 
-            private String id;
-            private Float size;
-            private String name;
-            private String mountImageId;
+            public abstract Builder size(Float size);
 
-            public Builder id(String id) {
-               this.id = id;
-               return this;
-            }
+            public abstract Builder name(String name);
 
-            public Builder size(float size) {
-               this.size = size;
-               return this;
-            }
+            public abstract Builder mountImageId(String mountImageId);
 
-            public Builder name(String name) {
-               this.name = name;
-               return this;
-            }
-
-            public Builder mountImageId(String mountImageId) {
-               this.mountImageId = mountImageId;
-               return this;
-            }
+            abstract UpdatePayload autoBuild();
 
             public UpdatePayload build() {
-               return UpdatePayload.create(id, size, name, mountImageId);
+               UpdatePayload payload = autoBuild();
+               if (payload.size() != null)
+                  checkSize(payload.size());
+
+               return payload;
             }
          }
       }
@@ -310,54 +215,20 @@ public abstract class Storage {
          @Nullable
          public abstract Integer deviceNumber();
 
-         public static ConnectPayload create(String storageId, String serverId, BusType busType, Integer deviceNumber) {
-            return new AutoValue_Storage_Request_ConnectPayload(storageId, serverId, busType, deviceNumber);
-         }
+         @AutoValue.Builder
+         public abstract static class Builder {
 
-         public static class Builder {
+            public abstract Builder storageId(String storageId);
 
-            private String storageId;
-            private String serverId;
-            private BusType busType;
-            private Integer deviceNumber;
+            public abstract Builder serverId(String serverId);
 
-            public Builder storageId(String storageId) {
-               this.storageId = storageId;
-               return this;
-            }
+            public abstract Builder busType(BusType busType);
 
-            public Builder serverId(String serverId) {
-               this.serverId = serverId;
-               return this;
-            }
+            public abstract Builder deviceNumber(Integer deviceNumber);
 
-            public Builder busType(BusType busType) {
-               this.busType = busType;
-               return this;
-            }
-
-            public Builder deviceNumber(Integer deviceNumber) {
-               this.deviceNumber = deviceNumber;
-               return this;
-            }
-
-            public ConnectPayload build() {
-               return ConnectPayload.create(storageId, serverId, busType, deviceNumber);
-            }
-
+            public abstract ConnectPayload build();
          }
       }
 
-      private static void checkSize(Float size) {
-         if (size != null)
-            checkArgument(size > 1, "Storage size must be > 1GB");
-      }
-
-      private static void checkPassword(String password) {
-         if (password != null)
-            checkArgument(isValidPassword(password), "Password must be between 8 and 50 characters, "
-                    + "only a-z, A-Z, 0-9 without  characters i, I, l, o, O, w, W, y, Y, z, Z and 1, 0");
-      }
    }
-
 }

@@ -16,6 +16,8 @@
  */
 package org.jclouds.profitbricks.http.parser.nic;
 
+import java.util.ArrayList;
+
 import com.google.common.collect.Lists;
 import com.google.inject.Inject;
 
@@ -44,9 +46,12 @@ public class NicListResponseHandler extends BaseNicResponseHandler<List<Nic>> {
          setPropertyOnEndTag(qName);
          if ("return".equals(qName) || "nics".equals(qName)) {
             nics.add(builder
+                    .ips(ips)
                     .firewall(firewallResponseHandler.getResult())
                     .build());
             builder = Nic.builder();
+            ips = new ArrayList<String>();
+            firewallResponseHandler.reset();
          }
          clearTextBuffer();
       }
@@ -57,6 +62,7 @@ public class NicListResponseHandler extends BaseNicResponseHandler<List<Nic>> {
 
    @Override
    public void reset() {
+      this.ips = new ArrayList<String>();
       this.nics = Lists.newArrayList();
    }
 

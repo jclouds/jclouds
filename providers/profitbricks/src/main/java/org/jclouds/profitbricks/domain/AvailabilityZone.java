@@ -16,6 +16,8 @@
  */
 package org.jclouds.profitbricks.domain;
 
+import com.google.common.base.Enums;
+
 public enum AvailabilityZone {
 
    AUTO, ZONE_1, ZONE_2, UNRECOGNIZED;
@@ -25,11 +27,6 @@ public enum AvailabilityZone {
    }
 
    public static AvailabilityZone fromValue(String v) {
-      try {
-         return valueOf(v);
-      } catch (Exception ex) {
-         return UNRECOGNIZED;
-      }
+      return Enums.getIfPresent(AvailabilityZone.class, v).or(UNRECOGNIZED);
    }
-
 }

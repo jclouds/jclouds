@@ -103,7 +103,7 @@ public abstract class BaseLoadBalancerResponseHandler<T> extends BaseProfitBrick
       else if ("ip".equals(qName))
          builder.ip(textToStringValue());
       else if ("lanId".equals(qName))
-         builder.lanId(textToStringValue());
+         builder.lanId(textToIntValue());
       else if ("provisioningState".equals(qName))
          builder.state(ProvisioningState.fromValue(textToStringValue()));
       else if ("creationTime".equals(qName))

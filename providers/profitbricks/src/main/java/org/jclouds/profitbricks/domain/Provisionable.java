@@ -16,13 +16,10 @@
  */
 package org.jclouds.profitbricks.domain;
 
-import com.google.common.base.Enums;
+/**
+ * Marker interface for {@link org.jclouds.profitbricks.domain.Image} and 
+ * {@link org.jclouds.profitbricks.domain.Snapshot}
+ */
+public interface Provisionable {
 
-public enum OsType {
-
-   WINDOWS, LINUX, OTHER, UNRECOGNIZED;
-
-   public static OsType fromValue(String v) {
-      return Enums.getIfPresent(OsType.class, v).or(UNRECOGNIZED);
-   }
 }

@@ -30,7 +30,7 @@ public class CreateDataCenterRequestBinderTest {
    public void testCreatePayload() {
       CreateDataCenterRequestBinder binder = new CreateDataCenterRequestBinder();
 
-      DataCenter.Request.CreatePayload payload = DataCenter.Request.CreatePayload.create("JClouds-DC", Location.DE_FKB);
+      DataCenter.Request.CreatePayload payload = DataCenter.Request.creatingPayload("JClouds-DC", Location.DE_FKB);
 
       String actual = binder.createPayload(payload);
       assertNotNull(actual, "Binder returned null payload");

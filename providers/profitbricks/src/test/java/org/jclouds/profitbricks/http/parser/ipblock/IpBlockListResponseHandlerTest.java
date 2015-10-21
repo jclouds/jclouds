@@ -44,29 +44,28 @@ public class IpBlockListResponseHandlerTest extends BaseResponseHandlerTest<List
 
       List<IpBlock> expected = ImmutableList.<IpBlock>of(
               IpBlock.builder()
-              .id("block-id")
+              .id("block-id-1")
               .location(Location.US_LAS)
               .publicIps(ImmutableList.<PublicIp>of(
                               PublicIp.builder()
-                              .ip("1.1")
-                              .nicId("nic-id")
+                              .ip("10.0.0.2")
+                              .nicId("nic-id-1")
                               .build(),
                               PublicIp.builder()
-                              .ip("1.2")
-                              .nicId("nic-id")
+                              .ip("10.0.0.3")
+                              .nicId("nic-id-2")
                               .build()))
               .build(),
               IpBlock.builder()
-              .id("block-id")
+              .id("block-id-2")
               .location(Location.US_LAS)
               .publicIps(ImmutableList.<PublicIp>of(
                               PublicIp.builder()
-                              .ip("2.1")
-                              .nicId("nic-id")
+                              .ip("10.0.0.4")
                               .build(),
                               PublicIp.builder()
-                              .ip("2.2")
-                              .nicId("nic-id")
+                              .ip("10.0.0.5")
+                              .nicId("nic-id-4")
                               .build()))
               .build()
       );

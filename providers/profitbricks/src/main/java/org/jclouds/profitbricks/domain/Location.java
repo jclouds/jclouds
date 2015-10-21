@@ -16,6 +16,8 @@
  */
 package org.jclouds.profitbricks.domain;
 
+import com.google.common.base.Enums;
+
 public enum Location {
 
    DE_FKB("de/fkb", "Germany, Karlsruhe"),
@@ -41,11 +43,7 @@ public enum Location {
    }
 
    public static Location fromValue(String v) {
-      try {
-         return valueOf(v);
-      } catch (IllegalArgumentException ex) {
-         return UNRECOGNIZED;
-      }
+      return Enums.getIfPresent(Location.class, v).or(UNRECOGNIZED);
    }
 
    public static Location fromId(String id) {

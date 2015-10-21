@@ -46,7 +46,7 @@ public class DrivesApiMockTest extends BaseProfitBricksMockTest {
       try {
          String requestId = api.addRomDriveToServer(Drive.Request.AddRomDriveToServerPayload.builder()
                  .serverId("server-id")
-                 .storageId("image-id")
+                 .imageId("image-id")
                  .deviceNumber("device-number")
                  .build());
          assertRequestHasCommonProperties(server.takeRequest(), content);

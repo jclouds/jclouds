@@ -60,7 +60,7 @@ public class DrivesApiLiveTest extends BaseProfitBricksLiveTest {
    public void addRomDriveToServerTest() {
       String requestId = api.drivesApi().addRomDriveToServer(Drive.Request.AddRomDriveToServerPayload.builder()
               .serverId(serverId)
-              .storageId("05cadf29-6c12-11e4-beeb-52540066fee9")
+              .imageId("05cadf29-6c12-11e4-beeb-52540066fee9")
               .deviceNumber("0")
               .build());
       assertNotNull(requestId);

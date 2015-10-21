@@ -130,7 +130,7 @@ public class ServerToNodeMetadataTest {
                               .internetAccess(true)
                               .serverId("qwertyui-qwer-qwer-qwer-qwertyyuiiop")
                               .macAddress("02:01:09:cd:f0:b0")
-                              .ip("173.252.120.6")
+                              .ips( ImmutableList.<String>of("173.252.120.6"))
                               .build()
                       )
               )

@@ -18,10 +18,12 @@ package org.jclouds.profitbricks.domain;
 
 import com.google.auto.value.AutoValue;
 
+import org.jclouds.javax.annotation.Nullable;
+
 @AutoValue
 public abstract class Drive {
 
-   public static final class Request {
+   public abstract static class Request {
 
       @AutoValue
       public abstract static class AddRomDriveToServerPayload {
@@ -30,40 +32,23 @@ public abstract class Drive {
 
          public abstract String imageId();
 
+         @Nullable
          public abstract String deviceNumber();
 
-         public static AddRomDriveToServerPayload create(String serverId, String storageId, String deviceNumber) {
-            return new AutoValue_Drive_Request_AddRomDriveToServerPayload(serverId, storageId, deviceNumber);
-         }
-
          public static Builder builder() {
-            return new Builder();
+            return new AutoValue_Drive_Request_AddRomDriveToServerPayload.Builder();
          }
 
-         public static class Builder {
+         @AutoValue.Builder
+         public abstract static class Builder {
 
-            private String serverId;
-            private String imageId;
-            private String deviceNumber;
+            public abstract Builder serverId(String serverId);
 
-            public Builder serverId(String serverId) {
-               this.serverId = serverId;
-               return this;
-            }
+            public abstract Builder imageId(String imageId);
 
-            public Builder storageId(String storageId) {
-               this.imageId = storageId;
-               return this;
-            }
+            public abstract Builder deviceNumber(String deviceNumber);
 
-            public Builder deviceNumber(String deviceNumber) {
-               this.deviceNumber = deviceNumber;
-               return this;
-            }
-
-            public AddRomDriveToServerPayload build() {
-               return AddRomDriveToServerPayload.create(serverId, imageId, deviceNumber);
-            }
+            public abstract AddRomDriveToServerPayload build();
          }
       }
    }

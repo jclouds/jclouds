@@ -49,8 +49,8 @@ public class NicListResponseHandlerTest extends BaseResponseHandlerTest<List<Nic
               .lanId(1)
               .internetAccess(true)
               .serverId("server-id")
-              .ip("192.168.0.1")
-              .macAddress("mac-address")
+              .ips(ImmutableList.of("192.168.0.1"))
+              .macAddress("aa:bb:cc:dd:ee:f1")
               .firewall(
                       Firewall.builder()
                       .active(true)
@@ -75,7 +75,7 @@ public class NicListResponseHandlerTest extends BaseResponseHandlerTest<List<Nic
                               "192.168.0.3",
                               "192.168.0.4"
                       ))
-              .macAddress("mac-address")
+              .macAddress("aa:bb:cc:dd:ee:f2")
               .firewall(
                       Firewall.builder()
                       .active(false)
