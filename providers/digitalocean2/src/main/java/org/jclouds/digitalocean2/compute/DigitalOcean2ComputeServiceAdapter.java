@@ -179,7 +179,7 @@ public class DigitalOcean2ComputeServiceAdapter implements ComputeServiceAdapter
       // provided. If it can be parsed as a number, use the method to get by ID. Otherwise, get by slug.
       Integer numericId = Ints.tryParse(imageId);
       Image image = numericId == null ? api.imageApi().get(imageId) : api.imageApi().get(numericId);
-      return ImageInRegion.create(image, region);
+      return image == null ? null : ImageInRegion.create(image, region);
    }
 
    @Override
