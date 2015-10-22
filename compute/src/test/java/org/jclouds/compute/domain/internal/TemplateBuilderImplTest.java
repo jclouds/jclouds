@@ -50,6 +50,7 @@ import org.jclouds.compute.suppliers.ImageCacheSupplier;
 import org.jclouds.domain.Location;
 import org.jclouds.domain.LocationBuilder;
 import org.jclouds.domain.LocationScope;
+import org.jclouds.rest.AuthorizationException;
 import org.testng.annotations.Test;
 
 import com.google.common.base.Function;
@@ -62,6 +63,8 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Ordering;
+import com.google.common.util.concurrent.Atomics;
+import com.google.inject.util.Providers;
 
 @Test(groups = "unit", singleThreaded = true, testName = "TemplateBuilderImplTest")
 public class TemplateBuilderImplTest {
@@ -468,8 +471,10 @@ public class TemplateBuilderImplTest {
             Supplier<Set<? extends Image>> images, Supplier<Set<? extends Hardware>> hardwares,
             Location defaultLocation, Provider<TemplateOptions> optionsProvider,
             Provider<TemplateBuilder> templateBuilderProvider, GetImageStrategy getImageStrategy) {
-      TemplateBuilderImpl template = new TemplateBuilderImpl(locations, new ImageCacheSupplier(images, 60), hardwares, Suppliers
-               .ofInstance(defaultLocation), optionsProvider, templateBuilderProvider, getImageStrategy);
+      TemplateBuilderImpl template = new TemplateBuilderImpl(locations, new ImageCacheSupplier(images, 60,
+            Atomics.<AuthorizationException> newReference(), Providers.of(getImageStrategy)), hardwares,
+            Suppliers.ofInstance(defaultLocation),
+            optionsProvider, templateBuilderProvider);
       return template;
    }
 

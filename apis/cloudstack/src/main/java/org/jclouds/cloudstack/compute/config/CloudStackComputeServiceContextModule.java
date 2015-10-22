@@ -89,7 +89,6 @@ import org.jclouds.rest.suppliers.MemoizedRetryOnTimeOutButNotOnAuthorizationExc
 
 import com.google.common.base.Function;
 import com.google.common.base.Objects;
-import com.google.common.base.Optional;
 import com.google.common.base.Predicate;
 import com.google.common.base.Supplier;
 import com.google.common.cache.CacheBuilder;
@@ -276,15 +275,5 @@ public class CloudStackComputeServiceContextModule extends
       return ImmutableMap.of(
          NetworkType.ADVANCED, new AdvancedNetworkOptionsConverter(),
          NetworkType.BASIC, new BasicNetworkOptionsConverter());
-   }
-
-   @Override
-   protected Optional<ImageExtension> provideImageExtension(Injector i) {
-      return Optional.of(i.getInstance(ImageExtension.class));
-   }
-
-   @Override
-   protected Optional<SecurityGroupExtension> provideSecurityGroupExtension(Injector i) {
-      return Optional.of(i.getInstance(SecurityGroupExtension.class));
    }
 }

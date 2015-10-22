@@ -145,6 +145,7 @@ public class TemplateBuilderSpec {
          .put("loginUser", new LoginUserParser())
          .put("authenticateSudo", new AuthenticateSudoParser())
          .put("locationId", new LocationIdParser())
+         .put("forceCacheReload", new ForceCacheReloadParser())
          .build();
 
    @VisibleForTesting
@@ -177,6 +178,8 @@ public class TemplateBuilderSpec {
    Boolean authenticateSudo;
    @VisibleForTesting
    String locationId;
+   @VisibleForTesting
+   Boolean forceCacheReload;
    
    /** Specification; used for toParseableString(). */
    // transient in case people using serializers don't want this to show up
@@ -279,6 +282,9 @@ public class TemplateBuilderSpec {
       if (locationId != null) {
          builder.locationId(locationId);
       }
+      if (forceCacheReload != null && forceCacheReload) {
+         builder.forceCacheReload();
+      }
       return builder;
    }
 
@@ -304,7 +310,8 @@ public class TemplateBuilderSpec {
    @Override
    public int hashCode() {
       return Objects.hashCode(hardwareId, minCores, minRam, hypervisorMatches, imageId, imageNameMatches, osFamily,
-            osVersionMatches, os64Bit, osArchMatches, osDescriptionMatches, loginUser, authenticateSudo, locationId);
+            osVersionMatches, os64Bit, osArchMatches, osDescriptionMatches, loginUser, authenticateSudo, locationId,
+            forceCacheReload);
    }
 
    @Override
@@ -322,7 +329,7 @@ public class TemplateBuilderSpec {
             && equal(osVersionMatches, that.osVersionMatches) && equal(os64Bit, that.os64Bit)
             && equal(osArchMatches, that.osArchMatches) && equal(osDescriptionMatches, that.osDescriptionMatches)
             && equal(loginUser, that.loginUser) && equal(authenticateSudo, that.authenticateSudo)
-            && equal(locationId, that.locationId);
+            && equal(locationId, that.locationId) && equal(forceCacheReload, that.forceCacheReload);
    }
    
    /** Base class for parsing doubles. */
@@ -563,6 +570,15 @@ public class TemplateBuilderSpec {
       }
    }
    
+   /** Parse forceCacheReload */
+   static class ForceCacheReloadParser extends BooleanParser {
+      @Override
+      protected void parseBoolean(TemplateBuilderSpec spec, boolean value) {
+         checkArgument(spec.forceCacheReload == null, "forceCacheReload was already set to ", spec.forceCacheReload);
+         spec.forceCacheReload = value;
+      }
+   }
+   
    public String getHardwareId() {
       return hardwareId;
    }
@@ -622,4 +638,9 @@ public class TemplateBuilderSpec {
    public String getSpecification() {
       return specification;
    }
+
+   public Boolean getForceCacheReload() {
+      return forceCacheReload;
+   }
+   
 }

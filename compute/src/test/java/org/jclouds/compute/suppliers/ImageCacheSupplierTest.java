@@ -16,20 +16,31 @@
  */
 package org.jclouds.compute.suppliers;
 
+import static com.google.common.collect.Iterables.any;
+import static org.jclouds.compute.predicates.ImagePredicates.idEquals;
 import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertFalse;
+import static org.testng.Assert.assertTrue;
 
 import java.util.Set;
+import java.util.concurrent.TimeUnit;
 
 import org.jclouds.compute.domain.Image;
 import org.jclouds.compute.domain.ImageBuilder;
 import org.jclouds.compute.domain.OperatingSystem;
+import org.jclouds.compute.strategy.GetImageStrategy;
 import org.jclouds.domain.Location;
 import org.jclouds.domain.LocationBuilder;
 import org.jclouds.domain.LocationScope;
+import org.jclouds.rest.AuthorizationException;
 import org.testng.annotations.Test;
 
+import com.google.common.base.Optional;
 import com.google.common.base.Suppliers;
 import com.google.common.collect.ImmutableSet;
+import com.google.common.util.concurrent.Atomics;
+import com.google.common.util.concurrent.Uninterruptibles;
+import com.google.inject.util.Providers;
 
 /**
  * Unit tests for the {@link ImageCacheSupplier} class.
@@ -49,15 +60,25 @@ public class ImageCacheSupplierTest {
 
    private Set<? extends Image> images = ImmutableSet.of(image);
 
+   private GetImageStrategy getImageStrategy = new GetImageStrategy() {
+      @Override
+      public Image getImage(String id) {
+         return new ImageBuilder().id(id).providerId(id).name("imageName-" + id).description("imageDescription")
+               .version("imageVersion").operatingSystem(os).status(Image.Status.AVAILABLE).location(location).build();
+      }
+   };
+
    @Test(expectedExceptions = NullPointerException.class)
    public void testRegisterNullImageIsNotAllowed() {
-      ImageCacheSupplier imageCache = new ImageCacheSupplier(Suppliers.<Set<? extends Image>> ofInstance(images), 60);
+      ImageCacheSupplier imageCache = new ImageCacheSupplier(Suppliers.<Set<? extends Image>> ofInstance(images), 60,
+            Atomics.<AuthorizationException> newReference(), Providers.of(getImageStrategy));
       imageCache.registerImage(null);
    }
 
    @Test
    public void testRegisterImageIgnoresDuplicates() {
-      ImageCacheSupplier imageCache = new ImageCacheSupplier(Suppliers.<Set<? extends Image>> ofInstance(images), 60);
+      ImageCacheSupplier imageCache = new ImageCacheSupplier(Suppliers.<Set<? extends Image>> ofInstance(images), 60,
+            Atomics.<AuthorizationException> newReference(), Providers.of(getImageStrategy));
       assertEquals(imageCache.get().size(), 1);
 
       imageCache.registerImage(image);
@@ -67,11 +88,63 @@ public class ImageCacheSupplierTest {
 
    @Test
    public void testRegisterNewImage() {
-      ImageCacheSupplier imageCache = new ImageCacheSupplier(Suppliers.<Set<? extends Image>> ofInstance(images), 60);
+      ImageCacheSupplier imageCache = new ImageCacheSupplier(Suppliers.<Set<? extends Image>> ofInstance(images), 60,
+            Atomics.<AuthorizationException> newReference(), Providers.of(getImageStrategy));
       assertEquals(imageCache.get().size(), 1);
 
       imageCache.registerImage(ImageBuilder.fromImage(image).id("newimage").build());
 
       assertEquals(imageCache.get().size(), 2);
+   }
+
+   @Test(expectedExceptions = NullPointerException.class)
+   public void testRemoveNullImageIsNotAllowed() {
+      ImageCacheSupplier imageCache = new ImageCacheSupplier(Suppliers.<Set<? extends Image>> ofInstance(images), 60,
+            Atomics.<AuthorizationException> newReference(), Providers.of(getImageStrategy));
+      imageCache.removeImage(null);
+   }
+
+   @Test
+   public void testRemoveImage() {
+      ImageCacheSupplier imageCache = new ImageCacheSupplier(Suppliers.<Set<? extends Image>> ofInstance(images), 60,
+            Atomics.<AuthorizationException> newReference(), Providers.of(getImageStrategy));
+      assertEquals(imageCache.get().size(), 1);
+
+      imageCache.removeImage(image.getId());
+
+      assertEquals(imageCache.get().size(), 0);
+   }
+
+   @Test
+   public void testLoadImage() {
+      ImageCacheSupplier imageCache = new ImageCacheSupplier(Suppliers.<Set<? extends Image>> ofInstance(images), 60,
+            Atomics.<AuthorizationException> newReference(), Providers.of(getImageStrategy));
+      assertEquals(imageCache.get().size(), 1);
+
+      Optional<? extends Image> image = imageCache.get("foo");
+
+      assertTrue(image.isPresent());
+      assertEquals(image.get().getName(), "imageName-foo");
+      assertEquals(imageCache.get().size(), 2);
+   }
+
+   @Test
+   public void testSupplierExpirationReloadsTheCache() {
+      ImageCacheSupplier imageCache = new ImageCacheSupplier(Suppliers.<Set<? extends Image>> ofInstance(images), 3,
+            Atomics.<AuthorizationException> newReference(), Providers.of(getImageStrategy));
+      assertEquals(imageCache.get().size(), 1);
+
+      Optional<? extends Image> image = imageCache.get("foo");
+
+      // Load an image into the cache
+      assertTrue(image.isPresent());
+      assertEquals(image.get().getName(), "imageName-foo");
+      assertEquals(imageCache.get().size(), 2);
+
+      // Once the supplier expires, reloading it will laod the initial values
+      // (it is a hardcoded supplier), so the just loaded image should be gone
+      Uninterruptibles.sleepUninterruptibly(3, TimeUnit.SECONDS);
+      assertEquals(imageCache.get().size(), 1);
+      assertFalse(any(imageCache.get(), idEquals("foo")));
    }
 }

@@ -58,6 +58,7 @@ import org.jclouds.ec2.compute.domain.RegionAndName;
 import org.jclouds.ec2.compute.functions.ImagesToRegionAndIdMap;
 import org.jclouds.ec2.compute.internal.EC2TemplateBuilderImpl;
 import org.jclouds.ec2.domain.VirtualizationType;
+import org.jclouds.rest.AuthorizationException;
 import org.testng.annotations.Test;
 
 import com.google.common.base.Function;
@@ -69,6 +70,8 @@ import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
+import com.google.common.util.concurrent.Atomics;
+import com.google.inject.util.Providers;
 
 /**
  * Tests compute service specifically to EC2.
@@ -236,8 +239,9 @@ public class EC2TemplateBuilderTest {
                         m1_small().build(), m1_xlarge().build(), m2_xlarge().build(), m2_2xlarge().build(),
                         m2_4xlarge().build(), g2_2xlarge().build(), HARDWARE_SUPPORTING_BOGUS));
 
-      return new EC2TemplateBuilderImpl(locations, new ImageCacheSupplier(images, 60), sizes, Suppliers.ofInstance(location), optionsProvider,
-               templateBuilderProvider, getImageStrategy, imageCache) {
+      return new EC2TemplateBuilderImpl(locations, new ImageCacheSupplier(images, 60,
+            Atomics.<AuthorizationException> newReference(), Providers.of(getImageStrategy)), sizes,
+            Suppliers.ofInstance(location), optionsProvider, templateBuilderProvider, imageCache) {
       };
    }
 

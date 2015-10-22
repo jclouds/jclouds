@@ -44,6 +44,7 @@ import org.jclouds.domain.Location;
 import org.jclouds.ec2.compute.domain.RegionAndName;
 import org.jclouds.ec2.compute.functions.ImagesToRegionAndIdMap;
 import org.jclouds.ec2.compute.options.EC2TemplateOptions;
+import org.jclouds.rest.AuthorizationException;
 import org.testng.annotations.Test;
 
 import com.google.common.base.Functions;
@@ -54,6 +55,8 @@ import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Sets;
+import com.google.common.util.concurrent.Atomics;
+import com.google.inject.util.Providers;
 
 @Test(groups = "unit", singleThreaded = true)
 public class EC2TemplateBuilderImplTest extends TemplateBuilderImplTest {
@@ -86,8 +89,10 @@ public class EC2TemplateBuilderImplTest extends TemplateBuilderImplTest {
                   ImagesToRegionAndIdMap.imagesToMap(images.get()))));
       }
 
-      return new EC2TemplateBuilderImpl(locations, new ImageCacheSupplier(images, 60), sizes, Suppliers.ofInstance(defaultLocation),
-            optionsProvider, templateBuilderProvider, getImageStrategy, Suppliers.<LoadingCache<RegionAndName, ? extends Image>>ofInstance(imageMap));
+      return new EC2TemplateBuilderImpl(locations, new ImageCacheSupplier(images, 60,
+            Atomics.<AuthorizationException> newReference(), Providers.of(getImageStrategy)), sizes,
+            Suppliers.ofInstance(defaultLocation), optionsProvider, templateBuilderProvider,
+            Suppliers.<LoadingCache<RegionAndName, ? extends Image>> ofInstance(imageMap));
    }
 
    @Override

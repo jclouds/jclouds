@@ -14,22 +14,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jclouds.compute.stub.config;
+package org.jclouds.rest.suppliers;
 
-import org.jclouds.compute.config.JCloudsNativeComputeServiceAdapterContextModule;
-import org.jclouds.concurrent.SingleThreaded;
+import com.google.common.annotations.Beta;
+import com.google.common.base.Optional;
 
-@SingleThreaded
-public class StubComputeServiceContextModule extends JCloudsNativeComputeServiceAdapterContextModule {
+/**
+ * Callback that gets called every time the supplier loads new values.
+ */
+@Beta
+public interface ValueLoadedCallback<V> {
+   
+   void valueLoaded(Optional<V> value);
 
-   public StubComputeServiceContextModule() {
-      super(StubComputeServiceAdapter.class);
+   /** The default implementation does nothing */
+   public static class NoOpCallback<V> implements ValueLoadedCallback<V> {
+      @Override
+      public void valueLoaded(Optional<V> value) {
+         // Do nothing
+      }
    }
-
-   @Override
-   protected void configure() {
-      install(new StubComputeServiceDependenciesModule());
-      super.configure();
-   }
-
 }

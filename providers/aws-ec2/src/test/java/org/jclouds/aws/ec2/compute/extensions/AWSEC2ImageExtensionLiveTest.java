@@ -21,7 +21,8 @@ import static com.google.common.collect.Iterables.transform;
 import org.jclouds.aws.ec2.AWSEC2Api;
 import org.jclouds.aws.util.AWSUtils;
 import org.jclouds.compute.domain.Image;
-import org.jclouds.compute.extensions.internal.BaseImageExtensionLiveTest;
+import org.jclouds.compute.extensions.ImageExtension;
+import org.jclouds.ec2.compute.extensions.EC2ImageExtensionLiveTest;
 import org.jclouds.ec2.compute.functions.EC2ImageParser;
 import org.jclouds.ec2.options.DescribeImagesOptions;
 import org.jclouds.sshj.config.SshjSshClientModule;
@@ -33,7 +34,7 @@ import com.google.inject.Module;
  * Live test for aws-ec2 {@link ImageExtension} implementation
  */
 @Test(groups = "live", singleThreaded = true, testName = "AWSEC2ImageExtensionLiveTest")
-public class AWSEC2ImageExtensionLiveTest extends BaseImageExtensionLiveTest {
+public class AWSEC2ImageExtensionLiveTest extends EC2ImageExtensionLiveTest {
 
    public AWSEC2ImageExtensionLiveTest() {
       provider = "aws-ec2";

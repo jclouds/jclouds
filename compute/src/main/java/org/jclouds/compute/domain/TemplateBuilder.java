@@ -56,7 +56,6 @@ public interface TemplateBuilder {
     *
     * @since 1.5
     */
-   @Beta
    TemplateBuilder from(TemplateBuilderSpec spec);
    
    /**
@@ -66,7 +65,6 @@ public interface TemplateBuilder {
     * @param spec a String in the format specified by {@link TemplateBuilderSpec}
     * @since 1.5
     */
-   @Beta
    TemplateBuilder from(String spec);
    
    /**
@@ -202,5 +200,19 @@ public interface TemplateBuilder {
     * Normal usage is to build up all options and pass them to the builder with a single call to this method.
     */
    TemplateBuilder options(TemplateOptions options);
+   
+   /**
+    * Forces an image lookup against the provider to reload the image cache.
+    * <p>
+    * Use with caution. In some providers getting the list of images is an
+    * expensive operation, and the use of the image cache is recommended. If
+    * there is a need to minimize the amount of time the images are cached,
+    * consider configuring the cache expiration time by setting the
+    * {@link org.jclouds.Constants#PROPERTY_SESSION_INTERVAL} property.
+    * 
+    * @since 2.0
+    */
+   @Beta
+   TemplateBuilder forceCacheReload();
 
 }

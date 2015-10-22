@@ -25,26 +25,14 @@ import static org.jclouds.googlecomputeengine.config.GoogleComputeEngineProperti
 import static org.jclouds.rest.config.BinderUtils.bindHttpApi;
 import static org.jclouds.util.Predicates2.retry;
 
-import javax.inject.Named;
-import javax.inject.Singleton;
 import java.net.URI;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicReference;
 
-import com.google.common.base.Function;
-import com.google.common.base.Functions;
-import com.google.common.base.Optional;
-import com.google.common.base.Predicate;
-import com.google.common.base.Supplier;
-import com.google.common.cache.CacheBuilder;
-import com.google.common.cache.CacheLoader;
-import com.google.common.cache.LoadingCache;
-import com.google.common.collect.ImmutableMap;
-import com.google.inject.Injector;
-import com.google.inject.Provides;
-import com.google.inject.Scopes;
-import com.google.inject.TypeLiteral;
+import javax.inject.Named;
+import javax.inject.Singleton;
+
 import org.jclouds.collect.Memoized;
 import org.jclouds.compute.ComputeService;
 import org.jclouds.compute.ComputeServiceAdapter;
@@ -53,8 +41,6 @@ import org.jclouds.compute.domain.Hardware;
 import org.jclouds.compute.domain.NodeMetadata;
 import org.jclouds.compute.domain.OperatingSystem;
 import org.jclouds.compute.domain.OsFamily;
-import org.jclouds.compute.extensions.ImageExtension;
-import org.jclouds.compute.extensions.SecurityGroupExtension;
 import org.jclouds.compute.options.TemplateOptions;
 import org.jclouds.domain.Location;
 import org.jclouds.domain.LoginCredentials;
@@ -79,6 +65,19 @@ import org.jclouds.googlecomputeengine.domain.MachineType;
 import org.jclouds.googlecomputeengine.domain.Operation;
 import org.jclouds.location.suppliers.ImplicitLocationSupplier;
 import org.jclouds.location.suppliers.implicit.FirstZone;
+
+import com.google.common.base.Function;
+import com.google.common.base.Functions;
+import com.google.common.base.Predicate;
+import com.google.common.base.Supplier;
+import com.google.common.cache.CacheBuilder;
+import com.google.common.cache.CacheLoader;
+import com.google.common.cache.LoadingCache;
+import com.google.common.collect.ImmutableMap;
+import com.google.inject.Injector;
+import com.google.inject.Provides;
+import com.google.inject.Scopes;
+import com.google.inject.TypeLiteral;
 
 public final class GoogleComputeEngineServiceContextModule
       extends ComputeServiceAdapterContextModule<Instance, MachineType, Image, Location> {
@@ -195,15 +194,6 @@ public final class GoogleComputeEngineServiceContextModule
    protected LoadingCache<URI, Image> diskURIToImageMap(
          CacheLoader<URI, Image> in) {
       return CacheBuilder.newBuilder().build(in);
-   }
-
-
-   @Override protected Optional<ImageExtension> provideImageExtension(Injector i) {
-      return Optional.absent();
-   }
-
-   @Override protected Optional<SecurityGroupExtension> provideSecurityGroupExtension(Injector i) {
-      return Optional.absent();
    }
 
    private static final Map<Instance.Status, NodeMetadata.Status> toPortableNodeStatus =

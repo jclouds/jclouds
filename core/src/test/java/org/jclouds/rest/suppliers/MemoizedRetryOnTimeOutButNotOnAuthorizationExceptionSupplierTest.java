@@ -21,22 +21,26 @@ import static com.google.common.util.concurrent.Atomics.newReference;
 import static org.testng.Assert.assertEquals;
 
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 
 import org.jclouds.rest.AuthorizationException;
 import org.jclouds.rest.suppliers.MemoizedRetryOnTimeOutButNotOnAuthorizationExceptionSupplier.SetAndThrowAuthorizationExceptionSupplierBackedLoader;
 import org.testng.annotations.Test;
 
+import com.google.common.base.Optional;
 import com.google.common.base.Supplier;
+import com.google.common.base.Suppliers;
 import com.google.common.util.concurrent.UncheckedExecutionException;
+import com.google.common.util.concurrent.Uninterruptibles;
 
 @Test(groups = "unit", testName = "MemoizedRetryOnTimeOutButNotOnAuthorizationExceptionSupplierTest")
 public class MemoizedRetryOnTimeOutButNotOnAuthorizationExceptionSupplierTest {
    @Test
    public void testLoaderNormal() {
       AtomicReference<AuthorizationException> authException = newReference();
-      assertEquals(new SetAndThrowAuthorizationExceptionSupplierBackedLoader<String>(ofInstance("foo"),
-            authException).load("KEY").get(), "foo");
+      assertEquals(new SetAndThrowAuthorizationExceptionSupplierBackedLoader<String>(ofInstance("foo"), authException, new ValueLoadedCallback.NoOpCallback<String>()).load("KEY").get(), "foo");
       assertEquals(authException.get(), null);
    }
 
@@ -48,7 +52,7 @@ public class MemoizedRetryOnTimeOutButNotOnAuthorizationExceptionSupplierTest {
             public String get() {
                throw new AuthorizationException();
             }
-         }, authException).load("KEY");
+         }, authException, new ValueLoadedCallback.NoOpCallback<String>()).load("KEY");
       } finally {
          assertEquals(authException.get().getClass(), AuthorizationException.class);
       }
@@ -62,7 +66,7 @@ public class MemoizedRetryOnTimeOutButNotOnAuthorizationExceptionSupplierTest {
             public String get() {
                throw new RuntimeException(new ExecutionException(new AuthorizationException()));
             }
-         }, authException).load("KEY");
+         }, authException, new ValueLoadedCallback.NoOpCallback<String>()).load("KEY");
       } finally {
          assertEquals(authException.get().getClass(), AuthorizationException.class);
       }
@@ -76,7 +80,7 @@ public class MemoizedRetryOnTimeOutButNotOnAuthorizationExceptionSupplierTest {
             public String get() {
                throw new UncheckedExecutionException(new AuthorizationException());
             }
-         }, authException).load("KEY");
+         }, authException, new ValueLoadedCallback.NoOpCallback<String>()).load("KEY");
       } finally {
          assertEquals(authException.get().getClass(), AuthorizationException.class);
       }
@@ -90,9 +94,43 @@ public class MemoizedRetryOnTimeOutButNotOnAuthorizationExceptionSupplierTest {
             public String get() {
                throw new RuntimeException(new IllegalArgumentException("foo"));
             }
-         }, authException).load("KEY");
+         }, authException, new ValueLoadedCallback.NoOpCallback<String>()).load("KEY");
       } finally {
          assertEquals(authException.get().getClass(), RuntimeException.class);
+      }
+   }
+
+   @Test
+   public void testLoaderNotifiesAfterReloading() {
+      AtomicReference<AuthorizationException> authException = newReference();
+      ValueLoadedEventHandler handler = new ValueLoadedEventHandler();
+
+      Supplier<String> supplier = MemoizedRetryOnTimeOutButNotOnAuthorizationExceptionSupplier.create(authException,
+            Suppliers.<String> ofInstance("foo"), 3, TimeUnit.SECONDS, handler);
+
+      // The supplier loads the value initially and returns the cached values
+      assertEquals(handler.count.get(), 0);
+      supplier.get();
+      assertEquals(handler.count.get(), 1);
+      supplier.get();
+      assertEquals(handler.count.get(), 1);
+      
+      // Once expired, it reloads the values, notified the event, and updated the cache
+      Uninterruptibles.sleepUninterruptibly(4, TimeUnit.SECONDS);
+      supplier.get();
+      assertEquals(handler.count.get(), 2);
+      supplier.get();
+      assertEquals(handler.count.get(), 2);
+      supplier.get();
+      assertEquals(handler.count.get(), 2);
+   }
+
+   static class ValueLoadedEventHandler implements ValueLoadedCallback<String>{
+      AtomicInteger count = new AtomicInteger(0);
+
+      @Override
+      public void valueLoaded(Optional<String> value) {
+         count.incrementAndGet();
       }
    }
 }

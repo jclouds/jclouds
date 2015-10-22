@@ -17,7 +17,6 @@
 package org.jclouds.ec2.compute.config;
 
 import static com.google.common.collect.Iterables.toArray;
-import static org.jclouds.Constants.PROPERTY_SESSION_INTERVAL;
 import static org.jclouds.ec2.reference.EC2Constants.PROPERTY_EC2_AMI_OWNERS;
 
 import java.util.Set;
@@ -30,8 +29,6 @@ import javax.inject.Singleton;
 import org.jclouds.compute.ComputeServiceContext;
 import org.jclouds.compute.config.BaseComputeServiceContextModule;
 import org.jclouds.compute.domain.Image;
-import org.jclouds.compute.extensions.ImageExtension;
-import org.jclouds.compute.extensions.SecurityGroupExtension;
 import org.jclouds.ec2.compute.EC2ComputeService;
 import org.jclouds.ec2.compute.domain.RegionAndName;
 import org.jclouds.ec2.compute.loaders.RegionAndIdToImage;
@@ -39,7 +36,6 @@ import org.jclouds.ec2.compute.suppliers.RegionAndNameToImageSupplier;
 import org.jclouds.rest.AuthorizationException;
 import org.jclouds.rest.suppliers.SetAndThrowAuthorizationExceptionSupplier;
 
-import com.google.common.base.Optional;
 import com.google.common.base.Splitter;
 import com.google.common.base.Supplier;
 import com.google.common.base.Suppliers;
@@ -78,9 +74,8 @@ public class EC2ComputeServiceContextModule extends BaseComputeServiceContextMod
    }
 
    @Override
-   protected Supplier<Set<? extends Image>> supplyNonParsingImageCache(
-            AtomicReference<AuthorizationException> authException, @Named(PROPERTY_SESSION_INTERVAL) long seconds,
-            final Supplier<Set<? extends Image>> imageSupplier, Injector injector) {
+   protected Supplier<Set<? extends Image>> supplyNonParsingImages(final Supplier<Set<? extends Image>> imageSupplier,
+         Injector injector) {
       final Supplier<LoadingCache<RegionAndName, ? extends Image>> cache = injector.getInstance(Key.get(new TypeLiteral<Supplier<LoadingCache<RegionAndName, ? extends Image>>>() {}));
       return new Supplier<Set<? extends Image>>() {
          @Override
@@ -134,16 +129,6 @@ public class EC2ComputeServiceContextModule extends BaseComputeServiceContextMod
       if (amiOwners.trim().equals(""))
          return new String[] {};
       return toArray(Splitter.on(',').split(amiOwners), String.class);
-   }
-
-   @Override
-   protected Optional<ImageExtension> provideImageExtension(Injector i) {
-      return Optional.of(i.getInstance(ImageExtension.class));
-   }
-
-   @Override
-   protected Optional<SecurityGroupExtension> provideSecurityGroupExtension(Injector i) {
-      return Optional.of(i.getInstance(SecurityGroupExtension.class));
    }
 }
 

@@ -66,6 +66,7 @@ import org.jclouds.compute.domain.Template;
 import org.jclouds.compute.domain.TemplateBuilder;
 import org.jclouds.compute.extensions.ImageExtension;
 import org.jclouds.compute.extensions.SecurityGroupExtension;
+import org.jclouds.compute.extensions.internal.DelegatingImageExtension;
 import org.jclouds.compute.options.RunScriptOptions;
 import org.jclouds.compute.options.TemplateOptions;
 import org.jclouds.compute.reference.ComputeServiceConstants;
@@ -80,6 +81,7 @@ import org.jclouds.compute.strategy.RebootNodeStrategy;
 import org.jclouds.compute.strategy.ResumeNodeStrategy;
 import org.jclouds.compute.strategy.RunScriptOnNodeAndAddToGoodMapOrPutExceptionIntoBadMap;
 import org.jclouds.compute.strategy.SuspendNodeStrategy;
+import org.jclouds.compute.suppliers.ImageCacheSupplier;
 import org.jclouds.domain.Credentials;
 import org.jclouds.domain.Location;
 import org.jclouds.domain.LoginCredentials;
@@ -180,8 +182,13 @@ public class BaseComputeService implements ComputeService {
       this.runScriptOnNodeFactory = checkNotNull(runScriptOnNodeFactory, "runScriptOnNodeFactory");
       this.persistNodeCredentials = checkNotNull(persistNodeCredentials, "persistNodeCredentials");
       this.userExecutor = checkNotNull(userExecutor, "userExecutor");
-      this.imageExtension = checkNotNull(imageExtension, "imageExtension");
       this.securityGroupExtension = checkNotNull(securityGroupExtension, "securityGroupExtension");
+      if (imageExtension.isPresent() && images instanceof ImageCacheSupplier) {
+         this.imageExtension = Optional.<ImageExtension> of(new DelegatingImageExtension(ImageCacheSupplier.class
+               .cast(images), imageExtension.get()));
+      } else {
+         this.imageExtension = checkNotNull(imageExtension, "imageExtension");
+      }
    }
 
    /**

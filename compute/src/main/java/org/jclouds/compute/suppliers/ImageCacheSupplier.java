@@ -17,68 +17,181 @@
 package org.jclouds.compute.suppliers;
 
 import static com.google.common.base.Preconditions.checkNotNull;
-import static com.google.common.collect.Iterables.concat;
-import static org.jclouds.Constants.PROPERTY_SESSION_INTERVAL;
 
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicReference;
 
+import javax.annotation.Resource;
 import javax.inject.Named;
-import javax.inject.Singleton;
 
 import org.jclouds.compute.domain.Image;
+import org.jclouds.compute.reference.ComputeServiceConstants;
+import org.jclouds.compute.strategy.GetImageStrategy;
+import org.jclouds.logging.Logger;
+import org.jclouds.rest.AuthorizationException;
+import org.jclouds.rest.suppliers.MemoizedRetryOnTimeOutButNotOnAuthorizationExceptionSupplier;
+import org.jclouds.rest.suppliers.ValueLoadedCallback;
 
+import com.google.common.annotations.Beta;
+import com.google.common.base.Function;
+import com.google.common.base.Optional;
 import com.google.common.base.Supplier;
-import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
+import com.google.common.cache.CacheLoader;
+import com.google.common.cache.LoadingCache;
 import com.google.common.collect.ImmutableSet;
-import com.google.inject.Inject;
+import com.google.common.collect.Maps;
+import com.google.inject.Provider;
 
 /**
- * Image supplier that allows new images to be registered.
+ * Memoized image supplier that allows new images to be registered at runtime.
  * <p>
- * This is a wrapper for the memoized image supplier (the actual image cache), to provide a way to register new images as
- * needed. Once a new image is created by the {@link org.jclouds.compute.extensions.ImageExtension}, or discovered by
- * other means (see https://issues.apache.org/jira/browse/JCLOUDS-570) this supplier will allow the image to be appended
- * to the cached list, so it can be properly used normally.
+ * The memoized <code>Supplier<Set<? extends Image>></code> is a static data
+ * structure that can't be properly modified at runtime. This class is a wrapper
+ * for the image supplier to provide a way to register new images as needed.
+ * Once a new image is created by the
+ * {@link org.jclouds.compute.extensions.ImageExtension}, or discovered by other
+ * means (see https://issues.apache.org/jira/browse/JCLOUDS-570) this supplier
+ * will allow the image to be appended to the cached list.
  */
-@Singleton
-public class ImageCacheSupplier implements Supplier<Set<? extends Image>> {
+@Beta
+public class ImageCacheSupplier implements Supplier<Set<? extends Image>>, ValueLoadedCallback<Set<? extends Image>> {
 
-   private final Supplier<Set<? extends Image>> imageCache;
+   /**
+    * The image supplier that fetches the images from the provider.
+    */
+   private final Supplier<Set<? extends Image>> liveImageSupplier;
+   
+   /**
+    * The image supplier that loads the images and caches them for the duration
+    * of the session. Delegates to the {@link #liveImageSupplier}.
+    */
+   private final Supplier<Set<? extends Image>> memoizedImageSupplier;
+   
+   /**
+    * The actual image cache. It acts as a view over the memoized image supplier
+    * and allows to add and remove images at runtime.
+    */
+   private final LoadingCache<String, Image> imageCache;
+   
+   @Resource
+   @Named(ComputeServiceConstants.COMPUTE_LOGGER)
+   protected Logger logger = Logger.NULL;
 
-   private final Cache<String, Image> uncachedImages;
-
-   @Inject
-   public ImageCacheSupplier(@Named("imageCache") Supplier<Set<? extends Image>> imageCache,
-         @Named(PROPERTY_SESSION_INTERVAL) long sessionIntervalSeconds) {
-      this.imageCache = checkNotNull(imageCache, "imageCache");
-      // We use a cache to let the entries in the "uncached" set expire as soon as the image cache expires. We want the
-      // uncached set to be regenerated when the original cache is also regenerated.
-      this.uncachedImages = CacheBuilder.newBuilder().expireAfterWrite(sessionIntervalSeconds, TimeUnit.SECONDS)
-            .build();
+   public ImageCacheSupplier(Supplier<Set<? extends Image>> imageSupplier, long sessionIntervalSeconds,
+         AtomicReference<AuthorizationException> authException, final Provider<GetImageStrategy> imageLoader) {
+      liveImageSupplier = imageSupplier;
+      memoizedImageSupplier = MemoizedRetryOnTimeOutButNotOnAuthorizationExceptionSupplier.create(authException,
+            imageSupplier, sessionIntervalSeconds, TimeUnit.SECONDS, this);
+      imageCache = CacheBuilder.newBuilder().expireAfterWrite(sessionIntervalSeconds, TimeUnit.SECONDS)
+            .build(new CacheLoader<String, Image>() {
+               @Override
+               public Image load(String key) throws Exception {
+                  return imageLoader.get().getImage(key);
+               }
+            });
    }
-
+   
    @Override
    public Set<? extends Image> get() {
-      return ImmutableSet.copyOf(concat(imageCache.get(), uncachedImages.asMap().values()));
+      // Call the memoized supplier. The "imageCache" is subscribed to the
+      // reloads of the supplier once it expires. For this reason we ignore the
+      // value returned by the supplier: every time it is reloaded, the cache
+      // will be notified and re-populated with the fresh values. Any other call
+      // to the supplier that returns a cached value will be ignored and the
+      // values in the cache will be returned, as the cache properly handles
+      // individual image additions and deletions (introduced, for example, by
+      // the usage of the ImageExtension).
+      memoizedImageSupplier.get();
+      return ImmutableSet.copyOf(imageCache.asMap().values());
+   }
+
+   /**
+    * The cache is subscribed to value loading events generated by the
+    * {@link MemoizedRetryOnTimeOutButNotOnAuthorizationExceptionSupplier}.
+    * <p>
+    * Every time the memoized supplier reloads a value, an event will be
+    * populated and this method will handle it. This makes it possible to
+    * refresh the cache with the last values everytime they are reloaded.
+    */
+   @Override
+   public void valueLoaded(Optional<Set<? extends Image>> value) {
+      if (value.isPresent()) {
+         reset(value.get());
+      }
+   }
+   
+   /**
+    * Resets the cache to the given set of images.
+    * <p>
+    * This method is called when the memoized image supplier is reloaded, or
+    * when the cache needs to be refreshed (for example when the TempalteBuilder
+    * is invoked forcing a fresh image lookup.
+    */
+   public void reset(Set<? extends Image> images) {
+      imageCache.invalidateAll();
+      imageCache.putAll(Maps.uniqueIndex(images, new Function<Image, String>() {
+         @Override
+         public String apply(Image input) {
+            return input.getId();
+         }
+      }));
+   }
+   
+   /**
+    * Calls the {@link #liveImageSupplier} to get the current images and
+    * rebuilds the cache with them.
+    */
+   public Set<? extends Image> rebuildCache() {
+      Set<? extends Image> images = liveImageSupplier.get();
+      reset(images);
+      return images;
+   }
+
+   /**
+    * Loads an image by id.
+    * <p>
+    * This methods returns the cached image, or performs a call to retrieve it
+    * if the image is still not cached.
+    */
+   public Optional<? extends Image> get(String id) {
+      try {
+         return Optional.fromNullable(imageCache.getUnchecked(id));
+      } catch (Exception ex) {
+         logger.error(ex, "Unexpected error loading image %s", id);
+         return Optional.absent();
+      }
    }
 
    /**
     * Registers a new image in the image cache.
     * <p>
-    * This method should be called to register new images into the image cache, when some image that is known to exist
-    * in the provider is still not cached. For example, this can happen when an image is created after the image cache
-    * has been populated for the first time.
+    * This method should be called to register new images into the image cache
+    * when some image that is known to exist in the provider is still not
+    * cached. For example, this can happen when an image is created after the
+    * image cache has been populated for the first time.
     * <p>
-    * Note that this method does not check if the image is already cached, to avoid loading all images if the image
-    * cache is still not populated.
+    * Note that this method does not check if the image is already cached, to
+    * avoid loading all images if the image cache is still not populated.
     *
     * @param image The image to be registered to the cache.
     */
    public void registerImage(Image image) {
       checkNotNull(image, "image");
-      uncachedImages.put(image.getId(), image);
+      imageCache.put(image.getId(), image);
+   }
+
+   /**
+    * Removes an image from the image cache.
+    * <p>
+    * This method should be called to invalidate an already cached image, when
+    * some image known to not exist in the provider is still cached.
+    * 
+    * @param imageId The id of the image to invalidate.
+    */
+   public void removeImage(String imageId) {
+      imageCache.invalidate(checkNotNull(imageId, "imageId"));
    }
 
 }

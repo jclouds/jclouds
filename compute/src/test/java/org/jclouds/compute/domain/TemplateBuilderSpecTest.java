@@ -61,6 +61,7 @@ public class TemplateBuilderSpecTest {
       assertNull(spec.loginUser);
       assertNull(spec.authenticateSudo);
       assertNull(spec.locationId);
+      assertNull(spec.forceCacheReload);
       assertTemplateBuilderEquivalence(templateBuilders.get(), templateBuilders.get().from(spec));
    }
 
@@ -81,6 +82,7 @@ public class TemplateBuilderSpecTest {
       assertNull(spec.loginUser);
       assertNull(spec.authenticateSudo);
       assertNull(spec.locationId);
+      assertNull(spec.forceCacheReload);
       assertTemplateBuilderEquivalence(templateBuilders.get().hardwareId("m1.small"),
             templateBuilders.get().from(spec));
    }
@@ -132,6 +134,7 @@ public class TemplateBuilderSpecTest {
       assertNull(spec.loginUser);
       assertNull(spec.authenticateSudo);
       assertNull(spec.locationId);
+      assertNull(spec.forceCacheReload);
       assertTemplateBuilderEquivalence(templateBuilders.get().minCores(32), templateBuilders.get().from(spec));
    }
 
@@ -160,6 +163,7 @@ public class TemplateBuilderSpecTest {
       assertNull(spec.loginUser);
       assertNull(spec.authenticateSudo);
       assertNull(spec.locationId);
+      assertNull(spec.forceCacheReload);
       assertTemplateBuilderEquivalence(templateBuilders.get().minRam(10), templateBuilders.get().from(spec));
    }
 
@@ -180,6 +184,7 @@ public class TemplateBuilderSpecTest {
       assertNull(spec.loginUser);
       assertNull(spec.authenticateSudo);
       assertNull(spec.locationId);
+      assertNull(spec.forceCacheReload);
       assertTemplateBuilderEquivalence(templateBuilders.get().minRam(10), templateBuilders.get().from(spec));
    }
 
@@ -216,6 +221,7 @@ public class TemplateBuilderSpecTest {
       assertNull(spec.loginUser);
       assertNull(spec.authenticateSudo);
       assertNull(spec.locationId);
+      assertNull(spec.forceCacheReload);
       assertTemplateBuilderEquivalence(templateBuilders.get().hypervisorMatches("OpenVZ"),
             templateBuilders.get().from(spec));
    }
@@ -246,6 +252,7 @@ public class TemplateBuilderSpecTest {
       assertNull(spec.loginUser);
       assertNull(spec.authenticateSudo);
       assertNull(spec.locationId);
+      assertNull(spec.forceCacheReload);
       assertTemplateBuilderEquivalence(templateBuilders.get().imageId("us-east-1/ami-fffffff"),
             templateBuilders.get().from(spec));
    }
@@ -315,6 +322,7 @@ public class TemplateBuilderSpecTest {
       assertNull(spec.loginUser);
       assertNull(spec.authenticateSudo);
       assertNull(spec.locationId);
+      assertNull(spec.forceCacheReload);
       assertTemplateBuilderEquivalence(templateBuilders.get().imageNameMatches(".*w/ None.*"),
             templateBuilders.get().from(spec));
    }
@@ -345,6 +353,7 @@ public class TemplateBuilderSpecTest {
       assertNull(spec.loginUser);
       assertNull(spec.authenticateSudo);
       assertNull(spec.locationId);
+      assertNull(spec.forceCacheReload);
       assertTemplateBuilderEquivalence(templateBuilders.get().osFamily(OsFamily.UBUNTU),
             templateBuilders.get().from(spec));
    }
@@ -374,6 +383,7 @@ public class TemplateBuilderSpecTest {
       assertNull(spec.loginUser);
       assertNull(spec.authenticateSudo);
       assertNull(spec.locationId);
+      assertNull(spec.forceCacheReload);
       assertTemplateBuilderEquivalence(templateBuilders.get().osVersionMatches(".*[Aa]utomated SSH Access.*"),
             templateBuilders.get().from(spec));
    }
@@ -403,6 +413,7 @@ public class TemplateBuilderSpecTest {
       assertNull(spec.loginUser);
       assertNull(spec.authenticateSudo);
       assertNull(spec.locationId);
+      assertNull(spec.forceCacheReload);
       assertTemplateBuilderEquivalence(templateBuilders.get().os64Bit(true),
             templateBuilders.get().from(spec));
    }
@@ -432,6 +443,7 @@ public class TemplateBuilderSpecTest {
       assertNull(spec.loginUser);
       assertNull(spec.authenticateSudo);
       assertNull(spec.locationId);
+      assertNull(spec.forceCacheReload);
       assertTemplateBuilderEquivalence(templateBuilders.get().osArchMatches("x86"),
             templateBuilders.get().from(spec));
    }
@@ -461,6 +473,7 @@ public class TemplateBuilderSpecTest {
       assertNull(spec.loginUser);
       assertNull(spec.authenticateSudo);
       assertNull(spec.locationId);
+      assertNull(spec.forceCacheReload);
       assertTemplateBuilderEquivalence(templateBuilders.get().osDescriptionMatches("^((?!MGC).)*$"),
             templateBuilders.get().from(spec));
    }
@@ -491,6 +504,7 @@ public class TemplateBuilderSpecTest {
       assertEquals(spec.loginUser, "ubuntu");
       assertNull(spec.authenticateSudo);
       assertNull(spec.locationId);
+      assertNull(spec.forceCacheReload);
       assertTemplateBuilderEquivalence(
             templateBuilders.get().options(overrideLoginUser("ubuntu")), templateBuilders
                   .get().from(spec));
@@ -522,6 +536,7 @@ public class TemplateBuilderSpecTest {
       assertEquals(spec.loginUser, "root:toor");
       assertNull(spec.authenticateSudo);
       assertNull(spec.locationId);
+      assertNull(spec.forceCacheReload);
       assertTemplateBuilderEquivalence(
             templateBuilders.get().options(
                   overrideLoginCredentials(LoginCredentials.builder().user("root").password("toor").build())),
@@ -554,15 +569,46 @@ public class TemplateBuilderSpecTest {
       assertEquals(spec.loginUser, "root:toor");
       assertEquals(spec.authenticateSudo.booleanValue(), true);
       assertNull(spec.locationId);
+      assertNull(spec.forceCacheReload);
       assertTemplateBuilderEquivalence(
             templateBuilders.get().options(
                   overrideLoginCredentials(LoginCredentials.builder().user("root").password("toor")
                         .authenticateSudo(true).build())), templateBuilders.get().from(spec));
    }
-
+   
    public void testParse_authenticateSudoRepeated() {
       try {
          parse("loginUser=root:toor,authenticateSudo=true,authenticateSudo=false");
+         fail("Expected exception");
+      } catch (IllegalArgumentException expected) {
+         // expected
+      }
+   }
+   
+   public void testParse_forceCacheReload() {
+      TemplateBuilderSpec spec = parse("forceCacheReload=true");
+      assertNull(spec.hardwareId);
+      assertNull(spec.minCores);
+      assertNull(spec.minRam);
+      assertNull(spec.minDisk);
+      assertNull(spec.imageId);
+      assertNull(spec.imageNameMatches);
+      assertNull(spec.hypervisorMatches);
+      assertNull(spec.osFamily);
+      assertNull(spec.osVersionMatches);
+      assertNull(spec.os64Bit);
+      assertNull(spec.osArchMatches);
+      assertNull(spec.osDescriptionMatches);
+      assertNull(spec.loginUser);
+      assertNull(spec.authenticateSudo);
+      assertNull(spec.locationId);
+      assertEquals(spec.forceCacheReload.booleanValue(), true);
+      assertTemplateBuilderEquivalence(templateBuilders.get().forceCacheReload(), templateBuilders.get().from(spec));
+   }
+
+   public void testParse_forceCacheReloadRepeated() {
+      try {
+         parse("forceCacheReload=true,forceCacheReload=false");
          fail("Expected exception");
       } catch (IllegalArgumentException expected) {
          // expected
@@ -586,6 +632,7 @@ public class TemplateBuilderSpecTest {
       assertNull(spec.loginUser);
       assertNull(spec.authenticateSudo);
       assertEquals(spec.locationId, "stub");
+      assertNull(spec.forceCacheReload);
       assertTemplateBuilderEquivalence(templateBuilders.get().locationId("stub"),
             templateBuilders.get().from(spec));
    }
@@ -616,6 +663,7 @@ public class TemplateBuilderSpecTest {
       assertNull(spec.loginUser);
       assertNull(spec.authenticateSudo);
       assertNull(spec.locationId);
+      assertNull(spec.forceCacheReload);
       TemplateBuilder expected = templateBuilders.get().osVersionMatches("1[012].[01][04]").imageNameMatches(".*w/ None.*").osFamily(OsFamily.UBUNTU);
       assertTemplateBuilderEquivalence(expected, templateBuilders.get().from(spec));
    }
@@ -637,6 +685,7 @@ public class TemplateBuilderSpecTest {
       assertNull(spec.loginUser);
       assertNull(spec.authenticateSudo);
       assertNull(spec.locationId);
+      assertNull(spec.forceCacheReload);
       TemplateBuilder expected = templateBuilders.get().minRam(10).osFamily(OsFamily.UBUNTU);
       assertTemplateBuilderEquivalence(expected, templateBuilders.get().from(spec));
    }

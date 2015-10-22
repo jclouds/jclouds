@@ -53,16 +53,18 @@ import com.google.common.util.concurrent.UncheckedExecutionException;
  */
 public class MemoizedRetryOnTimeOutButNotOnAuthorizationExceptionSupplier<T> extends ForwardingObject implements
       Supplier<T> {
-
+   
    static class SetAndThrowAuthorizationExceptionSupplierBackedLoader<V> extends CacheLoader<String, Optional<V>> {
 
       private final Supplier<V> delegate;
       private final AtomicReference<AuthorizationException> authException;
+      private final ValueLoadedCallback<V> valueLoadedCallback;
 
       public SetAndThrowAuthorizationExceptionSupplierBackedLoader(Supplier<V> delegate,
-            AtomicReference<AuthorizationException> authException) {
+            AtomicReference<AuthorizationException> authException, ValueLoadedCallback<V> valueLoadedCallback) {
          this.delegate = checkNotNull(delegate, "delegate");
          this.authException = checkNotNull(authException, "authException");
+         this.valueLoadedCallback = checkNotNull(valueLoadedCallback, "valueLoadedCallback");
       }
 
       @Override
@@ -70,7 +72,9 @@ public class MemoizedRetryOnTimeOutButNotOnAuthorizationExceptionSupplier<T> ext
          if (authException.get() != null)
             throw authException.get();
          try {
-            return Optional.fromNullable(delegate.get());
+            Optional<V> value = Optional.fromNullable(delegate.get());
+            valueLoadedCallback.valueLoaded(value);
+            return value;
          } catch (Exception e) {
             AuthorizationException aex = getFirstThrowableOfType(e, AuthorizationException.class);
             if (aex != null) {
@@ -85,7 +89,24 @@ public class MemoizedRetryOnTimeOutButNotOnAuthorizationExceptionSupplier<T> ext
       public String toString() {
          return Objects.toStringHelper(this).add("delegate", delegate).toString();
       }
+   }
+   
+   public static class ValueLoadedEvent<V> {
+      private final Object eventKey;
+      private final Optional<V> value;
 
+      public ValueLoadedEvent(Object eventKey, Optional<V> value) {
+         this.eventKey = checkNotNull(eventKey, "eventKey");
+         this.value = checkNotNull(value, "value");
+      }
+
+      public Object getEventKey() {
+         return eventKey;
+      }
+
+      public Optional<V> getValue() {
+         return value;
+      }
    }
 
    private final Supplier<T> delegate;
@@ -96,16 +117,26 @@ public class MemoizedRetryOnTimeOutButNotOnAuthorizationExceptionSupplier<T> ext
    public static <T> MemoizedRetryOnTimeOutButNotOnAuthorizationExceptionSupplier<T> create(
          AtomicReference<AuthorizationException> authException, Supplier<T> delegate, long duration, TimeUnit unit) {
       return new MemoizedRetryOnTimeOutButNotOnAuthorizationExceptionSupplier<T>(authException, delegate, duration,
-            unit);
+            unit, new ValueLoadedCallback.NoOpCallback<T>());
    }
-
+   
+   /**
+    * Creates a memoized supplier that calls the given callback each time values are loaded.
+    */
+   public static <T> MemoizedRetryOnTimeOutButNotOnAuthorizationExceptionSupplier<T> create(
+         AtomicReference<AuthorizationException> authException, Supplier<T> delegate, long duration, TimeUnit unit,
+         ValueLoadedCallback<T> valueLoadedCallback) {
+      return new MemoizedRetryOnTimeOutButNotOnAuthorizationExceptionSupplier<T>(authException, delegate, duration,
+            unit, valueLoadedCallback);
+   }
+   
    MemoizedRetryOnTimeOutButNotOnAuthorizationExceptionSupplier(AtomicReference<AuthorizationException> authException,
-         Supplier<T> delegate, long duration, TimeUnit unit) {
+         Supplier<T> delegate, long duration, TimeUnit unit, ValueLoadedCallback<T> valueLoadedCallback) {
       this.delegate = delegate;
       this.duration = duration;
       this.unit = unit;
       this.cache = CacheBuilder.newBuilder().expireAfterWrite(duration, unit)
-            .build(new SetAndThrowAuthorizationExceptionSupplierBackedLoader<T>(delegate, authException));
+            .build(new SetAndThrowAuthorizationExceptionSupplierBackedLoader<T>(delegate, authException, valueLoadedCallback));
    }
 
    @Override

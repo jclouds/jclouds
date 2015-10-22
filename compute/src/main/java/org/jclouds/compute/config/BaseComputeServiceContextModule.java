@@ -52,6 +52,7 @@ import org.jclouds.compute.options.RunScriptOptions;
 import org.jclouds.compute.options.TemplateOptions;
 import org.jclouds.compute.reference.ComputeServiceConstants;
 import org.jclouds.compute.strategy.CustomizeNodeAndAddToGoodMapOrPutExceptionIntoBadMap;
+import org.jclouds.compute.strategy.GetImageStrategy;
 import org.jclouds.compute.strategy.InitializeRunScriptOnNodeOrPlaceInBadMap;
 import org.jclouds.compute.suppliers.ImageCacheSupplier;
 import org.jclouds.config.ValueOfConfigurationKeyOrNull;
@@ -71,8 +72,10 @@ import com.google.common.base.Suppliers;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
 import com.google.inject.AbstractModule;
+import com.google.inject.Binding;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
+import com.google.inject.Key;
 import com.google.inject.Provides;
 import com.google.inject.TypeLiteral;
 import com.google.inject.assistedinject.FactoryModuleBuilder;
@@ -112,9 +115,6 @@ public abstract class BaseComputeServiceContextModule extends AbstractModule {
       }, InitializeRunScriptOnNodeOrPlaceInBadMap.class).build(InitializeRunScriptOnNodeOrPlaceInBadMap.Factory.class));
 
       install(new FactoryModuleBuilder().build(BlockUntilInitScriptStatusIsZeroThenReturnOutput.Factory.class));
-
-      bind(new TypeLiteral<Supplier<Set<? extends Image>>>() {
-      }).annotatedWith(Memoized.class).to(ImageCacheSupplier.class);
    }
 
    protected void bindCredentialsOverriderFunction() {
@@ -238,35 +238,27 @@ public abstract class BaseComputeServiceContextModule extends AbstractModule {
 
       }, images);
    }
-
+   
    @Provides
    @Singleton
-   @Named("imageCache")
-   protected final Supplier<Set<? extends Image>> supplyImageCache(AtomicReference<AuthorizationException> authException, @Named(PROPERTY_SESSION_INTERVAL) long seconds,
-         final Supplier<Set<? extends Image>> imageSupplier, Injector injector) {
-      if (shouldEagerlyParseImages(injector)) {
-         return supplyImageCache(authException, seconds, imageSupplier);
-      } else {
-         return supplyNonParsingImageCache(authException, seconds, imageSupplier, injector);
-      }
+   @Memoized
+   protected final Supplier<Set<? extends Image>> supplyImageCache(
+         AtomicReference<AuthorizationException> authException, @Named(PROPERTY_SESSION_INTERVAL) long seconds,
+         final Supplier<Set<? extends Image>> imageSupplier, com.google.inject.Provider<GetImageStrategy> imageLoader, Injector injector) {
+      Supplier<Set<? extends Image>> parsingImageSupplier = shouldEagerlyParseImages(injector) ? imageSupplier
+            : supplyNonParsingImages(imageSupplier, injector);
+      return new ImageCacheSupplier(parsingImageSupplier, seconds, authException, imageLoader);
    }
 
    protected boolean shouldEagerlyParseImages(Injector injector) {
       return true;
    }
 
-   protected Supplier<Set<? extends Image>> supplyImageCache(AtomicReference<AuthorizationException> authException, @Named(PROPERTY_SESSION_INTERVAL) long seconds,
-         final Supplier<Set<? extends Image>> imageSupplier) {
-      return MemoizedRetryOnTimeOutButNotOnAuthorizationExceptionSupplier.create(authException, imageSupplier, seconds,
-               TimeUnit.SECONDS);
-   }
-
    /**
-    * For overriding; default impl is same as {@link supplyImageCache(seconds, imageSupplier)}
+    * For overriding; default impl just returns the image supplier.
     */
-   protected Supplier<Set<? extends Image>> supplyNonParsingImageCache(AtomicReference<AuthorizationException> authException, @Named(PROPERTY_SESSION_INTERVAL) long seconds,
-            final Supplier<Set<? extends Image>> imageSupplier, Injector injector) {
-      return supplyImageCache(authException, seconds, imageSupplier);
+   protected Supplier<Set<? extends Image>> supplyNonParsingImages(final Supplier<Set<? extends Image>> imageSupplier, Injector injector) {
+      return imageSupplier;
    }
 
    @Provides
@@ -312,21 +304,15 @@ public abstract class BaseComputeServiceContextModule extends AbstractModule {
    @Provides
    @Singleton
    public final Optional<ImageExtension> guiceProvideImageExtension(Injector i) {
-      return provideImageExtension(i);
-   }
-
-   protected Optional<ImageExtension> provideImageExtension(Injector i) {
-      return Optional.absent();
+      Binding<ImageExtension> binding = i.getExistingBinding(Key.get(ImageExtension.class));
+      return binding == null ? Optional.<ImageExtension> absent() : Optional.of(binding.getProvider().get());
    }
 
    @Provides
    @Singleton
    protected final Optional<SecurityGroupExtension> guiceProvideSecurityGroupExtension(Injector i) {
-      return provideSecurityGroupExtension(i);
-   }
-
-   protected Optional<SecurityGroupExtension> provideSecurityGroupExtension(Injector i) {
-      return Optional.absent();
+      Binding<SecurityGroupExtension> binding = i.getExistingBinding(Key.get(SecurityGroupExtension.class));
+      return binding == null ? Optional.<SecurityGroupExtension> absent() : Optional.of(binding.getProvider().get());
    }
    
 
