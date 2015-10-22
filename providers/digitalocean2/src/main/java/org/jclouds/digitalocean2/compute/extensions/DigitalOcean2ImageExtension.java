@@ -86,14 +86,14 @@ public class DigitalOcean2ImageExtension implements ImageExtension {
    public ListenableFuture<Image> createImage(ImageTemplate template) {
       checkState(template instanceof CloneImageTemplate, "DigitalOcean only supports creating images through cloning.");
       final CloneImageTemplate cloneTemplate = (CloneImageTemplate) template;
+      int dropletId = Integer.parseInt(cloneTemplate.getSourceNodeId());
 
       // Droplet needs to be stopped
-      int dropletId = Integer.parseInt(cloneTemplate.getSourceNodeId());
-      Action powerOffEvent = api.dropletApi().powerOff(dropletId);
-      checkState(nodeStoppedPredicate.apply(powerOffEvent.id()), "node was not powered off in the configured timeout");
-      
       Droplet droplet = api.dropletApi().get(dropletId);
-      checkState(droplet.status() == Status.OFF, "node was not powered off in the configured timeout");
+      if (droplet.status() != Status.OFF) {
+         api.dropletApi().powerOff(dropletId);
+         checkState(nodeStoppedPredicate.apply(dropletId), "node was not powered off in the configured timeout");
+      }
 
       Action snapshotEvent = api.dropletApi().snapshot(Integer.parseInt(cloneTemplate.getSourceNodeId()),
             cloneTemplate.getName());
@@ -103,7 +103,7 @@ public class DigitalOcean2ImageExtension implements ImageExtension {
       // Until the process completes we don't have enough information to build an image to return
       checkState(imageAvailablePredicate.apply(snapshotEvent.id()),
             "snapshot failed to complete in the configured timeout");
-
+      
       org.jclouds.digitalocean2.domain.Image snapshot = api.imageApi().list().concat().firstMatch(
             new Predicate<org.jclouds.digitalocean2.domain.Image>() {
                @Override

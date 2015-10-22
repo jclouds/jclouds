@@ -108,16 +108,16 @@ public class DigitalOcean2ComputeServiceContextModule extends
    @Named(TIMEOUT_NODE_RUNNING)
    protected Predicate<Integer> provideDropletRunningPredicate(final DigitalOcean2Api api, Timeouts timeouts,
          PollPeriod pollPeriod) {
-      return retry(new ActionDonePredicate(api), timeouts.nodeRunning, pollPeriod.pollInitialPeriod,
-            pollPeriod.pollMaxPeriod);
+      return retry(new DropletInStatusPredicate(api, Droplet.Status.ACTIVE), timeouts.nodeRunning,
+            pollPeriod.pollInitialPeriod, pollPeriod.pollMaxPeriod);
    }
 
    @Provides
    @Named(TIMEOUT_NODE_SUSPENDED)
    protected Predicate<Integer> provideDropletSuspendedPredicate(final DigitalOcean2Api api, Timeouts timeouts,
          PollPeriod pollPeriod) {
-      return retry(new ActionDonePredicate(api), timeouts.nodeSuspended, pollPeriod.pollInitialPeriod,
-            pollPeriod.pollMaxPeriod);
+      return retry(new DropletInStatusPredicate(api, Droplet.Status.OFF), timeouts.nodeSuspended,
+            pollPeriod.pollInitialPeriod, pollPeriod.pollMaxPeriod);
    }
 
    @Provides
@@ -188,9 +188,28 @@ public class DigitalOcean2ComputeServiceContextModule extends
 
       @Override
       public boolean apply(Integer input) {
-         checkNotNull(input, "droplet");
+         checkNotNull(input, "droplet id");
          Droplet droplet = api.dropletApi().get(input);
          return droplet == null;
+      }
+   }
+   
+   @VisibleForTesting
+   static class DropletInStatusPredicate implements Predicate<Integer> {
+
+      private final DigitalOcean2Api api;
+      private final Droplet.Status status;
+
+      public DropletInStatusPredicate(DigitalOcean2Api api, Droplet.Status status) {
+         this.api = checkNotNull(api, "api must not be null");
+         this.status = checkNotNull(status, "status must not be null");
+      }
+
+      @Override
+      public boolean apply(Integer input) {
+         checkNotNull(input, "droplet id");
+         Droplet droplet = api.dropletApi().get(input);
+         return droplet != null && status == droplet.status();
       }
    }
 

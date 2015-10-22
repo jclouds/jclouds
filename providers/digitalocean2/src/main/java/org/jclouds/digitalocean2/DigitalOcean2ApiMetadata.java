@@ -20,6 +20,9 @@ import static org.jclouds.Constants.PROPERTY_SESSION_INTERVAL;
 import static org.jclouds.compute.config.ComputeServiceProperties.POLL_INITIAL_PERIOD;
 import static org.jclouds.compute.config.ComputeServiceProperties.POLL_MAX_PERIOD;
 import static org.jclouds.compute.config.ComputeServiceProperties.TEMPLATE;
+import static org.jclouds.compute.config.ComputeServiceProperties.TIMEOUT_NODE_RUNNING;
+import static org.jclouds.compute.config.ComputeServiceProperties.TIMEOUT_NODE_SUSPENDED;
+import static org.jclouds.compute.config.ComputeServiceProperties.TIMEOUT_NODE_TERMINATED;
 import static org.jclouds.oauth.v2.config.CredentialType.BEARER_TOKEN_CREDENTIALS;
 import static org.jclouds.oauth.v2.config.OAuthProperties.AUDIENCE;
 import static org.jclouds.oauth.v2.config.OAuthProperties.CREDENTIAL_TYPE;
@@ -68,6 +71,11 @@ public class DigitalOcean2ApiMetadata extends BaseHttpApiMetadata<DigitalOcean2A
       properties.put(TEMPLATE, "osFamily=UBUNTU,os64Bit=true");
       properties.put(POLL_INITIAL_PERIOD, 5000);
       properties.put(POLL_MAX_PERIOD, 20000);
+      // Node operations in DigitalOcean can be quite slow. Use a 5 minutes
+      // timeout by default
+      properties.put(TIMEOUT_NODE_RUNNING, 300000);
+      properties.put(TIMEOUT_NODE_SUSPENDED, 300000);
+      properties.put(TIMEOUT_NODE_TERMINATED, 300000);
       return properties;
    }
 
