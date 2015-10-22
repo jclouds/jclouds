@@ -7,7 +7,7 @@ END_OF_JCLOUDS_FILE
 chmod 0440 /etc/sudoers
 mkdir -p /over/ridden
 chmod 0755 /over/ridden
-groupadd -f wheel
+getent group wheel || groupadd -f wheel
 useradd -c 'JClouds Foo' -s /bin/bash -g wheel -m  -d /over/ridden/foo -p 'crypt(bar)' foo
 mkdir -p /over/ridden/foo/.ssh
 cat >> /over/ridden/foo/.ssh/authorized_keys <<-'END_OF_JCLOUDS_FILE'

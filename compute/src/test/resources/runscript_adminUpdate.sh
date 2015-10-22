@@ -93,7 +93,7 @@ END_OF_JCLOUDS_SCRIPT
 	chmod 0440 /etc/sudoers
 	mkdir -p /over/ridden
 	chmod 0755 /over/ridden
-	groupadd -f wheel
+	getent group wheel || groupadd -f wheel
 	useradd -c 'foo' -s /bin/bash -g wheel -m  -d /over/ridden/foo -p 'crypt(randompassword)' foo
 	mkdir -p /over/ridden/foo/.ssh
 	cat >> /over/ridden/foo/.ssh/authorized_keys <<-'END_OF_JCLOUDS_FILE'

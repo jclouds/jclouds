@@ -205,7 +205,7 @@ public class UserAdd implements Statement {
       userAddOptions.put("-s", shell);
       if (!groups.isEmpty()) {
          for (String group : groups)
-            statements.add(Statements.exec("groupadd -f " + group));
+            statements.add(Statements.exec("getent group " + group + " || groupadd -f " + group));
 
          List<String> groups = Lists.newArrayList(this.groups);
          String primaryGroup = groups.remove(0);
