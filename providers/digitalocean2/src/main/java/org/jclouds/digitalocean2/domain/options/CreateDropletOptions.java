@@ -104,6 +104,14 @@ public class CreateDropletOptions implements MapBinder {
       return backupsEnabled;
    }
 
+   public boolean isIpv6Enabled() {
+      return ipv6Enabled;
+   }
+
+   public String getUserData() {
+      return userData;
+   }
+
    public static Builder builder() {
       return new Builder();
    }
@@ -145,6 +153,22 @@ public class CreateDropletOptions implements MapBinder {
        */
       public Builder backupsEnabled(boolean backupsEnabled) {
          this.backupsEnabled = backupsEnabled;
+         return this;
+      }
+
+      /**
+       * Sets the user data for the droplet.
+       */
+      public Builder userData(String userData) {
+         this.userData = userData;
+         return this;
+      }
+
+      /**
+       * Enables/disables IPv6 for the droplet.
+       */
+      public Builder ipv6Enabled(boolean ipv6Enabled) {
+         this.ipv6Enabled = ipv6Enabled;
          return this;
       }
 

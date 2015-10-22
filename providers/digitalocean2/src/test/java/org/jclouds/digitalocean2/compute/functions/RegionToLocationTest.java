@@ -42,11 +42,15 @@ public class RegionToLocationTest {
       JustProvider locationsSupplier = new JustProvider(metadata.getId(), Suppliers.<URI> ofInstance(URI
             .create(metadata.getEndpoint())), ImmutableSet.<String> of());
 
-      Region region = Region.create("reg1", "Region1", ImmutableList.<String> of(), true, ImmutableList.<String> of());
+      Region region = Region.create("reg1", "Region1", ImmutableList.<String> of(), true,
+            ImmutableList.<String> of("virtio", "metadata"));
       Location expected = new LocationBuilder().id("reg1").description("reg1/Region 1")
             .parent(getOnlyElement(locationsSupplier.get())).scope(LocationScope.REGION).build();
 
-      RegionToLocation function = new RegionToLocation(locationsSupplier);
-      assertEquals(function.apply(region), expected);
+      Location location = new RegionToLocation(locationsSupplier).apply(region);
+
+      assertEquals(location, expected);
+      assertEquals(location.getMetadata().get("available"), true);
+      assertEquals(location.getMetadata().get("features"), ImmutableList.of("virtio", "metadata"));
    }
 }

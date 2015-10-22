@@ -27,7 +27,10 @@ import static com.google.common.collect.Sets.newHashSet;
 import static org.jclouds.compute.config.ComputeServiceProperties.TIMEOUT_NODE_RUNNING;
 import static org.jclouds.compute.config.ComputeServiceProperties.TIMEOUT_NODE_SUSPENDED;
 import static org.jclouds.compute.config.ComputeServiceProperties.TIMEOUT_NODE_TERMINATED;
+import static org.jclouds.compute.util.ComputeServiceUtils.metadataAndTagsAsCommaDelimitedValue;
 
+import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import javax.annotation.Resource;
@@ -48,6 +51,7 @@ import org.jclouds.digitalocean2.domain.Region;
 import org.jclouds.digitalocean2.domain.Size;
 import org.jclouds.digitalocean2.domain.options.CreateDropletOptions;
 import org.jclouds.domain.LoginCredentials;
+import org.jclouds.json.Json;
 import org.jclouds.logging.Logger;
 
 import com.google.common.base.Function;
@@ -67,15 +71,18 @@ public class DigitalOcean2ComputeServiceAdapter implements ComputeServiceAdapter
    private final Predicate<Integer> nodeRunningPredicate;
    private final Predicate<Integer> nodeStoppedPredicate;
    private final Predicate<Integer> nodeTerminatedPredicate;
+   private final Json json;
 
    @Inject DigitalOcean2ComputeServiceAdapter(DigitalOcean2Api api,
          @Named(TIMEOUT_NODE_RUNNING) Predicate<Integer> nodeRunningPredicate,
          @Named(TIMEOUT_NODE_SUSPENDED) Predicate<Integer> nodeStoppedPredicate,
-         @Named(TIMEOUT_NODE_TERMINATED) Predicate<Integer> nodeTerminatedPredicate) {
+         @Named(TIMEOUT_NODE_TERMINATED) Predicate<Integer> nodeTerminatedPredicate,
+         Json json) {
       this.api = api;
       this.nodeRunningPredicate = nodeRunningPredicate;
       this.nodeStoppedPredicate = nodeStoppedPredicate;
       this.nodeTerminatedPredicate = nodeTerminatedPredicate;
+      this.json = json;
    }
 
    @Override
@@ -89,6 +96,18 @@ public class DigitalOcean2ComputeServiceAdapter implements ComputeServiceAdapter
       options.backupsEnabled(templateOptions.getBackupsEnabled());
       if (!templateOptions.getSshKeyIds().isEmpty()) {
          options.addSshKeyIds(templateOptions.getSshKeyIds());
+      }
+
+      Map<String, String> metadataAndTags = metadataAndTagsAsCommaDelimitedValue(templateOptions);
+      if (!metadataAndTags.isEmpty()) {
+         @SuppressWarnings("unchecked")
+         List<String> regionFeatures = (List<String>) template.getLocation().getMetadata().get("features");
+         if (regionFeatures.contains("metadata")) {
+            options.userData(json.toJson(metadataAndTags));
+         } else {
+            logger.debug(">> region %s does not support metadata, ignoring provided user data", template.getLocation()
+                  .getId());
+         }
       }
 
       DropletCreate dropletCreated = api.dropletApi().create(name,

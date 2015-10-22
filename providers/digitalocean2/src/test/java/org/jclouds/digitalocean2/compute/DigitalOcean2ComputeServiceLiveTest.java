@@ -47,12 +47,12 @@ public class DigitalOcean2ComputeServiceLiveTest extends BaseComputeServiceLiveT
 
    @Override
    protected void checkTagsInNodeEquals(NodeMetadata node, ImmutableSet<String> tags) {
-      // DigitalOcean does not support tags
+      // We encode the tags in the user data but the DigitalOcean API does not return it
    }
 
    @Override
    protected void checkUserMetadataContains(NodeMetadata node, ImmutableMap<String, String> userMetadata) {
-      // DigitalOcean does not support user metadata
+      // The DigitalOcean API does not return the user data
    }
 
 }

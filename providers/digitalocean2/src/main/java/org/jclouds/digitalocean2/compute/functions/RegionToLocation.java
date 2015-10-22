@@ -29,6 +29,7 @@ import org.jclouds.domain.LocationScope;
 import org.jclouds.location.suppliers.all.JustProvider;
 
 import com.google.common.base.Function;
+import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 
 /**
@@ -52,6 +53,7 @@ public class RegionToLocation implements Function<Region, Location> {
       builder.scope(LocationScope.REGION);
       builder.parent(getOnlyElement(justProvider.get()));
       builder.iso3166Codes(ImmutableSet.<String> of());
+      builder.metadata(ImmutableMap.<String, Object> of("available", input.available(), "features", input.features()));
       return builder.build();
    }
 }
