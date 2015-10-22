@@ -45,13 +45,13 @@ public class UserAddTest {
 
    public void testWithGroupUNIX() {
       assertEquals(UserAdd.builder().login("me").group("wheel").build().render(OsFamily.UNIX),
-               "mkdir -p /home/users\nchmod 0755 /home/users\ngroupadd -f wheel\nuseradd -c me -s /bin/bash -g wheel -m  -d /home/users/me me\nchown -R me /home/users/me\n");
+               "mkdir -p /home/users\nchmod 0755 /home/users\ngetent group wheel || groupadd -f wheel\nuseradd -c me -s /bin/bash -g wheel -m  -d /home/users/me me\nchown -R me /home/users/me\n");
    }
 
    public void testWithGroupsUNIX() {
       assertEquals(UserAdd.builder().login("me").groups(ImmutableList.of("wheel", "candy")).build().render(
                OsFamily.UNIX),
-               "mkdir -p /home/users\nchmod 0755 /home/users\ngroupadd -f wheel\ngroupadd -f candy\nuseradd -c me -s /bin/bash -g wheel -G candy -m  -d /home/users/me me\nchown -R me /home/users/me\n");
+               "mkdir -p /home/users\nchmod 0755 /home/users\ngetent group wheel || groupadd -f wheel\ngetent group candy || groupadd -f candy\nuseradd -c me -s /bin/bash -g wheel -G candy -m  -d /home/users/me me\nchown -R me /home/users/me\n");
    }
 
    Function<String, String> crypt = new Function<String, String>() {
@@ -63,7 +63,7 @@ public class UserAddTest {
 
    public void testWithPasswordUNIX() {
       String userAdd = UserAdd.builder().cryptFunction(crypt).login("me").password("password").group("wheel").build().render(OsFamily.UNIX);
-      assert userAdd.startsWith("mkdir -p /home/users\nchmod 0755 /home/users\ngroupadd -f wheel\nuseradd -c me -s /bin/bash -g wheel -m  -d /home/users/me -p 'CRYPT'") : userAdd;
+      assert userAdd.startsWith("mkdir -p /home/users\nchmod 0755 /home/users\ngetent group wheel || groupadd -f wheel\nuseradd -c me -s /bin/bash -g wheel -m  -d /home/users/me -p 'CRYPT'") : userAdd;
       assert userAdd.endsWith("' me\nchown -R me /home/users/me\n") : userAdd;
    }
 
