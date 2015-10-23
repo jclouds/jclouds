@@ -93,7 +93,7 @@ public class StandardDriveToWellKnownImage implements Function<StandardDrive, We
          }
       });
 
-      if (family.isPresent()) {
+      if (!family.isPresent()) {
          logger.warn("could not find the operating system family for image: %s", name);
       }
 
