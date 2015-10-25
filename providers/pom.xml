@@ -55,7 +55,6 @@
     <module>softlayer</module>
     <module>hpcloud-compute</module>
     <module>hpcloud-blockstorage</module>
-    <module>hpcloud-objectstorage</module>
     <module>rackspace-cloudfiles-us</module>
     <module>rackspace-cloudfiles-uk</module>
     <module>rackspace-clouddns-us</module>
