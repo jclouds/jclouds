@@ -39,7 +39,6 @@
     <module>sqs</module>
     <module>elasticstack</module>
     <module>atmos</module>
-    <module>swift</module>
     <module>openstack-keystone</module>
     <module>openstack-cinder</module>
     <module>openstack-nova</module>
