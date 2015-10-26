@@ -799,7 +799,9 @@ public class BaseBlobIntegrationTest extends BaseBlobStoreIntegrationTest {
          blob.getMetadata().getUserMetadata().put("Adrian", "wonderpuff");
          blob.getMetadata().getUserMetadata().put("Adrian", "powderpuff");
 
+         awaitConsistency();
          addBlobToContainer(container, blob);
+         awaitConsistency();
          validateMetadata(view.getBlobStore().blobMetadata(container, name));
 
       } finally {

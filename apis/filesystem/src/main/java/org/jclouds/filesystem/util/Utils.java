@@ -20,7 +20,10 @@ import static java.nio.file.FileSystems.getDefault;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.AccessDeniedException;
+import java.nio.file.DirectoryNotEmptyException;
 import java.nio.file.Files;
+import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
 import java.nio.file.attribute.AclEntry;
 import java.nio.file.attribute.AclEntryPermission;
@@ -29,6 +32,9 @@ import java.nio.file.attribute.AclFileAttributeView;
 import java.nio.file.attribute.UserPrincipal;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.TimeUnit;
+
+import com.google.common.util.concurrent.Uninterruptibles;
 
 /**
  * Utilities for the filesystem blobstore.
@@ -37,6 +43,21 @@ public class Utils {
    /** Private constructor for utility class. */
    private Utils() {
       // Do nothing
+   }
+
+   /**
+    * Determine if Java is running on a Mac OS
+    */
+   public static boolean isMacOSX() {
+      String osName = System.getProperty("os.name");
+      return osName.contains("OS X");
+   }
+
+   /**
+    * Determine if Java is running on a windows OS
+    */
+   public static boolean isWindows() {
+      return System.getProperty("os.name", "").toLowerCase().contains("windows");
    }
 
    /** Delete a file or a directory recursively. */
@@ -49,14 +70,33 @@ public class Utils {
             }
          }
       }
-      Files.delete(file.toPath());
+
+      delete(file);
    }
 
-   /**
-    * Determine if Java is running on a windows OS
-    */
-   public static boolean isWindows() {
-      return System.getProperty("os.name", "").toLowerCase().contains("windows");
+   public static void delete(File file) throws IOException {
+      for (int n = 0; n < 10; n++) {
+         try {
+            Files.delete(file.toPath());
+            if (Files.exists(file.toPath())) {
+               Uninterruptibles.sleepUninterruptibly(200, TimeUnit.MILLISECONDS);
+               continue;
+            }
+            return;
+         } catch (DirectoryNotEmptyException dnee) {
+            // A previous file delete operation did not finish before this call
+            Uninterruptibles.sleepUninterruptibly(1, TimeUnit.SECONDS);
+            continue;
+         } catch (AccessDeniedException ade) {
+            // The file was locked by antivirus, indexing, or another operation triggered by previous file modification
+            Uninterruptibles.sleepUninterruptibly(1, TimeUnit.SECONDS);
+            continue;
+         } catch (NoSuchFileException nse) {
+            return; // The file has been eventually deleted after a previous operation that failed. no-op
+         }
+      }
+      // File could not be deleted multiple times. It is very likely locked in another process
+      throw new IOException("Could not delete: " + file.toPath());
    }
 
    /**
@@ -65,7 +105,7 @@ public class Utils {
     */
    public static boolean isPrivate(Path path) throws IOException {
       UserPrincipal everyone = getDefault().getUserPrincipalLookupService()
-               .lookupPrincipalByName("Everyone");
+            .lookupPrincipalByName("Everyone");
       AclFileAttributeView aclFileAttributes = java.nio.file.Files.getFileAttributeView(
             path, AclFileAttributeView.class);
       for (AclEntry aclEntry : aclFileAttributes.getAcl()) {

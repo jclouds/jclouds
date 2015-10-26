@@ -17,6 +17,7 @@
 package org.jclouds.filesystem.strategy.internal;
 
 import static com.google.common.io.BaseEncoding.base16;
+import static org.jclouds.filesystem.util.Utils.isMacOSX;
 import static org.jclouds.utils.TestUtils.randomByteSource;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertFalse;
@@ -30,6 +31,7 @@ import java.io.IOException;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.TimeUnit;
 
 import javax.inject.Provider;
 
@@ -55,6 +57,7 @@ import com.google.common.hash.HashCode;
 import com.google.common.hash.Hashing;
 import com.google.common.io.ByteSource;
 import com.google.common.io.Files;
+import com.google.common.util.concurrent.Uninterruptibles;
 
 /**
  * Test class for {@link FilesystemStorageStrategyImpl } class
@@ -159,14 +162,6 @@ public class FilesystemStorageStrategyImplTest {
                TestUtils.createRandomBlobKey("lev1" + FS + "lev2" + FS + "lev4" + FS, ".jpg") });
       storageStrategy.deleteDirectory(CONTAINER_NAME, null);
       TestUtils.directoryExists(TARGET_CONTAINER_NAME, false);
-   }
-
-   public void testDeleteDirectory_ErrorWhenNotExists() {
-      try {
-         storageStrategy.deleteDirectory(CONTAINER_NAME, null);
-         fail("No exception throwed");
-      } catch (Exception e) {
-      }
    }
 
    public void testDirectoryExists() throws IOException {
@@ -432,6 +427,7 @@ public class FilesystemStorageStrategyImplTest {
       storageStrategy.putBlob(CONTAINER_NAME, storageStrategy.newBlob(childKey));
 
       storageStrategy.removeBlob(CONTAINER_NAME, parentKey);
+      Uninterruptibles.sleepUninterruptibly(1, TimeUnit.SECONDS);
       assertFalse(storageStrategy.blobExists(CONTAINER_NAME, parentKey));
       assertTrue(storageStrategy.blobExists(CONTAINER_NAME, childKey));
    }
@@ -644,6 +640,7 @@ public class FilesystemStorageStrategyImplTest {
             .payload(randomByteSource().slice(0, 1024))
             // no metadata
             .build();
+      Uninterruptibles.sleepUninterruptibly(1, TimeUnit.SECONDS);
       storageStrategy.putBlob(CONTAINER_NAME, blob);
 
       blob = storageStrategy.getBlob(CONTAINER_NAME, blobKey);
@@ -687,13 +684,13 @@ public class FilesystemStorageStrategyImplTest {
 
    @DataProvider
    public Object[][] ignoreOnMacOSX() {
-        return org.jclouds.utils.TestUtils.isMacOSX() ? TestUtils.NO_INVOCATIONS
+        return isMacOSX() ? TestUtils.NO_INVOCATIONS
                 : TestUtils.SINGLE_NO_ARG_INVOCATION;
    }
 
   @DataProvider
   public Object[][] onlyOnMacOSX() {
-      return org.jclouds.utils.TestUtils.isMacOSX() ?
+      return isMacOSX() ?
           TestUtils.SINGLE_NO_ARG_INVOCATION : TestUtils.NO_INVOCATIONS;
   }
 }

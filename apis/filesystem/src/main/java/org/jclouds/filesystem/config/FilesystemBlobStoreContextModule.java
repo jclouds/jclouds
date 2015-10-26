@@ -16,6 +16,8 @@
  */
 package org.jclouds.filesystem.config;
 
+import static org.jclouds.filesystem.util.Utils.isWindows;
+
 import org.jclouds.blobstore.BlobRequestSigner;
 import org.jclouds.blobstore.BlobStore;
 import org.jclouds.blobstore.LocalBlobRequestSigner;
@@ -39,7 +41,11 @@ public class FilesystemBlobStoreContextModule extends AbstractModule {
    protected void configure() {
       bind(BlobStore.class).to(LocalBlobStore.class);
       install(new BlobStoreObjectModule());
-      bind(ConsistencyModel.class).toInstance(ConsistencyModel.STRICT);
+      if (isWindows()) {
+         bind(ConsistencyModel.class).toInstance(ConsistencyModel.EVENTUAL);
+      } else {
+         bind(ConsistencyModel.class).toInstance(ConsistencyModel.STRICT);
+      }
       bind(LocalStorageStrategy.class).to(FilesystemStorageStrategyImpl.class);
       bind(BlobUtils.class).to(FileSystemBlobUtilsImpl.class);
       bind(FilesystemBlobKeyValidator.class).to(FilesystemBlobKeyValidatorImpl.class);

@@ -17,6 +17,7 @@
 package org.jclouds.filesystem;
 
 import static com.google.common.io.BaseEncoding.base16;
+import static org.jclouds.filesystem.util.Utils.isMacOSX;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertNotNull;
@@ -31,6 +32,7 @@ import java.net.URI;
 import java.util.Iterator;
 import java.util.Properties;
 import java.util.Set;
+import java.util.concurrent.TimeUnit;
 
 import org.jclouds.ContextBuilder;
 import org.jclouds.blobstore.BlobRequestSigner;
@@ -64,6 +66,7 @@ import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Sets;
 import com.google.common.io.ByteSource;
 import com.google.common.io.Files;
+import com.google.common.util.concurrent.Uninterruptibles;
 import com.google.inject.CreationException;
 
 @Test(groups = "unit", testName = "FilesystemBlobStoreTest", singleThreaded = true)
@@ -417,7 +420,9 @@ public class FilesystemBlobStoreTest {
         assertTrue(result, "Blob " + BLOB_KEY2 + " doesn't exist");
 
         // remove first blob
+        Uninterruptibles.sleepUninterruptibly(5, TimeUnit.SECONDS);
         blobStore.removeBlob(CONTAINER_NAME, BLOB_KEY1);
+        Uninterruptibles.sleepUninterruptibly(5, TimeUnit.SECONDS);
         result = blobStore.blobExists(CONTAINER_NAME, BLOB_KEY1);
         assertFalse(result, "Blob still exists");
         // first file deleted, not the second
@@ -491,6 +496,7 @@ public class FilesystemBlobStoreTest {
         assertTrue(blobStore.blobExists(CONTAINER_NAME, childKey));
 
         blobStore.removeBlob(CONTAINER_NAME, parentKey);
+        Uninterruptibles.sleepUninterruptibly(1, TimeUnit.SECONDS);
         assertFalse(blobStore.blobExists(CONTAINER_NAME, parentKey));
         assertTrue(blobStore.blobExists(CONTAINER_NAME, childKey));
     }
@@ -827,7 +833,7 @@ public class FilesystemBlobStoreTest {
      * Creates a {@link Blob} object filled with data from a file
      *
      * @param keyName
-     * @param fileContent
+     * @param filePayload
      * @return
      */
     private Blob createBlob(String keyName, File filePayload) {
@@ -906,7 +912,7 @@ public class FilesystemBlobStoreTest {
 
     @DataProvider
     public Object[][] ignoreOnMacOSX() {
-        return org.jclouds.utils.TestUtils.isMacOSX() ? TestUtils.NO_INVOCATIONS
+        return isMacOSX() ? TestUtils.NO_INVOCATIONS
                 : TestUtils.SINGLE_NO_ARG_INVOCATION;
     }
 }

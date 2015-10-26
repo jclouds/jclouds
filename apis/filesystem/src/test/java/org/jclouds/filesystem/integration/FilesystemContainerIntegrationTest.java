@@ -17,6 +17,7 @@
 package org.jclouds.filesystem.integration;
 
 import static org.jclouds.blobstore.options.ListContainerOptions.Builder.maxResults;
+import static org.jclouds.filesystem.util.Utils.isMacOSX;
 import static org.testng.Assert.assertEquals;
 
 import java.io.IOException;
@@ -164,7 +165,7 @@ public class FilesystemContainerIntegrationTest extends BaseContainerIntegration
 
    @DataProvider
    public Object[][] ignoreOnMacOSX() {
-      return org.jclouds.utils.TestUtils.isMacOSX() ? TestUtils.NO_INVOCATIONS
+      return isMacOSX() ? TestUtils.NO_INVOCATIONS
             : TestUtils.SINGLE_NO_ARG_INVOCATION;
    }
 

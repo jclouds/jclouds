@@ -24,6 +24,7 @@ import static java.nio.file.Files.getPosixFilePermissions;
 import static java.nio.file.Files.probeContentType;
 import static java.nio.file.Files.readAttributes;
 import static java.nio.file.Files.setPosixFilePermissions;
+import static org.jclouds.filesystem.util.Utils.delete;
 import static org.jclouds.filesystem.util.Utils.isPrivate;
 import static org.jclouds.filesystem.util.Utils.isWindows;
 import static org.jclouds.filesystem.util.Utils.setPrivate;
@@ -454,7 +455,7 @@ public class FilesystemStorageStrategyImpl implements LocalStorageStrategy {
       try {
          Files.createParentDirs(outputFile);
          his = new HashingInputStream(Hashing.md5(), payload.openStream());
-         outputFile.delete();
+         delete(outputFile);
          Files.asByteSink(outputFile).writeFrom(his);
          HashCode actualHashCode = his.hash();
          HashCode expectedHashCode = payload.getContentMetadata().getContentMD5AsHashCode();
@@ -477,8 +478,10 @@ public class FilesystemStorageStrategyImpl implements LocalStorageStrategy {
          return base16().lowerCase().encode(actualHashCode.asBytes());
       } catch (IOException ex) {
          if (outputFile != null) {
-            if (!outputFile.delete()) {
-               logger.debug("Could not delete %s", outputFile);
+            try {
+               delete(outputFile);
+            } catch (IOException e) {
+               logger.debug("Could not delete %s: %s", outputFile, e);
             }
          }
          throw ex;
@@ -497,21 +500,24 @@ public class FilesystemStorageStrategyImpl implements LocalStorageStrategy {
       String fileName = buildPathStartingFromBaseDir(container, blobKey);
       logger.debug("Deleting blob %s", fileName);
       File fileToBeDeleted = new File(fileName);
-      if (!fileToBeDeleted.delete()) {
-         if (fileToBeDeleted.isDirectory()) {
-            try {
-               UserDefinedFileAttributeView view = getUserDefinedFileAttributeView(fileToBeDeleted.toPath());
-               if (view != null) {
-                  for (String s : view.list()) {
-                     view.delete(s);
-                  }
+
+      if (fileToBeDeleted.isDirectory()) {
+         try {
+            UserDefinedFileAttributeView view = getUserDefinedFileAttributeView(fileToBeDeleted.toPath());
+            if (view != null) {
+               for (String s : view.list()) {
+                  view.delete(s);
                }
-            } catch (IOException e) {
-               logger.debug("Could not delete attributes from %s", fileToBeDeleted);
             }
-         } else {
-            logger.debug("Could not delete %s", fileToBeDeleted);
+         } catch (IOException e) {
+            logger.debug("Could not delete attributes from %s: %s", fileToBeDeleted, e);
          }
+      }
+
+      try {
+         delete(fileToBeDeleted);
+      } catch (IOException e) {
+         logger.debug("Could not delete %s: %s", fileToBeDeleted, e);
       }
 
       // now examine if the key of the blob is a complex key (with a directory structure)
@@ -737,10 +743,10 @@ public class FilesystemStorageStrategyImpl implements LocalStorageStrategy {
    }
 
    /**
-    * Remove leading and trailing {@link File.separator} character from the string.
+    * Remove leading and trailing separator character from the string.
     *
     * @param pathToBeCleaned
-    * @param remove
+    * @param onlyTrailing
     *           only trailing separator char from path
     * @return
     */
@@ -767,7 +773,7 @@ public class FilesystemStorageStrategyImpl implements LocalStorageStrategy {
     * empty
     *
     * @param container
-    * @param normalizedKey
+    * @param blobKey
     */
    private void removeDirectoriesTreeOfBlobKey(String container, String blobKey) {
       String normalizedBlobKey = denormalize(blobKey);
@@ -786,8 +792,10 @@ public class FilesystemStorageStrategyImpl implements LocalStorageStrategy {
          File directory = new File(buildPathStartingFromBaseDir(container, parentPath));
          String[] children = directory.list();
          if (null == children || children.length == 0) {
-            if (!directory.delete()) {
-               logger.debug("Could not delete %s", directory);
+            try {
+               delete(directory);
+            } catch (IOException e) {
+               logger.debug("Could not delete %s: %s", directory, e);
                return;
             }
             // recursively call for removing other path

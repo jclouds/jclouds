@@ -16,6 +16,8 @@
  */
 package org.jclouds.filesystem.integration;
 
+import static org.jclouds.filesystem.util.Utils.isMacOSX;
+
 import java.io.IOException;
 import java.util.Map;
 import java.util.Properties;
@@ -46,7 +48,7 @@ public class FilesystemBlobIntegrationTest extends BaseBlobIntegrationTest {
    // https://bugs.openjdk.java.net/browse/JDK-8030048
    @Override
    public void checkContentMetadata(Blob blob) {
-      if (!org.jclouds.utils.TestUtils.isMacOSX()) {
+      if (!isMacOSX()) {
          super.checkContentMetadata(blob);
       }
    }
@@ -55,7 +57,7 @@ public class FilesystemBlobIntegrationTest extends BaseBlobIntegrationTest {
    // https://bugs.openjdk.java.net/browse/JDK-8030048
    @Override
    protected void checkContentDisposition(Blob blob, String contentDisposition) {
-      if (!org.jclouds.utils.TestUtils.isMacOSX()) {
+      if (!isMacOSX()) {
          super.checkContentDisposition(blob, contentDisposition);
       }
    }
@@ -64,7 +66,7 @@ public class FilesystemBlobIntegrationTest extends BaseBlobIntegrationTest {
    // https://bugs.openjdk.java.net/browse/JDK-8030048
    @Override
    protected void validateMetadata(BlobMetadata metadata) throws IOException {
-      if (!org.jclouds.utils.TestUtils.isMacOSX()) {
+      if (!isMacOSX()) {
          super.validateMetadata(metadata);
       }
    }
@@ -81,7 +83,7 @@ public class FilesystemBlobIntegrationTest extends BaseBlobIntegrationTest {
     * uses to implement user metadata */
    @Override
    protected void checkUserMetadata(Map<String, String> userMetadata1, Map<String, String> userMetadata2) {
-      if (!org.jclouds.utils.TestUtils.isMacOSX()) {
+      if (!isMacOSX()) {
          super.checkUserMetadata(userMetadata1, userMetadata2);
       }
    }

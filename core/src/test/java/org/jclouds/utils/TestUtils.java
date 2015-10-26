@@ -16,8 +16,8 @@
  */
 package org.jclouds.utils;
 
-import java.io.InputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Random;
 
 import com.google.common.io.ByteSource;
@@ -27,69 +27,64 @@ import com.google.common.io.ByteSource;
  */
 public class TestUtils {
 
-    public static boolean isMacOSX() {
-        String osName = System.getProperty("os.name");
-        return osName.contains("OS X");
-    }
+   public static boolean isJava6() {
+      return System.getProperty("java.version", "").contains("1.6.");
+   }
 
-    public static boolean isJava6() {
-        return System.getProperty("java.version", "").contains("1.6.");
-    }
+   public static ByteSource randomByteSource() {
+      return randomByteSource(0);
+   }
 
-    public static ByteSource randomByteSource() {
-        return randomByteSource(0);
-    }
+   public static ByteSource randomByteSource(long seed) {
+      return new RandomByteSource(seed);
+   }
 
-    public static ByteSource randomByteSource(long seed) {
-        return new RandomByteSource(seed);
-    }
+   private static class RandomByteSource extends ByteSource {
+      private final long seed;
 
-    private static class RandomByteSource extends ByteSource {
-        private final long seed;
+      RandomByteSource(long seed) {
+         this.seed = seed;
+      }
 
-        RandomByteSource(long seed) {
-            this.seed = seed;
-        }
+      @Override
+      public InputStream openStream() {
+         return new RandomInputStream(seed);
+      }
+   }
 
-        @Override
-        public InputStream openStream() {
-            return new RandomInputStream(seed);
-        }
-    }
+   private static class RandomInputStream extends InputStream {
+      private final Random random;
+      private boolean closed = false;
 
-    private static class RandomInputStream extends InputStream {
-        private final Random random;
-        private boolean closed = false;
+      RandomInputStream(long seed) {
+         this.random = new Random(seed);
+      }
 
-        RandomInputStream(long seed) {
-           this.random = new Random(seed);
-        }
+      @Override
+      public synchronized int read() throws IOException {
+         if (closed) {
+            throw new IOException("Stream already closed");
+         }
+         return (byte) random.nextInt();
+      }
 
-        @Override
-        public synchronized int read() throws IOException {
-            if (closed) {
-                throw new IOException("Stream already closed");
-            }
-            return (byte) random.nextInt();
-        }
+      @Override
+      public synchronized int read(byte[] b) throws IOException {
+         return read(b, 0, b.length);
+      }
 
-        @Override
-        public synchronized int read(byte[] b) throws IOException {
-            return read(b, 0, b.length);
-        }
+      @Override
+      public synchronized int read(byte[] b, int off, int len) throws IOException {
+         for (int i = 0; i < len; ++i) {
+            b[off + i] = (byte) read();
+         }
+         return len;
+      }
 
-        @Override
-        public synchronized int read(byte[] b, int off, int len) throws IOException {
-            for (int i = 0; i < len; ++i) {
-               b[off + i] = (byte) read();
-            }
-            return len;
-        }
-
-        @Override
-        public void close() throws IOException {
-            super.close();
-            closed = true;
-        }
-    }
+      @Override
+      public void close() throws IOException {
+         super.close();
+         closed = true;
+      }
+   }
 }
