@@ -20,7 +20,6 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Strings.emptyToNull;
 import static com.google.common.collect.Multimaps.forMap;
 import static org.jclouds.http.utils.Queries.buildQueryLine;
-import static org.jclouds.http.utils.Queries.encodeQueryLine;
 import static org.jclouds.http.utils.Queries.queryParser;
 import static org.jclouds.util.Strings2.urlDecode;
 import static org.jclouds.util.Strings2.urlEncode;
@@ -30,14 +29,18 @@ import java.net.URISyntaxException;
 import java.util.Arrays;
 import java.util.Map;
 
+import org.jclouds.http.utils.QueryValue;
 import org.jclouds.javax.annotation.Nullable;
 
 import com.google.common.annotations.Beta;
+import com.google.common.base.Function;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.Iterables;
 import com.google.common.collect.LinkedHashMultimap;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Multimap;
+import com.google.common.collect.Multimaps;
 
 /**
  * Functions on {@code String}s and {@link URI}s. Strings can be level 1 <a
@@ -93,6 +96,8 @@ public final class Uris {
     *
     */
    public static final class UriBuilder {
+      private static final TransformObjectToQueryValue QUERY_VALUE_TRANSFORMER = new TransformObjectToQueryValue();
+
       // colon for urns, semicolon & equals for matrix params
       private Iterable<Character> skipPathEncoding = Lists.charactersOf("/:;=");
       private String scheme;
@@ -160,14 +165,16 @@ public final class Uris {
       }
 
       public UriBuilder query(Multimap<String, ?> parameters) {
-         checkNotNull(parameters, "parameters");
+         Multimap<String, QueryValue> queryValueMultimap = Multimaps.transformValues(
+               checkNotNull(parameters, "parameters"), QUERY_VALUE_TRANSFORMER);
          query.clear();
-         query.putAll(parameters);
+         query.putAll(queryValueMultimap);
          return this;
       }
 
       public UriBuilder addQuery(String name, Iterable<?> values) {
-         query.putAll(checkNotNull(name, "name"), checkNotNull(values, "values of %s", name));
+         query.putAll(checkNotNull(name, "name"), Iterables.transform(checkNotNull(values, "values of %s", name),
+               QUERY_VALUE_TRANSFORMER));
          return this;
       }
 
@@ -176,12 +183,16 @@ public final class Uris {
       }
 
       public UriBuilder addQuery(Multimap<String, ?> parameters) {
-         query.putAll(checkNotNull(parameters, "parameters"));
+         Multimap<String, QueryValue> queryValueMultimap = Multimaps.transformValues(
+               checkNotNull(parameters, "parameters"), QUERY_VALUE_TRANSFORMER);
+         query.putAll(queryValueMultimap);
          return this;
       }
 
       public UriBuilder replaceQuery(String name, Iterable<?> values) {
-         query.replaceValues(checkNotNull(name, "name"), checkNotNull(values, "values of %s", name));
+         Iterable<QueryValue> queryValues = Iterables.transform(checkNotNull(values, "values of %s", name),
+               QUERY_VALUE_TRANSFORMER);
+         query.replaceValues(checkNotNull(name, "name"), queryValues);
          return this;
       }
 
@@ -282,9 +293,9 @@ public final class Uris {
          return build(ImmutableMap.<String, Object> of());
       }
 
-      public URI build(Map<String, ?> variables, boolean encodePath, boolean encodeQuery) {
+      public URI build(Map<String, ?> variables, boolean encodePath) {
          try {
-            return new URI(expand(variables, encodePath, encodeQuery));
+            return new URI(expand(variables, encodePath));
          } catch (URISyntaxException e) {
             throw new IllegalArgumentException(e);
          }
@@ -296,13 +307,13 @@ public final class Uris {
        */
       public URI build(Map<String, ?> variables) {
          try {
-            return new URI(expand(variables, true, true));
+            return new URI(expand(variables, true));
          } catch (URISyntaxException e) {
             throw new IllegalArgumentException(e);
          }
       }
 
-      private String expand(Map<String, ?> variables, boolean encodePath, boolean encodeQuery) {
+      private String expand(Map<String, ?> variables, boolean encodePath) {
          StringBuilder b = new StringBuilder();
          if (scheme != null)
             b.append(scheme).append("://");
@@ -318,11 +329,7 @@ public final class Uris {
             }
          }
          if (!query.isEmpty()) {
-            if (encodeQuery) {
-               b.append('?').append(encodeQueryLine(query));
-            } else {
-               b.append('?').append(buildQueryLine(query));
-            }
+            b.append('?').append(buildQueryLine(query));
          }
          return b.toString();
       }
@@ -387,5 +394,18 @@ public final class Uris {
       if (in != null && in.charAt(0) != '/')
          return new StringBuilder().append('/').append(in).toString();
       return in;
+   }
+
+   private static class TransformObjectToQueryValue implements Function<Object, QueryValue> {
+      @Override
+      public QueryValue apply(Object o) {
+         if (o == null) {
+            return null;
+         }
+         if (o instanceof QueryValue) {
+            return (QueryValue) o;
+         }
+         return new QueryValue(o.toString(), false);
+      }
    }
 }

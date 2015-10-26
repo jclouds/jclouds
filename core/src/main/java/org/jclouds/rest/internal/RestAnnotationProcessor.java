@@ -45,6 +45,7 @@ import static org.jclouds.util.Strings2.urlEncode;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Array;
 import java.net.URI;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -71,6 +72,7 @@ import org.jclouds.http.Uris.UriBuilder;
 import org.jclouds.http.filters.ConnectionCloseHeader;
 import org.jclouds.http.filters.StripExpectHeader;
 import org.jclouds.http.options.HttpRequestOptions;
+import org.jclouds.http.utils.QueryValue;
 import org.jclouds.io.ContentMetadataCodec;
 import org.jclouds.io.Payload;
 import org.jclouds.io.PayloadEnclosing;
@@ -271,7 +273,7 @@ public class RestAnnotationProcessor implements Function<Invocation, HttpRequest
          }
          for (Entry<String, String> query : options.buildQueryParameters().entries()) {
             queryParams.put(urlEncode(query.getKey(), '/', ','),
-                  urlEncode(replaceTokens(query.getValue(), tokenValues), '/', ','));
+                  new QueryValue(replaceTokens(query.getValue(), tokenValues), false));
          }
          for (Entry<String, String> form : options.buildFormParameters().entries()) {
             formParams.put(form.getKey(), replaceTokens(form.getValue(), tokenValues));
@@ -293,8 +295,7 @@ public class RestAnnotationProcessor implements Function<Invocation, HttpRequest
       requestBuilder.headers(filterOutContentHeaders(headers));
 
       // Query parameter encoding is handled in the annotation processor
-      requestBuilder.endpoint(uriBuilder.build(convertUnsafe(tokenValues), /*encodePath=*/encodeFullPath,
-            /*encodeQuery=*/ false));
+      requestBuilder.endpoint(uriBuilder.build(convertUnsafe(tokenValues), /*encodePath=*/encodeFullPath));
 
       if (payload == null) {
          PayloadEnclosing payloadEnclosing = findOrNull(invocation.getArgs(), PayloadEnclosing.class);
@@ -433,8 +434,8 @@ public class RestAnnotationProcessor implements Function<Invocation, HttpRequest
          addQuery(queryMap, query, tokenValues);
       }
 
-      for (Entry<String, Object> query : getQueryParamKeyValues(invocation).entries()) {
-         queryMap.put(query.getKey(), replaceTokens(query.getValue().toString(), tokenValues));
+      for (Entry<String, Object> query : getQueryParamKeyValues(invocation, tokenValues).entries()) {
+         queryMap.put(query.getKey(), query.getValue());
       }
       return queryMap;
    }
@@ -457,7 +458,7 @@ public class RestAnnotationProcessor implements Function<Invocation, HttpRequest
             queryParams.removeAll(key);
             queryParams.put(key, null);
          } else {
-            queryParams.put(key, urlEncode(replaceTokens(query.values()[i], tokenValues), '/', ','));
+            queryParams.put(key, new QueryValue(replaceTokens(query.values()[i], tokenValues), false));
          }
       }
    }
@@ -818,32 +819,26 @@ public class RestAnnotationProcessor implements Function<Invocation, HttpRequest
       return formParamValues;
    }
 
-   private Multimap<String, Object> getQueryParamKeyValues(Invocation invocation) {
+   private Multimap<String, Object> getQueryParamKeyValues(Invocation invocation, Multimap<String, ?> tokenValues) {
       Multimap<String, Object> queryParamValues = LinkedHashMultimap.create();
       for (Parameter param : parametersWithAnnotation(invocation.getInvokable(), QueryParam.class)) {
          QueryParam queryParam = param.getAnnotation(QueryParam.class);
          String paramKey = urlEncode(queryParam.value(), '/', ',');
          Optional<?> paramValue = getParamValue(invocation, param.getAnnotation(ParamParser.class), param.hashCode(),
                paramKey);
+         boolean encoded = param.isAnnotationPresent(Encoded.class);
          if (paramValue.isPresent())
             if (paramValue.get() instanceof Iterable) {
                @SuppressWarnings("unchecked")
                Iterable<String> iterableStrings = transform(Iterable.class.cast(paramValue.get()), toStringFunction());
-               if (!param.isAnnotationPresent(Encoded.class)) {
-                  iterableStrings = transform(iterableStrings, new Function<String, String>() {
-                     @Override
-                     public String apply(@Nullable String s) {
-                        return urlEncode(s, '/', ',');
-                     }
-                  });
+               List<QueryValue> values = new ArrayList<QueryValue>();
+               for (String stringValue : iterableStrings) {
+                  values.add(new QueryValue(replaceTokens(stringValue, tokenValues), encoded));
                }
-               queryParamValues.putAll(paramKey, iterableStrings);
+               queryParamValues.putAll(paramKey, values);
             } else {
                String value = paramValue.get().toString();
-               if (!param.isAnnotationPresent(Encoded.class)) {
-                  value = urlEncode(value, '/', ',');
-               }
-               queryParamValues.put(paramKey, value);
+               queryParamValues.put(paramKey, new QueryValue(replaceTokens(value, tokenValues), encoded));
             }
       }
       return queryParamValues;

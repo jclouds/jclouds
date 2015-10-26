@@ -16,6 +16,7 @@
  */
 package org.jclouds.http;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.jclouds.http.Uris.uriBuilder;
 import static org.jclouds.util.Strings2.urlEncode;
 import static org.testng.Assert.assertEquals;
@@ -67,18 +68,26 @@ public class UrisTest {
 
    @Test(dataProvider = "strings")
    public void testQuery(String val) {
-      assertEquals(uriBuilder("https://foo.com:8080").addQuery("moo", val).toString(), "https://foo.com:8080?moo=" + val);
-      assertEquals(uriBuilder("https://foo.com:8080").addQuery("moo", val).build().toString(), "https://foo.com:8080?moo="
-            + urlEncode(val, '/', ','));
-      assertEquals(uriBuilder("https://api.github.com/repos/user?foo=bar&kung=fu").addQuery("moo", val).toString(),
-            "https://api.github.com/repos/user?foo=bar&kung=fu&moo=" + val);
-      assertEquals(uriBuilder("https://api.github.com/repos/user?foo=bar&kung=fu").addQuery("moo", val).build().toString(),
-            "https://api.github.com/repos/user?foo=bar&kung=fu&moo=" + urlEncode(val, '/', ','));
-      assertEquals(uriBuilder("https://api.github.com/repos/{user}").addQuery("moo", val).toString(),
-            "https://api.github.com/repos/{user}?moo=" + val);
-      assertEquals(
-            uriBuilder("https://api.github.com/repos/{user}").addQuery("moo", val).build(templateParams).toASCIIString(),
-            "https://api.github.com/repos/bob?moo=" + urlEncode(val, '/', ','));
+      assertThat(uriBuilder("https://foo.com:8080").addQuery("moo", val).build().getQuery())
+            .isEqualTo("moo=" + val);
+      assertThat(uriBuilder("https://foo.com:8080").addQuery("moo", val).build().getRawQuery())
+            .isEqualTo("moo=" + urlEncode(val, '/', ','));
+      assertThat(uriBuilder("https://api.github.com/repos/user?foo=bar&kung=fu").addQuery("moo", val).build()
+            .getQuery())
+            .isEqualTo("foo=bar&kung=fu&moo=" + val);
+      assertThat(uriBuilder("https://api.github.com/repos/user?foo=bar&kung=fu").addQuery("moo", val).build()
+            .getRawQuery())
+            .isEqualTo("foo=bar&kung=fu&moo=" + urlEncode(val, '/', ','));
+      assertThat(uriBuilder("https://api.github.com/repos/{user}").addQuery("moo", val).build().getQuery())
+            .isEqualTo("moo=" + val);
+      assertThat(uriBuilder("https://api.github.com/repos/{user}").addQuery("moo", val).toString())
+            .isEqualTo("https://api.github.com/repos/{user}?moo=" + urlEncode(val, '/', ','));
+      assertThat(uriBuilder("https://api.github.com/repos/{user}").addQuery("moo", val).build(templateParams)
+            .getRawQuery())
+            .isEqualTo("moo=" + urlEncode(val, '/', ','));
+      assertThat(uriBuilder("https://api.github.com/repos/{user}").addQuery("moo", val).build(templateParams)
+            .getPath())
+            .isEqualTo("/repos/bob");
    }
 
    @Test(dataProvider = "strings")
@@ -125,9 +134,9 @@ public class UrisTest {
 
    @Test(dataProvider = "strings")
    public void testReplaceQueryIsEncoded(String key) {
-      assertEquals(uriBuilder("/redirect").addQuery("foo", key).toString(), "/redirect?foo=" + key);
-      assertEquals(uriBuilder("/redirect").addQuery("foo", key).build().toString(),
-            "/redirect?foo=" + urlEncode(key, '/', ','));
+      assertThat(uriBuilder("/redirect").addQuery("foo", key).build().getQuery()).isEqualTo("foo=" + key);
+      assertThat(uriBuilder("/redirect").addQuery("foo", key).build().getRawQuery())
+            .isEqualTo("foo=" + urlEncode(key, '/', ','));
    }
 
    public void testAddQuery() {
