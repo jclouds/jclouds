@@ -21,7 +21,6 @@ import static com.google.common.base.Predicates.notNull;
 import static com.google.common.collect.Iterables.concat;
 import static com.google.common.collect.Iterables.contains;
 import static com.google.common.collect.Iterables.filter;
-import static com.google.common.collect.Iterables.getOnlyElement;
 import static com.google.common.collect.Iterables.transform;
 import static com.google.common.collect.Sets.newHashSet;
 import static org.jclouds.compute.config.ComputeServiceProperties.TIMEOUT_NODE_RUNNING;
@@ -118,7 +117,7 @@ public class DigitalOcean2ComputeServiceAdapter implements ComputeServiceAdapter
 
       // We have to actively wait until the droplet has been provisioned until
       // we can build the entire Droplet object we want to return
-      nodeRunningPredicate.apply(getOnlyElement(dropletCreated.links().actions()).id());
+      nodeRunningPredicate.apply(dropletCreated.droplet().id());
       Droplet droplet = api.dropletApi().get(dropletCreated.droplet().id());
 
       LoginCredentials defaultCredentials = LoginCredentials.builder().user("root")
@@ -219,25 +218,27 @@ public class DigitalOcean2ComputeServiceAdapter implements ComputeServiceAdapter
    public void rebootNode(String id) {
       // We have to wait here, as the api does not properly populate the state
       // but fails if there is a pending event
-      Action action = api.dropletApi().reboot(Integer.parseInt(id));
-      checkState(nodeRunningPredicate.apply(action.id()), "node did not restart in the configured timeout");
+      int dropletId = Integer.parseInt(id);
+      api.dropletApi().reboot(dropletId);
+      checkState(nodeRunningPredicate.apply(dropletId), "node did not restart in the configured timeout");
    }
 
    @Override
    public void resumeNode(String id) {
       // We have to wait here, as the api does not properly populate the state
       // but fails if there is a pending event
-      Action action = api.dropletApi().powerOn(Integer.parseInt(id));
-      checkState(nodeRunningPredicate.apply(action.id()), "node did not started in the configured timeout");
+      int dropletId = Integer.parseInt(id);
+      api.dropletApi().powerOn(dropletId);
+      checkState(nodeRunningPredicate.apply(dropletId), "node did not started in the configured timeout");
    }
 
    @Override
    public void suspendNode(String id) {
-      int dropletId = Integer.parseInt(id);
       // We have to wait here, as the api does not properly populate the state
       // but fails if there is a pending event
+      int dropletId = Integer.parseInt(id);
       Action action = api.dropletApi().powerOff(dropletId);
-      checkState(nodeStoppedPredicate.apply(action.id()), "node did not stop in the configured timeout");
+      checkState(nodeStoppedPredicate.apply(dropletId), "node did not stop in the configured timeout");
    }
 
 }
