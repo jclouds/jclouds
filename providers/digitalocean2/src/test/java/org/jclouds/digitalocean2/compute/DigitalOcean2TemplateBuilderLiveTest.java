@@ -40,7 +40,7 @@ public class DigitalOcean2TemplateBuilderLiveTest extends BaseTemplateBuilderLiv
    @Override
    public void testDefaultTemplateBuilder() throws IOException {
       Template defaultTemplate = view.getComputeService().templateBuilder().build();
-      assert defaultTemplate.getImage().getOperatingSystem().getVersion().equals("15.04") : defaultTemplate
+      assert defaultTemplate.getImage().getOperatingSystem().getVersion().equals("15.10") : defaultTemplate
             .getImage().getOperatingSystem().getVersion();
       assertEquals(defaultTemplate.getImage().getOperatingSystem().is64Bit(), true);
       assertEquals(defaultTemplate.getImage().getOperatingSystem().getFamily(), OsFamily.UBUNTU);

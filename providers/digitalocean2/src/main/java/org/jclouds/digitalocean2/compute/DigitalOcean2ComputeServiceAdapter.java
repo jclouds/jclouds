@@ -42,7 +42,6 @@ import org.jclouds.compute.reference.ComputeServiceConstants;
 import org.jclouds.digitalocean2.DigitalOcean2Api;
 import org.jclouds.digitalocean2.compute.internal.ImageInRegion;
 import org.jclouds.digitalocean2.compute.options.DigitalOcean2TemplateOptions;
-import org.jclouds.digitalocean2.domain.Action;
 import org.jclouds.digitalocean2.domain.Droplet;
 import org.jclouds.digitalocean2.domain.DropletCreate;
 import org.jclouds.digitalocean2.domain.Image;
@@ -237,7 +236,7 @@ public class DigitalOcean2ComputeServiceAdapter implements ComputeServiceAdapter
       // We have to wait here, as the api does not properly populate the state
       // but fails if there is a pending event
       int dropletId = Integer.parseInt(id);
-      Action action = api.dropletApi().powerOff(dropletId);
+      api.dropletApi().powerOff(dropletId);
       checkState(nodeStoppedPredicate.apply(dropletId), "node did not stop in the configured timeout");
    }
 

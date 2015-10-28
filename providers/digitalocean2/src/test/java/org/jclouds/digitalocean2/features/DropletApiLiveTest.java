@@ -16,10 +16,7 @@
  */
 package org.jclouds.digitalocean2.features;
 
-import static com.google.common.collect.Iterables.getOnlyElement;
 import static java.util.logging.Logger.getAnonymousLogger;
-import static org.jclouds.digitalocean2.domain.Droplet.Status.ACTIVE;
-import static org.jclouds.digitalocean2.domain.Droplet.Status.OFF;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertNull;
@@ -77,8 +74,8 @@ public class DropletApiLiveTest extends BaseDigitalOcean2ApiLiveTest {
    public void testCreate() {
       DropletCreate dropletCreate = api().create(prefix + "-droplet-livetest", region.slug(), size.slug(), image.slug(),
             CreateDropletOptions.builder().backupsEnabled(true).addSshKeyId(key.id()).build());
-      assertActionCompleted(getOnlyElement(dropletCreate.links().actions()).id());
       dropletId = dropletCreate.droplet().id();
+      assertNodeRunning(dropletId);
       Droplet droplet = api().get(dropletId);
       assertNotNull(droplet, "Droplet should not be null");
    }
@@ -101,10 +98,8 @@ public class DropletApiLiveTest extends BaseDigitalOcean2ApiLiveTest {
    
    @Test(dependsOnMethods = "testListKernels")
    public void testPowerOff() {
-      Action action = api().powerOff(dropletId);
-      assertActionCompleted(action.id());
-      Droplet droplet = api().get(dropletId);
-      assertEquals(droplet.status(), OFF, "Droplet should be off");
+      api().powerOff(dropletId);
+      assertNodeStopped(dropletId);
    }
 
    @Test(groups = "live", dependsOnMethods = "testPowerOff")
@@ -146,29 +141,25 @@ public class DropletApiLiveTest extends BaseDigitalOcean2ApiLiveTest {
    @Test(groups = "live", dependsOnMethods = "testSnapshots")
    public void testPowerOn() {
       // Apparently droplets are automatically powered on after the snapshot process
-      Action action = api().powerOff(dropletId);
-      assertActionCompleted(action.id());
+      api().powerOff(dropletId);
+      assertNodeStopped(dropletId);
       
-      action = api().powerOn(dropletId);
-      assertActionCompleted(action.id());
-      Droplet droplet = api().get(dropletId);
-      assertEquals(droplet.status(), ACTIVE, "Droplet should be Active");
+      api().powerOn(dropletId);
+      assertNodeRunning(dropletId);
    }
    
    @Test(groups = "live", dependsOnMethods = "testPowerOn")
    public void testReboot() {
       Action action = api().reboot(dropletId);
       assertActionCompleted(action.id());
-      Droplet droplet = api().get(dropletId);
-      assertEquals(droplet.status(), ACTIVE, "Droplet should be off");
+      assertNodeRunning(dropletId);
    }
    
    @Test(groups = "live", dependsOnMethods = "testReboot")
    public void testPowerCycle() {
       Action action = api().powerCycle(dropletId);
       assertActionCompleted(action.id());
-      Droplet droplet = api().get(dropletId);
-      assertEquals(droplet.status(), ACTIVE, "Droplet should be off");
+      assertNodeRunning(dropletId);
    }
    
    @Test(groups = "live", dependsOnMethods = "testPowerCycle")

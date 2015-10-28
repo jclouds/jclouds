@@ -17,16 +17,17 @@
 package org.jclouds.digitalocean2.internal;
 
 import static com.google.common.base.Preconditions.checkState;
+import static org.jclouds.compute.config.ComputeServiceProperties.TIMEOUT_NODE_RUNNING;
+import static org.jclouds.compute.config.ComputeServiceProperties.TIMEOUT_NODE_SUSPENDED;
 import static org.jclouds.compute.config.ComputeServiceProperties.TIMEOUT_NODE_TERMINATED;
 import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertTrue;
 import static org.testng.util.Strings.isNullOrEmpty;
 
 import java.util.Properties;
-import java.util.concurrent.atomic.AtomicReference;
 
 import org.jclouds.apis.BaseApiLiveTest;
 import org.jclouds.compute.config.ComputeServiceProperties;
-import org.jclouds.compute.domain.NodeMetadata;
 import org.jclouds.digitalocean2.DigitalOcean2Api;
 import org.jclouds.digitalocean2.config.DigitalOcean2RateLimitModule;
 import org.jclouds.digitalocean2.domain.Action;
@@ -46,10 +47,10 @@ import com.google.inject.name.Names;
 
 public class BaseDigitalOcean2ApiLiveTest extends BaseApiLiveTest<DigitalOcean2Api> {
 
-   protected Predicate<Integer> actionCompleted;
-   protected Predicate<AtomicReference<NodeMetadata>> nodeRunning;
-   protected Predicate<Integer> nodeTerminated;
-   protected Predicate<Integer> dropletOff;
+   private Predicate<Integer> actionCompleted;
+   private Predicate<Integer> nodeTerminated;
+   private Predicate<Integer> nodeStopped;
+   private Predicate<Integer> nodeRunning;
 
    public BaseDigitalOcean2ApiLiveTest() {
       provider = "digitalocean2";
@@ -67,6 +68,10 @@ public class BaseDigitalOcean2ApiLiveTest extends BaseApiLiveTest<DigitalOcean2A
       actionCompleted = injector.getInstance(Key.get(new TypeLiteral<Predicate<Integer>>(){}));
       nodeTerminated = injector.getInstance(Key.get(new TypeLiteral<Predicate<Integer>>(){},
             Names.named(TIMEOUT_NODE_TERMINATED)));
+      nodeStopped = injector.getInstance(Key.get(new TypeLiteral<Predicate<Integer>>(){},
+            Names.named(TIMEOUT_NODE_SUSPENDED)));
+      nodeRunning = injector.getInstance(Key.get(new TypeLiteral<Predicate<Integer>>(){},
+            Names.named(TIMEOUT_NODE_RUNNING)));
       return injector.getInstance(DigitalOcean2Api.class);
    }
 
@@ -81,8 +86,16 @@ public class BaseDigitalOcean2ApiLiveTest extends BaseApiLiveTest<DigitalOcean2A
       assertEquals(action.status(), Action.Status.COMPLETED);
    }
 
+   protected void assertNodeStopped(int dropletId) {
+      assertTrue(nodeStopped.apply(dropletId), String.format("Droplet %s did not stop in the configured timeout", dropletId));
+   }
+
+   protected void assertNodeRunning(int dropletId) {
+      assertTrue(nodeRunning.apply(dropletId), String.format("Droplet %s did not start in the configured timeout", dropletId));
+   }
+
    protected void assertNodeTerminated(int dropletId) {
-      assertEquals(nodeTerminated.apply(dropletId), true, String.format("Timeout waiting for dropletId: %s", dropletId));
+      assertTrue(nodeTerminated.apply(dropletId), String.format("Droplet %s was not terminated in the configured timeout", dropletId));
    }
    
    protected Region firstAvailableRegion() {

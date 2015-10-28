@@ -69,8 +69,6 @@ public class KeyApiLiveTest extends BaseDigitalOcean2ApiLiveTest {
    public void testUpdateKey() {
       api().update(dsa.id(), "jclouds-test-dsa-updated");
       assertEquals(api().get(dsa.id()).name(), "jclouds-test-dsa-updated");
-      api().update(dsa.fingerprint(), "jclouds-test-dsa-updated2");
-      assertEquals(api().get(dsa.id()).name(), "jclouds-test-dsa-updated2");
    }
 
    @AfterClass(alwaysRun = true)
