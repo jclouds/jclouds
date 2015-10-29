@@ -88,7 +88,6 @@ public class ParseClientFromJsonTest {
       publicKey = crypto.rsaKeyFactory().generatePublic(publicKeySpec);
    }
 
-   @SuppressWarnings("resource")
    public void testClientWithPubKey() throws IOException, CertificateException, NoSuchAlgorithmException {
 
       Client user = Client.builder().certificate(certificate).orgname("jclouds").clientname("adriancole-jcloudstest")
@@ -99,7 +98,6 @@ public class ParseClientFromJsonTest {
                   .payload(ParseClientFromJsonTest.class.getResourceAsStream("/client.json")).build()), user);
    }
 
-   @SuppressWarnings("resource")
    public void testClientWithoutPubKey() throws IOException, CertificateException, NoSuchAlgorithmException {
 
       Client user = Client.builder().certificate(certificate).orgname("jclouds").clientname("adriancole-jcloudstest")

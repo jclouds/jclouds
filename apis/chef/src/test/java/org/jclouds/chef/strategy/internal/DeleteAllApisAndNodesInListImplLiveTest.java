@@ -19,7 +19,6 @@ package org.jclouds.chef.strategy.internal;
 import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertNull;
 
-import org.jclouds.chef.ChefApi;
 import org.jclouds.chef.internal.BaseChefLiveTest;
 import org.testng.annotations.Test;
 
@@ -29,7 +28,7 @@ import com.google.common.collect.ImmutableSet;
  * Tests behavior of {@code DeleteAllApisAndNodesInListImpl} strategies
  */
 @Test(groups = "live", testName = "DeleteAllApisAndNodesInListImplLiveTest")
-public class DeleteAllApisAndNodesInListImplLiveTest extends BaseChefLiveTest<ChefApi> {
+public class DeleteAllApisAndNodesInListImplLiveTest extends BaseChefLiveTest {
 
    private DeleteAllNodesInListImpl strategy;
    private CreateNodeAndPopulateAutomaticAttributesImpl creator;

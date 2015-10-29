@@ -55,10 +55,11 @@ import org.jclouds.chef.domain.Role;
 import org.jclouds.chef.domain.Sandbox;
 import org.jclouds.chef.domain.SearchResult;
 import org.jclouds.chef.domain.UploadSandbox;
+import org.jclouds.chef.features.OrganizationApi;
 import org.jclouds.chef.filters.SignedHeaderAuth;
+import org.jclouds.chef.functions.ParseCookbookDefinitionFromJson;
 import org.jclouds.chef.functions.ParseCookbookDefinitionListFromJson;
 import org.jclouds.chef.functions.ParseCookbookNamesFromJson;
-import org.jclouds.chef.functions.ParseCookbookDefinitionFromJson;
 import org.jclouds.chef.functions.ParseCookbookVersionsFromJson;
 import org.jclouds.chef.functions.ParseKeySetFromJson;
 import org.jclouds.chef.functions.ParseSearchClientsFromJson;
@@ -71,6 +72,7 @@ import org.jclouds.chef.options.CreateClientOptions;
 import org.jclouds.chef.options.SearchOptions;
 import org.jclouds.io.Payload;
 import org.jclouds.rest.annotations.BinderParam;
+import org.jclouds.rest.annotations.Delegate;
 import org.jclouds.rest.annotations.EndpointParam;
 import org.jclouds.rest.annotations.Fallback;
 import org.jclouds.rest.annotations.Headers;
@@ -85,6 +87,7 @@ import org.jclouds.rest.annotations.SkipEncoding;
 import org.jclouds.rest.annotations.WrapWith;
 import org.jclouds.rest.binders.BindToJsonPayload;
 
+import com.google.common.base.Optional;
 import com.google.inject.Provides;
 
 /**
@@ -100,6 +103,12 @@ public interface ChefApi extends Closeable {
     */
    @Provides
    ChefService chefService();
+   
+   /**
+    * Provides access to the organization, user and group management endpoints.
+    */
+   @Delegate
+   Optional<OrganizationApi> organizationApi();
 
    // Clients
 

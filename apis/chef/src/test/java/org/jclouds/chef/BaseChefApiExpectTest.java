@@ -33,6 +33,7 @@ public abstract class BaseChefApiExpectTest<S> extends BaseRestApiExpectTest<S> 
    protected SignedHeaderAuth signedHeaderAuth;
 
    public BaseChefApiExpectTest() {
+      provider = "chef";
       credential = PRIVATE_KEY;
       signedHeaderAuth = createInjector(Functions.forMap(ImmutableMap.<HttpRequest, HttpResponse> of()),
             createModule(), setupProperties()).getInstance(SignedHeaderAuth.class);

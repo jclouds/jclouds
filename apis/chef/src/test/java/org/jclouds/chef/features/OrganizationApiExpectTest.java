@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jclouds.enterprisechef;
+package org.jclouds.chef.features;
 
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNull;
@@ -24,15 +24,16 @@ import java.util.Set;
 
 import javax.ws.rs.core.MediaType;
 
+import org.jclouds.apis.ApiMetadata;
 import org.jclouds.chef.BaseChefApiExpectTest;
+import org.jclouds.chef.ChefApi;
 import org.jclouds.chef.ChefApiMetadata;
+import org.jclouds.chef.config.ChefHttpApiModule;
+import org.jclouds.chef.domain.Group;
+import org.jclouds.chef.domain.User;
 import org.jclouds.date.TimeStamp;
-import org.jclouds.enterprisechef.config.EnterpriseChefHttpApiModule;
-import org.jclouds.enterprisechef.domain.Group;
-import org.jclouds.enterprisechef.domain.User;
 import org.jclouds.http.HttpRequest;
 import org.jclouds.http.HttpResponse;
-import org.jclouds.providers.ProviderMetadata;
 import org.jclouds.rest.ConfiguresHttpApi;
 import org.jclouds.rest.ResourceNotFoundException;
 import org.testng.annotations.Test;
@@ -41,128 +42,125 @@ import com.google.common.base.Supplier;
 import com.google.inject.Module;
 
 /**
- * Expect tests for the {@link EnterpriseChefApi} class.
+ * Expect tests for the {@link OrganizationApi} class.
  */
-@Test(groups = "unit", testName = "EnterpriseChefApiExpectTest")
-public class EnterpriseChefApiExpectTest extends BaseChefApiExpectTest<EnterpriseChefApi> {
-   public EnterpriseChefApiExpectTest() {
-      provider = "enterprisechef";
-   }
+@Test(groups = "unit", testName = "OrganizationApiExpectTest")
+public class OrganizationApiExpectTest extends BaseChefApiExpectTest<ChefApi> {
 
    public void testGetUserReturns2xx() {
-      EnterpriseChefApi api = requestSendsResponse(
+      ChefApi api = requestSendsResponse(
             signed(HttpRequest.builder() //
                   .method("GET") //
-                  .endpoint("https://api.opscode.com/users/nacx") //
+                  .endpoint("http://localhost:4000/users/nacx") //
                   .addHeader("X-Chef-Version", ChefApiMetadata.DEFAULT_API_VERSION) //
                   .addHeader("Accept", MediaType.APPLICATION_JSON).build()), //
             HttpResponse.builder().statusCode(200)
                   .payload(payloadFromResourceWithContentType("/user.json", MediaType.APPLICATION_JSON)) //
                   .build());
 
-      User user = api.getUser("nacx");
+      User user = api.organizationApi().get().getUser("nacx");
       assertEquals(user.getUsername(), "nacx");
       assertEquals(user.getDisplayName(), "Ignasi Barrera");
    }
 
    public void testGetUserReturns404() {
-      EnterpriseChefApi api = requestSendsResponse(signed(HttpRequest.builder() //
+      ChefApi api = requestSendsResponse(signed(HttpRequest.builder() //
             .method("GET") //
-            .endpoint("https://api.opscode.com/users/foo") //
+            .endpoint("http://localhost:4000/users/foo") //
             .addHeader("X-Chef-Version", ChefApiMetadata.DEFAULT_API_VERSION) //
             .addHeader("Accept", MediaType.APPLICATION_JSON) //
             .build()), //
             HttpResponse.builder().statusCode(404).build());
 
-      assertNull(api.getUser("foo"));
+      assertNull(api.organizationApi().get().getUser("foo"));
    }
 
    public void testListGroups() {
-      EnterpriseChefApi api = requestSendsResponse(
+      ChefApi api = requestSendsResponse(
             signed(HttpRequest.builder() //
                   .method("GET") //
-                  .endpoint("https://api.opscode.com/groups") //
+                  .endpoint("http://localhost:4000/groups") //
                   .addHeader("X-Chef-Version", ChefApiMetadata.DEFAULT_API_VERSION) //
                   .addHeader("Accept", MediaType.APPLICATION_JSON).build()), //
             HttpResponse.builder().statusCode(200)
                   .payload(payloadFromResourceWithContentType("/groups.json", MediaType.APPLICATION_JSON)) //
                   .build());
 
-      Set<String> groups = api.listGroups();
+      Set<String> groups = api.organizationApi().get().listGroups();
       assertEquals(groups.size(), 5);
       assertTrue(groups.contains("admins"));
    }
 
    public void testGetGroupReturns2xx() {
-      EnterpriseChefApi api = requestSendsResponse(
+      ChefApi api = requestSendsResponse(
             signed(HttpRequest.builder() //
                   .method("GET") //
-                  .endpoint("https://api.opscode.com/groups/admins") //
+                  .endpoint("http://localhost:4000/groups/admins") //
                   .addHeader("X-Chef-Version", ChefApiMetadata.DEFAULT_API_VERSION) //
                   .addHeader("Accept", MediaType.APPLICATION_JSON).build()), //
             HttpResponse.builder().statusCode(200)
                   .payload(payloadFromResourceWithContentType("/group.json", MediaType.APPLICATION_JSON)) //
                   .build());
 
-      Group group = api.getGroup("admins");
+      Group group = api.organizationApi().get().getGroup("admins");
       assertEquals(group.getName(), "admins");
       assertEquals(group.getGroupname(), "admins");
    }
 
    public void testGetGroupReturns404() {
-      EnterpriseChefApi api = requestSendsResponse(signed(HttpRequest.builder() //
+      ChefApi api = requestSendsResponse(signed(HttpRequest.builder() //
             .method("GET") //
-            .endpoint("https://api.opscode.com/groups/foo") //
+            .endpoint("http://localhost:4000/groups/foo") //
             .addHeader("X-Chef-Version", ChefApiMetadata.DEFAULT_API_VERSION) //
             .addHeader("Accept", MediaType.APPLICATION_JSON) //
             .build()), //
             HttpResponse.builder().statusCode(404).build());
 
-      assertNull(api.getGroup("foo"));
+      assertNull(api.organizationApi().get().getGroup("foo"));
    }
 
    public void testCreateGroupReturns2xx() {
-      EnterpriseChefApi api = requestSendsResponse(signed(HttpRequest.builder() //
+      ChefApi api = requestSendsResponse(signed(HttpRequest.builder() //
             .method("POST") //
-            .endpoint("https://api.opscode.com/groups") //
+            .endpoint("http://localhost:4000/groups") //
             .addHeader("X-Chef-Version", ChefApiMetadata.DEFAULT_API_VERSION) //
             .addHeader("Accept", MediaType.APPLICATION_JSON) //
             .payload(payloadFromStringWithContentType("{\"groupname\":\"foo\"}", MediaType.APPLICATION_JSON)) //
             .build()), //
             HttpResponse.builder().statusCode(201).build());
 
-      api.createGroup("foo");
+      api.organizationApi().get().createGroup("foo");
    }
 
    public void testDeleteGroupReturns2xx() {
-      EnterpriseChefApi api = requestSendsResponse(signed(HttpRequest.builder() //
+      ChefApi api = requestSendsResponse(signed(HttpRequest.builder() //
             .method("DELETE") //
-            .endpoint("https://api.opscode.com/groups/foo") //
+            .endpoint("http://localhost:4000/groups/foo") //
             .addHeader("X-Chef-Version", ChefApiMetadata.DEFAULT_API_VERSION) //
             .addHeader("Accept", MediaType.APPLICATION_JSON) //
             .build()), //
             HttpResponse.builder().statusCode(200).build());
 
-      api.deleteGroup("foo");
+      api.organizationApi().get().deleteGroup("foo");
    }
 
    @Test(expectedExceptions = ResourceNotFoundException.class)
    public void testDeleteGroupFailsOn404() {
-      EnterpriseChefApi api = requestSendsResponse(signed(HttpRequest.builder() //
+      ChefApi api = requestSendsResponse(signed(HttpRequest.builder() //
             .method("DELETE") //
-            .endpoint("https://api.opscode.com/groups/foo") //
+            .endpoint("http://localhost:4000/groups/foo") //
             .addHeader("X-Chef-Version", ChefApiMetadata.DEFAULT_API_VERSION) //
             .addHeader("Accept", MediaType.APPLICATION_JSON) //
             .build()), //
             HttpResponse.builder().statusCode(404).build());
 
-      api.deleteGroup("foo");
+      api.organizationApi().get().deleteGroup("foo");
    }
 
    public void testUpdateGroupReturns2xx() {
-      EnterpriseChefApi api = requestSendsResponse(signed(HttpRequest.builder() //
+      ChefApi api = requestSendsResponse(signed(HttpRequest.builder() //
             .method("PUT") //
-            .endpoint("https://api.opscode.com/groups/admins") //
+            .endpoint("http://localhost:4000/groups/admins") //
             .addHeader("X-Chef-Version", ChefApiMetadata.DEFAULT_API_VERSION) //
             .addHeader("Accept", MediaType.APPLICATION_JSON) //
             .payload(payloadFromResourceWithContentType("/group-update.json", MediaType.APPLICATION_JSON)) //
@@ -170,14 +168,14 @@ public class EnterpriseChefApiExpectTest extends BaseChefApiExpectTest<Enterpris
             HttpResponse.builder().statusCode(200).build());
 
       Group group = Group.builder("admins").client("abiquo").group("admins").user("nacx").build();
-      api.updateGroup(group);
+      api.organizationApi().get().updateGroup(group);
    }
 
    @Test(expectedExceptions = ResourceNotFoundException.class)
    public void testUpdateGroupFailsOn404() {
-      EnterpriseChefApi api = requestSendsResponse(signed(HttpRequest.builder() //
+      ChefApi api = requestSendsResponse(signed(HttpRequest.builder() //
             .method("PUT") //
-            .endpoint("https://api.opscode.com/groups/admins") //
+            .endpoint("http://localhost:4000/groups/admins") //
             .addHeader("X-Chef-Version", ChefApiMetadata.DEFAULT_API_VERSION) //
             .addHeader("Accept", MediaType.APPLICATION_JSON) //
             .payload(payloadFromResourceWithContentType("/group-update.json", MediaType.APPLICATION_JSON)) //
@@ -185,16 +183,16 @@ public class EnterpriseChefApiExpectTest extends BaseChefApiExpectTest<Enterpris
             HttpResponse.builder().statusCode(404).build());
 
       Group group = Group.builder("admins").client("abiquo").group("admins").user("nacx").build();
-      api.updateGroup(group);
+      api.organizationApi().get().updateGroup(group);
    }
 
    @Override
    protected Module createModule() {
-      return new TestEnterpriseChefHttpApiModule();
+      return new TestChefHttpApiModule();
    }
 
    @ConfiguresHttpApi
-   static class TestEnterpriseChefHttpApiModule extends EnterpriseChefHttpApiModule {
+   static class TestChefHttpApiModule extends ChefHttpApiModule {
       @Override
       protected String provideTimeStamp(@TimeStamp Supplier<String> cache) {
          return "timestamp";
@@ -202,8 +200,8 @@ public class EnterpriseChefApiExpectTest extends BaseChefApiExpectTest<Enterpris
    }
 
    @Override
-   protected ProviderMetadata createProviderMetadata() {
-      return new EnterpriseChefProviderMetadata();
+   protected ApiMetadata createApiMetadata() {
+      return new ChefApiMetadata();
    }
 
 }

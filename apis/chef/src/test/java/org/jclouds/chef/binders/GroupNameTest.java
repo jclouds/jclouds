@@ -14,18 +14,27 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jclouds.enterprisechef;
+package org.jclouds.chef.binders;
 
-import org.jclouds.providers.internal.BaseProviderMetadataTest;
+import static org.testng.Assert.assertEquals;
+
+import java.io.IOException;
+
+import org.jclouds.chef.domain.Group;
 import org.testng.annotations.Test;
 
 /**
- * Unit tests for the {@link EnterpriseChefProviderMetadata} class.
+ * Unit tests for the {@link GroupName} class.
  */
-@Test(groups = "unit", testName = "EnterpriseChefProviderTest")
-public class EnterpriseChefProviderMetadataTest extends BaseProviderMetadataTest {
+@Test(groups = "unit", testName = "GroupNameTest")
+public class GroupNameTest {
 
-   public EnterpriseChefProviderMetadataTest() {
-      super(new EnterpriseChefProviderMetadata(), new EnterpriseChefApiMetadata());
+   @Test(expectedExceptions = NullPointerException.class)
+   public void testInvalidNullInput() {
+      new GroupName().apply(null);
+   }
+
+   public void testApplyGroupName() throws IOException {
+      assertEquals(new GroupName().apply(Group.builder("foo").build()), "foo");
    }
 }

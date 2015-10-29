@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jclouds.enterprisechef;
+package org.jclouds.chef.features;
 
 import java.util.Set;
 
@@ -31,18 +31,19 @@ import javax.ws.rs.core.MediaType;
 import org.jclouds.Constants;
 import org.jclouds.Fallbacks.NullOnNotFoundOr404;
 import org.jclouds.chef.ChefApi;
+import org.jclouds.chef.binders.BindGroupToUpdateRequestJsonPayload;
+import org.jclouds.chef.binders.GroupName;
+import org.jclouds.chef.domain.Group;
+import org.jclouds.chef.domain.User;
 import org.jclouds.chef.filters.SignedHeaderAuth;
 import org.jclouds.chef.functions.ParseKeySetFromJson;
-import org.jclouds.enterprisechef.binders.BindGroupToUpdateRequestJsonPayload;
-import org.jclouds.enterprisechef.binders.GroupName;
-import org.jclouds.enterprisechef.domain.Group;
-import org.jclouds.enterprisechef.domain.User;
 import org.jclouds.rest.annotations.BinderParam;
 import org.jclouds.rest.annotations.Fallback;
 import org.jclouds.rest.annotations.Headers;
 import org.jclouds.rest.annotations.ParamParser;
 import org.jclouds.rest.annotations.RequestFilters;
 import org.jclouds.rest.annotations.ResponseParser;
+import org.jclouds.rest.annotations.SinceApiVersion;
 import org.jclouds.rest.annotations.WrapWith;
 
 /**
@@ -51,7 +52,8 @@ import org.jclouds.rest.annotations.WrapWith;
 @RequestFilters(SignedHeaderAuth.class)
 @Consumes(MediaType.APPLICATION_JSON)
 @Headers(keys = "X-Chef-Version", values = "{" + Constants.PROPERTY_API_VERSION + "}")
-public interface EnterpriseChefApi extends ChefApi {
+@SinceApiVersion("12.0.0")
+public interface OrganizationApi extends ChefApi {
    /**
     * Retrieves an existing user.
     * 

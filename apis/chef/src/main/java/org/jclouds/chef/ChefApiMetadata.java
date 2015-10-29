@@ -40,7 +40,7 @@ import com.google.common.collect.ImmutableSet;
 import com.google.inject.Module;
 
 /**
- * Implementation of {@link ApiMetadata} for OpsCode's Chef api.
+ * Implementation of {@link ApiMetadata} for Chef.
  */
 @AutoService(ApiMetadata.class)
 public class ChefApiMetadata extends BaseHttpApiMetadata<ChefApi> {
@@ -48,7 +48,7 @@ public class ChefApiMetadata extends BaseHttpApiMetadata<ChefApi> {
    /**
     * The default Chef Server API version to use.
     */
-   public static final String DEFAULT_API_VERSION = "0.10.8";
+   public static final String DEFAULT_API_VERSION = "12.0.2";
 
    @Override
    public Builder toBuilder() {
@@ -86,11 +86,11 @@ public class ChefApiMetadata extends BaseHttpApiMetadata<ChefApi> {
 
       protected Builder() {
          id("chef")
-               .name("OpsCode Chef Api")
+               .name("Chef Api")
                .identityName("User")
                .credentialName("Certificate")
                .version(DEFAULT_API_VERSION)
-               .documentation(URI.create("http://wiki.opscode.com/display/chef/Server+API"))
+               .documentation(URI.create("https://docs.chef.io/api_chef_server.html"))
                .defaultEndpoint("http://localhost:4000")
                .defaultProperties(ChefApiMetadata.defaultProperties())
                .defaultModules(

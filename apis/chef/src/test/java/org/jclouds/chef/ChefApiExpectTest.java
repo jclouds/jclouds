@@ -42,9 +42,6 @@ import com.google.inject.Module;
  */
 @Test(groups = "unit", testName = "ChefApiExpectTest")
 public class ChefApiExpectTest extends BaseChefApiExpectTest<ChefApi> {
-   public ChefApiExpectTest() {
-     provider = "chef";
-   }
 
    private HttpRequest.Builder<?> getHttpRequestBuilder(String method, String endPoint) {
       return HttpRequest.builder() //

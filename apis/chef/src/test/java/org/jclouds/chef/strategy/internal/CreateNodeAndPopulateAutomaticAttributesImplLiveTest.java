@@ -20,7 +20,6 @@ import static org.testng.Assert.assertEquals;
 
 import java.util.Set;
 
-import org.jclouds.chef.ChefApi;
 import org.jclouds.chef.domain.Node;
 import org.jclouds.chef.internal.BaseChefLiveTest;
 import org.jclouds.ohai.config.OhaiModule.CurrentUserProvider;
@@ -33,7 +32,7 @@ import com.google.common.collect.ImmutableSet;
  * strategies
  */
 @Test(groups = "live", testName = "CreateNodeAndPopulateAutomaticAttributesImplLiveTest")
-public class CreateNodeAndPopulateAutomaticAttributesImplLiveTest extends BaseChefLiveTest<ChefApi> {
+public class CreateNodeAndPopulateAutomaticAttributesImplLiveTest extends BaseChefLiveTest {
 
    private CurrentUserProvider currentUserProvider;
    private CreateNodeAndPopulateAutomaticAttributesImpl strategy;

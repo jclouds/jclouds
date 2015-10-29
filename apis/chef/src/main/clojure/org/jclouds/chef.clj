@@ -19,7 +19,7 @@
   #^{:author "Adrian Cole"
      :doc "A clojure binding to the jclouds chef interface.
 
-Here's a quick example of how to manipulate a databag on the Opscode Platform, 
+Here's a quick example of how to manipulate a databag on the Chef Platform, 
 which is basically Chef Server as a Service.
 
 (use 'org.jclouds.chef)
@@ -28,7 +28,7 @@ which is basically Chef Server as a Service.
 ;; load the rsa key from ~/.chef/CLIENT_NAME.pem
 (def credential (load-pem client))
 
-;; create a connection to the opscode platform
+;; create a connection to the chef platform
 (def chef (chef-service \"chef\" client credential :chef.endpoint \"https://api.opscode.com/organizations/YOUR_ORG\"))
 
 (with-chef-service [chef]

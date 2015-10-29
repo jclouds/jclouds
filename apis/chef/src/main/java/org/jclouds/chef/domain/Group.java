@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jclouds.enterprisechef.domain;
+package org.jclouds.chef.domain;
 
 import static org.jclouds.chef.util.CollectionUtils.copyOfOrEmpty;
 import static com.google.common.base.Preconditions.checkNotNull;

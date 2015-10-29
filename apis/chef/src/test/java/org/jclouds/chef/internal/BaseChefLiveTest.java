@@ -16,8 +16,6 @@
  */
 package org.jclouds.chef.internal;
 
-import static org.jclouds.reflect.Types2.checkBound;
-
 import java.io.File;
 import java.io.IOException;
 import java.util.Properties;
@@ -31,12 +29,11 @@ import org.testng.annotations.Test;
 import com.google.common.base.Charsets;
 import com.google.common.base.Throwables;
 import com.google.common.io.Files;
-import com.google.common.reflect.TypeToken;
 import com.google.inject.Injector;
 import com.google.inject.Module;
 
 @Test(groups = "live")
-public abstract class BaseChefLiveTest<A extends ChefApi> extends BaseApiLiveTest<A> {
+public abstract class BaseChefLiveTest extends BaseApiLiveTest<ChefApi> {
 
    protected Injector injector;
    protected ChefService chefService;
@@ -64,9 +61,9 @@ public abstract class BaseChefLiveTest<A extends ChefApi> extends BaseApiLiveTes
    }
 
    @Override
-   protected A create(Properties props, Iterable<Module> modules) {
+   protected ChefApi create(Properties props, Iterable<Module> modules) {
       injector = newBuilder().modules(modules).overrides(props).buildInjector();
-      return injector.getInstance(resolveApiClass());
+      return injector.getInstance(ChefApi.class);
    }
 
    protected String setCredentialFromPemFile(Properties overrides, String identity, String key) {
@@ -84,13 +81,6 @@ public abstract class BaseChefLiveTest<A extends ChefApi> extends BaseApiLiveTes
       }
       overrides.setProperty(key, credentialFromFile);
       return credentialFromFile;
-   }
-
-   @SuppressWarnings("unchecked")
-   private Class<A> resolveApiClass() {
-      return Class.class.cast(checkBound(new TypeToken<A>(getClass()) {
-         private static final long serialVersionUID = 1L;
-      }).getRawType());
    }
 
 }

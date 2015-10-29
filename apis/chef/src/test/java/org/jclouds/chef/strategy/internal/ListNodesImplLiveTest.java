@@ -19,23 +19,22 @@ package org.jclouds.chef.strategy.internal;
 import static com.google.common.collect.Iterables.size;
 import static org.testng.Assert.assertTrue;
 
-import com.google.common.util.concurrent.ListeningExecutorService;
-import com.google.common.util.concurrent.MoreExecutors;
-import org.jclouds.chef.ChefApi;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
 import org.jclouds.chef.internal.BaseChefLiveTest;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.Test;
 
 import com.google.common.collect.ImmutableSet;
-
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
+import com.google.common.util.concurrent.ListeningExecutorService;
+import com.google.common.util.concurrent.MoreExecutors;
 
 /**
  * Tests behavior of {@code ListNodesImpl} strategies
  */
 @Test(groups = "live", testName = "ListNodesImplLiveTest")
-public class ListNodesImplLiveTest extends BaseChefLiveTest<ChefApi> {
+public class ListNodesImplLiveTest extends BaseChefLiveTest {
 
    private ListNodesImpl strategy;
    private CreateNodeAndPopulateAutomaticAttributesImpl creator;

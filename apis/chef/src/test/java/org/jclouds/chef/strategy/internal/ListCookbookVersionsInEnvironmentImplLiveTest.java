@@ -25,9 +25,6 @@ import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import com.google.common.util.concurrent.ListeningExecutorService;
-import com.google.common.util.concurrent.MoreExecutors;
-import org.jclouds.chef.ChefApi;
 import org.jclouds.chef.domain.ChecksumStatus;
 import org.jclouds.chef.domain.CookbookVersion;
 import org.jclouds.chef.domain.Metadata;
@@ -44,12 +41,14 @@ import com.google.common.collect.ImmutableSet;
 import com.google.common.hash.Hashing;
 import com.google.common.io.Files;
 import com.google.common.primitives.Bytes;
+import com.google.common.util.concurrent.ListeningExecutorService;
+import com.google.common.util.concurrent.MoreExecutors;
 
 /**
  * Tests behavior of {@code ListCookbookVersionsInEnvironmentImpl} strategies
  */
 @Test(groups = "live", testName = "ListCookbookVersionsInEnvironmentImplLiveTest")
-public class ListCookbookVersionsInEnvironmentImplLiveTest extends BaseChefLiveTest<ChefApi> {
+public class ListCookbookVersionsInEnvironmentImplLiveTest extends BaseChefLiveTest {
    public static final String PREFIX = "jcloudstest-strategy-" + System.getProperty("user.name");
 
    private ListCookbookVersionsInEnvironmentImpl strategy;

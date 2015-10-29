@@ -14,13 +14,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jclouds.enterprisechef.binders;
+package org.jclouds.chef.binders;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
 import javax.inject.Singleton;
 
-import org.jclouds.enterprisechef.domain.Group;
+import org.jclouds.chef.domain.Group;
 
 import com.google.common.base.Function;
 
