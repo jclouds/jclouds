@@ -70,6 +70,11 @@ public class AWSEC2ComputeServiceLiveTest extends EC2ComputeServiceLiveTest {
    }
 
    @Override
+   protected void checkVolumes(Hardware hardware) {
+      // Not all hardware profiles define volumes. Don't check their size
+   }
+
+   @Override
    @Test
    public void testExtendedOptionsAndLogin() throws Exception {
       String region = "us-west-2";
