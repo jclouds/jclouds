@@ -16,7 +16,6 @@
  */
 package org.jclouds.digitalocean2.compute.strategy;
 
-import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 import java.security.PublicKey;
@@ -101,11 +100,11 @@ public class CreateKeyPairsThenCreateNodes extends CreateNodesWithGroupEncodedIn
          generateKeyPairAndAddKeyToSet(options, generatedSshKeyIds, group);
       }
 
-      // If there is a script to run in the node, make sure a private key has been configured so jclouds will be able to
-      // access the node
-      if (options.getRunScript() != null) {
-         checkArgument(!Strings.isNullOrEmpty(options.getLoginPrivateKey()),
-               "no private key configured for: %s; please use options.overrideLoginPrivateKey(rsa_private_text)", group);
+      // If there is a script to run in the node, make sure a private key has
+      // been configured so jclouds will be able to access the node
+      if (options.getRunScript() != null && Strings.isNullOrEmpty(options.getLoginPrivateKey())) {
+         logger.warn(">> A runScript has been configured but no SSH key has been provided."
+               + " Authentication will delegate to the ssh-agent");
       }
 
       // If there is a key configured, then make sure there is a key pair for it
