@@ -56,9 +56,7 @@ public class GlobalForwardingRuleApiLiveTest extends BaseGoogleComputeEngineApiL
 
    @Test(groups = "live")
    public void testInsertGlobalForwardingRule() {
-
       assertOperationDoneSuccessfully(api.httpHeathChecks().insert(GLOBAL_FORWARDING_RULE_HEALTH_CHECK_NAME));
-
 
       List<URI> healthChecks = ImmutableList.of(getHealthCheckUrl(GLOBAL_FORWARDING_RULE_HEALTH_CHECK_NAME));
       BackendServiceOptions b = new BackendServiceOptions.Builder(GLOBAL_FORWARDING_RULE_BACKEND_SERVICE_NAME, healthChecks).build();
@@ -66,17 +64,16 @@ public class GlobalForwardingRuleApiLiveTest extends BaseGoogleComputeEngineApiL
                                               .create(b));
 
       UrlMapOptions map = new UrlMapOptions.Builder().name(GLOBAL_FORWARDING_RULE_URL_MAP_NAME)
-                                             .description("simple url map")
-                                             .defaultService(getBackendServiceUrl(GLOBAL_FORWARDING_RULE_BACKEND_SERVICE_NAME)).build();
-      assertOperationDoneSuccessfully(api.urlMaps()
-                                              .create(map));
-      assertOperationDoneSuccessfully(api.targetHttpProxies()
-                                              .create(GLOBAL_FORWARDING_RULE_TARGET_HTTP_PROXY_NAME,
-                                                      getUrlMapUrl(GLOBAL_FORWARDING_RULE_URL_MAP_NAME)));
-      assertOperationDoneSuccessfully(
-            api().create(GLOBAL_FORWARDING_RULE_NAME,
-                         new ForwardingRuleCreationOptions.Builder().target(getTargetHttpProxyUrl(GLOBAL_FORWARDING_RULE_TARGET_HTTP_PROXY_NAME))
-                                                    .portRange(PORT_RANGE).build()));
+            .description("simple url map")
+            .defaultService(getBackendServiceUrl(GLOBAL_FORWARDING_RULE_BACKEND_SERVICE_NAME)).build();
+      assertOperationDoneSuccessfully(api.urlMaps().create(map));
+      assertOperationDoneSuccessfully(api.targetHttpProxies().create(GLOBAL_FORWARDING_RULE_TARGET_HTTP_PROXY_NAME,
+            getUrlMapUrl(GLOBAL_FORWARDING_RULE_URL_MAP_NAME)));
+      assertOperationDoneSuccessfully(api().create(
+            GLOBAL_FORWARDING_RULE_NAME,
+            new ForwardingRuleCreationOptions.Builder()
+                  .target(getTargetHttpProxyUrl(GLOBAL_FORWARDING_RULE_TARGET_HTTP_PROXY_NAME))
+                  .description("jclodus-test").portRange(PORT_RANGE).build()));
    }
 
    @Test(groups = "live", dependsOnMethods = "testInsertGlobalForwardingRule")
@@ -87,6 +84,7 @@ public class GlobalForwardingRuleApiLiveTest extends BaseGoogleComputeEngineApiL
             .target(getTargetHttpProxyUrl(GLOBAL_FORWARDING_RULE_TARGET_HTTP_PROXY_NAME))
             .portRange("80-80")
             .ipProtocol(IPProtocol.TCP)
+            .description("jclodus-test")
             .build();
       assertGlobalForwardingRuleEquals(forwardingRule, expected);
    }

@@ -20,25 +20,73 @@ import static org.jclouds.googlecomputeengine.options.ListOptions.Builder.filter
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
 
+import java.net.URI;
+import java.util.List;
+import java.util.Properties;
+
 import org.jclouds.googlecloud.domain.ListPage;
+import org.jclouds.googlecomputeengine.GoogleComputeEngineApi;
+import org.jclouds.googlecomputeengine.domain.Image;
+import org.jclouds.googlecomputeengine.domain.Instance;
+import org.jclouds.googlecomputeengine.domain.NewInstance;
 import org.jclouds.googlecomputeengine.domain.NewTargetInstance;
 import org.jclouds.googlecomputeengine.domain.TargetInstance;
 import org.jclouds.googlecomputeengine.internal.BaseGoogleComputeEngineApiLiveTest;
 import org.testng.annotations.Test;
 
+import com.google.common.base.Predicate;
+import com.google.common.collect.FluentIterable;
 import com.google.common.collect.Iterables;
+import com.google.inject.Module;
 
 
 public class TargetInstanceApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
 
-   public static final String TARGET_INSTANCE_NAME = "test-target-instance-1";
+   private static final String INSTANCE_NAME = "test-target-instance-source-1";
+   private static final String INSTANCE_NETWORK_NAME = "test-target-instance-test-network";
+   private static final String IPV4_RANGE = "10.0.0.0/8";
+   private static final String TARGET_INSTANCE_NAME = "test-target-instance-1";
+   
+   private Instance instance;
+   
+   @Override
+   protected GoogleComputeEngineApi create(Properties props, Iterable<Module> modules) {
+      GoogleComputeEngineApi api = super.create(props, modules);
+      List<Image> list = api.images().listInProject("centos-cloud", filter("name eq centos.*")).next();
+      URI imageUri = FluentIterable.from(list)
+                        .filter(new Predicate<Image>() {
+                           @Override
+                           public boolean apply(Image input) {
+                              // filter out all deprecated images
+                              return !(input.deprecated() != null && input.deprecated().state() != null);
+                           }
+                        })
+                        .first()
+                        .get()
+                        .selfLink();
+
+      NewInstance newInstance = NewInstance.create(
+            INSTANCE_NAME, // name
+            getDefaultMachineTypeUrl(), // machineType
+            getNetworkUrl(INSTANCE_NETWORK_NAME), // network
+            imageUri);
+      
+      // need to insert the network first
+      assertOperationDoneSuccessfully(api.networks().createInIPv4Range
+              (INSTANCE_NETWORK_NAME, IPV4_RANGE));
+      assertOperationDoneSuccessfully(api.instancesInZone(DEFAULT_ZONE_NAME).create(newInstance));
+      instance = api.instancesInZone(DEFAULT_ZONE_NAME).get(INSTANCE_NAME);
+      assertNotNull(instance);
+
+      return api;
+   }
 
    @Test(groups = "live")
    public void testInsertTargetInstance(){
-
       NewTargetInstance newTargetInstance = new NewTargetInstance.Builder()
          .name(TARGET_INSTANCE_NAME)
          .description("A test Target Instance")
+         .instance(instance.selfLink())
          .build();
 
       assertOperationDoneSuccessfully(api.targetInstancesInZone(DEFAULT_ZONE_NAME).create(newTargetInstance));
@@ -66,6 +114,8 @@ public class TargetInstanceApiLiveTest extends BaseGoogleComputeEngineApiLiveTes
    @Test(groups = "live", dependsOnMethods = {"testListTargetInstance", "testGetTargetInstance"}, alwaysRun = true)
    public void testDeleteTargetInstance(){
       assertOperationDoneSuccessfully(api.targetInstancesInZone(DEFAULT_ZONE_NAME).delete(TARGET_INSTANCE_NAME));
+      assertOperationDoneSuccessfully(api.instancesInZone(DEFAULT_ZONE_NAME).delete(INSTANCE_NAME));
+      assertOperationDoneSuccessfully(api.networks().delete(INSTANCE_NETWORK_NAME));
    }
 
    private void assertTargetInstanceEquals(TargetInstance targetInstance){

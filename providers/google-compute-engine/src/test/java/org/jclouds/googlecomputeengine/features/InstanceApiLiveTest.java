@@ -53,6 +53,7 @@ import com.google.common.base.Predicate;
 import com.google.common.collect.FluentIterable;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
+import com.google.common.collect.Ordering;
 import com.google.inject.Module;
 
 @Test(groups = "live", testName = "InstanceApiLiveTest")
@@ -347,7 +348,10 @@ public class InstanceApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
    private void assertInstanceEquals(Instance result, NewInstance expected) {
       assertEquals(result.name(), expected.name());
       assertEquals(result.metadata().asMap(), expected.metadata().asMap()); // ignore fingerprint!
-      assertEquals(result.tags().items(), expected.tags().items());
+      // Do not assume tags come in the same order
+      List<String> resultTags = Ordering.from(String.CASE_INSENSITIVE_ORDER).sortedCopy(result.tags().items());
+      List<String> expectedTags = Ordering.from(String.CASE_INSENSITIVE_ORDER).sortedCopy(expected.tags().items());
+      assertEquals(resultTags, expectedTags);
    }
 
    @AfterClass(groups = { "integration", "live" })
