@@ -123,5 +123,10 @@
       <artifactId>rackspace-cloudservers-uk</artifactId>
       <version>${project.version}</version>
     </dependency>
+    <dependency>
+      <groupId>org.apache.jclouds.provider</groupId>
+      <artifactId>google-compute-engine</artifactId>
+      <version>${project.version}</version>
+    </dependency>
   </dependencies>
 </project>
