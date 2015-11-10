@@ -16,8 +16,11 @@
  */
 package org.jclouds.docker.internal;
 
+import static com.google.common.base.Charsets.UTF_8;
+import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.jclouds.util.Strings2.toStringAndClose;
+import static org.testng.Assert.assertEquals;
 import java.io.IOException;
 import java.util.Properties;
 
@@ -29,6 +32,7 @@ import org.jclouds.http.okhttp.config.OkHttpCommandExecutorServiceModule;
 
 import com.google.common.base.Charsets;
 import com.google.common.base.Throwables;
+import com.google.gson.JsonParser;
 import com.google.inject.Module;
 import com.squareup.okhttp.mockwebserver.MockWebServer;
 import com.squareup.okhttp.mockwebserver.RecordedRequest;
@@ -65,5 +69,16 @@ public class BaseDockerMockTest extends BaseMockWebServerTest {
       assertThat(request.getHeader(HttpHeaders.ACCEPT)).isEqualTo(MediaType.APPLICATION_JSON);
       return request;
    }
+
+   protected RecordedRequest assertSent(MockWebServer server, String method, String path, String json)
+           throws InterruptedException {
+      RecordedRequest request = assertSent(server, method, path);
+      assertEquals(request.getHeader("Content-Type"), APPLICATION_JSON);
+      assertEquals(parser.parse(new String(request.getBody(), UTF_8)), parser.parse(json));
+      return request;
+   }
+
+   /** So that we can ignore formatting. */
+   private final JsonParser parser = new JsonParser();
 
 }

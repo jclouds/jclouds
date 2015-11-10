@@ -22,7 +22,6 @@ import static org.testng.Assert.assertNotNull;
 import java.util.Properties;
 import java.util.Random;
 
-import org.jclouds.compute.ComputeService;
 import org.jclouds.compute.ComputeServiceAdapter.NodeAndInitialCredentials;
 import org.jclouds.compute.domain.Hardware;
 import org.jclouds.compute.domain.Template;
@@ -48,13 +47,12 @@ import com.google.inject.Module;
 @Test(groups = "live", singleThreaded = true, testName = "DockerComputeServiceAdapterLiveTest")
 public class DockerComputeServiceAdapterLiveTest extends BaseDockerApiLiveTest {
 
-   private static final String SSHABLE_IMAGE = "tutum/ubuntu";
-   private static final String SSHABLE_IMAGE_TAG = "trusty";
+   private static final String SSHABLE_IMAGE = "kwart/alpine-ext";
+   private static final String SSHABLE_IMAGE_TAG = "3.2-ssh";
    private Image defaultImage;
 
    private DockerComputeServiceAdapter adapter;
    private TemplateBuilder templateBuilder;
-   private ComputeService computeService;
    private NodeAndInitialCredentials<Container> guest;
 
    @BeforeClass
@@ -75,7 +73,6 @@ public class DockerComputeServiceAdapterLiveTest extends BaseDockerApiLiveTest {
       Injector injector = newBuilder().modules(modules).overrides(props).buildInjector();
       adapter = injector.getInstance(DockerComputeServiceAdapter.class);
       templateBuilder = injector.getInstance(TemplateBuilder.class);
-      computeService = injector.getInstance(ComputeService.class);
       return injector.getInstance(DockerApi.class);
    }
 

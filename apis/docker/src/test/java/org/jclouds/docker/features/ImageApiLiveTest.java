@@ -35,9 +35,6 @@ import com.google.common.collect.Iterables;
 @Test(groups = "live", testName = "ImageApiLiveTest", singleThreaded = true)
 public class ImageApiLiveTest extends BaseDockerApiLiveTest {
 
-   private static final String DEFAULT_IMAGE = "busybox";
-   private static final String DEFAULT_TAG = "ubuntu-14.04";
-
    private Image image;
 
    @Test

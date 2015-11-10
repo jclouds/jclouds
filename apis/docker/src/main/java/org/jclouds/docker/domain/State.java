@@ -16,12 +16,15 @@
  */
 package org.jclouds.docker.domain;
 
+import org.jclouds.javax.annotation.Nullable;
 import org.jclouds.json.SerializedNames;
 
 import com.google.auto.value.AutoValue;
 
 @AutoValue
 public abstract class State {
+
+
    public abstract int pid();
 
    public abstract boolean running();
@@ -36,12 +39,20 @@ public abstract class State {
 
    public abstract boolean restarting();
 
+   @Nullable public abstract String status();
+
+   @Nullable public abstract boolean oomKilled();
+
+   @Nullable public abstract boolean dead();
+
+   @Nullable public abstract String error();
+
    State() {
    }
 
-   @SerializedNames({ "Pid", "Running", "ExitCode", "StartedAt", "FinishedAt", "Paused", "Restarting" })
+   @SerializedNames({ "Pid", "Running", "ExitCode", "StartedAt", "FinishedAt", "Paused", "Restarting", "Status", "OOMKilled", "Dead", "Error" })
    public static State create(int pid, boolean running, int exitCode, String startedAt, String finishedAt,
-         boolean paused, boolean restarting) {
-      return new AutoValue_State(pid, running, exitCode, startedAt, finishedAt, paused, restarting);
+         boolean paused, boolean restarting, String status, boolean oomKilled, boolean dead, String error) {
+      return new AutoValue_State(pid, running, exitCode, startedAt, finishedAt, paused, restarting, status, oomKilled, dead, error);
    }
 }

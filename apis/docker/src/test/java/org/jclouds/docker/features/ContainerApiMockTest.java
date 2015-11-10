@@ -78,7 +78,7 @@ public class ContainerApiMockTest extends BaseDockerMockTest {
    public void testGetContainer() throws Exception {
       MockWebServer server = mockWebServer(new MockResponse().setBody(payloadFromResource("/container.json")));
       ContainerApi api = api(DockerApi.class, server.getUrl("/").toString(), new DockerParserModule()).getContainerApi();
-      String containerId = "b03d4cd15b76f8876110615cdeed15eadf77c9beb408d62f1687dcc69192cd6d";
+      String containerId = "e475abdf3e139a5e1e158b38b6cb290a1bec856d39d5a951f015dfb8fcba7331";
       try {
          assertEquals(api.inspectContainer(containerId), new ContainerParseTest().expected());
          assertSent(server, "GET", "/containers/" + containerId + "/json");

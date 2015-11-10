@@ -8,7 +8,7 @@ Please follow these steps to configure your workstation for jclouds-docker:
 
 - install the latest Docker release (please visit https://docs.docker.com/installation/)
 
-If you are using `boot2docker` then it can also manage certificates and help you setup `DOCKER_CERT_PATH` and `DOCKER_HOST` environment variables. (See `boot2docker shellinit`)
+If you are using `docker-machine` then it can also manage certificates and help you setup `DOCKER_CERT_PATH` and `DOCKER_HOST` environment variables.
 
 Assuming these environment variables are setup correctly there are no further setups steps are required.
 
@@ -48,7 +48,7 @@ As jclouds docker support is quite new, issues may occasionally arise. Please fo
 
 1. Remove all containers
 
-    $ docker rm `docker ps -a`
+    $ docker rm -f `docker ps -a`
 
 2. remove all the images
 

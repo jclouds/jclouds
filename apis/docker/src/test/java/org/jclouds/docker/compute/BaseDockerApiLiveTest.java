@@ -45,6 +45,11 @@ import com.google.inject.Module;
 @Test(groups = "live")
 public class BaseDockerApiLiveTest extends BaseApiLiveTest<DockerApi> {
 
+   protected static final String DEFAULT_IMAGE = "alpine";
+   protected static final String DEFAULT_TAG = "3.2";
+   protected static final String ALPINE_IMAGE_TAG = String.format("%s:%s", DEFAULT_IMAGE, DEFAULT_TAG);
+
+
    public BaseDockerApiLiveTest() {
       provider = "docker";
    }

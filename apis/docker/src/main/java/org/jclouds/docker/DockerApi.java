@@ -16,12 +16,13 @@
  */
 package org.jclouds.docker;
 
+import java.io.Closeable;
+
 import org.jclouds.docker.features.ContainerApi;
 import org.jclouds.docker.features.ImageApi;
 import org.jclouds.docker.features.MiscApi;
+import org.jclouds.docker.features.NetworkApi;
 import org.jclouds.rest.annotations.Delegate;
-
-import java.io.Closeable;
 
 public interface DockerApi extends Closeable {
 
@@ -33,5 +34,8 @@ public interface DockerApi extends Closeable {
 
    @Delegate
    ImageApi getImageApi();
+
+   @Delegate
+   NetworkApi getNetworkApi();
 
 }

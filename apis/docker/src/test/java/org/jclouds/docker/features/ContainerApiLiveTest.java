@@ -47,17 +47,16 @@ import com.google.common.collect.ImmutableList;
 public class ContainerApiLiveTest extends BaseDockerApiLiveTest {
 
    private Container container = null;
-   protected static final String BUSYBOX_IMAGE_TAG = "busybox:ubuntu-12.04";
    protected Image image = null;
 
    @BeforeClass
    protected void init() {
-      if (api.getImageApi().inspectImage(BUSYBOX_IMAGE_TAG) == null) {
-         CreateImageOptions options = CreateImageOptions.Builder.fromImage(BUSYBOX_IMAGE_TAG);
+      if (api.getImageApi().inspectImage(ALPINE_IMAGE_TAG) == null) {
+         CreateImageOptions options = CreateImageOptions.Builder.fromImage(ALPINE_IMAGE_TAG);
          InputStream createImageStream = api.getImageApi().createImage(options);
          consumeStream(createImageStream);
       }
-      image = api.getImageApi().inspectImage(BUSYBOX_IMAGE_TAG);
+      image = api.getImageApi().inspectImage(ALPINE_IMAGE_TAG);
       assertNotNull(image);
    }
 
@@ -69,7 +68,7 @@ public class ContainerApiLiveTest extends BaseDockerApiLiveTest {
          }
       }
       if (image != null) {
-         api.getImageApi().deleteImage(BUSYBOX_IMAGE_TAG);
+         api.getImageApi().deleteImage(ALPINE_IMAGE_TAG);
       }
    }
 

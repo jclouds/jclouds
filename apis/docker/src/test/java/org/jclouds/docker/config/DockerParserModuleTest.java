@@ -19,6 +19,9 @@ package org.jclouds.docker.config;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
 
+import java.util.List;
+import java.util.Map;
+
 import org.jclouds.docker.domain.Container;
 import org.jclouds.docker.domain.NetworkSettings;
 import org.jclouds.docker.domain.Port;
@@ -53,8 +56,70 @@ public class DockerParserModuleTest {
    }
 
    public void networkSettings() {
-      String text = "{\"IPAddress\":\"XX.XX.206.98\",\"IPPrefixLen\":27,\"Gateway\":\"XX.XX.206.105\",\"Bridge\":\"public\",\"Ports\":{}}";
-      NetworkSettings settings = NetworkSettings.create("XX.XX.206.98", 27, "XX.XX.206.105", "public", null, null);
+      String text = "{" +
+              "\"Bridge\":\"\"," +
+              "\"SandboxID\":\"3ef128b055eb9ef62a6a2c281d97a2dfde5f47947d490f1dd2a81612611d961f\"," +
+              "\"HairpinMode\":false," +
+              "\"LinkLocalIPv6Address\":\"\"," +
+              "\"LinkLocalIPv6PrefixLen\":0," +
+              "\"Ports\":{}," +
+              "\"SandboxKey\":\"/var/run/docker/netns/3ef128b055eb\"," +
+              "\"SecondaryIPAddresses\":[]," +
+              "\"SecondaryIPv6Addresses\":[]," +
+              "\"EndpointID\":\"9e8dcc0c8288938a923018fee0728cee8e6de7c01a5150738ee6e51c1caf8cf6\"," +
+              "\"Gateway\":\"172.17.0.1\"," +
+              "\"GlobalIPv6Address\":\"\"," +
+              "\"GlobalIPv6PrefixLen\":0," +
+              "\"IPAddress\":\"172.17.0.2\"," +
+              "\"IPPrefixLen\":16," +
+              "\"IPv6Gateway\":\"\"," +
+              "\"MacAddress\":\"02:42:ac:11:00:02\"," +
+              "\"Networks\":{" +
+              "\"bridge\":{" +
+              "\"EndpointID\":\"9e8dcc0c8288938a923018fee0728cee8e6de7c01a5150738ee6e51c1caf8cf6\"," +
+              "\"Gateway\":\"172.17.0.1\"," +
+              "\"IPAddress\":\"172.17.0.2\"," +
+              "\"IPPrefixLen\":16," +
+              "\"IPv6Gateway\":\"\"," +
+              "\"GlobalIPv6Address\":\"\"," +
+              "\"GlobalIPv6PrefixLen\":0," +
+              "\"MacAddress\":\"02:42:ac:11:00:02\"" +
+              "}" +
+              "}" +
+              "}";
+      NetworkSettings settings = NetworkSettings.create(
+              "", // Bridge
+              "3ef128b055eb9ef62a6a2c281d97a2dfde5f47947d490f1dd2a81612611d961f", // SandboxID
+              false, // HairpinMode
+              "", // LinkLocalIPv6Address
+              0, // LinkLocalIPv6PrefixLen
+              ImmutableMap.<String, List<Map<String, String>>> of(), // Ports
+              "/var/run/docker/netns/3ef128b055eb", // SandboxKey
+              null, // SecondaryIPAddresses
+              null, // SecondaryIPv6Addresses
+              "9e8dcc0c8288938a923018fee0728cee8e6de7c01a5150738ee6e51c1caf8cf6", // EndpointID
+              "172.17.0.1", // Gateway
+              "", // GlobalIPv6Address
+              0, // GlobalIPv6PrefixLen
+              "172.17.0.2", // IPAddress
+              16, // IPPrefixLen
+              "", // IPv6Gateway
+              "02:42:ac:11:00:02", // MacAddress
+              ImmutableMap.of(
+                      "bridge", NetworkSettings.Details.create(
+                              "9e8dcc0c8288938a923018fee0728cee8e6de7c01a5150738ee6e51c1caf8cf6", // EndpointID
+                              "172.17.0.1", // Gateway
+                              "172.17.0.2", // IPAddress
+                              16, // IPPrefixLen
+                              "", // IPv6Gateway
+                              "", // GlobalIPv6Address
+                              0, // GlobalIPv6PrefixLen
+                              "02:42:ac:11:00:02" // MacAddress
+                     )
+              ),
+              null // PortMapping
+      );
+
       assertEquals(json.fromJson(text, NetworkSettings.class), settings);
       assertEquals(json.toJson(settings), text);
    }

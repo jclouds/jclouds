@@ -96,7 +96,11 @@ public class ContainerToNodeMetadataTest {
             "2014-03-24T20:28:37.537659054Z", // startedAt
             "0001-01-01T00:00:00Z", // finishedAt
             false, // paused
-            false  // restarting
+            false,  // restarting
+            "running", // Status
+            false, // OOMKilled
+            false, // Dead
+            ""     // Error
       );
       container = Container.builder()
               .id("6d35806c1bd2b25cd92bba2d2c2c5169dc2156f53ab45c2b62d76e2d2fee14a9")

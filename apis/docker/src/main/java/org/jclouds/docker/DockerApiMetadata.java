@@ -16,9 +16,11 @@
  */
 package org.jclouds.docker;
 
-import com.google.auto.service.AutoService;
-import com.google.common.collect.ImmutableSet;
-import com.google.inject.Module;
+import static org.jclouds.compute.config.ComputeServiceProperties.TEMPLATE;
+import static org.jclouds.reflect.Reflection2.typeToken;
+import java.net.URI;
+import java.util.Properties;
+
 import org.jclouds.Constants;
 import org.jclouds.apis.ApiMetadata;
 import org.jclouds.compute.ComputeServiceContext;
@@ -28,11 +30,9 @@ import org.jclouds.docker.config.DockerHttpApiModule;
 import org.jclouds.docker.config.DockerParserModule;
 import org.jclouds.rest.internal.BaseHttpApiMetadata;
 
-import java.net.URI;
-import java.util.Properties;
-
-import static org.jclouds.compute.config.ComputeServiceProperties.TEMPLATE;
-import static org.jclouds.reflect.Reflection2.typeToken;
+import com.google.auto.service.AutoService;
+import com.google.common.collect.ImmutableSet;
+import com.google.inject.Module;
 
 @AutoService(ApiMetadata.class)
 public class DockerApiMetadata extends BaseHttpApiMetadata<DockerApi> {
@@ -70,7 +70,7 @@ public class DockerApiMetadata extends BaseHttpApiMetadata<DockerApi> {
                  .identityName("Path to certificate .pem file")
                  .credentialName("Path to key .pem file")
                  .documentation(URI.create("https://docs.docker.com/reference/api/docker_remote_api/"))
-                 .version("1.16")
+                 .version("1.21")
                  .defaultEndpoint("https://127.0.0.1:2376")
                  .defaultProperties(DockerApiMetadata.defaultProperties())
                  .view(typeToken(ComputeServiceContext.class))

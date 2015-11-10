@@ -51,8 +51,6 @@ import com.google.common.collect.Iterables;
 @Test(groups = "live", testName = "MiscApiLiveTest", singleThreaded = true)
 public class MiscApiLiveTest extends BaseDockerApiLiveTest {
 
-   protected static final String BUSYBOX_IMAGE_TAG = "busybox:ubuntu-12.04";
-
    private static String imageId;
 
    private Container container = null;
@@ -61,12 +59,12 @@ public class MiscApiLiveTest extends BaseDockerApiLiveTest {
 
    @BeforeClass
    protected void init() {
-      if (api.getImageApi().inspectImage(BUSYBOX_IMAGE_TAG) == null) {
-         CreateImageOptions options = CreateImageOptions.Builder.fromImage(BUSYBOX_IMAGE_TAG);
+      if (api.getImageApi().inspectImage(ALPINE_IMAGE_TAG) == null) {
+         CreateImageOptions options = CreateImageOptions.Builder.fromImage(ALPINE_IMAGE_TAG);
          InputStream createImageStream = api.getImageApi().createImage(options);
          consumeStream(createImageStream);
       }
-      image = api.getImageApi().inspectImage(BUSYBOX_IMAGE_TAG);
+      image = api.getImageApi().inspectImage(ALPINE_IMAGE_TAG);
       assertNotNull(image);
       Config containerConfig = Config.builder().image(image.id())
             .cmd(ImmutableList.of("/bin/sh", "-c", "touch hello; while true; do echo hello world; sleep 1; done"))
@@ -85,7 +83,7 @@ public class MiscApiLiveTest extends BaseDockerApiLiveTest {
          }
       }
       if (image != null) {
-         api.getImageApi().deleteImage(BUSYBOX_IMAGE_TAG);
+         api.getImageApi().deleteImage(ALPINE_IMAGE_TAG);
       }
    }
 
@@ -107,7 +105,7 @@ public class MiscApiLiveTest extends BaseDockerApiLiveTest {
 
    @Test
    public void testBuildImageFromDockerfile() throws IOException, InterruptedException, URISyntaxException {
-      BuildOptions options = BuildOptions.Builder.tag("testBuildImage").verbose(false).nocache(false);
+      BuildOptions options = BuildOptions.Builder.tag("jclouds-test-test-build-image").verbose(false).nocache(false);
       InputStream buildImageStream = api().build(tarredDockerfile(), options);
       String buildStream = consumeStream(buildImageStream);
       Iterable<String> splitted = Splitter.on("\n").split(buildStream.replace("\r", "").trim());

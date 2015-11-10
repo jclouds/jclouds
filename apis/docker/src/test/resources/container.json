@@ -1,129 +1,155 @@
 {
-    "Args": [
-        "-iface",
-        "ethwe",
-        "-wait",
-        "5",
-        "-name",
-        "7a:63:a2:39:7b:0f"
+  "Args": [
+    "-iface",
+    "ethwe",
+    "-wait",
+    "5",
+    "-name",
+    "7a:63:a2:39:7b:0f"
+  ],
+  "Config": {
+    "AttachStderr": false,
+    "AttachStdin": false,
+    "AttachStdout": false,
+    "Cmd": [
+      "-name",
+      "7a:63:a2:39:7b:0f"
     ],
-    "Config": {
-        "AttachStderr": false,
-        "AttachStdin": false,
-        "AttachStdout": false,
-        "Cmd": [
-            "-name",
-            "7a:63:a2:39:7b:0f"
-        ],
-        "CpuShares": 0,
-        "Cpuset": "",
-        "Domainname": "",
-        "Entrypoint": [
-            "/home/weave/weaver",
-            "-iface",
-            "ethwe",
-            "-wait",
-            "5"
-        ],
-        "Env": [
-            "PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
-        ],
-        "ExposedPorts": {
-            "6783/tcp": {},
-            "6783/udp": {}
-        },
-        "Hostname": "6c9932f478bd",
-        "Image": "zettio/weave",
-        "Memory": 0,
-        "MemorySwap": 0,
-        "NetworkDisabled": false,
-        "OnBuild": null,
-        "OpenStdin": false,
-        "PortSpecs": null,
-        "SecurityOpt": null,
-        "StdinOnce": false,
-        "Tty": false,
-        "User": "",
-        "Volumes": null,
-        "WorkingDir": "/home/weave"
+    "CpuShares": 0,
+    "Cpuset": "",
+    "Domainname": "",
+    "Entrypoint": [
+      "/home/weave/weaver",
+      "-iface",
+      "ethwe",
+      "-wait",
+      "5"
+    ],
+    "Env": [
+      "PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
+    ],
+    "ExposedPorts": {
+      "6783/tcp": {},
+      "6783/udp": {}
     },
-    "Created": "2014-10-31T17:00:21.544197943Z",
-    "Driver": "aufs",
-    "ExecDriver": "native-0.2",
-    "HostConfig": {
-        "Binds": null,
-        "CapAdd": null,
-        "CapDrop": null,
-        "ContainerIDFile": "",
-        "Devices": [],
-        "Dns": [ "8.8.8.8", "8.8.4.4" ],
-        "DnsSearch": null,
-        "ExtraHosts": [ "extra:169.254.0.1" ],
-        "Links": null,
-        "LxcConf": [],
-        "NetworkMode": "bridge",
-        "PortBindings": {
-            "6783/tcp": [
-                {
-                    "HostIp": "",
-                    "HostPort": "6783"
-                }
-            ],
-            "6783/udp": [
-                {
-                    "HostIp": "",
-                    "HostPort": "6783"
-                }
-            ]
-        },
-        "Privileged": true,
-        "PublishAllPorts": false,
-        "RestartPolicy": {
-            "MaximumRetryCount": 0,
-            "Name": ""
-        },
-        "VolumesFrom": null
-    },
-    "HostnamePath": "/var/lib/docker/containers/6c9932f478bd761f32ddb54ed28ab42ab6fac6f2a279f561ea31503ee9d39524/hostname",
-    "HostsPath": "/var/lib/docker/containers/6c9932f478bd761f32ddb54ed28ab42ab6fac6f2a279f561ea31503ee9d39524/hosts",
-    "Id": "6c9932f478bd761f32ddb54ed28ab42ab6fac6f2a279f561ea31503ee9d39524",
-    "Image": "57e570db16baba1e8c0d6f3c15868ddb400f64ff76ec948e65c3ca3f15fb3587",
-    "MountLabel": "",
-    "Name": "/weave",
-    "NetworkSettings": {
-        "Bridge": "docker0",
-        "Gateway": "172.17.42.1",
-        "IPAddress": "172.17.0.7",
-        "IPPrefixLen": 16,
-        "MacAddress": "02:42:ac:11:00:07",
-        "PortMapping": null,
-        "Ports": {
-            "6783/tcp": [
-                {
-                    "HostIp": "0.0.0.0",
-                    "HostPort": "6783"
-                }
-            ],
-            "6783/udp": [
-                {
-                    "HostIp": "0.0.0.0",
-                    "HostPort": "6783"
-                }
-            ]
+    "Hostname": "6c9932f478bd",
+    "Image": "zettio/weave",
+    "Memory": 0,
+    "MemorySwap": 0,
+    "NetworkDisabled": false,
+    "OnBuild": null,
+    "OpenStdin": false,
+    "PortSpecs": null,
+    "SecurityOpt": null,
+    "StdinOnce": false,
+    "Tty": false,
+    "User": "",
+    "Volumes": null,
+    "WorkingDir": "/home/weave"
+  },
+  "Created": "2014-10-31T17:00:21.544197943Z",
+  "Driver": "aufs",
+  "ExecDriver": "native-0.2",
+  "HostConfig": {
+    "Binds": null,
+    "CapAdd": null,
+    "CapDrop": null,
+    "ContainerIDFile": "",
+    "Devices": [],
+    "Dns": [
+      "8.8.8.8",
+      "8.8.4.4"
+    ],
+    "DnsSearch": null,
+    "ExtraHosts": ["extra:169.254.0.1"],
+    "Links": null,
+    "LxcConf": [],
+    "NetworkMode": "bridge",
+    "PortBindings": {
+      "6783/tcp": [
+        {
+          "HostIp": "",
+          "HostPort": "6783"
         }
+      ],
+      "6783/udp": [
+        {
+          "HostIp": "",
+          "HostPort": "6783"
+        }
+      ]
     },
-    "Path": "/home/weave/weaver",
-    "ProcessLabel": "",
-    "ResolvConfPath": "/var/lib/docker/containers/6c9932f478bd761f32ddb54ed28ab42ab6fac6f2a279f561ea31503ee9d39524/resolv.conf",
-    "State": {
-        "ExitCode": 0,
-        "FinishedAt": "0001-01-01T00:00:00Z",
-        "Paused": false,
-        "Pid": 3939,
-        "Restarting": false,
-        "Running": true,
-        "StartedAt": "2014-10-31T17:00:21.802008706Z"
+    "Privileged": true,
+    "PublishAllPorts": false,
+    "RestartPolicy": {
+      "MaximumRetryCount": 0,
+      "Name": ""
     },
-    "Volumes": {},
-    "VolumesRW": {}
+    "VolumesFrom": null
+  },
+  "HostnamePath": "/var/lib/docker/containers/6c9932f478bd761f32ddb54ed28ab42ab6fac6f2a279f561ea31503ee9d39524/hostname",
+  "HostsPath": "/var/lib/docker/containers/6c9932f478bd761f32ddb54ed28ab42ab6fac6f2a279f561ea31503ee9d39524/hosts",
+  "Id": "6c9932f478bd761f32ddb54ed28ab42ab6fac6f2a279f561ea31503ee9d39524",
+  "Image": "57e570db16baba1e8c0d6f3c15868ddb400f64ff76ec948e65c3ca3f15fb3587",
+  "MountLabel": "",
+  "Name": "/weave",
+  "NetworkSettings": {
+    "Bridge": "",
+    "SandboxID": "3ef128b055eb9ef62a6a2c281d97a2dfde5f47947d490f1dd2a81612611d961f",
+    "HairpinMode": false,
+    "LinkLocalIPv6Address": "",
+    "LinkLocalIPv6PrefixLen": 0,
+    "Ports": {},
+    "SandboxKey": "/var/run/docker/netns/3ef128b055eb",
+    "SecondaryIPAddresses": null,
+    "SecondaryIPv6Addresses": null,
+    "EndpointID": "9e8dcc0c8288938a923018fee0728cee8e6de7c01a5150738ee6e51c1caf8cf6",
+    "Gateway": "172.17.0.1",
+    "GlobalIPv6Address": "",
+    "GlobalIPv6PrefixLen": 0,
+    "IPAddress": "172.17.0.2",
+    "IPPrefixLen": 16,
+    "IPv6Gateway": "",
+    "MacAddress": "02:42:ac:11:00:02",
+    "Networks": {
+      "JCLOUDS_NETWORK": {
+        "EndpointID": "04268fbb4dc368b5a53bb1c3f89294a4f0c72095deb944db3c4efc6d6a439304",
+        "Gateway": "172.19.0.1",
+        "IPAddress": "172.19.0.2",
+        "IPPrefixLen": 16,
+        "IPv6Gateway": "",
+        "GlobalIPv6Address": "",
+        "GlobalIPv6PrefixLen": 0,
+        "MacAddress": "02:42:ac:13:00:02"
+      },
+      "bridge": {
+        "EndpointID": "9e8dcc0c8288938a923018fee0728cee8e6de7c01a5150738ee6e51c1caf8cf6",
+        "Gateway": "172.17.0.1",
+        "IPAddress": "172.17.0.2",
+        "IPPrefixLen": 16,
+        "IPv6Gateway": "",
+        "GlobalIPv6Address": "",
+        "GlobalIPv6PrefixLen": 0,
+        "MacAddress": "02:42:ac:11:00:02"
+      }
+    }
+  },
+  "Path": "/home/weave/weaver",
+  "ProcessLabel": "",
+  "ResolvConfPath": "/var/lib/docker/containers/6c9932f478bd761f32ddb54ed28ab42ab6fac6f2a279f561ea31503ee9d39524/resolv.conf",
+  "State": {
+    "Status": "running",
+    "Running": true,
+    "Paused": false,
+    "Restarting": false,
+    "OOMKilled": false,
+    "Dead": false,
+    "Pid": 10357,
+    "ExitCode": 0,
+    "Error": "",
+    "StartedAt": "2015-11-10T09:33:21.68146124Z",
+    "FinishedAt": "0001-01-01T00:00:00Z"
+  },
+  "Volumes": {},
+  "VolumesRW": {}
 }

@@ -34,7 +34,7 @@
   <packaging>bundle</packaging>
 
   <properties>
-    <test.docker.api-version>1.19</test.docker.api-version>
+    <test.docker.api-version>1.21</test.docker.api-version>
     <test.docker.identity>${env.DOCKER_CERT_PATH}/cert.pem</test.docker.identity>
     <test.docker.credential>${env.DOCKER_CERT_PATH}/key.pem</test.docker.credential>
     <test.docker.cacert.path>${env.DOCKER_CERT_PATH}/ca.pem</test.docker.cacert.path>
