@@ -110,11 +110,6 @@
     </dependency>
     <dependency>
       <groupId>org.apache.jclouds.provider</groupId>
-      <artifactId>hpcloud-compute</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.jclouds.provider</groupId>
       <artifactId>rackspace-cloudservers-us</artifactId>
       <version>${project.version}</version>
     </dependency>

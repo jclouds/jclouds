@@ -68,11 +68,6 @@
       <artifactId>rackspace-cloudfiles-uk</artifactId>
       <version>${project.version}</version>
     </dependency>
-    <dependency>
-      <groupId>org.apache.jclouds.provider</groupId>
-      <artifactId>hpcloud-objectstorage</artifactId>
-      <version>${project.version}</version>
-    </dependency>
   </dependencies>
   <profiles>
     <profile>
