@@ -344,7 +344,8 @@ public class RegionScopedSwiftBlobStore implements BlobStore {
 
    @Override
    public void removeBlob(String container, String name) {
-      api.getObjectApi(regionId, container).delete(name);
+      // use SLO API to delete blob regardless of whether its a single- or multi-part object
+      api.getStaticLargeObjectApi(regionId, container).delete(name);
    }
 
    @Override

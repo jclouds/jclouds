@@ -943,6 +943,10 @@ public class BaseBlobIntegrationTest extends BaseBlobStoreIntegrationTest {
          assertThat(ByteStreams2.toByteArrayAndClose(newBlob.getPayload().openStream())).isEqualTo(byteSource.read());
          checkContentMetadata(newBlob);
          checkUserMetadata(newBlob.getMetadata().getUserMetadata(), blob.getMetadata().getUserMetadata());
+
+         // ensure that deleting multi-part manifest deletes any user-visible parts
+         blobStore.removeBlob(container, name);
+         assertThat(blobStore.list(container)).isEmpty();
       } finally {
          returnContainer(container);
       }
