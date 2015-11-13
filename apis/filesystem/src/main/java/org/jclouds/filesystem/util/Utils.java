@@ -18,8 +18,10 @@ package org.jclouds.filesystem.util;
 
 import static java.nio.file.FileSystems.getDefault;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.nio.file.AccessDeniedException;
 import java.nio.file.DirectoryNotEmptyException;
 import java.nio.file.Files;
@@ -100,12 +102,40 @@ public class Utils {
    }
 
    /**
+    * @return Localized name for the "Everyone" Windows principal.
+    */
+   public static final String getWindowsEveryonePrincipalName() {
+      if (isWindows()) {
+         try {
+            Process process = new ProcessBuilder("whoami", "/groups").start();
+            try {
+               String line;
+               try (BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()))) {
+                  while ((line = reader.readLine()) != null) {
+                     if (line.indexOf("S-1-1-0") != -1) {
+                        return line.split(" ")[0];
+                     }
+                  }
+               }
+            } finally {
+               process.destroy();
+            }
+         } catch (IOException e) {
+         }
+      }
+      // Default/fallback value
+      return "Everyone";
+   }
+
+   public static final String WINDOWS_EVERYONE = getWindowsEveryonePrincipalName();
+
+   /**
     * @param path The path to a Windows file or directory.
     * @return true if path has permissions set to Everyone on windows. The exact permissions are not checked.
     */
    public static boolean isPrivate(Path path) throws IOException {
       UserPrincipal everyone = getDefault().getUserPrincipalLookupService()
-            .lookupPrincipalByName("Everyone");
+            .lookupPrincipalByName(WINDOWS_EVERYONE);
       AclFileAttributeView aclFileAttributes = java.nio.file.Files.getFileAttributeView(
             path, AclFileAttributeView.class);
       for (AclEntry aclEntry : aclFileAttributes.getAcl()) {
@@ -121,7 +151,7 @@ public class Utils {
     */
    public static void setPrivate(Path path) throws IOException {
       UserPrincipal everyone = getDefault().getUserPrincipalLookupService()
-            .lookupPrincipalByName("Everyone");
+            .lookupPrincipalByName(WINDOWS_EVERYONE);
       AclFileAttributeView aclFileAttributes = java.nio.file.Files.getFileAttributeView(
             path, AclFileAttributeView.class);
       CopyOnWriteArrayList<AclEntry> aclList = new CopyOnWriteArrayList(aclFileAttributes.getAcl());
@@ -138,7 +168,7 @@ public class Utils {
     */
    public static void setPublic(Path path) throws IOException {
       UserPrincipal everyone = getDefault().getUserPrincipalLookupService()
-            .lookupPrincipalByName("Everyone");
+            .lookupPrincipalByName(WINDOWS_EVERYONE);
       AclFileAttributeView aclFileAttributes = java.nio.file.Files.getFileAttributeView(
             path, AclFileAttributeView.class);
       List<AclEntry> list = aclFileAttributes.getAcl();

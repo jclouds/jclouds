@@ -37,6 +37,7 @@ import javax.inject.Provider;
 
 import org.jclouds.blobstore.domain.Blob;
 import org.jclouds.blobstore.domain.BlobBuilder;
+import org.jclouds.blobstore.domain.ContainerAccess;
 import org.jclouds.blobstore.domain.internal.BlobBuilderImpl;
 import org.jclouds.blobstore.options.ListContainerOptions;
 import org.jclouds.filesystem.predicates.validators.internal.FilesystemBlobKeyValidatorImpl;
@@ -125,6 +126,20 @@ public class FilesystemStorageStrategyImplTest {
       result = storageStrategy.createContainer(CONTAINER_NAME);
       assertTrue(result, "Container not created");
       TestUtils.directoryExists(TARGET_CONTAINER_NAME, true);
+   }
+
+   public void testCreateContainerAccess() {
+      boolean result;
+
+      TestUtils.directoryExists(TARGET_CONTAINER_NAME, false);
+      result = storageStrategy.createContainer(CONTAINER_NAME);
+      assertTrue(result, "Container not created");
+      TestUtils.directoryExists(TARGET_CONTAINER_NAME, true);
+
+      storageStrategy.setContainerAccess(CONTAINER_NAME, ContainerAccess.PRIVATE);
+      assertEquals(storageStrategy.getContainerAccess(CONTAINER_NAME), ContainerAccess.PRIVATE);
+      storageStrategy.setContainerAccess(CONTAINER_NAME, ContainerAccess.PUBLIC_READ);
+      assertEquals(storageStrategy.getContainerAccess(CONTAINER_NAME), ContainerAccess.PUBLIC_READ);
    }
 
    public void testCreateContainer_ContainerAlreadyExists() {
