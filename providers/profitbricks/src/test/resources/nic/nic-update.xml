@@ -1,15 +1,12 @@
-<?xml version="1.0" ?>
-<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:ws="http://ws.api.profitbricks.com/">
-    <soapenv:Header/>
-    <soapenv:Body>
-        <ws:updateNic>
-            <request>
-                <nicId>nic-id</nicId>
-                <ip>ip</ip>
-                <nicName>nic-name</nicName>
-                <dhcpActive>true</dhcpActive>
-                <lanId>1</lanId>
-            </request>
-        </ws:updateNic>
-    </soapenv:Body>
-</soapenv:Envelope>
+<?xml version="1.0" encoding="UTF-8"?>
+<S:Envelope xmlns:S="http://schemas.xmlsoap.org/soap/envelope/">
+   <S:Body>
+      <ns2:updateNicResponse xmlns:ns2="http://ws.api.profitbricks.com/">
+         <return>
+            <requestId>request-id</requestId>
+            <dataCenterId>datacenter-id</dataCenterId>
+            <dataCenterVersion>2</dataCenterVersion>
+         </return>
+      </ns2:updateNicResponse>
+   </S:Body>
+</S:Envelope>

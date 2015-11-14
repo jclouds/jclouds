@@ -22,44 +22,28 @@ import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertTrue;
 
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 import org.jclouds.profitbricks.BaseProfitBricksLiveTest;
-import org.jclouds.profitbricks.compute.internal.ProvisioningStatusAware;
-import org.jclouds.profitbricks.compute.internal.ProvisioningStatusPollingPredicate;
 import org.jclouds.profitbricks.domain.DataCenter;
-import org.jclouds.profitbricks.domain.ProvisioningState;
 import org.jclouds.profitbricks.domain.Server;
 import org.jclouds.profitbricks.domain.Storage;
 import org.jclouds.rest.InsufficientResourcesException;
-import org.jclouds.util.Predicates2;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.Test;
+import org.testng.annotations.BeforeClass;
 
-import com.google.common.base.Predicate;
-import com.google.common.collect.Iterables;
-
-@Test(groups = "live", testName = "StorageApiLiveTest", singleThreaded = true)
+@Test(groups = "live", testName = "StorageApiLiveTest")
 public class StorageApiLiveTest extends BaseProfitBricksLiveTest {
 
-   private Predicate<String> waitUntilAvailable;
    private DataCenter dataCenter;
    private Server server;
+
    private String createdStorageId;
 
-   @Override
-   protected void initialize() {
-      super.initialize();
-      List<DataCenter> dataCenters = api.dataCenterApi().getAllDataCenters();
-      assertFalse(dataCenters.isEmpty(), "Must atleast have 1 datacenter available for storage testing.");
-
-      dataCenter = Iterables.getFirst(dataCenters, null);
-      if (dataCenter != null)
-         dataCenter = api.dataCenterApi().getDataCenter(dataCenter.id()); // fetch individual to load more properties
-
-      this.waitUntilAvailable = Predicates2.retry(
-              new ProvisioningStatusPollingPredicate(api, ProvisioningStatusAware.STORAGE, ProvisioningState.AVAILABLE),
-              6l * 60l, 2l, TimeUnit.SECONDS);
+   @BeforeClass
+   public void setupTest() {
+      dataCenter = findOrCreateDataCenter("storageApiLiveTest" + System.currentTimeMillis());
+      server = findOrCreateServer(dataCenter);
    }
 
    @Test(expectedExceptions = InsufficientResourcesException.class)
@@ -74,6 +58,7 @@ public class StorageApiLiveTest extends BaseProfitBricksLiveTest {
 
    @Test
    public void testCreateStorage() {
+      assertDataCenterAvailable(dataCenter);
       String storageId = api.storageApi().createStorage(
               Storage.Request.creatingBuilder()
               .dataCenterId(dataCenter.id())
@@ -82,6 +67,8 @@ public class StorageApiLiveTest extends BaseProfitBricksLiveTest {
               .build());
 
       assertNotNull(storageId);
+      assertDataCenterAvailable(dataCenter);
+
       createdStorageId = storageId;
    }
 
@@ -102,14 +89,8 @@ public class StorageApiLiveTest extends BaseProfitBricksLiveTest {
    }
 
    @Test(dependsOnMethods = "testCreateStorage")
-   public void testWaitUntilAvailable() {
-      boolean available = waitUntilAvailable.apply(createdStorageId);
-
-      assertTrue(available);
-   }
-
-   @Test(dependsOnMethods = "testWaitUntilAvailable")
    public void testUpdateStorage() {
+      assertDataCenterAvailable(dataCenter);
       String requestId = api.storageApi().updateStorage(
               Storage.Request.updatingBuilder()
               .id(createdStorageId)
@@ -118,7 +99,7 @@ public class StorageApiLiveTest extends BaseProfitBricksLiveTest {
               .build());
 
       assertNotNull(requestId);
-      waitUntilAvailable.apply(createdStorageId);
+      assertDataCenterAvailable(dataCenter);
 
       Storage storage = api.storageApi().getStorage(createdStorageId);
       assertEquals(storage.size(), 5f);
@@ -127,9 +108,7 @@ public class StorageApiLiveTest extends BaseProfitBricksLiveTest {
 
    @Test(dependsOnMethods = "testUpdateStorage")
    public void testConnectStorage() {
-      server = Iterables.getFirst(dataCenter.servers(), null);
-      assertNotNull(server, "No server to attach to.");
-
+      assertDataCenterAvailable(dataCenter);
       String requestId = api.storageApi().connectStorageToServer(
               Storage.Request.connectingBuilder()
               .storageId(createdStorageId)
@@ -138,7 +117,7 @@ public class StorageApiLiveTest extends BaseProfitBricksLiveTest {
       );
 
       assertNotNull(requestId);
-      waitUntilAvailable.apply(createdStorageId);
+      assertDataCenterAvailable(dataCenter);
 
       Storage storage = api.storageApi().getStorage(createdStorageId);
       assertTrue(storage.serverIds().contains(server.id()));
@@ -146,22 +125,26 @@ public class StorageApiLiveTest extends BaseProfitBricksLiveTest {
 
    @Test(dependsOnMethods = "testConnectStorage")
    public void testDisconnectStorage() {
+      assertDataCenterAvailable(dataCenter);
       String requestId = api.storageApi()
               .disconnectStorageFromServer(createdStorageId, server.id());
 
       assertNotNull(requestId);
-      waitUntilAvailable.apply(createdStorageId);
+      assertDataCenterAvailable(dataCenter);
 
       Storage storage = api.storageApi().getStorage(createdStorageId);
       assertFalse(storage.serverIds().contains(server.id()));
    }
 
-   @AfterClass(alwaysRun = true)
+   @Test(dependsOnMethods = "testDisconnectStorage")
    public void testDeleteStorage() {
-      if (createdStorageId != null) {
-         boolean result = api.storageApi().deleteStorage(createdStorageId);
+      assertDataCenterAvailable(dataCenter);
+      boolean result = api.storageApi().deleteStorage(createdStorageId);
+      assertTrue(result, "Created test storage was not deleted");
+   }
 
-         assertTrue(result, "Created test storage was not delete.");
-      }
+   @AfterClass(alwaysRun = true)
+   public void cleanUp() {
+      destroyDataCenter(dataCenter);
    }
 }

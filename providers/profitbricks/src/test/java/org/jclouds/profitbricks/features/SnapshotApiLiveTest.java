@@ -16,59 +16,78 @@
  */
 package org.jclouds.profitbricks.features;
 
-import com.google.common.base.Predicate;
-import com.google.common.collect.Iterables;
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertNotNull;
+import static org.testng.Assert.assertTrue;
+
+import java.util.List;
+
 import org.jclouds.profitbricks.BaseProfitBricksLiveTest;
 import org.jclouds.profitbricks.domain.OsType;
 import org.jclouds.profitbricks.domain.Snapshot;
-import org.testng.annotations.Test;
-
-import java.util.List;
-import java.util.concurrent.TimeUnit;
-import org.jclouds.profitbricks.compute.internal.ProvisioningStatusAware;
-import org.jclouds.profitbricks.compute.internal.ProvisioningStatusPollingPredicate;
-import org.jclouds.profitbricks.domain.ProvisioningState;
 import org.jclouds.profitbricks.domain.Storage;
-import org.jclouds.util.Predicates2;
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertFalse;
-
-import static org.testng.Assert.assertNotNull;
-import static org.testng.Assert.assertTrue;
+import org.testng.annotations.Test;
+import org.jclouds.profitbricks.domain.DataCenter;
+import org.jclouds.profitbricks.domain.ProvisioningState;
 import org.testng.annotations.AfterClass;
+import org.testng.annotations.BeforeClass;
 
-@Test(groups = "live", testName = "SnapshotApiLiveTest", singleThreaded = true)
+import com.google.common.base.Predicate;
+import com.google.common.base.Supplier;
+import com.google.common.collect.FluentIterable;
+
+@Test(groups = "live", testName = "SnapshotApiLiveTest")
 public class SnapshotApiLiveTest extends BaseProfitBricksLiveTest {
 
-   protected Predicate<String> snapshotWaitingPredicate;
-   private String snapshotId;
-   private String storageId;
+   private DataCenter dataCenter;
+   private Storage storage;
 
-   @Override
-   protected void initialize() {
-      super.initialize();
+   private String createdSnapshotId;
 
-      initializeWaitPredicate();
+   @BeforeClass
+   public void setupTest() {
+      dataCenter = findOrCreateDataCenter("snapshotApiLiveTest-" + System.currentTimeMillis());
+      storage = FluentIterable.from(dataCenter.storages()).firstMatch(new Predicate<Storage>() {
 
-      List<Storage> storages = api.storageApi().getAllStorages();
-      assertFalse(storages.isEmpty(), "Must atleast have 1 storage available for snapshot testing.");
+         @Override
+         public boolean apply(Storage input) {
+            return input.state() == ProvisioningState.AVAILABLE
+                    && input.size() <= 10f;
+         }
+      }).or(new Supplier<Storage>() {
 
-      storageId = Iterables.getFirst(storages, null).id();
+         @Override
+         public Storage get() {
+            StorageApi storageApi = api.storageApi();
+            String name = String.format("server-%d", dataCenter.servers().size());
+            String createdStorageId = storageApi.createStorage(
+                    Storage.Request.creatingBuilder()
+                    .dataCenterId(dataCenter.id())
+                    .name(name)
+                    .size(2f)
+                    .build()
+            );
+            assertDataCenterAvailable(dataCenter);
+
+            return storageApi.getStorage(createdStorageId);
+         }
+      });
    }
 
    @Test
    public void testCreateSnapshot() {
-      Snapshot snapshot = api.snapshotApi().createSnapshot(Snapshot.Request.creatingBuilder()
-              .storageId(storageId)
+      assertDataCenterAvailable(dataCenter);
+      Snapshot snapshot = api.snapshotApi().createSnapshot(
+              Snapshot.Request.creatingBuilder()
+              .storageId(storage.id())
               .description("my description")
               .name("test snapshot")
               .build());
 
       assertNotNull(snapshot);
+      assertSnapshotAvailable(snapshot.id());
 
-      snapshotWaitingPredicate.apply(snapshot.id());
-
-      snapshotId = snapshot.id();
+      createdSnapshotId = snapshot.id();
    }
 
    @Test(dependsOnMethods = "testCreateSnapshot")
@@ -81,20 +100,22 @@ public class SnapshotApiLiveTest extends BaseProfitBricksLiveTest {
 
    @Test(dependsOnMethods = "testCreateSnapshot")
    public void testGetSnapshot() {
-      Snapshot snapshot = api.snapshotApi().getSnapshot(snapshotId);
+      Snapshot snapshot = api.snapshotApi().getSnapshot(createdSnapshotId);
 
       assertNotNull(snapshot);
-      assertEquals(snapshot.id(), snapshotId);
+      assertEquals(snapshot.id(), createdSnapshotId);
    }
 
-   @Test(dependsOnMethods = "testCreateSnapshot")
+   @Test(dependsOnMethods = "testGetSnapshot")
    public void testUpdateSnapshot() {
-
+      assertSnapshotAvailable(createdSnapshotId);
       String newName = "new name";
+      String newDescription = "new description";
 
-      api.snapshotApi().updateSnapshot(Snapshot.Request.updatingBuilder()
-              .id(snapshotId)
-              .description("new description")
+      String requestId = api.snapshotApi().updateSnapshot(
+              Snapshot.Request.updatingBuilder()
+              .id(createdSnapshotId)
+              .description(newDescription)
               .name(newName)
               .bootable(true)
               .osType(OsType.LINUX)
@@ -107,30 +128,26 @@ public class SnapshotApiLiveTest extends BaseProfitBricksLiveTest {
               .isRamHotPlug(true)
               .isRamHotUnPlug(true)
               .build());
-
-      Snapshot snapshot = api.snapshotApi().getSnapshot(snapshotId);
-
-      assertNotNull(snapshot);
-      assertEquals(snapshot.name(), newName);
+      assertNotNull(requestId);
    }
 
-   @Test(dependsOnMethods = "testCreateSnapshot")
+   @Test(dependsOnMethods = "testUpdateSnapshot")
    public void testRollbackSnapshot() {
-      String result = api.snapshotApi().rollbackSnapshot(Snapshot.Request.createRollbackPayload(snapshotId, storageId));
+      assertSnapshotAvailable(createdSnapshotId);
+      String requestid = api.snapshotApi().rollbackSnapshot(
+              Snapshot.Request.createRollbackPayload(createdSnapshotId, storage.id()));
+      assertNotNull(requestid);
+   }
 
-      assertNotNull(result);
+   @Test(dependsOnMethods = "testRollbackSnapshot", alwaysRun = true)
+   public void testDeleteSnapshot() {
+      assertSnapshotAvailable(createdSnapshotId);
+      boolean result = api.snapshotApi().deleteSnapshot(createdSnapshotId);
+      assertTrue(result, "Created snapshot wasn't deleted");
    }
 
    @AfterClass(alwaysRun = true)
-   public void testDeleteSnapshot() {
-      boolean result = api.snapshotApi().deleteSnapshot(snapshotId);
-
-      assertTrue(result);
-   }
-
-   private void initializeWaitPredicate() {
-      this.snapshotWaitingPredicate = Predicates2.retry(
-              new ProvisioningStatusPollingPredicate(api, ProvisioningStatusAware.SNAPSHOT, ProvisioningState.AVAILABLE),
-              2l * 60l, 2l, TimeUnit.SECONDS);
+   public void cleanUp() {
+      destroyDataCenter(dataCenter);
    }
 }

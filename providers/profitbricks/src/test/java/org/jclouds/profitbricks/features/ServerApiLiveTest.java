@@ -16,46 +16,35 @@
  */
 package org.jclouds.profitbricks.features;
 
-import com.google.common.base.Predicate;
-import com.google.common.collect.Iterables;
-import java.util.List;
-import java.util.concurrent.TimeUnit;
-import org.jclouds.profitbricks.BaseProfitBricksLiveTest;
-import org.jclouds.profitbricks.compute.internal.ProvisioningStatusAware;
-import org.jclouds.profitbricks.compute.internal.ProvisioningStatusPollingPredicate;
-import org.jclouds.profitbricks.domain.DataCenter;
-import org.jclouds.profitbricks.domain.ProvisioningState;
-import org.jclouds.profitbricks.domain.Server;
-import org.jclouds.util.Predicates2;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertTrue;
+
+import java.util.List;
+
+import org.jclouds.profitbricks.BaseProfitBricksLiveTest;
+import org.jclouds.profitbricks.domain.DataCenter;
+import org.jclouds.profitbricks.domain.ProvisioningState;
+import org.jclouds.profitbricks.domain.Server;
 import org.testng.annotations.AfterClass;
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
-@Test(groups = "live", testName = "ServerApiLiveTest", singleThreaded = true)
+@Test(groups = "live", testName = "ServerApiLiveTest")
 public class ServerApiLiveTest extends BaseProfitBricksLiveTest {
 
-   private Predicate<String> waitUntilAvailable;
    private DataCenter dataCenter;
    private String createdServerId;
 
-   @Override
-   protected void initialize() {
-      super.initialize();
-      List<DataCenter> dataCenters = api.dataCenterApi().getAllDataCenters();
-      assertFalse(dataCenters.isEmpty(), "Must atleast have 1 datacenter available for server testing.");
-
-      this.dataCenter = Iterables.getFirst(dataCenters, null);
-
-      this.waitUntilAvailable = Predicates2.retry(
-              new ProvisioningStatusPollingPredicate(api, ProvisioningStatusAware.SERVER, ProvisioningState.AVAILABLE),
-              2l * 60l, 2l, TimeUnit.SECONDS);
+   @BeforeClass
+   public void setupTest() {
+      dataCenter = findOrCreateDataCenter("serverApiLiveTest-" + System.currentTimeMillis());
    }
 
    @Test
    public void testCreateServer() {
+      assertDataCenterAvailable(dataCenter);
       String serverId = api.serverApi().createServer(
               Server.Request.creatingBuilder()
               .dataCenterId(dataCenter.id())
@@ -65,6 +54,9 @@ public class ServerApiLiveTest extends BaseProfitBricksLiveTest {
               .build());
 
       assertNotNull(serverId);
+      assertDataCenterAvailable(dataCenter);
+      assertNodeRunning(serverId);
+
       this.createdServerId = serverId;
    }
 
@@ -84,15 +76,9 @@ public class ServerApiLiveTest extends BaseProfitBricksLiveTest {
       assertFalse(servers.isEmpty());
    }
 
-   @Test(dependsOnMethods = "testCreateServer")
-   public void testWaitUntilAvailable() {
-      boolean available = waitUntilAvailable.apply(createdServerId);
-
-      assertTrue(available);
-   }
-
-   @Test(dependsOnMethods = "testWaitUntilAvailable")
+   @Test(dependsOnMethods = "testGetServer")
    public void testUpdateServer() {
+      assertDataCenterAvailable(dataCenter);
       String requestId = api.serverApi().updateServer(
               Server.Request.updatingBuilder()
               .id(createdServerId)
@@ -102,7 +88,7 @@ public class ServerApiLiveTest extends BaseProfitBricksLiveTest {
               .build());
 
       assertNotNull(requestId);
-      waitUntilAvailable.apply(createdServerId);
+      assertDataCenterAvailable(dataCenter);
 
       Server server = api.serverApi().getServer(createdServerId);
       assertEquals(server.state(), ProvisioningState.AVAILABLE);
@@ -112,11 +98,8 @@ public class ServerApiLiveTest extends BaseProfitBricksLiveTest {
    public void testStopServer() {
       String requestId = api.serverApi().stopServer(createdServerId);
       assertNotNull(requestId);
+      assertNodeSuspended(createdServerId);
 
-      Predicate<String> waitUntilInactive = Predicates2.retry(new ProvisioningStatusPollingPredicate(
-              api, ProvisioningStatusAware.SERVER, ProvisioningState.INACTIVE), 2l * 60l, 2l, TimeUnit.SECONDS);
-
-      waitUntilInactive.apply(createdServerId);
       Server server = api.serverApi().getServer(createdServerId);
       assertEquals(server.status(), Server.Status.SHUTOFF);
    }
@@ -125,20 +108,22 @@ public class ServerApiLiveTest extends BaseProfitBricksLiveTest {
    public void testStartServer() {
       String requestId = api.serverApi().startServer(createdServerId);
       assertNotNull(requestId);
-
-      waitUntilAvailable.apply(createdServerId);
+      assertNodeRunning(createdServerId);
 
       Server server = api.serverApi().getServer(createdServerId);
       assertEquals(server.status(), Server.Status.RUNNING);
    }
 
-   @AfterClass(alwaysRun = true)
+   @Test(dependsOnMethods = "testStartServer")
    public void testDeleteServer() {
-      if (createdServerId != null) {
-         boolean result = api.serverApi().deleteServer(createdServerId);
+      assertDataCenterAvailable(dataCenter);
+      boolean result = api.serverApi().deleteServer(createdServerId);
+      assertTrue(result, "Created test server was not deleted.");
+   }
 
-         assertTrue(result, "Created test server was not deleted.");
-      }
+   @AfterClass(alwaysRun = true)
+   public void cleanUp() {
+      destroyDataCenter(dataCenter);
    }
 
 }

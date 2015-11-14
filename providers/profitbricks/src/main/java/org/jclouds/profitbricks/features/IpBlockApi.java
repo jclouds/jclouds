@@ -17,14 +17,17 @@
 package org.jclouds.profitbricks.features;
 
 import java.util.List;
+
 import javax.inject.Named;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
+
 import org.jclouds.Fallbacks;
 import org.jclouds.http.filters.BasicAuthentication;
 import org.jclouds.profitbricks.domain.IpBlock;
+import org.jclouds.profitbricks.domain.Location;
 import org.jclouds.profitbricks.http.filters.ProfitBricksSoapMessageEnvelope;
 import org.jclouds.profitbricks.http.parser.RequestIdOnlyResponseHandler;
 import org.jclouds.profitbricks.http.parser.ipblock.IpBlockListResponseHandler;
@@ -58,7 +61,7 @@ public interface IpBlockApi {
    @Named("publicipblock:reserve")
    @Payload("<ws:reservePublicIpBlock><request><blockSize>{blockSize}</blockSize><location>{location}</location></request></ws:reservePublicIpBlock>")
    @XMLResponseParser(IpBlockResponseHandler.class)
-   IpBlock reservePublicIpBlock(@PayloadParam("blockSize") String blockSize, @PayloadParam("location") String location);
+   IpBlock reservePublicIpBlock(@PayloadParam("blockSize") int blockSize, @PayloadParam("location") Location location);
 
    @POST
    @Named("publicipblock:addip")

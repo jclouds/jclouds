@@ -16,79 +16,58 @@
  */
 package org.jclouds.profitbricks.features;
 
-import com.google.common.collect.Iterables;
-
-import java.util.List;
-
-import org.jclouds.profitbricks.BaseProfitBricksLiveTest;
-import org.jclouds.profitbricks.domain.Firewall;
-import org.jclouds.profitbricks.domain.Nic;
-
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertTrue;
 
-import java.util.concurrent.TimeUnit;
+import java.util.List;
 
-import org.jclouds.profitbricks.compute.internal.ProvisioningStatusAware;
-import org.jclouds.profitbricks.compute.internal.ProvisioningStatusPollingPredicate;
+import org.jclouds.profitbricks.BaseProfitBricksLiveTest;
+import org.jclouds.profitbricks.domain.DataCenter;
+import org.jclouds.profitbricks.domain.Firewall;
+import org.jclouds.profitbricks.domain.Nic;
 import org.jclouds.profitbricks.domain.Firewall.Protocol;
-import org.jclouds.profitbricks.domain.ProvisioningState;
-import org.jclouds.util.Predicates2;
 import org.testng.annotations.AfterClass;
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
-import com.google.common.base.Predicate;
 import com.google.common.collect.ImmutableList;
 
-@Test(groups = "live", testName = "FirewallApiLiveTest", singleThreaded = true)
+
+@Test(groups = "live", testName = "FirewallApiLiveTest")
 public class FirewallApiLiveTest extends BaseProfitBricksLiveTest {
 
-   private Predicate<String> waitUntilAvailable;
+   private DataCenter dataCenter;
    private Nic nic;
 
    private Firewall createdFirewall;
-   private Firewall.Rule createdFirewallRule;
 
-   @Override
-   protected void initialize() {
-      super.initialize();
-      List<Nic> nics = api.nicApi().getAllNics();
-      assertFalse(nics.isEmpty(), "Must atleast have 1 NIC available for firewall testing.");
-
-      this.nic = Iterables.tryFind(nics, new Predicate<Nic>() {
-
-         @Override
-         public boolean apply(Nic input) {
-            return input.state() == ProvisioningState.AVAILABLE;
-         }
-      }).orNull();
-
-      assertNotNull(nic, "No available NIC for firewall testing was found.");
-
-      this.waitUntilAvailable = Predicates2.retry(
-              new ProvisioningStatusPollingPredicate(api, ProvisioningStatusAware.NIC, ProvisioningState.AVAILABLE),
-              2l * 60l, 2l, TimeUnit.SECONDS);
+   @BeforeClass
+   public void setupTest() {
+      dataCenter = findOrCreateDataCenter("firewallApiLiveTest" + System.currentTimeMillis());
+      nic = findOrCreateNic(dataCenter);
    }
 
    @Test
    public void testAddFirewallRuleToNic() {
+      assertDataCenterAvailable(dataCenter);
       Firewall firewall = api.firewallApi().addFirewallRuleToNic(
-              Firewall.Request.createAddRulePayload(nic.id(), ImmutableList.of(
+              Firewall.Request.createAddRulePayload(
+                      nic.id(), ImmutableList.of(
                               Firewall.Rule.builder()
                               .name("test-rule-tcp")
                               .protocol(Protocol.TCP)
                               .build()
-                      ))
+                      )
+              )
       );
 
       assertNotNull(firewall);
-      assertNotNull(firewall.rules());
+      assertFalse(firewall.rules().isEmpty());
+      assertDataCenterAvailable(dataCenter);
 
-      waitUntilAvailable.apply(nic.id());
       createdFirewall = firewall;
-      createdFirewallRule = Iterables.getOnlyElement(firewall.rules());
    }
 
    @Test(dependsOnMethods = "testAddFirewallRuleToNic")
@@ -109,37 +88,52 @@ public class FirewallApiLiveTest extends BaseProfitBricksLiveTest {
 
    @Test(dependsOnMethods = "testAddFirewallRuleToNic")
    public void testActivateFirewall() {
-      boolean result = api.firewallApi().activateFirewall(ImmutableList.of(createdFirewall.id()));
-
-      waitUntilAvailable.apply(nic.id());
-
+      assertDataCenterAvailable(dataCenter);
+      boolean result = api.firewallApi().activateFirewall(
+              ImmutableList.of(createdFirewall.id()));
+      assertDataCenterAvailable(dataCenter);
       assertTrue(result);
+
+      Firewall firewall = api.firewallApi().getFirewall(createdFirewall.id());
+      assertTrue(firewall.active(), "Firewall wasn't activated");
    }
 
    @Test(dependsOnMethods = "testActivateFirewall")
    void testDeactivateFirewall() {
-      boolean result = api.firewallApi().deactivateFirewall(ImmutableList.of(createdFirewall.id()));
-
-      waitUntilAvailable.apply(nic.id());
-
+      assertDataCenterAvailable(dataCenter);
+      boolean result = api.firewallApi().deactivateFirewall(
+              ImmutableList.of(createdFirewall.id()));
+      assertDataCenterAvailable(dataCenter);
       assertTrue(result);
+
+      Firewall firewall = api.firewallApi().getFirewall(createdFirewall.id());
+      assertFalse(firewall.active(), "Firewall wasn't deactivated");
    }
 
-   @Test(dependsOnMethods = "testActivateFirewall")
+   @Test(dependsOnMethods = "testDeactivateFirewall")
    void testRemoveFirewallRule() {
-      boolean result = api.firewallApi().removeFirewallRules(ImmutableList.of(createdFirewallRule.id()));
+      assertDataCenterAvailable(dataCenter);
+      for (Firewall.Rule rule : createdFirewall.rules()) {
+         boolean result = api.firewallApi().removeFirewallRules(
+                 ImmutableList.of(rule.id()));
 
-      waitUntilAvailable.apply(nic.id());
+         assertTrue(result);
+         assertDataCenterAvailable(dataCenter);
 
-      assertTrue(result);
+      }
+      Firewall firewall = api.firewallApi().getFirewall(createdFirewall.id());
+      assertTrue(firewall.rules().isEmpty(), "Not all rules removed");
+   }
+
+   @Test(dependsOnMethods = "testRemoveFirewallRule")
+   public void testDeleteFirewall() {
+      assertDataCenterAvailable(dataCenter);
+      boolean result = api.firewallApi().deleteFirewall(ImmutableList.of(createdFirewall.id()));
+      assertTrue(result, "Created firewall was not deleted.");
    }
 
    @AfterClass(alwaysRun = true)
-   public void testDeleteFirewall() {
-      if (createdFirewall != null) {
-         boolean result = api.firewallApi().deleteFirewall(ImmutableList.of(createdFirewall.id()));
-
-         assertTrue(result, "Created firewall was not deleted.");
-      }
+   public void cleanUp() {
+      destroyDataCenter(dataCenter);
    }
 }

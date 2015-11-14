@@ -1,9 +1,12 @@
-<?xml version="1.0" ?>
-<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:ws="http://ws.api.profitbricks.com/">
-    <soapenv:Header/>
-    <soapenv:Body>
-        <ws:deleteNic>
-            <nicId>nic-id</nicId>
-        </ws:deleteNic>
-    </soapenv:Body>
-</soapenv:Envelope>
+<?xml version="1.0" encoding="UTF-8"?>
+<S:Envelope xmlns:S="http://schemas.xmlsoap.org/soap/envelope/">
+   <S:Body>
+      <ns2:deleteNicResponse xmlns:ns2="http://ws.api.profitbricks.com/">
+         <return>
+            <requestId>request-id</requestId>
+            <dataCenterId>datacenter-id</dataCenterId>
+            <dataCenterVersion>datacenter-version</dataCenterVersion>
+         </return>
+      </ns2:deleteNicResponse>
+   </S:Body>
+</S:Envelope>

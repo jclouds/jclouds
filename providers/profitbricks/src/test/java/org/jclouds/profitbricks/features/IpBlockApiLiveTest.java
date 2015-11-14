@@ -16,45 +16,46 @@
  */
 package org.jclouds.profitbricks.features;
 
-import com.google.common.collect.Iterables;
-import java.util.List;
-import org.jclouds.profitbricks.BaseProfitBricksLiveTest;
-import org.jclouds.profitbricks.domain.IpBlock;
-import org.jclouds.profitbricks.domain.Location;
-import org.jclouds.profitbricks.domain.Nic;
 import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertNotNull;
+import static org.testng.Assert.assertTrue;
+
+import java.util.List;
+
+import com.google.common.collect.Iterables;
+
+import org.jclouds.profitbricks.BaseProfitBricksLiveTest;
+import org.jclouds.profitbricks.domain.DataCenter;
+import org.jclouds.profitbricks.domain.IpBlock;
+import org.jclouds.profitbricks.domain.Nic;
+import org.testng.annotations.AfterClass;
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
-@Test(groups = "live", testName = "IpBlockApiLiveTest", singleThreaded = true)
+@Test(groups = "live", testName = "IpBlockApiLiveTest")
 public class IpBlockApiLiveTest extends BaseProfitBricksLiveTest {
 
-   private String nicid;
+   private DataCenter dataCenter;
+   private Nic nic;
+
    private IpBlock newIpBlock;
 
-   @Override
-   public void initialize() {
-      super.initialize();
-
-      List<Nic> nics = api.nicApi().getAllNics();
-
-      assertFalse(nics.isEmpty(), "At least one NIC is requred to test IpBlocks");
-
-      Nic nic = Iterables.getFirst(nics, null);
-
-      nicid = nic.id();
+   @BeforeClass
+   public void setupTest() {
+      dataCenter = findOrCreateDataCenter("ipBlockApiLiveTest" + System.currentTimeMillis());
+      nic = findOrCreateNic(dataCenter);
    }
 
    @Test
    public void testReservePublicIpBlock() {
-      newIpBlock = api.ipBlockApi().reservePublicIpBlock("2", Location.US_LAS.getId());
+      assertDataCenterAvailable(dataCenter);
+      newIpBlock = api.ipBlockApi().reservePublicIpBlock(1, testLocation);
 
       assertNotNull(newIpBlock);
-      assertNotNull(newIpBlock.ips());
       assertFalse(newIpBlock.ips().isEmpty());
    }
 
-   @Test
+   @Test(dependsOnMethods = "testReservePublicIpBlock")
    public void testGetAllIpBlocks() {
       List<IpBlock> ipBlocks = api.ipBlockApi().getAllIpBlock();
 
@@ -71,22 +72,40 @@ public class IpBlockApiLiveTest extends BaseProfitBricksLiveTest {
 
    @Test(dependsOnMethods = "testReservePublicIpBlock")
    public void testAddPublicIpToNic() {
-      String requestId = api.ipBlockApi().addPublicIpToNic(newIpBlock.ips().get(0), nicid);
+      assertDataCenterAvailable(dataCenter);
+      String ipToAdd = Iterables.getFirst(newIpBlock.ips(), null);
+      String requestId = api.ipBlockApi().addPublicIpToNic(
+              ipToAdd, nic.id());
 
       assertNotNull(requestId);
+      assertDataCenterAvailable(dataCenter);
+      List<String> ips = api.nicApi().getNic(nic.id()).ips();
+      assertTrue(ips.contains(ipToAdd), "NIC didn't contain added public ip");
    }
 
    @Test(dependsOnMethods = "testAddPublicIpToNic")
    public void testRemovePublicIpFromNic() {
-      String requestId = api.ipBlockApi().removePublicIpFromNic(newIpBlock.ips().get(0), nicid);
+      assertDataCenterAvailable(dataCenter);
+      String ipToRemove = Iterables.getFirst(newIpBlock.ips(), null);
+      String requestId = api.ipBlockApi().removePublicIpFromNic(
+              ipToRemove, nic.id());
 
       assertNotNull(requestId);
+      assertDataCenterAvailable(dataCenter);
+      List<String> ips = api.nicApi().getNic(nic.id()).ips();
+      assertFalse(ips.contains(ipToRemove), "NIC still contains removed public ip");
    }
 
    @Test(dependsOnMethods = "testRemovePublicIpFromNic")
    public void testReleasePublicIpBlock() {
+      assertDataCenterAvailable(dataCenter);
       String requestId = api.ipBlockApi().releasePublicIpBlock(newIpBlock.id());
 
       assertNotNull(requestId);
+   }
+
+   @AfterClass(alwaysRun = true)
+   public void cleanUp() {
+      destroyDataCenter(dataCenter);
    }
 }

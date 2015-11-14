@@ -21,7 +21,9 @@ import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
+
 import java.util.List;
+
 import org.jclouds.Fallbacks;
 import org.jclouds.http.filters.BasicAuthentication;
 import org.jclouds.profitbricks.binder.loadbalancer.CreateLoadBalancerRequestBinder;
@@ -31,6 +33,7 @@ import org.jclouds.profitbricks.binder.loadbalancer.UpdateLoadBalancerRequestBin
 import org.jclouds.profitbricks.domain.LoadBalancer;
 import org.jclouds.profitbricks.http.filters.ProfitBricksSoapMessageEnvelope;
 import org.jclouds.profitbricks.http.parser.RequestIdOnlyResponseHandler;
+import org.jclouds.profitbricks.http.parser.loadbalancer.LoadBalancerIdOnlyResponseHandler;
 import org.jclouds.profitbricks.http.parser.loadbalancer.LoadBalancerListResponseHandler;
 import org.jclouds.profitbricks.http.parser.loadbalancer.LoadBalancerResponseHandler;
 import org.jclouds.rest.annotations.Fallback;
@@ -62,7 +65,7 @@ public interface LoadBalancerApi {
    @POST
    @Named("loadbalancer:create")
    @MapBinder(CreateLoadBalancerRequestBinder.class)
-   @XMLResponseParser(RequestIdOnlyResponseHandler.class)
+   @XMLResponseParser(LoadBalancerIdOnlyResponseHandler.class)
    String createLoadBalancer(@PayloadParam("loadbalancer") LoadBalancer.Request.CreatePayload payload);
 
    @POST
@@ -72,10 +75,10 @@ public interface LoadBalancerApi {
    LoadBalancer registerLoadBalancer(@PayloadParam("loadbalancer") LoadBalancer.Request.RegisterPayload payload);
 
    @POST
-   @Named("loadbalancer:Deregister")
+   @Named("loadbalancer:deregister")
    @MapBinder(DeregisterLoadBalancerRequestBinder.class)
-   @XMLResponseParser(LoadBalancerResponseHandler.class)
-   LoadBalancer deregisterLoadBalancer(@PayloadParam("loadbalancer") LoadBalancer.Request.DeregisterPayload payload);
+   @XMLResponseParser(RequestIdOnlyResponseHandler.class)
+   String deregisterLoadBalancer(@PayloadParam("loadbalancer") LoadBalancer.Request.DeregisterPayload payload);
 
    @POST
    @Named("loadbalancer:delete")
@@ -85,6 +88,6 @@ public interface LoadBalancerApi {
    @POST
    @Named("loadbalancer:update")
    @MapBinder(UpdateLoadBalancerRequestBinder.class)
-   @XMLResponseParser(LoadBalancerResponseHandler.class)
-   LoadBalancer updateLoadBalancer(@PayloadParam("loadbalancer") LoadBalancer.Request.UpdatePayload payload);
+   @XMLResponseParser(RequestIdOnlyResponseHandler.class)
+   String updateLoadBalancer(@PayloadParam("loadbalancer") LoadBalancer.Request.UpdatePayload payload);
 }

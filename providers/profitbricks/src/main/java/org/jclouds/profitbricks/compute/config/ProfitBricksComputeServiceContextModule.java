@@ -16,10 +16,15 @@
  */
 package org.jclouds.profitbricks.compute.config;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+import static org.jclouds.compute.config.ComputeServiceProperties.TIMEOUT_NODE_RUNNING;
+import static org.jclouds.compute.config.ComputeServiceProperties.TIMEOUT_NODE_SUSPENDED;
 import static org.jclouds.profitbricks.config.ProfitBricksComputeProperties.POLL_PERIOD;
 import static org.jclouds.profitbricks.config.ProfitBricksComputeProperties.POLL_MAX_PERIOD;
 import static org.jclouds.profitbricks.config.ProfitBricksComputeProperties.POLL_PREDICATE_DATACENTER;
+import static org.jclouds.profitbricks.config.ProfitBricksComputeProperties.POLL_PREDICATE_SNAPSHOT;
 import static org.jclouds.profitbricks.config.ProfitBricksComputeProperties.POLL_TIMEOUT;
+import static org.jclouds.util.Predicates2.retry;
 
 import java.util.concurrent.TimeUnit;
 
@@ -49,11 +54,8 @@ import org.jclouds.profitbricks.compute.function.LocationToLocation;
 import org.jclouds.profitbricks.compute.function.ProvisionableToImage;
 import org.jclouds.profitbricks.compute.function.ServerToNodeMetadata;
 import org.jclouds.profitbricks.compute.function.StorageToVolume;
-import org.jclouds.profitbricks.compute.internal.ProvisioningStatusAware;
-import org.jclouds.profitbricks.compute.internal.ProvisioningStatusPollingPredicate;
 import org.jclouds.profitbricks.domain.ProvisioningState;
 import org.jclouds.profitbricks.domain.Provisionable;
-import org.jclouds.util.Predicates2;
 
 import com.google.common.base.Function;
 import com.google.common.base.Predicate;
@@ -101,10 +103,26 @@ public class ProfitBricksComputeServiceContextModule extends
    @Provides
    @Singleton
    @Named(POLL_PREDICATE_DATACENTER)
-   Predicate<String> provideWaitDataCenterUntilAvailablePredicate(
+   Predicate<String> provideDataCenterAvailablePredicate(
            final ProfitBricksApi api, ComputeConstants constants) {
-      return Predicates2.retry(new ProvisioningStatusPollingPredicate(
-              api, ProvisioningStatusAware.DATACENTER, ProvisioningState.AVAILABLE),
+      return retry(new DataCenterProvisioningStatePredicate(
+              api, ProvisioningState.AVAILABLE),
+              constants.pollTimeout(), constants.pollPeriod(), constants.pollMaxPeriod(), TimeUnit.SECONDS);
+   }
+
+   @Provides
+   @Named(TIMEOUT_NODE_RUNNING)
+   Predicate<String> provideServerRunningPredicate(final ProfitBricksApi api, ComputeConstants constants) {
+      return retry(new ServerStatusPredicate(
+              api, Server.Status.RUNNING),
+              constants.pollTimeout(), constants.pollPeriod(), constants.pollMaxPeriod(), TimeUnit.SECONDS);
+   }
+
+   @Provides
+   @Named(TIMEOUT_NODE_SUSPENDED)
+   Predicate<String> provideServerSuspendedPredicate(final ProfitBricksApi api, ComputeConstants constants) {
+      return retry(new ServerStatusPredicate(
+              api, Server.Status.SHUTOFF),
               constants.pollTimeout(), constants.pollPeriod(), constants.pollMaxPeriod(), TimeUnit.SECONDS);
    }
 
@@ -115,6 +133,69 @@ public class ProfitBricksComputeServiceContextModule extends
       closer.addToClose(provisioningManager);
 
       return provisioningManager;
+   }
+
+   @Provides
+   @Singleton
+   @Named(POLL_PREDICATE_SNAPSHOT)
+   Predicate<String> provideSnapshotAvailablePredicate(final ProfitBricksApi api, ComputeConstants constants) {
+      return retry(new SnapshotProvisioningStatePredicate(
+              api, ProvisioningState.AVAILABLE),
+              constants.pollTimeout(), constants.pollPeriod(), constants.pollMaxPeriod(), TimeUnit.SECONDS);
+   }
+
+   static class DataCenterProvisioningStatePredicate implements Predicate<String> {
+
+      private final ProfitBricksApi api;
+      private final ProvisioningState expectedState;
+
+      public DataCenterProvisioningStatePredicate(ProfitBricksApi api, ProvisioningState expectedState) {
+         this.api = checkNotNull(api, "api must not be null");
+         this.expectedState = checkNotNull(expectedState, "expectedState must not be null");
+      }
+
+      @Override
+      public boolean apply(String input) {
+         checkNotNull(input, "datacenter id");
+         return api.dataCenterApi().getDataCenterState(input) == expectedState;
+      }
+
+   }
+
+   static class ServerStatusPredicate implements Predicate<String> {
+
+      private final ProfitBricksApi api;
+      private final Server.Status expectedStatus;
+
+      public ServerStatusPredicate(ProfitBricksApi api, Server.Status expectedStatus) {
+         this.api = checkNotNull(api, "api must not be null");
+         this.expectedStatus = checkNotNull(expectedStatus, "expectedStatus must not be null");
+      }
+
+      @Override
+      public boolean apply(String input) {
+         checkNotNull(input, "server id");
+         return api.serverApi().getServer(input).status() == expectedStatus;
+      }
+
+   }
+
+   static class SnapshotProvisioningStatePredicate implements Predicate<String> {
+
+      private final ProfitBricksApi api;
+      private final ProvisioningState expectedState;
+
+      public SnapshotProvisioningStatePredicate(ProfitBricksApi api, ProvisioningState expectedState) {
+         this.api = checkNotNull(api, "api must not be null");
+         this.expectedState = checkNotNull(expectedState, "expectedState must not be null");
+      }
+
+      @Override
+      public boolean apply(String input) {
+         checkNotNull(input, "snapshot id");
+         return api.snapshotApi().getSnapshot(input).state() == expectedState;
+      }
+
    }
 
    @Singleton

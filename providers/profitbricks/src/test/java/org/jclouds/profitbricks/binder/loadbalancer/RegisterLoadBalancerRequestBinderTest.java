@@ -16,11 +16,12 @@
  */
 package org.jclouds.profitbricks.binder.loadbalancer;
 
-import com.google.common.collect.Lists;
-import java.util.List;
-import org.jclouds.profitbricks.domain.LoadBalancer;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
+
+import org.jclouds.profitbricks.domain.LoadBalancer;
+
+import com.google.common.collect.ImmutableList;
 import org.testng.annotations.Test;
 
 @Test(groups = "unit", testName = "RegisterLoadBalancerRequestBinderTest")
@@ -29,13 +30,8 @@ public class RegisterLoadBalancerRequestBinderTest {
    @Test
    public void testRegisterPayload() {
       RegisterLoadBalancerRequestBinder binder = new RegisterLoadBalancerRequestBinder();
-      List<String> serverIds = Lists.newArrayList();
-      serverIds.add("1");
-      serverIds.add("2");
-
-      LoadBalancer.Request.RegisterPayload payload = LoadBalancer.Request.createRegisteringPaylod("load-balancer-id", serverIds);
-
-      String actual = binder.createPayload(payload);
+      String actual = binder.createPayload(LoadBalancer.Request.createRegisteringPaylod(
+              "load-balancer-id", ImmutableList.of("1", "2")));
 
       assertNotNull(actual, "Binder returned null payload");
       assertEquals(expectedPayload, actual);
@@ -43,10 +39,8 @@ public class RegisterLoadBalancerRequestBinderTest {
 
    private final String expectedPayload
            = ("        <ws:registerServersOnLoadBalancer>\n"
-           + "             <request>"
            + "                <loadBalancerId>load-balancer-id</loadBalancerId>\n"
            + "                <serverIds>1</serverIds>\n"
            + "                <serverIds>2</serverIds>\n"
-           + "             </request>"
            + "        </ws:registerServersOnLoadBalancer>").replaceAll("\\s+", "");
 }

@@ -19,6 +19,7 @@ package org.jclouds.profitbricks.config;
 public class ProfitBricksComputeProperties {
 
    public static final String POLL_PREDICATE_DATACENTER = "jclouds.profitbricks.predicate.datacenter";
+   public static final String POLL_PREDICATE_SNAPSHOT = "jclouds.profitbricks.predicate.snapshot";
 
    public static final String POLL_TIMEOUT = "jclouds.profitbricks.poll.timeout";
    public static final String POLL_PERIOD = "jclouds.profitbricks.operation.poll.initial-period";

@@ -119,12 +119,12 @@ public class IpBlockApiMockTest extends BaseProfitBricksMockTest {
       ProfitBricksApi pbApi = api(server.getUrl(rootUrl));
       IpBlockApi api = pbApi.ipBlockApi();
 
-      String blockSize = "2";
+      int blockSize = 2;
       Location location = Location.US_LAS;
 
       String content = "<ws:reservePublicIpBlock><request><blockSize>" + blockSize + "</blockSize><location>" + location.getId() + "</location></request></ws:reservePublicIpBlock>";
       try {
-         IpBlock ipBlock = api.reservePublicIpBlock(blockSize, location.getId());
+         IpBlock ipBlock = api.reservePublicIpBlock(blockSize, location);
          assertRequestHasCommonProperties(server.takeRequest(), content);
          assertNotNull(ipBlock);
       } finally {

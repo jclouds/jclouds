@@ -16,51 +16,48 @@
  */
 package org.jclouds.profitbricks.features;
 
-import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertNotNull;
 
-import java.util.List;
-
 import org.jclouds.profitbricks.BaseProfitBricksLiveTest;
+import org.jclouds.profitbricks.domain.DataCenter;
 import org.jclouds.profitbricks.domain.Drive;
 import org.jclouds.profitbricks.domain.Image;
 import org.jclouds.profitbricks.domain.Server;
 import org.testng.annotations.Test;
+import org.testng.annotations.AfterClass;
+import org.testng.annotations.BeforeClass;
 
+import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
 
-@Test(groups = "live", testName = "DrivesApiLiveTest", singleThreaded = true)
+@Test(groups = "live", testName = "DrivesApiLiveTest")
 public class DrivesApiLiveTest extends BaseProfitBricksLiveTest {
 
-   public String serverId;
-   public String imageId;
+   private DataCenter dataCenter;
+   private Server server;
+   private Image image;
 
-   @Override
-   protected void initialize() {
-      super.initialize();
+   @BeforeClass
+   public void setupTest() {
+      dataCenter = findOrCreateDataCenter("drivesApiLiveTest" + System.currentTimeMillis());
+      server = findOrCreateServer(dataCenter);
+      image = Iterables.tryFind(api.imageApi().getAllImages(), new Predicate<Image>() {
 
-      List<Server> servers = api.serverApi().getAllServers();
-      assertFalse(servers.isEmpty(), "At least one server is required to run drives test.");
-
-      Server server = Iterables.getFirst(servers, null);
-      assertNotNull(server);
-
-      this.serverId = server.id();
-
-      List<Image> images = api.imageApi().getAllImages();
-      assertFalse(images.isEmpty(), "At least one image is required to run drives test.");
-
-      Image image = Iterables.getFirst(images, null);
-      assertNotNull(image);
-
-      this.imageId = image.id();
+         @Override
+         public boolean apply(Image input) {
+            return input.location() == dataCenter.location()
+                    && input.type() == Image.Type.CDROM;
+         }
+      }).get();
    }
 
    @Test
    public void addRomDriveToServerTest() {
-      String requestId = api.drivesApi().addRomDriveToServer(Drive.Request.AddRomDriveToServerPayload.builder()
-              .serverId(serverId)
-              .imageId("05cadf29-6c12-11e4-beeb-52540066fee9")
+      assertDataCenterAvailable(dataCenter);
+      String requestId = api.drivesApi().addRomDriveToServer(
+              Drive.Request.AddRomDriveToServerPayload.builder()
+              .serverId(server.id())
+              .imageId(image.id())
               .deviceNumber("0")
               .build());
       assertNotNull(requestId);
@@ -68,8 +65,13 @@ public class DrivesApiLiveTest extends BaseProfitBricksLiveTest {
 
    @Test(dependsOnMethods = "addRomDriveToServerTest")
    public void removeRomDriveFromServerTest() {
-      String requestId = api.drivesApi().removeRomDriveFromServer(imageId, serverId);
-
+      assertDataCenterAvailable(dataCenter);
+      String requestId = api.drivesApi().removeRomDriveFromServer(image.id(), server.id());
       assertNotNull(requestId);
+   }
+
+   @AfterClass(alwaysRun = true)
+   public void cleanUp() {
+      destroyDataCenter(dataCenter);
    }
 }

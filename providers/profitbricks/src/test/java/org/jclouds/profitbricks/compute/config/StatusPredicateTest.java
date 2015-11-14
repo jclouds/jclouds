@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jclouds.profitbricks.compute.internal;
+package org.jclouds.profitbricks.compute.config;
 
 import static org.jclouds.profitbricks.internal.BaseProfitBricksMockTest.mockWebServer;
 import static org.testng.Assert.assertEquals;
@@ -22,7 +22,12 @@ import static org.testng.Assert.assertEquals;
 import java.util.concurrent.TimeUnit;
 
 import org.jclouds.profitbricks.ProfitBricksApi;
+import org.jclouds.profitbricks.compute.config.ProfitBricksComputeServiceContextModule.DataCenterProvisioningStatePredicate;
+import org.jclouds.profitbricks.compute.config.ProfitBricksComputeServiceContextModule.ServerStatusPredicate;
+import org.jclouds.profitbricks.compute.config.ProfitBricksComputeServiceContextModule.SnapshotProvisioningStatePredicate;
 import org.jclouds.profitbricks.domain.ProvisioningState;
+import org.jclouds.profitbricks.domain.Server;
+import org.jclouds.profitbricks.domain.Snapshot;
 import org.jclouds.profitbricks.internal.BaseProfitBricksMockTest;
 import org.jclouds.util.Predicates2;
 import org.testng.annotations.Test;
@@ -31,12 +36,12 @@ import com.google.common.base.Predicate;
 import com.squareup.okhttp.mockwebserver.MockResponse;
 import com.squareup.okhttp.mockwebserver.MockWebServer;
 
+
 /**
- * Tests for the {@link ProvisioningStatusPollingPredicate} class.
- * <p>
+ * Test class for {@link DataCenterProvisioningStatePredicate} and {@link ServerStatusPredicate}
  */
 @Test(groups = "unit", testName = "ProvisioningStatusPollingPredicateTest")
-public class ProvisioningStatusPollingPredicateTest extends BaseProfitBricksMockTest {
+public class StatusPredicateTest extends BaseProfitBricksMockTest {
 
    @Test
    public void testDataCenterPredicate() throws Exception {
@@ -56,7 +61,7 @@ public class ProvisioningStatusPollingPredicateTest extends BaseProfitBricksMock
       ProfitBricksApi pbApi = api(server.getUrl(rootUrl));
 
       Predicate<String> waitUntilAvailable = Predicates2.retry(
-              new ProvisioningStatusPollingPredicate(pbApi, ProvisioningStatusAware.DATACENTER, ProvisioningState.AVAILABLE),
+              new DataCenterProvisioningStatePredicate(pbApi, ProvisioningState.AVAILABLE),
               30l, 1l, TimeUnit.SECONDS);
 
       String id = "aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee";
@@ -89,48 +94,15 @@ public class ProvisioningStatusPollingPredicateTest extends BaseProfitBricksMock
       ProfitBricksApi pbApi = api(server.getUrl(rootUrl));
 
       Predicate<String> waitUntilAvailable = Predicates2.retry(
-              new ProvisioningStatusPollingPredicate(pbApi, ProvisioningStatusAware.SERVER, ProvisioningState.AVAILABLE),
+              new ServerStatusPredicate(pbApi, Server.Status.RUNNING),
               30l, 1l, TimeUnit.SECONDS);
 
       String id = "qwertyui-qwer-qwer-qwer-qwertyyuiiop";
       try {
          waitUntilAvailable.apply(id);
-         ProvisioningState finalState = pbApi.serverApi().getServer(id).state();
+         Server remoteServer = pbApi.serverApi().getServer(id);
+         assertEquals(remoteServer.status(), Server.Status.RUNNING);
          assertRequestHasCommonProperties(server.takeRequest());
-         assertEquals(finalState, ProvisioningState.AVAILABLE);
-      } finally {
-         pbApi.close();
-         server.shutdown();
-      }
-   }
-
-   @Test
-   public void testStoragePredicate() throws Exception {
-      MockWebServer server = mockWebServer();
-
-      byte[] payloadInProcess = payloadFromResource("/storage/storage-state-inprocess.xml");
-      byte[] payloadAvailable = payloadFromResource("/storage/storage.xml");
-
-      // wait 3 times
-      server.enqueue(new MockResponse().setBody(payloadInProcess));
-      server.enqueue(new MockResponse().setBody(payloadInProcess));
-      server.enqueue(new MockResponse().setBody(payloadInProcess));
-      server.enqueue(new MockResponse().setBody(payloadAvailable));
-
-      server.enqueue(new MockResponse().setBody(payloadAvailable));
-
-      ProfitBricksApi pbApi = api(server.getUrl(rootUrl));
-
-      Predicate<String> waitUntilAvailable = Predicates2.retry(
-              new ProvisioningStatusPollingPredicate(pbApi, ProvisioningStatusAware.STORAGE, ProvisioningState.AVAILABLE),
-              30l, 1l, TimeUnit.SECONDS);
-
-      String id = "qswdefrg-qaws-qaws-defe-rgrgdsvcxbrh";
-      try {
-         waitUntilAvailable.apply(id);
-         ProvisioningState finalState = pbApi.storageApi().getStorage(id).state();
-         assertRequestHasCommonProperties(server.takeRequest());
-         assertEquals(finalState, ProvisioningState.AVAILABLE);
       } finally {
          pbApi.close();
          server.shutdown();
@@ -155,15 +127,15 @@ public class ProvisioningStatusPollingPredicateTest extends BaseProfitBricksMock
       ProfitBricksApi pbApi = api(server.getUrl(rootUrl));
 
       Predicate<String> waitUntilAvailable = Predicates2.retry(
-              new ProvisioningStatusPollingPredicate(pbApi, ProvisioningStatusAware.SNAPSHOT, ProvisioningState.AVAILABLE),
+              new SnapshotProvisioningStatePredicate(pbApi, ProvisioningState.AVAILABLE),
               30l, 1l, TimeUnit.SECONDS);
 
       String id = "qswdefrg-qaws-qaws-defe-rgrgdsvcxbrh";
       try {
          waitUntilAvailable.apply(id);
-         ProvisioningState finalState = pbApi.snapshotApi().getSnapshot(id).state();
+         Snapshot snapshot = pbApi.snapshotApi().getSnapshot(id);
+         assertEquals(snapshot.state(), ProvisioningState.AVAILABLE);
          assertRequestHasCommonProperties(server.takeRequest());
-         assertEquals(finalState, ProvisioningState.AVAILABLE);
       } finally {
          pbApi.close();
          server.shutdown();

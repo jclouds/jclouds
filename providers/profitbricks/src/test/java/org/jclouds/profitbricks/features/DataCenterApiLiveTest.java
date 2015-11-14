@@ -20,6 +20,7 @@ import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertNull;
+import static org.testng.Assert.assertTrue;
 
 import java.util.List;
 
@@ -28,12 +29,10 @@ import org.jclouds.profitbricks.domain.DataCenter;
 import org.jclouds.profitbricks.domain.Location;
 import org.jclouds.profitbricks.domain.ProvisioningState;
 
-import static org.testng.Assert.assertTrue;
-
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.Test;
 
-@Test(groups = "live", testName = "DataCenterApiLiveTest", singleThreaded = true)
+@Test(groups = "live", testName = "DataCenterApiLiveTest")
 public class DataCenterApiLiveTest extends BaseProfitBricksLiveTest {
 
    private String dcId;
@@ -45,7 +44,7 @@ public class DataCenterApiLiveTest extends BaseProfitBricksLiveTest {
       );
 
       assertNotNull(dc);
-      dcWaitingPredicate.apply(dc.id());
+      assertDataCenterAvailable(dc);
 
       dcId = dc.id();
    }
@@ -87,7 +86,7 @@ public class DataCenterApiLiveTest extends BaseProfitBricksLiveTest {
       );
 
       assertNotNull(dataCenter);
-      dcWaitingPredicate.apply(dcId);
+      assertDataCenterAvailable(dataCenter);
 
       DataCenter fetchedDc = api.dataCenterApi().getDataCenter(dcId);
 
@@ -118,10 +117,7 @@ public class DataCenterApiLiveTest extends BaseProfitBricksLiveTest {
 
    @AfterClass(alwaysRun = true)
    public void testDeleteDataCenter() {
-      if (dcId != null) {
-         boolean result = api.dataCenterApi().deleteDataCenter(dcId);
-
-         assertTrue(result, "Created test data center was not deleted.");
-      }
+      boolean result = api.dataCenterApi().deleteDataCenter(dcId);
+      assertTrue(result, "Created test data center was not deleted.");
    }
 }

@@ -16,17 +16,20 @@
  */
 package org.jclouds.profitbricks.features;
 
-import com.squareup.okhttp.mockwebserver.MockResponse;
-import com.squareup.okhttp.mockwebserver.MockWebServer;
-import java.util.List;
-import org.jclouds.profitbricks.ProfitBricksApi;
-import org.jclouds.profitbricks.domain.Nic;
-import org.jclouds.profitbricks.internal.BaseProfitBricksMockTest;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertNull;
 import static org.testng.Assert.assertTrue;
+
+import java.util.List;
+
+import com.squareup.okhttp.mockwebserver.MockResponse;
+import com.squareup.okhttp.mockwebserver.MockWebServer;
+
+import org.jclouds.profitbricks.ProfitBricksApi;
+import org.jclouds.profitbricks.domain.Nic;
+import org.jclouds.profitbricks.internal.BaseProfitBricksMockTest;
 import org.testng.annotations.Test;
 
 @Test(groups = "unit", testName = "NicApiMockTest")
@@ -111,7 +114,7 @@ public class NicApiMockTest extends BaseProfitBricksMockTest {
               + "</ws:createNic>";
 
       try {
-         Nic nic = api.createNic(
+         String nicId = api.createNic(
                  Nic.Request.creatingBuilder()
                  .ip("192.168.0.1")
                  .name("nic-name")
@@ -121,7 +124,7 @@ public class NicApiMockTest extends BaseProfitBricksMockTest {
                  .build());
 
          assertRequestHasCommonProperties(server.takeRequest(), content);
-         assertNotNull(nic.id());
+         assertNotNull(nicId);
 
       } finally {
          pbApi.close();
@@ -147,7 +150,7 @@ public class NicApiMockTest extends BaseProfitBricksMockTest {
               + "</request>"
               + "</ws:updateNic>";
       try {
-         Nic nic = api.updateNic(Nic.Request.updatingBuilder()
+         String requestId = api.updateNic(Nic.Request.updatingBuilder()
                  .id("nic-id")
                  .ip("10.0.0.1")
                  .name("nic-name")
@@ -155,7 +158,7 @@ public class NicApiMockTest extends BaseProfitBricksMockTest {
                  .lanId(1)
                  .build());
          assertRequestHasCommonProperties(server.takeRequest(), content);
-         assertNotNull(nic);
+         assertEquals(requestId, "request-id");
       } finally {
          pbApi.close();
          server.shutdown();
@@ -176,13 +179,13 @@ public class NicApiMockTest extends BaseProfitBricksMockTest {
               + "<internetAccess>true</internetAccess>"
               + "</ws:setInternetAccess>";
       try {
-         Nic nic = api.setInternetAccess(Nic.Request.setInternetAccessBuilder()
+         String requestId = api.setInternetAccess(Nic.Request.setInternetAccessBuilder()
                  .dataCenterId("datacenter-id")
                  .lanId(1)
                  .internetAccess(true)
                  .build());
          assertRequestHasCommonProperties(server.takeRequest(), content);
-         assertNotNull(nic);
+         assertEquals(requestId, "request-id");
       } finally {
          pbApi.close();
          server.shutdown();

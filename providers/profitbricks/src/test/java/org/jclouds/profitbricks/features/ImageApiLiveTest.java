@@ -16,20 +16,24 @@
  */
 package org.jclouds.profitbricks.features;
 
-import com.google.common.collect.Iterables;
-import java.util.List;
-import org.jclouds.profitbricks.BaseProfitBricksLiveTest;
-import org.jclouds.profitbricks.domain.Image;
 import static org.testng.Assert.assertEquals;
+
 import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertNull;
+
+import java.util.List;
+
+import org.jclouds.profitbricks.BaseProfitBricksLiveTest;
+import org.jclouds.profitbricks.domain.Image;
 import org.testng.annotations.Test;
 
-@Test(groups = "live", testName = "ImageApiLiveTest", singleThreaded = true)
+import com.google.common.collect.Iterables;
+
+@Test(groups = "live", testName = "ImageApiLiveTest")
 public class ImageApiLiveTest extends BaseProfitBricksLiveTest {
 
-   private String imageId;
+   private Image image;
 
    @Test
    public void testGetAllImages() {
@@ -37,22 +41,22 @@ public class ImageApiLiveTest extends BaseProfitBricksLiveTest {
 
       assertNotNull(images);
       assertFalse(images.isEmpty(), "No images found.");
-      imageId = Iterables.getFirst(images, null).id();
+
+      image = Iterables.getFirst(images, null);
+      assertNotNull(image);
    }
 
    @Test(dependsOnMethods = "testGetAllImages")
    public void testGetImage() {
-      Image image = api.imageApi().getImage(imageId);
+      Image fetchedImage = api.imageApi().getImage(image.id());
 
-      assertNotNull(image);
-      assertEquals(image.id(), imageId);
+      assertNotNull(fetchedImage);
+      assertEquals(fetchedImage, image);
    }
 
    @Test
    public void testGetNonExistingImage() {
       String id = "random-non-existing-id";
-      Image image = api.imageApi().getImage(id);
-
-      assertNull(image, "Should've just returned null");
+      assertNull(api.imageApi().getImage(id), "Should've just returned null");
    }
 }

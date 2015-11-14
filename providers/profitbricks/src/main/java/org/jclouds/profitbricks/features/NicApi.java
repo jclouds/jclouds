@@ -37,7 +37,11 @@ import javax.ws.rs.Consumes;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.POST;
+
 import java.util.List;
+
+import org.jclouds.profitbricks.http.parser.RequestIdOnlyResponseHandler;
+import org.jclouds.profitbricks.http.parser.nic.NicIdOnlyResponseHandler;
 
 @RequestFilters({BasicAuthentication.class, ProfitBricksSoapMessageEnvelope.class})
 @Consumes(MediaType.TEXT_XML)
@@ -54,8 +58,8 @@ public interface NicApi {
    @POST
    @Named("nic:create")
    @MapBinder(CreateNicRequestBinder.class)
-   @XMLResponseParser(NicResponseHandler.class)
-   Nic createNic(@PayloadParam("nic") Nic.Request.CreatePayload payload);
+   @XMLResponseParser(NicIdOnlyResponseHandler.class)
+   String createNic(@PayloadParam("nic") Nic.Request.CreatePayload payload);
 
    @POST
    @Named("nic:get")
@@ -67,14 +71,14 @@ public interface NicApi {
    @POST
    @Named("nic:update")
    @MapBinder(UpdateNicRequestBinder.class)
-   @XMLResponseParser(NicResponseHandler.class)
-   Nic updateNic(@PayloadParam("nic") Nic.Request.UpdatePayload payload);
+   @XMLResponseParser(RequestIdOnlyResponseHandler.class)
+   String updateNic(@PayloadParam("nic") Nic.Request.UpdatePayload payload);
 
    @POST
    @Named("nic:setInternetAccess")
    @MapBinder(SetInternetAccessBinder.class)
-   @XMLResponseParser(NicResponseHandler.class)
-   Nic setInternetAccess(@PayloadParam("nic") Nic.Request.SetInternetAccessPayload payload);
+   @XMLResponseParser(RequestIdOnlyResponseHandler.class)
+   String setInternetAccess(@PayloadParam("nic") Nic.Request.SetInternetAccessPayload payload);
 
    @POST
    @Named("nic:delete")

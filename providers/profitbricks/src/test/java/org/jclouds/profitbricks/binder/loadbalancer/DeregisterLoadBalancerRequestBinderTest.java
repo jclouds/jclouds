@@ -16,11 +16,12 @@
  */
 package org.jclouds.profitbricks.binder.loadbalancer;
 
-import com.google.common.collect.Lists;
-import java.util.List;
-import org.jclouds.profitbricks.domain.LoadBalancer;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
+
+import com.google.common.collect.ImmutableList;
+
+import org.jclouds.profitbricks.domain.LoadBalancer;
 import org.testng.annotations.Test;
 
 @Test(groups = "unit", testName = "DeregisterLoadBalancerRequestBinderTest")
@@ -29,13 +30,9 @@ public class DeregisterLoadBalancerRequestBinderTest {
    @Test
    public void testDeregisterPayload() {
       DeregisterLoadBalancerRequestBinder binder = new DeregisterLoadBalancerRequestBinder();
-      List<String> serverIds = Lists.newArrayList();
-      serverIds.add("1");
-      serverIds.add("2");
 
-      LoadBalancer.Request.DeregisterPayload payload = LoadBalancer.Request.createDeregisteringPayload("load-balancer-id", serverIds);
-
-      String actual = binder.createPayload(payload);
+      String actual = binder.createPayload(LoadBalancer.Request.createDeregisteringPayload(
+              "load-balancer-id", ImmutableList.of("1", "2")));
 
       assertNotNull(actual, "Binder returned null payload");
       assertEquals(expectedPayload, actual);
@@ -43,10 +40,8 @@ public class DeregisterLoadBalancerRequestBinderTest {
 
    private final String expectedPayload
            = ("        <ws:deregisterServersOnLoadBalancer>\n"
-           + "             <request>"
            + "                <serverIds>1</serverIds>\n"
            + "                <serverIds>2</serverIds>\n"
            + "                <loadBalancerId>load-balancer-id</loadBalancerId>\n"
-           + "             </request>"
            + "        </ws:deregisterServersOnLoadBalancer>").replaceAll("\\s+", "");
 }

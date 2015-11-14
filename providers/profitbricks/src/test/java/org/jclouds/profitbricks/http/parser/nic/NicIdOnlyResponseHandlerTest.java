@@ -14,14 +14,27 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jclouds.profitbricks.compute.internal;
+package org.jclouds.profitbricks.http.parser.nic;
 
-/**
- * An enumeration of ProfitBricks domain classes containing a property 'ProvisioningState'.
- *
- * @see ProvisioningStatusPollingPredicate
- */
-public enum ProvisioningStatusAware {
+import static org.testng.Assert.assertEquals;
 
-   DATACENTER, SERVER, STORAGE, NIC, SNAPSHOT;
+import org.jclouds.http.functions.ParseSax;
+import org.jclouds.profitbricks.http.parser.BaseResponseHandlerTest;
+import org.testng.annotations.Test;
+
+@Test(groups = "unit", testName = "NicIdOnlyResponseHandlerTest")
+public class NicIdOnlyResponseHandlerTest extends BaseResponseHandlerTest<String> {
+
+   @Override
+   protected ParseSax<String> createParser() {
+      return factory.create(injector.getInstance(NicIdOnlyResponseHandler.class));
+   }
+
+   @Test
+   public void testParseResponseFromCreateNic() {
+      ParseSax<String> parser = createParser();
+      String nicId = parser.parse(payloadFromResource("/nic/nic-create.xml"));
+      assertEquals("nic-id", nicId);
+   }
+
 }

@@ -52,4 +52,9 @@ public enum Location {
             return location;
       return UNRECOGNIZED;
    }
+
+   @Override
+   public String toString() {
+      return id;
+   }
 }
