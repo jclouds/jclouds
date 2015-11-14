@@ -974,7 +974,6 @@
           <version>3.0.1</version>
           <configuration>
             <omitVisitors>
-              CheckRelaxingNullnessAnnotation,
               CloneIdiom,
               DefaultEncodingDetector,
               EqualsOperandShouldHaveClassCompatibleWithThis,

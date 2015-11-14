@@ -18,8 +18,6 @@ package org.jclouds.collect;
 
 import java.util.Map.Entry;
 
-import org.jclouds.javax.annotation.Nullable;
-
 import com.google.common.base.Objects;
 
 
@@ -31,7 +29,7 @@ abstract class AbstractMapEntry<K, V> implements Entry<K, V> {
    }
 
    @Override
-   public boolean equals(@Nullable Object object) {
+   public boolean equals(Object object) {
       if (object instanceof Entry) {
          Entry<?, ?> that = (Entry<?, ?>) object;
          return Objects.equal(this.getKey(), that.getKey()) && Objects.equal(this.getValue(), that.getValue());
