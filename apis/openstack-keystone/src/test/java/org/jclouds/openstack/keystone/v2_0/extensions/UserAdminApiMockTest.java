@@ -48,7 +48,8 @@ public class UserAdminApiMockTest extends BaseOpenStackMockTest<KeystoneApi> {
       try {
          KeystoneApi keystoneApi = api(server.getUrl("/").toString(), "openstack-keystone");
          UserAdminApi userAdminApi = keystoneApi.getUserAdminApi().get();
-         CreateUserOptions createUserOptions = CreateUserOptions.Builder.email("john.smith@example.org").enabled(true);
+         CreateUserOptions createUserOptions = CreateUserOptions.Builder.email("john.smith@example.org").enabled(true)
+               .tenant("12345");
          User testUser = userAdminApi.create("jqsmith", "jclouds-password", createUserOptions);
 
          assertNotNull(testUser);
@@ -61,7 +62,7 @@ public class UserAdminApiMockTest extends BaseOpenStackMockTest<KeystoneApi> {
          assertEquals(createUserRequest.getRequestLine(), "POST /users HTTP/1.1");
          assertEquals(
                new String(createUserRequest.getBody()),
-               "{\"user\":{\"name\":\"jqsmith\",\"password\":\"jclouds-password\",\"email\":\"john.smith@example.org\",\"enabled\":true}}");
+               "{\"user\":{\"name\":\"jqsmith\",\"tenantId\":\"12345\",\"password\":\"jclouds-password\",\"email\":\"john.smith@example.org\",\"enabled\":true}}");
       } finally {
          server.shutdown();
       }
