@@ -23,8 +23,6 @@ import javax.inject.Inject;
 
 import org.jclouds.aws.ec2.domain.LaunchSpecification;
 import org.jclouds.aws.ec2.domain.LaunchSpecification.Builder;
-import org.jclouds.date.DateCodec;
-import org.jclouds.date.DateCodecFactory;
 import org.jclouds.ec2.domain.BlockDeviceMapping;
 import org.jclouds.http.functions.ParseSax.HandlerForGeneratedRequestWithResult;
 import org.jclouds.logging.Logger;
@@ -35,14 +33,11 @@ public class LaunchSpecificationHandler extends HandlerForGeneratedRequestWithRe
    @Resource
    protected Logger logger = Logger.NULL;
 
-   protected final DateCodec dateCodec;
    protected final Builder builder;
    protected final BlockDeviceMapping.Builder blockDeviceMappingBuilder;
 
    @Inject
-   public LaunchSpecificationHandler(DateCodecFactory dateCodecFactory, LaunchSpecification.Builder builder,
-            BlockDeviceMapping.Builder blockDeviceMappingBuilder) {
-      this.dateCodec = dateCodecFactory.iso8601();
+   public LaunchSpecificationHandler(LaunchSpecification.Builder builder, BlockDeviceMapping.Builder blockDeviceMappingBuilder) {
       this.builder = builder;
       this.blockDeviceMappingBuilder = blockDeviceMappingBuilder;
    }

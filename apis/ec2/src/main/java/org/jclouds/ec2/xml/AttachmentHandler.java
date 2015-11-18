@@ -22,8 +22,7 @@ import javax.annotation.Resource;
 import javax.inject.Inject;
 
 import org.jclouds.aws.util.AWSUtils;
-import org.jclouds.date.DateCodec;
-import org.jclouds.date.DateCodecFactory;
+import org.jclouds.date.DateService;
 import org.jclouds.ec2.domain.Attachment;
 import org.jclouds.http.functions.ParseSax;
 import org.jclouds.location.Region;
@@ -36,12 +35,12 @@ public class AttachmentHandler extends ParseSax.HandlerForGeneratedRequestWithRe
    @Resource
    protected Logger logger = Logger.NULL;
 
-   protected final DateCodec dateCodec;
+   protected final DateService dateService;
    protected final Supplier<String> defaultRegion;
 
    @Inject
-   AttachmentHandler(DateCodecFactory dateCodecFactory, @Region Supplier<String> defaultRegion) {
-      this.dateCodec = dateCodecFactory.iso8601();
+   AttachmentHandler(DateService dateService, @Region Supplier<String> defaultRegion) {
+      this.dateService = dateService;
       this.defaultRegion = defaultRegion;
    }
 
@@ -71,7 +70,7 @@ public class AttachmentHandler extends ParseSax.HandlerForGeneratedRequestWithRe
       } else if (qName.equals("device")) {
          device = currentText.toString().trim();
       } else if (qName.equals("attachTime")) {
-         attachTime = dateCodec.toDate(currentText.toString().trim());
+         attachTime = dateService.iso8601DateOrSecondsDateParse(currentText.toString().trim());
       }
       currentText.setLength(0);
    }

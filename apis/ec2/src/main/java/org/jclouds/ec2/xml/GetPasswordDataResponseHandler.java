@@ -18,18 +18,17 @@ package org.jclouds.ec2.xml;
 
 import javax.inject.Inject;
 
-import org.jclouds.date.DateCodec;
-import org.jclouds.date.DateCodecFactory;
+import org.jclouds.date.DateService;
 import org.jclouds.ec2.domain.PasswordData;
 import org.jclouds.http.functions.ParseSax;
 
 public class GetPasswordDataResponseHandler extends ParseSax.HandlerWithResult<PasswordData> {
-   protected final DateCodec dateCodec;
+   protected final DateService dateService;
 
 
    @Inject
-   protected GetPasswordDataResponseHandler(DateCodecFactory dateCodecFactory) {
-      this.dateCodec = dateCodecFactory.iso8601();
+   protected GetPasswordDataResponseHandler(DateService dateService) {
+      this.dateService = dateService;
    }
 
    private StringBuilder currentText = new StringBuilder();
@@ -44,7 +43,7 @@ public class GetPasswordDataResponseHandler extends ParseSax.HandlerWithResult<P
       if (qName.equals("instanceId")) {
          builder.instanceId(currentText.toString().trim());
       } else if (qName.equals("timestamp")) {
-         builder.timestamp(dateCodec.toDate(currentText.toString().trim()));
+         builder.timestamp(dateService.iso8601DateOrSecondsDateParse(currentText.toString().trim()));
       } else if (qName.equals("passwordData")) {
          builder.passwordData(currentText.toString().trim());
       }

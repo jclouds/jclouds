@@ -21,8 +21,7 @@ import java.util.Date;
 import javax.inject.Inject;
 
 import org.jclouds.aws.util.AWSUtils;
-import org.jclouds.date.DateCodec;
-import org.jclouds.date.DateCodecFactory;
+import org.jclouds.date.DateService;
 import org.jclouds.ec2.domain.BundleTask;
 import org.jclouds.http.functions.ParseSax;
 import org.jclouds.location.Region;
@@ -30,12 +29,12 @@ import org.jclouds.location.Region;
 import com.google.common.base.Supplier;
 
 public class BundleTaskHandler extends ParseSax.HandlerForGeneratedRequestWithResult<BundleTask> {
-   protected final DateCodec dateCodec;
+   protected final DateService dateService;
    protected final Supplier<String> defaultRegion;
 
    @Inject
-   protected BundleTaskHandler(DateCodecFactory dateCodecFactory, @Region Supplier<String> defaultRegion) {
-      this.dateCodec = dateCodecFactory.iso8601();
+   protected BundleTaskHandler(DateService dateService, @Region Supplier<String> defaultRegion) {
+      this.dateService = dateService;
       this.defaultRegion = defaultRegion;
    }
 
@@ -88,7 +87,7 @@ public class BundleTaskHandler extends ParseSax.HandlerForGeneratedRequestWithRe
          temp = temp.substring(0, temp.length() - 1);
          progress = Integer.parseInt(temp);
       } else if (qName.equals("startTime")) {
-         startTime = dateCodec.toDate(currentText.toString().trim());
+         startTime = dateService.iso8601DateOrSecondsDateParse(currentText.toString().trim());
       } else if (qName.equals("state")) {
          state = currentText.toString().trim();
       } else if (qName.equals("bucket")) {
@@ -96,7 +95,7 @@ public class BundleTaskHandler extends ParseSax.HandlerForGeneratedRequestWithRe
       } else if (qName.equals("prefix")) {
          prefix = currentText.toString().trim();
       } else if (qName.equals("updateTime")) {
-         updateTime = dateCodec.toDate(currentText.toString().trim());
+         updateTime = dateService.iso8601DateOrSecondsDateParse(currentText.toString().trim());
       }
       currentText.setLength(0);
    }

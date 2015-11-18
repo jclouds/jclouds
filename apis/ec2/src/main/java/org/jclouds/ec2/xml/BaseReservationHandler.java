@@ -25,8 +25,7 @@ import java.util.Set;
 import javax.inject.Inject;
 
 import org.jclouds.aws.util.AWSUtils;
-import org.jclouds.date.DateCodec;
-import org.jclouds.date.DateCodecFactory;
+import org.jclouds.date.DateService;
 import org.jclouds.ec2.domain.Attachment;
 import org.jclouds.ec2.domain.BlockDevice;
 import org.jclouds.ec2.domain.InstanceState;
@@ -43,12 +42,12 @@ import com.google.common.collect.Sets;
 
 public abstract class BaseReservationHandler<T> extends HandlerForGeneratedRequestWithResult<T> {
 
-   protected final DateCodec dateCodec;
+   protected final DateService dateService;
    protected final Supplier<String> defaultRegion;
 
    @Inject
-   public BaseReservationHandler(DateCodecFactory dateCodecFactory, @Region Supplier<String> defaultRegion) {
-      this.dateCodec = dateCodecFactory.iso8601();
+   public BaseReservationHandler(DateService dateService, @Region Supplier<String> defaultRegion) {
+      this.dateService = dateService;
       this.defaultRegion = defaultRegion;
    }
 
@@ -141,7 +140,7 @@ public abstract class BaseReservationHandler<T> extends HandlerForGeneratedReque
       } else if (equalsOrSuffix(qName, "keyName")) {
          builder.keyName(currentOrNull(currentText));
       } else if (equalsOrSuffix(qName, "launchTime")) {
-         builder.launchTime(dateCodec.toDate(currentOrNull(currentText)));
+         builder.launchTime(dateService.iso8601DateOrSecondsDateParse(currentOrNull(currentText)));
       } else if (equalsOrSuffix(qName, "availabilityZone")) {
          builder.availabilityZone(currentOrNull(currentText));
       } else if (equalsOrSuffix(qName, "virtualizationType")) {
@@ -167,7 +166,7 @@ public abstract class BaseReservationHandler<T> extends HandlerForGeneratedReque
       } else if (equalsOrSuffix(qName, "status")) {
          attachmentStatus = Attachment.Status.fromValue(currentText.toString().trim());
       } else if (equalsOrSuffix(qName, "attachTime")) {
-         attachTime = dateCodec.toDate(currentOrNull(currentText));
+         attachTime = dateService.iso8601DateOrSecondsDateParse(currentOrNull(currentText));
       } else if (equalsOrSuffix(qName, "deleteOnTermination")) {
          deleteOnTermination = Boolean.parseBoolean(currentText.toString().trim());
       } else if (equalsOrSuffix(qName, "ebs")) {

@@ -71,7 +71,29 @@ public class DescribeInstancesResponseHandlerTest extends BaseEC2HandlerTest {
                         "ec2-174-129-81-68.compute-1.amazonaws.com").imageId("ami-82e4b5c7").instanceId("i-0799056f")
                         .instanceState(InstanceState.RUNNING).rawState("running").instanceType(InstanceType.M1_SMALL)
                         .ipAddress("174.129.81.68").kernelId("aki-a71cf9ce").keyName("adriancole.ec21").launchTime(
-                                 dateService.iso8601DateParse("2009-11-09T03:00:34.000Z"))
+                                 dateService.iso8601DateOrSecondsDateParse("2009-11-09T03:00:34.000Z"))
+                        // MonitoringState.DISABLED,
+                        .availabilityZone("us-east-1c").virtualizationType("paravirtual").privateDnsName(
+                                 "ip-10-243-42-70.ec2.internal").privateIpAddress("10.243.42.70").ramdiskId(
+                                 "ari-a51cf9cc").rootDeviceType(RootDeviceType.INSTANCE_STORE).build()),
+               "993194456877", null, "r-a3c508cb"));
+
+      Set<Reservation<? extends RunningInstance>> result = parseRunningInstances("/describe_instances_running.xml");
+
+      assertEquals(result.toString(), contents.toString());
+      assertEquals(get(get(result, 0), 0).getInstanceState(), InstanceState.RUNNING);
+      assertEquals(get(get(result, 0), 0).getRawState(), "running");
+   }
+   
+   public void testWhenRunningAndSecondsDate() throws UnknownHostException {
+
+      Set<Reservation<RunningInstance>> contents = ImmutableSet.of(new Reservation<RunningInstance>(defaultRegion,
+               ImmutableSet.of("adriancole.ec2ingress"), ImmutableSet.of(RunningInstance.builder().region(
+                        defaultRegion).groupName("adriancole.ec2ingress").amiLaunchIndex("0").dnsName(
+                        "ec2-174-129-81-68.compute-1.amazonaws.com").imageId("ami-82e4b5c7").instanceId("i-0799056f")
+                        .instanceState(InstanceState.RUNNING).rawState("running").instanceType(InstanceType.M1_SMALL)
+                        .ipAddress("174.129.81.68").kernelId("aki-a71cf9ce").keyName("adriancole.ec21").launchTime(
+                                 dateService.iso8601DateOrSecondsDateParse("2009-11-09T03:00:34+0000"))
                         // MonitoringState.DISABLED,
                         .availabilityZone("us-east-1c").virtualizationType("paravirtual").privateDnsName(
                                  "ip-10-243-42-70.ec2.internal").privateIpAddress("10.243.42.70").ramdiskId(
@@ -92,7 +114,7 @@ public class DescribeInstancesResponseHandlerTest extends BaseEC2HandlerTest {
                         "default").amiLaunchIndex("23").dnsName("ec2-72-44-33-4.compute-1.amazonaws.com").imageId(
                         "ami-6ea54007").instanceId("i-28a64341").instanceState(InstanceState.RUNNING).rawState(
                         "running").instanceType(InstanceType.M1_LARGE).kernelId("aki-ba3adfd3").keyName(
-                        "example-key-name").launchTime(dateService.iso8601DateParse("2007-08-07T11:54:42.000Z"))
+                        "example-key-name").launchTime(dateService.iso8601DateOrSecondsDateParse("2007-08-07T11:54:42.000Z"))
                // MonitoringState.DISABLED,
                         .availabilityZone("us-east-1b").virtualizationType("paravirtual").privateDnsName(
                                  "10-251-50-132.ec2.internal")// product codes
@@ -104,7 +126,7 @@ public class DescribeInstancesResponseHandlerTest extends BaseEC2HandlerTest {
                                           "i-28a64435").instanceState(InstanceState.RUNNING).rawState("running")
                                  .instanceType(InstanceType.M1_LARGE).kernelId("aki-ba3adfd3").keyName(
                                           "example-key-name").launchTime(
-                                          dateService.iso8601DateParse("2007-08-07T11:54:42.000Z"))
+                                          dateService.iso8601DateOrSecondsDateParse("2007-08-07T11:54:42.000Z"))
                                  // MonitoringState.DISABLED,
                                  .availabilityZone("us-east-1b").virtualizationType("paravirtual").privateDnsName(
                                           "10-251-50-134.ec2.internal")// product codes
@@ -129,7 +151,7 @@ public class DescribeInstancesResponseHandlerTest extends BaseEC2HandlerTest {
                         .instanceState(InstanceState.RUNNING).rawState("running").instanceType(InstanceType.M1_SMALL)
                         .ipAddress("75.101.203.146").kernelId("aki-a71cf9ce")
                         .keyName("adriancole.ec2ebs1")
-                        .launchTime(dateService.iso8601DateParse("2009-12-30T04:06:23.000Z"))
+                        .launchTime(dateService.iso8601DateOrSecondsDateParse("2009-12-30T04:06:23.000Z"))
                         // MonitoringState.DISABLED
                         .availabilityZone("us-east-1b")
                         // "placement"
@@ -138,7 +160,7 @@ public class DescribeInstancesResponseHandlerTest extends BaseEC2HandlerTest {
                         .rootDeviceType(RootDeviceType.EBS).rootDeviceName("/dev/sda1").device(
                                  "/dev/sda1",
                                  new BlockDevice("vol-dc6ca8b5", Attachment.Status.ATTACHED, dateService
-                                          .iso8601DateParse("2009-12-30T04:06:29.000Z"), true)).build()),
+                                          .iso8601DateOrSecondsDateParse("2009-12-30T04:06:29.000Z"), true)).build()),
                "993194456877", null, "r-596dd731"));
 
       Set<Reservation<? extends RunningInstance>> result = parseRunningInstances("/describe_instances_ebs.xml");

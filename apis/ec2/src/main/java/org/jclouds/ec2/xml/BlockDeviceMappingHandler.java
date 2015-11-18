@@ -19,8 +19,7 @@ package org.jclouds.ec2.xml;
 import java.util.Date;
 import java.util.Map;
 
-import org.jclouds.date.DateCodec;
-import org.jclouds.date.DateCodecFactory;
+import org.jclouds.date.DateService;
 import org.jclouds.ec2.domain.Attachment;
 import org.jclouds.ec2.domain.BlockDevice;
 import org.jclouds.http.functions.ParseSax;
@@ -39,11 +38,11 @@ public class BlockDeviceMappingHandler extends
    private Attachment.Status attachmentStatus;
    private Date attachTime;
 
-   protected final DateCodec dateCodec;
+   protected final DateService dateService;
 
    @Inject 
-   public BlockDeviceMappingHandler(DateCodecFactory dateCodecFactory) {
-      this.dateCodec = dateCodecFactory.iso8601();
+   public BlockDeviceMappingHandler(DateService dateService) {
+      this.dateService = dateService;
    }
 
    public Map<String, BlockDevice> getResult() {
@@ -60,7 +59,7 @@ public class BlockDeviceMappingHandler extends
       } else if (qName.equals("status")) {
          attachmentStatus = Attachment.Status.fromValue(currentText.toString().trim());
       } else if (qName.equals("attachTime")) {
-         attachTime = dateCodec.toDate(currentText.toString().trim());
+         attachTime = dateService.iso8601DateOrSecondsDateParse(currentText.toString().trim());
       } else if (qName.equals("item")) {
          ebsBlockDevices.put(deviceName, new BlockDevice(volumeId, attachmentStatus, attachTime, deleteOnTermination));
           this.volumeId = null;

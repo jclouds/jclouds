@@ -21,7 +21,7 @@ import java.util.Set;
 
 import javax.inject.Inject;
 
-import org.jclouds.date.DateCodecFactory;
+import org.jclouds.date.DateService;
 import org.jclouds.ec2.domain.Attachment;
 import org.jclouds.ec2.domain.Volume;
 import org.jclouds.ec2.xml.CreateVolumeResponseHandler;
@@ -33,10 +33,10 @@ import com.google.common.base.Supplier;
 public class NovaCreateVolumeResponseHandler extends CreateVolumeResponseHandler {
 
    @Inject
-   protected NovaCreateVolumeResponseHandler(DateCodecFactory dateCodecFactory, @Region Supplier<String> defaultRegion,
+   protected NovaCreateVolumeResponseHandler(DateService dateService, @Region Supplier<String> defaultRegion,
             @Zone Supplier<Map<String, Supplier<Set<String>>>> regionToZonesSupplier,
             @Zone Supplier<Set<String>> zonesSupplier) {
-      super(dateCodecFactory, defaultRegion, regionToZonesSupplier, zonesSupplier);
+      super(dateService, defaultRegion, regionToZonesSupplier, zonesSupplier);
    }
    
    public void endElement(String uri, String name, String qName) {

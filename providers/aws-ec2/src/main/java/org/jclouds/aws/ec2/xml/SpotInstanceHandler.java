@@ -24,8 +24,7 @@ import javax.inject.Inject;
 import org.jclouds.aws.ec2.domain.SpotInstanceRequest;
 import org.jclouds.aws.ec2.domain.SpotInstanceRequest.Builder;
 import org.jclouds.aws.util.AWSUtils;
-import org.jclouds.date.DateCodec;
-import org.jclouds.date.DateCodecFactory;
+import org.jclouds.date.DateService;
 import org.jclouds.ec2.xml.TagSetHandler;
 import org.jclouds.http.functions.ParseSax;
 import org.jclouds.location.Region;
@@ -37,7 +36,7 @@ import com.google.common.base.Supplier;
 public class SpotInstanceHandler extends ParseSax.HandlerForGeneratedRequestWithResult<SpotInstanceRequest> {
    private StringBuilder currentText = new StringBuilder();
 
-   protected final DateCodec dateCodec;
+   protected final DateService dateService;
    protected final Supplier<String> defaultRegion;
    protected final Builder builder;
    protected boolean inFault;
@@ -48,10 +47,10 @@ public class SpotInstanceHandler extends ParseSax.HandlerForGeneratedRequestWith
    protected final TagSetHandler tagSetHandler;
 
    @Inject
-   public SpotInstanceHandler(DateCodecFactory dateCodecFactory, @Region Supplier<String> defaultRegion,
+   public SpotInstanceHandler(DateService dateService, @Region Supplier<String> defaultRegion,
          LaunchSpecificationHandler launchSpecificationHandler, TagSetHandler tagSetHandler,
          SpotInstanceRequest.Builder builder) {
-      this.dateCodec = dateCodecFactory.iso8601();
+      this.dateService = dateService;
       this.defaultRegion = defaultRegion;
       this.launchSpecificationHandler = launchSpecificationHandler;
       this.tagSetHandler = tagSetHandler;
@@ -138,7 +137,7 @@ public class SpotInstanceHandler extends ParseSax.HandlerForGeneratedRequestWith
       } else if (qName.equals("createTime")) {
          String createTime = currentOrNull(currentText);
          if (createTime != null)
-            builder.createTime(dateCodec.toDate(createTime));
+            builder.createTime(dateService.iso8601DateOrSecondsDateParse(createTime));
       } else if (qName.equals("productDescription")) {
          builder.productDescription(currentOrNull(currentText));
       } else if (inFault) {
@@ -155,16 +154,16 @@ public class SpotInstanceHandler extends ParseSax.HandlerForGeneratedRequestWith
          } else if (qName.equals("updateTime")) {
             String updateTime = currentOrNull(currentText);
             if (updateTime != null)
-               builder.statusUpdateTime(dateCodec.toDate(updateTime));
+               builder.statusUpdateTime(dateService.iso8601DateOrSecondsDateParse(updateTime));
          }
       } else if (qName.equals("validFrom")) {
          String validFrom = currentOrNull(currentText);
          if (validFrom != null)
-            builder.validFrom(dateCodec.toDate(validFrom));
+            builder.validFrom(dateService.iso8601DateOrSecondsDateParse(validFrom));
       } else if (qName.equals("validUntil")) {
          String validUntil = currentOrNull(currentText);
          if (validUntil != null)
-            builder.validUntil(dateCodec.toDate(validUntil));
+            builder.validUntil(dateService.iso8601DateOrSecondsDateParse(validUntil));
       }
       currentText.setLength(0);
    }

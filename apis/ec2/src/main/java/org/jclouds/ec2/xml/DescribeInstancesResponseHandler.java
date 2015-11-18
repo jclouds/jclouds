@@ -22,7 +22,7 @@ import java.util.Set;
 
 import javax.inject.Inject;
 
-import org.jclouds.date.DateCodecFactory;
+import org.jclouds.date.DateService;
 import org.jclouds.ec2.domain.Reservation;
 import org.jclouds.ec2.domain.RunningInstance;
 import org.jclouds.location.Region;
@@ -47,9 +47,9 @@ public class DescribeInstancesResponseHandler extends
    private boolean inTagSet;
 
    @Inject
-   DescribeInstancesResponseHandler(DateCodecFactory dateCodecFactory, @Region Supplier<String> defaultRegion,
+   DescribeInstancesResponseHandler(DateService dateService, @Region Supplier<String> defaultRegion,
          TagSetHandler tagSetHandler) {
-      super(dateCodecFactory, defaultRegion);
+      super(dateService, defaultRegion);
       this.tagSetHandler = tagSetHandler;
    }
 

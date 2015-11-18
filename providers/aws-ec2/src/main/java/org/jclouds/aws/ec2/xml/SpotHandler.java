@@ -20,8 +20,7 @@ import javax.inject.Inject;
 
 import org.jclouds.aws.ec2.domain.Spot;
 import org.jclouds.aws.util.AWSUtils;
-import org.jclouds.date.DateCodec;
-import org.jclouds.date.DateCodecFactory;
+import org.jclouds.date.DateService;
 import org.jclouds.http.functions.ParseSax;
 import org.jclouds.location.Region;
 
@@ -30,12 +29,12 @@ import com.google.common.base.Supplier;
 public class SpotHandler extends ParseSax.HandlerForGeneratedRequestWithResult<Spot> {
    private StringBuilder currentText = new StringBuilder();
 
-   protected final DateCodec dateCodec;
+   protected final DateService dateService;
    protected final Supplier<String> defaultRegion;
 
    @Inject
-   public SpotHandler(DateCodecFactory dateCodecFactory, @Region Supplier<String> defaultRegion) {
-      this.dateCodec = dateCodecFactory.iso8601();
+   public SpotHandler(DateService dateService, @Region Supplier<String> defaultRegion) {
+      this.dateService = dateService;
       this.defaultRegion = defaultRegion;
    }
 
@@ -60,7 +59,7 @@ public class SpotHandler extends ParseSax.HandlerForGeneratedRequestWithResult<S
       } else if (qName.equals("spotPrice")) {
          builder.spotPrice(Float.parseFloat(currentText.toString().trim()));
       } else if (qName.equals("timestamp")) {
-         builder.timestamp(dateCodec.toDate(currentText.toString().trim()));
+         builder.timestamp(dateService.iso8601DateOrSecondsDateParse(currentText.toString().trim()));
       } else if (qName.equals("availabilityZone")) {
          builder.availabilityZone(currentText.toString().trim());
       }
