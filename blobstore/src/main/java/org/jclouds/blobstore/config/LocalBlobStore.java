@@ -84,8 +84,6 @@ import org.jclouds.io.ByteStreams2;
 import org.jclouds.io.ContentMetadata;
 import org.jclouds.io.ContentMetadataCodec;
 import org.jclouds.io.Payload;
-import org.jclouds.io.payloads.ByteArrayPayload;
-import org.jclouds.io.payloads.FilePayload;
 import org.jclouds.logging.Logger;
 import org.jclouds.util.Closeables2;
 
@@ -662,17 +660,16 @@ public final class LocalBlobStore implements BlobStore {
             long size = 0;
             ImmutableList.Builder<ByteSource> streams = ImmutableList.builder();
 
-            // We must call getRawContent to work around Blob.setPayload calling ByteSourcePayload.release. If the
-            // Local blobstore returns a ByteArrayPayload or FilePayload it uses a stream, otherwise it uses a
-            // byte array.
+            // Try to convert payload to ByteSource, otherwise wrap it.
             ByteSource byteSource;
             try {
-               Object inputStream = blob.getPayload().getRawContent();
-               byteSource = (inputStream instanceof ByteArrayPayload || inputStream instanceof FilePayload) ?
-                     (ByteSource) blob.getPayload().getRawContent()
-                     : ByteSource.wrap(ByteStreams2.toByteArrayAndClose(blob.getPayload().openStream()));
-            } catch (IOException e) {
-               throw new RuntimeException(e);
+               byteSource = (ByteSource) blob.getPayload().getRawContent();
+            } catch (ClassCastException cce) {
+               try {
+                  byteSource = ByteSource.wrap(ByteStreams2.toByteArrayAndClose(blob.getPayload().openStream()));
+               } catch (IOException e) {
+                  throw new RuntimeException(e);
+               }
             }
 
             for (String s : options.getRanges()) {
