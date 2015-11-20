@@ -43,6 +43,7 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.Map;
 import java.util.Set;
+import java.util.UUID;
 
 import javax.annotation.Resource;
 import javax.inject.Inject;
@@ -450,13 +451,14 @@ public class FilesystemStorageStrategyImpl implements LocalStorageStrategy {
          return putDirectoryBlob(containerName, blob);
       }
       File outputFile = getFileForBlobKey(containerName, blobKey);
+      // TODO: should we use a known suffix to filter these out during list?
+      File tmpFile = getFileForBlobKey(containerName, blobKey + "-" + UUID.randomUUID());
       Path outputPath = outputFile.toPath();
       HashingInputStream his = null;
       try {
-         Files.createParentDirs(outputFile);
+         Files.createParentDirs(tmpFile);
          his = new HashingInputStream(Hashing.md5(), payload.openStream());
-         delete(outputFile);
-         Files.asByteSink(outputFile).writeFrom(his);
+         Files.asByteSink(tmpFile).writeFrom(his);
          HashCode actualHashCode = his.hash();
          HashCode expectedHashCode = payload.getContentMetadata().getContentMD5AsHashCode();
          if (expectedHashCode != null && !actualHashCode.equals(expectedHashCode)) {
@@ -464,6 +466,8 @@ public class FilesystemStorageStrategyImpl implements LocalStorageStrategy {
                   " expected: " + expectedHashCode);
          }
          payload.getContentMetadata().setContentMD5(actualHashCode);
+
+         tmpFile.renameTo(outputFile);
 
          UserDefinedFileAttributeView view = getUserDefinedFileAttributeView(outputPath);
          if (view != null) {
@@ -477,11 +481,11 @@ public class FilesystemStorageStrategyImpl implements LocalStorageStrategy {
          setBlobAccess(containerName, blobKey, BlobAccess.PRIVATE);
          return base16().lowerCase().encode(actualHashCode.asBytes());
       } catch (IOException ex) {
-         if (outputFile != null) {
+         if (tmpFile != null) {
             try {
-               delete(outputFile);
+               delete(tmpFile);
             } catch (IOException e) {
-               logger.debug("Could not delete %s: %s", outputFile, e);
+               logger.debug("Could not delete %s: %s", tmpFile, e);
             }
          }
          throw ex;
