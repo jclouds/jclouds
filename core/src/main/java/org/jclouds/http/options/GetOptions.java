@@ -161,7 +161,7 @@ public class GetOptions extends BaseHttpRequestOptions {
    public GetOptions ifETagMatches(String eTag) {
       checkArgument(getIfNoneMatch() == null, "ifETagDoesntMatch() is not compatible with ifETagMatches()");
       checkArgument(getIfModifiedSince() == null, "ifModifiedSince() is not compatible with ifETagMatches()");
-      this.headers.put(IF_MATCH, String.format("\"%1$s\"", checkNotNull(eTag, "eTag")));
+      this.headers.put(IF_MATCH, maybeQuoteETag(checkNotNull(eTag, "eTag")));
       return this;
    }
 
@@ -188,7 +188,7 @@ public class GetOptions extends BaseHttpRequestOptions {
    public GetOptions ifETagDoesntMatch(String eTag) {
       checkArgument(getIfMatch() == null, "ifETagMatches() is not compatible with ifETagDoesntMatch()");
       checkArgument(getIfUnmodifiedSince() == null, "ifUnmodifiedSince() is not compatible with ifETagDoesntMatch()");
-      this.headers.put(IF_NONE_MATCH, String.format("\"%1$s\"", checkNotNull(eTag, "ifETagDoesntMatch")));
+      this.headers.put(IF_NONE_MATCH, maybeQuoteETag(checkNotNull(eTag, "ifETagDoesntMatch")));
       return this;
    }
 
@@ -299,4 +299,10 @@ public class GetOptions extends BaseHttpRequestOptions {
             + ", payload=" + payload + ", pathSuffix=" + pathSuffix + ", ranges=" + ranges + "]";
    }
 
+   private static String maybeQuoteETag(String eTag) {
+      if (!eTag.startsWith("\"") && !eTag.endsWith("\"")) {
+         eTag = "\"" + eTag + "\"";
+      }
+      return eTag;
+   }
 }

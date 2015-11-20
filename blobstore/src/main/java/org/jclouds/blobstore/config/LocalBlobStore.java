@@ -630,11 +630,11 @@ public final class LocalBlobStore implements BlobStore {
 
       if (options != null) {
          if (options.getIfMatch() != null) {
-            if (!blob.getMetadata().getETag().equals(options.getIfMatch()))
+            if (!maybeQuoteETag(blob.getMetadata().getETag()).equals(options.getIfMatch()))
                throw returnResponseException(412);
          }
          if (options.getIfNoneMatch() != null) {
-            if (blob.getMetadata().getETag().equals(options.getIfNoneMatch()))
+            if (maybeQuoteETag(blob.getMetadata().getETag()).equals(options.getIfNoneMatch()))
                throw returnResponseException(304);
          }
          if (options.getIfModifiedSince() != null) {
@@ -856,5 +856,12 @@ public final class LocalBlobStore implements BlobStore {
    @Override
    public int getMaximumNumberOfParts() {
       return Integer.MAX_VALUE;
+   }
+
+   private static String maybeQuoteETag(String eTag) {
+      if (!eTag.startsWith("\"") && !eTag.endsWith("\"")) {
+         eTag = "\"" + eTag + "\"";
+      }
+      return eTag;
    }
 }
