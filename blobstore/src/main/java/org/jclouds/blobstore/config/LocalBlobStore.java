@@ -630,11 +630,11 @@ public final class LocalBlobStore implements BlobStore {
 
       if (options != null) {
          if (options.getIfMatch() != null) {
-            if (!maybeQuoteETag(blob.getMetadata().getETag()).equals(options.getIfMatch()))
+            if (!maybeQuoteETag(blob.getMetadata().getETag()).equals(maybeQuoteETag(options.getIfMatch())))
                throw returnResponseException(412);
          }
          if (options.getIfNoneMatch() != null) {
-            if (maybeQuoteETag(blob.getMetadata().getETag()).equals(options.getIfNoneMatch()))
+            if (maybeQuoteETag(blob.getMetadata().getETag()).equals(maybeQuoteETag(options.getIfNoneMatch())))
                throw returnResponseException(304);
          }
          if (options.getIfModifiedSince() != null) {
