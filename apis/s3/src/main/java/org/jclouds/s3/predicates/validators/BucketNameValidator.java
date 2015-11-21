@@ -16,11 +16,9 @@
  */
 package org.jclouds.s3.predicates.validators;
 
-import static com.google.common.base.CharMatcher.is;
-
 import javax.inject.Inject;
 
-import org.jclouds.predicates.validators.DnsNameValidator;
+import org.jclouds.predicates.Validator;
 
 import com.google.common.base.CharMatcher;
 import com.google.inject.Singleton;
@@ -33,42 +31,34 @@ import com.google.inject.Singleton;
  * @see org.jclouds.predicates.Validator
  */
 @Singleton
-public class BucketNameValidator extends DnsNameValidator {
+public class BucketNameValidator extends Validator<String> {
+   private static final CharMatcher MATCHER =
+         CharMatcher.inRange('a', 'z')
+         .or(CharMatcher.inRange('A', 'Z'))
+         .or(CharMatcher.inRange('0', '9'))
+         .or(CharMatcher.anyOf(".-_"));
 
    @Inject
    public BucketNameValidator() {
-      super(3, 63);
-   }
-
-   public void validate(String containerName) {
-      super.validate(containerName);
-      if (containerName.indexOf("..") != -1)
-         throw exception(containerName, "Bucket names cannot contain two, adjacent periods");
-      if (containerName.endsWith("-"))
-         throw exception(containerName, "Bucket names should not end with a dash");
-
-      if (containerName.indexOf("-.") != -1 || containerName.indexOf(".-") != -1)
-         throw exception(
-                  containerName,
-                  "Bucket names cannot contain dashes next to periods (e.g., \"my-.bucket.com\" and \"my.-bucket\" are invalid)");
    }
 
    @Override
-   protected IllegalArgumentException exception(String containerName, String reason) {
-      return new IllegalArgumentException(
-               String
-                        .format(
-                                 "Object '%s' doesn't match S3 bucket virtual host naming convention. "
-                                          + "Reason: %s. For more info, please refer to http://docs.amazonwebservices.com/AmazonS3/latest/index.html?BucketRestrictions.html.",
-                                 containerName, reason));
+   public void validate(String name) {
+      if (name == null) {
+         throw exception(name, "Can't be null");
+      } else if (name.length() < 3) {
+         throw exception(name, "Can't be less than 3 characters");
+      } else if (name.length() > 255) {
+         throw exception(name, "Can't be over 255 characters");
+      } else if (!MATCHER.matchesAllOf(name)) {
+         throw exception(name, "Illegal character");
+      }
    }
 
-   /**
-    * Amazon also permits periods in the dns name.
-    * It also permits underscores, although they aren't recommended.
-    */
-   @Override
-   protected CharMatcher getAcceptableRange() {
-      return super.getAcceptableRange().or(is('.')).or(is('_'));
+   private static IllegalArgumentException exception(String containerName, String reason) {
+      return new IllegalArgumentException(String.format(
+            "Object '%s' doesn't match S3 bucket bucket naming convention. " +
+            "Reason: %s. For more info, please refer to https://docs.aws.amazon.com/AmazonS3/latest/dev/BucketRestrictions.html",
+            containerName, reason));
    }
 }
