@@ -65,7 +65,6 @@ import org.jclouds.blobstore.domain.StorageMetadata;
 import org.jclouds.blobstore.domain.StorageType;
 import org.jclouds.blobstore.domain.internal.MutableStorageMetadataImpl;
 import org.jclouds.blobstore.domain.internal.PageSetImpl;
-import org.jclouds.blobstore.domain.internal.StorageMetadataImpl;
 import org.jclouds.blobstore.options.CopyOptions;
 import org.jclouds.blobstore.options.CreateContainerOptions;
 import org.jclouds.blobstore.options.GetOptions;
@@ -92,7 +91,6 @@ import com.google.common.base.Optional;
 import com.google.common.base.Predicate;
 import com.google.common.base.Supplier;
 import com.google.common.base.Throwables;
-import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Iterators;
@@ -237,15 +235,17 @@ public final class LocalBlobStore implements BlobStore {
          propagate(e);
       }
 
+      blobBelongingToContainer = Iterables.filter(blobBelongingToContainer,
+            new Predicate<String>() {
+               @Override
+               public boolean apply(String key) {
+                  // ignore folders
+                  return storageStrategy.blobExists(containerName, key);
+               }
+            });
       SortedSet<StorageMetadata> contents = newTreeSet(transform(blobBelongingToContainer,
             new Function<String, StorageMetadata>() {
                public StorageMetadata apply(String key) {
-                  if (!storageStrategy.blobExists(containerName, key)) {
-                     // handle directory
-                     return new StorageMetadataImpl(StorageType.FOLDER, /*id=*/ null, key,
-                           /*location=*/ null, /*uri=*/ null, /*eTag=*/ null, /*creationDate=*/ null,
-                           /*lastModified=*/ null, ImmutableMap.<String, String>of());
-                  }
                   Blob oldBlob = loadBlob(containerName, key);
                   checkState(oldBlob != null, "blob " + key + " is not present although it was in the list of "
                         + containerName);
