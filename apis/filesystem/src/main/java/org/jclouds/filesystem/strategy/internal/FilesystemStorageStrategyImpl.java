@@ -794,6 +794,16 @@ public class FilesystemStorageStrategyImpl implements LocalStorageStrategy {
       if (!isNullOrEmpty(parentPath)) {
          // remove parent directory only it's empty
          File directory = new File(buildPathStartingFromBaseDir(container, parentPath));
+         // don't delete directory if it's a directory blob
+         try {
+            UserDefinedFileAttributeView view = getUserDefinedFileAttributeView(directory.toPath());
+            if (!view.list().isEmpty()) {
+               return;
+            }
+         } catch (IOException e) {
+            logger.debug("Could not look for attributes from %s: %s", directory, e);
+         }
+
          String[] children = directory.list();
          if (null == children || children.length == 0) {
             try {
