@@ -467,7 +467,13 @@ public class FilesystemStorageStrategyImpl implements LocalStorageStrategy {
          }
          payload.getContentMetadata().setContentMD5(actualHashCode);
 
-         tmpFile.renameTo(outputFile);
+         if (outputFile.exists()) {
+            delete(outputFile);
+         }
+
+         if (!tmpFile.renameTo(outputFile)) {
+            throw new RuntimeException("Could not rename file " + tmpFile + " to " + outputFile);
+         }
 
          UserDefinedFileAttributeView view = getUserDefinedFileAttributeView(outputPath);
          if (view != null) {
