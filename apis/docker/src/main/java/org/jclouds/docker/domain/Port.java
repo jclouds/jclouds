@@ -16,17 +16,18 @@
  */
 package org.jclouds.docker.domain;
 
+import org.jclouds.javax.annotation.Nullable;
 import org.jclouds.json.SerializedNames;
 
 import com.google.auto.value.AutoValue;
 
 @AutoValue
 public abstract class Port {
-   public abstract String ip();
+   @Nullable public abstract String ip();
 
    public abstract int privatePort();
 
-   public abstract int publicPort();
+   @Nullable public abstract Integer publicPort();
 
    public abstract String type();
 
@@ -34,7 +35,7 @@ public abstract class Port {
    }
 
    @SerializedNames({ "IP", "PrivatePort", "PublicPort", "Type" })
-   public static Port create(String ip, int privatePort, int publicPort, String type) {
+   public static Port create(String ip, int privatePort, Integer publicPort, String type) {
       return new AutoValue_Port(ip, privatePort, publicPort, type);
    }
 }

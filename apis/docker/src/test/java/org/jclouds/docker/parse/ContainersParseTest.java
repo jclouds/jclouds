@@ -39,15 +39,13 @@ public class ContainersParseTest extends BaseDockerParseTest<List<ContainerSumma
    @Override
    @Consumes(MediaType.APPLICATION_JSON)
    public List<ContainerSummary> expected() {
-      return ImmutableList.of(
-              ContainerSummary.create("6d35806c1bd2b25cd92bba2d2c2c5169dc2156f53ab45c2b62d76e2d2fee14a9",
-                      ImmutableList.of("/hopeful_mclean"),
-                      "1395472605",
-                      "jclouds/ubuntu:latest",
-                      "/usr/sbin/sshd -D",
-                      ImmutableList.of(Port.create("0.0.0.0", 22, 49231, "tcp")),
-                      "Up 55 seconds")
-      );
+      return ImmutableList.of(ContainerSummary.create(
+            "6d35806c1bd2b25cd92bba2d2c2c5169dc2156f53ab45c2b62d76e2d2fee14a9", ImmutableList.of("/hopeful_mclean"),
+            "1395472605", "jclouds/ubuntu:latest", "/usr/sbin/sshd -D",
+            ImmutableList.of(Port.create("0.0.0.0", 22, 49231, "tcp")), "Up 55 seconds"), ContainerSummary.create(
+            "6d35806c1bd2b25cd92bba2d2c2c5169dc2156f53ab45c2b62d76e2d2fee14a2", ImmutableList.of("/hopeful_mclean"),
+            "1395472605", "jclouds/ubuntu:latest", "/usr/sbin/sshd -D",
+            ImmutableList.of(Port.create(null, 22, null, "tcp")), "Up 55 seconds"));
    }
 
 }
