@@ -803,7 +803,9 @@ public class FilesystemStorageStrategyImpl implements LocalStorageStrategy {
          // don't delete directory if it's a directory blob
          try {
             UserDefinedFileAttributeView view = getUserDefinedFileAttributeView(directory.toPath());
-            if (!view.list().isEmpty()) {
+            if (view == null) { // OSX HFS+ does not support UserDefinedFileAttributeView
+                logger.debug("Could not look for attributes from %s", directory);
+            } else if (!view.list().isEmpty()) {
                return;
             }
          } catch (IOException e) {
