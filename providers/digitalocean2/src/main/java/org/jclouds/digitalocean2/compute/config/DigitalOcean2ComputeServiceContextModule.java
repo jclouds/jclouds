@@ -57,9 +57,7 @@ import org.jclouds.domain.Location;
 
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Function;
-import com.google.common.base.Optional;
 import com.google.common.base.Predicate;
-import com.google.inject.Injector;
 import com.google.inject.Provides;
 import com.google.inject.TypeLiteral;
 import com.google.inject.name.Named;
@@ -97,11 +95,6 @@ public class DigitalOcean2ComputeServiceContextModule extends
 
       bind(new TypeLiteral<ImageExtension>() {
       }).to(DigitalOcean2ImageExtension.class);
-   }
-
-   @Override
-   protected Optional<ImageExtension> provideImageExtension(Injector i) {
-      return Optional.of(i.getInstance(ImageExtension.class));
    }
 
    @Provides
