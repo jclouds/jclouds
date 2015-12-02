@@ -30,6 +30,7 @@ import com.google.gson.TypeAdapterFactory;
 import com.google.gson.internal.JsonReaderInternalAccess;
 import com.google.gson.reflect.TypeToken;
 import com.google.gson.stream.JsonReader;
+import com.google.gson.stream.JsonToken;
 import com.google.gson.stream.JsonWriter;
 
 import java.io.IOException;
@@ -85,6 +86,10 @@ public class NullFilteringTypeAdapterFactories {
       @SuppressWarnings("unchecked")
       protected <C extends Iterable<E>, B extends ImmutableCollection.Builder<E>> C readAndBuild(JsonReader in,
             B builder) throws IOException {
+         if (in.peek() == JsonToken.NULL) {
+            in.nextNull();
+            return null;
+         }
          in.beginArray();
          while (in.hasNext()) {
             E element = elementAdapter.read(in);
@@ -278,7 +283,7 @@ public class NullFilteringTypeAdapterFactories {
       }
    }
 
-   private static final class MapTypeAdapter<K, V> extends TypeAdapter<Map<K, V>> {
+   public static class MapTypeAdapter<K, V> extends TypeAdapter<Map<K, V>> {
 
       protected final TypeAdapter<K> keyAdapter;
       protected final TypeAdapter<V> valueAdapter;
@@ -303,6 +308,10 @@ public class NullFilteringTypeAdapterFactories {
       }
 
       public Map<K, V> read(JsonReader in) throws IOException {
+         if (in.peek() == JsonToken.NULL) {
+            in.nextNull();
+            return null;
+         }
          ImmutableMap.Builder<K, V> result = ImmutableMap.builder();
          in.beginObject();
          while (in.hasNext()) {

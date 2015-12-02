@@ -297,4 +297,25 @@ public class NullFilteringTypeAdapterFactoriesTest {
       assertEquals(resourceDupes.get("i-foo"),
             ImmutableList.of(new Resource("i-foo", "foo"), new Resource("i-bar", "bar")));
    }
+
+   private Gson listInMap = new GsonBuilder().registerTypeAdapterFactory(new MapTypeAdapterFactory())
+         .registerTypeAdapterFactory(new ListTypeAdapterFactory()).create();
+   private Type listInMapType = new TypeToken<Map<String, List<Map<String, String>>>>() {
+      private static final long serialVersionUID = 1L;
+   }.getType();
+
+   public void testListInMap() {
+      Map<String, List<Map<String, String>>> notNull = listInMap
+            .fromJson("{\"value\":[{\"x\":\"y\",\"a\":\"b\"},{\"u\":\"v\"}]}", listInMapType);
+      assertEquals(notNull,
+            ImmutableMap.of("value", ImmutableList.of(ImmutableMap.of("x", "y", "a", "b"), ImmutableMap.of("u", "v"))));
+      Map<String, List<Map<String, String>>> innerMapValueNull = listInMap
+            .fromJson("{\"value\":[{\"x\":\"y\",\"a\":null},{\"u\":\"v\"}]}", listInMapType);
+      assertEquals(innerMapValueNull,
+            ImmutableMap.of("value", ImmutableList.of(ImmutableMap.of("x", "y"), ImmutableMap.of("u", "v"))));
+      Map<String, List<Map<String, String>>> withNullInList = listInMap.fromJson("{\"value\":[null]}", listInMapType);
+      assertEquals(withNullInList, ImmutableMap.of("value", ImmutableList.of()));
+      Map<String, List<Map<String, String>>> withNullAsList = listInMap.fromJson("{\"parent\":null}", listInMapType);
+      assertEquals(withNullAsList, ImmutableMap.of());
+   }
 }
