@@ -20,12 +20,15 @@ import static com.google.common.base.Objects.equal;
 import static org.testng.Assert.assertEquals;
 
 import java.lang.reflect.Type;
+import java.util.List;
 import java.util.Map;
 
 import org.jclouds.chef.config.ChefParserModule.KeepLastRepeatedKeyMapTypeAdapterFactory;
+import org.jclouds.json.internal.NullFilteringTypeAdapterFactories.ListTypeAdapterFactory;
 import org.testng.annotations.Test;
 
 import com.google.common.base.Objects;
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
@@ -89,5 +92,26 @@ public class ChefParserModuleTest {
                   mapkeyValueType);
       assertEquals(duplicates,
             ImmutableMap.of("i-foo", new KeyValue("i-foo", "foo2"), "i-bar", new KeyValue("i-bar", "bar2")));
+   }
+
+   private Gson listInMap = new GsonBuilder().registerTypeAdapterFactory(new KeepLastRepeatedKeyMapTypeAdapterFactory())
+         .registerTypeAdapterFactory(new ListTypeAdapterFactory()).create();
+   private Type listInMapType = new TypeToken<Map<String, List<Map<String, String>>>>() {
+      private static final long serialVersionUID = 1L;
+   }.getType();
+
+   public void testListInMap() {
+      Map<String, List<Map<String, String>>> notNull = listInMap
+            .fromJson("{\"value\":[{\"x\":\"y\",\"a\":\"b\"},{\"u\":\"v\"}]}", listInMapType);
+      assertEquals(notNull,
+            ImmutableMap.of("value", ImmutableList.of(ImmutableMap.of("x", "y", "a", "b"), ImmutableMap.of("u", "v"))));
+      Map<String, List<Map<String, String>>> innerMapValueNull = listInMap
+            .fromJson("{\"value\":[{\"x\":\"y\",\"a\":null},{\"u\":\"v\"}]}", listInMapType);
+      assertEquals(innerMapValueNull,
+            ImmutableMap.of("value", ImmutableList.of(ImmutableMap.of("x", "y"), ImmutableMap.of("u", "v"))));
+      Map<String, List<Map<String, String>>> withNullInList = listInMap.fromJson("{\"value\":[null]}", listInMapType);
+      assertEquals(withNullInList, ImmutableMap.of("value", ImmutableList.of()));
+      Map<String, List<Map<String, String>>> withNullAsList = listInMap.fromJson("{\"parent\":null}", listInMapType);
+      assertEquals(withNullAsList, ImmutableMap.of());
    }
 }
