@@ -24,7 +24,7 @@ import java.util.List;
 import java.util.Set;
 
 import org.jclouds.date.internal.SimpleDateFormatDateService;
-import org.jclouds.openstack.keystone.v2_0.config.Aliases;
+import org.jclouds.openstack.keystone.v2_0.config.NamespaceAliases;
 import org.jclouds.openstack.v2_0.ServiceType;
 import org.jclouds.openstack.v2_0.domain.Extension;
 import org.jclouds.reflect.Invocation;
@@ -70,10 +70,18 @@ public class PresentWhenExtensionAnnotationNamespaceEqualsAnyNamespaceInExtensio
 
    }
 
+   @org.jclouds.openstack.v2_0.services.Extension(of = ServiceType.COMPUTE, name = "Floating_ips", namespace = "http://docs.openstack.org/fake")
+   interface FloatingIPNamedApi {
+
+   }
+
    interface NovaApi {
 
       @Delegate
       Optional<FloatingIPApi> getFloatingIPExtensionApi(String region);
+
+      @Delegate
+      Optional<FloatingIPNamedApi> getFloatingIPNamedExtensionApi(String region);
 
       @Delegate
       Optional<KeyPairApi> getKeyPairExtensionApi(String region);
@@ -83,6 +91,11 @@ public class PresentWhenExtensionAnnotationNamespaceEqualsAnyNamespaceInExtensio
    InvocationSuccess getFloatingIPExtension(List<Object> args) throws SecurityException, NoSuchMethodException {
       return InvocationSuccess.create(
             Invocation.create(method(NovaApi.class, "getFloatingIPExtensionApi", String.class), args), "foo");
+   }
+
+   InvocationSuccess getFloatingIPNamedExtension(List<Object> args) throws SecurityException, NoSuchMethodException {
+      return InvocationSuccess.create(
+            Invocation.create(method(NovaApi.class, "getFloatingIPNamedExtensionApi", String.class), args), "foo");
    }
 
    InvocationSuccess getKeyPairExtension(List<Object> args) throws SecurityException, NoSuchMethodException {
@@ -108,7 +121,7 @@ public class PresentWhenExtensionAnnotationNamespaceEqualsAnyNamespaceInExtensio
    /**
     * It is possible that the /extensions call returned the correct extension, but that the
     * namespaces were different, for whatever reason. One way to address this is to have a multimap
-    * of the authoritative namespace to alternate onces, which could be wired up with guice
+    * of the authoritative namespace to alternate ones, which could be wired up with guice
     *
     */
    public void testPresentWhenAliasForExtensionMapsToNamespace() throws SecurityException, NoSuchMethodException {
@@ -123,6 +136,22 @@ public class PresentWhenExtensionAnnotationNamespaceEqualsAnyNamespaceInExtensio
       assertEquals(whenExtensionsAndAliasesInRegionInclude("region", ImmutableSet.of(keypairsWithDifferentNamespace), aliases).apply(
               getFloatingIPExtension(ImmutableList.<Object> of("region"))), Optional.absent());
 
+   }
+
+   /**
+    * In devstack and going forward, namespaces are being deprecated. When namespace is missing (or replaced with a
+    * "fake" /fake namespace), allow matching by name and alias.
+    *
+    */
+   public void testPresentWhenNameSpaceIsMissingAndMatchByNameOrAlias() throws SecurityException, NoSuchMethodException {
+      Extension floatingIpsWithFakeNamespace = floatingIps.toBuilder()
+            .namespace(URI.create("http://docs.openstack.org/ext/fake"))
+            .build();
+
+      Multimap<URI, URI> aliases = ImmutableMultimap.of();
+
+      assertEquals(whenExtensionsAndAliasesInRegionInclude("region", ImmutableSet.of(floatingIpsWithFakeNamespace), aliases).apply(
+            getFloatingIPNamedExtension(ImmutableList.<Object> of("region"))), Optional.of("foo"));
    }
 
    private PresentWhenExtensionAnnotationNamespaceEqualsAnyNamespaceInExtensionsSet whenExtensionsInRegionInclude(
@@ -141,7 +170,7 @@ public class PresentWhenExtensionAnnotationNamespaceEqualsAnyNamespaceInExtensio
                   @Override
                   protected void configure() {
                      MapBinder<URI, URI> aliasBindings = MapBinder.newMapBinder(binder(),
-                           URI.class, URI.class, Aliases.class).permitDuplicates();
+                           URI.class, URI.class, NamespaceAliases.class).permitDuplicates();
                      for (URI key : aliases.keySet()) {
                         for (URI value : aliases.get(key)) {
                            aliasBindings.addBinding(key).toInstance(value);

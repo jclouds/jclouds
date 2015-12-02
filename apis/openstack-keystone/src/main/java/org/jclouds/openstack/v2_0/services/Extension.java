@@ -28,15 +28,27 @@ import javax.inject.Qualifier;
  * the context of the extension, we must consider the <a href=
  * "http://docs.openstack.org/api/openstack-compute/2/content/Extensions-d1e1444.html"
  * >extensions call</a>.
- * 
+ *
  * <br/>
  * For our purposes, the minimal context of an extension is the type of the
  * service it extends ex. {@link ServiceType#COMPUTE}, and its namespace ex. <a
  * href
  * ="http://docs.openstack.org/ext/keypairs/api/v1.1">http://docs.openstack.org
  * /ext/keypairs/api/v1.1</a>.
- * 
- * 
+ *
+ * <br/><br/>
+ * A keystone extension example:<br/><br/>
+ * {<br/>
+ * "updated": "2014-12-03T00:00:00Z",<br/>
+ * "name": "DiskConfig",<br/>
+ * "links": [<br/>
+ *<br/>
+ * ],<br/>
+ * "namespace": "http://docs.openstack.org/compute/ext/fake_xml",<br/>
+ * "alias": "OS-DCF",<br/>
+ * "description": "Disk Management Extension."<br/>
+ * },<br/>
+ *<br/>
  * @see ServiceType
  * @see <a href=
  *      "http://docs.openstack.org/api/openstack-compute/2/content/Extensions-d1e1444.html"
@@ -51,14 +63,14 @@ public @interface Extension {
 
    /**
     * the service type this is an extension of.
-    * 
+    *
     * <h3>note</h3>
-    * 
+    *
     * This isn't necessarily one of the built-in {@link ServiceType services},
     * it could be an extension of a custom service.
-    * 
+    *
     * @return the service type this is an extension of.
-    * 
+    *
     */
    String of();
 
@@ -66,9 +78,18 @@ public @interface Extension {
     * namespace ex. <a href
     * ="http://docs.openstack.org/ext/keypairs/api/v1.1">http
     * ://docs.openstack.org /ext/keypairs/api/v1.1</a>.
-    * 
+    *
     * @return the namespace of the extension
     */
    String namespace();
 
+   /**
+    * @return the name of the extension
+    */
+   String name() default "";
+
+   /**
+    * @return the alias of the extension
+    */
+   String alias() default "";
 }

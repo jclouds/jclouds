@@ -92,15 +92,15 @@ public class KeystoneHttpApiModule extends HttpApiModule<KeystoneApi> {
    }
 
    // Allow providers to cleanly contribute their own aliases
-   public static MapBinder<URI, URI> aliasBinder(Binder binder) {
-      return MapBinder.newMapBinder(binder, URI.class, URI.class, Aliases.class).permitDuplicates();
+   public static MapBinder<URI, URI> namespaceAliasBinder(Binder binder) {
+      return MapBinder.newMapBinder(binder, URI.class, URI.class, NamespaceAliases.class).permitDuplicates();
    }
 
    @Override
    protected void configure() {
       bind(ImplicitOptionalConverter.class).to(PresentWhenExtensionAnnotationNamespaceEqualsAnyNamespaceInExtensionsSet.class);
       super.configure();
-      aliasBinder(binder());
+      namespaceAliasBinder(binder());
    }
 
    @Provides

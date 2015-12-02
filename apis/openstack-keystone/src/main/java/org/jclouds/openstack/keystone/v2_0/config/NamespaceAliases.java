@@ -26,6 +26,6 @@ import javax.inject.Qualifier;
 @Retention(value = RetentionPolicy.RUNTIME)
 @Target(value = { ElementType.TYPE, ElementType.FIELD, ElementType.PARAMETER, ElementType.METHOD })
 @Qualifier
-public @interface Aliases {
+public @interface NamespaceAliases {
 
 }

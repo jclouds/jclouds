@@ -40,7 +40,7 @@ import java.net.URI;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
-import static org.jclouds.openstack.keystone.v2_0.config.KeystoneHttpApiModule.aliasBinder;
+import static org.jclouds.openstack.keystone.v2_0.config.KeystoneHttpApiModule.namespaceAliasBinder;
 
 /**
  * Configures the Nova connection.
@@ -61,7 +61,7 @@ public class NovaHttpApiModule extends HttpApiModule<NovaApi> {
 
    // Intentionally private so subclasses use the Guice multibindings to contribute their aliases
    private void bindDefaultAliases() {
-      MapBinder<URI, URI> aliases = aliasBinder(binder());
+      MapBinder<URI, URI> aliases = namespaceAliasBinder(binder());
       aliases.addBinding(URI.create(ExtensionNamespaces.SECURITY_GROUPS)).toInstance(
             URI.create("http://docs.openstack.org/compute/ext/securitygroups/api/v1.1"));
       aliases.addBinding(URI.create(ExtensionNamespaces.FLOATING_IPS)).toInstance(

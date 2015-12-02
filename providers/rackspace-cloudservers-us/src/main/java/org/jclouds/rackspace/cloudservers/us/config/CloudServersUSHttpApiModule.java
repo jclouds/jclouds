@@ -16,7 +16,7 @@
  */
 package org.jclouds.rackspace.cloudservers.us.config;
 
-import static org.jclouds.openstack.keystone.v2_0.config.KeystoneHttpApiModule.aliasBinder;
+import static org.jclouds.openstack.keystone.v2_0.config.KeystoneHttpApiModule.namespaceAliasBinder;
 
 import java.net.URI;
 
@@ -36,7 +36,7 @@ public class CloudServersUSHttpApiModule extends NovaHttpApiModule {
    @Override
    protected void configure() {
       super.configure();
-      MapBinder<URI, URI> aliases = aliasBinder(binder());
+      MapBinder<URI, URI> aliases = namespaceAliasBinder(binder());
       aliases.addBinding(URI.create(ExtensionNamespaces.VOLUME_ATTACHMENTS)).toInstance(
             URI.create("http://docs.openstack.org/compute/ext/volumes/api/v1.1"));
    }

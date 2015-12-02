@@ -33,7 +33,7 @@ public class ExtensionPredicates {
 
    /**
     * matches namespace of the given extension
-    * 
+    *
     * @param namespace
     *           ex {@code http://docs.openstack.org/ext/keypairs/api/v1.1}
     * @return predicate that will match namespace of the given extension
@@ -56,7 +56,7 @@ public class ExtensionPredicates {
 
    /**
     * matches alias of the given extension
-    * 
+    *
     * @param alias
     *           ex. {@code os-keypairs}
     * @return predicate that will alias of the given extension
@@ -75,13 +75,13 @@ public class ExtensionPredicates {
             return "aliasEquals(" + alias + ")";
          }
       };
-   }   
+   }
    /**
     * matches namespace of the given extension
-    * 
+    *
     * @param namespace
     *           ex {@code http://docs.openstack.org/ext/keypairs/api/v1.1}
-    * @param namespacesAliases
+    * @param namespaceAliases
     *           Collection of ex {@code http://docs.openstack.org/compute/ext/keypairs/api/v1.1}
     * @return predicate that will match namespace of the given extension
     */
@@ -99,6 +99,29 @@ public class ExtensionPredicates {
          @Override
          public String toString() {
             return "namespaceOrAliasEquals(" + namespace + ")";
+         }
+      };
+   }
+
+   /**
+    * matches name of the given extension
+    *
+    * @param name
+    *           ex {@code http://docs.openstack.org/ext/keypairs/api/v1.1}
+    * @return predicate that will match name of the given extension
+    */
+   public static Predicate<Extension> nameEquals(final String name) {
+      checkNotNull(name, "extension name must be defined");
+
+      return new Predicate<Extension>() {
+         @Override
+         public boolean apply(Extension ext) {
+            return name.equals(ext.getName());
+         }
+
+         @Override
+         public String toString() {
+            return "nameEquals(" + name + ")";
          }
       };
    }

@@ -18,6 +18,7 @@ package org.jclouds.openstack.v2_0.functions;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.collect.Iterables.any;
+import static org.jclouds.openstack.v2_0.predicates.ExtensionPredicates.nameEquals;
 import static org.jclouds.openstack.v2_0.predicates.ExtensionPredicates.namespaceOrAliasEquals;
 import static org.jclouds.util.Optionals2.unwrapIfOptional;
 
@@ -28,7 +29,7 @@ import java.util.Set;
 
 import javax.inject.Inject;
 
-import org.jclouds.openstack.keystone.v2_0.config.Aliases;
+import org.jclouds.openstack.keystone.v2_0.config.NamespaceAliases;
 import org.jclouds.openstack.v2_0.domain.Extension;
 import org.jclouds.reflect.InvocationSuccess;
 import org.jclouds.rest.functions.ImplicitOptionalConverter;
@@ -39,7 +40,7 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Sets;
 
 /**
- * We use the annotation {@link org.jclouds.openstack.services.Extension} to bind a class that implements an extension
+ * We use the annotation {@link Extension} to bind a class that implements an extension
  * API to an {@link Extension}.
  */
 public class PresentWhenExtensionAnnotationNamespaceEqualsAnyNamespaceInExtensionsSet implements
@@ -49,7 +50,7 @@ public class PresentWhenExtensionAnnotationNamespaceEqualsAnyNamespaceInExtensio
 
    @Inject
    PresentWhenExtensionAnnotationNamespaceEqualsAnyNamespaceInExtensionsSet(
-         LoadingCache<String, Set<? extends Extension>> extensions, @Aliases Map<URI, Set<URI>> aliases) {
+         LoadingCache<String, Set<? extends Extension>> extensions, @NamespaceAliases Map<URI, Set<URI>> aliases) {
       this.extensions = extensions;
       this.aliases = aliases == null ? ImmutableMap.<URI, Set<URI>> of() : ImmutableMap.copyOf(aliases);
    }
@@ -63,16 +64,29 @@ public class PresentWhenExtensionAnnotationNamespaceEqualsAnyNamespaceInExtensio
          URI namespace = URI.create(ext.get().namespace());
          List<Object> args = input.getInvocation().getArgs();
          Set<URI> aliasesForNamespace = aliases.containsKey(namespace) ? aliases.get(namespace) : Sets.<URI> newHashSet();
+         String name = ext.get().name();
+
          if (args.isEmpty()) {
             if (any(extensions.getUnchecked(""), namespaceOrAliasEquals(namespace, aliasesForNamespace)))
                return input.getResult();
+            // Could not find extension by namespace or namespace alias. Try to find it by name next:
+            if ( !"".equals(name)) {
+               if (any(extensions.getUnchecked(""), nameEquals(name)))
+                  return input.getResult();
+            }
          } else if (args.size() == 1) {
             String arg0 = checkNotNull(args.get(0), "arg[0] in %s", input).toString();
             if (any(extensions.getUnchecked(arg0), namespaceOrAliasEquals(namespace, aliasesForNamespace)))
                return input.getResult();
+            // Could not find extension by namespace or namespace alias. Try to find it by name next:
+            if (!"".equals(name)) {
+               if (any(extensions.getUnchecked(arg0), nameEquals(name)))
+                  return input.getResult();
+            }
          } else {
             throw new RuntimeException(String.format("expecting zero or one args %s", input));
          }
+
          return Optional.absent();
       } else {
          // No extension annotation, should check whether to return absent
