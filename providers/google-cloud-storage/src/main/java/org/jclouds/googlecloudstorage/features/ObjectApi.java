@@ -85,7 +85,6 @@ public interface ObjectApi {
    @GET
    @Path("storage/v1/b/{bucket}/o/{object}")
    @Fallback(FalseOnNotFoundOr404.class)
-   @Nullable
    boolean objectExists(@PathParam("bucket") String bucketName, @PathParam("object") @Encoded String objectName);
 
    /**

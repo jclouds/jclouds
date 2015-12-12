@@ -37,7 +37,7 @@ public abstract class ComposeObjectTemplate {
 
       @AutoValue
       public abstract static class ObjectPreconditions {
-         @Nullable public abstract long ifGenerationMatch();
+         public abstract long ifGenerationMatch();
 
          @SerializedNames({"ifGenerationMatch"})
          public static ObjectPreconditions create(long ifGenerationMatch){
