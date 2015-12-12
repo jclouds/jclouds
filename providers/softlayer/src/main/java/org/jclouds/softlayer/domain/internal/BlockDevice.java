@@ -33,7 +33,7 @@ public class BlockDevice {
       this.diskImage = new DiskImage(diskImageCapacity);
    }
 
-   private class DiskImage {
+   private static class DiskImage {
       private float capacity;
 
       public DiskImage(float capacity) {
