@@ -16,8 +16,6 @@
  */
 package org.jclouds.cloudwatch.domain;
 
-import org.jclouds.javax.annotation.Nullable;
-
 /**
  * @see <a href="http://docs.amazonwebservices.com/AmazonCloudWatch/latest/APIReference/API_StatisticSet.html" />
  */
@@ -38,7 +36,6 @@ public class StatisticValues {
    /**
     * return the maximum value of the sample set
     */
-   @Nullable
    public double getMaximum() {
       return maximum;
    }
@@ -46,7 +43,6 @@ public class StatisticValues {
    /**
     * return the minimum value of the sample set
     */
-   @Nullable
    public double getMinimum() {
       return minimum;
    }
@@ -54,7 +50,6 @@ public class StatisticValues {
    /**
     * return the number of samples used for the statistic set
     */
-   @Nullable
    public double getSampleCount() {
       return sampleCount;
    }
@@ -62,7 +57,6 @@ public class StatisticValues {
    /**
     * return the sum of values for the sample set
     */
-   @Nullable
    public double getSum() {
       return sum;
    }

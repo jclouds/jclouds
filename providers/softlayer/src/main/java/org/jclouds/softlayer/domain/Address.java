@@ -238,7 +238,6 @@ public class Address {
    /**
     * @return The id of the account.
     */
-   @Nullable
    public int getAccountId() {
       return accountId;
    }
@@ -270,7 +269,6 @@ public class Address {
    /**
     * @return The name of the contact.
     */
-   @Nullable
    public int isActive() {
       return isActive;
    }
@@ -278,7 +276,6 @@ public class Address {
    /**
     * @return The id of the location.
     */
-   @Nullable
    public int getLocationId() {
       return locationId;
    }

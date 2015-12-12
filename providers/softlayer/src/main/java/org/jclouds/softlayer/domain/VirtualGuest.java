@@ -789,7 +789,6 @@ public class VirtualGuest {
       return this.powerState;
    }
 
-   @Nullable
    public int getActiveTransactionCount() {
       return activeTransactionCount;
    }

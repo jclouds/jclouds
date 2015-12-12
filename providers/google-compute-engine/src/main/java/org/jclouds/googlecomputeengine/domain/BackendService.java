@@ -72,8 +72,8 @@ public abstract class BackendService {
    @Nullable public  abstract String description();
    @Nullable public  abstract List<Backend> backends();
    @Nullable public abstract List<URI> healthChecks();
-   @Nullable public abstract int timeoutSec();
-   @Nullable public abstract int port();
+   public abstract int timeoutSec();
+   public abstract int port();
    @Nullable public abstract String protocol();
    @Nullable public abstract String fingerprint();
    @Nullable public abstract String portName();

@@ -46,7 +46,7 @@ public abstract class Instance {
       }
 
       /** A zero-based index to assign to this disk, where 0 is reserved for the boot disk. */
-      @Nullable public abstract int index();
+      public abstract int index();
 
       public abstract Type type();
 

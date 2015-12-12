@@ -749,6 +749,7 @@
               <compilerArg>-Xep:GuiceAssistedInjectScoping:OFF</compilerArg>
               <compilerArg>-Xep:LongLiteralLowerCaseSuffix:OFF</compilerArg>
               <compilerArg>-Xep:NonAtomicVolatileUpdate:OFF</compilerArg>
+              <compilerArg>-Xep:NullablePrimitive:ERROR</compilerArg>
               <compilerArg>-Xep:StringEquality:ERROR</compilerArg>
               <compilerArg>-Xep:TypeParameterUnusedInFormals:OFF</compilerArg>
             </compilerArgs>
