@@ -138,7 +138,7 @@ public class GoogleComputeEngineServiceLiveTest extends BaseComputeServiceLiveTe
    protected void checkTagsInNodeEquals(NodeMetadata node, ImmutableSet<String> tags) {
       Set<String> nodeTags = node.getTags();
       for (String tag : tags){
-         assert nodeTags.contains(tag) : String.format("node tags did not match %s %s node:", tags, nodeTags, node);
+         assert nodeTags.contains(tag) : String.format("node tags did not match %s %s node %s:", tags, nodeTags, node);
       }
    }
 

@@ -749,6 +749,7 @@
               <compilerArg>-Xep:ClassCanBeStatic:ERROR</compilerArg>
               <compilerArg>-Xep:GuiceAssistedInjectScoping:OFF</compilerArg>
               <compilerArg>-Xep:LongLiteralLowerCaseSuffix:OFF</compilerArg>
+              <compilerArg>-Xep:MalformedFormatString:ERROR</compilerArg>
               <compilerArg>-Xep:NonAtomicVolatileUpdate:OFF</compilerArg>
               <compilerArg>-Xep:NullablePrimitive:ERROR</compilerArg>
               <compilerArg>-Xep:StringEquality:ERROR</compilerArg>

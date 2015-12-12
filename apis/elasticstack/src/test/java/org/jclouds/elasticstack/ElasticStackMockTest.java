@@ -56,8 +56,7 @@ public class ElasticStackMockTest extends BaseMockWebServerTest {
 
          RecordedRequest request = server.takeRequest();
          assertAuthentication(request);
-         assertEquals(request.getRequestLine(),
-               String.format("GET /drives/list/standard HTTP/1.1", server.getUrl("/").toString()));
+         assertEquals(request.getRequestLine(), "GET /drives/list/standard HTTP/1.1");
       } finally {
          api.close();
          server.shutdown();
@@ -74,8 +73,7 @@ public class ElasticStackMockTest extends BaseMockWebServerTest {
 
          RecordedRequest request = server.takeRequest();
          assertAuthentication(request);
-         assertEquals(request.getRequestLine(),
-               String.format("GET /drives/info/standard HTTP/1.1", server.getUrl("/").toString()));
+         assertEquals(request.getRequestLine(), "GET /drives/info/standard HTTP/1.1");
       } finally {
          api.close();
          server.shutdown();

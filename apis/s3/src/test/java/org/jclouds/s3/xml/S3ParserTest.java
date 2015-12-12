@@ -124,7 +124,7 @@ public class S3ParserTest extends PerformanceTest {
       ObjectMetadata object = container.iterator().next();
       assert object.getKey().equals("3366");
       Date expected = new SimpleDateFormatDateService().iso8601DateParse("2009-03-12T02:00:13.000Z");
-      assert object.getLastModified().equals(expected) : String.format("expected %1$s, but got %1$s", expected, object
+      assert object.getLastModified().equals(expected) : String.format("expected %1$s, but got %2$s", expected, object
                .getLastModified());
       assertEquals(object.getETag(), "\"9d7bb64e8e18ee34eec06dd2cf37b766\"");
       assert object.getContentMetadata().getContentLength() == 136;
