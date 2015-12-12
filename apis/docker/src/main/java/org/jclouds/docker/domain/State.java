@@ -41,9 +41,9 @@ public abstract class State {
 
    @Nullable public abstract String status();
 
-   @Nullable public abstract boolean oomKilled();
+   public abstract boolean oomKilled();
 
-   @Nullable public abstract boolean dead();
+   public abstract boolean dead();
 
    @Nullable public abstract String error();
 
