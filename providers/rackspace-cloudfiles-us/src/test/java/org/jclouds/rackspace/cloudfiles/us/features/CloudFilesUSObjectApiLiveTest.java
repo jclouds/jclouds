@@ -14,8 +14,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jclouds.rackspace.cloudfiles.v1.features;
+package org.jclouds.rackspace.cloudfiles.us.features;
 
+import org.jclouds.rackspace.cloudfiles.v1.features.CloudFilesObjectApiLiveTest;
 import org.testng.annotations.Test;
 
 /**
