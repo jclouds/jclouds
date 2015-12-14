@@ -418,7 +418,7 @@ public interface AzureBlobClient extends Closeable {
    @Named("SetBlobProperties")
    @PUT
    @Path("{container}/{name}")
-   @QueryParams(keys = { "comp" }, values = { "metadata" })
+   @QueryParams(keys = { "comp" }, values = { "properties" })
    @ResponseParser(ParseETagHeader.class)
    String setBlobProperties(
          @PathParam("container") @ParamValidators(ContainerNameValidator.class) String container,

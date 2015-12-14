@@ -50,6 +50,8 @@ import org.jclouds.blobstore.integration.internal.BaseBlobStoreIntegrationTest;
 import org.jclouds.http.HttpResponseException;
 import org.jclouds.http.options.GetOptions;
 import org.jclouds.io.ByteStreams2;
+import org.jclouds.io.ContentMetadata;
+import org.jclouds.io.ContentMetadataBuilder;
 import org.jclouds.io.Payloads;
 import org.jclouds.util.Strings2;
 import org.jclouds.util.Throwables2;
@@ -543,5 +545,37 @@ public class AzureBlobClientLiveTest extends BaseBlobStoreIntegrationTest {
       getApi().copyBlob(copySource, privateContainer, "to-if-none-match", CopyBlobOptions.builder().ifNoneMatch(fakeETag).build());
       AzureBlob getBlob = getApi().getBlob(privateContainer, "to-if-none-match");
       assertEquals(ByteStreams2.toByteArrayAndClose(getBlob.getPayload().openStream()), byteSource.read());
+   }
+
+   @Test
+   public void testSetBlobProperties() throws Exception {
+      String blobName = "blob-name";
+      ByteSource byteSource = TestUtils.randomByteSource().slice(0, 1024);
+      String contentDisposition = "attachment; filename=photo.jpg";
+      String contentEncoding = "compress";
+      String contentLanguage = "en";
+      String contentType = "audio/ogg";
+
+      // create blob
+      AzureBlob object = getApi().newBlob();
+      object.getProperties().setName(blobName);
+      object.setPayload(byteSource.read());
+      getApi().putBlob(privateContainer, object);
+
+      // set properties
+      getApi().setBlobProperties(privateContainer, blobName, ContentMetadataBuilder.create()
+              .contentDisposition(contentDisposition)
+              .contentEncoding(contentEncoding)
+              .contentLanguage(contentLanguage)
+              .contentType(contentType)
+              .build());
+
+      // get properties
+      BlobProperties properties = getApi().getBlobProperties(privateContainer, blobName);
+      ContentMetadata contentMetadata = properties.getContentMetadata();
+      assertThat(contentMetadata.getContentDisposition()).isEqualTo(contentDisposition);
+      assertThat(contentMetadata.getContentEncoding()).isEqualTo(contentEncoding);
+      assertThat(contentMetadata.getContentLanguage()).isEqualTo(contentLanguage);
+      assertThat(contentMetadata.getContentType()).isEqualTo(contentType);
    }
 }

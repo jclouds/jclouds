@@ -21,6 +21,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 import javax.inject.Singleton;
 
+import org.jclouds.azure.storage.reference.AzureStorageHeaders;
 import org.jclouds.http.HttpRequest;
 import org.jclouds.io.ContentMetadata;
 import org.jclouds.rest.Binder;
@@ -44,14 +45,24 @@ public class BindAzureContentMetadataToRequest implements Binder {
 
       ImmutableMap.Builder<String, String> headers = ImmutableMap.builder();
 
-      String contentType = contentMetadata.getContentType();
-      if (contentType != null) {
-         headers.put("x-ms-blob-type", contentType);
-      }
-
       String contentDisposition = contentMetadata.getContentDisposition();
       if (contentDisposition != null) {
-         headers.put("x-ms-blob-content-disposition", contentDisposition);
+         headers.put(AzureStorageHeaders.CONTENT_DISPOSITION, contentDisposition);
+      }
+
+      String contentEncoding = contentMetadata.getContentEncoding();
+      if (contentEncoding != null) {
+         headers.put(AzureStorageHeaders.CONTENT_ENCODING, contentEncoding);
+      }
+
+      String contentLanguage = contentMetadata.getContentLanguage();
+      if (contentLanguage != null) {
+         headers.put(AzureStorageHeaders.CONTENT_LANGUAGE, contentLanguage);
+      }
+
+      String contentType = contentMetadata.getContentType();
+      if (contentType != null) {
+         headers.put(AzureStorageHeaders.CONTENT_TYPE, contentType);
       }
 
       return (R) request.toBuilder().replaceHeaders(Multimaps.forMap(headers.build())).build();
