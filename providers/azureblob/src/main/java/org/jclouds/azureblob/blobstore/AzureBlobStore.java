@@ -240,11 +240,9 @@ public class AzureBlobStore extends BaseBlobStore {
       }
 
       URI source = context.getSigner().signGetBlob(fromContainer, fromName).getEndpoint();
-      sync.copyBlob(source, toContainer, toName, azureOptions.build());
+      String eTag = sync.copyBlob(source, toContainer, toName, azureOptions.build());
 
       ContentMetadataBuilder builder = ContentMetadataBuilder.create();
-
-      String eTag = null;
 
       Optional<ContentMetadata> contentMetadata = options.getContentMetadata();
       if (contentMetadata.isPresent()) {
@@ -263,10 +261,6 @@ public class AzureBlobStore extends BaseBlobStore {
 
       if (userMetadata.isPresent()) {
          eTag = sync.setBlobMetadata(toContainer, toName, userMetadata.get());
-      }
-
-      if (eTag == null) {
-         eTag = sync.getBlobProperties(toContainer, toName).getETag();
       }
 
       return eTag;

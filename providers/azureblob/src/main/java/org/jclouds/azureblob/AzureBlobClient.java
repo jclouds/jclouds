@@ -463,7 +463,8 @@ public interface AzureBlobClient extends Closeable {
    @PUT
    @Path("{toContainer}/{toName}")
    @Headers(keys = AzureStorageHeaders.COPY_SOURCE, values = "{copySource}")
-   void copyBlob(
+   @ResponseParser(ParseETagHeader.class)
+   String copyBlob(
          @PathParam("copySource") URI copySource,
          @PathParam("toContainer") @ParamValidators(ContainerNameValidator.class) String toContainer, @PathParam("toName") String toName,
          @BinderParam(BindAzureCopyOptionsToRequest.class) CopyBlobOptions options);
