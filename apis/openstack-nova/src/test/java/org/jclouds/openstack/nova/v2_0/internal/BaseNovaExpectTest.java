@@ -35,6 +35,7 @@ public class BaseNovaExpectTest<T> extends BaseRestApiExpectTest<T> {
    protected HttpRequest extensionsOfNovaRequest;
    protected HttpResponse extensionsOfNovaResponse;
    protected HttpResponse unmatchedExtensionsOfNovaResponse;
+   protected HttpResponse unmatchedExtensionsOfNovaResponseWithNoNamespace;
    protected HttpRequest keystoneAuthWithAccessKeyAndSecretKeyAndTenantId;
    protected String identityWithTenantId;
 
@@ -48,13 +49,13 @@ public class BaseNovaExpectTest<T> extends BaseRestApiExpectTest<T> {
             credential);
       keystoneAuthWithAccessKeyAndSecretKeyAndTenantId = KeystoneFixture.INSTANCE.initialAuthWithAccessKeyAndSecretKeyAndTenantId(identity,
               credential);
-      
+
       authToken = KeystoneFixture.INSTANCE.getAuthToken();
       responseWithKeystoneAccess = KeystoneFixture.INSTANCE.responseWithAccess();
       // now, createContext arg will need tenant prefix
       identityWithTenantId = KeystoneFixture.INSTANCE.getTenantId() + ":" + identity;
       identity = KeystoneFixture.INSTANCE.getTenantName() + ":" + identity;
-      
+
       extensionsOfNovaRequest = HttpRequest.builder().method("GET")
              // NOTE THIS IS NOVA, NOT KEYSTONE
             .endpoint("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v2/3456/extensions")
@@ -63,16 +64,19 @@ public class BaseNovaExpectTest<T> extends BaseRestApiExpectTest<T> {
 
       extensionsOfNovaResponse = HttpResponse.builder().statusCode(200)
             .payload(payloadFromResource("/extension_list_full.json")).build();
-      
+
       unmatchedExtensionsOfNovaResponse = HttpResponse.builder().statusCode(200)
             .payload(payloadFromResource("/extension_list.json")).build();
+
+      unmatchedExtensionsOfNovaResponseWithNoNamespace = HttpResponse.builder().statusCode(200)
+            .payload(payloadFromResource("/extension_list_full_no_namespaces.json")).build();
    }
 
    @Override
    protected HttpRequestComparisonType compareHttpRequestAsType(HttpRequest input) {
       return HttpRequestComparisonType.JSON;
    }
-   
+
    protected HttpRequest.Builder<?> authenticatedGET() {
       return HttpRequest.builder()
                         .method("GET")

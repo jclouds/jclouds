@@ -48,7 +48,7 @@ import com.google.common.collect.FluentIterable;
  * This API strictly handles attaching Volumes to Servers. To create and manage Volumes you need to use the Cinder API.
  * @see org.jclouds.openstack.cinder.v1.features.VolumeApi
  */
-@Extension(of = ServiceType.COMPUTE, namespace = ExtensionNamespaces.VOLUME_ATTACHMENTS)
+@Extension(of = ServiceType.COMPUTE, namespace = ExtensionNamespaces.VOLUME_ATTACHMENTS, name = ExtensionNames.VOLUME_ATTACHMENT)
 @RequestFilters(AuthenticateRequest.class)
 @Consumes(MediaType.APPLICATION_JSON)
 @Path("/servers")

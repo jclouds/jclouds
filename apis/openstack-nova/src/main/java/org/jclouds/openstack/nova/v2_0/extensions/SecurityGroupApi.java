@@ -51,7 +51,7 @@ import com.google.common.collect.FluentIterable;
  * Provides access to the OpenStack Compute (Nova) Security Group extension API.
  */
 @Beta
-@Extension(of = ServiceType.COMPUTE, namespace = ExtensionNamespaces.SECURITY_GROUPS)
+@Extension(of = ServiceType.COMPUTE, namespace = ExtensionNamespaces.SECURITY_GROUPS, name = ExtensionNames.SECURITY_GROUPS)
 @RequestFilters(AuthenticateRequest.class)
 @Consumes(MediaType.APPLICATION_JSON)
 public interface SecurityGroupApi {

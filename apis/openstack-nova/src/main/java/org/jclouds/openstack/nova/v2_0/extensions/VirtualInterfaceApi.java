@@ -39,7 +39,7 @@ import com.google.common.collect.FluentIterable;
  * Provides access to the OpenStack Compute (Nova) Virtual Interface (VIFs) extension API.
  */
 @Beta
-@Extension(of = ServiceType.COMPUTE, namespace = ExtensionNamespaces.VIRTUAL_INTERFACES)
+@Extension(of = ServiceType.COMPUTE, namespace = ExtensionNamespaces.VIRTUAL_INTERFACES, name = ExtensionNames.VIRTUAL_INTERFACES)
 @RequestFilters(AuthenticateRequest.class)
 @Consumes(MediaType.APPLICATION_JSON)
 @Path("/servers")

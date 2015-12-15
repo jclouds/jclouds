@@ -17,8 +17,16 @@
 
 package org.jclouds.openstack.nova.v2_0.extensions;
 
-import com.google.common.annotations.Beta;
-import com.google.common.collect.FluentIterable;
+import javax.inject.Named;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
+import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
+
 import org.jclouds.Fallbacks;
 import org.jclouds.javax.annotation.Nullable;
 import org.jclouds.openstack.keystone.v2_0.filters.AuthenticateRequest;
@@ -31,21 +39,14 @@ import org.jclouds.rest.annotations.PayloadParam;
 import org.jclouds.rest.annotations.RequestFilters;
 import org.jclouds.rest.annotations.SelectJson;
 
-import javax.inject.Named;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.DELETE;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.MediaType;
+import com.google.common.annotations.Beta;
+import com.google.common.collect.FluentIterable;
 
 /**
  * Provides access to the OpenStack Compute (Nova) Attach Interfaces API.
  */
 @Beta
-@Extension(of = ServiceType.COMPUTE, namespace = ExtensionNamespaces.ATTACH_INTERFACES)
+@Extension(of = ServiceType.COMPUTE, namespace = ExtensionNamespaces.ATTACH_INTERFACES, name = ExtensionNames.ATTACH_INTERFACES)
 @RequestFilters(AuthenticateRequest.class)
 @Consumes(MediaType.APPLICATION_JSON)
 @Path("/servers")
@@ -53,7 +54,7 @@ public interface AttachInterfaceApi {
 
    /**
     * Returns list of port interfaces for given server
-    * 
+    *
     * @param serverId
     *           The Server ID
     * @return list of port interfaces for given server
@@ -67,7 +68,7 @@ public interface AttachInterfaceApi {
 
    /**
     * Returns information about a specified port interface for given server
-    * 
+    *
     * @param serverId
     *           The Server ID
     * @param attachmentId
@@ -84,7 +85,7 @@ public interface AttachInterfaceApi {
 
    /**
     * Creates a new port interface and associate with the given port
-    * 
+    *
     * @param portId
     *           The port ID
     * @return newly created port interface

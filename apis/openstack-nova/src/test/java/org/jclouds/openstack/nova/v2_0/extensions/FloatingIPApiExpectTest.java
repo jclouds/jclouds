@@ -58,6 +58,17 @@ public class FloatingIPApiExpectTest extends BaseNovaApiExpectTest {
 
    }
 
+   public void testNamespaceMissingNameFallback() throws Exception {
+
+      NovaApi apiWhenExtensionNotInList = requestsSendResponses(keystoneAuthWithUsernameAndPasswordAndTenantName,
+            responseWithKeystoneAccess, extensionsOfNovaRequest, unmatchedExtensionsOfNovaResponseWithNoNamespace);
+
+      assertEquals(apiWhenExtensionNotInList.getConfiguredRegions(), ImmutableSet.of("az-1.region-a.geo-1", "az-2.region-a.geo-1", "az-3.region-a.geo-1"));
+
+      assertTrue(apiWhenExtensionNotInList.getFloatingIPApi("az-1.region-a.geo-1").isPresent());
+
+   }
+
    public void testListFloatingIPsWhenResponseIs2xx() throws Exception {
       HttpRequest list = HttpRequest
             .builder()
