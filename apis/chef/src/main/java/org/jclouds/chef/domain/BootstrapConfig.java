@@ -41,6 +41,10 @@ public class BootstrapConfig {
       public String toString() {
          return ":verify_" + name().toLowerCase();
       }
+
+      public static SSLVerifyMode fromValue(String value) {
+          return valueOf(value.replaceAll(":verify_", "").toUpperCase());
+      }
    }
 
    public static Builder builder() {

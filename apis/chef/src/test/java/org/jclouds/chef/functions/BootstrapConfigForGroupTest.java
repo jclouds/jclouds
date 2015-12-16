@@ -28,6 +28,7 @@ import org.jclouds.chef.ChefApi;
 import org.jclouds.chef.domain.BootstrapConfig;
 import org.jclouds.chef.domain.Client;
 import org.jclouds.chef.domain.DatabagItem;
+import org.jclouds.chef.domain.BootstrapConfig.SSLVerifyMode;
 import org.jclouds.json.Json;
 import org.jclouds.json.config.GsonModule;
 import org.testng.annotations.BeforeClass;
@@ -70,6 +71,7 @@ public class BootstrapConfigForGroupTest {
       BootstrapConfigForGroup fn = new BootstrapConfigForGroup("jclouds", chefApi, json);
       DatabagItem databag = new DatabagItem("foo",
             "{\"environment\":\"development\",\"ssl_ca_file\":\"/etc/certs/chef-server.crt\","
+                  + "\"ssl_verify_mode\": \":verify_peer\","
                   + "\"run_list\":[\"recipe[apache2]\",\"role[webserver]\"],"
                   + "\"attributes\":{\"tomcat6\":{\"ssl_port\":8433}}}");
 
@@ -79,6 +81,7 @@ public class BootstrapConfigForGroupTest {
       BootstrapConfig config = fn.apply("foo");
       assertEquals(config.getEnvironment(), "development");
       assertEquals(config.getSslCAFile(), "/etc/certs/chef-server.crt");
+      assertEquals(config.getSslVerifyMode(), SSLVerifyMode.PEER);
       assertEquals(config.getRunList().get(0), "recipe[apache2]");
       assertEquals(config.getRunList().get(1), "role[webserver]");
       assertEquals(config.getAttributes().toString(), "{\"tomcat6\":{\"ssl_port\":8433}}");
