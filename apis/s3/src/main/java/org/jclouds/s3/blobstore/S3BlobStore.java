@@ -74,7 +74,6 @@ import com.google.common.base.Function;
 import com.google.common.base.Optional;
 import com.google.common.base.Predicate;
 import com.google.common.base.Supplier;
-import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
@@ -273,13 +272,6 @@ public class S3BlobStore extends BaseBlobStore {
 
       // TODO: Make use of options overrides
       PutObjectOptions options = new PutObjectOptions();
-      try {
-         AccessControlList acl = bucketAcls.getUnchecked(container);
-         if (acl != null && acl.hasPermission(GroupGranteeURI.ALL_USERS, Permission.READ))
-            options.withAcl(CannedAccessPolicy.PUBLIC_READ);
-      } catch (CacheLoader.InvalidCacheLoadException e) {
-         // nulls not permitted from cache loader
-      }
       return sync.putObject(container, blob2Object.apply(blob), options);
    }
 
