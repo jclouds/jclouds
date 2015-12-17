@@ -47,6 +47,8 @@ import org.jclouds.blobstore.domain.ContainerAccess;
 import org.jclouds.blobstore.domain.PageSet;
 import org.jclouds.blobstore.domain.StorageMetadata;
 import org.jclouds.blobstore.options.ListContainerOptions;
+import org.jclouds.http.HttpRequest;
+import org.jclouds.http.HttpResponse;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
@@ -510,6 +512,15 @@ public class BaseContainerIntegrationTest extends BaseBlobStoreIntegrationTest {
 
          blobStore.setContainerAccess(containerName, ContainerAccess.PUBLIC_READ);
          assertThat(blobStore.getContainerAccess(containerName)).isEqualTo(ContainerAccess.PUBLIC_READ);
+
+         String blobName = "blob";
+         blobStore.putBlob(containerName, blobStore.blobBuilder(blobName).payload("").build());
+
+         // test that blob is anonymously readable
+         HttpRequest request = view.getSigner().signGetBlob(containerName, blobName).toBuilder()
+                .replaceQueryParams(ImmutableMap.<String, String>of()).build();
+         HttpResponse response = view.utils().http().invoke(request);
+         assertThat(response.getStatusCode()).isEqualTo(200);
 
          blobStore.setContainerAccess(containerName, ContainerAccess.PRIVATE);
          assertThat(blobStore.getContainerAccess(containerName)).isEqualTo(ContainerAccess.PRIVATE);
