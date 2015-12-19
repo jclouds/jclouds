@@ -16,7 +16,7 @@
  */
 package org.jclouds.openstack.neutron.v2.config;
 
-import static org.jclouds.openstack.keystone.v2_0.config.KeystoneHttpApiModule.aliasBinder;
+import static org.jclouds.openstack.keystone.v2_0.config.KeystoneHttpApiModule.namespaceAliasBinder;
 
 import java.net.URI;
 import java.util.Set;
@@ -62,7 +62,7 @@ public class NeutronHttpApiModule extends HttpApiModule<NeutronApi> {
    }
 
    private void bindAliases() {
-      MapBinder<URI, URI> aliases = aliasBinder(binder());
+      MapBinder<URI, URI> aliases = namespaceAliasBinder(binder());
       aliases.addBinding(URI.create(ExtensionNamespaces.L3_ROUTER)).toInstance(
             URI.create("http://docs.openstack.org/ext/neutron/router/api/v1.0"));
       aliases.addBinding(URI.create(ExtensionNamespaces.SECURITY_GROUPS)).toInstance(
