@@ -160,17 +160,11 @@ public class S3BlobStore extends BaseBlobStore {
 
    @Override
    public void setContainerAccess(String container, ContainerAccess access) {
-      AccessControlList acl = sync.getBucketACL(container);
+      CannedAccessPolicy acl = CannedAccessPolicy.PRIVATE;
       if (access == ContainerAccess.PUBLIC_READ) {
-         acl.revokePermission(GroupGranteeURI.ALL_USERS, Permission.FULL_CONTROL)
-               .revokePermission(GroupGranteeURI.ALL_USERS, Permission.WRITE)
-               .addPermission(GroupGranteeURI.ALL_USERS, Permission.READ);
-      } else if (access == ContainerAccess.PRIVATE) {
-         acl.revokePermission(GroupGranteeURI.ALL_USERS, Permission.FULL_CONTROL)
-               .revokePermission(GroupGranteeURI.ALL_USERS, Permission.READ)
-               .revokePermission(GroupGranteeURI.ALL_USERS, Permission.WRITE);
+         acl = CannedAccessPolicy.PUBLIC_READ;
       }
-      sync.putBucketACL(container, acl);
+      sync.updateBucketCannedACL(container, acl);
    }
 
    /**
@@ -343,17 +337,11 @@ public class S3BlobStore extends BaseBlobStore {
 
    @Override
    public void setBlobAccess(String container, String name, BlobAccess access) {
-      AccessControlList acl = sync.getObjectACL(container, name);
+      CannedAccessPolicy acl = CannedAccessPolicy.PRIVATE;
       if (access == BlobAccess.PUBLIC_READ) {
-         acl.revokePermission(GroupGranteeURI.ALL_USERS, Permission.FULL_CONTROL)
-               .revokePermission(GroupGranteeURI.ALL_USERS, Permission.WRITE)
-               .addPermission(GroupGranteeURI.ALL_USERS, Permission.READ);
-      } else if (access == BlobAccess.PRIVATE) {
-         acl.revokePermission(GroupGranteeURI.ALL_USERS, Permission.FULL_CONTROL)
-               .revokePermission(GroupGranteeURI.ALL_USERS, Permission.READ)
-               .revokePermission(GroupGranteeURI.ALL_USERS, Permission.WRITE);
+         acl = CannedAccessPolicy.PUBLIC_READ;
       }
-      sync.putObjectACL(container, name, acl);
+      sync.updateObjectCannedACL(container, name, acl);
    }
 
    @Override
