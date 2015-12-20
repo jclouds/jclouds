@@ -185,4 +185,10 @@ public class FilesystemContainerIntegrationTest extends BaseContainerIntegration
       }
       return super.getBlobsToEscape();
    }
+
+   @Override
+   @Test(groups = { "integration", "live" })
+   public void testSetContainerAccess() throws Exception {
+      throw new SkipException("transient does not support anonymous access");
+   }
 }
