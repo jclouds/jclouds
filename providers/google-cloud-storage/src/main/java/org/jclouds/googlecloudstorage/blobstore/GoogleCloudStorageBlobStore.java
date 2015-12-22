@@ -209,15 +209,7 @@ public final class GoogleCloudStorageBlobStore extends BaseBlobStore {
     */
    @Override
    public String putBlob(String container, Blob blob) {
-      checkNotNull(blob.getPayload().getContentMetadata().getContentLength());
-      HashCode md5 = blob.getMetadata().getContentMetadata().getContentMD5AsHashCode();
-
-      ObjectTemplate template = blobMetadataToObjectTemplate.apply(blob.getMetadata());
-
-      if (md5 != null) {
-         template.md5Hash(base64().encode(md5.asBytes()));
-      }
-      return api.getObjectApi().multipartUpload(container, template, blob.getPayload()).etag();
+      return putBlob(container, blob, PutOptions.NONE);
    }
 
    @Override
@@ -225,7 +217,25 @@ public final class GoogleCloudStorageBlobStore extends BaseBlobStore {
       if (options.isMultipart()) {
          return putMultipartBlob(container, blob, options);
       } else {
-         return putBlob(container, blob);
+         checkNotNull(blob.getPayload().getContentMetadata().getContentLength());
+
+         ObjectTemplate template = blobMetadataToObjectTemplate.apply(blob.getMetadata());
+
+         HashCode md5 = blob.getMetadata().getContentMetadata().getContentMD5AsHashCode();
+         if (md5 != null) {
+            template.md5Hash(base64().encode(md5.asBytes()));
+         }
+
+         if (options.getBlobAccess() == BlobAccess.PUBLIC_READ) {
+            ObjectAccessControls controls = ObjectAccessControls.builder()
+                  .entity("allUsers")
+                  .bucket(container)
+                  .role(READER)
+                  .build();
+            template.addAcl(controls);
+         }
+
+         return api.getObjectApi().multipartUpload(container, template, blob.getPayload()).etag();
       }
    }
 
@@ -342,9 +352,9 @@ public final class GoogleCloudStorageBlobStore extends BaseBlobStore {
    }
 
    @Override
-   public MultipartUpload initiateMultipartUpload(String container, BlobMetadata blobMetadata) {
+   public MultipartUpload initiateMultipartUpload(String container, BlobMetadata blobMetadata, PutOptions options) {
       String uploadId = blobMetadata.getName();
-      return MultipartUpload.create(container, blobMetadata.getName(), uploadId, blobMetadata);
+      return MultipartUpload.create(container, blobMetadata.getName(), uploadId, blobMetadata, options);
    }
 
    @Override
@@ -364,7 +374,17 @@ public final class GoogleCloudStorageBlobStore extends BaseBlobStore {
          builder.add(api.getObjectApi().getObject(mpu.containerName(),
                Strings2.urlEncode(getMPUPartName(mpu, part.partNumber()))));
       }
+
       ObjectTemplate destination = blobMetadataToObjectTemplate.apply(mpu.blobMetadata());
+      if (mpu.putOptions().getBlobAccess() == BlobAccess.PUBLIC_READ) {
+         ObjectAccessControls controls = ObjectAccessControls.builder()
+               .entity("allUsers")
+               .bucket(mpu.containerName())
+               .role(READER)
+               .build();
+         destination.addAcl(controls);
+      }
+
       ComposeObjectTemplate template = ComposeObjectTemplate.builder().fromGoogleCloudStorageObject(builder.build())
             .destination(destination).build();
       return api.getObjectApi().composeObjects(mpu.containerName(), Strings2.urlEncode(mpu.blobName()), template)
