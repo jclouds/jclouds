@@ -231,14 +231,7 @@ public class AtmosBlobStore extends BaseBlobStore {
     */
    @Override
    public String putBlob(final String container, final Blob blob) {
-      final org.jclouds.atmos.options.PutOptions options = new org.jclouds.atmos.options.PutOptions();
-      try {
-         if (isPublic.getUnchecked(container + "/"))
-            options.publicRead();
-      } catch (CacheLoader.InvalidCacheLoadException e) {
-         // nulls not permitted
-      }
-      return AtmosUtils.putBlob(sync, crypto, blob2Object, container, blob, options);
+      return putBlob(container, blob, PutOptions.NONE);
    }
 
    /**
@@ -248,8 +241,22 @@ public class AtmosBlobStore extends BaseBlobStore {
     */
    @Override
    public String putBlob(String container, Blob blob, PutOptions options) {
-      // TODO implement options
-      return putBlob(container, blob);
+      if (options.isMultipart()) {
+         throw new UnsupportedOperationException("Atmos does not support multipart uploads");
+      }
+      org.jclouds.atmos.options.PutOptions atmosOptions = new org.jclouds.atmos.options.PutOptions();
+      atmosOptions.publicNone();
+      try {
+         // TODO: not needed
+         if (isPublic.getUnchecked(container + "/"))
+            atmosOptions.publicRead();
+      } catch (CacheLoader.InvalidCacheLoadException e) {
+         // nulls not permitted
+      }
+      if (options.getBlobAccess() == BlobAccess.PUBLIC_READ) {
+         atmosOptions.publicRead();
+      }
+      return AtmosUtils.putBlob(sync, crypto, blob2Object, container, blob, atmosOptions);
    }
 
    /**
@@ -289,7 +296,7 @@ public class AtmosBlobStore extends BaseBlobStore {
    }
 
    @Override
-   public MultipartUpload initiateMultipartUpload(String container, BlobMetadata blobMetadata) {
+   public MultipartUpload initiateMultipartUpload(String container, BlobMetadata blobMetadata, PutOptions options) {
       throw new UnsupportedOperationException("Atmos does not support multipart uploads");
    }
 
