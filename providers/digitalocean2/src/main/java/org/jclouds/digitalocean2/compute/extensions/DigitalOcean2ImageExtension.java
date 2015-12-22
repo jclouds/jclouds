@@ -118,17 +118,21 @@ public class DigitalOcean2ImageExtension implements ImageExtension {
 
    @Override
    public boolean deleteImage(String id) {
-      try {
-         // The id of the image can be an id or a slug. Use the corresponding method of the API depending on what is
-         // provided. If it can be parsed as a number, use the method to destroy by ID. Otherwise, destroy by slug.
-         Integer imageId = Ints.tryParse(id);
-         if (imageId != null) {
-            logger.debug(">> image does not have a slug. Using the id to delete the image...");
-            api.imageApi().delete(imageId);
+      String imageId = ImageInRegion.extractImageId(id);
+      Integer numericId = Ints.tryParse(imageId); // User images don't have a slug, so we expect a numeric id here
+
+      if (numericId != null) {
+         try {
+            logger.debug(">> deleting image %s...", id);
+            api.imageApi().delete(numericId);
+            return true;
+         } catch (Exception ex) {
+            logger.error(ex, ">> error deleting image %s", id);
          }
-         return true;
-      } catch (Exception ex) {
-         return false;
+      } else {
+         logger.warn(">> image %s is not a user image and cannot be deleted", id);
       }
+
+      return false;
    }
 }
