@@ -265,6 +265,9 @@ public class S3BlobStore extends BaseBlobStore {
       }
 
       PutObjectOptions options = new PutObjectOptions();
+      if (overrides.getBlobAccess() == BlobAccess.PUBLIC_READ) {
+         options = options.withAcl(CannedAccessPolicy.PUBLIC_READ);
+      }
       return sync.putObject(container, blob2Object.apply(blob), options);
    }
 
@@ -344,9 +347,13 @@ public class S3BlobStore extends BaseBlobStore {
    }
 
    @Override
-   public MultipartUpload initiateMultipartUpload(String container, BlobMetadata blobMetadata) {
-      String id = sync.initiateMultipartUpload(container, blob2ObjectMetadata.apply(blobMetadata));
-      return MultipartUpload.create(container, blobMetadata.getName(), id, blobMetadata);
+   public MultipartUpload initiateMultipartUpload(String container, BlobMetadata blobMetadata, PutOptions overrides) {
+      PutObjectOptions options = new PutObjectOptions();
+      if (overrides.getBlobAccess() == BlobAccess.PUBLIC_READ) {
+         options = options.withAcl(CannedAccessPolicy.PUBLIC_READ);
+      }
+      String id = sync.initiateMultipartUpload(container, blob2ObjectMetadata.apply(blobMetadata), options);
+      return MultipartUpload.create(container, blobMetadata.getName(), id, blobMetadata, overrides);
    }
 
    @Override
