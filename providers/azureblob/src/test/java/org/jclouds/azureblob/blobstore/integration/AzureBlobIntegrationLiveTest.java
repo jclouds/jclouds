@@ -55,6 +55,16 @@ public class AzureBlobIntegrationLiveTest extends BaseBlobIntegrationTest {
       throw new SkipException("unsupported in Azure");
    }
 
+   @Test(groups = { "integration", "live" }, expectedExceptions = UnsupportedOperationException.class)
+   public void testPutBlobAccess() throws Exception {
+      super.testPutBlobAccess();
+   }
+
+   @Test(groups = { "integration", "live" }, expectedExceptions = UnsupportedOperationException.class)
+   public void testPutBlobAccessMultipart() throws Exception {
+      super.testPutBlobAccessMultipart();
+   }
+
    @Override
    @Test
    public void testGetRange() {

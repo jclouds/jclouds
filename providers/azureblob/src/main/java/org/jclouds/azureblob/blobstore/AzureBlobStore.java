@@ -223,6 +223,9 @@ public class AzureBlobStore extends BaseBlobStore {
     */
    @Override
    public String putBlob(String container, Blob blob, PutOptions options) {
+      if (options.getBlobAccess() != BlobAccess.PRIVATE) {
+         throw new UnsupportedOperationException("blob access not supported by Azure");
+      }
       if (options.isMultipart()) {
          return putMultipartBlob(container, blob, options);
       }
@@ -374,9 +377,9 @@ public class AzureBlobStore extends BaseBlobStore {
    }
 
    @Override
-   public MultipartUpload initiateMultipartUpload(String container, BlobMetadata blobMetadata) {
+   public MultipartUpload initiateMultipartUpload(String container, BlobMetadata blobMetadata, PutOptions options) {
       String uploadId = UUID.randomUUID().toString();
-      return MultipartUpload.create(container, blobMetadata.getName(), uploadId, blobMetadata);
+      return MultipartUpload.create(container, blobMetadata.getName(), uploadId, blobMetadata, options);
    }
 
    @Override
