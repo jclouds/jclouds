@@ -674,6 +674,44 @@ public class BaseBlobIntegrationTest extends BaseBlobStoreIntegrationTest {
       }
    }
 
+   @Test(groups = { "integration", "live" })
+   public void testPutBlobAccess() throws Exception {
+      BlobStore blobStore = view.getBlobStore();
+      String containerName = getContainerName();
+      try {
+         String blobNamePrivate = "put-access-blob-name-private";
+         Blob blobPrivate = blobStore.blobBuilder(blobNamePrivate).payload(new byte[1]).build();
+         blobStore.putBlob(containerName, blobPrivate, new PutOptions().setBlobAccess(BlobAccess.PRIVATE));
+         assertThat(blobStore.getBlobAccess(containerName, blobNamePrivate)).isEqualTo(BlobAccess.PRIVATE);
+
+         String blobNamePublic = "put-access-blob-name-public";
+         Blob blobPublic = blobStore.blobBuilder(blobNamePublic).payload(new byte[1]).build();
+         blobStore.putBlob(containerName, blobPublic, new PutOptions().setBlobAccess(BlobAccess.PUBLIC_READ));
+         assertThat(blobStore.getBlobAccess(containerName, blobNamePublic)).isEqualTo(BlobAccess.PUBLIC_READ);
+      } finally {
+         returnContainer(containerName);
+      }
+   }
+
+   @Test(groups = { "integration", "live" })
+   public void testPutBlobAccessMultipart() throws Exception {
+      BlobStore blobStore = view.getBlobStore();
+      String containerName = getContainerName();
+      try {
+         String blobNamePrivate = "put-access-blob-name-private";
+         Blob blobPrivate = blobStore.blobBuilder(blobNamePrivate).payload(new byte[1]).build();
+         blobStore.putBlob(containerName, blobPrivate, new PutOptions().setBlobAccess(BlobAccess.PRIVATE).multipart(true));
+         assertThat(blobStore.getBlobAccess(containerName, blobNamePrivate)).isEqualTo(BlobAccess.PRIVATE);
+
+         String blobNamePublic = "put-access-blob-name-public";
+         Blob blobPublic = blobStore.blobBuilder(blobNamePublic).payload(new byte[1]).build();
+         blobStore.putBlob(containerName, blobPublic, new PutOptions().setBlobAccess(BlobAccess.PUBLIC_READ).multipart(true));
+         assertThat(blobStore.getBlobAccess(containerName, blobNamePublic)).isEqualTo(BlobAccess.PUBLIC_READ);
+      } finally {
+         returnContainer(containerName);
+      }
+   }
+
    protected void checkUserMetadata(Map<String, String> userMetadata1, Map<String, String> userMetadata2) {
       assertThat(userMetadata1).isEqualTo(userMetadata2);
    }
@@ -900,7 +938,7 @@ public class BaseBlobIntegrationTest extends BaseBlobStoreIntegrationTest {
       try {
          String name = "blob-name";
          Blob blob = blobStore.blobBuilder(name).build();
-         MultipartUpload mpu = blobStore.initiateMultipartUpload(container, blob.getMetadata());
+         MultipartUpload mpu = blobStore.initiateMultipartUpload(container, blob.getMetadata(), new PutOptions());
 
          List<MultipartPart> parts = blobStore.listMultipartUpload(mpu);
          assertThat(parts).isEqualTo(ImmutableList.of());
@@ -926,7 +964,7 @@ public class BaseBlobIntegrationTest extends BaseBlobStoreIntegrationTest {
                .payload(new byte[0]);
          addContentMetadata(blobBuilder);
          Blob blob = blobBuilder.build();
-         MultipartUpload mpu = blobStore.initiateMultipartUpload(container, blob.getMetadata());
+         MultipartUpload mpu = blobStore.initiateMultipartUpload(container, blob.getMetadata(), new PutOptions());
 
          ByteSource byteSource = TestUtils.randomByteSource().slice(0, 1);
          Payload payload = Payloads.newByteSourcePayload(byteSource);
@@ -960,7 +998,7 @@ public class BaseBlobIntegrationTest extends BaseBlobStoreIntegrationTest {
                .payload(new byte[0]);
          addContentMetadata(blobBuilder);
          Blob blob = blobBuilder.build();
-         MultipartUpload mpu = blobStore.initiateMultipartUpload(container, blob.getMetadata());
+         MultipartUpload mpu = blobStore.initiateMultipartUpload(container, blob.getMetadata(), new PutOptions());
 
          ByteSource byteSource = TestUtils.randomByteSource().slice(0, blobStore.getMinimumMultipartPartSize() + 1);
          ByteSource byteSource1 = byteSource.slice(0, blobStore.getMinimumMultipartPartSize());

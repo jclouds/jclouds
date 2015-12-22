@@ -333,7 +333,7 @@ public interface BlobStore {
    long countBlobs(String container, ListContainerOptions options);
 
    @Beta
-   MultipartUpload initiateMultipartUpload(String container, BlobMetadata blob);
+   MultipartUpload initiateMultipartUpload(String container, BlobMetadata blob, PutOptions options);
 
    @Beta
    // TODO: take parts?

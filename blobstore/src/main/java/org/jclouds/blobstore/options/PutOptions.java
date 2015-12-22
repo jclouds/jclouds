@@ -16,6 +16,10 @@
  */
 package org.jclouds.blobstore.options;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
+import org.jclouds.blobstore.domain.BlobAccess;
+
 /**
  * Contains options supported in the put blob operation. <h2>
  * Usage</h2> The recommended way to instantiate a PutOptions object is to statically import
@@ -30,6 +34,7 @@ public class PutOptions implements Cloneable {
 
    public static final ImmutablePutOptions NONE = new ImmutablePutOptions(new PutOptions());
 
+   private BlobAccess blobAccess = BlobAccess.PRIVATE;
    private boolean multipart = false;
 
    public PutOptions() {
@@ -44,6 +49,16 @@ public class PutOptions implements Cloneable {
 
       public ImmutablePutOptions(PutOptions delegate) {
          this.delegate = delegate;
+      }
+
+      @Override
+      public BlobAccess getBlobAccess() {
+         return delegate.getBlobAccess();
+      }
+
+      @Override
+      public PutOptions setBlobAccess(BlobAccess blobAccess) {
+         throw new UnsupportedOperationException();
       }
 
       @Override
@@ -66,6 +81,15 @@ public class PutOptions implements Cloneable {
          return delegate.toString();
       }
 
+   }
+
+   public BlobAccess getBlobAccess() {
+      return blobAccess;
+   }
+
+   public PutOptions setBlobAccess(BlobAccess blobAccess) {
+      this.blobAccess = checkNotNull(blobAccess);
+      return this;
    }
 
    public boolean isMultipart() {
@@ -115,6 +139,6 @@ public class PutOptions implements Cloneable {
 
    @Override
    public String toString() {
-      return "[multipart=" + multipart + "]";
+      return "[multipart=" + multipart + ", blobAccess=" + blobAccess + "]";
    }
 }

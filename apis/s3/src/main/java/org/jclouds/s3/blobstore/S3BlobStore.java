@@ -264,7 +264,6 @@ public class S3BlobStore extends BaseBlobStore {
          return putMultipartBlob(container, blob, overrides);
       }
 
-      // TODO: Make use of options overrides
       PutObjectOptions options = new PutObjectOptions();
       return sync.putObject(container, blob2Object.apply(blob), options);
    }

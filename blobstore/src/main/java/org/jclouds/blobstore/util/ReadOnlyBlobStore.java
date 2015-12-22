@@ -136,7 +136,7 @@ public final class ReadOnlyBlobStore extends ForwardingBlobStore {
    }
 
    @Override
-   public MultipartUpload initiateMultipartUpload(String container, BlobMetadata blobMetadata) {
+   public MultipartUpload initiateMultipartUpload(String container, BlobMetadata blobMetadata, PutOptions options) {
       throw new UnsupportedOperationException("Read-only BlobStore");
    }
 

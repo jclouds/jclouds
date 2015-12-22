@@ -290,7 +290,7 @@ public abstract class BaseBlobStore implements BlobStore {
    // TODO: parallel uploads
    @Beta
    protected String putMultipartBlob(String container, Blob blob, PutOptions overrides) {
-      MultipartUpload mpu = initiateMultipartUpload(container, blob.getMetadata());
+      MultipartUpload mpu = initiateMultipartUpload(container, blob.getMetadata(), overrides);
       List<MultipartPart> parts = Lists.newArrayList();
       long contentLength = blob.getMetadata().getContentMetadata().getContentLength();
       MultipartUploadSlicingAlgorithm algorithm = new MultipartUploadSlicingAlgorithm(

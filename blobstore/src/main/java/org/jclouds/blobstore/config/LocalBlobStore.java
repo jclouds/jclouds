@@ -750,9 +750,9 @@ public final class LocalBlobStore implements BlobStore {
    }
 
    @Override
-   public MultipartUpload initiateMultipartUpload(String container, BlobMetadata blobMetadata) {
+   public MultipartUpload initiateMultipartUpload(String container, BlobMetadata blobMetadata, PutOptions options) {
       return MultipartUpload.create(container, blobMetadata.getName(), UUID.randomUUID().toString(),
-            blobMetadata);
+            blobMetadata, options);
    }
 
    @Override
@@ -808,6 +808,8 @@ public final class LocalBlobStore implements BlobStore {
       for (MultipartPart part : parts) {
          storageStrategy.removeBlob(mpu.containerName(), mpu.blobName() + "-" + part.partNumber());
       }
+
+      setBlobAccess(mpu.containerName(), mpu.blobName(), mpu.putOptions().getBlobAccess());
 
       return eTag;
    }
