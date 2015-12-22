@@ -80,6 +80,18 @@ public class SwiftBlobIntegrationLiveTest extends BaseBlobIntegrationTest {
    }
 
    @Override
+   @Test(expectedExceptions = UnsupportedOperationException.class)
+   public void testPutBlobAccess() throws Exception {
+      super.testPutBlobAccess();
+   }
+
+   @Override
+   @Test(expectedExceptions = UnsupportedOperationException.class)
+   public void testPutBlobAccessMultipart() throws Exception {
+      super.testPutBlobAccessMultipart();
+   }
+
+   @Override
    protected long getMinimumMultipartBlobSize() {
       return 1;
    }

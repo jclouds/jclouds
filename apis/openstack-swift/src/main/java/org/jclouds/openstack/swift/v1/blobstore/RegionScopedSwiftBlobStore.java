@@ -237,6 +237,9 @@ public class RegionScopedSwiftBlobStore implements BlobStore {
 
    @Override
    public String putBlob(String container, Blob blob, PutOptions options) {
+      if (options.getBlobAccess() != BlobAccess.PRIVATE) {
+         throw new UnsupportedOperationException("blob access not supported by swift");
+      }
       if (options.isMultipart()) {
          return putMultipartBlob(container, blob, options);
       }
@@ -410,16 +413,19 @@ public class RegionScopedSwiftBlobStore implements BlobStore {
    }
 
    @Override
-   public MultipartUpload initiateMultipartUpload(String container, BlobMetadata blobMetadata) {
-      return initiateMultipartUpload(container, blobMetadata, 0);
+   public MultipartUpload initiateMultipartUpload(String container, BlobMetadata blobMetadata, PutOptions options) {
+      if (options.getBlobAccess() != BlobAccess.PRIVATE) {
+         throw new UnsupportedOperationException("blob ACLs not supported in swift");
+      }
+      return initiateMultipartUpload(container, blobMetadata, 0, options);
    }
 
-   private MultipartUpload initiateMultipartUpload(String container, BlobMetadata blobMetadata, long partSize) {
+   private MultipartUpload initiateMultipartUpload(String container, BlobMetadata blobMetadata, long partSize, PutOptions options) {
       Long contentLength = blobMetadata.getContentMetadata().getContentLength();
       String uploadId = String.format("%s/slo/%.6f/%s/%s", blobMetadata.getName(),
               System.currentTimeMillis() / 1000.0, contentLength == null ? Long.valueOf(0) : contentLength,
               partSize);
-      return MultipartUpload.create(container, blobMetadata.getName(), uploadId, blobMetadata);
+      return MultipartUpload.create(container, blobMetadata.getName(), uploadId, blobMetadata, options);
    }
 
    @Override
@@ -555,7 +561,7 @@ public class RegionScopedSwiftBlobStore implements BlobStore {
       MultipartUploadSlicingAlgorithm algorithm = new MultipartUploadSlicingAlgorithm(
             getMinimumMultipartPartSize(), getMaximumMultipartPartSize(), getMaximumNumberOfParts());
       long partSize = algorithm.calculateChunkSize(contentLength);
-      MultipartUpload mpu = initiateMultipartUpload(container, blob.getMetadata(), partSize);
+      MultipartUpload mpu = initiateMultipartUpload(container, blob.getMetadata(), partSize, overrides);
       int partNumber = 1;
       for (Payload payload : slicer.slice(blob.getPayload(), partSize)) {
          MultipartPart part = uploadMultipartPart(mpu, partNumber, payload);
