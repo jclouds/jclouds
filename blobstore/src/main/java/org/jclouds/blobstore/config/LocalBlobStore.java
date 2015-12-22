@@ -520,28 +520,7 @@ public final class LocalBlobStore implements BlobStore {
 
    @Override
    public String putBlob(String containerName, Blob blob) {
-      checkNotNull(containerName, "containerName must be set");
-      checkNotNull(blob, "blob must be set");
-      String blobKey = blob.getMetadata().getName();
-
-      logger.debug("Put blob with key [%s] to container [%s]", blobKey, containerName);
-      if (!storageStrategy.containerExists(containerName)) {
-         throw cnfe(containerName);
-      }
-
-      try {
-         return storageStrategy.putBlob(containerName, blob);
-      } catch (IOException e) {
-         String message = e.getMessage();
-         if (message != null && message.startsWith("MD5 hash code mismatch")) {
-            HttpResponseException exception = returnResponseException(400);
-            exception.initCause(e);
-            throw exception;
-         }
-         logger.error(e, "An error occurred storing the new blob with name [%s] to container [%s].", blobKey,
-               containerName);
-         throw propagate(e);
-      }
+      return putBlob(containerName, blob, PutOptions.NONE);
    }
 
    @Override
@@ -740,8 +719,30 @@ public final class LocalBlobStore implements BlobStore {
 
    @Override
    public String putBlob(String containerName, Blob blob, PutOptions options) {
-      // TODO implement options
-      return putBlob(containerName, blob);
+      checkNotNull(containerName, "containerName must be set");
+      checkNotNull(blob, "blob must be set");
+      String blobKey = blob.getMetadata().getName();
+
+      logger.debug("Put blob with key [%s] to container [%s]", blobKey, containerName);
+      if (!storageStrategy.containerExists(containerName)) {
+         throw cnfe(containerName);
+      }
+
+      try {
+         String eTag = storageStrategy.putBlob(containerName, blob);
+         setBlobAccess(containerName, blobKey, options.getBlobAccess());
+         return eTag;
+      } catch (IOException e) {
+         String message = e.getMessage();
+         if (message != null && message.startsWith("MD5 hash code mismatch")) {
+            HttpResponseException exception = returnResponseException(400);
+            exception.initCause(e);
+            throw exception;
+         }
+         logger.error(e, "An error occurred storing the new blob with name [%s] to container [%s].", blobKey,
+               containerName);
+         throw propagate(e);
+      }
    }
 
    @Override
