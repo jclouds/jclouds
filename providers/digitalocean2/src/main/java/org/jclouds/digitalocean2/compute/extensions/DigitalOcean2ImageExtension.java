@@ -17,17 +17,18 @@
 package org.jclouds.digitalocean2.compute.extensions;
 
 import static com.google.common.base.Preconditions.checkState;
-import static com.google.common.util.concurrent.Futures.immediateFuture;
 import static org.jclouds.compute.config.ComputeServiceProperties.TIMEOUT_IMAGE_AVAILABLE;
 import static org.jclouds.compute.config.ComputeServiceProperties.TIMEOUT_NODE_SUSPENDED;
 
 import java.util.NoSuchElementException;
+import java.util.concurrent.Callable;
 
 import javax.annotation.Resource;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.inject.Singleton;
 
+import org.jclouds.Constants;
 import org.jclouds.compute.domain.CloneImageTemplate;
 import org.jclouds.compute.domain.Image;
 import org.jclouds.compute.domain.ImageTemplate;
@@ -45,6 +46,8 @@ import com.google.common.base.Function;
 import com.google.common.base.Predicate;
 import com.google.common.primitives.Ints;
 import com.google.common.util.concurrent.ListenableFuture;
+import com.google.common.util.concurrent.ListeningExecutorService;
+import com.google.common.util.concurrent.UncheckedTimeoutException;
 
 /**
  * The {@link org.jclouds.compute.extensions.ImageExtension} implementation for the DigitalOcean provider.
@@ -60,15 +63,18 @@ public class DigitalOcean2ImageExtension implements ImageExtension {
    private final Predicate<Integer> imageAvailablePredicate;
    private final Predicate<Integer> nodeStoppedPredicate;
    private final Function<ImageInRegion, Image> imageTransformer;
+   private final ListeningExecutorService userExecutor;
 
    @Inject DigitalOcean2ImageExtension(DigitalOcean2Api api,
          @Named(TIMEOUT_IMAGE_AVAILABLE) Predicate<Integer> imageAvailablePredicate,
          @Named(TIMEOUT_NODE_SUSPENDED) Predicate<Integer> nodeStoppedPredicate,
-         Function<ImageInRegion, Image> imageTransformer) {
+         Function<ImageInRegion, Image> imageTransformer,
+         @Named(Constants.PROPERTY_USER_THREADS) ListeningExecutorService userExecutor) {
       this.api = api;
       this.imageAvailablePredicate = imageAvailablePredicate;
       this.nodeStoppedPredicate = nodeStoppedPredicate;
       this.imageTransformer = imageTransformer;
+      this.userExecutor = userExecutor;
    }
 
    @Override
@@ -89,31 +95,36 @@ public class DigitalOcean2ImageExtension implements ImageExtension {
       int dropletId = Integer.parseInt(cloneTemplate.getSourceNodeId());
 
       // Droplet needs to be stopped
-      Droplet droplet = api.dropletApi().get(dropletId);
+      final Droplet droplet = api.dropletApi().get(dropletId);
       if (droplet.status() != Status.OFF) {
          api.dropletApi().powerOff(dropletId);
          checkState(nodeStoppedPredicate.apply(dropletId), "node was not powered off in the configured timeout");
       }
 
-      Action snapshotEvent = api.dropletApi().snapshot(Integer.parseInt(cloneTemplate.getSourceNodeId()),
+      final Action snapshotEvent = api.dropletApi().snapshot(Integer.parseInt(cloneTemplate.getSourceNodeId()),
             cloneTemplate.getName());
 
       logger.info(">> registered new Image, waiting for it to become available");
 
-      // Until the process completes we don't have enough information to build an image to return
-      checkState(imageAvailablePredicate.apply(snapshotEvent.id()),
-            "snapshot failed to complete in the configured timeout");
-      
-      org.jclouds.digitalocean2.domain.Image snapshot = api.imageApi().list().concat().firstMatch(
-            new Predicate<org.jclouds.digitalocean2.domain.Image>() {
-               @Override
-               public boolean apply(org.jclouds.digitalocean2.domain.Image input) {
-                  return input.name().equals(cloneTemplate.getName());
-               }
-            }).get();
+      return userExecutor.submit(new Callable<Image>() {
+         @Override
+         public Image call() throws Exception {
+            if (imageAvailablePredicate.apply(snapshotEvent.id())) {
+               org.jclouds.digitalocean2.domain.Image snapshot = api.imageApi().list().concat()
+                     .firstMatch(new Predicate<org.jclouds.digitalocean2.domain.Image>() {
+                        @Override
+                        public boolean apply(org.jclouds.digitalocean2.domain.Image input) {
+                           return input.name().equals(cloneTemplate.getName());
+                        }
+                     }).get();
 
-      // By default snapshots are only available in the Droplet's region
-      return immediateFuture(imageTransformer.apply(ImageInRegion.create(snapshot, droplet.region().slug())));
+               return imageTransformer.apply(ImageInRegion.create(snapshot, droplet.region().slug()));
+            }
+
+            throw new UncheckedTimeoutException("Image was not created within the time limit: "
+                  + cloneTemplate.getName());
+         }
+      });
    }
 
    @Override
