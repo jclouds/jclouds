@@ -364,7 +364,7 @@ public class RegionScopedSwiftBlobStore implements BlobStore {
 
    @Override
    public BlobAccess getBlobAccess(String container, String name) {
-      throw new UnsupportedOperationException("unsupported in swift");
+      return BlobAccess.PRIVATE;
    }
 
    @Override

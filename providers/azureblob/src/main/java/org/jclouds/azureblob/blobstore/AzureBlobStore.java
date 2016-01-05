@@ -368,7 +368,7 @@ public class AzureBlobStore extends BaseBlobStore {
 
    @Override
    public BlobAccess getBlobAccess(String container, String key) {
-      throw new UnsupportedOperationException("unsupported in Azure");
+      return BlobAccess.PRIVATE;
    }
 
    @Override
