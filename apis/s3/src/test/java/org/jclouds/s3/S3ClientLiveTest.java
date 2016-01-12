@@ -531,19 +531,10 @@ public class S3ClientLiveTest extends BaseBlobStoreIntegrationTest {
          }
          assertThat(getApi().listMultipartParts(containerName, key, uploadId)).containsOnlyKeys(1);
 
-         String eTag = getApi().completeMultipartUpload(containerName, key, uploadId, ImmutableMap.of(1, eTagOf1));
-
-         assert !eTagOf1.equals(eTag);
+         getApi().completeMultipartUpload(containerName, key, uploadId, ImmutableMap.of(1, eTagOf1));
 
          object = getApi().getObject(containerName, key);
          assertEquals(ByteStreams2.toByteArrayAndClose(object.getPayload().openStream()), buffer);
-
-         // noticing amazon does not return content-md5 header or a parsable ETag after a multi-part
-         // upload is complete:
-         // https://forums.aws.amazon.com/thread.jspa?threadID=61344
-         assertEquals(object.getPayload().getContentMetadata().getContentMD5(), null);
-         assertEquals(getApi().headObject(containerName, key).getContentMetadata().getContentMD5(), null);
-
       } finally {
          if (object != null)
             object.getPayload().close();
@@ -566,8 +557,7 @@ public class S3ClientLiveTest extends BaseBlobStoreIntegrationTest {
 
          String eTagOf1 = getApi().uploadPartCopy(containerName, toObject, 1, uploadId, containerName, fromObject, 1, oneHundredOneConstitutions.size() - 1);
 
-         String eTag = getApi().completeMultipartUpload(containerName, toObject, uploadId, ImmutableMap.of(1, eTagOf1));
-         assertThat(eTag).isNotEqualTo(eTagOf1);
+         getApi().completeMultipartUpload(containerName, toObject, uploadId, ImmutableMap.of(1, eTagOf1));
 
          object = getApi().getObject(containerName, toObject);
          assertEquals(ByteStreams2.toByteArrayAndClose(object.getPayload().openStream()), oneHundredOneConstitutions.slice(1, oneHundredOneConstitutions.size() - 1).read());
