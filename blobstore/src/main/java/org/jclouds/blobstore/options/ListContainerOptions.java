@@ -291,6 +291,7 @@ public class ListContainerOptions extends ListOptions implements Cloneable {
    @Override
    public String toString() {
       return "[dir=" + dir + ", recursive=" + recursive + ", detailed=" + detailed
+               + ", prefix=" + prefix + ", marker=" + getMarker()
                + ", maxResults=" + getMaxResults() + "]";
    }
 
@@ -311,6 +312,7 @@ public class ListContainerOptions extends ListOptions implements Cloneable {
       return (detailed == other.detailed) &&
                recursive == other.recursive &&
                Objects.equal(dir, other.dir) &&
+               Objects.equal(prefix, other.prefix) &&
                Objects.equal(getMarker(), other.getMarker()) &&
                Objects.equal(getMaxResults(), other.getMaxResults());
    }
