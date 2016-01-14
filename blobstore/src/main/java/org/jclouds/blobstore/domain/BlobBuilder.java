@@ -108,6 +108,8 @@ public interface BlobBuilder {
 
    public interface PayloadBlobBuilder extends BlobBuilder {
 
+      PayloadBlobBuilder cacheControl(String cacheControl);
+
       PayloadBlobBuilder contentLength(long contentLength);
 
       /** @deprecated use {@link #contentMD5(HashCode)} instead. */

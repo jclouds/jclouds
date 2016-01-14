@@ -27,6 +27,16 @@ import com.google.common.hash.HashCode;
 
 public class BaseMutableContentMetadata extends ContentMetadataBuilder implements MutableContentMetadata {
 
+   @Override
+   public String getCacheControl() {
+      return cacheControl;
+   }
+
+   @Override
+   public void setCacheControl(@Nullable String cacheControl) {
+      cacheControl(cacheControl);
+   }
+
    /**
     * {@inheritDoc}
     */
@@ -154,9 +164,14 @@ public class BaseMutableContentMetadata extends ContentMetadataBuilder implement
    }
 
    public static BaseMutableContentMetadata fromContentMetadata(ContentMetadata in) {
-      return (BaseMutableContentMetadata) new BaseMutableContentMetadata().contentType(in.getContentType())
-               .contentLength(in.getContentLength()).contentMD5(in.getContentMD5()).contentDisposition(
-                        in.getContentDisposition()).contentLanguage(in.getContentLanguage()).contentEncoding(
-                        in.getContentEncoding()).expires(in.getExpires());
+      return (BaseMutableContentMetadata) new BaseMutableContentMetadata()
+               .cacheControl(in.getCacheControl())
+               .contentDisposition(in.getContentDisposition())
+               .contentEncoding(in.getContentEncoding())
+               .contentLanguage(in.getContentLanguage())
+               .contentLength(in.getContentLength())
+               .contentMD5(in.getContentMD5())
+               .contentType(in.getContentType())
+               .expires(in.getExpires());
    }
 }

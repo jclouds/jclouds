@@ -544,6 +544,10 @@ public final class LocalBlobStore implements BlobStore {
 
          if (options.getContentMetadata().isPresent()) {
             ContentMetadata contentMetadata = options.getContentMetadata().get();
+            String cacheControl = contentMetadata.getCacheControl();
+            if (cacheControl != null) {
+               builder.cacheControl(cacheControl);
+            }
             String contentDisposition = contentMetadata.getContentDisposition();
             if (contentDisposition != null) {
                builder.contentDisposition(contentDisposition);
@@ -561,7 +565,8 @@ public final class LocalBlobStore implements BlobStore {
                builder.contentType(contentType);
             }
          } else {
-            builder.contentDisposition(metadata.getContentDisposition())
+            builder.cacheControl(metadata.getCacheControl())
+                   .contentDisposition(metadata.getContentDisposition())
                    .contentEncoding(metadata.getContentEncoding())
                    .contentLanguage(metadata.getContentLanguage())
                    .contentType(metadata.getContentType());
@@ -782,6 +787,10 @@ public final class LocalBlobStore implements BlobStore {
             .userMetadata(mpu.blobMetadata().getUserMetadata())
             .payload(new SequenceInputStream(Iterators.asEnumeration(streams.build().iterator())))
             .contentLength(contentLength);
+      String cacheControl = mpu.blobMetadata().getContentMetadata().getCacheControl();
+      if (cacheControl != null) {
+         blobBuilder.cacheControl(cacheControl);
+      }
       String contentDisposition = mpu.blobMetadata().getContentMetadata().getContentDisposition();
       if (contentDisposition != null) {
          blobBuilder.contentDisposition(contentDisposition);

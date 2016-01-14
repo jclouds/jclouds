@@ -26,6 +26,7 @@ import com.google.common.hash.HashCode;
 
 public class BaseImmutableContentMetadata implements ContentMetadata {
 
+   protected String cacheControl;
    protected String contentType;
    protected Long contentLength;
    protected HashCode contentMD5;
@@ -34,8 +35,15 @@ public class BaseImmutableContentMetadata implements ContentMetadata {
    protected String contentEncoding;
    protected Date expires;
 
+   @Deprecated
    public BaseImmutableContentMetadata(String contentType, Long contentLength, byte[] contentMD5,
             String contentDisposition, String contentLanguage, String contentEncoding, Date expires) {
+      this(null, contentType, contentLength, contentMD5, contentDisposition, contentLanguage, contentEncoding, expires);
+   }
+
+   public BaseImmutableContentMetadata(String cacheControl, String contentType, Long contentLength, byte[] contentMD5,
+            String contentDisposition, String contentLanguage, String contentEncoding, Date expires) {
+      this.cacheControl = cacheControl;
       this.contentType = contentType;
       this.contentLength = contentLength;
       this.contentMD5 = contentMD5 == null ? null : HashCode.fromBytes(contentMD5);
@@ -43,6 +51,11 @@ public class BaseImmutableContentMetadata implements ContentMetadata {
       this.contentLanguage = contentLanguage;
       this.contentEncoding = contentEncoding;
       this.expires = expires;
+   }
+
+   @Override
+   public String getCacheControl() {
+      return cacheControl;
    }
 
    /**
@@ -108,7 +121,8 @@ public class BaseImmutableContentMetadata implements ContentMetadata {
 
    @Override
    public String toString() {
-      return "[contentType=" + contentType + ", contentLength=" + contentLength + ", contentDisposition="
+      return "[cacheControl=" + cacheControl
+               + "contentType=" + contentType + ", contentLength=" + contentLength + ", contentDisposition="
                + contentDisposition + ", contentEncoding=" + contentEncoding + ", contentLanguage=" + contentLanguage
                + ", contentMD5=" + contentMD5 + ", expires = " + expires + "]";
    }
@@ -128,6 +142,9 @@ public class BaseImmutableContentMetadata implements ContentMetadata {
       if (getClass() != obj.getClass())
          return false;
       BaseImmutableContentMetadata other = (BaseImmutableContentMetadata) obj;
+      if (!Objects.equal(cacheControl, other.cacheControl)) {
+         return false;
+      }
       if (contentDisposition == null) {
          if (other.contentDisposition != null)
             return false;

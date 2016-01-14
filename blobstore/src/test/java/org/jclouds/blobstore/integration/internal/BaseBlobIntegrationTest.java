@@ -756,6 +756,7 @@ public class BaseBlobIntegrationTest extends BaseBlobStoreIntegrationTest {
    }
 
    protected void checkContentMetadata(Blob blob) {
+      checkCacheControl(blob, "max-age=3600");
       checkContentType(blob, "text/csv");
       checkContentDisposition(blob, "attachment; filename=photo.jpg");
       checkContentEncoding(blob, "gzip");
@@ -763,10 +764,16 @@ public class BaseBlobIntegrationTest extends BaseBlobStoreIntegrationTest {
    }
 
    protected void addContentMetadata(PayloadBlobBuilder blobBuilder) {
+      blobBuilder.cacheControl("max-age=3600");
       blobBuilder.contentType("text/csv");
       blobBuilder.contentDisposition("attachment; filename=photo.jpg");
       blobBuilder.contentEncoding("gzip");
       blobBuilder.contentLanguage("en");
+   }
+
+   protected void checkCacheControl(Blob blob, String cacheControl) {
+      assertThat(blob.getPayload().getContentMetadata().getCacheControl()).isEqualTo(cacheControl);
+      assertThat(blob.getMetadata().getContentMetadata().getCacheControl()).isEqualTo(cacheControl);
    }
 
    protected void checkContentType(Blob blob, String contentType) {
@@ -893,6 +900,7 @@ public class BaseBlobIntegrationTest extends BaseBlobStoreIntegrationTest {
             .blobBuilder(fromName)
             .userMetadata(ImmutableMap.of("key1", "value1", "key2", "value2"))
             .payload(payload)
+            .cacheControl("max-age=1800")
             .contentLength(payload.size())
             .contentDisposition("attachment; filename=original.jpg")
             .contentEncoding("compress")
@@ -908,6 +916,7 @@ public class BaseBlobIntegrationTest extends BaseBlobStoreIntegrationTest {
          Map<String, String> userMetadata = ImmutableMap.of("key3", "value3", "key4", "value4");
          blobStore.copyBlob(fromContainer, fromName, toContainer, toName, CopyOptions.builder()
                .contentMetadata(ContentMetadataBuilder.create()
+                     .cacheControl("max-age=3600")
                      .contentType("text/csv")
                      .contentDisposition("attachment; filename=photo.jpg")
                      .contentEncoding("gzip")

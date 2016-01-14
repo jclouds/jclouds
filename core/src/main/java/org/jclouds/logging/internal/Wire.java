@@ -159,6 +159,7 @@ public abstract class Wire {
       MutableContentMetadata wiredMd = wiredPayload.getContentMetadata();
       if (oldMd.getContentLength() != null)
          wiredMd.setContentLength(oldMd.getContentLength());
+      wiredMd.setCacheControl(oldMd.getCacheControl());
       wiredMd.setContentType(oldMd.getContentType());
       wiredMd.setContentMD5(oldMd.getContentMD5());
       wiredMd.setContentDisposition(oldMd.getContentDisposition());

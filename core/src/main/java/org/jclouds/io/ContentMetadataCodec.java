@@ -18,6 +18,7 @@ package org.jclouds.io;
 
 import static com.google.common.collect.Iterables.any;
 import static com.google.common.io.BaseEncoding.base64;
+import static com.google.common.net.HttpHeaders.CACHE_CONTROL;
 import static com.google.common.net.HttpHeaders.CONTENT_DISPOSITION;
 import static com.google.common.net.HttpHeaders.CONTENT_ENCODING;
 import static com.google.common.net.HttpHeaders.CONTENT_LANGUAGE;
@@ -85,6 +86,8 @@ public interface ContentMetadataCodec {
       @Override
       public Multimap<String, String> toHeaders(ContentMetadata md) {
          Builder<String, String> builder = ImmutableMultimap.builder();
+         if (md.getCacheControl() != null)
+            builder.put(CACHE_CONTROL, md.getCacheControl());
          if (md.getContentType() != null)
             builder.put(CONTENT_TYPE, md.getContentType());
          if (md.getContentDisposition() != null)
@@ -111,7 +114,9 @@ public interface ContentMetadataCodec {
             }
          });
          for (Entry<String, String> header : headers.entries()) {
-            if (!chunked && CONTENT_LENGTH.equalsIgnoreCase(header.getKey())) {
+            if (CACHE_CONTROL.equalsIgnoreCase(header.getKey())) {
+               contentMetadata.setCacheControl(header.getValue());
+            } else if (!chunked && CONTENT_LENGTH.equalsIgnoreCase(header.getKey())) {
                contentMetadata.setContentLength(Long.valueOf(header.getValue()));
             } else if (CONTENT_MD5.equalsIgnoreCase(header.getKey())) {
                contentMetadata.setContentMD5(base64().decode(header.getValue()));

@@ -24,6 +24,8 @@ import com.google.common.hash.HashCode;
 
 public interface MutableContentMetadata extends ContentMetadata {
 
+   void setCacheControl(@Nullable String cacheControl);
+
    void setContentLength(@Nullable Long contentLength);
 
    /** @deprecated use {@link #setContentMD5(HashCode)} instead. */

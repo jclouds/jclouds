@@ -265,6 +265,7 @@ public abstract class BaseBlobStore implements BlobStore {
          ContentMetadata metadata = blob.getMetadata().getContentMetadata();
          BlobBuilder.PayloadBlobBuilder builder = blobBuilder(toName)
                .payload(is)
+               .cacheControl(metadata.getCacheControl())
                .contentDisposition(metadata.getContentDisposition())
                .contentEncoding(metadata.getContentEncoding())
                .contentLanguage(metadata.getContentLanguage())

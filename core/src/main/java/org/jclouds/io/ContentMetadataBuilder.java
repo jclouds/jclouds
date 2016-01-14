@@ -31,6 +31,7 @@ public class ContentMetadataBuilder {
       return new ContentMetadataBuilder();
    }
 
+   protected String cacheControl;
    protected String contentType = "application/unknown";
    protected Long contentLength;
    protected HashCode contentMD5;
@@ -38,6 +39,11 @@ public class ContentMetadataBuilder {
    protected String contentLanguage;
    protected String contentEncoding;
    protected Date expires;
+
+   public ContentMetadataBuilder cacheControl(@Nullable String cacheControl) {
+      this.cacheControl = cacheControl;
+      return this;
+   }
 
    public ContentMetadataBuilder contentLength(@Nullable Long contentLength) {
       this.contentLength = contentLength;
@@ -85,13 +91,14 @@ public class ContentMetadataBuilder {
    }
 
    public ContentMetadata build() {
-      return new BaseImmutableContentMetadata(contentType, contentLength,
+      return new BaseImmutableContentMetadata(cacheControl, contentType, contentLength,
                contentMD5 == null ? null : contentMD5.asBytes(), contentDisposition,
                contentLanguage, contentEncoding, expires);
    }
 
    public static ContentMetadataBuilder fromContentMetadata(ContentMetadata in) {
-      return new ContentMetadataBuilder().contentType(in.getContentType()).contentLength(in.getContentLength())
+      return new ContentMetadataBuilder()
+               .cacheControl(in.getCacheControl()).contentType(in.getContentType()).contentLength(in.getContentLength())
                .contentMD5(in.getContentMD5()).contentDisposition(in.getContentDisposition()).contentLanguage(
                         in.getContentLanguage()).contentEncoding(in.getContentEncoding()).expires(in.getExpires());
    }
@@ -111,7 +118,8 @@ public class ContentMetadataBuilder {
       if (getClass() != obj.getClass())
          return false;
       ContentMetadataBuilder other = (ContentMetadataBuilder) obj;
-      return Objects.equal(contentDisposition, other.contentDisposition) &&
+      return Objects.equal(cacheControl, other.cacheControl) &&
+             Objects.equal(contentDisposition, other.contentDisposition) &&
              Objects.equal(contentEncoding, other.contentEncoding) &&
              Objects.equal(contentLanguage, other.contentLanguage) &&
              Objects.equal(contentLength, other.contentLength) &&
@@ -122,7 +130,8 @@ public class ContentMetadataBuilder {
 
    @Override
    public String toString() {
-      return "[contentDisposition=" + contentDisposition + ", contentEncoding=" + contentEncoding
+      return "[cacheControl=" + cacheControl
+               + ", contentDisposition=" + contentDisposition + ", contentEncoding=" + contentEncoding
                + ", contentLanguage=" + contentLanguage + ", contentLength=" + contentLength + ", contentMD5="
                + contentMD5 + ", contentType=" + contentType + ", expires=" + expires + "]";
    }

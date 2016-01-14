@@ -15,6 +15,7 @@
  * limitations under the License.
  */
 package org.jclouds.io;
+import static com.google.common.net.HttpHeaders.CACHE_CONTROL;
 import static com.google.common.net.HttpHeaders.CONTENT_DISPOSITION;
 import static com.google.common.net.HttpHeaders.CONTENT_ENCODING;
 import static com.google.common.net.HttpHeaders.CONTENT_LANGUAGE;
@@ -32,13 +33,23 @@ import com.google.common.hash.HashCode;
 import com.google.common.collect.ImmutableSet;
 
 public interface ContentMetadata {
-   Set<String> HTTP_HEADERS = ImmutableSet.of(CONTENT_LENGTH, CONTENT_MD5, CONTENT_TYPE,
-            CONTENT_DISPOSITION, CONTENT_ENCODING, CONTENT_LANGUAGE, EXPIRES);
+   Set<String> HTTP_HEADERS = ImmutableSet.of(
+         CACHE_CONTROL,
+         CONTENT_LENGTH,
+         CONTENT_MD5,
+         CONTENT_TYPE,
+         CONTENT_DISPOSITION,
+         CONTENT_ENCODING,
+         CONTENT_LANGUAGE,
+         EXPIRES);
 
    // See http://stackoverflow.com/questions/10584647/simpledateformat-parse-is-one-hour-out-using-rfc-1123-gmt-in-summer
    // for why not using "zzz"
    String RFC1123_DATE_PATTERN = "EEE, dd MMM yyyyy HH:mm:ss Z";
    
+   @Nullable
+   String getCacheControl();
+
    /**
     * Returns the total size of the payload, or the chunk that's available.
     * <p/>
