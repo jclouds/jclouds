@@ -63,7 +63,10 @@ public interface ObjectMetadata extends Comparable<ObjectMetadata> {
     * Can be used to specify caching behavior along the request/reply chain.
     * 
     * @link http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html?sec14.9.
+    *
+    * @deprecated call getContentMetadata().getCacheControl() instead
     */
+   @Deprecated
    String getCacheControl();
 
    Date getLastModified();

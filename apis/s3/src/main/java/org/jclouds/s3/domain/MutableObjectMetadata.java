@@ -59,7 +59,10 @@ public interface MutableObjectMetadata extends ObjectMetadata {
     * Can be used to specify caching behavior along the request/reply chain.
     *
     * @link http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html?sec14.9.
+    *
+    * @deprecated call getContentMetadata().setCacheControl(String) instead
     */
+   @Deprecated
    void setCacheControl(String cacheControl);
 
    @Override

@@ -278,6 +278,11 @@ public class S3BlobStore extends BaseBlobStore {
 
       Optional<ContentMetadata> contentMetadata = options.getContentMetadata();
       if (contentMetadata.isPresent()) {
+         String cacheControl = contentMetadata.get().getCacheControl();
+         if (cacheControl != null) {
+            s3Options.cacheControl(cacheControl);
+         }
+
          String contentDisposition = contentMetadata.get().getContentDisposition();
          if (contentDisposition != null) {
             s3Options.contentDisposition(contentDisposition);

@@ -62,7 +62,6 @@ public class BindS3ObjectMetadataToRequestTest extends BaseS3ClientTest<S3Client
       payload.getContentMetadata().setContentLength(5368709120l);
       object.setPayload(payload);
       object.getMetadata().setKey("foo");
-      object.getMetadata().setCacheControl("no-cache");
       object.getMetadata().setUserMetadata(ImmutableMap.of("foo", "bar"));
 
       HttpRequest request = HttpRequest.builder().method("PUT").endpoint("http://localhost").build();
@@ -70,7 +69,7 @@ public class BindS3ObjectMetadataToRequestTest extends BaseS3ClientTest<S3Client
 
       assertEquals(binder.bindToRequest(request, object), HttpRequest.builder().method("PUT").endpoint(
                URI.create("http://localhost")).headers(
-               ImmutableMultimap.of("Cache-Control", "no-cache", "x-amz-meta-foo", "bar")).build());
+               ImmutableMultimap.of("x-amz-meta-foo", "bar")).build());
    }
 
    @Test(expectedExceptions = IllegalArgumentException.class)

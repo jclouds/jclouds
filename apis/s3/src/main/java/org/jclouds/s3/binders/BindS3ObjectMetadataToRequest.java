@@ -27,8 +27,6 @@ import org.jclouds.http.HttpRequest;
 import org.jclouds.rest.Binder;
 import org.jclouds.s3.domain.S3Object;
 
-import com.google.common.net.HttpHeaders;
-
 @Singleton
 public class BindS3ObjectMetadataToRequest implements Binder {
    protected final BindMapToHeadersWithPrefix metadataPrefixer;
@@ -53,10 +51,6 @@ public class BindS3ObjectMetadataToRequest implements Binder {
       
       request = metadataPrefixer.bindToRequest(request, s3Object.getMetadata().getUserMetadata());
 
-      if (s3Object.getMetadata().getCacheControl() != null) {
-         request = (R) request.toBuilder()
-                              .replaceHeader(HttpHeaders.CACHE_CONTROL, s3Object.getMetadata().getCacheControl()).build();
-      }
       return request;
    }
 }

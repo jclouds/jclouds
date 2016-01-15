@@ -42,7 +42,6 @@ public class ObjectMetadataBuilder {
    private String bucket;
    private URI uri;
    private StorageClass storageClass = StorageClass.STANDARD;
-   private String cacheControl;
    private Date lastModified;
    private String eTag;
    private CanonicalUser owner;
@@ -84,7 +83,7 @@ public class ObjectMetadataBuilder {
    }
 
    public ObjectMetadataBuilder cacheControl(String cacheControl) {
-      this.cacheControl = cacheControl;
+      contentMetadataBuilder.cacheControl(cacheControl);
       return this;
    }
 
@@ -130,7 +129,6 @@ public class ObjectMetadataBuilder {
    public ObjectMetadata build() {
       MutableObjectMetadataImpl toReturn = new MutableObjectMetadataImpl();
       toReturn.setContentMetadata(BaseMutableContentMetadata.fromContentMetadata(contentMetadataBuilder.build()));
-      toReturn.setCacheControl(cacheControl);
       toReturn.setKey(key);
       toReturn.setBucket(bucket);
       toReturn.setUri(uri);

@@ -108,11 +108,12 @@ public class MutableObjectMetadataImpl implements MutableObjectMetadata {
    }
 
    /**
-    *{@inheritDoc}
+    * @deprecated call getContentMetadata().getCacheControl() instead
     */
+   @Deprecated
    @Override
    public String getCacheControl() {
-      return cacheControl;
+      return contentMetadata.getCacheControl();
    }
 
    /**
@@ -148,11 +149,12 @@ public class MutableObjectMetadataImpl implements MutableObjectMetadata {
    }
 
    /**
-    *{@inheritDoc}
+    * @deprecated call getContentMetadata().setCacheControl(String) instead
     */
+   @Deprecated
    @Override
    public void setCacheControl(String cacheControl) {
-      this.cacheControl = cacheControl;
+      contentMetadata.setCacheControl(cacheControl);
    }
 
    /**

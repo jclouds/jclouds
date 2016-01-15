@@ -72,6 +72,7 @@ import com.google.common.net.HttpHeaders;
 public class CopyObjectOptions extends BaseHttpRequestOptions {
    private static final DateService dateService = new SimpleDateFormatDateService();
    public static final CopyObjectOptions NONE = new CopyObjectOptions();
+   private String cacheControl;
    private String contentDisposition;
    private String contentEncoding;
    private String contentLanguage;
@@ -255,6 +256,10 @@ public class CopyObjectOptions extends BaseHttpRequestOptions {
          returnVal.put(entry.getKey().replace(DEFAULT_AMAZON_HEADERTAG, headerTag), entry.getValue());
       }
       boolean replace = false;
+      if (cacheControl != null) {
+         returnVal.put(HttpHeaders.CACHE_CONTROL, cacheControl);
+         replace = true;
+      }
       if (contentDisposition != null) {
          returnVal.put(HttpHeaders.CONTENT_DISPOSITION, contentDisposition);
          replace = true;
@@ -282,6 +287,11 @@ public class CopyObjectOptions extends BaseHttpRequestOptions {
          returnVal.put(METADATA_DIRECTIVE.replace(DEFAULT_AMAZON_HEADERTAG, headerTag), "REPLACE");
       }
       return returnVal.build();
+   }
+
+   public CopyObjectOptions cacheControl(String cacheControl) {
+      this.cacheControl = checkNotNull(cacheControl, "cacheControl");
+      return this;
    }
 
    public CopyObjectOptions contentDisposition(String contentDisposition) {
@@ -352,6 +362,11 @@ public class CopyObjectOptions extends BaseHttpRequestOptions {
       public static CopyObjectOptions ifSourceETagDoesntMatch(String eTag) {
          CopyObjectOptions options = new CopyObjectOptions();
          return options.ifSourceETagDoesntMatch(eTag);
+      }
+
+      public static CopyObjectOptions cacheControl(String cacheControl) {
+         CopyObjectOptions options = new CopyObjectOptions();
+         return options.cacheControl(cacheControl);
       }
 
       public static CopyObjectOptions contentDisposition(String contentDisposition) {
