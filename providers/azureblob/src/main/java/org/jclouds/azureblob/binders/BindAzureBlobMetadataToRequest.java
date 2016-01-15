@@ -22,6 +22,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+import org.jclouds.azure.storage.reference.AzureStorageHeaders;
 import org.jclouds.azureblob.blobstore.functions.AzureBlobToBlob;
 import org.jclouds.azureblob.domain.AzureBlob;
 import org.jclouds.blobstore.binders.BindUserMetadataToHeadersWithPrefix;
@@ -56,6 +57,11 @@ public class BindAzureBlobMetadataToRequest implements Binder {
             && blob.getPayload().getContentMetadata().getContentLength() >= 0, "size must be set");
 
       Builder<String, String> headers = ImmutableMap.builder();
+
+      String cacheControl = blob.getPayload().getContentMetadata().getCacheControl();
+      if (cacheControl != null) {
+         headers.put(AzureStorageHeaders.CACHE_CONTROL, cacheControl);
+      }
 
       headers.put("x-ms-blob-type", blob.getProperties().getType().toString());
 

@@ -55,6 +55,10 @@ public class BindAzureBlobMetadataToMultipartRequest implements Binder {
       // bind BlockList-specific headers
       ImmutableMap.Builder<String, String> headers = ImmutableMap.builder();
       ContentMetadata contentMetadata = blob.getProperties().getContentMetadata();
+      String cacheControl = contentMetadata.getCacheControl();
+      if (cacheControl != null) {
+         headers.put("x-ms-blob-cache-control", cacheControl);
+      }
       String contentDisposition = contentMetadata.getContentDisposition();
       if (contentDisposition != null) {
          headers.put("x-ms-blob-content-disposition", contentDisposition);

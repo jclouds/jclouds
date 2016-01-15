@@ -249,6 +249,11 @@ public class AzureBlobStore extends BaseBlobStore {
       if (contentMetadata.isPresent()) {
          ContentMetadataBuilder builder = ContentMetadataBuilder.create();
 
+         String cacheControl = contentMetadata.get().getCacheControl();
+         if (cacheControl != null) {
+            builder.cacheControl(cacheControl);
+         }
+
          String contentDisposition = contentMetadata.get().getContentDisposition();
          if (contentDisposition != null) {
             builder.contentDisposition(contentDisposition);

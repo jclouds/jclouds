@@ -45,6 +45,11 @@ public class BindAzureContentMetadataToRequest implements Binder {
 
       ImmutableMap.Builder<String, String> headers = ImmutableMap.builder();
 
+      String cacheControl = contentMetadata.getCacheControl();
+      if (cacheControl != null) {
+         headers.put(AzureStorageHeaders.CACHE_CONTROL, cacheControl);
+      }
+
       String contentDisposition = contentMetadata.getContentDisposition();
       if (contentDisposition != null) {
          headers.put(AzureStorageHeaders.CONTENT_DISPOSITION, contentDisposition);

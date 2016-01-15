@@ -26,11 +26,13 @@ import java.net.URI;
 import java.util.Date;
 import java.util.Map;
 
+import org.jclouds.ContextBuilder;
 import org.jclouds.Fallbacks.TrueOnNotFoundOr404;
 import org.jclouds.Fallbacks.VoidOnNotFoundOr404;
 import org.jclouds.azure.storage.filters.SharedKeyLiteAuthentication;
 import org.jclouds.azure.storage.options.ListOptions;
 import org.jclouds.azureblob.AzureBlobFallbacks.FalseIfContainerAlreadyExists;
+import org.jclouds.azureblob.domain.AzureBlob;
 import org.jclouds.azureblob.domain.PublicAccess;
 import org.jclouds.azureblob.functions.ParseBlobFromHeadersAndHttpContent;
 import org.jclouds.azureblob.functions.ParseContainerPropertiesFromHeaders;
@@ -48,6 +50,8 @@ import org.jclouds.http.functions.ParseSax;
 import org.jclouds.http.functions.ReleasePayloadAndReturn;
 import org.jclouds.http.functions.ReturnTrueIf2xx;
 import org.jclouds.http.options.GetOptions;
+import org.jclouds.io.ContentMetadata;
+import org.jclouds.io.ContentMetadataBuilder;
 import org.jclouds.rest.internal.BaseRestAnnotationProcessingTest;
 import org.jclouds.rest.internal.GeneratedHttpRequest;
 import org.testng.annotations.Test;
@@ -59,6 +63,13 @@ import com.google.common.reflect.Invokable;
 
 @Test(groups = "unit", testName = "AzureBlobClientTest")
 public class AzureBlobClientTest extends BaseRestAnnotationProcessingTest<AzureBlobClient> {
+
+   private static AzureBlobClient getAzureBlobClient() {
+      return ContextBuilder
+            .newBuilder("azureblob")
+            .credentials("accessKey", "secretKey")
+            .buildApi(AzureBlobClient.class);
+   }
 
    public void testListContainers() throws SecurityException, NoSuchMethodException, IOException {
       Invokable<?, ?> method = method(AzureBlobClient.class, "listContainers", ListOptions[].class);
@@ -278,6 +289,30 @@ public class AzureBlobClientTest extends BaseRestAnnotationProcessingTest<AzureB
       assertFallbackClassEquals(method, null);
    }
 
+   public void testPutBlob() throws Exception {
+      Invokable<?, ?> method = method(AzureBlobClient.class, "putBlob", String.class, AzureBlob.class);
+      String payload = "payload";
+      String cacheControl = "max-age=3600";
+      AzureBlob object = getAzureBlobClient().newBlob();
+      object.setPayload(payload);
+      object.getProperties().setName("blob");
+      object.getProperties().getContentMetadata().setCacheControl(cacheControl);
+      object.getProperties().getContentMetadata().setContentLength(7L);
+      GeneratedHttpRequest request = processor.createRequest(method, ImmutableList.<Object> of("container", object));
+
+      assertRequestLineEquals(request, "PUT https://identity.blob.core.windows.net/container/blob HTTP/1.1");
+      assertNonPayloadHeadersEqual(request,
+            "Expect: 100-continue\n" +
+            "x-ms-blob-cache-control: " + cacheControl + "\n" +
+            "x-ms-blob-type: BlockBlob\n" +
+            "x-ms-version: 2013-08-15\n");
+      assertPayloadEquals(request, payload, "application/unknown", false);
+
+      assertResponseParserClassEquals(method, request, ParseETagHeader.class);
+      assertSaxResponseParserClassEquals(method, null);
+      assertFallbackClassEquals(method, null);
+   }
+
    public void testGetBlob() throws SecurityException, NoSuchMethodException, IOException {
       Invokable<?, ?> method = method(AzureBlobClient.class, "getBlob", String.class, String.class, GetOptions[].class);
       GeneratedHttpRequest request = processor.createRequest(method, ImmutableList.<Object> of("container", "blob"));
@@ -299,6 +334,27 @@ public class AzureBlobClientTest extends BaseRestAnnotationProcessingTest<AzureB
                "PUT https://identity.blob.core.windows.net/container/blob?comp=metadata HTTP/1.1");
       assertNonPayloadHeadersEqual(request,
                "x-ms-meta-key: value\n" +
+               "x-ms-version: 2013-08-15\n");
+      assertPayloadEquals(request, null, null, false);
+
+      assertResponseParserClassEquals(method, request, ParseETagHeader.class);
+      assertSaxResponseParserClassEquals(method, null);
+      assertFallbackClassEquals(method, null);
+   }
+
+   public void testSetBlobProperties() throws Exception {
+      String cacheControl = "max-age=3600";
+      ContentMetadata metadata = ContentMetadataBuilder.create()
+            .cacheControl(cacheControl)
+            .build();
+      Invokable<?, ?> method = method(AzureBlobClient.class, "setBlobProperties", String.class, String.class, ContentMetadata.class);
+      GeneratedHttpRequest request = processor.createRequest(method, ImmutableList.<Object> of("container", "blob", metadata));
+
+      assertRequestLineEquals(request,
+               "PUT https://identity.blob.core.windows.net/container/blob?comp=properties HTTP/1.1");
+      assertNonPayloadHeadersEqual(request,
+               "x-ms-blob-cache-control: " + cacheControl + "\n" +
+               "x-ms-blob-content-type: application/unknown\n" +
                "x-ms-version: 2013-08-15\n");
       assertPayloadEquals(request, null, null, false);
 

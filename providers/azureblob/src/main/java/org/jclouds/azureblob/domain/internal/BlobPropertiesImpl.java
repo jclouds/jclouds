@@ -46,6 +46,7 @@ public class BlobPropertiesImpl implements BlobProperties {
    private final LeaseStatus leaseStatus;
    private final BaseImmutableContentMetadata contentMetadata;
 
+   // TODO: should this take Cache-Control as well?
    public BlobPropertiesImpl(BlobType type, String name, String container, URI url, Date lastModified, String eTag,
             long size, String contentType, @Nullable byte[] contentMD5, @Nullable String contentMetadata,
             @Nullable String contentLanguage, @Nullable Date currentExpires, LeaseStatus leaseStatus, 
