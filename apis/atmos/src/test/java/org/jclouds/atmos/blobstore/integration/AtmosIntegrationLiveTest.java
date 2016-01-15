@@ -16,6 +16,7 @@
  */
 package org.jclouds.atmos.blobstore.integration;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.testng.Assert.assertEquals;
 
 import java.io.IOException;
@@ -74,6 +75,13 @@ public class AtmosIntegrationLiveTest extends BaseBlobIntegrationTest {
    @Test(enabled = false)
    public void testGetTwoRanges() {
       // not supported
+   }
+
+   // not supported
+   @Override
+   protected void checkCacheControl(Blob blob, String cacheControl) {
+      assertThat(blob.getPayload().getContentMetadata().getCacheControl()).isNull();
+      assertThat(blob.getMetadata().getContentMetadata().getCacheControl()).isNull();
    }
 
    // not supported

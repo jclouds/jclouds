@@ -132,9 +132,13 @@ public class DelegatingMutableContentMetadata implements MutableContentMetadata 
    }
 
    @Override
+   public void setCacheControl(String cacheControl) {
+      delegate.setCacheControl(cacheControl);
+   }
+
+   @Override
    public void setContentDisposition(String contentDisposition) {
       delegate.setContentDisposition(contentDisposition);
-
    }
 
    @Override
@@ -145,6 +149,11 @@ public class DelegatingMutableContentMetadata implements MutableContentMetadata 
    @Override
    public void setContentLanguage(String contentLanguage) {
       delegate.setContentLanguage(contentLanguage);
+   }
+
+   @Override
+   public String getCacheControl() {
+      return delegate.getCacheControl();
    }
 
    @Override
