@@ -262,18 +262,25 @@ public abstract class BaseBlobStore implements BlobStore {
       InputStream is = null;
       try {
          is = blob.getPayload().openStream();
-         ContentMetadata metadata = blob.getMetadata().getContentMetadata();
          BlobBuilder.PayloadBlobBuilder builder = blobBuilder(toName)
-               .payload(is)
-               .cacheControl(metadata.getCacheControl())
+               .payload(is);
+         Long contentLength = blob.getMetadata().getContentMetadata().getContentLength();
+         if (contentLength != null) {
+            builder.contentLength(contentLength);
+         }
+
+         ContentMetadata metadata;
+         if (options.getContentMetadata().isPresent()) {
+            metadata = options.getContentMetadata().get();
+         } else {
+            metadata = blob.getMetadata().getContentMetadata();
+         }
+         builder.cacheControl(metadata.getCacheControl())
                .contentDisposition(metadata.getContentDisposition())
                .contentEncoding(metadata.getContentEncoding())
                .contentLanguage(metadata.getContentLanguage())
                .contentType(metadata.getContentType());
-         Long contentLength = metadata.getContentLength();
-         if (contentLength != null) {
-            builder.contentLength(contentLength);
-         }
+
          Optional<Map<String, String>> userMetadata = options.getUserMetadata();
          if (userMetadata.isPresent()) {
             builder.userMetadata(userMetadata.get());

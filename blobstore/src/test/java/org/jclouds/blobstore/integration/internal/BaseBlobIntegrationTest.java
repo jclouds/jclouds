@@ -906,7 +906,6 @@ public class BaseBlobIntegrationTest extends BaseBlobStoreIntegrationTest {
             .contentEncoding("compress")
             .contentLanguage("fr")
             .contentType("audio/ogg");
-      addContentMetadata(blobBuilder);
       Blob blob = blobBuilder.build();
 
       String fromContainer = getContainerName();
