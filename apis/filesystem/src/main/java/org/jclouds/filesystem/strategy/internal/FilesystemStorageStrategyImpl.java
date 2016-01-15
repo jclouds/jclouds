@@ -95,6 +95,7 @@ import com.google.common.primitives.Longs;
  */
 public class FilesystemStorageStrategyImpl implements LocalStorageStrategy {
 
+   private static final String XATTR_CACHE_CONTROL = "user.cache-control";
    private static final String XATTR_CONTENT_DISPOSITION = "user.content-disposition";
    private static final String XATTR_CONTENT_ENCODING = "user.content-encoding";
    private static final String XATTR_CONTENT_LANGUAGE = "user.content-language";
@@ -326,6 +327,7 @@ public class FilesystemStorageStrategyImpl implements LocalStorageStrategy {
          byteSource = Files.asByteSource(file);
       }
       try {
+         String cacheControl = null;
          String contentDisposition = null;
          String contentEncoding = null;
          String contentLanguage = null;
@@ -338,6 +340,7 @@ public class FilesystemStorageStrategyImpl implements LocalStorageStrategy {
          if (view != null) {
             Set<String> attributes = ImmutableSet.copyOf(view.list());
 
+            cacheControl = readStringAttributeIfPresent(view, attributes, XATTR_CACHE_CONTROL);
             contentDisposition = readStringAttributeIfPresent(view, attributes, XATTR_CONTENT_DISPOSITION);
             contentEncoding = readStringAttributeIfPresent(view, attributes, XATTR_CONTENT_ENCODING);
             contentLanguage = readStringAttributeIfPresent(view, attributes, XATTR_CONTENT_LANGUAGE);
@@ -370,6 +373,7 @@ public class FilesystemStorageStrategyImpl implements LocalStorageStrategy {
             }
 
             builder.payload(byteSource)
+               .cacheControl(cacheControl)
                .contentDisposition(contentDisposition)
                .contentEncoding(contentEncoding)
                .contentLanguage(contentLanguage)
@@ -397,6 +401,7 @@ public class FilesystemStorageStrategyImpl implements LocalStorageStrategy {
 
    private void writeCommonMetadataAttr(UserDefinedFileAttributeView view, Blob blob) throws IOException {
       ContentMetadata metadata = blob.getMetadata().getContentMetadata();
+      writeStringAttributeIfPresent(view, XATTR_CACHE_CONTROL, metadata.getCacheControl());
       writeStringAttributeIfPresent(view, XATTR_CONTENT_DISPOSITION, metadata.getContentDisposition());
       writeStringAttributeIfPresent(view, XATTR_CONTENT_ENCODING, metadata.getContentEncoding());
       writeStringAttributeIfPresent(view, XATTR_CONTENT_LANGUAGE, metadata.getContentLanguage());
