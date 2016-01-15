@@ -16,6 +16,7 @@
  */
 package org.jclouds.openstack.swift.v1.blobstore.integration;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.jclouds.openstack.keystone.v2_0.config.KeystoneProperties.CREDENTIAL_TYPE;
 
 import java.util.Properties;
@@ -68,6 +69,14 @@ public class SwiftBlobIntegrationLiveTest extends BaseBlobIntegrationTest {
       return 422;
    }
 
+   // not supported
+   @Override
+   protected void checkCacheControl(Blob blob, String cacheControl) {
+      assertThat(blob.getPayload().getContentMetadata().getCacheControl()).isNull();
+      assertThat(blob.getMetadata().getContentMetadata().getCacheControl()).isNull();
+   }
+
+   // not supported
    @Override
    protected void checkContentLanguage(Blob blob, String contentLanguage) {
       assert blob.getPayload().getContentMetadata().getContentLanguage() == null;
