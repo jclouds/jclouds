@@ -25,12 +25,9 @@ import org.jclouds.blobstore.domain.internal.MutableBlobMetadataImpl;
 import org.jclouds.domain.Location;
 import org.jclouds.http.HttpUtils;
 import org.jclouds.s3.domain.AccessControlList;
-import org.jclouds.s3.domain.AccessControlList.GroupGranteeURI;
-import org.jclouds.s3.domain.AccessControlList.Permission;
 import org.jclouds.s3.domain.ObjectMetadata;
 
 import com.google.common.base.Function;
-import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
 
 @Singleton
@@ -50,13 +47,6 @@ public class ObjectToBlobMetadata implements Function<ObjectMetadata, MutableBlo
          return null;
       MutableBlobMetadata to = new MutableBlobMetadataImpl();
       HttpUtils.copy(from.getContentMetadata(), to.getContentMetadata());
-      try {
-         AccessControlList bucketAcl = bucketAcls.getUnchecked(from.getBucket());
-         if (bucketAcl.hasPermission(GroupGranteeURI.ALL_USERS, Permission.READ))
-            to.setPublicUri(from.getUri());
-      } catch (CacheLoader.InvalidCacheLoadException e) {
-         // nulls not permitted from cache loader
-      }
       to.setUri(from.getUri());
       to.setContainer(from.getBucket());
       to.setETag(from.getETag());
