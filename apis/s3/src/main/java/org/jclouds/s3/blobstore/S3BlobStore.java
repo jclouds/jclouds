@@ -74,7 +74,6 @@ import com.google.common.base.Function;
 import com.google.common.base.Optional;
 import com.google.common.base.Predicate;
 import com.google.common.base.Supplier;
-import com.google.common.cache.LoadingCache;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Iterables;
@@ -91,7 +90,6 @@ public class S3BlobStore extends BaseBlobStore {
    private final BlobToObjectMetadata blob2ObjectMetadata;
    private final BlobToHttpGetOptions blob2ObjectGetOptions;
    private final Provider<FetchBlobMetadata> fetchBlobMetadataProvider;
-   private final LoadingCache<String, AccessControlList> bucketAcls;
 
    @Inject
    protected S3BlobStore(BlobStoreContext context, BlobUtils blobUtils, Supplier<Location> defaultLocation,
@@ -100,8 +98,7 @@ public class S3BlobStore extends BaseBlobStore {
             ContainerToBucketListOptions container2BucketListOptions, BucketToResourceList bucket2ResourceList,
             ObjectToBlob object2Blob, BlobToHttpGetOptions blob2ObjectGetOptions, BlobToObject blob2Object,
             BlobToObjectMetadata blob2ObjectMetadata,
-            ObjectToBlobMetadata object2BlobMd, Provider<FetchBlobMetadata> fetchBlobMetadataProvider,
-            LoadingCache<String, AccessControlList> bucketAcls) {
+            ObjectToBlobMetadata object2BlobMd, Provider<FetchBlobMetadata> fetchBlobMetadataProvider) {
       super(context, blobUtils, defaultLocation, locations, slicer);
       this.blob2ObjectGetOptions = checkNotNull(blob2ObjectGetOptions, "blob2ObjectGetOptions");
       this.sync = checkNotNull(sync, "sync");
@@ -113,7 +110,6 @@ public class S3BlobStore extends BaseBlobStore {
       this.object2BlobMd = checkNotNull(object2BlobMd, "object2BlobMd");
       this.blob2ObjectMetadata = checkNotNull(blob2ObjectMetadata, "blob2ObjectMetadata");
       this.fetchBlobMetadataProvider = checkNotNull(fetchBlobMetadataProvider, "fetchBlobMetadataProvider");
-      this.bucketAcls = checkNotNull(bucketAcls, "bucketAcls");
    }
 
    /**

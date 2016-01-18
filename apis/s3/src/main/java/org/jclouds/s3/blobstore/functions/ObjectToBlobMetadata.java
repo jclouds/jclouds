@@ -24,21 +24,16 @@ import org.jclouds.blobstore.domain.StorageType;
 import org.jclouds.blobstore.domain.internal.MutableBlobMetadataImpl;
 import org.jclouds.domain.Location;
 import org.jclouds.http.HttpUtils;
-import org.jclouds.s3.domain.AccessControlList;
 import org.jclouds.s3.domain.ObjectMetadata;
 
 import com.google.common.base.Function;
-import com.google.common.cache.LoadingCache;
 
 @Singleton
 public class ObjectToBlobMetadata implements Function<ObjectMetadata, MutableBlobMetadata> {
-   private final LoadingCache<String, AccessControlList> bucketAcls;
    private final Function<String, Location> locationOfBucket;
 
    @Inject
-   public ObjectToBlobMetadata(LoadingCache<String, AccessControlList> bucketAcls, Function<String,
-         Location> locationOfBucket) {
-      this.bucketAcls = bucketAcls;
+   public ObjectToBlobMetadata(Function<String, Location> locationOfBucket) {
       this.locationOfBucket = locationOfBucket;
    }
 
