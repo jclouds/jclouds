@@ -46,22 +46,16 @@ import org.jclouds.s3.blobstore.functions.BucketToResourceList;
 import org.jclouds.s3.blobstore.functions.ContainerToBucketListOptions;
 import org.jclouds.s3.blobstore.functions.ObjectToBlob;
 import org.jclouds.s3.blobstore.functions.ObjectToBlobMetadata;
-import org.jclouds.s3.domain.AccessControlList;
 import org.jclouds.s3.domain.BucketMetadata;
-import org.jclouds.s3.domain.CannedAccessPolicy;
-import org.jclouds.s3.domain.ObjectMetadata;
 
 import com.google.common.base.Function;
 import com.google.common.base.Supplier;
-import com.google.common.cache.CacheLoader;
-import com.google.common.cache.LoadingCache;
 
 /**
  * Provide AWS S3 specific extensions.
  */
 public class AWSS3BlobStore extends S3BlobStore {
 
-   private final LoadingCache<String, AccessControlList> bucketAcls;
    private final BlobToObject blob2Object;
 
    @Inject
@@ -71,12 +65,10 @@ public class AWSS3BlobStore extends S3BlobStore {
             ContainerToBucketListOptions container2BucketListOptions, BucketToResourceList bucket2ResourceList,
             ObjectToBlob object2Blob, BlobToHttpGetOptions blob2ObjectGetOptions, BlobToObject blob2Object,
             BlobToObjectMetadata blob2ObjectMetadata,
-            ObjectToBlobMetadata object2BlobMd, Provider<FetchBlobMetadata> fetchBlobMetadataProvider,
-            LoadingCache<String, AccessControlList> bucketAcls) {
+            ObjectToBlobMetadata object2BlobMd, Provider<FetchBlobMetadata> fetchBlobMetadataProvider) {
       super(context, blobUtils, defaultLocation, locations, slicer, sync, convertBucketsToStorageMetadata,
                container2BucketListOptions, bucket2ResourceList, object2Blob, blob2ObjectGetOptions, blob2Object,
-               blob2ObjectMetadata, object2BlobMd, fetchBlobMetadataProvider, bucketAcls);
-      this.bucketAcls = bucketAcls;
+               blob2ObjectMetadata, object2BlobMd, fetchBlobMetadataProvider);
       this.blob2Object = blob2Object;
    }
 
@@ -95,17 +87,6 @@ public class AWSS3BlobStore extends S3BlobStore {
 
    private String putBlobWithReducedRedundancy(String container, Blob blob) {
       AWSS3PutObjectOptions options = new AWSS3PutObjectOptions();
-      try {
-         AccessControlList acl = bucketAcls.getUnchecked(container);
-         if (acl != null && acl.hasPermission(AccessControlList.GroupGranteeURI.ALL_USERS,
-                                              AccessControlList.Permission.READ)) {
-            options.withAcl(CannedAccessPolicy.PUBLIC_READ);
-         }
-         options.storageClass(ObjectMetadata.StorageClass.REDUCED_REDUNDANCY);
-
-      } catch (CacheLoader.InvalidCacheLoadException e) {
-         // nulls not permitted from cache loader
-      }
       return getContext().unwrapApi(AWSS3Client.class).putObject(container, blob2Object.apply(blob), options);
    }
 
