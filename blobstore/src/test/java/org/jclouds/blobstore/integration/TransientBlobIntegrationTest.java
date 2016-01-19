@@ -18,10 +18,17 @@ package org.jclouds.blobstore.integration;
 
 import org.jclouds.blobstore.integration.internal.BaseBlobIntegrationTest;
 import org.testng.annotations.Test;
+import org.testng.SkipException;
 
 @Test(groups = { "integration" })
 public class TransientBlobIntegrationTest extends BaseBlobIntegrationTest {
    public TransientBlobIntegrationTest() {
       provider = "transient";
+   }
+
+   @Override
+   @Test(groups = { "integration", "live" })
+   public void testSetBlobAccess() throws Exception {
+      throw new SkipException("transient does not support anonymous access");
    }
 }

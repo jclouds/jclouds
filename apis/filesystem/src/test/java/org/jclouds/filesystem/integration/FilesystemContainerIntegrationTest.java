@@ -189,6 +189,6 @@ public class FilesystemContainerIntegrationTest extends BaseContainerIntegration
    @Override
    @Test(groups = { "integration", "live" })
    public void testSetContainerAccess() throws Exception {
-      throw new SkipException("transient does not support anonymous access");
+      throw new SkipException("filesystem does not support anonymous access");
    }
 }

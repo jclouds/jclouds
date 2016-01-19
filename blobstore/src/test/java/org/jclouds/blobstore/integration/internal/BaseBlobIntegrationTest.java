@@ -65,6 +65,8 @@ import org.jclouds.blobstore.options.PutOptions;
 import org.jclouds.blobstore.strategy.internal.MultipartUploadSlicingAlgorithm;
 import org.jclouds.crypto.Crypto;
 import org.jclouds.encryption.internal.JCECrypto;
+import org.jclouds.http.HttpRequest;
+import org.jclouds.http.HttpResponse;
 import org.jclouds.http.HttpResponseException;
 import org.jclouds.io.ByteStreams2;
 import org.jclouds.io.ContentMetadataBuilder;
@@ -666,6 +668,12 @@ public class BaseBlobIntegrationTest extends BaseBlobStoreIntegrationTest {
 
          blobStore.setBlobAccess(containerName, blobName, BlobAccess.PUBLIC_READ);
          assertThat(blobStore.getBlobAccess(containerName, blobName)).isEqualTo(BlobAccess.PUBLIC_READ);
+
+         // test that blob is anonymously readable
+         HttpRequest request = view.getSigner().signGetBlob(containerName, blobName).toBuilder()
+                .replaceQueryParams(ImmutableMap.<String, String>of()).build();
+         HttpResponse response = view.utils().http().invoke(request);
+         assertThat(response.getStatusCode()).isEqualTo(200);
 
          blobStore.setBlobAccess(containerName, blobName, BlobAccess.PRIVATE);
          assertThat(blobStore.getBlobAccess(containerName, blobName)).isEqualTo(BlobAccess.PRIVATE);
