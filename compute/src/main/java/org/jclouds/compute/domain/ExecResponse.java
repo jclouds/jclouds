@@ -22,14 +22,16 @@ import com.google.common.base.Objects;
 
 public class ExecResponse implements CustomizationResponse {
 
+   public static final int DEFAULT_EXIT_STATUS = -1;
+    
    private final String output;
    private final String error;
    private final int exitStatus;
 
-   public ExecResponse(String output, String error, int exitStatus) {
+   public ExecResponse(String output, String error, Integer exitStatus) {
       this.output = output;
       this.error = error;
-      this.exitStatus = exitStatus;
+      this.exitStatus = exitStatus != null ? exitStatus : DEFAULT_EXIT_STATUS;
    }
 
    public String getError() {

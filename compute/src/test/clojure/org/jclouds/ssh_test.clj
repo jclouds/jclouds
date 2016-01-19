@@ -46,9 +46,9 @@
   "Default exec function - replies to ./runscript status by returning 1"
   [cmd]
   (merge
-   {:exit 0 :err "stderr" :out "stdout"}
+   {:exit (Integer. 0) :err "stderr" :out "stdout"}
    (condp = cmd
-       "/tmp/init-bootstrap status" {:exit 1 :out "[]"}
+       "/tmp/init-bootstrap status" {:exit (Integer. 1) :out "[]"}
        {})))
 
 

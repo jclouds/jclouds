@@ -22,20 +22,28 @@ import static org.easymock.EasyMock.expect;
 import static org.easymock.EasyMock.expectLastCall;
 import static org.easymock.EasyMock.replay;
 import static org.easymock.EasyMock.verify;
+import static org.testng.Assert.assertEquals;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.ConnectException;
 import java.net.SocketTimeoutException;
 import java.util.Properties;
+import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 
 import net.schmizz.sshj.SSHClient;
 import net.schmizz.sshj.common.SSHException;
 import net.schmizz.sshj.connection.ConnectionException;
+import net.schmizz.sshj.connection.channel.direct.PTYMode;
+import net.schmizz.sshj.connection.channel.direct.Session;
+import net.schmizz.sshj.connection.channel.direct.Session.Command;
 import net.schmizz.sshj.sftp.SFTPException;
 import net.schmizz.sshj.transport.TransportException;
 import net.schmizz.sshj.userauth.UserAuthException;
 
+import org.jclouds.compute.domain.ExecResponse;
 import org.jclouds.domain.LoginCredentials;
 import org.jclouds.logging.BufferLogger;
 import org.jclouds.logging.BufferLogger.Record;
@@ -47,11 +55,13 @@ import org.testng.Assert;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 
+import com.google.common.collect.ImmutableMap;
 import com.google.common.net.HostAndPort;
 import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.google.inject.Module;
+
 
 @Test
 public class SshjSshClientTest {
@@ -204,6 +214,39 @@ public class SshjSshClientTest {
       Record r = logcheck.assertLogContains("attempt 1 of 5");
       logcheck.assertLogDoesntContain("attempt 2 of 5");
       Assert.assertEquals(Level.INFO, r.getLevel());
+   }
+   
+   public void testExecResponseHasDefaultExitStatusIfDriverReturnsNullExitStatus() throws Exception {
+      SSHClientConnection mockConnection = createMock(SSHClientConnection.class);
+      net.schmizz.sshj.SSHClient mockClient = createMock(net.schmizz.sshj.SSHClient.class);
+      Session session = createMock(Session.class);
+      Command command = createMock(Command.class);
+      SshjSshClient client = createClient();
+      InputStream is = new ByteArrayInputStream( new byte[0] );
+
+      mockConnection.getSessionTimeout(); expectLastCall().andReturn(0);
+      mockClient.isConnected(); expectLastCall().andReturn(true);
+      mockClient.startSession(); expectLastCall().andReturn(session);
+      session.allocatePTY("vt100", 80, 24, 0, 0, ImmutableMap.<PTYMode, Integer> of());
+      expectLastCall();
+      session.exec("some-command"); expectLastCall().andReturn( command );
+      session.close(); expectLastCall();
+      command.join(0, TimeUnit.MILLISECONDS); expectLastCall();
+      command.getInputStream(); expectLastCall().andReturn(is);
+      command.getErrorStream(); expectLastCall().andReturn(is);
+      command.getExitStatus(); expectLastCall().andReturn(null);
+      replay(mockConnection);
+      replay(mockClient);
+      replay(session);
+      replay(command);
+      
+      mockConnection.ssh = mockClient;
+      client.sshClientConnection = mockConnection;
+      
+      ExecResponse response = client.exec( "some-command" );
+       
+      assertEquals(response.getExitStatus(), ExecResponse.DEFAULT_EXIT_STATUS);
+      verify(mockConnection, mockClient, session, command);
    }
 
 }

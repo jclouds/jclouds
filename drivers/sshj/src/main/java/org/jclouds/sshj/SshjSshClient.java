@@ -460,9 +460,8 @@ public class SshjSshClient implements SshClient {
             Command output = session.exec(checkNotNull(command, "command"));
             String outputString = IOUtils.readFully(output.getInputStream()).toString();
             output.join(sshClientConnection.getSessionTimeout(), TimeUnit.MILLISECONDS);
-            int errorStatus = output.getExitStatus();
             String errorString = IOUtils.readFully(output.getErrorStream()).toString();
-            return new ExecResponse(outputString, errorString, errorStatus);
+            return new ExecResponse(outputString, errorString, output.getExitStatus());
          } finally {
             clear();
          }
