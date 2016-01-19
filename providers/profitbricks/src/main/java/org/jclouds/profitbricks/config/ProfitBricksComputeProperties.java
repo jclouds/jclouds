@@ -18,12 +18,12 @@ package org.jclouds.profitbricks.config;
 
 public class ProfitBricksComputeProperties {
 
-   public static final String POLL_PREDICATE_DATACENTER = "jclouds.profitbricks.predicate.datacenter";
-   public static final String POLL_PREDICATE_SNAPSHOT = "jclouds.profitbricks.predicate.snapshot";
+   public static final String POLL_PREDICATE_DATACENTER     = "jclouds.profitbricks.predicate.datacenter";
+   public static final String POLL_PREDICATE_SNAPSHOT       = "jclouds.profitbricks.predicate.snapshot";
 
-   public static final String POLL_TIMEOUT = "jclouds.profitbricks.poll.timeout";
-   public static final String POLL_PERIOD = "jclouds.profitbricks.operation.poll.initial-period";
-   public static final String POLL_MAX_PERIOD = "jclouds.profitbricks.operation.poll.max-period";
+   public static final String TIMEOUT_DATACENTER_AVAILABLE  = "jclouds.profitbricks.timeout.datacenter-available";
+   public static final String POLL_INITIAL_PERIOD           = "jclouds.profitbricks.poll-status.initial-period";
+   public static final String POLL_MAX_PERIOD               = "jclouds.profitbricks.poll-status.poll.max-period";
 
    private ProfitBricksComputeProperties() {
       throw new AssertionError("Intentionally unimplemented");

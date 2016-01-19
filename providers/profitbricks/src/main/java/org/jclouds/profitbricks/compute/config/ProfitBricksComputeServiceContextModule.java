@@ -19,11 +19,11 @@ package org.jclouds.profitbricks.compute.config;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static org.jclouds.compute.config.ComputeServiceProperties.TIMEOUT_NODE_RUNNING;
 import static org.jclouds.compute.config.ComputeServiceProperties.TIMEOUT_NODE_SUSPENDED;
-import static org.jclouds.profitbricks.config.ProfitBricksComputeProperties.POLL_PERIOD;
+import static org.jclouds.profitbricks.config.ProfitBricksComputeProperties.POLL_INITIAL_PERIOD;
 import static org.jclouds.profitbricks.config.ProfitBricksComputeProperties.POLL_MAX_PERIOD;
 import static org.jclouds.profitbricks.config.ProfitBricksComputeProperties.POLL_PREDICATE_DATACENTER;
 import static org.jclouds.profitbricks.config.ProfitBricksComputeProperties.POLL_PREDICATE_SNAPSHOT;
-import static org.jclouds.profitbricks.config.ProfitBricksComputeProperties.POLL_TIMEOUT;
+import static org.jclouds.profitbricks.config.ProfitBricksComputeProperties.TIMEOUT_DATACENTER_AVAILABLE;
 import static org.jclouds.util.Predicates2.retry;
 
 import java.util.concurrent.TimeUnit;
@@ -36,6 +36,7 @@ import org.jclouds.compute.config.ComputeServiceAdapterContextModule;
 import org.jclouds.compute.domain.Hardware;
 import org.jclouds.compute.domain.Image;
 import org.jclouds.compute.domain.NodeMetadata;
+import org.jclouds.compute.domain.TemplateBuilder;
 import org.jclouds.compute.domain.Volume;
 import org.jclouds.domain.Location;
 import org.jclouds.functions.IdentityFunction;
@@ -49,6 +50,7 @@ import org.jclouds.profitbricks.compute.concurrent.ProvisioningManager;
 import org.jclouds.profitbricks.domain.DataCenter;
 import org.jclouds.profitbricks.domain.Server;
 import org.jclouds.profitbricks.domain.Storage;
+import org.jclouds.profitbricks.compute.ProfitBricksTemplateBuilderImpl;
 import org.jclouds.profitbricks.compute.function.DataCenterToLocation;
 import org.jclouds.profitbricks.compute.function.LocationToLocation;
 import org.jclouds.profitbricks.compute.function.ProvisionableToImage;
@@ -64,6 +66,7 @@ import com.google.inject.Provides;
 import com.google.inject.TypeLiteral;
 import com.google.inject.assistedinject.FactoryModuleBuilder;
 
+
 public class ProfitBricksComputeServiceContextModule extends
         ComputeServiceAdapterContextModule<Server, Hardware, Provisionable, DataCenter> {
 
@@ -78,6 +81,8 @@ public class ProfitBricksComputeServiceContextModule extends
 
       bind(ImplicitLocationSupplier.class).to(OnlyLocationOrFirstZone.class).in(Singleton.class);
 
+      bind(new TypeLiteral<TemplateBuilder>(){}).to(ProfitBricksTemplateBuilderImpl.class);
+      
       bind(new TypeLiteral<ComputeServiceAdapter<Server, Hardware, Provisionable, DataCenter>>() {
       }).to(ProfitBricksComputeServiceAdapter.class);
 
@@ -202,11 +207,11 @@ public class ProfitBricksComputeServiceContextModule extends
    public static class ComputeConstants {
 
       @Inject
-      @Named(POLL_TIMEOUT)
+      @Named(TIMEOUT_DATACENTER_AVAILABLE)
       private String pollTimeout;
 
       @Inject
-      @Named(POLL_PERIOD)
+      @Named(POLL_INITIAL_PERIOD)
       private String pollPeriod;
 
       @Inject

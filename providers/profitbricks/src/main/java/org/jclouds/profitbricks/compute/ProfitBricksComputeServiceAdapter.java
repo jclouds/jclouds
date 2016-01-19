@@ -16,6 +16,7 @@
  */
 package org.jclouds.profitbricks.compute;
 
+import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Strings.isNullOrEmpty;
 import static com.google.common.collect.Iterables.transform;
 import static com.google.common.util.concurrent.Futures.allAsList;
@@ -41,6 +42,8 @@ import org.jclouds.compute.domain.internal.VolumeImpl;
 import org.jclouds.compute.options.TemplateOptions;
 import org.jclouds.compute.reference.ComputeServiceConstants;
 import org.jclouds.compute.util.ComputeServiceUtils;
+import org.jclouds.domain.Location;
+import org.jclouds.domain.LocationScope;
 import org.jclouds.domain.LoginCredentials;
 import org.jclouds.logging.Logger;
 import org.jclouds.profitbricks.ProfitBricksApi;
@@ -53,6 +56,7 @@ import org.jclouds.profitbricks.features.DataCenterApi;
 import org.jclouds.profitbricks.features.ServerApi;
 import org.jclouds.profitbricks.compute.concurrent.ProvisioningJob;
 import org.jclouds.profitbricks.compute.concurrent.ProvisioningManager;
+import org.jclouds.profitbricks.compute.function.ProvisionableToImage;
 import org.jclouds.profitbricks.domain.Snapshot;
 import org.jclouds.profitbricks.domain.Provisionable;
 import org.jclouds.profitbricks.util.Passwords;
@@ -99,7 +103,10 @@ public class ProfitBricksComputeServiceAdapter implements ComputeServiceAdapter<
 
    @Override
    public NodeAndInitialCredentials<Server> createNodeWithGroupEncodedIntoName(String group, String name, Template template) {
-      final String dataCenterId = template.getLocation().getId();
+      Location location = template.getLocation();
+      checkArgument(location.getScope() == LocationScope.ZONE, "Template must use a ZONE-scoped location");
+      final String dataCenterId = location.getId();
+
       Hardware hardware = template.getHardware();
 
       TemplateOptions options = template.getOptions();
@@ -116,20 +123,24 @@ public class ProfitBricksComputeServiceAdapter implements ComputeServiceAdapter<
       for (final Volume volume : volumes)
          try {
             logger.trace("<< provisioning storage '%s'", volume);
-            final Storage.Request.CreatePayload request = Storage.Request.creatingBuilder()
-                    .dataCenterId(dataCenterId)
-                    // put image to first storage
-                    .mountImageId(i == 1 ? image.getId() : "")
-                    .imagePassword(password)
+            final Storage.Request.CreatePayload.Builder storageBuilder = Storage.Request.creatingBuilder();
+            if (i == 1) {
+               storageBuilder.mountImageId(image.getId());
+               // we don't need to pass password to the API if we're using a snapshot
+               Provisionable.Type provisionableType = Provisionable.Type.fromValue(
+                       image.getUserMetadata().get(ProvisionableToImage.KEY_PROVISIONABLE_TYPE));
+               if (provisionableType == Provisionable.Type.IMAGE)
+                  storageBuilder.imagePassword(password);
+            }
+            storageBuilder.dataCenterId(dataCenterId)
                     .name(format("%s-disk-%d", name, i++))
-                    .size(volume.getSize())
-                    .build();
+                    .size(volume.getSize());
 
             String storageId = (String) provisioningManager.provision(jobFactory.create(dataCenterId, new Supplier<Object>() {
 
                @Override
                public Object get() {
-                  return api.storageApi().createStorage(request);
+                  return api.storageApi().createStorage(storageBuilder.build());
                }
             }));
 

@@ -35,6 +35,7 @@ import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 
 import com.google.common.base.Suppliers;
+import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 
 @Test(groups = "unit", testName = "ProvisionableToImageTest")
@@ -88,6 +89,7 @@ public class ProvisionableToImageTest {
                       .version("14.04")
                       .is64Bit(false)
                       .build())
+              .userMetadata(ImmutableMap.of("provisionableType", "image"))
               .build();
 
       assertEquals(actual, expected);
@@ -118,6 +120,7 @@ public class ProvisionableToImageTest {
                       .version("7")
                       .is64Bit(true)
                       .build())
+              .userMetadata(ImmutableMap.of("provisionableType", "image"))
               .build();
 
       assertEquals(actual1, expected1);
@@ -145,6 +148,7 @@ public class ProvisionableToImageTest {
                       .version("6.5.0")
                       .is64Bit(true)
                       .build())
+              .userMetadata(ImmutableMap.of("provisionableType", "image"))
               .build();
 
       assertEquals(actual2, expected2);
@@ -172,6 +176,7 @@ public class ProvisionableToImageTest {
                       .version("2008")
                       .is64Bit(false)
                       .build())
+              .userMetadata(ImmutableMap.of("provisionableType", "image"))
               .build();
 
       assertEquals(actual3, expected3);
@@ -213,6 +218,7 @@ public class ProvisionableToImageTest {
                       .family(OsFamily.LINUX)
                       .is64Bit(true)
                       .build())
+              .userMetadata(ImmutableMap.of("provisionableType", "snapshot"))
               .build();
 
       assertEquals(actual1, expected1);
@@ -251,6 +257,7 @@ public class ProvisionableToImageTest {
                       .is64Bit(true)
                       .version("00.00")
                       .build())
+              .userMetadata(ImmutableMap.of("provisionableType", "snapshot"))
               .build();
 
       assertEquals(actual2, expected2);

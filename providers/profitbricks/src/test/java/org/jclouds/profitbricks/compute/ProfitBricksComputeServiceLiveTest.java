@@ -45,12 +45,12 @@ import org.jclouds.profitbricks.ProfitBricksApi;
 import org.jclouds.profitbricks.domain.DataCenter;
 import org.jclouds.profitbricks.features.DataCenterApi;
 import org.testng.annotations.AfterClass;
-import org.testng.annotations.BeforeGroups;
+import org.testng.annotations.BeforeClass;
 
 @Test(groups = "live", singleThreaded = true, testName = "ProfitBricksComputeServiceLiveTest")
 public class ProfitBricksComputeServiceLiveTest extends BaseComputeServiceLiveTest {
 
-   private static final String TEST_DC_NAME = "computeServiceLiveTest" + System.currentTimeMillis();
+   private static final String TEST_DC_NAME = "computeServiceLiveTest-" + System.currentTimeMillis();
 
    private DataCenter dataCenter;
 
@@ -58,7 +58,7 @@ public class ProfitBricksComputeServiceLiveTest extends BaseComputeServiceLiveTe
       provider = "profitbricks";
    }
 
-   @BeforeGroups(groups = {"integration", "live"})
+   @BeforeClass
    @Override
    public void setupContext() {
       super.setupContext();

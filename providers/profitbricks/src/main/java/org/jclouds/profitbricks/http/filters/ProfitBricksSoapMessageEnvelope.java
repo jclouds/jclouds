@@ -51,7 +51,7 @@ public class ProfitBricksSoapMessageEnvelope implements HttpRequestFilter {
       String body = SOAP_PREFIX.concat(oldPayload.getRawContent().toString()).concat(SOAP_SUFFIX);
       Payload newPayload = Payloads.newStringPayload(body);
       HttpUtils.copy(oldMetadata, newPayload.getContentMetadata());
-      newPayload.getContentMetadata().setContentLength(Long.valueOf(body.length())); // resize, add prefix/suffix length
+      newPayload.getContentMetadata().setContentLength(Long.valueOf(body.getBytes().length)); // resize, add prefix/suffix length
 
       return request.toBuilder().payload(newPayload).build();
    }

@@ -21,6 +21,7 @@ import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertTrue;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import org.jclouds.profitbricks.BaseProfitBricksLiveTest;
 import org.jclouds.profitbricks.domain.OsType;
@@ -35,6 +36,8 @@ import org.testng.annotations.BeforeClass;
 import com.google.common.base.Predicate;
 import com.google.common.base.Supplier;
 import com.google.common.collect.FluentIterable;
+
+import org.jclouds.util.Predicates2;
 
 @Test(groups = "live", testName = "SnapshotApiLiveTest")
 public class SnapshotApiLiveTest extends BaseProfitBricksLiveTest {
@@ -142,8 +145,20 @@ public class SnapshotApiLiveTest extends BaseProfitBricksLiveTest {
    @Test(dependsOnMethods = "testRollbackSnapshot", alwaysRun = true)
    public void testDeleteSnapshot() {
       assertSnapshotAvailable(createdSnapshotId);
-      boolean result = api.snapshotApi().deleteSnapshot(createdSnapshotId);
-      assertTrue(result, "Created snapshot wasn't deleted");
+      // Newly created snapshots doesn't seem to reflect in the API right away,
+      // so we need to persistently try to delete (to clean up resources as well)
+      Predicate<String> persistentDelete = Predicates2.retry(new Predicate<String>() {
+
+         @Override
+         public boolean apply(String input) {
+            try {
+               return api.snapshotApi().deleteSnapshot(input);
+            } catch (Exception ex) {
+               return false;
+            }
+         }
+      }, 120L, 5L, 10L, TimeUnit.SECONDS);
+      assertTrue(persistentDelete.apply(createdSnapshotId), "Created snapshot wasn't deleted");
    }
 
    @AfterClass(alwaysRun = true)

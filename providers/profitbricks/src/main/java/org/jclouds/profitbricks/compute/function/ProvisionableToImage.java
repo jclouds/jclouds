@@ -33,9 +33,12 @@ import org.jclouds.profitbricks.domain.Provisionable;
 
 import com.google.common.base.Function;
 import com.google.common.base.Strings;
+import com.google.common.collect.ImmutableMap;
 import com.google.inject.Inject;
 
 public class ProvisionableToImage implements Function<Provisionable, Image> {
+
+   public static final String KEY_PROVISIONABLE_TYPE = "provisionableType";
 
    private final ImageToImage fnImageToImage;
    private final SnapshotToImage fnSnapshotToImage;
@@ -76,7 +79,7 @@ public class ProvisionableToImage implements Function<Provisionable, Image> {
       }
    }
 
-   private static class ImageToImage implements Function<org.jclouds.profitbricks.domain.Image, Image> {
+   private static class ImageToImage implements ImageFunction<org.jclouds.profitbricks.domain.Image> {
 
       private static final Pattern HAS_NUMBERS = Pattern.compile(".*\\d+.*");
 
@@ -98,12 +101,12 @@ public class ProvisionableToImage implements Function<Provisionable, Image> {
                  .is64Bit(is64Bit(desc, from.type()))
                  .build();
 
-         return new ImageBuilder()
+         return addTypeMetadata(new ImageBuilder()
                  .ids(from.id())
                  .name(desc)
                  .location(fnRegion.apply(from.location()))
                  .status(Image.Status.AVAILABLE)
-                 .operatingSystem(os)
+                 .operatingSystem(os))
                  .build();
       }
 
@@ -147,9 +150,14 @@ public class ProvisionableToImage implements Function<Provisionable, Image> {
                return true;
          }
       }
+
+      @Override
+      public ImageBuilder addTypeMetadata(ImageBuilder builder) {
+         return builder.userMetadata(ImmutableMap.of(KEY_PROVISIONABLE_TYPE, Provisionable.Type.IMAGE.toString()));
+      }
    }
 
-   private static class SnapshotToImage implements Function<Snapshot, Image> {
+   private static class SnapshotToImage implements ImageFunction<Snapshot> {
 
       private final Function<org.jclouds.profitbricks.domain.Location, Location> fnRegion;
 
@@ -169,13 +177,13 @@ public class ProvisionableToImage implements Function<Provisionable, Image> {
                  .version("00.00")
                  .build();
 
-         return new ImageBuilder()
+         return addTypeMetadata(new ImageBuilder()
                  .ids(from.id())
                  .name(from.name())
                  .description(from.description())
                  .location(fnRegion.apply(from.location()))
                  .status(mapStatus(from.state()))
-                 .operatingSystem(os)
+                 .operatingSystem(os))
                  .build();
       }
 
@@ -211,5 +219,16 @@ public class ProvisionableToImage implements Function<Provisionable, Image> {
                return Image.Status.UNRECOGNIZED;
          }
       }
+
+      @Override
+      public ImageBuilder addTypeMetadata(ImageBuilder builder) {
+         return builder.userMetadata(ImmutableMap.of(KEY_PROVISIONABLE_TYPE, Provisionable.Type.SNAPSHOT.toString()));
+      }
+   }
+
+   private interface ImageFunction<T extends Provisionable> extends Function<T, Image> {
+
+      ImageBuilder addTypeMetadata(ImageBuilder builder);
+
    }
 }

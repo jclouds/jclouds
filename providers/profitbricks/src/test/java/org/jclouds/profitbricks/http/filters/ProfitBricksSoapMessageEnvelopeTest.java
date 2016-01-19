@@ -45,7 +45,7 @@ public class ProfitBricksSoapMessageEnvelopeTest {
       HttpRequest filtered = soapEnvelope.filter(request);
 
       assertEquals(filtered.getPayload().getRawContent(), expectedPayload);
-      assertEquals(filtered.getPayload().getContentMetadata().getContentLength(), Long.valueOf(expectedPayload.length()));
+      assertEquals(filtered.getPayload().getContentMetadata().getContentLength(), Long.valueOf(expectedPayload.getBytes().length));
    }
 
    @Test(expectedExceptions = NullPointerException.class, expectedExceptionsMessageRegExp = ".*must contain payload message.*")
