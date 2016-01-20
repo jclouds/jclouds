@@ -123,5 +123,10 @@
       <artifactId>google-compute-engine</artifactId>
       <version>${project.version}</version>
     </dependency>
+    <dependency>
+      <groupId>org.apache.jclouds.provider</groupId>
+      <artifactId>digitalocean2</artifactId>
+      <version>${project.version}</version>
+    </dependency>
   </dependencies>
 </project>
