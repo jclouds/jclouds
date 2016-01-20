@@ -1,0 +1,8 @@
+{
+   "ssh_key" : {
+     "id" : 767051,
+     "name" : "ubuntu-1204-64bit-338",
+     "public_key" : "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCIshoBsRRK73Kwq9zlKauwNWClpaR99TpAxjtP5DcL3EMCTCDepaNPMHhPYO1rogRyjZrc2nsJ1ImCbZ3eEGFjspyhIyPk1NbYkAFsoSV7eBtqy1V7ddZ8t1ZsDexigAA5GnXZSWL4O0oVyZpBTrkzhZ49lbWUq8ch3Hhulvml1BR4nTx92ZcYIFFr1S7NEtua9xhKvRvUcSmgL/0A8deOBgkc85y5ADcEIt+nrlrOtIOW/agX0VPXNFjRxYW7MCkRGoDObOYEaT/mj7PyKk0kimmemxAH5wd6aOI4C82TmHjQmXTwXZgpVlrsdbxomOGDDGNSy7HoQLI/xMRvEf+9",
+     "fingerprint" : "1a:cc:9b:88:c8:4f:b8:77:96:15:d2:0c:95:86:ff:90"
+    }
+}

@@ -1,0 +1,25 @@
+{
+   "meta" : {
+      "total" : 7
+   },
+   "ssh_keys" : [
+      {
+         "fingerprint" : "a1:df:a0:64:e4:36:10:6b:de:8d:e6:65:55:17:8f:31",
+         "public_key" : "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCHcVV1Rb5+/sCDF0eZ9Hw8vrHF+HYxptZRaNmnWsjzjeupeIiFgq6W1gRrDKB6pjA1t8R0b1xlcfb0361B5fRuwkeQTr2ALior6cipTgUUHT4UKcZMah7n09/YMPj2I7vzxjdX07PyB1z4OkL7FT3zBrsDTaR+ZngeFAVG59WmCj6vD2EqoZ2PeiEKETZOvQnZ3MEGiU5sYX9odIh5mjO5Jg1Q7oLjFzBbmMQ0oo/gkte8nBybHlD20iq1kzvmoSV4ECbTIa48yr8cgsX0d4M29YV9v2WCBfqaSRTRGVhfsalu9sgeSTHZ7F68g1wEkPXOzE3ZCUlZsKpskiYmCcTP",
+         "name" : "ubuntu-1204-64bit-jdk8-77a",
+         "id" : 799690
+      },
+      {
+         "name" : "ubuntu-1204-64bit-jdk8-a14",
+         "public_key" : "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCeU4rK0wlk8YOOAWd9GURgJzOlgNkLEarq/y9RMXKq1zUW9Jf5J4UuztZm6HsSpAbiBfwL/QYBsFEhfDUZiW0B5p6CL0cR93vgUhGVgoi+v5Nl3KDEgMDryja48CdmzkCB3KoX4aRGRkahx6chrFByM5laEyGJETnDl0s4VyxZH07FGgQYqdWj8jg99stIvZ8Ktzlq5RMXPYePEA03vzzc5JrTEtdhuiy/wjxY8piq1j40uch6JEfcEzfPdkWY7LZt5KlOtrYoVFVmu+Mp3QSknhZPyMMZW5GOEtcr1IGtOEBCL3gJWz0E/H4e4Itt+3L2bNpNfHJmISJRXsNanuyn",
+         "fingerprint" : "f3:34:8d:dc:26:31:90:2b:55:f0:d4:77:d4:17:1e:f2",
+         "id" : 802469
+      }
+   ],
+   "links" : {
+      "pages" : {
+         "first" : "https://api.digitalocean.com/v2/account/keys?page=1&per_page=5",
+         "prev" : "https://api.digitalocean.com/v2/account/keys?page=1&per_page=5"
+      }
+   }
+}

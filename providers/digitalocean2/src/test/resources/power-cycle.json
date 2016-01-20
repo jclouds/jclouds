@@ -1,0 +1,33 @@
+{
+    "action": {
+         "region" : {
+            "name" : "New York 1",
+            "available" : true,
+            "slug" : "nyc1",
+            "features" : [
+               "virtio",
+               "backups",
+               "metadata"
+            ],
+            "sizes" : [
+               "512mb",
+               "8gb",
+               "16gb",
+               "32gb",
+               "48gb",
+               "64gb",
+               "1gb",
+               "2gb",
+               "4gb"
+            ]
+         },
+         "started_at" : "2015-05-19T15:17:55Z",
+         "status" : "in-progress",
+         "resource_type" : "droplet",
+         "resource_id" : 5347489,
+         "region_slug" : "nyc1",
+         "id" : 50900149,
+         "completed_at" : "2015-05-19T15:18:01Z",
+         "type" : "power_cycle"
+      }
+}

@@ -1,0 +1,106 @@
+{
+   "meta" : {
+      "total" : 8
+   },
+   "links" : {
+      "pages" : {
+         "first" : "https://api.digitalocean.com/v2/actions?page=1&per_page=5",
+         "prev" : "https://api.digitalocean.com/v2/actions?page=1&per_page=5"
+      }
+   },
+   "actions" : [
+      {
+         "region" : {
+            "sizes" : [
+               "512mb",
+               "8gb",
+               "16gb",
+               "32gb",
+               "48gb",
+               "64gb",
+               "1gb",
+               "2gb",
+               "4gb"
+            ],
+            "available" : true,
+            "features" : [
+               "virtio",
+               "backups",
+               "metadata"
+            ],
+            "slug" : "nyc1",
+            "name" : "New York 1"
+         },
+         "started_at" : "2014-01-18T22:39:08Z",
+         "type" : "create",
+         "resource_type" : "droplet",
+         "id" : 14115951,
+         "completed_at" : "2014-01-18T22:41:14Z",
+         "region_slug" : "nyc1",
+         "resource_id" : 1010699,
+         "status" : "completed"
+      },
+      {
+         "started_at" : "2014-01-18T22:39:06Z",
+         "type" : "create",
+         "resource_type" : "droplet",
+         "region" : {
+            "sizes" : [
+               "512mb",
+               "8gb",
+               "16gb",
+               "32gb",
+               "48gb",
+               "64gb",
+               "1gb",
+               "2gb",
+               "4gb"
+            ],
+            "slug" : "nyc1",
+            "name" : "New York 1",
+            "features" : [
+               "virtio",
+               "backups",
+               "metadata"
+            ],
+            "available" : true
+         },
+         "resource_id" : 1010697,
+         "region_slug" : "nyc1",
+         "status" : "completed",
+         "id" : 14115948,
+         "completed_at" : "2014-01-18T22:40:43Z"
+      },
+      {
+         "region_slug" : "nyc1",
+         "resource_id" : 1010698,
+         "status" : "completed",
+         "id" : 14115949,
+         "completed_at" : "2014-01-18T22:44:08Z",
+         "type" : "create",
+         "started_at" : "2014-01-18T22:39:06Z",
+         "resource_type" : "droplet",
+         "region" : {
+            "sizes" : [
+               "512mb",
+               "8gb",
+               "16gb",
+               "32gb",
+               "48gb",
+               "64gb",
+               "1gb",
+               "2gb",
+               "4gb"
+            ],
+            "slug" : "nyc1",
+            "name" : "New York 1",
+            "available" : true,
+            "features" : [
+               "virtio",
+               "backups",
+               "metadata"
+            ]
+         }
+      }
+   ]
+}

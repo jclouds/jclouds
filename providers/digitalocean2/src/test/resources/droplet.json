@@ -1,0 +1,105 @@
+{
+   "droplet" :
+      {
+         "created_at" : "2015-05-25T15:50:48Z",
+         "region" : {
+            "name" : "New York 1",
+            "sizes" : [
+               "32gb",
+               "16gb",
+               "2gb",
+               "1gb",
+               "4gb",
+               "8gb",
+               "512mb",
+               "64gb",
+               "48gb"
+            ],
+            "slug" : "nyc1",
+            "features" : [
+               "virtio",
+               "backups",
+               "metadata"
+            ],
+            "available" : true
+         },
+         "id" : 5425561,
+         "disk" : 20,
+         "networks" : {
+            "v6" : [],
+            "v4" : [
+               {
+                  "type" : "public",
+                  "ip_address" : "162.243.167.46",
+                  "netmask" : "255.255.255.0",
+                  "gateway" : "162.243.167.1"
+               }
+            ]
+         },
+         "backup_ids" : [],
+         "image" : {
+            "slug" : "ubuntu-14-10-x32",
+            "public" : true,
+            "created_at" : "2015-01-08T18:41:22Z",
+            "distribution" : "Ubuntu",
+            "id" : 9801951,
+            "type" : "snapshot",
+            "regions" : [
+               "nyc1",
+               "ams1",
+               "sfo1",
+               "nyc2",
+               "ams2",
+               "sgp1",
+               "lon1",
+               "nyc3",
+               "ams3",
+               "fra1"
+            ],
+            "name" : "14.10 x32",
+            "min_disk_size" : 20
+         },
+         "vcpus" : 1,
+         "next_backup_window" : {
+            "end" : "2015-06-01T23:00:00Z",
+            "start" : "2015-06-01T00:00:00Z"
+         },
+         "locked" : false,
+         "snapshot_ids" : [],
+         "kernel" : {
+            "name" : "Ubuntu 14.10 x32 vmlinuz-3.16.0-28-generic",
+            "id" : 2926,
+            "version" : "3.16.0-28-generic"
+         },
+         "status" : "active",
+         "features" : [
+            "backups",
+            "virtio"
+         ],
+         "size" : {
+            "price_hourly" : 0.00744,
+            "slug" : "512mb",
+            "disk" : 20,
+            "available" : true,
+            "transfer" : 1,
+            "price_monthly" : 5,
+            "regions" : [
+               "nyc1",
+               "sgp1",
+               "ams1",
+               "sfo1",
+               "nyc2",
+               "lon1",
+               "nyc3",
+               "ams3",
+               "ams2",
+               "fra1"
+            ],
+            "memory" : 512,
+            "vcpus" : 1
+         },
+         "name" : "test1",
+         "size_slug" : "512mb",
+         "memory" : 512
+    }
+}

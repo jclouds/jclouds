@@ -1,0 +1,123 @@
+{
+   "links" : {
+      "pages" : {
+         "next" : "https://api.digitalocean.com/v2/sizes?page=2&per_page=5",
+         "last" : "https://api.digitalocean.com/v2/sizes?page=2&per_page=5"
+      }
+   },
+   "meta" : {
+      "total" : 9
+   },
+   "sizes" : [
+      {
+         "vcpus" : 1,
+         "disk" : 20,
+         "price_monthly" : 5,
+         "regions" : [
+            "nyc1",
+            "sgp1",
+            "ams1",
+            "sfo1",
+            "nyc2",
+            "lon1",
+            "nyc3",
+            "ams3",
+            "ams2",
+            "fra1"
+         ],
+         "price_hourly" : 0.00744,
+         "transfer" : 1,
+         "available" : true,
+         "slug" : "512mb",
+         "memory" : 512
+      },
+      {
+         "vcpus" : 1,
+         "disk" : 30,
+         "price_monthly" : 10,
+         "regions" : [
+            "nyc2",
+            "sgp1",
+            "ams1",
+            "sfo1",
+            "lon1",
+            "nyc3",
+            "ams3",
+            "nyc1",
+            "ams2",
+            "fra1"
+         ],
+         "price_hourly" : 0.01488,
+         "transfer" : 2,
+         "slug" : "1gb",
+         "available" : true,
+         "memory" : 1024
+      },
+      {
+         "price_hourly" : 0.02976,
+         "regions" : [
+            "nyc2",
+            "sfo1",
+            "ams1",
+            "sgp1",
+            "lon1",
+            "nyc3",
+            "ams3",
+            "nyc1",
+            "ams2",
+            "fra1"
+         ],
+         "transfer" : 3,
+         "available" : true,
+         "slug" : "2gb",
+         "memory" : 2048,
+         "vcpus" : 2,
+         "disk" : 40,
+         "price_monthly" : 20
+      },
+      {
+         "transfer" : 4,
+         "price_hourly" : 0.05952,
+         "regions" : [
+            "nyc2",
+            "ams1",
+            "sgp1",
+            "lon1",
+            "nyc3",
+            "ams3",
+            "nyc1",
+            "ams2",
+            "sfo1",
+            "fra1"
+         ],
+         "memory" : 4096,
+         "slug" : "4gb",
+         "available" : true,
+         "disk" : 60,
+         "vcpus" : 2,
+         "price_monthly" : 40
+      },
+      {
+         "available" : true,
+         "slug" : "8gb",
+         "memory" : 8192,
+         "regions" : [
+            "nyc2",
+            "sgp1",
+            "ams1",
+            "nyc1",
+            "lon1",
+            "nyc3",
+            "ams3",
+            "ams2",
+            "sfo1",
+            "fra1"
+         ],
+         "price_hourly" : 0.11905,
+         "transfer" : 5,
+         "price_monthly" : 80,
+         "vcpus" : 4,
+         "disk" : 80
+      }
+   ]
+}
