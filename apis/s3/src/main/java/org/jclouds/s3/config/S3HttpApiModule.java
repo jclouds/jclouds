@@ -251,6 +251,13 @@ public class S3HttpApiModule<S extends S3Client> extends AWSHttpApiModule<S> {
    @Provides
    @TimeStamp
    @Singleton
+   protected final Supplier<Date> guiceProvideTimeStampCacheDate(
+      @Named(Constants.PROPERTY_SESSION_INTERVAL) long seconds,
+      @TimeStamp final Supplier<String> timestamp,
+      final DateService dateService) {
+      return provideTimeStampCacheDate(seconds, timestamp, dateService);
+   }
+
    protected Supplier<Date> provideTimeStampCacheDate(
       @Named(Constants.PROPERTY_SESSION_INTERVAL) long seconds,
       @TimeStamp final Supplier<String> timestamp,
