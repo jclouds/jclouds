@@ -909,7 +909,7 @@
                 <configuration>
                   <encoding>${project.build.sourceEncoding}</encoding>
                   <quiet>true</quiet>
-                  <maxmemory>256m</maxmemory>
+                  <maxmemory>512m</maxmemory>
                 </configuration>
                 <reportSets>
                   <reportSet>
