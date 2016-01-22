@@ -16,57 +16,12 @@
  */
 package org.jclouds.azureblob.blobstore.integration;
 
-import static org.testng.Assert.fail;
-
-import java.io.IOException;
-
 import org.jclouds.blobstore.integration.internal.BaseBlobSignerLiveTest;
-import org.testng.SkipException;
 import org.testng.annotations.Test;
 
 @Test(groups = { "live" })
 public class AzureBlobSignerLiveTest extends BaseBlobSignerLiveTest {
    public AzureBlobSignerLiveTest() {
       provider = "azureblob";
-   }
-
-   @Test
-   public void testSignGetUrlWithTime() throws InterruptedException, IOException {
-      try {
-         super.testSignGetUrlWithTime();
-         fail();
-      } catch (UnsupportedOperationException uoe) {
-         throw new SkipException("not supported in Azure", uoe);
-      }
-   }
-
-   @Test
-   public void testSignGetUrlWithTimeExpired() throws InterruptedException, IOException {
-      try {
-         super.testSignGetUrlWithTimeExpired();
-         fail();
-      } catch (UnsupportedOperationException uoe) {
-         throw new SkipException("not supported in Azure", uoe);
-      }
-   }
-
-   @Test
-   public void testSignPutUrlWithTime() throws Exception {
-      try {
-         super.testSignPutUrlWithTime();
-         fail();
-      } catch (UnsupportedOperationException uoe) {
-         throw new SkipException("not supported in Azure", uoe);
-      }
-   }
-
-   @Test
-   public void testSignPutUrlWithTimeExpired() throws Exception {
-      try {
-         super.testSignPutUrlWithTimeExpired();
-         fail();
-      } catch (UnsupportedOperationException uoe) {
-         throw new SkipException("not supported in Azure", uoe);
-      }
    }
 }

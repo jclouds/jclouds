@@ -50,6 +50,7 @@ public class AzureStorageUtils {
       AzureStorageError error = factory.create(errorHandlerProvider.get()).parse(content);
       error.setRequestId(response.getFirstHeaderOrNull(AzureStorageHeaders.REQUEST_ID));
       if ("AuthenticationFailed".equals(error.getCode())) {
+         // this signature is incorrect for URLs from AzureBlobRequestSigner
          error.setStringSigned(signer.createStringToSign(command.getCurrentRequest()));
          error.setSignature(signer.signString(error.getStringSigned()));
       }

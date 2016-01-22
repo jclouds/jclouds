@@ -129,7 +129,7 @@ public class SharedKeyLiteAuthentication implements HttpRequestFilter {
                   .getContentType())).append("\n");
    }
 
-   private String calculateSignature(String toSign) throws HttpException {
+   public String calculateSignature(String toSign) throws HttpException {
       String signature = signString(toSign);
       if (signatureWire.enabled())
          signatureWire.input(Strings2.toInputStream(signature));
