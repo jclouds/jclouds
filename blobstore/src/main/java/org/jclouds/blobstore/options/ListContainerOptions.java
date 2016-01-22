@@ -31,7 +31,7 @@ import com.google.common.base.Objects;
  * import static org.jclouds.blobstore.options.ListContainerOptions.Builder.*
  * <p/>
  * BlobStore connection = // get connection
- * Future<ListResponse<ResourceMetadata>> list = connection.list("container",inDirectory("home/users").maxResults(1000));
+ * Future<ListResponse<ResourceMetadata>> list = connection.list("container",prefix("home/users").maxResults(1000));
  * <code>
  */
 public class ListContainerOptions extends ListOptions implements Cloneable {
@@ -143,6 +143,10 @@ public class ListContainerOptions extends ListOptions implements Cloneable {
 
    }
 
+   /**
+    * @deprecated superseded by ListContainerOptions.getPrefix and ListContainerOptions.getDelimiter.
+    */
+   @Deprecated
    public String getDir() {
       return dir;
    }
@@ -166,7 +170,9 @@ public class ListContainerOptions extends ListOptions implements Cloneable {
    /**
     * This will list the contents of a virtual or real directory path.
     *
+    * @deprecated superseded by ListContainerOptions.prefix and ListContainerOptions.delimiter.
     */
+   @Deprecated
    public ListContainerOptions inDirectory(String dir) {
       checkNotNull(dir, "dir");
       checkArgument(!dir.equals("/"), "dir must not be a slash");
@@ -229,7 +235,9 @@ public class ListContainerOptions extends ListOptions implements Cloneable {
 
       /**
        * @see ListContainerOptions#inDirectory(String)
+       * @deprecated superseded by ListContainerOptions.prefix and ListContainerOptions.delimiter.
        */
+      @Deprecated
       public static ListContainerOptions inDirectory(String directory) {
          ListContainerOptions options = new ListContainerOptions();
          return options.inDirectory(directory);
