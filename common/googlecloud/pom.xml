@@ -31,6 +31,12 @@
     <artifactId>googlecloud</artifactId>
     <name>jclouds Google Cloud Core</name>
     <description>jclouds components common to Google Cloud products</description>
+    <packaging>bundle</packaging>
+    
+    <properties>
+      <jclouds.osgi.export>org.jclouds.googlecloud*;version="${project.version}";-noimport:=true</jclouds.osgi.export>
+      <jclouds.osgi.import>org.jclouds*;version="${project.version}",*</jclouds.osgi.import>
+    </properties>
 
     <dependencies>
         <dependency>

@@ -30,6 +30,7 @@
   <artifactId>oauth</artifactId>
   <name>jclouds OAuth core</name>
   <description>jclouds components to access OAuth</description>
+  <packaging>bundle</packaging>
 
   <properties>
     <test.oauth.identity>FIX_ME</test.oauth.identity>
@@ -39,6 +40,8 @@
     <test.jclouds.oauth.scope>FIX_ME</test.jclouds.oauth.scope>
     <test.oauth.api-version>2</test.oauth.api-version>
     <test.oauth.build-version />
+    <jclouds.osgi.export>org.jclouds.oauth*;version="${project.version}"</jclouds.osgi.export>
+    <jclouds.osgi.import>org.jclouds*;version="${project.version}",*</jclouds.osgi.import>
   </properties>
 
   <dependencies>

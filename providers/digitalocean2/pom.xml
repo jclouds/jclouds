@@ -31,6 +31,7 @@
   <artifactId>digitalocean2</artifactId>
   <name>jclouds DigitalOcean v2 API Provider</name>
   <description>jclouds provider for Digital Ocean v2 Compute API</description>
+  <packaging>bundle</packaging>
 
   <properties>
     <test.digitalocean2.endpoint>https://api.digitalocean.com/v2/</test.digitalocean2.endpoint>
@@ -40,6 +41,7 @@
     <test.digitalocean2.template>osFamily=UBUNTU,os64Bit=true</test.digitalocean2.template>
     <jclouds.osgi.export>org.jclouds.digitalocean2*;version="${project.version}"</jclouds.osgi.export>
     <jclouds.osgi.import>
+      org.jclouds.compute.internal;version="${project.version}",
       org.jclouds.rest.internal;version="${project.version}",
       org.jclouds*;version="${project.version}",
       *
