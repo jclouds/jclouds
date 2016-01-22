@@ -41,6 +41,9 @@ import com.google.common.util.concurrent.Uninterruptibles;
  */
 @Test(groups = {"live"})
 public class BaseBlobSignerLiveTest extends BaseBlobStoreIntegrationTest {
+   protected int getSignedUrlTimeout() {
+      return 60;
+   }
 
    @Test
    public void testSignGetUrl() throws Exception {
@@ -82,20 +85,35 @@ public class BaseBlobSignerLiveTest extends BaseBlobStoreIntegrationTest {
    public void testSignGetUrlWithTime() throws InterruptedException, IOException {
       String name = "hello";
       String text = "fooooooooooooooooooooooo";
-      int timeout = 10;
 
       Blob blob = view.getBlobStore().blobBuilder(name).payload(text).contentType("text/plain").build();
       String container = getContainerName();
       try {
          view.getBlobStore().putBlob(container, blob);
          assertConsistencyAwareContainerSize(container, 1);
-         HttpRequest request = view.getSigner().signGetBlob(container, name, timeout);
-
+         HttpRequest request = view.getSigner().signGetBlob(container, name, getSignedUrlTimeout());
          assertEquals(request.getFilters().size(), 0);
-         Uninterruptibles.sleepUninterruptibly(timeout / 2, TimeUnit.SECONDS);
          assertEquals(Strings2.toStringAndClose(view.utils().http().invoke(request).getPayload().openStream()), text);
+      } catch (UnsupportedOperationException ignore) {
+         throw new SkipException("signGetUrl with a time limit is not supported on " + provider);
+      } finally {
+         returnContainer(container);
+      }
+   }
 
-         TimeUnit.SECONDS.sleep(2 * timeout);
+   @Test
+   public void testSignGetUrlWithTimeExpired() throws InterruptedException, IOException {
+      String name = "hello";
+      String text = "fooooooooooooooooooooooo";
+
+      Blob blob = view.getBlobStore().blobBuilder(name).payload(text).contentType("text/plain").build();
+      String container = getContainerName();
+      try {
+         view.getBlobStore().putBlob(container, blob);
+         assertConsistencyAwareContainerSize(container, 1);
+         HttpRequest request = view.getSigner().signGetBlob(container, name, -getSignedUrlTimeout());
+         assertEquals(request.getFilters().size(), 0);
+
          try {
             Strings2.toStringAndClose(view.utils().http().invoke(request).getPayload().openStream());
             fail("Temporary URL did not expire as expected");
@@ -129,26 +147,41 @@ public class BaseBlobSignerLiveTest extends BaseBlobStoreIntegrationTest {
    public void testSignPutUrlWithTime() throws Exception {
       String name = "hello";
       String text = "fooooooooooooooooooooooo";
-      int timeout = 30;
 
       Blob blob = view.getBlobStore().blobBuilder(name).payload(text).contentType("text/plain").build();
       String container = getContainerName();
       try {
-         HttpRequest request = view.getSigner().signPutBlob(container, blob, timeout);
+         HttpRequest request = view.getSigner().signPutBlob(container, blob, getSignedUrlTimeout());
          assertEquals(request.getFilters().size(), 0);
 
          // Strip Expect: 100-continue to make actual responses visible, since
          // Java 7+ will throw a ProtocolException instead of setting the response code:
          // http://www.docjar.com/html/api/sun/net/www/protocol/http/HttpURLConnection.java.html#1021
          request = request.toBuilder().removeHeader(EXPECT).build();
-         Uninterruptibles.sleepUninterruptibly(timeout / 2, TimeUnit.SECONDS);
          Strings2.toStringAndClose(view.utils().http().invoke(request).getPayload().openStream());
-         assertConsistencyAwareContainerSize(container, 1);
+      } catch (UnsupportedOperationException ignore) {
+         throw new SkipException("signPutUrl with a time limit is not supported on " + provider);
+      } finally {
+         returnContainer(container);
+      }
+   }
 
-         view.getBlobStore().removeBlob(container, name);
-         assertConsistencyAwareContainerSize(container, 0);
+   @Test
+   public void testSignPutUrlWithTimeExpired() throws Exception {
+      String name = "hello";
+      String text = "fooooooooooooooooooooooo";
 
-         TimeUnit.SECONDS.sleep(2 * timeout);
+      Blob blob = view.getBlobStore().blobBuilder(name).payload(text).contentType("text/plain").build();
+      String container = getContainerName();
+      try {
+         HttpRequest request = view.getSigner().signPutBlob(container, blob, -getSignedUrlTimeout());
+         assertEquals(request.getFilters().size(), 0);
+
+         // Strip Expect: 100-continue to make actual responses visible, since
+         // Java 7+ will throw a ProtocolException instead of setting the response code:
+         // http://www.docjar.com/html/api/sun/net/www/protocol/http/HttpURLConnection.java.html#1021
+         request = request.toBuilder().removeHeader(EXPECT).build();
+
          try {
             Strings2.toStringAndClose(view.utils().http().invoke(request).getPayload().openStream());
             fail("Temporary URL did not expire as expected");
