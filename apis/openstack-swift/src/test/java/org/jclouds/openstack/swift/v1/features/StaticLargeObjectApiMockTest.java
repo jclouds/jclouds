@@ -16,12 +16,14 @@
  */
 package org.jclouds.openstack.swift.v1.features;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.jclouds.openstack.swift.v1.reference.SwiftHeaders.OBJECT_METADATA_PREFIX;
 import static org.testng.Assert.assertEquals;
 
 import java.util.List;
 
 import org.jclouds.openstack.swift.v1.SwiftApi;
+import org.jclouds.openstack.swift.v1.domain.DeleteStaticLargeObjectResponse;
 import org.jclouds.openstack.swift.v1.domain.Segment;
 import org.jclouds.openstack.v2_0.internal.BaseOpenStackMockTest;
 import org.testng.annotations.Test;
@@ -168,16 +170,20 @@ public class StaticLargeObjectApiMockTest extends BaseOpenStackMockTest<SwiftApi
    public void testDelete() throws Exception {
       MockWebServer server = mockOpenStackServer();
       server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/access.json"))));
-      server.enqueue(addCommonHeaders(new MockResponse().setResponseCode(204)));
+      server.enqueue(addCommonHeaders(new MockResponse().setResponseCode(200)
+            .setBody("{\"Number Not Found\": 0, \"Response Status\": \"200 OK\", \"Errors\": [], \"Number Deleted\": 6, \"Response Body\": \"\"}")));
 
       try {
          SwiftApi api = api(server.getUrl("/").toString(), "openstack-swift");
-         api.getStaticLargeObjectApi("DFW", "myContainer").delete("myObject");
+         DeleteStaticLargeObjectResponse response = api.getStaticLargeObjectApi("DFW", "myContainer").delete("myObject");
 
          assertEquals(server.getRequestCount(), 2);
          assertAuthentication(server);
          assertRequest(server.takeRequest(), "DELETE", "/v1/MossoCloudFS_5bcf396e-39dd-45ff-93a1-712b9aba90a9/myContainer/myObject?multipart-manifest=delete");
-
+         assertThat(response.status()).isEqualTo("200 OK");
+         assertThat(response.deleted()).isEqualTo(6);
+         assertThat(response.notFound()).isZero();
+         assertThat(response.errors()).isEmpty();
       } finally {
          server.shutdown();
       }
@@ -186,15 +192,20 @@ public class StaticLargeObjectApiMockTest extends BaseOpenStackMockTest<SwiftApi
    public void testAlreadyDeleted() throws Exception {
       MockWebServer server = mockOpenStackServer();
       server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/access.json"))));
-      server.enqueue(addCommonHeaders(new MockResponse().setResponseCode(404)));
+      server.enqueue(addCommonHeaders(new MockResponse().setResponseCode(200)
+            .setBody("{\"Number Not Found\": 1, \"Response Status\": \"200 OK\", \"Errors\": [], \"Number Deleted\": 0, \"Response Body\": \"\"}")));
 
       try {
          SwiftApi api = api(server.getUrl("/").toString(), "openstack-swift");
-         api.getStaticLargeObjectApi("DFW", "myContainer").delete("myObject");
+         DeleteStaticLargeObjectResponse response = api.getStaticLargeObjectApi("DFW", "myContainer").delete("myObject");
 
          assertEquals(server.getRequestCount(), 2);
          assertAuthentication(server);
          assertRequest(server.takeRequest(), "DELETE", "/v1/MossoCloudFS_5bcf396e-39dd-45ff-93a1-712b9aba90a9/myContainer/myObject?multipart-manifest=delete");
+         assertThat(response.status()).isEqualTo("200 OK");
+         assertThat(response.deleted()).isZero();
+         assertThat(response.notFound()).isEqualTo(1);
+         assertThat(response.errors()).isEmpty();
       } finally {
          server.shutdown();
       }

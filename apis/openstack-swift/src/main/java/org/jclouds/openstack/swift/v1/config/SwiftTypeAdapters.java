@@ -25,6 +25,7 @@ import org.jclouds.json.config.GsonModule.DateAdapter;
 import org.jclouds.json.config.GsonModule.Iso8601DateAdapter;
 import org.jclouds.openstack.swift.v1.domain.BulkDeleteResponse;
 import org.jclouds.openstack.swift.v1.domain.ExtractArchiveResponse;
+import org.jclouds.openstack.swift.v1.domain.DeleteStaticLargeObjectResponse;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableMap.Builder;
@@ -45,7 +46,9 @@ public class SwiftTypeAdapters extends AbstractModule {
    public Map<Type, Object> provideCustomAdapterBindings() {
       return ImmutableMap.<Type, Object> builder()
             .put(ExtractArchiveResponse.class, new ExtractArchiveResponseAdapter())
-            .put(BulkDeleteResponse.class, new BulkDeleteResponseAdapter()).build();
+            .put(BulkDeleteResponse.class, new BulkDeleteResponseAdapter())
+            .put(DeleteStaticLargeObjectResponse.class, new StaticLargeObjectResponseAdapter())
+            .build();
    }
 
    static class ExtractArchiveResponseAdapter extends TypeAdapter<ExtractArchiveResponse> {
@@ -101,6 +104,40 @@ public class SwiftTypeAdapters extends AbstractModule {
 
       @Override
       public void write(JsonWriter arg0, BulkDeleteResponse arg1) throws IOException {
+         throw new UnsupportedOperationException();
+      }
+   }
+
+   static final class StaticLargeObjectResponseAdapter extends TypeAdapter<DeleteStaticLargeObjectResponse> {
+
+      @Override
+      public DeleteStaticLargeObjectResponse read(JsonReader reader) throws IOException {
+         String status = "";
+         int deleted = 0;
+         int notFound = 0;
+         Builder<String, String> errors = ImmutableMap.<String, String> builder();
+         reader.beginObject();
+         while (reader.hasNext()) {
+            String key = reader.nextName();
+            if (key.equals("Response Status")) {
+               status = reader.nextString();
+            } else if (key.equals("Number Deleted")) {
+               deleted = reader.nextInt();
+            } else if (key.equals("Number Not Found")) {
+               notFound = reader.nextInt();
+            } else if (key.equals("Errors")) {
+               readErrors(reader, errors);
+            } else {
+               // Response Body
+               reader.skipValue();
+            }
+         }
+         reader.endObject();
+         return DeleteStaticLargeObjectResponse.create(status, deleted, notFound, errors.build());
+      }
+
+      @Override
+      public void write(JsonWriter arg0, DeleteStaticLargeObjectResponse arg1) throws IOException {
          throw new UnsupportedOperationException();
       }
    }

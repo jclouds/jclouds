@@ -35,6 +35,7 @@ import org.jclouds.openstack.keystone.v2_0.filters.AuthenticateRequest;
 import org.jclouds.openstack.swift.v1.binders.BindManifestToJsonPayload;
 import org.jclouds.openstack.swift.v1.binders.BindMetadataToHeaders.BindObjectMetadataToHeaders;
 import org.jclouds.openstack.swift.v1.binders.BindToHeaders;
+import org.jclouds.openstack.swift.v1.domain.DeleteStaticLargeObjectResponse;
 import org.jclouds.openstack.swift.v1.domain.Segment;
 import org.jclouds.openstack.swift.v1.functions.ETagHeader;
 import org.jclouds.rest.annotations.BinderParam;
@@ -114,7 +115,7 @@ public interface StaticLargeObjectApi {
    @DELETE
    @Fallback(VoidOnNotFoundOr404.class)
    @QueryParams(keys = "multipart-manifest", values = "delete")
-   void delete(@PathParam("objectName") String objectName);
+   DeleteStaticLargeObjectResponse delete(@PathParam("objectName") String objectName);
 
    /**
     * Get a static large object's manifest.
