@@ -64,10 +64,4 @@ public class AzureBlobIntegrationLiveTest extends BaseBlobIntegrationTest {
    public void testPutBlobAccessMultipart() throws Exception {
       super.testPutBlobAccessMultipart();
    }
-
-   @Override
-   @Test
-   public void testGetRange() {
-      throw new SkipException("Currently broken on Azure");
-   }
 }

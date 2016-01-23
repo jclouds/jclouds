@@ -413,7 +413,7 @@ public class BaseBlobIntegrationTest extends BaseBlobStoreIntegrationTest {
          Blob blob3 = view.getBlobStore().getBlob(container, name, new GetOptions().tail(TEST_STRING.length() + 10));
          validateMetadata(blob3.getMetadata(), container, name);
          assertEquals(getContentAsStringOrNullAndClose(blob3), TEST_STRING);
-         assertThat(blob3.getAllHeaders().get(HttpHeaders.CONTENT_RANGE)).containsExactly("bytes 0-45/46");
+         // not all providers return Content-Range for non-partial responses
       } finally {
          returnContainer(container);
       }

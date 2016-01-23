@@ -331,15 +331,8 @@ public class AzureBlobClientLiveTest extends BaseBlobStoreIntegrationTest {
          assertEquals(e.getResponse().getStatusCode(), 412);
       }
 
-      // Range
-      // doesn't work per
-      // http://social.msdn.microsoft.com/Forums/en-US/windowsazure/thread/479fa63f-51df-4b66-96b5-33ae362747b6
-      // getBlob = getApi()
-      // .getBlob(privateContainer, object.getProperties().getName(),
-      // GetOptions.Builder.startAt(8)).get(120,
-      // TimeUnit.SECONDS);
-      // assertEquals(Utils.toStringAndClose((InputStream) getBlob.getData()),
-      // data.substring(8));
+      getBlob = getApi().getBlob(privateContainer, object.getProperties().getName(), GetOptions.Builder.startAt(8));
+      assertEquals(Strings2.toStringAndClose(getBlob.getPayload().openStream()), data.substring(8));
 
       getApi().deleteBlob(privateContainer, "object");
       getApi().deleteBlob(privateContainer, "chunked-object");
