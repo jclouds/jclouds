@@ -31,6 +31,7 @@
     <artifactId>google-cloud-storage</artifactId>
     <name>jclouds Google Cloud Storage provider</name>
     <description>jclouds components to access Google Cloud Storage</description>
+    <packaging>bundle</packaging>
 
     <properties>
         <test.google-cloud-storage.identity>client_email which usually looks like project_id@developer.gserviceaccount.com</test.google-cloud-storage.identity>
@@ -40,6 +41,8 @@
         <test.jclouds.oauth.credential-type>p12PrivateKeyCredentials</test.jclouds.oauth.credential-type>
         <test.google-cloud-storage.api-version>v1</test.google-cloud-storage.api-version>
         <test.google-cloud-storage.build-version/>
+        <jclouds.osgi.export>org.jclouds.googlecloudstorage*;version="${project.version}"</jclouds.osgi.export>
+        <jclouds.osgi.import>org.jclouds*;version="${project.version}",*</jclouds.osgi.import>
     </properties>
 
     <dependencies>
