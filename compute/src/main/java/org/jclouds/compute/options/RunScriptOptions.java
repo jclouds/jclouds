@@ -42,6 +42,25 @@ public class RunScriptOptions {
     */
    public static final RunScriptOptions NONE = new ImmutableRunScriptOptions(new RunScriptOptions());
 
+   public void copyTo(RunScriptOptions to) {
+      if (this.getPort() != -1)
+         to.blockOnPort(this.getPort(), this.getSeconds());
+      if (this.getTaskName() != null)
+         to.nameTask(this.getTaskName());
+      to.runAsRoot(this.shouldRunAsRoot());
+      to.blockOnComplete(this.shouldBlockOnComplete());
+      to.wrapInInitScript(this.shouldWrapInInitScript());
+      if (this.hasLoginPasswordOption())
+         to.overrideLoginPassword(this.loginPassword);
+      if (this.hasLoginPrivateKeyOption())
+         to.overrideLoginPrivateKey(this.loginPrivateKey);
+      if (this.getLoginUser() != null)
+         to.overrideLoginUser(this.getLoginUser());
+      if (this.shouldAuthenticateSudo() != null) {
+         to.overrideAuthenticateSudo(this.shouldAuthenticateSudo());
+      }
+   }
+   
    public static class ImmutableRunScriptOptions extends RunScriptOptions {
       private final RunScriptOptions delegate;
 
@@ -194,6 +213,18 @@ public class RunScriptOptions {
    public RunScriptOptions overrideLoginPrivateKey(String privateKey) {
       checkNotNull(privateKey, "privateKey");
       this.loginPrivateKey = Optional.of(privateKey);
+      return this;
+   }
+
+   public RunScriptOptions overrideLoginPassword(Optional<String> password) {
+      checkNotNull(password, "password");
+      this.loginPassword = password;
+      return this;
+   }
+
+   public RunScriptOptions overrideLoginPrivateKey(Optional<String> privateKey) {
+      checkNotNull(privateKey, "privateKey");
+      this.loginPrivateKey = privateKey;
       return this;
    }
 
@@ -453,9 +484,9 @@ public class RunScriptOptions {
    protected ToStringHelper string() {
       ToStringHelper toString = Objects.toStringHelper("").omitNullValues();
       toString.add("loginUser", loginUser);
-      if (loginPassword != null)
+      if (loginPassword != null && loginPassword.isPresent())
          toString.add("loginPasswordPresent", true);
-      if (loginPrivateKey != null)
+      if (loginPrivateKey != null && loginPrivateKey.isPresent())
          toString.add("loginPrivateKeyPresent", true);
       toString.add("authenticateSudo", authenticateSudo);
       if (port != -1 && seconds != -1) // TODO: not primitives
