@@ -66,6 +66,7 @@ import org.jclouds.openstack.swift.v1.blobstore.functions.ToBlobMetadata;
 import org.jclouds.openstack.swift.v1.blobstore.functions.ToListContainerOptions;
 import org.jclouds.openstack.swift.v1.blobstore.functions.ToResourceMetadata;
 import org.jclouds.openstack.swift.v1.domain.Container;
+import org.jclouds.openstack.swift.v1.domain.DeleteStaticLargeObjectResponse;
 import org.jclouds.openstack.swift.v1.domain.ObjectList;
 import org.jclouds.openstack.swift.v1.domain.Segment;
 import org.jclouds.openstack.swift.v1.domain.SwiftObject;
@@ -347,9 +348,20 @@ public class RegionScopedSwiftBlobStore implements BlobStore {
 
    @Override
    public void removeBlob(String container, String name) {
-      api.getObjectApi(regionId, container).delete(name);
+      // Multipart objects have a manifest which points to subobjects.  Normally
+      // deleting a object only deletes the manifest, leaving the subobjects.
+      // We first try a multipart delete and if that fails since the object is
+      // not an MPU we fall back to single-part delete.
+      DeleteStaticLargeObjectResponse response = api.getStaticLargeObjectApi(regionId, container).delete(name);
+      if (!response.status().equals("200 OK")) {
+         api.getObjectApi(regionId, container).delete(name);
+      }
    }
 
+   /**
+    * Delete multiple single-part objects.  Note that this does not remove the
+    * subobjects of a multi-part upload.
+    */
    @Override
    public void removeBlobs(String container, Iterable<String> names) {
       BulkApi bulkApi = api.getBulkApi(regionId);
