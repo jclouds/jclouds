@@ -19,6 +19,8 @@ package org.jclouds.blobstore.domain.internal;
 import java.net.URI;
 
 import com.google.common.base.Objects;
+import com.google.common.base.Objects.ToStringHelper;
+
 import org.jclouds.blobstore.domain.BlobMetadata;
 import org.jclouds.blobstore.domain.MutableBlobMetadata;
 import org.jclouds.blobstore.domain.StorageType;
@@ -114,5 +116,13 @@ public class MutableBlobMetadataImpl extends MutableStorageMetadataImpl implemen
    @Override
    public int hashCode() {
       return Objects.hashCode(super.hashCode(), contentMetadata, publicUri, container);
+   }
+
+   @Override
+   protected ToStringHelper string() {
+      return super.string()
+            .add("publicUri", publicUri)
+            .add("container", container)
+            .add("contentMetadata", contentMetadata);
    }
 }

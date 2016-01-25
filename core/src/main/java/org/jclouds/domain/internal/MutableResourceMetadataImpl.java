@@ -23,6 +23,8 @@ import org.jclouds.domain.Location;
 import org.jclouds.domain.MutableResourceMetadata;
 import org.jclouds.domain.ResourceMetadata;
 
+import com.google.common.base.Objects;
+import com.google.common.base.Objects.ToStringHelper;
 import com.google.common.collect.Maps;
 
 /**
@@ -158,20 +160,22 @@ public class MutableResourceMetadataImpl<T extends Enum<T>> implements MutableRe
 
    @Override
    public String toString() {
-      return "[type=" + type + ", id=" + id + ", name=" + name + ", location=" + location
-               + ", uri=" + uri + ", userMetadata=" + userMetadata + "]";
+      return string().toString();
+   }
+
+   protected ToStringHelper string() {
+      return Objects.toStringHelper("").omitNullValues()
+            .add("id", id)
+            .add("location", location)
+            .add("name", name)
+            .add("type", getType())
+            .add("uri", uri)
+            .add("userMetadata", userMetadata);
    }
 
    @Override
    public int hashCode() {
-      final int prime = 31;
-      int result = 1;
-      result = prime * result + ((id == null) ? 0 : id.hashCode());
-      result = prime * result + ((location == null) ? 0 : location.hashCode());
-      result = prime * result + ((name == null) ? 0 : name.hashCode());
-      result = prime * result + ((type == null) ? 0 : type.hashCode());
-      result = prime * result + ((uri == null) ? 0 : uri.hashCode());
-      return result;
+      return Objects.hashCode(id, location, name, type, uri, userMetadata);
    }
 
    @Override
@@ -183,32 +187,12 @@ public class MutableResourceMetadataImpl<T extends Enum<T>> implements MutableRe
       if (!(obj instanceof MutableResourceMetadata<?>))
          return false;
       MutableResourceMetadata<?> other = (MutableResourceMetadata<?>) obj;
-      if (id == null) {
-         if (other.getProviderId() != null)
-            return false;
-      } else if (!id.equals(other.getProviderId()))
-         return false;
-      if (location == null) {
-         if (other.getLocation() != null)
-            return false;
-      } else if (!location.equals(other.getLocation()))
-         return false;
-      if (name == null) {
-         if (other.getName() != null)
-            return false;
-      } else if (!name.equals(other.getName()))
-         return false;
-      if (type == null) {
-         if (other.getType() != null)
-            return false;
-      } else if (!type.equals(other.getType()))
-         return false;
-      if (uri == null) {
-         if (other.getUri() != null)
-            return false;
-      } else if (!uri.equals(other.getUri()))
-         return false;
-      return true;
+      return Objects.equal(id, other.getProviderId())
+            && Objects.equal(location, other.getLocation())
+            && Objects.equal(name, other.getName())
+            && Objects.equal(type, other.getType())
+            && Objects.equal(uri, other.getUri())
+            && Objects.equal(userMetadata, other.getUserMetadata());
    }
 
 }

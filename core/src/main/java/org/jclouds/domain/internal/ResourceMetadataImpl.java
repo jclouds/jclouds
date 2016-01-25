@@ -114,12 +114,13 @@ public abstract class ResourceMetadataImpl<T extends Enum<T>> implements Resourc
          return false;
       ResourceMetadataImpl<?> that = ResourceMetadataImpl.class.cast(o);
       return equal(this.getType(), that.getType()) && equal(this.providerId, that.providerId)
-               && equal(this.name, that.name) && equal(this.location, that.location) && equal(this.uri, that.uri);
+               && equal(this.name, that.name) && equal(this.location, that.location) && equal(this.uri, that.uri)
+               && equal(this.userMetadata, that.userMetadata);
    }
 
    @Override
    public int hashCode() {
-      return Objects.hashCode(getType(), providerId, name, location, uri);
+      return Objects.hashCode(getType(), providerId, name, location, uri, userMetadata);
    }
 
    @Override

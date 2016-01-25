@@ -19,6 +19,8 @@ package org.jclouds.blobstore.domain.internal;
 import java.util.Date;
 
 import com.google.common.base.Objects;
+import com.google.common.base.Objects.ToStringHelper;
+
 import org.jclouds.blobstore.domain.MutableStorageMetadata;
 import org.jclouds.blobstore.domain.StorageMetadata;
 import org.jclouds.blobstore.domain.StorageType;
@@ -117,5 +119,14 @@ public class MutableStorageMetadataImpl extends MutableResourceMetadataImpl<Stor
    @Override
    public int hashCode() {
       return Objects.hashCode(super.hashCode(), eTag, creationDate, lastModified, size);
+   }
+
+   @Override
+   protected ToStringHelper string() {
+      return super.string()
+            .add("eTag", eTag)
+            .add("creationDate", creationDate)
+            .add("lastModified", lastModified)
+            .add("size", size);
    }
 }

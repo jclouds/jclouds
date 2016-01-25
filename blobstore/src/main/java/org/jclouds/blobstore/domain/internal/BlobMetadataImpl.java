@@ -23,6 +23,8 @@ import java.util.Date;
 import java.util.Map;
 
 import com.google.common.base.Objects;
+import com.google.common.base.Objects.ToStringHelper;
+
 import org.jclouds.blobstore.domain.BlobMetadata;
 import org.jclouds.blobstore.domain.StorageType;
 import org.jclouds.domain.Location;
@@ -90,5 +92,13 @@ public class BlobMetadataImpl extends StorageMetadataImpl implements BlobMetadat
    @Override
    public int hashCode() {
       return Objects.hashCode(super.hashCode(), publicUri, container, contentMetadata);
+   }
+
+   @Override
+   protected ToStringHelper string() {
+      return super.string()
+            .add("publicUri", publicUri)
+            .add("container", container)
+            .add("contentMetadata", contentMetadata);
    }
 }

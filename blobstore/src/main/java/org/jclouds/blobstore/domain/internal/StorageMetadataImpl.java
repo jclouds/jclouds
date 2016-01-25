@@ -23,6 +23,7 @@ import java.util.Date;
 import java.util.Map;
 
 import com.google.common.base.Objects;
+import com.google.common.base.Objects.ToStringHelper;
 
 import org.jclouds.blobstore.domain.StorageMetadata;
 import org.jclouds.blobstore.domain.StorageType;
@@ -77,7 +78,7 @@ public class StorageMetadataImpl extends ResourceMetadataImpl<StorageType> imple
    @Override
    public int hashCode() {
       return Objects.hashCode(super.hashCode(), eTag, creationDate,
-            lastModified, type);
+            lastModified, type, size);
    }
 
    @Override
@@ -93,7 +94,18 @@ public class StorageMetadataImpl extends ResourceMetadataImpl<StorageType> imple
       if (!Objects.equal(creationDate, other.creationDate)) { return false; }
       if (!Objects.equal(lastModified, other.lastModified)) { return false; }
       if (!Objects.equal(type, other.type)) { return false; }
+      if (!Objects.equal(size, other.size)) { return false; }
       return true;
+   }
+
+   @Override
+   protected ToStringHelper string() {
+      return super.string()
+            .add("eTag", eTag)
+            .add("creationDate", creationDate)
+            .add("lastModified", lastModified)
+            .add("type", type)
+            .add("size", size);
    }
 
    /**
