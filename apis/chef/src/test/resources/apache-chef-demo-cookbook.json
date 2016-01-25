@@ -17,7 +17,16 @@
         "long_description": "",
         "recommendations": {},
         "version": "0.0.0",
-        "groupings": {},
+        "groupings": {
+            "one": {
+                "title": "One title",
+                "description": "One description"
+            },
+            "two": {
+                "title": "Two title",
+                "description": "Two description"
+            }
+        },
         "recipes": {},
         "conflicting": {},
         "description": "A fabulous new cookbook",

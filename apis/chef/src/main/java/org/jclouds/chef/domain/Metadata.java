@@ -49,7 +49,7 @@ public class Metadata {
       private ImmutableMap.Builder<String, String> recipes = ImmutableMap.builder();
       private ImmutableMap.Builder<String, String> replacing = ImmutableMap.builder();
       private String name;
-      private ImmutableMap.Builder<String, String> groupings = ImmutableMap.builder();
+      private ImmutableMap.Builder<String, Grouping> groupings = ImmutableMap.builder();
       private String longDescription;
       private ImmutableMap.Builder<String, Attribute> attributes = ImmutableMap.builder();
       private ImmutableMap.Builder<String, String> recommendations = ImmutableMap.builder();
@@ -154,12 +154,12 @@ public class Metadata {
          return this;
       }
 
-      public Builder grouping(String key, String value) {
+      public Builder grouping(String key, Grouping value) {
          this.groupings.put(checkNotNull(key, "key"), checkNotNull(value, "value"));
          return this;
       }
 
-      public Builder grouping(Map<String, String> groupings) {
+      public Builder grouping(Map<String, Grouping> groupings) {
          this.groupings.putAll(checkNotNull(groupings, "groupings"));
          return this;
       }
@@ -211,7 +211,7 @@ public class Metadata {
    private final Map<String, String> recipes;
    private final Map<String, String> replacing;
    private final String name;
-   private final Map<String, String> groupings;
+   private final Map<String, Grouping> groupings;
    @SerializedName("long_description")
    private final String longDescription;
    private final Map<String, Attribute> attributes;
@@ -224,7 +224,7 @@ public class Metadata {
          @Nullable Map<String, String> dependencies, String maintainerEmail, @Nullable Map<String, String> conflicting,
          String description, @Nullable Map<String, String> providing, @Nullable Map<String, String> platforms,
          String version, @Nullable Map<String, String> recipes, @Nullable Map<String, String> replacing, String name,
-         @Nullable Map<String, String> groupings, String longDescription, @Nullable Map<String, Attribute> attributes,
+         @Nullable Map<String, Grouping> groupings, String longDescription, @Nullable Map<String, Attribute> attributes,
          @Nullable Map<String, String> recommendations) {
       this.license = license;
       this.maintainer = maintainer;
@@ -297,7 +297,7 @@ public class Metadata {
       return name;
    }
 
-   public Map<String, String> getGroupings() {
+   public Map<String, Grouping> getGroupings() {
       return groupings;
    }
 

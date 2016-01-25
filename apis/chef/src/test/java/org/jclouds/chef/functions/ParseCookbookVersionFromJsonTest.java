@@ -25,6 +25,7 @@ import java.net.URI;
 import org.jclouds.chef.ChefApiMetadata;
 import org.jclouds.chef.config.ChefParserModule;
 import org.jclouds.chef.domain.CookbookVersion;
+import org.jclouds.chef.domain.Grouping;
 import org.jclouds.chef.domain.Metadata;
 import org.jclouds.chef.domain.Resource;
 import org.jclouds.http.HttpResponse;
@@ -101,8 +102,11 @@ public class ParseCookbookVersionFromJsonTest {
                   .maintainer("Your Name") //
                   .maintainerEmail("youremail@example.com") //
                   .description("A fabulous new cookbook") //
-                  .version("0.0.0").name("apache-chef-demo") //
+                  .version("0.0.0") //
+                  .name("apache-chef-demo") //
                   .longDescription("") //
+                  .grouping("one", Grouping.builder().title("One title").description("One description").build()) //
+                  .grouping("two", Grouping.builder().title("Two title").description("Two description").build()) //
                   .build())
             .rootFile(
                   Resource
