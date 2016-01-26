@@ -175,7 +175,8 @@ public class MutableResourceMetadataImpl<T extends Enum<T>> implements MutableRe
 
    @Override
    public int hashCode() {
-      return Objects.hashCode(id, location, name, type, uri, userMetadata);
+      // intentionally not hashing userMetadata
+      return Objects.hashCode(id, location, name, type, uri);
    }
 
    @Override
@@ -191,8 +192,8 @@ public class MutableResourceMetadataImpl<T extends Enum<T>> implements MutableRe
             && Objects.equal(location, other.getLocation())
             && Objects.equal(name, other.getName())
             && Objects.equal(type, other.getType())
-            && Objects.equal(uri, other.getUri())
-            && Objects.equal(userMetadata, other.getUserMetadata());
+            && Objects.equal(uri, other.getUri());
+            // intentionally not comparing userMetadata
    }
 
 }
