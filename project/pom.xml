@@ -1033,7 +1033,7 @@
           <artifactId>maven-javadoc-plugin</artifactId>
           <version>2.9</version>
           <configuration>
-            <maxmemory>256m</maxmemory>
+            <maxmemory>512m</maxmemory>
             <encoding>${project.build.sourceEncoding}</encoding>
             <quiet>true</quiet>
             <links>
