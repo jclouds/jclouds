@@ -16,7 +16,6 @@
  */
 package org.jclouds.filesystem.strategy.internal;
 
-import static com.google.common.io.BaseEncoding.base16;
 import static org.jclouds.filesystem.util.Utils.isMacOSX;
 import static org.jclouds.utils.TestUtils.randomByteSource;
 import static org.testng.Assert.assertEquals;
@@ -56,8 +55,6 @@ import com.google.common.base.Supplier;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
-import com.google.common.hash.HashCode;
-import com.google.common.hash.Hashing;
 import com.google.common.io.ByteSource;
 import com.google.common.io.Files;
 import com.google.common.util.concurrent.Uninterruptibles;
@@ -670,27 +667,6 @@ public class FilesystemStorageStrategyImplTest {
       assertFalse(blob.getMetadata().getUserMetadata().containsKey("key1"));
    }
 
-   // This test will become irrelevant if the JVM starts supporting
-   // user extended attributes on HFS+. Nobody will complain.
-   @Test(dataProvider = "onlyOnMacOSX")
-   public void testEtagReturnedWithoutXattrSupport() throws Exception {
-      String blobKey = TestUtils.createRandomBlobKey();
-      ByteSource content = randomByteSource().slice(0, 1024);
-      HashCode expectedHash = content.hash(Hashing.md5());
-
-      // write blob
-      Blob blob = new BlobBuilderImpl()
-            .name(blobKey)
-            .payload(content)
-            .build();
-      String etag = storageStrategy.putBlob(CONTAINER_NAME, blob);
-
-      // read blob & check etag
-      blob = storageStrategy.getBlob(CONTAINER_NAME, blobKey);
-      assertEquals(blob.getMetadata().getContentMetadata().getContentMD5AsHashCode(), expectedHash);
-      assertEquals(blob.getMetadata().getETag(), base16().lowerCase().encode(expectedHash.asBytes()));
-   }
-
    // ---------------------------------------------------------- Private methods
 
    /**
@@ -710,10 +686,4 @@ public class FilesystemStorageStrategyImplTest {
         return isMacOSX() ? TestUtils.NO_INVOCATIONS
                 : TestUtils.SINGLE_NO_ARG_INVOCATION;
    }
-
-  @DataProvider
-  public Object[][] onlyOnMacOSX() {
-      return isMacOSX() ?
-          TestUtils.SINGLE_NO_ARG_INVOCATION : TestUtils.NO_INVOCATIONS;
-  }
 }

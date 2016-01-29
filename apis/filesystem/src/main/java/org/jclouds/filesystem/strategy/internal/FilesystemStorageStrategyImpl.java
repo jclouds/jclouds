@@ -371,11 +371,6 @@ public class FilesystemStorageStrategyImpl implements LocalStorageStrategy {
                userMetadata.put(attribute.substring(XATTR_USER_METADATA_PREFIX.length()), value);
             }
 
-            if (hashCode == null) {
-                // content-md5 xattr not found; recompute
-                hashCode = byteSource.hash(Hashing.md5());
-            }
-
             builder.payload(byteSource)
                .cacheControl(cacheControl)
                .contentDisposition(contentDisposition)
