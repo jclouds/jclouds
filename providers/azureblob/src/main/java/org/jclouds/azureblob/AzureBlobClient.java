@@ -17,13 +17,6 @@
 package org.jclouds.azureblob;
 
 import static com.google.common.net.HttpHeaders.EXPECT;
-import static org.jclouds.Fallbacks.TrueOnNotFoundOr404;
-import static org.jclouds.Fallbacks.VoidOnNotFoundOr404;
-import static org.jclouds.azureblob.AzureBlobFallbacks.FalseIfContainerAlreadyExists;
-import static org.jclouds.blobstore.BlobStoreFallbacks.FalseOnContainerNotFound;
-import static org.jclouds.blobstore.BlobStoreFallbacks.FalseOnKeyNotFound;
-import static org.jclouds.blobstore.BlobStoreFallbacks.NullOnContainerNotFound;
-import static org.jclouds.blobstore.BlobStoreFallbacks.NullOnKeyNotFound;
 
 import java.io.Closeable;
 import java.net.URI;
@@ -39,10 +32,13 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.QueryParam;
 
+import org.jclouds.Fallbacks.TrueOnNotFoundOr404;
+import org.jclouds.Fallbacks.VoidOnNotFoundOr404;
 import org.jclouds.azure.storage.domain.BoundedSet;
 import org.jclouds.azure.storage.filters.SharedKeyLiteAuthentication;
 import org.jclouds.azure.storage.options.ListOptions;
 import org.jclouds.azure.storage.reference.AzureStorageHeaders;
+import org.jclouds.azureblob.AzureBlobFallbacks.FalseIfContainerAlreadyExists;
 import org.jclouds.azureblob.binders.BindAzureBlobMetadataToRequest;
 import org.jclouds.azureblob.binders.BindAzureBlobMetadataToMultipartRequest;
 import org.jclouds.azureblob.binders.BindAzureBlocksToRequest;
@@ -68,6 +64,10 @@ import org.jclouds.azureblob.predicates.validators.ContainerNameValidator;
 import org.jclouds.azureblob.xml.AccountNameEnumerationResultsHandler;
 import org.jclouds.azureblob.xml.BlobBlocksResultsHandler;
 import org.jclouds.azureblob.xml.ContainerNameEnumerationResultsHandler;
+import org.jclouds.blobstore.BlobStoreFallbacks.FalseOnContainerNotFound;
+import org.jclouds.blobstore.BlobStoreFallbacks.FalseOnKeyNotFound;
+import org.jclouds.blobstore.BlobStoreFallbacks.NullOnContainerNotFound;
+import org.jclouds.blobstore.BlobStoreFallbacks.NullOnKeyNotFound;
 import org.jclouds.blobstore.binders.BindMapToHeadersWithPrefix;
 import org.jclouds.http.functions.ParseETagHeader;
 import org.jclouds.http.options.GetOptions;

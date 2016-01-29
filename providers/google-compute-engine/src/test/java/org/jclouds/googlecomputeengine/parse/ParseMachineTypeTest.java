@@ -17,13 +17,13 @@
 package org.jclouds.googlecomputeengine.parse;
 
 import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
-import static org.jclouds.googlecomputeengine.domain.MachineType.ScratchDisk;
 
 import java.net.URI;
 
 import javax.ws.rs.Consumes;
 
 import org.jclouds.googlecomputeengine.domain.MachineType;
+import org.jclouds.googlecomputeengine.domain.MachineType.ScratchDisk;
 import org.jclouds.googlecomputeengine.internal.BaseGoogleComputeEngineParseTest;
 import org.testng.annotations.Test;
 

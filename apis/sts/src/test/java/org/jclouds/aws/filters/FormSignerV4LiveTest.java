@@ -17,8 +17,6 @@
 package org.jclouds.aws.filters;
 
 import static java.util.concurrent.TimeUnit.MINUTES;
-import static org.jclouds.aws.filters.FormSignerV4.ServiceAndRegion;
-import static org.jclouds.aws.filters.FormSignerV4.ServiceAndRegion.AWSServiceAndRegion;
 import static org.jclouds.sts.options.SessionCredentialsOptions.Builder.durationSeconds;
 import static org.testng.Assert.assertEquals;
 
@@ -30,6 +28,8 @@ import javax.inject.Provider;
 
 import org.jclouds.apis.BaseApiLiveTest;
 import org.jclouds.aws.domain.SessionCredentials;
+import org.jclouds.aws.filters.FormSignerV4.ServiceAndRegion;
+import org.jclouds.aws.filters.FormSignerV4.ServiceAndRegion.AWSServiceAndRegion;
 import org.jclouds.domain.Credentials;
 import org.jclouds.http.HttpRequest;
 import org.jclouds.rest.ApiContext;

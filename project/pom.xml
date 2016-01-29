@@ -757,6 +757,7 @@
               <compilerArg>-Xep:NullablePrimitive:ERROR</compilerArg>
               <compilerArg>-Xep:StringEquality:ERROR</compilerArg>
               <compilerArg>-Xep:TypeParameterUnusedInFormals:OFF</compilerArg>
+              <compilerArg>-Xep:UnnecessaryStaticImport:ERROR</compilerArg>
             </compilerArgs>
         </configuration>
         <dependencies>

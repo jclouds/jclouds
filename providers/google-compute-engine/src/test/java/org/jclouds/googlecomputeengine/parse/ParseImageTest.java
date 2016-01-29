@@ -17,7 +17,6 @@
 package org.jclouds.googlecomputeengine.parse;
 
 import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
-import static org.jclouds.googlecomputeengine.domain.Image.RawDisk;
 
 import java.net.URI;
 
@@ -26,6 +25,7 @@ import javax.ws.rs.Consumes;
 import org.jclouds.googlecomputeengine.domain.Deprecated;
 import org.jclouds.googlecomputeengine.domain.Deprecated.State;
 import org.jclouds.googlecomputeengine.domain.Image;
+import org.jclouds.googlecomputeengine.domain.Image.RawDisk;
 import org.jclouds.googlecomputeengine.domain.Image.Status;
 import org.jclouds.googlecomputeengine.internal.BaseGoogleComputeEngineParseTest;
 import org.testng.annotations.Test;

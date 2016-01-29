@@ -17,7 +17,6 @@
 package org.jclouds.googlecomputeengine.compute.functions;
 
 import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
-import static org.jclouds.Fallbacks.NullOnNotFoundOr404;
 
 import javax.inject.Named;
 import javax.ws.rs.Consumes;
@@ -27,6 +26,7 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import java.net.URI;
 
+import org.jclouds.Fallbacks.NullOnNotFoundOr404;
 import org.jclouds.googlecomputeengine.domain.Disk;
 import org.jclouds.googlecomputeengine.domain.Image;
 import org.jclouds.googlecomputeengine.domain.Instance;

@@ -20,7 +20,6 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import static org.jclouds.oauth.v2.OAuthTestUtils.setCredential;
 import static org.jclouds.oauth.v2.config.OAuthProperties.AUDIENCE;
 import static org.jclouds.oauth.v2.config.OAuthProperties.JWS_ALG;
-import static org.jclouds.oauth.v2.config.OAuthScopes.SingleScope;
 import static org.jclouds.providers.AnonymousProviderMetadata.forApiOnEndpoint;
 import static org.testng.Assert.assertNotNull;
 
@@ -29,6 +28,7 @@ import java.util.Properties;
 import org.jclouds.apis.BaseApiLiveTest;
 import org.jclouds.oauth.v2.config.OAuthModule;
 import org.jclouds.oauth.v2.config.OAuthScopes;
+import org.jclouds.oauth.v2.config.OAuthScopes.SingleScope;
 import org.jclouds.oauth.v2.domain.Claims;
 import org.jclouds.oauth.v2.domain.Token;
 import org.jclouds.providers.ProviderMetadata;

@@ -17,11 +17,6 @@
 package org.jclouds.atmos;
 
 import static com.google.common.net.HttpHeaders.EXPECT;
-import static org.jclouds.Fallbacks.FalseOnNotFoundOr404;
-import static org.jclouds.Fallbacks.NullOnNotFoundOr404;
-import static org.jclouds.blobstore.BlobStoreFallbacks.NullOnKeyAlreadyExists;
-import static org.jclouds.blobstore.BlobStoreFallbacks.ThrowContainerNotFoundOn404;
-import static org.jclouds.blobstore.BlobStoreFallbacks.ThrowKeyNotFoundOn404;
 
 import java.io.Closeable;
 import java.net.URI;
@@ -38,6 +33,8 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
+import org.jclouds.Fallbacks.FalseOnNotFoundOr404;
+import org.jclouds.Fallbacks.NullOnNotFoundOr404;
 import org.jclouds.atmos.binders.BindMetadataToHeaders;
 import org.jclouds.atmos.domain.AtmosObject;
 import org.jclouds.atmos.domain.BoundedSet;
@@ -55,6 +52,9 @@ import org.jclouds.atmos.functions.ParseUserMetadataFromHeaders;
 import org.jclouds.atmos.functions.ReturnTrueIfGroupACLIsOtherRead;
 import org.jclouds.atmos.options.ListOptions;
 import org.jclouds.atmos.options.PutOptions;
+import org.jclouds.blobstore.BlobStoreFallbacks.NullOnKeyAlreadyExists;
+import org.jclouds.blobstore.BlobStoreFallbacks.ThrowContainerNotFoundOn404;
+import org.jclouds.blobstore.BlobStoreFallbacks.ThrowKeyNotFoundOn404;
 import org.jclouds.http.options.GetOptions;
 import org.jclouds.javax.annotation.Nullable;
 import org.jclouds.rest.annotations.BinderParam;

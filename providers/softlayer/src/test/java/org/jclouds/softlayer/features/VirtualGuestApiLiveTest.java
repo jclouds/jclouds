@@ -17,7 +17,6 @@
 package org.jclouds.softlayer.features;
 
 import static com.google.common.base.Preconditions.checkState;
-import static org.jclouds.softlayer.compute.strategy.SoftLayerComputeServiceAdapter.VirtualGuestHasLoginDetailsPresent;
 import static org.jclouds.util.Predicates2.retry;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
@@ -27,6 +26,7 @@ import java.util.Properties;
 import java.util.Set;
 
 import org.jclouds.softlayer.SoftLayerApi;
+import org.jclouds.softlayer.compute.strategy.SoftLayerComputeServiceAdapter.VirtualGuestHasLoginDetailsPresent;
 import org.jclouds.softlayer.domain.ContainerVirtualGuestConfiguration;
 import org.jclouds.softlayer.domain.Datacenter;
 import org.jclouds.softlayer.domain.OperatingSystem;

@@ -18,7 +18,6 @@ package org.jclouds.s3;
 
 import static com.google.common.net.HttpHeaders.EXPECT;
 import static org.jclouds.blobstore.attr.BlobScopes.CONTAINER;
-import static org.jclouds.s3.S3Fallbacks.TrueOn404OrNotFoundFalseOnIllegalState;
 
 import java.io.Closeable;
 import java.util.Map;
@@ -59,6 +58,7 @@ import org.jclouds.rest.annotations.RequestFilters;
 import org.jclouds.rest.annotations.ResponseParser;
 import org.jclouds.rest.annotations.VirtualHost;
 import org.jclouds.rest.annotations.XMLResponseParser;
+import org.jclouds.s3.S3Fallbacks.TrueOn404OrNotFoundFalseOnIllegalState;
 import org.jclouds.s3.binders.BindACLToXMLPayload;
 import org.jclouds.s3.binders.BindAsHostPrefixIfConfigured;
 import org.jclouds.s3.binders.BindBucketLoggingToXmlPayload;

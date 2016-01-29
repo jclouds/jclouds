@@ -18,12 +18,12 @@ package org.jclouds.openstack.nova.v2_0.predicates;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static java.util.concurrent.TimeUnit.SECONDS;
-import static org.jclouds.openstack.nova.v2_0.domain.Server.Status;
 import static org.jclouds.openstack.nova.v2_0.domain.Server.Status.ACTIVE;
 import static org.jclouds.openstack.nova.v2_0.domain.Server.Status.SHUTOFF;
 import static org.jclouds.util.Predicates2.retry;
 
 import org.jclouds.openstack.nova.v2_0.domain.Server;
+import org.jclouds.openstack.nova.v2_0.domain.Server.Status;
 import org.jclouds.openstack.nova.v2_0.features.ServerApi;
 
 import com.google.common.base.Predicate;
