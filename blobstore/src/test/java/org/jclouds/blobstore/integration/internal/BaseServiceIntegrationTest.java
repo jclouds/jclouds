@@ -34,6 +34,7 @@ import com.google.common.collect.Iterables;
 
 public class BaseServiceIntegrationTest extends BaseBlobStoreIntegrationTest {
 
+   @SuppressWarnings("CollectionIncompatibleType")
    @Test(groups = { "integration", "live" })
    void containerDoesntExist() {
       Set<? extends StorageMetadata> list = view.getBlobStore().list();

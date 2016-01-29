@@ -271,6 +271,7 @@ public class NamingStrategies {
          return tryFind(constructors(token), hasMarker).orNull();
       }
 
+      @SuppressWarnings("CollectionIncompatibleType")
       @VisibleForTesting
       <T> String translateName(Invokable<T, T> c, int index) {
          String name = null;
