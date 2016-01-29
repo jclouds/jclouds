@@ -748,6 +748,7 @@
               <compilerArg>-Xlint:-serial</compilerArg>
               <compilerArg>-Xlint:-unchecked</compilerArg>
               <compilerArg>-Xep:ClassCanBeStatic:ERROR</compilerArg>
+              <compilerArg>-Xep:EqualsHashCode:ERROR</compilerArg>
               <compilerArg>-Xep:GuiceAssistedInjectScoping:OFF</compilerArg>
               <compilerArg>-Xep:LongLiteralLowerCaseSuffix:OFF</compilerArg>
               <compilerArg>-Xep:MalformedFormatString:ERROR</compilerArg>

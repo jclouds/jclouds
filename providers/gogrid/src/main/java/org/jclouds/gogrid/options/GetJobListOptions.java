@@ -96,6 +96,11 @@ public class GetJobListOptions extends BaseHttpRequestOptions {
       return buildQueryParameters().equals(options.buildQueryParameters());
    }
 
+   @Override
+   public int hashCode() {
+      return buildQueryParameters().hashCode();
+   }
+
    public static class Builder {
 
       public static GetJobListOptions maxItems(int maxNumber) {
