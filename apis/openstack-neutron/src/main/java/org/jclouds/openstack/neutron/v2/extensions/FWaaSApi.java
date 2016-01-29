@@ -16,10 +16,6 @@
  */
 package org.jclouds.openstack.neutron.v2.extensions;
 
-import static org.jclouds.Fallbacks.EmptyPagedIterableOnNotFoundOr404;
-import static org.jclouds.Fallbacks.FalseOnNotFoundOr404;
-import static org.jclouds.Fallbacks.NullOnNotFoundOr404;
-
 import javax.inject.Named;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
@@ -30,6 +26,9 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.core.MediaType;
 
+import org.jclouds.Fallbacks.EmptyPagedIterableOnNotFoundOr404;
+import org.jclouds.Fallbacks.FalseOnNotFoundOr404;
+import org.jclouds.Fallbacks.NullOnNotFoundOr404;
 import org.jclouds.collect.PagedIterable;
 import org.jclouds.javax.annotation.Nullable;
 import org.jclouds.openstack.keystone.v2_0.KeystoneFallbacks.EmptyPaginatedCollectionOnNotFoundOr404;
