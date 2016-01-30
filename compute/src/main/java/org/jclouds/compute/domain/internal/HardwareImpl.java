@@ -41,9 +41,9 @@ import com.google.common.collect.ImmutableList;
 
 public class HardwareImpl extends ComputeMetadataImpl implements Hardware {
 
-   private final List<Processor> processors;
+   private final List<? extends Processor> processors;
    private final int ram;
-   private final List<Volume> volumes;
+   private final List<? extends Volume> volumes;
    private final Predicate<Image> supportsImage;
    private final String hypervisor;
    private final boolean deprecated;

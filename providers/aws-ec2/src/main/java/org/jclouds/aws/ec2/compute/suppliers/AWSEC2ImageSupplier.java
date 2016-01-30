@@ -126,7 +126,7 @@ public final class AWSEC2ImageSupplier implements Supplier<Set<? extends Image>>
       // Forwarding so that later changes to the underlying cache are visible.
       return new ForwardingSet<Image>() {
          protected Set<Image> delegate() {
-            return ImmutableSet.copyOf(cache.get().asMap().values());
+            return (Set<Image>) ImmutableSet.copyOf(cache.get().asMap().values());
          }
       };
    }

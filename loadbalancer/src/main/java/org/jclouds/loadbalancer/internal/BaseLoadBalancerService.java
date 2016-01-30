@@ -154,7 +154,7 @@ public class BaseLoadBalancerService implements LoadBalancerService {
 
    public Set<? extends LoadBalancerMetadata> listLoadBalancers() {
       logger.debug(">> listing load balancers");
-      LinkedHashSet<LoadBalancerMetadata> set = newLinkedHashSet(listLoadBalancersStrategy.listLoadBalancers());
+      LinkedHashSet<? extends LoadBalancerMetadata> set = newLinkedHashSet(listLoadBalancersStrategy.listLoadBalancers());
       logger.debug("<< list(%d)", set.size());
       return set;
    }

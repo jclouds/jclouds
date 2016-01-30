@@ -29,7 +29,7 @@ public class ServerMetrics {
       protected long tx;
       protected long rxPackets;
       protected long rx;
-      protected Map<String, DriveMetrics> driveMetrics = ImmutableMap.<String, DriveMetrics> of();
+      protected Map<String, ? extends DriveMetrics> driveMetrics = ImmutableMap.<String, DriveMetrics> of();
 
       public Builder txPackets(long txPackets) {
          this.txPackets = txPackets;
@@ -65,9 +65,9 @@ public class ServerMetrics {
    protected final long tx;
    protected final long rxPackets;
    protected final long rx;
-   protected final Map<String, DriveMetrics> driveMetrics;
+   protected final Map<String, ? extends DriveMetrics> driveMetrics;
 
-   public ServerMetrics(long tx, long txPackets, long rx, long rxPackets, Map<String, DriveMetrics> driveMetrics) {
+   public ServerMetrics(long tx, long txPackets, long rx, long rxPackets, Map<String, ? extends DriveMetrics> driveMetrics) {
       this.txPackets = txPackets;
       this.tx = tx;
       this.rxPackets = rxPackets;
@@ -99,7 +99,7 @@ public class ServerMetrics {
     * 
     * @return metrics keyed on device id ex. {@code ide:0:0}
     */
-   public Map<String, DriveMetrics> getDriveMetrics() {
+   public Map<String, ? extends DriveMetrics> getDriveMetrics() {
       return driveMetrics;
    }
 

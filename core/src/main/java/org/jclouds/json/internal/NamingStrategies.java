@@ -261,7 +261,7 @@ public class NamingStrategies {
                         public Class<? extends Annotation> apply(Annotation input) {
                            return input.annotationType();
                         }
-                     }).anyMatch(in(markers));
+                     }).anyMatch((Predicate<Class<? extends Annotation>>) in(markers));
             }
          };
       }

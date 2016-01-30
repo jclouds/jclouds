@@ -337,9 +337,9 @@ public class BaseComputeService implements ComputeService {
     * {@inheritDoc}
     */
    @Override
-   public Set<ComputeMetadata> listNodes() {
+   public Set<? extends ComputeMetadata> listNodes() {
       logger.trace(">> listing nodes");
-      Set<ComputeMetadata> set = newLinkedHashSet(listNodesStrategy.listNodes());
+      Set<? extends ComputeMetadata> set = newLinkedHashSet(listNodesStrategy.listNodes());
       logger.trace("<< list(%d)", set.size());
       return set;
    }
@@ -351,7 +351,7 @@ public class BaseComputeService implements ComputeService {
    public Set<? extends NodeMetadata> listNodesByIds(Iterable<String> ids) {
       checkNotNull(ids, "ids");
       logger.trace(">> listing node with ids(%s)", ids);
-      Set<NodeMetadata> set = ImmutableSet.copyOf(listNodesStrategy.listNodesByIds(ids));
+      Set<? extends NodeMetadata> set = ImmutableSet.copyOf(listNodesStrategy.listNodesByIds(ids));
       logger.trace("<< list(%d)", set.size());
       return set;
    }
@@ -363,7 +363,7 @@ public class BaseComputeService implements ComputeService {
    public Set<? extends NodeMetadata> listNodesDetailsMatching(Predicate<ComputeMetadata> filter) {
       checkNotNull(filter, "filter");
       logger.trace(">> listing node details matching(%s)", filter);
-      Set<NodeMetadata> set = newLinkedHashSet(listNodesStrategy.listDetailsOnNodesMatching(filter));
+      Set<? extends NodeMetadata> set = newLinkedHashSet(listNodesStrategy.listDetailsOnNodesMatching(filter));
       logger.trace("<< list(%d)", set.size());
       return set;
    }

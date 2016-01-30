@@ -124,7 +124,7 @@ public abstract class BaseComputeServiceLiveTest extends BaseComputeServiceConte
 
    protected Predicate<HostAndPort> socketTester;
    protected OpenSocketFinder openSocketFinder;
-   protected SortedSet<NodeMetadata> nodes;
+   protected SortedSet<? extends NodeMetadata> nodes;
    protected ComputeService client;
 
    protected Template template;
@@ -383,7 +383,7 @@ public abstract class BaseComputeServiceLiveTest extends BaseComputeServiceConte
       assertFalse(node1.getName().equals("first-node") && node2.getName().equals("first-node"),
               "one node should be named something other than 'first-node");
 
-      this.nodes.addAll(nodes);
+      this.nodes = newTreeSet(concat(this.nodes, nodes));
    }
 
    private Template refreshTemplate() {
@@ -444,7 +444,7 @@ public abstract class BaseComputeServiceLiveTest extends BaseComputeServiceConte
       else
          this.assertLocationSameOrChild(checkNotNull(node.getLocation(), "location of %s", node), template.getLocation());
       checkOsMatchesTemplate(node);
-      this.nodes.add(node);
+      this.nodes = newTreeSet(concat(this.nodes, nodes));
    }
 
    @Test(enabled = true, dependsOnMethods = "testCompareSizes")
@@ -619,7 +619,7 @@ public abstract class BaseComputeServiceLiveTest extends BaseComputeServiceConte
 
          }));
 
-      SortedSet<NodeMetadata> listedNodes = ImmutableSortedSet.copyOf(client.listNodesByIds(nodeIds));
+      SortedSet<? extends NodeMetadata> listedNodes = ImmutableSortedSet.copyOf(client.listNodesByIds(nodeIds));
       // newTreeSet is here because elementsEqual cares about ordering.
       assertTrue(Iterables.elementsEqual(nodes, listedNodes),
               "nodes and listNodesByIds should be identical: was " + listedNodes + " but should be " + nodes);
@@ -923,7 +923,7 @@ public abstract class BaseComputeServiceLiveTest extends BaseComputeServiceConte
             // Destroy all nodes in the group but also make sure to destroy other created nodes that might not be in it.
             // The "testCreateTwoNodesWithOneSpecifiedName" creates nodes with an explicit name that puts them outside the group,
             // so the list of nodes should also be taken into account when destroying the nodes.
-            client.destroyNodesMatching(Predicates.<NodeMetadata> or(inGroup(group), in(nodes)));
+            client.destroyNodesMatching(Predicates.<NodeMetadata> or(inGroup(group), (Predicate<NodeMetadata>) in(nodes)));
          }
       } catch (Exception e) {
 

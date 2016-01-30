@@ -168,8 +168,8 @@ public class BaseVirtualSystem<T extends BaseVirtualSystem<T>> extends Section<T
    protected final String id;
    protected final String name;
    protected final OperatingSystemSection operatingSystem;
-   protected final Set<VirtualHardwareSection> virtualHardwareSections;
-   protected final Set<ProductSection> productSections;
+   protected final Set<? extends VirtualHardwareSection> virtualHardwareSections;
+   protected final Set<? extends ProductSection> productSections;
    @SuppressWarnings("unchecked")
    protected final Multimap<String, Section> additionalSections;
 

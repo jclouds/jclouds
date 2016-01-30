@@ -118,8 +118,8 @@ public class BaseEnvelope<V extends BaseVirtualSystem<V>, E extends BaseEnvelope
 
    }
 
-   private final Set<DiskSection> diskSections;
-   private final Set<NetworkSection> networkSections;
+   private final Set<? extends DiskSection> diskSections;
+   private final Set<? extends NetworkSection> networkSections;
    @SuppressWarnings("unchecked")
    private final Multimap<String, Section> additionalSections;
    private final V virtualSystem;
@@ -195,7 +195,7 @@ public class BaseEnvelope<V extends BaseVirtualSystem<V>, E extends BaseEnvelope
                diskSections, networkSections, additionalSections, virtualSystem);
    }
 
-   public Set<NetworkSection> getNetworkSections() {
+   public Set<? extends NetworkSection> getNetworkSections() {
       return networkSections;
    }
 }
