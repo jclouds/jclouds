@@ -662,12 +662,12 @@ public final class LocalBlobStore implements BlobStore {
                long offset = 0;
                long last = blob.getPayload().getContentMetadata().getContentLength() - 1;
                if (s.startsWith("-")) {
-                  offset = last - Integer.parseInt(s.substring(1)) + 1;
+                  offset = last - Long.parseLong(s.substring(1)) + 1;
                   if (offset < 0) {
                      offset = 0;
                   }
                } else if (s.endsWith("-")) {
-                  offset = Integer.parseInt(s.substring(0, s.length() - 1));
+                  offset = Long.parseLong(s.substring(0, s.length() - 1));
                } else if (s.contains("-")) {
                   String[] firstLast = s.split("\\-");
                   offset = Long.parseLong(firstLast[0]);
