@@ -20,14 +20,18 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import static org.jclouds.chef.util.CollectionUtils.copyOfOrEmpty;
 
 import java.beans.ConstructorProperties;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.jclouds.domain.JsonBall;
 import org.jclouds.javax.annotation.Nullable;
 
+import com.google.common.base.Function;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.Maps;
 import com.google.gson.annotations.SerializedName;
 
 /**
@@ -44,6 +48,10 @@ public class Role {
       private ImmutableMap.Builder<String, JsonBall> overrideAttributes = ImmutableMap.builder();
       private ImmutableMap.Builder<String, JsonBall> defaultAttributes = ImmutableMap.builder();
       private ImmutableList.Builder<String> runList = ImmutableList.builder();
+      // envRunList is a nested set of collections. The Immutable* classes in google collections don't appear to
+      // support this nested immutability, so the builder will utilize native collections as the envRunList is
+      // assembled. An immutable, nested map of collections will be assembled in the build() method.
+      private Map<String, List<String>> envRunList = new HashMap<String, List<String>>();
 
       public Builder name(String name) {
          this.name = checkNotNull(name, "name");
@@ -85,8 +93,40 @@ public class Role {
          return this;
       }
 
+      public Builder envRunList(Map<String, List<String>> envRunList) {
+         this.envRunList.putAll(checkNotNull(envRunList, "envRunList"));
+         return this;
+      }
+
+      public Builder envRunList(String name, List<String> runList) {
+         this.envRunList.put(checkNotNull(name, "name"), checkNotNull(runList, "runList"));
+         return this;
+      }
+
+      public Builder envRunListElement(String name, String value) {
+         checkNotNull(name, "name");
+         checkNotNull(value, "value");
+         List<String> runList = this.envRunList.get(name);
+         if (runList == null) {
+            runList = new ArrayList<String>();
+            this.envRunList.put(name, runList);
+         }
+         runList.add(value);
+         return this;
+      }
+
       public Role build() {
-         return new Role(name, description, defaultAttributes.build(), runList.build(), overrideAttributes.build());
+         // Assemble an immutable envRunList where each entry is an immutable list of entries.
+         Map<String, List<String>> immutableEnvRunList = Maps.transformValues(envRunList,
+               new Function<List<String>, List<String>>() {
+                  @Override
+                  public List<String> apply(List<String> input) {
+                     return ImmutableList.copyOf(input);
+                  }
+               });
+         
+         return new Role(name, description, defaultAttributes.build(), runList.build(), overrideAttributes.build(), 
+               immutableEnvRunList);
       }
    }
 
@@ -98,6 +138,8 @@ public class Role {
    private final Map<String, JsonBall> defaultAttributes;
    @SerializedName("run_list")
    private final List<String> runList;
+   @SerializedName("env_run_lists")
+   private Map<String, List<String>> envRunList;
 
    // internal
    @SerializedName("json_class")
@@ -105,14 +147,17 @@ public class Role {
    @SerializedName("chef_type")
    private final String _chefType = "role";
 
-   @ConstructorProperties({ "name", "description", "default_attributes", "run_list", "override_attributes" })
+   @ConstructorProperties({ "name", "description", "default_attributes", "run_list", "override_attributes", 
+      "env_run_lists"  })
    protected Role(String name, String description, @Nullable Map<String, JsonBall> defaultAttributes,
-         @Nullable List<String> runList, @Nullable Map<String, JsonBall> overrideAttributes) {
+         @Nullable List<String> runList, @Nullable Map<String, JsonBall> overrideAttributes,
+         @Nullable Map<String, List<String>> envRunList) {
       this.name = name;
       this.description = description;
       this.defaultAttributes = copyOfOrEmpty(defaultAttributes);
       this.runList = copyOfOrEmpty(runList);
       this.overrideAttributes = copyOfOrEmpty(overrideAttributes);
+      this.envRunList = envRunList;
    }
 
    public String getName() {
@@ -135,6 +180,10 @@ public class Role {
       return runList;
    }
 
+   public Map<String, List<String>> getEnvRunList() {
+      return envRunList;
+   }
+
    @Override
    public int hashCode() {
       final int prime = 31;
@@ -146,6 +195,7 @@ public class Role {
       result = prime * result + ((name == null) ? 0 : name.hashCode());
       result = prime * result + ((overrideAttributes == null) ? 0 : overrideAttributes.hashCode());
       result = prime * result + ((runList == null) ? 0 : runList.hashCode());
+      result = prime * result + ((envRunList == null) ? 0 : envRunList.hashCode());
       return result;
    }
 
@@ -193,13 +243,19 @@ public class Role {
             return false;
       } else if (!runList.equals(other.runList))
          return false;
+      if (envRunList == null) {
+         if (other.envRunList != null)
+            return false;
+      } else if (!envRunList.equals(other.envRunList))
+         return false;
       return true;
    }
 
    @Override
    public String toString() {
       return "Role [name=" + name + ", description=" + description + ", defaultAttributes=" + defaultAttributes
-            + ", overrideAttributes=" + overrideAttributes + ", runList=" + runList + "]";
+            + ", overrideAttributes=" + overrideAttributes + ", runList=" + runList
+            + ", envRunList=" + this.envRunList + "]";
    }
 
 }

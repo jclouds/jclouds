@@ -20,6 +20,7 @@ import static com.google.common.collect.Iterables.any;
 import static com.google.common.collect.Iterables.isEmpty;
 import static com.google.common.hash.Hashing.md5;
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
+import static org.jclouds.chef.domain.RoleTest.verifyRunListForEnvironment;
 import static org.jclouds.util.Closeables2.closeQuietly;
 import static org.jclouds.util.Predicates2.retry;
 import static org.testng.Assert.assertEquals;
@@ -243,12 +244,27 @@ public class ChefApiLiveTest extends BaseChefLiveTest {
 
    @Test
    public void testCreateRole() throws Exception {
+      String env1 = "env1";
+      String env2 = "env2";
+      String env1Alpha = "env1.alpha";
+      String env2Alpha = "env2.alpha";
+      String env2Bravo = "env2.bravo";
+
       api.deleteRole(PREFIX);
-      api.createRole(Role.builder().name(PREFIX).runListElement("recipe[java]").build());
+      api.createRole(Role.builder().name(PREFIX).runListElement("recipe[java]")
+            .envRunListElement(env1, env1Alpha)
+            .envRunListElement(env2, env2Alpha)
+            .envRunListElement(env2, env2Bravo)
+            .build());
       Role role = api.getRole(PREFIX);
       assertNotNull(role, "Created role should not be null");
       assertEquals(role.getName(), PREFIX);
       assertEquals(role.getRunList(), Collections.singleton("recipe[java]"));
+
+      assertNotNull(role.getEnvRunList(), "envRunList should not be null");
+      assertEquals(role.getEnvRunList().size(), 2, "envRunList.size should be 2");
+      verifyRunListForEnvironment(role.getEnvRunList(), env1, env1Alpha);
+      verifyRunListForEnvironment(role.getEnvRunList(), env2, env2Alpha, env2Bravo);
    }
 
    @Test(dependsOnMethods = "testCreateRole")

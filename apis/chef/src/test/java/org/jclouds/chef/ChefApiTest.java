@@ -357,13 +357,18 @@ public class ChefApiTest extends BaseRestAnnotationProcessingTest<ChefApi> {
    public void testCreateRole() throws SecurityException, NoSuchMethodException, IOException {
       Invokable<?, ?> method = method(ChefApi.class, "createRole", Role.class);
       GeneratedHttpRequest httpRequest = processor.apply(Invocation.create(method,
-            ImmutableList.<Object> of(Role.builder().name("testrole").runListElement("recipe[java]").build())));
+            ImmutableList.<Object> of(Role.builder().name("testrole").runListElement("recipe[java]")
+            .envRunListElement("erl.one", "erl.one.alpha")
+            .envRunListElement("erl.one", "erl.one.bravo")
+            .envRunListElement("erl.two", "erl.two.alpha")
+            .envRunListElement("erl.two", "erl.two.bravo")
+            .build())));
 
       assertRequestLineEquals(httpRequest, "POST http://localhost:4000/roles HTTP/1.1");
       assertNonPayloadHeadersEqual(httpRequest, "Accept: application/json\nX-Chef-Version: " + ChefApiMetadata.DEFAULT_API_VERSION
             + "-test\n");
       assertPayloadEquals(httpRequest, "{\"name\":\"testrole\",\"override_attributes\":{},\"default_attributes\":{},"
-            + "\"run_list\":[\"recipe[java]\"],\"json_class\":\"Chef::Role\",\"chef_type\":\"role\"}",
+            + "\"run_list\":[\"recipe[java]\"],\"env_run_lists\":{\"erl.one\":[\"erl.one.alpha\",\"erl.one.bravo\"],\"erl.two\":[\"erl.two.alpha\",\"erl.two.bravo\"]},\"json_class\":\"Chef::Role\",\"chef_type\":\"role\"}",
             "application/json", false);
 
       assertResponseParserClassEquals(method, httpRequest, ReleasePayloadAndReturn.class);
@@ -377,13 +382,18 @@ public class ChefApiTest extends BaseRestAnnotationProcessingTest<ChefApi> {
    public void testUpdateRole() throws SecurityException, NoSuchMethodException, IOException {
       Invokable<?, ?> method = method(ChefApi.class, "updateRole", Role.class);
       GeneratedHttpRequest httpRequest = processor.apply(Invocation.create(method,
-            ImmutableList.<Object> of(Role.builder().name("testrole").runListElement("recipe[java]").build())));
+            ImmutableList.<Object> of(Role.builder().name("testrole").runListElement("recipe[java]")
+            .envRunListElement("erl.one", "erl.one.alpha")
+            .envRunListElement("erl.one", "erl.one.bravo")
+            .envRunListElement("erl.two", "erl.two.alpha")
+            .envRunListElement("erl.two", "erl.two.bravo")
+            .build())));
 
       assertRequestLineEquals(httpRequest, "PUT http://localhost:4000/roles/testrole HTTP/1.1");
       assertNonPayloadHeadersEqual(httpRequest, "Accept: application/json\nX-Chef-Version: " + ChefApiMetadata.DEFAULT_API_VERSION
             + "-test\n");
       assertPayloadEquals(httpRequest, "{\"name\":\"testrole\",\"override_attributes\":{},\"default_attributes\":{},"
-            + "\"run_list\":[\"recipe[java]\"],\"json_class\":\"Chef::Role\",\"chef_type\":\"role\"}",
+            + "\"run_list\":[\"recipe[java]\"],\"env_run_lists\":{\"erl.one\":[\"erl.one.alpha\",\"erl.one.bravo\"],\"erl.two\":[\"erl.two.alpha\",\"erl.two.bravo\"]},\"json_class\":\"Chef::Role\",\"chef_type\":\"role\"}",
             "application/json", false);
 
       assertResponseParserClassEquals(method, httpRequest, ParseJson.class);
