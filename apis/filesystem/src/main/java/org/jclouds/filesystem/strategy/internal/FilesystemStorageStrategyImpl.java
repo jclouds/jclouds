@@ -456,8 +456,9 @@ public class FilesystemStorageStrategyImpl implements LocalStorageStrategy {
       }
       File outputFile = getFileForBlobKey(containerName, blobKey);
       // TODO: should we use a known suffix to filter these out during list?
-      File tmpFile = getFileForBlobKey(containerName, blobKey + "-" + UUID.randomUUID());
-      Path outputPath = outputFile.toPath();
+      String tmpBlobName = blobKey + "-" + UUID.randomUUID();
+      File tmpFile = getFileForBlobKey(containerName, tmpBlobName);
+      Path tmpPath = tmpFile.toPath();
       HashingInputStream his = null;
       try {
          Files.createParentDirs(tmpFile);
@@ -480,20 +481,22 @@ public class FilesystemStorageStrategyImpl implements LocalStorageStrategy {
             delete(outputFile);
          }
 
-         if (!tmpFile.renameTo(outputFile)) {
-            throw new RuntimeException("Could not rename file " + tmpFile + " to " + outputFile);
-         }
-
-         UserDefinedFileAttributeView view = getUserDefinedFileAttributeView(outputPath);
+         UserDefinedFileAttributeView view = getUserDefinedFileAttributeView(tmpPath);
          if (view != null) {
             try {
                view.write(XATTR_CONTENT_MD5, ByteBuffer.wrap(actualHashCode.asBytes()));
                writeCommonMetadataAttr(view, blob);
             } catch (IOException e) {
-               logger.debug("xattrs not supported on %s", outputPath);
+               logger.debug("xattrs not supported on %s", tmpPath);
             }
          }
-         setBlobAccess(containerName, blobKey, BlobAccess.PRIVATE);
+
+         setBlobAccess(containerName, tmpBlobName, BlobAccess.PRIVATE);
+
+         if (!tmpFile.renameTo(outputFile)) {
+            throw new RuntimeException("Could not rename file " + tmpFile + " to " + outputFile);
+         }
+
          return base16().lowerCase().encode(actualHashCode.asBytes());
       } catch (IOException ex) {
          if (tmpFile != null) {
