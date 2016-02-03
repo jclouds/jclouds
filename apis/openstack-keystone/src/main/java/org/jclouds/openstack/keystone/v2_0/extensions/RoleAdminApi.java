@@ -75,7 +75,6 @@ public interface RoleAdminApi {
    @SelectJson("role")
    @Produces(MediaType.APPLICATION_JSON)
    @WrapWith("role")
-   @Fallback(NullOnNotFoundOr404.class)
    @Nullable
    Role create(@PayloadParam("name") String name);
 

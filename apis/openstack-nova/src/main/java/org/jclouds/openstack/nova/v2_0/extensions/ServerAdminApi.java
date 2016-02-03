@@ -24,7 +24,6 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
-import org.jclouds.Fallbacks.FalseOnNotFoundOr404;
 import org.jclouds.fallbacks.MapHttp4xxCodesToExceptions;
 import org.jclouds.openstack.keystone.v2_0.filters.AuthenticateRequest;
 import org.jclouds.openstack.nova.v2_0.domain.BackupType;
@@ -64,8 +63,7 @@ public interface ServerAdminApi {
    @POST
    @Produces(MediaType.APPLICATION_JSON)
    @Payload("{\"suspend\":null}")
-   @Fallback(FalseOnNotFoundOr404.class)
-   Boolean suspend(@PathParam("id") String id);
+   void suspend(@PathParam("id") String id);
 
    /**
     * Resume a server.
@@ -76,8 +74,7 @@ public interface ServerAdminApi {
    @POST
    @Produces(MediaType.APPLICATION_JSON)
    @Payload("{\"resume\":null}")
-   @Fallback(FalseOnNotFoundOr404.class)
-   Boolean resume(@PathParam("id") String id);
+   void resume(@PathParam("id") String id);
 
    /**
     * Migrate a server.
@@ -88,8 +85,7 @@ public interface ServerAdminApi {
    @POST
    @Produces(MediaType.APPLICATION_JSON)
    @Payload("{\"migrate\":null}")
-   @Fallback(FalseOnNotFoundOr404.class)
-   Boolean migrate(@PathParam("id") String id);
+   void migrate(@PathParam("id") String id);
 
    /**
     * Lock a server.
@@ -100,8 +96,7 @@ public interface ServerAdminApi {
    @POST
    @Produces(MediaType.APPLICATION_JSON)
    @Payload("{\"lock\":null}")
-   @Fallback(FalseOnNotFoundOr404.class)
-   Boolean lock(@PathParam("id") String id);
+   void lock(@PathParam("id") String id);
 
    /**
     * Unlock a server.
@@ -112,8 +107,7 @@ public interface ServerAdminApi {
    @POST
    @Produces(MediaType.APPLICATION_JSON)
    @Payload("{\"unlock\":null}")
-   @Fallback(FalseOnNotFoundOr404.class)
-   Boolean unlock(@PathParam("id") String id);
+   void unlock(@PathParam("id") String id);
 
    /**
     * Reset network of a server.
@@ -124,8 +118,7 @@ public interface ServerAdminApi {
    @POST
    @Produces(MediaType.APPLICATION_JSON)
    @Payload("{\"resetNetwork\":null}")
-   @Fallback(FalseOnNotFoundOr404.class)
-   Boolean resetNetwork(@PathParam("id") String id);
+   void resetNetwork(@PathParam("id") String id);
 
    /**
     * Create backup of a server.
@@ -156,8 +149,7 @@ public interface ServerAdminApi {
    @POST
    @Produces(MediaType.APPLICATION_JSON)
    @Payload("{\"pause\":null}")
-   @Fallback(FalseOnNotFoundOr404.class)
-   Boolean pause(@PathParam("id") String id);
+   void pause(@PathParam("id") String id);
 
    /**
     * Unpause a server.
@@ -168,8 +160,7 @@ public interface ServerAdminApi {
    @POST
    @Produces(MediaType.APPLICATION_JSON)
    @Payload("{\"unpause\":null}")
-   @Fallback(FalseOnNotFoundOr404.class)
-   Boolean unpause(@PathParam("id") String id);
+   void unpause(@PathParam("id") String id);
 
    /**
     * Live migrate a server.
@@ -180,8 +171,7 @@ public interface ServerAdminApi {
    @POST
    @Produces(MediaType.APPLICATION_JSON)
    @WrapWith("os-migrateLive")
-   @Fallback(FalseOnNotFoundOr404.class)
-   Boolean liveMigrate(@PathParam("id") String id, @PayloadParam("host") String host,
+   void liveMigrate(@PathParam("id") String id, @PayloadParam("host") String host,
          @PayloadParam("block_migration") boolean blockMigration,
          @PayloadParam("disk_over_commit") boolean diskOverCommit);
 
@@ -194,6 +184,5 @@ public interface ServerAdminApi {
    @POST
    @Produces(MediaType.APPLICATION_JSON)
    @Payload("{\"injectNetworkInfo\":null}")
-   @Fallback(FalseOnNotFoundOr404.class)
-   Boolean injectNetworkInfo(@PathParam("id") String id);
+   void injectNetworkInfo(@PathParam("id") String id);
 }

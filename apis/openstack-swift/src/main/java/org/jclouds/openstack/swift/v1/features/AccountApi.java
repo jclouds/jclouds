@@ -73,27 +73,19 @@ public interface AccountApi {
     * Creates or updates the {@link Account} metadata.
     *
     * @param metadata  the metadata to create or update.
-    *
-    * @return {@code true} if the metadata was successfully created or updated,
-    *         {@code false} if not.
     */
    @Named("account:updateMetadata")
    @POST
-   @Fallback(FalseOnNotFoundOr404.class)
-   boolean updateMetadata(@BinderParam(BindAccountMetadataToHeaders.class) Map<String, String> metadata);
+   void updateMetadata(@BinderParam(BindAccountMetadataToHeaders.class) Map<String, String> metadata);
 
    /**
     * Replaces the temporary URL key for the {@link Account}.
     *
     * @param temporaryUrlKey  the temporary URL key to update.
-    *
-    * @return {@code true} if the temporary URL key was successfully updated,
-    *         {@code false} if not.
     */
    @Named("account:updateTemporaryUrlKey")
    @POST
-   @Fallback(FalseOnNotFoundOr404.class)
-   boolean updateTemporaryUrlKey(@HeaderParam(ACCOUNT_TEMPORARY_URL_KEY) String temporaryUrlKey);
+   void updateTemporaryUrlKey(@HeaderParam(ACCOUNT_TEMPORARY_URL_KEY) String temporaryUrlKey);
 
    /**
     * Deletes metadata from the {@link Account}.

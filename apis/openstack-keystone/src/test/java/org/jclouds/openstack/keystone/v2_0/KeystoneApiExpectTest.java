@@ -18,7 +18,6 @@ package org.jclouds.openstack.keystone.v2_0;
 
 import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertNull;
 
 import org.jclouds.http.HttpRequest;
 import org.jclouds.http.HttpResponse;
@@ -40,14 +39,6 @@ public class KeystoneApiExpectTest extends BaseKeystoneRestApiExpectTest<Keyston
       ApiMetadata metadata = api.getApiMetadata();
 
       assertEquals(metadata, new ParseRackspaceApiMetadataTest().expected());
-   }
-
-   public void testGetApiMetaDataFailNotFound() {
-      KeystoneApi api = requestsSendResponses(
-            keystoneAuthWithUsernameAndPasswordAndTenantName, responseWithKeystoneAccess,
-            HttpRequest.builder().method("GET").endpoint(endpoint + "/v2.0/").addHeader("Accept", APPLICATION_JSON).build(),
-            HttpResponse.builder().statusCode(404).build());
-      assertNull(api.getApiMetadata());
    }
 
 }

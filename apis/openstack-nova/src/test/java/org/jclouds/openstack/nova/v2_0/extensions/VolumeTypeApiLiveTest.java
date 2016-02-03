@@ -110,14 +110,14 @@ public class VolumeTypeApiLiveTest extends BaseNovaApiLiveTest {
       if (volumeTypeOption.isPresent()) {
          assertEquals(volumeTypeOption.get().getExtraSpecs(testVolumeType.getId()), ImmutableMap.of("test", "value1"));
          assertEquals(volumeTypeOption.get().getExtraSpec(testVolumeType.getId(), "test"),  "value1");
-         assertTrue(volumeTypeOption.get().updateExtraSpecs(testVolumeType.getId(), ImmutableMap.of("test1", "wibble")));
+         volumeTypeOption.get().updateExtraSpecs(testVolumeType.getId(), ImmutableMap.of("test1", "wibble"));
       }
    }
 
    @Test(dependsOnMethods = "testCreateVolumeType")
    public void testUpdateIndividualSpec() {
       if (volumeTypeOption.isPresent()) {
-         assertTrue(volumeTypeOption.get().updateExtraSpec(testVolumeType.getId(), "test1", "freddy"));
+         volumeTypeOption.get().updateExtraSpec(testVolumeType.getId(), "test1", "freddy");
          assertEquals(volumeTypeOption.get().getExtraSpec(testVolumeType.getId(), "test1"), "freddy");
       }
    }

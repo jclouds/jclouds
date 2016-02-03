@@ -17,8 +17,6 @@
 package org.jclouds.openstack.nova.v2_0.extensions;
 
 import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertFalse;
-import static org.testng.Assert.assertNull;
 import static org.testng.Assert.assertTrue;
 
 import java.net.URI;
@@ -32,8 +30,6 @@ import org.jclouds.http.HttpResponse;
 import org.jclouds.openstack.nova.v2_0.domain.Volume;
 import org.jclouds.openstack.nova.v2_0.domain.VolumeAttachment;
 import org.jclouds.openstack.nova.v2_0.internal.BaseNovaApiExpectTest;
-import org.jclouds.rest.AuthorizationException;
-import org.jclouds.rest.ResourceNotFoundException;
 import org.testng.annotations.Test;
 
 import com.google.common.collect.ImmutableSet;
@@ -65,19 +61,6 @@ public class VolumeAttachmentApiExpectTest extends BaseNovaApiExpectTest {
       assertEquals(attachment.getVolumeId(), "1");
    }
 
-   @Test(expectedExceptions = AuthorizationException.class)
-   public void testListAttachmentsFail() {
-      URI endpoint = URI.create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v2/3456/servers/instance-2/os-volume_attachments");
-      VolumeAttachmentApi api = requestsSendResponses(
-            keystoneAuthWithUsernameAndPasswordAndTenantName,
-            responseWithKeystoneAccess, extensionsOfNovaRequest, extensionsOfNovaResponse,
-            authenticatedGET().endpoint(endpoint).build(),
-            HttpResponse.builder().statusCode(401).build()
-      ).getVolumeAttachmentApi("az-1.region-a.geo-1").get();
-
-      api.listAttachmentsOnServer("instance-2");
-   }
-
    public void testGetAttachment() {
       URI endpoint = URI.create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v2/3456/servers/instance-1/os-volume_attachments/1");
       VolumeAttachmentApi api = requestsSendResponses(
@@ -89,18 +72,6 @@ public class VolumeAttachmentApiExpectTest extends BaseNovaApiExpectTest {
 
       VolumeAttachment attachment = api.getAttachmentForVolumeOnServer("1", "instance-1");
       assertEquals(attachment, testAttachment());
-   }
-
-   public void testGetAttachmentFail() {
-      URI endpoint = URI.create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v2/3456/servers/instance-1/os-volume_attachments/1");
-      VolumeAttachmentApi api = requestsSendResponses(
-            keystoneAuthWithUsernameAndPasswordAndTenantName,
-            responseWithKeystoneAccess, extensionsOfNovaRequest, extensionsOfNovaResponse,
-            authenticatedGET().endpoint(endpoint).build(),
-            HttpResponse.builder().statusCode(404).build()
-      ).getVolumeAttachmentApi("az-1.region-a.geo-1").get();
-
-     assertNull(api.getAttachmentForVolumeOnServer("1", "instance-1"));
    }
 
    public void testAttachVolume() {
@@ -117,20 +88,6 @@ public class VolumeAttachmentApiExpectTest extends BaseNovaApiExpectTest {
       assertEquals(result, testAttachment());
    }
 
-   @Test(expectedExceptions = ResourceNotFoundException.class)
-   public void testAttachVolumeFail() {
-      URI endpoint = URI.create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v2/3456/servers/instance-1/os-volume_attachments");
-      VolumeAttachmentApi api = requestsSendResponses(
-            keystoneAuthWithUsernameAndPasswordAndTenantName,
-            responseWithKeystoneAccess, extensionsOfNovaRequest, extensionsOfNovaResponse,
-            authenticatedGET().endpoint(endpoint).method("POST")
-                  .payload(payloadFromStringWithContentType("{\"volumeAttachment\":{\"volumeId\":\"1\",\"device\":\"/dev/vdc\"}}", MediaType.APPLICATION_JSON)).endpoint(endpoint).build(),
-            HttpResponse.builder().statusCode(404).build()
-      ).getVolumeAttachmentApi("az-1.region-a.geo-1").get();
-
-      api.attachVolumeToServerAsDevice("1", "instance-1", "/dev/vdc");
-   }
-
    public void testDetachVolume() {
       URI endpoint = URI.create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v2/3456/servers/instance-1/os-volume_attachments/1");
       VolumeAttachmentApi api = requestsSendResponses(
@@ -141,18 +98,6 @@ public class VolumeAttachmentApiExpectTest extends BaseNovaApiExpectTest {
       ).getVolumeAttachmentApi("az-1.region-a.geo-1").get();
 
       assertTrue(api.detachVolumeFromServer("1", "instance-1"));
-   }
-
-   public void testDetachVolumeFail() {
-      URI endpoint = URI.create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v2/3456/servers/instance-1/os-volume_attachments/1");
-      VolumeAttachmentApi api = requestsSendResponses(
-            keystoneAuthWithUsernameAndPasswordAndTenantName,
-            responseWithKeystoneAccess, extensionsOfNovaRequest, extensionsOfNovaResponse,
-            authenticatedGET().endpoint(endpoint).method("DELETE").build(),
-            HttpResponse.builder().statusCode(404).build()
-      ).getVolumeAttachmentApi("az-1.region-a.geo-1").get();
-
-      assertFalse(api.detachVolumeFromServer("1", "instance-1"));
    }
 
    protected Volume testVolume() {

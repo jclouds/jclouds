@@ -17,8 +17,6 @@
 package org.jclouds.openstack.nova.v2_0.features;
 
 import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertNull;
-import static org.testng.Assert.assertTrue;
 
 import org.jclouds.http.HttpRequest;
 import org.jclouds.http.HttpResponse;
@@ -56,22 +54,6 @@ public class ExtensionApiExpectTest extends BaseNovaApiExpectTest {
             new ParseExtensionListTest().expected().toString());
    }
 
-   public void testListExtensionsWhenReponseIs404IsEmpty() throws Exception {
-      HttpRequest listExtensions = HttpRequest.builder()
-            .method("GET")
-            .endpoint("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v2/3456/extensions")
-            .addHeader("Accept", "application/json")
-            .addHeader("X-Auth-Token", authToken)
-            .build();
-
-      HttpResponse listExtensionsResponse = HttpResponse.builder().statusCode(404).build();
-
-      NovaApi apiWhenNoServersExist = requestsSendResponses(keystoneAuthWithUsernameAndPasswordAndTenantName,
-            responseWithKeystoneAccess, listExtensions, listExtensionsResponse);
-
-      assertTrue(apiWhenNoServersExist.getExtensionApi("az-1.region-a.geo-1").list().isEmpty());
-   }
-
    // TODO: gson deserializer for Multimap
    public void testGetExtensionByAliasWhenResponseIs2xx() throws Exception {
       HttpRequest getExtension = HttpRequest.builder()
@@ -91,20 +73,4 @@ public class ExtensionApiExpectTest extends BaseNovaApiExpectTest {
             .toString(), new ParseExtensionTest().expected().toString());
    }
 
-   public void testGetExtensionByAliasWhenResponseIs404() throws Exception {
-      HttpRequest getExtension = HttpRequest.builder()
-            .method("GET")
-            .endpoint("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v2/3456/extensions/RS-PIE")
-            .addHeader("Accept", "application/json")
-            .addHeader("X-Auth-Token", authToken)
-            .build();
-
-      HttpResponse getExtensionResponse = HttpResponse.builder().statusCode(404)
-            .payload(payloadFromResource("/extension_details.json")).build();
-
-      NovaApi apiWhenNoExtensionsExist = requestsSendResponses(keystoneAuthWithUsernameAndPasswordAndTenantName,
-            responseWithKeystoneAccess, getExtension, getExtensionResponse);
-
-      assertNull(apiWhenNoExtensionsExist.getExtensionApi("az-1.region-a.geo-1").get("RS-PIE"));
-   }
 }

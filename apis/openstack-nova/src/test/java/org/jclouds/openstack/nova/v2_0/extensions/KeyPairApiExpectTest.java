@@ -18,7 +18,6 @@ package org.jclouds.openstack.nova.v2_0.extensions;
 
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertTrue;
-import static org.testng.Assert.assertNull;
 
 import org.jclouds.http.HttpRequest;
 import org.jclouds.http.HttpResponse;
@@ -55,23 +54,6 @@ public class KeyPairApiExpectTest extends BaseNovaApiExpectTest {
       // NOTE this required a change to the KeyPair domain object toString method
       assertEquals(apiWhenServersExist.getKeyPairApi("az-1.region-a.geo-1").get().list().toString(),
             new ParseKeyPairListTest().expected().toString());
-   }
-
-   public void testListKeyPairsWhenResponseIs404() throws Exception {
-      HttpRequest list = HttpRequest
-            .builder()
-            .method("GET")
-            .endpoint("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v2/3456/os-keypairs")
-            .addHeader("Accept", "application/json")
-            .addHeader("X-Auth-Token", authToken).build();
-
-      HttpResponse listResponse = HttpResponse.builder().statusCode(404).build();
-
-      NovaApi apiWhenNoServersExist = requestsSendResponses(keystoneAuthWithUsernameAndPasswordAndTenantName,
-            responseWithKeystoneAccess, extensionsOfNovaRequest, extensionsOfNovaResponse, list, listResponse);
-
-      assertTrue(apiWhenNoServersExist.getKeyPairApi("az-1.region-a.geo-1").get().list().isEmpty());
-
    }
 
    public void testCreateKeyPair() throws Exception {
@@ -157,19 +139,4 @@ public class KeyPairApiExpectTest extends BaseNovaApiExpectTest {
             new ParseKeyPairTest().expected());
    }
 
-   public void testGetKeyPairWhenResponseIs404() throws Exception {
-      HttpRequest get = HttpRequest
-            .builder()
-            .method("GET")
-            .endpoint("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v2/3456/os-keypairs/testkeypair")
-            .addHeader("Accept", "application/json")
-            .addHeader("X-Auth-Token", authToken).build();
-
-      HttpResponse getResponse = HttpResponse.builder().statusCode(404).build();
-
-      NovaApi apiWhenNoKeyPairExists = requestsSendResponses(keystoneAuthWithUsernameAndPasswordAndTenantName,
-            responseWithKeystoneAccess, extensionsOfNovaRequest, extensionsOfNovaResponse, get, getResponse);
-
-      assertNull(apiWhenNoKeyPairExists.getKeyPairApi("az-1.region-a.geo-1").get().get("testkeypair"));
-   }
 }

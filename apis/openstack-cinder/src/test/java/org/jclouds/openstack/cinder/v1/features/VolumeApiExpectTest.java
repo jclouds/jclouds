@@ -17,8 +17,6 @@
 package org.jclouds.openstack.cinder.v1.features;
 
 import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertFalse;
-import static org.testng.Assert.assertNull;
 import static org.testng.Assert.assertTrue;
 
 import java.net.URI;
@@ -33,7 +31,6 @@ import org.jclouds.openstack.cinder.v1.domain.Volume;
 import org.jclouds.openstack.cinder.v1.domain.VolumeAttachment;
 import org.jclouds.openstack.cinder.v1.internal.BaseCinderApiExpectTest;
 import org.jclouds.openstack.cinder.v1.options.CreateVolumeOptions;
-import org.jclouds.rest.ResourceNotFoundException;
 import org.testng.annotations.Test;
 
 import com.google.common.collect.ImmutableSet;
@@ -59,19 +56,6 @@ public class VolumeApiExpectTest extends BaseCinderApiExpectTest {
       assertEquals(volumes, ImmutableSet.of(testVolume()));
    }
    
-   public void testListVolumesFail() {
-      URI endpoint = URI.create("http://172.16.0.1:8776/v1/50cdb4c60374463198695d9f798fa34d/volumes");
-      VolumeApi api = requestsSendResponses(
-            keystoneAuthWithUsernameAndPasswordAndTenantName,
-            responseWithKeystoneAccess, 
-            authenticatedGET().endpoint(endpoint).build(),
-            HttpResponse.builder().statusCode(404).build()
-      ).getVolumeApi("RegionOne");
-
-      Set<? extends Volume> volumes = api.list().toSet();
-      assertTrue(volumes.isEmpty());
-   }
-
    public void testListVolumesInDetail() {
       URI endpoint = URI.create("http://172.16.0.1:8776/v1/50cdb4c60374463198695d9f798fa34d/volumes/detail");
       VolumeApi api = requestsSendResponses(
@@ -83,19 +67,6 @@ public class VolumeApiExpectTest extends BaseCinderApiExpectTest {
 
       Set<? extends Volume> volumes = api.listInDetail().toSet();
       assertEquals(volumes, ImmutableSet.of(testVolumeDetailed()));
-   }
-
-   public void testListVolumesInDetailFail() {
-      URI endpoint = URI.create("http://172.16.0.1:8776/v1/50cdb4c60374463198695d9f798fa34d/volumes/detail");
-      VolumeApi api = requestsSendResponses(
-            keystoneAuthWithUsernameAndPasswordAndTenantName,
-            responseWithKeystoneAccess,
-            authenticatedGET().endpoint(endpoint).build(),
-            HttpResponse.builder().statusCode(404).build()
-      ).getVolumeApi("RegionOne");
-
-      Set<? extends Volume> volumes = api.listInDetail().toSet();
-      assertTrue(volumes.isEmpty());
    }
 
    public void testCreateVolume() {
@@ -117,26 +88,6 @@ public class VolumeApiExpectTest extends BaseCinderApiExpectTest {
       assertEquals(volume, testVolumeCreate());
    }
 
-   @Test(expectedExceptions = ResourceNotFoundException.class)
-   public void testCreateVolumeFail() {
-      URI endpoint = URI.create("http://172.16.0.1:8776/v1/50cdb4c60374463198695d9f798fa34d/volumes");
-      VolumeApi api = requestsSendResponses(
-            keystoneAuthWithUsernameAndPasswordAndTenantName,
-            responseWithKeystoneAccess,
-            authenticatedGET().endpoint(endpoint)
-               .endpoint(endpoint)
-               .method("POST")
-                  .payload(payloadFromResourceWithContentType("/volume_create.json", MediaType.APPLICATION_JSON))
-               .build(),
-            HttpResponse.builder().statusCode(404).payload(payloadFromResource("/volume_create_response.json")).build()
-      ).getVolumeApi("RegionOne");
-
-      CreateVolumeOptions options = CreateVolumeOptions.Builder
-            .name("jclouds-test-volume")
-            .description("description of test volume");
-      api.create(1, options);
-   }
-
    public void testGetVolume() {
       URI endpoint = URI.create("http://172.16.0.1:8776/v1/50cdb4c60374463198695d9f798fa34d/volumes/60761c60-0f56-4499-b522-ff13e120af10");
       VolumeApi api = requestsSendResponses(
@@ -156,18 +107,6 @@ public class VolumeApiExpectTest extends BaseCinderApiExpectTest {
       assertEquals(Iterables.getOnlyElement(volume.getAttachments()), testAttachment());
    }
 
-   public void testGetVolumeFail() {
-      URI endpoint = URI.create("http://172.16.0.1:8776/v1/50cdb4c60374463198695d9f798fa34d/volumes/60761c60-0f56-4499-b522-ff13e120af10");
-      VolumeApi api = requestsSendResponses(
-            keystoneAuthWithUsernameAndPasswordAndTenantName,
-            responseWithKeystoneAccess,
-            authenticatedGET().endpoint(endpoint).build(),
-            HttpResponse.builder().statusCode(404).build()
-      ).getVolumeApi("RegionOne");
-
-      assertNull(api.get("60761c60-0f56-4499-b522-ff13e120af10"));
-   }
-
    public void testDeleteVolume() {
       URI endpoint = URI.create("http://172.16.0.1:8776/v1/50cdb4c60374463198695d9f798fa34d/volumes/60761c60-0f56-4499-b522-ff13e120af10");
       VolumeApi api = requestsSendResponses(
@@ -180,18 +119,6 @@ public class VolumeApiExpectTest extends BaseCinderApiExpectTest {
       assertTrue(api.delete("60761c60-0f56-4499-b522-ff13e120af10"));
    }
 
-   public void testDeleteVolumeFail() {
-      URI endpoint = URI.create("http://172.16.0.1:8776/v1/50cdb4c60374463198695d9f798fa34d/volumes/60761c60-0f56-4499-b522-ff13e120af10");
-      VolumeApi api = requestsSendResponses(
-            keystoneAuthWithUsernameAndPasswordAndTenantName,
-            responseWithKeystoneAccess,
-            authenticatedGET().endpoint(endpoint).method("DELETE").build(),
-            HttpResponse.builder().statusCode(404).build()
-      ).getVolumeApi("RegionOne");
-
-      assertFalse(api.delete("60761c60-0f56-4499-b522-ff13e120af10"));
-   }
-   
    protected Volume testVolumeCreate() {
       return Volume.builder()
             .id("60761c60-0f56-4499-b522-ff13e120af10")

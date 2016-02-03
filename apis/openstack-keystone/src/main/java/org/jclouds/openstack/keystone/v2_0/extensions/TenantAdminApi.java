@@ -27,7 +27,6 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
 import org.jclouds.Fallbacks.FalseOnNotFoundOr404;
-import org.jclouds.Fallbacks.NullOnNotFoundOr404;
 import org.jclouds.javax.annotation.Nullable;
 import org.jclouds.openstack.keystone.v2_0.domain.Tenant;
 import org.jclouds.openstack.keystone.v2_0.filters.AuthenticateRequest;
@@ -62,7 +61,6 @@ public interface TenantAdminApi {
    @POST
    @SelectJson("tenant")
    @Produces(MediaType.APPLICATION_JSON)
-   @Fallback(NullOnNotFoundOr404.class)
    @Nullable
    Tenant create(@PayloadParam("name") String name);
 
@@ -75,7 +73,6 @@ public interface TenantAdminApi {
    @POST
    @SelectJson("tenant")
    @MapBinder(CreateTenantOptions.class)
-   @Fallback(NullOnNotFoundOr404.class)
    @Nullable
    Tenant create(@PayloadParam("name") String name, CreateTenantOptions options);
 
@@ -100,20 +97,16 @@ public interface TenantAdminApi {
    @Path("/{id}")
    @SelectJson("tenant")
    @MapBinder(UpdateTenantOptions.class)
-   @Fallback(NullOnNotFoundOr404.class)
    @Nullable
    Tenant update(@PathParam("id") String id, UpdateTenantOptions options);
 
    /**
     * Adds role to a user on a tenant
-    *
-    * @return true if successful
     */
    @Named("tenant:addRoleOnTenant")
    @PUT
    @Path("/{id}/users/{userId}/roles/OS-KSADM/{roleId}")
-   @Fallback(FalseOnNotFoundOr404.class)
-   boolean addRoleOnTenant(@PathParam("id") String tenantId, @PathParam("userId") String userId,
+   void addRoleOnTenant(@PathParam("id") String tenantId, @PathParam("userId") String userId,
          @PathParam("roleId") String roleId);
 
    /**

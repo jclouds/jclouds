@@ -105,7 +105,7 @@ public class DatabaseApiLiveTest extends BaseTroveApiLiveTest {
                assertNotNull(database);
                assertTrue(database.equals("livetest_db1") || database.equals("livetest_db2") || database.equals("livetest_db3") );
                assertTrue(databaseApi.delete(database));
-               assertTrue(databaseApi.create(database));
+               databaseApi.create(database);
             }
          }
       }

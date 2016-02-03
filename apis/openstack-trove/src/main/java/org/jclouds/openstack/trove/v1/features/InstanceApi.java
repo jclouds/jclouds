@@ -111,7 +111,6 @@ public interface InstanceApi {
    @Path("/instances/{id}/root")
    @Consumes(MediaType.APPLICATION_JSON)
    @ResponseParser(ParsePasswordFromRootedInstance.class)
-   @Fallback(NullOnNotFoundOr404.class)
    String enableRoot(@PathParam("id") String instanceId);
 
    /**

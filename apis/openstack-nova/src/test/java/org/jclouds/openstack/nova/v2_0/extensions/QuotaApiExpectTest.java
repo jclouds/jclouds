@@ -17,7 +17,6 @@
 package org.jclouds.openstack.nova.v2_0.extensions;
 
 import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertNull;
 import static org.testng.Assert.assertTrue;
 
 import java.net.URI;
@@ -28,7 +27,6 @@ import org.jclouds.http.HttpRequest;
 import org.jclouds.http.HttpResponse;
 import org.jclouds.openstack.nova.v2_0.domain.Quota;
 import org.jclouds.openstack.nova.v2_0.internal.BaseNovaApiExpectTest;
-import org.jclouds.rest.ResourceNotFoundException;
 import org.testng.annotations.Test;
 
 /**
@@ -47,15 +45,6 @@ public class QuotaApiExpectTest extends BaseNovaApiExpectTest {
       assertEquals(api.getByTenant("demo"), getTestQuotas());
    }
 
-   public void testGetQuotasFailsTenantNotFound() throws Exception {
-      URI endpoint = URI.create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v2/3456/os-quota-sets/demo");
-      QuotaApi api = requestsSendResponses(keystoneAuthWithUsernameAndPasswordAndTenantName,
-            responseWithKeystoneAccess, extensionsOfNovaRequest, extensionsOfNovaResponse,
-            authenticatedGET().endpoint(endpoint).build(),
-            HttpResponse.builder().statusCode(404).build()).getQuotaApi("az-1.region-a.geo-1").get();
-      assertNull(api.getByTenant("demo"));
-   }
-
    public void testGetDefaultQuotas() throws Exception {
       URI endpoint = URI.create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v2/3456/os-quota-sets/demo/defaults");
       QuotaApi api = requestsSendResponses(keystoneAuthWithUsernameAndPasswordAndTenantName,
@@ -65,16 +54,6 @@ public class QuotaApiExpectTest extends BaseNovaApiExpectTest {
 
       assertEquals(api.getDefaultsForTenant("demo"), getTestQuotas());
    }
-
-   public void testGetDefaultQuotasFailsTenantNotFound() throws Exception {
-      URI endpoint = URI.create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v2/3456/os-quota-sets/demo/defaults");
-      QuotaApi api = requestsSendResponses(keystoneAuthWithUsernameAndPasswordAndTenantName,
-            responseWithKeystoneAccess, extensionsOfNovaRequest, extensionsOfNovaResponse,
-            authenticatedGET().endpoint(endpoint).build(),
-            HttpResponse.builder().statusCode(404).build()).getQuotaApi("az-1.region-a.geo-1").get();
-      assertNull(api.getDefaultsForTenant("demo"));
-   }
-
 
    public void testUpdateQuotas() throws Exception {
       URI endpoint = URI.create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v2/3456/os-quota-sets/demo");
@@ -88,21 +67,6 @@ public class QuotaApiExpectTest extends BaseNovaApiExpectTest {
             HttpResponse.builder().statusCode(200).build()).getQuotaApi("az-1.region-a.geo-1").get();
 
       assertTrue(api.updateQuotaOfTenant(getTestQuotas(), "demo"));
-   }
-
-   @Test(expectedExceptions = ResourceNotFoundException.class)
-   public void testUpdateQuotasFailsNotFound() throws Exception {
-      URI endpoint = URI.create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v2/3456/os-quota-sets/demo");
-      QuotaApi api = requestsSendResponses(keystoneAuthWithUsernameAndPasswordAndTenantName,
-            responseWithKeystoneAccess, extensionsOfNovaRequest, extensionsOfNovaResponse,
-            HttpRequest.builder().endpoint(endpoint).method("PUT")
-                  .addHeader("X-Auth-Token", authToken)
-                  .addHeader("Accept", "application/json")
-                  .payload(payloadFromResourceWithContentType("/quotas.json", MediaType.APPLICATION_JSON))
-                  .build(),
-            HttpResponse.builder().statusCode(404).build()).getQuotaApi("az-1.region-a.geo-1").get();
-
-      api.updateQuotaOfTenant(getTestQuotas(), "demo");
    }
 
    public static Quota getTestQuotas() {

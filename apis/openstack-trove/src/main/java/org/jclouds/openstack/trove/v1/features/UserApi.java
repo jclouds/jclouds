@@ -69,9 +69,8 @@ public interface UserApi {
    @POST
    @Path("/users")
    @Consumes(MediaType.APPLICATION_JSON)
-   @Fallback(FalseOnNotFoundOr404.class)
    @MapBinder(BindCreateUserToJson.class)
-   boolean create(@PayloadParam("users") Set<User> users);
+   void create(@PayloadParam("users") Set<User> users);
 
    /**
     * Create a database user by name, password, and database name. Simpler overload for {@link #create(String, Set)}.
@@ -85,9 +84,8 @@ public interface UserApi {
    @POST
    @Path("/users")
    @Consumes(MediaType.APPLICATION_JSON)
-   @Fallback(FalseOnNotFoundOr404.class)
    @MapBinder(BindCreateUserToJson.class)
-   boolean create(@PayloadParam("name") String userName, @PayloadParam("password") String password, @PayloadParam("databaseName") String databaseName);
+   void create(@PayloadParam("name") String userName, @PayloadParam("password") String password, @PayloadParam("databaseName") String databaseName);
 
    /**
     * Create a database user by name, password, and database name. Simpler overload for {@link #create(String, Set)}.
@@ -102,9 +100,8 @@ public interface UserApi {
    @POST
    @Path("/users")
    @Consumes(MediaType.APPLICATION_JSON)
-   @Fallback(FalseOnNotFoundOr404.class)
    @MapBinder(BindCreateUserToJson.class)
-   boolean create(@PayloadParam("name") String userName, @PayloadParam("password") String password, @PayloadParam("host") String host, @PayloadParam("databaseName") String databaseName);
+   void create(@PayloadParam("name") String userName, @PayloadParam("password") String password, @PayloadParam("host") String host, @PayloadParam("databaseName") String databaseName);
 
    /**
     * This operation grants access for the specified user to a database for the specified instance.
@@ -118,9 +115,8 @@ public interface UserApi {
    @PUT
    @Path("/users/{name}/databases")
    @Consumes(MediaType.APPLICATION_JSON)
-   @Fallback(FalseOnNotFoundOr404.class)
    @MapBinder(BindGrantUserToJson.class)
-   boolean grant(@PathParam("name") String userName, @PayloadParam("databases") List<String> databases);
+   void grant(@PathParam("name") String userName, @PayloadParam("databases") List<String> databases);
 
    /**
     * This operation grants access for the specified user to a database for the specified instance. Simpler overload for {@link #create(String, Set)}.
@@ -134,9 +130,8 @@ public interface UserApi {
    @PUT
    @Path("/users/{name}/databases")
    @Consumes(MediaType.APPLICATION_JSON)
-   @Fallback(FalseOnNotFoundOr404.class)
    @MapBinder(BindGrantUserToJson.class)
-   boolean grant(@PathParam("name") String userName, @PayloadParam("databaseName") String databaseName);
+   void grant(@PathParam("name") String userName, @PayloadParam("databaseName") String databaseName);
 
    /**
     * This operation grants access for the specified user to a database for the specified instance.

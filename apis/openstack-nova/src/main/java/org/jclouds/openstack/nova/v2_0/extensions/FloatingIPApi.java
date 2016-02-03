@@ -86,7 +86,6 @@ public interface FloatingIPApi {
    @SelectJson("floating_ip")
    @Produces(MediaType.APPLICATION_JSON)
    @Payload("{}")
-   @Fallback(NullOnNotFoundOr404.class)
    @Nullable
    FloatingIP create();
 
@@ -103,7 +102,6 @@ public interface FloatingIPApi {
    @SelectJson("floating_ip")
    @Produces(MediaType.APPLICATION_JSON)
    @Payload("%7B\"pool\":\"{pool}\"%7D")
-   @Fallback(NullOnNotFoundOr404.class)
    @Nullable
    FloatingIP allocateFromPool(@PayloadParam("pool") String pool);
 
@@ -121,7 +119,7 @@ public interface FloatingIPApi {
    /**
     * Adds a Floating IP address to a Server
     *
-    * @param id
+    * @param serverId
     *           the server id
     * @param address
     *           the IP address to add
@@ -138,7 +136,7 @@ public interface FloatingIPApi {
    /**
     * Removes a Floating IP address from a Server
     *
-    * @param id
+    * @param serverId
     *           the server id
     * @param address
     *           the IP address to remove

@@ -26,7 +26,6 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.core.MediaType;
 
 import org.jclouds.Fallbacks.FalseOnNotFoundOr404;
-import org.jclouds.Fallbacks.NullOnNotFoundOr404;
 import org.jclouds.javax.annotation.Nullable;
 import org.jclouds.openstack.keystone.v2_0.domain.User;
 import org.jclouds.openstack.keystone.v2_0.filters.AuthenticateRequest;
@@ -60,7 +59,6 @@ public interface UserAdminApi {
    @Named("user:create")
    @POST
    @SelectJson("user")
-   @Fallback(NullOnNotFoundOr404.class)
    @Nullable
    User create(@PayloadParam("name") String name, @PayloadParam("password") String password);
 
@@ -73,7 +71,6 @@ public interface UserAdminApi {
    @POST
    @SelectJson("user")
    @MapBinder(CreateUserOptions.class)
-   @Fallback(NullOnNotFoundOr404.class)
    @Nullable
    User create(@PayloadParam("name") String name,
          @PayloadParam("password") String password, CreateUserOptions options);
@@ -99,7 +96,6 @@ public interface UserAdminApi {
    @Path("/{id}")
    @SelectJson("user")
    @MapBinder(UpdateUserOptions.class)
-   @Fallback(NullOnNotFoundOr404.class)
    @Nullable
    User update(@PathParam("id") String id, UpdateUserOptions options);
 }

@@ -17,15 +17,16 @@
 package org.jclouds.openstack.trove.v1.features;
 
 import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertNull;
 import static org.testng.Assert.assertTrue;
+
 import java.net.URI;
 import java.util.Set;
+
 import javax.ws.rs.core.MediaType;
+
 import org.jclouds.http.HttpResponse;
 import org.jclouds.openstack.trove.v1.domain.Instance;
 import org.jclouds.openstack.trove.v1.internal.BaseTroveApiExpectTest;
-import org.jclouds.rest.ResourceNotFoundException;
 import org.testng.annotations.Test;
 
 /**
@@ -51,22 +52,6 @@ public class InstanceApiExpectTest extends BaseTroveApiExpectTest {
         assertEquals(instance.getName(), "json_rack_instance");  
     }
     
-    @Test(expectedExceptions = ResourceNotFoundException.class)
-    public void testCreateInstanceFail() {
-        URI endpoint = URI.create("http://172.16.0.1:8776/v1/3456/instances");
-        InstanceApi api = requestsSendResponses(
-                keystoneAuthWithUsernameAndPasswordAndTenantName,
-                responseWithKeystoneAccess,
-                authenticatedGET().endpoint(endpoint) // bad naming convention, you should not be able to change the method to POST
-                .method("POST")
-                .payload(payloadFromResourceWithContentType("/instance_create_request.json", MediaType.APPLICATION_JSON))
-                .build(),
-                HttpResponse.builder().statusCode(404).payload(payloadFromResource("/instance_create.json")).build() // response
-                ).getInstanceApi("RegionOne");
-
-        api.create("1", 2, "json_rack_instance");
-    }
-    
     public void testDeleteInstance() {
         URI endpoint = URI.create("http://172.16.0.1:8776/v1/3456/instances/098653ba-218b-47ce-936a-e0b749101f81");
         InstanceApi api = requestsSendResponses(
@@ -79,19 +64,6 @@ public class InstanceApiExpectTest extends BaseTroveApiExpectTest {
         assertTrue( api.delete("098653ba-218b-47ce-936a-e0b749101f81") );
     }
     
-    public void testDeleteInstanceFail() {
-        URI endpoint = URI.create("http://172.16.0.1:8776/v1/3456/instances/098653ba-218b-47ce-936a-e0b749101f81");
-        InstanceApi api = requestsSendResponses(
-                keystoneAuthWithUsernameAndPasswordAndTenantName,
-                responseWithKeystoneAccess,
-                authenticatedGET().endpoint(endpoint).method("DELETE").build(),
-                HttpResponse.builder().statusCode(404).build() // response
-                ).getInstanceApi("RegionOne");
-
-        assertTrue( !api.delete("098653ba-218b-47ce-936a-e0b749101f81") );
-    }
-
-   
    public void testListInstances() {
       URI endpoint = URI.create("http://172.16.0.1:8776/v1/3456/instances");
       InstanceApi api = requestsSendResponses(
@@ -105,19 +77,6 @@ public class InstanceApiExpectTest extends BaseTroveApiExpectTest {
       assertEquals(instances.size(), 2);
       assertEquals(instances.iterator().next().getSize(), 2);
    }
-
-   public void testListInstancesFail() {
-      URI endpoint = URI.create("http://172.16.0.1:8776/v1/3456/instances");
-      InstanceApi api = requestsSendResponses(
-            keystoneAuthWithUsernameAndPasswordAndTenantName,
-            responseWithKeystoneAccess,
-            authenticatedGET().endpoint(endpoint).build(),
-            HttpResponse.builder().statusCode(404).build()
-      ).getInstanceApi("RegionOne");
-
-      Set<? extends Instance> instances = api.list().toSet();
-      assertTrue(instances.isEmpty());
-   }   
 
    public void testGetInstance() {
       URI endpoint = URI.create("http://172.16.0.1:8776/v1/3456/instances/44b277eb-39be-4921-be31-3d61b43651d7");
@@ -135,18 +94,6 @@ public class InstanceApiExpectTest extends BaseTroveApiExpectTest {
       assertEquals(instance.getHostname(), "e09ad9a3f73309469cf1f43d11e79549caf9acf2.rackspaceclouddb.com");
    }
    
-   public void testGetInstanceFail() {
-      URI endpoint = URI.create("http://172.16.0.1:8776/v1/3456/instances/12312");
-      InstanceApi api = requestsSendResponses(
-            keystoneAuthWithUsernameAndPasswordAndTenantName,
-            responseWithKeystoneAccess,
-            authenticatedGET().endpoint(endpoint).build(),
-            HttpResponse.builder().statusCode(404).build()
-      ).getInstanceApi("RegionOne");
-
-      assertNull(api.get("12312"));
-   }  
-   
    public void testEnableRootOnInstance() {
        URI endpoint = URI.create("http://172.16.0.1:8776/v1/3456/instances/44b277eb-39be-4921-be31-3d61b43651d7/root");
        InstanceApi api = requestsSendResponses(
@@ -158,19 +105,6 @@ public class InstanceApiExpectTest extends BaseTroveApiExpectTest {
 
        String password = api.enableRoot("44b277eb-39be-4921-be31-3d61b43651d7");
        assertEquals(password, "12345");
-    }
-   
-   public void testEnableRootOnInstanceFail() {
-       URI endpoint = URI.create("http://172.16.0.1:8776/v1/3456/instances/44b277eb-39be-4921-be31-3d61b43651d7/root");
-       InstanceApi api = requestsSendResponses(
-             keystoneAuthWithUsernameAndPasswordAndTenantName,
-             responseWithKeystoneAccess,
-             authenticatedGET().method("POST").endpoint(endpoint).build(),
-             HttpResponse.builder().statusCode(404).payload(payloadFromResource("/instance_root.json")).build()
-       ).getInstanceApi("RegionOne");
-
-       String password = api.enableRoot("44b277eb-39be-4921-be31-3d61b43651d7");
-       assertEquals(password, null);
     }
    
    public void testIsRootInstance() {
@@ -199,17 +133,4 @@ public class InstanceApiExpectTest extends BaseTroveApiExpectTest {
        assertEquals(rooted.booleanValue(), false);
     }
    
-   @Test(expectedExceptions = ResourceNotFoundException.class)  
-   public void testIsRootInstanceFail() {
-       URI endpoint = URI.create("http://172.16.0.1:8776/v1/3456/instances/44b277eb-39be-4921-be31-3d61b43651d7/root");
-       InstanceApi api = requestsSendResponses(
-             keystoneAuthWithUsernameAndPasswordAndTenantName,
-             responseWithKeystoneAccess,
-             authenticatedGET().endpoint(endpoint).build(),
-             HttpResponse.builder().statusCode(404).payload(payloadFromResource("/instance_is_rooted.json")).build()
-       ).getInstanceApi("RegionOne");
-
-       Boolean rooted = api.isRooted("44b277eb-39be-4921-be31-3d61b43651d7");
-       assertNull(rooted);
-    }
 }

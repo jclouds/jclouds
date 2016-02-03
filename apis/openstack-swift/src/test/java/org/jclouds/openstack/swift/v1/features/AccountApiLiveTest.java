@@ -52,7 +52,7 @@ public class AccountApiLiveTest extends BaseSwiftApiLiveTest<SwiftApi> {
 
          Map<String, String> meta = ImmutableMap.of("MyAdd1", "foo", "MyAdd2", "bar");
 
-         assertTrue(accountApi.updateMetadata(meta));
+         accountApi.updateMetadata(meta);
 
          accountHasMetadata(accountApi, meta);
       }
@@ -64,7 +64,7 @@ public class AccountApiLiveTest extends BaseSwiftApiLiveTest<SwiftApi> {
 
          Map<String, String> meta = ImmutableMap.of("MyDelete1", "foo", "MyDelete2", "bar");
 
-         assertTrue(accountApi.updateMetadata(meta));
+         accountApi.updateMetadata(meta);
          accountHasMetadata(accountApi, meta);
 
          assertTrue(accountApi.deleteMetadata(meta));

@@ -132,8 +132,7 @@ public interface VolumeTypeApi {
    @Path("/{id}/extra_specs")
    @Produces(MediaType.APPLICATION_JSON)
    @MapBinder(BindToJsonPayload.class)
-   @Fallback(FalseOnNotFoundOr404.class)
-   boolean updateExtraSpecs(@PathParam("id") String id, @PayloadParam("extra_specs") Map<String, String> specs);
+   void updateExtraSpecs(@PathParam("id") String id, @PayloadParam("extra_specs") Map<String, String> specs);
 
    /**
     * Retrieve a single extra spec value
@@ -161,8 +160,7 @@ public interface VolumeTypeApi {
    @Path("/{id}/extra_specs/{key}")
    @Produces(MediaType.APPLICATION_JSON)
    @Payload("%7B\"{key}\":\"{value}\"%7D")
-   @Fallback(FalseOnNotFoundOr404.class)
-   boolean updateExtraSpec(@PathParam("id") String id,
+   void updateExtraSpec(@PathParam("id") String id,
          @PathParam("key") @PayloadParam("key") String key,
          @PayloadParam("value") String value);
 

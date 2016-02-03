@@ -17,7 +17,6 @@
 package org.jclouds.openstack.nova.v2_0.extensions;
 
 import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertNull;
 
 import java.net.URI;
 
@@ -46,16 +45,5 @@ public class ServerWithSecurityGroupsApiExpectTest extends BaseNovaApiExpectTest
       ServerWithSecurityGroups server = api.get("8d0a6ca5-8849-4b3d-b86e-f24c92490ebb");
       assertEquals(server.getId(), "8d0a6ca5-8849-4b3d-b86e-f24c92490ebb");
       assertEquals(server.getSecurityGroupNames(), ImmutableSet.of("default", "group1"));
-   }
-
-   public void testGetServerWithSecurityGroupsFailNotFound() {
-      URI endpoint = URI.create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v2/3456/os-create-server-ext/8d0a6ca5-8849-4b3d-b86e-f24c92490ebb");
-      ServerWithSecurityGroupsApi api = requestsSendResponses(
-            keystoneAuthWithUsernameAndPasswordAndTenantName,
-            responseWithKeystoneAccess, extensionsOfNovaRequest, extensionsOfNovaResponse,
-            authenticatedGET().endpoint(endpoint).build(),
-            HttpResponse.builder().statusCode(404).build()
-      ).getServerWithSecurityGroupsApi("az-1.region-a.geo-1").get();
-      assertNull(api.get("8d0a6ca5-8849-4b3d-b86e-f24c92490ebb"));
    }
 }

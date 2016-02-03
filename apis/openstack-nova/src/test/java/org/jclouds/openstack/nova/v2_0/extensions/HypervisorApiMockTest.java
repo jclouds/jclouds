@@ -101,19 +101,6 @@ public class HypervisorApiMockTest extends BaseOpenStackMockTest<NovaApi> {
       assertRequests(server, 3, "/os-hypervisors");
    }
 
-   public void testListHypervisorWhenResponseIs404(Method method) throws Exception {
-      MockWebServer server = servers.get(method.getName());
-      server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/extension_list_full.json"))));
-      server.enqueue(addCommonHeaders(new MockResponse().setResponseCode(404)));
-
-      NovaApi novaApi = api(server.getUrl("/").toString(), "openstack-nova");
-      assertEquals(novaApi.getConfiguredRegions(), ImmutableSet.of("RegionOne", "RegionTwo", "RegionThree"));
-
-      assertTrue(novaApi.getHypervisorApi("RegionOne").get().list().isEmpty());
-
-      assertRequests(server, 3, "/os-hypervisors");
-   }
-
    public void testListInDetail(Method method) throws Exception {
       MockWebServer server = servers.get(method.getName());
       server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/extension_list_full.json"))));
@@ -159,19 +146,6 @@ public class HypervisorApiMockTest extends BaseOpenStackMockTest<NovaApi> {
                   + " \"popcnt\", \"mca\", \"apic\", \"sse\", \"ds\", \"pni\", \"rdtscp\", \"sse2\", \"ss\", \"hypervisor\", \"pcid\", \"fpu\","
                   + " \"cx16\", \"pse36\", \"mtrr\", \"x2apic\"], \"topology\": {\"cores\": 4, \"threads\": 1, \"sockets\": 1}}",
             "Unexpected Cpu Info it was: " + hypervisorDetails.getCpuInfo());
-
-      assertRequests(server, 3, "/os-hypervisors/detail");
-   }
-
-   public void testListInDetailWhenResponseIs404(Method method) throws Exception {
-      MockWebServer server = servers.get(method.getName());
-      server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/extension_list_full.json"))));
-      server.enqueue(addCommonHeaders(new MockResponse().setResponseCode(404)));
-
-      NovaApi novaApi = api(server.getUrl("/").toString(), "openstack-nova");
-      assertEquals(novaApi.getConfiguredRegions(), ImmutableSet.of("RegionOne", "RegionTwo", "RegionThree"));
-
-      assertTrue(novaApi.getHypervisorApi("RegionOne").get().listInDetail().isEmpty());
 
       assertRequests(server, 3, "/os-hypervisors/detail");
    }

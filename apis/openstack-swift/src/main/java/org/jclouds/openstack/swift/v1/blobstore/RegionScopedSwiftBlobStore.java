@@ -310,10 +310,7 @@ public class RegionScopedSwiftBlobStore implements BlobStore {
          userMetadata = metadata.getMetadata();
       }
 
-      boolean copied = objectApi.copy(toName, fromContainer, fromName, userMetadata, systemMetadata);
-      if (!copied) {
-         throw new KeyNotFoundException(fromContainer, fromName, "Swift could not find the specified key");
-      }
+      objectApi.copy(toName, fromContainer, fromName, userMetadata, systemMetadata);
 
       // TODO: Swift copy object *appends* user metadata, does not overwrite
       return objectApi.getWithoutBody(toName).getETag();

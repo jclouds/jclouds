@@ -91,7 +91,6 @@ public interface SecurityGroupApi {
    @SelectJson("security_group")
    @Produces(MediaType.APPLICATION_JSON)
    @Payload("%7B\"security_group\":%7B\"name\":\"{name}\",\"description\":\"{description}\"%7D%7D")
-   @Fallback(NullOnNotFoundOr404.class)
    @Nullable
    SecurityGroup createWithDescription(@PayloadParam("name") String name,
          @PayloadParam("description") String description);
@@ -118,7 +117,6 @@ public interface SecurityGroupApi {
    @SelectJson("security_group_rule")
    @Produces(MediaType.APPLICATION_JSON)
    @MapBinder(BindSecurityGroupRuleToJsonPayload.class)
-   @Fallback(NullOnNotFoundOr404.class)
    @Nullable
    SecurityGroupRule createRuleAllowingCidrBlock(
          @PayloadParam("parent_group_id") String parentGroup, Ingress ip_protocol,
@@ -135,7 +133,6 @@ public interface SecurityGroupApi {
    @SelectJson("security_group_rule")
    @Produces(MediaType.APPLICATION_JSON)
    @MapBinder(BindSecurityGroupRuleToJsonPayload.class)
-   @Fallback(NullOnNotFoundOr404.class)
    @Nullable
    SecurityGroupRule createRuleAllowingSecurityGroupId(
          @PayloadParam("parent_group_id") String parentGroup, Ingress ip_protocol,

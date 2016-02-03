@@ -30,7 +30,6 @@ import org.jclouds.http.HttpResponse;
 import org.jclouds.openstack.nova.v2_0.domain.Host;
 import org.jclouds.openstack.nova.v2_0.domain.HostResourceUsage;
 import org.jclouds.openstack.nova.v2_0.internal.BaseNovaApiExpectTest;
-import org.jclouds.rest.ResourceNotFoundException;
 import org.testng.annotations.Test;
 
 import com.google.common.collect.ImmutableSet;
@@ -97,21 +96,6 @@ public class HostAdministrationApiExpectTest extends BaseNovaApiExpectTest {
                   .payload(payloadFromStringWithContentType("{\"host\":\"ubuntu\",\"status\":\"enabled\"}", MediaType.APPLICATION_JSON))
                   .build()).getHostAdministrationApi("az-1.region-a.geo-1").get();
       assertTrue(api.enable("ubuntu"));
-   }
-
-   @Test(expectedExceptions = ResourceNotFoundException.class)
-   public void testEnableHostFailNotFound() {
-      URI endpoint = URI.create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v2/3456/os-hosts/ubuntu");
-      HostAdministrationApi api = requestsSendResponses(keystoneAuthWithUsernameAndPasswordAndTenantName,
-            responseWithKeystoneAccess, extensionsOfNovaRequest, extensionsOfNovaResponse,
-            HttpRequest.builder().method("PUT")
-                       .addHeader("Accept", "application/json")
-                       .addHeader("X-Auth-Token", authToken)
-                  .payload(payloadFromStringWithContentType("{\"status\":\"enable\"}", MediaType.APPLICATION_JSON))
-                  .endpoint(endpoint).build(),
-            HttpResponse.builder().statusCode(404)
-                  .build()).getHostAdministrationApi("az-1.region-a.geo-1").get();
-      api.enable("ubuntu");
    }
 
    public void testEnableHostFailNotEnabled() {
@@ -184,18 +168,6 @@ public class HostAdministrationApiExpectTest extends BaseNovaApiExpectTest {
             HttpResponse.builder().statusCode(200)
                   .payload(payloadFromStringWithContentType("{\"host\":\"ubuntu\",\"power_action\":\"startup\"}", MediaType.APPLICATION_JSON))
                   .build()).getHostAdministrationApi("az-1.region-a.geo-1").get();
-      assertTrue(api.startup("ubuntu"));
-   }
-
-   @Test(expectedExceptions = ResourceNotFoundException.class)
-   public void testStartupHostFailNotFound() {
-      HostAdministrationApi api = requestsSendResponses(keystoneAuthWithUsernameAndPasswordAndTenantName,
-            responseWithKeystoneAccess, extensionsOfNovaRequest, extensionsOfNovaResponse,
-            HttpRequest.builder().method("GET")
-                       .endpoint("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v2/3456/os-hosts/ubuntu/startup")
-                       .addHeader("Accept", "application/json")
-                       .addHeader("X-Auth-Token", authToken).build(),
-            HttpResponse.builder().statusCode(404).build()).getHostAdministrationApi("az-1.region-a.geo-1").get();
       assertTrue(api.startup("ubuntu"));
    }
 

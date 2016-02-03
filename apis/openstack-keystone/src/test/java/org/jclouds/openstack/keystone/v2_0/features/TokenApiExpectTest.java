@@ -18,9 +18,7 @@ package org.jclouds.openstack.keystone.v2_0.features;
 
 import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertNotNull;
-import static org.testng.Assert.assertNull;
 import static org.testng.Assert.assertTrue;
 
 import java.net.URI;
@@ -30,7 +28,6 @@ import org.jclouds.date.DateService;
 import org.jclouds.date.internal.SimpleDateFormatDateService;
 import org.jclouds.http.HttpRequest;
 import org.jclouds.http.HttpResponse;
-import org.jclouds.http.HttpResponseException;
 import org.jclouds.openstack.keystone.v2_0.KeystoneApi;
 import org.jclouds.openstack.keystone.v2_0.domain.Endpoint;
 import org.jclouds.openstack.keystone.v2_0.domain.Role;
@@ -67,24 +64,6 @@ public class TokenApiExpectTest extends BaseKeystoneRestApiExpectTest<KeystoneAp
                   .tenant(Tenant.builder().id("4cea93f5464b4f1c921fb3e0461d72b5").name("demo").enabled(true).build()).build());
    }
 
-   public void testGetTokenFailNotFound() {
-      TokenApi api = requestsSendResponses(
-            keystoneAuthWithUsernameAndPasswordAndTenantName, responseWithKeystoneAccess,
-            authenticatedGET().endpoint(endpoint + "/v2.0/tokens/sometokenorother").build(),
-            HttpResponse.builder().statusCode(404).build())
-            .getTokenApi().get();
-      assertNull(api.get("sometokenorother"));
-   }
-
-   @Test(expectedExceptions = HttpResponseException.class)
-   public void testGetTokenFail500() {
-      TokenApi api = requestsSendResponses(
-            keystoneAuthWithUsernameAndPasswordAndTenantName, responseWithKeystoneAccess,
-            authenticatedGET().endpoint(endpoint + "/v2.0/tokens/sometokenorother").build(),
-            HttpResponse.builder().statusCode(500).build()).getTokenApi().get();
-      api.get("sometokenorother");
-   }
-
    public void testGetUserOfToken() {
       TokenApi api = requestsSendResponses(
             keystoneAuthWithUsernameAndPasswordAndTenantName, responseWithKeystoneAccess,
@@ -98,14 +77,6 @@ public class TokenApiExpectTest extends BaseKeystoneRestApiExpectTest<KeystoneAp
             .build());
    }
 
-   public void testGetUserOfTokenFailNotFound() {
-      TokenApi api = requestsSendResponses(
-            keystoneAuthWithUsernameAndPasswordAndTenantName, responseWithKeystoneAccess,
-            authenticatedGET().endpoint(endpoint + "/v2.0/tokens/sometokenorother").build(),
-            HttpResponse.builder().statusCode(404).build()).getTokenApi().get();
-      assertNull(api.getUserOfToken("sometokenorother"));
-   }
-
    public void testCheckTokenIsValid() {
       TokenApi api = requestsSendResponses(
             keystoneAuthWithUsernameAndPasswordAndTenantName, responseWithKeystoneAccess,
@@ -117,18 +88,6 @@ public class TokenApiExpectTest extends BaseKeystoneRestApiExpectTest<KeystoneAp
             HttpResponse.builder().statusCode(200).payload(payloadFromResourceWithContentType("/token_details.json", APPLICATION_JSON)).build())
             .getTokenApi().get();
       assertTrue(api.isValid("sometokenorother"));
-   }
-
-   public void testCheckTokenIsValidFailNotValid() {
-      TokenApi api = requestsSendResponses(
-            keystoneAuthWithUsernameAndPasswordAndTenantName, responseWithKeystoneAccess,
-            HttpRequest.builder().method("HEAD")
-                       .endpoint(endpoint + "/v2.0/tokens/sometokenorother")
-                       .addHeader("Accept", APPLICATION_JSON)
-                       .addHeader("X-Auth-Token", authToken)
-                       .build(),
-            HttpResponse.builder().statusCode(404).build()).getTokenApi().get();
-      assertFalse(api.isValid("sometokenorother"));
    }
 
    @Test
@@ -146,16 +105,5 @@ public class TokenApiExpectTest extends BaseKeystoneRestApiExpectTest<KeystoneAp
                   .region("region-a.geo-1").id("2.0").versionId("2.0").build()
       ));
    }
-
-   @Test
-   public void testGetEndpointsForTokenFailNotFound() {
-      TokenApi api = requestsSendResponses(
-            keystoneAuthWithUsernameAndPasswordAndTenantName, responseWithKeystoneAccess,
-            authenticatedGET().endpoint(endpoint + "/v2.0/tokens/XXXXXX/endpoints").build(),
-            HttpResponse.builder().statusCode(404).build())
-            .getTokenApi().get();
-      assertTrue(api.listEndpointsForToken("XXXXXX").isEmpty());
-   }
-
 
 }

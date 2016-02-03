@@ -335,7 +335,6 @@ public interface ServerApi {
    @Path("/{id}/metadata")
    @SelectJson("metadata")
    @Produces(MediaType.APPLICATION_JSON)
-   @Fallback(EmptyMapOnNotFoundOr404.class)
    @MapBinder(BindToJsonPayload.class)
    Map<String, String> setMetadata(@PathParam("id") String id,
          @PayloadParam("metadata") Map<String, String> metadata);
@@ -355,7 +354,6 @@ public interface ServerApi {
    @Produces(MediaType.APPLICATION_JSON)
    @SelectJson("metadata")
    @MapBinder(BindToJsonPayload.class)
-   @Fallback(EmptyMapOnNotFoundOr404.class)
    Map<String, String> updateMetadata(@PathParam("id") String id,
          @PayloadParam("metadata") Map<String, String> metadata);
 

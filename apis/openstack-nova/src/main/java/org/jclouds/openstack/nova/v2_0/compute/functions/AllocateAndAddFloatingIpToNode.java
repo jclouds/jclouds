@@ -19,6 +19,7 @@ package org.jclouds.openstack.nova.v2_0.compute.functions;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Preconditions.checkState;
 import static org.jclouds.compute.config.ComputeServiceProperties.TIMEOUT_NODE_RUNNING;
+
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
@@ -38,6 +39,7 @@ import org.jclouds.openstack.nova.v2_0.domain.FloatingIP;
 import org.jclouds.openstack.nova.v2_0.domain.regionscoped.RegionAndId;
 import org.jclouds.openstack.nova.v2_0.extensions.FloatingIPApi;
 import org.jclouds.rest.InsufficientResourcesException;
+import org.jclouds.rest.ResourceNotFoundException;
 
 import com.google.common.base.Function;
 import com.google.common.base.Objects;
@@ -114,8 +116,9 @@ public class AllocateAndAddFloatingIpToNode implements
             try {
                logger.debug(">> allocating floating IP from pool %s for node(%s)", poolName, nodeID);
                ip = floatingIpApi.allocateFromPool(poolName);
-               if (ip != null)
-                  return Optional.of(ip);
+               return Optional.of(ip);
+            } catch (ResourceNotFoundException ex) {
+               logger.trace("<< [%s] failed to allocate floating IP from pool %s for node(%s)", ex.getMessage(), poolName, nodeID);
             } catch (InsufficientResourcesException ire) {
                logger.trace("<< [%s] failed to allocate floating IP from pool %s for node(%s)", ire.getMessage(), poolName, nodeID);
             }
@@ -126,8 +129,9 @@ public class AllocateAndAddFloatingIpToNode implements
       try {
          logger.debug(">> creating floating IP for node(%s)", nodeID);
          ip = floatingIpApi.create();
-         if (ip != null)
-            return Optional.of(ip);
+         return Optional.of(ip);
+      } catch (ResourceNotFoundException ex) {
+         logger.trace("<< [%s] failed to create floating IP for node(%s)", ex.getMessage(), nodeID);
       } catch (InsufficientResourcesException ire) {
          logger.trace("<< [%s] failed to create floating IP for node(%s)", ire.getMessage(), nodeID);
       }

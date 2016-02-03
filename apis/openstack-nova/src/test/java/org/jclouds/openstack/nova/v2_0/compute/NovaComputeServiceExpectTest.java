@@ -127,22 +127,6 @@ public class NovaComputeServiceExpectTest extends BaseNovaComputeServiceExpectTe
       assertEquals(getCores(defaultTemplate.getHardware()), 1.0d);
    }
 
-   public void testListServersWhenReponseIs404IsEmpty() throws Exception {
-      HttpRequest listServers = HttpRequest
-            .builder()
-            .method("GET")
-            .endpoint("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v2/3456/servers/detail")
-            .addHeader("Accept", "application/json")
-            .addHeader("X-Auth-Token", authToken).build();
-
-      HttpResponse listServersResponse = HttpResponse.builder().statusCode(404).build();
-
-      ComputeService apiWhenNoServersExist = requestsSendResponses(keystoneAuthWithUsernameAndPasswordAndTenantName,
-            responseWithKeystoneAccess, listServers, listServersResponse);
-
-      assertTrue(apiWhenNoServersExist.listNodes().isEmpty());
-   }
-
    HttpRequest list = HttpRequest
          .builder()
          .method("GET")

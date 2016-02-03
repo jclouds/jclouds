@@ -17,8 +17,6 @@
 package org.jclouds.openstack.nova.v2_0.extensions;
 
 import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertFalse;
-import static org.testng.Assert.assertNull;
 import static org.testng.Assert.assertTrue;
 
 import java.net.URI;
@@ -65,16 +63,6 @@ public class HostAggregateApiExpectTest extends BaseNovaApiExpectTest {
       assertEquals(api.get("1"), exampleHostAggregateWithHost());
    }
 
-   public void testGetFailNotFound() {
-      URI endpoint = URI.create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v2/3456/os-aggregates/1");
-      HostAggregateApi api = requestsSendResponses(keystoneAuthWithUsernameAndPasswordAndTenantName,
-            responseWithKeystoneAccess, extensionsOfNovaRequest, extensionsOfNovaResponse,
-            authenticatedGET().endpoint(endpoint).build(),
-            HttpResponse.builder().statusCode(404).build()).getHostAggregateApi("az-1.region-a.geo-1").get();
-
-      assertNull(api.get("1"));
-   }
-
    public void testCreateAggregate() {
       URI endpoint = URI.create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v2/3456/os-aggregates");
       HostAggregateApi api = requestsSendResponses(keystoneAuthWithUsernameAndPasswordAndTenantName,
@@ -96,16 +84,6 @@ public class HostAggregateApiExpectTest extends BaseNovaApiExpectTest {
             HttpResponse.builder().statusCode(200).build()).getHostAggregateApi("az-1.region-a.geo-1").get();
 
       assertTrue(api.delete("1"));
-   }
-
-   public void testDeleteAggregateFailNotFound() {
-      URI endpoint = URI.create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v2/3456/os-aggregates/1");
-      HostAggregateApi api = requestsSendResponses(keystoneAuthWithUsernameAndPasswordAndTenantName,
-            responseWithKeystoneAccess, extensionsOfNovaRequest, extensionsOfNovaResponse,
-            authenticatedGET().endpoint(endpoint).method("DELETE").build(),
-            HttpResponse.builder().statusCode(404).build()).getHostAggregateApi("az-1.region-a.geo-1").get();
-
-      assertFalse(api.delete("1"));
    }
 
    public void testUpdateName() {

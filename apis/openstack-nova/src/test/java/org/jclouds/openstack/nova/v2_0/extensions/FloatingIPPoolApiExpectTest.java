@@ -77,19 +77,4 @@ public class FloatingIPPoolApiExpectTest extends BaseNovaApiExpectTest {
             .toString(), new ParseFloatingIPPoolListTest().expected().toString());
    }
 
-   public void testListFloatingIPsWhenResponseIs404() throws Exception {
-      HttpRequest list = HttpRequest
-            .builder()
-            .method("GET")
-            .endpoint("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v2/3456/os-floating-ip-pools")
-            .addHeader("Accept", "application/json")
-            .addHeader("X-Auth-Token", authToken).build();
-
-      HttpResponse listResponse = HttpResponse.builder().statusCode(404).build();
-
-      NovaApi apiWhenNoServersExist = requestsSendResponses(keystoneAuthWithUsernameAndPasswordAndTenantName,
-            responseWithKeystoneAccess, extensionsOfNovaRequest, extensionsOfNovaResponse, list, listResponse);
-
-      assertTrue(apiWhenNoServersExist.getFloatingIPPoolApi("az-1.region-a.geo-1").get().list().isEmpty());
-   }
 }

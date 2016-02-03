@@ -20,8 +20,6 @@ import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertNotNull;
-import static org.testng.Assert.assertNull;
-import static org.testng.Assert.assertTrue;
 
 import java.util.Set;
 
@@ -30,7 +28,6 @@ import org.jclouds.openstack.keystone.v2_0.KeystoneApi;
 import org.jclouds.openstack.keystone.v2_0.domain.Tenant;
 import org.jclouds.openstack.keystone.v2_0.internal.BaseKeystoneRestApiExpectTest;
 import org.jclouds.openstack.v2_0.options.PaginationOptions;
-import org.jclouds.rest.AuthorizationException;
 import org.testng.annotations.Test;
 
 import com.google.common.collect.ImmutableSet;
@@ -93,16 +90,6 @@ public class TenantApiExpectTest extends BaseKeystoneRestApiExpectTest<KeystoneA
       assertEquals(api.list().concat().toSet(), expected);
    }
    
-   // this is not a compatible format of json per:
-   // http://docs.openstack.org/api/openstack-identity-service/2.0/content/Paginated_Collections-d1e325.html
-   @Test(enabled = false)
-   public void testListTenantsFailNotFound() {
-      TenantApi api = requestsSendResponses(keystoneAuthWithUsernameAndPasswordAndTenantName, responseWithKeystoneAccess,
-               authenticatedGET().endpoint(endpoint + "/v2.0/tenants").build(), HttpResponse.builder().statusCode(404).build())
-               .getTenantApi().get();
-      assertTrue(api.list().isEmpty());
-   }
-
    public void testGetTenant() {
       TenantApi api = requestsSendResponses(
                keystoneAuthWithUsernameAndPasswordAndTenantName,
@@ -117,14 +104,6 @@ public class TenantApiExpectTest extends BaseKeystoneRestApiExpectTest<KeystoneA
             build());
    }
 
-   @Test(expectedExceptions = AuthorizationException.class)
-   public void testListTenantsFailNotAuthorized() {
-      TenantApi api = requestsSendResponses(keystoneAuthWithUsernameAndPasswordAndTenantName, responseWithKeystoneAccess,
-               authenticatedGET().endpoint(endpoint + "/v2.0/tenants/013ba41150a14830bec85ffe93353bcc").build(),
-               HttpResponse.builder().statusCode(401).build()).getTenantApi().get();
-      api.get("013ba41150a14830bec85ffe93353bcc");
-   }
-
    public void testGetTenantByName() {
       TenantApi api = requestsSendResponses(
                keystoneAuthWithUsernameAndPasswordAndTenantName,
@@ -137,13 +116,6 @@ public class TenantApiExpectTest extends BaseKeystoneRestApiExpectTest<KeystoneA
       assertNotNull(tenant);
       assertEquals(tenant, Tenant.builder().id("013ba41150a14830bec85ffe93353bcc").name("admin").enabled(true).
             build());
-   }
-
-   public void testGetTenantByNameFailNotFound() {
-      TenantApi api = requestsSendResponses(keystoneAuthWithUsernameAndPasswordAndTenantName, responseWithKeystoneAccess,
-               authenticatedGET().endpoint(endpoint + "/v2.0/tenants?name=admin").build(),
-               HttpResponse.builder().statusCode(404).build()).getTenantApi().get();
-      assertNull(api.getByName("admin"));
    }
 
 }

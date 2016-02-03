@@ -119,8 +119,6 @@ public interface FlavorApi {
    @POST
    @Unwrap
    @Produces(MediaType.APPLICATION_JSON)
-   @Fallback(NullOnNotFoundOr404.class)
-   @Nullable
    Flavor create(@WrapWith("flavor") Flavor flavor);
 
    /**

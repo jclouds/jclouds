@@ -117,9 +117,7 @@ public interface ImageApi {
    /**
     * Delete the specified image
     *
-    * @param id
-    *           id of the image
-    * @return server or null if not found
+    * @param id id of the image
     */
    @Named("image:delete")
    @DELETE
@@ -156,7 +154,6 @@ public interface ImageApi {
    @SelectJson("metadata")
    @Produces(MediaType.APPLICATION_JSON)
    @MapBinder(BindToJsonPayload.class)
-   @Fallback(EmptyMapOnNotFoundOr404.class)
    Map<String, String> setMetadata(@PathParam("id") String id, @PayloadParam("metadata") Map<String, String> metadata);
 
    /**
@@ -174,7 +171,6 @@ public interface ImageApi {
    @SelectJson("metadata")
    @Produces(MediaType.APPLICATION_JSON)
    @MapBinder(BindToJsonPayload.class)
-   @Fallback(EmptyMapOnNotFoundOr404.class)
    Map<String, String> updateMetadata(@PathParam("id") String id, @PayloadParam("metadata") Map<String, String> metadata);
 
    /**
@@ -210,7 +206,6 @@ public interface ImageApi {
    @Path("/{id}/metadata/{key}")
    @ResponseParser(OnlyMetadataValueOrNull.class)
    @MapBinder(BindMetadataToJsonPayload.class)
-   @Fallback(NullOnNotFoundOr404.class)
    @Nullable
    String updateMetadata(@PathParam("id") String id, @PathParam("key") @PayloadParam("key") String key,
          @PathParam("value") @PayloadParam("value") String value);

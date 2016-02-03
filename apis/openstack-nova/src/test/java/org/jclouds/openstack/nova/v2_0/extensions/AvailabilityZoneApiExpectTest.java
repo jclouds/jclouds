@@ -84,21 +84,6 @@ public class AvailabilityZoneApiExpectTest extends BaseNovaApiExpectTest {
       assertTrue(zone.get().getState().isAvailable(), "Zone: " + zone.get().getName() + " is not available.");
    }
 
-   public void testListAvailabilityZonesWhenResponseIs404() throws Exception {
-      HttpRequest list = HttpRequest.builder()
-            .method("GET")
-            .endpoint("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v2/3456/os-availability-zone")
-            .addHeader("Accept", "application/json")
-            .addHeader("X-Auth-Token", authToken).build();
-
-      HttpResponse listResponse = HttpResponse.builder().statusCode(404).build();
-
-      NovaApi apiWhenNoServersExist = requestsSendResponses(keystoneAuthWithUsernameAndPasswordAndTenantName, responseWithKeystoneAccess,
-            extensionsOfNovaRequest, extensionsOfNovaResponse, list, listResponse);
-
-      assertTrue(apiWhenNoServersExist.getAvailabilityZoneApi("az-1.region-a.geo-1").get().listAvailabilityZones().isEmpty());
-   }
-
    public void testListInDetail() throws Exception {
       HttpRequest list = HttpRequest
             .builder()
@@ -139,18 +124,4 @@ public class AvailabilityZoneApiExpectTest extends BaseNovaApiExpectTest {
             "Expected Updated time: " + new Date(1436509815000L) + " does match Updated time : " + hostService.getUpdated());
    }
 
-   public void testListInDetailWhenResponseIs404() throws Exception {
-      HttpRequest list = HttpRequest.builder()
-            .method("GET")
-            .endpoint("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v2/3456/os-availability-zone/detail")
-            .addHeader("Accept", "application/json")
-            .addHeader("X-Auth-Token", authToken).build();
-
-      HttpResponse listResponse = HttpResponse.builder().statusCode(404).build();
-
-      NovaApi apiWhenNoServersExist = requestsSendResponses(keystoneAuthWithUsernameAndPasswordAndTenantName, responseWithKeystoneAccess,
-            extensionsOfNovaRequest, extensionsOfNovaResponse, list, listResponse);
-
-      assertTrue(apiWhenNoServersExist.getAvailabilityZoneApi("az-1.region-a.geo-1").get().listInDetail().isEmpty());
-   }
 }

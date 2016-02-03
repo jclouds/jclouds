@@ -17,10 +17,7 @@
 package org.jclouds.openstack.keystone.v2_0.extensions;
 
 import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertNotNull;
-import static org.testng.Assert.assertNull;
-import static org.testng.Assert.assertTrue;
 
 import java.util.Set;
 
@@ -32,7 +29,6 @@ import org.jclouds.openstack.v2_0.internal.BaseOpenStackMockTest;
 import org.jclouds.openstack.v2_0.options.PaginationOptions;
 import org.testng.annotations.Test;
 
-import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.squareup.okhttp.mockwebserver.MockResponse;
 import com.squareup.okhttp.mockwebserver.MockWebServer;
@@ -70,31 +66,6 @@ public class ServiceAdminApiMockTest extends BaseOpenStackMockTest<KeystoneApi> 
 
          assertEquals(services.concat().size(), 2);
          assertEquals(services.concat().toSet(), expectedServices);
-
-      } finally {
-         server.shutdown();
-      }
-   }
-
-   public void listZeroServices() throws Exception {
-      MockWebServer server = mockOpenStackServer();
-      server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/access_version_uids.json"))));
-      server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/admin_extensions.json"))));
-      server.enqueue(addCommonHeaders(new MockResponse().setResponseCode(404)));
-
-      try {
-         KeystoneApi keystoneApi = api(server.getUrl("/").toString(), "openstack-keystone");
-         ServiceAdminApi serviceAdminApi = keystoneApi.getServiceAdminApi().get();
-         PagedIterable<? extends Service> services = serviceAdminApi.list();
-
-         ImmutableList<? extends Service> servicesList = services.concat().toList();
-         assertTrue(servicesList.isEmpty());
-
-         assertEquals(server.getRequestCount(), 3);
-         assertAuthentication(server);
-         assertExtensions(server);
-         RecordedRequest updateServiceRequest = server.takeRequest();
-         assertEquals(updateServiceRequest.getRequestLine(), "GET /OS-KSADM/services HTTP/1.1");
 
       } finally {
          server.shutdown();
@@ -157,34 +128,6 @@ public class ServiceAdminApiMockTest extends BaseOpenStackMockTest<KeystoneApi> 
       }
    }
 
-   public void createServiceFail() throws Exception {
-      MockWebServer server = mockOpenStackServer();
-      server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/access_version_uids.json"))));
-      server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/admin_extensions.json"))));
-      server.enqueue(addCommonHeaders(new MockResponse().setResponseCode(404)));
-
-      try {
-         KeystoneApi keystoneApi = api(server.getUrl("/").toString(), "openstack-keystone");
-         ServiceAdminApi serviceAdminApi = keystoneApi.getServiceAdminApi().get();
-         Service testService = serviceAdminApi.create("jclouds-service-test", "jclouds-service-type",
-               "jclouds-service-description");
-
-         assertNull(testService);
-
-         assertEquals(server.getRequestCount(), 3);
-         assertAuthentication(server);
-         assertExtensions(server);
-         RecordedRequest createServiceRequest = server.takeRequest();
-         assertEquals(createServiceRequest.getRequestLine(), "POST /OS-KSADM/services HTTP/1.1");
-         String bodyRequest = new String(createServiceRequest.getBody());
-         assertEquals(
-               bodyRequest,
-               "{\"OS-KSADM:service\":{\"name\":\"jclouds-service-test\",\"type\":\"jclouds-service-type\",\"description\":\"jclouds-service-description\"}}");
-      } finally {
-         server.shutdown();
-      }
-   }
-
    public void getService() throws Exception {
       MockWebServer server = mockOpenStackServer();
       server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/access_version_uids.json"))));
@@ -213,30 +156,6 @@ public class ServiceAdminApiMockTest extends BaseOpenStackMockTest<KeystoneApi> 
       }
    }
 
-   public void getServiceFail() throws Exception {
-      MockWebServer server = mockOpenStackServer();
-      server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/access_version_uids.json"))));
-      server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/admin_extensions.json"))));
-      server.enqueue(addCommonHeaders(new MockResponse().setResponseCode(404)));
-
-      try {
-         KeystoneApi keystoneApi = api(server.getUrl("/").toString(), "openstack-keystone");
-         ServiceAdminApi serviceAdminApi = keystoneApi.getServiceAdminApi().get();
-         Service service = serviceAdminApi.get("s1000");
-
-         assertNull(service);
-
-         assertEquals(server.getRequestCount(), 3);
-         assertAuthentication(server);
-         assertExtensions(server);
-         RecordedRequest updateServiceRequest = server.takeRequest();
-         assertEquals(updateServiceRequest.getRequestLine(), "GET /OS-KSADM/services/s1000 HTTP/1.1");
-
-      } finally {
-         server.shutdown();
-      }
-   }
-
    public void deleteService() throws Exception {
       MockWebServer server = mockOpenStackServer();
       server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/access_version_uids.json"))));
@@ -258,26 +177,4 @@ public class ServiceAdminApiMockTest extends BaseOpenStackMockTest<KeystoneApi> 
       }
    }
 
-   public void deleteServiceFail() throws Exception {
-      MockWebServer server = mockOpenStackServer();
-      server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/access_version_uids.json"))));
-      server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/admin_extensions.json"))));
-      server.enqueue(addCommonHeaders(new MockResponse().setResponseCode(404)));
-
-      try {
-         KeystoneApi keystoneApi = api(server.getUrl("/").toString(), "openstack-keystone");
-         ServiceAdminApi serviceAdminApi = keystoneApi.getServiceAdminApi().get();
-         boolean success = serviceAdminApi.delete("s1000");
-
-         assertFalse(success);
-
-         assertEquals(server.getRequestCount(), 3);
-         assertAuthentication(server);
-         assertExtensions(server);
-         RecordedRequest updateServiceRequest = server.takeRequest();
-         assertEquals(updateServiceRequest.getRequestLine(), "DELETE /OS-KSADM/services/s1000 HTTP/1.1");
-      } finally {
-         server.shutdown();
-      }
-   }
 }

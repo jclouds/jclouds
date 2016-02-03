@@ -37,8 +37,6 @@ import javax.ws.rs.Produces;
 import org.jclouds.Fallbacks.FalseOnNotFoundOr404;
 import org.jclouds.Fallbacks.NullOnNotFoundOr404;
 import org.jclouds.Fallbacks.VoidOnNotFoundOr404;
-import org.jclouds.blobstore.BlobStoreFallbacks.FalseOnContainerNotFound;
-import org.jclouds.blobstore.BlobStoreFallbacks.FalseOnKeyNotFound;
 import org.jclouds.blobstore.KeyNotFoundException;
 import org.jclouds.http.options.GetOptions;
 import org.jclouds.io.Payload;
@@ -198,16 +196,12 @@ public interface ObjectApi {
     *           corresponds to {@link SwiftObject#getName()}.
     * @param metadata
     *           the metadata to create or update.
-    *
-    * @return {@code true} if the metadata was successfully created or updated,
-    *         {@code false} if not.
     */
    @Named("object:updateMetadata")
    @POST
    @Path("/{objectName}")
    @Produces("")
-   @Fallback(FalseOnNotFoundOr404.class)
-   boolean updateMetadata(@PathParam("objectName") String objectName,
+   void updateMetadata(@PathParam("objectName") String objectName,
          @BinderParam(BindObjectMetadataToHeaders.class) Map<String, String> metadata);
 
    /**
@@ -219,15 +213,12 @@ public interface ObjectApi {
     * @param metadata
     *           the metadata to create or update.
     *
-    * @return {@code true} if the metadata was successfully created or updated,
-    *         {@code false} if not.
     */
    @Named("object:updateMetadata")
    @POST
    @Path("/{objectName}")
    @Produces("")
-   @Fallback(FalseOnNotFoundOr404.class)
-   boolean updateHeaders(@PathParam("objectName") String objectName,
+   void updateHeaders(@PathParam("objectName") String objectName,
          @BinderParam(BindToHeaders.class) Map<String, String> metadata);
 
    /**
@@ -273,16 +264,13 @@ public interface ObjectApi {
     * @param sourceObject
     *           the source object name.
     *
-    * @return {@code true} if the object was successfully copied, {@code false} if not.
-    *
     * @throws KeyNotFoundException if the source or destination container do not exist.
     */
    @Named("object:copy")
    @PUT
    @Path("/{destinationObject}")
    @Headers(keys = OBJECT_COPY_FROM, values = "/{sourceContainer}/{sourceObject}")
-   @Fallback(FalseOnContainerNotFound.class)
-   boolean copy(@PathParam("destinationObject") String destinationObject,
+   void copy(@PathParam("destinationObject") String destinationObject,
                 @PathParam("sourceContainer") String sourceContainer,
                 @PathParam("sourceObject") String sourceObject);
 
@@ -303,16 +291,13 @@ public interface ObjectApi {
     * @param objectMetadata
     *           Unprefixed/unescaped metadata, such as Content-Disposition
     *
-    * @return {@code true} if the object was successfully copied, {@code false} if not.
-    *
     * @throws KeyNotFoundException if the source or destination container do not exist.
     */
    @Named("object:copy")
    @PUT
    @Path("/{destinationObject}")
    @Headers(keys = {OBJECT_COPY_FROM, OBJECT_COPY_FRESH_METADATA}, values = {"/{sourceContainer}/{sourceObject}", "True"})
-   @Fallback(FalseOnKeyNotFound.class)
-   boolean copy(@PathParam("destinationObject") String destinationObject,
+   void copy(@PathParam("destinationObject") String destinationObject,
          @PathParam("sourceContainer") String sourceContainer,
          @PathParam("sourceObject") String sourceObject,
          @BinderParam(BindObjectMetadataToHeaders.class) Map<String, String> userMetadata,
@@ -336,16 +321,13 @@ public interface ObjectApi {
     * @param objectMetadata
     *           Unprefixed/unescaped metadata, such as Content-Disposition
     *
-    * @return {@code true} if the object was successfully copied, {@code false} if not.
-    *
     * @throws KeyNotFoundException if the source or destination container do not exist.
     */
    @Named("object:copy")
    @PUT
    @Path("/{destinationObject}")
    @Headers(keys = OBJECT_COPY_FROM, values = "/{sourceContainer}/{sourceObject}")
-   @Fallback(FalseOnKeyNotFound.class)
-   boolean copyAppendMetadata(@PathParam("destinationObject") String destinationObject,
+   void copyAppendMetadata(@PathParam("destinationObject") String destinationObject,
          @PathParam("sourceContainer") String sourceContainer,
          @PathParam("sourceObject") String sourceObject,
          @BinderParam(BindObjectMetadataToHeaders.class) Map<String, String> userMetadata,

@@ -87,7 +87,6 @@ public interface ServiceAdminApi {
    @POST
    @SelectJson("OS-KSADM:service")
    @WrapWith("OS-KSADM:service")
-   @Fallback(NullOnNotFoundOr404.class)
    @Nullable
    Service create(@PayloadParam("name") String name, @PayloadParam("type") String type,
          @PayloadParam("description") String description);

@@ -17,9 +17,7 @@
 package org.jclouds.openstack.keystone.v2_0.extensions;
 
 import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertNotNull;
-import static org.testng.Assert.assertNull;
 
 import org.jclouds.openstack.keystone.v2_0.KeystoneApi;
 import org.jclouds.openstack.keystone.v2_0.domain.Tenant;
@@ -67,33 +65,6 @@ public class TenantAdminApiMockTest extends BaseOpenStackMockTest<KeystoneApi> {
       }
    }
 
-   public void createTenantFail() throws Exception {
-      MockWebServer server = mockOpenStackServer();
-      server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/access_version_uids.json"))));
-      server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/admin_extensions.json"))));
-      server.enqueue(addCommonHeaders(new MockResponse().setResponseCode(404)));
-
-      try {
-         KeystoneApi keystoneApi = api(server.getUrl("/").toString(), "openstack-keystone");
-         TenantAdminApi tenantAdminApi = keystoneApi.getTenantAdminApi().get();
-         CreateTenantOptions createTenantOptions = CreateTenantOptions.Builder.description("jclouds-description")
-               .enabled(true);
-         Tenant testTenant = tenantAdminApi.create("jclouds-tenant", createTenantOptions);
-
-         assertNull(testTenant);
-
-         assertEquals(server.getRequestCount(), 3);
-         assertAuthentication(server);
-         assertExtensions(server);
-         RecordedRequest createTenantRequest = server.takeRequest();
-         assertEquals(createTenantRequest.getRequestLine(), "POST /tenants HTTP/1.1");
-         assertEquals(new String(createTenantRequest.getBody()),
-               "{\"tenant\":{\"name\":\"jclouds-tenant\",\"description\":\"jclouds-description\",\"enabled\":true}}");
-      } finally {
-         server.shutdown();
-      }
-   }
-
    public void updateTenant() throws Exception {
       MockWebServer server = mockOpenStackServer();
       server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/access_version_uids.json"))));
@@ -110,34 +81,6 @@ public class TenantAdminApiMockTest extends BaseOpenStackMockTest<KeystoneApi> {
 
          assertNotNull(updatedTenant);
          assertEquals(updatedTenant.getId(), "t1000");
-
-         assertEquals(server.getRequestCount(), 3);
-         assertAuthentication(server);
-         assertExtensions(server);
-         RecordedRequest updateTenantRequest = server.takeRequest();
-         assertEquals(updateTenantRequest.getRequestLine(), "PUT /tenants/t1000 HTTP/1.1");
-         assertEquals(
-               new String(updateTenantRequest.getBody()),
-               "{\"tenant\":{\"name\":\"jclouds-tenant-modified\",\"description\":\"jclouds-description-modified\",\"enabled\":false}}");
-      } finally {
-         server.shutdown();
-      }
-   }
-
-   public void updateTenantFail() throws Exception {
-      MockWebServer server = mockOpenStackServer();
-      server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/access_version_uids.json"))));
-      server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/admin_extensions.json"))));
-      server.enqueue(addCommonHeaders(new MockResponse().setResponseCode(404)));
-
-      try {
-         KeystoneApi keystoneApi = api(server.getUrl("/").toString(), "openstack-keystone");
-         TenantAdminApi tenantAdminApi = keystoneApi.getTenantAdminApi().get();
-         UpdateTenantOptions updateTenantOptions = UpdateTenantOptions.Builder
-               .description("jclouds-description-modified").enabled(false).name("jclouds-tenant-modified");
-         Tenant updatedTenant = tenantAdminApi.update("t1000", updateTenantOptions);
-
-         assertNull(updatedTenant);
 
          assertEquals(server.getRequestCount(), 3);
          assertAuthentication(server);
@@ -173,29 +116,6 @@ public class TenantAdminApiMockTest extends BaseOpenStackMockTest<KeystoneApi> {
       }
    }
 
-   public void deleteTenantFail() throws Exception {
-      MockWebServer server = mockOpenStackServer();
-      server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/access_version_uids.json"))));
-      server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/admin_extensions.json"))));
-      server.enqueue(addCommonHeaders(new MockResponse().setResponseCode(404)));
-
-      try {
-         KeystoneApi keystoneApi = api(server.getUrl("/").toString(), "openstack-keystone");
-         TenantAdminApi tenantAdminApi = keystoneApi.getTenantAdminApi().get();
-         boolean success = tenantAdminApi.delete("t1000");
-
-         assertFalse(success);
-
-         assertEquals(server.getRequestCount(), 3);
-         assertAuthentication(server);
-         assertExtensions(server);
-         RecordedRequest updateTenantRequest = server.takeRequest();
-         assertEquals(updateTenantRequest.getRequestLine(), "DELETE /tenants/t1000 HTTP/1.1");
-      } finally {
-         server.shutdown();
-      }
-   }
-
    public void addRoleOnTenant() throws Exception {
       MockWebServer server = mockOpenStackServer();
       server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/access_version_uids.json"))));
@@ -206,30 +126,6 @@ public class TenantAdminApiMockTest extends BaseOpenStackMockTest<KeystoneApi> {
          KeystoneApi keystoneApi = api(server.getUrl("/").toString(), "openstack-keystone");
          TenantAdminApi tenantAdminApi = keystoneApi.getTenantAdminApi().get();
          tenantAdminApi.addRoleOnTenant("u1000", "t1000", "r1000");
-
-         assertEquals(server.getRequestCount(), 3);
-         assertAuthentication(server);
-         assertExtensions(server);
-         RecordedRequest updateTenantRequest = server.takeRequest();
-         assertEquals(updateTenantRequest.getRequestLine(),
-               "PUT /tenants/u1000/users/t1000/roles/OS-KSADM/r1000 HTTP/1.1");
-      } finally {
-         server.shutdown();
-      }
-   }
-
-   public void addRoleOnTenantFail() throws Exception {
-      MockWebServer server = mockOpenStackServer();
-      server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/access_version_uids.json"))));
-      server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/admin_extensions.json"))));
-      server.enqueue(addCommonHeaders(new MockResponse().setResponseCode(404)));
-
-      try {
-         KeystoneApi keystoneApi = api(server.getUrl("/").toString(), "openstack-keystone");
-         TenantAdminApi tenantAdminApi = keystoneApi.getTenantAdminApi().get();
-         boolean success = tenantAdminApi.addRoleOnTenant("u1000", "t1000", "r1000");
-
-         assertFalse(success);
 
          assertEquals(server.getRequestCount(), 3);
          assertAuthentication(server);
@@ -264,27 +160,4 @@ public class TenantAdminApiMockTest extends BaseOpenStackMockTest<KeystoneApi> {
       }
    }
 
-   public void deleteRoleOnTenantFail() throws Exception {
-      MockWebServer server = mockOpenStackServer();
-      server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/access_version_uids.json"))));
-      server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/admin_extensions.json"))));
-      server.enqueue(addCommonHeaders(new MockResponse().setResponseCode(404)));
-
-      try {
-         KeystoneApi keystoneApi = api(server.getUrl("/").toString(), "openstack-keystone");
-         TenantAdminApi tenantAdminApi = keystoneApi.getTenantAdminApi().get();
-         boolean success = tenantAdminApi.deleteRoleOnTenant("t1000", "u1000", "r1000");
-
-         assertFalse(success);
-
-         assertEquals(server.getRequestCount(), 3);
-         assertAuthentication(server);
-         assertExtensions(server);
-         RecordedRequest updateTenantRequest = server.takeRequest();
-         assertEquals(updateTenantRequest.getRequestLine(),
-               "DELETE /tenants/t1000/users/u1000/roles/OS-KSADM/r1000 HTTP/1.1");
-      } finally {
-         server.shutdown();
-      }
-   }
 }

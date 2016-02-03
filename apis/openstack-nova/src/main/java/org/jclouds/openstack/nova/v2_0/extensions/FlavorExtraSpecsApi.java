@@ -81,15 +81,14 @@ public interface FlavorExtraSpecsApi {
    @Path("/{id}/os-extra_specs")
    @Produces(MediaType.APPLICATION_JSON)
    @MapBinder(BindToJsonPayload.class)
-   @Fallback(FalseOnNotFoundOr404.class)
-   Boolean updateMetadata(@PathParam("id") String flavorId,
+   void updateMetadata(@PathParam("id") String flavorId,
          @PayloadParam("extra_specs") Map<String, String> specs);
 
    /**
     * Return a single extra spec value
     *
-    * @param id  the id of the flavor to modify
-    * @param key the extra spec key to retrieve
+    * @param flavorId   the id of the flavor to modify
+    * @param key        the extra spec key to retrieve
     */
    @Named("flavorExtraSpecs:getMetadataKey")
    @GET
@@ -102,29 +101,28 @@ public interface FlavorExtraSpecsApi {
    /**
     * Creates or updates a single extra spec value
     *
-    * @param id    the id of the flavor to modify
-    * @param key   the extra spec key (when creating ensure this does not include whitespace or
-    *              other difficult characters)
-    * @param value the value to associate with the key
+    * @param flavorId   the id of the flavor to modify
+    * @param key        the extra spec key (when creating ensure this does not include whitespace or
+    *                   other difficult characters)
+    * @param value      the value to associate with the key
     */
    @Named("flavorExtraSpecs:updateMetadataEntry")
    @PUT
    @Path("/{id}/os-extra_specs/{key}")
    @Produces(MediaType.APPLICATION_JSON)
    @Payload("%7B\"{key}\":\"{value}\"%7D")
-   @Fallback(FalseOnNotFoundOr404.class)
-   Boolean updateMetadataEntry(@PathParam("id") String flavorId,
+   void updateMetadataEntry(@PathParam("id") String flavorId,
          @PathParam("key") @PayloadParam("key") String key, @PayloadParam("value") String value);
 
    /**
     * Deletes an extra spec
     *
-    * @param id  the id of the flavor to modify
-    * @param key the extra spec key to delete
+    * @param flavorId   the id of the flavor to modify
+    * @param key        the extra spec key to delete
     */
    @Named("flavorExtraSpecs:deleteMetadataKey")
    @DELETE
    @Path("/{id}/os-extra_specs/{key}")
    @Fallback(FalseOnNotFoundOr404.class)
-   Boolean deleteMetadataKey(@PathParam("id") String flavorId, @PathParam("key") String key);
+   boolean deleteMetadataKey(@PathParam("id") String flavorId, @PathParam("key") String key);
 }

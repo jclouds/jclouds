@@ -33,7 +33,6 @@ import static org.jclouds.openstack.swift.v1.reference.SwiftHeaders.OBJECT_METAD
 import static org.jclouds.openstack.swift.v1.reference.SwiftHeaders.OBJECT_REMOVE_METADATA_PREFIX;
 import static org.jclouds.util.Strings2.toStringAndClose;
 import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertTrue;
 import static org.testng.Assert.fail;
 
@@ -363,7 +362,7 @@ public class ObjectApiMockTest extends BaseOpenStackMockTest<SwiftApi> {
 
       try {
          SwiftApi api = api(server.getUrl("/").toString(), "openstack-swift");
-         assertTrue(api.getObjectApi("DFW", "myContainer").updateMetadata("myObject", metadata));
+         api.getObjectApi("DFW", "myContainer").updateMetadata("myObject", metadata);
 
          assertEquals(server.getRequestCount(), 2);
          assertEquals(server.takeRequest().getRequestLine(), "POST /tokens HTTP/1.1");
@@ -387,7 +386,7 @@ public class ObjectApiMockTest extends BaseOpenStackMockTest<SwiftApi> {
 
       try {
          SwiftApi api = api(server.getUrl("/").toString(), "openstack-swift");
-         assertTrue(api.getObjectApi("DFW", "myContainer").updateMetadata("myObject", metadata));
+         api.getObjectApi("DFW", "myContainer").updateMetadata("myObject", metadata);
 
          assertEquals(server.getRequestCount(), 2);
          assertEquals(server.takeRequest().getRequestLine(), "POST /tokens HTTP/1.1");
@@ -472,8 +471,7 @@ public class ObjectApiMockTest extends BaseOpenStackMockTest<SwiftApi> {
             .addHeader(SwiftHeaders.OBJECT_COPY_FROM, "/bar/foo.txt")));
       try {
          SwiftApi api = api(server.getUrl("/").toString(), "openstack-swift");
-         assertTrue(api.getObjectApi("DFW", "foo")
-               .copy("bar.txt", "bar", "foo.txt"));
+         api.getObjectApi("DFW", "foo").copy("bar.txt", "bar", "foo.txt");
 
          assertEquals(server.getRequestCount(), 2);
          assertEquals(server.takeRequest().getRequestLine(), "POST /tokens HTTP/1.1");
@@ -510,9 +508,9 @@ public class ObjectApiMockTest extends BaseOpenStackMockTest<SwiftApi> {
 
       try {
          SwiftApi api = api(server.getUrl("/").toString(), "openstack-swift");
-         assertTrue(api.getObjectApi("DFW", "foo")
+         api.getObjectApi("DFW", "foo")
                .copy("bar.txt", "bar", "foo.txt", ImmutableMap.of("someUserHeader", "someUserMetadataValue"),
-                     ImmutableMap.of("Content-Disposition", "attachment; filename=\"fname.ext\"")));
+                     ImmutableMap.of("Content-Disposition", "attachment; filename=\"fname.ext\""));
 
          assertEquals(server.getRequestCount(), 2);
          assertEquals(server.takeRequest().getRequestLine(), "POST /tokens HTTP/1.1");
@@ -530,6 +528,7 @@ public class ObjectApiMockTest extends BaseOpenStackMockTest<SwiftApi> {
       }
    }
 
+   @Test(expectedExceptions = KeyNotFoundException.class)
    public void testCopyObjectWithMetadataFail() throws Exception {
       MockWebServer server = mockOpenStackServer();
       server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/access.json"))));
@@ -538,9 +537,9 @@ public class ObjectApiMockTest extends BaseOpenStackMockTest<SwiftApi> {
 
       try {
          SwiftApi api = api(server.getUrl("/").toString(), "openstack-swift");
-         assertFalse(api.getObjectApi("DFW", "foo")
+         api.getObjectApi("DFW", "foo")
                .copy("bar.txt", "bar", "foo.txt", ImmutableMap.of("someUserHeader", "someUserMetadataValue"),
-                     ImmutableMap.of("Content-Disposition", "attachment; filename=\"fname.ext\"")));
+                     ImmutableMap.of("Content-Disposition", "attachment; filename=\"fname.ext\""));
       } finally {
          server.shutdown();
       }

@@ -17,8 +17,6 @@
 package org.jclouds.openstack.nova.v2_0.extensions;
 
 import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertFalse;
-import static org.testng.Assert.assertNull;
 import static org.testng.Assert.assertTrue;
 
 import java.net.URI;
@@ -49,18 +47,6 @@ public class FlavorExtraSpecsApiExpectTest extends BaseNovaApiExpectTest {
       assertEquals(api.getMetadata("9"), ImmutableMap.of("test", "value1"));
    }
 
-   public void testGetAllExtraSpecsFailNotFound() {
-      URI endpoint = URI.create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v2/3456/flavors/9/os-extra_specs");
-      FlavorExtraSpecsApi api = requestsSendResponses(
-            keystoneAuthWithUsernameAndPasswordAndTenantName,
-            responseWithKeystoneAccess, extensionsOfNovaRequest, extensionsOfNovaResponse,
-            authenticatedGET().endpoint(endpoint).build(),
-            HttpResponse.builder().statusCode(404).build()
-      ).getFlavorExtraSpecsApi("az-1.region-a.geo-1").get();
-
-      assertTrue(api.getMetadata("9").isEmpty());
-   }
-
    public void testSetAllExtraSpecs() {
       URI endpoint = URI.create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v2/3456/flavors/9/os-extra_specs");
       FlavorExtraSpecsApi api = requestsSendResponses(
@@ -72,7 +58,7 @@ public class FlavorExtraSpecsApiExpectTest extends BaseNovaApiExpectTest {
             HttpResponse.builder().statusCode(200).build()
       ).getFlavorExtraSpecsApi("az-1.region-a.geo-1").get();
 
-      assertTrue(api.updateMetadata("9", ImmutableMap.of("test1", "somevalue")));
+      api.updateMetadata("9", ImmutableMap.of("test1", "somevalue"));
    }
 
    public void testSetExtraSpec() {
@@ -86,7 +72,7 @@ public class FlavorExtraSpecsApiExpectTest extends BaseNovaApiExpectTest {
             HttpResponse.builder().statusCode(200).build()
       ).getFlavorExtraSpecsApi("az-1.region-a.geo-1").get();
 
-      assertTrue(api.updateMetadataEntry("5", "test1", "somevalue"));
+      api.updateMetadataEntry("5", "test1", "somevalue");
    }
 
    public void testGetExtraSpec() {
@@ -101,18 +87,6 @@ public class FlavorExtraSpecsApiExpectTest extends BaseNovaApiExpectTest {
       assertEquals(api.getMetadataKey("5", "test1"), "another value");
    }
 
-   public void testGetExtraSpecFailNotFound() {
-      URI endpoint = URI.create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v2/3456/flavors/5/os-extra_specs/test1");
-      FlavorExtraSpecsApi api = requestsSendResponses(
-            keystoneAuthWithUsernameAndPasswordAndTenantName,
-            responseWithKeystoneAccess, extensionsOfNovaRequest, extensionsOfNovaResponse,
-            authenticatedGET().endpoint(endpoint).build(),
-            HttpResponse.builder().statusCode(404).build()
-      ).getFlavorExtraSpecsApi("az-1.region-a.geo-1").get();
-
-      assertNull(api.getMetadataKey("5", "test1"));
-   }
-
    public void testDeleteExtraSpec() {
       URI endpoint = URI.create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v2/3456/flavors/5/os-extra_specs/test1");
       FlavorExtraSpecsApi api = requestsSendResponses(
@@ -123,18 +97,6 @@ public class FlavorExtraSpecsApiExpectTest extends BaseNovaApiExpectTest {
       ).getFlavorExtraSpecsApi("az-1.region-a.geo-1").get();
 
       assertTrue(api.deleteMetadataKey("5", "test1"));
-   }
-
-   public void testDeleteExtraSpecFailNotFound() {
-      URI endpoint = URI.create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v2/3456/flavors/5/os-extra_specs/test1");
-      FlavorExtraSpecsApi api = requestsSendResponses(
-            keystoneAuthWithUsernameAndPasswordAndTenantName,
-            responseWithKeystoneAccess, extensionsOfNovaRequest, extensionsOfNovaResponse,
-            authenticatedGET().endpoint(endpoint).method("DELETE").build(),
-            HttpResponse.builder().statusCode(404).build()
-      ).getFlavorExtraSpecsApi("az-1.region-a.geo-1").get();
-
-      assertFalse(api.deleteMetadataKey("5", "test1"));
    }
 
 }

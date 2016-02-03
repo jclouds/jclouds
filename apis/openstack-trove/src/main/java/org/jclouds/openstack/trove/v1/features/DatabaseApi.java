@@ -55,9 +55,8 @@ public interface DatabaseApi {
    @POST
    @Path("/databases")
    @Consumes(MediaType.APPLICATION_JSON)
-   @Fallback(FalseOnNotFoundOr404.class)
    @MapBinder(BindCreateDatabaseToJson.class)
-   boolean create(@PayloadParam("database") String database);
+   void create(@PayloadParam("database") String database);
 
    /**
     * This operation creates a new database within the specified instance.
@@ -71,9 +70,8 @@ public interface DatabaseApi {
    @POST
    @Path("/databases")
    @Consumes(MediaType.APPLICATION_JSON)
-   @Fallback(FalseOnNotFoundOr404.class)
    @MapBinder(BindCreateDatabaseToJson.class)
-   boolean create(@PayloadParam("database") String database, @PayloadParam("character_set") String character_set, @PayloadParam("collate") String collate);
+   void create(@PayloadParam("database") String database, @PayloadParam("character_set") String character_set, @PayloadParam("collate") String collate);
 
    /**
     * This operation deletes the specified database for the specified database instance.

@@ -17,8 +17,6 @@
 package org.jclouds.openstack.cinder.v1.features;
 
 import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertFalse;
-import static org.testng.Assert.assertNull;
 import static org.testng.Assert.assertTrue;
 
 import java.net.URI;
@@ -35,8 +33,6 @@ import org.jclouds.openstack.cinder.v1.domain.SnapshotExtendedAttributes;
 import org.jclouds.openstack.cinder.v1.domain.Volume;
 import org.jclouds.openstack.cinder.v1.internal.BaseCinderApiExpectTest;
 import org.jclouds.openstack.cinder.v1.options.CreateSnapshotOptions;
-import org.jclouds.rest.AuthorizationException;
-import org.jclouds.rest.ResourceNotFoundException;
 import org.testng.annotations.Test;
 
 import com.google.common.collect.ImmutableSet;
@@ -63,19 +59,6 @@ public class SnapshotApiExpectTest extends BaseCinderApiExpectTest {
       assertEquals(snapshots, ImmutableSet.of(testSnapshot()));
    }
 
-   public void testListSnapshotsFail() {
-      URI endpoint = URI.create("http://172.16.0.1:8776/v1/50cdb4c60374463198695d9f798fa34d/snapshots");
-      SnapshotApi api = requestsSendResponses(
-            keystoneAuthWithUsernameAndPasswordAndTenantName,
-            responseWithKeystoneAccess,
-            authenticatedGET().endpoint(endpoint).build(),
-            HttpResponse.builder().statusCode(404).build()
-      ).getSnapshotApi("RegionOne");
-
-      Set<? extends Snapshot> snapshots = api.list().toSet();
-      assertTrue(snapshots.isEmpty());
-   }
-
    public void testListSnapshotsInDetail() {
       URI endpoint = URI.create("http://172.16.0.1:8776/v1/50cdb4c60374463198695d9f798fa34d/snapshots/detail");
       SnapshotApi api = requestsSendResponses(
@@ -98,19 +81,6 @@ public class SnapshotApiExpectTest extends BaseCinderApiExpectTest {
       assertEquals(snappy.getSize(), 1);
    }
 
-   public void testListSnapshotsInDetailFail() {
-      URI endpoint = URI.create("http://172.16.0.1:8776/v1/50cdb4c60374463198695d9f798fa34d/snapshots/detail");
-      SnapshotApi api = requestsSendResponses(
-            keystoneAuthWithUsernameAndPasswordAndTenantName,
-            responseWithKeystoneAccess,
-            authenticatedGET().endpoint(endpoint).build(),
-            HttpResponse.builder().statusCode(404).build()
-      ).getSnapshotApi("RegionOne");
-
-      Set<? extends Snapshot> snapshots = api.listInDetail().toSet();
-      assertTrue(snapshots.isEmpty());
-   }
-
    public void testGetSnapshot() {
       URI endpoint = URI.create("http://172.16.0.1:8776/v1/50cdb4c60374463198695d9f798fa34d/snapshots/67d03df1-ce5d-4ba7-adbe-492ceb80170b");
       SnapshotApi api = requestsSendResponses(
@@ -122,18 +92,6 @@ public class SnapshotApiExpectTest extends BaseCinderApiExpectTest {
 
       Snapshot snapshot = api.get("67d03df1-ce5d-4ba7-adbe-492ceb80170b");
       assertEquals(snapshot, testSnapshotDetailed());
-   }
-
-   public void testGetSnapshotFail() {
-      URI endpoint = URI.create("http://172.16.0.1:8776/v1/50cdb4c60374463198695d9f798fa34d/snapshots/67d03df1-ce5d-4ba7-adbe-492ceb80170b");
-      SnapshotApi api = requestsSendResponses(
-            keystoneAuthWithUsernameAndPasswordAndTenantName,
-            responseWithKeystoneAccess,
-            authenticatedGET().endpoint(endpoint).build(),
-            HttpResponse.builder().statusCode(404).build()
-      ).getSnapshotApi("RegionOne");
-
-      assertNull(api.get("67d03df1-ce5d-4ba7-adbe-492ceb80170b"));
    }
 
    public void testCreateSnapshot() {
@@ -155,27 +113,6 @@ public class SnapshotApiExpectTest extends BaseCinderApiExpectTest {
 
       Snapshot snapshot = api.create("ea6f70ef-2784-40b9-9d14-d7f33c507c3f", options);
       assertEquals(snapshot, testSnapshotCreate());
-   }
-
-   @Test(expectedExceptions = ResourceNotFoundException.class)
-   public void testCreateSnapshotVolumeNotFoundFail() {
-      URI endpoint = URI.create("http://172.16.0.1:8776/v1/50cdb4c60374463198695d9f798fa34d/snapshots");
-      SnapshotApi api = requestsSendResponses(
-            keystoneAuthWithUsernameAndPasswordAndTenantName,
-            responseWithKeystoneAccess,
-            authenticatedGET().endpoint(endpoint)
-                  .method("POST")
-                  .payload(payloadFromResourceWithContentType("/snapshot_create.json", MediaType.APPLICATION_JSON))
-                  .build(),
-            HttpResponse.builder().statusCode(404).build()
-      ).getSnapshotApi("RegionOne");
-
-      CreateSnapshotOptions options = CreateSnapshotOptions.Builder
-            .name("jclouds-test-snapshot")
-            .description("jclouds test snapshot")
-            .force();
-
-      api.create("ea6f70ef-2784-40b9-9d14-d7f33c507c3f", options);
    }
 
    @Test(expectedExceptions = IllegalStateException.class)
@@ -204,27 +141,6 @@ public class SnapshotApiExpectTest extends BaseCinderApiExpectTest {
       api.create("ea6f70ef-2784-40b9-9d14-d7f33c507c3f", options);
    }
 
-   @Test(expectedExceptions = AuthorizationException.class)
-   public void testCreateSnapshotFail() {
-      URI endpoint = URI.create("http://172.16.0.1:8776/v1/50cdb4c60374463198695d9f798fa34d/snapshots");
-      SnapshotApi api = requestsSendResponses(
-            keystoneAuthWithUsernameAndPasswordAndTenantName,
-            responseWithKeystoneAccess,
-            authenticatedGET().endpoint(endpoint)
-                  .method("POST")
-                  .payload(payloadFromResourceWithContentType("/snapshot_create.json", MediaType.APPLICATION_JSON))
-                  .build(),
-            HttpResponse.builder().statusCode(401).build()
-      ).getSnapshotApi("RegionOne");
-
-      CreateSnapshotOptions options = CreateSnapshotOptions.Builder
-            .name("jclouds-test-snapshot")
-            .description("jclouds test snapshot")
-            .force();
-
-      api.create("ea6f70ef-2784-40b9-9d14-d7f33c507c3f", options);
-   }
-
    public void testDeleteSnapshot() {
       URI endpoint = URI.create("http://172.16.0.1:8776/v1/50cdb4c60374463198695d9f798fa34d/snapshots/67d03df1-ce5d-4ba7-adbe-492ceb80170b");
       SnapshotApi api = requestsSendResponses(
@@ -235,31 +151,6 @@ public class SnapshotApiExpectTest extends BaseCinderApiExpectTest {
       ).getSnapshotApi("RegionOne");
 
       assertTrue(api.delete("67d03df1-ce5d-4ba7-adbe-492ceb80170b"));
-   }
-
-   @Test(expectedExceptions = AuthorizationException.class)
-   public void testDeleteSnapshotFail() {
-      URI endpoint = URI.create("http://172.16.0.1:8776/v1/50cdb4c60374463198695d9f798fa34d/snapshots/67d03df1-ce5d-4ba7-adbe-492ceb80170b");
-      SnapshotApi api = requestsSendResponses(
-            keystoneAuthWithUsernameAndPasswordAndTenantName,
-            responseWithKeystoneAccess,
-            authenticatedGET().endpoint(endpoint).method("DELETE").build(),
-            HttpResponse.builder().statusCode(401).build()
-      ).getSnapshotApi("RegionOne");
-
-      api.delete("67d03df1-ce5d-4ba7-adbe-492ceb80170b");
-   }
-
-   public void testDeleteSnapshotNotFoundFail() {
-      URI endpoint = URI.create("http://172.16.0.1:8776/v1/50cdb4c60374463198695d9f798fa34d/snapshots/67d03df1-ce5d-4ba7-adbe-492ceb80170b");
-      SnapshotApi api = requestsSendResponses(
-            keystoneAuthWithUsernameAndPasswordAndTenantName,
-            responseWithKeystoneAccess,
-            authenticatedGET().endpoint(endpoint).method("DELETE").build(),
-            HttpResponse.builder().statusCode(404).build()
-      ).getSnapshotApi("RegionOne");
-
-      assertFalse(api.delete("67d03df1-ce5d-4ba7-adbe-492ceb80170b"));
    }
 
    @Test(expectedExceptions = IllegalStateException.class)

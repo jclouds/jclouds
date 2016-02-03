@@ -150,15 +150,11 @@ public interface ContainerApi {
     *           the container name corresponding to {@link Container#getName()}.
     * @param options
     *           the container options to update.
-    *
-    * @return {@code true} if the container metadata was successfully created or updated,
-    *         {@code false} if not.
     */
    @Named("container:update")
    @POST
    @Path("/{containerName}")
-   @Fallback(FalseOnNotFoundOr404.class)
-   boolean update(@PathParam("containerName") String containerName, UpdateContainerOptions options);
+   void update(@PathParam("containerName") String containerName, UpdateContainerOptions options);
 
    /**
     * Creates or updates the {@link Container} metadata.
@@ -167,15 +163,11 @@ public interface ContainerApi {
     *           the container name corresponding to {@link Container#getName()}.
     * @param metadata
     *           the container metadata to create or update.
-    *
-    * @return {@code true} if the container metadata was successfully created or updated,
-    *         {@code false} if not.
     */
    @Named("container:updateMetadata")
    @POST
    @Path("/{containerName}")
-   @Fallback(FalseOnNotFoundOr404.class)
-   boolean updateMetadata(@PathParam("containerName") String containerName,
+   void updateMetadata(@PathParam("containerName") String containerName,
          @BinderParam(BindContainerMetadataToHeaders.class) Map<String, String> metadata);
 
    /**

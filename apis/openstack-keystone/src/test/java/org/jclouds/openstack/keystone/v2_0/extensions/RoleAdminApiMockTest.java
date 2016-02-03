@@ -17,9 +17,7 @@
 package org.jclouds.openstack.keystone.v2_0.extensions;
 
 import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertNotNull;
-import static org.testng.Assert.assertNull;
 import static org.testng.Assert.assertTrue;
 
 import java.util.Set;
@@ -30,7 +28,6 @@ import org.jclouds.openstack.v2_0.internal.BaseOpenStackMockTest;
 import org.testng.annotations.Test;
 
 import com.google.common.collect.FluentIterable;
-import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.squareup.okhttp.mockwebserver.MockResponse;
 import com.squareup.okhttp.mockwebserver.MockWebServer;
@@ -73,32 +70,6 @@ public class RoleAdminApiMockTest extends BaseOpenStackMockTest<KeystoneApi> {
       }
    }
 
-   public void listZeroRoles() throws Exception {
-      MockWebServer server = mockOpenStackServer();
-      server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/access_version_uids.json"))));
-      server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/admin_extensions.json"))));
-      server.enqueue(addCommonHeaders(new MockResponse().setResponseCode(404)));
-
-      try {
-         KeystoneApi keystoneApi = api(server.getUrl("/").toString(), "openstack-keystone");
-         RoleAdminApi roleAdminApi = keystoneApi.getRoleAdminApi().get();
-         FluentIterable<? extends Role> roles = roleAdminApi.list();
-
-         ImmutableList<? extends Role> roleList = roles.toList();
-
-         assertTrue(roleList.isEmpty());
-
-         assertEquals(server.getRequestCount(), 3);
-         assertAuthentication(server);
-         assertExtensions(server);
-         RecordedRequest updateRoleRequest = server.takeRequest();
-         assertEquals(updateRoleRequest.getRequestLine(), "GET /OS-KSADM/roles HTTP/1.1");
-
-      } finally {
-         server.shutdown();
-      }
-   }
-
    public void createRole() throws Exception {
       MockWebServer server = mockOpenStackServer();
       server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/access_version_uids.json"))));
@@ -113,31 +84,6 @@ public class RoleAdminApiMockTest extends BaseOpenStackMockTest<KeystoneApi> {
 
          assertNotNull(testRole);
          assertEquals(testRole.getId(), "r1000");
-
-         assertEquals(server.getRequestCount(), 3);
-         assertAuthentication(server);
-         assertExtensions(server);
-         RecordedRequest createRoleRequest = server.takeRequest();
-         assertEquals(createRoleRequest.getRequestLine(), "POST /OS-KSADM/roles HTTP/1.1");
-         assertEquals(new String(createRoleRequest.getBody()), "{\"role\":{\"name\":\"jclouds-role\"}}");
-      } finally {
-         server.shutdown();
-      }
-   }
-
-   public void createRoleFail() throws Exception {
-      MockWebServer server = mockOpenStackServer();
-      server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/access_version_uids.json"))));
-      server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/admin_extensions.json"))));
-      server.enqueue(addCommonHeaders(new MockResponse().setResponseCode(404).setBody(
-            stringFromResource("/role_create_response.json"))));
-
-      try {
-         KeystoneApi keystoneApi = api(server.getUrl("/").toString(), "openstack-keystone");
-         RoleAdminApi roleAdminApi = keystoneApi.getRoleAdminApi().get();
-         Role testRole = roleAdminApi.create("jclouds-role");
-
-         assertNull(testRole);
 
          assertEquals(server.getRequestCount(), 3);
          assertAuthentication(server);
@@ -178,29 +124,6 @@ public class RoleAdminApiMockTest extends BaseOpenStackMockTest<KeystoneApi> {
       }
    }
 
-   public void getRoleFail() throws Exception {
-      MockWebServer server = mockOpenStackServer();
-      server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/access_version_uids.json"))));
-      server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/admin_extensions.json"))));
-      server.enqueue(addCommonHeaders(new MockResponse().setResponseCode(404)));
-
-      try {
-         KeystoneApi keystoneApi = api(server.getUrl("/").toString(), "openstack-keystone");
-         RoleAdminApi roleAdminApi = keystoneApi.getRoleAdminApi().get();
-         Role role = roleAdminApi.get("r1000");
-
-         assertNull(role);
-         assertEquals(server.getRequestCount(), 3);
-         assertAuthentication(server);
-         assertExtensions(server);
-         RecordedRequest updateRoleRequest = server.takeRequest();
-         assertEquals(updateRoleRequest.getRequestLine(), "GET /OS-KSADM/roles/r1000 HTTP/1.1");
-
-      } finally {
-         server.shutdown();
-      }
-   }
-
    public void deleteRole() throws Exception {
       MockWebServer server = mockOpenStackServer();
       server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/access_version_uids.json"))));
@@ -223,25 +146,4 @@ public class RoleAdminApiMockTest extends BaseOpenStackMockTest<KeystoneApi> {
       }
    }
 
-   public void deleteRoleFail() throws Exception {
-      MockWebServer server = mockOpenStackServer();
-      server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/access_version_uids.json"))));
-      server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/admin_extensions.json"))));
-      server.enqueue(addCommonHeaders(new MockResponse().setResponseCode(404)));
-
-      try {
-         KeystoneApi keystoneApi = api(server.getUrl("/").toString(), "openstack-keystone");
-         RoleAdminApi roleAdminApi = keystoneApi.getRoleAdminApi().get();
-         boolean success = roleAdminApi.delete("r1000");
-
-         assertFalse(success);
-         assertEquals(server.getRequestCount(), 3);
-         assertAuthentication(server);
-         assertExtensions(server);
-         RecordedRequest updateRoleRequest = server.takeRequest();
-         assertEquals(updateRoleRequest.getRequestLine(), "DELETE /OS-KSADM/roles/r1000 HTTP/1.1");
-      } finally {
-         server.shutdown();
-      }
-   }
 }

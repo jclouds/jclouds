@@ -20,7 +20,6 @@ import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertNotNull;
-import static org.testng.Assert.assertTrue;
 
 import java.util.Set;
 
@@ -57,10 +56,4 @@ public class ServiceApiExpectTest extends BaseKeystoneRestApiExpectTest<Keystone
       assertEquals(tenants, expected);
    }
 
-   public void testListTenantsFailNotFound() {
-      ServiceApi api = requestsSendResponses(keystoneAuthWithUsernameAndPasswordAndTenantName, responseWithKeystoneAccess,
-               authenticatedGET().endpoint(endpoint + "/v2.0/tenants").build(),
-               HttpResponse.builder().statusCode(404).build()).getServiceApi();
-      assertTrue(api.listTenants().isEmpty());
-   }
 }

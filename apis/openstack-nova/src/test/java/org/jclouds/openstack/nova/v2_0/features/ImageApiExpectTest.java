@@ -17,9 +17,6 @@
 package org.jclouds.openstack.nova.v2_0.features;
 
 import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertNull;
-import static org.testng.Assert.assertTrue;
-import static org.testng.Assert.fail;
 
 import org.jclouds.http.HttpRequest;
 import org.jclouds.http.HttpResponse;
@@ -61,22 +58,6 @@ public class ImageApiExpectTest extends BaseNovaApiExpectTest {
             new ParseImageListTest().expected().toString());
    }
 
-   public void testListImagesWhenReponseIs404IsEmpty() throws Exception {
-      HttpRequest list = HttpRequest.builder()
-            .method("GET")
-            .endpoint("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v2/3456/images")
-            .addHeader("Accept", "application/json")
-            .addHeader("X-Auth-Token", authToken)
-            .build();
-
-      HttpResponse listResponse = HttpResponse.builder().statusCode(404).build();
-
-      NovaApi apiWhenNoServersExist = requestsSendResponses(keystoneAuthWithUsernameAndPasswordAndTenantName,
-            responseWithKeystoneAccess, list, listResponse);
-
-      assertTrue(apiWhenNoServersExist.getImageApi("az-1.region-a.geo-1").list().concat().isEmpty());
-   }
-
    public void testGetImageWhenResponseIs2xx() throws Exception {
 
       HttpRequest getImage = HttpRequest.builder()
@@ -97,22 +78,6 @@ public class ImageApiExpectTest extends BaseNovaApiExpectTest {
                   .toString(), new ParseImageTest().expected().toString());
    }
 
-   public void testGetImageWhenResponseIs404() throws Exception {
-      HttpRequest getImage = HttpRequest.builder()
-            .method("GET")
-            .endpoint("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v2/3456/images/52415800-8b69-11e0-9b19-734f5736d2a2")
-            .addHeader("Accept", "application/json")
-            .addHeader("X-Auth-Token", authToken)
-            .build();
-
-      HttpResponse getImageResponse = HttpResponse.builder().statusCode(404).build();
-
-      NovaApi apiWhenNoImagesExist = requestsSendResponses(keystoneAuthWithUsernameAndPasswordAndTenantName,
-            responseWithKeystoneAccess, getImage, getImageResponse);
-
-      assertNull(apiWhenNoImagesExist.getImageApi("az-1.region-a.geo-1").get("52415800-8b69-11e0-9b19-734f5736d2a2"));
-   }
-
    public void testListMetadataWhenResponseIs2xx() throws Exception {
       String imageId = "52415800-8b69-11e0-9b19-734f5736d2a2";
       HttpRequest getMetadata = HttpRequest.builder()
@@ -130,28 +95,6 @@ public class ImageApiExpectTest extends BaseNovaApiExpectTest {
 
       assertEquals(apiWhenServerExists.getImageApi("az-1.region-a.geo-1").getMetadata(imageId).toString(),
              new ParseMetadataListTest().expected().toString());
-   }
-
-   public void testListMetadataWhenResponseIs404() throws Exception {
-      String imageId = "52415800-8b69-11e0-9b19-734f5736d2a2";
-      HttpRequest getMetadata = HttpRequest.builder()
-            .method("GET")
-            .endpoint("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v2/3456/images/" + imageId + "/metadata")
-            .addHeader("Accept", "*/*")
-            .addHeader("X-Auth-Token", authToken)
-            .build();
-
-      HttpResponse getMetadataResponse = HttpResponse.builder().statusCode(404).build();
-
-      NovaApi apiWhenServerExists = requestsSendResponses(keystoneAuthWithUsernameAndPasswordAndTenantName,
-               responseWithKeystoneAccess, getMetadata, getMetadataResponse);
-
-      try {
-         apiWhenServerExists.getImageApi("az-1.region-a.geo-1").getMetadata(imageId);
-         fail("Expected an exception.");
-         } catch (Exception e) {
-            // expected
-         }
    }
 
    public void testSetMetadataWhenResponseIs2xx() throws Exception {
@@ -180,35 +123,6 @@ public class ImageApiExpectTest extends BaseNovaApiExpectTest {
              new ParseMetadataListTest().expected().toString());
    }
 
-   public void testSetMetadataWhenResponseIs404() throws Exception {
-      String imageId = "52415800-8b69-11e0-9b19-734f5736d2a2";
-      ImmutableMap<String, String> metadata = new ImmutableMap.Builder<String, String>()
-              .put("Server Label", "Web Head 1")
-              .put("Image Version", "2.1")
-              .build();
-
-      HttpRequest setMetadata = HttpRequest.builder()
-            .method("PUT")
-            .endpoint("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v2/3456/images/" + imageId + "/metadata")
-            .addHeader("Accept", "*/*")
-            .addHeader("X-Auth-Token", authToken)
-            .payload(payloadFromStringWithContentType(
-                  "{\"metadata\":{\"Server Label\":\"Web Head 1\",\"Image Version\":\"2.1\"}}", "application/json"))
-            .build();
-
-      HttpResponse setMetadataResponse = HttpResponse.builder().statusCode(404).build();
-
-      NovaApi apiWhenServerExists = requestsSendResponses(keystoneAuthWithUsernameAndPasswordAndTenantName,
-               responseWithKeystoneAccess, setMetadata, setMetadataResponse);
-
-      try {
-    	 apiWhenServerExists.getImageApi("az-1.region-a.geo-1").setMetadata(imageId, metadata);
-         fail("Expected an exception.");
-      } catch (Exception e) {
-         // expected
-      }
-   }
-
    public void testUpdateMetadataWhenResponseIs2xx() throws Exception {
       String imageId = "52415800-8b69-11e0-9b19-734f5736d2a2";
       ImmutableMap<String, String> metadata = new ImmutableMap.Builder<String, String>()
@@ -235,35 +149,6 @@ public class ImageApiExpectTest extends BaseNovaApiExpectTest {
              new ParseMetadataUpdateTest().expected().toString());
    }
 
-   public void testUpdateMetadataWhenResponseIs404() throws Exception {
-      String imageId = "52415800-8b69-11e0-9b19-734f5736d2a2";
-      ImmutableMap<String, String> metadata = new ImmutableMap.Builder<String, String>()
-              .put("Server Label", "Web Head 2")
-              .put("Server Description", "Simple Server")
-              .build();
-
-      HttpRequest setMetadata = HttpRequest.builder()
-            .method("POST")
-            .endpoint("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v2/3456/servers/" + imageId + "/metadata")
-            .addHeader("Accept", "application/json")
-            .addHeader("X-Auth-Token", authToken)
-            .payload(payloadFromStringWithContentType("{\"metadata\":{\"Server Label\":\"Web Head 2\",\"Server Description\":\"Simple Server\"}}", "application/json"))
-            .build();
-
-      HttpResponse setMetadataResponse = HttpResponse.builder().statusCode(404)
-              .payload(payloadFromResource("/metadata_updated.json")).build();
-
-      NovaApi apiWhenServerExists = requestsSendResponses(keystoneAuthWithUsernameAndPasswordAndTenantName,
-               responseWithKeystoneAccess, setMetadata, setMetadataResponse);
-
-      try {
-         apiWhenServerExists.getImageApi("az-1.region-a.geo-1").setMetadata(imageId, metadata);
-         fail("Expected an exception.");
-      } catch (Exception e) {
-         // expected
-      }
-   }
-
    public void testGetMetadataItemWhenResponseIs2xx() throws Exception {
       String imageId = "52415800-8b69-11e0-9b19-734f5736d2a2";
       String key = "Image Version";
@@ -284,27 +169,6 @@ public class ImageApiExpectTest extends BaseNovaApiExpectTest {
 
       assertEquals(apiWhenServerExists.getImageApi("az-1.region-a.geo-1").getMetadata(imageId, "Image Version").toString(),
              "2.5");
-   }
-
-   public void testGetMetadataItemWhenResponseIs404() throws Exception {
-      String imageId = "52415800-8b69-11e0-9b19-734f5736d2a2";
-      String key = "Image Version";
-
-      HttpRequest getMetadata = HttpRequest.builder()
-            .method("GET")
-            .endpoint("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v2/3456/images/" + imageId + "/metadata/" +
-                  Strings2.urlEncode(key))
-            .addHeader("Accept", "application/json")
-            .addHeader("X-Auth-Token", authToken)
-            .build();
-
-      HttpResponse getMetadataResponse = HttpResponse.builder().statusCode(404)
-              .payload(payloadFromStringWithContentType("{\"metadata\":{\"Image Version\":\"2.5\"}}", "application/json")).build();
-
-      NovaApi apiWhenImageExists = requestsSendResponses(keystoneAuthWithUsernameAndPasswordAndTenantName,
-               responseWithKeystoneAccess, getMetadata, getMetadataResponse);
-
-      assertNull(apiWhenImageExists.getImageApi("az-1.region-a.geo-1").getMetadata(imageId, key));
    }
 
    public void testSetMetadataItemWhenResponseIs2xx() throws Exception {
@@ -349,23 +213,4 @@ public class ImageApiExpectTest extends BaseNovaApiExpectTest {
       apiWhenImageExists.getImageApi("az-1.region-a.geo-1").deleteMetadata(imageId, key);
    }
 
-   public void testDeleteMetadataItemWhenResponseIs404() throws Exception {
-      String imageId = "52415800-8b69-11e0-9b19-734f5736d2a2";
-      String key = "Image Version";
-
-      HttpRequest deleteMetadata = HttpRequest.builder()
-            .method("DELETE")
-            .endpoint("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v2/3456/images/" + imageId + "/metadata/" +
-                  Strings2.urlEncode(key))
-            .addHeader("Accept", "application/json")
-            .addHeader("X-Auth-Token", authToken)
-            .build();
-
-      HttpResponse deleteMetadataResponse = HttpResponse.builder().statusCode(404).build();
-
-      NovaApi apiWhenImageExists = requestsSendResponses(keystoneAuthWithUsernameAndPasswordAndTenantName,
-               responseWithKeystoneAccess, deleteMetadata, deleteMetadataResponse);
-
-      apiWhenImageExists.getImageApi("az-1.region-a.geo-1").deleteMetadata(imageId, key);
-   }
 }

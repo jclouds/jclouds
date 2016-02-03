@@ -17,8 +17,6 @@
 package org.jclouds.openstack.nova.v2_0.extensions;
 
 import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertFalse;
-import static org.testng.Assert.assertNull;
 import static org.testng.Assert.assertTrue;
 
 import java.net.URI;
@@ -35,8 +33,6 @@ import org.jclouds.openstack.nova.v2_0.domain.VolumeSnapshot;
 import org.jclouds.openstack.nova.v2_0.internal.BaseNovaApiExpectTest;
 import org.jclouds.openstack.nova.v2_0.options.CreateVolumeOptions;
 import org.jclouds.openstack.nova.v2_0.options.CreateVolumeSnapshotOptions;
-import org.jclouds.rest.AuthorizationException;
-import org.jclouds.rest.ResourceNotFoundException;
 import org.testng.annotations.Test;
 
 import com.google.common.collect.ImmutableSet;
@@ -62,19 +58,6 @@ public class VolumeApiExpectTest extends BaseNovaApiExpectTest {
       assertEquals(volumes, ImmutableSet.of(testVolume()));
    }
 
-   public void testListVolumesFail() {
-      URI endpoint = URI.create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v2/3456/os-volumes");
-      VolumeApi api = requestsSendResponses(
-            keystoneAuthWithUsernameAndPasswordAndTenantName,
-            responseWithKeystoneAccess, extensionsOfNovaRequest, extensionsOfNovaResponse,
-            authenticatedGET().endpoint(endpoint).build(),
-            HttpResponse.builder().statusCode(404).build()
-      ).getVolumeApi("az-1.region-a.geo-1").get();
-
-      Set<? extends Volume> volumes = api.list().toSet();
-      assertTrue(volumes.isEmpty());
-   }
-
    public void testListVolumesInDetail() {
       URI endpoint = URI.create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v2/3456/os-volumes/detail");
       VolumeApi api = requestsSendResponses(
@@ -86,19 +69,6 @@ public class VolumeApiExpectTest extends BaseNovaApiExpectTest {
 
       Set<? extends Volume> volumes = api.listInDetail().toSet();
       assertEquals(volumes, ImmutableSet.of(testVolume()));
-   }
-
-   public void testListVolumesInDetailFail() {
-      URI endpoint = URI.create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v2/3456/os-volumes/detail");
-      VolumeApi api = requestsSendResponses(
-            keystoneAuthWithUsernameAndPasswordAndTenantName,
-            responseWithKeystoneAccess, extensionsOfNovaRequest, extensionsOfNovaResponse,
-            authenticatedGET().endpoint(endpoint).build(),
-            HttpResponse.builder().statusCode(404).build()
-      ).getVolumeApi("az-1.region-a.geo-1").get();
-
-      Set<? extends Volume> volumes = api.listInDetail().toSet();
-      assertTrue(volumes.isEmpty());
    }
 
    public void testCreateVolume() {
@@ -115,23 +85,6 @@ public class VolumeApiExpectTest extends BaseNovaApiExpectTest {
 
       Volume volume = api.create(1, CreateVolumeOptions.Builder.name("jclouds-test-volume").description("description of test volume"));
       assertEquals(volume, testVolume());
-   }
-
-   @Test(expectedExceptions = ResourceNotFoundException.class)
-   public void testCreateVolumeFail() {
-      URI endpoint = URI.create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v2/3456/os-volumes");
-      VolumeApi api = requestsSendResponses(
-            keystoneAuthWithUsernameAndPasswordAndTenantName,
-            responseWithKeystoneAccess, extensionsOfNovaRequest, extensionsOfNovaResponse,
-            authenticatedGET().endpoint(endpoint)
-               .endpoint(endpoint)
-               .method("POST")
-               .payload(payloadFromStringWithContentType("{\"volume\":{\"display_name\":\"jclouds-test-volume\",\"display_description\":\"description of test volume\",\"size\":1}}", MediaType.APPLICATION_JSON))
-               .build(),
-            HttpResponse.builder().statusCode(404).payload(payloadFromResource("/volume_details.json")).build()
-      ).getVolumeApi("az-1.region-a.geo-1").get();
-
-      api.create(1, CreateVolumeOptions.Builder.name("jclouds-test-volume").description("description of test volume"));
    }
 
    public void testGetVolume() {
@@ -154,18 +107,6 @@ public class VolumeApiExpectTest extends BaseNovaApiExpectTest {
       assertEquals(Iterables.getOnlyElement(volume.getAttachments()), testAttachment());
    }
 
-   public void testGetVolumeFail() {
-      URI endpoint = URI.create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v2/3456/os-volumes/1");
-      VolumeApi api = requestsSendResponses(
-            keystoneAuthWithUsernameAndPasswordAndTenantName,
-            responseWithKeystoneAccess, extensionsOfNovaRequest, extensionsOfNovaResponse,
-            authenticatedGET().endpoint(endpoint).build(),
-            HttpResponse.builder().statusCode(404).build()
-      ).getVolumeApi("az-1.region-a.geo-1").get();
-
-      assertNull(api.get("1"));
-   }
-
    public void testDeleteVolume() {
       URI endpoint = URI.create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v2/3456/os-volumes/1");
       VolumeApi api = requestsSendResponses(
@@ -176,18 +117,6 @@ public class VolumeApiExpectTest extends BaseNovaApiExpectTest {
       ).getVolumeApi("az-1.region-a.geo-1").get();
 
       assertTrue(api.delete("1"));
-   }
-
-   public void testDeleteVolumeFail() {
-      URI endpoint = URI.create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v2/3456/os-volumes/1");
-      VolumeApi api = requestsSendResponses(
-            keystoneAuthWithUsernameAndPasswordAndTenantName,
-            responseWithKeystoneAccess, extensionsOfNovaRequest, extensionsOfNovaResponse,
-            authenticatedGET().endpoint(endpoint).method("DELETE").build(),
-            HttpResponse.builder().statusCode(404).build()
-      ).getVolumeApi("az-1.region-a.geo-1").get();
-
-      assertFalse(api.delete("1"));
    }
 
    public void testListSnapshots() {
@@ -203,19 +132,6 @@ public class VolumeApiExpectTest extends BaseNovaApiExpectTest {
       assertEquals(snapshots, ImmutableSet.of(testSnapshot()));
    }
 
-   public void testListSnapshotsFail() {
-      URI endpoint = URI.create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v2/3456/os-snapshots");
-      VolumeApi api = requestsSendResponses(
-            keystoneAuthWithUsernameAndPasswordAndTenantName,
-            responseWithKeystoneAccess, extensionsOfNovaRequest, extensionsOfNovaResponse,
-            authenticatedGET().endpoint(endpoint).build(),
-            HttpResponse.builder().statusCode(404).build()
-      ).getVolumeApi("az-1.region-a.geo-1").get();
-
-      Set<? extends VolumeSnapshot> snapshots = api.listSnapshots().toSet();
-      assertTrue(snapshots.isEmpty());
-   }
-
    public void testGetSnapshot() {
       URI endpoint = URI.create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v2/3456/os-snapshots/1");
       VolumeApi api = requestsSendResponses(
@@ -227,18 +143,6 @@ public class VolumeApiExpectTest extends BaseNovaApiExpectTest {
 
       VolumeSnapshot snapshot = api.getSnapshot("1");
       assertEquals(snapshot, testSnapshot());
-   }
-
-   public void testGetSnapshotFail() {
-      URI endpoint = URI.create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v2/3456/os-snapshots/1");
-      VolumeApi api = requestsSendResponses(
-            keystoneAuthWithUsernameAndPasswordAndTenantName,
-            responseWithKeystoneAccess, extensionsOfNovaRequest, extensionsOfNovaResponse,
-            authenticatedGET().endpoint(endpoint).build(),
-            HttpResponse.builder().statusCode(404).build()
-      ).getVolumeApi("az-1.region-a.geo-1").get();
-
-      assertNull(api.getSnapshot("1"));
    }
 
    public void testListSnapshotsInDetail() {
@@ -263,19 +167,6 @@ public class VolumeApiExpectTest extends BaseNovaApiExpectTest {
       assertEquals(snappy.getSize(), 1);
    }
 
-   public void testListSnapshotsInDetailFail() {
-      URI endpoint = URI.create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v2/3456/os-snapshots/detail");
-      VolumeApi api = requestsSendResponses(
-            keystoneAuthWithUsernameAndPasswordAndTenantName,
-            responseWithKeystoneAccess, extensionsOfNovaRequest, extensionsOfNovaResponse,
-            authenticatedGET().endpoint(endpoint).build(),
-            HttpResponse.builder().statusCode(404).build()
-      ).getVolumeApi("az-1.region-a.geo-1").get();
-
-      Set<? extends VolumeSnapshot> snapshots = api.listSnapshotsInDetail().toSet();
-      assertTrue(snapshots.isEmpty());
-   }
-
    public void testCreateSnapshot() {
       URI endpoint = URI.create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v2/3456/os-snapshots");
       VolumeApi api = requestsSendResponses(
@@ -292,22 +183,6 @@ public class VolumeApiExpectTest extends BaseNovaApiExpectTest {
       assertEquals(snapshot, testSnapshot());
    }
 
-   @Test(expectedExceptions = AuthorizationException.class)
-   public void testCreateSnapshotFail() {
-      URI endpoint = URI.create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v2/3456/os-snapshots");
-      VolumeApi api = requestsSendResponses(
-            keystoneAuthWithUsernameAndPasswordAndTenantName,
-            responseWithKeystoneAccess, extensionsOfNovaRequest, extensionsOfNovaResponse,
-            authenticatedGET().endpoint(endpoint)
-                  .method("POST")
-                  .payload(payloadFromStringWithContentType("{\"snapshot\":{\"display_name\":\"jclouds-live-test\",\"volume_id\":\"13\",\"display_description\":\"jclouds live test snapshot\",\"force\":\"true\"}}", MediaType.APPLICATION_JSON))
-                  .build(),
-            HttpResponse.builder().statusCode(401).build()
-      ).getVolumeApi("az-1.region-a.geo-1").get();
-
-      api.createSnapshot("13", CreateVolumeSnapshotOptions.Builder.name("jclouds-live-test").description("jclouds live test snapshot").force());
-   }
-
    public void testDeleteSnapshot() {
       URI endpoint = URI.create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v2/3456/os-snapshots/1");
       VolumeApi api = requestsSendResponses(
@@ -318,19 +193,6 @@ public class VolumeApiExpectTest extends BaseNovaApiExpectTest {
       ).getVolumeApi("az-1.region-a.geo-1").get();
 
       assertTrue(api.deleteSnapshot("1"));
-   }
-
-   @Test(expectedExceptions = AuthorizationException.class)
-   public void testDeleteSnapshotFail() {
-      URI endpoint = URI.create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v2/3456/os-snapshots/1");
-      VolumeApi api = requestsSendResponses(
-            keystoneAuthWithUsernameAndPasswordAndTenantName,
-            responseWithKeystoneAccess, extensionsOfNovaRequest, extensionsOfNovaResponse,
-            authenticatedGET().endpoint(endpoint).method("DELETE").build(),
-            HttpResponse.builder().statusCode(401).build()
-      ).getVolumeApi("az-1.region-a.geo-1").get();
-
-      api.deleteSnapshot("1");
    }
 
    protected Volume testVolume() {

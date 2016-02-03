@@ -77,7 +77,7 @@ public class AccountApiMockTest extends BaseOpenStackMockTest<SwiftApi> {
 
       try {
          SwiftApi api = api(server.getUrl("/").toString(), "openstack-swift");
-         assertTrue(api.getAccountApi("DFW").updateMetadata(metadata));
+         api.getAccountApi("DFW").updateMetadata(metadata);
 
          assertEquals(server.getRequestCount(), 2);
          assertAuthentication(server);
@@ -99,7 +99,7 @@ public class AccountApiMockTest extends BaseOpenStackMockTest<SwiftApi> {
 
       try {
          SwiftApi api = api(server.getUrl("/").toString(), "openstack-swift");
-         assertTrue(api.getAccountApi("DFW").updateTemporaryUrlKey("foobar"));
+         api.getAccountApi("DFW").updateTemporaryUrlKey("foobar");
 
          assertEquals(server.getRequestCount(), 2);
          assertAuthentication(server);

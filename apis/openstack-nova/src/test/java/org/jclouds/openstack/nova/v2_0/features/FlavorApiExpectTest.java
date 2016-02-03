@@ -17,8 +17,6 @@
 package org.jclouds.openstack.nova.v2_0.features;
 
 import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertNull;
-import static org.testng.Assert.assertTrue;
 
 import javax.ws.rs.HttpMethod;
 import javax.ws.rs.core.MediaType;
@@ -62,22 +60,6 @@ public class FlavorApiExpectTest extends BaseNovaApiExpectTest {
             new ParseFlavorListTest().expected().toString());
    }
 
-   public void testListFlavorsWhenReponseIs404IsEmpty() throws Exception {
-      HttpRequest listFlavors = HttpRequest.builder()
-            .method("GET")
-            .endpoint("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v2/3456/flavors")
-            .addHeader("Accept", "application/json")
-            .addHeader("X-Auth-Token", authToken)
-            .build();
-
-      HttpResponse listFlavorsResponse = HttpResponse.builder().statusCode(404).build();
-
-      NovaApi apiWhenNoServersExist = requestsSendResponses(keystoneAuthWithUsernameAndPasswordAndTenantName,
-            responseWithKeystoneAccess, listFlavors, listFlavorsResponse);
-
-      assertTrue(apiWhenNoServersExist.getFlavorApi("az-1.region-a.geo-1").list().concat().isEmpty());
-   }
-
    // TODO: gson deserializer for Multimap
    public void testGetFlavorWhenResponseIs2xx() throws Exception {
       HttpRequest getFlavor = HttpRequest.builder()
@@ -96,22 +78,6 @@ public class FlavorApiExpectTest extends BaseNovaApiExpectTest {
       assertEquals(
             apiWhenFlavorsExist.getFlavorApi("az-1.region-a.geo-1").get("52415800-8b69-11e0-9b19-734f1195ff37")
                   .toString(), new ParseFlavorTest().expected().toString());
-   }
-
-   public void testGetFlavorWhenResponseIs404() throws Exception {
-      HttpRequest getFlavor = HttpRequest.builder()
-            .method("GET")
-            .endpoint("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v2/3456/flavors/123")
-            .addHeader("Accept", "application/json")
-            .addHeader("X-Auth-Token", authToken).build();
-
-      HttpResponse getFlavorResponse = HttpResponse.builder().statusCode(404)
-            .payload(payloadFromResource("/flavor_details.json")).build();
-
-      NovaApi apiWhenNoFlavorsExist = requestsSendResponses(keystoneAuthWithUsernameAndPasswordAndTenantName,
-            responseWithKeystoneAccess, getFlavor, getFlavorResponse);
-
-      assertNull(apiWhenNoFlavorsExist.getFlavorApi("az-1.region-a.geo-1").get("123"));
    }
 
    public void testCreateFlavor200() throws Exception {

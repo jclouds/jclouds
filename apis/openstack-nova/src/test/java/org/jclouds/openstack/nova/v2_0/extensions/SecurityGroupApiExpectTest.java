@@ -17,7 +17,6 @@
 package org.jclouds.openstack.nova.v2_0.extensions;
 
 import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertNull;
 import static org.testng.Assert.assertTrue;
 
 import java.net.URI;
@@ -61,22 +60,6 @@ public class SecurityGroupApiExpectTest extends BaseNovaApiExpectTest {
                .list().toString(), new ParseSecurityGroupListTest().expected().toString());
    }
 
-   public void testListSecurityGroupsWhenReponseIs404IsEmpty() throws Exception {
-      HttpRequest listListSecurityGroups = HttpRequest.builder().method("GET").endpoint(
-               URI.create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v2/3456/os-security-groups")).headers(
-               ImmutableMultimap.<String, String> builder().put("Accept", "application/json").put("X-Auth-Token",
-                        authToken).build()).build();
-
-      HttpResponse listListSecurityGroupsResponse = HttpResponse.builder().statusCode(404).build();
-
-      NovaApi apiWhenNoSecurityGroupsExist = requestsSendResponses(keystoneAuthWithUsernameAndPasswordAndTenantName,
-               responseWithKeystoneAccess, extensionsOfNovaRequest, extensionsOfNovaResponse, listListSecurityGroups,
-               listListSecurityGroupsResponse);
-
-      assertTrue(apiWhenNoSecurityGroupsExist.getSecurityGroupApi("az-1.region-a.geo-1").get()
-               .list().isEmpty());
-   }
-
    public void testGetSecurityGroupWhenResponseIs2xx() throws Exception {
 
       HttpRequest getSecurityGroup = HttpRequest.builder().method("GET").endpoint(
@@ -93,23 +76,6 @@ public class SecurityGroupApiExpectTest extends BaseNovaApiExpectTest {
 
       assertEquals(apiWhenSecurityGroupsExist.getSecurityGroupApi("az-1.region-a.geo-1").get()
                .get("0").toString(), new ParseSecurityGroupTest().expected().toString());
-   }
-
-   public void testGetSecurityGroupWhenResponseIs404() throws Exception {
-      HttpRequest getSecurityGroup = HttpRequest.builder().method("GET").endpoint(
-               URI.create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v2/3456/os-security-groups/0")).headers(
-               ImmutableMultimap.<String, String> builder().put("Accept", "application/json").put("X-Auth-Token",
-                        authToken).build()).build();
-
-      HttpResponse getSecurityGroupResponse = HttpResponse.builder().statusCode(404).build();
-
-      NovaApi apiWhenNoSecurityGroupsExist = requestsSendResponses(keystoneAuthWithUsernameAndPasswordAndTenantName,
-               responseWithKeystoneAccess, extensionsOfNovaRequest, extensionsOfNovaResponse, getSecurityGroup,
-               getSecurityGroupResponse);
-
-      assertNull(apiWhenNoSecurityGroupsExist.getSecurityGroupApi("az-1.region-a.geo-1").get()
-               .get("0"));
-
    }
 
    public void testCreateSecurityGroupWhenResponseIs2xx() throws Exception {

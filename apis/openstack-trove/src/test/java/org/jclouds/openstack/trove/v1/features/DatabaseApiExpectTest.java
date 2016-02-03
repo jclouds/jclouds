@@ -17,12 +17,10 @@
 package org.jclouds.openstack.trove.v1.features;
 
 import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertTrue;
 
 import java.net.URI;
 import java.util.List;
-import java.util.Set;
 
 import javax.ws.rs.core.MediaType;
 
@@ -48,24 +46,7 @@ public class DatabaseApiExpectTest extends BaseTroveApiExpectTest {
             HttpResponse.builder().statusCode(202).build() // response
             ).getDatabaseApi("RegionOne", "instanceId-1234-5678");
 
-      boolean result = api.create("testingdb");
-      assertTrue(result);
-   }
-
-   public void testCreateDatabaseSimpleFail() {
-      URI endpoint = URI.create("http://172.16.0.1:8776/v1/3456/instances/instanceId-1234-5678/databases");
-      DatabaseApi api = requestsSendResponses(
-            keystoneAuthWithUsernameAndPasswordAndTenantName,
-            responseWithKeystoneAccess,
-            authenticatedGET().endpoint(endpoint)
-            .method("POST")
-            .payload(payloadFromResourceWithContentType("/database_create_simple_request.json", MediaType.APPLICATION_JSON))
-            .build(),
-            HttpResponse.builder().statusCode(404).build() // response
-            ).getDatabaseApi("RegionOne", "instanceId-1234-5678");
-
-      boolean result = api.create("testingdb");
-      assertFalse(result);
+      api.create("testingdb");
    }
 
    public void testCreateDatabase() {
@@ -80,24 +61,7 @@ public class DatabaseApiExpectTest extends BaseTroveApiExpectTest {
             HttpResponse.builder().statusCode(202).build() // response
             ).getDatabaseApi("RegionOne", "instanceId-1234-5678");
 
-      boolean result = api.create("testingdb", "utf8", "utf8_general_ci");
-      assertTrue(result);
-   }
-
-   public void testCreateDatabaseFail() {
-      URI endpoint = URI.create("http://172.16.0.1:8776/v1/3456/instances/instanceId-1234-5678/databases");
-      DatabaseApi api = requestsSendResponses(
-            keystoneAuthWithUsernameAndPasswordAndTenantName,
-            responseWithKeystoneAccess,
-            authenticatedGET().endpoint(endpoint)
-            .method("POST")
-            .payload(payloadFromResourceWithContentType("/database_create_request.json", MediaType.APPLICATION_JSON))
-            .build(),
-            HttpResponse.builder().statusCode(404).build() // response
-            ).getDatabaseApi("RegionOne", "instanceId-1234-5678");
-
-      boolean result = api.create("testingdb", "utf8", "utf8_general_ci");
-      assertFalse(result);
+      api.create("testingdb", "utf8", "utf8_general_ci");
    }
    
    public void testDeleteDatabase() {
@@ -115,21 +79,6 @@ public class DatabaseApiExpectTest extends BaseTroveApiExpectTest {
       assertTrue(result);
    }
    
-   public void testDeleteDatabaseFail() {
-      URI endpoint = URI.create("http://172.16.0.1:8776/v1/3456/instances/instanceId-1234-5678/databases/db1");
-      DatabaseApi api = requestsSendResponses(
-            keystoneAuthWithUsernameAndPasswordAndTenantName,
-            responseWithKeystoneAccess,
-            authenticatedGET().endpoint(endpoint) 
-            .method("DELETE")
-            .build(),
-            HttpResponse.builder().statusCode(404).build() // response
-            ).getDatabaseApi("RegionOne", "instanceId-1234-5678");
-
-      boolean result = api.delete("db1");
-      assertFalse(result);
-   }
-   
    public void testListDatabases() {
       URI endpoint = URI.create("http://172.16.0.1:8776/v1/3456/instances/instanceId-1234-5678/databases");
       DatabaseApi api = requestsSendResponses(
@@ -144,16 +93,4 @@ public class DatabaseApiExpectTest extends BaseTroveApiExpectTest {
       assertEquals(databases.iterator().next(), "anotherdb");
    }
    
-   public void testListDatabasesFail() {
-      URI endpoint = URI.create("http://172.16.0.1:8776/v1/3456/instances/instanceId-1234-5678/databases");
-      DatabaseApi api = requestsSendResponses(
-            keystoneAuthWithUsernameAndPasswordAndTenantName,
-            responseWithKeystoneAccess,
-            authenticatedGET().endpoint(endpoint).build(),
-            HttpResponse.builder().statusCode(404).payload(payloadFromResource("/database_list.json")).build()
-      ).getDatabaseApi("RegionOne", "instanceId-1234-5678");
-
-      Set<String> databases = api.list().toSet();
-      assertTrue(databases.isEmpty());
-   }
 }

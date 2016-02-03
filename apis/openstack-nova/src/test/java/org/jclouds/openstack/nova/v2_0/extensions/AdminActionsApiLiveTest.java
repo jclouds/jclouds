@@ -106,14 +106,14 @@ public class AdminActionsApiLiveTest extends BaseNovaApiLiveTest {
          fail("Resumed an active server!");
       } catch (HttpResponseException e) {
       }
-      assertTrue(api.suspend(testServerId));
+      api.suspend(testServerId);
       blockUntilServerInState(testServerId, serverApi, Status.SUSPENDED);
       try {
          api.suspend(testServerId);
          fail("Suspended an already suspended server!");
       } catch (HttpResponseException e) {
       }
-      assertTrue(api.resume(testServerId));
+      api.resume(testServerId);
       blockUntilServerInState(testServerId, serverApi, Status.ACTIVE);
       try {
          api.resume(testServerId);
@@ -128,20 +128,20 @@ public class AdminActionsApiLiveTest extends BaseNovaApiLiveTest {
       ServerAdminApi api = apiOption.get();
 
       // TODO should we be able to double-lock (as it were)
-      assertTrue(api.unlock(testServerId));
-      assertTrue(api.unlock(testServerId));
-      assertTrue(api.lock(testServerId));
-      assertTrue(api.lock(testServerId));
-      assertTrue(api.unlock(testServerId));
-      assertTrue(api.unlock(testServerId));
+      api.unlock(testServerId);
+      api.unlock(testServerId);
+      api.lock(testServerId);
+      api.lock(testServerId);
+      api.unlock(testServerId);
+      api.unlock(testServerId);
 
    }
 
    public void testResetNetworkAndInjectNetworkInfo() {
       skipOnAdminExtensionAbsent();
       ServerAdminApi api = apiOption.get();
-      assertTrue(api.resetNetwork(testServerId));
-      assertTrue(api.injectNetworkInfo(testServerId));
+      api.resetNetwork(testServerId);
+      api.injectNetworkInfo(testServerId);
    }
 
    @Test
@@ -155,14 +155,14 @@ public class AdminActionsApiLiveTest extends BaseNovaApiLiveTest {
          fail("Unpaused active server!");
       } catch (HttpResponseException e) {
       }
-      assertTrue(api.pause(testServerId));
+      api.pause(testServerId);
       blockUntilServerInState(testServerId, serverApi, Status.PAUSED);
       try {
          api.pause(testServerId);
          fail("paused a paused server!");
       } catch (HttpResponseException e) {
       }
-      assertTrue(api.unpause(testServerId));
+      api.unpause(testServerId);
       blockUntilServerInState(testServerId, serverApi, Status.ACTIVE);
       try {
          api.unpause(testServerId);

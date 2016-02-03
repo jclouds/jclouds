@@ -16,19 +16,17 @@
  */
 package org.jclouds.openstack.cinder.v1.features;
 
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertNotNull;
+
+import java.net.URI;
+
 import com.google.common.collect.Iterables;
 import org.jclouds.http.HttpResponse;
 import org.jclouds.openstack.cinder.v1.domain.AvailabilityZone;
 import org.jclouds.openstack.cinder.v1.extensions.AvailabilityZoneApi;
 import org.jclouds.openstack.cinder.v1.internal.BaseCinderApiExpectTest;
 import org.testng.annotations.Test;
-
-import java.net.URI;
-import java.util.Set;
-
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertNotNull;
-import static org.testng.Assert.assertTrue;
 
 @Test(groups = "unit", testName = "AvailabilityZoneApiExpectTest")
 public class AvailabilityZoneApiExpectTest extends BaseCinderApiExpectTest {
@@ -47,19 +45,6 @@ public class AvailabilityZoneApiExpectTest extends BaseCinderApiExpectTest {
 
       assertNotNull(availabilityZoneActual);
       assertEquals(availabilityZoneActual, availabilityZoneExpected);
-   }
-
-   public void testListAvailabilityZonesFail() throws Exception {
-      URI endpoint = URI.create("http://172.16.0.1:8776/v1/50cdb4c60374463198695d9f798fa34d/os-availability-zone");
-      AvailabilityZoneApi api = requestsSendResponses(
-            keystoneAuthWithUsernameAndPasswordAndTenantName,
-            responseWithKeystoneAccess,
-            authenticatedGET().endpoint(endpoint).build(),
-            HttpResponse.builder().statusCode(404).build()
-      ).getAvailabilityZoneApi("RegionOne");
-
-      Set<? extends AvailabilityZone> availabilityZones = api.list().toSet();
-      assertTrue(availabilityZones.isEmpty());
    }
 
    protected AvailabilityZone getTestAvailabilityZone() {

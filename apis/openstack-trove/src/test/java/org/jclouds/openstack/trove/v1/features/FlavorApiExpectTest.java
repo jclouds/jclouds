@@ -17,8 +17,6 @@
 package org.jclouds.openstack.trove.v1.features;
 
 import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertNull;
-import static org.testng.Assert.assertTrue;
 
 import java.net.URI;
 import java.util.Set;
@@ -49,19 +47,6 @@ public class FlavorApiExpectTest extends BaseTroveApiExpectTest {
       assertEquals(flavors.iterator().next().getRam(), 512);
    }
 
-   public void testListFlavorsFail() {
-      URI endpoint = URI.create("http://172.16.0.1:8776/v1/3456/flavors");
-      FlavorApi api = requestsSendResponses(
-            keystoneAuthWithUsernameAndPasswordAndTenantName,
-            responseWithKeystoneAccess,
-            authenticatedGET().endpoint(endpoint).build(),
-            HttpResponse.builder().statusCode(404).build()
-      ).getFlavorApi("RegionOne");
-
-      Set<? extends Flavor> flavors = api.list().toSet();
-      assertTrue(flavors.isEmpty());
-   }
-
    public void testGetFlavor() {
       URI endpoint = URI.create("http://172.16.0.1:8776/v1/3456/flavors/1");
       FlavorApi api = requestsSendResponses(
@@ -79,31 +64,20 @@ public class FlavorApiExpectTest extends BaseTroveApiExpectTest {
    }
 
    public void testGetFlavorByAccountId() {
-	      URI endpoint = URI.create("http://172.16.0.1:8776/v1/3456/flavors/40806637803162");
-	      TroveApi troveApi = requestsSendResponses(
-               keystoneAuthWithUsernameAndPasswordAndTenantName,
-               responseWithKeystoneAccess,
-               authenticatedGET().endpoint(endpoint).build(),
-               HttpResponse.builder().statusCode(200).payload(payloadFromResource("/flavor_list.json")).build() );
-	      FlavorApi api = troveApi.getFlavorApi("RegionOne");
+      URI endpoint = URI.create("http://172.16.0.1:8776/v1/3456/flavors/40806637803162");
+      TroveApi troveApi = requestsSendResponses(
+      keystoneAuthWithUsernameAndPasswordAndTenantName,
+      responseWithKeystoneAccess,
+      authenticatedGET().endpoint(endpoint).build(),
+      HttpResponse.builder().statusCode(200).payload(payloadFromResource("/flavor_list.json")).build() );
+      FlavorApi api = troveApi.getFlavorApi("RegionOne");
 
-	      Set<? extends Flavor> flavors = api.list(troveApi.getCurrentTenantId().get().getId() ).toSet();
-	      Flavor flavor = flavors.iterator().next();
-	      assertEquals(flavor.getName(), "512MB Instance");
-	      assertEquals(flavor.getId(), 1);
-	      assertEquals(flavor.getRam(), 512);
-	      assertEquals(flavor.getLinks().size(), 2);
-	   }
-
-   public void testGetFlavorFail() {
-      URI endpoint = URI.create("http://172.16.0.1:8776/v1/3456/flavors/12312");
-      FlavorApi api = requestsSendResponses(
-            keystoneAuthWithUsernameAndPasswordAndTenantName,
-            responseWithKeystoneAccess,
-            authenticatedGET().endpoint(endpoint).build(),
-            HttpResponse.builder().statusCode(404).build()
-      ).getFlavorApi("RegionOne");
-
-      assertNull(api.get(12312));
+      Set<? extends Flavor> flavors = api.list(troveApi.getCurrentTenantId().get().getId() ).toSet();
+      Flavor flavor = flavors.iterator().next();
+      assertEquals(flavor.getName(), "512MB Instance");
+      assertEquals(flavor.getId(), 1);
+      assertEquals(flavor.getRam(), 512);
+      assertEquals(flavor.getLinks().size(), 2);
    }
+
 }

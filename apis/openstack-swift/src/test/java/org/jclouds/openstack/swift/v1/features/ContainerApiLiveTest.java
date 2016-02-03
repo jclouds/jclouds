@@ -124,7 +124,7 @@ public class ContainerApiLiveTest extends BaseSwiftApiLiveTest<SwiftApi> {
          assertEquals(container.getName(), name);
          assertTrue(container.getMetadata().isEmpty());
 
-         assertNotNull(api.getContainerApi(regionId).update(name, opts));
+         api.getContainerApi(regionId).update(name, opts);
 
          Container updatedContainer = api.getContainerApi(regionId).get(name);
          assertNotNull(updatedContainer);
@@ -144,7 +144,7 @@ public class ContainerApiLiveTest extends BaseSwiftApiLiveTest<SwiftApi> {
 
          assertThat(containerApi.get(name).getAnybodyRead().get()).isFalse();
 
-         assertThat(containerApi.update(name, new UpdateContainerOptions().anybodyRead())).isTrue();
+         containerApi.update(name, new UpdateContainerOptions().anybodyRead());
          assertThat(containerApi.get(name).getAnybodyRead().get()).isTrue();
 
          assertThat(containerApi.deleteIfEmpty(name)).isTrue();
@@ -165,7 +165,7 @@ public class ContainerApiLiveTest extends BaseSwiftApiLiveTest<SwiftApi> {
 
       for (String regionId : regions) {
          ContainerApi containerApi = api.getContainerApi(regionId);
-         assertTrue(containerApi.updateMetadata(name, meta));
+         containerApi.updateMetadata(name, meta);
          containerHasMetadata(containerApi, name, meta);
       }
    }
@@ -176,7 +176,7 @@ public class ContainerApiLiveTest extends BaseSwiftApiLiveTest<SwiftApi> {
       for (String regionId : regions) {
          ContainerApi containerApi = api.getContainerApi(regionId);
          // update
-         assertTrue(containerApi.updateMetadata(name, meta));
+         containerApi.updateMetadata(name, meta);
          containerHasMetadata(containerApi, name, meta);
          // delete
          assertTrue(containerApi.deleteMetadata(name, meta));

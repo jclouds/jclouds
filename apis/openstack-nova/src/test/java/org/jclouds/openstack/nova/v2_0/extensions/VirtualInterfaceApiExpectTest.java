@@ -17,7 +17,6 @@
 package org.jclouds.openstack.nova.v2_0.extensions;
 
 import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertTrue;
 
 import java.net.URI;
 
@@ -48,15 +47,4 @@ public class VirtualInterfaceApiExpectTest extends BaseNovaApiExpectTest {
       assertEquals(vif.getMacAddress(), "fa:16:3e:09:71:34");
    }
 
-   public void testListVirtualInterfacesFailNotFound() {
-      URI endpoint = URI.create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v2/3456/servers/1/os-virtual-interfaces");
-      VirtualInterfaceApi api = requestsSendResponses(
-            keystoneAuthWithUsernameAndPasswordAndTenantName,
-            responseWithKeystoneAccess, extensionsOfNovaRequest, extensionsOfNovaResponse,
-            authenticatedGET().endpoint(endpoint).build(),
-            HttpResponse.builder().statusCode(404).build()
-      ).getVirtualInterfaceApi("az-1.region-a.geo-1").get();
-
-      assertTrue(api.listOnServer("1").isEmpty());
-   }
 }

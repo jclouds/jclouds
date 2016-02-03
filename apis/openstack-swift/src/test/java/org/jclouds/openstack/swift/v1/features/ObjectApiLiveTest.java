@@ -132,7 +132,7 @@ public class ObjectApiLiveTest extends BaseSwiftApiLiveTest<SwiftApi> {
          checkObject(object);
 
          // check the copy operation
-         assertTrue(destApi.copy(destinationObject, sourceContainer, sourceObjectName));
+         destApi.copy(destinationObject, sourceContainer, sourceObjectName);
          assertNotNull(destApi.get(destinationObject));
 
          // now get a real SwiftObject
@@ -191,9 +191,9 @@ public class ObjectApiLiveTest extends BaseSwiftApiLiveTest<SwiftApi> {
          checkObject(object);
 
          // check the copy append metadata operation
-         assertTrue(destApi.copyAppendMetadata(destinationObject, sourceContainer, sourceObjectName,
+         destApi.copyAppendMetadata(destinationObject, sourceContainer, sourceObjectName,
                ImmutableMap.<String, String>of("additionalUserMetakey", "additionalUserMetavalue"),
-               ImmutableMap.of("Content-Disposition", "attachment; filename=\"updatedname.txt\"")));
+               ImmutableMap.of("Content-Disposition", "attachment; filename=\"updatedname.txt\""));
 
          // now get a real SwiftObject
          SwiftObject destSwiftObject = destApi.get(destinationObject);
@@ -217,9 +217,9 @@ public class ObjectApiLiveTest extends BaseSwiftApiLiveTest<SwiftApi> {
          assertEquals(destSwiftObject.getPayload().getContentMetadata().getContentDisposition(), "attachment; filename=\"updatedname.txt\"");
 
          // check the copy replace metadata operation
-         assertTrue(destApi.copy(destinationObject, sourceContainer, sourceObjectName,
+         destApi.copy(destinationObject, sourceContainer, sourceObjectName,
                ImmutableMap.<String, String>of("key3", "value3"),
-               ImmutableMap.of("Content-Disposition", "attachment; filename=\"updatedname.txt\"")));
+               ImmutableMap.of("Content-Disposition", "attachment; filename=\"updatedname.txt\""));
 
          // now get a real SwiftObject
          destSwiftObject = destApi.get(destinationObject);
@@ -281,7 +281,7 @@ public class ObjectApiLiveTest extends BaseSwiftApiLiveTest<SwiftApi> {
          ObjectApi objectApi = api.getObjectApi(regionId, containerName);
 
          Map<String, String> meta = ImmutableMap.of("MyAdd1", "foo", "MyAdd2", "bar");
-         assertTrue(objectApi.updateMetadata(name, meta));
+         objectApi.updateMetadata(name, meta);
 
          SwiftObject object = objectApi.get(name);
          for (Entry<String, String> entry : meta.entrySet()) {
@@ -337,7 +337,7 @@ public class ObjectApiLiveTest extends BaseSwiftApiLiveTest<SwiftApi> {
 
          Map<String, String> meta = ImmutableMap.of("MyDelete1", "foo", "MyDelete2", "bar");
 
-         assertTrue(objectApi.updateMetadata(name, meta));
+         objectApi.updateMetadata(name, meta);
          assertFalse(objectApi.get(name).getMetadata().isEmpty());
 
          assertTrue(objectApi.deleteMetadata(name, meta));

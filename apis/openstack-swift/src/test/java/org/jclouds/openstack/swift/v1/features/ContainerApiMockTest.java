@@ -259,7 +259,7 @@ public class ContainerApiMockTest extends BaseOpenStackMockTest<SwiftApi> {
 
       try {
          SwiftApi api = api(server.getUrl("/").toString(), "openstack-swift");
-         assertTrue(api.getContainerApi("DFW").updateMetadata("myContainer", metadata));
+         api.getContainerApi("DFW").updateMetadata("myContainer", metadata);
 
          assertEquals(server.getRequestCount(), 2);
          assertEquals(server.takeRequest().getRequestLine(), "POST /tokens HTTP/1.1");
@@ -300,25 +300,6 @@ public class ContainerApiMockTest extends BaseOpenStackMockTest<SwiftApi> {
       MockWebServer server = mockOpenStackServer();
       server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/access.json"))));
       server.enqueue(addCommonHeaders(new MockResponse().setResponseCode(204)));
-
-      try {
-         SwiftApi api = api(server.getUrl("/").toString(), "openstack-swift");
-         assertTrue(api.getContainerApi("DFW").deleteIfEmpty("myContainer"));
-
-         assertEquals(server.getRequestCount(), 2);
-         assertEquals(server.takeRequest().getRequestLine(), "POST /tokens HTTP/1.1");
-         RecordedRequest deleteRequest = server.takeRequest();
-         assertEquals(deleteRequest.getRequestLine(),
-               "DELETE /v1/MossoCloudFS_5bcf396e-39dd-45ff-93a1-712b9aba90a9/myContainer HTTP/1.1");
-      } finally {
-         server.shutdown();
-      }
-   }
-
-   public void testAlreadyDeleted() throws Exception {
-      MockWebServer server = mockOpenStackServer();
-      server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/access.json"))));
-      server.enqueue(addCommonHeaders(new MockResponse().setResponseCode(404)));
 
       try {
          SwiftApi api = api(server.getUrl("/").toString(), "openstack-swift");

@@ -17,8 +17,6 @@
 package org.jclouds.openstack.nova.v2_0.extensions;
 
 import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertFalse;
-import static org.testng.Assert.assertNull;
 import static org.testng.Assert.assertTrue;
 
 import java.net.URI;
@@ -68,18 +66,6 @@ public class VolumeTypeApiExpectTest extends BaseNovaApiExpectTest {
 
       VolumeType type = api.get("8");
       assertEquals(type, testVolumeType());
-   }
-
-   public void testGetVolumeTypeFailNotFound() {
-      URI endpoint = URI.create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v2/3456/os-volume-types/8");
-      VolumeTypeApi api = requestsSendResponses(
-            keystoneAuthWithUsernameAndPasswordAndTenantName,
-            responseWithKeystoneAccess, extensionsOfNovaRequest, extensionsOfNovaResponse,
-            authenticatedGET().endpoint(endpoint).build(),
-            HttpResponse.builder().statusCode(404).build()
-      ).getVolumeTypeApi("az-1.region-a.geo-1").get();
-
-      assertNull(api.get("8"));
    }
 
    public void testCreateVolumeType() {
@@ -139,18 +125,6 @@ public class VolumeTypeApiExpectTest extends BaseNovaApiExpectTest {
       assertTrue(api.delete("8"));
    }
 
-   public void testDeleteVolumeTypeFailNotFound() {
-      URI endpoint = URI.create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v2/3456/os-volume-types/8");
-      VolumeTypeApi api = requestsSendResponses(
-            keystoneAuthWithUsernameAndPasswordAndTenantName,
-            responseWithKeystoneAccess, extensionsOfNovaRequest, extensionsOfNovaResponse,
-            authenticatedGET().endpoint(endpoint).method("DELETE").build(),
-            HttpResponse.builder().statusCode(404).build()
-      ).getVolumeTypeApi("az-1.region-a.geo-1").get();
-
-      assertFalse(api.delete("8"));
-   }
-
    public void testGetAllExtraSpecs() {
       URI endpoint = URI.create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v2/3456/os-volume-types/9/extra_specs");
       VolumeTypeApi api = requestsSendResponses(
@@ -161,18 +135,6 @@ public class VolumeTypeApiExpectTest extends BaseNovaApiExpectTest {
       ).getVolumeTypeApi("az-1.region-a.geo-1").get();
 
       assertEquals(api.getExtraSpecs("9"), ImmutableMap.of("test", "value1"));
-   }
-
-   public void testGetAllExtraSpecsFailNotFound() {
-      URI endpoint = URI.create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v2/3456/os-volume-types/9/extra_specs");
-      VolumeTypeApi api = requestsSendResponses(
-            keystoneAuthWithUsernameAndPasswordAndTenantName,
-            responseWithKeystoneAccess, extensionsOfNovaRequest, extensionsOfNovaResponse,
-            authenticatedGET().endpoint(endpoint).build(),
-            HttpResponse.builder().statusCode(404).build()
-      ).getVolumeTypeApi("az-1.region-a.geo-1").get();
-
-      assertTrue(api.getExtraSpecs("9").isEmpty());
    }
 
    public void testSetAllExtraSpecs() {
@@ -186,7 +148,7 @@ public class VolumeTypeApiExpectTest extends BaseNovaApiExpectTest {
             HttpResponse.builder().statusCode(200).build()
       ).getVolumeTypeApi("az-1.region-a.geo-1").get();
 
-      assertTrue(api.updateExtraSpecs("9", ImmutableMap.of("test1", "somevalue")));
+      api.updateExtraSpecs("9", ImmutableMap.of("test1", "somevalue"));
    }
 
    public void testSetExtraSpec() {
@@ -200,7 +162,7 @@ public class VolumeTypeApiExpectTest extends BaseNovaApiExpectTest {
             HttpResponse.builder().statusCode(200).build()
       ).getVolumeTypeApi("az-1.region-a.geo-1").get();
 
-      assertTrue(api.updateExtraSpec("5", "test1", "somevalue"));
+      api.updateExtraSpec("5", "test1", "somevalue");
    }
 
    public void testGetExtraSpec() {
@@ -215,18 +177,6 @@ public class VolumeTypeApiExpectTest extends BaseNovaApiExpectTest {
       assertEquals(api.getExtraSpec("5", "test1"), "another value");
    }
 
-   public void testGetExtraSpecFailNotFound() {
-      URI endpoint = URI.create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v2/3456/os-volume-types/5/extra_specs/test1");
-      VolumeTypeApi api = requestsSendResponses(
-            keystoneAuthWithUsernameAndPasswordAndTenantName,
-            responseWithKeystoneAccess, extensionsOfNovaRequest, extensionsOfNovaResponse,
-            authenticatedGET().endpoint(endpoint).build(),
-            HttpResponse.builder().statusCode(404).build()
-      ).getVolumeTypeApi("az-1.region-a.geo-1").get();
-
-      assertNull(api.getExtraSpec("5", "test1"));
-   }
-
    public void testDeleteExtraSpec() {
       URI endpoint = URI.create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v2/3456/os-volume-types/5/extra_specs/test1");
       VolumeTypeApi api = requestsSendResponses(
@@ -237,18 +187,6 @@ public class VolumeTypeApiExpectTest extends BaseNovaApiExpectTest {
       ).getVolumeTypeApi("az-1.region-a.geo-1").get();
 
       assertTrue(api.deleteExtraSpec("5", "test1"));
-   }
-
-   public void testDeleteExtraSpecFailNotFound() {
-      URI endpoint = URI.create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v2/3456/os-volume-types/5/extra_specs/test1");
-      VolumeTypeApi api = requestsSendResponses(
-            keystoneAuthWithUsernameAndPasswordAndTenantName,
-            responseWithKeystoneAccess, extensionsOfNovaRequest, extensionsOfNovaResponse,
-            authenticatedGET().endpoint(endpoint).method("DELETE").build(),
-            HttpResponse.builder().statusCode(404).build()
-      ).getVolumeTypeApi("az-1.region-a.geo-1").get();
-
-      assertFalse(api.deleteExtraSpec("5", "test1"));
    }
 
    public VolumeType testVolumeType() {

@@ -17,7 +17,6 @@
 package org.jclouds.openstack.cinder.v1.features;
 
 import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertNull;
 
 import java.net.URI;
 import java.util.Set;
@@ -63,18 +62,6 @@ public class VolumeTypeApiExpectTest extends BaseCinderApiExpectTest {
 
       VolumeType type = api.get("1");
       assertEquals(type, testVolumeType());
-   }
-
-   public void testGetVolumeTypeFailNotFound() {
-      URI endpoint = URI.create("http://172.16.0.1:8776/v1/50cdb4c60374463198695d9f798fa34d/types/X");
-      VolumeTypeApi api = requestsSendResponses(
-            keystoneAuthWithUsernameAndPasswordAndTenantName,
-            responseWithKeystoneAccess,
-            authenticatedGET().endpoint(endpoint).build(),
-            HttpResponse.builder().statusCode(404).build()
-      ).getVolumeTypeApi("RegionOne");
-
-      assertNull(api.get("X"));
    }
 
    public VolumeType testVolumeType() {
