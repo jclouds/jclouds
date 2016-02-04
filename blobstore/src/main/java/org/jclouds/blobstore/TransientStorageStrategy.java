@@ -165,6 +165,12 @@ public class TransientStorageStrategy implements LocalStorageStrategy {
       HashingInputStream input = new HashingInputStream(Hashing.md5(), blob.getPayload().openStream());
       try {
          payload = ByteStreams.toByteArray(input);
+         long actualSize = payload.length;
+         Long expectedSize = blob.getMetadata().getContentMetadata().getContentLength();
+         if (expectedSize != null && actualSize != expectedSize) {
+            throw new IOException("Content-Length mismatch, actual: " + actualSize +
+                  " expected: " + expectedSize);
+         }
          actualHashCode = input.hash();
          HashCode expectedHashCode = blob.getPayload().getContentMetadata().getContentMD5AsHashCode();
          if (expectedHashCode != null && !actualHashCode.equals(expectedHashCode)) {

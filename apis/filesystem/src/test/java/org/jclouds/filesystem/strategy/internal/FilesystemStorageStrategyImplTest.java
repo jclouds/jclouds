@@ -34,6 +34,7 @@ import java.util.concurrent.TimeUnit;
 
 import javax.inject.Provider;
 
+import org.assertj.core.api.Fail;
 import org.jclouds.blobstore.domain.Blob;
 import org.jclouds.blobstore.domain.BlobBuilder;
 import org.jclouds.blobstore.domain.ContainerAccess;
@@ -665,6 +666,21 @@ public class FilesystemStorageStrategyImplTest {
 
       blob = storageStrategy.getBlob(CONTAINER_NAME, blobKey);
       assertFalse(blob.getMetadata().getUserMetadata().containsKey("key1"));
+   }
+
+   @Test
+   public void testPutIncorrectContentLength() throws Exception {
+      Blob blob = new BlobBuilderImpl()
+            .name("key")
+            .payload(randomByteSource().slice(0, 1024))
+            .contentLength(512)
+            .build();
+      try {
+         storageStrategy.putBlob(CONTAINER_NAME, blob);
+         Fail.failBecauseExceptionWasNotThrown(IOException.class);
+      } catch (IOException ioe) {
+         // expected
+      }
    }
 
    // ---------------------------------------------------------- Private methods

@@ -462,7 +462,12 @@ public class FilesystemStorageStrategyImpl implements LocalStorageStrategy {
       try {
          Files.createParentDirs(tmpFile);
          his = new HashingInputStream(Hashing.md5(), payload.openStream());
-         Files.asByteSink(tmpFile).writeFrom(his);
+         long actualSize = Files.asByteSink(tmpFile).writeFrom(his);
+         Long expectedSize = blob.getMetadata().getContentMetadata().getContentLength();
+         if (expectedSize != null && actualSize != expectedSize) {
+            throw new IOException("Content-Length mismatch, actual: " + actualSize +
+                  " expected: " + expectedSize);
+         }
          HashCode actualHashCode = his.hash();
          HashCode expectedHashCode = payload.getContentMetadata().getContentMD5AsHashCode();
          if (expectedHashCode != null && !actualHashCode.equals(expectedHashCode)) {
