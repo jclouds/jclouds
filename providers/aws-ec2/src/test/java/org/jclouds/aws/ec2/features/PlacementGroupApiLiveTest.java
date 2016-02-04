@@ -165,6 +165,7 @@ public class PlacementGroupApiLiveTest extends BaseComputeServiceContextLiveTest
       assert availableTester.apply(group) : group;
    }
 
+   @SuppressWarnings("CheckReturnValue")
    public void testStartHS1Instance() throws Exception {
 
       Template template = view.getComputeService().templateBuilder()

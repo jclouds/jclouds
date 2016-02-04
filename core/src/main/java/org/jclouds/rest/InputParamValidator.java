@@ -129,7 +129,7 @@ public class InputParamValidator {
       }
    }
 
-   @SuppressWarnings("unchecked")
+   @SuppressWarnings({"CheckReturnValue", "unchecked"})
    private void runPredicatesAgainstArgs(List<Validator<?>> predicates, List<Object> args) {
       for (@SuppressWarnings("rawtypes")
       Validator validator : predicates) {

@@ -20,6 +20,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Strings.emptyToNull;
 
 import org.jclouds.View;
+import org.jclouds.util.TypeTokenUtils;
 
 import com.google.common.base.Predicate;
 import com.google.common.base.Predicates;
@@ -84,7 +85,7 @@ public class ApiPredicates {
           */
          @Override
          public boolean apply(ApiMetadata apiMetadata) {
-            return type.isAssignableFrom(apiMetadata.getContext());
+            return TypeTokenUtils.isSupertypeOf(type, apiMetadata.getContext());
          }
 
          /**
@@ -114,7 +115,7 @@ public class ApiPredicates {
          @Override
          public boolean apply(ApiMetadata apiMetadata) {
             for (TypeToken<? extends View> to : apiMetadata.getViews())
-               if (type.isAssignableFrom(to))
+               if (TypeTokenUtils.isSupertypeOf(type, to))
                   return true;
             return false;
          }

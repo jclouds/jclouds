@@ -27,6 +27,7 @@ import org.jclouds.googlecloud.options.ListOptions;
 import org.jclouds.javax.annotation.Nullable;
 
 import com.google.common.collect.AbstractIterator;
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterators;
 
 public final class ListPages {
@@ -49,7 +50,7 @@ public final class ListPages {
    }
 
    static <T> Iterator<ListPage<T>> singletonOrEmptyIterator(ListPage<T> input) {
-      return input.isEmpty() ? Iterators.<ListPage<T>>emptyIterator() : Iterators.singletonIterator(input);
+      return input.isEmpty() ? ImmutableList.<ListPage<T>>of().iterator() : Iterators.singletonIterator(input);
    }
 
    private ListPages() {

@@ -44,6 +44,7 @@ public class UpdateCDNContainerOptionsTest {
       assertEquals(ImmutableList.of("123456"), options.buildRequestHeaders().get(CDN_TTL));
    }
 
+   @SuppressWarnings("CheckReturnValue")
    @Test(expectedExceptions = IllegalStateException.class)
    public void testTTLLessThanMin() {
       UpdateCDNContainerOptions options = 
@@ -51,6 +52,7 @@ public class UpdateCDNContainerOptionsTest {
       options.buildRequestHeaders().get(CDN_TTL);
    }
 
+   @SuppressWarnings("CheckReturnValue")
    @Test(expectedExceptions = IllegalStateException.class)
    public void testTTLGreaterThanMax() {
       UpdateCDNContainerOptions options = 

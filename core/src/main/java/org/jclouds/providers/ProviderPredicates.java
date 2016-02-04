@@ -23,6 +23,7 @@ import org.jclouds.Context;
 import org.jclouds.View;
 import org.jclouds.apis.ApiMetadata;
 import org.jclouds.apis.ApiPredicates;
+import org.jclouds.util.TypeTokenUtils;
 
 import com.google.common.base.Preconditions;
 import com.google.common.base.Predicate;
@@ -237,7 +238,7 @@ public class ProviderPredicates {
           */
          @Override
          public boolean apply(ProviderMetadata providerMetadata) {
-            return apiClass.isAssignableFrom(providerMetadata.getApiMetadata().getClass());
+            return TypeTokenUtils.isSupertypeOf(apiClass, providerMetadata.getApiMetadata().getClass());
          }
 
          /**

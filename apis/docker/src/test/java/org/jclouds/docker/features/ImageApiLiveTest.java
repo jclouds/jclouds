@@ -16,6 +16,7 @@
  */
 package org.jclouds.docker.features;
 
+import static org.assertj.guava.api.Assertions.assertThat;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertNull;
@@ -29,6 +30,7 @@ import org.jclouds.docker.domain.ImageSummary;
 import org.jclouds.docker.options.CreateImageOptions;
 import org.testng.annotations.Test;
 
+import com.google.common.base.Optional;
 import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
 
@@ -61,12 +63,13 @@ public class ImageApiLiveTest extends BaseDockerApiLiveTest {
       List<ImageSummary> listImages = api().listImages();
       assertNotNull(listImages);
 
-      Iterables.find(listImages, new Predicate<ImageSummary>() {
+      Optional<ImageSummary> summary = Iterables.tryFind(listImages, new Predicate<ImageSummary>() {
          @Override
          public boolean apply(ImageSummary input) {
             return input.repoTags().contains("jclouds:testTag");
          }
       });
+      assertThat(summary).isPresent();
    }
 
    @Test(dependsOnMethods = "testListImages", alwaysRun = true)

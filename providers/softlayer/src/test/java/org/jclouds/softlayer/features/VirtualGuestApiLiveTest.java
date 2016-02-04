@@ -17,6 +17,7 @@
 package org.jclouds.softlayer.features;
 
 import static com.google.common.base.Preconditions.checkState;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.jclouds.util.Predicates2.retry;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
@@ -132,9 +133,13 @@ public class VirtualGuestApiLiveTest extends BaseSoftLayerApiLiveTest {
       VirtualGuest found = virtualGuestApi.getVirtualGuest(virtualGuest.getId());
       Set<TagReference> tagReferences = found.getTagReferences();
       assertNotNull(tagReferences);
-      for (String tag : tags) {
-         Iterables.contains(tagReferences, tag);
+
+      ImmutableSet.Builder<String> actualTagsBuilder = ImmutableSet.builder();
+      for (TagReference ref : tagReferences) {
+         actualTagsBuilder.add(ref.getTag().getName());
       }
+      Set<String> actualTags = actualTagsBuilder.build();
+      assertThat(actualTags).containsAll(tags);
    }
 
    @Test(dependsOnMethods = "testSetTagsOnVirtualGuest")

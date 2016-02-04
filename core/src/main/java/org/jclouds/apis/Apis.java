@@ -26,6 +26,7 @@ import java.util.ServiceLoader;
 
 import org.jclouds.View;
 import org.jclouds.osgi.ApiRegistry;
+import org.jclouds.util.TypeTokenUtils;
 
 import com.google.common.base.Function;
 import com.google.common.base.Predicate;
@@ -131,7 +132,7 @@ public class Apis {
 
          @Override
          public boolean apply(TypeToken<?> input) {
-            return view.isAssignableFrom(input);
+            return TypeTokenUtils.isSupertypeOf(view, input);
          }
 
       });

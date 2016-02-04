@@ -82,6 +82,7 @@ import org.jclouds.rest.config.CredentialStoreModule;
 import org.jclouds.rest.config.HttpApiModule;
 import org.jclouds.rest.config.RestModule;
 import org.jclouds.rest.internal.InvokeHttpMethod;
+import org.jclouds.util.TypeTokenUtils;
 
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Function;
@@ -620,7 +621,7 @@ public class ContextBuilder {
    @SuppressWarnings("unchecked")
    public <C extends Context> C build(TypeToken<C> contextType) {
       TypeToken<C> returnType = null;
-      if (contextType.isAssignableFrom(apiMetadata.getContext()))
+      if (TypeTokenUtils.isSupertypeOf(contextType, apiMetadata.getContext()))
          returnType = (TypeToken<C>) apiMetadata.getContext();
       else
          throw new IllegalArgumentException(String.format("api %s not assignable from %s; context: %s", apiMetadata,
