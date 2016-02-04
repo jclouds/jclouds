@@ -389,7 +389,8 @@ public class AzureBlobStore extends BaseBlobStore {
 
    @Override
    public void abortMultipartUpload(MultipartUpload mpu) {
-      sync.deleteBlob(mpu.containerName(), mpu.blobName());
+      // Azure automatically removes uncommitted blocks after 7 days:
+      // http://gauravmantri.com/2012/05/11/comparing-windows-azure-blob-storage-and-amazon-simple-storage-service-s3part-ii/#f020
    }
 
    @Override
