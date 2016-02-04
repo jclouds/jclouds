@@ -61,6 +61,7 @@ public class ZoneIdToURIFromAccessForTypeAndVersionTest {
    }).getInstance(ZoneIdToURISupplier.Factory.class);
 
 
+   @SuppressWarnings("CheckReturnValue")
    @Test(expectedExceptions = NoSuchElementException.class)
    public void testZoneUnmatches() {
       Maps.transformValues(factory.createForApiTypeAndVersion("compute", "1.0").get(),
