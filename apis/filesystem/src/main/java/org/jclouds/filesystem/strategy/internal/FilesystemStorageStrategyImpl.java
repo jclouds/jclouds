@@ -494,11 +494,11 @@ public class FilesystemStorageStrategyImpl implements LocalStorageStrategy {
          setBlobAccess(containerName, tmpBlobName, BlobAccess.PRIVATE);
 
          if (!tmpFile.renameTo(outputFile)) {
-            throw new RuntimeException("Could not rename file " + tmpFile + " to " + outputFile);
+            throw new IOException("Could not rename file " + tmpFile + " to " + outputFile);
          }
 
          return base16().lowerCase().encode(actualHashCode.asBytes());
-      } catch (IOException ex) {
+      } finally {
          if (tmpFile != null) {
             try {
                delete(tmpFile);
@@ -506,8 +506,6 @@ public class FilesystemStorageStrategyImpl implements LocalStorageStrategy {
                logger.debug("Could not delete %s: %s", tmpFile, e);
             }
          }
-         throw ex;
-      } finally {
          closeQuietly(his);
          if (payload != null) {
             payload.release();
