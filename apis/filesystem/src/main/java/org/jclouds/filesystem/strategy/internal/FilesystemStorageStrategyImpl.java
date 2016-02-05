@@ -496,6 +496,7 @@ public class FilesystemStorageStrategyImpl implements LocalStorageStrategy {
          if (!tmpFile.renameTo(outputFile)) {
             throw new IOException("Could not rename file " + tmpFile + " to " + outputFile);
          }
+         tmpFile = null;
 
          return base16().lowerCase().encode(actualHashCode.asBytes());
       } finally {
