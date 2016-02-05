@@ -127,7 +127,6 @@ public interface SubnetApi {
    @PUT
    @Path("/{id}")
    @SelectJson("subnet")
-   @Fallback(Fallbacks.NullOnNotFoundOr404.class)
    Subnet update(@PathParam("id") String id, @WrapWith("subnet") Subnet.UpdateSubnet subnet);
 
    /**

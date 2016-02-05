@@ -136,8 +136,6 @@ public interface FWaaSApi {
    @PUT
    @Path("/firewalls/{id}")
    @SelectJson("firewall")
-   @Fallback(NullOnNotFoundOr404.class)
-   @Nullable
    Firewall update(@PathParam("id") String id, @WrapWith("firewall") UpdateFirewall updateFirewall);
 
    /**
@@ -183,7 +181,6 @@ public interface FWaaSApi {
    @Named("firewall:updatePolicy")
    @PUT
    @SelectJson("firewall_policy")
-   @Fallback(NullOnNotFoundOr404.class)
    @Path("/firewall_policies/{id}")
    FirewallPolicy updateFirewallPolicy(@PathParam("id") String id, @WrapWith("firewall_policy") UpdateFirewallPolicy updateFirewallPolicy);
 
@@ -225,8 +222,6 @@ public interface FWaaSApi {
    @PUT
    @Path("/firewall_rules/{id}")
    @SelectJson("firewall_rule")
-   @Fallback(NullOnNotFoundOr404.class)
-   @Nullable
    FirewallRule updateFirewallRule(@PathParam("id") String id, @WrapWith("firewall_rule") UpdateFirewallRule updateFirewallRule);
 
    @Named("firewall:deleteFirewallRule")
@@ -238,8 +233,6 @@ public interface FWaaSApi {
    @Named("firewall:insertFirewallRuleToPolicy")
    @PUT
    @Path("/firewall_policies/{id}/insert_rule")
-   @Fallback(NullOnNotFoundOr404.class)
-   @Nullable
    FirewallPolicy insertFirewallRuleToPolicy(@PathParam("id") String policyId, @WrapWith("firewall_rule_id") String firewallRuleId);
 
    @Named("firewall:removeFirewallRuleFromPolicy")

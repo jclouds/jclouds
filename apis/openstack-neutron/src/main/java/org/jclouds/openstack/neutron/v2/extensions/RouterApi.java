@@ -127,8 +127,6 @@ public interface RouterApi {
    @PUT
    @Path("/{id}")
    @SelectJson("router")
-   @Fallback(NullOnNotFoundOr404.class)
-   @Nullable
    Router update(@PathParam("id") String id, @WrapWith("router") Router.UpdateRouter router);
 
    /**
@@ -154,8 +152,6 @@ public interface RouterApi {
    @PUT
    @Path("/{id}/add_router_interface")
    @MapBinder(EmptyOptions.class)
-   @Fallback(NullOnNotFoundOr404.class)
-   @Nullable
    RouterInterface addInterfaceForSubnet(@PathParam("id") String routerId, @PayloadParam("subnet_id") String subnetId);
 
    /**
@@ -169,8 +165,6 @@ public interface RouterApi {
    @PUT
    @Path("/{id}/add_router_interface")
    @MapBinder(EmptyOptions.class)
-   @Fallback(NullOnNotFoundOr404.class)
-   @Nullable
    RouterInterface addInterfaceForPort(@PathParam("id") String routerId, @PayloadParam("port_id") String portId);
 
    /**

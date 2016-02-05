@@ -17,11 +17,8 @@
 package org.jclouds.openstack.neutron.v2.extensions;
 
 import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertNotNull;
-import static org.testng.Assert.assertNull;
 import static org.testng.Assert.assertTrue;
-import static org.testng.Assert.fail;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -35,7 +32,6 @@ import org.jclouds.openstack.neutron.v2.domain.RouterInterface;
 import org.jclouds.openstack.neutron.v2.domain.Routers;
 import org.jclouds.openstack.neutron.v2.internal.BaseNeutronApiMockTest;
 import org.jclouds.openstack.v2_0.options.PaginationOptions;
-import org.jclouds.rest.ResourceNotFoundException;
 import org.testng.annotations.Test;
 
 import com.squareup.okhttp.mockwebserver.MockResponse;
@@ -92,30 +88,6 @@ public class RouterApiMockTest extends BaseNeutronApiMockTest {
       }
    }
 
-   @Test(expectedExceptions = ResourceNotFoundException.class)
-   public void testCreateRouterFail() throws IOException, InterruptedException, URISyntaxException {
-      MockWebServer server = mockOpenStackServer();
-      server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/access.json"))));
-      server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/extension_list.json"))));
-      server.enqueue(addCommonHeaders(
-            new MockResponse().setResponseCode(404)));
-
-      try {
-         NeutronApi neutronApi = api(server.getUrl("/").toString(), "openstack-neutron", overrides);
-         RouterApi api = neutronApi.getRouterApi("RegionOne").get();
-
-         Router.CreateRouter createRouter = Router.createBuilder().name("another_router").adminStateUp(Boolean.TRUE)
-               .externalGatewayInfo(ExternalGatewayInfo.builder().networkId("8ca37218-28ff-41cb-9b10-039601ea7e6b").build())
-               .build();
-
-         api.create(createRouter);
-         fail("Should have failed with not found exception");
-
-      } finally {
-         server.shutdown();
-      }
-   }
-
    public void testListSpecificPageRouter() throws IOException, InterruptedException, URISyntaxException {
       MockWebServer server = mockOpenStackServer();
       server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/access.json"))));
@@ -142,36 +114,6 @@ public class RouterApiMockTest extends BaseNeutronApiMockTest {
          assertNotNull(routers);
          assertEquals(routers.size(), 2);
          assertEquals(routers.first().get().getId(), "a9254bdb-2613-4a13-ac4c-adc581fba50d");
-      } finally {
-         server.shutdown();
-      }
-   }
-
-   public void testListSpecificPageRouterFail() throws IOException, InterruptedException, URISyntaxException {
-      MockWebServer server = mockOpenStackServer();
-      server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/access.json"))));
-      server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/extension_list.json"))));
-      server.enqueue(addCommonHeaders(new MockResponse().setResponseCode(404)));
-
-      try {
-         NeutronApi neutronApi = api(server.getUrl("/").toString(), "openstack-neutron", overrides);
-         RouterApi api = neutronApi.getRouterApi("RegionOne").get();
-
-         Routers routers = api.list(PaginationOptions.Builder.limit(2).marker("abcdefg"));
-
-         /*
-          * Check request
-          */
-         assertEquals(server.getRequestCount(), 3);
-         assertAuthentication(server);
-         assertExtensions(server, uriApiVersion + "");
-         assertRequest(server.takeRequest(), "GET", uriApiVersion + "/routers?limit=2&marker=abcdefg");
-
-         /*
-          * Check response
-          */
-         assertNotNull(routers);
-         assertTrue(routers.isEmpty());
       } finally {
          server.shutdown();
       }
@@ -212,37 +154,6 @@ public class RouterApiMockTest extends BaseNeutronApiMockTest {
       }
    }
 
-   public void testListPagedRouterFail() throws IOException, InterruptedException, URISyntaxException {
-      MockWebServer server = mockOpenStackServer();
-      server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/access.json"))));
-      server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/extension_list.json"))));
-      server.enqueue(addCommonHeaders(new MockResponse().setResponseCode(404)));
-
-      try {
-         NeutronApi neutronApi = api(server.getUrl("/").toString(), "openstack-neutron", overrides);
-         RouterApi api = neutronApi.getRouterApi("RegionOne").get();
-
-         // Note: Lazy! Have to actually look at the collection.
-         List<Router> routers = api.list().concat().toList();
-
-         /*
-          * Check request
-          */
-         assertEquals(server.getRequestCount(), 3);
-         assertAuthentication(server);
-         assertExtensions(server, uriApiVersion + "");
-         assertRequest(server.takeRequest(), "GET", uriApiVersion + "/routers");
-
-         /*
-          * Check response
-          */
-         assertNotNull(routers);
-         assertTrue(routers.isEmpty());
-      } finally {
-         server.shutdown();
-      }
-   }
-
    public void testGetRouter() throws IOException, InterruptedException, URISyntaxException {
       MockWebServer server = mockOpenStackServer();
       server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/access.json"))));
@@ -274,36 +185,6 @@ public class RouterApiMockTest extends BaseNeutronApiMockTest {
          assertEquals(router.getAdminStateUp(), Boolean.TRUE);
          assertEquals(router.getId(), "a9254bdb-2613-4a13-ac4c-adc581fba50d");
          assertEquals(router.getTenantId(), "33a40233088643acb66ff6eb0ebea679");
-      } finally {
-         server.shutdown();
-      }
-   }
-
-   public void testGetRouterFail() throws IOException, InterruptedException, URISyntaxException {
-      MockWebServer server = mockOpenStackServer();
-      server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/access.json"))));
-      server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/extension_list.json"))));
-      server.enqueue(addCommonHeaders(
-            new MockResponse().setResponseCode(404)));
-
-      try {
-         NeutronApi neutronApi = api(server.getUrl("/").toString(), "openstack-neutron", overrides);
-         RouterApi api = neutronApi.getRouterApi("RegionOne").get();
-
-         Router router = api.get("12345");
-
-         /*
-          * Check request
-          */
-         assertEquals(server.getRequestCount(), 3);
-         assertAuthentication(server);
-         assertExtensions(server, uriApiVersion + "");
-         assertRequest(server.takeRequest(), "GET", uriApiVersion + "/routers/12345");
-
-         /*
-          * Check response
-          */
-         assertNull(router);
       } finally {
          server.shutdown();
       }
@@ -350,41 +231,6 @@ public class RouterApiMockTest extends BaseNeutronApiMockTest {
       }
    }
 
-   public void testUpdateRouterFail() throws IOException, InterruptedException, URISyntaxException {
-      MockWebServer server = mockOpenStackServer();
-      server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/access.json"))));
-      server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/extension_list.json"))));
-      server.enqueue(addCommonHeaders(
-            new MockResponse().setResponseCode(404)));
-
-      try {
-         NeutronApi neutronApi = api(server.getUrl("/").toString(), "openstack-neutron", overrides);
-         RouterApi api = neutronApi.getRouterApi("RegionOne").get();
-
-         Router.UpdateRouter updateRouter = Router.updateBuilder()
-               .externalGatewayInfo(
-                     ExternalGatewayInfo.builder().networkId("8ca37218-28ff-41cb-9b10-039601ea7e6b").build())
-               .build();
-
-         Router router = api.update("12345", updateRouter);
-
-         /*
-          * Check request
-          */
-         assertEquals(server.getRequestCount(), 3);
-         assertAuthentication(server);
-         assertExtensions(server, uriApiVersion + "");
-         assertRequest(server.takeRequest(), "PUT", uriApiVersion + "/routers/12345", "/router_update_request.json");
-
-         /*
-          * Check response
-          */
-         assertNull(router);
-      } finally {
-         server.shutdown();
-      }
-   }
-
    public void testDeleteRouter() throws IOException, InterruptedException, URISyntaxException {
       MockWebServer server = mockOpenStackServer();
       server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/access.json"))));
@@ -410,36 +256,6 @@ public class RouterApiMockTest extends BaseNeutronApiMockTest {
           * Check response
           */
          assertTrue(result);
-      } finally {
-         server.shutdown();
-      }
-   }
-
-   public void testDeleteRouterFail() throws IOException, InterruptedException, URISyntaxException {
-      MockWebServer server = mockOpenStackServer();
-      server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/access.json"))));
-      server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/extension_list.json"))));
-      server.enqueue(addCommonHeaders(
-            new MockResponse().setResponseCode(404)));
-
-      try {
-         NeutronApi neutronApi = api(server.getUrl("/").toString(), "openstack-neutron", overrides);
-         RouterApi api = neutronApi.getRouterApi("RegionOne").get();
-
-         boolean result = api.delete("12345");
-
-         /*
-          * Check request
-          */
-         assertEquals(server.getRequestCount(), 3);
-         assertAuthentication(server);
-         assertExtensions(server, uriApiVersion + "");
-         assertRequest(server.takeRequest(), "DELETE", uriApiVersion + "/routers/12345");
-
-         /*
-          * Check response
-          */
-         assertFalse(result);
       } finally {
          server.shutdown();
       }
@@ -471,36 +287,6 @@ public class RouterApiMockTest extends BaseNeutronApiMockTest {
          assertNotNull(routerInterface);
          assertEquals(routerInterface.getSubnetId(), "a2f1f29d-571b-4533-907f-5803ab96ead1");
          assertEquals(routerInterface.getPortId(), "3a44f4e5-1694-493a-a1fb-393881c673a4");
-      } finally {
-         server.shutdown();
-      }
-   }
-
-   public void testAddRouterInterfaceForSubnetFail() throws IOException, InterruptedException, URISyntaxException {
-      MockWebServer server = mockOpenStackServer();
-      server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/access.json"))));
-      server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/extension_list.json"))));
-      server.enqueue(addCommonHeaders(
-            new MockResponse().setResponseCode(404)));
-
-      try {
-         NeutronApi neutronApi = api(server.getUrl("/").toString(), "openstack-neutron", overrides);
-         RouterApi api = neutronApi.getRouterApi("RegionOne").get();
-
-         RouterInterface routerInterface = api.addInterfaceForSubnet("12345", "a2f1f29d-571b-4533-907f-5803ab96ead1");
-
-         /*
-          * Check request
-          */
-         assertEquals(server.getRequestCount(), 3);
-         assertAuthentication(server);
-         assertExtensions(server, uriApiVersion + "");
-         assertRequest(server.takeRequest(), "PUT", uriApiVersion + "/routers/12345/add_router_interface", "/router_add_interface_request.json");
-
-         /*
-          * Check response
-          */
-         assertNull(routerInterface);
       } finally {
          server.shutdown();
       }
@@ -538,36 +324,6 @@ public class RouterApiMockTest extends BaseNeutronApiMockTest {
       }
    }
 
-   public void testAddRouterInterfaceForPortFail() throws IOException, InterruptedException, URISyntaxException {
-      MockWebServer server = mockOpenStackServer();
-      server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/access.json"))));
-      server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/extension_list.json"))));
-      server.enqueue(addCommonHeaders(
-            new MockResponse().setResponseCode(404)));
-
-      try {
-         NeutronApi neutronApi = api(server.getUrl("/").toString(), "openstack-neutron", overrides);
-         RouterApi api = neutronApi.getRouterApi("RegionOne").get();
-
-         RouterInterface routerInterface = api.addInterfaceForPort("12345", "portid");
-
-         /*
-          * Check request
-          */
-         assertEquals(server.getRequestCount(), 3);
-         assertAuthentication(server);
-         assertExtensions(server, uriApiVersion + "");
-         assertRequest(server.takeRequest(), "PUT", uriApiVersion + "/routers/12345/add_router_interface", "/router_add_interface_port_request.json");
-
-         /*
-          * Check response
-          */
-         assertNull(routerInterface);
-      } finally {
-         server.shutdown();
-      }
-   }
-
    public void testRemoveRouterInterfaceForSubnet() throws IOException, InterruptedException, URISyntaxException {
       MockWebServer server = mockOpenStackServer();
       server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/access.json"))));
@@ -593,36 +349,6 @@ public class RouterApiMockTest extends BaseNeutronApiMockTest {
           * Check response
           */
          assertTrue(result);
-      } finally {
-         server.shutdown();
-      }
-   }
-
-   public void testRemoveRouterInterfaceForSubnetFail() throws IOException, InterruptedException, URISyntaxException {
-      MockWebServer server = mockOpenStackServer();
-      server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/access.json"))));
-      server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/extension_list.json"))));
-      server.enqueue(addCommonHeaders(
-            new MockResponse().setResponseCode(404)));
-
-      try {
-         NeutronApi neutronApi = api(server.getUrl("/").toString(), "openstack-neutron", overrides);
-         RouterApi api = neutronApi.getRouterApi("RegionOne").get();
-
-         boolean result = api.removeInterfaceForSubnet("12345", "a2f1f29d-571b-4533-907f-5803ab96ead1");
-
-         /*
-          * Check request
-          */
-         assertEquals(server.getRequestCount(), 3);
-         assertAuthentication(server);
-         assertExtensions(server, uriApiVersion + "");
-         assertRequest(server.takeRequest(), "PUT", uriApiVersion + "/routers/12345/remove_router_interface", "/router_remove_interface_subnet_request.json");
-
-         /*
-          * Check response
-          */
-         assertFalse(result);
       } finally {
          server.shutdown();
       }
@@ -658,33 +384,4 @@ public class RouterApiMockTest extends BaseNeutronApiMockTest {
       }
    }
 
-   public void testRemoveRouterInterfaceForPortFail() throws IOException, InterruptedException, URISyntaxException {
-      MockWebServer server = mockOpenStackServer();
-      server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/access.json"))));
-      server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/extension_list.json"))));
-      server.enqueue(addCommonHeaders(
-            new MockResponse().setResponseCode(404)));
-
-      try {
-         NeutronApi neutronApi = api(server.getUrl("/").toString(), "openstack-neutron", overrides);
-         RouterApi api = neutronApi.getRouterApi("RegionOne").get();
-
-         boolean result = api.removeInterfaceForPort("12345", "portid");
-
-         /*
-          * Check request
-          */
-         assertEquals(server.getRequestCount(), 3);
-         assertAuthentication(server);
-         assertExtensions(server, uriApiVersion + "");
-         assertRequest(server.takeRequest(), "PUT", uriApiVersion + "/routers/12345/remove_router_interface", "/router_remove_interface_port_request.json");
-
-         /*
-          * Check response
-          */
-         assertFalse(result);
-      } finally {
-         server.shutdown();
-      }
-   }
 }

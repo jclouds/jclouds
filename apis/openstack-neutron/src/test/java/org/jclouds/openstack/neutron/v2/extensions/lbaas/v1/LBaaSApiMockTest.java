@@ -17,11 +17,9 @@
 package org.jclouds.openstack.neutron.v2.extensions.lbaas.v1;
 
 import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertNull;
 import static org.testng.Assert.assertTrue;
-import static org.testng.Assert.fail;
 
 import java.io.IOException;
 import java.util.List;
@@ -42,7 +40,6 @@ import org.jclouds.openstack.neutron.v2.domain.lbaas.v1.VIP;
 import org.jclouds.openstack.neutron.v2.domain.lbaas.v1.VIPs;
 import org.jclouds.openstack.neutron.v2.internal.BaseNeutronApiMockTest;
 import org.jclouds.openstack.v2_0.options.PaginationOptions;
-import org.jclouds.rest.ResourceNotFoundException;
 import org.testng.annotations.Test;
 
 import com.google.common.base.Optional;
@@ -144,29 +141,6 @@ public class LBaaSApiMockTest extends BaseNeutronApiMockTest {
       }
    }
 
-   @Test(expectedExceptions = ResourceNotFoundException.class)
-   public void testCreatePoolFail() throws IOException, InterruptedException {
-      MockWebServer server = mockOpenStackServer();
-      server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/access.json"))));
-      server.enqueue(addCommonHeaders(new MockResponse().setResponseCode(200).setBody(stringFromResource("/extension_list_with_lbaas_v1_response.json"))));
-      server.enqueue(addCommonHeaders(new MockResponse().setResponseCode(404)));
-
-      try {
-         NeutronApi neutronApi = api(server.getUrl("/").toString(), "openstack-neutron", overrides);
-         LBaaSApi lbaasApi = neutronApi.getLBaaSApi("RegionOne").get();
-
-         Pool.CreatePool createPool = Pool.createBuilder("8032909d-47a1-4715-90af-5153ffe39861", Protocol.TCP, Pool.ROUND_ROBIN)
-               .name("NewPool").description(null).healthMonitors(null).provider(null).adminStateUp(null).build();
-
-         lbaasApi.createPool(createPool);
-
-         fail("Should have failed with not found exception");
-
-      } finally {
-         server.shutdown();
-      }
-   }
-
    public void testListSpecificPagePool() throws IOException, InterruptedException {
       MockWebServer server = mockOpenStackServer();
       server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/access.json"))));
@@ -192,35 +166,6 @@ public class LBaaSApiMockTest extends BaseNeutronApiMockTest {
          assertNotNull(pools);
          assertEquals(pools.size(), 1);
          assertEquals(pools.first().get().getId(), "72741b06-df4d-4715-b142-276b6bce75ab");
-      } finally {
-         server.shutdown();
-      }
-   }
-
-   public void testListSpecificPagePoolFail() throws IOException, InterruptedException {
-      MockWebServer server = mockOpenStackServer();
-      server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/access.json"))));
-      server.enqueue(addCommonHeaders(new MockResponse().setResponseCode(200).setBody(stringFromResource("/extension_list_with_lbaas_v1_response.json"))));
-      server.enqueue(addCommonHeaders(new MockResponse().setResponseCode(404)));
-
-      try {
-         NeutronApi neutronApi = api(server.getUrl("/").toString(), "openstack-neutron", overrides);
-         LBaaSApi lbaasApi = neutronApi.getLBaaSApi("RegionOne").get();
-
-         Pools pools = lbaasApi.listPools(PaginationOptions.Builder.limit(2).marker("abcdefg"));
-
-         /*
-          * Check request
-          */
-         assertAuthentication(server);
-         server.takeRequest();
-         assertRequest(server.takeRequest(), "GET", uriApiVersion + "/lb/pools?limit=2&marker=abcdefg");
-
-         /*
-          * Check response
-          */
-         assertNotNull(pools);
-         assertTrue(pools.isEmpty());
       } finally {
          server.shutdown();
       }
@@ -256,37 +201,6 @@ public class LBaaSApiMockTest extends BaseNeutronApiMockTest {
          assertEquals(pools.size(), 2);
          assertEquals(pools.get(0).getId(), "72741b06-df4d-4715-b142-276b6bce75ab");
          assertEquals(pools.get(1).getId(), "72741b06-df4d-4715-b142-276b6bce75ab_2");
-      } finally {
-         server.shutdown();
-      }
-   }
-
-   public void testListPagedPoolFail() throws IOException, InterruptedException {
-      MockWebServer server = mockOpenStackServer();
-      server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/access.json"))));
-      server.enqueue(addCommonHeaders(new MockResponse().setResponseCode(200).setBody(stringFromResource("/extension_list_with_lbaas_v1_response.json"))));
-      server.enqueue(addCommonHeaders(new MockResponse().setResponseCode(404)));
-
-      try {
-         NeutronApi neutronApi = api(server.getUrl("/").toString(), "openstack-neutron", overrides);
-         LBaaSApi lbaasApi = neutronApi.getLBaaSApi("RegionOne").get();
-
-         // Note: Lazy! Have to actually look at the collection.
-         List<Pool> pools = lbaasApi.listPools().concat().toList();
-
-         /*
-          * Check request
-          */
-         assertEquals(server.getRequestCount(), 3);
-         assertAuthentication(server);
-         server.takeRequest();
-         assertRequest(server.takeRequest(), "GET", uriApiVersion + "/lb/pools");
-
-         /*
-          * Check response
-          */
-         assertNotNull(pools);
-         assertTrue(pools.isEmpty());
       } finally {
          server.shutdown();
       }
@@ -333,34 +247,6 @@ public class LBaaSApiMockTest extends BaseNeutronApiMockTest {
          assertEquals(pool.getAdminStateUp(), Boolean.TRUE);
          assertEquals(pool.getStatus(), LBaaSStatus.ACTIVE);
          assertNull(pool.getStatusDescription());
-      } finally {
-         server.shutdown();
-      }
-   }
-
-   public void testGetPoolFail() throws IOException, InterruptedException {
-      MockWebServer server = mockOpenStackServer();
-      server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/access.json"))));
-      server.enqueue(addCommonHeaders(new MockResponse().setResponseCode(200).setBody(stringFromResource("/extension_list_with_lbaas_v1_response.json"))));
-      server.enqueue(addCommonHeaders(new MockResponse().setResponseCode(404)));
-
-      try {
-         NeutronApi neutronApi = api(server.getUrl("/").toString(), "openstack-neutron", overrides);
-         LBaaSApi lbaasApi = neutronApi.getLBaaSApi("RegionOne").get();
-
-         Pool pool = lbaasApi.getPool("72741b06-df4d-4715-b142-276b6bce75ab");
-
-         /*
-          * Check request
-          */
-         assertAuthentication(server);
-         server.takeRequest();
-         assertRequest(server.takeRequest(), "GET", uriApiVersion + "/lb/pools/72741b06-df4d-4715-b142-276b6bce75ab");
-
-         /*
-          * Check response
-          */
-         assertNull(pool);
       } finally {
          server.shutdown();
       }
@@ -417,37 +303,6 @@ public class LBaaSApiMockTest extends BaseNeutronApiMockTest {
       }
    }
 
-   public void testUpdatePoolFail() throws IOException, InterruptedException {
-      MockWebServer server = mockOpenStackServer();
-      server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/access.json"))));
-      server.enqueue(addCommonHeaders(new MockResponse().setResponseCode(200).setBody(stringFromResource("/extension_list_with_lbaas_v1_response.json"))));
-      server.enqueue(addCommonHeaders(new MockResponse().setResponseCode(404)));
-
-      try {
-         NeutronApi neutronApi = api(server.getUrl("/").toString(), "openstack-neutron", overrides);
-         LBaaSApi lbaasApi = neutronApi.getLBaaSApi("RegionOne").get();
-
-         Pool.UpdatePool updatePool = Pool.updateBuilder().name("new_name").description("new description").lbMethod("NEW_LB_METHOD")
-               .healthMonitors(ImmutableSet.of("5d4b5228-33b0-4e60-b225-9b727c1a20e7")).adminStateUp(Boolean.FALSE).build();
-
-         Pool pool = lbaasApi.updatePool("72741b06-df4d-4715-b142-276b6bce75ab", updatePool);
-
-         /*
-          * Check request
-          */
-         assertAuthentication(server);
-         server.takeRequest();
-         assertRequest(server.takeRequest(), "PUT", uriApiVersion + "/lb/pools/72741b06-df4d-4715-b142-276b6bce75ab", "/lbaas/v1/pool_update_request.json");
-
-         /*
-          * Check response
-          */
-         assertNull(pool);
-      } finally {
-         server.shutdown();
-      }
-   }
-
    public void testDeletePool() throws IOException, InterruptedException {
       MockWebServer server = mockOpenStackServer();
       server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/access.json"))));
@@ -471,34 +326,6 @@ public class LBaaSApiMockTest extends BaseNeutronApiMockTest {
           * Check response
           */
          assertTrue(result);
-      } finally {
-         server.shutdown();
-      }
-   }
-
-   public void testDeletePoolFail() throws IOException, InterruptedException {
-      MockWebServer server = mockOpenStackServer();
-      server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/access.json"))));
-      server.enqueue(addCommonHeaders(new MockResponse().setResponseCode(200).setBody(stringFromResource("/extension_list_with_lbaas_v1_response.json"))));
-      server.enqueue(addCommonHeaders(new MockResponse().setResponseCode(404)));
-
-      try {
-         NeutronApi neutronApi = api(server.getUrl("/").toString(), "openstack-neutron", overrides);
-         LBaaSApi lbaasApi = neutronApi.getLBaaSApi("RegionOne").get();
-
-         boolean result = lbaasApi.deletePool("72741b06-df4d-4715-b142-276b6bce75ab");
-
-         /*
-          * Check request
-          */
-         assertAuthentication(server);
-         server.takeRequest();
-         assertRequest(server.takeRequest(), "DELETE", uriApiVersion + "/lb/pools/72741b06-df4d-4715-b142-276b6bce75ab");
-
-         /*
-          * Check response
-          */
-         assertFalse(result);
       } finally {
          server.shutdown();
       }
@@ -544,29 +371,6 @@ public class LBaaSApiMockTest extends BaseNeutronApiMockTest {
       }
    }
 
-   @Test(expectedExceptions = ResourceNotFoundException.class)
-   public void testCreateMemberFail() throws IOException, InterruptedException {
-      MockWebServer server = mockOpenStackServer();
-      server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/access.json"))));
-      server.enqueue(addCommonHeaders(new MockResponse().setResponseCode(200).setBody(stringFromResource("/extension_list_with_lbaas_v1_response.json"))));
-      server.enqueue(addCommonHeaders(new MockResponse().setResponseCode(404)));
-
-      try {
-         NeutronApi neutronApi = api(server.getUrl("/").toString(), "openstack-neutron", overrides);
-         LBaaSApi lbaasApi = neutronApi.getLBaaSApi("RegionOne").get();
-
-         Member.CreateMember createMember = Member.createBuilder("72741b06-df4d-4715-b142-276b6bce75ab", null, 80)
-               .weight(null).adminStateUp(null).build();
-
-         lbaasApi.createMember(createMember);
-
-         fail("Should have failed with not found exception");
-
-      } finally {
-         server.shutdown();
-      }
-   }
-
    public void testListSpecificPageMember() throws IOException, InterruptedException {
       MockWebServer server = mockOpenStackServer();
       server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/access.json"))));
@@ -592,35 +396,6 @@ public class LBaaSApiMockTest extends BaseNeutronApiMockTest {
          assertNotNull(members);
          assertEquals(members.size(), 1);
          assertEquals(members.first().get().getId(), "48a471ea-64f1-4eb6-9be7-dae6bbe40a0f");
-      } finally {
-         server.shutdown();
-      }
-   }
-
-   public void testListSpecificPageMemberFail() throws IOException, InterruptedException {
-      MockWebServer server = mockOpenStackServer();
-      server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/access.json"))));
-      server.enqueue(addCommonHeaders(new MockResponse().setResponseCode(200).setBody(stringFromResource("/extension_list_with_lbaas_v1_response.json"))));
-      server.enqueue(addCommonHeaders(new MockResponse().setResponseCode(404)));
-
-      try {
-         NeutronApi neutronApi = api(server.getUrl("/").toString(), "openstack-neutron", overrides);
-         LBaaSApi lbaasApi = neutronApi.getLBaaSApi("RegionOne").get();
-
-         Members members = lbaasApi.listMembers(PaginationOptions.Builder.limit(2).marker("abcdefg"));
-
-         /*
-          * Check request
-          */
-         assertAuthentication(server);
-         server.takeRequest();
-         assertRequest(server.takeRequest(), "GET", uriApiVersion + "/lb/members?limit=2&marker=abcdefg");
-
-         /*
-          * Check response
-          */
-         assertNotNull(members);
-         assertTrue(members.isEmpty());
       } finally {
          server.shutdown();
       }
@@ -661,37 +436,6 @@ public class LBaaSApiMockTest extends BaseNeutronApiMockTest {
       }
    }
 
-   public void testListPagedMemberFail() throws IOException, InterruptedException {
-      MockWebServer server = mockOpenStackServer();
-      server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/access.json"))));
-      server.enqueue(addCommonHeaders(new MockResponse().setResponseCode(200).setBody(stringFromResource("/extension_list_with_lbaas_v1_response.json"))));
-      server.enqueue(addCommonHeaders(new MockResponse().setResponseCode(404)));
-
-      try {
-         NeutronApi neutronApi = api(server.getUrl("/").toString(), "openstack-neutron", overrides);
-         LBaaSApi lbaasApi = neutronApi.getLBaaSApi("RegionOne").get();
-
-         // Note: Lazy! Have to actually look at the collection.
-         List<Member> members = lbaasApi.listMembers().concat().toList();
-
-         /*
-          * Check request
-          */
-         assertEquals(server.getRequestCount(), 3);
-         assertAuthentication(server);
-         server.takeRequest();
-         assertRequest(server.takeRequest(), "GET", uriApiVersion + "/lb/members");
-
-         /*
-          * Check response
-          */
-         assertNotNull(members);
-         assertTrue(members.isEmpty());
-      } finally {
-         server.shutdown();
-      }
-   }
-
    public void testGetMember() throws IOException, InterruptedException {
       MockWebServer server = mockOpenStackServer();
       server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/access.json"))));
@@ -724,34 +468,6 @@ public class LBaaSApiMockTest extends BaseNeutronApiMockTest {
          assertEquals(member.getAdminStateUp(), Boolean.TRUE);
          assertEquals(member.getStatus(), LBaaSStatus.ACTIVE);
          assertNull(member.getStatusDescription());
-      } finally {
-         server.shutdown();
-      }
-   }
-
-   public void testGetMemberFail() throws IOException, InterruptedException {
-      MockWebServer server = mockOpenStackServer();
-      server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/access.json"))));
-      server.enqueue(addCommonHeaders(new MockResponse().setResponseCode(200).setBody(stringFromResource("/extension_list_with_lbaas_v1_response.json"))));
-      server.enqueue(addCommonHeaders(new MockResponse().setResponseCode(404)));
-
-      try {
-         NeutronApi neutronApi = api(server.getUrl("/").toString(), "openstack-neutron", overrides);
-         LBaaSApi lbaasApi = neutronApi.getLBaaSApi("RegionOne").get();
-
-         Member member = lbaasApi.getMember("48a471ea-64f1-4eb6-9be7-dae6bbe40a0f");
-
-         /*
-          * Check request
-          */
-         assertAuthentication(server);
-         server.takeRequest();
-         assertRequest(server.takeRequest(), "GET", uriApiVersion + "/lb/members/48a471ea-64f1-4eb6-9be7-dae6bbe40a0f");
-
-         /*
-          * Check response
-          */
-         assertNull(member);
       } finally {
          server.shutdown();
       }
@@ -797,37 +513,6 @@ public class LBaaSApiMockTest extends BaseNeutronApiMockTest {
       }
    }
 
-   public void testUpdateMemberFail() throws IOException, InterruptedException {
-      MockWebServer server = mockOpenStackServer();
-      server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/access.json"))));
-      server.enqueue(addCommonHeaders(new MockResponse().setResponseCode(200).setBody(stringFromResource("/extension_list_with_lbaas_v1_response.json"))));
-      server.enqueue(addCommonHeaders(new MockResponse().setResponseCode(404)));
-
-      try {
-         NeutronApi neutronApi = api(server.getUrl("/").toString(), "openstack-neutron", overrides);
-         LBaaSApi lbaasApi = neutronApi.getLBaaSApi("RegionOne").get();
-
-         Member.UpdateMember updateMember = Member.updateBuilder().poolId("new_pool_id").weight(2)
-               .adminStateUp(Boolean.FALSE).build();
-
-         Member member = lbaasApi.updateMember("48a471ea-64f1-4eb6-9be7-dae6bbe40a0f", updateMember);
-
-         /*
-          * Check request
-          */
-         assertAuthentication(server);
-         server.takeRequest();
-         assertRequest(server.takeRequest(), "PUT", uriApiVersion + "/lb/members/48a471ea-64f1-4eb6-9be7-dae6bbe40a0f", "/lbaas/v1/member_update_request.json");
-
-         /*
-          * Check response
-          */
-         assertNull(member);
-      } finally {
-         server.shutdown();
-      }
-   }
-
    public void testDeleteMember() throws IOException, InterruptedException {
       MockWebServer server = mockOpenStackServer();
       server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/access.json"))));
@@ -851,34 +536,6 @@ public class LBaaSApiMockTest extends BaseNeutronApiMockTest {
           * Check response
           */
          assertTrue(result);
-      } finally {
-         server.shutdown();
-      }
-   }
-
-   public void testDeleteMemberFail() throws IOException, InterruptedException {
-      MockWebServer server = mockOpenStackServer();
-      server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/access.json"))));
-      server.enqueue(addCommonHeaders(new MockResponse().setResponseCode(200).setBody(stringFromResource("/extension_list_with_lbaas_v1_response.json"))));
-      server.enqueue(addCommonHeaders(new MockResponse().setResponseCode(404)));
-
-      try {
-         NeutronApi neutronApi = api(server.getUrl("/").toString(), "openstack-neutron", overrides);
-         LBaaSApi lbaasApi = neutronApi.getLBaaSApi("RegionOne").get();
-
-         boolean result = lbaasApi.deleteMember("48a471ea-64f1-4eb6-9be7-dae6bbe40a0f");
-
-         /*
-          * Check request
-          */
-         assertAuthentication(server);
-         server.takeRequest();
-         assertRequest(server.takeRequest(), "DELETE", uriApiVersion + "/lb/members/48a471ea-64f1-4eb6-9be7-dae6bbe40a0f");
-
-         /*
-          * Check response
-          */
-         assertFalse(result);
       } finally {
          server.shutdown();
       }
@@ -930,29 +587,6 @@ public class LBaaSApiMockTest extends BaseNeutronApiMockTest {
       }
    }
 
-   @Test(expectedExceptions = ResourceNotFoundException.class)
-   public void testCreateVIPFail() throws IOException, InterruptedException {
-      MockWebServer server = mockOpenStackServer();
-      server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/access.json"))));
-      server.enqueue(addCommonHeaders(new MockResponse().setResponseCode(200).setBody(stringFromResource("/extension_list_with_lbaas_v1_response.json"))));
-      server.enqueue(addCommonHeaders(new MockResponse().setResponseCode(404)));
-
-      try {
-         NeutronApi neutronApi = api(server.getUrl("/").toString(), "openstack-neutron", overrides);
-         LBaaSApi lbaasApi = neutronApi.getLBaaSApi("RegionOne").get();
-
-         VIP.CreateVIP createVIP = VIP.createBuilder("8032909d-47a1-4715-90af-5153ffe39861", Protocol.HTTP, 80, "61b1f87a-7a21-4ad3-9dda-7f81d249944f")
-               .name("NewVip").description(null).address(null).sessionPersistence(null).connectionLimit(null).build();
-
-         lbaasApi.createVIP(createVIP);
-
-         fail("Should have failed with not found exception");
-
-      } finally {
-         server.shutdown();
-      }
-   }
-
    public void testListSpecificPageVIP() throws IOException, InterruptedException {
       MockWebServer server = mockOpenStackServer();
       server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/access.json"))));
@@ -978,35 +612,6 @@ public class LBaaSApiMockTest extends BaseNeutronApiMockTest {
          assertNotNull(vips);
          assertEquals(vips.size(), 1);
          assertEquals(vips.first().get().getId(), "4ec89087-d057-4e2c-911f-60a3b47ee304");
-      } finally {
-         server.shutdown();
-      }
-   }
-
-   public void testListSpecificPageVIPFail() throws IOException, InterruptedException {
-      MockWebServer server = mockOpenStackServer();
-      server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/access.json"))));
-      server.enqueue(addCommonHeaders(new MockResponse().setResponseCode(200).setBody(stringFromResource("/extension_list_with_lbaas_v1_response.json"))));
-      server.enqueue(addCommonHeaders(new MockResponse().setResponseCode(404)));
-
-      try {
-         NeutronApi neutronApi = api(server.getUrl("/").toString(), "openstack-neutron", overrides);
-         LBaaSApi lbaasApi = neutronApi.getLBaaSApi("RegionOne").get();
-
-         VIPs vips = lbaasApi.listVIPs(PaginationOptions.Builder.limit(2).marker("abcdefg"));
-
-         /*
-          * Check request
-          */
-         assertAuthentication(server);
-         server.takeRequest();
-         assertRequest(server.takeRequest(), "GET", uriApiVersion + "/lb/vips?limit=2&marker=abcdefg");
-
-         /*
-          * Check response
-          */
-         assertNotNull(vips);
-         assertTrue(vips.isEmpty());
       } finally {
          server.shutdown();
       }
@@ -1042,37 +647,6 @@ public class LBaaSApiMockTest extends BaseNeutronApiMockTest {
          assertEquals(vips.size(), 2);
          assertEquals(vips.get(0).getId(), "4ec89087-d057-4e2c-911f-60a3b47ee304");
          assertEquals(vips.get(1).getId(), "c987d2be-9a3c-4ac9-a046-e8716b1350e2");
-      } finally {
-         server.shutdown();
-      }
-   }
-
-   public void testListPagedVIPFail() throws IOException, InterruptedException {
-      MockWebServer server = mockOpenStackServer();
-      server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/access.json"))));
-      server.enqueue(addCommonHeaders(new MockResponse().setResponseCode(200).setBody(stringFromResource("/extension_list_with_lbaas_v1_response.json"))));
-      server.enqueue(addCommonHeaders(new MockResponse().setResponseCode(404)));
-
-      try {
-         NeutronApi neutronApi = api(server.getUrl("/").toString(), "openstack-neutron", overrides);
-         LBaaSApi lbaasApi = neutronApi.getLBaaSApi("RegionOne").get();
-
-         // Note: Lazy! Have to actually look at the collection.
-         List<VIP> vips = lbaasApi.listVIPs().concat().toList();
-
-         /*
-          * Check request
-          */
-         assertEquals(server.getRequestCount(), 3);
-         assertAuthentication(server);
-         server.takeRequest();
-         assertRequest(server.takeRequest(), "GET", uriApiVersion + "/lb/vips");
-
-         /*
-          * Check response
-          */
-         assertNotNull(vips);
-         assertTrue(vips.isEmpty());
       } finally {
          server.shutdown();
       }
@@ -1117,34 +691,6 @@ public class LBaaSApiMockTest extends BaseNeutronApiMockTest {
          assertEquals(vip.getAdminStateUp(), Boolean.TRUE);
          assertEquals(vip.getStatus(), LBaaSStatus.ACTIVE);
          assertNull(vip.getStatusDescription());
-      } finally {
-         server.shutdown();
-      }
-   }
-
-   public void testGetVIPFail() throws IOException, InterruptedException {
-      MockWebServer server = mockOpenStackServer();
-      server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/access.json"))));
-      server.enqueue(addCommonHeaders(new MockResponse().setResponseCode(200).setBody(stringFromResource("/extension_list_with_lbaas_v1_response.json"))));
-      server.enqueue(addCommonHeaders(new MockResponse().setResponseCode(404)));
-
-      try {
-         NeutronApi neutronApi = api(server.getUrl("/").toString(), "openstack-neutron", overrides);
-         LBaaSApi lbaasApi = neutronApi.getLBaaSApi("RegionOne").get();
-
-         VIP vip = lbaasApi.getVIP("4ec89087-d057-4e2c-911f-60a3b47ee304");
-
-         /*
-          * Check request
-          */
-         assertAuthentication(server);
-         server.takeRequest();
-         assertRequest(server.takeRequest(), "GET", uriApiVersion + "/lb/vips/4ec89087-d057-4e2c-911f-60a3b47ee304");
-
-         /*
-          * Check response
-          */
-         assertNull(vip);
       } finally {
          server.shutdown();
       }
@@ -1197,38 +743,6 @@ public class LBaaSApiMockTest extends BaseNeutronApiMockTest {
       }
    }
 
-   public void testUpdateVIPFail() throws IOException, InterruptedException {
-      MockWebServer server = mockOpenStackServer();
-      server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/access.json"))));
-      server.enqueue(addCommonHeaders(new MockResponse().setResponseCode(200).setBody(stringFromResource("/extension_list_with_lbaas_v1_response.json"))));
-      server.enqueue(addCommonHeaders(new MockResponse().setResponseCode(404)));
-
-      try {
-         NeutronApi neutronApi = api(server.getUrl("/").toString(), "openstack-neutron", overrides);
-         LBaaSApi lbaasApi = neutronApi.getLBaaSApi("RegionOne").get();
-
-         SessionPersistence sessionPersistence = SessionPersistence.builder().type(SessionPersistence.Type.APP_COOKIE).cookieName("MyNewAppCookie").build();
-         VIP.UpdateVIP updateVIP = VIP.updateBuilder().name("new-name").description("new description").poolId("61b1f87a-7a21-4ad3-9dda-7f81d249944f")
-               .sessionPersistence(sessionPersistence).connectionLimit(50).adminStateUp(Boolean.FALSE).build();
-
-         VIP vip = lbaasApi.updateVIP("c987d2be-9a3c-4ac9-a046-e8716b1350e2", updateVIP);
-
-         /*
-          * Check request
-          */
-         assertAuthentication(server);
-         server.takeRequest();
-         assertRequest(server.takeRequest(), "PUT", uriApiVersion + "/lb/vips/c987d2be-9a3c-4ac9-a046-e8716b1350e2", "/lbaas/v1/vip_update_request.json");
-
-         /*
-          * Check response
-          */
-         assertNull(vip);
-      } finally {
-         server.shutdown();
-      }
-   }
-
    public void testDeleteVIP() throws IOException, InterruptedException {
       MockWebServer server = mockOpenStackServer();
       server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/access.json"))));
@@ -1252,34 +766,6 @@ public class LBaaSApiMockTest extends BaseNeutronApiMockTest {
           * Check response
           */
          assertTrue(result);
-      } finally {
-         server.shutdown();
-      }
-   }
-
-   public void testDeleteVIPFail() throws IOException, InterruptedException {
-      MockWebServer server = mockOpenStackServer();
-      server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/access.json"))));
-      server.enqueue(addCommonHeaders(new MockResponse().setResponseCode(200).setBody(stringFromResource("/extension_list_with_lbaas_v1_response.json"))));
-      server.enqueue(addCommonHeaders(new MockResponse().setResponseCode(404)));
-
-      try {
-         NeutronApi neutronApi = api(server.getUrl("/").toString(), "openstack-neutron", overrides);
-         LBaaSApi lbaasApi = neutronApi.getLBaaSApi("RegionOne").get();
-
-         boolean result = lbaasApi.deleteVIP("c987d2be-9a3c-4ac9-a046-e8716b1350e2");
-
-         /*
-          * Check request
-          */
-         assertAuthentication(server);
-         server.takeRequest();
-         assertRequest(server.takeRequest(), "DELETE", uriApiVersion + "/lb/vips/c987d2be-9a3c-4ac9-a046-e8716b1350e2");
-
-         /*
-          * Check response
-          */
-         assertFalse(result);
       } finally {
          server.shutdown();
       }
@@ -1330,29 +816,6 @@ public class LBaaSApiMockTest extends BaseNeutronApiMockTest {
       }
    }
 
-   @Test(expectedExceptions = ResourceNotFoundException.class)
-   public void testCreateHealthMonitorFail() throws IOException, InterruptedException {
-      MockWebServer server = mockOpenStackServer();
-      server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/access.json"))));
-      server.enqueue(addCommonHeaders(new MockResponse().setResponseCode(200).setBody(stringFromResource("/extension_list_with_lbaas_v1_response.json"))));
-      server.enqueue(addCommonHeaders(new MockResponse().setResponseCode(404)));
-
-      try {
-         NeutronApi neutronApi = api(server.getUrl("/").toString(), "openstack-neutron", overrides);
-         LBaaSApi lbaasApi = neutronApi.getLBaaSApi("RegionOne").get();
-
-         HealthMonitor.CreateHealthMonitor createHealthMonitor = HealthMonitor.createBuilder(ProbeType.HTTP, Integer.valueOf(1), Integer.valueOf(1), Integer.valueOf(1))
-               .httpMethod(null).urlPath(null).expectedCodes(null).adminStateUp(null).build();
-
-         lbaasApi.createHealthMonitor(createHealthMonitor);
-
-         fail("Should have failed with not found exception");
-
-      } finally {
-         server.shutdown();
-      }
-   }
-
    public void testListSpecificPageHealthMonitor() throws IOException, InterruptedException {
       MockWebServer server = mockOpenStackServer();
       server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/access.json"))));
@@ -1378,35 +841,6 @@ public class LBaaSApiMockTest extends BaseNeutronApiMockTest {
          assertNotNull(healthMonitors);
          assertEquals(healthMonitors.size(), 1);
          assertEquals(healthMonitors.first().get().getId(), "466c8345-28d8-4f84-a246-e04380b0461d");
-      } finally {
-         server.shutdown();
-      }
-   }
-
-   public void testListSpecificPageHealthMonitorFail() throws IOException, InterruptedException {
-      MockWebServer server = mockOpenStackServer();
-      server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/access.json"))));
-      server.enqueue(addCommonHeaders(new MockResponse().setResponseCode(200).setBody(stringFromResource("/extension_list_with_lbaas_v1_response.json"))));
-      server.enqueue(addCommonHeaders(new MockResponse().setResponseCode(404)));
-
-      try {
-         NeutronApi neutronApi = api(server.getUrl("/").toString(), "openstack-neutron", overrides);
-         LBaaSApi lbaasApi = neutronApi.getLBaaSApi("RegionOne").get();
-
-         HealthMonitors healthMonitors = lbaasApi.listHealthMonitors(PaginationOptions.Builder.limit(2).marker("abcdefg"));
-
-         /*
-          * Check request
-          */
-         assertAuthentication(server);
-         server.takeRequest();
-         assertRequest(server.takeRequest(), "GET", uriApiVersion + "/lb/health_monitors?limit=2&marker=abcdefg");
-
-         /*
-          * Check response
-          */
-         assertNotNull(healthMonitors);
-         assertTrue(healthMonitors.isEmpty());
       } finally {
          server.shutdown();
       }
@@ -1442,37 +876,6 @@ public class LBaaSApiMockTest extends BaseNeutronApiMockTest {
          assertEquals(healthMonitors.size(), 2);
          assertEquals(healthMonitors.get(0).getId(), "466c8345-28d8-4f84-a246-e04380b0461d");
          assertEquals(healthMonitors.get(1).getId(), "5d4b5228-33b0-4e60-b225-9b727c1a20e7");
-      } finally {
-         server.shutdown();
-      }
-   }
-
-   public void testListPagedHealthMonitorFail() throws IOException, InterruptedException {
-      MockWebServer server = mockOpenStackServer();
-      server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/access.json"))));
-      server.enqueue(addCommonHeaders(new MockResponse().setResponseCode(200).setBody(stringFromResource("/extension_list_with_lbaas_v1_response.json"))));
-      server.enqueue(addCommonHeaders(new MockResponse().setResponseCode(404)));
-
-      try {
-         NeutronApi neutronApi = api(server.getUrl("/").toString(), "openstack-neutron", overrides);
-         LBaaSApi lbaasApi = neutronApi.getLBaaSApi("RegionOne").get();
-
-         // Note: Lazy! Have to actually look at the collection.
-         List<HealthMonitor> healthMonitors = lbaasApi.listHealthMonitors().concat().toList();
-
-         /*
-          * Check request
-          */
-         assertEquals(server.getRequestCount(), 3);
-         assertAuthentication(server);
-         server.takeRequest();
-         assertRequest(server.takeRequest(), "GET", uriApiVersion + "/lb/health_monitors");
-
-         /*
-          * Check response
-          */
-         assertNotNull(healthMonitors);
-         assertTrue(healthMonitors.isEmpty());
       } finally {
          server.shutdown();
       }
@@ -1515,34 +918,6 @@ public class LBaaSApiMockTest extends BaseNeutronApiMockTest {
          assertEquals(healthMonitor.getAdminStateUp(), Boolean.TRUE);
          assertEquals(healthMonitor.getStatus(), LBaaSStatus.ACTIVE);
          assertNull(healthMonitor.getStatusDescription());
-      } finally {
-         server.shutdown();
-      }
-   }
-
-   public void testGetHealthMonitorFail() throws IOException, InterruptedException {
-      MockWebServer server = mockOpenStackServer();
-      server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/access.json"))));
-      server.enqueue(addCommonHeaders(new MockResponse().setResponseCode(200).setBody(stringFromResource("/extension_list_with_lbaas_v1_response.json"))));
-      server.enqueue(addCommonHeaders(new MockResponse().setResponseCode(404)));
-
-      try {
-         NeutronApi neutronApi = api(server.getUrl("/").toString(), "openstack-neutron", overrides);
-         LBaaSApi lbaasApi = neutronApi.getLBaaSApi("RegionOne").get();
-
-         HealthMonitor healthMonitor = lbaasApi.getHealthMonitor("5d4b5228-33b0-4e60-b225-9b727c1a20e7");
-
-         /*
-          * Check request
-          */
-         assertAuthentication(server);
-         server.takeRequest();
-         assertRequest(server.takeRequest(), "GET", uriApiVersion + "/lb/health_monitors/5d4b5228-33b0-4e60-b225-9b727c1a20e7");
-
-         /*
-          * Check response
-          */
-         assertNull(healthMonitor);
       } finally {
          server.shutdown();
       }
@@ -1593,37 +968,6 @@ public class LBaaSApiMockTest extends BaseNeutronApiMockTest {
       }
    }
 
-   public void testUpdateHealthMonitorFail() throws IOException, InterruptedException {
-      MockWebServer server = mockOpenStackServer();
-      server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/access.json"))));
-      server.enqueue(addCommonHeaders(new MockResponse().setResponseCode(200).setBody(stringFromResource("/extension_list_with_lbaas_v1_response.json"))));
-      server.enqueue(addCommonHeaders(new MockResponse().setResponseCode(404)));
-
-      try {
-         NeutronApi neutronApi = api(server.getUrl("/").toString(), "openstack-neutron", overrides);
-         LBaaSApi lbaasApi = neutronApi.getLBaaSApi("RegionOne").get();
-
-         HealthMonitor.UpdateHealthMonitor updateHealthMonitor = HealthMonitor.updateBuilder().delay(Integer.valueOf(1)).timeout(Integer.valueOf(1)).maxRetries(Integer.valueOf(1))
-               .httpMethod(HttpMethod.HEAD).urlPath("/index.html").expectedCodes("201").adminStateUp(Boolean.FALSE).build();
-
-         HealthMonitor healthMonitor = lbaasApi.updateHealthMonitor("466c8345-28d8-4f84-a246-e04380b0461d", updateHealthMonitor);
-
-         /*
-          * Check request
-          */
-         assertAuthentication(server);
-         server.takeRequest();
-         assertRequest(server.takeRequest(), "PUT", uriApiVersion + "/lb/health_monitors/466c8345-28d8-4f84-a246-e04380b0461d", "/lbaas/v1/health_monitor_update_request.json");
-
-         /*
-          * Check response
-          */
-         assertNull(healthMonitor);
-      } finally {
-         server.shutdown();
-      }
-   }
-
    public void testDeleteHealthMonitor() throws IOException, InterruptedException {
       MockWebServer server = mockOpenStackServer();
       server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/access.json"))));
@@ -1647,34 +991,6 @@ public class LBaaSApiMockTest extends BaseNeutronApiMockTest {
           * Check response
           */
          assertTrue(result);
-      } finally {
-         server.shutdown();
-      }
-   }
-
-   public void testDeleteHealthMonitorFail() throws IOException, InterruptedException {
-      MockWebServer server = mockOpenStackServer();
-      server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/access.json"))));
-      server.enqueue(addCommonHeaders(new MockResponse().setResponseCode(200).setBody(stringFromResource("/extension_list_with_lbaas_v1_response.json"))));
-      server.enqueue(addCommonHeaders(new MockResponse().setResponseCode(404)));
-
-      try {
-         NeutronApi neutronApi = api(server.getUrl("/").toString(), "openstack-neutron", overrides);
-         LBaaSApi lbaasApi = neutronApi.getLBaaSApi("RegionOne").get();
-
-         boolean result = lbaasApi.deleteHealthMonitor("466c8345-28d8-4f84-a246-e04380b0461d");
-
-         /*
-          * Check request
-          */
-         assertAuthentication(server);
-         server.takeRequest();
-         assertRequest(server.takeRequest(), "DELETE", uriApiVersion + "/lb/health_monitors/466c8345-28d8-4f84-a246-e04380b0461d");
-
-         /*
-          * Check response
-          */
-         assertFalse(result);
       } finally {
          server.shutdown();
       }
@@ -1708,26 +1024,6 @@ public class LBaaSApiMockTest extends BaseNeutronApiMockTest {
       }
    }
 
-   @Test(expectedExceptions = ResourceNotFoundException.class)
-   public void testAssociateHealthMonitorWithPoolFail() throws IOException, InterruptedException {
-      MockWebServer server = mockOpenStackServer();
-      server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/access.json"))));
-      server.enqueue(addCommonHeaders(new MockResponse().setResponseCode(200).setBody(stringFromResource("/extension_list_with_lbaas_v1_response.json"))));
-      server.enqueue(addCommonHeaders(new MockResponse().setResponseCode(404)));
-
-      try {
-         NeutronApi neutronApi = api(server.getUrl("/").toString(), "openstack-neutron", overrides);
-         LBaaSApi lbaasApi = neutronApi.getLBaaSApi("RegionOne").get();
-
-         lbaasApi.associateHealthMonitor("72741b06-df4d-4715-b142-276b6bce75ab", "5d4b5228-33b0-4e60-b225-9b727c1a20e7");
-
-         fail("Should have failed with not found exception");
-
-      } finally {
-         server.shutdown();
-      }
-   }
-
    public void testDisassociateHealthMonitorFromPool() throws IOException, InterruptedException {
       MockWebServer server = mockOpenStackServer();
       server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/access.json"))));
@@ -1751,34 +1047,6 @@ public class LBaaSApiMockTest extends BaseNeutronApiMockTest {
           * Check response
           */
          assertTrue(result);
-      } finally {
-         server.shutdown();
-      }
-   }
-
-   public void testDisassociateHealthMonitorFromPoolFail() throws IOException, InterruptedException {
-      MockWebServer server = mockOpenStackServer();
-      server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/access.json"))));
-      server.enqueue(addCommonHeaders(new MockResponse().setResponseCode(200).setBody(stringFromResource("/extension_list_with_lbaas_v1_response.json"))));
-      server.enqueue(addCommonHeaders(new MockResponse().setResponseCode(404)));
-
-      try {
-         NeutronApi neutronApi = api(server.getUrl("/").toString(), "openstack-neutron", overrides);
-         LBaaSApi lbaasApi = neutronApi.getLBaaSApi("RegionOne").get();
-
-         boolean result = lbaasApi.disassociateHealthMonitor("72741b06-df4d-4715-b142-276b6bce75ab", "5d4b5228-33b0-4e60-b225-9b727c1a20e7");
-
-         /*
-          * Check request
-          */
-         assertAuthentication(server);
-         server.takeRequest();
-         assertRequest(server.takeRequest(), "DELETE", uriApiVersion + "/lb/pools/72741b06-df4d-4715-b142-276b6bce75ab/health_monitors/5d4b5228-33b0-4e60-b225-9b727c1a20e7");
-
-         /*
-          * Check response
-          */
-         assertFalse(result);
       } finally {
          server.shutdown();
       }

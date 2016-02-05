@@ -142,8 +142,6 @@ public interface LBaaSApi {
    @PUT
    @Path("/vips/{id}")
    @SelectJson("vip")
-   @Fallback(NullOnNotFoundOr404.class)
-   @Nullable
    VIP updateVIP(@PathParam("id") String id, @WrapWith("vip") VIP.UpdateVIP vip);
 
    /**
@@ -220,8 +218,6 @@ public interface LBaaSApi {
    @PUT
    @Path("/pools/{id}")
    @SelectJson("pool")
-   @Fallback(NullOnNotFoundOr404.class)
-   @Nullable
    Pool updatePool(@PathParam("id") String id, @WrapWith("pool") Pool.UpdatePool pool);
 
    /**
@@ -298,8 +294,6 @@ public interface LBaaSApi {
    @PUT
    @Path("/members/{id}")
    @SelectJson("member")
-   @Fallback(NullOnNotFoundOr404.class)
-   @Nullable
    Member updateMember(@PathParam("id") String id, @WrapWith("member") Member.UpdateMember member);
 
    /**
@@ -376,8 +370,6 @@ public interface LBaaSApi {
    @PUT
    @Path("/health_monitors/{id}")
    @SelectJson("health_monitor")
-   @Fallback(NullOnNotFoundOr404.class)
-   @Nullable
    HealthMonitor updateHealthMonitor(@PathParam("id") String id,
          @WrapWith("health_monitor") HealthMonitor.UpdateHealthMonitor healthMonitor);
 

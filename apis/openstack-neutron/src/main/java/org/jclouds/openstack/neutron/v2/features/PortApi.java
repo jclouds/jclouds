@@ -131,7 +131,6 @@ public interface PortApi {
    @PUT
    @Path("/{id}")
    @SelectJson("port")
-   @Fallback(Fallbacks.NullOnNotFoundOr404.class)
    Port update(@PathParam("id") String id, @WrapWith("port") Port.UpdatePort port);
 
    /**

@@ -17,9 +17,7 @@
 package org.jclouds.openstack.neutron.v2.extensions;
 
 import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertNotNull;
-import static org.testng.Assert.assertNull;
 import static org.testng.Assert.assertTrue;
 
 import java.io.IOException;
@@ -36,7 +34,6 @@ import org.jclouds.openstack.neutron.v2.domain.SecurityGroup;
 import org.jclouds.openstack.neutron.v2.domain.SecurityGroups;
 import org.jclouds.openstack.neutron.v2.internal.BaseNeutronApiMockTest;
 import org.jclouds.openstack.v2_0.options.PaginationOptions;
-import org.jclouds.rest.ResourceNotFoundException;
 import org.testng.annotations.Test;
 
 import com.squareup.okhttp.mockwebserver.MockResponse;
@@ -93,28 +90,6 @@ public class SecurityGroupApiMockTest extends BaseNeutronApiMockTest {
       }
    }
 
-   @Test(expectedExceptions = ResourceNotFoundException.class)
-   public void testCreateSecurityGroupFail() throws IOException, InterruptedException, URISyntaxException {
-      MockWebServer server = mockOpenStackServer();
-      server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/access.json"))));
-      server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/extension_list.json"))));
-      server.enqueue(addCommonHeaders(
-            new MockResponse().setResponseCode(404)));
-
-      try {
-         NeutronApi neutronApi = api(server.getUrl("/").toString(), "openstack-neutron", overrides);
-         SecurityGroupApi api = neutronApi.getSecurityGroupApi("RegionOne").get();
-
-         SecurityGroup.CreateSecurityGroup createSecurityGroup = SecurityGroup.createBuilder().name("new-webservers")
-               .description("security group for webservers")
-               .build();
-
-         SecurityGroup securityGroup = api.create(createSecurityGroup);
-      } finally {
-         server.shutdown();
-      }
-   }
-
    public void testCreateSecurityGroupRule() throws IOException, InterruptedException, URISyntaxException {
       MockWebServer server = mockOpenStackServer();
       server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/access.json"))));
@@ -164,33 +139,6 @@ public class SecurityGroupApiMockTest extends BaseNeutronApiMockTest {
       }
    }
 
-   @Test(expectedExceptions = ResourceNotFoundException.class)
-   public void testCreateSecurityGroupRuleFail() throws IOException, InterruptedException, URISyntaxException {
-      MockWebServer server = mockOpenStackServer();
-      server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/access.json"))));
-      server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/extension_list.json"))));
-      server.enqueue(addCommonHeaders(
-            new MockResponse().setResponseCode(404)));
-
-      try {
-         NeutronApi neutronApi = api(server.getUrl("/").toString(), "openstack-neutron", overrides);
-         SecurityGroupApi api = neutronApi.getSecurityGroupApi("RegionOne").get();
-
-         Rule.CreateRule createSecurityGroupRule = Rule.createBuilder(
-               RuleDirection.INGRESS, "a7734e61-b545-452d-a3cd-0189cbd9747a")
-               .portRangeMin(80)
-               .portRangeMax(80)
-               .ethertype(RuleEthertype.IPV4)
-               .protocol(RuleProtocol.TCP)
-               .remoteGroupId("85cc3048-abc3-43cc-89b3-377341426ac5")
-               .build();
-
-         Rule rule = api.create(createSecurityGroupRule);
-      } finally {
-         server.shutdown();
-      }
-   }
-
    public void testListSpecificPageSecurityGroup() throws IOException, InterruptedException, URISyntaxException {
       MockWebServer server = mockOpenStackServer();
       server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/access.json"))));
@@ -219,36 +167,6 @@ public class SecurityGroupApiMockTest extends BaseNeutronApiMockTest {
          // Ensures the full collection is parsed and ordering is preserved.
          assertEquals(securityGroups.first().get().getId(), "85cc3048-abc3-43cc-89b3-377341426ac5");
          assertEquals(securityGroups.get(1).getId(), "85cc3048-abc3-43cc-89b3-377341426ac52");
-      } finally {
-         server.shutdown();
-      }
-   }
-
-   public void testListSpecificPageSecurityGroupFail() throws IOException, InterruptedException, URISyntaxException {
-      MockWebServer server = mockOpenStackServer();
-      server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/access.json"))));
-      server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/extension_list.json"))));
-      server.enqueue(addCommonHeaders(new MockResponse().setResponseCode(404)));
-
-      try {
-         NeutronApi neutronApi = api(server.getUrl("/").toString(), "openstack-neutron", overrides);
-         SecurityGroupApi api = neutronApi.getSecurityGroupApi("RegionOne").get();
-
-         SecurityGroups securityGroups = api.listSecurityGroups(PaginationOptions.Builder.limit(2).marker("abcdefg"));
-
-         /*
-          * Check request
-          */
-         assertEquals(server.getRequestCount(), 3);
-         assertAuthentication(server);
-         assertExtensions(server, uriApiVersion + "");
-         assertRequest(server.takeRequest(), "GET", uriApiVersion + "/security-groups?limit=2&marker=abcdefg");
-
-         /*
-          * Check response
-          */
-         assertNotNull(securityGroups);
-         assertTrue(securityGroups.isEmpty());
       } finally {
          server.shutdown();
       }
@@ -287,36 +205,6 @@ public class SecurityGroupApiMockTest extends BaseNeutronApiMockTest {
       }
    }
 
-   public void testListSpecificPageSecurityGroupRuleFail() throws IOException, InterruptedException, URISyntaxException {
-      MockWebServer server = mockOpenStackServer();
-      server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/access.json"))));
-      server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/extension_list.json"))));
-      server.enqueue(addCommonHeaders(new MockResponse().setResponseCode(404)));
-
-      try {
-         NeutronApi neutronApi = api(server.getUrl("/").toString(), "openstack-neutron", overrides);
-         SecurityGroupApi api = neutronApi.getSecurityGroupApi("RegionOne").get();
-
-         Rules rules = api.listRules(PaginationOptions.Builder.limit(2).marker("abcdefg"));
-
-         /*
-          * Check request
-          */
-         assertEquals(server.getRequestCount(), 3);
-         assertAuthentication(server);
-         assertExtensions(server, uriApiVersion + "");
-         assertRequest(server.takeRequest(), "GET", uriApiVersion + "/security-group-rules?limit=2&marker=abcdefg");
-
-         /*
-          * Check response
-          */
-         assertNotNull(rules);
-         assertTrue(rules.isEmpty());
-      } finally {
-         server.shutdown();
-      }
-   }
-
    public void testListPagedSecurityGroups() throws IOException, InterruptedException, URISyntaxException {
       MockWebServer server = mockOpenStackServer();
       server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/access.json"))));
@@ -348,38 +236,6 @@ public class SecurityGroupApiMockTest extends BaseNeutronApiMockTest {
          // Ensures ordering is preserved and both pages are parsed.
          assertEquals(securityGroups.get(0).getId(), "85cc3048-abc3-43cc-89b3-377341426ac5");
          assertEquals(securityGroups.get(3).getId(), "85cc3048-abc3-43cc-89b3-377341426ac524");
-
-      } finally {
-         server.shutdown();
-      }
-   }
-
-   public void testListPagedSecurityGroupsFail() throws IOException, InterruptedException, URISyntaxException {
-      MockWebServer server = mockOpenStackServer();
-      server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/access.json"))));
-      server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/extension_list.json"))));
-      server.enqueue(addCommonHeaders(new MockResponse().setResponseCode(404)));
-
-      try {
-         NeutronApi neutronApi = api(server.getUrl("/").toString(), "openstack-neutron", overrides);
-         SecurityGroupApi api = neutronApi.getSecurityGroupApi("RegionOne").get();
-
-         // Note: Lazy! Have to actually look at the collection.
-         List<SecurityGroup> securityGroups = api.listSecurityGroups().concat().toList();
-
-         /*
-          * Check request
-          */
-         assertEquals(server.getRequestCount(), 3);
-         assertAuthentication(server);
-         assertExtensions(server, uriApiVersion + "");
-         assertRequest(server.takeRequest(), "GET", uriApiVersion + "/security-groups");
-
-         /*
-          * Check response
-          */
-         assertNotNull(securityGroups);
-         assertTrue(securityGroups.isEmpty());
 
       } finally {
          server.shutdown();
@@ -423,38 +279,6 @@ public class SecurityGroupApiMockTest extends BaseNeutronApiMockTest {
       }
    }
 
-   public void testListPagedSecurityGroupRulesFail() throws IOException, InterruptedException, URISyntaxException {
-      MockWebServer server = mockOpenStackServer();
-      server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/access.json"))));
-      server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/extension_list.json"))));
-      server.enqueue(addCommonHeaders(new MockResponse().setResponseCode(404)));
-
-      try {
-         NeutronApi neutronApi = api(server.getUrl("/").toString(), "openstack-neutron", overrides);
-         SecurityGroupApi api = neutronApi.getSecurityGroupApi("RegionOne").get();
-
-         // Note: Lazy! Have to actually look at the collection.
-         List<Rule> rules = api.listRules().concat().toList();
-
-         /*
-          * Check request
-          */
-         assertEquals(server.getRequestCount(), 3);
-         assertAuthentication(server);
-         assertExtensions(server, uriApiVersion + "");
-         assertRequest(server.takeRequest(), "GET", uriApiVersion + "/security-group-rules");
-
-         /*
-          * Check response
-          */
-         assertNotNull(rules);
-         assertTrue(rules.isEmpty());
-
-      } finally {
-         server.shutdown();
-      }
-   }
-
    public void testGetSecurityGroup() throws IOException, InterruptedException, URISyntaxException {
       MockWebServer server = mockOpenStackServer();
       server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/access.json"))));
@@ -486,37 +310,6 @@ public class SecurityGroupApiMockTest extends BaseNeutronApiMockTest {
          assertEquals(securityGroup.getTenantId(), "e4f50856753b4dc6afee5fa6b9b6c550");
          Rule sgr = securityGroup.getRules().get(0);
          assertEquals(sgr.getId(), "3c0e45ff-adaf-4124-b083-bf390e5482ff");
-      } finally {
-         server.shutdown();
-      }
-   }
-
-   public void testGetSecurityGroupFail() throws IOException, InterruptedException, URISyntaxException {
-      MockWebServer server = mockOpenStackServer();
-      server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/access.json"))));
-      server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/extension_list.json"))));
-      server.enqueue(addCommonHeaders(
-            new MockResponse().setResponseCode(404)));
-
-      try {
-         NeutronApi neutronApi = api(server.getUrl("/").toString(), "openstack-neutron", overrides);
-         SecurityGroupApi api = neutronApi.getSecurityGroupApi("RegionOne").get();
-
-         SecurityGroup securityGroup = api.getSecurityGroup("12345");
-
-         /*
-          * Check request
-          */
-         assertEquals(server.getRequestCount(), 3);
-         assertAuthentication(server);
-         assertExtensions(server, uriApiVersion + "");
-         assertRequest(server.takeRequest(), "GET", uriApiVersion + "/security-groups/12345");
-
-         /*
-          * Check response
-          */
-         assertNull(securityGroup);
-
       } finally {
          server.shutdown();
       }
@@ -558,37 +351,6 @@ public class SecurityGroupApiMockTest extends BaseNeutronApiMockTest {
       }
    }
 
-   public void testGetSecurityGroupRuleFail() throws IOException, InterruptedException, URISyntaxException {
-      MockWebServer server = mockOpenStackServer();
-      server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/access.json"))));
-      server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/extension_list.json"))));
-      server.enqueue(addCommonHeaders(
-            new MockResponse().setResponseCode(404)));
-
-      try {
-         NeutronApi neutronApi = api(server.getUrl("/").toString(), "openstack-neutron", overrides);
-         SecurityGroupApi api = neutronApi.getSecurityGroupApi("RegionOne").get();
-
-         Rule rule = api.get("12345");
-
-         /*
-          * Check request
-          */
-         assertEquals(server.getRequestCount(), 3);
-         assertAuthentication(server);
-         assertExtensions(server, uriApiVersion + "");
-         assertRequest(server.takeRequest(), "GET", uriApiVersion + "/security-group-rules/12345");
-
-         /*
-          * Check response
-          */
-         assertNull(rule);
-
-      } finally {
-         server.shutdown();
-      }
-   }
-
    public void testDeleteSecurityGroup() throws IOException, InterruptedException, URISyntaxException {
       MockWebServer server = mockOpenStackServer();
       server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/access.json"))));
@@ -619,36 +381,6 @@ public class SecurityGroupApiMockTest extends BaseNeutronApiMockTest {
       }
    }
 
-   public void testDeleteSecurityGroupFail() throws IOException, InterruptedException, URISyntaxException {
-      MockWebServer server = mockOpenStackServer();
-      server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/access.json"))));
-      server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/extension_list.json"))));
-      server.enqueue(addCommonHeaders(
-            new MockResponse().setResponseCode(404)));
-
-      try {
-         NeutronApi neutronApi = api(server.getUrl("/").toString(), "openstack-neutron", overrides);
-         SecurityGroupApi api = neutronApi.getSecurityGroupApi("RegionOne").get();
-
-         boolean result = api.deleteSecurityGroup("12345");
-
-         /*
-          * Check request
-          */
-         assertEquals(server.getRequestCount(), 3);
-         assertAuthentication(server);
-         assertExtensions(server, uriApiVersion + "");
-         assertRequest(server.takeRequest(), "DELETE", uriApiVersion + "/security-groups/12345");
-
-         /*
-          * Check response
-          */
-         assertFalse(result);
-      } finally {
-         server.shutdown();
-      }
-   }
-
    public void testDeleteSecurityGroupRule() throws IOException, InterruptedException, URISyntaxException {
       MockWebServer server = mockOpenStackServer();
       server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/access.json"))));
@@ -674,36 +406,6 @@ public class SecurityGroupApiMockTest extends BaseNeutronApiMockTest {
           * Check response
           */
          assertTrue(result);
-      } finally {
-         server.shutdown();
-      }
-   }
-
-   public void testDeleteSecurityGroupRuleFail() throws IOException, InterruptedException, URISyntaxException {
-      MockWebServer server = mockOpenStackServer();
-      server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/access.json"))));
-      server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/extension_list.json"))));
-      server.enqueue(addCommonHeaders(
-            new MockResponse().setResponseCode(404)));
-
-      try {
-         NeutronApi neutronApi = api(server.getUrl("/").toString(), "openstack-neutron", overrides);
-         SecurityGroupApi api = neutronApi.getSecurityGroupApi("RegionOne").get();
-
-         boolean result = api.deleteRule("12345");
-
-         /*
-          * Check request
-          */
-         assertEquals(server.getRequestCount(), 3);
-         assertAuthentication(server);
-         assertExtensions(server, uriApiVersion + "");
-         assertRequest(server.takeRequest(), "DELETE", uriApiVersion + "/security-group-rules/12345");
-
-         /*
-          * Check response
-          */
-         assertFalse(result);
       } finally {
          server.shutdown();
       }

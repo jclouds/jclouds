@@ -17,9 +17,7 @@
 package org.jclouds.openstack.neutron.v2.features;
 
 import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertNotNull;
-import static org.testng.Assert.assertNull;
 import static org.testng.Assert.assertTrue;
 
 import java.io.IOException;
@@ -36,7 +34,6 @@ import org.jclouds.openstack.neutron.v2.domain.VIFType;
 import org.jclouds.openstack.neutron.v2.domain.VNICType;
 import org.jclouds.openstack.neutron.v2.internal.BaseNeutronApiMockTest;
 import org.jclouds.openstack.v2_0.options.PaginationOptions;
-import org.jclouds.rest.ResourceNotFoundException;
 import org.testng.annotations.Test;
 
 import com.google.common.collect.FluentIterable;
@@ -98,30 +95,6 @@ public class PortApiMockTest extends BaseNeutronApiMockTest {
       }
    }
 
-   @Test(expectedExceptions = ResourceNotFoundException.class)
-   public void testCreatePortFail() throws IOException, InterruptedException, URISyntaxException {
-      MockWebServer server = mockOpenStackServer();
-      server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/access.json"))));
-      server.enqueue(addCommonHeaders(
-            new MockResponse().setResponseCode(404)));
-
-      try {
-         NeutronApi neutronApi = api(server.getUrl("/").toString(), "openstack-neutron", overrides);
-         PortApi api = neutronApi.getPortApi("RegionOne");
-
-         Port.CreatePort createPort = Port.createBuilder("6aeaf34a-c482-4bd3-9dc3-7faf36412f12")
-               .name("port1")
-               .adminStateUp(Boolean.TRUE)
-               .deviceId("d6b4d3a5-c700-476f-b609-1493dd9dadc0")
-               .allowedAddressPairs(ImmutableSet.of(AddressPair.builder("12", "111.222.333.444").build()))
-               .build();
-
-         Port port = api.create(createPort);
-      } finally {
-         server.shutdown();
-      }
-   }
-
    public void testListSpecificPagePort() throws IOException, InterruptedException, URISyntaxException {
       MockWebServer server = mockOpenStackServer();
       server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/access.json"))));
@@ -145,32 +118,6 @@ public class PortApiMockTest extends BaseNeutronApiMockTest {
          assertNotNull(ports);
          assertEquals(ports.size(), 2);
          assertEquals(ports.first().get().getId(), "24e6637e-c521-45fc-8b8b-d7331aa3c99f");
-      } finally {
-         server.shutdown();
-      }
-   }
-
-   public void testListSpecificPagePortFail() throws IOException, InterruptedException, URISyntaxException {
-      MockWebServer server = mockOpenStackServer();
-      server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/access.json"))));
-      server.enqueue(addCommonHeaders(new MockResponse().setResponseCode(404)));
-
-      try {
-         NeutronApi neutronApi = api(server.getUrl("/").toString(), "openstack-neutron", overrides);
-         PortApi api = neutronApi.getPortApi("RegionOne");
-
-         Ports ports = api.list(PaginationOptions.Builder.limit(2).marker("abcdefg"));
-
-         /*
-          * Check request
-          */
-         assertAuthentication(server);
-         assertRequest(server.takeRequest(), "GET", uriApiVersion + "/ports?limit=2&marker=abcdefg");
-
-         /*
-          * Check response
-          */
-         assertTrue(ports.isEmpty());
       } finally {
          server.shutdown();
       }
@@ -204,34 +151,6 @@ public class PortApiMockTest extends BaseNeutronApiMockTest {
          assertEquals(ports.size(), 4);
          assertEquals(ports.get(0).getId(), "24e6637e-c521-45fc-8b8b-d7331aa3c99f");
          assertEquals(ports.get(3).getId(), "e54dfd9b-ce6e-47f7-af47-1609cfd1cdb0_4");
-      } finally {
-         server.shutdown();
-      }
-   }
-
-   public void testListPagedPortFail() throws IOException, InterruptedException, URISyntaxException {
-      MockWebServer server = mockOpenStackServer();
-      server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/access.json"))));
-      server.enqueue(addCommonHeaders(new MockResponse().setResponseCode(404)));
-
-      try {
-         NeutronApi neutronApi = api(server.getUrl("/").toString(), "openstack-neutron", overrides);
-         PortApi api = neutronApi.getPortApi("RegionOne");
-
-         // Note: Lazy! Have to actually look at the collection.
-         List<Port> ports = api.list().concat().toList();
-
-         /*
-          * Check request
-          */
-         assertEquals(server.getRequestCount(), 2);
-         assertAuthentication(server);
-         assertRequest(server.takeRequest(), "GET", uriApiVersion + "/ports");
-
-         /*
-          * Check response
-          */
-         assertTrue(ports.isEmpty());
       } finally {
          server.shutdown();
       }
@@ -281,37 +200,6 @@ public class PortApiMockTest extends BaseNeutronApiMockTest {
       }
    }
 
-   @Test(expectedExceptions = ResourceNotFoundException.class)
-   public void testCreateBulkPortFail() throws IOException, InterruptedException, URISyntaxException {
-      MockWebServer server = mockOpenStackServer();
-      server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/access.json"))));
-      server.enqueue(addCommonHeaders(
-            new MockResponse().setResponseCode(404)));
-
-      try {
-         NeutronApi neutronApi = api(server.getUrl("/").toString(), "openstack-neutron", overrides);
-         PortApi api = neutronApi.getPortApi("RegionOne");
-
-         Port.CreatePort createPort1 = Port.createBuilder("64239a54-dcc4-4b39-920b-b37c2144effa")
-               .name("port1")
-               .adminStateUp(Boolean.TRUE)
-               .deviceId("24df1d04-d5cb-41e1-8de5-61ed77c558df")
-               .securityGroups(ImmutableSet.of("dbc107f4-afcd-4d5a-9352-f68f82241d5b"))
-               .build();
-
-         Port.CreatePort createPort2 = Port.createBuilder("e6031bc2-901a-4c66-82da-f4c32ed89406")
-               .name("port2")
-               .adminStateUp(Boolean.FALSE)
-               .securityGroups(
-                     ImmutableSet.of("8bf3f7cc-8471-40b1-815f-9da47e79775b", "dbc107f4-afcd-4d5a-9352-f68f82241d5b"))
-               .build();
-
-         FluentIterable<Port> ports = api.createBulk(ImmutableList.of(createPort1, createPort2));
-      } finally {
-         server.shutdown();
-      }
-   }
-
    public void testGetPort() throws IOException, InterruptedException, URISyntaxException {
       MockWebServer server = mockOpenStackServer();
       server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/access.json"))));
@@ -343,33 +231,6 @@ public class PortApiMockTest extends BaseNeutronApiMockTest {
          assertEquals(port.getVifType(), VIFType.HYPERV);
          assertEquals(port.getVifDetails().get("name1"), "value1");
          assertEquals(((Map<String, Double>)port.getVifDetails().get("name2")).get("mapname2").intValue(), 3);
-      } finally {
-         server.shutdown();
-      }
-   }
-
-   public void testGetPortFail() throws IOException, InterruptedException, URISyntaxException {
-      MockWebServer server = mockOpenStackServer();
-      server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/access.json"))));
-      server.enqueue(addCommonHeaders(
-            new MockResponse().setResponseCode(404)));
-
-      try {
-         NeutronApi neutronApi = api(server.getUrl("/").toString(), "openstack-neutron", overrides);
-         PortApi api = neutronApi.getPortApi("RegionOne");
-
-         Port port = api.get("12345");
-
-         /*
-          * Check request
-          */
-         assertAuthentication(server);
-         assertRequest(server.takeRequest(), "GET", uriApiVersion + "/ports/12345");
-
-         /*
-          * Check response
-          */
-         assertNull(port);
       } finally {
          server.shutdown();
       }
@@ -408,37 +269,6 @@ public class PortApiMockTest extends BaseNeutronApiMockTest {
       }
    }
 
-   public void testUpdatePortFail() throws IOException, InterruptedException, URISyntaxException {
-      MockWebServer server = mockOpenStackServer();
-      server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/access.json"))));
-      server.enqueue(addCommonHeaders(
-            new MockResponse().setResponseCode(404)));
-
-      try {
-         NeutronApi neutronApi = api(server.getUrl("/").toString(), "openstack-neutron", overrides);
-         PortApi api = neutronApi.getPortApi("RegionOne");
-
-         Port.UpdatePort updatePort = Port.updateBuilder()
-               .securityGroups(ImmutableSet.of("85cc3048-abc3-43cc-89b3-377341426ac5", "c5ab5c29-2c99-44cb-a4b8-e70a88b77799"))
-               .build();
-
-         Port port = api.update("12345", updatePort);
-
-         /*
-          * Check request
-          */
-         assertAuthentication(server);
-         assertRequest(server.takeRequest(), "PUT", uriApiVersion + "/ports/12345", "/port_update_request.json");
-
-         /*
-          * Check response
-          */
-         assertNull(port);
-      } finally {
-         server.shutdown();
-      }
-   }
-
    public void testDeletePort() throws IOException, InterruptedException, URISyntaxException {
       MockWebServer server = mockOpenStackServer();
       server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/access.json"))));
@@ -465,29 +295,4 @@ public class PortApiMockTest extends BaseNeutronApiMockTest {
       }
    }
 
-   public void testDeletePortFail() throws IOException, InterruptedException, URISyntaxException {
-      MockWebServer server = mockOpenStackServer();
-      server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/access.json"))));
-      server.enqueue(addCommonHeaders(new MockResponse().setResponseCode(404)));
-
-      try {
-         NeutronApi neutronApi = api(server.getUrl("/").toString(), "openstack-neutron", overrides);
-         PortApi api = neutronApi.getPortApi("RegionOne");
-
-         boolean result = api.delete("12345");
-
-         /*
-          * Check request
-          */
-         assertAuthentication(server);
-         assertRequest(server.takeRequest(), "DELETE", uriApiVersion + "/ports/12345");
-
-         /*
-          * Check response
-          */
-         assertFalse(result);
-      } finally {
-         server.shutdown();
-      }
-   }
 }

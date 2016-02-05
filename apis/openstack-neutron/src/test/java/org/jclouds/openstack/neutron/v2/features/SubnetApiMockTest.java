@@ -17,9 +17,7 @@
 package org.jclouds.openstack.neutron.v2.features;
 
 import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertNotNull;
-import static org.testng.Assert.assertNull;
 import static org.testng.Assert.assertTrue;
 
 import java.io.IOException;
@@ -32,7 +30,6 @@ import org.jclouds.openstack.neutron.v2.domain.Subnet;
 import org.jclouds.openstack.neutron.v2.domain.Subnets;
 import org.jclouds.openstack.neutron.v2.internal.BaseNeutronApiMockTest;
 import org.jclouds.openstack.v2_0.options.PaginationOptions;
-import org.jclouds.rest.ResourceNotFoundException;
 import org.testng.annotations.Test;
 
 import com.google.common.collect.FluentIterable;
@@ -83,27 +80,6 @@ public class SubnetApiMockTest extends BaseNeutronApiMockTest {
       }
    }
 
-   @Test(expectedExceptions = ResourceNotFoundException.class)
-   public void testCreateSubnetFail() throws IOException, InterruptedException, URISyntaxException {
-      MockWebServer server = mockOpenStackServer();
-      server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/access.json"))));
-      server.enqueue(addCommonHeaders(new MockResponse().setResponseCode(404)));
-
-      try {
-         NeutronApi neutronApi = api(server.getUrl("/").toString(), "openstack-neutron", overrides);
-         SubnetApi api = neutronApi.getSubnetApi("RegionOne");
-
-         Subnet.CreateSubnet createSubnet = Subnet.createBuilder("1234567890", "cidr")
-               .name("jclouds-wibble")
-               .ipVersion(4)
-               .build();
-
-         Subnet subnet = api.create(createSubnet);
-      } finally {
-         server.shutdown();
-      }
-   }
-
    public void testListSpecificPageSubnet() throws IOException, InterruptedException, URISyntaxException {
       MockWebServer server = mockOpenStackServer();
       server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/access.json"))));
@@ -126,32 +102,6 @@ public class SubnetApiMockTest extends BaseNeutronApiMockTest {
           */
          assertNotNull(subnets);
          assertEquals(subnets.first().get().getId(), "16dba3bc-f3fa-4775-afdc-237e12c72f6a");
-      } finally {
-         server.shutdown();
-      }
-   }
-
-   public void testListSpecificPageSubnetFail() throws IOException, InterruptedException, URISyntaxException {
-      MockWebServer server = mockOpenStackServer();
-      server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/access.json"))));
-      server.enqueue(addCommonHeaders(new MockResponse().setResponseCode(404)));
-
-      try {
-         NeutronApi neutronApi = api(server.getUrl("/").toString(), "openstack-neutron", overrides);
-         SubnetApi api = neutronApi.getSubnetApi("RegionOne");
-
-         Subnets subnets = api.list(PaginationOptions.Builder.limit(2).marker("abcdefg"));
-
-         /*
-          * Check request
-          */
-         assertAuthentication(server);
-         assertRequest(server.takeRequest(), "GET", uriApiVersion + "/subnets?limit=2&marker=abcdefg");
-
-         /*
-          * Check response
-          */
-         assertTrue(subnets.isEmpty());
       } finally {
          server.shutdown();
       }
@@ -190,34 +140,6 @@ public class SubnetApiMockTest extends BaseNeutronApiMockTest {
       }
    }
 
-   public void testListPagedSubnetFail() throws IOException, InterruptedException, URISyntaxException {
-      MockWebServer server = mockOpenStackServer();
-      server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/access.json"))));
-      server.enqueue(addCommonHeaders(new MockResponse().setResponseCode(404)));
-
-      try {
-         NeutronApi neutronApi = api(server.getUrl("/").toString(), "openstack-neutron", overrides);
-         SubnetApi api = neutronApi.getSubnetApi("RegionOne");
-
-         // Note: Lazy! Have to actually look at the collection.
-         List<Subnet> subnets = api.list().concat().toList();
-
-         /*
-          * Check request
-          */
-         assertEquals(server.getRequestCount(), 2);
-         assertAuthentication(server);
-         assertRequest(server.takeRequest(), "GET", uriApiVersion + "/subnets");
-
-         /*
-          * Check response
-          */
-         assertTrue(subnets.isEmpty());
-      } finally {
-         server.shutdown();
-      }
-   }
-
    public void testGetSubnet() throws IOException, InterruptedException, URISyntaxException {
       MockWebServer server = mockOpenStackServer();
       server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/access.json"))));
@@ -244,33 +166,6 @@ public class SubnetApiMockTest extends BaseNeutronApiMockTest {
          assertEquals(subnet.getId(), "624312ff-d14b-4ba3-9834-1c78d23d574d");
          assertEquals(subnet.getTenantId(), "1234567890");
          assertEquals(subnet.getIPv6AddressMode(), IPv6DHCPMode.SLAAC);
-      } finally {
-         server.shutdown();
-      }
-   }
-
-   public void testGetSubnetFail() throws IOException, InterruptedException, URISyntaxException {
-      MockWebServer server = mockOpenStackServer();
-      server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/access.json"))));
-      server.enqueue(addCommonHeaders(new MockResponse().setResponseCode(404)));
-
-      try {
-         NeutronApi neutronApi = api(server.getUrl("/").toString(), "openstack-neutron", overrides);
-         SubnetApi api = neutronApi.getSubnetApi("RegionOne");
-
-         Subnet subnet = api.get("12345");
-
-         /*
-          * Check request
-          */
-         assertEquals(server.getRequestCount(), 2);
-         assertAuthentication(server);
-         assertRequest(server.takeRequest(), "GET", uriApiVersion + "/subnets/12345");
-
-         /*
-          * Check response
-          */
-         assertNull(subnet);
       } finally {
          server.shutdown();
       }
@@ -324,32 +219,6 @@ public class SubnetApiMockTest extends BaseNeutronApiMockTest {
       }
    }
 
-   @Test(expectedExceptions = ResourceNotFoundException.class)
-   public void testCreateBulkSubnetFail() throws IOException, InterruptedException, URISyntaxException {
-      MockWebServer server = mockOpenStackServer();
-      server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/access.json"))));
-      server.enqueue(addCommonHeaders(new MockResponse().setResponseCode(404)));
-
-      try {
-         NeutronApi neutronApi = api(server.getUrl("/").toString(), "openstack-neutron", overrides);
-         SubnetApi api = neutronApi.getSubnetApi("RegionOne");
-
-         Subnet.CreateSubnet createSubnet1 = Subnet.createBuilder("e6031bc2-901a-4c66-82da-f4c32ed89406",
-               "192.168.199.0/24")
-               .ipVersion(4)
-               .build();
-
-         Subnet.CreateSubnet createSubnet2 = Subnet.createBuilder("64239a54-dcc4-4b39-920b-b37c2144effa",
-               "10.56.4.0/22")
-               .ipVersion(4)
-               .build();
-
-         FluentIterable<Subnet> subnets = api.createBulk(ImmutableList.of(createSubnet1, createSubnet2));
-      } finally {
-         server.shutdown();
-      }
-   }
-
    public void testUpdateSubnet() throws IOException, InterruptedException, URISyntaxException {
       MockWebServer server = mockOpenStackServer();
       server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/access.json"))));
@@ -385,38 +254,6 @@ public class SubnetApiMockTest extends BaseNeutronApiMockTest {
       }
    }
 
-   public void testUpdateSubnetFail() throws IOException, InterruptedException, URISyntaxException {
-      MockWebServer server = mockOpenStackServer();
-      server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/access.json"))));
-      server.enqueue(addCommonHeaders(new MockResponse().setResponseCode(404)));
-
-      try {
-         NeutronApi neutronApi = api(server.getUrl("/").toString(), "openstack-neutron", overrides);
-         SubnetApi api = neutronApi.getSubnetApi("RegionOne");
-
-         Subnet.UpdateSubnet updateSubnet = Subnet.updateBuilder()
-               .name("new_name")
-               .gatewayIp("10.0.3.254")
-               .build();
-
-         Subnet subnet = api.update("12345", updateSubnet);
-
-         /*
-          * Check request
-          */
-         assertEquals(server.getRequestCount(), 2);
-         assertAuthentication(server);
-         assertRequest(server.takeRequest(), "PUT", uriApiVersion + "/subnets/12345", "/subnet_update_request.json");
-
-         /*
-          * Check response
-          */
-         assertNull(subnet);
-      } finally {
-         server.shutdown();
-      }
-   }
-
    public void testDeleteSubnet() throws IOException, InterruptedException, URISyntaxException {
       MockWebServer server = mockOpenStackServer();
       server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/access.json"))));
@@ -444,30 +281,4 @@ public class SubnetApiMockTest extends BaseNeutronApiMockTest {
       }
    }
 
-   public void testDeleteSubnetFail() throws IOException, InterruptedException, URISyntaxException {
-      MockWebServer server = mockOpenStackServer();
-      server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/access.json"))));
-      server.enqueue(addCommonHeaders(new MockResponse().setResponseCode(404)));
-
-      try {
-         NeutronApi neutronApi = api(server.getUrl("/").toString(), "openstack-neutron", overrides);
-         SubnetApi api = neutronApi.getSubnetApi("RegionOne");
-
-         boolean result = api.delete("12345");
-
-         /*
-          * Check request
-          */
-         assertEquals(server.getRequestCount(), 2);
-         assertAuthentication(server);
-         assertRequest(server.takeRequest(), "DELETE", uriApiVersion + "/subnets/12345");
-
-         /*
-          * Check response
-          */
-         assertFalse(result);
-      } finally {
-         server.shutdown();
-      }
-   }
 }

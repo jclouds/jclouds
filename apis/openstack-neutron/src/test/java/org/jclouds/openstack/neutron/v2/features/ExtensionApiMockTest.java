@@ -18,8 +18,6 @@ package org.jclouds.openstack.neutron.v2.features;
 
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
-import static org.testng.Assert.assertNull;
-import static org.testng.Assert.assertTrue;
 
 import java.util.Set;
 
@@ -67,33 +65,6 @@ public class ExtensionApiMockTest extends BaseNeutronApiMockTest {
       }
    }
 
-   public void testListExtensionsIsEmpty() throws Exception {
-      MockWebServer server = mockOpenStackServer();
-      server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/access.json"))));
-      server.enqueue(addCommonHeaders(new MockResponse().setResponseCode(404)));
-
-      try {
-         NeutronApi neutronApi = api(server.getUrl("/").toString(), "openstack-neutron", overrides);
-         ExtensionApi api = neutronApi.getExtensionApi("RegionOne");
-
-         Set<Extension> extensions = api.list();
-
-         /*
-          * Check request
-          */
-         assertEquals(server.getRequestCount(), 2);
-         assertAuthentication(server);
-         assertRequest(server.takeRequest(), "GET", uriApiVersion + "/extensions");
-
-         /*
-          * Check response
-          */
-         assertTrue(extensions.isEmpty());
-      } finally {
-         server.shutdown();
-      }
-   }
-
    public void testGetExtensionByAlias() throws Exception {
       MockWebServer server = mockOpenStackServer();
       server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/access.json"))));
@@ -120,33 +91,6 @@ public class ExtensionApiMockTest extends BaseNeutronApiMockTest {
       } finally {
          server.shutdown();
       }
-   }
-
-   public void testGetExtensionByAliasFail() throws Exception {
-      MockWebServer server = mockOpenStackServer();
-      server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/access.json"))));
-      server.enqueue(addCommonHeaders(new MockResponse().setResponseCode(404)));
-
-      try {
-         NeutronApi neutronApi = api(server.getUrl("/").toString(), "openstack-neutron", overrides);
-
-         Extension routerExtension = neutronApi.getExtensionApi("RegionOne").get("router");
-
-         /*
-          * Check request
-          */
-         assertEquals(server.getRequestCount(), 2);
-         assertAuthentication(server);
-         assertRequest(server.takeRequest(), "GET", uriApiVersion + "/extensions/router");
-
-         /*
-          * Check response
-          */
-         assertNull(routerExtension);
-      } finally {
-         server.shutdown();
-      }
-
    }
 
 }

@@ -133,8 +133,6 @@ public interface NetworkApi {
    @PUT
    @Path("/{id}")
    @SelectJson("network")
-   @Fallback(Fallbacks.NullOnNotFoundOr404.class)
-   @Nullable
    Network update(@PathParam("id") String id, @WrapWith("network") Network.UpdateNetwork network);
 
    /**

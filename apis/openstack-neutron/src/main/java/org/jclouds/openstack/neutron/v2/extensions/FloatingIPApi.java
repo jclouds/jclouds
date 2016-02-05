@@ -123,8 +123,6 @@ public interface FloatingIPApi {
    @PUT
    @Path("/{id}")
    @SelectJson("floatingip")
-   @Fallback(NullOnNotFoundOr404.class)
-   @Nullable
    FloatingIP update(@PathParam("id") String id, @WrapWith("floatingip") FloatingIP.UpdateFloatingIP updateFloatingIP);
 
    /**

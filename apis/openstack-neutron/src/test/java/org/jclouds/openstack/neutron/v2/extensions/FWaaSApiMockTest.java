@@ -19,8 +19,8 @@ package org.jclouds.openstack.neutron.v2.extensions;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertNotNull;
-import static org.testng.Assert.assertNull;
 import static org.testng.Assert.assertTrue;
+
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.List;
@@ -33,14 +33,12 @@ import org.jclouds.openstack.neutron.v2.domain.Firewall;
 import org.jclouds.openstack.neutron.v2.domain.FirewallPolicy;
 import org.jclouds.openstack.neutron.v2.domain.FirewallRule;
 import org.jclouds.openstack.neutron.v2.domain.FloatingIP;
-import org.jclouds.openstack.neutron.v2.domain.FloatingIPs;
 import org.jclouds.openstack.neutron.v2.domain.UpdateFirewall;
 import org.jclouds.openstack.neutron.v2.domain.UpdateFirewallPolicy;
 import org.jclouds.openstack.neutron.v2.domain.UpdateFirewallRule;
 import org.jclouds.openstack.neutron.v2.internal.BaseNeutronApiMockTest;
 import org.jclouds.openstack.v2_0.domain.PaginatedCollection;
 import org.jclouds.openstack.v2_0.options.PaginationOptions;
-import org.jclouds.rest.ResourceNotFoundException;
 import org.testng.annotations.Test;
 
 import com.google.common.collect.ImmutableList;
@@ -97,29 +95,6 @@ public class FWaaSApiMockTest extends BaseNeutronApiMockTest {
       }
    }
 
-   @Test(expectedExceptions = ResourceNotFoundException.class)
-   public void testCreateFirewallFail() throws IOException, InterruptedException, URISyntaxException {
-      MockWebServer server = mockOpenStackServer();
-      server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/access.json"))));
-      server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/extension_list.json"))));
-      server.enqueue(addCommonHeaders(
-            new MockResponse().setResponseCode(404)));
-
-      try {
-         NeutronApi neutronApi = api(server.getUrl("/").toString(), "openstack-neutron", overrides);
-         FWaaSApi api = neutronApi.getFWaaSApi("RegionOne").get();
-
-         CreateFirewall firewallRequest = CreateFirewall.builder()
-                 .firewallPolicyId("c69933c1-b472-44f9-8226-30dc4ffd454c")
-                 .adminStateUp(Boolean.TRUE)
-                 .build();
-
-         Firewall firewall = api.create(firewallRequest);
-      } finally {
-         server.shutdown();
-      }
-   }
-
    public void testListSpecificPageFirewall() throws IOException, InterruptedException, URISyntaxException {
       MockWebServer server = mockOpenStackServer();
       server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/access.json"))));
@@ -147,36 +122,6 @@ public class FWaaSApiMockTest extends BaseNeutronApiMockTest {
          assertEquals(firewalls.size(), 1);
          assertEquals(Iterables.getFirst(firewalls, null).getId(), "5eb708e7-3856-449a-99ac-fec27cd745f9");
          assertEquals(firewalls.get(0).getId(), "5eb708e7-3856-449a-99ac-fec27cd745f9");
-      } finally {
-         server.shutdown();
-      }
-   }
-
-   public void testListSpecificPageFirewallFail() throws IOException, InterruptedException, URISyntaxException {
-      MockWebServer server = mockOpenStackServer();
-      server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/access.json"))));
-      server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/extension_list.json"))));
-      server.enqueue(addCommonHeaders(new MockResponse().setResponseCode(404)));
-
-      try {
-         NeutronApi neutronApi = api(server.getUrl("/").toString(), "openstack-neutron", overrides);
-         FloatingIPApi api = neutronApi.getFloatingIPApi("RegionOne").get();
-
-         FloatingIPs floatingIPs = api.list(PaginationOptions.Builder.limit(2).marker("abcdefg"));
-
-         /*
-          * Check request
-          */
-         assertEquals(server.getRequestCount(), 3);
-         assertAuthentication(server);
-         assertExtensions(server, uriApiVersion + "");
-         assertRequest(server.takeRequest(), "GET", uriApiVersion + "/floatingips?limit=2&marker=abcdefg");
-
-         /*
-          * Check response
-          */
-         assertNotNull(floatingIPs);
-         assertTrue(floatingIPs.isEmpty());
       } finally {
          server.shutdown();
       }
@@ -212,37 +157,6 @@ public class FWaaSApiMockTest extends BaseNeutronApiMockTest {
          assertEquals(floatingIPs.size(), 4);
          assertEquals(floatingIPs.get(0).getId(), "2f245a7b-796b-4f26-9cf9-9e82d248fda7");
          assertEquals(floatingIPs.get(3).getId(), "61cea855-49cb-4846-997d-801b70c71bdd2");
-      } finally {
-         server.shutdown();
-      }
-   }
-
-   public void testListPagedFirewallFail() throws IOException, InterruptedException, URISyntaxException {
-      MockWebServer server = mockOpenStackServer();
-      server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/access.json"))));
-      server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/extension_list.json"))));
-      server.enqueue(addCommonHeaders(new MockResponse().setResponseCode(404)));
-
-      try {
-         NeutronApi neutronApi = api(server.getUrl("/").toString(), "openstack-neutron", overrides);
-         FloatingIPApi api = neutronApi.getFloatingIPApi("RegionOne").get();
-
-         // Note: Lazy! Have to actually look at the collection.
-         List<FloatingIP> floatingIPs = api.list().concat().toList();
-
-         /*
-          * Check request
-          */
-         assertEquals(server.getRequestCount(), 3);
-         assertAuthentication(server);
-         assertExtensions(server, uriApiVersion + "");
-         assertRequest(server.takeRequest(), "GET", uriApiVersion + "/floatingips");
-
-         /*
-          * Check response
-          */
-         assertNotNull(floatingIPs);
-         assertTrue(floatingIPs.isEmpty());
       } finally {
          server.shutdown();
       }
@@ -285,37 +199,6 @@ public class FWaaSApiMockTest extends BaseNeutronApiMockTest {
       }
    }
 
-   public void testGetFirewallFail() throws IOException, InterruptedException, URISyntaxException {
-      MockWebServer server = mockOpenStackServer();
-      server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/access.json"))));
-      server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/extension_list.json"))));
-      server.enqueue(addCommonHeaders(
-            new MockResponse().setResponseCode(404)));
-
-      try {
-         NeutronApi neutronApi = api(server.getUrl("/").toString(), "openstack-neutron", overrides);
-         FWaaSApi api = neutronApi.getFWaaSApi("RegionOne").get();
-
-         Firewall firewall = api.get("12345");
-
-         /*
-          * Check request
-          */
-         assertEquals(server.getRequestCount(), 3);
-         assertAuthentication(server);
-         assertExtensions(server, uriApiVersion + "");
-         assertRequest(server.takeRequest(), "GET", uriApiVersion + "/fw/firewalls/12345");
-
-         /*
-          * Check response
-          */
-         assertNull(firewall);
-
-      } finally {
-         server.shutdown();
-      }
-   }
-
    public void testUpdateFirewall() throws IOException, InterruptedException, URISyntaxException {
       MockWebServer server = mockOpenStackServer();
       server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/access.json"))));
@@ -352,40 +235,6 @@ public class FWaaSApiMockTest extends BaseNeutronApiMockTest {
       }
    }
 
-   public void testUpdateFirewallFail() throws IOException, InterruptedException, URISyntaxException {
-      MockWebServer server = mockOpenStackServer();
-      server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/access.json"))));
-      server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/extension_list.json"))));
-      server.enqueue(addCommonHeaders(
-              new MockResponse().setResponseCode(404)));
-
-      try {
-         NeutronApi neutronApi = api(server.getUrl("/").toString(), "openstack-neutron", overrides);
-         FWaaSApi api = neutronApi.getFWaaSApi("RegionOne").get();
-
-         UpdateFirewall updateFirewall = UpdateFirewall.builder()
-                 .adminStateUp(false)
-                 .build();
-
-         Firewall firewall = api.update("12345", updateFirewall);
-
-         /*
-          * Check request
-          */
-         assertEquals(server.getRequestCount(), 3);
-         assertAuthentication(server);
-         assertExtensions(server, uriApiVersion + "");
-         assertRequest(server.takeRequest(), "PUT", uriApiVersion + "/fw/firewalls/12345", "/firewall_update_request.json");
-
-         /*
-          * Check response
-          */
-         assertNull(firewall);
-      } finally {
-         server.shutdown();
-      }
-   }
-
    public void testDeleteFirewall() throws IOException, InterruptedException, URISyntaxException {
       MockWebServer server = mockOpenStackServer();
       server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/access.json"))));
@@ -411,36 +260,6 @@ public class FWaaSApiMockTest extends BaseNeutronApiMockTest {
           * Check response
           */
          assertTrue(result);
-      } finally {
-         server.shutdown();
-      }
-   }
-
-   public void testDeleteFirewallFail() throws IOException, InterruptedException, URISyntaxException {
-      MockWebServer server = mockOpenStackServer();
-      server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/access.json"))));
-      server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/extension_list.json"))));
-      server.enqueue(addCommonHeaders(
-            new MockResponse().setResponseCode(404)));
-
-      try {
-         NeutronApi neutronApi = api(server.getUrl("/").toString(), "openstack-neutron", overrides);
-         FWaaSApi api = neutronApi.getFWaaSApi("RegionOne").get();
-
-         boolean result = api.delete("12345");
-
-         /*
-          * Check request
-          */
-         assertEquals(server.getRequestCount(), 3);
-         assertAuthentication(server);
-         assertExtensions(server, uriApiVersion + "");
-         assertRequest(server.takeRequest(), "DELETE", uriApiVersion + "/fw/firewalls/12345");
-
-         /*
-          * Check response
-          */
-         assertFalse(result);
       } finally {
          server.shutdown();
       }
@@ -487,29 +306,6 @@ public class FWaaSApiMockTest extends BaseNeutronApiMockTest {
       }
    }
 
-   @Test(expectedExceptions = ResourceNotFoundException.class)
-   public void testCreateFirewallPolicyFail() throws IOException, InterruptedException, URISyntaxException {
-      MockWebServer server = mockOpenStackServer();
-      server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/access.json"))));
-      server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/extension_list.json"))));
-      server.enqueue(addCommonHeaders(
-              new MockResponse().setResponseCode(404)));
-
-      try {
-         NeutronApi neutronApi = api(server.getUrl("/").toString(), "openstack-neutron", overrides);
-         FWaaSApi api = neutronApi.getFWaaSApi("RegionOne").get();
-
-         CreateFirewallPolicy firewallPolicyRequest = CreateFirewallPolicy.builder()
-                 .name("jclouds-fw-policy_group-52-e8b")
-                 .build();
-
-         FirewallPolicy firewallPolicy = api.createFirewallPolicy(firewallPolicyRequest);
-
-      } finally {
-         server.shutdown();
-      }
-   }
-
    public void testGetFirewallPolicy() throws IOException, InterruptedException, URISyntaxException {
       MockWebServer server = mockOpenStackServer();
       server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/access.json"))));
@@ -541,37 +337,6 @@ public class FWaaSApiMockTest extends BaseNeutronApiMockTest {
          assertEquals(firewallPolicy.getName(), "myfirewallrule");
          assertEquals(firewallPolicy.isAudited(), false);
          assertEquals(firewallPolicy.isShared(), true);
-
-      } finally {
-         server.shutdown();
-      }
-   }
-
-   public void testGetFirewallPolicyFail() throws IOException, InterruptedException, URISyntaxException {
-      MockWebServer server = mockOpenStackServer();
-      server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/access.json"))));
-      server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/extension_list.json"))));
-      server.enqueue(addCommonHeaders(
-              new MockResponse().setResponseCode(404)));
-
-      try {
-         NeutronApi neutronApi = api(server.getUrl("/").toString(), "openstack-neutron", overrides);
-         FWaaSApi api = neutronApi.getFWaaSApi("RegionOne").get();
-
-         FirewallPolicy firewallPolicy = api.getFirewallPolicy("12345");
-
-         /*
-          * Check request
-          */
-         assertEquals(server.getRequestCount(), 3);
-         assertAuthentication(server);
-         assertExtensions(server, uriApiVersion + "");
-         assertRequest(server.takeRequest(), "GET", uriApiVersion + "/fw/firewall_policies/12345");
-
-         /*
-          * Check response
-          */
-         assertNull(firewallPolicy);
 
       } finally {
          server.shutdown();
@@ -619,41 +384,6 @@ public class FWaaSApiMockTest extends BaseNeutronApiMockTest {
       }
    }
 
-   public void testUpdateFirewallPolicyFail() throws IOException, InterruptedException, URISyntaxException {
-      MockWebServer server = mockOpenStackServer();
-      server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/access.json"))));
-      server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/extension_list.json"))));
-      server.enqueue(addCommonHeaders(
-              new MockResponse().setResponseCode(404)));
-
-      try {
-         NeutronApi neutronApi = api(server.getUrl("/").toString(), "openstack-neutron", overrides);
-         FWaaSApi api = neutronApi.getFWaaSApi("RegionOne").get();
-
-         UpdateFirewallPolicy updateFirewallPolicy = UpdateFirewallPolicy.builder()
-                 .shared(true)
-                 .build();
-
-         FirewallPolicy firewallPolicy = api.updateFirewallPolicy("12345", updateFirewallPolicy);
-
-         /*
-          * Check request
-          */
-         assertEquals(server.getRequestCount(), 3);
-         assertAuthentication(server);
-         assertExtensions(server, uriApiVersion + "");
-         assertRequest(server.takeRequest(), "PUT", uriApiVersion + "/fw/firewall_policies/12345");
-
-         /*
-          * Check response
-          */
-         assertNull(firewallPolicy);
-
-      } finally {
-         server.shutdown();
-      }
-   }
-
    public void testInsertFirewallRuleIntoFirewallPolicy() throws IOException, InterruptedException, URISyntaxException {
       MockWebServer server = mockOpenStackServer();
       server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/access.json"))));
@@ -680,36 +410,6 @@ public class FWaaSApiMockTest extends BaseNeutronApiMockTest {
           */
          assertNotNull(updatedFirewallPolicy);
 
-      } finally {
-         server.shutdown();
-      }
-   }
-
-   public void testInsertFirewallRuleIntoFirewallPolicyFail() throws IOException, InterruptedException, URISyntaxException {
-      MockWebServer server = mockOpenStackServer();
-      server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/access.json"))));
-      server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/extension_list.json"))));
-      server.enqueue(addCommonHeaders(
-              new MockResponse().setResponseCode(404)));
-
-      try {
-         NeutronApi neutronApi = api(server.getUrl("/").toString(), "openstack-neutron", overrides);
-         FWaaSApi api = neutronApi.getFWaaSApi("RegionOne").get();
-
-         FirewallPolicy updatedFirewallPolicy = api.insertFirewallRuleToPolicy("12345", "59585143-e819-48c9-944d-f03e0f049dba");
-
-         /*
-          * Check request
-          */
-         assertEquals(server.getRequestCount(), 3);
-         assertAuthentication(server);
-         assertExtensions(server, uriApiVersion + "");
-         assertRequest(server.takeRequest(), "PUT", uriApiVersion + "/fw/firewall_policies/12345/insert_rule", "/firewall_policy_insert_rule_request.json");
-
-         /*
-          * Check response
-          */
-         assertNull(updatedFirewallPolicy);
       } finally {
          server.shutdown();
       }
@@ -762,29 +462,6 @@ public class FWaaSApiMockTest extends BaseNeutronApiMockTest {
       }
    }
 
-   @Test(expectedExceptions = ResourceNotFoundException.class)
-   public void testCreateFirewallRuleFail() throws IOException, InterruptedException, URISyntaxException {
-      MockWebServer server = mockOpenStackServer();
-      server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/access.json"))));
-      server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/extension_list.json"))));
-      server.enqueue(addCommonHeaders(
-              new MockResponse().setResponseCode(404)));
-
-      try {
-         NeutronApi neutronApi = api(server.getUrl("/").toString(), "openstack-neutron", overrides);
-         FWaaSApi api = neutronApi.getFWaaSApi("RegionOne").get();
-
-         CreateFirewallRule firewallRuleRequest = CreateFirewallRule.builder()
-                 .name("jclouds-fw-rule_group-52-e8b_port-22")
-                 .build();
-
-         FirewallRule firewallRule = api.createFirewallRule(firewallRuleRequest);
-
-      } finally {
-         server.shutdown();
-      }
-   }
-
    public void testGetFirewallRule() throws IOException, InterruptedException, URISyntaxException {
       MockWebServer server = mockOpenStackServer();
       server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/access.json"))));
@@ -818,37 +495,6 @@ public class FWaaSApiMockTest extends BaseNeutronApiMockTest {
          assertEquals(firewallRule.isEnabled(), true);
          assertEquals(firewallRule.getIpVersion().version(), 4);
          assertEquals(firewallRule.isShared(), false);
-
-      } finally {
-         server.shutdown();
-      }
-   }
-
-   public void testGetFirewallRuleFail() throws IOException, InterruptedException, URISyntaxException {
-      MockWebServer server = mockOpenStackServer();
-      server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/access.json"))));
-      server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/extension_list.json"))));
-      server.enqueue(addCommonHeaders(
-              new MockResponse().setResponseCode(404)));
-
-      try {
-         NeutronApi neutronApi = api(server.getUrl("/").toString(), "openstack-neutron", overrides);
-         FWaaSApi api = neutronApi.getFWaaSApi("RegionOne").get();
-
-         FirewallRule firewallRule = api.getFirewallRule("12345");
-
-         /*
-          * Check request
-          */
-         assertEquals(server.getRequestCount(), 3);
-         assertAuthentication(server);
-         assertExtensions(server, uriApiVersion + "");
-         assertRequest(server.takeRequest(), "GET", uriApiVersion + "/fw/firewall_rules/12345");
-
-         /*
-          * Check response
-          */
-         assertNull(firewallRule);
 
       } finally {
          server.shutdown();
@@ -889,38 +535,6 @@ public class FWaaSApiMockTest extends BaseNeutronApiMockTest {
       }
    }
 
-   public void testUpdateFirewallRuleFail() throws IOException, InterruptedException, URISyntaxException {
-      MockWebServer server = mockOpenStackServer();
-      server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/access.json"))));
-      server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/extension_list.json"))));
-      server.enqueue(addCommonHeaders(
-              new MockResponse().setResponseCode(404)));
-
-      try {
-         NeutronApi neutronApi = api(server.getUrl("/").toString(), "openstack-neutron", overrides);
-         FWaaSApi api = neutronApi.getFWaaSApi("RegionOne").get();
-
-         UpdateFirewallRule updateFirewallRule = UpdateFirewallRule.builder()
-                 .build();
-
-         FirewallRule firewallRule = api.updateFirewallRule("12345", updateFirewallRule);
-         /*
-          * Check request
-          */
-         assertEquals(server.getRequestCount(), 3);
-         assertAuthentication(server);
-         assertExtensions(server, uriApiVersion + "");
-         assertRequest(server.takeRequest(), "PUT", uriApiVersion + "/fw/firewall_rules/12345", "/firewall_rule_update_request.json");
-
-         /*
-          * Check response
-          */
-         assertNull(firewallRule);
-      } finally {
-         server.shutdown();
-      }
-   }
-
    public void testDeleteFirewallRule() throws IOException, InterruptedException, URISyntaxException {
       MockWebServer server = mockOpenStackServer();
       server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/access.json"))));
@@ -946,36 +560,6 @@ public class FWaaSApiMockTest extends BaseNeutronApiMockTest {
           * Check response
           */
          assertTrue(result);
-      } finally {
-         server.shutdown();
-      }
-   }
-
-   public void testDeleteFirewallRuleFail() throws IOException, InterruptedException, URISyntaxException {
-      MockWebServer server = mockOpenStackServer();
-      server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/access.json"))));
-      server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/extension_list.json"))));
-      server.enqueue(addCommonHeaders(
-              new MockResponse().setResponseCode(404)));
-
-      try {
-         NeutronApi neutronApi = api(server.getUrl("/").toString(), "openstack-neutron", overrides);
-         FWaaSApi api = neutronApi.getFWaaSApi("RegionOne").get();
-
-         boolean result = api.deleteFirewallRule("12345");
-
-         /*
-          * Check request
-          */
-         assertEquals(server.getRequestCount(), 3);
-         assertAuthentication(server);
-         assertExtensions(server, uriApiVersion + "");
-         assertRequest(server.takeRequest(), "DELETE", uriApiVersion + "/fw/firewall_rules/12345");
-
-         /*
-          * Check response
-          */
-         assertFalse(result);
       } finally {
          server.shutdown();
       }
