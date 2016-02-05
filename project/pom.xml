@@ -518,6 +518,7 @@
             <exclude>**/modernizer_exclusions.txt</exclude>
             <exclude>**/.factorypath</exclude>
             <exclude>**/.apt_generated/**</exclude>
+            <exclude>**/.checkstyle</exclude>
 
             <!-- Temporary files generated on CloudBees slaves -->
             <exclude>.repository/**</exclude>

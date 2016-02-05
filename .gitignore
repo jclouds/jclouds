@@ -19,3 +19,4 @@ atlassian-ide-plugin.xml
 .java-version
 .factorypath
 .apt_generated
+.checkstyle

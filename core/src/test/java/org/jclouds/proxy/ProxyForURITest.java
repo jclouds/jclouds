@@ -17,6 +17,7 @@
 package org.jclouds.proxy;
 
 import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertNotEquals;
 import static org.testng.Assert.assertNotNull;
 
 import java.lang.reflect.Field;
@@ -41,12 +42,14 @@ public class ProxyForURITest {
 
    private class MyProxyConfig implements ProxyConfig {
       private boolean useSystem;
+      private boolean jvmProxyEnabled;
       private Type type;
       private Optional<HostAndPort> proxy;
       private Optional<Credentials> credentials;
 
-      MyProxyConfig(boolean useSystem, Type type, Optional<HostAndPort> proxy, Optional<Credentials> credentials) {
+      MyProxyConfig(boolean useSystem, boolean jvmProxyEnabled, Type type, Optional<HostAndPort> proxy, Optional<Credentials> credentials) {
          this.useSystem = useSystem;
+         this.jvmProxyEnabled = jvmProxyEnabled;
          this.type = type;
          this.proxy = proxy;
          this.credentials = credentials;
@@ -71,11 +74,16 @@ public class ProxyForURITest {
       public Optional<Credentials> getCredentials() {
          return credentials;
       }
+
+      @Override
+      public boolean isJvmProxyEnabled() {
+         return jvmProxyEnabled;
+      }
    }
 
    @Test
    public void testDontUseProxyForSockets() throws Exception {
-      ProxyConfig config = new MyProxyConfig(false, Proxy.Type.HTTP, hostAndPort, creds);
+      ProxyConfig config = new MyProxyConfig(false, false, Proxy.Type.HTTP, hostAndPort, creds);
       ProxyForURI proxy = new ProxyForURI(config);
       Field useProxyForSockets = proxy.getClass().getDeclaredField("useProxyForSockets");
       useProxyForSockets.setAccessible(true);
@@ -86,7 +94,7 @@ public class ProxyForURITest {
 
    @Test
    public void testUseProxyForSockets() throws Exception {
-      ProxyConfig config = new MyProxyConfig(false, Proxy.Type.HTTP, hostAndPort, creds);
+      ProxyConfig config = new MyProxyConfig(false, false, Proxy.Type.HTTP, hostAndPort, creds);
       ProxyForURI proxy = new ProxyForURI(config);
       URI uri = new URI("socket://ssh.example.com:22");
       assertEquals(proxy.apply(uri), new Proxy(Proxy.Type.HTTP, new InetSocketAddress("proxy.example.com", 8080)));
@@ -94,7 +102,7 @@ public class ProxyForURITest {
 
    @Test
    public void testUseProxyForSocketsSettingShouldntAffectHTTP() throws Exception {
-      ProxyConfig config = new MyProxyConfig(false, Proxy.Type.HTTP, hostAndPort, creds);
+      ProxyConfig config = new MyProxyConfig(false, false, Proxy.Type.HTTP, hostAndPort, creds);
       ProxyForURI proxy = new ProxyForURI(config);
       Field useProxyForSockets = proxy.getClass().getDeclaredField("useProxyForSockets");
       useProxyForSockets.setAccessible(true);
@@ -105,47 +113,72 @@ public class ProxyForURITest {
 
    @Test
    public void testHTTPDirect() throws URISyntaxException {
-      ProxyConfig config = new MyProxyConfig(false, Proxy.Type.DIRECT, noHostAndPort, noCreds);
+      ProxyConfig config = new MyProxyConfig(false, false, Proxy.Type.DIRECT, noHostAndPort, noCreds);
       URI uri = new URI("http://example.com/file");
       assertEquals(new ProxyForURI(config).apply(uri), Proxy.NO_PROXY);
    }
 
    @Test
    public void testHTTPSDirect() throws URISyntaxException {
-      ProxyConfig config = new MyProxyConfig(false, Proxy.Type.DIRECT, noHostAndPort, noCreds);
+      ProxyConfig config = new MyProxyConfig(false, false, Proxy.Type.DIRECT, noHostAndPort, noCreds);
       URI uri = new URI("https://example.com/file");
       assertEquals(new ProxyForURI(config).apply(uri), Proxy.NO_PROXY);
    }
 
    @Test
    public void testFTPDirect() throws URISyntaxException {
-      ProxyConfig config = new MyProxyConfig(false, Proxy.Type.DIRECT, noHostAndPort, noCreds);
+      ProxyConfig config = new MyProxyConfig(false, false, Proxy.Type.DIRECT, noHostAndPort, noCreds);
       URI uri = new URI("ftp://ftp.example.com/file");
       assertEquals(new ProxyForURI(config).apply(uri), Proxy.NO_PROXY);
    }
 
    @Test
    public void testSocketDirect() throws URISyntaxException {
-      ProxyConfig config = new MyProxyConfig(false, Proxy.Type.DIRECT, noHostAndPort, noCreds);
+      ProxyConfig config = new MyProxyConfig(false, false, Proxy.Type.DIRECT, noHostAndPort, noCreds);
       URI uri = new URI("socket://ssh.example.com:22");
       assertEquals(new ProxyForURI(config).apply(uri), Proxy.NO_PROXY);
    }
 
    @Test
    public void testHTTPThroughHTTPProxy() throws URISyntaxException {
-      ProxyConfig config = new MyProxyConfig(false, Proxy.Type.HTTP, hostAndPort, creds);
+      ProxyConfig config = new MyProxyConfig(false, false, Proxy.Type.HTTP, hostAndPort, creds);
       URI uri = new URI("http://example.com/file");
       assertEquals(new ProxyForURI(config).apply(uri), new Proxy(Proxy.Type.HTTP, new InetSocketAddress(
             "proxy.example.com", 8080)));
    }
 
    @Test
-   public void testHTTPThroughSystemProxy() throws URISyntaxException {
-      ProxyConfig config = new MyProxyConfig(true, Proxy.Type.DIRECT, noHostAndPort, noCreds);
+   public void testThroughJvmProxy() throws URISyntaxException {
+      ProxyConfig config = new MyProxyConfig(false, true, Proxy.Type.HTTP, noHostAndPort, noCreds);
       URI uri = new URI("http://example.com/file");
-      // could return a proxy, could return NO_PROXY, depends on the tester's
-      // environment
+      // could return a proxy, could return NO_PROXY, depends on the tester's environment
       assertNotNull(new ProxyForURI(config).apply(uri));
+   }
+
+   @Test
+   public void testThroughSystemProxy() throws URISyntaxException {
+      ProxyConfig config = new MyProxyConfig(true, false, Proxy.Type.HTTP, noHostAndPort, noCreds);
+      URI uri = new URI("http://example.com/file");
+      // could return a proxy, could return NO_PROXY, depends on the tester's environment
+      assertNotNull(new ProxyForURI(config).apply(uri));
+   }
+
+   @Test
+   public void testJcloudsProxyHostsPreferredOverJvmProxy() throws URISyntaxException {
+      ProxyConfig test = new MyProxyConfig(true, true, Proxy.Type.HTTP, hostAndPort, noCreds);
+      ProxyConfig jclouds = new MyProxyConfig(false, false, Proxy.Type.HTTP, hostAndPort, noCreds);
+      ProxyConfig jvm = new MyProxyConfig(false, true, Proxy.Type.HTTP, noHostAndPort, noCreds);
+      URI uri = new URI("http://example.com/file");
+      assertEquals(new ProxyForURI(test).apply(uri), new ProxyForURI(jclouds).apply(uri));
+      assertNotEquals(new ProxyForURI(test).apply(uri), new ProxyForURI(jvm).apply(uri));
+   }
+
+   @Test
+   public void testJvmProxyAlwaysPreferredOverSystem() throws URISyntaxException {
+      ProxyConfig test = new MyProxyConfig(true, true, Proxy.Type.HTTP, noHostAndPort, noCreds);
+      ProxyConfig jvm = new MyProxyConfig(false, true, Proxy.Type.HTTP, noHostAndPort, noCreds);
+      URI uri = new URI("http://example.com/file");
+      assertEquals(new ProxyForURI(test).apply(uri), new ProxyForURI(jvm).apply(uri));
    }
 
 }

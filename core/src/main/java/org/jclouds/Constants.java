@@ -100,10 +100,40 @@ public final class Constants {
    /**
     * Boolean property.
     * <p/>
-    * Whether or not to use the proxy setup from the underlying operating system.
+    * Whether or not to attempt to use the proxy setup from the underlying operating system.
+    * Defaults to false.
+    * Only considered if {@link #PROPERTY_PROXY_ENABLE_JVM_PROXY} is false
+    * and {@link #PROPERTY_PROXY_HOST} is not supplied.
+    * Due to how Java's <code>java.net.useSystemProxies</code> is handled,
+    * this may have limited effectiveness.
+    * @deprecated in 2.0.0, replaced by {@link #PROPERTY_PROXY_ENABLE_JVM_PROXY} does what this intended but better
     */
+   @Deprecated
+   // deprecated because:  the impl attempts to set the corresponding JVM system property
+   // but that is documented to have no effect if set after system startup;
+   // see e.g. https://docs.oracle.com/javase/7/docs/api/java/net/doc-files/net-properties.html
    public static final String PROPERTY_PROXY_SYSTEM = "jclouds.use-system-proxy";
-   
+
+   /**
+    * Boolean property.
+    * <p/>
+    * Whether or not jclouds is permitted to use the default proxy detected by the JVM
+    * and configured there using the usual Java settings:
+    * <ul>
+    * <li> <code>java.net.useSystemProxies</code>
+    * <li> <code>java.net.httpProxyHost</code>
+    * <li> <code>java.net.httpProxyPort</code>
+    * </ul>
+    * <p/>
+    * Defaults to true so that the Java standard way of setting proxies can be used.
+    * However if {@link #PROPERTY_PROXY_HOST} is set that will always take priority
+    * when jclouds looks for a proxy.
+    * If this property is explicitly set <code>false</code>,
+    * then jclouds will not use a proxy irrespective of the <code>java.net.*</code> settings,
+    * unless {@link #PROPERTY_PROXY_HOST} is set or {@link #PROPERTY_PROXY_SYSTEM} is true.
+    */
+   public static final String PROPERTY_PROXY_ENABLE_JVM_PROXY = "jclouds.enable-jvm-proxy";
+
    /**
     * String property.
     * <p/>
@@ -132,6 +162,7 @@ public final class Constants {
     * String property.
     * <p/>
     * Explicitly sets the user name credential for proxy authentication.
+    * This only applies when {@link #PROPERTY_PROXY_HOST} is supplied.
     */
    public static final String PROPERTY_PROXY_USER = "jclouds.proxy-user";
    
@@ -139,6 +170,7 @@ public final class Constants {
     * String property.
     * <p/>
     * Explicitly sets the password credential for proxy authentication.
+    * This only applies when {@link #PROPERTY_PROXY_HOST} is supplied.
     */
    public static final String PROPERTY_PROXY_PASSWORD = "jclouds.proxy-password";
 

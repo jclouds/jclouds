@@ -17,6 +17,7 @@
 package org.jclouds.proxy.internal;
 
 import static com.google.common.base.Preconditions.checkArgument;
+import static org.jclouds.Constants.PROPERTY_PROXY_ENABLE_JVM_PROXY;
 import static org.jclouds.Constants.PROPERTY_PROXY_HOST;
 import static org.jclouds.Constants.PROPERTY_PROXY_PASSWORD;
 import static org.jclouds.Constants.PROPERTY_PROXY_PORT;
@@ -45,9 +46,14 @@ import com.google.inject.Inject;
 @Singleton
 public class GuiceProxyConfig implements ProxyConfig {
 
+   @SuppressWarnings("deprecation")
    @Inject(optional = true)
    @Named(PROPERTY_PROXY_SYSTEM)
+   @Deprecated
    private boolean systemProxies = Boolean.parseBoolean(System.getProperty("java.net.useSystemProxies", "false"));
+   @Inject(optional = true)
+   @Named(PROPERTY_PROXY_ENABLE_JVM_PROXY)
+   private boolean jvmProxyEnabled = true;
    @Inject(optional = true)
    @Named(PROPERTY_PROXY_HOST)
    private String host;
@@ -66,7 +72,7 @@ public class GuiceProxyConfig implements ProxyConfig {
 
    @Override
    public Optional<HostAndPort> getProxy() {
-      if (host == null)
+      if (Strings.isNullOrEmpty(host))
          return Optional.absent();
       Integer port = this.port;
       if (port == null) {
@@ -107,13 +113,19 @@ public class GuiceProxyConfig implements ProxyConfig {
       return systemProxies;
    }
 
+   @Override
+   public boolean isJvmProxyEnabled() {
+      return jvmProxyEnabled;
+   }
+
    /**
     * {@inheritDoc}
     */
    @Override
    public String toString() {
       return Objects.toStringHelper(this).omitNullValues().add("systemProxies", systemProxies ? "true" : null)
-            .add("proxy", getProxy().orNull()).add("user", user).add("type", host != null ? type : null).toString();
+            .add("jvmProxyEnabled", jvmProxyEnabled ? "true" : "false")
+            .add("proxyHostPort", getProxy().orNull()).add("user", user).add("type", host != null ? type : null).toString();
    }
 
 }

@@ -65,13 +65,10 @@ public class ProxyForURI implements Function<URI, Proxy> {
    public Proxy apply(URI endpoint) {
       if (!useProxyForSockets && "socket".equals(endpoint.getScheme())) {
          return Proxy.NO_PROXY;
-      } else if (config.useSystem()) {
-         System.setProperty("java.net.useSystemProxies", "true");
-         Iterable<Proxy> proxies = ProxySelector.getDefault().select(endpoint);
-         return getLast(proxies);
-      } else if (config.getProxy().isPresent()) {
+      }
+      if (config.getProxy().isPresent()) {
          SocketAddress addr = new InetSocketAddress(config.getProxy().get().getHostText(), config.getProxy().get()
-               .getPort());
+            .getPort());
          Proxy proxy = new Proxy(config.getType(), addr);
 
          final Optional<Credentials> creds = config.getCredentials();
@@ -84,9 +81,22 @@ public class ProxyForURI implements Function<URI, Proxy> {
             Authenticator.setDefault(authenticator);
          }
          return proxy;
-      } else {
-         return Proxy.NO_PROXY;
       }
+      if (config.isJvmProxyEnabled()) {
+         return getDefaultProxy(endpoint);
+      }
+      if (config.useSystem()) {
+         // see notes on the Constant which initialized the above for deprecation;
+         // in short the following applied after startup is documented to have no effect.
+         System.setProperty("java.net.useSystemProxies", "true");
+         return getDefaultProxy(endpoint);
+      }
+      return Proxy.NO_PROXY;
+   }
+
+   private Proxy getDefaultProxy(URI endpoint) {
+      Iterable<Proxy> proxies = ProxySelector.getDefault().select(endpoint);
+      return getLast(proxies);
    }
 
 }
