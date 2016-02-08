@@ -67,12 +67,14 @@ import com.google.common.annotations.Beta;
  *
  * @see <a href=
  *      "http://specs.openstack.org/openstack/neutron-specs/specs/api/firewall_as_a_service__fwaas_.html">api doc</a>
+ * @see <a href=
+ *      "http://git.openstack.org/cgit/openstack/neutron-fwaas/tree/neutron_fwaas/extensions/firewall.py">extension info</a>
  */
 @Beta
 @Path("/fw")
 @RequestFilters(AuthenticateRequest.class)
 @Consumes(MediaType.APPLICATION_JSON)
-@Extension(of = ServiceType.NETWORK, namespace = ExtensionNamespaces.FWAAS)
+@Extension(of = ServiceType.NETWORK, namespace = ExtensionNamespaces.FWAAS, name = "Firewall service", alias = "fwaas")
 public interface FWaaSApi {
 
    /**

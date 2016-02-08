@@ -62,12 +62,12 @@ public class NeutronHttpApiModule extends HttpApiModule<NeutronApi> {
    }
 
    private void bindAliases() {
-      MapBinder<URI, URI> aliases = namespaceAliasBinder(binder());
-      aliases.addBinding(URI.create(ExtensionNamespaces.L3_ROUTER)).toInstance(
+      MapBinder<URI, URI> namespaceAliases = namespaceAliasBinder(binder());
+      namespaceAliases.addBinding(URI.create(ExtensionNamespaces.L3_ROUTER)).toInstance(
             URI.create("http://docs.openstack.org/ext/neutron/router/api/v1.0"));
-      aliases.addBinding(URI.create(ExtensionNamespaces.SECURITY_GROUPS)).toInstance(
+      namespaceAliases.addBinding(URI.create(ExtensionNamespaces.SECURITY_GROUPS)).toInstance(
             URI.create("http://docs.openstack.org/ext/securitygroups/api/v2.0"));
-      aliases.addBinding(URI.create(ExtensionNamespaces.LBAAS)).toInstance(
+      namespaceAliases.addBinding(URI.create(ExtensionNamespaces.LBAAS)).toInstance(
             URI.create("http://docs.openstack.org/networking/ext/lbaas/api/v1.0"));
    }
 

@@ -64,7 +64,7 @@ import com.google.common.annotations.Beta;
 @RequestFilters(AuthenticateRequest.class)
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
-@Extension(of = ServiceType.NETWORK, namespace = ExtensionNamespaces.SECURITY_GROUPS)
+@Extension(of = ServiceType.NETWORK, namespace = ExtensionNamespaces.SECURITY_GROUPS, name = "security-group", alias = "security-group")
 public interface SecurityGroupApi {
    /**
     * Groups

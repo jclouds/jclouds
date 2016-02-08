@@ -61,12 +61,15 @@ import com.google.common.annotations.Beta;
  *
  * @see <a href=
  *      "http://docs.openstack.org/api/openstack-network/2.0/content/router_ext.html">api doc</a>
+ *
+ * @see <a href=
+ * "https://github.com/openstack/neutron/tree/master/neutron/extensions">neutron extensions</a>
  */
 @Beta
 @Path("/routers")
 @RequestFilters(AuthenticateRequest.class)
 @Consumes(MediaType.APPLICATION_JSON)
-@Extension(of = ServiceType.NETWORK, namespace = ExtensionNamespaces.L3_ROUTER)
+@Extension(of = ServiceType.NETWORK, namespace = ExtensionNamespaces.L3_ROUTER, name = "Neutron L3 Router", alias = "router")
 public interface RouterApi {
 
    /**

@@ -61,7 +61,7 @@ import com.google.common.annotations.Beta;
 @Path("/floatingips")
 @RequestFilters(AuthenticateRequest.class)
 @Consumes(MediaType.APPLICATION_JSON)
-@Extension(of = ServiceType.NETWORK, namespace = ExtensionNamespaces.L3_ROUTER)
+@Extension(of = ServiceType.NETWORK, namespace = ExtensionNamespaces.L3_ROUTER, name = "Neutron L3 Router", alias = "router")
 public interface FloatingIPApi {
 
    /**
