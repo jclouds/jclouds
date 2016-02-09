@@ -39,7 +39,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.UUID;
-import java.util.regex.Pattern;
 
 import javax.annotation.Resource;
 import javax.inject.Inject;
@@ -473,7 +472,7 @@ public final class LocalBlobStore implements BlobStore {
             return name.indexOf(delimiter) == -1;
          }
          if (name.startsWith(prefix)) {
-            String unprefixedName = name.replaceFirst(prefix, "");
+            String unprefixedName = name.substring(prefix.length());
             if (unprefixedName.equals("")) {
                // a blob that matches the prefix should also be returned
                return true;
@@ -498,7 +497,7 @@ public final class LocalBlobStore implements BlobStore {
          String working = metadata.getName();
          if (prefix != null) {
             if (working.startsWith(prefix)) {
-               working = working.replaceFirst(Pattern.quote(prefix), "");
+               working = working.substring(prefix.length());
             } else {
                return NO_PREFIX;
             }
