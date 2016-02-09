@@ -33,13 +33,16 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.concurrent.TimeUnit;
 
+import org.assertj.core.api.Fail;
 import org.jclouds.blobstore.KeyNotFoundException;
+import org.jclouds.http.HttpResponseException;
 import org.jclouds.http.options.GetOptions;
 import org.jclouds.io.Payload;
 import org.jclouds.openstack.swift.v1.SwiftApi;
 import org.jclouds.openstack.swift.v1.domain.ObjectList;
 import org.jclouds.openstack.swift.v1.domain.SwiftObject;
 import org.jclouds.openstack.swift.v1.internal.BaseSwiftApiLiveTest;
+import org.jclouds.openstack.swift.v1.options.CopyOptions;
 import org.jclouds.openstack.swift.v1.options.ListContainerOptions;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
@@ -242,6 +245,63 @@ public class ObjectApiLiveTest extends BaseSwiftApiLiveTest<SwiftApi> {
             containerApi.deleteIfEmpty(destinationContainer);
          }
          fail("Expected KeyNotFoundException");
+      }
+   }
+
+   public void testCopyObjectConditional() throws Exception {
+      for (String regionId : regions) {
+         // source
+         String sourceContainer = "src" + containerName;
+         String sourceObjectName = "original.txt";
+         String badSource = "badSource";
+
+         // destination
+         String destinationContainer = "dest" + containerName;
+         String destinationObject = "copy.txt";
+         String destinationPath = "/" + destinationContainer + "/" + destinationObject;
+
+         ContainerApi containerApi = api.getContainerApi(regionId);
+
+         // create source and destination dirs
+         containerApi.create(sourceContainer);
+         containerApi.create(destinationContainer);
+
+         // get the api for this region and container
+         ObjectApi srcApi = api.getObjectApi(regionId, sourceContainer);
+         ObjectApi destApi = api.getObjectApi(regionId, destinationContainer);
+
+         // Create source object
+         assertNotNull(srcApi.put(sourceObjectName, PAYLOAD));
+         SwiftObject sourceObject = srcApi.get(sourceObjectName);
+         checkObject(sourceObject);
+
+         destApi.copy(destinationObject, sourceContainer, sourceObjectName, new CopyOptions().ifMatch(sourceObject.getETag()));
+         try {
+            destApi.copy(destinationObject, sourceContainer, sourceObjectName, new CopyOptions().ifMatch("fake-etag"));
+            Fail.failBecauseExceptionWasNotThrown(HttpResponseException.class);
+         } catch (HttpResponseException hre) {
+            assertThat(hre.getResponse().getStatusCode()).isEqualTo(412);
+         }
+
+         long now = System.currentTimeMillis();
+         Date before = new Date(now - 1000 * 1000);
+         Date after = new Date(now + 1000 * 1000);
+
+         destApi.copy(destinationObject, sourceContainer, sourceObjectName, new CopyOptions().ifModifiedSince(before));
+         try {
+            destApi.copy(destinationObject, sourceContainer, sourceObjectName, new CopyOptions().ifModifiedSince(after));
+            Fail.failBecauseExceptionWasNotThrown(HttpResponseException.class);
+         } catch (HttpResponseException hre) {
+            assertThat(hre.getResponse().getStatusCode()).isEqualTo(304);
+         }
+
+         try {
+            destApi.copy(destinationObject, sourceContainer, sourceObjectName, new CopyOptions().ifUnmodifiedSince(before));
+            Fail.failBecauseExceptionWasNotThrown(HttpResponseException.class);
+         } catch (HttpResponseException hre) {
+            assertThat(hre.getResponse().getStatusCode()).isEqualTo(412);
+         }
+         destApi.copy(destinationObject, sourceContainer, sourceObjectName, new CopyOptions().ifUnmodifiedSince(after));
       }
    }
 
