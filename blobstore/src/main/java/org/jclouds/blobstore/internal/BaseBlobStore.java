@@ -52,7 +52,6 @@ import org.jclouds.io.PayloadSlicer;
 import org.jclouds.util.Closeables2;
 
 import com.google.common.annotations.Beta;
-import com.google.common.base.Optional;
 import com.google.common.base.Predicate;
 import com.google.common.base.Supplier;
 import com.google.common.base.Throwables;
@@ -270,8 +269,8 @@ public abstract class BaseBlobStore implements BlobStore {
          }
 
          ContentMetadata metadata;
-         if (options.getContentMetadata().isPresent()) {
-            metadata = options.getContentMetadata().get();
+         if (options.contentMetadata() != null) {
+            metadata = options.contentMetadata();
          } else {
             metadata = blob.getMetadata().getContentMetadata();
          }
@@ -281,9 +280,9 @@ public abstract class BaseBlobStore implements BlobStore {
                .contentLanguage(metadata.getContentLanguage())
                .contentType(metadata.getContentType());
 
-         Optional<Map<String, String>> userMetadata = options.getUserMetadata();
-         if (userMetadata.isPresent()) {
-            builder.userMetadata(userMetadata.get());
+         Map<String, String> userMetadata = options.userMetadata();
+         if (userMetadata != null) {
+            builder.userMetadata(userMetadata);
          } else {
             builder.userMetadata(blob.getMetadata().getUserMetadata());
          }

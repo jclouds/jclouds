@@ -253,12 +253,11 @@ public class RegionScopedSwiftBlobStore implements BlobStore {
          CopyOptions options) {
       ObjectApi objectApi = api.getObjectApi(regionId, toContainer);
 
-      Map<String, String> userMetadata;
       Map<String, String> systemMetadata = Maps.newHashMap();
-      ContentMetadata contentMetadata = options.getContentMetadata().orNull();
+      ContentMetadata contentMetadata = options.contentMetadata();
+      Map<String, String> userMetadata = options.userMetadata();
 
-      if (contentMetadata != null ||
-            options.getUserMetadata().isPresent()) {
+      if (contentMetadata != null || userMetadata != null) {
          if (contentMetadata != null) {
             String contentDisposition = contentMetadata.getContentDisposition();
             if (contentDisposition != null) {
@@ -280,9 +279,7 @@ public class RegionScopedSwiftBlobStore implements BlobStore {
                systemMetadata.put(HttpHeaders.CONTENT_TYPE, contentType);
             }
          }
-         if (options.getUserMetadata().isPresent()) {
-            userMetadata = options.getUserMetadata().get();
-         } else {
+         if (userMetadata == null) {
             userMetadata = Maps.newHashMap();
          }
       } else {

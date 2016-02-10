@@ -17,59 +17,33 @@
 
 package org.jclouds.blobstore.options;
 
-import static com.google.common.base.Preconditions.checkNotNull;
-
 import java.util.Map;
 
 import org.jclouds.io.ContentMetadata;
+import org.jclouds.javax.annotation.Nullable;
 
+import com.google.auto.value.AutoValue;
 import com.google.common.annotations.Beta;
-import com.google.common.base.Optional;
-import com.google.common.collect.ImmutableMap;
 
+@AutoValue
 @Beta
-public final class CopyOptions {
+public abstract class CopyOptions {
    public static final CopyOptions NONE = builder().build();
 
-   private final Optional<ContentMetadata> contentMetadata;
-   private final Optional<Map<String, String>> userMetadata;
-
-   private CopyOptions(Builder builder) {
-      this.contentMetadata = Optional.fromNullable(builder.contentMetadata);
-      this.userMetadata = Optional.fromNullable(builder.userMetadata);
-   }
-
-   public Optional<ContentMetadata> getContentMetadata() {
-      return contentMetadata;
-   }
-
-   public Optional<Map<String, String>> getUserMetadata() {
-      return userMetadata;
-   }
-
    public static Builder builder() {
-      return new Builder();
+      return new AutoValue_CopyOptions.Builder();
    }
 
-   public static class Builder {
-      ContentMetadata contentMetadata;
-      Map<String, String> userMetadata;
+   @Nullable
+   public abstract ContentMetadata contentMetadata();
+   @Nullable
+   public abstract Map<String, String> userMetadata();
 
-      Builder() {
-      }
+   @AutoValue.Builder
+   public abstract static class Builder {
+      public abstract Builder contentMetadata(ContentMetadata contentMetadata);
+      public abstract Builder userMetadata(Map<String, String> userMetadata);
 
-      public Builder contentMetadata(ContentMetadata contentMetadata) {
-         this.contentMetadata = checkNotNull(contentMetadata, "contentMetadata");
-         return this;
-      }
-
-      public Builder userMetadata(Map<String, String> userMetadata) {
-         this.userMetadata = ImmutableMap.copyOf(userMetadata);
-         return this;
-      }
-
-      public CopyOptions build() {
-          return new CopyOptions(this);
-      }
+      public abstract CopyOptions build();
    }
 }

@@ -69,7 +69,6 @@ import org.jclouds.io.MutableContentMetadata;
 import org.jclouds.io.PayloadSlicer;
 
 import com.google.common.base.Function;
-import com.google.common.base.Optional;
 import com.google.common.base.Supplier;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
@@ -237,39 +236,39 @@ public class AzureBlobStore extends BaseBlobStore {
          CopyOptions options) {
       CopyBlobOptions.Builder azureOptions = CopyBlobOptions.builder();
 
-      Optional<Map<String, String>> userMetadata = options.getUserMetadata();
-      if (userMetadata.isPresent()) {
-         azureOptions.overrideUserMetadata(userMetadata.get());
+      Map<String, String> userMetadata = options.userMetadata();
+      if (userMetadata != null) {
+         azureOptions.overrideUserMetadata(userMetadata);
       }
 
       URI source = context.getSigner().signGetBlob(fromContainer, fromName).getEndpoint();
       String eTag = sync.copyBlob(source, toContainer, toName, azureOptions.build());
 
-      Optional<ContentMetadata> contentMetadata = options.getContentMetadata();
-      if (contentMetadata.isPresent()) {
+      ContentMetadata contentMetadata = options.contentMetadata();
+      if (contentMetadata != null) {
          ContentMetadataBuilder builder = ContentMetadataBuilder.create();
 
-         String cacheControl = contentMetadata.get().getCacheControl();
+         String cacheControl = contentMetadata.getCacheControl();
          if (cacheControl != null) {
             builder.cacheControl(cacheControl);
          }
 
-         String contentDisposition = contentMetadata.get().getContentDisposition();
+         String contentDisposition = contentMetadata.getContentDisposition();
          if (contentDisposition != null) {
             builder.contentDisposition(contentDisposition);
          }
 
-         String contentEncoding = contentMetadata.get().getContentEncoding();
+         String contentEncoding = contentMetadata.getContentEncoding();
          if (contentEncoding != null) {
             builder.contentEncoding(contentEncoding);
          }
 
-         String contentLanguage = contentMetadata.get().getContentLanguage();
+         String contentLanguage = contentMetadata.getContentLanguage();
          if (contentLanguage != null) {
             builder.contentLanguage(contentLanguage);
          }
 
-         String contentType = contentMetadata.get().getContentType();
+         String contentType = contentMetadata.getContentType();
          if (contentType != null) {
             builder.contentType(contentType);
          }

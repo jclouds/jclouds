@@ -541,8 +541,8 @@ public final class LocalBlobStore implements BlobStore {
             builder.contentLength(contentLength);
          }
 
-         if (options.getContentMetadata().isPresent()) {
-            ContentMetadata contentMetadata = options.getContentMetadata().get();
+         ContentMetadata contentMetadata = options.contentMetadata();
+         if (contentMetadata != null) {
             String cacheControl = contentMetadata.getCacheControl();
             if (cacheControl != null) {
                builder.cacheControl(cacheControl);
@@ -570,9 +570,10 @@ public final class LocalBlobStore implements BlobStore {
                    .contentLanguage(metadata.getContentLanguage())
                    .contentType(metadata.getContentType());
          }
-         Optional<Map<String, String>> userMetadata = options.getUserMetadata();
-         if (userMetadata.isPresent()) {
-            builder.userMetadata(userMetadata.get());
+
+         Map<String, String> userMetadata = options.userMetadata();
+         if (userMetadata != null) {
+            builder.userMetadata(userMetadata);
          } else {
             builder.userMetadata(blob.getMetadata().getUserMetadata());
          }

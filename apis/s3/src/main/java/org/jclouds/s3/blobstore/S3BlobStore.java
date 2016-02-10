@@ -71,7 +71,6 @@ import org.jclouds.s3.options.PutObjectOptions;
 import org.jclouds.s3.util.S3Utils;
 
 import com.google.common.base.Function;
-import com.google.common.base.Optional;
 import com.google.common.base.Predicate;
 import com.google.common.base.Supplier;
 import com.google.common.collect.ImmutableList;
@@ -272,37 +271,37 @@ public class S3BlobStore extends BaseBlobStore {
          CopyOptions options) {
       CopyObjectOptions s3Options = new CopyObjectOptions();
 
-      Optional<ContentMetadata> contentMetadata = options.getContentMetadata();
-      if (contentMetadata.isPresent()) {
-         String cacheControl = contentMetadata.get().getCacheControl();
+      ContentMetadata contentMetadata = options.contentMetadata();
+      if (contentMetadata != null) {
+         String cacheControl = contentMetadata.getCacheControl();
          if (cacheControl != null) {
             s3Options.cacheControl(cacheControl);
          }
 
-         String contentDisposition = contentMetadata.get().getContentDisposition();
+         String contentDisposition = contentMetadata.getContentDisposition();
          if (contentDisposition != null) {
             s3Options.contentDisposition(contentDisposition);
          }
 
-         String contentEncoding = contentMetadata.get().getContentEncoding();
+         String contentEncoding = contentMetadata.getContentEncoding();
          if (contentEncoding != null) {
             s3Options.contentEncoding(contentEncoding);
          }
 
-         String contentLanguage = contentMetadata.get().getContentLanguage();
+         String contentLanguage = contentMetadata.getContentLanguage();
          if (contentLanguage != null) {
             s3Options.contentLanguage(contentLanguage);
          }
 
-         String contentType = contentMetadata.get().getContentType();
+         String contentType = contentMetadata.getContentType();
          if (contentType != null) {
             s3Options.contentType(contentType);
          }
       }
 
-      Optional<Map<String, String>> userMetadata = options.getUserMetadata();
-      if (userMetadata.isPresent()) {
-         s3Options.overrideMetadataWith(userMetadata.get());
+      Map<String, String> userMetadata = options.userMetadata();
+      if (userMetadata != null) {
+         s3Options.overrideMetadataWith(userMetadata);
       }
 
       return sync.copyObject(fromContainer, fromName, toContainer, toName, s3Options).getETag();
