@@ -36,7 +36,7 @@ import org.jclouds.openstack.keystone.v2_0.suppliers.RegionIdToAdminURIFromAcces
 import org.jclouds.openstack.keystone.v2_0.suppliers.RegionIdToAdminURISupplier;
 import org.jclouds.openstack.v2_0.ServiceType;
 import org.jclouds.openstack.v2_0.domain.Extension;
-import org.jclouds.openstack.v2_0.functions.PresentWhenExtensionAnnotationNamespaceEqualsAnyNamespaceInExtensionsSet;
+import org.jclouds.openstack.v2_0.functions.PresentWhenExtensionAnnotationMatchesExtensionSet;
 import org.jclouds.openstack.v2_0.services.Identity;
 import org.jclouds.rest.ConfiguresHttpApi;
 import org.jclouds.rest.annotations.ApiVersion;
@@ -98,7 +98,7 @@ public class KeystoneHttpApiModule extends HttpApiModule<KeystoneApi> {
 
    @Override
    protected void configure() {
-      bind(ImplicitOptionalConverter.class).to(PresentWhenExtensionAnnotationNamespaceEqualsAnyNamespaceInExtensionsSet.class);
+      bind(ImplicitOptionalConverter.class).to(PresentWhenExtensionAnnotationMatchesExtensionSet.class);
       super.configure();
       namespaceAliasBinder(binder());
    }

@@ -18,6 +18,7 @@ package org.jclouds.openstack.v2_0.functions;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.collect.Iterables.any;
+import static org.jclouds.openstack.v2_0.predicates.ExtensionPredicates.aliasEquals;
 import static org.jclouds.openstack.v2_0.predicates.ExtensionPredicates.nameEquals;
 import static org.jclouds.openstack.v2_0.predicates.ExtensionPredicates.namespaceOrAliasEquals;
 import static org.jclouds.util.Optionals2.unwrapIfOptional;
@@ -42,17 +43,44 @@ import com.google.common.collect.Sets;
 /**
  * We use the annotation {@link Extension} to bind a class that implements an extension
  * API to an {@link Extension}.
+ *
+ * Match in the following order:
+ *
+ * 1. Match by namespace
+ * 2. Match by namespace aliases
+ * 3. Match by alias
+ * 4. Match by name
+ *
+ * New versions of openstack have no namespaces anymore.
+ * Alias is different than a namespace alias - it's an alternative namespace URL to match against.
  */
-public class PresentWhenExtensionAnnotationNamespaceEqualsAnyNamespaceInExtensionsSet implements
+public class PresentWhenExtensionAnnotationMatchesExtensionSet implements
       ImplicitOptionalConverter {
    private final LoadingCache<String, Set<? extends Extension>> extensions;
    private final Map<URI, Set<URI>> aliases;
 
    @Inject
-   PresentWhenExtensionAnnotationNamespaceEqualsAnyNamespaceInExtensionsSet(
+   PresentWhenExtensionAnnotationMatchesExtensionSet(
          LoadingCache<String, Set<? extends Extension>> extensions, @NamespaceAliases Map<URI, Set<URI>> aliases) {
       this.extensions = extensions;
       this.aliases = aliases == null ? ImmutableMap.<URI, Set<URI>> of() : ImmutableMap.copyOf(aliases);
+   }
+
+   private boolean checkExtension(String invocationArg, URI namespace,
+         Set<URI> aliasesForNamespace, String alias, String name) {
+      if (any(extensions.getUnchecked(invocationArg), namespaceOrAliasEquals(namespace, aliasesForNamespace)))
+         return true;
+      // Could not find extension by namespace or namespace alias. Try to find it by alias next:
+      if ( !"".equals(alias)) {
+         if (any(extensions.getUnchecked(invocationArg), aliasEquals(alias)))
+            return true;
+      }
+      // Could not find extension by namespace or namespace alias or alias. Try to find it by name next:
+      if ( !"".equals(name)) {
+         if (any(extensions.getUnchecked(invocationArg), nameEquals(name)))
+            return true;
+      }
+      return false;
    }
 
    @Override
@@ -65,23 +93,16 @@ public class PresentWhenExtensionAnnotationNamespaceEqualsAnyNamespaceInExtensio
          List<Object> args = input.getInvocation().getArgs();
          Set<URI> aliasesForNamespace = aliases.containsKey(namespace) ? aliases.get(namespace) : Sets.<URI> newHashSet();
          String name = ext.get().name();
+         String alias = ext.get().alias();
 
          if (args.isEmpty()) {
-            if (any(extensions.getUnchecked(""), namespaceOrAliasEquals(namespace, aliasesForNamespace)))
+            if (checkExtension("", namespace, aliasesForNamespace, alias, name)) {
                return input.getResult();
-            // Could not find extension by namespace or namespace alias. Try to find it by name next:
-            if ( !"".equals(name)) {
-               if (any(extensions.getUnchecked(""), nameEquals(name)))
-                  return input.getResult();
             }
          } else if (args.size() == 1) {
             String arg0 = checkNotNull(args.get(0), "arg[0] in %s", input).toString();
-            if (any(extensions.getUnchecked(arg0), namespaceOrAliasEquals(namespace, aliasesForNamespace)))
+            if (checkExtension(arg0, namespace, aliasesForNamespace, alias, name)) {
                return input.getResult();
-            // Could not find extension by namespace or namespace alias. Try to find it by name next:
-            if (!"".equals(name)) {
-               if (any(extensions.getUnchecked(arg0), nameEquals(name)))
-                  return input.getResult();
             }
          } else {
             throw new RuntimeException(String.format("expecting zero or one args %s", input));
@@ -96,7 +117,7 @@ public class PresentWhenExtensionAnnotationNamespaceEqualsAnyNamespaceInExtensio
 
    @Override
    public String toString() {
-      return "presentWhenExtensionAnnotationNamespaceEqualsAnyNamespaceInExtensionsSet()";
+      return "PresentWhenExtensionAnnotationMatchesExtensionSet()";
    }
 
 }
