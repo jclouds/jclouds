@@ -253,6 +253,21 @@ public class RegionScopedSwiftBlobStore implements BlobStore {
          CopyOptions options) {
       ObjectApi objectApi = api.getObjectApi(regionId, toContainer);
 
+      org.jclouds.openstack.swift.v1.options.CopyOptions swiftOptions = new org.jclouds.openstack.swift.v1.options.CopyOptions();
+
+      if (options.ifMatch() != null) {
+         swiftOptions.ifMatch(options.ifMatch());
+      }
+      if (options.ifNoneMatch() != null) {
+         throw new UnsupportedOperationException("Swift does not support ifNoneMatch");
+      }
+      if (options.ifModifiedSince() != null) {
+         swiftOptions.ifModifiedSince(options.ifModifiedSince());
+      }
+      if (options.ifUnmodifiedSince() != null) {
+         swiftOptions.ifUnmodifiedSince(options.ifUnmodifiedSince());
+      }
+
       Map<String, String> systemMetadata = Maps.newHashMap();
       ContentMetadata contentMetadata = options.contentMetadata();
       Map<String, String> userMetadata = options.userMetadata();
@@ -307,7 +322,7 @@ public class RegionScopedSwiftBlobStore implements BlobStore {
          userMetadata = metadata.getMetadata();
       }
 
-      objectApi.copy(toName, fromContainer, fromName, userMetadata, systemMetadata);
+      objectApi.copy(toName, fromContainer, fromName, userMetadata, systemMetadata, swiftOptions);
 
       // TODO: Swift copy object *appends* user metadata, does not overwrite
       return objectApi.getWithoutBody(toName).getETag();

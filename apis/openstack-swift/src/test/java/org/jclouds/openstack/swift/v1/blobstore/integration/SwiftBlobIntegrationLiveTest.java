@@ -101,6 +101,20 @@ public class SwiftBlobIntegrationLiveTest extends BaseBlobIntegrationTest {
    }
 
    @Override
+   @Test(expectedExceptions = UnsupportedOperationException.class)
+   public void testCopyIfNoneMatch() throws Exception {
+      super.testCopyIfNoneMatch();
+   }
+
+   @Override
+   @Test(expectedExceptions = UnsupportedOperationException.class)
+   public void testCopyIfNoneMatchNegative() throws Exception {
+      super.testCopyIfNoneMatchNegative();
+   }
+
+   // TODO: testCopyIfModifiedSinceNegative throws HTTP 304 not 412 error
+
+   @Override
    protected long getMinimumMultipartBlobSize() {
       return 1;
    }
