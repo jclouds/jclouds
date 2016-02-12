@@ -236,6 +236,19 @@ public class AzureBlobStore extends BaseBlobStore {
          CopyOptions options) {
       CopyBlobOptions.Builder azureOptions = CopyBlobOptions.builder();
 
+      if (options.ifMatch() != null) {
+         azureOptions.ifMatch(options.ifMatch());
+      }
+      if (options.ifNoneMatch() != null) {
+         azureOptions.ifNoneMatch(options.ifNoneMatch());
+      }
+      if (options.ifModifiedSince() != null) {
+         azureOptions.ifModifiedSince(options.ifModifiedSince());
+      }
+      if (options.ifUnmodifiedSince() != null) {
+         azureOptions.ifUnmodifiedSince(options.ifUnmodifiedSince());
+      }
+
       Map<String, String> userMetadata = options.userMetadata();
       if (userMetadata != null) {
          azureOptions.overrideUserMetadata(userMetadata);
