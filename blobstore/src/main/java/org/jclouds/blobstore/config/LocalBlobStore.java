@@ -530,6 +530,26 @@ public final class LocalBlobStore implements BlobStore {
          throw new KeyNotFoundException(fromContainer, fromName, "while copying");
       }
 
+      String eTag = maybeQuoteETag(blob.getMetadata().getETag());
+      if (eTag != null) {
+         if (options.ifMatch() != null && !options.ifMatch().equals(eTag)) {
+            throw returnResponseException(412);
+         }
+         if (options.ifNoneMatch() != null && options.ifNoneMatch().equals(eTag)) {
+            throw returnResponseException(412);
+         }
+      }
+
+      Date lastModified = blob.getMetadata().getLastModified();
+      if (lastModified != null) {
+         if (options.ifModifiedSince() != null && lastModified.compareTo(options.ifModifiedSince()) <= 0) {
+            throw returnResponseException(412);
+         }
+         if (options.ifUnmodifiedSince() != null && lastModified.compareTo(options.ifUnmodifiedSince()) >= 0) {
+            throw returnResponseException(412);
+         }
+      }
+
       InputStream is = null;
       try {
          is = blob.getPayload().openStream();
