@@ -17,6 +17,7 @@
 
 package org.jclouds.blobstore.options;
 
+import java.util.Date;
 import java.util.Map;
 
 import org.jclouds.io.ContentMetadata;
@@ -24,6 +25,7 @@ import org.jclouds.javax.annotation.Nullable;
 
 import com.google.auto.value.AutoValue;
 import com.google.common.annotations.Beta;
+import com.google.common.collect.ImmutableMap;
 
 @AutoValue
 @Beta
@@ -39,11 +41,34 @@ public abstract class CopyOptions {
    @Nullable
    public abstract Map<String, String> userMetadata();
 
+   @Nullable
+   public abstract Date ifModifiedSince();
+   @Nullable
+   public abstract Date ifUnmodifiedSince();
+   @Nullable
+   public abstract String ifMatch();
+   @Nullable
+   public abstract String ifNoneMatch();
+
    @AutoValue.Builder
    public abstract static class Builder {
       public abstract Builder contentMetadata(ContentMetadata contentMetadata);
       public abstract Builder userMetadata(Map<String, String> userMetadata);
 
-      public abstract CopyOptions build();
+      public abstract Builder ifModifiedSince(Date ifModifiedSince);
+      public abstract Builder ifUnmodifiedSince(Date ifUnmodifiedSince);
+      public abstract Builder ifMatch(String ifMatch);
+      public abstract Builder ifNoneMatch(String ifNoneMatch);
+
+      abstract Map<String, String> userMetadata();
+      abstract CopyOptions autoBuild();
+
+      public CopyOptions build() {
+         Map<String, String> userMetadata = userMetadata();
+         if (userMetadata != null) {
+            userMetadata(ImmutableMap.copyOf(userMetadata));
+         }
+         return autoBuild();
+      }
    }
 }

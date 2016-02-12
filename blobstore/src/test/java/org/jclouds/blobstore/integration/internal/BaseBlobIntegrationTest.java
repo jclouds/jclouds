@@ -42,11 +42,13 @@ import java.util.Map;
 import java.util.Random;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import javax.ws.rs.core.MediaType;
 
+import org.assertj.core.api.Fail;
 import org.jclouds.blobstore.BlobStore;
 import org.jclouds.blobstore.ContainerNotFoundException;
 import org.jclouds.blobstore.KeyNotFoundException;
@@ -941,6 +943,240 @@ public class BaseBlobIntegrationTest extends BaseBlobStoreIntegrationTest {
          }
          checkContentMetadata(toBlob);
          checkUserMetadata(toBlob.getMetadata().getUserMetadata(), userMetadata);
+      } finally {
+         returnContainer(toContainer);
+         returnContainer(fromContainer);
+      }
+   }
+
+   @Test(groups = { "integration", "live" })
+   public void testCopyIfMatch() throws Exception {
+      BlobStore blobStore = view.getBlobStore();
+      String fromName = "source";
+      String toName = "to";
+      ByteSource payload = TestUtils.randomByteSource().slice(0, 1024);
+      Blob blob = blobStore
+            .blobBuilder(fromName)
+            .payload(payload)
+            .contentLength(payload.size())
+            .build();
+      String fromContainer = getContainerName();
+      String toContainer = getContainerName();
+      try {
+         String eTag = blobStore.putBlob(fromContainer, blob);
+         blobStore.copyBlob(fromContainer, fromName, toContainer, toName, CopyOptions.builder().ifMatch(eTag).build());
+         Blob toBlob = blobStore.getBlob(toContainer, toName);
+         InputStream is = null;
+         try {
+            is = toBlob.getPayload().openStream();
+            assertEquals(ByteStreams.toByteArray(is), payload.read());
+         } finally {
+            Closeables2.closeQuietly(is);
+         }
+      } finally {
+         returnContainer(toContainer);
+         returnContainer(fromContainer);
+      }
+   }
+
+   @Test(groups = { "integration", "live" })
+   public void testCopyIfMatchNegative() throws Exception {
+      BlobStore blobStore = view.getBlobStore();
+      String fromName = "source";
+      String toName = "to";
+      ByteSource payload = TestUtils.randomByteSource().slice(0, 1024);
+      Blob blob = blobStore
+            .blobBuilder(fromName)
+            .payload(payload)
+            .contentLength(payload.size())
+            .build();
+      String fromContainer = getContainerName();
+      String toContainer = getContainerName();
+      try {
+         blobStore.putBlob(fromContainer, blob);
+         try {
+            blobStore.copyBlob(fromContainer, fromName, toContainer, toName, CopyOptions.builder().ifMatch("fake-etag").build());
+            Fail.failBecauseExceptionWasNotThrown(HttpResponseException.class);
+         } catch (HttpResponseException hre) {
+            assertThat(hre.getResponse().getStatusCode()).isEqualTo(412);
+         }
+      } finally {
+         returnContainer(toContainer);
+         returnContainer(fromContainer);
+      }
+   }
+
+   @Test(groups = { "integration", "live" })
+   public void testCopyIfNoneMatch() throws Exception {
+      BlobStore blobStore = view.getBlobStore();
+      String fromName = "source";
+      String toName = "to";
+      ByteSource payload = TestUtils.randomByteSource().slice(0, 1024);
+      Blob blob = blobStore
+            .blobBuilder(fromName)
+            .payload(payload)
+            .contentLength(payload.size())
+            .build();
+      String fromContainer = getContainerName();
+      String toContainer = getContainerName();
+      try {
+         blobStore.putBlob(fromContainer, blob);
+         blobStore.copyBlob(fromContainer, fromName, toContainer, toName, CopyOptions.builder().ifNoneMatch("fake-etag").build());
+         Blob toBlob = blobStore.getBlob(toContainer, toName);
+         InputStream is = null;
+         try {
+            is = toBlob.getPayload().openStream();
+            assertEquals(ByteStreams.toByteArray(is), payload.read());
+         } finally {
+            Closeables2.closeQuietly(is);
+         }
+      } finally {
+         returnContainer(toContainer);
+         returnContainer(fromContainer);
+      }
+   }
+
+   @Test(groups = { "integration", "live" })
+   public void testCopyIfNoneMatchNegative() throws Exception {
+      BlobStore blobStore = view.getBlobStore();
+      String fromName = "source";
+      String toName = "to";
+      ByteSource payload = TestUtils.randomByteSource().slice(0, 1024);
+      Blob blob = blobStore
+            .blobBuilder(fromName)
+            .payload(payload)
+            .contentLength(payload.size())
+            .build();
+      String fromContainer = getContainerName();
+      String toContainer = getContainerName();
+      try {
+         String eTag = blobStore.putBlob(fromContainer, blob);
+         try {
+            blobStore.copyBlob(fromContainer, fromName, toContainer, toName, CopyOptions.builder().ifNoneMatch(eTag).build());
+            Fail.failBecauseExceptionWasNotThrown(HttpResponseException.class);
+         } catch (HttpResponseException hre) {
+            assertThat(hre.getResponse().getStatusCode()).isEqualTo(412);
+         }
+      } finally {
+         returnContainer(toContainer);
+         returnContainer(fromContainer);
+      }
+   }
+
+   @Test(groups = { "integration", "live" })
+   public void testCopyIfModifiedSince() throws Exception {
+      BlobStore blobStore = view.getBlobStore();
+      String fromName = "source";
+      String toName = "to";
+      ByteSource payload = TestUtils.randomByteSource().slice(0, 1024);
+      Blob blob = blobStore
+            .blobBuilder(fromName)
+            .payload(payload)
+            .contentLength(payload.size())
+            .build();
+      String fromContainer = getContainerName();
+      String toContainer = getContainerName();
+      try {
+         blobStore.putBlob(fromContainer, blob);
+         Date before = new Date(System.currentTimeMillis() - TimeUnit.HOURS.toMillis(1));
+         blobStore.copyBlob(fromContainer, fromName, toContainer, toName, CopyOptions.builder().ifModifiedSince(before).build());
+         Blob toBlob = blobStore.getBlob(toContainer, toName);
+         InputStream is = null;
+         try {
+            is = toBlob.getPayload().openStream();
+            assertEquals(ByteStreams.toByteArray(is), payload.read());
+         } finally {
+            Closeables2.closeQuietly(is);
+         }
+      } finally {
+         returnContainer(toContainer);
+         returnContainer(fromContainer);
+      }
+   }
+
+   @Test(groups = { "integration", "live" })
+   public void testCopyIfModifiedSinceNegative() throws Exception {
+      BlobStore blobStore = view.getBlobStore();
+      String fromName = "source";
+      String toName = "to";
+      ByteSource payload = TestUtils.randomByteSource().slice(0, 1024);
+      Blob blob = blobStore
+            .blobBuilder(fromName)
+            .payload(payload)
+            .contentLength(payload.size())
+            .build();
+      String fromContainer = getContainerName();
+      String toContainer = getContainerName();
+      try {
+         blobStore.putBlob(fromContainer, blob);
+         // TODO: some problem with S3 and times in the future?
+         Date after = new Date(System.currentTimeMillis() + TimeUnit.HOURS.toMillis(1));
+         try {
+            blobStore.copyBlob(fromContainer, fromName, toContainer, toName, CopyOptions.builder().ifModifiedSince(after).build());
+            Fail.failBecauseExceptionWasNotThrown(HttpResponseException.class);
+         } catch (HttpResponseException hre) {
+            // most object stores return 412 but swift returns 304
+            assertThat(hre.getResponse().getStatusCode()).isIn(304, 412);
+         }
+      } finally {
+         returnContainer(toContainer);
+         returnContainer(fromContainer);
+      }
+   }
+
+   @Test(groups = { "integration", "live" })
+   public void testCopyIfUnmodifiedSince() throws Exception {
+      BlobStore blobStore = view.getBlobStore();
+      String fromName = "source";
+      String toName = "to";
+      ByteSource payload = TestUtils.randomByteSource().slice(0, 1024);
+      Blob blob = blobStore
+            .blobBuilder(fromName)
+            .payload(payload)
+            .contentLength(payload.size())
+            .build();
+      String fromContainer = getContainerName();
+      String toContainer = getContainerName();
+      try {
+         blobStore.putBlob(fromContainer, blob);
+         Date after = new Date(System.currentTimeMillis() + TimeUnit.HOURS.toMillis(1));
+         blobStore.copyBlob(fromContainer, fromName, toContainer, toName, CopyOptions.builder().ifUnmodifiedSince(after).build());
+         Blob toBlob = blobStore.getBlob(toContainer, toName);
+         InputStream is = null;
+         try {
+            is = toBlob.getPayload().openStream();
+            assertEquals(ByteStreams.toByteArray(is), payload.read());
+         } finally {
+            Closeables2.closeQuietly(is);
+         }
+      } finally {
+         returnContainer(toContainer);
+         returnContainer(fromContainer);
+      }
+   }
+
+   @Test(groups = { "integration", "live" })
+   public void testCopyIfUnmodifiedSinceNegative() throws Exception {
+      BlobStore blobStore = view.getBlobStore();
+      String fromName = "source";
+      String toName = "to";
+      ByteSource payload = TestUtils.randomByteSource().slice(0, 1024);
+      Blob blob = blobStore
+            .blobBuilder(fromName)
+            .payload(payload)
+            .contentLength(payload.size())
+            .build();
+      String fromContainer = getContainerName();
+      String toContainer = getContainerName();
+      try {
+         blobStore.putBlob(fromContainer, blob);
+         Date before = new Date(System.currentTimeMillis() - TimeUnit.HOURS.toMillis(1));
+         try {
+            blobStore.copyBlob(fromContainer, fromName, toContainer, toName, CopyOptions.builder().ifUnmodifiedSince(before).build());
+            Fail.failBecauseExceptionWasNotThrown(HttpResponseException.class);
+         } catch (HttpResponseException hre) {
+            assertThat(hre.getResponse().getStatusCode()).isEqualTo(412);
+         }
       } finally {
          returnContainer(toContainer);
          returnContainer(fromContainer);
