@@ -18,10 +18,16 @@ package org.jclouds.aws.s3.blobstore.integration;
 
 import org.jclouds.s3.blobstore.integration.S3BlobIntegrationLiveTest;
 import org.testng.annotations.Test;
+import org.testng.SkipException;
 
 @Test(groups = "live", testName = "AWSS3BlobIntegrationLiveTest")
 public class AWSS3BlobIntegrationLiveTest extends S3BlobIntegrationLiveTest {
    public AWSS3BlobIntegrationLiveTest() {
       provider = "aws-s3";
+   }
+
+   @Override
+   public void testCopyIfModifiedSinceNegative() throws Exception {
+      throw new SkipException("S3 supports copyIfModifiedSince but test uses time in the future which Amazon does not support");
    }
 }

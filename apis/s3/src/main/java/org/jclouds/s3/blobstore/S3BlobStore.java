@@ -270,6 +270,18 @@ public class S3BlobStore extends BaseBlobStore {
    public String copyBlob(String fromContainer, String fromName, String toContainer, String toName,
          CopyOptions options) {
       CopyObjectOptions s3Options = new CopyObjectOptions();
+      if (options.ifMatch() != null) {
+         s3Options.ifSourceETagMatches(options.ifMatch());
+      }
+      if (options.ifNoneMatch() != null) {
+         s3Options.ifSourceETagDoesntMatch(options.ifNoneMatch());
+      }
+      if (options.ifModifiedSince() != null) {
+         s3Options.ifSourceModifiedSince(options.ifModifiedSince());
+      }
+      if (options.ifUnmodifiedSince() != null) {
+         s3Options.ifSourceUnmodifiedSince(options.ifUnmodifiedSince());
+      }
 
       ContentMetadata contentMetadata = options.contentMetadata();
       if (contentMetadata != null) {
