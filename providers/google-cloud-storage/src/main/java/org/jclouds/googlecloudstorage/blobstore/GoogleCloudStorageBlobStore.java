@@ -308,6 +308,19 @@ public final class GoogleCloudStorageBlobStore extends BaseBlobStore {
    @Override
    public String copyBlob(String fromContainer, String fromName, String toContainer, String toName,
          CopyOptions options) {
+      if (options.ifMatch() != null) {
+         throw new UnsupportedOperationException("GCS does not support ifMatch");
+      }
+      if (options.ifNoneMatch() != null) {
+         throw new UnsupportedOperationException("GCS does not support ifNoneMatch");
+      }
+      if (options.ifModifiedSince() != null) {
+         throw new UnsupportedOperationException("GCS does not support ifModifiedSince");
+      }
+      if (options.ifUnmodifiedSince() != null) {
+         throw new UnsupportedOperationException("GCS does not support ifUnmodifiedSince");
+      }
+
       if (options.contentMetadata() == null && options.userMetadata() == null) {
          return api.getObjectApi().copyObject(toContainer, Strings2.urlEncode(toName), fromContainer,
                Strings2.urlEncode(fromName)).etag();

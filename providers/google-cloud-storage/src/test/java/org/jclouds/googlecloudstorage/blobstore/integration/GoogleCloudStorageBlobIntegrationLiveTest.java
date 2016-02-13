@@ -268,4 +268,52 @@ public class GoogleCloudStorageBlobIntegrationLiveTest extends BaseBlobIntegrati
          throw new SkipException("request signing not supported on GCS", uoe);
       }
    }
+
+   @Override
+   @Test(expectedExceptions = UnsupportedOperationException.class)
+   public void testCopyIfMatch() throws Exception {
+      super.testCopyIfMatch();
+   }
+
+   @Override
+   @Test(expectedExceptions = UnsupportedOperationException.class)
+   public void testCopyIfMatchNegative() throws Exception {
+      super.testCopyIfMatch();
+   }
+
+   @Override
+   @Test(expectedExceptions = UnsupportedOperationException.class)
+   public void testCopyIfNoneMatch() throws Exception {
+      super.testCopyIfNoneMatch();
+   }
+
+   @Override
+   @Test(expectedExceptions = UnsupportedOperationException.class)
+   public void testCopyIfNoneMatchNegative() throws Exception {
+      super.testCopyIfNoneMatch();
+   }
+
+   @Override
+   @Test(expectedExceptions = UnsupportedOperationException.class)
+   public void testCopyIfModifiedSince() throws Exception {
+      super.testCopyIfModifiedSince();
+   }
+
+   @Override
+   @Test(expectedExceptions = UnsupportedOperationException.class)
+   public void testCopyIfModifiedSinceNegative() throws Exception {
+      super.testCopyIfModifiedSince();
+   }
+
+   @Override
+   @Test(expectedExceptions = UnsupportedOperationException.class)
+   public void testCopyIfUnmodifiedSince() throws Exception {
+      super.testCopyIfUnmodifiedSince();
+   }
+
+   @Override
+   @Test(expectedExceptions = UnsupportedOperationException.class)
+   public void testCopyIfUnmodifiedSinceNegative() throws Exception {
+      super.testCopyIfUnmodifiedSince();
+   }
 }
