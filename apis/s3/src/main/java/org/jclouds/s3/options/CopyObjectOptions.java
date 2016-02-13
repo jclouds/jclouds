@@ -226,7 +226,7 @@ public class CopyObjectOptions extends BaseHttpRequestOptions {
    public CopyObjectOptions ifSourceETagMatches(String eTag) {
       checkState(getIfNoneMatch() == null, "ifETagDoesntMatch() is not compatible with ifETagMatches()");
       checkState(getIfModifiedSince() == null, "ifModifiedSince() is not compatible with ifETagMatches()");
-      replaceHeader(COPY_SOURCE_IF_MATCH, String.format("\"%1$s\"", checkNotNull(eTag, "eTag")));
+      replaceHeader(COPY_SOURCE_IF_MATCH, maybeQuoteETag(checkNotNull(eTag, "eTag")));
       return this;
    }
 
@@ -243,7 +243,7 @@ public class CopyObjectOptions extends BaseHttpRequestOptions {
       checkState(getIfMatch() == null, "ifETagMatches() is not compatible with ifETagDoesntMatch()");
       Preconditions.checkState(getIfUnmodifiedSince() == null,
                "ifUnmodifiedSince() is not compatible with ifETagDoesntMatch()");
-      replaceHeader(COPY_SOURCE_IF_NO_MATCH, String.format("\"%s\"", checkNotNull(eTag, "ifETagDoesntMatch")));
+      replaceHeader(COPY_SOURCE_IF_NO_MATCH, maybeQuoteETag(checkNotNull(eTag, "ifETagDoesntMatch")));
       return this;
    }
 
@@ -396,5 +396,12 @@ public class CopyObjectOptions extends BaseHttpRequestOptions {
          CopyObjectOptions options = new CopyObjectOptions();
          return options.overrideMetadataWith(metadata);
       }
+   }
+
+   private static String maybeQuoteETag(String eTag) {
+      if (!eTag.startsWith("\"") && !eTag.endsWith("\"")) {
+         eTag = "\"" + eTag + "\"";
+      }
+      return eTag;
    }
 }
