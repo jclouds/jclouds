@@ -308,15 +308,15 @@ public final class GoogleCloudStorageBlobStore extends BaseBlobStore {
    @Override
    public String copyBlob(String fromContainer, String fromName, String toContainer, String toName,
          CopyOptions options) {
-      if (!options.getContentMetadata().isPresent() && !options.getUserMetadata().isPresent()) {
+      if (options.contentMetadata() == null && options.userMetadata() == null) {
          return api.getObjectApi().copyObject(toContainer, Strings2.urlEncode(toName), fromContainer,
                Strings2.urlEncode(fromName)).etag();
       }
 
       ObjectTemplate template = new ObjectTemplate();
 
-      if (options.getContentMetadata().isPresent()) {
-         ContentMetadata contentMetadata = options.getContentMetadata().get();
+      if (options.contentMetadata() != null) {
+         ContentMetadata contentMetadata = options.contentMetadata();
 
          String contentDisposition = contentMetadata.getContentDisposition();
          if (contentDisposition != null) {
@@ -343,8 +343,8 @@ public final class GoogleCloudStorageBlobStore extends BaseBlobStore {
          }
       }
 
-      if (options.getUserMetadata().isPresent()) {
-         template.customMetadata(options.getUserMetadata().get());
+      if (options.userMetadata() != null) {
+         template.customMetadata(options.userMetadata());
       }
 
       return api.getObjectApi().copyObject(toContainer, Strings2.urlEncode(toName), fromContainer,
