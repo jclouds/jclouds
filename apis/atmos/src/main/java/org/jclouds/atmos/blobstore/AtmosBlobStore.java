@@ -45,6 +45,7 @@ import org.jclouds.blobstore.domain.PageSet;
 import org.jclouds.blobstore.domain.StorageMetadata;
 import org.jclouds.blobstore.functions.BlobToHttpGetOptions;
 import org.jclouds.blobstore.internal.BaseBlobStore;
+import org.jclouds.blobstore.options.CopyOptions;
 import org.jclouds.blobstore.options.CreateContainerOptions;
 import org.jclouds.blobstore.options.PutOptions;
 import org.jclouds.blobstore.strategy.internal.FetchBlobMetadata;
@@ -333,5 +334,17 @@ public class AtmosBlobStore extends BaseBlobStore {
    @Override
    public int getMaximumNumberOfParts() {
       throw new UnsupportedOperationException("Atmos does not support multipart uploads");
+   }
+
+   @Override
+   public String copyBlob(String fromContainer, String fromName, String toContainer, String toName,
+         CopyOptions options) {
+      if (options.ifMatch() != null) {
+         throw new UnsupportedOperationException("Atmos does not support ifMatch");
+      }
+      if (options.ifNoneMatch() != null) {
+         throw new UnsupportedOperationException("Atmos does not support ifNoneMatch");
+      }
+      return super.copyBlob(fromContainer, fromName, toContainer, toName, options);
    }
 }

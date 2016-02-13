@@ -164,4 +164,28 @@ public class AtmosIntegrationLiveTest extends BaseBlobIntegrationTest {
    public void testPutBlobAccessMultipart() throws Exception {
       super.testPutBlobAccessMultipart();
    }
+
+   @Override
+   @Test(groups = { "integration", "live" }, expectedExceptions = UnsupportedOperationException.class)
+   public void testCopyIfMatch() throws Exception {
+      super.testCopyIfMatch();
+   }
+
+   @Override
+   @Test(groups = { "integration", "live" }, expectedExceptions = UnsupportedOperationException.class)
+   public void testCopyIfMatchNegative() throws Exception {
+      super.testCopyIfMatchNegative();
+   }
+
+   @Override
+   @Test(groups = { "integration", "live" }, expectedExceptions = UnsupportedOperationException.class)
+   public void testCopyIfNoneMatch() throws Exception {
+      super.testCopyIfNoneMatch();
+   }
+
+   @Override
+   @Test(groups = { "integration", "live" }, expectedExceptions = UnsupportedOperationException.class)
+   public void testCopyIfNoneMatchNegative() throws Exception {
+      super.testCopyIfNoneMatchNegative();
+   }
 }
