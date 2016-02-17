@@ -1,0 +1,77 @@
+{
+    "server": {
+        "OS-DCF:diskConfig": "MANUAL",
+        "OS-EXT-AZ:availability_zone": "nova",
+        "OS-EXT-STS:power_state": 1,
+        "OS-EXT-STS:task_state": null,
+        "OS-EXT-STS:vm_state": "active",
+        "OS-SRV-USG:launched_at": "2016-02-17T14:48:00.000000",
+        "OS-SRV-USG:terminated_at": null,
+        "accessIPv4": "",
+        "accessIPv6": "",
+        "addresses": {
+            "jenkins": [
+                {
+                    "OS-EXT-IPS-MAC:mac_addr": "fa:16:3e:bf:82:43",
+                    "OS-EXT-IPS:type": "fixed",
+                    "addr": "172.16.130.24",
+                    "version": 4
+                },
+                {
+                    "OS-EXT-IPS-MAC:mac_addr": "fa:16:3e:bf:82:43",
+                    "OS-EXT-IPS:type": "floating",
+                    "addr": "10.8.54.75",
+                    "version": 4
+                }
+            ]
+        },
+        "config_drive": "",
+        "created": "2016-02-17T14:46:13Z",
+        "flavor": {
+            "id": "3",
+            "links": [
+                {
+                    "href": "http://openstack:8774/cac29c920a6149aabe499757b6ba81c7/flavors/3",
+                    "rel": "bookmark"
+                }
+            ]
+        },
+        "hostId": "18a9cd55f76c520dcad6c31d5b2b8f4c921979629c0274c0f7d2de39",
+        "id": "0bdc3a8d-3a96-4ccc-bb40-715537a7df7b",
+        "image": {
+            "id": "9a9f496a-f5c2-4286-81a4-98189a48777a",
+            "links": [
+                {
+                    "href": "http://openstack:8774/cac29c920a6149aabe499757b6ba81c7/images/9a9f496a-f5c2-4286-81a4-98189a48777a",
+                    "rel": "bookmark"
+                }
+            ]
+        },
+        "key_name": "jenkins",
+        "links": [
+            {
+                "href": "http://openstack:8774/v2/cac29c920a6149aabe499757b6ba81c7/servers/0bdc3a8d-3a96-4ccc-bb40-715537a7df7b",
+                "rel": "self"
+            },
+            {
+                "href": "http://openstack:8774/cac29c920a6149aabe499757b6ba81c7/servers/0bdc3a8d-3a96-4ccc-bb40-715537a7df7b",
+                "rel": "bookmark"
+            }
+        ],
+        "metadata": {
+            "jclouds-group": "cloudts"
+        },
+        "name": "cloudts-f07",
+        "os-extended-volumes:volumes_attached": [],
+        "progress": 0,
+        "security_groups": [
+            {
+                "name": "allow-all"
+            }
+        ],
+        "status": "ACTIVE",
+        "tenant_id": "cac29c920a6149aabe499757b6ba81c7",
+        "updated": "2016-02-17T14:48:00Z",
+        "user_id": "ed15e338032f4a2c85b7fa80e40b9917"
+    }
+}

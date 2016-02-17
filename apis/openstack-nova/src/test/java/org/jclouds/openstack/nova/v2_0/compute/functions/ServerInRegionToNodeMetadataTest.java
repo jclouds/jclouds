@@ -40,6 +40,7 @@ import org.jclouds.openstack.nova.v2_0.compute.config.NovaComputeServiceContextM
 import org.jclouds.openstack.nova.v2_0.domain.Server;
 import org.jclouds.openstack.nova.v2_0.domain.regionscoped.ServerInRegion;
 import org.jclouds.openstack.nova.v2_0.parse.ParseServerTest;
+import org.jclouds.openstack.nova.v2_0.parse.ParseServerWithAddressExtensionsTest;
 import org.jclouds.openstack.nova.v2_0.parse.ParseServerWithoutImageTest;
 import org.jclouds.openstack.v2_0.domain.Link;
 import org.jclouds.openstack.v2_0.domain.Resource;
@@ -224,6 +225,30 @@ public class ServerInRegionToNodeMetadataTest {
       NodeMetadata convertedNodeMetadata = converter.apply(serverInRegionToConvert);
 
       assertNull(convertedNodeMetadata.getImageId());
+   }
+
+   @Test
+   public void testFloatingIp() {
+      Hardware existingHardware = new HardwareBuilder().id("az-1.region-a.geo-1/52415800-8b69-11e0-9b19-734f216543fd")
+              .providerId("52415800-8b69-11e0-9b19-734f216543fd").location(region).build();
+      Image existingImage = new ImageBuilder().id("az-1.region-a.geo-1/52415800-8b69-11e0-9b19-734f6f006e54")
+              .operatingSystem(OperatingSystem.builder().family(OsFamily.LINUX).description("foobuntu").build())
+              .providerId("52415800-8b69-11e0-9b19-734f6f006e54").description("foobuntu").status(Image.Status.AVAILABLE)
+              .location(region).build();
+
+      Server serverToConvert = new ParseServerWithAddressExtensionsTest().expected();
+      ServerInRegion serverInRegionToConvert = new ServerInRegion(serverToConvert, "az-1.region-a.geo-1");
+
+      ServerInRegionToNodeMetadata converter = new ServerInRegionToNodeMetadata(
+              NovaComputeServiceContextModule.toPortableNodeStatus, locationIndex,
+              Suppliers.<Set<? extends Image>> ofInstance(ImmutableSet.of(existingImage)),
+              Suppliers.<Set<? extends Hardware>> ofInstance(ImmutableSet.of(existingHardware)),
+              namingConvention);
+
+      NodeMetadata convertedNodeMetadata = converter.apply(serverInRegionToConvert);
+
+      assertEquals(convertedNodeMetadata.getPrivateAddresses(), ImmutableSet.of("172.16.130.24"));
+      assertEquals(convertedNodeMetadata.getPublicAddresses(), ImmutableSet.of("10.8.54.75"));
    }
 
    // TODO: clean up this syntax

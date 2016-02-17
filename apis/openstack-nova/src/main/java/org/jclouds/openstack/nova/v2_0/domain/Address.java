@@ -22,6 +22,10 @@ import java.beans.ConstructorProperties;
 
 import com.google.common.base.Objects;
 import com.google.common.base.Objects.ToStringHelper;
+import com.google.common.base.Optional;
+import org.jclouds.javax.annotation.Nullable;
+
+import javax.inject.Named;
 
 /**
  * IP address
@@ -50,7 +54,10 @@ public class Address {
 
       protected String addr;
       protected int version;
-   
+      protected String macAddr;
+      protected String type;
+
+
       /** 
        * @see Address#getAddr()
        */
@@ -67,14 +74,26 @@ public class Address {
          return self();
       }
 
+      public T macAddr(String macAddr) {
+         this.macAddr = macAddr;
+         return self();
+      }
+
+      public T type(String type) {
+         this.type = type;
+         return self();
+      }
+
       public Address build() {
-         return new Address(addr, version);
+         return new Address(addr, version, macAddr, type);
       }
       
       public T fromAddress(Address in) {
          return this
                   .addr(in.getAddr())
-                  .version(in.getVersion());
+                  .version(in.getVersion())
+                  .macAddr(in.getMacAddr().orNull())
+                  .type(in.getType().orNull());
       }
    }
 
@@ -87,13 +106,19 @@ public class Address {
 
    private final String addr;
    private final int version;
+   @Named("OS-EXT-IPS-MAC:mac_addr")
+   private final Optional<String> macAddr;
+   @Named("OS-EXT-IPS:type")
+   private final Optional<String> type;
 
    @ConstructorProperties({
-      "addr", "version"
+      "addr", "version", "OS-EXT-IPS-MAC:mac_addr", "OS-EXT-IPS:type"
    })
-   protected Address(String addr, int version) {
+   protected Address(String addr, int version, @Nullable String macAddr, @Nullable String type) {
       this.addr = checkNotNull(addr, "addr");
       this.version = version;
+      this.macAddr = Optional.fromNullable(macAddr);
+      this.type = Optional.fromNullable(type);
    }
 
    /**
@@ -110,9 +135,17 @@ public class Address {
       return this.version;
    }
 
+   public Optional<String> getMacAddr() {
+      return this.macAddr;
+   }
+
+   public Optional<String> getType() {
+      return this.type;
+   }
+
    @Override
    public int hashCode() {
-      return Objects.hashCode(addr, version);
+      return Objects.hashCode(addr, version, macAddr, type);
    }
 
    @Override
@@ -121,12 +154,14 @@ public class Address {
       if (obj == null || getClass() != obj.getClass()) return false;
       Address that = Address.class.cast(obj);
       return Objects.equal(this.addr, that.addr)
-               && Objects.equal(this.version, that.version);
+               && Objects.equal(this.version, that.version)
+               && Objects.equal(this.macAddr, that.macAddr)
+               && Objects.equal(this.type, that.type);
    }
    
    protected ToStringHelper string() {
       return Objects.toStringHelper(this)
-            .add("addr", addr).add("version", version);
+            .add("addr", addr).add("version", version).add("macAddr", macAddr.or("")).add("type", type.or(""));
    }
    
    @Override

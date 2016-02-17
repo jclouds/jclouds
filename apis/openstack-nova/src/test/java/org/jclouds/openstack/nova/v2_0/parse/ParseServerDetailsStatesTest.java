@@ -130,7 +130,8 @@ public class ParseServerDetailsStatesTest extends BaseSetParserTest<Server> {
                               .hypervisorHostName("rdohavana.localdomain").build()
                   )
                   .addresses(ImmutableMultimap.<String, Address>builder()
-                              .putAll("public", Address.createV4("172.24.4.232")).build()
+                              .putAll("public", Address.builder().addr("172.24.4.232").version(4)
+                                      .macAddr("fa:16:3e:df:22:1b").type("fixed").build()).build()
                   ).build(),
             Server.builder()
                   .links(
@@ -168,7 +169,8 @@ public class ParseServerDetailsStatesTest extends BaseSetParserTest<Server> {
                               .instanceName("instance-00000006").build()
                   )
                   .addresses(ImmutableMultimap.<String, Address>builder()
-                              .putAll("public", Address.createV4("172.24.4.229")).build()
+                              .putAll("public", Address.builder().addr("172.24.4.229").version(4)
+                                      .macAddr("fa:16:3e:cb:56:d6").type("fixed").build()).build()
                   ).build(),
             Server.builder()
                   .links(
@@ -209,7 +211,8 @@ public class ParseServerDetailsStatesTest extends BaseSetParserTest<Server> {
                               .hypervisorHostName("rdohavana.localdomain").build()
                   )
                   .addresses(ImmutableMultimap.<String, Address>builder()
-                              .putAll("public", Address.createV4("172.24.4.227")).build()
+                              .putAll("public", Address.builder().addr("172.24.4.227").version(4)
+                                      .macAddr("fa:16:3e:18:fe:c8").type("fixed").build()).build()
                   ).build(),
             Server.builder()
                   .links(
@@ -250,7 +253,8 @@ public class ParseServerDetailsStatesTest extends BaseSetParserTest<Server> {
                               .hypervisorHostName("rdohavana.localdomain").build()
                   )
                   .addresses(ImmutableMultimap.<String, Address>builder()
-                              .putAll("public", Address.createV4("172.24.4.228")).build()
+                              .putAll("public", Address.builder().addr("172.24.4.228").version(4)
+                                      .macAddr("fa:16:3e:64:1a:d5").type("fixed").build()).build()
                   ).build()
       );
    }
