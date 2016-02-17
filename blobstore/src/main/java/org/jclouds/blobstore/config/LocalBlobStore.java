@@ -532,10 +532,10 @@ public final class LocalBlobStore implements BlobStore {
 
       String eTag = maybeQuoteETag(blob.getMetadata().getETag());
       if (eTag != null) {
-         if (options.ifMatch() != null && !options.ifMatch().equals(eTag)) {
+         if (options.ifMatch() != null && !maybeQuoteETag(options.ifMatch()).equals(eTag)) {
             throw returnResponseException(412);
          }
-         if (options.ifNoneMatch() != null && options.ifNoneMatch().equals(eTag)) {
+         if (options.ifNoneMatch() != null && maybeQuoteETag(options.ifNoneMatch()).equals(eTag)) {
             throw returnResponseException(412);
          }
       }
