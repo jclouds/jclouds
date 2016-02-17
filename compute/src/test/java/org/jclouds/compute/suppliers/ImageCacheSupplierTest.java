@@ -141,9 +141,9 @@ public class ImageCacheSupplierTest {
       assertEquals(image.get().getName(), "imageName-foo");
       assertEquals(imageCache.get().size(), 2);
 
-      // Once the supplier expires, reloading it will laod the initial values
+      // Once the supplier expires, reloading it will load the initial values
       // (it is a hardcoded supplier), so the just loaded image should be gone
-      Uninterruptibles.sleepUninterruptibly(3, TimeUnit.SECONDS);
+      Uninterruptibles.sleepUninterruptibly(4, TimeUnit.SECONDS);
       assertEquals(imageCache.get().size(), 1);
       assertFalse(any(imageCache.get(), idEquals("foo")));
    }
