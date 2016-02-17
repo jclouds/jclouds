@@ -16,11 +16,16 @@
  */
 package org.jclouds.profitbricks.compute.function;
 
+import static org.easymock.EasyMock.expect;
+import static org.easymock.EasyMock.replay;
+import static org.easymock.EasyMock.verify;
+import static org.jclouds.profitbricks.domain.Location.DE_FRA;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
 
 import java.util.Set;
 
+import org.easymock.EasyMock;
 import org.jclouds.compute.domain.HardwareBuilder;
 import org.jclouds.compute.domain.NodeMetadata;
 import org.jclouds.compute.domain.NodeMetadataBuilder;
@@ -33,6 +38,7 @@ import org.jclouds.compute.functions.GroupNamingConvention;
 import org.jclouds.domain.Location;
 import org.jclouds.domain.LocationBuilder;
 import org.jclouds.domain.LocationScope;
+import org.jclouds.profitbricks.ProfitBricksApi;
 import org.jclouds.profitbricks.ProfitBricksApiMetadata;
 import org.jclouds.profitbricks.domain.AvailabilityZone;
 import org.jclouds.profitbricks.domain.DataCenter;
@@ -41,12 +47,13 @@ import org.jclouds.profitbricks.domain.OsType;
 import org.jclouds.profitbricks.domain.ProvisioningState;
 import org.jclouds.profitbricks.domain.Server;
 import org.jclouds.profitbricks.domain.Storage;
-import org.testng.annotations.BeforeTest;
+import org.jclouds.profitbricks.features.DataCenterApi;
+import org.testng.annotations.AfterMethod;
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import com.google.common.base.Supplier;
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
@@ -56,25 +63,25 @@ import com.google.inject.name.Names;
 public class ServerToNodeMetadataTest {
 
    private ServerToNodeMetadata fnNodeMetadata;
+   
+   private ProfitBricksApi api;
+   
+   private DataCenterApi dataCenterApi;
 
-   @BeforeTest
+   @BeforeMethod
    public void setup() {
       Supplier<Set<? extends Location>> locationsSupply = new Supplier<Set<? extends Location>>() {
-
          @Override
          public Set<? extends Location> get() {
             return ImmutableSet.of(
                     new LocationBuilder()
-                    .id("12345678-abcd-efgh-ijkl-987654321000")
-                    .description("JClouds-DC")
-                    .scope(LocationScope.REGION)
-                    .metadata(ImmutableMap.<String, Object>of(
-                                    "version", "10",
-                                    "state", "AVAILABLE"))
+                    .id("de/fra")
+                    .description("de/fra")
+                    .scope(LocationScope.ZONE)
                     .parent(new LocationBuilder()
-                            .id("de/fra")
-                            .description("Germany, Frankfurt (M)")
-                            .scope(LocationScope.PROVIDER)
+                            .id("de")
+                            .description("de")
+                            .scope(LocationScope.REGION)
                             .build())
                     .build());
          }
@@ -86,15 +93,31 @@ public class ServerToNodeMetadataTest {
             Names.bindProperties(binder(), new ProfitBricksApiMetadata().getDefaultProperties());
          }
       }).getInstance(GroupNamingConvention.Factory.class);
+      
+      dataCenterApi = EasyMock.createMock(DataCenterApi.class);
+      api = EasyMock.createMock(ProfitBricksApi.class);
 
-      this.fnNodeMetadata = new ServerToNodeMetadata(new StorageToVolume(), locationsSupply, namingConvention);
+      expect(dataCenterApi.getDataCenter("mock")).andReturn(
+            DataCenter.builder().id("mock").version(10).location(DE_FRA).build());
+      expect(api.dataCenterApi()).andReturn(dataCenterApi);
+      
+      replay(dataCenterApi, api);
+
+      this.fnNodeMetadata = new ServerToNodeMetadata(new StorageToVolume(), locationsSupply, api, namingConvention);
+   }
+   
+   @AfterMethod
+   public void tearDown() {
+      verify(api, dataCenterApi);
    }
 
    @Test
    public void testServerToNodeMetadata() {
       Server server = Server.builder()
               .dataCenter(DataCenter.builder()
-                      .id("12345678-abcd-efgh-ijkl-987654321000").version(10)
+                      .id("mock")
+                      .version(10)
+                      .location(org.jclouds.profitbricks.domain.Location.DE_FRA)
                       .build())
               .id("qwertyui-qwer-qwer-qwer-qwertyyuiiop")
               .name("mock-facebook-node")
@@ -164,16 +187,13 @@ public class ServerToNodeMetadataTest {
                       .family(OsFamily.LINUX)
                       .build())
               .location(new LocationBuilder()
-                      .id("12345678-abcd-efgh-ijkl-987654321000")
-                      .description("JClouds-DC")
-                      .scope(LocationScope.REGION)
-                      .metadata(ImmutableMap.<String, Object>of(
-                                      "version", "10",
-                                      "state", "AVAILABLE"))
+                      .id("de/fra")
+                      .description("de/fra")
+                      .scope(LocationScope.ZONE)
                       .parent(new LocationBuilder()
-                              .id("de/fra")
-                              .description("Germany, Frankfurt (M)")
-                              .scope(LocationScope.PROVIDER)
+                              .id("de")
+                              .description("de")
+                              .scope(LocationScope.REGION)
                               .build())
                       .build())
               .publicAddresses(ImmutableList.<String>of("173.252.120.6"))

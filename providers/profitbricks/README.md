@@ -53,8 +53,6 @@ Template template = compute.templateBuilder()
 	
 compute.createNodesInGroup( "cluster1", 1, template );
 ```
-> If no `locationId` is specified in the template, jclouds will look for a `DataCenter` that is of same scope as the `Image`.
-
 
 ## Limitations
 

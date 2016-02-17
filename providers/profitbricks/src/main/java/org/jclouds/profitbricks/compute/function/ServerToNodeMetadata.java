@@ -18,18 +18,13 @@ package org.jclouds.profitbricks.compute.function;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Predicates.not;
-import static org.jclouds.profitbricks.domain.OsType.LINUX;
-import static org.jclouds.profitbricks.domain.OsType.WINDOWS;
-import static org.jclouds.profitbricks.domain.Server.Status.BLOCKED;
-import static org.jclouds.profitbricks.domain.Server.Status.CRASHED;
-import static org.jclouds.profitbricks.domain.Server.Status.PAUSED;
-import static org.jclouds.profitbricks.domain.Server.Status.RUNNING;
-import static org.jclouds.profitbricks.domain.Server.Status.SHUTDOWN;
-import static org.jclouds.profitbricks.domain.Server.Status.SHUTOFF;
+import static com.google.common.collect.Iterables.find;
+import static org.jclouds.location.predicates.LocationPredicates.idEquals;
 
 import java.util.List;
 import java.util.Set;
 
+import org.jclouds.collect.Memoized;
 import org.jclouds.compute.domain.Hardware;
 import org.jclouds.compute.domain.HardwareBuilder;
 import org.jclouds.compute.domain.NodeMetadata;
@@ -38,7 +33,10 @@ import org.jclouds.compute.domain.OperatingSystem;
 import org.jclouds.compute.domain.OsFamily;
 import org.jclouds.compute.domain.Processor;
 import org.jclouds.compute.domain.Volume;
+import org.jclouds.compute.functions.GroupNamingConvention;
 import org.jclouds.domain.Location;
+import org.jclouds.profitbricks.ProfitBricksApi;
+import org.jclouds.profitbricks.domain.DataCenter;
 import org.jclouds.profitbricks.domain.Nic;
 import org.jclouds.profitbricks.domain.OsType;
 import org.jclouds.profitbricks.domain.Server;
@@ -46,32 +44,30 @@ import org.jclouds.profitbricks.domain.Storage;
 import org.jclouds.util.InetAddresses2.IsPrivateIPAddress;
 
 import com.google.common.base.Function;
-import com.google.common.base.Predicate;
 import com.google.common.base.Supplier;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import com.google.inject.Inject;
 
-import org.jclouds.collect.Memoized;
-import org.jclouds.compute.functions.GroupNamingConvention;
-
 public class ServerToNodeMetadata implements Function<Server, NodeMetadata> {
 
    private final Function<Storage, Volume> fnVolume;
-   private final Supplier<Set<? extends Location>> locationSupply;
+   private final Supplier<Set<? extends Location>> locations;
    private final Function<List<Nic>, List<String>> fnCollectIps;
+   private final ProfitBricksApi api;
 
    private final GroupNamingConvention groupNamingConvention;
 
    @Inject
    ServerToNodeMetadata(Function<Storage, Volume> fnVolume,
-           @Memoized Supplier<Set<? extends Location>> locationsSupply,
+           @Memoized Supplier<Set<? extends Location>> locations,
+           ProfitBricksApi api,
            GroupNamingConvention.Factory groupNamingConvention) {
       this.fnVolume = fnVolume;
-      this.locationSupply = locationsSupply;
+      this.locations = locations;
+      this.api = api;
       this.groupNamingConvention = groupNamingConvention.createWithoutPrefix();
       this.fnCollectIps = new Function<List<Nic>, List<String>>() {
-
          @Override
          public List<String> apply(List<Nic> in) {
             List<String> ips = Lists.newArrayListWithExpectedSize(in.size());
@@ -85,17 +81,9 @@ public class ServerToNodeMetadata implements Function<Server, NodeMetadata> {
    @Override
    public NodeMetadata apply(final Server server) {
       checkNotNull(server, "Null server");
-
-      // Map fetched dataCenterId with actual populated object
-      Location location = null;
-      if (server.dataCenter() != null)
-         location = Iterables.find(locationSupply.get(), new Predicate<Location>() {
-
-            @Override
-            public boolean apply(Location t) {
-               return t.getId().equals(server.dataCenter().id());
-            }
-         });
+      // Location is not populated in the datacenter on a server response
+      DataCenter dataCenter = api.dataCenterApi().getDataCenter(server.dataCenter().id());
+      Location location = find(locations.get(), idEquals(dataCenter.location().getId()));
 
       float size = 0f;
       List<Volume> volumes = Lists.newArrayList();

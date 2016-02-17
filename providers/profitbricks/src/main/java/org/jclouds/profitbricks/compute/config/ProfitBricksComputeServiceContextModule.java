@@ -36,8 +36,8 @@ import org.jclouds.compute.config.ComputeServiceAdapterContextModule;
 import org.jclouds.compute.domain.Hardware;
 import org.jclouds.compute.domain.Image;
 import org.jclouds.compute.domain.NodeMetadata;
-import org.jclouds.compute.domain.TemplateBuilder;
 import org.jclouds.compute.domain.Volume;
+import org.jclouds.compute.strategy.CreateNodesInGroupThenAddToSet;
 import org.jclouds.domain.Location;
 import org.jclouds.functions.IdentityFunction;
 import org.jclouds.lifecycle.Closer;
@@ -47,50 +47,40 @@ import org.jclouds.profitbricks.ProfitBricksApi;
 import org.jclouds.profitbricks.compute.ProfitBricksComputeServiceAdapter;
 import org.jclouds.profitbricks.compute.concurrent.ProvisioningJob;
 import org.jclouds.profitbricks.compute.concurrent.ProvisioningManager;
-import org.jclouds.profitbricks.domain.DataCenter;
-import org.jclouds.profitbricks.domain.Server;
-import org.jclouds.profitbricks.domain.Storage;
-import org.jclouds.profitbricks.compute.ProfitBricksTemplateBuilderImpl;
-import org.jclouds.profitbricks.compute.function.DataCenterToLocation;
-import org.jclouds.profitbricks.compute.function.LocationToLocation;
 import org.jclouds.profitbricks.compute.function.ProvisionableToImage;
 import org.jclouds.profitbricks.compute.function.ServerToNodeMetadata;
 import org.jclouds.profitbricks.compute.function.StorageToVolume;
-import org.jclouds.profitbricks.domain.ProvisioningState;
+import org.jclouds.profitbricks.compute.strategy.AssignDataCenterToTemplate;
 import org.jclouds.profitbricks.domain.Provisionable;
+import org.jclouds.profitbricks.domain.ProvisioningState;
+import org.jclouds.profitbricks.domain.Server;
+import org.jclouds.profitbricks.domain.Storage;
 
 import com.google.common.base.Function;
 import com.google.common.base.Predicate;
 import com.google.inject.Inject;
 import com.google.inject.Provides;
+import com.google.inject.Scopes;
 import com.google.inject.TypeLiteral;
 import com.google.inject.assistedinject.FactoryModuleBuilder;
 
 
 public class ProfitBricksComputeServiceContextModule extends
-        ComputeServiceAdapterContextModule<Server, Hardware, Provisionable, DataCenter> {
+        ComputeServiceAdapterContextModule<Server, Hardware, Provisionable, Location> {
 
+   @SuppressWarnings("unchecked")
    @Override
    protected void configure() {
       super.configure();
 
-      install(new LocationsFromComputeServiceAdapterModule<Server, Hardware, Provisionable, DataCenter>() {
-      });
-
       install(new FactoryModuleBuilder().build(ProvisioningJob.Factory.class));
 
-      bind(ImplicitLocationSupplier.class).to(OnlyLocationOrFirstZone.class).in(Singleton.class);
+      bind(ImplicitLocationSupplier.class).to(OnlyLocationOrFirstZone.class).in(Scopes.SINGLETON);
 
-      bind(new TypeLiteral<TemplateBuilder>(){}).to(ProfitBricksTemplateBuilderImpl.class);
-      
-      bind(new TypeLiteral<ComputeServiceAdapter<Server, Hardware, Provisionable, DataCenter>>() {
+      bind(CreateNodesInGroupThenAddToSet.class).to(AssignDataCenterToTemplate.class).in(Scopes.SINGLETON);
+
+      bind(new TypeLiteral<ComputeServiceAdapter<Server, Hardware, Provisionable, Location>>() {
       }).to(ProfitBricksComputeServiceAdapter.class);
-
-      bind(new TypeLiteral<Function<org.jclouds.profitbricks.domain.Location, Location>>() {
-      }).to(LocationToLocation.class);
-
-      bind(new TypeLiteral<Function<DataCenter, Location>>() {
-      }).to(DataCenterToLocation.class);
 
       bind(new TypeLiteral<Function<Server, NodeMetadata>>() {
       }).to(ServerToNodeMetadata.class);

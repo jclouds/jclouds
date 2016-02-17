@@ -16,18 +16,20 @@
  */
 package org.jclouds.profitbricks.compute.function;
 
+import static org.jclouds.profitbricks.domain.Location.US_LAS;
 import static org.testng.Assert.assertEquals;
 
-import java.net.URI;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.Set;
 
 import org.jclouds.compute.domain.Image;
 import org.jclouds.compute.domain.ImageBuilder;
 import org.jclouds.compute.domain.OperatingSystem;
 import org.jclouds.compute.domain.OsFamily;
-import org.jclouds.location.suppliers.all.JustProvider;
-import org.jclouds.profitbricks.ProfitBricksProviderMetadata;
-import org.jclouds.profitbricks.domain.Location;
+import org.jclouds.domain.Location;
+import org.jclouds.domain.LocationBuilder;
+import org.jclouds.domain.LocationScope;
 import org.jclouds.profitbricks.domain.OsType;
 import org.jclouds.profitbricks.domain.ProvisioningState;
 import org.jclouds.profitbricks.domain.Snapshot;
@@ -42,15 +44,13 @@ import com.google.common.collect.ImmutableSet;
 public class ProvisionableToImageTest {
 
    private ProvisionableToImage fnImage;
-   private LocationToLocation fnRegion;
+   
+   private final Location location = new LocationBuilder().id("us/las").description("us/las").scope(LocationScope.ZONE)
+         .parent(new LocationBuilder().id("us").description("us").scope(LocationScope.REGION).build()).build();
 
    @BeforeTest
    public void setup() {
-      ProfitBricksProviderMetadata metadata = new ProfitBricksProviderMetadata();
-      JustProvider justProvider = new JustProvider(metadata.getId(), Suppliers.<URI>ofInstance(
-              URI.create(metadata.getEndpoint())), ImmutableSet.<String>of());
-      this.fnRegion = new LocationToLocation(justProvider);
-      this.fnImage = new ProvisionableToImage(fnRegion);
+      this.fnImage = new ProvisionableToImage(Suppliers.<Set<? extends Location>> ofInstance(ImmutableSet.of(location)));
    }
 
    @Test
@@ -66,7 +66,7 @@ public class ProvisionableToImageTest {
               .name("Ubuntu-14.04-LTS-server-2015-01-01")
               .size(2048f)
               .type(org.jclouds.profitbricks.domain.Image.Type.HDD)
-              .location(Location.US_LAS)
+              .location(US_LAS)
               .isNicHotPlug(true)
               .isNicHotUnPlug(true)
               .osType(OsType.LINUX)
@@ -81,7 +81,7 @@ public class ProvisionableToImageTest {
       Image expected = new ImageBuilder()
               .ids(image.id())
               .name(image.name())
-              .location(fnRegion.apply(Location.US_LAS))
+              .location(location)
               .status(Image.Status.AVAILABLE)
               .operatingSystem(OperatingSystem.builder()
                       .description("UBUNTU")
@@ -103,7 +103,7 @@ public class ProvisionableToImageTest {
               .name("Fedora-19-server-2015-01-01")
               .size(2048f)
               .type(org.jclouds.profitbricks.domain.Image.Type.HDD)
-              .location(Location.DE_FRA)
+              .location(US_LAS)
               .osType(OsType.LINUX)
               .build();
 
@@ -112,7 +112,7 @@ public class ProvisionableToImageTest {
       Image expected1 = new ImageBuilder()
               .ids(image1.id())
               .name(image1.name())
-              .location(fnRegion.apply(image1.location()))
+              .location(location)
               .status(Image.Status.AVAILABLE)
               .operatingSystem(OperatingSystem.builder()
                       .description("FEDORA")
@@ -131,7 +131,7 @@ public class ProvisionableToImageTest {
               .name("clearos-community-6.5.0-x86_64.iso")
               .size(2048f)
               .type(org.jclouds.profitbricks.domain.Image.Type.CDROM)
-              .location(Location.DE_FKB)
+              .location(US_LAS)
               .osType(OsType.LINUX)
               .build();
 
@@ -140,7 +140,7 @@ public class ProvisionableToImageTest {
       Image expected2 = new ImageBuilder()
               .ids(image2.id())
               .name(image2.name())
-              .location(fnRegion.apply(image2.location()))
+              .location(location)
               .status(Image.Status.AVAILABLE)
               .operatingSystem(OperatingSystem.builder()
                       .description("UNRECOGNIZED")
@@ -159,7 +159,7 @@ public class ProvisionableToImageTest {
               .name("windows-2008-r2-server-setup.iso")
               .size(2048f)
               .type(org.jclouds.profitbricks.domain.Image.Type.CDROM)
-              .location(Location.US_LASDEV)
+              .location(US_LAS)
               .osType(OsType.WINDOWS)
               .build();
 
@@ -168,7 +168,7 @@ public class ProvisionableToImageTest {
       Image expected3 = new ImageBuilder()
               .ids(image3.id())
               .name(image3.name())
-              .location(fnRegion.apply(image3.location()))
+              .location(location)
               .status(Image.Status.AVAILABLE)
               .operatingSystem(OperatingSystem.builder()
                       .description("WINDOWS")
@@ -185,6 +185,10 @@ public class ProvisionableToImageTest {
 
    @Test
    public void testSnapshotToImage() {
+      Calendar calendar = Calendar.getInstance();
+      calendar.set(2015, 4, 13);
+      Date date = calendar.getTime();
+      
       Snapshot snapshot1 = Snapshot.builder()
               .isBootable(true)
               .isCpuHotPlug(true)
@@ -195,13 +199,13 @@ public class ProvisionableToImageTest {
               .name("placeholder-snapshot-04/13/2015")
               .description("Created from \"placeholder\" in Data Center \"sbx-computeservice\"")
               .size(2048f)
-              .location(Location.US_LAS)
+              .location(US_LAS)
               .isNicHotPlug(true)
               .isNicHotUnPlug(true)
               .osType(OsType.LINUX)
               .isRamHotPlug(true)
               .isRamHotUnPlug(false)
-              .creationTime(new Date(2015, 4, 13))
+              .creationTime(date)
               .lastModificationTime(new Date())
               .state(ProvisioningState.AVAILABLE)
               .build();
@@ -211,7 +215,7 @@ public class ProvisionableToImageTest {
       Image expected1 = new ImageBuilder()
               .ids(snapshot1.id())
               .name(snapshot1.name())
-              .location(fnRegion.apply(Location.US_LAS))
+              .location(location)
               .status(Image.Status.AVAILABLE)
               .operatingSystem(OperatingSystem.builder()
                       .description(snapshot1.description())
@@ -233,13 +237,13 @@ public class ProvisionableToImageTest {
               .name("jclouds-ubuntu14.10-template")
               .description("Created from \"jclouds-ubuntu14.10 Storage\" in Data Center \"jclouds-computeservice\"")
               .size(10240f)
-              .location(Location.DE_FKB)
+              .location(US_LAS)
               .isNicHotPlug(true)
               .isNicHotUnPlug(true)
               .osType(OsType.LINUX)
               .isRamHotPlug(true)
               .isRamHotUnPlug(false)
-              .creationTime(new Date(2015, 4, 13))
+              .creationTime(date)
               .lastModificationTime(new Date())
               .state(ProvisioningState.INPROCESS)
               .build();
@@ -249,7 +253,7 @@ public class ProvisionableToImageTest {
       Image expected2 = new ImageBuilder()
               .ids(snapshot2.id())
               .name(snapshot2.name())
-              .location(fnRegion.apply(Location.DE_FKB))
+              .location(location)
               .status(Image.Status.PENDING)
               .operatingSystem(OperatingSystem.builder()
                       .description("ubuntu")

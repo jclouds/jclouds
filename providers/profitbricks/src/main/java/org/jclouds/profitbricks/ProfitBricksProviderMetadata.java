@@ -20,17 +20,22 @@ import static org.jclouds.Constants.PROPERTY_SO_TIMEOUT;
 import static org.jclouds.compute.config.ComputeServiceProperties.TIMEOUT_NODE_RUNNING;
 import static org.jclouds.compute.config.ComputeServiceProperties.TIMEOUT_NODE_SUSPENDED;
 import static org.jclouds.compute.config.ComputeServiceProperties.TIMEOUT_NODE_TERMINATED;
+import static org.jclouds.location.reference.LocationConstants.ISO3166_CODES;
+import static org.jclouds.location.reference.LocationConstants.PROPERTY_REGION;
+import static org.jclouds.location.reference.LocationConstants.PROPERTY_REGIONS;
+import static org.jclouds.location.reference.LocationConstants.PROPERTY_ZONE;
+import static org.jclouds.location.reference.LocationConstants.PROPERTY_ZONES;
 import static org.jclouds.profitbricks.config.ProfitBricksComputeProperties.POLL_INITIAL_PERIOD;
 import static org.jclouds.profitbricks.config.ProfitBricksComputeProperties.POLL_MAX_PERIOD;
 import static org.jclouds.profitbricks.config.ProfitBricksComputeProperties.TIMEOUT_DATACENTER_AVAILABLE;
-
-import com.google.auto.service.AutoService;
 
 import java.net.URI;
 import java.util.Properties;
 
 import org.jclouds.providers.ProviderMetadata;
 import org.jclouds.providers.internal.BaseProviderMetadata;
+
+import com.google.auto.service.AutoService;
 
 @AutoService(ProviderMetadata.class)
 public class ProfitBricksProviderMetadata extends BaseProviderMetadata {
@@ -54,6 +59,16 @@ public class ProfitBricksProviderMetadata extends BaseProviderMetadata {
 
    public static Properties defaultProperties() {
       Properties properties = ProfitBricksApiMetadata.defaultProperties();
+      
+      properties.setProperty(PROPERTY_REGIONS, "de,us");
+      properties.setProperty(PROPERTY_REGION + ".de.zones", "de/fkb,de/fra");
+      properties.setProperty(PROPERTY_REGION + ".us.zones", "us/las,us/lasdev");
+      properties.setProperty(PROPERTY_ZONES, "de/fkb,de/fra,us/las,us/lasdev");
+      properties.setProperty(PROPERTY_ZONE + ".de/fkb." + ISO3166_CODES, "DE-BW");
+      properties.setProperty(PROPERTY_ZONE + ".de/fra." + ISO3166_CODES, "DE-HE");
+      properties.setProperty(PROPERTY_ZONE + ".us/las." + ISO3166_CODES, "US-NV");
+      properties.setProperty(PROPERTY_ZONE + ".us/lasdebv." + ISO3166_CODES, "US-NV");
+      
       properties.put(TIMEOUT_DATACENTER_AVAILABLE, 30L * 60L); // 30 minutes
       properties.put(POLL_INITIAL_PERIOD, 5L);
       properties.put(POLL_MAX_PERIOD, 60L);
@@ -79,6 +94,7 @@ public class ProfitBricksProviderMetadata extends BaseProviderMetadata {
                  .name("ProfitBricks Cloud Compute 2.0")
                  .homepage(URI.create("http://www.profitbricks.com"))
                  .console(URI.create("https://my.profitbricks.com/dashboard/dcdr2/"))
+                 .iso3166Codes("DE-BW", "DE-HE", "US-NV")
                  .linkedServices("profitbricks")
                  .apiMetadata(new ProfitBricksApiMetadata())
                  .defaultProperties(ProfitBricksProviderMetadata.defaultProperties());

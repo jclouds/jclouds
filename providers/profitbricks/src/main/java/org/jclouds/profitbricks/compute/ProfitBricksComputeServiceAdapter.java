@@ -47,18 +47,18 @@ import org.jclouds.domain.LocationScope;
 import org.jclouds.domain.LoginCredentials;
 import org.jclouds.logging.Logger;
 import org.jclouds.profitbricks.ProfitBricksApi;
-import org.jclouds.profitbricks.domain.AvailabilityZone;
-import org.jclouds.profitbricks.domain.DataCenter;
-import org.jclouds.profitbricks.domain.Image;
-import org.jclouds.profitbricks.domain.Server;
-import org.jclouds.profitbricks.domain.Storage;
-import org.jclouds.profitbricks.features.DataCenterApi;
-import org.jclouds.profitbricks.features.ServerApi;
 import org.jclouds.profitbricks.compute.concurrent.ProvisioningJob;
 import org.jclouds.profitbricks.compute.concurrent.ProvisioningManager;
 import org.jclouds.profitbricks.compute.function.ProvisionableToImage;
-import org.jclouds.profitbricks.domain.Snapshot;
+import org.jclouds.profitbricks.compute.strategy.TemplateWithDataCenter;
+import org.jclouds.profitbricks.domain.AvailabilityZone;
+import org.jclouds.profitbricks.domain.DataCenter;
+import org.jclouds.profitbricks.domain.Image;
 import org.jclouds.profitbricks.domain.Provisionable;
+import org.jclouds.profitbricks.domain.Server;
+import org.jclouds.profitbricks.domain.Snapshot;
+import org.jclouds.profitbricks.domain.Storage;
+import org.jclouds.profitbricks.features.ServerApi;
 import org.jclouds.profitbricks.util.Passwords;
 import org.jclouds.rest.ResourceNotFoundException;
 
@@ -74,7 +74,7 @@ import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.inject.Inject;
 
 @Singleton
-public class ProfitBricksComputeServiceAdapter implements ComputeServiceAdapter<Server, Hardware, Provisionable, DataCenter> {
+public class ProfitBricksComputeServiceAdapter implements ComputeServiceAdapter<Server, Hardware, Provisionable, Location> {
 
    @Resource
    @Named(ComputeServiceConstants.COMPUTE_LOGGER)
@@ -100,12 +100,16 @@ public class ProfitBricksComputeServiceAdapter implements ComputeServiceAdapter<
       this.jobFactory = jobFactory;
       this.provisioningManager = provisioningManager;
    }
-
+   
    @Override
    public NodeAndInitialCredentials<Server> createNodeWithGroupEncodedIntoName(String group, String name, Template template) {
-      Location location = template.getLocation();
-      checkArgument(location.getScope() == LocationScope.ZONE, "Template must use a ZONE-scoped location");
-      final String dataCenterId = location.getId();
+      checkArgument(template instanceof TemplateWithDataCenter, "This implementation requires a TemplateWithDataCenter");
+      return createNodeWithGroupEncodedIntoName(group, name, TemplateWithDataCenter.class.cast(template));
+   }
+
+   protected NodeAndInitialCredentials<Server> createNodeWithGroupEncodedIntoName(String group, String name, TemplateWithDataCenter template) {
+      checkArgument(template.getLocation().getScope() == LocationScope.ZONE, "Template must use a ZONE-scoped location");
+      final String dataCenterId = template.getDataCenter().id();
 
       Hardware hardware = template.getHardware();
 
@@ -314,29 +318,9 @@ public class ProfitBricksComputeServiceAdapter implements ComputeServiceAdapter<
    }
 
    @Override
-   public Iterable<DataCenter> listLocations() {
-      logger.trace("<< fetching datacenters..");
-      final DataCenterApi dcApi = api.dataCenterApi();
-
-      // Fetch all datacenters
-      ListenableFuture<List<DataCenter>> futures = allAsList(transform(dcApi.getAllDataCenters(),
-              new Function<DataCenter, ListenableFuture<DataCenter>>() {
-
-                 @Override
-                 public ListenableFuture<DataCenter> apply(final DataCenter input) {
-                    // Fetch more details in parallel
-                    return executorService.submit(new Callable<DataCenter>() {
-                       @Override
-                       public DataCenter call() throws Exception {
-                          logger.trace("<< fetching datacenter with id [%s]", input.id());
-                          return dcApi.getDataCenter(input.id());
-                       }
-
-                    });
-                 }
-              }));
-
-      return getUnchecked(futures);
+   public Iterable<Location> listLocations() {
+      // Will never be called
+      throw new UnsupportedOperationException("Locations are configured in jclouds properties");
    }
 
    @Override

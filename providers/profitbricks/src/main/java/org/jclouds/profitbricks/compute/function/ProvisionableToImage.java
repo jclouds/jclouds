@@ -18,9 +18,13 @@ package org.jclouds.profitbricks.compute.function;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
+import static com.google.common.collect.Iterables.find;
+import static org.jclouds.location.predicates.LocationPredicates.idEquals;
 
+import java.util.Set;
 import java.util.regex.Pattern;
 
+import org.jclouds.collect.Memoized;
 import org.jclouds.compute.domain.Image;
 import org.jclouds.compute.domain.ImageBuilder;
 import org.jclouds.compute.domain.OperatingSystem;
@@ -33,6 +37,7 @@ import org.jclouds.profitbricks.domain.Provisionable;
 
 import com.google.common.base.Function;
 import com.google.common.base.Strings;
+import com.google.common.base.Supplier;
 import com.google.common.collect.ImmutableMap;
 import com.google.inject.Inject;
 
@@ -44,9 +49,9 @@ public class ProvisionableToImage implements Function<Provisionable, Image> {
    private final SnapshotToImage fnSnapshotToImage;
 
    @Inject
-   ProvisionableToImage(Function<org.jclouds.profitbricks.domain.Location, Location> fnRegion) {
-      this.fnImageToImage = new ImageToImage(fnRegion);
-      this.fnSnapshotToImage = new SnapshotToImage(fnRegion);
+   ProvisionableToImage(@Memoized Supplier<Set<? extends Location>> locations) {
+      this.fnImageToImage = new ImageToImage(locations);
+      this.fnSnapshotToImage = new SnapshotToImage(locations);
    }
 
    @Override
@@ -83,16 +88,17 @@ public class ProvisionableToImage implements Function<Provisionable, Image> {
 
       private static final Pattern HAS_NUMBERS = Pattern.compile(".*\\d+.*");
 
-      private final Function<org.jclouds.profitbricks.domain.Location, Location> fnRegion;
+      private final Supplier<Set<? extends Location>> locations;
 
-      ImageToImage(Function<org.jclouds.profitbricks.domain.Location, Location> fnRegion) {
-         this.fnRegion = fnRegion;
+      ImageToImage(Supplier<Set<? extends Location>> locations) {
+         this.locations = locations;
       }
 
       @Override
       public Image apply(org.jclouds.profitbricks.domain.Image from) {
          String desc = from.name();
          OsFamily osFamily = parseOsFamily(desc, from.osType());
+         Location location = find(locations.get(), idEquals(from.location().getId()));
 
          OperatingSystem os = OperatingSystem.builder()
                  .description(osFamily.value())
@@ -104,7 +110,7 @@ public class ProvisionableToImage implements Function<Provisionable, Image> {
          return addTypeMetadata(new ImageBuilder()
                  .ids(from.id())
                  .name(desc)
-                 .location(fnRegion.apply(from.location()))
+                 .location(location)
                  .status(Image.Status.AVAILABLE)
                  .operatingSystem(os))
                  .build();
@@ -159,16 +165,17 @@ public class ProvisionableToImage implements Function<Provisionable, Image> {
 
    private static class SnapshotToImage implements ImageFunction<Snapshot> {
 
-      private final Function<org.jclouds.profitbricks.domain.Location, Location> fnRegion;
+      private final Supplier<Set<? extends Location>> locations;
 
-      SnapshotToImage(Function<org.jclouds.profitbricks.domain.Location, Location> fnRegion) {
-         this.fnRegion = fnRegion;
+      SnapshotToImage(Supplier<Set<? extends Location>> locations) {
+         this.locations = locations;
       }
 
       @Override
       public Image apply(Snapshot from) {
          String textToParse = from.name() + from.description();
          OsFamily osFamily = parseOsFamily(textToParse, from.osType());
+         Location location = find(locations.get(), idEquals(from.location().getId()));
 
          OperatingSystem os = OperatingSystem.builder()
                  .description(osFamily.value())
@@ -181,7 +188,7 @@ public class ProvisionableToImage implements Function<Provisionable, Image> {
                  .ids(from.id())
                  .name(from.name())
                  .description(from.description())
-                 .location(fnRegion.apply(from.location()))
+                 .location(location)
                  .status(mapStatus(from.state()))
                  .operatingSystem(os))
                  .build();
