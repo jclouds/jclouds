@@ -67,7 +67,7 @@ public class ContainerApiMockTest extends BaseOpenStackMockTest<SwiftApi> {
 
          assertEquals(server.getRequestCount(), 2);
          assertAuthentication(server);
-         assertRequest(server.takeRequest(), "GET", "/v1/MossoCloudFS_5bcf396e-39dd-45ff-93a1-712b9aba90a9");
+         assertRequest(server.takeRequest(), "GET", "/v1/MossoCloudFS_5bcf396e-39dd-45ff-93a1-712b9aba90a9?format=json");
       } finally {
          server.shutdown();
       }

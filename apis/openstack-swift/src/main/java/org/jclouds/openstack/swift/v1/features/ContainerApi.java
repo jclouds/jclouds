@@ -46,6 +46,7 @@ import org.jclouds.openstack.swift.v1.options.ListContainerOptions;
 import org.jclouds.openstack.swift.v1.options.UpdateContainerOptions;
 import org.jclouds.rest.annotations.BinderParam;
 import org.jclouds.rest.annotations.Fallback;
+import org.jclouds.rest.annotations.QueryParams;
 import org.jclouds.rest.annotations.RequestFilters;
 import org.jclouds.rest.annotations.ResponseParser;
 
@@ -77,6 +78,7 @@ public interface ContainerApi {
    @Named("container:list")
    @GET
    @Fallback(EmptyFluentIterableOnNotFoundOr404.class)
+   @QueryParams(keys = "format", values = "json")
    FluentIterable<Container> list();
 
    /**

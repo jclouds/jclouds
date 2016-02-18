@@ -18,6 +18,7 @@ package org.jclouds.openstack.swift.v1;
 
 import static com.google.common.util.concurrent.MoreExecutors.sameThreadExecutor;
 import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.jclouds.openstack.keystone.v2_0.config.KeystoneProperties.CREDENTIAL_TYPE;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertTrue;
@@ -65,7 +66,7 @@ public class TempAuthMockTest {
       // list request went to the destination specified in X-Storage-Url.
       RecordedRequest listContainers = swiftServer.takeRequest();
       assertEquals(listContainers.getMethod(), "GET");
-      assertEquals(listContainers.getPath(), "/");
+      assertThat(listContainers.getPath().contains("?format=json"));
       assertEquals(listContainers.getHeader("Accept"), APPLICATION_JSON);
       assertEquals(listContainers.getHeader("X-Auth-Token"), "token");
    }
