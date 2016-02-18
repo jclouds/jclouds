@@ -35,7 +35,9 @@ import org.jclouds.compute.internal.BaseComputeServiceContextLiveTest;
 import org.jclouds.docker.DockerApi;
 import org.jclouds.docker.compute.functions.LoginPortForContainer;
 import org.jclouds.docker.compute.options.DockerTemplateOptions;
+import org.jclouds.docker.domain.Config;
 import org.jclouds.docker.domain.Container;
+import org.jclouds.docker.domain.HostConfig;
 import org.jclouds.docker.domain.Image;
 import org.jclouds.docker.domain.ImageSummary;
 import org.jclouds.docker.options.BuildOptions;
@@ -46,6 +48,7 @@ import org.testng.annotations.Test;
 
 import com.google.common.base.Optional;
 import com.google.common.base.Predicate;
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
 import com.google.inject.AbstractModule;
@@ -124,6 +127,33 @@ public class SshToCustomPortLiveTest extends BaseComputeServiceContextLiveTest {
       }
    }
 
+
+   @Test(dependsOnMethods = "testImageCreated")
+   public void testAdvancedConfig() throws RunNodesException {
+      final DockerTemplateOptions options = DockerTemplateOptions.Builder
+            .configBuilder(
+                  Config.builder().env(ImmutableList.<String> of("SSH_PORT=" + SSH_PORT, "ROOT_PASSWORD=jcloudsRulez"))
+                        .hostConfig(HostConfig.builder().networkMode("host").build())
+                        .image("test-if-this-value-is-correctly-overriden"))
+            .overrideLoginUser("root").overrideLoginPassword("jcloudsRulez").blockOnPort(SSH_PORT, 30);
+
+      final Template template = view.getComputeService().templateBuilder().imageId(image.id()).options(options).build();
+
+      String nodeId = null;
+      try {
+         NodeMetadata node = Iterables
+               .getOnlyElement(view.getComputeService().createNodesInGroup("ssh-test-advanced", 1, template));
+
+         nodeId = node.getId();
+         ExecResponse response = view.getComputeService().runScriptOnNode(nodeId, "sh -c 'true'",
+               wrapInInitScript(false));
+         assertEquals(response.getExitStatus(), 0);
+      } finally {
+         if (nodeId != null)
+            view.getComputeService().destroyNode(nodeId);
+      }
+   }
+   
    /**
     * Build a new image with 2 tags on it in the test preparation phase.
     * 

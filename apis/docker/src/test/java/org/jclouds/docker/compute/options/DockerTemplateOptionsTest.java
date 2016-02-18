@@ -17,8 +17,11 @@
 package org.jclouds.docker.compute.options;
 
 import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertNotNull;
 
 import org.jclouds.compute.options.TemplateOptions;
+import org.jclouds.docker.domain.Config;
+import org.jclouds.docker.domain.Config.Builder;
 import org.testng.annotations.Test;
 
 import com.google.common.collect.ImmutableList;
@@ -89,6 +92,21 @@ public class DockerTemplateOptionsTest {
    public void testNetworkMode() {
       TemplateOptions options = DockerTemplateOptions.Builder.networkMode("host");
       assertEquals(options.as(DockerTemplateOptions.class).getNetworkMode(), "host");
+   }
+
+   @Test
+   public void testConfigBuilder() {
+      Builder builder = Config.builder().memory(1024)
+            .cpuShares(100).cmd(ImmutableList.<String> of("/opt/jboss/wildfly/bin/standalone.sh", "-b", "0.0.0.0"))
+            .env(ImmutableList.<String> of("JAVA_HOME=/opt/jdk-1.8", "MGMT_USER=admin",
+                  "MGMT_PASSWORD=Schroedinger's Cat"));
+      TemplateOptions options = DockerTemplateOptions.Builder.configBuilder(builder);
+      Builder builderInOpts = options.as(DockerTemplateOptions.class).getConfigBuilder();
+      assertNotNull(builderInOpts);
+      Config configFromOptions = builderInOpts.build();
+      assertEquals(configFromOptions, builder.build());
+      assertEquals(configFromOptions.env(), ImmutableList.<String> of("JAVA_HOME=/opt/jdk-1.8", "MGMT_USER=admin",
+                  "MGMT_PASSWORD=Schroedinger's Cat"));
    }
 
    @Test

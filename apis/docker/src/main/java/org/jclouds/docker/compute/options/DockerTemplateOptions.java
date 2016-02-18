@@ -22,8 +22,8 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import java.util.List;
 import java.util.Map;
 
-import org.jclouds.compute.ComputeService;
 import org.jclouds.compute.options.TemplateOptions;
+import org.jclouds.docker.domain.Config;
 import org.jclouds.docker.internal.NullSafeCopies;
 import org.jclouds.domain.LoginCredentials;
 import org.jclouds.javax.annotation.Nullable;
@@ -34,22 +34,54 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 
 /**
- * Contains options supported by the {@link ComputeService#createNodesInGroup(String, int, TemplateOptions) createNodes}
- * operation on the <em>docker</em> provider.
- *
+ * Contains options supported by the
+ * {@link org.jclouds.compute.ComputeService#createNodesInGroup(String, int, TemplateOptions)
+ * createNodes} operation on the <em>docker</em> provider.
+ * 
  * <h2>Usage</h2>
  *
- * The recommended way to instantiate a
- * DockerTemplateOptions object is to statically import {@code DockerTemplateOptions.Builder.*}
- * and invoke one of the static creation methods, followed by an instance mutator if needed.
+ * The recommended way to instantiate a DockerTemplateOptions object is to
+ * statically import {@code DockerTemplateOptions.Builder.*} and invoke one of
+ * the static creation methods, followed by an instance mutator if needed.
  *
- * <pre>{@code import static org.jclouds.docker.compute.options.DockerTemplateOptions.Builder.*;
+ * <pre>
+ * {@code import static org.jclouds.docker.compute.options.DockerTemplateOptions.Builder.*;
  *
  * ComputeService api = // get connection
  * templateBuilder.options(inboundPorts(22, 80, 8080, 443));
- * Set<? extends NodeMetadata> set = api.createNodesInGroup(tag, 2, templateBuilder.build());}</pre>
+ * Set<? extends NodeMetadata> set = api.createNodesInGroup(tag, 2, templateBuilder.build());}
+ * </pre>
+ * 
+ * <h2>Advanced Usage</h2>
+ * <p>
+ * In addition to basic configuration through its methods, this class also
+ * provides possibility to work directly with Docker API configuration object (
+ * {@link Config.Builder}). When the
+ * {@link #configBuilder(org.jclouds.docker.domain.Config.Builder)} is used to
+ * configure not-<code>null</code> configBuilder, then this configuration object
+ * takes precedence over the other configuration in this class (i.e. the other
+ * config entries are not used)
+ * </p>
+ * <p>
+ * Note: The {@code image} property in the provided {@link Config.Builder} is rewritten by a placeholder value.
+ * The real value is configured by ComputeServiceAdapter.
+ * </p>
+ * 
+ * <pre>
+ * {@code import static org.jclouds.docker.compute.options.DockerTemplateOptions.Builder.*;
+ *
+ * ComputeService api = // get connection
+ * DockerTemplateOptions options = DockerTemplateOptions.Builder
+ *       .configBuilder(
+ *                Config.builder().env(ImmutableList.<String> of("SSH_PORT=8822"))
+ *                      .hostConfig(HostConfig.builder().networkMode("host").build()));
+ * templateBuilder.options(options);
+ * Set<? extends NodeMetadata> set = api.createNodesInGroup("sample-group", 1, templateBuilder.build());}
+ * </pre>
  */
 public class DockerTemplateOptions extends TemplateOptions implements Cloneable {
+
+   private static final String NO_IMAGE = "jclouds-placeholder-for-image";
 
    protected List<String> dns = ImmutableList.of();
    protected String hostname;
@@ -63,6 +95,8 @@ public class DockerTemplateOptions extends TemplateOptions implements Cloneable 
    protected String networkMode;
    protected Map<String, String> extraHosts = ImmutableMap.of();
 
+   protected Config.Builder configBuilder;
+   
    @Override
    public DockerTemplateOptions clone() {
       DockerTemplateOptions options = new DockerTemplateOptions();
@@ -94,6 +128,7 @@ public class DockerTemplateOptions extends TemplateOptions implements Cloneable 
          if (!extraHosts.isEmpty()) {
             eTo.extraHosts(extraHosts);
          }
+         eTo.configBuilder(configBuilder);
       }
    }
 
@@ -113,12 +148,22 @@ public class DockerTemplateOptions extends TemplateOptions implements Cloneable 
               equal(this.cpuShares, that.cpuShares) &&
               equal(this.env, that.env) &&
               equal(this.portBindings, that.portBindings) &&
-              equal(this.extraHosts, that.extraHosts);
+              equal(this.extraHosts, that.extraHosts) &&
+              buildersEqual(this.configBuilder, that.configBuilder);
    }
 
+
+   /**
+    * Compares two Config.Builder instances.
+    */
+   private boolean buildersEqual(Config.Builder b1, Config.Builder b2) {
+      return b1 == b2 || (b1 != null && b2 != null && b1.build().equals(b2.build()));
+   }
+   
    @Override
    public int hashCode() {
-      return Objects.hashCode(super.hashCode(), volumes, hostname, dns, memory, entrypoint, commands, cpuShares, env, portBindings, extraHosts);
+      return Objects.hashCode(super.hashCode(), volumes, hostname, dns, memory, entrypoint, commands, cpuShares, env,
+            portBindings, extraHosts, configBuilder);
    }
 
    @Override
@@ -134,6 +179,7 @@ public class DockerTemplateOptions extends TemplateOptions implements Cloneable 
               .add("env", env)
               .add("portBindings", portBindings)
               .add("extraHosts", extraHosts)
+              .add("configBuilder", configBuilder)
               .toString();
    }
 
@@ -235,6 +281,23 @@ public class DockerTemplateOptions extends TemplateOptions implements Cloneable 
       return this;
    }
 
+   /**
+    * This method sets Config.Builder configuration object, which can be used as
+    * a replacement for all the other settings from this class. Some values in
+    * the provided Config.Builder instance (the image name for instance) can be
+    * ignored or their value can be changed.
+    *
+    * @param configBuilder
+    *           Config.Builder instance. This instance can be changed in this
+    *           method!
+    */
+   public DockerTemplateOptions configBuilder(Config.Builder configBuilder) {
+      this.configBuilder = configBuilder != null 
+            ? Config.builder().fromConfig(configBuilder.image(NO_IMAGE).build())
+            : null;
+      return this;
+   }
+
    public Map<String, String> getVolumes() { return volumes; }
 
    public List<String> getDns() { return dns; }
@@ -256,6 +319,8 @@ public class DockerTemplateOptions extends TemplateOptions implements Cloneable 
    public String getNetworkMode() { return networkMode; }
 
    public Map<String, String> getExtraHosts() { return extraHosts; }
+
+   public Config.Builder getConfigBuilder() { return configBuilder; }
 
    public static class Builder {
 
@@ -379,6 +444,11 @@ public class DockerTemplateOptions extends TemplateOptions implements Cloneable 
          return options.extraHosts(extraHosts);
       }
 
+      public static DockerTemplateOptions configBuilder(Config.Builder configBuilder) {
+         DockerTemplateOptions options = new DockerTemplateOptions();
+         return options.configBuilder(configBuilder);
+      }
+      
       /**
        * @see TemplateOptions#inboundPorts(int...)
        */
