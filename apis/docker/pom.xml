@@ -38,6 +38,7 @@
     <test.docker.identity>${env.DOCKER_CERT_PATH}/cert.pem</test.docker.identity>
     <test.docker.credential>${env.DOCKER_CERT_PATH}/key.pem</test.docker.credential>
     <test.docker.cacert.path>${env.DOCKER_CERT_PATH}/ca.pem</test.docker.cacert.path>
+    <test.docker.endpoint>${env.DOCKER_HOST}</test.docker.endpoint>
     <test.jclouds.trust-all-certs>false</test.jclouds.trust-all-certs>
     <jclouds.osgi.export>org.jclouds.docker*;version="${project.version}"</jclouds.osgi.export>
     <jclouds.osgi.import>
@@ -151,7 +152,7 @@
                 </goals>
                 <configuration>
                   <name>test.docker.endpoint</name>
-                  <value>${env.DOCKER_HOST}</value>
+                  <value>${test.docker.endpoint}</value>
                   <regex>tcp</regex>
                   <replacement>https</replacement>
                   <failIfNoMatch>false</failIfNoMatch>

@@ -16,19 +16,5 @@
 #
 
 
-FROM alpine:3.2
+FROM kwart/alpine-ext:3.3-ssh
 MAINTAINER JClouds Dev <dev@jclouds.apache.org>
-
-ENV DROPBEAR_CONF=/etc/dropbear
-
-RUN apk add --update dropbear \
-    && mkdir -p ${DROPBEAR_CONF} \
-    && dropbearkey -t dss -f ${DROPBEAR_CONF}/dropbear_dss_host_key \
-    && dropbearkey -t rsa -f ${DROPBEAR_CONF}/dropbear_rsa_host_key -s 2048 \
-    && dropbearkey -t ecdsa -f ${DROPBEAR_CONF}/dropbear_ecdsa_host_key
-
-RUN echo 'root:screencast' | chpasswd
-
-EXPOSE 22
-
-CMD ["/usr/sbin/dropbear", "-E", "-F"]

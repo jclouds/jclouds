@@ -33,6 +33,7 @@ import org.jclouds.Constants;
 import org.jclouds.apis.BaseApiLiveTest;
 import org.jclouds.compute.config.ComputeServiceProperties;
 import org.jclouds.docker.DockerApi;
+import org.jclouds.docker.internal.DockerTestUtils;
 import org.jclouds.io.Payload;
 import org.jclouds.io.Payloads;
 import org.jclouds.sshj.config.SshjSshClientModule;
@@ -46,12 +47,23 @@ import com.google.inject.Module;
 public class BaseDockerApiLiveTest extends BaseApiLiveTest<DockerApi> {
 
    protected static final String DEFAULT_IMAGE = "alpine";
-   protected static final String DEFAULT_TAG = "3.2";
+   protected static final String DEFAULT_TAG = "3.3";
    protected static final String ALPINE_IMAGE_TAG = String.format("%s:%s", DEFAULT_IMAGE, DEFAULT_TAG);
 
 
    public BaseDockerApiLiveTest() {
       provider = "docker";
+   }
+
+   /**
+    * Removes Docker image if it's present on the Docker host.
+    *
+    * @param imageName
+    *           image to be deleted (must be not-<code>null</code>)
+    * @see DockerTestUtils#removeImageIfExists(DockerApi, String)
+    */
+   protected void removeImageIfExists(String imageName) {
+      DockerTestUtils.removeImageIfExists(api, imageName);
    }
 
    @Override

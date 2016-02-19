@@ -51,6 +51,8 @@ import com.google.common.collect.Iterables;
 @Test(groups = "live", testName = "MiscApiLiveTest", singleThreaded = true)
 public class MiscApiLiveTest extends BaseDockerApiLiveTest {
 
+   private static final String IMAGE_TEST_TAG = "jclouds-test-test-build-image";
+
    private static String imageId;
 
    private Container container = null;
@@ -105,14 +107,19 @@ public class MiscApiLiveTest extends BaseDockerApiLiveTest {
 
    @Test
    public void testBuildImageFromDockerfile() throws IOException, InterruptedException, URISyntaxException {
-      BuildOptions options = BuildOptions.Builder.tag("jclouds-test-test-build-image").verbose(false).nocache(false);
+      removeImageIfExists(IMAGE_TEST_TAG);
+      BuildOptions options = BuildOptions.Builder.tag(IMAGE_TEST_TAG).verbose(false).nocache(true);
       InputStream buildImageStream = api().build(tarredDockerfile(), options);
       String buildStream = consumeStream(buildImageStream);
-      Iterable<String> splitted = Splitter.on("\n").split(buildStream.replace("\r", "").trim());
-      String lastStreamedLine = Iterables.getLast(splitted).trim();
-      String rawImageId = Iterables.getLast(Splitter.on("Successfully built ").split(lastStreamedLine));
-      imageId = rawImageId.substring(0, 11);
-      assertNotNull(imageId);
+      try {
+         Iterable<String> splitted = Splitter.on("\n").split(buildStream.replace("\r", "").trim());
+         String lastStreamedLine = Iterables.getLast(splitted).trim();
+         String rawImageId = Iterables.getLast(Splitter.on("Successfully built ").split(lastStreamedLine));
+         imageId = rawImageId.substring(0, 11);
+         assertNotNull(imageId);
+      } finally {
+         removeImageIfExists(IMAGE_TEST_TAG);
+      }
    }
 
    @Test
@@ -168,7 +175,6 @@ public class MiscApiLiveTest extends BaseDockerApiLiveTest {
       assertEquals(execInspect.exitCode(), 2);
    }
 
-   
    private MiscApi api() {
       return api.getMiscApi();
    }

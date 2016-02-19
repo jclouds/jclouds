@@ -17,15 +17,15 @@
 package org.jclouds.docker.compute;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.jclouds.compute.options.TemplateOptions.Builder.runAsRoot;
+import static org.jclouds.compute.options.RunScriptOptions.Builder.wrapInInitScript;
+import static org.jclouds.docker.internal.DockerTestUtils.consumeStreamSilently;
+import static org.jclouds.docker.internal.DockerTestUtils.removeImageIfExists;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.util.List;
-import java.util.logging.Level;
 
 import org.jclouds.compute.RunNodesException;
 import org.jclouds.compute.domain.ExecResponse;
@@ -104,8 +104,9 @@ public class SshToCustomPortLiveTest extends BaseComputeServiceContextLiveTest {
    @Test(dependsOnMethods = "testImageCreated")
    public void testCustomPortSsh() throws RunNodesException {
       final DockerTemplateOptions options = DockerTemplateOptions.Builder
-            .commands("/usr/sbin/dropbear", "-E", "-F", "-p", String.valueOf(SSH_PORT)).overrideLoginUser("root")
-            .overrideLoginPassword("screencast").blockOnPort(SSH_PORT, 30).networkMode("host");
+            .env("SSH_PORT=" + SSH_PORT, "ROOT_PASSWORD=screencast")
+            .overrideLoginUser("root").overrideLoginPassword("screencast")
+            .blockOnPort(SSH_PORT, 30).networkMode("host");
 
       final Template template = view.getComputeService().templateBuilder().imageId(image.id()).options(options).build();
 
@@ -115,8 +116,7 @@ public class SshToCustomPortLiveTest extends BaseComputeServiceContextLiveTest {
                .getOnlyElement(view.getComputeService().createNodesInGroup("ssh-test", 1, template));
 
          nodeId = node.getId();
-         ExecResponse response = view.getComputeService().runScriptOnNode(nodeId, "echo hello",
-               runAsRoot(false).wrapInInitScript(false));
+         ExecResponse response = view.getComputeService().runScriptOnNode(nodeId, "sh -c 'echo hello && sleep 0.2'", wrapInInitScript(false));
          assertThat(response.getOutput().trim()).endsWith("hello");
       } finally {
          if (nodeId != null)
@@ -133,8 +133,11 @@ public class SshToCustomPortLiveTest extends BaseComputeServiceContextLiveTest {
    @BeforeClass(groups = { "integration", "live" })
    public void setupContext() {
       super.setupContext();
-
       final String tag = toTag(IMAGE_REPOSITORY, IMAGE_TAG_1);
+
+      removeImageIfExists(api(), tag);
+      removeImageIfExists(api(), toTag(IMAGE_REPOSITORY, IMAGE_TAG_2));
+
       BuildOptions options = BuildOptions.Builder.tag(tag).verbose(false).nocache(false);
       InputStream buildImageStream;
       try {
@@ -154,8 +157,8 @@ public class SshToCustomPortLiveTest extends BaseComputeServiceContextLiveTest {
     */
    @AfterClass(alwaysRun = true)
    protected void tearDown() {
-      consumeStreamSilently(api().getImageApi().deleteImage(toTag(IMAGE_REPOSITORY, IMAGE_TAG_1)));
-      consumeStreamSilently(api().getImageApi().deleteImage(toTag(IMAGE_REPOSITORY, IMAGE_TAG_2)));
+      removeImageIfExists(api(), toTag(IMAGE_REPOSITORY, IMAGE_TAG_1));
+      removeImageIfExists(api(), toTag(IMAGE_REPOSITORY, IMAGE_TAG_2));
    }
 
    /**
@@ -189,29 +192,6 @@ public class SshToCustomPortLiveTest extends BaseComputeServiceContextLiveTest {
    }
 
    /**
-    * Read all data from given InputStream and throw away all the bits.
-    * 
-    * @param is
-    */
-   private static void consumeStreamSilently(InputStream is) {
-      char[] tmpBuff = new char[8 * 1024];
-      // throw everything away
-      InputStreamReader isr = new InputStreamReader(is);
-
-      try {
-         try {
-            while (isr.read(tmpBuff) > -1) {
-               // empty
-            }
-         } finally {
-            isr.close();
-         }
-      } catch (IOException e) {
-         java.util.logging.Logger.getAnonymousLogger().log(Level.WARNING, "Error ocured during reading InputStream.", e);
-      }
-   }
-
-   /**
     * Concatenate repository and tag name (if provided) in Docker format.
     * 
     * @param repo
@@ -221,4 +201,5 @@ public class SshToCustomPortLiveTest extends BaseComputeServiceContextLiveTest {
    private static String toTag(String repo, String tag) {
       return repo + (tag != null ? ":" + tag : "");
    }
+
 }

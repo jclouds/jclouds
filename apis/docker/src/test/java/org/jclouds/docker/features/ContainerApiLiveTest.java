@@ -67,9 +67,6 @@ public class ContainerApiLiveTest extends BaseDockerApiLiveTest {
             api.getContainerApi().removeContainer(container.id(), RemoveContainerOptions.Builder.force(true));
          }
       }
-      if (image != null) {
-         api.getImageApi().deleteImage(ALPINE_IMAGE_TAG);
-      }
    }
 
    public void testCreateContainer() throws IOException, InterruptedException {

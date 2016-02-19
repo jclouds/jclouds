@@ -19,6 +19,7 @@ package org.jclouds.docker.compute;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertNotNull;
+
 import java.util.Properties;
 import java.util.Random;
 
@@ -32,9 +33,8 @@ import org.jclouds.docker.compute.strategy.DockerComputeServiceAdapter;
 import org.jclouds.docker.domain.Container;
 import org.jclouds.docker.domain.Image;
 import org.jclouds.docker.options.CreateImageOptions;
-import org.jclouds.docker.options.DeleteImageOptions;
 import org.jclouds.sshj.config.SshjSshClientModule;
-import org.testng.annotations.AfterGroups;
+import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
@@ -48,7 +48,7 @@ import com.google.inject.Module;
 public class DockerComputeServiceAdapterLiveTest extends BaseDockerApiLiveTest {
 
    private static final String SSHABLE_IMAGE = "kwart/alpine-ext";
-   private static final String SSHABLE_IMAGE_TAG = "3.2-ssh";
+   private static final String SSHABLE_IMAGE_TAG = "3.3-ssh";
    private Image defaultImage;
 
    private DockerComputeServiceAdapter adapter;
@@ -68,6 +68,14 @@ public class DockerComputeServiceAdapterLiveTest extends BaseDockerApiLiveTest {
       assertNotNull(defaultImage);
    }
 
+   @AfterClass(alwaysRun = true)
+   protected void tearDown() {
+      if (guest != null) {
+         adapter.destroyNode(guest.getNode().id() + "");
+      }
+      super.tearDown();
+   }
+
    @Override
    protected DockerApi create(Properties props, Iterable<Module> modules) {
       Injector injector = newBuilder().modules(modules).overrides(props).buildInjector();
@@ -83,7 +91,7 @@ public class DockerComputeServiceAdapterLiveTest extends BaseDockerApiLiveTest {
       Template template = templateBuilder.imageId(defaultImage.id()).build();
 
       DockerTemplateOptions options = template.getOptions().as(DockerTemplateOptions.class);
-      options.env(ImmutableList.of("ROOT_PASS=password"));
+      options.env(ImmutableList.of("ROOT_PASSWORD=password"));
       guest = adapter.createNodeWithGroupEncodedIntoName(group, name, template);
       assertEquals(guest.getNodeId(), guest.getNode().id());
    }
@@ -95,17 +103,6 @@ public class DockerComputeServiceAdapterLiveTest extends BaseDockerApiLiveTest {
       for (Hardware profile : profiles) {
          assertNotNull(profile);
       }
-   }
-
-   @AfterGroups(groups = "live")
-   protected void tearDown() {
-      if (guest != null) {
-         adapter.destroyNode(guest.getNode().id() + "");
-      }
-      if (defaultImage != null) {
-         api.getImageApi().deleteImage(defaultImage.id(), DeleteImageOptions.Builder.force(true));
-      }
-      super.tearDown();
    }
 
    @Override
