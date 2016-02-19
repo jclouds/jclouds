@@ -1,0 +1,13 @@
+<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:ws="http://ws.api.profitbricks.com/">
+    <soapenv:Header/>
+    <soapenv:Body>
+        <ws:createServerReturn>
+            <return>
+                <requestId>102457</requestId>
+                <dataCenterId>aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee</dataCenterId>
+                <dataCenterVersion>2</dataCenterVersion>
+                <serverId>qwertyui-qwer-qwer-qwer-qwertyyuiiop</serverId>
+            </return>
+        </ws:createServerReturn>
+    </soapenv:Body>
+</soapenv:Envelope>

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<S:Envelope xmlns:S="http://schemas.xmlsoap.org/soap/envelope/">
+    <S:Body>
+        <ns2:getAllDataCentersResponse xmlns:ns2="http://ws.api.profitbricks.com/">
+            <return>
+                <dataCenterId>aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee</dataCenterId>
+                <dataCenterName>JClouds-DC</dataCenterName>
+                <dataCenterVersion>10</dataCenterVersion>
+                <provisioningState>AVAILABLE</provisioningState>
+            </return>
+            <return>
+                <dataCenterId>qqqqqqqq-wwww-rrrr-tttt-yyyyyyyyyyyy</dataCenterId>
+                <dataCenterName>Random DC</dataCenterName>
+                <dataCenterVersion>238</dataCenterVersion>
+                <provisioningState>INPROCESS</provisioningState>
+            </return>
+        </ns2:getAllDataCentersResponse>
+    </S:Body>
+</S:Envelope>

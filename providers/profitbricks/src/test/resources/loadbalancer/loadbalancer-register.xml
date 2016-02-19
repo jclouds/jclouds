@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<S:Envelope xmlns:S="http://schemas.xmlsoap.org/soap/envelope/">
+  <S:Body>
+    <ns2:registerServersOnLoadBalancerResponse xmlns:ns2="http://ws.api.profitbricks.com/">
+      <return>
+        <dataCenterId>datacenter-id</dataCenterId>
+        <dataCenterVersion>4</dataCenterVersion>
+        <loadBalancerId>load-balancer-id</loadBalancerId>
+        <lanId>1</lanId>
+        <balancedServers>
+          <activate>true</activate>
+          <balancedNicId>balanced-nic-id</balancedNicId>
+          <serverId>server-id</serverId>
+          <serverName>server-name</serverName>
+        </balancedServers>
+      </return>
+    </ns2:registerServersOnLoadBalancerResponse>
+  </S:Body>
+</S:Envelope>

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:ws="http://ws.api.profitbricks.com/">
+    <soapenv:Header/>
+    <soapenv:Body>
+        <ws:updateStorageResponse>
+            <return>
+                <requestId>1234568</requestId>
+                <dataCenterId>aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee</dataCenterId>
+                <dataCenterVersion>46</dataCenterVersion>
+            </return>
+        </ws:updateStorageResponse>
+    </soapenv:Body>
+</soapenv:Envelope>

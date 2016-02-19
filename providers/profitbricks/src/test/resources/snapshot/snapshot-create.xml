@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<S:Envelope xmlns:S="http://schemas.xmlsoap.org/soap/envelope/">
+    <S:Body>
+        <ns2:createSnapshotReturn xmlns:ns2="http://ws.api.profitbricks.com/">
+            <return>
+                <requestId>12345678</requestId>
+                <snapshotId>aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee</snapshotId>
+            </return>
+        </ns2:createSnapshotReturn>
+    </S:Body>
+</S:Envelope>

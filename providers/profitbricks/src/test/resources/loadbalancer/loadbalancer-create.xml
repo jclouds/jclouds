@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<S:Envelope xmlns:S="http://schemas.xmlsoap.org/soap/envelope/">
+    <S:Body>
+        <ns2:createLoadBalancerResponse xmlns:ns2="http://ws.api.profitbricks.com/">
+            <return>
+                <requestId>request-id</requestId>
+                <dataCenterId>aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee</dataCenterId>
+                <dataCenterVersion>10</dataCenterVersion>
+                <loadBalancerId>1234-1234-1234-1234</loadBalancerId>
+            </return>
+        </ns2:createLoadBalancerResponse>
+    </S:Body>
+</S:Envelope>

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<S:Envelope xmlns:S="http://schemas.xmlsoap.org/soap/envelope/">
+    <S:Body>
+        <S:Fault xmlns:ns4="http://www.w3.org/2003/05/soap-envelope">
+            <faultcode>S:Server</faultcode>
+            <faultstring>The requested resource could not be found. Please refer to Request Id : 16361390. [VDC-6-404] The requested image does not exist or already deleted by the users. ResourceId ﻿random-non-existing-id</faultstring>
+            <detail>
+                <ns2:ProfitbricksServiceFault xmlns:ns2="http://ws.api.profitbricks.com/">
+                    <faultCode>RESOURCE_NOT_FOUND</faultCode>
+                    <httpCode>404</httpCode>
+                    <message>The requested resource could not be found. Please refer to Request Id : 16361390. [VDC-6-404] The requested image does not exist or already deleted by the users. ResourceId ﻿random-non-existing-id</message>
+                    <requestId>16361390</requestId>
+                </ns2:ProfitbricksServiceFault>
+            </detail>
+        </S:Fault>
+    </S:Body>
+</S:Envelope>

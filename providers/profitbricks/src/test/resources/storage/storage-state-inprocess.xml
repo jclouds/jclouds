@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<S:Envelope xmlns:S="http://schemas.xmlsoap.org/soap/envelope/">
+    <S:Body>
+        <ns2:getStorageResponse xmlns:ns2="http://ws.api.profitbricks.com/">
+            <return>
+                <requestId>16463316</requestId>
+                <dataCenterId>aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee</dataCenterId>
+                <dataCenterVersion>49</dataCenterVersion>
+                <storageId>qswdefrg-qaws-qaws-defe-rgrgdsvcxbrh</storageId>
+                <size>40</size>
+                <storageName>hdd-1</storageName>
+                <mountImage>
+                    <imageId>f0a59a5c-7940-11e4-8053-52540066fee9</imageId>
+                    <imageName>Ubuntu-14.04-LTS-server-2014-12-01</imageName>
+                </mountImage>
+                <serverIds>qwertyui-qwer-qwer-qwer-qwertyyuiiop</serverIds>
+                <provisioningState>INPROCESS</provisioningState>
+                <creationTime>2014-12-04T07:09:23.138Z</creationTime>
+                <lastModificationTime>2014-12-12T03:14:48.316Z</lastModificationTime>
+            </return>
+        </ns2:getStorageResponse>
+    </S:Body>
+</S:Envelope>
