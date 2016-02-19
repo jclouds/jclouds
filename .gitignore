@@ -20,5 +20,5 @@ atlassian-ide-plugin.xml
 .factorypath
 .apt_generated
 .checkstyle
-*nb-configuration.xml
-*nbactions.xml
+nb-configuration.xml
+nbactions.xml

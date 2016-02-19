@@ -86,7 +86,7 @@ public class ResponseStatusFromPayloadHttpCommandExecutorServiceTest extends Bas
    @Test
    public void testUnauthorized() throws Exception {
       MockWebServer server = mockWebServer();
-      server.enqueue(new MockResponse().setResponseCode(401).setBody(payloadFromResource("/fault-401.html")));
+      server.enqueue(new MockResponse().setResponseCode(401).setBody(payloadFromResource("/html/fault-401.html")));
 
       ProfitBricksApi pbApi = api(server.getUrl("/"));
       DataCenterApi api = pbApi.dataCenterApi();
@@ -131,7 +131,7 @@ public class ResponseStatusFromPayloadHttpCommandExecutorServiceTest extends Bas
    public void testServiceUnderMaintenance() throws Exception {
       MockWebServer server = mockWebServer();
       for (int i = 0; i <= MAX_RETRIES; i++)  // jclouds retries 5 times
-         server.enqueue(new MockResponse().setResponseCode(503).setBody(payloadFromResource("/maintenance-503.html")));
+         server.enqueue(new MockResponse().setResponseCode(503).setBody(payloadFromResource("/html/maintenance-503.html")));
 
       ProfitBricksApi pbApi = api(server.getUrl("/"));
       DataCenterApi api = pbApi.dataCenterApi();
