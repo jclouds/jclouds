@@ -463,6 +463,7 @@
             <exclude>**/src/test/resources/**/*.gz</exclude>
             <exclude>**/src/test/resources/**/*.xml</exclude>
             <exclude>**/src/test/resources/**/*.crt</exclude>
+            <exclude>**/profitbricks/src/test/resources/*.html</exclude>
 
             <!-- META-INF/services files -->
             <exclude>**/services/*LoggingModule</exclude>
@@ -519,6 +520,8 @@
             <exclude>**/.factorypath</exclude>
             <exclude>**/.apt_generated/**</exclude>
             <exclude>**/.checkstyle</exclude>
+            <exclude>nb-configuration.xml</exclude>
+            <exclude>nbactions.xml</exclude>
 
             <!-- Temporary files generated on CloudBees slaves -->
             <exclude>.repository/**</exclude>

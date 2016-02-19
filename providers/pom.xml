@@ -71,5 +71,6 @@
     <module>aws-route53</module>
     <module>ultradns-ws</module>
     <module>dynect</module>
+    <module>profitbricks</module>
   </modules>
 </project>
