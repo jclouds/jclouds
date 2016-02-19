@@ -54,7 +54,8 @@ import com.google.common.collect.FluentIterable;
  */
 @Deprecated
 @Beta
-@Extension(of = ServiceType.COMPUTE, namespace = ExtensionNamespaces.VOLUMES)
+@Extension(of = ServiceType.COMPUTE, namespace = ExtensionNamespaces.VOLUMES,
+      name = ExtensionNames.VOLUMES, alias = ExtensionAliases.VOLUMES)
 @RequestFilters(AuthenticateRequest.class)
 @Consumes(MediaType.APPLICATION_JSON)
 public interface VolumeApi {

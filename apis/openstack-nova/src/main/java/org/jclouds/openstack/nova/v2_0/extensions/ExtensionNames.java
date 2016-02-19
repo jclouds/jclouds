@@ -17,13 +17,14 @@
 package org.jclouds.openstack.nova.v2_0.extensions;
 
 /**
- * OpenStack Nova Extension Namespaces
+ * OpenStack Nova Extension Names
  */
 public final class ExtensionNames {
    public static final String FLOATING_IPS = "FloatingIps";
    public static final String ATTACH_INTERFACES = "AttachInterfaces";
    public static final String AVAILABILITY_ZONE = "AvailabilityZone";
    public static final String CONSOLES = "Consoles";
+   public static final String CREATESERVEREXT = "Createserverext";
    public static final String FLAVOR_EXTRA_SPECS = "FlavorExtraSpecs";
    public static final String HOST_ADMINISTRATION = "Hosts";
    public static final String HOST_AGGREGATE = "Aggregates";
@@ -36,6 +37,7 @@ public final class ExtensionNames {
    public static final String SIMPLE_TENANT_USAGE = "SimpleTenantUsage";
    public static final String VOLUME_ATTACHMENT = "VolumeAttachmentUpdate";
    public static final String FLOATING_IP_POOLS = "FloatingIpPools";
+   public static final String VOLUMES = "Volumes";
 
    private ExtensionNames() {
       throw new AssertionError("intentionally unimplemented");

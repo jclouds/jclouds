@@ -51,7 +51,8 @@ import com.google.common.annotations.Beta;
  *
  */
 @Beta
-@Extension(of = ServiceType.COMPUTE, namespace = ExtensionNamespaces.QUOTAS, name = ExtensionNames.QUOTAS)
+@Extension(of = ServiceType.COMPUTE, namespace = ExtensionNamespaces.QUOTAS,
+      name = ExtensionNames.QUOTAS, alias = ExtensionAliases.QUOTAS)
 @RequestFilters(AuthenticateRequest.class)
 @Consumes(MediaType.APPLICATION_JSON)
 @Path("/os-quota-sets")

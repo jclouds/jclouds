@@ -46,7 +46,8 @@ import com.google.common.collect.FluentIterable;
  * Provides access to the OpenStack Compute (Nova) Attach Interfaces API.
  */
 @Beta
-@Extension(of = ServiceType.COMPUTE, namespace = ExtensionNamespaces.ATTACH_INTERFACES, name = ExtensionNames.ATTACH_INTERFACES)
+@Extension(of = ServiceType.COMPUTE, namespace = ExtensionNamespaces.ATTACH_INTERFACES,
+      name = ExtensionNames.ATTACH_INTERFACES, alias = ExtensionAliases.ATTACH_INTERFACES)
 @RequestFilters(AuthenticateRequest.class)
 @Consumes(MediaType.APPLICATION_JSON)
 @Path("/servers")

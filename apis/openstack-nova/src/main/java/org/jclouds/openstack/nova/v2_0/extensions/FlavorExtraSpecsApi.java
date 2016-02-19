@@ -53,7 +53,8 @@ import com.google.common.annotations.Beta;
  * @see org.jclouds.openstack.nova.v2_0.features.FlavorApi
  */
 @Beta
-@Extension(of = ServiceType.COMPUTE, namespace = ExtensionNamespaces.FLAVOR_EXTRA_SPECS, name = ExtensionNames.FLAVOR_EXTRA_SPECS)
+@Extension(of = ServiceType.COMPUTE, namespace = ExtensionNamespaces.FLAVOR_EXTRA_SPECS,
+      name = ExtensionNames.FLAVOR_EXTRA_SPECS, alias = ExtensionAliases.FLAVOR_EXTRA_SPECS)
 @RequestFilters(AuthenticateRequest.class)
 @Consumes(MediaType.APPLICATION_JSON)
 @Path("/flavors")

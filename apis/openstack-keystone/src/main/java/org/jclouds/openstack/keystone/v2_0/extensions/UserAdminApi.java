@@ -46,7 +46,8 @@ import com.google.common.annotations.Beta;
  */
 @Beta
 @Consumes(MediaType.APPLICATION_JSON)
-@Extension(of = ServiceType.IDENTITY, namespace = ExtensionNamespaces.OS_KSADM)
+@Extension(of = ServiceType.IDENTITY, namespace = ExtensionNamespaces.OS_KSADM,
+      name = ExtensionNames.OS_KSADM, alias = ExtensionAliases.OS_KSADM)
 @RequestFilters(AuthenticateRequest.class)
 @Path("/users")
 public interface UserAdminApi {

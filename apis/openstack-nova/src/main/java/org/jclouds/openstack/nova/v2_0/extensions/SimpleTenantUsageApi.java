@@ -41,7 +41,8 @@ import com.google.common.collect.FluentIterable;
  * Provides access to the OpenStack Compute (Nova) Simple Tenant Usage extension API.
  */
 @Beta
-@Extension(of = ServiceType.COMPUTE, namespace = ExtensionNamespaces.SIMPLE_TENANT_USAGE, name = ExtensionNames.SIMPLE_TENANT_USAGE)
+@Extension(of = ServiceType.COMPUTE, namespace = ExtensionNamespaces.SIMPLE_TENANT_USAGE,
+      name = ExtensionNames.SIMPLE_TENANT_USAGE, alias = ExtensionAliases.SIMPLE_TENANT_USAGE)
 @RequestFilters(AuthenticateRequest.class)
 @Consumes(MediaType.APPLICATION_JSON)
 @Path("/os-simple-tenant-usage")

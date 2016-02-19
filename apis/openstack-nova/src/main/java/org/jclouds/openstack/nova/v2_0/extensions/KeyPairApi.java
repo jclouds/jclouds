@@ -51,7 +51,8 @@ import com.google.common.collect.FluentIterable;
  * Provides access to the OpenStack Compute (Nova) Key Pair Extension API.
  */
 @Beta
-@Extension(of = ServiceType.COMPUTE, namespace = ExtensionNamespaces.KEYPAIRS, name = ExtensionNames.KEYPAIRS)
+@Extension(of = ServiceType.COMPUTE, namespace = ExtensionNamespaces.KEYPAIRS,
+      name = ExtensionNames.KEYPAIRS, alias = ExtensionAliases.KEYPAIRS)
 @RequestFilters(AuthenticateRequest.class)
 @Consumes(MediaType.APPLICATION_JSON)
 @Path("/os-keypairs")

@@ -39,7 +39,8 @@ import com.google.common.collect.FluentIterable;
  * Provides access to the OpenStack Compute (Nova) Hypervisor Extension API.
  */
 @Beta
-@Extension(of = ServiceType.COMPUTE, namespace = ExtensionNamespaces.HYPERVISORS, name = ExtensionNames.HYPERVISORS)
+@Extension(of = ServiceType.COMPUTE, namespace = ExtensionNamespaces.HYPERVISORS,
+      name = ExtensionNames.HYPERVISORS, alias = ExtensionAliases.HYPERVISORS)
 @RequestFilters(AuthenticateRequest.class)
 @Consumes(MediaType.APPLICATION_JSON)
 @Path("/os-hypervisors")

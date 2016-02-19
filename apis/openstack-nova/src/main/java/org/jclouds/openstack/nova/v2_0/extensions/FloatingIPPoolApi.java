@@ -34,7 +34,8 @@ import com.google.common.annotations.Beta;
 import com.google.common.collect.FluentIterable;
 
 @Beta
-@Extension(of = ServiceType.COMPUTE, namespace = ExtensionNamespaces.FLOATING_IP_POOLS, name = ExtensionNames.FLOATING_IP_POOLS)
+@Extension(of = ServiceType.COMPUTE, namespace = ExtensionNamespaces.FLOATING_IP_POOLS,
+      name = ExtensionNames.FLOATING_IP_POOLS, alias = ExtensionAliases.FLOATING_IP_POOLS)
 @Consumes(MediaType.APPLICATION_JSON)
 @Path("/os-floating-ip-pools")
 @RequestFilters(AuthenticateRequest.class)

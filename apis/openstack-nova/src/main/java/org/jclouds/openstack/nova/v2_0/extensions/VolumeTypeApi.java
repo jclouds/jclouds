@@ -54,7 +54,9 @@ import com.google.common.collect.FluentIterable;
 
 /**
  * Provides access to the OpenStack Compute (Nova) Volume Type extension API.
- *
+ * This extension is no longer supported in OpenStack Liberty.
+ * You can use the Block Storage API and endpoint to list volume types,
+ * see <a href="http://developer.openstack.org/api-ref-blockstorage-v2.html#volumes-v2-types">volume types v2</a>.
  * @see VolumeApi
  */
 @Beta

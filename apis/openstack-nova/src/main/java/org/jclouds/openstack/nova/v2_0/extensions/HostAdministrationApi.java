@@ -51,7 +51,8 @@ import com.google.common.collect.FluentIterable;
  * Provides access to OpenStack Compute (Nova) Host Administration extension API.
  */
 @Beta
-@Extension(of = ServiceType.COMPUTE, namespace = ExtensionNamespaces.HOSTS, name = ExtensionNames.HOST_ADMINISTRATION)
+@Extension(of = ServiceType.COMPUTE, namespace = ExtensionNamespaces.HOSTS,
+      name = ExtensionNames.HOST_ADMINISTRATION, alias = ExtensionAliases.HOST_ADMINISTRATION)
 @RequestFilters(AuthenticateRequest.class)
 @Consumes(MediaType.APPLICATION_JSON)
 @Path("/os-hosts")

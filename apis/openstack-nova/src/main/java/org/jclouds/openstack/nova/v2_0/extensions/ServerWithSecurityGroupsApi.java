@@ -47,7 +47,8 @@ import com.google.common.annotations.Beta;
  * @see org.jclouds.openstack.nova.v2_0.features.ServerApi
  */
 @Beta
-@Extension(of = ServiceType.COMPUTE, namespace = ExtensionNamespaces.CREATESERVEREXT)
+@Extension(of = ServiceType.COMPUTE, namespace = ExtensionNamespaces.CREATESERVEREXT,
+      name = ExtensionNames.CREATESERVEREXT, alias = ExtensionAliases.CREATESERVEREXT)
 @RequestFilters(AuthenticateRequest.class)
 @Consumes(MediaType.APPLICATION_JSON)
 @Path("/os-create-server-ext")

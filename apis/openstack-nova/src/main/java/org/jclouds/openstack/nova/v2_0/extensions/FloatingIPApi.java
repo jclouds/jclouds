@@ -46,7 +46,8 @@ import com.google.common.collect.FluentIterable;
  * Provides access to the OpenStack Compute (Nova) Floating IP extension API.
  */
 @Beta
-@Extension(of = ServiceType.COMPUTE, namespace = ExtensionNamespaces.FLOATING_IPS, name = ExtensionNames.FLOATING_IPS)
+@Extension(of = ServiceType.COMPUTE, namespace = ExtensionNamespaces.FLOATING_IPS,
+      name = ExtensionNames.FLOATING_IPS, alias = ExtensionAliases.FLOATING_IPS)
 @RequestFilters(AuthenticateRequest.class)
 @Consumes(MediaType.APPLICATION_JSON)
 public interface FloatingIPApi {
