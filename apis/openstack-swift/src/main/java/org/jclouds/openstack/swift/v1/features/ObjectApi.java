@@ -57,6 +57,7 @@ import org.jclouds.openstack.swift.v1.options.PutOptions;
 import org.jclouds.rest.annotations.BinderParam;
 import org.jclouds.rest.annotations.Fallback;
 import org.jclouds.rest.annotations.Headers;
+import org.jclouds.rest.annotations.QueryParams;
 import org.jclouds.rest.annotations.RequestFilters;
 import org.jclouds.rest.annotations.ResponseParser;
 
@@ -83,6 +84,7 @@ public interface ObjectApi {
    @GET
    @ResponseParser(ParseObjectListFromResponse.class)
    @Fallback(NullOnNotFoundOr404.class)
+   @QueryParams(keys = "format", values = "json")
    @Nullable
    ObjectList list();
 
@@ -100,6 +102,7 @@ public interface ObjectApi {
    @GET
    @ResponseParser(ParseObjectListFromResponse.class)
    @Fallback(NullOnNotFoundOr404.class)
+   @QueryParams(keys = "format", values = "json")
    @Nullable
    ObjectList list(ListContainerOptions options);
 
@@ -169,6 +172,7 @@ public interface ObjectApi {
    @Path("/{objectName}")
    @ResponseParser(ParseObjectFromResponse.class)
    @Fallback(NullOnNotFoundOr404.class)
+   @QueryParams(keys = "format", values = "json")
    @Nullable
    SwiftObject get(@PathParam("objectName") String objectName);
 
@@ -187,6 +191,7 @@ public interface ObjectApi {
    @Path("/{objectName}")
    @ResponseParser(ParseObjectFromResponse.class)
    @Fallback(NullOnNotFoundOr404.class)
+   @QueryParams(keys = "format", values = "json")
    @Nullable
    SwiftObject get(@PathParam("objectName") String objectName, GetOptions options);
 

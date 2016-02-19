@@ -119,7 +119,7 @@ public class ObjectApiMockTest extends BaseOpenStackMockTest<SwiftApi> {
 
          assertEquals(server.getRequestCount(), 2);
          assertAuthentication(server);
-         assertRequest(server.takeRequest(), "GET", "/v1/MossoCloudFS_5bcf396e-39dd-45ff-93a1-712b9aba90a9/myContainer");
+         assertRequest(server.takeRequest(), "GET", "/v1/MossoCloudFS_5bcf396e-39dd-45ff-93a1-712b9aba90a9/myContainer?format=json");
       } finally {
          server.shutdown();
       }
@@ -141,7 +141,7 @@ public class ObjectApiMockTest extends BaseOpenStackMockTest<SwiftApi> {
 
          assertEquals(server.getRequestCount(), 2);
          assertAuthentication(server);
-         assertRequest(server.takeRequest(), "GET", "/v1/MossoCloudFS_5bcf396e-39dd-45ff-93a1-712b9aba90a9/myContainer");
+         assertRequest(server.takeRequest(), "GET", "/v1/MossoCloudFS_5bcf396e-39dd-45ff-93a1-712b9aba90a9/myContainer?format=json");
       } finally {
          server.shutdown();
       }
@@ -159,7 +159,7 @@ public class ObjectApiMockTest extends BaseOpenStackMockTest<SwiftApi> {
 
          assertEquals(server.getRequestCount(), 2);
          assertAuthentication(server);
-         assertRequest(server.takeRequest(), "GET", "/v1/MossoCloudFS_5bcf396e-39dd-45ff-93a1-712b9aba90a9/myContainer?marker=test");
+         assertRequest(server.takeRequest(), "GET", "/v1/MossoCloudFS_5bcf396e-39dd-45ff-93a1-712b9aba90a9/myContainer?format=json&marker=test");
       } finally {
          server.shutdown();
       }
@@ -319,7 +319,7 @@ public class ObjectApiMockTest extends BaseOpenStackMockTest<SwiftApi> {
          assertEquals(server.takeRequest().getRequestLine(), "POST /tokens HTTP/1.1");
          RecordedRequest get = server.takeRequest();
          assertEquals(get.getRequestLine(),
-               "GET /v1/MossoCloudFS_5bcf396e-39dd-45ff-93a1-712b9aba90a9/myContainer/myObject HTTP/1.1");
+               "GET /v1/MossoCloudFS_5bcf396e-39dd-45ff-93a1-712b9aba90a9/myContainer/myObject?format=json HTTP/1.1");
       } finally {
          server.shutdown();
       }

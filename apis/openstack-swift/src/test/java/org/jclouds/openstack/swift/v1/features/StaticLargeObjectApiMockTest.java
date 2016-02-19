@@ -139,7 +139,7 @@ public class StaticLargeObjectApiMockTest extends BaseOpenStackMockTest<SwiftApi
          assertAuthentication(server);
          RecordedRequest getRequest = server.takeRequest();
          assertRequest(getRequest, "GET",
-               "/v1/MossoCloudFS_5bcf396e-39dd-45ff-93a1-712b9aba90a9/myContainer/myObject?multipart-manifest=get");
+               "/v1/MossoCloudFS_5bcf396e-39dd-45ff-93a1-712b9aba90a9/myContainer/myObject?format=json&multipart-manifest=get");
       } finally {
          server.shutdown();
       }
@@ -161,7 +161,7 @@ public class StaticLargeObjectApiMockTest extends BaseOpenStackMockTest<SwiftApi
          assertAuthentication(server);
          RecordedRequest getRequest = server.takeRequest();
          assertRequest(getRequest, "GET",
-               "/v1/MossoCloudFS_5bcf396e-39dd-45ff-93a1-712b9aba90a9/myContainer/myObject?multipart-manifest=get");
+               "/v1/MossoCloudFS_5bcf396e-39dd-45ff-93a1-712b9aba90a9/myContainer/myObject?format=json&multipart-manifest=get");
       } finally {
          server.shutdown();
       }

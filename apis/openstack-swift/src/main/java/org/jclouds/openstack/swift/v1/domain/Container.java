@@ -39,14 +39,14 @@ import com.google.common.collect.Multimap;
 public class Container implements Comparable<Container> {
 
    private final String name;
-   private final long objectCount;
-   private final long bytesUsed;
+   private final Long objectCount;
+   private final Long bytesUsed;
    private final Optional<Boolean> anybodyRead;
    private final Map<String, String> metadata;
    private final Multimap<String, String> headers;
 
    @ConstructorProperties({ "name", "count", "bytes", "anybodyRead", "metadata", "headers"})
-   protected Container(String name, long objectCount, long bytesUsed, Optional<Boolean> anybodyRead,
+   protected Container(String name, Long objectCount, Long bytesUsed, Optional<Boolean> anybodyRead,
          Map<String, String> metadata, Multimap<String, String> headers) {
       this.name = checkNotNull(name, "name");
       this.objectCount = objectCount;
@@ -66,14 +66,14 @@ public class Container implements Comparable<Container> {
    /**
     * @return The count of objects for this container.
     */
-   public long getObjectCount() {
+   public Long getObjectCount() {
       return objectCount;
    }
 
    /**
     * @return The number of bytes used by this container.
     */
-   public long getBytesUsed() {
+   public Long getBytesUsed() {
       return bytesUsed;
    }
 
@@ -160,8 +160,8 @@ public class Container implements Comparable<Container> {
 
    public static class Builder {
       protected String name;
-      protected long objectCount;
-      protected long bytesUsed;
+      protected Long objectCount;
+      protected Long bytesUsed;
       protected Optional<Boolean> anybodyRead = Optional.absent();
       protected Map<String, String> metadata = ImmutableMap.of();
       protected Multimap<String, String> headers = ImmutableMultimap.of();
@@ -177,7 +177,7 @@ public class Container implements Comparable<Container> {
       /**
        * @see Container#getObjectCount()
        */
-      public Builder objectCount(long objectCount) {
+      public Builder objectCount(Long objectCount) {
          this.objectCount = objectCount;
          return this;
       }
@@ -185,7 +185,7 @@ public class Container implements Comparable<Container> {
       /**
        * @see Container#getBytesUsed()
        */
-      public Builder bytesUsed(long bytesUsed) {
+      public Builder bytesUsed(Long bytesUsed) {
          this.bytesUsed = bytesUsed;
          return this;
       }

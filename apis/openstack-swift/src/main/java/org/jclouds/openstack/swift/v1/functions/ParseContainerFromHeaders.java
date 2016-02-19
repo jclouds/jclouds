@@ -36,11 +36,13 @@ public class ParseContainerFromHeaders implements Function<HttpResponse, Contain
 
    @Override
    public Container apply(HttpResponse from) {
+      String bytesUsed = from.getFirstHeaderOrNull(CONTAINER_BYTES_USED);
+      String objectCount = from.getFirstHeaderOrNull(CONTAINER_OBJECT_COUNT);
       Container c = 
       Container.builder()
             .name(name)
-            .bytesUsed(Long.parseLong(from.getFirstHeaderOrNull(CONTAINER_BYTES_USED)))
-            .objectCount(Long.parseLong(from.getFirstHeaderOrNull(CONTAINER_OBJECT_COUNT)))
+            .bytesUsed(bytesUsed != null ? Long.valueOf(bytesUsed) : null)
+            .objectCount(objectCount != null ? Long.valueOf(objectCount) : null)
             .anybodyRead(CONTAINER_ACL_ANYBODY_READ.equals(from.getFirstHeaderOrNull(CONTAINER_READ)))
             .metadata(EntriesWithoutMetaPrefix.INSTANCE.apply(from.getHeaders())).build();
       return c;

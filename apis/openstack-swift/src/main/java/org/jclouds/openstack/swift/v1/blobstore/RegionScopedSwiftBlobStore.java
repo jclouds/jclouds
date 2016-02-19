@@ -430,7 +430,7 @@ public class RegionScopedSwiftBlobStore implements BlobStore {
    public long countBlobs(String containerName) {
       Container container = api.getContainerApi(regionId).get(containerName);
       // undefined if container doesn't exist, so default to zero
-      return container != null ? container.getObjectCount() : 0;
+      return container != null && container.getObjectCount() != null ? container.getObjectCount() : 0;
    }
 
    @Override

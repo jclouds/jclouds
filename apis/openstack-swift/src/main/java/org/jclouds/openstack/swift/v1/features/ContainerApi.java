@@ -97,6 +97,7 @@ public interface ContainerApi {
    @Named("container:list")
    @GET
    @Fallback(EmptyFluentIterableOnNotFoundOr404.class)
+   @QueryParams(keys = "format", values = "json")
    FluentIterable<Container> list(ListContainerOptions options);
 
    /**

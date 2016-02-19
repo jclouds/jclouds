@@ -92,7 +92,7 @@ public class StaticLargeObjectApiLiveTest extends BaseSwiftApiLiveTest<SwiftApi>
          assertEquals(bigObject.getMetadata(), ImmutableMap.of("myfoo", "Bar"));
 
          // segments are visible
-         assertEquals(api.getContainerApi(regionId).get(containerName).getObjectCount(), 3);
+         assertEquals(api.getContainerApi(regionId).get(containerName).getObjectCount(), Long.valueOf(3));
       }
    }
 
@@ -104,7 +104,7 @@ public class StaticLargeObjectApiLiveTest extends BaseSwiftApiLiveTest<SwiftApi>
          assertThat(resp.deleted()).isEqualTo(3);
          assertThat(resp.notFound()).isZero();
          assertThat(resp.errors()).isEmpty();
-         assertEquals(api.getContainerApi(regionId).get(containerName).getObjectCount(), 0);
+         assertEquals(api.getContainerApi(regionId).get(containerName).getObjectCount(), Long.valueOf(0));
       }
    }
 

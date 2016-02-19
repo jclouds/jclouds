@@ -69,7 +69,7 @@ public class BulkApiLiveTest extends BaseSwiftApiLiveTest<SwiftApi> {
                                                      .extractArchive(containerName, payload, "tar.gz");
          assertEquals(extractResponse.getCreated(), OBJECT_COUNT);
          assertTrue(extractResponse.getErrors().isEmpty());
-         assertEquals(api.getContainerApi(regionId).get(containerName).getObjectCount(), OBJECT_COUNT);
+         assertEquals(api.getContainerApi(regionId).get(containerName).getObjectCount(), Long.valueOf(OBJECT_COUNT));
 
          // repeat the command
          extractResponse = api.getBulkApi(regionId).extractArchive(containerName, payload, "tar.gz");
@@ -85,7 +85,7 @@ public class BulkApiLiveTest extends BaseSwiftApiLiveTest<SwiftApi> {
          assertEquals(deleteResponse.getDeleted(), OBJECT_COUNT);
          assertEquals(deleteResponse.getNotFound(), 0);
          assertTrue(deleteResponse.getErrors().isEmpty());
-         assertEquals(api.getContainerApi(regionId).get(containerName).getObjectCount(), 0);
+         assertEquals(api.getContainerApi(regionId).get(containerName).getObjectCount(), Long.valueOf(0));
       }
    }
 
