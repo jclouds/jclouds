@@ -10,8 +10,6 @@ Like any cloud provider, ProfitBricks has its own set of terms in cloud computin
 
 ## Getting Started
 
-Assuming that there's **atleast one** datacenter existing in your account, the provider needs only an *identity* (your ProfitBricks email), and *credentials* (password) to provision a `Node`, by using a ProfitBricks-provided ubuntu-12.04 image as a template. 
-
 ```java
 ComputeService compute = ContextBuilder.newBuilder( "profitbricks" )
 					.credentials( "profitbricks email", "password" )
