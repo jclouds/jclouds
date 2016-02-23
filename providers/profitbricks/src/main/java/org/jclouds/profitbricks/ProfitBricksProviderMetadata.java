@@ -16,6 +16,7 @@
  */
 package org.jclouds.profitbricks;
 
+import static org.jclouds.Constants.PROPERTY_ISO3166_CODES;
 import static org.jclouds.Constants.PROPERTY_SO_TIMEOUT;
 import static org.jclouds.compute.config.ComputeServiceProperties.TIMEOUT_NODE_RUNNING;
 import static org.jclouds.compute.config.ComputeServiceProperties.TIMEOUT_NODE_SUSPENDED;
@@ -64,6 +65,9 @@ public class ProfitBricksProviderMetadata extends BaseProviderMetadata {
       properties.setProperty(PROPERTY_REGION + ".de.zones", "de/fkb,de/fra");
       properties.setProperty(PROPERTY_REGION + ".us.zones", "us/las,us/lasdev");
       properties.setProperty(PROPERTY_ZONES, "de/fkb,de/fra,us/las,us/lasdev");
+      properties.setProperty(PROPERTY_ISO3166_CODES, "DE-BW,DE-HE,US_NV");
+      properties.setProperty(PROPERTY_REGION + ".de." + ISO3166_CODES, "DE-BW,DE-HE");
+      properties.setProperty(PROPERTY_REGION + ".us." + ISO3166_CODES, "US-NV");
       properties.setProperty(PROPERTY_ZONE + ".de/fkb." + ISO3166_CODES, "DE-BW");
       properties.setProperty(PROPERTY_ZONE + ".de/fra." + ISO3166_CODES, "DE-HE");
       properties.setProperty(PROPERTY_ZONE + ".us/las." + ISO3166_CODES, "US-NV");
