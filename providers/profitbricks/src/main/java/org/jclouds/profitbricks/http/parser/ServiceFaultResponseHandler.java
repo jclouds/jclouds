@@ -17,27 +17,40 @@
 package org.jclouds.profitbricks.http.parser;
 
 import org.jclouds.profitbricks.domain.ServiceFault;
+import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
 public class ServiceFaultResponseHandler extends BaseProfitBricksResponseHandler<ServiceFault> {
 
    private final ServiceFault.Builder builder;
+   private ServiceFault.Details.Builder detailsBuilder;
    private boolean done = false;
 
    ServiceFaultResponseHandler() {
       this.builder = ServiceFault.builder();
    }
+   
+   @Override
+   public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
+      if ("detail".equals(qName)) {
+         detailsBuilder = ServiceFault.Details.builder();
+      }
+   }
 
    @Override
    protected void setPropertyOnEndTag(String qName) {
-      if ("faultCode".equals(qName))
-         builder.faultCode(ServiceFault.FaultCode.fromValue(textToStringValue()));
+      if ("faultcode".equals(qName))
+         builder.faultCode(textToStringValue());
+      else if ("faultstring".equals(qName))
+         builder.faultString(textToStringValue());
+      else if ("faultCode".equals(qName))
+         detailsBuilder.faultCode(ServiceFault.Details.FaultCode.fromValue(textToStringValue()));
       else if ("httpCode".equals(qName))
-         builder.httpCode(textToIntValue());
+         detailsBuilder.httpCode(textToIntValue());
       else if ("message".equals(qName))
-         builder.message(textToStringValue());
+         detailsBuilder.message(textToStringValue());
       else if ("requestId".equals(qName))
-         builder.requestId(textToIntValue());
+         detailsBuilder.requestId(textToIntValue());
    }
 
    @Override
@@ -45,8 +58,10 @@ public class ServiceFaultResponseHandler extends BaseProfitBricksResponseHandler
       if (done)
          return;
       setPropertyOnEndTag(qName);
-      if ("detail".equals(qName))
+      if ("S:Fault".equals(qName))
          done = true;
+      if ("detail".equals(qName))
+         builder.details(detailsBuilder.build());
       clearTextBuffer();
    }
 

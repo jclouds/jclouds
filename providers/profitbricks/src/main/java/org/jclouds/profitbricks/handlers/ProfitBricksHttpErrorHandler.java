@@ -16,6 +16,7 @@
  */
 package org.jclouds.profitbricks.handlers;
 
+import static org.jclouds.http.HttpUtils.closeClientButKeepContentStream;
 import static org.jclouds.util.Closeables2.closeQuietly;
 
 import javax.inject.Singleton;
@@ -39,7 +40,15 @@ public class ProfitBricksHttpErrorHandler implements HttpErrorHandler {
 
    @Override
    public void handleError(final HttpCommand command, final HttpResponse response) {
-      Exception exception = null;
+   // it is important to always read fully and close streams
+      byte[] data = closeClientButKeepContentStream(response);
+      String message = data != null ? new String(data) : null;
+
+      Exception exception = message != null ? new HttpResponseException(command, response, message)
+            : new HttpResponseException(command, response);
+      message = message != null ? message : String.format("%s -> %s", command.getCurrentRequest().getRequestLine(),
+            response.getStatusLine());
+      
       try {
          switch (response.getStatusCode()) {
             case 400:
@@ -48,6 +57,9 @@ public class ProfitBricksHttpErrorHandler implements HttpErrorHandler {
                break;
             case 401:
                exception = new AuthorizationException("This request requires authentication.", exception);
+               break;
+            case 403:
+               exception = new AuthorizationException(response.getMessage(), exception);
                break;
             case 402:
             case 409:

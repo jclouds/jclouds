@@ -94,10 +94,13 @@ public class ResponseStatusFromPayloadHttpCommandExecutorService extends JavaUrl
          try {
             if (isSoapPayload(in)) {
                ServiceFault fault = faultHandler.parse(in);
-               if (fault != null)
-                  responseBuilder
-                          .statusCode(fault.httpCode())
-                          .message(fault.message());
+               if (fault != null) {
+                  if (fault.details() != null) {
+                     responseBuilder.statusCode(fault.details().httpCode()).message(fault.details().message());
+                  } else {
+                     responseBuilder.message(fault.faultString());
+                  }
+               }
             }
          } catch (Exception ex) {
             // ignore

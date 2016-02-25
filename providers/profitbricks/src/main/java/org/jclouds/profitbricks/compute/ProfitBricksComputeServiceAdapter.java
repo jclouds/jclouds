@@ -302,11 +302,16 @@ public class ProfitBricksComputeServiceAdapter implements ComputeServiceAdapter<
    public Provisionable getImage(String id) {
       // try search images
       logger.trace("<< searching for image with id=%s", id);
-      Image image = api.imageApi().getImage(id);
-      if (image != null) {
-         logger.trace(">> found image [%s].", image.name());
-         return image;
+      try {
+         Image image = api.imageApi().getImage(id);
+         if (image != null) {
+            logger.trace(">> found image [%s].", image.name());
+            return image;
+         }
+      } catch (Exception ex) {
+         logger.warn(ex, ">> unexpected error getting image. Trying to get as a snapshot...");
       }
+      
       // try search snapshots
       logger.trace("<< not found from images. searching for snapshot with id=%s", id);
       Snapshot snapshot = api.snapshotApi().getSnapshot(id);

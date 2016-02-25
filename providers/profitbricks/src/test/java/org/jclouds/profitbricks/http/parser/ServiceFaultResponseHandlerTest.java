@@ -21,6 +21,7 @@ import static org.testng.Assert.assertNotNull;
 
 import org.jclouds.http.functions.ParseSax;
 import org.jclouds.profitbricks.domain.ServiceFault;
+import org.jclouds.profitbricks.domain.ServiceFault.Details;
 import org.testng.annotations.Test;
 
 @Test(groups = "unit", testName = "ServiceFaultResponseHandlerTest")
@@ -37,12 +38,31 @@ public class ServiceFaultResponseHandlerTest extends BaseResponseHandlerTest<Ser
       ServiceFault actual = parser.parse(payloadFromResource("/fault-404.xml"));
       assertNotNull(actual, "Parsed content returned null");
 
-      ServiceFault expected = ServiceFault.builder()
-              .faultCode(ServiceFault.FaultCode.RESOURCE_NOT_FOUND)
-              .httpCode(404)
-              .message("The requested resource could not be found. Please refer to Request Id : 16370720. [VDC-6-404] The requested resource does not exist or already deleted by the users. ResourceId ﻿random-non-existing-id")
-              .requestId(16370720)
-              .build();
+      ServiceFault expected = ServiceFault
+            .builder()
+            .faultCode("S:Server")
+            .faultString(
+                  "The requested resource could not be found. Please refer to Request Id : 16370720. [VDC-6-404] The requested resource does not exist or already deleted by the users. ResourceId ﻿random-non-existing-id")
+            .details(
+                  Details
+                        .builder()
+                        .faultCode(ServiceFault.Details.FaultCode.RESOURCE_NOT_FOUND)
+                        .httpCode(404)
+                        .message(
+                              "The requested resource could not be found. Please refer to Request Id : 16370720. [VDC-6-404] The requested resource does not exist or already deleted by the users. ResourceId ﻿random-non-existing-id")
+                        .requestId(16370720).build()).build();
+
+      assertEquals(expected, actual);
+   }
+
+   @Test
+   public void testParseSoapServiceFaultWithoutDetails() {
+      ParseSax<ServiceFault> parser = createParser();
+      ServiceFault actual = parser.parse(payloadFromResource("/fault-500.xml"));
+      assertNotNull(actual, "Parsed content returned null");
+
+      ServiceFault expected = ServiceFault.builder().faultCode("S:Server").faultString("javax.ejb.EJBException")
+            .build();
 
       assertEquals(expected, actual);
    }
