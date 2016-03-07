@@ -62,9 +62,11 @@ public class StaticLargeObjectApiLiveTest extends BaseSwiftApiLiveTest<SwiftApi>
          ObjectApi objectApi = api.getObjectApi(regionId, containerName);
 
          String etag1s = objectApi.put(name + "/1", newByteSourcePayload(ByteSource.wrap(megOf1s)));
+         awaitConsistency();
          assertMegabyteAndETagMatches(regionId, name + "/1", etag1s);
 
          String etag2s = objectApi.put(name + "/2", newByteSourcePayload(ByteSource.wrap(megOf2s)));
+         awaitConsistency();
          assertMegabyteAndETagMatches(regionId, name + "/2", etag2s);
 
          List<Segment> segments = ImmutableList.<Segment> builder()
@@ -76,10 +78,13 @@ public class StaticLargeObjectApiLiveTest extends BaseSwiftApiLiveTest<SwiftApi>
                      .build())
                      .build();
 
+         awaitConsistency();
          String etagOfEtags = api.getStaticLargeObjectApi(regionId, containerName).replaceManifest(
                name, segments, ImmutableMap.of("myfoo", "Bar"));
 
          assertNotNull(etagOfEtags);
+
+         awaitConsistency();
 
          SwiftObject bigObject = api.getObjectApi(regionId, containerName).get(name);
          assertEquals(bigObject.getETag(), etagOfEtags);

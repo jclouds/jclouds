@@ -48,6 +48,13 @@ public abstract class BaseSwiftApiLiveTest<A extends SwiftApi> extends BaseApiLi
       provider = "openstack-swift";
    }
 
+   protected static final int AWAIT_CONSISTENCY_TIMEOUT_SECONDS = Integer.parseInt(System.getProperty(
+         "test.blobstore.await-consistency-timeout-seconds", "10"));
+
+   protected void awaitConsistency() {
+      Uninterruptibles.sleepUninterruptibly(AWAIT_CONSISTENCY_TIMEOUT_SECONDS, TimeUnit.SECONDS);
+   }
+
    @Override
    @BeforeClass(groups = "live")
    public void setup() {
