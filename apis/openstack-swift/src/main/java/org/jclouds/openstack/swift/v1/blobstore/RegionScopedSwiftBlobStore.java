@@ -578,7 +578,8 @@ public class RegionScopedSwiftBlobStore implements BlobStore {
    @Beta
    protected String putMultipartBlob(String container, Blob blob, PutOptions overrides) {
       List<MultipartPart> parts = Lists.newArrayList();
-      long contentLength = blob.getMetadata().getContentMetadata().getContentLength();
+      long contentLength = checkNotNull(blob.getMetadata().getContentMetadata().getContentLength(),
+            "must provide content-length to use multi-part upload");
       MultipartUploadSlicingAlgorithm algorithm = new MultipartUploadSlicingAlgorithm(
             getMinimumMultipartPartSize(), getMaximumMultipartPartSize(), getMaximumNumberOfParts());
       long partSize = algorithm.calculateChunkSize(contentLength);
