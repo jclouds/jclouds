@@ -17,15 +17,22 @@
 package org.jclouds.docker.features;
 
 import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertNotNull;
+import static org.testng.Assert.assertTrue;
+
+import java.util.List;
 
 import org.jclouds.docker.DockerApi;
 import org.jclouds.docker.config.DockerParserModule;
+import org.jclouds.docker.domain.ImageHistory;
 import org.jclouds.docker.internal.BaseDockerMockTest;
 import org.jclouds.docker.options.CreateImageOptions;
+import org.jclouds.docker.parse.HistoryParseTest;
 import org.jclouds.docker.parse.ImageParseTest;
 import org.jclouds.docker.parse.ImagesParseTest;
 import org.testng.annotations.Test;
 
+import com.google.common.collect.ImmutableList;
 import com.squareup.okhttp.mockwebserver.MockResponse;
 import com.squareup.okhttp.mockwebserver.MockWebServer;
 
@@ -93,4 +100,46 @@ public class ImageApiMockTest extends BaseDockerMockTest {
       }
    }
 
+   public void testGetHistory() throws Exception {
+      MockWebServer server = mockWebServer(
+            new MockResponse().setBody(payloadFromResource("/history.json")),
+            new MockResponse().setBody(payloadFromResource("/history-apiver22.json")),
+            new MockResponse().setResponseCode(404));
+      ImageApi api = api(DockerApi.class, server.getUrl("/").toString()).getImageApi();
+      try {
+         assertEquals(api.getHistory("ubuntu"), new HistoryParseTest().expected());
+         assertSent(server, "GET", "/images/ubuntu/history");
+
+         // Docker Engine 1.10 (REST API ver 22) doesn't return parent layer IDs
+         assertEquals(api.getHistory("fcf9d588ee9ab46c5a888e67f892fac66e6396eb195a743e50c0c5f9a4710e66"), 
+               ImmutableList.of(
+               ImageHistory.create("sha256:fcf9d588ee9ab46c5a888e67f892fac66e6396eb195a743e50c0c5f9a4710e66",
+                     1456304238,
+                     "",
+                     ImmutableList.of("registry.acme.com:8888/jboss-eap-test/eap-test:1.0-3"),
+                     188605160,
+                     ""),
+               ImageHistory.create("<missing>",
+                     1455838658,
+                     "",
+                     null,
+                     195019519,
+                     ""),
+               ImageHistory.create("<missing>",
+                     1455812978,
+                     "",
+                     null,
+                     203250948,
+                     "Imported from -")
+               ));
+         assertSent(server, "GET", "/images/fcf9d588ee9ab46c5a888e67f892fac66e6396eb195a743e50c0c5f9a4710e66/history");
+
+         // check also if  empty list is returned if the image is not found
+         List<ImageHistory> historyList = api.getHistory("missing-image");
+         assertNotNull(historyList);
+         assertTrue(historyList.isEmpty());
+      } finally {
+         server.shutdown();
+      }
+   }
 }

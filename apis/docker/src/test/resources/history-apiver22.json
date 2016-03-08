@@ -1,0 +1,28 @@
+[
+    {
+        "Comment": "",
+        "Created": 1456304238,
+        "CreatedBy": "",
+        "Id": "sha256:fcf9d588ee9ab46c5a888e67f892fac66e6396eb195a743e50c0c5f9a4710e66",
+        "Size": 188605160,
+        "Tags": [
+            "registry.acme.com:8888/jboss-eap-test/eap-test:1.0-3"
+        ]
+    },
+    {
+        "Comment": "",
+        "Created": 1455838658,
+        "CreatedBy": "",
+        "Id": "<missing>",
+        "Size": 195019519,
+        "Tags": null
+    },
+    {
+        "Comment": "Imported from -",
+        "Created": 1455812978,
+        "CreatedBy": "",
+        "Id": "<missing>",
+        "Size": 203250948,
+        "Tags": null
+    }
+]

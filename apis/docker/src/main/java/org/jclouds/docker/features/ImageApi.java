@@ -32,6 +32,7 @@ import javax.ws.rs.core.MediaType;
 import org.jclouds.Fallbacks.EmptyListOnNotFoundOr404;
 import org.jclouds.Fallbacks.NullOnNotFoundOr404;
 import org.jclouds.docker.domain.Image;
+import org.jclouds.docker.domain.ImageHistory;
 import org.jclouds.docker.domain.ImageSummary;
 import org.jclouds.docker.options.CreateImageOptions;
 import org.jclouds.docker.options.DeleteImageOptions;
@@ -123,4 +124,16 @@ public interface ImageApi {
    @Path("/images/{name}/tag")
    void tagImage(@PathParam("name") String name, @QueryParam("repo") String repoName,
          @QueryParam("tag") String tag, @QueryParam("force") boolean force);
+
+   /**
+    * Return the history of the image with given {@code name}.
+    *
+    * @param name
+    *           the name of the image for which the history is retrieved
+    */
+   @Named("image:history")
+   @GET
+   @Path("/images/{name}/history")
+   @Fallback(EmptyListOnNotFoundOr404.class)
+   List<ImageHistory> getHistory(@PathParam("name") String name);
 }
