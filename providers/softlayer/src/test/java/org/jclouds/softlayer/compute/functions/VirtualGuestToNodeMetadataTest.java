@@ -19,6 +19,7 @@ package org.jclouds.softlayer.compute.functions;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertTrue;
+
 import java.util.Set;
 
 import org.jclouds.compute.domain.NodeMetadata;
@@ -29,6 +30,7 @@ import org.jclouds.domain.LocationBuilder;
 import org.jclouds.domain.LocationScope;
 import org.jclouds.softlayer.domain.Datacenter;
 import org.jclouds.softlayer.domain.OperatingSystem;
+import org.jclouds.softlayer.domain.Password;
 import org.jclouds.softlayer.domain.PowerState;
 import org.jclouds.softlayer.domain.SoftwareDescription;
 import org.jclouds.softlayer.domain.SoftwareLicense;
@@ -39,6 +41,7 @@ import com.google.common.base.Supplier;
 import com.google.common.base.Suppliers;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
+import com.google.common.collect.Sets;
 import com.google.inject.Guice;
 
 /**
@@ -100,4 +103,56 @@ public class VirtualGuestToNodeMetadataTest {
               .build();
    }
 
+   @Test(expectedExceptions = { IllegalStateException.class })
+   public void testGetBestPasswordNone() {
+      Set<Password> passwords = Sets.newLinkedHashSet();
+      VirtualGuestToNodeMetadata f = new VirtualGuestToNodeMetadata(locationSupplier, namingConvention, 
+         virtualGuestToImage, virtualGuestToHardware);
+      f.getBestPassword(passwords, null);
+   }
+   
+   @Test
+   public void testGetBestPasswordOneRoot() {
+      Set<Password> passwords = Sets.newLinkedHashSet();
+      passwords.add(new Password(1, "root", "pass"));
+      VirtualGuestToNodeMetadata f = new VirtualGuestToNodeMetadata(locationSupplier, namingConvention, 
+         virtualGuestToImage, virtualGuestToHardware);
+      Password best = f.getBestPassword(passwords, null);
+      assertEquals(best.getUsername(), "root");
+   }
+   
+   @Test
+   public void testGetBestPasswordOneNonRoot() {
+      Set<Password> passwords = Sets.newLinkedHashSet();
+      passwords.add(new Password(1, "nonroot", "word"));
+      VirtualGuestToNodeMetadata f = new VirtualGuestToNodeMetadata(locationSupplier, namingConvention, 
+         virtualGuestToImage, virtualGuestToHardware);
+      Password best = f.getBestPassword(passwords, null);
+      assertEquals(best.getUsername(), "nonroot");
+   }
+   
+   @Test
+   public void testGetBestPasswordTwoDifferent() {
+      Set<Password> passwords = Sets.newLinkedHashSet();
+      passwords.add(new Password(1, "nonroot", "word"));
+      passwords.add(new Password(2, "root", "pass"));
+      VirtualGuestToNodeMetadata f = new VirtualGuestToNodeMetadata(locationSupplier, namingConvention, 
+         virtualGuestToImage, virtualGuestToHardware);
+      Password best = f.getBestPassword(passwords, null);
+      assertEquals(best.getUsername(), "root");
+   }
+   
+   @Test
+   public void testGetBestPasswordTwoSame() {
+      Set<Password> passwords = Sets.newLinkedHashSet();
+      passwords.add(new Password(1, "root", "word"));
+      passwords.add(new Password(2, "root", "pass"));
+      VirtualGuestToNodeMetadata f = new VirtualGuestToNodeMetadata(locationSupplier, namingConvention, 
+         virtualGuestToImage, virtualGuestToHardware);
+      Password best = f.getBestPassword(passwords, null);
+      assertEquals(best.getUsername(), "root");
+      // should take the first
+      assertEquals(best.getPassword(), "word");
+   }
+   
 }
