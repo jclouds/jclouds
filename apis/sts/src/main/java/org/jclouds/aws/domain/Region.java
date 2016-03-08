@@ -110,7 +110,7 @@ public class Region {
     */
    public static final String AP_NORTHEAST_1 = "ap-northeast-1";
 
-   public static final Set<String> DEFAULT_S3 = ImmutableSet.of(US_STANDARD, US_WEST_1, US_WEST_2, EU_WEST_1, SA_EAST_1,
+   public static final Set<String> DEFAULT_S3 = ImmutableSet.of(US_STANDARD, US_WEST_1, US_WEST_2, EU_WEST_1, EU_CENTRAL_1, SA_EAST_1,
          AP_SOUTHEAST_1, AP_SOUTHEAST_2, AP_NORTHEAST_1);
 
    public static final Set<String> DEFAULT_REGIONS = ImmutableSet.of(US_EAST_1, US_WEST_1, US_WEST_2, SA_EAST_1,
@@ -121,9 +121,8 @@ public class Region {
       Properties properties = regionProperties();
       properties.setProperty(PROPERTY_REGIONS, Joiner.on(',').join(DEFAULT_S3));
       // note that due to US_STANDARD the codes include US instead of US-VA
-      properties.setProperty(PROPERTY_ISO3166_CODES, "US,US-CA,US-OR,BR-SP,IE,SG,AU-NSW,JP-13");
+      properties.setProperty(PROPERTY_ISO3166_CODES, "US,US-CA,US-OR,BR-SP,IE,DE-HE,SG,AU-NSW,JP-13");
       properties.setProperty(PROPERTY_REGION + "." + US_STANDARD + "." + ISO3166_CODES, "US");
-      properties.setProperty(PROPERTY_REGION + "." + EU_WEST_1 + "." + ISO3166_CODES, "IE");
       return properties;
    }
 

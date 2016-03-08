@@ -20,6 +20,7 @@ import static org.jclouds.Constants.PROPERTY_ENDPOINT;
 import static org.jclouds.aws.domain.Region.AP_NORTHEAST_1;
 import static org.jclouds.aws.domain.Region.AP_SOUTHEAST_1;
 import static org.jclouds.aws.domain.Region.AP_SOUTHEAST_2;
+import static org.jclouds.aws.domain.Region.EU_CENTRAL_1;
 import static org.jclouds.aws.domain.Region.EU_WEST_1;
 import static org.jclouds.aws.domain.Region.SA_EAST_1;
 import static org.jclouds.aws.domain.Region.US_STANDARD;
@@ -69,6 +70,8 @@ public class AWSS3ProviderMetadata extends BaseProviderMetadata {
       properties.setProperty(PROPERTY_REGION + "." + US_WEST_1 + "." + ENDPOINT, "https://s3-us-west-1.amazonaws.com");
       properties.setProperty(PROPERTY_REGION + "." + US_WEST_2 + "." + ENDPOINT, "https://s3-us-west-2.amazonaws.com");
       properties.setProperty(PROPERTY_REGION + "." + SA_EAST_1 + "." + ENDPOINT, "https://s3-sa-east-1.amazonaws.com");
+      properties.setProperty(PROPERTY_REGION + "." + EU_CENTRAL_1 + "." + ENDPOINT,
+            "https://s3-eu-central-1.amazonaws.com");
       properties.setProperty(PROPERTY_REGION + "." + EU_WEST_1 + "." + ENDPOINT, "https://s3-eu-west-1.amazonaws.com");
       properties.setProperty(PROPERTY_REGION + "." + AP_SOUTHEAST_1 + "." + ENDPOINT,
             "https://s3-ap-southeast-1.amazonaws.com");
@@ -88,7 +91,7 @@ public class AWSS3ProviderMetadata extends BaseProviderMetadata {
          .homepage(URI.create("http://aws.amazon.com/s3"))
          .console(URI.create("https://console.aws.amazon.com/s3/home"))
          .linkedServices("aws-ec2", "aws-elb", "aws-cloudwatch", "aws-s3", "aws-simpledb")
-         .iso3166Codes("US", "US-CA", "US-OR", "BR-SP", "IE", "SG", "AU-NSW", "JP-13")
+         .iso3166Codes("US", "US-CA", "US-OR", "BR-SP", "IE", "DE-HE", "SG", "AU-NSW", "JP-13")
          .defaultProperties(AWSS3ProviderMetadata.defaultProperties());
       }
 
