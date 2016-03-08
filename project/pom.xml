@@ -223,6 +223,7 @@
     <maven.site.url.base>gitsite:git@github.com/jclouds/jclouds-maven-site.git</maven.site.url.base>
     <clojure.version>1.3.0</clojure.version>
     <guava.version>16.0.1</guava.version>
+    <guava.osgi.import>com.google.common.*;version="[16.0.1,20.0.0)"</guava.osgi.import>
     <guice.version>3.0</guice.version>
     <okhttp.version>2.2.0</okhttp.version>
     <surefire.version>2.17</surefire.version>
@@ -819,7 +820,7 @@
             <Bundle-Activator>${jclouds.osgi.activator}</Bundle-Activator>
             <Bundle-SymbolicName>${project.artifactId}</Bundle-SymbolicName>
             <Export-Package>${jclouds.osgi.export}</Export-Package>
-            <Import-Package>${jclouds.osgi.import}</Import-Package>
+            <Import-Package>${guava.osgi.import},${jclouds.osgi.import}</Import-Package>
             <DynamicImport-Package>${jclouds.osgi.dynamic}</DynamicImport-Package>
             <Fragment-Host>${jclouds.osgi.fragment}</Fragment-Host>
           </instructions>
