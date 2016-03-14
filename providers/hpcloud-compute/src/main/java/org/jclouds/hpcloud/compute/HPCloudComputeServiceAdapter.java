@@ -23,6 +23,7 @@ import javax.inject.Inject;
 import org.jclouds.location.Region;
 import org.jclouds.openstack.nova.v2_0.NovaApi;
 import org.jclouds.openstack.nova.v2_0.compute.NovaComputeServiceAdapter;
+import org.jclouds.openstack.nova.v2_0.compute.functions.CleanupServer;
 import org.jclouds.openstack.nova.v2_0.compute.functions.RemoveFloatingIpFromNodeAndDeallocate;
 import org.jclouds.openstack.nova.v2_0.domain.KeyPair;
 import org.jclouds.openstack.nova.v2_0.domain.regionscoped.ImageInRegion;
@@ -37,8 +38,9 @@ public class HPCloudComputeServiceAdapter extends NovaComputeServiceAdapter {
 
    @Inject
    public HPCloudComputeServiceAdapter(NovaApi novaApi, @Region Supplier<Set<String>> regionIds,
-            RemoveFloatingIpFromNodeAndDeallocate removeFloatingIpFromNodeAndDeallocate, LoadingCache<RegionAndName, KeyPair> keyPairCache) {
-      super(novaApi, regionIds, removeFloatingIpFromNodeAndDeallocate, keyPairCache);
+                                       RemoveFloatingIpFromNodeAndDeallocate removeFloatingIpFromNodeAndDeallocate,
+                                       LoadingCache<RegionAndName, KeyPair> keyPairCache, CleanupServer cleanupServer) {
+      super(novaApi, regionIds, removeFloatingIpFromNodeAndDeallocate, keyPairCache, cleanupServer);
    }
 
    @Override
