@@ -131,6 +131,11 @@ public final class OkHttpCommandExecutorService extends BaseHttpCommandExecutorS
          }
 
          @Override
+         public long contentLength() throws IOException {
+            return payload.getContentMetadata().getContentLength();
+         }
+
+         @Override
          public MediaType contentType() {
             return MediaType.parse(payload.getContentMetadata().getContentType());
          }

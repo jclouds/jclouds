@@ -21,6 +21,7 @@ import static org.jclouds.Constants.PROPERTY_MAX_CONNECTIONS_PER_HOST;
 import static org.jclouds.Constants.PROPERTY_USER_THREADS;
 import static org.jclouds.util.Closeables2.closeQuietly;
 import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertNotNull;
 
 import java.io.Closeable;
 import java.util.List;
@@ -28,6 +29,7 @@ import java.util.Properties;
 
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
 
 import org.jclouds.http.BaseHttpCommandExecutorServiceIntegrationTest;
 import org.jclouds.http.HttpResponseException;
@@ -70,6 +72,7 @@ public class OkHttpCommandExecutorServiceTest extends BaseHttpCommandExecutorSer
    private interface PatchApi extends Closeable {
       @PATCH
       @Path("/objects/{id}")
+      @Produces("text/plain")
       String patch(@PathParam("id") String id, @BinderParam(BindToStringPayload.class) String body);
 
       @PATCH
@@ -88,6 +91,11 @@ public class OkHttpCommandExecutorServiceTest extends BaseHttpCommandExecutorSer
          assertEquals(request.getMethod(), "PATCH");
          assertEquals(new String(request.getBody(), Charsets.UTF_8), "foo");
          assertEquals(result, "fooPATCH");
+         // Verify content headers are sent
+         assertNotNull(request.getHeader("Content-Type"));
+         assertNotNull(request.getHeader("Content-Length"));
+         assertEquals(request.getHeader("Content-Type"), "text/plain");
+         assertEquals(Integer.valueOf(request.getHeader("Content-Length")).intValue(), "foo".getBytes().length);
       } finally {
          closeQuietly(api);
          server.shutdown();
