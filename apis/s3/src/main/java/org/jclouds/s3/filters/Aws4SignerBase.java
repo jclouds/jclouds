@@ -76,6 +76,8 @@ public abstract class Aws4SignerBase {
    // A-Z, a-z, 0-9, hyphen (-), underscore (_), period (.), and tilde (~).
    private static final Escaper AWS_URL_PARAMETER_ESCAPER;
 
+   private static final Escaper AWS_PATH_ESCAPER = new PercentEscaper("/-_.~", false);
+
    static {
       timestampFormat = new SimpleDateFormat("yyyyMMdd'T'HHmmss'Z'");
       timestampFormat.setTimeZone(GMT);
@@ -384,7 +386,7 @@ public abstract class Aws4SignerBase {
       canonicalRequest.append(method).append("\n");
 
       // CanonicalURI + '\n' +
-      canonicalRequest.append(endpoint.getPath()).append("\n");
+      canonicalRequest.append(AWS_PATH_ESCAPER.escape(endpoint.getPath())).append("\n");
 
       // CanonicalQueryString + '\n' +
       if (endpoint.getQuery() != null) {
