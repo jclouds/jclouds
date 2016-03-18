@@ -32,7 +32,7 @@ public class AWSS3ServiceIntegrationLiveTest extends S3ServiceIntegrationLiveTes
    
    @Override
    protected Set<String> getIso3166Codes() {
-      return ImmutableSet.<String> of("US", "US-CA", "US-OR", "BR-SP", "IE", "SG", "AU-NSW", "JP-13");
+      return ImmutableSet.<String> of("US", "US-CA", "US-OR", "BR-SP", "DE-HE", "IE", "SG", "AU-NSW", "JP-13");
    }
 
    // Amazon returns null instead of us-standard in some situations
