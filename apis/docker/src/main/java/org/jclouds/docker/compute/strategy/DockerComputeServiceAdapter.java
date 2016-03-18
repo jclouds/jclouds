@@ -109,7 +109,7 @@ public class DockerComputeServiceAdapter implements
 
          HostConfig.Builder hostConfigBuilder = HostConfig.builder()
                  .publishAllPorts(true)
-                 .privileged(true);
+                 .privileged( templateOptions.getPrivileged() );
 
          if (!templateOptions.getPortBindings().isEmpty()) {
             Map<String, List<Map<String, String>>> portBindings = Maps.newHashMap();
@@ -160,7 +160,7 @@ public class DockerComputeServiceAdapter implements
 
       // build once more after setting inboundPorts
       containerConfig = containerConfigBuilder.build();
-      
+
       logger.debug(">> creating new container with containerConfig(%s)", containerConfig);
       Container container = api.getContainerApi().createContainer(name, containerConfig);
       logger.trace("<< container(%s)", container.id());

@@ -37,7 +37,7 @@ import com.google.common.collect.ImmutableMap;
  * Contains options supported by the
  * {@link org.jclouds.compute.ComputeService#createNodesInGroup(String, int, TemplateOptions)
  * createNodes} operation on the <em>docker</em> provider.
- * 
+ *
  * <h2>Usage</h2>
  *
  * The recommended way to instantiate a DockerTemplateOptions object is to
@@ -51,7 +51,7 @@ import com.google.common.collect.ImmutableMap;
  * templateBuilder.options(inboundPorts(22, 80, 8080, 443));
  * Set<? extends NodeMetadata> set = api.createNodesInGroup(tag, 2, templateBuilder.build());}
  * </pre>
- * 
+ *
  * <h2>Advanced Usage</h2>
  * <p>
  * In addition to basic configuration through its methods, this class also
@@ -66,7 +66,7 @@ import com.google.common.collect.ImmutableMap;
  * Note: The {@code image} property in the provided {@link Config.Builder} is rewritten by a placeholder value.
  * The real value is configured by ComputeServiceAdapter.
  * </p>
- * 
+ *
  * <pre>
  * {@code import static org.jclouds.docker.compute.options.DockerTemplateOptions.Builder.*;
  *
@@ -94,9 +94,10 @@ public class DockerTemplateOptions extends TemplateOptions implements Cloneable 
    protected Map<Integer, Integer> portBindings = ImmutableMap.of();
    protected String networkMode;
    protected Map<String, String> extraHosts = ImmutableMap.of();
+   protected boolean privileged;
 
    protected Config.Builder configBuilder;
-   
+
    @Override
    public DockerTemplateOptions clone() {
       DockerTemplateOptions options = new DockerTemplateOptions();
@@ -128,6 +129,8 @@ public class DockerTemplateOptions extends TemplateOptions implements Cloneable 
          if (!extraHosts.isEmpty()) {
             eTo.extraHosts(extraHosts);
          }
+         eTo.privileged(privileged);
+
          eTo.configBuilder(configBuilder);
       }
    }
@@ -149,6 +152,7 @@ public class DockerTemplateOptions extends TemplateOptions implements Cloneable 
               equal(this.env, that.env) &&
               equal(this.portBindings, that.portBindings) &&
               equal(this.extraHosts, that.extraHosts) &&
+              equal(this.privileged, that.privileged) &&
               buildersEqual(this.configBuilder, that.configBuilder);
    }
 
@@ -159,7 +163,7 @@ public class DockerTemplateOptions extends TemplateOptions implements Cloneable 
    private boolean buildersEqual(Config.Builder b1, Config.Builder b2) {
       return b1 == b2 || (b1 != null && b2 != null && b1.build().equals(b2.build()));
    }
-   
+
    @Override
    public int hashCode() {
       return Objects.hashCode(super.hashCode(), volumes, hostname, dns, memory, entrypoint, commands, cpuShares, env,
@@ -282,6 +286,18 @@ public class DockerTemplateOptions extends TemplateOptions implements Cloneable 
    }
 
    /**
+    * By default, Docker containers are unprivileged and cannot execute privileged operations or access certain
+    * host devices.
+    *
+    * @param privileged Whether the container should run in privileged mode or not
+    * @return this instance
+    */
+   public DockerTemplateOptions privileged(boolean privileged) {
+      this.privileged = privileged;
+      return this;
+   }
+
+   /**
     * This method sets Config.Builder configuration object, which can be used as
     * a replacement for all the other settings from this class. Some values in
     * the provided Config.Builder instance (the image name for instance) can be
@@ -292,7 +308,7 @@ public class DockerTemplateOptions extends TemplateOptions implements Cloneable 
     *           method!
     */
    public DockerTemplateOptions configBuilder(Config.Builder configBuilder) {
-      this.configBuilder = configBuilder != null 
+      this.configBuilder = configBuilder != null
             ? Config.builder().fromConfig(configBuilder.image(NO_IMAGE).build())
             : null;
       return this;
@@ -319,6 +335,8 @@ public class DockerTemplateOptions extends TemplateOptions implements Cloneable 
    public String getNetworkMode() { return networkMode; }
 
    public Map<String, String> getExtraHosts() { return extraHosts; }
+
+   public boolean getPrivileged() { return privileged; }
 
    public Config.Builder getConfigBuilder() { return configBuilder; }
 
@@ -444,11 +462,19 @@ public class DockerTemplateOptions extends TemplateOptions implements Cloneable 
          return options.extraHosts(extraHosts);
       }
 
+      /**
+       * @see DockerTemplateOptions#privileged(boolean)
+       */
+      public static DockerTemplateOptions privileged(boolean privileged) {
+         DockerTemplateOptions options = new DockerTemplateOptions();
+         return options.privileged(privileged);
+      }
+
       public static DockerTemplateOptions configBuilder(Config.Builder configBuilder) {
          DockerTemplateOptions options = new DockerTemplateOptions();
          return options.configBuilder(configBuilder);
       }
-      
+
       /**
        * @see TemplateOptions#inboundPorts(int...)
        */

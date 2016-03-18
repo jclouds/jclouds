@@ -95,6 +95,18 @@ public class DockerTemplateOptionsTest {
    }
 
    @Test
+   public void testPrivilegedDefaultFalse() {
+      TemplateOptions options = DockerTemplateOptions.Builder.memory(2);
+      assertEquals(options.as(DockerTemplateOptions.class).getPrivileged(), false);
+   }
+
+   @Test
+   public void testPrivileged() {
+      TemplateOptions options = DockerTemplateOptions.Builder.privileged(true);
+      assertEquals(options.as(DockerTemplateOptions.class).getPrivileged(), true);
+   }
+
+   @Test
    public void testConfigBuilder() {
       Builder builder = Config.builder().memory(1024)
             .cpuShares(100).cmd(ImmutableList.<String> of("/opt/jboss/wildfly/bin/standalone.sh", "-b", "0.0.0.0"))
