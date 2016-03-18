@@ -21,6 +21,8 @@ import com.google.common.base.Strings;
 import com.google.common.base.Supplier;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSortedMap;
+import com.google.common.hash.HashCode;
+import com.google.common.io.BaseEncoding;
 import com.google.common.net.HttpHeaders;
 import com.google.inject.Inject;
 import org.jclouds.aws.domain.SessionCredentials;
@@ -69,6 +71,8 @@ public class Aws4SignerForAuthorizationHeader extends Aws4SignerBase {
       checkNotNull(request, "request is not ready to sign");
       checkNotNull(request.getEndpoint(), "request is not ready to sign, request.endpoint not present.");
 
+      Payload payload = request.getPayload();
+
       // get host from request endpoint.
       String host = request.getEndpoint().getHost();
 
@@ -82,7 +86,6 @@ public class Aws4SignerForAuthorizationHeader extends Aws4SignerBase {
 
       HttpRequest.Builder<?> requestBuilder = request.toBuilder() //
             .removeHeader(AUTHORIZATION) // remove Authorization
-            .removeHeader(CONTENT_MD5) // aws s3 not allowed Content-MD5, use specs x-amz-content-sha256
             .removeHeader(DATE); // remove date
 
       ImmutableMap.Builder<String, String> signedHeadersBuilder = ImmutableSortedMap.<String, String>naturalOrder();
@@ -100,6 +103,16 @@ public class Aws4SignerForAuthorizationHeader extends Aws4SignerBase {
       if (!Strings.isNullOrEmpty(contentLength)) {
          requestBuilder.replaceHeader(HttpHeaders.CONTENT_LENGTH, contentLength);
          signedHeadersBuilder.put(HttpHeaders.CONTENT_LENGTH.toLowerCase(), contentLength);
+      }
+
+      // Content MD5
+      if (payload != null) {
+         HashCode md5 = payload.getContentMetadata().getContentMD5AsHashCode();
+         if (md5 != null) {
+            String contentMD5 = BaseEncoding.base64().encode(md5.asBytes());
+            requestBuilder.replaceHeader(CONTENT_MD5, contentMD5);
+            signedHeadersBuilder.put(CONTENT_MD5.toLowerCase(), contentMD5);
+         }
       }
 
       // host

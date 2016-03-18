@@ -59,6 +59,8 @@ import com.google.common.base.Strings;
 import com.google.common.base.Supplier;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSortedMap;
+import com.google.common.hash.HashCode;
+import com.google.common.io.BaseEncoding;
 import com.google.common.io.ByteProcessor;
 import com.google.common.net.HttpHeaders;
 import com.google.inject.Inject;
@@ -104,7 +106,6 @@ public class Aws4SignerForChunkedUpload extends Aws4SignerBase {
 
       HttpRequest.Builder<?> requestBuilder = request.toBuilder() //
             .removeHeader(AUTHORIZATION) // remove Authorization
-            .removeHeader(CONTENT_MD5) // aws s3 not allowed Content-MD5, use aws specs x-amz-content-sha256
             .removeHeader(DATE) // remove Date
             .removeHeader(CONTENT_LENGTH); // remove Content-Length
 
@@ -124,6 +125,16 @@ public class Aws4SignerForChunkedUpload extends Aws4SignerBase {
       long totalLength = calculateChunkedContentLength(contentLength, userDataBlockSize);
       requestBuilder.replaceHeader(CONTENT_LENGTH, Long.toString(totalLength));
       signedHeadersBuilder.put(CONTENT_LENGTH.toLowerCase(), Long.toString(totalLength));
+
+      // Content MD5
+      if (payload != null) {
+         HashCode md5 = payload.getContentMetadata().getContentMD5AsHashCode();
+         if (md5 != null) {
+            String contentMD5 = BaseEncoding.base64().encode(md5.asBytes());
+            requestBuilder.replaceHeader(CONTENT_MD5, contentMD5);
+            signedHeadersBuilder.put(CONTENT_MD5.toLowerCase(), contentMD5);
+         }
+      }
 
       // Content Type
       // content-type is not a required signing param. However, examples use this, so we include it to ease testing.
