@@ -21,7 +21,7 @@ import static org.jclouds.aws.domain.Region.US_STANDARD;
 import javax.inject.Singleton;
 
 import org.jclouds.aws.s3.AWSS3Client;
-import org.jclouds.aws.s3.filters.AWSRequestAuthorizeSignature;
+import org.jclouds.aws.s3.filters.AWSRequestAuthorizeSignatureV4;
 import org.jclouds.aws.s3.predicates.validators.AWSS3BucketNameValidator;
 import org.jclouds.location.Region;
 import org.jclouds.rest.ConfiguresHttpApi;
@@ -58,7 +58,7 @@ public class AWSS3HttpApiModule extends S3HttpApiModule<AWSS3Client> {
 
    @Override
    protected void bindRequestSigner() {
-      bind(RequestAuthorizeSignature.class).to(AWSRequestAuthorizeSignature.class).in(Scopes.SINGLETON);
+      bind(RequestAuthorizeSignature.class).to(AWSRequestAuthorizeSignatureV4.class).in(Scopes.SINGLETON);
    }
 
    @Singleton

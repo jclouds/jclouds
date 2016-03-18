@@ -19,16 +19,19 @@ package org.jclouds.aws.s3.blobstore;
 import static org.testng.Assert.assertEquals;
 
 import org.jclouds.aws.s3.config.AWSS3HttpApiModule;
+import org.jclouds.aws.s3.filters.AWSRequestAuthorizeSignature;
 import org.jclouds.blobstore.BlobStore;
 import org.jclouds.blobstore.domain.Blob;
 import org.jclouds.date.TimeStamp;
 import org.jclouds.http.HttpRequest;
 import org.jclouds.rest.ConfiguresHttpApi;
 import org.jclouds.s3.blobstore.S3BlobSignerExpectTest;
+import org.jclouds.s3.filters.RequestAuthorizeSignature;
 import org.testng.annotations.Test;
 
 import com.google.common.base.Supplier;
 import com.google.inject.Module;
+import com.google.inject.Scopes;
 
 @Test(groups = "unit", testName = "AWSS3BlobSignerExpectTest")
 public class AWSS3BlobSignerExpectTest extends S3BlobSignerExpectTest {
@@ -130,6 +133,12 @@ public class AWSS3BlobSignerExpectTest extends S3BlobSignerExpectTest {
       @TimeStamp
       protected String provideTimeStamp(@TimeStamp Supplier<String> cache) {
          return DATE;
+      }
+
+      // subclass expects v2 signatures
+      @Override
+      protected void bindRequestSigner() {
+         bind(RequestAuthorizeSignature.class).to(AWSRequestAuthorizeSignature.class).in(Scopes.SINGLETON);
       }
    }
 }

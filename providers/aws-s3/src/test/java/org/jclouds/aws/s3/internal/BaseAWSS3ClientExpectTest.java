@@ -19,13 +19,16 @@ package org.jclouds.aws.s3.internal;
 import org.jclouds.aws.s3.AWSS3Client;
 import org.jclouds.aws.s3.AWSS3ProviderMetadata;
 import org.jclouds.aws.s3.config.AWSS3HttpApiModule;
+import org.jclouds.aws.s3.filters.AWSRequestAuthorizeSignature;
 import org.jclouds.date.TimeStamp;
 import org.jclouds.providers.ProviderMetadata;
 import org.jclouds.rest.ConfiguresHttpApi;
 import org.jclouds.rest.internal.BaseRestApiExpectTest;
+import org.jclouds.s3.filters.RequestAuthorizeSignature;
 
 import com.google.common.base.Supplier;
 import com.google.inject.Module;
+import com.google.inject.Scopes;
 
 /**
  * Base class for writing Expect tests for AWS-S3
@@ -49,6 +52,12 @@ public class BaseAWSS3ClientExpectTest extends BaseRestApiExpectTest<AWSS3Client
       @Override
       protected String provideTimeStamp(@TimeStamp Supplier<String> cache) {
          return CONSTANT_DATE;
+      }
+
+      // subclass expects v2 signatures
+      @Override
+      protected void bindRequestSigner() {
+         bind(RequestAuthorizeSignature.class).to(AWSRequestAuthorizeSignature.class).in(Scopes.SINGLETON);
       }
    }
 
