@@ -106,13 +106,16 @@ public class Aws4SignerForAuthorizationHeader extends Aws4SignerBase {
       }
 
       // Content MD5
+      String contentMD5 = request.getFirstHeaderOrNull(CONTENT_MD5);
       if (payload != null) {
          HashCode md5 = payload.getContentMetadata().getContentMD5AsHashCode();
          if (md5 != null) {
-            String contentMD5 = BaseEncoding.base64().encode(md5.asBytes());
-            requestBuilder.replaceHeader(CONTENT_MD5, contentMD5);
-            signedHeadersBuilder.put(CONTENT_MD5.toLowerCase(), contentMD5);
+            contentMD5 = BaseEncoding.base64().encode(md5.asBytes());
          }
+      }
+      if (contentMD5 != null) {
+         requestBuilder.replaceHeader(CONTENT_MD5, contentMD5);
+         signedHeadersBuilder.put(CONTENT_MD5.toLowerCase(), contentMD5);
       }
 
       // host
