@@ -112,8 +112,13 @@ public class Aws4SignerForChunkedUpload extends Aws4SignerBase {
       ImmutableMap.Builder<String, String> signedHeadersBuilder = ImmutableSortedMap.<String, String>naturalOrder();
 
       // content-encoding
-      requestBuilder.replaceHeader(HttpHeaders.CONTENT_ENCODING, CONTENT_ENCODING_HEADER_AWS_CHUNKED);
-      signedHeadersBuilder.put(HttpHeaders.CONTENT_ENCODING.toLowerCase(), CONTENT_ENCODING_HEADER_AWS_CHUNKED);
+      String contentEncoding = CONTENT_ENCODING_HEADER_AWS_CHUNKED;
+      String originalContentEncoding = payload.getContentMetadata().getContentEncoding();
+      if (originalContentEncoding != null) {
+         contentEncoding += "," + originalContentEncoding;
+      }
+      requestBuilder.replaceHeader(HttpHeaders.CONTENT_ENCODING, contentEncoding);
+      signedHeadersBuilder.put(HttpHeaders.CONTENT_ENCODING.toLowerCase(), contentEncoding);
 
 
       // x-amz-decoded-content-length
@@ -213,8 +218,9 @@ public class Aws4SignerForChunkedUpload extends Aws4SignerBase {
       // replace request payload with chunked upload payload
       ChunkedUploadPayload chunkedPayload = new ChunkedUploadPayload(payload, userDataBlockSize, timestamp,
             credentialScope, hmacSHA256, signature);
+      chunkedPayload.getContentMetadata().setContentEncoding(null);
 
-      return request.toBuilder()
+      return requestBuilder
             .replaceHeader(HttpHeaders.AUTHORIZATION, authorization.toString())
             .payload(chunkedPayload)
             .build();
