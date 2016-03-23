@@ -265,7 +265,7 @@ public class ObjectApiMockTest extends BaseGoogleCloudStorageApiMockTest {
       String testPayload = "this is a test payload for upload!";
       p.setPayload(testPayload.getBytes());
 
-      ObjectTemplate template = new ObjectTemplate().name("file_name").size((long) 1000).crc32c("crc32c").contentType(MediaType.ANY_TEXT_TYPE);
+      ObjectTemplate template = new ObjectTemplate().name("file_name").size((long) testPayload.length()).crc32c("crc32c").contentType(MediaType.ANY_TEXT_TYPE);
 
       assertEquals(objectApi().multipartUpload("bucket_name", template, p.getPayload()),
             new ParseGoogleCloudStorageObject().expected());
