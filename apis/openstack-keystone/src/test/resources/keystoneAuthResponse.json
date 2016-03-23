@@ -180,8 +180,8 @@
                 ]
             },
             {
-                "type": "queuing",
-                "name": "marconi",
+                "type": "messaging",
+                "name": "zaqar",
                 "endpoints": [
                     {
                         "adminURL": "http://10.0.2.15:8888",

@@ -38,7 +38,7 @@ import static org.jclouds.openstack.v2_0.ServiceType.IDENTITY;
 import static org.jclouds.openstack.v2_0.ServiceType.IMAGE;
 import static org.jclouds.openstack.v2_0.ServiceType.NETWORK;
 import static org.jclouds.openstack.v2_0.ServiceType.OBJECT_STORE;
-import static org.jclouds.openstack.v2_0.ServiceType.QUEUES;
+import static org.jclouds.openstack.v2_0.ServiceType.MESSAGING;
 import static org.jclouds.openstack.v2_0.ServiceType.SHARED_FILESYSTEM;
 
 
@@ -142,7 +142,7 @@ public class ParseAccessTest extends BaseItemParserTest<Access> {
                         .publicURL("http://172.16.0.1:8776/v1/3456")
                         .tenantId("123123")
                         .region("RegionOne").build()).build())
-            .service(Service.builder().name("marconi").type(QUEUES)
+            .service(Service.builder().name("zaqar").type(MESSAGING)
                   .endpoint(Endpoint.builder()
                         .id("3456789")
                         .publicURL("http://172.16.0.1:8888")
