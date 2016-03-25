@@ -83,8 +83,6 @@ public class VirtualSystemSettingDataHandler extends ParseSax.HandlerWithResult<
             builder.logDataRoot(URI.create(current));
          } else if (equalsOrSuffix(qName, "RecoveryFile")) {
             builder.recoveryFile(URI.create(current));
-         } else if (equalsOrSuffix(qName, "RecoveryFile")) {
-            builder.recoveryFile(URI.create(current));
          } else if (equalsOrSuffix(qName, "SuspendDataRoot")) {
             builder.suspendDataRoot(URI.create(current));
          } else if (equalsOrSuffix(qName, "SwapFileDataRoot")) {
