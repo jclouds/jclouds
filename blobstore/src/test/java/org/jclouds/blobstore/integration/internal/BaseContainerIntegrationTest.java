@@ -32,6 +32,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.Random;
 import java.util.Set;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
@@ -61,8 +62,10 @@ public class BaseContainerIntegrationTest extends BaseBlobStoreIntegrationTest {
 
    @Test(groups = { "integration", "live" })
    public void containerDoesntExist() {
-      assert !view.getBlobStore().containerExists("forgetaboutit");
-      assert !view.getBlobStore().containerExists("cloudcachestorefunctionalintegrationtest-first");
+      Random random = new Random();
+      assert !view.getBlobStore().containerExists("forgetaboutit" + random.nextInt(Integer.MAX_VALUE));
+      assert !view.getBlobStore().containerExists("cloudcachestorefunctionalintegrationtest-first" +
+            random.nextInt(Integer.MAX_VALUE));
    }
 
    @Test(groups = { "integration", "live" })
