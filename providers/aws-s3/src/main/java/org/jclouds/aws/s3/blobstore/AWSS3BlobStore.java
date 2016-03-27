@@ -47,6 +47,7 @@ import org.jclouds.s3.blobstore.functions.ContainerToBucketListOptions;
 import org.jclouds.s3.blobstore.functions.ObjectToBlob;
 import org.jclouds.s3.blobstore.functions.ObjectToBlobMetadata;
 import org.jclouds.s3.domain.BucketMetadata;
+import org.jclouds.s3.domain.ObjectMetadata;
 
 import com.google.common.base.Function;
 import com.google.common.base.Supplier;
@@ -87,6 +88,7 @@ public class AWSS3BlobStore extends S3BlobStore {
 
    private String putBlobWithReducedRedundancy(String container, Blob blob) {
       AWSS3PutObjectOptions options = new AWSS3PutObjectOptions();
+      options.storageClass(ObjectMetadata.StorageClass.REDUCED_REDUNDANCY);
       return getContext().unwrapApi(AWSS3Client.class).putObject(container, blob2Object.apply(blob), options);
    }
 
