@@ -17,10 +17,13 @@
 package org.jclouds.aws.s3.filters;
 
 import static org.jclouds.http.utils.Queries.queryParser;
+import static org.jclouds.aws.s3.blobstore.AWSS3BlobRequestSigner.TEMPORARY_SIGNATURE_PARAM;
 import static org.jclouds.s3.filters.AwsSignatureV4Constants.AMZ_SIGNATURE_PARAM;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
+
+import com.google.common.collect.Multimap;
 
 import org.jclouds.http.HttpRequest;
 import org.jclouds.s3.filters.Aws4SignerForAuthorizationHeader;
@@ -50,7 +53,8 @@ public class AWSRequestAuthorizeSignatureV4 extends RequestAuthorizeSignatureV4 
       * with expiration.
       */
 
-      if (queryParser().apply(request.getEndpoint().getQuery()).containsKey(AMZ_SIGNATURE_PARAM)) {
+      Multimap<String, String> queryMap = queryParser().apply(request.getEndpoint().getQuery());
+      if (queryMap.containsKey(AMZ_SIGNATURE_PARAM) || queryMap.containsKey(TEMPORARY_SIGNATURE_PARAM)) {
          return request;
       }
       return super.signForAuthorizationHeader(request);
