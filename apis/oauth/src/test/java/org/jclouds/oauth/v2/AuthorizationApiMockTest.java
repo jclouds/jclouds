@@ -22,7 +22,9 @@ import static com.google.common.util.concurrent.MoreExecutors.sameThreadExecutor
 import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 import static org.jclouds.Constants.PROPERTY_MAX_RETRIES;
 import static org.jclouds.oauth.v2.config.CredentialType.P12_PRIVATE_KEY_CREDENTIALS;
+import static org.jclouds.oauth.v2.config.CredentialType.CLIENT_CREDENTIALS_SECRET;
 import static org.jclouds.oauth.v2.config.OAuthProperties.AUDIENCE;
+import static org.jclouds.oauth.v2.config.OAuthProperties.RESOURCE;
 import static org.jclouds.oauth.v2.config.OAuthProperties.CREDENTIAL_TYPE;
 import static org.jclouds.oauth.v2.config.OAuthProperties.JWS_ALG;
 import static org.jclouds.util.Strings2.toStringAndClose;
@@ -35,6 +37,7 @@ import java.util.Properties;
 
 import org.jclouds.ContextBuilder;
 import org.jclouds.concurrent.config.ExecutorServiceModule;
+import org.jclouds.oauth.v2.config.CredentialType;
 import org.jclouds.oauth.v2.config.OAuthModule;
 import org.jclouds.oauth.v2.config.OAuthScopes;
 import org.jclouds.oauth.v2.config.OAuthScopes.SingleScope;
@@ -82,7 +85,7 @@ public class AuthorizationApiMockTest {
                + "  \"token_type\" : \"Bearer\",\n" + "  \"expires_in\" : 3600\n" + "}"));
          server.play();
 
-         AuthorizationApi api = api(server.getUrl("/"));
+         AuthorizationApi api = api(server.getUrl("/"), P12_PRIVATE_KEY_CREDENTIALS);
 
          assertEquals(api.authorize(CLAIMS), TOKEN);
 
@@ -115,7 +118,7 @@ public class AuthorizationApiMockTest {
          server.enqueue(new MockResponse().setResponseCode(400));
          server.play();
 
-         AuthorizationApi api = api(server.getUrl("/"));
+         AuthorizationApi api = api(server.getUrl("/"), P12_PRIVATE_KEY_CREDENTIALS);
          api.authorize(CLAIMS);
          fail("An AuthorizationException should have been raised");
       } catch (AuthorizationException ex) {
@@ -125,14 +128,48 @@ public class AuthorizationApiMockTest {
       }
    }
 
+   public void testGenerateClientSecretRequest() throws Exception {
+      MockWebServer server = new MockWebServer();
+
+      String credential = "password";
+      String identity = "user";
+      String resource = "http://management.azure.com/";
+      String encoded_resource = "http%3A//management.azure.com/";
+
+      try {
+         server.enqueue(new MockResponse().setBody("{\n"
+                 + "  \"access_token\" : \"1/8xbJqaOZXSUZbHLl5EOtu1pxz3fmmetKx9W8CV4t79M\",\n"
+                 + "  \"token_type\" : \"Bearer\",\n" + "  \"expires_in\" : 3600\n" + "}"));
+         server.play();
+
+         AuthorizationApi api = api(server.getUrl("/"), CLIENT_CREDENTIALS_SECRET);
+
+         assertEquals(api.authorizeClientSecret(identity, credential, resource, null), TOKEN);
+
+         RecordedRequest request = server.takeRequest();
+         assertEquals(request.getMethod(), "POST");
+         assertEquals(request.getHeader("Accept"), APPLICATION_JSON);
+         assertEquals(request.getHeader("Content-Type"), "application/x-www-form-urlencoded");
+
+         assertEquals(
+                 new String(request.getBody(), UTF_8), //
+                 "grant_type=client_credentials&client_id=" + identity
+                         + "&client_secret=" + credential
+                         + "&resource=" + encoded_resource);
+      } finally {
+         server.shutdown();
+      }
+   }
+
    private final BaseEncoding encoding = base64Url().omitPadding();
 
-   private AuthorizationApi api(URL url) throws IOException {
+   private AuthorizationApi api(URL url, CredentialType credentialType) throws IOException {
       Properties overrides = new Properties();
       overrides.setProperty("oauth.endpoint", url.toString());
       overrides.setProperty(JWS_ALG, "RS256");
-      overrides.setProperty(CREDENTIAL_TYPE, P12_PRIVATE_KEY_CREDENTIALS.toString());
+      overrides.setProperty(CREDENTIAL_TYPE, credentialType.toString());
       overrides.setProperty(AUDIENCE, "https://accounts.google.com/o/oauth2/token");
+      overrides.setProperty(RESOURCE, "https://management.azure.com/");
       overrides.setProperty(PROPERTY_MAX_RETRIES, "1");
 
       return ContextBuilder.newBuilder(AnonymousHttpApiMetadata.forApi(AuthorizationApi.class))

@@ -26,7 +26,10 @@ public enum CredentialType {
    BEARER_TOKEN_CREDENTIALS,
 
    /** Contents are a PEM-encoded P12 Private Key. */
-   P12_PRIVATE_KEY_CREDENTIALS;
+   P12_PRIVATE_KEY_CREDENTIALS,
+
+   /** Contents are an ID and Secret */
+   CLIENT_CREDENTIALS_SECRET;
 
    @Override public String toString() {
       return UPPER_UNDERSCORE.to(LOWER_CAMEL, name());

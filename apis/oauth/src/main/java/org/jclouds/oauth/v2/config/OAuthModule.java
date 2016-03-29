@@ -28,6 +28,7 @@ import javax.inject.Singleton;
 
 import org.jclouds.oauth.v2.AuthorizationApi;
 import org.jclouds.oauth.v2.filters.BearerTokenFromCredentials;
+import org.jclouds.oauth.v2.filters.ClientCredentialsSecretFlow;
 import org.jclouds.oauth.v2.filters.JWTBearerTokenFlow;
 import org.jclouds.oauth.v2.filters.OAuthFilter;
 
@@ -69,12 +70,15 @@ public final class OAuthModule extends AbstractModule {
    @Singleton
    protected OAuthFilter authenticationFilterForCredentialType(CredentialType credentialType,
                                                                JWTBearerTokenFlow serviceAccountAuth,
-                                                               BearerTokenFromCredentials bearerTokenAuth) {
+                                                               BearerTokenFromCredentials bearerTokenAuth,
+                                                               ClientCredentialsSecretFlow clientCredentialAuth) {
       switch (credentialType) {
          case P12_PRIVATE_KEY_CREDENTIALS:
             return serviceAccountAuth;
          case BEARER_TOKEN_CREDENTIALS:
             return bearerTokenAuth;
+         case CLIENT_CREDENTIALS_SECRET:
+            return clientCredentialAuth;
          default:
             throw new IllegalArgumentException("Unsupported credential type: " + credentialType);
       }

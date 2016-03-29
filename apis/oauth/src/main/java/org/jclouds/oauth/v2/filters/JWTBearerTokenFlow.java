@@ -19,6 +19,7 @@ package org.jclouds.oauth.v2.filters;
 import static java.util.concurrent.TimeUnit.SECONDS;
 import static org.jclouds.Constants.PROPERTY_SESSION_INTERVAL;
 import static org.jclouds.oauth.v2.config.OAuthProperties.AUDIENCE;
+import static com.google.common.base.Preconditions.checkNotNull;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -50,7 +51,7 @@ import com.google.common.cache.LoadingCache;
 public class JWTBearerTokenFlow implements OAuthFilter {
    private static final Joiner ON_COMMA = Joiner.on(",");
 
-   private final String audience;
+   @com.google.inject.Inject(optional = true) @Named(AUDIENCE) private String audience;
    private final Supplier<Credentials> credentialsSupplier;
    private final OAuthScopes scopes;
    private final long tokenDuration;
@@ -59,8 +60,8 @@ public class JWTBearerTokenFlow implements OAuthFilter {
    public static class TestJWTBearerTokenFlow extends JWTBearerTokenFlow {
 
       @Inject TestJWTBearerTokenFlow(AuthorizeToken loader, @Named(PROPERTY_SESSION_INTERVAL) long tokenDuration,
-            @Named(AUDIENCE) String audience, @Provider Supplier<Credentials> credentialsSupplier, OAuthScopes scopes) {
-         super(loader, tokenDuration, audience, credentialsSupplier, scopes);
+             @Provider Supplier<Credentials> credentialsSupplier, OAuthScopes scopes) {
+         super(loader, tokenDuration, credentialsSupplier, scopes);
       }
 
       /** Constant time for testing. */
@@ -70,8 +71,7 @@ public class JWTBearerTokenFlow implements OAuthFilter {
    }
 
    @Inject JWTBearerTokenFlow(AuthorizeToken loader, @Named(PROPERTY_SESSION_INTERVAL) long tokenDuration,
-         @Named(AUDIENCE) String audience, @Provider Supplier<Credentials> credentialsSupplier, OAuthScopes scopes) {
-      this.audience = audience;
+         @Provider Supplier<Credentials> credentialsSupplier, OAuthScopes scopes) {
       this.credentialsSupplier = credentialsSupplier;
       this.scopes = scopes;
       this.tokenDuration = tokenDuration;
@@ -94,6 +94,7 @@ public class JWTBearerTokenFlow implements OAuthFilter {
    }
 
    @Override public HttpRequest filter(HttpRequest request) throws HttpException {
+      checkNotNull(audience, AUDIENCE);
       long now = currentTimeSeconds();
       Claims claims = Claims.create( //
             credentialsSupplier.get().identity, // iss

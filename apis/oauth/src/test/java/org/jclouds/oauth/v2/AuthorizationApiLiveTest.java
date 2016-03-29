@@ -18,20 +18,24 @@ package org.jclouds.oauth.v2;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static org.jclouds.oauth.v2.OAuthTestUtils.setCredential;
-import static org.jclouds.oauth.v2.config.OAuthProperties.AUDIENCE;
 import static org.jclouds.oauth.v2.config.OAuthProperties.JWS_ALG;
+import static org.jclouds.oauth.v2.config.OAuthProperties.RESOURCE;
+import static org.jclouds.oauth.v2.config.OAuthProperties.AUDIENCE;
+import static org.jclouds.oauth.v2.config.OAuthProperties.CREDENTIAL_TYPE;
 import static org.jclouds.providers.AnonymousProviderMetadata.forApiOnEndpoint;
 import static org.testng.Assert.assertNotNull;
 
 import java.util.Properties;
 
 import org.jclouds.apis.BaseApiLiveTest;
+import org.jclouds.oauth.v2.config.CredentialType;
 import org.jclouds.oauth.v2.config.OAuthModule;
 import org.jclouds.oauth.v2.config.OAuthScopes;
 import org.jclouds.oauth.v2.config.OAuthScopes.SingleScope;
 import org.jclouds.oauth.v2.domain.Claims;
 import org.jclouds.oauth.v2.domain.Token;
 import org.jclouds.providers.ProviderMetadata;
+import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
 import com.google.common.collect.ImmutableList;
@@ -45,24 +49,53 @@ public class AuthorizationApiLiveTest extends BaseApiLiveTest<AuthorizationApi> 
    private final String jwsAlg = "RS256";
    private String scope;
    private String audience;
+   private String credentialType;
+   private String resource;
 
    public AuthorizationApiLiveTest() {
       provider = "oauth";
    }
 
-   public void authenticateJWTToken() throws Exception {
+   @DataProvider
+   public Object[][] onlyRunForP12PrivateKeyCredentials() {
+      return (CredentialType.fromValue(credentialType) == CredentialType.P12_PRIVATE_KEY_CREDENTIALS) ?
+            OAuthTestUtils.SINGLE_NO_ARG_INVOCATION : OAuthTestUtils.NO_INVOCATIONS;
+   }
+
+   @DataProvider
+   public Object[][] onlyRunForClientCredentialsSecret() {
+      return (CredentialType.fromValue(credentialType) == CredentialType.CLIENT_CREDENTIALS_SECRET) ?
+            OAuthTestUtils.SINGLE_NO_ARG_INVOCATION : OAuthTestUtils.NO_INVOCATIONS;
+   }
+
+   @Test(dataProvider = "onlyRunForP12PrivateKeyCredentials")
+   public void authenticateP12PrivateKeyCredentialsTest() throws Exception {
       long now = System.currentTimeMillis() / 1000;
       Claims claims = Claims.create(
-            identity, // iss
-            scope, // scope
-            audience, // aud
-            now + 3600, // exp
-            now // iat
+              identity, // iss
+              scope, // scope
+              audience, // aud
+              now + 3600, // exp
+              now // iat
       );
 
       Token token = api.authorize(claims);
 
       assertNotNull(token, "no token when authorizing " + claims);
+   }
+
+   @Test(dataProvider = "onlyRunForClientCredentialsSecret")
+   public void authenticateClientCredentialsSecretTest() throws Exception {
+      Token token = api.authorizeClientSecret(identity, credential, resource, scope);
+
+      assertNotNull(token, "no token when authorizing " + identity);
+   }
+
+   @Test(dataProvider = "onlyRunForClientCredentialsSecret")
+   public void authenticateClientCredentialsSecretNullScopeTest() throws Exception {
+      Token token = api.authorizeClientSecret(identity, credential, resource, null);
+
+      assertNotNull(token, "no token when authorizing " + identity);
    }
 
    /** OAuth isn't registered as a provider intentionally, so we fake one. */
@@ -73,9 +106,27 @@ public class AuthorizationApiLiveTest extends BaseApiLiveTest<AuthorizationApi> 
    @Override protected Properties setupProperties() {
       Properties props = super.setupProperties();
       props.setProperty(JWS_ALG, jwsAlg);
-      credential = setCredential(props, "oauth.credential");
-      audience = checkNotNull(setIfTestSystemPropertyPresent(props, AUDIENCE), "test.jclouds.oauth.audience");
-      scope = checkNotNull(setIfTestSystemPropertyPresent(props, "jclouds.oauth.scope"), "test.jclouds.oauth.scope");
+
+      // scope is required for P12_PRIVATE_KEY_CREDENTIALS, optional for CLIENT_CREDENTIALS_SECRET.
+      // Moved the not-NULL check to P12_PRIVATE_KEY_CREDENTIALS specific parameters.
+      scope = setIfTestSystemPropertyPresent(props, "jclouds.oauth.scope");
+
+      // Determine which type of Credential to use, default to P12_PRIVATE_KEY_CREDENTIALS
+      credentialType = setIfTestSystemPropertyPresent(props, CREDENTIAL_TYPE);
+      if (credentialType == null) {
+         credentialType = CredentialType.P12_PRIVATE_KEY_CREDENTIALS.toString();
+         props.setProperty(CREDENTIAL_TYPE, credentialType);
+      }
+
+      // Set the credential specific properties.
+      if (CredentialType.fromValue(credentialType) == CredentialType.CLIENT_CREDENTIALS_SECRET) {
+         resource = checkNotNull(setIfTestSystemPropertyPresent(props, RESOURCE), "test." + RESOURCE);
+      } else if (CredentialType.fromValue(credentialType) == CredentialType.P12_PRIVATE_KEY_CREDENTIALS) {
+         audience = checkNotNull(setIfTestSystemPropertyPresent(props, AUDIENCE), "test.jclouds.oauth.audience");
+         credential = setCredential(props, "oauth.credential");
+         checkNotNull(scope, "test.jclouds.oauth.scope");
+      }
+
       return props;
    }
 

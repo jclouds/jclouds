@@ -25,6 +25,7 @@ import javax.ws.rs.Consumes;
 import javax.ws.rs.FormParam;
 import javax.ws.rs.POST;
 
+import org.jclouds.javax.annotation.Nullable;
 import org.jclouds.oauth.v2.OAuthFallbacks.AuthorizationExceptionOn4xx;
 import org.jclouds.oauth.v2.config.Authorization;
 import org.jclouds.oauth.v2.domain.Claims;
@@ -46,4 +47,16 @@ public interface AuthorizationApi extends Closeable {
    @Consumes(APPLICATION_JSON)
    @Fallback(AuthorizationExceptionOn4xx.class)
    Token authorize(@FormParam("assertion") @ParamParser(ClaimsToAssertion.class) Claims claims);
+
+   @Named("oauth2:authorize_client_secret")
+   @POST
+   @FormParams(keys = "grant_type", values = "client_credentials")
+   @Consumes(APPLICATION_JSON)
+   @Fallback(AuthorizationExceptionOn4xx.class)
+   Token authorizeClientSecret(
+           @FormParam("client_id") String client_id,
+           @FormParam("client_secret") String client_secret,
+           @FormParam("resource") String resource,
+           @FormParam("scope") @Nullable String scope
+   );
 }

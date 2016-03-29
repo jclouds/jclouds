@@ -36,6 +36,15 @@ public final class OAuthProperties {
     */
    public static final String CREDENTIAL_TYPE = "jclouds.oauth.credential-type";
 
+   /**
+    * When using oauth with Azure Active Direction and Client Credentials, a "resource" must
+    * be specified as part of the request.
+    *
+    * @see <a href="https://msdn.microsoft.com/en-us/library/azure/dn645543.aspx">doc</a>
+    */
+   public static final String RESOURCE = "jclouds.oauth.resource";
+
    private OAuthProperties() {
    }
 }
+
