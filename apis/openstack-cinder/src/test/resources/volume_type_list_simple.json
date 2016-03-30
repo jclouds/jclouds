@@ -11,6 +11,24 @@
             },
             "deleted_at": null,
             "id": 1
+        },
+        {
+            "name": "jclouds-test-2",
+            "deleted": false,
+            "created_at": "2012-05-10 12:33:06",
+            "updated_at": null,
+            "extra_specs": {},
+            "deleted_at": null,
+            "id": 2
+        },
+        {
+            "name": "jclouds-test-3",
+            "deleted": false,
+            "created_at": "2012-05-10 12:33:06",
+            "updated_at": null,
+            "extra_specs": null,
+            "deleted_at": null,
+            "id": 3
         }
     ]
 }

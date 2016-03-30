@@ -16,20 +16,18 @@
  */
 package org.jclouds.openstack.cinder.v1.domain;
 
-import static com.google.common.base.Preconditions.checkNotNull;
-
-import java.beans.ConstructorProperties;
-import java.util.Date;
-import java.util.Map;
-
-import javax.inject.Named;
-
-import org.jclouds.javax.annotation.Nullable;
-
 import com.google.common.base.Objects;
 import com.google.common.base.Objects.ToStringHelper;
 import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableMap;
+import org.jclouds.javax.annotation.Nullable;
+
+import javax.inject.Named;
+import java.beans.ConstructorProperties;
+import java.util.Date;
+import java.util.Map;
+
+import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * An Openstack Cinder Volume Type.
@@ -89,7 +87,10 @@ public class VolumeType {
        * @see VolumeType#getExtraSpecs()
        */
       public T extraSpecs(Map<String, String> extraSpecs) {
-         this.extraSpecs = ImmutableMap.copyOf(checkNotNull(extraSpecs, "extraSpecs"));     
+         if (extraSpecs != null)
+         {
+            this.extraSpecs = ImmutableMap.copyOf(extraSpecs);
+         }
          return self();
       }
 
@@ -126,12 +127,15 @@ public class VolumeType {
    @ConstructorProperties({
       "id", "name", "created_at", "updated_at", "extra_specs"
    })
-   protected VolumeType(String id, String name, @Nullable Date created, @Nullable Date updated, Map<String, String> extraSpecs) {
+   protected VolumeType(String id, String name, @Nullable Date created, @Nullable Date updated, @Nullable Map<String, String> extraSpecs) {
       this.id = checkNotNull(id, "id");
       this.name = checkNotNull(name, "name");
       this.created = Optional.fromNullable(created);
       this.updated = Optional.fromNullable(updated);
-      this.extraSpecs = ImmutableMap.copyOf(checkNotNull(extraSpecs, "extraSpecs"));     
+      if (extraSpecs == null)
+         this.extraSpecs = ImmutableMap.of();
+      else
+         this.extraSpecs = ImmutableMap.copyOf(extraSpecs);
    }
 
    public String getId() {
