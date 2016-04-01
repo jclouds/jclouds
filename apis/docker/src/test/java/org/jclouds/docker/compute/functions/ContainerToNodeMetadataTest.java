@@ -84,7 +84,6 @@ public class ContainerToNodeMetadataTest {
               .env(null)
               .cmd(ImmutableList.of("/usr/sbin/sshd", "-D"))
               .image("jclouds/ubuntu")
-              .volumesFrom("")
               .workingDir("")
               .entrypoint(null)
               .networkDisabled(false)

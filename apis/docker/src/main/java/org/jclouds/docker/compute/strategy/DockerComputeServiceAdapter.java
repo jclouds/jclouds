@@ -18,6 +18,7 @@ package org.jclouds.docker.compute.strategy;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.collect.Iterables.find;
+
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -26,6 +27,14 @@ import javax.annotation.Resource;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.inject.Singleton;
+
+import com.google.common.base.Predicate;
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
+import com.google.common.collect.Sets;
 
 import org.jclouds.compute.ComputeServiceAdapter;
 import org.jclouds.compute.domain.Hardware;
@@ -47,14 +56,6 @@ import org.jclouds.docker.options.RemoveContainerOptions;
 import org.jclouds.domain.Location;
 import org.jclouds.domain.LoginCredentials;
 import org.jclouds.logging.Logger;
-
-import com.google.common.base.Predicate;
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.ImmutableSet;
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
-import com.google.common.collect.Sets;
 
 /**
  * defines the connection between the {@link org.jclouds.docker.DockerApi} implementation and
@@ -138,7 +139,12 @@ public class DockerComputeServiceAdapter implements
             }
          }
 
+         if (!templateOptions.getVolumesFrom().isEmpty()) {
+            hostConfigBuilder.volumesFrom(templateOptions.getVolumesFrom());
+         }
+
          hostConfigBuilder.networkMode(templateOptions.getNetworkMode());
+
          containerConfigBuilder.hostConfig(hostConfigBuilder.build());
       }
 

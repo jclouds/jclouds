@@ -47,6 +47,18 @@ public class NullSafeCopies {
    }
 
    /**
+    * Copies given Map with keeping null value if provided.
+    *
+    * @param map
+    *           instance to copy (maybe <code>null</code>)
+    * @return if the parameter is not-<code>null</code> then immutable copy;
+    *         <code>null</code> otherwise
+    */
+   public static <K, V> Map<K, V> copyWithNullOf(@Nullable Map<K, V> map) {
+      return map != null ? ImmutableMap.copyOf(map) : null;
+   }
+
+   /**
     * Copies given {@link Iterable} into immutable {@link List} with keeping null value if provided.
     *
     * @param iterable

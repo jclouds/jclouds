@@ -16,45 +16,44 @@
  */
 package org.jclouds.docker.domain;
 
-import static com.google.common.base.Preconditions.checkNotNull;
 import static org.jclouds.docker.internal.NullSafeCopies.copyOf;
+import static org.jclouds.docker.internal.NullSafeCopies.copyWithNullOf;
 
 import java.util.List;
 import java.util.Map;
-
-import org.jclouds.javax.annotation.Nullable;
-import org.jclouds.json.SerializedNames;
 
 import com.google.auto.value.AutoValue;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 
+import org.jclouds.javax.annotation.Nullable;
+import org.jclouds.json.SerializedNames;
+
 @AutoValue
 public abstract class HostConfig {
    @Nullable public abstract String containerIDFile();
 
-   public abstract List<String> binds();
+   @Nullable public abstract List<String> binds();
 
    public abstract List<Map<String, String>> lxcConf();
 
    public abstract boolean privileged();
 
-   public abstract List<String> dns();
+   @Nullable public abstract List<String> dns();
 
    @Nullable public abstract List<String> dnsSearch();
 
    public abstract Map<String, List<Map<String, String>>> portBindings();
 
-   public abstract List<String> links();
+   @Nullable public abstract List<String> links();
 
-   public abstract List<String> extraHosts();
+   @Nullable public abstract List<String> extraHosts();
 
    public abstract boolean publishAllPorts();
 
-   public abstract List<String> volumesFrom();
+   @Nullable public abstract List<String> volumesFrom();
 
-   @Nullable
-   public abstract String networkMode();
+   @Nullable public abstract String networkMode();
 
    HostConfig() {
    }
@@ -64,8 +63,8 @@ public abstract class HostConfig {
    public static HostConfig create(String containerIDFile, List<String> binds, List<Map<String, String>> lxcConf,
          boolean privileged, List<String> dns, List<String> dnsSearch, Map<String, List<Map<String, String>>> portBindings,
          List<String> links, List<String> extraHosts, boolean publishAllPorts, List<String> volumesFrom, String networkMode) {
-      return new AutoValue_HostConfig(containerIDFile, copyOf(binds), copyOf(lxcConf), privileged, copyOf(dns), copyOf(dnsSearch),
-            copyOf(portBindings), copyOf(links), copyOf(extraHosts), publishAllPorts, copyOf(volumesFrom), networkMode);
+      return new AutoValue_HostConfig(containerIDFile, copyWithNullOf(binds), copyOf(lxcConf), privileged, copyWithNullOf(dns), copyWithNullOf(dnsSearch),
+            copyOf(portBindings), copyWithNullOf(links), copyWithNullOf(extraHosts), publishAllPorts, copyWithNullOf(volumesFrom), networkMode);
    }
 
    public static Builder builder() {
@@ -79,16 +78,16 @@ public abstract class HostConfig {
    public static final class Builder {
 
       private String containerIDFile;
-      private List<String> binds = Lists.newArrayList();
+      private List<String> binds;
       private List<Map<String, String>> lxcConf = Lists.newArrayList();
       private boolean privileged;
-      private List<String> dns = Lists.newArrayList();
-      private List<String> dnsSearch = Lists.newArrayList();
+      private List<String> dns;
+      private List<String> dnsSearch;
       private Map<String, List<Map<String, String>>> portBindings = Maps.newLinkedHashMap();
-      private List<String> links = Lists.newArrayList();
-      private List<String> extraHosts = Lists.newArrayList();
+      private List<String> links;
+      private List<String> extraHosts;
       private boolean publishAllPorts;
-      private List<String> volumesFrom = Lists.newArrayList();
+      private List<String> volumesFrom;
       private String networkMode;
 
       public Builder containerIDFile(String containerIDFile) {
@@ -97,12 +96,12 @@ public abstract class HostConfig {
       }
 
       public Builder binds(List<String> binds) {
-         this.binds.addAll(checkNotNull(binds, "binds"));
+         this.binds = binds;
          return this;
       }
 
       public Builder lxcConf(List<Map<String, String>> lxcConf) {
-         this.lxcConf.addAll(checkNotNull(lxcConf, "lxcConf"));
+         this.lxcConf = lxcConf;
          return this;
       }
 
@@ -112,27 +111,27 @@ public abstract class HostConfig {
       }
 
       public Builder dns(List<String> dns) {
-         this.dns.addAll(checkNotNull(dns, "dns"));
+         this.dns = dns;
          return this;
       }
 
       public Builder dnsSearch(List<String> dnsSearch) {
-         this.dnsSearch.addAll(checkNotNull(dnsSearch, "dnsSearch"));
+         this.dnsSearch = dnsSearch;
          return this;
       }
 
       public Builder links(List<String> links) {
-         this.links.addAll(checkNotNull(links, "links"));
+         this.links = links;
          return this;
       }
 
       public Builder extraHosts(List<String> extraHosts) {
-         this.extraHosts.addAll(checkNotNull(extraHosts, "extraHosts"));
+         this.extraHosts = extraHosts;
          return this;
       }
 
       public Builder portBindings(Map<String, List<Map<String, String>>> portBindings) {
-         this.portBindings.putAll(portBindings);
+         this.portBindings = portBindings;
          return this;
       }
 
@@ -142,7 +141,7 @@ public abstract class HostConfig {
       }
 
       public Builder volumesFrom(List<String> volumesFrom) {
-         this.volumesFrom.addAll(checkNotNull(volumesFrom, "volumesFrom"));
+         this.volumesFrom = volumesFrom;
          return this;
       }
 

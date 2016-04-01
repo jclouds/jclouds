@@ -64,7 +64,7 @@ public abstract class Config {
 
    public abstract String image();
 
-   public abstract Map<String, ?> volumes();
+   @Nullable public abstract Map<String, ?> volumes();
 
    @Nullable public abstract String workingDir();
 
@@ -76,9 +76,9 @@ public abstract class Config {
 
    @Nullable public abstract HostConfig hostConfig();
 
-   public abstract List<String> binds();
+   @Nullable public abstract List<String> binds();
 
-   public abstract List<String> links();
+   @Nullable public abstract List<String> links();
 
    public abstract List<Map<String, String>> lxcConf();
 
@@ -90,13 +90,13 @@ public abstract class Config {
 
    @Nullable public abstract List<String> dns();
 
-   @Nullable public abstract String dnsSearch();
+   @Nullable public abstract List<String> dnsSearch();
 
-   @Nullable public abstract String volumesFrom();
+   @Nullable public abstract List<String> volumesFrom();
 
-   public abstract List<String> capAdd();
+   @Nullable public abstract List<String> capAdd();
 
-   public abstract List<String> capDrop();
+   @Nullable public abstract List<String> capDrop();
 
    public abstract Map<String, String> restartPolicy();
 
@@ -117,14 +117,14 @@ public abstract class Config {
          String image, Map<String, ?> volumes, String workingDir, boolean networkDisabled,
          Map<String, ?> exposedPorts, List<String> securityOpts, HostConfig hostConfig, List<String> binds,
          List<String> links, List<Map<String, String>> lxcConf, Map<String, List<Map<String, String>>> portBindings,
-         boolean publishAllPorts, boolean privileged, List<String> dns, String dnsSearch, String volumesFrom,
+         boolean publishAllPorts, boolean privileged, List<String> dns, List<String> dnsSearch, List<String> volumesFrom,
          List<String> capAdd, List<String> capDrop, Map<String, String> restartPolicy) {
       return new AutoValue_Config(hostname, domainname, user, memory, memorySwap, cpuShares, attachStdin,
               attachStdout, attachStderr, tty, openStdin, stdinOnce, copyWithNullOf(env), copyWithNullOf(cmd),
-              copyWithNullOf(entrypoint), image, copyOf(volumes), workingDir, networkDisabled,
+              copyWithNullOf(entrypoint), image, copyWithNullOf(volumes), workingDir, networkDisabled,
               copyOf(exposedPorts), copyOf(securityOpts), hostConfig,
-              copyOf(binds), copyOf(links), copyOf(lxcConf), copyOf(portBindings), publishAllPorts, privileged,
-              copyWithNullOf(dns), dnsSearch, volumesFrom, copyOf(capAdd), copyOf(capDrop), copyOf(restartPolicy));
+              copyWithNullOf(binds), copyWithNullOf(links), copyOf(lxcConf), copyOf(portBindings), publishAllPorts, privileged,
+              copyWithNullOf(dns), copyWithNullOf(dnsSearch), copyWithNullOf(volumesFrom), copyWithNullOf(capAdd), copyWithNullOf(capDrop), copyOf(restartPolicy));
    }
 
    public static Builder builder() {
@@ -152,23 +152,23 @@ public abstract class Config {
       private List<String> cmd;
       private List<String> entrypoint;
       private String image;
-      private Map<String, ?> volumes = Maps.newHashMap();
+      private Map<String, ?> volumes;
       private String workingDir;
       private boolean networkDisabled;
       private Map<String, ?> exposedPorts = Maps.newHashMap();
       private List<String> securityOpts = Lists.newArrayList();
       private HostConfig hostConfig;
-      private List<String> binds = Lists.newArrayList();
-      private List<String> links = Lists.newArrayList();
+      private List<String> binds;
+      private List<String> links;
       private List<Map<String, String>> lxcConf = Lists.newArrayList();
       private Map<String, List<Map<String, String>>> portBindings = Maps.newHashMap();
       private boolean publishAllPorts;
       private boolean privileged;
       private List<String> dns;
-      private String dnsSearch;
-      private String volumesFrom;
-      private List<String> capAdd = Lists.newArrayList();
-      private List<String> capDrop = Lists.newArrayList();
+      private List<String> dnsSearch;
+      private List<String> volumesFrom;
+      private List<String> capAdd;
+      private List<String> capDrop;
       private Map<String, String> restartPolicy = Maps.newHashMap();
 
       public Builder hostname(String hostname) {
@@ -322,12 +322,12 @@ public abstract class Config {
          return this;
       }
 
-      public Builder dnsSearch(String dnsSearch) {
+      public Builder dnsSearch(List<String> dnsSearch) {
          this.dnsSearch = dnsSearch;
          return this;
       }
 
-      public Builder volumesFrom(String volumesFrom) {
+      public Builder volumesFrom(List<String> volumesFrom) {
          this.volumesFrom = volumesFrom;
          return this;
       }
