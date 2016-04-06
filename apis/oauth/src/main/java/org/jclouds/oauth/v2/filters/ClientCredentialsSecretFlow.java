@@ -16,11 +16,14 @@
  */
 package org.jclouds.oauth.v2.filters;
 
+import java.util.List;
+
 import com.google.common.base.Joiner;
 import com.google.common.base.Supplier;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
+
 import org.jclouds.oauth.v2.AuthorizationApi;
 import org.jclouds.oauth.v2.domain.ClientSecret;
 import org.jclouds.oauth.v2.config.OAuthScopes;
@@ -31,6 +34,7 @@ import org.jclouds.http.HttpRequest;
 import org.jclouds.location.Provider;
 
 import javax.inject.Named;
+
 import com.google.inject.Inject;
 
 import static java.util.concurrent.TimeUnit.SECONDS;
@@ -53,13 +57,16 @@ public class ClientCredentialsSecretFlow implements OAuthFilter {
     private final Supplier<Credentials> credentialsSupplier;
     private final long tokenDuration;
     private final LoadingCache<ClientSecret, Token> tokenCache;
-    @Inject(optional = true) @Named(RESOURCE) private String resource;
-    @Inject(optional = true) private OAuthScopes scopes;
+    private final String resource;
+    private final OAuthScopes scopes;
 
     @Inject
     ClientCredentialsSecretFlow(AuthorizeToken loader, @Named(PROPERTY_SESSION_INTERVAL) long tokenDuration,
-                                @Provider Supplier<Credentials> credentialsSupplier) {
+                                @Provider Supplier<Credentials> credentialsSupplier, OAuthScopes scopes,
+                                @Named(RESOURCE) String resource) {
         this.credentialsSupplier = credentialsSupplier;
+        this.scopes = scopes;
+        this.resource = resource;
         this.tokenDuration = tokenDuration;
         // since the session interval is also the token expiration time requested to the server make the token expire a
         // bit before the deadline to make sure there aren't session expiration exceptions
@@ -81,11 +88,12 @@ public class ClientCredentialsSecretFlow implements OAuthFilter {
 
     @Override public HttpRequest filter(HttpRequest request) throws HttpException {
         long now = currentTimeSeconds();
+        List<String> configuredScopes = scopes.forRequest(request);
         ClientSecret client = ClientSecret.create(
                 credentialsSupplier.get().identity,
                 credentialsSupplier.get().credential,
                 resource == null ? "" : resource,
-                scopes == null ? null : ON_SPACE.join(scopes.forRequest(request)),
+                configuredScopes.isEmpty() ? null : ON_SPACE.join(configuredScopes),
                 now + tokenDuration
         );
         Token token = tokenCache.getUnchecked(client);

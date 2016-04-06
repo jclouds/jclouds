@@ -16,12 +16,15 @@
  */
 package org.jclouds.oauth.v2.config;
 
+import static org.jclouds.oauth.v2.config.CredentialType.BEARER_TOKEN_CREDENTIALS;
+import static org.jclouds.oauth.v2.config.CredentialType.CLIENT_CREDENTIALS_SECRET;
 import static org.jclouds.oauth.v2.config.CredentialType.P12_PRIVATE_KEY_CREDENTIALS;
 import static org.jclouds.oauth.v2.config.OAuthProperties.CREDENTIAL_TYPE;
 import static org.jclouds.rest.config.BinderUtils.bindHttpApi;
 
 import java.net.URI;
 import java.security.PrivateKey;
+import java.util.Map;
 
 import javax.inject.Named;
 import javax.inject.Singleton;
@@ -34,8 +37,10 @@ import org.jclouds.oauth.v2.filters.OAuthFilter;
 
 import com.google.common.base.Supplier;
 import com.google.common.base.Suppliers;
+import com.google.common.collect.ImmutableMap;
 import com.google.inject.AbstractModule;
 import com.google.inject.Inject;
+import com.google.inject.Injector;
 import com.google.inject.Provider;
 import com.google.inject.Provides;
 import com.google.inject.TypeLiteral;
@@ -65,23 +70,23 @@ public final class OAuthModule extends AbstractModule {
          return CredentialType.fromValue(credentialType);
       }
    }
+   
+   @Provides
+   @Singleton
+   protected Map<CredentialType, Class<? extends OAuthFilter>> authenticationFlowMap() {
+      return ImmutableMap.of(P12_PRIVATE_KEY_CREDENTIALS, JWTBearerTokenFlow.class,
+                             BEARER_TOKEN_CREDENTIALS, BearerTokenFromCredentials.class,
+                             CLIENT_CREDENTIALS_SECRET, ClientCredentialsSecretFlow.class);
+   }
 
    @Provides
    @Singleton
    protected OAuthFilter authenticationFilterForCredentialType(CredentialType credentialType,
-                                                               JWTBearerTokenFlow serviceAccountAuth,
-                                                               BearerTokenFromCredentials bearerTokenAuth,
-                                                               ClientCredentialsSecretFlow clientCredentialAuth) {
-      switch (credentialType) {
-         case P12_PRIVATE_KEY_CREDENTIALS:
-            return serviceAccountAuth;
-         case BEARER_TOKEN_CREDENTIALS:
-            return bearerTokenAuth;
-         case CLIENT_CREDENTIALS_SECRET:
-            return clientCredentialAuth;
-         default:
-            throw new IllegalArgumentException("Unsupported credential type: " + credentialType);
+         Map<CredentialType, Class<? extends OAuthFilter>> authenticationFlows, Injector injector) {
+      if (!authenticationFlows.containsKey(credentialType)) {
+         throw new IllegalArgumentException("Unsupported credential type: " + credentialType);
       }
+      return injector.getInstance(authenticationFlows.get(credentialType));
    }
 
 }

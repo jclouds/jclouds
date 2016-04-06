@@ -16,7 +16,9 @@
  */
 package org.jclouds.oauth.v2.domain;
 
+import org.jclouds.javax.annotation.Nullable;
 import org.jclouds.json.SerializedNames;
+
 import com.google.auto.value.AutoValue;
 
 /**
@@ -34,7 +36,7 @@ public abstract class ClientSecret {
     public abstract String resource();
 
     /** The scope(s) to authorize against. **/
-    public abstract String scope();
+    @Nullable public abstract String scope();
 
     /** When does the token expire. **/
     public abstract long expire();

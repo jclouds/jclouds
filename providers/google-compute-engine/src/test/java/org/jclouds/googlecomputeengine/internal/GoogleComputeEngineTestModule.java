@@ -38,6 +38,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import org.jclouds.crypto.Crypto;
 import org.jclouds.oauth.v2.filters.JWTBearerTokenFlow;
+import org.jclouds.oauth.v2.filters.TestJWTBearerTokenFlow;
 import org.jclouds.ssh.SshKeys;
 
 import com.google.common.base.Supplier;
@@ -67,7 +68,7 @@ enum GoogleComputeEngineTestModule implements Module {
 
    @Override public void configure(Binder binder) {
       // Predictable time
-      binder.bind(JWTBearerTokenFlow.class).to(JWTBearerTokenFlow.TestJWTBearerTokenFlow.class);
+      binder.bind(JWTBearerTokenFlow.class).to(TestJWTBearerTokenFlow.class);
 
       // Predictable ssh keys
       Crypto crypto = createMock(Crypto.class);

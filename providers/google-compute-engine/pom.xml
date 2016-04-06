@@ -71,6 +71,13 @@
             <scope>test</scope>
         </dependency>
         <dependency>
+            <groupId>org.apache.jclouds.api</groupId>
+            <artifactId>oauth</artifactId>
+            <version>${project.version}</version>
+            <type>test-jar</type>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
             <groupId>org.apache.jclouds</groupId>
             <artifactId>jclouds-compute</artifactId>
             <version>${project.version}</version>

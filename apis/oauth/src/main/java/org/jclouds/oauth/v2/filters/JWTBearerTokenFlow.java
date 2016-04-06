@@ -19,7 +19,6 @@ package org.jclouds.oauth.v2.filters;
 import static java.util.concurrent.TimeUnit.SECONDS;
 import static org.jclouds.Constants.PROPERTY_SESSION_INTERVAL;
 import static org.jclouds.oauth.v2.config.OAuthProperties.AUDIENCE;
-import static com.google.common.base.Preconditions.checkNotNull;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -51,29 +50,17 @@ import com.google.common.cache.LoadingCache;
 public class JWTBearerTokenFlow implements OAuthFilter {
    private static final Joiner ON_COMMA = Joiner.on(",");
 
-   @com.google.inject.Inject(optional = true) @Named(AUDIENCE) private String audience;
+   private final String audience;
    private final Supplier<Credentials> credentialsSupplier;
    private final OAuthScopes scopes;
    private final long tokenDuration;
    private final LoadingCache<Claims, Token> tokenCache;
 
-   public static class TestJWTBearerTokenFlow extends JWTBearerTokenFlow {
-
-      @Inject TestJWTBearerTokenFlow(AuthorizeToken loader, @Named(PROPERTY_SESSION_INTERVAL) long tokenDuration,
-             @Provider Supplier<Credentials> credentialsSupplier, OAuthScopes scopes) {
-         super(loader, tokenDuration, credentialsSupplier, scopes);
-      }
-
-      /** Constant time for testing. */
-      long currentTimeSeconds() {
-         return 0;
-      }
-   }
-
    @Inject JWTBearerTokenFlow(AuthorizeToken loader, @Named(PROPERTY_SESSION_INTERVAL) long tokenDuration,
-         @Provider Supplier<Credentials> credentialsSupplier, OAuthScopes scopes) {
+         @Provider Supplier<Credentials> credentialsSupplier, OAuthScopes scopes, @Named(AUDIENCE) String audience) {
       this.credentialsSupplier = credentialsSupplier;
       this.scopes = scopes;
+      this.audience = audience;
       this.tokenDuration = tokenDuration;
       // since the session interval is also the token expiration time requested to the server make the token expire a
       // bit before the deadline to make sure there aren't session expiration exceptions
@@ -94,7 +81,6 @@ public class JWTBearerTokenFlow implements OAuthFilter {
    }
 
    @Override public HttpRequest filter(HttpRequest request) throws HttpException {
-      checkNotNull(audience, AUDIENCE);
       long now = currentTimeSeconds();
       Claims claims = Claims.create( //
             credentialsSupplier.get().identity, // iss

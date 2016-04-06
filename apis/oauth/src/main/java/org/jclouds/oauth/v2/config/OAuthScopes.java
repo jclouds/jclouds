@@ -46,6 +46,19 @@ public interface OAuthScopes {
       SingleScope() {
       }
    }
+   
+   @AutoValue public abstract static class NoScopes implements OAuthScopes {
+       public static NoScopes create() {
+          return new AutoValue_OAuthScopes_NoScopes();
+       }
+
+       @Override public List<String> forRequest(HttpRequest input) {
+          return ImmutableList.of();
+       }
+
+       NoScopes() {
+       }
+    }
 
    @AutoValue public abstract static class ReadOrWriteScopes implements OAuthScopes {
       abstract List<String> readScopes();
