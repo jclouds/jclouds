@@ -16,20 +16,18 @@
  */
 package org.jclouds.azurecompute.arm.internal;
 import static com.google.common.util.concurrent.MoreExecutors.sameThreadExecutor;
-import static org.testng.Assert.assertEquals;
 import static org.jclouds.oauth.v2.config.CredentialType.BEARER_TOKEN_CREDENTIALS;
 import static org.jclouds.oauth.v2.config.OAuthProperties.CREDENTIAL_TYPE;
+import static org.testng.Assert.assertEquals;
 
 import java.io.IOException;
 import java.util.Properties;
 import java.util.Set;
 
 import org.jclouds.ContextBuilder;
-import org.jclouds.concurrent.config.ExecutorServiceModule;
 import org.jclouds.azurecompute.arm.AzureComputeApi;
 import org.jclouds.azurecompute.arm.AzureComputeProviderMetadata;
-import org.jclouds.json.Json;
-import org.jclouds.rest.ApiContext;
+import org.jclouds.concurrent.config.ExecutorServiceModule;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 
@@ -52,7 +50,6 @@ public class BaseAzureComputeApiMockTest {
 
    protected MockWebServer server;
    protected AzureComputeApi api;
-   private Json json;
 
    // So that we can ignore formatting.
    private final JsonParser parser = new JsonParser();
@@ -63,15 +60,14 @@ public class BaseAzureComputeApiMockTest {
       server.play();
       Properties properties = new Properties();
       properties.put(CREDENTIAL_TYPE, BEARER_TOKEN_CREDENTIALS.toString());
+      properties.put("oauth.endpoint", "https://login.microsoftonline.com/tenant-id/oauth2/token");
       AzureComputeProviderMetadata pm = AzureComputeProviderMetadata.builder().build();
-      ApiContext<AzureComputeApi> ctx = ContextBuilder.newBuilder(pm)
+      api = ContextBuilder.newBuilder(pm)
               .credentials("", MOCK_BEARER_TOKEN)
               .endpoint(server.getUrl("/").toString() + "subscriptions/12345678-1234-1234-1234-123456789012")
               .modules(modules)
               .overrides(properties)
-              .build();
-      json = ctx.utils().injector().getInstance(Json.class);
-      api = ctx.getApi();
+              .buildApi(AzureComputeApi.class);
    }
 
    @AfterMethod(alwaysRun = true)

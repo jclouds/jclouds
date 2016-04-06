@@ -31,10 +31,10 @@
   <packaging>bundle</packaging>
 
   <properties>
-    <test.jclouds.azurecompute-arm.subscription-id>FIXME_subscription-id</test.jclouds.azurecompute-arm.subscription-id>
-    <test.jclouds.azurecompute-arm.tenant-id>FIXME_tenant-id</test.jclouds.azurecompute-arm.tenant-id>
-    <test.azurecompute-arm.endpoint>https://management.azure.com/subscriptions/${test.jclouds.azurecompute-arm.subscription-id}</test.azurecompute-arm.endpoint>
-    <test.azurecompute-arm.api-version>2014-04-01-preview</test.azurecompute-arm.api-version>
+    <test.jclouds.oauth.resource>https://management.azure.com/</test.jclouds.oauth.resource>
+    <test.oauth.endpoint>https://login.microsoftonline.com/FIXME_tenant-id/oauth2/token</test.oauth.endpoint>
+    <test.azurecompute-arm.endpoint>https://management.azure.com/subscriptions/FIXME_subscription-id</test.azurecompute-arm.endpoint>
+    <test.azurecompute-arm.api-version></test.azurecompute-arm.api-version>
     <test.azurecompute-arm.build-version />
     <test.azurecompute-arm.identity>app id</test.azurecompute-arm.identity>
     <test.azurecompute-arm.credential>app password</test.azurecompute-arm.credential>
@@ -162,8 +162,8 @@
                     <test.azurecompute-arm.build-version>${test.azurecompute-arm.build-version}</test.azurecompute-arm.build-version>
                     <test.azurecompute-arm.identity>${test.azurecompute-arm.identity}</test.azurecompute-arm.identity>
                     <test.azurecompute-arm.credential>${test.azurecompute-arm.credential}</test.azurecompute-arm.credential>
-                    <test.jclouds.azurecompute-arm.subscription-id>${test.jclouds.azurecompute-arm.subscription-id}</test.jclouds.azurecompute-arm.subscription-id>
-                    <test.jclouds.azurecompute-arm.tenant-id>${test.jclouds.azurecompute-arm.tenant-id}</test.jclouds.azurecompute-arm.tenant-id>
+                    <test.jclouds.oauth.resource>${test.jclouds.oauth.resource}</test.jclouds.oauth.resource>
+                    <test.oauth.endpoint>${test.oauth.endpoint}</test.oauth.endpoint>
                   </systemPropertyVariables>
                 </configuration>
               </execution>

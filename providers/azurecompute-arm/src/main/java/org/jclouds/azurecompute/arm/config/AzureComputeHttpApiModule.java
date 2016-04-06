@@ -52,6 +52,6 @@ public class AzureComputeHttpApiModule extends HttpApiModule<AzureComputeApi> {
    protected void configure() {
       install(new AzureComputeParserModule());
       super.configure();
-      bind(OAuthScopes.class).toInstance(OAuthScopes.ReadOrWriteScopes.create("read", "read write"));
+      bind(OAuthScopes.class).toInstance(OAuthScopes.NoScopes.create());
    }
 }

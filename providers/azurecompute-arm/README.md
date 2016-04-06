@@ -2,7 +2,8 @@ jclouds Labs - Azure Compute ARM Provider
 ============
 
 Build status for azurecomputearm module:
-[![Build Status](http://devopsfunjenkins.westus.cloudapp.azure.com:8080/buildStatus/icon?job=jclouds-labs-azurecompute-arm/org.apache.jclouds.labs:azurecomputearm)](http://devopsfunjenkins.westus.cloudapp.azure.com:8080/job/jclouds-labs-azurecompute-arm/org.apache.jclouds.labs$azurecomputearm/)
+[![Build Status](https://jclouds.ci.cloudbees.com/buildStatus/icon?job=jclouds-labs/org.apache.jclouds.labs$azurecompute-arm)](https://jclouds.ci.cloudbees.com/buildStatus/icon?job=jclouds-labs/org.apache.jclouds.labs$azurecompute-arm)
+
 
 
 ## Setting Up Test Credentials
@@ -42,68 +43,23 @@ Run the following commands to assign roles to the service principal
 ```bash
 # Assign roles for this service principal
 azure role assignment create --objectId <Object-id> -o Contributor -c /subscriptions/<Subscription-id>/
-
 ```
 
 Verify service principal
 
 ```bash
 azure login -u <Application-id> -p <password> --service-principal --tenant <Tenant-id>
-
 ```
 
 ## Run Live Tests
 
-
 Use the following to run the live tests
 
 ```bash
-# ResourceGroupApiLiveTest:
 
-mvn -Dtest=ResourceGroupApiLiveTest -Dtest.azurecompute-arm.identity=<Application-id> -Dtest.azurecompute-arm.subscriptionid=<Subscription-id> -Dtest.azurecompute-arm.credential=<password> -Dtest.azurecompute-arm.endpoint="https://management.azure.com" -Dtest.jclouds.oauth.resource="https://management.azure.com/" -Dtest.oauth.endpoint="https://login.microsoftonline.com/<Tenant-id>/oauth2/token" test
-
-# AuthorizationApiLiveTest:
-
-mvn -Dtest=AuthorizationApiLiveTest -Dtest.oauth.identity=<Application-id> -Dtest.oauth.credential=<password> -Dtest.jclouds.oauth.resource="https://management.azure.com/" -Dtest.oauth.endpoint="https://login.microsoftonline.com/<Tenant-id>/oauth2/token" -Dtest.jclouds.oauth.audience="https://management.azure.com/" test
-
-# LocationApiLiveTest:
-
-mvn -Dtest=LocationApiLiveTest -Dtest.azurecompute-arm.identity=<Application-id> -Dtest.azurecompute-arm.subscriptionid=<Subscription-id> -Dtest.azurecompute-arm.credential=<password> -Dtest.azurecompute-arm.endpoint="https://management.azure.com" -Dtest.jclouds.oauth.resource="https://management.azure.com/" -Dtest.oauth.endpoint="https://login.microsoftonline.com/<Tenant-id>/oauth2/token" test
-
-# StorageAccountApiLiveTest:
-
-mvn -Dtest=StorageAccountApiLiveTest -Dtest.azurecompute-arm.identity=<Application-id> -Dtest.azurecompute-arm.subscriptionid=<Subscription-id> -Dtest.azurecompute-arm.credential=<password> -Dtest.azurecompute-arm.endpoint="https://management.azure.com" -Dtest.jclouds.oauth.resource="https://management.azure.com/" -Dtest.oauth.endpoint="https://login.microsoftonline.com/<Tenant-id>/oauth2/token" test
-
-# VirtualNetworkApiLiveTest:
-
-mvn -Dtest=VirtualNetworkApiLiveTest -Dtest.azurecompute-arm.identity=<Application-id> -Dtest.azurecompute-arm.subscriptionid=<Subscription-id> -Dtest.azurecompute-arm.credential=<password> -Dtest.azurecompute-arm.resourcegroup="jcloudstest" -Dtest.azurecompute-arm.endpoint="https://management.azure.com" -Dtest.jclouds.oauth.resource="https://management.azure.com/" -Dtest.oauth.endpoint="https://login.microsoftonline.com/<Tenant-id>/oauth2/token" test
-
-# SubnetApiLiveTest
-
-mvn -Dtest=SubnetApiLiveTest -Dtest.azurecompute-arm.identity=<Application-id> -Dtest.azurecompute-arm.subscriptionid=<Subscription-id> -Dtest.azurecompute-arm.credential=<password> -Dtest.azurecompute-arm.resourcegroup="jcloudstest" -Dtest.azurecompute-arm.endpoint="https://management.azure.com" -Dtest.jclouds.oauth.resource="https://management.azure.com/" -Dtest.oauth.endpoint="https://login.microsoftonline.com/<Tenant-id>/oauth2/token" test
-
-# NetworkInterfaceCardApiLiveTest
-
-mvn -Dtest=NetworkInterfaceCardApiLiveTest -Dtest.azurecompute-arm.identity=<Application-id> -Dtest.azurecompute-arm.subscriptionid=<Subscription-id> -Dtest.azurecompute-arm.credential=<password> -Dtest.azurecompute-arm.resourcegroup="jcloudstest" -Dtest.azurecompute-arm.endpoint="https://management.azure.com" -Dtest.jclouds.oauth.resource="https://management.azure.com/" -Dtest.oauth.endpoint="https://login.microsoftonline.com/<Tenant-id>/oauth2/token" test
-
-# VirtualMachineApiLiveTest:
-
-mvn -Dtest=VirtualMachineApiLiveTest -Dtest.azurecompute-arm.identity=<Application-id> -Dtest.azurecompute-arm.subscriptionid=<Subscription-id> -Dtest.azurecompute-arm.credential=<password> -Dtest.azurecompute-arm.endpoint="https://management.azure.com" -Dtest.jclouds.oauth.resource="https://management.azure.com/" -Dtest.oauth.endpoint="https://login.microsoftonline.com/<Tenant-id>/oauth2/token" test
-
-# VMSizeApiLiveTest:
-
-mvn -Dtest=VMSizeApiLiveTest -Dtest.azurecompute-arm.identity=<Application-id> -Dtest.azurecompute-arm.subscriptionid=<Subscription-id> -Dtest.azurecompute-arm.credential=<password> -Dtest.azurecompute-arm.endpoint="https://management.azure.com" -Dtest.jclouds.oauth.resource="https://management.azure.com/" -Dtest.oauth.endpoint="https://login.microsoftonline.com/<Tenant-id>/oauth2/token" test
-
-# PublicIPAddressApiLiveTest
-
-mvn -Dtest=PublicIPAddressApiLiveTest -Dtest.azurecompute-arm.identity=<Application-id> -Dtest.azurecompute-arm.subscriptionid=<Subscription-id> -Dtest.azurecompute-arm.credential=<password> -Dtest.azurecompute-arm.endpoint="https://management.azure.com" -Dtest.jclouds.oauth.resource="https://management.azure.com/" -Dtest.oauth.endpoint="https://login.microsoftonline.com/<Tenant-id>/oauth2/token" test
-
-# OSImageApiLiveTest:
-
-mvn -Dtest=OSImageApiLiveTest -Dtest.azurecompute-arm.identity=<Application-id> -Dtest.azurecompute-arm.subscriptionid=<Subscription-id> -Dtest.azurecompute-arm.credential=<password> -Dtest.azurecompute-arm.endpoint="https://management.azure.com" -Dtest.jclouds.oauth.resource="https://management.azure.com/" -Dtest.oauth.endpoint="https://login.microsoftonline.com/<Tenant-id>/oauth2/token" test
-
-# DeploymentApiLiveTest:
-
-mvn -Dtest=DeploymentApiLiveTest -Dtest.azurecompute-arm.identity=<Application-id> -Dtest.azurecompute-arm.subscriptionid=<Subscription-id> -Dtest.azurecompute-arm.credential=<password> -Dtest.azurecompute-arm.endpoint="https://management.azure.com/" -Dtest.jclouds.oauth.resource="https://management.azure.com/" -Dtest.oauth.endpoint="https://login.microsoftonline.com/<Tenant-id>/oauth2/token" test
-
+mvn clean verify -Plive \
+    -Dtest.azurecompute-arm.identity=<Application-id> \
+    -Dtest.azurecompute-arm.credential=<password> \
+    -Dtest.azurecompute-arm.endpoint=https://management.azure.com/subscriptions/<Subscription-id> \
+    -Dtest.oauth.endpoint=https://login.microsoftonline.com/<Tenant-id>/oauth2/token
 ```
