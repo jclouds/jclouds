@@ -2,7 +2,7 @@ jclouds Labs - Azure Compute ARM Provider
 ============
 
 Build status for azurecomputearm module:
-[![Build Status](https://jclouds.ci.cloudbees.com/buildStatus/icon?job=jclouds-labs/org.apache.jclouds.labs$azurecompute-arm)](https://jclouds.ci.cloudbees.com/buildStatus/icon?job=jclouds-labs/org.apache.jclouds.labs$azurecompute-arm)
+[![Build Status](https://jclouds.ci.cloudbees.com/buildStatus/icon?job=jclouds-labs/org.apache.jclouds.labs$azurecompute-arm)](https://jclouds.ci.cloudbees.com/job/jclouds-labs/org.apache.jclouds.labs$azurecompute-arm/)
 
 
 
