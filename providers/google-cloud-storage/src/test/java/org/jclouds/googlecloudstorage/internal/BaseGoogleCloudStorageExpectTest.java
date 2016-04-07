@@ -51,6 +51,7 @@ import org.jclouds.http.HttpResponse;
 import org.jclouds.io.Payload;
 import org.jclouds.io.payloads.ByteSourcePayload;
 import org.jclouds.oauth.v2.filters.JWTBearerTokenFlow;
+import org.jclouds.oauth.v2.filters.TestJWTBearerTokenFlow;
 import org.jclouds.providers.ProviderMetadata;
 import org.jclouds.rest.internal.BaseRestApiExpectTest;
 
@@ -91,7 +92,7 @@ public class BaseGoogleCloudStorageExpectTest<T> extends BaseRestApiExpectTest<T
          @Override
          public void configure(Binder binder) {
             // Predictable time
-            binder.bind(JWTBearerTokenFlow.class).to(JWTBearerTokenFlow.TestJWTBearerTokenFlow.class);
+            binder.bind(JWTBearerTokenFlow.class).to(TestJWTBearerTokenFlow.class);
             try {
                KeyFactory keyfactory = KeyFactory.getInstance("RSA");
                PrivateKey privateKey = keyfactory.generatePrivate(privateKeySpec(ByteSource.wrap(PRIVATE_KEY
