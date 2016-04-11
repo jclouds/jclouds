@@ -18,6 +18,8 @@ package org.jclouds.googlecomputeengine.internal;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Preconditions.checkState;
+import static org.jclouds.googlecomputeengine.config.GoogleComputeEngineProperties.OPERATION_COMPLETE_INTERVAL;
+import static org.jclouds.googlecomputeengine.config.GoogleComputeEngineProperties.OPERATION_COMPLETE_TIMEOUT;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertTrue;
 
@@ -40,6 +42,7 @@ import com.google.inject.Injector;
 import com.google.inject.Key;
 import com.google.inject.Module;
 import com.google.inject.TypeLiteral;
+import com.google.inject.name.Names;
 
 public class BaseGoogleComputeEngineApiLiveTest extends BaseApiLiveTest<GoogleComputeEngineApi> {
 
@@ -61,6 +64,8 @@ public class BaseGoogleComputeEngineApiLiveTest extends BaseApiLiveTest<GoogleCo
    protected static final String GOOGLE_PROJECT = "google";
 
    protected Predicate<AtomicReference<Operation>> operationDone;
+   protected long operationDoneInterval;
+   protected long operationDoneTimeout;
    protected URI projectUrl;
 
    public BaseGoogleComputeEngineApiLiveTest() {
@@ -78,6 +83,8 @@ public class BaseGoogleComputeEngineApiLiveTest extends BaseApiLiveTest<GoogleCo
       }));
       projectUrl = injector.getInstance(Key.get(new TypeLiteral<Supplier<URI>>() {
       }, CurrentProject.class)).get();
+      operationDoneInterval = Long.parseLong(injector.getInstance(Key.get(String.class, Names.named(OPERATION_COMPLETE_INTERVAL))));
+      operationDoneTimeout = Long.parseLong(injector.getInstance(Key.get(String.class, Names.named(OPERATION_COMPLETE_TIMEOUT))));
       return injector.getInstance(GoogleComputeEngineApi.class);
    }
 

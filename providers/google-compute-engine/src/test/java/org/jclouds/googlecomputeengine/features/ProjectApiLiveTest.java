@@ -16,10 +16,14 @@
  */
 package org.jclouds.googlecomputeengine.features;
 
+import static java.util.concurrent.TimeUnit.MILLISECONDS;
+import static org.jclouds.util.Predicates2.retry;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertTrue;
+
+import java.util.concurrent.atomic.AtomicReference;
 
 import org.jclouds.googlecomputeengine.domain.Metadata;
 import org.jclouds.googlecomputeengine.domain.Operation;
@@ -27,6 +31,8 @@ import org.jclouds.googlecomputeengine.domain.Operation.Status;
 import org.jclouds.googlecomputeengine.domain.Project;
 import org.jclouds.googlecomputeengine.internal.BaseGoogleComputeEngineApiLiveTest;
 import org.testng.annotations.Test;
+
+import com.google.common.base.Predicate;
 
 public class ProjectApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
 
@@ -71,12 +77,19 @@ public class ProjectApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
 
    @Test(groups = "live", dependsOnMethods = "getProject")
    public void testSetUsageExportBucket() {
-      Operation o = api.project().setUsageExportBucket("test-bucket", "test-");
+      AtomicReference<Operation> o = new AtomicReference<Operation>(api.project().setUsageExportBucket(
+            "unexisting-bucket", "test-"));
 
-      while (o.status() == Status.PENDING) {
-         o = api.operations().get(o.selfLink());
-      }
-      assertEquals(o.error().errors().get(0).code(), "PERMISSIONS_ERROR");
-      assertEquals(o.error().errors().get(0).message(), "Required 'owner' permission for 'test-bucket'");
+      retry(new Predicate<AtomicReference<Operation>>() {
+         @Override
+         public boolean apply(AtomicReference<Operation> input) {
+            input.set(api.operations().get(input.get().selfLink()));
+            return Status.DONE == input.get().status();
+         }
+      }, operationDoneTimeout, operationDoneInterval, MILLISECONDS).apply(o);
+
+      assertEquals(o.get().status(), Status.DONE);
+      assertEquals(o.get().error().errors().get(0).code(), "PERMISSIONS_ERROR");
+      assertEquals(o.get().error().errors().get(0).message(), "Required 'read' permission for 'unexisting-bucket'");
    }
 }
