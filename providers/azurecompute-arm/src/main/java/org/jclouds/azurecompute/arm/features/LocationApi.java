@@ -49,7 +49,7 @@ public interface LocationApi {
    /**
     * The List Locations operation lists all of the data center locations that are valid for your subscription.
     */
-   @Named("ListLocations")
+   @Named("location:list")
    @GET
    @SelectJson("value")
    @Fallback(EmptyListOnNotFoundOr404.class)

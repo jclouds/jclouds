@@ -68,14 +68,13 @@ public enum Region {
    public static Region byName(final String name) {
       Preconditions.checkNotNull(name);
 
-      Region result = null;
       for (Region region : values()) {
          if (name.equals(region.name)) {
-            result = region;
+            return region;
          }
       }
 
-      return result;
+      return null;
    }
 
    public static Set<String> iso3166Codes() {

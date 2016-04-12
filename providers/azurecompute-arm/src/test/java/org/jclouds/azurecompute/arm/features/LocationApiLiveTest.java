@@ -20,6 +20,7 @@ import org.jclouds.azurecompute.arm.domain.Location;
 import org.jclouds.azurecompute.arm.internal.BaseAzureComputeApiLiveTest;
 import org.testng.annotations.Test;
 
+import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertTrue;
 
 @Test(groups = "live", testName = "LocationApiLiveTest")
@@ -27,13 +28,23 @@ public class LocationApiLiveTest extends BaseAzureComputeApiLiveTest {
 
    @Test
    public void testList() {
-      for (Location location : api().list()) {
-          assertTrue(!location.id().isEmpty());
-      }
       assertTrue(!api().list().isEmpty());
+
+      for (Location location : api().list()) {
+         assertTrue(!location.id().isEmpty());
+         checkLocation(location);
+      }
    }
 
    private LocationApi api() {
       return api.getLocationApi();
+   }
+
+   private void checkLocation(final Location location) {
+      assertNotNull(location.name(), "Name cannot be null for a Location.");
+      assertNotNull(location.displayName(), "DisplayName cannot be null for: " + location.name());
+      assertNotNull(location.id(), "Id cannot be null for: " + location.name());
+      assertNotNull(location.latitude(), "Latitude cannot be null for: " + location.name());
+      assertNotNull(location.longitude(), "Longitude cannot be null for: " + location.name());
    }
 }
