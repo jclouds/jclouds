@@ -19,6 +19,7 @@ package org.jclouds.azurecompute.arm;
 import java.io.Closeable;
 
 import org.jclouds.azurecompute.arm.features.JobApi;
+import org.jclouds.azurecompute.arm.features.LocationApi;
 import org.jclouds.azurecompute.arm.features.ResourceGroupApi;
 import org.jclouds.rest.annotations.Delegate;
 
@@ -40,4 +41,12 @@ public interface AzureComputeApi extends Closeable {
 
    @Delegate
    JobApi getJobApi();
+
+   /**
+    * This Azure Resource Manager API provides all of the locations that are available for resource providers
+    *
+    * @see <a href="https://msdn.microsoft.com/en-US/library/azure/dn790540.aspx">docs</a>
+    */
+   @Delegate
+   LocationApi getLocationApi();
 }

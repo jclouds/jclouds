@@ -34,7 +34,7 @@ import static org.testng.Assert.assertEquals;
 @Test(groups = "unit", testName = "ResourceGroupApiMockTest", singleThreaded = true)
 public class ResourceGroupApiMockTest extends BaseAzureComputeApiMockTest {
 
-   final String subscriptionid = "12345678-1234-1234-1234-123456789012";
+   final String subscriptionid = "SUBSCRIPTIONID";
    final String requestUrl = "/subscriptions/" + subscriptionid + "/resourcegroups";
    final String version = "?api-version=2015-01-01";
 

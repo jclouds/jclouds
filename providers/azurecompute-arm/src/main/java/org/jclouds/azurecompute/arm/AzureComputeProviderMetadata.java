@@ -27,6 +27,7 @@ import static org.jclouds.oauth.v2.config.OAuthProperties.CREDENTIAL_TYPE;
 
 import java.net.URI;
 import java.util.Properties;
+import org.jclouds.azurecompute.arm.domain.Region;
 import org.jclouds.providers.ProviderMetadata;
 import org.jclouds.providers.internal.BaseProviderMetadata;
 
@@ -75,6 +76,7 @@ public class AzureComputeProviderMetadata extends BaseProviderMetadata {
                  .homepage(URI.create("https://www.windowsazure.com/"))
                  .console(URI.create("https://windows.azure.com/default.aspx"))
                  .linkedServices("azureblob")
+                 .iso3166Codes(Region.iso3166Codes())
                  .defaultProperties(AzureComputeProviderMetadata.defaultProperties());
       }
 
