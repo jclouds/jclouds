@@ -21,7 +21,10 @@ import java.io.Closeable;
 import org.jclouds.azurecompute.arm.features.JobApi;
 import org.jclouds.azurecompute.arm.features.LocationApi;
 import org.jclouds.azurecompute.arm.features.ResourceGroupApi;
+import org.jclouds.azurecompute.arm.features.StorageAccountApi;
 import org.jclouds.rest.annotations.Delegate;
+
+import javax.ws.rs.PathParam;
 
 /**
  * The Azure Resource Manager API is a REST API for managing your services and deployments.
@@ -49,4 +52,13 @@ public interface AzureComputeApi extends Closeable {
     */
    @Delegate
    LocationApi getLocationApi();
+
+   /**
+    * The Azure Resource Manager API includes operations for managing the storage accounts in your subscription.
+    *
+    * @see <https://msdn.microsoft.com/en-us/library/mt163683.aspx">docs</a>
+    */
+   @Delegate
+   StorageAccountApi getStorageAccountApi(@PathParam("resourceGroup") String resourceGroup);
+
 }

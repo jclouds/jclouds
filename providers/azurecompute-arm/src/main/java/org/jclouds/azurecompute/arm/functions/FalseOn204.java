@@ -16,33 +16,25 @@
  */
 package org.jclouds.azurecompute.arm.functions;
 import com.google.common.base.Function;
-import org.jclouds.azurecompute.arm.util.GetEnumValue;
 import org.jclouds.http.HttpResponse;
 
 import javax.inject.Singleton;
+
+import static org.jclouds.http.HttpUtils.releasePayload;
 /**
- * Parses job status from http response
+ * Parses an http response code from http responser
  */
 @Singleton
-public class ParseJobStatus implements Function<HttpResponse, ParseJobStatus.JobStatus> {
-   public enum JobStatus {
-
-      DONE,
-      IN_PROGRESS,
-      FAILED,
-      UNRECOGNIZED;
-
-      public static JobStatus fromValue(final String text) {
-         return (JobStatus) GetEnumValue.fromValueOrDefault(text, JobStatus.UNRECOGNIZED);
+public class FalseOn204 implements Function<HttpResponse, Boolean> {
+   public Boolean apply(final HttpResponse from) {
+      releasePayload(from);
+      final int statusCode = from.getStatusCode();
+      if (statusCode == 200) {
+         return true;
       }
-   }
-   public JobStatus apply(final HttpResponse from) {
-      if (from.getStatusCode() == 202 ){
-         return JobStatus.IN_PROGRESS;
-      } else if (from.getStatusCode() == 200 ){
-         return JobStatus.DONE;
-      } else {
-         return JobStatus.FAILED;
+      if (statusCode == 204) {
+         return false;
       }
+      throw new IllegalStateException("not expected response from: " + from);
    }
 }

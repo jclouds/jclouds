@@ -96,6 +96,11 @@ public class BaseAzureComputeApiMockTest {
       return new MockResponse().setStatus("HTTP/1.1 202 Accepted");
    }
 
+
+   protected MockResponse response204() {
+      return new MockResponse().setStatus("HTTP/1.1 204 No Content");
+   }
+
    protected MockResponse response202WithHeader() {
       return new MockResponse()
               .setStatus("HTTP/1.1 202 Accepted")
