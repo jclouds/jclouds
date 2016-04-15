@@ -75,6 +75,15 @@ public final class Fallbacks {
       }
    }
 
+   public static final class FalseOnNotFoundOr204 implements Fallback<Boolean> {
+      public Boolean createOrPropagate(Throwable t) throws Exception {
+         if (containsResourceNotFoundException(checkNotNull(t, "throwable"))
+               || returnValueOnCodeOrNull(t, true, equalTo(204)) != null)
+            return false;
+         throw propagate(t);
+      }
+   }
+
    /**
     */
    public static final class AbsentOn403Or404Or500 implements Fallback<Optional<Object>> {
