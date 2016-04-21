@@ -29,7 +29,7 @@ public class FalseOn204 implements Function<HttpResponse, Boolean> {
    public Boolean apply(final HttpResponse from) {
       releasePayload(from);
       final int statusCode = from.getStatusCode();
-      if (statusCode == 200) {
+      if (statusCode == 200 || statusCode == 202) {
          return true;
       }
       if (statusCode == 204) {

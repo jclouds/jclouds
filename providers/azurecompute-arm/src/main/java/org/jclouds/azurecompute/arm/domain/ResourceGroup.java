@@ -41,11 +41,12 @@ public abstract class ResourceGroup {
    public abstract String name();
    public abstract String location();
 
+   @Nullable
    public abstract Map<String, String> tags();
    public abstract ResourceGroupProperties properties();
 
    @SerializedNames({"id", "name", "location", "tags", "properties"})
    public static ResourceGroup create(String id, String name, String location, Map<String, String> tags, ResourceGroupProperties properties) {
-      return new AutoValue_ResourceGroup(id, name, location, tags == null ? ImmutableMap.<String, String>builder().build() : ImmutableMap.copyOf(tags), properties);
+      return new AutoValue_ResourceGroup(id, name, location, tags == null ? null : ImmutableMap.copyOf(tags), properties);
    }
 }

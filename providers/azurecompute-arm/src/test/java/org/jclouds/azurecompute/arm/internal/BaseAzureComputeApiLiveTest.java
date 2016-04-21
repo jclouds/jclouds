@@ -23,7 +23,11 @@ import com.google.common.collect.ImmutableMap;
 import org.jclouds.azurecompute.arm.domain.ResourceGroup;
 
 import org.jclouds.azurecompute.arm.domain.StorageService;
+import org.jclouds.azurecompute.arm.domain.Subnet;
+import org.jclouds.azurecompute.arm.domain.VirtualNetwork;
 import org.jclouds.azurecompute.arm.features.StorageAccountApi;
+import org.jclouds.azurecompute.arm.features.SubnetApi;
+import org.jclouds.azurecompute.arm.features.VirtualNetworkApi;
 import org.jclouds.azurecompute.arm.functions.ParseJobStatus;
 import org.jclouds.util.Predicates2;
 import org.testng.Assert;
@@ -31,11 +35,21 @@ import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 
 import java.net.URI;
+import java.util.Arrays;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class BaseAzureComputeApiLiveTest extends AbstractAzureComputeApiLiveTest {
    public static final String LOCATION = "westeurope";
+
+   public static final String DEFAULT_SUBNET_ADDRESS_SPACE = "10.2.0.0/23";
+
+   public static final String VIRTUAL_NETWORK_NAME = "jclouds-virtual-network-live-test";
+
+   public static final String DEFAULT_SUBNET_NAME = "jclouds-1";
+
+   public static final String DEFAULT_VIRTUALNETWORK_ADDRESS_PREFIX = "10.2.0.0/16";
+
    private String resourceGroupName = null;
 
    protected StorageService storageService;
@@ -121,5 +135,38 @@ public class BaseAzureComputeApiLiveTest extends AbstractAzureComputeApiLiveTest
 
       Logger.getAnonymousLogger().log(Level.INFO, "created storageService: {0}", ss);
       return ss;
+   }
+
+   protected VirtualNetwork getOrCreateVirtualNetwork(final String virtualNetworkName) {
+
+      VirtualNetworkApi vnApi = api.getVirtualNetworkApi(getResourceGroupName());
+      VirtualNetwork vn = vnApi.get(virtualNetworkName);
+
+      if (vn != null) {
+         return vn;
+      }
+
+      final VirtualNetwork.VirtualNetworkProperties virtualNetworkProperties =
+              VirtualNetwork.VirtualNetworkProperties.create(null, null,
+                      VirtualNetwork.AddressSpace.create(Arrays.asList(DEFAULT_VIRTUALNETWORK_ADDRESS_PREFIX)), null);
+
+
+      vn = vnApi.createOrUpdate(VIRTUAL_NETWORK_NAME, LOCATION, virtualNetworkProperties);
+      return vn;
+   }
+
+   protected Subnet getOrCreateSubnet(final String subnetName, final String virtualNetworkName){
+
+      SubnetApi subnetApi = api.getSubnetApi(getResourceGroupName(), virtualNetworkName);
+      Subnet subnet = subnetApi.get(subnetName);
+
+      if (subnet != null){
+         return subnet;
+      }
+
+      Subnet.SubnetProperties  properties = Subnet.SubnetProperties.builder().addressPrefix(DEFAULT_SUBNET_ADDRESS_SPACE).build();
+      subnet = subnetApi.createOrUpdate(subnetName, properties);
+
+      return subnet;
    }
 }

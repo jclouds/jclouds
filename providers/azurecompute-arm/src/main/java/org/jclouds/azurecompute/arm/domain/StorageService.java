@@ -160,6 +160,7 @@ public abstract class StorageService {
    /**
     * Specifies the tags of the storage account.
     */
+   @Nullable
    public abstract Map<String, String> tags();
 
    /**
@@ -178,6 +179,6 @@ public abstract class StorageService {
    public static StorageService create(final String id,  final String name,  final String location,
                                        final Map<String, String> tags,  final String type,
                                        final StorageServiceProperties storageServiceProperties) {
-      return new AutoValue_StorageService(id,  name,  location,  tags == null ? ImmutableMap.<String, String>builder().build() : ImmutableMap.copyOf(tags), type, storageServiceProperties);
+      return new AutoValue_StorageService(id,  name,  location,  tags == null ? null : ImmutableMap.copyOf(tags), type, storageServiceProperties);
    }
 }

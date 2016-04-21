@@ -22,6 +22,8 @@ import org.jclouds.azurecompute.arm.features.JobApi;
 import org.jclouds.azurecompute.arm.features.LocationApi;
 import org.jclouds.azurecompute.arm.features.ResourceGroupApi;
 import org.jclouds.azurecompute.arm.features.StorageAccountApi;
+import org.jclouds.azurecompute.arm.features.SubnetApi;
+import org.jclouds.azurecompute.arm.features.VirtualNetworkApi;
 import org.jclouds.rest.annotations.Delegate;
 
 import javax.ws.rs.PathParam;
@@ -60,5 +62,21 @@ public interface AzureComputeApi extends Closeable {
     */
    @Delegate
    StorageAccountApi getStorageAccountApi(@PathParam("resourceGroup") String resourceGroup);
+   /**
+    * The Subnet API includes operations for managing the subnets in your virtual network.
+    *
+    * @see <a href="https://msdn.microsoft.com/en-us/library/azure/mt163621.aspx">docs</a>
+    */
+   @Delegate
+   SubnetApi getSubnetApi(@PathParam("resourcegroup") String resourcegroup,
+                          @PathParam("virtualnetwork") String virtualnetwork);
+
+   /**
+    * The Virtual Network API includes operations for managing the virtual networks in your subscription.
+    *
+    * @see <a href="https://msdn.microsoft.com/en-us/library/azure/mt163661.aspx">docs</a>
+    */
+   @Delegate
+   VirtualNetworkApi getVirtualNetworkApi(@PathParam("resourcegroup") String resourcegroup);
 
 }

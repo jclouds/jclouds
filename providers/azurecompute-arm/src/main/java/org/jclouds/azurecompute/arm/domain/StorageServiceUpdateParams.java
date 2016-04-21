@@ -48,6 +48,7 @@ public abstract class StorageServiceUpdateParams {
    /**
     * Specifies the tags of the storage account.
     */
+   @Nullable
    public abstract Map<String, String> tags();
 
    /**
@@ -59,6 +60,6 @@ public abstract class StorageServiceUpdateParams {
    @SerializedNames({"tags", "properties"})
    public static StorageServiceUpdateParams create(final Map<String, String> tags,
                                                    final StorageServiceUpdateProperties storageServiceProperties) {
-      return new AutoValue_StorageServiceUpdateParams(tags == null ? ImmutableMap.<String, String>builder().build() : ImmutableMap.copyOf(tags), storageServiceProperties);
+      return new AutoValue_StorageServiceUpdateParams(tags == null ? null : ImmutableMap.copyOf(tags), storageServiceProperties);
    }
 }
