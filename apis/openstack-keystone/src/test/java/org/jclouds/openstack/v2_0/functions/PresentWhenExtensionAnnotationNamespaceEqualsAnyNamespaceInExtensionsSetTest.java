@@ -130,15 +130,36 @@ public class PresentWhenExtensionAnnotationNamespaceEqualsAnyNamespaceInExtensio
     * "fake" /fake namespace), allow matching by name and alias.
     *
     */
-   public void testPresentWhenNameSpaceIsMissingAndMatchByNameOrAlias() throws SecurityException, NoSuchMethodException {
+   public void testPresentWhenNameSpaceIsFakeAndMatchByNameOrAlias() throws SecurityException, NoSuchMethodException {
       // Revert to alias
-      Extension floatingIpsWithMissingNamespace = floatingIps.toBuilder()
+      Extension floatingIpsWithFakeNamespace = floatingIps.toBuilder()
             .namespace(URI.create("http://docs.openstack.org/ext/fake"))
             .build();
 
       // Revert to name
-      Extension floatingIpsWithMissingNamespaceAndAlias = floatingIps.toBuilder()
+      Extension floatingIpsWithFakeNamespaceAndAlias = floatingIps.toBuilder()
             .namespace(URI.create("http://docs.openstack.org/ext/fake"))
+            .alias("fake")
+            .build();
+
+      Multimap<URI, URI> aliases = ImmutableMultimap.of();
+
+      assertEquals(whenExtensionsAndAliasesInRegionInclude("region", ImmutableSet.of(floatingIpsWithFakeNamespace), aliases).apply(
+            getFloatingIPExtension(ImmutableList.<Object> of("region"))), Optional.of("foo"));
+
+      assertEquals(whenExtensionsAndAliasesInRegionInclude("region", ImmutableSet.of(floatingIpsWithFakeNamespaceAndAlias), aliases).apply(
+            getFloatingIPExtension(ImmutableList.<Object> of("region"))), Optional.of("foo"));
+   }
+   
+   public void testPresentWhenNameSpaceIsMissingAndMatchByNameOrAlias() throws SecurityException, NoSuchMethodException {
+      // Revert to alias
+      Extension floatingIpsWithMissingNamespace = floatingIps.toBuilder()
+            .namespace(null)
+            .build();
+
+      // Revert to name
+      Extension floatingIpsWithMissingNamespaceAndAlias = floatingIps.toBuilder()
+            .namespace(null)
             .alias("fake")
             .build();
 

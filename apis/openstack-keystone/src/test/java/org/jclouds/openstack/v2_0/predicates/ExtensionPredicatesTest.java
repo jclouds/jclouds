@@ -46,6 +46,12 @@ public class ExtensionPredicatesTest {
    public void testNamespaceEqualsWhenEqual() {
       assert namespaceEquals(URI.create("http://docs.openstack.org/ext/keypairs/api/v1.1")).apply(ref);
    }
+   
+   @Test
+   public void testNamespaceEqualsWhenNullNamespace() {
+      Extension withoutNamespace = ref.toBuilder().namespace(null).build();
+      assert !namespaceEquals(URI.create("http://docs.openstack.org/ext/keypairs/api/v1.1")).apply(withoutNamespace);
+   }
 
    @Test
    public void testNamespaceEqualsWhenEqualEvenOnInputHttps() {
