@@ -757,16 +757,12 @@ public class CreateKeyPairPlacementAndSecurityGroupsAsNeededAndReturnRunOptionsT
       verifyStrategy(strategy);
    }
 
-   public void testGetSecurityGroupsForTagAndOptions_reusesGroupByDefaultWhenNoPortsAreSpecifiedWhenDoesExistAndAcceptsUserSuppliedGroups() {
+   public void testGetSecurityGroupsForTagAndOptions_DoesNotReuseGroupByDefaultWhenNoPortsAreSpecifiedWhenDoesExistAndAcceptsUserSuppliedGroups() {
       // setup constants
       String region = Region.AP_SOUTHEAST_1;
       String group = "group";
-      String generatedMarkerGroup = "jclouds#group";
       Set<String> groupNames = ImmutableSet.<String> of("group1", "group2");
-      int[] ports = {};
-      boolean shouldAuthorizeSelf = true;
-      boolean groupExisted = true;
-      Set<String> returnVal = ImmutableSet.<String> of("sg-12345", "group1", "group2");
+      Set<String> returnVal = ImmutableSet.<String> of("group1", "group2");
 
       // create mocks
       CreateKeyPairPlacementAndSecurityGroupsAsNeededAndReturnRunOptions strategy = setupStrategy();
@@ -775,11 +771,6 @@ public class CreateKeyPairPlacementAndSecurityGroupsAsNeededAndReturnRunOptionsT
       // setup expectations
       expect(options.getGroupIds()).andReturn(ImmutableSet.<String> of());
       expect(options.getGroups()).andReturn(groupNames).atLeastOnce();
-      RegionNameAndIngressRules regionNameAndIngressRules = new RegionNameAndIngressRules(region, generatedMarkerGroup,
-            ports, shouldAuthorizeSelf, null);
-
-      expect(strategy.securityGroupMap.getUnchecked(regionNameAndIngressRules))
-            .andReturn(groupExisted ? "sg-12345" : null);
 
       // replay mocks
       replay(options);
@@ -793,16 +784,12 @@ public class CreateKeyPairPlacementAndSecurityGroupsAsNeededAndReturnRunOptionsT
       verifyStrategy(strategy);
    }
 
-   public void testGetSecurityGroupsForTagAndOptions_reusesGroupByDefaultWhenNoPortsAreSpecifiedWhenDoesExistAndAcceptsUserSuppliedGroupIds() {
+   public void testGetSecurityGroupsForTagAndOptions_DoesNotReuseGroupByDefaultWhenNoPortsAreSpecifiedWhenDoesExistAndAcceptsUserSuppliedGroupIds() {
       // setup constants
       String region = Region.AP_SOUTHEAST_1;
       String group = "group";
-      String generatedMarkerGroup = "jclouds#group";
       Set<String> groupNames = ImmutableSet.<String> of();
-      int[] ports = {};
-      boolean shouldAuthorizeSelf = true;
-      boolean groupExisted = true;
-      Set<String> returnVal = ImmutableSet.<String> of("sg-12345");
+      Set<String> returnVal = ImmutableSet.<String> of();
 
       // create mocks
       CreateKeyPairPlacementAndSecurityGroupsAsNeededAndReturnRunOptions strategy = setupStrategy();
@@ -811,11 +798,6 @@ public class CreateKeyPairPlacementAndSecurityGroupsAsNeededAndReturnRunOptionsT
       // setup expectations
       expect(options.getGroupIds()).andReturn(ImmutableSet.<String> of("group1", "group2"));
       expect(options.getGroups()).andReturn(groupNames).atLeastOnce();
-      RegionNameAndIngressRules regionNameAndIngressRules = new RegionNameAndIngressRules(region, generatedMarkerGroup,
-            ports, shouldAuthorizeSelf, null);
-
-      expect(strategy.securityGroupMap.getUnchecked(regionNameAndIngressRules))
-            .andReturn(groupExisted ? "sg-12345" : null);
 
       // replay mocks
       replay(options);

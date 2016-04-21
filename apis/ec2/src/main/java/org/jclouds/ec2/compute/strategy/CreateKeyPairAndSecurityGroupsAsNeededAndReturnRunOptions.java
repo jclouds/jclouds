@@ -167,19 +167,16 @@ public class CreateKeyPairAndSecurityGroupsAsNeededAndReturnRunOptions {
       if (group != null) {
          String markerGroup = namingConvention.create().sharedNameForGroup(group);
 
-         RegionNameAndIngressRules regionNameAndIngressRulesForMarkerGroup;
-
          if (userSpecifiedTheirOwnGroups(options)) {
-            regionNameAndIngressRulesForMarkerGroup = new RegionNameAndIngressRules(region, markerGroup, new int[] {},
-                     false, vpcId);
             groups.addAll(EC2TemplateOptions.class.cast(options).getGroups());
          } else {
-            regionNameAndIngressRulesForMarkerGroup = new RegionNameAndIngressRules(region, markerGroup, options
+            RegionNameAndIngressRules regionNameAndIngressRulesForMarkerGroup = new RegionNameAndIngressRules(region, markerGroup, options
                      .getInboundPorts(), true, vpcId);
+            // this will create if not yet exists.
+            groups.add(securityGroupMap.getUnchecked(regionNameAndIngressRulesForMarkerGroup));
          }
-         // this will create if not yet exists.
-         groups.add(securityGroupMap.getUnchecked(regionNameAndIngressRulesForMarkerGroup));
       }
+
       return groups.build();
    }
 
