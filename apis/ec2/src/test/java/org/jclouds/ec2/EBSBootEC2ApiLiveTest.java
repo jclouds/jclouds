@@ -357,7 +357,7 @@ public class EBSBootEC2ApiLiveTest extends BaseComputeServiceContextLiveTest {
                imageIds(amiId)));
       } catch (AWSResponseException e) {
          // TODO add a retry handler for this HTTP code 400 and the below error
-         if (e.getError().getClass().equals("InvalidAMIID.NotFound"))
+         if (e.getError().getCode().equals("InvalidAMIID.NotFound"))
             ebsImage = Iterables.getOnlyElement(client.getAMIApi().get().describeImagesInRegion(snapshot.getRegion(),
                   imageIds(amiId)));
          else
