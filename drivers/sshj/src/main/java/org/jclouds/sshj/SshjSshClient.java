@@ -172,8 +172,8 @@ public class SshjSshClient implements SshClient {
    }
 
    private void checkConnected() {
-      checkState(sshClientConnection.ssh != null && sshClientConnection.ssh.isConnected(), String
-               .format("(%s) ssh not connected!", toString()));
+      checkState(sshClientConnection.ssh != null && sshClientConnection.ssh.isConnected(),
+               "(%s) ssh not connected!", this);
    }
 
    public interface Connection<T> {

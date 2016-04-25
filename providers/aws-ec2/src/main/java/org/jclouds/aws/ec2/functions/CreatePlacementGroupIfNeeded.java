@@ -63,8 +63,8 @@ public class CreatePlacementGroupIfNeeded extends CacheLoader<RegionAndName, Str
       try {
          ec2Api.getPlacementGroupApi().get().createPlacementGroupInRegion(region, name);
          logger.debug("<< created placementGroup(%s)", name);
-         checkState(placementGroupAvailable.apply(new PlacementGroup(region, name, "cluster", State.PENDING)), String
-                  .format("placementGroup region(%s) name(%s) failed to become available", region, name));
+         checkState(placementGroupAvailable.apply(new PlacementGroup(region, name, "cluster", State.PENDING)),
+                  "placementGroup region(%s) name(%s) failed to become available", region, name);
       } catch (AWSResponseException e) {
          if (e.getError().getCode().equals("InvalidPlacementGroup.Duplicate")) {
             logger.debug("<< reused placementGroup(%s)", name);

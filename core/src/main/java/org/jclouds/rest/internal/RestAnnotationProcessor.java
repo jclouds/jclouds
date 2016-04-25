@@ -511,7 +511,7 @@ public class RestAnnotationProcessor implements Function<Invocation, HttpRequest
       try {
          URI returnVal = parser.apply(invocation.getArgs().get(position));
          checkArgument(returnVal != null,
-               format("endpoint for [%s] not configured for %s", position, invocation.getInvokable()));
+               "endpoint for [%s] not configured for %s", position, invocation.getInvokable());
          return returnVal;
       } catch (NullPointerException e) {
          throw new IllegalArgumentException(format("argument at index %d on invocation.getInvoked() %s was null",

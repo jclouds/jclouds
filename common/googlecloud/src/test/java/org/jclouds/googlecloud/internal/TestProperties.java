@@ -67,8 +67,7 @@ public final class TestProperties {
          val = System.getProperty(testKey);
       }
       checkNotNull(val,
-            String.format("the property %s must be set (pem private key file path or private key as a string)",
-                  testKey));
+            "the property %s must be set (pem private key file path or private key as a string)", testKey);
 
       if (val.startsWith("-----BEGIN")) {
          return val;

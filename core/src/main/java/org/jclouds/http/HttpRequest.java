@@ -242,7 +242,7 @@ public class HttpRequest extends HttpMessage {
       super(headers, payload);
       this.method = checkNotNull(method, "method");
       this.endpoint = checkNotNull(endpoint, "endpoint");
-      checkArgument(endpoint.getHost() != null, String.format("endpoint.getHost() is null for %s", endpoint));
+      checkArgument(endpoint.getHost() != null, "endpoint.getHost() is null for %s", endpoint);
       this.filters = ImmutableList.<HttpRequestFilter> copyOf(checkNotNull(filters, "filters"));
    }
 

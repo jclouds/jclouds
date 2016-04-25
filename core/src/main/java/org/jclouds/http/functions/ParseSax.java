@@ -113,7 +113,7 @@ public class ParseSax<T> implements Function<HttpResponse, T>, InvocationContext
 
    private void validateXml(String from) {
       checkNotNull(from, "xml string");
-      checkArgument(from.indexOf('<') >= 0, String.format("not an xml document [%s] ", from));
+      checkArgument(from.indexOf('<') >= 0, "not an xml document [%s] ", from);
    }
 
    public T parse(InputStream from) {

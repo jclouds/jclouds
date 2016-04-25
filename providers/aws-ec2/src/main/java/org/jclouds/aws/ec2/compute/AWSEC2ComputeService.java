@@ -127,8 +127,8 @@ public class AWSEC2ComputeService extends EC2ComputeService {
             try {
                client.getPlacementGroupApi().get().deletePlacementGroupInRegion(region, placementGroup);
                checkState(placementGroupDeleted.apply(new PlacementGroup(region, placementGroup, "cluster",
-                        State.PENDING)), String.format("placementGroup region(%s) name(%s) failed to delete", region,
-                        placementGroup));
+                        State.PENDING)), "placementGroup region(%s) name(%s) failed to delete", region,
+                        placementGroup);
                placementGroupMap.invalidate(new RegionAndName(region, placementGroup));
                logger.debug("<< deleted placementGroup(%s)", placementGroup);
             } catch (IllegalStateException e) {
