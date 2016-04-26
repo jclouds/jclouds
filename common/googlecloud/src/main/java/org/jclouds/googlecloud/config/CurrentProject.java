@@ -37,14 +37,21 @@ public @interface CurrentProject {
    public static final class ClientEmail {
       public static final String DESCRIPTION = "" //
             + "client_email which usually looks like project_id@developer.gserviceaccount.com or " //
-            + "project_id-extended_uid@developer.gserviceaccount.com";
+            + "project_id-extended_uid@developer.gserviceaccount.com or " //
+            + "account@project_id.iam.gserviceaccount.com";
       private static final Pattern PROJECT_NUMBER_PATTERN = Pattern.compile("^([0-9]+)[@-].*");
+      private static final String IAM_ACCOUNT_SUFFIX = ".iam.gserviceaccount.com";
 
       /** Parses the project number from the client email or throws an {@linkplain IllegalArgumentException}. */
       public static String toProjectNumber(String email) {
          Matcher matcher = PROJECT_NUMBER_PATTERN.matcher(email);
-         checkArgument(matcher.find(), "Client email %s is malformed. Should be %s", email, DESCRIPTION);
-         return matcher.group(1);
+         boolean isIAM = email.endsWith(IAM_ACCOUNT_SUFFIX);
+         checkArgument(isIAM || matcher.find(), "Client email %s is malformed. Should be %s", email, DESCRIPTION);
+         return isIAM ? projectIdFromIAM(email) : matcher.group(1);
+      }
+
+      private static String projectIdFromIAM(String email) {
+         return email.substring(email.indexOf('@') + 1, email.indexOf(IAM_ACCOUNT_SUFFIX));
       }
    }
 }
