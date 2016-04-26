@@ -135,6 +135,17 @@ public interface InstanceApi {
    @GET
    @Path("/{instance}/serialPort")
    SerialPortOutput getSerialPortOutput(@PathParam("instance") String instance);
+   
+   /**
+    * Returns the specified instance's serial port output.
+    *
+    * @param instance the instance name.
+    * @return if successful, this method returns a SerialPortOutput containing the instance's serial output.
+    */
+   @Named("Instances:getSerialPortOutput")
+   @GET
+   @Path("/{instance}/serialPort")
+   SerialPortOutput getSerialPortOutput(@PathParam("instance") String instance, @QueryParam("port") int port);
 
    /**
     * Hard-resets the instance.

@@ -31,13 +31,16 @@ import java.net.URI;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.atomic.AtomicReference;
 
+import com.google.common.base.Function;
 import com.google.common.base.Predicate;
 import com.google.common.base.Splitter;
 import com.google.common.base.Strings;
 import com.google.common.cache.LoadingCache;
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import com.google.common.util.concurrent.Atomics;
@@ -45,6 +48,7 @@ import com.google.common.util.concurrent.UncheckedTimeoutException;
 import org.jclouds.compute.ComputeServiceAdapter;
 import org.jclouds.compute.domain.Hardware;
 import org.jclouds.compute.domain.NodeMetadata;
+import org.jclouds.compute.domain.OsFamily;
 import org.jclouds.compute.domain.Template;
 import org.jclouds.compute.options.TemplateOptions;
 import org.jclouds.domain.Location;
@@ -90,6 +94,7 @@ public final class GoogleComputeEngineServiceAdapter
    private final Resources resources;
    private final Predicate<AtomicReference<Operation>> operationDone;
    private final Predicate<AtomicReference<Instance>> instanceVisible;
+   private final Function<Map<String, ?>, String> windowsPasswordGenerator;
    private final FirewallTagNamingConvention.Factory firewallTagNamingConvention;
    private final List<String> imageProjects;
    private final LoadingCache<URI, Image> diskURIToImage;
@@ -97,6 +102,7 @@ public final class GoogleComputeEngineServiceAdapter
    @Inject GoogleComputeEngineServiceAdapter(JustProvider justProvider, GoogleComputeEngineApi api,
                                             Predicate<AtomicReference<Operation>> operationDone,
                                             Predicate<AtomicReference<Instance>> instanceVisible,
+                                            Function<Map<String, ?>, String> windowsPasswordGenerator,
                                             Resources resources,
                                             FirewallTagNamingConvention.Factory firewallTagNamingConvention,
                                             @Named(IMAGE_PROJECTS) String imageProjects,
@@ -105,6 +111,7 @@ public final class GoogleComputeEngineServiceAdapter
       this.api = api;
       this.operationDone = operationDone;
       this.instanceVisible = instanceVisible;
+      this.windowsPasswordGenerator = windowsPasswordGenerator;
       this.resources = resources;
       this.firewallTagNamingConvention = firewallTagNamingConvention;
       this.imageProjects = Splitter.on(',').omitEmptyStrings().splitToList(imageProjects);
@@ -187,6 +194,14 @@ public final class GoogleComputeEngineServiceAdapter
       // Add lookup for InstanceToNodeMetadata
       diskURIToImage.getUnchecked(instance.get().disks().get(0).source());
 
+      if (options.autoCreateWindowsPassword() != null && options.autoCreateWindowsPassword()
+                  || OsFamily.WINDOWS == template.getImage().getOperatingSystem().getFamily()) {
+           Map<String, ?> params = ImmutableMap.of("instance", instance, "zone", zone, "email", create.user(), "userName", credentials.getUser());
+           String password = windowsPasswordGenerator.apply(params);
+           credentials = LoginCredentials.builder(credentials)
+                          .password(password)
+                          .build();
+         }
       return new NodeAndInitialCredentials<Instance>(instance.get(), instance.get().selfLink().toString(), credentials);
    }
 

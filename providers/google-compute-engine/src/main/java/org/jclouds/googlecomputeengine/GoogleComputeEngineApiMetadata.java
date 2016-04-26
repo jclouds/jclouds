@@ -61,7 +61,7 @@ public class GoogleComputeEngineApiMetadata extends BaseHttpApiMetadata<GoogleCo
       properties.put(JWS_ALG, "RS256");
       properties.put(PROPERTY_SESSION_INTERVAL, 3600);
       properties.put(OPERATION_COMPLETE_INTERVAL, 500);
-      properties.put(OPERATION_COMPLETE_TIMEOUT, 600000);
+      properties.put(OPERATION_COMPLETE_TIMEOUT, 1000000);
       properties.put(TEMPLATE, "osFamily=DEBIAN,osVersionMatches=7\\..*,locationId=us-central1-a");
       properties.put(PROJECT_NAME, ""); // Defaulting to empty helps avoid temptation for optional inject!
       properties.put(IMAGE_PROJECTS, "centos-cloud,debian-cloud,rhel-cloud,suse-cloud,opensuse-cloud,gce-nvme,coreos-cloud,ubuntu-os-cloud,windows-cloud");

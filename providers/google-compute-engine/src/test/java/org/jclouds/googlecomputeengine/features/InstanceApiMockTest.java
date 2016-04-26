@@ -67,6 +67,18 @@ public class InstanceApiMockTest extends BaseGoogleComputeEngineApiMockTest {
       assertSent(server, "GET", "/projects/party/zones/us-central1-a/instances/test-1/serialPort");
    }
 
+   public void getInstanceSerialPortOutputWindowsPassword() throws Exception {
+      server.enqueue(jsonResponse("/instance_serial_port_4_windows.json"));
+
+      assertEquals(instanceApi().getSerialPortOutput("test-1", 4),
+              new ParseInstanceSerialOutputTest().expected(
+                      url("/projects"),
+                      "{\"ready\":true,\"version\":\"Microsoft Windows NT 6.1.7601 Service Pack 1\"}\n{\"encryptedPassword\":\"uiHDEhxyvj6lF5GalHh9TsMZb4bG6Y9qGmFb9S3XI29yvVsDCLdp4IbUg21MncHcaxP0rFu0kyjxlEXDs8y4L1KOhy6iyB42Lh+vZ4XIMjmvU4rZrjsBZ5TxQo9hL0lBW7o3FRM\\/UIXCeRk39ObUl2AjDmQ0mcw1byJI5v9KVJnNMaHdRCy\\/kvN6bx3qqjIhIMu0JExp4UVkAX2Mxb9b+c4o2DiZF5pY6ZfbuEmjSbvGRJXyswkOJ4jTZl+7e6+SZfEal8HJyRfZKiqTjrz+DLjYSlXrfIRqlvKeAFGOJq6IRojNWiTOOh8Zorc0iHDTIkf+MY0scfbBUo5m30Bf4w==\",\"exponent\":\"AQAB\",\"modulus\":\"0tiKdO2JmBHss26jnrSAwb583KG\\/ZIw5JwwMPXrCVsFAPwY1OV3RlT1Hp4Xvpibr7rvJbOC+f\\/Gd0cBrK5pccQfccB+OHKpbBof473zEfRbdtFwPn10RfAFj\\/xikW0r\\/XxgG\\/c8tz9bmALBStGqmwOVOLRHxjwgtGu4poeuwmFfG6TuwgCadxpllW74mviFd4LZVSuCSni5YJnBM2HSJ8NP6g1fqI17KDXt2XO\\/7kSItubmMk+HGEXdH4qiugHYewaIf1o4XSQROC8xlRl7t\\/RaD4U58hKYkVwg0Ir7WzYzAVpG2UR4Co\\/GDG9Hct7HOYekDqVQ+sSZbwzajnVunkw==\",\"passwordFound\":true,\"userName\":\"example-user\"}\n"
+              ));
+
+      assertSent(server, "GET", "/projects/party/zones/us-central1-a/instances/test-1/serialPort?port=4");
+   }
+
    public void insert_noOptions() throws Exception {
       server.enqueue(jsonResponse("/zone_operation.json"));
 

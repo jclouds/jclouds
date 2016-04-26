@@ -28,6 +28,7 @@ import org.jclouds.scriptbuilder.domain.Statement;
 public final class GoogleComputeEngineTemplateOptions extends TemplateOptions {
 
    private boolean autoCreateKeyPair = true;
+   private boolean autoCreateWindowsPassword;
    private List<ServiceAccount> serviceAccounts;
    private String bootDiskType;
    private boolean preemptible = false;
@@ -46,6 +47,7 @@ public final class GoogleComputeEngineTemplateOptions extends TemplateOptions {
          GoogleComputeEngineTemplateOptions eTo = GoogleComputeEngineTemplateOptions.class.cast(to);
          eTo.autoCreateKeyPair(autoCreateKeyPair());
          eTo.serviceAccounts(serviceAccounts());
+         eTo.autoCreateWindowsPassword(autoCreateWindowsPassword());
          eTo.bootDiskType(bootDiskType());
          eTo.preemptible(preemptible());
       }
@@ -105,6 +107,24 @@ public final class GoogleComputeEngineTemplateOptions extends TemplateOptions {
     */
    public boolean preemptible() {
       return preemptible;
+   }
+
+   /**
+    * Whether a Windows password should be created automatically; {@link null} means to generate
+    * the password if and only if the image is for a Windows VM.
+    */
+   public Boolean autoCreateWindowsPassword() {
+	   return autoCreateWindowsPassword;
+   }
+   
+   /**
+    * Sets whether to auto-create a windows password. The default ({@code null}) is to always
+    * do so for Windows VMs, inferring this from the image. An explicit value of true or false
+    * overrides this.
+    */
+   public GoogleComputeEngineTemplateOptions autoCreateWindowsPassword(Boolean autoCreateWindowsPassword) {
+      this.autoCreateWindowsPassword = autoCreateWindowsPassword;
+      return this;
    }
 
    /**

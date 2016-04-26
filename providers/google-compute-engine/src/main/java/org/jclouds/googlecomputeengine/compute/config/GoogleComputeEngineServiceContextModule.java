@@ -53,6 +53,7 @@ import org.jclouds.googlecomputeengine.compute.functions.InstanceToNodeMetadata;
 import org.jclouds.googlecomputeengine.compute.functions.MachineTypeToHardware;
 import org.jclouds.googlecomputeengine.compute.functions.OrphanedGroupsFromDeadNodes;
 import org.jclouds.googlecomputeengine.compute.functions.Resources;
+import org.jclouds.googlecomputeengine.compute.functions.ResetWindowsPassword;
 import org.jclouds.googlecomputeengine.compute.loaders.DiskURIToImage;
 import org.jclouds.googlecomputeengine.compute.options.GoogleComputeEngineTemplateOptions;
 import org.jclouds.googlecomputeengine.compute.predicates.AtomicInstanceVisible;
@@ -120,6 +121,9 @@ public final class GoogleComputeEngineServiceContextModule
       
       bind(new TypeLiteral<Function<String, OperatingSystem>>() {
       }).to(ImageNameToOperatingSystem.class);
+
+      bind(new TypeLiteral<Function<Map<String, ?>, String>>() {
+      }).to(ResetWindowsPassword.class);
 
       bind(FirewallTagNamingConvention.Factory.class).in(Scopes.SINGLETON);
 

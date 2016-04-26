@@ -45,4 +45,12 @@ public class ParseInstanceSerialOutputTest extends BaseGoogleComputeEngineParseT
             URI.create(baseUrl + "/party/zones/us-central1-a/instances/test-instance/serialPort"),
             "console output");
    }
+
+   @Consumes(APPLICATION_JSON)
+   public SerialPortOutput expected(String baseUrl, String contents) {
+      return SerialPortOutput.create(
+              URI.create(baseUrl + "/party/zones/us-central1-a/instances/test-instance/serialPort"),
+              contents
+      );
+   }
 }

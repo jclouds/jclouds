@@ -58,6 +58,11 @@
             <version>${project.version}</version>
         </dependency>
         <dependency>
+            <groupId>org.apache.jclouds.driver</groupId>
+            <artifactId>jclouds-bouncycastle</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
             <groupId>org.apache.jclouds.common</groupId>
             <artifactId>googlecloud</artifactId>
             <version>${project.version}</version>
