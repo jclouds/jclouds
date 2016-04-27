@@ -20,6 +20,7 @@ import static com.google.common.collect.ImmutableList.copyOf;
 
 import java.util.List;
 
+import com.google.common.collect.ImmutableList;
 import org.jclouds.javax.annotation.Nullable;
 import com.google.auto.value.AutoValue;
 import org.jclouds.json.SerializedNames;
@@ -71,7 +72,14 @@ public abstract class Subnet {
 
          public abstract Builder ipConfigurations(List<IpConfiguration> ipConfigurations);
 
-         public abstract SubnetProperties build();
+         abstract List<IpConfiguration> ipConfigurations();
+
+         abstract SubnetProperties autoBuild();
+
+         public SubnetProperties build() {
+            ipConfigurations(ipConfigurations() != null ? ImmutableList.copyOf(ipConfigurations()) : null);
+            return autoBuild();
+         }
       }
    }
 

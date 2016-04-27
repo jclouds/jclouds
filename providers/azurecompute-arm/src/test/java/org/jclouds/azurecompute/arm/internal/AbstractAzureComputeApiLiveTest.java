@@ -22,9 +22,9 @@ import static org.jclouds.azurecompute.arm.config.AzureComputeProperties.OPERATI
 import static org.jclouds.azurecompute.arm.config.AzureComputeProperties.OPERATION_TIMEOUT;
 import static org.jclouds.azurecompute.arm.config.AzureComputeProperties.TCP_RULE_FORMAT;
 import static org.jclouds.azurecompute.arm.config.AzureComputeProperties.TCP_RULE_REGEXP;
+
 import java.util.Properties;
 import java.util.Random;
-
 import org.jclouds.apis.BaseApiLiveTest;
 import org.jclouds.azurecompute.arm.AzureComputeApi;
 import org.jclouds.azurecompute.arm.AzureComputeProviderMetadata;

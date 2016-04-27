@@ -16,21 +16,23 @@
  */
 package org.jclouds.azurecompute.arm;
 
-import java.io.Closeable;
-
 import org.jclouds.azurecompute.arm.features.JobApi;
 import org.jclouds.azurecompute.arm.features.LocationApi;
+import org.jclouds.azurecompute.arm.features.NetworkInterfaceCardApi;
+import org.jclouds.azurecompute.arm.features.PublicIPAddressApi;
 import org.jclouds.azurecompute.arm.features.ResourceGroupApi;
 import org.jclouds.azurecompute.arm.features.StorageAccountApi;
 import org.jclouds.azurecompute.arm.features.SubnetApi;
+import org.jclouds.azurecompute.arm.features.VirtualMachineApi;
 import org.jclouds.azurecompute.arm.features.VirtualNetworkApi;
 import org.jclouds.rest.annotations.Delegate;
 
 import javax.ws.rs.PathParam;
+import java.io.Closeable;
 
 /**
  * The Azure Resource Manager API is a REST API for managing your services and deployments.
- * <p/>
+ * <p>
  *
  * @see <a href="https://msdn.microsoft.com/en-us/library/azure/dn790568.aspx" >doc</a>
  */
@@ -62,6 +64,7 @@ public interface AzureComputeApi extends Closeable {
     */
    @Delegate
    StorageAccountApi getStorageAccountApi(@PathParam("resourceGroup") String resourceGroup);
+
    /**
     * The Subnet API includes operations for managing the subnets in your virtual network.
     *
@@ -78,5 +81,31 @@ public interface AzureComputeApi extends Closeable {
     */
    @Delegate
    VirtualNetworkApi getVirtualNetworkApi(@PathParam("resourcegroup") String resourcegroup);
+
+
+   /**
+    * The Network Interface Card API includes operations for managing the NICs in your subscription.
+    *
+    * @see <a href="https://msdn.microsoft.com/en-us/library/mt163668.aspx">docs</a>
+    */
+   @Delegate
+   NetworkInterfaceCardApi getNetworkInterfaceCardApi(@PathParam("resourcegroup") String resourcegroup);
+
+   /**
+    * The Public IP Address API includes operations for managing public ID Addresses for NICs in your subscription.
+    *
+    * @see <a href="https://msdn.microsoft.com/en-us/library/azure/mt163638.aspx">docs</a>
+    */
+   @Delegate
+   PublicIPAddressApi getPublicIPAddressApi(@PathParam("resourcegroup") String resourcegroup);
+
+
+   /**
+    * The Virtual Machine API includes operations for managing the virtual machines in your subscription.
+    *
+    * @see <a href="https://msdn.microsoft.com/en-us/library/azure/mt163630.aspx">docs</a>
+    */
+   @Delegate
+   VirtualMachineApi getVirtualMachineApi(@PathParam("resourceGroup") String resourceGroup);
 
 }

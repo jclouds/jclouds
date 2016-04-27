@@ -12,7 +12,6 @@
          "id": "/subscriptions/SUBSCRIPTIONID/resourceGroups/test2",
          "name": "test2",
          "location": "eastus",
-         "tags": {},
          "properties": {
             "provisioningState": "Succeeded"
          }

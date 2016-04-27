@@ -1,0 +1,68 @@
+{
+  "value": [
+    {
+      "name": "AnotherNIC",
+      "id": "/subscriptions/12345678-2749-4e68-9dcf-123456789abc/resourceGroups/azurearmtesting/providers/Microsoft.Network/networkInterfaces/AnotherNIC",
+      "etag": "W/\"e4ed4253-64b6-4184-bfaa-554f470d20c5\"",
+      "type": "Microsoft.Network/networkInterfaces",
+      "location": "northeurope",
+      "properties": {
+        "provisioningState": "Succeeded",
+        "resourceGuid": "7fcf6704-21c5-4983-bd9f-017e0873f22f",
+        "ipConfigurations": [
+          {
+            "name": "ipconfig1",
+            "id": "/subscriptions/12345678-2749-4e68-9dcf-123456789abc/resourceGroups/azurearmtesting/providers/Microsoft.Network/networkInterfaces/AnotherNIC/ipConfigurations/ipconfig1",
+            "etag": "W/\"e4ed4253-64b6-4184-bfaa-554f470d20c5\"",
+            "properties": {
+              "provisioningState": "Succeeded",
+              "privateIPAddress": "10.2.1.4",
+              "privateIPAllocationMethod": "Dynamic",
+              "subnet": {
+                "id": "/subscriptions/12345678-2749-4e68-9dcf-123456789abc/resourceGroups/armlivetesting/providers/Microsoft.Network/virtualNetworks/jclouds-virtual-network-live-test/subnets/anothersubnet"
+              },
+              "primary": true
+            }
+          }
+        ],
+        "dnsSettings": {
+          "dnsServers": [],
+          "appliedDnsServers": []
+        },
+        "enableIPForwarding": false
+      }
+    },
+    {
+      "name": "MyNic",
+      "id": "/subscriptions/12345678-2749-4e68-9dcf-123456789abc/resourceGroups/azurearmtesting/providers/Microsoft.Network/networkInterfaces/MyNic",
+      "etag": "W/\"a37d25ff-3f62-4ee2-a111-f355beb5ff69\"",
+      "type": "Microsoft.Network/networkInterfaces",
+      "location": "northeurope",
+      "properties": {
+        "provisioningState": "Succeeded",
+        "resourceGuid": "35908409-a081-4411-86a9-51f9ea99321f",
+        "ipConfigurations": [
+          {
+            "name": "ipconfig1",
+            "id": "/subscriptions/12345678-2749-4e68-9dcf-123456789abc/resourceGroups/azurearmtesting/providers/Microsoft.Network/networkInterfaces/MyNic/ipConfigurations/ipconfig1",
+            "etag": "W/\"a37d25ff-3f62-4ee2-a111-f355beb5ff69\"",
+            "properties": {
+              "provisioningState": "Succeeded",
+              "privateIPAddress": "10.2.0.100",
+              "privateIPAllocationMethod": "Static",
+              "subnet": {
+                "id": "/subscriptions/12345678-2749-4e68-9dcf-123456789abc/resourceGroups/armlivetesting/providers/Microsoft.Network/virtualNetworks/jclouds-virtual-network-live-test/subnets/default"
+              },
+              "primary": true
+            }
+          }
+        ],
+        "dnsSettings": {
+          "dnsServers": [],
+          "appliedDnsServers": []
+        },
+        "enableIPForwarding": false
+      }
+    }
+  ]
+}

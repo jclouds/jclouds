@@ -1,0 +1,20 @@
+{
+  "name": "mypublicaddress",
+  "id": "/subscriptions/fakeb2f5-4710-4e93-bdf4-419edbde2178/resourceGroups/myresourcegroup/providers/Microsoft.Network/publicIPAddresses/mypublicaddress",
+  "etag": "W/\"f0bdaf62-456b-4338-8f65-05417b1a55e9\"",
+  "type": "Microsoft.Network/publicIPAddresses",
+  "location": "northeurope",
+  "tags": {
+    "testkey": "testvalue"
+  },
+  "properties": {
+    "provisioningState": "Updating",
+    "resourceGuid": "ebe3f160-2484-447a-8980-c587b214b16f",
+    "publicIPAllocationMethod": "Static",
+    "idleTimeoutInMinutes": 4,
+    "dnsSettings": {
+      "domainNameLabel": "foobar",
+      "fqdn": "foobar.northeurope.cloudapp.azure.com"
+    }
+  }
+}

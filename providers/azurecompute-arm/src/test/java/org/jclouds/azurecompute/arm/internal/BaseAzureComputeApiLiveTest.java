@@ -20,11 +20,17 @@ import static org.testng.Assert.assertTrue;
 
 import com.google.common.base.Predicate;
 import com.google.common.collect.ImmutableMap;
+import org.jclouds.azurecompute.arm.domain.IdReference;
+import org.jclouds.azurecompute.arm.domain.IpConfiguration;
+import org.jclouds.azurecompute.arm.domain.IpConfigurationProperties;
+import org.jclouds.azurecompute.arm.domain.NetworkInterfaceCard;
+import org.jclouds.azurecompute.arm.domain.NetworkInterfaceCardProperties;
 import org.jclouds.azurecompute.arm.domain.ResourceGroup;
 
 import org.jclouds.azurecompute.arm.domain.StorageService;
 import org.jclouds.azurecompute.arm.domain.Subnet;
 import org.jclouds.azurecompute.arm.domain.VirtualNetwork;
+import org.jclouds.azurecompute.arm.features.NetworkInterfaceCardApi;
 import org.jclouds.azurecompute.arm.features.StorageAccountApi;
 import org.jclouds.azurecompute.arm.features.SubnetApi;
 import org.jclouds.azurecompute.arm.features.VirtualNetworkApi;
@@ -36,6 +42,7 @@ import org.testng.annotations.BeforeClass;
 
 import java.net.URI;
 import java.util.Arrays;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -50,12 +57,14 @@ public class BaseAzureComputeApiLiveTest extends AbstractAzureComputeApiLiveTest
 
    public static final String DEFAULT_VIRTUALNETWORK_ADDRESS_PREFIX = "10.2.0.0/16";
 
+   public static final String NETWORKINTERFACECARD_NAME = "jcloudsNic";
+
    private String resourceGroupName = null;
 
    protected StorageService storageService;
 
-
    private String storageServiceName = null;
+
 
    protected String getStorageServiceName() {
       if (storageServiceName == null) {
@@ -72,6 +81,17 @@ public class BaseAzureComputeApiLiveTest extends AbstractAzureComputeApiLiveTest
       }
       assertNotNull(endpoint);
       return endpoint;
+   }
+
+   protected String getSubscriptionId() {
+      String subscriptionid = null;
+      String endpoint = null;
+      endpoint = getEndpoint();
+      if (endpoint != null) {
+         subscriptionid = endpoint.substring(endpoint.lastIndexOf("/") + 1);
+      }
+      assertNotNull(subscriptionid);
+      return subscriptionid;
    }
 
    protected String getResourceGroupName() {
@@ -99,7 +119,6 @@ public class BaseAzureComputeApiLiveTest extends AbstractAzureComputeApiLiveTest
    @Override
    public void setup() {
       super.setup();
-
       storageService = getOrCreateStorageService(getStorageServiceName());
    }
 
@@ -168,5 +187,30 @@ public class BaseAzureComputeApiLiveTest extends AbstractAzureComputeApiLiveTest
       subnet = subnetApi.createOrUpdate(subnetName, properties);
 
       return subnet;
+   }
+
+   protected NetworkInterfaceCard getOrCreateNetworkInterfaceCard(final String networkInterfaceCardName){
+
+      NetworkInterfaceCardApi nicApi = api.getNetworkInterfaceCardApi(getResourceGroupName());
+      NetworkInterfaceCard nic = nicApi.get(networkInterfaceCardName);
+
+      if (nic != null){
+         return nic;
+      }
+
+      VirtualNetwork vn = getOrCreateVirtualNetwork(VIRTUAL_NETWORK_NAME);
+
+      Subnet subnet = getOrCreateSubnet(DEFAULT_SUBNET_NAME, VIRTUAL_NETWORK_NAME);
+
+      //Create properties object
+      final NetworkInterfaceCardProperties networkInterfaceCardProperties =
+              NetworkInterfaceCardProperties.builder()
+                      .ipConfigurations(Arrays.asList(IpConfiguration.create("myipconfig", null, null, null,
+                              IpConfigurationProperties.create(null, null, "Dynamic", IdReference.create(subnet.id()), null))
+                      )).build();
+
+      final Map<String, String> tags = ImmutableMap.of("jclouds", "livetest");
+      nic = nicApi.createOrUpdate(NETWORKINTERFACECARD_NAME, LOCATION, networkInterfaceCardProperties, tags);
+      return  nic;
    }
 }

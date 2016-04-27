@@ -1,0 +1,47 @@
+{
+  "properties": {
+    "vmId": "27ee085b-d707-xxxx-yyyy-2370e2eb1cc1",
+    "hardwareProfile": {
+      "vmSize": "Standard_D1"
+    },
+    "storageProfile": {
+      "imageReference": {
+        "publisher": "publisher",
+        "offer": "offer",
+        "sku": "sku",
+        "version": "ver"
+      },
+      "osDisk": {
+        "osType": "Windows",
+        "name": "windowsmachine",
+        "createOption": "FromImage",
+        "vhd": {
+          "uri": "https://groupname2760.blob.core.windows.net/vhds/windowsmachine201624102936.vhd"
+        },
+        "caching": "ReadWrite"
+      },
+      "dataDisks": []
+    },
+    "osProfile": {
+      "computerName": "windowsmachine",
+      "adminUsername": "azureuser",
+      "windowsConfiguration": {
+        "provisionVMAgent": false,
+        "enableAutomaticUpdates": true
+      },
+      "secrets": []
+    },
+    "networkProfile": {"networkInterfaces":[{"id":"/subscriptions/SUBSCRIPTIONID/resourceGroups/groupname/providers/Microsoft.Network/networkInterfaces/windowsmachine167"}]},
+    "diagnosticsProfile": {
+      "bootDiagnostics": {
+        "enabled": true,
+        "storageUri": "https://groupname2760.blob.core.windows.net/"
+      }
+    },
+    "provisioningState": "Creating"
+  },
+  "id": "/subscriptions/SUBSCRIPTIONID/resourceGroups/groupname/providers/Microsoft.Compute/virtualMachines/windowsmachine",
+  "name": "windowsmachine",
+  "type": "Microsoft.Compute/virtualMachines",
+  "location": "westus"
+}

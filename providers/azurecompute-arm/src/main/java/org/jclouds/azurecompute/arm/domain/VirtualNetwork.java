@@ -20,6 +20,7 @@ import static com.google.common.collect.ImmutableList.copyOf;
 
 import java.util.Map;
 import java.util.List;
+import com.google.common.collect.ImmutableList;
 
 import com.google.auto.value.AutoValue;
 import com.google.common.collect.ImmutableMap;
@@ -36,7 +37,7 @@ public abstract class VirtualNetwork {
 
       @SerializedNames({"addressPrefixes"})
       public static AddressSpace create(final List<String> addressPrefixes) {
-         return new AutoValue_VirtualNetwork_AddressSpace(copyOf(addressPrefixes));
+         return new AutoValue_VirtualNetwork_AddressSpace(addressPrefixes == null ? ImmutableList.<String>of() : ImmutableList.copyOf(addressPrefixes));
       }
    }
 
@@ -79,7 +80,14 @@ public abstract class VirtualNetwork {
 
          public abstract Builder subnets(List<Subnet> subnets);
 
-         public abstract VirtualNetworkProperties build();
+         abstract List<Subnet> subnets();
+
+         abstract VirtualNetworkProperties autoBuild();
+
+         public VirtualNetworkProperties build() {
+            subnets(subnets() != null ? ImmutableList.copyOf(subnets()) : null);
+            return autoBuild();
+         }
       }
    }
 
