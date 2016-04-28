@@ -67,7 +67,7 @@ public class DigitalOcean2RateLimitExceededException extends RateLimitExceededEx
 
       totalRequestsPerHour = limit == null ? null : Integer.valueOf(limit);
       remainingRequests = remaining == null ? null : Integer.valueOf(remaining);
-      timeToNextAvailableRequest = reset == null ? null : millisUntilNextAvailableRequest(Long.valueOf(reset));
+      timeToNextAvailableRequest = reset == null ? null : millisUntilNextAvailableRequest(Long.parseLong(reset));
    }
 
    private static Multimap<String, String> rateLimitHeaders(HttpResponse response) {

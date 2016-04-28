@@ -136,7 +136,7 @@ public class BlockUntilInitScriptStatusIsZeroThenReturnOutput extends AbstractFu
             String stdout = commandRunner.runAction("stdout").getOutput();
             String stderr = commandRunner.runAction("stderr").getOutput();
             Integer exitStatus = Ints.tryParse(commandRunner.runAction("exitstatus").getOutput().trim());
-            exec = new ExecResponse(stdout, stderr, exitStatus == null ? -1 : exitStatus);
+            exec = new ExecResponse(stdout, stderr, exitStatus == null ? Integer.valueOf(-1) : exitStatus);
          } while (!isCancelled() && exec.getExitStatus() == -1);
          logger.debug("<< complete(%s) status(%s)", commandRunner.getStatement().getInstanceName(), exec
                   .getExitStatus());

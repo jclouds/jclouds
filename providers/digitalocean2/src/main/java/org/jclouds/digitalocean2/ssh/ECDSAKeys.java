@@ -128,8 +128,7 @@ public class ECDSAKeys {
       }
       ECParameterSpec spec = CURVES.get(curveName);
       stream = new ByteArrayInputStream(base64().decode(get(parts, 1)));
-      @SuppressWarnings("unused")
-      String keyType = new String(readLengthFirst(stream));
+      readLengthFirst(stream);  // ignore return value
       String curveMarker = new String(readLengthFirst(stream));
       checkArgument(curveName.equals(curveMarker), "looking for marker %s but got %s", curveName, curveMarker);
 
@@ -308,7 +307,7 @@ public class ECDSAKeys {
    }
 
    public static class EllipticCurves {
-      public static ECParameterSpec nistp256 = new ECParameterSpec(
+      public static final ECParameterSpec nistp256 = new ECParameterSpec(
             new EllipticCurve(
                   new ECFieldFp(new BigInteger("FFFFFFFF00000001000000000000000000000000FFFFFFFFFFFFFFFFFFFFFFFF", 16)),
                   new BigInteger("FFFFFFFF00000001000000000000000000000000FFFFFFFFFFFFFFFFFFFFFFFC", 16),
@@ -318,7 +317,7 @@ public class ECDSAKeys {
             new BigInteger("FFFFFFFF00000000FFFFFFFFFFFFFFFFBCE6FAADA7179E84F3B9CAC2FC632551", 16),
             1);
 
-      public static ECParameterSpec nistp384 = new ECParameterSpec(
+      public static final ECParameterSpec nistp384 = new ECParameterSpec(
             new EllipticCurve(
                   new ECFieldFp(new BigInteger("FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFEFFFFFFFF0000000000000000FFFFFFFF", 16)),
                   new BigInteger("FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFEFFFFFFFF0000000000000000FFFFFFFC", 16),
@@ -328,7 +327,7 @@ public class ECDSAKeys {
             new BigInteger("FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFC7634D81F4372DDF581A0DB248B0A77AECEC196ACCC52973", 16),
             1);
 
-      public static ECParameterSpec nistp521 = new ECParameterSpec(
+      public static final ECParameterSpec nistp521 = new ECParameterSpec(
             new EllipticCurve(
                   new ECFieldFp(new BigInteger("01FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF", 16)),
                   new BigInteger("01FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFC", 16),

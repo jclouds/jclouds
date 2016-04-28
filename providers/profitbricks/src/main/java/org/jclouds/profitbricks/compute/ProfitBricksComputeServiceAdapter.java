@@ -160,7 +160,7 @@ public class ProfitBricksComputeServiceAdapter implements ComputeServiceAdapter<
       if (options.getNetworks() != null)
          try {
             String networkId = Iterables.get(options.getNetworks(), 0);
-            lanId = Integer.valueOf(networkId);
+            lanId = Integer.parseInt(networkId);
          } catch (Exception ex) {
             logger.warn("no valid network id found from options. using default id='%d'", DEFAULT_LAN_ID);
          }

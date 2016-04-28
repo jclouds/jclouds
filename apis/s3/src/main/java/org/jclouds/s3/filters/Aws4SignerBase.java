@@ -69,24 +69,14 @@ import org.jclouds.providers.ProviderMetadata;
  */
 public abstract class Aws4SignerBase {
    private static final TimeZone GMT = TimeZone.getTimeZone("GMT");
-   protected static final DateFormat timestampFormat;
-   protected static final DateFormat dateFormat;
+   protected final DateFormat timestampFormat;
+   protected final DateFormat dateFormat;
 
    // Do not URL-encode any of the unreserved characters that RFC 3986 defines:
    // A-Z, a-z, 0-9, hyphen (-), underscore (_), period (.), and tilde (~).
-   private static final Escaper AWS_URL_PARAMETER_ESCAPER;
+   private static final Escaper AWS_URL_PARAMETER_ESCAPER = new PercentEscaper("-_.~", false);
 
    private static final Escaper AWS_PATH_ESCAPER = new PercentEscaper("/-_.~", false);
-
-   static {
-      timestampFormat = new SimpleDateFormat("yyyyMMdd'T'HHmmss'Z'");
-      timestampFormat.setTimeZone(GMT);
-
-      dateFormat = new SimpleDateFormat("yyyyMMdd");
-      dateFormat.setTimeZone(GMT);
-
-      AWS_URL_PARAMETER_ESCAPER = new PercentEscaper("-_.~", false);
-   }
 
    // Specifying a default for how to parse the service and region in this way allows
    // tests or other downstream services to not have to use guice overrides.
@@ -137,6 +127,10 @@ public abstract class Aws4SignerBase {
       this.timestampProvider = timestampProvider;
       this.serviceAndRegion = serviceAndRegion;
       this.crypto = crypto;
+      this.timestampFormat = new SimpleDateFormat("yyyyMMdd'T'HHmmss'Z'");
+      timestampFormat.setTimeZone(GMT);
+      this.dateFormat = new SimpleDateFormat("yyyyMMdd");
+      dateFormat.setTimeZone(GMT);
    }
 
    protected String getContentType(HttpRequest request) {

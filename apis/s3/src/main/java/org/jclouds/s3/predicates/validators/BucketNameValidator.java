@@ -45,7 +45,7 @@ public class BucketNameValidator extends Validator<String> {
    @Override
    public void validate(String name) {
       if (name == null) {
-         throw exception(name, "Can't be null");
+         throw exception("", "Can't be null");
       } else if (name.length() < 3) {
          throw exception(name, "Can't be less than 3 characters");
       } else if (name.length() > 255) {

@@ -46,8 +46,6 @@ public class ProfitBricksHttpErrorHandler implements HttpErrorHandler {
 
       Exception exception = message != null ? new HttpResponseException(command, response, message)
             : new HttpResponseException(command, response);
-      message = message != null ? message : String.format("%s -> %s", command.getCurrentRequest().getRequestLine(),
-            response.getStatusLine());
       
       try {
          switch (response.getStatusCode()) {
