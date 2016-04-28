@@ -121,9 +121,7 @@ public class Throwables2 {
       AuthorizationException aex = getFirstThrowableOfType(e, AuthorizationException.class);
       if (aex != null)
          throw aex;
-      propagate(e);
-      assert false : "exception should have propagated " + e;
-      return null;
+      throw propagate(e);
    }
 
    // Note that ordering matters to propagateIfPossible.

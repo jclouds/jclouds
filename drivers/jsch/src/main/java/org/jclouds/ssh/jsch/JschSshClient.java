@@ -190,8 +190,7 @@ public class JschSshClient implements SshClient {
             }
          }
       }
-      assert false : "should not reach here";
-      return null;
+      throw new AssertionError("should not reach here");
    }
 
    public void connect() {

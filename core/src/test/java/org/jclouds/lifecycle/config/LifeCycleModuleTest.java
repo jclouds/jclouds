@@ -33,6 +33,7 @@ import org.jclouds.concurrent.config.ExecutorServiceModule;
 import org.jclouds.lifecycle.Closer;
 import org.testng.annotations.Test;
 
+import com.google.common.base.Throwables;
 import com.google.common.util.concurrent.ExecutionList;
 import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.inject.AbstractModule;
@@ -130,7 +131,7 @@ public class LifeCycleModuleTest {
                  assert closer.getState() == Closer.State.PROCESSING;
                  closeDone.await();
              } catch (InterruptedException e) {
-                 assert false : e.getMessage();
+                 throw Throwables.propagate(e);
              }
          }
       });
@@ -141,7 +142,7 @@ public class LifeCycleModuleTest {
             try {
                closer.close();
             } catch (IOException e) {
-               assert false : e.getMessage();
+               throw Throwables.propagate(e);
             }
          }
       });
@@ -180,7 +181,7 @@ public class LifeCycleModuleTest {
             try {
                closer.close();
             } catch (IOException e) {
-               assert false : e.getMessage();
+               throw Throwables.propagate(e);
             }
          }
       };
