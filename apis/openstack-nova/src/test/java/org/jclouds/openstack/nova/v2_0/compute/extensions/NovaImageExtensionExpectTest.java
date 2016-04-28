@@ -74,9 +74,9 @@ public class NovaImageExtensionExpectTest extends BaseNovaComputeServiceExpectTe
    public void testCreateImage() {
       Builder<HttpRequest, HttpResponse> requestResponseMap = ImmutableMap.<HttpRequest, HttpResponse> builder();
       requestResponseMap.put(keystoneAuthWithUsernameAndPasswordAndTenantName, responseWithKeystoneAccess);
-      requestResponseMap.put(serverDetail, serverDetailResponse).build();
-      requestResponseMap.put(createImage, createImageResponse).build();
-      requestResponseMap.put(getImage, getImageResponse).build();
+      requestResponseMap.put(serverDetail, serverDetailResponse);
+      requestResponseMap.put(createImage, createImageResponse);
+      requestResponseMap.put(getImage, getImageResponse);
 
       ImageExtension apiThatCreatesImage = requestsSendResponses(requestResponseMap.build()).getImageExtension().get();
 

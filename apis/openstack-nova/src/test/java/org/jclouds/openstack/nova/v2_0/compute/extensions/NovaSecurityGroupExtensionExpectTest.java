@@ -69,7 +69,7 @@ public class NovaSecurityGroupExtensionExpectTest extends BaseNovaComputeService
       Builder<HttpRequest, HttpResponse> requestResponseMap = ImmutableMap.<HttpRequest, HttpResponse> builder();
       requestResponseMap.put(keystoneAuthWithUsernameAndPasswordAndTenantName, responseWithKeystoneAccess);
       requestResponseMap.put(extensionsOfNovaRequest, extensionsOfNovaResponse);
-      requestResponseMap.put(list, listResponse).build();
+      requestResponseMap.put(list, listResponse);
 
       SecurityGroupExtension extension = requestsSendResponses(requestResponseMap.build()).getSecurityGroupExtension().get();
 
@@ -90,7 +90,7 @@ public class NovaSecurityGroupExtensionExpectTest extends BaseNovaComputeService
       Builder<HttpRequest, HttpResponse> requestResponseMap = ImmutableMap.<HttpRequest, HttpResponse> builder();
       requestResponseMap.put(keystoneAuthWithUsernameAndPasswordAndTenantName, responseWithKeystoneAccess);
       requestResponseMap.put(extensionsOfNovaRequest, extensionsOfNovaResponse);
-      requestResponseMap.put(list, listResponse).build();
+      requestResponseMap.put(list, listResponse);
 
       SecurityGroupExtension extension = requestsSendResponses(requestResponseMap.build()).getSecurityGroupExtension().get();
 
@@ -125,7 +125,7 @@ public class NovaSecurityGroupExtensionExpectTest extends BaseNovaComputeService
       requestResponseMap.put(keystoneAuthWithUsernameAndPasswordAndTenantName, responseWithKeystoneAccess);
       requestResponseMap.put(extensionsOfNovaRequest, extensionsOfNovaResponse);
       requestResponseMap.put(serverReq, serverResponse);
-      requestResponseMap.put(list, listResponse).build();
+      requestResponseMap.put(list, listResponse);
 
       SecurityGroupExtension extension = requestsSendResponses(requestResponseMap.build()).getSecurityGroupExtension().get();
 
@@ -146,7 +146,7 @@ public class NovaSecurityGroupExtensionExpectTest extends BaseNovaComputeService
       requestResponseMap.put(keystoneAuthWithUsernameAndPasswordAndTenantName, responseWithKeystoneAccess);
       requestResponseMap.put(extensionsOfNovaRequest, extensionsOfNovaResponse);
       requestResponseMap.put(getSecurityGroup, getSecurityGroupResponse);
-      requestResponseMap.put(list, listResponse).build();
+      requestResponseMap.put(list, listResponse);
 
       SecurityGroupExtension extension = requestsSendResponses(requestResponseMap.build()).getSecurityGroupExtension().get();
 
@@ -188,7 +188,7 @@ public class NovaSecurityGroupExtensionExpectTest extends BaseNovaComputeService
       requestResponseMap.put(extensionsOfNovaRequest, extensionsOfNovaResponse);
       requestResponseMap.put(create, createResponse);
       requestResponseMap.put(list, listResponse);
-      requestResponseMap.put(getSecurityGroup, getSecurityGroupResponse).build();
+      requestResponseMap.put(getSecurityGroup, getSecurityGroupResponse);
 
       SecurityGroupExtension extension = requestsSendResponses(requestResponseMap.build()).getSecurityGroupExtension().get();
 
@@ -221,7 +221,7 @@ public class NovaSecurityGroupExtensionExpectTest extends BaseNovaComputeService
       requestResponseMap.put(keystoneAuthWithUsernameAndPasswordAndTenantName, responseWithKeystoneAccess);
       requestResponseMap.put(extensionsOfNovaRequest, extensionsOfNovaResponse);
       requestResponseMap.put(getSecurityGroup, getSecurityGroupResponse);
-      requestResponseMap.put(delete, deleteResponse).build();
+      requestResponseMap.put(delete, deleteResponse);
 
       SecurityGroupExtension extension = requestsSendResponses(requestResponseMap.build()).getSecurityGroupExtension().get();
 
