@@ -29,7 +29,6 @@ import org.jclouds.blobstore.domain.Blob;
 import org.jclouds.http.HttpRequest;
 import org.jclouds.rest.AuthorizationException;
 import org.jclouds.util.Strings2;
-import org.testng.SkipException;
 import org.testng.annotations.Test;
 
 import com.google.common.util.concurrent.Uninterruptibles;
@@ -94,8 +93,6 @@ public class BaseBlobSignerLiveTest extends BaseBlobStoreIntegrationTest {
          HttpRequest request = view.getSigner().signGetBlob(container, name, getSignedUrlTimeout());
          assertEquals(request.getFilters().size(), 0);
          assertEquals(Strings2.toStringAndClose(view.utils().http().invoke(request).getPayload().openStream()), text);
-      } catch (UnsupportedOperationException ignore) {
-         throw new SkipException("signGetUrl with a time limit is not supported on " + provider);
       } finally {
          returnContainer(container);
       }
@@ -119,8 +116,6 @@ public class BaseBlobSignerLiveTest extends BaseBlobStoreIntegrationTest {
             fail("Temporary URL did not expire as expected");
          } catch (AuthorizationException expected) {
          }
-      } catch (UnsupportedOperationException ignore) {
-         throw new SkipException("signGetUrl with a time limit is not supported on " + provider);
       } finally {
          returnContainer(container);
       }
@@ -159,8 +154,6 @@ public class BaseBlobSignerLiveTest extends BaseBlobStoreIntegrationTest {
          // http://www.docjar.com/html/api/sun/net/www/protocol/http/HttpURLConnection.java.html#1021
          request = request.toBuilder().removeHeader(EXPECT).build();
          Strings2.toStringAndClose(view.utils().http().invoke(request).getPayload().openStream());
-      } catch (UnsupportedOperationException ignore) {
-         throw new SkipException("signPutUrl with a time limit is not supported on " + provider);
       } finally {
          returnContainer(container);
       }
@@ -187,8 +180,6 @@ public class BaseBlobSignerLiveTest extends BaseBlobStoreIntegrationTest {
             fail("Temporary URL did not expire as expected");
          } catch (AuthorizationException expected) {
          }
-      } catch (UnsupportedOperationException ignore) {
-         throw new SkipException("signPutUrl with a time limit is not supported on " + provider);
       } finally {
          returnContainer(container);
       }

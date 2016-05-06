@@ -16,12 +16,51 @@
  */
 package org.jclouds.atmos.blobstore.integration;
 
+import java.io.IOException;
+
 import org.jclouds.blobstore.integration.internal.BaseBlobSignerLiveTest;
+import org.testng.SkipException;
 import org.testng.annotations.Test;
 
 @Test(groups = { "live" })
 public class AtmosBlobSignerLiveTest extends BaseBlobSignerLiveTest {
    public AtmosBlobSignerLiveTest() {
       provider = "atmos";
+   }
+
+   @Test
+   public void testSignGetUrlWithTime() throws InterruptedException, IOException {
+      try {
+         super.testSignGetUrlWithTime();
+      } catch (UnsupportedOperationException uoe) {
+         throw new SkipException("not supported in Atmos", uoe);
+      }
+   }
+
+   @Test
+   public void testSignGetUrlWithTimeExpired() throws InterruptedException, IOException {
+      try {
+         super.testSignGetUrlWithTimeExpired();
+      } catch (UnsupportedOperationException uoe) {
+         throw new SkipException("not supported in Atmos", uoe);
+      }
+   }
+
+   @Test
+   public void testSignPutUrlWithTime() throws Exception {
+      try {
+         super.testSignPutUrlWithTime();
+      } catch (UnsupportedOperationException uoe) {
+         throw new SkipException("not supported in Atmos", uoe);
+      }
+   }
+
+   @Test
+   public void testSignPutUrlWithTimeExpired() throws Exception {
+      try {
+         super.testSignPutUrlWithTimeExpired();
+      } catch (UnsupportedOperationException uoe) {
+         throw new SkipException("not supported in Atmos", uoe);
+      }
    }
 }
