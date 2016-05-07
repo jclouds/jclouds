@@ -81,7 +81,7 @@ public interface LocalStorageStrategy {
      */
     void clearContainer(String container, ListContainerOptions options);
 
-    /** @return StorageMetadata associated with a container name, e.g., creation date and location */
+    /** @return StorageMetadata associated with a container name, e.g., creation date and location, or null if container does not exist */
     StorageMetadata getContainerMetadata(String container);
 
     /**

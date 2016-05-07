@@ -88,8 +88,10 @@ import org.jclouds.util.Closeables2;
 import com.google.common.base.Function;
 import com.google.common.base.Optional;
 import com.google.common.base.Predicate;
+import com.google.common.base.Predicates;
 import com.google.common.base.Supplier;
 import com.google.common.base.Throwables;
+import com.google.common.collect.FluentIterable;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Iterators;
@@ -429,12 +431,16 @@ public final class LocalBlobStore implements BlobStore {
       ArrayList<String> containers = new ArrayList<String>(storageStrategy.getAllContainerNames());
       Collections.sort(containers);
 
-      return new PageSetImpl<StorageMetadata>(transform(
-            containers, new Function<String, StorageMetadata>() {
+      return new PageSetImpl<StorageMetadata>(FluentIterable
+            .from(containers)
+            .transform(new Function<String, StorageMetadata>() {
+               @Override
                public StorageMetadata apply(String name) {
                   return storageStrategy.getContainerMetadata(name);
                }
-            }), null);
+            })
+            .filter(Predicates.<StorageMetadata>notNull()),
+            null);
    }
 
    @Override
