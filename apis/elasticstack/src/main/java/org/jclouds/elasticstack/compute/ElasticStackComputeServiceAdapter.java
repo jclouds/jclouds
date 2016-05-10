@@ -159,7 +159,7 @@ public class ElasticStackComputeServiceAdapter implements
                @Override
                public boolean apply(Image input) {
                   String toParse = input.getUserMetadata().get("size");
-                  return toParse != null && new Float(toParse) <= size;
+                  return toParse != null && Float.parseFloat(toParse) <= size;
                }
 
                @Override
