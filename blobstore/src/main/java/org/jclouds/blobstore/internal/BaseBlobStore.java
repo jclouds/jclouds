@@ -263,8 +263,9 @@ public abstract class BaseBlobStore implements BlobStore {
          throw new KeyNotFoundException(fromContainer, fromName, "while copying");
       }
 
-      String eTag = maybeQuoteETag(blob.getMetadata().getETag());
+      String eTag = blob.getMetadata().getETag();
       if (eTag != null) {
+         eTag = maybeQuoteETag(eTag);
          if (options.ifMatch() != null && !options.ifMatch().equals(eTag)) {
             throw returnResponseException(412);
          }
