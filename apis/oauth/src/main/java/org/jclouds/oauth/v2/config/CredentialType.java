@@ -29,7 +29,10 @@ public enum CredentialType {
    P12_PRIVATE_KEY_CREDENTIALS,
 
    /** Contents are an ID and Secret */
-   CLIENT_CREDENTIALS_SECRET;
+   CLIENT_CREDENTIALS_SECRET,
+
+   /** Contents are an ID and PEM-encoded Private Key.  The certificate is specified as it's own property. */
+   CLIENT_CREDENTIALS_P12_AND_CERTIFICATE;
 
    @Override public String toString() {
       return UPPER_UNDERSCORE.to(LOWER_CAMEL, name());

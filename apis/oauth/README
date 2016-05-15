@@ -23,7 +23,7 @@ mvn clean install -Plive \
 -Dtest.jclouds.oauth.scope=https://www.googleapis.com/auth/prediction \
 
 
-To Run the live test against Azure Active Directory which uses the client_credentials grant type:
+To Run the live test against Azure Active Directory which uses the client_credentials grant type when using a password:
 
 mvn clean install -Plive \
 -Dtest.oauth.identity=<azure app id> \
@@ -31,4 +31,15 @@ mvn clean install -Plive \
 -Dtest.oauth.endpoint=https://login.microsoftonline.com/<tenant id>/oauth2/token \
 -Dtest.jclouds.oauth.resource=https://management.azure.com/ \
 -Dtest.jclouds.oauth.credential-type=clientCredentialsSecret
+
+To run the live test against Azure Active directory using the client_credentials grant type with a certificate and private key:
+
+mvn clean install -Plive \
+-Dtest.jclouds.oauth.credential-type=clientCredentialsP12 \
+-Dtest.jclouds.oauth.resource=https://management.azure.com/ \
+-Dtest.oauth.endpoint=https://login.microsoftonline.com/<tenant id>/oauth2/token \
+-Dtest.jclouds.oauth.audience=https://login.microsoftonline.com/<tenant id>/oauth2/token 
+-Dtest.oauth.identity=<azure app id> \
+-Dtest.oauth.credential=<path to unencrypted private key PEM file> \
+-Dtest.jclouds.oauth.certificate=<path to certificate PEM file>
 

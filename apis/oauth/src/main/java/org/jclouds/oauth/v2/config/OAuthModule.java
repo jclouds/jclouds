@@ -16,10 +16,11 @@
  */
 package org.jclouds.oauth.v2.config;
 
-import static org.jclouds.oauth.v2.config.CredentialType.BEARER_TOKEN_CREDENTIALS;
-import static org.jclouds.oauth.v2.config.CredentialType.CLIENT_CREDENTIALS_SECRET;
-import static org.jclouds.oauth.v2.config.CredentialType.P12_PRIVATE_KEY_CREDENTIALS;
 import static org.jclouds.oauth.v2.config.OAuthProperties.CREDENTIAL_TYPE;
+import static org.jclouds.oauth.v2.config.CredentialType.BEARER_TOKEN_CREDENTIALS;
+import static org.jclouds.oauth.v2.config.CredentialType.P12_PRIVATE_KEY_CREDENTIALS;
+import static org.jclouds.oauth.v2.config.CredentialType.CLIENT_CREDENTIALS_SECRET;
+import static org.jclouds.oauth.v2.config.CredentialType.CLIENT_CREDENTIALS_P12_AND_CERTIFICATE;
 import static org.jclouds.rest.config.BinderUtils.bindHttpApi;
 
 import java.net.URI;
@@ -30,9 +31,11 @@ import javax.inject.Named;
 import javax.inject.Singleton;
 
 import org.jclouds.oauth.v2.AuthorizationApi;
-import org.jclouds.oauth.v2.filters.BearerTokenFromCredentials;
-import org.jclouds.oauth.v2.filters.ClientCredentialsSecretFlow;
+import org.jclouds.oauth.v2.domain.CertificateFingerprint;
 import org.jclouds.oauth.v2.filters.JWTBearerTokenFlow;
+import org.jclouds.oauth.v2.filters.BearerTokenFromCredentials;
+import org.jclouds.oauth.v2.filters.ClientCredentialsJWTBearerTokenFlow;
+import org.jclouds.oauth.v2.filters.ClientCredentialsSecretFlow;
 import org.jclouds.oauth.v2.filters.OAuthFilter;
 
 import com.google.common.base.Supplier;
@@ -51,6 +54,7 @@ public final class OAuthModule extends AbstractModule {
       bindHttpApi(binder(), AuthorizationApi.class);
       bind(CredentialType.class).toProvider(CredentialTypeFromPropertyOrDefault.class);
       bind(new TypeLiteral<Supplier<PrivateKey>>() {}).annotatedWith(Authorization.class).to(PrivateKeySupplier.class);
+      bind(new TypeLiteral<Supplier<CertificateFingerprint>>() {}).annotatedWith(Authorization.class).to(CertificateFingerprintSupplier.class);
    }
 
    @Provides
@@ -76,7 +80,8 @@ public final class OAuthModule extends AbstractModule {
    protected Map<CredentialType, Class<? extends OAuthFilter>> authenticationFlowMap() {
       return ImmutableMap.of(P12_PRIVATE_KEY_CREDENTIALS, JWTBearerTokenFlow.class,
                              BEARER_TOKEN_CREDENTIALS, BearerTokenFromCredentials.class,
-                             CLIENT_CREDENTIALS_SECRET, ClientCredentialsSecretFlow.class);
+                             CLIENT_CREDENTIALS_SECRET, ClientCredentialsSecretFlow.class,
+                             CLIENT_CREDENTIALS_P12_AND_CERTIFICATE, ClientCredentialsJWTBearerTokenFlow.class);
    }
 
    @Provides

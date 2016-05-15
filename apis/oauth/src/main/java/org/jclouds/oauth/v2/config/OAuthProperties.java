@@ -37,12 +37,19 @@ public final class OAuthProperties {
    public static final String CREDENTIAL_TYPE = "jclouds.oauth.credential-type";
 
    /**
-    * When using oauth with Azure Active Direction and Client Credentials, a "resource" must
+    * When using oauth with Azure Active Directory and Client Credentials, a "resource" must
     * be specified as part of the request.
     *
     * @see <a href="https://msdn.microsoft.com/en-us/library/azure/dn645543.aspx">doc</a>
     */
    public static final String RESOURCE = "jclouds.oauth.resource";
+
+   /**
+    * When using oauth with Azure Active Directory, Client Credentials, and using JWT
+    * authentication, the certificate associated with the Private Key must be provided.
+    * The fingerprint of the certificate is included in the JWT headers.
+    */
+   public static final String CERTIFICATE = "jclouds.oauth.certificate";
 
    private OAuthProperties() {
    }

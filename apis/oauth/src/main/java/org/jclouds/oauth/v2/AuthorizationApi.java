@@ -29,8 +29,10 @@ import org.jclouds.javax.annotation.Nullable;
 import org.jclouds.oauth.v2.OAuthFallbacks.AuthorizationExceptionOn4xx;
 import org.jclouds.oauth.v2.config.Authorization;
 import org.jclouds.oauth.v2.domain.Claims;
+import org.jclouds.oauth.v2.domain.ClientCredentialsClaims;
 import org.jclouds.oauth.v2.domain.Token;
 import org.jclouds.oauth.v2.functions.ClaimsToAssertion;
+import org.jclouds.oauth.v2.functions.ClientCredentialsClaimsToAssertion;
 import org.jclouds.rest.annotations.Endpoint;
 import org.jclouds.rest.annotations.Fallback;
 import org.jclouds.rest.annotations.FormParams;
@@ -58,5 +60,17 @@ public interface AuthorizationApi extends Closeable {
            @FormParam("client_secret") String client_secret,
            @FormParam("resource") String resource,
            @FormParam("scope") @Nullable String scope
+   );
+
+   @Named("oauth2:authorize_client_p12")
+   @POST
+   @FormParams(keys = {"grant_type", "client_assertion_type"}, values = {"client_credentials", "urn:ietf:params:oauth:client-assertion-type:jwt-bearer"})
+   @Consumes(APPLICATION_JSON)
+   @Fallback(AuthorizationExceptionOn4xx.class)
+   Token authorize(
+            @FormParam("client_id") String client_id,
+            @FormParam("client_assertion") @ParamParser(ClientCredentialsClaimsToAssertion.class) ClientCredentialsClaims claim,
+            @FormParam("resource") String resource,
+            @FormParam("scope") @Nullable String scope
    );
 }
