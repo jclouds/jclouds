@@ -18,8 +18,11 @@ package org.jclouds.azurecompute.arm.internal;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
+import java.net.URI;
 import java.util.Properties;
 import java.util.Random;
+
+import com.google.common.base.Predicate;
 import com.google.inject.Module;
 import com.google.inject.Injector;
 
@@ -28,11 +31,19 @@ import org.jclouds.apis.BaseApiLiveTest;
 import org.jclouds.azurecompute.arm.AzureComputeApi;
 import org.jclouds.azurecompute.arm.AzureComputeProviderMetadata;
 import org.jclouds.providers.ProviderMetadata;
+import com.google.inject.name.Names;
+import com.google.inject.Key;
+import com.google.inject.TypeLiteral;
+
+import static org.jclouds.compute.config.ComputeServiceProperties.TIMEOUT_IMAGE_AVAILABLE;
+import static org.jclouds.compute.config.ComputeServiceProperties.TIMEOUT_NODE_SUSPENDED;
 
 
 public abstract class AbstractAzureComputeApiLiveTest extends BaseApiLiveTest<AzureComputeApi> {
 
    protected static final int RAND = new Random().nextInt(999);
+   protected Predicate<String> nodeSuspendedPredicate;
+   protected Predicate<URI> imageAvailablePredicate;
 
    public AbstractAzureComputeApiLiveTest() {
       provider = "azurecompute-arm";
@@ -40,6 +51,10 @@ public abstract class AbstractAzureComputeApiLiveTest extends BaseApiLiveTest<Az
 
    @Override protected AzureComputeApi create(Properties props, Iterable<Module> modules) {
       Injector injector = newBuilder().modules(modules).overrides(props).buildInjector();
+      nodeSuspendedPredicate = injector.getInstance(Key.get(new TypeLiteral<Predicate<String>>() {
+      }, Names.named(TIMEOUT_NODE_SUSPENDED)));
+      imageAvailablePredicate = injector.getInstance(Key.get(new TypeLiteral<Predicate<URI>>() {
+      }, Names.named(TIMEOUT_IMAGE_AVAILABLE)));
       return injector.getInstance(AzureComputeApi.class);
    }
 

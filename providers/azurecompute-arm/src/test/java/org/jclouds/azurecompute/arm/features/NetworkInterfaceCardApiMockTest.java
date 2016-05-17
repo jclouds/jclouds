@@ -107,7 +107,8 @@ public class NetworkInterfaceCardApiMockTest extends BaseAzureComputeApiMockTest
               NetworkInterfaceCardProperties.create(null, null, null,
                       Arrays.asList(IpConfiguration.create("myipconfig", null, null, null,
                               IpConfigurationProperties.create(null, null, "Dynamic", IdReference.create(SubnetID), null))
-                      )
+                      ),
+                      null
               );
 
       final Map<String, String> tags = ImmutableMap.of("mycustomtag", "foobar");

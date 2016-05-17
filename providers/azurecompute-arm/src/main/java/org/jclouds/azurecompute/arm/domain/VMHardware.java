@@ -17,6 +17,7 @@
 package org.jclouds.azurecompute.arm.domain;
 
 import com.google.auto.value.AutoValue;
+import org.jclouds.json.SerializedNames;
 
 /**
  * A VM Size that is available in a region for a given subscription.
@@ -24,45 +25,51 @@ import com.google.auto.value.AutoValue;
  * @see <a href="https://msdn.microsoft.com/en-us/library/azure/mt269440.aspx" >api</a>
  */
 @AutoValue
-public class VMHardware {
+public abstract class VMHardware {
 
    /**
     * The name of the VM size.
     */
-   public String name;
+   public abstract String name();
 
    /**
     * The number of cores that are available in the VM size.
     */
-   public Integer numberOfCores;
+   public abstract Integer numberOfCores();
 
    /**
     * Specifies the size in MB of the OS Disk.
     */
-   public Integer osDiskSizeInMB;
+   public abstract Integer osDiskSizeInMB();
 
    /**
     * The size of the resource disk.
     */
-   public Integer resourceDiskSizeInMB;
+   public abstract Integer resourceDiskSizeInMB();
 
    /**
     * Specifies the available RAM in MB.
     */
-   public Integer memoryInMB;
+   public abstract Integer memoryInMB();
 
    /**
     * Specifies the maximum number of data disks that can be attached to the VM size.
     */
-   public Integer maxDataDiskCount;
+   public abstract Integer maxDataDiskCount();
 
    /**
     * Specifies the location of the HW resource
     */
-   public String location;
+   public abstract String location();
 
    /**
     * Specifies if this HW is globally available
     */
-   public boolean globallyAvailable;
+   public abstract boolean globallyAvailable();
+
+   @SerializedNames({ "name", "numberOfCores", "osDiskSizeInMB", "resourceDiskSizeInMB", "memoryInMB", "maxDataDiskCount", "location", "globallyAvailable"})
+   public static VMHardware create(String name, Integer numberOfCores, Integer osDiskSizeInMB, Integer resourceDiskSizeInMB, Integer memoryInMB, Integer maxDataDiskCount, String location, boolean globallyAvailable) {
+
+      return new AutoValue_VMHardware(name, numberOfCores, osDiskSizeInMB, resourceDiskSizeInMB, memoryInMB, maxDataDiskCount, location, globallyAvailable);
+   }
 }

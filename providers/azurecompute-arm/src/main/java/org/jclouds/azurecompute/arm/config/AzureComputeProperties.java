@@ -41,4 +41,10 @@ public class AzureComputeProperties {
 
    public static final String TIMEOUT_RESOURCE_DELETED = "jclouds.azurecompute.arm.timeout.resourcedeleted";
 
+   public static final String DEFAULT_VNET_ADDRESS_SPACE_PREFIX = "jclouds.azurecompute.arm.vnet.addressprefix";
+
+   public static final String DEFAULT_SUBNET_ADDRESS_PREFIX = "jclouds.azurecompute.arm.subnet.addressprefix";
+
+   public static final String DEFAULT_DATADISKSIZE = "jclouds.azurecompute.arm.datadisksize";
+
 }

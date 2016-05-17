@@ -31,8 +31,25 @@ public abstract class DeploymentTemplate {
    //Empty placeholders as we want to generate the empty JSON object
    @AutoValue
    public abstract static class Parameters {
-      public static Parameters create() {
-         return new AutoValue_DeploymentTemplate_Parameters();
+
+      @Nullable
+      public abstract KeyVaultReference publicKeyFromAzureKeyVault();
+
+      public static Parameters create(KeyVaultReference reference)
+      {
+         return new AutoValue_DeploymentTemplate_Parameters(reference);
+      }
+   }
+
+   @AutoValue
+   public abstract static class TemplateParameters {
+
+      @Nullable
+      public abstract TemplateParameterType publicKeyFromAzureKeyVault();
+
+      public static TemplateParameters create(TemplateParameterType publicKeyFromAzureKeyVault)
+      {
+         return new AutoValue_DeploymentTemplate_TemplateParameters(publicKeyFromAzureKeyVault);
       }
    }
 
@@ -40,7 +57,7 @@ public abstract class DeploymentTemplate {
 
    public abstract String contentVersion();
 
-   public abstract Parameters parameters();
+   public abstract TemplateParameters parameters();
 
    public abstract Map<String, String> variables();
 
@@ -52,7 +69,7 @@ public abstract class DeploymentTemplate {
    @SerializedNames({"$schema", "contentVersion", "parameters", "variables", "resources" , "outputs"})
    public static DeploymentTemplate create(final String schema,
                                            final String contentVersion,
-                                           final Parameters parameters,
+                                           final TemplateParameters parameters,
                                            final Map<String, String> variables,
                                            final List<ResourceDefinition> resources,
                                            final List<?> outputs) {
@@ -83,7 +100,7 @@ public abstract class DeploymentTemplate {
 
       public abstract Builder contentVersion(String type);
 
-      public abstract Builder parameters(Parameters parameters);
+      public abstract Builder parameters(TemplateParameters parameters);
 
       public abstract Builder variables(Map<String, String> variables);
 

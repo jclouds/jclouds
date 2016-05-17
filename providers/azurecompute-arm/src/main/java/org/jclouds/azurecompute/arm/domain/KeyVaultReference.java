@@ -16,21 +16,31 @@
  */
 package org.jclouds.azurecompute.arm.domain;
 
+import com.google.auto.value.AutoValue;
+import org.jclouds.json.SerializedNames;
 
-import java.util.List;
-import java.util.Map;
+// Simple helper class to serialize / deserialize keyvault reference.
 
-public class VMDeployment {
+@AutoValue
+public abstract class KeyVaultReference {
 
-   public Deployment deployment;
+   @AutoValue
+   public abstract static class Reference {
 
-   public List<PublicIPAddress> ipAddressList;
+      public abstract IdReference keyVault();
 
-   public VirtualMachineInstance vm;
+      public abstract String secretName();
 
-   public VirtualMachine virtualMachine;
+      @SerializedNames({"keyVault", "secretName"})
+      public static Reference create(final IdReference keyVault, final String secretName) {
+         return new AutoValue_KeyVaultReference_Reference(keyVault, secretName);
+      }
+   }
 
-   public Map<String, String> userMetaData;
+   public abstract Reference reference();
 
-   public Iterable<String> tags;
+   @SerializedNames({"reference"})
+   public static KeyVaultReference create(final Reference reference) {
+      return new AutoValue_KeyVaultReference(reference);
+   }
 }

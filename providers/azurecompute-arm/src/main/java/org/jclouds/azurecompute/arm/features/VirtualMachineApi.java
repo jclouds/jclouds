@@ -131,5 +131,30 @@ public interface VirtualMachineApi {
    @Path("/{name}/powerOff")
    void stop(@PathParam("name") String name);
 
+   /**
+    * Generalize the virtual machine
+    */
+   @Named("generalize")
+   @POST
+   @Path("/{name}/generalize")
+   void generalize(@PathParam("name") String name);
+
+   /**
+    * Capture the virtual machine image
+    * destinationContainerName: the name of the folder created under the "system" container in the storage account
+    * Folder structure: Microsoft.Computer > Images > destinationContainerName
+    * Within the folder, there will be 1 page blob for the osDisk vhd and 1 block blob for the vmTemplate json file
+    */
+   @Named("capture")
+   @POST
+   @Payload("%7B\"vhdPrefix\":\"{vhdPrefix}\",\"destinationContainerName\":\"{destinationContainerName}\",\"overwriteVhds\":\"true\"%7D")
+   @MapBinder(BindToJsonPayload.class)
+   @Path("/{name}/capture")
+   @ResponseParser(URIParser.class)
+   @Fallback(Fallbacks.NullOnNotFoundOr404.class)
+   URI capture(@PathParam("name") String name,
+               @PayloadParam("vhdPrefix") String vhdPrefix,
+               @PayloadParam("destinationContainerName") String destinationContainerName);
+
 }
 

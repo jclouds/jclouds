@@ -38,13 +38,17 @@ public abstract class NetworkInterfaceCardProperties {
    @Nullable
    public abstract List<IpConfiguration> ipConfigurations();
 
-   @SerializedNames({"provisioningState", "resourceGuid", "enableIPForwarding", "ipConfigurations"})
-   public static NetworkInterfaceCardProperties create(final String provisioningState, final String resourceGuid, final Boolean enableIPForwarding, final List<IpConfiguration> ipConfigurations) {
+   @Nullable
+   public abstract IdReference networkSecurityGroup();
+
+   @SerializedNames({"provisioningState", "resourceGuid", "enableIPForwarding", "ipConfigurations", "networkSecurityGroup"})
+   public static NetworkInterfaceCardProperties create(final String provisioningState, final String resourceGuid, final Boolean enableIPForwarding, final List<IpConfiguration> ipConfigurations, final IdReference networkSecurityGroup) {
       NetworkInterfaceCardProperties.Builder builder = NetworkInterfaceCardProperties.builder()
               .provisioningState(provisioningState)
               .resourceGuid(resourceGuid)
               .enableIPForwarding(enableIPForwarding)
-              .ipConfigurations(ipConfigurations == null ? null : ImmutableList.copyOf(ipConfigurations));
+              .ipConfigurations(ipConfigurations == null ? null : ImmutableList.copyOf(ipConfigurations))
+              .networkSecurityGroup(networkSecurityGroup);
 
       return builder.build();
    }
@@ -65,6 +69,8 @@ public abstract class NetworkInterfaceCardProperties {
       public abstract Builder ipConfigurations(List<IpConfiguration> ipConfigurations);
 
       abstract List<IpConfiguration> ipConfigurations();
+
+      public abstract Builder networkSecurityGroup(IdReference networkSecurityGroup);
 
       abstract NetworkInterfaceCardProperties autoBuild();
 

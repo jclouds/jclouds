@@ -16,21 +16,19 @@
  */
 package org.jclouds.azurecompute.arm.domain;
 
+import com.google.auto.value.AutoValue;
+import org.jclouds.javax.annotation.Nullable;
+import org.jclouds.json.SerializedNames;
 
-import java.util.List;
-import java.util.Map;
+// Simple helper class to serialize / deserialize id reference.
 
-public class VMDeployment {
+@AutoValue
+public abstract class TemplateParameterType {
+   @Nullable
+   public abstract String type();
 
-   public Deployment deployment;
-
-   public List<PublicIPAddress> ipAddressList;
-
-   public VirtualMachineInstance vm;
-
-   public VirtualMachine virtualMachine;
-
-   public Map<String, String> userMetaData;
-
-   public Iterable<String> tags;
+   @SerializedNames({"type"})
+   public static TemplateParameterType create(final String type) {
+      return new AutoValue_TemplateParameterType(type);
+   }
 }

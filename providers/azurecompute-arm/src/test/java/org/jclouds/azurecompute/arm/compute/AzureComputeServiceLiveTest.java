@@ -16,33 +16,57 @@
  */
 package org.jclouds.azurecompute.arm.compute;
 
+import org.jclouds.compute.RunScriptOnNodesException;
+import org.jclouds.compute.domain.ExecResponse;
+import org.jclouds.compute.domain.NodeMetadata;
+import org.jclouds.compute.domain.OperatingSystem;
+import org.jclouds.compute.domain.Template;
 import org.jclouds.compute.internal.BaseComputeServiceLiveTest;
+import org.jclouds.compute.predicates.NodePredicates;
+import org.jclouds.domain.LoginCredentials;
+import org.jclouds.scriptbuilder.domain.Statement;
+import org.jclouds.scriptbuilder.domain.Statements;
+import org.jclouds.scriptbuilder.statements.java.InstallJDK;
+import org.jclouds.scriptbuilder.statements.login.AdminAccess;
 import org.jclouds.sshj.config.SshjSshClientModule;
 import org.testng.annotations.Test;
-
 import org.jclouds.providers.ProviderMetadata;
-
 import org.jclouds.azurecompute.arm.AzureComputeProviderMetadata;
 
 import static org.jclouds.azurecompute.arm.config.AzureComputeProperties.RESOURCE_GROUP_NAME;
 import static org.jclouds.compute.config.ComputeServiceProperties.TIMEOUT_NODE_RUNNING;
+import static org.jclouds.compute.config.ComputeServiceProperties.TIMEOUT_NODE_SUSPENDED;
+import static org.jclouds.compute.config.ComputeServiceProperties.TIMEOUT_NODE_TERMINATED;
+import static org.jclouds.compute.config.ComputeServiceProperties.TIMEOUT_PORT_OPEN;
 import static org.jclouds.compute.config.ComputeServiceProperties.TIMEOUT_SCRIPT_COMPLETE;
 import org.jclouds.azurecompute.arm.internal.AzureLiveTestUtils;
-
 import com.google.inject.Module;
+import java.util.Map;
 import java.util.Properties;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
+
 import static com.google.common.base.Preconditions.checkNotNull;
+import org.jclouds.logging.slf4j.config.SLF4JLoggingModule;
+import org.jclouds.logging.config.LoggingModule;
+
 
 /**
  * Live tests for the {@link org.jclouds.compute.ComputeService} integration.
  */
 @Test(groups = "live", singleThreaded = true, testName = "AzureComputeServiceLiveTest")
 public class AzureComputeServiceLiveTest extends BaseComputeServiceLiveTest {
-   public String azureGroup;
+   protected int nonBlockDurationSeconds = 30;
 
    public AzureComputeServiceLiveTest() {
       provider = "azurecompute-arm";
+      nonBlockDurationSeconds = 300;
+      group = "az-u";
+   }
+
+   @Override
+   protected LoggingModule getLoggingModule() {
+      return new SLF4JLoggingModule();
    }
 
    @Override
@@ -56,18 +80,42 @@ public class AzureComputeServiceLiveTest extends BaseComputeServiceLiveTest {
       return pm;
    }
 
-   @Override protected Properties setupProperties() {
-      azureGroup = "jc" + System.getProperty("user.name").substring(0, 3);
+   @Override
+   protected Properties setupProperties() {
       Properties properties = super.setupProperties();
-      long scriptTimeout = TimeUnit.MILLISECONDS.convert(20, TimeUnit.MINUTES);
+      long scriptTimeout = TimeUnit.MILLISECONDS.convert(60, TimeUnit.MINUTES);
       properties.setProperty(TIMEOUT_SCRIPT_COMPLETE, scriptTimeout + "");
       properties.setProperty(TIMEOUT_NODE_RUNNING, scriptTimeout + "");
-      properties.put(RESOURCE_GROUP_NAME, azureGroup);
+      properties.setProperty(TIMEOUT_PORT_OPEN, scriptTimeout + "");
+      properties.setProperty(TIMEOUT_NODE_TERMINATED, scriptTimeout + "");
+      properties.setProperty(TIMEOUT_NODE_SUSPENDED, scriptTimeout + "");
+      properties.put(RESOURCE_GROUP_NAME, "a4");
 
       AzureLiveTestUtils.defaultProperties(properties);
       checkNotNull(setIfTestSystemPropertyPresent(properties, "oauth.endpoint"), "test.oauth.endpoint");
 
       return properties;
+   }
 
+   @Override
+   protected Template refreshTemplate() {
+      return this.template = addRunScriptToTemplate(this.buildTemplate(this.client.templateBuilder()));
+   }
+
+   @Override
+   protected Template addRunScriptToTemplate(Template template) {
+      template.getOptions().runScript(Statements.newStatementList(new Statement[]{AdminAccess.standard(), Statements.exec("sleep 50"), InstallJDK.fromOpenJDK()}));
+      return template;
+   }
+
+   @Override
+   @Test( enabled = false)
+   protected void weCanCancelTasks(NodeMetadata node) throws InterruptedException, ExecutionException {
+      return;
+   }
+
+   @Override
+   protected Map<? extends NodeMetadata, ExecResponse> runScriptWithCreds(String group, OperatingSystem os, LoginCredentials creds) throws RunScriptOnNodesException {
+      return this.client.runScriptOnNodesMatching(NodePredicates.runningInGroup(group), Statements.newStatementList(Statements.exec("sleep 50"), InstallJDK.fromOpenJDK()), org.jclouds.compute.options.TemplateOptions.Builder.overrideLoginCredentials(creds).nameTask("runScriptWithCreds"));
    }
 }

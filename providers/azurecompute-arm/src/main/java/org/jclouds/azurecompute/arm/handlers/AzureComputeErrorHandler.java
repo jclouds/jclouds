@@ -48,7 +48,12 @@ public class AzureComputeErrorHandler implements HttpErrorHandler {
                  : message;
          switch (response.getStatusCode()) {
             case 400:
-               exception = new IllegalArgumentException(message, exception);
+               if (message.contains("unauthorized_client")) {
+                  exception = new AuthorizationException(message, exception);
+               }
+               else {
+                  exception = new IllegalArgumentException(message, exception);
+               }
                break;
             case 401:
             case 403:

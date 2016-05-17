@@ -18,18 +18,17 @@ package org.jclouds.azurecompute.arm.features;
 
 import org.jclouds.azurecompute.arm.internal.BaseAzureComputeApiMockTest;
 import org.jclouds.compute.options.TemplateOptions;
+import org.jclouds.azurecompute.arm.compute.options.AzureTemplateOptions;
 import org.jclouds.azurecompute.arm.domain.DeploymentBody;
 import org.jclouds.azurecompute.arm.domain.ImageReference;
 import org.jclouds.azurecompute.arm.domain.IpConfiguration;
 import org.jclouds.azurecompute.arm.domain.IpConfigurationProperties;
 import org.jclouds.azurecompute.arm.domain.NetworkInterfaceCardProperties;
-import org.jclouds.azurecompute.arm.domain.OSProfile;
 import org.jclouds.azurecompute.arm.domain.PublicIPAddressProperties;
 import org.jclouds.azurecompute.arm.domain.ResourceDefinition;
 import org.jclouds.azurecompute.arm.domain.StorageService;
 import org.jclouds.azurecompute.arm.domain.StorageService.StorageServiceProperties;
 import org.jclouds.azurecompute.arm.domain.VirtualMachineProperties;
-import org.jclouds.azurecompute.arm.domain.VirtualNetwork.VirtualNetworkProperties;
 import org.jclouds.azurecompute.arm.util.DeploymentTemplateBuilder;
 import org.jclouds.compute.domain.Hardware;
 import org.jclouds.compute.domain.HardwareBuilder;
@@ -56,6 +55,8 @@ import static org.testng.Assert.fail;
 public class DeploymentTemplateBuilderTest extends BaseAzureComputeApiMockTest {
 
    final String group = "jcgroup";
+   final String vnetName = group + "virtualnetwork";
+   final String subnetId = "";
 
    @Test
    public void testResourceGroup() {
@@ -68,22 +69,6 @@ public class DeploymentTemplateBuilderTest extends BaseAzureComputeApiMockTest {
 
       StorageServiceProperties properties = (StorageServiceProperties) resource.properties();
       assertEquals(properties.accountType(), StorageService.AccountType.Standard_LRS);
-      assertTrue(variables.containsKey(parseVariableName(resource.name())));
-   }
-
-   @Test
-   void testVirtualNetwork() {
-      DeploymentTemplateBuilder builder = getMockDeploymentTemplateBuilderWithEmptyOptions();
-      DeploymentBody deploymentBody = builder.getDeploymentTemplate();
-      List<ResourceDefinition> resources = deploymentBody.template().resources();
-      Map<String, String> variables = deploymentBody.template().variables();
-
-      ResourceDefinition resource = getResourceByType(resources, "Microsoft.Network/virtualNetworks");
-
-      VirtualNetworkProperties properties = (VirtualNetworkProperties) resource.properties();
-      assertTrue(properties.addressSpace().addressPrefixes().size() > 0);
-      assertTrue(properties.subnets().size() > 0);
-
       assertTrue(variables.containsKey(parseVariableName(resource.name())));
    }
 
@@ -147,42 +132,49 @@ public class DeploymentTemplateBuilderTest extends BaseAzureComputeApiMockTest {
    }
 
    @Test
-   void testVirtualMachineWithSSH() {
+   void testCustomOptions(){
+      final String dnsLabelPrefix = "mydnslabel";
+      final String customData = "echo customData";
+      final String customData64 = "ZWNobyBjdXN0b21EYXRh";
+      final String keyvaultString = "/url/to/vault/:publickeysecret";
 
-      String rsakey = new String("ssh-rsa AAAAB3NzaC1yc2EAAAABJQAAAQEAmfk/QSF0pvnrpdz+Ah2KulGruKU+8FFBdlw938MpOysRdmp7uwpH6Z7+5VNGNdxFIAyc/W3UaZXF9hTsU8+78TlwkZpsr2mzU+ycu37XLAQ8Uv7hjsAN0DkKKPrZ9lgUUfZVKV/8E/JIAs03gIbL6zO3y7eYJQ5fNeZb+nji7tQT+YLpGq/FDegvraPKVMQbCSCZhsHyWhdPLyFlu9/30npZ0ahYOPI/KyZxFDtM/pHp88+ZAk9Icq5owaLRWcJQqrBGWqjbZnHtjdDqvHZ+C0wPhdJZPyfkHOrSYTwSQBXfX4JLRRCz3J1jf62MbQWT1o6Y4JEs1ZP1Skxu6zR96Q== mocktest");
+      AzureTemplateOptions options = new AzureTemplateOptions()
+            .customData(customData)
+            .DNSLabelPrefix(dnsLabelPrefix)
+            .keyVaultIdAndSecret(keyvaultString);
 
-      TemplateOptions options = new TemplateOptions();
-      options.authorizePublicKey(rsakey);
+      options.virtualNetworkName(vnetName);
+      options.subnetId(subnetId);
+
+      assertEquals(options.as(AzureTemplateOptions.class).getCustomData(), customData);
+      assertEquals(options.getDNSLabelPrefix(), dnsLabelPrefix);
+      assertEquals(options.as(AzureTemplateOptions.class).getKeyVaultIdAndSecret(), keyvaultString);
 
       DeploymentTemplateBuilder builder = getMockDeploymentTemplateBuilderWithOptions(options);
-      Template template = builder.getTemplate();
 
       DeploymentBody deploymentBody = builder.getDeploymentTemplate();
+
       List<ResourceDefinition> resources = deploymentBody.template().resources();
-      Map<String, String> variables = deploymentBody.template().variables();
+      ResourceDefinition publicIpResource = getResourceByType(resources, "Microsoft.Network/publicIPAddresses");
+      assertNotNull(publicIpResource);
 
-      ResourceDefinition resource = getResourceByType(resources, "Microsoft.Compute/virtualMachines");
-      assertNotNull(resource);
+      PublicIPAddressProperties ipProperties = (PublicIPAddressProperties) publicIpResource.properties();
+      assertEquals(ipProperties.dnsSettings().domainNameLabel(), dnsLabelPrefix);
 
-      VirtualMachineProperties properties = (VirtualMachineProperties) resource.properties();
-      assertEquals(properties.hardwareProfile().vmSize(), template.getHardware().getId());
+      ResourceDefinition vmResource = getResourceByType(resources, "Microsoft.Compute/virtualMachines");
+      assertNotNull(vmResource);
 
-      ImageReference image = properties.storageProfile().imageReference();
-      assertEquals(image.publisher(), template.getImage().getProviderId());
-      assertEquals(image.offer(), template.getImage().getName());
-      assertEquals(image.sku(), template.getImage().getVersion());
-      assertEquals(image.version(), "latest");
+      VirtualMachineProperties virtualMachineProperties = (VirtualMachineProperties) vmResource.properties();
+      assertEquals(virtualMachineProperties.osProfile().customData(), customData64);
 
-      // Check that ssh key is in place
-      OSProfile.LinuxConfiguration osConfig = properties.osProfile().linuxConfiguration();
-      assertEquals(osConfig.disablePasswordAuthentication(), "true");
-      assertTrue(osConfig.ssh().publicKeys().size() > 0);
-      assertEquals(osConfig.ssh().publicKeys().get(0).keyData(), rsakey);
-
-      assertTrue(variables.containsKey(parseVariableName(resource.name())));
+      //populated when keyvault is used to get public key.
+      assertNotNull(virtualMachineProperties.osProfile().linuxConfiguration().ssh().publicKeys());
    }
 
    private Template getMockTemplate(TemplateOptions options) {
+      ((AzureTemplateOptions)options).virtualNetworkName(vnetName);
+      ((AzureTemplateOptions)options).subnetId(subnetId);
+
       Location provider = (new LocationBuilder()).scope(LocationScope.PROVIDER).id("azurecompute-arm").description("azurecompute-arm").build();
       Location region = (new LocationBuilder()).scope(LocationScope.REGION).id("northeurope").description("North Europe").parent(provider).build();
       OperatingSystem os = OperatingSystem.builder().name("osName").version("osVersion").description("osDescription").arch("X86_32").build();
@@ -193,13 +185,19 @@ public class DeploymentTemplateBuilderTest extends BaseAzureComputeApiMockTest {
    }
 
    private DeploymentTemplateBuilder getMockDeploymentTemplateBuilderWithEmptyOptions() {
-      TemplateOptions options = new TemplateOptions();
+      AzureTemplateOptions options = new AzureTemplateOptions();
+      options.virtualNetworkName(vnetName);
+      options.subnetId(subnetId);
+
       Template template = getMockTemplate(options);
       DeploymentTemplateBuilder templateBuilder = api.deploymentTemplateFactory().create(group, "mydeployment", template);
       return templateBuilder;
    }
 
    private DeploymentTemplateBuilder getMockDeploymentTemplateBuilderWithOptions(TemplateOptions options) {
+      ((AzureTemplateOptions)options).virtualNetworkName(vnetName);
+      ((AzureTemplateOptions)options).subnetId(subnetId);
+
       Template template = getMockTemplate(options);
       DeploymentTemplateBuilder templateBuilder = api.deploymentTemplateFactory().create(group, "mydeployment", template);
       return templateBuilder;

@@ -14,23 +14,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jclouds.azurecompute.arm.domain;
+package org.jclouds.azurecompute.arm.functions;
+import com.google.common.base.Function;
+import org.jclouds.http.HttpResponse;
 
+import javax.inject.Singleton;
 
-import java.util.List;
-import java.util.Map;
+import static org.jclouds.http.HttpUtils.releasePayload;
 
-public class VMDeployment {
-
-   public Deployment deployment;
-
-   public List<PublicIPAddress> ipAddressList;
-
-   public VirtualMachineInstance vm;
-
-   public VirtualMachine virtualMachine;
-
-   public Map<String, String> userMetaData;
-
-   public Iterable<String> tags;
+/**
+ * Parses an http response code from http responser
+ */
+@Singleton
+public class StatusCodeParser implements Function<HttpResponse, String> {
+   public String apply(final HttpResponse from) {
+      releasePayload(from);
+      final String statusCode = Integer.toString(from.getStatusCode());
+      if (statusCode != null) {
+         return statusCode;
+      }
+      throw new IllegalStateException("did not receive RequestId in: " + from);
+   }
 }

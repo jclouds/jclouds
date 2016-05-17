@@ -17,37 +17,44 @@
 package org.jclouds.azurecompute.arm.domain;
 
 import com.google.auto.value.AutoValue;
+import org.jclouds.json.SerializedNames;
 
 @AutoValue
-public class VMImage {
+public abstract class VMImage {
 
    /**
     * The publisher of the image reference.
     */
-   public String publisher;
+   public abstract String publisher();
 
    /**
     * The offer of the image reference.
     */
-   public String offer;
+   public abstract String offer();
 
    /**
     * The sku of the image reference.
     */
-   public String sku;
+   public abstract String sku();
 
    /**
     * The version of the image reference.
     */
-   public String version;
+   public abstract String version();
 
    /**
     * The location from where Image was fetched
     */
-   public String location;
+   public abstract String location();
 
    /**
     * Specifies if this image is globally available
     */
-   public boolean globallyAvailable;
+   public abstract boolean globallyAvailable();
+
+   @SerializedNames({ "publisher", "offer", "sku", "version", "location", "globallyAvailable"})
+   public static VMImage create(String publisher, String offer, String sku, String version, String location, boolean globallyAvailable) {
+
+      return new AutoValue_VMImage(publisher, offer, sku, version, location, globallyAvailable);
+   }
 }

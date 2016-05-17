@@ -17,6 +17,8 @@
 package org.jclouds.azurecompute.arm.features;
 
 import com.google.common.base.Predicate;
+import com.google.gson.internal.LinkedTreeMap;
+import com.google.common.collect.Iterables;
 import org.jclouds.azurecompute.arm.domain.DataDisk;
 import org.jclouds.azurecompute.arm.domain.DiagnosticsProfile;
 import org.jclouds.azurecompute.arm.domain.HardwareProfile;
@@ -33,16 +35,28 @@ import org.jclouds.azurecompute.arm.domain.VirtualMachine;
 import org.jclouds.azurecompute.arm.domain.VirtualMachineInstance;
 import org.jclouds.azurecompute.arm.domain.VirtualMachineProperties;
 import org.jclouds.azurecompute.arm.functions.ParseJobStatus;
+import org.jclouds.azurecompute.arm.internal.AzureLiveTestUtils;
 import org.jclouds.azurecompute.arm.internal.BaseAzureComputeApiLiveTest;
 import org.jclouds.util.Predicates2;
+import org.jclouds.azurecompute.arm.domain.ResourceDefinition;
+import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+import static org.jclouds.azurecompute.arm.config.AzureComputeProperties.RESOURCE_GROUP_NAME;
+import static org.jclouds.compute.config.ComputeServiceProperties.TIMEOUT_SCRIPT_COMPLETE;
+import static org.jclouds.compute.config.ComputeServiceProperties.TIMEOUT_NODE_RUNNING;
+import static org.jclouds.compute.config.ComputeServiceProperties.TIMEOUT_PORT_OPEN;
+import static org.jclouds.compute.config.ComputeServiceProperties.TIMEOUT_NODE_TERMINATED;
+import static org.jclouds.compute.config.ComputeServiceProperties.TIMEOUT_NODE_SUSPENDED;
 import static org.testng.Assert.assertNotNull;
 
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Properties;
+import java.util.concurrent.TimeUnit;
 
 import static org.testng.Assert.assertTrue;
 
@@ -60,6 +74,23 @@ public class VirtualMachineApiLiveTest extends BaseAzureComputeApiLiveTest {
       nicName = nic.name();
    }
 
+   @Override
+   protected Properties setupProperties() {
+      Properties properties = super.setupProperties();
+      long scriptTimeout = TimeUnit.MILLISECONDS.convert(60, TimeUnit.MINUTES);
+      properties.setProperty(TIMEOUT_SCRIPT_COMPLETE, scriptTimeout + "");
+      properties.setProperty(TIMEOUT_NODE_RUNNING, scriptTimeout + "");
+      properties.setProperty(TIMEOUT_PORT_OPEN, scriptTimeout + "");
+      properties.setProperty(TIMEOUT_NODE_TERMINATED, scriptTimeout + "");
+      properties.setProperty(TIMEOUT_NODE_SUSPENDED, scriptTimeout + "");
+      properties.put(RESOURCE_GROUP_NAME, getResourceGroupName());
+
+      AzureLiveTestUtils.defaultProperties(properties);
+      checkNotNull(setIfTestSystemPropertyPresent(properties, "oauth.endpoint"), "test.oauth.endpoint");
+
+      return properties;
+   }
+
    private String getName() {
       if (vmName == null) {
          vmName = String.format("%3.24s",
@@ -70,7 +101,6 @@ public class VirtualMachineApiLiveTest extends BaseAzureComputeApiLiveTest {
 
    @Test
    public void testCreate() {
-
       StorageAccountApi storageApi = api.getStorageAccountApi(getResourceGroupName());
       StorageService storageAccount = storageApi.get(getStorageServiceName());
       String blob = storageAccount.storageServiceProperties().primaryEndpoints().get("blob");
@@ -109,22 +139,7 @@ public class VirtualMachineApiLiveTest extends BaseAzureComputeApiLiveTest {
    public void testStop() {
       api().stop(getName());
       //Poll until resource is ready to be used
-      boolean jobDone = Predicates2.retry(new Predicate<String>() {
-         @Override
-         public boolean apply(String name) {
-            String status = "";
-            List<VirtualMachineInstance.VirtualMachineStatus> statuses = api().getInstanceDetails(name).statuses();
-            for (int c = 0; c < statuses.size(); c++) {
-               if (statuses.get(c).code().substring(0, 10).equals("PowerState")) {
-                  status = statuses.get(c).displayStatus();
-                  break;
-               }
-            }
-            return status.equals("VM stopped");
-         }
-      }, 60 * 4 * 1000).apply(getName());
-      assertTrue(jobDone, "stop operation did not complete in the configured timeout");
-
+      nodeSuspendedPredicate.apply(getName());
    }
 
    @Test(dependsOnMethods = "testGet")
@@ -194,11 +209,53 @@ public class VirtualMachineApiLiveTest extends BaseAzureComputeApiLiveTest {
    @Test(dependsOnMethods = "testCreate")
    public void testList() {
       List<VirtualMachine> list = api().list();
-      VirtualMachine vm = api().get(getName());
-      assertTrue(list.contains(vm));
+      final VirtualMachine vm = api().get(getName());
+
+      boolean vmPresent = Iterables.any(list, new Predicate<VirtualMachine>() {
+         public boolean apply(VirtualMachine input) {
+            return input.name().equals(vm.name());
+         }
+      });
+
+      assertTrue(vmPresent);
    }
 
-   @Test(dependsOnMethods = {"testRestart", "testList", "testGet"}, alwaysRun = true)
+   @Test(dependsOnMethods = "testRestart")
+   public void testGeneralize() throws IllegalStateException {
+      api().stop(getName());
+      //Poll until resource is ready to be used
+
+      if (nodeSuspendedPredicate.apply(getName())) {
+         api().generalize(getName());
+      }
+   }
+
+   @Test(dependsOnMethods = "testGeneralize")
+   public void testCapture() throws IllegalStateException {
+      URI uri = api().capture(getName(), getName(), getName());
+      if (uri != null) {
+         if (imageAvailablePredicate.apply(uri)) {
+            List<ResourceDefinition> definitions = api.getJobApi().captureStatus(uri);
+            if (definitions != null) {
+               for (ResourceDefinition definition : definitions) {
+                  LinkedTreeMap<String, String> properties = (LinkedTreeMap<String, String>) definition.properties();
+                  Object storageObject = properties.get("storageProfile");
+                  LinkedTreeMap<String, String> properties2 = (LinkedTreeMap<String, String>) storageObject;
+                  Object osDiskObject = properties2.get("osDisk");
+                  LinkedTreeMap<String, String> osProperties = (LinkedTreeMap<String, String>) osDiskObject;
+                  Object dataDisksObject = properties2.get("dataDisks");
+                  ArrayList<Object> dataProperties = (ArrayList<Object>) dataDisksObject;
+                  LinkedTreeMap<String, String> datadiskObject = (LinkedTreeMap<String, String>) dataProperties.get(0);
+
+                  Assert.assertNotNull(osProperties.get("name"));
+                  Assert.assertNotNull(datadiskObject.get("name"));
+               }
+            }
+         }
+      }
+   }
+
+   @Test(dependsOnMethods = "testCapture", alwaysRun = true)
    public void testDelete() throws Exception {
       URI uri = api().delete(getName());
 
@@ -227,8 +284,10 @@ public class VirtualMachineApiLiveTest extends BaseAzureComputeApiLiveTest {
       VHD vhd = VHD.create(blob + "vhds/" + getName() + ".vhd");
       VHD vhd2 = VHD.create(blob + "vhds/" + getName() + "data.vhd");
       DataDisk dataDisk = DataDisk.create(getName() + "data", "100", 0, vhd2, "Empty");
-      OSDisk osDisk = OSDisk.create(null, getName(), vhd, "ReadWrite", "FromImage");
-      StorageProfile storageProfile = StorageProfile.create(imgRef, osDisk, null);
+      List<DataDisk> dataDisks = new ArrayList<DataDisk>();
+      dataDisks.add(dataDisk);
+      OSDisk osDisk = OSDisk.create(null, getName(), vhd, "ReadWrite", "FromImage", null);
+      StorageProfile storageProfile = StorageProfile.create(imgRef, osDisk, dataDisks);
       OSProfile.WindowsConfiguration windowsConfig = OSProfile.WindowsConfiguration.create(false, null, null, true,
               null);
       OSProfile osProfile = OSProfile.create(getName(), "azureuser", "RFe3&432dg", null, null, windowsConfig);

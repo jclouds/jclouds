@@ -47,30 +47,31 @@ public class VMHardwareToHardware implements Function<VMHardware, Hardware> {
    @Override
    public Hardware apply(VMHardware from) {
       final HardwareBuilder builder = new HardwareBuilder()
-              .name(from.name)
-              .id(from.name)
-              .processors(ImmutableList.of(new Processor(from.numberOfCores, 2)))
-              .ram(from.memoryInMB)
-              .location(from.globallyAvailable ? null : FluentIterable.from(locations.get())
-                      .firstMatch(LocationPredicates.idEquals(from.location))
+              .name(from.name())
+              .providerId(from.name())
+              .id(from.name())
+              .processors(ImmutableList.of(new Processor(from.numberOfCores(), 2)))
+              .ram(from.memoryInMB())
+              .location(from.globallyAvailable() ? null : FluentIterable.from(locations.get())
+                      .firstMatch(LocationPredicates.idEquals(from.location()))
                       .get());
 
       // No id or providerId from Azure
-      if (from.resourceDiskSizeInMB != null) {
+      if (from.resourceDiskSizeInMB() != null) {
          builder.volume(new VolumeBuilder()
-                 .size(Float.valueOf(from.resourceDiskSizeInMB))
+                 .size(Float.valueOf(from.resourceDiskSizeInMB()))
                  .type(Volume.Type.LOCAL)
                  .build());
       }
-      if (from.osDiskSizeInMB != null) {
+      if (from.osDiskSizeInMB() != null) {
          builder.volume(new VolumeBuilder()
-                 .size(Float.valueOf(from.osDiskSizeInMB))
+                 .size(Float.valueOf(from.osDiskSizeInMB()))
                  .type(Volume.Type.LOCAL)
                  .build());
       }
 
       ImmutableMap.Builder<String, String> metadata = ImmutableMap.builder();
-      metadata.put("maxDataDiskCount", String.valueOf(from.maxDataDiskCount));
+      metadata.put("maxDataDiskCount", String.valueOf(from.maxDataDiskCount()));
       builder.userMetadata(metadata.build());
 
       return builder.build();

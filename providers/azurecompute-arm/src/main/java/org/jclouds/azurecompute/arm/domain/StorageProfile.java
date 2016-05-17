@@ -29,6 +29,7 @@ public abstract class StorageProfile {
    /**
     * The image reference of the storage profile
     */
+   @Nullable
    public abstract ImageReference imageReference();
 
    /**

@@ -17,6 +17,8 @@
 package org.jclouds.azurecompute.arm.compute.functions;
 
 import static com.google.common.base.Preconditions.checkNotNull;
+import static org.jclouds.azurecompute.arm.compute.functions.DeploymentToNodeMetadata.AZURE_LOGIN_PASSWORD;
+import static org.jclouds.azurecompute.arm.compute.functions.DeploymentToNodeMetadata.AZURE_LOGIN_USERNAME;
 
 import com.google.common.base.Supplier;
 import com.google.common.collect.FluentIterable;
@@ -29,7 +31,9 @@ import org.jclouds.compute.domain.OsFamily;
 
 import com.google.common.base.Function;
 import com.google.inject.Inject;
+import org.jclouds.domain.Credentials;
 import org.jclouds.domain.Location;
+import org.jclouds.domain.LoginCredentials;
 import org.jclouds.location.predicates.LocationPredicates;
 
 import java.util.Set;
@@ -59,7 +63,7 @@ public class VMImageToImage implements Function<VMImage, Image> {
    private final Supplier<Set<? extends org.jclouds.domain.Location>> locations;
 
    public static String encodeFieldsToUniqueId(VMImage imageReference){
-      return (imageReference.globallyAvailable ? "global" : imageReference.location) + "/" + imageReference.publisher + "/" + imageReference.offer + "/" + imageReference.sku;
+      return (imageReference.globallyAvailable() ? "global" : imageReference.location()) + "/" + imageReference.publisher() + "/" + imageReference.offer() + "/" + imageReference.sku();
    }
 
    public static String[] decodeFieldsFromUniqueId(final String id) {
@@ -74,17 +78,18 @@ public class VMImageToImage implements Function<VMImage, Image> {
    @Override
    public Image apply(final VMImage image) {
 
+      Credentials credentials = new Credentials(AZURE_LOGIN_USERNAME, AZURE_LOGIN_PASSWORD);
       final ImageBuilder builder = new ImageBuilder()
-              .name(image.offer)
-              .description(image.sku)
+              .name(image.offer())
+              .description(image.sku())
               .status(Image.Status.AVAILABLE)
-              .version(image.sku)
+              .version(image.sku())
               .id(encodeFieldsToUniqueId(image))
-              .providerId(image.publisher)
-              .location(image.globallyAvailable ? null : FluentIterable.from(locations.get())
-                      .firstMatch(LocationPredicates.idEquals(image.location))
+              .defaultCredentials(LoginCredentials.fromCredentials(credentials))
+              .providerId(image.publisher())
+              .location(image.globallyAvailable() ? null : FluentIterable.from(locations.get())
+                      .firstMatch(LocationPredicates.idEquals(image.location()))
                       .get());
-
 
       final OperatingSystem.Builder osBuilder = osFamily().apply(image);
       return builder.operatingSystem(osBuilder.build()).build();
@@ -94,8 +99,8 @@ public class VMImageToImage implements Function<VMImage, Image> {
       return new Function<VMImage, OperatingSystem.Builder>() {
          @Override
          public OperatingSystem.Builder apply(final VMImage image) {
-            checkNotNull(image.offer, "offer");
-            final String label = image.offer;
+            checkNotNull(image.offer(), "offer");
+            final String label = image.offer();
 
             OsFamily family = OsFamily.UNRECOGNIZED;
             if (label.contains(CENTOS)) {
@@ -116,8 +121,8 @@ public class VMImageToImage implements Function<VMImage, Image> {
             return OperatingSystem.builder().
                     family(family).
                     is64Bit(true).
-                    description(image.sku).
-                    version(image.sku);
+                    description(image.sku()).
+                    version(image.sku());
          }
       };
    }
