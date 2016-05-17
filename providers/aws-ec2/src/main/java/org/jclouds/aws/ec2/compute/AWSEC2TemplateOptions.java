@@ -28,6 +28,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.jclouds.aws.ec2.options.RequestSpotInstancesOptions;
+import org.jclouds.aws.ec2.options.Tenancy;
 import org.jclouds.compute.options.TemplateOptions;
 import org.jclouds.domain.LoginCredentials;
 import org.jclouds.ec2.compute.options.EC2TemplateOptions;
@@ -89,6 +90,10 @@ public class AWSEC2TemplateOptions extends EC2TemplateOptions implements Cloneab
             eTo.spotOptions(getSpotOptions());
          if (getPrivateIpAddress() != null)
             eTo.privateIpAddress(getPrivateIpAddress());
+         if (getTenancy() != null)
+            eTo.tenancy(getTenancy());
+         if (getDedicatedHostId() != null)
+            eTo.dedicatedHostId(getDedicatedHostId());
       }
    }
 
@@ -102,6 +107,8 @@ public class AWSEC2TemplateOptions extends EC2TemplateOptions implements Cloneab
    private String iamInstanceProfileArn;
    private String iamInstanceProfileName;
    private String privateIpAddress;
+   private Tenancy tenancy;
+   private String dedicatedHostId;
 
    @Override
    public boolean equals(Object o) {
@@ -116,13 +123,15 @@ public class AWSEC2TemplateOptions extends EC2TemplateOptions implements Cloneab
                && equal(this.spotPrice, that.spotPrice) && equal(this.spotOptions, that.spotOptions)
                && equal(this.groupIds, that.groupIds) && equal(this.iamInstanceProfileArn, that.iamInstanceProfileArn)
                && equal(this.iamInstanceProfileName, that.iamInstanceProfileName)
-               && equal(this.privateIpAddress, that.privateIpAddress);
+               && equal(this.privateIpAddress, that.privateIpAddress)
+               && equal(this.tenancy, that.tenancy) && equal(this.dedicatedHostId, that.dedicatedHostId);
    }
 
    @Override
    public int hashCode() {
       return Objects.hashCode(super.hashCode(), monitoringEnabled, placementGroup, noPlacementGroup, subnetId,
-               spotPrice, spotOptions, groupIds, iamInstanceProfileArn, iamInstanceProfileName, privateIpAddress);
+               spotPrice, spotOptions, groupIds, iamInstanceProfileArn, iamInstanceProfileName, privateIpAddress,
+               tenancy, dedicatedHostId);
    }
 
    @Override
@@ -142,6 +151,8 @@ public class AWSEC2TemplateOptions extends EC2TemplateOptions implements Cloneab
       toString.add("iamInstanceProfileArn", iamInstanceProfileArn);
       toString.add("iamInstanceProfileName", iamInstanceProfileName);
       toString.add("privateIpAddress", privateIpAddress);
+      toString.add("tenancy", tenancy);
+      toString.add("dedicatedHostId", dedicatedHostId);
       return toString;
    }
 
@@ -204,6 +215,22 @@ public class AWSEC2TemplateOptions extends EC2TemplateOptions implements Cloneab
 
    public AWSEC2TemplateOptions privateIpAddress(String address) {
       this.privateIpAddress = checkNotNull(emptyToNull(address), "address must be defined");
+      return this;
+   }
+
+   /**
+    * Specifies the tenancy used to run instances with
+    */
+   public AWSEC2TemplateOptions tenancy(Tenancy tenancy) {
+      this.tenancy = checkNotNull(tenancy, "tenancy must be defined");
+      return this;
+   }
+
+   /**
+    * Specifies the ID of the dedicated host on which the instance should resist.
+    */
+   public AWSEC2TemplateOptions dedicatedHostId(String hostId) {
+      this.dedicatedHostId = checkNotNull(emptyToNull(hostId), "hostId must be defined");
       return this;
    }
 
@@ -460,6 +487,22 @@ public class AWSEC2TemplateOptions extends EC2TemplateOptions implements Cloneab
       public static AWSEC2TemplateOptions privateIpAddress(String address) {
          AWSEC2TemplateOptions options = new AWSEC2TemplateOptions();
          return options.privateIpAddress(address);
+      }
+
+      /**
+       * @see AWSEC2TemplateOptions#tenancy
+       */
+      public static AWSEC2TemplateOptions tenancy(Tenancy tenancy) {
+         AWSEC2TemplateOptions options = new AWSEC2TemplateOptions();
+         return options.tenancy(tenancy);
+      }
+
+      /**
+       * @see AWSEC2TemplateOptions#dedicatedHostId
+       */
+      public static AWSEC2TemplateOptions dedicatedHostId(String hostId) {
+         AWSEC2TemplateOptions options = new AWSEC2TemplateOptions();
+         return options.dedicatedHostId(hostId);
       }
 
       /**
@@ -811,5 +854,13 @@ public class AWSEC2TemplateOptions extends EC2TemplateOptions implements Cloneab
 
    public String getPrivateIpAddress() {
       return privateIpAddress;
+   }
+
+   public Tenancy getTenancy() {
+      return tenancy;
+   }
+
+   public String getDedicatedHostId() {
+      return dedicatedHostId;
    }
 }

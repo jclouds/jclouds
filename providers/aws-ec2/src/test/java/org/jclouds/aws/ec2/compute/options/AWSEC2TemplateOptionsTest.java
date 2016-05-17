@@ -18,6 +18,7 @@ package org.jclouds.aws.ec2.compute.options;
 
 import static org.jclouds.aws.ec2.compute.AWSEC2TemplateOptions.Builder.authorizePublicKey;
 import static org.jclouds.aws.ec2.compute.AWSEC2TemplateOptions.Builder.blockOnPort;
+import static org.jclouds.aws.ec2.compute.AWSEC2TemplateOptions.Builder.dedicatedHostId;
 import static org.jclouds.aws.ec2.compute.AWSEC2TemplateOptions.Builder.enableMonitoring;
 import static org.jclouds.aws.ec2.compute.AWSEC2TemplateOptions.Builder.iamInstanceProfileArn;
 import static org.jclouds.aws.ec2.compute.AWSEC2TemplateOptions.Builder.iamInstanceProfileName;
@@ -28,11 +29,13 @@ import static org.jclouds.aws.ec2.compute.AWSEC2TemplateOptions.Builder.noKeyPai
 import static org.jclouds.aws.ec2.compute.AWSEC2TemplateOptions.Builder.privateIpAddress;
 import static org.jclouds.aws.ec2.compute.AWSEC2TemplateOptions.Builder.securityGroupIds;
 import static org.jclouds.aws.ec2.compute.AWSEC2TemplateOptions.Builder.securityGroups;
+import static org.jclouds.aws.ec2.compute.AWSEC2TemplateOptions.Builder.tenancy;
 import static org.testng.Assert.assertEquals;
 
 import java.io.IOException;
 
 import org.jclouds.aws.ec2.compute.AWSEC2TemplateOptions;
+import org.jclouds.aws.ec2.options.Tenancy;
 import org.jclouds.compute.options.TemplateOptions;
 import org.testng.annotations.Test;
 
@@ -424,5 +427,41 @@ public class AWSEC2TemplateOptionsTest {
    @Test(expectedExceptions = NullPointerException.class)
    public void testPrivateIpAddressNPE() {
       privateIpAddress(null);
+   }
+
+   @Test
+   public void testTenancy() {
+      AWSEC2TemplateOptions options = new AWSEC2TemplateOptions();
+      options.tenancy(Tenancy.DEDICATED);
+      assertEquals(options.getTenancy(), Tenancy.DEDICATED);
+   }
+
+   @Test
+   public void testTenancyStatic() {
+      AWSEC2TemplateOptions options = tenancy(Tenancy.HOST);
+      assertEquals(options.getTenancy(), Tenancy.HOST);
+   }
+
+   @Test(expectedExceptions = NullPointerException.class)
+   public void testTenancyNPE() {
+      tenancy(null);
+   }
+
+   @Test
+   public void testDedicatedHostId() {
+      AWSEC2TemplateOptions options = new AWSEC2TemplateOptions();
+      options.dedicatedHostId("hostId-1234");
+      assertEquals(options.getDedicatedHostId(), "hostId-1234");
+   }
+
+   @Test
+   public void testDedicatedHostIdStatic() {
+      AWSEC2TemplateOptions options = dedicatedHostId("hostId-5678");
+      assertEquals(options.getDedicatedHostId(), "hostId-5678");
+   }
+
+   @Test(expectedExceptions = NullPointerException.class)
+   public void testDedicatedHostIdStaticNPE() {
+      dedicatedHostId(null);
    }
 }

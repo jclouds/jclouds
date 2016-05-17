@@ -61,6 +61,22 @@ public class AWSRunInstancesOptions extends RunInstancesOptions {
    }
 
    /**
+    * Specifies the tenancy of the instance within which to launch the instance(s).
+    */
+   public AWSRunInstancesOptions withTenancy(Tenancy tenancy) {
+      formParameters.put("Placement.Tenancy", checkNotNull(tenancy, "tenancy").toString());
+      return this;
+   }
+
+   /**
+    * Specifies the ID of the dedicated host on which the instance should resist.
+    */
+   public AWSRunInstancesOptions withDedicatedHostId(String hostId) {
+      formParameters.put("Placement.HostId", checkNotNull(hostId, "hostId"));
+      return this;
+   }
+
+   /**
     * Enables monitoring for the instance.
     */
    public AWSRunInstancesOptions enableMonitoring() {
@@ -140,6 +156,22 @@ public class AWSRunInstancesOptions extends RunInstancesOptions {
       public static AWSRunInstancesOptions inPlacementGroup(String placementGroup) {
          AWSRunInstancesOptions options = new AWSRunInstancesOptions();
          return options.inPlacementGroup(placementGroup);
+      }
+
+      /**
+       * @see AWSRunInstancesOptions#withTenancy(Tenancy)
+       */
+      public static AWSRunInstancesOptions withTenancy(Tenancy tenancy) {
+         AWSRunInstancesOptions options = new AWSRunInstancesOptions();
+         return options.withTenancy(tenancy);
+      }
+
+      /**
+       * @see AWSRunInstancesOptions#withDedicatedHostId(String)
+       */
+      public static AWSRunInstancesOptions withDedicatedHostId(String hostId) {
+         AWSRunInstancesOptions options = new AWSRunInstancesOptions();
+         return options.withDedicatedHostId(hostId);
       }
 
       /**

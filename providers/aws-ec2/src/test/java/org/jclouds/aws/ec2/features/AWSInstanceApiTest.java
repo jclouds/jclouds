@@ -23,6 +23,7 @@ import java.util.Map;
 
 import org.jclouds.Fallbacks.EmptySetOnNotFoundOr404;
 import org.jclouds.aws.ec2.options.AWSRunInstancesOptions;
+import org.jclouds.aws.ec2.options.Tenancy;
 import org.jclouds.aws.ec2.xml.AWSDescribeInstancesResponseHandler;
 import org.jclouds.aws.ec2.xml.AWSRunInstancesResponseHandler;
 import org.jclouds.ec2.domain.BlockDevice;
@@ -121,19 +122,21 @@ public class AWSInstanceApiTest extends BaseAWSEC2ApiTest<AWSInstanceApi> {
             String.class, int.class, int.class, RunInstancesOptions[].class);
       GeneratedHttpRequest request = processor.createRequest(
             method,
-            Lists.<Object> newArrayList("us-east-1",
-            "us-east-1a",
-            "ami-voo",
-            1,
-            5,
-            new AWSRunInstancesOptions().withKernelId("kernelId").enableMonitoring()
-                  .withSecurityGroups("group1", "group2")));
+            Lists.<Object> newArrayList(
+                  "us-east-1",
+                  "us-east-1a",
+                  "ami-voo",
+                  1,
+                  5,
+                  new AWSRunInstancesOptions().withKernelId("kernelId").enableMonitoring()
+                        .withSecurityGroups("group1", "group2")
+                        .withTenancy(Tenancy.HOST).withDedicatedHostId("hostId")));
 
       assertRequestLineEquals(request, "POST https://ec2.us-east-1.amazonaws.com/ HTTP/1.1");
       assertNonPayloadHeadersEqual(request, "Host: ec2.us-east-1.amazonaws.com\n");
       assertPayloadEquals(
             request,
-            "Action=RunInstances&ImageId=ami-voo&MinCount=1&MaxCount=5&KernelId=kernelId&Monitoring.Enabled=true&SecurityGroup.1=group1&SecurityGroup.2=group2&Placement.AvailabilityZone=us-east-1a",
+            "Action=RunInstances&ImageId=ami-voo&MinCount=1&MaxCount=5&KernelId=kernelId&Monitoring.Enabled=true&SecurityGroup.1=group1&SecurityGroup.2=group2&Placement.Tenancy=host&Placement.HostId=hostId&Placement.AvailabilityZone=us-east-1a",
             "application/x-www-form-urlencoded", false);
       assertResponseParserClassEquals(method, request, ParseSax.class);
       assertSaxResponseParserClassEquals(method, AWSRunInstancesResponseHandler.class);
