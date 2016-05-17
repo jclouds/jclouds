@@ -38,6 +38,7 @@ public class LocationToLocation implements Function<Location, org.jclouds.domain
 
    private final JustProvider justProvider;
 
+   // allow us to lazy discover the provider of a resource
    @Inject
    LocationToLocation(JustProvider justProvider) {
       this.justProvider = justProvider;
@@ -46,7 +47,11 @@ public class LocationToLocation implements Function<Location, org.jclouds.domain
    @Override
    public org.jclouds.domain.Location apply(final Location location) {
       final LocationBuilder builder = new LocationBuilder();
-      builder.id(location.id());
+      String id = location.id();
+      int index = id.lastIndexOf('/');
+      if (index > 0 && (index + 1) < id.length())
+         id = id.substring(index + 1);
+      builder.id(id);
       builder.description(location.displayName());
       builder.parent(getOnlyElement(justProvider.get()));
 

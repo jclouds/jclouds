@@ -16,16 +16,38 @@
  */
 package org.jclouds.azurecompute.arm.domain;
 
+import com.google.auto.value.AutoValue;
 
-import java.util.List;
+@AutoValue
+public class VMImage {
 
-public class VMDeployment {
+   /**
+    * The publisher of the image reference.
+    */
+   public String publisher;
 
-   public Deployment deployment;
+   /**
+    * The offer of the image reference.
+    */
+   public String offer;
 
-   public List<PublicIPAddress> ipAddressList;
+   /**
+    * The sku of the image reference.
+    */
+   public String sku;
 
-   public VirtualMachineInstance vm;
+   /**
+    * The version of the image reference.
+    */
+   public String version;
 
-   public VirtualMachine virtualMachine;
+   /**
+    * The location from where Image was fetched
+    */
+   public String location;
+
+   /**
+    * Specifies if this image is globally available
+    */
+   public boolean globallyAvailable;
 }

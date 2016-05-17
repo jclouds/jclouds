@@ -64,6 +64,6 @@ public abstract class VirtualMachine {
    public static VirtualMachine create(final String id, final String name, final String type, final String location,
                                        @Nullable final Map<String, String> tags, VirtualMachineProperties properties) {
 
-      return new AutoValue_VirtualMachine(id, name, location, type, tags == null ? null : ImmutableMap.copyOf(tags), properties);
+      return new AutoValue_VirtualMachine(id, name, type, location, tags == null ? null : ImmutableMap.copyOf(tags), properties);
    }
 }

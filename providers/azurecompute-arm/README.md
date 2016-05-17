@@ -53,13 +53,25 @@ azure login -u <Application-id> -p <password> --service-principal --tenant <Tena
 
 ## Run Live Tests
 
-Use the following to run the live tests
+Use the following to run one live test:
+
+```bash
+mvn -Dtest=<name of the live test> \
+    -Dtest.azurecompute-arm.identity="<Application-id>" \
+    -Dtest.azurecompute-arm.credential="<password>" \
+    -Dtest.azurecompute-arm.endpoint="https://management.azure.com/subscriptions/<Subscription-id>" \
+    -Dtest.oauth.endpoint="https://login.microsoftonline.com/<Tenant-id>/oauth2/token" test
+
+```
+
+Use the following to run all the live tests:
 
 ```bash
 
 mvn clean verify -Plive \
-    -Dtest.azurecompute-arm.identity=<Application-id> \
-    -Dtest.azurecompute-arm.credential=<password> \
-    -Dtest.azurecompute-arm.endpoint=https://management.azure.com/subscriptions/<Subscription-id> \
+    -Dtest.azurecompute-arm.identity="<Application-id>"" \
+    -Dtest.azurecompute-arm.credential="<password>"" \
+    -Dtest.azurecompute-arm.endpoint="https://management.azure.com/subscriptions/<Subscription-id>"" \
     -Dtest.oauth.endpoint=https://login.microsoftonline.com/<Tenant-id>/oauth2/token
+
 ```

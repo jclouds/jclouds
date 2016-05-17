@@ -16,11 +16,17 @@
  */
 package org.jclouds.azurecompute.arm;
 
+
+import static org.jclouds.azurecompute.arm.config.AzureComputeProperties.IMAGE_PUBLISHERS;
+import static org.jclouds.azurecompute.arm.config.AzureComputeProperties.RESOURCE_GROUP_NAME;
+import static org.jclouds.azurecompute.arm.config.AzureComputeProperties.OPERATION_TIMEOUT;
 import static org.jclouds.azurecompute.arm.config.AzureComputeProperties.OPERATION_POLL_INITIAL_PERIOD;
 import static org.jclouds.azurecompute.arm.config.AzureComputeProperties.OPERATION_POLL_MAX_PERIOD;
-import static org.jclouds.azurecompute.arm.config.AzureComputeProperties.OPERATION_TIMEOUT;
 import static org.jclouds.azurecompute.arm.config.AzureComputeProperties.TCP_RULE_FORMAT;
 import static org.jclouds.azurecompute.arm.config.AzureComputeProperties.TCP_RULE_REGEXP;
+
+import static org.jclouds.azurecompute.arm.config.AzureComputeProperties.DEFAULT_IMAGE_LOGIN;
+
 import static org.jclouds.oauth.v2.config.CredentialType.CLIENT_CREDENTIALS_SECRET;
 import static org.jclouds.oauth.v2.config.OAuthProperties.RESOURCE;
 import static org.jclouds.oauth.v2.config.OAuthProperties.CREDENTIAL_TYPE;
@@ -30,6 +36,9 @@ import java.util.Properties;
 import org.jclouds.azurecompute.arm.domain.Region;
 import org.jclouds.providers.ProviderMetadata;
 import org.jclouds.providers.internal.BaseProviderMetadata;
+import org.jclouds.compute.config.ComputeServiceProperties;
+
+import static org.jclouds.compute.config.ComputeServiceProperties.TIMEOUT_NODE_TERMINATED;
 
 import com.google.auto.service.AutoService;
 
@@ -51,13 +60,19 @@ public class AzureComputeProviderMetadata extends BaseProviderMetadata {
 
    public static Properties defaultProperties() {
       final Properties properties = AzureManagementApiMetadata.defaultProperties();
-      properties.setProperty(OPERATION_TIMEOUT, "60000");
+      properties.put(ComputeServiceProperties.POLL_INITIAL_PERIOD, 1000);
+      properties.put(ComputeServiceProperties.POLL_MAX_PERIOD, 10000);
+      properties.setProperty(OPERATION_TIMEOUT, "46000000");
       properties.setProperty(OPERATION_POLL_INITIAL_PERIOD, "5");
       properties.setProperty(OPERATION_POLL_MAX_PERIOD, "15");
       properties.setProperty(TCP_RULE_FORMAT, "tcp_%s-%s");
       properties.setProperty(TCP_RULE_REGEXP, "tcp_\\d{1,5}-\\d{1,5}");
-      properties.put(RESOURCE, "https://management.azure.com");
+      properties.put(RESOURCE, "https://management.azure.com/");
       properties.put(CREDENTIAL_TYPE, CLIENT_CREDENTIALS_SECRET.toString());
+      properties.put(RESOURCE_GROUP_NAME, "jcloudsgroup");
+      properties.put(IMAGE_PUBLISHERS, "Microsoft.WindowsAzure.Compute, MicrosoftWindowsServer, Canonical");
+      properties.put(DEFAULT_IMAGE_LOGIN, "jclouds:Password1!");
+      properties.put(TIMEOUT_NODE_TERMINATED, 60 * 10 * 1000);
       return properties;
    }
 

@@ -19,6 +19,7 @@ package org.jclouds.azurecompute.arm.util;
 import com.google.common.collect.ImmutableMap;
 import com.google.inject.assistedinject.Assisted;
 
+import org.jclouds.azurecompute.arm.compute.config.AzureComputeServiceContextModule;
 import org.jclouds.azurecompute.arm.domain.DeploymentProperties;
 import org.jclouds.compute.options.TemplateOptions;
 import org.jclouds.azurecompute.arm.domain.DataDisk;
@@ -72,12 +73,11 @@ public class DeploymentTemplateBuilder {
    private TemplateOptions options;
    private List<ResourceDefinition> resources;
    private Map<String, String> variables;
-   private String loginUser;
-   private String loginPassword;
+   private static String loginUser;
+   private static String loginPassword;
    private String location;
+   private AzureComputeServiceContextModule.AzureComputeConstants azureComputeConstants;
 
-   public static final String DEFAULT_LOGIN_USER = "jclouds";
-   public static final String DEFAULT_LOGIN_PASSWORD = "Password1!";
    private static final String DEPLOYMENT_MODE = "Incremental";
    private static final String DEFAULT_DATA_DISK_SIZE = "1023";
 
@@ -85,24 +85,37 @@ public class DeploymentTemplateBuilder {
    private static final String DEFAULT_subnetAddressPrefix = "10.0.0.0/24";
 
    @Inject
-   DeploymentTemplateBuilder(Json json, @Assisted("group") String group, @Assisted("name") String name, @Assisted Template template) {
+   DeploymentTemplateBuilder(Json json, @Assisted("group") String group, @Assisted("name") String name, @Assisted Template template,
+                             final AzureComputeServiceContextModule.AzureComputeConstants azureComputeConstants) {
       this.name = name;
       this.group = group;
       this.template = template;
       this.options = template.getOptions().as(TemplateOptions.class);
       this.variables = new HashMap<String, String>();
       this.resources = new ArrayList<ResourceDefinition>();
-      this.loginUser = options.getLoginUser() == null ? DEFAULT_LOGIN_USER : options.getLoginUser();
-      this.loginPassword = options.getLoginPassword() == null ? DEFAULT_LOGIN_PASSWORD : options.getLoginPassword();
       this.location = template.getLocation().getId();
       this.json = json;
+
+      this.azureComputeConstants = azureComputeConstants;
+
+      String[] defaultLogin = this.azureComputeConstants.azureDefaultImageLogin().split(":");
+      String defaultUser = null;
+      String defaultPassword = null;
+
+      if (defaultLogin.length == 2) {
+         defaultUser = defaultLogin[0].trim();
+         defaultPassword = defaultLogin[1].trim();
+      }
+
+      loginUser = options.getLoginUser() == null ? defaultUser : options.getLoginUser();
+      loginPassword = options.getLoginPassword() == null ? defaultPassword : options.getLoginPassword();
    }
 
-   public String getLoginUserUsername() {
+   public static String getLoginUserUsername() {
       return loginUser;
    }
 
-   public String getLoginPassword() {
+   public static String getLoginPassword() {
       return loginPassword;
    }
 

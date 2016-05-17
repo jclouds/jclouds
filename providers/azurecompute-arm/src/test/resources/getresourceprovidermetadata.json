@@ -1,0 +1,366 @@
+{
+  "id": "/subscriptions/SUBSCRIPTIONID/providers/Microsoft.Compute",
+  "namespace": "Microsoft.Compute",
+  "authorization": {
+    "applicationId": "12312312-1212-1212-1212-121212121212",
+    "roleDefinitionId": "34534534-272e-4238-8723-123423452224"
+  },
+  "resourceTypes": [
+    {
+      "resourceType": "availabilitySets",
+      "locations": [
+        "East US",
+        "East US 2",
+        "West US",
+        "Central US",
+        "North Central US",
+        "South Central US",
+        "North Europe",
+        "West Europe",
+        "East Asia",
+        "Southeast Asia",
+        "Japan East",
+        "Japan West",
+        "Brazil South"
+      ],
+      "apiVersions": [
+        "2016-03-30",
+        "2015-06-15",
+        "2015-05-01-preview"
+      ],
+      "capabilities": "CrossResourceGroupResourceMove, CrossSubscriptionResourceMove"
+    },
+    {
+      "resourceType": "virtualMachines",
+      "locations": [
+        "East US",
+        "East US 2",
+        "West US",
+        "Central US",
+        "North Central US",
+        "South Central US",
+        "North Europe",
+        "West Europe",
+        "East Asia",
+        "Southeast Asia",
+        "Japan East",
+        "Japan West",
+        "Brazil South"
+      ],
+      "apiVersions": [
+        "2016-03-30",
+        "2015-06-15",
+        "2015-05-01-preview"
+      ],
+      "capabilities": "CrossResourceGroupResourceMove, CrossSubscriptionResourceMove"
+    },
+    {
+      "resourceType": "virtualMachines/extensions",
+      "locations": [
+        "East US",
+        "East US 2",
+        "West US",
+        "Central US",
+        "North Central US",
+        "South Central US",
+        "North Europe",
+        "West Europe",
+        "East Asia",
+        "Southeast Asia",
+        "Japan East",
+        "Japan West",
+        "Brazil South"
+      ],
+      "apiVersions": [
+        "2016-03-30",
+        "2015-06-15",
+        "2015-05-01-preview"
+      ],
+      "capabilities": "CrossResourceGroupResourceMove, CrossSubscriptionResourceMove"
+    },
+    {
+      "resourceType": "virtualMachines/diagnosticSettings",
+      "locations": [
+        "East US",
+        "East US 2",
+        "West US",
+        "Central US",
+        "North Central US",
+        "South Central US",
+        "North Europe",
+        "West Europe",
+        "East Asia",
+        "Southeast Asia",
+        "Japan East",
+        "Japan West",
+        "Brazil South"
+      ],
+      "apiVersions": [
+        "2014-04-01"
+      ]
+    },
+    {
+      "resourceType": "virtualMachines/metricDefinitions",
+      "locations": [
+        "East US",
+        "East US 2",
+        "West US",
+        "Central US",
+        "North Central US",
+        "South Central US",
+        "North Europe",
+        "West Europe",
+        "East Asia",
+        "Southeast Asia",
+        "Japan East",
+        "Japan West",
+        "Brazil South"
+      ],
+      "apiVersions": [
+        "2014-04-01"
+      ]
+    },
+    {
+      "resourceType": "virtualMachineScaleSets",
+      "locations": [
+        "East US",
+        "East US 2",
+        "West US",
+        "Central US",
+        "North Central US",
+        "South Central US",
+        "North Europe",
+        "West Europe",
+        "East Asia",
+        "Southeast Asia",
+        "Japan East",
+        "Japan West",
+        "Brazil South"
+      ],
+      "apiVersions": [
+        "2016-03-30",
+        "2015-06-15",
+        "2015-05-01-preview"
+      ],
+      "capabilities": "None"
+    },
+    {
+      "resourceType": "virtualMachineScaleSets/extensions",
+      "locations": [
+        "East US",
+        "East US 2",
+        "West US",
+        "Central US",
+        "North Central US",
+        "South Central US",
+        "North Europe",
+        "West Europe",
+        "East Asia",
+        "Southeast Asia",
+        "Japan East",
+        "Japan West",
+        "Brazil South"
+      ],
+      "apiVersions": [
+        "2016-03-30",
+        "2015-06-15",
+        "2015-05-01-preview"
+      ],
+      "capabilities": "CrossResourceGroupResourceMove, CrossSubscriptionResourceMove"
+    },
+    {
+      "resourceType": "virtualMachineScaleSets/virtualMachines",
+      "locations": [
+        "East US",
+        "East US 2",
+        "West US",
+        "Central US",
+        "North Central US",
+        "South Central US",
+        "North Europe",
+        "West Europe",
+        "East Asia",
+        "Southeast Asia",
+        "Japan East",
+        "Japan West",
+        "Brazil South"
+      ],
+      "apiVersions": [
+        "2016-03-30",
+        "2015-06-15",
+        "2015-05-01-preview"
+      ]
+    },
+    {
+      "resourceType": "virtualMachineScaleSets/networkInterfaces",
+      "locations": [
+        "East US",
+        "East US 2",
+        "West US",
+        "Central US",
+        "North Central US",
+        "South Central US",
+        "North Europe",
+        "West Europe",
+        "East Asia",
+        "Southeast Asia",
+        "Japan East",
+        "Japan West",
+        "Brazil South"
+      ],
+      "apiVersions": [
+        "2016-03-30",
+        "2015-06-15",
+        "2015-05-01-preview"
+      ]
+    },
+    {
+      "resourceType": "virtualMachineScaleSets/virtualMachines/networkInterfaces",
+      "locations": [
+        "East US",
+        "East US 2",
+        "West US",
+        "Central US",
+        "North Central US",
+        "South Central US",
+        "North Europe",
+        "West Europe",
+        "East Asia",
+        "Southeast Asia",
+        "Japan East",
+        "Japan West",
+        "Brazil South"
+      ],
+      "apiVersions": [
+        "2016-03-30",
+        "2015-06-15",
+        "2015-05-01-preview"
+      ]
+    },
+    {
+      "resourceType": "locations",
+      "locations": [],
+      "apiVersions": [
+        "2016-03-30",
+        "2015-06-15",
+        "2015-05-01-preview"
+      ]
+    },
+    {
+      "resourceType": "locations/operations",
+      "locations": [
+        "East US",
+        "East US 2",
+        "West US",
+        "Central US",
+        "North Central US",
+        "South Central US",
+        "North Europe",
+        "West Europe",
+        "East Asia",
+        "Southeast Asia",
+        "Japan East",
+        "Japan West",
+        "Brazil South"
+      ],
+      "apiVersions": [
+        "2016-03-30",
+        "2015-06-15",
+        "2015-05-01-preview"
+      ]
+    },
+    {
+      "resourceType": "locations/vmSizes",
+      "locations": [
+        "East US",
+        "East US 2",
+        "West US",
+        "Central US",
+        "North Central US",
+        "South Central US",
+        "North Europe",
+        "West Europe",
+        "East Asia",
+        "Southeast Asia",
+        "Japan East",
+        "Japan West",
+        "Brazil South"
+      ],
+      "apiVersions": [
+        "2016-03-30",
+        "2015-06-15",
+        "2015-05-01-preview"
+      ]
+    },
+    {
+      "resourceType": "locations/usages",
+      "locations": [
+        "East US",
+        "East US 2",
+        "West US",
+        "Central US",
+        "North Central US",
+        "South Central US",
+        "North Europe",
+        "West Europe",
+        "East Asia",
+        "Southeast Asia",
+        "Japan East",
+        "Japan West",
+        "Brazil South"
+      ],
+      "apiVersions": [
+        "2016-03-30",
+        "2015-06-15",
+        "2015-05-01-preview"
+      ]
+    },
+    {
+      "resourceType": "locations/publishers",
+      "locations": [
+        "East US",
+        "East US 2",
+        "West US",
+        "Central US",
+        "North Central US",
+        "South Central US",
+        "North Europe",
+        "West Europe",
+        "East Asia",
+        "Southeast Asia",
+        "Japan East",
+        "Japan West",
+        "Brazil South"
+      ],
+      "apiVersions": [
+        "2016-03-30",
+        "2015-06-15",
+        "2015-05-01-preview"
+      ]
+    },
+    {
+      "resourceType": "operations",
+      "locations": [
+        "East US",
+        "East US 2",
+        "West US",
+        "Central US",
+        "North Central US",
+        "South Central US",
+        "North Europe",
+        "West Europe",
+        "East Asia",
+        "Southeast Asia",
+        "Japan East",
+        "Japan West",
+        "Brazil South"
+      ],
+      "apiVersions": [
+        "2016-03-30",
+        "2015-06-15",
+        "2015-05-01-preview"
+      ]
+    }
+  ],
+  "registrationState": "Registered"
+}
