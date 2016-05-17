@@ -1,0 +1,99 @@
+{
+  "value": [
+    {
+      "id": "/subscriptions/123abc12-1234-1234-1234-12345345234/resourceGroups/resourceGroup/providers/Microsoft.Resources/deployments/jcdep1458344383064",
+      "name": "jcdep1458344383064",
+      "properties": {
+        "parameters": {},
+        "mode": "Incremental",
+        "provisioningState": "Running",
+        "timestamp": "2016-04-26T11:48:11.1807222Z",
+        "duration": "PT0.950828S",
+        "correlationId": "f7876e0f-22ec-413c-a79e-0a718b4789a2",
+        "providers": [
+          {
+            "namespace": "Microsoft.Storage",
+            "resourceTypes": [
+              {
+                "resourceType": "storageAccounts",
+                "locations": [
+                  "northeurope"
+                ]
+              }
+            ]
+          },
+          {
+            "namespace": "Microsoft.Network",
+            "resourceTypes": [
+              {
+                "resourceType": "virtualNetworks",
+                "locations": [
+                  "northeurope"
+                ]
+              },
+              {
+                "resourceType": "publicIPAddresses",
+                "locations": [
+                  "northeurope"
+                ]
+              },
+              {
+                "resourceType": "networkInterfaces",
+                "locations": [
+                  "northeurope"
+                ]
+              }
+            ]
+          },
+          {
+            "namespace": "Microsoft.Compute",
+            "resourceTypes": [
+              {
+                "resourceType": "virtualMachines",
+                "locations": [
+                  "northeurope"
+                ]
+              }
+            ]
+          }
+        ],
+        "dependencies": [
+          {
+            "dependsOn": [
+              {
+                "id": "/subscriptions/123abc12-1234-1234-1234-12345345234/resourceGroups/resourceGroup/providers/Microsoft.Network/publicIPAddresses/jc1461584629971publicip",
+                "resourceType": "Microsoft.Network/publicIPAddresses",
+                "resourceName": "jc1461584629971publicip"
+              },
+              {
+                "id": "/subscriptions/123abc12-1234-1234-1234-12345345234/resourceGroups/resourceGroup/providers/Microsoft.Network/virtualNetworks/jc1461584629971virtualnetwork",
+                "resourceType": "Microsoft.Network/virtualNetworks",
+                "resourceName": "jc1461584629971virtualnetwork"
+              }
+            ],
+            "id": "/subscriptions/123abc12-1234-1234-1234-12345345234/resourceGroups/resourceGroup/providers/Microsoft.Network/networkInterfaces/jc1461584629971nic",
+            "resourceType": "Microsoft.Network/networkInterfaces",
+            "resourceName": "jc1461584629971nic"
+          },
+          {
+            "dependsOn": [
+              {
+                "id": "/subscriptions/123abc12-1234-1234-1234-12345345234/resourceGroups/resourceGroup/providers/Microsoft.Storage/storageAccounts/jc1461584629971storage",
+                "resourceType": "Microsoft.Storage/storageAccounts",
+                "resourceName": "jc1461584629971storage"
+              },
+              {
+                "id": "/subscriptions/123abc12-1234-1234-1234-12345345234/resourceGroups/resourceGroup/providers/Microsoft.Network/networkInterfaces/jc1461584629971nic",
+                "resourceType": "Microsoft.Network/networkInterfaces",
+                "resourceName": "jc1461584629971nic"
+              }
+            ],
+            "id": "/subscriptions/123abc12-1234-1234-1234-12345345234/resourceGroups/resourceGroup/providers/Microsoft.Compute/virtualMachines/jc1461584629971VirtualMachine",
+            "resourceType": "Microsoft.Compute/virtualMachines",
+            "resourceName": "jc1461584629971VirtualMachine"
+          }
+        ]
+      }
+    }
+  ]
+}

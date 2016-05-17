@@ -14,23 +14,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jclouds.azurecompute.arm.config;
+package org.jclouds.azurecompute.arm.domain;
 
-/**
- * Configuration properties and constants used in Azure Resource Manager connections.
- */
-public class AzureComputeProperties {
+import com.google.auto.value.AutoValue;
+import org.jclouds.json.SerializedNames;
 
-   public static final String OPERATION_TIMEOUT = "jclouds.azurecompute.arm.operation.timeout";
+@AutoValue
+public abstract class DeploymentProperties {
 
-   public static final String OPERATION_POLL_INITIAL_PERIOD = "jclouds.azurecompute.arm.operation.poll.initial.period";
+   public abstract DeploymentBody properties();
 
-   public static final String OPERATION_POLL_MAX_PERIOD = "jclouds.azurecompute.arm.operation.poll.max.period";
-
-   public static final String TCP_RULE_FORMAT = "jclouds.azurecompute.arm.tcp.rule.format";
-
-   public static final String TCP_RULE_REGEXP = "jclouds.azurecompute.arm.tcp.rule.regexp";
-
-   public static final String STORAGE_API_VERSION = "2015-06-15";
-
+   @SerializedNames({"properties"})
+   public static DeploymentProperties create(final DeploymentBody properties) {
+      return new AutoValue_DeploymentProperties(properties);
+   }
 }

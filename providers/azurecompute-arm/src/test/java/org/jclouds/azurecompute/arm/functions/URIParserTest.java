@@ -31,14 +31,14 @@ public class URIParserTest {
 
    public void testApply() {
       URIParser parser = new URIParser();
-      Multimap<String, String> headers = LinkedHashMultimap.<String, String> create();
+      Multimap<String, String> headers = LinkedHashMultimap.<String, String>create();
 
       URI uri = parser.apply(HttpResponse.builder().statusCode(200).build());
       assertNull(uri);
 
       try {
          uri = parser.apply(HttpResponse.builder().statusCode(202).build());
-      } catch (IllegalStateException ex){
+      } catch (IllegalStateException ex) {
          assertNotNull(ex);
       }
 

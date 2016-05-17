@@ -18,6 +18,7 @@ package org.jclouds.azurecompute.arm.features;
 
 import java.io.IOException;
 import java.net.URI;
+
 import org.jclouds.azurecompute.arm.functions.ParseJobStatus.JobStatus;
 import org.jclouds.azurecompute.arm.internal.BaseAzureComputeApiMockTest;
 import org.testng.annotations.Test;
@@ -49,8 +50,18 @@ public class JobApiMockTest extends BaseAzureComputeApiMockTest {
       assertSent(server, "GET", requestUrl);
    }
 
-   public void testGetJobStatusFailed() throws InterruptedException {
+   public void testGetJobStatusNoContent() throws InterruptedException {
       server.enqueue(jsonResponse("/resourcegroup.json").setStatus("HTTP/1.1 204 No Content"));
+
+      JobStatus status = api.getJobApi().jobStatus(URI.create(requestUrl));
+
+      assertEquals(status, JobStatus.NO_CONTENT);
+
+      assertSent(server, "GET", requestUrl);
+   }
+
+   public void testGetJobStatusFailed() throws InterruptedException {
+      server.enqueue(jsonResponse("/resourcegroup.json").setStatus("HTTP/1.1 208 Error"));
 
       JobStatus status = api.getJobApi().jobStatus(URI.create(requestUrl));
 

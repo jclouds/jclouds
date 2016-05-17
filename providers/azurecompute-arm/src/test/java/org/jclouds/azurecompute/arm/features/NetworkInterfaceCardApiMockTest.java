@@ -34,7 +34,6 @@ import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertNull;
 import static org.testng.Assert.assertTrue;
 import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertFalse;
 
 @Test(groups = "unit", testName = "NetworkInterfaceCardApiMockTest", singleThreaded = true)
 public class NetworkInterfaceCardApiMockTest extends BaseAzureComputeApiMockTest {
@@ -123,12 +122,11 @@ public class NetworkInterfaceCardApiMockTest extends BaseAzureComputeApiMockTest
 
    public void deleteNetworkInterfaceCard() throws InterruptedException {
 
-      server.enqueue(response202());
+      server.enqueue(response202WithHeader());
 
       final NetworkInterfaceCardApi nicApi = api.getNetworkInterfaceCardApi(resourcegroup);
 
-      boolean status = nicApi.delete(nicName);
-      assertTrue(status);
+      nicApi.delete(nicName);
 
       String path = String.format("/subscriptions/%s/resourcegroups/%s/providers/Microsoft.Network/networkInterfaces/%s?%s", subscriptionid, resourcegroup, nicName, apiVersion);
       assertSent(server, "DELETE", path);
@@ -137,12 +135,11 @@ public class NetworkInterfaceCardApiMockTest extends BaseAzureComputeApiMockTest
 
    public void deleteNetworkInterfaceCardResourceDoesNotExist() throws InterruptedException {
 
-      server.enqueue(response204());
+      server.enqueue(response404());
 
       final NetworkInterfaceCardApi nicApi = api.getNetworkInterfaceCardApi(resourcegroup);
 
-      boolean status = nicApi.delete(nicName);
-      assertFalse(status);
+      nicApi.delete(nicName);
 
       String path = String.format("/subscriptions/%s/resourcegroups/%s/providers/Microsoft.Network/networkInterfaces/%s?%s", subscriptionid, resourcegroup, nicName, apiVersion);
       assertSent(server, "DELETE", path);

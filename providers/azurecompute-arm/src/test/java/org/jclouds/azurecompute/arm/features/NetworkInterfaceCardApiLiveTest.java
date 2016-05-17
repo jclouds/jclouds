@@ -17,6 +17,7 @@
 package org.jclouds.azurecompute.arm.features;
 
 import com.google.common.collect.ImmutableMap;
+import com.google.common.base.Predicate;
 import org.jclouds.azurecompute.arm.domain.IdReference;
 import org.jclouds.azurecompute.arm.domain.IpConfiguration;
 import org.jclouds.azurecompute.arm.domain.IpConfigurationProperties;
@@ -24,18 +25,22 @@ import org.jclouds.azurecompute.arm.domain.NetworkInterfaceCard;
 import org.jclouds.azurecompute.arm.domain.NetworkInterfaceCardProperties;
 import org.jclouds.azurecompute.arm.domain.Subnet;
 import org.jclouds.azurecompute.arm.domain.VirtualNetwork;
+import org.jclouds.azurecompute.arm.functions.ParseJobStatus;
 import org.jclouds.azurecompute.arm.internal.BaseAzureComputeApiLiveTest;
+import org.jclouds.util.Predicates2;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
+import java.net.URI;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
+
+import static org.testng.Assert.assertNull;
 import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertTrue;
 import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertFalse;
 
 @Test(groups = "live", singleThreaded = true)
 public class NetworkInterfaceCardApiLiveTest extends BaseAzureComputeApiLiveTest {
@@ -66,8 +71,8 @@ public class NetworkInterfaceCardApiLiveTest extends BaseAzureComputeApiLiveTest
    public void deleteNetworkInterfaceCardResourceDoesNotExist() {
 
       final NetworkInterfaceCardApi nicApi = api.getNetworkInterfaceCardApi(resourcegroup);
-      boolean status = nicApi.delete(NETWORKINTERFACECARD_NAME);
-      assertFalse(status);
+      URI uri = nicApi.delete(NETWORKINTERFACECARD_NAME);
+      assertNull(uri);
    }
 
    @Test(groups = "live", dependsOnMethods = "deleteNetworkInterfaceCardResourceDoesNotExist")
@@ -85,8 +90,8 @@ public class NetworkInterfaceCardApiLiveTest extends BaseAzureComputeApiLiveTest
                               .properties(IpConfigurationProperties.builder()
                                       .privateIPAllocationMethod("Dynamic")
                                       .subnet(IdReference.create(subnetID)).build()
-                      ).build()
-              )).build();
+                              ).build()
+                      )).build();
 
       final Map<String, String> tags = ImmutableMap.of("jclouds", "livetest");
       NetworkInterfaceCard nic = nicApi.createOrUpdate(NETWORKINTERFACECARD_NAME, LOCATION, networkInterfaceCardProperties, tags);
@@ -131,9 +136,19 @@ public class NetworkInterfaceCardApiLiveTest extends BaseAzureComputeApiLiveTest
    public void deleteNetworkInterfaceCard() {
 
       final NetworkInterfaceCardApi nicApi = api.getNetworkInterfaceCardApi(resourcegroup);
+      URI uri = nicApi.delete(NETWORKINTERFACECARD_NAME);
+      if (uri != null) {
+         assertTrue(uri.toString().contains("api-version"));
+         assertTrue(uri.toString().contains("operationresults"));
 
-      boolean status = nicApi.delete(NETWORKINTERFACECARD_NAME);
-      assertTrue(status);
+         boolean jobDone = Predicates2.retry(new Predicate<URI>() {
+            @Override
+            public boolean apply(URI uri) {
+               return ParseJobStatus.JobStatus.DONE == api.getJobApi().jobStatus(uri);
+            }
+         }, 60 * 2 * 1000 /* 2 minute timeout */).apply(uri);
+         assertTrue(jobDone, "delete operation did not complete in the configured timeout");
+      }
    }
 
 }

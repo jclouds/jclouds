@@ -14,23 +14,29 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jclouds.azurecompute.arm.config;
+package org.jclouds.azurecompute.arm.domain;
 
-/**
- * Configuration properties and constants used in Azure Resource Manager connections.
- */
-public class AzureComputeProperties {
+import com.google.auto.value.AutoValue;
+import org.jclouds.azurecompute.arm.domain.DeploymentTemplate.Parameters;
+import org.jclouds.javax.annotation.Nullable;
+import org.jclouds.json.SerializedNames;
 
-   public static final String OPERATION_TIMEOUT = "jclouds.azurecompute.arm.operation.timeout";
+@AutoValue
+public abstract class DeploymentBody {
 
-   public static final String OPERATION_POLL_INITIAL_PERIOD = "jclouds.azurecompute.arm.operation.poll.initial.period";
+   @Nullable
+   public abstract DeploymentTemplate template();
 
-   public static final String OPERATION_POLL_MAX_PERIOD = "jclouds.azurecompute.arm.operation.poll.max.period";
+   @Nullable
+   public abstract String mode();
 
-   public static final String TCP_RULE_FORMAT = "jclouds.azurecompute.arm.tcp.rule.format";
+   @Nullable
+   public abstract Parameters parameters();
 
-   public static final String TCP_RULE_REGEXP = "jclouds.azurecompute.arm.tcp.rule.regexp";
-
-   public static final String STORAGE_API_VERSION = "2015-06-15";
-
+   @SerializedNames({"template", "mode", "parameters"})
+   public static DeploymentBody create(final DeploymentTemplate template,
+                                       final String mode,
+                                       final Parameters parameters) {
+      return new AutoValue_DeploymentBody(template, mode, parameters);
+   }
 }

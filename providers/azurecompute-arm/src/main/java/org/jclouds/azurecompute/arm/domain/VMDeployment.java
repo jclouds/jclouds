@@ -14,23 +14,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jclouds.azurecompute.arm.config;
+package org.jclouds.azurecompute.arm.domain;
 
-/**
- * Configuration properties and constants used in Azure Resource Manager connections.
- */
-public class AzureComputeProperties {
 
-   public static final String OPERATION_TIMEOUT = "jclouds.azurecompute.arm.operation.timeout";
+import java.util.List;
 
-   public static final String OPERATION_POLL_INITIAL_PERIOD = "jclouds.azurecompute.arm.operation.poll.initial.period";
+public class VMDeployment {
 
-   public static final String OPERATION_POLL_MAX_PERIOD = "jclouds.azurecompute.arm.operation.poll.max.period";
+   public Deployment deployment;
 
-   public static final String TCP_RULE_FORMAT = "jclouds.azurecompute.arm.tcp.rule.format";
+   public List<PublicIPAddress> ipAddressList;
 
-   public static final String TCP_RULE_REGEXP = "jclouds.azurecompute.arm.tcp.rule.regexp";
-
-   public static final String STORAGE_API_VERSION = "2015-06-15";
-
+   public VirtualMachineInstance vm;
 }

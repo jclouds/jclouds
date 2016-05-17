@@ -69,7 +69,7 @@ public class VirtualMachineApiLiveTest extends BaseAzureComputeApiLiveTest {
    }
 
    @Test
-   public void testCreate(){
+   public void testCreate() {
 
       StorageAccountApi storageApi = api.getStorageAccountApi(getResourceGroupName());
       StorageService storageAccount = storageApi.get(getStorageServiceName());
@@ -80,7 +80,8 @@ public class VirtualMachineApiLiveTest extends BaseAzureComputeApiLiveTest {
 
       //Poll until resource is ready to be used
       boolean jobDone = Predicates2.retry(new Predicate<String>() {
-         @Override public boolean apply(String name) {
+         @Override
+         public boolean apply(String name) {
             return !api().get(name).properties().provisioningState().equals("Creating");
          }
       }, 60 * 20 * 1000).apply(getName());
@@ -109,7 +110,8 @@ public class VirtualMachineApiLiveTest extends BaseAzureComputeApiLiveTest {
       api().stop(getName());
       //Poll until resource is ready to be used
       boolean jobDone = Predicates2.retry(new Predicate<String>() {
-         @Override public boolean apply(String name) {
+         @Override
+         public boolean apply(String name) {
             String status = "";
             List<VirtualMachineInstance.VirtualMachineStatus> statuses = api().getInstanceDetails(name).statuses();
             for (int c = 0; c < statuses.size(); c++) {
@@ -131,7 +133,8 @@ public class VirtualMachineApiLiveTest extends BaseAzureComputeApiLiveTest {
 
       //Poll until resource is ready to be used
       boolean jobDone = Predicates2.retry(new Predicate<String>() {
-         @Override public boolean apply(String name) {
+         @Override
+         public boolean apply(String name) {
             String status = "";
             List<VirtualMachineInstance.VirtualMachineStatus> statuses = api().getInstanceDetails(name).statuses();
             for (int c = 0; c < statuses.size(); c++) {
@@ -153,7 +156,8 @@ public class VirtualMachineApiLiveTest extends BaseAzureComputeApiLiveTest {
 
       //Poll until resource is ready to be used
       boolean jobDone = Predicates2.retry(new Predicate<String>() {
-         @Override public boolean apply(String name) {
+         @Override
+         public boolean apply(String name) {
             String status = "";
             List<VirtualMachineInstance.VirtualMachineStatus> statuses = api().getInstanceDetails(name).statuses();
             for (int c = 0; c < statuses.size(); c++) {
@@ -171,7 +175,8 @@ public class VirtualMachineApiLiveTest extends BaseAzureComputeApiLiveTest {
 
       //Poll until resource is ready to be used
       jobDone = Predicates2.retry(new Predicate<String>() {
-         @Override public boolean apply(String name) {
+         @Override
+         public boolean apply(String name) {
             String status = "";
             List<VirtualMachineInstance.VirtualMachineStatus> statuses = api().getInstanceDetails(name).statuses();
             for (int c = 0; c < statuses.size(); c++) {
@@ -193,7 +198,7 @@ public class VirtualMachineApiLiveTest extends BaseAzureComputeApiLiveTest {
       assertTrue(list.contains(vm));
    }
 
-   @Test(dependsOnMethods = {"testRestart", "testList", "testGet"},  alwaysRun = true)
+   @Test(dependsOnMethods = {"testRestart", "testList", "testGet"}, alwaysRun = true)
    public void testDelete() throws Exception {
       URI uri = api().delete(getName());
 

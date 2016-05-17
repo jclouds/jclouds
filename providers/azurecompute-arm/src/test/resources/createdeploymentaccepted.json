@@ -1,0 +1,33 @@
+{
+  "id": "/subscriptions/04f7ec88-8e28-41ed-8537-5e17766001f5/resourceGroups/jims216group/providers/Microsoft.Resources/deployments/jcdep1458344383064",
+  "name": "jcdep1458344383064",
+  "properties": {
+    "parameters": {
+      "newStorageAccountName": {
+        "type": "String",
+        "value": "jcres1458344383064"
+      },
+      "storageAccountType": {
+        "type": "String",
+        "value": "Standard_LRS"
+      },
+      "location": {
+        "type": "String",
+        "value": "West US"
+      }
+    },
+    "mode": "Incremental",
+    "provisioningState": "Accepted",
+    "timestamp": "2016-03-18T23:39:47.3048037Z",
+    "duration": "PT2.4433028S",
+    "correlationId": "8dee9711-8632-4948-9fe6-368bb75e6438",
+    "providers": [{
+      "namespace": "Microsoft.Storage",
+      "resourceTypes": [{
+        "resourceType": "storageAccounts",
+        "locations": ["westus"]
+      }]
+    }],
+    "dependencies": []
+  }
+}

@@ -19,7 +19,6 @@ package org.jclouds.azurecompute.arm.domain;
 import com.google.auto.value.AutoValue;
 import java.util.Date;
 import java.util.Map;
-
 import com.google.common.collect.ImmutableMap;
 import org.jclouds.javax.annotation.Nullable;
 import org.jclouds.json.SerializedNames;
@@ -83,11 +82,13 @@ public abstract class StorageService {
        /**
         * Specifies the time that the storage account was created.
         */
+       @Nullable
        public abstract Date creationTime();
 
        /**
         * Specifies the endpoints of the storage account.
         */
+       @Nullable
        public abstract Map<String, String> primaryEndpoints();
 
        /**
@@ -105,6 +106,7 @@ public abstract class StorageService {
        /**
         * Specifies the secondary endpoints of the storage account.
         */
+       @Nullable
        public abstract Map<String, String> secondaryEndpoints();
 
       /**
@@ -133,9 +135,47 @@ public abstract class StorageService {
               final Map<String, String> secondaryEndpoints, final String secondaryLocation,
               final RegionStatus statusOfPrimary, final RegionStatus statusOfSecondary) {
 
-         return new AutoValue_StorageService_StorageServiceProperties(accountType, creationTime,
-                 primaryEndpoints == null ? ImmutableMap.<String, String>builder().build() : ImmutableMap.copyOf(primaryEndpoints), primaryLocation, provisioningState,
-                 secondaryEndpoints == null ? ImmutableMap.<String, String>builder().build() : ImmutableMap.copyOf(secondaryEndpoints), secondaryLocation, statusOfPrimary, statusOfSecondary);
+         StorageServiceProperties.Builder builder = StorageServiceProperties.builder()
+                 .accountType(accountType)
+                 .creationTime(creationTime)
+                 .primaryLocation(primaryLocation)
+                 .provisioningState(provisioningState)
+                 .secondaryLocation(secondaryLocation)
+                 .statusOfPrimary(statusOfPrimary)
+                 .statusOfSecondary(statusOfSecondary);
+
+
+         builder.primaryEndpoints(primaryEndpoints != null ? ImmutableMap.copyOf(primaryEndpoints) : null);
+         builder.secondaryEndpoints(secondaryEndpoints != null ? ImmutableMap.copyOf(secondaryEndpoints) : null);
+
+         return  builder.build();
+      }
+      public static Builder builder() {
+         return new AutoValue_StorageService_StorageServiceProperties.Builder();
+      }
+
+      @AutoValue.Builder
+      public abstract static class Builder {
+         public abstract Builder accountType(AccountType accountType);
+         public abstract Builder creationTime(Date creationTime);
+         public abstract Builder primaryEndpoints(Map<String, String> primaryEndpoints);
+         public abstract Builder primaryLocation(String primaryLocation);
+         public abstract Builder provisioningState(Status provisioningState);
+         public abstract Builder secondaryEndpoints(Map<String, String> secondaryEndpoints);
+         public abstract Builder secondaryLocation(String secondaryLocation);
+         public abstract Builder statusOfPrimary(RegionStatus statusOfPrimary);
+         public abstract Builder statusOfSecondary(RegionStatus statusOfSecondary);
+
+         abstract Map<String, String>  primaryEndpoints();
+         abstract Map<String, String>  secondaryEndpoints();
+
+         abstract StorageServiceProperties autoBuild();
+
+         public StorageServiceProperties build() {
+            primaryEndpoints(primaryEndpoints() != null ? ImmutableMap.copyOf(primaryEndpoints()) : null);
+            secondaryEndpoints(secondaryEndpoints() != null ? ImmutableMap.copyOf(secondaryEndpoints()) : null);
+            return autoBuild();
+         }
       }
    }
 

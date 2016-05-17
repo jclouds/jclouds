@@ -51,6 +51,8 @@ import java.util.List;
 import java.util.Map;
 import java.net.URI;
 
+import static org.jclouds.azurecompute.arm.config.AzureComputeProperties.STORAGE_API_VERSION;
+
 /**
  * The Azure Resource Management API includes operations for managing the storage accounts in your subscription.
  *
@@ -58,7 +60,7 @@ import java.net.URI;
  */
 @Path("/")
 @RequestFilters(OAuthFilter.class)
-@QueryParams(keys = "api-version", values = "2015-06-15")
+@QueryParams(keys = "api-version", values = STORAGE_API_VERSION)
 @Consumes(MediaType.APPLICATION_JSON)
 public interface StorageAccountApi {
 

@@ -20,7 +20,7 @@ import org.jclouds.Fallbacks.EmptyListOnNotFoundOr404;
 import org.jclouds.Fallbacks.NullOnNotFoundOr404;
 import org.jclouds.azurecompute.arm.domain.NetworkInterfaceCard;
 import org.jclouds.azurecompute.arm.domain.NetworkInterfaceCardProperties;
-import org.jclouds.azurecompute.arm.functions.FalseOn204;
+import org.jclouds.azurecompute.arm.functions.URIParser;
 import org.jclouds.oauth.v2.filters.OAuthFilter;
 import org.jclouds.rest.annotations.Fallback;
 import org.jclouds.rest.annotations.MapBinder;
@@ -41,6 +41,7 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.core.MediaType;
 import java.util.List;
 import java.util.Map;
+import java.net.URI;
 
 @Path("/resourcegroups/{resourcegroup}/providers/Microsoft.Network/networkInterfaces")
 @QueryParams(keys = "api-version", values = "2015-06-15")
@@ -73,6 +74,7 @@ public interface NetworkInterfaceCardApi {
    @Named("networkinterfacecard:delete")
    @Path("/{networkinterfacecardname}")
    @DELETE
-   @ResponseParser(FalseOn204.class)
-   boolean delete(@PathParam("networkinterfacecardname") String networkinterfacecardname);
+   @ResponseParser(URIParser.class)
+   @Fallback(NullOnNotFoundOr404.class)
+   URI delete(@PathParam("networkinterfacecardname") String networkinterfacecardname);
 }

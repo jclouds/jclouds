@@ -16,17 +16,22 @@
  */
 package org.jclouds.azurecompute.arm;
 
+import org.jclouds.azurecompute.arm.features.DeploymentApi;
 import org.jclouds.azurecompute.arm.features.JobApi;
 import org.jclouds.azurecompute.arm.features.LocationApi;
 import org.jclouds.azurecompute.arm.features.NetworkInterfaceCardApi;
+import org.jclouds.azurecompute.arm.features.OSImageApi;
 import org.jclouds.azurecompute.arm.features.PublicIPAddressApi;
 import org.jclouds.azurecompute.arm.features.ResourceGroupApi;
 import org.jclouds.azurecompute.arm.features.StorageAccountApi;
 import org.jclouds.azurecompute.arm.features.SubnetApi;
 import org.jclouds.azurecompute.arm.features.VirtualMachineApi;
 import org.jclouds.azurecompute.arm.features.VirtualNetworkApi;
+import org.jclouds.azurecompute.arm.features.VMSizeApi;
+import org.jclouds.azurecompute.arm.util.DeploymentTemplateBuilder;
 import org.jclouds.rest.annotations.Delegate;
 
+import com.google.inject.Provides;
 import javax.ws.rs.PathParam;
 import java.io.Closeable;
 
@@ -107,5 +112,32 @@ public interface AzureComputeApi extends Closeable {
     */
    @Delegate
    VirtualMachineApi getVirtualMachineApi(@PathParam("resourceGroup") String resourceGroup);
+
+   /**
+    * This Azure Resource Manager API lists all available virtual machine sizes for a subscription in a given region
+    *
+    * @see <a href="https://msdn.microsoft.com/en-us/library/azure/mt269440.aspx">docs</a>
+    */
+   @Delegate
+   VMSizeApi getVMSizeApi(@PathParam("location") String location);
+
+   /**
+    * The Azure Resource Manager API gets all the OS images in your subscription.
+    *
+    * @see <a href="http://msdn.microsoft.com/en-us/library/jj157175">docs</a>
+    */
+   @Delegate
+   OSImageApi getOSImageApi(@PathParam("location") String location);
+
+   /**
+    * The Deployment API allows for the management of Azure Resource Manager resources through the use of templates.
+    *
+    * @see <a href="https://msdn.microsoft.com/en-us/library/azure/dn790549.aspx">docs</a>
+    */
+   @Delegate
+   DeploymentApi getDeploymentApi(@PathParam("resourcegroup") String resourceGroup);
+
+   @Provides
+   DeploymentTemplateBuilder.Factory deploymentTemplateFactory();
 
 }

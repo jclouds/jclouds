@@ -14,23 +14,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jclouds.azurecompute.arm.config;
+package org.jclouds.azurecompute.arm.domain;
 
-/**
- * Configuration properties and constants used in Azure Resource Manager connections.
- */
-public class AzureComputeProperties {
+import org.jclouds.azurecompute.arm.util.GetEnumValue;
 
-   public static final String OPERATION_TIMEOUT = "jclouds.azurecompute.arm.operation.timeout";
+public class ComputeNode {
+   public enum Status {
+      GOOD,
+      BAD,
+      UNRECOGNIZED;
 
-   public static final String OPERATION_POLL_INITIAL_PERIOD = "jclouds.azurecompute.arm.operation.poll.initial.period";
-
-   public static final String OPERATION_POLL_MAX_PERIOD = "jclouds.azurecompute.arm.operation.poll.max.period";
-
-   public static final String TCP_RULE_FORMAT = "jclouds.azurecompute.arm.tcp.rule.format";
-
-   public static final String TCP_RULE_REGEXP = "jclouds.azurecompute.arm.tcp.rule.regexp";
-
-   public static final String STORAGE_API_VERSION = "2015-06-15";
-
+      public static Status fromValue(final String text) {
+         return (Status) GetEnumValue.fromValueOrDefault(text, Status.UNRECOGNIZED);
+      }
+   }
 }

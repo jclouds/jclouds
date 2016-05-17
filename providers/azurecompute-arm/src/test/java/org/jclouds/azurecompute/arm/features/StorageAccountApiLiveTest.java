@@ -117,13 +117,13 @@ public class StorageAccountApiLiveTest extends BaseAzureComputeApiLiveTest {
       assertTrue(params.tags().containsKey("another_property_name"));
       assertNull(params.storageServiceProperties().accountType());
    }
-   @Test(dependsOnMethods = "testCreate")
+   @Test(dependsOnMethods = {"testCreate", "testGet"})
    public void testUpdateAccountType() {
       StorageServiceUpdateParams.StorageServiceUpdateProperties props =
               StorageServiceUpdateParams.StorageServiceUpdateProperties.create(StorageService.AccountType.Standard_GRS);
       final StorageServiceUpdateParams params = api().update(NAME,
               null, props);
-      assertTrue(params.tags().isEmpty());
+      assertNull(params.tags());
       assertEquals(params.storageServiceProperties().accountType(), StorageService.AccountType.Standard_GRS);
    }
 

@@ -14,23 +14,38 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jclouds.azurecompute.arm.config;
+package org.jclouds.azurecompute.arm.domain;
+
+import com.google.auto.value.AutoValue;
+import org.jclouds.javax.annotation.Nullable;
+import org.jclouds.json.SerializedNames;
 
 /**
- * Configuration properties and constants used in Azure Resource Manager connections.
+ * SKU
  */
-public class AzureComputeProperties {
+@AutoValue
+public abstract class SKU {
+   /**
+    * The location of the SKU
+    */
+   @Nullable
+   public abstract String location();
 
-   public static final String OPERATION_TIMEOUT = "jclouds.azurecompute.arm.operation.timeout";
+   /**
+    * The name of the SKU
+    */
+   @Nullable
+   public abstract String name();
 
-   public static final String OPERATION_POLL_INITIAL_PERIOD = "jclouds.azurecompute.arm.operation.poll.initial.period";
+   /**
+    * The id of the SKU
+    */
+   @Nullable
+   public abstract String id();
 
-   public static final String OPERATION_POLL_MAX_PERIOD = "jclouds.azurecompute.arm.operation.poll.max.period";
+   @SerializedNames({"location", "name", "id"})
+   public static SKU create(final String location, final String name, final String id) {
 
-   public static final String TCP_RULE_FORMAT = "jclouds.azurecompute.arm.tcp.rule.format";
-
-   public static final String TCP_RULE_REGEXP = "jclouds.azurecompute.arm.tcp.rule.regexp";
-
-   public static final String STORAGE_API_VERSION = "2015-06-15";
-
+      return new AutoValue_SKU(location, name, id);
+   }
 }

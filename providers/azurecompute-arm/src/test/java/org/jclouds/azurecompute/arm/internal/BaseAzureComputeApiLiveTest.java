@@ -66,12 +66,34 @@ public class BaseAzureComputeApiLiveTest extends AbstractAzureComputeApiLiveTest
    private String storageServiceName = null;
 
 
+   protected String getCredential() {
+      String credential = null;
+      if (System.getProperty("test.azurecompute-arm.credential") != null) {
+         credential = System.getProperty("test.azurecompute-arm.credential");
+      }
+      assertNotNull(credential);
+      return credential;
+   }
+
+   protected String getIdentity() {
+      String identity = null;
+      if (System.getProperty("test.azurecompute-arm.identity") != null) {
+         identity = System.getProperty("test.azurecompute-arm.identity");
+      }
+      assertNotNull(identity);
+      return identity;
+   }
+
    protected String getStorageServiceName() {
       if (storageServiceName == null) {
          storageServiceName = String.format("%3.24s",
                  System.getProperty("user.name") + RAND + this.getClass().getSimpleName()).toLowerCase();
       }
       return storageServiceName;
+   }
+
+   protected String getLocation() {
+      return LOCATION;
    }
 
    protected String getEndpoint() {
@@ -113,7 +135,6 @@ public class BaseAzureComputeApiLiveTest extends AbstractAzureComputeApiLiveTest
    private void deleteResourceGroup(String name) {
       api.getResourceGroupApi().delete(name);
    }
-
 
    @BeforeClass
    @Override

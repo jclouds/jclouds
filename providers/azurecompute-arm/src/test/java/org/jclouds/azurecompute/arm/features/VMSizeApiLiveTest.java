@@ -14,23 +14,27 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jclouds.azurecompute.arm.config;
+package org.jclouds.azurecompute.arm.features;
 
-/**
- * Configuration properties and constants used in Azure Resource Manager connections.
- */
-public class AzureComputeProperties {
+import org.jclouds.azurecompute.arm.domain.VMSize;
+import org.jclouds.azurecompute.arm.internal.BaseAzureComputeApiLiveTest;
+import org.testng.annotations.Test;
 
-   public static final String OPERATION_TIMEOUT = "jclouds.azurecompute.arm.operation.timeout";
+import static org.testng.Assert.assertNotNull;
+import static org.testng.Assert.assertTrue;
 
-   public static final String OPERATION_POLL_INITIAL_PERIOD = "jclouds.azurecompute.arm.operation.poll.initial.period";
+@Test(groups = "live", testName = "VMSizeApiLiveTest")
+public class VMSizeApiLiveTest extends BaseAzureComputeApiLiveTest {
 
-   public static final String OPERATION_POLL_MAX_PERIOD = "jclouds.azurecompute.arm.operation.poll.max.period";
+   @Test
+   public void testList() {
+      for (VMSize vmSize : api().list()) {
+         assertNotNull(vmSize.name());
+      }
+      assertTrue(api().list().size() > 0);
+   }
 
-   public static final String TCP_RULE_FORMAT = "jclouds.azurecompute.arm.tcp.rule.format";
-
-   public static final String TCP_RULE_REGEXP = "jclouds.azurecompute.arm.tcp.rule.regexp";
-
-   public static final String STORAGE_API_VERSION = "2015-06-15";
-
+   private VMSizeApi api() {
+      return api.getVMSizeApi(getLocation());
+   }
 }
