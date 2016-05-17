@@ -144,21 +144,22 @@ public class AdaptingComputeServiceStrategies<N, H, I, L> implements CreateNodeW
    @Override
    public NodeMetadata rebootNode(String id) {
       NodeMetadata node = getNode(checkNotNull(id, "id"));
-      checkStateAvailable(node);
+      checkStateAvailable(id, node);
       client.rebootNode(id);
       // invalidate state of node
       return getNode(checkNotNull(id, "id"));
    }
 
-   private void checkStateAvailable(NodeMetadata node) {
-      checkState(node != null && node.getStatus() != Status.TERMINATED,
+   private void checkStateAvailable(String id, NodeMetadata node) {
+      checkState(node != null, "node with id %s terminated or unavailable!", id);
+      checkState(node.getStatus() != Status.TERMINATED,
                "node %s terminated or unavailable! current status: %s", node, formatStatus(node));
    }
 
    @Override
    public NodeMetadata resumeNode(String id) {
       NodeMetadata node = getNode(checkNotNull(id, "id"));
-      checkStateAvailable(node);
+      checkStateAvailable(id, node);
       client.resumeNode(id);
       // invalidate state of node
       return getNode(checkNotNull(id, "id"));
@@ -167,7 +168,7 @@ public class AdaptingComputeServiceStrategies<N, H, I, L> implements CreateNodeW
    @Override
    public NodeMetadata suspendNode(String id) {
       NodeMetadata node = getNode(checkNotNull(id, "id"));
-      checkStateAvailable(node);
+      checkStateAvailable(id, node);
       client.suspendNode(id);
       // invalidate state of node
       return getNode(checkNotNull(id, "id"));
