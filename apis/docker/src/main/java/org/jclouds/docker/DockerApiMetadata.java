@@ -38,6 +38,7 @@ import com.google.inject.Module;
 public class DockerApiMetadata extends BaseHttpApiMetadata<DockerApi> {
 
     public static final String DOCKER_CA_CERT_PATH = "docker.cacert.path";
+    public static final String DOCKER_CA_CERT_DATA = "docker.cacert.data";
 
    @Override
    public Builder toBuilder() {
@@ -58,6 +59,7 @@ public class DockerApiMetadata extends BaseHttpApiMetadata<DockerApi> {
       properties.setProperty(ComputeServiceProperties.IMAGE_LOGIN_USER, "root:password");
       properties.setProperty(TEMPLATE, "osFamily=UBUNTU,os64Bit=true");
       properties.setProperty(DOCKER_CA_CERT_PATH, "");
+      properties.setProperty(DOCKER_CA_CERT_DATA, "");
       return properties;
    }
 
@@ -67,8 +69,8 @@ public class DockerApiMetadata extends BaseHttpApiMetadata<DockerApi> {
          super(DockerApi.class);
          id("docker")
                  .name("Docker API")
-                 .identityName("Path to certificate .pem file")
-                 .credentialName("Path to key .pem file")
+                 .identityName("Path or data for certificate .pem file")
+                 .credentialName("Path or data for key .pem file")
                  .documentation(URI.create("https://docs.docker.com/reference/api/docker_remote_api/"))
                  .version("1.21")
                  .defaultEndpoint("https://127.0.0.1:2376")

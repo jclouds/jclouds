@@ -18,10 +18,13 @@ package org.jclouds.docker.suppliers;
 
 import com.google.common.base.Charsets;
 import com.google.common.io.Files;
+
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.bouncycastle.openssl.PEMKeyPair;
 import org.bouncycastle.openssl.PEMParser;
 import org.bouncycastle.openssl.jcajce.JcaPEMKeyConverter;
+
+import org.jclouds.crypto.Pems;
 import org.jclouds.util.Closeables2;
 
 import javax.net.ssl.KeyManager;
@@ -29,6 +32,7 @@ import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.TrustManagerFactory;
 import javax.net.ssl.X509ExtendedKeyManager;
+
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
@@ -54,22 +58,48 @@ public class SSLContextBuilder {
     private KeyManager[] keyManagers;
     private TrustManager[] trustManagers;
 
+    public static final boolean isClientKeyAndCertificateData(String key, String cert) {
+        return (key.startsWith(Pems.PUBLIC_X509_MARKER) || key.startsWith(Pems.PUBLIC_PKCS1_MARKER)) &&
+                cert.startsWith(Pems.CERTIFICATE_X509_MARKER);
+    }
+
     public SSLContextBuilder() { }
 
-    public SSLContextBuilder clientKeyAndCertificate(String keyPath, String certPath) throws IOException, CertificateException {
+    public SSLContextBuilder clientKeyAndCertificatePaths(String keyPath, String certPath) throws IOException, CertificateException {
         X509Certificate certificate = getCertificate(loadFile(certPath));
         PrivateKey privateKey = getKey(loadFile(keyPath));
-        keyManagers = new KeyManager[]{new InMemoryKeyManager(certificate, privateKey)};
+        keyManager(new InMemoryKeyManager(certificate, privateKey));
         return this;
     }
 
-    public SSLContextBuilder caCertificate(String caCertPath){
+    public SSLContextBuilder clientKeyAndCertificateData(String keyData, String certData) throws CertificateException {
+        X509Certificate certificate = getCertificate(certData);
+        PrivateKey privateKey = getKey(keyData);
+        keyManager(new InMemoryKeyManager(certificate, privateKey));
+        return this;
+    }
+
+    public SSLContextBuilder caCertificatePath(String caCertPath) {
+        try {
+            trustManagers = getTrustManagerWithCaCert(loadFile(caCertPath));
+        } catch (IOException e) {
+            throw propagate(e);
+        }
+        return this;
+    }
+
+    public SSLContextBuilder caCertificateData(String caCertPath) {
         trustManagers = getTrustManagerWithCaCert(caCertPath);
         return this;
     }
 
+    public SSLContextBuilder keyManager(KeyManager keyManager) {
+        keyManagers = new KeyManager[] { keyManager };
+        return this;
+    }
+
     public SSLContextBuilder trustManager(TrustManager trustManager) {
-        trustManagers = new TrustManager[]{trustManager};
+        trustManagers = new TrustManager[] { trustManager };
         return this;
     }
 
@@ -79,9 +109,9 @@ public class SSLContextBuilder {
         return sslContext;
     }
 
-    private TrustManager[] getTrustManagerWithCaCert(String caCertPath) {
+    private TrustManager[] getTrustManagerWithCaCert(String caCertData) {
         try {
-            X509Certificate caCert = getCertificate(loadFile(caCertPath));
+            X509Certificate caCert = getCertificate(caCertData);
             KeyStore trustStore = KeyStore.getInstance(KeyStore.getDefaultType());
             trustStore.load(null, null);
             trustStore.setCertificateEntry("ca", caCert);
@@ -132,32 +162,29 @@ public class SSLContextBuilder {
 
         private final PrivateKey privateKey;
 
-        public InMemoryKeyManager(final X509Certificate certificate, final PrivateKey privateKey)
-                throws IOException, CertificateException {
+        public InMemoryKeyManager(final X509Certificate certificate, final PrivateKey privateKey) throws CertificateException {
             this.certificate = certificate;
             this.privateKey = privateKey;
         }
 
         @Override
-        public String chooseClientAlias(final String[] keyType, final Principal[] issuers,
-                                        final Socket socket) {
+        public String chooseClientAlias(final String[] keyType, final Principal[] issuers, final Socket socket) {
             return DEFAULT_ALIAS;
         }
 
         @Override
-        public String chooseServerAlias(final String keyType, final Principal[] issuers,
-                                        final Socket socket) {
+        public String chooseServerAlias(final String keyType, final Principal[] issuers, final Socket socket) {
             return DEFAULT_ALIAS;
         }
 
         @Override
         public X509Certificate[] getCertificateChain(final String alias) {
-            return new X509Certificate[]{certificate};
+            return new X509Certificate[] { certificate };
         }
 
         @Override
         public String[] getClientAliases(final String keyType, final Principal[] issuers) {
-            return new String[]{DEFAULT_ALIAS};
+            return new String[] { DEFAULT_ALIAS };
         }
 
         @Override
@@ -167,7 +194,7 @@ public class SSLContextBuilder {
 
         @Override
         public String[] getServerAliases(final String keyType, final Principal[] issuers) {
-            return new String[]{DEFAULT_ALIAS};
+            return new String[] { DEFAULT_ALIAS };
         }
     }
 

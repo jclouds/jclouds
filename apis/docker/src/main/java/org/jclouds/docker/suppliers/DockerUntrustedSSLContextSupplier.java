@@ -17,6 +17,7 @@
 package org.jclouds.docker.suppliers;
 
 import com.google.common.base.Supplier;
+
 import org.jclouds.domain.Credentials;
 import org.jclouds.http.config.SSLModule;
 import org.jclouds.location.Provider;
@@ -30,6 +31,7 @@ import java.io.IOException;
 import java.security.GeneralSecurityException;
 
 import static com.google.common.base.Throwables.propagate;
+import static org.jclouds.docker.suppliers.SSLContextBuilder.isClientKeyAndCertificateData;
 
 @Singleton
 public class DockerUntrustedSSLContextSupplier implements Supplier<SSLContext> {
@@ -45,13 +47,13 @@ public class DockerUntrustedSSLContextSupplier implements Supplier<SSLContext> {
 
    @Override
    public SSLContext get() {
-      Credentials currentCreds = creds.get();
+      Credentials currentCreds = checkNotNull(creds.get(), "credential supplier returned null");
       try {
          SSLContextBuilder builder = new SSLContextBuilder();
-         // check if identity and credential are files, to set up sslContext
-         if (currentCreds != null && new File(currentCreds.identity).isFile()
-               && new File(currentCreds.credential).isFile()) {
-            builder.clientKeyAndCertificate(currentCreds.credential, currentCreds.identity);
+         if (isClientKeyAndCertificateData(currentCreds.credential, currentCreds.identity)) {
+            builder.clientKeyAndCertificateData(currentCreds.credential, currentCreds.identity);
+         } else if (new File(currentCreds.identity).isFile() && new File(currentCreds.credential).isFile()) {
+            builder.clientKeyAndCertificatePaths(currentCreds.credential, currentCreds.identity);
          }
          builder.trustManager(insecureTrustManager);
          return builder.build();
