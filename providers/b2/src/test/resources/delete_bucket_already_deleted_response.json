@@ -1,0 +1,5 @@
+{
+   "status" : 400,
+   "code" : "bad_bucket_id",
+   "message" : "Bucket id 4a48fe8875c6214145260818 does not exist"
+}

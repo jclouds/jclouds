@@ -1,0 +1,7 @@
+{
+    "accountId": "YOUR_ACCOUNT_ID",
+    "apiUrl": "http://localhost",
+    "authorizationToken": "2_20150807002553_443e98bf57f978fa58c284f8_24d25d99772e3ba927778b39c9b0198f412d2163_acct",
+    "downloadUrl": "http://localhost",
+    "minimumPartSize": 100000000
+}
