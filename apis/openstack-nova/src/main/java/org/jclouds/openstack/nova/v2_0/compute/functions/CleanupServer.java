@@ -30,6 +30,7 @@ import org.jclouds.logging.Logger;
 import org.jclouds.openstack.nova.v2_0.NovaApi;
 import org.jclouds.openstack.nova.v2_0.domain.KeyPair;
 import org.jclouds.openstack.nova.v2_0.domain.SecurityGroup;
+import org.jclouds.openstack.nova.v2_0.domain.Server;
 import org.jclouds.openstack.nova.v2_0.domain.ServerWithSecurityGroups;
 import org.jclouds.openstack.nova.v2_0.domain.regionscoped.RegionAndId;
 import org.jclouds.openstack.nova.v2_0.domain.regionscoped.RegionAndName;
@@ -64,7 +65,15 @@ public class CleanupServer implements Function<String, Boolean> {
    @Override
    public Boolean apply(String id) {
       final RegionAndId regionAndId = RegionAndId.fromSlashEncoded(id);
-      ServerWithSecurityGroups server = novaApi.getServerWithSecurityGroupsApi(regionAndId.getRegion()).get().get(regionAndId.getId());
+      boolean secGroupsPresent = novaApi.getServerWithSecurityGroupsApi(regionAndId.getRegion()).isPresent();
+      Server server;
+
+      if (secGroupsPresent) {
+         server = novaApi.getServerWithSecurityGroupsApi(regionAndId.getRegion()).get()
+               .get(regionAndId.getId());
+      } else {
+         server = novaApi.getServerApi(regionAndId.getRegion()).get(regionAndId.getId());
+      }
 
       if (novaApi.getFloatingIPApi(regionAndId.getRegion()).isPresent()) {
          try {
@@ -73,6 +82,7 @@ public class CleanupServer implements Function<String, Boolean> {
             logger.warn(e, "<< error removing and deallocating ip from node(%s): %s", id, e.getMessage());
          }
       }
+
       if (containsMetadata(server, JCLOUDS_KP)) {
         if (novaApi.getKeyPairApi(regionAndId.getRegion()).isPresent()) {
            RegionAndName regionAndName = RegionAndName.fromRegionAndName(regionAndId.getRegion(), server.getKeyName());
@@ -86,8 +96,8 @@ public class CleanupServer implements Function<String, Boolean> {
 
       boolean serverDeleted = novaApi.getServerApi(regionAndId.getRegion()).delete(regionAndId.getId());
 
-      if (containsMetadata(server, JCLOUDS_SG)) {
-         for (final String securityGroupName : server.getSecurityGroupNames()) {
+      if (containsMetadata(server, JCLOUDS_SG) && secGroupsPresent) {
+         for (final String securityGroupName : ((ServerWithSecurityGroups)server).getSecurityGroupNames()) {
             for (SecurityGroup securityGroup : novaApi.getSecurityGroupApi(regionAndId.getRegion()).get().list().toList()) {
                if (securityGroup.getName().equalsIgnoreCase(securityGroupName)) {
                   if (novaApi.getSecurityGroupApi(regionAndId.getRegion()).isPresent()) {
@@ -105,7 +115,7 @@ public class CleanupServer implements Function<String, Boolean> {
       return serverDeleted;
    }
 
-   private boolean containsMetadata(ServerWithSecurityGroups server, String key) {
+   private boolean containsMetadata(Server server, String key) {
       if (server == null || server.getMetadata() == null || server.getMetadata().get("jclouds_tags") == null)
          return false;
       return server.getMetadata().get("jclouds_tags").contains(key);
