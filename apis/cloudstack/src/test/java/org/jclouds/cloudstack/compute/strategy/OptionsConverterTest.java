@@ -16,18 +16,20 @@
  */
 package org.jclouds.cloudstack.compute.strategy;
 
-import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.ImmutableSet;
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertTrue;
+
+import java.util.Map;
+
 import org.jclouds.cloudstack.compute.options.CloudStackTemplateOptions;
 import org.jclouds.cloudstack.domain.Network;
 import org.jclouds.cloudstack.domain.NetworkService;
 import org.jclouds.cloudstack.options.DeployVirtualMachineOptions;
 import org.testng.annotations.Test;
 
-import java.util.Map;
-
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertTrue;
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.ImmutableSet;
 
 @Test(singleThreaded = true, testName = "OptionsConverterTest")
 public class OptionsConverterTest {
@@ -41,7 +43,7 @@ public class OptionsConverterTest {
    public void testBasicNetworkOptionsConverter() {
       BasicNetworkOptionsConverter converter = new BasicNetworkOptionsConverter();
 
-      CloudStackTemplateOptions optionsIn = CloudStackTemplateOptions.Builder.securityGroupId("42").networks("46");
+      CloudStackTemplateOptions optionsIn = CloudStackTemplateOptions.Builder.securityGroupIds(ImmutableList.of("42")).networks(ImmutableList.of("46"));
       DeployVirtualMachineOptions optionsOut = new DeployVirtualMachineOptions();
 
       DeployVirtualMachineOptions optionsOut2 = converter.apply(optionsIn, EMPTY_NETWORKS_MAP, ZONE_ID, optionsOut);
@@ -55,7 +57,7 @@ public class OptionsConverterTest {
    public void testAdvancedSecurityGroupsNotAllowed() {
       boolean exceptionThrown = false;
       AdvancedNetworkOptionsConverter converter = new AdvancedNetworkOptionsConverter();
-      CloudStackTemplateOptions optionsIn = CloudStackTemplateOptions.Builder.securityGroupId("42");
+      CloudStackTemplateOptions optionsIn = CloudStackTemplateOptions.Builder.securityGroupIds(ImmutableList.of("42"));
 
       try {
          converter.apply(optionsIn, EMPTY_NETWORKS_MAP, ZONE_ID, DeployVirtualMachineOptions.NONE);
@@ -69,7 +71,7 @@ public class OptionsConverterTest {
    @Test
    public void testAdvancedExplicitNetworkSelection() {
       AdvancedNetworkOptionsConverter converter = new AdvancedNetworkOptionsConverter();
-      DeployVirtualMachineOptions optionsActual = converter.apply(CloudStackTemplateOptions.Builder.networks("42"),
+      DeployVirtualMachineOptions optionsActual = converter.apply(new CloudStackTemplateOptions().networks(ImmutableList.of("42")),
          EMPTY_NETWORKS_MAP, ZONE_ID, DeployVirtualMachineOptions.NONE);
       DeployVirtualMachineOptions optionsExpected = DeployVirtualMachineOptions.Builder.networkId("42");
       assertEquals(optionsActual, optionsExpected);
@@ -82,7 +84,7 @@ public class OptionsConverterTest {
       Network eligibleNetwork = Network.builder()
          .id("25").zoneId(ZONE_ID).isDefault(true).services(ImmutableSet.of(firewallServiceWithStaticNat))
          .build();
-      DeployVirtualMachineOptions optionsActual = converter.apply(CloudStackTemplateOptions.NONE,
+      DeployVirtualMachineOptions optionsActual = converter.apply(new CloudStackTemplateOptions(),
          ImmutableMap.of(eligibleNetwork.getId(), eligibleNetwork), ZONE_ID, DeployVirtualMachineOptions.NONE);
       DeployVirtualMachineOptions optionsExpected = DeployVirtualMachineOptions.Builder.networkId("25");
       assertEquals(optionsActual, optionsExpected);
@@ -93,7 +95,7 @@ public class OptionsConverterTest {
       AdvancedNetworkOptionsConverter converter = new AdvancedNetworkOptionsConverter();
       boolean exceptionThrown = false;
       try {
-         converter.apply(CloudStackTemplateOptions.NONE, EMPTY_NETWORKS_MAP, ZONE_ID, DeployVirtualMachineOptions.NONE);
+         converter.apply(new CloudStackTemplateOptions(), EMPTY_NETWORKS_MAP, ZONE_ID, DeployVirtualMachineOptions.NONE);
       } catch (IllegalArgumentException e) {
          exceptionThrown = true;
       }
@@ -109,7 +111,7 @@ public class OptionsConverterTest {
 
       boolean exceptionThrown = false;
       try {
-         converter.apply(CloudStackTemplateOptions.NONE, ImmutableMap.of(unsuitableNetwork.getId(), unsuitableNetwork), ZONE_ID, DeployVirtualMachineOptions.NONE);
+         converter.apply(new CloudStackTemplateOptions(), ImmutableMap.of(unsuitableNetwork.getId(), unsuitableNetwork), ZONE_ID, DeployVirtualMachineOptions.NONE);
       } catch (IllegalArgumentException e) {
          exceptionThrown = true;
       }

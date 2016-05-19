@@ -205,8 +205,7 @@ public class CloudStackComputeServiceAdapter implements
             options.keyPair(keyPair.getName());
          }
       } else if (templateOptions.shouldGenerateKeyPair()) {
-         SshKeyPair keyPair = keyPairCache.getUnchecked(namingConvention.create()
-                                                        .sharedNameForGroup(group));
+         SshKeyPair keyPair = keyPairCache.getUnchecked(namingConvention.create().sharedNameForGroup(group));
          keyPairCache.asMap().put(keyPair.getName(), keyPair);
          templateOptions.keyPair(keyPair.getName());
          options.keyPair(keyPair.getName());
