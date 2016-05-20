@@ -304,16 +304,22 @@ public abstract class BaseComputeServiceContextModule extends AbstractModule {
    @Provides
    @Singleton
    public final Optional<ImageExtension> guiceProvideImageExtension(Injector i) {
-      Binding<ImageExtension> binding = i.getExistingBinding(Key.get(ImageExtension.class));
-      return binding == null ? Optional.<ImageExtension> absent() : Optional.of(binding.getProvider().get());
+      return provideImageExtension(i);
    }
 
    @Provides
    @Singleton
    protected final Optional<SecurityGroupExtension> guiceProvideSecurityGroupExtension(Injector i) {
+      return provideSecurityGroupExtension(i);
+   }
+
+   protected Optional<ImageExtension> provideImageExtension(Injector i) {
+      Binding<ImageExtension> binding = i.getExistingBinding(Key.get(ImageExtension.class));
+      return binding == null ? Optional.<ImageExtension> absent() : Optional.of(binding.getProvider().get());
+   }
+
+   protected Optional<SecurityGroupExtension> provideSecurityGroupExtension(Injector i) {
       Binding<SecurityGroupExtension> binding = i.getExistingBinding(Key.get(SecurityGroupExtension.class));
       return binding == null ? Optional.<SecurityGroupExtension> absent() : Optional.of(binding.getProvider().get());
    }
-   
-
 }
