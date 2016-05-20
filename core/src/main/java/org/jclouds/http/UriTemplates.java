@@ -44,17 +44,26 @@ public class UriTemplates {
       for (char c : Lists.charactersOf(template)) {
          switch (c) {
          case '{':
+            if (inVar) {
+                builder.append('{');
+                builder.append(var);
+                var.setLength(0);
+            }
             inVar = true;
             break;
          case '}':
-            inVar = false;
             String key = var.toString();
             Object value = variables.get(var.toString());
-            if (value != null)
-               builder.append(value);
-            else
-               builder.append('{').append(key).append('}');
+            if (inVar) {
+               if (value != null)
+                  builder.append(value);
+               else
+                  builder.append('{').append(key).append('}');
+            } else {
+               builder.append('}');
+            }
             var.setLength(0);
+            inVar = false;
             break;
          default:
             if (inVar)

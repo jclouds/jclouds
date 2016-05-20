@@ -51,4 +51,8 @@ public class UriTemplatesTest {
    public void testMissingParamProceeds() {
       assertEquals(expand("/{user-dir}", ImmutableMap.of("user_dir", "foo")), "/{user-dir}");
    }
+
+   public void testJson() {
+      assertEquals(expand("{\"key\":\"{variable}\"}", ImmutableMap.of("variable", "value")), "{\"key\":\"value\"}");
+   }
 }
