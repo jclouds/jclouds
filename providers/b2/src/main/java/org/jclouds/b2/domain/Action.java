@@ -14,23 +14,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jclouds.b2;
+package org.jclouds.b2.domain;
 
-import java.io.Closeable;
+import com.google.common.base.CaseFormat;
 
-import org.jclouds.b2.features.AuthorizationApi;
-import org.jclouds.b2.features.BucketApi;
-import org.jclouds.b2.features.ObjectApi;
-import org.jclouds.rest.annotations.Delegate;
+public enum Action {
+   UPLOAD,
+   HIDE;
 
-/** Provides access to Backblaze B2 resources via their REST API. */
-public interface B2Api extends Closeable {
-   @Delegate
-   AuthorizationApi getAuthorizationApi();
+   public static Action fromValue(String symbol) {
+      return Action.valueOf(CaseFormat.LOWER_CAMEL.to(CaseFormat.UPPER_UNDERSCORE, symbol));
+   }
 
-   @Delegate
-   BucketApi getBucketApi();
-
-   @Delegate
-   ObjectApi getObjectApi();
+   @Override
+   public String toString() {
+      return CaseFormat.UPPER_UNDERSCORE.to(CaseFormat.LOWER_CAMEL, name());
+   }
 }

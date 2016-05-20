@@ -14,23 +14,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jclouds.b2;
+package org.jclouds.b2.domain;
 
-import java.io.Closeable;
+import java.util.Date;
 
-import org.jclouds.b2.features.AuthorizationApi;
-import org.jclouds.b2.features.BucketApi;
-import org.jclouds.b2.features.ObjectApi;
-import org.jclouds.rest.annotations.Delegate;
+import org.jclouds.json.SerializedNames;
 
-/** Provides access to Backblaze B2 resources via their REST API. */
-public interface B2Api extends Closeable {
-   @Delegate
-   AuthorizationApi getAuthorizationApi();
+import com.google.auto.value.AutoValue;
 
-   @Delegate
-   BucketApi getBucketApi();
+@AutoValue
+public abstract class HideFileResponse {
+   /** Always "hide". */
+   public abstract Action action();
+   public abstract String fileId();
+   public abstract String fileName();
+   public abstract Date uploadTimestamp();
 
-   @Delegate
-   ObjectApi getObjectApi();
+   @SerializedNames({"action", "fileId", "fileName", "uploadTimestamp"})
+   public static HideFileResponse create(Action action, String fileId, String fileName, long uploadTimestamp) {
+      return new AutoValue_HideFileResponse(action, fileId, fileName, new Date(uploadTimestamp));
+   }
 }

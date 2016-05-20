@@ -17,6 +17,7 @@
 package org.jclouds.b2.handlers;
 
 import org.jclouds.blobstore.ContainerNotFoundException;
+import org.jclouds.blobstore.KeyNotFoundException;
 import org.jclouds.http.HttpCommand;
 import org.jclouds.http.HttpErrorHandler;
 import org.jclouds.http.HttpResponse;
@@ -24,6 +25,7 @@ import org.jclouds.http.functions.ParseJson;
 import org.jclouds.json.Json;
 import org.jclouds.b2.B2ResponseException;
 import org.jclouds.b2.domain.B2Error;
+import org.jclouds.rest.ResourceNotFoundException;
 
 import com.google.inject.Inject;
 import com.google.inject.TypeLiteral;
@@ -39,6 +41,12 @@ public final class ParseB2ErrorFromJsonContent extends ParseJson<B2Error> implem
          return new ContainerNotFoundException(exception);
       } else if ("bad_json".equals(error.code())) {
          return new IllegalArgumentException(error.message(), exception);
+      } else if ("bad_request".equals(error.code())) {
+         return new IllegalArgumentException(error.message(), exception);
+      } else if ("file_not_present".equals(error.code())) {
+         return new KeyNotFoundException(exception);
+      } else if ("not_found".equals(error.code())) {
+         return new ResourceNotFoundException(error.message(), exception);
       } else {
          return exception;
       }

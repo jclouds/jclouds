@@ -1,0 +1,19 @@
+{
+    "files": [
+        {
+            "action": "upload",
+            "fileId": "4_z27c88f1d182b150646ff0b16_f1004ba650fe24e6b_d20150809_m012853_c100_v0009990_t0000",
+            "fileName": "files/hello.txt",
+            "size": 6,
+            "uploadTimestamp": 1439083733000
+        },
+        {
+            "action": "upload",
+            "fileId": "4_z27c88f1d182b150646ff0b16_f1004ba650fe24e6c_d20150809_m012854_c100_v0009990_t0000",
+            "fileName": "files/world.txt",
+            "size": 6,
+            "uploadTimestamp": 1439083734000
+        }
+    ],
+    "nextFileName": null
+}
