@@ -65,6 +65,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 
 import org.jclouds.Constants;
+import org.jclouds.domain.Credentials;
 import org.jclouds.http.HttpRequest;
 import org.jclouds.http.HttpRequestFilter;
 import org.jclouds.http.HttpUtils;
@@ -81,6 +82,7 @@ import org.jclouds.io.payloads.MultipartForm;
 import org.jclouds.io.payloads.Part;
 import org.jclouds.io.payloads.Part.PartOptions;
 import org.jclouds.javax.annotation.Nullable;
+import org.jclouds.location.Provider;
 import org.jclouds.logging.Logger;
 import org.jclouds.reflect.Invocation;
 import org.jclouds.rest.Binder;
@@ -147,6 +149,7 @@ public class RestAnnotationProcessor implements Function<Invocation, HttpRequest
    private final Injector injector;
    private final HttpUtils utils;
    private final ContentMetadataCodec contentMetadataCodec;
+   private final Supplier<Credentials> credentials;
    private final String apiVersion;
    private final String buildVersion;
    private final InputParamValidator inputParamValidator;
@@ -156,7 +159,8 @@ public class RestAnnotationProcessor implements Function<Invocation, HttpRequest
    private final boolean connectionCloseHeader;
 
    @Inject
-   private RestAnnotationProcessor(Injector injector, @ApiVersion String apiVersion, @BuildVersion String buildVersion,
+   private RestAnnotationProcessor(Injector injector,
+         @Provider Supplier<Credentials> credentials, @ApiVersion String apiVersion, @BuildVersion String buildVersion,
          HttpUtils utils, ContentMetadataCodec contentMetadataCodec, InputParamValidator inputParamValidator,
          GetAcceptHeaders getAcceptHeaders, @Nullable @Named("caller") Invocation caller,
          @Named(Constants.PROPERTY_STRIP_EXPECT_HEADER) boolean stripExpectHeader,
@@ -164,6 +168,7 @@ public class RestAnnotationProcessor implements Function<Invocation, HttpRequest
       this.injector = injector;
       this.utils = utils;
       this.contentMetadataCodec = contentMetadataCodec;
+      this.credentials = credentials;
       this.apiVersion = apiVersion;
       this.buildVersion = buildVersion;
       this.inputParamValidator = inputParamValidator;
@@ -226,6 +231,7 @@ public class RestAnnotationProcessor implements Function<Invocation, HttpRequest
 
       Multimap<String, Object> tokenValues = LinkedHashMultimap.create();
 
+      tokenValues.put(Constants.PROPERTY_IDENTITY, credentials.get().identity);
       tokenValues.put(Constants.PROPERTY_API_VERSION, apiVersion);
       tokenValues.put(Constants.PROPERTY_BUILD_VERSION, buildVersion);
       // URI template in rfc6570 form
@@ -334,7 +340,7 @@ public class RestAnnotationProcessor implements Function<Invocation, HttpRequest
          }
          if (invocation.getInvokable().isAnnotationPresent(PayloadParams.class)) {
             PayloadParams params = invocation.getInvokable().getAnnotation(PayloadParams.class);
-            addMapPayload(mapParams, params, headers);
+            addMapPayload(mapParams, params, headers, tokenValues);
          }
          request = mapBinder.bindToRequest(request, mapParams);
       } else {
@@ -464,12 +470,12 @@ public class RestAnnotationProcessor implements Function<Invocation, HttpRequest
    }
 
    private void addMapPayload(Map<String, Object> postParams, PayloadParams mapDefaults,
-         Multimap<String, String> headers) {
+         Multimap<String, String> headers, Multimap<String, Object> tokenValues) {
       for (int i = 0; i < mapDefaults.keys().length; i++) {
          if (mapDefaults.values()[i].equals(PayloadParams.NULL)) {
             postParams.put(mapDefaults.keys()[i], null);
          } else {
-            postParams.put(mapDefaults.keys()[i], replaceTokens(mapDefaults.values()[i], headers));
+            postParams.put(mapDefaults.keys()[i], replaceTokens(replaceTokens(mapDefaults.values()[i], headers), tokenValues));
          }
       }
    }
