@@ -16,6 +16,8 @@
  */
 package org.jclouds.docker.suppliers;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 import com.google.common.base.Supplier;
 
 import org.jclouds.domain.Credentials;
