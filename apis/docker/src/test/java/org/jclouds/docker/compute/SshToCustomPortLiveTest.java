@@ -26,6 +26,7 @@ import static org.testng.Assert.assertNotNull;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
+import java.util.Map;
 
 import org.jclouds.compute.RunNodesException;
 import org.jclouds.compute.domain.ExecResponse;
@@ -49,8 +50,11 @@ import org.testng.annotations.Test;
 import com.google.common.base.Optional;
 import com.google.common.base.Predicate;
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import com.google.inject.AbstractModule;
 import com.google.inject.Module;
 
@@ -61,6 +65,7 @@ import com.google.inject.Module;
 public class SshToCustomPortLiveTest extends BaseComputeServiceContextLiveTest {
 
    private static final int SSH_PORT = 8822;
+   private static final int SSH_PORT_BRIDGE = 18822;
    private static final String IMAGE_REPOSITORY = "jclouds/testrepo";
    private static final String IMAGE_TAG_1 = "testtag";
    private static final String IMAGE_TAG_2 = "second";
@@ -130,12 +135,17 @@ public class SshToCustomPortLiveTest extends BaseComputeServiceContextLiveTest {
 
    @Test(dependsOnMethods = "testImageCreated")
    public void testAdvancedConfig() throws RunNodesException {
+      final String portId = SSH_PORT + "/tcp";
       final DockerTemplateOptions options = DockerTemplateOptions.Builder
             .configBuilder(
                   Config.builder().env(ImmutableList.<String> of("SSH_PORT=" + SSH_PORT, "ROOT_PASSWORD=jcloudsRulez"))
-                        .hostConfig(HostConfig.builder().networkMode("host").build())
+                        .exposedPorts(ImmutableMap.<String, Object> of(portId, Maps.newHashMap()))
+                        .hostConfig(HostConfig.builder().networkMode("bridge")
+                              .portBindings(ImmutableMap.<String, List<Map<String, String>>> of(portId,
+                                    Lists.<Map<String, String>>newArrayList(ImmutableMap.of("HostPort", String.valueOf(SSH_PORT_BRIDGE)))))
+                              .build())
                         .image("test-if-this-value-is-correctly-overriden"))
-            .overrideLoginUser("root").overrideLoginPassword("jcloudsRulez").blockOnPort(SSH_PORT, 30);
+            .overrideLoginUser("root").overrideLoginPassword("jcloudsRulez").blockOnPort(SSH_PORT_BRIDGE, 30);
 
       final Template template = view.getComputeService().templateBuilder().imageId(image.id()).options(options).build();
 

@@ -89,9 +89,11 @@ public class DockerComputeServiceAdapter implements
       String loginUserPassword = template.getImage().getDefaultCredentials().getOptionalPassword().or("password");
 
       DockerTemplateOptions templateOptions = DockerTemplateOptions.class.cast(options);
+
+      Config containerConfig = null;
       Config.Builder containerConfigBuilder = templateOptions.getConfigBuilder();
       if (containerConfigBuilder == null) {
-         containerConfigBuilder = Config.builder();
+         containerConfigBuilder = Config.builder().image(imageId);
 
          containerConfigBuilder.entrypoint(templateOptions.getEntrypoint());
          containerConfigBuilder.cmd(templateOptions.getCommands());
@@ -110,14 +112,14 @@ public class DockerComputeServiceAdapter implements
          }
 
          HostConfig.Builder hostConfigBuilder = HostConfig.builder()
-                 .publishAllPorts(true)
-                 .privileged(templateOptions.getPrivileged());
+               .publishAllPorts(true)
+               .privileged(templateOptions.getPrivileged());
 
          if (!templateOptions.getPortBindings().isEmpty()) {
             Map<String, List<Map<String, String>>> portBindings = Maps.newHashMap();
             for (Map.Entry<Integer, Integer> entry : templateOptions.getPortBindings().entrySet()) {
                portBindings.put(entry.getValue() + "/tcp",
-                       Lists.<Map<String, String>>newArrayList(ImmutableMap.of("HostIp", "0.0.0.0", "HostPort", Integer.toString(entry.getKey()))));
+                     Lists.<Map<String, String>>newArrayList(ImmutableMap.of("HostIp", "0.0.0.0", "HostPort", Integer.toString(entry.getKey()))));
             }
             hostConfigBuilder.portBindings(portBindings);
          }
@@ -147,41 +149,43 @@ public class DockerComputeServiceAdapter implements
          hostConfigBuilder.networkMode(templateOptions.getNetworkMode());
 
          containerConfigBuilder.hostConfig(hostConfigBuilder.build());
-      }
 
-      containerConfigBuilder.image(imageId);
-
-      // add the inbound ports into exposed ports map
-      Config containerConfig = containerConfigBuilder.build();
-      Map<String, Object> exposedPorts = Maps.newHashMap();
-      if (containerConfig.exposedPorts() == null) {
-         exposedPorts.putAll(containerConfig.exposedPorts());
-      }
-      for (int inboundPort : templateOptions.getInboundPorts()) {
-         String portKey = inboundPort + "/tcp";
-         if (!exposedPorts.containsKey(portKey)) {
-            exposedPorts.put(portKey, Maps.newHashMap());
+         // add the inbound ports into exposed ports map
+         containerConfig = containerConfigBuilder.build();
+         Map<String, Object> exposedPorts = Maps.newHashMap();
+         if (containerConfig.exposedPorts() == null) {
+            exposedPorts.putAll(containerConfig.exposedPorts());
          }
-      }
-      containerConfigBuilder.exposedPorts(exposedPorts);
-
-      // build once more after setting inboundPorts
-      containerConfig = containerConfigBuilder.build();
-
-      // finally update port bindings
-      Map<String, List<Map<String, String>>> portBindings = Maps.newHashMap();
-      Map<String, List<Map<String, String>>> existingBindings = containerConfig.hostConfig().portBindings();
-      if (existingBindings != null) {
-          portBindings.putAll(existingBindings);
-      }
-      for (String exposedPort : containerConfig.exposedPorts().keySet()) {
-         if (!portBindings.containsKey(exposedPort)) {
-            portBindings.put(exposedPort, Lists.<Map<String, String>>newArrayList(ImmutableMap.of("HostIp", "0.0.0.0")));
+         for (int inboundPort : templateOptions.getInboundPorts()) {
+            String portKey = inboundPort + "/tcp";
+            if (!exposedPorts.containsKey(portKey)) {
+               exposedPorts.put(portKey, Maps.newHashMap());
+            }
          }
+         containerConfigBuilder.exposedPorts(exposedPorts);
+
+         // build once more after setting inboundPorts
+         containerConfig = containerConfigBuilder.build();
+
+         // finally update port bindings
+         Map<String, List<Map<String, String>>> portBindings = Maps.newHashMap();
+         Map<String, List<Map<String, String>>> existingBindings = containerConfig.hostConfig().portBindings();
+         if (existingBindings != null) {
+            portBindings.putAll(existingBindings);
+         }
+         for (String exposedPort : containerConfig.exposedPorts().keySet()) {
+            if (!portBindings.containsKey(exposedPort)) {
+               portBindings.put(exposedPort, Lists.<Map<String, String>>newArrayList(ImmutableMap.of("HostIp", "0.0.0.0")));
+            }
+         }
+         hostConfigBuilder = HostConfig.builder().fromHostConfig(containerConfig.hostConfig());
+         hostConfigBuilder.portBindings(portBindings);
+         containerConfigBuilder.hostConfig(hostConfigBuilder.build());
+
+      } else {
+         containerConfigBuilder.image(imageId);
       }
-      HostConfig.Builder hostConfigBuilder = HostConfig.builder().fromHostConfig(containerConfig.hostConfig());
-      hostConfigBuilder.portBindings(portBindings);
-      containerConfigBuilder.hostConfig(hostConfigBuilder.build());
+
       containerConfig = containerConfigBuilder.build();
 
       logger.debug(">> creating new container with containerConfig(%s)", containerConfig);
