@@ -58,8 +58,5 @@ public class ConfigTest {
       assertThat(config.domainname()).isNull();
       assertThat(config.workingDir()).isNull();
       assertThat(config.hostConfig()).isNull();
-      assertThat(config.dns()).isNull();
-      assertThat(config.dnsSearch()).isNull();
-      assertThat(config.volumesFrom()).isNull();
    }
 }

@@ -16,16 +16,16 @@
  */
 package org.jclouds.docker.domain;
 
-import static com.google.common.base.Preconditions.checkNotNull;
 import static org.jclouds.docker.internal.NullSafeCopies.copyOf;
+
 import java.util.List;
 import java.util.Map;
 
+import org.jclouds.docker.internal.NullSafeCopies;
 import org.jclouds.javax.annotation.Nullable;
 import org.jclouds.json.SerializedNames;
 
 import com.google.auto.value.AutoValue;
-import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 
@@ -135,7 +135,7 @@ public abstract class NetworkSettings {
       private String gateway;
       private String bridge;
       private String portMapping;
-      private Map<String, List<Map<String, String>>> ports = ImmutableMap.of();
+      private Map<String, List<Map<String, String>>> ports;
       private String sandboxId;
       private boolean hairpinMode;
       private String linkLocalIPv6Address;
@@ -176,7 +176,7 @@ public abstract class NetworkSettings {
       }
 
       public Builder ports(Map<String, List<Map<String, String>>> ports) {
-         this.ports = ImmutableMap.copyOf(checkNotNull(ports, "ports"));
+         this.ports = NullSafeCopies.copyWithNullOf(ports);
          return this;
       }
 

@@ -85,7 +85,10 @@ public class ContainerApiLiveTest extends BaseDockerApiLiveTest {
    }
 
    @Test(dependsOnMethods = "testStartContainer")
-   public void testAttachContainer() {
+   public void testAttachContainer() throws InterruptedException {
+      // wait 2 seconds - give a container chance to echo the string
+      Thread.sleep(2000L);
+      
       InputStream attachStream = api().attach(container.id(), AttachOptions.Builder.logs(true).stream(false).stdout(true));
       String stream = consumeStream(attachStream);
       assertThat(stream.trim()).contains("hello world");

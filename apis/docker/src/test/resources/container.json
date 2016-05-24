@@ -40,7 +40,7 @@
     "OnBuild": null,
     "OpenStdin": false,
     "PortSpecs": null,
-    "SecurityOpt": null,
+    "SecurityOpts": null,
     "StdinOnce": false,
     "Tty": false,
     "User": "",
@@ -52,8 +52,8 @@
   "ExecDriver": "native-0.2",
   "HostConfig": {
     "Binds": null,
-    "CapAdd": null,
-    "CapDrop": null,
+    "CapAdd": ["NET_ADMIN"],
+    "CapDrop": ["MKNOD"],
     "ContainerIDFile": "",
     "Devices": [],
     "Dns": [
@@ -137,6 +137,7 @@
   "Path": "/home/weave/weaver",
   "ProcessLabel": "",
   "ResolvConfPath": "/var/lib/docker/containers/6c9932f478bd761f32ddb54ed28ab42ab6fac6f2a279f561ea31503ee9d39524/resolv.conf",
+  "SecurityOpt": [],
   "State": {
     "Status": "running",
     "Running": true,

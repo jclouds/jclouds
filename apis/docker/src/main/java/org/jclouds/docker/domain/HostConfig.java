@@ -55,16 +55,29 @@ public abstract class HostConfig {
 
    @Nullable public abstract String networkMode();
 
+   @Nullable public abstract List<String> securityOpt();
+
+   @Nullable public abstract List<String> capAdd();
+
+   @Nullable public abstract List<String> capDrop();
+
+   public abstract Map<String, String> restartPolicy();
+
+
+
    HostConfig() {
    }
 
    @SerializedNames({ "ContainerIDFile", "Binds", "LxcConf", "Privileged", "Dns", "DnsSearch", "PortBindings",
-         "Links", "ExtraHosts", "PublishAllPorts", "VolumesFrom", "NetworkMode" })
+         "Links", "ExtraHosts", "PublishAllPorts", "VolumesFrom", "NetworkMode", "SecurityOpt",
+         "CapAdd", "CapDrop", "RestartPolicy" })
    public static HostConfig create(String containerIDFile, List<String> binds, List<Map<String, String>> lxcConf,
          boolean privileged, List<String> dns, List<String> dnsSearch, Map<String, List<Map<String, String>>> portBindings,
-         List<String> links, List<String> extraHosts, boolean publishAllPorts, List<String> volumesFrom, String networkMode) {
+         List<String> links, List<String> extraHosts, boolean publishAllPorts, List<String> volumesFrom, String networkMode, 
+         List<String> securityOpt, List<String> capAdd, List<String> capDrop, Map<String, String> restartPolicy) {
       return new AutoValue_HostConfig(containerIDFile, copyWithNullOf(binds), copyOf(lxcConf), privileged, copyWithNullOf(dns), copyWithNullOf(dnsSearch),
-            copyOf(portBindings), copyWithNullOf(links), copyWithNullOf(extraHosts), publishAllPorts, copyWithNullOf(volumesFrom), networkMode);
+            copyOf(portBindings), copyWithNullOf(links), copyWithNullOf(extraHosts), publishAllPorts, copyWithNullOf(volumesFrom), networkMode,
+            copyOf(securityOpt), copyWithNullOf(capAdd), copyWithNullOf(capDrop), copyOf(restartPolicy));
    }
 
    public static Builder builder() {
@@ -89,7 +102,11 @@ public abstract class HostConfig {
       private boolean publishAllPorts;
       private List<String> volumesFrom;
       private String networkMode;
-
+      private List<String> securityOpt = Lists.newArrayList();
+      private List<String> capAdd;
+      private List<String> capDrop;
+      private Map<String, String> restartPolicy = Maps.newHashMap();
+      
       public Builder containerIDFile(String containerIDFile) {
          this.containerIDFile = containerIDFile;
          return this;
@@ -150,16 +167,37 @@ public abstract class HostConfig {
          return this;
       }
 
+      public Builder securityOpt(List<String> securityOpt) {
+         this.securityOpt = securityOpt;
+         return this;
+      }
+
+      public Builder capAdd(List<String> capAdd) {
+         this.capAdd = capAdd;
+         return this;
+      }
+
+      public Builder capDrop(List<String> capDrop) {
+         this.capDrop = capDrop;
+         return this;
+      }
+
+      public Builder restartPolicy(Map<String, String> restartPolicy) {
+         this.restartPolicy = restartPolicy;
+         return this;
+      }
+      
       public HostConfig build() {
          return HostConfig.create(containerIDFile, binds, lxcConf, privileged, dns, dnsSearch, portBindings, links,
-               extraHosts, publishAllPorts, volumesFrom, networkMode);
+               extraHosts, publishAllPorts, volumesFrom, networkMode, securityOpt, capAdd, capDrop, restartPolicy);
       }
 
       public Builder fromHostConfig(HostConfig in) {
          return this.containerIDFile(in.containerIDFile()).binds(in.binds()).lxcConf(in.lxcConf())
                .privileged(in.privileged()).dns(in.dns()).dnsSearch(in.dnsSearch()).links(in.links())
                .extraHosts(in.extraHosts()).portBindings(in.portBindings()).publishAllPorts(in.publishAllPorts())
-               .volumesFrom(in.volumesFrom()).networkMode(in.networkMode());
+               .volumesFrom(in.volumesFrom()).networkMode(in.networkMode()).securityOpt(in.securityOpt())
+               .capAdd(in.capAdd()).capDrop(in.capDrop()).restartPolicy(in.restartPolicy());
       }
    }
 }

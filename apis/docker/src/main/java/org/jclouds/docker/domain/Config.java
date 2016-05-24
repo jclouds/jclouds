@@ -23,6 +23,7 @@ import static org.jclouds.docker.internal.NullSafeCopies.copyWithNullOf;
 import java.util.List;
 import java.util.Map;
 
+import org.jclouds.docker.domain.HostConfig.Builder;
 import org.jclouds.javax.annotation.Nullable;
 import org.jclouds.json.SerializedNames;
 
@@ -76,30 +77,6 @@ public abstract class Config {
 
    @Nullable public abstract HostConfig hostConfig();
 
-   @Nullable public abstract List<String> binds();
-
-   @Nullable public abstract List<String> links();
-
-   public abstract List<Map<String, String>> lxcConf();
-
-   public abstract Map<String, List<Map<String, String>>> portBindings();
-
-   public abstract boolean publishAllPorts();
-
-   public abstract boolean privileged();
-
-   @Nullable public abstract List<String> dns();
-
-   @Nullable public abstract List<String> dnsSearch();
-
-   @Nullable public abstract List<String> volumesFrom();
-
-   @Nullable public abstract List<String> capAdd();
-
-   @Nullable public abstract List<String> capDrop();
-
-   public abstract Map<String, String> restartPolicy();
-
    Config() {
    }
 
@@ -107,24 +84,17 @@ public abstract class Config {
          {
                  "Hostname", "Domainname", "User", "Memory", "MemorySwap", "CpuShares", "AttachStdin", "AttachStdout",
                  "AttachStderr", "Tty", "OpenStdin", "StdinOnce", "Env", "Cmd", "Entrypoint", "Image", "Volumes",
-                 "WorkingDir", "NetworkDisabled", "ExposedPorts", "SecurityOpts", "HostConfig", "Binds", "Links",
-                 "LxcConf", "PortBindings", "PublishAllPorts", "Privileged", "Dns", "DnsSearch", "VolumesFrom",
-                 "CapAdd", "CapDrop", "RestartPolicy"
+                 "WorkingDir", "NetworkDisabled", "ExposedPorts", "SecurityOpts", "HostConfig"
          })
    public static Config create(String hostname, String domainname, String user, int memory, int memorySwap,
          int cpuShares, boolean attachStdin, boolean attachStdout, boolean attachStderr, boolean tty,
          boolean openStdin, boolean stdinOnce, List<String> env, List<String> cmd, List<String> entrypoint,
          String image, Map<String, ?> volumes, String workingDir, boolean networkDisabled,
-         Map<String, ?> exposedPorts, List<String> securityOpts, HostConfig hostConfig, List<String> binds,
-         List<String> links, List<Map<String, String>> lxcConf, Map<String, List<Map<String, String>>> portBindings,
-         boolean publishAllPorts, boolean privileged, List<String> dns, List<String> dnsSearch, List<String> volumesFrom,
-         List<String> capAdd, List<String> capDrop, Map<String, String> restartPolicy) {
+         Map<String, ?> exposedPorts, List<String> securityOpts, HostConfig hostConfig) {
       return new AutoValue_Config(hostname, domainname, user, memory, memorySwap, cpuShares, attachStdin,
               attachStdout, attachStderr, tty, openStdin, stdinOnce, copyWithNullOf(env), copyWithNullOf(cmd),
               copyWithNullOf(entrypoint), image, copyWithNullOf(volumes), workingDir, networkDisabled,
-              copyOf(exposedPorts), copyOf(securityOpts), hostConfig,
-              copyWithNullOf(binds), copyWithNullOf(links), copyOf(lxcConf), copyOf(portBindings), publishAllPorts, privileged,
-              copyWithNullOf(dns), copyWithNullOf(dnsSearch), copyWithNullOf(volumesFrom), copyWithNullOf(capAdd), copyWithNullOf(capDrop), copyOf(restartPolicy));
+              copyOf(exposedPorts), copyOf(securityOpts), hostConfig);
    }
 
    public static Builder builder() {
@@ -158,18 +128,6 @@ public abstract class Config {
       private Map<String, ?> exposedPorts = Maps.newHashMap();
       private List<String> securityOpts = Lists.newArrayList();
       private HostConfig hostConfig;
-      private List<String> binds;
-      private List<String> links;
-      private List<Map<String, String>> lxcConf = Lists.newArrayList();
-      private Map<String, List<Map<String, String>>> portBindings = Maps.newHashMap();
-      private boolean publishAllPorts;
-      private boolean privileged;
-      private List<String> dns;
-      private List<String> dnsSearch;
-      private List<String> volumesFrom;
-      private List<String> capAdd;
-      private List<String> capDrop;
-      private Map<String, String> restartPolicy = Maps.newHashMap();
 
       public Builder hostname(String hostname) {
          this.hostname = hostname;
@@ -287,71 +245,10 @@ public abstract class Config {
          return this;
       }
 
-      public Builder binds(List<String> binds) {
-         this.binds = binds;
-         return this;
-      }
-
-      public Builder links(List<String> links) {
-         this.links = links;
-         return this;
-      }
-
-      public Builder lxcConf(List<Map<String, String>> lxcConf) {
-         this.lxcConf = lxcConf;
-         return this;
-      }
-
-      public Builder portBindings(Map<String, List<Map<String, String>>> portBindings) {
-         this.portBindings = portBindings;
-         return this;
-      }
-
-      public Builder publishAllPorts(boolean publishAllPorts) {
-         this.publishAllPorts = publishAllPorts;
-         return this;
-      }
-
-      public Builder privileged(boolean privileged) {
-         this.privileged = privileged;
-         return this;
-      }
-
-      public Builder dns(List<String>  dns) {
-         this.dns = dns;
-         return this;
-      }
-
-      public Builder dnsSearch(List<String> dnsSearch) {
-         this.dnsSearch = dnsSearch;
-         return this;
-      }
-
-      public Builder volumesFrom(List<String> volumesFrom) {
-         this.volumesFrom = volumesFrom;
-         return this;
-      }
-
-      public Builder capAdd(List<String> capAdd) {
-         this.capAdd = capAdd;
-         return this;
-      }
-
-      public Builder capDrop(List<String> capDrop) {
-         this.capDrop = capDrop;
-         return this;
-      }
-
-      public Builder restartPolicy(Map<String, String> restartPolicy) {
-         this.restartPolicy = restartPolicy;
-         return this;
-      }
-
       public Config build() {
          return Config.create(hostname, domainname, user, memory, memorySwap, cpuShares, attachStdin, attachStdout,
                  attachStderr, tty, openStdin, stdinOnce, env, cmd, entrypoint, image, volumes, workingDir,
-                 networkDisabled, exposedPorts, securityOpts, hostConfig, binds, links, lxcConf, portBindings,
-                 publishAllPorts, privileged, dns, dnsSearch, volumesFrom, capAdd, capDrop, restartPolicy);
+                 networkDisabled, exposedPorts, securityOpts, hostConfig);
       }
 
       public Builder fromConfig(Config in) {
@@ -360,11 +257,8 @@ public abstract class Config {
                  .attachStdout(in.attachStdout()).attachStderr(in.attachStderr()).tty(in.tty())
                  .openStdin(in.openStdin()).stdinOnce(in.stdinOnce()).env(in.env()).cmd(in.cmd())
                  .entrypoint(in.entrypoint()).image(in.image()).volumes(in.volumes()).workingDir(in.workingDir())
-                 .networkDisabled(in.networkDisabled()).exposedPorts(in.exposedPorts()).securityOpts(in.securityOpts())
-                 .hostConfig(in.hostConfig()).binds(in.binds()).links(in.links()).lxcConf(in.lxcConf())
-                 .portBindings(in.portBindings()).publishAllPorts(in.publishAllPorts()).privileged(in.privileged())
-                 .dns(in.dns()).dnsSearch(in.dnsSearch()).volumesFrom(in.volumesFrom()).capAdd(in.capAdd())
-                 .capDrop(in.capDrop()).restartPolicy(in.restartPolicy());
+                 .networkDisabled(in.networkDisabled()).exposedPorts(in.exposedPorts())
+                 .securityOpts(in.securityOpts()).hostConfig(in.hostConfig());
       }
 
    }

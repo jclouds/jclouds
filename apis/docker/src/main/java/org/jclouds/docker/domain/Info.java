@@ -42,9 +42,9 @@ public abstract class Info {
 
    public abstract String indexServerAddress();
 
-   public abstract String initPath();
+   @Nullable public abstract String initPath();
 
-   public abstract String initSha1();
+   @Nullable public abstract String initSha1();
 
    public abstract String kernelVersion();
 
