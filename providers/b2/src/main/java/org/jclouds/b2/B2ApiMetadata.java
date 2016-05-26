@@ -25,6 +25,8 @@ import java.util.concurrent.TimeUnit;
 import org.jclouds.Constants;
 import org.jclouds.apis.ApiMetadata;
 import org.jclouds.blobstore.BlobStoreContext;
+import org.jclouds.blobstore.reference.BlobStoreConstants;
+import org.jclouds.b2.blobstore.config.B2BlobStoreContextModule;
 import org.jclouds.b2.config.B2HttpApiModule;
 import org.jclouds.rest.internal.BaseHttpApiMetadata;
 
@@ -47,6 +49,7 @@ public final class B2ApiMetadata extends BaseHttpApiMetadata {
 
    public static Properties defaultProperties() {
       Properties properties = BaseHttpApiMetadata.defaultProperties();
+      properties.setProperty(BlobStoreConstants.PROPERTY_USER_METADATA_PREFIX, "X-Bz-Info-");
       properties.setProperty(Constants.PROPERTY_SESSION_INTERVAL, String.valueOf(TimeUnit.HOURS.toSeconds(1)));
       properties.setProperty(Constants.PROPERTY_IDEMPOTENT_METHODS, "DELETE,GET,HEAD,OPTIONS,POST,PUT");
       properties.setProperty(Constants.PROPERTY_RETRY_DELAY_START, String.valueOf(TimeUnit.SECONDS.toMillis(1)));
@@ -66,7 +69,8 @@ public final class B2ApiMetadata extends BaseHttpApiMetadata {
                  .defaultProperties(B2ApiMetadata.defaultProperties())
                  .view(typeToken(BlobStoreContext.class))
                  .defaultModules(ImmutableSet.<Class<? extends Module>>of(
-                         B2HttpApiModule.class));
+                         B2HttpApiModule.class,
+                         B2BlobStoreContextModule.class));
       }
 
       @Override

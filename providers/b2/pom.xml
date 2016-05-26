@@ -126,7 +126,6 @@
                 </goals>
                 <configuration>
                   <groups>live</groups>
-                  <excludedGroups>livelong</excludedGroups>
                   <systemPropertyVariables>
                     <jclouds.blobstore.httpstream.url>${jclouds.blobstore.httpstream.url}</jclouds.blobstore.httpstream.url>
                     <jclouds.blobstore.httpstream.md5>${jclouds.blobstore.httpstream.md5}</jclouds.blobstore.httpstream.md5>

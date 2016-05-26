@@ -30,6 +30,7 @@ import org.jclouds.b2.reference.B2Headers;
 import com.google.common.base.Function;
 import com.google.common.base.Throwables;
 import com.google.common.collect.ImmutableMap;
+import com.google.common.net.HttpHeaders;
 
 public final class ParseB2ObjectFromResponse implements Function<HttpResponse, B2Object> {
    @Override
@@ -58,7 +59,8 @@ public final class ParseB2ObjectFromResponse implements Function<HttpResponse, B
          }
       }
       Date uploadTimestamp = new Date(Long.parseLong(from.getFirstHeaderOrNull(B2Headers.UPLOAD_TIMESTAMP)));
+      String contentRange = from.getFirstHeaderOrNull(HttpHeaders.CONTENT_RANGE);
 
-      return B2Object.create(fileId, fileName, null, null, contentMeta.getContentLength(), contentSha1, contentMeta.getContentType(), fileInfo.build(), null, uploadTimestamp.getTime(), payload);
+      return B2Object.create(fileId, fileName, null, null, contentMeta.getContentLength(), contentSha1, contentMeta.getContentType(), fileInfo.build(), null, uploadTimestamp.getTime(), contentRange, payload);
    }
 }

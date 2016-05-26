@@ -39,13 +39,14 @@ public abstract class B2Object {
    @Nullable public abstract String bucketId();
    @Nullable public abstract Long contentLength();
    @Nullable public abstract String contentType();
+   @Nullable public abstract String contentRange();
 
-   @SerializedNames({"fileId", "fileName", "accountId", "bucketId", "contentLength", "contentSha1", "contentType", "fileInfo", "action", "uploadTimestamp", "payload"})
-   public static B2Object create(String fileId, String fileName, @Nullable String accountId, @Nullable String bucketId, @Nullable Long contentLength, @Nullable String contentSha1, @Nullable String contentType, @Nullable Map<String, String> fileInfo, @Nullable Action action, @Nullable Long uploadTimestamp, @Nullable Payload payload) {
+   @SerializedNames({"fileId", "fileName", "accountId", "bucketId", "contentLength", "contentSha1", "contentType", "fileInfo", "action", "uploadTimestamp", "contentRange", "payload"})
+   public static B2Object create(String fileId, String fileName, @Nullable String accountId, @Nullable String bucketId, @Nullable Long contentLength, @Nullable String contentSha1, @Nullable String contentType, @Nullable Map<String, String> fileInfo, @Nullable Action action, @Nullable Long uploadTimestamp, @Nullable String contentRange, @Nullable Payload payload) {
       if (fileInfo != null) {
          fileInfo = ImmutableMap.copyOf(fileInfo);
       }
       Date date = uploadTimestamp == null ? null : new Date(uploadTimestamp);
-      return new AutoValue_B2Object(fileId, fileName, contentSha1, fileInfo, payload, date, action, accountId, bucketId, contentLength, contentType);
+      return new AutoValue_B2Object(fileId, fileName, contentSha1, fileInfo, payload, date, action, accountId, bucketId, contentLength, contentType, contentRange);
    }
 }
