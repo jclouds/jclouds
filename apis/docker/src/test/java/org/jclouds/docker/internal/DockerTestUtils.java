@@ -23,6 +23,7 @@ import java.util.logging.Level;
 
 import org.jclouds.docker.DockerApi;
 import org.jclouds.docker.features.ImageApi;
+import org.jclouds.docker.options.DeleteImageOptions;
 
 import com.google.common.base.Preconditions;
 
@@ -72,7 +73,7 @@ public class DockerTestUtils {
       Preconditions.checkNotNull(imageName, "Docker image name has to be provided");
       final ImageApi imageApi = dockerApi.getImageApi();
       if (null != imageApi.inspectImage(imageName)) {
-         consumeStreamSilently(imageApi.deleteImage(imageName));
+         consumeStreamSilently(imageApi.deleteImage(imageName, DeleteImageOptions.Builder.force(true)));
       }
    }
 }

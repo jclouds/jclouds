@@ -77,6 +77,8 @@ public abstract class Container {
 
    @Nullable public abstract String processLabel();
 
+   @Nullable public abstract Node node();
+
    Container() {
    }
 
@@ -84,17 +86,17 @@ public abstract class Container {
          {
                  "Id", "Created", "Path", "Name", "Args", "Config", "State", "Image", "NetworkSettings", "SysInitPath",
                  "ResolvConfPath", "Volumes", "HostConfig", "Driver", "ExecDriver", "VolumesRW", "Command", "Status",
-                 "Ports", "HostnamePath", "HostsPath", "MountLabel", "ProcessLabel"
+                 "Ports", "HostnamePath", "HostsPath", "MountLabel", "ProcessLabel", "Node"
          })
    public static Container create(String id, Date created, String path, String name, List<String> args, Config config,
                                   State state, String image, NetworkSettings networkSettings, String sysInitPath,
                                   String resolvConfPath, Map<String, String> volumes, HostConfig hostConfig,
                                   String driver, String execDriver, Map<String, Boolean> volumesRW, String command,
                                   String status, List<Port> ports, String hostnamePath, String hostsPath,
-                                  String mountLabel, String processLabel) {
+                                  String mountLabel, String processLabel, Node node) {
       return new AutoValue_Container(id, created, path, name, copyOf(args), config, state, image, networkSettings,
               sysInitPath, resolvConfPath, copyOf(volumes), hostConfig, driver, execDriver, copyOf(volumesRW), command,
-              status, copyOf(ports), hostnamePath, hostsPath, mountLabel, processLabel);
+              status, copyOf(ports), hostnamePath, hostsPath, mountLabel, processLabel, node);
    }
 
    public static Builder builder() {
@@ -130,6 +132,7 @@ public abstract class Container {
       private String hostsPath;
       private String mountLabel;
       private String processLabel;
+      private Node node;
 
       public Builder id(String id) {
          this.id = id;
@@ -246,10 +249,15 @@ public abstract class Container {
          return this;
       }
 
+      public Builder node(Node node) {
+         this.node = node;
+         return this;
+      }
+
       public Container build() {
          return Container.create(id, created, path, name, args, config, state, image, networkSettings,
                  sysInitPath, resolvConfPath, volumes, hostConfig, driver, execDriver, volumesRW, command, status,
-                 ports, hostnamePath, hostsPath, mountLabel, processLabel);
+                 ports, hostnamePath, hostsPath, mountLabel, processLabel, node);
       }
 
       public Builder fromContainer(Container in) {
@@ -258,7 +266,7 @@ public abstract class Container {
                  .sysInitPath(in.sysInitPath()).resolvConfPath(in.resolvConfPath()).driver(in.driver())
                  .execDriver(in.execDriver()).volumes(in.volumes()).hostConfig(in.hostConfig()).volumesRW(in.volumesRW())
                  .command(in.command()).status(in.status()).ports(in.ports()).hostnamePath(in.hostnamePath())
-                 .hostsPath(in.hostsPath()).mountLabel(in.mountLabel()).processLabel(in.processLabel());
+                 .hostsPath(in.hostsPath()).mountLabel(in.mountLabel()).processLabel(in.processLabel()).node(in.node());
       }
    }
 }

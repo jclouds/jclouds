@@ -203,6 +203,7 @@ public class ContainerToNodeMetadataTest {
       expect(mockContainer.name()).andReturn(container.name());
       expect(mockContainer.config()).andReturn(container.config()).anyTimes();
       expect(mockContainer.networkSettings()).andReturn(container.networkSettings()).anyTimes();
+      expect(mockContainer.node()).andReturn(container.node()).anyTimes();
       expect(mockContainer.state()).andReturn(container.state());
       expect(mockContainer.image()).andReturn(container.image()).anyTimes();
       replay(mockContainer);
