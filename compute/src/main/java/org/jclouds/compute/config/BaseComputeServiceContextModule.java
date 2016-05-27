@@ -93,9 +93,9 @@ public abstract class BaseComputeServiceContextModule extends AbstractModule {
       }).to(TemplateOptionsToStatement.class);
       bind(LoginCredentials.class).annotatedWith(Names.named("image")).toProvider(
             GetLoginForProviderFromPropertiesAndStoreCredentialsOrReturnNull.class);
-      
+
       bindCredentialsOverriderFunction();
-      
+
       install(new FactoryModuleBuilder()
             .implement(RunScriptOnNodeUsingSsh.class, Names.named("direct"), RunScriptOnNodeUsingSsh.class)
             .implement(RunScriptOnNodeAsInitScriptUsingSshAndBlockUntilComplete.class, Names.named("blocking"),
@@ -195,7 +195,7 @@ public abstract class BaseComputeServiceContextModule extends AbstractModule {
          template.imageId(imageId);
       return template;
    }
-   
+
    @Provides
    @Singleton
    protected final Map<OsFamily, LoginCredentials> provideOsFamilyToCredentials(Injector injector) {
@@ -205,7 +205,7 @@ public abstract class BaseComputeServiceContextModule extends AbstractModule {
    protected Map<OsFamily, LoginCredentials> osFamilyToCredentials(Injector injector) {
       return ImmutableMap.of(OsFamily.WINDOWS, LoginCredentials.builder().user("Administrator").build());
    }
-   
+
    /**
     * The default options if none are provided.
     */
@@ -238,7 +238,7 @@ public abstract class BaseComputeServiceContextModule extends AbstractModule {
 
       }, images);
    }
-   
+
    @Provides
    @Singleton
    @Memoized

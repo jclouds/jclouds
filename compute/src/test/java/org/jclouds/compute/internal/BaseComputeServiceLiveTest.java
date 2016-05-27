@@ -651,7 +651,7 @@ public abstract class BaseComputeServiceLiveTest extends BaseComputeServiceConte
       int toDestroy = refreshNodes().size();
       Set<? extends NodeMetadata> destroyed = client.destroyNodesMatching(inGroup(group));
       assertEquals(toDestroy, destroyed.size());
-      Uninterruptibles.sleepUninterruptibly(10, TimeUnit.SECONDS);
+      Uninterruptibles.sleepUninterruptibly(100, TimeUnit.SECONDS);
       for (NodeMetadata node : filter(client.listNodesDetailsMatching(all()), inGroup(group))) {
          assert node.getStatus() == Status.TERMINATED : node;
          assert view.utils().credentialStore().get("node#" + node.getId()) == null : "credential should have been null for "
@@ -849,7 +849,7 @@ public abstract class BaseComputeServiceLiveTest extends BaseComputeServiceConte
          checkVolumes(hardware);
       }
    }
-   
+
    protected void checkVolumes(Hardware hardware) {
       assert hardware.getVolumes().size() > 0 : hardware;
    }
@@ -859,7 +859,7 @@ public abstract class BaseComputeServiceLiveTest extends BaseComputeServiceConte
       // Allow to override the comparison but keeping testng dependencies happy
       doCompareSizes();
    }
-   
+
    protected void doCompareSizes() throws Exception {
       Hardware defaultSize = client.templateBuilder().build().getHardware();
 
