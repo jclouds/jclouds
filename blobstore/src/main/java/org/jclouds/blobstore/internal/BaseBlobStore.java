@@ -266,10 +266,10 @@ public abstract class BaseBlobStore implements BlobStore {
       String eTag = blob.getMetadata().getETag();
       if (eTag != null) {
          eTag = maybeQuoteETag(eTag);
-         if (options.ifMatch() != null && !options.ifMatch().equals(eTag)) {
+         if (options.ifMatch() != null && !maybeQuoteETag(options.ifMatch()).equals(eTag)) {
             throw returnResponseException(412);
          }
-         if (options.ifNoneMatch() != null && options.ifNoneMatch().equals(eTag)) {
+         if (options.ifNoneMatch() != null && maybeQuoteETag(options.ifNoneMatch()).equals(eTag)) {
             throw returnResponseException(412);
          }
       }
