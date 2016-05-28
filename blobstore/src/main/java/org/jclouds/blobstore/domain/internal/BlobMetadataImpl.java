@@ -43,11 +43,19 @@ public class BlobMetadataImpl extends StorageMetadataImpl implements BlobMetadat
    public BlobMetadataImpl(String id, String name, @Nullable Location location, URI uri, String eTag,
             @Nullable Date creationDate, @Nullable Date lastModified,
             Map<String, String> userMetadata, @Nullable URI publicUri,
-            @Nullable String container, ContentMetadata contentMetadata) {
-      super(StorageType.BLOB, id, name, location, uri, eTag, creationDate, lastModified, userMetadata);
+            @Nullable String container, ContentMetadata contentMetadata, @Nullable Long size) {
+      super(StorageType.BLOB, id, name, location, uri, eTag, creationDate, lastModified, userMetadata, size);
       this.publicUri = publicUri;
       this.container = container;
       this.contentMetadata = checkNotNull(contentMetadata, "contentMetadata");
+   }
+
+   @Deprecated
+   public BlobMetadataImpl(String id, String name, @Nullable Location location, URI uri, String eTag,
+            @Nullable Date creationDate, @Nullable Date lastModified,
+            Map<String, String> userMetadata, @Nullable URI publicUri,
+            @Nullable String container, ContentMetadata contentMetadata) {
+      this(id, name, location, uri, eTag, creationDate, lastModified, userMetadata, publicUri, container, contentMetadata, null);
    }
 
    /**
