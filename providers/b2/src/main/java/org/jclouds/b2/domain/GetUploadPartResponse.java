@@ -14,27 +14,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jclouds.b2;
+package org.jclouds.b2.domain;
 
-import java.io.Closeable;
+import java.net.URI;
 
-import org.jclouds.b2.features.AuthorizationApi;
-import org.jclouds.b2.features.BucketApi;
-import org.jclouds.b2.features.MultipartApi;
-import org.jclouds.b2.features.ObjectApi;
-import org.jclouds.rest.annotations.Delegate;
+import org.jclouds.json.SerializedNames;
 
-/** Provides access to Backblaze B2 resources via their REST API. */
-public interface B2Api extends Closeable {
-   @Delegate
-   AuthorizationApi getAuthorizationApi();
+import com.google.auto.value.AutoValue;
 
-   @Delegate
-   BucketApi getBucketApi();
+@AutoValue
+public abstract class GetUploadPartResponse {
+   public abstract String fileId();
+   public abstract URI uploadUrl();
+   public abstract String authorizationToken();
 
-   @Delegate
-   ObjectApi getObjectApi();
-
-   @Delegate
-   MultipartApi getMultipartApi();
+   @SerializedNames({"fileId", "uploadUrl", "authorizationToken"})
+   public static GetUploadPartResponse create(String fileId, URI uploadUrl, String authorizationToken) {
+      return new AutoValue_GetUploadPartResponse(fileId, uploadUrl, authorizationToken);
+   }
 }
