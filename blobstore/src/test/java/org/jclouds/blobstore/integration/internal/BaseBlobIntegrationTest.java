@@ -637,7 +637,7 @@ public class BaseBlobIntegrationTest extends BaseBlobStoreIntegrationTest {
 
    @Test(groups = { "integration", "live" })
    public void testPutMultipartByteSource() throws Exception {
-      long length = 32 * 1024 * 1024 + 1; // MultipartUploadSlicingAlgorithm.DEFAULT_PART_SIZE + 1
+      long length = getMinimumMultipartBlobSize();
       BlobStore blobStore = view.getBlobStore();
       MultipartUploadSlicingAlgorithm algorithm = new MultipartUploadSlicingAlgorithm(
               blobStore.getMinimumMultipartPartSize(), blobStore.getMaximumMultipartPartSize(),
@@ -707,14 +707,17 @@ public class BaseBlobIntegrationTest extends BaseBlobStoreIntegrationTest {
    public void testPutBlobAccessMultipart() throws Exception {
       BlobStore blobStore = view.getBlobStore();
       String containerName = getContainerName();
+      ByteSource byteSource = TestUtils.randomByteSource().slice(0, getMinimumMultipartBlobSize());
+      Payload payload = Payloads.newByteSourcePayload(byteSource);
+      payload.getContentMetadata().setContentLength(byteSource.size());
       try {
          String blobNamePrivate = "put-access-blob-name-private";
-         Blob blobPrivate = blobStore.blobBuilder(blobNamePrivate).payload(new byte[1]).build();
+         Blob blobPrivate = blobStore.blobBuilder(blobNamePrivate).payload(payload).build();
          blobStore.putBlob(containerName, blobPrivate, new PutOptions().setBlobAccess(BlobAccess.PRIVATE).multipart(true));
          assertThat(blobStore.getBlobAccess(containerName, blobNamePrivate)).isEqualTo(BlobAccess.PRIVATE);
 
          String blobNamePublic = "put-access-blob-name-public";
-         Blob blobPublic = blobStore.blobBuilder(blobNamePublic).payload(new byte[1]).build();
+         Blob blobPublic = blobStore.blobBuilder(blobNamePublic).payload(payload).build();
          blobStore.putBlob(containerName, blobPublic, new PutOptions().setBlobAccess(BlobAccess.PUBLIC_READ).multipart(true));
          assertThat(blobStore.getBlobAccess(containerName, blobNamePublic)).isEqualTo(BlobAccess.PUBLIC_READ);
       } finally {
