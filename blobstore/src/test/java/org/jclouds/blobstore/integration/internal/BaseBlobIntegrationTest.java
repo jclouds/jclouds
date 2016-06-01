@@ -167,12 +167,11 @@ public class BaseBlobIntegrationTest extends BaseBlobStoreIntegrationTest {
    @Test(groups = { "integration", "live" })
    public void testFileGetParallel() throws Exception {
       final ByteSource supplier = createTestInput(32 * 1024);
-      final String expectedContentDisposition = "attachment; filename=constit.txt";
       final String container = getContainerName();
       try {
          final String name = "constitution.txt";
 
-         uploadByteSource(container, name, expectedContentDisposition, supplier);
+         uploadByteSource(container, name, supplier);
          Map<Integer, ListenableFuture<?>> responses = Maps.newHashMap();
          for (int i = 0; i < 10; i++) {
             responses.put(i, this.exec.submit(new Callable<Void>() {
@@ -181,7 +180,6 @@ public class BaseBlobIntegrationTest extends BaseBlobStoreIntegrationTest {
                      Blob blob = view.getBlobStore().getBlob(container, name);
                      validateMetadata(blob.getMetadata(), container, name);
                      assertEquals(hashAndClose(blob.getPayload().openStream(), md5()), supplier.hash(md5()));
-                     checkContentDisposition(blob, expectedContentDisposition);
                   } catch (IOException e) {
                      Throwables.propagate(e);
                   }
@@ -201,15 +199,13 @@ public class BaseBlobIntegrationTest extends BaseBlobStoreIntegrationTest {
 
    }
 
-   private void uploadByteSource(String container, String name, String contentDisposition,
-         ByteSource byteSource) throws IOException {
+   private void uploadByteSource(String container, String name, ByteSource byteSource) throws IOException {
       BlobStore blobStore = view.getBlobStore();
       blobStore.putBlob(container, blobStore.blobBuilder(name)
             .payload(new ByteSourcePayload(byteSource))
             .contentType("text/plain")
             .contentMD5(byteSource.hash(md5()))
             .contentLength(byteSource.size())
-            .contentDisposition(contentDisposition)
             .build());
    }
 
