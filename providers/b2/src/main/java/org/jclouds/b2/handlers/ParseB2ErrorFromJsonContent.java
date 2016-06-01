@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jclouds.labs.b2.handlers;
+package org.jclouds.b2.handlers;
 
 import org.jclouds.blobstore.ContainerNotFoundException;
 import org.jclouds.http.HttpCommand;
@@ -22,8 +22,8 @@ import org.jclouds.http.HttpErrorHandler;
 import org.jclouds.http.HttpResponse;
 import org.jclouds.http.functions.ParseJson;
 import org.jclouds.json.Json;
-import org.jclouds.labs.b2.B2ResponseException;
-import org.jclouds.labs.b2.domain.B2Error;
+import org.jclouds.b2.B2ResponseException;
+import org.jclouds.b2.domain.B2Error;
 
 import com.google.inject.Inject;
 import com.google.inject.TypeLiteral;

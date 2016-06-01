@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jclouds.labs.b2.filters;
+package org.jclouds.b2.filters;
 
 import java.net.URI;
 
@@ -26,7 +26,7 @@ import org.jclouds.domain.Credentials;
 import org.jclouds.http.HttpException;
 import org.jclouds.http.HttpRequest;
 import org.jclouds.http.HttpRequestFilter;
-import org.jclouds.labs.b2.domain.Authorization;
+import org.jclouds.b2.domain.Authorization;
 import org.jclouds.location.Provider;
 
 import com.google.common.base.Supplier;

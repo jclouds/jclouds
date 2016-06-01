@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jclouds.labs.b2.config;
+package org.jclouds.b2.config;
 
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
@@ -24,10 +24,10 @@ import javax.inject.Singleton;
 
 import org.jclouds.Constants;
 import org.jclouds.collect.Memoized;
-import org.jclouds.labs.b2.B2Api;
-import org.jclouds.labs.b2.domain.Authorization;
-import org.jclouds.labs.b2.filters.RequestAuthorization;
-import org.jclouds.labs.b2.handlers.ParseB2ErrorFromJsonContent;
+import org.jclouds.b2.B2Api;
+import org.jclouds.b2.domain.Authorization;
+import org.jclouds.b2.filters.RequestAuthorization;
+import org.jclouds.b2.handlers.ParseB2ErrorFromJsonContent;
 import org.jclouds.http.HttpErrorHandler;
 import org.jclouds.http.annotation.ClientError;
 import org.jclouds.http.annotation.Redirection;

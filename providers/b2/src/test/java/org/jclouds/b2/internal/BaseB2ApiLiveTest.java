@@ -14,12 +14,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jclouds.labs.b2.internal;
+package org.jclouds.b2.internal;
 
 import org.jclouds.apis.ApiMetadata;
 import org.jclouds.apis.BaseApiLiveTest;
-import org.jclouds.labs.b2.B2Api;
-import org.jclouds.labs.b2.B2ApiMetadata;
+import org.jclouds.b2.B2Api;
+import org.jclouds.b2.B2ApiMetadata;
 
 public class BaseB2ApiLiveTest extends BaseApiLiveTest<B2Api> {
    protected BaseB2ApiLiveTest() {

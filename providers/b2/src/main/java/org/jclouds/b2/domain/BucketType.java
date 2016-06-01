@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jclouds.labs.b2.domain;
+package org.jclouds.b2.domain;
 
 import com.google.common.base.CaseFormat;
 

@@ -14,17 +14,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jclouds.labs.b2.features;
+package org.jclouds.b2.features;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.failBecauseExceptionWasNotThrown;
 
 import java.util.Random;
 
-import org.jclouds.labs.b2.domain.Bucket;
-import org.jclouds.labs.b2.domain.BucketList;
-import org.jclouds.labs.b2.domain.BucketType;
-import org.jclouds.labs.b2.internal.BaseB2ApiLiveTest;
+import org.jclouds.b2.domain.Bucket;
+import org.jclouds.b2.domain.BucketList;
+import org.jclouds.b2.domain.BucketType;
+import org.jclouds.b2.internal.BaseB2ApiLiveTest;
 import org.testng.annotations.Test;
 
 public final class BucketApiLiveTest extends BaseB2ApiLiveTest {

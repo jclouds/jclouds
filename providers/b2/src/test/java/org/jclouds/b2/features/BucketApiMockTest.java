@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jclouds.labs.b2.features;
+package org.jclouds.b2.features;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -25,10 +25,10 @@ import java.util.Properties;
 
 import org.jclouds.ContextBuilder;
 import org.jclouds.concurrent.config.ExecutorServiceModule;
-import org.jclouds.labs.b2.B2Api;
-import org.jclouds.labs.b2.domain.Bucket;
-import org.jclouds.labs.b2.domain.BucketList;
-import org.jclouds.labs.b2.domain.BucketType;
+import org.jclouds.b2.B2Api;
+import org.jclouds.b2.domain.Bucket;
+import org.jclouds.b2.domain.BucketList;
+import org.jclouds.b2.domain.BucketType;
 import org.jclouds.util.Strings2;
 import org.testng.annotations.Test;
 

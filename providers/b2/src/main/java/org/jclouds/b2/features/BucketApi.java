@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jclouds.labs.b2.features;
+package org.jclouds.b2.features;
 
 import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 
@@ -28,10 +28,10 @@ import javax.ws.rs.Produces;
 
 import org.jclouds.Fallbacks.NullOnNotFoundOr404;
 import org.jclouds.blobstore.attr.BlobScope;
-import org.jclouds.labs.b2.domain.Bucket;
-import org.jclouds.labs.b2.domain.BucketList;
-import org.jclouds.labs.b2.domain.BucketType;
-import org.jclouds.labs.b2.filters.RequestAuthorization;
+import org.jclouds.b2.domain.Bucket;
+import org.jclouds.b2.domain.BucketList;
+import org.jclouds.b2.domain.BucketType;
+import org.jclouds.b2.filters.RequestAuthorization;
 import org.jclouds.rest.annotations.Fallback;
 import org.jclouds.rest.annotations.MapBinder;
 import org.jclouds.rest.annotations.PayloadParam;

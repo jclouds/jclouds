@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jclouds.labs.b2;
+package org.jclouds.b2;
 
 import static org.jclouds.reflect.Reflection2.typeToken;
 
@@ -25,7 +25,7 @@ import java.util.concurrent.TimeUnit;
 import org.jclouds.Constants;
 import org.jclouds.apis.ApiMetadata;
 import org.jclouds.blobstore.BlobStoreContext;
-import org.jclouds.labs.b2.config.B2HttpApiModule;
+import org.jclouds.b2.config.B2HttpApiModule;
 import org.jclouds.rest.internal.BaseHttpApiMetadata;
 
 import com.google.common.collect.ImmutableSet;

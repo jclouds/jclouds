@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jclouds.labs.b2.features;
+package org.jclouds.b2.features;
 
 import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 
@@ -24,7 +24,7 @@ import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 
 import org.jclouds.http.filters.BasicAuthentication;
-import org.jclouds.labs.b2.domain.Authorization;
+import org.jclouds.b2.domain.Authorization;
 import org.jclouds.rest.annotations.RequestFilters;
 
 public interface AuthorizationApi {
