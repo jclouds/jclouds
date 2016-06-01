@@ -17,15 +17,17 @@
 
 package org.jclouds.blobstore.domain;
 
+import org.jclouds.javax.annotation.Nullable;
+
 import com.google.auto.value.AutoValue;
 
 @AutoValue
 public abstract class MultipartPart {
    public abstract int partNumber();
    public abstract long partSize();
-   public abstract String partETag();
+   @Nullable public abstract String partETag();
 
-   public static MultipartPart create(int partNumber, long partSize, String partETag) {
+   public static MultipartPart create(int partNumber, long partSize, @Nullable String partETag) {
       return new AutoValue_MultipartPart(partNumber, partSize, partETag);
    }
 }
