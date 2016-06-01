@@ -93,6 +93,11 @@ public final class MultipartUploadSlicingAlgorithm {
             parts = (int)(length / partSize);
          }
       }
+      if (partSize < minimumPartSize) {
+         partSize = minimumPartSize;
+         unitPartSize = minimumPartSize;
+         parts = (int)(length / unitPartSize);
+      }
       if (partSize > maximumPartSize) {
          partSize = maximumPartSize;
          unitPartSize = maximumPartSize;
