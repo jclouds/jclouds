@@ -324,18 +324,23 @@ public abstract class BaseBlobStore implements BlobStore {
    @Beta
    protected String putMultipartBlob(String container, Blob blob, PutOptions overrides) {
       MultipartUpload mpu = initiateMultipartUpload(container, blob.getMetadata(), overrides);
-      List<MultipartPart> parts = Lists.newArrayList();
-      long contentLength = blob.getMetadata().getContentMetadata().getContentLength();
-      MultipartUploadSlicingAlgorithm algorithm = new MultipartUploadSlicingAlgorithm(
-            getMinimumMultipartPartSize(), getMaximumMultipartPartSize(), getMaximumNumberOfParts());
-      long partSize = algorithm.calculateChunkSize(contentLength);
-      int partNumber = 1;
-      for (Payload payload : slicer.slice(blob.getPayload(), partSize)) {
-         MultipartPart part = uploadMultipartPart(mpu, partNumber, payload);
-         parts.add(part);
-         ++partNumber;
+      try {
+         List<MultipartPart> parts = Lists.newArrayList();
+         long contentLength = blob.getMetadata().getContentMetadata().getContentLength();
+         MultipartUploadSlicingAlgorithm algorithm = new MultipartUploadSlicingAlgorithm(
+               getMinimumMultipartPartSize(), getMaximumMultipartPartSize(), getMaximumNumberOfParts());
+         long partSize = algorithm.calculateChunkSize(contentLength);
+         int partNumber = 1;
+         for (Payload payload : slicer.slice(blob.getPayload(), partSize)) {
+            MultipartPart part = uploadMultipartPart(mpu, partNumber, payload);
+            parts.add(part);
+            ++partNumber;
+         }
+         return completeMultipartUpload(mpu, parts);
+      } catch (RuntimeException re) {
+         abortMultipartUpload(mpu);
+         throw re;
       }
-      return completeMultipartUpload(mpu, parts);
    }
 
    private static HttpResponseException returnResponseException(int code) {
