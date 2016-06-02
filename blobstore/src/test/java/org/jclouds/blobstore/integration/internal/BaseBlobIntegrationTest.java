@@ -639,7 +639,7 @@ public class BaseBlobIntegrationTest extends BaseBlobStoreIntegrationTest {
               blobStore.getMinimumMultipartPartSize(), blobStore.getMaximumMultipartPartSize(),
               blobStore.getMaximumNumberOfParts());
       // make sure that we are creating multiple parts
-      assertThat(algorithm.calculateChunkSize(length)).isLessThan(length);
+      assertThat(algorithm.calculateChunkSize(length)).isLessThanOrEqualTo(length);
       ByteSource byteSource = TestUtils.randomByteSource().slice(0, length);
       Payload payload = new ByteSourcePayload(byteSource);
       HashCode hashCode = byteSource.hash(Hashing.md5());

@@ -43,6 +43,7 @@ public final class MultipartUploadSlicingAlgorithm {
    @VisibleForTesting
    static final int DEFAULT_MAGNITUDE_BASE = 100;
 
+   // TODO: these are not injected
    @Inject(optional = true)
    @Named("jclouds.mpu.parts.size")
    @VisibleForTesting
@@ -107,6 +108,11 @@ public final class MultipartUploadSlicingAlgorithm {
                                          // cannot be split
          unitPartSize = minimumPartSize; // take the minimum part size
          parts = (int)(length / unitPartSize);
+      }
+      if (parts == 0) {
+         partSize = length;
+         unitPartSize = length;
+         parts = 1;
       }
       if (parts > maximumNumberOfParts) { // if still splits in too many parts
          parts = maximumNumberOfParts - 1; // limit them. do not care about not
