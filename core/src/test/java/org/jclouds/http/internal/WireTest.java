@@ -32,7 +32,7 @@ import static org.testng.Assert.assertNotEquals;
 @Test(groups = "unit", sequential = true)
 public class WireTest {
 
-   class BufferLogger implements Logger {
+   static class BufferLogger implements Logger {
       StringBuilder buff = new StringBuilder();
 
       public void debug(String message, Object... args) {

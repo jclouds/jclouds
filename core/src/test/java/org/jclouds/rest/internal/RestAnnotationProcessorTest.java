@@ -633,7 +633,7 @@ public class RestAnnotationProcessorTest extends BaseRestApiTest {
       assertPayloadEquals(request, "", "application/octet-stream", false);
    }
 
-   private class TestHttpRequestOptions extends BaseHttpRequestOptions {
+   private static class TestHttpRequestOptions extends BaseHttpRequestOptions {
       TestHttpRequestOptions payload(String payload) {
          this.payload = payload;
          return this;
@@ -720,7 +720,7 @@ public class RestAnnotationProcessorTest extends BaseRestApiTest {
       assertPayloadEquals(request, "last_payload_wins!", "application/unknown", false);
    }
 
-   public class TestCustomMethod {
+   public static class TestCustomMethod {
       @FOO
       public void foo() {
       }
@@ -738,7 +738,7 @@ public class RestAnnotationProcessorTest extends BaseRestApiTest {
       void foo();
    }
 
-   public class TestOverridden implements Parent {
+   public static class TestOverridden implements Parent {
       @POST
       public void foo() {
       }
@@ -1808,7 +1808,7 @@ public class RestAnnotationProcessorTest extends BaseRestApiTest {
       assertEquals(headers.get("x-amz-copy-source"), ImmutableList.of("/eggs/robot"));
    }
 
-   public class TestReplaceQueryOptions extends BaseHttpRequestOptions {
+   public static class TestReplaceQueryOptions extends BaseHttpRequestOptions {
       public TestReplaceQueryOptions() {
          this.queryParameters.put("x-amz-copy-source", "/{bucket}");
       }
@@ -2198,7 +2198,7 @@ public class RestAnnotationProcessorTest extends BaseRestApiTest {
             ImmutableList.of(dateService.rfc822DateFormat(date)));
    }
 
-   public class PrefixOptions extends BaseHttpRequestOptions {
+   public static class PrefixOptions extends BaseHttpRequestOptions {
       public PrefixOptions withPrefix(String prefix) {
          queryParameters.put("prefix", checkNotNull(prefix, "prefix"));
          return this;
@@ -2245,7 +2245,7 @@ public class RestAnnotationProcessorTest extends BaseRestApiTest {
       assertEquals(request.getHeaders().size(), 0);
    }
 
-   public class PayloadOptions extends BaseHttpRequestOptions {
+   public static class PayloadOptions extends BaseHttpRequestOptions {
       @Override
       public String buildStringPayload() {
          return "foo";
@@ -2504,7 +2504,7 @@ public class RestAnnotationProcessorTest extends BaseRestApiTest {
       assertPayloadEquals(request, "test", "application/unknown", false);
    }
 
-   public class TestReplaceFormOptions extends BaseHttpRequestOptions {
+   public static class TestReplaceFormOptions extends BaseHttpRequestOptions {
       public TestReplaceFormOptions() {
          this.formParameters.put("x-amz-copy-source", "/{bucket}");
       }

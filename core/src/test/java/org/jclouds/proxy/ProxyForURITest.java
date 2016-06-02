@@ -40,7 +40,7 @@ public class ProxyForURITest {
    private Optional<HostAndPort> hostAndPort = Optional.of(HostAndPort.fromParts("proxy.example.com", 8080));
    private Optional<Credentials> creds = Optional.of(new Credentials("user", "pwd"));
 
-   private class MyProxyConfig implements ProxyConfig {
+   private static class MyProxyConfig implements ProxyConfig {
       private boolean useSystem;
       private boolean jvmProxyEnabled;
       private Type type;

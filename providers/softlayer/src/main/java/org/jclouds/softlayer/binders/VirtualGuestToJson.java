@@ -168,7 +168,7 @@ public class VirtualGuestToJson implements Binder {
       return ImmutableList.copyOf(blockDevices);
    }
 
-   public class BlockDevicesComparator implements Comparator<BlockDevice> {
+   public static class BlockDevicesComparator implements Comparator<BlockDevice> {
 
       @Override
       public int compare(BlockDevice b1, BlockDevice b2) {

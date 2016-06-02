@@ -554,7 +554,7 @@ public class SoftLayerComputeServiceAdapter implements
       }
    }
 
-   private class IsOperatingSystem implements Predicate<SoftwareDescription> {
+   private static class IsOperatingSystem implements Predicate<SoftwareDescription> {
       @Override
       public boolean apply(SoftwareDescription softwareDescription) {
          // operatingSystem is set to '1' if this Software Description describes an Operating System.

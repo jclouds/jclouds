@@ -50,7 +50,7 @@ public class DateServiceTest extends PerformanceTest {
 
    protected TestData[] testData;
 
-   protected class TestData {
+   protected static class TestData {
       public final String iso8601DateString;
       public final String iso8601DateStringTz;
 

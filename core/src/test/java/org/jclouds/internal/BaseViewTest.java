@@ -81,7 +81,7 @@ public class BaseViewTest {
       }
    }
 
-   public class DummyView extends BaseView {
+   public static class DummyView extends BaseView {
 
       protected DummyView(ApiContext<DummyApi> context) {
          super(context, new TypeToken<ApiContext<DummyApi>>() {

@@ -100,7 +100,7 @@ public abstract class NullHackJsonLiteralAdapter<L> extends TypeAdapter<L> {
       }
    }
 
-   public final class NullReplacingWriter extends Writer {
+   public static final class NullReplacingWriter extends Writer {
       private final Writer delegate;
       private final String nullReplacement;
 

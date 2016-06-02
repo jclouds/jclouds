@@ -140,7 +140,7 @@ public final class DeserializationConstructorAndReflectiveTypeAdapterFactory imp
             getParameterReaders(gson, deserializationTarget));
    }
 
-   private final class DeserializeIntoParameterizedConstructor<T> extends TypeAdapter<T> {
+   private static final class DeserializeIntoParameterizedConstructor<T> extends TypeAdapter<T> {
       private final TypeAdapter<T> serializer;
       private final Invokable<T, T> parameterizedCtor;
       private final Map<String, ParameterReader<?>> parameterReaders;

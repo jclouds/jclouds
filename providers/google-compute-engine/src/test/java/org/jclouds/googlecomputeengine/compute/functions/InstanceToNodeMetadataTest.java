@@ -57,7 +57,7 @@ public class InstanceToNodeMetadataTest {
     * The predicates returned always evaluate to true.
     *
     */
-   class FixedGroupNamingConvention implements GroupNamingConvention {
+   static class FixedGroupNamingConvention implements GroupNamingConvention {
       private final String name;
 
       public FixedGroupNamingConvention(final String name) {
