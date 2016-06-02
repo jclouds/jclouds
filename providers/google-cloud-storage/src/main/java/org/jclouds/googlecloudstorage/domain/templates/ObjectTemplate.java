@@ -22,6 +22,7 @@ import java.util.Map;
 
 import org.jclouds.googlecloudstorage.domain.ObjectAccessControls;
 
+import com.google.common.base.Objects;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.net.MediaType;
@@ -156,5 +157,22 @@ public class ObjectTemplate {
 
    public List<ObjectAccessControls> acl() {
       return acl;
+   }
+
+   @Override
+   public String toString() {
+      return Objects.toStringHelper(this)
+         .add("name", name)
+         .add("size", size)
+         .add("cacheControl", cacheControl)
+         .add("contentDisposition", contentDisposition)
+         .add("contentEncoding", contentEncoding)
+         .add("contentLanguage", contentLanguage)
+         .add("contentType", contentType)
+         .add("crc32c", crc32c)
+         .add("md5Hash", md5Hash)
+         .add("metadata", metadata)
+         .add("acl", acl)
+         .toString();
    }
 }
