@@ -38,7 +38,7 @@ public final class MultipartUploadSlicingAlgorithm {
    protected Logger logger = Logger.NULL;
 
    @VisibleForTesting
-   static final long DEFAULT_PART_SIZE = 33554432; // 32MB
+   public static final long DEFAULT_PART_SIZE = 33554432; // 32MB
 
    @VisibleForTesting
    static final int DEFAULT_MAGNITUDE_BASE = 100;

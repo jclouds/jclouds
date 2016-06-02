@@ -633,7 +633,7 @@ public class BaseBlobIntegrationTest extends BaseBlobStoreIntegrationTest {
 
    @Test(groups = { "integration", "live" })
    public void testPutMultipartByteSource() throws Exception {
-      long length = getMinimumMultipartBlobSize();
+      long length = Math.max(getMinimumMultipartBlobSize(), MultipartUploadSlicingAlgorithm.DEFAULT_PART_SIZE + 1);
       BlobStore blobStore = view.getBlobStore();
       MultipartUploadSlicingAlgorithm algorithm = new MultipartUploadSlicingAlgorithm(
               blobStore.getMinimumMultipartPartSize(), blobStore.getMaximumMultipartPartSize(),
