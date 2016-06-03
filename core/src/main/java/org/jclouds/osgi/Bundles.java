@@ -22,6 +22,7 @@ import static org.jclouds.util.Strings2.toStringAndClose;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
 
 import org.osgi.framework.Bundle;
@@ -97,9 +98,11 @@ public final class Bundles {
          public T apply(Class<?> in) {
             checkNotNull(in, "input class");
             try {
-               return clazz.cast(in.newInstance());
+               return clazz.cast(in.getConstructor().newInstance());
             } catch (InstantiationException e) {
             } catch (IllegalAccessException e) {
+            } catch (InvocationTargetException e) {
+            } catch (NoSuchMethodException e) {
             }
             return null;
          }

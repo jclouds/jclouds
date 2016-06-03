@@ -45,6 +45,7 @@ import static org.jclouds.rest.config.BinderUtils.bindHttpApi;
 import static org.jclouds.util.Throwables2.propagateAuthorizationOrOriginalException;
 
 import java.io.Closeable;
+import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
@@ -437,10 +438,14 @@ public class ContextBuilder {
                   @Override
                   public Module apply(Class<? extends Module> arg0) {
                      try {
-                        return arg0.newInstance();
+                        return arg0.getConstructor().newInstance();
                      } catch (InstantiationException e) {
                         throw propagate(e);
                      } catch (IllegalAccessException e) {
+                        throw propagate(e);
+                     } catch (InvocationTargetException e) {
+                        throw propagate(e);
+                     } catch (NoSuchMethodException e) {
                         throw propagate(e);
                      }
                   }
