@@ -18,10 +18,8 @@ package org.jclouds.googlecloudstorage.blobstore.integration;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertNotEquals;
 import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertNull;
-import static org.testng.Assert.assertTrue;
 
 import java.io.File;
 import java.io.IOException;
@@ -224,9 +222,7 @@ public class GoogleCloudStorageBlobIntegrationLiveTest extends BaseBlobIntegrati
          addMultipartBlobToContainer(containerName, "const.txt");
 
          long countAfter = blobStore.countBlobs(containerName);
-         assertNotEquals(countBefore, countAfter, "No blob was created");
-         assertTrue(countAfter - countBefore > 1, "A multipart blob wasn't actually created - "
-                  + "there was only 1 extra blob but there should be one manifest blob and multiple chunk blobs");
+         assertThat(countAfter).isEqualTo(countBefore + 1);
       } finally {
          returnContainer(containerName);
       }

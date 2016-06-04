@@ -384,9 +384,9 @@ public final class GoogleCloudStorageBlobStore extends BaseBlobStore {
 
    @Override
    public String completeMultipartUpload(MultipartUpload mpu, List<MultipartPart> parts) {
-      ImmutableList.Builder<GoogleCloudStorageObject> builder = ImmutableList.builder();
+      ImmutableList.Builder<GoogleCloudStorageObject> objects = ImmutableList.builder();
       for (MultipartPart part : parts) {
-         builder.add(api.getObjectApi().getObject(mpu.containerName(),
+         objects.add(api.getObjectApi().getObject(mpu.containerName(),
                Strings2.urlEncode(getMPUPartName(mpu, part.partNumber()))));
       }
 
@@ -400,11 +400,20 @@ public final class GoogleCloudStorageBlobStore extends BaseBlobStore {
          destination.addAcl(controls);
       }
 
-      ComposeObjectTemplate template = ComposeObjectTemplate.builder().fromGoogleCloudStorageObject(builder.build())
+      ComposeObjectTemplate template = ComposeObjectTemplate.builder()
+            .fromGoogleCloudStorageObject(objects.build())
             .destination(destination).build();
-      return api.getObjectApi().composeObjects(mpu.containerName(), Strings2.urlEncode(mpu.blobName()), template)
+      String eTag = api.getObjectApi().composeObjects(mpu.containerName(), Strings2.urlEncode(mpu.blobName()), template)
             .etag();
-      // TODO: delete components?
+
+      // remove parts, composite object keeps a reference to them
+      ImmutableList.Builder<String> builder = ImmutableList.builder();
+      for (MultipartPart part : parts) {
+         builder.add(getMPUPartName(mpu, part.partNumber()));
+      }
+      removeBlobs(mpu.containerName(), builder.build());
+
+      return eTag;
    }
 
    @Override
