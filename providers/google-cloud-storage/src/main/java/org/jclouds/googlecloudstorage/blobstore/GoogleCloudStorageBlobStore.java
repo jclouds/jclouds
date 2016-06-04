@@ -452,8 +452,8 @@ public final class GoogleCloudStorageBlobStore extends BaseBlobStore {
 
    @Override
    public int getMaximumNumberOfParts() {
-      // TODO: should this be 32?  See: https://cloud.google.com/storage/docs/composite-objects
-      return 10 * 1000;
+      // can raise limit via composite objects of composites
+      return 32;
    }
 
    private static String getMPUPartName(MultipartUpload mpu, int partNumber) {
