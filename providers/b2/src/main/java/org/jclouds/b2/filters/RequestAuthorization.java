@@ -22,30 +22,25 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import org.jclouds.collect.Memoized;
-import org.jclouds.domain.Credentials;
 import org.jclouds.http.HttpException;
 import org.jclouds.http.HttpRequest;
 import org.jclouds.http.HttpRequestFilter;
 import org.jclouds.b2.domain.Authorization;
-import org.jclouds.location.Provider;
 
 import com.google.common.base.Supplier;
 import com.google.common.net.HttpHeaders;
 
 @Singleton
 public final class RequestAuthorization implements HttpRequestFilter {
-   private final Supplier<Credentials> creds;
    private final Supplier<Authorization> auth;
 
    @Inject
-   RequestAuthorization(@Provider Supplier<Credentials> creds, @Memoized Supplier<Authorization> auth) {
-      this.creds = creds;
+   RequestAuthorization(@Memoized Supplier<Authorization> auth) {
       this.auth = auth;
    }
 
    @Override
    public HttpRequest filter(HttpRequest request) throws HttpException {
-      Credentials creds = this.creds.get();
       Authorization auth = this.auth.get();
 
       // Replace with API URL
