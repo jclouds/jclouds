@@ -23,6 +23,7 @@ import static org.testng.Assert.assertTrue;
 
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.UUID;
 
 import org.jclouds.openstack.swift.v1.SwiftApi;
 import org.jclouds.openstack.swift.v1.domain.Account;
@@ -82,6 +83,19 @@ public class AccountApiLiveTest extends BaseSwiftApiLiveTest<SwiftApi> {
          // note keys are returned in lower-case!
          assertEquals(account.getMetadata().get(entry.getKey().toLowerCase()), entry.getValue(),
                account + " didn't have metadata: " + entry);
+      }
+   }
+
+   public void testUpdateTemporaryUrlKey() throws Exception {
+      for (String regionId : regions) {
+         AccountApi accountApi = api.getAccountApi(regionId);
+
+         String key = UUID.randomUUID().toString();
+
+         accountApi.updateTemporaryUrlKey(key);
+
+         assertTrue(accountApi.get().getMetadata().containsKey("temp-url-key"));
+         assertTrue(accountApi.get().getMetadata().get("temp-url-key").equals(key));
       }
    }
 }
