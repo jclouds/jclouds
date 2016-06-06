@@ -29,6 +29,8 @@ import org.jclouds.azurecompute.arm.features.VirtualMachineApi;
 import org.jclouds.azurecompute.arm.features.VirtualNetworkApi;
 import org.jclouds.azurecompute.arm.features.VMSizeApi;
 import org.jclouds.azurecompute.arm.util.DeploymentTemplateBuilder;
+import org.jclouds.azurecompute.arm.features.NetworkSecurityGroupApi;
+import org.jclouds.azurecompute.arm.features.NetworkSecurityRuleApi;
 import org.jclouds.rest.annotations.Delegate;
 
 import com.google.inject.Provides;
@@ -137,7 +139,23 @@ public interface AzureComputeApi extends Closeable {
    @Delegate
    DeploymentApi getDeploymentApi(@PathParam("resourcegroup") String resourceGroup);
 
+   /**
+    * The NetworkSecurityGroup API includes operations for managing network security groups within your subscription.
+    *
+    * @see <a href="https://msdn.microsoft.com/en-us/library/azure/mt163615.aspx">docs</a>
+    */
+   @Delegate
+   NetworkSecurityGroupApi getNetworkSecurityGroupApi(@PathParam("resourcegroup") String resourcegroup);
+ 
+   /**
+    * The NetworkSecurityRule API includes operations for managing network security rules within a network security group.
+    *
+    * @see <a href="https://msdn.microsoft.com/en-us/library/azure/mt163580.aspx">docs</a>
+    */
+   @Delegate
+   NetworkSecurityRuleApi getNetworkSecurityRuleApi(@PathParam("resourcegroup") String resourcegroup,
+                                                    @PathParam("networksecuritygroup") String networksecuritygroup);
+
    @Provides
    DeploymentTemplateBuilder.Factory deploymentTemplateFactory();
-
 }
