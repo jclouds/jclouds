@@ -23,7 +23,6 @@ import static org.jclouds.docker.internal.NullSafeCopies.copyWithNullOf;
 import java.util.List;
 import java.util.Map;
 
-import org.jclouds.docker.domain.HostConfig.Builder;
 import org.jclouds.javax.annotation.Nullable;
 import org.jclouds.json.SerializedNames;
 

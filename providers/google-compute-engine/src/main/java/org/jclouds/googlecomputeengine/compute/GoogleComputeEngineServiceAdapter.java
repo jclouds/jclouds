@@ -34,7 +34,6 @@ import javax.inject.Inject;
 import javax.inject.Named;
 
 import org.jclouds.compute.ComputeServiceAdapter;
-import org.jclouds.compute.domain.Hardware;
 import org.jclouds.compute.domain.NodeMetadata;
 import org.jclouds.compute.domain.OsFamily;
 import org.jclouds.compute.domain.Template;
