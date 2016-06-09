@@ -27,6 +27,7 @@ import org.jclouds.docker.domain.Config;
 import org.jclouds.docker.domain.Container;
 import org.jclouds.docker.domain.HostConfig;
 import org.jclouds.docker.domain.NetworkSettings;
+import org.jclouds.docker.domain.Node;
 import org.jclouds.docker.domain.State;
 import org.jclouds.docker.internal.BaseDockerParseTest;
 import org.testng.annotations.Test;
@@ -125,6 +126,8 @@ public class ContainerParseTest extends BaseDockerParseTest<Container> {
               .hostsPath("/var/lib/docker/containers/6c9932f478bd761f32ddb54ed28ab42ab6fac6f2a279f561ea31503ee9d39524/hosts")
               .mountLabel("")
               .processLabel("")
+              .node(Node.builder().
+                      ip("10.10.10.10").build())
               .build();
    }
 }

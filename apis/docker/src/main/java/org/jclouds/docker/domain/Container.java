@@ -26,6 +26,7 @@ import org.jclouds.javax.annotation.Nullable;
 import org.jclouds.json.SerializedNames;
 
 import com.google.auto.value.AutoValue;
+import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 
@@ -77,7 +78,7 @@ public abstract class Container {
 
    @Nullable public abstract String processLabel();
 
-   @Nullable public abstract Node node();
+   public abstract Optional<Node> node();
 
    Container() {
    }
@@ -93,7 +94,7 @@ public abstract class Container {
                                   String resolvConfPath, Map<String, String> volumes, HostConfig hostConfig,
                                   String driver, String execDriver, Map<String, Boolean> volumesRW, String command,
                                   String status, List<Port> ports, String hostnamePath, String hostsPath,
-                                  String mountLabel, String processLabel, Node node) {
+                                  String mountLabel, String processLabel, Optional<Node> node) {
       return new AutoValue_Container(id, created, path, name, copyOf(args), config, state, image, networkSettings,
               sysInitPath, resolvConfPath, copyOf(volumes), hostConfig, driver, execDriver, copyOf(volumesRW), command,
               status, copyOf(ports), hostnamePath, hostsPath, mountLabel, processLabel, node);
@@ -132,7 +133,7 @@ public abstract class Container {
       private String hostsPath;
       private String mountLabel;
       private String processLabel;
-      private Node node;
+      private Optional<Node> node = Optional.absent();
 
       public Builder id(String id) {
          this.id = id;
@@ -250,7 +251,7 @@ public abstract class Container {
       }
 
       public Builder node(Node node) {
-         this.node = node;
+         this.node = Optional.fromNullable(node);
          return this;
       }
 
@@ -266,7 +267,7 @@ public abstract class Container {
                  .sysInitPath(in.sysInitPath()).resolvConfPath(in.resolvConfPath()).driver(in.driver())
                  .execDriver(in.execDriver()).volumes(in.volumes()).hostConfig(in.hostConfig()).volumesRW(in.volumesRW())
                  .command(in.command()).status(in.status()).ports(in.ports()).hostnamePath(in.hostnamePath())
-                 .hostsPath(in.hostsPath()).mountLabel(in.mountLabel()).processLabel(in.processLabel()).node(in.node());
+                 .hostsPath(in.hostsPath()).mountLabel(in.mountLabel()).processLabel(in.processLabel()).node(in.node().orNull());
       }
    }
 }

@@ -128,6 +128,7 @@ public class ContainerToNodeMetadataTest {
               .status("")
               .hostConfig(HostConfig.builder().publishAllPorts(true).build())
               .ports(ImmutableList.<Port>of())
+              .node(null)
               .build();
       ProviderMetadata providerMetadata = EasyMock.createMock(ProviderMetadata.class);
       expect(providerMetadata.getEndpoint()).andReturn("http://127.0.0.1:4243");

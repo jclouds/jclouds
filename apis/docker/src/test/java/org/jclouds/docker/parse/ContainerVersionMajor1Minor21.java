@@ -239,6 +239,7 @@ public class ContainerVersionMajor1Minor21 {
                            "bridge", NetworkSettings.Details.create("", "", "", 0, "", "", 0, "")))
                      .build())
                .path("/bin/sh")
+               .node(null)
                .processLabel("")
                .resolvConfPath("/var/lib/docker/containers/ba033ac4401106a3b513bc9d639eee123ad78ca3616b921167cd74b20e25ed39/resolv.conf")
 //            "RestartCount": 1,

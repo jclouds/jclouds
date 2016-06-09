@@ -134,6 +134,9 @@
       }
     }
   },
+  "Node": {
+    "IP": "10.10.10.10"
+  },
   "Path": "/home/weave/weaver",
   "ProcessLabel": "",
   "ResolvConfPath": "/var/lib/docker/containers/6c9932f478bd761f32ddb54ed28ab42ab6fac6f2a279f561ea31503ee9d39524/resolv.conf",
