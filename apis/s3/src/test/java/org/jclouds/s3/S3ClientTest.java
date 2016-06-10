@@ -20,6 +20,7 @@ import static org.jclouds.reflect.Reflection2.method;
 import static org.testng.Assert.assertEquals;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Map;
 
 import org.jclouds.Fallbacks.VoidOnNotFoundOr404;
@@ -68,6 +69,7 @@ import org.jclouds.s3.xml.BucketLoggingHandler;
 import org.jclouds.s3.xml.CopyObjectHandler;
 import org.jclouds.s3.xml.ListAllMyBucketsHandler;
 import org.jclouds.s3.xml.ListBucketHandler;
+import org.jclouds.s3.xml.ListMultipartUploadsHandler;
 import org.jclouds.s3.xml.LocationConstraintHandler;
 import org.jclouds.s3.xml.PayerHandler;
 import org.jclouds.util.Strings2;
@@ -620,6 +622,22 @@ public abstract class S3ClientTest<T extends S3Client> extends BaseS3ClientTest<
 
       assertResponseParserClassEquals(method, request, ETagFromHttpResponseViaRegex.class);
       assertSaxResponseParserClassEquals(method, null);
+      assertFallbackClassEquals(method, MapHttp4xxCodesToExceptions.class);
+
+      checkFilters(request);
+   }
+
+   public void testListMultipartUploads() throws Exception {
+      Invokable<?, ?> method = method(S3Client.class, "listMultipartUploads", String.class, String.class,
+            Integer.class, String.class, String.class, String.class);
+      GeneratedHttpRequest request = processor.createRequest(method, Arrays.<Object> asList("bucket", null, null, null, null, null));
+
+      assertRequestLineEquals(request, "GET https://bucket." + url + "/?uploads HTTP/1.1");
+      assertNonPayloadHeadersEqual(request, "Host: bucket." + url + "\n");
+      assertPayloadEquals(request, null, "application/unknown", false);
+
+      assertResponseParserClassEquals(method, request, ParseSax.class);
+      assertSaxResponseParserClassEquals(method, ListMultipartUploadsHandler.class);
       assertFallbackClassEquals(method, MapHttp4xxCodesToExceptions.class);
 
       checkFilters(request);

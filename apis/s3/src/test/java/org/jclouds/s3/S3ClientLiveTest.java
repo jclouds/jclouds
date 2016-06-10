@@ -56,6 +56,7 @@ import org.jclouds.s3.domain.AccessControlList.GroupGranteeURI;
 import org.jclouds.s3.domain.AccessControlList.Permission;
 import org.jclouds.s3.domain.CannedAccessPolicy;
 import org.jclouds.s3.domain.DeleteResult;
+import org.jclouds.s3.domain.ListMultipartUploadsResponse;
 import org.jclouds.s3.domain.ObjectMetadata;
 import org.jclouds.s3.domain.ObjectMetadataBuilder;
 import org.jclouds.s3.domain.S3Object;
@@ -562,6 +563,35 @@ public class S3ClientLiveTest extends BaseBlobStoreIntegrationTest {
          object = getApi().getObject(containerName, toObject);
          assertEquals(ByteStreams2.toByteArrayAndClose(object.getPayload().openStream()), oneHundredOneConstitutions.slice(1, oneHundredOneConstitutions.size() - 1).read());
       } finally {
+         returnContainer(containerName);
+      }
+   }
+
+   public void testListMultipartUploads() throws Exception {
+      String containerName = getContainerName();
+      String key = "testListMultipartUploads";
+      String uploadId = null;
+      try {
+         ListMultipartUploadsResponse response = getApi().listMultipartUploads(containerName, null, null, null, null, null);
+         assertThat(response.bucket()).isEqualTo(containerName);
+         assertThat(response.isTruncated()).isFalse();
+         assertThat(response.uploads()).isEmpty();
+
+         uploadId = getApi().initiateMultipartUpload(containerName, ObjectMetadataBuilder.create().key(key).build());
+
+         response = getApi().listMultipartUploads(containerName, null, null, null, null, null);
+         assertThat(response.bucket()).isEqualTo(containerName);
+         assertThat(response.isTruncated()).isFalse();
+         assertThat(response.uploads()).hasSize(1);
+
+         ListMultipartUploadsResponse.Upload upload = response.uploads().get(0);
+         assertThat(upload.key()).isEqualTo(key);
+         assertThat(upload.uploadId()).isEqualTo(uploadId);
+         assertThat(upload.storageClass()).isEqualTo(ObjectMetadata.StorageClass.STANDARD);
+      } finally {
+         if (uploadId != null) {
+            getApi().abortMultipartUpload(containerName, key, uploadId);
+         }
          returnContainer(containerName);
       }
    }

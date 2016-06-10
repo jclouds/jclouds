@@ -75,6 +75,7 @@ import org.jclouds.s3.domain.BucketMetadata;
 import org.jclouds.s3.domain.CannedAccessPolicy;
 import org.jclouds.s3.domain.DeleteResult;
 import org.jclouds.s3.domain.ListBucketResponse;
+import org.jclouds.s3.domain.ListMultipartUploadsResponse;
 import org.jclouds.s3.domain.ObjectMetadata;
 import org.jclouds.s3.domain.Payer;
 import org.jclouds.s3.domain.S3Object;
@@ -100,6 +101,7 @@ import org.jclouds.s3.xml.CopyObjectHandler;
 import org.jclouds.s3.xml.DeleteResultHandler;
 import org.jclouds.s3.xml.ListAllMyBucketsHandler;
 import org.jclouds.s3.xml.ListBucketHandler;
+import org.jclouds.s3.xml.ListMultipartUploadsHandler;
 import org.jclouds.s3.xml.LocationConstraintHandler;
 import org.jclouds.s3.xml.PartIdsFromHttpResponse;
 import org.jclouds.s3.xml.PayerHandler;
@@ -785,4 +787,15 @@ public interface S3Client extends Closeable {
    Map<Integer, String> listMultipartParts(@Bucket @EndpointParam(parser = AssignCorrectHostnameForBucket.class)
          @BinderParam(BindAsHostPrefixIfConfigured.class) @ParamValidators(BucketNameValidator.class) String bucketName,
          @PathParam("key") String key, @QueryParam("uploadId") String uploadId);
+
+   @Named("ListMultipartUploads")
+   @GET
+   @Path("/")
+   @QueryParams(keys = "uploads")
+   @XMLResponseParser(ListMultipartUploadsHandler.class)
+   ListMultipartUploadsResponse listMultipartUploads(@Bucket @EndpointParam(parser = AssignCorrectHostnameForBucket.class)
+         @BinderParam(BindAsHostPrefixIfConfigured.class) @ParamValidators(BucketNameValidator.class) String bucketName,
+         @QueryParam("delimiter") @Nullable String delimiter, @QueryParam("max-uploads") @Nullable Integer maxUploads,
+         @QueryParam("key-marker") @Nullable String keyMarker, @QueryParam("prefix") @Nullable String prefix,
+         @QueryParam("upload-id-marker") @Nullable String uploadIdMarker);
 }
