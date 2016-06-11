@@ -16,7 +16,13 @@
  */
 package org.jclouds.azureblob.options;
 
+import java.util.Set;
+
 import org.jclouds.azure.storage.options.ListOptions;
+import org.jclouds.azureblob.domain.ListBlobsInclude;
+
+import com.google.common.base.Joiner;
+import com.google.common.collect.ImmutableSet;
 
 /**
  * Contains options supported in the REST API for the List Blobs operation. <h2>
@@ -35,6 +41,7 @@ import org.jclouds.azure.storage.options.ListOptions;
  * @see <a href="http://msdn.microsoft.com/en-us/library/dd179466.aspx" />
  */
 public class ListBlobsOptions extends ListOptions {
+   private Set<String> datasets;
 
    /**
     * When the request includes this parameter, the operation returns a {@code BlobPrefix} element
@@ -94,6 +101,11 @@ public class ListBlobsOptions extends ListOptions {
          ListBlobsOptions options = new ListBlobsOptions();
          return options.maxResults(maxKeys);
       }
+
+      public static ListBlobsOptions include(Set<ListBlobsInclude> datasets) {
+         ListBlobsOptions options = new ListBlobsOptions();
+         return options.include(datasets);
+      }
    }
 
    /**
@@ -126,5 +138,15 @@ public class ListBlobsOptions extends ListOptions {
    @Override
    public ListBlobsOptions prefix(String prefix) {
       return (ListBlobsOptions) super.prefix(prefix);
+   }
+
+   public ListBlobsOptions include(Set<ListBlobsInclude> datasets) {
+      datasets = ImmutableSet.copyOf(datasets);
+      this.queryParameters.put("include", Joiner.on(",").join(datasets));
+      return this;
+   }
+
+   public Set<String> getInclude() {
+      return datasets;
    }
 }

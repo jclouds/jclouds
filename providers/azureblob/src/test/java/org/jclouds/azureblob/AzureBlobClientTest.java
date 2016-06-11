@@ -24,6 +24,7 @@ import static org.testng.Assert.assertEquals;
 import java.io.IOException;
 import java.net.URI;
 import java.util.Date;
+import java.util.EnumSet;
 import java.util.Map;
 
 import org.jclouds.ContextBuilder;
@@ -33,6 +34,7 @@ import org.jclouds.azure.storage.filters.SharedKeyLiteAuthentication;
 import org.jclouds.azure.storage.options.ListOptions;
 import org.jclouds.azureblob.AzureBlobFallbacks.FalseIfContainerAlreadyExists;
 import org.jclouds.azureblob.domain.AzureBlob;
+import org.jclouds.azureblob.domain.ListBlobsInclude;
 import org.jclouds.azureblob.domain.PublicAccess;
 import org.jclouds.azureblob.functions.ParseBlobFromHeadersAndHttpContent;
 import org.jclouds.azureblob.functions.ParseContainerPropertiesFromHeaders;
@@ -197,6 +199,20 @@ public class AzureBlobClientTest extends BaseRestAnnotationProcessingTest<AzureB
 
       assertRequestLineEquals(request,
                "GET https://identity.blob.core.windows.net/container?restype=container&comp=list HTTP/1.1");
+      assertNonPayloadHeadersEqual(request, "x-ms-version: 2013-08-15\n");
+      assertPayloadEquals(request, null, null, false);
+
+      assertResponseParserClassEquals(method, request, ParseSax.class);
+      assertSaxResponseParserClassEquals(method, ContainerNameEnumerationResultsHandler.class);
+      assertFallbackClassEquals(method, null);
+   }
+
+   public void testListBlobsWithOptions() throws SecurityException, NoSuchMethodException, IOException {
+      Invokable<?, ?> method = method(AzureBlobClient.class, "listBlobs", String.class, ListBlobsOptions[].class);
+      GeneratedHttpRequest request = processor.createRequest(method, ImmutableList.<Object> of("container", new ListBlobsOptions().include(EnumSet.allOf(ListBlobsInclude.class))));
+
+      assertRequestLineEquals(request,
+               "GET https://identity.blob.core.windows.net/container?restype=container&comp=list&include=copy,metadata,snapshots,uncommittedblobs HTTP/1.1");
       assertNonPayloadHeadersEqual(request, "x-ms-version: 2013-08-15\n");
       assertPayloadEquals(request, null, null, false);
 

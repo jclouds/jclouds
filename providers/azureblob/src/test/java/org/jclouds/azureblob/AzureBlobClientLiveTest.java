@@ -31,6 +31,7 @@ import java.net.URI;
 import java.security.SecureRandom;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.EnumSet;
 import java.util.Map;
 import java.util.Set;
 
@@ -41,6 +42,7 @@ import org.jclouds.azureblob.domain.AzureBlob;
 import org.jclouds.azureblob.domain.BlobProperties;
 import org.jclouds.azureblob.domain.ContainerProperties;
 import org.jclouds.azureblob.domain.ListBlobBlocksResponse;
+import org.jclouds.azureblob.domain.ListBlobsInclude;
 import org.jclouds.azureblob.domain.ListBlobsResponse;
 import org.jclouds.azureblob.domain.PublicAccess;
 import org.jclouds.azureblob.options.CopyBlobOptions;
@@ -349,11 +351,20 @@ public class AzureBlobClientLiveTest extends BaseBlobStoreIntegrationTest {
       String blockIdA = BaseEncoding.base64().encode((blockBlob + "-" + A).getBytes());
       String blockIdB = BaseEncoding.base64().encode((blockBlob + "-" + B).getBytes());
       String blockIdC = BaseEncoding.base64().encode((blockBlob + "-" + C).getBytes());
+
       getApi().createContainer(blockContainer);
+
       getApi().putBlock(blockContainer, blockBlob, blockIdA, Payloads.newByteArrayPayload(A.getBytes()));
       getApi().putBlock(blockContainer, blockBlob, blockIdB, Payloads.newByteArrayPayload(B.getBytes()));
       getApi().putBlock(blockContainer, blockBlob, blockIdC, Payloads.newByteArrayPayload(C.getBytes()));
+
+      ListBlobsResponse blobs = getApi().listBlobs(blockContainer);
+      assertThat(blobs).isEmpty();
+      blobs = getApi().listBlobs(blockContainer, new ListBlobsOptions().include(EnumSet.allOf(ListBlobsInclude.class)));
+      assertThat(blobs).hasSize(1);
+
       getApi().putBlockList(blockContainer, blockBlob, Arrays.asList(blockIdA, blockIdB, blockIdC));
+
       ListBlobBlocksResponse blocks = getApi().getBlockList(blockContainer, blockBlob);
       assertEquals(3, blocks.getBlocks().size());
       assertEquals(blockIdA, blocks.getBlocks().get(0).getBlockName());
@@ -362,6 +373,7 @@ public class AzureBlobClientLiveTest extends BaseBlobStoreIntegrationTest {
       assertEquals(1, blocks.getBlocks().get(0).getContentLength());
       assertEquals(1, blocks.getBlocks().get(1).getContentLength());
       assertEquals(1, blocks.getBlocks().get(2).getContentLength());
+
       getApi().deleteContainer(blockContainer);
    }
 
