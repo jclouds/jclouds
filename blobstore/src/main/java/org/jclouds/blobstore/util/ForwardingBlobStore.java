@@ -245,6 +245,11 @@ public abstract class ForwardingBlobStore extends ForwardingObject
    }
 
    @Override
+   public List<MultipartUpload> listMultipartUploads(String container) {
+      return delegate().listMultipartUploads(container);
+   }
+
+   @Override
    public long getMinimumMultipartPartSize() {
       return delegate().getMinimumMultipartPartSize();
    }

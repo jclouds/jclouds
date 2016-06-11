@@ -64,6 +64,7 @@ import org.jclouds.s3.domain.AccessControlList.GroupGranteeURI;
 import org.jclouds.s3.domain.AccessControlList.Permission;
 import org.jclouds.s3.domain.BucketMetadata;
 import org.jclouds.s3.domain.CannedAccessPolicy;
+import org.jclouds.s3.domain.ListMultipartUploadsResponse;
 import org.jclouds.s3.options.CopyObjectOptions;
 import org.jclouds.s3.options.ListBucketOptions;
 import org.jclouds.s3.options.PutBucketOptions;
@@ -398,6 +399,25 @@ public class S3BlobStore extends BaseBlobStore {
          parts.add(MultipartPart.create(entry.getKey(), partSize, entry.getValue()));
       }
       return parts.build();
+   }
+
+   @Override
+   public List<MultipartUpload> listMultipartUploads(String container) {
+      ImmutableList.Builder<MultipartUpload> builder = ImmutableList.builder();
+      String keyMarker = null;
+      String uploadIdMarker = null;
+      while (true) {
+         ListMultipartUploadsResponse response = sync.listMultipartUploads(container, null, null, keyMarker, null, uploadIdMarker);
+         for (ListMultipartUploadsResponse.Upload upload : response.uploads()) {
+            builder.add(MultipartUpload.create(container, upload.key(), upload.uploadId(), null, null));
+         }
+         keyMarker = response.keyMarker();
+         uploadIdMarker = response.uploadIdMarker();
+         if (response.uploads().isEmpty() || keyMarker == null || uploadIdMarker == null) {
+            break;
+         }
+      }
+      return builder.build();
    }
 
    @Override

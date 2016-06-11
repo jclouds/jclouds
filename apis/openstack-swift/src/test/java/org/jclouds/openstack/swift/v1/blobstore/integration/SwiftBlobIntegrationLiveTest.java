@@ -112,6 +112,15 @@ public class SwiftBlobIntegrationLiveTest extends BaseBlobIntegrationTest {
       super.testCopyIfNoneMatchNegative();
    }
 
+   @Override
+   public void testListMultipartUploads() throws Exception {
+      try {
+         super.testListMultipartUploads();
+      } catch (UnsupportedOperationException uoe) {
+         throw new SkipException("Swift does not support listing multipart uploads", uoe);
+      }
+   }
+
    // TODO: testCopyIfModifiedSinceNegative throws HTTP 304 not 412 error
 
    @Override

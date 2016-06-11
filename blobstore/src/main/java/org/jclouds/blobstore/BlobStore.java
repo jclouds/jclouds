@@ -349,6 +349,9 @@ public interface BlobStore {
    List<MultipartPart> listMultipartUpload(MultipartUpload mpu);
 
    @Beta
+   List<MultipartUpload> listMultipartUploads(String container);
+
+   @Beta
    long getMinimumMultipartPartSize();
 
    @Beta

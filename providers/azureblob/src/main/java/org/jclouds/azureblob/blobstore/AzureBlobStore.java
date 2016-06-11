@@ -20,6 +20,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import static org.jclouds.azure.storage.options.ListOptions.Builder.includeMetadata;
 
 import java.net.URI;
+import java.util.EnumSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -38,8 +39,11 @@ import org.jclouds.azureblob.blobstore.functions.ListBlobsResponseToResourceList
 import org.jclouds.azureblob.blobstore.functions.ListOptionsToListBlobsOptions;
 import org.jclouds.azureblob.domain.AzureBlob;
 import org.jclouds.azureblob.domain.BlobBlockProperties;
+import org.jclouds.azureblob.domain.BlobProperties;
 import org.jclouds.azureblob.domain.ContainerProperties;
 import org.jclouds.azureblob.domain.ListBlobBlocksResponse;
+import org.jclouds.azureblob.domain.ListBlobsInclude;
+import org.jclouds.azureblob.domain.ListBlobsResponse;
 import org.jclouds.azureblob.domain.PublicAccess;
 import org.jclouds.azureblob.options.CopyBlobOptions;
 import org.jclouds.azureblob.options.ListBlobsOptions;
@@ -451,6 +455,33 @@ public class AzureBlobStore extends BaseBlobStore {
          parts.add(MultipartPart.create(partNumber, partSize, eTag));
       }
       return parts.build();
+   }
+
+   @Override
+   public List<MultipartUpload> listMultipartUploads(String container) {
+      ImmutableList.Builder<MultipartUpload> builder = ImmutableList.builder();
+      String marker = null;
+      while (true) {
+         ListBlobsOptions options = new ListBlobsOptions().include(EnumSet.of(ListBlobsInclude.UNCOMMITTEDBLOBS));
+         if (marker != null) {
+            options.marker(marker);
+         }
+         ListBlobsResponse response = sync.listBlobs(container, options);
+         for (BlobProperties properties : response) {
+            // only uncommitted blobs lack ETags
+            if (properties.getETag() != null) {
+               continue;
+            }
+            // TODO: bogus uploadId
+            String uploadId = UUID.randomUUID().toString();
+            builder.add(MultipartUpload.create(properties.getContainer(), properties.getName(), uploadId, null, null));
+         }
+         marker = response.getNextMarker();
+         if (marker == null) {
+            break;
+         }
+      }
+      return builder.build();
    }
 
    @Override

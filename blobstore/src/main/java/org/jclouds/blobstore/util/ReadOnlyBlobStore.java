@@ -159,4 +159,10 @@ public final class ReadOnlyBlobStore extends ForwardingBlobStore {
    public List<MultipartPart> listMultipartUpload(MultipartUpload mpu) {
       throw new UnsupportedOperationException("Read-only BlobStore");
    }
+
+   // TODO: should ReadOnlyBlobStore allow listing parts and uploads?
+   @Override
+   public List<MultipartUpload> listMultipartUploads(String container) {
+      throw new UnsupportedOperationException("Read-only BlobStore");
+   }
 }

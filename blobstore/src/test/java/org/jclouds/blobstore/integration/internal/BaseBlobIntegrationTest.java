@@ -1275,6 +1275,50 @@ public class BaseBlobIntegrationTest extends BaseBlobStoreIntegrationTest {
       }
    }
 
+   @Test(groups = { "integration", "live" })
+   public void testListMultipartUploads() throws Exception {
+      BlobStore blobStore = view.getBlobStore();
+      String name = "blob-name";
+      PayloadBlobBuilder blobBuilder = blobStore.blobBuilder(name)
+            .userMetadata(ImmutableMap.of("key1", "value1", "key2", "value2"))
+            // TODO: fake payload to add content metadata
+            .payload(new byte[0]);
+      addContentMetadata(blobBuilder);
+      Blob blob = blobBuilder.build();
+      MultipartUpload mpu = null;
+
+      String container = getContainerName();
+      try {
+         List<MultipartUpload> uploads = blobStore.listMultipartUploads(container);
+         assertThat(uploads).isEmpty();
+
+         mpu = blobStore.initiateMultipartUpload(container, blob.getMetadata(), new PutOptions());
+
+         // some providers like Azure cannot list an MPU until the first blob is uploaded
+         assertThat(uploads.size()).isBetween(0, 1);
+
+         ByteSource byteSource = TestUtils.randomByteSource().slice(0, 1);
+         Payload payload = Payloads.newByteSourcePayload(byteSource);
+         payload.getContentMetadata().setContentLength(byteSource.size());
+         MultipartPart part = blobStore.uploadMultipartPart(mpu, 1, payload);
+
+         uploads = blobStore.listMultipartUploads(container);
+         assertThat(uploads).hasSize(1);
+
+         blobStore.completeMultipartUpload(mpu, ImmutableList.of(part));
+
+         uploads = blobStore.listMultipartUploads(container);
+         assertThat(uploads).isEmpty();
+
+         // cannot test abort since Azure does not have explicit support
+      } finally {
+         if (mpu != null) {
+            blobStore.abortMultipartUpload(mpu);
+         }
+         returnContainer(container);
+      }
+   }
+
    @Test(groups = { "integration", "live" }, expectedExceptions = {KeyNotFoundException.class})
    public void testCopy404BlobFail() throws Exception {
       BlobStore blobStore = view.getBlobStore();

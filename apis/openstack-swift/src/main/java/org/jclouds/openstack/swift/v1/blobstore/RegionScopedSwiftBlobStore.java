@@ -517,6 +517,11 @@ public class RegionScopedSwiftBlobStore implements BlobStore {
    }
 
    @Override
+   public List<MultipartUpload> listMultipartUploads(String container) {
+      throw new UnsupportedOperationException();
+   }
+
+   @Override
    public long getMinimumMultipartPartSize() {
       return 1024 * 1024 + 1;
    }

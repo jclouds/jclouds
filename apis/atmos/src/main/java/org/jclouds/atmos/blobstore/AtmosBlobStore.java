@@ -322,6 +322,11 @@ public class AtmosBlobStore extends BaseBlobStore {
    }
 
    @Override
+   public List<MultipartUpload> listMultipartUploads(String container) {
+      throw new UnsupportedOperationException("Atmos does not support multipart uploads");
+   }
+
+   @Override
    public long getMinimumMultipartPartSize() {
       throw new UnsupportedOperationException("Atmos does not support multipart uploads");
    }
