@@ -131,7 +131,7 @@ public class ContainerToNodeMetadataTest {
               .node(null)
               .build();
       ProviderMetadata providerMetadata = EasyMock.createMock(ProviderMetadata.class);
-      expect(providerMetadata.getEndpoint()).andReturn("http://127.0.0.1:4243");
+      expect(providerMetadata.getEndpoint()).andReturn("http://127.0.0.1:4243").atLeastOnce();
       replay(providerMetadata);
 
       GroupNamingConvention.Factory namingConvention = Guice.createInjector().getInstance(GroupNamingConvention.Factory.class);
@@ -177,7 +177,7 @@ public class ContainerToNodeMetadataTest {
 
    private Function<State, NodeMetadata.Status> toPortableStatus() {
       StateToStatus function = EasyMock.createMock(StateToStatus.class);
-         expect(function.apply(anyObject(State.class))).andReturn(NodeMetadata.Status.RUNNING);
+         expect(function.apply(anyObject(State.class))).andReturn(NodeMetadata.Status.RUNNING).atLeastOnce();
          replay(function);
          return function;
    }
@@ -193,11 +193,58 @@ public class ContainerToNodeMetadataTest {
       assertEquals(node.getGroup(), "hopeful_mclean");
       assertEquals(node.getImageId(), "af0f59f1c19eef9471c3b8c8d587c39b8f130560b54f3766931b37d76d5de4b6");
       assertEquals(node.getLoginPort(), 49199);
-      assertEquals(node.getPrivateAddresses().size(), 1);
-      assertEquals(node.getPublicAddresses().size(), 1);
+      assertEquals(node.getPrivateAddresses(), ImmutableSet.of("172.17.0.2"));
+      assertEquals(node.getPublicAddresses(), ImmutableSet.of("127.0.0.1"));
+   }
+
+   public void testVirtualMachineWithNetworksToNodeMetadata() {
+      // Example networks taken from container.json
+      Container containerWithNetwork = container.toBuilder()
+            .networkSettings(container.networkSettings().toBuilder()
+                    .networks(ImmutableMap.<String, NetworkSettings.Details>builder()
+                          .put("JCLOUDS_NETWORK", NetworkSettings.Details.builder()
+                                   .endpoint("1a10519f808faf1181cfdf3d1d6dd93e19ede2d1c8fed82562a4c17c297c4db3")
+                                   .gateway("172.19.0.1")
+                                   .ipAddress("172.19.0.2")
+                                   .ipPrefixLen(16)
+                                   .ipv6Gateway("")
+                                   .globalIPv6Address("")
+                                   .globalIPv6PrefixLen(0)
+                                   .macAddress("02:42:ac:13:00:02")
+                                   .build())
+                          .put("bridge", NetworkSettings.Details.builder()
+                                .endpoint("9e8dcc0c8288938a923018fee0728cee8e6de7c01a5150738ee6e51c1caf8cf6")
+                                .gateway("172.17.0.1")
+                                .ipAddress("172.17.0.2")
+                                .ipPrefixLen(16)
+                                .ipv6Gateway("")
+                                .globalIPv6Address("")
+                                .globalIPv6PrefixLen(0)
+                                .macAddress("02:42:ac:11:00:02")
+                                .build())
+                          .build())
+                    .build())
+            .build();
+
+      Container mockContainer = mockContainer(containerWithNetwork);
+
+      NodeMetadata node = function.apply(mockContainer);
+
+      verify(mockContainer);
+
+      assertEquals(node.getId(), "6d35806c1bd2b25cd92bba2d2c2c5169dc2156f53ab45c2b62d76e2d2fee14a9");
+      assertEquals(node.getGroup(), "hopeful_mclean");
+      assertEquals(node.getImageId(), "af0f59f1c19eef9471c3b8c8d587c39b8f130560b54f3766931b37d76d5de4b6");
+      assertEquals(node.getLoginPort(), 49199);
+      assertEquals(node.getPrivateAddresses(), ImmutableSet.of("172.17.0.2", "172.19.0.2"));
+      assertEquals(node.getPublicAddresses(), ImmutableSet.of("127.0.0.1"));
    }
 
    private Container mockContainer() {
+      return mockContainer(container);
+   }
+   
+   private Container mockContainer(Container container) {
       Container mockContainer = EasyMock.createMock(Container.class);
 
       expect(mockContainer.id()).andReturn(container.id());

@@ -56,8 +56,32 @@ public abstract class NetworkSettings {
       @SerializedNames({ "EndpointID", "Gateway", "IPAddress", "IPPrefixLen", "IPv6Gateway", "GlobalIPv6Address", "GlobalIPv6PrefixLen", "MacAddress" })
       public static Details create(String endpointId, String gateway, String ipAddress, int ipPrefixLen, String ipv6Gateway, String globalIPv6Address,
                                    int globalIPv6PrefixLen, String macAddress) {
-         return new AutoValue_NetworkSettings_Details(endpointId, gateway, ipAddress, ipPrefixLen, ipv6Gateway, globalIPv6Address, globalIPv6PrefixLen,
-                 macAddress);
+         return builder().endpoint(endpointId).gateway(gateway).ipAddress(ipAddress).ipPrefixLen(ipPrefixLen)
+               .ipv6Gateway(ipv6Gateway).globalIPv6Address(globalIPv6Address)
+               .globalIPv6PrefixLen(globalIPv6PrefixLen).macAddress(macAddress)
+               .build();
+      }
+      
+      public Builder toBuilder() {
+         return new AutoValue_NetworkSettings_Details.Builder(this);
+      }
+
+      public static Builder builder() {
+         return new AutoValue_NetworkSettings_Details.Builder();
+      }
+
+      @AutoValue.Builder
+      public abstract static class Builder {
+         public abstract Builder endpoint(String value);
+         public abstract Builder gateway(String value);
+         public abstract Builder ipAddress(String value);
+         public abstract Builder ipPrefixLen(int value);
+         public abstract Builder ipv6Gateway(String value);
+         public abstract Builder globalIPv6Address(String value);
+         public abstract Builder globalIPv6PrefixLen(int value);
+         public abstract Builder macAddress(String value);
+
+         public abstract Details build();
       }
    }
 
