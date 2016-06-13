@@ -16,10 +16,8 @@
  */
 package org.jclouds.docker.compute.functions;
 
-import static org.easymock.EasyMock.anyObject;
 import static org.easymock.EasyMock.expect;
 import static org.easymock.EasyMock.replay;
-import static org.easymock.EasyMock.verify;
 import static org.testng.Assert.assertEquals;
 
 import java.util.Arrays;
@@ -48,7 +46,6 @@ import org.jclouds.providers.ProviderMetadata;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import com.google.common.base.Function;
 import com.google.common.base.Supplier;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
@@ -171,28 +168,19 @@ public class ContainerToNodeMetadataTest {
          }
       };
 
-      function = new ContainerToNodeMetadata(providerMetadata, toPortableStatus(), namingConvention, images, locations,
+      function = new ContainerToNodeMetadata(providerMetadata, new StateToStatus(), namingConvention, images, locations,
             new LoginPortForContainer.LoginPortLookupChain(null));
    }
 
-   private Function<State, NodeMetadata.Status> toPortableStatus() {
-      StateToStatus function = EasyMock.createMock(StateToStatus.class);
-         expect(function.apply(anyObject(State.class))).andReturn(NodeMetadata.Status.RUNNING).atLeastOnce();
-         replay(function);
-         return function;
-   }
-
    public void testVirtualMachineToNodeMetadata() {
-      Container mockContainer = mockContainer();
-
-      NodeMetadata node = function.apply(mockContainer);
-
-      verify(mockContainer);
+      NodeMetadata node = function.apply(container);
 
       assertEquals(node.getId(), "6d35806c1bd2b25cd92bba2d2c2c5169dc2156f53ab45c2b62d76e2d2fee14a9");
       assertEquals(node.getGroup(), "hopeful_mclean");
       assertEquals(node.getImageId(), "af0f59f1c19eef9471c3b8c8d587c39b8f130560b54f3766931b37d76d5de4b6");
       assertEquals(node.getLoginPort(), 49199);
+      assertEquals(node.getStatus(), NodeMetadata.Status.RUNNING);
+      assertEquals(node.getImageId(), "af0f59f1c19eef9471c3b8c8d587c39b8f130560b54f3766931b37d76d5de4b6");
       assertEquals(node.getPrivateAddresses(), ImmutableSet.of("172.17.0.2"));
       assertEquals(node.getPublicAddresses(), ImmutableSet.of("127.0.0.1"));
    }
@@ -226,36 +214,11 @@ public class ContainerToNodeMetadataTest {
                     .build())
             .build();
 
-      Container mockContainer = mockContainer(containerWithNetwork);
+      NodeMetadata node = function.apply(containerWithNetwork);
 
-      NodeMetadata node = function.apply(mockContainer);
-
-      verify(mockContainer);
-
-      assertEquals(node.getId(), "6d35806c1bd2b25cd92bba2d2c2c5169dc2156f53ab45c2b62d76e2d2fee14a9");
-      assertEquals(node.getGroup(), "hopeful_mclean");
-      assertEquals(node.getImageId(), "af0f59f1c19eef9471c3b8c8d587c39b8f130560b54f3766931b37d76d5de4b6");
+      // Only asserting network-related aspects; the rest is covered by testVirtualMachineToNodeMetadata
       assertEquals(node.getLoginPort(), 49199);
       assertEquals(node.getPrivateAddresses(), ImmutableSet.of("172.17.0.2", "172.19.0.2"));
       assertEquals(node.getPublicAddresses(), ImmutableSet.of("127.0.0.1"));
-   }
-
-   private Container mockContainer() {
-      return mockContainer(container);
-   }
-   
-   private Container mockContainer(Container container) {
-      Container mockContainer = EasyMock.createMock(Container.class);
-
-      expect(mockContainer.id()).andReturn(container.id());
-      expect(mockContainer.name()).andReturn(container.name());
-      expect(mockContainer.config()).andReturn(container.config()).anyTimes();
-      expect(mockContainer.networkSettings()).andReturn(container.networkSettings()).anyTimes();
-      expect(mockContainer.node()).andReturn(container.node()).anyTimes();
-      expect(mockContainer.state()).andReturn(container.state());
-      expect(mockContainer.image()).andReturn(container.image()).anyTimes();
-      replay(mockContainer);
-
-      return mockContainer;
    }
 }
