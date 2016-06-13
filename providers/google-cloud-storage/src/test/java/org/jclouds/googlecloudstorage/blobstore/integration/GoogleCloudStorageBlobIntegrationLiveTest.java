@@ -312,4 +312,13 @@ public class GoogleCloudStorageBlobIntegrationLiveTest extends BaseBlobIntegrati
    public void testCopyIfUnmodifiedSinceNegative() throws Exception {
       super.testCopyIfUnmodifiedSince();
    }
+
+   @Override
+   public void testListMultipartUploads() throws Exception {
+      try {
+         super.testListMultipartUploads();
+      } catch (UnsupportedOperationException uoe) {
+         throw new SkipException("GCS does not support listing multipart uploads", uoe);
+      }
+   }
 }

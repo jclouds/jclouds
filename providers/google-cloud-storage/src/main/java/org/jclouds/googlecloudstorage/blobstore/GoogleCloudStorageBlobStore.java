@@ -441,6 +441,11 @@ public final class GoogleCloudStorageBlobStore extends BaseBlobStore {
    }
 
    @Override
+   public List<MultipartUpload> listMultipartUploads(String container) {
+      throw new UnsupportedOperationException("not supported");
+   }
+
+   @Override
    public long getMinimumMultipartPartSize() {
       return 5L * 1024L * 1024L;
    }
