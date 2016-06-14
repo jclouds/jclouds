@@ -1297,15 +1297,22 @@ public class BaseBlobIntegrationTest extends BaseBlobStoreIntegrationTest {
          // some providers like Azure cannot list an MPU until the first blob is uploaded
          assertThat(uploads.size()).isBetween(0, 1);
 
-         ByteSource byteSource = TestUtils.randomByteSource().slice(0, 1);
-         Payload payload = Payloads.newByteSourcePayload(byteSource);
-         payload.getContentMetadata().setContentLength(byteSource.size());
-         MultipartPart part = blobStore.uploadMultipartPart(mpu, 1, payload);
+         // B2 requires at least two parts to call complete
+         ByteSource byteSource = TestUtils.randomByteSource().slice(0, blobStore.getMinimumMultipartPartSize() + 1);
+         ByteSource byteSource1 = byteSource.slice(0, blobStore.getMinimumMultipartPartSize());
+         ByteSource byteSource2 = byteSource.slice(blobStore.getMinimumMultipartPartSize(), 1);
+         Payload payload1 = Payloads.newByteSourcePayload(byteSource1);
+         Payload payload2 = Payloads.newByteSourcePayload(byteSource2);
+         payload1.getContentMetadata().setContentLength(byteSource1.size());
+         payload2.getContentMetadata().setContentLength(byteSource2.size());
+         MultipartPart part1 = blobStore.uploadMultipartPart(mpu, 1, payload1);
+         MultipartPart part2 = blobStore.uploadMultipartPart(mpu, 2, payload2);
 
          uploads = blobStore.listMultipartUploads(container);
          assertThat(uploads).hasSize(1);
 
-         blobStore.completeMultipartUpload(mpu, ImmutableList.of(part));
+         blobStore.completeMultipartUpload(mpu, ImmutableList.of(part1, part2));
+         mpu = null;
 
          uploads = blobStore.listMultipartUploads(container);
          assertThat(uploads).isEmpty();
