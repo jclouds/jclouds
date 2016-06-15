@@ -16,6 +16,7 @@
  */
 package org.jclouds.googlecloudstorage;
 
+import static org.jclouds.Constants.PROPERTY_IDEMPOTENT_METHODS;
 import static org.jclouds.Constants.PROPERTY_SESSION_INTERVAL;
 import static org.jclouds.googlecloudstorage.reference.GoogleCloudStorageConstants.OPERATION_COMPLETE_INTERVAL;
 import static org.jclouds.googlecloudstorage.reference.GoogleCloudStorageConstants.OPERATION_COMPLETE_TIMEOUT;
@@ -60,6 +61,7 @@ public class GoogleCloudStorageApiMetadata extends BaseHttpApiMetadata<GoogleClo
       properties.put(PROPERTY_SESSION_INTERVAL, 3600);
       properties.put(OPERATION_COMPLETE_INTERVAL, 2000);
       properties.put(OPERATION_COMPLETE_TIMEOUT, 600000);
+      properties.setProperty(PROPERTY_IDEMPOTENT_METHODS, "DELETE,GET,HEAD,OPTIONS,POST,PUT");
       return properties;
    }
 
