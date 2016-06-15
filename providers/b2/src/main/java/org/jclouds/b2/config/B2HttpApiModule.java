@@ -26,9 +26,11 @@ import org.jclouds.Constants;
 import org.jclouds.collect.Memoized;
 import org.jclouds.b2.B2Api;
 import org.jclouds.b2.domain.Authorization;
+import org.jclouds.b2.filters.B2RetryHandler;
 import org.jclouds.b2.filters.RequestAuthorization;
 import org.jclouds.b2.handlers.ParseB2ErrorFromJsonContent;
 import org.jclouds.http.HttpErrorHandler;
+import org.jclouds.http.HttpRetryHandler;
 import org.jclouds.http.annotation.ClientError;
 import org.jclouds.http.annotation.Redirection;
 import org.jclouds.http.annotation.ServerError;
@@ -55,6 +57,11 @@ public final class B2HttpApiModule extends HttpApiModule<B2Api> {
       bind(HttpErrorHandler.class).annotatedWith(Redirection.class).to(ParseB2ErrorFromJsonContent.class);
       bind(HttpErrorHandler.class).annotatedWith(ClientError.class).to(ParseB2ErrorFromJsonContent.class);
       bind(HttpErrorHandler.class).annotatedWith(ServerError.class).to(ParseB2ErrorFromJsonContent.class);
+   }
+
+   @Override
+   protected void bindRetryHandlers() {
+      bind(HttpRetryHandler.class).annotatedWith(ServerError.class).to(B2RetryHandler.class);
    }
 
    @Provides

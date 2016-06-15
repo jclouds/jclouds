@@ -48,6 +48,8 @@ public final class B2ApiMetadata extends BaseHttpApiMetadata {
    public static Properties defaultProperties() {
       Properties properties = BaseHttpApiMetadata.defaultProperties();
       properties.setProperty(Constants.PROPERTY_SESSION_INTERVAL, String.valueOf(TimeUnit.HOURS.toSeconds(1)));
+      properties.setProperty(Constants.PROPERTY_IDEMPOTENT_METHODS, "DELETE,GET,HEAD,OPTIONS,POST,PUT");
+      properties.setProperty(Constants.PROPERTY_RETRY_DELAY_START, String.valueOf(TimeUnit.SECONDS.toMillis(1)));
       return properties;
    }
 
