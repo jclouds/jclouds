@@ -16,9 +16,12 @@
  */
 package org.jclouds.gae;
 
+import static org.jclouds.Constants.PROPERTY_IDEMPOTENT_METHODS;
+
 import java.io.IOException;
 
 import javax.inject.Inject;
+import javax.inject.Named;
 import javax.inject.Singleton;
 
 import org.jclouds.JcloudsVersion;
@@ -56,8 +59,9 @@ public class GaeHttpCommandExecutorService extends BaseHttpCommandExecutorServic
             ContentMetadataCodec contentMetadataCodec,
             IOExceptionRetryHandler ioRetryHandler, DelegatingRetryHandler retryHandler,
             DelegatingErrorHandler errorHandler, HttpWire wire, ConvertToGaeRequest convertToGaeRequest,
-            ConvertToJcloudsResponse convertToJcloudsResponse) {
-      super(utils, contentMetadataCodec, retryHandler, ioRetryHandler, errorHandler, wire);
+            ConvertToJcloudsResponse convertToJcloudsResponse,
+            @Named(PROPERTY_IDEMPOTENT_METHODS) String idempotentMethods) {
+      super(utils, contentMetadataCodec, retryHandler, ioRetryHandler, errorHandler, wire, idempotentMethods);
       this.urlFetchService = urlFetchService;
       this.convertToGaeRequest = convertToGaeRequest;
       this.convertToJcloudsResponse = convertToJcloudsResponse;

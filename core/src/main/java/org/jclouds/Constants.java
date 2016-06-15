@@ -350,6 +350,9 @@ public final class Constants {
     */
    public static final String PROPERTY_MAX_PARALLEL_DELETES = "jclouds.max-parallel-deletes";
 
+   /** Comma-separated list of methods considered idempotent for purposes of retries.  By default jclouds uses DELETE,GET,HEAD,OPTIONS,PUT. */
+   public static final String PROPERTY_IDEMPOTENT_METHODS = "jclouds.idempotent-methods";
+
    private Constants() {
       throw new AssertionError("intentionally unimplemented");
    }

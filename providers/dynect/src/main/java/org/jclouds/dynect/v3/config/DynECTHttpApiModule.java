@@ -16,6 +16,7 @@
  */
 package org.jclouds.dynect.v3.config;
 
+import static org.jclouds.Constants.PROPERTY_IDEMPOTENT_METHODS;
 import static org.jclouds.http.HttpUtils.closeClientButKeepContentStream;
 import static org.jclouds.rest.config.BinderUtils.bindHttpApi;
 
@@ -102,10 +103,11 @@ public class DynECTHttpApiModule extends HttpApiModule<DynECTApi> {
       private SillyRabbit200sAreForSuccess(HttpUtils utils, ContentMetadataCodec contentMetadataCodec,
             DelegatingRetryHandler retryHandler, IOExceptionRetryHandler ioRetryHandler,
             DelegatingErrorHandler errorHandler, HttpWire wire, @Named("untrusted") HostnameVerifier verifier,
-            @Named("untrusted") Supplier<SSLContext> untrustedSSLContextProvider, Function<URI, Proxy> proxyForURI)
+            @Named("untrusted") Supplier<SSLContext> untrustedSSLContextProvider, Function<URI, Proxy> proxyForURI,
+            @Named(PROPERTY_IDEMPOTENT_METHODS) String idempotentMethods)
             throws SecurityException, NoSuchFieldException {
          super(utils, contentMetadataCodec, retryHandler, ioRetryHandler, errorHandler, wire, verifier,
-               untrustedSSLContextProvider, proxyForURI);
+               untrustedSSLContextProvider, proxyForURI, idempotentMethods);
       }
 
       /**

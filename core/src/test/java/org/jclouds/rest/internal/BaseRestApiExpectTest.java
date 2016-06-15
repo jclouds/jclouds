@@ -19,6 +19,7 @@ package org.jclouds.rest.internal;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.util.concurrent.MoreExecutors.sameThreadExecutor;
 import static com.google.inject.name.Names.named;
+import static org.jclouds.Constants.PROPERTY_IDEMPOTENT_METHODS;
 import static org.jclouds.Constants.PROPERTY_MAX_RETRIES;
 import static org.jclouds.Constants.PROPERTY_USER_THREADS;
 import static org.testng.Assert.assertEquals;
@@ -191,8 +192,9 @@ public abstract class BaseRestApiExpectTest<S> {
       @Inject
       public ExpectHttpCommandExecutorService(Function<HttpRequest, HttpResponse> fn, HttpUtils utils,
             ContentMetadataCodec contentMetadataCodec, IOExceptionRetryHandler ioRetryHandler,
-            DelegatingRetryHandler retryHandler, DelegatingErrorHandler errorHandler, HttpWire wire) {
-         super(utils, contentMetadataCodec, retryHandler, ioRetryHandler, errorHandler, wire);
+            DelegatingRetryHandler retryHandler, DelegatingErrorHandler errorHandler, HttpWire wire,
+            @Named(PROPERTY_IDEMPOTENT_METHODS) String idempotentMethods) {
+         super(utils, contentMetadataCodec, retryHandler, ioRetryHandler, errorHandler, wire, idempotentMethods);
          this.fn = checkNotNull(fn, "fn");
       }
 

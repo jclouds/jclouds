@@ -19,6 +19,7 @@ package org.jclouds.http.okhttp;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.net.HttpHeaders.ACCEPT;
 import static com.google.common.net.HttpHeaders.USER_AGENT;
+import static org.jclouds.Constants.PROPERTY_IDEMPOTENT_METHODS;
 import static org.jclouds.http.HttpUtils.filterOutContentHeaders;
 import static org.jclouds.io.Payloads.newInputStreamPayload;
 
@@ -26,6 +27,8 @@ import java.io.IOException;
 import java.net.Proxy;
 import java.net.URI;
 import java.util.Map;
+
+import javax.inject.Named;
 
 import okio.BufferedSink;
 import okio.Okio;
@@ -66,8 +69,9 @@ public final class OkHttpCommandExecutorService extends BaseHttpCommandExecutorS
    @Inject
    OkHttpCommandExecutorService(HttpUtils utils, ContentMetadataCodec contentMetadataCodec,
          DelegatingRetryHandler retryHandler, IOExceptionRetryHandler ioRetryHandler,
-         DelegatingErrorHandler errorHandler, HttpWire wire, Function<URI, Proxy> proxyForURI, OkHttpClient okHttpClient) {
-      super(utils, contentMetadataCodec, retryHandler, ioRetryHandler, errorHandler, wire);
+         DelegatingErrorHandler errorHandler, HttpWire wire, Function<URI, Proxy> proxyForURI, OkHttpClient okHttpClient,
+         @Named(PROPERTY_IDEMPOTENT_METHODS) String idempotentMethods) {
+      super(utils, contentMetadataCodec, retryHandler, ioRetryHandler, errorHandler, wire, idempotentMethods);
       this.proxyForURI = proxyForURI;
       this.globalClient = okHttpClient;
    }

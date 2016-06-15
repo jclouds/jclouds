@@ -16,6 +16,7 @@
  */
 package org.jclouds.s3;
 
+import static org.jclouds.Constants.PROPERTY_IDEMPOTENT_METHODS;
 import static org.jclouds.Constants.PROPERTY_RELAX_HOSTNAME;
 import static org.jclouds.aws.reference.AWSConstants.PROPERTY_AUTH_TAG;
 import static org.jclouds.aws.reference.AWSConstants.PROPERTY_HEADER_TAG;
@@ -79,6 +80,7 @@ public class S3ApiMetadata extends BaseHttpApiMetadata {
       properties.setProperty(PROPERTY_RELAX_HOSTNAME, "true");
       properties.setProperty(PROPERTY_BLOBSTORE_DIRECTORY_SUFFIX, "/");
       properties.setProperty(PROPERTY_USER_METADATA_PREFIX, String.format("x-${%s}-meta-", PROPERTY_HEADER_TAG));
+      properties.setProperty(PROPERTY_IDEMPOTENT_METHODS, "DELETE,GET,HEAD,OPTIONS,POST,PUT");
 
       // Chunk size must be at least 8 KB. We recommend a chunk size of a least 64 KB for better performance.
       properties.setProperty(PROPERTY_JCLOUDS_S3_CHUNKED_SIZE, String.valueOf(64 * 1024));

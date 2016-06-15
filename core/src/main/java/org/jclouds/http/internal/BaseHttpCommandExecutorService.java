@@ -18,6 +18,7 @@ package org.jclouds.http.internal;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Throwables.propagate;
+import static org.jclouds.Constants.PROPERTY_IDEMPOTENT_METHODS;
 import static org.jclouds.http.HttpUtils.checkRequestHasContentLengthOrChunkedEncoding;
 import static org.jclouds.http.HttpUtils.releasePayload;
 import static org.jclouds.http.HttpUtils.wirePayloadIfEnabled;
@@ -48,8 +49,6 @@ import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.ImmutableSet;
 
 public abstract class BaseHttpCommandExecutorService<Q> implements HttpCommandExecutorService {
-   private static final Set<String> IDEMPOTENT_METHODS = ImmutableSet.of("GET", "HEAD", "OPTIONS", "PUT", "DELETE");
-
    protected final HttpUtils utils;
    protected final ContentMetadataCodec contentMetadataCodec;
 
@@ -65,16 +64,20 @@ public abstract class BaseHttpCommandExecutorService<Q> implements HttpCommandEx
 
    protected final HttpWire wire;
 
+   private final Set<String> idempotentMethods;
+
    @Inject
    protected BaseHttpCommandExecutorService(HttpUtils utils, ContentMetadataCodec contentMetadataCodec,
          DelegatingRetryHandler retryHandler, IOExceptionRetryHandler ioRetryHandler,
-         DelegatingErrorHandler errorHandler, HttpWire wire) {
+         DelegatingErrorHandler errorHandler, HttpWire wire,
+         @Named(PROPERTY_IDEMPOTENT_METHODS) String idempotentMethods) {
       this.utils = checkNotNull(utils, "utils");
       this.contentMetadataCodec = checkNotNull(contentMetadataCodec, "contentMetadataCodec");
       this.retryHandler = checkNotNull(retryHandler, "retryHandler");
       this.ioRetryHandler = checkNotNull(ioRetryHandler, "ioRetryHandler");
       this.errorHandler = checkNotNull(errorHandler, "errorHandler");
       this.wire = checkNotNull(wire, "wire");
+      this.idempotentMethods = ImmutableSet.copyOf(idempotentMethods.split(","));
    }
 
    @Override
@@ -147,7 +150,7 @@ public abstract class BaseHttpCommandExecutorService<Q> implements HttpCommandEx
 
    private boolean isIdempotent(HttpCommand command) {
       String method = command.getCurrentRequest().getMethod();
-      if (!IDEMPOTENT_METHODS.contains(method)) {
+      if (!idempotentMethods.contains(method)) {
          logger.error("Command not considered safe to retry because request method is %1$s: %2$s", method, command);
          return false;
       } else {

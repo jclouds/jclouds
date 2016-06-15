@@ -21,6 +21,7 @@ import static org.easymock.EasyMock.expectLastCall;
 import static org.easymock.EasyMock.getCurrentArguments;
 import static org.easymock.EasyMock.replay;
 import static org.easymock.EasyMock.verify;
+import static org.jclouds.Constants.PROPERTY_IDEMPOTENT_METHODS;
 import static org.jclouds.http.HttpUtils.closeClientButKeepContentStream;
 import static org.jclouds.http.HttpUtils.releasePayload;
 import static org.jclouds.io.Payloads.newInputStreamPayload;
@@ -33,6 +34,7 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import javax.inject.Inject;
+import javax.inject.Named;
 
 import org.easymock.EasyMock;
 import org.easymock.IAnswer;
@@ -307,8 +309,9 @@ public class BaseHttpCommandExecutorServiceTest {
       @Inject
       MockHttpCommandExecutorService(HttpUtils utils, ContentMetadataCodec contentMetadataCodec,
             DelegatingRetryHandler retryHandler, IOExceptionRetryHandler ioRetryHandler,
-            DelegatingErrorHandler errorHandler, HttpWire wire) {
-         super(utils, contentMetadataCodec, retryHandler, ioRetryHandler, errorHandler, wire);
+            DelegatingErrorHandler errorHandler, HttpWire wire,
+            @Named(PROPERTY_IDEMPOTENT_METHODS) String idempotentMethods) {
+         super(utils, contentMetadataCodec, retryHandler, ioRetryHandler, errorHandler, wire, idempotentMethods);
       }
 
       @Override

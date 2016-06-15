@@ -18,12 +18,14 @@ package org.jclouds.http.apachehc;
 
 import static com.google.common.hash.Hashing.md5;
 import static com.google.common.io.BaseEncoding.base64;
+import static org.jclouds.Constants.PROPERTY_IDEMPOTENT_METHODS;
 import static org.jclouds.http.HttpUtils.filterOutContentHeaders;
 
 import java.io.IOException;
 import java.net.URI;
 
 import javax.inject.Inject;
+import javax.inject.Named;
 
 import org.apache.http.Header;
 import org.apache.http.HttpHost;
@@ -56,8 +58,9 @@ public class ApacheHCHttpCommandExecutorService extends BaseHttpCommandExecutorS
    @Inject
    ApacheHCHttpCommandExecutorService(HttpUtils utils, ContentMetadataCodec contentMetadataCodec,
          DelegatingRetryHandler retryHandler, IOExceptionRetryHandler ioRetryHandler,
-         DelegatingErrorHandler errorHandler, HttpWire wire, HttpClient client) {
-      super(utils, contentMetadataCodec, retryHandler, ioRetryHandler, errorHandler, wire);
+         DelegatingErrorHandler errorHandler, HttpWire wire, HttpClient client,
+         @Named(PROPERTY_IDEMPOTENT_METHODS) String idempotentMethods) {
+      super(utils, contentMetadataCodec, retryHandler, ioRetryHandler, errorHandler, wire, idempotentMethods);
       this.client = client;
       this.apacheHCUtils = new ApacheHCUtils(contentMetadataCodec);
    }
