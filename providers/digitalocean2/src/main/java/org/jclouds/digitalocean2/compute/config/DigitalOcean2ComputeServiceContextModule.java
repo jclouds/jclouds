@@ -32,7 +32,8 @@ import org.jclouds.compute.domain.Image;
 import org.jclouds.compute.domain.NodeMetadata;
 import org.jclouds.compute.domain.NodeMetadata.Status;
 import org.jclouds.compute.extensions.ImageExtension;
-import org.jclouds.compute.functions.TemplateOptionsToStatement;
+import org.jclouds.compute.functions.NodeAndTemplateOptionsToStatement;
+import org.jclouds.compute.functions.NodeAndTemplateOptionsToStatementWithoutPublicKey;
 import org.jclouds.compute.options.TemplateOptions;
 import org.jclouds.compute.reference.ComputeServiceConstants.PollPeriod;
 import org.jclouds.compute.reference.ComputeServiceConstants.Timeouts;
@@ -45,7 +46,6 @@ import org.jclouds.digitalocean2.compute.functions.DropletToNodeMetadata;
 import org.jclouds.digitalocean2.compute.functions.ImageInRegionToImage;
 import org.jclouds.digitalocean2.compute.functions.RegionToLocation;
 import org.jclouds.digitalocean2.compute.functions.SizeToHardware;
-import org.jclouds.digitalocean2.compute.functions.TemplateOptionsToStatementWithoutPublicKey;
 import org.jclouds.digitalocean2.compute.internal.ImageInRegion;
 import org.jclouds.digitalocean2.compute.options.DigitalOcean2TemplateOptions;
 import org.jclouds.digitalocean2.compute.strategy.CreateKeyPairsThenCreateNodes;
@@ -91,7 +91,7 @@ public class DigitalOcean2ComputeServiceContextModule extends
 
       bind(CreateNodesInGroupThenAddToSet.class).to(CreateKeyPairsThenCreateNodes.class);
       bind(TemplateOptions.class).to(DigitalOcean2TemplateOptions.class);
-      bind(TemplateOptionsToStatement.class).to(TemplateOptionsToStatementWithoutPublicKey.class);
+      bind(NodeAndTemplateOptionsToStatement.class).to(NodeAndTemplateOptionsToStatementWithoutPublicKey.class);
 
       bind(new TypeLiteral<ImageExtension>() {
       }).to(DigitalOcean2ImageExtension.class);

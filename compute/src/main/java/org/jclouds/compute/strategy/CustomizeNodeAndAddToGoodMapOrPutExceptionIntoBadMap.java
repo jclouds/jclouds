@@ -34,6 +34,7 @@ import org.jclouds.compute.callables.RunScriptOnNode;
 import org.jclouds.compute.config.CustomizationResponse;
 import org.jclouds.compute.domain.ExecResponse;
 import org.jclouds.compute.domain.NodeMetadata;
+import org.jclouds.compute.functions.NodeAndTemplateOptionsToStatement;
 import org.jclouds.compute.options.TemplateOptions;
 import org.jclouds.compute.reference.ComputeServiceConstants;
 import org.jclouds.compute.util.OpenSocketFinder;
@@ -66,7 +67,7 @@ public class CustomizeNodeAndAddToGoodMapOrPutExceptionIntoBadMap implements Cal
    private final OpenSocketFinder openSocketFinder;
 
    @Nullable
-   private final Statement statement;
+   private final NodeAndTemplateOptionsToStatement nodeAndTemplateOptionsToStatement;
    private final TemplateOptions options;
    private AtomicReference<NodeMetadata> node;
    private final Set<NodeMetadata> goodNodes;
@@ -78,13 +79,13 @@ public class CustomizeNodeAndAddToGoodMapOrPutExceptionIntoBadMap implements Cal
    @AssistedInject
    public CustomizeNodeAndAddToGoodMapOrPutExceptionIntoBadMap(
          @Named(TIMEOUT_NODE_RUNNING) Function<AtomicReference<NodeMetadata>, AtomicReference<NodeMetadata>> pollNodeRunning,
-         OpenSocketFinder openSocketFinder, Function<TemplateOptions, Statement> templateOptionsToStatement,
+         OpenSocketFinder openSocketFinder, NodeAndTemplateOptionsToStatement nodeAndTemplateOptionsToStatement,
          InitializeRunScriptOnNodeOrPlaceInBadMap.Factory initScriptRunnerFactory, @Assisted TemplateOptions options,
          @Assisted AtomicReference<NodeMetadata> node, @Assisted Set<NodeMetadata> goodNodes,
          @Assisted Map<NodeMetadata, Exception> badNodes,
          @Assisted Multimap<NodeMetadata, CustomizationResponse> customizationResponses) {
-      this.statement = checkNotNull(templateOptionsToStatement, "templateOptionsToStatement").apply(
-            checkNotNull(options, "options"));
+      this.nodeAndTemplateOptionsToStatement = checkNotNull(nodeAndTemplateOptionsToStatement,
+            "nodeAndTemplateOptionsToStatement");
       this.pollNodeRunning = checkNotNull(pollNodeRunning, "pollNodeRunning");
       this.initScriptRunnerFactory = checkNotNull(initScriptRunnerFactory, "initScriptRunnerFactory");
       this.openSocketFinder = checkNotNull(openSocketFinder, "openSocketFinder");
@@ -99,11 +100,11 @@ public class CustomizeNodeAndAddToGoodMapOrPutExceptionIntoBadMap implements Cal
    public CustomizeNodeAndAddToGoodMapOrPutExceptionIntoBadMap(
          @Named(TIMEOUT_NODE_RUNNING) Function<AtomicReference<NodeMetadata>, AtomicReference<NodeMetadata>> pollNodeRunning,
          GetNodeMetadataStrategy getNode, OpenSocketFinder openSocketFinder,
-         Function<TemplateOptions, Statement> templateOptionsToStatement,
+         NodeAndTemplateOptionsToStatement nodeAndTemplateOptionsToStatement,
          InitializeRunScriptOnNodeOrPlaceInBadMap.Factory initScriptRunnerFactory, @Assisted TemplateOptions options,
          @Assisted Set<NodeMetadata> goodNodes, @Assisted Map<NodeMetadata, Exception> badNodes,
          @Assisted Multimap<NodeMetadata, CustomizationResponse> customizationResponses) {
-      this(pollNodeRunning, openSocketFinder, templateOptionsToStatement, initScriptRunnerFactory, options,
+      this(pollNodeRunning, openSocketFinder, nodeAndTemplateOptionsToStatement, initScriptRunnerFactory, options,
             new AtomicReference<NodeMetadata>(null), goodNodes, badNodes, customizationResponses);
    }
 
@@ -115,6 +116,7 @@ public class CustomizeNodeAndAddToGoodMapOrPutExceptionIntoBadMap implements Cal
       try {
          if (options.shouldBlockUntilRunning()) {
             pollNodeRunning.apply(node);
+            Statement statement = nodeAndTemplateOptionsToStatement.apply(node.get(), options);
             if (statement != null) {
                RunScriptOnNode runner = initScriptRunnerFactory.create(node.get(), statement, options, badNodes).call();
                if (runner != null) {

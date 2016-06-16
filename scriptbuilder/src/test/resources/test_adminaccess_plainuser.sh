@@ -6,6 +6,7 @@ cat >> /home/users/defaultAdminUsername/.ssh/authorized_keys <<-'END_OF_JCLOUDS_
 	publicKey
 END_OF_JCLOUDS_FILE
 chmod 600 /home/users/defaultAdminUsername/.ssh/authorized_keys
+chown -R defaultAdminUsername /home/users/defaultAdminUsername/.ssh
 mkdir -p /home/users/defaultAdminUsername/.ssh
 rm /home/users/defaultAdminUsername/.ssh/id_rsa
 cat >> /home/users/defaultAdminUsername/.ssh/id_rsa <<-'END_OF_JCLOUDS_FILE'

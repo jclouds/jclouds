@@ -32,7 +32,8 @@ import org.jclouds.compute.config.CustomizationResponse;
 import org.jclouds.compute.domain.NodeMetadata;
 import org.jclouds.compute.domain.NodeMetadata.Status;
 import org.jclouds.compute.domain.NodeMetadataBuilder;
-import org.jclouds.compute.functions.TemplateOptionsToStatement;
+import org.jclouds.compute.functions.InstallKeysAndRunScript;
+import org.jclouds.compute.functions.NodeAndTemplateOptionsToStatement;
 import org.jclouds.compute.options.TemplateOptions;
 import org.jclouds.compute.util.OpenSocketFinder;
 import org.jclouds.scriptbuilder.domain.Statement;
@@ -53,7 +54,7 @@ public class CustomizeNodeAndAddToGoodMapOrPutExceptionIntoBadMapTest {
    public void testBreakOnIllegalStateExceptionDuringPollNode() {
       InitializeRunScriptOnNodeOrPlaceInBadMap.Factory initScriptRunnerFactory = createMock(InitializeRunScriptOnNodeOrPlaceInBadMap.Factory.class);
       OpenSocketFinder openSocketFinder = createMock(OpenSocketFinder.class);
-      Function<TemplateOptions, Statement> templateOptionsToStatement = new TemplateOptionsToStatement();
+      NodeAndTemplateOptionsToStatement nodeAndTemplateOptionsToStatement = new InstallKeysAndRunScript();
       @SuppressWarnings("unused")
       Statement statement = null;
       TemplateOptions options = new TemplateOptions();
@@ -79,7 +80,7 @@ public class CustomizeNodeAndAddToGoodMapOrPutExceptionIntoBadMapTest {
       // run
       AtomicReference<NodeMetadata> atomicNode = Atomics.newReference(pendingNode);
       new CustomizeNodeAndAddToGoodMapOrPutExceptionIntoBadMap(pollNodeRunning, openSocketFinder,
-            templateOptionsToStatement, initScriptRunnerFactory, options, atomicNode, goodNodes, badNodes,
+            nodeAndTemplateOptionsToStatement, initScriptRunnerFactory, options, atomicNode, goodNodes, badNodes,
             customizationResponses).apply(atomicNode);
 
       assertEquals(goodNodes.size(), 0);
@@ -95,7 +96,7 @@ public class CustomizeNodeAndAddToGoodMapOrPutExceptionIntoBadMapTest {
       int portTimeoutSecs = 2;
       InitializeRunScriptOnNodeOrPlaceInBadMap.Factory initScriptRunnerFactory = createMock(InitializeRunScriptOnNodeOrPlaceInBadMap.Factory.class);
       OpenSocketFinder openSocketFinder = createMock(OpenSocketFinder.class);
-      Function<TemplateOptions, Statement> templateOptionsToStatement = new TemplateOptionsToStatement();
+      NodeAndTemplateOptionsToStatement nodeAndTemplateOptionsToStatement = new InstallKeysAndRunScript();
       TemplateOptions options = new TemplateOptions().blockOnPort(22, portTimeoutSecs);
       Set<NodeMetadata> goodNodes = Sets.newLinkedHashSet();
       Map<NodeMetadata, Exception> badNodes = Maps.newLinkedHashMap();
@@ -124,7 +125,7 @@ public class CustomizeNodeAndAddToGoodMapOrPutExceptionIntoBadMapTest {
       // run
       AtomicReference<NodeMetadata> atomicNode = Atomics.newReference(pendingNode);
       new CustomizeNodeAndAddToGoodMapOrPutExceptionIntoBadMap(pollNodeRunning, openSocketFinder,
-            templateOptionsToStatement, initScriptRunnerFactory, options, atomicNode, goodNodes, badNodes,
+            nodeAndTemplateOptionsToStatement, initScriptRunnerFactory, options, atomicNode, goodNodes, badNodes,
             customizationResponses).apply(atomicNode);
 
       assertEquals(goodNodes.size(), 0);

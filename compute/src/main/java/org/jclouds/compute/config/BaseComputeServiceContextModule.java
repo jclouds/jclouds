@@ -47,7 +47,6 @@ import org.jclouds.compute.extensions.ImageExtension;
 import org.jclouds.compute.extensions.SecurityGroupExtension;
 import org.jclouds.compute.functions.CreateSshClientOncePortIsListeningOnNode;
 import org.jclouds.compute.functions.DefaultCredentialsFromImageOrOverridingCredentials;
-import org.jclouds.compute.functions.TemplateOptionsToStatement;
 import org.jclouds.compute.options.RunScriptOptions;
 import org.jclouds.compute.options.TemplateOptions;
 import org.jclouds.compute.reference.ComputeServiceConstants;
@@ -89,8 +88,6 @@ public abstract class BaseComputeServiceContextModule extends AbstractModule {
       install(new ComputeServiceTimeoutsModule());
       bind(new TypeLiteral<Function<NodeMetadata, SshClient>>() {
       }).to(CreateSshClientOncePortIsListeningOnNode.class);
-      bind(new TypeLiteral<Function<TemplateOptions, Statement>>() {
-      }).to(TemplateOptionsToStatement.class);
       bind(LoginCredentials.class).annotatedWith(Names.named("image")).toProvider(
             GetLoginForProviderFromPropertiesAndStoreCredentialsOrReturnNull.class);
 

@@ -16,40 +16,45 @@
  */
 package org.jclouds.compute.functions;
 
-import static com.google.common.collect.Lists.newArrayList;
-
-import java.util.List;
-
 import javax.inject.Singleton;
 
+import org.jclouds.compute.domain.NodeMetadata;
 import org.jclouds.compute.options.TemplateOptions;
 import org.jclouds.scriptbuilder.InitScript;
 import org.jclouds.scriptbuilder.domain.Statement;
 import org.jclouds.scriptbuilder.domain.StatementList;
-import org.jclouds.scriptbuilder.statements.ssh.AuthorizeRSAPublicKeys;
 import org.jclouds.scriptbuilder.statements.ssh.InstallRSAPrivateKey;
 
-import com.google.common.base.Function;
-import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.ImmutableList;
 
+/**
+ * Convert the node and template options into a statement, but ignoring the
+ * public key.
+ * <p>
+ * Providers that can install the public key using their API should bind this
+ * strategy to avoid an unnecessary SSH connection to manually upload it.
+ */
 @Singleton
-public class TemplateOptionsToStatement implements Function<TemplateOptions, Statement> {
+public class NodeAndTemplateOptionsToStatementWithoutPublicKey implements NodeAndTemplateOptionsToStatement {
 
    @Override
-   public Statement apply(TemplateOptions options) {
-      List<Statement> bootstrap = newArrayList();
-      if (options.getPublicKey() != null)
-         bootstrap.add(new AuthorizeRSAPublicKeys(ImmutableSet.of(options.getPublicKey())));
-      if (options.getRunScript() != null)
-         bootstrap.add(options.getRunScript());
-      if (options.getPrivateKey() != null)
-         bootstrap.add(new InstallRSAPrivateKey(options.getPrivateKey()));
-      if (bootstrap.size() >= 1) {
-         if (options.getTaskName() == null && !(options.getRunScript() instanceof InitScript))
+   public Statement apply(NodeMetadata node, TemplateOptions options) {
+      ImmutableList.Builder<Statement> builder = ImmutableList.builder();
+      if (options.getRunScript() != null) {
+         builder.add(options.getRunScript());
+      }
+      if (options.getPrivateKey() != null) {
+         builder.add(new InstallRSAPrivateKey(options.getPrivateKey()));
+      }
+
+      ImmutableList<Statement> bootstrap = builder.build();
+      if (!bootstrap.isEmpty()) {
+         if (options.getTaskName() == null && !(options.getRunScript() instanceof InitScript)) {
             options.nameTask("bootstrap");
+         }
          return bootstrap.size() == 1 ? bootstrap.get(0) : new StatementList(bootstrap);
       }
+
       return null;
    }
-
 }

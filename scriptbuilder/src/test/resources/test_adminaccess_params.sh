@@ -14,6 +14,7 @@ cat >> /over/ridden/foo/.ssh/authorized_keys <<-'END_OF_JCLOUDS_FILE'
 	fooPublicKey
 END_OF_JCLOUDS_FILE
 chmod 600 /over/ridden/foo/.ssh/authorized_keys
+chown -R foo /over/ridden/foo/.ssh
 chown -R foo /over/ridden/foo
 exec 3<> /etc/ssh/sshd_config && awk -v TEXT="PasswordAuthentication no
 PermitRootLogin no

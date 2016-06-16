@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jclouds.digitalocean2.compute.functions;
+package org.jclouds.compute.functions;
 
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNull;
@@ -31,18 +31,17 @@ import org.jclouds.ssh.SshKeys;
 import org.testng.annotations.Test;
 
 /**
- * Unit tests for the {@link TemplateOptionsToStatementWithoutPublicKey} class.
+ * Unit tests for the {@link NodeAndTemplateOptionsToStatementWithoutPublicKey} class.
  */
-@Test(groups = "unit", testName = "TemplateOptionsToStatementWithoutPublicKeyTest")
-public class TemplateOptionsToStatementWithoutPublicKeyTest {
+@Test(groups = "unit", testName = "NodeAndTemplateOptionsToStatementWithoutPublicKeyTest")
+public class NodeAndTemplateOptionsToStatementWithoutPublicKeyTest {
 
    @Test
    public void testPublicKeyDoesNotGenerateAuthorizePublicKeyStatementIfOnlyPublicKeyOptionsConfigured() {
       Map<String, String> keys = SshKeys.generate();
       TemplateOptions options = TemplateOptions.Builder.authorizePublicKey(keys.get("public"));
-
-      TemplateOptionsToStatementWithoutPublicKey function = new TemplateOptionsToStatementWithoutPublicKey();
-      assertNull(function.apply(options));
+      NodeAndTemplateOptionsToStatementWithoutPublicKey function = new NodeAndTemplateOptionsToStatementWithoutPublicKey();
+      assertNull(function.apply(null, options));
    }
 
    @Test
@@ -50,8 +49,8 @@ public class TemplateOptionsToStatementWithoutPublicKeyTest {
       Map<String, String> keys = SshKeys.generate();
       TemplateOptions options = TemplateOptions.Builder.authorizePublicKey(keys.get("public")).runScript("uptime");
 
-      TemplateOptionsToStatementWithoutPublicKey function = new TemplateOptionsToStatementWithoutPublicKey();
-      Statement statement = function.apply(options);
+      NodeAndTemplateOptionsToStatementWithoutPublicKey function = new NodeAndTemplateOptionsToStatementWithoutPublicKey();
+      Statement statement = function.apply(null, options);
 
       assertEquals(statement.render(OsFamily.UNIX), "uptime\n");
    }
@@ -62,8 +61,8 @@ public class TemplateOptionsToStatementWithoutPublicKeyTest {
       TemplateOptions options = TemplateOptions.Builder.authorizePublicKey(keys.get("public"))
             .installPrivateKey(keys.get("private")).runScript("uptime");
 
-      TemplateOptionsToStatementWithoutPublicKey function = new TemplateOptionsToStatementWithoutPublicKey();
-      Statement statement = function.apply(options);
+      NodeAndTemplateOptionsToStatementWithoutPublicKey function = new NodeAndTemplateOptionsToStatementWithoutPublicKey();
+      Statement statement = function.apply(null, options);
 
       assertTrue(statement instanceof StatementList);
       StatementList statements = (StatementList) statement;

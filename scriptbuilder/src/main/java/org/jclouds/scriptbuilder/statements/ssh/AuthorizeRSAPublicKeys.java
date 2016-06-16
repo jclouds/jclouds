@@ -22,6 +22,7 @@ import static org.jclouds.scriptbuilder.domain.Statements.exec;
 
 import java.util.List;
 
+import org.jclouds.javax.annotation.Nullable;
 import org.jclouds.scriptbuilder.domain.OsFamily;
 import org.jclouds.scriptbuilder.domain.Statement;
 import org.jclouds.scriptbuilder.domain.StatementList;
@@ -34,14 +35,20 @@ import com.google.common.collect.ImmutableList.Builder;
 public class AuthorizeRSAPublicKeys implements Statement {
    private final String sshDir;
    private final List<String> publicKeys;
-
+   private final String owner;
+   
    public AuthorizeRSAPublicKeys(Iterable<String> publicKeys) {
-      this("~/.ssh", publicKeys);
+      this("~/.ssh", publicKeys, null);
+   }
+   
+   public AuthorizeRSAPublicKeys(Iterable<String> publicKeys, @Nullable String owner) {
+      this("~/.ssh", publicKeys, owner);
    }
 
-   public AuthorizeRSAPublicKeys(String sshDir, Iterable<String> publicKeys) {
+   public AuthorizeRSAPublicKeys(String sshDir, Iterable<String> publicKeys, @Nullable String owner) {
       this.sshDir = checkNotNull(sshDir, "sshDir");
       this.publicKeys = ImmutableList.copyOf(checkNotNull(publicKeys, "publicKeys"));
+      this.owner = owner;
    }
 
    @Override
@@ -59,6 +66,9 @@ public class AuthorizeRSAPublicKeys implements Statement {
       String authorizedKeys = sshDir + "{fs}authorized_keys";
       statements.add(appendFile(authorizedKeys, Splitter.on('\n').split(Joiner.on("\n\n").join(publicKeys))));
       statements.add(exec("chmod 600 " + authorizedKeys));
+      if (owner != null) {
+         statements.add(exec(String.format("chown -R %s %s", owner, sshDir)));
+      }
       return new StatementList(statements.build()).render(family);
    }
 }

@@ -28,6 +28,17 @@ public class AuthorizeRSAPublicKeyTest {
 
    public void testAuthorizeRSAPublicKeyUNIXCurrentUser() {
       assertEquals(
+               new AuthorizeRSAPublicKeys(ImmutableSet.of("ssh-dss AAAAB"), "jclouds").render(OsFamily.UNIX),
+               "mkdir -p ~/.ssh\n" +
+               "cat >> ~/.ssh/authorized_keys <<-'END_OF_JCLOUDS_FILE'\n" +
+               "\tssh-dss AAAAB\n" +
+               "END_OF_JCLOUDS_FILE\n" +
+               "chmod 600 ~/.ssh/authorized_keys\n" +
+               "chown -R jclouds ~/.ssh\n");
+   }
+   
+   public void testAuthorizeRSAPublicKeyUNIXNoOwner() {
+      assertEquals(
                new AuthorizeRSAPublicKeys(ImmutableSet.of("ssh-dss AAAAB")).render(OsFamily.UNIX),
                "mkdir -p ~/.ssh\n" +
                "cat >> ~/.ssh/authorized_keys <<-'END_OF_JCLOUDS_FILE'\n" +
@@ -38,29 +49,31 @@ public class AuthorizeRSAPublicKeyTest {
 
    public void testAuthorizeRSAPublicKeyUNIXCurrentUserWith2Keys() {
       assertEquals(
-               new AuthorizeRSAPublicKeys(ImmutableSet.of("ssh-dss AAAAB", "ssh-dss CCCCD")).render(OsFamily.UNIX),
+               new AuthorizeRSAPublicKeys(ImmutableSet.of("ssh-dss AAAAB", "ssh-dss CCCCD"), "jclouds").render(OsFamily.UNIX),
                "mkdir -p ~/.ssh\n" +
                "cat >> ~/.ssh/authorized_keys <<-'END_OF_JCLOUDS_FILE'\n" +
                "\tssh-dss AAAAB\n" +
                "\t\n" +
                "\tssh-dss CCCCD\n" +
                "END_OF_JCLOUDS_FILE\n" +
-               "chmod 600 ~/.ssh/authorized_keys\n");
+               "chmod 600 ~/.ssh/authorized_keys\n" +
+               "chown -R jclouds ~/.ssh\n");
    }
 
    public void testAuthorizeRSAPublicKeyUNIXSpecifiedDir() {
       assertEquals(
-               new AuthorizeRSAPublicKeys("/home/me/.ssh", ImmutableSet.of("ssh-dss AAAAB")).render(OsFamily.UNIX),
+               new AuthorizeRSAPublicKeys("/home/me/.ssh", ImmutableSet.of("ssh-dss AAAAB"), "jclouds").render(OsFamily.UNIX),
                "mkdir -p /home/me/.ssh\n" +
                "cat >> /home/me/.ssh/authorized_keys <<-'END_OF_JCLOUDS_FILE'\n" +
                "\tssh-dss AAAAB\n" +
                "END_OF_JCLOUDS_FILE\n" +
-               "chmod 600 /home/me/.ssh/authorized_keys\n");
+               "chmod 600 /home/me/.ssh/authorized_keys\n" +
+               "chown -R jclouds /home/me/.ssh\n");
    }
 
    public void testAuthorizeRSAPublicKeyUNIXSpecifiedDirWith2Keys() {
       assertEquals(
-               new AuthorizeRSAPublicKeys("/home/me/.ssh", ImmutableSet.of("ssh-dss AAAAB", "ssh-dss CCCCD"))
+               new AuthorizeRSAPublicKeys("/home/me/.ssh", ImmutableSet.of("ssh-dss AAAAB", "ssh-dss CCCCD"), "jclouds")
                         .render(OsFamily.UNIX),
                         "mkdir -p /home/me/.ssh\n" +
                               "cat >> /home/me/.ssh/authorized_keys <<-'END_OF_JCLOUDS_FILE'\n" +
@@ -68,11 +81,12 @@ public class AuthorizeRSAPublicKeyTest {
                               "\t\n" +
                               "\tssh-dss CCCCD\n" +
                               "END_OF_JCLOUDS_FILE\n" +
-                              "chmod 600 /home/me/.ssh/authorized_keys\n");
+                              "chmod 600 /home/me/.ssh/authorized_keys\n" +
+                              "chown -R jclouds /home/me/.ssh\n");
    }
 
    @Test(expectedExceptions = UnsupportedOperationException.class)
    public void testAuthorizeRSAPublicKeyWINDOWS() {
-      new AuthorizeRSAPublicKeys(ImmutableSet.of("ssh-dss AAAAB")).render(OsFamily.WINDOWS);
+      new AuthorizeRSAPublicKeys(ImmutableSet.of("ssh-dss AAAAB"), "jclouds").render(OsFamily.WINDOWS);
    }
 }

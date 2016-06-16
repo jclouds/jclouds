@@ -15,6 +15,7 @@ cat >> /home/users/defaultAdminUsername/.ssh/authorized_keys <<'END_OF_FILE'
 publicKey
 END_OF_FILE
 chmod 600 /home/users/defaultAdminUsername/.ssh/authorized_keys
+chown -R defaultAdminUsername /home/users/defaultAdminUsername/.ssh
 chown -R defaultAdminUsername /home/users/defaultAdminUsername
 exec 3<> /etc/ssh/sshd_config && awk -v TEXT="PasswordAuthentication no
 PermitRootLogin no

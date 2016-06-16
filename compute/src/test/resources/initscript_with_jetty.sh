@@ -219,6 +219,7 @@ END_OF_JCLOUDS_SCRIPT
 		publicKey
 	END_OF_JCLOUDS_FILE
 	chmod 600 /home/users/web/.ssh/authorized_keys
+	chown -R web /home/users/web/.ssh
 	chown -R web /home/users/web
 	exec 3<> /etc/ssh/sshd_config && awk -v TEXT="PasswordAuthentication no
 	PermitRootLogin no

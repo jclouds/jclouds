@@ -231,7 +231,7 @@ public class UserAdd implements Statement {
       if (!authorizeRSAPublicKeys.isEmpty() || installRSAPrivateKey != null) {
          String sshDir = homeDir + "{fs}.ssh";
          if (!authorizeRSAPublicKeys.isEmpty())
-            statements.add(new AuthorizeRSAPublicKeys(sshDir, authorizeRSAPublicKeys));
+            statements.add(new AuthorizeRSAPublicKeys(sshDir, authorizeRSAPublicKeys, login));
          if (installRSAPrivateKey != null)
             statements.add(new InstallRSAPrivateKey(sshDir, installRSAPrivateKey));
       }

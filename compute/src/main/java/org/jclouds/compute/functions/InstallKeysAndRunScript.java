@@ -14,45 +14,45 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jclouds.digitalocean2.compute.functions;
+package org.jclouds.compute.functions;
+
+import static com.google.common.collect.Lists.newArrayList;
+
+import java.util.List;
 
 import javax.inject.Singleton;
 
-import org.jclouds.compute.functions.TemplateOptionsToStatement;
+import org.jclouds.compute.domain.NodeMetadata;
 import org.jclouds.compute.options.TemplateOptions;
 import org.jclouds.scriptbuilder.InitScript;
 import org.jclouds.scriptbuilder.domain.Statement;
 import org.jclouds.scriptbuilder.domain.StatementList;
+import org.jclouds.scriptbuilder.statements.ssh.AuthorizeRSAPublicKeys;
 import org.jclouds.scriptbuilder.statements.ssh.InstallRSAPrivateKey;
-import com.google.common.collect.ImmutableList;
 
-/**
- * Convert the template options into a statement, but ignoring the public key.
- * <p>
- * The {@link org.jclouds.DigitalOcean2ComputeServiceAdapter.compute.strategy.DigitalOceanComputeServiceAdapter} already takes care of
- * installing it using the {@link org.jclouds.digitalocean.features.KeyPairApi}.
- */
+import com.google.common.collect.ImmutableSet;
+
 @Singleton
-public class TemplateOptionsToStatementWithoutPublicKey extends TemplateOptionsToStatement {
+public class InstallKeysAndRunScript implements NodeAndTemplateOptionsToStatement {
 
    @Override
-   public Statement apply(TemplateOptions options) {
-      ImmutableList.Builder<Statement> builder = ImmutableList.builder();
-      if (options.getRunScript() != null) {
-         builder.add(options.getRunScript());
+   public Statement apply(NodeMetadata node, TemplateOptions options) {
+      String user = options.getLoginUser();
+      if (user == null && node.getCredentials() != null) {
+         user = node.getCredentials().getUser();
       }
-      if (options.getPrivateKey() != null) {
-         builder.add(new InstallRSAPrivateKey(options.getPrivateKey()));
-      }
-
-      ImmutableList<Statement> bootstrap = builder.build();
-      if (!bootstrap.isEmpty()) {
-         if (options.getTaskName() == null && !(options.getRunScript() instanceof InitScript)) {
+      List<Statement> bootstrap = newArrayList();
+      if (options.getPublicKey() != null)
+         bootstrap.add(new AuthorizeRSAPublicKeys(ImmutableSet.of(options.getPublicKey()), user));
+      if (options.getRunScript() != null)
+         bootstrap.add(options.getRunScript());
+      if (options.getPrivateKey() != null)
+         bootstrap.add(new InstallRSAPrivateKey(options.getPrivateKey()));
+      if (bootstrap.size() >= 1) {
+         if (options.getTaskName() == null && !(options.getRunScript() instanceof InitScript))
             options.nameTask("bootstrap");
-         }
          return bootstrap.size() == 1 ? bootstrap.get(0) : new StatementList(bootstrap);
       }
-
       return null;
    }
 
