@@ -198,14 +198,21 @@ public class RestAnnotationProcessor implements Function<Invocation, HttpRequest
          endpoint = Optional.fromNullable(r.getEndpoint());
          if (endpoint.isPresent())
             logger.trace("using endpoint %s from invocation.getArgs() for %s", endpoint, invocation);
-      } else if (caller != null) {
-         endpoint = getEndpointFor(caller);
-         if (endpoint.isPresent())
-            logger.trace("using endpoint %s from caller %s for %s", endpoint, caller, invocation);
-         else
-            endpoint = findEndpoint(invocation);
       } else {
-         endpoint = findEndpoint(invocation);
+         // If there is no explicit HttpRequest parameter, try to find the endpoint. When using
+         // delegate apis, the endpoint defined in the callee takes precedence
+         endpoint = getEndpointFor(invocation);
+         if (!endpoint.isPresent()) {
+            if (caller != null) {
+               endpoint = getEndpointFor(caller);
+               if (endpoint.isPresent())
+                  logger.trace("using endpoint %s from caller %s for %s", endpoint, caller, invocation);
+               else
+                  endpoint = findEndpoint(invocation);
+            } else {
+               endpoint = findEndpoint(invocation);
+            }
+         }
       }
 
       if (!endpoint.isPresent())

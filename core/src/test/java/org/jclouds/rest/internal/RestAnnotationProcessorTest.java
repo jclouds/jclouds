@@ -20,6 +20,7 @@ import static com.google.common.base.Charsets.UTF_8;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 import static javax.ws.rs.core.MediaType.APPLICATION_XML;
+import static org.assertj.core.api.Assertions.failBecauseExceptionWasNotThrown;
 import static org.jclouds.io.Payloads.newInputStreamPayload;
 import static org.jclouds.io.Payloads.newStringPayload;
 import static org.jclouds.providers.AnonymousProviderMetadata.forApiOnEndpoint;
@@ -185,6 +186,13 @@ public class RestAnnotationProcessorTest extends BaseRestApiTest {
       @Produces(APPLICATION_XML)
       @Consumes(APPLICATION_XML)
       void testProducesAndConsumesOnMethod();
+
+      @GET
+      void testWithEndpointParam(@EndpointParam URI endpoint);
+
+      @GET
+      @Endpoint(Localhost2.class)
+      void testWithEndpoint();
    }
 
    @Path("/client/{jclouds.api-version}")
@@ -409,6 +417,46 @@ public class RestAnnotationProcessorTest extends BaseRestApiTest {
 
       assertEquals(child.getInstance(Caller.class).getURI(), URI.create("http://localhost:1111"));
 
+   }
+
+   public void testDelegateIsLazyLoadedAndRequestIncludesEndpointParamFromCallee()
+         throws InterruptedException, ExecutionException {
+      Injector child = injectorForCaller(new HttpCommandExecutorService() {
+         @Override
+         public HttpResponse invoke(HttpCommand command) {
+            assertEquals(command.getCurrentRequest().getRequestLine(), "GET http://foo/bar/client/1 HTTP/1.1");
+            return HttpResponse.builder().build();
+         }
+      });
+
+      try {
+         child.getInstance(Callee.class);
+         failBecauseExceptionWasNotThrown(ConfigurationException.class);
+      } catch (ConfigurationException e) {
+
+      }
+
+      child.getInstance(Caller.class).getCallee(URI.create("http://howdyboys")).testWithEndpointParam(URI.create("http://foo/bar"));
+   }
+
+   public void testDelegateIsLazyLoadedAndRequestIncludesEndpointFromCallee()
+         throws InterruptedException, ExecutionException {
+      Injector child = injectorForCaller(new HttpCommandExecutorService() {
+         @Override
+         public HttpResponse invoke(HttpCommand command) {
+            assertEquals(command.getCurrentRequest().getRequestLine(), "GET http://localhost:1111/client/1 HTTP/1.1");
+            return HttpResponse.builder().build();
+         }
+      });
+
+      try {
+         child.getInstance(Callee.class);
+         failBecauseExceptionWasNotThrown(ConfigurationException.class);
+      } catch (ConfigurationException e) {
+
+      }
+
+      child.getInstance(Caller.class).getCallee(URI.create("http://howdyboys")).testWithEndpoint();
    }
 
    public void testDelegateIsLazyLoadedAndRequestIncludesEndpointVersionAndPath() throws InterruptedException,
