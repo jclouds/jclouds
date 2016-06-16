@@ -18,23 +18,21 @@ package org.jclouds.b2.features;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.failBecauseExceptionWasNotThrown;
+import static org.jclouds.b2.features.B2TestUtils.api;
+import static org.jclouds.b2.features.B2TestUtils.assertAuthentication;
+import static org.jclouds.b2.features.B2TestUtils.assertRequest;
+import static org.jclouds.b2.features.B2TestUtils.createMockWebServer;
+import static org.jclouds.b2.features.B2TestUtils.stringFromResource;
 
-import java.io.IOException;
 import java.net.URI;
-import java.net.URL;
 import java.util.Date;
 import java.util.Map;
-import java.util.Set;
-import java.util.Properties;
 
-import org.jclouds.ContextBuilder;
 import org.jclouds.blobstore.ContainerNotFoundException;
 import org.jclouds.blobstore.KeyNotFoundException;
-import org.jclouds.concurrent.config.ExecutorServiceModule;
 import org.jclouds.http.options.GetOptions;
 import org.jclouds.io.Payload;
 import org.jclouds.io.Payloads;
-import org.jclouds.b2.B2Api;
 import org.jclouds.b2.domain.Action;
 import org.jclouds.b2.domain.B2Object;
 import org.jclouds.b2.domain.B2ObjectList;
@@ -43,28 +41,16 @@ import org.jclouds.b2.domain.HideFileResponse;
 import org.jclouds.b2.domain.UploadFileResponse;
 import org.jclouds.b2.domain.UploadUrlResponse;
 import org.jclouds.b2.reference.B2Headers;
-import org.jclouds.util.Strings2;
 import org.testng.annotations.Test;
 
-import com.google.common.base.Charsets;
-import com.google.common.base.Throwables;
 import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.ImmutableSet;
 import com.google.common.net.HttpHeaders;
-import com.google.common.reflect.TypeToken;
-import com.google.common.util.concurrent.MoreExecutors;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonParser;
-import com.google.inject.Module;
 import com.squareup.okhttp.mockwebserver.MockResponse;
 import com.squareup.okhttp.mockwebserver.MockWebServer;
 import com.squareup.okhttp.mockwebserver.RecordedRequest;
 
 @Test(groups = "unit", testName = "ObjectApiMockTest")
 public final class ObjectApiMockTest {
-   private final Set<Module> modules = ImmutableSet.<Module> of(
-         new ExecutorServiceModule(MoreExecutors.sameThreadExecutor()));
-
    private static final String BUCKET_NAME = "BUCKET_NAME";
    private static final String BUCKET_ID = "4a48fe8875c6214145260818";
    private static final String FILE_ID = "4_h4a48fe8875c6214145260818_f000000000000472a_d20140104_m032022_c001_v0000123_t0104";
@@ -445,101 +431,6 @@ public final class ObjectApiMockTest {
          assertRequest(server.takeRequest(), "POST", "/b2api/v1/b2_hide_file", "/hide_file_request.json");
       } finally {
          server.shutdown();
-      }
-   }
-
-   public B2Api api(String uri, String provider, Properties overrides) {
-      return ContextBuilder.newBuilder(provider)
-            .credentials("ACCOUNT_ID", "APPLICATION_KEY")
-            .endpoint(uri)
-            .overrides(overrides)
-            .modules(modules)
-            .buildApi(new TypeToken<B2Api>(getClass()) {});
-   }
-
-   public B2Api api(String uri, String provider) {
-      return api(uri, provider, new Properties());
-   }
-
-   public static MockWebServer createMockWebServer() throws IOException {
-      MockWebServer server = new MockWebServer();
-      server.play();
-      URL url = server.getUrl("");
-      return server;
-   }
-
-   public void assertAuthentication(MockWebServer server) {
-      assertThat(server.getRequestCount()).isGreaterThanOrEqualTo(1);
-      try {
-         assertThat(server.takeRequest().getRequestLine()).isEqualTo("GET /b2api/v1/b2_authorize_account HTTP/1.1");
-      } catch (InterruptedException e) {
-         throw Throwables.propagate(e);
-      }
-   }
-
-   /**
-    * Ensures the request has a json header for the proper REST methods.
-    *
-    * @param request
-    * @param method
-    *           The request method (such as GET).
-    * @param path
-    *           The path requested for this REST call.
-    * @see RecordedRequest
-    */
-   public void assertRequest(RecordedRequest request, String method, String path) {
-      assertThat(request.getMethod()).isEqualTo(method);
-      assertThat(request.getPath()).isEqualTo(path);
-   }
-
-   /**
-    * Ensures the request is json and has the same contents as the resource
-    * file provided.
-    *
-    * @param request
-    * @param method
-    *           The request method (such as GET).
-    * @param resourceLocation
-    *           The location of the resource file. Contents will be compared to
-    *           the request body as JSON.
-    * @see RecordedRequest
-    */
-   public void assertRequest(RecordedRequest request, String method, String path, String resourceLocation) {
-      assertRequest(request, method, path);
-      assertContentTypeIsJson(request);
-      JsonParser parser = new JsonParser();
-      JsonElement requestJson;
-      try {
-         requestJson = parser.parse(new String(request.getBody(), Charsets.UTF_8));
-      } catch (Exception e) {
-         throw Throwables.propagate(e);
-      }
-      JsonElement resourceJson = parser.parse(stringFromResource(resourceLocation));
-      assertThat(requestJson).isEqualTo(resourceJson);
-   }
-
-   /**
-    * Ensures the request has a json header.
-    *
-    * @param request
-    * @see RecordedRequest
-    */
-   private void assertContentTypeIsJson(RecordedRequest request) {
-      assertThat(request.getHeaders()).contains("Content-Type: application/json");
-   }
-
-   /**
-    * Get a string from a resource
-    *
-    * @param resourceName
-    *           The name of the resource.
-    * @return The content of the resource
-    */
-   public String stringFromResource(String resourceName) {
-      try {
-         return Strings2.toStringAndClose(getClass().getResourceAsStream(resourceName));
-      } catch (IOException e) {
-         throw Throwables.propagate(e);
       }
    }
 }
