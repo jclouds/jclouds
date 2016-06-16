@@ -98,7 +98,7 @@ public class BaseBlobStoreIntegrationTest extends BaseViewLiveTest<BlobStoreCont
    /**
     * There are a lot of retries here mainly from experience running inside amazon EC2.
     */
-   @BeforeSuite
+   @BeforeSuite(groups = { "integration", "live" })
    public void setUpResourcesForAllThreads(ITestContext testContext) throws Exception {
       setupContext();
       createContainersSharedByAllThreads(view, testContext);
