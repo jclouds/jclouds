@@ -42,10 +42,6 @@ public abstract class B2Object {
 
    @SerializedNames({"fileId", "fileName", "accountId", "bucketId", "contentLength", "contentSha1", "contentType", "fileInfo", "action", "uploadTimestamp", "payload"})
    public static B2Object create(String fileId, String fileName, @Nullable String accountId, @Nullable String bucketId, @Nullable Long contentLength, @Nullable String contentSha1, @Nullable String contentType, @Nullable Map<String, String> fileInfo, @Nullable Action action, @Nullable Long uploadTimestamp, @Nullable Payload payload) {
-      if ("none".equals(contentSha1)) {
-         // large files may have "none" sha1
-         contentSha1 = null;
-      }
       if (fileInfo != null) {
          fileInfo = ImmutableMap.copyOf(fileInfo);
       }

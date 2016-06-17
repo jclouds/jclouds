@@ -118,7 +118,7 @@ public final class MultipartApiMockTest {
          assertThat(response.action()).isEqualTo(Action.UPLOAD);
          assertThat(response.bucketId()).isEqualTo(BUCKET_ID);
          assertThat(response.contentLength()).isEqualTo(208158542);
-         assertThat(response.contentSha1()).isNull();
+         assertThat(response.contentSha1()).isEqualTo("none");
          assertThat(response.contentType()).isEqualTo(CONTENT_TYPE);
          assertThat(response.fileId()).isEqualTo(FILE_ID);
          assertThat(response.fileInfo()).isEqualTo(FILE_INFO);
