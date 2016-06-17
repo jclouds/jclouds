@@ -42,6 +42,7 @@ import com.google.common.base.Objects;
 import com.google.common.base.Objects.ToStringHelper;
 import com.google.common.collect.ForwardingObject;
 import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
@@ -105,8 +106,8 @@ public class CreateServerOptions implements MapBinder {
    private List<File> personality = Lists.newArrayList();
    private byte[] userData;
    private String diskConfig;
-   private Set<String> networks = ImmutableSet.of();
-   private Set<Network> novaNetworks = ImmutableSet.of();
+   private List<String> networks = ImmutableList.of();
+   private List<Network> novaNetworks = ImmutableList.of();
    private String availabilityZone;
    private boolean configDrive;
    private Set<BlockDeviceMapping> blockDeviceMappings = ImmutableSet.of();
@@ -180,7 +181,7 @@ public class CreateServerOptions implements MapBinder {
       String user_data;
       @Named("OS-DCF:diskConfig")
       String diskConfig;
-      Set<Map<String, String>> networks;
+      List<Map<String, String>> networks;
       @Named("config_drive")
       String configDrive;
       @Named("block_device_mapping_v2")
@@ -224,7 +225,7 @@ public class CreateServerOptions implements MapBinder {
          server.diskConfig = diskConfig;
       }
       if (!networks.isEmpty() || !novaNetworks.isEmpty()) {
-         server.networks = Sets.newLinkedHashSet(); // ensures ordering is preserved - helps testing and more intuitive for users.
+         server.networks = Lists.newArrayList(); // ensures ordering is preserved - helps testing and more intuitive for users.
          for (Network network : novaNetworks) {
             // Avoid serializing null values, which are common here.
             ImmutableMap.Builder<String, String> networkMap = new ImmutableMap.Builder<String, String>();
@@ -383,7 +384,7 @@ public class CreateServerOptions implements MapBinder {
     * @see #getNetworks()
     */
    public CreateServerOptions networks(Iterable<String> networks) {
-      this.networks = ImmutableSet.copyOf(networks);
+      this.networks = ImmutableList.copyOf(networks);
       return this;
    }
 
@@ -392,7 +393,7 @@ public class CreateServerOptions implements MapBinder {
     * Overwrites networks supplied by {@link #networks(Iterable)}
     */
    public CreateServerOptions novaNetworks(Iterable<Network> networks) {
-      this.novaNetworks = ImmutableSet.copyOf(networks);
+      this.novaNetworks = ImmutableList.copyOf(networks);
       return this;
    }
 
@@ -400,7 +401,7 @@ public class CreateServerOptions implements MapBinder {
     * @see #getNetworks()
     */
    public CreateServerOptions networks(String... networks) {
-      return networks(ImmutableSet.copyOf(networks));
+      return networks(ImmutableList.copyOf(networks));
    }
 
    /**
@@ -438,20 +439,20 @@ public class CreateServerOptions implements MapBinder {
    /**
     * Get custom networks specified for the server.
     *
-    * @return A set of uuids defined by Neutron (previously Quantum)
+    * @return A list of uuids defined by Neutron (previously Quantum)
     * @see <a href="https://wiki.openstack.org/wiki/Neutron/APIv2-specification#Network">Neutron Networks<a/>
     */
-   public Set<String> getNetworks() {
+   public List<String> getNetworks() {
       return networks;
    }
 
    /**
     * Get custom networks specified for the server.
     *
-    * @return A set of uuids defined by Neutron (previously Quantum)
+    * @return A list of uuids defined by Neutron (previously Quantum)
     * @see <a href="https://wiki.openstack.org/wiki/Neutron/APIv2-specification#Network">Neutron Networks<a/>
     */
-   public Set<Network> getNovaNetworks() {
+   public List<Network> getNovaNetworks() {
       return novaNetworks;
    }
 
