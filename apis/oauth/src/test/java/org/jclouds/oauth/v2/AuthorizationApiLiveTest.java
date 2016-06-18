@@ -24,6 +24,8 @@ import static org.jclouds.oauth.v2.config.OAuthProperties.AUDIENCE;
 import static org.jclouds.oauth.v2.config.OAuthProperties.CERTIFICATE;
 import static org.jclouds.oauth.v2.config.OAuthProperties.CREDENTIAL_TYPE;
 import static org.jclouds.providers.AnonymousProviderMetadata.forApiOnEndpoint;
+import static org.jclouds.utils.TestUtils.NO_INVOCATIONS;
+import static org.jclouds.utils.TestUtils.SINGLE_NO_ARG_INVOCATION;
 import static org.testng.Assert.assertNotNull;
 
 import java.util.Properties;
@@ -63,19 +65,19 @@ public class AuthorizationApiLiveTest extends BaseApiLiveTest<AuthorizationApi> 
    @DataProvider
    public Object[][] onlyRunForP12PrivateKeyCredentials() {
       return (CredentialType.fromValue(credentialType) == CredentialType.P12_PRIVATE_KEY_CREDENTIALS) ?
-            OAuthTestUtils.SINGLE_NO_ARG_INVOCATION : OAuthTestUtils.NO_INVOCATIONS;
+            SINGLE_NO_ARG_INVOCATION : NO_INVOCATIONS;
    }
 
    @DataProvider
    public Object[][] onlyRunForClientCredentialsSecret() {
       return (CredentialType.fromValue(credentialType) == CredentialType.CLIENT_CREDENTIALS_SECRET) ?
-              OAuthTestUtils.SINGLE_NO_ARG_INVOCATION : OAuthTestUtils.NO_INVOCATIONS;
+              SINGLE_NO_ARG_INVOCATION : NO_INVOCATIONS;
    }
 
    @DataProvider
    public Object[][] onlyRunForClientCredentialsP12() {
       return (CredentialType.fromValue(credentialType) == CredentialType.CLIENT_CREDENTIALS_P12_AND_CERTIFICATE) ?
-              OAuthTestUtils.SINGLE_NO_ARG_INVOCATION : OAuthTestUtils.NO_INVOCATIONS;
+              SINGLE_NO_ARG_INVOCATION : NO_INVOCATIONS;
    }
 
    @Test(dataProvider = "onlyRunForP12PrivateKeyCredentials")

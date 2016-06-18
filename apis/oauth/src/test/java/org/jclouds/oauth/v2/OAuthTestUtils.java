@@ -32,9 +32,6 @@ import com.google.common.io.Files;
 
 public class OAuthTestUtils {
 
-   public static final Object[][] NO_INVOCATIONS = new Object[0][0];
-   public static final Object[][] SINGLE_NO_ARG_INVOCATION = { new Object[0] };
-
    public static Properties defaultProperties(Properties properties) {
       try {
          properties = properties == null ? new Properties() : properties;

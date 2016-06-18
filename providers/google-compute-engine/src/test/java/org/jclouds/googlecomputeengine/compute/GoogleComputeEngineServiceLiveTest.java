@@ -17,6 +17,9 @@
 package org.jclouds.googlecomputeengine.compute;
 
 import static com.google.common.collect.Iterables.contains;
+import static com.google.common.collect.Iterables.getOnlyElement;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.jclouds.compute.predicates.NodePredicates.inGroup;
 import static org.jclouds.util.Strings2.toStringAndClose;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertFalse;
@@ -33,9 +36,9 @@ import com.google.inject.Module;
 import org.jclouds.compute.ComputeServiceContext;
 import org.jclouds.compute.domain.Hardware;
 import org.jclouds.compute.domain.NodeMetadata;
+import org.jclouds.compute.domain.Template;
 import org.jclouds.compute.internal.BaseComputeServiceLiveTest;
 import org.jclouds.compute.options.TemplateOptions;
-import org.jclouds.compute.predicates.NodePredicates;
 import org.jclouds.googlecloud.internal.TestProperties;
 import org.jclouds.googlecomputeengine.GoogleComputeEngineApi;
 import org.jclouds.googlecomputeengine.compute.options.GoogleComputeEngineTemplateOptions;
@@ -95,7 +98,7 @@ public class GoogleComputeEngineServiceLiveTest extends BaseComputeServiceLiveTe
          assertTrue(instance.scheduling().preemptible());
 
       } finally {
-         client.destroyNodesMatching(NodePredicates.inGroup(group));
+         client.destroyNodesMatching(inGroup(group));
       }
    }
    /**
@@ -150,6 +153,22 @@ public class GoogleComputeEngineServiceLiveTest extends BaseComputeServiceLiveTe
    @Override
    protected void checkVolumes(Hardware hardware) {
       // Hardware profiles might not have volumes.
+   }
+
+   @Override
+   @Test(dataProvider = "onlyIfAutomaticHardwareSupported", groups = {"integration", "live"})
+   public void testCreateNodeWithCustomHardware() throws Exception {
+      Template template = buildTemplate(templateBuilder()
+            .hardwareId("automatic:cores=2;ram=4096"));
+      try {
+         NodeMetadata node = getOnlyElement(client.createNodesInGroup("custom", 1, template));
+         assertThat(node.getHardware().getRam()).isEqualTo(4096);
+         assertThat(node.getHardware().getProcessors().get(0).getCores()).isEqualTo(2);
+         assertThat(node.getHardware().getId()).isEqualTo(node.getLocation().getDescription() + "/machineTypes/custom-2-4096");
+      }
+      finally {
+         client.destroyNodesMatching(inGroup("custom"));
+      }
    }
 
 }

@@ -27,6 +27,9 @@ import com.google.common.io.ByteSource;
  */
 public class TestUtils {
 
+   public static final Object[][] NO_INVOCATIONS = new Object[0][0];
+   public static final Object[][] SINGLE_NO_ARG_INVOCATION = { new Object[0] };
+
    public static boolean isJava6() {
       return System.getProperty("java.version", "").contains("1.6.");
    }

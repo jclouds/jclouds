@@ -33,6 +33,7 @@ import static java.lang.String.format;
 import static java.lang.System.currentTimeMillis;
 import static java.util.concurrent.TimeUnit.SECONDS;
 import static java.util.logging.Logger.getAnonymousLogger;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.jclouds.Constants.PROPERTY_USER_THREADS;
 import static org.jclouds.compute.options.RunScriptOptions.Builder.nameTask;
 import static org.jclouds.compute.options.RunScriptOptions.Builder.wrapInInitScript;
@@ -44,6 +45,8 @@ import static org.jclouds.compute.predicates.NodePredicates.inGroup;
 import static org.jclouds.compute.predicates.NodePredicates.runningInGroup;
 import static org.jclouds.compute.util.ComputeServiceUtils.getCores;
 import static org.jclouds.util.Predicates2.retry;
+import static org.jclouds.utils.TestUtils.NO_INVOCATIONS;
+import static org.jclouds.utils.TestUtils.SINGLE_NO_ARG_INVOCATION;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertNotNull;
@@ -81,6 +84,7 @@ import org.jclouds.compute.domain.NodeMetadata.Status;
 import org.jclouds.compute.domain.OperatingSystem;
 import org.jclouds.compute.domain.Template;
 import org.jclouds.compute.domain.TemplateBuilder;
+import org.jclouds.compute.domain.internal.ArbitraryCpuRamTemplateBuilderImpl;
 import org.jclouds.compute.util.OpenSocketFinder;
 import org.jclouds.domain.Credentials;
 import org.jclouds.domain.Location;
@@ -96,6 +100,7 @@ import org.jclouds.ssh.SshClient;
 import org.jclouds.ssh.SshException;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeGroups;
+import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
 import com.google.common.base.Function;
@@ -934,6 +939,26 @@ public abstract class BaseComputeServiceLiveTest extends BaseComputeServiceConte
       } finally {
          if (ssh != null)
             ssh.disconnect();
+      }
+   }
+
+   @DataProvider
+   public Object[][] onlyIfAutomaticHardwareSupported() {
+      return  client.templateBuilder() instanceof ArbitraryCpuRamTemplateBuilderImpl ?
+            SINGLE_NO_ARG_INVOCATION : NO_INVOCATIONS;
+   }
+
+   @Test(dataProvider = "onlyIfAutomaticHardwareSupported", groups = {"integration", "live"})
+   public void testCreateNodeWithCustomHardware() throws Exception {
+      Template template = buildTemplate(templateBuilder()
+            .hardwareId("automatic:cores=2;ram=4096"));
+      try {
+         NodeMetadata node = getOnlyElement(client.createNodesInGroup("custom", 1, template));
+         assertThat(node.getHardware().getRam()).isEqualTo(4096);
+         assertThat(node.getHardware().getProcessors().get(0).getCores()).isEqualTo(2);
+      }
+      finally {
+         client.destroyNodesMatching(inGroup("custom"));
       }
    }
 

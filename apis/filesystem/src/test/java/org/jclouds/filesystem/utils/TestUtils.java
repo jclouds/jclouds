@@ -54,9 +54,6 @@ public class TestUtils {
     private static final Iterator<File> IMAGE_RESOURCES_ITERATOR =
             Iterators.cycle(IMAGE_RESOURCES);
 
-    public static final Object[][] NO_INVOCATIONS = new Object[0][0];
-    public static final Object[][] SINGLE_NO_ARG_INVOCATION = { new Object[0] };
-
     /**
      * Generate a random blob key simple name (with no path in the key)
      * @return 

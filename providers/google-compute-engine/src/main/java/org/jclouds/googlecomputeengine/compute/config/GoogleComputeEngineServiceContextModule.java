@@ -79,6 +79,8 @@ import com.google.inject.Injector;
 import com.google.inject.Provides;
 import com.google.inject.Scopes;
 import com.google.inject.TypeLiteral;
+import org.jclouds.compute.domain.internal.TemplateBuilderImpl;
+import org.jclouds.googlecomputeengine.compute.domain.internal.GoogleComputeEngineArbitraryCpuRamTemplateBuilderImpl;
 
 public final class GoogleComputeEngineServiceContextModule
       extends ComputeServiceAdapterContextModule<Instance, MachineType, Image, Location> {
@@ -91,6 +93,8 @@ public final class GoogleComputeEngineServiceContextModule
 
       bind(new TypeLiteral<ComputeServiceAdapter<Instance, MachineType, Image, Location>>() {
       }).to(GoogleComputeEngineServiceAdapter.class);
+
+      bind(TemplateBuilderImpl.class).to(GoogleComputeEngineArbitraryCpuRamTemplateBuilderImpl.class);
 
       // Use compute service to supply locations, which are always zones.
       install(new LocationsFromComputeServiceAdapterModule<Instance, MachineType, Image, Location>() {

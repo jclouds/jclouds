@@ -16,26 +16,29 @@
  */
 package org.jclouds.googlecomputeengine.compute.functions;
 
-import static org.jclouds.compute.util.ComputeServiceUtils.groupFromMapOrName;
+import com.google.common.base.Function;
+import com.google.common.base.Splitter;
+import com.google.common.base.Supplier;
+import com.google.common.cache.LoadingCache;
+import com.google.common.collect.ImmutableList;
+import org.jclouds.collect.Memoized;
+import org.jclouds.compute.domain.Hardware;
+import org.jclouds.compute.domain.HardwareBuilder;
+import org.jclouds.compute.domain.NodeMetadata;
+import org.jclouds.compute.domain.NodeMetadata.Status;
+import org.jclouds.compute.domain.NodeMetadataBuilder;
+import org.jclouds.compute.domain.Processor;
+import org.jclouds.compute.functions.GroupNamingConvention;
+import org.jclouds.domain.Location;
+import org.jclouds.googlecomputeengine.domain.Image;
+import org.jclouds.googlecomputeengine.domain.Instance;
 
 import javax.inject.Inject;
 import java.net.URI;
 import java.util.List;
 import java.util.Map;
 
-import com.google.common.base.Function;
-import com.google.common.base.Supplier;
-import com.google.common.cache.LoadingCache;
-import com.google.common.collect.ImmutableList;
-import org.jclouds.collect.Memoized;
-import org.jclouds.compute.domain.Hardware;
-import org.jclouds.compute.domain.NodeMetadata;
-import org.jclouds.compute.domain.NodeMetadata.Status;
-import org.jclouds.compute.domain.NodeMetadataBuilder;
-import org.jclouds.compute.functions.GroupNamingConvention;
-import org.jclouds.domain.Location;
-import org.jclouds.googlecomputeengine.domain.Image;
-import org.jclouds.googlecomputeengine.domain.Instance;
+import static org.jclouds.compute.util.ComputeServiceUtils.groupFromMapOrName;
 
 public final class InstanceToNodeMetadata implements Function<Instance, NodeMetadata> {
 
@@ -73,13 +76,21 @@ public final class InstanceToNodeMetadata implements Function<Instance, NodeMeta
       // a loading cache. That would be more expensive, but could ensure this isn't null.
       Image image = diskURIToImage.getUnchecked(input.disks().get(0).source());
 
+      Hardware hardware;
+      if (isCustomMachineTypeURI(input.machineType())) {
+         hardware = machineTypeURIToCustomHardware(input.machineType());
+      }
+      else {
+         hardware = hardwares.get().get(input.machineType());
+      }
+
       builder.id(input.selfLink().toString())
              .name(input.name())
              .providerId(input.id())
              .hostname(input.name())
              .location(zone)
              .imageId(image != null ? image.selfLink().toString() : null)
-             .hardware(hardwares.get().get(input.machineType()))
+             .hardware(hardware)
              .status(input.status() != null ? toPortableNodeStatus.get(input.status()) : Status.UNRECOGNIZED)
              .tags(input.tags().items())
              .uri(input.selfLink())
@@ -110,5 +121,24 @@ public final class InstanceToNodeMetadata implements Function<Instance, NodeMeta
          }
       }
       return publicAddressesBuilder.build();
+   }
+
+   public static boolean isCustomMachineTypeURI(URI machineType) {
+      return machineType.toString().contains("machineTypes/custom");
+   }
+
+   public static Hardware machineTypeURIToCustomHardware(URI machineType) {
+      String uri = machineType.toString();
+      String values = uri.substring(uri.lastIndexOf('/') + 8);
+      List<String> hardwareValues = Splitter.on('-')
+            .trimResults()
+            .splitToList(values);
+      return new HardwareBuilder()
+            .id(uri)
+            .providerId(uri)
+            .processor(new Processor(Double.parseDouble(hardwareValues.get(0)), 1.0))
+            .ram(Integer.parseInt(hardwareValues.get(1)))
+            .uri(machineType)
+            .build();
    }
 }

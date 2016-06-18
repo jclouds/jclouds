@@ -17,6 +17,8 @@
 package org.jclouds.filesystem.strategy.internal;
 
 import static org.jclouds.filesystem.util.Utils.isMacOSX;
+import static org.jclouds.utils.TestUtils.NO_INVOCATIONS;
+import static org.jclouds.utils.TestUtils.SINGLE_NO_ARG_INVOCATION;
 import static org.jclouds.utils.TestUtils.randomByteSource;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertFalse;
@@ -699,7 +701,7 @@ public class FilesystemStorageStrategyImplTest {
 
    @DataProvider
    public Object[][] ignoreOnMacOSX() {
-        return isMacOSX() ? TestUtils.NO_INVOCATIONS
-                : TestUtils.SINGLE_NO_ARG_INVOCATION;
+        return isMacOSX() ? NO_INVOCATIONS
+                : SINGLE_NO_ARG_INVOCATION;
    }
 }

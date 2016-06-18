@@ -16,13 +16,6 @@
  */
 package org.jclouds.googlecomputeengine.compute.functions;
 
-import static com.google.common.collect.Maps.uniqueIndex;
-import static org.testng.Assert.assertEquals;
-
-import java.net.URI;
-import java.util.Map;
-import java.util.Set;
-
 import com.google.common.base.Function;
 import com.google.common.base.Functions;
 import com.google.common.base.Predicate;
@@ -48,6 +41,16 @@ import org.jclouds.googlecomputeengine.parse.ParseImageTest;
 import org.jclouds.googlecomputeengine.parse.ParseInstanceTest;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
+
+import java.net.URI;
+import java.util.Map;
+import java.util.Set;
+
+import static com.google.common.collect.Maps.uniqueIndex;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.jclouds.googlecomputeengine.compute.functions.InstanceToNodeMetadata.isCustomMachineTypeURI;
+import static org.jclouds.googlecomputeengine.compute.functions.InstanceToNodeMetadata.machineTypeURIToCustomHardware;
+import static org.testng.Assert.assertEquals;
 
 @Test(groups = "unit", testName = "InstanceToNodeMetadataTest", singleThreaded = true) // BeforeMethod = singleThreaded
 public class InstanceToNodeMetadataTest {
@@ -199,4 +202,26 @@ public class InstanceToNodeMetadataTest {
       assertEquals(nodeMetadata.getId(), instance.selfLink().toString());
       assertEquals(nodeMetadata.getTags(), ImmutableSet.of("aTag", "Group-port-42"));
    }
+
+   @Test
+   public void isCustomMachineTypeTest() {
+      URI uri = URI.create("https://www.googleapis.com/compute/v1/projects/jclouds-dev/zones/asia-east1-a/machineTypes/custom-1-1024");
+      assertThat(isCustomMachineTypeURI(uri)).isTrue();
+
+      URI uri2 = URI.create("https://www.googleapis.com/compute/v1/projects/jclouds-dev/");
+      assertThat(isCustomMachineTypeURI(uri2)).isFalse();
+   }
+
+   @Test
+   public void machineTypeParserTest() {
+      URI uri = URI.create("https://www.googleapis.com/compute/v1/projects/jclouds-dev/zones/asia-east1-a/machineTypes/custom-1-1024");
+      Hardware hardware = machineTypeURIToCustomHardware(uri);
+      assertThat(hardware.getRam()).isEqualTo(1024);
+      assertThat(hardware.getProcessors().get(0).getCores()).isEqualTo(1);
+      assertThat(hardware.getUri())
+            .isEqualTo(URI.create("https://www.googleapis.com/compute/v1/projects/jclouds-dev/zones/asia-east1-a/machineTypes/custom-1-1024"));
+      assertThat(hardware.getId())
+            .isEqualTo("https://www.googleapis.com/compute/v1/projects/jclouds-dev/zones/asia-east1-a/machineTypes/custom-1-1024");
+   }
+
 }
