@@ -4,7 +4,6 @@
         "name": "128 MB Server",
         "ram": 128,
         "disk": 10,
-        "vcpus": 1,
-        "links": []
+        "vcpus": 1
     }
 }

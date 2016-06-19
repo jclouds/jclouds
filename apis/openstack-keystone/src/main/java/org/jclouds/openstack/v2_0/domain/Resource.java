@@ -49,7 +49,7 @@ public class Resource implements Comparable<Resource> {
 
       protected String id;
       protected String name;
-      protected Set<Link> links = ImmutableSet.of();
+      protected Set<Link> links;
 
       /**
        * @see Resource#getId()
@@ -71,12 +71,12 @@ public class Resource implements Comparable<Resource> {
        * @see Resource#getLinks()
        */
       public T links(Set<Link> links) {
-         this.links = ImmutableSet.copyOf(checkNotNull(links, "links"));
+         this.links = links == null ? null : ImmutableSet.copyOf(links);
          return self();
       }
 
       public T links(Link... in) {
-         return links(ImmutableSet.copyOf(in));
+         return links(in == null ? null : ImmutableSet.copyOf(in));
       }
 
       public Resource build() {
@@ -108,7 +108,7 @@ public class Resource implements Comparable<Resource> {
    protected Resource(String id, @Nullable String name, @Nullable Set<Link> links) {
       this.id = checkNotNull(id, "id");
       this.name = name;
-      this.links = links == null ? ImmutableSet.<Link>of() : ImmutableSet.copyOf(checkNotNull(links, "links"));
+      this.links = links == null ? null : ImmutableSet.copyOf(links);
    }
    
    /**
@@ -132,6 +132,7 @@ public class Resource implements Comparable<Resource> {
    /**
     * @return the links of the id address allocated to the new server
     */
+   @Nullable
    public Set<Link> getLinks() {
       return this.links;
    }

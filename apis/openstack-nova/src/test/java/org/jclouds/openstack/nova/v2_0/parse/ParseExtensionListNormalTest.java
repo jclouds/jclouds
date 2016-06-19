@@ -27,6 +27,7 @@ import org.jclouds.json.BaseSetParserTest;
 import org.jclouds.json.config.GsonModule;
 import org.jclouds.openstack.nova.v2_0.config.NovaParserModule;
 import org.jclouds.openstack.v2_0.domain.Extension;
+import org.jclouds.openstack.v2_0.domain.Link;
 import org.jclouds.rest.annotations.SelectJson;
 import org.testng.annotations.Test;
 
@@ -47,22 +48,25 @@ public class ParseExtensionListNormalTest extends BaseSetParserTest<Extension> {
    @Consumes(MediaType.APPLICATION_JSON)
    public Set<Extension> expected() {
       return ImmutableSet.of(
-            Extension.builder().alias("os-keypairs").name("Keypairs")
-                  .namespace(URI.create("http://docs.openstack.org/ext/keypairs/api/v1.1"))
-                  .updated(new SimpleDateFormatDateService().iso8601SecondsDateParse("2011-08-08T00:00:00+00:00"))
-                  .description("Keypair Support").build(),
-            Extension.builder().alias("os-volumes").name("Volumes")
-                  .namespace(URI.create("http://docs.openstack.org/ext/volumes/api/v1.1"))
-                  .updated(new SimpleDateFormatDateService().iso8601SecondsDateParse("2011-03-25T00:00:00+00:00"))
-                  .description("Volumes support").build(),
+            Extension.builder().alias("os-keypairs").name("Keypairs").namespace(URI.create("http://docs.openstack.org/ext/keypairs/api/v1.1"))
+                  .updated(new SimpleDateFormatDateService().iso8601SecondsDateParse("2011-08-08T00:00:00+00:00")).description("Keypair Support")
+                  .links(Link.builder().relation(Link.Relation.SELF).href(URI.create("http://docs.openstack.org/ext/keypairs/api/v1.1")).build())
+                  .build(),
+            Extension.builder().alias("os-volumes").name("Volumes").namespace(URI.create("http://docs.openstack.org/ext/volumes/api/v1.1"))
+                  .updated(new SimpleDateFormatDateService().iso8601SecondsDateParse("2011-03-25T00:00:00+00:00")).description("Volumes support")
+                  .links(Link.builder().relation(Link.Relation.SELF).href(URI.create("http://docs.openstack.org/ext/volumes/api/v1.1")).build())
+                  .build(),
             Extension.builder().alias("security_groups").name("SecurityGroups")
                   .namespace(URI.create("http://docs.openstack.org/ext/securitygroups/api/v1.1"))
                   .updated(new SimpleDateFormatDateService().iso8601SecondsDateParse("2011-07-21T00:00:00+00:00"))
-                  .description("Security group support").build(),
+                  .description("Security group support")
+                  .links(Link.builder().relation(Link.Relation.SELF).href(URI.create("http://docs.openstack.org/ext/securitygroups/api/v1.1")).build())
+                  .build(),
             Extension.builder().alias("os-floating-ips").name("Floating_ips")
                   .namespace(URI.create("http://docs.openstack.org/ext/floating_ips/api/v1.1"))
-                  .updated(new SimpleDateFormatDateService().iso8601SecondsDateParse("2011-06-16T00:00:00+00:00"))
-                  .description("Floating IPs support").build());
+                  .updated(new SimpleDateFormatDateService().iso8601SecondsDateParse("2011-06-16T00:00:00+00:00")).description("Floating IPs support")
+                  .links(Link.builder().relation(Link.Relation.SELF).href(URI.create("http://docs.openstack.org/ext/floating_ips/api/v1.1")).build())
+                  .build());
    }
 
    protected Injector injector() {
