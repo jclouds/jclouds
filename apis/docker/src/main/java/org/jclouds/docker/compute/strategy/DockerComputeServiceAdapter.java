@@ -51,6 +51,7 @@ import org.jclouds.docker.domain.ContainerSummary;
 import org.jclouds.docker.domain.HostConfig;
 import org.jclouds.docker.domain.Image;
 import org.jclouds.docker.domain.ImageSummary;
+import org.jclouds.docker.options.CreateImageOptions;
 import org.jclouds.docker.options.ListContainerOptions;
 import org.jclouds.docker.options.RemoveContainerOptions;
 import org.jclouds.domain.Location;
@@ -237,13 +238,32 @@ public class DockerComputeServiceAdapter implements
    }
 
    @Override
-   public Image getImage(final String imageId) {
-      // less efficient than just inspectImage but listImages return repoTags
-      return find(listImages(), new Predicate<Image>() {
+   public Image getImage(final String imageIdOrName) {
+      checkNotNull(imageIdOrName);
+      if (imageIdOrName.startsWith("sha256")) {
+         // less efficient than just inspectImage but listImages return repoTags
+         return find(listImages(), new Predicate<Image>() {
+            @Override
+            public boolean apply(Image input) {
+               // Only attempt match on id as we should try to pull again anyway if using name
+               return input.id().equals(imageIdOrName);
+            }
+         }, null);
+      }
 
+      // Image is not cached or getting image by name so try to pull it
+      api.getImageApi().createImage(CreateImageOptions.Builder.fromImage(imageIdOrName));
+
+      // as above this ensure repotags are returned
+      return find(listImages(), new Predicate<Image>() {
          @Override
          public boolean apply(Image input) {
-            return input.id().equals(imageId);
+            for (String tag : input.repoTags()) {
+               if (tag.equals(imageIdOrName) || tag.equals(imageIdOrName + ":latest")) {
+                  return true;
+               }
+            }
+            return false;
          }
       }, null);
    }

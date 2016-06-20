@@ -100,13 +100,7 @@ public class DockerComputeServiceLiveTest extends BaseComputeServiceContextLiveT
       client = view.getComputeService();
 
       String imageName = SSHABLE_IMAGE + ":" + SSHABLE_IMAGE_TAG;
-      org.jclouds.docker.domain.Image image = imageApi().inspectImage(imageName);
-      if (image == null) {
-         CreateImageOptions options = CreateImageOptions.Builder.fromImage(SSHABLE_IMAGE).tag(SSHABLE_IMAGE_TAG);
-         imageApi().createImage(options);
-      }
-      image = imageApi().inspectImage(imageName);
-      defaultImage = client.getImage(image.id());
+      defaultImage = client.getImage(imageName);
       assertNotNull(defaultImage);
    }
 
