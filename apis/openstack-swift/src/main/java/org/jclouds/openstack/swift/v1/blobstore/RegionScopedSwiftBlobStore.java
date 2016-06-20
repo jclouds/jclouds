@@ -20,15 +20,19 @@ import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.collect.Iterables.tryFind;
 import static com.google.common.collect.Lists.transform;
+import static org.jclouds.Constants.PROPERTY_USER_THREADS;
 import static org.jclouds.blobstore.options.ListContainerOptions.Builder.recursive;
 import static org.jclouds.location.predicates.LocationPredicates.idEquals;
 import static org.jclouds.openstack.swift.v1.options.PutOptions.Builder.metadata;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.Callable;
 
 import javax.inject.Inject;
+import javax.inject.Named;
 
 import org.jclouds.blobstore.BlobStore;
 import org.jclouds.blobstore.BlobStoreContext;
@@ -76,6 +80,7 @@ import org.jclouds.openstack.swift.v1.options.UpdateContainerOptions;
 import org.jclouds.openstack.swift.v1.reference.SwiftHeaders;
 
 import com.google.common.annotations.Beta;
+import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Function;
 import com.google.common.base.Optional;
 import com.google.common.base.Supplier;
@@ -89,10 +94,12 @@ import com.google.common.collect.ImmutableMap.Builder;
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
-import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.io.ByteSource;
 import com.google.common.net.HttpHeaders;
+import com.google.common.util.concurrent.Futures;
+import com.google.common.util.concurrent.ListenableFuture;
+import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.inject.AbstractModule;
 import com.google.inject.Injector;
 import com.google.inject.assistedinject.Assisted;
@@ -579,10 +586,33 @@ public class RegionScopedSwiftBlobStore implements BlobStore {
       throw new UnsupportedOperationException();
    }
 
-   // copied from BaseBlobStore
+   @com.google.inject.Inject
+   @Named(PROPERTY_USER_THREADS)
+   @VisibleForTesting
+   ListeningExecutorService userExecutor;
+
+   /**
+    * Upload using a user-provided executor, or the jclouds userExecutor
+    *
+    * @param container
+    * @param blob
+    * @param overrides
+    * @return the multipart blob etag
+    */
    @Beta
    protected String putMultipartBlob(String container, Blob blob, PutOptions overrides) {
-      List<MultipartPart> parts = Lists.newArrayList();
+      if (overrides.getUseCustomExecutor()) {
+         return putMultipartBlob(container, blob, overrides, overrides.getCustomExecutor());
+      } else {
+         return putMultipartBlob(container, blob, overrides, userExecutor);
+      }
+   }
+
+   // copied from BaseBlobStore
+   @Beta
+   protected String putMultipartBlob(String container, Blob blob, PutOptions overrides, ListeningExecutorService executor) {
+      ArrayList<ListenableFuture<MultipartPart>> parts = new ArrayList<ListenableFuture<MultipartPart>>();
+
       long contentLength = checkNotNull(blob.getMetadata().getContentMetadata().getContentLength(),
             "must provide content-length to use multi-part upload");
       MultipartUploadSlicingAlgorithm algorithm = new MultipartUploadSlicingAlgorithm(
@@ -590,11 +620,30 @@ public class RegionScopedSwiftBlobStore implements BlobStore {
       long partSize = algorithm.calculateChunkSize(contentLength);
       MultipartUpload mpu = initiateMultipartUpload(container, blob.getMetadata(), partSize, overrides);
       int partNumber = 1;
+
       for (Payload payload : slicer.slice(blob.getPayload(), partSize)) {
-         MultipartPart part = uploadMultipartPart(mpu, partNumber, payload);
-         parts.add(part);
-         ++partNumber;
+         BlobUploader b =
+               new BlobUploader(mpu, partNumber++, payload);
+         parts.add(executor.submit(b));
       }
-      return completeMultipartUpload(mpu, parts);
+
+      return completeMultipartUpload(mpu, Futures.getUnchecked(Futures.allAsList(parts)));
+   }
+
+   private final class BlobUploader implements Callable<MultipartPart> {
+      private final MultipartUpload mpu;
+      private final int partNumber;
+      private final Payload payload;
+
+      BlobUploader(MultipartUpload mpu, int partNumber, Payload payload) {
+         this.mpu = mpu;
+         this.partNumber = partNumber;
+         this.payload = payload;
+      }
+
+      @Override
+      public MultipartPart call() {
+         return uploadMultipartPart(mpu, partNumber, payload);
+      }
    }
 }
