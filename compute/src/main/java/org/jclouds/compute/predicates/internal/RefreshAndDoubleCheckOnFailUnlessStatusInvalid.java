@@ -23,7 +23,6 @@ import java.util.Set;
 import java.util.concurrent.atomic.AtomicReference;
 
 import javax.annotation.Resource;
-import javax.inject.Singleton;
 
 import org.jclouds.compute.domain.ComputeMetadataIncludingStatus;
 import org.jclouds.logging.Logger;
@@ -37,7 +36,6 @@ import com.google.common.collect.ImmutableSet;
  * resource, so as to eliminate a redundant {@link ComputeService#getNodeMetadata} call after the
  * predicate passes.
  */
-@Singleton
 public abstract class RefreshAndDoubleCheckOnFailUnlessStatusInvalid<S extends Enum<S>, C extends ComputeMetadataIncludingStatus<S>> implements Predicate<AtomicReference<C>> {
 
    private final S intended;

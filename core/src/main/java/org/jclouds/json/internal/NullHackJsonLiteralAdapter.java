@@ -20,8 +20,6 @@ import java.io.IOException;
 import java.io.Writer;
 import java.lang.reflect.Field;
 
-import javax.inject.Singleton;
-
 import com.google.common.base.Throwables;
 import com.google.gson.TypeAdapter;
 import com.google.gson.internal.bind.TypeAdapters;
@@ -33,7 +31,6 @@ import com.google.gson.stream.JsonWriter;
  * 
  * @see <a href="http://code.google.com/p/google-gson/issues/detail?id=326" />
  */
-@Singleton
 public abstract class NullHackJsonLiteralAdapter<L> extends TypeAdapter<L> {
 
    @Override

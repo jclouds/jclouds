@@ -21,8 +21,6 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 import java.io.Closeable;
 
-import javax.inject.Singleton;
-
 import org.jclouds.Context;
 import org.jclouds.View;
 import org.jclouds.location.Provider;
@@ -34,7 +32,6 @@ import com.google.common.collect.ForwardingObject;
 import com.google.common.reflect.TypeParameter;
 import com.google.common.reflect.TypeToken;
 
-@Singleton
 public abstract class BaseView extends ForwardingObject implements View {
 
    private final Context backend;
