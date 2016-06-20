@@ -45,8 +45,22 @@ import com.google.common.io.Files;
 @Singleton
 public class BasePayloadSlicer implements PayloadSlicer {
 
-   private static class InputStreamPayloadIterator implements Iterable<Payload>, Iterator<Payload> {
+   private static final class InputStreamPayloadIterable implements Iterable<Payload> {
+      private final InputStream input;
+      private final ContentMetadata metaData;
 
+      InputStreamPayloadIterable(InputStream input, ContentMetadata metaData) {
+         this.input = checkNotNull(input, "input");
+         this.metaData = checkNotNull(metaData, "metaData");
+      }
+
+      @Override
+      public Iterator<Payload> iterator() {
+         return new InputStreamPayloadIterator(input, metaData);
+      }
+   }
+
+   private static final class InputStreamPayloadIterator implements Iterator<Payload> {
       private final InputStream input;
       private final ContentMetadata metaData;
       private Payload nextPayload;
@@ -81,11 +95,6 @@ public class BasePayloadSlicer implements PayloadSlicer {
       @Override
       public void remove() {
          throw new UnsupportedOperationException("Payload iterator does not support removal");
-      }
-
-      @Override
-      public Iterator<Payload> iterator() {
-         return this;
       }
 
       private Payload getNextPayload() {
@@ -125,7 +134,22 @@ public class BasePayloadSlicer implements PayloadSlicer {
 
    }
 
-   private static class ByteSourcePayloadIterator implements Iterable<Payload>, Iterator<Payload> {
+   private static final class ByteSourcePayloadIterable implements Iterable<Payload> {
+      private final ByteSource input;
+      private final ContentMetadata metaData;
+
+      ByteSourcePayloadIterable(ByteSource input, ContentMetadata metaData) {
+         this.input = checkNotNull(input, "input");
+         this.metaData = checkNotNull(metaData, "metaData");
+      }
+
+      @Override
+      public Iterator<Payload> iterator() {
+         return new ByteSourcePayloadIterator(input, metaData);
+      }
+   }
+
+   private static final class ByteSourcePayloadIterator implements Iterator<Payload> {
       private final ByteSource input;
       private final ContentMetadata metaData;
       private Payload nextPayload;
@@ -159,11 +183,6 @@ public class BasePayloadSlicer implements PayloadSlicer {
       @Override
       public void remove() {
          throw new UnsupportedOperationException("Payload iterator does not support removal");
-      }
-
-      @Override
-      public Iterator<Payload> iterator() {
-         return this;
       }
 
       private Payload getNextPayload() {
@@ -297,10 +316,10 @@ public class BasePayloadSlicer implements PayloadSlicer {
    }
 
    protected Iterable<Payload> doSlice(InputStream rawContent, ContentMetadata meta) {
-      return new InputStreamPayloadIterator(rawContent, meta);
+      return new InputStreamPayloadIterable(rawContent, meta);
    }
 
    protected Iterable<Payload> doSlice(ByteSource rawContent, ContentMetadata meta) {
-      return new ByteSourcePayloadIterator(rawContent, meta);
+      return new ByteSourcePayloadIterable(rawContent, meta);
    }
 }
