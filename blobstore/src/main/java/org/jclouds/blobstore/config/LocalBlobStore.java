@@ -100,6 +100,7 @@ import com.google.common.net.HttpHeaders;
 
 @Singleton
 public final class LocalBlobStore implements BlobStore {
+   private static final String MULTIPART_PREFIX = ".mpus-";
 
    @Resource
    private Logger logger = Logger.NULL;
@@ -783,7 +784,11 @@ public final class LocalBlobStore implements BlobStore {
 
    @Override
    public MultipartUpload initiateMultipartUpload(String container, BlobMetadata blobMetadata, PutOptions options) {
-      return MultipartUpload.create(container, blobMetadata.getName(), UUID.randomUUID().toString(),
+      String uploadId = UUID.randomUUID().toString();
+      // create a stub blob
+      Blob blob = blobBuilder(MULTIPART_PREFIX + uploadId + "-" + blobMetadata.getName() + "-stub").payload(ByteSource.empty()).build();
+      putBlob(container, blob);
+      return MultipartUpload.create(container, blobMetadata.getName(), uploadId,
             blobMetadata, options);
    }
 
@@ -791,8 +796,9 @@ public final class LocalBlobStore implements BlobStore {
    public void abortMultipartUpload(MultipartUpload mpu) {
       List<MultipartPart> parts = listMultipartUpload(mpu);
       for (MultipartPart part : parts) {
-         removeBlob(mpu.containerName(), mpu.blobName() + "-" + part.partNumber());
+         removeBlob(mpu.containerName(), MULTIPART_PREFIX + mpu.id() + "-" + mpu.blobName() + "-" + part.partNumber());
       }
+      removeBlob(mpu.containerName(), MULTIPART_PREFIX + mpu.id() + "-" + mpu.blobName() + "-stub");
    }
 
    @Override
@@ -800,7 +806,7 @@ public final class LocalBlobStore implements BlobStore {
       ImmutableList.Builder<InputStream> streams = ImmutableList.builder();
       long contentLength = 0;
       for (MultipartPart part : parts) {
-         Blob blobPart = getBlob(mpu.containerName(), mpu.blobName() + "-" + part.partNumber());
+         Blob blobPart = getBlob(mpu.containerName(), MULTIPART_PREFIX + mpu.id() + "-" + mpu.blobName() + "-" + part.partNumber());
          contentLength += blobPart.getMetadata().getContentMetadata().getContentLength();
          InputStream is;
          try {
@@ -843,8 +849,9 @@ public final class LocalBlobStore implements BlobStore {
       String eTag = putBlob(mpu.containerName(), blobBuilder.build());
 
       for (MultipartPart part : parts) {
-         storageStrategy.removeBlob(mpu.containerName(), mpu.blobName() + "-" + part.partNumber());
+         removeBlob(mpu.containerName(), MULTIPART_PREFIX + mpu.id() + "-" + mpu.blobName() + "-" + part.partNumber());
       }
+      removeBlob(mpu.containerName(), MULTIPART_PREFIX + mpu.id() + "-" + mpu.blobName() + "-stub");
 
       setBlobAccess(mpu.containerName(), mpu.blobName(), mpu.putOptions().getBlobAccess());
 
@@ -853,7 +860,7 @@ public final class LocalBlobStore implements BlobStore {
 
    @Override
    public MultipartPart uploadMultipartPart(MultipartUpload mpu, int partNumber, Payload payload) {
-      String partName = mpu.blobName() + "-" + partNumber;
+      String partName = MULTIPART_PREFIX + mpu.id() + "-" + mpu.blobName() + "-" + partNumber;
       Blob blob = blobBuilder(partName)
             .payload(payload)
             .build();
@@ -866,11 +873,14 @@ public final class LocalBlobStore implements BlobStore {
    public List<MultipartPart> listMultipartUpload(MultipartUpload mpu) {
       ImmutableList.Builder<MultipartPart> parts = ImmutableList.builder();
       ListContainerOptions options =
-            new ListContainerOptions().prefix(mpu.blobName() + "-").recursive();
+            new ListContainerOptions().prefix(MULTIPART_PREFIX + mpu.id() + "-" + mpu.blobName() + "-").recursive();
       while (true) {
          PageSet<? extends StorageMetadata> pageSet = list(mpu.containerName(), options);
          for (StorageMetadata sm : pageSet) {
-            int partNumber = Integer.parseInt(sm.getName().substring((mpu.blobName() + "-").length()));
+            if (sm.getName().endsWith("-stub")) {
+               continue;
+            }
+            int partNumber = Integer.parseInt(sm.getName().substring((MULTIPART_PREFIX + mpu.id() + "-" + mpu.blobName() + "-").length()));
             long partSize = -1;  // TODO: could call getContentMetadata but did not above
             parts.add(MultipartPart.create(partNumber, partSize, sm.getETag()));
          }
@@ -884,7 +894,29 @@ public final class LocalBlobStore implements BlobStore {
 
    @Override
    public List<MultipartUpload> listMultipartUploads(String container) {
-      throw new UnsupportedOperationException();
+      ImmutableList.Builder<MultipartUpload> mpus = ImmutableList.builder();
+      ListContainerOptions options = new ListContainerOptions().prefix(MULTIPART_PREFIX).recursive();
+      int uuidLength = UUID.randomUUID().toString().length();
+      while (true) {
+         PageSet<? extends StorageMetadata> pageSet = list(container, options);
+         for (StorageMetadata sm : pageSet) {
+            if (!sm.getName().endsWith("-stub")) {
+               continue;
+            }
+            String uploadId = sm.getName().substring(MULTIPART_PREFIX.length(), MULTIPART_PREFIX.length() + uuidLength);
+            String blobName = sm.getName().substring(MULTIPART_PREFIX.length() + uuidLength + 1);
+            int index = blobName.lastIndexOf('-');
+            blobName = blobName.substring(0, index);
+
+            mpus.add(MultipartUpload.create(container, blobName, uploadId, null, null));
+         }
+         if (pageSet.isEmpty() || pageSet.getNextMarker() == null) {
+            break;
+         }
+         options.afterMarker(pageSet.getNextMarker());
+      }
+
+      return mpus.build();
    }
 
    @Override

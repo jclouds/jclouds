@@ -31,13 +31,4 @@ public class TransientBlobIntegrationTest extends BaseBlobIntegrationTest {
    public void testSetBlobAccess() throws Exception {
       throw new SkipException("transient does not support anonymous access");
    }
-
-   @Test(groups = { "integration", "live" })
-   public void testListMultipartUploads() throws Exception {
-      try {
-         super.testListMultipartUploads();
-      } catch (UnsupportedOperationException uoe) {
-         throw new SkipException("transient does not support listing multipart uploads");
-      }
-   }
 }

@@ -93,13 +93,4 @@ public class FilesystemBlobIntegrationTest extends BaseBlobIntegrationTest {
    public void testSetBlobAccess() throws Exception {
       throw new SkipException("filesystem does not support anonymous access");
    }
-
-   @Test(groups = { "integration", "live" })
-   public void testListMultipartUploads() throws Exception {
-      try {
-         super.testListMultipartUploads();
-      } catch (UnsupportedOperationException uoe) {
-         throw new SkipException("filesystem does not support listing multipart uploads");
-      }
-   }
 }
