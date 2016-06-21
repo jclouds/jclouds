@@ -290,7 +290,7 @@ public abstract class BaseComputeServiceLiveTest extends BaseComputeServiceConte
    }
 
    @Test(enabled = false)
-   public void weCanCancelTasks(NodeMetadata node) throws InterruptedException, ExecutionException {
+   protected void weCanCancelTasks(NodeMetadata node) throws InterruptedException, ExecutionException {
       ListenableFuture<ExecResponse> future = client.submitScriptOnNode(node.getId(), "sleep 300",
             nameTask("sleeper").runAsRoot(false));
       ExecResponse response = null;
@@ -386,11 +386,11 @@ public abstract class BaseComputeServiceLiveTest extends BaseComputeServiceConte
       this.nodes = newTreeSet(concat(this.nodes, nodes));
    }
 
-   private Template refreshTemplate() {
+   protected Template refreshTemplate() {
       return template = addRunScriptToTemplate(buildTemplate(client.templateBuilder()));
    }
 
-   protected static Template addRunScriptToTemplate(Template template) {
+   protected Template addRunScriptToTemplate(Template template) {
       template.getOptions().runScript(Statements.newStatementList(AdminAccess.standard(), InstallJDK.fromOpenJDK()));
       return template;
    }
