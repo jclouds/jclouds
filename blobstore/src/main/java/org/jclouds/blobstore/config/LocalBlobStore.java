@@ -789,8 +789,9 @@ public final class LocalBlobStore implements BlobStore {
 
    @Override
    public void abortMultipartUpload(MultipartUpload mpu) {
-      for (int i = 1; i <= 10 * 1000; ++i) {
-         storageStrategy.removeBlob(mpu.containerName(), mpu.blobName() + "-" + i);
+      List<MultipartPart> parts = listMultipartUpload(mpu);
+      for (MultipartPart part : parts) {
+         removeBlob(mpu.containerName(), mpu.blobName() + "-" + part.partNumber());
       }
    }
 
