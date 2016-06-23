@@ -39,7 +39,7 @@ public final class UploadFileBinder implements MapBinder {
             .replaceHeader(HttpHeaders.AUTHORIZATION, uploadUrl.authorizationToken())
             .replaceHeader(B2Headers.FILE_NAME, escaper.escape(fileName));
       for (Map.Entry<String, String> entry : fileInfo.entrySet()) {
-         builder.replaceHeader(B2Headers.FILE_INFO_PREFIX + entry.getKey(), entry.getValue());
+         builder.replaceHeader(B2Headers.FILE_INFO_PREFIX + entry.getKey(), escaper.escape(entry.getValue()));
       }
       return (R) builder.build();
    }

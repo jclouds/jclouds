@@ -48,7 +48,13 @@ public final class ParseB2ObjectFromResponse implements Function<HttpResponse, B
       ImmutableMap.Builder<String, String> fileInfo = ImmutableMap.builder();
       for (Map.Entry<String, String> entry : from.getHeaders().entries()) {
          if (entry.getKey().regionMatches(true, 0, B2Headers.FILE_INFO_PREFIX, 0, B2Headers.FILE_INFO_PREFIX.length())) {
-            fileInfo.put(entry.getKey().substring(B2Headers.FILE_INFO_PREFIX.length()), entry.getValue());
+            String value;
+            try {
+               value = URLDecoder.decode(entry.getValue(), "UTF-8");
+            } catch (UnsupportedEncodingException uee) {
+               throw Throwables.propagate(uee);
+            }
+            fileInfo.put(entry.getKey().substring(B2Headers.FILE_INFO_PREFIX.length()), value);
          }
       }
       Date uploadTimestamp = new Date(Long.parseLong(from.getFirstHeaderOrNull(B2Headers.UPLOAD_TIMESTAMP)));
