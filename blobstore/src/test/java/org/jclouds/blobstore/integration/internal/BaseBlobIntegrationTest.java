@@ -119,8 +119,6 @@ public class BaseBlobIntegrationTest extends BaseBlobStoreIntegrationTest {
    @Test(groups = { "integration", "live" })
    public void testPutBlobParallel() throws Exception {
       final ByteSource expected = createTestInput(32 * 1024);
-      final Payload testPayload = Payloads.newByteSourcePayload(expected);
-      testPayload.getContentMetadata().setContentType("image/png");
 
       final String container = getContainerName();
       try {
@@ -131,7 +129,9 @@ public class BaseBlobIntegrationTest extends BaseBlobStoreIntegrationTest {
 
                @Override
                public Void call() throws Exception {
-                  Blob blob = view.getBlobStore().blobBuilder(name).payload(testPayload).contentLength(expected.size()).build();
+                  Payload payload = Payloads.newByteSourcePayload(expected);
+                  payload.getContentMetadata().setContentType("image/png");
+                  Blob blob = view.getBlobStore().blobBuilder(name).payload(payload).contentLength(expected.size()).build();
                   view.getBlobStore().putBlob(container, blob);
 
                   assertConsistencyAwareBlobExists(container, name);
