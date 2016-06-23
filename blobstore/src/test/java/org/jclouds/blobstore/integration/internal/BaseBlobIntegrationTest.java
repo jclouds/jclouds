@@ -43,8 +43,6 @@ import java.util.Random;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
-import java.util.concurrent.atomic.AtomicInteger;
 
 import javax.ws.rs.core.MediaType;
 
@@ -119,33 +117,28 @@ public class BaseBlobIntegrationTest extends BaseBlobStoreIntegrationTest {
     * http://groups.google.com/group/jclouds/browse_thread/thread/4a7c8d58530b287f
     */
    @Test(groups = { "integration", "live" })
-   public void testPutFileParallel() throws InterruptedException, IOException, TimeoutException {
-
-      File payloadFile = File.createTempFile("testPutFileParallel", "png");
-      createTestInput(32 * 1024).copyTo(Files.asByteSink(payloadFile));
-
-      final Payload testPayload = Payloads.newFilePayload(payloadFile);
-      final HashCode md5 = hashAndClose(testPayload.openStream(), md5());
+   public void testPutBlobParallel() throws Exception {
+      final ByteSource expected = createTestInput(32 * 1024);
+      final Payload testPayload = Payloads.newByteSourcePayload(expected);
       testPayload.getContentMetadata().setContentType("image/png");
 
-      final AtomicInteger blobCount = new AtomicInteger();
       final String container = getContainerName();
       try {
          Map<Integer, ListenableFuture<?>> responses = Maps.newHashMap();
          for (int i = 0; i < 3; i++) {
-
+            final String name = String.valueOf(i);
             responses.put(i, this.exec.submit(new Callable<Void>() {
 
                @Override
                public Void call() throws Exception {
-                  String name = blobCount.incrementAndGet() + "";
-                  Blob blob = view.getBlobStore().blobBuilder(name).payload(testPayload).build();
+                  Blob blob = view.getBlobStore().blobBuilder(name).payload(testPayload).contentLength(expected.size()).build();
                   view.getBlobStore().putBlob(container, blob);
-                  assertConsistencyAwareBlobExists(container, name);
-                  blob = view.getBlobStore().getBlob(container, name);
 
-                  assertEquals(hashAndClose(blob.getPayload().openStream(), md5()), md5,
-                           String.format("md5 didn't match on %s/%s", container, name));
+                  assertConsistencyAwareBlobExists(container, name);
+
+                  blob = view.getBlobStore().getBlob(container, name);
+                  byte[] actual = ByteStreams2.toByteArrayAndClose(blob.getPayload().openStream());
+                  assertThat(actual).isEqualTo(expected.read());
 
                   view.getBlobStore().removeBlob(container, name);
                   assertConsistencyAwareBlobDoesntExist(container, name);
@@ -159,7 +152,6 @@ public class BaseBlobIntegrationTest extends BaseBlobStoreIntegrationTest {
          assert exceptions.size() == 0 : exceptions;
 
       } finally {
-         payloadFile.delete();
          returnContainer(container);
       }
    }
