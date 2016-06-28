@@ -537,8 +537,9 @@ public final class LocalBlobStore implements BlobStore {
          throw new KeyNotFoundException(fromContainer, fromName, "while copying");
       }
 
-      String eTag = maybeQuoteETag(blob.getMetadata().getETag());
+      String eTag = blob.getMetadata().getETag();
       if (eTag != null) {
+         eTag = maybeQuoteETag(eTag);
          if (options.ifMatch() != null && !maybeQuoteETag(options.ifMatch()).equals(eTag)) {
             throw returnResponseException(412);
          }
@@ -640,13 +641,17 @@ public final class LocalBlobStore implements BlobStore {
       Blob blob = loadBlob(containerName, key);
 
       if (options != null) {
-         if (options.getIfMatch() != null) {
-            if (!maybeQuoteETag(blob.getMetadata().getETag()).equals(maybeQuoteETag(options.getIfMatch())))
-               throw returnResponseException(412);
-         }
-         if (options.getIfNoneMatch() != null) {
-            if (maybeQuoteETag(blob.getMetadata().getETag()).equals(maybeQuoteETag(options.getIfNoneMatch())))
-               throw returnResponseException(304);
+         String eTag = blob.getMetadata().getETag();
+         if (eTag != null) {
+            eTag = maybeQuoteETag(eTag);
+            if (options.getIfMatch() != null) {
+               if (!eTag.equals(maybeQuoteETag(options.getIfMatch())))
+                  throw returnResponseException(412);
+            }
+            if (options.getIfNoneMatch() != null) {
+               if (eTag.equals(maybeQuoteETag(options.getIfNoneMatch())))
+                  throw returnResponseException(304);
+            }
          }
          if (options.getIfModifiedSince() != null) {
             Date modifiedSince = options.getIfModifiedSince();
