@@ -17,6 +17,7 @@
 package org.jclouds.azurecompute.arm.compute.functions;
 
 import static com.google.common.base.Preconditions.checkNotNull;
+import static org.jclouds.azurecompute.arm.compute.extensions.AzureComputeImageExtension.CUSTOM_IMAGE_PREFIX;
 import static org.jclouds.azurecompute.arm.compute.functions.DeploymentToNodeMetadata.AZURE_LOGIN_PASSWORD;
 import static org.jclouds.azurecompute.arm.compute.functions.DeploymentToNodeMetadata.AZURE_LOGIN_USERNAME;
 
@@ -79,8 +80,14 @@ public class VMImageToImage implements Function<VMImage, Image> {
    public Image apply(final VMImage image) {
 
       Credentials credentials = new Credentials(AZURE_LOGIN_USERNAME, AZURE_LOGIN_PASSWORD);
+      String name = "";
+      if (image.offer().startsWith(CUSTOM_IMAGE_PREFIX)) {
+         name = image.offer().substring(CUSTOM_IMAGE_PREFIX.length());
+      } else {
+            name = image.offer();
+      }
       final ImageBuilder builder = new ImageBuilder()
-              .name(image.offer())
+              .name(name)
               .description(image.sku())
               .status(Image.Status.AVAILABLE)
               .version(image.sku())

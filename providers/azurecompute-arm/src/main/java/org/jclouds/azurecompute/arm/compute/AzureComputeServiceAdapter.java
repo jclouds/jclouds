@@ -265,9 +265,10 @@ public class AzureComputeServiceAdapter implements ComputeServiceAdapter<VMDeplo
    public VMImage getImage(final String id) {
       String[] fields = VMImageToImage.decodeFieldsFromUniqueId(id);
       if (fields[2].startsWith(CUSTOM_IMAGE_PREFIX)) {
-         String storage = fields[2].substring(CUSTOM_IMAGE_PREFIX.length());
-         String vhd = fields[3];
-         VMImage ref = VMImage.create(CUSTOM_IMAGE_PREFIX + azureGroup, CUSTOM_IMAGE_PREFIX + storage, vhd, null, fields[0], false);
+         String name = fields[2].substring(CUSTOM_IMAGE_PREFIX.length());
+         String sku = fields[3];
+         String version = "1";
+         VMImage ref = VMImage.create(CUSTOM_IMAGE_PREFIX + azureGroup, CUSTOM_IMAGE_PREFIX + name, sku, version, fields[0], false);
          return ref;
       }
 

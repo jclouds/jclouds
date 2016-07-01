@@ -34,7 +34,6 @@ import org.jclouds.azurecompute.arm.domain.PublicIPAddress;
 import org.jclouds.azurecompute.arm.domain.VirtualMachine;
 import org.jclouds.compute.reference.ComputeServiceConstants;
 import org.jclouds.logging.Logger;
-import org.jclouds.azurecompute.arm.domain.StorageService;
 
 import com.google.common.base.Function;
 
@@ -79,12 +78,6 @@ public class CleanupResources implements Function<String, Boolean> {
             boolean deploymentDeleteStatus = false;
 
             if (jobDone) {
-               StorageService ss = api.getStorageAccountApi(group).get(storageAccountName);
-               if (ss != null) {
-                  storageAcctDeleteStatus = api.getStorageAccountApi(group).delete(storageAccountName);
-               } else {
-                  storageAcctDeleteStatus = true;
-               }
                Deployment deployment = api.getDeploymentApi(group).get(id);
                if (deployment != null) {
                   uri = api.getDeploymentApi(group).delete(id);

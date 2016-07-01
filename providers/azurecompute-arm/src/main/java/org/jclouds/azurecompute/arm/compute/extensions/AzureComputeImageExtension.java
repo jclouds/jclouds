@@ -85,6 +85,7 @@ public class AzureComputeImageExtension implements ImageExtension {
    public ListenableFuture<Image> createImage(ImageTemplate template) {
       final CloneImageTemplate cloneTemplate = (CloneImageTemplate) template;
       final String id = cloneTemplate.getSourceNodeId();
+      final String name = cloneTemplate.getName();
       final String storageAccountName = id.replaceAll("[^A-Za-z0-9 ]", "") + "stor";
 
       // VM needs to be stopped before it can be generalized
@@ -118,7 +119,7 @@ public class AzureComputeImageExtension implements ImageExtension {
 
                            VirtualMachine vm = api.getVirtualMachineApi(group).get(id);
                            String location = vm.location();
-                           final VMImage ref = VMImage.create(CUSTOM_IMAGE_PREFIX + group, CUSTOM_IMAGE_PREFIX + storageAccountName, disks[0], disks[1], location, false);
+                           final VMImage ref = VMImage.create(CUSTOM_IMAGE_PREFIX + group, CUSTOM_IMAGE_PREFIX + name, disks[0], disks[1], location, false);
                            return imageReferenceToImage.apply(ref);
                         }
                      }
