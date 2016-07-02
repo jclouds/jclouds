@@ -164,7 +164,7 @@ public class DockerTemplateOptions extends TemplateOptions implements Cloneable 
    @Override
    public int hashCode() {
       return Objects.hashCode(super.hashCode(), volumes, hostname, dns, memory, entrypoint, commands, cpuShares, env,
-            portBindings, extraHosts, volumesFrom, privileged, openStdin, configBuilder);
+            portBindings, networkMode, extraHosts, volumesFrom, privileged, openStdin, configBuilder);
    }
 
    @Override
@@ -264,7 +264,11 @@ public class DockerTemplateOptions extends TemplateOptions implements Cloneable 
    }
 
    /**
-    * Sets the networking mode for the container. Supported values are: bridge, host, and container:[name|id]
+    * Sets the networking mode for the container.
+    * <p>
+    * Supported values are: {@code bridge}, {@code none}, {@code host},
+    * {@code networkname}, {@code networkid} or {@code container:[name|id]}
+    *
     * @param networkMode
     * @return this instance
     */

@@ -32,6 +32,7 @@ import com.google.common.base.Predicate;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
@@ -182,7 +183,6 @@ public class DockerComputeServiceAdapter implements
          hostConfigBuilder = HostConfig.builder().fromHostConfig(containerConfig.hostConfig());
          hostConfigBuilder.portBindings(portBindings);
          containerConfigBuilder.hostConfig(hostConfigBuilder.build());
-
       } else {
          containerConfigBuilder.image(imageId);
       }
@@ -193,9 +193,20 @@ public class DockerComputeServiceAdapter implements
       Container container = api.getContainerApi().createContainer(name, containerConfig);
       logger.trace("<< container(%s)", container.id());
 
+      if (templateOptions.getNetworks() != null) {
+          logger.debug(">> connecting container(%s) to networks(%s)", container.id(), Iterables.toString(templateOptions.getNetworks()));
+          for (String networkIdOrName : templateOptions.getNetworks()) {
+              api.getNetworkApi().connectContainerToNetwork(networkIdOrName, container.id());
+          }
+          logger.trace("<< connected(%s)", container.id());
+      }
+
       HostConfig hostConfig = containerConfig.hostConfig();
 
+      logger.debug(">> starting container(%s) with hostConfig(%s)", container.id(), hostConfig);
       api.getContainerApi().startContainer(container.id(), hostConfig);
+      logger.trace("<< started(%s)", container.id());
+
       container = api.getContainerApi().inspectContainer(container.id());
       if (container.state().exitCode() != 0) {
          destroyNode(container.id());
