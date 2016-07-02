@@ -18,11 +18,16 @@ package org.jclouds.docker.compute;
 
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertFalse;
+import static org.testng.Assert.assertTrue;
 import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertNull;
 
 import java.util.Properties;
 import java.util.Random;
+
+import org.testng.annotations.AfterClass;
+import org.testng.annotations.BeforeClass;
+import org.testng.annotations.Test;
 
 import com.google.common.base.Predicate;
 import com.google.common.collect.ImmutableList;
@@ -40,10 +45,8 @@ import org.jclouds.docker.compute.options.DockerTemplateOptions;
 import org.jclouds.docker.compute.strategy.DockerComputeServiceAdapter;
 import org.jclouds.docker.domain.Container;
 import org.jclouds.docker.domain.Image;
+import org.jclouds.docker.domain.Network;
 import org.jclouds.sshj.config.SshjSshClientModule;
-import org.testng.annotations.AfterClass;
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.Test;
 
 @Test(groups = "live", singleThreaded = true, testName = "DockerComputeServiceAdapterLiveTest")
 public class DockerComputeServiceAdapterLiveTest extends BaseDockerApiLiveTest {
@@ -51,6 +54,8 @@ public class DockerComputeServiceAdapterLiveTest extends BaseDockerApiLiveTest {
    private static final String SSHABLE_IMAGE = "kwart/alpine-ext";
    private static final String SSHABLE_IMAGE_TAG = "3.3-ssh";
    private Image defaultImage;
+   private Network network1;
+   private Network network2;
 
    private DockerComputeServiceAdapter adapter;
    private TemplateBuilder templateBuilder;
@@ -62,6 +67,8 @@ public class DockerComputeServiceAdapterLiveTest extends BaseDockerApiLiveTest {
       super.initialize();
       String imageName = SSHABLE_IMAGE + ":" + SSHABLE_IMAGE_TAG;
       defaultImage = adapter.getImage(imageName);
+      network1 = api.getNetworkApi().createNetwork(Network.builder().name("network1").driver("overlay").build());
+      network2 = api.getNetworkApi().createNetwork(Network.builder().name("network2").driver("overlay").build());
       assertNotNull(defaultImage);
    }
 
@@ -72,6 +79,12 @@ public class DockerComputeServiceAdapterLiveTest extends BaseDockerApiLiveTest {
       }
       if (api.getImageApi().inspectImage(CHUANWEN_COWSAY) != null) {
          api.getImageApi().deleteImage(CHUANWEN_COWSAY);
+      }
+      if (api.getNetworkApi().inspectNetwork("network1") != null) {
+         api.getNetworkApi().removeNetwork("network1");
+      }
+      if (api.getNetworkApi().inspectNetwork("network2") != null) {
+         api.getNetworkApi().removeNetwork("network2");
       }
       super.tearDown();
    }
@@ -85,14 +98,11 @@ public class DockerComputeServiceAdapterLiveTest extends BaseDockerApiLiveTest {
    }
 
    public void testCreateNodeWithGroupEncodedIntoNameThenStoreCredentials() {
-      String group = "foo";
       String name = "container" + new Random().nextInt();
-
       Template template = templateBuilder.imageId(defaultImage.id()).build();
-
       DockerTemplateOptions options = template.getOptions().as(DockerTemplateOptions.class);
       options.env(ImmutableList.of("ROOT_PASSWORD=password"));
-      guest = adapter.createNodeWithGroupEncodedIntoName(group, name, template);
+      guest = adapter.createNodeWithGroupEncodedIntoName("test", name, template);
       assertEquals(guest.getNodeId(), guest.getNode().id());
    }
 
@@ -106,7 +116,6 @@ public class DockerComputeServiceAdapterLiveTest extends BaseDockerApiLiveTest {
    }
 
    public void testGetImageNotHiddenByCache() {
-
       //Ensure image to be tested is unknown to jclouds and docker and that cache is warm
       assertNull(findImageFromListImages(CHUANWEN_COWSAY));
       assertNull(api.getImageApi().inspectImage(CHUANWEN_COWSAY));
@@ -116,6 +125,20 @@ public class DockerComputeServiceAdapterLiveTest extends BaseDockerApiLiveTest {
 
       assertNotNull(findImageFromListImages(CHUANWEN_COWSAY), "New image is not available from listImages presumably due to caching");
    }
+
+   public void testCreateNodeWithMultipleNetworks() {
+       String name = "container" + new Random().nextInt();
+       Template template = templateBuilder.imageId(defaultImage.id()).build();
+       DockerTemplateOptions options = template.getOptions().as(DockerTemplateOptions.class);
+       options.env(ImmutableList.of("ROOT_PASSWORD=password"));
+       options.networkMode("bridge");
+       options.networks(network1.name(), network2.name());
+       guest = adapter.createNodeWithGroupEncodedIntoName("test", name, template);
+
+       assertTrue(guest.getNode().networkSettings().networks().containsKey("network1"));
+       assertTrue(guest.getNode().networkSettings().networks().containsKey("network2"));
+       assertEquals(guest.getNode().networkSettings().secondaryIPAddresses().size(), 2);
+    }
 
    private Image findImageFromListImages(final String image) {
       return Iterables.find(adapter.listImages(), new Predicate<Image>() {
