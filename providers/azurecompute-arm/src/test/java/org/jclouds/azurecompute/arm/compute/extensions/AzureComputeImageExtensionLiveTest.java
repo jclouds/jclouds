@@ -63,7 +63,7 @@ public class AzureComputeImageExtensionLiveTest extends BaseImageExtensionLiveTe
       properties.setProperty(TIMEOUT_PORT_OPEN, scriptTimeout + "");
       properties.setProperty(TIMEOUT_NODE_TERMINATED, scriptTimeout + "");
       properties.setProperty(TIMEOUT_NODE_SUSPENDED, scriptTimeout + "");
-      properties.put(RESOURCE_GROUP_NAME, "a5");
+      properties.put(RESOURCE_GROUP_NAME, "jcloudsgroup");
 
       properties.put(ComputeServiceProperties.POLL_INITIAL_PERIOD, 1000);
       properties.put(ComputeServiceProperties.POLL_MAX_PERIOD, 10000);
@@ -85,5 +85,6 @@ public class AzureComputeImageExtensionLiveTest extends BaseImageExtensionLiveTe
       AzureComputeProviderMetadata pm = AzureComputeProviderMetadata.builder().build();
       return pm;
    }
+
 
 }

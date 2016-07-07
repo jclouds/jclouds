@@ -17,18 +17,24 @@
 package org.jclouds.azurecompute.arm.compute.extensions;
 
 import com.google.common.base.Predicate;
+import com.google.common.base.Supplier;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.ListeningExecutorService;
+import com.google.common.util.concurrent.UncheckedTimeoutException;
 import com.google.gson.internal.LinkedTreeMap;
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
 import org.jclouds.Constants;
+import org.jclouds.View;
 import org.jclouds.azurecompute.arm.AzureComputeApi;
 import org.jclouds.azurecompute.arm.compute.config.AzureComputeServiceContextModule;
 import org.jclouds.azurecompute.arm.compute.functions.VMImageToImage;
 import org.jclouds.azurecompute.arm.domain.ResourceDefinition;
+import org.jclouds.azurecompute.arm.domain.StorageServiceKeys;
 import org.jclouds.azurecompute.arm.domain.VMImage;
 import org.jclouds.azurecompute.arm.domain.VirtualMachine;
+import static java.lang.String.format;
+import org.jclouds.azurecompute.arm.util.BlobHelper;
 import org.jclouds.compute.domain.CloneImageTemplate;
 import org.jclouds.compute.domain.Image;
 import org.jclouds.compute.domain.ImageTemplate;
@@ -36,27 +42,25 @@ import org.jclouds.compute.domain.ImageTemplateBuilder;
 import org.jclouds.compute.extensions.ImageExtension;
 import org.jclouds.azurecompute.arm.compute.config.AzureComputeServiceContextModule.AzureComputeConstants;
 
-import static java.lang.String.format;
-import static org.jclouds.compute.config.ComputeServiceProperties.TIMEOUT_IMAGE_AVAILABLE;
-import static org.jclouds.compute.config.ComputeServiceProperties.TIMEOUT_NODE_SUSPENDED;
-
-import com.google.common.util.concurrent.UncheckedTimeoutException;
-
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Callable;
 
+import static org.jclouds.compute.config.ComputeServiceProperties.TIMEOUT_IMAGE_AVAILABLE;
+import static org.jclouds.compute.config.ComputeServiceProperties.TIMEOUT_NODE_SUSPENDED;
+
 
 public class AzureComputeImageExtension implements ImageExtension {
    private final AzureComputeApi api;
+   private final ListeningExecutorService userExecutor;
+   private final Supplier<View> blobstore = null;
+   private final String group;
    private final Predicate<URI> imageAvailablePredicate;
    private final Predicate<String> nodeSuspendedPredicate;
    private final AzureComputeConstants azureComputeConstants;
-   private final ListeningExecutorService userExecutor;
-   private final String group;
    private final VMImageToImage imageReferenceToImage;
-   public static final String CONTAINER_NAME = "vhdsnew";
+   public static final String CONTAINER_NAME = "jclouds";
    public static final String CUSTOM_IMAGE_PREFIX = "#";
 
    @Inject
@@ -69,29 +73,28 @@ public class AzureComputeImageExtension implements ImageExtension {
       this.userExecutor = userExecutor;
       this.group = azureComputeConstants.azureResourceGroup();
       this.imageReferenceToImage = imageReferenceToImage;
-      this.api = api;
       this.imageAvailablePredicate = imageAvailablePredicate;
       this.nodeSuspendedPredicate = nodeSuspendedPredicate;
       this.azureComputeConstants = azureComputeConstants;
+      this.api = api;
    }
 
    @Override
    public ImageTemplate buildImageTemplateFromNode(String name, String id) {
-      String imageName = name.toLowerCase();
-      return new ImageTemplateBuilder.CloneImageTemplateBuilder().nodeId(id).name(imageName).build();
+      String nameLowerCase = name.toLowerCase();
+      return new ImageTemplateBuilder.CloneImageTemplateBuilder().nodeId(id).name(nameLowerCase).build();
    }
 
    @Override
    public ListenableFuture<Image> createImage(ImageTemplate template) {
+
+
       final CloneImageTemplate cloneTemplate = (CloneImageTemplate) template;
       final String id = cloneTemplate.getSourceNodeId();
       final String name = cloneTemplate.getName();
       final String storageAccountName = id.replaceAll("[^A-Za-z0-9 ]", "") + "stor";
 
-      // VM needs to be stopped before it can be generalized
-      String status = "";
       api.getVirtualMachineApi(group).stop(id);
-      //Poll until resource is ready to be used
       if (nodeSuspendedPredicate.apply(id)) {
          return userExecutor.submit(new Callable<Image>() {
             @Override
@@ -118,26 +121,36 @@ public class AzureComputeImageExtension implements ImageExtension {
                            disks[1] = datadiskObject.get("name");
 
                            VirtualMachine vm = api.getVirtualMachineApi(group).get(id);
-                           String location = vm.location();
-                           final VMImage ref = VMImage.create(CUSTOM_IMAGE_PREFIX + group, CUSTOM_IMAGE_PREFIX + name, disks[0], disks[1], location, false);
+                           final VMImage ref = VMImage.create(group, storageAccountName, disks[0], disks[1], name, "custom", vm.location());
                            return imageReferenceToImage.apply(ref);
                         }
                      }
                   }
                }
                throw new UncheckedTimeoutException("Image was not created within the time limit: "
-                       + cloneTemplate.getName());
+                     + cloneTemplate.getName());
             }
          });
       } else {
          final String illegalStateExceptionMessage = format("Node %s was not suspended within %sms.",
-                 id, azureComputeConstants.operationTimeout());
+               id, azureComputeConstants.operationTimeout());
          throw new IllegalStateException(illegalStateExceptionMessage);
       }
    }
 
    @Override
    public boolean deleteImage(String id) {
+
+      VMImage image = VMImageToImage.decodeFieldsFromUniqueId(id);
+      if (image.custom()) {
+         StorageServiceKeys keys = api.getStorageAccountApi(image.group()).getKeys(image.storage());
+
+         // This removes now all the images in this storage. At least in theory, there should be just one and if there is
+         // more, they should be copies of each other.
+         BlobHelper.deleteContainerIfExists(image.storage(), keys.key1(), "system");
+         return !BlobHelper.customImageExists(image.storage(), keys.key1());
+      }
+
       return false;
    }
 }

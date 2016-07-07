@@ -182,7 +182,7 @@ public class DeploymentTemplateBuilder {
 
       String imageName = template.getImage().getName();
       if (imageName.startsWith(CUSTOM_IMAGE_PREFIX)) {
-         storageAccountName = imageName.substring(CUSTOM_IMAGE_PREFIX.length()); // get group name
+         storageAccountName = template.getImage().getVersion();
       }
 
       if (Strings.isNullOrEmpty(storageAccountName)) {
@@ -414,13 +414,12 @@ public class DeploymentTemplateBuilder {
       boolean usingMarketplaceImage = true;
       String cusotomImageUri = "";
 
-      // TODO: make new fields for group information
-      String publisher = template.getImage().getProviderId();
-      String storageName = template.getImage().getName();
-      String sku = template.getImage().getDescription(); // this is actual VHD
-      if (storageName.startsWith(CUSTOM_IMAGE_PREFIX)) {
-         storageName = storageName.substring(CUSTOM_IMAGE_PREFIX.length()); // get group name
-         cusotomImageUri = sku;
+      // Handle custom image case if description starts with CUSTOM_IMAGE_PREFIX
+      String vhd1 = template.getImage().getProviderId();
+      String description = template.getImage().getDescription();
+      if (description.substring(0, CUSTOM_IMAGE_PREFIX.length()).equals(CUSTOM_IMAGE_PREFIX)) {
+         String storageName = template.getImage().getVersion();
+         cusotomImageUri = vhd1;
          cusotomImageUri = "https://" + storageName + ".blob.core.windows.net/system/Microsoft.Compute/Images/" + AzureComputeImageExtension.CONTAINER_NAME + "/" + cusotomImageUri;
       }
 

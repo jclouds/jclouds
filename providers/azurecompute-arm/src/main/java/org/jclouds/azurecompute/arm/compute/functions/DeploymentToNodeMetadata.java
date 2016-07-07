@@ -210,7 +210,7 @@ public class DeploymentToNodeMetadata implements Function<VMDeployment, NodeMeta
 
          if (imageReference != null) {
             VMImage vmImage = VMImage.create(imageReference.publisher(), imageReference.offer(), imageReference.sku(),
-                    imageReference.version(), locationName, false);
+                    imageReference.version(), locationName);
             Image image = vmImageToImage.apply(vmImage);
             builder.imageId(image.getId());
          }
