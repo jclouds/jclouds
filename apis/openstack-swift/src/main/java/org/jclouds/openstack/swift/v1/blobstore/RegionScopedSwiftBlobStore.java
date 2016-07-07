@@ -608,7 +608,6 @@ public class RegionScopedSwiftBlobStore implements BlobStore {
       }
    }
 
-   // copied from BaseBlobStore
    @Beta
    protected String putMultipartBlob(String container, Blob blob, PutOptions overrides, ListeningExecutorService executor) {
       ArrayList<ListenableFuture<MultipartPart>> parts = new ArrayList<ListenableFuture<MultipartPart>>();
