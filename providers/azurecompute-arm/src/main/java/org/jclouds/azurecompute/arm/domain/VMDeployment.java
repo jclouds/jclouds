@@ -16,21 +16,43 @@
  */
 package org.jclouds.azurecompute.arm.domain;
 
+import com.google.auto.value.AutoValue;
+import org.jclouds.javax.annotation.Nullable;
 
 import java.util.List;
 import java.util.Map;
 
-public class VMDeployment {
+@AutoValue
+public abstract class VMDeployment {
 
-   public Deployment deployment;
+   public abstract Deployment deployment();
 
-   public List<PublicIPAddress> ipAddressList;
+   @Nullable
+   public abstract List<PublicIPAddress> ipAddressList();
 
-   public VirtualMachineInstance vm;
+   @Nullable
+   public abstract VirtualMachineInstance vm();
 
-   public VirtualMachine virtualMachine;
+   @Nullable
+   public abstract VirtualMachine virtualMachine();
 
-   public Map<String, String> userMetaData;
+   @Nullable
+   public abstract List<NetworkInterfaceCard> networkInterfaceCards();
 
-   public Iterable<String> tags;
+   @Nullable
+   public abstract Map<String, String> userMetaData();
+
+   @Nullable
+   public abstract Iterable<String> tags();
+
+   public static VMDeployment create(Deployment deployment) {
+      return create(deployment, null, null, null, null, null, null);
+   }
+
+   public static VMDeployment create(Deployment deployment, List<PublicIPAddress> ipAddressList,
+                                     VirtualMachineInstance vm, VirtualMachine virtualMachine,
+                                     List<NetworkInterfaceCard> networkInterfaceCards, Map<String, String> userMetaData,
+                                     Iterable<String> tags) {
+      return new AutoValue_VMDeployment(deployment, ipAddressList, vm, virtualMachine, networkInterfaceCards, userMetaData, tags);
+   }
 }

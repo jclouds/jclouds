@@ -26,6 +26,7 @@ import java.util.Arrays;
 import java.util.Collection;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import javax.annotation.Resource;
@@ -42,6 +43,7 @@ import org.jclouds.azurecompute.arm.compute.functions.VMImageToImage;
 import org.jclouds.azurecompute.arm.domain.Deployment;
 import org.jclouds.azurecompute.arm.domain.DeploymentBody;
 import org.jclouds.azurecompute.arm.domain.DeploymentProperties;
+import org.jclouds.azurecompute.arm.domain.NetworkInterfaceCard;
 import org.jclouds.azurecompute.arm.domain.ResourceProviderMetaData;
 import org.jclouds.azurecompute.arm.domain.VMImage;
 import org.jclouds.azurecompute.arm.domain.VMHardware;
@@ -51,9 +53,9 @@ import org.jclouds.azurecompute.arm.domain.PublicIPAddress;
 import org.jclouds.azurecompute.arm.domain.SKU;
 import org.jclouds.azurecompute.arm.domain.VMDeployment;
 import org.jclouds.azurecompute.arm.domain.VirtualMachine;
+import org.jclouds.azurecompute.arm.domain.VirtualMachineInstance;
 import org.jclouds.azurecompute.arm.features.DeploymentApi;
 import org.jclouds.azurecompute.arm.features.OSImageApi;
-import org.jclouds.azurecompute.arm.features.VirtualMachineApi;
 import org.jclouds.azurecompute.arm.util.DeploymentTemplateBuilder;
 import org.jclouds.compute.ComputeServiceAdapter;
 import org.jclouds.compute.domain.Template;
@@ -131,8 +133,7 @@ public class AzureComputeServiceAdapter implements ComputeServiceAdapter<VMDeplo
             Deployment deployment = deploymentApi.create(name, deploymentTemplate);
 
             if (deployment != null) {
-               VMDeployment vmDeployment = new VMDeployment();
-               vmDeployment.deployment = deployment;
+               VMDeployment vmDeployment = VMDeployment.create(deployment);
                deployments.add(vmDeployment);
             } else {
                logger.debug("Failed to create deployment!");
@@ -272,13 +273,15 @@ public class AzureComputeServiceAdapter implements ComputeServiceAdapter<VMDeplo
          return ref;
       }
 
-      Iterable<VMImage> images = listImages();
+      String location = fields[0];
+      String publisher = fields[1];
+      String offer = fields[2];
+      String sku = fields[3];
 
-      for (VMImage image : images) {
-         String imageId = VMImageToImage.encodeFieldsToUniqueId(image);
-         if (id.equals(imageId)){
-            return image;
-         }
+      OSImageApi osImageApi = api.getOSImageApi(location);
+      List<Version> versions = osImageApi.listVersions(publisher, offer, sku);
+      if (!versions.isEmpty()) {
+         return VMImage.create(publisher, offer, sku, versions.get(0).name(), location, false);
       }
       return null;
    }
@@ -324,21 +327,7 @@ public class AzureComputeServiceAdapter implements ComputeServiceAdapter<VMDeplo
       Deployment deployment = api.getDeploymentApi(azureGroup).get(id);
       if (deployment == null)
          return null;
-      String resourceGroup = getResourceGroupFromId(deployment.id());
-      VMDeployment vmDeployment = new VMDeployment();
-      vmDeployment.deployment = deployment;
-      List<PublicIPAddress> list = getIPAddresses(deployment);
-      vmDeployment.ipAddressList = list;
-      VirtualMachine vm = api.getVirtualMachineApi(azureGroup).get(id);
-      vmDeployment.virtualMachine = vm;
-      vmDeployment.vm = api.getVirtualMachineApi(azureGroup).getInstanceDetails(id);
-      if (vm != null && vm.tags() != null) {
-         vmDeployment.userMetaData = vm.tags();
-         String tagString = vmDeployment.userMetaData.get("tags");
-         List<String> tags = Arrays.asList(tagString.split(","));
-         vmDeployment.tags = tags;
-      }
-      return vmDeployment;
+      return convertDeploymentToVMDeployment(deployment);
    }
 
    @Override
@@ -384,30 +373,49 @@ public class AzureComputeServiceAdapter implements ComputeServiceAdapter<VMDeplo
       return list;
    }
 
+   private List<NetworkInterfaceCard> getNetworkInterfaceCards(Deployment deployment) {
+      List<NetworkInterfaceCard> result = new ArrayList<NetworkInterfaceCard>();
+
+      String resourceGroup = getResourceGroupFromId(deployment.id());
+
+      if (deployment.properties() != null && deployment.properties().dependencies() != null) {
+         for (Deployment.Dependency dependency : deployment.properties().dependencies()) {
+            if (dependency.resourceType().equals("Microsoft.Network/networkInterfaces")) {
+               String resourceName = dependency.resourceName();
+               NetworkInterfaceCard nic = api.getNetworkInterfaceCardApi(resourceGroup).get(resourceName);
+               result.add(nic);
+            }
+         }
+      }
+
+      return result;
+   }
+
+   private VMDeployment convertDeploymentToVMDeployment(Deployment deployment) {
+      String id = deployment.id();
+      String resourceGroup = getResourceGroupFromId(id);
+
+      List<PublicIPAddress> ipAddressList = getIPAddresses(deployment);
+      List<NetworkInterfaceCard> networkInterfaceCards = getNetworkInterfaceCards(deployment);
+      VirtualMachine vm = api.getVirtualMachineApi(azureGroup).get(id);
+      VirtualMachineInstance vmInstanceDetails = api.getVirtualMachineApi(azureGroup).getInstanceDetails(id);
+      Map<String, String> userMetaData = null;
+      Iterable<String> tags = null;
+      if (vm != null && vm.tags() != null) {
+         userMetaData = vm.tags();
+         String tagString = userMetaData.get("tags");
+         tags = Arrays.asList(tagString.split(","));
+      }
+      return VMDeployment.create(deployment, ipAddressList, vmInstanceDetails, vm, networkInterfaceCards, userMetaData, tags);
+   }
+
    @Override
    public Iterable<VMDeployment> listNodes() {
       List<Deployment> deployments = api.getDeploymentApi(azureGroup).list();
 
       List<VMDeployment> vmDeployments = new ArrayList<VMDeployment>();
-
       for (Deployment d : deployments){
-         VMDeployment vmDeployment = new VMDeployment();
-         vmDeployment.deployment = d;
-         VirtualMachineApi vmApi = api.getVirtualMachineApi(azureGroup);
-         vmDeployment.vm = vmApi.getInstanceDetails(d.name());
-         List<PublicIPAddress> list = getIPAddresses(d);
-         vmDeployment.ipAddressList = list;
-
-         VirtualMachine vm = vmApi.get(d.name());
-         vmDeployment.virtualMachine = vm;
-
-         if (vm != null && vm.tags() != null) {
-            vmDeployment.userMetaData = vm.tags();
-            String tagString = vmDeployment.userMetaData.get("tags");
-            List<String> tags = Arrays.asList(tagString.split(","));
-            vmDeployment.tags = tags;
-         }
-         vmDeployments.add(vmDeployment);
+         vmDeployments.add(convertDeploymentToVMDeployment(d));
       }
       return vmDeployments;
    }
@@ -417,7 +425,7 @@ public class AzureComputeServiceAdapter implements ComputeServiceAdapter<VMDeplo
       return Iterables.filter(listNodes(), new Predicate<VMDeployment>() {
          @Override
          public boolean apply(final VMDeployment input) {
-            return Iterables.contains(ids, input.deployment.name());
+            return Iterables.contains(ids, input.deployment().name());
          }
       });
    }

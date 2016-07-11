@@ -27,6 +27,8 @@ import org.jclouds.azurecompute.arm.AzureComputeApi;
 import org.jclouds.azurecompute.arm.domain.ComputeNode;
 import org.jclouds.azurecompute.arm.domain.Deployment;
 import org.jclouds.azurecompute.arm.domain.ImageReference;
+import org.jclouds.azurecompute.arm.domain.IpConfiguration;
+import org.jclouds.azurecompute.arm.domain.NetworkInterfaceCard;
 import org.jclouds.azurecompute.arm.domain.PublicIPAddress;
 import org.jclouds.azurecompute.arm.domain.VMDeployment;
 import org.jclouds.azurecompute.arm.domain.VMHardware;
@@ -111,20 +113,20 @@ public class DeploymentToNodeMetadata implements Function<VMDeployment, NodeMeta
    @Override
    public NodeMetadata apply(final VMDeployment from) {
       final NodeMetadataBuilder builder = new NodeMetadataBuilder();
-      final Deployment deployment = from.deployment;
+      final Deployment deployment = from.deployment();
       builder.id(deployment.name());
       builder.providerId(deployment.name());
       builder.name(deployment.name());
       String group =  this.nodeNamingConvention.extractGroup(deployment.name());
       builder.group(group);
-      if (from.tags != null)
-         builder.tags(from.tags);
-      if (from.userMetaData != null)
-         builder.userMetadata(from.userMetaData);
+      if (from.tags() != null)
+         builder.tags(from.tags());
+      if (from.userMetaData() != null)
+         builder.userMetadata(from.userMetaData());
 
       NodeMetadata.Status status = STATUS_TO_NODESTATUS.get(provisioningStateFromString(deployment.properties().provisioningState()));
-      if (status == NodeMetadata.Status.RUNNING && from.vm != null && from.vm.statuses() != null) {
-         List<VirtualMachineInstance.VirtualMachineStatus> statuses = from.vm.statuses();
+      if (status == NodeMetadata.Status.RUNNING && from.vm() != null && from.vm().statuses() != null) {
+         List<VirtualMachineInstance.VirtualMachineStatus> statuses = from.vm().statuses();
          for (int c = 0; c < statuses.size(); c++) {
             if (statuses.get(c).code().substring(0, 10).equals("PowerState")) {
                if (statuses.get(c).displayStatus().equals("VM running")) {
@@ -139,11 +141,11 @@ public class DeploymentToNodeMetadata implements Function<VMDeployment, NodeMeta
 
       builder.status(status);
 
-      if (from.vm != null) {
+      if (from.vm() != null) {
          builder.hostname(deployment.name() + "pc");
       }
 
-      Credentials credentials = credentialStore.get("node#" + from.deployment.name());
+      Credentials credentials = credentialStore.get("node#" + from.deployment().name());
       if (credentials != null && credentials.identity.equals(JCLOUDS_DEFAULT_USERNAME)) {
          credentials = new Credentials(AZURE_LOGIN_USERNAME, credentials.credential);
       }
@@ -162,9 +164,9 @@ public class DeploymentToNodeMetadata implements Function<VMDeployment, NodeMeta
       builder.credentials(LoginCredentials.fromCredentials(credentials));
 
       final Set<String> publicIpAddresses = Sets.newLinkedHashSet();
-      if (from.ipAddressList != null) {
-         for (int c = 0; c < from.ipAddressList.size(); c++) {
-            PublicIPAddress ip = from.ipAddressList.get(c);
+      if (from.ipAddressList() != null) {
+         for (int c = 0; c < from.ipAddressList().size(); c++) {
+            PublicIPAddress ip = from.ipAddressList().get(c);
             if (ip != null && ip.properties() != null && ip.properties().ipAddress() != null)
             {
                publicIpAddresses.add(ip.properties().ipAddress());
@@ -174,10 +176,25 @@ public class DeploymentToNodeMetadata implements Function<VMDeployment, NodeMeta
          if (publicIpAddresses.size() > 0)
             builder.publicAddresses(publicIpAddresses);
       }
+      final Set<String> privateIpAddresses = Sets.newLinkedHashSet();
+      if (from.networkInterfaceCards() != null) {
+         for (NetworkInterfaceCard nic : from.networkInterfaceCards()) {
+            if (nic != null && nic.properties() != null && nic.properties().ipConfigurations() != null) {
+               for (IpConfiguration ip : nic.properties().ipConfigurations()) {
+                  if (ip != null && ip.properties() != null && ip.properties().privateIPAddress() != null) {
+                     privateIpAddresses.add(ip.properties().privateIPAddress());
+                  }
+               }
+            }
+         }
+         if (!privateIpAddresses.isEmpty()) {
+            builder.privateAddresses(privateIpAddresses);
+         }
+      }
 
       org.jclouds.azurecompute.arm.domain.Location myLocation = null;
-      if (from.virtualMachine != null) {
-         String locationName = from.virtualMachine.location();
+      if (from.virtualMachine() != null) {
+         String locationName = from.virtualMachine().location();
          List<org.jclouds.azurecompute.arm.domain.Location> locations = api.getLocationApi().list();
 
          for (org.jclouds.azurecompute.arm.domain.Location location : locations) {
@@ -189,7 +206,7 @@ public class DeploymentToNodeMetadata implements Function<VMDeployment, NodeMeta
          Location jLocation = this.locationToLocation.apply(myLocation);
          builder.location(jLocation);
 
-         ImageReference imageReference = from.virtualMachine.properties().storageProfile().imageReference();
+         ImageReference imageReference = from.virtualMachine().properties().storageProfile().imageReference();
 
          if (imageReference != null) {
             VMImage vmImage = VMImage.create(imageReference.publisher(), imageReference.offer(), imageReference.sku(),
@@ -199,7 +216,7 @@ public class DeploymentToNodeMetadata implements Function<VMDeployment, NodeMeta
          }
 
          VMSize myVMSize = null;
-         String vmSizeName = from.virtualMachine.properties().hardwareProfile().vmSize();
+         String vmSizeName = from.virtualMachine().properties().hardwareProfile().vmSize();
          List<VMSize> vmSizes = api.getVMSizeApi(locationName).list();
          for (VMSize vmSize : vmSizes) {
             if (vmSize.name().equals(vmSizeName)) {
