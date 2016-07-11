@@ -111,6 +111,7 @@ public class S3ClientLiveTest extends BaseBlobStoreIntegrationTest {
       return url;
    }
 
+   @Test(groups = {"fails-on-s3proxy"})
    public void testPutCannedAccessPolicyPublic() throws Exception {
       String containerName = getContainerName();
       try {
@@ -130,6 +131,7 @@ public class S3ClientLiveTest extends BaseBlobStoreIntegrationTest {
 
    }
 
+   @Test(groups = {"fails-on-s3proxy"})
    public void testCopyCannedAccessPolicyPublic() throws Exception {
       String containerName = getContainerName();
       String destinationContainer = getContainerName();
@@ -154,6 +156,7 @@ public class S3ClientLiveTest extends BaseBlobStoreIntegrationTest {
    String sourceKey = "apples";
    String destinationKey = "pears";
 
+   @Test(groups = {"fails-on-s3proxy"})
    public void testPublicWriteOnObject() throws InterruptedException, ExecutionException, TimeoutException, IOException {
       final String publicReadWriteObjectKey = "public-read-write-acl";
       final String containerName = getContainerName();
@@ -191,6 +194,7 @@ public class S3ClientLiveTest extends BaseBlobStoreIntegrationTest {
 
    }
 
+   @Test(groups = {"fails-on-s3proxy"})
    public void testUpdateObjectACL() throws InterruptedException, ExecutionException, TimeoutException, IOException {
       String containerName = getContainerName();
       try {

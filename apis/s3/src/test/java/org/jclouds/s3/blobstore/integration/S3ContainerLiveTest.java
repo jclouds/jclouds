@@ -16,6 +16,9 @@
  */
 package org.jclouds.s3.blobstore.integration;
 
+import java.io.IOException;
+import java.net.MalformedURLException;
+
 import org.jclouds.blobstore.integration.internal.BaseBlobStoreIntegrationTest;
 import org.jclouds.blobstore.integration.internal.BaseContainerLiveTest;
 import org.testng.annotations.Test;
@@ -26,5 +29,24 @@ public class S3ContainerLiveTest extends BaseContainerLiveTest {
    public S3ContainerLiveTest() {
       provider = "s3";
       BaseBlobStoreIntegrationTest.SANITY_CHECK_RETURNED_BUCKET_NAME = true;
+   }
+
+   @Override
+   @Test(groups = {"live", "fails-on-s3proxy"})
+   public void testPublicAccess() throws InterruptedException, MalformedURLException, IOException {
+      super.testPublicAccess();
+   }
+
+   @Override
+   @Test(groups = {"live", "fails-on-s3proxy"}, dependsOnMethods = "testPublicAccess")
+   public void testPublicAccessInNonDefaultLocation() throws InterruptedException, MalformedURLException, IOException {
+      super.testPublicAccessInNonDefaultLocation();
+   }
+
+   @Override
+   @Test(groups = {"live", "fails-on-s3proxy"}, dependsOnMethods = "testPublicAccess")
+   public void testPublicAccessInNonDefaultLocationWithBigBlob() throws InterruptedException, MalformedURLException,
+            IOException {
+      super.testPublicAccessInNonDefaultLocationWithBigBlob();
    }
 }

@@ -108,6 +108,7 @@ public class BucketsLiveTest extends BaseBlobStoreIntegrationTest {
 
    }
 
+   @Test(groups = {"fails-on-s3proxy"})
    public void testUpdateBucketACL() throws InterruptedException, ExecutionException, TimeoutException, IOException,
          Exception {
       String bucketName = getContainerName();
@@ -177,6 +178,7 @@ public class BucketsLiveTest extends BaseBlobStoreIntegrationTest {
 
    }
 
+   @Test(groups = {"fails-on-s3proxy"})
    public void testBucketPayer() throws Exception {
       final String bucketName = getContainerName();
       try {
@@ -207,6 +209,7 @@ public class BucketsLiveTest extends BaseBlobStoreIntegrationTest {
       }
    }
 
+   @Test(groups = {"fails-on-s3proxy"})
    public void testBucketLogging() throws Exception {
       final String bucketName = getContainerName();
       final String targetBucket = getContainerName();
