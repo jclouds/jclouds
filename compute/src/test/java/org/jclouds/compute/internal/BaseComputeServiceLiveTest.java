@@ -251,7 +251,6 @@ public abstract class BaseComputeServiceLiveTest extends BaseComputeServiceConte
                .adminUsername("foo").adminHome("/over/ridden/foo").build(), nameTask("adminUpdate"));
 
          response = future.get(3, TimeUnit.MINUTES);
-
          assert response.getExitStatus() == 0 : node.getId() + ": " + response;
 
          node = client.getNodeMetadata(node.getId());
@@ -259,14 +258,27 @@ public abstract class BaseComputeServiceLiveTest extends BaseComputeServiceConte
          assertEquals(node.getCredentials().identity, "foo");
          assert node.getCredentials().credential != null : nodes;
 
-         weCanCancelTasks(node);
-
-         assert response.getExitStatus() == 0 : node.getId() + ": " + response;
-
          response = client.runScriptOnNode(node.getId(), "echo $USER", wrapInInitScript(false).runAsRoot(false));
-
          assert response.getOutput().trim().equals("foo") : node.getId() + ": " + response;
 
+      } finally {
+         client.destroyNodesMatching(inGroup(group));
+      }
+   }
+   
+   @Test
+   public void testWeCanCancelTasks() throws Exception {
+      String group = this.group + "w";
+      try {
+         client.destroyNodesMatching(inGroup(group));
+      } catch (Exception e) {
+
+      }
+      template = buildTemplate(client.templateBuilder());
+      try {
+         Set<? extends NodeMetadata> nodes = client.createNodesInGroup(group, 1, template);
+         NodeMetadata node = getOnlyElement(nodes);
+         weCanCancelTasks(node);
       } finally {
          client.destroyNodesMatching(inGroup(group));
       }
@@ -805,6 +817,8 @@ public abstract class BaseComputeServiceLiveTest extends BaseComputeServiceConte
             if (provider2 == null)
                provider2 = location.getParent().getParent();
             assertProvider(provider2);
+            break;
+         default:
             break;
          }
       }

@@ -27,7 +27,6 @@ import static org.testng.Assert.assertEquals;
 import java.io.IOException;
 import java.util.Map;
 import java.util.Set;
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 
 import org.easymock.IArgumentMatcher;
@@ -452,10 +451,10 @@ public class StubComputeServiceIntegrationTest extends BaseComputeServiceLiveTes
    public void testAScriptExecutionAfterBootWithBasicTemplate() throws Exception {
       super.testAScriptExecutionAfterBootWithBasicTemplate();
    }
-   
+
    @Test(enabled = false)
    @Override
-   public void weCanCancelTasks(NodeMetadata node) throws InterruptedException, ExecutionException {
+   public void testWeCanCancelTasks() throws Exception {
       // not sure how to do multithreading in a mock so that tests can work
    }
 
