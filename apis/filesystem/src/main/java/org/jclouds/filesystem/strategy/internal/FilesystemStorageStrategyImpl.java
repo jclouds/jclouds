@@ -32,6 +32,7 @@ import static org.jclouds.filesystem.util.Utils.setPublic;
 import static org.jclouds.util.Closeables2.closeQuietly;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
@@ -389,6 +390,8 @@ public class FilesystemStorageStrategyImpl implements LocalStorageStrategy {
                .contentLength(byteSource.size())
                .contentMD5(byteSource.hash(Hashing.md5()).asBytes());
          }
+      } catch (FileNotFoundException fnfe) {
+         return null;
       } catch (IOException e) {
          throw Throwables.propagate(e);
       }

@@ -245,18 +245,21 @@ public final class LocalBlobStore implements BlobStore {
                   return storageStrategy.blobExists(containerName, key);
                }
             });
-      SortedSet<StorageMetadata> contents = newTreeSet(transform(blobBelongingToContainer,
-            new Function<String, StorageMetadata>() {
+      SortedSet<StorageMetadata> contents = newTreeSet(FluentIterable.from(blobBelongingToContainer)
+            .transform(new Function<String, StorageMetadata>() {
+               @Override
                public StorageMetadata apply(String key) {
                   Blob oldBlob = loadBlob(containerName, key);
-                  checkState(oldBlob != null, "blob " + key + " is not present although it was in the list of "
-                        + containerName);
+                  if (oldBlob == null) {
+                     return null;
+                  }
                   checkState(oldBlob.getMetadata() != null, "blob " + containerName + "/" + key + " has no metadata");
                   MutableBlobMetadata md = BlobStoreUtils.copy(oldBlob.getMetadata());
                   md.setSize(oldBlob.getMetadata().getSize());
                   return md;
                }
-            }));
+            })
+            .filter(Predicates.<StorageMetadata>notNull()));
 
       String marker = null;
       if (options != null) {
