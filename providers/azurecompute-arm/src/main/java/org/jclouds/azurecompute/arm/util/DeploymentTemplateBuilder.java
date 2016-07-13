@@ -21,6 +21,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import org.jclouds.azurecompute.arm.compute.config.AzureComputeServiceContextModule;
 import org.jclouds.azurecompute.arm.compute.extensions.AzureComputeImageExtension;
@@ -54,6 +55,8 @@ import org.jclouds.azurecompute.arm.domain.VHD;
 import org.jclouds.azurecompute.arm.domain.VirtualMachineProperties;
 import org.jclouds.compute.domain.Template;
 import org.jclouds.json.Json;
+import org.jclouds.predicates.Validator;
+import org.jclouds.predicates.validators.DnsNameValidator;
 
 import com.google.common.base.Joiner;
 import com.google.common.base.Preconditions;
@@ -175,12 +178,19 @@ public class DeploymentTemplateBuilder {
    }
 
    private void addStorageResource() {
-      String storageAccountName = name.replaceAll("[^A-Za-z0-9 ]", "") + "stor";
+      String storageAccountName = null;
 
-      String storageName = template.getImage().getName();
-      if (storageName.startsWith(CUSTOM_IMAGE_PREFIX)) {
-         storageAccountName = storageName.substring(CUSTOM_IMAGE_PREFIX.length()); // get group name
+      String imageName = template.getImage().getName();
+      if (imageName.startsWith(CUSTOM_IMAGE_PREFIX)) {
+         storageAccountName = imageName.substring(CUSTOM_IMAGE_PREFIX.length()); // get group name
       }
+
+      if (Strings.isNullOrEmpty(storageAccountName)) {
+         storageAccountName = generateStorageAccountName(name);
+      }
+
+      Validator<String> validator = new DnsNameValidator(3, 24);
+      validator.validate(storageAccountName);
 
       variables.put("storageAccountName", storageAccountName);
 
@@ -528,4 +538,37 @@ public class DeploymentTemplateBuilder {
       return !Strings.isNullOrEmpty(options.getKeyVaultIdAndSecret());
    }
 
+   /**
+    * Generates a valid storage account
+    *
+    * Storage account names must be between 3 and 24 characters in length and may contain numbers and lowercase letters only.
+    *
+    * @param name the node name
+    * @return the storage account name starting from a sanitized name (with only numbers and lowercase letters only ).
+    * If sanitized name is between 3 and 24 characters, storage account name is equals to sanitized name.
+    * If sanitized name is less than 3 characters, storage account is sanitized name plus 4 random chars.
+    * If sanitized name is more than 24 characters, storage account is first 10 chars of sanitized name plus 4 random chars plus last 10 chars of sanitized name.
+    */
+   private static String generateStorageAccountName(String name) {
+      String storageAccountName = name.replaceAll("[^a-z0-9]", "");
+      int nameLength = storageAccountName.length();
+      if (nameLength >= 3 && nameLength <= 24) {
+         return storageAccountName;
+      }
+
+      String random = UUID.randomUUID().toString().replaceAll("[^a-z0-9]", "").substring(0, 4);
+      if (nameLength < 3) {
+         storageAccountName = new StringBuilder().append(storageAccountName).append(random).toString();
+      }
+      if (nameLength > 24) {
+         storageAccountName = shorten(storageAccountName, random);
+      }
+      return storageAccountName;
+   }
+
+   private static String shorten(String storageAccountName, String random) {
+      String prefix = storageAccountName.substring(0, 10);
+      String suffix = storageAccountName.substring(storageAccountName.length() - 10, storageAccountName.length());
+      return String.format("%s%s%s", prefix, random, suffix);
+   }
 }
