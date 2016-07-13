@@ -16,8 +16,9 @@
  */
 package org.jclouds.azurecompute.arm.features;
 
-import org.jclouds.azurecompute.arm.internal.BaseAzureComputeApiMockTest;
-import org.jclouds.compute.options.TemplateOptions;
+import java.util.List;
+import java.util.Map;
+
 import org.jclouds.azurecompute.arm.compute.options.AzureTemplateOptions;
 import org.jclouds.azurecompute.arm.domain.DeploymentBody;
 import org.jclouds.azurecompute.arm.domain.ImageReference;
@@ -29,6 +30,7 @@ import org.jclouds.azurecompute.arm.domain.ResourceDefinition;
 import org.jclouds.azurecompute.arm.domain.StorageService;
 import org.jclouds.azurecompute.arm.domain.StorageService.StorageServiceProperties;
 import org.jclouds.azurecompute.arm.domain.VirtualMachineProperties;
+import org.jclouds.azurecompute.arm.internal.BaseAzureComputeApiMockTest;
 import org.jclouds.azurecompute.arm.util.DeploymentTemplateBuilder;
 import org.jclouds.compute.domain.Hardware;
 import org.jclouds.compute.domain.HardwareBuilder;
@@ -37,13 +39,11 @@ import org.jclouds.compute.domain.ImageBuilder;
 import org.jclouds.compute.domain.OperatingSystem;
 import org.jclouds.compute.domain.Template;
 import org.jclouds.compute.domain.internal.TemplateImpl;
+import org.jclouds.compute.options.TemplateOptions;
 import org.jclouds.domain.Location;
 import org.jclouds.domain.LocationBuilder;
 import org.jclouds.domain.LocationScope;
 import org.testng.annotations.Test;
-
-import java.util.Map;
-import java.util.List;
 
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
@@ -169,6 +169,28 @@ public class DeploymentTemplateBuilderTest extends BaseAzureComputeApiMockTest {
 
       //populated when keyvault is used to get public key.
       assertNotNull(virtualMachineProperties.osProfile().linuxConfiguration().ssh().publicKeys());
+   }
+
+   @Test(expectedExceptions = IllegalArgumentException.class)
+   void testSimplifyPortsWithPortsNull() {
+      int[] ports = null;
+      DeploymentTemplateBuilder.simplifyPorts(ports);
+   }
+
+   @Test(expectedExceptions = IllegalArgumentException.class)
+   void testSimplifyPortsWithPortsEmpty() {
+      int[] ports = new int[0];
+      DeploymentTemplateBuilder.simplifyPorts(ports);
+   }
+
+   @Test
+   void testSimplifyPorts() {
+      int[] ports = {8084, 22, 8081, 8080, 8082};
+      List<String> ranges = DeploymentTemplateBuilder.simplifyPorts(ports);
+      assertEquals(ranges.size(), 3);
+      assertEquals(ranges.get(0), "22");
+      assertEquals(ranges.get(1), "8080-8082");
+      assertEquals(ranges.get(2), "8084");
    }
 
    private Template getMockTemplate(TemplateOptions options) {

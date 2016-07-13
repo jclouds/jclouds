@@ -16,11 +16,11 @@
  */
 package org.jclouds.azurecompute.arm.util;
 
-import com.google.common.base.Strings;
-import com.google.common.collect.Lists;
-import com.google.inject.assistedinject.Assisted;
-import com.google.common.base.Joiner;
-import com.google.common.base.Preconditions;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import org.jclouds.azurecompute.arm.compute.config.AzureComputeServiceContextModule;
 import org.jclouds.azurecompute.arm.compute.extensions.AzureComputeImageExtension;
@@ -32,38 +32,37 @@ import org.jclouds.azurecompute.arm.domain.DeploymentTemplate;
 import org.jclouds.azurecompute.arm.domain.DiagnosticsProfile;
 import org.jclouds.azurecompute.arm.domain.DnsSettings;
 import org.jclouds.azurecompute.arm.domain.HardwareProfile;
+import org.jclouds.azurecompute.arm.domain.IdReference;
 import org.jclouds.azurecompute.arm.domain.ImageReference;
 import org.jclouds.azurecompute.arm.domain.IpConfiguration;
 import org.jclouds.azurecompute.arm.domain.IpConfigurationProperties;
 import org.jclouds.azurecompute.arm.domain.KeyVaultReference;
 import org.jclouds.azurecompute.arm.domain.NetworkInterfaceCardProperties;
 import org.jclouds.azurecompute.arm.domain.NetworkProfile;
-import org.jclouds.azurecompute.arm.domain.OSDisk;
-import org.jclouds.azurecompute.arm.domain.OSProfile;
-import org.jclouds.azurecompute.arm.domain.PublicIPAddressProperties;
-import org.jclouds.azurecompute.arm.domain.StorageProfile;
-import org.jclouds.azurecompute.arm.domain.StorageService;
-import org.jclouds.azurecompute.arm.domain.TemplateParameterType;
-import org.jclouds.azurecompute.arm.domain.VHD;
-import org.jclouds.azurecompute.arm.domain.VirtualMachineProperties;
-import org.jclouds.azurecompute.arm.domain.StorageService.StorageServiceProperties;
-import org.jclouds.azurecompute.arm.domain.IdReference;
-import org.jclouds.azurecompute.arm.domain.ResourceDefinition;
 import org.jclouds.azurecompute.arm.domain.NetworkSecurityGroupProperties;
 import org.jclouds.azurecompute.arm.domain.NetworkSecurityRule;
 import org.jclouds.azurecompute.arm.domain.NetworkSecurityRuleProperties;
+import org.jclouds.azurecompute.arm.domain.OSDisk;
+import org.jclouds.azurecompute.arm.domain.OSProfile;
+import org.jclouds.azurecompute.arm.domain.PublicIPAddressProperties;
+import org.jclouds.azurecompute.arm.domain.ResourceDefinition;
+import org.jclouds.azurecompute.arm.domain.StorageProfile;
+import org.jclouds.azurecompute.arm.domain.StorageService;
+import org.jclouds.azurecompute.arm.domain.StorageService.StorageServiceProperties;
+import org.jclouds.azurecompute.arm.domain.TemplateParameterType;
+import org.jclouds.azurecompute.arm.domain.VHD;
+import org.jclouds.azurecompute.arm.domain.VirtualMachineProperties;
 import org.jclouds.compute.domain.Template;
 import org.jclouds.json.Json;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import com.google.common.base.Joiner;
+import com.google.common.base.Preconditions;
+import com.google.common.base.Strings;
+import com.google.common.collect.Lists;
+import com.google.inject.Inject;
+import com.google.inject.assistedinject.Assisted;
 
 import static com.google.common.io.BaseEncoding.base64;
-import com.google.inject.Inject;
-
 import static org.jclouds.azurecompute.arm.compute.extensions.AzureComputeImageExtension.CUSTOM_IMAGE_PREFIX;
 import static org.jclouds.azurecompute.arm.config.AzureComputeProperties.STORAGE_API_VERSION;
 
@@ -280,32 +279,36 @@ public class DeploymentTemplateBuilder {
    }
 
    private void addNetworkSecurityGroup() {
-      int ports[] = options.getInboundPorts();
-      if ((ports != null) && (ports.length > 0)) {
+      int inboundPorts[] = options.getInboundPorts();
+      if ((inboundPorts != null) && (inboundPorts.length > 0)) {
          variables.put("networkSecurityGroupName", name + "nsg");
          variables.put("networkSecurityGroupNameReference", "[resourceId('Microsoft.Network/networkSecurityGroups',variables('networkSecurityGroupName'))]");
 
+         List<String> portRanges = simplifyPorts(inboundPorts);
+
          List<NetworkSecurityRule> rules = new ArrayList<NetworkSecurityRule>();
-         for (int i = 0; i < ports.length; i++) {
+         int priority = 1234;
+         for (String portRange : portRanges) {
             NetworkSecurityRuleProperties ruleProperties = NetworkSecurityRuleProperties.builder()
-                    .description("default-allow-port-" + ports[i])
+                    .description("default-allow-port-" + portRange)
                     .protocol(NetworkSecurityRuleProperties.Protocol.All)
                     .access(NetworkSecurityRuleProperties.Access.Allow)
                     .sourcePortRange("*")
-                    .destinationPortRange(Integer.toString(ports[i]))
+                    .destinationPortRange(portRange)
                     .sourceAddressPrefix("*")
                     .destinationAddressPrefix("*")
-                    .priority(1234 + i)
+                    .priority(priority)
                     .direction(NetworkSecurityRuleProperties.Direction.Inbound)
                     .build();
 
             NetworkSecurityRule networkSecurityRule = NetworkSecurityRule.create(
-                    "default-allow-port-" + ports[i],
+                    "default-allow-port-" + portRange,
                     null,
                     null,
                     ruleProperties);
 
             rules.add(networkSecurityRule);
+            priority++;
          }
 
          NetworkSecurityGroupProperties networkSecurityGroupProperties = NetworkSecurityGroupProperties.builder()
@@ -321,6 +324,44 @@ public class DeploymentTemplateBuilder {
          resources.add(networkSecurityGroup);
       }
 
+   }
+
+   /**
+    * Helper function for simplifying an array of ports to a list of ranges as list of strings
+    * @param ports array of int
+    * @return list of strings representing ranges
+    */
+   public static List<String> simplifyPorts(int[] ports) {
+      Preconditions.checkArgument(ports != null && ports.length != 0);
+      ArrayList<String> output = new ArrayList<String>();
+      Arrays.sort(ports);
+
+      int range_start = ports[0];
+      int range_end = ports[0];
+      for (int i = 1; i < ports.length; i++) {
+         if ((ports[i - 1] == ports[i] - 1) || (ports[i - 1] == ports[i])){
+            // Range continues.
+            range_end = ports[i];
+         }
+         else {
+            // Range ends.
+            output.add(formatRange(range_start, range_end));
+            range_start = ports[i];
+            range_end = ports[i];
+         }
+      }
+      // Make sure we get the last range.
+      output.add(formatRange(range_start, range_end));
+      return output;
+   }
+
+   private static String formatRange(int start, int finish) {
+      if (start == finish){
+         return Integer.toString(start);
+      }
+      else {
+         return String.format("%s-%s", Integer.toString(start), Integer.toString(finish));
+      }
    }
 
    private void addVirtualMachine() {
