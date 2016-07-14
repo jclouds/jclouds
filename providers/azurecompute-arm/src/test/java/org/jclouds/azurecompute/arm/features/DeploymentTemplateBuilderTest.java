@@ -43,13 +43,14 @@ import org.jclouds.compute.options.TemplateOptions;
 import org.jclouds.domain.Location;
 import org.jclouds.domain.LocationBuilder;
 import org.jclouds.domain.LocationScope;
+import org.testng.Assert;
 import org.testng.annotations.Test;
+
+import com.google.common.collect.Iterables;
 
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertTrue;
-import static org.testng.Assert.fail;
-
 
 @Test(groups = "unit", testName = "DeploymentTemplateBuilderTest", singleThreaded = true)
 public class DeploymentTemplateBuilderTest extends BaseAzureComputeApiMockTest {
@@ -106,7 +107,6 @@ public class DeploymentTemplateBuilderTest extends BaseAzureComputeApiMockTest {
       assertTrue(variables.containsKey(parseVariableName(resource.name())));
    }
 
-
    @Test
    void testVirtualMachine() {
       DeploymentTemplateBuilder builder = getMockDeploymentTemplateBuilderWithEmptyOptions();
@@ -129,6 +129,41 @@ public class DeploymentTemplateBuilderTest extends BaseAzureComputeApiMockTest {
       assertEquals(image.version(), "latest");
 
       assertTrue(variables.containsKey(parseVariableName(resource.name())));
+   }
+
+   @Test
+   void testAddStorageResourceWhenNameIsLongerThan24Chars() {
+      String name = "thishasmorethan24characters";
+      DeploymentTemplateBuilder builder = getMockDeploymentTemplateBuilderWithEmptyOptions(name);
+
+      DeploymentBody deploymentBody = builder.getDeploymentTemplate();
+      assertTrue(Iterables.contains(deploymentBody.template().variables().keySet(), "storageAccountName"));
+      String storageAccountName = deploymentBody.template().variables().get("storageAccountName");
+      assertEquals(storageAccountName.length(), 24);
+      assertEquals(storageAccountName.substring(0, 10), "thishasmor");
+      assertEquals(storageAccountName.substring(storageAccountName.length() - 10, storageAccountName.length()), "characters");
+   }
+
+   @Test
+   void testAddStorageResourceWhenNameIsExactly24Chars() {
+      String name = "ithasexactly24characters";
+      DeploymentTemplateBuilder builder = getMockDeploymentTemplateBuilderWithEmptyOptions(name);
+
+      DeploymentBody deploymentBody = builder.getDeploymentTemplate();
+      assertTrue(Iterables.contains(deploymentBody.template().variables().keySet(), "storageAccountName"));
+      assertEquals(deploymentBody.template().variables().get("storageAccountName").length(), 24);
+      assertEquals(deploymentBody.template().variables().get("storageAccountName"), name);
+   }
+
+   @Test
+   void testAddStorageResourceWhenNameIsLessThan3Chars() {
+      String name = "3c";
+      DeploymentTemplateBuilder builder = getMockDeploymentTemplateBuilderWithEmptyOptions(name);
+
+      DeploymentBody deploymentBody = builder.getDeploymentTemplate();
+      assertTrue(Iterables.contains(deploymentBody.template().variables().keySet(), "storageAccountName"));
+      assertEquals(deploymentBody.template().variables().get("storageAccountName").length(), 6);
+      assertEquals(deploymentBody.template().variables().get("storageAccountName").substring(0, 2), name);
    }
 
    @Test
@@ -207,21 +242,29 @@ public class DeploymentTemplateBuilderTest extends BaseAzureComputeApiMockTest {
    }
 
    private DeploymentTemplateBuilder getMockDeploymentTemplateBuilderWithEmptyOptions() {
+      return getMockDeploymentTemplateBuilderWithEmptyOptions("mydeployment");
+   }
+
+   private DeploymentTemplateBuilder getMockDeploymentTemplateBuilderWithEmptyOptions(String name) {
       AzureTemplateOptions options = new AzureTemplateOptions();
       options.virtualNetworkName(vnetName);
       options.subnetId(subnetId);
 
       Template template = getMockTemplate(options);
-      DeploymentTemplateBuilder templateBuilder = api.deploymentTemplateFactory().create(group, "mydeployment", template);
+      DeploymentTemplateBuilder templateBuilder = api.deploymentTemplateFactory().create(group, name, template);
       return templateBuilder;
    }
 
    private DeploymentTemplateBuilder getMockDeploymentTemplateBuilderWithOptions(TemplateOptions options) {
+      return getMockDeploymentTemplateBuilderWithOptions("mydeployment", options);
+   }
+
+   private DeploymentTemplateBuilder getMockDeploymentTemplateBuilderWithOptions(String name, TemplateOptions options) {
       ((AzureTemplateOptions)options).virtualNetworkName(vnetName);
       ((AzureTemplateOptions)options).subnetId(subnetId);
 
       Template template = getMockTemplate(options);
-      DeploymentTemplateBuilder templateBuilder = api.deploymentTemplateFactory().create(group, "mydeployment", template);
+      DeploymentTemplateBuilder templateBuilder = api.deploymentTemplateFactory().create(group, name, template);
       return templateBuilder;
    }
 
@@ -231,7 +274,7 @@ public class DeploymentTemplateBuilderTest extends BaseAzureComputeApiMockTest {
             return r;
          }
       }
-      fail("Resource with type: " + type + " not found");
+      Assert.fail("Resource with type: " + type + " not found");
       return null;
    }
 
