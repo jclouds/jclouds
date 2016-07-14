@@ -122,7 +122,7 @@ public class S3BlobStore extends BaseBlobStore {
 
    /**
     * This implementation invokes {@link S3Client#bucketExists}
-    * 
+    *
     * @param container
     *           bucket name
     */
@@ -133,7 +133,7 @@ public class S3BlobStore extends BaseBlobStore {
 
    /**
     * This implementation invokes {@link S3Client#putBucketInRegion}
-    * 
+    *
     * @param location
     *           corresponds to a Region
     * @param container
@@ -165,7 +165,7 @@ public class S3BlobStore extends BaseBlobStore {
 
    /**
     * This implementation invokes {@link S3Client#listBucket}
-    * 
+    *
     * @param container
     *           bucket name
     */
@@ -195,7 +195,7 @@ public class S3BlobStore extends BaseBlobStore {
 
    /**
     * This implementation invokes {@link S3Client#objectExists}
-    * 
+    *
     * @param container
     *           bucket name
     * @param key
@@ -208,7 +208,7 @@ public class S3BlobStore extends BaseBlobStore {
 
    /**
     * This implementation invokes {@link S3Client#headObject}
-    * 
+    *
     * @param container
     *           bucket name
     * @param key
@@ -221,7 +221,7 @@ public class S3BlobStore extends BaseBlobStore {
 
    /**
     * This implementation invokes {@link S3Client#getObject}
-    * 
+    *
     * @param container
     *           bucket name
     * @param key
@@ -235,7 +235,7 @@ public class S3BlobStore extends BaseBlobStore {
 
    /**
     * This implementation invokes {@link S3Client#putObject}
-    * 
+    *
     * @param container
     *           bucket name
     * @param blob
@@ -248,7 +248,7 @@ public class S3BlobStore extends BaseBlobStore {
 
    /**
     * This implementation invokes {@link S3Client#putObject}
-    * 
+    *
     * @param container
     *           bucket name
     * @param blob
@@ -322,7 +322,7 @@ public class S3BlobStore extends BaseBlobStore {
 
    /**
     * This implementation invokes {@link S3Client#deleteObject}
-    * 
+    *
     * @param container
     *           bucket name
     * @param key

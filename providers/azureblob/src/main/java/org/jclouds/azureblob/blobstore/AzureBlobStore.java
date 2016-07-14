@@ -19,6 +19,7 @@ package org.jclouds.azureblob.blobstore;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static org.jclouds.azure.storage.options.ListOptions.Builder.includeMetadata;
 
+import java.io.InputStream;
 import java.net.URI;
 import java.util.EnumSet;
 import java.util.List;
@@ -130,7 +131,7 @@ public class AzureBlobStore extends BaseBlobStore {
 
    /**
     * This implementation invokes {@link AzureBlobClient#bucketExists}
-    * 
+    *
     * @param container
     *           container name
     */
@@ -141,7 +142,7 @@ public class AzureBlobStore extends BaseBlobStore {
 
    /**
     * This implementation invokes {@link AzureBlobClient#putBucketInRegion}
-    * 
+    *
     * @param location
     *           currently ignored
     * @param container
@@ -154,7 +155,7 @@ public class AzureBlobStore extends BaseBlobStore {
 
    /**
     * This implementation invokes {@link AzureBlobClient#listBlobs}
-    * 
+    *
     * @param container
     *           container name
     */
@@ -166,7 +167,7 @@ public class AzureBlobStore extends BaseBlobStore {
 
    /**
     * This implementation invokes {@link AzureBlobClient#deleteContainer}
-    * 
+    *
     * @param container
     *           container name
     */
@@ -177,7 +178,7 @@ public class AzureBlobStore extends BaseBlobStore {
 
    /**
     * This implementation invokes {@link AzureBlobClient#blobExists}
-    * 
+    *
     * @param container
     *           container name
     * @param key
@@ -190,7 +191,7 @@ public class AzureBlobStore extends BaseBlobStore {
 
    /**
     * This implementation invokes {@link AzureBlobClient#getBlob}
-    * 
+    *
     * @param container
     *           container name
     * @param key
@@ -205,7 +206,7 @@ public class AzureBlobStore extends BaseBlobStore {
 
    /**
     * This implementation invokes {@link AzureBlobClient#putObject}
-    * 
+    *
     * @param container
     *           container name
     * @param blob
@@ -218,7 +219,7 @@ public class AzureBlobStore extends BaseBlobStore {
 
    /**
     * This implementation invokes {@link AzureBlobClient#putObject}
-    * 
+    *
     * @param container
     *           container name
     * @param blob
@@ -298,7 +299,7 @@ public class AzureBlobStore extends BaseBlobStore {
 
    /**
     * This implementation invokes {@link AzureBlobClient#deleteObject}
-    * 
+    *
     * @param container
     *           container name
     * @param key
@@ -336,7 +337,7 @@ public class AzureBlobStore extends BaseBlobStore {
 
     /**
     * This implementation invokes {@link AzureBlobClient#getBlobProperties}
-    * 
+    *
     * @param container
     *           container name
     * @param key
@@ -497,5 +498,10 @@ public class AzureBlobStore extends BaseBlobStore {
    @Override
    public int getMaximumNumberOfParts() {
       return 50 * 1000;
+   }
+
+   @Override
+   public InputStream streamBlob(String container, String name) {
+      throw new UnsupportedOperationException("Azure does not support streaming a blob");
    }
 }

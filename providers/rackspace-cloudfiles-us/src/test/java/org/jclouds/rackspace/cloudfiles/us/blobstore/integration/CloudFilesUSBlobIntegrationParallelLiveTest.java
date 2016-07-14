@@ -14,30 +14,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jclouds.rackspace.cloudfiles.v1.blobstore;
+package org.jclouds.rackspace.cloudfiles.us.blobstore.integration;
 
-import static org.jclouds.rackspace.cloudidentity.v2_0.config.CloudIdentityCredentialTypes.API_KEY_CREDENTIALS;
-
-import java.util.Properties;
-
+import org.jclouds.blobstore.BlobStore;
 import org.jclouds.openstack.swift.v1.blobstore.RegionScopedBlobStoreContext;
-import org.jclouds.openstack.swift.v1.blobstore.RegionScopedBlobStoreContextLiveTest;
+import org.jclouds.rackspace.cloudfiles.v1.blobstore.CloudFilesRegionScopedSwiftBlobStoreParallelLiveTest;
 import org.testng.annotations.Test;
 
-/**
- * Tests the live behavior of the {@link RegionScopedBlobStoreContext}.
- */
-@Test(groups = "live")
-public class CloudFilesRegionScopedBlobStoreContextLiveTest extends RegionScopedBlobStoreContextLiveTest {
-
-   public CloudFilesRegionScopedBlobStoreContextLiveTest() {
-      provider = "rackspace-cloudfiles";
+@Test(groups = "live", testName = "CloudFilesUSBlobIntegrationLiveTest")
+public class CloudFilesUSBlobIntegrationParallelLiveTest extends CloudFilesRegionScopedSwiftBlobStoreParallelLiveTest {
+   public CloudFilesUSBlobIntegrationParallelLiveTest() {
+      provider = "rackspace-cloudfiles-us";
    }
 
    @Override
-   protected Properties setupProperties() {
-      Properties props = super.setupProperties();
-      setIfTestSystemPropertyPresent(props, API_KEY_CREDENTIALS);
-      return props;
+   protected BlobStore getBlobStore() {
+      RegionScopedBlobStoreContext ctx = RegionScopedBlobStoreContext.class.cast(view);
+      return ctx.getBlobStore("DFW");
    }
 }

@@ -22,13 +22,15 @@ import static org.jclouds.Constants.PROPERTY_USER_THREADS;
 import static org.jclouds.blobstore.options.ListContainerOptions.Builder.recursive;
 import static org.jclouds.util.Predicates2.retry;
 
-import java.io.InputStream;
+import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutorService;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -399,5 +401,25 @@ public abstract class BaseBlobStore implements BlobStore {
          eTag = "\"" + eTag + "\"";
       }
       return eTag;
+   }
+
+   @Override
+   public void downloadBlob(String container, String name, File destination) {
+      throw new UnsupportedOperationException("Operation not supported yet");
+   }
+
+   @Override
+   public void downloadBlob(String container, String name, File destination, ExecutorService executor) {
+      throw new UnsupportedOperationException("Operation not supported yet");
+   }
+
+   @Override
+   public InputStream streamBlob(String container, String name) {
+      throw new UnsupportedOperationException("Operation not supported yet");
+   }
+
+   @Override
+   public InputStream streamBlob(String container, String name, ExecutorService executor) {
+      throw new UnsupportedOperationException("Operation not supported yet");
    }
 }

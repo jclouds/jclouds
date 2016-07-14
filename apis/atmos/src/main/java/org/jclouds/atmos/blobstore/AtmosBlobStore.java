@@ -19,6 +19,7 @@ package org.jclouds.atmos.blobstore;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static org.jclouds.atmos.options.PutOptions.Builder.publicRead;
 
+import java.io.InputStream;
 import java.util.List;
 import java.util.Set;
 
@@ -115,7 +116,7 @@ public class AtmosBlobStore extends BaseBlobStore {
 
    /**
     * This implementation invokes {@link AtmosClient#createDirectory}
-    * 
+    *
     * @param location
     *           currently ignored
     * @param container
@@ -148,7 +149,7 @@ public class AtmosBlobStore extends BaseBlobStore {
 
    /**
     * This implementation invokes {@link AtmosClient#createDirectory}
-    * 
+    *
     * @param container
     *           directory name
     */
@@ -183,7 +184,7 @@ public class AtmosBlobStore extends BaseBlobStore {
 
    /**
     * This implementation invokes {@link AtmosClient#pathExists}
-    * 
+    *
     * @param container
     *           container
     * @param key
@@ -338,6 +339,11 @@ public class AtmosBlobStore extends BaseBlobStore {
 
    @Override
    public int getMaximumNumberOfParts() {
+      throw new UnsupportedOperationException("Atmos does not support multipart uploads");
+   }
+
+   @Override
+   public InputStream streamBlob(String container, String name) {
       throw new UnsupportedOperationException("Atmos does not support multipart uploads");
    }
 

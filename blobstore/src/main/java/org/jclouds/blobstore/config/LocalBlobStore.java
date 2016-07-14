@@ -39,6 +39,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.UUID;
+import java.util.concurrent.ExecutorService;
 
 import javax.annotation.Resource;
 import javax.inject.Inject;
@@ -942,10 +943,32 @@ public final class LocalBlobStore implements BlobStore {
       return Integer.MAX_VALUE;
    }
 
+   @Override
+   public void downloadBlob(String container, String name, File destination) {
+      throw new UnsupportedOperationException();
+   }
+
+   @Override
+   public void downloadBlob(String container, String name, File destination, ExecutorService executor) {
+      throw new UnsupportedOperationException();
+   }
+
+   @Override
+   public InputStream streamBlob(String container, String name) {
+      throw new UnsupportedOperationException();
+   }
+
+   @Override
+   public InputStream streamBlob(String container, String name, ExecutorService executor) {
+      throw new UnsupportedOperationException();
+   }
+
    private static String maybeQuoteETag(String eTag) {
       if (!eTag.startsWith("\"") && !eTag.endsWith("\"")) {
          eTag = "\"" + eTag + "\"";
       }
       return eTag;
    }
+
+
 }

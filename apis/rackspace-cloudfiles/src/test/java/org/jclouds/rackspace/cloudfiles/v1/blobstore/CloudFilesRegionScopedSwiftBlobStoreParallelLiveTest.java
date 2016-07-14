@@ -14,24 +14,30 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.jclouds.rackspace.cloudfiles.v1.blobstore;
 
 import static org.jclouds.rackspace.cloudidentity.v2_0.config.CloudIdentityCredentialTypes.API_KEY_CREDENTIALS;
 
 import java.util.Properties;
 
+import org.jclouds.blobstore.BlobStore;
 import org.jclouds.openstack.swift.v1.blobstore.RegionScopedBlobStoreContext;
-import org.jclouds.openstack.swift.v1.blobstore.RegionScopedBlobStoreContextLiveTest;
+import org.jclouds.openstack.swift.v1.blobstore.RegionScopedSwiftBlobStoreParallelLiveTest;
 import org.testng.annotations.Test;
 
-/**
- * Tests the live behavior of the {@link RegionScopedBlobStoreContext}.
- */
+//Applies the RegionScopedSwiftBlobStoreIntegrationTest to rackspace
 @Test(groups = "live")
-public class CloudFilesRegionScopedBlobStoreContextLiveTest extends RegionScopedBlobStoreContextLiveTest {
+public class CloudFilesRegionScopedSwiftBlobStoreParallelLiveTest extends RegionScopedSwiftBlobStoreParallelLiveTest {
 
-   public CloudFilesRegionScopedBlobStoreContextLiveTest() {
+   public CloudFilesRegionScopedSwiftBlobStoreParallelLiveTest() {
       provider = "rackspace-cloudfiles";
+   }
+
+   @Override
+   protected BlobStore getBlobStore() {
+      RegionScopedBlobStoreContext ctx = RegionScopedBlobStoreContext.class.cast(view);
+      return ctx.getBlobStore("IAD");
    }
 
    @Override
