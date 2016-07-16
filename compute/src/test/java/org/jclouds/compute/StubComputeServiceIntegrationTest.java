@@ -418,8 +418,8 @@ public class StubComputeServiceIntegrationTest extends BaseComputeServiceLiveTes
          if (o == null || !this.getClass().equals(o.getClass()))
             return false;
          PayloadEquals other = (PayloadEquals) o;
-         return this.expected == null && other.expected == null || this.expected != null
-                  && this.expected.equals(other.expected);
+         return (this.expected == null && other.expected == null) ||
+                (this.expected != null && this.expected.equals(other.expected));
       }
 
       @Override

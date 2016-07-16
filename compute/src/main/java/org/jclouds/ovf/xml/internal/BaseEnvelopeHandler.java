@@ -93,8 +93,8 @@ public class BaseEnvelopeHandler<V extends BaseVirtualSystem<V>, B extends BaseV
             inNetwork = true;
          } else if (equalsOrSuffix(qName, "VirtualSystem")) {
             inVirtualSystem = true;
-         } else if (extensionHandlers.containsKey(qName) || attributes.containsKey("type")
-                  && extensionHandlers.containsKey(attributes.get("type"))) {
+         } else if (extensionHandlers.containsKey(qName) || (attributes.containsKey("type")
+                  && extensionHandlers.containsKey(attributes.get("type")))) {
             inExtensionSection = true;
             extensionHandler = extensionHandlers.get(qName).get();
          } else if (qName.endsWith("Section")) {

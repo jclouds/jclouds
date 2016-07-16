@@ -179,8 +179,8 @@ public class CreateKeyPairPlacementAndSecurityGroupsAsNeededAndReturnRunOptions 
 
    @Override
    protected boolean userSpecifiedTheirOwnGroups(TemplateOptions options) {
-      return options instanceof AWSEC2TemplateOptions
-            && !AWSEC2TemplateOptions.class.cast(options).getGroupIds().isEmpty()
+      return (options instanceof AWSEC2TemplateOptions
+            && !AWSEC2TemplateOptions.class.cast(options).getGroupIds().isEmpty())
             || super.userSpecifiedTheirOwnGroups(options);
    }
 

@@ -183,7 +183,7 @@ public final class GoogleComputeEngineServiceAdapter
       // Add lookup for InstanceToNodeMetadata
       diskURIToImage.getUnchecked(instance.get().disks().get(0).source());
 
-      if (options.autoCreateWindowsPassword() != null && options.autoCreateWindowsPassword()
+      if ((options.autoCreateWindowsPassword() != null && options.autoCreateWindowsPassword())
                   || OsFamily.WINDOWS == template.getImage().getOperatingSystem().getFamily()) {
            Map<String, ?> params = ImmutableMap.of("instance", instance, "zone", zone, "email", create.user(), "userName", credentials.getUser());
            String password = windowsPasswordGenerator.apply(params);
