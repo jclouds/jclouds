@@ -400,7 +400,7 @@ public abstract class Aws4SignerBase {
       // HexEncode(Hash(Payload))
       canonicalRequest.append(hashedPayload);
 
-      signatureWire.getWireLog().debug("<<", canonicalRequest);
+      signatureWire.getWireLog().debug("<< " + canonicalRequest);
 
       // Create a String to Sign
       StringBuilder toSign = new StringBuilder();
