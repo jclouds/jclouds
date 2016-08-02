@@ -164,7 +164,7 @@ public final class CreateNodesWithGroupEncodedIntoNameThenAddToSet extends
    private void getOrCreateFirewalls(GoogleComputeEngineTemplateOptions templateOptions, Network network,
          FirewallTagNamingConvention naming) {
 
-      Set<String> tags = Sets.newHashSet(templateOptions.getTags());
+      Set<String> tags = Sets.newLinkedHashSet(templateOptions.getTags());
 
       FirewallApi firewallApi = api.firewalls();
 
