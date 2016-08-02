@@ -25,7 +25,6 @@ import java.util.Map;
 import org.jclouds.byon.Node;
 import org.jclouds.util.Closeables2;
 import org.yaml.snakeyaml.DumperOptions;
-import org.yaml.snakeyaml.Loader;
 import org.yaml.snakeyaml.Yaml;
 import org.yaml.snakeyaml.constructor.Constructor;
 
@@ -109,12 +108,10 @@ public class YamlNode {
       public YamlNode apply(ByteSource byteSource) {
          if (byteSource == null)
             return null;
-         // note that snakeyaml also throws nosuchmethod error when you use the non-deprecated
-         // constructor
          InputStream in = null;
          try {
             in = byteSource.openStream();
-            return (YamlNode) new Yaml(new Loader(new Constructor(YamlNode.class))).load(in);
+            return (YamlNode) new Yaml(new Constructor(YamlNode.class)).load(in);
          } catch (IOException ioe) {
             throw Throwables.propagate(ioe);
          } finally {

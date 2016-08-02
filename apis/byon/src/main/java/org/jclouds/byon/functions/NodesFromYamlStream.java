@@ -29,7 +29,6 @@ import javax.inject.Singleton;
 
 import org.jclouds.byon.Node;
 import org.jclouds.byon.domain.YamlNode;
-import org.yaml.snakeyaml.Loader;
 import org.yaml.snakeyaml.TypeDescription;
 import org.yaml.snakeyaml.Yaml;
 import org.yaml.snakeyaml.constructor.Constructor;
@@ -90,10 +89,7 @@ public class NodesFromYamlStream implements Function<ByteSource, LoadingCache<St
       TypeDescription configDesc = new TypeDescription(Config.class);
       configDesc.putListPropertyType("nodes", YamlNode.class);
       constructor.addTypeDescription(configDesc);
-      // note that snakeyaml also throws nosuchmethod error when you use the
-      // non-deprecated
-      // constructor
-      Yaml yaml = new Yaml(new Loader(constructor));
+      Yaml yaml = new Yaml(constructor);
       Config config;
       InputStream in = null;
       try {
