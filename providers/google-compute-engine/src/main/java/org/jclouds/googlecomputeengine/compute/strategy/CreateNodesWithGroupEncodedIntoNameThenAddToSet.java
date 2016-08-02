@@ -58,6 +58,7 @@ import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Multimap;
+import com.google.common.collect.Sets;
 import com.google.common.util.concurrent.Atomics;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.ListeningExecutorService;
@@ -163,7 +164,21 @@ public final class CreateNodesWithGroupEncodedIntoNameThenAddToSet extends
    private void getOrCreateFirewalls(GoogleComputeEngineTemplateOptions templateOptions, Network network,
          FirewallTagNamingConvention naming) {
 
+      Set<String> tags = Sets.newHashSet(templateOptions.getTags());
+
       FirewallApi firewallApi = api.firewalls();
+
+      if (!templateOptions.getGroups().isEmpty()) {
+         for (String firewallName : templateOptions.getGroups()) {
+            Firewall firewall = firewallApi.get(firewallName);
+            validateFirewall(firewall, network);
+            if (!firewall.targetTags().isEmpty()) {
+               // Add tags coming from firewalls
+               tags.addAll(firewall.targetTags());
+            }
+         }
+      }
+
       int[] inboundPorts = templateOptions.getInboundPorts();
       if ((inboundPorts == null) || inboundPorts.length == 0){
          return;
@@ -186,6 +201,16 @@ public final class CreateNodesWithGroupEncodedIntoNameThenAddToSet extends
          operationDone.apply(operation);
          checkState(operation.get().httpErrorStatusCode() == null, "Could not insert firewall, operation failed %s",
                operation);
+
+         // Add tags for firewalls
+         tags.add(name);
+      }
+      templateOptions.tags(tags);
+   }
+
+   private void validateFirewall(Firewall firewall, Network network) {
+      if (firewall == null || !firewall.network().equals(network.selfLink())) {
+         throw new IllegalArgumentException(String.format("Can't find firewall %s in network %s.", firewall.name(), network));
       }
    }
 

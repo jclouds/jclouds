@@ -22,29 +22,17 @@ import static com.google.common.collect.Iterables.filter;
 import static com.google.common.collect.Lists.newArrayList;
 import static java.lang.String.format;
 import static org.jclouds.googlecloud.internal.ListPages.concat;
-import static org.jclouds.googlecomputeengine.compute.strategy.CreateNodesWithGroupEncodedIntoNameThenAddToSet.simplifyPorts;
 import static org.jclouds.googlecomputeengine.config.GoogleComputeEngineProperties.IMAGE_PROJECTS;
 
-import javax.inject.Inject;
-import javax.inject.Named;
 import java.net.URI;
-import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicReference;
 
-import com.google.common.base.Function;
-import com.google.common.base.Predicate;
-import com.google.common.base.Splitter;
-import com.google.common.base.Strings;
-import com.google.common.cache.LoadingCache;
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.Iterables;
-import com.google.common.collect.Lists;
-import com.google.common.util.concurrent.Atomics;
-import com.google.common.util.concurrent.UncheckedTimeoutException;
+import javax.inject.Inject;
+import javax.inject.Named;
+
 import org.jclouds.compute.ComputeServiceAdapter;
 import org.jclouds.compute.domain.Hardware;
 import org.jclouds.compute.domain.NodeMetadata;
@@ -73,6 +61,18 @@ import org.jclouds.googlecomputeengine.domain.Tags;
 import org.jclouds.googlecomputeengine.domain.Zone;
 import org.jclouds.googlecomputeengine.features.InstanceApi;
 import org.jclouds.location.suppliers.all.JustProvider;
+
+import com.google.common.base.Function;
+import com.google.common.base.Predicate;
+import com.google.common.base.Splitter;
+import com.google.common.base.Strings;
+import com.google.common.cache.LoadingCache;
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.Iterables;
+import com.google.common.collect.Lists;
+import com.google.common.util.concurrent.Atomics;
+import com.google.common.util.concurrent.UncheckedTimeoutException;
 
 /**
  * This implementation maps the following:
@@ -136,16 +136,6 @@ public final class GoogleComputeEngineServiceAdapter
       URI network = URI.create(networks.next());
       assert !networks.hasNext() : "Error: Options should specify only one network";
 
-      // Add tags from template
-      ArrayList<String> tags = new ArrayList<String>(options.getTags());
-
-      // Add tags for firewalls
-      FirewallTagNamingConvention naming = firewallTagNamingConvention.get(group);
-      List<String> ports = simplifyPorts(options.getInboundPorts());
-      if (ports != null){
-         tags.add(naming.name(ports));
-      }
-
       Scheduling scheduling = getScheduling(options);
 
       NewInstance newInstance = new NewInstance.Builder( name,
@@ -153,7 +143,7 @@ public final class GoogleComputeEngineServiceAdapter
             network,
             disks)
             .description(group)
-            .tags(Tags.create(null, ImmutableList.copyOf(tags)))
+            .tags(Tags.create(null, ImmutableList.copyOf(options.getTags())))
             .serviceAccounts(options.serviceAccounts())
             .scheduling(scheduling)
             .build();
