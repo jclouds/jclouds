@@ -38,12 +38,9 @@ public abstract class ClientSecret {
     /** The scope(s) to authorize against. **/
     @Nullable public abstract String scope();
 
-    /** When does the token expire. **/
-    public abstract long expire();
-
-    @SerializedNames({ "client_id", "client_secret", "resource", "scope", "expire" })
-    public static ClientSecret create(String clientId, String clientSecret, String resource, String scope, long expire) {
-        return new AutoValue_ClientSecret(clientId, clientSecret, resource, scope, expire);
+    @SerializedNames({ "client_id", "client_secret", "resource", "scope" })
+    public static ClientSecret create(String clientId, String clientSecret, String resource, String scope) {
+        return new AutoValue_ClientSecret(clientId, clientSecret, resource, scope);
     }
 
     ClientSecret() {

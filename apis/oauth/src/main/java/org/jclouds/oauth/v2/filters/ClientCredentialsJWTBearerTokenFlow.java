@@ -58,7 +58,6 @@ public class ClientCredentialsJWTBearerTokenFlow implements OAuthFilter {
     private final String audience;
     private final Supplier<Credentials> credentialsSupplier;
     private final OAuthScopes scopes;
-    private final long tokenDuration;
     private final LoadingCache<ClientCredentialsAuthArgs, Token> tokenCache;
 
     @Inject
@@ -71,7 +70,6 @@ public class ClientCredentialsJWTBearerTokenFlow implements OAuthFilter {
         this.scopes = scopes;
         this.audience = audience;
         this.resource = resource;
-        this.tokenDuration = tokenDuration;
         // since the session interval is also the token expiration time requested to the server make the token expire a
         // bit before the deadline to make sure there aren't session expiration exceptions
         long cacheExpirationSeconds = tokenDuration > 30 ? tokenDuration - 30 : tokenDuration;
@@ -80,26 +78,40 @@ public class ClientCredentialsJWTBearerTokenFlow implements OAuthFilter {
 
     static final class AuthorizeToken extends CacheLoader<ClientCredentialsAuthArgs, Token> {
         private final AuthorizationApi api;
+        private final long tokenDuration;
 
-        @Inject AuthorizeToken(AuthorizationApi api) {
+        @Inject AuthorizeToken(AuthorizationApi api, @Named(PROPERTY_SESSION_INTERVAL) long tokenDuration) {
             this.api = api;
+            this.tokenDuration = tokenDuration;
+        }
+
+        long currentTimeSeconds() {
+            return System.currentTimeMillis() / 1000;
         }
 
         @Override public Token load(ClientCredentialsAuthArgs key) throws Exception {
-            return api.authorize(key.clientId(), key.claims(), key.resource(), key.scope());
+            final long now = currentTimeSeconds();
+            final ClientCredentialsClaims claims = ClientCredentialsClaims.create(
+                  key.claims().iss(),
+                  key.claims().sub(),
+                  key.claims().aud(),
+                  now + tokenDuration,
+                  now,
+                  UUID.randomUUID().toString()
+            );
+            return api.authorize(key.clientId(), claims, key.resource(), key.scope());
         }
     }
 
     @Override public HttpRequest filter(HttpRequest request) throws HttpException {
-        long now = currentTimeSeconds();
         List<String> configuredScopes = scopes.forRequest(request);
         ClientCredentialsClaims claims = ClientCredentialsClaims.create( //
                 credentialsSupplier.get().identity, // iss
                 credentialsSupplier.get().identity, // sub
                 audience, // aud
-                now + tokenDuration, // exp
-                now, // nbf
-                UUID.randomUUID().toString() // jti
+                -1, // placeholder exp for the cache
+                -1, // placeholder nbf for the cache
+                null // placeholder jti for the cache
         );
         ClientCredentialsAuthArgs authArgs = ClientCredentialsAuthArgs.create(
                 credentialsSupplier.get().identity,
@@ -111,10 +123,6 @@ public class ClientCredentialsJWTBearerTokenFlow implements OAuthFilter {
         Token token = tokenCache.getUnchecked(authArgs);
         String authorization = String.format("%s %s", token.tokenType(), token.accessToken());
         return request.toBuilder().addHeader("Authorization", authorization).build();
-    }
-
-    long currentTimeSeconds() {
-        return System.currentTimeMillis() / 1000;
     }
 }
 

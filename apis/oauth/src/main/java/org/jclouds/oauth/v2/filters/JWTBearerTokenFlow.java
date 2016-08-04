@@ -32,6 +32,7 @@ import org.jclouds.oauth.v2.config.OAuthScopes;
 import org.jclouds.oauth.v2.domain.Claims;
 import org.jclouds.oauth.v2.domain.Token;
 
+import com.google.auto.value.AutoValue;
 import com.google.common.base.Joiner;
 import com.google.common.base.Supplier;
 import com.google.common.cache.CacheBuilder;
@@ -53,30 +54,36 @@ public class JWTBearerTokenFlow implements OAuthFilter {
    private final String audience;
    private final Supplier<Credentials> credentialsSupplier;
    private final OAuthScopes scopes;
-   private final long tokenDuration;
-   private final LoadingCache<Claims, Token> tokenCache;
+   private final LoadingCache<TokenCacheKey, Token> tokenCache;
 
    @Inject JWTBearerTokenFlow(AuthorizeToken loader, @Named(PROPERTY_SESSION_INTERVAL) long tokenDuration,
          @Provider Supplier<Credentials> credentialsSupplier, OAuthScopes scopes, @Named(AUDIENCE) String audience) {
       this.credentialsSupplier = credentialsSupplier;
       this.scopes = scopes;
       this.audience = audience;
-      this.tokenDuration = tokenDuration;
       // since the session interval is also the token expiration time requested to the server make the token expire a
       // bit before the deadline to make sure there aren't session expiration exceptions
       long cacheExpirationSeconds = tokenDuration > 30 ? tokenDuration - 30 : tokenDuration;
       this.tokenCache = CacheBuilder.newBuilder().expireAfterWrite(cacheExpirationSeconds, SECONDS).build(loader);
    }
 
-   static final class AuthorizeToken extends CacheLoader<Claims, Token> {
+   static final class AuthorizeToken extends CacheLoader<TokenCacheKey, Token> {
       private final AuthorizationApi api;
+      private final long tokenDuration;
 
-      @Inject AuthorizeToken(AuthorizationApi api) {
+      @Inject AuthorizeToken(AuthorizationApi api, @Named(PROPERTY_SESSION_INTERVAL) long tokenDuration) {
          this.api = api;
+         this.tokenDuration = tokenDuration;
       }
 
-      @Override public Token load(Claims key) throws Exception {
-         return api.authorize(key);
+      @Override public Token load(TokenCacheKey tokenCacheKey) throws Exception {
+         final Claims claims = Claims.create(
+               tokenCacheKey.claims().iss(),
+               tokenCacheKey.claims().scope(),
+               tokenCacheKey.claims().aud(),
+               tokenCacheKey.startTime + tokenDuration,
+               tokenCacheKey.startTime);
+         return api.authorize(claims);
       }
    }
 
@@ -86,15 +93,32 @@ public class JWTBearerTokenFlow implements OAuthFilter {
             credentialsSupplier.get().identity, // iss
             ON_COMMA.join(scopes.forRequest(request)), // scope
             audience, // aud
-            now + tokenDuration, // exp
-            now // iat
+            -1, // placeholder exp for the cache
+            -1 // placeholder iat for the cache
       );
-      Token token = tokenCache.getUnchecked(claims);
+      final TokenCacheKey tokenCacheKey = TokenCacheKey.create(claims, now);
+      Token token = tokenCache.getUnchecked(tokenCacheKey);
       String authorization = String.format("%s %s", token.tokenType(), token.accessToken());
       return request.toBuilder().addHeader("Authorization", authorization).build();
    }
 
    long currentTimeSeconds() {
       return System.currentTimeMillis() / 1000;
+   }
+
+   @AutoValue
+   abstract static class TokenCacheKey {
+      public abstract Claims claims();
+
+      long startTime;
+
+      public static TokenCacheKey create(Claims claims, long startTime) {
+         final AutoValue_JWTBearerTokenFlow_TokenCacheKey tokenCacheKey = new AutoValue_JWTBearerTokenFlow_TokenCacheKey(claims);
+         tokenCacheKey.startTime = startTime;
+         return tokenCacheKey;
+      }
+
+      TokenCacheKey() {
+      }
    }
 }

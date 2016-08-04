@@ -55,7 +55,6 @@ public class ClientCredentialsSecretFlow implements OAuthFilter {
     private static final Joiner ON_SPACE = Joiner.on(" ");
 
     private final Supplier<Credentials> credentialsSupplier;
-    private final long tokenDuration;
     private final LoadingCache<ClientSecret, Token> tokenCache;
     private final String resource;
     private final OAuthScopes scopes;
@@ -67,7 +66,6 @@ public class ClientCredentialsSecretFlow implements OAuthFilter {
         this.credentialsSupplier = credentialsSupplier;
         this.scopes = scopes;
         this.resource = resource;
-        this.tokenDuration = tokenDuration;
         // since the session interval is also the token expiration time requested to the server make the token expire a
         // bit before the deadline to make sure there aren't session expiration exceptions
         long cacheExpirationSeconds = tokenDuration > 30 ? tokenDuration - 30 : tokenDuration;
@@ -87,21 +85,15 @@ public class ClientCredentialsSecretFlow implements OAuthFilter {
     }
 
     @Override public HttpRequest filter(HttpRequest request) throws HttpException {
-        long now = currentTimeSeconds();
         List<String> configuredScopes = scopes.forRequest(request);
         ClientSecret client = ClientSecret.create(
                 credentialsSupplier.get().identity,
                 credentialsSupplier.get().credential,
                 resource == null ? "" : resource,
-                configuredScopes.isEmpty() ? null : ON_SPACE.join(configuredScopes),
-                now + tokenDuration
+                configuredScopes.isEmpty() ? null : ON_SPACE.join(configuredScopes)
         );
         Token token = tokenCache.getUnchecked(client);
         String authorization = String.format("%s %s", token.tokenType(), token.accessToken());
         return request.toBuilder().addHeader("Authorization", authorization).build();
-    }
-
-    long currentTimeSeconds() {
-        return System.currentTimeMillis() / 1000;
     }
 }
