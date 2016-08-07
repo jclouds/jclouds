@@ -1,0 +1,12 @@
+{
+  "kind": "compute#subnetwork",
+   "id": "5850679262666457680",
+   "creationTimestamp": "2016-06-07T14:29:35.476-07:00",
+   "gatewayAddress": "10.128.0.1",
+   "name": "jclouds-subnetwork-test",
+   "network": "https://www.googleapis.com/compute/v1/projects/party/global/networks/mynetwork",
+   "ipCidrRange": "10.128.0.0/20",
+   "region": "https://www.googleapis.com/compute/v1/projects/party/regions/someregion",
+   "selfLink": "https://www.googleapis.com/compute/v1/projects/party/regions/someregion/subnetworks/jclouds-test",
+   "description": "A custom subnetwork for the project"
+}

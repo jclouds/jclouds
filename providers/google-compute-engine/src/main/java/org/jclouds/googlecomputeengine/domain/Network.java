@@ -18,17 +18,25 @@ package org.jclouds.googlecomputeengine.domain;
 
 import java.net.URI;
 import java.util.Date;
+import java.util.List;
 
 import org.jclouds.javax.annotation.Nullable;
 import org.jclouds.json.SerializedNames;
 
 import com.google.auto.value.AutoValue;
+import com.google.common.base.Strings;
 
 /**
  * Represents a network used to enable instance communication.
  */
 @AutoValue
 public abstract class Network {
+
+   public enum NetworkType {
+      LegacyNetwork,
+      AutoSubnetwork,
+      CustomNetwork,
+   }
 
    public abstract String id();
 
@@ -37,6 +45,8 @@ public abstract class Network {
    public abstract URI selfLink();
 
    public abstract String name();
+
+   public abstract NetworkType type();
 
    @Nullable public abstract String description();
 
@@ -52,10 +62,23 @@ public abstract class Network {
     */
    @Nullable public abstract String gatewayIPv4();
 
-   @SerializedNames({ "id", "creationTimestamp", "selfLink", "name", "description", "IPv4Range", "gatewayIPv4" })
+   @Nullable public abstract List<URI> subnetworks();
+
    public static Network create(String id, Date creationTimestamp, URI selfLink, String name, String description, String rangeIPv4,
-         String gatewayIPv4) {
-      return new AutoValue_Network(id, creationTimestamp, selfLink, name, description, rangeIPv4, gatewayIPv4);
+                                String gatewayIPv4) {
+      return new AutoValue_Network(id, creationTimestamp, selfLink, name, NetworkType.LegacyNetwork, description,
+              rangeIPv4, gatewayIPv4, null);
+   }
+
+   @SerializedNames({ "id", "creationTimestamp", "selfLink", "name", "description", "IPv4Range", "gatewayIPv4", "autoCreateSubnetworks", "subnetworks" })
+   public static Network create(String id, Date creationTimestamp, URI selfLink, String name, String description, String rangeIPv4,
+         String gatewayIPv4, String autoCreateSubnetworks, List<URI> subnetworks) {
+      NetworkType type;
+      type = !Strings.isNullOrEmpty(rangeIPv4) ? NetworkType.LegacyNetwork
+              : (autoCreateSubnetworks.equals("true") ? NetworkType.AutoSubnetwork
+                  : NetworkType.CustomNetwork);
+      return new AutoValue_Network(id, creationTimestamp, selfLink, name, type, description, rangeIPv4, gatewayIPv4,
+              subnetworks);
    }
 
    Network() {

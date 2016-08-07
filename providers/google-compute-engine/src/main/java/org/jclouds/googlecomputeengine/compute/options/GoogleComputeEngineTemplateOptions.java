@@ -18,11 +18,14 @@ package org.jclouds.googlecomputeengine.compute.options;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.jclouds.compute.options.TemplateOptions;
 import org.jclouds.domain.LoginCredentials;
 import org.jclouds.googlecomputeengine.domain.Instance.ServiceAccount;
 import org.jclouds.scriptbuilder.domain.Statement;
+
+import com.google.common.collect.ImmutableSet;
 
 /** Instance options specific to Google Compute Engine. */
 public final class GoogleComputeEngineTemplateOptions extends TemplateOptions {
@@ -32,6 +35,7 @@ public final class GoogleComputeEngineTemplateOptions extends TemplateOptions {
    private List<ServiceAccount> serviceAccounts;
    private String bootDiskType;
    private boolean preemptible = false;
+   private Set<String> subnetworks;
 
    @Override
    public GoogleComputeEngineTemplateOptions clone() {
@@ -133,6 +137,11 @@ public final class GoogleComputeEngineTemplateOptions extends TemplateOptions {
    public List<ServiceAccount> serviceAccounts(){
       return serviceAccounts;
    }
+
+   public Set<String> getSubnetworks() {
+      return subnetworks;
+   }
+
 
    /**
     * {@inheritDoc}
@@ -284,6 +293,22 @@ public final class GoogleComputeEngineTemplateOptions extends TemplateOptions {
    @Override
    public GoogleComputeEngineTemplateOptions networks(String... networks) {
       return GoogleComputeEngineTemplateOptions.class.cast(super.networks(networks));
+   }
+
+   /**
+    * Assigns subnetworks to the machine.
+    */
+   public GoogleComputeEngineTemplateOptions subnetworks(Iterable<String> networks) {
+      this.subnetworks = ImmutableSet.copyOf(networks);
+      return this;
+   }
+
+   /**
+    * Assigns subnetworks to the machine.
+    */
+   public GoogleComputeEngineTemplateOptions subnetworks(String... networks) {
+      this.subnetworks = ImmutableSet.copyOf(networks);
+      return this;
    }
 
    /**

@@ -136,11 +136,17 @@ public final class GoogleComputeEngineServiceAdapter
       URI network = URI.create(networks.next());
       assert !networks.hasNext() : "Error: Options should specify only one network";
 
+      Iterator<String> subnetworks = options.getSubnetworks().iterator();
+
+      URI subnetwork = subnetworks.hasNext() ? URI.create(subnetworks.next()) : null;
+      assert !subnetworks.hasNext() : "Error: Options should specify only one subnetwork";
+
       Scheduling scheduling = getScheduling(options);
 
-      NewInstance newInstance = new NewInstance.Builder( name,
+      NewInstance newInstance = new NewInstance.Builder(name,
             template.getHardware().getUri(), // machineType
             network,
+            subnetwork,
             disks)
             .description(group)
             .tags(Tags.create(null, ImmutableList.copyOf(options.getTags())))

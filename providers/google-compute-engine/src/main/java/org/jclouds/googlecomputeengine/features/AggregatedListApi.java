@@ -36,6 +36,7 @@ import org.jclouds.googlecomputeengine.domain.ForwardingRule;
 import org.jclouds.googlecomputeengine.domain.Instance;
 import org.jclouds.googlecomputeengine.domain.MachineType;
 import org.jclouds.googlecomputeengine.domain.Operation;
+import org.jclouds.googlecomputeengine.domain.Subnetwork;
 import org.jclouds.googlecomputeengine.domain.TargetInstance;
 import org.jclouds.googlecomputeengine.domain.TargetPool;
 import org.jclouds.googlecomputeengine.internal.BaseToIteratorOfListPage;
@@ -496,6 +497,55 @@ public interface AggregatedListApi {
                   return api.aggregatedList().pageOfTargetPools(pageToken, options);
                }
             };
+      }
+   }
+
+   /**
+    * Retrieves the list of instance resources available to the specified
+    * project. By default the list as a maximum size of 100, if no options are
+    * provided or ListOptions#getMaxResults() has not been set.
+    *
+    * @param pageToken
+    *           marks the beginning of the next list page
+    * @param listOptions
+    *           listing options
+    * @return a page of the list
+    */
+   @Named("Subnetworks:aggregatedList")
+   @GET
+   @Path("/subnetworks")
+   ListPage<Subnetwork> pageOfSubnetworks(@Nullable @QueryParam("pageToken") String pageToken, ListOptions listOptions);
+
+   /** @see #pageOfSubnetworks(String, ListOptions) */
+   @Named("Subnetworks:aggregatedList")
+   @GET
+   @Path("/subnetworks")
+   @Transform(SubnetworksPages.class)
+   Iterator<ListPage<Subnetwork>> subnetworks();
+
+   /** @see #pageOfSubnetworks(String, ListOptions) */
+   @Named("Subnetworks:aggregatedList")
+   @GET
+   @Path("/subnetworks")
+   @Transform(SubnetworksPages.class)
+   Iterator<ListPage<Subnetwork>> subnetworks(ListOptions options);
+
+   static final class SubnetworksPages extends BaseToIteratorOfListPage<Subnetwork, SubnetworksPages> {
+      private final GoogleComputeEngineApi api;
+
+      @Inject
+      SubnetworksPages(GoogleComputeEngineApi api) {
+         this.api = api;
+      }
+
+      @Override
+      protected Function<String, ListPage<Subnetwork>> fetchNextPage(final ListOptions options) {
+         return new Function<String, ListPage<Subnetwork>>() {
+            @Override
+            public ListPage<Subnetwork> apply(String pageToken) {
+               return api.aggregatedList().pageOfSubnetworks(pageToken, options);
+            }
+         };
       }
    }
 }

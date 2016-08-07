@@ -1,0 +1,7 @@
+{
+  "name": "jclouds-test",
+  "description": "my subnetwork",
+  "network": "https://www.googleapis.com/compute/v1/projects/party/global/networks/mynetwork",
+  "ipCidrRange": "10.0.0.0/24",
+  "region": "https://www.googleapis.com/compute/v1/projects/party/regions/someregion"
+}

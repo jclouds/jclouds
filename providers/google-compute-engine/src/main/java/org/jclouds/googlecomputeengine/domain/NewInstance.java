@@ -39,6 +39,7 @@ public abstract class NewInstance {
    @AutoValue
    abstract static class NetworkInterface {
       abstract URI network();
+      @Nullable abstract URI subnetwork();
 
       abstract List<AccessConfig> accessConfigs();
 
@@ -46,9 +47,19 @@ public abstract class NewInstance {
          return create(network, Arrays.asList(AccessConfig.create(null, Type.ONE_TO_ONE_NAT, null)));
       }
 
+      static NetworkInterface create(URI network, URI subnetwork) {
+         return create(network, subnetwork,
+             Arrays.asList(AccessConfig.create(null, Type.ONE_TO_ONE_NAT, null)));
+      }
+
       @SerializedNames({ "network", "accessConfigs" })
       static NetworkInterface create(URI network, List<AccessConfig> accessConfigs) {
-         return new AutoValue_NewInstance_NetworkInterface(network, accessConfigs);
+         return new AutoValue_NewInstance_NetworkInterface(network, null, accessConfigs);
+      }
+
+      @SerializedNames({ "network", "subnetwork", "accessConfigs" })
+      static NetworkInterface create(URI network, URI subnetwork, List<AccessConfig> accessConfigs) {
+         return new AutoValue_NewInstance_NetworkInterface(network, subnetwork, accessConfigs);
       }
 
       NetworkInterface() {
@@ -81,8 +92,18 @@ public abstract class NewInstance {
       return create(name, machineType, network, Arrays.asList(AttachDisk.newBootDisk(sourceImage)), null, null);
    }
 
+   public static NewInstance create(String name, URI machineType, URI network, URI subnetwork, URI sourceImage) {
+      return create(name, machineType, network, subnetwork, Arrays.asList(AttachDisk.newBootDisk(sourceImage)), null,
+              null);
+   }
+
    public static NewInstance create(String name, URI machineType, URI network, List<AttachDisk> disks,
                                     @Nullable String description, @Nullable Tags tags) {
+      return create(name, machineType, network, null, disks, description, tags);
+   }
+
+   public static NewInstance create(String name, URI machineType, URI network, @Nullable URI subnetwork,
+                                    List<AttachDisk> disks, @Nullable String description, @Nullable Tags tags) {
       checkArgument(disks.get(0).boot(), "disk 0 must be a boot disk! %s", disks);
       boolean foundBoot = false;
       for (AttachDisk disk : disks) {
@@ -127,11 +148,27 @@ public abstract class NewInstance {
          this.disks = disks;
       }
 
+      public Builder(String name, URI machineType, URI network, URI subnetwork, List<AttachDisk> disks) {
+         checkNotNull(name, "NewInstance name cannot be null");
+         this.name = name;
+         this.machineType = machineType;
+         this.networkInterfaces = ImmutableList.of(NetworkInterface.create(network, subnetwork));
+         this.disks = disks;
+      }
+
       public Builder(String name, URI machineType, URI network, URI sourceImage) {
          checkNotNull(name, "NewInstance name cannot be null");
          this.name = name;
          this.machineType = machineType;
          this.networkInterfaces = ImmutableList.of(NetworkInterface.create(network));
+         this.disks = Arrays.asList(AttachDisk.newBootDisk(sourceImage));
+      }
+
+      public Builder(String name, URI machineType, URI network, URI subnetwork, URI sourceImage) {
+         checkNotNull(name, "NewInstance name cannot be null");
+         this.name = name;
+         this.machineType = machineType;
+         this.networkInterfaces = ImmutableList.of(NetworkInterface.create(network, subnetwork));
          this.disks = Arrays.asList(AttachDisk.newBootDisk(sourceImage));
       }
 

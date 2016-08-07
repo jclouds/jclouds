@@ -18,6 +18,7 @@ package org.jclouds.googlecomputeengine.features;
 
 import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 
+import java.net.URI;
 import java.util.Iterator;
 
 import javax.inject.Inject;
@@ -34,14 +35,16 @@ import javax.ws.rs.QueryParam;
 import org.jclouds.Fallbacks.NullOnNotFoundOr404;
 import org.jclouds.googlecloud.domain.ListPage;
 import org.jclouds.googlecomputeengine.GoogleComputeEngineApi;
-import org.jclouds.googlecomputeengine.domain.Network;
 import org.jclouds.googlecomputeengine.domain.Operation;
-import org.jclouds.googlecomputeengine.internal.BaseToIteratorOfListPage;
+import org.jclouds.googlecomputeengine.domain.Subnetwork;
+import org.jclouds.googlecomputeengine.internal.BaseCallerArg0ToIteratorOfListPage;
 import org.jclouds.googlecomputeengine.options.ListOptions;
-import org.jclouds.googlecomputeengine.options.NetworkCreationOptions;
+import org.jclouds.googlecomputeengine.options.SubnetworkCreationOptions;
 import org.jclouds.javax.annotation.Nullable;
 import org.jclouds.oauth.v2.filters.OAuthFilter;
 import org.jclouds.rest.annotations.BinderParam;
+import org.jclouds.rest.annotations.Delegate;
+import org.jclouds.rest.annotations.EndpointParam;
 import org.jclouds.rest.annotations.Fallback;
 import org.jclouds.rest.annotations.MapBinder;
 import org.jclouds.rest.annotations.PayloadParam;
@@ -54,50 +57,37 @@ import com.google.common.base.Function;
 
 @SkipEncoding({'/', '='})
 @RequestFilters(OAuthFilter.class)
-@Path("/networks")
+@Path("/subnetworks")
 @Consumes(APPLICATION_JSON)
-public interface NetworkApi {
-
-   /** Returns a network by name or null if not found. */
-   @Named("Networks:get")
-   @GET
-   @Path("/{network}")
-   @Fallback(NullOnNotFoundOr404.class)
-   Network get(@PathParam("network") String networkName);
+public interface SubnetworkApi {
 
    /**
-    * Creates a persistent network resource in the specified project with the specified range.
-    *
-    * @param networkName the network name
-    * @param IPv4Range   the range of the network to be inserted.
-    * @return an Operation resource. To check on the status of an operation, poll the Operations resource returned to
-    *         you, and look for the status field.
+    * Returns a network by name or null if not found.
     */
-   @Named("Networks:insert")
-   @POST
-   @Produces(APPLICATION_JSON)
-   @MapBinder(BindToJsonPayload.class)
-   Operation createInIPv4Range(@PayloadParam("name") String networkName,
-                               @PayloadParam("IPv4Range") String IPv4Range);
+   @Named("Subnetworks:get")
+   @GET
+   @Path("/{subnetwork}")
+   @Fallback(NullOnNotFoundOr404.class)
+   Subnetwork get(@PathParam("subnetwork") String subnetworkName);
 
    /**
     * Creates a persistent network resource in the specified project with the specified range and specified gateway.
     *
-    * @param options the options to create the network.
+    * @param newSubnetwork definition of the subnetwork.
     * @return an Operation resource. To check on the status of an operation, poll the Operations resource returned to
     *         you, and look for the status field.
     */
-   @Named("Networks:insert")
+   @Named("Subnetworks:insert")
    @POST
    @Produces(APPLICATION_JSON)
-   Operation createInIPv4Range(@BinderParam(BindToJsonPayload.class) NetworkCreationOptions options);
+   Operation createInNetwork(@BinderParam(BindToJsonPayload.class) SubnetworkCreationOptions newSubnetwork);
 
    /** Deletes a network by name and returns the operation in progress, or null if not found. */
-   @Named("Networks:delete")
+   @Named("Subnetworks:delete")
    @DELETE
-   @Path("/{network}")
+   @Path("/{subnetwork}")
    @Fallback(NullOnNotFoundOr404.class)
-   Operation delete(@PathParam("network") String networkName);
+   Operation delete(@PathParam("subnetwork") String subnetworkName);
 
    /**
     * Retrieves the list of network resources available to the specified project.
@@ -108,34 +98,28 @@ public interface NetworkApi {
     * @param listOptions listing options
     * @return a page of the list
     */
-   @Named("Networks:list")
+   @Named("Subnetworks:list")
    @GET
-   ListPage<Network> listPage(@Nullable @QueryParam("pageToken") String pageToken, ListOptions listOptions);
+   ListPage<Subnetwork> listPage(@Nullable @QueryParam("pageToken") String pageToken, ListOptions listOptions);
 
    /** @see #listPage(String, ListOptions) */
-   @Named("Networks:list")
+   @Named("Subnetworks:list")
    @GET
-   @Transform(NetworkPages.class)
-   Iterator<ListPage<Network>> list();
+   @Transform(SubnetworkPages.class)
+   Iterator<ListPage<Subnetwork>> list();
 
-   /** @see #listPage(String, ListOptions) */
-   @Named("Networks:list")
-   @GET
-   @Transform(NetworkPages.class)
-   Iterator<ListPage<Network>> list(ListOptions options);
-
-   final class NetworkPages extends BaseToIteratorOfListPage<Network, NetworkPages> {
+   static final class SubnetworkPages extends BaseCallerArg0ToIteratorOfListPage<Subnetwork, SubnetworkPages> {
 
       private final GoogleComputeEngineApi api;
 
-      @Inject NetworkPages(GoogleComputeEngineApi api) {
+      @Inject SubnetworkPages(GoogleComputeEngineApi api) {
          this.api = api;
       }
 
-      @Override protected Function<String, ListPage<Network>> fetchNextPage(final ListOptions options) {
-         return new Function<String, ListPage<Network>>() {
-            @Override public ListPage<Network> apply(String pageToken) {
-               return api.networks().listPage(pageToken, options);
+      @Override protected Function<String, ListPage<Subnetwork>> fetchNextPage(final String region, final ListOptions options) {
+         return new Function<String, ListPage<Subnetwork>>() {
+            @Override public ListPage<Subnetwork> apply(String pageToken) {
+               return api.subnetworksInRegion(region).listPage(pageToken, options);
             }
          };
       }
