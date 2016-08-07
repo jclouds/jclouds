@@ -38,7 +38,8 @@ public @interface CurrentProject {
       public static final String DESCRIPTION = "" //
             + "client_email which usually looks like project_id@developer.gserviceaccount.com or " //
             + "project_id-extended_uid@developer.gserviceaccount.com or " //
-            + "account@project_id.iam.gserviceaccount.com";
+            + "account@project_id.company_domain.iam.gserviceaccount.com or " //
+            + "account@project_id.iam.gserviceaccount.com or ";
       private static final Pattern PROJECT_NUMBER_PATTERN = Pattern.compile("^([0-9]+)[@-].*");
       private static final String IAM_ACCOUNT_SUFFIX = ".iam.gserviceaccount.com";
 
@@ -51,7 +52,12 @@ public @interface CurrentProject {
       }
 
       private static String projectIdFromIAM(String email) {
-         return email.substring(email.indexOf('@') + 1, email.indexOf(IAM_ACCOUNT_SUFFIX));
+         String project_id = email.substring(email.indexOf('@') + 1, email.indexOf(IAM_ACCOUNT_SUFFIX));
+         int dot = project_id.indexOf('.');
+         return dot > 0
+               // Convert project_id.company_domain into company_domain:project_id
+               ? String.format("%s:%s", project_id.substring(dot + 1), project_id.substring(0, dot))
+               : project_id;
       }
    }
 }

@@ -42,4 +42,8 @@ public class ClientEmailTest {
    public void testParseProjectIdFromIAMAccount() {
       assertEquals(toProjectNumber("account@project_id.iam.gserviceaccount.com"), "project_id");
    }
+
+   public void testParseCompanyAndProjectIdFromIAMAccount() {
+      assertEquals(toProjectNumber("account@project_id.company.com.iam.gserviceaccount.com"), "company.com:project_id");
+   }
 }
