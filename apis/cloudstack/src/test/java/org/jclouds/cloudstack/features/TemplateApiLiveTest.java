@@ -110,7 +110,7 @@ public class TemplateApiLiveTest extends BaseCloudStackApiLiveTest {
       assertNotNull(network);
 
       // Create a VM and stop it
-      String defaultTemplate = template != null ? template.getImageId() : null;
+      String defaultTemplate = templateBuilderSpec != null ? templateBuilderSpec.getImageId() : null;
       vmForCreation = VirtualMachineApiLiveTest.createVirtualMachineInNetwork(network, defaultTemplate, client, jobComplete, virtualMachineRunning);
       assertTrue(jobComplete.apply(client.getVirtualMachineApi().stopVirtualMachine(vmForCreation.getId())), vmForCreation.toString());
 

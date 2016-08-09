@@ -191,9 +191,11 @@ public abstract class BaseTemplateBuilderLiveTest extends BaseComputeServiceCont
       ComputeServiceContext context = null;
       try {
          Properties overrides = setupProperties();
-         String login = template != null && template.getLoginUser() != null ? template.getLoginUser() : "foo:bar";
+         String login = templateBuilderSpec != null && templateBuilderSpec.getLoginUser() != null ? templateBuilderSpec
+               .getLoginUser() : "foo:bar";
          overrides.setProperty(propertyKey + ".image.login-user", login);
-         boolean auth = template != null && template.getAuthenticateSudo() != null ? template.getAuthenticateSudo() : true;
+         boolean auth = templateBuilderSpec != null && templateBuilderSpec.getAuthenticateSudo() != null ? templateBuilderSpec
+               .getAuthenticateSudo() : true;
          overrides.setProperty(propertyKey + ".image.authenticate-sudo", auth + "");
 
          context = createView(overrides, ImmutableSet.<Module>of(credentialStoreModule));

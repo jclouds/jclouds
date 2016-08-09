@@ -218,7 +218,7 @@ public abstract class BaseComputeServiceLiveTest extends BaseComputeServiceConte
       } catch (Exception e) {
 
       }
-      template = buildTemplate(client.templateBuilder());
+      template = buildTemplate(templateBuilder());
       template.getOptions().blockOnPort(22, 120);
       try {
          Set<? extends NodeMetadata> nodes = client.createNodesInGroup(group, 1, template);
@@ -274,7 +274,7 @@ public abstract class BaseComputeServiceLiveTest extends BaseComputeServiceConte
       } catch (Exception e) {
 
       }
-      template = buildTemplate(client.templateBuilder());
+      template = buildTemplate(templateBuilder());
       try {
          Set<? extends NodeMetadata> nodes = client.createNodesInGroup(group, 1, template);
          NodeMetadata node = getOnlyElement(nodes);
@@ -333,7 +333,7 @@ public abstract class BaseComputeServiceLiveTest extends BaseComputeServiceConte
 
    @Test(enabled = true, dependsOnMethods = { "testImagesCache" })
    public void testTemplateMatch() throws Exception {
-      template = buildTemplate(client.templateBuilder());
+      template = buildTemplate(templateBuilder());
       Template toMatch = client.templateBuilder().imageId(template.getImage().getId()).build();
       assertEquals(toMatch.getImage(), template.getImage());
    }
@@ -374,7 +374,7 @@ public abstract class BaseComputeServiceLiveTest extends BaseComputeServiceConte
 
    @Test(enabled = true, dependsOnMethods = "testCreateTwoNodesWithRunScript")
    public void testCreateTwoNodesWithOneSpecifiedName() throws Exception {
-      template = buildTemplate(client.templateBuilder());
+      template = buildTemplate(templateBuilder());
       template.getOptions().nodeNames(ImmutableSet.of("first-node"));
       Set<? extends NodeMetadata> nodes;
       try {
@@ -399,7 +399,7 @@ public abstract class BaseComputeServiceLiveTest extends BaseComputeServiceConte
    }
 
    protected Template refreshTemplate() {
-      return template = addRunScriptToTemplate(buildTemplate(client.templateBuilder()));
+      return template = addRunScriptToTemplate(buildTemplate(templateBuilder()));
    }
 
    protected Template addRunScriptToTemplate(Template template) {
@@ -437,7 +437,7 @@ public abstract class BaseComputeServiceLiveTest extends BaseComputeServiceConte
 
       if (existingLocationIsAssignable) {
          getAnonymousLogger().info("creating another node based on existing nodes' location: " + existingLocation);
-         template = buildTemplate(client.templateBuilder());
+         template = buildTemplate(templateBuilder());
          template = addRunScriptToTemplate(client.templateBuilder().fromTemplate(template)
                .locationId(existingLocation.getId()).build());
       } else {
@@ -472,7 +472,7 @@ public abstract class BaseComputeServiceLiveTest extends BaseComputeServiceConte
             final int groupNum = i;
             final String group = "twin" + groupNum;
             groups.add(group);
-            template = buildTemplate(client.templateBuilder());
+            template = buildTemplate(templateBuilder());
             template.getOptions().inboundPorts(22, 8080).blockOnPort(22, 300 + groupNum);
             ListenableFuture<NodeMetadata> future = userExecutor.submit(new Callable<NodeMetadata>() {
                public NodeMetadata call() throws Exception {
@@ -522,6 +522,14 @@ public abstract class BaseComputeServiceLiveTest extends BaseComputeServiceConte
             sshPing(node, taskName);
          }
       }
+   }
+
+   protected TemplateBuilder templateBuilder() {
+      TemplateBuilder templateBuilder = client.templateBuilder();
+      if (templateBuilderSpec != null) {
+         templateBuilder = templateBuilder.from(templateBuilderSpec);
+      }
+      return templateBuilder;
    }
 
    protected Template buildTemplate(TemplateBuilder templateBuilder) {
@@ -731,7 +739,7 @@ public abstract class BaseComputeServiceLiveTest extends BaseComputeServiceConte
       ImmutableSet<String> tags = ImmutableSet.of(group);
       Stopwatch watch = Stopwatch.createStarted();
 
-      template = buildTemplate(client.templateBuilder());
+      template = buildTemplate(templateBuilder());
       template.getOptions().inboundPorts(22, 8080).blockOnPort(22, 300).userMetadata(userMetadata).tags(tags);
 
       NodeMetadata node = getOnlyElement(client.createNodesInGroup(group, 1, template));
@@ -834,7 +842,7 @@ public abstract class BaseComputeServiceLiveTest extends BaseComputeServiceConte
 
       }
       // no inbound ports
-      template = buildTemplate(client.templateBuilder());
+      template = buildTemplate(templateBuilder());
       template.getOptions().blockUntilRunning(false).inboundPorts();
       try {
          long time = currentTimeMillis();

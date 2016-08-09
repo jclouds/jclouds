@@ -35,7 +35,7 @@ import com.google.inject.util.Modules;
 
 public abstract class BaseGenericComputeServiceContextLiveTest<W extends ComputeServiceContext> extends BaseViewLiveTest<W> {
 
-   protected TemplateBuilderSpec template;
+   protected TemplateBuilderSpec templateBuilderSpec;
    protected LoginCredentials loginCredentials = LoginCredentials.builder().user("root").build();
 
    // isolate tests from eachother, as default credentialStore is static
@@ -47,15 +47,15 @@ public abstract class BaseGenericComputeServiceContextLiveTest<W extends Compute
       Properties overrides = super.setupProperties();
       String spec = setIfTestSystemPropertyPresent(overrides, provider + ".template");
       if (spec != null) {
-         template = TemplateBuilderSpec.parse(spec);
-         if (template.getLoginUser() != null) {
-            Iterable<String> userPass = Splitter.on(':').split(template.getLoginUser());
+         templateBuilderSpec = TemplateBuilderSpec.parse(spec);
+         if (templateBuilderSpec.getLoginUser() != null) {
+            Iterable<String> userPass = Splitter.on(':').split(templateBuilderSpec.getLoginUser());
             Builder loginCredentialsBuilder = LoginCredentials.builder();
             loginCredentialsBuilder.user(Iterables.get(userPass, 0));
             if (Iterables.size(userPass) == 2)
                loginCredentialsBuilder.password(Iterables.get(userPass, 1));
-            if (template.getAuthenticateSudo() != null)
-               loginCredentialsBuilder.authenticateSudo(template.getAuthenticateSudo());
+            if (templateBuilderSpec.getAuthenticateSudo() != null)
+               loginCredentialsBuilder.authenticateSudo(templateBuilderSpec.getAuthenticateSudo());
             loginCredentials = loginCredentialsBuilder.build();
          }
       }

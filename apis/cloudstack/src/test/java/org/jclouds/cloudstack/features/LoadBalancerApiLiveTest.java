@@ -86,7 +86,7 @@ public class LoadBalancerApiLiveTest extends BaseCloudStackApiLiveTest {
    public void testCreateVm() {
       if (networksDisabled)
          return;
-      String defaultTemplate = template != null ? template.getImageId() : null;
+      String defaultTemplate = templateBuilderSpec != null ? templateBuilderSpec.getImageId() : null;
       vm = VirtualMachineApiLiveTest.createVirtualMachineInNetwork(network,
             defaultTemplateOrPreferredInZone(defaultTemplate, client, network.getZoneId()),
             client, jobComplete, virtualMachineRunning);

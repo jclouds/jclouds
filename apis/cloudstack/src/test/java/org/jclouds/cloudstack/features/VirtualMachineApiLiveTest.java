@@ -176,7 +176,7 @@ public class VirtualMachineApiLiveTest extends BaseCloudStackApiLiveTest {
 
    @Test
    public void testCreateVirtualMachine() throws Exception {
-      String defaultTemplate = template != null ? template.getImageId() : null;
+      String defaultTemplate = templateBuilderSpec != null ? templateBuilderSpec.getImageId() : null;
       vm = createVirtualMachine(client, defaultTemplate, jobComplete, virtualMachineRunning);
       if (vm.getPassword() != null) {
          conditionallyCheckSSH();
@@ -190,7 +190,7 @@ public class VirtualMachineApiLiveTest extends BaseCloudStackApiLiveTest {
    public void testCreateVirtualMachineWithSpecificIp() throws Exception {
       skipIfNotGlobalAdmin();
 
-      String defaultTemplate = template != null ? template.getImageId() : null;
+      String defaultTemplate = templateBuilderSpec != null ? templateBuilderSpec.getImageId() : null;
       Network network = null;
 
       try {
