@@ -71,7 +71,9 @@ public class SudoAwareInitManager {
    public ExecResponse refreshAndRunAction(String action) {
       checkState(ssh != null, "please call init() before invoking call");
       try {
-         ssh.connect();
+         if (!ssh.isConnected()) {
+            ssh.connect();
+         }
          return runAction(action);
       } finally {
          if (ssh != null)

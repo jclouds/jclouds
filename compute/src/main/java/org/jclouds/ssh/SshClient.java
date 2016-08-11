@@ -61,6 +61,8 @@ public interface SshClient {
 
    void disconnect();
 
+   boolean isConnected();
+
    void put(String path, String contents);
 
 }

@@ -410,6 +410,15 @@ public class SshjSshClient implements SshClient {
       }
    }
 
+   @Override
+   public boolean isConnected() {
+      try {
+         return sshClientConnection.getSSHClient().isConnected();
+      } catch (Exception e) {
+         throw Throwables.propagate(e);
+      }
+   }
+
    protected Connection<Session> execConnection() {
 
       return new Connection<Session>() {

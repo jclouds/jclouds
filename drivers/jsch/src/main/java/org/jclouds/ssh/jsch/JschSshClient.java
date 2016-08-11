@@ -339,9 +339,15 @@ public class JschSshClient implements SshClient {
       return toString;
    }
 
+   @Override
    @PreDestroy
    public void disconnect() {
       sessionConnection.clear();
+   }
+
+   @Override
+   public boolean isConnected() {
+      return sessionConnection.getSession().isConnected();
    }
 
    protected ConnectionWithStreams<ChannelExec> execConnection(final String command) {

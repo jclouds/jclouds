@@ -75,6 +75,10 @@ public class SshjSshClientLiveTest {
             public void disconnect() {
             }
 
+            public boolean isConnected() {
+               return false;
+            }
+
             public Payload get(String path) {
                if (path.equals("/etc/passwd")) {
                   return Payloads.newStringPayload("root");
