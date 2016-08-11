@@ -16,9 +16,10 @@
  */
 package org.jclouds.docker.compute.functions;
 
-import com.google.common.base.Function;
-import com.google.common.base.Splitter;
-import com.google.common.collect.Iterables;
+import static com.google.common.base.Preconditions.checkNotNull;
+
+import javax.annotation.Resource;
+import javax.inject.Named;
 
 import org.jclouds.compute.domain.Image;
 import org.jclouds.compute.domain.ImageBuilder;
@@ -27,11 +28,8 @@ import org.jclouds.compute.domain.OsFamily;
 import org.jclouds.compute.reference.ComputeServiceConstants;
 import org.jclouds.logging.Logger;
 
-import javax.annotation.Resource;
-import javax.inject.Named;
-
-import static com.google.common.base.Preconditions.checkNotNull;
-import static com.google.common.collect.Iterables.get;
+import com.google.common.base.Function;
+import com.google.common.collect.Iterables;
 
 public class ImageToImage implements Function<org.jclouds.docker.domain.Image, org.jclouds.compute.domain.Image> {
 
@@ -46,13 +44,24 @@ public class ImageToImage implements Function<org.jclouds.docker.domain.Image, o
    public Image apply(org.jclouds.docker.domain.Image from) {
       checkNotNull(from, "image");
 
-      String description = checkNotNull(Iterables.getFirst(from.repoTags(), "image must have at least one repo tag"));
+      String firstRepoTag = Iterables.getFirst(from.repoTags(), "<none>");
+      final int versionSeparatorPos = firstRepoTag.lastIndexOf(':');
 
-      OsFamily osFamily = osFamily().apply(description);
-      String osVersion = parseVersion(description);
+      final String name;
+      final String osVersion;
+      if (versionSeparatorPos > -1) {
+         name = firstRepoTag.substring(0, versionSeparatorPos);
+         osVersion = firstRepoTag.substring(versionSeparatorPos + 1);
+      } else {
+         name = firstRepoTag;
+         osVersion = firstRepoTag;
+      }
+      logger.debug("os version for item: %s is %s", firstRepoTag, osVersion);
+
+      OsFamily osFamily = osFamily().apply(firstRepoTag);
 
       OperatingSystem os = OperatingSystem.builder()
-              .description(description)
+              .description(firstRepoTag)
               .family(osFamily)
               .version(osVersion)
               .is64Bit(is64bit(from))
@@ -60,8 +69,8 @@ public class ImageToImage implements Function<org.jclouds.docker.domain.Image, o
 
       return new ImageBuilder()
               .ids(from.id())
-              .name(get(Splitter.on(":").split(description), 0))
-              .description(description)
+              .name(name)
+              .description(firstRepoTag)
               .operatingSystem(os)
               .status(Image.Status.AVAILABLE)
               .build();
@@ -89,12 +98,6 @@ public class ImageToImage implements Function<org.jclouds.docker.domain.Image, o
             return OsFamily.UNRECOGNIZED;
          }
       };
-   }
-
-   private String parseVersion(String description) {
-      String version = get(Splitter.on(":").split(description), 1);
-      logger.debug("os version for item: %s is %s", description, version);
-      return version;
    }
 
 }

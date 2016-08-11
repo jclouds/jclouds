@@ -37,6 +37,48 @@ import com.google.common.collect.ImmutableList;
 @Test(groups = "unit", testName = "ImageToImageTest")
 public class ImageToImageTest {
 
+   private static final org.jclouds.docker.domain.Image IMAGE_EMPTY_REPOTAGS = org.jclouds.docker.domain.Image.create(
+         "id", // id
+         "author",
+         "comment",
+         Config.builder()
+         .image("imageId")
+         .build(),
+         Config.builder()
+         .image("imageId")
+         .build(),
+         "parent", // parent
+         new Date(), // created
+         "containerId", // container
+         "1.3.1", // dockerVersion
+         "x86_64", // architecture
+         "os", // os
+         0l, // size
+         0l, // virtualSize
+         ImmutableList.<String> of() // repoTags
+         );
+
+   private static final org.jclouds.docker.domain.Image IMAGE_REPOTAG_WITH_PORT = org.jclouds.docker.domain.Image.create(
+         "id", // id
+         "author",
+         "comment",
+         Config.builder()
+         .image("imageId")
+         .build(),
+         Config.builder()
+         .image("imageId")
+         .build(),
+         "parent", // parent
+         new Date(), // created
+         "containerId", // container
+         "1.3.1", // dockerVersion
+         "x86_64", // architecture
+         "os", // os
+         0l, // size
+         0l, // virtualSize
+         ImmutableList.of("registry.company.example:8888/a/b/c/d:latest") // repoTags
+         );
+
    private ImageToImage function;
 
    private org.jclouds.docker.domain.Image image;
@@ -74,6 +116,23 @@ public class ImageToImageTest {
       verify(mockImage);
 
       assertEquals(mockImage.id(), image.getId().toString());
+   }
+
+   public void testEmptyRepoTags() {
+      Image image = function.apply(IMAGE_EMPTY_REPOTAGS);
+
+      assertEquals(image.getId(), "id");
+      assertEquals(image.getDescription(), "<none>");
+      assertEquals(image.getOperatingSystem().getVersion(), "<none>");
+      assertEquals(image.getName(), "<none>");
+   }
+
+   public void testRepoTagWithHostPort() {
+      Image image = function.apply(IMAGE_REPOTAG_WITH_PORT);
+
+      assertEquals(image.getDescription(), "registry.company.example:8888/a/b/c/d:latest");
+      assertEquals(image.getOperatingSystem().getVersion(), "latest");
+      assertEquals(image.getName(), "registry.company.example:8888/a/b/c/d");
    }
 
    private org.jclouds.docker.domain.Image mockImage() {
