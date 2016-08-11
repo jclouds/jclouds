@@ -16,18 +16,18 @@
  */
 package org.jclouds.azurecompute.arm.domain;
 
-import static com.google.common.collect.ImmutableList.copyOf;
-
 import java.util.List;
 import java.util.Map;
 
-import com.google.common.collect.ImmutableMap;
 import org.jclouds.azurecompute.arm.util.GetEnumValue;
 import org.jclouds.domain.JsonBall;
 import org.jclouds.javax.annotation.Nullable;
+import org.jclouds.json.SerializedNames;
 
 import com.google.auto.value.AutoValue;
-import org.jclouds.json.SerializedNames;
+import com.google.common.collect.ImmutableMap;
+
+import static com.google.common.collect.ImmutableList.copyOf;
 
 @AutoValue
 public abstract class Deployment {
@@ -186,7 +186,7 @@ public abstract class Deployment {
       public abstract ContentLink templateLink();
 
       @Nullable
-      public abstract Map<String, JsonBall> parameters();
+      public abstract Map<String, Value> parameters();
 
       @Nullable
       public abstract ContentLink parametersLink();
@@ -209,7 +209,7 @@ public abstract class Deployment {
                                                 final List<Dependency> dependencies,
                                                 final Map<String, JsonBall> template,
                                                 final ContentLink templateLink,
-                                                final Map<String, JsonBall> parameters,
+                                                final Map<String, Value> parameters,
                                                 final ContentLink parametersLink,
                                                 final String mode,
                                                 final String duration,
@@ -222,7 +222,7 @@ public abstract class Deployment {
                                                               dependencies == null ? null : copyOf(dependencies),
                                                               template == null ? ImmutableMap.<String, JsonBall>builder().build() : ImmutableMap.copyOf(template),
                                                               templateLink,
-                                                              parameters == null ? ImmutableMap.<String, JsonBall>builder().build() : ImmutableMap.copyOf(parameters),
+                                                              parameters == null ? ImmutableMap.<String, Value>builder().build() : ImmutableMap.copyOf(parameters),
                                                               parametersLink,
                                                               mode,
                                                               duration,

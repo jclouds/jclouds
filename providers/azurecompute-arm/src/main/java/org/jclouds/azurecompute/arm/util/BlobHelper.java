@@ -16,6 +16,9 @@
  */
 package org.jclouds.azurecompute.arm.util;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.jclouds.ContextBuilder;
 import org.jclouds.azure.storage.domain.BoundedSet;
 import org.jclouds.azureblob.AzureBlobClient;
@@ -24,9 +27,6 @@ import org.jclouds.azureblob.domain.ContainerProperties;
 import org.jclouds.azureblob.domain.ListBlobsResponse;
 import org.jclouds.azurecompute.arm.domain.VMImage;
 import org.jclouds.util.Closeables2;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class BlobHelper {
 

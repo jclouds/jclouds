@@ -16,11 +16,8 @@
  */
 package org.jclouds.azurecompute.arm.compute;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 import javax.annotation.Resource;
@@ -30,33 +27,32 @@ import javax.inject.Singleton;
 
 import org.jclouds.azurecompute.arm.AzureComputeApi;
 import org.jclouds.azurecompute.arm.compute.config.AzureComputeServiceContextModule.AzureComputeConstants;
+import org.jclouds.azurecompute.arm.compute.functions.DeploymentToVMDeployment;
 import org.jclouds.azurecompute.arm.compute.functions.VMImageToImage;
 import org.jclouds.azurecompute.arm.domain.Deployment;
 import org.jclouds.azurecompute.arm.domain.DeploymentBody;
 import org.jclouds.azurecompute.arm.domain.DeploymentProperties;
-import org.jclouds.azurecompute.arm.domain.NetworkInterfaceCard;
-import org.jclouds.azurecompute.arm.domain.ResourceProviderMetaData;
-import org.jclouds.azurecompute.arm.domain.StorageService;
-import org.jclouds.azurecompute.arm.domain.VMImage;
-import org.jclouds.azurecompute.arm.domain.VMHardware;
 import org.jclouds.azurecompute.arm.domain.Location;
 import org.jclouds.azurecompute.arm.domain.Offer;
-import org.jclouds.azurecompute.arm.domain.PublicIPAddress;
+import org.jclouds.azurecompute.arm.domain.ResourceProviderMetaData;
 import org.jclouds.azurecompute.arm.domain.SKU;
+import org.jclouds.azurecompute.arm.domain.StorageService;
 import org.jclouds.azurecompute.arm.domain.VMDeployment;
 import org.jclouds.azurecompute.arm.domain.VMSize;
 import org.jclouds.azurecompute.arm.domain.Version;
-import org.jclouds.azurecompute.arm.domain.VirtualMachine;
-import org.jclouds.azurecompute.arm.domain.VirtualMachineInstance;
+import org.jclouds.azurecompute.arm.domain.VMHardware;
+import org.jclouds.azurecompute.arm.domain.VMImage;
+import org.jclouds.azurecompute.arm.domain.Value;
 import org.jclouds.azurecompute.arm.features.DeploymentApi;
 import org.jclouds.azurecompute.arm.features.OSImageApi;
-import org.jclouds.azurecompute.arm.util.BlobHelper;
 import org.jclouds.azurecompute.arm.functions.CleanupResources;
+import org.jclouds.azurecompute.arm.util.BlobHelper;
 import org.jclouds.azurecompute.arm.util.DeploymentTemplateBuilder;
 import org.jclouds.compute.ComputeServiceAdapter;
 import org.jclouds.compute.domain.Template;
 import org.jclouds.compute.reference.ComputeServiceConstants;
 import org.jclouds.domain.LoginCredentials;
+import org.jclouds.json.Json;
 import org.jclouds.location.reference.LocationConstants;
 import org.jclouds.logging.Logger;
 import org.jclouds.providers.ProviderMetadata;
@@ -90,17 +86,16 @@ public class AzureComputeServiceAdapter implements ComputeServiceAdapter<VMDeplo
    @Resource
    @Named(ComputeServiceConstants.COMPUTE_LOGGER)
    private Logger logger = Logger.NULL;
-
+   private final Json json;
    private final AzureComputeApi api;
-
    private final AzureComputeConstants azureComputeConstants;
-
    private final ProviderMetadata providerMetadata;
+   private final DeploymentToVMDeployment deploymentToVMDeployment;
 
    @Inject
    AzureComputeServiceAdapter(final AzureComputeApi api, final AzureComputeConstants azureComputeConstants,
-                              CleanupResources cleanupResources, ProviderMetadata providerMetadata) {
-
+                              CleanupResources cleanupResources, Json json, ProviderMetadata providerMetadata, DeploymentToVMDeployment deploymentToVMDeployment) {
+      this.json = json;
       this.api = api;
       this.azureComputeConstants = azureComputeConstants;
       this.azureGroup = azureComputeConstants.azureResourceGroup();
@@ -109,6 +104,7 @@ public class AzureComputeServiceAdapter implements ComputeServiceAdapter<VMDeplo
 
       this.cleanupResources = cleanupResources;
       this.providerMetadata = providerMetadata;
+      this.deploymentToVMDeployment = deploymentToVMDeployment;
    }
 
    @Override
@@ -153,12 +149,8 @@ public class AzureComputeServiceAdapter implements ComputeServiceAdapter<VMDeplo
          destroyNode(name);
          throw new IllegalStateException(illegalStateExceptionMessage);
       }
-
       final VMDeployment deployment = deployments.iterator().next();
-
-
-      NodeAndInitialCredentials<VMDeployment> credential = null;
-
+      NodeAndInitialCredentials<VMDeployment> credential;
       if (template.getOptions().getPublicKey() != null){
          String privateKey = template.getOptions().getPrivateKey();
          credential = new NodeAndInitialCredentials<VMDeployment>(deployment, name,
@@ -167,7 +159,6 @@ public class AzureComputeServiceAdapter implements ComputeServiceAdapter<VMDeplo
          credential = new NodeAndInitialCredentials<VMDeployment>(deployment, name,
                  LoginCredentials.builder().user(loginUser).password(loginPassword).authenticateSudo(true).build());
       }
-
       return credential;
    }
 
@@ -288,7 +279,7 @@ public class AzureComputeServiceAdapter implements ComputeServiceAdapter<VMDeplo
 
    @Override
    public Iterable<Location> listLocations() {
-      final Iterable<String> whiteListZoneName = findWhiteListOfRegions();
+      final Iterable<String> whiteListedRegionNames = findWhiteListOfRegions();
 
       final Iterable<String> vmLocations = FluentIterable.from(api.getResourceProviderApi().get("Microsoft.Compute"))
               .filter(new Predicate<ResourceProviderMetaData>() {
@@ -314,7 +305,7 @@ public class AzureComputeServiceAdapter implements ComputeServiceAdapter<VMDeplo
               .filter(new Predicate<Location>() {
                  @Override
                  public boolean apply(Location location) {
-                    return whiteListZoneName == null ? true : Iterables.contains(whiteListZoneName, location.name());
+                    return whiteListedRegionNames == null ? true : Iterables.contains(whiteListedRegionNames, location.name());
                  }
               })
               .toList();
@@ -322,27 +313,14 @@ public class AzureComputeServiceAdapter implements ComputeServiceAdapter<VMDeplo
       return locations;
    }
 
-   private Iterable<String> findWhiteListOfRegions() {
-      if (providerMetadata.getDefaultProperties().get(LocationConstants.PROPERTY_REGIONS) == null)  return null;
-      return Splitter.on(",").trimResults().split((CharSequence) providerMetadata.getDefaultProperties().get(LocationConstants.PROPERTY_REGIONS));
-   }
-
-   private String getResourceGroupFromId(String id) {
-      String searchStr = "/resourceGroups/";
-      int indexStart = id.lastIndexOf(searchStr) + searchStr.length();
-      searchStr = "/providers/";
-      int indexEnd = id.lastIndexOf(searchStr);
-
-      String resourceGroup = id.substring(indexStart, indexEnd);
-      return resourceGroup;
-   }
-
    @Override
    public VMDeployment getNode(final String id) {
       Deployment deployment = api.getDeploymentApi(azureGroup).get(id);
-      if (deployment == null)
-         return null;
-      return convertDeploymentToVMDeployment(deployment);
+      if (deployment == null) return null;
+      if (new IsDeploymentInRegions(findWhiteListOfRegions()).apply(deployment)) {
+         return deploymentToVMDeployment.apply(deployment);
+      }
+      return null;
    }
 
    @Override
@@ -365,84 +343,21 @@ public class AzureComputeServiceAdapter implements ComputeServiceAdapter<VMDeplo
       api.getVirtualMachineApi(azureGroup).stop(id);
    }
 
-   private List<PublicIPAddress> getIPAddresses(Deployment deployment) {
-      List<PublicIPAddress> list = new ArrayList<PublicIPAddress>();
-      String resourceGroup = getResourceGroupFromId(deployment.id());
-
-      if (deployment.properties() != null && deployment.properties().dependencies() != null) {
-         List<Deployment.Dependency> dependencies = deployment.properties().dependencies();
-         for (int d = 0; d < dependencies.size(); d++) {
-            if (dependencies.get(d).resourceType().equals("Microsoft.Network/networkInterfaces")) {
-               List<Deployment.Dependency> dependsOn = dependencies.get(d).dependsOn();
-               for (int e = 0; e < dependsOn.size(); e++) {
-                  if (dependsOn.get(e).resourceType().equals("Microsoft.Network/publicIPAddresses")) {
-                     String resourceName = dependsOn.get(e).resourceName();
-                     PublicIPAddress ip = api.getPublicIPAddressApi(resourceGroup).get(resourceName);
-                     list.add(ip);
-                     break;
-                  }
-               }
-            }
-         }
-      }
-      return list;
-   }
-
-   private List<NetworkInterfaceCard> getNetworkInterfaceCards(Deployment deployment) {
-      List<NetworkInterfaceCard> result = new ArrayList<NetworkInterfaceCard>();
-
-      String resourceGroup = getResourceGroupFromId(deployment.id());
-
-      if (deployment.properties() != null && deployment.properties().dependencies() != null) {
-         for (Deployment.Dependency dependency : deployment.properties().dependencies()) {
-            if (dependency.resourceType().equals("Microsoft.Network/networkInterfaces")) {
-               String resourceName = dependency.resourceName();
-               NetworkInterfaceCard nic = api.getNetworkInterfaceCardApi(resourceGroup).get(resourceName);
-               result.add(nic);
-            }
-         }
-      }
-
-      return result;
-   }
-
-   private VMDeployment convertDeploymentToVMDeployment(Deployment deployment) {
-      String id = deployment.id();
-      String resourceGroup = getResourceGroupFromId(id);
-
-      List<PublicIPAddress> ipAddressList = getIPAddresses(deployment);
-      List<NetworkInterfaceCard> networkInterfaceCards = getNetworkInterfaceCards(deployment);
-      VirtualMachine vm = api.getVirtualMachineApi(azureGroup).get(id);
-      VirtualMachineInstance vmInstanceDetails = api.getVirtualMachineApi(azureGroup).getInstanceDetails(id);
-      Map<String, String> userMetaData = null;
-      Iterable<String> tags = null;
-      if (vm != null && vm.tags() != null) {
-         userMetaData = vm.tags();
-         String tagString = userMetaData.get("tags");
-         tags = Arrays.asList(tagString.split(","));
-      }
-      return VMDeployment.create(deployment, ipAddressList, vmInstanceDetails, vm, networkInterfaceCards, userMetaData, tags);
-   }
-
    @Override
    public Iterable<VMDeployment> listNodes() {
-      List<Deployment> deployments = api.getDeploymentApi(azureGroup).list();
-
-      List<VMDeployment> vmDeployments = new ArrayList<VMDeployment>();
-      for (Deployment d : deployments){
-         // Check that this vm is not generalized and made to custom image
-         try {
-            String storageAccountName = d.name().replaceAll("[^A-Za-z0-9 ]", "") + "stor";
-            String key = api.getStorageAccountApi(azureGroup).getKeys(storageAccountName).key1();
-            if (!BlobHelper.customImageExists(storageAccountName, key))
-               vmDeployments.add(convertDeploymentToVMDeployment(d));
-         }
-         catch (Exception e) {
-            // This might happen if there is no custom images but vm is generalized. No need to list
-         }
-      }
-
-      return vmDeployments;
+      return FluentIterable.from(api.getDeploymentApi(azureGroup).list())
+              .filter(new IsDeploymentInRegions(findWhiteListOfRegions()))
+              .filter(new Predicate<Deployment>() {
+                 @Override
+                 public boolean apply(Deployment deployment) {
+                    Value storageAccountNameValue = deployment.properties().parameters().get("storageAccountName");
+                    String storageAccountName = storageAccountNameValue.value();
+                    String key = api.getStorageAccountApi(azureGroup).getKeys(storageAccountName).key1();
+                    return !BlobHelper.customImageExists(storageAccountName, key);
+                 }
+              })
+              .transform(deploymentToVMDeployment)
+              .toList();
    }
 
    @Override
@@ -455,4 +370,23 @@ public class AzureComputeServiceAdapter implements ComputeServiceAdapter<VMDeplo
       });
    }
 
+   private Iterable<String> findWhiteListOfRegions() {
+      if (providerMetadata.getDefaultProperties().get(LocationConstants.PROPERTY_REGIONS) == null)  return null;
+      return Splitter.on(",").trimResults().split((CharSequence) providerMetadata.getDefaultProperties().get(LocationConstants.PROPERTY_REGIONS));
+   }
+
+   private class IsDeploymentInRegions implements Predicate<Deployment> {
+
+      private final Iterable<String> whiteListOfRegions;
+
+      public IsDeploymentInRegions(Iterable<String> whiteListOfRegions) {
+         this.whiteListOfRegions = whiteListOfRegions;
+      }
+
+      @Override
+      public boolean apply(Deployment deployment) {
+         Value locationValue = deployment.properties().parameters().get("location");
+         return Iterables.contains(whiteListOfRegions, locationValue.value());
+      }
+   }
 }
