@@ -38,7 +38,7 @@
     <test.digitalocean2.api-version>2</test.digitalocean2.api-version>
     <test.digitalocean2.identity>FIXME</test.digitalocean2.identity>
     <test.digitalocean2.credential>FIXME</test.digitalocean2.credential>
-    <test.digitalocean2.template>osFamily=UBUNTU,os64Bit=true</test.digitalocean2.template>
+    <test.digitalocean2.template>osFamily=UBUNTU,os64Bit=true,osVersionMatches=14.*</test.digitalocean2.template>
     <jclouds.osgi.export>org.jclouds.digitalocean2*;version="${project.version}"</jclouds.osgi.export>
     <jclouds.osgi.import>
       org.jclouds.compute.internal;version="${project.version}",

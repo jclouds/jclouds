@@ -25,7 +25,6 @@ import static org.testng.Assert.assertTrue;
 import java.util.List;
 import java.util.Map;
 
-import org.jclouds.compute.ComputeTestUtils;
 import org.jclouds.digitalocean2.domain.Action;
 import org.jclouds.digitalocean2.domain.Backup;
 import org.jclouds.digitalocean2.domain.Droplet;
@@ -38,6 +37,7 @@ import org.jclouds.digitalocean2.domain.Size;
 import org.jclouds.digitalocean2.domain.Snapshot;
 import org.jclouds.digitalocean2.domain.options.CreateDropletOptions;
 import org.jclouds.digitalocean2.internal.BaseDigitalOcean2ApiLiveTest;
+import org.jclouds.ssh.SshKeys;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
@@ -60,7 +60,7 @@ public class DropletApiLiveTest extends BaseDigitalOcean2ApiLiveTest {
       size = cheapestSizeInRegion(region);
       image = ubuntuImageInRegion(region);
       
-      Map<String, String> keyPair = ComputeTestUtils.setupKeyPair();
+      Map<String, String> keyPair = SshKeys.generate();
       key = api.keyApi().create(prefix + "-droplet-livetest", keyPair.get("public"));
    }
    
@@ -93,7 +93,7 @@ public class DropletApiLiveTest extends BaseDigitalOcean2ApiLiveTest {
    @Test(dependsOnMethods = "testCreate")
    public void testListKernels() {
       Iterable<Kernel> kernels = api().listKernels(dropletId).concat();
-      assertEquals(kernels.iterator().next().name(), "DO-recovery-static-fsck");
+      assertTrue(kernels.iterator().hasNext());
    }
    
    @Test(dependsOnMethods = "testListKernels")
@@ -103,6 +103,12 @@ public class DropletApiLiveTest extends BaseDigitalOcean2ApiLiveTest {
    }
 
    @Test(groups = "live", dependsOnMethods = "testPowerOff")
+   public void testPowerOn() {
+      api().powerOn(dropletId);
+      assertNodeRunning(dropletId);
+   }
+
+   @Test(groups = "live", dependsOnMethods = "testPowerOn")
    public void testSnapshots() {
       Action action = api().snapshot(dropletId, prefix + dropletId + "-snapshot");
       assertActionCompleted(action.id());
@@ -139,16 +145,6 @@ public class DropletApiLiveTest extends BaseDigitalOcean2ApiLiveTest {
    }
 
    @Test(groups = "live", dependsOnMethods = "testSnapshots")
-   public void testPowerOn() {
-      // Apparently droplets are automatically powered on after the snapshot process
-      api().powerOff(dropletId);
-      assertNodeStopped(dropletId);
-      
-      api().powerOn(dropletId);
-      assertNodeRunning(dropletId);
-   }
-   
-   @Test(groups = "live", dependsOnMethods = "testPowerOn")
    public void testReboot() {
       Action action = api().reboot(dropletId);
       assertActionCompleted(action.id());

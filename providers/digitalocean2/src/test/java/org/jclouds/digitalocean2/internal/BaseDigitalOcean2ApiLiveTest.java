@@ -16,21 +16,19 @@
  */
 package org.jclouds.digitalocean2.internal;
 
-import static com.google.common.base.Preconditions.checkState;
 import static org.jclouds.compute.config.ComputeServiceProperties.TIMEOUT_NODE_RUNNING;
 import static org.jclouds.compute.config.ComputeServiceProperties.TIMEOUT_NODE_SUSPENDED;
 import static org.jclouds.compute.config.ComputeServiceProperties.TIMEOUT_NODE_TERMINATED;
-import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertTrue;
 import static org.testng.util.Strings.isNullOrEmpty;
 
 import java.util.Properties;
+import java.util.concurrent.TimeUnit;
 
 import org.jclouds.apis.BaseApiLiveTest;
 import org.jclouds.compute.config.ComputeServiceProperties;
 import org.jclouds.digitalocean2.DigitalOcean2Api;
 import org.jclouds.digitalocean2.config.DigitalOcean2RateLimitModule;
-import org.jclouds.digitalocean2.domain.Action;
 import org.jclouds.digitalocean2.domain.Image;
 import org.jclouds.digitalocean2.domain.Region;
 import org.jclouds.digitalocean2.domain.Size;
@@ -60,6 +58,7 @@ public class BaseDigitalOcean2ApiLiveTest extends BaseApiLiveTest<DigitalOcean2A
       Properties props = super.setupProperties();
       props.put(ComputeServiceProperties.POLL_INITIAL_PERIOD, 1000);
       props.put(ComputeServiceProperties.POLL_MAX_PERIOD, 10000);
+      props.put(ComputeServiceProperties.TIMEOUT_IMAGE_AVAILABLE, TimeUnit.MINUTES.toMillis(45));
       return props;
    }
 
@@ -81,9 +80,7 @@ public class BaseDigitalOcean2ApiLiveTest extends BaseApiLiveTest<DigitalOcean2A
    }
 
    protected void assertActionCompleted(int actionId) {
-      checkState(actionCompleted.apply(actionId), "Timeout waiting for action: %s", actionId);
-      Action action = api.actionApi().get(actionId);
-      assertEquals(action.status(), Action.Status.COMPLETED);
+      assertTrue(actionCompleted.apply(actionId), String.format("Action %s did not complete in the configured timeout", actionId));
    }
 
    protected void assertNodeStopped(int dropletId) {

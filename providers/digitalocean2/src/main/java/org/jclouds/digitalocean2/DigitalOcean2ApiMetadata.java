@@ -68,7 +68,7 @@ public class DigitalOcean2ApiMetadata extends BaseHttpApiMetadata<DigitalOcean2A
       properties.put(AUDIENCE, "https://cloud.digitalocean.com/v1/oauth/token");
       properties.put(CREDENTIAL_TYPE, BEARER_TOKEN_CREDENTIALS.toString());
       properties.put(PROPERTY_SESSION_INTERVAL, 3600);
-      properties.put(TEMPLATE, "osFamily=UBUNTU,os64Bit=true");
+      properties.put(TEMPLATE, "osFamily=UBUNTU,os64Bit=true,osVersionMatches=14.*");
       properties.put(POLL_INITIAL_PERIOD, 5000);
       properties.put(POLL_MAX_PERIOD, 20000);
       // Node operations in DigitalOcean can be quite slow. Use a 5 minutes

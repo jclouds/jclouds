@@ -18,7 +18,7 @@ package org.jclouds.digitalocean2.compute.extensions;
 
 import static com.google.common.base.Preconditions.checkState;
 import static org.jclouds.compute.config.ComputeServiceProperties.TIMEOUT_IMAGE_AVAILABLE;
-import static org.jclouds.compute.config.ComputeServiceProperties.TIMEOUT_NODE_SUSPENDED;
+import static org.jclouds.compute.config.ComputeServiceProperties.TIMEOUT_NODE_RUNNING;
 
 import java.util.NoSuchElementException;
 import java.util.concurrent.Callable;
@@ -61,18 +61,18 @@ public class DigitalOcean2ImageExtension implements ImageExtension {
 
    private final DigitalOcean2Api api;
    private final Predicate<Integer> imageAvailablePredicate;
-   private final Predicate<Integer> nodeStoppedPredicate;
+   private final Predicate<Integer> nodeRunningPredicate;
    private final Function<ImageInRegion, Image> imageTransformer;
    private final ListeningExecutorService userExecutor;
 
    @Inject DigitalOcean2ImageExtension(DigitalOcean2Api api,
          @Named(TIMEOUT_IMAGE_AVAILABLE) Predicate<Integer> imageAvailablePredicate,
-         @Named(TIMEOUT_NODE_SUSPENDED) Predicate<Integer> nodeStoppedPredicate,
+         @Named(TIMEOUT_NODE_RUNNING) Predicate<Integer> nodeRunningPredicate,
          Function<ImageInRegion, Image> imageTransformer,
          @Named(Constants.PROPERTY_USER_THREADS) ListeningExecutorService userExecutor) {
       this.api = api;
       this.imageAvailablePredicate = imageAvailablePredicate;
-      this.nodeStoppedPredicate = nodeStoppedPredicate;
+      this.nodeRunningPredicate = nodeRunningPredicate;
       this.imageTransformer = imageTransformer;
       this.userExecutor = userExecutor;
    }
@@ -94,11 +94,11 @@ public class DigitalOcean2ImageExtension implements ImageExtension {
       final CloneImageTemplate cloneTemplate = (CloneImageTemplate) template;
       int dropletId = Integer.parseInt(cloneTemplate.getSourceNodeId());
 
-      // Droplet needs to be stopped
+      // Droplet needs to be active
       final Droplet droplet = api.dropletApi().get(dropletId);
-      if (droplet.status() != Status.OFF) {
-         api.dropletApi().powerOff(dropletId);
-         checkState(nodeStoppedPredicate.apply(dropletId), "node was not powered off in the configured timeout");
+      if (droplet.status() != Status.ACTIVE) {
+         api.dropletApi().powerOn(dropletId);
+         checkState(nodeRunningPredicate.apply(dropletId), "node was not powered on in the configured timeout");
       }
 
       final Action snapshotEvent = api.dropletApi().snapshot(Integer.parseInt(cloneTemplate.getSourceNodeId()),
