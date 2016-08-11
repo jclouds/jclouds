@@ -16,6 +16,13 @@
  */
 package org.jclouds.azurecompute.arm.compute;
 
+import java.util.Map;
+import java.util.Properties;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
+
+import org.jclouds.azurecompute.arm.AzureComputeProviderMetadata;
+import org.jclouds.azurecompute.arm.internal.AzureLiveTestUtils;
 import org.jclouds.compute.RunScriptOnNodesException;
 import org.jclouds.compute.domain.ExecResponse;
 import org.jclouds.compute.domain.NodeMetadata;
@@ -24,32 +31,25 @@ import org.jclouds.compute.domain.Template;
 import org.jclouds.compute.internal.BaseComputeServiceLiveTest;
 import org.jclouds.compute.predicates.NodePredicates;
 import org.jclouds.domain.LoginCredentials;
+import org.jclouds.logging.config.LoggingModule;
+import org.jclouds.logging.slf4j.config.SLF4JLoggingModule;
+import org.jclouds.providers.ProviderMetadata;
 import org.jclouds.scriptbuilder.domain.Statement;
 import org.jclouds.scriptbuilder.domain.Statements;
 import org.jclouds.scriptbuilder.statements.java.InstallJDK;
 import org.jclouds.scriptbuilder.statements.login.AdminAccess;
 import org.jclouds.sshj.config.SshjSshClientModule;
 import org.testng.annotations.Test;
-import org.jclouds.providers.ProviderMetadata;
-import org.jclouds.azurecompute.arm.AzureComputeProviderMetadata;
 
-import static org.jclouds.azurecompute.arm.config.AzureComputeProperties.RESOURCE_GROUP_NAME;
-import static org.jclouds.compute.config.ComputeServiceProperties.TIMEOUT_NODE_RUNNING;
-import static org.jclouds.compute.config.ComputeServiceProperties.TIMEOUT_NODE_SUSPENDED;
-import static org.jclouds.compute.config.ComputeServiceProperties.TIMEOUT_NODE_TERMINATED;
-import static org.jclouds.compute.config.ComputeServiceProperties.TIMEOUT_PORT_OPEN;
-import static org.jclouds.compute.config.ComputeServiceProperties.TIMEOUT_SCRIPT_COMPLETE;
-import org.jclouds.azurecompute.arm.internal.AzureLiveTestUtils;
 import com.google.inject.Module;
-import java.util.Map;
-import java.util.Properties;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.TimeUnit;
 
 import static com.google.common.base.Preconditions.checkNotNull;
-import org.jclouds.logging.slf4j.config.SLF4JLoggingModule;
-import org.jclouds.logging.config.LoggingModule;
-
+import static org.jclouds.azurecompute.arm.config.AzureComputeProperties.RESOURCE_GROUP_NAME;
+import static org.jclouds.compute.config.ComputeServiceProperties.TIMEOUT_SCRIPT_COMPLETE;
+import static org.jclouds.compute.config.ComputeServiceProperties.TIMEOUT_NODE_RUNNING;
+import static org.jclouds.compute.config.ComputeServiceProperties.TIMEOUT_PORT_OPEN;
+import static org.jclouds.compute.config.ComputeServiceProperties.TIMEOUT_NODE_TERMINATED;
+import static org.jclouds.compute.config.ComputeServiceProperties.TIMEOUT_NODE_SUSPENDED;
 
 /**
  * Live tests for the {@link org.jclouds.compute.ComputeService} integration.

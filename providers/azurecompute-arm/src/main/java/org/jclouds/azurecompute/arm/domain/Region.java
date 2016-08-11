@@ -16,12 +16,13 @@
  */
 package org.jclouds.azurecompute.arm.domain;
 
+import java.util.Arrays;
+import java.util.Set;
+
 import com.google.common.base.Function;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
-import java.util.Arrays;
-import java.util.Set;
 
 /**
  * Regions used in Azure.
@@ -46,7 +47,14 @@ public enum Region {
    JAPAN_WEST("Japan West", "JP-27"),
    BRAZIL_SOUTH("Brazil South", "BR"),
    AUSTRALIA_EAST("Australia East", "AU-NSW"),
-   AUSTRALIA_SOUTH_EAST("Australia Southeast", "AU-VIC");
+   AUSTRALIA_SOUTH_EAST("Australia Southeast", "AU-VIC"),
+   INDIA_CENTRAL("Central India", "IN-GA"),
+   INDIA_SOUTH("South India", "IN-TN"),
+   INDIA_WEST("West India", "IN-MH"),
+   CHINA_EAST("China East", "CN-SH"),
+   CHINA_NORTH("China North", "CN-BJ"),
+   CANADA_CENTRAL("Canada Central", "CA-ON"),
+   CANADA_EAST("Canada East", "CA-QC");
 
    private final String name;
 
@@ -73,7 +81,6 @@ public enum Region {
             return region;
          }
       }
-
       return null;
    }
 
@@ -86,4 +93,5 @@ public enum Region {
          }
       }));
    }
+
 }

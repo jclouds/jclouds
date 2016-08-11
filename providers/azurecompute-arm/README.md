@@ -4,8 +4,6 @@ jclouds Labs - Azure Compute ARM Provider
 Build status for azurecomputearm module:
 [![Build Status](https://jclouds.ci.cloudbees.com/buildStatus/icon?job=jclouds-labs/org.apache.jclouds.labs$azurecompute-arm)](https://jclouds.ci.cloudbees.com/job/jclouds-labs/org.apache.jclouds.labs$azurecompute-arm/)
 
-
-
 ## Setting Up Test Credentials
 
 ### Create a Service Principal
@@ -74,4 +72,25 @@ mvn clean verify -Plive \
     -Dtest.azurecompute-arm.endpoint="https://management.azure.com/subscriptions/<Subscription-id>"" \
     -Dtest.oauth.endpoint=https://login.microsoftonline.com/<Tenant-id>/oauth2/token
 
+```
+
+## How to use it
+
+Azure Compute ARM provider works exactly as any other jclouds provider.
+Notice that as Azure supports dozens of locations, operations like listImages can be really time-consuming.
+To limit the scope of such operations there are some additional properties you may want to use:
+
+```bash
+jclouds.azurecompute.arm.publishers
+```
+which is by default `Canonical,RedHat`
+
+and
+```bash
+jclouds.regions
+```
+which is by default `null`. If you want to target only the `north europe` region, you can use
+
+```bash
+jclouds.regions="northeurope"
 ```

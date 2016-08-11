@@ -15,23 +15,22 @@
  * limitations under the License.
  */
 package org.jclouds.azurecompute.arm.config;
+
 import org.jclouds.azurecompute.arm.AzureComputeApi;
 import org.jclouds.azurecompute.arm.handlers.AzureComputeErrorHandler;
 import org.jclouds.azurecompute.arm.util.DeploymentTemplateBuilder;
-
 import org.jclouds.http.HttpErrorHandler;
 import org.jclouds.http.annotation.ClientError;
 import org.jclouds.http.annotation.Redirection;
 import org.jclouds.http.annotation.ServerError;
 import org.jclouds.location.suppliers.ImplicitLocationSupplier;
-import org.jclouds.location.suppliers.implicit.OnlyLocationOrFirstRegionOptionallyMatchingRegionId;
-
+import org.jclouds.location.suppliers.implicit.FirstRegion;
+import org.jclouds.oauth.v2.config.OAuthScopes;
 import org.jclouds.rest.ConfiguresHttpApi;
 import org.jclouds.rest.config.HttpApiModule;
-import org.jclouds.oauth.v2.config.OAuthScopes;
 
-import com.google.inject.assistedinject.FactoryModuleBuilder;
 import com.google.inject.Scopes;
+import com.google.inject.assistedinject.FactoryModuleBuilder;
 
 @ConfiguresHttpApi
 public class AzureComputeHttpApiModule extends HttpApiModule<AzureComputeApi> {
@@ -46,14 +45,12 @@ public class AzureComputeHttpApiModule extends HttpApiModule<AzureComputeApi> {
    @Override
    protected void installLocations() {
       super.installLocations();
-      bind(ImplicitLocationSupplier.class).
-              to(OnlyLocationOrFirstRegionOptionallyMatchingRegionId.class).
-              in(Scopes.SINGLETON);
+      bind(ImplicitLocationSupplier.class).to(FirstRegion.class).in(Scopes.SINGLETON);
    }
+
 
    @Override
    protected void configure() {
-      install(new AzureComputeParserModule());
       install(new FactoryModuleBuilder().build(DeploymentTemplateBuilder.Factory.class));
       super.configure();
       bind(OAuthScopes.class).toInstance(OAuthScopes.NoScopes.create());

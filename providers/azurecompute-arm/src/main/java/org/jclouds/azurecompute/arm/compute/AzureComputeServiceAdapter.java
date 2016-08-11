@@ -16,14 +16,9 @@
  */
 package org.jclouds.azurecompute.arm.compute;
 
-import static java.lang.String.format;
-import static java.util.concurrent.TimeUnit.SECONDS;
-import static org.jclouds.util.Predicates2.retry;
 import java.util.ArrayList;
-
 import java.util.Arrays;
 import java.util.Collection;
-
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -33,9 +28,6 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import javax.inject.Singleton;
 
-import com.google.common.collect.ArrayListMultimap;
-import com.google.common.collect.Multimap;
-import com.google.common.net.UrlEscapers;
 import org.jclouds.azurecompute.arm.AzureComputeApi;
 import org.jclouds.azurecompute.arm.compute.config.AzureComputeServiceContextModule.AzureComputeConstants;
 import org.jclouds.azurecompute.arm.compute.functions.VMImageToImage;
@@ -52,27 +44,38 @@ import org.jclouds.azurecompute.arm.domain.Offer;
 import org.jclouds.azurecompute.arm.domain.PublicIPAddress;
 import org.jclouds.azurecompute.arm.domain.SKU;
 import org.jclouds.azurecompute.arm.domain.VMDeployment;
+import org.jclouds.azurecompute.arm.domain.VMSize;
+import org.jclouds.azurecompute.arm.domain.Version;
 import org.jclouds.azurecompute.arm.domain.VirtualMachine;
 import org.jclouds.azurecompute.arm.domain.VirtualMachineInstance;
 import org.jclouds.azurecompute.arm.features.DeploymentApi;
 import org.jclouds.azurecompute.arm.features.OSImageApi;
 import org.jclouds.azurecompute.arm.util.BlobHelper;
+import org.jclouds.azurecompute.arm.functions.CleanupResources;
 import org.jclouds.azurecompute.arm.util.DeploymentTemplateBuilder;
 import org.jclouds.compute.ComputeServiceAdapter;
 import org.jclouds.compute.domain.Template;
 import org.jclouds.compute.reference.ComputeServiceConstants;
 import org.jclouds.domain.LoginCredentials;
+import org.jclouds.location.reference.LocationConstants;
 import org.jclouds.logging.Logger;
-import org.jclouds.azurecompute.arm.functions.CleanupResources;
-import org.jclouds.azurecompute.arm.domain.VMSize;
-import org.jclouds.azurecompute.arm.domain.Version;
+import org.jclouds.providers.ProviderMetadata;
 
+import com.google.common.base.Function;
 import com.google.common.base.Predicate;
+import com.google.common.base.Splitter;
+import com.google.common.collect.ArrayListMultimap;
+import com.google.common.collect.FluentIterable;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Multimap;
 import com.google.common.collect.Sets;
-import com.google.common.base.Splitter;
+import com.google.common.net.UrlEscapers;
+
 import static com.google.common.base.Preconditions.checkState;
+import static java.lang.String.format;
+import static java.util.concurrent.TimeUnit.SECONDS;
+import static org.jclouds.util.Predicates2.retry;
 
 /**
  * Defines the connection between the {@link AzureComputeApi} implementation and the jclouds
@@ -92,9 +95,11 @@ public class AzureComputeServiceAdapter implements ComputeServiceAdapter<VMDeplo
 
    private final AzureComputeConstants azureComputeConstants;
 
+   private final ProviderMetadata providerMetadata;
+
    @Inject
    AzureComputeServiceAdapter(final AzureComputeApi api, final AzureComputeConstants azureComputeConstants,
-                              CleanupResources cleanupResources) {
+                              CleanupResources cleanupResources, ProviderMetadata providerMetadata) {
 
       this.api = api;
       this.azureComputeConstants = azureComputeConstants;
@@ -103,6 +108,7 @@ public class AzureComputeServiceAdapter implements ComputeServiceAdapter<VMDeplo
       logger.debug("AzureComputeServiceAdapter set azuregroup to: " + azureGroup);
 
       this.cleanupResources = cleanupResources;
+      this.providerMetadata = providerMetadata;
    }
 
    @Override
@@ -207,9 +213,8 @@ public class AzureComputeServiceAdapter implements ComputeServiceAdapter<VMDeplo
       //      }
    }
 
-   private void getImagesFromPublisher(String publisherName, List<VMImage> osImagesRef, String location) {
-
-
+   private List<VMImage> getImagesFromPublisher(String publisherName, String location) {
+      List<VMImage> osImagesRef = Lists.newArrayList();
       OSImageApi osImageApi = api.getOSImageApi(location);
       Iterable<Offer> offerList = osImageApi.listOffers(publisherName);
 
@@ -224,14 +229,14 @@ public class AzureComputeServiceAdapter implements ComputeServiceAdapter<VMDeplo
             }
          }
       }
-
+      return osImagesRef;
    }
 
    private List<VMImage> listImagesByLocation(String location) {
       final List<VMImage> osImages = Lists.newArrayList();
       Iterable<String> publishers = Splitter.on(',').trimResults().omitEmptyStrings().split(this.azureComputeConstants.azureImagePublishers());
       for (String publisher : publishers) {
-         getImagesFromPublisher(publisher, osImages, location);
+         osImages.addAll(getImagesFromPublisher(publisher, location));
       }
       return osImages;
    }
@@ -240,14 +245,10 @@ public class AzureComputeServiceAdapter implements ComputeServiceAdapter<VMDeplo
    public Iterable<VMImage> listImages() {
 
       final List<VMImage> osImages = Lists.newArrayList();
-      final List<String> locationIds = Lists.newArrayList();
 
       for (Location location : listLocations()){
-         locationIds.add(location.name());
          osImages.addAll(listImagesByLocation(location.name()));
       }
-      checkAndSetImageAvailability(osImages, Sets.newHashSet(locationIds));
-
       // list custom images
       List<StorageService> storages = api.getStorageAccountApi(azureGroup).list();
       for (StorageService storage : storages) {
@@ -257,20 +258,7 @@ public class AzureComputeServiceAdapter implements ComputeServiceAdapter<VMDeplo
                   "custom", storage.location());
             osImages.addAll(images);
       }
-
       return osImages;
-   }
-
-   private void checkAndSetImageAvailability(List<VMImage> images, Collection<String> locations) {
-      Multimap<String, String> map = ArrayListMultimap.create();
-
-      for (VMImage image : images) {
-         map.put( image.offer() + "/" + image.sku(), image.location());
-      }
-      ///TODO
-      //      for (VMImage image : images) {
-      //         image.globallyAvailable() = map.get(image.offer() + "/" + image.sku()).containsAll(locations);
-      //      }
    }
 
    @Override
@@ -300,28 +288,43 @@ public class AzureComputeServiceAdapter implements ComputeServiceAdapter<VMDeplo
 
    @Override
    public Iterable<Location> listLocations() {
+      final Iterable<String> whiteListZoneName = findWhiteListOfRegions();
 
-      List<Location> locations = api.getLocationApi().list();
+      final Iterable<String> vmLocations = FluentIterable.from(api.getResourceProviderApi().get("Microsoft.Compute"))
+              .filter(new Predicate<ResourceProviderMetaData>() {
+                 @Override
+                 public boolean apply(ResourceProviderMetaData input) {
+                    return input.resourceType().equals("virtualMachines");
+                 }
+              })
+              .transformAndConcat(new Function<ResourceProviderMetaData, Iterable<String>>() {
+                 @Override
+                 public Iterable<String> apply(ResourceProviderMetaData resourceProviderMetaData) {
+                    return resourceProviderMetaData.locations();
+                 }
+              });
 
-      List<ResourceProviderMetaData> resources = api.getResourceProviderApi().get("Microsoft.Compute");
+      List<Location> locations = FluentIterable.from(api.getLocationApi().list())
+              .filter(new Predicate<Location>() {
+                 @Override
+                 public boolean apply(Location location) {
+                    return Iterables.contains(vmLocations, location.displayName());
+                 }
+              })
+              .filter(new Predicate<Location>() {
+                 @Override
+                 public boolean apply(Location location) {
+                    return whiteListZoneName == null ? true : Iterables.contains(whiteListZoneName, location.name());
+                 }
+              })
+              .toList();
 
-      final List<String> vmLocations = new ArrayList<String>();
+      return locations;
+   }
 
-      for (ResourceProviderMetaData m : resources){
-         if (m.resourceType().equals("virtualMachines")){
-            vmLocations.addAll(m.locations());
-            break;
-         }
-      }
-
-      Iterable<Location> result = Iterables.filter(locations, new Predicate<Location>() {
-         @Override
-         public boolean apply(Location input) {
-            return vmLocations.contains(input.displayName());
-         }
-      });
-
-      return result;
+   private Iterable<String> findWhiteListOfRegions() {
+      if (providerMetadata.getDefaultProperties().get(LocationConstants.PROPERTY_REGIONS) == null)  return null;
+      return Splitter.on(",").trimResults().split((CharSequence) providerMetadata.getDefaultProperties().get(LocationConstants.PROPERTY_REGIONS));
    }
 
    private String getResourceGroupFromId(String id) {

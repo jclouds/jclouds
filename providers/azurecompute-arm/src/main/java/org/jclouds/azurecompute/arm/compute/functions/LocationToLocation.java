@@ -16,8 +16,6 @@
  */
 package org.jclouds.azurecompute.arm.compute.functions;
 
-import static com.google.common.collect.Iterables.getOnlyElement;
-
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
@@ -29,6 +27,8 @@ import org.jclouds.location.suppliers.all.JustProvider;
 
 import com.google.common.base.Function;
 import com.google.common.collect.ImmutableSet;
+
+import static com.google.common.collect.Iterables.getOnlyElement;
 
 /**
  * Converts an Location into a Location.
@@ -47,20 +47,14 @@ public class LocationToLocation implements Function<Location, org.jclouds.domain
    @Override
    public org.jclouds.domain.Location apply(final Location location) {
       final LocationBuilder builder = new LocationBuilder();
-      String id = location.id();
-      int index = id.lastIndexOf('/');
-      if (index > 0 && (index + 1) < id.length())
-         id = id.substring(index + 1);
-      builder.id(id);
+      builder.id(location.name());
       builder.description(location.displayName());
       builder.parent(getOnlyElement(justProvider.get()));
-
       builder.scope(LocationScope.REGION);
-      final Region region = Region.byName(location.name());
+      final Region region = Region.byName(location.displayName());
       if (region != null) {
          builder.iso3166Codes(ImmutableSet.of(region.iso3166Code()));
       }
-
       return builder.build();
    }
 

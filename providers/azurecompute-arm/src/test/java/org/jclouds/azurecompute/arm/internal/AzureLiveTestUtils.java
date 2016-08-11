@@ -17,8 +17,10 @@
 package org.jclouds.azurecompute.arm.internal;
 
 import java.util.Properties;
-import static org.jclouds.oauth.v2.config.OAuthProperties.CREDENTIAL_TYPE;
+
+import static org.jclouds.location.reference.LocationConstants.PROPERTY_REGIONS;
 import static org.jclouds.oauth.v2.config.CredentialType.CLIENT_CREDENTIALS_SECRET;
+import static org.jclouds.oauth.v2.config.OAuthProperties.CREDENTIAL_TYPE;
 
 public class AzureLiveTestUtils {
 
@@ -28,6 +30,7 @@ public class AzureLiveTestUtils {
        properties.put("oauth.credential", "password");
        properties.put("oauth.endpoint", "https://login.microsoftonline.com/oauth2/token");
        properties.put(CREDENTIAL_TYPE, CLIENT_CREDENTIALS_SECRET.toString());
+       properties.put(PROPERTY_REGIONS, "northeurope");
        return properties;
     }
 }
