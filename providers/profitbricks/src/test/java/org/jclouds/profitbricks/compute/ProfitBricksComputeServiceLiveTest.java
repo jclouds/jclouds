@@ -18,6 +18,7 @@ package org.jclouds.profitbricks.compute;
 
 import org.jclouds.compute.domain.ExecResponse;
 import org.jclouds.compute.domain.NodeMetadata;
+import org.jclouds.compute.domain.Template;
 import org.jclouds.compute.internal.BaseComputeServiceLiveTest;
 import org.jclouds.logging.config.LoggingModule;
 import org.jclouds.logging.slf4j.config.SLF4JLoggingModule;
@@ -27,6 +28,10 @@ import org.testng.annotations.Test;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import com.google.inject.Module;
+
+import static com.google.common.collect.Iterables.getOnlyElement;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.jclouds.compute.predicates.NodePredicates.inGroup;
 
 @Test(groups = "live", singleThreaded = true, testName = "ProfitBricksComputeServiceLiveTest")
 public class ProfitBricksComputeServiceLiveTest extends BaseComputeServiceLiveTest {
@@ -68,6 +73,39 @@ public class ProfitBricksComputeServiceLiveTest extends BaseComputeServiceLiveTe
    @Override
    protected void checkOsMatchesTemplate(NodeMetadata node) {
       // Not enough description from API to match template
+   }
+
+   @Override
+   @Test(dataProvider = "onlyIfAutomaticHardwareSupported", groups = {"integration", "live"})
+   public void testCreateNodeWithCustomHardware() throws Exception {
+      Template template = buildTemplate(templateBuilder()
+              .hardwareId("automatic:cores=2;ram=2048;disk=10"));
+      try {
+         NodeMetadata node = getOnlyElement(client.createNodesInGroup(group + "custom", 1, template));
+         assertThat(node.getHardware().getRam()).isEqualTo(2048);
+         assertThat(node.getHardware().getProcessors().get(0).getCores()).isEqualTo(2);
+         assertThat(node.getHardware().getVolumes().get(0).getSize()).isEqualTo(10);
+         assertThat(node.getHardware().getId()).isEqualTo("automatic:cores=2;ram=2048;disk=10");
+      }
+      finally {
+         client.destroyNodesMatching(inGroup(group + "custom"));
+      }
+   }
+
+   @Test(dataProvider = "onlyIfAutomaticHardwareSupported", groups = {"integration", "live"})
+   public void testCreateNodeWithCustomHardwareUsingMins() throws Exception {
+      Template template = buildTemplate(templateBuilder()
+           .minCores(2).minRam(2048).minDisk(10));
+      try {
+         NodeMetadata node = getOnlyElement(client.createNodesInGroup(group + "custom", 1, template));
+         assertThat(node.getHardware().getRam()).isEqualTo(2048);
+         assertThat(node.getHardware().getProcessors().get(0).getCores()).isEqualTo(2);
+         assertThat(node.getHardware().getVolumes().get(0).getSize()).isEqualTo(10);
+         assertThat(node.getHardware().getId()).isEqualTo("cpu=2,ram=2048,disk=10");
+      }
+      finally {
+         client.destroyNodesMatching(inGroup(group + "custom"));
+      }
    }
 
 }

@@ -37,6 +37,8 @@ import org.jclouds.compute.domain.Hardware;
 import org.jclouds.compute.domain.Image;
 import org.jclouds.compute.domain.NodeMetadata;
 import org.jclouds.compute.domain.Volume;
+import org.jclouds.compute.domain.internal.ArbitraryCpuRamTemplateBuilderImpl;
+import org.jclouds.compute.domain.internal.TemplateBuilderImpl;
 import org.jclouds.compute.strategy.CreateNodesInGroupThenAddToSet;
 import org.jclouds.domain.Location;
 import org.jclouds.functions.IdentityFunction;
@@ -78,6 +80,8 @@ public class ProfitBricksComputeServiceContextModule extends
       bind(ImplicitLocationSupplier.class).to(OnlyLocationOrFirstZone.class).in(Scopes.SINGLETON);
 
       bind(CreateNodesInGroupThenAddToSet.class).to(AssignDataCenterToTemplate.class).in(Scopes.SINGLETON);
+
+      bind(TemplateBuilderImpl.class).to(ArbitraryCpuRamTemplateBuilderImpl.class);
 
       bind(new TypeLiteral<ComputeServiceAdapter<Server, Hardware, Provisionable, Location>>() {
       }).to(ProfitBricksComputeServiceAdapter.class);

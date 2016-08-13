@@ -16,6 +16,7 @@
  */
 package org.jclouds.compute.util;
 
+import com.google.common.base.Optional;
 import com.google.common.base.Splitter;
 
 import java.util.Map;
@@ -24,6 +25,7 @@ public class AutomaticHardwareIdSpec {
 
    private double cores;
    private int ram;
+   private Optional<Float> disk = Optional.absent();
 
    public static boolean isAutomaticId(String id) {
       return id.startsWith("automatic:");
@@ -41,17 +43,30 @@ public class AutomaticHardwareIdSpec {
          throw new IllegalArgumentException(String.format("Omitted keys on hardwareId: %s. Please set number " +
                "of cores and ram amount.", hardwareId));
       }
+      if (specValues.containsKey("disk")) {
+         float disk = Float.parseFloat(specValues.get("disk"));
+         if (disk > 0.0f) {
+            spec.disk = Optional.of(disk);
+         }
+         else {
+            throw new IllegalArgumentException(String.format("Invalid disk value: %s", hardwareId));
+         }
+      }
       spec.ram = Integer.parseInt(specValues.get("ram"));
       spec.cores = Double.parseDouble(specValues.get("cores"));
       return spec;
    }
 
-   public static AutomaticHardwareIdSpec automaticHardwareIdSpecBuilder(double cores, int ram) {
+   public static AutomaticHardwareIdSpec automaticHardwareIdSpecBuilder(double cores, int ram, Optional<Float> disk) {
       AutomaticHardwareIdSpec spec = new AutomaticHardwareIdSpec();
-      if (cores == 0 || ram == 0) {
-         throw new IllegalArgumentException(String.format("Omitted or wrong minCores and minRam. If you" +
-               " want to use exact values, please set the minCores and minRam values."));
+      if (cores <= 0 || ram == 0) {
+         throw new IllegalArgumentException(String.format("Omitted or wrong minCores and minRam. If you want to" +
+               " use exact values, please set the minCores and minRam values: cores=%s, ram=%s", cores, ram));
       }
+      if (disk.isPresent() && disk.get() <= 0.0f) {
+         throw new IllegalArgumentException(String.format("Invalid disk value: %.0f", disk.get()));
+      }
+      spec.disk = disk;
       spec.cores = cores;
       spec.ram = ram;
       return spec;
@@ -59,7 +74,12 @@ public class AutomaticHardwareIdSpec {
 
    @Override
    public String toString() {
-      return String.format("automatic:cores=%s;ram=%s", cores, ram);
+      if (disk.isPresent()) {
+         return String.format("automatic:cores=%s;ram=%s;disk=%.0f", cores, ram, disk.get().floatValue());
+      }
+      else {
+         return String.format("automatic:cores=%s;ram=%s", cores, ram);
+      }
    }
 
    public double getCores() {
@@ -68,5 +88,9 @@ public class AutomaticHardwareIdSpec {
 
    public int getRam() {
       return ram;
+   }
+
+   public Optional<Float> getDisk() {
+      return disk;
    }
 }

@@ -16,6 +16,7 @@
  */
 package org.jclouds.compute.domain.internal;
 
+import com.google.common.base.Optional;
 import com.google.common.base.Supplier;
 import org.jclouds.collect.Memoized;
 import org.jclouds.compute.domain.Hardware;
@@ -46,9 +47,13 @@ public class ArbitraryCpuRamTemplateBuilderImpl extends TemplateBuilderImpl {
       super(locations, images, hardwares, defaultLocation, optionsProvider, defaultTemplateProvider);
    }
 
-   protected Hardware automaticHardwareForCpuAndRam(double cores, int ram) {
-      return new HardwareBuilder()
-            .id(automaticHardwareIdSpecBuilder(cores, ram).toString())
+   protected Hardware automaticHardware(double cores, int ram, Optional<Float> diskSize) {
+      HardwareBuilder builder = new HardwareBuilder();
+      if (diskSize.isPresent() && diskSize.get() > 0.0f) {
+            builder.volume(new VolumeImpl(diskSize.get(), true, true));
+      }
+      return builder
+            .id(automaticHardwareIdSpecBuilder(cores, ram, diskSize).toString())
             .ram(ram)
             .processor(new Processor(cores, 1.0))
             .build();
@@ -60,24 +65,24 @@ public class ArbitraryCpuRamTemplateBuilderImpl extends TemplateBuilderImpl {
       } catch (NoSuchElementException ex) {
          if (isAutomaticId(hardwareId)) {
             AutomaticHardwareIdSpec spec = parseId(hardwareId);
-            return automaticHardwareForCpuAndRam(spec.getCores(), spec.getRam());
+            return automaticHardware(spec.getCores(), spec.getRam(), spec.getDisk());
          }
          else {
             throw ex;
          }
-        }
-    }
+      }
+   }
 
    protected Hardware resolveHardware(Set<? extends Hardware> hardwarel, final Iterable<? extends Image> images) {
       try {
          return super.resolveHardware(hardwarel, images);
       }
       catch (NoSuchElementException ex) {
-         if (super.minCores != 0 && super.minRam != 0) {
-            return automaticHardwareForCpuAndRam(minCores, minRam);
+         if (minCores <= 0 || minRam == 0 || minDisk < 0) {
+            throw new IllegalArgumentException("No hardware profile matching the given criteria was found. If you" +
+                    " want to use exact values, please set the minCores, minRam and minDisk to positive values.");
          }
-         else throw new IllegalArgumentException("No hardware profile matching the given criteria was found. If " +
-               "you want to use exact values, please set the minCores and minRam values", ex);
+         return automaticHardware(minCores, minRam, minDisk == 0 ? Optional.<Float>absent() : Optional.of((float)minDisk));
       }
    }
 

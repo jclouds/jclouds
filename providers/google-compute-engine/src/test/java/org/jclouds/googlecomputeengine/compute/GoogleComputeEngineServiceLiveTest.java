@@ -161,13 +161,13 @@ public class GoogleComputeEngineServiceLiveTest extends BaseComputeServiceLiveTe
       Template template = buildTemplate(templateBuilder()
             .hardwareId("automatic:cores=2;ram=4096"));
       try {
-         NodeMetadata node = getOnlyElement(client.createNodesInGroup("custom", 1, template));
+         NodeMetadata node = getOnlyElement(client.createNodesInGroup(group + "custom", 1, template));
          assertThat(node.getHardware().getRam()).isEqualTo(4096);
          assertThat(node.getHardware().getProcessors().get(0).getCores()).isEqualTo(2);
          assertThat(node.getHardware().getId()).isEqualTo(node.getLocation().getDescription() + "/machineTypes/custom-2-4096");
       }
       finally {
-         client.destroyNodesMatching(inGroup("custom"));
+         client.destroyNodesMatching(inGroup(group + "custom"));
       }
    }
 
