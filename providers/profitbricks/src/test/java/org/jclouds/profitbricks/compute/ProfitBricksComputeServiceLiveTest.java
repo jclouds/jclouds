@@ -85,7 +85,7 @@ public class ProfitBricksComputeServiceLiveTest extends BaseComputeServiceLiveTe
          assertThat(node.getHardware().getRam()).isEqualTo(2048);
          assertThat(node.getHardware().getProcessors().get(0).getCores()).isEqualTo(2);
          assertThat(node.getHardware().getVolumes().get(0).getSize()).isEqualTo(10);
-         assertThat(node.getHardware().getId()).isEqualTo("automatic:cores=2;ram=2048;disk=10");
+         assertThat(node.getHardware().getId()).isEqualTo("cpu=2,ram=2048,disk=10");
       }
       finally {
          client.destroyNodesMatching(inGroup(group + "custom"));
