@@ -1,20 +1,56 @@
 # Docker as a local cloud provider
+
 jclouds-docker is a local cloud provider modelled on [docker](http://www.docker.io). Similar to other jclouds supported
 providers, it supports the same portable abstractions offered by jclouds.
 
-##Setup
+## Setup
 
 Please follow these steps to configure your workstation for jclouds-docker:
 
 - install the latest Docker release (please visit https://docs.docker.com/installation/)
+- [enable remote access](https://docs.docker.com/engine/quickstart/#bind-docker-to-another-host-port-or-a-unix-socket) to Docker
 
-If you are using `docker-machine` then it can also manage certificates and help you setup `DOCKER_CERT_PATH` and `DOCKER_HOST` environment variables.
+### Sample configuration for Linux systems using systemd
 
-Assuming these environment variables are setup correctly there are no further setups steps are required.
+Run following commands on a machine where is the Docker Engine installed.
+It enables remote access (plain TCP - only for loopback address 127.0.0.1)
+on standard port `2375`.
 
-Live tests then can now be run: `mvn -Plive integration-test`
+```bash
+# switch to root account
+sudo su -
 
-#How it works
+# create override for docker start-script
+mkdir /etc/systemd/system/docker.service.d
+cat << EOT > /etc/systemd/system/docker.service.d/allow-tcp.conf
+[Service]
+ExecStart=
+ExecStart=/usr/bin/docker daemon -H fd:// -H tcp://
+EOT
+
+# reload configuration and restart docker daemon
+systemctl daemon-reload
+systemctl restart docker
+
+# close the 'root' session
+exit
+```
+
+If the `-H fd://` Docker daemon parameter doesn't work on your Linux (e.g. Fedora),
+then replace it by `-H unix:///var/run/docker.sock`
+
+Find more details in [Control and configure Docker with systemd](https://docs.docker.com/engine/admin/systemd/) guide.
+
+### Running live tests
+
+The `DOCKER_HOST` environment variable has to be configured as it's used as a value for `test.docker.endpoint` system property.
+
+```
+export DOCKER_HOST="http://localhost:2375/"
+mvn -Plive integration-test
+```
+
+# How it works
 
 
                                                ---------------   -------------
@@ -24,7 +60,7 @@ Live tests then can now be run: `mvn -Plive integration-test`
     | jclouds | ---------------------------> |              DOCKER_HOST              |
      ---------                               ----------------------------------------
 
-##Components
+## Components
 
 - jclouds \- acts as a java client to access to docker features
 - DOCKER_HOST \- hosts Docker API, NB: jclouds-docker assumes that the latest Docker is installed
@@ -37,19 +73,17 @@ Live tests then can now be run: `mvn -Plive integration-test`
 
 --------------
 
-#Notes:
-- jclouds-docker is still at alpha stage please report any issues you find at [jclouds issues](https://issues.apache.org/jira/browse/JCLOUDS)
-- jclouds-docker has been tested on Mac OSX, it might work on Linux iff vbox is running and set up correctly. However, it has never been tried on Windows.
+# Notes:
+- report any issues you find at [jclouds issues](https://issues.apache.org/jira/browse/JCLOUDS)
+- jclouds-docker has been tested on Mac OSX and Linux. However, it has never been tried on Windows.
 
 --------------
 
-#Troubleshooting
-As jclouds docker support is quite new, issues may occasionally arise. Please follow these steps to get things going again:
+# Troubleshooting
 
-1. Remove all containers
+As jclouds docker support is quite new, issues may occasionally arise. 
+You can try to remove all containers to get things going again:
 
-    $ docker rm -f `docker ps -a`
-
-2. remove all the images
-
-    $ docker rmi -f `docker images -q`
+```bash
+docker rm -f `docker ps -aq`
+```
