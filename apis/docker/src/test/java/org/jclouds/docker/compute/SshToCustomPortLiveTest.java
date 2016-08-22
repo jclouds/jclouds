@@ -121,7 +121,7 @@ public class SshToCustomPortLiveTest extends BaseComputeServiceContextLiveTest {
       String nodeId = null;
       try {
          NodeMetadata node = Iterables
-               .getOnlyElement(view.getComputeService().createNodesInGroup("ssh-test", 1, template));
+               .getOnlyElement(view.getComputeService().createNodesInGroup("ssh-net-host", 1, template));
 
          nodeId = node.getId();
          ExecResponse response = view.getComputeService().runScriptOnNode(nodeId, "sh -c 'echo hello && sleep 0.2'", wrapInInitScript(false));
@@ -152,7 +152,7 @@ public class SshToCustomPortLiveTest extends BaseComputeServiceContextLiveTest {
       String nodeId = null;
       try {
          NodeMetadata node = Iterables
-               .getOnlyElement(view.getComputeService().createNodesInGroup("ssh-test-advanced", 1, template));
+               .getOnlyElement(view.getComputeService().createNodesInGroup("ssh-net-bridge", 1, template));
 
          nodeId = node.getId();
          ExecResponse response = view.getComputeService().runScriptOnNode(nodeId, "sh -c 'true'",
@@ -214,8 +214,8 @@ public class SshToCustomPortLiveTest extends BaseComputeServiceContextLiveTest {
          protected void configure() {
             bind(LoginPortForContainer.class).toInstance(new LoginPortForContainer() {
                @Override
-               public Optional<Integer> apply(Container input) {
-                  return Optional.of(SSH_PORT);
+               public Optional<Integer> apply(Container container) {
+                  return Optional.of(container.name().contains("ssh-net-bridge") ? SSH_PORT_BRIDGE : SSH_PORT);
                }
             });
          }
