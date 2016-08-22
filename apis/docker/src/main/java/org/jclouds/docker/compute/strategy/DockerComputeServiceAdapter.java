@@ -22,6 +22,7 @@ import static com.google.common.collect.Iterables.find;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.regex.Pattern;
 
 import javax.annotation.Resource;
 import javax.inject.Inject;
@@ -66,6 +67,21 @@ import org.jclouds.logging.Logger;
 @Singleton
 public class DockerComputeServiceAdapter implements
         ComputeServiceAdapter<Container, Hardware, Image, Location> {
+
+
+   /**
+    * Some Docker versions returns host prefix even for images from Docker hub in repoTags field. We use this constant
+    * to correctly identify requested image name.
+    */
+   public static final String PREFIX_DOCKER_HUB_HOST = "docker.io/";
+
+   /**
+    * (Optional) Suffix used, when image version is not used during searching images.
+    */
+   public static final String SUFFIX_LATEST_VERSION = ":latest";
+
+   private static final String PATTERN_IMAGE_PREFIX = "^(" + Pattern.quote(PREFIX_DOCKER_HUB_HOST) + ")?";
+   private static final String PATTERN_IMAGE_SUFFIX = "(" + Pattern.quote(SUFFIX_LATEST_VERSION) + ")?$";
 
    @Resource
    @Named(ComputeServiceConstants.COMPUTE_LOGGER)
@@ -266,17 +282,7 @@ public class DockerComputeServiceAdapter implements
       api.getImageApi().createImage(CreateImageOptions.Builder.fromImage(imageIdOrName));
 
       // as above this ensure repotags are returned
-      return find(listImages(), new Predicate<Image>() {
-         @Override
-         public boolean apply(Image input) {
-            for (String tag : input.repoTags()) {
-               if (tag.equals(imageIdOrName) || tag.equals(imageIdOrName + ":latest")) {
-                  return true;
-               }
-            }
-            return false;
-         }
-      }, null);
+      return find(listImages(), createPredicateMatchingRepoTags(imageIdOrName), null);
    }
 
    @Override
@@ -329,4 +335,19 @@ public class DockerComputeServiceAdapter implements
       api.getContainerApi().pause(id);
    }
 
+   protected static Predicate<Image> createPredicateMatchingRepoTags(final String imageIdOrName) {
+      final Pattern imgPattern = Pattern
+            .compile(PATTERN_IMAGE_PREFIX + Pattern.quote(imageIdOrName) + PATTERN_IMAGE_SUFFIX);
+      return new Predicate<Image>() {
+         @Override
+         public boolean apply(Image input) {
+            for (String tag : input.repoTags()) {
+               if (imgPattern.matcher(tag).matches()) {
+                  return true;
+               }
+            }
+            return false;
+         }
+      };
+   }
 }

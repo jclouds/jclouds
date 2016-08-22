@@ -148,7 +148,9 @@ public class DockerComputeServiceAdapterLiveTest extends BaseDockerApiLiveTest {
          @Override
          public boolean apply(Image input) {
             for (String tag : input.repoTags()) {
-               if (tag.equals(image) || tag.equals(CHUANWEN_COWSAY + ":latest")) {
+               if (tag.equals(CHUANWEN_COWSAY + DockerComputeServiceAdapter.SUFFIX_LATEST_VERSION)
+                     || tag.equals(DockerComputeServiceAdapter.PREFIX_DOCKER_HUB_HOST + CHUANWEN_COWSAY
+                           + DockerComputeServiceAdapter.SUFFIX_LATEST_VERSION)) {
                   return true;
                }
             }
