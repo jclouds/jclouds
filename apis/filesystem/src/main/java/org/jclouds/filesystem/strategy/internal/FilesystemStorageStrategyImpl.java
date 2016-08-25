@@ -704,7 +704,7 @@ public class FilesystemStorageStrategyImpl implements LocalStorageStrategy {
       return null;
    }
 
-   private UserDefinedFileAttributeView getUserDefinedFileAttributeView(Path path) throws IOException {
+   protected UserDefinedFileAttributeView getUserDefinedFileAttributeView(Path path) throws IOException {
       return getFileAttributeView(path, UserDefinedFileAttributeView.class);
    }
 
