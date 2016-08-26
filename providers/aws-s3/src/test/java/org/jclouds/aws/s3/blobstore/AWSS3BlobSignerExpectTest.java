@@ -18,6 +18,8 @@ package org.jclouds.aws.s3.blobstore;
 
 import static org.testng.Assert.assertEquals;
 
+import java.util.Map;
+
 import org.jclouds.aws.s3.config.AWSS3HttpApiModule;
 import org.jclouds.aws.s3.filters.AWSRequestAuthorizeSignature;
 import org.jclouds.blobstore.BlobStore;
@@ -29,6 +31,7 @@ import org.jclouds.s3.blobstore.S3BlobSignerExpectTest;
 import org.jclouds.s3.filters.RequestAuthorizeSignature;
 import org.testng.annotations.Test;
 
+import com.google.common.base.Splitter;
 import com.google.common.base.Supplier;
 import com.google.inject.Module;
 import com.google.inject.Scopes;
@@ -72,12 +75,21 @@ public class AWSS3BlobSignerExpectTest extends S3BlobSignerExpectTest {
             .addHeader("Authorization", "AWS identity:0uvBv1wEskuhFHYJF/L6kEV9A7o=").build();
    }
 
+   private void compareRequestComponents(final HttpRequest request, final HttpRequest compare) {
+      assertEquals(request.getMethod(), compare.getMethod());
+      String query = request.getEndpoint().toString().split("\\?")[1];
+      final Map<String, String> params = Splitter.on('&').trimResults().withKeyValueSeparator("=").split(query);
+      assertEquals(params.get("X-Amz-Algorithm"), "AWS4-HMAC-SHA256");
+      assertEquals(params.get("X-Amz-Expires"), "3");
+      assertEquals(params.get("X-Amz-SignedHeaders"), "host");
+   }
+
    @Test
    public void testSignGetBlobWithTime() {
       BlobStore getBlobWithTime = requestsSendResponses(init());
       HttpRequest compare = getBlobWithTime();
-      assertEquals(getBlobWithTime.getContext().getSigner().signGetBlob(container, name, 3l /* seconds */),
-         compare);
+      HttpRequest request = getBlobWithTime.getContext().getSigner().signGetBlob(container, name, 3l /* seconds */);
+      compareRequestComponents(request, compare);
    }
 
    @Override
@@ -118,8 +130,9 @@ public class AWSS3BlobSignerExpectTest extends S3BlobSignerExpectTest {
       Blob blob = signPutBloblWithTime.blobBuilder(name).payload(text).contentType("text/plain").build();
       HttpRequest compare = putBlobWithTime();
       compare.setPayload(blob.getPayload());
-      assertEquals(signPutBloblWithTime.getContext().getSigner().signPutBlob(container, blob, 3l /* seconds */),
-         compare);
+      HttpRequest request = signPutBloblWithTime.getContext().getSigner().signPutBlob(container, blob, 3l /* seconds */);
+      compareRequestComponents(request, compare);
+      assertEquals(request.getPayload(), compare.getPayload());
    }
 
    @Override

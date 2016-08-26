@@ -16,7 +16,7 @@
  */
 package org.jclouds.aws.s3.blobstore.config;
 
-import org.jclouds.aws.s3.blobstore.AWSS3BlobRequestSigner;
+import org.jclouds.aws.s3.blobstore.AWSS3BlobRequestSignerV4;
 import org.jclouds.aws.s3.blobstore.AWSS3BlobStore;
 import org.jclouds.blobstore.BlobRequestSigner;
 import org.jclouds.s3.blobstore.S3BlobStore;
@@ -34,6 +34,6 @@ public class AWSS3BlobStoreContextModule extends S3BlobStoreContextModule {
 
    @Override
    protected void bindRequestSigner() {
-      bind(BlobRequestSigner.class).to(AWSS3BlobRequestSigner.class);
+      bind(BlobRequestSigner.class).to(AWSS3BlobRequestSignerV4.class);
    }
 }

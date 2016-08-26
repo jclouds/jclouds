@@ -22,12 +22,17 @@ import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.fail;
 
+import com.google.common.collect.Iterables;
 import org.jclouds.aws.AWSResponseException;
 import org.jclouds.aws.domain.Region;
 import org.jclouds.blobstore.BlobStore;
 import org.jclouds.blobstore.domain.Blob;
 import org.jclouds.blobstore.domain.StorageMetadata;
 import org.jclouds.domain.Location;
+import org.jclouds.http.HttpRequest;
+import org.jclouds.http.HttpResponse;
+import org.jclouds.location.predicates.LocationPredicates;
+import org.jclouds.rest.HttpClient;
 import org.jclouds.s3.S3Client;
 import org.jclouds.s3.S3ClientLiveTest;
 import org.jclouds.s3.domain.ListBucketResponse;
@@ -153,5 +158,55 @@ public class AWSS3ClientLiveTest extends S3ClientLiveTest {
 	   } finally {
 		   returnContainer(containerName);
 	   }
+   }
+
+   /**
+    * Test signed get/put operations using signature v4. This is done by explicitly
+    * using the "eu-central-1" region which only support signature v4.
+    */
+   public void testV4SignatureOps() throws InterruptedException {
+       String containerName = getContainerName();
+	   try {
+           BlobStore blobStore = view.getBlobStore();
+           Location location = Iterables.tryFind(blobStore.listAssignableLocations(),
+               LocationPredicates.idEquals(Region.EU_CENTRAL_1)).orNull();
+           assertNotNull(location);
+           blobStore.createContainerInLocation(location, containerName);
+
+           final HttpClient client = view.utils().http();
+           String blobName = "test-blob";
+           Blob blob = blobStore.blobBuilder(blobName).payload("something").build();
+
+           // Signed put, no timeout.
+           HttpRequest request = view.getSigner().signPutBlob(containerName, blob);
+           assertNotNull(request);
+           HttpResponse response = client.invoke(request);
+           assertEquals(response.getStatusCode(), 200);
+
+           // Signed get, no timeout.
+           request = view.getSigner().signGetBlob(containerName, blobName);
+           assertNotNull(request);
+           response = client.invoke(request);
+           assertEquals(response.getStatusCode(), 200);
+
+           blobStore.removeBlob(containerName, blobName);
+
+           // Signed put with timeout.
+           request = view.getSigner().signPutBlob(containerName, blob, /*seconds=*/ 60);
+           assertNotNull(request);
+           response = client.invoke(request);
+           assertEquals(response.getStatusCode(), 200);
+
+           // Signed get with timeout.
+           request = view.getSigner().signGetBlob(containerName, blobName, /*seconds=*/ 60);
+           assertNotNull(request);
+           response = client.invoke(request);
+           assertEquals(response.getStatusCode(), 200);
+
+           // Cleanup the container.
+           blobStore.removeBlob(containerName, blobName);
+       } finally {
+           returnContainer(containerName);
+       }
    }
 }

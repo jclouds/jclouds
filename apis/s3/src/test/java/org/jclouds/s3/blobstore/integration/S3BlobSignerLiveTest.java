@@ -52,7 +52,9 @@ public class S3BlobSignerLiveTest extends BaseBlobSignerLiveTest {
    @Test
    public void testSignGetUrlWithTimeExpired() throws InterruptedException, IOException {
       try {
-         super.testSignGetUrlWithTimeExpired();
+         // Intentionally try with a timeout of 0. AWS signature v4 throws an error if
+         // the timeout is negative.
+         super.testSignGetUrlWithTime(/*timeout=*/ 0);
          if (!supportsUrlWithTime()) {
             fail();
          }
@@ -76,7 +78,9 @@ public class S3BlobSignerLiveTest extends BaseBlobSignerLiveTest {
    @Test
    public void testSignPutUrlWithTimeExpired() throws Exception {
       try {
-         super.testSignPutUrlWithTimeExpired();
+         // Intentionally try with a timeout of 0. AWS signature v4 throws an error if
+         // the timeout is negative.
+         super.testSignPutUrlWithTime(/*timeout=*/ 0);
          if (!supportsUrlWithTime()) {
             fail();
          }

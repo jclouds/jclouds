@@ -98,8 +98,7 @@ public class BaseBlobSignerLiveTest extends BaseBlobStoreIntegrationTest {
       }
    }
 
-   @Test
-   public void testSignGetUrlWithTimeExpired() throws InterruptedException, IOException {
+   public void testSignGetUrlWithTime(final long timeout) throws InterruptedException, IOException {
       String name = "hello";
       String text = "fooooooooooooooooooooooo";
 
@@ -108,7 +107,7 @@ public class BaseBlobSignerLiveTest extends BaseBlobStoreIntegrationTest {
       try {
          view.getBlobStore().putBlob(container, blob);
          assertConsistencyAwareContainerSize(container, 1);
-         HttpRequest request = view.getSigner().signGetBlob(container, name, -getSignedUrlTimeout());
+         HttpRequest request = view.getSigner().signGetBlob(container, name, timeout);
          assertEquals(request.getFilters().size(), 0);
 
          try {
@@ -119,6 +118,11 @@ public class BaseBlobSignerLiveTest extends BaseBlobStoreIntegrationTest {
       } finally {
          returnContainer(container);
       }
+   }
+
+   @Test
+   public void testSignGetUrlWithTimeExpired() throws InterruptedException, IOException {
+       testSignGetUrlWithTime(-getSignedUrlTimeout());
    }
 
    @Test
@@ -159,15 +163,14 @@ public class BaseBlobSignerLiveTest extends BaseBlobStoreIntegrationTest {
       }
    }
 
-   @Test
-   public void testSignPutUrlWithTimeExpired() throws Exception {
+   public void testSignPutUrlWithTime(final long timeout) throws InterruptedException, IOException {
       String name = "hello";
       String text = "fooooooooooooooooooooooo";
 
       Blob blob = view.getBlobStore().blobBuilder(name).payload(text).contentType("text/plain").build();
       String container = getContainerName();
       try {
-         HttpRequest request = view.getSigner().signPutBlob(container, blob, -getSignedUrlTimeout());
+         HttpRequest request = view.getSigner().signPutBlob(container, blob, 0);
          assertEquals(request.getFilters().size(), 0);
 
          // Strip Expect: 100-continue to make actual responses visible, since
@@ -183,6 +186,11 @@ public class BaseBlobSignerLiveTest extends BaseBlobStoreIntegrationTest {
       } finally {
          returnContainer(container);
       }
+   }
+
+   @Test
+   public void testSignPutUrlWithTimeExpired() throws Exception {
+       testSignPutUrlWithTime(-getSignedUrlTimeout());
    }
 
    @Test
