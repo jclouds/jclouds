@@ -41,6 +41,7 @@ import com.google.gson.TypeAdapter;
 import com.google.gson.TypeAdapterFactory;
 import com.google.gson.internal.ConstructorConstructor;
 import com.google.gson.internal.Excluder;
+import com.google.gson.internal.bind.JsonAdapterAnnotationTypeAdapterFactory;
 import com.google.gson.internal.bind.ReflectiveTypeAdapterFactory;
 import com.google.gson.reflect.TypeToken;
 import com.google.gson.stream.JsonReader;
@@ -114,7 +115,8 @@ public final class DeserializationConstructorAndReflectiveTypeAdapterFactory imp
       this.constructorFieldNamingPolicy = checkNotNull(deserializationFieldNamingPolicy,
             "deserializationFieldNamingPolicy");
       this.delegateFactory = new ReflectiveTypeAdapterFactory(constructorConstructor, checkNotNull(
-            serializationFieldNamingPolicy, "fieldNamingPolicy"), checkNotNull(excluder, "excluder"));
+            serializationFieldNamingPolicy, "fieldNamingPolicy"), checkNotNull(excluder, "excluder"),
+            new JsonAdapterAnnotationTypeAdapterFactory(constructorConstructor));
    }
 
    public <T> TypeAdapter<T> create(Gson gson, TypeToken<T> type) {
