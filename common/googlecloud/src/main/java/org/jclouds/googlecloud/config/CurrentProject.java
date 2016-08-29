@@ -39,7 +39,7 @@ public @interface CurrentProject {
             + "client_email which usually looks like project_id@developer.gserviceaccount.com or " //
             + "project_id-extended_uid@developer.gserviceaccount.com or " //
             + "account@project_id.company_domain.iam.gserviceaccount.com or " //
-            + "account@project_id.iam.gserviceaccount.com or ";
+            + "account@project_id.iam.gserviceaccount.com.";
       private static final Pattern PROJECT_NUMBER_PATTERN = Pattern.compile("^([0-9]+)[@-].*");
       private static final String IAM_ACCOUNT_SUFFIX = ".iam.gserviceaccount.com";
 
