@@ -133,5 +133,10 @@
       <artifactId>profitbricks</artifactId>
       <version>${project.version}</version>
     </dependency>
+    <dependency>
+      <groupId>org.apache.jclouds.api</groupId>
+      <artifactId>docker</artifactId>
+      <version>${project.version}</version>
+    </dependency>
   </dependencies>
 </project>

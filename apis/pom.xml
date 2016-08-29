@@ -53,5 +53,6 @@
     <module>route53</module>
     <module>chef</module>
     <module>oauth</module>
+    <module>docker</module>
   </modules>
 </project>
