@@ -1,0 +1,53 @@
+[
+    {
+        "Created": 1442866547,
+        "Id": "d7057cb020844f245031d27b76cb18af05db1cc3a96a29fa7777af75f5ac91a3",
+        "Labels": null,
+        "ParentId": "cfa753dfea5e68a24366dfba16e6edf573daa447abf65bc11619c1a98a3aff54",
+        "RepoDigests": [],
+        "RepoTags": [
+            "docker.io/busybox:1.23.2",
+            "docker.io/busybox:latest"
+        ],
+        "Size": 0,
+        "VirtualSize": 1095501
+    },
+    {
+        "Created": 1442598293,
+        "Id": "633fcd11259e8d6bccfbb59a4086b95b0d0fb44edfc3912000ef1f70e8a7bfc6",
+        "Labels": null,
+        "ParentId": "b65c936b5fb601d680ed656b1ccf8ab857c0e5cb521043a005405c194e9a69f3",
+        "RepoDigests": [],
+        "RepoTags": [
+            "docker.io/busybox:ubuntu-14.04",
+            "jclouds:testTag"
+        ],
+        "Size": 0,
+        "VirtualSize": 5607885
+    },
+    {
+        "Created": 1442260874,
+        "Id": "f4fddc471ec22fc1f7d37768132f1753bc171121e30ac2af7fcb0302588197c0",
+        "Labels": null,
+        "ParentId": "",
+        "RepoDigests": [],
+        "RepoTags": [
+            "docker.io/alpine:3.2"
+        ],
+        "Size": 5244426,
+        "VirtualSize": 5244426
+    },
+    {
+        "Created": 1440102075,
+        "Id": "91e54dfb11794fad694460162bf0cb0a4fa710cfa3f60979c177d920813e267c",
+        "Labels": {},
+        "ParentId": "d74508fb6632491cea586a1fd7d748dfc5274cd6fdfedee309ecdcbc2bf5cb82",
+        "RepoDigests": [],
+        "RepoTags": [
+            "docker.io/ubuntu:14.04",
+            "docker.io/ubuntu:latest"
+        ],
+        "Size": 0,
+        "VirtualSize": 188333286
+    }
+]

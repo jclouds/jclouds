@@ -1,0 +1,90 @@
+{
+    "Architecture": "x86_64",
+    "BridgeNfIp6tables": true,
+    "BridgeNfIptables": true,
+    "CPUSet": true,
+    "CPUShares": true,
+    "CgroupDriver": "cgroupfs",
+    "ClusterAdvertise": "",
+    "ClusterStore": "",
+    "Containers": 0,
+    "ContainersPaused": 0,
+    "ContainersRunning": 0,
+    "ContainersStopped": 0,
+    "CpuCfsPeriod": true,
+    "CpuCfsQuota": true,
+    "Debug": false,
+    "DockerRootDir": "/var/lib/docker",
+    "Driver": "aufs",
+    "DriverStatus": [
+        [
+            "Root Dir",
+            "/var/lib/docker/aufs"
+        ],
+        [
+            "Backing Filesystem",
+            "extfs"
+        ],
+        [
+            "Dirs",
+            "117"
+        ],
+        [
+            "Dirperm1 Supported",
+            "true"
+        ]
+    ],
+    "ExecutionDriver": "",
+    "ExperimentalBuild": false,
+    "HttpProxy": "",
+    "HttpsProxy": "",
+    "ID": "KFWR:PMVY:BEWE:TD52:5WEU:NXF4:I6S3:WDIE:GCRD:L3YA:VWC4:ZRYZ",
+    "IPv4Forwarding": true,
+    "Images": 39,
+    "IndexServerAddress": "https://index.docker.io/v1/",
+    "KernelMemory": true,
+    "KernelVersion": "4.4.0-22-generic",
+    "Labels": null,
+    "LoggingDriver": "json-file",
+    "MemTotal": 8248356864,
+    "MemoryLimit": true,
+    "NCPU": 4,
+    "NEventsListener": 0,
+    "NFd": 33,
+    "NGoroutines": 83,
+    "Name": "test",
+    "NoProxy": "",
+    "OSType": "linux",
+    "OomKillDisable": true,
+    "OperatingSystem": "Ubuntu 16.04 LTS",
+    "Plugins": {
+        "Authorization": null,
+        "Network": [
+            "bridge",
+            "null",
+            "host"
+        ],
+        "Volume": [
+            "local"
+        ]
+    },
+    "RegistryConfig": {
+        "IndexConfigs": {
+            "docker.io": {
+                "Mirrors": null,
+                "Name": "docker.io",
+                "Official": true,
+                "Secure": true
+            }
+        },
+        "InsecureRegistryCIDRs": [
+            "0.0.0.0/0",
+            "127.0.0.0/8"
+        ],
+        "Mirrors": null
+    },
+    "ServerVersion": "1.11.1",
+    "SwapLimit": false,
+    "SystemStatus": null,
+    "SystemTime": "2016-05-24T15:20:15.407969411+02:00"
+}
