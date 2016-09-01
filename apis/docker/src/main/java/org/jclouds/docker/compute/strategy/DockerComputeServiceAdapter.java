@@ -29,6 +29,7 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import javax.inject.Singleton;
 
+import com.google.common.base.Charsets;
 import com.google.common.base.Predicate;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
@@ -53,12 +54,16 @@ import org.jclouds.docker.domain.ContainerSummary;
 import org.jclouds.docker.domain.HostConfig;
 import org.jclouds.docker.domain.Image;
 import org.jclouds.docker.domain.ImageSummary;
+import org.jclouds.docker.options.AttachOptions;
 import org.jclouds.docker.options.CreateImageOptions;
 import org.jclouds.docker.options.ListContainerOptions;
 import org.jclouds.docker.options.RemoveContainerOptions;
+import org.jclouds.docker.util.DockerInputStream;
+import org.jclouds.docker.util.StdStreamData;
 import org.jclouds.domain.Location;
 import org.jclouds.domain.LoginCredentials;
 import org.jclouds.logging.Logger;
+import org.jclouds.util.Closeables2;
 
 /**
  * defines the connection between the {@link org.jclouds.docker.DockerApi} implementation and
@@ -224,10 +229,6 @@ public class DockerComputeServiceAdapter implements
       logger.trace("<< started(%s)", container.id());
 
       container = api.getContainerApi().inspectContainer(container.id());
-      if (container.state().exitCode() != 0) {
-         destroyNode(container.id());
-         throw new IllegalStateException(String.format("Container %s has not started correctly", container.id()));
-      }
       return new NodeAndInitialCredentials(container, container.id(),
               LoginCredentials.builder().user(loginUser).password(loginUserPassword).build());
    }
@@ -316,6 +317,7 @@ public class DockerComputeServiceAdapter implements
 
    @Override
    public void destroyNode(String id) {
+      traceContainerLogs(id);
       api.getContainerApi().removeContainer(id, RemoveContainerOptions.Builder.force(true));
    }
 
@@ -349,5 +351,46 @@ public class DockerComputeServiceAdapter implements
             return false;
          }
       };
+   }
+
+   /**
+    * If log level TRACE (or finer), then logs from the given container are
+    * written to JClouds log.
+    *
+    * @param containerId
+    *           Id of the container to retrieve logs for.
+    */
+   private void traceContainerLogs(final String containerId) {
+      if (logger.isTraceEnabled()) {
+         DockerInputStream dis = null;
+         try {
+            dis = new DockerInputStream(api.getContainerApi().attach(containerId,
+                  AttachOptions.Builder.logs(true).stderr(true).stdout(true)));
+            String idToLog = containerId;
+            if (idToLog.length() > 8) {
+               idToLog = idToLog.substring(0, 8);
+            }
+            StdStreamData data = null;
+            while (null != (data = dis.readStdStreamData())) {
+               final byte[] bytePayload = data.getPayload();
+               final String payload = bytePayload != null ? new String(bytePayload, Charsets.UTF_8) : "";
+               switch (data.getType()) {
+                  case OUT:
+                     logger.trace("Container [%s] StdOut: %s", idToLog, payload);
+                     break;
+                  case ERR:
+                     logger.trace("Container [%s] StdErr: %s", idToLog, payload);
+                     break;
+                  default:
+                     logger.trace("Container [%s] - Unexpected STD stream type: %s", idToLog, data.getType());
+                     break;
+               }
+            }
+         } catch (Exception e) {
+            logger.trace("Retrieving container log failed", e);
+         } finally {
+            Closeables2.closeQuietly(dis);
+         }
+      }
    }
 }
