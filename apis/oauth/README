@@ -35,7 +35,7 @@ mvn clean install -Plive \
 To run the live test against Azure Active directory using the client_credentials grant type with a certificate and private key:
 
 mvn clean install -Plive \
--Dtest.jclouds.oauth.credential-type=clientCredentialsP12 \
+-Dtest.jclouds.oauth.credential-type=clientCredentialsP12AndCertificate \
 -Dtest.jclouds.oauth.resource=https://management.azure.com/ \
 -Dtest.oauth.endpoint=https://login.microsoftonline.com/<tenant id>/oauth2/token \
 -Dtest.jclouds.oauth.audience=https://login.microsoftonline.com/<tenant id>/oauth2/token 
