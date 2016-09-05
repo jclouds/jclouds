@@ -132,7 +132,7 @@ public final class DeserializationConstructorAndReflectiveTypeAdapterFactory imp
          String autoClassName = type.getRawType().getName().replace('$', '_')
                .replace(packageName + ".", packageName + ".AutoValue_");
          try {
-            type = (TypeToken<T>) TypeToken.get(Class.forName(autoClassName));
+            type = (TypeToken<T>) TypeToken.get(type.getRawType().getClassLoader().loadClass(autoClassName));
          } catch (ClassNotFoundException ignored) {
          }
       }
