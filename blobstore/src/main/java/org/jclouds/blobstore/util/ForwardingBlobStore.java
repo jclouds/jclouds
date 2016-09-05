@@ -19,8 +19,11 @@ package org.jclouds.blobstore.util;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
+import java.io.File;
+import java.io.InputStream;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.ExecutorService;
 
 import com.google.common.collect.ForwardingObject;
 
@@ -262,5 +265,25 @@ public abstract class ForwardingBlobStore extends ForwardingObject
    @Override
    public int getMaximumNumberOfParts() {
       return delegate().getMaximumNumberOfParts();
+   }
+
+   @Override
+   public void downloadBlob(String container, String name, File destination) {
+      delegate().downloadBlob(container, name, destination);
+   }
+
+   @Override
+   public void downloadBlob(String container, String name, File destination, ExecutorService executor) {
+      delegate().downloadBlob(container, name, destination, executor);
+   }
+
+   @Override
+   public InputStream streamBlob(String container, String name) {
+      return delegate().streamBlob(container, name);
+   }
+
+   @Override
+   public InputStream streamBlob(String container, String name, ExecutorService executor) {
+      return delegate().streamBlob(container, name, executor);
    }
 }
