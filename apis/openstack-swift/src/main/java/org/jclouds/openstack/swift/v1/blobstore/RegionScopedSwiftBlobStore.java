@@ -41,6 +41,7 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.LinkedBlockingQueue;
 
+import javax.annotation.Resource;
 import javax.inject.Inject;
 import javax.inject.Named;
 
@@ -76,6 +77,7 @@ import org.jclouds.io.ContentMetadata;
 import org.jclouds.io.Payload;
 import org.jclouds.io.PayloadSlicer;
 import org.jclouds.io.payloads.ByteSourcePayload;
+import org.jclouds.logging.Logger;
 import org.jclouds.openstack.swift.v1.SwiftApi;
 import org.jclouds.openstack.swift.v1.blobstore.functions.ToBlobMetadata;
 import org.jclouds.openstack.swift.v1.blobstore.functions.ToListContainerOptions;
@@ -89,6 +91,7 @@ import org.jclouds.openstack.swift.v1.features.BulkApi;
 import org.jclouds.openstack.swift.v1.features.ObjectApi;
 import org.jclouds.openstack.swift.v1.options.UpdateContainerOptions;
 import org.jclouds.openstack.swift.v1.reference.SwiftHeaders;
+import org.jclouds.util.Closeables2;
 
 import com.google.common.annotations.Beta;
 import com.google.common.base.Function;
@@ -151,6 +154,9 @@ public class RegionScopedSwiftBlobStore implements BlobStore {
    private final ToResourceMetadata toResourceMetadata;
    protected final PayloadSlicer slicer;
    protected final ListeningExecutorService userExecutor;
+
+   @Resource
+   protected Logger logger = Logger.NULL;
 
    @Override
    public Set<? extends Location> listAssignableLocations() {
@@ -701,14 +707,11 @@ public class RegionScopedSwiftBlobStore implements BlobStore {
          Futures.getUnchecked(Futures.allAsList(results));
 
       } catch (IOException e) {
-         // cleanup, attempt to delete large file
-         if (raf != null) {
-            try {
-               raf.close();
-            } catch (IOException e1) {}
-         }
+         Closeables2.closeQuietly(raf);
          destination.delete();
          throw new RuntimeException(e);
+      } finally {
+         Closeables2.closeQuietly(raf);
       }
    }
 
@@ -798,7 +801,7 @@ public class RegionScopedSwiftBlobStore implements BlobStore {
             long from;
             for (from = 0; from < contentLength; from = from + partSize) {
                try {
-                  System.out.println(Thread.currentThread() + " writing to output");
+                  logger.debug(Thread.currentThread() + " writing to output");
                   result = results.take();
                   if (result == null) {
                      output.close();
@@ -807,7 +810,7 @@ public class RegionScopedSwiftBlobStore implements BlobStore {
                   }
                   output.write(result.get());
                } catch (Exception e) {
-                  System.out.println(e);
+                  logger.debug(e.toString());
                   try {
                      // close pipe so client is notified of an exception
                      input.close();
@@ -819,10 +822,7 @@ public class RegionScopedSwiftBlobStore implements BlobStore {
                }
             }
             // Finished writing results to stream
-            try {
-               output.close();
-            } catch (IOException e) {
-            }
+            Closeables2.closeQuietly(output);
          }
       });
 
@@ -866,7 +866,7 @@ public class RegionScopedSwiftBlobStore implements BlobStore {
                byte[] downloadedBlock = ByteStreams.toByteArray(object.getPayload().openStream());
                return downloadedBlock;
             } catch (IOException e) {
-               System.out.println(e);
+               logger.debug(e.toString());
                lastException = e;
                continue;
             }

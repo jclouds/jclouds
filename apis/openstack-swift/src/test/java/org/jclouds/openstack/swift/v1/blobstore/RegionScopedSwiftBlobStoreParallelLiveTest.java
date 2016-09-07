@@ -40,6 +40,7 @@ import org.jclouds.blobstore.BlobStore;
 import org.jclouds.blobstore.domain.Blob;
 import org.jclouds.blobstore.integration.internal.BaseBlobStoreIntegrationTest;
 import org.jclouds.io.payloads.FilePayload;
+import org.jclouds.util.Closeables2;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
@@ -147,24 +148,28 @@ public class RegionScopedSwiftBlobStoreParallelLiveTest extends BaseBlobStoreInt
 
       // Reserve space for performance reasons
       raf = new RandomAccessFile(file.getAbsoluteFile(), "rw");
-      raf.seek(size - 1);
-      raf.write(0);
+      try {
+         raf.seek(size - 1);
+         raf.write(0);
 
-      // Loop through ranges within the file
-      long from;
-      long to;
-      long partSize = 1000000;
+         // Loop through ranges within the file
+         long from;
+         long to;
+         long partSize = 1000000;
 
-      ExecutorService threadPool = Executors.newFixedThreadPool(16);
+         ExecutorService threadPool = Executors.newFixedThreadPool(16);
 
-      for (from = 0; from < size; from = from + partSize) {
-         to = (from + partSize >= size) ? size - 1 : from + partSize - 1;
-         RandomFileWriter writer = new RandomFileWriter(raf, from, to);
-         threadPool.submit(writer);
+         for (from = 0; from < size; from = from + partSize) {
+            to = (from + partSize >= size) ? size - 1 : from + partSize - 1;
+            RandomFileWriter writer = new RandomFileWriter(raf, from, to);
+            threadPool.submit(writer);
+         }
+
+         threadPool.shutdown();
+         threadPool.awaitTermination(1, TimeUnit.DAYS);
+      } finally {
+         Closeables2.closeQuietly(raf);
       }
-
-      threadPool.shutdown();
-      threadPool.awaitTermination(1, TimeUnit.DAYS);
    }
 
    private final class RandomFileWriter implements Runnable {
