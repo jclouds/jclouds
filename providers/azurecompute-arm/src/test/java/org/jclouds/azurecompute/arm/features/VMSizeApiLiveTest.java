@@ -35,6 +35,6 @@ public class VMSizeApiLiveTest extends BaseAzureComputeApiLiveTest {
    }
 
    private VMSizeApi api() {
-      return api.getVMSizeApi(getLocation());
+      return api.getVMSizeApi(LOCATION);
    }
 }

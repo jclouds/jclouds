@@ -16,6 +16,8 @@
  */
 package org.jclouds.azurecompute.arm.features;
 
+import java.util.List;
+
 import org.jclouds.azurecompute.arm.domain.Location;
 import org.jclouds.azurecompute.arm.internal.BaseAzureComputeApiLiveTest;
 import org.testng.annotations.Test;
@@ -28,10 +30,9 @@ public class LocationApiLiveTest extends BaseAzureComputeApiLiveTest {
 
    @Test
    public void testList() {
-      assertTrue(!api().list().isEmpty());
-
-      for (Location location : api().list()) {
-         assertTrue(!location.id().isEmpty());
+      List<Location> locations = api().list();
+      assertTrue(!locations.isEmpty());
+      for (Location location : locations) {
          checkLocation(location);
       }
    }

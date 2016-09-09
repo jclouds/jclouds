@@ -16,42 +16,54 @@
  */
 package org.jclouds.azurecompute.arm.features;
 
-import com.google.common.collect.ImmutableMap;
+import java.net.URI;
+import java.util.List;
+import java.util.Map;
+
 import org.jclouds.azurecompute.arm.domain.PublicIPAddress;
 import org.jclouds.azurecompute.arm.domain.PublicIPAddressProperties;
 import org.jclouds.azurecompute.arm.internal.BaseAzureComputeApiLiveTest;
 import org.jclouds.util.Predicates2;
-import com.google.common.base.Predicate;
+import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
-import java.util.List;
-import java.util.Map;
+import com.google.common.base.Predicate;
+import com.google.common.collect.ImmutableMap;
 
-import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertTrue;
+import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertNull;
-
+import static org.testng.Assert.assertTrue;
 
 @Test(groups = "live", singleThreaded = true)
 public class PublicIPAddressApiLiveTest extends BaseAzureComputeApiLiveTest {
 
+   private String resourceGroupName;
    private final String publicIpAddressName = "myipaddress";
-   private final String subscriptionid = getSubscriptionId();
-   private String resourcegroup;
+   private String subscriptionid;
 
    @BeforeClass
    @Override
    public void setup() {
       super.setup();
-      resourcegroup = getResourceGroupName();
+      resourceGroupName = String.format("rg-%s-%s", this.getClass().getSimpleName().toLowerCase(), System.getProperty("user.name"));
+      assertNotNull(createResourceGroup(resourceGroupName));
+      subscriptionid = getSubscriptionId();
+   }
+
+   @AfterClass
+   @Override
+   protected void tearDown() {
+      super.tearDown();
+      URI uri = deleteResourceGroup(resourceGroupName);
+      assertResourceDeleted(uri);
    }
 
    @Test(groups = "live")
    public void deletePublicIPAddressResourceDoesNotExist() {
-      final PublicIPAddressApi ipApi = api.getPublicIPAddressApi(resourcegroup);
+      final PublicIPAddressApi ipApi = api.getPublicIPAddressApi(resourceGroupName);
       boolean status = ipApi.delete(publicIpAddressName);
       assertFalse(status);
    }
@@ -59,7 +71,7 @@ public class PublicIPAddressApiLiveTest extends BaseAzureComputeApiLiveTest {
    @Test(groups = "live", dependsOnMethods = "deletePublicIPAddressResourceDoesNotExist")
    public void createPublicIPAddress() {
 
-      final PublicIPAddressApi ipApi = api.getPublicIPAddressApi(resourcegroup);
+      final PublicIPAddressApi ipApi = api.getPublicIPAddressApi(resourceGroupName);
 
       final Map<String, String> tags = ImmutableMap.of("testkey", "testvalue");
 
@@ -74,7 +86,7 @@ public class PublicIPAddressApiLiveTest extends BaseAzureComputeApiLiveTest {
       assertNotNull(ip);
       assertEquals(ip.name(), publicIpAddressName);
       assertEquals(ip.location(), LOCATION);
-      assertEquals(ip.id(), String.format("/subscriptions/%s/resourceGroups/%s/providers/Microsoft.Network/publicIPAddresses/%s", subscriptionid, resourcegroup, publicIpAddressName));
+      assertEquals(ip.id(), String.format("/subscriptions/%s/resourceGroups/%s/providers/Microsoft.Network/publicIPAddresses/%s", subscriptionid, resourceGroupName, publicIpAddressName));
       assertEquals(ip.tags().get("testkey"), "testvalue");
       assertNotNull(ip.properties());
       assertEquals(ip.properties().provisioningState(), "Updating");
@@ -86,7 +98,7 @@ public class PublicIPAddressApiLiveTest extends BaseAzureComputeApiLiveTest {
    @Test(groups = "live", dependsOnMethods = "createPublicIPAddress")
    public void getPublicIPAddress() {
 
-      final PublicIPAddressApi ipApi = api.getPublicIPAddressApi(resourcegroup);
+      final PublicIPAddressApi ipApi = api.getPublicIPAddressApi(resourceGroupName);
 
       //Poll until resource is ready to be used
       boolean jobDone = Predicates2.retry(new Predicate<String>() {
@@ -100,7 +112,7 @@ public class PublicIPAddressApiLiveTest extends BaseAzureComputeApiLiveTest {
       assertNotNull(ip);
       assertEquals(ip.name(), publicIpAddressName);
       assertEquals(ip.location(), LOCATION);
-      assertEquals(ip.id(), String.format("/subscriptions/%s/resourceGroups/%s/providers/Microsoft.Network/publicIPAddresses/%s", subscriptionid, resourcegroup, publicIpAddressName));
+      assertEquals(ip.id(), String.format("/subscriptions/%s/resourceGroups/%s/providers/Microsoft.Network/publicIPAddresses/%s", subscriptionid, resourceGroupName, publicIpAddressName));
       assertEquals(ip.tags().get("testkey"), "testvalue");
       assertNotNull(ip.properties());
       assertEquals(ip.properties().provisioningState(), "Succeeded");
@@ -112,7 +124,7 @@ public class PublicIPAddressApiLiveTest extends BaseAzureComputeApiLiveTest {
    @Test(groups = "live", dependsOnMethods = "createPublicIPAddress")
    public void listPublicIPAddresses() {
 
-      final PublicIPAddressApi ipApi = api.getPublicIPAddressApi(resourcegroup);
+      final PublicIPAddressApi ipApi = api.getPublicIPAddressApi(resourceGroupName);
 
       List<PublicIPAddress> ipList = ipApi.list();
 
@@ -121,7 +133,7 @@ public class PublicIPAddressApiLiveTest extends BaseAzureComputeApiLiveTest {
 
    @Test(groups = "live", dependsOnMethods = {"listPublicIPAddresses", "getPublicIPAddress"}, alwaysRun = true)
    public void deletePublicIPAddress() {
-      final PublicIPAddressApi ipApi = api.getPublicIPAddressApi(resourcegroup);
+      final PublicIPAddressApi ipApi = api.getPublicIPAddressApi(resourceGroupName);
       boolean status = ipApi.delete(publicIpAddressName);
       assertTrue(status);
    }

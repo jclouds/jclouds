@@ -16,7 +16,8 @@
  */
 package org.jclouds.azurecompute.arm.features;
 
-import com.google.common.net.UrlEscapers;
+import java.net.URI;
+
 import org.jclouds.azurecompute.arm.compute.options.AzureTemplateOptions;
 import org.jclouds.azurecompute.arm.domain.Deployment;
 import org.jclouds.azurecompute.arm.domain.DeploymentBody;
@@ -37,8 +38,11 @@ import org.jclouds.compute.options.TemplateOptions;
 import org.jclouds.domain.Location;
 import org.jclouds.domain.LocationBuilder;
 import org.jclouds.domain.LocationScope;
+import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
+
+import com.google.common.net.UrlEscapers;
 
 import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertTrue;
@@ -48,30 +52,42 @@ public class TemplateToDeploymentTemplateLiveTest extends BaseAzureComputeApiLiv
 
    private int maxTestDuration = 400;
    private int pollingInterval = 3; // how frequently to poll for create status
-   private String resourceGroup;
+   private String resourceGroupName;
    private String deploymentName;
    private String vnetName;
    private String subnetId;
+   private String virtualNetworkName;
 
    @BeforeClass
    @Override
    public void setup() {
       super.setup();
-      resourceGroup = getResourceGroupName();
+      resourceGroupName = String.format("rg-%s-%s", this.getClass().getSimpleName().toLowerCase(), System.getProperty("user.name"));
+      assertNotNull(createResourceGroup(resourceGroupName));
+      virtualNetworkName = String.format("vn-%s-%s", this.getClass().getSimpleName().toLowerCase(), System.getProperty("user.name"));
 
       //Subnets belong to a virtual network so that needs to be created first
-      VirtualNetwork vn = getOrCreateVirtualNetwork(VIRTUAL_NETWORK_NAME);
+      VirtualNetwork vn = createDefaultVirtualNetwork(resourceGroupName, virtualNetworkName, "10.2.0.0/16", LOCATION);
       assertNotNull(vn);
       vnetName = vn.name();
 
       //Subnet needs to be up & running before NIC can be created
-      Subnet subnet = getOrCreateSubnet(DEFAULT_SUBNET_NAME, VIRTUAL_NETWORK_NAME);
+      String subnetName = String.format("s-%s-%s", this.getClass().getSimpleName().toLowerCase(), System.getProperty("user.name"));
+      Subnet subnet = createDefaultSubnet(resourceGroupName, subnetName, virtualNetworkName, "10.2.0.0/23");
       assertNotNull(subnet);
       assertNotNull(subnet.id());
       subnetId = subnet.id();
    }
 
-   @Test(groups = "live")
+   @AfterClass
+   @Override
+   protected void tearDown() {
+      super.tearDown();
+      URI uri = deleteResourceGroup(resourceGroupName);
+      assertResourceDeleted(uri);
+   }
+
+   @Test
    public void testValidateDeploymentTemplateLinuxNodeWithOptions() {
       Long now = System.currentTimeMillis();
       deploymentName = "jc" + now;
@@ -96,7 +112,7 @@ public class TemplateToDeploymentTemplateLiveTest extends BaseAzureComputeApiLiv
       assertNotNull(deployment);
    }
 
-   @Test(groups = "live")
+   @Test
    public void testValidateDeploymentTemplateLinuxNode() {
       Long now = System.currentTimeMillis();
       deploymentName = "jc" + now;
@@ -115,7 +131,7 @@ public class TemplateToDeploymentTemplateLiveTest extends BaseAzureComputeApiLiv
       assertNotNull(deployment);
    }
 
-   @Test(groups = "live")
+   @Test
    public void testValidateDeploymentTemplateWithCustomOptions() {
       Long now = System.currentTimeMillis();
       deploymentName = "jc" + now;
@@ -143,7 +159,7 @@ public class TemplateToDeploymentTemplateLiveTest extends BaseAzureComputeApiLiv
       assertNotNull(deployment);
    }
 
-   @Test(groups = "live")
+   @Test
    public void testValidateDeploymentTemplateLinuxNodeWithSSH() {
       Long now = System.currentTimeMillis();
       deploymentName = "jc" + now;
@@ -168,7 +184,7 @@ public class TemplateToDeploymentTemplateLiveTest extends BaseAzureComputeApiLiv
       assertNotNull(deployment);
    }
 
-   @Test(groups = "live")
+   @Test
    public void testCreateDeploymentTemplateLinuxNode() {
       Long now = System.currentTimeMillis();
       deploymentName = "jc" + now;
@@ -249,17 +265,17 @@ public class TemplateToDeploymentTemplateLiveTest extends BaseAzureComputeApiLiv
       options.subnetId(subnetId);
 
       Template template = getTemplate(options);
-      DeploymentTemplateBuilder templateBuilder = api.deploymentTemplateFactory().create(resourceGroup, deploymentName, template);
+      DeploymentTemplateBuilder templateBuilder = api.deploymentTemplateFactory().create(resourceGroupName, deploymentName, template);
       return templateBuilder;
    }
 
    private DeploymentTemplateBuilder getDeploymentTemplateBuilderWithOptions(TemplateOptions options) {
       Template template = getTemplate(options);
-      DeploymentTemplateBuilder templateBuilder = api.deploymentTemplateFactory().create(resourceGroup, deploymentName, template);
+      DeploymentTemplateBuilder templateBuilder = api.deploymentTemplateFactory().create(resourceGroupName, deploymentName, template);
       return templateBuilder;
    }
 
    private DeploymentApi api() {
-      return api.getDeploymentApi(resourceGroup);
+      return api.getDeploymentApi(resourceGroupName);
    }
 }

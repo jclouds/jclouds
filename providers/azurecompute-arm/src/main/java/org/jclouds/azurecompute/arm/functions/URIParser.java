@@ -15,12 +15,13 @@
  * limitations under the License.
  */
 package org.jclouds.azurecompute.arm.functions;
-import com.google.common.base.Function;
-import org.jclouds.http.HttpResponse;
+import java.net.URI;
 
 import javax.inject.Singleton;
 
-import java.net.URI;
+import org.jclouds.http.HttpResponse;
+
+import com.google.common.base.Function;
 /**
  * Parses job status from http response
  */
@@ -31,7 +32,7 @@ public class URIParser implements Function<HttpResponse, URI> {
          String uri = from.getFirstHeaderOrNull("Location");
          return URI.create(uri);
 
-      } else if (from.getStatusCode() == 200){
+      } else if (from.getStatusCode() == 200 || from.getStatusCode() == 204){
          return null;
       }
       throw new IllegalStateException("did not receive expected response code and header in: " + from);

@@ -70,11 +70,12 @@ public class AzureManagementApiMetadata extends BaseHttpApiMetadata<AzureCompute
                  .defaultProperties(AzureManagementApiMetadata.defaultProperties())
                  .view(typeToken(ComputeServiceContext.class))
                  .defaultModules(ImmutableSet.<Class<? extends Module>>builder()
-                         .add(AzureComputeServiceContextModule.class)
                          .add(OAuthModule.class)
                          .add(OkHttpCommandExecutorServiceModule.class)
                          .add(AzureComputeParserModule.class)
-                         .add(AzureComputeHttpApiModule.class).build());
+                         .add(AzureComputeHttpApiModule.class)
+                         .add(AzureComputeServiceContextModule.class)
+                         .build());
       }
 
       @Override

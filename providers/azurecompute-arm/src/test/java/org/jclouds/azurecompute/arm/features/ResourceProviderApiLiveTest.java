@@ -16,17 +16,17 @@
  */
 package org.jclouds.azurecompute.arm.features;
 
-import com.google.common.base.Predicate;
-import com.google.common.collect.Iterables;
+import java.util.List;
+
 import org.jclouds.azurecompute.arm.domain.ResourceProviderMetaData;
 import org.jclouds.azurecompute.arm.internal.BaseAzureComputeApiLiveTest;
 import org.testng.annotations.Test;
 
-import java.util.List;
+import com.google.common.base.Predicate;
+import com.google.common.collect.Iterables;
 
 import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertTrue;
-
 
 @Test(groups = "live", testName = "ResourceProviderApiLiveTest")
 public class ResourceProviderApiLiveTest extends BaseAzureComputeApiLiveTest {

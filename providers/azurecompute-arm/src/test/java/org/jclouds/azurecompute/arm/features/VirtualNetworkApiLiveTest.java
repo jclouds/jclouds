@@ -16,87 +16,84 @@
  */
 package org.jclouds.azurecompute.arm.features;
 
-import org.jclouds.azurecompute.arm.domain.VirtualNetwork;
-import org.jclouds.azurecompute.arm.internal.BaseAzureComputeApiLiveTest;
-
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.Test;
-
 import java.util.Arrays;
 import java.util.List;
 
+import org.jclouds.azurecompute.arm.domain.VirtualNetwork;
+import org.jclouds.azurecompute.arm.internal.BaseAzureComputeApiLiveTest;
+import org.testng.annotations.AfterClass;
+import org.testng.annotations.BeforeClass;
+import org.testng.annotations.Test;
+
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertFalse;
-import static org.testng.Assert.assertTrue;
 import static org.testng.Assert.assertNotNull;
+import static org.testng.Assert.assertTrue;
 
 @Test(groups = "live", singleThreaded = true)
 public class VirtualNetworkApiLiveTest extends BaseAzureComputeApiLiveTest {
 
-   private final String subscriptionid = "subscriptionid";
-   private String resourcegroup;
+   private String resourceGroupName;
+   private String virtualNetworkName;
 
    @BeforeClass
    @Override
    public void setup() {
       super.setup();
-      resourcegroup = getResourceGroupName();
+      resourceGroupName = String.format("rg-%s-%s", this.getClass().getSimpleName().toLowerCase(), System.getProperty("user.name"));
+      assertNotNull(createResourceGroup(resourceGroupName));
+      virtualNetworkName = String.format("vn-%s-%s", this.getClass().getSimpleName().toLowerCase(), System.getProperty("user.name"));
    }
 
-   @Test(groups = "live")
+   @AfterClass
+   @Override
+   protected void tearDown() {
+      super.tearDown();
+      deleteResourceGroup(resourceGroupName);
+   }
+
+   @Test
    public void deleteVirtualNetworkResourceDoesNotExist() {
-
-      final VirtualNetworkApi vnApi = api.getVirtualNetworkApi(resourcegroup);
-
-      boolean status = vnApi.delete(VIRTUAL_NETWORK_NAME);
+      boolean status = api().delete(virtualNetworkName);
       assertFalse(status);
-
    }
 
-   @Test(groups = "live", dependsOnMethods = "deleteVirtualNetworkResourceDoesNotExist")
+   @Test(dependsOnMethods = "deleteVirtualNetworkResourceDoesNotExist")
    public void createVirtualNetwork() {
-
-      final VirtualNetworkApi vnApi = api.getVirtualNetworkApi(resourcegroup);
-
-      //Create properties object
 
       final VirtualNetwork.VirtualNetworkProperties virtualNetworkProperties =
               VirtualNetwork.VirtualNetworkProperties.builder().addressSpace(
                       VirtualNetwork.AddressSpace.create(Arrays.asList(DEFAULT_VIRTUALNETWORK_ADDRESS_PREFIX))).build();
 
-      VirtualNetwork vn = vnApi.createOrUpdate(VIRTUAL_NETWORK_NAME, LOCATION, virtualNetworkProperties);
+      VirtualNetwork vn = api().createOrUpdate(virtualNetworkName, LOCATION, virtualNetworkProperties);
 
-      assertEquals(VIRTUAL_NETWORK_NAME, vn.name());
-      assertEquals(LOCATION, vn.location());
+      assertEquals(vn.name(), virtualNetworkName);
+      assertEquals(vn.location(), LOCATION);
    }
 
-   @Test(groups = "live", dependsOnMethods = "createVirtualNetwork")
+   @Test(dependsOnMethods = "createVirtualNetwork")
    public void getVirtualNetwork() {
-
-      final VirtualNetworkApi vnApi = api.getVirtualNetworkApi(resourcegroup);
-      VirtualNetwork vn = vnApi.get(VIRTUAL_NETWORK_NAME);
+      VirtualNetwork vn = api().get(virtualNetworkName);
 
       assertNotNull(vn.name());
       assertNotNull(vn.location());
       assertNotNull(vn.properties().addressSpace().addressPrefixes());
    }
 
-   @Test(groups = "live", dependsOnMethods = "createVirtualNetwork")
+   @Test(dependsOnMethods = "createVirtualNetwork")
    public void listVirtualNetworks() {
-
-      final VirtualNetworkApi vnApi = api.getVirtualNetworkApi(resourcegroup);
-      List<VirtualNetwork> vnList = vnApi.list();
-
+      List<VirtualNetwork> vnList = api().list();
       assertTrue(vnList.size() > 0);
    }
 
-   @Test(groups = "live", dependsOnMethods = {"listVirtualNetworks", "getVirtualNetwork"}, alwaysRun = true)
+   @Test(dependsOnMethods = {"listVirtualNetworks", "getVirtualNetwork"}, alwaysRun = true)
    public void deleteVirtualNetwork() {
-
-      final VirtualNetworkApi vnApi = api.getVirtualNetworkApi(resourcegroup);
-
-      boolean status = vnApi.delete(VIRTUAL_NETWORK_NAME);
+      boolean status = api().delete(virtualNetworkName);
       assertTrue(status);
+   }
+
+   private VirtualNetworkApi api() {
+      return api.getVirtualNetworkApi(resourceGroupName);
    }
 
 }

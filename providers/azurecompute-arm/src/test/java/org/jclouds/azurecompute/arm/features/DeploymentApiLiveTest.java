@@ -16,14 +16,16 @@
  */
 package org.jclouds.azurecompute.arm.features;
 
-import com.google.common.base.Predicate;
-import com.google.common.net.UrlEscapers;
+import java.net.URI;
+import java.util.List;
+
 import org.jclouds.azurecompute.arm.compute.options.AzureTemplateOptions;
 import org.jclouds.azurecompute.arm.domain.Deployment;
 import org.jclouds.azurecompute.arm.domain.Deployment.ProvisioningState;
 import org.jclouds.azurecompute.arm.domain.DeploymentBody;
 import org.jclouds.azurecompute.arm.domain.DeploymentProperties;
-import org.jclouds.azurecompute.arm.functions.ParseJobStatus;
+import org.jclouds.azurecompute.arm.domain.Subnet;
+import org.jclouds.azurecompute.arm.domain.VirtualNetwork;
 import org.jclouds.azurecompute.arm.internal.BaseAzureComputeApiLiveTest;
 import org.jclouds.azurecompute.arm.util.DeploymentTemplateBuilder;
 import org.jclouds.compute.domain.Hardware;
@@ -39,25 +41,25 @@ import org.jclouds.domain.Location;
 import org.jclouds.domain.LocationBuilder;
 import org.jclouds.domain.LocationScope;
 import org.jclouds.util.Predicates2;
+import org.testng.Assert;
+import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
-import java.net.URI;
-import java.util.List;
+import com.google.common.base.Predicate;
+import com.google.common.net.UrlEscapers;
 
-import static org.testng.Assert.assertTrue;
 import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertNull;
+import static org.testng.Assert.assertTrue;
 
-@Test(groups = "live", testName = "DeploymentApiLiveTest", singleThreaded = true)
+@Test(testName = "DeploymentApiLiveTest", singleThreaded = true)
 public class DeploymentApiLiveTest extends BaseAzureComputeApiLiveTest {
-   private int maxTestDuration = 190;
 
-   private String resourceName;
+   private String resourceGroupName;
    private String deploymentName;
-   private String rawtemplate;
-   private String rawparameters;
-   private String rawbadParameters;
+   private String subnetId;
+
    private String properties;
    private String badProperties;
 
@@ -65,16 +67,37 @@ public class DeploymentApiLiveTest extends BaseAzureComputeApiLiveTest {
    @Override
    public void setup() {
       super.setup();
-      resourceName = getResourceGroupName();
-      Long now = System.currentTimeMillis();
-      deploymentName = "jc" + now;
+      resourceGroupName = String.format("rg-%s-%s", this.getClass().getSimpleName().toLowerCase(), System.getProperty("user.name"));
+      assertNotNull(createResourceGroup(resourceGroupName));
+      deploymentName = "jc" + System.currentTimeMillis();
+      String virtualNetworkName = String.format("vn-%s-%s", this.getClass().getSimpleName().toLowerCase(), System.getProperty("user.name"));
+      String storageAccountName = String.format("st%s%s", System.getProperty("user.name"), RAND);
 
-      rawtemplate = "{\"$schema\":\"https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#\",\"contentVersion\":\"1.0.0.0\",\"parameters\":{\"newStorageAccountName\":{\"type\":\"string\",\"metadata\":{\"description\":\"Name of the Storage Account\"}},\"storageAccountType\":{\"type\":\"string\",\"defaultValue\":\"Standard_LRS\",\"allowedValues\":[\"Standard_LRS\",\"Standard_GRS\",\"Standard_ZRS\"],\"metadata\":{\"description\":\"Storage Account type\"}},\"location\":{\"type\":\"string\",\"allowedValues\":[\"East US\",\"West US\",\"West Europe\",\"East Asia\",\"Southeast Asia\"],\"metadata\":{\"description\":\"Location of storage account\"}}},\"resources\":[{\"type\":\"Microsoft.Storage/storageAccounts\",\"name\":\"[parameters('newStorageAccountName')]\",\"apiVersion\":\"2015-05-01-preview\",\"location\":\"[parameters('location')]\",\"properties\":{\"accountType\":\"[parameters('storageAccountType')]\"}}]}";
-      rawparameters = "{\"newStorageAccountName\":{\"value\":\"" + resourceName + "\"},\"storageAccountType\":{\"value\":\"Standard_LRS\"},\"location\":{\"value\":\"West US\"}}";
-      rawbadParameters = "{\"newStorageAccountName\":{\"value\":\"" + resourceName + "\"},\"storageAccountType\":{\"value\":\"Standard_LRS\"},\"location\":{\"value\":\"West\"}}";
+      String rawtemplate = "{\"$schema\":\"https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#\",\"contentVersion\":\"1.0.0.0\",\"parameters\":{\"newStorageAccountName\":{\"type\":\"string\",\"metadata\":{\"description\":\"Name of the Storage Account\"}},\"storageAccountType\":{\"type\":\"string\",\"defaultValue\":\"Standard_LRS\",\"allowedValues\":[\"Standard_LRS\",\"Standard_GRS\",\"Standard_ZRS\"],\"metadata\":{\"description\":\"Storage Account type\"}},\"location\":{\"type\":\"string\",\"allowedValues\":[\"East US\",\"West US\",\"West Europe\",\"East Asia\",\"Southeast Asia\"],\"metadata\":{\"description\":\"Location of storage account\"}}},\"resources\":[{\"type\":\"Microsoft.Storage/storageAccounts\",\"name\":\"[parameters('newStorageAccountName')]\",\"apiVersion\":\"2015-05-01-preview\",\"location\":\"[parameters('location')]\",\"properties\":{\"accountType\":\"[parameters('storageAccountType')]\"}}]}";
+      String rawparameters = "{\"newStorageAccountName\":{\"value\":\"" + storageAccountName + "\"},\"storageAccountType\":{\"value\":\"Standard_LRS\"},\"location\":{\"value\":\"West US\"}}";
+      String rawbadParameters = "{\"newStorageAccountName\":{\"value\":\"" + storageAccountName + "\"},\"storageAccountType\":{\"value\":\"Standard_LRS\"},\"location\":{\"value\":\"West\"}}";
 
       properties = getPutBody(rawtemplate, "Incremental", rawparameters);
       badProperties = getPutBody(rawtemplate, "Incremental", rawbadParameters);
+
+      //Subnets belong to a virtual network so that needs to be created first
+      VirtualNetwork vn = createDefaultVirtualNetwork(resourceGroupName, virtualNetworkName, "10.3.0.0/16", LOCATION);
+      assertNotNull(vn);
+
+      //Subnet needs to be up & running before NIC can be created
+      String subnetName = String.format("s-%s-%s", this.getClass().getSimpleName().toLowerCase(), System.getProperty("user.name"));
+      Subnet subnet = createDefaultSubnet(resourceGroupName, subnetName, virtualNetworkName, "10.3.0.0/23");
+      assertNotNull(subnet);
+      assertNotNull(subnet.id());
+      subnetId = subnet.id();
+   }
+
+   @AfterClass
+   @Override
+   protected void tearDown() {
+      super.tearDown();
+      URI uri = api.getResourceGroupApi().delete(resourceGroupName);
+      assertResourceDeleted(uri);
    }
 
    private String getPutBody(String template, String mode, String parameters) {
@@ -91,7 +114,7 @@ public class DeploymentApiLiveTest extends BaseAzureComputeApiLiveTest {
 
    private Template getTemplate(TemplateOptions options) {
       Location provider = (new LocationBuilder()).scope(LocationScope.PROVIDER).id("azurecompute-arm").description("azurecompute-arm").build();
-      Location region = (new LocationBuilder()).scope(LocationScope.REGION).id("northeurope").description("North Europe").parent(provider).build();
+      Location region = (new LocationBuilder()).scope(LocationScope.REGION).id(LOCATION).description("West Europe").parent(provider).build();
 
       OperatingSystem os = OperatingSystem.builder()
               .family(OsFamily.UBUNTU)
@@ -116,11 +139,11 @@ public class DeploymentApiLiveTest extends BaseAzureComputeApiLiveTest {
 
    private DeploymentTemplateBuilder getDeploymentTemplateBuilderWithOptions(TemplateOptions options) {
       Template template = getTemplate(options);
-      DeploymentTemplateBuilder templateBuilder = api.deploymentTemplateFactory().create(resourceName, deploymentName, template);
+      DeploymentTemplateBuilder templateBuilder = api.deploymentTemplateFactory().create(resourceGroupName, deploymentName, template);
       return templateBuilder;
    }
 
-   @Test(groups = "live")
+   @Test
    public void testValidate(){
       Deployment deploymentInvalid = null;
       try {
@@ -138,12 +161,13 @@ public class DeploymentApiLiveTest extends BaseAzureComputeApiLiveTest {
       }
       assertNotNull(deploymentValid);
    }
-   @Test(groups = "live")
+   @Test
    public void testCreate() {
       String rsakey = new String("ssh-rsa AAAAB3NzaC1yc2EAAAABJQAAAQEAmfk/QSF0pvnrpdz+Ah2KulGruKU+8FFBdlw938MpOysRdmp7uwpH6Z7+5VNGNdxFIAyc/W3UaZXF9hTsU8+78TlwkZpsr2mzU+ycu37XLAQ8Uv7hjsAN0DkKKPrZ9lgUUfZVKV/8E/JIAs03gIbL6zO3y7eYJQ5fNeZb+nji7tQT+YLpGq/FDegvraPKVMQbCSCZhsHyWhdPLyFlu9/30npZ0ahYOPI/KyZxFDtM/pHp88+ZAk9Icq5owaLRWcJQqrBGWqjbZnHtjdDqvHZ+C0wPhdJZPyfkHOrSYTwSQBXfX4JLRRCz3J1jf62MbQWT1o6Y4JEs1ZP1Skxu6zR96Q== mocktest");
 
-      TemplateOptions options = new AzureTemplateOptions();
+      AzureTemplateOptions options = new AzureTemplateOptions();
       options.authorizePublicKey(rsakey);
+      options.subnetId(subnetId);
       DeploymentTemplateBuilder templateBuilder = getDeploymentTemplateBuilderWithOptions(options);
       DeploymentBody deploymentTemplateBody = templateBuilder.getDeploymentTemplate();
 
@@ -151,7 +175,6 @@ public class DeploymentApiLiveTest extends BaseAzureComputeApiLiveTest {
 
       String deploymentTemplate = templateBuilder.getDeploymentTemplateJson(properties);
       deploymentTemplate = UrlEscapers.urlFormParameterEscaper().escape(deploymentTemplate);
-
 
       Deployment deploymentValid = api().validate(deploymentName, deploymentTemplate);
       assertNotNull(deploymentValid);
@@ -165,9 +188,10 @@ public class DeploymentApiLiveTest extends BaseAzureComputeApiLiveTest {
          public boolean apply(String name) {
             Deployment dp = api().get(deploymentName);
             ProvisioningState state = ProvisioningState.fromValue(dp.properties().provisioningState());
+            if (state == ProvisioningState.FAILED) Assert.fail();
             return state == ProvisioningState.SUCCEEDED;
          }
-      }, 60 * maxTestDuration * 1000).apply(deploymentName);
+      }, 60 * 20 * 1000).apply(deploymentName);
       assertTrue(jobDone, "create operation did not complete in the configured timeout");
 
       Deployment dp = api().get(deploymentName);
@@ -176,7 +200,7 @@ public class DeploymentApiLiveTest extends BaseAzureComputeApiLiveTest {
    }
 
 
-   @Test(groups = "live", dependsOnMethods = "testCreate")
+   @Test(dependsOnMethods = "testCreate")
    public void testGetDeployment() {
       Deployment deployment = api().get(deploymentName);
       assertNotNull(deployment);
@@ -184,7 +208,7 @@ public class DeploymentApiLiveTest extends BaseAzureComputeApiLiveTest {
       assertTrue(state == ProvisioningState.SUCCEEDED);
    }
 
-   @Test(groups = "live", dependsOnMethods = "testCreate")
+   @Test(dependsOnMethods = "testCreate")
    public void testListDeployments() {
       List<Deployment> deployments = api().list();
       assertTrue(deployments.size() > 0);
@@ -197,31 +221,20 @@ public class DeploymentApiLiveTest extends BaseAzureComputeApiLiveTest {
          }
       }
       assertTrue(deploymentFound);
-
    }
 
-   @Test(groups = "live", dependsOnMethods = {"testGetDeployment", "testListDeployments"}, alwaysRun = true)
+   @Test(dependsOnMethods = {"testGetDeployment", "testListDeployments"})
    public void testDelete() throws Exception {
       List<Deployment> deployments = api().list();
       for (Deployment d : deployments) {
          if (d.name().contains("jc")) {
             URI uri = api().delete(d.name());
-            assertNotNull(uri);
-            assertTrue(uri.toString().contains("api-version"));
-            assertTrue(uri.toString().contains("operationresults"));
-
-            boolean jobDone = Predicates2.retry(new Predicate<URI>() {
-               @Override
-               public boolean apply(URI uri) {
-                  return ParseJobStatus.JobStatus.NO_CONTENT == api.getJobApi().jobStatus(uri);
-               }
-            }, 60 * maxTestDuration * 1000).apply(uri);
-            assertTrue(jobDone, "delete operation did not complete in the configured timeout");
+            assertResourceDeleted(uri);
          }
       }
    }
 
    private DeploymentApi api() {
-      return api.getDeploymentApi(resourceName);
+      return api.getDeploymentApi(resourceGroupName);
    }
 }

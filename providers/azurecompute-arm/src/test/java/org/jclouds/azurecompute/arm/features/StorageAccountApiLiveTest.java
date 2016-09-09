@@ -16,18 +16,21 @@
  */
 package org.jclouds.azurecompute.arm.features;
 
-import com.google.common.base.Predicate;
-import com.google.common.collect.ImmutableMap;
+import java.net.URI;
+import java.util.List;
+
 import org.jclouds.azurecompute.arm.domain.StorageService;
 import org.jclouds.azurecompute.arm.domain.StorageServiceKeys;
 import org.jclouds.azurecompute.arm.domain.StorageServiceUpdateParams;
 import org.jclouds.azurecompute.arm.functions.ParseJobStatus;
 import org.jclouds.azurecompute.arm.internal.BaseAzureComputeApiLiveTest;
 import org.jclouds.util.Predicates2;
+import org.testng.annotations.AfterClass;
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
-import java.net.URI;
-import java.util.List;
+import com.google.common.base.Predicate;
+import com.google.common.collect.ImmutableMap;
 
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertFalse;
@@ -41,13 +44,22 @@ public class StorageAccountApiLiveTest extends BaseAzureComputeApiLiveTest {
    private static final String NAME = String.format("%3.24s",
            RAND + StorageAccountApiLiveTest.class.getSimpleName().toLowerCase());
 
-   private void check(final StorageService storage) {
-      assertNotNull(storage.id());
-      assertNotNull(storage.name());
-      assertNotNull(storage.storageServiceProperties());
-      assertNotNull(storage.storageServiceProperties().accountType());
-      assertFalse(storage.storageServiceProperties().primaryEndpoints().isEmpty());
-      assertNotNull(storage.storageServiceProperties().creationTime());
+   private String resourceGroupName;
+
+   @BeforeClass
+   @Override
+   public void setup() {
+      super.setup();
+      resourceGroupName = String.format("rg-%s-%s", this.getClass().getSimpleName().toLowerCase(), System.getProperty("user.name"));
+      assertNotNull(createResourceGroup(resourceGroupName));
+   }
+
+   @AfterClass
+   @Override
+   protected void tearDown() {
+      super.tearDown();
+      URI uri = deleteResourceGroup(resourceGroupName);
+      assertResourceDeleted(uri);
    }
 
    @Test(dependsOnMethods = "testCreate")
@@ -117,6 +129,7 @@ public class StorageAccountApiLiveTest extends BaseAzureComputeApiLiveTest {
       assertTrue(params.tags().containsKey("another_property_name"));
       assertNull(params.storageServiceProperties().accountType());
    }
+
    @Test(dependsOnMethods = {"testCreate", "testGet"})
    public void testUpdateAccountType() {
       StorageServiceUpdateParams.StorageServiceUpdateProperties props =
@@ -127,7 +140,16 @@ public class StorageAccountApiLiveTest extends BaseAzureComputeApiLiveTest {
       assertEquals(params.storageServiceProperties().accountType(), StorageService.AccountType.Standard_GRS);
    }
 
+   private void check(final StorageService storage) {
+      assertNotNull(storage.id());
+      assertNotNull(storage.name());
+      assertNotNull(storage.storageServiceProperties());
+      assertNotNull(storage.storageServiceProperties().accountType());
+      assertFalse(storage.storageServiceProperties().primaryEndpoints().isEmpty());
+      assertNotNull(storage.storageServiceProperties().creationTime());
+   }
+
    private StorageAccountApi api() {
-      return api.getStorageAccountApi(getResourceGroupName());
+      return api.getStorageAccountApi(resourceGroupName);
    }
 }

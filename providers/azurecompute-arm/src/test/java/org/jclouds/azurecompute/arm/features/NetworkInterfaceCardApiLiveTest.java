@@ -16,72 +16,64 @@
  */
 package org.jclouds.azurecompute.arm.features;
 
-import com.google.common.collect.ImmutableMap;
-import com.google.common.base.Predicate;
+import java.net.URI;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
+
 import org.jclouds.azurecompute.arm.domain.IdReference;
 import org.jclouds.azurecompute.arm.domain.IpConfiguration;
 import org.jclouds.azurecompute.arm.domain.IpConfigurationProperties;
 import org.jclouds.azurecompute.arm.domain.NetworkInterfaceCard;
 import org.jclouds.azurecompute.arm.domain.NetworkInterfaceCardProperties;
 import org.jclouds.azurecompute.arm.domain.Subnet;
-import org.jclouds.azurecompute.arm.domain.VirtualNetwork;
-import org.jclouds.azurecompute.arm.functions.ParseJobStatus;
 import org.jclouds.azurecompute.arm.internal.BaseAzureComputeApiLiveTest;
-import org.jclouds.util.Predicates2;
+import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
-import java.net.URI;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
+import com.google.common.collect.ImmutableMap;
 
-
-import static org.testng.Assert.assertNull;
+import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertTrue;
-import static org.testng.Assert.assertEquals;
 
 @Test(groups = "live", singleThreaded = true)
 public class NetworkInterfaceCardApiLiveTest extends BaseAzureComputeApiLiveTest {
 
-   private String resourcegroup;
-   private String subnetID;
+   private String resourceGroupName;
+   private String subnetId;
+   private String nicName;
 
    @BeforeClass
    @Override
    public void setup() {
       super.setup();
-
-      resourcegroup = getResourceGroupName();
+      resourceGroupName = String.format("rg-%s-%s", this.getClass().getSimpleName().toLowerCase(), System.getProperty("user.name"));
+      assertNotNull(api.getResourceGroupApi().create(resourceGroupName, LOCATION, ImmutableMap.<String, String>of()));
+      String virtualNetworkName = String.format("vn-%s-%s", this.getClass().getSimpleName().toLowerCase(), System.getProperty("user.name"));
+      nicName = String.format("nic-%s-%s", this.getClass().getSimpleName().toLowerCase(), System.getProperty("user.name"));
+      String subnetName = String.format("s-%s-%s", this.getClass().getSimpleName().toLowerCase(), System.getProperty("user.name"));
 
       //Subnets belong to a virtual network so that needs to be created first
-      VirtualNetwork vn = getOrCreateVirtualNetwork(VIRTUAL_NETWORK_NAME);
-      assertNotNull(vn);
+      assertNotNull(createDefaultVirtualNetwork(resourceGroupName, virtualNetworkName, "10.2.0.0/16", LOCATION));
 
       //Subnet needs to be up & running before NIC can be created
-      Subnet subnet = getOrCreateSubnet(DEFAULT_SUBNET_NAME, VIRTUAL_NETWORK_NAME);
+      Subnet subnet = createDefaultSubnet(resourceGroupName, subnetName, virtualNetworkName, "10.2.0.0/23");
       assertNotNull(subnet);
       assertNotNull(subnet.id());
-      subnetID = subnet.id();
+      subnetId = subnet.id();
    }
 
-
-   @Test(groups = "live")
-   public void deleteNetworkInterfaceCardResourceDoesNotExist() {
-
-      final NetworkInterfaceCardApi nicApi = api.getNetworkInterfaceCardApi(resourcegroup);
-      URI uri = nicApi.delete(NETWORKINTERFACECARD_NAME);
-      assertNull(uri);
+   @AfterClass
+   @Override
+   protected void tearDown() {
+      super.tearDown();
+      deleteResourceGroup(resourceGroupName);
    }
 
-   @Test(groups = "live", dependsOnMethods = "deleteNetworkInterfaceCardResourceDoesNotExist")
+   @Test
    public void createNetworkInterfaceCard() {
-
-      final NetworkInterfaceCardApi nicApi = api.getNetworkInterfaceCardApi(resourcegroup);
-
-
-      //Create properties object
       //Create properties object
       final NetworkInterfaceCardProperties networkInterfaceCardProperties =
               NetworkInterfaceCardProperties.builder().ipConfigurations(
@@ -89,66 +81,48 @@ public class NetworkInterfaceCardApiLiveTest extends BaseAzureComputeApiLiveTest
                               .name("myipconfig")
                               .properties(IpConfigurationProperties.builder()
                                       .privateIPAllocationMethod("Dynamic")
-                                      .subnet(IdReference.create(subnetID)).build()
+                                      .subnet(IdReference.create(subnetId)).build()
                               ).build()
                       )).build();
 
       final Map<String, String> tags = ImmutableMap.of("jclouds", "livetest");
-      NetworkInterfaceCard nic = nicApi.createOrUpdate(NETWORKINTERFACECARD_NAME, LOCATION, networkInterfaceCardProperties, tags);
+      NetworkInterfaceCard nic = api().createOrUpdate(nicName, LOCATION, networkInterfaceCardProperties, tags);
 
-      assertEquals(nic.name(), NETWORKINTERFACECARD_NAME);
+      assertEquals(nic.name(), nicName);
       assertEquals(nic.location(), LOCATION);
       assertTrue(nic.properties().ipConfigurations().size() > 0);
       assertEquals(nic.properties().ipConfigurations().get(0).name(), "myipconfig");
       assertEquals(nic.properties().ipConfigurations().get(0).properties().privateIPAllocationMethod(), "Dynamic");
-      assertEquals(nic.properties().ipConfigurations().get(0).properties().subnet().id(), subnetID);
+      assertEquals(nic.properties().ipConfigurations().get(0).properties().subnet().id(), subnetId);
       assertEquals(nic.tags().get("jclouds"), "livetest");
-
    }
 
-   @Test(groups = "live", dependsOnMethods = "createNetworkInterfaceCard")
+   @Test(dependsOnMethods = "createNetworkInterfaceCard")
    public void getNetworkInterfaceCard() {
+      NetworkInterfaceCard nic = api().get(nicName);
 
-      final NetworkInterfaceCardApi nicApi = api.getNetworkInterfaceCardApi(resourcegroup);
-
-      NetworkInterfaceCard nic = nicApi.get(NETWORKINTERFACECARD_NAME);
-
-      assertEquals(nic.name(), NETWORKINTERFACECARD_NAME);
+      assertEquals(nic.name(), nicName);
       assertEquals(nic.location(), LOCATION);
       assertTrue(nic.properties().ipConfigurations().size() > 0);
       assertEquals(nic.properties().ipConfigurations().get(0).name(), "myipconfig");
       assertEquals(nic.properties().ipConfigurations().get(0).properties().privateIPAllocationMethod(), "Dynamic");
-      assertEquals(nic.properties().ipConfigurations().get(0).properties().subnet().id(), subnetID);
+      assertEquals(nic.properties().ipConfigurations().get(0).properties().subnet().id(), subnetId);
    }
 
-   @Test(groups = "live", dependsOnMethods = "createNetworkInterfaceCard")
+   @Test(dependsOnMethods = "createNetworkInterfaceCard")
    public void listNetworkInterfaceCards() {
-
-      final NetworkInterfaceCardApi nicApi = api.getNetworkInterfaceCardApi(resourcegroup);
-
-      List<NetworkInterfaceCard> nicList = nicApi.list();
-
-      assertTrue(nicList.contains(nicApi.get(NETWORKINTERFACECARD_NAME)));
+      List<NetworkInterfaceCard> nicList = api().list();
+      assertTrue(nicList.contains(api().get(nicName)));
    }
 
-
-   @Test(groups = "live", dependsOnMethods = {"listNetworkInterfaceCards", "getNetworkInterfaceCard"}, alwaysRun = true)
+   @Test(dependsOnMethods = {"listNetworkInterfaceCards", "getNetworkInterfaceCard"})
    public void deleteNetworkInterfaceCard() {
+      URI uri = api().delete(nicName);
+      assertResourceDeleted(uri);
+   }
 
-      final NetworkInterfaceCardApi nicApi = api.getNetworkInterfaceCardApi(resourcegroup);
-      URI uri = nicApi.delete(NETWORKINTERFACECARD_NAME);
-      if (uri != null) {
-         assertTrue(uri.toString().contains("api-version"));
-         assertTrue(uri.toString().contains("operationresults"));
-
-         boolean jobDone = Predicates2.retry(new Predicate<URI>() {
-            @Override
-            public boolean apply(URI uri) {
-               return ParseJobStatus.JobStatus.DONE == api.getJobApi().jobStatus(uri);
-            }
-         }, 60 * 2 * 1000 /* 2 minute timeout */).apply(uri);
-         assertTrue(jobDone, "delete operation did not complete in the configured timeout");
-      }
+   private NetworkInterfaceCardApi api() {
+      return api.getNetworkInterfaceCardApi(resourceGroupName);
    }
 
 }

@@ -16,18 +16,19 @@
  */
 package org.jclouds.azurecompute.arm.features;
 
+import java.util.List;
+
 import org.jclouds.azurecompute.arm.domain.Offer;
 import org.jclouds.azurecompute.arm.domain.Publisher;
 import org.jclouds.azurecompute.arm.domain.SKU;
 import org.jclouds.azurecompute.arm.domain.Version;
-import org.jclouds.azurecompute.arm.internal.AbstractAzureComputeApiLiveTest;
+import org.jclouds.azurecompute.arm.internal.BaseAzureComputeApiLiveTest;
 import org.testng.annotations.Test;
+
 import static org.testng.Assert.assertTrue;
 
-import java.util.List;
-
 @Test(groups = "live", testName = "OSImageApiLiveTest")
-public class OSImageApiLiveTest extends AbstractAzureComputeApiLiveTest {
+public class OSImageApiLiveTest extends BaseAzureComputeApiLiveTest {
 
    @Test
    public void testPublisher() {

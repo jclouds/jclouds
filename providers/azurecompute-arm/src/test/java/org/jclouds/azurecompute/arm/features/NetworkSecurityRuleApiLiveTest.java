@@ -16,160 +16,104 @@
  */
 package org.jclouds.azurecompute.arm.features;
 
-import com.google.common.base.Predicate;
-import com.google.common.collect.Iterables;
+import java.net.URI;
+import java.util.List;
+
 import org.jclouds.azurecompute.arm.domain.NetworkSecurityGroup;
-import org.jclouds.azurecompute.arm.domain.NetworkSecurityGroupProperties;
 import org.jclouds.azurecompute.arm.domain.NetworkSecurityRule;
 import org.jclouds.azurecompute.arm.domain.NetworkSecurityRuleProperties;
 import org.jclouds.azurecompute.arm.domain.NetworkSecurityRuleProperties.Access;
 import org.jclouds.azurecompute.arm.domain.NetworkSecurityRuleProperties.Direction;
 import org.jclouds.azurecompute.arm.domain.NetworkSecurityRuleProperties.Protocol;
-import org.jclouds.azurecompute.arm.functions.ParseJobStatus;
 import org.jclouds.azurecompute.arm.internal.BaseAzureComputeApiLiveTest;
-
-import org.jclouds.util.Predicates2;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
-import java.net.URI;
-import java.util.ArrayList;
-import java.util.List;
+import com.google.common.base.Predicate;
+import com.google.common.collect.Iterables;
 
 import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertTrue;
 import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertNull;
+import static org.testng.Assert.assertTrue;
 
 @Test(groups = "live", singleThreaded = true)
 public class NetworkSecurityRuleApiLiveTest extends BaseAzureComputeApiLiveTest {
 
-   private String resourcegroup;
-   private static String DEFAULT_NSG_NAME = "testNetworkSecurityGroup";
+   private String resourceGroupName;
    private static String UNKNOWN_RULE_NAME = "ruledoesntexist";
-
-   private NetworkSecurityGroup createGroup() {
-      NetworkSecurityRule rule = NetworkSecurityRule.create("denyallout", null, null,
-              NetworkSecurityRuleProperties.builder()
-                      .description("deny all out")
-                      .protocol(Protocol.Tcp)
-                      .sourcePortRange("*")
-                      .destinationPortRange("*")
-                      .sourceAddressPrefix("*")
-                      .destinationAddressPrefix("*")
-                      .access(Access.Deny)
-                      .priority(4095)
-                      .direction(Direction.Outbound)
-                      .build());
-      ArrayList<NetworkSecurityRule> ruleList = new ArrayList<NetworkSecurityRule>();
-      ruleList.add(rule);
-      NetworkSecurityGroup nsg = NetworkSecurityGroup.create("samplensg", "westus", null,
-              NetworkSecurityGroupProperties.builder()
-                      .securityRules(ruleList)
-                      .build(),
-              null);
-      return nsg;
-   }
-
-   private NetworkSecurityRule createRule() {
-      NetworkSecurityRule rule = NetworkSecurityRule.create("allowalludpin", null, null,
-              NetworkSecurityRuleProperties.builder()
-                        .description("allow all udp in")
-                        .protocol(Protocol.Udp)
-                        .sourcePortRange("*")
-                        .destinationPortRange("*")
-                        .sourceAddressPrefix("*")
-                        .destinationAddressPrefix("*")
-                        .access(Access.Allow)
-                        .priority(4094)
-                        .direction(Direction.Inbound)
-                        .build());
-      return rule;
-   }
+   private String nsgName;
 
    @BeforeClass
    @Override
    public void setup() {
       super.setup();
-      resourcegroup = getResourceGroupName();
+      resourceGroupName = String.format("rg-%s-%s", this.getClass().getSimpleName().toLowerCase(), System.getProperty("user.name"));
+      assertNotNull(createResourceGroup(resourceGroupName));
+      nsgName = String.format("nsg-%s-%s", this.getClass().getSimpleName().toLowerCase(), System.getProperty("user.name"));
 
       // a network security group is needed
-      final NetworkSecurityGroup nsg = createGroup();
-      final NetworkSecurityGroupApi nsgApi = api.getNetworkSecurityGroupApi(resourcegroup);
-      NetworkSecurityGroup result = nsgApi.createOrUpdate(DEFAULT_NSG_NAME,
+      final NetworkSecurityGroup nsg = newNetworkSecurityGroup(nsgName, LOCATION);
+      assertNotNull(api.getNetworkSecurityGroupApi(resourceGroupName).createOrUpdate(nsgName,
               nsg.location(),
               nsg.tags(),
-              nsg.properties());
+              nsg.properties()));
    }
 
-   @AfterClass(alwaysRun = true)
+   @AfterClass
    @Override
-   public void tearDown() {
-      // remove the security group we created
-      final NetworkSecurityGroupApi nsgApi = api.getNetworkSecurityGroupApi(resourcegroup);
-      URI uri = nsgApi.delete(DEFAULT_NSG_NAME);
-      if (uri != null) {
-         boolean jobDone = Predicates2.retry(new Predicate<URI>() {
-            @Override
-            public boolean apply(URI uri) {
-               return ParseJobStatus.JobStatus.DONE == api.getJobApi().jobStatus(uri);
-            }
-         }, 60 * 2 * 1000 /* 2 minute timeout */).apply(uri);
-      }
-
+   protected void tearDown() {
       super.tearDown();
+      URI uri = deleteResourceGroup(resourceGroupName);
+      assertResourceDeleted(uri);
    }
 
-   @Test(groups = "live")
+   @Test
    public void deleteNetworkSecurityRuleDoesNotExist() {
-      final NetworkSecurityRuleApi ruleApi = api.getNetworkSecurityRuleApi(resourcegroup, DEFAULT_NSG_NAME);
-      URI uri = ruleApi.delete(UNKNOWN_RULE_NAME);
+      URI uri = api().delete(UNKNOWN_RULE_NAME);
       assertNull(uri);
    }
 
-   @Test(groups = "live", dependsOnMethods = "deleteNetworkSecurityRuleDoesNotExist")
+   @Test(dependsOnMethods = "deleteNetworkSecurityRuleDoesNotExist")
    public void createNetworkSecurityRule() {
       final NetworkSecurityRule rule = createRule();
       assertNotNull(rule);
 
-      final NetworkSecurityRuleApi ruleApi = api.getNetworkSecurityRuleApi(resourcegroup, DEFAULT_NSG_NAME);
+      final NetworkSecurityRuleApi ruleApi = api.getNetworkSecurityRuleApi(resourceGroupName, nsgName);
       NetworkSecurityRule result = ruleApi.createOrUpdate(rule.name(), rule.properties());
       assertNotNull(result);
       assertEquals(result.name(), rule.name());
    }
 
-   @Test(groups = "live", dependsOnMethods = "createNetworkSecurityRule")
+   @Test(dependsOnMethods = "createNetworkSecurityRule")
    public void getNetworkSecurityRule() {
       final NetworkSecurityRule rule = createRule();
       assertNotNull(rule);
 
-      final NetworkSecurityRuleApi ruleApi = api.getNetworkSecurityRuleApi(resourcegroup, DEFAULT_NSG_NAME);
-      NetworkSecurityRule result = ruleApi.get(rule.name());
+      NetworkSecurityRule result = api().get(rule.name());
       assertNotNull(result);
       assertNotNull(result.etag());
       assertEquals(result.name(), rule.name());
    }
 
-   @Test(groups = "live", dependsOnMethods = "createNetworkSecurityRule")
+   @Test(dependsOnMethods = "createNetworkSecurityRule")
    public void getNetworkSecurityDefaultRule() {
       String defaultRuleName = "AllowVnetInBound";
 
-      final NetworkSecurityRuleApi ruleApi = api.getNetworkSecurityRuleApi(resourcegroup, DEFAULT_NSG_NAME);
-      NetworkSecurityRule result = ruleApi.getDefaultRule(defaultRuleName);
+      NetworkSecurityRule result = api().getDefaultRule(defaultRuleName);
 
       assertNotNull(result);
       assertNotNull(result.etag());
       assertEquals(result.name(), defaultRuleName);
    }
 
-   @Test(groups = "live", dependsOnMethods = "createNetworkSecurityRule")
+   @Test(dependsOnMethods = "createNetworkSecurityRule")
    public void listNetworkSecurityRules() {
       final NetworkSecurityRule rule = createRule();
       assertNotNull(rule);
 
-      final NetworkSecurityRuleApi ruleApi = api.getNetworkSecurityRuleApi(resourcegroup, DEFAULT_NSG_NAME);
-      List<NetworkSecurityRule> result = ruleApi.list();
+      List<NetworkSecurityRule> result = api().list();
 
       assertNotNull(result);
       assertEquals(result.size(), 2);
@@ -183,34 +127,40 @@ public class NetworkSecurityRuleApiLiveTest extends BaseAzureComputeApiLiveTest 
       assertTrue(rulePresent);
    }
 
-   @Test(groups = "live", dependsOnMethods = "createNetworkSecurityRule")
+   @Test(dependsOnMethods = "createNetworkSecurityRule")
    public void listDefaultSecurityRules() {
-      final NetworkSecurityRuleApi ruleApi = api.getNetworkSecurityRuleApi(resourcegroup, DEFAULT_NSG_NAME);
-      List<NetworkSecurityRule> result = ruleApi.listDefaultRules();
-
+      List<NetworkSecurityRule> result = api().listDefaultRules();
       assertNotNull(result);
       assertTrue(result.size() > 0);
    }
 
-   @Test(groups = "live", dependsOnMethods = {"listNetworkSecurityRules", "listDefaultSecurityRules", "getNetworkSecurityRule"}, alwaysRun = true)
+   @Test(dependsOnMethods = {"listNetworkSecurityRules", "listDefaultSecurityRules", "getNetworkSecurityRule"})
    public void deleteNetworkSecurityRule() {
       final NetworkSecurityRule rule = createRule();
       assertNotNull(rule);
 
-      final NetworkSecurityRuleApi ruleApi = api.getNetworkSecurityRuleApi(resourcegroup, DEFAULT_NSG_NAME);
-      URI uri = ruleApi.delete(rule.name());
-      if (uri != null) {
-         assertTrue(uri.toString().contains("api-version"));
-         assertTrue(uri.toString().contains("operationresults"));
+      URI uri = api().delete(rule.name());
+      assertResourceDeleted(uri);
+   }
 
-         boolean jobDone = Predicates2.retry(new Predicate<URI>() {
-            @Override
-            public boolean apply(URI uri) {
-               return ParseJobStatus.JobStatus.DONE == api.getJobApi().jobStatus(uri);
-            }
-         }, 60 * 2 * 1000 /* 2 minute timeout */).apply(uri);
-         assertTrue(jobDone, "delete operation did not complete in the configured timeout");
-      }
+   private NetworkSecurityRule createRule() {
+      NetworkSecurityRule rule = NetworkSecurityRule.create("allowalludpin", null, null,
+              NetworkSecurityRuleProperties.builder()
+                      .description("allow all udp in")
+                      .protocol(Protocol.Udp)
+                      .sourcePortRange("*")
+                      .destinationPortRange("*")
+                      .sourceAddressPrefix("*")
+                      .destinationAddressPrefix("*")
+                      .access(Access.Allow)
+                      .priority(4094)
+                      .direction(Direction.Inbound)
+                      .build());
+      return rule;
+   }
+
+   private NetworkSecurityRuleApi api() {
+      return api.getNetworkSecurityRuleApi(resourceGroupName, nsgName);
    }
 
 }

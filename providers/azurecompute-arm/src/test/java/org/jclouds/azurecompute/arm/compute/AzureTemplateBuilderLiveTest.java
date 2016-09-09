@@ -16,7 +16,10 @@
  */
 package org.jclouds.azurecompute.arm.compute;
 
-import com.google.inject.Module;
+import java.util.Properties;
+import java.util.Set;
+import java.util.concurrent.TimeUnit;
+
 import org.jclouds.azurecompute.arm.AzureComputeProviderMetadata;
 import org.jclouds.azurecompute.arm.internal.AzureLiveTestUtils;
 import org.jclouds.compute.internal.BaseTemplateBuilderLiveTest;
@@ -24,11 +27,8 @@ import org.jclouds.providers.ProviderMetadata;
 import org.jclouds.sshj.config.SshjSshClientModule;
 import org.testng.annotations.Test;
 
-import java.util.Properties;
-import java.util.Set;
-import java.util.concurrent.TimeUnit;
-
 import com.google.common.collect.ImmutableSet;
+import com.google.inject.Module;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static org.jclouds.azurecompute.arm.config.AzureComputeProperties.RESOURCE_GROUP_NAME;
@@ -41,7 +41,7 @@ public class AzureTemplateBuilderLiveTest extends BaseTemplateBuilderLiveTest {
 
    @Override
    protected Set<String> getIso3166Codes() {
-      return ImmutableSet.of("US-IA", "US-VA", "US-IL", "US-TX", "US-CA", "IE", "NL", "HK", "SG", "JP-11", "JP-27", "BR", "AU-NSW", "AU-VIC");
+      return ImmutableSet.of("US-IA", "US-VA", "US-IL", "US-TX", "US-CA", "IE", "NL", "HK", "SG", "JP-11", "JP-27", "BR", "AU-NSW", "AU-VIC", "IN-GA", "IN-TN", "IN-MH", "CN-SH", "CN-BJ", "CA-ON", "CA-QC");
    }
 
    public AzureTemplateBuilderLiveTest() {

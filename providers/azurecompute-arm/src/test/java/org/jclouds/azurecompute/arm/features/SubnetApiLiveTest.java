@@ -16,89 +16,87 @@
  */
 package org.jclouds.azurecompute.arm.features;
 
-import org.jclouds.azurecompute.arm.domain.Subnet;
+import java.util.List;
 
+import org.jclouds.azurecompute.arm.domain.Subnet;
 import org.jclouds.azurecompute.arm.domain.VirtualNetwork;
 import org.jclouds.azurecompute.arm.internal.BaseAzureComputeApiLiveTest;
-
+import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
-import java.util.List;
-
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertFalse;
-import static org.testng.Assert.assertTrue;
 import static org.testng.Assert.assertNotNull;
+import static org.testng.Assert.assertTrue;
 
 @Test(groups = "live", singleThreaded = true)
 public class SubnetApiLiveTest extends BaseAzureComputeApiLiveTest {
 
-   private final String subscriptionid = "subscriptionid";
-   private String resourcegroup;
+   private String resourceGroupName;
+   private String virtualNetworkName;
+   private String subnetName;
 
    @BeforeClass
    @Override
    public void setup() {
       super.setup();
-      resourcegroup = getResourceGroupName();
+      resourceGroupName = String.format("rg-%s-%s", this.getClass().getSimpleName().toLowerCase(), System.getProperty("user.name"));
+      assertNotNull(createResourceGroup(resourceGroupName));
+      virtualNetworkName = String.format("vn-%s-%s", this.getClass().getSimpleName().toLowerCase(), System.getProperty("user.name"));
+      subnetName = "jclouds-" + RAND;
 
       // Subnets belong to a virtual network so that needs to be created first
       // VN will be deleted when resource group is deleted
-      VirtualNetwork vn = getOrCreateVirtualNetwork(VIRTUAL_NETWORK_NAME);
+      VirtualNetwork vn = createDefaultVirtualNetwork(resourceGroupName, virtualNetworkName, "10.2.0.0/16", LOCATION);
       assertNotNull(vn);
    }
 
-   @Test(groups = "live")
-   public void deleteSubnetResourceDoesNotExist() {
-
-      final SubnetApi subnetApi = api.getSubnetApi(resourcegroup, VIRTUAL_NETWORK_NAME);
-
-      boolean status = subnetApi.delete(DEFAULT_SUBNET_NAME);
-      assertFalse(status);
-
+   @AfterClass
+   @Override
+   protected void tearDown() {
+      super.tearDown();
+      deleteResourceGroup(resourceGroupName);
    }
 
-   @Test(groups = "live", dependsOnMethods = "deleteSubnetResourceDoesNotExist")
+   @Test
+   public void deleteSubnetResourceDoesNotExist() {
+      assertFalse(api().delete(subnetName));
+   }
+
+   @Test(dependsOnMethods = "deleteSubnetResourceDoesNotExist")
    public void createSubnet() {
-
-      final SubnetApi subnetApi = api.getSubnetApi(resourcegroup, VIRTUAL_NETWORK_NAME);
-
       //Create properties object
       //addressPrefix must match Virtual network address space!
-      Subnet.SubnetProperties properties = Subnet.SubnetProperties.builder().addressPrefix(DEFAULT_SUBNET_ADDRESS_SPACE).build();
+      Subnet.SubnetProperties properties = Subnet.SubnetProperties.builder().addressPrefix("10.2.0.0/23").build();
 
-      Subnet subnet = subnetApi.createOrUpdate(DEFAULT_SUBNET_NAME, properties);
+      Subnet subnet = api().createOrUpdate(subnetName, properties);
 
-      assertEquals(subnet.name(), DEFAULT_SUBNET_NAME);
-      assertEquals(subnet.properties().addressPrefix(), DEFAULT_SUBNET_ADDRESS_SPACE);
+      assertEquals(subnet.name(), subnetName);
+      assertEquals(subnet.properties().addressPrefix(), "10.2.0.0/23");
    }
 
-   @Test(groups = "live", dependsOnMethods = "createSubnet")
+   @Test(dependsOnMethods = "createSubnet")
    public void getSubnet() {
-
-      final SubnetApi subnetApi = api.getSubnetApi(resourcegroup, VIRTUAL_NETWORK_NAME);
-      Subnet subnet = subnetApi.get(DEFAULT_SUBNET_NAME);
-
+      Subnet subnet = api().get(subnetName);
       assertNotNull(subnet.name());
       assertNotNull(subnet.properties().addressPrefix());
    }
 
-   @Test(groups = "live", dependsOnMethods = "createSubnet")
+   @Test(dependsOnMethods = "createSubnet")
    public void listSubnets() {
-
-      final SubnetApi subnetApi = api.getSubnetApi(resourcegroup, VIRTUAL_NETWORK_NAME);
-      List<Subnet> subnets = subnetApi.list();
-
+      List<Subnet> subnets = api().list();
       assertTrue(subnets.size() > 0);
    }
 
-   @Test(groups = "live", dependsOnMethods = {"listSubnets", "getSubnet"}, alwaysRun = true)
+   @Test(dependsOnMethods = {"listSubnets", "getSubnet"}, alwaysRun = true)
    public void deleteSubnet() {
-
-      final SubnetApi subnetApi = api.getSubnetApi(resourcegroup, VIRTUAL_NETWORK_NAME);
-      boolean status = subnetApi.delete(DEFAULT_SUBNET_NAME);
+      boolean status = api().delete(subnetName);
       assertTrue(status);
+   }
+
+   private SubnetApi api() {
+      return api.getSubnetApi(resourceGroupName, virtualNetworkName);
    }
 
 }

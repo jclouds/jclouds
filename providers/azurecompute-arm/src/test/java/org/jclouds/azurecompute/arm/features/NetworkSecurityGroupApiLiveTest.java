@@ -16,99 +16,72 @@
  */
 package org.jclouds.azurecompute.arm.features;
 
-import com.google.common.base.Predicate;
+import java.net.URI;
+import java.util.List;
+
 import org.jclouds.azurecompute.arm.domain.NetworkSecurityGroup;
-import org.jclouds.azurecompute.arm.domain.NetworkSecurityGroupProperties;
 import org.jclouds.azurecompute.arm.domain.NetworkSecurityRule;
-import org.jclouds.azurecompute.arm.domain.NetworkSecurityRuleProperties;
-
-import org.jclouds.azurecompute.arm.domain.NetworkSecurityRuleProperties.Access;
-import org.jclouds.azurecompute.arm.domain.NetworkSecurityRuleProperties.Direction;
-import org.jclouds.azurecompute.arm.domain.NetworkSecurityRuleProperties.Protocol;
-import org.jclouds.azurecompute.arm.functions.ParseJobStatus;
 import org.jclouds.azurecompute.arm.internal.BaseAzureComputeApiLiveTest;
-
-import org.jclouds.util.Predicates2;
+import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
-
-import java.util.ArrayList;
-import java.util.List;
-import java.net.URI;
-
-import static org.testng.Assert.assertTrue;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
-import static org.testng.AssertJUnit.assertNull;
+import static org.testng.Assert.assertNull;
+import static org.testng.Assert.assertTrue;
 
 @Test(groups = "live", singleThreaded = true)
 public class NetworkSecurityGroupApiLiveTest extends BaseAzureComputeApiLiveTest {
 
-   private String resourcegroup;
-   private static String DEFAULT_NSG_NAME = "testNetworkSecurityGroup";
-
-   private NetworkSecurityGroup createGroup() {
-      NetworkSecurityRule rule = NetworkSecurityRule.create("denyallout", null, null,
-                     NetworkSecurityRuleProperties.builder()
-                                       .description("deny all out")
-                                       .protocol(Protocol.Tcp)
-                                       .sourcePortRange("*")
-                                       .destinationPortRange("*")
-                                       .sourceAddressPrefix("*")
-                                       .destinationAddressPrefix("*")
-                                       .access(Access.Deny)
-                                       .priority(4095)
-                                       .direction(Direction.Outbound)
-                                       .build());
-      ArrayList<NetworkSecurityRule> ruleList = new ArrayList<NetworkSecurityRule>();
-      ruleList.add(rule);
-      NetworkSecurityGroup nsg = NetworkSecurityGroup.create("samplensg", "westus", null,
-                                                             NetworkSecurityGroupProperties.builder()
-                                                                                       .securityRules(ruleList)
-                                                                                       .build(),
-                                                             null);
-      return nsg;
-   }
+   private String resourceGroupName;
+   private static String nsgName = "testNetworkSecurityGroup";
 
    @BeforeClass
    @Override
    public void setup() {
       super.setup();
-      resourcegroup = getResourceGroupName();
+      resourceGroupName = String.format("rg-%s-%s", this.getClass().getSimpleName().toLowerCase(), System.getProperty("user.name"));
+      assertNotNull(createResourceGroup(resourceGroupName));
+      nsgName = String.format("nsg-%s-%s", this.getClass().getSimpleName().toLowerCase(), System.getProperty("user.name"));
    }
 
-   @Test(groups = "live")
+   @AfterClass
+   @Override
+   protected void tearDown() {
+      super.tearDown();
+      URI uri = deleteResourceGroup(resourceGroupName);
+      assertResourceDeleted(uri);
+   }
+
+   @Test
    public void deleteNetworkSecurityGroupDoesNotExist() {
-      final NetworkSecurityGroupApi nsgApi = api.getNetworkSecurityGroupApi(resourcegroup);
-      URI uri = nsgApi.delete(DEFAULT_NSG_NAME);
+      URI uri = api().delete(nsgName);
       assertNull(uri);
    }
 
-   @Test(groups = "live", dependsOnMethods = "deleteNetworkSecurityGroupDoesNotExist")
+   @Test(dependsOnMethods = "deleteNetworkSecurityGroupDoesNotExist")
    public void createNetworkSecurityGroup() {
-      final NetworkSecurityGroup nsg = createGroup();
+      final NetworkSecurityGroup nsg = newNetworkSecurityGroup(nsgName, LOCATION);
       assertNotNull(nsg);
 
-      final NetworkSecurityGroupApi nsgApi = api.getNetworkSecurityGroupApi(resourcegroup);
-      NetworkSecurityGroup result = nsgApi.createOrUpdate(DEFAULT_NSG_NAME,
+      NetworkSecurityGroup result = api().createOrUpdate(nsgName,
                                                   nsg.location(),
                                                   nsg.tags(),
                                                   nsg.properties());
       assertNotNull(result);
    }
 
-   @Test(groups = "live", dependsOnMethods = "createNetworkSecurityGroup")
+   @Test(dependsOnMethods = "createNetworkSecurityGroup")
    public void listNetworkSecurityGroups() {
-      final NetworkSecurityGroupApi nsgApi = api.getNetworkSecurityGroupApi(resourcegroup);
-      List<NetworkSecurityGroup> result = nsgApi.list();
+      List<NetworkSecurityGroup> result = api().list();
 
       // verify we have something
       assertNotNull(result);
       assertEquals(result.size(), 1);
 
       // check that the nework security group matches the one we originally passed in
-      NetworkSecurityGroup original = createGroup();
+      NetworkSecurityGroup original = newNetworkSecurityGroup(nsgName, LOCATION);
       NetworkSecurityGroup nsg = result.get(0);
       assertEquals(original.name(), nsg.name());
       assertEquals(original.location(), nsg.location());
@@ -122,31 +95,23 @@ public class NetworkSecurityGroupApiLiveTest extends BaseAzureComputeApiLiveTest
       assertTrue(originalRule.properties().equals(nsgRule.properties()));
    }
 
-   @Test(groups = "live", dependsOnMethods = {"listNetworkSecurityGroups", "getNetworkSecurityGroup"}, alwaysRun = true)
+   @Test(dependsOnMethods = {"listNetworkSecurityGroups", "getNetworkSecurityGroup"}, alwaysRun = true)
    public void deleteNetworkSecurityGroup() {
-      final NetworkSecurityGroupApi nsgApi = api.getNetworkSecurityGroupApi(resourcegroup);
-      URI uri = nsgApi.delete(DEFAULT_NSG_NAME);
-      if (uri != null) {
-         assertTrue(uri.toString().contains("api-version"));
-         assertTrue(uri.toString().contains("operationresults"));
-
-         boolean jobDone = Predicates2.retry(new Predicate<URI>() {
-            @Override
-            public boolean apply(URI uri) {
-               return ParseJobStatus.JobStatus.DONE == api.getJobApi().jobStatus(uri);
-            }
-         }, 60 * 2 * 1000 /* 2 minute timeout */).apply(uri);
-         assertTrue(jobDone, "delete operation did not complete in the configured timeout");
-      }
+      URI uri = api().delete(nsgName);
+      assertResourceDeleted(uri);
    }
 
-   @Test(groups = "live", dependsOnMethods = "createNetworkSecurityGroup")
+   @Test(dependsOnMethods = "createNetworkSecurityGroup")
    public void getNetworkSecurityGroup() {
-      final NetworkSecurityGroupApi nsgApi = api.getNetworkSecurityGroupApi(resourcegroup);
-      NetworkSecurityGroup nsg = nsgApi.get(DEFAULT_NSG_NAME);
+      NetworkSecurityGroup nsg = api().get(nsgName);
       assertNotNull(nsg);
       assertNotNull(nsg.etag());
-      assertEquals(nsg.name(), DEFAULT_NSG_NAME);
+      assertEquals(nsg.name(), nsgName);
    }
+
+   private NetworkSecurityGroupApi api() {
+      return api.getNetworkSecurityGroupApi(resourceGroupName);
+   }
+
 }
 

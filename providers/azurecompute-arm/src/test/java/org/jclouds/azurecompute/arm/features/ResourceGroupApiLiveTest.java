@@ -16,38 +16,27 @@
  */
 package org.jclouds.azurecompute.arm.features;
 
-import com.google.common.base.Predicate;
-import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.Iterables;
-
 import java.net.URI;
 import java.util.List;
 
 import org.jclouds.azurecompute.arm.domain.ResourceGroup;
-import org.jclouds.azurecompute.arm.functions.ParseJobStatus.JobStatus;
 import org.jclouds.azurecompute.arm.internal.BaseAzureComputeApiLiveTest;
-
 import org.testng.annotations.AfterClass;
-import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
+import com.google.common.base.Predicate;
+import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.Iterables;
+
+import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertNull;
 import static org.testng.Assert.assertTrue;
-import static org.testng.Assert.assertEquals;
-import org.jclouds.util.Predicates2;
-
 
 @Test(groups = "live", testName = "ResourceGroupApiLiveTest")
 public class ResourceGroupApiLiveTest extends BaseAzureComputeApiLiveTest {
-   private String resourcegroup;
 
-   @BeforeClass
-   @Override
-   public void setup(){
-      super.setup();
-      resourcegroup = getResourceGroupName();
-   }
+   private static final String RESOURCE_GROUP_NAME = "jcloudstest";
 
    private ResourceGroupApi api() {
       return api.getResourceGroupApi();
@@ -63,26 +52,26 @@ public class ResourceGroupApiLiveTest extends BaseAzureComputeApiLiveTest {
 
          @Override
          public boolean apply(final ResourceGroup group) {
-            return resourcegroup.equals(group.name());
+            return RESOURCE_GROUP_NAME.equals(group.name());
          }
       }));
    }
 
    @Test(dependsOnMethods = "testCreate")
    public void testRead() {
-      final ResourceGroup group = api().get(resourcegroup);
-      assertNotNull(group);
-      assertEquals(group.name(), resourcegroup);
-      assertEquals(group.location(), LOCATION);
+      final ResourceGroup resourceGroup = api().get(RESOURCE_GROUP_NAME);
+      assertNotNull(resourceGroup);
+      assertEquals(resourceGroup.name(), RESOURCE_GROUP_NAME);
+      assertEquals(resourceGroup.location(), LOCATION);
    }
 
    public void testCreate() {
 
-      final ResourceGroup resourceGroup = api().create("jcloudstest", LOCATION, null);
-      assertEquals(resourceGroup.name(), "jcloudstest");
+      final ResourceGroup resourceGroup = api().create(RESOURCE_GROUP_NAME, LOCATION, null);
+      assertEquals(resourceGroup.name(), RESOURCE_GROUP_NAME);
       assertEquals(resourceGroup.location(), LOCATION);
       assertNull(resourceGroup.tags());
-      assertTrue(resourceGroup.id().contains("jcloudstest"));
+      assertTrue(resourceGroup.id().contains(RESOURCE_GROUP_NAME));
       assertEquals(resourceGroup.properties().provisioningState(), "Succeeded");
    }
 
@@ -90,7 +79,7 @@ public class ResourceGroupApiLiveTest extends BaseAzureComputeApiLiveTest {
    public void testUpdateWithEmptyTag() {
       ImmutableMap<String, String> tags = ImmutableMap.<String, String>builder().build();
 
-      final ResourceGroup resourceGroup = api().update("jcloudstest", tags);
+      final ResourceGroup resourceGroup = api().update(RESOURCE_GROUP_NAME, tags);
 
       assertEquals(resourceGroup.tags().size(), 0);
       assertEquals(resourceGroup.properties().provisioningState(), "Succeeded");
@@ -100,7 +89,7 @@ public class ResourceGroupApiLiveTest extends BaseAzureComputeApiLiveTest {
    public void testUpdateWithTag() {
       ImmutableMap<String, String> tags = ImmutableMap.<String, String>builder().put("test1", "value1").build();
 
-      final ResourceGroup resourceGroup = api().update("jcloudstest", tags);
+      final ResourceGroup resourceGroup = api().update(RESOURCE_GROUP_NAME, tags);
 
       assertEquals(resourceGroup.tags().size(), 1);
       assertEquals(resourceGroup.properties().provisioningState(), "Succeeded");
@@ -108,31 +97,7 @@ public class ResourceGroupApiLiveTest extends BaseAzureComputeApiLiveTest {
 
    @AfterClass(alwaysRun = true)
    public void testDelete() throws Exception {
-      URI uri =  api().delete("jcloudstest");
-
-      if (uri != null){
-         assertTrue(uri.toString().contains("api-version"));
-         assertTrue(uri.toString().contains("operationresults"));
-
-         boolean jobDone = Predicates2.retry(new Predicate<URI>() {
-            @Override public boolean apply(URI uri) {
-               return JobStatus.DONE == api.getJobApi().jobStatus(uri);
-            }
-         }, 60 * 2 * 1000 /* 1 minute timeout */).apply(uri);
-         assertTrue(jobDone, "delete operation did not complete in the configured timeout");
-      }
-
-      uri =  api().delete("jcloudstest");
-      if (uri != null){
-         assertTrue(uri.toString().contains("api-version"));
-         assertTrue(uri.toString().contains("operationresults"));
-
-         boolean jobDone = Predicates2.retry(new Predicate<URI>() {
-            @Override public boolean apply(URI uri) {
-               return JobStatus.DONE == api.getJobApi().jobStatus(uri);
-            }
-         }, 60 * 1 * 1000 /* 1 minute timeout */).apply(uri);
-         assertTrue(jobDone, "delete operation did not complete in the configured timeout");
-      }
+      URI uri =  api().delete(RESOURCE_GROUP_NAME);
+      assertResourceDeleted(uri);
    }
 }

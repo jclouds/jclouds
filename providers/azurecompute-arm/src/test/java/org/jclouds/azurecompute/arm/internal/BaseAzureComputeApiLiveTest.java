@@ -15,210 +15,157 @@
  * limitations under the License.
  */
 package org.jclouds.azurecompute.arm.internal;
-import static org.testng.Assert.assertNotNull;
-import static org.testng.Assert.assertTrue;
-
-import com.google.common.base.Predicate;
-import com.google.common.collect.ImmutableMap;
-import org.jclouds.azurecompute.arm.domain.IdReference;
-import org.jclouds.azurecompute.arm.domain.IpConfiguration;
-import org.jclouds.azurecompute.arm.domain.IpConfigurationProperties;
-import org.jclouds.azurecompute.arm.domain.NetworkInterfaceCard;
-import org.jclouds.azurecompute.arm.domain.NetworkInterfaceCardProperties;
-import org.jclouds.azurecompute.arm.domain.ResourceGroup;
-
-import org.jclouds.azurecompute.arm.domain.StorageService;
-import org.jclouds.azurecompute.arm.domain.Subnet;
-import org.jclouds.azurecompute.arm.domain.VirtualNetwork;
-import org.jclouds.azurecompute.arm.features.NetworkInterfaceCardApi;
-import org.jclouds.azurecompute.arm.features.StorageAccountApi;
-import org.jclouds.azurecompute.arm.features.SubnetApi;
-import org.jclouds.azurecompute.arm.features.VirtualNetworkApi;
-import org.jclouds.azurecompute.arm.functions.ParseJobStatus;
-import org.jclouds.util.Predicates2;
-import org.testng.Assert;
-import org.testng.annotations.AfterClass;
-import org.testng.annotations.BeforeClass;
 
 import java.net.URI;
 import java.util.Arrays;
-import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.util.List;
+import java.util.Properties;
+import java.util.Random;
 
-public class BaseAzureComputeApiLiveTest extends AbstractAzureComputeApiLiveTest {
+import org.jclouds.apis.BaseApiLiveTest;
+import org.jclouds.azurecompute.arm.AzureComputeApi;
+import org.jclouds.azurecompute.arm.domain.NetworkSecurityGroup;
+import org.jclouds.azurecompute.arm.domain.NetworkSecurityGroupProperties;
+import org.jclouds.azurecompute.arm.domain.NetworkSecurityRule;
+import org.jclouds.azurecompute.arm.domain.NetworkSecurityRuleProperties;
+import org.jclouds.azurecompute.arm.domain.ResourceGroup;
+import org.jclouds.azurecompute.arm.domain.StorageService;
+import org.jclouds.azurecompute.arm.domain.Subnet;
+import org.jclouds.azurecompute.arm.domain.VirtualNetwork;
+import org.jclouds.azurecompute.arm.functions.ParseJobStatus;
+
+import com.google.common.base.Predicate;
+import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.Lists;
+import com.google.inject.Injector;
+import com.google.inject.Key;
+import com.google.inject.Module;
+import com.google.inject.TypeLiteral;
+import com.google.inject.name.Names;
+
+import static com.google.common.base.Preconditions.checkNotNull;
+import static org.jclouds.azurecompute.arm.config.AzureComputeProperties.TIMEOUT_RESOURCE_DELETED;
+import static org.jclouds.compute.config.ComputeServiceProperties.TIMEOUT_IMAGE_AVAILABLE;
+import static org.jclouds.util.Predicates2.retry;
+import static org.testng.Assert.assertNotNull;
+import static org.testng.Assert.assertTrue;
+
+public class BaseAzureComputeApiLiveTest extends BaseApiLiveTest<AzureComputeApi> {
+
+   protected static final int RAND = new Random().nextInt(999);
    public static final String LOCATION = "westeurope";
    public static final String LOCATIONDESCRIPTION = "West Europe";
-
-   public static final String DEFAULT_SUBNET_ADDRESS_SPACE = "10.2.0.0/23";
-
-   public static final String VIRTUAL_NETWORK_NAME = "jclouds-virtual-network-live-test";
-
-   public static final String DEFAULT_SUBNET_NAME = "jclouds-1";
-
    public static final String DEFAULT_VIRTUALNETWORK_ADDRESS_PREFIX = "10.2.0.0/16";
-
-   public static final String NETWORKINTERFACECARD_NAME = "jcloudsNic";
-
-   private String resourceGroupName = null;
-
-   private String virtualNetworkName = null;
-
-   protected StorageService storageService;
-
-   private String storageServiceName = null;
-
-   protected String getStorageServiceName() {
-      if (storageServiceName == null) {
-         storageServiceName = String.format("%3.24s",
-                 System.getProperty("user.name") + RAND + this.getClass().getSimpleName()).toLowerCase();
-      }
-      return storageServiceName;
+   
+   protected Predicate<URI> imageAvailablePredicate;
+   protected Predicate<URI> resourceDeleted;
+   
+   public BaseAzureComputeApiLiveTest() {
+      provider = "azurecompute-arm";
    }
 
-   protected String getLocation() {
-      return LOCATION;
+   @Override protected AzureComputeApi create(Properties props, Iterable<Module> modules) {
+      Injector injector = newBuilder().modules(modules).overrides(props).buildInjector();
+      imageAvailablePredicate = injector.getInstance(Key.get(new TypeLiteral<Predicate<URI>>() {
+      }, Names.named(TIMEOUT_IMAGE_AVAILABLE)));
+      resourceDeleted = injector.getInstance(Key.get(new TypeLiteral<Predicate<URI>>() {
+      }, Names.named(TIMEOUT_RESOURCE_DELETED)));
+      return injector.getInstance(AzureComputeApi.class);
    }
 
-   protected String getEndpoint() {
-      String endpoint = null;
-      if (System.getProperty("test.azurecompute-arm.endpoint") != null) {
-         endpoint = System.getProperty("test.azurecompute-arm.endpoint");
-      }
-      assertNotNull(endpoint);
-      return endpoint;
+   @Override protected Properties setupProperties() {
+      Properties properties = super.setupProperties();
+      // for oauth
+      AzureLiveTestUtils.defaultProperties(properties);
+      checkNotNull(setIfTestSystemPropertyPresent(properties, "oauth.endpoint"), "test.oauth.endpoint");
+      return properties;
+   }
+   
+   protected void assertResourceDeleted(URI uri) {
+      assertNotNull(uri);
+      assertTrue(resourceDeleted.apply(uri), String.format("Resource %s was not terminated in the configured timeout", uri));
    }
 
-   protected String getSubscriptionId() {
-      String subscriptionid = null;
-      String endpoint = null;
-      endpoint = getEndpoint();
-      if (endpoint != null) {
-         subscriptionid = endpoint.substring(endpoint.lastIndexOf("/") + 1);
-      }
-      assertNotNull(subscriptionid);
-      return subscriptionid;
+   protected VirtualNetwork createDefaultVirtualNetwork(final String resourceGroupName, String virtualNetworkName, String virtualnetworkAddressPrefix, String location) {
+      final VirtualNetwork.VirtualNetworkProperties virtualNetworkProperties =
+              VirtualNetwork.VirtualNetworkProperties.create(null, null,
+                      VirtualNetwork.AddressSpace.create(Arrays.asList(virtualnetworkAddressPrefix)), null);
+      VirtualNetwork virtualNetwork = api.getVirtualNetworkApi(resourceGroupName).createOrUpdate(virtualNetworkName, location, virtualNetworkProperties);
+      retry(new Predicate<String>() {
+         @Override
+         public boolean apply(String name) {
+            VirtualNetwork virtualNetwork = api.getVirtualNetworkApi(resourceGroupName).get(name);
+            return virtualNetwork.properties().provisioningState().equals("Succeeded");
+         }
+      }, 60 * 4 * 1000).apply(virtualNetwork.name());
+      return virtualNetwork;
    }
 
-   protected String getResourceGroupName() {
-      if (resourceGroupName == null) {
-         resourceGroupName = String.format("%3.24s",
-                 System.getProperty("user.name") + RAND + "groupjclouds");
-         //createResourceGroup(resourceGroupName);
-      }
-      return resourceGroupName;
+   protected Subnet createDefaultSubnet(final String resourceGroupName, String subnetName, final String virtualNetworkName, String subnetAddressSpace) {
+      Subnet.SubnetProperties  properties = Subnet.SubnetProperties.builder().addressPrefix(subnetAddressSpace).build();
+      Subnet subnet = api.getSubnetApi(resourceGroupName, virtualNetworkName).createOrUpdate(subnetName, properties);
+      retry(new Predicate<String>() {
+         @Override
+         public boolean apply(String name) {
+            Subnet subnet = api.getSubnetApi(resourceGroupName, virtualNetworkName).get(name);
+            return subnet.properties().provisioningState().equals("Succeeded");
+         }
+      }, 60 * 4 * 1000).apply(subnet.name());
+      return subnet;
    }
 
-   protected void createResourceGroup(String name) {
-      ImmutableMap<String, String> tags = ImmutableMap.<String, String>builder().build();
-
-      final ResourceGroup resourceGroup = api.getResourceGroupApi().create(
-              name, LOCATION, tags);
-   }
-
-   private void deleteResourceGroup(String name) {
-      api.getResourceGroupApi().delete(name);
-   }
-
-
-   @BeforeClass
-   @Override
-   public void setup() {
-      super.setup();
-      createResourceGroup(getResourceGroupName());
-      storageService = getOrCreateStorageService(getStorageServiceName());
-   }
-
-   @AfterClass(alwaysRun = true)
-   @Override
-   protected void tearDown() {
-      super.tearDown();
-      Boolean status = api.getStorageAccountApi(getResourceGroupName()).delete(getStorageServiceName());
-      assertTrue(status.booleanValue());
-      deleteResourceGroup(getResourceGroupName());
-   }
-
-   protected StorageService getOrCreateStorageService(String storageServiceName) {
-      StorageAccountApi storageApi = api.getStorageAccountApi(getResourceGroupName());
-      StorageService ss = storageApi.get(storageServiceName);
-      if (ss != null) {
-         return ss;
-      }
-      URI uri = storageApi.create(storageServiceName, LOCATION, ImmutableMap.of("property_name",
+   protected StorageService createStorageService(String resourceGroupName, String storageServiceName, String location) {
+      URI uri = api.getStorageAccountApi(resourceGroupName).create(storageServiceName, location, ImmutableMap.of("property_name",
               "property_value"), ImmutableMap.of("accountType", StorageService.AccountType.Standard_LRS.toString()));
-      if (uri != null){
+      if (uri != null) {
          assertTrue(uri.toString().contains("api-version"));
 
-         boolean jobDone = Predicates2.retry(new Predicate<URI>() {
-            @Override public boolean apply(URI uri) {
+         boolean jobDone = retry(new Predicate<URI>() {
+            @Override
+            public boolean apply(URI uri) {
                return ParseJobStatus.JobStatus.DONE == api.getJobApi().jobStatus(uri);
             }
          }, 60 * 1 * 1000 /* 1 minute timeout */).apply(uri);
          assertTrue(jobDone, "create operation did not complete in the configured timeout");
       }
-      ss = storageApi.get(storageServiceName);
-      Assert.assertEquals(ss.location(), LOCATION);
-
-      Logger.getAnonymousLogger().log(Level.INFO, "created storageService: {0}", ss);
-      return ss;
+      return api.getStorageAccountApi(resourceGroupName).get(storageServiceName);
    }
 
-   protected VirtualNetwork getOrCreateVirtualNetwork(final String virtualNetworkName) {
-
-      VirtualNetworkApi vnApi = api.getVirtualNetworkApi(getResourceGroupName());
-      VirtualNetwork vn = vnApi.get(virtualNetworkName);
-
-      if (vn != null) {
-         return vn;
-      }
-
-      final VirtualNetwork.VirtualNetworkProperties virtualNetworkProperties =
-              VirtualNetwork.VirtualNetworkProperties.create(null, null,
-                      VirtualNetwork.AddressSpace.create(Arrays.asList(DEFAULT_VIRTUALNETWORK_ADDRESS_PREFIX)), null);
-
-
-      vn = vnApi.createOrUpdate(VIRTUAL_NETWORK_NAME, LOCATION, virtualNetworkProperties);
-      this.virtualNetworkName = virtualNetworkName;
-      return vn;
+   protected ResourceGroup createResourceGroup(String resourceGroupName) {
+      return api.getResourceGroupApi().create(resourceGroupName, LOCATION, ImmutableMap.<String, String>of());
    }
 
-   protected Subnet getOrCreateSubnet(final String subnetName, final String virtualNetworkName){
-
-      SubnetApi subnetApi = api.getSubnetApi(getResourceGroupName(), virtualNetworkName);
-      Subnet subnet = subnetApi.get(subnetName);
-
-      if (subnet != null){
-         return subnet;
-      }
-
-      Subnet.SubnetProperties  properties = Subnet.SubnetProperties.builder().addressPrefix(DEFAULT_SUBNET_ADDRESS_SPACE).build();
-      subnet = subnetApi.createOrUpdate(subnetName, properties);
-
-      return subnet;
+   protected URI deleteResourceGroup(String resourceGroupName) {
+      return api.getResourceGroupApi().delete(resourceGroupName);
    }
 
-   protected NetworkInterfaceCard getOrCreateNetworkInterfaceCard(final String networkInterfaceCardName){
-
-      NetworkInterfaceCardApi nicApi = api.getNetworkInterfaceCardApi(getResourceGroupName());
-      NetworkInterfaceCard nic = nicApi.get(networkInterfaceCardName);
-
-      if (nic != null){
-         return nic;
-      }
-
-      VirtualNetwork vn = getOrCreateVirtualNetwork(VIRTUAL_NETWORK_NAME);
-
-      Subnet subnet = getOrCreateSubnet(DEFAULT_SUBNET_NAME, VIRTUAL_NETWORK_NAME);
-
-      //Create properties object
-      final NetworkInterfaceCardProperties networkInterfaceCardProperties =
-              NetworkInterfaceCardProperties.builder()
-                      .ipConfigurations(Arrays.asList(IpConfiguration.create("myipconfig", null, null, null,
-                              IpConfigurationProperties.create(null, null, "Dynamic", IdReference.create(subnet.id()), null))
-                      )).build();
-
-      final Map<String, String> tags = ImmutableMap.of("jclouds", "livetest");
-      nic = nicApi.createOrUpdate(NETWORKINTERFACECARD_NAME, LOCATION, networkInterfaceCardProperties, tags);
-      return  nic;
+   protected NetworkSecurityGroup newNetworkSecurityGroup(String nsgName, String locationName) {
+      NetworkSecurityRule rule = NetworkSecurityRule.create("denyallout", null, null,
+              NetworkSecurityRuleProperties.builder()
+                      .description("deny all out")
+                      .protocol(NetworkSecurityRuleProperties.Protocol.Tcp)
+                      .sourcePortRange("*")
+                      .destinationPortRange("*")
+                      .sourceAddressPrefix("*")
+                      .destinationAddressPrefix("*")
+                      .access(NetworkSecurityRuleProperties.Access.Deny)
+                      .priority(4095)
+                      .direction(NetworkSecurityRuleProperties.Direction.Outbound)
+                      .build());
+      List<NetworkSecurityRule> ruleList = Lists.newArrayList();
+      ruleList.add(rule);
+      NetworkSecurityGroup nsg = NetworkSecurityGroup.create(nsgName, locationName, null,
+              NetworkSecurityGroupProperties.builder()
+                      .securityRules(ruleList)
+                      .build(),
+              null);
+      return nsg;
    }
+
+   protected String getSubscriptionId() {
+      String subscriptionId = endpoint.substring(endpoint.lastIndexOf("/") + 1);
+      assertNotNull(subscriptionId);
+      return subscriptionId;
+   }
+
 }
