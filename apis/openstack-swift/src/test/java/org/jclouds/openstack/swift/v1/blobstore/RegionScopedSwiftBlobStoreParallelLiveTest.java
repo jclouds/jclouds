@@ -57,7 +57,7 @@ import com.google.common.util.concurrent.MoreExecutors;
 public class RegionScopedSwiftBlobStoreParallelLiveTest extends BaseBlobStoreIntegrationTest {
 
    private final File BIG_FILE = new File("random.dat");
-   private final long SIZE = 1000000000; //10 * 1000 * 1000;
+   private final long SIZE = 10 * 1000 * 1000;
    private BlobStore blobStore;
    private String ETAG;
    private ListeningExecutorService executor =
@@ -100,6 +100,7 @@ public class RegionScopedSwiftBlobStoreParallelLiveTest extends BaseBlobStoreInt
    public void cleanupFiles() {
       // Delete local file
       delete(BIG_FILE);
+      delete(new File(BIG_FILE + ".downloaded"));
 
       // Delete uploaded file
       blobStore.clearContainer(CONTAINER);
