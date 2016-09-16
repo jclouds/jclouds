@@ -38,7 +38,7 @@
     <test.azurecompute-arm.build-version />
     <test.azurecompute-arm.identity>app id</test.azurecompute-arm.identity>
     <test.azurecompute-arm.credential>app password</test.azurecompute-arm.credential>
-    <jclouds.osgi.export>org.jclouds.azurecompute-arm*;version="${project.version}"</jclouds.osgi.export>
+    <jclouds.osgi.export>org.jclouds.azurecompute.arm*;version="${project.version}"</jclouds.osgi.export>
     <jclouds.osgi.import>org.jclouds*;version="${project.version}",*</jclouds.osgi.import>
   </properties>
 
