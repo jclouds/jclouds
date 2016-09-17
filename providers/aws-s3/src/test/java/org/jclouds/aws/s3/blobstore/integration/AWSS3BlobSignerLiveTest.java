@@ -16,9 +16,11 @@
  */
 package org.jclouds.aws.s3.blobstore.integration;
 
+import java.io.IOException;
 import java.util.Properties;
 
 import org.jclouds.Constants;
+import org.jclouds.blobstore.integration.internal.BaseBlobSignerLiveTest;
 import org.jclouds.s3.blobstore.integration.S3BlobSignerLiveTest;
 import org.testng.annotations.Test;
 
@@ -34,5 +36,10 @@ public class AWSS3BlobSignerLiveTest extends S3BlobSignerLiveTest {
       overrides.setProperty(Constants.PROPERTY_STRIP_EXPECT_HEADER, "true");
       overrides.setProperty(Constants.PROPERTY_SESSION_INTERVAL, "1");
       return overrides;
+   }
+
+   @Override
+   protected boolean supportsUrlWithTime() {
+      return true;
    }
 }

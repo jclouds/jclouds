@@ -33,11 +33,17 @@ public class S3BlobSignerLiveTest extends BaseBlobSignerLiveTest {
       BaseBlobStoreIntegrationTest.SANITY_CHECK_RETURNED_BUCKET_NAME = true;
    }
 
+   protected boolean supportsUrlWithTime() {
+      return false;
+   }
+
    @Test
    public void testSignGetUrlWithTime() throws InterruptedException, IOException {
       try {
          super.testSignGetUrlWithTime();
-         fail();
+         if (!supportsUrlWithTime()) {
+            fail();
+         }
       } catch (UnsupportedOperationException uoe) {
          throw new SkipException("not supported by S3 signer", uoe);
       }
@@ -47,7 +53,9 @@ public class S3BlobSignerLiveTest extends BaseBlobSignerLiveTest {
    public void testSignGetUrlWithTimeExpired() throws InterruptedException, IOException {
       try {
          super.testSignGetUrlWithTimeExpired();
-         fail();
+         if (!supportsUrlWithTime()) {
+            fail();
+         }
       } catch (UnsupportedOperationException uoe) {
          throw new SkipException("not supported by S3 signer", uoe);
       }
@@ -57,7 +65,9 @@ public class S3BlobSignerLiveTest extends BaseBlobSignerLiveTest {
    public void testSignPutUrlWithTime() throws Exception {
       try {
          super.testSignPutUrlWithTime();
-         fail();
+         if (!supportsUrlWithTime()) {
+            fail();
+         }
       } catch (UnsupportedOperationException uoe) {
          throw new SkipException("not supported by S3 signer", uoe);
       }
@@ -67,7 +77,9 @@ public class S3BlobSignerLiveTest extends BaseBlobSignerLiveTest {
    public void testSignPutUrlWithTimeExpired() throws Exception {
       try {
          super.testSignPutUrlWithTimeExpired();
-         fail();
+         if (!supportsUrlWithTime()) {
+            fail();
+         }
       } catch (UnsupportedOperationException uoe) {
          throw new SkipException("not supported by S3 signer", uoe);
       }
