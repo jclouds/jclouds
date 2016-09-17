@@ -16,11 +16,9 @@
  */
 package org.jclouds.aws.s3.blobstore.integration;
 
-import java.io.IOException;
 import java.util.Properties;
 
 import org.jclouds.Constants;
-import org.jclouds.blobstore.integration.internal.BaseBlobSignerLiveTest;
 import org.jclouds.s3.blobstore.integration.S3BlobSignerLiveTest;
 import org.testng.annotations.Test;
 
