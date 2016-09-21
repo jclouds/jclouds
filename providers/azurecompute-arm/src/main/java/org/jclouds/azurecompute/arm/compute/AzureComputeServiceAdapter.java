@@ -16,6 +16,11 @@
  */
 package org.jclouds.azurecompute.arm.compute;
 
+import static com.google.common.base.Preconditions.checkState;
+import static java.lang.String.format;
+import static java.util.concurrent.TimeUnit.SECONDS;
+import static org.jclouds.util.Predicates2.retry;
+
 import java.util.Collection;
 import java.util.List;
 import java.util.Set;
@@ -29,6 +34,7 @@ import org.jclouds.azurecompute.arm.AzureComputeApi;
 import org.jclouds.azurecompute.arm.compute.config.AzureComputeServiceContextModule.AzureComputeConstants;
 import org.jclouds.azurecompute.arm.compute.functions.DeploymentToVMDeployment;
 import org.jclouds.azurecompute.arm.compute.functions.VMImageToImage;
+import org.jclouds.azurecompute.arm.compute.predicates.IsDeploymentInRegions;
 import org.jclouds.azurecompute.arm.domain.Deployment;
 import org.jclouds.azurecompute.arm.domain.DeploymentBody;
 import org.jclouds.azurecompute.arm.domain.DeploymentProperties;
@@ -38,11 +44,11 @@ import org.jclouds.azurecompute.arm.domain.ResourceProviderMetaData;
 import org.jclouds.azurecompute.arm.domain.SKU;
 import org.jclouds.azurecompute.arm.domain.StorageService;
 import org.jclouds.azurecompute.arm.domain.VMDeployment;
-import org.jclouds.azurecompute.arm.domain.VMSize;
-import org.jclouds.azurecompute.arm.domain.Version;
 import org.jclouds.azurecompute.arm.domain.VMHardware;
 import org.jclouds.azurecompute.arm.domain.VMImage;
+import org.jclouds.azurecompute.arm.domain.VMSize;
 import org.jclouds.azurecompute.arm.domain.Value;
+import org.jclouds.azurecompute.arm.domain.Version;
 import org.jclouds.azurecompute.arm.features.DeploymentApi;
 import org.jclouds.azurecompute.arm.features.OSImageApi;
 import org.jclouds.azurecompute.arm.functions.CleanupResources;
@@ -52,14 +58,13 @@ import org.jclouds.compute.ComputeServiceAdapter;
 import org.jclouds.compute.domain.Template;
 import org.jclouds.compute.reference.ComputeServiceConstants;
 import org.jclouds.domain.LoginCredentials;
-import org.jclouds.json.Json;
-import org.jclouds.location.reference.LocationConstants;
+import org.jclouds.location.Region;
 import org.jclouds.logging.Logger;
-import org.jclouds.providers.ProviderMetadata;
 
 import com.google.common.base.Function;
 import com.google.common.base.Predicate;
 import com.google.common.base.Splitter;
+import com.google.common.base.Supplier;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.FluentIterable;
 import com.google.common.collect.Iterables;
@@ -67,11 +72,6 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.Sets;
 import com.google.common.net.UrlEscapers;
-
-import static com.google.common.base.Preconditions.checkState;
-import static java.lang.String.format;
-import static java.util.concurrent.TimeUnit.SECONDS;
-import static org.jclouds.util.Predicates2.retry;
 
 /**
  * Defines the connection between the {@link AzureComputeApi} implementation and the jclouds
@@ -86,16 +86,16 @@ public class AzureComputeServiceAdapter implements ComputeServiceAdapter<VMDeplo
    @Resource
    @Named(ComputeServiceConstants.COMPUTE_LOGGER)
    private Logger logger = Logger.NULL;
-   private final Json json;
    private final AzureComputeApi api;
    private final AzureComputeConstants azureComputeConstants;
-   private final ProviderMetadata providerMetadata;
+   private final Supplier<Set<String>> regionIds;
+   private final IsDeploymentInRegions isDeploymentInRegions;
    private final DeploymentToVMDeployment deploymentToVMDeployment;
 
    @Inject
    AzureComputeServiceAdapter(final AzureComputeApi api, final AzureComputeConstants azureComputeConstants,
-                              CleanupResources cleanupResources, Json json, ProviderMetadata providerMetadata, DeploymentToVMDeployment deploymentToVMDeployment) {
-      this.json = json;
+         CleanupResources cleanupResources, @Region Supplier<Set<String>> regionIds,
+         IsDeploymentInRegions isDeploymentInRegions, DeploymentToVMDeployment deploymentToVMDeployment) {
       this.api = api;
       this.azureComputeConstants = azureComputeConstants;
       this.azureGroup = azureComputeConstants.azureResourceGroup();
@@ -103,7 +103,8 @@ public class AzureComputeServiceAdapter implements ComputeServiceAdapter<VMDeplo
       logger.debug("AzureComputeServiceAdapter set azuregroup to: " + azureGroup);
 
       this.cleanupResources = cleanupResources;
-      this.providerMetadata = providerMetadata;
+      this.regionIds = regionIds;
+      this.isDeploymentInRegions = isDeploymentInRegions;
       this.deploymentToVMDeployment = deploymentToVMDeployment;
    }
 
@@ -279,8 +280,6 @@ public class AzureComputeServiceAdapter implements ComputeServiceAdapter<VMDeplo
 
    @Override
    public Iterable<Location> listLocations() {
-      final Iterable<String> whiteListedRegionNames = findWhiteListOfRegions();
-
       final Iterable<String> vmLocations = FluentIterable.from(api.getResourceProviderApi().get("Microsoft.Compute"))
               .filter(new Predicate<ResourceProviderMetaData>() {
                  @Override
@@ -305,7 +304,7 @@ public class AzureComputeServiceAdapter implements ComputeServiceAdapter<VMDeplo
               .filter(new Predicate<Location>() {
                  @Override
                  public boolean apply(Location location) {
-                    return whiteListedRegionNames == null ? true : Iterables.contains(whiteListedRegionNames, location.name());
+                    return regionIds.get().isEmpty() ? true : regionIds.get().contains(location.name());
                  }
               })
               .toList();
@@ -317,7 +316,7 @@ public class AzureComputeServiceAdapter implements ComputeServiceAdapter<VMDeplo
    public VMDeployment getNode(final String id) {
       Deployment deployment = api.getDeploymentApi(azureGroup).get(id);
       if (deployment == null) return null;
-      if (new IsDeploymentInRegions(findWhiteListOfRegions()).apply(deployment)) {
+      if (isDeploymentInRegions.apply(deployment)) {
          return deploymentToVMDeployment.apply(deployment);
       }
       return null;
@@ -346,7 +345,7 @@ public class AzureComputeServiceAdapter implements ComputeServiceAdapter<VMDeplo
    @Override
    public Iterable<VMDeployment> listNodes() {
       return FluentIterable.from(api.getDeploymentApi(azureGroup).list())
-              .filter(new IsDeploymentInRegions(findWhiteListOfRegions()))
+              .filter(isDeploymentInRegions)
               .filter(new Predicate<Deployment>() {
                  @Override
                  public boolean apply(Deployment deployment) {
@@ -368,25 +367,5 @@ public class AzureComputeServiceAdapter implements ComputeServiceAdapter<VMDeplo
             return Iterables.contains(ids, input.deployment().name());
          }
       });
-   }
-
-   private Iterable<String> findWhiteListOfRegions() {
-      if (providerMetadata.getDefaultProperties().get(LocationConstants.PROPERTY_REGIONS) == null)  return null;
-      return Splitter.on(",").trimResults().split((CharSequence) providerMetadata.getDefaultProperties().get(LocationConstants.PROPERTY_REGIONS));
-   }
-
-   private class IsDeploymentInRegions implements Predicate<Deployment> {
-
-      private final Iterable<String> whiteListOfRegions;
-
-      public IsDeploymentInRegions(Iterable<String> whiteListOfRegions) {
-         this.whiteListOfRegions = whiteListOfRegions;
-      }
-
-      @Override
-      public boolean apply(Deployment deployment) {
-         Value locationValue = deployment.properties().parameters().get("location");
-         return Iterables.contains(whiteListOfRegions, locationValue.value());
-      }
    }
 }
