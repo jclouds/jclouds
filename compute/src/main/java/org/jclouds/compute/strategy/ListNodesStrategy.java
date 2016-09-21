@@ -25,7 +25,7 @@ public interface ListNodesStrategy {
 
    Iterable<? extends ComputeMetadata> listNodes();
 
-   Iterable<? extends NodeMetadata> listDetailsOnNodesMatching(Predicate<ComputeMetadata> filter);
+   Iterable<? extends NodeMetadata> listDetailsOnNodesMatching(Predicate<? super NodeMetadata> filter);
 
    Iterable<? extends NodeMetadata> listNodesByIds(Iterable<String> ids);
 }

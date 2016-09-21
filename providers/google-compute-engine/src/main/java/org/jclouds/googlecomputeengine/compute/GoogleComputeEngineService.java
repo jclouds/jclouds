@@ -136,7 +136,7 @@ public final class GoogleComputeEngineService extends BaseComputeService {
    }
 
    @Override
-   public Set<? extends NodeMetadata> destroyNodesMatching(Predicate<NodeMetadata> filter) {
+   public Set<? extends NodeMetadata> destroyNodesMatching(Predicate<? super NodeMetadata> filter) {
       // GCE does not return TERMINATED nodes, so in practice no node will never reach the TERMINATED
       // state, and the deleted nodes will never be returned.
       // In order to be able to clean up the resources associated to the deleted nodes, we have to retrieve

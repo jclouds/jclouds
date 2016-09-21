@@ -118,7 +118,7 @@ public class AdaptingComputeServiceStrategies<N, H, I, L> implements CreateNodeW
    }
 
    @Override
-   public Iterable<? extends NodeMetadata> listDetailsOnNodesMatching(Predicate<ComputeMetadata> filter) {
+   public Iterable<? extends NodeMetadata> listDetailsOnNodesMatching(Predicate<? super NodeMetadata> filter) {
       return filter(transform(client.listNodes(), nodeMetadataAdapter), filter);
    }
    

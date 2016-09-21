@@ -644,7 +644,7 @@ public abstract class BaseComputeServiceLiveTest extends BaseComputeServiceConte
 
          }));
 
-      SortedSet<? extends NodeMetadata> listedNodes = ImmutableSortedSet.copyOf(client.listNodesByIds(nodeIds));
+      SortedSet<? extends ComputeMetadata> listedNodes = ImmutableSortedSet.copyOf(client.listNodesByIds(nodeIds));
       // newTreeSet is here because elementsEqual cares about ordering.
       assertTrue(Iterables.elementsEqual(nodes, listedNodes),
               "nodes and listNodesByIds should be identical: was " + listedNodes + " but should be " + nodes);

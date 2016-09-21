@@ -103,7 +103,7 @@ public interface ComputeService {
    /**
     * @return all nodes with one of the provided ids available to the current user.
     */
-   Set<? extends NodeMetadata> listNodesByIds(Iterable<String> ids);
+   Set<? extends ComputeMetadata> listNodesByIds(Iterable<String> ids);
 
    /**
     * The list locations command returns all the valid locations for nodes. A location has a scope,
@@ -197,7 +197,7 @@ public interface ComputeService {
     * @throws NoSuchElementException
     *            if no nodes matched the predicate specified
     */
-   Set<? extends NodeMetadata> resumeNodesMatching(Predicate<NodeMetadata> filter);
+   Set<? extends NodeMetadata> resumeNodesMatching(Predicate<? super NodeMetadata> filter);
 
    /**
     * suspend the node, given its id. This will result in
@@ -227,7 +227,7 @@ public interface ComputeService {
     * @throws NoSuchElementException
     *            if no nodes matched the predicate specified
     */
-   Set<? extends NodeMetadata> suspendNodesMatching(Predicate<NodeMetadata> filter);
+   Set<? extends NodeMetadata> suspendNodesMatching(Predicate<? super NodeMetadata> filter);
 
    /**
     * destroy the node, given its id. If it is the only node in a tag set, the dependent resources
@@ -242,7 +242,7 @@ public interface ComputeService {
     * 
     * @return list of nodes destroyed
     */
-   Set<? extends NodeMetadata> destroyNodesMatching(Predicate<NodeMetadata> filter);
+   Set<? extends NodeMetadata> destroyNodesMatching(Predicate<? super NodeMetadata> filter);
 
    /**
     * reboot the node, given its id.
@@ -258,7 +258,7 @@ public interface ComputeService {
     * @throws NoSuchElementException
     *            if no nodes matched the predicate specified
     */
-   Set<? extends NodeMetadata> rebootNodesMatching(Predicate<NodeMetadata> filter);
+   Set<? extends NodeMetadata> rebootNodesMatching(Predicate<? super NodeMetadata> filter);
 
    /**
     * Find a node by its id.
@@ -272,27 +272,27 @@ public interface ComputeService {
     * @param filter
     *           how to select the nodes you are interested in details on.
     */
-   Set<? extends NodeMetadata> listNodesDetailsMatching(Predicate<ComputeMetadata> filter);
+   Set<? extends NodeMetadata> listNodesDetailsMatching(Predicate<? super NodeMetadata> filter);
 
    /**
     * 
     * @see ComputeService#runScriptOnNodesMatching(Predicate, Statement, RunScriptOptions)
     */
-   Map<? extends NodeMetadata, ExecResponse> runScriptOnNodesMatching(Predicate<NodeMetadata> filter, String runScript)
+   Map<? extends NodeMetadata, ExecResponse> runScriptOnNodesMatching(Predicate<? super NodeMetadata> filter, String runScript)
             throws RunScriptOnNodesException;
 
    /**
     * 
     * @see ComputeService#runScriptOnNodesMatching(Predicate, Statement, RunScriptOptions)
     */
-   Map<? extends NodeMetadata, ExecResponse> runScriptOnNodesMatching(Predicate<NodeMetadata> filter,
+   Map<? extends NodeMetadata, ExecResponse> runScriptOnNodesMatching(Predicate<? super NodeMetadata> filter,
             Statement runScript) throws RunScriptOnNodesException;
 
    /**
     * 
     * @see ComputeService#runScriptOnNodesMatching(Predicate, Statement, RunScriptOptions)
     */
-   Map<? extends NodeMetadata, ExecResponse> runScriptOnNodesMatching(Predicate<NodeMetadata> filter, String runScript,
+   Map<? extends NodeMetadata, ExecResponse> runScriptOnNodesMatching(Predicate<? super NodeMetadata> filter, String runScript,
             RunScriptOptions options) throws RunScriptOnNodesException;
 
    /**
@@ -313,7 +313,7 @@ public interface ComputeService {
     * @see org.jclouds.compute.predicates.NodePredicates#runningInGroup(String)
     * @see org.jclouds.scriptbuilder.domain.Statements
     */
-   Map<? extends NodeMetadata, ExecResponse> runScriptOnNodesMatching(Predicate<NodeMetadata> filter,
+   Map<? extends NodeMetadata, ExecResponse> runScriptOnNodesMatching(Predicate<? super NodeMetadata> filter,
             Statement runScript, RunScriptOptions options) throws RunScriptOnNodesException;
 
    /**

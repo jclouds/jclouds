@@ -103,7 +103,7 @@ public class EC2ListNodesStrategy implements ListNodesStrategy {
    }
 
    @Override
-   public Set<? extends NodeMetadata> listDetailsOnNodesMatching(Predicate<ComputeMetadata> filter) {
+   public Set<? extends NodeMetadata> listDetailsOnNodesMatching(Predicate<? super NodeMetadata> filter) {
       Iterable<? extends RunningInstance> instances = pollRunningInstances();
       Iterable<? extends NodeMetadata> nodes = filter(transform(filter(instances, notNull()),
                runningInstanceToNodeMetadata), and(notNull(), filter));
