@@ -80,6 +80,8 @@ import com.google.inject.Provides;
 import com.google.inject.Scopes;
 import com.google.inject.TypeLiteral;
 import org.jclouds.compute.domain.internal.TemplateBuilderImpl;
+import org.jclouds.compute.functions.NodeAndTemplateOptionsToStatement;
+import org.jclouds.compute.functions.NodeAndTemplateOptionsToStatementWithoutPublicKey;
 import org.jclouds.googlecomputeengine.compute.domain.internal.GoogleComputeEngineArbitraryCpuRamTemplateBuilderImpl;
 
 public final class GoogleComputeEngineServiceContextModule
@@ -116,6 +118,7 @@ public final class GoogleComputeEngineServiceContextModule
             .to(CreateNodesWithGroupEncodedIntoNameThenAddToSet.class);
 
       bind(TemplateOptions.class).to(GoogleComputeEngineTemplateOptions.class);
+      bind(NodeAndTemplateOptionsToStatement.class).to(NodeAndTemplateOptionsToStatementWithoutPublicKey.class);
 
       bind(new TypeLiteral<Function<Set<? extends NodeMetadata>, Set<String>>>() {
       }).to(OrphanedGroupsFromDeadNodes.class);

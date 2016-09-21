@@ -117,7 +117,6 @@ public class InstanceToNodeMetadataTest {
    private Set<Hardware> hardwares;
    private URI imageUrl = new ParseImageTest().expected().selfLink();
    private Set<Location> locations;
-   private InstanceToNodeMetadata groupGroupNodeParser;
    private InstanceToNodeMetadata groupNullNodeParser;
 
    @BeforeMethod
@@ -139,7 +138,6 @@ public class InstanceToNodeMetadataTest {
                new LocationBuilder().id("0").description("mock parent location").scope(LocationScope.PROVIDER)
                .build()).build());
 
-      groupGroupNodeParser = createNodeParser(hardwares, locations, "Group");
       groupNullNodeParser = createNodeParser(hardwares, locations, null);
    }
 

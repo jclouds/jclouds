@@ -184,7 +184,6 @@ public class InstanceApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
    public void testGetSerialPortOutput() {
       SerialPortOutput output = api().getSerialPortOutput(INSTANCE_NAME);
       assertNotNull(output);
-      assertNotNull(output.selfLink());
       assertNotNull(output.contents());
    }
 

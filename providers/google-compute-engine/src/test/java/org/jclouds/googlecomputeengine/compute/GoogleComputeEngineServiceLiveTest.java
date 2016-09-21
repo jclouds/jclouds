@@ -29,10 +29,6 @@ import java.net.URI;
 import java.util.Properties;
 import java.util.Set;
 
-import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.ImmutableSet;
-import com.google.common.collect.Iterables;
-import com.google.inject.Module;
 import org.jclouds.compute.ComputeServiceContext;
 import org.jclouds.compute.domain.Hardware;
 import org.jclouds.compute.domain.NodeMetadata;
@@ -48,6 +44,11 @@ import org.jclouds.googlecomputeengine.domain.MachineType;
 import org.jclouds.rest.AuthorizationException;
 import org.jclouds.sshj.config.SshjSshClientModule;
 import org.testng.annotations.Test;
+
+import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.Iterables;
+import com.google.inject.Module;
 
 @Test(groups = "live", singleThreaded = true)
 public class GoogleComputeEngineServiceLiveTest extends BaseComputeServiceLiveTest {

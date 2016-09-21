@@ -45,11 +45,12 @@ import com.google.common.base.Predicate;
 import com.google.common.collect.FluentIterable;
 import com.google.common.collect.Iterables;
 
+@Test(groups = "live", testName = "TargetPoolApiLiveTest")
 public class TargetPoolApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
 
    private static final String BACKUP_TARGETPOOL_NAME = "targetpool-api-live-test-backup";
    private static final String TARGETPOOL_NAME = "targetpool-api-live-test-primary";
-   private static final String THIRD_TARGETPOOL_NAME = "targetpool-apo-live-test-third";
+   private static final String THIRD_TARGETPOOL_NAME = "targetpool-api-live-test-third";
    private static final String DESCRIPTION = "A New TargetPool!";
    private static final String DESCRIPTION_BACKUP = "A backup target pool!";
 
@@ -226,14 +227,14 @@ public class TargetPoolApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
    @Test(groups = "live", dependsOnMethods = {"testInsertTargetPool2"})
    public void testListBackupTargetPool() {
       TargetPoolCreationOptions options = new TargetPoolCreationOptions.Builder(THIRD_TARGETPOOL_NAME)
-      .description("A targetPool for testing setBackup.").build();
+            .description("A targetPool for testing setBackup.").build();
       assertOperationDoneSuccessfully(api().create(options));
       TargetPool targetPool = api().get(THIRD_TARGETPOOL_NAME);
       assertNotNull(targetPool);
       assertEquals(targetPool.name(), THIRD_TARGETPOOL_NAME);
       assertEquals(targetPool.backupPool(), null);
 
-      URI selfLink = api().get(TARGETPOOL_NAME).selfLink();
+      URI selfLink = api().get(BACKUP_TARGETPOOL_NAME).selfLink();
 
       Float failoverRatio = Float.valueOf((float) 0.5);
       assertOperationDoneSuccessfully(api().setBackup(THIRD_TARGETPOOL_NAME, failoverRatio, selfLink));

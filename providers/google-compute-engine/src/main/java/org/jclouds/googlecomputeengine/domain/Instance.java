@@ -137,7 +137,7 @@ public abstract class Instance {
    @AutoValue
    public abstract static class SerialPortOutput {
 
-      public abstract URI selfLink();
+      @Nullable public abstract URI selfLink();
 
       /** The contents of the console output. */
       public abstract String contents();

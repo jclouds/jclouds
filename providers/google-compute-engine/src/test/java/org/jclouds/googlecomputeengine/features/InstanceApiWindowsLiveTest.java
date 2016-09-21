@@ -47,7 +47,7 @@ import java.util.concurrent.atomic.AtomicReference;
 import static org.jclouds.googlecomputeengine.options.ListOptions.Builder.filter;
 import static org.testng.Assert.assertFalse;
 
-@Test(groups = "live", testName = "InstanceApiLiveTest")
+@Test(groups = "live", testName = "InstanceApiWindowsLiveTest")
 public class InstanceApiWindowsLiveTest extends BaseGoogleComputeEngineApiLiveTest {
 
    private static final String INSTANCE_NETWORK_NAME = "instance-api-live-test-network";
