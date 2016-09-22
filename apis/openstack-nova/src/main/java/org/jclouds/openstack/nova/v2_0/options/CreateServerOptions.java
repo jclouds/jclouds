@@ -20,7 +20,6 @@ import static com.google.common.base.Objects.equal;
 import static com.google.common.base.Objects.toStringHelper;
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
-import static com.google.common.base.Preconditions.checkState;
 import static com.google.common.base.Strings.emptyToNull;
 import static com.google.common.io.BaseEncoding.base64;
 
@@ -62,8 +61,6 @@ public class CreateServerOptions implements MapBinder {
                path.getBytes().length < 255,
                String.format("maximum length of path is 255 bytes.  Path specified %s is %d bytes", path,
                      path.getBytes().length));
-         checkArgument(contents.length < 10 * 1024,
-               String.format("maximum size of the file is 10KB.  Contents specified is %d bytes", contents.length));
       }
 
       public String getContents() {
@@ -272,18 +269,19 @@ public class CreateServerOptions implements MapBinder {
     * provide a minimal amount of launch-time personalization. If significant
     * customization is required, a custom image should be created. The max size
     * of the file path data is 255 bytes while the max size of the file contents
-    * is 10KB. Note that the file contents should be encoded as a Base64 string
-    * and the 10KB limit refers to the number of bytes in the decoded data not
-    * the number of characters in the encoded data. The maximum number of file
-    * path/content pairs that can be supplied is 5. Any existing files that
-    * match the specified file will be renamed to include the extension bak
-    * followed by a time stamp. For example, the file /etc/passwd will be backed
+    * is determined by provider quotas(default size is 10KB). Note that the file
+    * contents should be encoded as a Base64 string and the size limit refers to
+    * the number of bytes in the decoded data not the number of characters in the
+    * encoded data. The maximum number of file path/content pairs that can be supplied
+    * is determined by provider quotas(default is 5). Any existing files that match
+    * the specified file will be renamed to include the extension bak followed by a
+    * time stamp.
+    * For example, the file /etc/passwd will be backed
     * up as /etc/passwd.bak.1246036261.5785. All files will have root and the
     * root group as owner and group owner, respectively and will allow user and
     * group read access only (-r--r-----).
     */
    public CreateServerOptions writeFileToPath(byte[] contents, String path) {
-      checkState(personality.size() < 5, "maximum number of files allowed is 5");
       personality.add(new File(path, contents));
       return this;
    }
