@@ -104,24 +104,35 @@ public class Region {
     * users
     */
    public static final String AP_SOUTHEAST_1 = "ap-southeast-1";
+   
+   /**
+    * Region in Mumbai (India), launched June 27, 2016. This region improves latency for Asia-based
+    * users
+    */
+   public static final String AP_SOUTH_1 = "ap-south-1";
 
    /**
     * Region in Tokyo, launched March 2, 2011. This region improves latency for Asia-based users
     */
    public static final String AP_NORTHEAST_1 = "ap-northeast-1";
+   
+   /**
+    * Region in Seoul, launched January 6, 2016. This region improves latency for Asia-based users
+    */
+   public static final String AP_NORTHEAST_2 = "ap-northeast-2";
 
    public static final Set<String> DEFAULT_S3 = ImmutableSet.of(US_STANDARD, US_WEST_1, US_WEST_2, EU_WEST_1, EU_CENTRAL_1, SA_EAST_1,
-         AP_SOUTHEAST_1, AP_SOUTHEAST_2, AP_NORTHEAST_1);
+         AP_SOUTHEAST_1, AP_SOUTHEAST_2, AP_SOUTH_1, AP_NORTHEAST_1, AP_NORTHEAST_2);
 
    public static final Set<String> DEFAULT_REGIONS = ImmutableSet.of(US_EAST_1, US_WEST_1, US_WEST_2, SA_EAST_1,
-         EU_WEST_1, EU_CENTRAL_1, AP_SOUTHEAST_1, AP_SOUTHEAST_2, AP_NORTHEAST_1);
+         EU_WEST_1, EU_CENTRAL_1, AP_SOUTHEAST_1, AP_SOUTHEAST_2, AP_SOUTH_1, AP_NORTHEAST_1, AP_NORTHEAST_2);
 
    public static Properties regionPropertiesS3() {
 
       Properties properties = regionProperties();
       properties.setProperty(PROPERTY_REGIONS, Joiner.on(',').join(DEFAULT_S3));
       // note that due to US_STANDARD the codes include US instead of US-VA
-      properties.setProperty(PROPERTY_ISO3166_CODES, "US,US-CA,US-OR,BR-SP,IE,DE-HE,SG,AU-NSW,JP-13");
+      properties.setProperty(PROPERTY_ISO3166_CODES, "US,US-CA,US-OR,BR-SP,IE,DE-HE,SG,AU-NSW,IN-MH,JP-13,KR-11");
       properties.setProperty(PROPERTY_REGION + "." + US_STANDARD + "." + ISO3166_CODES, "US");
       return properties;
    }
@@ -129,7 +140,7 @@ public class Region {
    public static Properties regionProperties() {
       Properties properties = new Properties();
       properties.setProperty(PROPERTY_REGIONS, Joiner.on(',').join(DEFAULT_REGIONS));
-      properties.setProperty(PROPERTY_ISO3166_CODES, "US-VA,US-CA,US-OR,BR-SP,IE,DE-HE,SG,AU-NSW,JP-13");
+      properties.setProperty(PROPERTY_ISO3166_CODES, "US-VA,US-CA,US-OR,BR-SP,IE,DE-HE,SG,AU-NSW,IN-MH,JP-13,KR-11");
       properties.setProperty(PROPERTY_REGION + "." + US_EAST_1 + "." + ISO3166_CODES, "US-VA");
       properties.setProperty(PROPERTY_REGION + "." + US_WEST_1 + "." + ISO3166_CODES, "US-CA");
       properties.setProperty(PROPERTY_REGION + "." + US_WEST_2 + "." + ISO3166_CODES, "US-OR");
@@ -138,7 +149,9 @@ public class Region {
       properties.setProperty(PROPERTY_REGION + "." + EU_CENTRAL_1 + "." + ISO3166_CODES, "DE-HE");
       properties.setProperty(PROPERTY_REGION + "." + AP_SOUTHEAST_1 + "." + ISO3166_CODES, "SG");
       properties.setProperty(PROPERTY_REGION + "." + AP_SOUTHEAST_2 + "." + ISO3166_CODES, "AU-NSW");
+      properties.setProperty(PROPERTY_REGION + "." + AP_SOUTH_1 + "." + ISO3166_CODES, "IN-MH");
       properties.setProperty(PROPERTY_REGION + "." + AP_NORTHEAST_1 + "." + ISO3166_CODES, "JP-13");
+      properties.setProperty(PROPERTY_REGION + "." + AP_NORTHEAST_2 + "." + ISO3166_CODES, "KR-11");
       return properties;
    }
 }
