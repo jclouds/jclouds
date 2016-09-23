@@ -18,8 +18,10 @@ package org.jclouds.aws.s3;
 
 import static org.jclouds.Constants.PROPERTY_ENDPOINT;
 import static org.jclouds.aws.domain.Region.AP_NORTHEAST_1;
+import static org.jclouds.aws.domain.Region.AP_NORTHEAST_2;
 import static org.jclouds.aws.domain.Region.AP_SOUTHEAST_1;
 import static org.jclouds.aws.domain.Region.AP_SOUTHEAST_2;
+import static org.jclouds.aws.domain.Region.AP_SOUTH_1;
 import static org.jclouds.aws.domain.Region.EU_WEST_1;
 import static org.jclouds.aws.domain.Region.SA_EAST_1;
 import static org.jclouds.aws.domain.Region.US_STANDARD;
@@ -52,7 +54,7 @@ public class AWSS3ProviderMetadata extends BaseProviderMetadata {
    public Builder toBuilder() {
       return builder().fromProviderMetadata(this);
    }
-   
+
    public AWSS3ProviderMetadata() {
       super(builder());
    }
@@ -74,11 +76,15 @@ public class AWSS3ProviderMetadata extends BaseProviderMetadata {
             "https://s3-ap-southeast-1.amazonaws.com");
       properties.setProperty(PROPERTY_REGION + "." + AP_SOUTHEAST_2 + "." + ENDPOINT,
             "https://s3-ap-southeast-2.amazonaws.com");
+      properties.setProperty(PROPERTY_REGION + "." + AP_SOUTH_1 + "." + ENDPOINT,
+          "https://s3-ap-south-1.amazonaws.com");
       properties.setProperty(PROPERTY_REGION + "." + AP_NORTHEAST_1 + "." + ENDPOINT,
             "https://s3-ap-northeast-1.amazonaws.com");
+      properties.setProperty(PROPERTY_REGION + "." + AP_NORTHEAST_2 + "." + ENDPOINT,
+          "https://s3-ap-northeast-2.amazonaws.com");
       return properties;
    }
-   
+
    public static class Builder extends BaseProviderMetadata.Builder {
 
       protected Builder() {
@@ -88,7 +94,7 @@ public class AWSS3ProviderMetadata extends BaseProviderMetadata {
          .homepage(URI.create("http://aws.amazon.com/s3"))
          .console(URI.create("https://console.aws.amazon.com/s3/home"))
          .linkedServices("aws-ec2", "aws-elb", "aws-cloudwatch", "aws-s3", "aws-simpledb")
-         .iso3166Codes("US", "US-CA", "US-OR", "BR-SP", "IE", "SG", "AU-NSW", "JP-13")
+         .iso3166Codes("US", "US-CA", "US-OR", "BR-SP", "IE", "DE-HE", "SG", "AU-NSW", "IN-MH", "JP-13", "KR-11")
          .defaultProperties(AWSS3ProviderMetadata.defaultProperties());
       }
 
@@ -96,7 +102,7 @@ public class AWSS3ProviderMetadata extends BaseProviderMetadata {
       public AWSS3ProviderMetadata build() {
          return new AWSS3ProviderMetadata(this);
       }
-      
+
       @Override
       public Builder fromProviderMetadata(
             ProviderMetadata in) {
