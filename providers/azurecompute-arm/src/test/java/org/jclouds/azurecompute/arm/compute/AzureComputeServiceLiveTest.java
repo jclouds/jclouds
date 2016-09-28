@@ -16,21 +16,26 @@
  */
 package org.jclouds.azurecompute.arm.compute;
 
-import java.util.Map;
+import static com.google.common.base.Preconditions.checkNotNull;
+import static org.jclouds.azurecompute.arm.config.AzureComputeProperties.IMAGE_PUBLISHERS;
+import static org.jclouds.azurecompute.arm.config.AzureComputeProperties.RESOURCE_GROUP_NAME;
+import static org.jclouds.compute.config.ComputeServiceProperties.TIMEOUT_NODE_RUNNING;
+import static org.jclouds.compute.config.ComputeServiceProperties.TIMEOUT_NODE_SUSPENDED;
+import static org.jclouds.compute.config.ComputeServiceProperties.TIMEOUT_NODE_TERMINATED;
+import static org.jclouds.compute.config.ComputeServiceProperties.TIMEOUT_PORT_OPEN;
+import static org.jclouds.compute.config.ComputeServiceProperties.TIMEOUT_SCRIPT_COMPLETE;
+import static org.jclouds.compute.options.TemplateOptions.Builder.authorizePublicKey;
+import static org.jclouds.location.reference.LocationConstants.PROPERTY_REGIONS;
+
 import java.util.Properties;
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 
 import org.jclouds.azurecompute.arm.AzureComputeProviderMetadata;
 import org.jclouds.azurecompute.arm.internal.AzureLiveTestUtils;
-import org.jclouds.compute.RunScriptOnNodesException;
-import org.jclouds.compute.domain.ExecResponse;
 import org.jclouds.compute.domain.NodeMetadata;
-import org.jclouds.compute.domain.OperatingSystem;
 import org.jclouds.compute.domain.Template;
+import org.jclouds.compute.domain.TemplateBuilder;
 import org.jclouds.compute.internal.BaseComputeServiceLiveTest;
-import org.jclouds.compute.predicates.NodePredicates;
-import org.jclouds.domain.LoginCredentials;
 import org.jclouds.logging.config.LoggingModule;
 import org.jclouds.logging.slf4j.config.SLF4JLoggingModule;
 import org.jclouds.providers.ProviderMetadata;
@@ -41,29 +46,18 @@ import org.jclouds.scriptbuilder.statements.login.AdminAccess;
 import org.jclouds.sshj.config.SshjSshClientModule;
 import org.testng.annotations.Test;
 
+import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.ImmutableSet;
 import com.google.inject.Module;
-
-import static com.google.common.base.Preconditions.checkNotNull;
-import static org.jclouds.azurecompute.arm.config.AzureComputeProperties.IMAGE_PUBLISHERS;
-import static org.jclouds.azurecompute.arm.config.AzureComputeProperties.RESOURCE_GROUP_NAME;
-import static org.jclouds.compute.config.ComputeServiceProperties.TEMPLATE;
-import static org.jclouds.compute.config.ComputeServiceProperties.TIMEOUT_NODE_RUNNING;
-import static org.jclouds.compute.config.ComputeServiceProperties.TIMEOUT_NODE_SUSPENDED;
-import static org.jclouds.compute.config.ComputeServiceProperties.TIMEOUT_NODE_TERMINATED;
-import static org.jclouds.compute.config.ComputeServiceProperties.TIMEOUT_PORT_OPEN;
-import static org.jclouds.compute.config.ComputeServiceProperties.TIMEOUT_SCRIPT_COMPLETE;
 
 /**
  * Live tests for the {@link org.jclouds.compute.ComputeService} integration.
  */
 @Test(groups = "live", singleThreaded = true, testName = "AzureComputeServiceLiveTest")
 public class AzureComputeServiceLiveTest extends BaseComputeServiceLiveTest {
-   protected int nonBlockDurationSeconds = 30;
-
+   
    public AzureComputeServiceLiveTest() {
       provider = "azurecompute-arm";
-      nonBlockDurationSeconds = 300;
-      group = "az-u";
    }
 
    @Override
@@ -78,21 +72,20 @@ public class AzureComputeServiceLiveTest extends BaseComputeServiceLiveTest {
 
    @Override
    protected ProviderMetadata createProviderMetadata() {
-      AzureComputeProviderMetadata pm = AzureComputeProviderMetadata.builder().build();
-      return pm;
+      return AzureComputeProviderMetadata.builder().build();
    }
 
    @Override
    protected Properties setupProperties() {
       Properties properties = super.setupProperties();
-      long scriptTimeout = TimeUnit.MILLISECONDS.convert(60, TimeUnit.MINUTES);
-      properties.setProperty(TIMEOUT_SCRIPT_COMPLETE, scriptTimeout + "");
-      properties.setProperty(TIMEOUT_NODE_RUNNING, scriptTimeout + "");
-      properties.setProperty(TIMEOUT_PORT_OPEN, scriptTimeout + "");
-      properties.setProperty(TIMEOUT_NODE_TERMINATED, scriptTimeout + "");
-      properties.setProperty(TIMEOUT_NODE_SUSPENDED, scriptTimeout + "");
-      properties.put(RESOURCE_GROUP_NAME, "a4");
-      properties.put(TEMPLATE, "locationId=westeurope");
+      String defaultTimeout = String.valueOf(TimeUnit.MILLISECONDS.convert(60, TimeUnit.MINUTES));
+      properties.setProperty(TIMEOUT_SCRIPT_COMPLETE, defaultTimeout);
+      properties.setProperty(TIMEOUT_NODE_RUNNING, defaultTimeout);
+      properties.setProperty(TIMEOUT_PORT_OPEN, defaultTimeout);
+      properties.setProperty(TIMEOUT_NODE_TERMINATED, defaultTimeout);
+      properties.setProperty(TIMEOUT_NODE_SUSPENDED, defaultTimeout);
+      properties.put(RESOURCE_GROUP_NAME, "jc");
+      properties.put(PROPERTY_REGIONS, "eastus");
       properties.put(IMAGE_PUBLISHERS, "Canonical");
 
       AzureLiveTestUtils.defaultProperties(properties);
@@ -102,24 +95,27 @@ public class AzureComputeServiceLiveTest extends BaseComputeServiceLiveTest {
    }
 
    @Override
-   protected Template refreshTemplate() {
-      return this.template = addRunScriptToTemplate(this.buildTemplate(this.client.templateBuilder()));
+   protected TemplateBuilder templateBuilder() {
+      return super.templateBuilder().options(
+            authorizePublicKey(keyPair.get("public")).overrideLoginPrivateKey(keyPair.get("private")));
    }
 
    @Override
    protected Template addRunScriptToTemplate(Template template) {
-      template.getOptions().runScript(Statements.newStatementList(new Statement[]{AdminAccess.standard(), Statements.exec("sleep 50"), InstallJDK.fromOpenJDK()}));
+      template.getOptions().runScript(
+            Statements.newStatementList(new Statement[] { AdminAccess.standard(), Statements.exec("sleep 50"),
+                  InstallJDK.fromOpenJDK() }));
       return template;
    }
-
+   
    @Override
-   @Test( enabled = false)
-   protected void weCanCancelTasks(NodeMetadata node) throws InterruptedException, ExecutionException {
-      return;
+   protected void checkUserMetadataContains(NodeMetadata node, ImmutableMap<String, String> userMetadata) {
+      // User metadata not yet supported
    }
 
    @Override
-   protected Map<? extends NodeMetadata, ExecResponse> runScriptWithCreds(String group, OperatingSystem os, LoginCredentials creds) throws RunScriptOnNodesException {
-      return this.client.runScriptOnNodesMatching(NodePredicates.runningInGroup(group), Statements.newStatementList(Statements.exec("sleep 50"), InstallJDK.fromOpenJDK()), org.jclouds.compute.options.TemplateOptions.Builder.overrideLoginCredentials(creds).nameTask("runScriptWithCreds"));
+   protected void checkTagsInNodeEquals(NodeMetadata node, ImmutableSet<String> tags) {
+      // Tags not yet supported
    }
+
 }

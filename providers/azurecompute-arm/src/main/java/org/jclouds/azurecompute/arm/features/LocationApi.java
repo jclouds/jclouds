@@ -27,11 +27,11 @@ import javax.ws.rs.core.MediaType;
 
 import org.jclouds.Fallbacks.EmptyListOnNotFoundOr404;
 import org.jclouds.azurecompute.arm.domain.Location;
+import org.jclouds.azurecompute.arm.filters.ApiVersionFilter;
 import org.jclouds.oauth.v2.filters.OAuthFilter;
-import org.jclouds.rest.annotations.QueryParams;
+import org.jclouds.rest.annotations.Fallback;
 import org.jclouds.rest.annotations.RequestFilters;
 import org.jclouds.rest.annotations.SelectJson;
-import org.jclouds.rest.annotations.Fallback;
 
 /**
  * This Azure Resource Manager API provides all of the locations that are available for resource providers
@@ -40,8 +40,7 @@ import org.jclouds.rest.annotations.Fallback;
  * @see <a href="https://msdn.microsoft.com/en-US/library/azure/dn790540.aspx">docs</a>
  */
 @Path("/locations")
-@RequestFilters(OAuthFilter.class)
-@QueryParams(keys = "api-version", values = "2015-11-01")
+@RequestFilters({ OAuthFilter.class, ApiVersionFilter.class })
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 public interface LocationApi {

@@ -17,31 +17,47 @@
 package org.jclouds.azurecompute.arm;
 
 
+import static org.jclouds.azurecompute.arm.config.AzureComputeProperties.API_VERSION_PREFIX;
+import static org.jclouds.azurecompute.arm.config.AzureComputeProperties.DEFAULT_DATADISKSIZE;
+import static org.jclouds.azurecompute.arm.config.AzureComputeProperties.DEFAULT_SUBNET_ADDRESS_PREFIX;
+import static org.jclouds.azurecompute.arm.config.AzureComputeProperties.DEFAULT_VNET_ADDRESS_SPACE_PREFIX;
 import static org.jclouds.azurecompute.arm.config.AzureComputeProperties.IMAGE_PUBLISHERS;
-import static org.jclouds.azurecompute.arm.config.AzureComputeProperties.RESOURCE_GROUP_NAME;
-import static org.jclouds.azurecompute.arm.config.AzureComputeProperties.OPERATION_TIMEOUT;
 import static org.jclouds.azurecompute.arm.config.AzureComputeProperties.OPERATION_POLL_INITIAL_PERIOD;
 import static org.jclouds.azurecompute.arm.config.AzureComputeProperties.OPERATION_POLL_MAX_PERIOD;
+import static org.jclouds.azurecompute.arm.config.AzureComputeProperties.OPERATION_TIMEOUT;
+import static org.jclouds.azurecompute.arm.config.AzureComputeProperties.RESOURCE_GROUP_NAME;
+import static org.jclouds.azurecompute.arm.config.AzureComputeProperties.STORAGE_API_VERSION;
 import static org.jclouds.azurecompute.arm.config.AzureComputeProperties.TCP_RULE_FORMAT;
 import static org.jclouds.azurecompute.arm.config.AzureComputeProperties.TCP_RULE_REGEXP;
-import static org.jclouds.azurecompute.arm.config.AzureComputeProperties.DEFAULT_VNET_ADDRESS_SPACE_PREFIX;
-import static org.jclouds.azurecompute.arm.config.AzureComputeProperties.DEFAULT_SUBNET_ADDRESS_PREFIX;
-import static org.jclouds.azurecompute.arm.config.AzureComputeProperties.DEFAULT_DATADISKSIZE;
-
-import static org.jclouds.azurecompute.arm.config.AzureComputeProperties.DEFAULT_IMAGE_LOGIN;
-
+import static org.jclouds.compute.config.ComputeServiceProperties.IMAGE_AUTHENTICATE_SUDO;
+import static org.jclouds.compute.config.ComputeServiceProperties.IMAGE_LOGIN_USER;
+import static org.jclouds.compute.config.ComputeServiceProperties.TEMPLATE;
+import static org.jclouds.compute.config.ComputeServiceProperties.TIMEOUT_NODE_TERMINATED;
 import static org.jclouds.oauth.v2.config.CredentialType.CLIENT_CREDENTIALS_SECRET;
-import static org.jclouds.oauth.v2.config.OAuthProperties.RESOURCE;
 import static org.jclouds.oauth.v2.config.OAuthProperties.CREDENTIAL_TYPE;
+import static org.jclouds.oauth.v2.config.OAuthProperties.RESOURCE;
 
 import java.net.URI;
 import java.util.Properties;
+
 import org.jclouds.azurecompute.arm.domain.Region;
+import org.jclouds.azurecompute.arm.features.DeploymentApi;
+import org.jclouds.azurecompute.arm.features.LocationApi;
+import org.jclouds.azurecompute.arm.features.NetworkInterfaceCardApi;
+import org.jclouds.azurecompute.arm.features.NetworkSecurityGroupApi;
+import org.jclouds.azurecompute.arm.features.NetworkSecurityRuleApi;
+import org.jclouds.azurecompute.arm.features.OSImageApi;
+import org.jclouds.azurecompute.arm.features.PublicIPAddressApi;
+import org.jclouds.azurecompute.arm.features.ResourceGroupApi;
+import org.jclouds.azurecompute.arm.features.ResourceProviderApi;
+import org.jclouds.azurecompute.arm.features.StorageAccountApi;
+import org.jclouds.azurecompute.arm.features.SubnetApi;
+import org.jclouds.azurecompute.arm.features.VMSizeApi;
+import org.jclouds.azurecompute.arm.features.VirtualMachineApi;
+import org.jclouds.azurecompute.arm.features.VirtualNetworkApi;
+import org.jclouds.compute.config.ComputeServiceProperties;
 import org.jclouds.providers.ProviderMetadata;
 import org.jclouds.providers.internal.BaseProviderMetadata;
-import org.jclouds.compute.config.ComputeServiceProperties;
-
-import static org.jclouds.compute.config.ComputeServiceProperties.TIMEOUT_NODE_TERMINATED;
 
 import com.google.auto.service.AutoService;
 
@@ -72,13 +88,37 @@ public class AzureComputeProviderMetadata extends BaseProviderMetadata {
       properties.setProperty(TCP_RULE_REGEXP, "tcp_\\d{1,5}-\\d{1,5}");
       properties.put(RESOURCE, "https://management.azure.com/");
       properties.put(CREDENTIAL_TYPE, CLIENT_CREDENTIALS_SECRET.toString());
-      properties.put(RESOURCE_GROUP_NAME, "jcloudsgroup");
+      properties.put(RESOURCE_GROUP_NAME, "jclouds");
       properties.put(DEFAULT_VNET_ADDRESS_SPACE_PREFIX, "10.0.0.0/16");
       properties.put(DEFAULT_SUBNET_ADDRESS_PREFIX, "10.0.0.0/24");
       properties.put(DEFAULT_DATADISKSIZE, "100");
       properties.put(IMAGE_PUBLISHERS, "Canonical,RedHat");
-      properties.put(DEFAULT_IMAGE_LOGIN, "jclouds:Password1!");
+      // Default credentials for all images
+      properties.put(IMAGE_LOGIN_USER, "jclouds:Password12345!");
+      properties.put(IMAGE_AUTHENTICATE_SUDO, "true");
+      properties.put(TEMPLATE, "imageNameMatches=UbuntuServer,osVersionMatches=1[45]\\.[01][04]\\.[0-9]-LTS");
       properties.put(TIMEOUT_NODE_TERMINATED, 60 * 10 * 1000);
+      // Api versions used in each API
+      properties.put(API_VERSION_PREFIX + DeploymentApi.class.getSimpleName(), "2016-02-01");
+      properties.put(API_VERSION_PREFIX + LocationApi.class.getSimpleName(), "2015-11-01");
+      properties.put(API_VERSION_PREFIX + NetworkInterfaceCardApi.class.getSimpleName(), "2015-06-15");
+      properties.put(API_VERSION_PREFIX + NetworkSecurityGroupApi.class.getSimpleName(), "2016-03-30");
+      properties.put(API_VERSION_PREFIX + NetworkSecurityRuleApi.class.getSimpleName(), "2016-03-30");
+      properties.put(API_VERSION_PREFIX + OSImageApi.class.getSimpleName(), "2015-06-15");
+      properties.put(API_VERSION_PREFIX + PublicIPAddressApi.class.getSimpleName(), "2015-06-15");
+      properties.put(API_VERSION_PREFIX + ResourceGroupApi.class.getSimpleName(), "2015-01-01");
+      properties.put(API_VERSION_PREFIX + ResourceProviderApi.class.getSimpleName(), "2015-01-01");
+      properties.put(API_VERSION_PREFIX + StorageAccountApi.class.getSimpleName(), STORAGE_API_VERSION);
+      properties.put(API_VERSION_PREFIX + SubnetApi.class.getSimpleName(), "2015-06-15");
+      properties.put(API_VERSION_PREFIX + VirtualNetworkApi.class.getSimpleName(), "2015-06-15");
+      properties.put(API_VERSION_PREFIX + VMSizeApi.class.getSimpleName(), "2015-06-15");
+      properties.put(API_VERSION_PREFIX + VirtualMachineApi.class.getSimpleName(), "2015-06-15");
+      properties.put(API_VERSION_PREFIX + "GetVirtualMachine", "2016-03-30");
+      properties.put(API_VERSION_PREFIX + "GetVirtualMachineInstance", "2016-03-30");
+      properties.put(API_VERSION_PREFIX + "CreateVirtualMachine", "2016-03-30");
+      properties.put(API_VERSION_PREFIX + "ListVirtualMachines", "2015-06-15");
+      properties.put(API_VERSION_PREFIX + "DeleteVirtualMachine", "2016-03-30");
+      
       return properties;
    }
 

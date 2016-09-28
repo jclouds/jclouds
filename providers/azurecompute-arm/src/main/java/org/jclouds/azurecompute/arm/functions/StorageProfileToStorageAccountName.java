@@ -14,22 +14,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jclouds.azurecompute.arm.util;
+package org.jclouds.azurecompute.arm.functions;
 
-import java.util.EnumSet;
+import java.net.URI;
 
-public class GetEnumValue {
+import org.jclouds.azurecompute.arm.domain.StorageProfile;
 
-   public static <T extends Enum<T>> Enum<T> fromValueOrDefault(String text, Enum<T> defaultValue) {
-      if (text != null) {
-         EnumSet<T> elements = EnumSet.allOf(defaultValue.getDeclaringClass());
-         for (Enum<T> element : elements) {
-            if (text.equalsIgnoreCase(element.name())) {
-               return element;
-            }
-         }
-      }
-      return defaultValue;
+import com.google.common.base.Function;
+import com.google.common.base.Splitter;
+import com.google.common.collect.Iterables;
+
+/**
+ * Returns the storage account name for a given storage profile.
+ */
+public class StorageProfileToStorageAccountName implements Function<StorageProfile, String> {
+
+   @Override
+   public String apply(StorageProfile input) {
+      String storageAccountNameURI = input.osDisk().vhd().uri();
+      return Iterables.get(Splitter.on(".").split(URI.create(storageAccountNameURI).getHost()), 0);
    }
 
 }

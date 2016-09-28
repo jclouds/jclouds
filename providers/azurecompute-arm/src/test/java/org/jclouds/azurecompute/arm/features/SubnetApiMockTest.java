@@ -16,18 +16,17 @@
  */
 package org.jclouds.azurecompute.arm.features;
 
-import com.squareup.okhttp.mockwebserver.RecordedRequest;
-import org.jclouds.azurecompute.arm.domain.Subnet;
-import org.jclouds.azurecompute.arm.internal.BaseAzureComputeApiMockTest;
-import org.testng.annotations.Test;
-
-import java.util.List;
-
 import static com.google.common.collect.Iterables.isEmpty;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertFalse;
-import static org.testng.Assert.assertTrue;
 import static org.testng.Assert.assertNull;
+import static org.testng.Assert.assertTrue;
+
+import java.util.List;
+
+import org.jclouds.azurecompute.arm.domain.Subnet;
+import org.jclouds.azurecompute.arm.internal.BaseAzureComputeApiMockTest;
+import org.testng.annotations.Test;
 
 
 @Test(groups = "unit", testName = "SubnetApiMockTest", singleThreaded = true)
@@ -135,6 +134,6 @@ public class SubnetApiMockTest extends BaseAzureComputeApiMockTest {
       assertFalse(status);
 
       String path = String.format("/subscriptions/%s/resourcegroups/%s/providers/Microsoft.Network/virtualNetworks/%s/subnets/%s?%s", subscriptionid, resourcegroup, virtualNetwork, subnetName, apiVersion);
-      RecordedRequest rr = assertSent(server, "DELETE", path);
+      assertSent(server, "DELETE", path);
    }
 }

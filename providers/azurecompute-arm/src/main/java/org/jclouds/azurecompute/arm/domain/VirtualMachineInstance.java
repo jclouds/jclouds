@@ -16,13 +16,23 @@
  */
 package org.jclouds.azurecompute.arm.domain;
 
-import com.google.auto.value.AutoValue;
-import com.google.common.collect.ImmutableList;
+import static com.google.common.collect.Iterables.filter;
+import static com.google.common.collect.Iterables.getFirst;
+import static com.google.common.collect.Iterables.transform;
+import static org.jclouds.util.Predicates2.startsWith;
+
+import java.util.Date;
 import java.util.List;
+
+import org.jclouds.azurecompute.arm.domain.VirtualMachineInstance.VirtualMachineStatus.PowerState;
+import org.jclouds.azurecompute.arm.domain.VirtualMachineProperties.ProvisioningState;
+import org.jclouds.azurecompute.arm.util.GetEnumValue;
 import org.jclouds.javax.annotation.Nullable;
 import org.jclouds.json.SerializedNames;
 
-import java.util.Date;
+import com.google.auto.value.AutoValue;
+import com.google.common.base.Function;
+import com.google.common.collect.ImmutableList;
 
 /**
  * A virtual machine instance view that is valid for your subscription.
@@ -30,8 +40,21 @@ import java.util.Date;
 @AutoValue
 public abstract class VirtualMachineInstance {
 
-   @AutoValue
+   @com.google.auto.value.AutoValue
    public abstract static class VirtualMachineStatus {
+      
+      public static final String PROVISIONING_STATE_PREFIX = "ProvisioningState/";
+      public static final String POWER_STATE_PREFIX = "PowerState/";
+      
+      public enum PowerState {
+         RUNNING,
+         STOPPED,
+         UNRECOGNIZED;
+
+         public static PowerState fromValue(final String text) {
+            return (PowerState) GetEnumValue.fromValueOrDefault(text, PowerState.UNRECOGNIZED);
+         }
+      }
 
       @Nullable
       public abstract String code();
@@ -61,6 +84,26 @@ public abstract class VirtualMachineInstance {
 
    @Nullable
    public abstract List<VirtualMachineStatus> statuses();
+   
+   public ProvisioningState provisioningState() {
+      return ProvisioningState.fromValue(firstStatus(VirtualMachineStatus.PROVISIONING_STATE_PREFIX));
+   }
+   
+   public PowerState powerState() {
+      return PowerState.fromValue(firstStatus(VirtualMachineStatus.POWER_STATE_PREFIX));
+   }
+   
+   private String firstStatus(final String type) {
+      return getFirst(transform(filter(transform(statuses(), new Function<VirtualMachineStatus, String>() {
+         @Override public String apply(VirtualMachineStatus input) {
+            return input.code();
+         }
+      }), startsWith(type)), new Function<String, String>() {
+         @Override public String apply(String input) {
+            return input.substring(type.length());
+         }
+      }), null);
+   }
 
 
    @SerializedNames({"platformUpdateDomain", "platformFaultDomain", "statuses"})

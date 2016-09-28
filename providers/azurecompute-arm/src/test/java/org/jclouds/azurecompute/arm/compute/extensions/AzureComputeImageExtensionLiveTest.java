@@ -16,29 +16,35 @@
  */
 package org.jclouds.azurecompute.arm.compute.extensions;
 
-import com.google.inject.Module;
-import org.jclouds.azurecompute.arm.AzureComputeProviderMetadata;
-import org.jclouds.azurecompute.arm.config.AzureComputeProperties;
-import org.jclouds.azurecompute.arm.internal.AzureLiveTestUtils;
-import org.jclouds.compute.config.ComputeServiceProperties;
-import org.jclouds.compute.extensions.internal.BaseImageExtensionLiveTest;
-import org.jclouds.providers.ProviderMetadata;
-import org.jclouds.sshj.config.SshjSshClientModule;
-import org.testng.annotations.Test;
-
-import java.util.Properties;
-import java.util.concurrent.TimeUnit;
-
 import static com.google.common.base.Preconditions.checkNotNull;
+import static org.jclouds.azurecompute.arm.config.AzureComputeProperties.IMAGE_PUBLISHERS;
 import static org.jclouds.azurecompute.arm.config.AzureComputeProperties.RESOURCE_GROUP_NAME;
 import static org.jclouds.compute.config.ComputeServiceProperties.TIMEOUT_NODE_RUNNING;
 import static org.jclouds.compute.config.ComputeServiceProperties.TIMEOUT_NODE_SUSPENDED;
 import static org.jclouds.compute.config.ComputeServiceProperties.TIMEOUT_NODE_TERMINATED;
 import static org.jclouds.compute.config.ComputeServiceProperties.TIMEOUT_PORT_OPEN;
 import static org.jclouds.compute.config.ComputeServiceProperties.TIMEOUT_SCRIPT_COMPLETE;
+import static org.jclouds.compute.options.TemplateOptions.Builder.authorizePublicKey;
+import static org.jclouds.location.reference.LocationConstants.PROPERTY_REGIONS;
+
+import java.util.Map;
+import java.util.Properties;
+import java.util.concurrent.TimeUnit;
+
+import org.jclouds.azurecompute.arm.AzureComputeProviderMetadata;
+import org.jclouds.azurecompute.arm.internal.AzureLiveTestUtils;
+import org.jclouds.compute.ComputeTestUtils;
+import org.jclouds.compute.domain.TemplateBuilder;
+import org.jclouds.compute.extensions.internal.BaseImageExtensionLiveTest;
+import org.jclouds.providers.ProviderMetadata;
+import org.jclouds.sshj.config.SshjSshClientModule;
+import org.testng.annotations.Test;
+
+import com.google.inject.Module;
 
 /**
- * Live tests for the {@link org.jclouds.compute.extensions.ImageExtension} integration.
+ * Live tests for the {@link org.jclouds.compute.extensions.ImageExtension}
+ * integration.
  */
 @Test(groups = "live", singleThreaded = true, testName = "AzureComputeImageExtensionLiveTest")
 public class AzureComputeImageExtensionLiveTest extends BaseImageExtensionLiveTest {
@@ -57,34 +63,33 @@ public class AzureComputeImageExtensionLiveTest extends BaseImageExtensionLiveTe
    @Override
    protected Properties setupProperties() {
       Properties properties = super.setupProperties();
-      long scriptTimeout = TimeUnit.MILLISECONDS.convert(60, TimeUnit.MINUTES);
-      properties.setProperty(TIMEOUT_SCRIPT_COMPLETE, scriptTimeout + "");
-      properties.setProperty(TIMEOUT_NODE_RUNNING, scriptTimeout + "");
-      properties.setProperty(TIMEOUT_PORT_OPEN, scriptTimeout + "");
-      properties.setProperty(TIMEOUT_NODE_TERMINATED, scriptTimeout + "");
-      properties.setProperty(TIMEOUT_NODE_SUSPENDED, scriptTimeout + "");
-      properties.put(RESOURCE_GROUP_NAME, "jcloudsgroup");
-
-      properties.put(ComputeServiceProperties.POLL_INITIAL_PERIOD, 1000);
-      properties.put(ComputeServiceProperties.POLL_MAX_PERIOD, 10000);
-      properties.setProperty(AzureComputeProperties.OPERATION_TIMEOUT, "46000000");
-      properties.setProperty(AzureComputeProperties.OPERATION_POLL_INITIAL_PERIOD, "5");
-      properties.setProperty(AzureComputeProperties.OPERATION_POLL_MAX_PERIOD, "15");
-      properties.setProperty(AzureComputeProperties.TCP_RULE_FORMAT, "tcp_%s-%s");
-      properties.setProperty(AzureComputeProperties.TCP_RULE_REGEXP, "tcp_\\d{1,5}-\\d{1,5}");
+      String defaultTimeout = String.valueOf(TimeUnit.MILLISECONDS.convert(60, TimeUnit.MINUTES));
+      properties.setProperty(TIMEOUT_SCRIPT_COMPLETE, defaultTimeout);
+      properties.setProperty(TIMEOUT_NODE_RUNNING, defaultTimeout);
+      properties.setProperty(TIMEOUT_PORT_OPEN, defaultTimeout);
+      properties.setProperty(TIMEOUT_NODE_TERMINATED, defaultTimeout);
+      properties.setProperty(TIMEOUT_NODE_SUSPENDED, defaultTimeout);
+      properties.put(RESOURCE_GROUP_NAME, "jc");
+      properties.put(PROPERTY_REGIONS, "eastus");
+      properties.put(IMAGE_PUBLISHERS, "Canonical");
 
       AzureLiveTestUtils.defaultProperties(properties);
       checkNotNull(setIfTestSystemPropertyPresent(properties, "oauth.endpoint"), "test.oauth.endpoint");
 
       return properties;
-
    }
 
    @Override
    protected ProviderMetadata createProviderMetadata() {
-      AzureComputeProviderMetadata pm = AzureComputeProviderMetadata.builder().build();
-      return pm;
+      return AzureComputeProviderMetadata.builder().build();
    }
 
+   @Override
+   public TemplateBuilder getNodeTemplate() {
+      Map<String, String> keyPair = ComputeTestUtils.setupKeyPair();
+      return super.getNodeTemplate().options(
+            authorizePublicKey(keyPair.get("public"))
+            .overrideLoginPrivateKey(keyPair.get("private")));
+   }
 
 }

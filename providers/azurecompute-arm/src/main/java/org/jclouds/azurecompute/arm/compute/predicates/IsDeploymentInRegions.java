@@ -40,6 +40,7 @@ public class IsDeploymentInRegions implements Predicate<Deployment> {
 
    @Override
    public boolean apply(Deployment deployment) {
+      if (deployment.properties() == null || deployment.properties().parameters() == null || deployment.properties().parameters().get("location") == null) return false;
       Value locationValue = deployment.properties().parameters().get("location");
       return regionIds.get().contains(locationValue.value());
    }

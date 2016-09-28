@@ -16,9 +16,11 @@
  */
 package org.jclouds.azurecompute.arm.compute.options;
 
-import static com.google.common.base.Objects.equal;
 import org.jclouds.compute.options.TemplateOptions;
+
 import com.google.common.base.Objects;
+
+import static com.google.common.base.Objects.equal;
 
 /**
  * Azure ARM custom options
@@ -31,7 +33,9 @@ public class AzureTemplateOptions extends TemplateOptions implements Cloneable {
    private String subnetAddressPrefix;
    private String DNSLabelPrefix;
    private String keyVaultIdAndSecret;
-
+   private String virtualNetworkName;
+   private String subnetId;
+   private String blob;
 
    /**
     * Custom options for the Azure ARM API
@@ -40,9 +44,7 @@ public class AzureTemplateOptions extends TemplateOptions implements Cloneable {
       this.customData = customData;
       return this;
    }
-   private String virtualNetworkName;
-   private String subnetId;
-
+   
    /**
     * Sets the CIDR block for virtual network
     */
@@ -75,15 +77,6 @@ public class AzureTemplateOptions extends TemplateOptions implements Cloneable {
       return this;
    }
 
-   public String getCustomData() { return customData; }
-   public String getVirtualNetworkAddressPrefix() { return virtualNetworkAddressPrefix; }
-   public String getSubnetAddressPrefix() { return subnetAddressPrefix; }
-   public String getDNSLabelPrefix() { return DNSLabelPrefix; }
-   public String getKeyVaultIdAndSecret() { return keyVaultIdAndSecret; }
-   public String getVirtualNetworkName() { return virtualNetworkName; }
-   public String getSubnetId() { return subnetId; }
-
-
    /**
     * Sets the virtual network name
     */
@@ -99,6 +92,24 @@ public class AzureTemplateOptions extends TemplateOptions implements Cloneable {
       this.subnetId = subnetId;
       return this;
    }
+
+   /**
+    * Sets the blob name
+    */
+   public  AzureTemplateOptions blob(String blob) {
+      this.blob = blob;
+      return this;
+   }
+
+   public String getCustomData() { return customData; }
+   public String getVirtualNetworkAddressPrefix() { return virtualNetworkAddressPrefix; }
+   public String getSubnetAddressPrefix() { return subnetAddressPrefix; }
+   public String getDNSLabelPrefix() { return DNSLabelPrefix; }
+   public String getKeyVaultIdAndSecret() { return keyVaultIdAndSecret; }
+   public String getVirtualNetworkName() { return virtualNetworkName; }
+   public String getSubnetId() { return subnetId; }
+   public String getBlob() { return blob; }
+
 
    @Override
    public AzureTemplateOptions clone() {
@@ -119,12 +130,13 @@ public class AzureTemplateOptions extends TemplateOptions implements Cloneable {
          eTo.keyVaultIdAndSecret(keyVaultIdAndSecret);
          eTo.virtualNetworkName(virtualNetworkName);
          eTo.subnetId(subnetId);
+         eTo.blob(blob);
       }
    }
 
    @Override
    public int hashCode() {
-      return Objects.hashCode(super.hashCode(), virtualNetworkAddressPrefix, subnetAddressPrefix, DNSLabelPrefix, customData, keyVaultIdAndSecret, virtualNetworkName, subnetId);
+      return Objects.hashCode(super.hashCode(), virtualNetworkAddressPrefix, subnetAddressPrefix, DNSLabelPrefix, customData, keyVaultIdAndSecret, virtualNetworkName, subnetId, blob);
    }
 
    @Override
@@ -146,7 +158,8 @@ public class AzureTemplateOptions extends TemplateOptions implements Cloneable {
             && equal(this.DNSLabelPrefix, other.DNSLabelPrefix)
             && equal(this.keyVaultIdAndSecret, other.keyVaultIdAndSecret)
             && equal(this.virtualNetworkName, other.virtualNetworkName)
-            && equal(this.subnetId, other.subnetId);
+            && equal(this.subnetId, other.subnetId)
+            && equal(this.blob, other.blob);
    }
 
    @Override
@@ -159,6 +172,7 @@ public class AzureTemplateOptions extends TemplateOptions implements Cloneable {
       toString.add("keyVaultIdAndSecret", keyVaultIdAndSecret);
       toString.add("virtualNetworkName", virtualNetworkName);
       toString.add("subnetId", subnetId);
+      toString.add("blob", blob);
       return toString;
    }
 
@@ -218,6 +232,14 @@ public class AzureTemplateOptions extends TemplateOptions implements Cloneable {
       public static AzureTemplateOptions subnetId(String subnetId) {
          AzureTemplateOptions options = new AzureTemplateOptions();
          return options.subnetId(subnetId);
+      }
+
+      /**
+       * @see AzureTemplateOptions#blob
+       */
+      public static AzureTemplateOptions blob(String blob) {
+         AzureTemplateOptions options = new AzureTemplateOptions();
+         return options.blob(blob);
       }
    }
 }

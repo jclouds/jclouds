@@ -18,19 +18,20 @@ package org.jclouds.azurecompute.arm.features;
 import java.io.Closeable;
 import java.net.URI;
 import java.util.List;
+
 import javax.ws.rs.Consumes;
-import javax.ws.rs.core.MediaType;
 import javax.ws.rs.GET;
+import javax.ws.rs.core.MediaType;
 
 import org.jclouds.Fallbacks;
 import org.jclouds.azurecompute.arm.domain.ResourceDefinition;
+import org.jclouds.azurecompute.arm.functions.ParseJobStatus;
+import org.jclouds.azurecompute.arm.functions.ParseJobStatus.JobStatus;
 import org.jclouds.oauth.v2.filters.OAuthFilter;
 import org.jclouds.rest.annotations.EndpointParam;
 import org.jclouds.rest.annotations.Fallback;
 import org.jclouds.rest.annotations.RequestFilters;
 import org.jclouds.rest.annotations.ResponseParser;
-import org.jclouds.azurecompute.arm.functions.ParseJobStatus;
-import org.jclouds.azurecompute.arm.functions.ParseJobStatus.JobStatus;
 import org.jclouds.rest.annotations.SelectJson;
 
 /**

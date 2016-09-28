@@ -16,58 +16,50 @@
  */
 package org.jclouds.azurecompute.arm.compute.functions;
 
-import static com.google.common.base.Preconditions.checkNotNull;
-import static org.jclouds.azurecompute.arm.compute.functions.DeploymentToNodeMetadata.AZURE_LOGIN_PASSWORD;
-import static org.jclouds.azurecompute.arm.compute.functions.DeploymentToNodeMetadata.AZURE_LOGIN_USERNAME;
+import java.util.Set;
 
-import com.google.common.base.Supplier;
-import com.google.common.collect.FluentIterable;
+import org.jclouds.azurecompute.arm.domain.ImageReference;
 import org.jclouds.azurecompute.arm.domain.VMImage;
 import org.jclouds.collect.Memoized;
 import org.jclouds.compute.domain.Image;
 import org.jclouds.compute.domain.ImageBuilder;
 import org.jclouds.compute.domain.OperatingSystem;
 import org.jclouds.compute.domain.OsFamily;
-
-import com.google.common.base.Function;
-import com.google.inject.Inject;
-import org.jclouds.domain.Credentials;
 import org.jclouds.domain.Location;
-import org.jclouds.domain.LoginCredentials;
 import org.jclouds.location.predicates.LocationPredicates;
 
-import java.util.Set;
+import com.google.common.base.Function;
+import com.google.common.base.Supplier;
+import com.google.common.collect.FluentIterable;
+import com.google.inject.Inject;
+
+import static com.google.common.base.Preconditions.checkNotNull;
 
 public class VMImageToImage implements Function<VMImage, Image> {
 
-   private static final String UNRECOGNIZED = "UNRECOGNIZED";
-
    private static final String UBUNTU = "Ubuntu";
-
    private static final String WINDOWS = "Windows";
-
    private static final String OPENLOGIC = "openLogic";
-
    private static final String CENTOS = "CentOS";
-
    private static final String COREOS = "CoreOS";
-
    private static final String OPENSUSE = "openSUSE";
-
    private static final String SUSE = "SUSE";
-
-   private static final String SQL_SERVER = "SQL Server";
-
-   private static final String ORACLE_lINUX = "Oracle Linux";
+   private static final String SLES = "SLES";
+   private static final String ORACLE_lINUX = "Oracle-Linux";
+   private static final String RHEL = "RHEL";
 
    private final Supplier<Set<? extends org.jclouds.domain.Location>> locations;
 
+   public static String encodeFieldsToUniqueId(boolean globallyAvailable, String locatioName, ImageReference imageReference){
+      return (globallyAvailable ? "global" : locatioName) + "/" + imageReference.publisher() + "/" + imageReference.offer() + "/" + imageReference.sku();
+   }
+   
    public static String encodeFieldsToUniqueId(VMImage imageReference){
       return (imageReference.globallyAvailable() ? "global" : imageReference.location()) + "/" + imageReference.publisher() + "/" + imageReference.offer() + "/" + imageReference.sku();
    }
 
    public static String encodeFieldsToUniqueIdCustom(VMImage imageReference){
-      return (imageReference.globallyAvailable() ? "global" : imageReference.location()) + "/" + imageReference.group() + "/" + imageReference.storage() + "/" + imageReference.vhd1() + "/" + imageReference.offer();
+      return (imageReference.globallyAvailable() ? "global" : imageReference.location()) + "/" + imageReference.group() + "/" + imageReference.storage() + "/" + imageReference.offer() + "/" + imageReference.name();
    }
 
    public static VMImage decodeFieldsFromUniqueId(final String id) {
@@ -79,10 +71,10 @@ public class VMImageToImage implements Function<VMImage, Image> {
          0: imageReference.location) + "/" +
          1: imageReference.group + "/" +
          2: imageReference.storage + "/" +
-         3: imageReference.vhd1 + "/" +
-         4: imageReference.offer
+         3: imageReference.offer + "/" +
+         4: imageReference.name
          */
-         vmImage = VMImage.create(fields[1], fields[2], fields[3], null, null, fields[4], fields[0]);
+         vmImage = VMImage.customImage().location(fields[0]).group(fields[1]).storage(fields[2]).vhd1(fields[3]).offer(fields[4]).build();
       } else {
          /* id fields indexes
          0: imageReference.location) + "/" +
@@ -90,7 +82,7 @@ public class VMImageToImage implements Function<VMImage, Image> {
          2: imageReference.offer + "/" +
          3: imageReference.sku + "/" +
          */
-         vmImage = VMImage.create(fields[1], fields[2], fields[3], null, fields[0]);
+         vmImage = VMImage.azureImage().location(fields[0]).publisher(fields[1]).offer(fields[2]).sku(fields[3]).build();
       }
       return vmImage;
    }
@@ -102,26 +94,21 @@ public class VMImageToImage implements Function<VMImage, Image> {
 
    @Override
    public Image apply(final VMImage image) {
-
-      Credentials credentials = new Credentials(AZURE_LOGIN_USERNAME, AZURE_LOGIN_PASSWORD);
       if (image.custom()) {
-
          final ImageBuilder builder = new ImageBuilder()
                .location(FluentIterable.from(locations.get())
                      .firstMatch(LocationPredicates.idEquals(image.location()))
                      .get())
                .name(image.name())
-               .description("#" + image.group())
+               .description(image.group())
                .status(Image.Status.AVAILABLE)
-               .version(image.storage())
+               .version("latest")
                .providerId(image.vhd1())
-               .id(encodeFieldsToUniqueIdCustom(image))
-               .defaultCredentials(LoginCredentials.fromCredentials(credentials));
+               .id(encodeFieldsToUniqueIdCustom(image));
 
          final OperatingSystem.Builder osBuilder = osFamily().apply(image);
          Image retimage = builder.operatingSystem(osBuilder.build()).build();
          return retimage;
-
       }
       else {
          final ImageBuilder builder = new ImageBuilder()
@@ -130,7 +117,6 @@ public class VMImageToImage implements Function<VMImage, Image> {
                .status(Image.Status.AVAILABLE)
                .version(image.sku())
                .id(encodeFieldsToUniqueId(image))
-               .defaultCredentials(LoginCredentials.fromCredentials(credentials))
                .providerId(image.publisher())
                .location(image.globallyAvailable() ? null : FluentIterable.from(locations.get())
                      .firstMatch(LocationPredicates.idEquals(image.location()))
@@ -149,11 +135,11 @@ public class VMImageToImage implements Function<VMImage, Image> {
             final String label = image.offer();
 
             OsFamily family = OsFamily.UNRECOGNIZED;
-            if (label.contains(CENTOS)) {
+            if (label.contains(CENTOS) || label.contains(OPENLOGIC)) {
                family = OsFamily.CENTOS;
-            } else if (label.contains(OPENLOGIC)) {
-               family = OsFamily.CENTOS;
-            } else if (label.contains(SUSE)) {
+            } else if (label.contains(COREOS)) {
+               family = OsFamily.COREOS;
+            } else if (label.contains(SUSE) || label.contains(SLES) || label.contains(OPENSUSE)) {
                family = OsFamily.SUSE;
             } else if (label.contains(UBUNTU)) {
                family = OsFamily.UBUNTU;
@@ -161,18 +147,16 @@ public class VMImageToImage implements Function<VMImage, Image> {
                family = OsFamily.WINDOWS;
             } else if (label.contains(ORACLE_lINUX)) {
                family = OsFamily.OEL;
+            } else if (label.contains(RHEL)) {
+               family = OsFamily.RHEL;
             }
-
-            String sku = image.sku();
-            if (image.custom())
-               sku = image.vhd1();
 
             // only 64bit OS images are supported by Azure ARM
             return OperatingSystem.builder().
                   family(family).
                   is64Bit(true).
-                  description(sku).
-                  version(sku);
+                  description(image.custom() ? image.vhd1() : image.sku()).
+                  version(image.custom() ? "latest" : image.sku());
          }
       };
    }

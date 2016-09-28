@@ -16,33 +16,30 @@
  */
 package org.jclouds.azurecompute.arm.compute;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+import static org.jclouds.azurecompute.arm.config.AzureComputeProperties.RESOURCE_GROUP_NAME;
+import static org.jclouds.compute.util.ComputeServiceUtils.getCores;
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertTrue;
+
+import java.io.IOException;
 import java.util.Properties;
 import java.util.Set;
-import java.util.concurrent.TimeUnit;
 
 import org.jclouds.azurecompute.arm.AzureComputeProviderMetadata;
+import org.jclouds.azurecompute.arm.domain.Region;
 import org.jclouds.azurecompute.arm.internal.AzureLiveTestUtils;
+import org.jclouds.compute.domain.OsFamily;
+import org.jclouds.compute.domain.Template;
 import org.jclouds.compute.internal.BaseTemplateBuilderLiveTest;
 import org.jclouds.providers.ProviderMetadata;
 import org.jclouds.sshj.config.SshjSshClientModule;
 import org.testng.annotations.Test;
 
-import com.google.common.collect.ImmutableSet;
 import com.google.inject.Module;
-
-import static com.google.common.base.Preconditions.checkNotNull;
-import static org.jclouds.azurecompute.arm.config.AzureComputeProperties.RESOURCE_GROUP_NAME;
-import static org.jclouds.compute.config.ComputeServiceProperties.TIMEOUT_NODE_RUNNING;
-import static org.jclouds.compute.config.ComputeServiceProperties.TIMEOUT_SCRIPT_COMPLETE;
 
 @Test(groups = "live", testName = "AzureTemplateBuilderLiveTest")
 public class AzureTemplateBuilderLiveTest extends BaseTemplateBuilderLiveTest {
-   public String azureGroup;
-
-   @Override
-   protected Set<String> getIso3166Codes() {
-      return ImmutableSet.of("US-IA", "US-VA", "US-IL", "US-TX", "US-CA", "IE", "NL", "HK", "SG", "JP-11", "JP-27", "BR", "AU-NSW", "AU-VIC", "IN-GA", "IN-TN", "IN-MH", "CN-SH", "CN-BJ", "CA-ON", "CA-QC");
-   }
 
    public AzureTemplateBuilderLiveTest() {
       provider = "azurecompute-arm";
@@ -55,23 +52,33 @@ public class AzureTemplateBuilderLiveTest extends BaseTemplateBuilderLiveTest {
 
    @Override
    protected ProviderMetadata createProviderMetadata() {
-      AzureComputeProviderMetadata pm = AzureComputeProviderMetadata.builder().build();
-      return pm;
+      return AzureComputeProviderMetadata.builder().build();
    }
 
    @Override
    protected Properties setupProperties() {
-      azureGroup = "jc" + System.getProperty("user.name").substring(0, 3);
       Properties properties = super.setupProperties();
-      long scriptTimeout = TimeUnit.MILLISECONDS.convert(20, TimeUnit.MINUTES);
-      properties.setProperty(TIMEOUT_SCRIPT_COMPLETE, scriptTimeout + "");
-      properties.setProperty(TIMEOUT_NODE_RUNNING, scriptTimeout + "");
-      properties.put(RESOURCE_GROUP_NAME, azureGroup);
+      properties.put(RESOURCE_GROUP_NAME, "jc");
 
       AzureLiveTestUtils.defaultProperties(properties);
       checkNotNull(setIfTestSystemPropertyPresent(properties, "oauth.endpoint"), "test.oauth.endpoint");
 
       return properties;
-
+   }
+   
+   @Override
+   @Test
+   public void testDefaultTemplateBuilder() throws IOException {
+      Template defaultTemplate = view.getComputeService().templateBuilder().build();
+      assertTrue(defaultTemplate.getImage().getOperatingSystem().getVersion().matches("1[45]\\.[01][04]\\.[0-9]-LTS"),
+            "Version mismatch, expected dd.dd.d-LTS, found: " + defaultTemplate.getImage().getOperatingSystem().getVersion());
+      assertEquals(defaultTemplate.getImage().getOperatingSystem().is64Bit(), true);
+      assertEquals(defaultTemplate.getImage().getOperatingSystem().getFamily(), OsFamily.UBUNTU);
+      assertEquals(getCores(defaultTemplate.getHardware()), 1.0d);
+   }
+   
+   @Override
+   protected Set<String> getIso3166Codes() {
+      return Region.iso3166Codes();
    }
 }

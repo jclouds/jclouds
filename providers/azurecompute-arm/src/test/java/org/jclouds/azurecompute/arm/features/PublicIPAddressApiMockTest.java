@@ -147,8 +147,7 @@ public class PublicIPAddressApiMockTest extends BaseAzureComputeApiMockTest {
       PublicIPAddressProperties properties = PublicIPAddressProperties.create(null, null, "Static", 4, null,
               DnsSettings.create("foobar", "foobar.northeurope.cloudapp.azure.com", null));
 
-      PublicIPAddress ip = ipApi.createOrUpdate(publicIpName, location, tags, properties);
-
+      ipApi.createOrUpdate(publicIpName, location, tags, properties);
    }
 
    public void deletePublicIPAddress() throws InterruptedException {

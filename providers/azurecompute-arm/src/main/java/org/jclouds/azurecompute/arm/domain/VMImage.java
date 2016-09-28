@@ -16,9 +16,9 @@
  */
 package org.jclouds.azurecompute.arm.domain;
 
-import com.google.auto.value.AutoValue;
 import org.jclouds.javax.annotation.Nullable;
-import org.jclouds.json.SerializedNames;
+
+import com.google.auto.value.AutoValue;
 
 @AutoValue
 public abstract class VMImage {
@@ -91,16 +91,35 @@ public abstract class VMImage {
     * True if custom image
     */
    public abstract boolean custom();
-
-   @SerializedNames({ "publisher", "offer", "sku", "version", "location"})
-   public static VMImage create(String publisher, String offer, String sku, String version, String location) {
-
-      return new AutoValue_VMImage(publisher, offer, sku, version, location, false, null, null, null, null, null, false);
+   
+   public static Builder builder() {
+      return new AutoValue_VMImage.Builder();
    }
-
-   @SerializedNames({ "group", "storage", "vhd1", "vhd2", "name", "offer", "location"})
-   public static VMImage create(String group, String storage, String vhd1, String vhd2, String name, String offer, String location) {
-
-      return new AutoValue_VMImage(null, offer, null, null, location, false, group, storage, vhd1, vhd2, name, true);
+   
+   public static Builder azureImage() {
+      return new AutoValue_VMImage.Builder().globallyAvailable(false).custom(false);
+   }
+   
+   public static Builder customImage() {
+      return new AutoValue_VMImage.Builder().globallyAvailable(false).custom(true);
+   }
+   
+   @AutoValue.Builder
+   public abstract static class Builder {
+      
+      public abstract Builder publisher(String published);
+      public abstract Builder offer(String offer);
+      public abstract Builder sku(String sku);
+      public abstract Builder version(String version);
+      public abstract Builder location(String location);
+      public abstract Builder globallyAvailable(boolean globallyAvailable);
+      public abstract Builder group(String group);
+      public abstract Builder storage(String storage);
+      public abstract Builder vhd1(String vhd1);
+      public abstract Builder vhd2(String vhd2);
+      public abstract Builder name(String name);
+      public abstract Builder custom(boolean custom);
+      
+      public abstract VMImage build();
    }
 }

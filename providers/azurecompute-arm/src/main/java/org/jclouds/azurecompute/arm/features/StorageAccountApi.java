@@ -16,15 +16,19 @@
  */
 package org.jclouds.azurecompute.arm.features;
 
+import java.net.URI;
+import java.util.List;
+import java.util.Map;
+
 import javax.inject.Named;
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
 import javax.ws.rs.Consumes;
-import javax.ws.rs.PUT;
-import javax.ws.rs.POST;
 import javax.ws.rs.DELETE;
+import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
+import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
 import org.jclouds.Fallbacks;
@@ -32,26 +36,20 @@ import org.jclouds.azurecompute.arm.domain.Availability;
 import org.jclouds.azurecompute.arm.domain.StorageService;
 import org.jclouds.azurecompute.arm.domain.StorageServiceKeys;
 import org.jclouds.azurecompute.arm.domain.StorageServiceUpdateParams;
+import org.jclouds.azurecompute.arm.filters.ApiVersionFilter;
 import org.jclouds.azurecompute.arm.functions.FalseOn204;
 import org.jclouds.azurecompute.arm.functions.URIParser;
 import org.jclouds.javax.annotation.Nullable;
 import org.jclouds.oauth.v2.filters.OAuthFilter;
 import org.jclouds.rest.annotations.Fallback;
-import org.jclouds.rest.annotations.QueryParams;
-import org.jclouds.rest.annotations.RequestFilters;
-import org.jclouds.rest.annotations.SelectJson;
-import org.jclouds.rest.annotations.Payload;
-import org.jclouds.rest.annotations.PATCH;
-import org.jclouds.rest.annotations.ResponseParser;
-import org.jclouds.rest.annotations.PayloadParam;
 import org.jclouds.rest.annotations.MapBinder;
+import org.jclouds.rest.annotations.PATCH;
+import org.jclouds.rest.annotations.Payload;
+import org.jclouds.rest.annotations.PayloadParam;
+import org.jclouds.rest.annotations.RequestFilters;
+import org.jclouds.rest.annotations.ResponseParser;
+import org.jclouds.rest.annotations.SelectJson;
 import org.jclouds.rest.binders.BindToJsonPayload;
-
-import java.util.List;
-import java.util.Map;
-import java.net.URI;
-
-import static org.jclouds.azurecompute.arm.config.AzureComputeProperties.STORAGE_API_VERSION;
 
 /**
  * The Azure Resource Management API includes operations for managing the storage accounts in your subscription.
@@ -59,8 +57,7 @@ import static org.jclouds.azurecompute.arm.config.AzureComputeProperties.STORAGE
  * @see <a href="https://msdn.microsoft.com/en-us/library/mt163683.aspx">docs</a>
  */
 @Path("/")
-@RequestFilters(OAuthFilter.class)
-@QueryParams(keys = "api-version", values = STORAGE_API_VERSION)
+@RequestFilters({ OAuthFilter.class, ApiVersionFilter.class })
 @Consumes(MediaType.APPLICATION_JSON)
 public interface StorageAccountApi {
 

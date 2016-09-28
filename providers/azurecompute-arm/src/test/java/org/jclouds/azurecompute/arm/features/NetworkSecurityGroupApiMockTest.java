@@ -83,8 +83,6 @@ public class NetworkSecurityGroupApiMockTest extends BaseAzureComputeApiMockTest
    }
 
    public void getNetworkSecurityGroup() throws InterruptedException {
-      NetworkSecurityGroup nsg = createGroup();
-
       server.enqueue(jsonResponse("/networksecuritygroupget.json").setResponseCode(200));
 
       final NetworkSecurityGroupApi nsgApi = api.getNetworkSecurityGroupApi(resourcegroup);

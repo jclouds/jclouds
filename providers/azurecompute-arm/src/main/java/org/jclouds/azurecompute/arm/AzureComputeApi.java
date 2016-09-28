@@ -16,27 +16,26 @@
  */
 package org.jclouds.azurecompute.arm;
 
+import java.io.Closeable;
+
+import javax.ws.rs.PathParam;
+
 import org.jclouds.azurecompute.arm.features.DeploymentApi;
-import org.jclouds.azurecompute.arm.util.DeploymentTemplateBuilder;
 import org.jclouds.azurecompute.arm.features.JobApi;
 import org.jclouds.azurecompute.arm.features.LocationApi;
 import org.jclouds.azurecompute.arm.features.NetworkInterfaceCardApi;
+import org.jclouds.azurecompute.arm.features.NetworkSecurityGroupApi;
+import org.jclouds.azurecompute.arm.features.NetworkSecurityRuleApi;
 import org.jclouds.azurecompute.arm.features.OSImageApi;
 import org.jclouds.azurecompute.arm.features.PublicIPAddressApi;
 import org.jclouds.azurecompute.arm.features.ResourceGroupApi;
 import org.jclouds.azurecompute.arm.features.ResourceProviderApi;
 import org.jclouds.azurecompute.arm.features.StorageAccountApi;
 import org.jclouds.azurecompute.arm.features.SubnetApi;
+import org.jclouds.azurecompute.arm.features.VMSizeApi;
 import org.jclouds.azurecompute.arm.features.VirtualMachineApi;
 import org.jclouds.azurecompute.arm.features.VirtualNetworkApi;
-import org.jclouds.azurecompute.arm.features.VMSizeApi;
-import org.jclouds.azurecompute.arm.features.NetworkSecurityGroupApi;
-import org.jclouds.azurecompute.arm.features.NetworkSecurityRuleApi;
 import org.jclouds.rest.annotations.Delegate;
-
-import com.google.inject.Provides;
-import javax.ws.rs.PathParam;
-import java.io.Closeable;
 
 /**
  * The Azure Resource Manager API is a REST API for managing your services and deployments.
@@ -165,6 +164,4 @@ public interface AzureComputeApi extends Closeable {
    @Delegate
    ResourceProviderApi getResourceProviderApi();
 
-   @Provides
-   DeploymentTemplateBuilder.Factory deploymentTemplateFactory();
 }

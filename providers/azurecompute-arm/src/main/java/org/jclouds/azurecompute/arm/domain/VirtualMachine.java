@@ -16,12 +16,13 @@
  */
 package org.jclouds.azurecompute.arm.domain;
 
-import com.google.auto.value.AutoValue;
-import com.google.common.collect.ImmutableMap;
+import java.util.Map;
+
 import org.jclouds.javax.annotation.Nullable;
 import org.jclouds.json.SerializedNames;
 
-import java.util.Map;
+import com.google.auto.value.AutoValue;
+import com.google.common.collect.ImmutableMap;
 
 /**
  * A virtual machine  that is valid for your subscription.

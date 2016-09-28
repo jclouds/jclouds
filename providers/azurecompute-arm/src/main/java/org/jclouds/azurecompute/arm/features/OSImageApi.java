@@ -31,17 +31,16 @@ import org.jclouds.azurecompute.arm.domain.Offer;
 import org.jclouds.azurecompute.arm.domain.Publisher;
 import org.jclouds.azurecompute.arm.domain.SKU;
 import org.jclouds.azurecompute.arm.domain.Version;
+import org.jclouds.azurecompute.arm.filters.ApiVersionFilter;
 import org.jclouds.oauth.v2.filters.OAuthFilter;
 import org.jclouds.rest.annotations.Fallback;
-import org.jclouds.rest.annotations.QueryParams;
 import org.jclouds.rest.annotations.RequestFilters;
 
 /**
  * The Azure Resource Management API includes operations for managing the OS images in your subscription.
  */
 @Path("/providers/Microsoft.Compute/locations/{location}")
-@RequestFilters(OAuthFilter.class)
-@QueryParams(keys = "api-version", values = "2015-06-15")
+@RequestFilters({ OAuthFilter.class, ApiVersionFilter.class })
 @Consumes(APPLICATION_JSON)
 public interface OSImageApi {
 

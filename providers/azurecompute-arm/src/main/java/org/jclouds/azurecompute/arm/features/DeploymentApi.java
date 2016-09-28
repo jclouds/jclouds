@@ -34,12 +34,12 @@ import org.jclouds.Fallbacks;
 import org.jclouds.Fallbacks.EmptyListOnNotFoundOr404;
 import org.jclouds.Fallbacks.NullOnNotFoundOr404;
 import org.jclouds.azurecompute.arm.domain.Deployment;
+import org.jclouds.azurecompute.arm.filters.ApiVersionFilter;
 import org.jclouds.azurecompute.arm.functions.URIParser;
 import org.jclouds.oauth.v2.filters.OAuthFilter;
 import org.jclouds.rest.annotations.Fallback;
 import org.jclouds.rest.annotations.Payload;
 import org.jclouds.rest.annotations.PayloadParam;
-import org.jclouds.rest.annotations.QueryParams;
 import org.jclouds.rest.annotations.RequestFilters;
 import org.jclouds.rest.annotations.ResponseParser;
 import org.jclouds.rest.annotations.SelectJson;
@@ -50,8 +50,7 @@ import org.jclouds.rest.annotations.SelectJson;
  * - get information about deployment
  */
 @Path("/resourcegroups/{resourcegroup}/providers/microsoft.resources/deployments")
-@QueryParams(keys = "api-version", values = "2016-02-01")
-@RequestFilters(OAuthFilter.class)
+@RequestFilters({ OAuthFilter.class, ApiVersionFilter.class })
 @Consumes(MediaType.APPLICATION_JSON)
 public interface DeploymentApi {
 

@@ -18,7 +18,6 @@ package org.jclouds.azurecompute.arm.config;
 
 import org.jclouds.azurecompute.arm.AzureComputeApi;
 import org.jclouds.azurecompute.arm.handlers.AzureComputeErrorHandler;
-import org.jclouds.azurecompute.arm.util.DeploymentTemplateBuilder;
 import org.jclouds.http.HttpErrorHandler;
 import org.jclouds.http.annotation.ClientError;
 import org.jclouds.http.annotation.Redirection;
@@ -30,7 +29,6 @@ import org.jclouds.rest.ConfiguresHttpApi;
 import org.jclouds.rest.config.HttpApiModule;
 
 import com.google.inject.Scopes;
-import com.google.inject.assistedinject.FactoryModuleBuilder;
 
 @ConfiguresHttpApi
 public class AzureComputeHttpApiModule extends HttpApiModule<AzureComputeApi> {
@@ -51,7 +49,6 @@ public class AzureComputeHttpApiModule extends HttpApiModule<AzureComputeApi> {
 
    @Override
    protected void configure() {
-      install(new FactoryModuleBuilder().build(DeploymentTemplateBuilder.Factory.class));
       super.configure();
       bind(OAuthScopes.class).toInstance(OAuthScopes.NoScopes.create());
    }

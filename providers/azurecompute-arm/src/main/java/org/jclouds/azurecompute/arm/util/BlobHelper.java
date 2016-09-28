@@ -16,76 +16,68 @@
  */
 package org.jclouds.azurecompute.arm.util;
 
+import static org.jclouds.util.Closeables2.closeQuietly;
+
+import java.io.Closeable;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.jclouds.ContextBuilder;
-import org.jclouds.azure.storage.domain.BoundedSet;
 import org.jclouds.azureblob.AzureBlobClient;
 import org.jclouds.azureblob.domain.BlobProperties;
 import org.jclouds.azureblob.domain.ContainerProperties;
 import org.jclouds.azureblob.domain.ListBlobsResponse;
 import org.jclouds.azurecompute.arm.domain.VMImage;
-import org.jclouds.util.Closeables2;
 
-public class BlobHelper {
+public class BlobHelper implements Closeable {
 
-   public static void deleteContainerIfExists(String storage, String key, String containerName) {
-      final AzureBlobClient azureBlob = ContextBuilder.newBuilder("azureblob")
-              .credentials(storage, key)
-              .buildApi(AzureBlobClient.class);
+   private final String storageAccount;
+   private final AzureBlobClient azureBlob;
 
-      try {
-         azureBlob.deleteContainer(containerName);
-      }
-      finally {
-         Closeables2.closeQuietly(azureBlob);
-      }
+   public BlobHelper(String storageAccount, String key) {
+      this.storageAccount = storageAccount;
+      this.azureBlob = ContextBuilder.newBuilder("azureblob").credentials(storageAccount, key)
+            .buildApi(AzureBlobClient.class);
    }
 
-   public static boolean customImageExists(String storage, String key) {
-      final AzureBlobClient azureBlob = ContextBuilder.newBuilder("azureblob")
-              .credentials(storage, key)
-              .buildApi(AzureBlobClient.class);
-
-      try {
-         return azureBlob.containerExists("system");
-      }
-      finally {
-         Closeables2.closeQuietly(azureBlob);
-      }
+   @Override
+   public void close() throws IOException {
+      closeQuietly(azureBlob);
    }
 
-   public static List<VMImage> getImages(String containerName, String group,
-                                         String storageAccountName, String key, String offer, String location) {
-      final AzureBlobClient azureBlob = ContextBuilder.newBuilder("azureblob")
-              .credentials(storageAccountName, key)
-              .buildApi(AzureBlobClient.class);
+   public void deleteContainerIfExists(String containerName) {
+      azureBlob.deleteContainer(containerName);
+   }
 
+   public boolean hasContainers() {
+      return !azureBlob.listContainers().isEmpty();
+   }
 
+   public boolean customImageExists() {
+      return azureBlob.containerExists("system");
+   }
+
+   public List<VMImage> getImages(String containerName, String group, String offer, String location) {
       List<VMImage> list = new ArrayList<VMImage>();
-      try {
-         BoundedSet<ContainerProperties> containerList = azureBlob.listContainers();
-         for (ContainerProperties props : containerList) {
-            if (props.getName().equals("system")) {
-               ListBlobsResponse blobList = azureBlob.listBlobs("system");
-               String osDisk = "";
-               String dataDisk = "";
 
-               for (BlobProperties blob : blobList) {
-                  String name = blob.getName();
+      ContainerProperties systemContainer = azureBlob.getContainerProperties("system");
+      if (systemContainer != null) {
+         ListBlobsResponse blobList = azureBlob.listBlobs(systemContainer.getName());
+         for (BlobProperties blob : blobList) {
+            String name = blob.getName();
 
-                  if (dataDisk.length() == 0) dataDisk = name.substring(1 + name.lastIndexOf('/'));
-                  else if (osDisk.length() == 0) osDisk = name.substring(1 + name.lastIndexOf('/'));
-               }
-               final VMImage ref = VMImage.create(group, storageAccountName, osDisk, dataDisk, "test-create-image", "custom", location);
-               list.add(ref);
+            if (name.contains("-osDisk")) {
+               String imageName = name.substring(name.lastIndexOf('/') + 1, name.indexOf("-osDisk"));
+               String imageUrl = blob.getUrl().toString();
+
+               list.add(VMImage.customImage().group(group).storage(storageAccount).vhd1(imageUrl).name(imageName)
+                     .offer(offer).location(location).build());
             }
          }
       }
-      finally {
-         Closeables2.closeQuietly(azureBlob);
-      }
+
       return list;
    }
+
 }

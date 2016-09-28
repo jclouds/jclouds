@@ -101,7 +101,7 @@ public class VirtualNetworkApiMockTest extends BaseAzureComputeApiMockTest {
                       VirtualNetwork.AddressSpace.create(Arrays.asList("10.2.0.0/16")), null);
 
 
-      VirtualNetwork vn = vnApi.createOrUpdate(virtualNetwork, location, virtualNetworkProperties);
+      vnApi.createOrUpdate(virtualNetwork, location, virtualNetworkProperties);
 
       String path = String.format("/subscriptions/%s/resourcegroups/%s/providers/Microsoft.Network/virtualNetworks/%s?%s", subscriptionid, resourcegroup, virtualNetwork, apiVersion);
       String json = String.format("{\"location\":\"%s\",\"properties\":{\"addressSpace\":{\"addressPrefixes\":[\"%s\"]}}}", location, "10.2.0.0/16");

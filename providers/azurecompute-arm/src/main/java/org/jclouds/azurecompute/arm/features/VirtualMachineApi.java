@@ -16,10 +16,25 @@
  */
 package org.jclouds.azurecompute.arm.features;
 
+import java.net.URI;
+import java.util.List;
+
+import javax.inject.Named;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
+import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
+
 import org.jclouds.Fallbacks;
 import org.jclouds.azurecompute.arm.domain.VirtualMachine;
 import org.jclouds.azurecompute.arm.domain.VirtualMachineInstance;
 import org.jclouds.azurecompute.arm.domain.VirtualMachineProperties;
+import org.jclouds.azurecompute.arm.filters.ApiVersionFilter;
 import org.jclouds.azurecompute.arm.functions.URIParser;
 import org.jclouds.oauth.v2.filters.OAuthFilter;
 import org.jclouds.rest.annotations.Fallback;
@@ -32,27 +47,13 @@ import org.jclouds.rest.annotations.ResponseParser;
 import org.jclouds.rest.annotations.SelectJson;
 import org.jclouds.rest.binders.BindToJsonPayload;
 
-import javax.inject.Named;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.DELETE;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.PUT;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.MediaType;
-import java.net.URI;
-import java.util.List;
-
 /**
  * The Virtual Machine API includes operations for managing the virtual machines in your subscription.
  *
  * @see <a href="https://msdn.microsoft.com/en-us/library/azure/mt163630.aspx">docs</a>
  */
 @Path("/resourceGroups/{resourceGroup}/providers/Microsoft.Compute/virtualMachines")
-@RequestFilters(OAuthFilter.class)
-@QueryParams(keys = "api-version", values = "2015-06-15")
+@RequestFilters({ OAuthFilter.class, ApiVersionFilter.class })
 @Consumes(MediaType.APPLICATION_JSON)
 public interface VirtualMachineApi {
 
@@ -66,14 +67,14 @@ public interface VirtualMachineApi {
    VirtualMachine get(@PathParam("name") String name);
 
    /**
-    * The Get Virtual Machine details
+    * Get information about the model view and instance view of a virtual machine:
     */
    @Named("GetVirtualMachineInstance")
    @GET
    @Path("/{name}/instanceView")
    @Fallback(Fallbacks.NullOnNotFoundOr404.class)
    VirtualMachineInstance getInstanceDetails(@PathParam("name") String name);
-
+   
    /**
     * The Create Virtual Machine
     */

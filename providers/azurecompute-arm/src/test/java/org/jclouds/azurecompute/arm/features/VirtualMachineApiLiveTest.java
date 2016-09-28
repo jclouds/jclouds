@@ -16,6 +16,10 @@
  */
 package org.jclouds.azurecompute.arm.features;
 
+import static org.jclouds.util.Predicates2.retry;
+import static org.testng.Assert.assertNotNull;
+import static org.testng.Assert.assertTrue;
+
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -41,6 +45,7 @@ import org.jclouds.azurecompute.arm.domain.Subnet;
 import org.jclouds.azurecompute.arm.domain.VHD;
 import org.jclouds.azurecompute.arm.domain.VirtualMachine;
 import org.jclouds.azurecompute.arm.domain.VirtualMachineInstance;
+import org.jclouds.azurecompute.arm.domain.VirtualMachineInstance.VirtualMachineStatus.PowerState;
 import org.jclouds.azurecompute.arm.domain.VirtualMachineProperties;
 import org.jclouds.azurecompute.arm.internal.BaseAzureComputeApiLiveTest;
 import org.testng.Assert;
@@ -48,16 +53,9 @@ import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
-import com.google.common.base.Function;
 import com.google.common.base.Predicate;
-import com.google.common.collect.FluentIterable;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Iterables;
-import com.google.gson.internal.LinkedTreeMap;
-
-import static org.jclouds.util.Predicates2.retry;
-import static org.testng.Assert.assertNotNull;
-import static org.testng.Assert.assertTrue;
 
 @Test(groups = "live", testName = "VirtualMachineApiLiveTest")
 public class VirtualMachineApiLiveTest extends BaseAzureComputeApiLiveTest {
@@ -125,7 +123,7 @@ public class VirtualMachineApiLiveTest extends BaseAzureComputeApiLiveTest {
       }, 60 * 20 * 1000).apply(vmName);
       assertTrue(jobDone, "create operation did not complete in the configured timeout");
 
-      String status = api().get(vmName).properties().provisioningState();
+      VirtualMachineProperties.ProvisioningState status = api().get(vmName).properties().provisioningState();
       // Cannot be creating anymore. Should be succeeded or running but not failed.
       assertTrue(!status.equals("Creating"));
       assertTrue(!status.equals("Failed"));
@@ -146,21 +144,21 @@ public class VirtualMachineApiLiveTest extends BaseAzureComputeApiLiveTest {
    @Test(dependsOnMethods = "testStart")
    public void testStop() {
       api().stop(vmName);
-      assertTrue(stateReached("PowerState", "VM stopped"), "stop operation did not complete in the configured timeout");
+      assertTrue(stateReached(PowerState.STOPPED), "stop operation did not complete in the configured timeout");
    }
 
    @Test(dependsOnMethods = "testGet")
    public void testStart() {
       api().start(vmName);
-      assertTrue(stateReached("PowerState", "VM running"), "start operation did not complete in the configured timeout");
+      assertTrue(stateReached(PowerState.RUNNING), "start operation did not complete in the configured timeout");
    }
 
    @Test(dependsOnMethods = "testStop")
    public void testRestart() {
       api().start(vmName);
-      assertTrue(stateReached("PowerState", "VM running"), "start operation did not complete in the configured timeout");
+      assertTrue(stateReached(PowerState.RUNNING), "start operation did not complete in the configured timeout");
       api().restart(vmName);
-      assertTrue(stateReached("PowerState", "VM running"), "restart operation did not complete in the configured timeout");
+      assertTrue(stateReached(PowerState.RUNNING), "restart operation did not complete in the configured timeout");
    }
 
    @Test(dependsOnMethods = "testCreate")
@@ -180,10 +178,11 @@ public class VirtualMachineApiLiveTest extends BaseAzureComputeApiLiveTest {
    @Test(dependsOnMethods = "testRestart")
    public void testGeneralize() throws IllegalStateException {
       api().stop(vmName);
-      assertTrue(stateReached("PowerState", "VM stopped"), "restart operation did not complete in the configured timeout");
+      assertTrue(stateReached(PowerState.STOPPED), "restart operation did not complete in the configured timeout");
       api().generalize(vmName);
    }
 
+   @SuppressWarnings("unchecked")
    @Test(dependsOnMethods = "testGeneralize")
    public void testCapture() throws IllegalStateException {
       URI uri = api().capture(vmName, vmName, vmName);
@@ -192,17 +191,17 @@ public class VirtualMachineApiLiveTest extends BaseAzureComputeApiLiveTest {
          List<ResourceDefinition> definitions = api.getJobApi().captureStatus(uri);
          if (definitions != null) {
             for (ResourceDefinition definition : definitions) {
-               LinkedTreeMap<String, String> properties = (LinkedTreeMap<String, String>) definition.properties();
+               Map<String, String> properties = (Map<String, String>) definition.properties();
                Object storageObject = properties.get("storageProfile");
-               LinkedTreeMap<String, String> properties2 = (LinkedTreeMap<String, String>) storageObject;
+               Map<String, String> properties2 = (Map<String, String>) storageObject;
                Object osDiskObject = properties2.get("osDisk");
-               LinkedTreeMap<String, String> osProperties = (LinkedTreeMap<String, String>) osDiskObject;
+               Map<String, String> osProperties = (Map<String, String>) osDiskObject;
                Object dataDisksObject = properties2.get("dataDisks");
-               ArrayList<Object> dataProperties = (ArrayList<Object>) dataDisksObject;
-               LinkedTreeMap<String, String> datadiskObject = (LinkedTreeMap<String, String>) dataProperties.get(0);
+               List<Object> dataProperties = (List<Object>) dataDisksObject;
+               Map<String, String> datadiskObject = (Map<String, String>) dataProperties.get(0);
 
-               Assert.assertNotNull(osProperties.get("name"));
-               Assert.assertNotNull(datadiskObject.get("name"));
+               assertNotNull(osProperties.get("name"));
+               assertNotNull(datadiskObject.get("name"));
             }
          }
       }
@@ -245,7 +244,7 @@ public class VirtualMachineApiLiveTest extends BaseAzureComputeApiLiveTest {
               DiagnosticsProfile.BootDiagnostics.create(true, blob);
       DiagnosticsProfile diagnosticsProfile = DiagnosticsProfile.create(bootDiagnostics);
       VirtualMachineProperties properties = VirtualMachineProperties.create(null,
-              null, null, hwProf, storageProfile, osProfile, networkProfile, diagnosticsProfile, "Creating");
+              null, null, hwProf, storageProfile, osProfile, networkProfile, diagnosticsProfile, VirtualMachineProperties.ProvisioningState.CREATING);
       return properties;
    }
 
@@ -261,37 +260,15 @@ public class VirtualMachineApiLiveTest extends BaseAzureComputeApiLiveTest {
       return api.getNetworkInterfaceCardApi(resourceGroupName).createOrUpdate(networkInterfaceCardName, locationName, networkInterfaceCardProperties, tags);
    }
 
-   private boolean deleteStorageService(String resourceGroupName, String storageServiceName) {
-      return api.getStorageAccountApi(resourceGroupName).delete(storageServiceName);
+   private boolean waitForState(String name, final PowerState state) {
+      return api().getInstanceDetails(name).powerState().equals(state);
    }
 
-   private boolean waitForState(String name, final String state, final String displayStatus) {
-      return FluentIterable.from(api().getInstanceDetails(name).statuses())
-              .filter(new Predicate<VirtualMachineInstance.VirtualMachineStatus>() {
-                 @Override
-                 public boolean apply(VirtualMachineInstance.VirtualMachineStatus input) {
-                    return input.code().substring(0, 10).equals(state);
-                 }
-              })
-              .transform(new Function<VirtualMachineInstance.VirtualMachineStatus, String>() {
-                 @Override
-                 public String apply(VirtualMachineInstance.VirtualMachineStatus input) {
-                    return input.displayStatus();
-                 }
-              })
-              .anyMatch(new Predicate<String>() {
-                 @Override
-                 public boolean apply(String input) {
-                    return input.equals(displayStatus);
-                 }
-              });
-   }
-
-   private boolean stateReached(final String state, final String displayStatus) {
+   private boolean stateReached(final PowerState state) {
       return retry(new Predicate<String>() {
          @Override
          public boolean apply(String name) {
-            return waitForState(name, state, displayStatus);
+            return waitForState(name, state);
          }
       }, 60 * 4 * 1000).apply(vmName);
    }

@@ -46,7 +46,7 @@
     <dependency>
       <groupId>org.apache.jclouds</groupId>
       <artifactId>jclouds-compute</artifactId>
-      <version>${project.parent.version}</version>
+      <version>${project.version}</version>
     </dependency>
     <dependency>
       <groupId>com.google.auto.service</groupId>
@@ -75,11 +75,6 @@
       <version>${project.version}</version>
       <type>test-jar</type>
       <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.jclouds</groupId>
-      <artifactId>jclouds-compute</artifactId>
-      <version>${project.version}</version>
     </dependency>
     <dependency>
       <groupId>org.apache.jclouds</groupId>

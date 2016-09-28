@@ -32,8 +32,7 @@ azure ad app create --name <name> --password <password> --home-page <home-page> 
 # Create a Service Principal
 azure ad sp create <Application-id>
 
-# Output will include a value for `Object Id`
-
+# Output will include a value for `Object Id`, to be used in the next step 
 ```
 
 Run the following commands to assign roles to the service principal
@@ -58,7 +57,8 @@ mvn -Dtest=<name of the live test> \
     -Dtest.azurecompute-arm.identity="<Application-id>" \
     -Dtest.azurecompute-arm.credential="<password>" \
     -Dtest.azurecompute-arm.endpoint="https://management.azure.com/subscriptions/<Subscription-id>" \
-    -Dtest.oauth.endpoint="https://login.microsoftonline.com/<Tenant-id>/oauth2/token" test
+    -Dtest.oauth.endpoint="https://login.microsoftonline.com/<Tenant-id>/oauth2/token"
+    integration-test -Plive
 
 ```
 

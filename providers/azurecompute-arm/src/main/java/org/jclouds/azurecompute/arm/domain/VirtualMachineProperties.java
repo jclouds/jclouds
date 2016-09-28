@@ -16,15 +16,34 @@
  */
 package org.jclouds.azurecompute.arm.domain;
 
-import com.google.auto.value.AutoValue;
+import org.jclouds.azurecompute.arm.util.GetEnumValue;
 import org.jclouds.javax.annotation.Nullable;
 import org.jclouds.json.SerializedNames;
+
+import com.google.auto.value.AutoValue;
 
 /**
  * A virtual machine properties for the virtual machine.
  */
 @AutoValue
 public abstract class VirtualMachineProperties {
+
+   public enum ProvisioningState {
+      ACCEPTED,
+      CREATING,
+      READY,
+      CANCELED,
+      FAILED,
+      DELETED,
+      SUCCEEDED,
+      RUNNING,
+      UPDATING,
+      UNRECOGNIZED;
+
+      public static ProvisioningState fromValue(final String text) {
+         return (ProvisioningState) GetEnumValue.fromValueOrDefault(text, ProvisioningState.UNRECOGNIZED);
+      }
+   }
 
    /**
     * The id of the virtual machine.
@@ -78,7 +97,7 @@ public abstract class VirtualMachineProperties {
     * The provisioning state of the VM
     */
    @Nullable
-   public abstract String provisioningState();
+   public abstract ProvisioningState provisioningState();
 
    @SerializedNames({"vmId", "licenseType", "availabilitySet", "hardwareProfile", "storageProfile", "osProfile",
            "networkProfile", "diagnosticsProfile", "provisioningState"})
@@ -90,7 +109,7 @@ public abstract class VirtualMachineProperties {
                                                  final OSProfile osProfile,
                                                  final NetworkProfile networkProfile,
                                                  final DiagnosticsProfile diagnosticsProfile,
-                                                 final String provisioningState) {
+                                                 final ProvisioningState provisioningState) {
       return builder()
               .vmId(vmId)
               .licenseType(licenseType)
@@ -126,7 +145,7 @@ public abstract class VirtualMachineProperties {
 
       public abstract Builder diagnosticsProfile(DiagnosticsProfile diagnosticsProfile);
 
-      public abstract Builder provisioningState(String provisioningState);
+      public abstract Builder provisioningState(ProvisioningState provisioningState);
 
       public abstract VirtualMachineProperties build();
    }

@@ -235,41 +235,6 @@ public class StorageAccountApiMockTest extends BaseAzureComputeApiMockTest {
               "/providers/Microsoft.Storage/storageAccounts/TESTSTORAGE?api-version=2015-06-15");
    }
 
-   private StorageService getStrorageAccount() {
-      DateService DATE_SERVICE = new SimpleDateFormatDateService();
-      Map<String, String> endpoints = new HashMap<String, String>();
-      endpoints.put("blob", "https://TESTSTORAGE.blob.core.windows.net/");
-      endpoints.put("file", "https://TESTSTORAGE.file.core.windows.net/");
-      endpoints.put("queue", "https://TESTSTORAGE.queue.core.windows.net/");
-      endpoints.put("table", "https://TESTSTORAGE.table.core.windows.net/");
-      Map<String, String> secondaryEndpoints = new HashMap<String, String>();
-      secondaryEndpoints.put("blob", "https://TESTSTORAGE-secondary.blob.core.windows.net/");
-      secondaryEndpoints.put("queue", "https://TESTSTORAGE-secondary.queue.core.windows.net/");
-      secondaryEndpoints.put("table", "https://TESTSTORAGE-secondary.table.core.windows.net/");
-
-
-      String location = "westus";
-      String secondaryLocation = "eastus";
-      final StorageService.StorageServiceProperties props = StorageService.StorageServiceProperties.create(
-              StorageService.AccountType.Standard_RAGRS,
-              DATE_SERVICE.iso8601DateOrSecondsDateParse("2016-02-24T13:04:45.0890883Z"),
-              endpoints,
-              location,
-              StorageService.Status.Succeeded,
-              secondaryEndpoints, secondaryLocation,
-              StorageService.RegionStatus.Available,
-              StorageService.RegionStatus.Available);
-
-      final Map<String, String> tags = ImmutableMap.of(
-              "key1", "value1",
-              "key2", "value2");
-
-      return StorageService.create(
-              "/subscriptions/SUBSCRIPTIONID/resourceGroups/resourceGroup" +
-                      "/providers/Microsoft.Storage/storageAccounts/TESTSTORAGE",
-              "TESTSTORAGE", location, tags, null, props);
-   }
-
    private List<StorageService> expected() throws MalformedURLException {
       DateService DATE_SERVICE = new SimpleDateFormatDateService();
       Map<String, String> endpoints = new HashMap<String, String>();

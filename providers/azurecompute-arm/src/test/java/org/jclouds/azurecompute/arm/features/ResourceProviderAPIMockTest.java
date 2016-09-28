@@ -31,7 +31,6 @@ public class ResourceProviderAPIMockTest extends BaseAzureComputeApiMockTest {
 
    final String apiVersion = "2015-01-01";
    final String resource = "Microsoft.Compute";
-   private final String vm_resource = "virtualMachines";
 
    public void getPublicIPAddressInfo() throws InterruptedException {
       server.enqueue(jsonResponse("/getresourceprovidermetadata.json"));

@@ -28,6 +28,7 @@ import org.jclouds.ContextBuilder;
 import org.jclouds.azurecompute.arm.AzureComputeApi;
 import org.jclouds.azurecompute.arm.AzureComputeProviderMetadata;
 import org.jclouds.concurrent.config.ExecutorServiceModule;
+import org.jclouds.rest.ApiContext;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 
@@ -50,6 +51,7 @@ public class BaseAzureComputeApiMockTest {
 
    protected MockWebServer server;
    protected AzureComputeApi api;
+   protected ApiContext<AzureComputeApi> context;
 
    // So that we can ignore formatting.
    private final JsonParser parser = new JsonParser();
@@ -58,16 +60,21 @@ public class BaseAzureComputeApiMockTest {
    public void start() throws IOException {
       server = new MockWebServer();
       server.play();
-      Properties properties = new Properties();
-      properties.put(CREDENTIAL_TYPE, BEARER_TOKEN_CREDENTIALS.toString());
-      properties.put("oauth.endpoint", "https://login.microsoftonline.com/tenant-id/oauth2/token");
       AzureComputeProviderMetadata pm = AzureComputeProviderMetadata.builder().build();
-      api = ContextBuilder.newBuilder(pm)
+      context = ContextBuilder.newBuilder(pm)
               .credentials("", MOCK_BEARER_TOKEN)
               .endpoint(server.getUrl("/").toString() + "subscriptions/SUBSCRIPTIONID")
               .modules(modules)
-              .overrides(properties)
-              .buildApi(AzureComputeApi.class);
+              .overrides(setupProperties())
+              .build();
+      api = context.getApi();
+   }
+   
+   protected Properties setupProperties() {
+      Properties properties = new Properties();
+      properties.put(CREDENTIAL_TYPE, BEARER_TOKEN_CREDENTIALS.toString());
+      properties.put("oauth.endpoint", "https://login.microsoftonline.com/tenant-id/oauth2/token");
+      return properties;
    }
 
    @AfterMethod(alwaysRun = true)
