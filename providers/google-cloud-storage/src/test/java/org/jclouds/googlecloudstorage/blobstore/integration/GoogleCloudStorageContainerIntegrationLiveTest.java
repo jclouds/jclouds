@@ -90,6 +90,11 @@ public class GoogleCloudStorageContainerIntegrationLiveTest extends BaseContaine
    }
 
    @Override
+   public void testListMarkerPrefix() throws Exception {
+      throw new SkipException("cannot specify arbitrary markers");
+   }
+
+   @Override
    public void testSetContainerAccess() throws Exception {
       try {
          super.testSetContainerAccess();
