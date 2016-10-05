@@ -47,6 +47,11 @@ public class AtmosContainerIntegrationLiveTest extends BaseContainerIntegrationT
    }
 
    @Override
+   public void testListMarkerPrefix() throws Exception {
+      throw new SkipException("cannot specify arbitrary markers");
+   }
+
+   @Override
    public void testListContainerWithZeroMaxResults() throws Exception {
       throw new SkipException("Atmos requires a positive integer for max results");
    }

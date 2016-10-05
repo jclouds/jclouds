@@ -577,6 +577,24 @@ public class BaseContainerIntegrationTest extends BaseBlobStoreIntegrationTest {
       }
    }
 
+   /** Test that listing with a marker prefix matches the first key with that prefix. */
+   @Test
+   public void testListMarkerPrefix() throws Exception {
+      BlobStore blobStore = view.getBlobStore();
+      final String container = getContainerName();
+      try {
+         blobStore.createContainerInLocation(null, container);
+         blobStore.putBlob(container, blobStore.blobBuilder("a/a").payload("").build());
+         blobStore.putBlob(container, blobStore.blobBuilder("b/b").payload("").build());
+         ListContainerOptions options = new ListContainerOptions().afterMarker("b/").recursive();
+         PageSet<? extends StorageMetadata> res = blobStore.list(container, options);
+         assertThat(res).hasSize(1);
+         assertThat(res.iterator().next().getName()).isEqualTo("b/b");
+      } finally {
+         returnContainer(container);
+      }
+   }
+
    @DataProvider
    public Object[][] getBlobsToEscape() {
       ImmutableSet<String> testNames = ImmutableSet.of("%20", "%20 ", " %20", " ");

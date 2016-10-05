@@ -35,4 +35,9 @@ public class AzureBlobContainerIntegrationLiveTest extends BaseContainerIntegrat
    public void testListContainerWithZeroMaxResults() throws Exception {
       throw new SkipException("Azure requires a positive integer for max results");
    }
+
+   @Override
+   public void testListMarkerPrefix() throws Exception {
+      throw new SkipException("cannot specify arbitrary markers");
+   }
 }

@@ -276,21 +276,11 @@ public final class LocalBlobStore implements BlobStore {
          if (options.getMarker() != null) {
             final String finalMarker = options.getMarker();
             String delimiter = storageStrategy.getSeparator();
-            Optional<StorageMetadata> lastMarkerMetadata;
-            if (finalMarker.endsWith(delimiter)) {
-               lastMarkerMetadata = tryFind(contents, new Predicate<StorageMetadata>() {
-                  public boolean apply(StorageMetadata metadata) {
-                     int length = finalMarker.length() - 1;
-                     return metadata.getName().substring(0, length).compareTo(finalMarker.substring(0, length)) > 0;
-                  }
-               });
-            } else {
-               lastMarkerMetadata = tryFind(contents, new Predicate<StorageMetadata>() {
-                  public boolean apply(StorageMetadata metadata) {
-                     return metadata.getName().compareTo(finalMarker) > 0;
-                  }
-               });
-            }
+            Optional<StorageMetadata> lastMarkerMetadata = tryFind(contents, new Predicate<StorageMetadata>() {
+               public boolean apply(StorageMetadata metadata) {
+                  return metadata.getName().compareTo(finalMarker) > 0;
+               }
+            });
             if (lastMarkerMetadata.isPresent()) {
                contents = contents.tailSet(lastMarkerMetadata.get());
             } else {
