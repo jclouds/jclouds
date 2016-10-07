@@ -44,7 +44,7 @@ public abstract class Network {
     * The range of internal addresses that are legal on this network. This range is a CIDR
     * specification, for example: {@code 192.168.0.0/16}.
     */
-   public abstract String rangeIPv4();
+   @Nullable public abstract String rangeIPv4();
 
    /**
     * This must be within the range specified by IPv4Range, and is typically the first usable address in that range.
