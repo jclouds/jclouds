@@ -23,6 +23,7 @@ import org.jclouds.aws.ec2.features.AWSSecurityGroupApi;
 import org.jclouds.aws.ec2.features.MonitoringApi;
 import org.jclouds.aws.ec2.features.PlacementGroupApi;
 import org.jclouds.aws.ec2.features.SpotInstanceApi;
+import org.jclouds.aws.ec2.features.VPCApi;
 import org.jclouds.ec2.EC2Api;
 import org.jclouds.javax.annotation.Nullable;
 import org.jclouds.location.functions.RegionToEndpointOrProviderIfNull;
@@ -59,7 +60,7 @@ public interface AWSEC2Api extends EC2Api {
    @Override
    Optional<? extends AWSSecurityGroupApi> getSecurityGroupApiForRegion(
             @EndpointParam(parser = RegionToEndpointOrProviderIfNull.class) @Nullable String region);
-   
+
    /**
     * {@inheritDoc}
     */
@@ -78,7 +79,7 @@ public interface AWSEC2Api extends EC2Api {
     */
    @Delegate
    Optional<? extends PlacementGroupApi> getPlacementGroupApi();
-   
+
    @Delegate
    Optional<? extends PlacementGroupApi> getPlacementGroupApiForRegion(
             @EndpointParam(parser = RegionToEndpointOrProviderIfNull.class) @Nullable String region);
@@ -88,7 +89,7 @@ public interface AWSEC2Api extends EC2Api {
     */
    @Delegate
    Optional<? extends MonitoringApi> getMonitoringApi();
-   
+
    @Delegate
    Optional<? extends MonitoringApi> getMonitoringApiForRegion(
             @EndpointParam(parser = RegionToEndpointOrProviderIfNull.class) @Nullable String region);
@@ -99,19 +100,25 @@ public interface AWSEC2Api extends EC2Api {
    @Delegate
    @Override
    Optional<? extends AWSKeyPairApi> getKeyPairApi();
-   
+
    @Delegate
    @Override
    Optional<? extends AWSKeyPairApi> getKeyPairApiForRegion(
             @EndpointParam(parser = RegionToEndpointOrProviderIfNull.class) @Nullable String region);
-   
+
    /**
     * Provides synchronous access to SpotInstance services.
     */
    @Delegate
    Optional<? extends SpotInstanceApi> getSpotInstanceApi();
-   
+
    @Delegate
    Optional<? extends SpotInstanceApi> getSpotInstanceApiForRegion(
             @EndpointParam(parser = RegionToEndpointOrProviderIfNull.class) @Nullable String region);
+
+   /**
+    * Provides synchronous access to VPC services.
+    */
+   @Delegate
+   Optional<? extends VPCApi> getVPCApi();
 }
