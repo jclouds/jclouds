@@ -25,6 +25,7 @@ import static org.jclouds.http.HttpUtils.wirePayloadIfEnabled;
 import static org.jclouds.util.Throwables2.getFirstThrowableOfType;
 
 import java.io.IOException;
+import java.net.ProtocolException;
 import java.util.Set;
 
 import javax.annotation.Resource;
@@ -145,6 +146,16 @@ public abstract class BaseHttpCommandExecutorService<Q> implements HttpCommandEx
    }
 
    boolean shouldContinue(HttpCommand command, IOException response) {
+      // Even though Java does not want to handle it this way,
+      // treat a Protocol Exception on PUT with 100-Continue as a case of Unauthorized (and attempt to retry)
+      if (command.getCurrentRequest().getMethod().equals("PUT")
+            && command.getCurrentRequest().getHeaders().containsEntry("Expect", "100-continue")
+            && response instanceof ProtocolException
+            && response.getMessage().equals("Server rejected operation")
+            ) {
+         logger.debug("Caught a protocol exception on a 100-continue PUT request. Attempting to retry.");
+         return isIdempotent(command) && retryHandler.shouldRetryRequest(command, HttpResponse.builder().statusCode(401).message("Unauthorized").build());
+      }
       return isIdempotent(command) && ioRetryHandler.shouldRetryRequest(command, response);
    }
 
