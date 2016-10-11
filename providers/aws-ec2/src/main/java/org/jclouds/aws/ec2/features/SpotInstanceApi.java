@@ -193,7 +193,7 @@ public interface SpotInstanceApi {
     * @param region
     *           Region where the spot instance service is running
     * @param options
-    *           options to control the list
+    *           options to control the describeVpcsInRegion
     * 
     * @see #describeSpotInstanceRequestsInRegion
     * @see #requestSpotInstancesInRegion
