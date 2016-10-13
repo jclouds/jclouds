@@ -41,7 +41,7 @@ public class AccountApiMockTest extends BaseSoftLayerMockTest {
       AccountApi api = getAccountApi(server);
       try {
          assertEquals(api.listVirtualGuests(), new VirtualGuestsParseTest().expected());
-         assertSent(server, "GET", "/SoftLayer_Account/VirtualGuests?objectMask=powerState%3BoperatingSystem.passwords%3Bdatacenter%3BbillingItem%3BblockDevices.diskImage%3BtagReferences");
+         assertSent(server, "GET", "/SoftLayer_Account/VirtualGuests?objectMask=powerState%3BoperatingSystem.passwords%3Bdatacenter%3BbillingItem%3BblockDevices.diskImage%3BtagReferences.tag.name");
       } finally {
          server.shutdown();
       }
@@ -52,7 +52,7 @@ public class AccountApiMockTest extends BaseSoftLayerMockTest {
       AccountApi api = getAccountApi(server);
       try {
          assertTrue(api.listVirtualGuests().isEmpty());
-         assertSent(server, "GET", "/SoftLayer_Account/VirtualGuests?objectMask=powerState%3BoperatingSystem.passwords%3Bdatacenter%3BbillingItem%3BblockDevices.diskImage%3BtagReferences");
+         assertSent(server, "GET", "/SoftLayer_Account/VirtualGuests?objectMask=powerState%3BoperatingSystem.passwords%3Bdatacenter%3BbillingItem%3BblockDevices.diskImage%3BtagReferences.tag.name");
       } finally {
          server.shutdown();
       }

@@ -45,7 +45,7 @@ public interface AccountApi {
 
    String GUEST_MASK = "children.blockDevices.diskImage.softwareReferences.softwareDescription";
    String LIST_GUEST_MASK = "powerState;operatingSystem.passwords;datacenter;billingItem;blockDevices" +
-           ".diskImage;tagReferences";
+           ".diskImage;tagReferences.tag.name";
 
    /**
     * @return an account's associated virtual guest objects.
