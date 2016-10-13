@@ -54,7 +54,6 @@ import static org.testng.Assert.assertTrue;
 import static org.testng.Assert.fail;
 
 import java.io.IOException;
-import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -347,7 +346,7 @@ public abstract class BaseComputeServiceLiveTest extends BaseComputeServiceConte
       ComputeTestUtils.checkHttpGet(view.utils().http(), node, 8080);
    }
 
-   @Test(enabled = true, dependsOnMethods = "testConcurrentUseOfComputeServiceToCreateNodes")
+   @Test(enabled = true, dependsOnMethods = "testCreateTwoNodesWithOneSpecifiedName")
    public void testCreateTwoNodesWithRunScript() throws Exception {
       try {
          client.destroyNodesMatching(inGroup(group));
@@ -377,21 +376,20 @@ public abstract class BaseComputeServiceLiveTest extends BaseComputeServiceConte
       checkOsMatchesTemplate(node2);
    }
 
-   @Test(enabled = true, dependsOnMethods = "testCreateTwoNodesWithRunScript")
+   @Test(enabled = true, dependsOnMethods = "testDestroyNodes", alwaysRun = true)
    public void testCreateTwoNodesWithOneSpecifiedName() throws Exception {
       template = buildTemplate(templateBuilder());
       template.getOptions().nodeNames(ImmutableSet.of("first-node"));
-      Set<? extends NodeMetadata> nodes;
       try {
-         nodes = newTreeSet(client.createNodesInGroup(group, 2, template));
+         this.nodes = newTreeSet(client.createNodesInGroup(group, 2, template));
       } catch (RunNodesException e) {
-         nodes = newTreeSet(concat(e.getSuccessfulNodes(), e.getNodeErrors().keySet()));
+         this.nodes = newTreeSet(concat(e.getSuccessfulNodes(), e.getNodeErrors().keySet()));
          throw e;
       }
 
-      assertEquals(nodes.size(), 2, "expected two nodes but was " + nodes);
-      NodeMetadata node1 = Iterables.getFirst(nodes, null);
-      NodeMetadata node2 = Iterables.getLast(nodes, null);
+      assertEquals(this.nodes.size(), 2, "expected two nodes but was " + nodes);
+      NodeMetadata node1 = Iterables.getFirst(this.nodes, null);
+      NodeMetadata node2 = Iterables.getLast(this.nodes, null);
       // credentials aren't always the same
       // assertEquals(node1.getCredentials(), node2.getCredentials());
 
@@ -399,13 +397,11 @@ public abstract class BaseComputeServiceLiveTest extends BaseComputeServiceConte
               "one node should be named 'first-node'");
       assertFalse(node1.getName().equals("first-node") && node2.getName().equals("first-node"),
               "one node should be named something other than 'first-node");
-
-      this.nodes = newTreeSet(concat(this.nodes, nodes));
    }
 
    protected Template refreshTemplate() {
       return template = addRunScriptToTemplate(buildTemplate(templateBuilder()));
-   }
+   } 
 
    protected Template addRunScriptToTemplate(Template template) {
       template.getOptions().runScript(Statements.newStatementList(AdminAccess.standard(), InstallJDK.fromOpenJDK()));
@@ -432,8 +428,18 @@ public abstract class BaseComputeServiceLiveTest extends BaseComputeServiceConte
       }
    }
 
-   @Test(enabled = true, dependsOnMethods = "testCreateTwoNodesWithOneSpecifiedName")
+   @Test(enabled = true, dependsOnMethods = "testCreateTwoNodesWithRunScript", alwaysRun = true)
    public void testCreateAnotherNodeWithANewContextToEnsureSharedMemIsntRequired() throws Exception {
+      if (this.nodes == null || this.nodes.isEmpty()) {
+         template = buildTemplate(templateBuilder());
+         try {
+            nodes = newTreeSet(client.createNodesInGroup(group, 1, template));
+         } catch (RunNodesException e) {
+            nodes = newTreeSet(concat(e.getSuccessfulNodes(), e.getNodeErrors().keySet()));
+            throw e;
+         }
+      }
+      
       initializeContext();
 
       Location existingLocation = Iterables.get(this.nodes, 0).getLocation();
@@ -541,8 +547,16 @@ public abstract class BaseComputeServiceLiveTest extends BaseComputeServiceConte
       return templateBuilder.build();
    }
 
-   @Test(enabled = true, dependsOnMethods = "testCreateAnotherNodeWithANewContextToEnsureSharedMemIsntRequired")
+   @Test(enabled = true)
    public void testGet() throws Exception {
+      template = buildTemplate(templateBuilder());
+      try {
+         nodes = newTreeSet(client.createNodesInGroup(group, 1, template));
+      } catch (RunNodesException e) {
+         nodes = newTreeSet(concat(e.getSuccessfulNodes(), e.getNodeErrors().keySet()));
+         throw e;
+      }
+      
       Map<String, ? extends NodeMetadata> metadataMap = newLinkedHashMap(uniqueIndex(
             filter(client.listNodesDetailsMatching(all()), and(inGroup(group), not(TERMINATED))),
             new Function<NodeMetadata, String>() {
@@ -568,12 +582,6 @@ public abstract class BaseComputeServiceLiveTest extends BaseComputeServiceConte
          assertEquals(metadata.getPublicAddresses().size(), node.getPublicAddresses().size(), format(
                "[%s] didn't match: [%s]", metadata.getPublicAddresses(), node.getPublicAddresses().size()));
       }
-      assertNodeZero(metadataMap.values());
-   }
-
-   protected void assertNodeZero(Collection<? extends NodeMetadata> metadataSet) {
-      assert metadataSet.size() == 0 : format("nodes left in set: [%s] which didn't match set: [%s]", metadataSet,
-            nodes);
    }
 
    @Test(enabled = true, dependsOnMethods = "testGet")
