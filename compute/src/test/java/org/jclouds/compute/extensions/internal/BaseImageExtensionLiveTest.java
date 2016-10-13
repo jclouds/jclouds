@@ -35,6 +35,7 @@ import org.jclouds.compute.domain.Image;
 import org.jclouds.compute.domain.ImageTemplate;
 import org.jclouds.compute.domain.NodeMetadata;
 import org.jclouds.compute.domain.Template;
+import org.jclouds.compute.domain.TemplateBuilder;
 import org.jclouds.compute.extensions.ImageExtension;
 import org.jclouds.compute.internal.BaseComputeServiceContextLiveTest;
 import org.jclouds.compute.reference.ComputeServiceConstants;
@@ -66,8 +67,8 @@ public abstract class BaseImageExtensionLiveTest extends BaseComputeServiceConte
     * 
     * @return
     */
-   public Template getNodeTemplate() {
-      return view.getComputeService().templateBuilder().build();
+   public TemplateBuilder getNodeTemplate() {
+      return view.getComputeService().templateBuilder();
    }
 
    /**
@@ -96,7 +97,7 @@ public abstract class BaseImageExtensionLiveTest extends BaseComputeServiceConte
       Optional<ImageExtension> imageExtension = computeService.getImageExtension();
       assertTrue(imageExtension.isPresent(), "image extension was not present");
 
-      Template template = getNodeTemplate();
+      Template template = getNodeTemplate().build();
       NodeMetadata node = Iterables.getOnlyElement(computeService.createNodesInGroup(imageGroup, 1, template));
       checkReachable(node);
 
@@ -128,10 +129,9 @@ public abstract class BaseImageExtensionLiveTest extends BaseComputeServiceConte
       Optional<? extends Image> optImage = getImage();
       assertTrue(optImage.isPresent());
 
-      NodeMetadata node = Iterables.getOnlyElement(computeService.createNodesInGroup(imageGroup, 1, view
-               .getComputeService()
+      NodeMetadata node = Iterables.getOnlyElement(computeService.createNodesInGroup(imageGroup, 1, getNodeTemplate()
                // fromImage does not use the arg image's id (but we do need to set location)
-               .templateBuilder().imageId(optImage.get().getId()).fromImage(optImage.get()).build()));
+               .imageId(optImage.get().getId()).fromImage(optImage.get()).build()));
 
       checkReachable(node);
       view.getComputeService().destroyNode(node.getId());

@@ -26,7 +26,7 @@ import java.util.Set;
 
 import org.jclouds.collect.Memoized;
 import org.jclouds.compute.domain.Image;
-import org.jclouds.compute.domain.Template;
+import org.jclouds.compute.domain.TemplateBuilder;
 import org.jclouds.compute.domain.TemplateBuilderSpec;
 import org.jclouds.compute.extensions.ImageExtension;
 import org.jclouds.compute.extensions.internal.BaseImageExtensionLiveTest;
@@ -95,8 +95,8 @@ public class EC2ImageExtensionLiveTest extends BaseImageExtensionLiveTest {
    }
 
    @Override
-   public Template getNodeTemplate() {
-      return view.getComputeService().templateBuilder().from(ebsTemplate).build();
+   public TemplateBuilder getNodeTemplate() {
+      return getNodeTemplate().from(ebsTemplate);
    }
 
    @Override
