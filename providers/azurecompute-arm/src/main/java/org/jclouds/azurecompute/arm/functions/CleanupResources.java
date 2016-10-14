@@ -16,7 +16,6 @@
  */
 package org.jclouds.azurecompute.arm.functions;
 
-import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Predicates.notNull;
 import static com.google.common.collect.Iterables.filter;
 import static com.google.common.collect.Iterables.transform;
@@ -25,7 +24,6 @@ import static org.jclouds.util.Closeables2.closeQuietly;
 
 import java.net.URI;
 import java.util.List;
-import java.util.Map;
 
 import javax.annotation.Resource;
 import javax.inject.Inject;
@@ -33,10 +31,11 @@ import javax.inject.Named;
 import javax.inject.Singleton;
 
 import org.jclouds.azurecompute.arm.AzureComputeApi;
+import org.jclouds.azurecompute.arm.compute.functions.LocationToResourceGroupName;
 import org.jclouds.azurecompute.arm.domain.IdReference;
 import org.jclouds.azurecompute.arm.domain.IpConfiguration;
 import org.jclouds.azurecompute.arm.domain.NetworkInterfaceCard;
-import org.jclouds.azurecompute.arm.domain.ResourceGroup;
+import org.jclouds.azurecompute.arm.domain.RegionAndId;
 import org.jclouds.azurecompute.arm.domain.StorageServiceKeys;
 import org.jclouds.azurecompute.arm.domain.VirtualMachine;
 import org.jclouds.azurecompute.arm.util.BlobHelper;
@@ -46,10 +45,8 @@ import org.jclouds.logging.Logger;
 import com.google.common.base.Function;
 import com.google.common.base.Predicate;
 import com.google.common.base.Splitter;
-import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
 
 @Singleton
 public class CleanupResources implements Function<String, Boolean> {
@@ -61,28 +58,29 @@ public class CleanupResources implements Function<String, Boolean> {
    protected final AzureComputeApi api;
    private final Predicate<URI> resourceDeleted;
    private final StorageProfileToStorageAccountName storageProfileToStorageAccountName;
+   private final LocationToResourceGroupName locationToResourceGroupName;
 
    @Inject
    CleanupResources(AzureComputeApi azureComputeApi, @Named(TIMEOUT_RESOURCE_DELETED) Predicate<URI> resourceDeleted,
-         StorageProfileToStorageAccountName storageProfileToStorageAccountName) {
+         StorageProfileToStorageAccountName storageProfileToStorageAccountName,
+         LocationToResourceGroupName locationToResourceGroupName) {
       this.api = azureComputeApi;
       this.resourceDeleted = resourceDeleted;
       this.storageProfileToStorageAccountName = storageProfileToStorageAccountName;
+      this.locationToResourceGroupName = locationToResourceGroupName;
    }
 
    @Override
    public Boolean apply(final String id) {
-      logger.debug(">> destroying %s ...", id);
-
-      Map<String, VirtualMachine> resourceGroupNamesAndVirtualMachines = getResourceGroupNamesAndVirtualMachines(id);
-      if (resourceGroupNamesAndVirtualMachines.isEmpty())
+      RegionAndId regionAndId = RegionAndId.fromSlashEncoded(id);
+      String group = locationToResourceGroupName.apply(regionAndId.region());
+      
+      VirtualMachine virtualMachine = api.getVirtualMachineApi(group).get(regionAndId.id());
+      if (virtualMachine == null) {
          return true;
+      }
 
-      String group = checkNotNull(resourceGroupNamesAndVirtualMachines.entrySet().iterator().next().getKey(),
-            "resourceGroup name must not be null");
-      VirtualMachine virtualMachine = checkNotNull(resourceGroupNamesAndVirtualMachines.get(group),
-            "virtualMachine must not be null");
-
+      logger.debug(">> destroying %s ...", regionAndId.slashEncode());
       boolean vmDeleted = deleteVirtualMachine(group, virtualMachine);
       
       // We don't delete the network here, as it is global to the resource
@@ -163,14 +161,4 @@ public class CleanupResources implements Function<String, Boolean> {
       return resourceDeleted.apply(api.getVirtualMachineApi(group).delete(virtualMachine.name()));
    }
 
-   private Map<String, VirtualMachine> getResourceGroupNamesAndVirtualMachines(String id) {
-      for (ResourceGroup resourceGroup : api.getResourceGroupApi().list()) {
-         String group = resourceGroup.name();
-         VirtualMachine virtualMachine = api.getVirtualMachineApi(group).get(id);
-         if (virtualMachine != null) {
-            return ImmutableMap.of(group, virtualMachine);
-         }
-      }
-      return Maps.newHashMap();
-   }
 }

@@ -16,8 +16,6 @@
  */
 package org.jclouds.azurecompute.arm.compute;
 
-import static com.google.common.base.Preconditions.checkNotNull;
-import static org.jclouds.azurecompute.arm.config.AzureComputeProperties.RESOURCE_GROUP_NAME;
 import static org.jclouds.compute.util.ComputeServiceUtils.getCores;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertTrue;
@@ -58,25 +56,23 @@ public class AzureTemplateBuilderLiveTest extends BaseTemplateBuilderLiveTest {
    @Override
    protected Properties setupProperties() {
       Properties properties = super.setupProperties();
-      properties.put(RESOURCE_GROUP_NAME, "jc");
-
       AzureLiveTestUtils.defaultProperties(properties);
-      checkNotNull(setIfTestSystemPropertyPresent(properties, "oauth.endpoint"), "test.oauth.endpoint");
-
+      setIfTestSystemPropertyPresent(properties, "oauth.endpoint");
       return properties;
    }
-   
+
    @Override
    @Test
    public void testDefaultTemplateBuilder() throws IOException {
       Template defaultTemplate = view.getComputeService().templateBuilder().build();
       assertTrue(defaultTemplate.getImage().getOperatingSystem().getVersion().matches("1[45]\\.[01][04]\\.[0-9]-LTS"),
-            "Version mismatch, expected dd.dd.d-LTS, found: " + defaultTemplate.getImage().getOperatingSystem().getVersion());
+            "Version mismatch, expected dd.dd.d-LTS, found: "
+                  + defaultTemplate.getImage().getOperatingSystem().getVersion());
       assertEquals(defaultTemplate.getImage().getOperatingSystem().is64Bit(), true);
       assertEquals(defaultTemplate.getImage().getOperatingSystem().getFamily(), OsFamily.UBUNTU);
       assertEquals(getCores(defaultTemplate.getHardware()), 1.0d);
    }
-   
+
    @Override
    protected Set<String> getIso3166Codes() {
       return Region.iso3166Codes();

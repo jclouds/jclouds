@@ -38,6 +38,7 @@ import org.jclouds.azurecompute.arm.compute.config.AzureComputeServiceContextMod
 import org.jclouds.azurecompute.arm.domain.IdReference;
 import org.jclouds.azurecompute.arm.domain.IpConfiguration;
 import org.jclouds.azurecompute.arm.domain.NetworkInterfaceCard;
+import org.jclouds.azurecompute.arm.domain.RegionAndId;
 import org.jclouds.azurecompute.arm.domain.StorageProfile;
 import org.jclouds.azurecompute.arm.domain.StorageServiceKeys;
 import org.jclouds.azurecompute.arm.domain.VMImage;
@@ -110,7 +111,6 @@ public class VirtualMachineToNodeMetadata implements Function<VirtualMachine, No
                      .put(PowerState.UNRECOGNIZED, NodeMetadata.Status.UNRECOGNIZED).build(),
                NodeMetadata.Status.UNRECOGNIZED);
 
-   private final String azureGroup;
    private final AzureComputeApi api;
    private final GroupNamingConvention nodeNamingConvention;
    private final Supplier<Map<String, ? extends Image>> images;
@@ -119,28 +119,32 @@ public class VirtualMachineToNodeMetadata implements Function<VirtualMachine, No
    private final Map<String, Credentials> credentialStore;
    private final Function<VMImage, Image> vmImageToImge;
    private final StorageProfileToStorageAccountName storageProfileToStorageAccountName;
+   private final LocationToResourceGroupName locationToResourceGroupName;
 
    @Inject
    VirtualMachineToNodeMetadata(AzureComputeApi api, GroupNamingConvention.Factory namingConvention,
          Supplier<Map<String, ? extends Image>> images, Supplier<Map<String, ? extends Hardware>> hardwares,
          @Memoized Supplier<Set<? extends Location>> locations, Map<String, Credentials> credentialStore,
          final AzureComputeConstants azureComputeConstants, Function<VMImage, Image> vmImageToImge,
-         StorageProfileToStorageAccountName storageProfileToStorageAccountName) {
+         StorageProfileToStorageAccountName storageProfileToStorageAccountName,
+         LocationToResourceGroupName locationToResourceGroupName) {
       this.api = api;
       this.nodeNamingConvention = namingConvention.createWithoutPrefix();
       this.images = checkNotNull(images, "images cannot be null");
       this.locations = checkNotNull(locations, "locations cannot be null");
       this.hardwares = checkNotNull(hardwares, "hardwares cannot be null");
       this.credentialStore = credentialStore;
-      this.azureGroup = azureComputeConstants.azureResourceGroup();
       this.vmImageToImge = vmImageToImge;
       this.storageProfileToStorageAccountName = storageProfileToStorageAccountName;
+      this.locationToResourceGroupName = locationToResourceGroupName;
    }
 
    @Override
    public NodeMetadata apply(VirtualMachine virtualMachine) {
+      String azureGroup = locationToResourceGroupName.apply(virtualMachine.location());
+      
       NodeMetadataBuilder builder = new NodeMetadataBuilder();
-      builder.id(virtualMachine.name());
+      builder.id(RegionAndId.fromRegionAndId(virtualMachine.location(), virtualMachine.name()).slashEncode());
       builder.providerId(virtualMachine.id());
       builder.name(virtualMachine.name());
       builder.hostname(virtualMachine.name());
@@ -180,7 +184,7 @@ public class VirtualMachineToNodeMetadata implements Function<VirtualMachine, No
       String locationName = virtualMachine.location();
       builder.location(getLocation(locationName));
 
-      Optional<? extends Image> image = findImage(virtualMachine.properties().storageProfile(), locationName);
+      Optional<? extends Image> image = findImage(virtualMachine.properties().storageProfile(), locationName, azureGroup);
       if (image.isPresent()) {
          builder.imageId(image.get().getId());
          builder.operatingSystem(image.get().getOperatingSystem());
@@ -239,7 +243,7 @@ public class VirtualMachineToNodeMetadata implements Function<VirtualMachine, No
       }, null);
    }
 
-   protected Optional<? extends Image> findImage(final StorageProfile storageProfile, String locatioName) {
+   protected Optional<? extends Image> findImage(final StorageProfile storageProfile, String locatioName, String azureGroup) {
       if (storageProfile.imageReference() != null) {
          return Optional.fromNullable(images.get().get(
                encodeFieldsToUniqueId(false, locatioName, storageProfile.imageReference())));

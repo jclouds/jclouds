@@ -16,21 +16,34 @@
  */
 package org.jclouds.azurecompute.arm.internal;
 
-import java.util.Properties;
-
+import static org.jclouds.azurecompute.arm.config.AzureComputeProperties.IMAGE_PUBLISHERS;
+import static org.jclouds.compute.config.ComputeServiceProperties.TIMEOUT_NODE_RUNNING;
+import static org.jclouds.compute.config.ComputeServiceProperties.TIMEOUT_NODE_SUSPENDED;
+import static org.jclouds.compute.config.ComputeServiceProperties.TIMEOUT_NODE_TERMINATED;
+import static org.jclouds.compute.config.ComputeServiceProperties.TIMEOUT_PORT_OPEN;
+import static org.jclouds.compute.config.ComputeServiceProperties.TIMEOUT_SCRIPT_COMPLETE;
 import static org.jclouds.location.reference.LocationConstants.PROPERTY_REGIONS;
 import static org.jclouds.oauth.v2.config.CredentialType.CLIENT_CREDENTIALS_SECRET;
 import static org.jclouds.oauth.v2.config.OAuthProperties.CREDENTIAL_TYPE;
+
+import java.util.Properties;
+import java.util.concurrent.TimeUnit;
 
 public class AzureLiveTestUtils {
 
     public static Properties defaultProperties(Properties properties) {
        properties = properties == null ? new Properties() : properties;
-       properties.put("oauth.identity", "foo");
-       properties.put("oauth.credential", "password");
-       properties.put("oauth.endpoint", "https://login.microsoftonline.com/oauth2/token");
        properties.put(CREDENTIAL_TYPE, CLIENT_CREDENTIALS_SECRET.toString());
-       properties.put(PROPERTY_REGIONS, "northeurope");
+       properties.put(PROPERTY_REGIONS, "eastus");
+       properties.put(IMAGE_PUBLISHERS, "Canonical");
+       
+       String defaultTimeout = String.valueOf(TimeUnit.MILLISECONDS.convert(60, TimeUnit.MINUTES));
+       properties.setProperty(TIMEOUT_SCRIPT_COMPLETE, defaultTimeout);
+       properties.setProperty(TIMEOUT_NODE_RUNNING, defaultTimeout);
+       properties.setProperty(TIMEOUT_PORT_OPEN, defaultTimeout);
+       properties.setProperty(TIMEOUT_NODE_TERMINATED, defaultTimeout);
+       properties.setProperty(TIMEOUT_NODE_SUSPENDED, defaultTimeout);
+       
        return properties;
     }
 }

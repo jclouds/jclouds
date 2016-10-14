@@ -31,8 +31,10 @@ import javax.annotation.Resource;
 
 import org.jclouds.Constants;
 import org.jclouds.azurecompute.arm.AzureComputeApi;
-import org.jclouds.azurecompute.arm.compute.config.AzureComputeServiceContextModule.AzureComputeConstants;
+import org.jclouds.azurecompute.arm.compute.config.AzureComputeServiceContextModule.VirtualMachineInStatePredicateFactory;
+import org.jclouds.azurecompute.arm.compute.functions.LocationToResourceGroupName;
 import org.jclouds.azurecompute.arm.compute.functions.ResourceDefinitionToCustomImage;
+import org.jclouds.azurecompute.arm.domain.RegionAndId;
 import org.jclouds.azurecompute.arm.domain.ResourceDefinition;
 import org.jclouds.azurecompute.arm.domain.StorageServiceKeys;
 import org.jclouds.azurecompute.arm.domain.VMImage;
@@ -61,27 +63,27 @@ public class AzureComputeImageExtension implements ImageExtension {
    protected Logger logger = Logger.NULL;
 
    private final AzureComputeApi api;
-   private final String group;
    private final ListeningExecutorService userExecutor;
    private final Predicate<URI> imageAvailablePredicate;
-   private final Predicate<String> nodeSuspendedPredicate;
+   private final VirtualMachineInStatePredicateFactory nodeSuspendedPredicate;
    private final ResourceDefinitionToCustomImage.Factory resourceDefinitionToImage;
    private final CleanupResources cleanupResources;
+   private final LocationToResourceGroupName locationToResourceGroupName;
 
    @Inject
    AzureComputeImageExtension(AzureComputeApi api,
          @Named(TIMEOUT_IMAGE_AVAILABLE) Predicate<URI> imageAvailablePredicate,
-         @Named(TIMEOUT_NODE_SUSPENDED) Predicate<String> nodeSuspendedPredicate,
-         AzureComputeConstants azureComputeConstants,
+         @Named(TIMEOUT_NODE_SUSPENDED) VirtualMachineInStatePredicateFactory nodeSuspendedPredicate,
          @Named(Constants.PROPERTY_USER_THREADS) ListeningExecutorService userExecutor,
-         ResourceDefinitionToCustomImage.Factory resourceDefinitionToImage, CleanupResources cleanupResources) {
+         ResourceDefinitionToCustomImage.Factory resourceDefinitionToImage, CleanupResources cleanupResources,
+         LocationToResourceGroupName locationToResourceGroupName) {
       this.api = api;
       this.imageAvailablePredicate = imageAvailablePredicate;
       this.nodeSuspendedPredicate = nodeSuspendedPredicate;
-      this.group = azureComputeConstants.azureResourceGroup();
       this.userExecutor = userExecutor;
       this.resourceDefinitionToImage = resourceDefinitionToImage;
       this.cleanupResources = cleanupResources;
+      this.locationToResourceGroupName = locationToResourceGroupName;
    }
 
    @Override
@@ -92,21 +94,23 @@ public class AzureComputeImageExtension implements ImageExtension {
    @Override
    public ListenableFuture<Image> createImage(ImageTemplate template) {
       final CloneImageTemplate cloneTemplate = (CloneImageTemplate) template;
-      final String id = cloneTemplate.getSourceNodeId();
-      final String name = cloneTemplate.getName();
+      
+      final RegionAndId regionAndId = RegionAndId.fromSlashEncoded(cloneTemplate.getSourceNodeId());
+      final String group = locationToResourceGroupName.apply(regionAndId.region());
 
-      logger.debug(">> stopping node %s...", id);
-      api.getVirtualMachineApi(group).stop(id);
-      checkState(nodeSuspendedPredicate.apply(id), "Node %s was not suspended within the configured time limit", id);
+      logger.debug(">> stopping node %s...", regionAndId.slashEncode());
+      api.getVirtualMachineApi(group).stop(regionAndId.id());
+      checkState(nodeSuspendedPredicate.create(group).apply(regionAndId.id()),
+            "Node %s was not suspended within the configured time limit", regionAndId.slashEncode());
 
       return userExecutor.submit(new Callable<Image>() {
          @Override
          public Image call() throws Exception {
-            logger.debug(">> generalizing virtal machine %s...", id);
-            api.getVirtualMachineApi(group).generalize(id);
+            logger.debug(">> generalizing virtal machine %s...", regionAndId.id());
+            api.getVirtualMachineApi(group).generalize(regionAndId.id());
 
-            logger.debug(">> capturing virtual machine %s to container %s...", id, CONTAINER_NAME);
-            URI uri = api.getVirtualMachineApi(group).capture(id, cloneTemplate.getName(), CONTAINER_NAME);
+            logger.debug(">> capturing virtual machine %s to container %s...", regionAndId.id(), CONTAINER_NAME);
+            URI uri = api.getVirtualMachineApi(group).capture(regionAndId.id(), cloneTemplate.getName(), CONTAINER_NAME);
             checkState(uri != null && imageAvailablePredicate.apply(uri),
                   "Image %s was not created within the configured time limit", cloneTemplate.getName());
 
@@ -114,7 +118,8 @@ public class AzureComputeImageExtension implements ImageExtension {
             checkState(definitions.size() == 1,
                   "Expected one resource definition after creating the image but %s were returned", definitions.size());
 
-            Image image = resourceDefinitionToImage.create(id, name).apply(definitions.get(0));
+            Image image = resourceDefinitionToImage.create(cloneTemplate.getSourceNodeId(), cloneTemplate.getName())
+                  .apply(definitions.get(0));
             logger.debug(">> created %s", image);
             return image;
          }
@@ -130,7 +135,7 @@ public class AzureComputeImageExtension implements ImageExtension {
 
       StorageServiceKeys keys = api.getStorageAccountApi(image.group()).getKeys(image.storage());
       BlobHelper blobHelper = new BlobHelper(image.storage(), keys.key1());
-      
+
       try {
          // This removes now all the images in this storage. At least in theory,
          // there should be just one and if there is

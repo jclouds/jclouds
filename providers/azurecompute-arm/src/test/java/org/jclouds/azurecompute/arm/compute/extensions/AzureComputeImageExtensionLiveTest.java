@@ -16,20 +16,10 @@
  */
 package org.jclouds.azurecompute.arm.compute.extensions;
 
-import static com.google.common.base.Preconditions.checkNotNull;
-import static org.jclouds.azurecompute.arm.config.AzureComputeProperties.IMAGE_PUBLISHERS;
-import static org.jclouds.azurecompute.arm.config.AzureComputeProperties.RESOURCE_GROUP_NAME;
-import static org.jclouds.compute.config.ComputeServiceProperties.TIMEOUT_NODE_RUNNING;
-import static org.jclouds.compute.config.ComputeServiceProperties.TIMEOUT_NODE_SUSPENDED;
-import static org.jclouds.compute.config.ComputeServiceProperties.TIMEOUT_NODE_TERMINATED;
-import static org.jclouds.compute.config.ComputeServiceProperties.TIMEOUT_PORT_OPEN;
-import static org.jclouds.compute.config.ComputeServiceProperties.TIMEOUT_SCRIPT_COMPLETE;
 import static org.jclouds.compute.options.TemplateOptions.Builder.authorizePublicKey;
-import static org.jclouds.location.reference.LocationConstants.PROPERTY_REGIONS;
 
 import java.util.Map;
 import java.util.Properties;
-import java.util.concurrent.TimeUnit;
 
 import org.jclouds.azurecompute.arm.AzureComputeProviderMetadata;
 import org.jclouds.azurecompute.arm.internal.AzureLiveTestUtils;
@@ -63,19 +53,8 @@ public class AzureComputeImageExtensionLiveTest extends BaseImageExtensionLiveTe
    @Override
    protected Properties setupProperties() {
       Properties properties = super.setupProperties();
-      String defaultTimeout = String.valueOf(TimeUnit.MILLISECONDS.convert(60, TimeUnit.MINUTES));
-      properties.setProperty(TIMEOUT_SCRIPT_COMPLETE, defaultTimeout);
-      properties.setProperty(TIMEOUT_NODE_RUNNING, defaultTimeout);
-      properties.setProperty(TIMEOUT_PORT_OPEN, defaultTimeout);
-      properties.setProperty(TIMEOUT_NODE_TERMINATED, defaultTimeout);
-      properties.setProperty(TIMEOUT_NODE_SUSPENDED, defaultTimeout);
-      properties.put(RESOURCE_GROUP_NAME, "jc");
-      properties.put(PROPERTY_REGIONS, "eastus");
-      properties.put(IMAGE_PUBLISHERS, "Canonical");
-
       AzureLiveTestUtils.defaultProperties(properties);
-      checkNotNull(setIfTestSystemPropertyPresent(properties, "oauth.endpoint"), "test.oauth.endpoint");
-
+      setIfTestSystemPropertyPresent(properties, "oauth.endpoint");
       return properties;
    }
 

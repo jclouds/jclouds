@@ -24,7 +24,6 @@ import static org.jclouds.azurecompute.arm.config.AzureComputeProperties.IMAGE_P
 import static org.jclouds.azurecompute.arm.config.AzureComputeProperties.OPERATION_POLL_INITIAL_PERIOD;
 import static org.jclouds.azurecompute.arm.config.AzureComputeProperties.OPERATION_POLL_MAX_PERIOD;
 import static org.jclouds.azurecompute.arm.config.AzureComputeProperties.OPERATION_TIMEOUT;
-import static org.jclouds.azurecompute.arm.config.AzureComputeProperties.RESOURCE_GROUP_NAME;
 import static org.jclouds.azurecompute.arm.config.AzureComputeProperties.TCP_RULE_FORMAT;
 import static org.jclouds.azurecompute.arm.config.AzureComputeProperties.TCP_RULE_REGEXP;
 import static org.jclouds.azurecompute.arm.config.AzureComputeProperties.TIMEOUT_RESOURCE_DELETED;
@@ -137,10 +136,6 @@ public class AzureComputeServiceContextModule
       @Inject
       private String tcpRuleRegexpProperty;
 
-      @Named(RESOURCE_GROUP_NAME)
-      @Inject
-      private String azureResourceGroupProperty;
-
       @Named(IMAGE_PUBLISHERS)
       @Inject
       private String azureImagePublishersProperty;
@@ -159,10 +154,6 @@ public class AzureComputeServiceContextModule
 
       public Long operationTimeout() {
          return Long.parseLong(operationTimeoutProperty);
-      }
-
-      public String azureResourceGroup() {
-         return azureResourceGroupProperty;
       }
 
       public String azureImagePublishers() {
@@ -199,11 +190,11 @@ public class AzureComputeServiceContextModule
    }
 
    @Provides
-   @com.google.inject.name.Named(TIMEOUT_NODE_RUNNING)
-   protected Predicate<String> provideVirtualMachineRunningPredicate(final AzureComputeApi api, final AzureComputeServiceContextModule.AzureComputeConstants azureComputeConstants, Timeouts timeouts, PollPeriod pollPeriod) {
-      String azureGroup = azureComputeConstants.azureResourceGroup();
-      return retry(new VirtualMachineInStatePredicate(api, azureGroup, PowerState.RUNNING), timeouts.nodeRunning,
-              pollPeriod.pollInitialPeriod, pollPeriod.pollMaxPeriod);
+   @Named(TIMEOUT_NODE_RUNNING)
+   protected VirtualMachineInStatePredicateFactory provideVirtualMachineRunningPredicate(final AzureComputeApi api,
+         Timeouts timeouts, PollPeriod pollPeriod) {
+      return new VirtualMachineInStatePredicateFactory(api, PowerState.RUNNING, timeouts.nodeRunning,
+            pollPeriod.pollInitialPeriod, pollPeriod.pollMaxPeriod);
    }
    
    @Provides
@@ -229,19 +220,17 @@ public class AzureComputeServiceContextModule
 
    @Provides
    @Named(TIMEOUT_NODE_SUSPENDED)
-   protected Predicate<String> provideNodeSuspendedPredicate(final AzureComputeApi api, final AzureComputeServiceContextModule.AzureComputeConstants azureComputeConstants,
-                                                             Timeouts timeouts, PollPeriod pollPeriod) {
-      String azureGroup = azureComputeConstants.azureResourceGroup();
-      return retry(new VirtualMachineInStatePredicate(api, azureGroup, PowerState.STOPPED), timeouts.nodeTerminated,
-              pollPeriod.pollInitialPeriod, pollPeriod.pollMaxPeriod);
+   protected VirtualMachineInStatePredicateFactory provideNodeSuspendedPredicate(final AzureComputeApi api,
+         Timeouts timeouts, PollPeriod pollPeriod) {
+      return new VirtualMachineInStatePredicateFactory(api, PowerState.STOPPED, timeouts.nodeTerminated,
+            pollPeriod.pollInitialPeriod, pollPeriod.pollMaxPeriod);
    }
    
    @Provides
-   @Named("PublicIpAvailable")
-   protected Predicate<String> providePublicIpAvailablePredicate(final AzureComputeApi api, final AzureComputeServiceContextModule.AzureComputeConstants azureComputeConstants,
-                                                             Timeouts timeouts, PollPeriod pollPeriod) {
-      String azureGroup = azureComputeConstants.azureResourceGroup();
-      return retry(new PublicIpAvailablePredicate(api, azureGroup), azureComputeConstants.operationTimeout(),
+   protected PublicIpAvailablePredicateFactory providePublicIpAvailablePredicate(final AzureComputeApi api,
+         final AzureComputeServiceContextModule.AzureComputeConstants azureComputeConstants, Timeouts timeouts,
+         PollPeriod pollPeriod) {
+      return new PublicIpAvailablePredicateFactory(api, azureComputeConstants.operationTimeout(),
             azureComputeConstants.operationPollInitialPeriod(), azureComputeConstants.operationPollMaxPeriod());
    }
 
@@ -280,45 +269,62 @@ public class AzureComputeServiceContextModule
       }
    }
 
-   @VisibleForTesting
-   static class VirtualMachineInStatePredicate implements Predicate<String> {
+   public static class VirtualMachineInStatePredicateFactory {
 
       private final AzureComputeApi api;
-      private final String azureGroup;
       private final PowerState powerState;
+      private final long timeout;
+      private final long period;
+      private final long maxPeriod;
 
-      public VirtualMachineInStatePredicate(AzureComputeApi api, String azureGroup, PowerState powerState) {
-         this.api = checkNotNull(api, "api must not be null");
-         this.azureGroup = checkNotNull(azureGroup, "azuregroup must not be null");
-         this.powerState = checkNotNull(powerState, "powerState must not be null");
+      VirtualMachineInStatePredicateFactory(AzureComputeApi api, PowerState powerState, long timeout,
+            long period, long maxPeriod) {
+         this.api = checkNotNull(api, "api cannot be null");
+         this.powerState = checkNotNull(powerState, "powerState cannot be null");
+         this.timeout = timeout;
+         this.period = period;
+         this.maxPeriod = maxPeriod;
       }
 
-      @Override
-      public boolean apply(String name) {
-         checkNotNull(name, "name cannot be null");
-         VirtualMachineInstance vmInstance = api.getVirtualMachineApi(this.azureGroup).getInstanceDetails(name);
-         if (vmInstance == null) return false;
-         return powerState == vmInstance.powerState();
+      public Predicate<String> create(final String azureGroup) {
+         return retry(new Predicate<String>() {
+            @Override
+            public boolean apply(String name) {
+               checkNotNull(name, "name cannot be null");
+               VirtualMachineInstance vmInstance = api.getVirtualMachineApi(azureGroup).getInstanceDetails(name);
+               if (vmInstance == null)
+                  return false;
+               return powerState == vmInstance.powerState();
+            }
+         }, timeout, period, maxPeriod);
       }
    }
    
-   @VisibleForTesting
-   static class PublicIpAvailablePredicate implements Predicate<String> {
+   public static class PublicIpAvailablePredicateFactory {
 
       private final AzureComputeApi api;
-      private final String azureGroup;
+      private final long timeout;
+      private final long period;
+      private final long maxPeriod;
 
-      public PublicIpAvailablePredicate(AzureComputeApi api, String azureGroup) {
-         this.api = checkNotNull(api, "api must not be null");
-         this.azureGroup = checkNotNull(azureGroup, "azuregroup must not be null");
+      PublicIpAvailablePredicateFactory(AzureComputeApi api, long timeout,
+            long period, long maxPeriod) {
+         this.api = checkNotNull(api, "api cannot be null");
+         this.timeout = timeout;
+         this.period = period;
+         this.maxPeriod = maxPeriod;
       }
-
-      @Override
-      public boolean apply(String name) {
-         checkNotNull(name, "name cannot be null");
-         PublicIPAddress publicIp = api.getPublicIPAddressApi(azureGroup).get(name);
-         if (publicIp == null) return false;
-         return publicIp.properties().provisioningState().equalsIgnoreCase("Succeeded");
+      
+      public Predicate<String> create(final String azureGroup) {
+         return retry(new Predicate<String>() {
+            @Override
+            public boolean apply(String name) {
+               checkNotNull(name, "name cannot be null");
+               PublicIPAddress publicIp = api.getPublicIPAddressApi(azureGroup).get(name);
+               if (publicIp == null) return false;
+               return publicIp.properties().provisioningState().equalsIgnoreCase("Succeeded");
+            }
+         }, timeout, period, maxPeriod);
       }
    }
 

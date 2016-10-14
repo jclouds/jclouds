@@ -35,6 +35,7 @@ import javax.inject.Singleton;
 import org.jclouds.Constants;
 import org.jclouds.azurecompute.arm.AzureComputeApi;
 import org.jclouds.azurecompute.arm.compute.config.AzureComputeServiceContextModule;
+import org.jclouds.azurecompute.arm.compute.functions.LocationToResourceGroupName;
 import org.jclouds.azurecompute.arm.compute.options.AzureTemplateOptions;
 import org.jclouds.azurecompute.arm.domain.ResourceGroup;
 import org.jclouds.azurecompute.arm.domain.StorageService;
@@ -73,20 +74,23 @@ public class CreateResourceGroupThenCreateNodes extends CreateNodesWithGroupEnco
 
    private final AzureComputeApi api;
    private final AzureComputeServiceContextModule.AzureComputeConstants azureComputeConstants;
+   private final LocationToResourceGroupName locationToResourceGroupName;
 
    @Inject
    protected CreateResourceGroupThenCreateNodes(
            CreateNodeWithGroupEncodedIntoName addNodeWithGroupStrategy,
            ListNodesStrategy listNodesStrategy,
            GroupNamingConvention.Factory namingConvention,
-           @Named(Constants.PROPERTY_USER_THREADS) ListeningExecutorService userExecutor,
-           CustomizeNodeAndAddToGoodMapOrPutExceptionIntoBadMap.Factory customizeNodeAndAddToGoodMapOrPutExceptionIntoBadMapFactory,
-           AzureComputeApi api, AzureComputeServiceContextModule.AzureComputeConstants azureComputeConstants) {
+         @Named(Constants.PROPERTY_USER_THREADS) ListeningExecutorService userExecutor,
+         CustomizeNodeAndAddToGoodMapOrPutExceptionIntoBadMap.Factory customizeNodeAndAddToGoodMapOrPutExceptionIntoBadMapFactory,
+         AzureComputeApi api, AzureComputeServiceContextModule.AzureComputeConstants azureComputeConstants,
+         LocationToResourceGroupName locationToResourceGroupName) {
       super(addNodeWithGroupStrategy, listNodesStrategy, namingConvention, userExecutor,
               customizeNodeAndAddToGoodMapOrPutExceptionIntoBadMapFactory);
       this.api = checkNotNull(api, "api cannot be null");
       checkNotNull(userExecutor, "userExecutor cannot be null");
       this.azureComputeConstants = azureComputeConstants;
+      this.locationToResourceGroupName = locationToResourceGroupName;
    }
 
    @Override
@@ -100,7 +104,7 @@ public class CreateResourceGroupThenCreateNodes extends CreateNodesWithGroupEnco
          logger.warn(">> a runScript was configured but no SSH key has been provided. " +
                  "Authentication will delegate to the ssh-agent");
       }
-      String azureGroupName = this.azureComputeConstants.azureResourceGroup();
+      String azureGroupName = locationToResourceGroupName.apply(template.getLocation().getId());
 
       AzureTemplateOptions options = template.getOptions().as(AzureTemplateOptions.class);
       // create resource group for jclouds group if it does not already exist

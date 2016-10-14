@@ -23,7 +23,7 @@ import java.util.Map;
 import javax.inject.Inject;
 
 import org.jclouds.azurecompute.arm.AzureComputeApi;
-import org.jclouds.azurecompute.arm.compute.config.AzureComputeServiceContextModule.AzureComputeConstants;
+import org.jclouds.azurecompute.arm.domain.RegionAndId;
 import org.jclouds.azurecompute.arm.domain.ResourceDefinition;
 import org.jclouds.azurecompute.arm.domain.VMImage;
 import org.jclouds.azurecompute.arm.domain.VirtualMachine;
@@ -39,21 +39,24 @@ public class ResourceDefinitionToCustomImage implements Function<ResourceDefinit
       ResourceDefinitionToCustomImage create(@Assisted("nodeId") String nodeId, @Assisted("imageName") String imageName);
    }
 
-   private final String resourceGroup;
    private final Function<VMImage, Image> vmImageToImage;
    private final String imageName;
    private final String storageAccountName;
    private final VirtualMachine vm;
+   private final String resourceGroup;
 
    @Inject
-   ResourceDefinitionToCustomImage(AzureComputeApi api, AzureComputeConstants azureComputeConstants,
+   ResourceDefinitionToCustomImage(AzureComputeApi api,
          StorageProfileToStorageAccountName storageProfileToStorageAccountName,
-         Function<VMImage, Image> vmImageToImage, @Assisted("nodeId") String nodeId,
+         Function<VMImage, Image> vmImageToImage, LocationToResourceGroupName locationToResourceGroupName,
+         @Assisted("nodeId") String nodeId,
          @Assisted("imageName") String imageName) {
       this.vmImageToImage = vmImageToImage;
-      this.resourceGroup = azureComputeConstants.azureResourceGroup();
       this.imageName = imageName;
-      this.vm = api.getVirtualMachineApi(resourceGroup).get(nodeId);
+      
+      RegionAndId regionAndId = RegionAndId.fromSlashEncoded(nodeId);
+      this.resourceGroup = locationToResourceGroupName.apply(regionAndId.region());
+      this.vm = api.getVirtualMachineApi(this.resourceGroup).get(regionAndId.id());
       this.storageAccountName = storageProfileToStorageAccountName.apply(vm.properties().storageProfile());
    }
 
