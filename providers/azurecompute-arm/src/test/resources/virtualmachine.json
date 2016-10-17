@@ -43,5 +43,8 @@
   "id": "/subscriptions/SUBSCRIPTIONID/resourceGroups/groupname/providers/Microsoft.Compute/virtualMachines/windowsmachine",
   "name": "windowsmachine",
   "type": "Microsoft.Compute/virtualMachines",
-  "location": "westus"
+  "location": "westus",
+  "tags": {
+    "foo": "bar"
+  }
 }

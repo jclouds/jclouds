@@ -16,6 +16,12 @@
  */
 package org.jclouds.azurecompute.arm.features;
 
+import static com.google.common.collect.Iterables.isEmpty;
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertNotNull;
+import static org.testng.Assert.assertNull;
+import static org.testng.Assert.assertTrue;
+
 import java.net.URI;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -40,13 +46,8 @@ import org.jclouds.azurecompute.arm.internal.BaseAzureComputeApiMockTest;
 import org.testng.annotations.Test;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
 import com.squareup.okhttp.mockwebserver.MockResponse;
-
-import static com.google.common.collect.Iterables.isEmpty;
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertNotNull;
-import static org.testng.Assert.assertNull;
-import static org.testng.Assert.assertTrue;
 
 @Test(groups = "unit", testName = "VirtualMachineApiMockTest", singleThreaded = true)
 public class VirtualMachineApiMockTest extends BaseAzureComputeApiMockTest {
@@ -107,11 +108,11 @@ public class VirtualMachineApiMockTest extends BaseAzureComputeApiMockTest {
       server.enqueue(jsonResponse("/createvirtualmachineresponse.json"));
 
       final VirtualMachineApi vmAPI = api.getVirtualMachineApi("groupname");
-      VirtualMachine vm = vmAPI.create("windowsmachine", "westus", getProperties());
+      VirtualMachine vm = vmAPI.create("windowsmachine", "westus", getProperties(), ImmutableMap.of("foo", "bar"));
       assertEquals(vm, getVM());
       assertSent(server, "PUT", "/subscriptions/SUBSCRIPTIONID/resourceGroups/groupname/providers/Microsoft.Compute" +
               "/virtualMachines/windowsmachine?validating=false&api-version=2016-03-30",
-              "{\"location\":\"westus\",\"properties\":" +
+              "{\"location\":\"westus\",\"tags\":{\"foo\":\"bar\"},\"properties\":" +
                       "{\"vmId\":\"27ee085b-d707-xxxx-yyyy-2370e2eb1cc1\"," +
                       "\"hardwareProfile\":{\"vmSize\":\"Standard_D1\"}," +
                       "\"storageProfile\":{\"imageReference\":{\"publisher\":\"publisher\",\"offer\":\"offer\",\"sku\":\"sku\",\"version\":\"ver\"}," +
@@ -240,7 +241,7 @@ public class VirtualMachineApiMockTest extends BaseAzureComputeApiMockTest {
       VirtualMachineProperties properties = getProperties();
       VirtualMachine machine = VirtualMachine.create("/subscriptions/SUBSCRIPTIONID/" + "" +
                       "resourceGroups/groupname/providers/Microsoft.Compute/virtualMachines/windowsmachine", "windowsmachine",
-              "Microsoft.Compute/virtualMachines", "westus", null, properties);
+              "Microsoft.Compute/virtualMachines", "westus", ImmutableMap.of("foo", "bar"), properties);
       return machine;
    }
 

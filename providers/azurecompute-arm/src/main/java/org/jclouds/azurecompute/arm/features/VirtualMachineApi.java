@@ -18,6 +18,7 @@ package org.jclouds.azurecompute.arm.features;
 
 import java.net.URI;
 import java.util.List;
+import java.util.Map;
 
 import javax.inject.Named;
 import javax.ws.rs.Consumes;
@@ -80,14 +81,15 @@ public interface VirtualMachineApi {
     */
    @Named("CreateVirtualMachine")
    @PUT
-   @Payload("%7B\"location\":\"{location}\",\"tags\":%7B%7D,\"properties\":{properties}%7D")
+   @Payload("%7B\"location\":\"{location}\",\"tags\":{tags},\"properties\":{properties}%7D")
    @MapBinder(BindToJsonPayload.class)
    @Path("/{vmname}")
    @QueryParams(keys = "validating", values = "false")
    @Produces(MediaType.APPLICATION_JSON)
    VirtualMachine create(@PathParam("vmname") String vmname,
                          @PayloadParam("location") String location,
-                         @PayloadParam("properties") VirtualMachineProperties properties);
+                         @PayloadParam("properties") VirtualMachineProperties properties,
+                         @PayloadParam("tags") Map<String, String> tags);
 
    /**
     * The List Virtual Machines operation

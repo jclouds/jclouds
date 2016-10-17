@@ -24,9 +24,11 @@ import static org.jclouds.azurecompute.arm.compute.extensions.AzureComputeImageE
 import static org.jclouds.azurecompute.arm.compute.extensions.AzureComputeImageExtension.CUSTOM_IMAGE_OFFER;
 import static org.jclouds.azurecompute.arm.compute.functions.VMImageToImage.decodeFieldsFromUniqueId;
 import static org.jclouds.azurecompute.arm.compute.functions.VMImageToImage.encodeFieldsToUniqueIdCustom;
+import static org.jclouds.compute.util.ComputeServiceUtils.metadataAndTagsAsCommaDelimitedValue;
 import static org.jclouds.util.Closeables2.closeQuietly;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import javax.inject.Inject;
@@ -124,7 +126,6 @@ public class AzureComputeServiceAdapter implements ComputeServiceAdapter<Virtual
       // TODO Store group apart from the name to be able to identify nodes with
       // custom names in the configured group
       // TODO ARM specific options
-      // TODO user metadata and tags
       // TODO network ids => create one nic in each network
       // TODO inbound ports
 
@@ -141,9 +142,11 @@ public class AzureComputeServiceAdapter implements ComputeServiceAdapter<Virtual
             .availabilitySet(null) // TODO
             .hardwareProfile(hardwareProfile).storageProfile(storageProfile).osProfile(osProfile)
             .networkProfile(networkProfile).build();
+      
+      Map<String, String> metadataAndTags = metadataAndTagsAsCommaDelimitedValue(template.getOptions());
 
       VirtualMachine virtualMachine = api.getVirtualMachineApi(azureGroup).create(name, template.getLocation().getId(),
-            virtualMachineProperties);
+            virtualMachineProperties, metadataAndTags);
 
       // Safe to pass null credentials here, as jclouds will default populate
       // the node with the default credentials from the image, or the ones in

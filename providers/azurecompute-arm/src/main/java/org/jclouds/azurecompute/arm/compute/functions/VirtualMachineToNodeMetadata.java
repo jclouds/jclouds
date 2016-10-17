@@ -23,6 +23,7 @@ import static com.google.common.collect.Iterables.tryFind;
 import static org.jclouds.azurecompute.arm.compute.extensions.AzureComputeImageExtension.CONTAINER_NAME;
 import static org.jclouds.azurecompute.arm.compute.extensions.AzureComputeImageExtension.CUSTOM_IMAGE_OFFER;
 import static org.jclouds.azurecompute.arm.compute.functions.VMImageToImage.encodeFieldsToUniqueId;
+import static org.jclouds.compute.util.ComputeServiceUtils.addMetadataAndParseTagsFromCommaDelimitedValue;
 import static org.jclouds.util.Closeables2.closeQuietly;
 
 import java.util.List;
@@ -96,7 +97,6 @@ public class VirtualMachineToNodeMetadata implements Function<VirtualMachine, No
                      .put(VirtualMachineProperties.ProvisioningState.CREATING, NodeMetadata.Status.PENDING)
                      .put(VirtualMachineProperties.ProvisioningState.RUNNING, NodeMetadata.Status.PENDING)
                      .put(VirtualMachineProperties.ProvisioningState.UPDATING, NodeMetadata.Status.PENDING)
-                     .put(VirtualMachineProperties.ProvisioningState.SUCCEEDED, NodeMetadata.Status.RUNNING)
                      .put(VirtualMachineProperties.ProvisioningState.DELETED, NodeMetadata.Status.TERMINATED)
                      .put(VirtualMachineProperties.ProvisioningState.CANCELED, NodeMetadata.Status.TERMINATED)
                      .put(VirtualMachineProperties.ProvisioningState.FAILED, NodeMetadata.Status.ERROR)
@@ -148,8 +148,7 @@ public class VirtualMachineToNodeMetadata implements Function<VirtualMachine, No
       builder.providerId(virtualMachine.id());
       builder.name(virtualMachine.name());
       builder.hostname(virtualMachine.name());
-      String group = this.nodeNamingConvention.extractGroup(virtualMachine.name());
-      builder.group(group);
+      builder.group(nodeNamingConvention.extractGroup(virtualMachine.name()));
 
       ProvisioningState provisioningState = virtualMachine.properties().provisioningState();
       if (ProvisioningState.SUCCEEDED.equals(provisioningState)) {
@@ -177,10 +176,9 @@ public class VirtualMachineToNodeMetadata implements Function<VirtualMachine, No
       builder.privateAddresses(getPrivateIpAddresses(virtualMachine.properties().networkProfile().networkInterfaces()));
 
       if (virtualMachine.tags() != null) {
-         Map<String, String> userMetaData = virtualMachine.tags();
-         builder.userMetadata(userMetaData);
-         builder.tags(Splitter.on(",").split(userMetaData.get("tags")));
+         addMetadataAndParseTagsFromCommaDelimitedValue(builder, virtualMachine.tags());
       }
+      
       String locationName = virtualMachine.location();
       builder.location(getLocation(locationName));
 

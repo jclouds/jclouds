@@ -22,7 +22,6 @@ import java.util.Properties;
 
 import org.jclouds.azurecompute.arm.AzureComputeProviderMetadata;
 import org.jclouds.azurecompute.arm.internal.AzureLiveTestUtils;
-import org.jclouds.compute.domain.NodeMetadata;
 import org.jclouds.compute.domain.Template;
 import org.jclouds.compute.domain.TemplateBuilder;
 import org.jclouds.compute.internal.BaseComputeServiceLiveTest;
@@ -36,8 +35,6 @@ import org.jclouds.scriptbuilder.statements.login.AdminAccess;
 import org.jclouds.sshj.config.SshjSshClientModule;
 import org.testng.annotations.Test;
 
-import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.ImmutableSet;
 import com.google.inject.Module;
 
 /**
@@ -86,15 +83,4 @@ public class AzureComputeServiceLiveTest extends BaseComputeServiceLiveTest {
                   InstallJDK.fromOpenJDK() }));
       return template;
    }
-   
-   @Override
-   protected void checkUserMetadataContains(NodeMetadata node, ImmutableMap<String, String> userMetadata) {
-      // User metadata not yet supported
-   }
-
-   @Override
-   protected void checkTagsInNodeEquals(NodeMetadata node, ImmutableSet<String> tags) {
-      // Tags not yet supported
-   }
-
 }

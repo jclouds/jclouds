@@ -23,6 +23,7 @@ import static org.testng.Assert.assertTrue;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -111,7 +112,8 @@ public class VirtualMachineApiLiveTest extends BaseAzureComputeApiLiveTest {
    public void testCreate() {
       String blob = storageService.storageServiceProperties().primaryEndpoints().get("blob");
 
-      VirtualMachine vm = api().create(vmName, LOCATION, getProperties(blob, nicName));
+      VirtualMachine vm = api().create(vmName, LOCATION, getProperties(blob, nicName),
+            Collections.<String, String> emptyMap());
       assertTrue(!vm.name().isEmpty());
 
       //Poll until resource is ready to be used
