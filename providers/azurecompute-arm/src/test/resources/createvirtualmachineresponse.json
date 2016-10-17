@@ -46,5 +46,10 @@
   "location": "westus",
   "tags": {
     "foo": "bar"
+  },
+  "plan": {
+    "name": "deadline-slave-7-2",
+    "publisher": "thinkboxsoftware",
+    "product": "deadline7-2"
   }
 }

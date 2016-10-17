@@ -16,6 +16,7 @@
  */
 package org.jclouds.azurecompute.arm.domain;
 
+import org.jclouds.azurecompute.arm.domain.Version.VersionProperties;
 import org.jclouds.javax.annotation.Nullable;
 
 import com.google.auto.value.AutoValue;
@@ -92,6 +93,12 @@ public abstract class VMImage {
     */
    public abstract boolean custom();
    
+   /**
+    * Extended version properties.
+    */
+   @Nullable
+   public abstract VersionProperties versionProperties();
+   
    public static Builder builder() {
       return new AutoValue_VMImage.Builder();
    }
@@ -119,6 +126,7 @@ public abstract class VMImage {
       public abstract Builder vhd2(String vhd2);
       public abstract Builder name(String name);
       public abstract Builder custom(boolean custom);
+      public abstract Builder versionProperties(VersionProperties versionProperties);
       
       public abstract VMImage build();
    }

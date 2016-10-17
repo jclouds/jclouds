@@ -16,8 +16,10 @@
  */
 package org.jclouds.azurecompute.arm.domain;
 
-import com.google.auto.value.AutoValue;
+import org.jclouds.javax.annotation.Nullable;
 import org.jclouds.json.SerializedNames;
+
+import com.google.auto.value.AutoValue;
 
 /**
  * Version
@@ -39,11 +41,50 @@ public abstract class Version {
     * The id of the Version
     */
    public abstract String id();
+   
+   /**
+    * The plan for the Version if this image is from the marketplace.
+    */
+   @Nullable
+   public abstract VersionProperties properties();
+   
+   Version() {
+      
+   }
 
-   @SerializedNames({"location", "name", "id"})
-   public static Version create(final String location, final String name, final String id) {
-
-      return new AutoValue_Version(location, name, id);
+   @SerializedNames({"location", "name", "id", "properties"})
+   public static Version create(final String location, final String name, final String id,
+         final VersionProperties properties) {
+      return new AutoValue_Version(location, name, id, properties);
+   }
+   
+   @AutoValue
+   public abstract static class VersionProperties {
+      @Nullable public abstract Plan plan();
+      public abstract OSDiskImage osDiskImage();
+      
+      VersionProperties() {
+         
+      }
+      
+      @SerializedNames({"plan", "osDiskImage"})
+      public static VersionProperties create(Plan plan, OSDiskImage osDiskImage) {
+         return new AutoValue_Version_VersionProperties(plan, osDiskImage);
+      }
+      
+      @AutoValue
+      public abstract static class OSDiskImage {
+         public abstract String operatingSystem();
+         
+         OSDiskImage() {
+            
+         }
+         
+         @SerializedNames({"operatingSystem"})
+         public static OSDiskImage create(String operatingSystem) {
+            return new AutoValue_Version_VersionProperties_OSDiskImage(operatingSystem);
+         }
+      }
    }
 }
 

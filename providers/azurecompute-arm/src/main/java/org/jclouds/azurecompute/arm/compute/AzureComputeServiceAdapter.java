@@ -24,6 +24,7 @@ import static org.jclouds.azurecompute.arm.compute.extensions.AzureComputeImageE
 import static org.jclouds.azurecompute.arm.compute.extensions.AzureComputeImageExtension.CUSTOM_IMAGE_OFFER;
 import static org.jclouds.azurecompute.arm.compute.functions.VMImageToImage.decodeFieldsFromUniqueId;
 import static org.jclouds.azurecompute.arm.compute.functions.VMImageToImage.encodeFieldsToUniqueIdCustom;
+import static org.jclouds.azurecompute.arm.compute.functions.VMImageToImage.getMarketplacePlanFromImageMetadata;
 import static org.jclouds.compute.util.ComputeServiceUtils.metadataAndTagsAsCommaDelimitedValue;
 import static org.jclouds.util.Closeables2.closeQuietly;
 
@@ -52,6 +53,7 @@ import org.jclouds.azurecompute.arm.domain.NetworkProfile;
 import org.jclouds.azurecompute.arm.domain.OSDisk;
 import org.jclouds.azurecompute.arm.domain.OSProfile;
 import org.jclouds.azurecompute.arm.domain.Offer;
+import org.jclouds.azurecompute.arm.domain.Plan;
 import org.jclouds.azurecompute.arm.domain.PublicIPAddress;
 import org.jclouds.azurecompute.arm.domain.PublicIPAddressProperties;
 import org.jclouds.azurecompute.arm.domain.RegionAndId;
@@ -144,9 +146,10 @@ public class AzureComputeServiceAdapter implements ComputeServiceAdapter<Virtual
             .networkProfile(networkProfile).build();
       
       Map<String, String> metadataAndTags = metadataAndTagsAsCommaDelimitedValue(template.getOptions());
+      Plan plan = getMarketplacePlanFromImageMetadata(template.getImage());
 
       VirtualMachine virtualMachine = api.getVirtualMachineApi(azureGroup).create(name, template.getLocation().getId(),
-            virtualMachineProperties, metadataAndTags);
+            virtualMachineProperties, metadataAndTags, plan);
 
       // Safe to pass null credentials here, as jclouds will default populate
       // the node with the default credentials from the image, or the ones in
@@ -182,8 +185,9 @@ public class AzureComputeServiceAdapter implements ComputeServiceAdapter<Virtual
          for (SKU sku : skuList) {
             Iterable<Version> versionList = osImageApi.listVersions(publisherName, offer.name(), sku.name());
             for (Version version : versionList) {
+               Version versionDetails = osImageApi.getVersion(publisherName, offer.name(), sku.name(), version.name());
                VMImage vmImage = VMImage.azureImage().publisher(publisherName).offer(offer.name()).sku(sku.name())
-                     .version(version.name()).location(location).build();
+                     .version(versionDetails.name()).location(location).versionProperties(version.properties()).build();
                osImagesRef.add(vmImage);
             }
          }
@@ -275,8 +279,9 @@ public class AzureComputeServiceAdapter implements ComputeServiceAdapter<Virtual
       OSImageApi osImageApi = api.getOSImageApi(location);
       List<Version> versions = osImageApi.listVersions(publisher, offer, sku);
       if (!versions.isEmpty()) {
-         return VMImage.azureImage().publisher(publisher).offer(offer).sku(sku).version(versions.get(0).name())
-               .location(location).build();
+         Version version = osImageApi.getVersion(publisher, offer, sku, versions.get(0).name());
+         return VMImage.azureImage().publisher(publisher).offer(offer).sku(sku).version(version.name())
+               .location(location).versionProperties(version.properties()).build();
       }
       return null;
    }

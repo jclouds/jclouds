@@ -60,11 +60,42 @@ public abstract class VirtualMachine {
     * Specifies the properties of the vm
     */
    public abstract VirtualMachineProperties properties();
+   
+   /**
+    * Specifies the plan, for marketplace images
+    */
+   @Nullable
+   public abstract Plan plan();
 
-   @SerializedNames({"id", "name", "type", "location", "tags", "properties"})
+   @SerializedNames({"id", "name", "type", "location", "tags", "properties", "plan"})
    public static VirtualMachine create(final String id, final String name, final String type, final String location,
-                                       @Nullable final Map<String, String> tags, VirtualMachineProperties properties) {
+         @Nullable final Map<String, String> tags, VirtualMachineProperties properties, @Nullable Plan plan) {
+      return builder().id(id).name(name).type(type).location(location).tags(tags).properties(properties).plan(plan)
+            .build();
+   }
+   
+   public static Builder builder() {
+      return new AutoValue_VirtualMachine.Builder();
+   }
+   
+   @AutoValue.Builder
+   public abstract static class Builder {
+      
+      public abstract Builder id(String id);
+      public abstract Builder name(String name);
+      public abstract Builder type(String type);
+      public abstract Builder location(String location);
+      public abstract Builder tags(Map<String, String> tags);
+      public abstract Builder properties(VirtualMachineProperties properties);
+      public abstract Builder plan(Plan plan);
+      
+      abstract Map<String, String> tags();
 
-      return new AutoValue_VirtualMachine(id, name, type, location, tags == null ? null : ImmutableMap.copyOf(tags), properties);
+      abstract VirtualMachine autoBuild();
+
+      public VirtualMachine build() {
+         tags(tags() != null ? ImmutableMap.copyOf(tags()) : null);
+         return autoBuild();
+      }
    }
 }

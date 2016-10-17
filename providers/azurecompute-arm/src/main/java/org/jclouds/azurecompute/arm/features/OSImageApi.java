@@ -80,4 +80,14 @@ public interface OSImageApi {
    @Fallback(EmptyListOnNotFoundOr404.class)
    List<Version> listVersions(@PathParam("publisher") String publisher, @PathParam("offer") String offer,
                           @PathParam("sku") String sku);
+   
+   /**
+    * Get the details of a Version
+    */
+   @Named("version:get")
+   @GET
+   @Path("/publishers/{publisher}/artifacttypes/vmimage/offers/{offer}/skus/{sku}/versions/{version}")
+   @Fallback(EmptyListOnNotFoundOr404.class)
+   Version getVersion(@PathParam("publisher") String publisher, @PathParam("offer") String offer,
+                          @PathParam("sku") String sku, @PathParam("version") String version);
 }

@@ -113,7 +113,7 @@ public class VirtualMachineApiLiveTest extends BaseAzureComputeApiLiveTest {
       String blob = storageService.storageServiceProperties().primaryEndpoints().get("blob");
 
       VirtualMachine vm = api().create(vmName, LOCATION, getProperties(blob, nicName),
-            Collections.<String, String> emptyMap());
+            Collections.<String, String> emptyMap(), null);
       assertTrue(!vm.name().isEmpty());
 
       //Poll until resource is ready to be used

@@ -32,11 +32,13 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
 import org.jclouds.Fallbacks;
+import org.jclouds.azurecompute.arm.domain.Plan;
 import org.jclouds.azurecompute.arm.domain.VirtualMachine;
 import org.jclouds.azurecompute.arm.domain.VirtualMachineInstance;
 import org.jclouds.azurecompute.arm.domain.VirtualMachineProperties;
 import org.jclouds.azurecompute.arm.filters.ApiVersionFilter;
 import org.jclouds.azurecompute.arm.functions.URIParser;
+import org.jclouds.javax.annotation.Nullable;
 import org.jclouds.oauth.v2.filters.OAuthFilter;
 import org.jclouds.rest.annotations.Fallback;
 import org.jclouds.rest.annotations.MapBinder;
@@ -81,7 +83,7 @@ public interface VirtualMachineApi {
     */
    @Named("CreateVirtualMachine")
    @PUT
-   @Payload("%7B\"location\":\"{location}\",\"tags\":{tags},\"properties\":{properties}%7D")
+   @Payload("%7B\"location\":\"{location}\",\"tags\":{tags},\"properties\":{properties},\"plan\":{plan}%7D")
    @MapBinder(BindToJsonPayload.class)
    @Path("/{vmname}")
    @QueryParams(keys = "validating", values = "false")
@@ -89,7 +91,8 @@ public interface VirtualMachineApi {
    VirtualMachine create(@PathParam("vmname") String vmname,
                          @PayloadParam("location") String location,
                          @PayloadParam("properties") VirtualMachineProperties properties,
-                         @PayloadParam("tags") Map<String, String> tags);
+                         @PayloadParam("tags") Map<String, String> tags,
+                         @Nullable @PayloadParam("plan") Plan plan);
 
    /**
     * The List Virtual Machines operation
