@@ -99,6 +99,8 @@ import com.google.common.collect.Lists;
 @Singleton
 public class AzureComputeServiceAdapter implements ComputeServiceAdapter<VirtualMachine, VMHardware, VMImage, Location> {
 
+   public static final String GROUP_KEY = "jclouds_group";
+   
    private final CleanupResources cleanupResources;
    private final AzureComputeApi api;
    private final AzureComputeConstants azureComputeConstants;
@@ -125,8 +127,6 @@ public class AzureComputeServiceAdapter implements ComputeServiceAdapter<Virtual
       AzureTemplateOptions templateOptions = template.getOptions().as(AzureTemplateOptions.class);
       String azureGroup = locationToResourceGroupName.apply(template.getLocation().getId());
 
-      // TODO Store group apart from the name to be able to identify nodes with
-      // custom names in the configured group
       // TODO ARM specific options
       // TODO network ids => create one nic in each network
       // TODO inbound ports
@@ -145,6 +145,9 @@ public class AzureComputeServiceAdapter implements ComputeServiceAdapter<Virtual
             .hardwareProfile(hardwareProfile).storageProfile(storageProfile).osProfile(osProfile)
             .networkProfile(networkProfile).build();
       
+      // Store group apart from the name to be able to identify nodes with
+      // custom names in the configured group
+      template.getOptions().getUserMetadata().put(GROUP_KEY, group);
       Map<String, String> metadataAndTags = metadataAndTagsAsCommaDelimitedValue(template.getOptions());
       Plan plan = getMarketplacePlanFromImageMetadata(template.getImage());
 
@@ -187,7 +190,8 @@ public class AzureComputeServiceAdapter implements ComputeServiceAdapter<Virtual
             for (Version version : versionList) {
                Version versionDetails = osImageApi.getVersion(publisherName, offer.name(), sku.name(), version.name());
                VMImage vmImage = VMImage.azureImage().publisher(publisherName).offer(offer.name()).sku(sku.name())
-                     .version(versionDetails.name()).location(location).versionProperties(version.properties()).build();
+                     .version(versionDetails.name()).location(location).versionProperties(versionDetails.properties())
+                     .build();
                osImagesRef.add(vmImage);
             }
          }

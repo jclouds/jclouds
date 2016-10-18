@@ -20,6 +20,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.collect.Iterables.find;
 import static com.google.common.collect.Iterables.transform;
 import static com.google.common.collect.Iterables.tryFind;
+import static org.jclouds.azurecompute.arm.compute.AzureComputeServiceAdapter.GROUP_KEY;
 import static org.jclouds.azurecompute.arm.compute.extensions.AzureComputeImageExtension.CONTAINER_NAME;
 import static org.jclouds.azurecompute.arm.compute.extensions.AzureComputeImageExtension.CUSTOM_IMAGE_OFFER;
 import static org.jclouds.azurecompute.arm.compute.functions.VMImageToImage.encodeFieldsToUniqueId;
@@ -148,7 +149,6 @@ public class VirtualMachineToNodeMetadata implements Function<VirtualMachine, No
       builder.providerId(virtualMachine.id());
       builder.name(virtualMachine.name());
       builder.hostname(virtualMachine.name());
-      builder.group(nodeNamingConvention.extractGroup(virtualMachine.name()));
 
       ProvisioningState provisioningState = virtualMachine.properties().provisioningState();
       if (ProvisioningState.SUCCEEDED.equals(provisioningState)) {
@@ -175,9 +175,15 @@ public class VirtualMachineToNodeMetadata implements Function<VirtualMachine, No
       builder.publicAddresses(getPublicIpAddresses(virtualMachine.properties().networkProfile().networkInterfaces()));
       builder.privateAddresses(getPrivateIpAddresses(virtualMachine.properties().networkProfile().networkInterfaces()));
 
+      String groupFromMetadata = null;
       if (virtualMachine.tags() != null) {
          addMetadataAndParseTagsFromCommaDelimitedValue(builder, virtualMachine.tags());
+         groupFromMetadata = virtualMachine.tags().get(GROUP_KEY);
       }
+      
+      // Try to read the group from the virtual machine tags, and parse the name if missing
+      builder.group(groupFromMetadata != null ? groupFromMetadata : nodeNamingConvention.extractGroup(virtualMachine
+            .name()));
       
       String locationName = virtualMachine.location();
       builder.location(getLocation(locationName));
