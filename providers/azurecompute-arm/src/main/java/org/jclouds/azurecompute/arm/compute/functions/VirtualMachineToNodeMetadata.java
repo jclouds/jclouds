@@ -156,14 +156,19 @@ public class VirtualMachineToNodeMetadata implements Function<VirtualMachine, No
          // the VM
          VirtualMachineInstance instanceDetails = api.getVirtualMachineApi(azureGroup).getInstanceDetails(
                virtualMachine.name());
-         builder.status(POWERSTATE_TO_NODESTATUS.apply(instanceDetails.powerState()));
-         builder.backendStatus(Joiner.on(',').join(
-               transform(instanceDetails.statuses(), new Function<VirtualMachineStatus, String>() {
-                  @Override
-                  public String apply(VirtualMachineStatus input) {
-                     return input.code();
-                  }
-               })));
+         if (instanceDetails != null && instanceDetails.powerState() != null) {
+            builder.status(POWERSTATE_TO_NODESTATUS.apply(instanceDetails.powerState()));
+            builder.backendStatus(Joiner.on(',').join(
+                  transform(instanceDetails.statuses(), new Function<VirtualMachineStatus, String>() {
+                     @Override
+                     public String apply(VirtualMachineStatus input) {
+                        return input.code();
+                     }
+                  })));
+         } else {
+            builder.status(NodeMetadata.Status.PENDING);
+            builder.backendStatus(provisioningState.name());
+         }
       } else {
          builder.status(PROVISIONINGSTATE_TO_NODESTATUS.apply(provisioningState));
          builder.backendStatus(provisioningState.name());
@@ -207,8 +212,13 @@ public class VirtualMachineToNodeMetadata implements Function<VirtualMachine, No
       List<String> privateIpAddresses = Lists.newArrayList();
       for (IdReference networkInterfaceCardIdReference : idReferences) {
          NetworkInterfaceCard networkInterfaceCard = getNetworkInterfaceCard(networkInterfaceCardIdReference);
-         for (IpConfiguration ipConfiguration : networkInterfaceCard.properties().ipConfigurations()) {
-            privateIpAddresses.add(ipConfiguration.properties().privateIPAddress());
+         if (networkInterfaceCard != null && networkInterfaceCard.properties() != null
+               && networkInterfaceCard.properties().ipConfigurations() != null) {
+            for (IpConfiguration ipConfiguration : networkInterfaceCard.properties().ipConfigurations()) {
+               if (ipConfiguration.properties().privateIPAddress() != null) {
+                  privateIpAddresses.add(ipConfiguration.properties().privateIPAddress());
+               }
+            }
          }
       }
       return privateIpAddresses;
@@ -226,12 +236,15 @@ public class VirtualMachineToNodeMetadata implements Function<VirtualMachine, No
       List<String> publicIpAddresses = Lists.newArrayList();
       for (IdReference networkInterfaceCardIdReference : idReferences) {
          NetworkInterfaceCard networkInterfaceCard = getNetworkInterfaceCard(networkInterfaceCardIdReference);
-         String resourceGroup = Iterables.get(Splitter.on("/").split(networkInterfaceCardIdReference.id()), 4);
-         for (IpConfiguration ipConfiguration : networkInterfaceCard.properties().ipConfigurations()) {
-            if (ipConfiguration.properties().publicIPAddress() != null) {
-               String publicIpId = ipConfiguration.properties().publicIPAddress().id();
-               publicIpAddresses.add(api.getPublicIPAddressApi(resourceGroup)
-                     .get(Iterables.getLast(Splitter.on("/").split(publicIpId))).properties().ipAddress());
+         if (networkInterfaceCard != null && networkInterfaceCard.properties() != null
+               && networkInterfaceCard.properties().ipConfigurations() != null) {
+            String resourceGroup = Iterables.get(Splitter.on("/").split(networkInterfaceCardIdReference.id()), 4);
+            for (IpConfiguration ipConfiguration : networkInterfaceCard.properties().ipConfigurations()) {
+               if (ipConfiguration.properties().publicIPAddress() != null) {
+                  String publicIpId = ipConfiguration.properties().publicIPAddress().id();
+                  publicIpAddresses.add(api.getPublicIPAddressApi(resourceGroup)
+                        .get(Iterables.getLast(Splitter.on("/").split(publicIpId))).properties().ipAddress());
+               }
             }
          }
       }
