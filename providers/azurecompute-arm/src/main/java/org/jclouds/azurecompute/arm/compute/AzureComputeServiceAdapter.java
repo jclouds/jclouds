@@ -32,7 +32,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import javax.annotation.Resource;
 import javax.inject.Inject;
+import javax.inject.Named;
 import javax.inject.Singleton;
 
 import org.jclouds.azurecompute.arm.AzureComputeApi;
@@ -79,7 +81,9 @@ import org.jclouds.compute.ComputeServiceAdapter;
 import org.jclouds.compute.domain.Image;
 import org.jclouds.compute.domain.OsFamily;
 import org.jclouds.compute.domain.Template;
+import org.jclouds.compute.reference.ComputeServiceConstants;
 import org.jclouds.location.Region;
+import org.jclouds.logging.Logger;
 
 import com.google.common.base.Function;
 import com.google.common.base.Objects;
@@ -100,6 +104,10 @@ import com.google.common.collect.Lists;
 public class AzureComputeServiceAdapter implements ComputeServiceAdapter<VirtualMachine, VMHardware, VMImage, Location> {
 
    public static final String GROUP_KEY = "jclouds_group";
+   
+   @Resource
+   @Named(ComputeServiceConstants.COMPUTE_LOGGER)
+   protected Logger logger = Logger.NULL;
    
    private final CleanupResources cleanupResources;
    private final AzureComputeApi api;
@@ -223,19 +231,23 @@ public class AzureComputeServiceAdapter implements ComputeServiceAdapter<Virtual
          List<StorageService> storages = api.getStorageAccountApi(azureGroup).list();
 
          for (StorageService storage : storages) {
-            String name = storage.name();
-            StorageService storageService = api.getStorageAccountApi(azureGroup).get(name);
-            if (storageService != null
-                  && Status.Succeeded == storageService.storageServiceProperties().provisioningState()) {
-               String key = api.getStorageAccountApi(azureGroup).getKeys(name).key1();
-               BlobHelper blobHelper = new BlobHelper(storage.name(), key);
-               try {
-                  List<VMImage> images = blobHelper.getImages(CONTAINER_NAME, azureGroup, CUSTOM_IMAGE_OFFER,
-                        storage.location());
-                  osImages.addAll(images);
-               } finally {
-                  closeQuietly(blobHelper);
+            try {
+               String name = storage.name();
+               StorageService storageService = api.getStorageAccountApi(azureGroup).get(name);
+               if (storageService != null
+                     && Status.Succeeded == storageService.storageServiceProperties().provisioningState()) {
+                  String key = api.getStorageAccountApi(azureGroup).getKeys(name).key1();
+                  BlobHelper blobHelper = new BlobHelper(storage.name(), key);
+                  try {
+                     List<VMImage> images = blobHelper.getImages(CONTAINER_NAME, azureGroup, CUSTOM_IMAGE_OFFER,
+                           storage.location());
+                     osImages.addAll(images);
+                  } finally {
+                     closeQuietly(blobHelper);
+                  }
                }
+            } catch (Exception ex) {
+               logger.warn("<< could not get custom images from storage account %s: %s", storage, ex.getMessage());
             }
          }
       }
