@@ -17,6 +17,7 @@
 package org.jclouds.azurecompute.arm;
 
 
+import static org.jclouds.Constants.PROPERTY_MAX_RATE_LIMIT_WAIT;
 import static org.jclouds.azurecompute.arm.config.AzureComputeProperties.API_VERSION_PREFIX;
 import static org.jclouds.azurecompute.arm.config.AzureComputeProperties.DEFAULT_DATADISKSIZE;
 import static org.jclouds.azurecompute.arm.config.AzureComputeProperties.DEFAULT_SUBNET_ADDRESS_PREFIX;
@@ -30,6 +31,8 @@ import static org.jclouds.azurecompute.arm.config.AzureComputeProperties.TCP_RUL
 import static org.jclouds.azurecompute.arm.config.AzureComputeProperties.TCP_RULE_REGEXP;
 import static org.jclouds.compute.config.ComputeServiceProperties.IMAGE_AUTHENTICATE_SUDO;
 import static org.jclouds.compute.config.ComputeServiceProperties.IMAGE_LOGIN_USER;
+import static org.jclouds.compute.config.ComputeServiceProperties.POLL_INITIAL_PERIOD;
+import static org.jclouds.compute.config.ComputeServiceProperties.POLL_MAX_PERIOD;
 import static org.jclouds.compute.config.ComputeServiceProperties.RESOURCENAME_DELIMITER;
 import static org.jclouds.compute.config.ComputeServiceProperties.RESOURCENAME_PREFIX;
 import static org.jclouds.compute.config.ComputeServiceProperties.TEMPLATE;
@@ -56,7 +59,6 @@ import org.jclouds.azurecompute.arm.features.SubnetApi;
 import org.jclouds.azurecompute.arm.features.VMSizeApi;
 import org.jclouds.azurecompute.arm.features.VirtualMachineApi;
 import org.jclouds.azurecompute.arm.features.VirtualNetworkApi;
-import org.jclouds.compute.config.ComputeServiceProperties;
 import org.jclouds.providers.ProviderMetadata;
 import org.jclouds.providers.internal.BaseProviderMetadata;
 
@@ -80,20 +82,22 @@ public class AzureComputeProviderMetadata extends BaseProviderMetadata {
 
    public static Properties defaultProperties() {
       final Properties properties = AzureManagementApiMetadata.defaultProperties();
-      properties.put(ComputeServiceProperties.POLL_INITIAL_PERIOD, 1000);
-      properties.put(ComputeServiceProperties.POLL_MAX_PERIOD, 10000);
-      properties.setProperty(OPERATION_TIMEOUT, "46000000");
-      properties.setProperty(OPERATION_POLL_INITIAL_PERIOD, "5");
-      properties.setProperty(OPERATION_POLL_MAX_PERIOD, "15");
-      properties.setProperty(TCP_RULE_FORMAT, "tcp_%s-%s");
-      properties.setProperty(TCP_RULE_REGEXP, "tcp_\\d{1,5}-\\d{1,5}");
+      properties.put(POLL_INITIAL_PERIOD, 1000);
+      properties.put(POLL_MAX_PERIOD, 10000);
+      properties.put(OPERATION_TIMEOUT, 46000000);
+      properties.put(OPERATION_POLL_INITIAL_PERIOD, 5);
+      properties.put(OPERATION_POLL_MAX_PERIOD, 15);
+      // Default max wait in rate limit: 5m30s
+      properties.put(PROPERTY_MAX_RATE_LIMIT_WAIT, 330000);
+      properties.put(TCP_RULE_FORMAT, "tcp_%s-%s");
+      properties.put(TCP_RULE_REGEXP, "tcp_\\d{1,5}-\\d{1,5}");
       properties.put(RESOURCE, "https://management.azure.com/");
       properties.put(CREDENTIAL_TYPE, CLIENT_CREDENTIALS_SECRET.toString());
       properties.put(DEFAULT_VNET_ADDRESS_SPACE_PREFIX, "10.0.0.0/16");
       properties.put(DEFAULT_SUBNET_ADDRESS_PREFIX, "10.0.0.0/24");
       properties.put(RESOURCENAME_PREFIX, "jclouds");
       properties.put(RESOURCENAME_DELIMITER, "-");
-      properties.put(DEFAULT_DATADISKSIZE, "100");
+      properties.put(DEFAULT_DATADISKSIZE, 100);
       properties.put(IMAGE_PUBLISHERS, "Canonical,RedHat");
       // Default credentials for all images
       properties.put(IMAGE_LOGIN_USER, "jclouds:Password12345!");

@@ -20,6 +20,7 @@ import java.io.IOException;
 
 import javax.inject.Singleton;
 
+import org.jclouds.azurecompute.arm.exceptions.AzureComputeRateLimitExceededException;
 import org.jclouds.http.HttpCommand;
 import org.jclouds.http.HttpErrorHandler;
 import org.jclouds.http.HttpResponse;
@@ -65,11 +66,12 @@ public class AzureComputeErrorHandler implements HttpErrorHandler {
                   exception = new ResourceNotFoundException(message, exception);
                }
                break;
-
             case 409:
                exception = new IllegalStateException(message, exception);
                break;
-
+            case 429:
+               exception = new AzureComputeRateLimitExceededException(response, exception);
+               break;
             default:
          }
       } finally {
