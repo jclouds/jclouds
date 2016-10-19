@@ -352,6 +352,14 @@ public final class Constants {
 
    /** Comma-separated list of methods considered idempotent for purposes of retries.  By default jclouds uses DELETE,GET,HEAD,OPTIONS,PUT. */
    public static final String PROPERTY_IDEMPOTENT_METHODS = "jclouds.idempotent-methods";
+   
+   /**
+    * Maximum amount of time (in milliseconds) a request will wait until retrying if
+    * the rate limit is exhausted.
+    * <p>
+    * Default value: 2 minutes.
+    */
+   public static final String PROPERTY_MAX_RATE_LIMIT_WAIT = "jclouds.max-ratelimit-wait";
 
    private Constants() {
       throw new AssertionError("intentionally unimplemented");

@@ -17,7 +17,7 @@
 package org.jclouds.digitalocean2.exceptions;
 
 import static org.jclouds.Constants.PROPERTY_MAX_RETRIES;
-import static org.jclouds.digitalocean2.handlers.RateLimitRetryHandler.millisUntilNextAvailableRequest;
+import static org.jclouds.digitalocean2.handlers.DigitalOcean2RateLimitRetryHandler.millisUntilNextAvailableRequest;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertTrue;
 import static org.testng.Assert.fail;

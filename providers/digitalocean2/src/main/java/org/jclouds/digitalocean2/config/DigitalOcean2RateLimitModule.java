@@ -16,7 +16,7 @@
  */
 package org.jclouds.digitalocean2.config;
 
-import org.jclouds.digitalocean2.handlers.RateLimitRetryHandler;
+import org.jclouds.digitalocean2.handlers.DigitalOcean2RateLimitRetryHandler;
 import org.jclouds.http.HttpRetryHandler;
 import org.jclouds.http.annotation.ClientError;
 
@@ -25,6 +25,6 @@ import com.google.inject.AbstractModule;
 public class DigitalOcean2RateLimitModule extends AbstractModule {
    @Override
    protected void configure() {
-      bind(HttpRetryHandler.class).annotatedWith(ClientError.class).to(RateLimitRetryHandler.class);
+      bind(HttpRetryHandler.class).annotatedWith(ClientError.class).to(DigitalOcean2RateLimitRetryHandler.class);
    }
 }

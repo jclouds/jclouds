@@ -16,7 +16,7 @@
  */
 package org.jclouds.digitalocean2.exceptions;
 
-import static org.jclouds.digitalocean2.handlers.RateLimitRetryHandler.millisUntilNextAvailableRequest;
+import static org.jclouds.digitalocean2.handlers.DigitalOcean2RateLimitRetryHandler.millisUntilNextAvailableRequest;
 
 import org.jclouds.http.HttpResponse;
 import org.jclouds.rest.RateLimitExceededException;

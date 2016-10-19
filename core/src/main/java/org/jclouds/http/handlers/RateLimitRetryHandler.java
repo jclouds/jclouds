@@ -14,14 +14,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jclouds.digitalocean2.handlers;
+package org.jclouds.http.handlers;
 
+import static org.jclouds.Constants.PROPERTY_MAX_RATE_LIMIT_WAIT;
 import static org.jclouds.Constants.PROPERTY_MAX_RETRIES;
-import static org.jclouds.digitalocean2.config.DigitalOcean2Properties.MAX_RATE_LIMIT_WAIT;
 
 import javax.annotation.Resource;
 import javax.inject.Named;
-import javax.inject.Singleton;
 
 import org.jclouds.http.HttpCommand;
 import org.jclouds.http.HttpResponse;
@@ -29,17 +28,15 @@ import org.jclouds.http.HttpRetryHandler;
 import org.jclouds.logging.Logger;
 
 import com.google.common.annotations.Beta;
+import com.google.common.base.Optional;
 import com.google.inject.Inject;
 
 /**
- * Retry handler that takes into account the DigitalOcean rate limit and delays
- * the requests until they are known to succeed.
+ * Retry handler that takes into account the provider rate limit and delays the
+ * requests until they are known to succeed.
  */
 @Beta
-@Singleton
-public class RateLimitRetryHandler implements HttpRetryHandler {
-
-   static final String RATE_LIMIT_RESET_HEADER = "RateLimit-Reset";
+public abstract class RateLimitRetryHandler implements HttpRetryHandler {
 
    @Resource
    protected Logger logger = Logger.NULL;
@@ -49,15 +46,34 @@ public class RateLimitRetryHandler implements HttpRetryHandler {
    private int retryCountLimit = 5;
 
    @Inject(optional = true)
-   @Named(MAX_RATE_LIMIT_WAIT)
-   private int maxRateLimitWait = 120000;
+   @Named(PROPERTY_MAX_RATE_LIMIT_WAIT)
+   private int maxRateLimitWait = 2 * 60 * 1000;
+
+   /**
+    * Returns the response status that will be considered a rate limit error.
+    * <p>
+    * Providers can override this to customize which responses are retried.
+    */
+   protected int rateLimitErrorStatus() {
+      return 429;
+   }
+
+   /**
+    * Compute the number of milliseconds that must pass until a request can be
+    * performed.
+    * 
+    * @param command The command being executed.
+    * @param response The rate-limit error response.
+    * @return The number of milliseconds to wait for an available request, if taht information is available.
+    */
+   protected abstract Optional<Long> millisToNextAvailableRequest(final HttpCommand command, final HttpResponse response);
 
    @Override
    public boolean shouldRetryRequest(final HttpCommand command, final HttpResponse response) {
       command.incrementFailureCount();
 
       // Do not retry client errors that are not rate limit errors
-      if (response.getStatusCode() != 429) {
+      if (response.getStatusCode() != rateLimitErrorStatus()) {
          return false;
       } else if (!command.isReplayable()) {
          logger.error("Cannot retry after rate limit error, command is not replayable: %1$s", command);
@@ -72,24 +88,22 @@ public class RateLimitRetryHandler implements HttpRetryHandler {
    }
 
    private boolean delayRequestUntilAllowed(final HttpCommand command, final HttpResponse response) {
-      // The header is the Unix epoch time when the next request can be done
-      String epochForNextAvailableRequest = response.getFirstHeaderOrNull(RATE_LIMIT_RESET_HEADER);
-      if (epochForNextAvailableRequest == null) {
+      Optional<Long> millisToNextAvailableRequest = millisToNextAvailableRequest(command, response);
+      if (!millisToNextAvailableRequest.isPresent()) {
          logger.error("Cannot retry after rate limit error, no retry information provided in the response");
          return false;
       }
 
-      long waitPeriod = millisUntilNextAvailableRequest(Long.parseLong(epochForNextAvailableRequest));
-
-      if (waitPeriod > 0) {
+      long waitPeriod = millisToNextAvailableRequest.get();
+      if (waitPeriod > 0L) {
          if (waitPeriod > maxRateLimitWait) {
-            logger.error("Max wait for rate limited requests is %s seconds but need to wait %s seconds, aborting",
+            logger.error("Max wait for rate limited requests is %sms but need to wait %sms, aborting",
                   maxRateLimitWait, waitPeriod);
             return false;
          }
 
          try {
-            logger.debug("Waiting %s seconds before retrying, as defined by the rate limit", waitPeriod);
+            logger.debug("Waiting %sms before retrying, as defined by the rate limit", waitPeriod);
             // Do not use Uninterrumpibles or similar, to let the jclouds
             // tiemout configuration interrupt this thread
             Thread.sleep(waitPeriod);
@@ -105,7 +119,12 @@ public class RateLimitRetryHandler implements HttpRetryHandler {
       return true;
    }
 
-   public static long millisUntilNextAvailableRequest(long epochForNextAvailableRequest) {
-      return (epochForNextAvailableRequest * 1000) - System.currentTimeMillis();
+   public int getRetryCountLimit() {
+      return retryCountLimit;
    }
+
+   public int getMaxRateLimitWait() {
+      return maxRateLimitWait;
+   }
+
 }

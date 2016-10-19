@@ -14,9 +14,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jclouds.digitalocean2.handlers;
+package org.jclouds.http.handlers;
 
-import static org.jclouds.digitalocean2.handlers.RateLimitRetryHandler.RATE_LIMIT_RESET_HEADER;
+import static com.google.common.net.HttpHeaders.RETRY_AFTER;
 import static org.jclouds.http.HttpUtils.releasePayload;
 import static org.jclouds.io.Payloads.newInputStreamPayload;
 import static org.testng.Assert.assertEquals;
@@ -32,6 +32,7 @@ import org.jclouds.http.HttpResponse;
 import org.jclouds.io.Payload;
 import org.testng.annotations.Test;
 
+import com.google.common.base.Optional;
 import com.google.common.util.concurrent.Uninterruptibles;
 
 @Test(groups = "unit", testName = "RateLimitRetryHandlerTest")
@@ -41,7 +42,14 @@ public class RateLimitRetryHandlerTest {
    // stuck
    private static final long TEST_SAFE_TIMEOUT = 60000;
 
-   private final RateLimitRetryHandler rateLimitRetryHandler = new RateLimitRetryHandler();
+   private final RateLimitRetryHandler rateLimitRetryHandler = new RateLimitRetryHandler() {
+      @Override
+      protected Optional<Long> millisToNextAvailableRequest(HttpCommand command, HttpResponse response) {
+         String secondsToNextAvailableRequest = response.getFirstHeaderOrNull(RETRY_AFTER);
+         return secondsToNextAvailableRequest != null ? Optional.of(Long.valueOf(secondsToNextAvailableRequest) * 1000)
+               : Optional.<Long> absent();
+      }
+   };
 
    @Test(timeOut = TEST_SAFE_TIMEOUT)
    public void testDoNotRetryIfNoRateLimit() {
@@ -67,7 +75,7 @@ public class RateLimitRetryHandlerTest {
    }
 
    @Test(timeOut = TEST_SAFE_TIMEOUT)
-   public void testDoNotRetryIfNoRateLimitResetHeader() {
+   public void testDoNotRetryIfNoRateLimitInfo() {
       HttpCommand command = new HttpCommand(HttpRequest.builder().method("GET").endpoint("http://localhost").build());
       HttpResponse response = HttpResponse.builder().statusCode(429).build();
 
@@ -76,22 +84,16 @@ public class RateLimitRetryHandlerTest {
 
    @Test(timeOut = TEST_SAFE_TIMEOUT)
    public void testDoNotRetryIfTooMuchWait() {
-      // 5 minutes Unix epoch timestamp
-      long rateLimitResetEpoch = (System.currentTimeMillis() + 300000) / 1000;
       HttpCommand command = new HttpCommand(HttpRequest.builder().method("GET").endpoint("http://localhost").build());
-      HttpResponse response = HttpResponse.builder().statusCode(429)
-            .addHeader(RATE_LIMIT_RESET_HEADER, String.valueOf(rateLimitResetEpoch)).build();
+      HttpResponse response = HttpResponse.builder().statusCode(429).addHeader(RETRY_AFTER, "400").build();
 
       assertFalse(rateLimitRetryHandler.shouldRetryRequest(command, response));
    }
 
    @Test(timeOut = TEST_SAFE_TIMEOUT)
    public void testRequestIsDelayed() {
-      // 5 seconds Unix epoch timestamp
-      long rateLimitResetEpoch = (System.currentTimeMillis() + 5000) / 1000;
       HttpCommand command = new HttpCommand(HttpRequest.builder().method("GET").endpoint("http://localhost").build());
-      HttpResponse response = HttpResponse.builder().statusCode(429)
-            .addHeader(RATE_LIMIT_RESET_HEADER, String.valueOf(rateLimitResetEpoch)).build();
+      HttpResponse response = HttpResponse.builder().statusCode(429).addHeader(RETRY_AFTER, "5").build();
 
       long start = System.currentTimeMillis();
 
@@ -104,12 +106,9 @@ public class RateLimitRetryHandlerTest {
 
    @Test(timeOut = TEST_SAFE_TIMEOUT)
    public void testDoNotRetryIfRequestIsAborted() throws Exception {
-      // 10 seconds Unix epoch timestamp
-      long rateLimitResetEpoch = (System.currentTimeMillis() + 10000) / 1000;
       final HttpCommand command = new HttpCommand(HttpRequest.builder().method("GET").endpoint("http://localhost")
             .build());
-      final HttpResponse response = HttpResponse.builder().statusCode(429)
-            .addHeader(RATE_LIMIT_RESET_HEADER, String.valueOf(rateLimitResetEpoch)).build();
+      final HttpResponse response = HttpResponse.builder().statusCode(429).addHeader(RETRY_AFTER, "10").build();
 
       final Thread requestThread = Thread.currentThread();
       Thread killer = new Thread() {
@@ -143,7 +142,7 @@ public class RateLimitRetryHandlerTest {
    @Test(timeOut = TEST_SAFE_TIMEOUT)
    public void testDisallowExcessiveRetries() {
       HttpCommand command = new HttpCommand(HttpRequest.builder().method("GET").endpoint("http://localhost").build());
-      HttpResponse response = HttpResponse.builder().statusCode(429).addHeader(RATE_LIMIT_RESET_HEADER, "0").build();
+      HttpResponse response = HttpResponse.builder().statusCode(429).addHeader(RETRY_AFTER, "0").build();
 
       for (int i = 0; i < 5; i++) {
          assertTrue(rateLimitRetryHandler.shouldRetryRequest(command, response));
