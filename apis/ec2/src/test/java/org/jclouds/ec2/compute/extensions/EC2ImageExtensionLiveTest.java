@@ -96,7 +96,7 @@ public class EC2ImageExtensionLiveTest extends BaseImageExtensionLiveTest {
 
    @Override
    public TemplateBuilder getNodeTemplate() {
-      return getNodeTemplate().from(ebsTemplate);
+      return super.getNodeTemplate().from(ebsTemplate);
    }
 
    @Override
