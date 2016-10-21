@@ -109,8 +109,6 @@ public class FilesystemStorageStrategyImpl implements LocalStorageStrategy {
    private static final byte[] DIRECTORY_MD5 =
            Hashing.md5().hashBytes(new byte[0]).asBytes();
 
-   private static final String BACK_SLASH = "\\";
-
    @Resource
    protected Logger logger = Logger.NULL;
 
@@ -315,7 +313,7 @@ public class FilesystemStorageStrategyImpl implements LocalStorageStrategy {
       populateBlobKeysInContainer(containerFile, blobNames, new Function<String, String>() {
          @Override
          public String apply(String string) {
-            return string.substring(containerPathLength);
+            return denormalize(string.substring(containerPathLength));
          }
       });
       return blobNames;
@@ -614,7 +612,7 @@ public class FilesystemStorageStrategyImpl implements LocalStorageStrategy {
 
    @Override
    public String getSeparator() {
-      return File.separator;
+      return "/";
    }
 
    public boolean createContainer(String container) {
@@ -745,28 +743,26 @@ public class FilesystemStorageStrategyImpl implements LocalStorageStrategy {
    }
 
    /**
-    * Substitutes all the file separator occurrences in the path with a file separator for the
-    * current operative system
+    * Convert path to the current OS filesystem standard
     *
-    * @param pathToBeNormalized
+    * @param path
     * @return
     */
-   private static String normalize(String pathToBeNormalized) {
-      if (null != pathToBeNormalized && pathToBeNormalized.contains(BACK_SLASH)) {
-         if (!BACK_SLASH.equals(File.separator)) {
-            return pathToBeNormalized.replace(BACK_SLASH, File.separator);
-         }
+   private static String normalize(String path) {
+      if (null != path) {
+         return path.replace("/", File.separator).replace("\\", File.separator);
       }
-      return pathToBeNormalized;
+      return path;
    }
 
-   private static String denormalize(String pathToDenormalize) {
-      if (null != pathToDenormalize && pathToDenormalize.contains("/")) {
-         if (BACK_SLASH.equals(File.separator)) {
-              return pathToDenormalize.replace("/", BACK_SLASH);
-         }
+   /**
+    * Convert path to jclouds standard (/)
+    */
+   private static String denormalize(String path) {
+      if (null != path) {
+         return path.replace("\\", "/");
       }
-      return pathToDenormalize;
+      return path;
    }
 
    /**
@@ -786,10 +782,11 @@ public class FilesystemStorageStrategyImpl implements LocalStorageStrategy {
 
       // search for separator chars
       if (!onlyTrailing) {
-         if (pathToBeCleaned.substring(0, 1).equals(File.separator))
+         if (pathToBeCleaned.charAt(0) == '/' || pathToBeCleaned.charAt(0) == '\\')
             beginIndex = 1;
       }
-      if (pathToBeCleaned.substring(pathToBeCleaned.length() - 1).equals(File.separator))
+      if (pathToBeCleaned.charAt(pathToBeCleaned.length() - 1) == '/' ||
+            pathToBeCleaned.charAt(pathToBeCleaned.length() - 1) == '\\')
          endIndex--;
 
       return pathToBeCleaned.substring(beginIndex, endIndex);
@@ -803,10 +800,7 @@ public class FilesystemStorageStrategyImpl implements LocalStorageStrategy {
     * @param blobKey
     */
    private void removeDirectoriesTreeOfBlobKey(String container, String blobKey) {
-      String normalizedBlobKey = denormalize(blobKey);
-      // exists is no path is present in the blobkey
-      if (!normalizedBlobKey.contains(File.separator))
-         return;
+      String normalizedBlobKey = normalize(blobKey);
 
       File file = new File(normalizedBlobKey);
       // TODO

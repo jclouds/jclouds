@@ -173,9 +173,11 @@ public class FilesystemBlobStoreTest {
         checkForContainerContent(CONTAINER_NAME, null);
 
         // creates blobs in first container
-        Set<String> blobsExpected = TestUtils.createBlobsInContainer(CONTAINER_NAME, "bbb" + File.separator + "ccc"
-                + File.separator + "ddd" + File.separator + "1234.jpg", "4rrr.jpg", "rrr" + File.separator + "sss"
-                + File.separator + "788.jpg", "xdc" + File.separator + "wert.kpg");
+        Set<String> blobsExpected = TestUtils.createBlobsInContainer(CONTAINER_NAME,
+              "bbb/ccc/ddd/1234.jpg",
+              "4rrr.jpg",
+              "rrr/sss/788.jpg",
+              "xdc/wert.kpg");
 
         checkForContainerContent(CONTAINER_NAME, blobsExpected);
     }
@@ -220,17 +222,19 @@ public class FilesystemBlobStoreTest {
 
         // creates blobs in first container
 
-        Set<String> blobNamesCreatedInContainer1 = TestUtils.createBlobsInContainer(CONTAINER_NAME, "bbb"
-                + File.separator + "ccc" + File.separator + "ddd" + File.separator + "1234.jpg",
-                TestUtils.createRandomBlobKey(), "rrr" + File.separator + "sss" + File.separator + "788.jpg", "xdc"
-                + File.separator + "wert.kpg");
+        Set<String> blobNamesCreatedInContainer1 = TestUtils.createBlobsInContainer(CONTAINER_NAME,
+              "bbb/ccc/ddd/1234.jpg",
+              TestUtils.createRandomBlobKey(),
+              "rrr/sss/788.jpg",
+              "xdc/wert.kpg");
 
         // creates blobs in second container
         blobStore.createContainerInLocation(null, CONTAINER_NAME2);
-        Set<String> blobNamesCreatedInContainer2 = TestUtils.createBlobsInContainer(CONTAINER_NAME2, "asd"
-                + File.separator + "bbb" + File.separator + "ccc" + File.separator + "ddd" + File.separator + "1234.jpg",
-                TestUtils.createRandomBlobKey(), "rrr" + File.separator + "sss" + File.separator + "788.jpg", "xdc"
-                + File.separator + "wert.kpg");
+        Set<String> blobNamesCreatedInContainer2 = TestUtils.createBlobsInContainer(CONTAINER_NAME2,
+              "asd/bbb/ccc/ddd/1234.jpg",
+              TestUtils.createRandomBlobKey(),
+              "rrr/sss/788.jpg",
+              "xdc/wert.kpg");
 
         // test blobs in first container
         checkForContainerContent(CONTAINER_NAME, blobNamesCreatedInContainer1);
@@ -244,12 +248,14 @@ public class FilesystemBlobStoreTest {
         checkForContainerContent(CONTAINER_NAME, null);
 
         // creates blobs in first container
-        Set<String> blobsExpected = TestUtils.createBlobsInContainer(CONTAINER_NAME, "bbb" + File.separator + "ccc"
-                + File.separator + "ddd" + File.separator + "1234.jpg", "4rrr.jpg", "rrr" + File.separator + "sss"
-                + File.separator + "788.jpg", "rrr" + File.separator + "wert.kpg");
+        Set<String> blobsExpected = TestUtils.createBlobsInContainer(CONTAINER_NAME,
+              "bbb/ccc/ddd/1234.jpg",
+              "4rrr.jpg",
+              "rrr/sss/788.jpg",
+              "rrr/wert.kpg");
 
         // remove not expected values
-        blobsExpected.remove("bbb" + File.separator + "ccc" + File.separator + "ddd" + File.separator + "1234.jpg");
+        blobsExpected.remove("bbb/ccc/ddd/1234.jpg");
         blobsExpected.remove("4rrr.jpg");
 
         checkForContainerContent(CONTAINER_NAME, "rrr", blobsExpected);
@@ -271,17 +277,19 @@ public class FilesystemBlobStoreTest {
         blobStore.createContainerInLocation(null, CONTAINER_NAME2);
 
         // creates blobs in first container
-        Set<String> blobNamesCreatedInContainer1 = TestUtils.createBlobsInContainer(CONTAINER_NAME, "bbb"
-                + File.separator + "ccc" + File.separator + "ddd" + File.separator + "1234.jpg",
-                TestUtils.createRandomBlobKey(), "rrr" + File.separator + "sss" + File.separator + "788.jpg", "xdc"
-                + File.separator + "wert.kpg");
+        Set<String> blobNamesCreatedInContainer1 = TestUtils.createBlobsInContainer(CONTAINER_NAME,
+              "bbb/ccc/ddd/1234.jpg",
+              TestUtils.createRandomBlobKey(),
+              "rrr/sss/788.jpg",
+              "xdc/wert.kpg");
 
         // creates blobs in second container
         blobStore.createContainerInLocation(null, CONTAINER_NAME2);
-        Set<String> blobNamesCreatedInContainer2 = TestUtils.createBlobsInContainer(CONTAINER_NAME2, "asd"
-                + File.separator + "bbb" + File.separator + "ccc" + File.separator + "ddd" + File.separator + "1234.jpg",
-                TestUtils.createRandomBlobKey(), "rrr" + File.separator + "sss" + File.separator + "788.jpg", "xdc"
-                + File.separator + "wert.kpg");
+        Set<String> blobNamesCreatedInContainer2 = TestUtils.createBlobsInContainer(CONTAINER_NAME2,
+              "asd/bbb/ccc/ddd/1234.jpg",
+              TestUtils.createRandomBlobKey(),
+              "rrr/sss/788.jpg",
+              "xdc/wert.kpg");
 
         // test blobs in containers
         checkForContainerContent(CONTAINER_NAME, blobNamesCreatedInContainer1);
@@ -329,7 +337,7 @@ public class FilesystemBlobStoreTest {
         blobStore.removeBlob(CONTAINER_NAME, BLOB_KEY);
         result = blobStore.blobExists(CONTAINER_NAME, BLOB_KEY);
         assertFalse(result, "Blob still exists");
-        TestUtils.fileExists(TARGET_CONTAINER_NAME + File.separator + BLOB_KEY, false);
+        TestUtils.fileExists(TARGET_CONTAINER_NAME + "/" + BLOB_KEY, false);
     }
 
     public void testRemoveBlob_TwoSimpleBlobKeys() throws IOException {

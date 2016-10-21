@@ -605,8 +605,8 @@ public class FilesystemStorageStrategyImplTest {
       Set<String> createBlobKeys = TestUtils.createBlobsInContainer(CONTAINER_NAME, new String[] {
                TestUtils.createRandomBlobKey("GetBlobKeys-", ".jpg"),
                TestUtils.createRandomBlobKey("GetBlobKeys-", ".jpg"),
-               TestUtils.createRandomBlobKey("563" + FS + "g3sx2" + FS + "removeBlob-", ".jpg"),
-               TestUtils.createRandomBlobKey("563" + FS + "g3sx2" + FS + "removeBlob-", ".jpg") });
+               TestUtils.createRandomBlobKey("563" + "/" + "g3sx2" + "/" + "removeBlob-", ".jpg"),
+               TestUtils.createRandomBlobKey("563" + "/" + "g3sx2" + "/" + "removeBlob-", ".jpg") });
       storageStrategy.getBlobKeysInsideContainer(CONTAINER_NAME);
 
       List<String> retrievedBlobKeys = Lists.newArrayList();

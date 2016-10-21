@@ -16,8 +16,6 @@
  */
 package org.jclouds.filesystem.predicates.validators.internal;
 
-import java.io.File;
-
 import org.jclouds.filesystem.predicates.validators.FilesystemContainerNameValidator;
 
 import com.google.inject.Singleton;
@@ -38,9 +36,8 @@ public class FilesystemContainerNameValidatorImpl extends FilesystemContainerNam
             throw new IllegalArgumentException("Container name can't be null or empty");
 
         //container name cannot contains / (or \ in Windows) character
-        if (name.contains(File.separator))
-            throw new IllegalArgumentException(String.format(
-                    "Container name '%s' cannot contain character %s", name, File.separator));
+        if (name.contains("\\") || name.contains("/"))
+            throw new IllegalArgumentException("Container name '%s' cannot contain \\ or /");
     }
 
 }
