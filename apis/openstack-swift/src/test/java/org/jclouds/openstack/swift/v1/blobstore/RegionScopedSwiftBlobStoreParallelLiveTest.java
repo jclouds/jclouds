@@ -173,7 +173,7 @@ public class RegionScopedSwiftBlobStoreParallelLiveTest extends BaseBlobStoreInt
       }
    }
 
-   private final class RandomFileWriter implements Runnable {
+   private static final class RandomFileWriter implements Runnable {
       private final RandomAccessFile raf;
       private final long begin;
       private final long end;
