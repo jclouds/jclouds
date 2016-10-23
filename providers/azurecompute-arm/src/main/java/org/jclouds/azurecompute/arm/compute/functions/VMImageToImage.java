@@ -73,7 +73,7 @@ public class VMImageToImage implements Function<VMImage, Image> {
    }
 
    public static VMImage decodeFieldsFromUniqueId(final String id) {
-      String fields[] = checkNotNull(id, "id").split("/");
+      String[] fields = checkNotNull(id, "id").split("/");
       VMImage vmImage;
       boolean custom = fields.length == 5;
       if (custom) {
