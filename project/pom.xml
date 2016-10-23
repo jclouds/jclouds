@@ -221,7 +221,6 @@
     <maven.compile.target>1.6</maven.compile.target>
     <maven.compile.deprecation>true</maven.compile.deprecation>
     <maven.site.url.base>gitsite:git@github.com/jclouds/jclouds-maven-site.git</maven.site.url.base>
-    <clojure.version>1.3.0</clojure.version>
     <guava.version>16.0.1</guava.version>
     <guava.osgi.import>com.google.common.*;version="[16.0.1,20.0.0)"</guava.osgi.import>
     <guice.version>3.0</guice.version>
@@ -249,21 +248,6 @@
 
   <dependencyManagement>
     <dependencies>
-      <dependency>
-        <groupId>org.clojure</groupId>
-        <artifactId>clojure</artifactId>
-        <version>${clojure.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.clojure</groupId>
-        <artifactId>tools.logging</artifactId>
-        <version>0.2.3</version>
-      </dependency>
-      <dependency>
-        <groupId>org.clojure</groupId>
-        <artifactId>core.incubator</artifactId>
-        <version>0.1.0</version>
-      </dependency>
       <dependency>
         <groupId>com.google.guava</groupId>
         <artifactId>guava</artifactId>
@@ -394,21 +378,6 @@
       <scope>test</scope>
     </dependency>
     <dependency>
-      <groupId>org.clojure</groupId>
-      <artifactId>clojure</artifactId>
-      <optional>true</optional>
-    </dependency>
-    <dependency>
-      <groupId>org.clojure</groupId>
-      <artifactId>tools.logging</artifactId>
-      <optional>true</optional>
-    </dependency>
-    <dependency>
-      <groupId>org.clojure</groupId>
-      <artifactId>core.incubator</artifactId>
-      <optional>true</optional>
-    </dependency>
-    <dependency>
       <groupId>org.assertj</groupId>
       <artifactId>assertj-core</artifactId>
       <scope>test</scope>
@@ -423,9 +392,6 @@
   <build>
     <resources>
       <resource>
-        <directory>src/main/clojure</directory>
-      </resource>
-      <resource>
         <directory>src/main/resources</directory>
       </resource>
       <!-- For AutoService generated services. -->
@@ -437,9 +403,6 @@
       </resource>
     </resources>
     <testResources>
-      <testResource>
-        <directory>src/test/clojure</directory>
-      </testResource>
       <testResource>
         <directory>src/test/resources</directory>
       </testResource>
@@ -1127,32 +1090,6 @@
           <groupId>org.sonatype.maven.plugin</groupId>
           <artifactId>emma-maven-plugin</artifactId>
           <version>1.2</version>
-        </plugin>
-        <plugin>
-          <groupId>com.theoryinpractise</groupId>
-          <artifactId>clojure-maven-plugin</artifactId>
-          <version>1.3.10</version>
-          <configuration>
-            <sourceDirectories>
-              <sourceDirectory>src/main/clojure</sourceDirectory>
-            </sourceDirectories>
-            <testSourceDirectories>
-              <testSourceDirectory>src/test/clojure</testSourceDirectory>
-            </testSourceDirectories>
-            <clojureOptions>-Xms128m -Xmx512m -Djava.awt.headless=true -XX:MaxPermSize=256m -Xss256k</clojureOptions>
-            <warnOnReflection>true</warnOnReflection>
-            <compileDeclaredNamespaceOnly>true</compileDeclaredNamespaceOnly>
-            <testDeclaredNamespaceOnly>false</testDeclaredNamespaceOnly>
-          </configuration>
-          <executions>
-            <execution>
-              <id>test-clojure</id>
-              <phase>test</phase>
-              <goals>
-                <goal>test</goal>
-              </goals>
-            </execution>
-          </executions>
         </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
