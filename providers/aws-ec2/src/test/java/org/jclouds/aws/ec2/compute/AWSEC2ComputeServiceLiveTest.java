@@ -17,7 +17,6 @@
 package org.jclouds.aws.ec2.compute;
 
 import static com.google.common.collect.Iterables.getOnlyElement;
-import static com.google.common.collect.Sets.newTreeSet;
 import static org.jclouds.compute.domain.OsFamily.AMZN_LINUX;
 import static org.jclouds.compute.options.RunScriptOptions.Builder.runAsRoot;
 import static org.jclouds.compute.util.ComputeServiceUtils.getCores;
@@ -49,7 +48,6 @@ import org.jclouds.compute.predicates.NodePredicates;
 import org.jclouds.domain.LoginCredentials;
 import org.jclouds.ec2.compute.EC2ComputeServiceLiveTest;
 import org.jclouds.ec2.domain.KeyPair;
-import org.jclouds.ec2.domain.SecurityGroup;
 import org.jclouds.ec2.features.InstanceApi;
 import org.jclouds.ec2.features.KeyPairApi;
 import org.jclouds.net.domain.IpProtocol;
@@ -58,7 +56,6 @@ import org.testng.annotations.Test;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
-import com.google.common.collect.ImmutableSortedSet;
 import com.google.common.util.concurrent.ListenableFuture;
 
 @Test(groups = "live", singleThreaded = true, testName = "AWSEC2ComputeServiceLiveTest")
@@ -172,15 +169,6 @@ public class AWSEC2ComputeServiceLiveTest extends EC2ComputeServiceLiveTest {
          } finally {
             monitoringApi.close();
          }
-
-         // make sure we made our dummy group and also let in the user's group
-         assertEquals(newTreeSet(instance.getGroupNames()), ImmutableSortedSet.<String> of("jclouds#" + group, group));
-
-         // make sure our dummy group has no rules
-         SecurityGroup secgroup = getOnlyElement(securityGroupApi.describeSecurityGroupsInRegion(instance
-                  .getRegion(), "jclouds#" + group));
-
-         assert secgroup.size() == 0 : secgroup;
 
          // try to run a script with the original keyPair
          runScriptWithCreds(group, first.getOperatingSystem(), LoginCredentials.builder().user(

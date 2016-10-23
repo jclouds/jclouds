@@ -679,7 +679,7 @@ public abstract class BaseComputeServiceLiveTest extends BaseComputeServiceConte
       }
    }
 
-   @Test(enabled = true, dependsOnMethods = { "testListNodes", "testGetNodesWithDetails", "testListNodesByIds" })
+   @Test(enabled = true, alwaysRun = true, dependsOnMethods = { "testListNodes", "testGetNodesWithDetails", "testListNodesByIds" })
    public void testDestroyNodes() {
       int toDestroy = refreshNodes().size();
       Set<? extends NodeMetadata> destroyed = client.destroyNodesMatching(inGroup(group));
