@@ -801,7 +801,7 @@
               <compilerArg>-Xep:JUnit4SetUpNotRun:ERROR</compilerArg>
               <compilerArg>-Xep:JUnit4TearDownNotRun:ERROR</compilerArg>
               <compilerArg>-Xep:JUnit4TestNotRun:ERROR</compilerArg>
-              <compilerArg>-Xep:LongLiteralLowerCaseSuffix:OFF</compilerArg>  <!-- noisy -->
+              <compilerArg>-Xep:LongLiteralLowerCaseSuffix:ERROR</compilerArg>
               <compilerArg>-Xep:MisusedWeekYear:ERROR</compilerArg>
               <compilerArg>-Xep:NarrowingCompoundAssignment:ERROR</compilerArg>
               <compilerArg>-Xep:NonCanonicalStaticImport:ERROR</compilerArg>
