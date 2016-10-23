@@ -34,9 +34,9 @@ public class NoAclBucketListTest extends BaseGoogleCloudStorageParseTest<ListPag
 
    private Bucket item1 = Bucket.create("bhashbucket", // id
          "bhashbucket", // name
-         1082289308625l, // projectNumber
+         1082289308625L, // projectNumber
          new SimpleDateFormatDateService().iso8601DateParse("2014-06-02T19:19:41.112z"), // timeCreated
-         99l, // metageneration
+         99L, // metageneration
          null, // acl
          null, // defaultObjectAcl
          Owner.create("project-owners-1082289308625", null), // owner

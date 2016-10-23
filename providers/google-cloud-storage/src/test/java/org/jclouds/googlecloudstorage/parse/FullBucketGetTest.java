@@ -62,9 +62,9 @@ public class FullBucketGetTest extends BaseGoogleCloudStorageParseTest<Bucket> {
       return Bucket.create(
             "jcloudstestbucket3500", // id
             "jcloudstestbucket3500", // name
-            1082289308625l, // projectNumber
+            1082289308625L, // projectNumber
             new SimpleDateFormatDateService().iso8601DateParse("2014-06-19T14:03:22.345Z"), // timeCreated
-            10l, // metageneration
+            10L, // metageneration
             Arrays.asList(acl1), // acl
             Arrays.asList(defObjectAcl), // defaultObjectAcl
             Owner.create("project-owners-1082289308625", null), // owner
