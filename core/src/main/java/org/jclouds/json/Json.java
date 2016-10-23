@@ -16,6 +16,7 @@
  */
 package org.jclouds.json;
 
+import java.io.InputStream;
 import java.lang.reflect.Type;
 
 public interface Json {
@@ -42,5 +43,17 @@ public interface Json {
     * {@link #fromJson(Object, Type)}
     */
    <T> T fromJson(String json, Class<T> classOfT);
+   
+   /**
+    * Deserialize the generic object from json. If the object is not a generic type, use
+    * {@link #fromJson(Object, Class)}
+    */
+   <T> T fromJson(InputStream json, Type type);
+
+   /**
+    * Deserialize the object from json. If the object is a generic type, use
+    * {@link #fromJson(Object, Type)}
+    */
+   <T> T fromJson(InputStream json, Class<T> classOfT);
 
 }

@@ -30,7 +30,7 @@ public interface Payload extends Closeable {
    /**
     * Creates a new InputStream object of the payload.
     *
-    * @deprecated see openStream
+    * @deprecated see {@link Payload#openStream()}.
     */
    @Deprecated
    InputStream getInput();

@@ -30,7 +30,6 @@ import org.jclouds.http.HttpResponse;
 import org.jclouds.http.HttpResponseException;
 import org.jclouds.json.Json;
 import org.jclouds.logging.Logger;
-import org.jclouds.util.Strings2;
 
 import com.google.common.base.Function;
 import com.google.inject.TypeLiteral;
@@ -57,8 +56,8 @@ public class ParseJson<T> implements Function<HttpResponse, T> {
     * parses the http response body to create a new {@code <T>}.
     */
    public T apply(HttpResponse from) {
-      InputStream gson = from.getPayload().getInput();
       try {
+         InputStream gson = from.getPayload().openStream();
          return apply(gson);
       } catch (Exception e) {
          StringBuilder message = new StringBuilder();
@@ -80,7 +79,7 @@ public class ParseJson<T> implements Function<HttpResponse, T> {
    @SuppressWarnings("unchecked")
    public <V> V apply(InputStream stream, Type type) throws IOException {
       try {
-         return (V) json.fromJson(Strings2.toStringAndClose(stream), type);
+         return (V) json.fromJson(stream, type);
       } finally {
          if (stream != null)
             stream.close();

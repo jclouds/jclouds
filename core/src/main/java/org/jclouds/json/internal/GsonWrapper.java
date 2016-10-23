@@ -16,6 +16,11 @@
  */
 package org.jclouds.json.internal;
 
+import static org.jclouds.util.Closeables2.closeQuietly;
+
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
 import java.lang.reflect.Type;
 
 import javax.inject.Inject;
@@ -45,6 +50,27 @@ public class GsonWrapper extends ForwardingObject implements Json  {
    @Override
    public <T> T fromJson(String json, Class<T> classOfT) {
       return gson.fromJson(json, classOfT);
+   }
+   
+   @SuppressWarnings("unchecked")
+   @Override
+   public <T> T fromJson(InputStream json, Type type) {
+      Reader reader = new InputStreamReader(json);
+      try {
+         return (T) gson.fromJson(reader, type);
+      } finally {
+         closeQuietly(reader);
+      }
+   }
+
+   @Override
+   public <T> T fromJson(InputStream json, Class<T> classOfT) {
+      Reader reader = new InputStreamReader(json);
+      try {
+         return gson.fromJson(reader, classOfT);
+      } finally {
+         closeQuietly(reader);
+      }
    }
 
    @Override
