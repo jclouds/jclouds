@@ -73,7 +73,7 @@ public class ReceiveMessageResponseHandler extends ParseSax.HandlerForGeneratedR
    }
 
    @Override
-   public void characters(char ch[], int start, int length) {
+   public void characters(char[] ch, int start, int length) {
       if (inMessages) {
          messageHandler.characters(ch, start, length);
       }

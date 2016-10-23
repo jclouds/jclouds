@@ -76,7 +76,7 @@ public class ListAlarmHistoryResponseHandler
    }
 
    @Override
-   public void characters(char ch[], int start, int length) {
+   public void characters(char[] ch, int start, int length) {
       if (inAlarmHistoryItems) {
          alarmHistoryItemHandler.characters(ch, start, length);
       } else {

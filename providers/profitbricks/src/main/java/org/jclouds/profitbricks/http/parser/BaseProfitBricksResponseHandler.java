@@ -28,7 +28,7 @@ public abstract class BaseProfitBricksResponseHandler<T> extends ParseSax.Handle
    }
 
    @Override
-   public void characters(char ch[], int start, int length) {
+   public void characters(char[] ch, int start, int length) {
       strBuilder.append(ch, start, length);
    }
 

@@ -75,7 +75,7 @@ public class CreateHostedZoneResponseHandler extends ParseSax.HandlerForGenerate
    }
 
    @Override
-   public void characters(char ch[], int start, int length) {
+   public void characters(char[] ch, int start, int length) {
       if (inChange) {
          changeHandler.characters(ch, start, length);
       } else {

@@ -91,7 +91,7 @@ public class BatchResponseHandler<V> extends ParseSax.HandlerForGeneratedRequest
    }
 
    @Override
-   public void characters(char ch[], int start, int length) throws SAXException {
+   public void characters(char[] ch, int start, int length) throws SAXException {
       if (inResult) {
          resultHandler.characters(ch, start, length);
       } else if (inError) {

@@ -69,7 +69,7 @@ public class TagHandler extends ParseSax.HandlerForGeneratedRequestWithResult<Ta
     * {@inheritDoc}
     */
    @Override
-   public void characters(char ch[], int start, int length) {
+   public void characters(char[] ch, int start, int length) {
       currentText.append(ch, start, length);
    }
 }

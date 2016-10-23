@@ -63,7 +63,7 @@ public class DescribeVolumesResponseHandler extends ParseSax.HandlerWithResult<S
       }
    }
 
-   public void characters(char ch[], int start, int length) {
+   public void characters(char[] ch, int start, int length) {
       volumeHandler.characters(ch, start, length);
    }
 

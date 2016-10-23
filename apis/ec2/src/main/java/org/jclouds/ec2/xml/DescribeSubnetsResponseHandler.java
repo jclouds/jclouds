@@ -78,7 +78,7 @@ public class DescribeSubnetsResponseHandler extends
    }
 
    @Override
-   public void characters(char ch[], int start, int length) {
+   public void characters(char[] ch, int start, int length) {
       if (inSubnetSet) {
          subnetHandler.characters(ch, start, length);
       } else {

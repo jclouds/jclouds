@@ -169,7 +169,7 @@ public class MetricAlarmHandler extends ParseSax.HandlerForGeneratedRequestWithR
    }
 
    @Override
-   public void characters(char ch[], int start, int length) {
+   public void characters(char[] ch, int start, int length) {
       if (inDimensions) {
          dimensionHandler.characters(ch, start, length);
       } else {

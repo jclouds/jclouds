@@ -165,7 +165,7 @@ public class BaseVirtualSystemHandler<T extends BaseVirtualSystem<T>, B extends 
    }
 
    @Override
-   public void characters(char ch[], int start, int length) {
+   public void characters(char[] ch, int start, int length) {
       if (inHardware) {
          hardwareHandler.characters(ch, start, length);
       } else if (inOs) {

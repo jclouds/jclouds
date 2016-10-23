@@ -66,7 +66,7 @@ public class AWSDescribeInstancesResponseHandler extends
    }
 
    @Override
-   public void characters(char ch[], int start, int length) {
+   public void characters(char[] ch, int start, int length) {
       if (inTagSet) {
          tagSetHandler.characters(ch, start, length);
       } else {

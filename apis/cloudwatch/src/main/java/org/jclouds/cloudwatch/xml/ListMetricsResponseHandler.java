@@ -91,7 +91,7 @@ public class ListMetricsResponseHandler extends ParseSax.HandlerForGeneratedRequ
     * {@inheritDoc}
     */
    @Override
-   public void characters(char ch[], int start, int length) {
+   public void characters(char[] ch, int start, int length) {
       if (inMetrics) {
          metricHandler.characters(ch, start, length);
       } else {

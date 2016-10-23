@@ -75,7 +75,7 @@ public class GetMetricStatisticsResponseHandlerV2 extends ParseSax.HandlerWithRe
       currentText.setLength(0);
    }
 
-   public void characters(char ch[], int start, int length) {
+   public void characters(char[] ch, int start, int length) {
       if (inDatapoints) {
          datapointHandler.characters(ch, start, length);
       } else {

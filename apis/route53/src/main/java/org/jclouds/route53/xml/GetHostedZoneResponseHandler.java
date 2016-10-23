@@ -86,7 +86,7 @@ public class GetHostedZoneResponseHandler extends ParseSax.HandlerForGeneratedRe
    }
 
    @Override
-   public void characters(char ch[], int start, int length) {
+   public void characters(char[] ch, int start, int length) {
       if (inHostedZone) {
          zoneHandler.characters(ch, start, length);
       } else {

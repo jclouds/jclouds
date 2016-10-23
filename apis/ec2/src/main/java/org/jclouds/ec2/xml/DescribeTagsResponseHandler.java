@@ -86,7 +86,7 @@ public class DescribeTagsResponseHandler extends ParseSax.HandlerForGeneratedReq
     * {@inheritDoc}
     */
    @Override
-   public void characters(char ch[], int start, int length) {
+   public void characters(char[] ch, int start, int length) {
       if (inTags) {
          tagHander.characters(ch, start, length);
       } else {

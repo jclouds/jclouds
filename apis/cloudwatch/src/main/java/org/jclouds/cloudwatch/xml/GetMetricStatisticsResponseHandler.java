@@ -54,7 +54,7 @@ public class GetMetricStatisticsResponseHandler extends ParseSax.HandlerWithResu
       }
    }
 
-   public void characters(char ch[], int start, int length) {
+   public void characters(char[] ch, int start, int length) {
       datapointHandler.characters(ch, start, length);
    }
 

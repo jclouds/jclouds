@@ -123,7 +123,7 @@ public final class ListMultipartUploadsHandler extends ParseSax.HandlerWithResul
       }
    }
 
-   public void characters(char ch[], int start, int length) {
+   public void characters(char[] ch, int start, int length) {
       currentText.append(ch, start, length);
    }
 }

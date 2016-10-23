@@ -66,7 +66,7 @@ public class TaskListHandler extends ParseSax.HandlerForGeneratedRequestWithResu
    }
 
    @Override
-   public void characters(char ch[], int start, int length) {
+   public void characters(char[] ch, int start, int length) {
       if (inTask) {
          taskHandler.characters(ch, start, length);
       }

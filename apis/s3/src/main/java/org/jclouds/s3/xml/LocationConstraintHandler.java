@@ -78,7 +78,7 @@ public class LocationConstraintHandler extends ParseSax.HandlerWithResult<String
       return v;
    }
 
-   public void characters(char ch[], int start, int length) {
+   public void characters(char[] ch, int start, int length) {
       currentText.append(ch, start, length);
    }
 }

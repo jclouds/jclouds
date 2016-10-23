@@ -65,7 +65,7 @@ public class DescribePlacementGroupsResponseHandler extends
       bundleTaskHandler.endElement(uri, localName, qName);
    }
 
-   public void characters(char ch[], int start, int length) {
+   public void characters(char[] ch, int start, int length) {
       bundleTaskHandler.characters(ch, start, length);
    }
 

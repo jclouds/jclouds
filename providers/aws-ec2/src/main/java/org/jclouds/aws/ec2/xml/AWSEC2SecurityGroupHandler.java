@@ -128,7 +128,7 @@ public class AWSEC2SecurityGroupHandler extends HandlerForGeneratedRequestWithRe
     * {@inheritDoc}
     */
    @Override
-   public void characters(char ch[], int start, int length) {
+   public void characters(char[] ch, int start, int length) {
       if (inIpPermissions) {
          ipPermissionHandler.characters(ch, start, length);
       } else {

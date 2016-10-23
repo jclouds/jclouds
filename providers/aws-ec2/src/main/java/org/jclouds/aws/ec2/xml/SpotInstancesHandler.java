@@ -70,7 +70,7 @@ public class SpotInstancesHandler extends ParseSax.HandlerWithResult<Set<SpotIns
          spotRequestHandler.endElement(uri, localName, qName);
    }
 
-   public void characters(char ch[], int start, int length) {
+   public void characters(char[] ch, int start, int length) {
       if (itemDepth >= 1)
          spotRequestHandler.characters(ch, start, length);
    }

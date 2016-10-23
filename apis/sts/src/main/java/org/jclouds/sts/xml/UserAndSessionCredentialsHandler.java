@@ -87,7 +87,7 @@ public class UserAndSessionCredentialsHandler extends ParseSax.HandlerForGenerat
    }
 
    @Override
-   public void characters(char ch[], int start, int length) {
+   public void characters(char[] ch, int start, int length) {
       if (inCreds) {
          credsHandler.characters(ch, start, length);
       } else {

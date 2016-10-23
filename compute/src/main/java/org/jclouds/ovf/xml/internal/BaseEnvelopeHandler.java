@@ -155,7 +155,7 @@ public class BaseEnvelopeHandler<V extends BaseVirtualSystem<V>, B extends BaseV
    }
 
    @Override
-   public void characters(char ch[], int start, int length) {
+   public void characters(char[] ch, int start, int length) {
       if (inDisk) {
          diskHandler.characters(ch, start, length);
       } else if (inNetwork) {

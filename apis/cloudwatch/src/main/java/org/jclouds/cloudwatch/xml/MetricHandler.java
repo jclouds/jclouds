@@ -103,7 +103,7 @@ public class MetricHandler extends ParseSax.HandlerForGeneratedRequestWithResult
     * {@inheritDoc}
     */
    @Override
-   public void characters(char ch[], int start, int length) {
+   public void characters(char[] ch, int start, int length) {
       if (inDimensions) {
          dimensionHandler.characters(ch, start, length);
       } else {

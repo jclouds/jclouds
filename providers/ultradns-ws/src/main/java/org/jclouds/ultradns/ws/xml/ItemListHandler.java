@@ -45,7 +45,7 @@ public class ItemListHandler extends ParseSax.HandlerForGeneratedRequestWithResu
    }
 
    @Override
-   public void characters(char ch[], int start, int length) {
+   public void characters(char[] ch, int start, int length) {
       currentText.append(ch, start, length);
    }
 }

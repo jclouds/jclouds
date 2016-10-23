@@ -165,7 +165,7 @@ public class CreateVolumeResponseHandler extends ParseSax.HandlerForGeneratedReq
       return volume;
    }
 
-   public void characters(char ch[], int start, int length) {
+   public void characters(char[] ch, int start, int length) {
       currentText.append(ch, start, length);
    }
 

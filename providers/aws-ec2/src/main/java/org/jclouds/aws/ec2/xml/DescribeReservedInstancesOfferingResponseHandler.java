@@ -64,7 +64,7 @@ public class DescribeReservedInstancesOfferingResponseHandler extends
       reservedInstancesOffering.endElement(uri, localName, qName);
    }
 
-   public void characters(char ch[], int start, int length) {
+   public void characters(char[] ch, int start, int length) {
       reservedInstancesOffering.characters(ch, start, length);
    }
 

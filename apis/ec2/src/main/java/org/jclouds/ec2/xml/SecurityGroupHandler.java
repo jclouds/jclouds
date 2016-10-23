@@ -129,7 +129,7 @@ public class SecurityGroupHandler extends ParseSax.HandlerForGeneratedRequestWit
     * {@inheritDoc}
     */
    @Override
-   public void characters(char ch[], int start, int length) {
+   public void characters(char[] ch, int start, int length) {
       if (inIpPermissions) {
          ipPermissionHandler.characters(ch, start, length);
       } else {

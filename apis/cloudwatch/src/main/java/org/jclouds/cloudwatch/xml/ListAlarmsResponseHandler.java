@@ -76,7 +76,7 @@ public class ListAlarmsResponseHandler
    }
 
    @Override
-   public void characters(char ch[], int start, int length) {
+   public void characters(char[] ch, int start, int length) {
       if (inMetricAlarms) {
          metricAlarmHandler.characters(ch, start, length);
       } else {

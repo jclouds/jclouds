@@ -114,7 +114,7 @@ public class DescribeSecurityGroupsResponseHandler extends
     * {@inheritDoc}
     */
    @Override
-   public void characters(char ch[], int start, int length) {
+   public void characters(char[] ch, int start, int length) {
       if (inSecurityGroupInfo) {
          securityGroupHandler.characters(ch, start, length);
       } else {

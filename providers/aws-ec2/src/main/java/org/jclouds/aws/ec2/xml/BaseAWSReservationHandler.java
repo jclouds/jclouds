@@ -225,7 +225,7 @@ public abstract class BaseAWSReservationHandler<T> extends HandlerForGeneratedRe
 
    protected abstract boolean endOfInstanceItem();
 
-   public void characters(char ch[], int start, int length) {
+   public void characters(char[] ch, int start, int length) {
       currentText.append(ch, start, length);
    }
 

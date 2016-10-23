@@ -93,7 +93,7 @@ public class DescribeAvailabilityZonesResponseHandler extends ParseSax.HandlerWi
       currentText.setLength(0);
    }
 
-   public void characters(char ch[], int start, int length) {
+   public void characters(char[] ch, int start, int length) {
       currentText.append(ch, start, length);
    }
 

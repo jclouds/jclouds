@@ -48,7 +48,7 @@ public class GetConsoleOutputResponseHandler extends ParseSax.HandlerWithResult<
     }
 
     @Override
-    public void characters(char ch[], int start, int length) {
+    public void characters(char[] ch, int start, int length) {
        currentText.append(ch, start, length);
     }
 }

@@ -169,7 +169,7 @@ public class SpotInstanceHandler extends ParseSax.HandlerForGeneratedRequestWith
    }
 
    @Override
-   public void characters(char ch[], int start, int length) {
+   public void characters(char[] ch, int start, int length) {
       if (inLaunchSpecification) {
          launchSpecificationHandler.characters(ch, start, length);
       } else if (inTagSet) {

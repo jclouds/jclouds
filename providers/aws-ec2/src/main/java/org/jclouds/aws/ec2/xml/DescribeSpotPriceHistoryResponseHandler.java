@@ -66,7 +66,7 @@ public class DescribeSpotPriceHistoryResponseHandler extends
       spotHandler.endElement(uri, localName, qName);
    }
 
-   public void characters(char ch[], int start, int length) {
+   public void characters(char[] ch, int start, int length) {
       spotHandler.characters(ch, start, length);
    }
 
