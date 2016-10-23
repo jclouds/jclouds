@@ -16,6 +16,7 @@
  */
 package org.jclouds.azurecompute.arm.features;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.jclouds.util.Predicates2.retry;
 import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertTrue;
@@ -120,15 +121,15 @@ public class VirtualMachineApiLiveTest extends BaseAzureComputeApiLiveTest {
       boolean jobDone = retry(new Predicate<String>() {
          @Override
          public boolean apply(String name) {
-            return !api().get(name).properties().provisioningState().equals("Creating");
+            return !api().get(name).properties().provisioningState().equals(VirtualMachineProperties.ProvisioningState.CREATING);
          }
       }, 60 * 20 * 1000).apply(vmName);
       assertTrue(jobDone, "create operation did not complete in the configured timeout");
 
       VirtualMachineProperties.ProvisioningState status = api().get(vmName).properties().provisioningState();
       // Cannot be creating anymore. Should be succeeded or running but not failed.
-      assertTrue(!status.equals("Creating"));
-      assertTrue(!status.equals("Failed"));
+      assertThat(status).isNotEqualTo(VirtualMachineProperties.ProvisioningState.CREATING);
+      assertThat(status).isNotEqualTo(VirtualMachineProperties.ProvisioningState.FAILED);
    }
 
    @Test(dependsOnMethods = "testCreate")
