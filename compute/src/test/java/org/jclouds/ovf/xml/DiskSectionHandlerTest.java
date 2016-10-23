@@ -44,9 +44,9 @@ public class DiskSectionHandlerTest {
       assertEquals(result.toString(), DiskSection.builder().info("Describes the set of virtual disks").disk(
                Disk.builder().id("vmdisk1")
 
-               .fileRef("file1").capacity(8589934592l).populatedSize(3549324972l).format(
+               .fileRef("file1").capacity(8589934592L).populatedSize(3549324972L).format(
                         URI.create("http://www.vmware.com/interfaces/specifications/vmdk.html#sparse")).build()).disk(
-               Disk.builder().id("vmdisk2").capacity(536870912l).build()).disk(
+               Disk.builder().id("vmdisk2").capacity(536870912L).build()).disk(
                Disk.builder().id("vmdisk3").capacityAllocationUnits("byte * 2^30").build())
 
       .build().toString()

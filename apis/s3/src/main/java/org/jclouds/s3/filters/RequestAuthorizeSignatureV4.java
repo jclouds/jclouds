@@ -84,7 +84,7 @@ public class RequestAuthorizeSignatureV4 implements RequestAuthorizeSignature {
          return false;
       }
 
-      return contentLength > 0l && !payload.isRepeatable();
+      return contentLength > 0L && !payload.isRepeatable();
    }
 
    protected HttpRequest signForAuthorizationHeader(HttpRequest request) {

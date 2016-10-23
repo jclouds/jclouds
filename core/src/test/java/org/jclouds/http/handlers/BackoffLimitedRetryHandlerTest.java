@@ -142,7 +142,7 @@ public class BackoffLimitedRetryHandlerTest {
       };
 
       response.setPayload(Payloads.newInputStreamPayload(inputStream));
-      response.getPayload().getContentMetadata().setContentLength(1l);
+      response.getPayload().getContentMetadata().setContentLength(1L);
       assertEquals(response.getPayload().openStream().available(), 2);
       assertEquals(response.getPayload().openStream().read(), 1);
 

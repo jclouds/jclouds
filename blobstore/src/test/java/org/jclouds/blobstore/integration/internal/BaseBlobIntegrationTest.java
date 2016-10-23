@@ -147,7 +147,7 @@ public class BaseBlobIntegrationTest extends BaseBlobStoreIntegrationTest {
 
             }));
          }
-         Map<Integer, Exception> exceptions = awaitCompletion(responses, exec, 30000l, Logger.CONSOLE,
+         Map<Integer, Exception> exceptions = awaitCompletion(responses, exec, 30000L, Logger.CONSOLE,
                   "putFileParallel");
          assert exceptions.size() == 0 : exceptions;
 
@@ -179,7 +179,7 @@ public class BaseBlobIntegrationTest extends BaseBlobStoreIntegrationTest {
                }
             }));
          }
-         Map<Integer, Exception> exceptions = awaitCompletion(responses, exec, 30000l, Logger.CONSOLE,
+         Map<Integer, Exception> exceptions = awaitCompletion(responses, exec, 30000L, Logger.CONSOLE,
                   "get constitution");
          if (!exceptions.isEmpty()) {
             throw exceptions.values().iterator().next();

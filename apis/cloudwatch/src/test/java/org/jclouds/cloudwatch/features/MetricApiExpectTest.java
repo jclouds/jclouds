@@ -156,11 +156,11 @@ public class MetricApiExpectTest extends BaseCloudWatchApiExpectTest {
    }
 
    GetMetricStatistics stats = GetMetricStatistics.builder()
-                                                  .endTime(new Date(10000000l))
+                                                  .endTime(new Date(10000000L))
                                                   .metricName(EC2Constants.MetricName.CPU_UTILIZATION)
                                                   .namespace(Namespaces.EC2)
                                                   .period(60)
-                                                  .startTime(new Date(10000000l))
+                                                  .startTime(new Date(10000000L))
                                                   .statistic(Statistics.MAXIMUM)
                                                   .statistic(Statistics.MINIMUM)
                                                   .unit(Unit.PERCENT).build();

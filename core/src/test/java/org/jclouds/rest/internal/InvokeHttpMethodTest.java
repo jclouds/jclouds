@@ -96,7 +96,7 @@ public class InvokeHttpMethodTest {
    }
 
    public void testMethodWithTimeoutRunsTimeLimiter() throws Exception {
-      expect(config.getTimeoutNanos(get)).andReturn(Optional.of(250000000l));
+      expect(config.getTimeoutNanos(get)).andReturn(Optional.of(250000000L));
       InvokeAndTransform invoke = invokeHttpMethod.new InvokeAndTransform("ns:get", getCommand);
       expect(timeLimiter.callWithTimeout(invoke, 250000000, TimeUnit.NANOSECONDS, true)).andReturn(response);
       replay(http, timeLimiter, fallback, config);
@@ -123,7 +123,7 @@ public class InvokeHttpMethodTest {
 
    public void testTimeLimitedRunsFallbackCreateOrPropagate() throws Exception {
       IllegalStateException exception = new IllegalStateException();
-      expect(config.getTimeoutNanos(get)).andReturn(Optional.of(250000000l));
+      expect(config.getTimeoutNanos(get)).andReturn(Optional.of(250000000L));
       InvokeAndTransform invoke = invokeHttpMethod.new InvokeAndTransform("ns:get", getCommand);
       expect(timeLimiter.callWithTimeout(invoke, 250000000, TimeUnit.NANOSECONDS, true)).andThrow(exception);
       expect(fallback.createOrPropagate(exception)).andReturn(fallbackResponse);

@@ -38,7 +38,7 @@ public class BindAzureBlobMetadataToRequestTest extends BaseRestAnnotationProces
    public void testPassWithMinimumDetailsAndPayload64MB() {
       AzureBlob blob = injector.getInstance(AzureBlob.Factory.class).create(null);
       Payload payload = Payloads.newStringPayload("");
-      payload.getContentMetadata().setContentLength(64 * 1024 * 1024l);
+      payload.getContentMetadata().setContentLength(64 * 1024 * 1024L);
       blob.setPayload(payload);
       blob.getProperties().setName("foo");
 
@@ -55,7 +55,7 @@ public class BindAzureBlobMetadataToRequestTest extends BaseRestAnnotationProces
    public void testExtendedPropertiesBind() {
       AzureBlob blob = injector.getInstance(AzureBlob.Factory.class).create(null);
       Payload payload = Payloads.newStringPayload("");
-      payload.getContentMetadata().setContentLength(64 * 1024 * 1024l);
+      payload.getContentMetadata().setContentLength(64 * 1024 * 1024L);
       blob.setPayload(payload);
       blob.getProperties().setName("foo");
       blob.getProperties().setMetadata(ImmutableMap.of("foo", "bar"));
@@ -87,7 +87,7 @@ public class BindAzureBlobMetadataToRequestTest extends BaseRestAnnotationProces
    public void testNoNameIsBad() {
       AzureBlob blob = injector.getInstance(AzureBlob.Factory.class).create(null);
       Payload payload = Payloads.newStringPayload("");
-      payload.getContentMetadata().setContentLength(5368709120000l);
+      payload.getContentMetadata().setContentLength(5368709120000L);
       blob.setPayload(payload);
 
       HttpRequest request = HttpRequest.builder().method("PUT").endpoint("http://localhost").build();
@@ -99,7 +99,7 @@ public class BindAzureBlobMetadataToRequestTest extends BaseRestAnnotationProces
    public void testOver64MBIsBad() {
       AzureBlob blob = injector.getInstance(AzureBlob.Factory.class).create(null);
       Payload payload = Payloads.newStringPayload("");
-      payload.getContentMetadata().setContentLength(64 * 1024 * 1024l + 1);
+      payload.getContentMetadata().setContentLength(64 * 1024 * 1024L + 1);
       blob.setPayload(payload);
       blob.getProperties().setName("foo");
 

@@ -42,7 +42,7 @@ public class AsyncJobApiTest extends BaseCloudStackApiTest<AsyncJobApi> {
 
    public void testGetAsyncJob() throws SecurityException, NoSuchMethodException, IOException {
       Invokable<?, ?> method = method(AsyncJobApi.class, "getAsyncJob", String.class);
-      GeneratedHttpRequest httpRequest = processor.createRequest(method, ImmutableList.<Object> of(11l));
+      GeneratedHttpRequest httpRequest = processor.createRequest(method, ImmutableList.<Object> of(11L));
 
       assertRequestLineEquals(httpRequest,
             "GET http://localhost:8080/client/api?response=json&command=queryAsyncJobResult&jobid=11 HTTP/1.1");

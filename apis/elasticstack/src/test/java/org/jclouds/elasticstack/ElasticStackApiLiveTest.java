@@ -69,7 +69,7 @@ public class ElasticStackApiLiveTest extends BaseComputeServiceContextLiveTest {
       provider = "elasticstack";
    }
 
-   protected long driveSize = 1 * 1024 * 1024 * 1024l;
+   protected long driveSize = 1 * 1024 * 1024 * 1024L;
    protected int maxDriveImageTime = 360;
    protected String vncPassword = "Il0veVNC";
    protected ElasticStackApi client;
@@ -167,10 +167,10 @@ public class ElasticStackApiLiveTest extends BaseComputeServiceContextLiveTest {
       assertEquals(drive.getSize(), driveSize);
       assertEquals(drive.getStatus(), DriveStatus.ACTIVE);
       // for some reason, these occasionally return as 4096,1
-      // assertEquals(info.getReadBytes(), 0l);
-      // assertEquals(info.getWriteBytes(), 0l);
-      // assertEquals(info.getReadRequests(), 0l);
-      // assertEquals(info.getWriteRequests(), 0l);
+      // assertEquals(info.getReadBytes(), 0L);
+      // assertEquals(info.getWriteBytes(), 0L);
+      // assertEquals(info.getReadRequests(), 0L);
+      // assertEquals(info.getWriteRequests(), 0L);
       assertEquals(drive.getEncryptionCipher(), "aes-xts-plain");
    }
 
@@ -326,7 +326,7 @@ public class ElasticStackApiLiveTest extends BaseComputeServiceContextLiveTest {
    private DriveInfo drive3;
 
    public void testWeCanReadAndWriteToDrive() throws IOException {
-      drive2 = client.createDrive(new CreateDriveRequest.Builder().name(prefix + "2").size(1 * 1024 * 1024l).build());
+      drive2 = client.createDrive(new CreateDriveRequest.Builder().name(prefix + "2").size(1 * 1024 * 1024L).build());
       client.writeDrive(drive2.getUuid(), Payloads.newStringPayload("foo"));
       assertEquals(Strings2.toStringAndClose(client.readDrive(drive2.getUuid(), 0, 3).openStream()), "foo");
    }
@@ -335,7 +335,7 @@ public class ElasticStackApiLiveTest extends BaseComputeServiceContextLiveTest {
    public void testWeCopyADriveContentsViaGzip() throws IOException {
       try {
          drive3 = client
-                  .createDrive(new CreateDriveRequest.Builder().name(prefix + "3").size(1 * 1024 * 1024l).build());
+                  .createDrive(new CreateDriveRequest.Builder().name(prefix + "3").size(1 * 1024 * 1024L).build());
          System.err.println("before image; drive 2" + client.getDriveInfo(drive2.getUuid()));
          System.err.println("before image; drive 3" + client.getDriveInfo(drive3.getUuid()));
          client.imageDrive(drive2.getUuid(), drive3.getUuid());

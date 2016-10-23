@@ -46,8 +46,8 @@ public class PredicateLocateImageByNameTest {
          "1.3.1", // dockerVersion
          "x86_64", // architecture
          "os", // os
-         0l, // size
-         0l, // virtualSize
+         0L, // size
+         0L, // virtualSize
          ImmutableList.<String> of("kwart/alpine-ext:3.3-ssh", "kwart/alpine-ext:latest", "my-tag:latestdock") // repoTags
    );
 
@@ -59,8 +59,8 @@ public class PredicateLocateImageByNameTest {
          "1.3.1", // dockerVersion
          "x86_64", // architecture
          "os", // os
-         0l, // size
-         0l, // virtualSize
+         0L, // size
+         0L, // virtualSize
          ImmutableList.<String> of() // repoTags
    );
 
@@ -72,8 +72,8 @@ public class PredicateLocateImageByNameTest {
          "1.3.1", // dockerVersion
          "x86_64", // architecture
          "os", // os
-         0l, // size
-         0l, // virtualSize
+         0L, // size
+         0L, // virtualSize
          ImmutableList.<String> of("docker.io/kwart/alpine-ext:3.3-ssh", "docker.io/kwart/alpine-ext:latest") // repoTags
    );
 

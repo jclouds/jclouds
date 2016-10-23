@@ -63,7 +63,7 @@ public class ContainerApiMockTest extends BaseDockerMockTest {
       }
    }
 
-   @Test(timeOut = 10000l)
+   @Test(timeOut = 10000L)
    public void testListAllContainers() throws Exception {
       MockWebServer server = mockWebServer(new MockResponse().setBody(payloadFromResource("/containers.json")));
       ContainerApi api = api(DockerApi.class, server.getUrl("/").toString()).getContainerApi();

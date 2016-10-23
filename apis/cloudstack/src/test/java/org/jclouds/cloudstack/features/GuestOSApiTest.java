@@ -44,7 +44,7 @@ public class GuestOSApiTest extends BaseCloudStackApiTest<GuestOSApi> {
 
    public void testGetOSCategory() throws SecurityException, NoSuchMethodException, IOException {
       Invokable<?, ?> method = method(GuestOSApi.class, "getOSCategory", String.class);
-      GeneratedHttpRequest httpRequest = processor.createRequest(method, ImmutableList.<Object> of(11l));
+      GeneratedHttpRequest httpRequest = processor.createRequest(method, ImmutableList.<Object> of(11L));
 
       assertRequestLineEquals(httpRequest,
             "GET http://localhost:8080/client/api?response=json&command=listOsCategories&listAll=true&id=11 HTTP/1.1");
@@ -78,7 +78,7 @@ public class GuestOSApiTest extends BaseCloudStackApiTest<GuestOSApi> {
 
    public void testGetOSType() throws SecurityException, NoSuchMethodException, IOException {
       Invokable<?, ?> method = method(GuestOSApi.class, "getOSType", String.class);
-      GeneratedHttpRequest httpRequest = processor.createRequest(method, ImmutableList.<Object> of(11l));
+      GeneratedHttpRequest httpRequest = processor.createRequest(method, ImmutableList.<Object> of(11L));
 
       assertRequestLineEquals(httpRequest,
             "GET http://localhost:8080/client/api?response=json&command=listOsTypes&listAll=true&id=11 HTTP/1.1");

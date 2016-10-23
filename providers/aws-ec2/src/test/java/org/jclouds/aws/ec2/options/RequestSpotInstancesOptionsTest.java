@@ -104,7 +104,7 @@ public class RequestSpotInstancesOptionsTest {
             ImmutableList.of("1970-05-23T21:21:18Z"));
    }
 
-   Date test = new Date(12345678910l);
+   Date test = new Date(12345678910L);
 
    @Test
    public void testFromStatic() {

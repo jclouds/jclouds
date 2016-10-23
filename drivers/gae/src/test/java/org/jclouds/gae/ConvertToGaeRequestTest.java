@@ -120,7 +120,7 @@ public class ConvertToGaeRequestTest {
                                        .method(HttpMethod.GET)
                                        .endpoint(endPoint)
                                        .payload(Strings2.toInputStream("hoot!")).build();
-      request.getPayload().getContentMetadata().setContentLength(5l);
+      request.getPayload().getContentMetadata().setContentLength(5L);
       testHoot(request);
    }
 

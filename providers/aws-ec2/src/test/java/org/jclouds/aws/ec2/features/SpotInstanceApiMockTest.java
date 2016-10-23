@@ -109,8 +109,8 @@ import com.squareup.okhttp.mockwebserver.MockResponse;
          enqueueRegions(DEFAULT_REGION);
          enqueueXml(DEFAULT_REGION, "/describe_spot_price_history.xml");
 
-         Date from = new Date(12345678910l);
-         Date to = new Date(1234567891011l);
+         Date from = new Date(12345678910L);
+         Date to = new Date(1234567891011L);
 
          Set<Spot> result = spotApi().describeSpotPriceHistoryInRegion(DEFAULT_REGION,
                from(from).to(to).productDescription("description").instanceType("m1.small"));

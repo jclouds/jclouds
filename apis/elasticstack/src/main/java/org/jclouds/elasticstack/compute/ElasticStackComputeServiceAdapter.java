@@ -104,7 +104,7 @@ public class ElasticStackComputeServiceAdapter implements
 
    @Override
    public NodeAndInitialCredentials<ServerInfo> createNodeWithGroupEncodedIntoName(String tag, String name, Template template) {
-      long bootSize = (long) (template.getHardware().getVolumes().get(0).getSize() * 1024 * 1024 * 1024l);
+      long bootSize = (long) (template.getHardware().getVolumes().get(0).getSize() * 1024 * 1024 * 1024L);
 
       logger.debug(">> creating boot drive bytes(%d)", bootSize);
       DriveInfo drive = client

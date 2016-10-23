@@ -44,7 +44,7 @@ public class GetRecordResponseTest extends BaseDynECTParseTest<Record<Map<String
                    .zone("adrianc.zone.dynecttest.jclouds.org")
                    .fqdn("adrianc.zone.dynecttest.jclouds.org")
                    .type("SOA")
-                   .id(50976579l)
+                   .id(50976579L)
                    .ttl(3600)
                    // TODO: default parse to unsigned
                    .rdata(ImmutableMap.<String, Object> builder()

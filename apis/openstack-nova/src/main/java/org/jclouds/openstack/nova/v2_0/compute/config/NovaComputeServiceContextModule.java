@@ -201,7 +201,7 @@ public class NovaComputeServiceContextModule extends
    protected final Predicate<AtomicReference<RegionAndName>> securityGroupEventualConsistencyDelay(
             FindSecurityGroupWithNameAndReturnTrue in,
             @Named(TIMEOUT_SECURITYGROUP_PRESENT) long msDelay) {
-      return retry(in, msDelay, 100l, MILLISECONDS);
+      return retry(in, msDelay, 100L, MILLISECONDS);
    }
 
    @Provides

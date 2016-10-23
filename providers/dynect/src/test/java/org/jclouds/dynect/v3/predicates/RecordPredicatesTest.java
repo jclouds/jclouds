@@ -28,7 +28,7 @@ public class RecordPredicatesTest {
                                .zone("adrianc.zone.dynecttest.jclouds.org")
                                .fqdn("adrianc.zone.dynecttest.jclouds.org")
                                .type("SOA")
-                               .id(50976579l).build();
+                               .id(50976579L).build();
 
    @Test
    public void testTypeEqualsWhenEqual() {

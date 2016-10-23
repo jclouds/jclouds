@@ -99,7 +99,7 @@ public class DateServiceDateCodecFactoryTest {
       Date date = new Date(1000);
       assertEquals(iso8601SecondsCodec.toDate(iso8601SecondsCodec.toString(date)), date);
 
-      assertEquals(iso8601SecondsCodec.toDate("2012-11-14T21:51:28UTC").getTime(), 1352929888000l);
+      assertEquals(iso8601SecondsCodec.toDate("2012-11-14T21:51:28UTC").getTime(), 1352929888000L);
    }
 
    @Test

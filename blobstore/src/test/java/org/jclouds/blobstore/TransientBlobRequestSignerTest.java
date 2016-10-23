@@ -75,7 +75,7 @@ public class TransientBlobRequestSignerTest extends BaseRestAnnotationProcessing
    public void testSignPutBlob() throws ArrayIndexOutOfBoundsException, SecurityException, IllegalArgumentException,
             NoSuchMethodException, IOException {
       HashCode hashCode = HashCode.fromBytes(new byte[16]);
-      Blob blob = blobFactory.get().name(blobName).forSigning().contentLength(2l).contentMD5(hashCode)
+      Blob blob = blobFactory.get().name(blobName).forSigning().contentLength(2L).contentMD5(hashCode)
                .contentType("text/plain").build();
 
       assertEquals(blob.getPayload().getContentMetadata().getContentMD5AsHashCode(), hashCode);

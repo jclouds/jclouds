@@ -58,7 +58,7 @@ public class ParseSystemAndUserMetadataFromHeadersTest {
                                       .payload("")
                                       .addHeader(HttpHeaders.LAST_MODIFIED, "Wed, 09 Sep 2009 19:50:23 GMT").build(); 
       from.getPayload().getContentMetadata().setContentType(MediaType.APPLICATION_JSON);
-      from.getPayload().getContentMetadata().setContentLength(100l);
+      from.getPayload().getContentMetadata().setContentLength(100L);
       BlobMetadata metadata = parser.apply(from);
       assertEquals(metadata.getName(), "key");
    }

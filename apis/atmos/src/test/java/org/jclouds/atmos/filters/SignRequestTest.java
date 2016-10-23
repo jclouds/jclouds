@@ -120,7 +120,7 @@ public class SignRequestTest {
                                        .endpoint("http://localhost/rest/objects")
                                        .headers(headers).build();
       request.setPayload("");
-      request.getPayload().getContentMetadata().setContentLength(4286l);
+      request.getPayload().getContentMetadata().setContentLength(4286L);
       request.getPayload().getContentMetadata().setContentType(MediaType.APPLICATION_OCTET_STREAM);
       return request;
    }

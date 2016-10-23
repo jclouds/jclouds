@@ -38,7 +38,7 @@ public class ParseSystemMetadataFromHeadersTest {
          dateService.iso8601SecondsDateParse("2009-10-19T04:37:00Z"), "rootr",
          dateService.iso8601SecondsDateParse("2009-10-12T16:09:42Z"),
          dateService.iso8601SecondsDateParse("2009-10-19T04:37:00Z"), 1,
-         "4980cdb2b010109b04a44f7bb83f5f04ad354c638ae5", "e913e09366364e9ba384b8fead643d43", "default", 4096l,
+         "4980cdb2b010109b04a44f7bb83f5f04ad354c638ae5", "e913e09366364e9ba384b8fead643d43", "default", 4096L,
          FileType.DIRECTORY, "root"
 
    );

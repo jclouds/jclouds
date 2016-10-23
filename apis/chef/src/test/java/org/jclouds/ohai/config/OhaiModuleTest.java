@@ -66,7 +66,7 @@ public class OhaiModuleTest {
       }, new ChefParserModule(), new GsonModule(), new OhaiModule() {
          @Override
          protected Long millis() {
-            return 127999291932529l;
+            return 127999291932529L;
          }
 
          @Override
@@ -100,7 +100,7 @@ public class OhaiModuleTest {
       }, new ChefParserModule(), new GsonModule(), new OhaiModule() {
          @Override
          protected Long millis() {
-            return 1279992919l;
+            return 1279992919L;
          }
 
          @Override

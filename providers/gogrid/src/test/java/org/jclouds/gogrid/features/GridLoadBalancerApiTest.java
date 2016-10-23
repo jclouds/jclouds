@@ -106,7 +106,7 @@ public class GridLoadBalancerApiTest extends BaseGoGridApiTest<GridLoadBalancerA
    @Test
    public void testEditLoadBalancer() throws NoSuchMethodException, IOException {
       Invokable<?, ?> method = method(GridLoadBalancerApi.class, "editLoadBalancer", long.class, List.class);
-      GeneratedHttpRequest httpRequest = processor.createRequest(method, ImmutableList.<Object> of(1l, ImmutableList.of(
+      GeneratedHttpRequest httpRequest = processor.createRequest(method, ImmutableList.<Object> of(1L, ImmutableList.of(
             IpPortPair.builder().ip(Ip.builder().ip("127.0.0.1").build()).port(8080).build(),
             IpPortPair.builder().ip(Ip.builder().ip("127.0.0.1").build()).port(9090).build())));
 

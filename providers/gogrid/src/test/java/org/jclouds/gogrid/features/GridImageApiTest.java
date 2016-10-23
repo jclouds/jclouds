@@ -141,7 +141,7 @@ public class GridImageApiTest extends BaseGoGridApiTest<GridImageApi> {
    @Test
    public void testDeleteById() throws NoSuchMethodException, IOException {
       Invokable<?, ?> method = method(GridImageApi.class, "deleteById", long.class);
-      GeneratedHttpRequest httpRequest = processor.createRequest(method, ImmutableList.<Object> of(11l));
+      GeneratedHttpRequest httpRequest = processor.createRequest(method, ImmutableList.<Object> of(11L));
 
       assertRequestLineEquals(httpRequest, "GET https://api.gogrid.com/api/grid/image/delete?v=1.5&id=11 HTTP/1.1");
       assertNonPayloadHeadersEqual(httpRequest, "");

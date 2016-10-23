@@ -50,7 +50,7 @@ public class ParseServerListTest extends BaseSetParserTest<Server> {
    @Override
    @SelectJson("list")
    public Set<Server> expected() {
-      Option dc = Option.createWithIdNameAndDescription(1l, "US-West-1", "US West 1 Datacenter");
+      Option dc = Option.createWithIdNameAndDescription(1L, "US-West-1", "US West 1 Datacenter");
       Option centOs = Option.createWithIdNameAndDescription(13L, "CentOS 5.2 (32-bit)", "CentOS 5.2 (32-bit)");
       Option webServer = Option.createWithIdNameAndDescription(1L, "Web Server", "Web or Application Server");
       return ImmutableSet.of(Server.builder().id(75245L).datacenter(dc).name("PowerServer").description("server to test the api. created by Alex")

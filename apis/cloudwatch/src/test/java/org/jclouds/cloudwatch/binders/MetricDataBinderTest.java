@@ -77,7 +77,7 @@ public class MetricDataBinderTest {
                                            .dimension(new Dimension("TestDimension", "FAKE"))
                                            .dimension(new Dimension("TestDimension2", "FAKE2"))
                                            .unit(Unit.COUNT)
-                                           .timestamp(new Date(10000000l))
+                                           .timestamp(new Date(10000000L))
                                            .value(5.0)
                                            .build();
 
@@ -107,14 +107,14 @@ public class MetricDataBinderTest {
                                            .dimension(new Dimension("TestDimension", "FAKE"))
                                            .dimension(new Dimension("TestDimension2", "FAKE2"))
                                            .unit(Unit.COUNT)
-                                           .timestamp(new Date(10000000l))
+                                           .timestamp(new Date(10000000L))
                                            .value(2.0)
                                            .build();
       MetricDatum metricDatum2 = MetricDatum.builder()
                                            .metricName("TestMetricName")
                                            .dimension(new Dimension("TestDimension", "FAKE"))
                                            .unit(Unit.COUNT)
-                                           .timestamp(new Date(10000000l))
+                                           .timestamp(new Date(10000000L))
                                            .value(5.0)
                                            .build();
 

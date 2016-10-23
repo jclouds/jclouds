@@ -51,7 +51,7 @@ public class JMXTest {
 
       final RuntimeMXBean runtime = createMock(RuntimeMXBean.class);
 
-      expect(runtime.getUptime()).andReturn(69876000l);
+      expect(runtime.getUptime()).andReturn(69876000L);
 
       replay(runtime);
 

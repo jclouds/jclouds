@@ -48,7 +48,7 @@ public class MapToQueueAttributesTest {
                             .approximateNumberOfMessages(0)
                             .approximateNumberOfMessagesNotVisible(0)
                             .approximateNumberOfMessagesDelayed(0)
-                            .createdTimestamp(new Date(1347566436l))
+                            .createdTimestamp(new Date(1347566436L))
                             .lastModifiedTimestamp(new Date(1347566436))
                             .visibilityTimeout(30)
                             .maximumMessageSize(65536)

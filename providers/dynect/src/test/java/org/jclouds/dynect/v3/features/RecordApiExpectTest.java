@@ -66,7 +66,7 @@ public class RecordApiExpectTest extends BaseDynECTApiExpectTest {
                             .zone("jclouds.org")
                             .fqdn("jclouds.org")
                             .type("SOA")
-                            .id(50976579l).build();
+                            .id(50976579L).build();
 
    public void testGetWhenResponseIs2xx() {
       DynECTApi success = requestsSendResponses(createSession, createSessionResponse, getSOA, soaResponse);
@@ -92,7 +92,7 @@ public class RecordApiExpectTest extends BaseDynECTApiExpectTest {
         .zone("jclouds.org")
         .fqdn("jclouds.org")
         .type("AAAA")
-        .id(50976579l).build();
+        .id(50976579L).build();
 
    public void testGetAAAAWhenResponseIs2xx() {
       DynECTApi success = requestsSendResponses(createSession, createSessionResponse, getAAAA, aaaaResponse);
@@ -118,7 +118,7 @@ public class RecordApiExpectTest extends BaseDynECTApiExpectTest {
         .zone("jclouds.org")
         .fqdn("jclouds.org")
         .type("A")
-        .id(50976579l).build();
+        .id(50976579L).build();
 
    public void testGetAWhenResponseIs2xx() {
       DynECTApi success = requestsSendResponses(createSession, createSessionResponse, getA, aResponse);
@@ -144,7 +144,7 @@ public class RecordApiExpectTest extends BaseDynECTApiExpectTest {
         .zone("jclouds.org")
         .fqdn("jclouds.org")
         .type("CNAME")
-        .id(50976579l).build();
+        .id(50976579L).build();
 
    public void testGetCNAMEWhenResponseIs2xx() {
       DynECTApi success = requestsSendResponses(createSession, createSessionResponse, getCNAME, cnameResponse);
@@ -170,7 +170,7 @@ public class RecordApiExpectTest extends BaseDynECTApiExpectTest {
         .zone("jclouds.org")
         .fqdn("jclouds.org")
         .type("MX")
-        .id(50976579l).build();
+        .id(50976579L).build();
 
    public void testGetMXWhenResponseIs2xx() {
       DynECTApi success = requestsSendResponses(createSession, createSessionResponse, getMX, mxResponse);
@@ -196,7 +196,7 @@ public class RecordApiExpectTest extends BaseDynECTApiExpectTest {
         .zone("jclouds.org")
         .fqdn("jclouds.org")
         .type("NS")
-        .id(50976579l).build();
+        .id(50976579L).build();
 
    public void testGetNSWhenResponseIs2xx() {
       DynECTApi success = requestsSendResponses(createSession, createSessionResponse, getNS, nsResponse);
@@ -222,7 +222,7 @@ public class RecordApiExpectTest extends BaseDynECTApiExpectTest {
         .zone("jclouds.org")
         .fqdn("jclouds.org")
         .type("PTR")
-        .id(50976579l).build();
+        .id(50976579L).build();
 
    public void testGetPTRWhenResponseIs2xx() {
       DynECTApi success = requestsSendResponses(createSession, createSessionResponse, getPTR, ptrResponse);
@@ -259,7 +259,7 @@ public class RecordApiExpectTest extends BaseDynECTApiExpectTest {
         .zone("jclouds.org")
         .fqdn("jclouds.org")
         .type("SPF")
-        .id(50976579l).build();
+        .id(50976579L).build();
 
    public void testGetSPFWhenResponseIs2xx() {
       DynECTApi success = requestsSendResponses(createSession, createSessionResponse, getSPF, spfResponse);
@@ -280,7 +280,7 @@ public class RecordApiExpectTest extends BaseDynECTApiExpectTest {
         .zone("jclouds.org")
         .fqdn("jclouds.org")
         .type("SRV")
-        .id(50976579l).build();
+        .id(50976579L).build();
 
    public void testGetSRVWhenResponseIs2xx() {
       DynECTApi success = requestsSendResponses(createSession, createSessionResponse, getSRV, srvResponse);
@@ -301,7 +301,7 @@ public class RecordApiExpectTest extends BaseDynECTApiExpectTest {
         .zone("jclouds.org")
         .fqdn("jclouds.org")
         .type("SSHFP")
-        .id(50976579l).build();
+        .id(50976579L).build();
 
    public void testGetSSHFPWhenResponseIs2xx() {
       DynECTApi success = requestsSendResponses(createSession, createSessionResponse, getSSHFP, sshfpResponse);
@@ -322,7 +322,7 @@ public class RecordApiExpectTest extends BaseDynECTApiExpectTest {
         .zone("jclouds.org")
         .fqdn("jclouds.org")
         .type("TXT")
-        .id(50976579l).build();
+        .id(50976579L).build();
 
    public void testGetTXTWhenResponseIs2xx() {
       DynECTApi success = requestsSendResponses(createSession, createSessionResponse, getTXT, txtResponse);
@@ -403,7 +403,7 @@ public class RecordApiExpectTest extends BaseDynECTApiExpectTest {
                                                .ttl(86400)
                                                .rdata(a("1.1.1.1"))
                                                .build();
-      assertEquals(success.getRecordApiForZone("jclouds.org").scheduleCreate(record), Job.success(285372440l));
+      assertEquals(success.getRecordApiForZone("jclouds.org").scheduleCreate(record), Job.success(285372440L));
    }
 
    HttpRequest delete = HttpRequest.builder().method(DELETE)
@@ -420,13 +420,13 @@ public class RecordApiExpectTest extends BaseDynECTApiExpectTest {
                      .zone("jclouds.org")
                      .fqdn("www.jclouds.org")
                      .type("A")
-                     .id(285372440l)
+                     .id(285372440L)
                      .build();
 
    public void testDeleteWhenResponseIs2xx() {
       DynECTApi success = requestsSendResponses(createSession, createSessionResponse, delete, deleteResponse);
 
-      assertEquals(success.getRecordApiForZone("jclouds.org").scheduleDelete(id), Job.success(285372457l));
+      assertEquals(success.getRecordApiForZone("jclouds.org").scheduleDelete(id), Job.success(285372457L));
    }
 
    public void testDeleteWhenResponseIs404() {

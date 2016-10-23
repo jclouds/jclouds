@@ -312,7 +312,7 @@ public class ElasticStackApiTest extends BaseRestAnnotationProcessingTest<Elasti
    public void testCreateDrive() throws SecurityException, NoSuchMethodException, IOException {
       Invokable<?, ?> method = method(ElasticStackApi.class, "createDrive", Drive.class);
       GeneratedHttpRequest httpRequest = processor.createRequest(method, ImmutableList.<Object> of(
-            new CreateDriveRequest.Builder().name("foo").size(10000l).build()));
+            new CreateDriveRequest.Builder().name("foo").size(10000L).build()));
 
       assertRequestLineEquals(httpRequest, "POST https://api-lon-p.elastichosts.com/drives/create HTTP/1.1");
       assertNonPayloadHeadersEqual(httpRequest, "Accept: text/plain\n");
@@ -329,7 +329,7 @@ public class ElasticStackApiTest extends BaseRestAnnotationProcessingTest<Elasti
    public void testSetDriveData() throws SecurityException, NoSuchMethodException, IOException {
       Invokable<?, ?> method = method(ElasticStackApi.class, "setDriveData", String.class, DriveData.class);
       GeneratedHttpRequest httpRequest = processor.createRequest(method, ImmutableList.<Object> of("100",
-            new DriveData.Builder().name("foo").size(10000l).tags(ImmutableList.of("production", "candy")).build()));
+            new DriveData.Builder().name("foo").size(10000L).tags(ImmutableList.of("production", "candy")).build()));
 
       assertRequestLineEquals(httpRequest, "POST https://api-lon-p.elastichosts.com/drives/100/set HTTP/1.1");
       assertNonPayloadHeadersEqual(httpRequest, "Accept: text/plain\n");

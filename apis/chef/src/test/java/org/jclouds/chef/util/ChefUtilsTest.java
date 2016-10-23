@@ -31,9 +31,9 @@ import com.google.common.collect.ImmutableList;
  */
 @Test(groups = { "unit" }, sequential = true)
 public class ChefUtilsTest {
-   public static long millis = 1280251180727l;
+   public static long millis = 1280251180727L;
    public static String millisString = "1280251180727";
-   public static Date now = new Date(1280251180727l);
+   public static Date now = new Date(1280251180727L);
 
    public void testToOhaiTime() {
       assertEquals(ChefUtils.toOhaiTime(millis).toString(), millisString);

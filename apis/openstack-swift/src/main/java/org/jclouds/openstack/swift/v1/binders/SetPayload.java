@@ -49,7 +49,7 @@ public class SetPayload implements Binder {
 
       Long contentLength = payload.getContentMetadata().getContentLength();
       if (contentLength != null && contentLength >= 0) {
-         checkArgument(contentLength <= 5l * 1024 * 1024 * 1024, "maximum size for put object is 5GB, %s",
+         checkArgument(contentLength <= 5L * 1024 * 1024 * 1024, "maximum size for put object is 5GB, %s",
                contentLength);
       } else {
          builder.replaceHeader(TRANSFER_ENCODING, "chunked").build();

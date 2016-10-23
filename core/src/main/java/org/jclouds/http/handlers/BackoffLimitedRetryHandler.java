@@ -118,7 +118,7 @@ public class BackoffLimitedRetryHandler implements HttpRetryHandler, IOException
    }
 
    public void imposeBackoffExponentialDelay(long period, int pow, int failureCount, int max, String commandDescription) {
-      imposeBackoffExponentialDelay(period, period * 10l, pow, failureCount, max, commandDescription);
+      imposeBackoffExponentialDelay(period, period * 10L, pow, failureCount, max, commandDescription);
    }
 
    public void imposeBackoffExponentialDelay(long period, long maxPeriod, int pow, int failureCount, int max,

@@ -42,7 +42,7 @@ public class FilterStringsBoundToInjectorByNameTest {
 
          @Override
          protected void configure() {
-            bindConstant().annotatedWith(Names.named("foo")).to(1l);
+            bindConstant().annotatedWith(Names.named("foo")).to(1L);
          }
 
       }).getInstance(FilterStringsBoundToInjectorByName.class);

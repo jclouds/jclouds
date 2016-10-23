@@ -74,8 +74,8 @@ public class ReadAnnotationsAndPropertiesTest {
       });
       ReadAnnotationsAndProperties config = new ReadAnnotationsAndProperties(injector,
             new FilterStringsBoundToInjectorByName(injector), defaultFallback);
-      assertEquals(config.getTimeoutNanos(asyncGet), Optional.of(250000000l));
-      assertEquals(config.getTimeoutNanos(asyncNamedGet), Optional.of(250000000l));
+      assertEquals(config.getTimeoutNanos(asyncGet), Optional.of(250000000L));
+      assertEquals(config.getTimeoutNanos(asyncNamedGet), Optional.of(250000000L));
    }
 
    public void testNamedInvocationGetsTimeoutOverrideOnAsyncMethods() throws Exception {
@@ -90,7 +90,7 @@ public class ReadAnnotationsAndPropertiesTest {
       });
       ReadAnnotationsAndProperties config = new ReadAnnotationsAndProperties(injector,
             new FilterStringsBoundToInjectorByName(injector), defaultFallback);
-      assertEquals(config.getTimeoutNanos(asyncNamedGet), Optional.of(250000000l));
+      assertEquals(config.getTimeoutNanos(asyncNamedGet), Optional.of(250000000L));
    }
 
    /**

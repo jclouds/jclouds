@@ -37,8 +37,8 @@ public class MapToDriveInfoTest {
          .status(DriveStatus.ACTIVE)
          .name("Ubuntu 10.10 Server Edition Linux 64bit Preinstalled System")
          .metrics(
-               new DriveMetrics.Builder().readBytes(4096l).writeBytes(8589938688l).writeRequests(2097153l)
-                     .readRequests(1l).build())
+               new DriveMetrics.Builder().readBytes(4096L).writeBytes(8589938688L).writeRequests(2097153L)
+                     .readRequests(1L).build())
          .user("58ca3c1f-7629-4771-9b71-863f40153ba4")
          .encryptionCipher("aes-xts-plain")
          .uuid("b8171d28-755a-4271-b891-7998871a160e")
@@ -51,7 +51,7 @@ public class MapToDriveInfoTest {
                      "00031836-a624-4b22-bc7d-41ff8977087b:guest:17b076be-430d-4a76-9df3-b9896fec82a5:ide:0:0",
                      "000663ee-9fb6-4461-90f6-01327a4aff07:guest:f83b519f-feab-42cf-859c-f61495681ada:ide:0:1"))//
          .readers(ImmutableSet.of("ffffffff-ffff-ffff-ffff-ffffffffffff"))//
-         .size(8589934592l)//
+         .size(8589934592L)//
          .userMetadata(ImmutableMap.of("foo", "bar", "baz", "raz")).build();
 
    private static final MapToDriveInfo MAP_TO_DRIVE = new MapToDriveInfo();
@@ -61,7 +61,7 @@ public class MapToDriveInfoTest {
    }
 
    public void testBasics() {
-      DriveInfo expects = new DriveInfo.Builder().name("foo").size(100l).metrics(new DriveMetrics.Builder().build())
+      DriveInfo expects = new DriveInfo.Builder().name("foo").size(100L).metrics(new DriveMetrics.Builder().build())
             .build();
       assertEquals(MAP_TO_DRIVE.apply(ImmutableMap.of("name", "foo", "size", "100")), expects);
    }

@@ -43,11 +43,11 @@ public class ListRecordsResponseTest extends BaseDynECTParseTest<FluentIterable<
                                    .zone("adrianc.zone.dynecttest.jclouds.org")
                                    .fqdn("adrianc.zone.dynecttest.jclouds.org");
       return FluentIterable.from(ImmutableSet.<RecordId> builder()
-                                             .add(builder.type("SOA").id(50976579l).build())
-                                             .add(builder.type("NS").id(50976580l).build())
-                                             .add(builder.type("NS").id(50976581l).build())
-                                             .add(builder.type("NS").id(50976582l).build())
-                                             .add(builder.type("NS").id(50976583l).build())
+                                             .add(builder.type("SOA").id(50976579L).build())
+                                             .add(builder.type("NS").id(50976580L).build())
+                                             .add(builder.type("NS").id(50976581L).build())
+                                             .add(builder.type("NS").id(50976582L).build())
+                                             .add(builder.type("NS").id(50976583L).build())
                                              .build());
    }
 }

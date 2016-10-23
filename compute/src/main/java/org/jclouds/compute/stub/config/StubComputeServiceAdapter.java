@@ -100,7 +100,7 @@ public class StubComputeServiceAdapter implements JCloudsNativeComputeServiceAda
    }
 
    protected void setStateOnNodeAfterDelay(final Status status, final NodeMetadata node, final long millis) {
-      if (millis == 0l)
+      if (millis == 0L)
          setStateOnNode(status, node);
       else
          executor.execute(new Runnable() {

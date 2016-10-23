@@ -43,7 +43,7 @@ public class GetSOARecordResponseTest extends BaseDynECTParseTest<SOARecord> {
                       .zone("adrianc.zone.dynecttest.jclouds.org")
                       .fqdn("adrianc.zone.dynecttest.jclouds.org")
                       .type("SOA")
-                      .id(50976579l)
+                      .id(50976579L)
                       .ttl(3600)
                       .serialStyle(INCREMENT)
                       .rdata(SOAData.builder()

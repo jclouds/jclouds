@@ -62,7 +62,7 @@ public class BaseHttpCommandExecutorServiceTest {
    public void testStreamIsClosedWhenRetrying() throws IOException {
       MockInputStream in = new MockInputStream(2); // Input stream that produces 2 bytes
       HttpResponse response = HttpResponse.builder().payload(newInputStreamPayload(in)).build();
-      response.getPayload().getContentMetadata().setContentLength(1l);
+      response.getPayload().getContentMetadata().setContentLength(1L);
       HttpCommand command = mockHttpCommand();
 
       DelegatingRetryHandler retryHandler = EasyMock.createMock(DelegatingRetryHandler.class);
@@ -90,7 +90,7 @@ public class BaseHttpCommandExecutorServiceTest {
    public void testStreamIsClosedWhenNotRetrying() throws IOException {
       MockInputStream in = new MockInputStream(2); // Input stream that produces 2 bytes
       HttpResponse response = HttpResponse.builder().payload(newInputStreamPayload(in)).build();
-      response.getPayload().getContentMetadata().setContentLength(1l);
+      response.getPayload().getContentMetadata().setContentLength(1L);
       HttpCommand command = mockHttpCommand();
 
       DelegatingRetryHandler retryHandler = EasyMock.createMock(DelegatingRetryHandler.class);
@@ -120,7 +120,7 @@ public class BaseHttpCommandExecutorServiceTest {
    public void testStreamIsClosedAndBufferedInTheErrorHandlerWhenNotRetrying() throws IOException {
       MockInputStream in = new MockInputStream(2); // Input stream that produces 2 bytes
       HttpResponse response = HttpResponse.builder().payload(newInputStreamPayload(in)).build();
-      response.getPayload().getContentMetadata().setContentLength(1l);
+      response.getPayload().getContentMetadata().setContentLength(1L);
       HttpCommand command = mockHttpCommand();
 
       DelegatingRetryHandler retryHandler = EasyMock.createMock(DelegatingRetryHandler.class);
@@ -164,7 +164,7 @@ public class BaseHttpCommandExecutorServiceTest {
    public void testCloseStreamCanBeCalledMoreThanOnce() throws IOException {
       MockInputStream in = new MockInputStream(2); // Input stream that produces 2 bytes
       HttpResponse response = HttpResponse.builder().payload(newInputStreamPayload(in)).build();
-      response.getPayload().getContentMetadata().setContentLength(1l);
+      response.getPayload().getContentMetadata().setContentLength(1L);
       HttpCommand command = mockHttpCommand();
 
       DelegatingRetryHandler retryHandler = EasyMock.createMock(DelegatingRetryHandler.class);

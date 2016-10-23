@@ -46,7 +46,7 @@ public class BindS3ObjectMetadataToRequest implements Binder {
       checkArgument(s3Object.getMetadata().getKey() != null, "s3Object.getMetadata().getKey() must be set!");
       checkArgument(s3Object.getPayload().getContentMetadata().getContentLength() != null,
             "contentLength must be set, streaming not supported");
-      checkArgument(s3Object.getPayload().getContentMetadata().getContentLength() <= 5l * 1024 * 1024 * 1024,
+      checkArgument(s3Object.getPayload().getContentMetadata().getContentLength() <= 5L * 1024 * 1024 * 1024,
             "maximum size for put object is 5GB");
       
       request = metadataPrefixer.bindToRequest(request, s3Object.getMetadata().getUserMetadata());

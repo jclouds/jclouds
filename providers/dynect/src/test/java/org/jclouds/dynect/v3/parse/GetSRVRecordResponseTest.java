@@ -41,7 +41,7 @@ public class GetSRVRecordResponseTest extends BaseDynECTParseTest<Record<SRVData
                    .zone("adrianc.zone.dynecttest.jclouds.org")
                    .fqdn("_http._tcp.www.jclouds.org.")
                    .type("SRV")
-                   .id(50976579l)
+                   .id(50976579L)
                    .ttl(3600)
                    .rdata(SRVData.builder()
                                  .priority(0)

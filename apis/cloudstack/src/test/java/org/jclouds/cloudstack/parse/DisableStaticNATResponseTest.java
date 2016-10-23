@@ -31,7 +31,7 @@ public class DisableStaticNATResponseTest extends BaseItemParserTest<Long> {
    @Override
    @SelectJson("jobid")
    public Long expected() {
-      return 50006l;
+      return 50006L;
    }
 
 }

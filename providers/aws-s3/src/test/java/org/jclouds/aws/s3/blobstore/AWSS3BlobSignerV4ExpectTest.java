@@ -85,7 +85,7 @@ public class AWSS3BlobSignerV4ExpectTest extends S3BlobSignerExpectTest {
       BlobStore getBlobWithTime = requestsSendResponses(init());
       HttpRequest compare = getBlobWithTime();
       HttpRequest signedRequest = getBlobWithTime.getContext().getSigner().signGetBlob(BUCKET_NAME, OBJECT_NAME,
-            86400l /* seconds */);
+            86400L /* seconds */);
       assertEquals(signedRequest, compare);
    }
 
@@ -111,7 +111,7 @@ public class AWSS3BlobSignerV4ExpectTest extends S3BlobSignerExpectTest {
       HttpRequest compare = _putBlobWithTime();
       compare.setPayload(blob.getPayload());
       HttpRequest signedRequest = signPutBloblWithTime.getContext().getSigner().signPutBlob(BUCKET_NAME, blob,
-            86400l /* seconds */);
+            86400L /* seconds */);
       assertEquals(signedRequest, compare);
    }
 

@@ -51,8 +51,8 @@ public class MapToStandardDriveTest {
    }
 
    public void testBasics() {
-      StandardDrive expects = new StandardDrive.Builder().name("foo").size(100l).media(MediaType.DISK)
-            .format(ImageConversionType.GZIP).rawSize(5l).build();
+      StandardDrive expects = new StandardDrive.Builder().name("foo").size(100L).media(MediaType.DISK)
+            .format(ImageConversionType.GZIP).rawSize(5L).build();
       assertEquals(MAP_TO_STANDARD_DRIVE.apply(ImmutableMap.of("name", "foo", "size", "100", "format", "gzip", "media",
             "disk", "rawsize", "5")), expects);
    }

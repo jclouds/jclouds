@@ -70,9 +70,9 @@ public class GoGridComputeServiceAdapter implements ComputeServiceAdapter<Server
       this.client = checkNotNull(client, "client");
       this.sizeToRam = checkNotNull(sizeToRam, "sizeToRam");
       this.serverLatestJobCompleted = retry(new ServerLatestJobCompleted(client.getJobServices()),
-            timeouts.nodeRunning * 9l / 10l);
+            timeouts.nodeRunning * 9L / 10L);
       this.serverLatestJobCompletedShort = retry(new ServerLatestJobCompleted(client.getJobServices()),
-            timeouts.nodeRunning * 1l / 10l);
+            timeouts.nodeRunning * 1L / 10L);
    }
 
    @Override

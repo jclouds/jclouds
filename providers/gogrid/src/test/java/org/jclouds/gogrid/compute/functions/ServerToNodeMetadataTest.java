@@ -57,13 +57,13 @@ public class ServerToNodeMetadataTest {
 
       Map<ServerState, Status> serverStateToNodeStatus = createMock(Map.class);
       org.jclouds.compute.domain.Image jcImage = createMock(org.jclouds.compute.domain.Image.class);
-      Option dc = Option.createWithIdNameAndDescription(1l, "US-West-1", "US West 1 Datacenter");
-      Option ram = Option.createWithIdNameAndDescription(1l, "512MB", "Server with 512MB RAM");
+      Option dc = Option.createWithIdNameAndDescription(1L, "US-West-1", "US West 1 Datacenter");
+      Option ram = Option.createWithIdNameAndDescription(1L, "512MB", "Server with 512MB RAM");
 
       Set<? extends org.jclouds.compute.domain.Image> images = ImmutableSet.of(jcImage);
       Server server = createMock(Server.class);
 
-      expect(server.getId()).andReturn(1000l).atLeastOnce();
+      expect(server.getId()).andReturn(1000L).atLeastOnce();
       expect(server.getName()).andReturn("group-ff").atLeastOnce();
       expect(server.getState()).andReturn(ServerState.ON).atLeastOnce();
 
@@ -78,7 +78,7 @@ public class ServerToNodeMetadataTest {
       expect(server.getImage()).andReturn(image).atLeastOnce();
       expect(server.getRam()).andReturn(ram).atLeastOnce();
       expect(server.getDatacenter()).andReturn(dc).atLeastOnce();
-      expect(image.getId()).andReturn(2000l).atLeastOnce();
+      expect(image.getId()).andReturn(2000L).atLeastOnce();
       expect(jcImage.getProviderId()).andReturn("2000").atLeastOnce();
       expect(jcImage.getLocation()).andReturn(location).atLeastOnce();
       expect(jcImage.getOperatingSystem()).andReturn(createMock(OperatingSystem.class)).atLeastOnce();

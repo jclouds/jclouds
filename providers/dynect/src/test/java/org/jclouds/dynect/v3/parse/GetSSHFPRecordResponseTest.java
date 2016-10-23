@@ -38,7 +38,7 @@ public class GetSSHFPRecordResponseTest extends BaseDynECTParseTest<Record<SSHFP
     @Consumes(MediaType.APPLICATION_JSON)
     public Record<SSHFPData> expected() {
         return Record.<SSHFPData> builder().zone("adrianc.zone.dynecttest.jclouds.org")
-                .fqdn("_http._tcp.www.jclouds.org.").type("SSHFP").id(50976579l).ttl(3600)
+                .fqdn("_http._tcp.www.jclouds.org.").type("SSHFP").id(50976579L).ttl(3600)
                 .rdata(SSHFPData.builder().algorithm(2).fptype(1).fingerprint("190E37C5B5DB9A1C455E648A41AF3CC83F99F102").build()).build();
     }
 }

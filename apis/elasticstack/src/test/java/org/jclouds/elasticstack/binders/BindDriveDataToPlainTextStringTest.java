@@ -56,7 +56,7 @@ public class BindDriveDataToPlainTextStringTest {
 
    public void testSimple() {
       HttpRequest request = HttpRequest.builder().method("POST").endpoint("https://host/drives/create").build();
-      FN.bindToRequest(request, new DriveData.Builder().name("foo").size(100l).build());
+      FN.bindToRequest(request, new DriveData.Builder().name("foo").size(100L).build());
       assertEquals(request.getPayload().getContentMetadata().getContentType(), MediaType.TEXT_PLAIN);
       assertEquals(request.getPayload().getRawContent(), "name foo\nsize 100");
    }
@@ -64,7 +64,7 @@ public class BindDriveDataToPlainTextStringTest {
    public void testComplete() throws IOException {
       DriveData input = new DriveData.Builder().name("Ubuntu 10.10 Server Edition Linux 64bit Preinstalled System")
       //
-            .size(8589934592l)//
+            .size(8589934592L)//
             .claimType(ClaimType.SHARED)//
             .readers(ImmutableSet.of("ffffffff-ffff-ffff-ffff-ffffffffffff"))//
             .tags(ImmutableSet.of("tag1", "tag2")).userMetadata(ImmutableMap.of("foo", "bar", "baz", "raz"))//

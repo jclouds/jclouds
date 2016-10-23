@@ -72,7 +72,7 @@ public class ParseBlobFromHeadersAndHttpContentTest {
                                           .addHeader("Content-Range", "0-10485759/20232760").build(); 
 
       response.getPayload().getContentMetadata().setContentType(MediaType.APPLICATION_JSON);
-      response.getPayload().getContentMetadata().setContentLength(10485760l);
+      response.getPayload().getContentMetadata().setContentLength(10485760L);
 
       MutableBlobMetadata meta = blobMetadataProvider.get();
       expect(metadataParser.apply(response)).andReturn(meta);

@@ -187,7 +187,7 @@ public class EC2ComputeServiceDependenciesModule extends AbstractModule {
    @Named("SECURITY")
    protected final Predicate<RegionAndName> securityGroupEventualConsistencyDelay(SecurityGroupPresent in,
          @Named(PROPERTY_EC2_TIMEOUT_SECURITYGROUP_PRESENT) long msDelay) {
-      return retry(in, msDelay, 100l, MILLISECONDS);
+      return retry(in, msDelay, 100L, MILLISECONDS);
    }
 
 }

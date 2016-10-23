@@ -26,13 +26,13 @@ import com.google.common.collect.ImmutableList;
 public class JoinOnCommaTest {
    @Test
    public void testIterableLong() {
-      String list = new JoinOnComma().apply(ImmutableList.of(1l, 2l));
+      String list = new JoinOnComma().apply(ImmutableList.of(1L, 2L));
       assertEquals(list, "1,2");
    }
 
    @Test
    public void testLongArray() {
-      String list = new JoinOnComma().apply(new long[] { 1l, 2l });
+      String list = new JoinOnComma().apply(new long[] { 1L, 2L });
       assertEquals(list, "1,2");
    }
 

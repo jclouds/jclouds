@@ -31,7 +31,7 @@ public class DeleteNetworkResponseTest extends BaseItemParserTest<Long> {
    @Override
    @SelectJson("jobid")
    public Long expected() {
-      return 45612l;
+      return 45612L;
    }
 
 }

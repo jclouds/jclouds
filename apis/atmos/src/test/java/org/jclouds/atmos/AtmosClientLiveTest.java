@@ -213,7 +213,7 @@ public class AtmosClientLiveTest extends BaseBlobStoreIntegrationTest {
       AtmosObject object = getApi().newObject();
       object.getContentMetadata().setName(name);
       object.setPayload(Payloads.newPayload(data));
-      object.getContentMetadata().setContentLength(16l);
+      object.getContentMetadata().setContentLength(16L);
       object.getContentMetadata().setContentMD5(hashCode.asBytes());
       object.getContentMetadata().setContentType("text/plain");
       object.getUserMetadata().getMetadata().put("Metadata", metadataValue);

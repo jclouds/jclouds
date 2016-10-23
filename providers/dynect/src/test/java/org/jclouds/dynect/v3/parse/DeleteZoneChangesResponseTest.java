@@ -34,6 +34,6 @@ public class DeleteZoneChangesResponseTest extends BaseDynECTParseTest<Job> {
    @Override
    @Consumes(MediaType.APPLICATION_JSON)
    public Job expected() {
-      return Job.success(275625520l);
+      return Job.success(275625520L);
    }
 }

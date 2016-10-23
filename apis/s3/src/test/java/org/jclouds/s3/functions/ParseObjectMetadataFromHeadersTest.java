@@ -53,7 +53,7 @@ public class ParseObjectMetadataFromHeadersTest {
                                       .addHeader(HttpHeaders.LAST_MODIFIED, lastModified)
                                       .addHeader(HttpHeaders.ETAG, "\"00000000000000000000000000000000\"")
                                       .addHeader(HttpHeaders.CACHE_CONTROL, "cacheControl").build();
-      http.getPayload().getContentMetadata().setContentLength(1025l);
+      http.getPayload().getContentMetadata().setContentLength(1025L);
       http.getPayload().getContentMetadata().setContentDisposition("contentDisposition");
       http.getPayload().getContentMetadata().setContentEncoding("encoding");
       http.getPayload().getContentMetadata().setContentType(MediaType.APPLICATION_OCTET_STREAM);
@@ -66,7 +66,7 @@ public class ParseObjectMetadataFromHeadersTest {
       expects.getContentMetadata().setContentDisposition("contentDisposition");
       expects.getContentMetadata().setContentEncoding("encoding");
       expects.getContentMetadata().setContentType(MediaType.APPLICATION_OCTET_STREAM);
-      expects.getContentMetadata().setContentLength(1025l);
+      expects.getContentMetadata().setContentLength(1025L);
       expects.getContentMetadata().setContentMD5(hashCode);
       expects.setETag("\"abcd\"");
       expects.setKey("key");
@@ -84,7 +84,7 @@ public class ParseObjectMetadataFromHeadersTest {
                                       .addHeader(HttpHeaders.LAST_MODIFIED, lastModified)
                                       .addHeader(HttpHeaders.ETAG, "\"abcd-1\"")
                                       .addHeader(HttpHeaders.CACHE_CONTROL, "cacheControl").build();
-      http.getPayload().getContentMetadata().setContentLength(1025l);
+      http.getPayload().getContentMetadata().setContentLength(1025L);
       http.getPayload().getContentMetadata().setContentDisposition("contentDisposition");
       http.getPayload().getContentMetadata().setContentEncoding("encoding");
       http.getPayload().getContentMetadata().setContentType(MediaType.APPLICATION_OCTET_STREAM);
@@ -96,7 +96,7 @@ public class ParseObjectMetadataFromHeadersTest {
       expects.getContentMetadata().setContentDisposition("contentDisposition");
       expects.getContentMetadata().setContentEncoding("encoding");
       expects.getContentMetadata().setContentType(MediaType.APPLICATION_OCTET_STREAM);
-      expects.getContentMetadata().setContentLength(1025l);
+      expects.getContentMetadata().setContentLength(1025L);
       expects.setETag("\"abcd-1\"");
       expects.setKey("key");
       expects.setLastModified(now);
@@ -114,7 +114,7 @@ public class ParseObjectMetadataFromHeadersTest {
                                       .addHeader(S3Headers.AMZ_ETAG, "\"00000000000000000000000000000000\"")
                                       .addHeader(HttpHeaders.CACHE_CONTROL, "cacheControl").build();
       
-      http.getPayload().getContentMetadata().setContentLength(1025l);
+      http.getPayload().getContentMetadata().setContentLength(1025L);
       http.getPayload().getContentMetadata().setContentDisposition("contentDisposition");
       http.getPayload().getContentMetadata().setContentEncoding("encoding");
       http.getPayload().getContentMetadata().setContentType(MediaType.APPLICATION_OCTET_STREAM);
@@ -128,7 +128,7 @@ public class ParseObjectMetadataFromHeadersTest {
       expects.getContentMetadata().setContentEncoding("encoding");
       expects.getContentMetadata().setContentMD5(hashCode);
       expects.getContentMetadata().setContentType(MediaType.APPLICATION_OCTET_STREAM);
-      expects.getContentMetadata().setContentLength(1025l);
+      expects.getContentMetadata().setContentLength(1025L);
       expects.setETag("\"abcd\"");
       expects.setKey("key");
       expects.setLastModified(now);

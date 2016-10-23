@@ -50,7 +50,7 @@ public class ParseServerTest extends BaseItemParserTest<Server> {
    @SelectJson("list")
    @OnlyElement
    public Server expected() {
-      Option dc = Option.createWithIdNameAndDescription(1l, "US-West-1", "US West 1 Datacenter");
+      Option dc = Option.createWithIdNameAndDescription(1L, "US-West-1", "US West 1 Datacenter");
       Option centOs = Option.createWithIdNameAndDescription(13L, "CentOS 5.2 (32-bit)", "CentOS 5.2 (32-bit)");
       Option webServer = Option.createWithIdNameAndDescription(1L, "Web Server", "Web or Application Server");
       return Server.builder().id(75245L).datacenter(dc).isSandbox(false).name("PowerServer").description("server to test the api. created by Alex")

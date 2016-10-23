@@ -82,7 +82,7 @@ public class VolumeApiTest extends BaseCloudStackApiTest<VolumeApi> {
    public void testCreateVolumeWithSnapshot() throws SecurityException, NoSuchMethodException, IOException {
       Invokable<?, ?> method = method(VolumeApi.class, "createVolumeFromSnapshotInZone", String.class, String.class,
             String.class);
-      GeneratedHttpRequest httpRequest = processor.createRequest(method, ImmutableList.<Object> of("jclouds-volume", 999L, 111l));
+      GeneratedHttpRequest httpRequest = processor.createRequest(method, ImmutableList.<Object> of("jclouds-volume", 999L, 111L));
 
       assertRequestLineEquals(httpRequest, createVolumeFromSnapshot.getRequestLine());
       assertNonPayloadHeadersEqual(httpRequest, "Accept: application/json\n");

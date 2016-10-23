@@ -59,7 +59,7 @@ public class Predicates2 {
     * like {@link #retry(Predicate, long, long, long, TimeUnit)} where {@code maxPeriod} is 10x {@code period}
     */
    public static <T> Predicate<T> retry(Predicate<T> findOrBreak, long timeout, long period, TimeUnit unit) {
-      return retry(findOrBreak, timeout, period, period * 10l, unit);
+      return retry(findOrBreak, timeout, period, period * 10L, unit);
    }
 
    /**
@@ -72,11 +72,11 @@ public class Predicates2 {
    /**
     * @see org.jclouds.compute.config.ComputeServiceProperties#POLL_INITIAL_PERIOD
     */
-   public static final long DEFAULT_PERIOD = 50l;
+   public static final long DEFAULT_PERIOD = 50L;
    /**
     * @see org.jclouds.compute.config.ComputeServiceProperties#POLL_MAX_PERIOD
     */
-   public static final long DEFAULT_MAX_PERIOD = 1000l;
+   public static final long DEFAULT_MAX_PERIOD = 1000L;
 
    /**
     * like {@link #retry(Predicate, long, long, long, TimeUnit)} where {@code unit} is in milliseconds, {@code period}
@@ -110,7 +110,7 @@ public class Predicates2 {
          // Always try at least once, even if timeout is 0 or negative.
          // A timeout of 0 means 0 millis.
          try {
-            long i = 1l;
+            long i = 1L;
             long now = System.currentTimeMillis();
             long end = now + timeout;
             while (now < end) {

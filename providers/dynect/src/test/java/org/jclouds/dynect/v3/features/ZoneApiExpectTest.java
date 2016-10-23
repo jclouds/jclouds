@@ -70,12 +70,12 @@ public class ZoneApiExpectTest extends BaseDynECTApiExpectTest {
       assertEquals(success.getZoneApi().scheduleCreate(CreatePrimaryZone.builder()
                                                                         .fqdn("jclouds.org")
                                                                         .contact("jimmy@jclouds.org")
-                                                                        .build()), Job.success(285351593l));
+                                                                        .build()), Job.success(285351593L));
    }
 
    public void testCreateWithContactWhenResponseIs2xx() {
       DynECTApi success = requestsSendResponses(createSession, createSessionResponse, create, createResponse);
-      assertEquals(success.getZoneApi().scheduleCreateWithContact("jclouds.org", "jimmy@jclouds.org"), Job.success(285351593l));
+      assertEquals(success.getZoneApi().scheduleCreateWithContact("jclouds.org", "jimmy@jclouds.org"), Job.success(285351593L));
    }
 
    public void testGetWhenResponseIs404() {

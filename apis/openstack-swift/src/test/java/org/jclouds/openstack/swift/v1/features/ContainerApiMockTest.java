@@ -116,8 +116,8 @@ public class ContainerApiMockTest extends BaseOpenStackMockTest<SwiftApi> {
 
          Container container = api.getContainerApi("DFW").get("myContainer");
          assertEquals(container.getName(), "myContainer");
-         assertEquals(container.getObjectCount(), Long.valueOf(42l));
-         assertEquals(container.getBytesUsed(), Long.valueOf(323479l));
+         assertEquals(container.getObjectCount(), Long.valueOf(42L));
+         assertEquals(container.getBytesUsed(), Long.valueOf(323479L));
          for (Entry<String, String> entry : container.getMetadata().entrySet()) {
             assertEquals(container.getMetadata().get(entry.getKey().toLowerCase()), entry.getValue());
          }
@@ -236,8 +236,8 @@ public class ContainerApiMockTest extends BaseOpenStackMockTest<SwiftApi> {
          SwiftApi api = api(server.getUrl("/").toString(), "openstack-swift");
          Container container = api.getContainerApi("DFW").get("myContainer");
          assertEquals(container.getName(), "myContainer");
-         assertEquals(container.getObjectCount(), Long.valueOf(42l));
-         assertEquals(container.getBytesUsed(), Long.valueOf(323479l));
+         assertEquals(container.getObjectCount(), Long.valueOf(42L));
+         assertEquals(container.getBytesUsed(), Long.valueOf(323479L));
          for (Entry<String, String> entry : container.getMetadata().entrySet()) {
             assertEquals(container.getMetadata().get(entry.getKey().toLowerCase()), entry.getValue());
          }

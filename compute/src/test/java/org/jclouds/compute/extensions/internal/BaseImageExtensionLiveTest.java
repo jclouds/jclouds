@@ -174,7 +174,7 @@ public abstract class BaseImageExtensionLiveTest extends BaseComputeServiceConte
             }
             return false;
          }
-      }, getSpawnNodeMaxWait(), 1l, SECONDS).apply(client));
+      }, getSpawnNodeMaxWait(), 1L, SECONDS).apply(client));
    }
 
    protected Optional<Image> findImageWithNameInCache(String name) {

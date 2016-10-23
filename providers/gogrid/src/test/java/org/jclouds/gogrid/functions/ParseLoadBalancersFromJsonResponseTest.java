@@ -57,7 +57,7 @@ public class ParseLoadBalancersFromJsonResponseTest {
       ParseLoadBalancerListFromJsonResponse parser = i.getInstance(ParseLoadBalancerListFromJsonResponse.class);
       SortedSet<LoadBalancer> response = parser.apply(HttpResponse.builder().statusCode(200).message("ok").payload(is).build());
 
-      Option dc = Option.createWithIdNameAndDescription(1l, "US-West-1", "US West 1 Datacenter");
+      Option dc = Option.createWithIdNameAndDescription(1L, "US-West-1", "US West 1 Datacenter");
 
       LoadBalancer loadBalancer = LoadBalancer.builder().id(6372L).name("Balancer")
             .virtualIp(IpPortPair.builder().ip(Ip.builder().id(1313082L)

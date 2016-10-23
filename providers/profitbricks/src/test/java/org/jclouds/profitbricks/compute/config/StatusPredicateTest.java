@@ -62,7 +62,7 @@ public class StatusPredicateTest extends BaseProfitBricksMockTest {
 
       Predicate<String> waitUntilAvailable = Predicates2.retry(
               new DataCenterProvisioningStatePredicate(pbApi, ProvisioningState.AVAILABLE),
-              30l, 1l, TimeUnit.SECONDS);
+              30L, 1L, TimeUnit.SECONDS);
 
       String id = "aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee";
       try {
@@ -95,7 +95,7 @@ public class StatusPredicateTest extends BaseProfitBricksMockTest {
 
       Predicate<String> waitUntilAvailable = Predicates2.retry(
               new ServerStatusPredicate(pbApi, Server.Status.RUNNING),
-              30l, 1l, TimeUnit.SECONDS);
+              30L, 1L, TimeUnit.SECONDS);
 
       String id = "qwertyui-qwer-qwer-qwer-qwertyyuiiop";
       try {
@@ -128,7 +128,7 @@ public class StatusPredicateTest extends BaseProfitBricksMockTest {
 
       Predicate<String> waitUntilAvailable = Predicates2.retry(
               new SnapshotProvisioningStatePredicate(pbApi, ProvisioningState.AVAILABLE),
-              30l, 1l, TimeUnit.SECONDS);
+              30L, 1L, TimeUnit.SECONDS);
 
       String id = "qswdefrg-qaws-qaws-defe-rgrgdsvcxbrh";
       try {

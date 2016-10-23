@@ -49,7 +49,7 @@ public class MapToServerInfoTest {
          .smp(1)
          .mem(1024)
          .status(ServerStatus.ACTIVE)
-         .started(new Date(1291493868l))
+         .started(new Date(1291493868L))
          .user("2f6244eb-50bc-4403-847e-f03cc3706a1f")
          .name("jo")
          .vnc(new VNC("46.20.114.124", "HfHzVmLT", false))

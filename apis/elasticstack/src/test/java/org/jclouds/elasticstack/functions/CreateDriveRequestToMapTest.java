@@ -35,7 +35,7 @@ public class CreateDriveRequestToMapTest {
          CreateDriveRequestToMap.class);
 
    public void testBasics() {
-      assertEquals(BASEDRIVE_TO_MAP.apply(new CreateDriveRequest.Builder().name("foo").size(100l).build()),
+      assertEquals(BASEDRIVE_TO_MAP.apply(new CreateDriveRequest.Builder().name("foo").size(100L).build()),
             ImmutableMap.of("name", "foo", "size", "100"));
    }
 
@@ -43,7 +43,7 @@ public class CreateDriveRequestToMapTest {
       CreateDriveRequest one = new CreateDriveRequest.Builder()
             .name("Ubuntu 10.10 Server Edition Linux 64bit Preinstalled System")
             //
-            .size(8589934592l)//
+            .size(8589934592L)//
             .claimType(ClaimType.SHARED)//
             .readers(ImmutableSet.of("ffffffff-ffff-ffff-ffff-ffffffffffff"))//
             .tags(ImmutableSet.of("tag1", "tag2")).userMetadata(ImmutableMap.of("foo", "bar", "baz", "raz"))//

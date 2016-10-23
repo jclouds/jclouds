@@ -53,8 +53,8 @@ public class ImageToImageTest {
          "1.3.1", // dockerVersion
          "x86_64", // architecture
          "os", // os
-         0l, // size
-         0l, // virtualSize
+         0L, // size
+         0L, // virtualSize
          ImmutableList.<String> of() // repoTags
          );
 
@@ -74,8 +74,8 @@ public class ImageToImageTest {
          "1.3.1", // dockerVersion
          "x86_64", // architecture
          "os", // os
-         0l, // size
-         0l, // virtualSize
+         0L, // size
+         0L, // virtualSize
          ImmutableList.of("registry.company.example:8888/a/b/c/d:latest") // repoTags
          );
 
@@ -101,8 +101,8 @@ public class ImageToImageTest {
               "1.3.1", // dockerVersion
               "x86_64", // architecture
               "os", // os
-              0l, // size
-              0l, // virtualSize
+              0L, // size
+              0L, // virtualSize
               ImmutableList.of("repoTag1:version") // repoTags
       );
       function = new ImageToImage();

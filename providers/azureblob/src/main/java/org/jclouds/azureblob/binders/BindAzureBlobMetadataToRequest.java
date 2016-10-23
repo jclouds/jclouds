@@ -77,7 +77,7 @@ public class BindAzureBlobMetadataToRequest implements Binder {
          break;
       case BLOCK_BLOB:
          checkArgument(
-               checkNotNull(blob.getPayload().getContentMetadata().getContentLength(), "blob.getContentLength()") <= 64l * 1024 * 1024,
+               checkNotNull(blob.getPayload().getContentMetadata().getContentLength(), "blob.getContentLength()") <= 64L * 1024 * 1024,
                "maximum size for put Blob is 64MB");
          break;
       }

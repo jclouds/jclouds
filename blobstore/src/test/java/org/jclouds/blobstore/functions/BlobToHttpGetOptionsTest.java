@@ -35,7 +35,7 @@ public class BlobToHttpGetOptionsTest {
    @Test
    public void testIfUnmodifiedSince()  {
 
-      Date ifUnmodifiedSince = new Date(999999l);
+      Date ifUnmodifiedSince = new Date(999999L);
 
       org.jclouds.blobstore.options.GetOptions in = new org.jclouds.blobstore.options.GetOptions();
       in.ifUnmodifiedSince(ifUnmodifiedSince);
@@ -48,7 +48,7 @@ public class BlobToHttpGetOptionsTest {
    @Test
    public void testIfModifiedSince()  {
 
-      Date ifModifiedSince = new Date(999999l);
+      Date ifModifiedSince = new Date(999999L);
 
       org.jclouds.blobstore.options.GetOptions in = new org.jclouds.blobstore.options.GetOptions();
       in.ifModifiedSince(ifModifiedSince);

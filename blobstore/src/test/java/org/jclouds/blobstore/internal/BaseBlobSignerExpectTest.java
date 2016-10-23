@@ -63,7 +63,7 @@ public abstract class BaseBlobSignerExpectTest extends BaseRestApiExpectTest<Blo
    public void testSignGetBlobWithTime() {
       BlobStore getBlobWithTime = requestsSendResponses(init());
       HttpRequest compare = getBlobWithTime();
-      assertEquals(getBlobWithTime.getContext().getSigner().signGetBlob(container, name, 3l /* seconds */),
+      assertEquals(getBlobWithTime.getContext().getSigner().signGetBlob(container, name, 3L /* seconds */),
             compare);
    }
 
@@ -88,7 +88,7 @@ public abstract class BaseBlobSignerExpectTest extends BaseRestApiExpectTest<Blo
    public void testSignPutBlob() throws Exception {
       HashCode hashCode = HashCode.fromBytes(new byte[16]);
       BlobStore signPutBlob = requestsSendResponses(init());
-      Blob blob = signPutBlob.blobBuilder("name").forSigning().contentLength(2l).contentMD5(hashCode)
+      Blob blob = signPutBlob.blobBuilder("name").forSigning().contentLength(2L).contentMD5(hashCode)
             .contentType("text/plain").expires(new Date(1000)).build();
       HttpRequest compare = putBlob();
       compare.setPayload(blob.getPayload());
@@ -103,7 +103,7 @@ public abstract class BaseBlobSignerExpectTest extends BaseRestApiExpectTest<Blo
       Blob blob = signPutBloblWithTime.blobBuilder(name).payload(text).contentType("text/plain").build();
       HttpRequest compare = putBlobWithTime();
       compare.setPayload(blob.getPayload());
-      assertEquals(signPutBloblWithTime.getContext().getSigner().signPutBlob(container, blob, 3l /* seconds */),
+      assertEquals(signPutBloblWithTime.getContext().getSigner().signPutBlob(container, blob, 3L /* seconds */),
             compare);
    }
 

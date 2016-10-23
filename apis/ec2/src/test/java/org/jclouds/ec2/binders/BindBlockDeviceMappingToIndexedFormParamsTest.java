@@ -43,7 +43,7 @@ public class BindBlockDeviceMappingToIndexedFormParamsTest {
    public void testMappingOrdersLexicographically() {
       Map<String, BlockDevice> mapping = Maps.newLinkedHashMap();
       mapping.put("apple", new BlockDevice("appleId", true));
-      Date date = new Date(999999l);
+      Date date = new Date(999999L);
       mapping.put("cranberry", new BlockDevice("cranberry", Status.ATTACHED, date, false));
 
       HttpRequest request = HttpRequest.builder().method("POST").endpoint("http://localhost")

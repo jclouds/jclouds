@@ -88,7 +88,7 @@ public class ObjectApiMockTest extends BaseOpenStackMockTest<SwiftApi> {
                   .name("test_obj_2")
                   .uri(URI.create(baseUri + "/test_obj_2"))
                   .etag("b039efe731ad111bc1b0ef221c3849d0")
-                  .payload(payload(64l, "application/octet-stream", null))
+                  .payload(payload(64L, "application/octet-stream", null))
                   .lastModified(dates.iso8601DateParse("2009-02-03T05:26:32.612278")).build(),
             SwiftObject.builder()
                   .name("test obj 3")

@@ -88,7 +88,7 @@ public class AtmosBlobRequestSignerTest extends BaseRestAnnotationProcessingTest
       Blob blob = blobFactory.create(null);
       blob.getMetadata().setName("name");
       blob.setPayload("");
-      blob.getPayload().getContentMetadata().setContentLength(2l);
+      blob.getPayload().getContentMetadata().setContentLength(2L);
       blob.getPayload().getContentMetadata().setContentMD5(hashCode.asBytes());
       blob.getPayload().getContentMetadata().setContentType("text/plain");
       blob.getPayload().getContentMetadata().setExpires(new Date(1000));

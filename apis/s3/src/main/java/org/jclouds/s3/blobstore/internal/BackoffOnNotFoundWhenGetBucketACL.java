@@ -45,7 +45,7 @@ public class BackoffOnNotFoundWhenGetBucketACL extends CacheLoader<String, Acces
          try {
             return client.getBucketACL(bucketName);
          } catch (ResourceNotFoundException e) {
-            imposeBackoffExponentialDelay(100l, 200l, 2, currentTries, maxTries);
+            imposeBackoffExponentialDelay(100L, 200L, 2, currentTries, maxTries);
             last = e;
          }
       }

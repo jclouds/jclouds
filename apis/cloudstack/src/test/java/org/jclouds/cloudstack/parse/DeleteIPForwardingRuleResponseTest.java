@@ -31,7 +31,7 @@ public class DeleteIPForwardingRuleResponseTest extends BaseItemParserTest<Long>
    @Override
    @SelectJson("jobid")
    public Long expected() {
-      return 50005l;
+      return 50005L;
    }
 
 }

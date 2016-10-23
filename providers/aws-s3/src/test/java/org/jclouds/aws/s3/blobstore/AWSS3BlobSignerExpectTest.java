@@ -88,7 +88,7 @@ public class AWSS3BlobSignerExpectTest extends S3BlobSignerExpectTest {
    public void testSignGetBlobWithTime() {
       BlobStore getBlobWithTime = requestsSendResponses(init());
       HttpRequest compare = getBlobWithTime();
-      HttpRequest request = getBlobWithTime.getContext().getSigner().signGetBlob(container, name, 3l /* seconds */);
+      HttpRequest request = getBlobWithTime.getContext().getSigner().signGetBlob(container, name, 3L /* seconds */);
       compareRequestComponents(request, compare);
    }
 
@@ -130,7 +130,7 @@ public class AWSS3BlobSignerExpectTest extends S3BlobSignerExpectTest {
       Blob blob = signPutBloblWithTime.blobBuilder(name).payload(text).contentType("text/plain").build();
       HttpRequest compare = putBlobWithTime();
       compare.setPayload(blob.getPayload());
-      HttpRequest request = signPutBloblWithTime.getContext().getSigner().signPutBlob(container, blob, 3l /* seconds */);
+      HttpRequest request = signPutBloblWithTime.getContext().getSigner().signPutBlob(container, blob, 3L /* seconds */);
       compareRequestComponents(request, compare);
       assertEquals(request.getPayload(), compare.getPayload());
    }

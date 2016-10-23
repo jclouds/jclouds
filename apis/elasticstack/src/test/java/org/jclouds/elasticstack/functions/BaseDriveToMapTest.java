@@ -33,14 +33,14 @@ public class BaseDriveToMapTest {
    private static final BaseDriveToMap BASEDRIVE_TO_MAP = new BaseDriveToMap();
 
    public void testBasics() {
-      assertEquals(BASEDRIVE_TO_MAP.apply(new Drive.Builder().name("foo").size(100l).build()),
+      assertEquals(BASEDRIVE_TO_MAP.apply(new Drive.Builder().name("foo").size(100L).build()),
             ImmutableMap.of("name", "foo", "size", "100"));
    }
 
    public void testComplete() throws IOException {
       Drive one = new Drive.Builder().name("Ubuntu 10.10 Server Edition Linux 64bit Preinstalled System")
       //
-            .size(8589934592l)//
+            .size(8589934592L)//
             .claimType(ClaimType.SHARED)//
             .readers(ImmutableSet.of("ffffffff-ffff-ffff-ffff-ffffffffffff"))//
             .tags(ImmutableSet.of("tag1", "tag2")).userMetadata(ImmutableMap.of("foo", "bar", "baz", "raz"))//
