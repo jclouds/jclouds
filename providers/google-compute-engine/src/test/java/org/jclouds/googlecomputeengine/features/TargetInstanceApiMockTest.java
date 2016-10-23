@@ -32,7 +32,7 @@ import org.testng.annotations.Test;
 @Test(groups = "unit", testName = "TargetInstanceApiMockTest", singleThreaded = true)
 public class TargetInstanceApiMockTest extends BaseGoogleComputeEngineApiMockTest {
 
-   public static String TARGET_INSTANCE_NAME = "target-instance-1";
+   public static final String TARGET_INSTANCE_NAME = "target-instance-1";
 
    public void get() throws Exception {
       server.enqueue(jsonResponse("/target_instance_get.json"));

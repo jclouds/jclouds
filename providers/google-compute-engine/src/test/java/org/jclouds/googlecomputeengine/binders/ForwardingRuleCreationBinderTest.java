@@ -35,10 +35,10 @@ import com.google.gson.Gson;
 @Test(groups = "unit", testName = "ForwardingRuleCreationBinderTest")
 public class ForwardingRuleCreationBinderTest extends BaseGoogleComputeEngineExpectTest<Object>{
 
-   private static String DESCRIPTION = "This is a test!";
-   private static String IP_ADDRESS = "1.2.1.1.1";
-   private static String PORT_RANGE = "1.2.3.4.1";
-   private static URI TARGET = URI.create(BASE_URL + "/party/regions/europe-west1/targetPools/test-target-pool");
+   private static final String DESCRIPTION = "This is a test!";
+   private static final String IP_ADDRESS = "1.2.1.1.1";
+   private static final String PORT_RANGE = "1.2.3.4.1";
+   private static final URI TARGET = URI.create(BASE_URL + "/party/regions/europe-west1/targetPools/test-target-pool");
 
    Json json = new GsonWrapper(new Gson());
 

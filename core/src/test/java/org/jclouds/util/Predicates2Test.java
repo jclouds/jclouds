@@ -40,10 +40,10 @@ import com.google.common.collect.Lists;
 @Test(groups = "unit", singleThreaded = true)
 public class Predicates2Test {
    // Grace must be reasonably big; Thread.sleep can take a bit longer to wake up sometimes...
-   public static int SLOW_BUILD_SERVER_GRACE = 250;
+   public static final int SLOW_BUILD_SERVER_GRACE = 250;
 
    // Sometimes returns sooner than timer would predict (e.g. observed 2999ms, when expected 3000ms)
-   public static int EARLY_RETURN_GRACE = 10;
+   public static final int EARLY_RETURN_GRACE = 10;
 
    private Stopwatch stopwatch;
 

@@ -102,8 +102,8 @@ public class SignedHeaderAuthTest {
          .put("X-Ops-Authorization-6", "DzWNPylHJqMeGKVYwGQKpg62QDfe5yXh3wZLiQcXow==")
          .put("X-Ops-Timestamp", TIMESTAMP_ISO8601).build();
 
-   public static String PUBLIC_KEY;
-   public static String PRIVATE_KEY;
+   public static final String PUBLIC_KEY;
+   public static final String PRIVATE_KEY;
 
    static {
       try {
@@ -111,7 +111,7 @@ public class SignedHeaderAuthTest {
 
          PRIVATE_KEY = Strings2.toStringAndClose(SignedHeaderAuthTest.class.getResourceAsStream("/privkey.txt"));
       } catch (IOException e) {
-         Throwables.propagate(e);
+         throw Throwables.propagate(e);
       }
    }
 

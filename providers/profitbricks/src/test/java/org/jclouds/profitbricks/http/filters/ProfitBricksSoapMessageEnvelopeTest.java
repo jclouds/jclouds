@@ -27,19 +27,19 @@ import org.testng.annotations.Test;
 @Test(groups = "unit", testName = "ProfitBricksSoapMessageEnvelopeTest")
 public class ProfitBricksSoapMessageEnvelopeTest {
 
-   private final String SOAP_PREFIX
+   private static final String SOAP_PREFIX
            = "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:ws=\"http://ws.api.profitbricks.com/\">"
            + "<soapenv:Header/>"
            + "<soapenv:Body>";
-   private final String SOAP_SUFFIX = "</soapenv:Body></soapenv:Envelope>";
-   private final String endpoint = "https://api.profitbricks.com/1.3";
+   private static final String SOAP_SUFFIX = "</soapenv:Body></soapenv:Envelope>";
+   private static final String ENDPOINT = "https://api.profitbricks.com/1.3";
 
    @Test
    public void testPayloadEnclosedWithSoapTags() {
       String requestBody = "<ws:getAllDataCenters/>";
       String expectedPayload = SOAP_PREFIX.concat(requestBody).concat(SOAP_SUFFIX);
 
-      HttpRequest request = HttpRequest.builder().method("POST").endpoint(endpoint).payload(requestBody).build();
+      HttpRequest request = HttpRequest.builder().method("POST").endpoint(ENDPOINT).payload(requestBody).build();
 
       ProfitBricksSoapMessageEnvelope soapEnvelope = new ProfitBricksSoapMessageEnvelope();
       HttpRequest filtered = soapEnvelope.filter(request);
@@ -50,7 +50,7 @@ public class ProfitBricksSoapMessageEnvelopeTest {
 
    @Test(expectedExceptions = NullPointerException.class, expectedExceptionsMessageRegExp = ".*must contain payload message.*")
    public void testNullRequest() {
-      HttpRequest request = HttpRequest.builder().method("POST").endpoint(endpoint).build();
+      HttpRequest request = HttpRequest.builder().method("POST").endpoint(ENDPOINT).build();
       new ProfitBricksSoapMessageEnvelope().filter(request);
    }
 

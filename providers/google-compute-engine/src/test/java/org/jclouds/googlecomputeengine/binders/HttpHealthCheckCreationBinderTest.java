@@ -33,11 +33,11 @@ import com.google.gson.Gson;
 @Test(groups = "unit", testName = "HttpHealthCheckCreationBinderTest")
 public class HttpHealthCheckCreationBinderTest extends BaseGoogleComputeEngineExpectTest<Object>{
 
-   private String NAME = "testHttpHealthCheck";
-   private Integer TIMEOUTSEC = 3;
-   private Integer UNHEALTHYTHRESHOLD = 5;
-   private Integer HEALTHYTHRESHOLD = 4;
-   private static String DESCRIPTION = "This is a test!";
+   private static final String NAME = "testHttpHealthCheck";
+   private static final int TIMEOUTSEC = 3;
+   private static final int UNHEALTHYTHRESHOLD = 5;
+   private static final int HEALTHYTHRESHOLD = 4;
+   private static final String DESCRIPTION = "This is a test!";
 
    Json json = new GsonWrapper(new Gson());
 

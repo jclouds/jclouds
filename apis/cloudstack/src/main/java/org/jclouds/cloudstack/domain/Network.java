@@ -52,8 +52,8 @@ public class Network {
       protected String broadcastDomainType;
       protected URI broadcastURI;
       protected String displayText;
-      protected String DNS1;
-      protected String DNS2;
+      protected String dns1;
+      protected String dns2;
       protected String domain;
       protected String domainId;
       protected String endIP;
@@ -72,7 +72,7 @@ public class Network {
       protected String name;
       protected String state;
       protected GuestIPType guestIPType;
-      protected String VLAN;
+      protected String vlan;
       protected TrafficType trafficType;
       protected String zoneId;
       protected boolean securityGroupEnabled;
@@ -123,8 +123,8 @@ public class Network {
        * @return the DNS for the Network
        */
       public T DNS(List<String> DNS) {
-         if (!DNS.isEmpty()) this.DNS1 = DNS.get(0);
-         if (DNS.size() > 1) this.DNS2 = DNS.get(1);
+         if (!DNS.isEmpty()) this.dns1 = DNS.get(0);
+         if (DNS.size() > 1) this.dns2 = DNS.get(1);
          return self();
       }
 
@@ -275,8 +275,8 @@ public class Network {
       /**
        * @see Network#getVLAN()
        */
-      public T VLAN(String VLAN) {
-         this.VLAN = VLAN;
+      public T VLAN(String vlan) {
+         this.vlan = vlan;
          return self();
       }
 
@@ -325,7 +325,7 @@ public class Network {
       }
 
       public Network build() {
-         return new Network(id, account, broadcastDomainType, broadcastURI, displayText, DNS1, DNS2, domain, domainId, endIP, gateway, isDefault, isShared, isSystem, netmask, networkDomain, networkOfferingAvailability, networkOfferingDisplayText, networkOfferingId, networkOfferingName, related, startIP, name, state, guestIPType, VLAN, trafficType, zoneId, tags, securityGroupEnabled, services);
+         return new Network(id, account, broadcastDomainType, broadcastURI, displayText, dns1, dns2, domain, domainId, endIP, gateway, isDefault, isShared, isSystem, netmask, networkDomain, networkOfferingAvailability, networkOfferingDisplayText, networkOfferingId, networkOfferingName, related, startIP, name, state, guestIPType, vlan, trafficType, zoneId, tags, securityGroupEnabled, services);
       }
 
       public T fromNetwork(Network in) {
@@ -375,8 +375,8 @@ public class Network {
    private final String broadcastDomainType;
    private final URI broadcastURI;
    private final String displayText;
-   private final String DNS1;
-   private final String DNS2;
+   private final String dns1;
+   private final String dns2;
    private final String domain;
    private final String domainId;
    private final String endIP;
@@ -395,7 +395,7 @@ public class Network {
    private final String name;
    private final String state;
    private final GuestIPType guestIPType;
-   private final String VLAN;
+   private final String vlan;
    private final TrafficType trafficType;
    private final String zoneId;
    private final Set<Tag> tags;
@@ -406,20 +406,20 @@ public class Network {
          "id", "account", "broadcastdomaintype", "broadcasturi", "displaytext", "dns1", "dns2", "domain", "domainid", "endip", "gateway", "isdefault", "isshared", "issystem", "netmask", "networkdomain", "networkofferingavailability", "networkofferingdisplaytext", "networkofferingid", "networkofferingname", "related", "startip", "name", "state", "type", "vlan", "traffictype", "zoneid", "tags", "securitygroupenabled", "service"
    })
    protected Network(String id, @Nullable String account, @Nullable String broadcastDomainType, @Nullable URI broadcastURI,
-                     @Nullable String displayText, @Nullable String DNS1, @Nullable String DNS2, @Nullable String domain, @Nullable String domainId,
+                     @Nullable String displayText, @Nullable String dns1, @Nullable String dns2, @Nullable String domain, @Nullable String domainId,
                      @Nullable String endIP, @Nullable String gateway, boolean isDefault, boolean isShared, boolean isSystem,
                      @Nullable String netmask, @Nullable String networkDomain, @Nullable String networkOfferingAvailability,
                      @Nullable String networkOfferingDisplayText, @Nullable String networkOfferingId, @Nullable String networkOfferingName,
                      @Nullable String related, @Nullable String startIP, @Nullable String name, @Nullable String state,
-                     @Nullable GuestIPType guestIPType, @Nullable String VLAN, @Nullable TrafficType trafficType,
+                     @Nullable GuestIPType guestIPType, @Nullable String vlan, @Nullable TrafficType trafficType,
                      @Nullable String zoneId, @Nullable Set<Tag> tags, boolean securityGroupEnabled, Set<? extends NetworkService> services) {
       this.id = checkNotNull(id, "id");
       this.account = account;
       this.broadcastDomainType = broadcastDomainType;
       this.broadcastURI = broadcastURI;
       this.displayText = displayText;
-      this.DNS1 = DNS1;
-      this.DNS2 = DNS2;
+      this.dns1 = dns1;
+      this.dns2 = dns2;
       this.domain = domain;
       this.domainId = domainId;
       this.endIP = endIP;
@@ -438,7 +438,7 @@ public class Network {
       this.name = name;
       this.state = state;
       this.guestIPType = guestIPType;
-      this.VLAN = VLAN;
+      this.vlan = vlan;
       this.trafficType = trafficType;
       this.zoneId = zoneId;
       this.tags = tags != null ? ImmutableSet.copyOf(tags) : ImmutableSet.<Tag> of();
@@ -487,10 +487,10 @@ public class Network {
 
    public List<String> getDNS() {
       ImmutableList.Builder<String> builder = ImmutableList.builder();
-      if (DNS1 != null && !"".equals(DNS1))
-         builder.add(DNS1);
-      if (DNS2 != null && !"".equals(DNS2))
-         builder.add(DNS2);
+      if (dns1 != null && !"".equals(dns1))
+         builder.add(dns1);
+      if (dns2 != null && !"".equals(dns2))
+         builder.add(dns2);
       return builder.build();
    }
 
@@ -639,7 +639,7 @@ public class Network {
     */
    @Nullable
    public String getVLAN() {
-      return this.VLAN;
+      return this.vlan;
    }
 
    /**
@@ -681,7 +681,7 @@ public class Network {
 
    @Override
    public int hashCode() {
-      return Objects.hashCode(id, account, broadcastDomainType, broadcastURI, displayText, DNS1, DNS2, domain, domainId, endIP, gateway, isDefault, isShared, isSystem, netmask, networkDomain, networkOfferingAvailability, networkOfferingDisplayText, networkOfferingId, networkOfferingName, related, startIP, name, state, guestIPType, VLAN, trafficType, zoneId, tags, securityGroupEnabled, services);
+      return Objects.hashCode(id, account, broadcastDomainType, broadcastURI, displayText, dns1, dns2, domain, domainId, endIP, gateway, isDefault, isShared, isSystem, netmask, networkDomain, networkOfferingAvailability, networkOfferingDisplayText, networkOfferingId, networkOfferingName, related, startIP, name, state, guestIPType, vlan, trafficType, zoneId, tags, securityGroupEnabled, services);
    }
 
    @Override
@@ -694,8 +694,8 @@ public class Network {
             && Objects.equal(this.broadcastDomainType, that.broadcastDomainType)
             && Objects.equal(this.broadcastURI, that.broadcastURI)
             && Objects.equal(this.displayText, that.displayText)
-            && Objects.equal(this.DNS1, that.DNS1)
-            && Objects.equal(this.DNS2, that.DNS2)
+            && Objects.equal(this.dns1, that.dns1)
+            && Objects.equal(this.dns2, that.dns2)
             && Objects.equal(this.domain, that.domain)
             && Objects.equal(this.domainId, that.domainId)
             && Objects.equal(this.endIP, that.endIP)
@@ -714,7 +714,7 @@ public class Network {
             && Objects.equal(this.name, that.name)
             && Objects.equal(this.state, that.state)
             && Objects.equal(this.guestIPType, that.guestIPType)
-            && Objects.equal(this.VLAN, that.VLAN)
+            && Objects.equal(this.vlan, that.vlan)
             && Objects.equal(this.trafficType, that.trafficType)
             && Objects.equal(this.zoneId, that.zoneId)
             && Objects.equal(this.tags, that.tags)
@@ -725,12 +725,12 @@ public class Network {
    protected ToStringHelper string() {
       return Objects.toStringHelper(this)
             .add("id", id).add("account", account).add("broadcastDomainType", broadcastDomainType).add("broadcastURI", broadcastURI)
-            .add("displayText", displayText).add("DNS1", DNS1).add("DNS2", DNS2).add("domain", domain).add("domainId", domainId)
+            .add("displayText", displayText).add("DNS1", dns1).add("dns2", dns2).add("domain", domain).add("domainId", domainId)
             .add("endIP", endIP).add("gateway", gateway).add("isDefault", isDefault).add("isShared", isShared).add("isSystem", isSystem)
             .add("netmask", netmask).add("networkDomain", networkDomain).add("networkOfferingAvailability", networkOfferingAvailability)
             .add("networkOfferingDisplayText", networkOfferingDisplayText).add("networkOfferingId", networkOfferingId)
             .add("networkOfferingName", networkOfferingName).add("related", related).add("startIP", startIP).add("name", name)
-            .add("state", state).add("guestIPType", guestIPType).add("VLAN", VLAN).add("trafficType", trafficType)
+            .add("state", state).add("guestIPType", guestIPType).add("VLAN", vlan).add("trafficType", trafficType)
             .add("zoneId", zoneId).add("tags", tags).add("securityGroupEnabled", securityGroupEnabled).add("services", services);
    }
 

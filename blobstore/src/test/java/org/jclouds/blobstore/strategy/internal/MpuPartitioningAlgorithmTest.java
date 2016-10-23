@@ -26,9 +26,9 @@ import org.testng.annotations.Test;
  */
 @Test(groups = "unit")
 public final class MpuPartitioningAlgorithmTest {
-   private final long MIN_PART_SIZE = 5L * 1024 * 1024;
-   private final long MAX_PART_SIZE = 5L * 1024 * 1024 * 1024;
-   private final int MAX_NUMBER_OF_PARTS = 10 * 1000;
+   private static final long MIN_PART_SIZE = 5L * 1024 * 1024;
+   private static final long MAX_PART_SIZE = 5L * 1024 * 1024 * 1024;
+   private static final int MAX_NUMBER_OF_PARTS = 10 * 1000;
 
    /**
     * Below 1 parts the MPU is not used.

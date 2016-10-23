@@ -29,8 +29,8 @@ import com.google.common.base.Function;
 
 @Singleton
 public class ETagFromHttpResponseViaRegex implements Function<HttpResponse, String> {
-   private static Pattern pattern = Pattern.compile("<ETag>([\\S&&[^<]]+)</ETag>");
-   private static String ESCAPED_QUOTE = "&quot;";
+   private static final Pattern PATTERN = Pattern.compile("<ETag>([\\S&&[^<]]+)</ETag>");
+   private static final String ESCAPED_QUOTE = "&quot;";
    private final ReturnStringIf2xx returnStringIf200;
 
    @Inject
@@ -43,7 +43,7 @@ public class ETagFromHttpResponseViaRegex implements Function<HttpResponse, Stri
       String value = null;
       String content = returnStringIf200.apply(response);
       if (content != null) {
-         Matcher matcher = pattern.matcher(content);
+         Matcher matcher = PATTERN.matcher(content);
          if (matcher.find()) {
             value = matcher.group(1);
             if (value.indexOf(ESCAPED_QUOTE) != -1) {

@@ -18,6 +18,7 @@ package org.jclouds.rackspace.cloudloadbalancers.v1.domain.internal;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
+import java.util.Collection;
 import java.util.Map;
 import java.util.Set;
 import java.util.SortedSet;
@@ -40,8 +41,9 @@ public class BaseLoadBalancer<N extends BaseNode<N>, T extends BaseLoadBalancer<
 
    private static final String ENABLED = "enabled";
    private static final String PERSISTENCE_TYPE = "persistenceType";
-   public static Algorithm[] WEIGHTED_ALGORITHMS = { Algorithm.WEIGHTED_LEAST_CONNECTIONS,
-         Algorithm.WEIGHTED_ROUND_ROBIN };
+   public static final Collection<Algorithm> WEIGHTED_ALGORITHMS = ImmutableSet.of(
+         Algorithm.WEIGHTED_LEAST_CONNECTIONS,
+         Algorithm.WEIGHTED_ROUND_ROBIN);
 
    protected String name;
    protected String protocol;

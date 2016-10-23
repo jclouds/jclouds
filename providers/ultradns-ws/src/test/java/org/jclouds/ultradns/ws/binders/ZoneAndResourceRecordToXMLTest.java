@@ -24,7 +24,7 @@ import org.testng.annotations.Test;
 @Test(groups = "unit", testName = "ZoneAndResourceRecordToXMLTest")
 public class ZoneAndResourceRecordToXMLTest {
 
-   String A = "<v01:createResourceRecord><transactionID /><resourceRecord ZoneName=\"jclouds.org.\" Type=\"1\" DName=\"www.jclouds.org.\" TTL=\"3600\"><InfoValues Info1Value=\"1.1.1.1\" /></resourceRecord></v01:createResourceRecord>";
+   private static final String A = "<v01:createResourceRecord><transactionID /><resourceRecord ZoneName=\"jclouds.org.\" Type=\"1\" DName=\"www.jclouds.org.\" TTL=\"3600\"><InfoValues Info1Value=\"1.1.1.1\" /></resourceRecord></v01:createResourceRecord>";
 
    public void testA() {
       assertEquals(ZoneAndResourceRecordToXML.toXML("jclouds.org.", ResourceRecord.rrBuilder()
@@ -34,7 +34,7 @@ public class ZoneAndResourceRecordToXMLTest {
                                                                                   .rdata("1.1.1.1").build()), A);
    }
 
-   String MX = "<v01:createResourceRecord><transactionID /><resourceRecord ZoneName=\"jclouds.org.\" Type=\"15\" DName=\"mail.jclouds.org.\" TTL=\"1800\"><InfoValues Info1Value=\"10\" Info2Value=\"maileast.jclouds.org.\" /></resourceRecord></v01:createResourceRecord>";
+   private static final String MX = "<v01:createResourceRecord><transactionID /><resourceRecord ZoneName=\"jclouds.org.\" Type=\"15\" DName=\"mail.jclouds.org.\" TTL=\"1800\"><InfoValues Info1Value=\"10\" Info2Value=\"maileast.jclouds.org.\" /></resourceRecord></v01:createResourceRecord>";
 
    public void testMX() {
       assertEquals(ZoneAndResourceRecordToXML.toXML("jclouds.org.", ResourceRecord.rrBuilder()
@@ -45,7 +45,7 @@ public class ZoneAndResourceRecordToXMLTest {
                                                                                   .infoValue("maileast.jclouds.org.").build()), MX);
    }
 
-   String A_UPDATE = "<v01:updateResourceRecord><transactionID /><resourceRecord Guid=\"ABCDEF\" ZoneName=\"jclouds.org.\" Type=\"1\" DName=\"www.jclouds.org.\" TTL=\"3600\"><InfoValues Info1Value=\"1.1.1.1\" /></resourceRecord></v01:updateResourceRecord>";
+   private static final String A_UPDATE = "<v01:updateResourceRecord><transactionID /><resourceRecord Guid=\"ABCDEF\" ZoneName=\"jclouds.org.\" Type=\"1\" DName=\"www.jclouds.org.\" TTL=\"3600\"><InfoValues Info1Value=\"1.1.1.1\" /></resourceRecord></v01:updateResourceRecord>";
 
    public void testUpdate() {
       assertEquals(ZoneAndResourceRecordToXML.update("ABCDEF", A), A_UPDATE);

@@ -35,12 +35,12 @@ import com.google.common.collect.Multimaps;
 
 @Singleton
 public class BindMapToHeadersWithPrefix implements Binder {
-   private final Function<String, String> FN;
+   private final Function<String, String> fn;
 
    @Inject
    public BindMapToHeadersWithPrefix(@Named(PROPERTY_USER_METADATA_PREFIX) final String metadataPrefix) {
       checkNotNull(metadataPrefix, PROPERTY_USER_METADATA_PREFIX);
-      FN = new Function<String, String>() {
+      fn = new Function<String, String>() {
 
          @Override
          public String apply(String arg0) {
@@ -63,7 +63,7 @@ public class BindMapToHeadersWithPrefix implements Binder {
       checkArgument(checkNotNull(input, "input") instanceof Map<?, ?>, "this binder is only valid for Maps!");
       checkNotNull(request, "request");
 
-      Map<String, String> userMetadata = Maps2.transformKeys((Map<String, String>) input, FN);
+      Map<String, String> userMetadata = Maps2.transformKeys((Map<String, String>) input, fn);
       return (R) request.toBuilder().replaceHeaders(Multimaps.forMap(userMetadata)).build();
    }
 

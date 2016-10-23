@@ -108,7 +108,7 @@ public class Reflection2Test {
       assertEquals(methodInSuper.getParameters().get(0).getType().getRawType(), Object.class);
    }
 
-   ImmutableSet<String> SET_METHODS = ImmutableSet.of(
+   private static final ImmutableSet<String> SET_METHODS = ImmutableSet.of(
          // Java 6 and 7 methods
          "add",
          "addAll",
@@ -131,7 +131,7 @@ public class Reflection2Test {
          "spliterator",
          "stream");
 
-   ImmutableSet<String> SORTED_SET_METHODS = ImmutableSet.<String>builder()
+   private static final ImmutableSet<String> SORTED_SET_METHODS = ImmutableSet.<String>builder()
          .addAll(SET_METHODS)
          .add("comparator")
          .add("first")

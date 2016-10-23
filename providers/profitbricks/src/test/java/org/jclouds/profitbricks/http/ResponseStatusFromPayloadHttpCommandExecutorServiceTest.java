@@ -42,7 +42,7 @@ import com.squareup.okhttp.mockwebserver.MockWebServer;
 @Test(groups = "unit", testName = "ResponseStatusFromPayloadHttpCommandExecutorServiceTest")
 public class ResponseStatusFromPayloadHttpCommandExecutorServiceTest extends BaseProfitBricksMockTest {
 
-   private final int MAX_RETRIES = 5;
+   private static final int MAX_RETRIES = 5;
 
    @Test
    public void testNotFound() throws Exception {

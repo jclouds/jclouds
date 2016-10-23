@@ -41,7 +41,7 @@ import com.google.common.collect.ImmutableSet;
 
 @Test(groups = { "unit" })
 public class MapToServerInfoTest {
-   public static ServerInfo ONE = new ServerInfo.Builder()
+   public static final ServerInfo ONE = new ServerInfo.Builder()
          .persistent(true)
          .uuid("f8bee9cd-8e4b-4a05-8593-1314e3bfe49b")
          .cpu(2000)
@@ -75,7 +75,7 @@ public class MapToServerInfoTest {
                                  .readBytes(45686784).writeRequests(3698).writeBytes(15147008).build())).build())
          .build();
 
-   public static ServerInfo TWO = new ServerInfo.Builder()
+   public static final ServerInfo TWO = new ServerInfo.Builder()
          .status(ServerStatus.STOPPED)
          .name("Demo")
          .mem(1024)
@@ -123,7 +123,7 @@ public class MapToServerInfoTest {
 
    }
 
-   public static ServerInfo NEW = new ServerInfo.Builder()
+   public static final ServerInfo NEW = new ServerInfo.Builder()
          .persistent(true)
          .uuid("bd98615a-6f74-4d63-ad1e-b13338b9356a")
          .cpu(1000)

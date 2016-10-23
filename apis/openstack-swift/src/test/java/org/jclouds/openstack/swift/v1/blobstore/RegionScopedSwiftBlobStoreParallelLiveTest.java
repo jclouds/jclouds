@@ -56,10 +56,10 @@ import com.google.common.util.concurrent.MoreExecutors;
 @Test(groups = "live", singleThreaded = true)
 public class RegionScopedSwiftBlobStoreParallelLiveTest extends BaseBlobStoreIntegrationTest {
 
-   private final File BIG_FILE;
-   private final long SIZE = 10 * 1000 * 1000;
+   private static final File BIG_FILE = new File("random.dat");
+   private static final long SIZE = 10 * 1000 * 1000;
    private BlobStore blobStore;
-   private String ETAG;
+   private String etag;
    private ListeningExecutorService executor =
          MoreExecutors.listeningDecorator(
                MoreExecutors.getExitingExecutorService(
@@ -67,7 +67,7 @@ public class RegionScopedSwiftBlobStoreParallelLiveTest extends BaseBlobStoreInt
                            5000L, TimeUnit.MILLISECONDS,
                            new ArrayBlockingQueue<Runnable>(10, true), new ThreadPoolExecutor.CallerRunsPolicy())));
 
-   private String CONTAINER = "jcloudsparalleltest" + UUID.randomUUID();
+   private static final String CONTAINER = "jcloudsparalleltest" + UUID.randomUUID();
 
    public RegionScopedSwiftBlobStoreParallelLiveTest() {
       provider = "openstack-swift";
@@ -96,9 +96,9 @@ public class RegionScopedSwiftBlobStoreParallelLiveTest extends BaseBlobStoreInt
       blobStore = getBlobStore();
       createRandomFile(SIZE, BIG_FILE);
       HashCode hashCode = Files.hash(BIG_FILE, Hashing.md5());
-      ETAG = hashCode.toString();
+      etag = hashCode.toString();
       blobStore.createContainerInLocation(null, CONTAINER);
-      System.out.println("generated file md5: " + ETAG);
+      System.out.println("generated file md5: " + etag);
    }
 
    @AfterClass
@@ -119,7 +119,7 @@ public class RegionScopedSwiftBlobStoreParallelLiveTest extends BaseBlobStoreInt
             .build();
       // configure the blobstore to use multipart uploading of the file
       String eTag = blobStore.putBlob(CONTAINER, blob, multipart(executor));
-      // assertEquals(eTag, ETAG);
+      // assertEquals(eTag, etag);
       // The etag returned by Swift is not the md5 of the Blob uploaded
       // It is the md5 of the concatenated segment md5s
    }
@@ -129,7 +129,7 @@ public class RegionScopedSwiftBlobStoreParallelLiveTest extends BaseBlobStoreInt
       final File downloadedFile = new File(BIG_FILE + ".downloaded");
       blobStore.downloadBlob(CONTAINER, BIG_FILE.getName(), downloadedFile, executor);
       String eTag = Files.hash(downloadedFile, Hashing.md5()).toString();
-      assertEquals(eTag, ETAG);
+      assertEquals(eTag, etag);
    }
 
    @Test(dependsOnMethods = "uploadMultipartBlob", singleThreaded = true)
@@ -146,7 +146,7 @@ public class RegionScopedSwiftBlobStoreParallelLiveTest extends BaseBlobStoreInt
       }
 
       is.close();
-      assertEquals(hasher.hash().toString(), ETAG);
+      assertEquals(hasher.hash().toString(), etag);
    }
 
    private void createRandomFile(long size, File file) throws IOException, InterruptedException {

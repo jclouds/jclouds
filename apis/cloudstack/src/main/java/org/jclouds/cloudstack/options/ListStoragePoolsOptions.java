@@ -25,7 +25,7 @@ import com.google.common.collect.ImmutableSet;
  */
 public class ListStoragePoolsOptions extends BaseHttpRequestOptions {
 
-   public static ListStoragePoolsOptions NONE = new ListStoragePoolsOptions();
+   public static final ListStoragePoolsOptions NONE = new ListStoragePoolsOptions();
    
    public static class Builder {
 

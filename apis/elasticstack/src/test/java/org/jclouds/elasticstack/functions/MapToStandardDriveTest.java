@@ -33,7 +33,7 @@ import com.google.common.collect.ImmutableSet;
 
 @Test(groups = { "unit" })
 public class MapToStandardDriveTest {
-   public static StandardDrive ONE = new StandardDrive.Builder()
+   public static final StandardDrive ONE = new StandardDrive.Builder()
          .name("Windows Web Server 2008 R2")
          .uuid("11b84345-7169-4279-8038-18d6ba1a7712")//
          .claimType(ClaimType.SHARED)

@@ -36,8 +36,6 @@ import com.google.common.base.Objects.ToStringHelper;
 */
 public class ServerExtendedStatus {
 
-   public static String PREFIX;
-
    public static Builder<?> builder() { 
       return new ConcreteBuilder();
    }

@@ -33,7 +33,7 @@ import com.google.common.collect.ImmutableSet;
 
 @Test(groups = { "unit" })
 public class MapToDriveInfoTest {
-   public static DriveInfo ONE = new DriveInfo.Builder()
+   public static final DriveInfo ONE = new DriveInfo.Builder()
          .status(DriveStatus.ACTIVE)
          .name("Ubuntu 10.10 Server Edition Linux 64bit Preinstalled System")
          .metrics(
