@@ -49,14 +49,16 @@ import org.jclouds.googlecloudstorage.GoogleCloudStorageProviderMetadata;
 import org.jclouds.http.HttpRequest;
 import org.jclouds.http.HttpResponse;
 import org.jclouds.io.Payload;
-import org.jclouds.io.payloads.ByteSourcePayload;
+import org.jclouds.io.Payloads;
 import org.jclouds.oauth.v2.filters.JWTBearerTokenFlow;
 import org.jclouds.oauth.v2.filters.TestJWTBearerTokenFlow;
 import org.jclouds.providers.ProviderMetadata;
 import org.jclouds.rest.internal.BaseRestApiExpectTest;
 
+import com.google.common.base.Charsets;
 import com.google.common.base.Joiner;
 import com.google.common.base.Supplier;
+import com.google.common.base.Throwables;
 import com.google.common.io.ByteSource;
 import com.google.common.io.Resources;
 import com.google.inject.Binder;
@@ -167,6 +169,10 @@ public class BaseGoogleCloudStorageExpectTest<T> extends BaseRestApiExpectTest<T
    }
 
    protected Payload staticPayloadFromResource(String resource) {
-      return new ByteSourcePayload(Resources.asByteSource(Resources.getResource(getClass(), resource)));
+      try {
+         return Payloads.newStringPayload(Resources.toString(Resources.getResource(getClass(), resource), Charsets.UTF_8));
+      } catch (IOException ex) {
+         throw Throwables.propagate(ex);
+      }
    }
 }
