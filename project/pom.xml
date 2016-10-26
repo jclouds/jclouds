@@ -807,7 +807,8 @@
               <compilerArg>-Xep:NonCanonicalStaticImport:ERROR</compilerArg>
               <compilerArg>-Xep:NonFinalCompileTimeConstant:ERROR</compilerArg>
               <compilerArg>-Xep:Overrides:ERROR</compilerArg>
-              <compilerArg>-Xep:PackageLocation:ERROR</compilerArg>
+              <!-- Disabled because of internal error on Windows with 2.0.5, see https://github.com/google/error-prone/issues/432 -->
+              <!-- <compilerArg>-Xep:PackageLocation:WARNING</compilerArg> -->
               <compilerArg>-Xep:PreconditionsCheckNotNull:ERROR</compilerArg>
               <compilerArg>-Xep:PreconditionsCheckNotNullPrimitive:ERROR</compilerArg>
               <compilerArg>-Xep:ProtoFieldNullComparison:ERROR</compilerArg>
