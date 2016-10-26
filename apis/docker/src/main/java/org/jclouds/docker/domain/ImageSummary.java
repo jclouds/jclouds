@@ -33,9 +33,9 @@ public abstract class ImageSummary {
 
    public abstract String parentId();
 
-   public abstract int size();
+   public abstract long size();
 
-   public abstract int virtualSize();
+   public abstract long virtualSize();
 
    public abstract List<String> repoTags();
 
@@ -43,7 +43,7 @@ public abstract class ImageSummary {
    }
 
    @SerializedNames({"Id", "Created", "ParentId", "Size", "VirtualSize", "RepoTags"})
-   public static ImageSummary create(String id, long created, String parentId, int size, int virtualSize,
+   public static ImageSummary create(String id, long created, String parentId, long size, long virtualSize,
                                      List<String> repoTags) {
       return new AutoValue_ImageSummary(id, created, parentId, size, virtualSize, copyOf(repoTags));
    }
