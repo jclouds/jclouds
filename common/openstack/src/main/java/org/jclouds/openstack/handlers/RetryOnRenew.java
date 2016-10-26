@@ -16,9 +16,6 @@
  */
 package org.jclouds.openstack.handlers;
 
-import static org.jclouds.http.HttpUtils.closeClientButKeepContentStream;
-import static org.jclouds.http.HttpUtils.releasePayload;
-
 import java.util.concurrent.TimeUnit;
 
 import javax.annotation.Resource;
@@ -75,49 +72,43 @@ public class RetryOnRenew implements HttpRetryHandler {
    @Override
    public boolean shouldRetryRequest(HttpCommand command, HttpResponse response) {
       boolean retry = false; // default
-      try {
-         switch (response.getStatusCode()) {
-            case 401:
-               // Do not retry on 401 from authentication request
-               Multimap<String, String> headers = command.getCurrentRequest().getHeaders();
-               if (headers != null && headers.containsKey(AuthHeaders.AUTH_USER)
-                        && headers.containsKey(AuthHeaders.AUTH_KEY) && !headers.containsKey(AuthHeaders.AUTH_TOKEN)) {
-                  retry = false;
-               } else {
-                  closeClientButKeepContentStream(response);
-                  // This is not an authentication request returning 401
-                  // Check if we already had seen this request
-                  Integer count = retryCountMap.getIfPresent(command);
+      switch (response.getStatusCode()) {
+         case 401:
+            // Do not retry on 401 from authentication request
+            Multimap<String, String> headers = command.getCurrentRequest().getHeaders();
+            if (headers != null && headers.containsKey(AuthHeaders.AUTH_USER)
+                     && headers.containsKey(AuthHeaders.AUTH_KEY) && !headers.containsKey(AuthHeaders.AUTH_TOKEN)) {
+               retry = false;
+            } else {
+               // This is not an authentication request returning 401
+               // Check if we already had seen this request
+               Integer count = retryCountMap.getIfPresent(command);
 
-                  if (count == null) {
-                     // First time this non-authentication request failed
-                     logger.debug("invalidating authentication token - first time for %s", command);
-                     retryCountMap.put(command, 1);
-                     authenticationResponseCache.invalidateAll();
-                     retry = true;
+               if (count == null) {
+                  // First time this non-authentication request failed
+                  logger.debug("invalidating authentication token - first time for %s", command);
+                  retryCountMap.put(command, 1);
+                  authenticationResponseCache.invalidateAll();
+                  retry = true;
+               } else {
+                  // This request has failed before
+                  if (count + 1 >= NUM_RETRIES) {
+                     logger.debug("too many 401s - giving up after: %s for %s", count, command);
+                     retry = false;
                   } else {
-                     // This request has failed before
-                     if (count + 1 >= NUM_RETRIES) {
-                        logger.debug("too many 401s - giving up after: %s for %s", count, command);
-                        retry = false;
-                     } else {
-                        // Retry just in case
-                        logger.debug("invalidating authentication token - retry %s for %s", count, command);
-                        retryCountMap.put(command, count + 1);
-                        // Wait between retries
-                        authenticationResponseCache.invalidateAll();
-                        Uninterruptibles.sleepUninterruptibly(5, TimeUnit.SECONDS);
-                        retry = true;
-                     }
+                     // Retry just in case
+                     logger.debug("invalidating authentication token - retry %s for %s", count, command);
+                     retryCountMap.put(command, count + 1);
+                     // Wait between retries
+                     authenticationResponseCache.invalidateAll();
+                     Uninterruptibles.sleepUninterruptibly(5, TimeUnit.SECONDS);
+                     retry = true;
                   }
                }
-            break;
-         }
-         return retry;
-
-      } finally {
-         releasePayload(response);
+            }
+         break;
       }
+      return retry;
    }
 
 }

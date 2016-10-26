@@ -110,14 +110,11 @@ public class RetryOnRenewTest {
    @Test
    public void test408ShouldRetry() {
       HttpCommand command = createMock(HttpCommand.class);
-      HttpRequest request = createMock(HttpRequest.class);
       HttpResponse response = createMock(HttpResponse.class);
       @SuppressWarnings("unchecked")
       LoadingCache<Credentials, Auth> cache = createMock(LoadingCache.class);
       BackoffLimitedRetryHandler backoffHandler = createMock(BackoffLimitedRetryHandler.class);
 
-      expect(response.getPayload()).andReturn(Payloads.newStringPayload(
-                  "The server has waited too long for the request to be sent by the client.")).times(2);
       expect(backoffHandler.shouldRetryRequest(command, response)).andReturn(true).once();
       expect(response.getStatusCode()).andReturn(408).once();
 
@@ -145,7 +142,6 @@ public class RetryOnRenewTest {
       LoadingCache<Credentials, Auth> cache = createMock(LoadingCache.class);
       BackoffLimitedRetryHandler backoffHandler = createMock(BackoffLimitedRetryHandler.class);
 
-      expect(response.getPayload()).andReturn(Payloads.newStringPayload("")).times(2);
       expect(response.getStatusCode()).andReturn(404).once();
 
       replay(command);
