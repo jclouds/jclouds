@@ -750,7 +750,10 @@ public class FilesystemStorageStrategyImpl implements LocalStorageStrategy {
     */
    private static String normalize(String path) {
       if (null != path) {
-         return path.replace("/", File.separator).replace("\\", File.separator);
+         if (isWindows()) {
+            path = path.replace("\\", File.separator);
+         }
+         return path.replace("/", File.separator);
       }
       return path;
    }
@@ -759,7 +762,7 @@ public class FilesystemStorageStrategyImpl implements LocalStorageStrategy {
     * Convert path to jclouds standard (/)
     */
    private static String denormalize(String path) {
-      if (null != path) {
+      if (null != path && isWindows() ) {
          return path.replace("\\", "/");
       }
       return path;
@@ -782,11 +785,11 @@ public class FilesystemStorageStrategyImpl implements LocalStorageStrategy {
 
       // search for separator chars
       if (!onlyTrailing) {
-         if (pathToBeCleaned.charAt(0) == '/' || pathToBeCleaned.charAt(0) == '\\')
+         if (pathToBeCleaned.charAt(0) == '/' || (pathToBeCleaned.charAt(0) == '\\' && isWindows()))
             beginIndex = 1;
       }
       if (pathToBeCleaned.charAt(pathToBeCleaned.length() - 1) == '/' ||
-            pathToBeCleaned.charAt(pathToBeCleaned.length() - 1) == '\\')
+            (pathToBeCleaned.charAt(pathToBeCleaned.length() - 1) == '\\' && isWindows()))
          endIndex--;
 
       return pathToBeCleaned.substring(beginIndex, endIndex);
