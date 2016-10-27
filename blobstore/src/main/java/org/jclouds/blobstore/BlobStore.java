@@ -173,7 +173,9 @@ public interface BlobStore {
     *           container where the directory resides
     * @param directory
     *           full path to the directory
+    * @deprecated use prefix and delimiter instead
     */
+   @Deprecated
    boolean directoryExists(String container, String directory);
 
    /**
@@ -183,7 +185,9 @@ public interface BlobStore {
     *           container to create the directory in
     * @param directory
     *           full path to the directory
+    * @deprecated use prefix and delimiter instead
     */
+   @Deprecated
    void createDirectory(String container, String directory);
 
    /**
@@ -193,7 +197,9 @@ public interface BlobStore {
     *           container to delete the directory from
     * @param directory
     *           full path to the directory to delete
+    * @deprecated use prefix and delimiter instead
     */
+   @Deprecated
    void deleteDirectory(String containerName, String name);
 
    /**
