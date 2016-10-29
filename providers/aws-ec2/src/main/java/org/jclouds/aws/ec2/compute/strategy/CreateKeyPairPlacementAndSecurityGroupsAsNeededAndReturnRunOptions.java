@@ -43,14 +43,15 @@ import org.jclouds.ec2.compute.strategy.CreateKeyPairAndSecurityGroupsAsNeededAn
 import org.jclouds.ec2.domain.KeyPair;
 import org.jclouds.ec2.domain.Subnet;
 import org.jclouds.ec2.options.RunInstancesOptions;
-import org.jclouds.ec2.util.SubnetFilterBuilder;
 import org.jclouds.logging.Logger;
 
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Function;
 import com.google.common.base.Optional;
 import com.google.common.base.Predicate;
+import com.google.common.base.Predicates;
 import com.google.common.cache.LoadingCache;
+import com.google.common.collect.Iterables;
 
 @Singleton
 public class CreateKeyPairPlacementAndSecurityGroupsAsNeededAndReturnRunOptions extends
@@ -192,7 +193,7 @@ public class CreateKeyPairPlacementAndSecurityGroupsAsNeededAndReturnRunOptions 
          awsInstanceOptions.withSecurityGroupIds(awsTemplateOptions.getGroupIds());
       String subnetId = awsTemplateOptions.getSubnetId();
       if (subnetId != null) {
-         Set<String> groups = getSecurityGroupsForTagAndOptions(region, group, vpcIdForSubnet(subnetId), template.getOptions());
+         Set<String> groups = getSecurityGroupsForTagAndOptions(region, group, vpcIdForSubnet(region, subnetId), template.getOptions());
          awsInstanceOptions.withSubnetId(subnetId);
          awsInstanceOptions.withSecurityGroupIds(groups);
       } else {
@@ -202,8 +203,8 @@ public class CreateKeyPairPlacementAndSecurityGroupsAsNeededAndReturnRunOptions 
    }
    
    @VisibleForTesting
-   String vpcIdForSubnet(String subnetId) {
-      Optional<Subnet> subnet = awsEC2Api.getSubnetApi().get().filter(new SubnetFilterBuilder().subnetId(subnetId).build()).first();
+   String vpcIdForSubnet(String region, String subnetId) {
+      Optional<Subnet> subnet = Iterables.tryFind(awsEC2Api.getAWSSubnetApi().get().describeSubnetsInRegion(region, subnetId), Predicates.<Subnet>notNull());
       if (!subnet.isPresent()) {
          throw new IllegalArgumentException("Subnet " + subnetId + " not found");
       }

@@ -19,18 +19,26 @@ package org.jclouds.aws.ec2.features;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
 
+import java.util.Random;
 import java.util.Set;
 
+import org.jclouds.aws.ec2.AWSEC2Api;
+import org.jclouds.aws.ec2.domain.VPC;
+import org.jclouds.aws.ec2.options.CreateSecurityGroupOptions;
+import org.jclouds.aws.ec2.options.CreateVpcOptions;
+import org.jclouds.ec2.EC2Api;
 import org.jclouds.ec2.domain.SecurityGroup;
 import org.jclouds.ec2.domain.UserIdGroupPair;
 import org.jclouds.ec2.features.SecurityGroupApiLiveTest;
 import org.jclouds.ec2.util.IpPermissions;
 import org.jclouds.net.domain.IpPermission;
 import org.jclouds.net.domain.IpProtocol;
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 import com.google.common.base.Predicate;
 import com.google.common.collect.ImmutableMultimap;
+import com.google.common.collect.Iterables;
 
 @Test(groups = "live", singleThreaded = true)
 public class AWSSecurityGroupApiLiveTest extends SecurityGroupApiLiveTest {
@@ -114,6 +122,42 @@ public class AWSSecurityGroupApiLiveTest extends SecurityGroupApiLiveTest {
       } finally {
          client.deleteSecurityGroupInRegion(null, group2Name);
          client.deleteSecurityGroupInRegion(null, group1Name);
+      }
+   }
+
+   @Override
+   @BeforeClass(groups = { "integration", "live" })
+   public void setupContext() {
+      super.setupContext();
+      ec2Api = view.unwrapApi(EC2Api.class);
+      client = ec2Api.getSecurityGroupApi().get();
+   }
+
+   @Test
+   void testCreateSecurityGroupInVpc() {
+      String region = "us-west-2";
+      String groupName = PREFIX + "1" + new Random().nextInt(10000);
+      String description = "jclouds testCreateSecurityGroupInVpc";
+      
+      VPCApi vpcClient = AWSEC2Api.class.cast(ec2Api).getVPCApi().get();
+      AWSSecurityGroupApi sgClient = AWSSecurityGroupApi.class.cast(client);
+
+      VPC vpc = vpcClient.createVpc(region, "10.0.0.0/16", CreateVpcOptions.NONE);
+      try {
+         String sgId = sgClient.createSecurityGroupInRegionAndReturnId(
+               region, groupName, description, CreateSecurityGroupOptions.Builder.vpcId(vpc.id()));
+
+         try {
+            Set<SecurityGroup> securityGroups = sgClient.describeSecurityGroupsInRegionWithFilter(
+                  region, ImmutableMultimap.of("vpc-id", vpc.id(), "group-id", sgId));
+            SecurityGroup sg = Iterables.getOnlyElement(securityGroups);
+            assertEquals(sg.getId(), sgId);
+            assertEquals(sg.getId(), sgId);
+         } finally {
+            sgClient.deleteSecurityGroupInRegionById(region, sgId);
+         }
+      } finally {
+         vpcClient.deleteVpc(region, vpc.id());
       }
    }
 }

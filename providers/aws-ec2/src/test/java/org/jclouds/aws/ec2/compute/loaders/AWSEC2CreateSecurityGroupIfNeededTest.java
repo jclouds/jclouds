@@ -82,7 +82,8 @@ public class AWSEC2CreateSecurityGroupIfNeededTest {
                   new CreateSecurityGroupOptions().vpcId("vpc"))).andReturn("sg-123456");
       expect(group.getOwnerId()).andReturn("ownerId");
       client.authorizeSecurityGroupIngressInRegion("region", "sg-123456", permissions.build());
-      expect(client.describeSecurityGroupsInRegion("region", "group")).andReturn(Set.class.cast(groups));
+      expect(client.describeSecurityGroupsInRegionById("region", "sg-123456"))
+               .andReturn(Set.class.cast(groups));
 
 
       replay(client);

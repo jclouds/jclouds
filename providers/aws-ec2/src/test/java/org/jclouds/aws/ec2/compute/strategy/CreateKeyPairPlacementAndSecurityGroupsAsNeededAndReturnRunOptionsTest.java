@@ -308,7 +308,7 @@ public class CreateKeyPairPlacementAndSecurityGroupsAsNeededAndReturnRunOptionsT
       expect(options.getSubnetId()).andReturn("1");
       expect(options.getUserData()).andReturn(null);
       expect(options.isMonitoringEnabled()).andReturn(false);
-      expect(strategy.vpcIdForSubnet("1")).andReturn("vpc1");
+      expect(strategy.vpcIdForSubnet("", "1")).andReturn("vpc1");
 
       // replay mocks
       replay(options);

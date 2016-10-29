@@ -40,11 +40,6 @@ public class EC2ImageExtensionExpectTest extends BaseEC2ComputeServiceExpectTest
       requestResponseMap.put(describeRegionsRequest, describeRegionsResponse);
       requestResponseMap.put(describeAvailabilityZonesRequest, describeAvailabilityZonesResponse);
       requestResponseMap.put(describeImagesRequest, describeImagesResponse);
-      requestResponseMap.put(createKeyPairRequest, createKeyPairResponse);
-      requestResponseMap.put(createSecurityGroupRequest, createSecurityGroupResponse);
-      requestResponseMap.put(describeSecurityGroupRequest, describeSecurityGroupResponse);
-      requestResponseMap.put(authorizeSecurityGroupIngressRequest22, authorizeSecurityGroupIngressResponse);
-      requestResponseMap.put(authorizeSecurityGroupIngressRequestGroup, authorizeSecurityGroupIngressResponse);
       requestResponseMap.put(describeInstanceRequest, describeInstanceResponse);
       
       HttpRequest createImageRequest = formSigner.filter(HttpRequest.builder().method("POST")

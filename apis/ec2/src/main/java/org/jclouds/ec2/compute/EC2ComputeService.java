@@ -32,9 +32,6 @@ import static org.jclouds.ec2.reference.EC2Constants.PROPERTY_EC2_GENERATE_INSTA
 import static org.jclouds.ec2.util.Tags.resourceToTagsAsMap;
 import static org.jclouds.util.Predicates2.retry;
 
-import javax.inject.Named;
-import javax.inject.Provider;
-import javax.inject.Singleton;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -42,21 +39,10 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.atomic.AtomicReference;
 
-import com.google.common.annotations.VisibleForTesting;
-import com.google.common.base.Function;
-import com.google.common.base.Optional;
-import com.google.common.base.Predicate;
-import com.google.common.base.Supplier;
-import com.google.common.cache.LoadingCache;
-import com.google.common.collect.FluentIterable;
-import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.ImmutableMultimap;
-import com.google.common.collect.ImmutableMultimap.Builder;
-import com.google.common.collect.ImmutableSet;
-import com.google.common.collect.Maps;
-import com.google.common.collect.Multimap;
-import com.google.common.util.concurrent.ListeningExecutorService;
-import com.google.inject.Inject;
+import javax.inject.Named;
+import javax.inject.Provider;
+import javax.inject.Singleton;
+
 import org.jclouds.Constants;
 import org.jclouds.aws.util.AWSUtils;
 import org.jclouds.collect.Memoized;
@@ -95,9 +81,26 @@ import org.jclouds.ec2.compute.options.EC2TemplateOptions;
 import org.jclouds.ec2.domain.InstanceState;
 import org.jclouds.ec2.domain.KeyPair;
 import org.jclouds.ec2.domain.RunningInstance;
+import org.jclouds.ec2.domain.SecurityGroup;
 import org.jclouds.ec2.domain.Tag;
 import org.jclouds.ec2.util.TagFilterBuilder;
 import org.jclouds.scriptbuilder.functions.InitAdminAccess;
+
+import com.google.common.annotations.VisibleForTesting;
+import com.google.common.base.Function;
+import com.google.common.base.Optional;
+import com.google.common.base.Predicate;
+import com.google.common.base.Supplier;
+import com.google.common.cache.LoadingCache;
+import com.google.common.collect.FluentIterable;
+import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.ImmutableMultimap;
+import com.google.common.collect.ImmutableMultimap.Builder;
+import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.Maps;
+import com.google.common.collect.Multimap;
+import com.google.common.util.concurrent.ListeningExecutorService;
+import com.google.inject.Inject;
 
 @Singleton
 public class EC2ComputeService extends BaseComputeService {
@@ -220,10 +223,16 @@ public class EC2ComputeService extends BaseComputeService {
       checkNotNull(emptyToNull(group), "group must be defined");
       String groupName = namingConvention.create().sharedNameForGroup(group);
 
-      if (!client.getSecurityGroupApi().get().describeSecurityGroupsInRegion(region, groupName).isEmpty()) {
+      Multimap<String, String> securityGroupFilterByName = ImmutableMultimap.of("group-name", groupName);
+      Set<SecurityGroup> securityGroupsToDelete = client.getSecurityGroupApi().get()
+              .describeSecurityGroupsInRegionWithFilter(region, securityGroupFilterByName);
+      if (securityGroupsToDelete.size() > 1) {
+         logger.warn("When trying to delete security group %s found more than one matching the name. Will delete all - %s.",
+                 group, securityGroupsToDelete);
+      }
+      for (SecurityGroup securityGroup : securityGroupsToDelete) {
          logger.debug(">> deleting securityGroup(%s)", groupName);
-         client.getSecurityGroupApi().get().deleteSecurityGroupInRegion(region, groupName);
-         // TODO: test this clear happens
+         client.getSecurityGroupApi().get().deleteSecurityGroupInRegionById(region, securityGroup.getId());
          securityGroupMap.invalidate(new RegionNameAndIngressRules(region, groupName, null, false, null));
          logger.debug("<< deleted securityGroup(%s)", groupName);
       }

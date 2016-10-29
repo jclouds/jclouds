@@ -30,6 +30,7 @@ import org.jclouds.logging.Logger;
 import org.jclouds.rest.ResourceNotFoundException;
 
 import com.google.common.base.Predicate;
+import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Iterables;
 import com.google.inject.Inject;
 
@@ -57,8 +58,8 @@ public class SecurityGroupPresent implements Predicate<RegionAndName> {
       }
    }
 
-   protected SecurityGroup refresh(RegionAndName securityGroup) {
-      return Iterables.getOnlyElement(client.getSecurityGroupApi().get().describeSecurityGroupsInRegion(
-            securityGroup.getRegion(), securityGroup.getName()));
+   protected SecurityGroup refresh(final RegionAndName securityGroup) {
+      return Iterables.getOnlyElement(client.getSecurityGroupApi().get().describeSecurityGroupsInRegionWithFilter(securityGroup.getRegion(),
+              ImmutableMultimap.of("group-name", securityGroup.getName())));
    }
 }

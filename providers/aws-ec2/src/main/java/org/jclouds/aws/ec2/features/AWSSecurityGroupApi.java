@@ -139,6 +139,15 @@ public interface AWSSecurityGroupApi extends SecurityGroupApi {
    @FormParams(keys = ACTION, values = "DescribeSecurityGroups")
    @XMLResponseParser(AWSEC2DescribeSecurityGroupsResponseHandler.class)
    @Fallback(EmptySetOnNotFoundOr404.class)
+   Set<SecurityGroup> describeSecurityGroupsInRegion(
+           @EndpointParam(parser = RegionToEndpointOrProviderIfNull.class) @Nullable String region);
+   
+   @Named("DescribeSecurityGroups")
+   @POST
+   @Path("/")
+   @FormParams(keys = ACTION, values = "DescribeSecurityGroups")
+   @XMLResponseParser(AWSEC2DescribeSecurityGroupsResponseHandler.class)
+   @Fallback(EmptySetOnNotFoundOr404.class)
    Set<SecurityGroup> describeSecurityGroupsInRegionWithFilter(
            @EndpointParam(parser = RegionToEndpointOrProviderIfNull.class) @Nullable String region,
            @BinderParam(BindFiltersToIndexedFormParams.class) Multimap<String, String> filter);

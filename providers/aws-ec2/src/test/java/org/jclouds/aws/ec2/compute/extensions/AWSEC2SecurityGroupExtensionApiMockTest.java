@@ -153,8 +153,8 @@ public class AWSEC2SecurityGroupExtensionApiMockTest extends BaseAWSEC2ApiMockTe
       assertPosted(DEFAULT_REGION, "Action=DescribeRegions");
       assertPosted(DEFAULT_REGION,
             "Action=CreateSecurityGroup&GroupName=jclouds%23some-group&GroupDescription=jclouds%23some-group");
-      assertPosted(DEFAULT_REGION, "Action=DescribeSecurityGroups&GroupName.1=jclouds%23some-group");
-      assertPosted(DEFAULT_REGION, "Action=DescribeSecurityGroups&GroupName.1=jclouds%23some-group");
+      assertPosted(DEFAULT_REGION, "Action=DescribeSecurityGroups&Filter.1.Name=group-name&Filter.1.Value.1=jclouds%23some-group");
+      assertPosted(DEFAULT_REGION, "Action=DescribeSecurityGroups&Filter.1.Name=group-name&Filter.1.Value.1=jclouds%23some-group");
       assertPosted(DEFAULT_REGION, "Action=DescribeSecurityGroups&GroupId.1=sg-3c6ef654");
       assertPosted(DEFAULT_REGION, "Action=DescribeAvailabilityZones");
    }
