@@ -118,6 +118,7 @@ public class EC2ComputeServiceExpectTest extends BaseEC2ComputeServiceExpectTest
       requestResponseMap.put(describeImagesRequest, describeImagesResponse);
       requestResponseMap.put(createKeyPairRequest, createKeyPairResponse);
       requestResponseMap.put(createSecurityGroupRequest, createSecurityGroupResponse);
+      requestResponseMap.put(describeSecurityGroupFilteredRequest, describeSecurityGroupFilteredResponse);
       requestResponseMap.put(describeSecurityGroupRequest, describeSecurityGroupResponse);
       requestResponseMap.put(authorizeSecurityGroupIngressRequest22, authorizeSecurityGroupIngressResponse);
       requestResponseMap.put(authorizeSecurityGroupIngressRequestGroup, authorizeSecurityGroupIngressResponse);
@@ -144,6 +145,7 @@ public class EC2ComputeServiceExpectTest extends BaseEC2ComputeServiceExpectTest
       requestResponseMap.put(describeImagesRequest, describeImagesResponse);
       requestResponseMap.put(createKeyPairRequest, createKeyPairResponse);
       requestResponseMap.put(createSecurityGroupRequest, createSecurityGroupResponse);
+      requestResponseMap.put(describeSecurityGroupFilteredRequest, describeSecurityGroupFilteredResponse);
       requestResponseMap.put(describeSecurityGroupRequest, describeSecurityGroupResponse);
       requestResponseMap.put(authorizeSecurityGroupIngressRequest22, authorizeSecurityGroupIngressResponse);
       requestResponseMap.put(authorizeSecurityGroupIngressRequestGroup, authorizeSecurityGroupIngressResponse);
@@ -171,6 +173,7 @@ public class EC2ComputeServiceExpectTest extends BaseEC2ComputeServiceExpectTest
       requestResponseMap.put(describeImagesRequest, describeImagesResponse);
       requestResponseMap.put(createKeyPairRequest, createKeyPairResponse);
       requestResponseMap.put(createSecurityGroupRequest, createSecurityGroupResponse);
+      requestResponseMap.put(describeSecurityGroupFilteredRequest, describeSecurityGroupFilteredResponse);
       requestResponseMap.put(describeSecurityGroupRequest, describeSecurityGroupResponse);
       requestResponseMap.put(authorizeSecurityGroupIngressRequest22, authorizeSecurityGroupIngressResponse);
       requestResponseMap.put(authorizeSecurityGroupIngressRequestGroup, authorizeSecurityGroupIngressResponse);
@@ -263,6 +266,7 @@ public class EC2ComputeServiceExpectTest extends BaseEC2ComputeServiceExpectTest
       requestResponseMap.put(describeImagesRequest, describeImagesResponse);
       requestResponseMap.put(createKeyPairRequest, createKeyPairResponse);
       requestResponseMap.put(createSecurityGroupRequest, createSecurityGroupResponse);
+      requestResponseMap.put(describeSecurityGroupFilteredRequest, describeSecurityGroupFilteredResponse);
       requestResponseMap.put(describeSecurityGroupRequest, describeSecurityGroupResponse);
       requestResponseMap.put(authorizeSecurityGroupIngressRequest22, authorizeSecurityGroupIngressResponse);
       requestResponseMap.put(authorizeSecurityGroupIngressRequestGroup, authorizeSecurityGroupIngressResponse);
@@ -298,6 +302,7 @@ public class EC2ComputeServiceExpectTest extends BaseEC2ComputeServiceExpectTest
       requestResponseMap.put(describeImagesRequest, describeImagesResponse);
       requestResponseMap.put(createKeyPairRequest, createKeyPairResponse);
       requestResponseMap.put(createSecurityGroupRequest, createSecurityGroupResponse);
+      requestResponseMap.put(describeSecurityGroupFilteredRequest, describeSecurityGroupFilteredResponse);
       requestResponseMap.put(describeSecurityGroupRequest, describeSecurityGroupResponse);
       requestResponseMap.put(authorizeSecurityGroupIngressRequest22, authorizeSecurityGroupIngressResponse);
       requestResponseMap.put(authorizeSecurityGroupIngressRequestGroup, authorizeSecurityGroupIngressResponse);

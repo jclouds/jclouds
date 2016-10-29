@@ -14,36 +14,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jclouds.ec2.compute.functions;
+package org.jclouds.ec2.binders;
 
-import static com.google.common.base.Preconditions.checkNotNull;
-import static com.google.common.collect.ImmutableMultimap.of;
-
-import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import org.jclouds.aws.util.AWSUtils;
-import org.jclouds.ec2.EC2Api;
+import org.jclouds.http.HttpRequest;
+import org.jclouds.rest.Binder;
 
-import com.google.common.base.Function;
-import com.google.common.collect.Iterables;
-
+/**
+ * Binds the String [] to query parameters named with SubnetId.index
+ */
 @Singleton
-public class EC2SecurityGroupIdFromName implements Function<String, String> {
-   protected EC2Api api;
-
-   @Inject
-   public EC2SecurityGroupIdFromName(EC2Api api) {
-      this.api = checkNotNull(api, "api");
-   }
-
+public class BindSubnetIdsToIndexedFormParams implements Binder {
    @Override
-   public String apply(String input) {
-      checkNotNull(input, "input");
-      String[] parts = AWSUtils.parseHandle(input);
-      String region = parts[0];
-      String name = parts[1];
-      return Iterables.getOnlyElement(api.getSecurityGroupApi().get()
-               .describeSecurityGroupsInRegionWithFilter(region, of("group-name", name))).getId();
+   public <R extends HttpRequest> R bindToRequest(R request, Object input) {
+      return AWSUtils.indexStringArrayToFormValuesWithPrefix(request, "SubnetId", input);
    }
+
 }

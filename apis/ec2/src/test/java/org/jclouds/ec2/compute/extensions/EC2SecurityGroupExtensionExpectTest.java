@@ -49,6 +49,12 @@ import com.google.common.collect.Sets;
 @Test(groups = "unit", testName = "EC2SecurityGroupExtensionExpectTest")
 public class EC2SecurityGroupExtensionExpectTest extends BaseEC2ComputeServiceExpectTest {
    
+   public EC2SecurityGroupExtensionExpectTest() {
+      // Don't use the default (us-east-1) region. Better to ensure we always pass through the
+      // desired region, rather than it falling back to the default!
+      region = "eu-west-1";
+   }
+   
    public void testListSecurityGroups() {
       HttpRequest describeSecurityGroupsAllRequest = 
          formSigner.filter(HttpRequest.builder()
@@ -209,10 +215,24 @@ public class EC2SecurityGroupExtensionExpectTest extends BaseEC2ComputeServiceEx
          .payload(payloadFromResourceWithContentType(
                                                      "/describe_securitygroups_extension_single.xml", MediaType.APPLICATION_XML)).build();
       
+      HttpRequest describeSecurityGroupsSingleFilteredRequest = 
+            formSigner.filter(HttpRequest.builder()
+                              .method("POST")
+                              .endpoint("https://ec2." + region + ".amazonaws.com/")
+                              .addHeader("Host", "ec2." + region + ".amazonaws.com")
+                              .addFormParam("Action", "DescribeSecurityGroups")
+                              .addFormParam("Filter.1.Name", "group-name")
+                              .addFormParam("Filter.1.Value.1", "jclouds#some-group").build());
+
+         HttpResponse describeSecurityGroupsSingleFilteredResponse = 
+            HttpResponse.builder().statusCode(200)
+            .payload(payloadFromResourceWithContentType(
+                                                        "/describe_securitygroups_extension_single.xml", MediaType.APPLICATION_XML)).build();
 
       Builder<HttpRequest, HttpResponse> requestResponseMap = ImmutableMap.<HttpRequest, HttpResponse> builder();
       requestResponseMap.put(describeRegionsRequest, describeRegionsResponse);
       requestResponseMap.put(describeAvailabilityZonesRequest, describeAvailabilityZonesResponse);
+      requestResponseMap.put(describeSecurityGroupsSingleFilteredRequest, describeSecurityGroupsSingleFilteredResponse);
       requestResponseMap.put(describeSecurityGroupsSingleRequest, describeSecurityGroupsSingleResponse);
       requestResponseMap.put(createKeyPairRequest, createKeyPairResponse);
       requestResponseMap.put(createSecurityGroupExtRequest, createSecurityGroupResponse);

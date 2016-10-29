@@ -46,6 +46,8 @@ public abstract class BaseEC2ComputeServiceExpectTest extends BaseEC2ComputeServ
    protected HttpResponse createKeyPairResponse;
    protected HttpRequest createSecurityGroupRequest;
    protected HttpResponse createSecurityGroupResponse;
+   protected HttpRequest describeSecurityGroupFilteredRequest;
+   protected HttpResponse describeSecurityGroupFilteredResponse;
    protected HttpRequest describeSecurityGroupRequest;
    protected HttpResponse describeSecurityGroupResponse;
    protected HttpRequest authorizeSecurityGroupIngressRequest22;
@@ -124,6 +126,20 @@ public abstract class BaseEC2ComputeServiceExpectTest extends BaseEC2ComputeServ
                            .payload(payloadFromResourceWithContentType(
                                  "/created_securitygroup.xml", MediaType.APPLICATION_XML)).build();
 
+      describeSecurityGroupFilteredRequest = 
+            formSigner.filter(HttpRequest.builder()
+                       .method("POST")
+                       .endpoint("https://ec2." + region + ".amazonaws.com/")
+                       .addHeader("Host", "ec2." + region + ".amazonaws.com")
+                       .addFormParam("Action", "DescribeSecurityGroups")
+                       .addFormParam("Filter.1.Name", "group-name")
+                       .addFormParam("Filter.1.Value.1", "jclouds#test").build());
+   
+      describeSecurityGroupFilteredResponse = 
+            HttpResponse.builder().statusCode(200)
+                        .payload(payloadFromResourceWithContentType(
+                              "/new_securitygroup.xml", MediaType.APPLICATION_XML)).build();
+   
       describeSecurityGroupRequest = 
                formSigner.filter(HttpRequest.builder()
                           .method("POST")

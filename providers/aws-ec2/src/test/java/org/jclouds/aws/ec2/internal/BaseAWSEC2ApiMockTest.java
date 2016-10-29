@@ -116,7 +116,7 @@ public class BaseAWSEC2ApiMockTest {
       }
    }
 
-   @BeforeMethod
+   @BeforeMethod(alwaysRun = true)
    public void start() throws IOException {
       MockWebServer server = new MockWebServer();
       server.play();

@@ -37,6 +37,7 @@ public class DescribeSubnetsResponseHandler extends
    private StringBuilder currentText = new StringBuilder();
    private boolean inSubnetSet;
    private boolean inTagSet;
+   private boolean inIpv6CidrBlockAssociationSet;
    private Builder<Subnet> subnets = ImmutableSet.<Subnet> builder();
 
    @Inject
@@ -56,6 +57,8 @@ public class DescribeSubnetsResponseHandler extends
       } else if (inSubnetSet) {
          if (equalsOrSuffix(qName, "tagSet")) {
             inTagSet = true;
+         } else if (equalsOrSuffix(qName, "ipv6CidrBlockAssociationSet")) {
+            inIpv6CidrBlockAssociationSet = true;
          }
          subnetHandler.startElement(url, name, qName, attributes);
       }
@@ -68,7 +71,10 @@ public class DescribeSubnetsResponseHandler extends
       } else if (equalsOrSuffix(qName, "tagSet")) {
          inTagSet = false;
          subnetHandler.endElement(uri, name, qName);
-      } else if (equalsOrSuffix(qName, "item") && !inTagSet) {
+      } else if (equalsOrSuffix(qName, "ipv6CidrBlockAssociationSet")) {
+         inIpv6CidrBlockAssociationSet = false;
+         subnetHandler.endElement(uri, name, qName);
+      } else if (equalsOrSuffix(qName, "item") && !inTagSet && !inIpv6CidrBlockAssociationSet) {
          subnets.add(subnetHandler.getResult());
       } else if (inSubnetSet) {
          subnetHandler.endElement(uri, name, qName);

@@ -24,6 +24,7 @@ import org.jclouds.aws.ec2.AWSEC2Api;
 import org.jclouds.aws.ec2.domain.VPC;
 import org.jclouds.aws.ec2.options.CreateVpcOptions;
 import org.jclouds.compute.internal.BaseComputeServiceContextLiveTest;
+import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
@@ -48,6 +49,18 @@ public class VPCApiLiveTest extends BaseComputeServiceContextLiveTest {
       client = view.unwrapApi(AWSEC2Api.class).getVPCApi().get();
    }
 
+   @Override
+   @AfterClass(groups = { "integration", "live" })
+   public void tearDownContext() {
+      try {
+         if (vpc != null) {
+            client.deleteVpc(null, vpc.id());
+         }
+      } finally {
+         super.tearDownContext();
+      }
+   }
+
    @Test
    public void testCreate() {
       vpc = client.createVpc(null, "10.0.0.0/16", CreateVpcOptions.NONE);
@@ -69,7 +82,9 @@ public class VPCApiLiveTest extends BaseComputeServiceContextLiveTest {
    @Test(dependsOnMethods = {"testList", "testGet"}, alwaysRun = true)
    public void testDelete() {
       if (vpc != null) {
-         assertTrue(client.deleteVpc(null, vpc.id()));
+         String vpcId = vpc.id();
+         vpc = null;
+         assertTrue(client.deleteVpc(null, vpcId));
       }
    }
 

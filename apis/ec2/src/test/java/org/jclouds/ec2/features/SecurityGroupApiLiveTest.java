@@ -52,7 +52,7 @@ public class SecurityGroupApiLiveTest extends BaseComputeServiceContextLiveTest 
       provider = "ec2";
    }
 
-   private EC2Api ec2Api;
+   protected EC2Api ec2Api;
    protected SecurityGroupApi client;
 
    @Override

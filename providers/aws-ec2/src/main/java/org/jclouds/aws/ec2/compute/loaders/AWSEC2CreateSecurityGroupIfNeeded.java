@@ -33,6 +33,7 @@ import org.jclouds.aws.ec2.options.CreateSecurityGroupOptions;
 import org.jclouds.compute.reference.ComputeServiceConstants;
 import org.jclouds.ec2.compute.domain.RegionAndName;
 import org.jclouds.ec2.compute.domain.RegionNameAndIngressRules;
+import org.jclouds.ec2.domain.SecurityGroup;
 import org.jclouds.logging.Logger;
 import org.jclouds.net.domain.IpPermission;
 import org.jclouds.net.domain.IpProtocol;
@@ -73,7 +74,7 @@ public class AWSEC2CreateSecurityGroupIfNeeded extends CacheLoader<RegionAndName
       return createSecurityGroupInRegion(from.getRegion(), from.getName(), realFrom.getVpcId(), realFrom.getPorts());
    }
 
-   private String createSecurityGroupInRegion(String region, String name, String vpcId, int... ports) {
+   private String createSecurityGroupInRegion(String region, final String name, String vpcId, int... ports) {
       checkNotNull(region, "region");
       checkNotNull(name, "name");
       logger.debug(">> creating securityGroup region(%s) name(%s)", region, name);
@@ -102,7 +103,16 @@ public class AWSEC2CreateSecurityGroupIfNeeded extends CacheLoader<RegionAndName
                                .build());
             }
 
-            String myOwnerId = Iterables.get(securityApi.describeSecurityGroupsInRegion(region, name), 0).getOwnerId();
+            // Use filter (as per `SecurityGroupPresent`, in securityGroupEventualConsistencyDelay)
+            Set<SecurityGroup> securityGroups = securityApi.describeSecurityGroupsInRegionById(region, id);
+            if (securityGroups.isEmpty()) {
+               throw new IllegalStateException(String.format("security group %s/%s not found after creating", region, name));
+            } else if (securityGroups.size() > 1) {
+               throw new IllegalStateException(String.format("multiple security groups matching %s/%s found after creating: %s", 
+                     region, name, securityGroups));
+            }
+            SecurityGroup securityGroup = Iterables.getOnlyElement(securityGroups);
+            String myOwnerId = securityGroup.getOwnerId();
             permissions.add(IpPermission.builder()
                             .fromPort(0)
                             .toPort(65535)

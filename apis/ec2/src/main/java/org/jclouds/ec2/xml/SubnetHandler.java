@@ -33,6 +33,7 @@ public class SubnetHandler extends ParseSax.HandlerForGeneratedRequestWithResult
    private Subnet.Builder builder = Subnet.builder();
    private final TagSetHandler tagSetHandler;
    private boolean inTagSet;
+   private boolean inIpv6CidrBlockAssociationSet;
 
    @Inject
    public SubnetHandler(TagSetHandler tagSetHandler) {
@@ -52,6 +53,8 @@ public class SubnetHandler extends ParseSax.HandlerForGeneratedRequestWithResult
    public void startElement(String uri, String name, String qName, Attributes attrs) {
       if (equalsOrSuffix(qName, "tagSet")) {
          inTagSet = true;
+      } else if (equalsOrSuffix(qName, "ipv6CidrBlockAssociationSet")) {
+         inIpv6CidrBlockAssociationSet = true;
       }
       if (inTagSet) {
          tagSetHandler.startElement(uri, name, qName, attrs);
@@ -60,6 +63,13 @@ public class SubnetHandler extends ParseSax.HandlerForGeneratedRequestWithResult
 
    @Override
    public void endElement(String uri, String name, String qName) {
+      if (equalsOrSuffix(qName, "ipv6CidrBlockAssociationSet")) {
+         inIpv6CidrBlockAssociationSet = false;
+      }
+      if (inIpv6CidrBlockAssociationSet) {
+         return; // ignore contents (otherwise "item" and "state" will confuse us!
+      }
+      
       if (equalsOrSuffix(qName, "tagSet")) {
          inTagSet = false;
          builder.tags(tagSetHandler.getResult());
