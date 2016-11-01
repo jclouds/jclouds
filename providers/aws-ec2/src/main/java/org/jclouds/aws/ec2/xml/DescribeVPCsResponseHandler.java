@@ -78,7 +78,7 @@ public class DescribeVPCsResponseHandler extends
    }
 
    @Override
-   public void characters(char ch[], int start, int length) {
+   public void characters(char[] ch, int start, int length) {
       if (inVpcSet) {
          vpcHandler.characters(ch, start, length);
       } else {
