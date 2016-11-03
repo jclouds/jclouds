@@ -34,14 +34,15 @@ import com.google.common.collect.ImmutableSet;
 
 public class BundlesTest {
 
+   @SuppressWarnings("rawtypes")
    @Test
    public void testInstantiateAvailableClassesWhenAllAssignable() throws ClassNotFoundException {
       Bundle bundle = createMock(Bundle.class);
-      expect(bundle.loadClass("org.jclouds.providers.JcloudsTestBlobStoreProviderMetadata")).andReturn(
+      expect((Class) bundle.loadClass("org.jclouds.providers.JcloudsTestBlobStoreProviderMetadata")).andReturn(
             JcloudsTestBlobStoreProviderMetadata.class);
-      expect(bundle.loadClass("org.jclouds.providers.JcloudsTestComputeProviderMetadata")).andReturn(
+      expect((Class) bundle.loadClass("org.jclouds.providers.JcloudsTestComputeProviderMetadata")).andReturn(
             JcloudsTestComputeProviderMetadata.class);
-      expect(bundle.loadClass("org.jclouds.providers.JcloudsTestYetAnotherComputeProviderMetadata")).andReturn(
+      expect((Class) bundle.loadClass("org.jclouds.providers.JcloudsTestYetAnotherComputeProviderMetadata")).andReturn(
             JcloudsTestYetAnotherComputeProviderMetadata.class);
       replay(bundle);
 
@@ -55,14 +56,15 @@ public class BundlesTest {
       verify(bundle);
    }
 
+   @SuppressWarnings("rawtypes")
    @Test
    public void testInstantiateAvailableClassesWhenNotAllAssignable() throws ClassNotFoundException {
       Bundle bundle = createMock(Bundle.class);
-      expect(bundle.loadClass("org.jclouds.providers.JcloudsTestBlobStoreProviderMetadata")).andReturn(
+      expect((Class) bundle.loadClass("org.jclouds.providers.JcloudsTestBlobStoreProviderMetadata")).andReturn(
             JcloudsTestBlobStoreProviderMetadata.class);
-      expect(bundle.loadClass("org.jclouds.apis.JcloudsTestComputeApiMetadata")).andReturn(
+      expect((Class) bundle.loadClass("org.jclouds.apis.JcloudsTestComputeApiMetadata")).andReturn(
             JcloudsTestComputeApiMetadata.class);
-      expect(bundle.loadClass("org.jclouds.providers.JcloudsTestYetAnotherComputeProviderMetadata")).andReturn(
+      expect((Class) bundle.loadClass("org.jclouds.providers.JcloudsTestYetAnotherComputeProviderMetadata")).andReturn(
             JcloudsTestYetAnotherComputeProviderMetadata.class);
       replay(bundle);
 

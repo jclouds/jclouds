@@ -20,7 +20,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.Dictionary;
 import java.util.Enumeration;
-import java.util.HashMap;
+import java.util.Hashtable;
 
 import org.jclouds.scriptbuilder.domain.OsFamily;
 import org.jclouds.scriptbuilder.domain.ShellToken;
@@ -100,7 +100,7 @@ public class BundleFunctionLoader implements FunctionLoader {
 
    private void registerFunction(String functions) {
       String[] className = { FunctionLoader.class.getName() };
-      Dictionary dictionary = new HashMap<String, Object>();
+      Dictionary<String, Object> dictionary = new Hashtable<String, Object>(1);
       dictionary.put("function", functions);
       registration = bundleContext.registerService(className, this, dictionary);
    }

@@ -20,3 +20,4 @@ com/google/common/primitives/Longs.compare:(JJ)I
 com/google/inject/Inject
 com/google/inject/Provider
 java/lang/StringBuffer."<init>":()V
+java/util/Hashtable."<init>":(I)V

@@ -233,6 +233,8 @@
     <auto-service.version>1.0-rc2</auto-service.version>
     <auto-value.version>1.1</auto-value.version>
     <java-xmlbuilder.version>1.1</java-xmlbuilder.version>
+    <osgi.version>4.2.0</osgi.version>
+    <osgi.compendium.version>${osgi.version}</osgi.compendium.version>
     <http.proxyHost />
     <http.proxyPort />
     <jclouds.wire.httpstream.url>http://archive.apache.org/dist/commons/logging/binaries/commons-logging-1.1.1-bin.tar.gz</jclouds.wire.httpstream.url>
@@ -361,6 +363,16 @@
         <groupId>com.jamesmurty.utils</groupId>
         <artifactId>java-xmlbuilder</artifactId>
         <version>${java-xmlbuilder.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.osgi</groupId>
+        <artifactId>org.osgi.core</artifactId>
+        <version>${osgi.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.osgi</groupId>
+        <artifactId>org.osgi.compendium</artifactId>
+        <version>${osgi.compendium.version}</version>
       </dependency>
     </dependencies>
   </dependencyManagement>

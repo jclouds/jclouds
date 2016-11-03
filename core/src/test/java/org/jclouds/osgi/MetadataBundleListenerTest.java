@@ -57,17 +57,18 @@ public class MetadataBundleListenerTest {
             .loadClass("org.jclouds.providers.JcloudsTestComputeProviderMetadata")));
    }
 
+   @SuppressWarnings("rawtypes")
    @Test
    public void testGetProviderMetadata() throws Exception {
       MetadataBundleListener listener = new MetadataBundleListener();
       Bundle bundle = createMock(Bundle.class);
       expect(bundle.getEntry("/META-INF/services/org.jclouds.providers.ProviderMetadata")).andReturn(
             getClass().getResource("/META-INF/services/org.jclouds.providers.ProviderMetadata")).anyTimes();
-      expect(bundle.loadClass("org.jclouds.providers.JcloudsTestBlobStoreProviderMetadata")).andReturn(
+      expect((Class) bundle.loadClass("org.jclouds.providers.JcloudsTestBlobStoreProviderMetadata")).andReturn(
             JcloudsTestBlobStoreProviderMetadata.class).anyTimes();
-      expect(bundle.loadClass("org.jclouds.providers.JcloudsTestComputeProviderMetadata")).andReturn(
+      expect((Class) bundle.loadClass("org.jclouds.providers.JcloudsTestComputeProviderMetadata")).andReturn(
             JcloudsTestComputeProviderMetadata.class).anyTimes();
-      expect(bundle.loadClass("org.jclouds.providers.JcloudsTestYetAnotherComputeProviderMetadata")).andReturn(
+      expect((Class) bundle.loadClass("org.jclouds.providers.JcloudsTestYetAnotherComputeProviderMetadata")).andReturn(
             JcloudsTestYetAnotherComputeProviderMetadata.class).anyTimes();
       replay(bundle);
       List<ProviderMetadata> providerMetadataList = Lists.newArrayList(listener.listProviderMetadata(bundle));
@@ -79,6 +80,7 @@ public class MetadataBundleListenerTest {
       verify(bundle);
    }
 
+   @SuppressWarnings("rawtypes")
    @Test
    public void testProviderListener() throws Exception {
       MetadataBundleListener listener = new MetadataBundleListener();
@@ -90,11 +92,11 @@ public class MetadataBundleListenerTest {
       expect(bundle.getEntry("/META-INF/services/org.jclouds.providers.ProviderMetadata")).andReturn(
             getClass().getResource("/META-INF/services/org.jclouds.providers.ProviderMetadata")).anyTimes();
       expect(bundle.getEntry("/META-INF/services/org.jclouds.apis.ApiMetadata")).andReturn(null).anyTimes();
-      expect(bundle.loadClass("org.jclouds.providers.JcloudsTestBlobStoreProviderMetadata")).andReturn(
+      expect((Class) bundle.loadClass("org.jclouds.providers.JcloudsTestBlobStoreProviderMetadata")).andReturn(
             JcloudsTestBlobStoreProviderMetadata.class).anyTimes();
-      expect(bundle.loadClass("org.jclouds.providers.JcloudsTestComputeProviderMetadata")).andReturn(
+      expect((Class) bundle.loadClass("org.jclouds.providers.JcloudsTestComputeProviderMetadata")).andReturn(
             JcloudsTestComputeProviderMetadata.class).anyTimes();
-      expect(bundle.loadClass("org.jclouds.providers.JcloudsTestYetAnotherComputeProviderMetadata")).andReturn(
+      expect((Class) bundle.loadClass("org.jclouds.providers.JcloudsTestYetAnotherComputeProviderMetadata")).andReturn(
             JcloudsTestYetAnotherComputeProviderMetadata.class).anyTimes();
 
       providerListener.added(anyObject(JcloudsTestBlobStoreProviderMetadata.class));
@@ -110,6 +112,7 @@ public class MetadataBundleListenerTest {
       verify(bundle, providerListener);
    }
 
+   @SuppressWarnings("rawtypes")
    @Test
    public void testGetProviderMetadataFromMultipleClassLoaders() throws Exception {
       ClassLoader isolatedClassLoader = createIsolatedClassLoader();
@@ -117,11 +120,11 @@ public class MetadataBundleListenerTest {
       Bundle bundle = createMock(Bundle.class);
       expect(bundle.getEntry("/META-INF/services/org.jclouds.providers.ProviderMetadata")).andReturn(
             getClass().getResource("/META-INF/services/org.jclouds.providers.ProviderMetadata")).anyTimes();
-      expect(bundle.loadClass("org.jclouds.providers.JcloudsTestBlobStoreProviderMetadata")).andReturn(
+      expect((Class) bundle.loadClass("org.jclouds.providers.JcloudsTestBlobStoreProviderMetadata")).andReturn(
             isolatedClassLoader.loadClass(JcloudsTestBlobStoreProviderMetadata.class.getName())).anyTimes();
-      expect(bundle.loadClass("org.jclouds.providers.JcloudsTestComputeProviderMetadata")).andReturn(
+      expect((Class) bundle.loadClass("org.jclouds.providers.JcloudsTestComputeProviderMetadata")).andReturn(
             JcloudsTestComputeProviderMetadata.class).anyTimes();
-      expect(bundle.loadClass("org.jclouds.providers.JcloudsTestYetAnotherComputeProviderMetadata")).andReturn(
+      expect((Class) bundle.loadClass("org.jclouds.providers.JcloudsTestYetAnotherComputeProviderMetadata")).andReturn(
             JcloudsTestYetAnotherComputeProviderMetadata.class).anyTimes();
 
       replay(bundle);
@@ -134,17 +137,18 @@ public class MetadataBundleListenerTest {
       verify(bundle);
    }
 
+   @SuppressWarnings("rawtypes")
    @Test
    public void testGetApiMetadata() throws Exception {
       MetadataBundleListener listener = new MetadataBundleListener();
       Bundle bundle = createMock(Bundle.class);
       expect(bundle.getEntry("/META-INF/services/org.jclouds.apis.ApiMetadata")).andReturn(
             getClass().getResource("/META-INF/services/org.jclouds.apis.ApiMetadata")).anyTimes();
-      expect(bundle.loadClass("org.jclouds.apis.JcloudsTestBlobStoreApiMetadata")).andReturn(
+      expect((Class) bundle.loadClass("org.jclouds.apis.JcloudsTestBlobStoreApiMetadata")).andReturn(
             JcloudsTestBlobStoreApiMetadata.class).anyTimes();
-      expect(bundle.loadClass("org.jclouds.apis.JcloudsTestComputeApiMetadata")).andReturn(
+      expect((Class) bundle.loadClass("org.jclouds.apis.JcloudsTestComputeApiMetadata")).andReturn(
             JcloudsTestComputeApiMetadata.class).anyTimes();
-      expect(bundle.loadClass("org.jclouds.apis.JcloudsTestYetAnotherComputeApiMetadata")).andReturn(
+      expect((Class) bundle.loadClass("org.jclouds.apis.JcloudsTestYetAnotherComputeApiMetadata")).andReturn(
             JcloudsTestYetAnotherComputeApiMetadata.class).anyTimes();
 
       replay(bundle);
@@ -157,6 +161,7 @@ public class MetadataBundleListenerTest {
       verify(bundle);
    }
 
+   @SuppressWarnings("rawtypes")
    @Test
    public void testApiListener() throws Exception {
       MetadataBundleListener listener = new MetadataBundleListener();
@@ -168,11 +173,11 @@ public class MetadataBundleListenerTest {
       expect(bundle.getEntry("/META-INF/services/org.jclouds.providers.ProviderMetadata")).andReturn(null).anyTimes();
       expect(bundle.getEntry("/META-INF/services/org.jclouds.apis.ApiMetadata")).andReturn(
             getClass().getResource("/META-INF/services/org.jclouds.apis.ApiMetadata")).anyTimes();
-      expect(bundle.loadClass("org.jclouds.apis.JcloudsTestBlobStoreApiMetadata")).andReturn(
+      expect((Class) bundle.loadClass("org.jclouds.apis.JcloudsTestBlobStoreApiMetadata")).andReturn(
             JcloudsTestBlobStoreApiMetadata.class).anyTimes();
-      expect(bundle.loadClass("org.jclouds.apis.JcloudsTestComputeApiMetadata")).andReturn(
+      expect((Class) bundle.loadClass("org.jclouds.apis.JcloudsTestComputeApiMetadata")).andReturn(
             JcloudsTestComputeApiMetadata.class).anyTimes();
-      expect(bundle.loadClass("org.jclouds.apis.JcloudsTestYetAnotherComputeApiMetadata")).andReturn(
+      expect((Class) bundle.loadClass("org.jclouds.apis.JcloudsTestYetAnotherComputeApiMetadata")).andReturn(
             JcloudsTestYetAnotherComputeApiMetadata.class).anyTimes();
 
       apiListener.added(anyObject(JcloudsTestBlobStoreApiMetadata.class));
@@ -188,6 +193,7 @@ public class MetadataBundleListenerTest {
       verify(bundle, apiListener);
    }
 
+   @SuppressWarnings("rawtypes")
    @Test
    public void testGetApiMetadataFromMultipleClassLoaders() throws Exception {
       ClassLoader isolatedClassLoader = createIsolatedClassLoader();
@@ -195,11 +201,11 @@ public class MetadataBundleListenerTest {
       Bundle bundle = createMock(Bundle.class);
       expect(bundle.getEntry("/META-INF/services/org.jclouds.apis.ApiMetadata")).andReturn(
             getClass().getResource("/META-INF/services/org.jclouds.apis.ApiMetadata")).anyTimes();
-      expect(bundle.loadClass("org.jclouds.apis.JcloudsTestBlobStoreApiMetadata")).andReturn(
+      expect((Class) bundle.loadClass("org.jclouds.apis.JcloudsTestBlobStoreApiMetadata")).andReturn(
             isolatedClassLoader.loadClass(JcloudsTestBlobStoreApiMetadata.class.getName())).anyTimes();
-      expect(bundle.loadClass("org.jclouds.apis.JcloudsTestComputeApiMetadata")).andReturn(
+      expect((Class) bundle.loadClass("org.jclouds.apis.JcloudsTestComputeApiMetadata")).andReturn(
             JcloudsTestComputeApiMetadata.class).anyTimes();
-      expect(bundle.loadClass("org.jclouds.apis.JcloudsTestYetAnotherComputeApiMetadata")).andReturn(
+      expect((Class) bundle.loadClass("org.jclouds.apis.JcloudsTestYetAnotherComputeApiMetadata")).andReturn(
             JcloudsTestYetAnotherComputeApiMetadata.class).anyTimes();
 
       replay(bundle);
