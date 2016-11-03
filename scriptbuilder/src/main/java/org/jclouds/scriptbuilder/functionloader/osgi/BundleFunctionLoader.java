@@ -18,8 +18,9 @@ package org.jclouds.scriptbuilder.functionloader.osgi;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.Dictionary;
 import java.util.Enumeration;
-import java.util.Properties;
+import java.util.HashMap;
 
 import org.jclouds.scriptbuilder.domain.OsFamily;
 import org.jclouds.scriptbuilder.domain.ShellToken;
@@ -98,9 +99,10 @@ public class BundleFunctionLoader implements FunctionLoader {
    }
 
    private void registerFunction(String functions) {
-      Properties properties = new Properties();
-      properties.put("function", functions);
-      registration = bundleContext.registerService(FunctionLoader.class.getName(), this, properties);
+      String[] className = { FunctionLoader.class.getName() };
+      Dictionary dictionary = new HashMap<String, Object>();
+      dictionary.put("function", functions);
+      registration = bundleContext.registerService(className, this, dictionary);
    }
 
 }
