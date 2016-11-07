@@ -56,7 +56,7 @@ import com.google.common.util.concurrent.MoreExecutors;
 @Test(groups = "live", singleThreaded = true)
 public class RegionScopedSwiftBlobStoreParallelLiveTest extends BaseBlobStoreIntegrationTest {
 
-   private final File BIG_FILE = new File("random.dat");
+   private final File BIG_FILE;
    private final long SIZE = 10 * 1000 * 1000;
    private BlobStore blobStore;
    private String ETAG;
@@ -71,6 +71,11 @@ public class RegionScopedSwiftBlobStoreParallelLiveTest extends BaseBlobStoreInt
 
    public RegionScopedSwiftBlobStoreParallelLiveTest() {
       provider = "openstack-swift";
+      try {
+         BIG_FILE = File.createTempFile("random", "dat");
+      } catch (IOException ioe) {
+         throw new RuntimeException(ioe);
+      }
    }
 
    // Override as needed for the right region
@@ -121,7 +126,7 @@ public class RegionScopedSwiftBlobStoreParallelLiveTest extends BaseBlobStoreInt
 
    @Test(dependsOnMethods = "uploadMultipartBlob", singleThreaded = true)
    public void downloadParallelBlob() throws IOException {
-      final File downloadedFile = new File(BIG_FILE.getName() + ".downloaded");
+      final File downloadedFile = new File(BIG_FILE + ".downloaded");
       blobStore.downloadBlob(CONTAINER, BIG_FILE.getName(), downloadedFile, executor);
       String eTag = Files.hash(downloadedFile, Hashing.md5()).toString();
       assertEquals(eTag, ETAG);

@@ -679,7 +679,7 @@ public class RegionScopedSwiftBlobStore implements BlobStore {
 
       ListeningExecutorService listeningExecutor = MoreExecutors.listeningDecorator(executor);
       RandomAccessFile raf = null;
-      File tempFile = new File(destination.getName() + "." + UUID.randomUUID());
+      File tempFile = new File(destination + "." + UUID.randomUUID());
       try {
          long contentLength = api
                .getObjectApi(regionId, container)
