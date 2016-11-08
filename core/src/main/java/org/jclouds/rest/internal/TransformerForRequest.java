@@ -85,7 +85,8 @@ public class TransformerForRequest implements Function<HttpRequest, Function<Htt
       Class<? extends HandlerWithResult<?>> handler = getSaxResponseParserClassOrNull(request.getInvocation()
             .getInvokable());
       if (handler != null) {
-         transformer = parserFactory.create(injector.getInstance(handler));
+         HandlerWithResult<?> h = injector.getInstance(handler);
+         transformer = parserFactory.create(h);
       } else {
          transformer = getTransformerForMethod(request.getInvocation(), injector);
       }
