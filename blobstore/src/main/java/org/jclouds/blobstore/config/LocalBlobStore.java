@@ -864,7 +864,8 @@ public final class LocalBlobStore implements BlobStore {
             .payload(payload)
             .build();
       String partETag = putBlob(mpu.containerName(), blob);
-      long partSize = -1;  // TODO: how to get this from payload?
+      BlobMetadata metadata = blobMetadata(mpu.containerName(), partName);  // TODO: racy, how to get this from payload?
+      long partSize = metadata.getContentMetadata().getContentLength();
       return MultipartPart.create(partNumber, partSize, partETag);
    }
 
@@ -880,7 +881,7 @@ public final class LocalBlobStore implements BlobStore {
                continue;
             }
             int partNumber = Integer.parseInt(sm.getName().substring((MULTIPART_PREFIX + mpu.id() + "-" + mpu.blobName() + "-").length()));
-            long partSize = -1;  // TODO: could call getContentMetadata but did not above
+            long partSize = sm.getSize();
             parts.add(MultipartPart.create(partNumber, partSize, sm.getETag()));
          }
          if (pageSet.isEmpty() || pageSet.getNextMarker() == null) {
