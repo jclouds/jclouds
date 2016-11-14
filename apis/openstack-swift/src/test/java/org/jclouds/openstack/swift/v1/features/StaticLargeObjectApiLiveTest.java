@@ -39,7 +39,7 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.io.ByteSource;
 
-@Test(groups = "live", testName = "StaticLargeObjectApiLiveTest")
+@Test(groups = "live", testName = "StaticLargeObjectApiLiveTest", singleThreaded = true)
 public class StaticLargeObjectApiLiveTest extends BaseSwiftApiLiveTest<SwiftApi> {
 
    private String name = getClass().getSimpleName();
@@ -57,6 +57,7 @@ public class StaticLargeObjectApiLiveTest extends BaseSwiftApiLiveTest<SwiftApi>
       }
    }
 
+   @Test
    public void testReplaceManifest() throws Exception {
       for (String regionId : regions) {
          ObjectApi objectApi = api.getObjectApi(regionId, containerName);
@@ -117,6 +118,7 @@ public class StaticLargeObjectApiLiveTest extends BaseSwiftApiLiveTest<SwiftApi>
          assertThat(resp.deleted()).isZero();
          assertThat(resp.notFound()).isZero();
          assertThat(resp.errors()).hasSize(1);
+         api.getObjectApi(regionId, containerName).delete(objectName);
       }
    }
 
