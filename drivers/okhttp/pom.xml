@@ -33,7 +33,7 @@
 
   <properties>
     <jclouds.osgi.export>org.jclouds.http.okhttp*;version="${project.version}"</jclouds.osgi.export>
-    <jclouds.osgi.import>org.jclouds*;version="${project.version}",*</jclouds.osgi.import>
+    <jclouds.osgi.import>org.jclouds*;version="${project.version}",${okio.osgi.import},*</jclouds.osgi.import>
   </properties>
 
   <dependencies>
