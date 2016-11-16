@@ -71,4 +71,8 @@ public class PageSetImpl<T> extends LinkedHashSet<T> implements PageSet<T> {
       return true;
    }
 
+   @Override
+   public String toString() {
+      return "marker: " + marker + " elements: " + super.toString();
+   }
 }
