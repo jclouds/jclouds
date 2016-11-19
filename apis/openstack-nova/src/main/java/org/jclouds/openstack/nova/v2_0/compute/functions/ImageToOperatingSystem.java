@@ -80,9 +80,9 @@ public class ImageToOperatingSystem implements Function<Image, OperatingSystem> 
             is64Bit = matcher.group(2).equals("x64");
          }
       } else {
-         if (imageName.contains("Red Hat EL")) {
+         if (imageName.contains("Red Hat")) {
             osFamily = OsFamily.RHEL;
-         } else if (imageName.contains("Oracle EL")) {
+         } else if (imageName.contains("Oracle")) {
             osFamily = OsFamily.OEL;
          } else {
             final Iterable<String> imageNameParts = Splitter.on(CharMatcher.WHITESPACE).trimResults().split(
