@@ -76,7 +76,7 @@ public class CloudServersUSProviderMetadata extends BaseProviderMetadata {
       * Debian - script problems
       * Ubuntu - script problems
       * */
-      properties.setProperty(TEMPLATE, "imageNameMatches=.*CentOS.*7.*,os64Bit=true");
+      properties.setProperty(TEMPLATE, "imageNameMatches=.*Ubuntu.*,os64Bit=true");
       return properties;
    }
 
