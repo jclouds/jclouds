@@ -19,6 +19,7 @@ package org.jclouds.digitalocean2.compute.options;
 import static com.google.common.base.Objects.equal;
 import static com.google.common.base.Preconditions.checkNotNull;
 
+import java.util.Arrays;
 import java.util.Set;
 
 import org.jclouds.compute.options.TemplateOptions;
@@ -35,6 +36,7 @@ public class DigitalOcean2TemplateOptions extends TemplateOptions implements Clo
    private boolean privateNetworking = false;
    private boolean backupsEnabled = false;
    private boolean autoCreateKeyPair = true;
+   private byte[] userData;
 
    /**
     * Enables a private network interface if the region supports private networking.
@@ -68,6 +70,14 @@ public class DigitalOcean2TemplateOptions extends TemplateOptions implements Clo
       return this;
    }
 
+   /**
+    * Sets the userData member.
+    */
+   public DigitalOcean2TemplateOptions userData(byte[] userData) {
+      this.userData = userData;
+      return this;
+   }
+
    public Set<Integer> getSshKeyIds() {
       return sshKeyIds;
    }
@@ -82,6 +92,10 @@ public class DigitalOcean2TemplateOptions extends TemplateOptions implements Clo
 
    public boolean getAutoCreateKeyPair() {
       return autoCreateKeyPair;
+   }
+
+   public byte[] getUserData() {
+      return userData;
    }
 
    @Override
@@ -100,12 +114,16 @@ public class DigitalOcean2TemplateOptions extends TemplateOptions implements Clo
          eTo.backupsEnabled(backupsEnabled);
          eTo.autoCreateKeyPair(autoCreateKeyPair);
          eTo.sshKeyIds(sshKeyIds);
+         if (null != getUserData()) {
+            eTo.userData(getUserData());
+         }
       }
    }
 
    @Override
    public int hashCode() {
-      return Objects.hashCode(super.hashCode(), backupsEnabled, privateNetworking, autoCreateKeyPair, sshKeyIds);
+      return Objects.hashCode(super.hashCode(), backupsEnabled, privateNetworking, autoCreateKeyPair, sshKeyIds,
+            Arrays.hashCode(userData));
    }
 
    @Override
@@ -122,7 +140,8 @@ public class DigitalOcean2TemplateOptions extends TemplateOptions implements Clo
       DigitalOcean2TemplateOptions other = (DigitalOcean2TemplateOptions) obj;
       return super.equals(other) && equal(this.backupsEnabled, other.backupsEnabled)
             && equal(this.privateNetworking, other.privateNetworking)
-            && equal(this.autoCreateKeyPair, other.autoCreateKeyPair) && equal(this.sshKeyIds, other.sshKeyIds);
+            && equal(this.autoCreateKeyPair, other.autoCreateKeyPair) && equal(this.sshKeyIds, other.sshKeyIds)
+            && Arrays.equals(this.userData, other.userData);
    }
 
    @Override
@@ -134,6 +153,7 @@ public class DigitalOcean2TemplateOptions extends TemplateOptions implements Clo
          toString.add("sshKeyIds", sshKeyIds);
       }
       toString.add("autoCreateKeyPair", autoCreateKeyPair);
+      toString.add("userData", userData);
       return toString;
    }
 
@@ -169,6 +189,14 @@ public class DigitalOcean2TemplateOptions extends TemplateOptions implements Clo
       public static DigitalOcean2TemplateOptions autoCreateKeyPair(boolean autoCreateKeyPair) {
          DigitalOcean2TemplateOptions options = new DigitalOcean2TemplateOptions();
          return options.autoCreateKeyPair(autoCreateKeyPair);
+      }
+
+      /**
+       * @see DigitalOcean2TemplateOptions#userData
+       */
+      public static DigitalOcean2TemplateOptions userData(byte[] userData) {
+         DigitalOcean2TemplateOptions options = new DigitalOcean2TemplateOptions();
+         return options.userData(userData);
       }
    }
 }

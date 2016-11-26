@@ -26,7 +26,6 @@ import static com.google.common.collect.Sets.newHashSet;
 import static org.jclouds.compute.config.ComputeServiceProperties.TIMEOUT_NODE_RUNNING;
 import static org.jclouds.compute.config.ComputeServiceProperties.TIMEOUT_NODE_SUSPENDED;
 import static org.jclouds.compute.config.ComputeServiceProperties.TIMEOUT_NODE_TERMINATED;
-import static org.jclouds.compute.util.ComputeServiceUtils.metadataAndTagsAsCommaDelimitedValue;
 
 import java.util.List;
 import java.util.Map;
@@ -83,6 +82,17 @@ public class DigitalOcean2ComputeServiceAdapter implements ComputeServiceAdapter
       this.json = json;
    }
 
+   private void setUserDataIfSupported(Template template, CreateDropletOptions.Builder options, String userData) {
+      @SuppressWarnings("unchecked")
+      List<String> regionFeatures = (List<String>) template.getLocation().getMetadata().get("features");
+      if (regionFeatures.contains("metadata")) {
+         options.userData(userData);
+      } else {
+         logger.debug(">> region %s does not support metadata, ignoring provided user data", template.getLocation()
+               .getId());
+      }
+   }
+
    @Override
    public NodeAndInitialCredentials<Droplet> createNodeWithGroupEncodedIntoName(String group, final String name,
          Template template) {
@@ -96,16 +106,15 @@ public class DigitalOcean2ComputeServiceAdapter implements ComputeServiceAdapter
          options.addSshKeyIds(templateOptions.getSshKeyIds());
       }
 
-      Map<String, String> metadataAndTags = metadataAndTagsAsCommaDelimitedValue(templateOptions);
-      if (!metadataAndTags.isEmpty()) {
-         @SuppressWarnings("unchecked")
-         List<String> regionFeatures = (List<String>) template.getLocation().getMetadata().get("features");
-         if (regionFeatures.contains("metadata")) {
-            options.userData(json.toJson(metadataAndTags));
-         } else {
-            logger.debug(">> region %s does not support metadata, ignoring provided user data", template.getLocation()
-                  .getId());
-         }
+      // In DigitalOcean, user_data is a SINGLE string, NOT a map!
+      // Encoding tags or anything else than user_data in here breaks their functionality.
+      if (null != templateOptions.getUserData()) {
+         setUserDataIfSupported(template, options, new String(templateOptions.getUserData()));
+      }
+      // Backwards compatible variant, getting userData from userMetaData map.
+      Map<String, String> metadataAndTags = templateOptions.getUserMetadata();
+      if (null != metadataAndTags.get("user_data")) {
+         setUserDataIfSupported(template, options, metadataAndTags.get("user_data"));
       }
 
       DropletCreate dropletCreated = api.dropletApi().create(name,
