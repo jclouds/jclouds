@@ -43,10 +43,17 @@ public class DigitalOcean2TemplateOptionsTest {
       TemplateOptions options = new DigitalOcean2TemplateOptions().backupsEnabled(true);
       assertEquals(options.as(DigitalOcean2TemplateOptions.class).getBackupsEnabled(), true);
    }
-   
+
    @Test
    public void testAutoCreateKeyPair() {
       TemplateOptions options = new DigitalOcean2TemplateOptions().autoCreateKeyPair(false);
       assertEquals(options.as(DigitalOcean2TemplateOptions.class).getAutoCreateKeyPair(), false);
+   }
+
+   @Test
+   public void testUserData() {
+      byte[] userData = "Lorem ipsum".getBytes();
+      TemplateOptions options = new DigitalOcean2TemplateOptions().userData(userData);
+      assertEquals(options.as(DigitalOcean2TemplateOptions.class).getUserData(), userData);
    }
 }
