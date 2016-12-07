@@ -20,6 +20,7 @@ import static com.google.common.base.Objects.equal;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 import java.util.Arrays;
+import java.util.Map;
 import java.util.Set;
 
 import org.jclouds.compute.options.TemplateOptions;
@@ -76,6 +77,36 @@ public class DigitalOcean2TemplateOptions extends TemplateOptions implements Clo
    public DigitalOcean2TemplateOptions userData(byte[] userData) {
       this.userData = userData;
       return this;
+   }
+   
+   /**
+    * @deprecated Key value metadata is not supported in DigitalOcean. Use
+    *             {@link #userData(byte[])} instead.
+    */
+   @Deprecated
+   @Override
+   public TemplateOptions userMetadata(Map<String, String> userMetadata) {
+      return super.userMetadata(userMetadata);
+   }
+
+   /**
+    * @deprecated Key value metadata is not supported in DigitalOcean. Use
+    *             {@link #userData(byte[])} instead.
+    */
+   @Deprecated
+   @Override
+   public TemplateOptions userMetadata(String key, String value) {
+      return super.userMetadata(key, value);
+   }
+
+   /**
+    * @deprecated Key value metadata is not supported in DigitalOcean. User data
+    *             can be retrieved with {@link #getUserData()}.
+    */
+   @Deprecated
+   @Override
+   public Map<String, String> getUserMetadata() {
+      return super.getUserMetadata();
    }
 
    public Set<Integer> getSshKeyIds() {

@@ -28,7 +28,6 @@ import static org.jclouds.compute.config.ComputeServiceProperties.TIMEOUT_NODE_S
 import static org.jclouds.compute.config.ComputeServiceProperties.TIMEOUT_NODE_TERMINATED;
 
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 import javax.annotation.Resource;
@@ -48,7 +47,6 @@ import org.jclouds.digitalocean2.domain.Region;
 import org.jclouds.digitalocean2.domain.Size;
 import org.jclouds.digitalocean2.domain.options.CreateDropletOptions;
 import org.jclouds.domain.LoginCredentials;
-import org.jclouds.json.Json;
 import org.jclouds.logging.Logger;
 
 import com.google.common.base.Function;
@@ -68,18 +66,15 @@ public class DigitalOcean2ComputeServiceAdapter implements ComputeServiceAdapter
    private final Predicate<Integer> nodeRunningPredicate;
    private final Predicate<Integer> nodeStoppedPredicate;
    private final Predicate<Integer> nodeTerminatedPredicate;
-   private final Json json;
 
    @Inject DigitalOcean2ComputeServiceAdapter(DigitalOcean2Api api,
          @Named(TIMEOUT_NODE_RUNNING) Predicate<Integer> nodeRunningPredicate,
          @Named(TIMEOUT_NODE_SUSPENDED) Predicate<Integer> nodeStoppedPredicate,
-         @Named(TIMEOUT_NODE_TERMINATED) Predicate<Integer> nodeTerminatedPredicate,
-         Json json) {
+         @Named(TIMEOUT_NODE_TERMINATED) Predicate<Integer> nodeTerminatedPredicate) {
       this.api = api;
       this.nodeRunningPredicate = nodeRunningPredicate;
       this.nodeStoppedPredicate = nodeStoppedPredicate;
       this.nodeTerminatedPredicate = nodeTerminatedPredicate;
-      this.json = json;
    }
 
    private void setUserDataIfSupported(Template template, CreateDropletOptions.Builder options, String userData) {
@@ -110,11 +105,9 @@ public class DigitalOcean2ComputeServiceAdapter implements ComputeServiceAdapter
       // Encoding tags or anything else than user_data in here breaks their functionality.
       if (null != templateOptions.getUserData()) {
          setUserDataIfSupported(template, options, new String(templateOptions.getUserData()));
-      }
-      // Backwards compatible variant, getting userData from userMetaData map.
-      Map<String, String> metadataAndTags = templateOptions.getUserMetadata();
-      if (null != metadataAndTags.get("user_data")) {
-         setUserDataIfSupported(template, options, metadataAndTags.get("user_data"));
+      } else if (null != templateOptions.getUserMetadata().get("user_data")) {
+         // Backwards compatible variant, getting userData from userMetaData map.
+         setUserDataIfSupported(template, options, templateOptions.getUserMetadata().get("user_data"));
       }
 
       DropletCreate dropletCreated = api.dropletApi().create(name,
