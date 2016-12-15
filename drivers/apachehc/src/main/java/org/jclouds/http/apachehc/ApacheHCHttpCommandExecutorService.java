@@ -19,6 +19,7 @@ package org.jclouds.http.apachehc;
 import static com.google.common.hash.Hashing.md5;
 import static com.google.common.io.BaseEncoding.base64;
 import static org.jclouds.Constants.PROPERTY_IDEMPOTENT_METHODS;
+import static org.jclouds.Constants.PROPERTY_USER_AGENT;
 import static org.jclouds.http.HttpUtils.filterOutContentHeaders;
 
 import java.io.IOException;
@@ -28,6 +29,7 @@ import javax.inject.Inject;
 import javax.inject.Named;
 
 import org.apache.http.Header;
+import org.apache.http.HttpHeaders;
 import org.apache.http.HttpHost;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
@@ -54,15 +56,18 @@ import com.google.common.collect.Multimap;
 public class ApacheHCHttpCommandExecutorService extends BaseHttpCommandExecutorService<HttpUriRequest> {
    private final HttpClient client;
    private final ApacheHCUtils apacheHCUtils;
+   private final String userAgent;
 
    @Inject
    ApacheHCHttpCommandExecutorService(HttpUtils utils, ContentMetadataCodec contentMetadataCodec,
          DelegatingRetryHandler retryHandler, IOExceptionRetryHandler ioRetryHandler,
          DelegatingErrorHandler errorHandler, HttpWire wire, HttpClient client,
-         @Named(PROPERTY_IDEMPOTENT_METHODS) String idempotentMethods) {
+         @Named(PROPERTY_IDEMPOTENT_METHODS) String idempotentMethods,
+         @Named(PROPERTY_USER_AGENT) String userAgent) {
       super(utils, contentMetadataCodec, retryHandler, ioRetryHandler, errorHandler, wire, idempotentMethods);
       this.client = client;
       this.apacheHCUtils = new ApacheHCUtils(contentMetadataCodec);
+      this.userAgent = userAgent;
    }
 
    @Override
@@ -71,6 +76,10 @@ public class ApacheHCHttpCommandExecutorService extends BaseHttpCommandExecutorS
       if (request.getPayload() != null && request.getPayload().getContentMetadata().getContentMD5() != null) {
          String md5 = base64().encode(ByteStreams2.hashAndClose(request.getPayload().openStream(), md5()).asBytes());
          returnVal.addHeader("Content-MD5", md5);
+      }
+
+      if (!returnVal.containsHeader(HttpHeaders.USER_AGENT)) {
+         returnVal.addHeader(HttpHeaders.USER_AGENT, userAgent);
       }
 
       return returnVal;
