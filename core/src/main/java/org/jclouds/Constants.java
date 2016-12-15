@@ -340,6 +340,13 @@ public final class Constants {
    public static final String PROPERTY_STRIP_EXPECT_HEADER = "jclouds.strip-expect-header";
 
    /**
+    * String property.
+    * <p/>
+    * This will override the user agent header in http request.
+    */
+   public static final String PROPERTY_USER_AGENT = "jclouds.user-agent";
+
+   /**
     * When true, add the Connection: close header. Useful when interacting with
     * providers that don't properly support persistent connections. Defaults to false.
     */

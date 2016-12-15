@@ -33,6 +33,7 @@ import static org.jclouds.Constants.PROPERTY_SESSION_INTERVAL;
 import static org.jclouds.Constants.PROPERTY_SO_TIMEOUT;
 import static org.jclouds.Constants.PROPERTY_STRIP_EXPECT_HEADER;
 import static org.jclouds.Constants.PROPERTY_USER_THREADS;
+import static org.jclouds.Constants.PROPERTY_USER_AGENT;
 import static org.jclouds.reflect.Reflection2.typeToken;
 
 import java.net.URI;
@@ -40,6 +41,7 @@ import java.util.Properties;
 import java.util.Set;
 
 import org.jclouds.Context;
+import org.jclouds.JcloudsVersion;
 import org.jclouds.View;
 import org.jclouds.apis.ApiMetadata;
 
@@ -75,6 +77,10 @@ public abstract class BaseApiMetadata implements ApiMetadata {
       props.setProperty(PROPERTY_SESSION_INTERVAL, 60 + "");
       props.setProperty(PROPERTY_PRETTY_PRINT_PAYLOADS, "true");
       props.setProperty(PROPERTY_STRIP_EXPECT_HEADER, "false");
+      props.setProperty(PROPERTY_USER_AGENT,
+			String.format("jclouds/%s java/%s",
+                                       JcloudsVersion.get(),
+                                       System.getProperty("java.version")));
       props.setProperty(PROPERTY_CONNECTION_CLOSE_HEADER, "false");
 
       // By default, we allow maximum parallel deletes to be equal to the number

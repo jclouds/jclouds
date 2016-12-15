@@ -22,6 +22,7 @@ import static com.google.common.net.HttpHeaders.CONTENT_LENGTH;
 import static com.google.common.net.HttpHeaders.HOST;
 import static com.google.common.net.HttpHeaders.USER_AGENT;
 import static org.jclouds.Constants.PROPERTY_IDEMPOTENT_METHODS;
+import static org.jclouds.Constants.PROPERTY_USER_AGENT;
 import static org.jclouds.http.HttpUtils.filterOutContentHeaders;
 import static org.jclouds.io.Payloads.newInputStreamPayload;
 import static org.jclouds.util.Closeables2.closeQuietly;
@@ -43,7 +44,6 @@ import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.SSLContext;
 
-import org.jclouds.JcloudsVersion;
 import org.jclouds.http.HttpRequest;
 import org.jclouds.http.HttpResponse;
 import org.jclouds.http.HttpUtils;
@@ -64,22 +64,20 @@ import com.google.inject.Inject;
 
 @Singleton
 public class JavaUrlHttpCommandExecutorService extends BaseHttpCommandExecutorService<HttpURLConnection> {
-
-   public static final String DEFAULT_USER_AGENT = String.format("jclouds/%s java/%s", JcloudsVersion.get(),
-         System.getProperty("java.version"));
-
    protected final Supplier<SSLContext> untrustedSSLContextProvider;
    protected final Function<URI, Proxy> proxyForURI;
    protected final HostnameVerifier verifier;
    @Inject(optional = true)
    protected Supplier<SSLContext> sslContextSupplier;
+   protected final String userAgent;
 
    @Inject
    public JavaUrlHttpCommandExecutorService(HttpUtils utils, ContentMetadataCodec contentMetadataCodec,
          DelegatingRetryHandler retryHandler, IOExceptionRetryHandler ioRetryHandler,
          DelegatingErrorHandler errorHandler, HttpWire wire, @Named("untrusted") HostnameVerifier verifier,
          @Named("untrusted") Supplier<SSLContext> untrustedSSLContextProvider, Function<URI, Proxy> proxyForURI,
-         @Named(PROPERTY_IDEMPOTENT_METHODS) String idempotentMethods) {
+         @Named(PROPERTY_IDEMPOTENT_METHODS) String idempotentMethods,
+         @Named(PROPERTY_USER_AGENT) String userAgent) {
       super(utils, contentMetadataCodec, retryHandler, ioRetryHandler, errorHandler, wire, idempotentMethods);
       if (utils.getMaxConnections() > 0) {
          System.setProperty("http.maxConnections", String.valueOf(checkNotNull(utils, "utils").getMaxConnections()));
@@ -87,6 +85,7 @@ public class JavaUrlHttpCommandExecutorService extends BaseHttpCommandExecutorSe
       this.untrustedSSLContextProvider = checkNotNull(untrustedSSLContextProvider, "untrustedSSLContextProvider");
       this.verifier = checkNotNull(verifier, "verifier");
       this.proxyForURI = checkNotNull(proxyForURI, "proxyForURI");
+      this.userAgent = userAgent;
    }
 
    @Override
@@ -149,7 +148,7 @@ public class JavaUrlHttpCommandExecutorService extends BaseHttpCommandExecutorSe
       }
       connection.setRequestProperty(HOST, host);
       if (connection.getRequestProperty(USER_AGENT) == null) {
-          connection.setRequestProperty(USER_AGENT, DEFAULT_USER_AGENT);
+         connection.setRequestProperty(USER_AGENT, userAgent);
       }
       Payload payload = request.getPayload();
       if (payload != null) {

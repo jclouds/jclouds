@@ -20,6 +20,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.net.HttpHeaders.ACCEPT;
 import static com.google.common.net.HttpHeaders.USER_AGENT;
 import static org.jclouds.Constants.PROPERTY_IDEMPOTENT_METHODS;
+import static org.jclouds.Constants.PROPERTY_USER_AGENT;
 import static org.jclouds.http.HttpUtils.filterOutContentHeaders;
 import static org.jclouds.io.Payloads.newInputStreamPayload;
 
@@ -34,7 +35,6 @@ import okio.BufferedSink;
 import okio.Okio;
 import okio.Source;
 
-import org.jclouds.JcloudsVersion;
 import org.jclouds.http.HttpRequest;
 import org.jclouds.http.HttpResponse;
 import org.jclouds.http.HttpUtils;
@@ -59,21 +59,20 @@ import com.squareup.okhttp.RequestBody;
 import com.squareup.okhttp.Response;
 
 public final class OkHttpCommandExecutorService extends BaseHttpCommandExecutorService<Request> {
-
-   private static final String DEFAULT_USER_AGENT = String.format("jclouds-okhttp/%s java/%s", JcloudsVersion.get(),
-         System.getProperty("java.version"));
-
    private final Function<URI, Proxy> proxyForURI;
    private final OkHttpClient globalClient;
+   private final String userAgent;
 
    @Inject
    OkHttpCommandExecutorService(HttpUtils utils, ContentMetadataCodec contentMetadataCodec,
          DelegatingRetryHandler retryHandler, IOExceptionRetryHandler ioRetryHandler,
          DelegatingErrorHandler errorHandler, HttpWire wire, Function<URI, Proxy> proxyForURI, OkHttpClient okHttpClient,
-         @Named(PROPERTY_IDEMPOTENT_METHODS) String idempotentMethods) {
+         @Named(PROPERTY_IDEMPOTENT_METHODS) String idempotentMethods,
+         @Named(PROPERTY_USER_AGENT) String userAgent) {
       super(utils, contentMetadataCodec, retryHandler, ioRetryHandler, errorHandler, wire, idempotentMethods);
       this.proxyForURI = proxyForURI;
       this.globalClient = okHttpClient;
+      this.userAgent = userAgent;
    }
 
    @Override
@@ -105,7 +104,7 @@ public final class OkHttpCommandExecutorService extends BaseHttpCommandExecutorS
          builder.addHeader(ACCEPT, "*/*");
       }
       if (request.getFirstHeaderOrNull(USER_AGENT) == null) {
-         builder.addHeader(USER_AGENT, DEFAULT_USER_AGENT);
+         builder.addHeader(USER_AGENT, userAgent);
       }
       for (Map.Entry<String, String> entry : request.getHeaders().entries()) {
          builder.addHeader(entry.getKey(), entry.getValue());
