@@ -37,17 +37,17 @@ import org.testng.annotations.Test;
 import com.google.common.io.ByteSource;
 
 @Test(groups = "live", testName = "TemporaryUrlSignerLiveTest")
-public class TemporaryUrlSignerLiveTest extends BaseSwiftApiLiveTest<SwiftApi> {
+public class TemporaryUrlSignerLiveTest extends BaseSwiftApiLiveTest {
 
    private String name = getClass().getSimpleName();
    private String containerName = getClass().getSimpleName() + "Container";
 
    public void signForPublicAccess() throws Exception {
-      for (String regionId : api.getConfiguredRegions()) {
-         SwiftObject object = api.getObjectApi(regionId, containerName).get(name);
+      for (String regionId : getApi().getConfiguredRegions()) {
+         SwiftObject object = getApi().getObjectApi(regionId, containerName).get(name);
 
          long expires = System.currentTimeMillis() / 1000 + 5;
-         String signature = TemporaryUrlSigner.checkApiEvery(api.getAccountApi(regionId), 5)
+         String signature = TemporaryUrlSigner.checkApiEvery(getApi().getAccountApi(regionId), 5)
                .sign("GET", object.getUri().getPath(), expires);
 
          URI signed = URI.create(format("%s?temp_url_sig=%s&temp_url_expires=%s", object.getUri(), signature, expires));
@@ -70,10 +70,10 @@ public class TemporaryUrlSignerLiveTest extends BaseSwiftApiLiveTest<SwiftApi> {
    public void setup() {
       super.setup();
       String key = UUID.randomUUID().toString();
-      for (String regionId : api.getConfiguredRegions()) {
-         api.getAccountApi(regionId).updateTemporaryUrlKey(key);
-         api.getContainerApi(regionId).create(containerName);
-         api.getObjectApi(regionId, containerName)
+      for (String regionId : getApi().getConfiguredRegions()) {
+         getApi().getAccountApi(regionId).updateTemporaryUrlKey(key);
+         getApi().getContainerApi(regionId).create(containerName);
+         getApi().getObjectApi(regionId, containerName)
                .put(name, newByteSourcePayload(ByteSource.wrap("swifty".getBytes())));
       }
    }
@@ -81,10 +81,9 @@ public class TemporaryUrlSignerLiveTest extends BaseSwiftApiLiveTest<SwiftApi> {
    @AfterMethod
    @AfterClass(groups = "live")
    public void tearDown() {
-      for (String regionId : api.getConfiguredRegions()) {
-         api.getObjectApi(regionId, containerName).delete(name);
-         api.getContainerApi(regionId).deleteIfEmpty(containerName);
+      for (String regionId : getApi().getConfiguredRegions()) {
+         getApi().getObjectApi(regionId, containerName).delete(name);
+         getApi().getContainerApi(regionId).deleteIfEmpty(containerName);
       }
-      super.tearDown();
    }
 }

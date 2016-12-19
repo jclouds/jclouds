@@ -30,7 +30,6 @@ import org.jboss.shrinkwrap.api.exporter.TarGzExporter;
 import org.jclouds.io.ByteStreams2;
 import org.jclouds.io.Payload;
 import org.jclouds.io.payloads.ByteSourcePayload;
-import org.jclouds.openstack.swift.v1.SwiftApi;
 import org.jclouds.openstack.swift.v1.domain.BulkDeleteResponse;
 import org.jclouds.openstack.swift.v1.domain.ExtractArchiveResponse;
 import org.jclouds.openstack.swift.v1.internal.BaseSwiftApiLiveTest;
@@ -44,7 +43,7 @@ import com.google.common.collect.Lists;
 import com.google.common.io.ByteSource;
 
 @Test(groups = "live", testName = "BulkApiLiveTest")
-public class BulkApiLiveTest extends BaseSwiftApiLiveTest<SwiftApi> {
+public class BulkApiLiveTest extends BaseSwiftApiLiveTest {
 
    private static final int OBJECT_COUNT = 10;
    private String containerName = getClass().getSimpleName();
@@ -53,7 +52,7 @@ public class BulkApiLiveTest extends BaseSwiftApiLiveTest<SwiftApi> {
 
    public void testNotPresentWhenDeleting() throws Exception {
       for (String regionId : regions) {
-         BulkDeleteResponse deleteResponse = api.getBulkApi(regionId).bulkDelete(
+         BulkDeleteResponse deleteResponse = getApi().getBulkApi(regionId).bulkDelete(
                ImmutableList.of(UUID.randomUUID().toString()));
          assertEquals(deleteResponse.getDeleted(), 0);
          assertEquals(deleteResponse.getNotFound(), 1);
@@ -65,14 +64,14 @@ public class BulkApiLiveTest extends BaseSwiftApiLiveTest<SwiftApi> {
       for (String regionId : regions) {
          Payload payload = new ByteSourcePayload(ByteSource.wrap(tarGz));
 
-         ExtractArchiveResponse extractResponse = api.getBulkApi(regionId)
+         ExtractArchiveResponse extractResponse = getApi().getBulkApi(regionId)
                                                      .extractArchive(containerName, payload, "tar.gz");
          assertEquals(extractResponse.getCreated(), OBJECT_COUNT);
          assertTrue(extractResponse.getErrors().isEmpty());
-         assertEquals(api.getContainerApi(regionId).get(containerName).getObjectCount(), Long.valueOf(OBJECT_COUNT));
+         assertEquals(getApi().getContainerApi(regionId).get(containerName).getObjectCount(), Long.valueOf(OBJECT_COUNT));
 
          // repeat the command
-         extractResponse = api.getBulkApi(regionId).extractArchive(containerName, payload, "tar.gz");
+         extractResponse = getApi().getBulkApi(regionId).extractArchive(containerName, payload, "tar.gz");
          assertEquals(extractResponse.getCreated(), OBJECT_COUNT);
          assertTrue(extractResponse.getErrors().isEmpty());
       }
@@ -81,11 +80,11 @@ public class BulkApiLiveTest extends BaseSwiftApiLiveTest<SwiftApi> {
    @Test(dependsOnMethods = "testExtractArchive")
    public void testBulkDelete() throws Exception {
       for (String regionId : regions) {
-         BulkDeleteResponse deleteResponse = api.getBulkApi(regionId).bulkDelete(paths);
+         BulkDeleteResponse deleteResponse = getApi().getBulkApi(regionId).bulkDelete(paths);
          assertEquals(deleteResponse.getDeleted(), OBJECT_COUNT);
          assertEquals(deleteResponse.getNotFound(), 0);
          assertTrue(deleteResponse.getErrors().isEmpty());
-         assertEquals(api.getContainerApi(regionId).get(containerName).getObjectCount(), Long.valueOf(0));
+         assertEquals(getApi().getContainerApi(regionId).get(containerName).getObjectCount(), Long.valueOf(0));
       }
    }
 
@@ -94,7 +93,7 @@ public class BulkApiLiveTest extends BaseSwiftApiLiveTest<SwiftApi> {
    public void setup() {
       super.setup();
       for (String regionId : regions) {
-         boolean created = api.getContainerApi(regionId).create(containerName);
+         boolean created = getApi().getContainerApi(regionId).create(containerName);
          if (!created) {
             deleteAllObjectsInContainer(regionId, containerName);
          }
@@ -113,13 +112,11 @@ public class BulkApiLiveTest extends BaseSwiftApiLiveTest<SwiftApi> {
       }
    }
 
-   @Override
    @AfterClass(groups = "live")
    public void tearDown() {
       for (String regionId : regions) {
          deleteAllObjectsInContainer(regionId, containerName);
-         api.getContainerApi(regionId).deleteIfEmpty(containerName);
+         getApi().getContainerApi(regionId).deleteIfEmpty(containerName);
       }
-      super.tearDown();
    }
 }

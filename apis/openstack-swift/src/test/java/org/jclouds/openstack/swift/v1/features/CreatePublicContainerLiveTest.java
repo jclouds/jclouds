@@ -19,29 +19,26 @@ package org.jclouds.openstack.swift.v1.features;
 import static org.jclouds.openstack.swift.v1.options.CreateContainerOptions.Builder.anybodyRead;
 import static org.testng.Assert.assertTrue;
 
-import org.jclouds.openstack.swift.v1.SwiftApi;
 import org.jclouds.openstack.swift.v1.internal.BaseSwiftApiLiveTest;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.Test;
 
 @Test(groups = "live", testName = "CreatePublicContainerLiveTest")
-public class CreatePublicContainerLiveTest extends BaseSwiftApiLiveTest<SwiftApi> {
+public class CreatePublicContainerLiveTest extends BaseSwiftApiLiveTest {
 
    private String name = getClass().getSimpleName();
 
    public void testAnybodyReadUpdatesMetadata() throws Exception {
-      for (String regionId : api.getConfiguredRegions()) {
-         api.getContainerApi(regionId).create(name, anybodyRead());
-         assertTrue(api.getContainerApi(regionId).get(name).getAnybodyRead().get());
+      for (String regionId : getApi().getConfiguredRegions()) {
+         getApi().getContainerApi(regionId).create(name, anybodyRead());
+         assertTrue(getApi().getContainerApi(regionId).get(name).getAnybodyRead().get());
       }
    }
 
-   @Override
    @AfterClass(groups = "live")
    public void tearDown() {
-      for (String regionId : api.getConfiguredRegions()) {
-         api.getContainerApi(regionId).deleteIfEmpty(name);
+      for (String regionId : getApi().getConfiguredRegions()) {
+         getApi().getContainerApi(regionId).deleteIfEmpty(name);
       }
-      super.tearDown();
    }
 }

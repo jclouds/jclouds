@@ -23,7 +23,7 @@ import java.util.Properties;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
-import org.jclouds.apis.BaseApiLiveTest;
+import org.jclouds.blobstore.integration.internal.BaseBlobStoreIntegrationTest;
 import org.jclouds.location.reference.LocationConstants;
 import org.jclouds.openstack.keystone.v2_0.config.KeystoneProperties;
 import org.jclouds.openstack.swift.v1.SwiftApi;
@@ -40,31 +40,23 @@ import com.google.common.collect.Lists;
 import com.google.common.util.concurrent.Uninterruptibles;
 
 @Test(groups = "live", testName = "BaseSwiftApiLiveTest")
-public abstract class BaseSwiftApiLiveTest<A extends SwiftApi> extends BaseApiLiveTest<A> {
-
-   protected Set<String> regions;
+public abstract class BaseSwiftApiLiveTest extends BaseBlobStoreIntegrationTest {
 
    protected BaseSwiftApiLiveTest() {
       provider = "openstack-swift";
    }
+
+   public SwiftApi getApi() {
+      return view.unwrapApi(SwiftApi.class);
+   }
+
+   protected Set<String> regions;
 
    protected static final int AWAIT_CONSISTENCY_TIMEOUT_SECONDS = Integer.parseInt(System.getProperty(
          "test.blobstore.await-consistency-timeout-seconds", "10"));
 
    protected void awaitConsistency() {
       Uninterruptibles.sleepUninterruptibly(AWAIT_CONSISTENCY_TIMEOUT_SECONDS, TimeUnit.SECONDS);
-   }
-
-   @Override
-   @BeforeClass(groups = "live")
-   public void setup() {
-      super.setup();
-      String providedRegion = System.getProperty("test." + LocationConstants.PROPERTY_REGION);
-      if (providedRegion != null) {
-        regions = ImmutableSet.of(providedRegion);
-      } else {
-        regions = api.getConfiguredRegions();
-      }
    }
 
    @Override
@@ -78,7 +70,7 @@ public abstract class BaseSwiftApiLiveTest<A extends SwiftApi> extends BaseApiLi
    protected void deleteAllObjectsInContainer(String regionId, final String containerName) {
       Uninterruptibles.sleepUninterruptibly(10, TimeUnit.SECONDS);
 
-      ObjectList objects = api.getObjectApi(regionId, containerName).list(new ListContainerOptions());
+      ObjectList objects = getApi().getObjectApi(regionId, containerName).list(new ListContainerOptions());
       if (objects == null) {
          return;
       }
@@ -88,8 +80,18 @@ public abstract class BaseSwiftApiLiveTest<A extends SwiftApi> extends BaseApiLi
          }
       });
       if (!pathsToDelete.isEmpty()) {
-         BulkDeleteResponse response = api.getBulkApi(regionId).bulkDelete(pathsToDelete);
+         BulkDeleteResponse response = getApi().getBulkApi(regionId).bulkDelete(pathsToDelete);
          checkState(response.getErrors().isEmpty(), "Errors deleting paths %s: %s", pathsToDelete, response);
       }
    }
+
+   @BeforeClass(groups = "live")
+   public void setup() {
+           String providedRegion = System.getProperty("test." + LocationConstants.PROPERTY_REGION);
+           if (providedRegion != null) {
+                regions = ImmutableSet.of(providedRegion);
+              } else {
+                regions = getApi().getConfiguredRegions();
+              }
+        }
 }

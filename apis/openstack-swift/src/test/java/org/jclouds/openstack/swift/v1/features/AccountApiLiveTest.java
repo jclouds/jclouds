@@ -25,7 +25,6 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.UUID;
 
-import org.jclouds.openstack.swift.v1.SwiftApi;
 import org.jclouds.openstack.swift.v1.domain.Account;
 import org.jclouds.openstack.swift.v1.internal.BaseSwiftApiLiveTest;
 import org.testng.annotations.Test;
@@ -33,11 +32,11 @@ import org.testng.annotations.Test;
 import com.google.common.collect.ImmutableMap;
 
 @Test(groups = "live", testName = "AccountApiLiveTest")
-public class AccountApiLiveTest extends BaseSwiftApiLiveTest<SwiftApi> {
+public class AccountApiLiveTest extends BaseSwiftApiLiveTest {
 
    public void testGet() throws Exception {
       for (String regionId : regions) {
-         AccountApi accountApi = api.getAccountApi(regionId);
+         AccountApi accountApi = getApi().getAccountApi(regionId);
          Account account = accountApi.get();
 
          assertNotNull(account);
@@ -49,7 +48,7 @@ public class AccountApiLiveTest extends BaseSwiftApiLiveTest<SwiftApi> {
 
    public void testUpdateMetadata() throws Exception {
       for (String regionId : regions) {
-         AccountApi accountApi = api.getAccountApi(regionId);
+         AccountApi accountApi = getApi().getAccountApi(regionId);
 
          Map<String, String> meta = ImmutableMap.of("MyAdd1", "foo", "MyAdd2", "bar");
 
@@ -61,7 +60,7 @@ public class AccountApiLiveTest extends BaseSwiftApiLiveTest<SwiftApi> {
 
    public void testDeleteMetadata() throws Exception {
       for (String regionId : regions) {
-         AccountApi accountApi = api.getAccountApi(regionId);
+         AccountApi accountApi = getApi().getAccountApi(regionId);
 
          Map<String, String> meta = ImmutableMap.of("MyDelete1", "foo", "MyDelete2", "bar");
 
@@ -88,7 +87,7 @@ public class AccountApiLiveTest extends BaseSwiftApiLiveTest<SwiftApi> {
 
    public void testUpdateTemporaryUrlKey() throws Exception {
       for (String regionId : regions) {
-         AccountApi accountApi = api.getAccountApi(regionId);
+         AccountApi accountApi = getApi().getAccountApi(regionId);
 
          String key = UUID.randomUUID().toString();
 

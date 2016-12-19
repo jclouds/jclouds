@@ -24,8 +24,13 @@ import org.testng.annotations.Test;
  * Base class for all {@link CloudFilesApi} live tests.
  */
 @Test(groups = "live", testName = "BaseCloudFilesApiLiveTest")
-public abstract class BaseCloudFilesApiLiveTest extends BaseSwiftApiLiveTest<CloudFilesApi> {
+public abstract class BaseCloudFilesApiLiveTest extends BaseSwiftApiLiveTest {
+
    protected BaseCloudFilesApiLiveTest() {
       provider = "rackspace-cloudfiles";
+   }
+
+   public CloudFilesApi getApi() {
+      return view.unwrapApi(CloudFilesApi.class);
    }
 }
