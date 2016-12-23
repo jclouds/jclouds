@@ -159,7 +159,7 @@ END_OF_JCLOUDS_FILE
 function findOpenJDK() {
   local oldJavaHome=$JAVA_HOME
   unset JAVA_HOME
-  for CANDIDATE in $oldJavaHome `ls -d /usr/lib/jvm/java-1.6.0-openjdk-* /usr/lib/jvm/java-6-openjdk-* /usr/lib/jvm/java-6-openjdk 2>&-`; do
+  for CANDIDATE in $oldJavaHome `ls -d /usr/lib/jvm/java-*-openjdk* 2>&-`; do
     if [ -n "$CANDIDATE" -a -x "$CANDIDATE/bin/java" ]; then
       export JAVA_HOME=$CANDIDATE
       break
@@ -177,9 +177,14 @@ function installOpenJDK() {
     echo reusing JAVA_HOME $JAVA_HOME
   else
     if which dpkg &> /dev/null; then
-      apt-get-update && apt-get-install openjdk-6-jdk
+      apt-get-update && \
+          PACKAGE=$(apt-cache search --names-only '^openjdk-.-jdk$' | sort -r | cut -d' ' -f1 | head -1) && \
+          [ ! -z "$PACKAGE" ] && \
+          {  apt-get-install $PACKAGE-headless || apt-get-install $PACKAGE; }
     elif which rpm &> /dev/null; then
-      yum-install java-1.6.0-openjdk-devel
+      PACKAGE=$(repoquery --qf='%{name}' --pkgnarrow=available 'java-*-openjdk-devel' | sort -r | head -1) && \
+        [ ! -z "$PACKAGE" ] && \
+        yum-install $PACKAGE
     else
       abort "we only support apt-get and yum right now... please contribute"
     fi
