@@ -19,7 +19,12 @@ package org.jclouds.openstack.swift.v1;
 import static org.jclouds.Constants.PROPERTY_IDEMPOTENT_METHODS;
 import static org.jclouds.openstack.keystone.v2_0.config.KeystoneProperties.CREDENTIAL_TYPE;
 import static org.jclouds.openstack.keystone.v2_0.config.KeystoneProperties.SERVICE_TYPE;
+import static org.jclouds.openstack.swift.v1.reference.TempAuthHeaders.TEMP_AUTH_HEADER_USER;
+import static org.jclouds.openstack.swift.v1.reference.TempAuthHeaders.TEMP_AUTH_HEADER_PASS;
+import static org.jclouds.openstack.swift.v1.reference.TempAuthHeaders.DEFAULT_HEADER_USER;
+import static org.jclouds.openstack.swift.v1.reference.TempAuthHeaders.DEFAULT_HEADER_PASS;
 import static org.jclouds.reflect.Reflection2.typeToken;
+
 
 import java.net.URI;
 import java.util.Properties;
@@ -62,6 +67,8 @@ public class SwiftApiMetadata extends BaseHttpApiMetadata<SwiftApi> {
       properties.setProperty(PROPERTY_IDEMPOTENT_METHODS, "DELETE,GET,HEAD,OPTIONS,POST,PUT");
       // Can alternatively be set to "tempAuthCredentials"
       properties.setProperty(CREDENTIAL_TYPE, CredentialTypes.PASSWORD_CREDENTIALS);
+      properties.setProperty(TEMP_AUTH_HEADER_USER, DEFAULT_HEADER_USER);
+      properties.setProperty(TEMP_AUTH_HEADER_PASS, DEFAULT_HEADER_PASS);
       return properties;
    }
 
