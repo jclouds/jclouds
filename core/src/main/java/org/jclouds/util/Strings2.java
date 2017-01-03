@@ -41,6 +41,7 @@ import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
 import com.google.common.collect.Multimap;
 import com.google.common.io.CharStreams;
+import com.google.common.net.InetAddresses;
 import com.google.common.primitives.Chars;
 
 public class Strings2 {
@@ -67,7 +68,7 @@ public class Strings2 {
          throw new IllegalStateException("error creating pattern: " + in, e);
       }
    }
-   
+
    private static final LoadingCache<Character, String> CHAR_TO_ENCODED = CacheBuilder.newBuilder()
          .<Character, String> build(new CacheLoader<Character, String>() {
             @Override
@@ -79,19 +80,43 @@ public class Strings2 {
                }
             }
          });
-   
+
    private static final String IP_ADDRESS = "(\\d{1,3})\\.(\\d{1,3})\\.(\\d{1,3})\\.(\\d{1,3})";
    private static final String SLASH_FORMAT = IP_ADDRESS + "/(\\d{1,3})";
    private static final Pattern ADDRESS_PATTERN = Pattern.compile(IP_ADDRESS);
    private static final Pattern CIDR_PATTERN = Pattern.compile(SLASH_FORMAT);
 
    public static boolean isCidrFormat(String in) {
-      return CIDR_PATTERN.matcher(in).matches();
+      return CIDR_PATTERN.matcher(in).matches() || isIPv6CIDR(in);
+   }
+
+   public static boolean isIPv6CIDR(String in) {
+      // ensure IPv6 notation (as opposed to parsing for IPv4)
+      if ( !in.contains(":"))
+         return false;
+      String[] parts = in.split("/");
+      if ( parts.length != 2 ) {
+         if (parts.length == 1)
+            return InetAddresses.isInetAddress(in);
+         else
+            return false;
+      }
+      // no leading zero
+      if ( parts[1].length() > 1 && parts[1].startsWith("0"))
+         return false;
+      int mask;
+      try {
+         mask = Integer.parseInt(parts[1]);
+      } catch (NumberFormatException e) {
+         return false;
+      }
+      if (mask < 0 || mask > 128) return false;
+      return InetAddresses.isInetAddress(parts[0]);
    }
 
    /**
     * url decodes the input param, if set.
-    * 
+    *
     * @param in
     *           nullable
     * @return null if input was null
@@ -124,12 +149,12 @@ public class Strings2 {
 
    /**
     * replaces tokens that are expressed as <code>{token}</code>
-    * 
+    *
     * <p/>
     * ex. if input is "hello {where}"<br/>
     * and replacements is "where" -> "world" <br/>
     * then replaceTokens returns "hello world"
-    * 
+    *
     * @param input
     *           source to replace
     * @param replacements
@@ -151,7 +176,7 @@ public class Strings2 {
       builder.append(input, i, input.length());
       return builder.toString();
    }
-   
+
    private static final Pattern TOKEN_PATTERN = Pattern.compile("\\{(.+?)\\}");
 
    public static String replaceTokens(String input, Multimap<String, ?> tokenValues) {
