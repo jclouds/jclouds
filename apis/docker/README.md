@@ -50,6 +50,21 @@ export DOCKER_HOST="http://localhost:2375/"
 mvn -Plive integration-test
 ```
 
+Notice, if you are using [Docker for Mac](https://docs.docker.com/engine/installation/mac/), Docker Remote API may not be available over HTTP. 
+In the [Known issue]{https://docs.docker.com/docker-for-mac/troubleshoot/#known-issues) Docker team recommend to use [socat](http://www.dest-unreach.org/socat/)
+to expose `docker.sock` over tcp. You may find useful the following simple commands:
+
+```
+docker run -d -v /var/run/docker.sock:/var/run/docker.sock -p 127.0.0.1:1234:1234 bobrik/socat TCP-LISTEN:1234,fork UNIX-CONNECT:/var/run/docker.sock
+```
+
+and then 
+
+```
+export DOCKER_HOST=http://localhost:1234
+mvn -Plive integration-test
+```
+
 # How it works
 
 
