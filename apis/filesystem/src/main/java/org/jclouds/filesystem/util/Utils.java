@@ -113,7 +113,7 @@ public class Utils {
                try (BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()))) {
                   while ((line = reader.readLine()) != null) {
                      if (line.indexOf("S-1-1-0") != -1) {
-                        return line.split(" ")[0];
+                        return line.split("\\s{2,}")[0];
                      }
                   }
                }
