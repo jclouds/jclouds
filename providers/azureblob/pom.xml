@@ -33,7 +33,7 @@
 
   <properties>
     <test.azureblob.endpoint>https://${jclouds.identity}.blob.core.windows.net</test.azureblob.endpoint>
-    <test.azureblob.api-version>2013-08-15</test.azureblob.api-version>
+    <test.azureblob.api-version>2016-05-31</test.azureblob.api-version>
     <test.azureblob.build-version />
     <test.azureblob.identity>${test.azure.identity}</test.azureblob.identity>
     <test.azureblob.credential>${test.azure.credential}</test.azureblob.credential>
