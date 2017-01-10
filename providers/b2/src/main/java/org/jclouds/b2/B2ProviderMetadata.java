@@ -49,7 +49,7 @@ public final class B2ProviderMetadata extends BaseProviderMetadata {
          id("b2")
                  .name("Backblaze B2")
                  .apiMetadata(new B2ApiMetadata())
-                 .endpoint("https://api.backblaze.com/")
+                 .endpoint("https://api.backblazeb2.com/")
                  .defaultProperties(B2ProviderMetadata.defaultProperties());
       }
 

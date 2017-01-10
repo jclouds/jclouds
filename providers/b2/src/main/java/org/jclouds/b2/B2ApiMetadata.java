@@ -65,7 +65,7 @@ public final class B2ApiMetadata extends BaseHttpApiMetadata {
                  .identityName("Account Id")
                  .credentialName("Application Key")
                  .documentation(URI.create("https://www.backblaze.com/b2/docs/"))
-                 .defaultEndpoint("https://api.backblaze.com/")
+                 .defaultEndpoint("https://api.backblazeb2.com/")
                  .defaultProperties(B2ApiMetadata.defaultProperties())
                  .view(typeToken(BlobStoreContext.class))
                  .defaultModules(ImmutableSet.<Class<? extends Module>>of(
