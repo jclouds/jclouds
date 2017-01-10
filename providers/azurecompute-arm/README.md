@@ -42,6 +42,14 @@ Run the following commands to assign roles to the service principal
 azure role assignment create --objectId <Object-id> -o Contributor -c /subscriptions/<Subscription-id>/
 ```
 
+Look up the the tenant Id
+
+```bash
+azure account show -s <Subscription-id> --json
+
+# output will be a JSON which will include the `Tenant id`
+```
+
 Verify service principal
 
 ```bash
