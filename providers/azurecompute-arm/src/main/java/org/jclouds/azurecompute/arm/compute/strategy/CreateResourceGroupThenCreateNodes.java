@@ -216,7 +216,7 @@ public class CreateResourceGroupThenCreateNodes extends CreateNodesWithGroupEnco
       }
 
       if (nameLength > 24) {
-         sanitizedStorageAccountName = shorten(storageAccountName, random);
+         sanitizedStorageAccountName = shorten(sanitizedStorageAccountName, random);
       }
       return sanitizedStorageAccountName;
    }
