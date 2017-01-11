@@ -165,7 +165,7 @@ public class AWSS3ClientLiveTest extends S3ClientLiveTest {
     * using the "eu-central-1" region which only support signature v4.
     */
    public void testV4SignatureOps() throws InterruptedException {
-       String containerName = getContainerName();
+       String containerName = getScratchContainerName() + "eu";
 	   try {
            BlobStore blobStore = view.getBlobStore();
            Location location = Iterables.tryFind(blobStore.listAssignableLocations(),
@@ -206,7 +206,7 @@ public class AWSS3ClientLiveTest extends S3ClientLiveTest {
            // Cleanup the container.
            blobStore.removeBlob(containerName, blobName);
        } finally {
-           returnContainer(containerName);
+           destroyContainer(containerName);
        }
    }
 }
