@@ -57,6 +57,7 @@ public class BasePacketApiMockTest {
    protected MockWebServer server;
    protected PacketApi api;
    private Json json;
+   private ApiContext<PacketApi> ctx;
    
    // So that we can ignore formatting.
    private final JsonParser parser = new JsonParser();
@@ -65,7 +66,7 @@ public class BasePacketApiMockTest {
    public void start() throws IOException {
       server = new MockWebServer();
       server.play();
-      ApiContext<PacketApi> ctx = ContextBuilder.newBuilder("packet")
+      ctx = ContextBuilder.newBuilder("packet")
             .credentials("", X_AUTHORIZATION_TOKEN)
             .endpoint(url(""))
             .modules(modules)
@@ -130,7 +131,7 @@ public class BasePacketApiMockTest {
       RecordedRequest request = server.takeRequest();
       assertEquals(request.getMethod(), method);
       assertEquals(request.getPath(), path);
-      assertEquals(request.getHeader("Accept"), "application/json");
+      assertEquals(request.getHeader("Accept"), "application/json; version=" + ctx.getMetadata().get("apiVersion"));
       assertEquals(request.getHeader("X-Auth-Token"), X_AUTHORIZATION_TOKEN);
       return request;
    }

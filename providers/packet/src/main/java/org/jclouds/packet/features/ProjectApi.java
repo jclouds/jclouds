@@ -36,6 +36,7 @@ import org.jclouds.packet.domain.Href;
 import org.jclouds.packet.domain.Project;
 import org.jclouds.packet.domain.internal.PaginatedCollection;
 import org.jclouds.packet.domain.options.ListOptions;
+import org.jclouds.packet.filters.AddApiVersionToRequest;
 import org.jclouds.packet.filters.AddXAuthTokenToRequest;
 import org.jclouds.packet.functions.BaseToPagedIterable;
 import org.jclouds.rest.annotations.Fallback;
@@ -49,7 +50,7 @@ import com.google.inject.TypeLiteral;
 
 @Path("/projects")
 @Consumes(MediaType.APPLICATION_JSON)
-@RequestFilters(AddXAuthTokenToRequest.class)
+@RequestFilters({ AddXAuthTokenToRequest.class, AddApiVersionToRequest.class} )
 public interface ProjectApi {
 
 

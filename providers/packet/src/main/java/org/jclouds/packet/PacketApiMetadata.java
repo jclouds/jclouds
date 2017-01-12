@@ -65,6 +65,7 @@ public class PacketApiMetadata extends BaseHttpApiMetadata<PacketApi> {
                  .documentation(URI.create("https://www.packet.net/help/api/#"))
                  .defaultEndpoint("https://api.packet.net")
                  .defaultProperties(PacketApiMetadata.defaultProperties())
+                 .version("1")
                  //.view(typeToken(ComputeServiceContext.class))
                  .defaultModules(ImmutableSet.<Class<? extends Module>>builder()
                          .add(PacketHttpApiModule.class)
