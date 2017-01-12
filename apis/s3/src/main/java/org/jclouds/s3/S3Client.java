@@ -533,10 +533,10 @@ public interface S3Client extends Closeable {
    @Named("GetBucketLocation")
    @GET
    @QueryParams(keys = "location")
-   @Path("/")
+   @Path("/{bucket}")
    @Endpoint(Bucket.class)
    @XMLResponseParser(LocationConstraintHandler.class)
-   String getBucketLocation(@Bucket @BinderParam(BindAsHostPrefixIfConfigured.class) @ParamValidators(
+   String getBucketLocation(@Bucket @PathParam("bucket") @ParamValidators(
          BucketNameValidator.class) String bucketName);
 
 
