@@ -80,8 +80,7 @@ public class AWSS3ClientTest extends S3ClientTest<AWSS3Client> {
       Invokable<?, ?> method = method(AWSS3Client.class, "getBucketLocation", String.class);
       GeneratedHttpRequest request = processor.createRequest(method, ImmutableList.<Object> of("bucket-eu-west-1"));
 
-      assertRequestLineEquals(request, "GET https://bucket-eu-west-1.s3.amazonaws.com/?location HTTP/1.1");
-      assertNonPayloadHeadersEqual(request, "Host: bucket-eu-west-1.s3.amazonaws.com\n");
+      assertRequestLineEquals(request, "GET https://s3.amazonaws.com/bucket-eu-west-1?location HTTP/1.1");
       assertPayloadEquals(request, null, null, false);
 
       assertResponseParserClassEquals(method, request, ParseSax.class);
@@ -116,16 +115,15 @@ public class AWSS3ClientTest extends S3ClientTest<AWSS3Client> {
       Invokable<?, ?> method = method(AWSS3Client.class, "getBucketLocation", String.class);
       GeneratedHttpRequest request = processor.createRequest(method, ImmutableList.<Object> of("bucket"));
 
-      assertRequestLineEquals(request, "GET https://bucket.s3.amazonaws.com/?location HTTP/1.1");
-      assertNonPayloadHeadersEqual(request, "Host: bucket.s3.amazonaws.com\n");
+      assertRequestLineEquals(request, "GET https://s3.amazonaws.com/bucket?location HTTP/1.1");
       assertPayloadEquals(request, null, null, false);
 
       request = (GeneratedHttpRequest) filter.filter(request);
 
-      assertRequestLineEquals(request, "GET https://bucket.s3.amazonaws.com/?location HTTP/1.1");
+      assertRequestLineEquals(request, "GET https://s3.amazonaws.com/bucket?location HTTP/1.1");
       assertNonPayloadHeadersEqual(
             request,
-            "Authorization: AWS identity:2fFTeYJTDwiJmaAkKj732RjNbOg=\nDate: 2009-11-08T15:54:08.897Z\nHost: bucket.s3.amazonaws.com\n");
+            "Authorization: AWS identity:f1Pt8/8Yr/HZahuc6KPI1B2+Mw4=\nDate: 2009-11-08T15:54:08.897Z\n");
       assertPayloadEquals(request, null, null, false);
 
       assertResponseParserClassEquals(method, request, ParseSax.class);

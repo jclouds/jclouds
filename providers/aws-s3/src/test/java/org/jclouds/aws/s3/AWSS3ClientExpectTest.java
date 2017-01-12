@@ -36,10 +36,9 @@ public class AWSS3ClientExpectTest extends BaseAWSS3ClientExpectTest {
 
    HttpRequest bucketLocationRequest = HttpRequest.builder()
                                                   .method("GET")
-                                                  .endpoint("https://test.s3.amazonaws.com/?location")
-                                                  .addHeader("Host", "test.s3.amazonaws.com")
+                                                  .endpoint("https://s3.amazonaws.com/test?location")
                                                   .addHeader("Date", CONSTANT_DATE)
-                                                  .addHeader("Authorization", "AWS identity:D1rymKrEdvzvhmZXeg+Z0R+tiug=").build();
+                                                  .addHeader("Authorization", "AWS identity:sOZnJSLuwnMVn7CiEKcVmpFI0rU=").build();
 
    HttpResponse bucketLocationResponse = HttpResponse.builder()
                                                      .statusCode(200)
