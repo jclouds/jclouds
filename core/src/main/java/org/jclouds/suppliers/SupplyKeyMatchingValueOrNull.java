@@ -16,17 +16,20 @@
  */
 package org.jclouds.suppliers;
 
+import java.util.Collection;
 import java.util.Map;
 
 import javax.annotation.Resource;
 
 import org.jclouds.logging.Logger;
 
+import com.google.common.base.Function;
 import com.google.common.base.Supplier;
 import com.google.common.base.Suppliers;
-import com.google.common.collect.ImmutableBiMap;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Maps;
+import com.google.common.collect.Multimap;
+import com.google.common.collect.Multimaps;
 
 /**
  * Allows you to lazy discover a key by value. This is useful for example in service discovery,
@@ -49,12 +52,30 @@ public class SupplyKeyMatchingValueOrNull<K, V> implements Supplier<K> {
    public K get() {
       V uri = valueSupplier.get();
       // eagerly get all the values, so we can see which is default
-      Map<K, V> map = Maps.transformValues(supplier.get(), Suppliers.<V> supplierFunction());
-      K region = ImmutableBiMap.copyOf(map).inverse().get(uri);
-      if (region == null && !map.isEmpty()) {
-         region = Iterables.get(map.keySet(), 0);
-         logger.warn("failed to find key for value %s in %s; choosing first: %s", uri, map, region);
+      final Map<K, V> map = Maps.transformValues(supplier.get(), Suppliers.<V> supplierFunction());
+
+      // There can be keys with the same value so we need a multimap here
+      Multimap<V, K> inverted = Multimaps.index(map.keySet(), new Function<K, V>() {
+         @Override public V apply(K input) {
+            return map.get(input);
+         }
+      });
+
+      Collection<K> keys = inverted.get(uri);
+      K key = null;
+
+      if (keys == null || keys.isEmpty()) {
+         if (!map.isEmpty()) {
+            key = Iterables.get(map.keySet(), 0);
+            logger.warn("failed to find key for value %s in %s; choosing first: %s", uri, map, key);
+         }
+      } else {
+         key = Iterables.get(keys, 0);
+         if (keys.size() > 1) {
+            logger.debug("found %s keys for value %s. choosing first: %s", keys.size(), uri, key);
+         }
       }
-      return region;
+
+      return key;
    }
 }
