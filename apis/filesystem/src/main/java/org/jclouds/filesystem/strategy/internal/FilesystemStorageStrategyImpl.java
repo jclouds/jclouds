@@ -52,6 +52,8 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import javax.inject.Provider;
 
+import org.jclouds.blobstore.ContainerNotFoundException;
+import org.jclouds.blobstore.KeyNotFoundException;
 import org.jclouds.blobstore.LocalStorageStrategy;
 import org.jclouds.blobstore.domain.Blob;
 import org.jclouds.blobstore.domain.BlobAccess;
@@ -552,7 +554,14 @@ public class FilesystemStorageStrategyImpl implements LocalStorageStrategy {
 
    @Override
    public BlobAccess getBlobAccess(String containerName, String blobName) {
-      Path path = new File(buildPathStartingFromBaseDir(containerName, blobName)).toPath();
+      if (new File(buildPathStartingFromBaseDir(containerName)).exists()) {
+         throw new ContainerNotFoundException(containerName, "in getBlobAccess");
+      }
+      File file = new File(buildPathStartingFromBaseDir(containerName, blobName));
+      if (!file.exists()) {
+         throw new KeyNotFoundException(containerName, blobName, "in getBlobAccess");
+      }
+      Path path = file.toPath();
 
       if ( isWindows() ) {
          try {
