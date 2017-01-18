@@ -16,10 +16,12 @@
  */
 package org.jclouds.packet.features;
 
+import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import org.jclouds.packet.compute.internal.BasePacketApiLiveTest;
-import org.jclouds.packet.domain.Project;
+import org.jclouds.packet.domain.SshKey;
+import org.jclouds.ssh.SshKeys;
 import org.testng.annotations.Test;
 
 import com.google.common.base.Predicate;
@@ -29,34 +31,53 @@ import static org.jclouds.packet.domain.options.ListOptions.Builder.page;
 import static org.testng.Assert.assertTrue;
 import static org.testng.util.Strings.isNullOrEmpty;
 
-@Test(groups = "live", testName = "ProjectApiLiveTest")
-public class ProjectApiLiveTest extends BasePacketApiLiveTest {
+@Test(groups = "live", testName = "SshKeyApiLiveTest")
+public class SshKeyApiLiveTest extends BasePacketApiLiveTest {
 
+   private SshKey sshKey;
+
+   public void testCreate() {
+      Map<String, String> keyPair = SshKeys.generate();
+      sshKey = api.sshKeyApi().create(prefix + "-sshkey-livetest", keyPair.get("public"));
+   }
+
+   @Test(dependsOnMethods = "testCreate")
+   public void testGet() {
+      api.sshKeyApi().get(sshKey.id());
+   }
+
+   @Test(dependsOnMethods = "testCreate")
    public void testList() {
       final AtomicInteger found = new AtomicInteger(0);
-      assertTrue(Iterables.all(api().list().concat(), new Predicate<Project>() {
+      assertTrue(Iterables.all(api().list().concat(), new Predicate<SshKey>() {
          @Override
-         public boolean apply(Project input) {
+         public boolean apply(SshKey input) {
             found.incrementAndGet();
             return !isNullOrEmpty(input.id());
          }
-      }), "All projects must have the 'id' field populated");
-      assertTrue(found.get() > 0, "Expected some projects to be returned");
+      }), "All ssh keys must have the 'id' field populated");
+      assertTrue(found.get() > 0, "Expected some ssh keys to be returned");
    }
 
+   @Test(dependsOnMethods = "testCreate")
    public void testListOnePage() {
       final AtomicInteger found = new AtomicInteger(0);
-      assertTrue(api().list(page(1).perPage(5)).allMatch(new Predicate<Project>() {
+      assertTrue(api().list(page(1).perPage(5)).allMatch(new Predicate<SshKey>() {
          @Override
-         public boolean apply(Project input) {
+         public boolean apply(SshKey input) {
             found.incrementAndGet();
             return !isNullOrEmpty(input.id());
          }
-      }), "All projects must have the 'id' field populated");
-      assertTrue(found.get() > 0, "Expected some projects to be returned");
+      }), "All ssh keys must have the 'id' field populated");
+      assertTrue(found.get() > 0, "Expected some ssh keys to be returned");
    }
 
-   private ProjectApi api() {
-      return api.projectApi();
+   @Test(dependsOnMethods = "testList", alwaysRun = true)
+   public void testDelete() throws InterruptedException {
+      api.sshKeyApi().delete(sshKey.id());
+   }
+
+   private SshKeyApi api() {
+      return api.sshKeyApi();
    }
 }

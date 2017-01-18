@@ -18,6 +18,8 @@ package org.jclouds.packet.domain;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import org.jclouds.javax.annotation.Nullable;
 import org.jclouds.json.SerializedNames;
@@ -27,6 +29,8 @@ import com.google.common.base.Enums;
 import com.google.common.base.Joiner;
 import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.ImmutableSet;
 
 import static com.google.common.base.Preconditions.checkArgument;
 
@@ -60,15 +64,19 @@ public abstract class Device {
     public abstract OperatingSystem operatingSystem();
     public abstract Facility facility();
     public abstract Href project();
+    public abstract List<Href> sshKeys();
     public abstract Href projectLite();
     public abstract List<Object> volumes();
     public abstract List<IpAddress> ipAddresses();
+    public abstract List<ProvisioningEvent> provisioningEvents();
     public abstract Plan plan();
     public abstract String rootPassword();
     public abstract String userdata();
     public abstract String href();
 
-    @SerializedNames({"id", "short_id", "hostname", "description", "state", "tags", "billing_cycle", "user", "iqn", "locked", "bonding_mode", "created_at", "updated_at", "operating_system", "facility", "project", "project_lite", "volumes", "ip_addresses", "plan", "root_password", "userdata", "href"})
+    @SerializedNames({"id", "short_id", "hostname", "description", "state", "tags", "billing_cycle", "user", "iqn",
+            "locked", "bonding_mode", "created_at", "updated_at", "operating_system", "facility", "project", "ssh_keys",
+            "project_lite", "volumes", "ip_addresses", "provisioning_events", "plan", "root_password", "userdata", "href"})
     public static Device create(String id,
                                 String shortId,
                                 String hostname,
@@ -85,9 +93,11 @@ public abstract class Device {
                                 OperatingSystem operatingSystem,
                                 Facility facility,
                                 Href project,
+                                List<Href> sshKeys,
                                 Href projectLite,
                                 List<Object> volumes,
                                 List<IpAddress> ipAddresses,
+                                List<ProvisioningEvent> provisioningEvents,
                                 Plan plan,
                                 String rootPassword,
                                 String userdata,
@@ -95,14 +105,80 @@ public abstract class Device {
     ) {
         return new AutoValue_Device(id, shortId, hostname, description, state,
                 tags == null ? ImmutableList.<String> of() : ImmutableList.copyOf(tags),
-                billingCycle, user, iqn, locked, bondingMode, createdAt, updatedAt, operatingSystem, facility, project, projectLite,
+                billingCycle, user, iqn, locked, bondingMode, createdAt, updatedAt, operatingSystem, facility, project,
+                sshKeys == null ? ImmutableList.<Href> of() : ImmutableList.copyOf(sshKeys),
+                projectLite,
                 volumes == null ? ImmutableList.of() : ImmutableList.copyOf(volumes),
                 ipAddresses == null ? ImmutableList.<IpAddress>of() : ImmutableList.copyOf(ipAddresses),
-                plan, rootPassword, userdata, href
+                provisioningEvents == null ? ImmutableList.<ProvisioningEvent> of() : ImmutableList.copyOf(provisioningEvents),
+                plan,
+                rootPassword, userdata, href
         );
     }
 
     Device() {
+    }
+
+    @AutoValue
+    public abstract static class CreateDevice {
+
+        public abstract String hostname();
+        public abstract String plan();
+        public abstract String billingCycle();
+        public abstract String facility();
+        public abstract Map<String, String> features();
+        public abstract String operatingSystem();
+        public abstract Boolean locked();
+        public abstract String userdata();
+        public abstract Set<String> tags();
+
+        @SerializedNames({"hostname", "plan", "billing_cycle", "facility", "features", "operating_system",
+                "locked", "userdata", "tags" })
+        private static CreateDevice create(final String hostname, final String plan, final String billingCycle,
+                                          final String facility, final Map<String, String> features, final String operatingSystem,
+                                          final Boolean locked, final String userdata,
+                                          final Set<String> tags) {
+            return builder()
+                    .hostname(hostname)
+                    .plan(plan)
+                    .billingCycle(billingCycle)
+                    .facility(facility)
+                    .features(features)
+                    .operatingSystem(operatingSystem)
+                    .locked(locked)
+                    .userdata(userdata)
+                    .tags(tags)
+                    .build();
+        }
+
+        public static Builder builder() {
+            return new AutoValue_Device_CreateDevice.Builder();
+        }
+
+        @AutoValue.Builder
+        public abstract static class Builder {
+
+            public abstract Builder hostname(String hostname);
+            public abstract Builder plan(String plan);
+            public abstract Builder billingCycle(String billingCycle);
+            public abstract Builder facility(String facility);
+            public abstract Builder features(Map<String, String> features);
+            public abstract Builder operatingSystem(String operatingSystem);
+            public abstract Builder locked(Boolean locked);
+            public abstract Builder userdata(String userdata);
+            public abstract Builder tags(Set<String> tags);
+
+           abstract Map<String, String> features();
+           abstract Set<String> tags();
+
+           abstract CreateDevice autoBuild();
+
+           public CreateDevice build() {
+              return tags(tags() != null ? ImmutableSet.copyOf(tags()) : ImmutableSet.<String> of())
+                      .features(features() != null ? ImmutableMap.copyOf(features()) : ImmutableMap.<String, String> of())
+                      .autoBuild();
+           }
+        }
     }
 
 }

@@ -1,0 +1,211 @@
+{
+  "id": "3238ce59-fe02-4b9b-92c1-915ef4f3fb9e",
+  "short_id": "3238ce59",
+  "hostname": "andrea-device-livetest",
+  "description": null,
+  "state": "queued",
+  "tags": [],
+  "billing_cycle": "hourly",
+  "user": "root",
+  "iqn": "iqn.2017-01.net.packet:device.3238ce59",
+  "locked": false,
+  "bonding_mode": 5,
+  "created_at": "2017-01-20T14:15:28Z",
+  "updated_at": "2017-01-20T14:15:29Z",
+  "provisioning_percentage": 10.0,
+  "operating_system": {
+    "id": "1b9b78e3-de68-466e-ba00-f2123e89c112",
+    "slug": "ubuntu_16_04",
+    "name": "Ubuntu 16.04 LTS",
+    "distro": "ubuntu",
+    "version": "16.04",
+    "provisionable_on": [
+      "baremetal_0",
+      "baremetal_1",
+      "baremetal_2",
+      "baremetal_2a",
+      "baremetal_3",
+      "baremetal_hua"
+    ]
+  },
+  "facility": {
+    "id": "e1e9c52e-a0bc-4117-b996-0fc94843ea09",
+    "name": "Parsippany, NJ",
+    "code": "ewr1",
+    "features": [
+      "baremetal",
+      "storage"
+    ],
+    "address": null
+  },
+  "project": {
+    "href": "/projects/93907f48-adfe-43ed-ad89-0e6e83721a54"
+  },
+  "ssh_keys": [
+    {
+      "href": "/ssh-keys/a3d8bebe-574f-427d-80ee-bc2ba17f7074"
+    },
+    {
+      "href": "/ssh-keys/a8d6cc17-7d9d-4fb9-8190-afdb301b67df"
+    },
+    {
+      "href": "/ssh-keys/084a5dec-30be-415a-8937-9c615932e459"
+    },
+    {
+      "href": "/ssh-keys/eacfb002-45e1-4047-a0d5-cd9d8bab19ed"
+    },
+    {
+      "href": "/ssh-keys/f82b69d7-8c7e-4a38-9283-ecdbcaba56aa"
+    },
+    {
+      "href": "/ssh-keys/da5d6c21-2e8c-43ac-820f-ff41bd4e6ebc"
+    }
+  ],
+  "project_lite": {
+    "href": "/projects/93907f48-adfe-43ed-ad89-0e6e83721a54"
+  },
+  "volumes": [],
+  "ip_addresses": [],
+  "provisioning_events": [
+    {
+      "id": "32a4da09-37dd-446b-99ef-9f64c1eb0097",
+      "type": "provisioning.101",
+      "body": "Provisioning started",
+      "created_at": "2017-01-20T14:15:29Z",
+      "relationships": [
+        {
+          "href": "#5062a5fe-19ea-4b41-864c-e5f4dcb02fa0"
+        }
+      ],
+      "interpolated": "Provisioning started",
+      "href": "/events/32a4da09-37dd-446b-99ef-9f64c1eb0097"
+    },
+    {
+      "id": null,
+      "type": "provisioning.102",
+      "body": "Network configured",
+      "created_at": null,
+      "relationships": [],
+      "interpolated": "Network configured"
+    },
+    {
+      "id": null,
+      "type": "provisioning.103",
+      "body": "Configuration written, restarting device",
+      "created_at": null,
+      "relationships": [],
+      "interpolated": "Configuration written, restarting device"
+    },
+    {
+      "id": null,
+      "type": "provisioning.104",
+      "body": "Connected to magic install system",
+      "created_at": null,
+      "relationships": [],
+      "interpolated": "Connected to magic install system"
+    },
+    {
+      "id": null,
+      "type": "provisioning.105",
+      "body": "Server partitions created",
+      "created_at": null,
+      "relationships": [],
+      "interpolated": "Server partitions created"
+    },
+    {
+      "id": null,
+      "type": "provisioning.106",
+      "body": "Operating system packages installed",
+      "created_at": null,
+      "relationships": [],
+      "interpolated": "Operating system packages installed"
+    },
+    {
+      "id": null,
+      "type": "provisioning.107",
+      "body": "Server networking interfaces configured",
+      "created_at": null,
+      "relationships": [],
+      "interpolated": "Server networking interfaces configured"
+    },
+    {
+      "id": null,
+      "type": "provisioning.108",
+      "body": "Cloud-init packages installed and configured",
+      "created_at": null,
+      "relationships": [],
+      "interpolated": "Cloud-init packages installed and configured"
+    },
+    {
+      "id": null,
+      "type": "provisioning.109",
+      "body": "Installation finished, rebooting server",
+      "created_at": null,
+      "relationships": [],
+      "interpolated": "Installation finished, rebooting server"
+    },
+    {
+      "id": null,
+      "type": "provisioning.109",
+      "body": "Installation finished, rebooting server",
+      "created_at": null,
+      "relationships": [],
+      "interpolated": "Installation finished, rebooting server"
+    }
+  ],
+  "plan": {
+    "id": "e69c0169-4726-46ea-98f1-939c9e8a3607",
+    "slug": "baremetal_0",
+    "name": "Type 0",
+    "description": "Our Type 0 configuration is a general use \"cloud killer\" server, with a Intel Atom 2.4Ghz processor and 8GB of RAM.",
+    "line": "baremetal",
+    "specs": {
+      "cpus": [
+        {
+          "count": 1,
+          "type": "Intel Atom C2550 @ 2.4Ghz"
+        }
+      ],
+      "memory": {
+        "total": "8GB"
+      },
+      "drives": [
+        {
+          "count": 1,
+          "size": "80GB",
+          "type": "SSD"
+        }
+      ],
+      "nics": [
+        {
+          "count": 2,
+          "type": "1Gbps"
+        }
+      ],
+      "features": {
+        "raid": false,
+        "txt": true
+      }
+    },
+    "available_in": [
+      {
+        "href": "/facilities/2b70eb8f-fa18-47c0-aba7-222a842362fd"
+      },
+      {
+        "href": "/facilities/8e6470b3-b75e-47d1-bb93-45b225750975"
+      },
+      {
+        "href": "/facilities/8ea03255-89f9-4e62-9d3f-8817db82ceed"
+      },
+      {
+        "href": "/facilities/e1e9c52e-a0bc-4117-b996-0fc94843ea09"
+      }
+    ],
+    "pricing": {
+      "hour": 0.05
+    }
+  },
+  "userdata": "",
+  "root_password": "$n4hwka3!i",
+  "href": "/devices/3238ce59-fe02-4b9b-92c1-915ef4f3fb9e"
+}

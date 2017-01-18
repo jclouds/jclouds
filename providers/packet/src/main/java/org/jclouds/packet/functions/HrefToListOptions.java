@@ -35,7 +35,7 @@ import static org.jclouds.packet.domain.options.ListOptions.PER_PAGE_PARAM;
  * Transforms an href returned by the API into a {@link ListOptions} that can be
  * used to perform a request to get another page of a paginated list.
  */
-public class LinkToListOptions implements Function<Href, ListOptions> {
+public class HrefToListOptions implements Function<Href, ListOptions> {
 
    @Override
    public ListOptions apply(Href input) {

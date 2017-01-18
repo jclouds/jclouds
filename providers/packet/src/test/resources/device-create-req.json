@@ -1,0 +1,11 @@
+{
+  "hostname": "jclouds-device-livetest",
+  "plan": "baremetal_0",
+  "billing_cycle": "hourly",
+  "facility": "ewr1",
+  "features": {},
+  "operating_system": "ubuntu_16_04",
+  "locked": false,
+  "userdata": "",
+  "tags": []
+}

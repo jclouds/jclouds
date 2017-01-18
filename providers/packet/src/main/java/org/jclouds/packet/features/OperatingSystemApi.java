@@ -33,7 +33,7 @@ import org.jclouds.http.functions.ParseJson;
 import org.jclouds.json.Json;
 import org.jclouds.packet.PacketApi;
 import org.jclouds.packet.domain.Href;
-import org.jclouds.packet.domain.Project;
+import org.jclouds.packet.domain.OperatingSystem;
 import org.jclouds.packet.domain.internal.PaginatedCollection;
 import org.jclouds.packet.domain.options.ListOptions;
 import org.jclouds.packet.filters.AddApiVersionToRequest;
@@ -48,45 +48,45 @@ import com.google.common.base.Function;
 import com.google.common.base.Optional;
 import com.google.inject.TypeLiteral;
 
-@Path("/projects")
+@Path("/operating-systems")
 @Consumes(MediaType.APPLICATION_JSON)
 @RequestFilters({ AddXAuthTokenToRequest.class, AddApiVersionToRequest.class} )
-public interface ProjectApi {
+public interface OperatingSystemApi {
 
-    @Named("project:list")
+    @Named("operatingsystem:list")
     @GET
-    @ResponseParser(ParseProjects.class)
-    @Transform(ParseProjects.ToPagedIterable.class)
+    @ResponseParser(ParseOperatingSystems.class)
+    @Transform(ParseOperatingSystems.ToPagedIterable.class)
     @Fallback(Fallbacks.EmptyPagedIterableOnNotFoundOr404.class)
-    PagedIterable<Project> list();
+    PagedIterable<OperatingSystem> list();
 
-    @Named("project:list")
+    @Named("operatingsystem:list")
     @GET
-    @ResponseParser(ParseProjects.class)
+    @ResponseParser(ParseOperatingSystems.class)
     @Fallback(Fallbacks.EmptyIterableWithMarkerOnNotFoundOr404.class)
-    IterableWithMarker<Project> list(ListOptions options);
+    IterableWithMarker<OperatingSystem> list(ListOptions options);
 
-    final class ParseProjects extends ParseJson<ParseProjects.Projects> {
+    final class ParseOperatingSystems extends ParseJson<ParseOperatingSystems.OperatingSystems> {
         @Inject
-        ParseProjects(Json json) {
-            super(json, TypeLiteral.get(Projects.class));
+        ParseOperatingSystems(Json json) {
+            super(json, TypeLiteral.get(ParseOperatingSystems.OperatingSystems.class));
         }
 
-        private static class Projects extends PaginatedCollection<Project> {
-            @ConstructorProperties({ "projects", "meta" })
-            public Projects(List<Project> items, Meta meta) {
+        private static class OperatingSystems extends PaginatedCollection<OperatingSystem> {
+            @ConstructorProperties({ "operating_systems", "meta" })
+            public OperatingSystems(List<OperatingSystem> items, Meta meta) {
                 super(items, meta);
             }
         }
 
-        private static class ToPagedIterable extends BaseToPagedIterable<Project, ListOptions> {
+        private static class ToPagedIterable extends BaseToPagedIterable<OperatingSystem, ListOptions> {
             @Inject ToPagedIterable(PacketApi api, Function<Href, ListOptions> hrefToOptions) {
                 super(api, hrefToOptions);
             }
 
             @Override
-            protected IterableWithMarker<Project> fetchPageUsingOptions(ListOptions options, Optional<Object> arg0) {
-                return api.projectApi().list(options);
+            protected IterableWithMarker<OperatingSystem> fetchPageUsingOptions(ListOptions options, Optional<Object> arg0) {
+                return api.operatingSystemApi().list(options);
             }
         }
     }

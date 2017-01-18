@@ -17,7 +17,7 @@
 package org.jclouds.packet.features;
 
 import org.jclouds.packet.compute.internal.BasePacketApiMockTest;
-import org.jclouds.packet.domain.Project;
+import org.jclouds.packet.domain.Facility;
 import org.testng.annotations.Test;
 
 import static com.google.common.collect.Iterables.isEmpty;
@@ -26,53 +26,53 @@ import static org.jclouds.packet.domain.options.ListOptions.Builder.page;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertTrue;
 
-@Test(groups = "unit", testName = "ProjectApiMockTest", singleThreaded = true)
-public class ProjectApiMockTest extends BasePacketApiMockTest {
+@Test(groups = "unit", testName = "FacilityApiMockTest", singleThreaded = true)
+public class FacilityApiMockTest extends BasePacketApiMockTest {
 
-   public void testListProjects() throws InterruptedException {
-      server.enqueue(jsonResponse("/projects-first.json"));
-      server.enqueue(jsonResponse("/projects-last.json"));
+   public void testListFacilities() throws InterruptedException {
+      server.enqueue(jsonResponse("/facilities-first.json"));
+      server.enqueue(jsonResponse("/facilities-last.json"));
 
-      Iterable<Project> projects = api.projectApi().list().concat();
+      Iterable<Facility> facilities = api.facilityApi().list().concat();
 
-      assertEquals(size(projects), 8); // Force the PagedIterable to advance
+      assertEquals(size(facilities), 3); // Force the PagedIterable to advance
       assertEquals(server.getRequestCount(), 2);
 
-      assertSent(server, "GET", "/projects");
-      assertSent(server, "GET", "/projects?page=2");
+      assertSent(server, "GET", "/facilities");
+      assertSent(server, "GET", "/facilities?page=2");
    }
 
-   public void testListProjectsReturns404() throws InterruptedException {
+   public void testListFacilitiesReturns404() throws InterruptedException {
       server.enqueue(response404());
 
-      Iterable<Project> projects = api.projectApi().list().concat();
+      Iterable<Facility> facilities = api.facilityApi().list().concat();
 
-      assertTrue(isEmpty(projects));
+      assertTrue(isEmpty(facilities));
 
       assertEquals(server.getRequestCount(), 1);
-      assertSent(server, "GET", "/projects");
+      assertSent(server, "GET", "/facilities");
    }
 
-   public void testListProjectsWithOptions() throws InterruptedException {
-      server.enqueue(jsonResponse("/projects-first.json"));
+   public void testListFacilitiesWithOptions() throws InterruptedException {
+      server.enqueue(jsonResponse("/facilities-first.json"));
 
-      Iterable<Project> actions = api.projectApi().list(page(1).perPage(5));
+      Iterable<Facility> actions = api.facilityApi().list(page(1).perPage(2));
 
-      assertEquals(size(actions), 5);
+      assertEquals(size(actions), 2);
       assertEquals(server.getRequestCount(), 1);
 
-      assertSent(server, "GET", "/projects?page=1&per_page=5");
+      assertSent(server, "GET", "/facilities?page=1&per_page=2");
    }
 
-   public void testListProjectsWithOptionsReturns404() throws InterruptedException {
+   public void testListFacilitiesWithOptionsReturns404() throws InterruptedException {
       server.enqueue(response404());
 
-      Iterable<Project> actions = api.projectApi().list(page(1).perPage(5));
+      Iterable<Facility> actions = api.facilityApi().list(page(1).perPage(2));
 
       assertTrue(isEmpty(actions));
 
       assertEquals(server.getRequestCount(), 1);
-      assertSent(server, "GET", "/projects?page=1&per_page=5");
+      assertSent(server, "GET", "/facilities?page=1&per_page=2");
    }
 
 }

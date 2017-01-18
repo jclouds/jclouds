@@ -25,7 +25,7 @@ import org.jclouds.location.suppliers.implicit.FirstRegion;
 import org.jclouds.packet.PacketApi;
 import org.jclouds.packet.domain.Href;
 import org.jclouds.packet.domain.options.ListOptions;
-import org.jclouds.packet.functions.LinkToListOptions;
+import org.jclouds.packet.functions.HrefToListOptions;
 import org.jclouds.packet.handlers.PacketErrorHandler;
 import org.jclouds.rest.ConfiguresHttpApi;
 import org.jclouds.rest.config.HttpApiModule;
@@ -42,7 +42,7 @@ public class PacketHttpApiModule extends HttpApiModule<PacketApi> {
       super.configure();
       bind(ImplicitLocationSupplier.class).to(FirstRegion.class).in(Scopes.SINGLETON);
       bind(new TypeLiteral<Function<Href, ListOptions>>() {
-      }).to(LinkToListOptions.class);
+      }).to(HrefToListOptions.class);
    }
 
    @Override

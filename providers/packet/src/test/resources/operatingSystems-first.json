@@ -1,0 +1,96 @@
+{
+  "operating_systems": [
+    {
+      "id": "06e21644-a769-11e6-80f5-76304dec7eb7",
+      "slug": "alpine_3",
+      "name": "Alpine 3",
+      "distro": "alpine",
+      "version": "3",
+      "provisionable_on": []
+    },
+    {
+      "id": "06e21978-a769-11e6-80f5-76304dec7eb7",
+      "slug": "centos_6",
+      "name": "CentOS 6",
+      "distro": "centos",
+      "version": "6",
+      "provisionable_on": []
+    },
+    {
+      "id": "68bad60d-f5a7-45c2-ad09-573edaad3a3c",
+      "slug": "centos_7",
+      "name": "Centos 7",
+      "distro": "centos",
+      "version": "7",
+      "provisionable_on": [
+        "baremetal_0",
+        "baremetal_1",
+        "baremetal_2",
+        "baremetal_3"
+      ]
+    },
+    {
+      "id": "06e21ce8-a769-11e6-80f5-76304dec7eb7",
+      "slug": "coreos_alpha",
+      "name": "CoreOS Alpha",
+      "distro": "coreos",
+      "version": "alpha",
+      "provisionable_on": [
+        "baremetal_0",
+        "baremetal_1",
+        "baremetal_2",
+        "baremetal_3"
+      ]
+    },
+    {
+      "id": "6345f310-0bb0-4b59-b051-954fed05183a",
+      "slug": "coreos_beta",
+      "name": "CoreOS Beta",
+      "distro": "coreos",
+      "version": "beta",
+      "provisionable_on": [
+        "baremetal_0",
+        "baremetal_1",
+        "baremetal_2",
+        "baremetal_3"
+      ]
+    },
+    {
+      "id": "d61c3912-8422-4daf-835e-854efa0062e4",
+      "slug": "coreos_stable",
+      "name": "CoreOS Stable",
+      "distro": "coreos",
+      "version": "stable",
+      "provisionable_on": [
+        "baremetal_0",
+        "baremetal_1",
+        "baremetal_2",
+        "baremetal_3"
+      ]
+    },
+    {
+      "id": "06e21e78-a769-11e6-80f5-76304dec7eb7",
+      "slug": "debian_7",
+      "name": "Debian 7",
+      "distro": "debian",
+      "version": "7",
+      "provisionable_on": []
+    }
+  ],
+  "meta": {
+    "first": {
+      "href": "/operating-systems?page=1"
+    },
+    "previous": null,
+    "self": {
+      "href": "/operating-systems?page=1"
+    },
+    "next": {
+      "href": "/operating-systems?page=2"
+    },
+    "last": {
+      "href": "/operating-systems?page=2"
+    },
+    "total": 14
+  }
+}

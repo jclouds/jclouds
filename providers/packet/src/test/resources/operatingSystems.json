@@ -1,0 +1,166 @@
+{
+  "operating_systems": [
+    {
+      "id": "06e21644-a769-11e6-80f5-76304dec7eb7",
+      "slug": "alpine_3",
+      "name": "Alpine 3",
+      "distro": "alpine",
+      "version": "3",
+      "provisionable_on": []
+    },
+    {
+      "id": "06e21978-a769-11e6-80f5-76304dec7eb7",
+      "slug": "centos_6",
+      "name": "CentOS 6",
+      "distro": "centos",
+      "version": "6",
+      "provisionable_on": []
+    },
+    {
+      "id": "68bad60d-f5a7-45c2-ad09-573edaad3a3c",
+      "slug": "centos_7",
+      "name": "Centos 7",
+      "distro": "centos",
+      "version": "7",
+      "provisionable_on": [
+        "baremetal_0",
+        "baremetal_1",
+        "baremetal_2",
+        "baremetal_3"
+      ]
+    },
+    {
+      "id": "06e21ce8-a769-11e6-80f5-76304dec7eb7",
+      "slug": "coreos_alpha",
+      "name": "CoreOS Alpha",
+      "distro": "coreos",
+      "version": "alpha",
+      "provisionable_on": [
+        "baremetal_0",
+        "baremetal_1",
+        "baremetal_2",
+        "baremetal_3"
+      ]
+    },
+    {
+      "id": "6345f310-0bb0-4b59-b051-954fed05183a",
+      "slug": "coreos_beta",
+      "name": "CoreOS Beta",
+      "distro": "coreos",
+      "version": "beta",
+      "provisionable_on": [
+        "baremetal_0",
+        "baremetal_1",
+        "baremetal_2",
+        "baremetal_3"
+      ]
+    },
+    {
+      "id": "d61c3912-8422-4daf-835e-854efa0062e4",
+      "slug": "coreos_stable",
+      "name": "CoreOS Stable",
+      "distro": "coreos",
+      "version": "stable",
+      "provisionable_on": [
+        "baremetal_0",
+        "baremetal_1",
+        "baremetal_2",
+        "baremetal_3"
+      ]
+    },
+    {
+      "id": "06e21e78-a769-11e6-80f5-76304dec7eb7",
+      "slug": "debian_7",
+      "name": "Debian 7",
+      "distro": "debian",
+      "version": "7",
+      "provisionable_on": []
+    },
+    {
+      "id": "88239019-abc7-41e8-9a4d-cd334da97ff1",
+      "slug": "debian_8",
+      "name": "Debian 8",
+      "distro": "debian",
+      "version": "8",
+      "provisionable_on": [
+        "baremetal_0",
+        "baremetal_1",
+        "baremetal_2",
+        "baremetal_3"
+      ]
+    },
+    {
+      "id": "06e21ffe-a769-11e6-80f5-76304dec7eb7",
+      "slug": "deprovision",
+      "name": "Deprovision",
+      "distro": "centos",
+      "version": "",
+      "provisionable_on": []
+    },
+    {
+      "id": "06e22198-a769-11e6-80f5-76304dec7eb7",
+      "slug": "freebsd_10_3",
+      "name": "FreeBSD 10.3",
+      "distro": "freebsd",
+      "version": "10.3",
+      "provisionable_on": [
+        "baremetal_0",
+        "baremetal_1",
+        "baremetal_2",
+        "baremetal_3"
+      ]
+    },
+    {
+      "id": "06e22328-a769-11e6-80f5-76304dec7eb7",
+      "slug": "rancher",
+      "name": "RancherOS",
+      "distro": "rancher",
+      "version": "latest",
+      "provisionable_on": [
+        "baremetal_0",
+        "baremetal_1",
+        "baremetal_2",
+        "baremetal_3"
+      ]
+    },
+    {
+      "id": "06e224b8-a769-11e6-80f5-76304dec7eb7",
+      "slug": "ubuntu_14_04",
+      "name": "Ubuntu 14.04 LTS",
+      "distro": "ubuntu",
+      "version": "14.04",
+      "provisionable_on": [
+        "baremetal_0",
+        "baremetal_1",
+        "baremetal_2",
+        "baremetal_3"
+      ]
+    },
+    {
+      "id": "1b9b78e3-de68-466e-ba00-f2123e89c112",
+      "slug": "ubuntu_16_04",
+      "name": "Ubuntu 16.04 LTS",
+      "distro": "ubuntu",
+      "version": "16.04",
+      "provisionable_on": [
+        "baremetal_0",
+        "baremetal_1",
+        "baremetal_2",
+        "baremetal_2a",
+        "baremetal_3"
+      ]
+    },
+    {
+      "id": "06e22972-a769-11e6-80f5-76304dec7eb7",
+      "slug": "windows_2012_rc2",
+      "name": "Windows 2012 RC2",
+      "distro": "windows",
+      "version": "2012 RC2",
+      "provisionable_on": [
+        "baremetal_1",
+        "baremetal_2",
+        "baremetal_3"
+      ]
+    }
+  ]
+}

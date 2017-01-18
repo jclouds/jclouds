@@ -33,7 +33,7 @@ import org.jclouds.http.functions.ParseJson;
 import org.jclouds.json.Json;
 import org.jclouds.packet.PacketApi;
 import org.jclouds.packet.domain.Href;
-import org.jclouds.packet.domain.Project;
+import org.jclouds.packet.domain.Plan;
 import org.jclouds.packet.domain.internal.PaginatedCollection;
 import org.jclouds.packet.domain.options.ListOptions;
 import org.jclouds.packet.filters.AddApiVersionToRequest;
@@ -48,45 +48,45 @@ import com.google.common.base.Function;
 import com.google.common.base.Optional;
 import com.google.inject.TypeLiteral;
 
-@Path("/projects")
+@Path("/plans")
 @Consumes(MediaType.APPLICATION_JSON)
 @RequestFilters({ AddXAuthTokenToRequest.class, AddApiVersionToRequest.class} )
-public interface ProjectApi {
+public interface PlanApi {
 
-    @Named("project:list")
+    @Named("plan:list")
     @GET
-    @ResponseParser(ParseProjects.class)
-    @Transform(ParseProjects.ToPagedIterable.class)
+    @ResponseParser(ParsePlans.class)
+    @Transform(ParsePlans.ToPagedIterable.class)
     @Fallback(Fallbacks.EmptyPagedIterableOnNotFoundOr404.class)
-    PagedIterable<Project> list();
+    PagedIterable<Plan> list();
 
-    @Named("project:list")
+    @Named("plan:list")
     @GET
-    @ResponseParser(ParseProjects.class)
+    @ResponseParser(ParsePlans.class)
     @Fallback(Fallbacks.EmptyIterableWithMarkerOnNotFoundOr404.class)
-    IterableWithMarker<Project> list(ListOptions options);
+    IterableWithMarker<Plan> list(ListOptions options);
 
-    final class ParseProjects extends ParseJson<ParseProjects.Projects> {
+    final class ParsePlans extends ParseJson<ParsePlans.Plans> {
         @Inject
-        ParseProjects(Json json) {
-            super(json, TypeLiteral.get(Projects.class));
+        ParsePlans(Json json) {
+            super(json, TypeLiteral.get(ParsePlans.Plans.class));
         }
 
-        private static class Projects extends PaginatedCollection<Project> {
-            @ConstructorProperties({ "projects", "meta" })
-            public Projects(List<Project> items, Meta meta) {
+        private static class Plans extends PaginatedCollection<Plan> {
+            @ConstructorProperties({ "plans", "meta" })
+            public Plans(List<Plan> items, Meta meta) {
                 super(items, meta);
             }
         }
 
-        private static class ToPagedIterable extends BaseToPagedIterable<Project, ListOptions> {
+        private static class ToPagedIterable extends BaseToPagedIterable<Plan, ListOptions> {
             @Inject ToPagedIterable(PacketApi api, Function<Href, ListOptions> hrefToOptions) {
                 super(api, hrefToOptions);
             }
 
             @Override
-            protected IterableWithMarker<Project> fetchPageUsingOptions(ListOptions options, Optional<Object> arg0) {
-                return api.projectApi().list(options);
+            protected IterableWithMarker<Plan> fetchPageUsingOptions(ListOptions options, Optional<Object> arg0) {
+                return api.planApi().list(options);
             }
         }
     }

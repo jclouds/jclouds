@@ -29,11 +29,11 @@ import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertNotNull;
 
-@Test(groups = "unit", testName = "LinkToListOptionsTest")
-public class LinkToListOptionsTest {
+@Test(groups = "unit", testName = "HrefToListOptionsTest")
+public class HrefToListOptionsTest {
 
    public void testNoOptions() {
-      LinkToListOptions function = new LinkToListOptions();
+      HrefToListOptions function = new HrefToListOptions();
 
       ListOptions options = function.apply(Href.create("https://api.packet.net/projects"));
       assertNotNull(options);
@@ -44,7 +44,7 @@ public class LinkToListOptionsTest {
    }
 
    public void testWithOptions() {
-      LinkToListOptions function = new LinkToListOptions();
+      HrefToListOptions function = new HrefToListOptions();
 
       ListOptions options = function.apply(Href.create("https://api.packet.net/projects?page=2&per_page=5"));
       assertNotNull(options);

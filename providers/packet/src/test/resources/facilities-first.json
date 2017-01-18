@@ -1,0 +1,39 @@
+{
+  "facilities": [
+    {
+      "id": "e1e9c52e-a0bc-4117-b996-0fc94843ea09",
+      "name": "Parsippany, NJ",
+      "code": "ewr1",
+      "features": [
+        "baremetal",
+        "storage"
+      ],
+      "address": null
+    },
+    {
+      "id": "8e6470b3-b75e-47d1-bb93-45b225750975",
+      "name": "Amsterdam, NL",
+      "code": "ams1",
+      "features": [
+        "storage"
+      ],
+      "address": null
+    }
+  ],
+  "meta": {
+    "first": {
+      "href": "/facilities?page=1"
+    },
+    "previous": null,
+    "self": {
+      "href": "/facilities?page=1"
+    },
+    "next": {
+      "href": "/facilities?page=2"
+    },
+    "last": {
+      "href": "/facilities?page=2"
+    },
+    "total": 3
+  }
+}

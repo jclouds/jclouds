@@ -19,7 +19,7 @@ package org.jclouds.packet.features;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import org.jclouds.packet.compute.internal.BasePacketApiLiveTest;
-import org.jclouds.packet.domain.Project;
+import org.jclouds.packet.domain.Plan;
 import org.testng.annotations.Test;
 
 import com.google.common.base.Predicate;
@@ -29,34 +29,34 @@ import static org.jclouds.packet.domain.options.ListOptions.Builder.page;
 import static org.testng.Assert.assertTrue;
 import static org.testng.util.Strings.isNullOrEmpty;
 
-@Test(groups = "live", testName = "ProjectApiLiveTest")
-public class ProjectApiLiveTest extends BasePacketApiLiveTest {
+@Test(groups = "live", testName = "PlanApiLiveTest")
+public class PlanApiLiveTest extends BasePacketApiLiveTest {
 
    public void testList() {
       final AtomicInteger found = new AtomicInteger(0);
-      assertTrue(Iterables.all(api().list().concat(), new Predicate<Project>() {
+      assertTrue(Iterables.all(api().list().concat(), new Predicate<Plan>() {
          @Override
-         public boolean apply(Project input) {
+         public boolean apply(Plan input) {
             found.incrementAndGet();
             return !isNullOrEmpty(input.id());
          }
-      }), "All projects must have the 'id' field populated");
-      assertTrue(found.get() > 0, "Expected some projects to be returned");
+      }), "All plans must have the 'id' field populated");
+      assertTrue(found.get() > 0, "Expected some plans to be returned");
    }
 
    public void testListOnePage() {
       final AtomicInteger found = new AtomicInteger(0);
-      assertTrue(api().list(page(1).perPage(5)).allMatch(new Predicate<Project>() {
+      assertTrue(api().list(page(1).perPage(5)).allMatch(new Predicate<Plan>() {
          @Override
-         public boolean apply(Project input) {
+         public boolean apply(Plan input) {
             found.incrementAndGet();
             return !isNullOrEmpty(input.id());
          }
-      }), "All projects must have the 'id' field populated");
-      assertTrue(found.get() > 0, "Expected some projects to be returned");
+      }), "All plans must have the 'id' field populated");
+      assertTrue(found.get() > 0, "Expected some plans to be returned");
    }
 
-   private ProjectApi api() {
-      return api.projectApi();
+   private PlanApi api() {
+      return api.planApi();
    }
 }

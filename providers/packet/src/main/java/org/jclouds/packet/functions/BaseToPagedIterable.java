@@ -35,12 +35,12 @@ import com.google.common.base.Optional;
  */
 public abstract class BaseToPagedIterable<T, O extends ListOptions> extends
         Arg0ToPagedIterable<T, BaseToPagedIterable<T, O>> {
-   private final Function<Href, O> linkToOptions;
+   private final Function<Href, O> hrefToOptions;
    protected final PacketApi api;
 
-   @Inject protected BaseToPagedIterable(PacketApi api, Function<Href, O> linkToOptions) {
+   @Inject protected BaseToPagedIterable(PacketApi api, Function<Href, O> hrefToOptions) {
       this.api = api;
-      this.linkToOptions = linkToOptions;
+      this.hrefToOptions = hrefToOptions;
    }
 
    protected abstract IterableWithMarker<T> fetchPageUsingOptions(O options, Optional<Object> arg0);
@@ -50,7 +50,7 @@ public abstract class BaseToPagedIterable<T, O extends ListOptions> extends
       return new Function<Object, IterableWithMarker<T>>() {
          @Override
          public IterableWithMarker<T> apply(Object input) {
-            O nextOptions = linkToOptions.apply(Href.class.cast(input));
+            O nextOptions = hrefToOptions.apply(Href.class.cast(input));
             return fetchPageUsingOptions(nextOptions, arg0);
          }
       };

@@ -1,0 +1,30 @@
+{
+  "facilities": [
+    {
+      "id": "e1e9c52e-a0bc-4117-b996-0fc94843ea09",
+      "name": "Parsippany, NJ",
+      "code": "ewr1",
+      "features": [
+        "baremetal",
+        "storage"
+      ],
+      "address": null
+    },
+    {
+      "id": "8e6470b3-b75e-47d1-bb93-45b225750975",
+      "name": "Amsterdam, NL",
+      "code": "ams1",
+      "features": [
+        "storage"
+      ],
+      "address": null
+    },
+    {
+      "id": "2b70eb8f-fa18-47c0-aba7-222a842362fd",
+      "name": "Sunnyvale, CA",
+      "code": "sjc1",
+      "features": [],
+      "address": null
+    }
+  ]
+}

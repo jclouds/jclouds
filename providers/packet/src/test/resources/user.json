@@ -1,0 +1,19 @@
+{
+  "id": "faaaec30-be0c-4b6d-b1a7-1bf6e494a333",
+  "first_name": "Melissa",
+  "last_name": "Smith",
+  "full_name": "Melissa Smith",
+  "email": "melissa@example.com",
+  "max_projects": 1,
+  "two_factor_auth": "sms",
+  "timezone": "America/New_York",
+  "phone_number": "555-555-5555",
+  "created_at": "2014-04-14T02:15:15Z",
+  "updated_at": "2014-04-14T02:15:15Z",
+  "timezone": "America/New_York",
+  "emails": [
+    { "href": "/emails/7e407a6a-4f96-4da0-8c48-5665352ebf06" }
+  ],
+  "avatar_url": "https://www.gravatar.com/avatar/d248bbb3a03ed?d=https://app.packet.net/client-portal/assets/images/default_gravatar.png",
+  "href": "/users/faaaec30-be0c-4b6d-b1a7-1bf6e494a333"
+}

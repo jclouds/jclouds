@@ -1,0 +1,12 @@
+{
+  "id": "bba63e41-b12c-493a-81d4-e52f50f247ed",
+  "label": "test",
+  "key": "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDNnvPZ25wZK19grrbal6R5JP1hLRBUuNh86KxZVMAFkGd5ouVSgO9dFajHZ45Q4mbaTkdOiqf7otMLDzkaztEa7oLK7Jso0Y0LOi+nT4gf38rvbEF5mq069G9b9XqlNleaGnpLuTN54iEK8c4TWZxIJqgelHEHhjp7V1asmilBbpZDmwA5cTt9vGJIhqA/BptKH3folZKeAQjRa1ZRSwSQUnk9rBKn4PKSRDojVa9A9jKt4qboJh5q7ZjtE8z+665F/4TgLzElTXUA8+uUFGpuynMSmQEt301e18dXAl+vBr8fMiThcoVVbdVdqdjXsw75fMXPAgqhjrw8k3+0/4P9 andrea@bigmac.local",
+  "fingerprint": "88:8a:7d:0f:db:fb:f4:2a:63:2e:d3:4b:1f:7f:0b:12",
+  "created_at": "2017-01-03T09:42:54Z",
+  "updated_at": "2017-01-03T09:42:54Z",
+  "owner": {
+    "href": "/users/ad711bc3-6333-449a-a405-23ca81f38c00"
+  },
+  "href": "/ssh-keys/bba63e41-b12c-493a-81d4-e52f50f247ed"
+}

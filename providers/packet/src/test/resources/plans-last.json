@@ -1,0 +1,98 @@
+{
+  "plans": [
+    {
+      "id": "741f3afb-bb2f-4694-93a0-fcbad7cd5e78",
+      "slug": "baremetal_3",
+      "name": "Type 3",
+      "description": "Our Type 3 configuration is a high core, high IO server, with dual Intel E5-2640 v3 processors, 128GB of DDR4 RAM and ultra fast NVME flash drives.",
+      "line": "baremetal",
+      "specs": {
+        "cpus": [
+          {
+            "count": 2,
+            "type": "Intel E5-2640 v3"
+          }
+        ],
+        "memory": {
+          "total": "128GB"
+        },
+        "drives": [
+          {
+            "count": 2,
+            "size": "120GB",
+            "type": "SSD"
+          },
+          {
+            "count": 1,
+            "size": "1.6TB",
+            "type": "NVME"
+          }
+        ],
+        "nics": [
+          {
+            "count": 2,
+            "type": "10Gbps"
+          }
+        ],
+        "features": {
+          "raid": true,
+          "txt": true
+        }
+      },
+      "available_in": [
+        {
+          "href": "/facilities/2b70eb8f-fa18-47c0-aba7-222a842362fd"
+        },
+        {
+          "href": "/facilities/8e6470b3-b75e-47d1-bb93-45b225750975"
+        },
+        {
+          "href": "/facilities/e1e9c52e-a0bc-4117-b996-0fc94843ea09"
+        }
+      ],
+      "pricing": {
+        "hour": 1.75
+      }
+    },
+    {
+      "id": "87728148-3155-4992-a730-8d1e6aca8a32",
+      "slug": "storage_1",
+      "name": "Standard",
+      "description": "TBD",
+      "line": "storage",
+      "specs": {},
+      "available_in": [],
+      "pricing": {
+        "hour": 0.000104
+      }
+    },
+    {
+      "id": "d6570cfb-38fa-4467-92b3-e45d059bb249",
+      "slug": "storage_2",
+      "name": "Performance",
+      "description": "TBD",
+      "line": "storage",
+      "specs": {},
+      "available_in": [],
+      "pricing": {
+        "hour": 0.000223
+      }
+    }
+  ],
+  "meta": {
+    "first": {
+      "href": "/plans?page=1"
+    },
+    "previous": {
+      "href": "/plans?page=1"
+    },
+    "self": {
+      "href": "/plans?page=2"
+    },
+    "next": null,
+    "last": {
+      "href": "/plans?page=2"
+    },
+    "total": 7
+  }
+}

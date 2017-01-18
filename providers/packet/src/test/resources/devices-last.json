@@ -1,0 +1,376 @@
+{
+  "devices": [
+    {
+      "id": "5bd27259-8b71-48f7-879d-c4e695cb2f36",
+      "short_id": "5bd27259",
+      "hostname": "andrea-device-livetest",
+      "description": null,
+      "state": "active",
+      "tags": [],
+      "billing_cycle": "hourly",
+      "user": "root",
+      "iqn": "iqn.2017-01.net.packet:device.5bd27259",
+      "locked": false,
+      "bonding_mode": 5,
+      "created_at": "2017-01-18T17:12:29Z",
+      "updated_at": "2017-01-18T17:16:29Z",
+      "operating_system": {
+        "id": "1b9b78e3-de68-466e-ba00-f2123e89c112",
+        "slug": "ubuntu_16_04",
+        "name": "Ubuntu 16.04 LTS",
+        "distro": "ubuntu",
+        "version": "16.04",
+        "provisionable_on": [
+          "baremetal_0",
+          "baremetal_1",
+          "baremetal_2",
+          "baremetal_2a",
+          "baremetal_3",
+          "baremetal_hua"
+        ]
+      },
+      "facility": {
+        "id": "e1e9c52e-a0bc-4117-b996-0fc94843ea09",
+        "name": "Parsippany, NJ",
+        "code": "ewr1",
+        "features": [
+          "baremetal",
+          "storage"
+        ],
+        "address": null
+      },
+      "project": {
+        "href": "/projects/93907f48-adfe-43ed-ad89-0e6e83721a54"
+      },
+      "ssh_keys": [
+        {
+          "href": "/ssh-keys/a3d8bebe-574f-427d-80ee-bc2ba17f7074"
+        },
+        {
+          "href": "/ssh-keys/a8d6cc17-7d9d-4fb9-8190-afdb301b67df"
+        },
+        {
+          "href": "/ssh-keys/084a5dec-30be-415a-8937-9c615932e459"
+        },
+        {
+          "href": "/ssh-keys/eacfb002-45e1-4047-a0d5-cd9d8bab19ed"
+        },
+        {
+          "href": "/ssh-keys/f82b69d7-8c7e-4a38-9283-ecdbcaba56aa"
+        },
+        {
+          "href": "/ssh-keys/cf9db551-ec79-4c16-a776-97cdbcb3cec4"
+        }
+      ],
+      "project_lite": {
+        "href": "/projects/93907f48-adfe-43ed-ad89-0e6e83721a54"
+      },
+      "volumes": [],
+      "ip_addresses": [
+        {
+          "id": "cbff502b-12ca-4986-b683-2cb4e119ae40",
+          "address_family": 4,
+          "netmask": "255.255.255.254",
+          "created_at": "2017-01-18T17:12:30Z",
+          "public": true,
+          "cidr": 31,
+          "management": true,
+          "manageable": true,
+          "enabled": true,
+          "assigned_to": {
+            "href": "/devices/5bd27259-8b71-48f7-879d-c4e695cb2f31"
+          },
+          "network": "147.75.197.54",
+          "address": "147.75.197.55",
+          "gateway": "147.75.197.54",
+          "href": "/ips/cbff502b-12ca-4986-b683-2cb4e119ae40"
+        },
+        {
+          "id": "d5cec621-18c1-4e02-8f71-8dd46370c3e5",
+          "address_family": 6,
+          "netmask": "ffff:ffff:ffff:ffff:ffff:ffff:ffff:fffe",
+          "created_at": "2017-01-18T17:12:30Z",
+          "public": true,
+          "cidr": 127,
+          "management": true,
+          "manageable": true,
+          "enabled": true,
+          "assigned_to": {
+            "href": "/devices/5bd27259-8b71-48f7-879d-c4e695cb2f31"
+          },
+          "network": "2604:1380:2:9800::",
+          "address": "2604:1380:2:9800::1",
+          "gateway": "2604:1380:2:9800::",
+          "href": "/ips/d5cec621-18c1-4e02-8f71-8dd46370c3e5"
+        },
+        {
+          "id": "6d206311-1f88-454d-9cf2-afca79f51fa3",
+          "address_family": 4,
+          "netmask": "255.255.255.254",
+          "created_at": "2017-01-18T17:12:30Z",
+          "public": false,
+          "cidr": 31,
+          "management": true,
+          "manageable": true,
+          "enabled": true,
+          "assigned_to": {
+            "href": "/devices/5bd27259-8b71-48f7-879d-c4e695cb2f31"
+          },
+          "network": "10.99.214.0",
+          "address": "10.99.214.1",
+          "gateway": "10.99.214.0",
+          "href": "/ips/6d206311-1f88-454d-9cf2-afca79f51fa3"
+        }
+      ],
+      "plan": {
+        "id": "e69c0169-4726-46ea-98f1-939c9e8a3607",
+        "slug": "baremetal_0",
+        "name": "Type 0",
+        "description": "Our Type 0 configuration is a general use \"cloud killer\" server, with a Intel Atom 2.4Ghz processor and 8GB of RAM.",
+        "line": "baremetal",
+        "specs": {
+          "cpus": [
+            {
+              "count": 1,
+              "type": "Intel Atom C2550 @ 2.4Ghz"
+            }
+          ],
+          "memory": {
+            "total": "8GB"
+          },
+          "drives": [
+            {
+              "count": 1,
+              "size": "80GB",
+              "type": "SSD"
+            }
+          ],
+          "nics": [
+            {
+              "count": 2,
+              "type": "1Gbps"
+            }
+          ],
+          "features": {
+            "raid": false,
+            "txt": true
+          }
+        },
+        "available_in": [
+          {
+            "href": "/facilities/2b70eb8f-fa18-47c0-aba7-222a842362fd"
+          },
+          {
+            "href": "/facilities/8e6470b3-b75e-47d1-bb93-45b225750975"
+          },
+          {
+            "href": "/facilities/8ea03255-89f9-4e62-9d3f-8817db82ceed"
+          },
+          {
+            "href": "/facilities/e1e9c52e-a0bc-4117-b996-0fc94843ea09"
+          }
+        ],
+        "pricing": {
+          "hour": 0.05
+        }
+      },
+      "userdata": "",
+      "root_password": "soaz0#a=cd",
+      "href": "/devices/5bd27259-8b71-48f7-879d-c4e695cb2f31"
+    },
+    {
+      "id": "5bd27259-8b71-48f7-879d-c4e695cb2f37",
+      "short_id": "5bd27259",
+      "hostname": "andrea-device-livetest",
+      "description": null,
+      "state": "active",
+      "tags": [],
+      "billing_cycle": "hourly",
+      "user": "root",
+      "iqn": "iqn.2017-01.net.packet:device.5bd27259",
+      "locked": false,
+      "bonding_mode": 5,
+      "created_at": "2017-01-18T17:12:29Z",
+      "updated_at": "2017-01-18T17:16:29Z",
+      "operating_system": {
+        "id": "1b9b78e3-de68-466e-ba00-f2123e89c112",
+        "slug": "ubuntu_16_04",
+        "name": "Ubuntu 16.04 LTS",
+        "distro": "ubuntu",
+        "version": "16.04",
+        "provisionable_on": [
+          "baremetal_0",
+          "baremetal_1",
+          "baremetal_2",
+          "baremetal_2a",
+          "baremetal_3",
+          "baremetal_hua"
+        ]
+      },
+      "facility": {
+        "id": "e1e9c52e-a0bc-4117-b996-0fc94843ea09",
+        "name": "Parsippany, NJ",
+        "code": "ewr1",
+        "features": [
+          "baremetal",
+          "storage"
+        ],
+        "address": null
+      },
+      "project": {
+        "href": "/projects/93907f48-adfe-43ed-ad89-0e6e83721a54"
+      },
+      "ssh_keys": [
+        {
+          "href": "/ssh-keys/a3d8bebe-574f-427d-80ee-bc2ba17f7074"
+        },
+        {
+          "href": "/ssh-keys/a8d6cc17-7d9d-4fb9-8190-afdb301b67df"
+        },
+        {
+          "href": "/ssh-keys/084a5dec-30be-415a-8937-9c615932e459"
+        },
+        {
+          "href": "/ssh-keys/eacfb002-45e1-4047-a0d5-cd9d8bab19ed"
+        },
+        {
+          "href": "/ssh-keys/f82b69d7-8c7e-4a38-9283-ecdbcaba56aa"
+        },
+        {
+          "href": "/ssh-keys/cf9db551-ec79-4c16-a776-97cdbcb3cec4"
+        }
+      ],
+      "project_lite": {
+        "href": "/projects/93907f48-adfe-43ed-ad89-0e6e83721a54"
+      },
+      "volumes": [],
+      "ip_addresses": [
+        {
+          "id": "cbff502b-12ca-4986-b683-2cb4e119ae40",
+          "address_family": 4,
+          "netmask": "255.255.255.254",
+          "created_at": "2017-01-18T17:12:30Z",
+          "public": true,
+          "cidr": 31,
+          "management": true,
+          "manageable": true,
+          "enabled": true,
+          "assigned_to": {
+            "href": "/devices/5bd27259-8b71-48f7-879d-c4e695cb2f31"
+          },
+          "network": "147.75.197.54",
+          "address": "147.75.197.55",
+          "gateway": "147.75.197.54",
+          "href": "/ips/cbff502b-12ca-4986-b683-2cb4e119ae40"
+        },
+        {
+          "id": "d5cec621-18c1-4e02-8f71-8dd46370c3e5",
+          "address_family": 6,
+          "netmask": "ffff:ffff:ffff:ffff:ffff:ffff:ffff:fffe",
+          "created_at": "2017-01-18T17:12:30Z",
+          "public": true,
+          "cidr": 127,
+          "management": true,
+          "manageable": true,
+          "enabled": true,
+          "assigned_to": {
+            "href": "/devices/5bd27259-8b71-48f7-879d-c4e695cb2f31"
+          },
+          "network": "2604:1380:2:9800::",
+          "address": "2604:1380:2:9800::1",
+          "gateway": "2604:1380:2:9800::",
+          "href": "/ips/d5cec621-18c1-4e02-8f71-8dd46370c3e5"
+        },
+        {
+          "id": "6d206311-1f88-454d-9cf2-afca79f51fa3",
+          "address_family": 4,
+          "netmask": "255.255.255.254",
+          "created_at": "2017-01-18T17:12:30Z",
+          "public": false,
+          "cidr": 31,
+          "management": true,
+          "manageable": true,
+          "enabled": true,
+          "assigned_to": {
+            "href": "/devices/5bd27259-8b71-48f7-879d-c4e695cb2f31"
+          },
+          "network": "10.99.214.0",
+          "address": "10.99.214.1",
+          "gateway": "10.99.214.0",
+          "href": "/ips/6d206311-1f88-454d-9cf2-afca79f51fa3"
+        }
+      ],
+      "plan": {
+        "id": "e69c0169-4726-46ea-98f1-939c9e8a3607",
+        "slug": "baremetal_0",
+        "name": "Type 0",
+        "description": "Our Type 0 configuration is a general use \"cloud killer\" server, with a Intel Atom 2.4Ghz processor and 8GB of RAM.",
+        "line": "baremetal",
+        "specs": {
+          "cpus": [
+            {
+              "count": 1,
+              "type": "Intel Atom C2550 @ 2.4Ghz"
+            }
+          ],
+          "memory": {
+            "total": "8GB"
+          },
+          "drives": [
+            {
+              "count": 1,
+              "size": "80GB",
+              "type": "SSD"
+            }
+          ],
+          "nics": [
+            {
+              "count": 2,
+              "type": "1Gbps"
+            }
+          ],
+          "features": {
+            "raid": false,
+            "txt": true
+          }
+        },
+        "available_in": [
+          {
+            "href": "/facilities/2b70eb8f-fa18-47c0-aba7-222a842362fd"
+          },
+          {
+            "href": "/facilities/8e6470b3-b75e-47d1-bb93-45b225750975"
+          },
+          {
+            "href": "/facilities/8ea03255-89f9-4e62-9d3f-8817db82ceed"
+          },
+          {
+            "href": "/facilities/e1e9c52e-a0bc-4117-b996-0fc94843ea09"
+          }
+        ],
+        "pricing": {
+          "hour": 0.05
+        }
+      },
+      "userdata": "",
+      "root_password": "soaz0#a=cd",
+      "href": "/devices/5bd27259-8b71-48f7-879d-c4e695cb2f31"
+    }
+  ],
+  "meta": {
+    "first": {
+      "href": "/projects/93907f48-adfe-43ed-ad89-0e6e83721a54/devices?page=1"
+    },
+    "previous": {
+      "href": "/projects/93907f48-adfe-43ed-ad89-0e6e83721a54/devices?page=1"
+    },
+    "self": {
+      "href": "/projects/93907f48-adfe-43ed-ad89-0e6e83721a54/devices?page=2"
+    },
+    "next": null,
+    "last": {
+      "href": "/projects/93907f48-adfe-43ed-ad89-0e6e83721a54/devices?page=2"
+    },
+    "total": 7
+  }
+}
