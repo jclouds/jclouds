@@ -20,6 +20,7 @@ import static com.google.common.base.Preconditions.checkState;
 import static com.google.common.collect.Iterables.contains;
 import static com.google.common.collect.Iterables.filter;
 import static com.google.common.collect.Iterables.find;
+import static com.google.common.collect.Iterables.getOnlyElement;
 import static org.jclouds.azurecompute.arm.compute.extensions.AzureComputeImageExtension.CONTAINER_NAME;
 import static org.jclouds.azurecompute.arm.compute.extensions.AzureComputeImageExtension.CUSTOM_IMAGE_OFFER;
 import static org.jclouds.azurecompute.arm.compute.functions.VMImageToImage.decodeFieldsFromUniqueId;
@@ -81,6 +82,7 @@ import org.jclouds.compute.ComputeServiceAdapter;
 import org.jclouds.compute.domain.Image;
 import org.jclouds.compute.domain.OsFamily;
 import org.jclouds.compute.domain.Template;
+import org.jclouds.compute.options.TemplateOptions;
 import org.jclouds.compute.reference.ComputeServiceConstants;
 import org.jclouds.location.Region;
 import org.jclouds.logging.Logger;
@@ -137,11 +139,10 @@ public class AzureComputeServiceAdapter implements ComputeServiceAdapter<Virtual
 
       // TODO ARM specific options
       // TODO network ids => create one nic in each network
-      // TODO inbound ports
 
       String locationName = template.getLocation().getId();
       String subnetId = templateOptions.getSubnetId();
-      NetworkInterfaceCard nic = createNetworkInterfaceCard(subnetId, name, locationName, azureGroup);
+      NetworkInterfaceCard nic = createNetworkInterfaceCard(subnetId, name, locationName, azureGroup, template.getOptions());
       StorageProfile storageProfile = createStorageProfile(name, template.getImage(), templateOptions.getBlob());
       HardwareProfile hardwareProfile = HardwareProfile.builder().vmSize(template.getHardware().getId()).build();
       OSProfile osProfile = createOsProfile(name, template);
@@ -341,7 +342,7 @@ public class AzureComputeServiceAdapter implements ComputeServiceAdapter<Virtual
 
    @Override
    public void destroyNode(final String id) {
-      checkState(cleanupResources.apply(id), "server(%s) and its resources still there after deleting!?", id);
+      checkState(cleanupResources.cleanupNode(id), "server(%s) and its resources still there after deleting!?", id);
    }
 
    @Override
@@ -405,7 +406,7 @@ public class AzureComputeServiceAdapter implements ComputeServiceAdapter<Virtual
    }
 
    private NetworkInterfaceCard createNetworkInterfaceCard(String subnetId, String name, String locationName,
-         String azureGroup) {
+         String azureGroup, TemplateOptions options) {
       final PublicIPAddressApi ipApi = api.getPublicIPAddressApi(azureGroup);
 
       PublicIPAddressProperties properties = PublicIPAddressProperties.builder().publicIPAllocationMethod("Static")
@@ -418,7 +419,7 @@ public class AzureComputeServiceAdapter implements ComputeServiceAdapter<Virtual
       checkState(publicIpAvailable.create(azureGroup).apply(publicIpAddressName),
             "Public IP was not provisioned in the configured timeout");
 
-      final NetworkInterfaceCardProperties networkInterfaceCardProperties = NetworkInterfaceCardProperties
+      final NetworkInterfaceCardProperties.Builder networkInterfaceCardProperties = NetworkInterfaceCardProperties
             .builder()
             .ipConfigurations(
                   ImmutableList.of(IpConfiguration
@@ -427,11 +428,16 @@ public class AzureComputeServiceAdapter implements ComputeServiceAdapter<Virtual
                         .properties(
                               IpConfigurationProperties.builder().privateIPAllocationMethod("Dynamic")
                                     .publicIPAddress(IdReference.create(ip.id())).subnet(IdReference.create(subnetId))
-                                    .build()).build())).build();
+                                    .build()).build()));
+
+      String securityGroup = getOnlyElement(options.getGroups(), null);
+      if (securityGroup != null) {
+         networkInterfaceCardProperties.networkSecurityGroup(IdReference.create(securityGroup));
+      }
 
       String networkInterfaceCardName = "jc-nic-" + name;
       return api.getNetworkInterfaceCardApi(azureGroup).createOrUpdate(networkInterfaceCardName, locationName,
-            networkInterfaceCardProperties, ImmutableMap.of("jclouds", name));
+            networkInterfaceCardProperties.build(), ImmutableMap.of("jclouds", name));
    }
 
    private StorageProfile createStorageProfile(String name, Image image, String blob) {

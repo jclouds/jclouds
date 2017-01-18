@@ -191,7 +191,7 @@ public class VirtualMachineToNodeMetadata implements Function<VirtualMachine, No
             .name()));
       
       String locationName = virtualMachine.location();
-      builder.location(getLocation(locationName));
+      builder.location(getLocation(locations, locationName));
 
       Optional<? extends Image> image = findImage(virtualMachine.properties().storageProfile(), locationName, azureGroup);
       if (image.isPresent()) {
@@ -251,7 +251,7 @@ public class VirtualMachineToNodeMetadata implements Function<VirtualMachine, No
       return publicIpAddresses;
    }
 
-   protected Location getLocation(final String locationName) {
+   protected static Location getLocation(Supplier<Set<? extends Location>> locations, final String locationName) {
       return find(locations.get(), new Predicate<Location>() {
          @Override
          public boolean apply(Location location) {

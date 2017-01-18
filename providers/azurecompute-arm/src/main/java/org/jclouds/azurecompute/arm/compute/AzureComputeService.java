@@ -16,11 +16,12 @@
  */
 package org.jclouds.azurecompute.arm.compute;
 
-import static com.google.common.base.Preconditions.checkNotNull;
 import static org.jclouds.compute.config.ComputeServiceProperties.TIMEOUT_NODE_RUNNING;
 import static org.jclouds.compute.config.ComputeServiceProperties.TIMEOUT_NODE_SUSPENDED;
 import static org.jclouds.compute.config.ComputeServiceProperties.TIMEOUT_NODE_TERMINATED;
+
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -30,6 +31,8 @@ import javax.inject.Provider;
 import javax.inject.Singleton;
 
 import org.jclouds.Constants;
+import org.jclouds.azurecompute.arm.compute.functions.LocationToResourceGroupName;
+import org.jclouds.azurecompute.arm.functions.CleanupResources;
 import org.jclouds.collect.Memoized;
 import org.jclouds.compute.ComputeServiceContext;
 import org.jclouds.compute.callables.RunScriptOnNode;
@@ -54,51 +57,74 @@ import org.jclouds.compute.strategy.ResumeNodeStrategy;
 import org.jclouds.compute.strategy.SuspendNodeStrategy;
 import org.jclouds.domain.Credentials;
 import org.jclouds.domain.Location;
-import org.jclouds.azurecompute.arm.functions.CleanupResources;
 import org.jclouds.scriptbuilder.functions.InitAdminAccess;
 
 import com.google.common.base.Optional;
 import com.google.common.base.Predicate;
 import com.google.common.base.Supplier;
+import com.google.common.collect.ImmutableMultimap;
+import com.google.common.collect.ImmutableSet;
 import com.google.common.util.concurrent.ListeningExecutorService;
 
 @Singleton
 public class AzureComputeService extends BaseComputeService {
-   protected final CleanupResources cleanupResources;
+   private final CleanupResources cleanupResources;
+   private final LocationToResourceGroupName locationToResourceGroupName;
 
    @Inject
    protected AzureComputeService(ComputeServiceContext context, Map<String, Credentials> credentialStore,
-                                @Memoized Supplier<Set<? extends Image>> images, @Memoized Supplier<Set<? extends Hardware>> sizes,
-                                @Memoized Supplier<Set<? extends Location>> locations, ListNodesStrategy listNodesStrategy,
-                                GetImageStrategy getImageStrategy, GetNodeMetadataStrategy getNodeMetadataStrategy,
-                                CreateNodesInGroupThenAddToSet runNodesAndAddToSetStrategy, RebootNodeStrategy rebootNodeStrategy,
-                                DestroyNodeStrategy destroyNodeStrategy, ResumeNodeStrategy startNodeStrategy,
-                                SuspendNodeStrategy stopNodeStrategy, Provider<TemplateBuilder> templateBuilderProvider,
-                                @Named("DEFAULT") Provider<TemplateOptions> templateOptionsProvider,
-                                @Named(TIMEOUT_NODE_RUNNING) Predicate<AtomicReference<NodeMetadata>> nodeRunning,
-                                @Named(TIMEOUT_NODE_TERMINATED) Predicate<AtomicReference<NodeMetadata>> nodeTerminated,
-                                @Named(TIMEOUT_NODE_SUSPENDED) Predicate<AtomicReference<NodeMetadata>> nodeSuspended,
-                                InitializeRunScriptOnNodeOrPlaceInBadMap.Factory initScriptRunnerFactory,
-                                RunScriptOnNode.Factory runScriptOnNodeFactory, InitAdminAccess initAdminAccess,
-                                PersistNodeCredentials persistNodeCredentials, Timeouts timeouts,
-                                @Named(Constants.PROPERTY_USER_THREADS) ListeningExecutorService userExecutor,
-                                 CleanupResources cleanupResources,
-                                Optional<ImageExtension> imageExtension,
-                                Optional<SecurityGroupExtension> securityGroupExtension) {
+         @Memoized Supplier<Set<? extends Image>> images, @Memoized Supplier<Set<? extends Hardware>> sizes,
+         @Memoized Supplier<Set<? extends Location>> locations, ListNodesStrategy listNodesStrategy,
+         GetImageStrategy getImageStrategy, GetNodeMetadataStrategy getNodeMetadataStrategy,
+         CreateNodesInGroupThenAddToSet runNodesAndAddToSetStrategy, RebootNodeStrategy rebootNodeStrategy,
+         DestroyNodeStrategy destroyNodeStrategy, ResumeNodeStrategy startNodeStrategy,
+         SuspendNodeStrategy stopNodeStrategy, Provider<TemplateBuilder> templateBuilderProvider,
+         @Named("DEFAULT") Provider<TemplateOptions> templateOptionsProvider,
+         @Named(TIMEOUT_NODE_RUNNING) Predicate<AtomicReference<NodeMetadata>> nodeRunning,
+         @Named(TIMEOUT_NODE_TERMINATED) Predicate<AtomicReference<NodeMetadata>> nodeTerminated,
+         @Named(TIMEOUT_NODE_SUSPENDED) Predicate<AtomicReference<NodeMetadata>> nodeSuspended,
+         InitializeRunScriptOnNodeOrPlaceInBadMap.Factory initScriptRunnerFactory,
+         RunScriptOnNode.Factory runScriptOnNodeFactory, InitAdminAccess initAdminAccess,
+         PersistNodeCredentials persistNodeCredentials, Timeouts timeouts,
+         @Named(Constants.PROPERTY_USER_THREADS) ListeningExecutorService userExecutor,
+         CleanupResources cleanupResources, Optional<ImageExtension> imageExtension,
+         Optional<SecurityGroupExtension> securityGroupExtension,
+         LocationToResourceGroupName locationToResourceGroupName) {
       super(context, credentialStore, images, sizes, locations, listNodesStrategy, getImageStrategy,
-              getNodeMetadataStrategy, runNodesAndAddToSetStrategy, rebootNodeStrategy, destroyNodeStrategy,
-              startNodeStrategy, stopNodeStrategy, templateBuilderProvider, templateOptionsProvider, nodeRunning,
-              nodeTerminated, nodeSuspended, initScriptRunnerFactory, initAdminAccess, runScriptOnNodeFactory,
-              persistNodeCredentials, timeouts, userExecutor, imageExtension, securityGroupExtension);
-      this.cleanupResources = checkNotNull(cleanupResources, "cleanupResources");
-
+            getNodeMetadataStrategy, runNodesAndAddToSetStrategy, rebootNodeStrategy, destroyNodeStrategy,
+            startNodeStrategy, stopNodeStrategy, templateBuilderProvider, templateOptionsProvider, nodeRunning,
+            nodeTerminated, nodeSuspended, initScriptRunnerFactory, initAdminAccess, runScriptOnNodeFactory,
+            persistNodeCredentials, timeouts, userExecutor, imageExtension, securityGroupExtension);
+      this.cleanupResources = cleanupResources;
+      this.locationToResourceGroupName = locationToResourceGroupName;
    }
 
    @Override
    protected void cleanUpIncidentalResourcesOfDeadNodes(Set<? extends NodeMetadata> deadNodes) {
+      ImmutableMultimap.Builder<String, String> regionGroups = ImmutableMultimap.builder();
+      ImmutableSet.Builder<String> resourceGroups = ImmutableSet.builder();
+
       for (NodeMetadata deadNode : deadNodes) {
-         cleanupResources.apply(deadNode.getId());
+         String resourceGroup = locationToResourceGroupName.apply(deadNode.getLocation().getId());
+
+         resourceGroups.add(resourceGroup);
+         if (deadNode.getGroup() != null) {
+            regionGroups.put(resourceGroup, deadNode.getGroup());
+         }
+
+         try {
+            cleanupResources.cleanupNode(deadNode.getId());
+         } catch (Exception ex) {
+            logger.warn(ex, "Error cleaning up resources for node %s", deadNode);
+         }
+      }
+
+      for (Entry<String, String> regionGroup : regionGroups.build().entries()) {
+         cleanupResources.cleanupSecurityGroupIfOrphaned(regionGroup.getKey(), regionGroup.getValue());
+      }
+
+      for (String resourceGroup : resourceGroups.build()) {
+         cleanupResources.deleteResourceGroupIfEmpty(resourceGroup);
       }
    }
-
 }

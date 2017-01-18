@@ -71,4 +71,5 @@ public class AzureComputeImageExtensionLiveTest extends BaseImageExtensionLiveTe
             .overrideLoginPrivateKey(keyPair.get("private")));
    }
 
+
 }

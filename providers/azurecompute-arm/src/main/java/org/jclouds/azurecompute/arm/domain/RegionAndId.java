@@ -29,7 +29,7 @@ public abstract class RegionAndId {
    public abstract String region();
    public abstract String id();
    
-   RegionAndId() {
+   protected RegionAndId() {
       
    }
    

@@ -154,7 +154,7 @@ public class BaseAzureComputeApiLiveTest extends BaseApiLiveTest<AzureComputeApi
                       .build());
       List<NetworkSecurityRule> ruleList = Lists.newArrayList();
       ruleList.add(rule);
-      NetworkSecurityGroup nsg = NetworkSecurityGroup.create(nsgName, locationName, null,
+      NetworkSecurityGroup nsg = NetworkSecurityGroup.create("id", nsgName, locationName, null,
               NetworkSecurityGroupProperties.builder()
                       .securityRules(ruleList)
                       .build(),

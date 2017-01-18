@@ -35,10 +35,13 @@ import org.jclouds.azurecompute.arm.compute.functions.LocationToResourceGroupNam
 import org.jclouds.azurecompute.arm.domain.IdReference;
 import org.jclouds.azurecompute.arm.domain.IpConfiguration;
 import org.jclouds.azurecompute.arm.domain.NetworkInterfaceCard;
+import org.jclouds.azurecompute.arm.domain.NetworkSecurityGroup;
 import org.jclouds.azurecompute.arm.domain.RegionAndId;
 import org.jclouds.azurecompute.arm.domain.StorageServiceKeys;
 import org.jclouds.azurecompute.arm.domain.VirtualMachine;
+import org.jclouds.azurecompute.arm.features.NetworkSecurityGroupApi;
 import org.jclouds.azurecompute.arm.util.BlobHelper;
+import org.jclouds.compute.functions.GroupNamingConvention;
 import org.jclouds.compute.reference.ComputeServiceConstants;
 import org.jclouds.logging.Logger;
 
@@ -49,7 +52,7 @@ import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 
 @Singleton
-public class CleanupResources implements Function<String, Boolean> {
+public class CleanupResources {
 
    @Resource
    @Named(ComputeServiceConstants.COMPUTE_LOGGER)
@@ -59,22 +62,23 @@ public class CleanupResources implements Function<String, Boolean> {
    private final Predicate<URI> resourceDeleted;
    private final StorageProfileToStorageAccountName storageProfileToStorageAccountName;
    private final LocationToResourceGroupName locationToResourceGroupName;
+   private final GroupNamingConvention.Factory namingConvention;
 
    @Inject
    CleanupResources(AzureComputeApi azureComputeApi, @Named(TIMEOUT_RESOURCE_DELETED) Predicate<URI> resourceDeleted,
          StorageProfileToStorageAccountName storageProfileToStorageAccountName,
-         LocationToResourceGroupName locationToResourceGroupName) {
+         LocationToResourceGroupName locationToResourceGroupName, GroupNamingConvention.Factory namingConvention) {
       this.api = azureComputeApi;
       this.resourceDeleted = resourceDeleted;
       this.storageProfileToStorageAccountName = storageProfileToStorageAccountName;
       this.locationToResourceGroupName = locationToResourceGroupName;
+      this.namingConvention = namingConvention;
    }
 
-   @Override
-   public Boolean apply(final String id) {
+   public boolean cleanupNode(final String id) {
       RegionAndId regionAndId = RegionAndId.fromSlashEncoded(id);
       String group = locationToResourceGroupName.apply(regionAndId.region());
-      
+
       VirtualMachine virtualMachine = api.getVirtualMachineApi(group).get(regionAndId.id());
       if (virtualMachine == null) {
          return true;
@@ -82,10 +86,17 @@ public class CleanupResources implements Function<String, Boolean> {
 
       logger.debug(">> destroying %s ...", regionAndId.slashEncode());
       boolean vmDeleted = deleteVirtualMachine(group, virtualMachine);
-      
+
       // We don't delete the network here, as it is global to the resource
       // group. It will be deleted when the resource group is deleted
 
+      cleanupVirtualMachineNICs(group, virtualMachine);
+      cleanupVirtualMachineStorage(group, virtualMachine);
+
+      return vmDeleted;
+   }
+
+   public void cleanupVirtualMachineNICs(String group, VirtualMachine virtualMachine) {
       for (String nicName : getNetworkCardInterfaceNames(virtualMachine)) {
          NetworkInterfaceCard nic = api.getNetworkInterfaceCardApi(group).get(nicName);
          Iterable<String> publicIps = getPublicIps(group, nic);
@@ -99,8 +110,11 @@ public class CleanupResources implements Function<String, Boolean> {
             api.getPublicIPAddressApi(group).delete(publicIp);
          }
       }
+   }
 
-      String storageAccountName = storageProfileToStorageAccountName.apply(virtualMachine.properties().storageProfile());
+   public void cleanupVirtualMachineStorage(String group, VirtualMachine virtualMachine) {
+      String storageAccountName = storageProfileToStorageAccountName
+            .apply(virtualMachine.properties().storageProfile());
       StorageServiceKeys keys = api.getStorageAccountApi(group).getKeys(storageAccountName);
 
       // Remove the virtual machine files
@@ -118,20 +132,44 @@ public class CleanupResources implements Function<String, Boolean> {
       } finally {
          closeQuietly(blobHelper);
       }
-
-      deleteResourceGroupIfEmpty(group);
-
-      return vmDeleted;
    }
 
-   public void deleteResourceGroupIfEmpty(String group) {
-      if (api.getVirtualMachineApi(group).list().isEmpty() 
-            && api.getStorageAccountApi(group).list().isEmpty()
-            && api.getNetworkInterfaceCardApi(group).list().isEmpty()
-            && api.getPublicIPAddressApi(group).list().isEmpty()) {
-         logger.debug(">> the resource group %s is empty. Deleting...", group);
-         resourceDeleted.apply(api.getResourceGroupApi().delete(group));
+   public boolean cleanupSecurityGroupIfOrphaned(String resourceGroup, String group) {
+      String name = namingConvention.create().sharedNameForGroup(group);
+      NetworkSecurityGroupApi sgapi = api.getNetworkSecurityGroupApi(resourceGroup);
+
+      boolean deleted = false;
+
+      try {
+         NetworkSecurityGroup securityGroup = sgapi.get(name);
+         if (securityGroup != null) {
+            List<NetworkInterfaceCard> nics = securityGroup.properties().networkInterfaces();
+            if (nics == null || nics.isEmpty()) {
+               logger.debug(">> deleting orphaned security group %s from %s...", name, resourceGroup);
+               try {
+                  deleted = resourceDeleted.apply(sgapi.delete(name));
+               } catch (Exception ex) {
+                  logger.warn(ex, ">> error deleting orphaned security group %s from %s...", name, resourceGroup);
+               }
+            }
+         }
+      } catch (Exception ex) {
+         logger.warn(ex, "Error deleting security groups for %s and group %s", resourceGroup, group);
       }
+
+      return deleted;
+   }
+
+   public boolean deleteResourceGroupIfEmpty(String group) {
+      boolean deleted = false;
+      if (api.getVirtualMachineApi(group).list().isEmpty() && api.getStorageAccountApi(group).list().isEmpty()
+            && api.getNetworkInterfaceCardApi(group).list().isEmpty()
+            && api.getPublicIPAddressApi(group).list().isEmpty()
+            && api.getNetworkSecurityGroupApi(group).list().isEmpty()) {
+         logger.debug(">> the resource group %s is empty. Deleting...", group);
+         deleted = resourceDeleted.apply(api.getResourceGroupApi().delete(group));
+      }
+      return deleted;
    }
 
    private Iterable<String> getPublicIps(String group, NetworkInterfaceCard nic) {

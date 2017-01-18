@@ -42,15 +42,22 @@ import javax.inject.Singleton;
 import org.jclouds.azurecompute.arm.AzureComputeApi;
 import org.jclouds.azurecompute.arm.compute.AzureComputeService;
 import org.jclouds.azurecompute.arm.compute.AzureComputeServiceAdapter;
+import org.jclouds.azurecompute.arm.compute.domain.RegionAndIdAndIngressRules;
 import org.jclouds.azurecompute.arm.compute.extensions.AzureComputeImageExtension;
+import org.jclouds.azurecompute.arm.compute.extensions.AzureComputeSecurityGroupExtension;
 import org.jclouds.azurecompute.arm.compute.functions.LocationToLocation;
+import org.jclouds.azurecompute.arm.compute.functions.NetworkSecurityGroupToSecurityGroup;
+import org.jclouds.azurecompute.arm.compute.functions.NetworkSecurityRuleToIpPermission;
 import org.jclouds.azurecompute.arm.compute.functions.ResourceDefinitionToCustomImage;
 import org.jclouds.azurecompute.arm.compute.functions.VMHardwareToHardware;
 import org.jclouds.azurecompute.arm.compute.functions.VMImageToImage;
 import org.jclouds.azurecompute.arm.compute.functions.VirtualMachineToNodeMetadata;
+import org.jclouds.azurecompute.arm.compute.loaders.CreateSecurityGroupIfNeeded;
 import org.jclouds.azurecompute.arm.compute.options.AzureTemplateOptions;
 import org.jclouds.azurecompute.arm.compute.strategy.CreateResourceGroupThenCreateNodes;
 import org.jclouds.azurecompute.arm.domain.Location;
+import org.jclouds.azurecompute.arm.domain.NetworkSecurityGroup;
+import org.jclouds.azurecompute.arm.domain.NetworkSecurityRule;
 import org.jclouds.azurecompute.arm.domain.PublicIPAddress;
 import org.jclouds.azurecompute.arm.domain.ResourceDefinition;
 import org.jclouds.azurecompute.arm.domain.VMHardware;
@@ -64,32 +71,38 @@ import org.jclouds.compute.ComputeServiceAdapter;
 import org.jclouds.compute.config.ComputeServiceAdapterContextModule;
 import org.jclouds.compute.domain.Hardware;
 import org.jclouds.compute.domain.NodeMetadata;
+import org.jclouds.compute.domain.SecurityGroup;
 import org.jclouds.compute.extensions.ImageExtension;
+import org.jclouds.compute.extensions.SecurityGroupExtension;
 import org.jclouds.compute.functions.NodeAndTemplateOptionsToStatement;
 import org.jclouds.compute.functions.NodeAndTemplateOptionsToStatementWithoutPublicKey;
 import org.jclouds.compute.options.TemplateOptions;
 import org.jclouds.compute.reference.ComputeServiceConstants.PollPeriod;
 import org.jclouds.compute.reference.ComputeServiceConstants.Timeouts;
 import org.jclouds.compute.strategy.CreateNodesInGroupThenAddToSet;
+import org.jclouds.net.domain.IpPermission;
 
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Function;
 import com.google.common.base.Predicate;
+import com.google.common.cache.CacheBuilder;
+import com.google.common.cache.CacheLoader;
+import com.google.common.cache.LoadingCache;
 import com.google.inject.Inject;
 import com.google.inject.Provides;
 import com.google.inject.TypeLiteral;
 import com.google.inject.assistedinject.FactoryModuleBuilder;
 
-public class AzureComputeServiceContextModule
-        extends ComputeServiceAdapterContextModule<VirtualMachine, VMHardware, VMImage, Location> {
+public class AzureComputeServiceContextModule extends
+      ComputeServiceAdapterContextModule<VirtualMachine, VMHardware, VMImage, Location> {
 
    @Override
    protected void configure() {
       super.configure();
-      
+
       bind(new TypeLiteral<ComputeServiceAdapter<VirtualMachine, VMHardware, VMImage, Location>>() {
       }).to(AzureComputeServiceAdapter.class);
-      
+
       bind(new TypeLiteral<Function<VMImage, org.jclouds.compute.domain.Image>>() {
       }).to(VMImageToImage.class);
       bind(new TypeLiteral<Function<VMHardware, Hardware>>() {
@@ -98,19 +111,27 @@ public class AzureComputeServiceContextModule
       }).to(VirtualMachineToNodeMetadata.class);
       bind(new TypeLiteral<Function<Location, org.jclouds.domain.Location>>() {
       }).to(LocationToLocation.class);
+      bind(new TypeLiteral<Function<NetworkSecurityGroup, SecurityGroup>>() {
+      }).to(NetworkSecurityGroupToSecurityGroup.class);
+      bind(new TypeLiteral<Function<NetworkSecurityRule, IpPermission>>() {
+      }).to(NetworkSecurityRuleToIpPermission.class);
       bind(ComputeService.class).to(AzureComputeService.class);
-      
+
       install(new LocationsFromComputeServiceAdapterModule<VirtualMachine, VMHardware, VMImage, Location>() {
       });
-      
+
       install(new FactoryModuleBuilder().build(ResourceDefinitionToCustomImage.Factory.class));
 
       bind(TemplateOptions.class).to(AzureTemplateOptions.class);
       bind(NodeAndTemplateOptionsToStatement.class).to(NodeAndTemplateOptionsToStatementWithoutPublicKey.class);
       bind(CreateNodesInGroupThenAddToSet.class).to(CreateResourceGroupThenCreateNodes.class);
-      
+      bind(new TypeLiteral<CacheLoader<RegionAndIdAndIngressRules, String>>() {
+      }).to(CreateSecurityGroupIfNeeded.class);
+
       bind(new TypeLiteral<ImageExtension>() {
       }).to(AzureComputeImageExtension.class);
+      bind(new TypeLiteral<SecurityGroupExtension>() {
+      }).to(AzureComputeSecurityGroupExtension.class);
    }
 
    @Singleton
@@ -190,47 +211,65 @@ public class AzureComputeServiceContextModule
    }
 
    @Provides
+   @Singleton
+   protected final LoadingCache<RegionAndIdAndIngressRules, String> securityGroupMap(
+         CacheLoader<RegionAndIdAndIngressRules, String> in) {
+      return CacheBuilder.newBuilder().build(in);
+   }
+
+   @Provides
    @Named(TIMEOUT_NODE_RUNNING)
    protected VirtualMachineInStatePredicateFactory provideVirtualMachineRunningPredicate(final AzureComputeApi api,
-         Timeouts timeouts, PollPeriod pollPeriod) {
+         final Timeouts timeouts, final PollPeriod pollPeriod) {
       return new VirtualMachineInStatePredicateFactory(api, PowerState.RUNNING, timeouts.nodeRunning,
             pollPeriod.pollInitialPeriod, pollPeriod.pollMaxPeriod);
    }
-   
+
    @Provides
    @Named(TIMEOUT_NODE_TERMINATED)
-   protected Predicate<URI> provideNodeTerminatedPredicate(final AzureComputeApi api, Timeouts timeouts, PollPeriod pollPeriod) {
+   protected Predicate<URI> provideNodeTerminatedPredicate(final AzureComputeApi api, final Timeouts timeouts,
+         final PollPeriod pollPeriod) {
       return retry(new ActionDonePredicate(api), timeouts.nodeTerminated, pollPeriod.pollInitialPeriod,
-              pollPeriod.pollMaxPeriod);
+            pollPeriod.pollMaxPeriod);
    }
 
    @Provides
    @Named(TIMEOUT_IMAGE_AVAILABLE)
-   protected Predicate<URI> provideImageAvailablePredicate(final AzureComputeApi api, Timeouts timeouts, PollPeriod pollPeriod) {
+   protected Predicate<URI> provideImageAvailablePredicate(final AzureComputeApi api, final Timeouts timeouts,
+         final PollPeriod pollPeriod) {
       return retry(new ImageDonePredicate(api), timeouts.imageAvailable, pollPeriod.pollInitialPeriod,
-              pollPeriod.pollMaxPeriod);
+            pollPeriod.pollMaxPeriod);
    }
 
    @Provides
    @Named(TIMEOUT_RESOURCE_DELETED)
-   protected Predicate<URI> provideResourceDeletedPredicate(final AzureComputeApi api, Timeouts timeouts, PollPeriod pollPeriod) {
+   protected Predicate<URI> provideResourceDeletedPredicate(final AzureComputeApi api, final Timeouts timeouts,
+         final PollPeriod pollPeriod) {
       return retry(new ActionDonePredicate(api), timeouts.nodeTerminated, pollPeriod.pollInitialPeriod,
-              pollPeriod.pollMaxPeriod);
+            pollPeriod.pollMaxPeriod);
    }
 
    @Provides
    @Named(TIMEOUT_NODE_SUSPENDED)
    protected VirtualMachineInStatePredicateFactory provideNodeSuspendedPredicate(final AzureComputeApi api,
-         Timeouts timeouts, PollPeriod pollPeriod) {
+         final Timeouts timeouts, final PollPeriod pollPeriod) {
       return new VirtualMachineInStatePredicateFactory(api, PowerState.STOPPED, timeouts.nodeTerminated,
             pollPeriod.pollInitialPeriod, pollPeriod.pollMaxPeriod);
    }
-   
+
    @Provides
    protected PublicIpAvailablePredicateFactory providePublicIpAvailablePredicate(final AzureComputeApi api,
-         final AzureComputeServiceContextModule.AzureComputeConstants azureComputeConstants, Timeouts timeouts,
-         PollPeriod pollPeriod) {
+         final AzureComputeServiceContextModule.AzureComputeConstants azureComputeConstants, final Timeouts timeouts,
+         final PollPeriod pollPeriod) {
       return new PublicIpAvailablePredicateFactory(api, azureComputeConstants.operationTimeout(),
+            azureComputeConstants.operationPollInitialPeriod(), azureComputeConstants.operationPollMaxPeriod());
+   }
+
+   @Provides
+   protected SecurityGroupAvailablePredicateFactory provideSecurityGroupAvailablePredicate(final AzureComputeApi api,
+         final AzureComputeServiceContextModule.AzureComputeConstants azureComputeConstants, final Timeouts timeouts,
+         final PollPeriod pollPeriod) {
+      return new SecurityGroupAvailablePredicateFactory(api, azureComputeConstants.operationTimeout(),
             azureComputeConstants.operationPollInitialPeriod(), azureComputeConstants.operationPollMaxPeriod());
    }
 
@@ -239,14 +278,15 @@ public class AzureComputeServiceContextModule
 
       private final AzureComputeApi api;
 
-      public ActionDonePredicate(AzureComputeApi api) {
+      public ActionDonePredicate(final AzureComputeApi api) {
          this.api = checkNotNull(api, "api must not be null");
       }
 
       @Override
-      public boolean apply(URI uri) {
+      public boolean apply(final URI uri) {
          checkNotNull(uri, "uri cannot be null");
-         return (ParseJobStatus.JobStatus.DONE == api.getJobApi().jobStatus(uri)) || (ParseJobStatus.JobStatus.NO_CONTENT == api.getJobApi().jobStatus(uri));
+         return ParseJobStatus.JobStatus.DONE == api.getJobApi().jobStatus(uri)
+               || ParseJobStatus.JobStatus.NO_CONTENT == api.getJobApi().jobStatus(uri);
       }
 
    }
@@ -256,14 +296,16 @@ public class AzureComputeServiceContextModule
 
       private final AzureComputeApi api;
 
-      public ImageDonePredicate(AzureComputeApi api) {
+      public ImageDonePredicate(final AzureComputeApi api) {
          this.api = checkNotNull(api, "api must not be null");
       }
 
       @Override
-      public boolean apply(URI uri) {
+      public boolean apply(final URI uri) {
          checkNotNull(uri, "uri cannot be null");
-         if (api.getJobApi().jobStatus(uri) != ParseJobStatus.JobStatus.DONE) return false;
+         if (api.getJobApi().jobStatus(uri) != ParseJobStatus.JobStatus.DONE) {
+            return false;
+         }
          List<ResourceDefinition> definitions = api.getJobApi().captureStatus(uri);
          return definitions != null;
       }
@@ -277,8 +319,8 @@ public class AzureComputeServiceContextModule
       private final long period;
       private final long maxPeriod;
 
-      VirtualMachineInStatePredicateFactory(AzureComputeApi api, PowerState powerState, long timeout,
-            long period, long maxPeriod) {
+      VirtualMachineInStatePredicateFactory(final AzureComputeApi api, final PowerState powerState, final long timeout,
+            final long period, final long maxPeriod) {
          this.api = checkNotNull(api, "api cannot be null");
          this.powerState = checkNotNull(powerState, "powerState cannot be null");
          this.timeout = timeout;
@@ -289,17 +331,18 @@ public class AzureComputeServiceContextModule
       public Predicate<String> create(final String azureGroup) {
          return retry(new Predicate<String>() {
             @Override
-            public boolean apply(String name) {
+            public boolean apply(final String name) {
                checkNotNull(name, "name cannot be null");
                VirtualMachineInstance vmInstance = api.getVirtualMachineApi(azureGroup).getInstanceDetails(name);
-               if (vmInstance == null)
+               if (vmInstance == null) {
                   return false;
+               }
                return powerState == vmInstance.powerState();
             }
          }, timeout, period, maxPeriod);
       }
    }
-   
+
    public static class PublicIpAvailablePredicateFactory {
 
       private final AzureComputeApi api;
@@ -307,22 +350,54 @@ public class AzureComputeServiceContextModule
       private final long period;
       private final long maxPeriod;
 
-      PublicIpAvailablePredicateFactory(AzureComputeApi api, long timeout,
-            long period, long maxPeriod) {
+      PublicIpAvailablePredicateFactory(final AzureComputeApi api, final long timeout, final long period,
+            final long maxPeriod) {
          this.api = checkNotNull(api, "api cannot be null");
          this.timeout = timeout;
          this.period = period;
          this.maxPeriod = maxPeriod;
       }
-      
+
       public Predicate<String> create(final String azureGroup) {
          return retry(new Predicate<String>() {
             @Override
-            public boolean apply(String name) {
+            public boolean apply(final String name) {
                checkNotNull(name, "name cannot be null");
                PublicIPAddress publicIp = api.getPublicIPAddressApi(azureGroup).get(name);
-               if (publicIp == null) return false;
+               if (publicIp == null) {
+                  return false;
+               }
                return publicIp.properties().provisioningState().equalsIgnoreCase("Succeeded");
+            }
+         }, timeout, period, maxPeriod);
+      }
+   }
+
+   public static class SecurityGroupAvailablePredicateFactory {
+      private final AzureComputeApi api;
+      private final long timeout;
+      private final long period;
+      private final long maxPeriod;
+
+      SecurityGroupAvailablePredicateFactory(final AzureComputeApi api, final long timeout, final long period,
+            final long maxPeriod) {
+         this.api = checkNotNull(api, "api cannot be null");
+         this.timeout = timeout;
+         this.period = period;
+         this.maxPeriod = maxPeriod;
+      }
+
+      public Predicate<String> create(final String resourceGroup) {
+         checkNotNull(resourceGroup, "resourceGroup cannot be null");
+         return retry(new Predicate<String>() {
+            @Override
+            public boolean apply(final String name) {
+               checkNotNull(name, "name cannot be null");
+               NetworkSecurityGroup sg = api.getNetworkSecurityGroupApi(resourceGroup).get(name);
+               if (sg == null) {
+                  return false;
+               }
+               return sg.properties().provisioningState().equalsIgnoreCase("Succeeded");
             }
          }, timeout, period, maxPeriod);
       }

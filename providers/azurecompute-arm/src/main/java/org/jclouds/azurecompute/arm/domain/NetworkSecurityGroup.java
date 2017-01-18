@@ -25,7 +25,7 @@ import java.util.Map;
 
 @AutoValue
 public abstract class NetworkSecurityGroup {
-   @Nullable
+   public abstract String id();
    public abstract String name();
 
    @Nullable
@@ -40,15 +40,10 @@ public abstract class NetworkSecurityGroup {
    @Nullable
    public abstract String etag();
 
-   @SerializedNames({"name", "location", "tags", "properties", "etag"})
-   public static NetworkSecurityGroup create(final String name,
-                                             final String location,
-                                             final Map<String, String> tags,
-                                             final NetworkSecurityGroupProperties properties,
-                                             final String etag) {
-      return new AutoValue_NetworkSecurityGroup(name, location,
-                                                (tags == null) ? null : ImmutableMap.copyOf(tags),
-                                                properties, etag);
+   @SerializedNames({ "id", "name", "location", "tags", "properties", "etag" })
+   public static NetworkSecurityGroup create(final String id, final String name, final String location,
+         final Map<String, String> tags, final NetworkSecurityGroupProperties properties, final String etag) {
+      return new AutoValue_NetworkSecurityGroup(id, name, location, (tags == null) ? null : ImmutableMap.copyOf(tags),
+            properties, etag);
    }
 }
-
