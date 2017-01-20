@@ -25,6 +25,7 @@ import java.util.SortedSet;
 import org.jclouds.azure.storage.domain.BoundedSet;
 import org.jclouds.azure.storage.domain.internal.BoundedHashSet;
 import org.jclouds.azureblob.domain.ContainerProperties;
+import org.jclouds.azureblob.domain.PublicAccess;
 import org.jclouds.azureblob.domain.internal.ContainerPropertiesImpl;
 import org.jclouds.date.DateService;
 import org.jclouds.http.functions.BaseHandlerTest;
@@ -57,15 +58,15 @@ public class AccountNameEnumerationResultsHandlerTest extends BaseHandlerTest {
       contents.add(new ContainerPropertiesImpl(URI
                .create("http://myaccount.blob.core.windows.net/audio"), dateService
                .rfc822DateParse("Wed, 13 Aug 2008 20:39:39 GMT"), "0x8CACB9BD7C6B1B2", Maps
-               .<String, String> newHashMap()));
+               .<String, String> newHashMap(), PublicAccess.CONTAINER));
       contents.add(new ContainerPropertiesImpl(URI
                .create("http://myaccount.blob.core.windows.net/images"), dateService
                .rfc822DateParse("Wed, 14 Aug 2008 20:39:39 GMT"), "0x8CACB9BD7C1EEEC", Maps
-               .<String, String> newHashMap()));
+               .<String, String> newHashMap(), PublicAccess.BLOB));
       contents.add(new ContainerPropertiesImpl(URI
                .create("http://myaccount.blob.core.windows.net/textfiles"), dateService
                .rfc822DateParse("Wed, 15 Aug 2008 20:39:39 GMT"), "0x8CACB9BD7BACAC3", Maps
-               .<String, String> newHashMap()));
+               .<String, String> newHashMap(), PublicAccess.PRIVATE));
       BoundedSet<ContainerProperties> list = new BoundedHashSet<ContainerProperties>(contents, URI
                .create("http://myaccount.blob.core.windows.net/"), null, null, 3, "video");
 
@@ -80,15 +81,15 @@ public class AccountNameEnumerationResultsHandlerTest extends BaseHandlerTest {
       contents.add(new ContainerPropertiesImpl(URI
                .create("http://myaccount.blob.core.windows.net/audio"), dateService
                .rfc822DateParse("Wed, 13 Aug 2008 20:39:39 GMT"), "0x8CACB9BD7C6B1B2", Maps
-               .<String, String> newHashMap()));
+               .<String, String> newHashMap(), PublicAccess.CONTAINER));
       contents.add(new ContainerPropertiesImpl(URI
                .create("http://myaccount.blob.core.windows.net/images"), dateService
                .rfc822DateParse("Wed, 14 Aug 2008 20:39:39 GMT"), "0x8CACB9BD7C1EEEC", Maps
-               .<String, String> newHashMap()));
+               .<String, String> newHashMap(), PublicAccess.BLOB));
       contents.add(new ContainerPropertiesImpl(URI
                .create("http://myaccount.blob.core.windows.net/textfiles"), dateService
                .rfc822DateParse("Wed, 15 Aug 2008 20:39:39 GMT"), "0x8CACB9BD7BACAC3", Maps
-               .<String, String> newHashMap()));
+               .<String, String> newHashMap(), PublicAccess.PRIVATE));
       InputStream is = getClass().getResourceAsStream("/test_list_containers_options.xml");
       BoundedSet<ContainerProperties> list = new BoundedHashSet<ContainerProperties>(contents, URI
                .create("http://myaccount.blob.core.windows.net"), "prefix", "marker", 1, "video");

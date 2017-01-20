@@ -46,6 +46,8 @@ public interface MutableContainerPropertiesWithMetadata extends ContainerPropert
     */
    void setETag(String eTag);
 
+   void setPublicAccess(PublicAccess publicAccess);
+
    /**
     * @see ListableContainerProperties#setMetadata
     */

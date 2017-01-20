@@ -129,11 +129,18 @@ public class AzureBlobClientLiveTest extends BaseBlobStoreIntegrationTest {
             throw e;
          }
       }
-      // TODO
-      // URL url = new URL(String.format("http://%s.blob.core.windows.net/%s",
-      // identity,
-      // publicContainer));
-      // Utils.toStringAndClose(url.openStream());
+
+      ContainerProperties properties = null;
+      for (ContainerProperties p : getApi().listContainers(includeMetadata())) {
+         if (p.getName().equals(publicContainer)) {
+            properties = p;
+            break;
+         }
+      }
+      assertThat(properties.getPublicAccess()).isEqualTo(PublicAccess.BLOB);
+
+      properties = getApi().getContainerProperties(publicContainer);
+      assertThat(properties.getPublicAccess()).isEqualTo(PublicAccess.BLOB);
    }
 
    @Test(timeOut = 10 * 60 * 1000)

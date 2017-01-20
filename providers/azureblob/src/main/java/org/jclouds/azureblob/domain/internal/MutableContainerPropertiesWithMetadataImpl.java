@@ -22,6 +22,7 @@ import java.util.Map;
 
 import org.jclouds.azureblob.domain.ContainerProperties;
 import org.jclouds.azureblob.domain.MutableContainerPropertiesWithMetadata;
+import org.jclouds.azureblob.domain.PublicAccess;
 
 import com.google.common.collect.Maps;
 
@@ -35,6 +36,7 @@ public class MutableContainerPropertiesWithMetadataImpl implements
    private URI url;
    private Date lastModified;
    private String eTag;
+   private PublicAccess publicAccess;
 
    private Map<String, String> metadata = Maps.newHashMap();
 
@@ -65,6 +67,11 @@ public class MutableContainerPropertiesWithMetadataImpl implements
       return eTag;
    }
 
+   @Override
+   public PublicAccess getPublicAccess() {
+      return publicAccess;
+   }
+
    /**
     *{@inheritDoc}
     */
@@ -87,6 +94,11 @@ public class MutableContainerPropertiesWithMetadataImpl implements
    @Override
    public void setETag(String eTag) {
       this.eTag = eTag;
+   }
+
+   @Override
+   public void setPublicAccess(PublicAccess publicAccess) {
+      this.publicAccess = publicAccess;
    }
 
    /**
@@ -130,6 +142,7 @@ public class MutableContainerPropertiesWithMetadataImpl implements
       result = prime * result + ((metadata == null) ? 0 : metadata.hashCode());
       result = prime * result + ((name == null) ? 0 : name.hashCode());
       result = prime * result + ((url == null) ? 0 : url.hashCode());
+      result = prime * result + ((publicAccess == null) ? 0 : publicAccess.hashCode());
       return result;
    }
 
@@ -166,6 +179,11 @@ public class MutableContainerPropertiesWithMetadataImpl implements
          if (other.url != null)
             return false;
       } else if (!url.equals(other.url))
+         return false;
+      if (publicAccess == null) {
+         if (other.publicAccess != null)
+            return false;
+      } else if (!publicAccess.equals(other.publicAccess))
          return false;
       return true;
    }

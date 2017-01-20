@@ -29,5 +29,7 @@ public interface ContainerProperties extends Comparable<ContainerProperties> {
 
    String getETag();
 
+   PublicAccess getPublicAccess();
+
    Map<String, String> getMetadata();
 }

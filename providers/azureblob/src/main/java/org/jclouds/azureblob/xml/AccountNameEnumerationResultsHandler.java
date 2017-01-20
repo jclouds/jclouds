@@ -29,6 +29,7 @@ import javax.inject.Inject;
 import org.jclouds.azure.storage.domain.BoundedSet;
 import org.jclouds.azure.storage.domain.internal.BoundedHashSet;
 import org.jclouds.azureblob.domain.ContainerProperties;
+import org.jclouds.azureblob.domain.PublicAccess;
 import org.jclouds.azureblob.domain.internal.ContainerPropertiesImpl;
 import org.jclouds.date.DateService;
 import org.jclouds.http.functions.ParseSax;
@@ -56,6 +57,7 @@ public class AccountNameEnumerationResultsHandler extends
    private String currentName;
    private Date currentLastModified;
    private String currentETag;
+   private PublicAccess currentPublicAccess = PublicAccess.PRIVATE;
    private boolean inMetadata;
 
    private Map<String, String> currentMetadata = Maps.newHashMap();
@@ -111,10 +113,11 @@ public class AccountNameEnumerationResultsHandler extends
             throw propagate(use);
          }
          containerMetadata.add(new ContainerPropertiesImpl(currentUrl, currentLastModified,
-                  currentETag, currentMetadata));
+                  currentETag, currentMetadata, currentPublicAccess));
          currentName = null;
          currentLastModified = null;
          currentETag = null;
+         currentPublicAccess = PublicAccess.PRIVATE;
          currentMetadata = Maps.newHashMap();
       } else if (qName.equals("Name")) {
          currentName = currentText.toString().trim();
@@ -122,6 +125,8 @@ public class AccountNameEnumerationResultsHandler extends
          currentLastModified = dateParser.rfc822DateParse(currentText.toString().trim());
       } else if (qName.equals("Etag")) {
          currentETag = currentText.toString().trim();
+      } else if (qName.equals("PublicAccess")) {
+         currentPublicAccess = PublicAccess.fromString(currentText.toString().trim());
       }
       currentText.setLength(0);
    }

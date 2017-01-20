@@ -23,6 +23,7 @@ import java.util.Date;
 import java.util.Map;
 
 import org.jclouds.azureblob.domain.ContainerProperties;
+import org.jclouds.azureblob.domain.PublicAccess;
 
 import com.google.common.collect.Maps;
 
@@ -35,14 +36,21 @@ public class ContainerPropertiesImpl implements ContainerProperties {
    private final URI url;
    private final Date lastModified;
    private final String eTag;
+   private final PublicAccess publicAccess;
    private final Map<String, String> metadata = Maps.newLinkedHashMap();
 
-   public ContainerPropertiesImpl(URI url, Date lastModified, String eTag, Map<String, String> metadata) {
+   public ContainerPropertiesImpl(URI url, Date lastModified, String eTag, Map<String, String> metadata, PublicAccess publicAccess) {
       this.url = checkNotNull(url, "url");
       this.name = checkNotNull(url.getPath(), "url.getPath()").replaceFirst("/", "");
       this.lastModified = checkNotNull(lastModified, "lastModified");
       this.eTag = checkNotNull(eTag, "eTag");
       this.metadata.putAll(checkNotNull(metadata, "metadata"));
+      this.publicAccess = checkNotNull(publicAccess);
+   }
+
+   @Deprecated
+   public ContainerPropertiesImpl(URI url, Date lastModified, String eTag, Map<String, String> metadata) {
+      this(url, lastModified, eTag, metadata, PublicAccess.PRIVATE);
    }
 
    /**
@@ -90,6 +98,11 @@ public class ContainerPropertiesImpl implements ContainerProperties {
    }
 
    @Override
+   public PublicAccess getPublicAccess() {
+      return publicAccess;
+   }
+
+   @Override
    public int hashCode() {
       final int prime = 31;
       int result = 1;
@@ -97,6 +110,7 @@ public class ContainerPropertiesImpl implements ContainerProperties {
       result = prime * result + ((lastModified == null) ? 0 : lastModified.hashCode());
       result = prime * result + ((name == null) ? 0 : name.hashCode());
       result = prime * result + ((url == null) ? 0 : url.hashCode());
+      result = prime * result + ((publicAccess == null) ? 0 : publicAccess.hashCode());
       return result;
    }
 
@@ -128,6 +142,11 @@ public class ContainerPropertiesImpl implements ContainerProperties {
          if (other.url != null)
             return false;
       } else if (!url.equals(other.url))
+         return false;
+      if (publicAccess == null) {
+         if (other.publicAccess != null)
+            return false;
+      } else if (!publicAccess.equals(other.publicAccess))
          return false;
       return true;
    }

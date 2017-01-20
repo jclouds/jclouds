@@ -63,6 +63,7 @@ public class ParseContainerPropertiesFromHeaders implements Function<HttpRespons
       parseLastModifiedOrThrowException(from, to);
       addETagTo(from, to);
       to.setUrl(request.getEndpoint());
+      to.setPublicAccess(new ParsePublicAccessHeader().apply(from));
       return to;
    }
 

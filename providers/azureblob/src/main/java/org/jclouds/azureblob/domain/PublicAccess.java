@@ -40,4 +40,7 @@ public enum PublicAccess {
     */
    PRIVATE;
 
+   public static PublicAccess fromString(String string) {
+      return valueOf(string.toUpperCase());
+   }
 }
