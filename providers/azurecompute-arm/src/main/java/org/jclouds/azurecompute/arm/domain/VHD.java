@@ -17,6 +17,7 @@
 package org.jclouds.azurecompute.arm.domain;
 
 import com.google.auto.value.AutoValue;
+
 import org.jclouds.json.SerializedNames;
 
 @AutoValue
@@ -31,6 +32,8 @@ public abstract class VHD {
    public static VHD create(final String uri) {
       return builder().uri(uri).build();
    }
+   
+   public abstract Builder toBuilder();
 
    public static Builder builder() {
       return new AutoValue_VHD.Builder();

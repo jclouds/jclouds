@@ -16,24 +16,22 @@
  */
 package org.jclouds.azurecompute.arm.features;
 
-import java.util.List;
-
-import org.jclouds.azurecompute.arm.domain.Subnet;
-import org.jclouds.azurecompute.arm.domain.VirtualNetwork;
-import org.jclouds.azurecompute.arm.internal.BaseAzureComputeApiLiveTest;
-import org.testng.annotations.AfterClass;
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.Test;
-
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertTrue;
 
+import java.util.List;
+
+import org.jclouds.azurecompute.arm.domain.Subnet;
+import org.jclouds.azurecompute.arm.domain.VirtualNetwork;
+import org.jclouds.azurecompute.arm.internal.BaseAzureComputeApiLiveTest;
+import org.testng.annotations.BeforeClass;
+import org.testng.annotations.Test;
+
 @Test(groups = "live", singleThreaded = true)
 public class SubnetApiLiveTest extends BaseAzureComputeApiLiveTest {
 
-   private String resourceGroupName;
    private String virtualNetworkName;
    private String subnetName;
 
@@ -41,22 +39,15 @@ public class SubnetApiLiveTest extends BaseAzureComputeApiLiveTest {
    @Override
    public void setup() {
       super.setup();
-      resourceGroupName = String.format("rg-%s-%s", this.getClass().getSimpleName().toLowerCase(), System.getProperty("user.name"));
-      assertNotNull(createResourceGroup(resourceGroupName));
-      virtualNetworkName = String.format("vn-%s-%s", this.getClass().getSimpleName().toLowerCase(), System.getProperty("user.name"));
+      createTestResourceGroup();
+      virtualNetworkName = String.format("vn-%s-%s", this.getClass().getSimpleName().toLowerCase(),
+            System.getProperty("user.name"));
       subnetName = "jclouds-" + RAND;
 
       // Subnets belong to a virtual network so that needs to be created first
       // VN will be deleted when resource group is deleted
       VirtualNetwork vn = createDefaultVirtualNetwork(resourceGroupName, virtualNetworkName, "10.2.0.0/16", LOCATION);
       assertNotNull(vn);
-   }
-
-   @AfterClass
-   @Override
-   protected void tearDown() {
-      super.tearDown();
-      deleteResourceGroup(resourceGroupName);
    }
 
    @Test

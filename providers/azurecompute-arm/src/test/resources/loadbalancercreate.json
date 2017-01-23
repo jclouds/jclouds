@@ -1,0 +1,28 @@
+{
+  "name": "testLoadBalancer",
+  "id": "/subscriptions/SUBSCRIPTIONID/resourceGroups/rg-loadbalancerapilivetest-nacx/providers/Microsoft.Network/loadBalancers/testLoadBalancer",
+  "etag": "W/\"406af4e7-b24b-4c00-b42f-b3c4399bf61d\"",
+  "type": "Microsoft.Network/loadBalancers",
+  "location": "westeurope",
+  "properties": {
+    "provisioningState": "Succeeded",
+    "resourceGuid": "112b7e75-f287-4789-9f6a-9a55a6fbe47c",
+    "frontendIPConfigurations": [
+      {
+        "name": "ipConfigs",
+        "id": "/subscriptions/SUBSCRIPTIONID/resourceGroups/rg-loadbalancerapilivetest-nacx/providers/Microsoft.Network/loadBalancers/testLoadBalancer/frontendIPConfigurations/ipConfigs",
+        "etag": "W/\"406af4e7-b24b-4c00-b42f-b3c4399bf61d\"",
+        "properties": {
+          "provisioningState": "Succeeded",
+          "privateIPAllocationMethod": "Dynamic"
+        }
+      }
+    ],
+    "backendAddressPools": [],
+    "loadBalancingRules": [],
+    "probes": [],
+    "inboundNatRules": [],
+    "outboundNatRules": [],
+    "inboundNatPools": []
+  }
+}

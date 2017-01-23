@@ -43,6 +43,7 @@ import org.jclouds.azurecompute.arm.domain.VHD;
 import org.jclouds.azurecompute.arm.domain.VirtualMachine;
 import org.jclouds.azurecompute.arm.domain.VirtualMachineInstance;
 import org.jclouds.azurecompute.arm.domain.VirtualMachineProperties;
+import org.jclouds.azurecompute.arm.domain.Status;
 import org.jclouds.azurecompute.arm.internal.BaseAzureComputeApiMockTest;
 import org.testng.annotations.Test;
 
@@ -288,7 +289,7 @@ public class VirtualMachineApiMockTest extends BaseAzureComputeApiMockTest {
    }
 
    private VirtualMachineInstance getVMInstance() {
-      List<VirtualMachineInstance.VirtualMachineStatus> statuses = new ArrayList<VirtualMachineInstance.VirtualMachineStatus>();
+      List<Status> statuses = new ArrayList<Status>();
       String testDate = "Wed May 04 01:38:52 PDT 2016";
       DateFormat formatter = new SimpleDateFormat("EEE MMM dd HH:mm:ss z yyyy");
       Date date = null;
@@ -297,11 +298,11 @@ public class VirtualMachineApiMockTest extends BaseAzureComputeApiMockTest {
       } catch (Exception e) {
          e.printStackTrace();
       }
-      VirtualMachineInstance.VirtualMachineStatus vmStatus = VirtualMachineInstance.VirtualMachineStatus.create(
-            "ProvisioningState/succeeded", "Info", "Provisioning succeeded", date);
+      Status vmStatus = Status.create(
+            "ProvisioningState/succeeded", "Info", "Provisioning succeeded", null, date);
       statuses.add(vmStatus);
-      VirtualMachineInstance.VirtualMachineStatus vmStatus1 = VirtualMachineInstance.VirtualMachineStatus.create(
-            "PowerState/running", "Info", "VM running", null);
+      Status vmStatus1 = Status.create(
+            "PowerState/running", "Info", "VM running", null, null);
       statuses.add(vmStatus1);
 
       VirtualMachineInstance machineInstance = VirtualMachineInstance

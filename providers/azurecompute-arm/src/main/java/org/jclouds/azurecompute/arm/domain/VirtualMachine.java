@@ -74,6 +74,8 @@ public abstract class VirtualMachine {
             .build();
    }
    
+   public abstract Builder toBuilder();
+   
    public static Builder builder() {
       return new AutoValue_VirtualMachine.Builder();
    }

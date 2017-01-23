@@ -17,13 +17,15 @@
 
 package org.jclouds.azurecompute.arm.domain;
 
+import java.util.List;
+import java.util.Map;
+
+import org.jclouds.javax.annotation.Nullable;
+import org.jclouds.json.SerializedNames;
+
 import com.google.auto.value.AutoValue;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
-import org.jclouds.javax.annotation.Nullable;
-import org.jclouds.json.SerializedNames;
-import java.util.Map;
-import java.util.List;
 
 /**
  * AvailabilitySet for subscription
@@ -45,24 +47,54 @@ public abstract class AvailabilitySet {
       public abstract int platformFaultDomainCount();
 
       /**
-       * A list of virtual machines in availability set
+       * A list of virtual machines in the availability set
        */
       @Nullable
-      public abstract List<AvailabilitySetVirtualMachine> virtualMachines();
+      public abstract List<IdReference> virtualMachines();
+      
+      /**
+       * A list of statuses in the availability set
+       */
+      @Nullable
+      public abstract List<Status> statuses();
 
-      @SerializedNames({"platformUpdateDomainCount", "platformFaultDomainCount", "virtualMachines"})
+      @SerializedNames({ "platformUpdateDomainCount", "platformFaultDomainCount", "virtualMachines", "statuses" })
       public static AvailabilitySetProperties create(final int platformUpdateDomainCount,
-                                                     final int platformFaultDomainCount,
-                                                     List<AvailabilitySetVirtualMachine> virtualMachines) {
-         return new AutoValue_AvailabilitySet_AvailabilitySetProperties(platformUpdateDomainCount,
-                 platformFaultDomainCount,
-                 virtualMachines == null ? null : ImmutableList.copyOf(virtualMachines));
+            final int platformFaultDomainCount, List<IdReference> virtualMachines, List<Status> statuses) {
+         return builder().platformUpdateDomainCount(platformUpdateDomainCount)
+               .platformFaultDomainCount(platformFaultDomainCount).virtualMachines(virtualMachines).statuses(statuses)
+               .build();
+      }
+      
+      public abstract Builder toBuilder();
+      
+      public static Builder builder() {
+         return new AutoValue_AvailabilitySet_AvailabilitySetProperties.Builder();
+      }
+      
+      @AutoValue.Builder
+      public abstract static class Builder {
+         public abstract Builder platformUpdateDomainCount(int platformUpdateDomainCount);
+         public abstract Builder platformFaultDomainCount(int platformFaultDomainCount);
+         public abstract Builder virtualMachines(List<IdReference> virtualMachines);
+         public abstract Builder statuses(List<Status> statuses);
+         
+         abstract List<IdReference> virtualMachines();
+         abstract List<Status> statuses();
+         abstract AvailabilitySetProperties autoBuild();
+         
+         public AvailabilitySetProperties build() {
+            virtualMachines(virtualMachines() != null ? ImmutableList.copyOf(virtualMachines()) : null);
+            statuses(statuses() != null ? ImmutableList.copyOf(statuses()) : null);
+            return autoBuild();
+         }
       }
    }
 
    /**
     * The id of the availability set
     */
+   @Nullable
    public abstract String id();
 
    /**
@@ -72,7 +104,7 @@ public abstract class AvailabilitySet {
    public abstract String name();
 
    /**
-    * The name of the availability set.
+    * The type of the availability set.
     */
    @Nullable
    public abstract String type();
@@ -99,6 +131,30 @@ public abstract class AvailabilitySet {
    @SerializedNames({"id", "name", "type", "location", "tags", "properties"})
    public static AvailabilitySet create(final String id, final String name, final String type, final String location,
                                         final Map<String, String> tags, AvailabilitySetProperties properties) {
-      return new AutoValue_AvailabilitySet(id, name, type, location, tags == null ? null : ImmutableMap.copyOf(tags), properties);
+      return builder().id(id).name(name).type(type).location(location).tags(tags).properties(properties).build();
+   }
+   
+   public abstract Builder toBuilder();
+   
+   public static Builder builder() {
+      return new AutoValue_AvailabilitySet.Builder();
+   }
+   
+   @AutoValue.Builder
+   public abstract static class Builder {
+      public abstract Builder id(String id);
+      public abstract Builder name(String name);
+      public abstract Builder type(String type);
+      public abstract Builder location(String location);
+      public abstract Builder tags(Map<String, String> tags);
+      public abstract Builder properties(AvailabilitySetProperties properties);
+      
+      abstract Map<String, String> tags();
+      abstract AvailabilitySet autoBuild();
+      
+      public AvailabilitySet build() {
+         tags(tags() != null ? ImmutableMap.copyOf(tags()) : null);
+         return autoBuild();
+      }
    }
 }

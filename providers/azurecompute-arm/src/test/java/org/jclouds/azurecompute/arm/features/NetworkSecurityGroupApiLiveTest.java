@@ -16,42 +16,31 @@
  */
 package org.jclouds.azurecompute.arm.features;
 
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertNotNull;
+import static org.testng.Assert.assertNull;
+import static org.testng.Assert.assertTrue;
+
 import java.net.URI;
 import java.util.List;
 
 import org.jclouds.azurecompute.arm.domain.NetworkSecurityGroup;
 import org.jclouds.azurecompute.arm.domain.NetworkSecurityRule;
 import org.jclouds.azurecompute.arm.internal.BaseAzureComputeApiLiveTest;
-import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
-
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertNotNull;
-import static org.testng.Assert.assertNull;
-import static org.testng.Assert.assertTrue;
 
 @Test(groups = "live", singleThreaded = true)
 public class NetworkSecurityGroupApiLiveTest extends BaseAzureComputeApiLiveTest {
 
-   private String resourceGroupName;
    private static String nsgName = "testNetworkSecurityGroup";
 
    @BeforeClass
    @Override
    public void setup() {
       super.setup();
-      resourceGroupName = String.format("rg-%s-%s", this.getClass().getSimpleName().toLowerCase(), System.getProperty("user.name"));
-      assertNotNull(createResourceGroup(resourceGroupName));
+      createTestResourceGroup();
       nsgName = String.format("nsg-%s-%s", this.getClass().getSimpleName().toLowerCase(), System.getProperty("user.name"));
-   }
-
-   @AfterClass
-   @Override
-   protected void tearDown() {
-      super.tearDown();
-      URI uri = deleteResourceGroup(resourceGroupName);
-      assertResourceDeleted(uri);
    }
 
    @Test

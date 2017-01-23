@@ -16,6 +16,12 @@
  */
 package org.jclouds.azurecompute.arm.features;
 
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertFalse;
+import static org.testng.Assert.assertNotNull;
+import static org.testng.Assert.assertNull;
+import static org.testng.Assert.assertTrue;
+
 import java.net.URI;
 import java.util.List;
 
@@ -25,18 +31,11 @@ import org.jclouds.azurecompute.arm.domain.StorageServiceUpdateParams;
 import org.jclouds.azurecompute.arm.functions.ParseJobStatus;
 import org.jclouds.azurecompute.arm.internal.BaseAzureComputeApiLiveTest;
 import org.jclouds.util.Predicates2;
-import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 import com.google.common.base.Predicate;
 import com.google.common.collect.ImmutableMap;
-
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertFalse;
-import static org.testng.Assert.assertNotNull;
-import static org.testng.Assert.assertNull;
-import static org.testng.Assert.assertTrue;
 
 @Test(groups = "live", testName = "StorageAccountApiLiveTest")
 public class StorageAccountApiLiveTest extends BaseAzureComputeApiLiveTest {
@@ -44,22 +43,11 @@ public class StorageAccountApiLiveTest extends BaseAzureComputeApiLiveTest {
    private static final String NAME = String.format("%3.24s",
            RAND + StorageAccountApiLiveTest.class.getSimpleName().toLowerCase());
 
-   private String resourceGroupName;
-
    @BeforeClass
    @Override
    public void setup() {
       super.setup();
-      resourceGroupName = String.format("rg-%s-%s", this.getClass().getSimpleName().toLowerCase(), System.getProperty("user.name"));
-      assertNotNull(createResourceGroup(resourceGroupName));
-   }
-
-   @AfterClass
-   @Override
-   protected void tearDown() {
-      super.tearDown();
-      URI uri = deleteResourceGroup(resourceGroupName);
-      assertResourceDeleted(uri);
+      createTestResourceGroup();
    }
 
    @Test(dependsOnMethods = "testCreate")

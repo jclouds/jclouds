@@ -160,7 +160,7 @@ public abstract class Deployment {
    }
 
    @AutoValue
-   public abstract static class DeploymentProperties {
+   public abstract static class DeploymentProperties implements Provisionable {
       @Nullable
       public abstract String provisioningState();
 

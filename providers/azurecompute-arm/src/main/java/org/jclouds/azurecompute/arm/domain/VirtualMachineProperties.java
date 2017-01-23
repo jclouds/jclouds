@@ -61,7 +61,7 @@ public abstract class VirtualMachineProperties {
     * The availability set  of the virtual machine
     */
    @Nullable
-   public abstract AvailabilitySet availabilitySet();
+   public abstract IdReference availabilitySet();
 
    /**
     * The hardware Profile of the virtual machine .
@@ -103,7 +103,7 @@ public abstract class VirtualMachineProperties {
            "networkProfile", "diagnosticsProfile", "provisioningState"})
    public static VirtualMachineProperties create(final String vmId,
                                                  final String licenseType,
-                                                 final AvailabilitySet availabilitySet,
+                                                 final IdReference availabilitySet,
                                                  final HardwareProfile hardwareProfile,
                                                  final StorageProfile storageProfile,
                                                  final OSProfile osProfile,
@@ -122,6 +122,8 @@ public abstract class VirtualMachineProperties {
               .provisioningState(provisioningState)
               .build();
    }
+   
+   public abstract Builder toBuilder();
 
    public static Builder builder() {
       return new AutoValue_VirtualMachineProperties.Builder();
@@ -133,7 +135,7 @@ public abstract class VirtualMachineProperties {
 
       public abstract Builder licenseType(String licenseType);
 
-      public abstract Builder availabilitySet(AvailabilitySet availabilitySet);
+      public abstract Builder availabilitySet(IdReference availabilitySet);
 
       public abstract Builder hardwareProfile(HardwareProfile hardwareProfile);
 

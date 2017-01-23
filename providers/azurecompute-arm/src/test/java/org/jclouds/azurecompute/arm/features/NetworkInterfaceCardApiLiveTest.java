@@ -16,6 +16,10 @@
  */
 package org.jclouds.azurecompute.arm.features;
 
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertNotNull;
+import static org.testng.Assert.assertTrue;
+
 import java.net.URI;
 import java.util.Arrays;
 import java.util.List;
@@ -28,20 +32,14 @@ import org.jclouds.azurecompute.arm.domain.NetworkInterfaceCard;
 import org.jclouds.azurecompute.arm.domain.NetworkInterfaceCardProperties;
 import org.jclouds.azurecompute.arm.domain.Subnet;
 import org.jclouds.azurecompute.arm.internal.BaseAzureComputeApiLiveTest;
-import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 import com.google.common.collect.ImmutableMap;
 
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertNotNull;
-import static org.testng.Assert.assertTrue;
-
 @Test(groups = "live", singleThreaded = true)
 public class NetworkInterfaceCardApiLiveTest extends BaseAzureComputeApiLiveTest {
 
-   private String resourceGroupName;
    private String subnetId;
    private String nicName;
 
@@ -49,7 +47,7 @@ public class NetworkInterfaceCardApiLiveTest extends BaseAzureComputeApiLiveTest
    @Override
    public void setup() {
       super.setup();
-      resourceGroupName = String.format("rg-%s-%s", this.getClass().getSimpleName().toLowerCase(), System.getProperty("user.name"));
+      createTestResourceGroup();
       assertNotNull(api.getResourceGroupApi().create(resourceGroupName, LOCATION, ImmutableMap.<String, String>of()));
       String virtualNetworkName = String.format("vn-%s-%s", this.getClass().getSimpleName().toLowerCase(), System.getProperty("user.name"));
       nicName = String.format("nic-%s-%s", this.getClass().getSimpleName().toLowerCase(), System.getProperty("user.name"));
@@ -63,13 +61,6 @@ public class NetworkInterfaceCardApiLiveTest extends BaseAzureComputeApiLiveTest
       assertNotNull(subnet);
       assertNotNull(subnet.id());
       subnetId = subnet.id();
-   }
-
-   @AfterClass
-   @Override
-   protected void tearDown() {
-      super.tearDown();
-      deleteResourceGroup(resourceGroupName);
    }
 
    @Test

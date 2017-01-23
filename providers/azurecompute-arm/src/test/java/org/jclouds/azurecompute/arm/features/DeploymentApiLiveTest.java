@@ -31,7 +31,6 @@ import org.jclouds.azurecompute.arm.domain.VirtualNetwork;
 import org.jclouds.azurecompute.arm.internal.BaseAzureComputeApiLiveTest;
 import org.jclouds.util.Predicates2;
 import org.testng.Assert;
-import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
@@ -41,7 +40,6 @@ import com.google.common.net.UrlEscapers;
 @Test(testName = "DeploymentApiLiveTest", singleThreaded = true)
 public class DeploymentApiLiveTest extends BaseAzureComputeApiLiveTest {
 
-   private String resourceGroupName;
    private String deploymentName;
    private String subnetId;
 
@@ -52,8 +50,7 @@ public class DeploymentApiLiveTest extends BaseAzureComputeApiLiveTest {
    @Override
    public void setup() {
       super.setup();
-      resourceGroupName = String.format("rg-%s-%s", this.getClass().getSimpleName().toLowerCase(), System.getProperty("user.name"));
-      assertNotNull(createResourceGroup(resourceGroupName));
+      createTestResourceGroup();
       deploymentName = "jc" + System.currentTimeMillis();
       String virtualNetworkName = String.format("vn-%s-%s", this.getClass().getSimpleName().toLowerCase(), System.getProperty("user.name"));
       String storageAccountName = String.format("st%s%s", System.getProperty("user.name"), RAND);
@@ -75,14 +72,6 @@ public class DeploymentApiLiveTest extends BaseAzureComputeApiLiveTest {
       assertNotNull(subnet);
       assertNotNull(subnet.id());
       subnetId = subnet.id();
-   }
-
-   @AfterClass
-   @Override
-   protected void tearDown() {
-      super.tearDown();
-      URI uri = api.getResourceGroupApi().delete(resourceGroupName);
-      assertResourceDeleted(uri);
    }
 
    private String getPutBody(String template, String mode, String parameters) {

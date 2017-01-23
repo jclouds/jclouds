@@ -22,7 +22,6 @@ import java.util.Map;
 import com.google.common.collect.ImmutableMap;
 import org.jclouds.javax.annotation.Nullable;
 import org.jclouds.json.SerializedNames;
-
 import org.jclouds.azurecompute.arm.util.GetEnumValue;
 
 @AutoValue
@@ -150,6 +149,9 @@ public abstract class StorageService {
 
          return  builder.build();
       }
+      
+      public abstract Builder toBuilder();
+      
       public static Builder builder() {
          return new AutoValue_StorageService_StorageServiceProperties.Builder();
       }

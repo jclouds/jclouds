@@ -49,6 +49,8 @@ public abstract class IpConfiguration {
               .properties(properties)
               .build();
    }
+   
+   public abstract Builder toBuilder();
 
    public static Builder builder() {
       return new AutoValue_IpConfiguration.Builder();

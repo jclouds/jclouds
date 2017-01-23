@@ -17,6 +17,7 @@
 package org.jclouds.azurecompute.arm.domain;
 
 import com.google.auto.value.AutoValue;
+
 import org.jclouds.json.SerializedNames;
 
 @AutoValue
@@ -58,6 +59,8 @@ public abstract class DataDisk {
               .vhd(vhd)
               .build();
    }
+   
+   public abstract Builder toBuilder();
 
    public static Builder builder() {
       return new AutoValue_DataDisk.Builder();

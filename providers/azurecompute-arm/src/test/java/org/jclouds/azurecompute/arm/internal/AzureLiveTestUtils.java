@@ -17,6 +17,7 @@
 package org.jclouds.azurecompute.arm.internal;
 
 import static org.jclouds.azurecompute.arm.config.AzureComputeProperties.IMAGE_PUBLISHERS;
+import static org.jclouds.compute.config.ComputeServiceProperties.RESOURCENAME_PREFIX;
 import static org.jclouds.compute.config.ComputeServiceProperties.TIMEOUT_NODE_RUNNING;
 import static org.jclouds.compute.config.ComputeServiceProperties.TIMEOUT_NODE_SUSPENDED;
 import static org.jclouds.compute.config.ComputeServiceProperties.TIMEOUT_NODE_TERMINATED;
@@ -36,6 +37,7 @@ public class AzureLiveTestUtils {
        properties.put(CREDENTIAL_TYPE, CLIENT_CREDENTIALS_SECRET.toString());
        properties.put(PROPERTY_REGIONS, "eastus");
        properties.put(IMAGE_PUBLISHERS, "Canonical");
+       properties.put(RESOURCENAME_PREFIX, "jcloudstest");
        
        String defaultTimeout = String.valueOf(TimeUnit.MILLISECONDS.convert(60, TimeUnit.MINUTES));
        properties.setProperty(TIMEOUT_SCRIPT_COMPLETE, defaultTimeout);

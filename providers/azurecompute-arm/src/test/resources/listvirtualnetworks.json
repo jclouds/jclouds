@@ -2,7 +2,7 @@
   "value": [
     {
       "name": "mockvirtualnetwork",
-      "id": "/subscriptions/SUBSCRIPTIONID/resourceGroups/azurearmtesting/providers/Microsoft.Network/virtualNetworks/mockvirtualnetwork",
+      "id": "/subscriptions/6b6748c8-3e69-4e27-9b71-df97a81c0bbc/resourceGroups/azurearmtesting/providers/Microsoft.Network/virtualNetworks/mockvirtualnetwork",
       "etag": "W/\"0dcd223f-670c-49ca-abe7-5978d127c131\"",
       "type": "Microsoft.Network/virtualNetworks",
       "location": "westeurope",

@@ -16,40 +16,30 @@
  */
 package org.jclouds.azurecompute.arm.features;
 
-import java.util.Arrays;
-import java.util.List;
-
-import org.jclouds.azurecompute.arm.domain.VirtualNetwork;
-import org.jclouds.azurecompute.arm.internal.BaseAzureComputeApiLiveTest;
-import org.testng.annotations.AfterClass;
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.Test;
-
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertTrue;
 
+import java.util.Arrays;
+import java.util.List;
+
+import org.jclouds.azurecompute.arm.domain.VirtualNetwork;
+import org.jclouds.azurecompute.arm.internal.BaseAzureComputeApiLiveTest;
+import org.testng.annotations.BeforeClass;
+import org.testng.annotations.Test;
+
 @Test(groups = "live", singleThreaded = true)
 public class VirtualNetworkApiLiveTest extends BaseAzureComputeApiLiveTest {
 
-   private String resourceGroupName;
    private String virtualNetworkName;
 
    @BeforeClass
    @Override
    public void setup() {
       super.setup();
-      resourceGroupName = String.format("rg-%s-%s", this.getClass().getSimpleName().toLowerCase(), System.getProperty("user.name"));
-      assertNotNull(createResourceGroup(resourceGroupName));
+      createTestResourceGroup();
       virtualNetworkName = String.format("vn-%s-%s", this.getClass().getSimpleName().toLowerCase(), System.getProperty("user.name"));
-   }
-
-   @AfterClass
-   @Override
-   protected void tearDown() {
-      super.tearDown();
-      deleteResourceGroup(resourceGroupName);
    }
 
    @Test

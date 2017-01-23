@@ -20,6 +20,7 @@ package org.jclouds.azurecompute.arm.domain;
 import com.google.auto.value.AutoValue;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
+
 import org.jclouds.javax.annotation.Nullable;
 import org.jclouds.json.SerializedNames;
 
@@ -67,6 +68,8 @@ public abstract class ResourceDefinition {
 
         return  builder.build();
     }
+    
+    public abstract Builder toBuilder();
 
     public static Builder builder() {
         return new AutoValue_ResourceDefinition.Builder();

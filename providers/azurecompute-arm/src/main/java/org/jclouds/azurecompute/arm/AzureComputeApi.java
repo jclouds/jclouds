@@ -20,8 +20,10 @@ import java.io.Closeable;
 
 import javax.ws.rs.PathParam;
 
+import org.jclouds.azurecompute.arm.features.AvailabilitySetApi;
 import org.jclouds.azurecompute.arm.features.DeploymentApi;
 import org.jclouds.azurecompute.arm.features.JobApi;
+import org.jclouds.azurecompute.arm.features.LoadBalancerApi;
 import org.jclouds.azurecompute.arm.features.LocationApi;
 import org.jclouds.azurecompute.arm.features.NetworkInterfaceCardApi;
 import org.jclouds.azurecompute.arm.features.NetworkSecurityGroupApi;
@@ -35,6 +37,7 @@ import org.jclouds.azurecompute.arm.features.SubnetApi;
 import org.jclouds.azurecompute.arm.features.VMSizeApi;
 import org.jclouds.azurecompute.arm.features.VirtualMachineApi;
 import org.jclouds.azurecompute.arm.features.VirtualNetworkApi;
+
 import org.jclouds.rest.annotations.Delegate;
 
 /**
@@ -155,6 +158,28 @@ public interface AzureComputeApi extends Closeable {
    @Delegate
    NetworkSecurityRuleApi getNetworkSecurityRuleApi(@PathParam("resourcegroup") String resourcegroup,
                                                     @PathParam("networksecuritygroup") String networksecuritygroup);
+
+   /**
+    * The LoadBalancer API includes operations for managing load balancers
+    * within your subscription.
+    *
+    * @see <a href=
+    *      "https://msdn.microsoft.com/en-us/library/azure/mt163574.aspx">docs
+    *      </a>
+    */
+   @Delegate
+   LoadBalancerApi getLoadBalancerApi(@PathParam("resourcegroup") String resourcegroup);
+   
+   /**
+    * The AvailabilitySet API includes operations for managing availability sets
+    * within your subscription.
+    *
+    * @see <a href=
+    *      "https://docs.microsoft.com/en-us/rest/api/compute/availabilitysets">docs
+    *      </a>
+    */
+   @Delegate
+   AvailabilitySetApi getAvailabilitySetApi(@PathParam("resourcegroup") String resourcegroup);
 
    /**
     * The Azure Resource Provider API provides information about a resource provider and its supported resource types.

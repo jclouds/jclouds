@@ -139,6 +139,11 @@ public class AzureComputeServiceAdapter implements ComputeServiceAdapter<Virtual
 
       // TODO ARM specific options
       // TODO network ids => create one nic in each network
+      
+      IdReference availabilitySet = null;
+      if (templateOptions.getAvailabilitySet() != null) {
+         availabilitySet = IdReference.create(templateOptions.getAvailabilitySet().id());
+      }
 
       String locationName = template.getLocation().getId();
       String subnetId = templateOptions.getSubnetId();
@@ -151,7 +156,7 @@ public class AzureComputeServiceAdapter implements ComputeServiceAdapter<Virtual
             .networkInterfaces(ImmutableList.of(IdReference.create(nic.id()))).build();
       VirtualMachineProperties virtualMachineProperties = VirtualMachineProperties.builder()
             .licenseType(null) // TODO
-            .availabilitySet(null) // TODO
+            .availabilitySet(availabilitySet)
             .hardwareProfile(hardwareProfile).storageProfile(storageProfile).osProfile(osProfile)
             .networkProfile(networkProfile).build();
       

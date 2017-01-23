@@ -17,6 +17,7 @@
 package org.jclouds.azurecompute.arm.domain;
 
 import com.google.auto.value.AutoValue;
+
 import org.jclouds.azurecompute.arm.util.GetEnumValue;
 import org.jclouds.javax.annotation.Nullable;
 import org.jclouds.json.SerializedNames;
@@ -112,6 +113,8 @@ public abstract class NetworkSecurityRuleProperties {
               .direction(direction)
               .build();
    }
+   
+   public abstract Builder toBuilder();
 
    public static Builder builder() {
       return new AutoValue_NetworkSecurityRuleProperties.Builder();

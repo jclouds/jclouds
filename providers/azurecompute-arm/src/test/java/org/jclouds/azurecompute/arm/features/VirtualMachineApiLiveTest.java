@@ -47,11 +47,10 @@ import org.jclouds.azurecompute.arm.domain.Subnet;
 import org.jclouds.azurecompute.arm.domain.VHD;
 import org.jclouds.azurecompute.arm.domain.VirtualMachine;
 import org.jclouds.azurecompute.arm.domain.VirtualMachineInstance;
-import org.jclouds.azurecompute.arm.domain.VirtualMachineInstance.VirtualMachineStatus.PowerState;
+import org.jclouds.azurecompute.arm.domain.VirtualMachineInstance.PowerState;
 import org.jclouds.azurecompute.arm.domain.VirtualMachineProperties;
 import org.jclouds.azurecompute.arm.internal.BaseAzureComputeApiLiveTest;
 import org.testng.Assert;
-import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
@@ -63,7 +62,6 @@ import com.google.common.collect.Iterables;
 public class VirtualMachineApiLiveTest extends BaseAzureComputeApiLiveTest {
 
    private String subscriptionid;
-   private String resourceGroupName;
    private String storageServiceName;
    private String vmName;
    private String nicName;
@@ -77,8 +75,7 @@ public class VirtualMachineApiLiveTest extends BaseAzureComputeApiLiveTest {
       super.setup();
       subscriptionid = getSubscriptionId();
 
-      resourceGroupName = String.format("rg-%s-%s", this.getClass().getSimpleName().toLowerCase(), System.getProperty("user.name"));
-      assertNotNull(createResourceGroup(resourceGroupName));
+      createTestResourceGroup();
       virtualNetworkName = String.format("vn-%s-%s", this.getClass().getSimpleName().toLowerCase(), System.getProperty("user.name"));
 
       storageServiceName = String.format("st%s%s", System.getProperty("user.name"), RAND);
@@ -99,14 +96,6 @@ public class VirtualMachineApiLiveTest extends BaseAzureComputeApiLiveTest {
       nicName = nic.name();
 
       vmName = String.format("%3.24s", System.getProperty("user.name") + RAND + this.getClass().getSimpleName()).toLowerCase().substring(0, 15);
-   }
-
-   @AfterClass
-   @Override
-   protected void tearDown() {
-      super.tearDown();
-      URI deleteResourceGroupURI = deleteResourceGroup(resourceGroupName);
-      assertResourceDeleted(deleteResourceGroupURI);
    }
 
    @Test
@@ -253,11 +242,11 @@ public class VirtualMachineApiLiveTest extends BaseAzureComputeApiLiveTest {
 
    protected NetworkInterfaceCard createNetworkInterfaceCard(final String resourceGroupName, String networkInterfaceCardName, String locationName, String ipConfigurationName) {
       //Create properties object
-      final NetworkInterfaceCardProperties networkInterfaceCardProperties =
-              NetworkInterfaceCardProperties.builder()
-                      .ipConfigurations(Arrays.asList(IpConfiguration.create(ipConfigurationName, null, null, null,
-                              IpConfigurationProperties.create(null, null, "Dynamic", IdReference.create(subnetId), null))
-                      )).build();
+      final NetworkInterfaceCardProperties networkInterfaceCardProperties = NetworkInterfaceCardProperties
+            .builder()
+            .ipConfigurations(
+                  Arrays.asList(IpConfiguration.create(ipConfigurationName, null, null, null, IpConfigurationProperties
+                        .create(null, null, "Dynamic", IdReference.create(subnetId), null, null, null)))).build();
 
       final Map<String, String> tags = ImmutableMap.of("jclouds", "livetest");
       return api.getNetworkInterfaceCardApi(resourceGroupName).createOrUpdate(networkInterfaceCardName, locationName, networkInterfaceCardProperties, tags);

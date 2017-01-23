@@ -48,10 +48,10 @@ import org.jclouds.azurecompute.arm.domain.StorageServiceKeys;
 import org.jclouds.azurecompute.arm.domain.VMImage;
 import org.jclouds.azurecompute.arm.domain.VirtualMachine;
 import org.jclouds.azurecompute.arm.domain.VirtualMachineInstance;
-import org.jclouds.azurecompute.arm.domain.VirtualMachineInstance.VirtualMachineStatus;
-import org.jclouds.azurecompute.arm.domain.VirtualMachineInstance.VirtualMachineStatus.PowerState;
+import org.jclouds.azurecompute.arm.domain.VirtualMachineInstance.PowerState;
 import org.jclouds.azurecompute.arm.domain.VirtualMachineProperties;
 import org.jclouds.azurecompute.arm.domain.VirtualMachineProperties.ProvisioningState;
+import org.jclouds.azurecompute.arm.domain.Status;
 import org.jclouds.azurecompute.arm.functions.StorageProfileToStorageAccountName;
 import org.jclouds.azurecompute.arm.util.BlobHelper;
 import org.jclouds.collect.Memoized;
@@ -107,7 +107,7 @@ public class VirtualMachineToNodeMetadata implements Function<VirtualMachine, No
                      .put(VirtualMachineProperties.ProvisioningState.UNRECOGNIZED, NodeMetadata.Status.UNRECOGNIZED)
                      .build(), NodeMetadata.Status.UNRECOGNIZED);
 
-   private static final Function<VirtualMachineStatus.PowerState, NodeMetadata.Status> POWERSTATE_TO_NODESTATUS = Functions
+   private static final Function<PowerState, NodeMetadata.Status> POWERSTATE_TO_NODESTATUS = Functions
          .forMap(
                ImmutableMap.<PowerState, NodeMetadata.Status> builder()
                      .put(PowerState.RUNNING, NodeMetadata.Status.RUNNING)
@@ -161,9 +161,9 @@ public class VirtualMachineToNodeMetadata implements Function<VirtualMachine, No
          if (instanceDetails != null && instanceDetails.powerState() != null) {
             builder.status(POWERSTATE_TO_NODESTATUS.apply(instanceDetails.powerState()));
             builder.backendStatus(Joiner.on(',').join(
-                  transform(instanceDetails.statuses(), new Function<VirtualMachineStatus, String>() {
+                  transform(instanceDetails.statuses(), new Function<Status, String>() {
                      @Override
-                     public String apply(VirtualMachineStatus input) {
+                     public String apply(Status input) {
                         return input.code();
                      }
                   })));

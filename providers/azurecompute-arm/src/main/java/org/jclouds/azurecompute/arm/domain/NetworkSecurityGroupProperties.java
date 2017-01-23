@@ -17,6 +17,7 @@
 package org.jclouds.azurecompute.arm.domain;
 
 import com.google.auto.value.AutoValue;
+
 import org.jclouds.javax.annotation.Nullable;
 import org.jclouds.json.SerializedNames;
 import com.google.common.collect.ImmutableList;
@@ -24,7 +25,7 @@ import com.google.common.collect.ImmutableList;
 import java.util.List;
 
 @AutoValue
-public abstract class NetworkSecurityGroupProperties {
+public abstract class NetworkSecurityGroupProperties implements Provisionable {
 
    @Nullable
    public abstract List<NetworkSecurityRule> securityRules();
@@ -60,6 +61,8 @@ public abstract class NetworkSecurityGroupProperties {
               .provisioningState(provisioningState)
               .build();
    }
+   
+   public abstract Builder toBuilder();
 
    public static Builder builder() {
       return new AutoValue_NetworkSecurityGroupProperties.Builder();

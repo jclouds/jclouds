@@ -20,7 +20,9 @@ import static org.jclouds.compute.options.TemplateOptions.Builder.authorizePubli
 
 import java.util.Properties;
 
+import org.jclouds.azurecompute.arm.AzureComputeApi;
 import org.jclouds.azurecompute.arm.AzureComputeProviderMetadata;
+import org.jclouds.azurecompute.arm.domain.ResourceGroup;
 import org.jclouds.azurecompute.arm.internal.AzureLiveTestUtils;
 import org.jclouds.compute.domain.Template;
 import org.jclouds.compute.domain.TemplateBuilder;
@@ -33,9 +35,13 @@ import org.jclouds.scriptbuilder.domain.Statements;
 import org.jclouds.scriptbuilder.statements.java.InstallJDK;
 import org.jclouds.scriptbuilder.statements.login.AdminAccess;
 import org.jclouds.sshj.config.SshjSshClientModule;
+import org.testng.annotations.AfterClass;
 import org.testng.annotations.Test;
 
+import com.google.common.cache.LoadingCache;
+import com.google.inject.Key;
 import com.google.inject.Module;
+import com.google.inject.TypeLiteral;
 
 /**
  * Live tests for the {@link org.jclouds.compute.ComputeService} integration.
@@ -43,8 +49,34 @@ import com.google.inject.Module;
 @Test(groups = "live", singleThreaded = true, testName = "AzureComputeServiceLiveTest")
 public class AzureComputeServiceLiveTest extends BaseComputeServiceLiveTest {
    
+   private LoadingCache<String, ResourceGroup> resourceGroupMap;
+
    public AzureComputeServiceLiveTest() {
       provider = "azurecompute-arm";
+   }
+
+   @Override
+   public void initializeContext() {
+      super.initializeContext();
+      resourceGroupMap = context.utils().injector()
+            .getInstance(Key.get(new TypeLiteral<LoadingCache<String, ResourceGroup>>() {
+            }));
+   }
+
+   @Override
+   @AfterClass(groups = "live", alwaysRun = true)
+   protected void tearDownContext() {
+      try {
+         if (template != null) {
+            ResourceGroup rg = resourceGroupMap.getIfPresent(template.getLocation().getId());
+            if (rg != null) {
+               AzureComputeApi api = view.unwrapApi(AzureComputeApi.class);
+               api.getResourceGroupApi().delete(rg.name());
+            }
+         }
+      } finally {
+         super.tearDownContext();
+      }
    }
 
    @Override

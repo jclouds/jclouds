@@ -111,6 +111,8 @@ public abstract class VMImage {
       return new AutoValue_VMImage.Builder().globallyAvailable(false).custom(true);
    }
    
+   public abstract Builder toBuilder();
+   
    @AutoValue.Builder
    public abstract static class Builder {
       

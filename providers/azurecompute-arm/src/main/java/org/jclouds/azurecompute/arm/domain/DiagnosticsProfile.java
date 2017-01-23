@@ -17,6 +17,7 @@
 package org.jclouds.azurecompute.arm.domain;
 
 import com.google.auto.value.AutoValue;
+
 import org.jclouds.javax.annotation.Nullable;
 import org.jclouds.json.SerializedNames;
 
@@ -38,6 +39,8 @@ public abstract class DiagnosticsProfile {
                  .storageUri(storageUri)
                  .build();
       }
+      
+      public abstract Builder toBuilder();
 
       public static Builder builder() {
          return new AutoValue_DiagnosticsProfile_BootDiagnostics.Builder();
@@ -56,6 +59,9 @@ public abstract class DiagnosticsProfile {
    public static DiagnosticsProfile create(final BootDiagnostics  bootDiagnostics) {
       return builder().bootDiagnostics(bootDiagnostics).build();
    }
+   
+   public abstract Builder toBuilder();
+   
    public static Builder builder() {
       return new AutoValue_DiagnosticsProfile.Builder();
    }

@@ -16,12 +16,16 @@
  */
 package org.jclouds.azurecompute.arm.domain;
 
+import java.util.List;
+
 import com.google.auto.value.AutoValue;
+import com.google.common.collect.ImmutableList;
+
 import org.jclouds.javax.annotation.Nullable;
 import org.jclouds.json.SerializedNames;
 
 @AutoValue
-public abstract class IpConfigurationProperties {
+public abstract class IpConfigurationProperties implements Provisionable {
 
    @Nullable
    public abstract String provisioningState();
@@ -37,9 +41,18 @@ public abstract class IpConfigurationProperties {
 
    @Nullable
    public abstract IdReference publicIPAddress();
+   
+   @Nullable
+   public abstract List<IdReference> loadBalancerBackendAddressPools();
+   
+   @Nullable
+   public abstract List<IdReference> loadBalancerInboundNatRules();
 
-   @SerializedNames({"provisioningState", "privateIPAddress", "privateIPAllocationMethod", "subnet", "publicIPAddress"})
-   public static IpConfigurationProperties create(final String provisioningState, final String privateIPAddress, final String privateIPAllocationMethod, final IdReference subnet, final IdReference publicIPAddress) {
+   @SerializedNames({ "provisioningState", "privateIPAddress", "privateIPAllocationMethod", "subnet",
+         "publicIPAddress", "loadBalancerBackendAddressPools", "loadBalancerInboundNatRules" })
+   public static IpConfigurationProperties create(final String provisioningState, final String privateIPAddress,
+         final String privateIPAllocationMethod, final IdReference subnet, final IdReference publicIPAddress,
+         List<IdReference> loadBalancerBackendAddressPools, List<IdReference> loadBalancerInboundNatRules) {
 
       return builder()
               .provisioningState(provisioningState)
@@ -47,8 +60,12 @@ public abstract class IpConfigurationProperties {
               .privateIPAllocationMethod(privateIPAllocationMethod)
               .subnet(subnet)
               .publicIPAddress(publicIPAddress)
+              .loadBalancerBackendAddressPools(loadBalancerBackendAddressPools)
+              .loadBalancerInboundNatRules(loadBalancerInboundNatRules)
               .build();
    }
+   
+   public abstract Builder toBuilder();
 
    public static Builder builder() {
       return new AutoValue_IpConfigurationProperties.Builder();
@@ -65,8 +82,24 @@ public abstract class IpConfigurationProperties {
       public abstract Builder subnet(IdReference subnet);
 
       public abstract Builder publicIPAddress(IdReference publicIPAddress);
+      
+      public abstract Builder loadBalancerBackendAddressPools(List<IdReference> loadBalancerBackendAddressPools);
+      
+      public abstract Builder loadBalancerInboundNatRules(List<IdReference> loadBalancerInboundNatRules);
+      
+      abstract List<IdReference> loadBalancerBackendAddressPools();
+      
+      abstract List<IdReference> loadBalancerInboundNatRules();
+      
+      abstract IpConfigurationProperties autoBuild();
 
-      public abstract IpConfigurationProperties build();
+      public IpConfigurationProperties build() {
+         loadBalancerBackendAddressPools(loadBalancerBackendAddressPools() != null ? ImmutableList
+               .copyOf(loadBalancerBackendAddressPools()) : null);
+         loadBalancerInboundNatRules(loadBalancerInboundNatRules() != null ? ImmutableList
+               .copyOf(loadBalancerInboundNatRules()) : null);
+         return autoBuild();
+      }
    }
 }
 

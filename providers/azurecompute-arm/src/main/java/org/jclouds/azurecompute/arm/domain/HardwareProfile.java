@@ -17,6 +17,7 @@
 package org.jclouds.azurecompute.arm.domain;
 
 import com.google.auto.value.AutoValue;
+
 import org.jclouds.json.SerializedNames;
 
 @AutoValue
@@ -31,6 +32,8 @@ public abstract class HardwareProfile {
    public static HardwareProfile create(final String vmSize) {
       return builder().vmSize(vmSize).build();
    }
+   
+   public abstract Builder toBuilder();
 
    public static Builder builder() {
       return new AutoValue_HardwareProfile.Builder();

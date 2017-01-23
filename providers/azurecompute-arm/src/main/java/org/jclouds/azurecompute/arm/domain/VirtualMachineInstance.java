@@ -21,10 +21,8 @@ import static com.google.common.collect.Iterables.getFirst;
 import static com.google.common.collect.Iterables.transform;
 import static org.jclouds.util.Predicates2.startsWith;
 
-import java.util.Date;
 import java.util.List;
 
-import org.jclouds.azurecompute.arm.domain.VirtualMachineInstance.VirtualMachineStatus.PowerState;
 import org.jclouds.azurecompute.arm.domain.VirtualMachineProperties.ProvisioningState;
 import org.jclouds.azurecompute.arm.util.GetEnumValue;
 import org.jclouds.javax.annotation.Nullable;
@@ -40,42 +38,19 @@ import com.google.common.collect.ImmutableList;
 @AutoValue
 public abstract class VirtualMachineInstance {
 
-   @com.google.auto.value.AutoValue
-   public abstract static class VirtualMachineStatus {
-      
-      public static final String PROVISIONING_STATE_PREFIX = "ProvisioningState/";
-      public static final String POWER_STATE_PREFIX = "PowerState/";
-      
-      public enum PowerState {
-         RUNNING,
-         STOPPED,
-         UNRECOGNIZED;
+   public static final String PROVISIONING_STATE_PREFIX = "ProvisioningState/";
+   public static final String POWER_STATE_PREFIX = "PowerState/";
+   
+   public enum PowerState {
+      RUNNING,
+      STOPPED,
+      UNRECOGNIZED;
 
-         public static PowerState fromValue(final String text) {
-            return (PowerState) GetEnumValue.fromValueOrDefault(text, PowerState.UNRECOGNIZED);
-         }
-      }
-
-      @Nullable
-      public abstract String code();
-
-      @Nullable
-      public abstract String level();
-
-      @Nullable
-      public abstract String displayStatus();
-
-      @Nullable
-      public abstract Date time();
-
-      @SerializedNames({"code", "level", "displayStatus", "time"})
-      public static VirtualMachineStatus create(final String code, final String level, final String displayStatus,
-                                                final Date time) {
-
-         return new AutoValue_VirtualMachineInstance_VirtualMachineStatus(code, level, displayStatus, time);
+      public static PowerState fromValue(final String text) {
+         return (PowerState) GetEnumValue.fromValueOrDefault(text, PowerState.UNRECOGNIZED);
       }
    }
-
+   
    @Nullable
    public abstract String platformUpdateDomain();
 
@@ -83,19 +58,19 @@ public abstract class VirtualMachineInstance {
    public abstract String platformFaultDomain();
 
    @Nullable
-   public abstract List<VirtualMachineStatus> statuses();
+   public abstract List<Status> statuses();
    
    public ProvisioningState provisioningState() {
-      return ProvisioningState.fromValue(firstStatus(VirtualMachineStatus.PROVISIONING_STATE_PREFIX));
+      return ProvisioningState.fromValue(firstStatus(PROVISIONING_STATE_PREFIX));
    }
    
    public PowerState powerState() {
-      return PowerState.fromValue(firstStatus(VirtualMachineStatus.POWER_STATE_PREFIX));
+      return PowerState.fromValue(firstStatus(POWER_STATE_PREFIX));
    }
    
    private String firstStatus(final String type) {
-      return getFirst(transform(filter(transform(statuses(), new Function<VirtualMachineStatus, String>() {
-         @Override public String apply(VirtualMachineStatus input) {
+      return getFirst(transform(filter(transform(statuses(), new Function<Status, String>() {
+         @Override public String apply(Status input) {
             return input.code();
          }
       }), startsWith(type)), new Function<String, String>() {
@@ -108,7 +83,7 @@ public abstract class VirtualMachineInstance {
 
    @SerializedNames({"platformUpdateDomain", "platformFaultDomain", "statuses"})
    public static VirtualMachineInstance create(final String platformUpdateDomain, final String platformFaultDomain,
-                                               final List<VirtualMachineStatus> statuses) {
+                                               final List<Status> statuses) {
 
       return new AutoValue_VirtualMachineInstance(platformUpdateDomain, platformFaultDomain, statuses == null ? null : ImmutableList.copyOf(statuses));
    }

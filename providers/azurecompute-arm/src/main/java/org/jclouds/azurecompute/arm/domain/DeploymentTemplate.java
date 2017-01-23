@@ -19,6 +19,7 @@ package org.jclouds.azurecompute.arm.domain;
 import com.google.auto.value.AutoValue;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
+
 import org.jclouds.javax.annotation.Nullable;
 
 import java.util.List;
@@ -89,6 +90,8 @@ public abstract class DeploymentTemplate {
 
       return builder.build();
    }
+   
+   public abstract Builder toBuilder();
 
    public static Builder builder() {
       return new AutoValue_DeploymentTemplate.Builder();

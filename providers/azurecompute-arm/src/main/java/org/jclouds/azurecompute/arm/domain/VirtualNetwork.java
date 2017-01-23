@@ -24,6 +24,7 @@ import com.google.common.collect.ImmutableList;
 
 import com.google.auto.value.AutoValue;
 import com.google.common.collect.ImmutableMap;
+
 import org.jclouds.javax.annotation.Nullable;
 import org.jclouds.json.SerializedNames;
 
@@ -42,7 +43,7 @@ public abstract class VirtualNetwork {
    }
 
    @AutoValue
-   public abstract static class VirtualNetworkProperties {
+   public abstract static class VirtualNetworkProperties implements Provisionable {
 
       @Nullable
       public abstract String provisioningState();
@@ -65,6 +66,8 @@ public abstract class VirtualNetwork {
                  .subnets(subnets != null ? copyOf(subnets) : null)
                  .build();
       }
+      
+      public abstract Builder toBuilder();
 
       public static Builder builder() {
          return new AutoValue_VirtualNetwork_VirtualNetworkProperties.Builder();

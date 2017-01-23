@@ -27,7 +27,7 @@ import com.google.common.collect.ImmutableMap;
 public abstract class ResourceGroup {
 
    @AutoValue
-   public abstract static class ResourceGroupProperties{
+   public abstract static class ResourceGroupProperties implements Provisionable {
       @Nullable
       public abstract String provisioningState();
 

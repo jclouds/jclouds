@@ -21,16 +21,23 @@ import static org.jclouds.compute.options.TemplateOptions.Builder.authorizePubli
 import java.util.Map;
 import java.util.Properties;
 
+import org.jclouds.azurecompute.arm.AzureComputeApi;
 import org.jclouds.azurecompute.arm.AzureComputeProviderMetadata;
+import org.jclouds.azurecompute.arm.domain.ResourceGroup;
 import org.jclouds.azurecompute.arm.internal.AzureLiveTestUtils;
 import org.jclouds.compute.ComputeTestUtils;
 import org.jclouds.compute.domain.TemplateBuilder;
 import org.jclouds.compute.extensions.internal.BaseImageExtensionLiveTest;
+import org.jclouds.domain.Location;
 import org.jclouds.providers.ProviderMetadata;
 import org.jclouds.sshj.config.SshjSshClientModule;
+import org.testng.annotations.AfterClass;
 import org.testng.annotations.Test;
 
+import com.google.common.cache.LoadingCache;
+import com.google.inject.Key;
 import com.google.inject.Module;
+import com.google.inject.TypeLiteral;
 
 /**
  * Live tests for the {@link org.jclouds.compute.extensions.ImageExtension}
@@ -38,12 +45,37 @@ import com.google.inject.Module;
  */
 @Test(groups = "live", singleThreaded = true, testName = "AzureComputeImageExtensionLiveTest")
 public class AzureComputeImageExtensionLiveTest extends BaseImageExtensionLiveTest {
+   
+   public static final String NAME_PREFIX = "%s";
+   
+   private LoadingCache<String, ResourceGroup> resourceGroupMap;
 
    public AzureComputeImageExtensionLiveTest() {
       provider = "azurecompute-arm";
    }
 
-   public static String NAME_PREFIX = "%s";
+   @Override
+   public void initializeContext() {
+      super.initializeContext();
+      resourceGroupMap = context.utils().injector()
+            .getInstance(Key.get(new TypeLiteral<LoadingCache<String, ResourceGroup>>() {
+            }));
+   }
+
+   @Override
+   @AfterClass(groups = "live", alwaysRun = true)
+   protected void tearDownContext() {
+      try {
+         Location location = getNodeTemplate().build().getLocation();
+         ResourceGroup rg = resourceGroupMap.getIfPresent(location.getId());
+         if (rg != null) {
+            AzureComputeApi api = view.unwrapApi(AzureComputeApi.class);
+            api.getResourceGroupApi().delete(rg.name());
+         }
+      } finally {
+         super.tearDownContext();
+      }
+   }
 
    @Override
    protected Module getSshModule() {

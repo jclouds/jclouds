@@ -21,6 +21,7 @@ import static com.google.common.collect.ImmutableList.copyOf;
 import java.util.List;
 
 import com.google.common.collect.ImmutableList;
+
 import org.jclouds.javax.annotation.Nullable;
 import com.google.auto.value.AutoValue;
 import org.jclouds.json.SerializedNames;
@@ -40,7 +41,7 @@ public abstract class Subnet {
    }
 
    @AutoValue
-   public abstract static class SubnetProperties {
+   public abstract static class SubnetProperties implements Provisionable {
 
       @Nullable
       public abstract String provisioningState();
@@ -59,6 +60,8 @@ public abstract class Subnet {
                  .ipConfigurations(ipConfigurations != null ? copyOf(ipConfigurations) : null)
                  .build();
       }
+      
+      public abstract Builder toBuilder();
 
       public static Builder builder() {
          return new AutoValue_Subnet_SubnetProperties.Builder();

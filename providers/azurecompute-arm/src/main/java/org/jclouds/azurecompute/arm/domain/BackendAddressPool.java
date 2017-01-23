@@ -16,22 +16,28 @@
  */
 package org.jclouds.azurecompute.arm.domain;
 
-import com.google.auto.value.AutoValue;
+import org.jclouds.javax.annotation.Nullable;
 import org.jclouds.json.SerializedNames;
 
-/**
- * The virtual machine id
- */
-@AutoValue
-public abstract class AvailabilitySetVirtualMachine {
+import com.google.auto.value.AutoValue;
 
-   /**
-    * The id of the virtual machine.
-    */
+@AutoValue
+public abstract class BackendAddressPool {
+   public abstract String name();
+
+   @Nullable
    public abstract String id();
 
-   @SerializedNames({"id"})
-   public static AvailabilitySetVirtualMachine create(final String id) {
-      return new AutoValue_AvailabilitySetVirtualMachine(id);
+   @Nullable
+   public abstract BackendAddressPoolProperties properties();
+
+   @Nullable
+   public abstract String etag();
+
+   @SerializedNames({ "name", "id", "properties", "etag" })
+   public static BackendAddressPool create(final String name, final String id,
+         final BackendAddressPoolProperties properties, final String etag) {
+      return new AutoValue_BackendAddressPool(name, id, properties, etag);
    }
 }
+

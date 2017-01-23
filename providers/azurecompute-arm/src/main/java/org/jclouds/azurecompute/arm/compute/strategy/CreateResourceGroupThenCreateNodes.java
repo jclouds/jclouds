@@ -38,7 +38,9 @@ import javax.inject.Singleton;
 import org.jclouds.Constants;
 import org.jclouds.azurecompute.arm.AzureComputeApi;
 import org.jclouds.azurecompute.arm.compute.domain.RegionAndIdAndIngressRules;
+import org.jclouds.azurecompute.arm.compute.functions.TemplateToAvailabilitySet;
 import org.jclouds.azurecompute.arm.compute.options.AzureTemplateOptions;
+import org.jclouds.azurecompute.arm.domain.AvailabilitySet;
 import org.jclouds.azurecompute.arm.domain.NetworkSecurityGroup;
 import org.jclouds.azurecompute.arm.domain.RegionAndId;
 import org.jclouds.azurecompute.arm.domain.ResourceGroup;
@@ -84,6 +86,7 @@ public class CreateResourceGroupThenCreateNodes extends CreateNodesWithGroupEnco
    private final String defaultVnetAddressPrefix;
    private final String defaultSubnetAddressPrefix;
    private final Predicate<URI> storageAccountCreated;
+   private final TemplateToAvailabilitySet templateToAvailabilitySet;
 
    @Inject
    protected CreateResourceGroupThenCreateNodes(
@@ -95,7 +98,8 @@ public class CreateResourceGroupThenCreateNodes extends CreateNodesWithGroupEnco
          AzureComputeApi api, @Named(DEFAULT_VNET_ADDRESS_SPACE_PREFIX) String defaultVnetAddressPrefix,
          @Named(DEFAULT_SUBNET_ADDRESS_PREFIX) String defaultSubnetAddressPrefix,
          LoadingCache<RegionAndIdAndIngressRules, String> securityGroupMap,
-         LoadingCache<String, ResourceGroup> resourceGroupMap, @Named("STORAGE") Predicate<URI> storageAccountCreated) {
+         LoadingCache<String, ResourceGroup> resourceGroupMap, @Named("STORAGE") Predicate<URI> storageAccountCreated,
+         TemplateToAvailabilitySet templateToAvailabilitySet) {
       super(addNodeWithGroupStrategy, listNodesStrategy, namingConvention, userExecutor,
             customizeNodeAndAddToGoodMapOrPutExceptionIntoBadMapFactory);
       this.api = checkNotNull(api, "api cannot be null");
@@ -105,6 +109,7 @@ public class CreateResourceGroupThenCreateNodes extends CreateNodesWithGroupEnco
       this.defaultVnetAddressPrefix = defaultVnetAddressPrefix;
       this.defaultSubnetAddressPrefix = defaultSubnetAddressPrefix;
       this.storageAccountCreated = storageAccountCreated;
+      this.templateToAvailabilitySet = templateToAvailabilitySet;
    }
 
    @Override
@@ -129,6 +134,7 @@ public class CreateResourceGroupThenCreateNodes extends CreateNodesWithGroupEnco
 
       getOrCreateVirtualNetworkWithSubnet(location, options, azureGroupName);
       configureSecurityGroupForOptions(group, azureGroupName, template.getLocation(), options);
+      configureAvailabilitySetForTemplate(template);
 
       StorageService storageService = getOrCreateStorageService(group, azureGroupName, location, template.getImage());
       options.blob(storageService.storageServiceProperties().primaryEndpoints().get("blob"));
@@ -215,6 +221,14 @@ public class CreateResourceGroupThenCreateNodes extends CreateNodesWithGroupEnco
          // this will create if not yet exists.
          String securityGroupId = securityGroupMap.getUnchecked(regionAndIdAndIngressRules);
          options.securityGroups(securityGroupId);
+      }
+   }
+   
+   private void configureAvailabilitySetForTemplate(Template template) {
+      AvailabilitySet availabilitySet = templateToAvailabilitySet.apply(template);
+      if (availabilitySet != null) {
+         logger.debug(">> configuring nodes in availability set [%s]", availabilitySet.name());
+         template.getOptions().as(AzureTemplateOptions.class).availabilitySet(availabilitySet);
       }
    }
 

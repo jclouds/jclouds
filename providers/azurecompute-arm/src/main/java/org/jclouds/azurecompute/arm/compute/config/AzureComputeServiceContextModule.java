@@ -51,6 +51,7 @@ import org.jclouds.azurecompute.arm.compute.strategy.CreateResourceGroupThenCrea
 import org.jclouds.azurecompute.arm.domain.Location;
 import org.jclouds.azurecompute.arm.domain.NetworkSecurityGroup;
 import org.jclouds.azurecompute.arm.domain.NetworkSecurityRule;
+import org.jclouds.azurecompute.arm.domain.Provisionable;
 import org.jclouds.azurecompute.arm.domain.PublicIPAddress;
 import org.jclouds.azurecompute.arm.domain.ResourceDefinition;
 import org.jclouds.azurecompute.arm.domain.ResourceGroup;
@@ -58,7 +59,7 @@ import org.jclouds.azurecompute.arm.domain.VMHardware;
 import org.jclouds.azurecompute.arm.domain.VMImage;
 import org.jclouds.azurecompute.arm.domain.VirtualMachine;
 import org.jclouds.azurecompute.arm.domain.VirtualMachineInstance;
-import org.jclouds.azurecompute.arm.domain.VirtualMachineInstance.VirtualMachineStatus.PowerState;
+import org.jclouds.azurecompute.arm.domain.VirtualMachineInstance.PowerState;
 import org.jclouds.azurecompute.arm.functions.ParseJobStatus;
 import org.jclouds.compute.ComputeService;
 import org.jclouds.compute.ComputeServiceAdapter;
@@ -79,6 +80,7 @@ import org.jclouds.net.domain.IpPermission;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Function;
 import com.google.common.base.Predicate;
+import com.google.common.base.Supplier;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
@@ -185,15 +187,20 @@ public class AzureComputeServiceContextModule extends
 
    @Provides
    protected PublicIpAvailablePredicateFactory providePublicIpAvailablePredicate(final AzureComputeApi api,
-         @Named(OPERATION_TIMEOUT) Integer operationTimeout, PollPeriod pollPeriod) {
-      return new PublicIpAvailablePredicateFactory(api, operationTimeout, pollPeriod.pollInitialPeriod,
-            pollPeriod.pollMaxPeriod);
+         Predicate<Supplier<Provisionable>> resourceAvailable) {
+      return new PublicIpAvailablePredicateFactory(api, resourceAvailable);
    }
 
    @Provides
    protected SecurityGroupAvailablePredicateFactory provideSecurityGroupAvailablePredicate(final AzureComputeApi api,
+         Predicate<Supplier<Provisionable>> resourceAvailable) {
+      return new SecurityGroupAvailablePredicateFactory(api, resourceAvailable);
+   }
+
+   @Provides
+   protected Predicate<Supplier<Provisionable>> provideResourceAvailablePredicate(final AzureComputeApi api,
          @Named(OPERATION_TIMEOUT) Integer operationTimeout, PollPeriod pollPeriod) {
-      return new SecurityGroupAvailablePredicateFactory(api, operationTimeout, pollPeriod.pollInitialPeriod,
+      return retry(new ResourceInStatusPredicate("Succeeded"), operationTimeout, pollPeriod.pollInitialPeriod,
             pollPeriod.pollMaxPeriod);
    }
 
@@ -274,64 +281,74 @@ public class AzureComputeServiceContextModule extends
          }, timeout, period, maxPeriod);
       }
    }
+   
+   public static class ResourceInStatusPredicate implements Predicate<Supplier<Provisionable>> {
+      private final String expectedStatus;
+
+      ResourceInStatusPredicate(String expectedStatus) {
+         this.expectedStatus = checkNotNull(expectedStatus, "expectedStatus cannot be null");
+      }
+
+      @Override
+      public boolean apply(Supplier<Provisionable> provisionableSupplier) {
+         checkNotNull(provisionableSupplier, "provisionableSupplier supplier cannot be null");
+         Provisionable provisionable = provisionableSupplier.get();
+         return provisionable != null && provisionable.provisioningState().equalsIgnoreCase(expectedStatus);
+      }
+   }
 
    public static class PublicIpAvailablePredicateFactory {
-
       private final AzureComputeApi api;
-      private final long timeout;
-      private final long period;
-      private final long maxPeriod;
+      private final Predicate<Supplier<Provisionable>> resourceAvailable;
 
-      PublicIpAvailablePredicateFactory(final AzureComputeApi api, final long timeout, final long period,
-            final long maxPeriod) {
+      PublicIpAvailablePredicateFactory(final AzureComputeApi api, Predicate<Supplier<Provisionable>> resourceAvailable) {
          this.api = checkNotNull(api, "api cannot be null");
-         this.timeout = timeout;
-         this.period = period;
-         this.maxPeriod = maxPeriod;
+         this.resourceAvailable = resourceAvailable;
       }
 
       public Predicate<String> create(final String azureGroup) {
-         return retry(new Predicate<String>() {
+         checkNotNull(azureGroup, "azureGroup cannot be null");
+         return new Predicate<String>() {
             @Override
             public boolean apply(final String name) {
                checkNotNull(name, "name cannot be null");
-               PublicIPAddress publicIp = api.getPublicIPAddressApi(azureGroup).get(name);
-               if (publicIp == null) {
-                  return false;
-               }
-               return publicIp.properties().provisioningState().equalsIgnoreCase("Succeeded");
+               return resourceAvailable.apply(new Supplier<Provisionable>() {
+                  @Override
+                  public Provisionable get() {
+                     PublicIPAddress publicIp = api.getPublicIPAddressApi(azureGroup).get(name);
+                     return publicIp == null ? null : publicIp.properties();
+                  }
+               });
             }
-         }, timeout, period, maxPeriod);
+         };
       }
    }
 
    public static class SecurityGroupAvailablePredicateFactory {
       private final AzureComputeApi api;
-      private final long timeout;
-      private final long period;
-      private final long maxPeriod;
+      private final Predicate<Supplier<Provisionable>> resourceAvailable;
 
-      SecurityGroupAvailablePredicateFactory(final AzureComputeApi api, final long timeout, final long period,
-            final long maxPeriod) {
+      SecurityGroupAvailablePredicateFactory(final AzureComputeApi api,
+            Predicate<Supplier<Provisionable>> resourceAvailable) {
          this.api = checkNotNull(api, "api cannot be null");
-         this.timeout = timeout;
-         this.period = period;
-         this.maxPeriod = maxPeriod;
+         this.resourceAvailable = resourceAvailable;
       }
 
       public Predicate<String> create(final String resourceGroup) {
          checkNotNull(resourceGroup, "resourceGroup cannot be null");
-         return retry(new Predicate<String>() {
+         return new Predicate<String>() {
             @Override
             public boolean apply(final String name) {
                checkNotNull(name, "name cannot be null");
-               NetworkSecurityGroup sg = api.getNetworkSecurityGroupApi(resourceGroup).get(name);
-               if (sg == null) {
-                  return false;
-               }
-               return sg.properties().provisioningState().equalsIgnoreCase("Succeeded");
+               return resourceAvailable.apply(new Supplier<Provisionable>() {
+                  @Override
+                  public Provisionable get() {
+                     NetworkSecurityGroup sg = api.getNetworkSecurityGroupApi(resourceGroup).get(name);
+                     return sg == null ? null : sg.properties();
+                  }
+               });
             }
-         }, timeout, period, maxPeriod);
+         };
       }
    }
 

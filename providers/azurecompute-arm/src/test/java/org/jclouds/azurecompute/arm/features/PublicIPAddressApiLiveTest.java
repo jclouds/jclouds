@@ -16,7 +16,12 @@
  */
 package org.jclouds.azurecompute.arm.features;
 
-import java.net.URI;
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertFalse;
+import static org.testng.Assert.assertNotNull;
+import static org.testng.Assert.assertNull;
+import static org.testng.Assert.assertTrue;
+
 import java.util.List;
 import java.util.Map;
 
@@ -24,23 +29,15 @@ import org.jclouds.azurecompute.arm.domain.PublicIPAddress;
 import org.jclouds.azurecompute.arm.domain.PublicIPAddressProperties;
 import org.jclouds.azurecompute.arm.internal.BaseAzureComputeApiLiveTest;
 import org.jclouds.util.Predicates2;
-import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 import com.google.common.base.Predicate;
 import com.google.common.collect.ImmutableMap;
 
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertFalse;
-import static org.testng.Assert.assertNotNull;
-import static org.testng.Assert.assertNull;
-import static org.testng.Assert.assertTrue;
-
 @Test(groups = "live", singleThreaded = true)
 public class PublicIPAddressApiLiveTest extends BaseAzureComputeApiLiveTest {
 
-   private String resourceGroupName;
    private final String publicIpAddressName = "myipaddress";
    private String subscriptionid;
 
@@ -48,17 +45,8 @@ public class PublicIPAddressApiLiveTest extends BaseAzureComputeApiLiveTest {
    @Override
    public void setup() {
       super.setup();
-      resourceGroupName = String.format("rg-%s-%s", this.getClass().getSimpleName().toLowerCase(), System.getProperty("user.name"));
-      assertNotNull(createResourceGroup(resourceGroupName));
+      createTestResourceGroup();
       subscriptionid = getSubscriptionId();
-   }
-
-   @AfterClass
-   @Override
-   protected void tearDown() {
-      super.tearDown();
-      URI uri = deleteResourceGroup(resourceGroupName);
-      assertResourceDeleted(uri);
    }
 
    @Test(groups = "live")

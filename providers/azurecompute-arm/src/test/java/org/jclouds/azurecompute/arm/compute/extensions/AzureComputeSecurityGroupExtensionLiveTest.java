@@ -29,8 +29,8 @@ import java.util.Properties;
 import java.util.Set;
 import java.util.concurrent.ExecutionException;
 
+import org.jclouds.azurecompute.arm.AzureComputeApi;
 import org.jclouds.azurecompute.arm.AzureComputeProviderMetadata;
-import org.jclouds.azurecompute.arm.compute.strategy.CleanupResources;
 import org.jclouds.azurecompute.arm.domain.ResourceGroup;
 import org.jclouds.azurecompute.arm.internal.AzureLiveTestUtils;
 import org.jclouds.compute.ComputeService;
@@ -60,7 +60,6 @@ public class AzureComputeSecurityGroupExtensionLiveTest extends BaseSecurityGrou
 
    private LoadingCache<String, ResourceGroup> resourceGroupMap;
    private ResourceGroup testResourceGroup;
-   private CleanupResources cleanupResources;
 
    public AzureComputeSecurityGroupExtensionLiveTest() {
       provider = "azurecompute-arm";
@@ -72,8 +71,7 @@ public class AzureComputeSecurityGroupExtensionLiveTest extends BaseSecurityGrou
       resourceGroupMap = context.utils().injector()
             .getInstance(Key.get(new TypeLiteral<LoadingCache<String, ResourceGroup>>() {
             }));
-      cleanupResources = context.utils().injector().getInstance(CleanupResources.class);
-      createResourceGroupIfMissing();
+      createResourceGroup();
    }
 
    @Test(groups = { "integration", "live" }, dependsOnMethods = "testCreateSecurityGroup")
@@ -118,8 +116,11 @@ public class AzureComputeSecurityGroupExtensionLiveTest extends BaseSecurityGrou
    @AfterClass(groups = { "integration", "live" })
    @Override
    protected void tearDownContext() {
-      super.tearDownContext();
-      cleanupResources.deleteResourceGroupIfEmpty(testResourceGroup.name());
+      try {
+         view.unwrapApi(AzureComputeApi.class).getResourceGroupApi().delete(testResourceGroup.name());
+      } finally {
+         super.tearDownContext();
+      }
    }
 
    @Override
@@ -135,7 +136,7 @@ public class AzureComputeSecurityGroupExtensionLiveTest extends BaseSecurityGrou
       return AzureComputeProviderMetadata.builder().build();
    }
 
-   private void createResourceGroupIfMissing() {
+   private void createResourceGroup() {
       Location location = getNodeTemplate().getLocation();
       testResourceGroup = resourceGroupMap.getUnchecked(location.getId());
    }

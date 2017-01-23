@@ -39,7 +39,9 @@ import java.net.URI;
 import java.util.Properties;
 
 import org.jclouds.azurecompute.arm.domain.Region;
+import org.jclouds.azurecompute.arm.features.AvailabilitySetApi;
 import org.jclouds.azurecompute.arm.features.DeploymentApi;
+import org.jclouds.azurecompute.arm.features.LoadBalancerApi;
 import org.jclouds.azurecompute.arm.features.LocationApi;
 import org.jclouds.azurecompute.arm.features.NetworkInterfaceCardApi;
 import org.jclouds.azurecompute.arm.features.NetworkSecurityGroupApi;
@@ -108,6 +110,8 @@ public class AzureComputeProviderMetadata extends BaseProviderMetadata {
       properties.put(API_VERSION_PREFIX + VirtualNetworkApi.class.getSimpleName(), "2015-06-15");
       properties.put(API_VERSION_PREFIX + VMSizeApi.class.getSimpleName(), "2015-06-15");
       properties.put(API_VERSION_PREFIX + VirtualMachineApi.class.getSimpleName(), "2015-06-15");
+      properties.put(API_VERSION_PREFIX + LoadBalancerApi.class.getSimpleName(), "2016-03-30");
+      properties.put(API_VERSION_PREFIX + AvailabilitySetApi.class.getSimpleName(), "2016-03-30");
       properties.put(API_VERSION_PREFIX + "GetVirtualMachine", "2016-03-30");
       properties.put(API_VERSION_PREFIX + "GetVirtualMachineInstance", "2016-03-30");
       properties.put(API_VERSION_PREFIX + "CreateVirtualMachine", "2016-03-30");

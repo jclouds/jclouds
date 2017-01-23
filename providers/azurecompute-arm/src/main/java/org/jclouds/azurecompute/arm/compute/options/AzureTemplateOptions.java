@@ -16,6 +16,7 @@
  */
 package org.jclouds.azurecompute.arm.compute.options;
 
+import org.jclouds.azurecompute.arm.domain.AvailabilitySet;
 import org.jclouds.compute.options.TemplateOptions;
 
 import com.google.common.base.Objects;
@@ -30,6 +31,8 @@ public class AzureTemplateOptions extends TemplateOptions implements Cloneable {
    private String virtualNetworkName;
    private String subnetId;
    private String blob;
+   private AvailabilitySet availabilitySet;
+   private String availabilitySetName;
 
    /**
     * Sets the virtual network name
@@ -54,10 +57,30 @@ public class AzureTemplateOptions extends TemplateOptions implements Cloneable {
       this.blob = blob;
       return this;
    }
+   
+   /**
+    * Sets the availability set where the nodes will be configured. If it does
+    * not exist jclouds will create a new one with the given configuration.
+    */
+   public AzureTemplateOptions availabilitySet(AvailabilitySet availabilitySet) {
+      this.availabilitySet = availabilitySet;
+      return this;
+   }
+
+   /**
+    * Sets the availability set where the nodes will be configured. The
+    * availability set must exist.
+    */
+   public AzureTemplateOptions availabilitySet(String availabilitySetName) {
+      this.availabilitySetName = availabilitySetName;
+      return this;
+   }
 
    public String getVirtualNetworkName() { return virtualNetworkName; }
    public String getSubnetId() { return subnetId; }
    public String getBlob() { return blob; }
+   public AvailabilitySet getAvailabilitySet() { return availabilitySet; }
+   public String getAvailabilitySetName() { return availabilitySetName; }
 
 
    @Override
@@ -75,12 +98,15 @@ public class AzureTemplateOptions extends TemplateOptions implements Cloneable {
          eTo.virtualNetworkName(virtualNetworkName);
          eTo.subnetId(subnetId);
          eTo.blob(blob);
+         eTo.availabilitySet(availabilitySet);
+         eTo.availabilitySet(availabilitySetName);
       }
    }
 
    @Override
    public int hashCode() {
-      return Objects.hashCode(super.hashCode(), virtualNetworkName, subnetId, blob);
+      return Objects.hashCode(super.hashCode(), virtualNetworkName, subnetId, blob, availabilitySet,
+            availabilitySetName);
    }
 
    @Override
@@ -98,7 +124,9 @@ public class AzureTemplateOptions extends TemplateOptions implements Cloneable {
       return super.equals(other)
             && equal(this.virtualNetworkName, other.virtualNetworkName)
             && equal(this.subnetId, other.subnetId)
-            && equal(this.blob, other.blob);
+            && equal(this.blob, other.blob)
+            && equal(this.availabilitySet, other.availabilitySet)
+            && equal(this.availabilitySetName, other.availabilitySetName);
    }
 
    @Override
@@ -113,7 +141,7 @@ public class AzureTemplateOptions extends TemplateOptions implements Cloneable {
    public static class Builder {
 
       /**
-       * @see AzureTemplateOptions#virtualNetworkName
+       * @see AzureTemplateOptions#virtualNetworkName(String)
        */
       public static AzureTemplateOptions virtualNetworkName(String virtualNetworkName) {
          AzureTemplateOptions options = new AzureTemplateOptions();
@@ -121,7 +149,7 @@ public class AzureTemplateOptions extends TemplateOptions implements Cloneable {
       }
 
       /**
-       * @see AzureTemplateOptions#subnetId
+       * @see AzureTemplateOptions#subnetId(String)
        */
       public static AzureTemplateOptions subnetId(String subnetId) {
          AzureTemplateOptions options = new AzureTemplateOptions();
@@ -129,11 +157,27 @@ public class AzureTemplateOptions extends TemplateOptions implements Cloneable {
       }
 
       /**
-       * @see AzureTemplateOptions#blob
+       * @see AzureTemplateOptions#blob(String)
        */
       public static AzureTemplateOptions blob(String blob) {
          AzureTemplateOptions options = new AzureTemplateOptions();
          return options.blob(blob);
+      }
+      
+      /**
+       * @see AzureTemplateOptions#availabilitySet(AvailabilitySet)
+       */
+      public static AzureTemplateOptions availabilitySet(AvailabilitySet availabilitySet) {
+         AzureTemplateOptions options = new AzureTemplateOptions();
+         return options.availabilitySet(availabilitySet);
+      }
+      
+      /**
+       * @see AzureTemplateOptions#availabilitySet(String)
+       */
+      public static AzureTemplateOptions availabilitySet(String availabilitySetName) {
+         AzureTemplateOptions options = new AzureTemplateOptions();
+         return options.availabilitySet(availabilitySetName);
       }
    }
 }

@@ -35,6 +35,7 @@ import org.jclouds.azurecompute.arm.domain.NetworkInterfaceCard;
 import org.jclouds.azurecompute.arm.domain.NetworkInterfaceCardProperties;
 import org.jclouds.azurecompute.arm.filters.ApiVersionFilter;
 import org.jclouds.azurecompute.arm.functions.URIParser;
+import org.jclouds.javax.annotation.Nullable;
 import org.jclouds.oauth.v2.filters.OAuthFilter;
 import org.jclouds.rest.annotations.Fallback;
 import org.jclouds.rest.annotations.MapBinder;
@@ -60,9 +61,9 @@ public interface NetworkInterfaceCardApi {
    @MapBinder(BindToJsonPayload.class)
    @PUT
    NetworkInterfaceCard createOrUpdate(@PathParam("networkinterfacecardname") String networkinterfacecardname,
-                                                           @PayloadParam("location") String location,
-                                                           @PayloadParam("properties") NetworkInterfaceCardProperties properties,
-                                                           @PayloadParam("tags") Map<String, String> tags);
+         @PayloadParam("location") String location,
+         @PayloadParam("properties") NetworkInterfaceCardProperties properties,
+         @Nullable @PayloadParam("tags") Map<String, String> tags);
 
    @Named("networkinterfacecard:get")
    @Path("/{networkinterfacecardname}")

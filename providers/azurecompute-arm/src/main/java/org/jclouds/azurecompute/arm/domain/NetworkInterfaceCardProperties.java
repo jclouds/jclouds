@@ -24,7 +24,7 @@ import org.jclouds.json.SerializedNames;
 import java.util.List;
 
 @AutoValue
-public abstract class NetworkInterfaceCardProperties {
+public abstract class NetworkInterfaceCardProperties implements Provisionable {
 
    @Nullable
    public abstract String provisioningState();
@@ -52,6 +52,8 @@ public abstract class NetworkInterfaceCardProperties {
 
       return builder.build();
    }
+   
+   public abstract Builder toBuilder();
 
    public static Builder builder() {
 

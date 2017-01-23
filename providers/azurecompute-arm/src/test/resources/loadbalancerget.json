@@ -1,0 +1,54 @@
+{
+  "name": "testLoadBalancer",
+  "id": "/subscriptions/SUBSCRIPTIONID/resourceGroups/rg-loadbalancerapilivetest-nacx/providers/Microsoft.Network/loadBalancers/testLoadBalancer",
+  "etag": "W/\"b2cfb60e-4ada-4546-a336-dd71e574ead6\"",
+  "type": "Microsoft.Network/loadBalancers",
+  "location": "westeurope",
+  "properties": {
+    "provisioningState": "Succeeded",
+    "resourceGuid": "0d53b121-95cc-47b5-bbc6-0391f5991028",
+    "frontendIPConfigurations": [
+      {
+        "name": "ipConfigs",
+        "id": "/subscriptions/SUBSCRIPTIONID/resourceGroups/rg-loadbalancerapilivetest-nacx/providers/Microsoft.Network/loadBalancers/testLoadBalancer/frontendIPConfigurations/ipConfigs",
+        "etag": "W/\"b2cfb60e-4ada-4546-a336-dd71e574ead6\"",
+        "properties": {
+          "provisioningState": "Succeeded",
+          "privateIPAllocationMethod": "Dynamic",
+          "publicIPAddress": {
+            "id": "/subscriptions/SUBSCRIPTIONID/resourceGroups/rg-loadbalancerapilivetest-nacx/providers/Microsoft.Network/publicIPAddresses/Ip4LoadBalancer"
+          },
+          "loadBalancingRules": [
+            {
+              "id": "/subscriptions/SUBSCRIPTIONID/resourceGroups/rg-loadbalancerapilivetest-nacx/providers/Microsoft.Network/loadBalancers/testLoadBalancer/loadBalancingRules/lbRule1"
+            }
+          ]
+        }
+      }
+    ],
+    "backendAddressPools": [],
+    "loadBalancingRules": [
+      {
+        "name": "lbRule1",
+        "id": "/subscriptions/SUBSCRIPTIONID/resourceGroups/rg-loadbalancerapilivetest-nacx/providers/Microsoft.Network/loadBalancers/testLoadBalancer/loadBalancingRules/lbRule1",
+        "etag": "W/\"b2cfb60e-4ada-4546-a336-dd71e574ead6\"",
+        "properties": {
+          "provisioningState": "Succeeded",
+          "frontendIPConfiguration": {
+            "id": "/subscriptions/SUBSCRIPTIONID/resourceGroups/rg-loadbalancerapilivetest-nacx/providers/Microsoft.Network/loadBalancers/testLoadBalancer/frontendIPConfigurations/ipConfigs"
+          },
+          "frontendPort": 80,
+          "backendPort": 80,
+          "enableFloatingIP": false,
+          "idleTimeoutInMinutes": 4,
+          "protocol": "Tcp",
+          "loadDistribution": "Default"
+        }
+      }
+    ],
+    "probes": [],
+    "inboundNatRules": [],
+    "outboundNatRules": [],
+    "inboundNatPools": []
+  }
+}
