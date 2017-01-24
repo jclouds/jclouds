@@ -16,8 +16,6 @@
  */
 package org.jclouds.packet.domain.internal;
 
-import static com.google.common.base.Preconditions.checkNotNull;
-
 import java.util.Iterator;
 import java.util.List;
 
@@ -29,6 +27,8 @@ import org.jclouds.packet.domain.Href;
 import com.google.auto.value.AutoValue;
 import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableList;
+
+import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Base class for all collections that return paginated results.
@@ -57,7 +57,7 @@ public abstract class PaginatedCollection<T> extends IterableWithMarker<T> {
 
    protected PaginatedCollection(List<T> items, Meta meta) {
       this.items = ImmutableList.copyOf(checkNotNull(items, "items cannot be null"));
-      this.meta = checkNotNull(meta, "meta cannot be null");
+      this.meta = meta;
    }
 
    public List<T> items() {
@@ -66,7 +66,7 @@ public abstract class PaginatedCollection<T> extends IterableWithMarker<T> {
 
    public Meta meta() {
       return meta;
-   }
+   }  
 
    @Override
    public Iterator<T> iterator() {
@@ -75,7 +75,7 @@ public abstract class PaginatedCollection<T> extends IterableWithMarker<T> {
 
    @Override
    public Optional<Object> nextMarker() {
-      if (meta.next() == null) {
+      if (meta == null || meta.next() == null) {
          return Optional.absent();
       }
       return Optional.fromNullable((Object) meta.next());

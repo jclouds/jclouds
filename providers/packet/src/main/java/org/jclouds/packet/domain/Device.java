@@ -70,7 +70,7 @@ public abstract class Device {
     public abstract List<IpAddress> ipAddresses();
     public abstract List<ProvisioningEvent> provisioningEvents();
     public abstract Plan plan();
-    public abstract String rootPassword();
+    @Nullable public abstract String rootPassword();
     public abstract String userdata();
     public abstract String href();
 
