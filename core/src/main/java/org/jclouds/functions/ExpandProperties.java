@@ -36,7 +36,7 @@ import com.google.common.collect.Maps;
 public class ExpandProperties implements Function<Properties, Properties> {
 
    // Matches variables in a string such as ${foo.bar}
-   private static final Pattern VAR = Pattern.compile("\\$\\{[^\\}]+}");
+   private static final Pattern VAR = Pattern.compile("\\$\\{[^\\}]+\\}");
 
    @Override
    public Properties apply(final Properties properties) {
