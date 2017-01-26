@@ -1,0 +1,46 @@
+{
+  "value": [
+    {
+      "id": "/subscriptions/610bba05-d7a7-4567-96af-48ecbd09453b/resourceGroups/test/providers/Microsoft.Compute/virtualMachines/test",
+      "name": "test",
+      "type": "Microsoft.Compute/virtualMachines",
+      "location": "northeurope"
+    },
+    {
+      "id": "/subscriptions/610bba05-d7a7-4567-96af-48ecbd09453b/resourceGroups/test/providers/Microsoft.Network/networkInterfaces/test641",
+      "name": "test641",
+      "type": "Microsoft.Network/networkInterfaces",
+      "location": "northeurope"
+    },
+    {
+      "id": "/subscriptions/610bba05-d7a7-4567-96af-48ecbd09453b/resourceGroups/test/providers/Microsoft.Network/networkSecurityGroups/test-nsg",
+      "name": "test-nsg",
+      "type": "Microsoft.Network/networkSecurityGroups",
+      "location": "northeurope"
+    },
+    {
+      "id": "/subscriptions/610bba05-d7a7-4567-96af-48ecbd09453b/resourceGroups/test/providers/Microsoft.Network/publicIPAddresses/test-ip",
+      "name": "test-ip",
+      "type": "Microsoft.Network/publicIPAddresses",
+      "location": "northeurope"
+    },
+    {
+      "id": "/subscriptions/610bba05-d7a7-4567-96af-48ecbd09453b/resourceGroups/test/providers/Microsoft.Network/virtualNetworks/test-vnet",
+      "name": "test-vnet",
+      "type": "Microsoft.Network/virtualNetworks",
+      "location": "northeurope"
+    },
+    {
+      "id": "/subscriptions/610bba05-d7a7-4567-96af-48ecbd09453b/resourceGroups/test/providers/Microsoft.Storage/storageAccounts/testjclo",
+      "name": "testjclo",
+      "type": "Microsoft.Storage/storageAccounts",
+      "sku": {
+        "name": "Premium_LRS",
+        "tier": "Premium"
+      },
+      "kind": "Storage",
+      "location": "northeurope",
+      "tags": {}
+    }
+  ]
+}

@@ -16,12 +16,6 @@
  */
 package org.jclouds.azurecompute.arm.compute.strategy;
 
-import static com.google.common.base.Predicates.notNull;
-import static com.google.common.collect.Iterables.filter;
-import static com.google.common.collect.Iterables.transform;
-import static org.jclouds.azurecompute.arm.config.AzureComputeProperties.TIMEOUT_RESOURCE_DELETED;
-import static org.jclouds.util.Closeables2.closeQuietly;
-
 import java.net.URI;
 import java.util.List;
 
@@ -52,6 +46,12 @@ import com.google.common.base.Splitter;
 import com.google.common.cache.LoadingCache;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
+
+import static com.google.common.base.Predicates.notNull;
+import static com.google.common.collect.Iterables.filter;
+import static com.google.common.collect.Iterables.transform;
+import static org.jclouds.azurecompute.arm.config.AzureComputeProperties.TIMEOUT_RESOURCE_DELETED;
+import static org.jclouds.util.Closeables2.closeQuietly;
 
 @Singleton
 public class CleanupResources {
@@ -165,10 +165,7 @@ public class CleanupResources {
 
    public boolean deleteResourceGroupIfEmpty(String group) {
       boolean deleted = false;
-      if (api.getVirtualMachineApi(group).list().isEmpty() && api.getStorageAccountApi(group).list().isEmpty()
-            && api.getNetworkInterfaceCardApi(group).list().isEmpty()
-            && api.getPublicIPAddressApi(group).list().isEmpty()
-            && api.getNetworkSecurityGroupApi(group).list().isEmpty()) {
+      if (api.getResourceGroupApi().resources(group).isEmpty()) {
          logger.debug(">> the resource group %s is empty. Deleting...", group);
          deleted = resourceDeleted.apply(api.getResourceGroupApi().delete(group));
       }

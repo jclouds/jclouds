@@ -16,20 +16,22 @@
  */
 package org.jclouds.azurecompute.arm.features;
 
-import static com.google.common.collect.Iterables.isEmpty;
-import static com.google.common.collect.Iterables.size;
-import static org.testng.Assert.assertNotNull;
-
 import java.net.URI;
 import java.util.List;
-import com.google.common.collect.ImmutableMap;
 
+import org.jclouds.azurecompute.arm.domain.Resource;
 import org.jclouds.azurecompute.arm.domain.ResourceGroup;
 import org.jclouds.azurecompute.arm.internal.BaseAzureComputeApiMockTest;
 import org.testng.annotations.Test;
-import static org.testng.Assert.assertTrue;
-import static org.testng.Assert.assertNull;
+
+import com.google.common.collect.ImmutableMap;
+
+import static com.google.common.collect.Iterables.isEmpty;
+import static com.google.common.collect.Iterables.size;
 import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertNotNull;
+import static org.testng.Assert.assertNull;
+import static org.testng.Assert.assertTrue;
 
 @Test(groups = "unit", testName = "ResourceGroupApiMockTest", singleThreaded = true)
 public class ResourceGroupApiMockTest extends BaseAzureComputeApiMockTest {
@@ -145,6 +147,27 @@ public class ResourceGroupApiMockTest extends BaseAzureComputeApiMockTest {
       assertNull(uri);
       assertEquals(server.getRequestCount(), 1);
       assertSent(server, "DELETE", requestUrl + "/jcloudstest" + version);
+   }
+
+   public void testListResourceGroupResources() throws InterruptedException {
+      server.enqueue(jsonResponse("/resourcegroup-resources.json"));
+
+      List<Resource> resources = api.getResourceGroupApi().resources("jcloudstest");
+
+      assertEquals(size(resources), 6);
+
+      assertSent(server, "GET", requestUrl + "/jcloudstest/resources" + version);
+   }
+
+   public void testListResourceGroupResourcesReturns404() throws InterruptedException {
+      server.enqueue(response404());
+
+      List<Resource> resources = api.getResourceGroupApi().resources("jcloudstest");
+
+      assertTrue(isEmpty(resources));
+
+      assertEquals(server.getRequestCount(), 1);
+      assertSent(server, "GET", requestUrl + "/jcloudstest/resources" + version);
    }
 
 }

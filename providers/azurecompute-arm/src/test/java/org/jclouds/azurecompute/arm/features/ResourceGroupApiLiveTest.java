@@ -19,6 +19,7 @@ package org.jclouds.azurecompute.arm.features;
 import java.net.URI;
 import java.util.List;
 
+import org.jclouds.azurecompute.arm.domain.Resource;
 import org.jclouds.azurecompute.arm.domain.ResourceGroup;
 import org.jclouds.azurecompute.arm.internal.BaseAzureComputeApiLiveTest;
 import org.testng.annotations.AfterClass;
@@ -43,6 +44,15 @@ public class ResourceGroupApiLiveTest extends BaseAzureComputeApiLiveTest {
    }
 
    @Test(dependsOnMethods = "testCreate")
+   public void testResources() {
+      List<Resource> resources = api().resources(RESOURCE_GROUP_NAME);
+      assertTrue(resources.isEmpty());
+      for (Resource resource : resources) {
+         assertNotNull(resource);
+      }
+   }
+   
+   @Test(dependsOnMethods = "testCreate")
    public void testList() {
       final List<ResourceGroup> resourceGroups = api().list();
 
@@ -66,7 +76,6 @@ public class ResourceGroupApiLiveTest extends BaseAzureComputeApiLiveTest {
    }
 
    public void testCreate() {
-
       final ResourceGroup resourceGroup = api().create(RESOURCE_GROUP_NAME, LOCATION, null);
       assertEquals(resourceGroup.name(), RESOURCE_GROUP_NAME);
       assertEquals(resourceGroup.location(), LOCATION);

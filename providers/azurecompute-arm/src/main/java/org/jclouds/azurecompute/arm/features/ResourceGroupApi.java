@@ -15,6 +15,7 @@
  * limitations under the License.
  */
 package org.jclouds.azurecompute.arm.features;
+
 import java.io.Closeable;
 import java.net.URI;
 import java.util.List;
@@ -32,6 +33,7 @@ import javax.ws.rs.core.MediaType;
 
 import org.jclouds.Fallbacks.EmptyListOnNotFoundOr404;
 import org.jclouds.Fallbacks.NullOnNotFoundOr404;
+import org.jclouds.azurecompute.arm.domain.Resource;
 import org.jclouds.azurecompute.arm.domain.ResourceGroup;
 import org.jclouds.azurecompute.arm.filters.ApiVersionFilter;
 import org.jclouds.azurecompute.arm.functions.URIParser;
@@ -67,7 +69,7 @@ public interface ResourceGroupApi extends Closeable{
    @Path("/{name}")
    @Produces(MediaType.APPLICATION_JSON)
    @MapBinder(BindToJsonPayload.class)
-   ResourceGroup create(@PathParam("name") String name, @PayloadParam("location") String location, @Nullable @PayloadParam("tags")Map<String, String> tags);
+   ResourceGroup create(@PathParam("name") String name, @PayloadParam("location") String location, @Nullable @PayloadParam("tags") Map<String, String> tags);
 
    @Named("resourcegroup:get")
    @GET
@@ -76,12 +78,19 @@ public interface ResourceGroupApi extends Closeable{
    @Nullable
    ResourceGroup get(@PathParam("name") String name);
 
+   @Named("resourcegroup:resources")
+   @GET
+   @Path("/{name}/resources")
+   @SelectJson("value")
+   @Fallback(EmptyListOnNotFoundOr404.class)
+   List<Resource> resources(@PathParam("name") String name);
+
    @Named("resourcegroup:update")
    @PATCH
    @Produces(MediaType.APPLICATION_JSON)
    @Path("/{name}")
    @MapBinder(BindToJsonPayload.class)
-   ResourceGroup update(@PathParam("name") String name, @Nullable @PayloadParam("tags")Map<String, String> tags);
+   ResourceGroup update(@PathParam("name") String name, @Nullable @PayloadParam("tags") Map<String, String> tags);
 
    @Named("resourcegroup:delete")
    @DELETE
