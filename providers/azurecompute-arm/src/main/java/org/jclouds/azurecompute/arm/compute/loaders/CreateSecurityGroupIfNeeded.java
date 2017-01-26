@@ -29,7 +29,6 @@ import javax.inject.Singleton;
 
 import org.jclouds.azurecompute.arm.AzureComputeApi;
 import org.jclouds.azurecompute.arm.compute.domain.RegionAndIdAndIngressRules;
-import org.jclouds.azurecompute.arm.compute.functions.LocationToResourceGroupName;
 import org.jclouds.azurecompute.arm.domain.NetworkSecurityGroup;
 import org.jclouds.azurecompute.arm.domain.NetworkSecurityGroupProperties;
 import org.jclouds.azurecompute.arm.domain.NetworkSecurityRule;
@@ -37,10 +36,12 @@ import org.jclouds.azurecompute.arm.domain.NetworkSecurityRuleProperties;
 import org.jclouds.azurecompute.arm.domain.NetworkSecurityRuleProperties.Access;
 import org.jclouds.azurecompute.arm.domain.NetworkSecurityRuleProperties.Direction;
 import org.jclouds.azurecompute.arm.domain.NetworkSecurityRuleProperties.Protocol;
+import org.jclouds.azurecompute.arm.domain.ResourceGroup;
 import org.jclouds.compute.reference.ComputeServiceConstants;
 import org.jclouds.logging.Logger;
 
 import com.google.common.cache.CacheLoader;
+import com.google.common.cache.LoadingCache;
 
 @Singleton
 public class CreateSecurityGroupIfNeeded extends CacheLoader<RegionAndIdAndIngressRules, String> {
@@ -49,18 +50,18 @@ public class CreateSecurityGroupIfNeeded extends CacheLoader<RegionAndIdAndIngre
    protected Logger logger = Logger.NULL;
 
    private final AzureComputeApi api;
-   private final LocationToResourceGroupName locationToResourceGroupName;
+   private final LoadingCache<String, ResourceGroup> resourceGroupMap;
 
    @Inject
-   CreateSecurityGroupIfNeeded(AzureComputeApi api, LocationToResourceGroupName locationToResourceGroupName) {
+   CreateSecurityGroupIfNeeded(AzureComputeApi api, LoadingCache<String, ResourceGroup> resourceGroupMap) {
       this.api = api;
-      this.locationToResourceGroupName = locationToResourceGroupName;
+      this.resourceGroupMap = resourceGroupMap;
    }
 
    @Override
    public String load(RegionAndIdAndIngressRules key) throws Exception {
-      String resourceGroup = locationToResourceGroupName.apply(key.region());
-      return createSecurityGroup(key.region(), resourceGroup, key.id(), key.inboundPorts());
+      ResourceGroup resourceGroup = resourceGroupMap.getUnchecked(key.region());
+      return createSecurityGroup(key.region(), resourceGroup.name(), key.id(), key.inboundPorts());
    }
 
    private String createSecurityGroup(String location, String resourceGroup, String name, int[] inboundPorts) {

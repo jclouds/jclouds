@@ -18,7 +18,6 @@ package org.jclouds.azurecompute.arm.compute.extensions;
 
 import static com.google.common.collect.Iterables.get;
 import static com.google.common.collect.Iterables.getOnlyElement;
-import static java.util.logging.Logger.getAnonymousLogger;
 import static org.jclouds.compute.options.TemplateOptions.Builder.inboundPorts;
 import static org.jclouds.compute.options.TemplateOptions.Builder.securityGroups;
 import static org.jclouds.compute.predicates.NodePredicates.inGroup;
@@ -26,14 +25,12 @@ import static org.jclouds.net.domain.IpProtocol.TCP;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertTrue;
 
-import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 import java.util.concurrent.ExecutionException;
 
-import org.jclouds.azurecompute.arm.AzureComputeApi;
 import org.jclouds.azurecompute.arm.AzureComputeProviderMetadata;
-import org.jclouds.azurecompute.arm.compute.functions.LocationToResourceGroupName;
+import org.jclouds.azurecompute.arm.compute.strategy.CleanupResources;
 import org.jclouds.azurecompute.arm.domain.ResourceGroup;
 import org.jclouds.azurecompute.arm.internal.AzureLiveTestUtils;
 import org.jclouds.compute.ComputeService;
@@ -50,7 +47,9 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 import com.google.common.base.Optional;
-import com.google.common.collect.ImmutableMap;
+import com.google.common.cache.LoadingCache;
+import com.google.inject.Key;
+import com.google.inject.TypeLiteral;
 
 /**
  * Live test for AzureCompute
@@ -59,10 +58,9 @@ import com.google.common.collect.ImmutableMap;
 @Test(groups = "live", singleThreaded = true, testName = "AzureComputeSecurityGroupExtensionLiveTest")
 public class AzureComputeSecurityGroupExtensionLiveTest extends BaseSecurityGroupExtensionLiveTest {
 
-   private AzureComputeApi api;
-   private LocationToResourceGroupName locationToResourceGroupName;
-   private String resourceGroupName;
+   private LoadingCache<String, ResourceGroup> resourceGroupMap;
    private ResourceGroup testResourceGroup;
+   private CleanupResources cleanupResources;
 
    public AzureComputeSecurityGroupExtensionLiveTest() {
       provider = "azurecompute-arm";
@@ -71,8 +69,10 @@ public class AzureComputeSecurityGroupExtensionLiveTest extends BaseSecurityGrou
    @BeforeClass(groups = { "integration", "live" })
    public void setupContext() {
       super.setupContext();
-      api = context.utils().injector().getInstance(AzureComputeApi.class);
-      locationToResourceGroupName = context.utils().injector().getInstance(LocationToResourceGroupName.class);
+      resourceGroupMap = context.utils().injector()
+            .getInstance(Key.get(new TypeLiteral<LoadingCache<String, ResourceGroup>>() {
+            }));
+      cleanupResources = context.utils().injector().getInstance(CleanupResources.class);
       createResourceGroupIfMissing();
    }
 
@@ -119,12 +119,7 @@ public class AzureComputeSecurityGroupExtensionLiveTest extends BaseSecurityGrou
    @Override
    protected void tearDownContext() {
       super.tearDownContext();
-      if (testResourceGroup != null) {
-         // Cleanup the resource group we created for the tests
-         getAnonymousLogger().info(
-               "deleting resource group " + testResourceGroup.name() + " for the security group live tests...");
-         api.getResourceGroupApi().delete(testResourceGroup.name());
-      }
+      cleanupResources.deleteResourceGroupIfEmpty(testResourceGroup.name());
    }
 
    @Override
@@ -142,13 +137,6 @@ public class AzureComputeSecurityGroupExtensionLiveTest extends BaseSecurityGrou
 
    private void createResourceGroupIfMissing() {
       Location location = getNodeTemplate().getLocation();
-      resourceGroupName = locationToResourceGroupName.apply(location.getId());
-      ResourceGroup resourceGroupInLocation = api.getResourceGroupApi().get(resourceGroupName);
-      if (resourceGroupInLocation == null) {
-         getAnonymousLogger().info(
-               "creating resource group " + resourceGroupName + " for the security group live tests...");
-         final Map<String, String> tags = ImmutableMap.of("description", "AzureComputeSecurityGroupExtensionLiveTest");
-         testResourceGroup = api.getResourceGroupApi().create(resourceGroupName, location.getId(), tags);
-      }
+      testResourceGroup = resourceGroupMap.getUnchecked(location.getId());
    }
 }

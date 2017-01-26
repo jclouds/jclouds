@@ -32,13 +32,13 @@ import javax.annotation.Resource;
 import org.jclouds.Constants;
 import org.jclouds.azurecompute.arm.AzureComputeApi;
 import org.jclouds.azurecompute.arm.compute.config.AzureComputeServiceContextModule.VirtualMachineInStatePredicateFactory;
-import org.jclouds.azurecompute.arm.compute.functions.LocationToResourceGroupName;
 import org.jclouds.azurecompute.arm.compute.functions.ResourceDefinitionToCustomImage;
+import org.jclouds.azurecompute.arm.compute.strategy.CleanupResources;
 import org.jclouds.azurecompute.arm.domain.RegionAndId;
 import org.jclouds.azurecompute.arm.domain.ResourceDefinition;
+import org.jclouds.azurecompute.arm.domain.ResourceGroup;
 import org.jclouds.azurecompute.arm.domain.StorageServiceKeys;
 import org.jclouds.azurecompute.arm.domain.VMImage;
-import org.jclouds.azurecompute.arm.functions.CleanupResources;
 import org.jclouds.azurecompute.arm.util.BlobHelper;
 import org.jclouds.compute.domain.CloneImageTemplate;
 import org.jclouds.compute.domain.Image;
@@ -49,6 +49,7 @@ import org.jclouds.compute.reference.ComputeServiceConstants;
 import org.jclouds.logging.Logger;
 
 import com.google.common.base.Predicate;
+import com.google.common.cache.LoadingCache;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.inject.Inject;
@@ -68,7 +69,7 @@ public class AzureComputeImageExtension implements ImageExtension {
    private final VirtualMachineInStatePredicateFactory nodeSuspendedPredicate;
    private final ResourceDefinitionToCustomImage.Factory resourceDefinitionToImage;
    private final CleanupResources cleanupResources;
-   private final LocationToResourceGroupName locationToResourceGroupName;
+   private final LoadingCache<String, ResourceGroup> resourceGroupMap;
 
    @Inject
    AzureComputeImageExtension(AzureComputeApi api,
@@ -76,14 +77,14 @@ public class AzureComputeImageExtension implements ImageExtension {
          @Named(TIMEOUT_NODE_SUSPENDED) VirtualMachineInStatePredicateFactory nodeSuspendedPredicate,
          @Named(Constants.PROPERTY_USER_THREADS) ListeningExecutorService userExecutor,
          ResourceDefinitionToCustomImage.Factory resourceDefinitionToImage, CleanupResources cleanupResources,
-         LocationToResourceGroupName locationToResourceGroupName) {
+         LoadingCache<String, ResourceGroup> resourceGroupMap) {
       this.api = api;
       this.imageAvailablePredicate = imageAvailablePredicate;
       this.nodeSuspendedPredicate = nodeSuspendedPredicate;
       this.userExecutor = userExecutor;
       this.resourceDefinitionToImage = resourceDefinitionToImage;
       this.cleanupResources = cleanupResources;
-      this.locationToResourceGroupName = locationToResourceGroupName;
+      this.resourceGroupMap = resourceGroupMap;
    }
 
    @Override
@@ -94,23 +95,25 @@ public class AzureComputeImageExtension implements ImageExtension {
    @Override
    public ListenableFuture<Image> createImage(ImageTemplate template) {
       final CloneImageTemplate cloneTemplate = (CloneImageTemplate) template;
-      
+
       final RegionAndId regionAndId = RegionAndId.fromSlashEncoded(cloneTemplate.getSourceNodeId());
-      final String group = locationToResourceGroupName.apply(regionAndId.region());
+      ResourceGroup resourceGroup = resourceGroupMap.getUnchecked(regionAndId.region());
+      final String resourceGroupName = resourceGroup.name();
 
       logger.debug(">> stopping node %s...", regionAndId.slashEncode());
-      api.getVirtualMachineApi(group).stop(regionAndId.id());
-      checkState(nodeSuspendedPredicate.create(group).apply(regionAndId.id()),
+      api.getVirtualMachineApi(resourceGroupName).stop(regionAndId.id());
+      checkState(nodeSuspendedPredicate.create(resourceGroupName).apply(regionAndId.id()),
             "Node %s was not suspended within the configured time limit", regionAndId.slashEncode());
 
       return userExecutor.submit(new Callable<Image>() {
          @Override
          public Image call() throws Exception {
             logger.debug(">> generalizing virtal machine %s...", regionAndId.id());
-            api.getVirtualMachineApi(group).generalize(regionAndId.id());
+            api.getVirtualMachineApi(resourceGroupName).generalize(regionAndId.id());
 
             logger.debug(">> capturing virtual machine %s to container %s...", regionAndId.id(), CONTAINER_NAME);
-            URI uri = api.getVirtualMachineApi(group).capture(regionAndId.id(), cloneTemplate.getName(), CONTAINER_NAME);
+            URI uri = api.getVirtualMachineApi(resourceGroupName)
+                  .capture(regionAndId.id(), cloneTemplate.getName(), CONTAINER_NAME);
             checkState(uri != null && imageAvailablePredicate.apply(uri),
                   "Image %s was not created within the configured time limit", cloneTemplate.getName());
 

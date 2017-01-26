@@ -31,8 +31,8 @@ import javax.inject.Provider;
 import javax.inject.Singleton;
 
 import org.jclouds.Constants;
-import org.jclouds.azurecompute.arm.compute.functions.LocationToResourceGroupName;
-import org.jclouds.azurecompute.arm.functions.CleanupResources;
+import org.jclouds.azurecompute.arm.compute.strategy.CleanupResources;
+import org.jclouds.azurecompute.arm.domain.ResourceGroup;
 import org.jclouds.collect.Memoized;
 import org.jclouds.compute.ComputeServiceContext;
 import org.jclouds.compute.callables.RunScriptOnNode;
@@ -62,6 +62,7 @@ import org.jclouds.scriptbuilder.functions.InitAdminAccess;
 import com.google.common.base.Optional;
 import com.google.common.base.Predicate;
 import com.google.common.base.Supplier;
+import com.google.common.cache.LoadingCache;
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.util.concurrent.ListeningExecutorService;
@@ -69,7 +70,7 @@ import com.google.common.util.concurrent.ListeningExecutorService;
 @Singleton
 public class AzureComputeService extends BaseComputeService {
    private final CleanupResources cleanupResources;
-   private final LocationToResourceGroupName locationToResourceGroupName;
+   private final LoadingCache<String, ResourceGroup> resourceGroupMap;
 
    @Inject
    protected AzureComputeService(ComputeServiceContext context, Map<String, Credentials> credentialStore,
@@ -88,15 +89,14 @@ public class AzureComputeService extends BaseComputeService {
          PersistNodeCredentials persistNodeCredentials, Timeouts timeouts,
          @Named(Constants.PROPERTY_USER_THREADS) ListeningExecutorService userExecutor,
          CleanupResources cleanupResources, Optional<ImageExtension> imageExtension,
-         Optional<SecurityGroupExtension> securityGroupExtension,
-         LocationToResourceGroupName locationToResourceGroupName) {
+         Optional<SecurityGroupExtension> securityGroupExtension, LoadingCache<String, ResourceGroup> resourceGroupMap) {
       super(context, credentialStore, images, sizes, locations, listNodesStrategy, getImageStrategy,
             getNodeMetadataStrategy, runNodesAndAddToSetStrategy, rebootNodeStrategy, destroyNodeStrategy,
             startNodeStrategy, stopNodeStrategy, templateBuilderProvider, templateOptionsProvider, nodeRunning,
             nodeTerminated, nodeSuspended, initScriptRunnerFactory, initAdminAccess, runScriptOnNodeFactory,
             persistNodeCredentials, timeouts, userExecutor, imageExtension, securityGroupExtension);
       this.cleanupResources = cleanupResources;
-      this.locationToResourceGroupName = locationToResourceGroupName;
+      this.resourceGroupMap = resourceGroupMap;
    }
 
    @Override
@@ -105,11 +105,11 @@ public class AzureComputeService extends BaseComputeService {
       ImmutableSet.Builder<String> resourceGroups = ImmutableSet.builder();
 
       for (NodeMetadata deadNode : deadNodes) {
-         String resourceGroup = locationToResourceGroupName.apply(deadNode.getLocation().getId());
+         ResourceGroup resourceGroup = resourceGroupMap.getUnchecked(deadNode.getLocation().getId());
 
-         resourceGroups.add(resourceGroup);
+         resourceGroups.add(resourceGroup.name());
          if (deadNode.getGroup() != null) {
-            regionGroups.put(resourceGroup, deadNode.getGroup());
+            regionGroups.put(resourceGroup.name(), deadNode.getGroup());
          }
 
          try {

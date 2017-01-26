@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jclouds.azurecompute.arm.functions;
+package org.jclouds.azurecompute.arm.compute.strategy;
 
 import static com.google.common.base.Predicates.notNull;
 import static com.google.common.collect.Iterables.filter;
@@ -31,15 +31,16 @@ import javax.inject.Named;
 import javax.inject.Singleton;
 
 import org.jclouds.azurecompute.arm.AzureComputeApi;
-import org.jclouds.azurecompute.arm.compute.functions.LocationToResourceGroupName;
 import org.jclouds.azurecompute.arm.domain.IdReference;
 import org.jclouds.azurecompute.arm.domain.IpConfiguration;
 import org.jclouds.azurecompute.arm.domain.NetworkInterfaceCard;
 import org.jclouds.azurecompute.arm.domain.NetworkSecurityGroup;
 import org.jclouds.azurecompute.arm.domain.RegionAndId;
+import org.jclouds.azurecompute.arm.domain.ResourceGroup;
 import org.jclouds.azurecompute.arm.domain.StorageServiceKeys;
 import org.jclouds.azurecompute.arm.domain.VirtualMachine;
 import org.jclouds.azurecompute.arm.features.NetworkSecurityGroupApi;
+import org.jclouds.azurecompute.arm.functions.StorageProfileToStorageAccountName;
 import org.jclouds.azurecompute.arm.util.BlobHelper;
 import org.jclouds.compute.functions.GroupNamingConvention;
 import org.jclouds.compute.reference.ComputeServiceConstants;
@@ -48,6 +49,7 @@ import org.jclouds.logging.Logger;
 import com.google.common.base.Function;
 import com.google.common.base.Predicate;
 import com.google.common.base.Splitter;
+import com.google.common.cache.LoadingCache;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 
@@ -58,40 +60,41 @@ public class CleanupResources {
    @Named(ComputeServiceConstants.COMPUTE_LOGGER)
    protected Logger logger = Logger.NULL;
 
-   protected final AzureComputeApi api;
+   private final AzureComputeApi api;
    private final Predicate<URI> resourceDeleted;
    private final StorageProfileToStorageAccountName storageProfileToStorageAccountName;
-   private final LocationToResourceGroupName locationToResourceGroupName;
+   private final LoadingCache<String, ResourceGroup> resourceGroupMap;
    private final GroupNamingConvention.Factory namingConvention;
 
    @Inject
    CleanupResources(AzureComputeApi azureComputeApi, @Named(TIMEOUT_RESOURCE_DELETED) Predicate<URI> resourceDeleted,
          StorageProfileToStorageAccountName storageProfileToStorageAccountName,
-         LocationToResourceGroupName locationToResourceGroupName, GroupNamingConvention.Factory namingConvention) {
+         LoadingCache<String, ResourceGroup> resourceGroupMap, GroupNamingConvention.Factory namingConvention) {
       this.api = azureComputeApi;
       this.resourceDeleted = resourceDeleted;
       this.storageProfileToStorageAccountName = storageProfileToStorageAccountName;
-      this.locationToResourceGroupName = locationToResourceGroupName;
+      this.resourceGroupMap = resourceGroupMap;
       this.namingConvention = namingConvention;
    }
 
    public boolean cleanupNode(final String id) {
       RegionAndId regionAndId = RegionAndId.fromSlashEncoded(id);
-      String group = locationToResourceGroupName.apply(regionAndId.region());
+      ResourceGroup resourceGroup = resourceGroupMap.getUnchecked(regionAndId.region());
+      String resourceGroupName = resourceGroup.name();
 
-      VirtualMachine virtualMachine = api.getVirtualMachineApi(group).get(regionAndId.id());
+      VirtualMachine virtualMachine = api.getVirtualMachineApi(resourceGroupName).get(regionAndId.id());
       if (virtualMachine == null) {
          return true;
       }
 
       logger.debug(">> destroying %s ...", regionAndId.slashEncode());
-      boolean vmDeleted = deleteVirtualMachine(group, virtualMachine);
+      boolean vmDeleted = deleteVirtualMachine(resourceGroupName, virtualMachine);
 
       // We don't delete the network here, as it is global to the resource
       // group. It will be deleted when the resource group is deleted
 
-      cleanupVirtualMachineNICs(group, virtualMachine);
-      cleanupVirtualMachineStorage(group, virtualMachine);
+      cleanupVirtualMachineNICs(resourceGroupName, virtualMachine);
+      cleanupVirtualMachineStorage(resourceGroupName, virtualMachine);
 
       return vmDeleted;
    }

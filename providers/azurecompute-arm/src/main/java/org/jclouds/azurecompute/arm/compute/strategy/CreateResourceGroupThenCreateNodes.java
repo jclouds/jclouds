@@ -21,7 +21,8 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Preconditions.checkState;
 import static com.google.common.collect.Iterables.getOnlyElement;
 import static org.jclouds.azurecompute.arm.compute.functions.VMImageToImage.decodeFieldsFromUniqueId;
-import static org.jclouds.util.Predicates2.retry;
+import static org.jclouds.azurecompute.arm.config.AzureComputeProperties.DEFAULT_SUBNET_ADDRESS_PREFIX;
+import static org.jclouds.azurecompute.arm.config.AzureComputeProperties.DEFAULT_VNET_ADDRESS_SPACE_PREFIX;
 
 import java.net.URI;
 import java.util.Arrays;
@@ -36,9 +37,7 @@ import javax.inject.Singleton;
 
 import org.jclouds.Constants;
 import org.jclouds.azurecompute.arm.AzureComputeApi;
-import org.jclouds.azurecompute.arm.compute.config.AzureComputeServiceContextModule;
 import org.jclouds.azurecompute.arm.compute.domain.RegionAndIdAndIngressRules;
-import org.jclouds.azurecompute.arm.compute.functions.LocationToResourceGroupName;
 import org.jclouds.azurecompute.arm.compute.options.AzureTemplateOptions;
 import org.jclouds.azurecompute.arm.domain.NetworkSecurityGroup;
 import org.jclouds.azurecompute.arm.domain.RegionAndId;
@@ -47,10 +46,8 @@ import org.jclouds.azurecompute.arm.domain.StorageService;
 import org.jclouds.azurecompute.arm.domain.Subnet;
 import org.jclouds.azurecompute.arm.domain.VMImage;
 import org.jclouds.azurecompute.arm.domain.VirtualNetwork;
-import org.jclouds.azurecompute.arm.features.ResourceGroupApi;
 import org.jclouds.azurecompute.arm.features.SubnetApi;
 import org.jclouds.azurecompute.arm.features.VirtualNetworkApi;
-import org.jclouds.azurecompute.arm.functions.ParseJobStatus;
 import org.jclouds.compute.config.CustomizationResponse;
 import org.jclouds.compute.domain.Image;
 import org.jclouds.compute.domain.NodeMetadata;
@@ -65,6 +62,7 @@ import org.jclouds.compute.strategy.impl.CreateNodesWithGroupEncodedIntoNameThen
 import org.jclouds.domain.Location;
 import org.jclouds.logging.Logger;
 
+import com.google.common.base.Optional;
 import com.google.common.base.Predicate;
 import com.google.common.base.Strings;
 import com.google.common.cache.LoadingCache;
@@ -81,9 +79,11 @@ public class CreateResourceGroupThenCreateNodes extends CreateNodesWithGroupEnco
    protected Logger logger = Logger.NULL;
 
    private final AzureComputeApi api;
-   private final AzureComputeServiceContextModule.AzureComputeConstants azureComputeConstants;
-   private final LocationToResourceGroupName locationToResourceGroupName;
    private final LoadingCache<RegionAndIdAndIngressRules, String> securityGroupMap;
+   private final LoadingCache<String, ResourceGroup> resourceGroupMap;
+   private final String defaultVnetAddressPrefix;
+   private final String defaultSubnetAddressPrefix;
+   private final Predicate<URI> storageAccountCreated;
 
    @Inject
    protected CreateResourceGroupThenCreateNodes(
@@ -92,22 +92,28 @@ public class CreateResourceGroupThenCreateNodes extends CreateNodesWithGroupEnco
          GroupNamingConvention.Factory namingConvention,
          @Named(Constants.PROPERTY_USER_THREADS) ListeningExecutorService userExecutor,
          CustomizeNodeAndAddToGoodMapOrPutExceptionIntoBadMap.Factory customizeNodeAndAddToGoodMapOrPutExceptionIntoBadMapFactory,
-         AzureComputeApi api, AzureComputeServiceContextModule.AzureComputeConstants azureComputeConstants,
-         LocationToResourceGroupName locationToResourceGroupName,
-         LoadingCache<RegionAndIdAndIngressRules, String> securityGroupMap) {
+         AzureComputeApi api, @Named(DEFAULT_VNET_ADDRESS_SPACE_PREFIX) String defaultVnetAddressPrefix,
+         @Named(DEFAULT_SUBNET_ADDRESS_PREFIX) String defaultSubnetAddressPrefix,
+         LoadingCache<RegionAndIdAndIngressRules, String> securityGroupMap,
+         LoadingCache<String, ResourceGroup> resourceGroupMap, @Named("STORAGE") Predicate<URI> storageAccountCreated) {
       super(addNodeWithGroupStrategy, listNodesStrategy, namingConvention, userExecutor,
             customizeNodeAndAddToGoodMapOrPutExceptionIntoBadMapFactory);
       this.api = checkNotNull(api, "api cannot be null");
       checkNotNull(userExecutor, "userExecutor cannot be null");
-      this.azureComputeConstants = azureComputeConstants;
-      this.locationToResourceGroupName = locationToResourceGroupName;
       this.securityGroupMap = securityGroupMap;
+      this.resourceGroupMap = resourceGroupMap;
+      this.defaultVnetAddressPrefix = defaultVnetAddressPrefix;
+      this.defaultSubnetAddressPrefix = defaultSubnetAddressPrefix;
+      this.storageAccountCreated = storageAccountCreated;
    }
 
    @Override
    public Map<?, ListenableFuture<Void>> execute(String group, int count, Template template,
          Set<NodeMetadata> goodNodes, Map<NodeMetadata, Exception> badNodes,
          Multimap<NodeMetadata, CustomizationResponse> customizationResponses) {
+
+      AzureTemplateOptions options = template.getOptions().as(AzureTemplateOptions.class);
+
       // If there is a script to be run on the node and public key
       // authentication has been configured, warn users if the private key
       // is not present
@@ -115,56 +121,39 @@ public class CreateResourceGroupThenCreateNodes extends CreateNodesWithGroupEnco
          logger.warn(">> a runScript was configured but no SSH key has been provided. "
                + "Authentication will delegate to the ssh-agent");
       }
-      String azureGroupName = locationToResourceGroupName.apply(template.getLocation().getId());
 
-      AzureTemplateOptions options = template.getOptions().as(AzureTemplateOptions.class);
-      // create resource group for jclouds group if it does not already exist
-      ResourceGroupApi resourceGroupApi = api.getResourceGroupApi();
-      ResourceGroup resourceGroup = resourceGroupApi.get(azureGroupName);
-      final String location = template.getLocation().getId();
+      // This sill create the resource group if it does not exist
+      String location = template.getLocation().getId();
+      ResourceGroup resourceGroup = resourceGroupMap.getUnchecked(location);
+      String azureGroupName = resourceGroup.name();
 
-      if (resourceGroup == null) {
-         final Map<String, String> tags = ImmutableMap.of("description", "jclouds managed VMs");
-         resourceGroupApi.create(azureGroupName, location, tags).name();
-      }
-
-      String vnetName = azureGroupName + "virtualnetwork";
-      String subnetName = azureGroupName + "subnet";
-
-      if (options.getVirtualNetworkName() != null) {
-         vnetName = options.getVirtualNetworkName();
-      }
-
-      this.getOrCreateVirtualNetworkWithSubnet(vnetName, subnetName, location, options, azureGroupName);
+      getOrCreateVirtualNetworkWithSubnet(location, options, azureGroupName);
       configureSecurityGroupForOptions(group, azureGroupName, template.getLocation(), options);
 
       StorageService storageService = getOrCreateStorageService(group, azureGroupName, location, template.getImage());
-      String blob = storageService.storageServiceProperties().primaryEndpoints().get("blob");
-      options.blob(blob);
+      options.blob(storageService.storageServiceProperties().primaryEndpoints().get("blob"));
 
-      Map<?, ListenableFuture<Void>> responses = super.execute(group, count, template, goodNodes, badNodes,
-            customizationResponses);
-
-      return responses;
+      return super.execute(group, count, template, goodNodes, badNodes, customizationResponses);
    }
 
-   protected synchronized void getOrCreateVirtualNetworkWithSubnet(final String virtualNetworkName,
-         final String subnetName, final String location, AzureTemplateOptions options, final String azureGroupName) {
+   protected synchronized void getOrCreateVirtualNetworkWithSubnet(final String location, AzureTemplateOptions options,
+         final String azureGroupName) {
+      String virtualNetworkName = Optional.fromNullable(options.getVirtualNetworkName()).or(
+            azureGroupName + "virtualnetwork");
+      String subnetName = azureGroupName + "subnet";
 
       // Subnets belong to a virtual network so that needs to be created first
       VirtualNetworkApi vnApi = api.getVirtualNetworkApi(azureGroupName);
       VirtualNetwork vn = vnApi.get(virtualNetworkName);
 
       if (vn == null) {
+         Subnet subnet = Subnet.create(subnetName, null, null,
+               Subnet.SubnetProperties.builder().addressPrefix(defaultSubnetAddressPrefix).build());
+
          VirtualNetwork.VirtualNetworkProperties virtualNetworkProperties = VirtualNetwork.VirtualNetworkProperties
-               .builder()
-               .addressSpace(
-                     VirtualNetwork.AddressSpace.create(Arrays.asList(this.azureComputeConstants
-                           .azureDefaultVnetAddressPrefixProperty())))
-               .subnets(
-                     Arrays.asList(Subnet.create(subnetName, null, null, Subnet.SubnetProperties.builder()
-                           .addressPrefix(this.azureComputeConstants.azureDefaultSubnetAddressPrefixProperty()).build())))
-               .build();
+               .builder().addressSpace(VirtualNetwork.AddressSpace.create(Arrays.asList(defaultVnetAddressPrefix)))
+               .subnets(Arrays.asList(subnet)).build();
+
          vn = vnApi.createOrUpdate(virtualNetworkName, location, virtualNetworkProperties);
       }
 
@@ -199,15 +188,10 @@ public class CreateResourceGroupThenCreateNodes extends CreateNodesWithGroupEnco
       URI uri = api.getStorageAccountApi(resourceGroupName).create(storageAccountName, locationName,
             ImmutableMap.of("jclouds", name),
             ImmutableMap.of("accountType", StorageService.AccountType.Standard_LRS.toString()));
-      boolean starageAccountCreated = retry(new Predicate<URI>() {
-         @Override
-         public boolean apply(URI uri) {
-            return ParseJobStatus.JobStatus.DONE == api.getJobApi().jobStatus(uri);
-         }
-      }, 60 * 2 * 1000 /* 2 minutes timeout */).apply(uri);
-      // TODO check provisioning state of the primary
-      checkState(starageAccountCreated, "Storage account %s was not created in the configured timeout",
+
+      checkState(storageAccountCreated.apply(uri), "Storage account %s was not created in the configured timeout",
             storageAccountName);
+
       return api.getStorageAccountApi(resourceGroupName).get(storageAccountName);
    }
 

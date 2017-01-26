@@ -25,12 +25,14 @@ import javax.inject.Inject;
 import org.jclouds.azurecompute.arm.AzureComputeApi;
 import org.jclouds.azurecompute.arm.domain.RegionAndId;
 import org.jclouds.azurecompute.arm.domain.ResourceDefinition;
+import org.jclouds.azurecompute.arm.domain.ResourceGroup;
 import org.jclouds.azurecompute.arm.domain.VMImage;
 import org.jclouds.azurecompute.arm.domain.VirtualMachine;
 import org.jclouds.azurecompute.arm.functions.StorageProfileToStorageAccountName;
 import org.jclouds.compute.domain.Image;
 
 import com.google.common.base.Function;
+import com.google.common.cache.LoadingCache;
 import com.google.inject.assistedinject.Assisted;
 
 public class ResourceDefinitionToCustomImage implements Function<ResourceDefinition, Image> {
@@ -41,30 +43,35 @@ public class ResourceDefinitionToCustomImage implements Function<ResourceDefinit
 
    private final Function<VMImage, Image> vmImageToImage;
    private final String imageName;
-   private final String storageAccountName;
-   private final VirtualMachine vm;
-   private final String resourceGroup;
+   private final String nodeId;
+   private final AzureComputeApi api;
+   private final StorageProfileToStorageAccountName storageProfileToStorageAccountName;
+   private final LoadingCache<String, ResourceGroup> resourceGroupMap;
 
    @Inject
    ResourceDefinitionToCustomImage(AzureComputeApi api,
          StorageProfileToStorageAccountName storageProfileToStorageAccountName,
-         Function<VMImage, Image> vmImageToImage, LocationToResourceGroupName locationToResourceGroupName,
-         @Assisted("nodeId") String nodeId,
-         @Assisted("imageName") String imageName) {
+         Function<VMImage, Image> vmImageToImage, LoadingCache<String, ResourceGroup> resourceGroupMap,
+         @Assisted("nodeId") String nodeId, @Assisted("imageName") String imageName) {
+      this.api = api;
       this.vmImageToImage = vmImageToImage;
+      this.nodeId = nodeId;
       this.imageName = imageName;
-      
-      RegionAndId regionAndId = RegionAndId.fromSlashEncoded(nodeId);
-      this.resourceGroup = locationToResourceGroupName.apply(regionAndId.region());
-      this.vm = api.getVirtualMachineApi(this.resourceGroup).get(regionAndId.id());
-      this.storageAccountName = storageProfileToStorageAccountName.apply(vm.properties().storageProfile());
+      this.storageProfileToStorageAccountName = storageProfileToStorageAccountName;
+      this.resourceGroupMap = resourceGroupMap;
    }
 
    @SuppressWarnings("unchecked")
    @Override
    public Image apply(ResourceDefinition input) {
-      VMImage.Builder builder = VMImage.customImage().group(resourceGroup).storage(storageAccountName).name(imageName)
-            .offer(CUSTOM_IMAGE_OFFER).location(vm.location());
+      RegionAndId regionAndId = RegionAndId.fromSlashEncoded(nodeId);
+      ResourceGroup resourceGroup = resourceGroupMap.getUnchecked(regionAndId.region());
+      
+      VirtualMachine vm = api.getVirtualMachineApi(resourceGroup.name()).get(regionAndId.id());
+      String storageAccountName = storageProfileToStorageAccountName.apply(vm.properties().storageProfile());
+
+      VMImage.Builder builder = VMImage.customImage().group(resourceGroup.name()).storage(storageAccountName)
+            .name(imageName).offer(CUSTOM_IMAGE_OFFER).location(vm.location());
 
       Map<String, String> properties = (Map<String, String>) input.properties();
 

@@ -22,29 +22,15 @@ package org.jclouds.azurecompute.arm.config;
  */
 public class AzureComputeProperties {
 
-   public static final String STORAGE_API_VERSION = "2015-06-15";
-
    public static final String OPERATION_TIMEOUT = "jclouds.azurecompute.arm.operation.timeout";
 
-   public static final String OPERATION_POLL_INITIAL_PERIOD = "jclouds.azurecompute.arm.operation.poll.initial.period";
-
-   public static final String OPERATION_POLL_MAX_PERIOD = "jclouds.azurecompute.arm.operation.poll.max.period";
-
-   public static final String TCP_RULE_FORMAT = "jclouds.azurecompute.arm.tcp.rule.format";
-
-   public static final String TCP_RULE_REGEXP = "jclouds.azurecompute.arm.tcp.rule.regexp";
-
    public static final String IMAGE_PUBLISHERS = "jclouds.azurecompute.arm.publishers";
-
-   public static final String DEFAULT_IMAGE_LOGIN = "jclouds.azurecompute.arm.defaultimagelogin";
 
    public static final String TIMEOUT_RESOURCE_DELETED = "jclouds.azurecompute.arm.timeout.resourcedeleted";
 
    public static final String DEFAULT_VNET_ADDRESS_SPACE_PREFIX = "jclouds.azurecompute.arm.vnet.addressprefix";
 
    public static final String DEFAULT_SUBNET_ADDRESS_PREFIX = "jclouds.azurecompute.arm.subnet.addressprefix";
-
-   public static final String DEFAULT_DATADISKSIZE = "jclouds.azurecompute.arm.datadisksize";
 
    public static final String API_VERSION_PREFIX = "jclouds.azurecompute.arm.apiversion.";
 

@@ -60,9 +60,9 @@ public class NetworkSecurityRuleToIpPermission implements Function<NetworkSecuri
 
       String portRange = rule.properties().destinationPortRange();
       if (!"*".equals(portRange)) {
-         String[] range = portRange.split("-");
+         String[] range = portRange.split("-"); // One single element if it is a single port
          permissions = PortSelection.class.cast(permissions).fromPort(Integer.parseInt(range[0]))
-               .to(Integer.parseInt(range[1]));
+               .to(Integer.parseInt(range[range.length - 1]));
       }
 
       if (!"*".equals(rule.properties().sourceAddressPrefix())) {

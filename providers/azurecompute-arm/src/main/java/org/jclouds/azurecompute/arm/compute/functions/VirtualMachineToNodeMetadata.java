@@ -17,6 +17,7 @@
 package org.jclouds.azurecompute.arm.compute.functions;
 
 import static com.google.common.base.Preconditions.checkNotNull;
+import static com.google.common.base.Strings.nullToEmpty;
 import static com.google.common.collect.Iterables.find;
 import static com.google.common.collect.Iterables.transform;
 import static com.google.common.collect.Iterables.tryFind;
@@ -25,6 +26,7 @@ import static org.jclouds.azurecompute.arm.compute.extensions.AzureComputeImageE
 import static org.jclouds.azurecompute.arm.compute.extensions.AzureComputeImageExtension.CUSTOM_IMAGE_OFFER;
 import static org.jclouds.azurecompute.arm.compute.functions.VMImageToImage.encodeFieldsToUniqueId;
 import static org.jclouds.compute.util.ComputeServiceUtils.addMetadataAndParseTagsFromCommaDelimitedValue;
+import static org.jclouds.location.predicates.LocationPredicates.idEquals;
 import static org.jclouds.util.Closeables2.closeQuietly;
 
 import java.util.List;
@@ -36,11 +38,11 @@ import javax.inject.Inject;
 import javax.inject.Named;
 
 import org.jclouds.azurecompute.arm.AzureComputeApi;
-import org.jclouds.azurecompute.arm.compute.config.AzureComputeServiceContextModule.AzureComputeConstants;
 import org.jclouds.azurecompute.arm.domain.IdReference;
 import org.jclouds.azurecompute.arm.domain.IpConfiguration;
 import org.jclouds.azurecompute.arm.domain.NetworkInterfaceCard;
 import org.jclouds.azurecompute.arm.domain.RegionAndId;
+import org.jclouds.azurecompute.arm.domain.ResourceGroup;
 import org.jclouds.azurecompute.arm.domain.StorageProfile;
 import org.jclouds.azurecompute.arm.domain.StorageServiceKeys;
 import org.jclouds.azurecompute.arm.domain.VMImage;
@@ -71,6 +73,7 @@ import com.google.common.base.Optional;
 import com.google.common.base.Predicate;
 import com.google.common.base.Splitter;
 import com.google.common.base.Supplier;
+import com.google.common.cache.LoadingCache;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
@@ -120,15 +123,14 @@ public class VirtualMachineToNodeMetadata implements Function<VirtualMachine, No
    private final Map<String, Credentials> credentialStore;
    private final Function<VMImage, Image> vmImageToImge;
    private final StorageProfileToStorageAccountName storageProfileToStorageAccountName;
-   private final LocationToResourceGroupName locationToResourceGroupName;
+   private final LoadingCache<String, ResourceGroup> resourceGroupMap;
 
    @Inject
    VirtualMachineToNodeMetadata(AzureComputeApi api, GroupNamingConvention.Factory namingConvention,
          Supplier<Map<String, ? extends Image>> images, Supplier<Map<String, ? extends Hardware>> hardwares,
          @Memoized Supplier<Set<? extends Location>> locations, Map<String, Credentials> credentialStore,
-         final AzureComputeConstants azureComputeConstants, Function<VMImage, Image> vmImageToImge,
-         StorageProfileToStorageAccountName storageProfileToStorageAccountName,
-         LocationToResourceGroupName locationToResourceGroupName) {
+         Function<VMImage, Image> vmImageToImge, StorageProfileToStorageAccountName storageProfileToStorageAccountName,
+         LoadingCache<String, ResourceGroup> resourceGroupMap) {
       this.api = api;
       this.nodeNamingConvention = namingConvention.createWithoutPrefix();
       this.images = checkNotNull(images, "images cannot be null");
@@ -137,13 +139,13 @@ public class VirtualMachineToNodeMetadata implements Function<VirtualMachine, No
       this.credentialStore = credentialStore;
       this.vmImageToImge = vmImageToImge;
       this.storageProfileToStorageAccountName = storageProfileToStorageAccountName;
-      this.locationToResourceGroupName = locationToResourceGroupName;
+      this.resourceGroupMap = resourceGroupMap;
    }
 
    @Override
    public NodeMetadata apply(VirtualMachine virtualMachine) {
-      String azureGroup = locationToResourceGroupName.apply(virtualMachine.location());
-      
+      ResourceGroup resourceGroup = resourceGroupMap.getUnchecked(virtualMachine.location());
+
       NodeMetadataBuilder builder = new NodeMetadataBuilder();
       builder.id(RegionAndId.fromRegionAndId(virtualMachine.location(), virtualMachine.name()).slashEncode());
       builder.providerId(virtualMachine.id());
@@ -154,7 +156,7 @@ public class VirtualMachineToNodeMetadata implements Function<VirtualMachine, No
       if (ProvisioningState.SUCCEEDED.equals(provisioningState)) {
          // If the provisioning succeeded, we need to query the *real* status of
          // the VM
-         VirtualMachineInstance instanceDetails = api.getVirtualMachineApi(azureGroup).getInstanceDetails(
+         VirtualMachineInstance instanceDetails = api.getVirtualMachineApi(resourceGroup.name()).getInstanceDetails(
                virtualMachine.name());
          if (instanceDetails != null && instanceDetails.powerState() != null) {
             builder.status(POWERSTATE_TO_NODESTATUS.apply(instanceDetails.powerState()));
@@ -185,15 +187,18 @@ public class VirtualMachineToNodeMetadata implements Function<VirtualMachine, No
          addMetadataAndParseTagsFromCommaDelimitedValue(builder, virtualMachine.tags());
          groupFromMetadata = virtualMachine.tags().get(GROUP_KEY);
       }
-      
-      // Try to read the group from the virtual machine tags, and parse the name if missing
+
+      // Try to read the group from the virtual machine tags, and parse the name
+      // if missing
       builder.group(groupFromMetadata != null ? groupFromMetadata : nodeNamingConvention.extractGroup(virtualMachine
             .name()));
-      
+
       String locationName = virtualMachine.location();
       builder.location(getLocation(locations, locationName));
 
-      Optional<? extends Image> image = findImage(virtualMachine.properties().storageProfile(), locationName, azureGroup);
+      Optional<? extends Image> image = findImage(virtualMachine.properties().storageProfile(), locationName,
+            resourceGroup.name());
+      
       if (image.isPresent()) {
          builder.imageId(image.get().getId());
          builder.operatingSystem(image.get().getOperatingSystem());
@@ -252,15 +257,11 @@ public class VirtualMachineToNodeMetadata implements Function<VirtualMachine, No
    }
 
    protected static Location getLocation(Supplier<Set<? extends Location>> locations, final String locationName) {
-      return find(locations.get(), new Predicate<Location>() {
-         @Override
-         public boolean apply(Location location) {
-            return locationName != null && locationName.equals(location.getId());
-         }
-      }, null);
+      return find(locations.get(), idEquals(nullToEmpty(locationName)), null);
    }
 
-   protected Optional<? extends Image> findImage(final StorageProfile storageProfile, String locatioName, String azureGroup) {
+   protected Optional<? extends Image> findImage(final StorageProfile storageProfile, String locatioName,
+         String azureGroup) {
       if (storageProfile.imageReference() != null) {
          return Optional.fromNullable(images.get().get(
                encodeFieldsToUniqueId(false, locatioName, storageProfile.imageReference())));

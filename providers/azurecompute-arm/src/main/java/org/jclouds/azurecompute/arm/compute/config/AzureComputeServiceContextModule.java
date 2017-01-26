@@ -17,15 +17,7 @@
 package org.jclouds.azurecompute.arm.compute.config;
 
 import static com.google.common.base.Preconditions.checkNotNull;
-import static org.jclouds.azurecompute.arm.config.AzureComputeProperties.DEFAULT_DATADISKSIZE;
-import static org.jclouds.azurecompute.arm.config.AzureComputeProperties.DEFAULT_SUBNET_ADDRESS_PREFIX;
-import static org.jclouds.azurecompute.arm.config.AzureComputeProperties.DEFAULT_VNET_ADDRESS_SPACE_PREFIX;
-import static org.jclouds.azurecompute.arm.config.AzureComputeProperties.IMAGE_PUBLISHERS;
-import static org.jclouds.azurecompute.arm.config.AzureComputeProperties.OPERATION_POLL_INITIAL_PERIOD;
-import static org.jclouds.azurecompute.arm.config.AzureComputeProperties.OPERATION_POLL_MAX_PERIOD;
 import static org.jclouds.azurecompute.arm.config.AzureComputeProperties.OPERATION_TIMEOUT;
-import static org.jclouds.azurecompute.arm.config.AzureComputeProperties.TCP_RULE_FORMAT;
-import static org.jclouds.azurecompute.arm.config.AzureComputeProperties.TCP_RULE_REGEXP;
 import static org.jclouds.azurecompute.arm.config.AzureComputeProperties.TIMEOUT_RESOURCE_DELETED;
 import static org.jclouds.compute.config.ComputeServiceProperties.TIMEOUT_IMAGE_AVAILABLE;
 import static org.jclouds.compute.config.ComputeServiceProperties.TIMEOUT_NODE_RUNNING;
@@ -53,6 +45,7 @@ import org.jclouds.azurecompute.arm.compute.functions.VMHardwareToHardware;
 import org.jclouds.azurecompute.arm.compute.functions.VMImageToImage;
 import org.jclouds.azurecompute.arm.compute.functions.VirtualMachineToNodeMetadata;
 import org.jclouds.azurecompute.arm.compute.loaders.CreateSecurityGroupIfNeeded;
+import org.jclouds.azurecompute.arm.compute.loaders.ResourceGroupForLocation;
 import org.jclouds.azurecompute.arm.compute.options.AzureTemplateOptions;
 import org.jclouds.azurecompute.arm.compute.strategy.CreateResourceGroupThenCreateNodes;
 import org.jclouds.azurecompute.arm.domain.Location;
@@ -60,6 +53,7 @@ import org.jclouds.azurecompute.arm.domain.NetworkSecurityGroup;
 import org.jclouds.azurecompute.arm.domain.NetworkSecurityRule;
 import org.jclouds.azurecompute.arm.domain.PublicIPAddress;
 import org.jclouds.azurecompute.arm.domain.ResourceDefinition;
+import org.jclouds.azurecompute.arm.domain.ResourceGroup;
 import org.jclouds.azurecompute.arm.domain.VMHardware;
 import org.jclouds.azurecompute.arm.domain.VMImage;
 import org.jclouds.azurecompute.arm.domain.VirtualMachine;
@@ -88,7 +82,6 @@ import com.google.common.base.Predicate;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
-import com.google.inject.Inject;
 import com.google.inject.Provides;
 import com.google.inject.TypeLiteral;
 import com.google.inject.assistedinject.FactoryModuleBuilder;
@@ -125,8 +118,11 @@ public class AzureComputeServiceContextModule extends
       bind(TemplateOptions.class).to(AzureTemplateOptions.class);
       bind(NodeAndTemplateOptionsToStatement.class).to(NodeAndTemplateOptionsToStatementWithoutPublicKey.class);
       bind(CreateNodesInGroupThenAddToSet.class).to(CreateResourceGroupThenCreateNodes.class);
+
       bind(new TypeLiteral<CacheLoader<RegionAndIdAndIngressRules, String>>() {
       }).to(CreateSecurityGroupIfNeeded.class);
+      bind(new TypeLiteral<CacheLoader<String, ResourceGroup>>() {
+      }).to(ResourceGroupForLocation.class);
 
       bind(new TypeLiteral<ImageExtension>() {
       }).to(AzureComputeImageExtension.class);
@@ -134,86 +130,16 @@ public class AzureComputeServiceContextModule extends
       }).to(AzureComputeSecurityGroupExtension.class);
    }
 
-   @Singleton
-   public static class AzureComputeConstants {
-
-      @Named(OPERATION_TIMEOUT)
-      @Inject
-      private String operationTimeoutProperty;
-
-      @Named(OPERATION_POLL_INITIAL_PERIOD)
-      @Inject
-      private String operationPollInitialPeriodProperty;
-
-      @Named(OPERATION_POLL_MAX_PERIOD)
-      @Inject
-      private String operationPollMaxPeriodProperty;
-
-      @Named(TCP_RULE_FORMAT)
-      @Inject
-      private String tcpRuleFormatProperty;
-
-      @Named(TCP_RULE_REGEXP)
-      @Inject
-      private String tcpRuleRegexpProperty;
-
-      @Named(IMAGE_PUBLISHERS)
-      @Inject
-      private String azureImagePublishersProperty;
-
-      @Named(DEFAULT_VNET_ADDRESS_SPACE_PREFIX)
-      @Inject
-      private String azureDefaultVnetAddressPrefixProperty;
-
-      @Named(DEFAULT_SUBNET_ADDRESS_PREFIX)
-      @Inject
-      private String azureDefaultSubnetAddressPrefixProperty;
-
-      @Named(DEFAULT_DATADISKSIZE)
-      @Inject
-      private String azureDefaultDataDiskSizeProperty;
-
-      public Long operationTimeout() {
-         return Long.parseLong(operationTimeoutProperty);
-      }
-
-      public String azureImagePublishers() {
-         return azureImagePublishersProperty;
-      }
-
-      public String azureDefaultVnetAddressPrefixProperty() {
-         return azureDefaultVnetAddressPrefixProperty;
-      }
-
-      public String azureDefaultSubnetAddressPrefixProperty() {
-         return azureDefaultSubnetAddressPrefixProperty;
-      }
-
-      public String azureDefaultDataDiskSizeProperty() {
-         return azureDefaultDataDiskSizeProperty;
-      }
-
-      public Integer operationPollInitialPeriod() {
-         return Integer.parseInt(operationPollInitialPeriodProperty);
-      }
-
-      public Integer operationPollMaxPeriod() {
-         return Integer.parseInt(operationPollMaxPeriodProperty);
-      }
-
-      public String tcpRuleFormat() {
-         return tcpRuleFormatProperty;
-      }
-
-      public String tcpRuleRegexp() {
-         return tcpRuleRegexpProperty;
-      }
-   }
-
    @Provides
    @Singleton
    protected final LoadingCache<RegionAndIdAndIngressRules, String> securityGroupMap(
          CacheLoader<RegionAndIdAndIngressRules, String> in) {
+      return CacheBuilder.newBuilder().build(in);
+   }
+
+   @Provides
+   @Singleton
+   protected final LoadingCache<String, ResourceGroup> resourceGroupMap(CacheLoader<String, ResourceGroup> in) {
       return CacheBuilder.newBuilder().build(in);
    }
 
@@ -259,18 +185,24 @@ public class AzureComputeServiceContextModule extends
 
    @Provides
    protected PublicIpAvailablePredicateFactory providePublicIpAvailablePredicate(final AzureComputeApi api,
-         final AzureComputeServiceContextModule.AzureComputeConstants azureComputeConstants, final Timeouts timeouts,
-         final PollPeriod pollPeriod) {
-      return new PublicIpAvailablePredicateFactory(api, azureComputeConstants.operationTimeout(),
-            azureComputeConstants.operationPollInitialPeriod(), azureComputeConstants.operationPollMaxPeriod());
+         @Named(OPERATION_TIMEOUT) Integer operationTimeout, PollPeriod pollPeriod) {
+      return new PublicIpAvailablePredicateFactory(api, operationTimeout, pollPeriod.pollInitialPeriod,
+            pollPeriod.pollMaxPeriod);
    }
 
    @Provides
    protected SecurityGroupAvailablePredicateFactory provideSecurityGroupAvailablePredicate(final AzureComputeApi api,
-         final AzureComputeServiceContextModule.AzureComputeConstants azureComputeConstants, final Timeouts timeouts,
-         final PollPeriod pollPeriod) {
-      return new SecurityGroupAvailablePredicateFactory(api, azureComputeConstants.operationTimeout(),
-            azureComputeConstants.operationPollInitialPeriod(), azureComputeConstants.operationPollMaxPeriod());
+         @Named(OPERATION_TIMEOUT) Integer operationTimeout, PollPeriod pollPeriod) {
+      return new SecurityGroupAvailablePredicateFactory(api, operationTimeout, pollPeriod.pollInitialPeriod,
+            pollPeriod.pollMaxPeriod);
+   }
+
+   @Provides
+   @Named("STORAGE")
+   protected Predicate<URI> provideStorageAccountAvailablePredicate(final AzureComputeApi api,
+         @Named(OPERATION_TIMEOUT) Integer operationTimeout, PollPeriod pollPeriod) {
+      return retry(new ActionDonePredicate(api), operationTimeout, pollPeriod.pollInitialPeriod,
+            pollPeriod.pollMaxPeriod);
    }
 
    @VisibleForTesting
