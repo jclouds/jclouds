@@ -69,7 +69,7 @@ public class DeviceToNodeMetadata implements Function<Device, NodeMetadata> {
       return new NodeMetadataBuilder()
               .ids(input.id())
               .name(input.hostname())
-              .hostname(input.hostname())
+              .hostname(String.format("%s", input.hostname()))  
               .group(groupNamingConvention.extractGroup(input.hostname()))
               .location(facilityToLocation.apply(input.facility()))
               .hardware(planToHardware.apply(input.plan()))

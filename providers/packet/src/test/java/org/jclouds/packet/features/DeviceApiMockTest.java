@@ -17,7 +17,6 @@
 package org.jclouds.packet.features;
 
 import org.jclouds.packet.compute.internal.BasePacketApiMockTest;
-import org.jclouds.packet.domain.ActionType;
 import org.jclouds.packet.domain.BillingCycle;
 import org.jclouds.packet.domain.Device;
 import org.jclouds.packet.domain.Device.CreateDevice;
@@ -90,7 +89,7 @@ public class DeviceApiMockTest extends BasePacketApiMockTest {
       assertEquals(device, objectFromResource("/device.json", Device.class));
 
       assertEquals(server.getRequestCount(), 1);
-      assertSent(server, "GET", "/projects/93907f48-adfe-43ed-ad89-0e6e83721a54/devices/1");
+      assertSent(server, "GET", "/devices/1");
    }
 
    public void testGetDeviceReturns404() throws InterruptedException {
@@ -101,7 +100,7 @@ public class DeviceApiMockTest extends BasePacketApiMockTest {
       assertNull(device);
 
       assertEquals(server.getRequestCount(), 1);
-      assertSent(server, "GET", "/projects/93907f48-adfe-43ed-ad89-0e6e83721a54/devices/1");
+      assertSent(server, "GET", "/devices/1");
    }
 
    public void testCreateDevice() throws InterruptedException {
@@ -133,7 +132,7 @@ public class DeviceApiMockTest extends BasePacketApiMockTest {
       api.deviceApi("93907f48-adfe-43ed-ad89-0e6e83721a54").delete("1");
 
       assertEquals(server.getRequestCount(), 1);
-      assertSent(server, "DELETE", "/projects/93907f48-adfe-43ed-ad89-0e6e83721a54/devices/1");
+      assertSent(server, "DELETE", "/devices/1");
    }
 
    public void testDeleteDeviceReturns404() throws InterruptedException {
@@ -142,43 +141,34 @@ public class DeviceApiMockTest extends BasePacketApiMockTest {
       api.deviceApi("93907f48-adfe-43ed-ad89-0e6e83721a54").delete("1");
 
       assertEquals(server.getRequestCount(), 1);
-      assertSent(server, "DELETE", "/projects/93907f48-adfe-43ed-ad89-0e6e83721a54/devices/1");
+      assertSent(server, "DELETE", "/devices/1");
    }
 
    public void testActionPowerOn() throws InterruptedException {
       server.enqueue(jsonResponse("/power-on.json"));
 
-      api.deviceApi("93907f48-adfe-43ed-ad89-0e6e83721a54").actions("deviceId", ActionType.POWER_ON);
+      api.deviceApi("93907f48-adfe-43ed-ad89-0e6e83721a54").powerOn("deviceId");
 
       assertEquals(server.getRequestCount(), 1);
-      assertSent(server, "POST", "/projects/93907f48-adfe-43ed-ad89-0e6e83721a54/devices/deviceId/actions");
+      assertSent(server, "POST", "/devices/deviceId/actions");
    }
 
    public void testActionPowerOff() throws InterruptedException {
       server.enqueue(jsonResponse("/power-off.json"));
 
-      api.deviceApi("93907f48-adfe-43ed-ad89-0e6e83721a54").actions("deviceId", ActionType.POWER_OFF);
+      api.deviceApi("93907f48-adfe-43ed-ad89-0e6e83721a54").powerOff("deviceId");
 
       assertEquals(server.getRequestCount(), 1);
-      assertSent(server, "POST", "/projects/93907f48-adfe-43ed-ad89-0e6e83721a54/devices/deviceId/actions");
+      assertSent(server, "POST", "/devices/deviceId/actions");
    }
 
    public void testActionReboot() throws InterruptedException {
       server.enqueue(jsonResponse("/reboot.json"));
 
-      api.deviceApi("93907f48-adfe-43ed-ad89-0e6e83721a54").actions("deviceId", ActionType.REBOOT);
+      api.deviceApi("93907f48-adfe-43ed-ad89-0e6e83721a54").reboot("deviceId");
 
       assertEquals(server.getRequestCount(), 1);
-      assertSent(server, "POST", "/projects/93907f48-adfe-43ed-ad89-0e6e83721a54/devices/deviceId/actions");
+      assertSent(server, "POST", "/devices/deviceId/actions");
    }
 
-   public void testActionRescue() throws InterruptedException {
-      server.enqueue(jsonResponse("/rescue.json"));
-
-      api.deviceApi("93907f48-adfe-43ed-ad89-0e6e83721a54").actions("deviceId", ActionType.RESCUE);
-
-      assertEquals(server.getRequestCount(), 1);
-      assertSent(server, "POST", "/projects/93907f48-adfe-43ed-ad89-0e6e83721a54/devices/deviceId/actions");
-   }
-   
 }

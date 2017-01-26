@@ -38,7 +38,7 @@ import static com.google.common.base.Preconditions.checkArgument;
 public abstract class Device {
 
     public enum State {
-        PROVISIONING, QUEUED, ACTIVE;
+        PROVISIONING, QUEUED, ACTIVE, REBOOTING, POWERING_OFF, POWERING_ON, INACTIVE;
 
         public static State fromValue(String value) {
             Optional<State> state = Enums.getIfPresent(State.class, value.toUpperCase());

@@ -20,6 +20,8 @@ import java.net.URI;
 import java.util.Properties;
 
 import org.jclouds.apis.ApiMetadata;
+import org.jclouds.compute.ComputeServiceContext;
+import org.jclouds.packet.compute.config.PacketComputeServiceContextModule;
 import org.jclouds.packet.config.PacketComputeParserModule;
 import org.jclouds.packet.config.PacketHttpApiModule;
 import org.jclouds.rest.internal.BaseHttpApiMetadata;
@@ -29,6 +31,8 @@ import com.google.inject.Module;
 
 import static org.jclouds.compute.config.ComputeServiceProperties.TEMPLATE;
 import static org.jclouds.compute.config.ComputeServiceProperties.TIMEOUT_NODE_RUNNING;
+import static org.jclouds.compute.config.ComputeServiceProperties.TIMEOUT_NODE_SUSPENDED;
+import static org.jclouds.reflect.Reflection2.typeToken;
 
 /**
  * Implementation of {@link ApiMetadata} for Packet API
@@ -52,6 +56,7 @@ public class PacketApiMetadata extends BaseHttpApiMetadata<PacketApi> {
       Properties properties = BaseHttpApiMetadata.defaultProperties();
       properties.put(TEMPLATE, "osFamily=UBUNTU,os64Bit=true,osVersionMatches=16.*");
       properties.put(TIMEOUT_NODE_RUNNING, 300000); // 5 mins
+      properties.put(TIMEOUT_NODE_SUSPENDED, 300000); // 5 mins
       return properties;
    }
 
@@ -66,11 +71,11 @@ public class PacketApiMetadata extends BaseHttpApiMetadata<PacketApi> {
                  .defaultEndpoint("https://api.packet.net")
                  .defaultProperties(PacketApiMetadata.defaultProperties())
                  .version("1")
-                 //.view(typeToken(ComputeServiceContext.class))
+                 .view(typeToken(ComputeServiceContext.class))
                  .defaultModules(ImmutableSet.<Class<? extends Module>>builder()
                          .add(PacketHttpApiModule.class)
                          .add(PacketComputeParserModule.class)
-                         //.add(PacketComputeServiceContextModule.class)
+                         .add(PacketComputeServiceContextModule.class)
                          .build());
       }
 

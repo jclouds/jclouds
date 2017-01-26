@@ -20,7 +20,6 @@ import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import org.jclouds.packet.compute.internal.BasePacketApiLiveTest;
-import org.jclouds.packet.domain.ActionType;
 import org.jclouds.packet.domain.BillingCycle;
 import org.jclouds.packet.domain.Device;
 import org.jclouds.packet.domain.SshKey;
@@ -40,7 +39,7 @@ import static org.testng.Assert.assertNull;
 import static org.testng.Assert.assertTrue;
 import static org.testng.util.Strings.isNullOrEmpty;
 
-@Test(groups = "live", testName = "DeviceApiLiveTest")
+@Test(groups = "live", singleThreaded = true, testName = "DeviceApiLiveTest")
 public class DeviceApiLiveTest extends BasePacketApiLiveTest {
 
    private SshKey sshKey;
@@ -81,22 +80,22 @@ public class DeviceApiLiveTest extends BasePacketApiLiveTest {
 
    @Test(groups = "live", dependsOnMethods = "testCreate")
    public void testReboot() {
-      api().actions(deviceId, ActionType.REBOOT);
+      api().reboot(deviceId);
       assertNodeRunning(deviceId);
    }
 
    @Test(groups = "live", dependsOnMethods = "testReboot")
    public void testPowerOff() {
-      api().actions(deviceId, ActionType.POWER_OFF);
-      assertNodeTerminated(deviceId);
+      api().powerOff(deviceId);
+      assertNodeSuspended(deviceId);
    }
 
    @Test(groups = "live", dependsOnMethods = "testPowerOff")
    public void testPowerOn() {
-      api().actions(deviceId, ActionType.POWER_ON);
+      api().powerOn(deviceId);
       assertNodeRunning(deviceId);
    }
-   
+
    @Test(dependsOnMethods = "testCreate")
    public void testList() {
       final AtomicInteger found = new AtomicInteger(0);
@@ -123,7 +122,7 @@ public class DeviceApiLiveTest extends BasePacketApiLiveTest {
       assertTrue(found.get() > 0, "Expected some devices to be returned");
    }
 
-   @Test(dependsOnMethods = "testList", alwaysRun = true)
+   @Test(dependsOnMethods = "testPowerOn", alwaysRun = true)
    public void testDelete() throws InterruptedException {
       if (deviceId != null) {
          api().delete(deviceId);

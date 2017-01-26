@@ -31,12 +31,14 @@ import com.google.inject.TypeLiteral;
 import com.google.inject.name.Names;
 
 import static org.jclouds.compute.config.ComputeServiceProperties.TIMEOUT_NODE_RUNNING;
+import static org.jclouds.compute.config.ComputeServiceProperties.TIMEOUT_NODE_SUSPENDED;
 import static org.jclouds.compute.config.ComputeServiceProperties.TIMEOUT_NODE_TERMINATED;
 import static org.testng.Assert.assertTrue;
 
 public class BasePacketApiLiveTest extends BaseApiLiveTest<PacketApi> {
 
    private Predicate<String> deviceRunning;
+   private Predicate<String> deviceSuspended;
    private Predicate<String> deviceTerminated;
 
    public BasePacketApiLiveTest() {
@@ -57,6 +59,8 @@ public class BasePacketApiLiveTest extends BaseApiLiveTest<PacketApi> {
       Injector injector = newBuilder().modules(modules).overrides(props).buildInjector();
       deviceRunning = injector.getInstance(Key.get(new TypeLiteral<Predicate<String>>(){},
             Names.named(TIMEOUT_NODE_RUNNING)));
+      deviceSuspended = injector.getInstance(Key.get(new TypeLiteral<Predicate<String>>(){},
+              Names.named(TIMEOUT_NODE_SUSPENDED)));
       deviceTerminated = injector.getInstance(Key.get(new TypeLiteral<Predicate<String>>(){},
               Names.named(TIMEOUT_NODE_TERMINATED)));
       return injector.getInstance(PacketApi.class);
@@ -66,6 +70,10 @@ public class BasePacketApiLiveTest extends BaseApiLiveTest<PacketApi> {
       assertTrue(deviceRunning.apply(deviceId), String.format("Device %s did not start in the configured timeout", deviceId));
    }
 
+   protected void assertNodeSuspended(String deviceId) {
+      assertTrue(deviceSuspended.apply(deviceId), String.format("Device %s was not suspended in the configured timeout", deviceId));
+   }
+   
    protected void assertNodeTerminated(String deviceId) {
       assertTrue(deviceTerminated.apply(deviceId), String.format("Device %s was not terminated in the configured timeout", deviceId));
    }

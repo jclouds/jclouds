@@ -33,8 +33,13 @@ public class DeviceStateToStatus implements Function<Device.State, Status> {
 
    private static final Function<Device.State, Status> toPortableStatus = Functions.forMap(
          ImmutableMap.<Device.State, Status> builder()
-               .put(Device.State.PROVISIONING, Status.PENDING)
-               .put(Device.State.ACTIVE, Status.RUNNING)
+                 .put(Device.State.PROVISIONING, Status.PENDING)
+                 .put(Device.State.POWERING_ON, Status.PENDING)
+                 .put(Device.State.POWERING_OFF, Status.PENDING)
+                 .put(Device.State.REBOOTING, Status.PENDING)
+                 .put(Device.State.QUEUED, Status.PENDING)
+                 .put(Device.State.INACTIVE, Status.SUSPENDED)
+                 .put(Device.State.ACTIVE, Status.RUNNING)
                .build(),
          Status.UNRECOGNIZED);
 

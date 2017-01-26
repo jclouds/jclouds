@@ -40,7 +40,6 @@ import org.jclouds.http.functions.ParseJson;
 import org.jclouds.javax.annotation.Nullable;
 import org.jclouds.json.Json;
 import org.jclouds.packet.PacketApi;
-import org.jclouds.packet.domain.ActionType;
 import org.jclouds.packet.domain.Device;
 import org.jclouds.packet.domain.Href;
 import org.jclouds.packet.domain.internal.PaginatedCollection;
@@ -49,8 +48,7 @@ import org.jclouds.packet.filters.AddApiVersionToRequest;
 import org.jclouds.packet.filters.AddXAuthTokenToRequest;
 import org.jclouds.rest.annotations.BinderParam;
 import org.jclouds.rest.annotations.Fallback;
-import org.jclouds.rest.annotations.MapBinder;
-import org.jclouds.rest.annotations.PayloadParam;
+import org.jclouds.rest.annotations.Payload;
 import org.jclouds.rest.annotations.RequestFilters;
 import org.jclouds.rest.annotations.ResponseParser;
 import org.jclouds.rest.annotations.Transform;
@@ -60,13 +58,13 @@ import com.google.common.base.Function;
 import com.google.common.base.Optional;
 import com.google.inject.TypeLiteral;
 
-@Path("/projects/{projectId}/devices")
 @Consumes(MediaType.APPLICATION_JSON)
 @RequestFilters({AddXAuthTokenToRequest.class, AddApiVersionToRequest.class})
 public interface DeviceApi {
 
    @Named("device:list")
    @GET
+   @Path("/projects/{projectId}/devices")
    @ResponseParser(ParseDevices.class)
    @Transform(ParseDevices.ToPagedIterable.class)
    @Fallback(Fallbacks.EmptyPagedIterableOnNotFoundOr404.class)
@@ -74,6 +72,7 @@ public interface DeviceApi {
 
    @Named("device:list")
    @GET
+   @Path("/projects/{projectId}/devices")
    @ResponseParser(ParseDevices.class)
    @Fallback(Fallbacks.EmptyIterableWithMarkerOnNotFoundOr404.class)
    IterableWithMarker<Device> list(ListOptions options);
@@ -122,27 +121,43 @@ public interface DeviceApi {
 
    @Named("device:create")
    @POST
+   @Path("/projects/{projectId}/devices")
    @Produces(MediaType.APPLICATION_JSON)
    Device create(@BinderParam(BindToJsonPayload.class) Device.CreateDevice device);
 
 
    @Named("device:get")
    @GET
-   @Path("/{id}")
+   @Path("/devices/{id}")
    @Fallback(NullOnNotFoundOr404.class)
    @Nullable
    Device get(@PathParam("id") String id);
 
    @Named("device:delete")
    @DELETE
-   @Path("/{id}")
+   @Path("/devices/{id}")
    @Fallback(VoidOnNotFoundOr404.class)
    void delete(@PathParam("id") String id);
 
-   @Named("device:actions")
+   @Named("device:powerOff")
    @POST
-   @Path("/{id}/actions")
-   @MapBinder(BindToJsonPayload.class)
-   void actions(@PathParam("id") String id, @PayloadParam("type") ActionType type);
+   @Produces(MediaType.APPLICATION_JSON)
+   @Path("/devices/{id}/actions")
+   @Payload("{\"type\":\"power_off\"}")
+   void powerOff(@PathParam("id") String id);
+
+   @Named("device:powerOn")
+   @POST
+   @Produces(MediaType.APPLICATION_JSON)
+   @Path("/devices/{id}/actions")
+   @Payload("{\"type\":\"power_on\"}")
+   void powerOn(@PathParam("id") String id);
+   
+   @Named("device:reboot")
+   @POST
+   @Produces(MediaType.APPLICATION_JSON)
+   @Path("/devices/{id}/actions")
+   @Payload("{\"type\":\"reboot\"}")
+   void reboot(@PathParam("id") String id);
 
 }

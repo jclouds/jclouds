@@ -18,7 +18,7 @@ package org.jclouds.packet.features;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
-import org.jclouds.packet.compute.internal.BasePacketApiMockTest;
+import org.jclouds.packet.compute.internal.BasePacketApiLiveTest;
 import org.jclouds.packet.domain.Facility;
 import org.testng.annotations.Test;
 
@@ -30,7 +30,7 @@ import static org.testng.Assert.assertTrue;
 import static org.testng.util.Strings.isNullOrEmpty;
 
 @Test(groups = "live", testName = "FacilityApiLiveTest")
-public class FacilityApiLiveTest extends BasePacketApiMockTest {
+public class FacilityApiLiveTest extends BasePacketApiLiveTest {
 
    public void testList() {
       final AtomicInteger found = new AtomicInteger(0);
