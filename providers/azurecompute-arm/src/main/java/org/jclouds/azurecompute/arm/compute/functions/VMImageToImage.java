@@ -17,6 +17,8 @@
 package org.jclouds.azurecompute.arm.compute.functions;
 
 import static com.google.common.base.Preconditions.checkNotNull;
+import static com.google.common.collect.Iterables.tryFind;
+import static java.util.Arrays.asList;
 
 import java.util.Map;
 import java.util.Set;
@@ -34,6 +36,8 @@ import org.jclouds.javax.annotation.Nullable;
 import org.jclouds.location.predicates.LocationPredicates;
 
 import com.google.common.base.Function;
+import com.google.common.base.Optional;
+import com.google.common.base.Predicate;
 import com.google.common.base.Supplier;
 import com.google.common.collect.FluentIterable;
 import com.google.common.collect.ImmutableMap;
@@ -41,18 +45,12 @@ import com.google.inject.Inject;
 
 public class VMImageToImage implements Function<VMImage, Image> {
 
-   public static final String MARKETPLACE_TAG = "marketplace";
-
-   private static final String UBUNTU = "Ubuntu";
-   private static final String WINDOWS = "Windows";
-   private static final String OPENLOGIC = "openLogic";
-   private static final String CENTOS = "CentOS";
-   private static final String COREOS = "CoreOS";
-   private static final String OPENSUSE = "openSUSE";
-   private static final String SUSE = "SUSE";
-   private static final String SLES = "SLES";
-   private static final String ORACLE_lINUX = "Oracle-Linux";
-   private static final String RHEL = "RHEL";
+   private static final Map<String, OsFamily> OTHER_OS_MAP = ImmutableMap.<String, OsFamily> builder()
+         .put("openlogic", OsFamily.CENTOS)
+         .put("win", OsFamily.WINDOWS)
+         .put("sles", OsFamily.SUSE)
+         .put("oracle-linux", OsFamily.OEL)
+         .build();
 
    private final Supplier<Set<? extends org.jclouds.domain.Location>> locations;
 
@@ -155,25 +153,8 @@ public class VMImageToImage implements Function<VMImage, Image> {
       return new Function<VMImage, OperatingSystem.Builder>() {
          @Override
          public OperatingSystem.Builder apply(final VMImage image) {
-            checkNotNull(image.offer(), "offer");
-            final String label = image.offer();
-
-            OsFamily family = OsFamily.UNRECOGNIZED;
-            if (label.contains(CENTOS) || label.contains(OPENLOGIC)) {
-               family = OsFamily.CENTOS;
-            } else if (label.contains(COREOS)) {
-               family = OsFamily.COREOS;
-            } else if (label.contains(SUSE) || label.contains(SLES) || label.contains(OPENSUSE)) {
-               family = OsFamily.SUSE;
-            } else if (label.contains(UBUNTU)) {
-               family = OsFamily.UBUNTU;
-            } else if (label.contains(WINDOWS)) {
-               family = OsFamily.WINDOWS;
-            } else if (label.contains(ORACLE_lINUX)) {
-               family = OsFamily.OEL;
-            } else if (label.contains(RHEL)) {
-               family = OsFamily.RHEL;
-            }
+            final String label = checkNotNull(image.offer(), "offer").toLowerCase();
+            OsFamily family = findInStandardFamilies(label).or(findInOtherOSMap(label)).or(OsFamily.UNRECOGNIZED);
             
             // Fallback to generic operating system type
             if (OsFamily.UNRECOGNIZED == family && image.versionProperties() != null
@@ -188,5 +169,28 @@ public class VMImageToImage implements Function<VMImage, Image> {
                   .version(image.custom() ? "latest" : image.sku());
          }
       };
+   }
+
+   private static Optional<OsFamily> findInStandardFamilies(final String label) {
+      return tryFind(asList(OsFamily.values()), new Predicate<OsFamily>() {
+         @Override
+         public boolean apply(OsFamily input) {
+            return label.contains(input.value());
+         }
+      });
+   }
+
+   private static Optional<OsFamily> findInOtherOSMap(final String label) {
+      return tryFind(OTHER_OS_MAP.keySet(), new Predicate<String>() {
+         @Override
+         public boolean apply(String input) {
+            return label.contains(input);
+         }
+      }).transform(new Function<String, OsFamily>() {
+         @Override
+         public OsFamily apply(String input) {
+            return OTHER_OS_MAP.get(input);
+         }
+      });
    }
 }
