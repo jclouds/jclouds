@@ -231,13 +231,13 @@ public abstract class BaseComputeServiceLiveTest extends BaseComputeServiceConte
          assert good.identity != null : nodes;
 
          for (Entry<? extends NodeMetadata, ExecResponse> response : client.runScriptOnNodesMatching(
-               runningInGroup(group), "hostname",
+               runningInGroup(group), "hostname -s",
                wrapInInitScript(false).runAsRoot(false).overrideLoginCredentials(good)).entrySet()) {
             checkResponseEqualsHostname(response.getValue(), response.getKey());
          }
 
          // test single-node execution
-         ExecResponse response = client.runScriptOnNode(node.getId(), "hostname",
+         ExecResponse response = client.runScriptOnNode(node.getId(), "hostname -s",
                wrapInInitScript(false).runAsRoot(false));
          checkResponseEqualsHostname(response, node);
          OperatingSystem os = node.getOperatingSystem();
@@ -269,7 +269,7 @@ public abstract class BaseComputeServiceLiveTest extends BaseComputeServiceConte
          client.destroyNodesMatching(inGroup(group));
       }
    }
-   
+
    @Test
    public void testWeCanCancelTasks() throws Exception {
       String group = this.group + "w";
@@ -401,7 +401,7 @@ public abstract class BaseComputeServiceLiveTest extends BaseComputeServiceConte
 
    protected Template refreshTemplate() {
       return template = addRunScriptToTemplate(buildTemplate(templateBuilder()));
-   } 
+   }
 
    protected Template addRunScriptToTemplate(Template template) {
       template.getOptions().runScript(Statements.newStatementList(AdminAccess.standard(), InstallJDK.fromOpenJDK()));
@@ -439,7 +439,7 @@ public abstract class BaseComputeServiceLiveTest extends BaseComputeServiceConte
             throw e;
          }
       }
-      
+
       initializeContext();
 
       Location existingLocation = Iterables.get(this.nodes, 0).getLocation();
@@ -556,7 +556,7 @@ public abstract class BaseComputeServiceLiveTest extends BaseComputeServiceConte
          nodes = newTreeSet(concat(e.getSuccessfulNodes(), e.getNodeErrors().keySet()));
          throw e;
       }
-      
+
       Map<String, ? extends NodeMetadata> metadataMap = newLinkedHashMap(uniqueIndex(
             filter(client.listNodesDetailsMatching(all()), and(inGroup(group), not(TERMINATED))),
             new Function<NodeMetadata, String>() {
