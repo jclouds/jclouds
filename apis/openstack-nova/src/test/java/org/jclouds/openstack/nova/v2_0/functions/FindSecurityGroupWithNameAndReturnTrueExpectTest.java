@@ -21,11 +21,13 @@ import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertTrue;
 
 import java.net.URI;
+import java.util.Set;
 import java.util.concurrent.atomic.AtomicReference;
 
 import org.jclouds.http.HttpRequest;
 import org.jclouds.http.HttpResponse;
 import org.jclouds.openstack.nova.v2_0.NovaApi;
+import org.jclouds.openstack.nova.v2_0.domain.SecurityGroup;
 import org.jclouds.openstack.nova.v2_0.domain.regionscoped.RegionAndName;
 import org.jclouds.openstack.nova.v2_0.domain.regionscoped.SecurityGroupInRegion;
 import org.jclouds.openstack.nova.v2_0.internal.BaseNovaApiExpectTest;
@@ -63,9 +65,10 @@ public class FindSecurityGroupWithNameAndReturnTrueExpectTest extends BaseNovaAp
       assertTrue(predicate.apply(securityGroupInRegionRef));
 
       // the reference is now up to date, and includes the actual group found.
-      assertEquals(securityGroupInRegionRef.get().toString(), new SecurityGroupInRegion(Iterables
-               .getOnlyElement(new ParseSecurityGroupListTest().expected()), "az-1.region-a.geo-1").toString());
-
+      final Set<SecurityGroup> expected = new ParseSecurityGroupListTest().expected();
+      assertEquals(
+         securityGroupInRegionRef.get().toString(),
+         new SecurityGroupInRegion(Iterables.getOnlyElement(expected), "az-1.region-a.geo-1", expected).toString());
    }
 
    public void testDoesNotUpdateReferenceWhenSecurityGroupListMissingGroupName() throws Exception {

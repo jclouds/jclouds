@@ -46,7 +46,6 @@ import org.jclouds.compute.strategy.impl.CreateNodesWithGroupEncodedIntoNameThen
 import org.jclouds.domain.Location;
 import org.jclouds.domain.LoginCredentials;
 import org.jclouds.functions.IdentityFunction;
-import org.jclouds.net.domain.IpPermission;
 import org.jclouds.openstack.nova.v2_0.compute.NovaComputeService;
 import org.jclouds.openstack.nova.v2_0.compute.NovaComputeServiceAdapter;
 import org.jclouds.openstack.nova.v2_0.compute.extensions.NovaImageExtension;
@@ -57,9 +56,7 @@ import org.jclouds.openstack.nova.v2_0.compute.functions.FlavorInRegionToHardwar
 import org.jclouds.openstack.nova.v2_0.compute.functions.ImageInRegionToImage;
 import org.jclouds.openstack.nova.v2_0.compute.functions.ImageToOperatingSystem;
 import org.jclouds.openstack.nova.v2_0.compute.functions.NovaSecurityGroupInRegionToSecurityGroup;
-import org.jclouds.openstack.nova.v2_0.compute.functions.NovaSecurityGroupToSecurityGroup;
 import org.jclouds.openstack.nova.v2_0.compute.functions.OrphanedGroupsByRegionId;
-import org.jclouds.openstack.nova.v2_0.compute.functions.SecurityGroupRuleToIpPermission;
 import org.jclouds.openstack.nova.v2_0.compute.functions.ServerInRegionToNodeMetadata;
 import org.jclouds.openstack.nova.v2_0.compute.loaders.CreateUniqueKeyPair;
 import org.jclouds.openstack.nova.v2_0.compute.loaders.FindSecurityGroupOrCreate;
@@ -68,7 +65,6 @@ import org.jclouds.openstack.nova.v2_0.compute.options.NovaTemplateOptions;
 import org.jclouds.openstack.nova.v2_0.compute.strategy.ApplyNovaTemplateOptionsCreateNodesWithGroupEncodedIntoNameThenAddToSet;
 import org.jclouds.openstack.nova.v2_0.domain.FloatingIP;
 import org.jclouds.openstack.nova.v2_0.domain.KeyPair;
-import org.jclouds.openstack.nova.v2_0.domain.SecurityGroupRule;
 import org.jclouds.openstack.nova.v2_0.domain.Server;
 import org.jclouds.openstack.nova.v2_0.domain.regionscoped.FlavorInRegion;
 import org.jclouds.openstack.nova.v2_0.domain.regionscoped.ImageInRegion;
@@ -113,12 +109,6 @@ public class NovaComputeServiceContextModule extends
 
       bind(new TypeLiteral<Function<ServerInRegion, NodeMetadata>>() {
       }).to(ServerInRegionToNodeMetadata.class);
-
-      bind(new TypeLiteral<Function<SecurityGroupRule, IpPermission>>() {
-      }).to(SecurityGroupRuleToIpPermission.class);
-
-      bind(new TypeLiteral<Function<org.jclouds.openstack.nova.v2_0.domain.SecurityGroup, SecurityGroup>>() {
-      }).to(NovaSecurityGroupToSecurityGroup.class);
 
       bind(new TypeLiteral<Function<SecurityGroupInRegion, SecurityGroup>>() {
       }).to(NovaSecurityGroupInRegionToSecurityGroup.class);

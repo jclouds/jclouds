@@ -24,6 +24,7 @@ import org.jclouds.http.HttpRequest;
 import org.jclouds.http.HttpResponse;
 import org.jclouds.openstack.nova.v2_0.NovaApi;
 import org.jclouds.openstack.nova.v2_0.compute.functions.CreateSecurityGroupIfNeeded;
+import org.jclouds.openstack.nova.v2_0.domain.SecurityGroup;
 import org.jclouds.openstack.nova.v2_0.domain.regionscoped.RegionSecurityGroupNameAndPorts;
 import org.jclouds.openstack.nova.v2_0.domain.regionscoped.SecurityGroupInRegion;
 import org.jclouds.openstack.nova.v2_0.internal.BaseNovaApiExpectTest;
@@ -47,13 +48,14 @@ public class CreateSecurityGroupIfNeededTest extends BaseNovaApiExpectTest {
                               "{\"security_group\":{\"name\":\"jclouds_mygroup\",\"description\":\"jclouds_mygroup\"}}",
                               "application/json")).build();
 
+   private final int groupId = 2769;
+
    public void testCreateNewGroup() throws Exception {
 
       Builder<HttpRequest, HttpResponse> builder = ImmutableMap.builder();
 
       builder.put(keystoneAuthWithUsernameAndPasswordAndTenantName, responseWithKeystoneAccess);
       builder.put(extensionsOfNovaRequest, extensionsOfNovaResponse);
-      int groupId = 2769;
 
       HttpResponse createResponse = HttpResponse.builder().statusCode(200)
                .payload(
@@ -113,15 +115,24 @@ public class CreateSecurityGroupIfNeededTest extends BaseNovaApiExpectTest {
 
       builder.put(getSecurityGroup, getSecurityGroupResponse);
 
+
+      HttpRequest listSecurityGroups = HttpRequest.builder().method("GET").endpoint(
+         URI.create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v2/3456/os-security-groups")).headers(
+         ImmutableMultimap.<String, String> builder().put("Accept", "application/json").put("X-Auth-Token",
+            authToken).build()).build();
+      HttpResponse listSecurityGroupsResponse = HttpResponse.builder().statusCode(200).payload(
+         payloadFromResource("/securitygroup_list_details_computeservice_typical.json")).build();
+      builder.put(listSecurityGroups, listSecurityGroupsResponse);
+
       NovaApi apiCanCreateSecurityGroup = requestsSendResponses(builder.build());
 
       CreateSecurityGroupIfNeeded fn = new CreateSecurityGroupIfNeeded(apiCanCreateSecurityGroup);
 
       // we can find it
-      assertEquals(fn.apply(
-               new RegionSecurityGroupNameAndPorts("az-1.region-a.geo-1", "jclouds_mygroup", ImmutableSet.of(22, 8080)))
-               .toString(), new SecurityGroupInRegion(new ParseComputeServiceTypicalSecurityGroupTest().expected(),
-               "az-1.region-a.geo-1").toString());
+      final SecurityGroup expected = new ParseComputeServiceTypicalSecurityGroupTest().expected();
+      assertEquals(
+         fn.apply(new RegionSecurityGroupNameAndPorts("az-1.region-a.geo-1", "jclouds_mygroup", ImmutableSet.of(22, 8080))).toString(),
+         new SecurityGroupInRegion(expected, "az-1.region-a.geo-1", ImmutableList.of(expected)).toString());
 
    }
 
@@ -155,10 +166,9 @@ public class CreateSecurityGroupIfNeededTest extends BaseNovaApiExpectTest {
       CreateSecurityGroupIfNeeded fn = new CreateSecurityGroupIfNeeded(apiWhenSecurityGroupsExist);
 
       // we can find it
-      assertEquals(fn.apply(
-               new RegionSecurityGroupNameAndPorts("az-1.region-a.geo-1", "jclouds_mygroup", ImmutableSet.of(22, 8080)))
-               .toString(), new SecurityGroupInRegion(new ParseComputeServiceTypicalSecurityGroupTest().expected(),
-               "az-1.region-a.geo-1").toString());
-
+      final SecurityGroup expected = new ParseComputeServiceTypicalSecurityGroupTest().expected();
+      assertEquals(
+         fn.apply(new RegionSecurityGroupNameAndPorts("az-1.region-a.geo-1", "jclouds_mygroup", ImmutableSet.of(22, 8080))).toString(),
+         new SecurityGroupInRegion(expected, "az-1.region-a.geo-1", ImmutableList.of(expected)).toString());
    }
 }
