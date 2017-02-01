@@ -554,7 +554,7 @@ public class FilesystemStorageStrategyImpl implements LocalStorageStrategy {
 
    @Override
    public BlobAccess getBlobAccess(String containerName, String blobName) {
-      if (new File(buildPathStartingFromBaseDir(containerName)).exists()) {
+      if (!new File(buildPathStartingFromBaseDir(containerName)).exists()) {
          throw new ContainerNotFoundException(containerName, "in getBlobAccess");
       }
       File file = new File(buildPathStartingFromBaseDir(containerName, blobName));
