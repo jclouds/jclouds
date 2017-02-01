@@ -337,7 +337,8 @@ public abstract class BaseRestApiExpectTest<S> {
                         String.format("request %s is out of range (%s)", index, requests.size())).payload(
                         Payloads.newStringPayload(renderRequest(input))).build();
             if (!httpRequestsAreEqual(input, requests.get(index))) {
-               assertEquals(renderRequest(input), renderRequest(requests.get(index)));
+               assertEquals(renderRequest(input), renderRequest(requests.get(index)),
+                  "Actual request did not match expected request " + index);
             }
             return responses.get(index);
          }

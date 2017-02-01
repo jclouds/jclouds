@@ -35,6 +35,7 @@ import org.jclouds.rest.ResourceNotFoundException;
 
 import com.google.common.base.Optional;
 import com.google.common.base.Predicate;
+import com.google.common.collect.FluentIterable;
 import com.google.common.collect.Iterables;
 import com.google.inject.Inject;
 
@@ -63,7 +64,8 @@ public class FindSecurityGroupWithNameAndReturnTrue implements Predicate<AtomicR
 
       logger.trace("looking for security group %s", securityGroupInRegion.slashEncode());
       try {
-         SecurityGroup returnVal = Iterables.find(api.get().list(), new Predicate<SecurityGroup>() {
+         final FluentIterable<SecurityGroup> allGroups = api.get().list();
+         SecurityGroup returnVal = Iterables.find(allGroups, new Predicate<SecurityGroup>() {
 
             @Override
             public boolean apply(SecurityGroup input) {
@@ -71,7 +73,7 @@ public class FindSecurityGroupWithNameAndReturnTrue implements Predicate<AtomicR
             }
 
          });
-         securityGroupInRegionRef.set(new SecurityGroupInRegion(returnVal, securityGroupInRegion.getRegion()));
+         securityGroupInRegionRef.set(new SecurityGroupInRegion(returnVal, securityGroupInRegion.getRegion(), allGroups));
          return true;
       } catch (ResourceNotFoundException e) {
          return false;

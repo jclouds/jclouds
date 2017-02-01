@@ -255,10 +255,23 @@ public class NovaSecurityGroupExtensionExpectTest extends BaseNovaComputeService
               payloadFromResource("/securitygroup_details_extension.json")).build();
 
 
-      SecurityGroupExtension extension = orderedRequestsSendResponses(ImmutableList.of(keystoneAuthWithUsernameAndPasswordAndTenantName,
-              extensionsOfNovaRequest, getSecurityGroup, createRule, getSecurityGroup, list, list),
-              ImmutableList.of(responseWithKeystoneAccess, extensionsOfNovaResponse, getSecurityGroupNoRulesResponse,
-                      createRuleResponse, getSecurityGroupResponse, listResponse, listResponse)).getSecurityGroupExtension().get();
+      SecurityGroupExtension extension = orderedRequestsSendResponses(
+         ImmutableList.of(
+            keystoneAuthWithUsernameAndPasswordAndTenantName,
+            extensionsOfNovaRequest,
+            list,
+            getSecurityGroup,
+            createRule,
+            list,
+            getSecurityGroup),
+         ImmutableList.of(
+            responseWithKeystoneAccess,
+            extensionsOfNovaResponse,
+            listResponse,
+            getSecurityGroupNoRulesResponse,
+            createRuleResponse,
+            listResponse,
+            getSecurityGroupResponse)).getSecurityGroupExtension().get();
 
       IpPermission.Builder builder = IpPermission.builder();
 
@@ -304,10 +317,24 @@ public class NovaSecurityGroupExtensionExpectTest extends BaseNovaComputeService
               payloadFromResource("/securitygroup_details_extension.json")).build();
 
 
-      SecurityGroupExtension extension = orderedRequestsSendResponses(ImmutableList.of(keystoneAuthWithUsernameAndPasswordAndTenantName,
-              extensionsOfNovaRequest, getSecurityGroup, createRule, getSecurityGroup, list, list),
-              ImmutableList.of(responseWithKeystoneAccess, extensionsOfNovaResponse, getSecurityGroupNoRulesResponse,
-                      createRuleResponse, getSecurityGroupResponse, listResponse, listResponse)).getSecurityGroupExtension().get();
+      SecurityGroupExtension extension = orderedRequestsSendResponses(
+         ImmutableList.of(
+            keystoneAuthWithUsernameAndPasswordAndTenantName,
+            extensionsOfNovaRequest,
+            list,
+            getSecurityGroup,
+            createRule,
+            list,
+            getSecurityGroup),
+         ImmutableList.of(
+            responseWithKeystoneAccess,
+            extensionsOfNovaResponse,
+            listResponse,
+            getSecurityGroupNoRulesResponse,
+            createRuleResponse,
+            listResponse,
+            getSecurityGroupResponse))
+         .getSecurityGroupExtension().get();
 
       SecurityGroup origGroup = extension.getSecurityGroupById(region + "/160");
 
@@ -349,11 +376,23 @@ public class NovaSecurityGroupExtensionExpectTest extends BaseNovaComputeService
       HttpResponse getSecurityGroupResponse = HttpResponse.builder().statusCode(200).payload(
               payloadFromResource("/securitygroup_details_extension.json")).build();
 
-
-      SecurityGroupExtension extension = orderedRequestsSendResponses(ImmutableList.of(keystoneAuthWithUsernameAndPasswordAndTenantName,
-              extensionsOfNovaRequest, getSecurityGroup, createRule, getSecurityGroup, list, list),
-              ImmutableList.of(responseWithKeystoneAccess, extensionsOfNovaResponse, getSecurityGroupNoRulesResponse,
-                      createRuleResponse, getSecurityGroupResponse, listResponse, listResponse)).getSecurityGroupExtension().get();
+      SecurityGroupExtension extension = orderedRequestsSendResponses(
+         ImmutableList.of(
+            keystoneAuthWithUsernameAndPasswordAndTenantName,
+            extensionsOfNovaRequest,
+            list,
+            getSecurityGroup,
+            createRule,
+            list,
+            getSecurityGroup),
+         ImmutableList.of(
+            responseWithKeystoneAccess,
+            extensionsOfNovaResponse,
+            listResponse,
+            getSecurityGroupNoRulesResponse,
+            createRuleResponse,
+            listResponse,
+            getSecurityGroupResponse)).getSecurityGroupExtension().get();
 
       IpPermission.Builder builder = IpPermission.builder();
 
@@ -399,10 +438,24 @@ public class NovaSecurityGroupExtensionExpectTest extends BaseNovaComputeService
               payloadFromResource("/securitygroup_details_extension.json")).build();
 
 
-      SecurityGroupExtension extension = orderedRequestsSendResponses(ImmutableList.of(keystoneAuthWithUsernameAndPasswordAndTenantName,
-              extensionsOfNovaRequest, getSecurityGroup, createRule, getSecurityGroup, list, list),
-              ImmutableList.of(responseWithKeystoneAccess, extensionsOfNovaResponse, getSecurityGroupNoRulesResponse,
-                      createRuleResponse, getSecurityGroupResponse, listResponse, listResponse)).getSecurityGroupExtension().get();
+      SecurityGroupExtension extension = orderedRequestsSendResponses(
+         ImmutableList.of(
+            keystoneAuthWithUsernameAndPasswordAndTenantName,
+            extensionsOfNovaRequest,
+            list,
+            getSecurityGroup,
+            createRule,
+            list,
+            getSecurityGroup),
+         ImmutableList.of(
+            responseWithKeystoneAccess,
+            extensionsOfNovaResponse,
+            listResponse,
+            getSecurityGroupNoRulesResponse,
+            createRuleResponse,
+            listResponse,
+            getSecurityGroupResponse))
+         .getSecurityGroupExtension().get();
 
       SecurityGroup origGroup = extension.getSecurityGroupById(region + "/160");
 

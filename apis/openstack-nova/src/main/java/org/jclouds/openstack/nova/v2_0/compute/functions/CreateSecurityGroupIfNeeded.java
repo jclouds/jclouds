@@ -38,6 +38,7 @@ import org.jclouds.openstack.nova.v2_0.extensions.SecurityGroupApi;
 
 import com.google.common.base.Function;
 import com.google.common.base.Optional;
+import com.google.common.collect.FluentIterable;
 
 @Singleton
 public class CreateSecurityGroupIfNeeded implements Function<RegionSecurityGroupNameAndPorts, SecurityGroupInRegion> {
@@ -58,31 +59,30 @@ public class CreateSecurityGroupIfNeeded implements Function<RegionSecurityGroup
       String regionId = regionSecurityGroupNameAndPorts.getRegion();
       Optional<? extends SecurityGroupApi> api = novaApi.getSecurityGroupApi(regionId);
       checkArgument(api.isPresent(), "Security groups are required, but the extension is not available in region %s!", regionId);
+      final FluentIterable<SecurityGroup> allGroups = api.get().list();
       logger.debug(">> creating securityGroup %s", regionSecurityGroupNameAndPorts);
       try {
-
          SecurityGroup securityGroup = api.get().createWithDescription(
-                  regionSecurityGroupNameAndPorts.getName(), regionSecurityGroupNameAndPorts.getName());
+            regionSecurityGroupNameAndPorts.getName(), regionSecurityGroupNameAndPorts.getName());
 
          logger.debug("<< created securityGroup(%s)", securityGroup);
          for (int port : regionSecurityGroupNameAndPorts.getPorts()) {
             authorizeGroupToItselfAndAllIPsToTCPPort(api.get(), securityGroup, port);
          }
-         return new SecurityGroupInRegion(api.get().get(securityGroup.getId()), regionId);
+         return new SecurityGroupInRegion(api.get().get(securityGroup.getId()), regionId, allGroups);
       } catch (IllegalStateException e) {
          logger.trace("<< trying to find securityGroup(%s): %s", regionSecurityGroupNameAndPorts, e.getMessage());
-         SecurityGroup group = find(api.get().list(), nameEquals(regionSecurityGroupNameAndPorts
-                  .getName()));
+         SecurityGroup group = find(allGroups, nameEquals(regionSecurityGroupNameAndPorts.getName()));
          logger.debug("<< reused securityGroup(%s)", group.getId());
-         return new SecurityGroupInRegion(group, regionId);
+         return new SecurityGroupInRegion(group, regionId, allGroups);
       }
    }
 
    private void authorizeGroupToItselfAndAllIPsToTCPPort(SecurityGroupApi securityGroupApi,
-            SecurityGroup securityGroup, int port) {
+                                                         SecurityGroup securityGroup, int port) {
       logger.debug(">> authorizing securityGroup(%s) permission to 0.0.0.0/0 on port %d", securityGroup, port);
       securityGroupApi.createRuleAllowingCidrBlock(securityGroup.getId(), Ingress.builder().ipProtocol(
-               IpProtocol.TCP).fromPort(port).toPort(port).build(), "0.0.0.0/0");
+         IpProtocol.TCP).fromPort(port).toPort(port).build(), "0.0.0.0/0");
       logger.debug("<< authorized securityGroup(%s) permission to 0.0.0.0/0 on port %d", securityGroup, port);
 
    }
