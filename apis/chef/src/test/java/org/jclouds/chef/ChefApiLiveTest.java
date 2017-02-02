@@ -246,9 +246,9 @@ public class ChefApiLiveTest extends BaseChefLiveTest {
    public void testCreateRole() throws Exception {
       String env1 = "env1";
       String env2 = "env2";
-      String env1Alpha = "env1.alpha";
-      String env2Alpha = "env2.alpha";
-      String env2Bravo = "env2.bravo";
+      String env1Alpha = "recipe[env1.alpha]";
+      String env2Alpha = "recipe[env2.alpha]";
+      String env2Bravo = "recipe[env2.bravo]";
 
       api.deleteRole(PREFIX);
       api.createRole(Role.builder().name(PREFIX).runListElement("recipe[java]")
