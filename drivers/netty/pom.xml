@@ -35,7 +35,7 @@
     <jclouds.osgi.export>org.jclouds.netty*;version="${project.version}"</jclouds.osgi.export>
     <jclouds.osgi.import>
       org.jclouds*;version="${project.version}",
-      org.jboss.netty*;version="[3.3,4)",
+      org.jboss.netty*;version="3.5.9.Final",
       *
     </jclouds.osgi.import>
   </properties>
