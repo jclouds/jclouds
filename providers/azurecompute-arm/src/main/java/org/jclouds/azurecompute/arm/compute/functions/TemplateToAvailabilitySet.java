@@ -18,6 +18,9 @@ package org.jclouds.azurecompute.arm.compute.functions;
 
 import static com.google.common.base.Preconditions.checkArgument;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import javax.annotation.Resource;
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -75,9 +78,16 @@ public class TemplateToAvailabilitySet implements Function<Template, Availabilit
             checkArgument(location.equals(availabilitySet.location()), "The availability set %s does not belong to location %s",
                   options.getAvailabilitySetName(), location);
          } else {
-            availabilitySet = api.getAvailabilitySetApi(resourceGroup).createOrUpdate(options.getAvailabilitySet().name(), location,
-                  options.getAvailabilitySet().tags(), options.getAvailabilitySet().properties());
-            logger.debug(">> creating availability set [%s]", availabilitySet.name());
+            Map<String, String> tags = new HashMap<String, String>();
+            if (options.getAvailabilitySet().tags() != null) {
+               tags.putAll(options.getAvailabilitySet().tags());
+            }
+            tags.put("jclouds", options.getAvailabilitySet().name());
+
+            logger.debug(">> creating availability set [%s]", options.getAvailabilitySet().name());
+
+            availabilitySet = api.getAvailabilitySetApi(resourceGroup).createOrUpdate(
+                  options.getAvailabilitySet().name(), location, tags, options.getAvailabilitySet().properties());
          }
       }
 

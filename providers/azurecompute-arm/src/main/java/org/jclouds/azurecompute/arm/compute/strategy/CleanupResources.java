@@ -25,6 +25,7 @@ import javax.inject.Named;
 import javax.inject.Singleton;
 
 import org.jclouds.azurecompute.arm.AzureComputeApi;
+import org.jclouds.azurecompute.arm.domain.AvailabilitySet;
 import org.jclouds.azurecompute.arm.domain.IdReference;
 import org.jclouds.azurecompute.arm.domain.IpConfiguration;
 import org.jclouds.azurecompute.arm.domain.NetworkInterfaceCard;
@@ -95,6 +96,7 @@ public class CleanupResources {
 
       cleanupVirtualMachineNICs(resourceGroupName, virtualMachine);
       cleanupVirtualMachineStorage(resourceGroupName, virtualMachine);
+      cleanupAvailabilitySetIfOrphaned(resourceGroupName, virtualMachine);
 
       return vmDeleted;
    }
@@ -163,6 +165,24 @@ public class CleanupResources {
       return deleted;
    }
 
+   public boolean cleanupAvailabilitySetIfOrphaned(String resourceGroup, VirtualMachine virtualMachine) {
+      boolean deleted = false;
+      IdReference availabilitySetRef = virtualMachine.properties().availabilitySet();
+
+      if (availabilitySetRef != null) {
+         String name = Iterables.getLast(Splitter.on("/").split(availabilitySetRef.id()));
+         AvailabilitySet availabilitySet = api.getAvailabilitySetApi(resourceGroup).get(name);
+
+         if (isOrphanedJcloudsAvailabilitySet(availabilitySet)) {
+            logger.debug(">> deleting orphaned availability set %s from %s...", name, resourceGroup);
+            URI uri = api.getAvailabilitySetApi(resourceGroup).delete(name);
+            deleted = uri == null || resourceDeleted.apply(uri);
+         }
+      }
+
+      return deleted;
+   }
+
    public boolean deleteResourceGroupIfEmpty(String group) {
       boolean deleted = false;
       if (api.getResourceGroupApi().resources(group).isEmpty()) {
@@ -185,6 +205,16 @@ public class CleanupResources {
                   return Iterables.getLast(Splitter.on("/").split(input.id()));
                }
             });
+   }
+
+   private static boolean isOrphanedJcloudsAvailabilitySet(AvailabilitySet availabilitySet) {
+      // We check for the presence of the 'jclouds' tag to make sure we only
+      // delete availability sets that were automatically created by jclouds
+      return availabilitySet != null
+            && availabilitySet.tags() != null
+            && availabilitySet.tags().containsKey("jclouds")
+            && (availabilitySet.properties().virtualMachines() == null || availabilitySet.properties()
+                  .virtualMachines().isEmpty());
    }
 
    private List<String> getNetworkCardInterfaceNames(VirtualMachine virtualMachine) {
