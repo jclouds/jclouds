@@ -68,6 +68,9 @@ public class ResourceDefinitionToCustomImage implements Function<ResourceDefinit
       ResourceGroup resourceGroup = resourceGroupMap.getUnchecked(regionAndId.region());
       
       VirtualMachine vm = api.getVirtualMachineApi(resourceGroup.name()).get(regionAndId.id());
+      if (vm == null) {
+         return null;
+      }
       String storageAccountName = storageProfileToStorageAccountName.apply(vm.properties().storageProfile());
 
       VMImage.Builder builder = VMImage.customImage().group(resourceGroup.name()).storage(storageAccountName)

@@ -123,6 +123,9 @@ public class AzureComputeSecurityGroupExtension implements SecurityGroupExtensio
       ResourceGroup resourceGroup = resourceGroupMap.getUnchecked(regionAndId.region());
 
       VirtualMachine vm = api.getVirtualMachineApi(resourceGroup.name()).get(regionAndId.id());
+      if (vm == null) {
+         throw new IllegalArgumentException("Node " + regionAndId.id() + " was not found");
+      }
       List<IdReference> networkInterfacesIdReferences = vm.properties().networkProfile().networkInterfaces();
       List<NetworkSecurityGroup> networkGroups = new ArrayList<NetworkSecurityGroup>();
 
