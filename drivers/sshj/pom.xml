@@ -89,7 +89,7 @@
     <dependency>
       <groupId>com.hierynomus</groupId>
       <artifactId>sshj</artifactId>
-      <version>0.12.0</version>
+      <version>0.20.0</version>
       <exclusions>
         <!-- provided by the jclouds-bouncycastle driver -->
         <exclusion>
