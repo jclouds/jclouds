@@ -135,6 +135,13 @@ public class CreateServerOptions implements MapBinder {
             configDrive, blockDeviceMappings);
    }
 
+   protected String formatPossiblyGzipped(final byte [] data) {
+      if (data.length > 10 && data[0] == 31 && data[1] == -117) {
+         return String.format("<gzipped data (%d bytes)>", data.length);
+      }
+      return new String(data);
+   }
+
    protected ToStringHelper string() {
       ToStringHelper toString = Objects.toStringHelper(this);
       toString.add("keyName", keyName);
@@ -148,7 +155,7 @@ public class CreateServerOptions implements MapBinder {
          toString.add("adminPassPresent", true);
       if (diskConfig != null)
          toString.add("diskConfig", diskConfig);
-      toString.add("userData", userData == null ? null : new String(userData));
+      toString.add("userData", userData == null ? null : formatPossiblyGzipped(userData));
       if (!networks.isEmpty())
          toString.add("networks", networks);
       toString.add("availabilityZone", availabilityZone == null ? null : availabilityZone);
