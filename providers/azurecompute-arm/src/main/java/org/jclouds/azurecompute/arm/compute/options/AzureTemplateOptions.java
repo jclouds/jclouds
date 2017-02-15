@@ -135,6 +135,8 @@ public class AzureTemplateOptions extends TemplateOptions implements Cloneable {
       toString.add("virtualNetworkName", virtualNetworkName);
       toString.add("subnetId", subnetId);
       toString.add("blob", blob);
+      toString.add("availabilitySet", availabilitySet);
+      toString.add("availabilitySetName", availabilitySetName);
       return toString;
    }
 
