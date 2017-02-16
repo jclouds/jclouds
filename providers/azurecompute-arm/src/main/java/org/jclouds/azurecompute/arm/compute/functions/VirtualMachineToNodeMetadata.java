@@ -41,6 +41,7 @@ import org.jclouds.azurecompute.arm.AzureComputeApi;
 import org.jclouds.azurecompute.arm.domain.IdReference;
 import org.jclouds.azurecompute.arm.domain.IpConfiguration;
 import org.jclouds.azurecompute.arm.domain.NetworkInterfaceCard;
+import org.jclouds.azurecompute.arm.domain.PublicIPAddress;
 import org.jclouds.azurecompute.arm.domain.RegionAndId;
 import org.jclouds.azurecompute.arm.domain.ResourceGroup;
 import org.jclouds.azurecompute.arm.domain.StorageProfile;
@@ -247,8 +248,10 @@ public class VirtualMachineToNodeMetadata implements Function<VirtualMachine, No
             for (IpConfiguration ipConfiguration : networkInterfaceCard.properties().ipConfigurations()) {
                if (ipConfiguration.properties().publicIPAddress() != null) {
                   String publicIpId = ipConfiguration.properties().publicIPAddress().id();
-                  publicIpAddresses.add(api.getPublicIPAddressApi(resourceGroup)
-                        .get(Iterables.getLast(Splitter.on("/").split(publicIpId))).properties().ipAddress());
+                  PublicIPAddress publicIp = api.getPublicIPAddressApi(resourceGroup).get(Iterables.getLast(Splitter.on("/").split(publicIpId)));
+                  if (publicIp != null && publicIp.properties().ipAddress() != null) {
+                     publicIpAddresses.add(publicIp.properties().ipAddress());
+                  }
                }
             }
          }
