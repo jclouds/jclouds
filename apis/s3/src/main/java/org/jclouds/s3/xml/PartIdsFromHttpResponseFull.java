@@ -20,24 +20,23 @@ import static org.jclouds.util.SaxUtils.currentOrNull;
 
 import java.util.Date;
 import java.util.Map;
-import java.util.regex.Pattern;
 
 import javax.inject.Inject;
 
 import org.jclouds.date.DateService;
 import org.jclouds.http.functions.ParseSax;
+import org.jclouds.s3.domain.ListMultipartUploadResponse;
 
+import com.google.common.annotations.Beta;
 import com.google.common.collect.ImmutableMap;
 
 /**
  * Parses the following XML document:
  * <p/>
  * ListBucketResult xmlns="http://s3.amazonaws.com/doc/2006-03-01"
- *
- * @deprecated see PartIdsFromHttpResponseFull
  */
-@Deprecated
-public class PartIdsFromHttpResponse extends ParseSax.HandlerWithResult<Map<Integer, String>> {
+@Beta
+public final class PartIdsFromHttpResponseFull extends ParseSax.HandlerWithResult<Map<Integer, ListMultipartUploadResponse>> {
    private final StringBuilder currentText = new StringBuilder();
 
    private final DateService dateParser;
@@ -47,17 +46,14 @@ public class PartIdsFromHttpResponse extends ParseSax.HandlerWithResult<Map<Inte
    private String eTag;
    private long size;
 
-   private final ImmutableMap.Builder<Integer, String> parts = ImmutableMap.builder();
-
-   /** Some blobs have a non-hex suffix when created by multi-part uploads such Amazon S3. */
-   private static final Pattern ETAG_CONTENT_MD5_PATTERN = Pattern.compile("\"([0-9a-f]+)\"");
+   private final ImmutableMap.Builder<Integer, ListMultipartUploadResponse> parts = ImmutableMap.builder();
 
    @Inject
-   public PartIdsFromHttpResponse(DateService dateParser) {
+   PartIdsFromHttpResponseFull(DateService dateParser) {
       this.dateParser = dateParser;
    }
 
-   public Map<Integer, String> getResult() {
+   public Map<Integer, ListMultipartUploadResponse> getResult() {
       return parts.build();
    }
 
@@ -71,7 +67,7 @@ public class PartIdsFromHttpResponse extends ParseSax.HandlerWithResult<Map<Inte
       } else if (qName.equals("Size")) {
          size = Long.parseLong(currentText.toString().trim());
       } else if (qName.equals("Part")) {
-         parts.put(partNumber, eTag);
+         parts.put(partNumber, ListMultipartUploadResponse.create(partNumber, lastModfied, eTag, size));
       }
       currentText.setLength(0);
    }
@@ -80,3 +76,4 @@ public class PartIdsFromHttpResponse extends ParseSax.HandlerWithResult<Map<Inte
       currentText.append(ch, start, length);
    }
 }
+

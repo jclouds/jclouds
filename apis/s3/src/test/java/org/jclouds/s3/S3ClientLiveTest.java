@@ -56,6 +56,7 @@ import org.jclouds.s3.domain.AccessControlList.GroupGranteeURI;
 import org.jclouds.s3.domain.AccessControlList.Permission;
 import org.jclouds.s3.domain.CannedAccessPolicy;
 import org.jclouds.s3.domain.DeleteResult;
+import org.jclouds.s3.domain.ListMultipartUploadResponse;
 import org.jclouds.s3.domain.ListMultipartUploadsResponse;
 import org.jclouds.s3.domain.ObjectMetadata;
 import org.jclouds.s3.domain.ObjectMetadataBuilder;
@@ -514,7 +515,7 @@ public class S3ClientLiveTest extends BaseBlobStoreIntegrationTest {
          String key = "constitution.txt";
          String uploadId = getApi().initiateMultipartUpload(containerName,
                   ObjectMetadataBuilder.create().key(key).contentMD5(oneHundredOneConstitutionsMD5.asBytes()).build());
-         assertThat(getApi().listMultipartParts(containerName, key, uploadId)).isEmpty();
+         assertThat(getApi().listMultipartPartsFull(containerName, key, uploadId)).isEmpty();
 
          byte[] buffer = oneHundredOneConstitutions.read();
          assertEquals(oneHundredOneConstitutions.size(), (long) buffer.length);
@@ -534,7 +535,9 @@ public class S3ClientLiveTest extends BaseBlobStoreIntegrationTest {
             // available there.
             eTagOf1 = getApi().uploadPart(containerName, key, 1, uploadId, part1);
          }
-         assertThat(getApi().listMultipartParts(containerName, key, uploadId)).containsOnlyKeys(1);
+         Map<Integer, ListMultipartUploadResponse> map = getApi().listMultipartPartsFull(containerName, key, uploadId);
+         assertThat(map).containsOnlyKeys(1);
+         assertThat(map.get(1).eTag()).isEqualTo(eTagOf1);
 
          getApi().completeMultipartUpload(containerName, key, uploadId, ImmutableMap.of(1, eTagOf1));
 
