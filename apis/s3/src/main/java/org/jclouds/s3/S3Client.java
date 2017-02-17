@@ -75,6 +75,7 @@ import org.jclouds.s3.domain.BucketMetadata;
 import org.jclouds.s3.domain.CannedAccessPolicy;
 import org.jclouds.s3.domain.DeleteResult;
 import org.jclouds.s3.domain.ListBucketResponse;
+import org.jclouds.s3.domain.ListMultipartUploadResponse;
 import org.jclouds.s3.domain.ListMultipartUploadsResponse;
 import org.jclouds.s3.domain.ObjectMetadata;
 import org.jclouds.s3.domain.Payer;
@@ -104,8 +105,10 @@ import org.jclouds.s3.xml.ListBucketHandler;
 import org.jclouds.s3.xml.ListMultipartUploadsHandler;
 import org.jclouds.s3.xml.LocationConstraintHandler;
 import org.jclouds.s3.xml.PartIdsFromHttpResponse;
+import org.jclouds.s3.xml.PartIdsFromHttpResponseFull;
 import org.jclouds.s3.xml.PayerHandler;
 
+import com.google.common.annotations.Beta;
 import com.google.inject.Provides;
 
 /**
@@ -780,11 +783,22 @@ public interface S3Client extends Closeable {
          @PathParam("key") String key, @QueryParam("uploadId") String uploadId,
          @BinderParam(BindPartIdsAndETagsToRequest.class) Map<Integer, String> parts);
 
+   /** @deprecated see #listMultipartPartsFull */
+   @Deprecated
    @Named("ListMultipartParts")
    @GET
    @Path("/{key}")
    @XMLResponseParser(PartIdsFromHttpResponse.class)
    Map<Integer, String> listMultipartParts(@Bucket @EndpointParam(parser = AssignCorrectHostnameForBucket.class)
+         @BinderParam(BindAsHostPrefixIfConfigured.class) @ParamValidators(BucketNameValidator.class) String bucketName,
+         @PathParam("key") String key, @QueryParam("uploadId") String uploadId);
+
+   @Beta
+   @Named("ListMultipartParts")
+   @GET
+   @Path("/{key}")
+   @XMLResponseParser(PartIdsFromHttpResponseFull.class)
+   Map<Integer, ListMultipartUploadResponse> listMultipartPartsFull(@Bucket @EndpointParam(parser = AssignCorrectHostnameForBucket.class)
          @BinderParam(BindAsHostPrefixIfConfigured.class) @ParamValidators(BucketNameValidator.class) String bucketName,
          @PathParam("key") String key, @QueryParam("uploadId") String uploadId);
 
