@@ -52,7 +52,7 @@ public class NetworkSecurityRuleToIpPermission implements Function<NetworkSecuri
    @Override
    public IpPermission apply(final NetworkSecurityRule rule) {
       if (!InboundRule.apply(rule)) {
-         logger.warn(">> ignoring non-inbound networks ecurity rule %s...", rule.name());
+         logger.warn(">> ignoring non-inbound network security rule %s...", rule.name());
          return null;
       }
 

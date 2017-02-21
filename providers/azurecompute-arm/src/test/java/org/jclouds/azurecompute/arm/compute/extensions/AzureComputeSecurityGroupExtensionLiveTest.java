@@ -23,6 +23,7 @@ import static org.jclouds.compute.options.TemplateOptions.Builder.securityGroups
 import static org.jclouds.compute.predicates.NodePredicates.inGroup;
 import static org.jclouds.net.domain.IpProtocol.TCP;
 import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertTrue;
 
 import java.util.Properties;
@@ -40,6 +41,7 @@ import org.jclouds.compute.domain.SecurityGroup;
 import org.jclouds.compute.extensions.SecurityGroupExtension;
 import org.jclouds.compute.extensions.internal.BaseSecurityGroupExtensionLiveTest;
 import org.jclouds.domain.Location;
+import org.jclouds.net.domain.IpPermission;
 import org.jclouds.net.util.IpPermissions;
 import org.jclouds.providers.ProviderMetadata;
 import org.testng.annotations.AfterClass;
@@ -72,6 +74,21 @@ public class AzureComputeSecurityGroupExtensionLiveTest extends BaseSecurityGrou
             .getInstance(Key.get(new TypeLiteral<LoadingCache<String, ResourceGroup>>() {
             }));
       createResourceGroup();
+   }
+
+   @Test(groups = { "integration", "live" }, singleThreaded = true, dependsOnMethods = "testAddIpPermissionsFromSpec")
+   public void testAddIpPermissionForAnyProtocol() {
+      ComputeService computeService = view.getComputeService();
+      Optional<SecurityGroupExtension> securityGroupExtension = computeService.getSecurityGroupExtension();
+      assertTrue(securityGroupExtension.isPresent(), "security group extension was not present");
+
+      SecurityGroup group = securityGroupExtension.get().getSecurityGroupById(groupId);
+      assertNotNull(group, "No security group was found with id: " + groupId);
+
+      IpPermission openAll = IpPermissions.permitAnyProtocol();
+      SecurityGroup allOpenSecurityGroup = securityGroupExtension.get().addIpPermission(openAll, group);
+
+      assertTrue(allOpenSecurityGroup.getIpPermissions().contains(openAll));
    }
 
    @Test(groups = { "integration", "live" }, dependsOnMethods = "testCreateSecurityGroup")

@@ -193,7 +193,7 @@ public class AzureComputeSecurityGroupExtension implements SecurityGroupExtensio
          Multimap<String, String> tenantIdGroupNamePairs, Iterable<String> ipRanges, Iterable<String> groupIds,
          SecurityGroup group) {
       String portRange = startPort + "-" + endPort;
-      String ruleName = protocol + "-" + portRange;
+      String ruleName = "ingress-" + protocol.name().toLowerCase() + "-" + portRange;
 
       logger.debug(">> adding ip permission [%s] to %s...", ruleName, group.getName());
 
@@ -240,7 +240,7 @@ public class AzureComputeSecurityGroupExtension implements SecurityGroupExtensio
          Multimap<String, String> tenantIdGroupNamePairs, final Iterable<String> ipRanges, Iterable<String> groupIds,
          SecurityGroup group) {
       final String portRange = startPort + "-" + endPort;
-      String ruleName = protocol + "-" + portRange;
+      String ruleName = "ingress-" + protocol.name().toLowerCase() + "-" + portRange;
 
       logger.debug(">> deleting ip permissions matching [%s] from %s...", ruleName, group.getName());
 
