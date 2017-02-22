@@ -62,6 +62,7 @@ import org.jclouds.googlecomputeengine.features.InstanceApi;
 import org.jclouds.location.suppliers.all.JustProvider;
 
 import com.google.common.base.Function;
+import com.google.common.base.Optional;
 import com.google.common.base.Predicate;
 import com.google.common.base.Splitter;
 import com.google.common.base.Strings;
@@ -96,7 +97,7 @@ public final class GoogleComputeEngineServiceAdapter
    private final Function<Map<String, ?>, String> windowsPasswordGenerator;
    private final FirewallTagNamingConvention.Factory firewallTagNamingConvention;
    private final List<String> imageProjects;
-   private final LoadingCache<URI, Image> diskURIToImage;
+   private final LoadingCache<URI, Optional<Image>> diskURIToImage;
 
    @Inject GoogleComputeEngineServiceAdapter(JustProvider justProvider, GoogleComputeEngineApi api,
                                             Predicate<AtomicReference<Operation>> operationDone,
@@ -105,7 +106,7 @@ public final class GoogleComputeEngineServiceAdapter
                                             Resources resources,
                                             FirewallTagNamingConvention.Factory firewallTagNamingConvention,
                                             @Named(IMAGE_PROJECTS) String imageProjects,
-                                            LoadingCache<URI, Image> diskURIToImage) {
+                                            LoadingCache<URI, Optional<Image>> diskURIToImage) {
       this.justProvider = justProvider;
       this.api = api;
       this.operationDone = operationDone;

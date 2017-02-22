@@ -17,6 +17,7 @@
 package org.jclouds.googlecomputeengine.compute.functions;
 
 import com.google.common.base.Function;
+import com.google.common.base.Optional;
 import com.google.common.base.Splitter;
 import com.google.common.base.Supplier;
 import com.google.common.cache.LoadingCache;
@@ -44,13 +45,13 @@ public final class InstanceToNodeMetadata implements Function<Instance, NodeMeta
 
    private final Map<Instance.Status, NodeMetadata.Status> toPortableNodeStatus;
    private final GroupNamingConvention nodeNamingConvention;
-   private final LoadingCache<URI, Image> diskURIToImage;
+   private final LoadingCache<URI, Optional<Image>> diskURIToImage;
    private final Supplier<Map<URI, Hardware>> hardwares;
    private final Supplier<Map<URI, Location>> locationsByUri;
 
    @Inject InstanceToNodeMetadata(Map<Instance.Status, NodeMetadata.Status> toPortableNodeStatus,
                                   GroupNamingConvention.Factory namingConvention,
-                                  LoadingCache<URI, Image> diskURIToImage,
+                                  LoadingCache<URI, Optional<Image>> diskURIToImage,
                                   @Memoized Supplier<Map<URI, Hardware>> hardwares,
                                   @Memoized Supplier<Map<URI, Location>> locationsByUri) {
       this.toPortableNodeStatus = toPortableNodeStatus;
@@ -74,7 +75,9 @@ public final class InstanceToNodeMetadata implements Function<Instance, NodeMeta
       //
       // Note: This will be present if we created the node. In the future we could choose to make diskToSourceImage
       // a loading cache. That would be more expensive, but could ensure this isn't null.
-      Image image = diskURIToImage.getUnchecked(input.disks().get(0).source());
+
+      URI diskSource = input.disks().get(0).source();
+      Optional<Image> image = diskURIToImage.getUnchecked(diskSource);
 
       Hardware hardware;
       if (isCustomMachineTypeURI(input.machineType())) {
@@ -89,7 +92,7 @@ public final class InstanceToNodeMetadata implements Function<Instance, NodeMeta
              .providerId(input.id())
              .hostname(input.name())
              .location(zone)
-             .imageId(image != null ? image.selfLink().toString() : null)
+             .imageId(image.isPresent() ? image.get().selfLink().toString() : null)
              .hardware(hardware)
              .status(input.status() != null ? toPortableNodeStatus.get(input.status()) : Status.UNRECOGNIZED)
              .tags(input.tags().items())

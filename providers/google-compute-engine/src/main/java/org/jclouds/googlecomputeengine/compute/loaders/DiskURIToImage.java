@@ -22,6 +22,7 @@ import javax.inject.Singleton;
 import java.net.URI;
 import java.util.concurrent.ExecutionException;
 
+import com.google.common.base.Optional;
 import com.google.common.cache.CacheLoader;
 import org.jclouds.googlecomputeengine.compute.functions.Resources;
 import org.jclouds.googlecomputeengine.domain.Disk;
@@ -30,7 +31,7 @@ import org.jclouds.logging.Logger;
 
 
 @Singleton
-public class DiskURIToImage extends CacheLoader<URI, Image> {
+public class DiskURIToImage extends CacheLoader<URI, Optional<Image>> {
    @Resource
    protected Logger logger = Logger.NULL;
 
@@ -42,10 +43,12 @@ public class DiskURIToImage extends CacheLoader<URI, Image> {
    }
 
    @Override
-   public Image load(URI key) throws ExecutionException {
+   public Optional<Image> load(URI key) throws ExecutionException {
       try {
          Disk disk = resources.disk(key);
-         return resources.image(disk.sourceImage());
+         URI sourceImage = disk.sourceImage();
+         Image image = sourceImage != null ? resources.image(sourceImage) : null;
+         return Optional.fromNullable(image);
       } catch (Exception e) {
          throw new ExecutionException(message(key, e), e);
       }

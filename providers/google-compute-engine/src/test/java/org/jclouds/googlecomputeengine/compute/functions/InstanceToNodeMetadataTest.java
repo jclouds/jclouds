@@ -18,6 +18,7 @@ package org.jclouds.googlecomputeengine.compute.functions;
 
 import com.google.common.base.Function;
 import com.google.common.base.Functions;
+import com.google.common.base.Optional;
 import com.google.common.base.Predicate;
 import com.google.common.base.Supplier;
 import com.google.common.base.Suppliers;
@@ -176,8 +177,8 @@ public class InstanceToNodeMetadataTest {
             }
          };
 
-      Map<URI, Image> imageMap = ImmutableMap.of(instance.disks().get(0).source(),
-            new ParseImageTest().expected());
+      Map<URI, Optional<Image>> imageMap = ImmutableMap.of(instance.disks().get(0).source(),
+            Optional.of(new ParseImageTest().expected()));
 
       return new InstanceToNodeMetadata(
          ImmutableMap.<Instance.Status, NodeMetadata.Status>builder()
