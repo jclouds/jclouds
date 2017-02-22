@@ -148,6 +148,26 @@ public class GoogleComputeEngineServiceMockTest extends BaseGoogleComputeEngineA
       assertSent(server, "GET", "/projects/party/aggregated/machineTypes");
    }
 
+
+   public void listNodesWithSnapshotSource() throws Exception {
+      server.enqueue(aggregatedListWithInstanceNetworkAndStatus("test-0", "test-network", RUNNING));
+      server.enqueue(singleRegionSingleZoneResponse());
+      server.enqueue(jsonResponse("/disk_get_with_source_snapshot.json"));
+      server.enqueue(jsonResponse("/aggregated_machinetype_list.json"));
+
+      Set<? extends ComputeMetadata> nodes = computeService().listNodes();
+      assertEquals(nodes.size(), 1);
+      NodeMetadata node = (NodeMetadata) nodes.iterator().next();
+      String imageId = node.getImageId();
+      assertEquals(imageId, null);
+      assertSent(server, "GET", "/projects/party/aggregated/instances");
+      assertSent(server, "GET", "/projects/party/regions");
+      assertSent(server, "GET", "/projects/party/zones/us-central1-a/disks/test");
+      assertSent(server, "GET", "/projects/party/aggregated/machineTypes");
+   }
+
+
+
    public void createNodeWhenFirewallDoesNotExist() throws Exception {
       server.enqueue(singleRegionSingleZoneResponse());
       server.enqueue(jsonResponse("/image_list.json"));

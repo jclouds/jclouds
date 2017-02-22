@@ -67,6 +67,7 @@ import org.jclouds.googlecomputeengine.domain.Operation;
 import org.jclouds.location.suppliers.ImplicitLocationSupplier;
 import org.jclouds.location.suppliers.implicit.FirstZone;
 
+import com.google.common.base.Optional;
 import com.google.common.base.Function;
 import com.google.common.base.Functions;
 import com.google.common.base.Predicate;
@@ -134,7 +135,7 @@ public final class GoogleComputeEngineServiceContextModule
 
       bind(FirewallTagNamingConvention.Factory.class).in(Scopes.SINGLETON);
 
-      bind(new TypeLiteral<CacheLoader<URI, Image>>() {
+      bind(new TypeLiteral<CacheLoader<URI, Optional<Image>>>() {
       }).to(DiskURIToImage.class);
 
       bindHttpApi(binder(), Resources.class);
@@ -202,8 +203,8 @@ public final class GoogleComputeEngineServiceContextModule
 
    @Provides
    @Singleton
-   protected LoadingCache<URI, Image> diskURIToImageMap(
-         CacheLoader<URI, Image> in) {
+   protected LoadingCache<URI, Optional<Image>> diskURIToImageMap(
+         CacheLoader<URI, Optional<Image>> in) {
       return CacheBuilder.newBuilder().build(in);
    }
 

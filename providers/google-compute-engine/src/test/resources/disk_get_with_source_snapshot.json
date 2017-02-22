@@ -1,0 +1,12 @@
+{
+   "kind": "compute#disk",
+   "id": "13050421646334304115",
+   "creationTimestamp": "2012-11-25T01:38:48.306",
+   "selfLink": "https://www.googleapis.com/compute/v1/projects/party/zones/us-central1-a/disks/test",
+   "name": "test",
+   "sizeGb": "1",
+   "zone": "https://www.googleapis.com/compute/v1/projects/party/zones/us-central1-a",
+   "status": "READY",
+   "type": "https://www.googleapis.com/compute/v1/projects/studied-point-720/zones/us-central1-a/diskTypes/pd-standard",
+   "sourceSnapshot": "https://www.googleapis.com/compute/v1/projects/party/global/snapshots/snapshot"
+}
