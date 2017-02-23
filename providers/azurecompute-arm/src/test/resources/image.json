@@ -1,0 +1,43 @@
+{
+  "location": "West US",
+  "tags": {
+    "key": "value"
+  },
+  "properties": {
+    "sourceVirtualMachine": {
+      "id": "/subscriptions/{subscriptionId}/resourceGroups/myResourceGroup/providers/Microsoft.Compute/virtualMachines/myVM"
+    },
+    "storageProfile": {
+      "osDisk": {
+        "osType": "Windows",
+        "blobUri": "https://mystorageaccount.blob.core.windows.net/osimages/osimage.vhd",
+        "snapshot": {
+          "id": "subscriptions/{subscriptionId}/resourceGroups/myResourceGroup/providers/Microsoft.Compute/snapshots/mySnapshot1"
+        },
+        "managedDisk": {
+          "id": "subscriptions/{subscriptionId}/resourceGroups/myResourceGroup/providers/Microsoft.Compute/disks/myManagedDisk1"
+        },
+        "osState": "generalized",
+        "hostCaching": "readwrite",
+        "storageAccountType": "Standard_LRS",
+        "diskSizeGB": 20
+      },
+      "dataDisks": [
+        {
+          "lun": "1",
+          "blobUri": "https://mystorageaccount.blob.core.windows.net/dataimages/dataimage.vhd",
+          "snapshot": {
+            "id": "subscriptions/{subscriptionId}/resourceGroups/myResourceGroup/providers/Microsoft.Compute/snapshots/mySnapshot2"
+          },
+          "managedDisk": {
+            "id": "subscriptions/{subscriptionId}/resourceGroups/myResourceGroup/providers/Microsoft.Compute/disks/myManagedDisk2"
+          },
+          "hostCaching": "readwrite",
+          "storageAccountType": "Standard_LRS",
+          "diskSizeInGB": 20
+        }
+      ]
+    },
+    "provisioningState": "creating"
+  }
+}

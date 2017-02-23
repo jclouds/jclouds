@@ -1,0 +1,11 @@
+{
+  "properties": {
+    "creationData": {
+      "createOption": "Empty"
+    },
+    "diskSizeGB": 2,
+    "provisioningState": "Updating",
+    "isArmResource": true
+  },
+  "location": "westeurope"
+}

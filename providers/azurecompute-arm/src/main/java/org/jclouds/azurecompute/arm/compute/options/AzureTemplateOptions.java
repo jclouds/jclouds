@@ -16,12 +16,16 @@
  */
 package org.jclouds.azurecompute.arm.compute.options;
 
+import java.util.List;
+
 import org.jclouds.azurecompute.arm.domain.AvailabilitySet;
+import org.jclouds.azurecompute.arm.domain.DataDisk;
 import org.jclouds.compute.options.TemplateOptions;
 
 import com.google.common.base.Objects;
+import com.google.common.collect.ImmutableList;
 
-import static com.google.common.base.Objects.equal;
+import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Azure ARM custom options
@@ -33,6 +37,7 @@ public class AzureTemplateOptions extends TemplateOptions implements Cloneable {
    private String blob;
    private AvailabilitySet availabilitySet;
    private String availabilitySetName;
+   private List<DataDisk> dataDisks = ImmutableList.of();
 
    /**
     * Sets the virtual network name
@@ -76,12 +81,25 @@ public class AzureTemplateOptions extends TemplateOptions implements Cloneable {
       return this;
    }
 
+   public AzureTemplateOptions dataDisks(Iterable<DataDisk> dataDisks) {
+      for (DataDisk dataDisk : checkNotNull(dataDisks, "dataDisks"))
+         checkNotNull(dataDisk, "all dataDisks must be non-empty");
+      this.dataDisks = ImmutableList.copyOf(dataDisks);
+      return this;
+   }
+
+   public AzureTemplateOptions dataDisks(DataDisk... dataDisks) {
+      return dataDisks(ImmutableList.copyOf(checkNotNull(dataDisks, "dataDisks")));
+   }
+   
    public String getVirtualNetworkName() { return virtualNetworkName; }
    public String getSubnetId() { return subnetId; }
    public String getBlob() { return blob; }
    public AvailabilitySet getAvailabilitySet() { return availabilitySet; }
    public String getAvailabilitySetName() { return availabilitySetName; }
-
+   public List<DataDisk> getDataDisks() {
+      return dataDisks;
+   }
 
    @Override
    public AzureTemplateOptions clone() {
@@ -100,43 +118,56 @@ public class AzureTemplateOptions extends TemplateOptions implements Cloneable {
          eTo.blob(blob);
          eTo.availabilitySet(availabilitySet);
          eTo.availabilitySet(availabilitySetName);
+         eTo.dataDisks(dataDisks);
       }
+   }
+
+   @Override
+   public boolean equals(Object o) {
+      if (this == o) return true;
+      if (!(o instanceof AzureTemplateOptions)) return false;
+      if (!super.equals(o)) return false;
+
+      AzureTemplateOptions that = (AzureTemplateOptions) o;
+
+      if (virtualNetworkName != null ? !virtualNetworkName.equals(that.virtualNetworkName) : that.virtualNetworkName != null)
+         return false;
+      if (subnetId != null ? !subnetId.equals(that.subnetId) : that.subnetId != null) return false;
+      if (blob != null ? !blob.equals(that.blob) : that.blob != null) return false;
+      if (availabilitySet != null ? !availabilitySet.equals(that.availabilitySet) : that.availabilitySet != null)
+         return false;
+      if (availabilitySetName != null ? !availabilitySetName.equals(that.availabilitySetName) : that.availabilitySetName != null)
+         return false;
+      return dataDisks != null ? dataDisks.equals(that.dataDisks) : that.dataDisks == null;
    }
 
    @Override
    public int hashCode() {
-      return Objects.hashCode(super.hashCode(), virtualNetworkName, subnetId, blob, availabilitySet,
-            availabilitySetName);
-   }
-
-   @Override
-   public boolean equals(Object obj) {
-      if (this == obj) {
-         return true;
-      }
-      if (!super.equals(obj)) {
-         return false;
-      }
-      if (getClass() != obj.getClass()) {
-         return false;
-      }
-      AzureTemplateOptions other = (AzureTemplateOptions) obj;
-      return super.equals(other)
-            && equal(this.virtualNetworkName, other.virtualNetworkName)
-            && equal(this.subnetId, other.subnetId)
-            && equal(this.blob, other.blob)
-            && equal(this.availabilitySet, other.availabilitySet)
-            && equal(this.availabilitySetName, other.availabilitySetName);
+      int result = super.hashCode();
+      result = 31 * result + (virtualNetworkName != null ? virtualNetworkName.hashCode() : 0);
+      result = 31 * result + (subnetId != null ? subnetId.hashCode() : 0);
+      result = 31 * result + (blob != null ? blob.hashCode() : 0);
+      result = 31 * result + (availabilitySet != null ? availabilitySet.hashCode() : 0);
+      result = 31 * result + (availabilitySetName != null ? availabilitySetName.hashCode() : 0);
+      result = 31 * result + (dataDisks != null ? dataDisks.hashCode() : 0);
+      return result;
    }
 
    @Override
    public Objects.ToStringHelper string() {
-      Objects.ToStringHelper toString = super.string().omitNullValues();
-      toString.add("virtualNetworkName", virtualNetworkName);
-      toString.add("subnetId", subnetId);
-      toString.add("blob", blob);
-      toString.add("availabilitySet", availabilitySet);
-      toString.add("availabilitySetName", availabilitySetName);
+      Objects.ToStringHelper toString = super.string();
+      if (virtualNetworkName != null)
+         toString.add("virtualNetworkName", virtualNetworkName);
+      if (subnetId != null)
+         toString.add("subnetId", subnetId);
+      if (blob != null)
+         toString.add("blob", blob);
+      if (availabilitySet != null)
+         toString.add("availabilitySet", availabilitySet);
+      if (availabilitySetName != null)
+         toString.add("availabilitySetName", availabilitySetName);
+      if (!dataDisks.isEmpty())
+         toString.add("dataDisks", dataDisks);
       return toString;
    }
 
@@ -180,6 +211,19 @@ public class AzureTemplateOptions extends TemplateOptions implements Cloneable {
       public static AzureTemplateOptions availabilitySet(String availabilitySetName) {
          AzureTemplateOptions options = new AzureTemplateOptions();
          return options.availabilitySet(availabilitySetName);
+      }
+
+      /**
+       * @see AzureTemplateOptions#dataDisks
+       */
+      public static AzureTemplateOptions dataDisks(DataDisk... dataDisks) {
+         AzureTemplateOptions options = new AzureTemplateOptions();
+         return options.dataDisks(dataDisks);
+      }
+
+      public static AzureTemplateOptions dataDisks(Iterable<DataDisk> dataDisks) {
+         AzureTemplateOptions options = new AzureTemplateOptions();
+         return options.dataDisks(dataDisks);
       }
    }
 }

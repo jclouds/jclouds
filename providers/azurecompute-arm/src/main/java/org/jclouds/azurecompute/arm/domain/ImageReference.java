@@ -16,14 +16,20 @@
  */
 package org.jclouds.azurecompute.arm.domain;
 
-import com.google.auto.value.AutoValue;
-
 import org.jclouds.javax.annotation.Nullable;
 import org.jclouds.json.SerializedNames;
+
+import com.google.auto.value.AutoValue;
 
 @AutoValue
 public abstract class ImageReference {
 
+   /**
+    * The id of the image reference.
+    */
+   @Nullable
+   public abstract String id();
+   
    /**
     * The publisher of the image reference.
     */
@@ -48,13 +54,15 @@ public abstract class ImageReference {
    @Nullable
    public abstract String version();
 
-   @SerializedNames({"publisher", "offer", "sku", "version"})
-   public static ImageReference create(final String publisher,
+   @SerializedNames({"id", "publisher", "offer", "sku", "version"})
+   public static ImageReference create(final String id,
+                                       final String publisher,
                                        final String offer,
                                        final String sku,
                                        final String version) {
 
       return builder()
+              .id(id)
               .publisher(publisher)
               .offer(offer)
               .sku(sku)
@@ -70,12 +78,10 @@ public abstract class ImageReference {
 
    @AutoValue.Builder
    public abstract static class Builder {
+      public abstract Builder id(String id);
       public abstract Builder publisher(String publisher);
-
       public abstract Builder offer(String offer);
-
       public abstract Builder sku(String sku);
-
       public abstract Builder version(String version);
 
       public abstract ImageReference build();

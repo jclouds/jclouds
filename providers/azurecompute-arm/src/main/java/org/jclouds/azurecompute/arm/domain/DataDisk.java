@@ -16,47 +16,108 @@
  */
 package org.jclouds.azurecompute.arm.domain;
 
-import com.google.auto.value.AutoValue;
-
+import org.jclouds.azurecompute.arm.util.GetEnumValue;
+import org.jclouds.javax.annotation.Nullable;
 import org.jclouds.json.SerializedNames;
 
+import com.google.auto.value.AutoValue;
+import com.google.common.base.CaseFormat;
+
 @AutoValue
-public abstract class DataDisk {
+public abstract class DataDisk implements Provisionable {
+
+   public enum DiskCreateOptionTypes {
+      FROM_IMAGE,
+      EMPTY,
+      ATTACH,
+      UNRECOGNIZED;
+
+      public static DiskCreateOptionTypes fromValue(final String text) {
+         return (DiskCreateOptionTypes) GetEnumValue.fromValueOrDefault(text, UNRECOGNIZED);
+      }
+
+      @Override
+      public String toString() {
+         return CaseFormat.UPPER_UNDERSCORE.to(CaseFormat.UPPER_CAMEL, name());
+      }
+   }
+   
+   public enum CachingTypes {
+      NONE,
+      READ_ONLY,
+      READ_WRITE,
+      UNRECOGNIZED;
+
+      public static CachingTypes fromValue(final String text) {
+         return (CachingTypes) GetEnumValue.fromValueOrDefault(text, UNRECOGNIZED);
+      }
+
+      @Override
+      public String toString() {
+         return CaseFormat.UPPER_UNDERSCORE.to(CaseFormat.UPPER_CAMEL, name());
+      }
+   }
 
    /**
     * The name of the data disk
     */
-   public abstract String name();
+   @Nullable public abstract String name();
 
    /**
     * The size of the data disk
     */
-   public abstract String diskSizeGB();
+   @Nullable public abstract String diskSizeGB();
 
    /**
     * The lun value of the data disk
     */
-   public abstract int lun();
+   @Nullable public abstract Integer lun();
 
    /**
     * The vhd of the data disk
     */
-   public abstract VHD vhd();
+   @Nullable public abstract VHD vhd();
+
+   /**
+    * The source user image virtual hard disk. This virtual hard disk will be
+    * copied before using it to attach to the virtual machine. If SourceImage
+    * is provided, the destination virtual hard disk must not exist.
+    */
+   @Nullable public abstract VHD image();
 
    /**
     * The create option of the data disk
     */
-   public abstract String createOption();
+   public abstract DiskCreateOptionTypes createOption();
+   
+   /**
+    * The caching type. Possible values include: 'None', 'ReadOnly',
+    * 'ReadWrite'.
+    */
+   @Nullable public abstract CachingTypes caching();
 
-   @SerializedNames({"name", "diskSizeGB", "lun", "vhd", "createOption"})
-   public static DataDisk create(final String name, final String diskSizeGB, final int lun,
-                                 final VHD vhd, final String createOption) {
+   /**
+    * The managed disk parameters.
+    */
+   @Nullable public abstract ManagedDiskParameters managedDiskParameters();
+
+   @Nullable
+   public abstract String provisioningState();
+
+   @SerializedNames({"name", "diskSizeGB", "lun", "vhd", "image", "createOption", "caching", "managedDisk", "provisioningState"})
+   public static DataDisk create(final String name, final String diskSizeGB, final Integer lun,
+                                 final VHD vhd, final VHD image, final String createOption, final String caching, 
+                                 final ManagedDiskParameters managedDiskParamenters, final String provisioningState) {
       return builder()
               .name(name)
               .diskSizeGB(diskSizeGB)
               .lun(lun)
-              .createOption(createOption)
               .vhd(vhd)
+              .image(image)
+              .caching(CachingTypes.fromValue(caching))
+              .createOption(DiskCreateOptionTypes.fromValue(createOption))
+              .managedDiskParameters(managedDiskParamenters)
+              .provisioningState(provisioningState)
               .build();
    }
    
@@ -68,15 +129,24 @@ public abstract class DataDisk {
 
    @AutoValue.Builder
    public abstract static class Builder {
+      
       public abstract Builder name(String name);
 
       public abstract Builder diskSizeGB(String diskSizeGB);
 
-      public abstract Builder createOption(String createOption);
+      public abstract Builder createOption(DiskCreateOptionTypes createOption);
 
-      public abstract Builder lun(int lun);
+      public abstract Builder lun(Integer lun);
 
       public abstract Builder vhd(VHD vhd);
+
+      public abstract Builder image(VHD image);
+
+      public abstract Builder caching(CachingTypes caching);
+
+      public abstract Builder managedDiskParameters(ManagedDiskParameters managedDiskParameters);
+      
+      public abstract Builder provisioningState(String provisioningState);
 
       public abstract DataDisk build();
    }

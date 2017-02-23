@@ -16,6 +16,9 @@
  */
 package org.jclouds.azurecompute.arm.internal;
 
+import java.util.Properties;
+import java.util.concurrent.TimeUnit;
+
 import static org.jclouds.azurecompute.arm.config.AzureComputeProperties.IMAGE_PUBLISHERS;
 import static org.jclouds.compute.config.ComputeServiceProperties.RESOURCENAME_PREFIX;
 import static org.jclouds.compute.config.ComputeServiceProperties.TIMEOUT_NODE_RUNNING;
@@ -27,15 +30,12 @@ import static org.jclouds.location.reference.LocationConstants.PROPERTY_REGIONS;
 import static org.jclouds.oauth.v2.config.CredentialType.CLIENT_CREDENTIALS_SECRET;
 import static org.jclouds.oauth.v2.config.OAuthProperties.CREDENTIAL_TYPE;
 
-import java.util.Properties;
-import java.util.concurrent.TimeUnit;
-
 public class AzureLiveTestUtils {
 
     public static Properties defaultProperties(Properties properties) {
        properties = properties == null ? new Properties() : properties;
        properties.put(CREDENTIAL_TYPE, CLIENT_CREDENTIALS_SECRET.toString());
-       properties.put(PROPERTY_REGIONS, "eastus");
+       properties.put(PROPERTY_REGIONS, "westeurope");
        properties.put(IMAGE_PUBLISHERS, "Canonical");
        properties.put(RESOURCENAME_PREFIX, "jcloudstest");
        

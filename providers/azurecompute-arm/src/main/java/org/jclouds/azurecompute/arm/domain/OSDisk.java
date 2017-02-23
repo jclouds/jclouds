@@ -16,10 +16,10 @@
  */
 package org.jclouds.azurecompute.arm.domain;
 
-import com.google.auto.value.AutoValue;
-
 import org.jclouds.javax.annotation.Nullable;
 import org.jclouds.json.SerializedNames;
+
+import com.google.auto.value.AutoValue;
 
 @AutoValue
 public abstract class OSDisk {
@@ -59,9 +59,15 @@ public abstract class OSDisk {
    @Nullable
    public abstract VHD image();
 
-   @SerializedNames({"osType", "name", "vhd", "caching", "createOption", "image"})
+   /**
+    * The managed disk parameters.
+    */
+   @Nullable public abstract ManagedDiskParameters managedDiskParameters();
+   
+   @SerializedNames({"osType", "name", "vhd", "caching", "createOption", "image", "managedDisk"})
    public static OSDisk create(final String osType, final String name, final VHD vhd,
-                               final String caching, final String createOption, final VHD image) {
+                               final String caching, final String createOption, final VHD image, 
+                               final ManagedDiskParameters managedDiskParamenters) {
       return builder()
             .osType(osType)
             .name(name)
@@ -69,7 +75,8 @@ public abstract class OSDisk {
             .caching(caching)
             .createOption(createOption)
             .image(image)
-            .build();
+              .managedDiskParameters(managedDiskParamenters)
+              .build();
    }
    
    public abstract Builder toBuilder();
@@ -86,6 +93,7 @@ public abstract class OSDisk {
       public abstract Builder createOption(String createOption);
       public abstract Builder vhd(VHD vhd);
       public abstract Builder image(VHD image);
+      public abstract Builder managedDiskParameters(ManagedDiskParameters managedDiskParameters);
       public abstract OSDisk build();
    }
 }

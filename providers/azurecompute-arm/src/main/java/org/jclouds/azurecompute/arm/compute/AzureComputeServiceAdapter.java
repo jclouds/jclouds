@@ -16,23 +16,10 @@
  */
 package org.jclouds.azurecompute.arm.compute;
 
-import static com.google.common.base.Preconditions.checkState;
-import static com.google.common.collect.Iterables.contains;
-import static com.google.common.collect.Iterables.filter;
-import static com.google.common.collect.Iterables.find;
-import static com.google.common.collect.Iterables.getOnlyElement;
-import static org.jclouds.azurecompute.arm.compute.extensions.AzureComputeImageExtension.CONTAINER_NAME;
-import static org.jclouds.azurecompute.arm.compute.extensions.AzureComputeImageExtension.CUSTOM_IMAGE_OFFER;
-import static org.jclouds.azurecompute.arm.compute.functions.VMImageToImage.decodeFieldsFromUniqueId;
-import static org.jclouds.azurecompute.arm.compute.functions.VMImageToImage.encodeFieldsToUniqueIdCustom;
-import static org.jclouds.azurecompute.arm.compute.functions.VMImageToImage.getMarketplacePlanFromImageMetadata;
-import static org.jclouds.azurecompute.arm.config.AzureComputeProperties.IMAGE_PUBLISHERS;
-import static org.jclouds.compute.util.ComputeServiceUtils.metadataAndTagsAsCommaDelimitedValue;
-import static org.jclouds.util.Closeables2.closeQuietly;
-
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
 import javax.annotation.Resource;
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -42,6 +29,8 @@ import org.jclouds.azurecompute.arm.AzureComputeApi;
 import org.jclouds.azurecompute.arm.compute.config.AzureComputeServiceContextModule.PublicIpAvailablePredicateFactory;
 import org.jclouds.azurecompute.arm.compute.options.AzureTemplateOptions;
 import org.jclouds.azurecompute.arm.compute.strategy.CleanupResources;
+import org.jclouds.azurecompute.arm.domain.AvailabilitySet;
+import org.jclouds.azurecompute.arm.domain.CreationData;
 import org.jclouds.azurecompute.arm.domain.DataDisk;
 import org.jclouds.azurecompute.arm.domain.HardwareProfile;
 import org.jclouds.azurecompute.arm.domain.IdReference;
@@ -49,6 +38,7 @@ import org.jclouds.azurecompute.arm.domain.ImageReference;
 import org.jclouds.azurecompute.arm.domain.IpConfiguration;
 import org.jclouds.azurecompute.arm.domain.IpConfigurationProperties;
 import org.jclouds.azurecompute.arm.domain.Location;
+import org.jclouds.azurecompute.arm.domain.ManagedDiskParameters;
 import org.jclouds.azurecompute.arm.domain.NetworkInterfaceCard;
 import org.jclouds.azurecompute.arm.domain.NetworkInterfaceCardProperties;
 import org.jclouds.azurecompute.arm.domain.NetworkProfile;
@@ -66,7 +56,6 @@ import org.jclouds.azurecompute.arm.domain.StorageProfile;
 import org.jclouds.azurecompute.arm.domain.StorageService;
 import org.jclouds.azurecompute.arm.domain.StorageService.Status;
 import org.jclouds.azurecompute.arm.domain.StorageServiceKeys;
-import org.jclouds.azurecompute.arm.domain.VHD;
 import org.jclouds.azurecompute.arm.domain.VMHardware;
 import org.jclouds.azurecompute.arm.domain.VMImage;
 import org.jclouds.azurecompute.arm.domain.VMSize;
@@ -97,6 +86,23 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 
+import static com.google.common.base.Preconditions.checkState;
+import static com.google.common.collect.ImmutableList.builder;
+import static com.google.common.collect.ImmutableList.of;
+import static com.google.common.collect.Iterables.contains;
+import static com.google.common.collect.Iterables.filter;
+import static com.google.common.collect.Iterables.find;
+import static com.google.common.collect.Iterables.getOnlyElement;
+import static org.jclouds.azurecompute.arm.compute.extensions.AzureComputeImageExtension.CONTAINER_NAME;
+import static org.jclouds.azurecompute.arm.compute.extensions.AzureComputeImageExtension.CUSTOM_IMAGE_OFFER;
+import static org.jclouds.azurecompute.arm.compute.functions.VMImageToImage.decodeFieldsFromUniqueId;
+import static org.jclouds.azurecompute.arm.compute.functions.VMImageToImage.encodeFieldsToUniqueIdCustom;
+import static org.jclouds.azurecompute.arm.compute.functions.VMImageToImage.getMarketplacePlanFromImageMetadata;
+import static org.jclouds.azurecompute.arm.config.AzureComputeProperties.IMAGE_PUBLISHERS;
+import static org.jclouds.azurecompute.arm.util.VMImages.isCustom;
+import static org.jclouds.compute.util.ComputeServiceUtils.metadataAndTagsAsCommaDelimitedValue;
+import static org.jclouds.util.Closeables2.closeQuietly;
+
 /**
  * Defines the connection between the {@link AzureComputeApi} implementation and
  * the jclouds {@link org.jclouds.compute.ComputeService}.
@@ -105,11 +111,11 @@ import com.google.common.collect.Lists;
 public class AzureComputeServiceAdapter implements ComputeServiceAdapter<VirtualMachine, VMHardware, VMImage, Location> {
 
    public static final String GROUP_KEY = "jclouds_group";
-   
+
    @Resource
    @Named(ComputeServiceConstants.COMPUTE_LOGGER)
    protected Logger logger = Logger.NULL;
-   
+
    private final CleanupResources cleanupResources;
    private final AzureComputeApi api;
    private final List<String> imagePublishers;
@@ -119,8 +125,8 @@ public class AzureComputeServiceAdapter implements ComputeServiceAdapter<Virtual
 
    @Inject
    AzureComputeServiceAdapter(final AzureComputeApi api, @Named(IMAGE_PUBLISHERS) String imagePublishers,
-         CleanupResources cleanupResources, @Region Supplier<Set<String>> regionIds,
-         PublicIpAvailablePredicateFactory publicIpAvailable, LoadingCache<String, ResourceGroup> resourceGroupMap) {
+                              CleanupResources cleanupResources, @Region Supplier<Set<String>> regionIds,
+                              PublicIpAvailablePredicateFactory publicIpAvailable, LoadingCache<String, ResourceGroup> resourceGroupMap) {
       this.api = api;
       this.imagePublishers = Splitter.on(',').trimResults().omitEmptyStrings().splitToList(imagePublishers);
       this.cleanupResources = cleanupResources;
@@ -130,35 +136,32 @@ public class AzureComputeServiceAdapter implements ComputeServiceAdapter<Virtual
    }
 
    @Override
-   public NodeAndInitialCredentials<VirtualMachine> createNodeWithGroupEncodedIntoName(final String group,
-         final String name, final Template template) {
-
-      AzureTemplateOptions templateOptions = template.getOptions().as(AzureTemplateOptions.class);
-      ResourceGroup resourceGroup = resourceGroupMap.getUnchecked(template.getLocation().getId());
-
-      // TODO ARM specific options
-      // TODO network ids => createOrUpdate one nic in each network
-      
-      IdReference availabilitySet = null;
-      if (templateOptions.getAvailabilitySet() != null) {
-         availabilitySet = IdReference.create(templateOptions.getAvailabilitySet().id());
-      }
+   public NodeAndInitialCredentials<VirtualMachine> createNodeWithGroupEncodedIntoName(final String group, final String name, final Template template) {
+      // TODO network ids => create one nic in each network
 
       String locationName = template.getLocation().getId();
+      Image image = template.getImage();
+      String hardwareId = template.getHardware().getId();
+      ResourceGroup resourceGroup = resourceGroupMap.getUnchecked(locationName);
+      // TODO ARM specific options
+      AzureTemplateOptions templateOptions = template.getOptions().as(AzureTemplateOptions.class);
       String subnetId = templateOptions.getSubnetId();
-      NetworkInterfaceCard nic = createNetworkInterfaceCard(subnetId, name, locationName, resourceGroup.name(),
-            template.getOptions());
-      StorageProfile storageProfile = createStorageProfile(name, template.getImage(), templateOptions.getBlob());
-      HardwareProfile hardwareProfile = HardwareProfile.builder().vmSize(template.getHardware().getId()).build();
-      OSProfile osProfile = createOsProfile(name, template);
-      NetworkProfile networkProfile = NetworkProfile.builder()
-            .networkInterfaces(ImmutableList.of(IdReference.create(nic.id()))).build();
-      VirtualMachineProperties virtualMachineProperties = VirtualMachineProperties.builder()
-            .licenseType(null) // TODO
-            .availabilitySet(availabilitySet)
-            .hardwareProfile(hardwareProfile).storageProfile(storageProfile).osProfile(osProfile)
-            .networkProfile(networkProfile).build();
       
+      IdReference availabilitySet = getAvailabilitySetIdReference(templateOptions.getAvailabilitySet());
+      StorageProfile storageProfile = createStorageProfile(image, templateOptions.getDataDisks());
+      NetworkInterfaceCard nic = createNetworkInterfaceCard(subnetId, name, locationName, resourceGroup.name(), template.getOptions());
+      HardwareProfile hardwareProfile = HardwareProfile.builder().vmSize(hardwareId).build();
+      OSProfile osProfile = createOsProfile(name, template);
+      NetworkProfile networkProfile = NetworkProfile.builder().networkInterfaces(of(IdReference.create(nic.id()))).build();
+      VirtualMachineProperties virtualMachineProperties = VirtualMachineProperties.builder()
+              .licenseType(null) // TODO
+              .availabilitySet(availabilitySet)
+              .hardwareProfile(hardwareProfile)
+              .storageProfile(storageProfile)
+              .osProfile(osProfile)
+              .networkProfile(networkProfile)
+              .build();
+
       // Store group apart from the name to be able to identify nodes with
       // custom names in the configured group
       template.getOptions().getUserMetadata().put(GROUP_KEY, group);
@@ -171,7 +174,7 @@ public class AzureComputeServiceAdapter implements ComputeServiceAdapter<Virtual
       // Safe to pass null credentials here, as jclouds will default populate
       // the node with the default credentials from the image, or the ones in
       // the options, if provided.
-      RegionAndId regionAndId = RegionAndId.fromRegionAndId(template.getLocation().getId(), name);
+      RegionAndId regionAndId = RegionAndId.fromRegionAndId(locationName, name);
       return new NodeAndInitialCredentials<VirtualMachine>(virtualMachine, regionAndId.slashEncode(), null);
    }
 
@@ -182,9 +185,9 @@ public class AzureComputeServiceAdapter implements ComputeServiceAdapter<Virtual
          Iterable<VMSize> vmSizes = api.getVMSizeApi(location.name()).list();
          for (VMSize vmSize : vmSizes) {
             VMHardware hwProfile = VMHardware
-                  .create(vmSize.name(), vmSize.numberOfCores(), vmSize.osDiskSizeInMB(),
-                        vmSize.resourceDiskSizeInMB(), vmSize.memoryInMB(), vmSize.maxDataDiskCount(), location.name(),
-                        false);
+                    .create(vmSize.name(), vmSize.numberOfCores(), vmSize.osDiskSizeInMB(),
+                            vmSize.resourceDiskSizeInMB(), vmSize.memoryInMB(), vmSize.maxDataDiskCount(), location.name(),
+                            false);
             hwProfiles.add(hwProfile);
          }
       }
@@ -204,8 +207,8 @@ public class AzureComputeServiceAdapter implements ComputeServiceAdapter<Virtual
             for (Version version : versionList) {
                Version versionDetails = osImageApi.getVersion(publisherName, offer.name(), sku.name(), version.name());
                VMImage vmImage = VMImage.azureImage().publisher(publisherName).offer(offer.name()).sku(sku.name())
-                     .version(versionDetails.name()).location(location).versionProperties(versionDetails.properties())
-                     .build();
+                       .version(versionDetails.name()).location(location).versionProperties(versionDetails.properties())
+                       .build();
                osImagesRef.add(vmImage);
             }
          }
@@ -245,13 +248,13 @@ public class AzureComputeServiceAdapter implements ComputeServiceAdapter<Virtual
             try {
                String name = storage.name();
                StorageService storageService = api.getStorageAccountApi(azureGroup).get(name);
-               if (storageService != null && availableLocationNames.contains(storageService.location())
-                     && Status.Succeeded == storageService.storageServiceProperties().provisioningState()) {
+               if (storageService != null
+                       && Status.Succeeded == storageService.storageServiceProperties().provisioningState()) {
                   String key = api.getStorageAccountApi(azureGroup).getKeys(name).key1();
                   BlobHelper blobHelper = new BlobHelper(storage.name(), key);
                   try {
                      List<VMImage> images = blobHelper.getImages(CONTAINER_NAME, azureGroup, CUSTOM_IMAGE_OFFER,
-                           storage.location());
+                             storage.location());
                      osImages.addAll(images);
                   } finally {
                      closeQuietly(blobHelper);
@@ -284,7 +287,7 @@ public class AzureComputeServiceAdapter implements ComputeServiceAdapter<Virtual
          try {
             if (blobHelper.customImageExists()) {
                List<VMImage> customImagesInStorage = blobHelper.getImages(CONTAINER_NAME, resourceGroup.name(),
-                     CUSTOM_IMAGE_OFFER, image.location());
+                       CUSTOM_IMAGE_OFFER, image.location());
                customImage = find(customImagesInStorage, new Predicate<VMImage>() {
                   @Override
                   public boolean apply(VMImage input) {
@@ -308,7 +311,7 @@ public class AzureComputeServiceAdapter implements ComputeServiceAdapter<Virtual
       if (!versions.isEmpty()) {
          Version version = osImageApi.getVersion(publisher, offer, sku, versions.get(0).name());
          return VMImage.azureImage().publisher(publisher).offer(offer).sku(sku).version(version.name())
-               .location(location).versionProperties(version.properties()).build();
+                 .location(location).versionProperties(version.properties()).build();
       }
       return null;
    }
@@ -316,17 +319,17 @@ public class AzureComputeServiceAdapter implements ComputeServiceAdapter<Virtual
    @Override
    public Iterable<Location> listLocations() {
       final Iterable<String> vmLocations = FluentIterable.from(api.getResourceProviderApi().get("Microsoft.Compute"))
-            .filter(new Predicate<ResourceProviderMetaData>() {
-               @Override
-               public boolean apply(ResourceProviderMetaData input) {
-                  return input.resourceType().equals("virtualMachines");
-               }
-            }).transformAndConcat(new Function<ResourceProviderMetaData, Iterable<String>>() {
-               @Override
-               public Iterable<String> apply(ResourceProviderMetaData resourceProviderMetaData) {
-                  return resourceProviderMetaData.locations();
-               }
-            });
+              .filter(new Predicate<ResourceProviderMetaData>() {
+                 @Override
+                 public boolean apply(ResourceProviderMetaData input) {
+                    return input.resourceType().equals("virtualMachines");
+                 }
+              }).transformAndConcat(new Function<ResourceProviderMetaData, Iterable<String>>() {
+                 @Override
+                 public Iterable<String> apply(ResourceProviderMetaData resourceProviderMetaData) {
+                    return resourceProviderMetaData.locations();
+                 }
+              });
 
       List<Location> locations = FluentIterable.from(api.getLocationApi().list()).filter(new Predicate<Location>() {
          @Override
@@ -378,7 +381,7 @@ public class AzureComputeServiceAdapter implements ComputeServiceAdapter<Virtual
 
    @Override
    public Iterable<VirtualMachine> listNodes() {
-      ImmutableList.Builder<VirtualMachine> nodes = ImmutableList.builder();
+      ImmutableList.Builder<VirtualMachine> nodes = builder();
       for (ResourceGroup resourceGroup : api.getResourceGroupApi().list()) {
          nodes.addAll(api.getVirtualMachineApi(resourceGroup.name()).list());
       }
@@ -401,14 +404,14 @@ public class AzureComputeServiceAdapter implements ComputeServiceAdapter<Virtual
       String adminUsername = Objects.firstNonNull(template.getOptions().getLoginUser(), defaultLoginUser);
       String adminPassword = Objects.firstNonNull(template.getOptions().getLoginPassword(), defaultLoginPassword);
       OSProfile.Builder builder = OSProfile.builder().adminUsername(adminUsername).adminPassword(adminPassword)
-            .computerName(computerName);
+              .computerName(computerName);
 
       if (template.getOptions().getPublicKey() != null
-            && OsFamily.WINDOWS != template.getImage().getOperatingSystem().getFamily()) {
+              && OsFamily.WINDOWS != template.getImage().getOperatingSystem().getFamily()) {
          OSProfile.LinuxConfiguration linuxConfiguration = OSProfile.LinuxConfiguration.create("true",
-               OSProfile.LinuxConfiguration.SSH.create(ImmutableList.of(OSProfile.LinuxConfiguration.SSH.SSHPublicKey
-                     .create(String.format("/home/%s/.ssh/authorized_keys", adminUsername), template.getOptions()
-                           .getPublicKey()))));
+                 OSProfile.LinuxConfiguration.SSH.create(of(OSProfile.LinuxConfiguration.SSH.SSHPublicKey
+                         .create(String.format("/home/%s/.ssh/authorized_keys", adminUsername), template.getOptions()
+                                 .getPublicKey()))));
          builder.linuxConfiguration(linuxConfiguration);
       }
 
@@ -416,29 +419,29 @@ public class AzureComputeServiceAdapter implements ComputeServiceAdapter<Virtual
    }
 
    private NetworkInterfaceCard createNetworkInterfaceCard(String subnetId, String name, String locationName,
-         String azureGroup, TemplateOptions options) {
+                                                           String azureGroup, TemplateOptions options) {
       final PublicIPAddressApi ipApi = api.getPublicIPAddressApi(azureGroup);
 
       PublicIPAddressProperties properties = PublicIPAddressProperties.builder().publicIPAllocationMethod("Static")
-            .idleTimeoutInMinutes(4).build();
+              .idleTimeoutInMinutes(4).build();
 
       String publicIpAddressName = "public-address-" + name;
       PublicIPAddress ip = ipApi.createOrUpdate(publicIpAddressName, locationName, ImmutableMap.of("jclouds", name),
-            properties);
+              properties);
 
       checkState(publicIpAvailable.create(azureGroup).apply(publicIpAddressName),
-            "Public IP was not provisioned in the configured timeout");
+              "Public IP was not provisioned in the configured timeout");
 
       final NetworkInterfaceCardProperties.Builder networkInterfaceCardProperties = NetworkInterfaceCardProperties
-            .builder()
-            .ipConfigurations(
-                  ImmutableList.of(IpConfiguration
-                        .builder()
-                        .name("ipConfig-" + name)
-                        .properties(
-                              IpConfigurationProperties.builder().privateIPAllocationMethod("Dynamic")
-                                    .publicIPAddress(IdReference.create(ip.id())).subnet(IdReference.create(subnetId))
-                                    .build()).build()));
+              .builder()
+              .ipConfigurations(
+                      of(IpConfiguration
+                              .builder()
+                              .name("ipConfig-" + name)
+                              .properties(
+                                      IpConfigurationProperties.builder().privateIPAllocationMethod("Dynamic")
+                                              .publicIPAddress(IdReference.create(ip.id())).subnet(IdReference.create(subnetId))
+                                              .build()).build()));
 
       String securityGroup = getOnlyElement(options.getGroups(), null);
       if (securityGroup != null) {
@@ -447,29 +450,36 @@ public class AzureComputeServiceAdapter implements ComputeServiceAdapter<Virtual
 
       String networkInterfaceCardName = "jc-nic-" + name;
       return api.getNetworkInterfaceCardApi(azureGroup).createOrUpdate(networkInterfaceCardName, locationName,
-            networkInterfaceCardProperties.build(), ImmutableMap.of("jclouds", name));
+              networkInterfaceCardProperties.build(), ImmutableMap.of("jclouds", name));
    }
 
-   private StorageProfile createStorageProfile(String name, Image image, String blob) {
-      VMImage imageRef = decodeFieldsFromUniqueId(image.getId());
-      ImageReference imageReference = null;
-      VHD sourceImage = null;
-      String osType = null;
-
-      if (!imageRef.custom()) {
-         imageReference = ImageReference.builder().publisher(image.getProviderId()).offer(image.getName())
-               .sku(image.getVersion()).version("latest").build();
-      } else {
-         sourceImage = VHD.create(image.getProviderId());
-
-         // TODO: read the ostype from the image blob
-         OsFamily osFamily = image.getOperatingSystem().getFamily();
-         osType = osFamily == OsFamily.WINDOWS ? "Windows" : "Linux";
-      }
-
-      VHD vhd = VHD.create(blob + "vhds/" + name + ".vhd");
-      OSDisk osDisk = OSDisk.create(osType, name, vhd, "ReadWrite", "FromImage", sourceImage);
-
-      return StorageProfile.create(imageReference, osDisk, ImmutableList.<DataDisk> of());
+   private StorageProfile createStorageProfile(Image image, List<DataDisk> dataDisks) {
+      return StorageProfile.create(createImageReference(image), createOSDisk(image), dataDisks);
    }
+
+   private ImageReference createImageReference(Image image) {
+      return isCustom(image.getId()) ? ImageReference.builder().id(image.getId()).build() :
+              ImageReference.builder()
+                      .publisher(image.getProviderId())
+                      .offer(image.getName())
+                      .sku(image.getVersion())
+                      .version("latest")
+                      .build();
+   }
+
+   private OSDisk createOSDisk(Image image) {
+      OsFamily osFamily = image.getOperatingSystem().getFamily();
+      String osType = osFamily == OsFamily.WINDOWS ? "Windows" : "Linux";
+      return OSDisk.builder()
+              .osType(osType)
+              .caching(DataDisk.CachingTypes.READ_WRITE.toString())
+              .createOption(CreationData.CreateOptions.FROM_IMAGE.toString())
+              .managedDiskParameters(ManagedDiskParameters.create(null, ManagedDiskParameters.StorageAccountTypes.STANDARD_LRS.toString()))
+              .build();
+   }
+   
+   private IdReference getAvailabilitySetIdReference(AvailabilitySet availabilitySet) {
+      return availabilitySet != null ? IdReference.create(availabilitySet.id()) : null;
+   }
+
 }

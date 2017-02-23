@@ -16,8 +16,6 @@
  */
 package org.jclouds.azurecompute.arm.features;
 
-import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
-
 import java.util.List;
 
 import javax.inject.Named;
@@ -35,6 +33,8 @@ import org.jclouds.azurecompute.arm.filters.ApiVersionFilter;
 import org.jclouds.oauth.v2.filters.OAuthFilter;
 import org.jclouds.rest.annotations.Fallback;
 import org.jclouds.rest.annotations.RequestFilters;
+
+import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 
 /**
  * The Azure Resource Management API includes operations for managing the OS images in your subscription.
@@ -90,4 +90,5 @@ public interface OSImageApi {
    @Fallback(EmptyListOnNotFoundOr404.class)
    Version getVersion(@PathParam("publisher") String publisher, @PathParam("offer") String offer,
                           @PathParam("sku") String sku, @PathParam("version") String version);
+
 }

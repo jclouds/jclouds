@@ -30,6 +30,7 @@ import org.jclouds.azurecompute.arm.domain.IdReference;
 import org.jclouds.azurecompute.arm.domain.ImageReference;
 import org.jclouds.azurecompute.arm.domain.IpConfiguration;
 import org.jclouds.azurecompute.arm.domain.IpConfigurationProperties;
+import org.jclouds.azurecompute.arm.domain.ManagedDiskParameters;
 import org.jclouds.azurecompute.arm.domain.NetworkInterfaceCard;
 import org.jclouds.azurecompute.arm.domain.NetworkInterfaceCardProperties;
 import org.jclouds.azurecompute.arm.domain.NetworkProfile;
@@ -149,7 +150,13 @@ public class VirtualMachineApiLiveTest extends BaseAzureComputeApiLiveTest {
 
       String blob = storageService.storageServiceProperties().primaryEndpoints().get("blob");
       VHD vhd = VHD.create(blob + "vhds/" + vmName + "new-data-disk.vhd");
-      DataDisk newDataDisk = DataDisk.create(vmName + "new-data-disk", "1", 1, vhd, "Empty");
+      DataDisk newDataDisk = DataDisk.builder()
+              .name(vmName + "new-data-disk")
+              .diskSizeGB("1")
+              .lun(1)
+              .createOption(DataDisk.DiskCreateOptionTypes.EMPTY)
+              .vhd(vhd)
+              .build();
       List<DataDisk> oldDataDisks = oldStorageProfile.dataDisks();
       assertEquals(oldDataDisks.size(), 1);
 
@@ -236,14 +243,18 @@ public class VirtualMachineApiLiveTest extends BaseAzureComputeApiLiveTest {
    private VirtualMachineProperties getProperties(String blob, String nic) {
 
       HardwareProfile hwProf = HardwareProfile.create("Standard_D1");
-      ImageReference imgRef = ImageReference.create("MicrosoftWindowsServerEssentials",
-              "WindowsServerEssentials", "WindowsServerEssentials", "latest");
-      VHD vhd = VHD.create(blob + "vhds/" + vmName + ".vhd");
-      VHD vhd2 = VHD.create(blob + "vhds/" + vmName + "data.vhd");
-      DataDisk dataDisk = DataDisk.create(vmName + "data", "100", 0, vhd2, "Empty");
+      ImageReference imgRef = ImageReference.builder().publisher("MicrosoftWindowsServerEssentials")
+              .offer("WindowsServerEssentials").sku("WindowsServerEssentials").version("latest").build();
+      DataDisk dataDisk = DataDisk.builder().name("data").diskSizeGB("100").lun(0).createOption(DataDisk.DiskCreateOptionTypes.EMPTY).build();
       List<DataDisk> dataDisks = new ArrayList<DataDisk>();
       dataDisks.add(dataDisk);
-      OSDisk osDisk = OSDisk.create(null, vmName, vhd, "ReadWrite", "FromImage", null);
+
+      OSDisk osDisk = OSDisk.builder()
+              .osType("Windows")
+              .caching(DataDisk.CachingTypes.READ_WRITE.toString())
+              .createOption("FromImage")
+              .managedDiskParameters(ManagedDiskParameters.create(null, ManagedDiskParameters.StorageAccountTypes.STANDARD_LRS.toString()))
+              .build();
       StorageProfile storageProfile = StorageProfile.create(imgRef, osDisk, dataDisks);
       OSProfile.WindowsConfiguration windowsConfig = OSProfile.WindowsConfiguration.create(false, null, null, true,
               null);

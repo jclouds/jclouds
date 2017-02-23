@@ -16,10 +16,6 @@
  */
 package org.jclouds.azurecompute.arm.compute.functions;
 
-import static com.google.common.base.Preconditions.checkNotNull;
-import static com.google.common.collect.Iterables.tryFind;
-import static java.util.Arrays.asList;
-
 import java.util.Map;
 import java.util.Set;
 
@@ -42,6 +38,11 @@ import com.google.common.base.Supplier;
 import com.google.common.collect.FluentIterable;
 import com.google.common.collect.ImmutableMap;
 import com.google.inject.Inject;
+
+import static com.google.common.base.Preconditions.checkNotNull;
+import static com.google.common.collect.Iterables.tryFind;
+import static java.util.Arrays.asList;
+import static org.jclouds.azurecompute.arm.util.VMImages.isCustom;
 
 public class VMImageToImage implements Function<VMImage, Image> {
 
@@ -71,10 +72,9 @@ public class VMImageToImage implements Function<VMImage, Image> {
    }
 
    public static VMImage decodeFieldsFromUniqueId(final String id) {
-      String[] fields = checkNotNull(id, "id").split("/");
       VMImage vmImage;
-      boolean custom = fields.length == 5;
-      if (custom) {
+      String[] fields = checkNotNull(id, "id").split("/");
+      if (isCustom(id)) {
          /* id fields indexes
          0: imageReference.location) + "/" +
          1: imageReference.group + "/" +
@@ -193,4 +193,5 @@ public class VMImageToImage implements Function<VMImage, Image> {
          }
       });
    }
+
 }

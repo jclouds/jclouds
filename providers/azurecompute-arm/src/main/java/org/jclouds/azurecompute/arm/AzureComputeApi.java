@@ -22,9 +22,11 @@ import javax.ws.rs.PathParam;
 
 import org.jclouds.azurecompute.arm.features.AvailabilitySetApi;
 import org.jclouds.azurecompute.arm.features.DeploymentApi;
+import org.jclouds.azurecompute.arm.features.ImageApi;
 import org.jclouds.azurecompute.arm.features.JobApi;
 import org.jclouds.azurecompute.arm.features.LoadBalancerApi;
 import org.jclouds.azurecompute.arm.features.LocationApi;
+import org.jclouds.azurecompute.arm.features.DiskApi;
 import org.jclouds.azurecompute.arm.features.NetworkInterfaceCardApi;
 import org.jclouds.azurecompute.arm.features.NetworkSecurityGroupApi;
 import org.jclouds.azurecompute.arm.features.NetworkSecurityRuleApi;
@@ -37,7 +39,6 @@ import org.jclouds.azurecompute.arm.features.SubnetApi;
 import org.jclouds.azurecompute.arm.features.VMSizeApi;
 import org.jclouds.azurecompute.arm.features.VirtualMachineApi;
 import org.jclouds.azurecompute.arm.features.VirtualNetworkApi;
-
 import org.jclouds.rest.annotations.Delegate;
 
 /**
@@ -189,4 +190,19 @@ public interface AzureComputeApi extends Closeable {
    @Delegate
    ResourceProviderApi getResourceProviderApi();
 
+   /**
+    * The ManagedDataDisk API includes operations for managing data disks within your subscription.
+    *
+    * @see <a href="https://docs.microsoft.com/en-us/rest/api/manageddisks/disks/disks-rest-api">docs</a>
+    */
+   @Delegate
+   DiskApi getDiskApi(@PathParam("resourcegroup") String resourcegroup);
+
+   /**
+    * The virtual machine image API includes operations for managing data disks within your subscription.
+    *
+    * @see <a href="https://docs.microsoft.com/en-us/rest/api/manageddisks/images/images-rest-api">docs</a>
+    */
+   @Delegate
+   ImageApi getVirtualMachineImageApi(@PathParam("resourcegroup") String resourcegroup);
 }
