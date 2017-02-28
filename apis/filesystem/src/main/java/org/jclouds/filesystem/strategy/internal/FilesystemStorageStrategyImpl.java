@@ -346,33 +346,37 @@ public class FilesystemStorageStrategyImpl implements LocalStorageStrategy {
 
          UserDefinedFileAttributeView view = getUserDefinedFileAttributeView(file.toPath());
          if (view != null) {
-            Set<String> attributes = ImmutableSet.copyOf(view.list());
+            try {
+               Set<String> attributes = ImmutableSet.copyOf(view.list());
 
-            cacheControl = readStringAttributeIfPresent(view, attributes, XATTR_CACHE_CONTROL);
-            contentDisposition = readStringAttributeIfPresent(view, attributes, XATTR_CONTENT_DISPOSITION);
-            contentEncoding = readStringAttributeIfPresent(view, attributes, XATTR_CONTENT_ENCODING);
-            contentLanguage = readStringAttributeIfPresent(view, attributes, XATTR_CONTENT_LANGUAGE);
-            contentType = readStringAttributeIfPresent(view, attributes, XATTR_CONTENT_TYPE);
-            if (contentType == null && autoDetectContentType) {
-               contentType = probeContentType(file.toPath());
-            }
-            if (attributes.contains(XATTR_CONTENT_MD5)) {
-               ByteBuffer buf = ByteBuffer.allocate(view.size(XATTR_CONTENT_MD5));
-               view.read(XATTR_CONTENT_MD5, buf);
-               hashCode = HashCode.fromBytes(buf.array());
-            }
-            if (attributes.contains(XATTR_EXPIRES)) {
-               ByteBuffer buf = ByteBuffer.allocate(view.size(XATTR_EXPIRES));
-               view.read(XATTR_EXPIRES, buf);
-               buf.flip();
-               expires = new Date(buf.asLongBuffer().get());
-            }
-            for (String attribute : attributes) {
-               if (!attribute.startsWith(XATTR_USER_METADATA_PREFIX)) {
-                  continue;
+               cacheControl = readStringAttributeIfPresent(view, attributes, XATTR_CACHE_CONTROL);
+               contentDisposition = readStringAttributeIfPresent(view, attributes, XATTR_CONTENT_DISPOSITION);
+               contentEncoding = readStringAttributeIfPresent(view, attributes, XATTR_CONTENT_ENCODING);
+               contentLanguage = readStringAttributeIfPresent(view, attributes, XATTR_CONTENT_LANGUAGE);
+               contentType = readStringAttributeIfPresent(view, attributes, XATTR_CONTENT_TYPE);
+               if (contentType == null && autoDetectContentType) {
+                  contentType = probeContentType(file.toPath());
                }
-               String value = readStringAttributeIfPresent(view, attributes, attribute);
-               userMetadata.put(attribute.substring(XATTR_USER_METADATA_PREFIX.length()), value);
+               if (attributes.contains(XATTR_CONTENT_MD5)) {
+                  ByteBuffer buf = ByteBuffer.allocate(view.size(XATTR_CONTENT_MD5));
+                  view.read(XATTR_CONTENT_MD5, buf);
+                  hashCode = HashCode.fromBytes(buf.array());
+               }
+               if (attributes.contains(XATTR_EXPIRES)) {
+                  ByteBuffer buf = ByteBuffer.allocate(view.size(XATTR_EXPIRES));
+                  view.read(XATTR_EXPIRES, buf);
+                  buf.flip();
+                  expires = new Date(buf.asLongBuffer().get());
+               }
+               for (String attribute : attributes) {
+                  if (!attribute.startsWith(XATTR_USER_METADATA_PREFIX)) {
+                     continue;
+                  }
+                  String value = readStringAttributeIfPresent(view, attributes, attribute);
+                  userMetadata.put(attribute.substring(XATTR_USER_METADATA_PREFIX.length()), value);
+               }
+            } catch (IOException e) {
+               logger.debug("xattrs not supported on %s", file.toPath());
             }
 
             builder.payload(byteSource)
