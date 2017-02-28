@@ -149,7 +149,7 @@ public class NovaComputeServiceAdapter implements
       }, 30 * 60, 1, SECONDS).apply(lightweightServer.getId())) {
          final String message = format("Server %s was not created within %sms so it will be destroyed.", name, "30 * 60");
          logger.warn(message);
-         destroyNode(lightweightServer.getId());
+         destroyNode(RegionAndId.fromRegionAndId(regionId, lightweightServer.getId()).slashEncode());
          throw new IllegalStateException(message);
       }
       logger.trace("<< server(%s)", lightweightServer.getId());
