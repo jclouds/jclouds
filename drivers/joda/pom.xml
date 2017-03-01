@@ -35,16 +35,6 @@
     <jclouds.osgi.export>org.jclouds.date.joda*;version="${project.version}"</jclouds.osgi.export>
     <jclouds.osgi.import>org.jclouds*;version="${project.version}",*</jclouds.osgi.import>
   </properties>
-  <!-- bootstrapping: need to fetch the project POM -->
-  <repositories>
-    <repository>
-      <id>jclouds-sona-snapshots-nexus</id>
-      <url>https://oss.sonatype.org/content/repositories/snapshots</url>
-      <snapshots>
-        <enabled>true</enabled>
-      </snapshots>
-    </repository>
-  </repositories>
 
   <dependencies>
     <dependency>

@@ -51,21 +51,6 @@
     </jclouds.osgi.import>
   </properties>
 
-  <!-- temporary -->
-  <repositories>
-    <repository>
-      <id>jboss-public-releases</id>
-      <url>https://repository.jboss.org/nexus/content/groups/public-jboss</url>
-      <releases>
-        <enabled>true</enabled>
-      </releases>
-      <snapshots>
-        <enabled>false</enabled>
-      </snapshots>
-    </repository>
-  </repositories>
-
-
   <dependencies>
     <dependency>
       <groupId>org.apache.jclouds.api</groupId>

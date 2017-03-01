@@ -40,17 +40,6 @@
     </jclouds.osgi.import>
   </properties>
 
-  <!-- bootstrapping: need to fetch the project POM -->
-  <repositories>
-    <repository>
-      <id>jclouds-sona-snapshots-nexus</id>
-      <url>https://oss.sonatype.org/content/repositories/snapshots</url>
-      <snapshots>
-        <enabled>true</enabled>
-      </snapshots>
-    </repository>
-  </repositories>
-
   <dependencies>
     <dependency>
       <groupId>org.apache.jclouds</groupId>

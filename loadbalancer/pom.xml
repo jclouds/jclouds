@@ -36,17 +36,6 @@
     <jclouds.osgi.fragment>jclouds-core;bundle-version="[1.3,3)"</jclouds.osgi.fragment>
   </properties>
 
-  <!-- bootstrapping: need to fetch the project POM -->
-  <repositories>
-    <repository>
-      <id>jclouds-sona-snapshots-nexus</id>
-      <url>https://oss.sonatype.org/content/repositories/snapshots</url>
-      <snapshots>
-        <enabled>true</enabled>
-      </snapshots>
-    </repository>
-  </repositories>
-
   <dependencies>
     <dependency>
       <groupId>${project.groupId}</groupId>
