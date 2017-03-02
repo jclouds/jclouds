@@ -16,18 +16,6 @@
  */
 package org.jclouds.azurecompute.arm.compute.functions;
 
-import static com.google.common.base.Preconditions.checkArgument;
-import static com.google.common.base.Strings.nullToEmpty;
-import static com.google.common.collect.Iterables.find;
-import static com.google.common.collect.Iterables.tryFind;
-import static org.jclouds.azurecompute.arm.compute.AzureComputeServiceAdapter.GROUP_KEY;
-import static org.jclouds.azurecompute.arm.compute.extensions.AzureComputeImageExtension.CONTAINER_NAME;
-import static org.jclouds.azurecompute.arm.compute.extensions.AzureComputeImageExtension.CUSTOM_IMAGE_OFFER;
-import static org.jclouds.azurecompute.arm.compute.functions.VMImageToImage.encodeFieldsToUniqueId;
-import static org.jclouds.compute.util.ComputeServiceUtils.addMetadataAndParseTagsFromCommaDelimitedValue;
-import static org.jclouds.location.predicates.LocationPredicates.idEquals;
-import static org.jclouds.util.Closeables2.closeQuietly;
-
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -70,6 +58,18 @@ import com.google.common.base.Supplier;
 import com.google.common.cache.LoadingCache;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
+
+import static com.google.common.base.Preconditions.checkArgument;
+import static com.google.common.base.Strings.nullToEmpty;
+import static com.google.common.collect.Iterables.find;
+import static com.google.common.collect.Iterables.tryFind;
+import static org.jclouds.azurecompute.arm.compute.AzureComputeServiceAdapter.GROUP_KEY;
+import static org.jclouds.azurecompute.arm.compute.extensions.AzureComputeImageExtension.CONTAINER_NAME;
+import static org.jclouds.azurecompute.arm.compute.extensions.AzureComputeImageExtension.CUSTOM_IMAGE_OFFER;
+import static org.jclouds.azurecompute.arm.compute.functions.VMImageToImage.encodeFieldsToUniqueId;
+import static org.jclouds.compute.util.ComputeServiceUtils.addMetadataAndParseTagsFromCommaDelimitedValue;
+import static org.jclouds.location.predicates.LocationPredicates.idEquals;
+import static org.jclouds.util.Closeables2.closeQuietly;
 
 public class VirtualMachineToNodeMetadata implements Function<VirtualMachine, NodeMetadata> {
 

@@ -115,7 +115,7 @@ public class VirtualMachineApiMockTest extends BaseAzureComputeApiMockTest {
       Plan plan = Plan.create("thinkboxsoftware", "deadline-slave-7-2", "deadline7-2");
       final VirtualMachineApi vmAPI = api.getVirtualMachineApi("groupname");
       VirtualMachine vm = vmAPI
-            .create("windowsmachine", "westus", getProperties(), ImmutableMap.of("foo", "bar"), plan);
+            .createOrUpdate("windowsmachine", "westus", getProperties(), ImmutableMap.of("foo", "bar"), plan);
       assertEquals(vm, getVM(plan));
       assertSent(
             server,
@@ -138,7 +138,7 @@ public class VirtualMachineApiMockTest extends BaseAzureComputeApiMockTest {
       server.enqueue(jsonResponse("/createvirtualmachineresponse.json"));
 
       final VirtualMachineApi vmAPI = api.getVirtualMachineApi("groupname");
-      VirtualMachine vm = vmAPI.create("windowsmachine", "westus", getProperties(), ImmutableMap.of("foo", "bar"), null);
+      VirtualMachine vm = vmAPI.createOrUpdate("windowsmachine", "westus", getProperties(), ImmutableMap.of("foo", "bar"), null);
       assertEquals(vm, getVM());
       assertSent(
             server,

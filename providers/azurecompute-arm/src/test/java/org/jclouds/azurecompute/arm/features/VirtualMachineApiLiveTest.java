@@ -16,11 +16,6 @@
  */
 package org.jclouds.azurecompute.arm.features;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.jclouds.util.Predicates2.retry;
-import static org.testng.Assert.assertNotNull;
-import static org.testng.Assert.assertTrue;
-
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -55,8 +50,15 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 import com.google.common.base.Predicate;
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Iterables;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.jclouds.util.Predicates2.retry;
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertNotNull;
+import static org.testng.Assert.assertTrue;
 
 @Test(groups = "live", testName = "VirtualMachineApiLiveTest")
 public class VirtualMachineApiLiveTest extends BaseAzureComputeApiLiveTest {
@@ -102,7 +104,7 @@ public class VirtualMachineApiLiveTest extends BaseAzureComputeApiLiveTest {
    public void testCreate() {
       String blob = storageService.storageServiceProperties().primaryEndpoints().get("blob");
 
-      VirtualMachine vm = api().create(vmName, LOCATION, getProperties(blob, nicName),
+      VirtualMachine vm = api().createOrUpdate(vmName, LOCATION, getProperties(blob, nicName),
             Collections.<String, String> emptyMap(), null);
       assertTrue(!vm.name().isEmpty());
 
@@ -113,7 +115,7 @@ public class VirtualMachineApiLiveTest extends BaseAzureComputeApiLiveTest {
             return !api().get(name).properties().provisioningState().equals(VirtualMachineProperties.ProvisioningState.CREATING);
          }
       }, 60 * 20 * 1000).apply(vmName);
-      assertTrue(jobDone, "create operation did not complete in the configured timeout");
+      assertTrue(jobDone, "createOrUpdate operation did not complete in the configured timeout");
 
       VirtualMachineProperties.ProvisioningState status = api().get(vmName).properties().provisioningState();
       // Cannot be creating anymore. Should be succeeded or running but not failed.
@@ -133,16 +135,38 @@ public class VirtualMachineApiLiveTest extends BaseAzureComputeApiLiveTest {
       assertTrue(!vmi.statuses().isEmpty());
    }
 
-   @Test(dependsOnMethods = "testStart")
-   public void testStop() {
-      api().stop(vmName);
-      assertTrue(stateReached(PowerState.STOPPED), "stop operation did not complete in the configured timeout");
-   }
-
    @Test(dependsOnMethods = "testGet")
    public void testStart() {
       api().start(vmName);
       assertTrue(stateReached(PowerState.RUNNING), "start operation did not complete in the configured timeout");
+   }
+
+   @Test(dependsOnMethods = "testStart")
+   public void testUpdate() {
+      VirtualMachine vm = api().get(vmName);
+      VirtualMachineProperties oldProperties = vm.properties();
+      StorageProfile oldStorageProfile = oldProperties.storageProfile();
+
+      String blob = storageService.storageServiceProperties().primaryEndpoints().get("blob");
+      VHD vhd = VHD.create(blob + "vhds/" + vmName + "new-data-disk.vhd");
+      DataDisk newDataDisk = DataDisk.create(vmName + "new-data-disk", "1", 1, vhd, "Empty");
+      List<DataDisk> oldDataDisks = oldStorageProfile.dataDisks();
+      assertEquals(oldDataDisks.size(), 1);
+
+      ImmutableList<DataDisk> newDataDisks = ImmutableList.<DataDisk> builder().addAll(oldDataDisks).add(newDataDisk).build();
+      StorageProfile newStorageProfile = oldStorageProfile.toBuilder().dataDisks(newDataDisks).build();
+      VirtualMachineProperties newProperties = oldProperties.toBuilder().storageProfile(newStorageProfile).build();
+
+      VirtualMachine newVm = vm.toBuilder().properties(newProperties).build();
+      vm = api().createOrUpdate(vmName, newVm.location(), newVm.properties(), newVm.tags(), newVm.plan());
+
+      assertEquals(vm.properties().storageProfile().dataDisks().size(), oldDataDisks.size() + 1);
+   }
+
+   @Test(dependsOnMethods = "testUpdate")
+   public void testStop() {
+      api().stop(vmName);
+      assertTrue(stateReached(PowerState.STOPPED), "stop operation did not complete in the configured timeout");
    }
 
    @Test(dependsOnMethods = "testStop")

@@ -53,16 +53,13 @@ import org.jclouds.rest.binders.BindToJsonPayload;
 /**
  * The Virtual Machine API includes operations for managing the virtual machines in your subscription.
  *
- * @see <a href="https://msdn.microsoft.com/en-us/library/azure/mt163630.aspx">docs</a>
+ * @see <a href="https://docs.microsoft.com/en-us/rest/api/compute/virtualmachines/virtualmachines-rest-api">docs</a>
  */
 @Path("/resourceGroups/{resourceGroup}/providers/Microsoft.Compute/virtualMachines")
 @RequestFilters({ OAuthFilter.class, ApiVersionFilter.class })
 @Consumes(MediaType.APPLICATION_JSON)
 public interface VirtualMachineApi {
 
-   /**
-    * The Get Virtual Machine details
-    */
    @Named("GetVirtualMachine")
    @GET
    @Path("/{name}")
@@ -70,7 +67,7 @@ public interface VirtualMachineApi {
    VirtualMachine get(@PathParam("name") String name);
 
    /**
-    * Get information about the model view and instance view of a virtual machine:
+    * Get information about the model view and instance view of a virtual machine
     */
    @Named("GetVirtualMachineInstance")
    @GET
@@ -78,34 +75,25 @@ public interface VirtualMachineApi {
    @Fallback(Fallbacks.NullOnNotFoundOr404.class)
    VirtualMachineInstance getInstanceDetails(@PathParam("name") String name);
    
-   /**
-    * The Create Virtual Machine
-    */
-   @Named("CreateVirtualMachine")
+   @Named("CreateOrUpdateVirtualMachine")
    @PUT
    @Payload("%7B\"location\":\"{location}\",\"tags\":{tags},\"properties\":{properties},\"plan\":{plan}%7D")
    @MapBinder(BindToJsonPayload.class)
    @Path("/{vmname}")
    @QueryParams(keys = "validating", values = "false")
    @Produces(MediaType.APPLICATION_JSON)
-   VirtualMachine create(@PathParam("vmname") String vmname,
-                         @PayloadParam("location") String location,
-                         @PayloadParam("properties") VirtualMachineProperties properties,
-                         @PayloadParam("tags") Map<String, String> tags,
-                         @Nullable @PayloadParam("plan") Plan plan);
+   VirtualMachine createOrUpdate(@PathParam("vmname") String vmname,
+                                 @PayloadParam("location") String location,
+                                 @PayloadParam("properties") VirtualMachineProperties properties,
+                                 @PayloadParam("tags") Map<String, String> tags,
+                                 @Nullable @PayloadParam("plan") Plan plan);
 
-   /**
-    * The List Virtual Machines operation
-    */
    @Named("ListVirtualMachines")
    @GET
    @SelectJson("value")
    @Fallback(Fallbacks.EmptyListOnNotFoundOr404.class)
    List<VirtualMachine> list();
 
-   /**
-    * The Delete Virtual Machine operation
-    */
    @Named("DeleteVirtualMachine")
    @DELETE
    @Path("/{name}")
@@ -113,33 +101,21 @@ public interface VirtualMachineApi {
    @Fallback(Fallbacks.NullOnNotFoundOr404.class)
    URI delete(@PathParam("name") String name);
 
-   /**
-    * The Restart Virtual Machine operation
-    */
    @Named("RestartVirtualMachine")
    @POST
    @Path("/{name}/restart")
    void restart(@PathParam("name") String name);
 
-   /**
-    * The start Virtual Machine operation
-    */
    @Named("StartVirtualMachine")
    @POST
    @Path("/{name}/start")
    void start(@PathParam("name") String name);
 
-   /**
-    * The stop Virtual Machine operation
-    */
    @Named("StopVirtualMachine")
    @POST
    @Path("/{name}/powerOff")
    void stop(@PathParam("name") String name);
 
-   /**
-    * Generalize the virtual machine
-    */
    @Named("generalize")
    @POST
    @Path("/{name}/generalize")
