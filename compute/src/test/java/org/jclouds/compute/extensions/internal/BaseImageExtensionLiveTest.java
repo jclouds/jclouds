@@ -68,7 +68,11 @@ public abstract class BaseImageExtensionLiveTest extends BaseComputeServiceConte
     * @return
     */
    public TemplateBuilder getNodeTemplate() {
-      return view.getComputeService().templateBuilder();
+      TemplateBuilder templateBuilder = view.getComputeService().templateBuilder();
+      if (templateBuilderSpec != null) {
+          templateBuilder = templateBuilder.from(templateBuilderSpec);
+      }
+      return templateBuilder;
    }
 
    /**
