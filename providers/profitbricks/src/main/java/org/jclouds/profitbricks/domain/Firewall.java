@@ -141,9 +141,7 @@ public abstract class Firewall {
                  .protocol(Protocol.ANY);
       }
 
-      public Builder toBuilder() {
-         return new AutoValue_Firewall_Rule.Builder(this);
-      }
+      public abstract Builder toBuilder();
 
       @AutoValue.Builder
       public abstract static class Builder {

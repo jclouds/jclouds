@@ -62,9 +62,7 @@ public abstract class NetworkSettings {
                .build();
       }
       
-      public Builder toBuilder() {
-         return new AutoValue_NetworkSettings_Details.Builder(this);
-      }
+      public abstract Builder toBuilder();
 
       public static Builder builder() {
          return new AutoValue_NetworkSettings_Details.Builder();
