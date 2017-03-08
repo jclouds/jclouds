@@ -1215,7 +1215,11 @@ public class BaseBlobIntegrationTest extends BaseBlobStoreIntegrationTest {
          MultipartPart part = blobStore.uploadMultipartPart(mpu, 1, payload);
 
          List<MultipartPart> parts = blobStore.listMultipartUpload(mpu);
-         assertThat(parts).isEqualTo(ImmutableList.of(part));
+         assertThat(parts).hasSize(1);
+         assertThat(parts.get(0).partNumber()).isEqualTo(part.partNumber());
+         assertThat(parts.get(0).partSize()).isEqualTo(part.partSize());
+         assertThat(parts.get(0).partETag()).isEqualTo(part.partETag());
+         // not checking lastModified since B2, S3, and Swift do not return it from uploadMultipartPart
 
          blobStore.completeMultipartUpload(mpu, ImmutableList.of(part));
 
@@ -1254,7 +1258,14 @@ public class BaseBlobIntegrationTest extends BaseBlobStoreIntegrationTest {
          MultipartPart part2 = blobStore.uploadMultipartPart(mpu, 2, payload2);
 
          List<MultipartPart> parts = blobStore.listMultipartUpload(mpu);
-         assertThat(parts).isEqualTo(ImmutableList.of(part1, part2));
+         assertThat(parts).hasSize(2);
+         assertThat(parts.get(0).partNumber()).isEqualTo(part1.partNumber());
+         assertThat(parts.get(0).partSize()).isEqualTo(part1.partSize());
+         assertThat(parts.get(0).partETag()).isEqualTo(part1.partETag());
+         assertThat(parts.get(1).partNumber()).isEqualTo(part2.partNumber());
+         assertThat(parts.get(1).partSize()).isEqualTo(part2.partSize());
+         assertThat(parts.get(1).partETag()).isEqualTo(part2.partETag());
+         // not checking lastModified since B2, S3, and Swift do not return it from uploadMultipartPart
 
          blobStore.completeMultipartUpload(mpu, ImmutableList.of(part1, part2));
 

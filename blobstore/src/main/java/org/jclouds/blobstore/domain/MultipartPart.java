@@ -17,6 +17,8 @@
 
 package org.jclouds.blobstore.domain;
 
+import java.util.Date;
+
 import org.jclouds.javax.annotation.Nullable;
 
 import com.google.auto.value.AutoValue;
@@ -26,8 +28,14 @@ public abstract class MultipartPart {
    public abstract int partNumber();
    public abstract long partSize();
    @Nullable public abstract String partETag();
+   @Nullable public abstract Date lastModified();
 
+   @Deprecated
    public static MultipartPart create(int partNumber, long partSize, @Nullable String partETag) {
-      return new AutoValue_MultipartPart(partNumber, partSize, partETag);
+      return MultipartPart.create(partNumber, partSize, partETag, null);
+   }
+
+   public static MultipartPart create(int partNumber, long partSize, @Nullable String partETag, @Nullable Date lastModified) {
+      return new AutoValue_MultipartPart(partNumber, partSize, partETag, lastModified);
    }
 }

@@ -21,6 +21,7 @@ import static org.jclouds.azure.storage.options.ListOptions.Builder.includeMetad
 
 import java.io.InputStream;
 import java.net.URI;
+import java.util.Date;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.Map;
@@ -435,8 +436,8 @@ public class AzureBlobStore extends BaseBlobStore {
       String blockId = BaseEncoding.base64().encode(Ints.toByteArray(partNumber));
       sync.putBlock(mpu.containerName(), mpu.blobName(), blockId, payload);
       String eTag = "";  // putBlock does not return ETag
-      long partSize = -1;  // TODO: how to get this from payload?
-      return MultipartPart.create(partNumber, partSize, eTag);
+      Date lastModified = null;  // putBlob does not return Last-Modified
+      return MultipartPart.create(partNumber, payload.getContentMetadata().getContentLength(), eTag);
    }
 
    @Override
@@ -452,8 +453,8 @@ public class AzureBlobStore extends BaseBlobStore {
       for (BlobBlockProperties properties : response.getBlocks()) {
          int partNumber = Ints.fromByteArray(BaseEncoding.base64().decode(properties.getBlockName()));
          String eTag = "";  // getBlockList does not return ETag
-         long partSize = -1;  // TODO: could call getContentLength but did not above
-         parts.add(MultipartPart.create(partNumber, partSize, eTag));
+         Date lastModified = null;  // getBlockList does not return LastModified
+         parts.add(MultipartPart.create(partNumber, properties.getContentLength(), eTag, lastModified));
       }
       return parts.build();
    }
