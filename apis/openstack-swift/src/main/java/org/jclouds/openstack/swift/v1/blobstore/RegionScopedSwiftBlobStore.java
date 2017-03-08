@@ -35,6 +35,7 @@ import java.lang.reflect.Method;
 import java.nio.MappedByteBuffer;
 import java.nio.channels.FileChannel;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -528,7 +529,8 @@ public class RegionScopedSwiftBlobStore implements BlobStore {
       String partName = getMPUPartName(mpu, partNumber);
       String eTag = api.getObjectApi(regionId, mpu.containerName()).put(partName, payload);
       long partSize = payload.getContentMetadata().getContentLength();
-      return MultipartPart.create(partNumber, partSize, eTag);
+      Date lastModified = null;  // Swift does not return Last-Modified
+      return MultipartPart.create(partNumber, partSize, eTag, lastModified);
    }
 
    @Override
@@ -540,7 +542,7 @@ public class RegionScopedSwiftBlobStore implements BlobStore {
       for (StorageMetadata sm : pageSet) {
          int lastSlash = sm.getName().lastIndexOf('/');
          int partNumber = Integer.parseInt(sm.getName().substring(lastSlash + 1));
-         parts.add(MultipartPart.create(partNumber, sm.getSize(), sm.getETag()));
+         parts.add(MultipartPart.create(partNumber, sm.getSize(), sm.getETag(), sm.getLastModified()));
       }
       return parts.build();
    }

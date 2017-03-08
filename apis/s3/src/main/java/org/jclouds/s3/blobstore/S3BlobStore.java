@@ -20,6 +20,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Preconditions.checkState;
 import static org.jclouds.util.Predicates2.retry;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -64,6 +65,7 @@ import org.jclouds.s3.domain.AccessControlList.GroupGranteeURI;
 import org.jclouds.s3.domain.AccessControlList.Permission;
 import org.jclouds.s3.domain.BucketMetadata;
 import org.jclouds.s3.domain.CannedAccessPolicy;
+import org.jclouds.s3.domain.ListMultipartUploadResponse;
 import org.jclouds.s3.domain.ListMultipartUploadsResponse;
 import org.jclouds.s3.options.CopyObjectOptions;
 import org.jclouds.s3.options.ListBucketOptions;
@@ -385,18 +387,19 @@ public class S3BlobStore extends BaseBlobStore {
 
    @Override
    public MultipartPart uploadMultipartPart(MultipartUpload mpu, int partNumber, Payload payload) {
-      long partSize = -1;  // TODO: how to get this from payload?
+      long partSize = payload.getContentMetadata().getContentLength();
       String eTag = sync.uploadPart(mpu.containerName(), mpu.blobName(), partNumber, mpu.id(), payload);
-      return MultipartPart.create(partNumber, partSize, eTag);
+      Date lastModified = null;  // S3 does not return Last-Modified
+      return MultipartPart.create(partNumber, partSize, eTag, lastModified);
    }
 
    @Override
    public List<MultipartPart> listMultipartUpload(MultipartUpload mpu) {
       ImmutableList.Builder<MultipartPart> parts = ImmutableList.builder();
-      Map<Integer, String> s3Parts = sync.listMultipartParts(mpu.containerName(), mpu.blobName(), mpu.id());
-      for (Map.Entry<Integer, String> entry : s3Parts.entrySet()) {
-         long partSize = -1;  // TODO: could call getContentLength but did not above
-         parts.add(MultipartPart.create(entry.getKey(), partSize, entry.getValue()));
+      Map<Integer, ListMultipartUploadResponse> s3Parts = sync.listMultipartPartsFull(mpu.containerName(), mpu.blobName(), mpu.id());
+      for (Map.Entry<Integer, ListMultipartUploadResponse> entry : s3Parts.entrySet()) {
+         ListMultipartUploadResponse response = entry.getValue();
+         parts.add(MultipartPart.create(entry.getKey(), response.size(), response.eTag(), response.lastModified()));
       }
       return parts.build();
    }
