@@ -18,6 +18,7 @@ package org.jclouds.b2.blobstore;
 
 import java.io.IOException;
 import java.net.URI;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -408,7 +409,8 @@ public final class B2BlobStore extends BaseBlobStore {
       GetUploadPartResponse getUploadPart = api.getMultipartApi().getUploadPartUrl(mpu.id());
       UploadPartResponse uploadPart = api.getMultipartApi().uploadPart(getUploadPart, partNumber, contentSha1, payload);
 
-      return MultipartPart.create(uploadPart.partNumber(), uploadPart.contentLength(), uploadPart.contentSha1());
+      Date lastModified = null;  // B2 does not return Last-Modified
+      return MultipartPart.create(uploadPart.partNumber(), uploadPart.contentLength(), uploadPart.contentSha1(), lastModified);
    }
 
    @Override
@@ -416,7 +418,7 @@ public final class B2BlobStore extends BaseBlobStore {
       ListPartsResponse response = api.getMultipartApi().listParts(mpu.id(), null, null);
       ImmutableList.Builder<MultipartPart> parts = ImmutableList.builder();
       for (ListPartsResponse.Entry entry : response.parts()) {
-         parts.add(MultipartPart.create(entry.partNumber(), entry.contentLength(), entry.contentSha1()));
+         parts.add(MultipartPart.create(entry.partNumber(), entry.contentLength(), entry.contentSha1(), entry.uploadTimestamp()));
       }
       return parts.build();
    }
