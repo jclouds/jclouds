@@ -423,7 +423,7 @@ public final class GoogleCloudStorageBlobStore extends BaseBlobStore {
       InsertObjectOptions insertOptions = new InsertObjectOptions().name(partName);
       GoogleCloudStorageObject object = api.getObjectApi().simpleUpload(mpu.containerName(),
             mpu.blobMetadata().getContentMetadata().getContentType(), partSize, payload, insertOptions);
-      return MultipartPart.create(partNumber, partSize, object.etag());
+      return MultipartPart.create(partNumber, partSize, object.etag(), object.updated());
    }
 
    @Override
@@ -435,7 +435,7 @@ public final class GoogleCloudStorageBlobStore extends BaseBlobStore {
       for (StorageMetadata sm : pageSet) {
          int lastUnderscore = sm.getName().lastIndexOf('_');
          int partNumber = Integer.parseInt(sm.getName().substring(lastUnderscore + 1));
-         parts.add(MultipartPart.create(partNumber, sm.getSize(), sm.getETag()));
+         parts.add(MultipartPart.create(partNumber, sm.getSize(), sm.getETag(), sm.getLastModified()));
       }
       return parts.build();
    }
