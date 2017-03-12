@@ -21,6 +21,8 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 import java.util.Date;
 
+import org.jclouds.javax.annotation.Nullable;
+
 import com.google.auto.value.AutoValue;
 import com.google.common.annotations.Beta;
 import org.jclouds.javax.annotation.Nullable;
@@ -33,7 +35,7 @@ public abstract class ListMultipartUploadResponse {
    public abstract String eTag();
    public abstract long size();
 
-   public static ListMultipartUploadResponse create(int partNumber, Date lastModified, String eTag, long size) {
+   public static ListMultipartUploadResponse create(int partNumber, @Nullable Date lastModified, String eTag, long size) {
       checkArgument(partNumber > 0, "partNumber must be greater than zero, was: %s", partNumber);
       checkNotNull(eTag, "eTag");
       if (lastModified != null) {
