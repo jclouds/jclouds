@@ -24,42 +24,13 @@ import com.google.auto.value.AutoValue;
 @AutoValue
 public abstract class ManagedDiskParameters {
 
-   public enum StorageAccountTypes {
-      /** Enum value Standard_LRS. */
-      STANDARD_LRS("Standard_LRS"),
-
-      /** Enum value Premium_LRS. */
-      PREMIUM_LRS("Premium_LRS");
-
-      /** The actual serialized value for a StorageAccountTypes instance. */
-      private String value;
-
-      StorageAccountTypes(String value) {
-         this.value = value;
-      }
-
-      public static StorageAccountTypes fromString(String value) {
-         StorageAccountTypes[] items = StorageAccountTypes.values();
-         for (StorageAccountTypes item : items) {
-            if (item.toString().equalsIgnoreCase(value)) {
-               return item;
-            }
-         }
-         return null;
-      }
-
-      @Override
-      public String toString() {
-         return this.value;
-      }
-   }
-
    @Nullable public abstract String id();
 
-   public abstract StorageAccountTypes storageAccountType();
+   // Might be null in custom images. In that case the API returns it in the OSDisk object.
+   @Nullable public abstract StorageAccountType storageAccountType();
 
    @SerializedNames({"id", "storageAccountType"})
    public static ManagedDiskParameters create(final String id, final String storageAccountType) {
-      return new AutoValue_ManagedDiskParameters(id, StorageAccountTypes.fromString(storageAccountType));
+      return new AutoValue_ManagedDiskParameters(id, StorageAccountType.fromString(storageAccountType));
    }
 }

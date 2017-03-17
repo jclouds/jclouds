@@ -16,6 +16,11 @@
  */
 package org.jclouds.azurecompute.arm.compute.strategy;
 
+import static com.google.common.base.Predicates.notNull;
+import static com.google.common.collect.Iterables.filter;
+import static com.google.common.collect.Iterables.transform;
+import static org.jclouds.azurecompute.arm.config.AzureComputeProperties.TIMEOUT_RESOURCE_DELETED;
+
 import java.net.URI;
 import java.util.List;
 
@@ -32,11 +37,8 @@ import org.jclouds.azurecompute.arm.domain.NetworkInterfaceCard;
 import org.jclouds.azurecompute.arm.domain.NetworkSecurityGroup;
 import org.jclouds.azurecompute.arm.domain.RegionAndId;
 import org.jclouds.azurecompute.arm.domain.ResourceGroup;
-import org.jclouds.azurecompute.arm.domain.StorageServiceKeys;
 import org.jclouds.azurecompute.arm.domain.VirtualMachine;
 import org.jclouds.azurecompute.arm.features.NetworkSecurityGroupApi;
-import org.jclouds.azurecompute.arm.functions.StorageProfileToStorageAccountName;
-import org.jclouds.azurecompute.arm.util.BlobHelper;
 import org.jclouds.compute.functions.GroupNamingConvention;
 import org.jclouds.compute.reference.ComputeServiceConstants;
 import org.jclouds.logging.Logger;
@@ -48,12 +50,6 @@ import com.google.common.cache.LoadingCache;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 
-import static com.google.common.base.Predicates.notNull;
-import static com.google.common.collect.Iterables.filter;
-import static com.google.common.collect.Iterables.transform;
-import static org.jclouds.azurecompute.arm.config.AzureComputeProperties.TIMEOUT_RESOURCE_DELETED;
-import static org.jclouds.util.Closeables2.closeQuietly;
-
 @Singleton
 public class CleanupResources {
 
@@ -63,17 +59,14 @@ public class CleanupResources {
 
    private final AzureComputeApi api;
    private final Predicate<URI> resourceDeleted;
-   private final StorageProfileToStorageAccountName storageProfileToStorageAccountName;
    private final LoadingCache<String, ResourceGroup> resourceGroupMap;
    private final GroupNamingConvention.Factory namingConvention;
 
    @Inject
    CleanupResources(AzureComputeApi azureComputeApi, @Named(TIMEOUT_RESOURCE_DELETED) Predicate<URI> resourceDeleted,
-         StorageProfileToStorageAccountName storageProfileToStorageAccountName,
          LoadingCache<String, ResourceGroup> resourceGroupMap, GroupNamingConvention.Factory namingConvention) {
       this.api = azureComputeApi;
       this.resourceDeleted = resourceDeleted;
-      this.storageProfileToStorageAccountName = storageProfileToStorageAccountName;
       this.resourceGroupMap = resourceGroupMap;
       this.namingConvention = namingConvention;
    }
@@ -95,7 +88,6 @@ public class CleanupResources {
       // group. It will be deleted when the resource group is deleted
 
       cleanupVirtualMachineNICs(resourceGroupName, virtualMachine);
-      cleanupVirtualMachineStorage(resourceGroupName, virtualMachine);
       cleanupAvailabilitySetIfOrphaned(resourceGroupName, virtualMachine);
 
       return vmDeleted;
@@ -114,28 +106,6 @@ public class CleanupResources {
             logger.debug(">> deleting public ip nic %s...", publicIp);
             api.getPublicIPAddressApi(group).delete(publicIp);
          }
-      }
-   }
-
-   public void cleanupVirtualMachineStorage(String group, VirtualMachine virtualMachine) {
-      String storageAccountName = storageProfileToStorageAccountName
-            .apply(virtualMachine.properties().storageProfile());
-      StorageServiceKeys keys = api.getStorageAccountApi(group).getKeys(storageAccountName);
-
-      // Remove the virtual machine files
-      logger.debug(">> deleting virtual machine disk storage...");
-      BlobHelper blobHelper = new BlobHelper(storageAccountName, keys.key1());
-      try {
-         blobHelper.deleteContainerIfExists("vhds");
-
-         if (!blobHelper.customImageExists()) {
-            logger.debug(">> deleting storage account %s...", storageAccountName);
-            api.getStorageAccountApi(group).delete(storageAccountName);
-         } else {
-            logger.debug(">> the storage account contains custom images. Will not delete it!");
-         }
-      } finally {
-         closeQuietly(blobHelper);
       }
    }
 

@@ -26,7 +26,6 @@ import javax.ws.rs.GET;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
 import org.jclouds.Fallbacks.EmptyListOnNotFoundOr404;
@@ -48,11 +47,11 @@ import org.jclouds.rest.binders.BindToJsonPayload;
 @RequestFilters({ OAuthFilter.class, ApiVersionFilter.class })
 @Consumes(MediaType.APPLICATION_JSON)
 public interface NetworkSecurityRuleApi {
+
    @Named("networksecurityrule:createOrUpdate")
    @Path("/securityRules/{networksecurityrulename}")
    @PUT
    @MapBinder(BindToJsonPayload.class)
-   @Produces(MediaType.APPLICATION_JSON)
    NetworkSecurityRule createOrUpdate(@PathParam("networksecurityrulename") String ruleName,
                                       @PayloadParam("properties") NetworkSecurityRuleProperties properties);
 

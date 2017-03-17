@@ -38,10 +38,8 @@ import org.jclouds.azurecompute.arm.domain.NetworkSecurityRule;
 import org.jclouds.azurecompute.arm.domain.NetworkSecurityRuleProperties;
 import org.jclouds.azurecompute.arm.domain.Provisionable;
 import org.jclouds.azurecompute.arm.domain.ResourceGroup;
-import org.jclouds.azurecompute.arm.domain.StorageService;
 import org.jclouds.azurecompute.arm.domain.Subnet;
 import org.jclouds.azurecompute.arm.domain.VirtualNetwork;
-import org.jclouds.azurecompute.arm.functions.ParseJobStatus;
 import org.testng.annotations.AfterClass;
 
 import com.google.common.base.Predicate;
@@ -99,7 +97,7 @@ public class BaseAzureComputeApiLiveTest extends BaseApiLiveTest<AzureComputeApi
    @Override protected Properties setupProperties() {
       Properties properties = super.setupProperties();
       // for oauth
-      AzureLiveTestUtils.defaultProperties(properties);
+      AzureLiveTestUtils.defaultProperties(properties, getClass().getSimpleName().toLowerCase());
       checkNotNull(setIfTestSystemPropertyPresent(properties, "oauth.endpoint"), "test.oauth.endpoint");
       return properties;
    }
@@ -137,23 +135,6 @@ public class BaseAzureComputeApiLiveTest extends BaseApiLiveTest<AzureComputeApi
          }
       }, 60 * 4 * 1000).apply(subnet.name());
       return subnet;
-   }
-
-   protected StorageService createStorageService(final String resourceGroupName, final String storageServiceName, final String location) {
-      URI uri = api.getStorageAccountApi(resourceGroupName).create(storageServiceName, location, ImmutableMap.of("property_name",
-              "property_value"), ImmutableMap.of("accountType", StorageService.AccountType.Standard_LRS.toString()));
-      if (uri != null) {
-         assertTrue(uri.toString().contains("api-version"));
-
-         boolean jobDone = retry(new Predicate<URI>() {
-            @Override
-            public boolean apply(final URI uri) {
-               return ParseJobStatus.JobStatus.DONE == api.getJobApi().jobStatus(uri);
-            }
-         }, 60 * 1 * 1000 /* 1 minute timeout */).apply(uri);
-         assertTrue(jobDone, "create operation did not complete in the configured timeout");
-      }
-      return api.getStorageAccountApi(resourceGroupName).get(storageServiceName);
    }
 
    protected void createTestResourceGroup() {

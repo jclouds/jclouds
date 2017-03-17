@@ -28,7 +28,6 @@ import javax.ws.rs.GET;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
 import org.jclouds.Fallbacks.EmptyListOnNotFoundOr404;
@@ -67,7 +66,6 @@ public interface ResourceGroupApi extends Closeable{
    @Named("resourcegroup:create")
    @PUT
    @Path("/{name}")
-   @Produces(MediaType.APPLICATION_JSON)
    @MapBinder(BindToJsonPayload.class)
    ResourceGroup create(@PathParam("name") String name, @PayloadParam("location") String location, @Nullable @PayloadParam("tags") Map<String, String> tags);
 
@@ -87,7 +85,6 @@ public interface ResourceGroupApi extends Closeable{
 
    @Named("resourcegroup:update")
    @PATCH
-   @Produces(MediaType.APPLICATION_JSON)
    @Path("/{name}")
    @MapBinder(BindToJsonPayload.class)
    ResourceGroup update(@PathParam("name") String name, @Nullable @PayloadParam("tags") Map<String, String> tags);

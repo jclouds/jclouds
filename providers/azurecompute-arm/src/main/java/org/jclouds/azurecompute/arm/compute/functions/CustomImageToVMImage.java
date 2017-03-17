@@ -14,14 +14,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jclouds.azurecompute.arm.util;
+package org.jclouds.azurecompute.arm.compute.functions;
 
-import static com.google.common.base.Preconditions.checkNotNull;
+import org.jclouds.azurecompute.arm.domain.Image;
+import org.jclouds.azurecompute.arm.domain.VMImage;
 
-public class VMImages {
+import com.google.common.base.Function;
 
-   public static boolean isCustom(String imageId) {
-      return checkNotNull(imageId, "id").split("/").length == 2;
+public class CustomImageToVMImage implements Function<Image, VMImage> {
+
+   @Override
+   public VMImage apply(Image input) {
+      return VMImage.customImage().customImageId(input.id()).location(input.location()).name(input.name())
+            .offer(input.properties().storageProfile().osDisk().osType()).build();
    }
-  
 }

@@ -60,11 +60,11 @@ public interface DeploymentApi {
     */
    @Named("deployment:create")
    @Path("/{deploymentname}")
-   @Payload("{properties}")
+   @Payload("{template}")
    @PUT
    @Produces(MediaType.APPLICATION_JSON)
    Deployment create(@PathParam("deploymentname") String deploymentname,
-                               @PayloadParam("properties") String properties);
+                               @PayloadParam("template") String template);
 
    /**
     * Get Deployment Information returns information about the specified deployment.
@@ -80,11 +80,11 @@ public interface DeploymentApi {
     */
    @Named("deployment:validate")
    @Path("/{deploymentname}/validate")
-   @Payload("{properties}")
+   @Payload("{template}")
    @POST
    @Produces(MediaType.APPLICATION_JSON)
    Deployment validate(@PathParam("deploymentname") String deploymentname,
-                                 @PayloadParam("properties") String properties);
+                                 @PayloadParam("template") String template);
 
    /**
     * List all deployments in a resource group

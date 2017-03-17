@@ -26,6 +26,18 @@ import com.google.common.collect.ImmutableMap;
 
 @AutoValue
 public abstract class Image {
+   
+   /**
+    * The id of the image
+    */
+   @Nullable
+   public abstract String id();
+
+   /**
+    * The name of the image
+    */
+   @Nullable
+   public abstract String name();
 
    /**
     * The location of the image
@@ -42,9 +54,10 @@ public abstract class Image {
     */
    @Nullable public abstract Map<String, String> tags();
 
-   @SerializedNames({"location", "properties", "tags"})
-   public static Image create(final String location, final ImageProperties properties, final Map<String, String> tags) {
-      return builder().location(location).properties(properties).tags(tags).build();
+   @SerializedNames({"id", "name", "location", "properties", "tags"})
+   public static Image create(final String id, final String name, final String location,
+         final ImageProperties properties, final Map<String, String> tags) {
+      return builder().id(id).name(name).location(location).properties(properties).tags(tags).build();
    }
 
    public abstract Builder toBuilder();
@@ -55,10 +68,10 @@ public abstract class Image {
 
    @AutoValue.Builder
    public abstract static class Builder {
+      public abstract Builder id(String id);
+      public abstract Builder name(String name);
       public abstract Builder location(String location);
-
       public abstract Builder properties(ImageProperties properties);
-
       public abstract Builder tags(Map<String, String> tags);
 
       abstract Map<String, String> tags();

@@ -67,7 +67,11 @@
       <groupId>org.apache.jclouds.api</groupId>
       <artifactId>oauth</artifactId>
       <version>${project.version}</version>
-      <type>jar</type>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.jclouds.driver</groupId>
+      <artifactId>jclouds-okhttp</artifactId>
+      <version>${project.version}</version>
     </dependency>
     <dependency>
       <groupId>org.apache.jclouds.api</groupId>
@@ -103,25 +107,9 @@
       <scope>test</scope>
     </dependency>
     <dependency>
-      <groupId>org.apache.jclouds.driver</groupId>
-      <artifactId>jclouds-slf4j</artifactId>
-      <version>${project.parent.version}</version>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.jclouds.provider</groupId>
-      <artifactId>azureblob</artifactId>
-      <version>${project.parent.version}</version>
-    </dependency>
-    <dependency>
      <groupId>ch.qos.logback</groupId>
      <artifactId>logback-classic</artifactId>
      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.jclouds.driver</groupId>
-      <artifactId>jclouds-okhttp</artifactId>
-      <version>${project.version}</version>
     </dependency>
     <dependency>
       <groupId>com.squareup.okhttp</groupId>
@@ -135,20 +123,13 @@
         </exclusion>
       </exclusions>
     </dependency>
-    <dependency>
-      <groupId>org.apache.jclouds</groupId>
-      <artifactId>jclouds-blobstore</artifactId>
-      <version>${project.parent.version}</version>
-    </dependency>
   </dependencies>
 
   <profiles>
     <profile>
       <id>live</id>
-
       <build>
         <defaultGoal>clean verify</defaultGoal>
-
         <plugins>
           <plugin>
             <groupId>org.apache.maven.plugins</groupId>

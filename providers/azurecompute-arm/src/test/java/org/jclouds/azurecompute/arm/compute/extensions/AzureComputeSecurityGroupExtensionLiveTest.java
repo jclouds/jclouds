@@ -18,6 +18,7 @@ package org.jclouds.azurecompute.arm.compute.extensions;
 
 import static com.google.common.collect.Iterables.get;
 import static com.google.common.collect.Iterables.getOnlyElement;
+import static org.jclouds.azurecompute.arm.config.AzureComputeProperties.TIMEOUT_RESOURCE_DELETED;
 import static org.jclouds.compute.options.TemplateOptions.Builder.inboundPorts;
 import static org.jclouds.compute.options.TemplateOptions.Builder.securityGroups;
 import static org.jclouds.compute.predicates.NodePredicates.inGroup;
@@ -26,6 +27,7 @@ import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertTrue;
 
+import java.net.URI;
 import java.util.Properties;
 import java.util.Set;
 import java.util.concurrent.ExecutionException;
@@ -49,9 +51,11 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 import com.google.common.base.Optional;
+import com.google.common.base.Predicate;
 import com.google.common.cache.LoadingCache;
 import com.google.inject.Key;
 import com.google.inject.TypeLiteral;
+import com.google.inject.name.Names;
 
 /**
  * Live test for AzureCompute
@@ -61,6 +65,7 @@ import com.google.inject.TypeLiteral;
 public class AzureComputeSecurityGroupExtensionLiveTest extends BaseSecurityGroupExtensionLiveTest {
 
    private LoadingCache<String, ResourceGroup> resourceGroupMap;
+   private Predicate<URI> resourceDeleted;
    private ResourceGroup testResourceGroup;
 
    public AzureComputeSecurityGroupExtensionLiveTest() {
@@ -73,6 +78,8 @@ public class AzureComputeSecurityGroupExtensionLiveTest extends BaseSecurityGrou
       resourceGroupMap = context.utils().injector()
             .getInstance(Key.get(new TypeLiteral<LoadingCache<String, ResourceGroup>>() {
             }));
+      resourceDeleted = context.utils().injector().getInstance(Key.get(new TypeLiteral<Predicate<URI>>() {
+      }, Names.named(TIMEOUT_RESOURCE_DELETED)));
       createResourceGroup();
    }
 
@@ -134,7 +141,11 @@ public class AzureComputeSecurityGroupExtensionLiveTest extends BaseSecurityGrou
    @Override
    protected void tearDownContext() {
       try {
-         view.unwrapApi(AzureComputeApi.class).getResourceGroupApi().delete(testResourceGroup.name());
+         URI uri = view.unwrapApi(AzureComputeApi.class).getResourceGroupApi().delete(testResourceGroup.name());
+         if (uri != null) {
+            assertTrue(resourceDeleted.apply(uri),
+                  String.format("Resource %s was not terminated in the configured timeout", uri));
+         }
       } finally {
          super.tearDownContext();
       }
@@ -143,7 +154,7 @@ public class AzureComputeSecurityGroupExtensionLiveTest extends BaseSecurityGrou
    @Override
    protected Properties setupProperties() {
       Properties properties = super.setupProperties();
-      AzureLiveTestUtils.defaultProperties(properties);
+      AzureLiveTestUtils.defaultProperties(properties, "sgelivetest");
       setIfTestSystemPropertyPresent(properties, "oauth.endpoint");
       return properties;
    }

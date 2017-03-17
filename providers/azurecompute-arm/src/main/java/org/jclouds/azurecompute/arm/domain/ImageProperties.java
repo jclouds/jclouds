@@ -24,17 +24,8 @@ import com.google.auto.value.AutoValue;
 @AutoValue
 public abstract class ImageProperties implements Provisionable {
 
-   @AutoValue
-   public abstract static class SourceVirtualMachine {
-      public abstract String id();
-
-      @SerializedNames({"id"})
-      public static SourceVirtualMachine create(final String id) {
-         return new AutoValue_ImageProperties_SourceVirtualMachine(id);
-      }
-   }
-   
-   public abstract SourceVirtualMachine sourceVirtualMachine();
+   @Nullable
+   public abstract IdReference sourceVirtualMachine();
    
    @Nullable
    public abstract StorageProfile storageProfile();
@@ -43,7 +34,7 @@ public abstract class ImageProperties implements Provisionable {
    public abstract String provisioningState();
    
    @SerializedNames({ "sourceVirtualMachine", "storageProfile", "provisioningState"})
-   public static ImageProperties create(final SourceVirtualMachine sourceVirtualMachine, 
+   public static ImageProperties create(final IdReference sourceVirtualMachine, 
                                         final StorageProfile storageProfile,
                                         final String provisioningState) {
       return builder()
@@ -61,7 +52,7 @@ public abstract class ImageProperties implements Provisionable {
 
    @AutoValue.Builder
    public abstract static class Builder {
-      public abstract Builder sourceVirtualMachine(SourceVirtualMachine sourceVirtualMachine);
+      public abstract Builder sourceVirtualMachine(IdReference sourceVirtualMachine);
       public abstract Builder storageProfile(StorageProfile storageProfile);
       public abstract Builder provisioningState(String provisioningState);
       public abstract ImageProperties build();

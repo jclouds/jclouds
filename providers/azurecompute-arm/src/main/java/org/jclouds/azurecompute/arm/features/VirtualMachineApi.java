@@ -77,11 +77,9 @@ public interface VirtualMachineApi {
    
    @Named("CreateOrUpdateVirtualMachine")
    @PUT
-   @Payload("%7B\"location\":\"{location}\",\"tags\":{tags},\"properties\":{properties},\"plan\":{plan}%7D")
    @MapBinder(BindToJsonPayload.class)
    @Path("/{vmname}")
    @QueryParams(keys = "validating", values = "false")
-   @Produces(MediaType.APPLICATION_JSON)
    VirtualMachine createOrUpdate(@PathParam("vmname") String vmname,
                                  @PayloadParam("location") String location,
                                  @PayloadParam("properties") VirtualMachineProperties properties,
@@ -130,10 +128,10 @@ public interface VirtualMachineApi {
    @Named("capture")
    @POST
    @Payload("%7B\"vhdPrefix\":\"{vhdPrefix}\",\"destinationContainerName\":\"{destinationContainerName}\",\"overwriteVhds\":\"true\"%7D")
-   @MapBinder(BindToJsonPayload.class)
    @Path("/{name}/capture")
    @ResponseParser(URIParser.class)
    @Fallback(Fallbacks.NullOnNotFoundOr404.class)
+   @Produces(MediaType.APPLICATION_JSON)
    URI capture(@PathParam("name") String name,
                @PayloadParam("vhdPrefix") String vhdPrefix,
                @PayloadParam("destinationContainerName") String destinationContainerName);

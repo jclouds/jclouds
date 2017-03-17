@@ -16,6 +16,15 @@
  */
 package org.jclouds.azurecompute.arm.compute.functions;
 
+import static com.google.common.base.Preconditions.checkArgument;
+import static com.google.common.base.Strings.nullToEmpty;
+import static com.google.common.collect.Iterables.find;
+import static org.jclouds.azurecompute.arm.compute.AzureComputeServiceAdapter.GROUP_KEY;
+import static org.jclouds.azurecompute.arm.compute.functions.VMImageToImage.encodeFieldsToUniqueId;
+import static org.jclouds.azurecompute.arm.compute.functions.VMImageToImage.encodeFieldsToUniqueIdCustom;
+import static org.jclouds.compute.util.ComputeServiceUtils.addMetadataAndParseTagsFromCommaDelimitedValue;
+import static org.jclouds.location.predicates.LocationPredicates.idEquals;
+
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -33,11 +42,7 @@ import org.jclouds.azurecompute.arm.domain.PublicIPAddress;
 import org.jclouds.azurecompute.arm.domain.RegionAndId;
 import org.jclouds.azurecompute.arm.domain.ResourceGroup;
 import org.jclouds.azurecompute.arm.domain.StorageProfile;
-import org.jclouds.azurecompute.arm.domain.StorageServiceKeys;
-import org.jclouds.azurecompute.arm.domain.VMImage;
 import org.jclouds.azurecompute.arm.domain.VirtualMachine;
-import org.jclouds.azurecompute.arm.functions.StorageProfileToStorageAccountName;
-import org.jclouds.azurecompute.arm.util.BlobHelper;
 import org.jclouds.collect.Memoized;
 import org.jclouds.compute.domain.Hardware;
 import org.jclouds.compute.domain.Image;
@@ -59,18 +64,6 @@ import com.google.common.cache.LoadingCache;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 
-import static com.google.common.base.Preconditions.checkArgument;
-import static com.google.common.base.Strings.nullToEmpty;
-import static com.google.common.collect.Iterables.find;
-import static com.google.common.collect.Iterables.tryFind;
-import static org.jclouds.azurecompute.arm.compute.AzureComputeServiceAdapter.GROUP_KEY;
-import static org.jclouds.azurecompute.arm.compute.extensions.AzureComputeImageExtension.CONTAINER_NAME;
-import static org.jclouds.azurecompute.arm.compute.extensions.AzureComputeImageExtension.CUSTOM_IMAGE_OFFER;
-import static org.jclouds.azurecompute.arm.compute.functions.VMImageToImage.encodeFieldsToUniqueId;
-import static org.jclouds.compute.util.ComputeServiceUtils.addMetadataAndParseTagsFromCommaDelimitedValue;
-import static org.jclouds.location.predicates.LocationPredicates.idEquals;
-import static org.jclouds.util.Closeables2.closeQuietly;
-
 public class VirtualMachineToNodeMetadata implements Function<VirtualMachine, NodeMetadata> {
 
    @Resource
@@ -81,8 +74,6 @@ public class VirtualMachineToNodeMetadata implements Function<VirtualMachine, No
    private final GroupNamingConvention nodeNamingConvention;
    private final Supplier<Set<? extends Location>> locations;
    private final Supplier<Map<String, ? extends Hardware>> hardwares;
-   private final Function<VMImage, Image> vmImageToImge;
-   private final StorageProfileToStorageAccountName storageProfileToStorageAccountName;
    private final LoadingCache<String, ResourceGroup> resourceGroupMap;
    private final ImageCacheSupplier imageCache;
    private final VirtualMachineToStatus virtualMachineToStatus;
@@ -90,16 +81,12 @@ public class VirtualMachineToNodeMetadata implements Function<VirtualMachine, No
    @Inject
    VirtualMachineToNodeMetadata(AzureComputeApi api, GroupNamingConvention.Factory namingConvention,
          Supplier<Map<String, ? extends Hardware>> hardwares, @Memoized Supplier<Set<? extends Location>> locations,
-         Map<String, Credentials> credentialStore, Function<VMImage, Image> vmImageToImge,
-         StorageProfileToStorageAccountName storageProfileToStorageAccountName,
-         LoadingCache<String, ResourceGroup> resourceGroupMap, @Memoized Supplier<Set<? extends Image>> imageCache,
-         VirtualMachineToStatus virtualMachineToStatus) {
+         Map<String, Credentials> credentialStore, LoadingCache<String, ResourceGroup> resourceGroupMap,
+         @Memoized Supplier<Set<? extends Image>> imageCache, VirtualMachineToStatus virtualMachineToStatus) {
       this.api = api;
       this.nodeNamingConvention = namingConvention.createWithoutPrefix();
       this.locations = locations;
       this.hardwares = hardwares;
-      this.vmImageToImge = vmImageToImge;
-      this.storageProfileToStorageAccountName = storageProfileToStorageAccountName;
       this.resourceGroupMap = resourceGroupMap;
       this.virtualMachineToStatus = virtualMachineToStatus;
       checkArgument(imageCache instanceof ImageCacheSupplier,
@@ -207,29 +194,14 @@ public class VirtualMachineToNodeMetadata implements Function<VirtualMachine, No
    protected Optional<? extends Image> findImage(final StorageProfile storageProfile, String locatioName,
          String azureGroup) {
       if (storageProfile.imageReference() != null) {
-         String imageId = encodeFieldsToUniqueId(false, locatioName, storageProfile.imageReference());
+         // FIXME check this condition
+         String imageId = storageProfile.imageReference().customImageId() != null ?
+               encodeFieldsToUniqueIdCustom(false, locatioName, storageProfile.imageReference()) :
+               encodeFieldsToUniqueId(false, locatioName, storageProfile.imageReference());
          return imageCache.get(imageId);
       } else {
-         String storageAccountName = storageProfileToStorageAccountName.apply(storageProfile);
-         StorageServiceKeys keys = api.getStorageAccountApi(azureGroup).getKeys(storageAccountName);
-         BlobHelper blobHelper = new BlobHelper(storageAccountName, keys.key1());
-
-         try {
-            // Custom image. Let's find it by uri
-            List<VMImage> customImagesInStorage = blobHelper.getImages(CONTAINER_NAME, azureGroup, CUSTOM_IMAGE_OFFER,
-                  locatioName);
-            Optional<VMImage> customImage = tryFind(customImagesInStorage, new Predicate<VMImage>() {
-               @Override
-               public boolean apply(VMImage input) {
-                  return input.vhd1().equals(storageProfile.osDisk().image().uri());
-               }
-            });
-
-            return customImage.isPresent() ? Optional.of(vmImageToImge.apply(customImage.get())) : Optional
-                  .<Image> absent();
-         } finally {
-            closeQuietly(blobHelper);
-         }
+         logger.warn("could not find image for storage profile %s", storageProfile);
+         return Optional.absent();
       }
    }
 

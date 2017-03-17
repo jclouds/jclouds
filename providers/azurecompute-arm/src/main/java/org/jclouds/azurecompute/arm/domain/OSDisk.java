@@ -64,21 +64,20 @@ public abstract class OSDisk {
     */
    @Nullable public abstract ManagedDiskParameters managedDiskParameters();
    
-   @SerializedNames({"osType", "name", "vhd", "caching", "createOption", "image", "managedDisk"})
-   public static OSDisk create(final String osType, final String name, final VHD vhd,
-                               final String caching, final String createOption, final VHD image, 
-                               final ManagedDiskParameters managedDiskParamenters) {
-      return builder()
-            .osType(osType)
-            .name(name)
-            .vhd(vhd)
-            .caching(caching)
-            .createOption(createOption)
-            .image(image)
-              .managedDiskParameters(managedDiskParamenters)
-              .build();
+   /**
+    * The storage account type. This field is returned in custom images.
+    */
+   @Nullable public abstract StorageAccountType storageAccountType();
+
+   @SerializedNames({ "osType", "name", "vhd", "caching", "createOption", "image", "managedDisk", "storageAccountType" })
+   public static OSDisk create(final String osType, final String name, final VHD vhd, final String caching,
+         final String createOption, final VHD image, final ManagedDiskParameters managedDiskParamenters,
+         final String storageAccountType) {
+      return builder().osType(osType).name(name).vhd(vhd).caching(caching).createOption(createOption).image(image)
+            .managedDiskParameters(managedDiskParamenters)
+            .storageAccountType(StorageAccountType.fromString(storageAccountType)).build();
    }
-   
+
    public abstract Builder toBuilder();
 
    public static Builder builder() {
@@ -94,6 +93,7 @@ public abstract class OSDisk {
       public abstract Builder vhd(VHD vhd);
       public abstract Builder image(VHD image);
       public abstract Builder managedDiskParameters(ManagedDiskParameters managedDiskParameters);
+      public abstract Builder storageAccountType(StorageAccountType storageAccountType);
       public abstract OSDisk build();
    }
 }

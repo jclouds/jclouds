@@ -16,90 +16,154 @@
  */
 package org.jclouds.azurecompute.arm.features;
 
-import java.net.URI;
-import java.util.Collections;
-import java.util.List;
-import java.util.UUID;
-
-import org.jclouds.azurecompute.arm.domain.Image;
-import org.jclouds.azurecompute.arm.domain.ImageProperties;
-import org.jclouds.azurecompute.arm.domain.Provisionable;
-import org.jclouds.azurecompute.arm.domain.VirtualMachine;
-import org.jclouds.azurecompute.arm.domain.VirtualMachineProperties;
-import org.jclouds.azurecompute.arm.internal.BaseAzureComputeApiLiveTest;
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.Test;
-
-import com.google.common.base.Supplier;
-
+import static com.google.common.base.Preconditions.checkNotNull;
+import static com.google.common.collect.Iterables.any;
+import static com.google.common.collect.Iterables.getOnlyElement;
+import static org.jclouds.azurecompute.arm.config.AzureComputeProperties.TIMEOUT_RESOURCE_DELETED;
+import static org.jclouds.compute.predicates.NodePredicates.inGroup;
 import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertNull;
 import static org.testng.Assert.assertTrue;
 
-@Test(groups = "live", singleThreaded = true)
-public class ImageApiLiveTest extends BaseAzureComputeApiLiveTest {
+import java.net.URI;
+import java.util.Properties;
 
-   public static final String JCLOUDS_VM_IMAGE_PREFIX = "jclouds-vm-image-";
-   private String imageName;
-   private VirtualMachine virtualMachine;
+import org.jclouds.azurecompute.arm.AzureComputeApi;
+import org.jclouds.azurecompute.arm.domain.IdReference;
+import org.jclouds.azurecompute.arm.domain.Image;
+import org.jclouds.azurecompute.arm.domain.ImageProperties;
+import org.jclouds.azurecompute.arm.domain.ResourceGroup;
+import org.jclouds.azurecompute.arm.internal.AzureLiveTestUtils;
+import org.jclouds.compute.RunNodesException;
+import org.jclouds.compute.domain.NodeMetadata;
+import org.jclouds.compute.internal.BaseComputeServiceContextLiveTest;
+import org.jclouds.domain.Location;
+import org.testng.annotations.AfterClass;
+import org.testng.annotations.BeforeClass;
+import org.testng.annotations.Test;
 
-   @BeforeClass
+import com.google.common.base.Predicate;
+import com.google.common.cache.LoadingCache;
+import com.google.inject.Key;
+import com.google.inject.TypeLiteral;
+import com.google.inject.name.Names;
+
+// We extend the BaseComputeServiceContextLiveTest to create nodes using the abstraction, which is much easier
+@Test(groups = "live", singleThreaded = true, testName = "ImageApiLiveTest")
+public class ImageApiLiveTest extends BaseComputeServiceContextLiveTest {
+
+   private static final String imageName = "imageFromRest";
+
+   private LoadingCache<String, ResourceGroup> resourceGroupMap;
+   private Predicate<URI> resourceDeleted;
+   private AzureComputeApi api;
+
+   private String resourceGroupName;
+   private String location;
+   private ImageApi imageApi;
+   private Image image;
+
+   private String group;
+
+   public ImageApiLiveTest() {
+      provider = "azurecompute-arm";
+      group = getClass().getSimpleName().toLowerCase();
+   }
+
    @Override
-   public void setup() {
-      super.setup();
-      createTestResourceGroup();
-      imageName = JCLOUDS_VM_IMAGE_PREFIX + RAND;
-      String vmName = "jclouds-vm-" + RAND;
+   protected Properties setupProperties() {
+      Properties properties = super.setupProperties();
+      AzureLiveTestUtils.defaultProperties(properties, getClass().getSimpleName().toLowerCase());
+      checkNotNull(setIfTestSystemPropertyPresent(properties, "oauth.endpoint"), "test.oauth.endpoint");
+      return properties;
+   }
 
-      virtualMachine = api.getVirtualMachineApi(resourceGroupName).createOrUpdate(vmName, LOCATION, VirtualMachineProperties.builder().build(),
-              Collections.<String, String> emptyMap(), null);
+   @Override
+   protected void initializeContext() {
+      super.initializeContext();
+      resourceDeleted = context.utils().injector().getInstance(Key.get(new TypeLiteral<Predicate<URI>>() {
+      }, Names.named(TIMEOUT_RESOURCE_DELETED)));
+      resourceGroupMap = context.utils().injector()
+            .getInstance(Key.get(new TypeLiteral<LoadingCache<String, ResourceGroup>>() {
+            }));
+      api = view.unwrapApi(AzureComputeApi.class);
+   }
+
+   @Override
+   @BeforeClass
+   public void setupContext() {
+      super.setupContext();
+      // Use the resource name conventions used in the abstraction
+      ResourceGroup resourceGroup = createResourceGroup();
+      resourceGroupName = resourceGroup.name();
+      location = resourceGroup.location();
+      imageApi = api.getVirtualMachineImageApi(resourceGroupName);
+   }
+
+   @Override
+   @AfterClass(alwaysRun = true)
+   protected void tearDownContext() {
+      try {
+         view.getComputeService().destroyNodesMatching(inGroup(group));
+      } finally {
+         try {
+            URI uri = api.getResourceGroupApi().delete(resourceGroupName);
+            assertResourceDeleted(uri);
+         } finally {
+            super.tearDownContext();
+         }
+      }
    }
 
    @Test
-   public void deleteImageResourceDoesNotExist() {
-      assertNull(api().delete(JCLOUDS_VM_IMAGE_PREFIX + UUID.randomUUID()));
+   public void testDeleteImageDoesNotExist() {
+      assertNull(imageApi.delete("notAnImage"));
    }
 
    @Test
-   public void CreateVirtualMachineImageFromExistingVM() {
-      String id = String.format("/subscriptions/%s/resourceGroups/%s/providers/Microsoft.Compute/virtualMachines/myVM", getSubscriptionId(), resourceGroupName);
-      ImageProperties properties = ImageProperties.builder()
-              .sourceVirtualMachine(ImageProperties.SourceVirtualMachine.create(id))
-              .build();
-      Image image = api().createOrUpdate(imageName, LOCATION, properties);
-      assertTrue(waitUntilAvailable(imageName), "creation operation did not complete in the configured timeout");
-      assertTrue(id.equals(image.properties().sourceVirtualMachine().id()));
-   }
+   public void testCreateImage() throws RunNodesException {
+      NodeMetadata node = getOnlyElement(view.getComputeService().createNodesInGroup(group, 1));
+      IdReference vmIdRef = IdReference.create(node.getProviderId());
+      view.getComputeService().suspendNode(node.getId());
 
-   @Test(dependsOnMethods = "CreateVirtualMachineImageFromExistingVM")
-   public void getImage() {
-      Image image = api().get(imageName);
+      api.getVirtualMachineApi(resourceGroupName).generalize(node.getName());
+
+      image = imageApi.createOrUpdate(imageName, location, ImageProperties.builder()
+            .sourceVirtualMachine(vmIdRef).build());
       assertNotNull(image);
    }
 
-   @Test(dependsOnMethods = "CreateVirtualMachineImageFromExistingVM")
-   public void listImages() {
-      List<Image> images = api().list();
-      assertTrue(images.size() > 0);
-   }
-
-   @Test(dependsOnMethods = {"listImages", "getImage"}, alwaysRun = true)
-   public void deleteImage() {
-      URI uri = api().delete(imageName);
-      assertNotNull(uri);
-   }
-
-   private ImageApi api() {
-      return api.getVirtualMachineImageApi(resourceGroupName);
-   }
-   
-   private boolean waitUntilAvailable(final String name) {
-      return resourceAvailable.apply(new Supplier<Provisionable>() {
-         @Override public Provisionable get() {
-            Image image = api().get(name);
-            return image == null ? null : image.properties();
+   @Test(dependsOnMethods = "testCreateImage")
+   public void testListImages() {
+      // Check that the image we've just created exists
+      assertTrue(any(imageApi.list(), new Predicate<Image>() {
+         @Override
+         public boolean apply(Image input) {
+            return image.name().equals(input.name());
          }
-      });
+      }));
    }
-}
 
+   @Test(dependsOnMethods = "testCreateImage")
+   public void testGetImage() {
+      assertNotNull(imageApi.get(imageName));
+   }
+
+   @Test(dependsOnMethods = { "testCreateImage", "testListImages", "testGetImage" }, alwaysRun = true)
+   public void deleteImage() {
+      assertResourceDeleted(imageApi.delete(imageName));
+   }
+
+   private void assertResourceDeleted(final URI uri) {
+      if (uri != null) {
+         assertTrue(resourceDeleted.apply(uri),
+               String.format("Resource %s was not deleted in the configured timeout", uri));
+      }
+   }
+
+   private ResourceGroup createResourceGroup() {
+      Location location = view.getComputeService().templateBuilder().build().getLocation();
+      return resourceGroupMap.getUnchecked(location.getId());
+   }
+
+}

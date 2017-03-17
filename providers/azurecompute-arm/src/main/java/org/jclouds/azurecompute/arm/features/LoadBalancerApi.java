@@ -27,7 +27,6 @@ import javax.ws.rs.GET;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
 import org.jclouds.Fallbacks.EmptyListOnNotFoundOr404;
@@ -67,7 +66,6 @@ public interface LoadBalancerApi {
    @Path("/{loadbalancername}")
    @PUT
    @MapBinder(BindToJsonPayload.class)
-   @Produces(MediaType.APPLICATION_JSON)
    LoadBalancer createOrUpdate(@PathParam("loadbalancername") String lbName,
          @PayloadParam("location") String location, @Nullable @PayloadParam("tags") Map<String, String> tags,
          @PayloadParam("properties") LoadBalancerProperties properties);

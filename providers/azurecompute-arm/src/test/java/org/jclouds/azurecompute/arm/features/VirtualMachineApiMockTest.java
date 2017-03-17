@@ -233,7 +233,7 @@ public class VirtualMachineApiMockTest extends BaseAzureComputeApiMockTest {
       assertNotNull(uri);
       assertSent(server, "POST", "/subscriptions/SUBSCRIPTIONID/resourceGroups/groupname/providers/Microsoft.Compute"
             + "/virtualMachines/vm/capture?api-version=2016-04-30-preview",
-            "{\"vhdPrefix\":\"prefix\",\"destinationContainerName\":\"container\"}");
+            "{\"vhdPrefix\":\"prefix\",\"destinationContainerName\":\"container\",\"overwriteVhds\":\"true\"}");
    }
 
    public void testCapture404() throws Exception {
@@ -244,7 +244,7 @@ public class VirtualMachineApiMockTest extends BaseAzureComputeApiMockTest {
       assertNull(uri);
       assertSent(server, "POST", "/subscriptions/SUBSCRIPTIONID/resourceGroups/groupname/providers/Microsoft.Compute"
             + "/virtualMachines/vm/capture?api-version=2016-04-30-preview",
-            "{\"vhdPrefix\":\"prefix\",\"destinationContainerName\":\"container\"}");
+            "{\"vhdPrefix\":\"prefix\",\"destinationContainerName\":\"container\",\"overwriteVhds\":\"true\"}");
    }
 
    private VirtualMachineProperties getProperties() {
@@ -252,7 +252,7 @@ public class VirtualMachineApiMockTest extends BaseAzureComputeApiMockTest {
       ImageReference imgRef = ImageReference.builder().publisher("publisher").offer("offer").sku("sku").version("ver").build();
       VHD vhd = VHD.create("https://groupname2760.blob.core.windows.net/vhds/windowsmachine201624102936.vhd");
       List<DataDisk> dataDisks = new ArrayList<DataDisk>();
-      OSDisk osDisk = OSDisk.create("Windows", "windowsmachine", vhd, "ReadWrite", "FromImage", null, null);
+      OSDisk osDisk = OSDisk.create("Windows", "windowsmachine", vhd, "ReadWrite", "FromImage", null, null, null);
       StorageProfile storageProfile = StorageProfile.create(imgRef, osDisk, dataDisks);
       OSProfile.WindowsConfiguration windowsConfig = OSProfile.WindowsConfiguration.create(false, null, null, true,
             null);

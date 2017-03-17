@@ -40,7 +40,8 @@ import org.jclouds.rest.annotations.SelectJson;
 
 @RequestFilters(OAuthFilter.class)
 @Consumes(MediaType.APPLICATION_JSON)
-public interface JobApi extends Closeable{
+public interface JobApi extends Closeable {
+   
    @GET
    @ResponseParser(ParseJobStatus.class)
    JobStatus jobStatus(@EndpointParam URI jobURI);

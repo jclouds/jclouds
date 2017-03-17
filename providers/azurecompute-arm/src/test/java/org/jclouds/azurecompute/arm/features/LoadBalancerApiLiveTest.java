@@ -116,7 +116,7 @@ public class LoadBalancerApiLiveTest extends BaseComputeServiceContextLiveTest {
    @Override
    protected Properties setupProperties() {
       Properties properties = super.setupProperties();
-      AzureLiveTestUtils.defaultProperties(properties);
+      AzureLiveTestUtils.defaultProperties(properties, getClass().getSimpleName().toLowerCase());
       checkNotNull(setIfTestSystemPropertyPresent(properties, "oauth.endpoint"), "test.oauth.endpoint");
       return properties;
    }
@@ -356,7 +356,7 @@ public class LoadBalancerApiLiveTest extends BaseComputeServiceContextLiveTest {
       // set
       AvailabilitySetProperties props = AvailabilitySetProperties.builder().platformUpdateDomainCount(count)
             .platformFaultDomainCount(count).build();
-      AvailabilitySet as = AvailabilitySet.builder().name(group).properties(props).build();
+      AvailabilitySet as = AvailabilitySet.managed().name(group).properties(props).build();
 
       Set<? extends NodeMetadata> nodes = view.getComputeService()
             .createNodesInGroup(group, count, availabilitySet(as));

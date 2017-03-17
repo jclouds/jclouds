@@ -28,13 +28,13 @@ import javax.ws.rs.GET;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
 import org.jclouds.Fallbacks.EmptyListOnNotFoundOr404;
 import org.jclouds.Fallbacks.NullOnNotFoundOr404;
 import org.jclouds.azurecompute.arm.domain.AvailabilitySet;
 import org.jclouds.azurecompute.arm.domain.AvailabilitySet.AvailabilitySetProperties;
+import org.jclouds.azurecompute.arm.domain.AvailabilitySet.SKU;
 import org.jclouds.azurecompute.arm.filters.ApiVersionFilter;
 import org.jclouds.azurecompute.arm.functions.URIParser;
 import org.jclouds.javax.annotation.Nullable;
@@ -65,12 +65,13 @@ public interface AvailabilitySetApi extends Closeable {
    AvailabilitySet get(@PathParam("name") String name);
 
    @Named("availabilityset:createOrUpdate")
+   @MapBinder(BindToJsonPayload.class)
    @Path("/{name}")
    @PUT
-   @MapBinder(BindToJsonPayload.class)
-   @Produces(MediaType.APPLICATION_JSON)
    AvailabilitySet createOrUpdate(@PathParam("name") String name,
-         @PayloadParam("location") String location, @Nullable @PayloadParam("tags") Map<String, String> tags,
+         @Nullable @PayloadParam("sku") SKU sku,
+         @PayloadParam("location") String location,
+         @Nullable @PayloadParam("tags") Map<String, String> tags,
          @PayloadParam("properties") AvailabilitySetProperties properties);
 
    @Named("availabilityset:delete")

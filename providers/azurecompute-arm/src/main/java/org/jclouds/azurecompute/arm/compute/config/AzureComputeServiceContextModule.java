@@ -40,7 +40,6 @@ import org.jclouds.azurecompute.arm.compute.extensions.AzureComputeSecurityGroup
 import org.jclouds.azurecompute.arm.compute.functions.LocationToLocation;
 import org.jclouds.azurecompute.arm.compute.functions.NetworkSecurityGroupToSecurityGroup;
 import org.jclouds.azurecompute.arm.compute.functions.NetworkSecurityRuleToIpPermission;
-import org.jclouds.azurecompute.arm.compute.functions.ResourceDefinitionToCustomImage;
 import org.jclouds.azurecompute.arm.compute.functions.VMHardwareToHardware;
 import org.jclouds.azurecompute.arm.compute.functions.VMImageToImage;
 import org.jclouds.azurecompute.arm.compute.functions.VirtualMachineToNodeMetadata;
@@ -48,6 +47,7 @@ import org.jclouds.azurecompute.arm.compute.loaders.CreateSecurityGroupIfNeeded;
 import org.jclouds.azurecompute.arm.compute.loaders.ResourceGroupForLocation;
 import org.jclouds.azurecompute.arm.compute.options.AzureTemplateOptions;
 import org.jclouds.azurecompute.arm.compute.strategy.CreateResourceGroupThenCreateNodes;
+import org.jclouds.azurecompute.arm.domain.Image;
 import org.jclouds.azurecompute.arm.domain.Location;
 import org.jclouds.azurecompute.arm.domain.NetworkSecurityGroup;
 import org.jclouds.azurecompute.arm.domain.NetworkSecurityRule;
@@ -86,7 +86,6 @@ import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
 import com.google.inject.Provides;
 import com.google.inject.TypeLiteral;
-import com.google.inject.assistedinject.FactoryModuleBuilder;
 
 public class AzureComputeServiceContextModule extends
       ComputeServiceAdapterContextModule<VirtualMachine, VMHardware, VMImage, Location> {
@@ -114,8 +113,6 @@ public class AzureComputeServiceContextModule extends
 
       install(new LocationsFromComputeServiceAdapterModule<VirtualMachine, VMHardware, VMImage, Location>() {
       });
-
-      install(new FactoryModuleBuilder().build(ResourceDefinitionToCustomImage.Factory.class));
 
       bind(TemplateOptions.class).to(AzureTemplateOptions.class);
       bind(NodeAndTemplateOptionsToStatement.class).to(NodeAndTemplateOptionsToStatementWithoutPublicKey.class);
@@ -163,9 +160,9 @@ public class AzureComputeServiceContextModule extends
 
    @Provides
    @Named(TIMEOUT_IMAGE_AVAILABLE)
-   protected Predicate<URI> provideImageAvailablePredicate(final AzureComputeApi api, final Timeouts timeouts,
+   protected Predicate<URI> provideImageCapturedPredicate(final AzureComputeApi api, final Timeouts timeouts,
          final PollPeriod pollPeriod) {
-      return retry(new ImageDonePredicate(api), timeouts.imageAvailable, pollPeriod.pollInitialPeriod,
+      return retry(new ImageCapturedPredicate(api), timeouts.imageAvailable, pollPeriod.pollInitialPeriod,
             pollPeriod.pollMaxPeriod);
    }
 
@@ -195,6 +192,13 @@ public class AzureComputeServiceContextModule extends
    protected SecurityGroupAvailablePredicateFactory provideSecurityGroupAvailablePredicate(final AzureComputeApi api,
          Predicate<Supplier<Provisionable>> resourceAvailable) {
       return new SecurityGroupAvailablePredicateFactory(api, resourceAvailable);
+   }
+   
+   @Provides
+   protected ImageAvailablePredicateFactory provideImageAvailablePredicate(final AzureComputeApi api,
+         Predicate<Supplier<Provisionable>> resourceAvailable, final Timeouts timeouts, final PollPeriod pollPeriod) {
+      return new ImageAvailablePredicateFactory(api, retry(new ResourceInStatusPredicate("Succeeded"),
+            timeouts.imageAvailable, pollPeriod.pollInitialPeriod, pollPeriod.pollMaxPeriod));
    }
 
    @Provides
@@ -231,11 +235,11 @@ public class AzureComputeServiceContextModule extends
    }
 
    @VisibleForTesting
-   static class ImageDonePredicate implements Predicate<URI> {
+   static class ImageCapturedPredicate implements Predicate<URI> {
 
       private final AzureComputeApi api;
 
-      public ImageDonePredicate(final AzureComputeApi api) {
+      public ImageCapturedPredicate(final AzureComputeApi api) {
          this.api = checkNotNull(api, "api must not be null");
       }
 
@@ -345,6 +349,34 @@ public class AzureComputeServiceContextModule extends
                   public Provisionable get() {
                      NetworkSecurityGroup sg = api.getNetworkSecurityGroupApi(resourceGroup).get(name);
                      return sg == null ? null : sg.properties();
+                  }
+               });
+            }
+         };
+      }
+   }
+   
+   public static class ImageAvailablePredicateFactory {
+      private final AzureComputeApi api;
+      private final Predicate<Supplier<Provisionable>> resourceAvailable;
+      
+      ImageAvailablePredicateFactory(final AzureComputeApi api,
+            Predicate<Supplier<Provisionable>> resourceAvailable) {
+         this.api = checkNotNull(api, "api cannot be null");
+         this.resourceAvailable = resourceAvailable;
+      }
+
+      public Predicate<String> create(final String resourceGroup) {
+         checkNotNull(resourceGroup, "resourceGroup cannot be null");
+         return new Predicate<String>() {
+            @Override
+            public boolean apply(final String name) {
+               checkNotNull(name, "name cannot be null");
+               return resourceAvailable.apply(new Supplier<Provisionable>() {
+                  @Override
+                  public Provisionable get() {
+                     Image img = api.getVirtualMachineImageApi(resourceGroup).get(name);
+                     return img == null ? null : img.properties();
                   }
                });
             }

@@ -36,10 +36,10 @@ import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertNull;
 import static org.testng.Assert.assertTrue;
 
-@Test(groups = "live", singleThreaded = true)
+@Test(groups = "live", testName = "DiskApiLiveTest", singleThreaded = true)
 public class DiskApiLiveTest extends BaseAzureComputeApiLiveTest {
 
-   public static final String JCLOUDS_IMAGE_PREFIX = "jclouds-";
+   public static final String JCLOUDS_DISK_PREFIX = "jclouds-";
    private String diskName;
 
    @BeforeClass
@@ -47,12 +47,12 @@ public class DiskApiLiveTest extends BaseAzureComputeApiLiveTest {
    public void setup() {
       super.setup();
       createTestResourceGroup();
-      diskName = JCLOUDS_IMAGE_PREFIX + RAND;
+      diskName = JCLOUDS_DISK_PREFIX + RAND;
    }
 
    @Test
    public void deleteDiskResourceDoesNotExist() {
-      assertNull(api().delete(JCLOUDS_IMAGE_PREFIX + UUID.randomUUID()));
+      assertNull(api().delete(JCLOUDS_DISK_PREFIX + UUID.randomUUID()));
    }
 
    @Test

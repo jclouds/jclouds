@@ -14,25 +14,34 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jclouds.azurecompute.arm.functions;
+package org.jclouds.azurecompute.arm.domain;
 
-import java.net.URI;
+public enum StorageAccountType {
+   /** Enum value Standard_LRS. */
+   STANDARD_LRS("Standard_LRS"),
 
-import org.jclouds.azurecompute.arm.domain.StorageProfile;
+   /** Enum value Premium_LRS. */
+   PREMIUM_LRS("Premium_LRS");
 
-import com.google.common.base.Function;
-import com.google.common.base.Splitter;
-import com.google.common.collect.Iterables;
+   /** The actual serialized value for a StorageAccountTypes instance. */
+   private String value;
 
-/**
- * Returns the storage account name for a given storage profile.
- */
-public class StorageProfileToStorageAccountName implements Function<StorageProfile, String> {
-
-   @Override
-   public String apply(StorageProfile input) {
-      String storageAccountNameURI = input.osDisk().vhd().uri();
-      return Iterables.get(Splitter.on(".").split(URI.create(storageAccountNameURI).getHost()), 0);
+   StorageAccountType(String value) {
+      this.value = value;
    }
 
+   public static StorageAccountType fromString(String value) {
+      StorageAccountType[] items = StorageAccountType.values();
+      for (StorageAccountType item : items) {
+         if (item.toString().equalsIgnoreCase(value)) {
+            return item;
+         }
+      }
+      return null;
+   }
+
+   @Override
+   public String toString() {
+      return this.value;
+   }
 }

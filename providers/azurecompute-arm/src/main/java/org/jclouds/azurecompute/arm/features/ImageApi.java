@@ -26,7 +26,6 @@ import javax.ws.rs.GET;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
 import org.jclouds.Fallbacks.EmptyListOnNotFoundOr404;
@@ -38,7 +37,6 @@ import org.jclouds.azurecompute.arm.functions.URIParser;
 import org.jclouds.oauth.v2.filters.OAuthFilter;
 import org.jclouds.rest.annotations.Fallback;
 import org.jclouds.rest.annotations.MapBinder;
-import org.jclouds.rest.annotations.Payload;
 import org.jclouds.rest.annotations.PayloadParam;
 import org.jclouds.rest.annotations.RequestFilters;
 import org.jclouds.rest.annotations.ResponseParser;
@@ -58,10 +56,8 @@ public interface ImageApi {
 
    @Named("image:create_or_update")
    @PUT
-   @Payload("%7B\"location\":\"{location}\",\"properties\":{properties}%7D")
    @MapBinder(BindToJsonPayload.class)
    @Path("/{imageName}")
-   @Produces(MediaType.APPLICATION_JSON)
    Image createOrUpdate(@PathParam("imageName") String imageName,
                        @PayloadParam("location") String location,
                        @PayloadParam("properties") ImageProperties properties);

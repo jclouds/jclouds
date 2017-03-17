@@ -17,6 +17,7 @@
 package org.jclouds.azurecompute.arm.features;
 
 import static com.google.common.collect.Iterables.any;
+import static org.jclouds.azurecompute.arm.domain.AvailabilitySet.AvailabilitySetType.MANAGED;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertNull;
@@ -27,6 +28,7 @@ import java.util.UUID;
 
 import org.jclouds.azurecompute.arm.domain.AvailabilitySet;
 import org.jclouds.azurecompute.arm.domain.AvailabilitySet.AvailabilitySetProperties;
+import org.jclouds.azurecompute.arm.domain.AvailabilitySet.SKU;
 import org.jclouds.azurecompute.arm.internal.BaseAzureComputeApiLiveTest;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
@@ -56,10 +58,13 @@ public class AvailabilitySetApiLiveTest extends BaseAzureComputeApiLiveTest {
    public void createAvailabilitySet() {
       AvailabilitySetProperties props = AvailabilitySetProperties.builder().platformUpdateDomainCount(2)
             .platformFaultDomainCount(3).build();
-      AvailabilitySet as = api().createOrUpdate(asName, LOCATION, null, props);
+      AvailabilitySet as = api().createOrUpdate(asName, SKU.create(MANAGED), LOCATION, null, props);
 
       assertNotNull(as);
       assertEquals(as.name(), asName);
+      
+      assertNotNull(as.sku());
+      assertEquals(as.sku().type(), MANAGED);
    }
 
    @Test(dependsOnMethods = "createAvailabilitySet")
@@ -80,7 +85,7 @@ public class AvailabilitySetApiLiveTest extends BaseAzureComputeApiLiveTest {
    @Test(dependsOnMethods = "createAvailabilitySet")
    public void updateAvailabilitySet() {
       AvailabilitySet as = api().get(asName);
-      as = api().createOrUpdate(asName, LOCATION, ImmutableMap.of("foo", "bar"), as.properties());
+      as = api().createOrUpdate(asName, SKU.create(MANAGED), LOCATION, ImmutableMap.of("foo", "bar"), as.properties());
 
       assertNotNull(as);
       assertTrue(as.tags().containsKey("foo"));

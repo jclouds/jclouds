@@ -17,6 +17,7 @@
 package org.jclouds.azurecompute.arm.features;
 
 import static com.google.common.collect.Iterables.isEmpty;
+import static org.jclouds.azurecompute.arm.domain.AvailabilitySet.AvailabilitySetType.MANAGED;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertNull;
@@ -27,6 +28,7 @@ import java.util.List;
 
 import org.jclouds.azurecompute.arm.domain.AvailabilitySet;
 import org.jclouds.azurecompute.arm.domain.AvailabilitySet.AvailabilitySetProperties;
+import org.jclouds.azurecompute.arm.domain.AvailabilitySet.SKU;
 import org.jclouds.azurecompute.arm.internal.BaseAzureComputeApiMockTest;
 import org.testng.annotations.Test;
 
@@ -36,7 +38,7 @@ public class AvailabilitySetApiMockTest extends BaseAzureComputeApiMockTest {
    private final String subscriptionid = "SUBSCRIPTIONID";
    private final String resourcegroup = "myresourcegroup";
    private final String asName = "myas";
-   private final String apiVersion = "api-version=2016-03-30";
+   private final String apiVersion = "api-version=2016-04-30-preview";
 
    public void createAvailabilitySet() throws InterruptedException {
 
@@ -46,12 +48,12 @@ public class AvailabilitySetApiMockTest extends BaseAzureComputeApiMockTest {
 
       AvailabilitySetProperties props = AvailabilitySetProperties.builder().platformUpdateDomainCount(2)
             .platformFaultDomainCount(3).build();
-      AvailabilitySet as = asApi.createOrUpdate(asName, "westeurope", null, props);
+      AvailabilitySet as = asApi.createOrUpdate(asName, SKU.create(MANAGED), "westeurope", null, props);
 
       String path = String.format(
             "/subscriptions/%s/resourcegroups/%s/providers/Microsoft.Compute/availabilitySets/%s?%s", subscriptionid,
             resourcegroup, asName, apiVersion);
-      String json = "{\"location\":\"westeurope\",\"properties\":{\"platformUpdateDomainCount\":2,\"platformFaultDomainCount\":3}}";
+      String json = "{\"location\":\"westeurope\",\"properties\":{\"platformUpdateDomainCount\":2,\"platformFaultDomainCount\":3},\"sku\":{\"name\":\"Aligned\"}}";
       assertSent(server, "PUT", path, json);
 
       assertEquals(as.name(), asName);

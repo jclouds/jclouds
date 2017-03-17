@@ -87,7 +87,8 @@ public class TemplateToAvailabilitySet implements Function<Template, Availabilit
             logger.debug(">> creating availability set [%s]", options.getAvailabilitySet().name());
 
             availabilitySet = api.getAvailabilitySetApi(resourceGroup).createOrUpdate(
-                  options.getAvailabilitySet().name(), location, tags, options.getAvailabilitySet().properties());
+                  options.getAvailabilitySet().name(), options.getAvailabilitySet().sku(), location, tags,
+                  options.getAvailabilitySet().properties());
          }
       }
 

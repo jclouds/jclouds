@@ -25,11 +25,12 @@ import com.google.auto.value.AutoValue;
 public abstract class ImageReference {
 
    /**
-    * The id of the image reference.
+    * Specifies the resource identifier of a virtual machine image in your subscription. This element is only used
+    * for virtual machine images, not platform images or marketplace images.
     */
    @Nullable
-   public abstract String id();
-   
+   public abstract String customImageId();
+
    /**
     * The publisher of the image reference.
     */
@@ -53,6 +54,10 @@ public abstract class ImageReference {
     */
    @Nullable
    public abstract String version();
+   
+   ImageReference() {
+      
+   }
 
    @SerializedNames({"id", "publisher", "offer", "sku", "version"})
    public static ImageReference create(final String id,
@@ -61,8 +66,7 @@ public abstract class ImageReference {
                                        final String sku,
                                        final String version) {
 
-      return builder()
-              .id(id)
+      return builder().customImageId(id)
               .publisher(publisher)
               .offer(offer)
               .sku(sku)
@@ -78,7 +82,7 @@ public abstract class ImageReference {
 
    @AutoValue.Builder
    public abstract static class Builder {
-      public abstract Builder id(String id);
+      public abstract Builder customImageId(String ids);
       public abstract Builder publisher(String publisher);
       public abstract Builder offer(String offer);
       public abstract Builder sku(String sku);

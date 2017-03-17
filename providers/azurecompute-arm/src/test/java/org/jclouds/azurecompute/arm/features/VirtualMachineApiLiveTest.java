@@ -16,6 +16,12 @@
  */
 package org.jclouds.azurecompute.arm.features;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.jclouds.util.Predicates2.retry;
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertNotNull;
+import static org.testng.Assert.assertTrue;
+
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -24,7 +30,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.jclouds.azurecompute.arm.domain.DataDisk;
-import org.jclouds.azurecompute.arm.domain.DiagnosticsProfile;
 import org.jclouds.azurecompute.arm.domain.HardwareProfile;
 import org.jclouds.azurecompute.arm.domain.IdReference;
 import org.jclouds.azurecompute.arm.domain.ImageReference;
@@ -37,6 +42,7 @@ import org.jclouds.azurecompute.arm.domain.NetworkProfile;
 import org.jclouds.azurecompute.arm.domain.OSDisk;
 import org.jclouds.azurecompute.arm.domain.OSProfile;
 import org.jclouds.azurecompute.arm.domain.ResourceDefinition;
+import org.jclouds.azurecompute.arm.domain.StorageAccountType;
 import org.jclouds.azurecompute.arm.domain.StorageProfile;
 import org.jclouds.azurecompute.arm.domain.StorageService;
 import org.jclouds.azurecompute.arm.domain.Subnet;
@@ -45,8 +51,8 @@ import org.jclouds.azurecompute.arm.domain.VirtualMachine;
 import org.jclouds.azurecompute.arm.domain.VirtualMachineInstance;
 import org.jclouds.azurecompute.arm.domain.VirtualMachineInstance.PowerState;
 import org.jclouds.azurecompute.arm.domain.VirtualMachineProperties;
+import org.jclouds.azurecompute.arm.functions.ParseJobStatus;
 import org.jclouds.azurecompute.arm.internal.BaseAzureComputeApiLiveTest;
-import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
@@ -55,20 +61,12 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Iterables;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.jclouds.util.Predicates2.retry;
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertNotNull;
-import static org.testng.Assert.assertTrue;
-
 @Test(groups = "live", testName = "VirtualMachineApiLiveTest")
 public class VirtualMachineApiLiveTest extends BaseAzureComputeApiLiveTest {
 
    private String subscriptionid;
-   private String storageServiceName;
    private String vmName;
    private String nicName;
-   private StorageService storageService;
    private String virtualNetworkName;
    private String subnetId;
 
@@ -80,9 +78,6 @@ public class VirtualMachineApiLiveTest extends BaseAzureComputeApiLiveTest {
 
       createTestResourceGroup();
       virtualNetworkName = String.format("vn-%s-%s", this.getClass().getSimpleName().toLowerCase(), System.getProperty("user.name"));
-
-      storageServiceName = String.format("st%s%s", System.getProperty("user.name"), RAND);
-      storageService = createStorageService(resourceGroupName, storageServiceName, LOCATION);
 
       // Subnets belong to a virtual network so that needs to be created first
       assertNotNull(createDefaultVirtualNetwork(resourceGroupName, virtualNetworkName, "10.2.0.0/16", LOCATION));
@@ -103,25 +98,10 @@ public class VirtualMachineApiLiveTest extends BaseAzureComputeApiLiveTest {
 
    @Test
    public void testCreate() {
-      String blob = storageService.storageServiceProperties().primaryEndpoints().get("blob");
-
-      VirtualMachine vm = api().createOrUpdate(vmName, LOCATION, getProperties(blob, nicName),
+      VirtualMachine vm = api().createOrUpdate(vmName, LOCATION, getProperties(nicName, null),
             Collections.<String, String> emptyMap(), null);
       assertTrue(!vm.name().isEmpty());
-
-      //Poll until resource is ready to be used
-      boolean jobDone = retry(new Predicate<String>() {
-         @Override
-         public boolean apply(String name) {
-            return !api().get(name).properties().provisioningState().equals(VirtualMachineProperties.ProvisioningState.CREATING);
-         }
-      }, 60 * 20 * 1000).apply(vmName);
-      assertTrue(jobDone, "createOrUpdate operation did not complete in the configured timeout");
-
-      VirtualMachineProperties.ProvisioningState status = api().get(vmName).properties().provisioningState();
-      // Cannot be creating anymore. Should be succeeded or running but not failed.
-      assertThat(status).isNotEqualTo(VirtualMachineProperties.ProvisioningState.CREATING);
-      assertThat(status).isNotEqualTo(VirtualMachineProperties.ProvisioningState.FAILED);
+      waitUntilReady(vmName);
    }
 
    @Test(dependsOnMethods = "testCreate")
@@ -139,7 +119,7 @@ public class VirtualMachineApiLiveTest extends BaseAzureComputeApiLiveTest {
    @Test(dependsOnMethods = "testGet")
    public void testStart() {
       api().start(vmName);
-      assertTrue(stateReached(PowerState.RUNNING), "start operation did not complete in the configured timeout");
+      assertTrue(stateReached(vmName, PowerState.RUNNING), "start operation did not complete in the configured timeout");
    }
 
    @Test(dependsOnMethods = "testStart")
@@ -147,15 +127,12 @@ public class VirtualMachineApiLiveTest extends BaseAzureComputeApiLiveTest {
       VirtualMachine vm = api().get(vmName);
       VirtualMachineProperties oldProperties = vm.properties();
       StorageProfile oldStorageProfile = oldProperties.storageProfile();
-
-      String blob = storageService.storageServiceProperties().primaryEndpoints().get("blob");
-      VHD vhd = VHD.create(blob + "vhds/" + vmName + "new-data-disk.vhd");
+      
       DataDisk newDataDisk = DataDisk.builder()
               .name(vmName + "new-data-disk")
               .diskSizeGB("1")
               .lun(1)
               .createOption(DataDisk.DiskCreateOptionTypes.EMPTY)
-              .vhd(vhd)
               .build();
       List<DataDisk> oldDataDisks = oldStorageProfile.dataDisks();
       assertEquals(oldDataDisks.size(), 1);
@@ -173,15 +150,15 @@ public class VirtualMachineApiLiveTest extends BaseAzureComputeApiLiveTest {
    @Test(dependsOnMethods = "testUpdate")
    public void testStop() {
       api().stop(vmName);
-      assertTrue(stateReached(PowerState.STOPPED), "stop operation did not complete in the configured timeout");
+      assertTrue(stateReached(vmName, PowerState.STOPPED), "stop operation did not complete in the configured timeout");
    }
 
    @Test(dependsOnMethods = "testStop")
    public void testRestart() {
       api().start(vmName);
-      assertTrue(stateReached(PowerState.RUNNING), "start operation did not complete in the configured timeout");
+      assertTrue(stateReached(vmName, PowerState.RUNNING), "start operation did not complete in the configured timeout");
       api().restart(vmName);
-      assertTrue(stateReached(PowerState.RUNNING), "restart operation did not complete in the configured timeout");
+      assertTrue(stateReached(vmName, PowerState.RUNNING), "restart operation did not complete in the configured timeout");
    }
 
    @Test(dependsOnMethods = "testCreate")
@@ -201,15 +178,31 @@ public class VirtualMachineApiLiveTest extends BaseAzureComputeApiLiveTest {
    @Test(dependsOnMethods = "testRestart")
    public void testGeneralize() throws IllegalStateException {
       api().stop(vmName);
-      assertTrue(stateReached(PowerState.STOPPED), "restart operation did not complete in the configured timeout");
+      assertTrue(stateReached(vmName, PowerState.STOPPED), "restart operation did not complete in the configured timeout");
       api().generalize(vmName);
    }
 
    @SuppressWarnings("unchecked")
-   @Test(dependsOnMethods = "testGeneralize")
+   @Test
    public void testCapture() throws IllegalStateException {
-      URI uri = api().capture(vmName, vmName, vmName);
-      if (uri == null) Assert.fail();
+      // Capture is only allowed for Blob based VMs, so let's create one VM for this test
+      NetworkInterfaceCard nic = createNetworkInterfaceCard(resourceGroupName, "capture-nic-" + RAND, LOCATION, "ipConfig-" + RAND);
+      StorageService storageService = createStorageService(resourceGroupName, "capture" + RAND, LOCATION);
+      String blob = storageService.storageServiceProperties().primaryEndpoints().get("blob");
+      
+      String captureVmName = "capture-" + RAND;
+      api().createOrUpdate(captureVmName, LOCATION, getProperties(nic.name(), blob),
+            Collections.<String, String> emptyMap(), null);
+      waitUntilReady(captureVmName);
+      
+      api().stop(captureVmName);
+      assertTrue(stateReached(captureVmName, PowerState.STOPPED),
+            "restart operation did not complete in the configured timeout");
+      api().generalize(captureVmName);
+      
+      URI uri = api().capture(captureVmName, captureVmName, captureVmName);
+      assertNotNull(uri);
+      
       if (imageAvailablePredicate.apply(uri)) {
          List<ResourceDefinition> definitions = api.getJobApi().captureStatus(uri);
          if (definitions != null) {
@@ -219,18 +212,13 @@ public class VirtualMachineApiLiveTest extends BaseAzureComputeApiLiveTest {
                Map<String, String> properties2 = (Map<String, String>) storageObject;
                Object osDiskObject = properties2.get("osDisk");
                Map<String, String> osProperties = (Map<String, String>) osDiskObject;
-               Object dataDisksObject = properties2.get("dataDisks");
-               List<Object> dataProperties = (List<Object>) dataDisksObject;
-               Map<String, String> datadiskObject = (Map<String, String>) dataProperties.get(0);
-
                assertNotNull(osProperties.get("name"));
-               assertNotNull(datadiskObject.get("name"));
             }
          }
       }
    }
 
-   @Test(dependsOnMethods = "testCapture", alwaysRun = true)
+   @Test(dependsOnMethods = "testGeneralize", alwaysRun = true)
    public void testDelete() throws Exception {
       URI uri = api().delete(vmName);
       assertResourceDeleted(uri);
@@ -240,22 +228,28 @@ public class VirtualMachineApiLiveTest extends BaseAzureComputeApiLiveTest {
       return api.getVirtualMachineApi(resourceGroupName);
    }
 
-   private VirtualMachineProperties getProperties(String blob, String nic) {
+   private VirtualMachineProperties getProperties(String nic, String blob) {
 
       HardwareProfile hwProf = HardwareProfile.create("Standard_D1");
       ImageReference imgRef = ImageReference.builder().publisher("MicrosoftWindowsServerEssentials")
               .offer("WindowsServerEssentials").sku("WindowsServerEssentials").version("latest").build();
-      DataDisk dataDisk = DataDisk.builder().name("data").diskSizeGB("100").lun(0).createOption(DataDisk.DiskCreateOptionTypes.EMPTY).build();
-      List<DataDisk> dataDisks = new ArrayList<DataDisk>();
-      dataDisks.add(dataDisk);
-
-      OSDisk osDisk = OSDisk.builder()
+      
+      DataDisk.Builder dataDisk = DataDisk.builder().name("data").diskSizeGB("100").lun(0).createOption(DataDisk.DiskCreateOptionTypes.EMPTY);
+      
+      OSDisk.Builder osDisk = OSDisk.builder()
+              .name("os")
               .osType("Windows")
               .caching(DataDisk.CachingTypes.READ_WRITE.toString())
-              .createOption("FromImage")
-              .managedDiskParameters(ManagedDiskParameters.create(null, ManagedDiskParameters.StorageAccountTypes.STANDARD_LRS.toString()))
-              .build();
-      StorageProfile storageProfile = StorageProfile.create(imgRef, osDisk, dataDisks);
+              .createOption("FromImage");
+      
+      if (blob == null) {
+         osDisk.managedDiskParameters(ManagedDiskParameters.create(null, StorageAccountType.STANDARD_LRS.toString()));
+      } else {
+         osDisk.vhd(VHD.create(blob + "vhds/" + vmName + ".vhd"));
+         dataDisk.vhd(VHD.create(blob + "vhds/" + vmName + "data.vhd"));
+      }
+      
+      StorageProfile storageProfile = StorageProfile.create(imgRef, osDisk.build(), ImmutableList.of(dataDisk.build()));
       OSProfile.WindowsConfiguration windowsConfig = OSProfile.WindowsConfiguration.create(false, null, null, true,
               null);
       OSProfile osProfile = OSProfile.create(vmName, "azureuser", "RFe3&432dg", null, null, windowsConfig);
@@ -267,15 +261,12 @@ public class VirtualMachineApiLiveTest extends BaseAzureComputeApiLiveTest {
               new ArrayList<IdReference>();
       networkInterfaces.add(networkInterface);
       NetworkProfile networkProfile = NetworkProfile.create(networkInterfaces);
-      DiagnosticsProfile.BootDiagnostics bootDiagnostics =
-              DiagnosticsProfile.BootDiagnostics.create(true, blob);
-      DiagnosticsProfile diagnosticsProfile = DiagnosticsProfile.create(bootDiagnostics);
       VirtualMachineProperties properties = VirtualMachineProperties.create(null,
-              null, null, hwProf, storageProfile, osProfile, networkProfile, diagnosticsProfile, VirtualMachineProperties.ProvisioningState.CREATING);
+              null, null, hwProf, storageProfile, osProfile, networkProfile, null, VirtualMachineProperties.ProvisioningState.CREATING);
       return properties;
    }
 
-   protected NetworkInterfaceCard createNetworkInterfaceCard(final String resourceGroupName, String networkInterfaceCardName, String locationName, String ipConfigurationName) {
+   private NetworkInterfaceCard createNetworkInterfaceCard(final String resourceGroupName, String networkInterfaceCardName, String locationName, String ipConfigurationName) {
       //Create properties object
       final NetworkInterfaceCardProperties networkInterfaceCardProperties = NetworkInterfaceCardProperties
             .builder()
@@ -286,12 +277,46 @@ public class VirtualMachineApiLiveTest extends BaseAzureComputeApiLiveTest {
       final Map<String, String> tags = ImmutableMap.of("jclouds", "livetest");
       return api.getNetworkInterfaceCardApi(resourceGroupName).createOrUpdate(networkInterfaceCardName, locationName, networkInterfaceCardProperties, tags);
    }
+   
+   private StorageService createStorageService(final String resourceGroupName, final String storageServiceName,
+         final String location) {
+      URI uri = api.getStorageAccountApi(resourceGroupName).create(storageServiceName, location,
+            ImmutableMap.of("property_name", "property_value"),
+            ImmutableMap.of("accountType", StorageService.AccountType.Standard_LRS.toString()));
+      if (uri != null) {
+         assertTrue(uri.toString().contains("api-version"));
+
+         boolean jobDone = retry(new Predicate<URI>() {
+            @Override
+            public boolean apply(final URI uri) {
+               return ParseJobStatus.JobStatus.DONE == api.getJobApi().jobStatus(uri);
+            }
+         }, 60 * 1 * 1000 /* 1 minute timeout */).apply(uri);
+         assertTrue(jobDone, "create operation did not complete in the configured timeout");
+      }
+      return api.getStorageAccountApi(resourceGroupName).get(storageServiceName);
+   }
 
    private boolean waitForState(String name, final PowerState state) {
       return api().getInstanceDetails(name).powerState().equals(state);
    }
+   
+   private void waitUntilReady(String vmName) {
+      boolean ready = retry(new Predicate<String>() {
+         @Override
+         public boolean apply(String name) {
+            return !api().get(name).properties().provisioningState().equals(VirtualMachineProperties.ProvisioningState.CREATING);
+         }
+      }, 60 * 20 * 1000).apply(vmName);
+      assertTrue(ready, "createOrUpdate operation did not complete in the configured timeout");
 
-   private boolean stateReached(final PowerState state) {
+      VirtualMachineProperties.ProvisioningState status = api().get(vmName).properties().provisioningState();
+      // Cannot be creating anymore. Should be succeeded or running but not failed.
+      assertThat(status).isNotEqualTo(VirtualMachineProperties.ProvisioningState.CREATING);
+      assertThat(status).isNotEqualTo(VirtualMachineProperties.ProvisioningState.FAILED);
+   }
+
+   private boolean stateReached(String vmName, final PowerState state) {
       return retry(new Predicate<String>() {
          @Override
          public boolean apply(String name) {

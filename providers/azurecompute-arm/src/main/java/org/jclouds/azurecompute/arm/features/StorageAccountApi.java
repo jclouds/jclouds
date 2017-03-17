@@ -79,9 +79,7 @@ public interface StorageAccountApi {
     * PUT
     */
    @Named("storageaccount:create")
-   @Payload("%7B\"location\":\"{location}\",\"tags\":{tags},\"properties\":{properties}%7D")
    @Path("/resourcegroups/{resourceGroup}/providers/Microsoft.Storage/storageAccounts/{storageAccountName}")
-   @Produces(MediaType.APPLICATION_JSON)
    @ResponseParser(URIParser.class)
    @MapBinder(BindToJsonPayload.class)
    @PUT
@@ -120,7 +118,6 @@ public interface StorageAccountApi {
    @Named("storageaccountkey:get")
    @POST
    @Path("/resourcegroups/{resourceGroup}/providers/Microsoft.Storage/storageAccounts/{storageAccountName}/listKeys")
-   @Produces(MediaType.APPLICATION_JSON)
    @Fallback(Fallbacks.NullOnNotFoundOr404.class)
    StorageServiceKeys getKeys(@PathParam("storageAccountName") String storageAccountName);
 
@@ -143,10 +140,8 @@ public interface StorageAccountApi {
     */
    @Named("storageaccount:update")
    @PATCH
-   @Payload("%7B\"tags\":{tags},\"properties\":{properties}%7D")
    @MapBinder(BindToJsonPayload.class)
    @Path("/resourcegroups/{resourceGroup}/providers/Microsoft.Storage/storageAccounts/{storageAccountName}")
-   @Produces(MediaType.APPLICATION_JSON)
    StorageServiceUpdateParams update(
            @PathParam("storageAccountName") String storageAccountName,
            @Nullable @PayloadParam("tags") Map<String, String> tags,

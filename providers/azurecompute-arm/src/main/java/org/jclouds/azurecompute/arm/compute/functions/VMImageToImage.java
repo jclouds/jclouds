@@ -19,6 +19,7 @@ package org.jclouds.azurecompute.arm.compute.functions;
 import java.util.Map;
 import java.util.Set;
 
+import org.jclouds.azurecompute.arm.compute.extensions.AzureComputeImageExtension;
 import org.jclouds.azurecompute.arm.domain.ImageReference;
 import org.jclouds.azurecompute.arm.domain.Plan;
 import org.jclouds.azurecompute.arm.domain.VMImage;
@@ -55,10 +56,16 @@ public class VMImageToImage implements Function<VMImage, Image> {
 
    private final Supplier<Set<? extends org.jclouds.domain.Location>> locations;
 
-   public static String encodeFieldsToUniqueId(boolean globallyAvailable, String locatioName,
+   public static String encodeFieldsToUniqueId(boolean globallyAvailable, String locationName,
          ImageReference imageReference) {
-      return (globallyAvailable ? "global" : locatioName) + "/" + imageReference.publisher() + "/"
+      return (globallyAvailable ? "global" : locationName) + "/" + imageReference.publisher() + "/"
             + imageReference.offer() + "/" + imageReference.sku();
+   }
+
+   public static String encodeFieldsToUniqueIdCustom(boolean globallyAvailable, String locationName,
+         ImageReference imageReference) {
+      return (globallyAvailable ? "global" : locationName) + "/" + imageReference.customImageId()
+            .substring(imageReference.customImageId().lastIndexOf("/") + 1);
    }
 
    public static String encodeFieldsToUniqueId(VMImage imageReference) {
@@ -67,8 +74,7 @@ public class VMImageToImage implements Function<VMImage, Image> {
    }
 
    public static String encodeFieldsToUniqueIdCustom(VMImage imageReference) {
-      return (imageReference.globallyAvailable() ? "global" : imageReference.location()) + "/" + imageReference.group()
-            + "/" + imageReference.storage() + "/" + imageReference.offer() + "/" + imageReference.name();
+      return (imageReference.globallyAvailable() ? "global" : imageReference.location()) + "/" + imageReference.name();
    }
 
    public static VMImage decodeFieldsFromUniqueId(final String id) {
@@ -76,17 +82,13 @@ public class VMImageToImage implements Function<VMImage, Image> {
       String[] fields = checkNotNull(id, "id").split("/");
       if (isCustom(id)) {
          /* id fields indexes
-         0: imageReference.location) + "/" +
-         1: imageReference.group + "/" +
-         2: imageReference.storage + "/" +
-         3: imageReference.offer + "/" +
-         4: imageReference.name
+         0: imageReference.location + "/" +
+         1: imageReference.name
          */
-         vmImage = VMImage.customImage().location(fields[0]).group(fields[1]).storage(fields[2]).vhd1(fields[3])
-               .offer(fields[4]).build();
+         vmImage = VMImage.customImage().location(fields[0]).name(fields[1]).build();
       } else {
          /* id fields indexes
-         0: imageReference.location) + "/" +
+         0: imageReference.location + "/" +
          1: imageReference.publisher + "/" +
          2: imageReference.offer + "/" +
          3: imageReference.sku + "/" +
@@ -98,7 +100,7 @@ public class VMImageToImage implements Function<VMImage, Image> {
    }
 
    @Inject
-   VMImageToImage(@Memoized final Supplier<Set<? extends Location>> locations) {
+   VMImageToImage(@Memoized Supplier<Set<? extends Location>> locations) {
       this.locations = locations;
    }
 
@@ -110,7 +112,7 @@ public class VMImageToImage implements Function<VMImage, Image> {
          builder.location(
                      FluentIterable.from(locations.get()).firstMatch(LocationPredicates.idEquals(image.location()))
                            .get()).name(image.name()).description(image.group()).status(Image.Status.AVAILABLE)
-               .version("latest").providerId(image.vhd1()).id(encodeFieldsToUniqueIdCustom(image));
+               .version("latest").providerId(image.customImageId()).id(encodeFieldsToUniqueIdCustom(image));
 
          final OperatingSystem.Builder osBuilder = osFamily().apply(image);
          builder.operatingSystem(osBuilder.build());
@@ -165,7 +167,7 @@ public class VMImageToImage implements Function<VMImage, Image> {
 
             // only 64bit OS images are supported by Azure ARM
             return OperatingSystem.builder().family(family).is64Bit(true)
-                  .description(image.custom() ? image.vhd1() : image.sku())
+                  .description(image.custom() ? AzureComputeImageExtension.CUSTOM_IMAGE_OFFER : image.sku())
                   .version(image.custom() ? "latest" : image.sku());
          }
       };

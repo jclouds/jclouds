@@ -16,7 +16,6 @@
  */
 package org.jclouds.azurecompute.arm.features;
 
-
 import java.io.Closeable;
 import java.util.List;
 

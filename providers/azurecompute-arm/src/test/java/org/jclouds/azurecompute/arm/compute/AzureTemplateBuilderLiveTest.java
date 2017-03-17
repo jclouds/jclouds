@@ -56,7 +56,7 @@ public class AzureTemplateBuilderLiveTest extends BaseTemplateBuilderLiveTest {
    @Override
    protected Properties setupProperties() {
       Properties properties = super.setupProperties();
-      AzureLiveTestUtils.defaultProperties(properties);
+      AzureLiveTestUtils.defaultProperties(properties, getClass().getSimpleName().toLowerCase());
       setIfTestSystemPropertyPresent(properties, "oauth.endpoint");
       return properties;
    }
@@ -65,8 +65,8 @@ public class AzureTemplateBuilderLiveTest extends BaseTemplateBuilderLiveTest {
    @Test
    public void testDefaultTemplateBuilder() throws IOException {
       Template defaultTemplate = view.getComputeService().templateBuilder().build();
-      assertTrue(defaultTemplate.getImage().getOperatingSystem().getVersion().matches("1[45]\\.[01][04]\\.[0-9]-LTS"),
-            "Version mismatch, expected dd.dd.d-LTS, found: "
+      assertTrue(defaultTemplate.getImage().getOperatingSystem().getVersion().matches("1[456]\\.[01][04](\\.[0-9])?-LTS"),
+            "Version mismatch, expected dd.dd(.d)?-LTS, found: "
                   + defaultTemplate.getImage().getOperatingSystem().getVersion());
       assertEquals(defaultTemplate.getImage().getOperatingSystem().is64Bit(), true);
       assertEquals(defaultTemplate.getImage().getOperatingSystem().getFamily(), OsFamily.UBUNTU);

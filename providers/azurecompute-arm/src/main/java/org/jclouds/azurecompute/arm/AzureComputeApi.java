@@ -17,7 +17,6 @@
 package org.jclouds.azurecompute.arm;
 
 import java.io.Closeable;
-
 import javax.ws.rs.PathParam;
 
 import org.jclouds.azurecompute.arm.features.AvailabilitySetApi;
@@ -170,7 +169,7 @@ public interface AzureComputeApi extends Closeable {
     */
    @Delegate
    LoadBalancerApi getLoadBalancerApi(@PathParam("resourcegroup") String resourcegroup);
-   
+
    /**
     * The AvailabilitySet API includes operations for managing availability sets
     * within your subscription.

@@ -32,21 +32,20 @@ import static org.jclouds.oauth.v2.config.OAuthProperties.CREDENTIAL_TYPE;
 
 public class AzureLiveTestUtils {
 
-    public static Properties defaultProperties(Properties properties) {
-       properties = properties == null ? new Properties() : properties;
-       properties.put(CREDENTIAL_TYPE, CLIENT_CREDENTIALS_SECRET.toString());
-       properties.put(PROPERTY_REGIONS, "westeurope");
-       properties.put(IMAGE_PUBLISHERS, "Canonical");
-       properties.put(RESOURCENAME_PREFIX, "jcloudstest");
-       
-       String defaultTimeout = String.valueOf(TimeUnit.MILLISECONDS.convert(60, TimeUnit.MINUTES));
-       properties.setProperty(TIMEOUT_SCRIPT_COMPLETE, defaultTimeout);
-       properties.setProperty(TIMEOUT_NODE_RUNNING, defaultTimeout);
-       properties.setProperty(TIMEOUT_PORT_OPEN, defaultTimeout);
-       properties.setProperty(TIMEOUT_NODE_TERMINATED, defaultTimeout);
-       properties.setProperty(TIMEOUT_NODE_SUSPENDED, defaultTimeout);
-       
-       return properties;
-    }
-}
+   public static Properties defaultProperties(Properties properties, String resourceNamePrefix) {
+      properties = properties == null ? new Properties() : properties;
+      properties.put(CREDENTIAL_TYPE, CLIENT_CREDENTIALS_SECRET.toString());
+      properties.put(PROPERTY_REGIONS, "westeurope");
+      properties.put(IMAGE_PUBLISHERS, "Canonical");
+      properties.put(RESOURCENAME_PREFIX, resourceNamePrefix);
 
+      String defaultTimeout = String.valueOf(TimeUnit.MILLISECONDS.convert(60, TimeUnit.MINUTES));
+      properties.setProperty(TIMEOUT_SCRIPT_COMPLETE, defaultTimeout);
+      properties.setProperty(TIMEOUT_NODE_RUNNING, defaultTimeout);
+      properties.setProperty(TIMEOUT_PORT_OPEN, defaultTimeout);
+      properties.setProperty(TIMEOUT_NODE_TERMINATED, defaultTimeout);
+      properties.setProperty(TIMEOUT_NODE_SUSPENDED, defaultTimeout);
+
+      return properties;
+   }
+}
