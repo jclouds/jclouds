@@ -160,9 +160,11 @@ public class DockerComputeServiceAdapter implements
          }
 
          if (!templateOptions.getVolumes().isEmpty()) {
+            List<String> binds = Lists.newArrayList();
             for (Map.Entry<String, String> entry : templateOptions.getVolumes().entrySet()) {
-               hostConfigBuilder.binds(ImmutableList.of(entry.getKey() + ":" + entry.getValue()));
+               binds.add(entry.getKey() + ":" + entry.getValue());
             }
+            hostConfigBuilder.binds(ImmutableList.copyOf(binds));
          }
 
          if (!templateOptions.getVolumesFrom().isEmpty()) {
