@@ -39,7 +39,7 @@ public class HttpHealthCheckCreationBinder extends BindToJsonPayload {
       return super.bindToRequest(request, helper);
    }
 
-   private class HttpHealthCheckBinderHelper{
+   private static class HttpHealthCheckBinderHelper{
 
       /**
        * Values used to bind HttpHealthCheckCreationOptions to json request.

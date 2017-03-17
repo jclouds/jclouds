@@ -503,7 +503,7 @@ public class RestAnnotationProcessorTest extends BaseRestApiTest {
    }
 
    @QueryParams(keys = "x-ms-version", values = "2009-07-17")
-   public class TestQuery {
+   public static class TestQuery {
       @FOO
       @Path("/")
       @QueryParams(keys = "x-ms-rubbish", values = "bin")
@@ -639,7 +639,7 @@ public class RestAnnotationProcessorTest extends BaseRestApiTest {
    }
 
    @QueryParams(keys = "test%param", values = "percent%")
-   public class TestInterfaceQueryParam {
+   public static class TestInterfaceQueryParam {
       @FOO
       @Path("/")
       public void query() {
@@ -800,7 +800,7 @@ public class RestAnnotationProcessorTest extends BaseRestApiTest {
       assertEquals(request.getMethod(), "POST");
    }
 
-   public class TestOverriddenEndpoint implements Parent {
+   public static class TestOverriddenEndpoint implements Parent {
 
       @POST
       @Endpoint(Localhost2.class)
@@ -1559,7 +1559,7 @@ public class RestAnnotationProcessorTest extends BaseRestApiTest {
       assertEquals(request.getFilters().get(1).getClass(), ConnectionCloseHeader.class);
    }
 
-   public class TestEncoding {
+   public static class TestEncoding {
       @GET
       @Path("/{path1}/{path2}")
       public void twoPaths(@PathParam("path1") String path, @PathParam("path2") String path2) {
@@ -1608,7 +1608,7 @@ public class RestAnnotationProcessorTest extends BaseRestApiTest {
       assertPayloadEquals(request, null, null, false);
    }
 
-   public class TestPath {
+   public static class TestPath {
       @GET
       @Path("/{path}")
       public void onePath(@PathParam("path") String path) {
@@ -1775,7 +1775,7 @@ public class RestAnnotationProcessorTest extends BaseRestApiTest {
       }
    }
 
-   public class TestHeader {
+   public static class TestHeader {
       @GET
       @Path("/")
       @Headers(keys = "x-amz-copy-source", values = "/{bucket}")
@@ -1812,7 +1812,7 @@ public class RestAnnotationProcessorTest extends BaseRestApiTest {
    }
 
    @Headers(keys = "x-amz-copy-source", values = "/{bucket}")
-   public class TestClassHeader {
+   public static class TestClassHeader {
       @GET
       @Path("/")
       public void oneHeader(@PathParam("bucket") String path) {
@@ -1872,7 +1872,7 @@ public class RestAnnotationProcessorTest extends BaseRestApiTest {
       assertEquals(query, "x-amz-copy-source=/robot");
    }
 
-   public class TestQueryReplace {
+   public static class TestQueryReplace {
 
       @GET
       @Path("/")
@@ -1913,7 +1913,7 @@ public class RestAnnotationProcessorTest extends BaseRestApiTest {
    }
 
    @QueryParams(keys = "x-amz-copy-source", values = "/{bucket}")
-   public class TestClassQuery {
+   public static class TestClassQuery {
       @GET
       @Path("/")
       public void oneQuery(@PathParam("bucket") String path) {
@@ -2352,7 +2352,7 @@ public class RestAnnotationProcessorTest extends BaseRestApiTest {
       assertPayloadEquals(request, "data", "application/unknown", false);
    }
 
-   public class TestVirtualHostMethod {
+   public static class TestVirtualHostMethod {
       @GET
       @Path("/{id}")
       @VirtualHost
@@ -2558,7 +2558,7 @@ public class RestAnnotationProcessorTest extends BaseRestApiTest {
       }
    }
 
-   public class TestFormReplace {
+   public static class TestFormReplace {
 
       @POST
       @Path("/")

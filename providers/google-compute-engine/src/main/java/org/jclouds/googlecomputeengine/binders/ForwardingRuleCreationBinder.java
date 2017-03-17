@@ -41,7 +41,7 @@ public class ForwardingRuleCreationBinder extends BindToJsonPayload {
       return super.bindToRequest(request, forwardingRuleCreationBinderHelper);
    }
 
-   private class ForwardingRuleCreationBinderHelper{
+   private static class ForwardingRuleCreationBinderHelper{
 
       /**
        * Values used to bind ForwardingRuleOptions to json request.
