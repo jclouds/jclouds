@@ -45,7 +45,11 @@ public final class DomainResourceReferences {
    }
 
    public enum StorageClass {
-      STANDARD, DURABLE_REDUCED_AVAILABILITY, NEARLINE;
+      COLDLINE,
+      DURABLE_REDUCED_AVAILABILITY,
+      MULTI_REGIONAL,
+      NEARLINE,
+      STANDARD;
    }
 
    public enum Projection {
