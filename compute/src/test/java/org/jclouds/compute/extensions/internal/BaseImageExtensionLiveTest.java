@@ -104,6 +104,8 @@ public abstract class BaseImageExtensionLiveTest extends BaseComputeServiceConte
       Template template = getNodeTemplate().build();
       NodeMetadata node = Iterables.getOnlyElement(computeService.createNodesInGroup(imageGroup, 1, template));
       checkReachable(node);
+      
+      prepareNodeBeforeCreatingImage(node);
 
       logger.info("Creating image from node %s, started with template: %s", node, template);
       ImageTemplate newImageTemplate = imageExtension.get().buildImageTemplateFromNode(imageGroup,
@@ -120,6 +122,13 @@ public abstract class BaseImageExtensionLiveTest extends BaseComputeServiceConte
       assertTrue(optImage.isPresent());
    }
    
+   /**
+    * Subclasses can override this to prepare the node before creating an image (run cleanup scripts, etc)
+    */
+   protected void prepareNodeBeforeCreatingImage(NodeMetadata node) {
+      
+   }
+
    @Test(groups = { "integration", "live" }, singleThreaded = true, dependsOnMethods = "testCreateImage")
    public void testImageIsCachedAfterBeingCreated() {
       Optional<Image> imageInCache = findImageWithNameInCache(imageGroup);
