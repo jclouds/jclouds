@@ -35,7 +35,10 @@ public class AWSS3ServiceIntegrationLiveTest extends S3ServiceIntegrationLiveTes
       return ImmutableSet.<String> of(
             "AU-NSW",
             "BR-SP",
+            "CA",
+            "CN-11",
             "DE-HE",
+            "GB-LND",
             "IE",
             "IN-MH",
             "JP-13",
@@ -43,6 +46,7 @@ public class AWSS3ServiceIntegrationLiveTest extends S3ServiceIntegrationLiveTes
             "SG",
             "US",
             "US-CA",
+            "US-OH",
             "US-OR");
    }
 
