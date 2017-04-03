@@ -87,7 +87,7 @@ public class ParseObjectListFromResponse implements Function<HttpResponse, Objec
       public SwiftObject apply(InternalObject input) {
          if (input.subdir != null) {
             return SwiftObject.builder()
-                  .uri(uriBuilder(containerUri).clearQuery().appendPath(input.subdir).build())
+                  .uri(uriBuilder(containerUri).clearQuery().appendPath(urlEncode(input.subdir)).build())
                   .name(input.subdir)
                   .etag(SUBDIR_ETAG)
                   .payload(payload(input.bytes, input.hash, "application/directory", input.expires))
