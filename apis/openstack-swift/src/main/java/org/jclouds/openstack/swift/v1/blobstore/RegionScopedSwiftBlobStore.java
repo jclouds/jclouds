@@ -494,7 +494,7 @@ public class RegionScopedSwiftBlobStore implements BlobStore {
          mapBuilder.put("content-type", contentMetadata.getContentType());
       }
       /**
-       * Do not set content-length. Set automatically to manifest json string length by BindManifestToJsonPayload
+       * Do not set content-length. Set automatically to manifest json string length by BindToJsonPayload
        */
       if (contentMetadata.getContentDisposition() != null) {
          mapBuilder.put("content-disposition", contentMetadata.getContentDisposition());
