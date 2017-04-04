@@ -61,21 +61,40 @@ public class ObjectApiLiveTest extends BaseSwiftApiLiveTest {
    private String containerName = getClass().getSimpleName() + "Container";
    static final Payload PAYLOAD = newByteSourcePayload(ByteSource.wrap("swifty".getBytes()));
 
+   protected void assertCanCreateReadUpdateDeleteList(String regionId, String containerName, String objectName) throws Exception {
+      assertNotNull(getApi().getContainerApi(regionId).create(containerName));
+      assertNotNull(getApi().getObjectApi(regionId, containerName).put(objectName, PAYLOAD));
+
+      SwiftObject object = getApi().getObjectApi(regionId, containerName).get(objectName);
+      assertEquals(object.getName(), objectName);
+      checkObject(object);
+      assertEquals(toStringAndClose(object.getPayload().openStream()), "swifty");
+
+      String lexicographicallyBeforeName = objectName.substring(0, objectName.length() - 1);
+      object = getApi().getObjectApi(regionId, containerName)
+          .list(marker(lexicographicallyBeforeName)).get(0);
+      assertEquals(object.getName(), objectName);
+      checkObject(object);
+
+      getApi().getObjectApi(regionId, containerName).delete(objectName);
+      getApi().getContainerApi(regionId).deleteIfEmpty(containerName);
+   }
+
    public void testCreateWithSpacesAndSpecialCharacters() throws Exception {
       final String containerName = "container # ! special";
       final String objectName = "object # ! special";
 
       for (String regionId : regions) {
-         assertNotNull(getApi().getContainerApi(regionId).create(containerName));
-         assertNotNull(getApi().getObjectApi(regionId, containerName).put(objectName, PAYLOAD));
+         assertCanCreateReadUpdateDeleteList(regionId, containerName, objectName);
+      }
+   }
 
-         SwiftObject object = getApi().getObjectApi(regionId, containerName).get(objectName);
-         assertEquals(object.getName(), objectName);
-         checkObject(object);
-         assertEquals(toStringAndClose(object.getPayload().openStream()), "swifty");
+   public void testCreateAndListWithUnicodeCharacters() throws Exception {
+      final String containerName = "container-unic₪de";
+      final String objectName = "object-unic₪de";
 
-         getApi().getObjectApi(regionId, containerName).delete(objectName);
-         getApi().getContainerApi(regionId).deleteIfEmpty(containerName);
+      for (String regionId : regions) {
+         assertCanCreateReadUpdateDeleteList(regionId, containerName, objectName);
       }
    }
 
