@@ -427,7 +427,7 @@ public final class B2BlobStore extends BaseBlobStore {
 
    @Override
    public long getMinimumMultipartPartSize() {
-      return auth.get().minimumPartSize();
+      return auth.get().absoluteMinimumPartSize();
    }
 
    @Override
