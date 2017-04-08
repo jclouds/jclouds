@@ -24,7 +24,6 @@ import java.util.Map;
 import javax.inject.Named;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
-import javax.ws.rs.HeaderParam;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
@@ -68,7 +67,7 @@ public interface ObjectApi {
    @POST
    @MapBinder(UploadFileBinder.class)
    @Consumes(APPLICATION_JSON)
-   UploadFileResponse uploadFile(@PayloadParam("uploadUrl") UploadUrlResponse uploadUrl, @PayloadParam("fileName") String fileName, @HeaderParam("X-Bz-Content-Sha1") String contentSha1, @PayloadParam("fileInfo") Map<String, String> fileInfo, Payload payload);
+   UploadFileResponse uploadFile(@PayloadParam("uploadUrl") UploadUrlResponse uploadUrl, @PayloadParam("fileName") String fileName, @Nullable @PayloadParam("contentSha1") String contentSha1, @PayloadParam("fileInfo") Map<String, String> fileInfo, Payload payload);
 
    @Named("b2_delete_file_version")
    @POST

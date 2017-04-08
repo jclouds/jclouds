@@ -84,7 +84,7 @@ public interface MultipartApi {
    @Named("b2_upload_part")
    @POST
    @MapBinder(UploadPartBinder.class)
-   UploadPartResponse uploadPart(@PayloadParam("response") GetUploadPartResponse response, @HeaderParam("X-Bz-Part-Number") int partNumber, @HeaderParam("X-Bz-Content-Sha1") String sha1, @PayloadParam("payload") Payload payload);
+   UploadPartResponse uploadPart(@PayloadParam("response") GetUploadPartResponse response, @HeaderParam("X-Bz-Part-Number") int partNumber, @Nullable @PayloadParam("contentSha1") String sha1, @PayloadParam("payload") Payload payload);
 
    @Named("b2_list_parts")
    @POST

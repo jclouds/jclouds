@@ -33,10 +33,15 @@ public final class UploadFileBinder implements MapBinder {
    public <R extends HttpRequest> R bindToRequest(R request, Map<String, Object> postParams) {
       UploadUrlResponse uploadUrl = (UploadUrlResponse) postParams.get("uploadUrl");
       String fileName = (String) postParams.get("fileName");
+      String contentSha1 = (String) postParams.get("contentSha1");
+      if (contentSha1 == null) {
+         contentSha1 = "do_not_verify";
+      }
       Map<String, String> fileInfo = (Map<String, String>) postParams.get("fileInfo");
       HttpRequest.Builder builder = request.toBuilder()
             .endpoint(uploadUrl.uploadUrl())
             .replaceHeader(HttpHeaders.AUTHORIZATION, uploadUrl.authorizationToken())
+            .replaceHeader(B2Headers.CONTENT_SHA1, contentSha1)
             .replaceHeader(B2Headers.FILE_NAME, escaper.escape(fileName));
       for (Map.Entry<String, String> entry : fileInfo.entrySet()) {
          builder.replaceHeader(B2Headers.FILE_INFO_PREFIX + entry.getKey(), escaper.escape(entry.getValue()));

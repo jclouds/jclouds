@@ -123,26 +123,6 @@ public final class B2BlobIntegrationLiveTest extends BaseBlobIntegrationTest {
    }
 
    @Override
-   public void testPutInputStream() throws Exception {
-      try {
-         super.testPutInputStream();
-         failBecauseExceptionWasNotThrown(IllegalArgumentException.class);
-      } catch (IllegalArgumentException iae) {
-         throw new SkipException("B2 requires repeatable payloads to calculate SHA1 hash", iae);
-      }
-   }
-
-   @Override
-   public void testPutMultipartInputStream() throws Exception {
-      try {
-         super.testPutMultipartInputStream();
-         failBecauseExceptionWasNotThrown(IllegalArgumentException.class);
-      } catch (IllegalArgumentException iae) {
-         throw new SkipException("B2 requires repeatable payloads to calculate SHA1 hash", iae);
-      }
-   }
-
-   @Override
    public void testPutObjectStream() throws InterruptedException, IOException, ExecutionException {
       try {
          super.testPutObjectStream();

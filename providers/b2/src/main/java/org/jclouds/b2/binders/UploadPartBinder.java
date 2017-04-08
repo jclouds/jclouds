@@ -20,6 +20,7 @@ import java.util.Map;
 
 import org.jclouds.http.HttpRequest;
 import org.jclouds.b2.domain.GetUploadPartResponse;
+import org.jclouds.b2.reference.B2Headers;
 import org.jclouds.rest.MapBinder;
 
 import com.google.common.net.HttpHeaders;
@@ -28,9 +29,14 @@ public final class UploadPartBinder implements MapBinder {
    @Override
    public <R extends HttpRequest> R bindToRequest(R request, Map<String, Object> postParams) {
       GetUploadPartResponse uploadUrl = (GetUploadPartResponse) postParams.get("response");
+      String contentSha1 = (String) postParams.get("contentSha1");
+      if (contentSha1 == null) {
+         contentSha1 = "do_not_verify";
+      }
       return (R) request.toBuilder()
             .endpoint(uploadUrl.uploadUrl())
             .replaceHeader(HttpHeaders.AUTHORIZATION, uploadUrl.authorizationToken())
+            .replaceHeader(B2Headers.CONTENT_SHA1, contentSha1)
             .build();
    }
 

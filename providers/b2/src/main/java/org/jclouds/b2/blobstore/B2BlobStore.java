@@ -16,7 +16,6 @@
  */
 package org.jclouds.b2.blobstore;
 
-import java.io.IOException;
 import java.net.URI;
 import java.util.Date;
 import java.util.List;
@@ -67,7 +66,6 @@ import org.jclouds.blobstore.options.PutOptions;
 import org.jclouds.blobstore.util.BlobUtils;
 import org.jclouds.collect.Memoized;
 import org.jclouds.domain.Location;
-import org.jclouds.io.ByteStreams2;
 import org.jclouds.io.ContentMetadata;
 import org.jclouds.io.ContentMetadataBuilder;
 import org.jclouds.io.MutableContentMetadata;
@@ -78,14 +76,12 @@ import org.jclouds.io.payloads.BaseMutableContentMetadata;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 import com.google.common.base.Supplier;
-import com.google.common.base.Throwables;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Sets;
-import com.google.common.hash.Hashing;
 import com.google.common.net.HttpHeaders;
 import com.google.common.util.concurrent.UncheckedExecutionException;
 
@@ -254,8 +250,6 @@ public final class B2BlobStore extends BaseBlobStore {
 
    @Override
    public String putBlob(String container, Blob blob, PutOptions options) {
-      Preconditions.checkArgument(blob.getPayload().isRepeatable(), "B2 requires repeatable payload to calculate SHA1");
-
       if (options.getBlobAccess() != BlobAccess.PRIVATE) {
          throw new UnsupportedOperationException("B2 only supports private access blobs");
       }
@@ -263,13 +257,6 @@ public final class B2BlobStore extends BaseBlobStore {
       if (options.isMultipart()) {
          return putMultipartBlob(container, blob, options);
       } else {
-         String contentSha1;
-         try {
-            contentSha1 = ByteStreams2.hashAndClose(blob.getPayload().openStream(), Hashing.sha1()).toString();
-         } catch (IOException ioe) {
-            throw Throwables.propagate(ioe);
-         }
-
          String name = blob.getMetadata().getName();
 
          // B2 versions all files so we store the original fileId to delete it after the upload succeeds
@@ -277,7 +264,7 @@ public final class B2BlobStore extends BaseBlobStore {
 
          Bucket bucket = getBucket(container);
          UploadUrlResponse uploadUrl = api.getObjectApi().getUploadUrl(bucket.bucketId());
-         UploadFileResponse uploadFile = api.getObjectApi().uploadFile(uploadUrl, name, contentSha1, blob.getMetadata().getUserMetadata(), blob.getPayload());
+         UploadFileResponse uploadFile = api.getObjectApi().uploadFile(uploadUrl, name, null, blob.getMetadata().getUserMetadata(), blob.getPayload());
 
          if (oldFileId != null) {
             api.getObjectApi().deleteFileVersion(name, oldFileId);
@@ -397,20 +384,15 @@ public final class B2BlobStore extends BaseBlobStore {
 
    @Override
    public MultipartPart uploadMultipartPart(MultipartUpload mpu, int partNumber, Payload payload) {
-      Preconditions.checkArgument(payload.isRepeatable());
-
-      String contentSha1;
-      try {
-         contentSha1 = ByteStreams2.hashAndClose(payload.openStream(), Hashing.sha1()).toString();
-      } catch (IOException ioe) {
-         throw Throwables.propagate(ioe);
-      }
-
       GetUploadPartResponse getUploadPart = api.getMultipartApi().getUploadPartUrl(mpu.id());
-      UploadPartResponse uploadPart = api.getMultipartApi().uploadPart(getUploadPart, partNumber, contentSha1, payload);
+      UploadPartResponse uploadPart = api.getMultipartApi().uploadPart(getUploadPart, partNumber, null, payload);
 
       Date lastModified = null;  // B2 does not return Last-Modified
-      return MultipartPart.create(uploadPart.partNumber(), uploadPart.contentLength(), uploadPart.contentSha1(), lastModified);
+      String contentSha1 = uploadPart.contentSha1();
+      if (contentSha1.startsWith("unverified:")) {
+          contentSha1 = contentSha1.substring("unverified:".length());
+      }
+      return MultipartPart.create(uploadPart.partNumber(), uploadPart.contentLength(), contentSha1, lastModified);
    }
 
    @Override
