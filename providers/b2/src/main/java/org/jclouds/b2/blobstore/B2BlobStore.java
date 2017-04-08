@@ -16,7 +16,9 @@
  */
 package org.jclouds.b2.blobstore;
 
+import java.io.UnsupportedEncodingException;
 import java.net.URI;
+import java.net.URLEncoder;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -480,7 +482,12 @@ public final class B2BlobStore extends BaseBlobStore {
       contentMetadata.setContentType(b2Object.contentType());
       metadata.setContentMetadata(contentMetadata);
       metadata.setUserMetadata(b2Object.fileInfo());
-      metadata.setPublicUri(URI.create(auth.get().downloadUrl() + "/file/" + container + "/" + b2Object.fileName()));
+      try {
+         metadata.setPublicUri(URI.create(auth.get().downloadUrl() + "/file/" + container + "/" +
+               URLEncoder.encode(b2Object.fileName(), "UTF-8")));
+      } catch (UnsupportedEncodingException uee) {
+         throw new RuntimeException(uee);
+      }
       return metadata;
    }
 }
