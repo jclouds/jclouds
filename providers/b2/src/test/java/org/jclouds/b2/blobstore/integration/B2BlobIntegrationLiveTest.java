@@ -68,7 +68,7 @@ public final class B2BlobIntegrationLiveTest extends BaseBlobIntegrationTest {
          super.testCopyBlobCopyMetadata();
          failBecauseExceptionWasNotThrown(IllegalArgumentException.class);
       } catch (IllegalArgumentException iae) {
-         throw new SkipException("B2 requires repeatable payloads to calculate SHA1 hash", iae);
+         throw new SkipException("B2 does not support the Cache-Control header", iae);
       }
    }
 
@@ -78,7 +78,7 @@ public final class B2BlobIntegrationLiveTest extends BaseBlobIntegrationTest {
          super.testCopyBlobReplaceMetadata();
          failBecauseExceptionWasNotThrown(IllegalArgumentException.class);
       } catch (IllegalArgumentException iae) {
-         throw new SkipException("B2 requires repeatable payloads to calculate SHA1 hash", iae);
+         throw new SkipException("B2 does not support the Cache-Control header", iae);
       }
    }
 
@@ -88,7 +88,7 @@ public final class B2BlobIntegrationLiveTest extends BaseBlobIntegrationTest {
          super.testCopyIfMatch();
          failBecauseExceptionWasNotThrown(IllegalArgumentException.class);
       } catch (IllegalArgumentException iae) {
-         throw new SkipException("B2 requires repeatable payloads to calculate SHA1 hash", iae);
+         throw new SkipException("B2 does not support the Cache-Control header", iae);
       }
    }
 
@@ -98,7 +98,7 @@ public final class B2BlobIntegrationLiveTest extends BaseBlobIntegrationTest {
          super.testCopyIfNoneMatch();
          failBecauseExceptionWasNotThrown(IllegalArgumentException.class);
       } catch (IllegalArgumentException iae) {
-         throw new SkipException("B2 requires repeatable payloads to calculate SHA1 hash", iae);
+         throw new SkipException("B2 does not support the Cache-Control header", iae);
       }
    }
 
@@ -108,7 +108,7 @@ public final class B2BlobIntegrationLiveTest extends BaseBlobIntegrationTest {
          super.testCopyIfModifiedSince();
          failBecauseExceptionWasNotThrown(IllegalArgumentException.class);
       } catch (IllegalArgumentException iae) {
-         throw new SkipException("B2 requires repeatable payloads to calculate SHA1 hash", iae);
+         throw new SkipException("B2 does not support the Cache-Control header", iae);
       }
    }
 
@@ -118,7 +118,7 @@ public final class B2BlobIntegrationLiveTest extends BaseBlobIntegrationTest {
          super.testCopyIfUnmodifiedSince();
          failBecauseExceptionWasNotThrown(IllegalArgumentException.class);
       } catch (IllegalArgumentException iae) {
-         throw new SkipException("B2 requires repeatable payloads to calculate SHA1 hash", iae);
+         throw new SkipException("B2 does not support the Cache-Control header", iae);
       }
    }
 
@@ -128,7 +128,7 @@ public final class B2BlobIntegrationLiveTest extends BaseBlobIntegrationTest {
          super.testPutObjectStream();
          failBecauseExceptionWasNotThrown(IllegalArgumentException.class);
       } catch (IllegalArgumentException iae) {
-         throw new SkipException("B2 requires repeatable payloads to calculate SHA1 hash", iae);
+         throw new SkipException("B2 does not support the Cache-Control header", iae);
       }
    }
 
