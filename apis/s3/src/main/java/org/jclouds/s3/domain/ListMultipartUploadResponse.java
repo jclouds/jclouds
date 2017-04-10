@@ -23,19 +23,22 @@ import java.util.Date;
 
 import com.google.auto.value.AutoValue;
 import com.google.common.annotations.Beta;
+import org.jclouds.javax.annotation.Nullable;
 
 @AutoValue
 @Beta
 public abstract class ListMultipartUploadResponse {
    public abstract int partNumber();
-   public abstract Date lastModified();
+   @Nullable public abstract Date lastModified();
    public abstract String eTag();
    public abstract long size();
 
    public static ListMultipartUploadResponse create(int partNumber, Date lastModified, String eTag, long size) {
       checkArgument(partNumber > 0, "partNumber must be greater than zero, was: %s", partNumber);
       checkNotNull(eTag, "eTag");
-      lastModified = (Date) checkNotNull(lastModified, "lastModified").clone();
+      if (lastModified != null) {
+         lastModified = (Date) lastModified.clone();
+      }
       checkArgument(size >= 0, "size must be positive, was: %s", size);
       return new AutoValue_ListMultipartUploadResponse(partNumber, lastModified, eTag, size);
    }
