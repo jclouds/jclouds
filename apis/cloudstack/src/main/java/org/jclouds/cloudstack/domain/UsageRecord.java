@@ -368,7 +368,7 @@ public class UsageRecord {
    @ConstructorProperties({
          "usageid", "description", "accountid", "account", "domainid", "startdate", "enddate", "assigndate", "releasedate",
          "zoneid", "virtualmachineid", "name", "offeringid", "templateid", "ipaddress", "issourcenat", "rawusage", "usage",
-         "size", "type", "usagetype", "project", "projectId"
+         "size", "type", "usagetype", "project", "projectid"
    })
    protected UsageRecord(String id, @Nullable String description, @Nullable String accountId, @Nullable String accountName,
                          @Nullable String domainId, @Nullable Date startDate, @Nullable Date endDate, @Nullable Date assignDate,
