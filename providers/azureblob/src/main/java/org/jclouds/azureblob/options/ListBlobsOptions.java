@@ -141,8 +141,12 @@ public class ListBlobsOptions extends ListOptions {
    }
 
    public ListBlobsOptions include(Set<ListBlobsInclude> datasets) {
-      datasets = ImmutableSet.copyOf(datasets);
-      this.queryParameters.put("include", Joiner.on(",").join(datasets));
+      ImmutableSet.Builder<String> builder = ImmutableSet.builder();
+      for (ListBlobsInclude dataset : datasets) {
+         builder.add(dataset.toString());
+      }
+      this.datasets = builder.build();
+      this.queryParameters.put("include", Joiner.on(",").join(this.datasets));
       return this;
    }
 
