@@ -101,6 +101,16 @@ public class ListProjectsOptions extends AccountInDomainOptions {
       }
       return this;
    }
+   
+   public ListProjectsOptions page(Long page) {
+      this.queryParameters.replaceValues("page", ImmutableSet.of(page + ""));
+      return this;
+   }
+   
+   public ListProjectsOptions pageSize(Long pageSize) {
+      this.queryParameters.replaceValues("pagesize", ImmutableSet.of(pageSize + ""));
+      return this;
+   }
 
    public static class Builder {
 
@@ -174,6 +184,22 @@ public class ListProjectsOptions extends AccountInDomainOptions {
       public static ListProjectsOptions tags(Map<String, String> tags) {
          ListProjectsOptions options = new ListProjectsOptions();
          return options.tags(tags);
+      }
+      
+      /**
+       * @see org.jclouds.cloudstack.options.ListProjectsOptions#page
+       */
+      public static ListProjectsOptions page(Long page) {
+         ListProjectsOptions options = new ListProjectsOptions();
+         return options.page(page);
+      }
+      
+      /**
+       * @see org.jclouds.cloudstack.options.ListProjectsOptions#pageSize
+       */
+      public static ListProjectsOptions pageSize(Long pageSize) {
+         ListProjectsOptions options = new ListProjectsOptions();
+         return options.pageSize(pageSize);
       }
    }
 
