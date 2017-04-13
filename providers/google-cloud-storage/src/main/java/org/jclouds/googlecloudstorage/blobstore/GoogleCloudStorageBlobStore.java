@@ -22,6 +22,7 @@ import static org.jclouds.googlecloudstorage.domain.DomainResourceReferences.Obj
 
 import java.util.List;
 import java.util.Set;
+import java.util.UUID;
 
 import javax.inject.Inject;
 
@@ -368,7 +369,7 @@ public final class GoogleCloudStorageBlobStore extends BaseBlobStore {
 
    @Override
    public MultipartUpload initiateMultipartUpload(String container, BlobMetadata blobMetadata, PutOptions options) {
-      String uploadId = blobMetadata.getName();
+      String uploadId = UUID.randomUUID().toString();
       return MultipartUpload.create(container, blobMetadata.getName(), uploadId, blobMetadata, options);
    }
 
@@ -430,7 +431,7 @@ public final class GoogleCloudStorageBlobStore extends BaseBlobStore {
    public List<MultipartPart> listMultipartUpload(MultipartUpload mpu) {
       ImmutableList.Builder<MultipartPart> parts = ImmutableList.builder();
       PageSet<? extends StorageMetadata> pageSet = list(mpu.containerName(),
-            new ListContainerOptions().prefix(mpu.blobName() + "_"));
+            new ListContainerOptions().prefix(mpu.id() + "_"));
       // TODO: pagination
       for (StorageMetadata sm : pageSet) {
          int lastUnderscore = sm.getName().lastIndexOf('_');
