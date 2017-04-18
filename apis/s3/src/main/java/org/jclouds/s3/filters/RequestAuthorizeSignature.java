@@ -16,6 +16,7 @@
  */
 package org.jclouds.s3.filters;
 
+import org.jclouds.http.HttpRequest;
 import org.jclouds.http.HttpRequestFilter;
 
 /**
@@ -23,4 +24,5 @@ import org.jclouds.http.HttpRequestFilter;
  */
 
 public interface RequestAuthorizeSignature extends HttpRequestFilter {
+   HttpRequest signForTemporaryAccess(HttpRequest request, long timeInSeconds);
 }

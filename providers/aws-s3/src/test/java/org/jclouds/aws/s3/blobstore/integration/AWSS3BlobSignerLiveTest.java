@@ -35,9 +35,4 @@ public class AWSS3BlobSignerLiveTest extends S3BlobSignerLiveTest {
       overrides.setProperty(Constants.PROPERTY_SESSION_INTERVAL, "1");
       return overrides;
    }
-
-   @Override
-   protected boolean supportsUrlWithTime() {
-      return true;
-   }
 }

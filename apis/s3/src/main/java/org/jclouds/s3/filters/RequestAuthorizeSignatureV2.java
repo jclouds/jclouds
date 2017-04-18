@@ -29,9 +29,11 @@ import static org.jclouds.s3.reference.S3Constants.PROPERTY_S3_VIRTUAL_HOST_BUCK
 import static org.jclouds.util.Strings2.toInputStream;
 
 import java.util.Collection;
+import java.util.Date;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.TimeUnit;
 
 import javax.annotation.Resource;
 import javax.inject.Inject;
@@ -42,14 +44,17 @@ import javax.inject.Singleton;
 import org.jclouds.Constants;
 import org.jclouds.aws.domain.SessionCredentials;
 import org.jclouds.crypto.Crypto;
+import org.jclouds.date.DateService;
 import org.jclouds.date.TimeStamp;
 import org.jclouds.domain.Credentials;
 import org.jclouds.http.HttpException;
 import org.jclouds.http.HttpRequest;
+import org.jclouds.http.HttpRequestFilter;
 import org.jclouds.http.HttpUtils;
 import org.jclouds.http.internal.SignatureWire;
 import org.jclouds.logging.Logger;
 import org.jclouds.rest.RequestSigner;
+import org.jclouds.s3.reference.S3Constants;
 import org.jclouds.s3.util.S3Utils;
 
 import com.google.common.annotations.VisibleForTesting;
@@ -90,13 +95,15 @@ public class RequestAuthorizeSignatureV2 implements RequestAuthorizeSignature, R
    private final String headerTag;
    private final String servicePath;
    private final boolean isVhostStyle;
+   private final DateService dateService;
 
    @Inject
    public RequestAuthorizeSignatureV2(SignatureWire signatureWire, @Named(PROPERTY_AUTH_TAG) String authTag,
          @Named(PROPERTY_S3_VIRTUAL_HOST_BUCKETS) boolean isVhostStyle,
          @Named(PROPERTY_S3_SERVICE_PATH) String servicePath, @Named(PROPERTY_HEADER_TAG) String headerTag,
          @org.jclouds.location.Provider Supplier<Credentials> creds,
-         @TimeStamp Provider<String> timeStampProvider, Crypto crypto, HttpUtils utils) {
+         @TimeStamp Provider<String> timeStampProvider, Crypto crypto, HttpUtils utils,
+         DateService dateService) {
       this.isVhostStyle = isVhostStyle;
       this.servicePath = servicePath;
       this.headerTag = headerTag;
@@ -106,6 +113,7 @@ public class RequestAuthorizeSignatureV2 implements RequestAuthorizeSignature, R
       this.timeStampProvider = timeStampProvider;
       this.crypto = crypto;
       this.utils = utils;
+      this.dateService = dateService;
    }
 
    public HttpRequest filter(HttpRequest request) throws HttpException {
@@ -260,5 +268,33 @@ public class RequestAuthorizeSignatureV2 implements RequestAuthorizeSignature, R
             separator = '&';
          }
       }
+   }
+
+   @Override
+   public HttpRequest signForTemporaryAccess(HttpRequest request, long timeInSeconds) {
+      // Update the 'DATE' header
+      String dateString = request.getFirstHeaderOrNull(HttpHeaders.DATE);
+      if (dateString == null) {
+         dateString = timeStampProvider.get();
+      }
+      Date date = dateService.rfc1123DateParse(dateString);
+      String expiration = String.valueOf(TimeUnit.MILLISECONDS.toSeconds(date.getTime()) + timeInSeconds);
+      HttpRequest.Builder<?> builder = request.toBuilder()
+         .removeHeader(HttpHeaders.AUTHORIZATION)
+         .replaceHeader(HttpHeaders.DATE, expiration);
+      String stringToSign = createStringToSign(builder.build());
+      String signature = sign(stringToSign);
+      HttpRequest ret = builder
+         .addQueryParam(HttpHeaders.EXPIRES, expiration)
+         .addQueryParam("AWSAccessKeyId", creds.get().identity)
+         // Signature MUST be the last parameter because if it isn't, even encoded '+' values in the
+         // signature will be converted to a space by a subsequent addQueryParameter.
+         // See HttpRequestTest.testAddBase64AndUrlEncodedQueryParams for more details.
+         .addQueryParam(S3Constants.TEMPORARY_SIGNATURE_PARAM, signature)
+         // remove signer created by RestAnnotationProcessor
+         .removeHeader(HttpHeaders.DATE)
+         .filters(ImmutableList.<HttpRequestFilter>of())
+         .build();
+      return ret;
    }
 }

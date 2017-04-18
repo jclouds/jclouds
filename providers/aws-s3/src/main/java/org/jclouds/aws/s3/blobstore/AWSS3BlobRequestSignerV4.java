@@ -28,20 +28,20 @@ import org.jclouds.reflect.Invocation;
 import org.jclouds.rest.internal.RestAnnotationProcessor;
 import org.jclouds.s3.blobstore.S3BlobRequestSigner;
 import org.jclouds.s3.blobstore.functions.BlobToObject;
-import org.jclouds.s3.filters.RequestAuthorizeSignatureV4;
+import org.jclouds.s3.filters.RequestAuthorizeSignature;
 
 import com.google.common.collect.ImmutableList;
 import com.google.inject.Inject;
 
 public class AWSS3BlobRequestSignerV4 extends S3BlobRequestSigner<AWSS3Client> {
 
-   private final RequestAuthorizeSignatureV4 authSigner;
+   private final RequestAuthorizeSignature authSigner;
 
    @Inject
    public AWSS3BlobRequestSignerV4(RestAnnotationProcessor processor, BlobToObject blobToObject,
                                    BlobToHttpGetOptions blob2HttpGetOptions, Class<AWSS3Client> interfaceClass,
-                                   RequestAuthorizeSignatureV4 authSigner) throws SecurityException, NoSuchMethodException {
-      super(processor, blobToObject, blob2HttpGetOptions, interfaceClass);
+                                   RequestAuthorizeSignature authSigner) throws SecurityException, NoSuchMethodException {
+      super(processor, blobToObject, blob2HttpGetOptions, interfaceClass, authSigner);
       this.authSigner = authSigner;
    }
 

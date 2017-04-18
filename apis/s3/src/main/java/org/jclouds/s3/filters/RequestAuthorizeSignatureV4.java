@@ -106,6 +106,7 @@ public class RequestAuthorizeSignatureV4 implements RequestAuthorizeSignature {
     * For example, you might store videos in an Amazon S3 bucket and make them available on your website by using presigned URLs.
     * Identifies the version of AWS Signature and the algorithm that you used to calculate the signature.
     */
+   @Override
    public HttpRequest signForTemporaryAccess(HttpRequest request, long timeInSeconds) {
       return signerForQueryString.sign(request, timeInSeconds);
    }

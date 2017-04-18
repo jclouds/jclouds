@@ -17,8 +17,8 @@
 package org.jclouds.aws.s3.filters;
 
 import static org.jclouds.http.utils.Queries.queryParser;
-import static org.jclouds.aws.s3.blobstore.AWSS3BlobRequestSigner.TEMPORARY_SIGNATURE_PARAM;
 import static org.jclouds.s3.filters.AwsSignatureV4Constants.AMZ_SIGNATURE_PARAM;
+import static org.jclouds.s3.reference.S3Constants.TEMPORARY_SIGNATURE_PARAM;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;

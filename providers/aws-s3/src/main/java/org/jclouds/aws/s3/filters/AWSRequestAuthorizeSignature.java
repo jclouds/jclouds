@@ -18,10 +18,10 @@ package org.jclouds.aws.s3.filters;
 
 import static org.jclouds.aws.reference.AWSConstants.PROPERTY_AUTH_TAG;
 import static org.jclouds.aws.reference.AWSConstants.PROPERTY_HEADER_TAG;
-import static org.jclouds.aws.s3.blobstore.AWSS3BlobRequestSigner.TEMPORARY_SIGNATURE_PARAM;
 import static org.jclouds.http.utils.Queries.queryParser;
 import static org.jclouds.s3.reference.S3Constants.PROPERTY_S3_SERVICE_PATH;
 import static org.jclouds.s3.reference.S3Constants.PROPERTY_S3_VIRTUAL_HOST_BUCKETS;
+import static org.jclouds.s3.reference.S3Constants.TEMPORARY_SIGNATURE_PARAM;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -29,6 +29,7 @@ import javax.inject.Provider;
 import javax.inject.Singleton;
 
 import org.jclouds.crypto.Crypto;
+import org.jclouds.date.DateService;
 import org.jclouds.date.TimeStamp;
 import org.jclouds.domain.Credentials;
 import org.jclouds.http.HttpRequest;
@@ -47,9 +48,10 @@ public class AWSRequestAuthorizeSignature extends RequestAuthorizeSignatureV2 {
             @Named(PROPERTY_S3_VIRTUAL_HOST_BUCKETS) boolean isVhostStyle,
             @Named(PROPERTY_S3_SERVICE_PATH) String servicePath, @Named(PROPERTY_HEADER_TAG) String headerTag,
             @org.jclouds.location.Provider Supplier<Credentials> creds,
-            @TimeStamp Provider<String> timeStampProvider, Crypto crypto, HttpUtils utils) {
+            @TimeStamp Provider<String> timeStampProvider, Crypto crypto, HttpUtils utils,
+            DateService dateService) {
       super(signatureWire, authTag, isVhostStyle, servicePath, headerTag, creds, timeStampProvider, crypto, 
-             utils);
+             utils, dateService);
    }
 
    @Override
