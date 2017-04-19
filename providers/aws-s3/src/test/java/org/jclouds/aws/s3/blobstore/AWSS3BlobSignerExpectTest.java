@@ -18,12 +18,17 @@ package org.jclouds.aws.s3.blobstore;
 
 import static org.testng.Assert.assertEquals;
 
+import java.util.Date;
 import java.util.Map;
 
+import javax.inject.Named;
+
+import org.jclouds.Constants;
 import org.jclouds.aws.s3.config.AWSS3HttpApiModule;
 import org.jclouds.aws.s3.filters.AWSRequestAuthorizeSignature;
 import org.jclouds.blobstore.BlobStore;
 import org.jclouds.blobstore.domain.Blob;
+import org.jclouds.date.DateService;
 import org.jclouds.date.TimeStamp;
 import org.jclouds.http.HttpRequest;
 import org.jclouds.rest.ConfiguresHttpApi;
@@ -33,6 +38,7 @@ import org.testng.annotations.Test;
 
 import com.google.common.base.Splitter;
 import com.google.common.base.Supplier;
+import com.google.common.base.Suppliers;
 import com.google.inject.Module;
 import com.google.inject.Scopes;
 
@@ -49,9 +55,14 @@ public class AWSS3BlobSignerExpectTest extends S3BlobSignerExpectTest {
    protected HttpRequest getBlob() {
       return HttpRequest.builder().method("GET")
             .endpoint("https://container.s3.amazonaws.com/name")
+            .addQueryParam("X-Amz-Algorithm", "AWS4-HMAC-SHA256")
+            .addQueryParam("X-Amz-Credential", "identity/20080605/us-east-1/s3/aws4_request")
+            .addQueryParam("X-Amz-Date", "20080605T163819Z")
+            .addQueryParam("X-Amz-Expires", "900")
+            .addQueryParam("X-Amz-SignedHeaders", "host")
+            .addQueryParam("X-Amz-Signature", "1aa13b18ef9c4a9a98db7539e9eeb2c63afadbab649e14e28d5b765dfd96c32b")
             .addHeader("Host", HOST)
-            .addHeader("Date", "Thu, 05 Jun 2008 16:38:19 GMT")
-            .addHeader("Authorization", "AWS identity:0uvBv1wEskuhFHYJF/L6kEV9A7o=").build();
+            .build();
    }
 
    @Override
@@ -71,8 +82,10 @@ public class AWSS3BlobSignerExpectTest extends S3BlobSignerExpectTest {
             .endpoint("https://container.s3.amazonaws.com/name")
             .addHeader("Host", HOST)
             .addHeader("Range", "bytes=0-1")
-            .addHeader("Date", "Thu, 05 Jun 2008 16:38:19 GMT")
-            .addHeader("Authorization", "AWS identity:0uvBv1wEskuhFHYJF/L6kEV9A7o=").build();
+            .addHeader("x-amz-content-sha256", "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855")
+            .addHeader("X-Amz-Date", "20080605T163819Z")
+            .addHeader("Authorization", "AWS4-HMAC-SHA256 Credential=identity/20080605/us-east-1/s3/aws4_request, SignedHeaders=host;x-amz-content-sha256;x-amz-date, Signature=8f6a70bf43f31c92a67095510b080f574154df8a5ccb988ec8a6cbcce03dd5b8")
+            .build();
    }
 
    private void compareRequestComponents(final HttpRequest request, final HttpRequest compare) {
@@ -80,15 +93,16 @@ public class AWSS3BlobSignerExpectTest extends S3BlobSignerExpectTest {
       String query = request.getEndpoint().toString().split("\\?")[1];
       final Map<String, String> params = Splitter.on('&').trimResults().withKeyValueSeparator("=").split(query);
       assertEquals(params.get("X-Amz-Algorithm"), "AWS4-HMAC-SHA256");
-      assertEquals(params.get("X-Amz-Expires"), "3");
+      assertEquals(params.get("X-Amz-Expires"), "900");
       assertEquals(params.get("X-Amz-SignedHeaders"), "host");
    }
 
+   @Override
    @Test
    public void testSignGetBlobWithTime() {
       BlobStore getBlobWithTime = requestsSendResponses(init());
       HttpRequest compare = getBlobWithTime();
-      HttpRequest request = getBlobWithTime.getContext().getSigner().signGetBlob(container, name, 3L /* seconds */);
+      HttpRequest request = getBlobWithTime.getContext().getSigner().signGetBlob(container, name, 900L /* seconds */);
       compareRequestComponents(request, compare);
    }
 
@@ -119,18 +133,33 @@ public class AWSS3BlobSignerExpectTest extends S3BlobSignerExpectTest {
    protected HttpRequest removeBlob() {
       return HttpRequest.builder().method("DELETE")
             .endpoint("https://container.s3.amazonaws.com/name")
+            .addHeader("x-amz-content-sha256", "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855")
+            .addHeader("X-Amz-Date", "20080605T163819Z")
+            .addHeader("Authorization", "AWS4-HMAC-SHA256 Credential=identity/20080605/us-east-1/s3/aws4_request, SignedHeaders=host;x-amz-content-sha256;x-amz-date, Signature=b068a3b2a76f06bf1d73b907243602f43962f5572ea1e588ed193c8c656118fe")
             .addHeader("Host", HOST)
-            .addHeader("Date", "Thu, 05 Jun 2008 16:38:19 GMT")
-            .addHeader("Authorization", "AWS identity:4FnyjdX/ULdDMRbVlLNjZfEo9RQ=").build();
+            .build();
    }
 
+   @Override
+   @Test
+   public void testSignPutBlob() throws Exception {
+      BlobStore signPutBloblWithTime = requestsSendResponses(init());
+      Blob blob = signPutBloblWithTime.blobBuilder(name).payload(text).contentType("text/plain").build();
+      HttpRequest compare = putBlobWithTime();
+      compare.setPayload(blob.getPayload());
+      HttpRequest request = signPutBloblWithTime.getContext().getSigner().signPutBlob(container, blob);
+      compareRequestComponents(request, compare);
+      assertEquals(request.getPayload(), compare.getPayload());
+   }
+
+   @Override
    @Test
    public void testSignPutBlobWithTime() throws Exception {
       BlobStore signPutBloblWithTime = requestsSendResponses(init());
       Blob blob = signPutBloblWithTime.blobBuilder(name).payload(text).contentType("text/plain").build();
       HttpRequest compare = putBlobWithTime();
       compare.setPayload(blob.getPayload());
-      HttpRequest request = signPutBloblWithTime.getContext().getSigner().signPutBlob(container, blob, 3L /* seconds */);
+      HttpRequest request = signPutBloblWithTime.getContext().getSigner().signPutBlob(container, blob, 900L /* seconds */);
       compareRequestComponents(request, compare);
       assertEquals(request.getPayload(), compare.getPayload());
    }
@@ -148,10 +177,13 @@ public class AWSS3BlobSignerExpectTest extends S3BlobSignerExpectTest {
          return DATE;
       }
 
-      // subclass expects v2 signatures
       @Override
-      protected void bindRequestSigner() {
-         bind(RequestAuthorizeSignature.class).to(AWSRequestAuthorizeSignature.class).in(Scopes.SINGLETON);
+      @TimeStamp
+      protected Supplier<Date> provideTimeStampCacheDate(
+            @Named(Constants.PROPERTY_SESSION_INTERVAL) long seconds,
+            @TimeStamp final Supplier<String> timestamp,
+            final DateService dateService) {
+         return Suppliers.ofInstance(new Date(1212683899000L));
       }
    }
 }

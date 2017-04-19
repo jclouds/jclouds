@@ -291,8 +291,8 @@ public class RequestAuthorizeSignatureV2 implements RequestAuthorizeSignature, R
          // signature will be converted to a space by a subsequent addQueryParameter.
          // See HttpRequestTest.testAddBase64AndUrlEncodedQueryParams for more details.
          .addQueryParam(S3Constants.TEMPORARY_SIGNATURE_PARAM, signature)
-         // remove signer created by RestAnnotationProcessor
          .removeHeader(HttpHeaders.DATE)
+         // remove signer created by RestAnnotationProcessor
          .filters(ImmutableList.<HttpRequestFilter>of())
          .build();
       return ret;

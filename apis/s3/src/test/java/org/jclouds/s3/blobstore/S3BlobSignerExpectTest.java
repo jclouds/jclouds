@@ -22,7 +22,6 @@ import org.jclouds.http.HttpRequest;
 import org.jclouds.rest.ConfiguresHttpApi;
 import org.jclouds.s3.S3Client;
 import org.jclouds.s3.config.S3HttpApiModule;
-import org.testng.SkipException;
 import org.testng.annotations.Test;
 
 import com.google.common.base.Supplier;
@@ -42,23 +41,20 @@ public class S3BlobSignerExpectTest extends BaseBlobSignerExpectTest {
    protected HttpRequest getBlob() {
       return HttpRequest.builder().method("GET")
                         .endpoint("http://localhost/container/name")
-                        .addHeader("Date", "Thu, 05 Jun 2008 16:38:19 GMT")
-                        .addHeader("Authorization", "AWS identity:0uvBv1wEskuhFHYJF/L6kEV9A7o=").build();
+                        .addQueryParam("Expires", "1212684799")
+                        .addQueryParam("AWSAccessKeyId", "identity")
+                        .addQueryParam("Signature", "Z0UqrkQv83rykFxvI3f0dQtxEAM=")
+                        .build();
    }
 
-   @Override
-   @Test
-   public void testSignGetBlobWithTime() {
-      throw new SkipException("not yet implemented");
-   }
-
-   //TODO
    @Override
    protected HttpRequest getBlobWithTime() {
       return HttpRequest.builder().method("GET")
-            .endpoint("http://locahost/container/name")
-            .addHeader("Date", "Thu, 05 Jun 2008 16:38:19 GMT")
-            .addHeader("Authorization", "AWS identity:0uvBv1wEskuhFHYJF/L6kEV9A7o=").build();
+            .endpoint("http://localhost/container/name")
+            .addQueryParam("Expires", "1212683902")
+            .addQueryParam("AWSAccessKeyId", "identity")
+            .addQueryParam("Signature", "Y4Ac4sZfBemGZmgfG78F7IX+IFg=")
+            .build();
    }
 
    @Override
@@ -74,25 +70,22 @@ public class S3BlobSignerExpectTest extends BaseBlobSignerExpectTest {
    protected HttpRequest putBlob() {
       return HttpRequest.builder().method("PUT")
             .endpoint("http://localhost/container/name")
+            .addQueryParam("Expires", "1212684799")
+            .addQueryParam("AWSAccessKeyId", "identity")
+            .addQueryParam("Signature", "N3+nS6ogzOqgT+YaThFN6RU/+xs=")
             .addHeader("Expect", "100-continue")
-            .addHeader("Date", "Thu, 05 Jun 2008 16:38:19 GMT")
-            .addHeader("Authorization", "AWS identity:zM2oT+71KcoOSxv1SU5L12UXnT8=").build();
+            .build();
    }
 
-   @Override
-   @Test
-   public void testSignPutBlobWithTime() throws Exception {
-      throw new SkipException("not yet implemented");
-   }
-
-   //TODO
    @Override
    protected HttpRequest putBlobWithTime() {
       return HttpRequest.builder().method("PUT")
             .endpoint("http://localhost/container/name")
+            .addQueryParam("Expires", "1212683902")
+            .addQueryParam("AWSAccessKeyId", "identity")
+            .addQueryParam("Signature", "genkB2vLxe3AWV/bPvRTMqQts7E=")
             .addHeader("Expect", "100-continue")
-            .addHeader("Date", "Thu, 05 Jun 2008 16:38:19 GMT")
-            .addHeader("Authorization", "AWS identity:zM2oT+71KcoOSxv1SU5L12UXnT8=").build();
+            .build();
    }
 
    @Override

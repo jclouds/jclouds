@@ -41,6 +41,9 @@ import com.google.common.reflect.Invokable;
 
 @Singleton
 public class S3BlobRequestSigner<T extends S3Client> implements BlobRequestSigner {
+   /** Matches Amazon default when Expiry parameter not present. */
+   private static final int DEFAULT_EXPIRY_SECONDS = 15 * 60;
+
    private final RequestAuthorizeSignature authSigner;
 
    protected final RestAnnotationProcessor processor;
@@ -67,9 +70,7 @@ public class S3BlobRequestSigner<T extends S3Client> implements BlobRequestSigne
 
    @Override
    public HttpRequest signGetBlob(String container, String name) {
-      checkNotNull(container, "container");
-      checkNotNull(name, "name");
-      return cleanRequest(processor.apply(Invocation.create(getMethod, ImmutableList.<Object> of(container, name))));
+      return signGetBlob(container, name, DEFAULT_EXPIRY_SECONDS);
    }
 
    @Override
@@ -82,10 +83,7 @@ public class S3BlobRequestSigner<T extends S3Client> implements BlobRequestSigne
 
    @Override
    public HttpRequest signPutBlob(String container, Blob blob) {
-      checkNotNull(container, "container");
-      checkNotNull(blob, "blob");
-      return cleanRequest(processor.apply(Invocation.create(createMethod,
-            ImmutableList.<Object> of(container, blobToObject.apply(blob)))));
+      return signPutBlob(container, blob, DEFAULT_EXPIRY_SECONDS);
    }
 
    @Override
