@@ -43,7 +43,7 @@ import com.google.inject.name.Named;
 
 /**
  * Uses {@link TemporaryUrlSigner} to sign requests for access to blobs. If no
- * interval is supplied, it defaults to a year.
+ * interval is supplied, it defaults to a 15 minutes.
  */
 public class RegionScopedTemporaryUrlBlobSigner implements BlobRequestSigner {
 
@@ -57,7 +57,7 @@ public class RegionScopedTemporaryUrlBlobSigner implements BlobRequestSigner {
       this.storageUrl = regionToUris.get().get(regionId).get();
    }
 
-   private static final long YEAR = TimeUnit.DAYS.toSeconds(365);
+   private static final long DEFAULT_SIGNING_TIMEOUT = TimeUnit.MINUTES.toSeconds(15);
    private final BlobToHttpGetOptions toGetOptions = new BlobToHttpGetOptions();
    private final Provider<Long> timestamp;
    private final TemporaryUrlSigner signer;
@@ -65,7 +65,7 @@ public class RegionScopedTemporaryUrlBlobSigner implements BlobRequestSigner {
 
    @Override
    public HttpRequest signGetBlob(String container, String name) {
-      return signGetBlob(container, name, YEAR);
+      return signGetBlob(container, name, DEFAULT_SIGNING_TIMEOUT);
    }
 
    @Override
@@ -75,12 +75,12 @@ public class RegionScopedTemporaryUrlBlobSigner implements BlobRequestSigner {
 
    @Override
    public HttpRequest signGetBlob(String container, String name, org.jclouds.blobstore.options.GetOptions options) {
-      return sign("GET", container, name, toGetOptions.apply(options), timestamp.get() + YEAR);
+      return sign("GET", container, name, toGetOptions.apply(options), timestamp.get() + DEFAULT_SIGNING_TIMEOUT);
    }
 
    @Override
    public HttpRequest signPutBlob(String container, Blob blob) {
-      return signPutBlob(container, blob, YEAR);
+      return signPutBlob(container, blob, DEFAULT_SIGNING_TIMEOUT);
    }
 
    @Override
@@ -91,7 +91,7 @@ public class RegionScopedTemporaryUrlBlobSigner implements BlobRequestSigner {
    @Deprecated
    @Override
    public HttpRequest signRemoveBlob(String container, String name) {
-      return sign("DELETE", container, name, GetOptions.NONE, timestamp.get() + YEAR);
+      return sign("DELETE", container, name, GetOptions.NONE, timestamp.get() + DEFAULT_SIGNING_TIMEOUT);
    }
 
    private HttpRequest sign(String method, String container, String name, GetOptions options, long expires) {
