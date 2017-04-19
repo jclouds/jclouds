@@ -25,7 +25,6 @@ import javax.inject.Named;
 
 import org.jclouds.Constants;
 import org.jclouds.aws.s3.config.AWSS3HttpApiModule;
-import org.jclouds.aws.s3.filters.AWSRequestAuthorizeSignature;
 import org.jclouds.blobstore.BlobStore;
 import org.jclouds.blobstore.domain.Blob;
 import org.jclouds.date.DateService;
@@ -33,14 +32,12 @@ import org.jclouds.date.TimeStamp;
 import org.jclouds.http.HttpRequest;
 import org.jclouds.rest.ConfiguresHttpApi;
 import org.jclouds.s3.blobstore.S3BlobSignerExpectTest;
-import org.jclouds.s3.filters.RequestAuthorizeSignature;
 import org.testng.annotations.Test;
 
 import com.google.common.base.Splitter;
 import com.google.common.base.Supplier;
 import com.google.common.base.Suppliers;
 import com.google.inject.Module;
-import com.google.inject.Scopes;
 
 @Test(groups = "unit", testName = "AWSS3BlobSignerExpectTest")
 public class AWSS3BlobSignerExpectTest extends S3BlobSignerExpectTest {
