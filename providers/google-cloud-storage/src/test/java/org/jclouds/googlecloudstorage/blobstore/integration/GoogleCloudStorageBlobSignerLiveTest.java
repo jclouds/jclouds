@@ -16,8 +16,6 @@
  */
 package org.jclouds.googlecloudstorage.blobstore.integration;
 
-import java.io.IOException;
-
 import org.jclouds.blobstore.integration.internal.BaseBlobSignerLiveTest;
 import org.testng.SkipException;
 import org.testng.annotations.Test;
@@ -28,70 +26,6 @@ public class GoogleCloudStorageBlobSignerLiveTest extends BaseBlobSignerLiveTest
       provider = "google-cloud-storage";
    }
 
-   @Test
-   public void testSignGetUrl() throws Exception {
-      try {
-         super.testSignGetUrl();
-      } catch (UnsupportedOperationException uoe) {
-         throw new SkipException("not yet implemented in GCS", uoe);
-      }
-   }
-
-   @Test
-   public void testSignGetUrlOptions() throws Exception {
-      try {
-         super.testSignGetUrlOptions();
-      } catch (UnsupportedOperationException uoe) {
-         throw new SkipException("not yet implemented in GCS", uoe);
-      }
-   }
-
-   @Test
-   public void testSignGetUrlWithTime() throws InterruptedException, IOException {
-      try {
-         super.testSignGetUrlWithTime();
-      } catch (UnsupportedOperationException uoe) {
-         throw new SkipException("not yet implemented in GCS", uoe);
-      }
-   }
-
-   @Test
-   public void testSignGetUrlWithTimeExpired() throws InterruptedException, IOException {
-      try {
-         super.testSignGetUrlWithTimeExpired();
-      } catch (UnsupportedOperationException uoe) {
-         throw new SkipException("not yet implemented in GCS", uoe);
-      }
-   }
-
-   @Test
-   public void testSignPutUrl() throws Exception {
-      try {
-         super.testSignPutUrl();
-      } catch (UnsupportedOperationException uoe) {
-         throw new SkipException("not yet implemented in GCS", uoe);
-      }
-   }
-
-   @Test
-   public void testSignPutUrlWithTime() throws Exception {
-      try {
-         super.testSignPutUrlWithTime();
-      } catch (UnsupportedOperationException uoe) {
-         throw new SkipException("not yet implemented in GCS", uoe);
-      }
-   }
-
-   @Test
-   public void testSignPutUrlWithTimeExpired() throws Exception {
-      try {
-         super.testSignPutUrlWithTimeExpired();
-      } catch (UnsupportedOperationException uoe) {
-         throw new SkipException("not yet implemented in GCS", uoe);
-      }
-   }
-
-   @Test
    public void testSignRemoveUrl() throws Exception {
       try {
          super.testSignRemoveUrl();

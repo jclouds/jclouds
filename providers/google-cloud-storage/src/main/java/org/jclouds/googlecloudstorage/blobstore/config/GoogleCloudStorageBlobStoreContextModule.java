@@ -16,11 +16,15 @@
  */
 package org.jclouds.googlecloudstorage.blobstore.config;
 
+import org.jclouds.blobstore.BlobRequestSigner;
 import org.jclouds.blobstore.BlobStore;
 import org.jclouds.blobstore.attr.ConsistencyModel;
+import org.jclouds.date.TimeStamp;
+import org.jclouds.googlecloudstorage.blobstore.GoogleCloudStorageBlobRequestSigner;
 import org.jclouds.googlecloudstorage.blobstore.GoogleCloudStorageBlobStore;
 
 import com.google.inject.AbstractModule;
+import com.google.inject.Provides;
 import com.google.inject.Scopes;
 
 public class GoogleCloudStorageBlobStoreContextModule extends AbstractModule {
@@ -29,5 +33,12 @@ public class GoogleCloudStorageBlobStoreContextModule extends AbstractModule {
    protected void configure() {
       bind(ConsistencyModel.class).toInstance(ConsistencyModel.EVENTUAL);
       bind(BlobStore.class).to(GoogleCloudStorageBlobStore.class).in(Scopes.SINGLETON);
+      bind(BlobRequestSigner.class).to(GoogleCloudStorageBlobRequestSigner.class);
+   }
+
+   @Provides
+   @TimeStamp
+   protected final Long unixEpochTimestamp() {
+      return System.currentTimeMillis() / 1000;
    }
 }

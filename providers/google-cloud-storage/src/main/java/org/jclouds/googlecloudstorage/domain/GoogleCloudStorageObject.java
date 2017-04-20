@@ -46,7 +46,7 @@ public abstract class GoogleCloudStorageObject {
    public abstract String bucket();
    public abstract long generation();
    public abstract long metageneration();
-   public abstract String contentType();
+   @Nullable public abstract String contentType();
    public abstract Date updated();
    @Nullable public abstract Date timeDeleted();
    public abstract StorageClass storageClass();
