@@ -95,6 +95,7 @@ public class S3BlobRequestSigner<T extends S3Client> implements BlobRequestSigne
       return cleanRequest(authSigner.signForTemporaryAccess(request, timeInSeconds));
    }
 
+   @Deprecated
    @Override
    public HttpRequest signRemoveBlob(String container, String name) {
       checkNotNull(container, "container");

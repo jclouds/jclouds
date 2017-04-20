@@ -88,6 +88,7 @@ public class RegionScopedTemporaryUrlBlobSigner implements BlobRequestSigner {
       return sign("PUT", container, blob.getMetadata().getName(), GetOptions.NONE, timestamp.get() + timeInSeconds);
    }
 
+   @Deprecated
    @Override
    public HttpRequest signRemoveBlob(String container, String name) {
       return sign("DELETE", container, name, GetOptions.NONE, timestamp.get() + YEAR);

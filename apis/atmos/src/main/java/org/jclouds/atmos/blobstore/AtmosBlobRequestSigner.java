@@ -85,6 +85,7 @@ public class AtmosBlobRequestSigner implements BlobRequestSigner {
       throw new UnsupportedOperationException();
    }
 
+   @Deprecated
    @Override
    public HttpRequest signRemoveBlob(String container, String name) {
       checkNotNull(container, "container");

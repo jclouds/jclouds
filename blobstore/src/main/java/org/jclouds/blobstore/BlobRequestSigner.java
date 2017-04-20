@@ -71,6 +71,7 @@ public interface BlobRequestSigner {
     * @throws UnsupportedOperationException
     *            if not supported by the provider
     */
+   @Deprecated
    HttpRequest signRemoveBlob(String container, String name);
 
    /**
