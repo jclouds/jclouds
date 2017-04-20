@@ -303,8 +303,7 @@ public class StubComputeServiceIntegrationTest extends BaseComputeServiceLiveTes
                clientNew.disconnect();
 
                String startJetty = new StringBuilder()
-                  .append("cd /usr/local/jetty").append('\n')
-                  .append("nohup java -jar start.jar jetty.port=8080 > start.out 2> start.err < /dev/null &").append('\n')
+                  .append("JETTY_PORT=8080 /usr/local/jetty/bin/jetty.sh start").append('\n')
                   .append("test $? && sleep 1").append('\n').toString();
 
                clientNew.connect();
@@ -312,7 +311,7 @@ public class StubComputeServiceIntegrationTest extends BaseComputeServiceLiveTes
                clientNew.disconnect();
 
                clientNew.connect();
-               expect(clientNew.exec("cd /usr/local/jetty\n./bin/jetty.sh stop\n")).andReturn(EXEC_GOOD);
+               expect(clientNew.exec("/usr/local/jetty/bin/jetty.sh stop\n")).andReturn(EXEC_GOOD);
                clientNew.disconnect();
 
                clientNew.connect();
@@ -532,6 +531,11 @@ public class StubComputeServiceIntegrationTest extends BaseComputeServiceLiveTes
    @Test(enabled = true, dependsOnMethods = { "testListNodes", "testGetNodesWithDetails", "testListNodesByIds" })
    public void testDestroyNodes() {
       super.testDestroyNodes();
+   }
+
+   @Override
+   protected void waitGracePeriodForDestroyedNodes() {
+      // Do not wait
    }
 
 }
