@@ -55,8 +55,8 @@ public class PacketApiMetadata extends BaseHttpApiMetadata<PacketApi> {
    public static Properties defaultProperties() {
       Properties properties = BaseHttpApiMetadata.defaultProperties();
       properties.put(TEMPLATE, "osFamily=UBUNTU,os64Bit=true,osVersionMatches=16.*");
-      properties.put(TIMEOUT_NODE_RUNNING, 300000); // 5 mins
-      properties.put(TIMEOUT_NODE_SUSPENDED, 300000); // 5 mins
+      properties.put(TIMEOUT_NODE_RUNNING, 900000); // 15 mins
+      properties.put(TIMEOUT_NODE_SUSPENDED, 900000); // 15 mins
       return properties;
    }
 
