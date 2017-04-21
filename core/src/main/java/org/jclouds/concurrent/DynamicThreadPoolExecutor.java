@@ -122,6 +122,10 @@ class DynamicThreadPoolExecutor extends ThreadPoolExecutor {
     */
    static class ForceQueuePolicy implements RejectedExecutionHandler {
       public void rejectedExecution(Runnable r, ThreadPoolExecutor executor) {
+         if (executor.isShutdown()) {
+            throw new RejectedExecutionException("Rejected execution of task [" + r.getClass()
+                  + "] since the executor is shutdown.");
+         }
          try {
             executor.getQueue().put(r);
          } catch (InterruptedException e) {
@@ -147,6 +151,10 @@ class DynamicThreadPoolExecutor extends ThreadPoolExecutor {
       }
 
       public void rejectedExecution(Runnable r, ThreadPoolExecutor executor) {
+         if (executor.isShutdown()) {
+            throw new RejectedExecutionException("Rejected execution of task [" + r.getClass()
+                  + "] since the executor is shutdown.");
+         }
          try {
             boolean successful = executor.getQueue().offer(r, waitTime, TimeUnit.MILLISECONDS);
             if (!successful)
