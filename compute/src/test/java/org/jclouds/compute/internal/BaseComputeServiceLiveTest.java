@@ -98,7 +98,7 @@ import org.jclouds.scriptbuilder.statements.login.AdminAccess;
 import org.jclouds.ssh.SshClient;
 import org.jclouds.ssh.SshException;
 import org.testng.annotations.AfterClass;
-import org.testng.annotations.BeforeGroups;
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
@@ -134,7 +134,7 @@ public abstract class BaseComputeServiceLiveTest extends BaseComputeServiceConte
    protected Template template;
    protected Map<String, String> keyPair;
 
-   @BeforeGroups(groups = { "integration", "live" })
+   @BeforeClass(groups = { "integration", "live" })
    @Override
    public void setupContext() {
       setServiceDefaults();
@@ -146,7 +146,6 @@ public abstract class BaseComputeServiceLiveTest extends BaseComputeServiceConte
          group = group + "-";
       setupKeyPairForTest();
       super.setupContext();
-      buildSocketTester();
    }
 
    public void setServiceDefaults() {
@@ -169,6 +168,7 @@ public abstract class BaseComputeServiceLiveTest extends BaseComputeServiceConte
    protected void initializeContext() {
       super.initializeContext();
       client = view.getComputeService();
+      buildSocketTester();
    }
 
    @Test(enabled = true, expectedExceptions = AuthorizationException.class)
