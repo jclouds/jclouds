@@ -57,12 +57,8 @@ public class AzureBlobRequestSignerTest extends BaseRestAnnotationProcessingTest
             NoSuchMethodException, IOException {
       HttpRequest request = signer.signGetBlob("container", "name");
 
-      assertRequestLineEquals(request, "GET https://identity.blob.core.windows.net/container/name HTTP/1.1");
-      assertNonPayloadHeadersEqual(
-               request,
-               "Authorization: SharedKeyLite identity:jg07gnCq8qSIrYB68jVeFHWoGjdBqXxnRsVaNrFByGI=\n" +
-               "Date: Thu, 05 Jun 2008 16:38:19 GMT\n" +
-               "x-ms-version: 2016-05-31\n");
+      assertRequestLineEquals(request, "GET https://identity.blob.core.windows.net/container/name?sv=2016-05-31&se=2008-06-05T16%3A53%3A19Z&sr=b&sp=r&sig=2ud/p0SM7pAZd1/ydgqYghGzFDP%2Bb/1QjZQ3D1nKzOQ%3D HTTP/1.1");
+      assertNonPayloadHeadersEqual(request, "Date: Thu, 05 Jun 2008 16:38:19 GMT\n");
       assertPayloadEquals(request, null, null, false);
 
       assertEquals(request.getFilters().size(), 0);
@@ -72,12 +68,8 @@ public class AzureBlobRequestSignerTest extends BaseRestAnnotationProcessingTest
             NoSuchMethodException, IOException {
       HttpRequest request = signer.signRemoveBlob("container", "name");
 
-      assertRequestLineEquals(request, "DELETE https://identity.blob.core.windows.net/container/name HTTP/1.1");
-      assertNonPayloadHeadersEqual(
-               request,
-               "Authorization: SharedKeyLite identity:1VtEOOk1rhnbR3o2F9/57ALo3uy3aeUwfXMQjTroIF0=\n" +
-               "Date: Thu, 05 Jun 2008 16:38:19 GMT\n" +
-               "x-ms-version: 2016-05-31\n");
+      assertRequestLineEquals(request, "DELETE https://identity.blob.core.windows.net/container/name?sv=2016-05-31&se=2008-06-05T16%3A53%3A19Z&sr=b&sp=d&sig=eCvzaSr/pJGG85RXM2TthSOxj9%2Bhd/rJmz8AHgMo0nI%3D HTTP/1.1");
+      assertNonPayloadHeadersEqual(request, "Date: Thu, 05 Jun 2008 16:38:19 GMT\n");
       assertPayloadEquals(request, null, null, false);
 
       assertEquals(request.getFilters().size(), 0);
@@ -96,15 +88,12 @@ public class AzureBlobRequestSignerTest extends BaseRestAnnotationProcessingTest
 
       HttpRequest request = signer.signPutBlob("container", blob);
 
-      assertRequestLineEquals(request, "PUT https://identity.blob.core.windows.net/container/name HTTP/1.1");
+      assertRequestLineEquals(request, "PUT https://identity.blob.core.windows.net/container/name?sv=2016-05-31&se=2008-06-05T16%3A53%3A19Z&sr=b&sp=w&sig=QkYYay9OSH6Dm5lMIwKTsCDsPqEu/GLd8M5WaOitRFY%3D HTTP/1.1");
       assertNonPayloadHeadersEqual(
                request,
-               "Authorization: SharedKeyLite identity:0p2Ji00Yr3ZpPYy61QS5BVCJWSn8skZ5BOgMQb4vN4s=\n" +
+               "Content-Length: 2\n" +
                "Date: Thu, 05 Jun 2008 16:38:19 GMT\n" +
-               "Expect: 100-continue\n" +
-               "x-ms-blob-type: BlockBlob\n" +
-               "x-ms-version: 2016-05-31\n");
-      assertContentHeadersEqual(request, "text/plain", null, null, null, 2L, hashCode.asBytes(), new Date(1000));
+               "x-ms-blob-type: BlockBlob\n");
 
       assertEquals(request.getFilters().size(), 0);
    }
