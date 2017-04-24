@@ -16,13 +16,12 @@
  */
 package org.jclouds.azurecompute.arm.features;
 
-import static org.jclouds.azurecompute.arm.compute.options.AzureTemplateOptions.Builder.availabilitySet;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Preconditions.checkState;
 import static com.google.common.collect.Iterables.any;
-import static com.google.common.collect.Iterables.getLast;
 import static com.google.common.collect.Iterables.transform;
 import static com.google.common.collect.Lists.newArrayList;
+import static org.jclouds.azurecompute.arm.compute.options.AzureTemplateOptions.Builder.availabilitySet;
 import static org.jclouds.azurecompute.arm.config.AzureComputeProperties.TIMEOUT_RESOURCE_DELETED;
 import static org.jclouds.azurecompute.arm.domain.InboundNatRuleProperties.Protocol.Tcp;
 import static org.jclouds.compute.predicates.NodePredicates.inGroup;
@@ -40,7 +39,9 @@ import java.util.Set;
 
 import org.jclouds.azurecompute.arm.AzureComputeApi;
 import org.jclouds.azurecompute.arm.compute.config.AzureComputeServiceContextModule.PublicIpAvailablePredicateFactory;
+import org.jclouds.azurecompute.arm.compute.domain.ResourceGroupAndName;
 import org.jclouds.azurecompute.arm.domain.AvailabilitySet;
+import org.jclouds.azurecompute.arm.domain.AvailabilitySet.AvailabilitySetProperties;
 import org.jclouds.azurecompute.arm.domain.BackendAddressPool;
 import org.jclouds.azurecompute.arm.domain.BackendAddressPoolProperties;
 import org.jclouds.azurecompute.arm.domain.FrontendIPConfigurations;
@@ -62,24 +63,18 @@ import org.jclouds.azurecompute.arm.domain.ProbeProperties;
 import org.jclouds.azurecompute.arm.domain.Provisionable;
 import org.jclouds.azurecompute.arm.domain.PublicIPAddress;
 import org.jclouds.azurecompute.arm.domain.PublicIPAddressProperties;
-import org.jclouds.azurecompute.arm.domain.RegionAndId;
-import org.jclouds.azurecompute.arm.domain.ResourceGroup;
 import org.jclouds.azurecompute.arm.domain.VirtualMachine;
-import org.jclouds.azurecompute.arm.domain.AvailabilitySet.AvailabilitySetProperties;
 import org.jclouds.azurecompute.arm.internal.AzureLiveTestUtils;
 import org.jclouds.compute.RunNodesException;
 import org.jclouds.compute.domain.NodeMetadata;
 import org.jclouds.compute.internal.BaseComputeServiceContextLiveTest;
-import org.jclouds.domain.Location;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 import com.google.common.base.Function;
 import com.google.common.base.Predicate;
-import com.google.common.base.Splitter;
 import com.google.common.base.Supplier;
-import com.google.common.cache.LoadingCache;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.inject.Key;
@@ -93,13 +88,11 @@ public class LoadBalancerApiLiveTest extends BaseComputeServiceContextLiveTest {
    private static final String lbName = String.format("lb-%s-%s", LoadBalancerApiLiveTest.class.getSimpleName()
          .toLowerCase(), System.getProperty("user.name"));
 
-   private LoadingCache<String, ResourceGroup> resourceGroupMap;
    private Predicate<URI> resourceDeleted;
    private PublicIpAvailablePredicateFactory publicIpAvailable;
    private Predicate<Supplier<Provisionable>> resourceAvailable;
    private AzureComputeApi api;
 
-   private String resourceGroupName;
    private String location;
    private LoadBalancerApi lbApi;
    private NetworkInterfaceCardApi nicApi;
@@ -116,7 +109,7 @@ public class LoadBalancerApiLiveTest extends BaseComputeServiceContextLiveTest {
    @Override
    protected Properties setupProperties() {
       Properties properties = super.setupProperties();
-      AzureLiveTestUtils.defaultProperties(properties, getClass().getSimpleName().toLowerCase());
+      AzureLiveTestUtils.defaultProperties(properties);
       checkNotNull(setIfTestSystemPropertyPresent(properties, "oauth.endpoint"), "test.oauth.endpoint");
       return properties;
    }
@@ -126,9 +119,6 @@ public class LoadBalancerApiLiveTest extends BaseComputeServiceContextLiveTest {
       super.initializeContext();
       resourceDeleted = context.utils().injector().getInstance(Key.get(new TypeLiteral<Predicate<URI>>() {
       }, Names.named(TIMEOUT_RESOURCE_DELETED)));
-      resourceGroupMap = context.utils().injector()
-            .getInstance(Key.get(new TypeLiteral<LoadingCache<String, ResourceGroup>>() {
-            }));
       publicIpAvailable = context.utils().injector().getInstance(PublicIpAvailablePredicateFactory.class);
       resourceAvailable = context.utils().injector()
             .getInstance(Key.get(new TypeLiteral<Predicate<Supplier<Provisionable>>>() {
@@ -142,11 +132,10 @@ public class LoadBalancerApiLiveTest extends BaseComputeServiceContextLiveTest {
       super.setupContext();
       // Use the resource name conventions used in the abstraction so the nodes
       // can see the load balancer
-      ResourceGroup resourceGroup = createResourceGroup();
-      resourceGroupName = resourceGroup.name();
-      location = resourceGroup.location();
-      lbApi = api.getLoadBalancerApi(resourceGroupName);
-      nicApi = api.getNetworkInterfaceCardApi(resourceGroupName);
+      location = view.getComputeService().templateBuilder().build().getLocation().getId();
+      view.unwrapApi(AzureComputeApi.class).getResourceGroupApi().create(group, location, null);
+      lbApi = api.getLoadBalancerApi(group);
+      nicApi = api.getNetworkInterfaceCardApi(group);
    }
 
    @Override
@@ -156,7 +145,7 @@ public class LoadBalancerApiLiveTest extends BaseComputeServiceContextLiveTest {
          view.getComputeService().destroyNodesMatching(inGroup(group));
       } finally {
          try {
-            URI uri = api.getResourceGroupApi().delete(resourceGroupName);
+            URI uri = api.getResourceGroupApi().delete(group);
             assertResourceDeleted(uri);
          } finally {
             super.tearDownContext();
@@ -316,7 +305,7 @@ public class LoadBalancerApiLiveTest extends BaseComputeServiceContextLiveTest {
    }
 
    private PublicIPAddress createPublicIPAddress(final String publicIpAddressName) {
-      final PublicIPAddressApi ipApi = view.unwrapApi(AzureComputeApi.class).getPublicIPAddressApi(resourceGroupName);
+      final PublicIPAddressApi ipApi = view.unwrapApi(AzureComputeApi.class).getPublicIPAddressApi(group);
       PublicIPAddress publicIPAddress = ipApi.get(publicIpAddressName);
 
       if (publicIPAddress == null) {
@@ -325,7 +314,7 @@ public class LoadBalancerApiLiveTest extends BaseComputeServiceContextLiveTest {
                .idleTimeoutInMinutes(4).build();
          publicIPAddress = ipApi.createOrUpdate(publicIpAddressName, location, tags, properties);
 
-         checkState(publicIpAvailable.create(resourceGroupName).apply(publicIpAddressName),
+         checkState(publicIpAvailable.create(group).apply(publicIpAddressName),
                "Public IP was not provisioned in the configured timeout");
       }
 
@@ -358,16 +347,16 @@ public class LoadBalancerApiLiveTest extends BaseComputeServiceContextLiveTest {
             .platformFaultDomainCount(count).build();
       AvailabilitySet as = AvailabilitySet.managed().name(group).properties(props).build();
 
-      Set<? extends NodeMetadata> nodes = view.getComputeService()
-            .createNodesInGroup(group, count, availabilitySet(as));
+      Set<? extends NodeMetadata> nodes = view.getComputeService().createNodesInGroup(group, count,
+            availabilitySet(as).resourceGroup(this.group));
 
       List<String> nicNames = new ArrayList<String>();
       for (NodeMetadata node : nodes) {
-         RegionAndId regionAndId = RegionAndId.fromSlashEncoded(node.getId());
-         VirtualMachine vm = api.getVirtualMachineApi(resourceGroupName).get(regionAndId.id());
+         ResourceGroupAndName resourceGroupAndName = ResourceGroupAndName.fromSlashEncoded(node.getId());
+         VirtualMachine vm = api.getVirtualMachineApi(resourceGroupAndName.resourceGroup()).get(
+               resourceGroupAndName.name());
 
-         String nicName = getLast(Splitter.on("/").split(
-               vm.properties().networkProfile().networkInterfaces().get(0).id()));
+         String nicName = vm.properties().networkProfile().networkInterfaces().get(0).name();
          nicNames.add(nicName);
       }
 
@@ -424,11 +413,6 @@ public class LoadBalancerApiLiveTest extends BaseComputeServiceContextLiveTest {
       });
 
       return nicApi.get(nicName);
-   }
-
-   private ResourceGroup createResourceGroup() {
-      Location location = view.getComputeService().templateBuilder().build().getLocation();
-      return resourceGroupMap.getUnchecked(location.getId());
    }
 
    private LoadBalancer updateLoadBalancer(final String name, LoadBalancerProperties props) {

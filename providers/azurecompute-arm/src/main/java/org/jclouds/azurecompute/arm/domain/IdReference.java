@@ -16,19 +16,56 @@
  */
 package org.jclouds.azurecompute.arm.domain;
 
-import com.google.auto.value.AutoValue;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import org.jclouds.javax.annotation.Nullable;
 import org.jclouds.json.SerializedNames;
+
+import com.google.auto.value.AutoValue;
 
 // Simple helper class to serialize / deserialize id reference.
 
 @AutoValue
 public abstract class IdReference {
+   
+   private static final Pattern RESOURCE_GROUP_PATTERN = Pattern.compile("^.*/resourceGroups/([^/]+)(/.*)?$");
+   
    @Nullable
    public abstract String id();
+   
+   @Nullable
+   public String resourceGroup() {
+      return extractResourceGroup(id());
+   }
+   
+   @Nullable
+   public String name() {
+      return extractName(id());
+   }
 
    @SerializedNames({"id"})
    public static IdReference create(final String id) {
       return new AutoValue_IdReference(id);
+   }
+   
+   /**
+    * Extracts the name from the given URI.
+    */
+   public static String extractName(String uri) {
+      if (uri == null)
+         return null;
+      String noSlashAtEnd = uri.replaceAll("/+$", "");
+      return noSlashAtEnd.substring(noSlashAtEnd.lastIndexOf('/') + 1);
+   }
+   
+   /**
+    * Extracts the resource group name from the given URI.
+    */
+   public static String extractResourceGroup(String uri) {
+      if (uri == null)
+         return null;
+      Matcher m = RESOURCE_GROUP_PATTERN.matcher(uri);
+      return m.matches() ? m.group(1) : null;
    }
 }

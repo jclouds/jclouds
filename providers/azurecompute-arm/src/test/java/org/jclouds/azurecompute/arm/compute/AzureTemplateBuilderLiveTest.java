@@ -56,7 +56,7 @@ public class AzureTemplateBuilderLiveTest extends BaseTemplateBuilderLiveTest {
    @Override
    protected Properties setupProperties() {
       Properties properties = super.setupProperties();
-      AzureLiveTestUtils.defaultProperties(properties, getClass().getSimpleName().toLowerCase());
+      AzureLiveTestUtils.defaultProperties(properties);
       setIfTestSystemPropertyPresent(properties, "oauth.endpoint");
       return properties;
    }

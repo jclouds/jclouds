@@ -97,7 +97,7 @@ public class BaseAzureComputeApiLiveTest extends BaseApiLiveTest<AzureComputeApi
    @Override protected Properties setupProperties() {
       Properties properties = super.setupProperties();
       // for oauth
-      AzureLiveTestUtils.defaultProperties(properties, getClass().getSimpleName().toLowerCase());
+      AzureLiveTestUtils.defaultProperties(properties);
       checkNotNull(setIfTestSystemPropertyPresent(properties, "oauth.endpoint"), "test.oauth.endpoint");
       return properties;
    }

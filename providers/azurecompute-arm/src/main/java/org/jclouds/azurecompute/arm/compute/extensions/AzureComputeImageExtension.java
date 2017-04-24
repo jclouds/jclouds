@@ -19,6 +19,7 @@ package org.jclouds.azurecompute.arm.compute.extensions;
 import static com.google.common.base.Functions.compose;
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkState;
+import static org.jclouds.azurecompute.arm.compute.domain.ResourceGroupAndName.fromSlashEncoded;
 import static org.jclouds.azurecompute.arm.compute.functions.VMImageToImage.decodeFieldsFromUniqueId;
 import static org.jclouds.azurecompute.arm.config.AzureComputeProperties.TIMEOUT_RESOURCE_DELETED;
 import static org.jclouds.compute.config.ComputeServiceProperties.TIMEOUT_NODE_SUSPENDED;
@@ -32,11 +33,10 @@ import org.jclouds.Constants;
 import org.jclouds.azurecompute.arm.AzureComputeApi;
 import org.jclouds.azurecompute.arm.compute.config.AzureComputeServiceContextModule.ImageAvailablePredicateFactory;
 import org.jclouds.azurecompute.arm.compute.config.AzureComputeServiceContextModule.VirtualMachineInStatePredicateFactory;
+import org.jclouds.azurecompute.arm.compute.domain.ResourceGroupAndName;
 import org.jclouds.azurecompute.arm.compute.functions.CustomImageToVMImage;
 import org.jclouds.azurecompute.arm.domain.IdReference;
 import org.jclouds.azurecompute.arm.domain.ImageProperties;
-import org.jclouds.azurecompute.arm.domain.RegionAndId;
-import org.jclouds.azurecompute.arm.domain.ResourceGroup;
 import org.jclouds.azurecompute.arm.domain.VMImage;
 import org.jclouds.azurecompute.arm.domain.VirtualMachine;
 import org.jclouds.compute.domain.CloneImageTemplate;
@@ -49,7 +49,6 @@ import org.jclouds.logging.Logger;
 
 import com.google.common.base.Function;
 import com.google.common.base.Predicate;
-import com.google.common.cache.LoadingCache;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.inject.Inject;
@@ -66,25 +65,21 @@ public class AzureComputeImageExtension implements ImageExtension {
    private final ListeningExecutorService userExecutor;
    private final ImageAvailablePredicateFactory imageAvailablePredicate;
    private final VirtualMachineInStatePredicateFactory nodeSuspendedPredicate;
-   private final LoadingCache<String, ResourceGroup> resourceGroupMap;
    private final Function<VMImage, Image> vmImageToImage;
    private final Predicate<URI> resourceDeleted;
    private final CustomImageToVMImage customImagetoVmImage;
 
    @Inject
-   AzureComputeImageExtension(AzureComputeApi api,
-         ImageAvailablePredicateFactory imageAvailablePredicate,
+   AzureComputeImageExtension(AzureComputeApi api, ImageAvailablePredicateFactory imageAvailablePredicate,
          @Named(TIMEOUT_NODE_SUSPENDED) VirtualMachineInStatePredicateFactory nodeSuspendedPredicate,
          @Named(Constants.PROPERTY_USER_THREADS) ListeningExecutorService userExecutor,
-         Function<VMImage, Image> vmImageToImage, LoadingCache<String, ResourceGroup> resourceGroupMap,
-         @Named(TIMEOUT_RESOURCE_DELETED) Predicate<URI> resourceDeleted,
+         Function<VMImage, Image> vmImageToImage, @Named(TIMEOUT_RESOURCE_DELETED) Predicate<URI> resourceDeleted,
          CustomImageToVMImage customImagetoVmImage) {
       this.api = api;
       this.imageAvailablePredicate = imageAvailablePredicate;
       this.nodeSuspendedPredicate = nodeSuspendedPredicate;
       this.userExecutor = userExecutor;
       this.vmImageToImage = vmImageToImage;
-      this.resourceGroupMap = resourceGroupMap;
       this.resourceDeleted = resourceDeleted;
       this.customImagetoVmImage = customImagetoVmImage;
    }
@@ -97,27 +92,27 @@ public class AzureComputeImageExtension implements ImageExtension {
    @Override
    public ListenableFuture<Image> createImage(ImageTemplate template) {
       final CloneImageTemplate cloneTemplate = (CloneImageTemplate) template;
-      final RegionAndId regionAndId = RegionAndId.fromSlashEncoded(cloneTemplate.getSourceNodeId());
-      ResourceGroup resourceGroup = resourceGroupMap.getUnchecked(regionAndId.region());
-      final String resourceGroupName = resourceGroup.name();
+      final ResourceGroupAndName resourceGroupAndName = fromSlashEncoded(cloneTemplate.getSourceNodeId());
+      final String resourceGroupName = resourceGroupAndName.resourceGroup();
+      final String vmName = resourceGroupAndName.name();
 
-      final VirtualMachine vm = api.getVirtualMachineApi(resourceGroupName).get(regionAndId.id());
+      final VirtualMachine vm = api.getVirtualMachineApi(resourceGroupName).get(vmName);
       final IdReference vmIdRef = IdReference.create(vm.id());
 
-      logger.debug(">> stopping node %s...", regionAndId.slashEncode());
-      api.getVirtualMachineApi(resourceGroupName).stop(regionAndId.id());
-      checkState(nodeSuspendedPredicate.create(resourceGroupName).apply(regionAndId.id()),
-            "Node %s was not suspended within the configured time limit", regionAndId.slashEncode());
+      logger.debug(">> stopping node %s...", cloneTemplate.getSourceNodeId());
+      api.getVirtualMachineApi(resourceGroupName).stop(vmName);
+      checkState(nodeSuspendedPredicate.create(resourceGroupName).apply(vmName),
+            "Node %s was not suspended within the configured time limit", cloneTemplate.getSourceNodeId());
 
       return userExecutor.submit(new Callable<Image>() {
          @Override
          public Image call() throws Exception {
-            logger.debug(">> generalizing virtal machine %s...", regionAndId.id());
+            logger.debug(">> generalizing virtal machine %s...", vmName);
 
-            api.getVirtualMachineApi(resourceGroupName).generalize(regionAndId.id());
+            api.getVirtualMachineApi(resourceGroupName).generalize(vmName);
 
             org.jclouds.azurecompute.arm.domain.Image imageFromVM = api.getVirtualMachineImageApi(resourceGroupName)
-                  .createOrUpdate(cloneTemplate.getName(), regionAndId.region(),
+                  .createOrUpdate(cloneTemplate.getName(), vm.location(),
                         ImageProperties.builder().sourceVirtualMachine(vmIdRef).build());
 
             checkState(imageAvailablePredicate.create(resourceGroupName).apply(imageFromVM.name()),
@@ -134,9 +129,7 @@ public class AzureComputeImageExtension implements ImageExtension {
       checkArgument(image.custom(), "Only custom images can be deleted");
 
       logger.debug(">> deleting image %s", id);
-
-      ResourceGroup resourceGroup = resourceGroupMap.getUnchecked(image.location());
-      URI uri = api.getVirtualMachineImageApi(resourceGroup.name()).delete(image.name());
+      URI uri = api.getVirtualMachineImageApi(image.resourceGroup()).delete(image.name());
       return resourceDeleted.apply(uri);
    }
 }

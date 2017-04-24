@@ -24,7 +24,7 @@ import static org.jclouds.compute.predicates.NodePredicates.inGroup;
 import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertNull;
 import static org.testng.Assert.assertTrue;
-
+import static org.jclouds.azurecompute.arm.compute.options.AzureTemplateOptions.Builder.resourceGroup;
 import java.net.URI;
 import java.util.Properties;
 
@@ -32,18 +32,15 @@ import org.jclouds.azurecompute.arm.AzureComputeApi;
 import org.jclouds.azurecompute.arm.domain.IdReference;
 import org.jclouds.azurecompute.arm.domain.Image;
 import org.jclouds.azurecompute.arm.domain.ImageProperties;
-import org.jclouds.azurecompute.arm.domain.ResourceGroup;
 import org.jclouds.azurecompute.arm.internal.AzureLiveTestUtils;
 import org.jclouds.compute.RunNodesException;
 import org.jclouds.compute.domain.NodeMetadata;
 import org.jclouds.compute.internal.BaseComputeServiceContextLiveTest;
-import org.jclouds.domain.Location;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 import com.google.common.base.Predicate;
-import com.google.common.cache.LoadingCache;
 import com.google.inject.Key;
 import com.google.inject.TypeLiteral;
 import com.google.inject.name.Names;
@@ -54,11 +51,9 @@ public class ImageApiLiveTest extends BaseComputeServiceContextLiveTest {
 
    private static final String imageName = "imageFromRest";
 
-   private LoadingCache<String, ResourceGroup> resourceGroupMap;
    private Predicate<URI> resourceDeleted;
    private AzureComputeApi api;
 
-   private String resourceGroupName;
    private String location;
    private ImageApi imageApi;
    private Image image;
@@ -73,7 +68,7 @@ public class ImageApiLiveTest extends BaseComputeServiceContextLiveTest {
    @Override
    protected Properties setupProperties() {
       Properties properties = super.setupProperties();
-      AzureLiveTestUtils.defaultProperties(properties, getClass().getSimpleName().toLowerCase());
+      AzureLiveTestUtils.defaultProperties(properties);
       checkNotNull(setIfTestSystemPropertyPresent(properties, "oauth.endpoint"), "test.oauth.endpoint");
       return properties;
    }
@@ -83,9 +78,6 @@ public class ImageApiLiveTest extends BaseComputeServiceContextLiveTest {
       super.initializeContext();
       resourceDeleted = context.utils().injector().getInstance(Key.get(new TypeLiteral<Predicate<URI>>() {
       }, Names.named(TIMEOUT_RESOURCE_DELETED)));
-      resourceGroupMap = context.utils().injector()
-            .getInstance(Key.get(new TypeLiteral<LoadingCache<String, ResourceGroup>>() {
-            }));
       api = view.unwrapApi(AzureComputeApi.class);
    }
 
@@ -94,10 +86,9 @@ public class ImageApiLiveTest extends BaseComputeServiceContextLiveTest {
    public void setupContext() {
       super.setupContext();
       // Use the resource name conventions used in the abstraction
-      ResourceGroup resourceGroup = createResourceGroup();
-      resourceGroupName = resourceGroup.name();
-      location = resourceGroup.location();
-      imageApi = api.getVirtualMachineImageApi(resourceGroupName);
+      location = view.getComputeService().templateBuilder().build().getLocation().getId();
+      view.unwrapApi(AzureComputeApi.class).getResourceGroupApi().create(group, location, null);
+      imageApi = api.getVirtualMachineImageApi(group);
    }
 
    @Override
@@ -107,7 +98,7 @@ public class ImageApiLiveTest extends BaseComputeServiceContextLiveTest {
          view.getComputeService().destroyNodesMatching(inGroup(group));
       } finally {
          try {
-            URI uri = api.getResourceGroupApi().delete(resourceGroupName);
+            URI uri = api.getResourceGroupApi().delete(group);
             assertResourceDeleted(uri);
          } finally {
             super.tearDownContext();
@@ -122,11 +113,11 @@ public class ImageApiLiveTest extends BaseComputeServiceContextLiveTest {
 
    @Test
    public void testCreateImage() throws RunNodesException {
-      NodeMetadata node = getOnlyElement(view.getComputeService().createNodesInGroup(group, 1));
+      NodeMetadata node = getOnlyElement(view.getComputeService().createNodesInGroup(group, 1, resourceGroup(group)));
       IdReference vmIdRef = IdReference.create(node.getProviderId());
       view.getComputeService().suspendNode(node.getId());
 
-      api.getVirtualMachineApi(resourceGroupName).generalize(node.getName());
+      api.getVirtualMachineApi(group).generalize(node.getName());
 
       image = imageApi.createOrUpdate(imageName, location, ImageProperties.builder()
             .sourceVirtualMachine(vmIdRef).build());
@@ -159,11 +150,6 @@ public class ImageApiLiveTest extends BaseComputeServiceContextLiveTest {
          assertTrue(resourceDeleted.apply(uri),
                String.format("Resource %s was not deleted in the configured timeout", uri));
       }
-   }
-
-   private ResourceGroup createResourceGroup() {
-      Location location = view.getComputeService().templateBuilder().build().getLocation();
-      return resourceGroupMap.getUnchecked(location.getId());
    }
 
 }

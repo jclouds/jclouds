@@ -15,6 +15,7 @@
  * limitations under the License.
  */
 package org.jclouds.azurecompute.arm.features;
+
 import java.io.Closeable;
 import java.net.URI;
 import java.util.List;
@@ -37,7 +38,6 @@ import org.jclouds.rest.annotations.SelectJson;
 /**
  * The Azure Resource Manager API checks for job status and progress.
  */
-
 @RequestFilters(OAuthFilter.class)
 @Consumes(MediaType.APPLICATION_JSON)
 public interface JobApi extends Closeable {

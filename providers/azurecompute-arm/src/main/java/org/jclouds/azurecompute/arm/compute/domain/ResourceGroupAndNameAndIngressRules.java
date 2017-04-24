@@ -16,31 +16,36 @@
  */
 package org.jclouds.azurecompute.arm.compute.domain;
 
-import org.jclouds.azurecompute.arm.domain.RegionAndId;
+import static org.jclouds.azurecompute.arm.compute.domain.ResourceGroupAndName.fromResourceGroupAndName;
 
 import com.google.auto.value.AutoValue;
 import com.google.common.base.Objects;
 
 @AutoValue
-public abstract class RegionAndIdAndIngressRules {
+public abstract class ResourceGroupAndNameAndIngressRules {
 
-   abstract RegionAndId regionAndId(); // Intentionally hidden
+   abstract ResourceGroupAndName resourceGroupAndName(); // Intentionally hidden
+   
+   public abstract String location();
+
    public abstract int[] inboundPorts();
 
-   RegionAndIdAndIngressRules() {
+   ResourceGroupAndNameAndIngressRules() {
 
    }
 
-   public static RegionAndIdAndIngressRules create(String region, String id, int[] inboundPorts) {
-      return new AutoValue_RegionAndIdAndIngressRules(RegionAndId.fromRegionAndId(region, id), inboundPorts);
+   public static ResourceGroupAndNameAndIngressRules create(String resourceGroup, String location, String name,
+         int[] inboundPorts) {
+      return new AutoValue_ResourceGroupAndNameAndIngressRules(fromResourceGroupAndName(resourceGroup, name), location,
+            inboundPorts);
    }
 
-   public String id() {
-      return regionAndId().id();
+   public String name() {
+      return resourceGroupAndName().name();
    }
 
-   public String region() {
-      return regionAndId().region();
+   public String resourceGroup() {
+      return resourceGroupAndName().resourceGroup();
    }
 
    // Intentionally delegate equals and hashcode to the fields in the parent
@@ -48,7 +53,7 @@ public abstract class RegionAndIdAndIngressRules {
 
    @Override
    public int hashCode() {
-      return Objects.hashCode(region(), id());
+      return Objects.hashCode(resourceGroup(), name());
    }
 
    @Override
@@ -56,11 +61,11 @@ public abstract class RegionAndIdAndIngressRules {
       if (obj == this) {
          return true;
       }
-      if (!(obj instanceof RegionAndId)) {
+      if (!(obj instanceof ResourceGroupAndName)) {
          return false;
       }
-      RegionAndId that = (RegionAndId) obj;
-      return Objects.equal(region(), that.region()) && Objects.equal(id(), that.id());
+      ResourceGroupAndName that = (ResourceGroupAndName) obj;
+      return Objects.equal(resourceGroup(), that.resourceGroup()) && Objects.equal(name(), that.name());
    }
 
 }

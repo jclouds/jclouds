@@ -29,14 +29,12 @@ import javax.inject.Singleton;
 import org.jclouds.azurecompute.arm.AzureComputeApi;
 import org.jclouds.azurecompute.arm.compute.options.AzureTemplateOptions;
 import org.jclouds.azurecompute.arm.domain.AvailabilitySet;
-import org.jclouds.azurecompute.arm.domain.ResourceGroup;
 import org.jclouds.compute.domain.Template;
 import org.jclouds.compute.reference.ComputeServiceConstants;
 import org.jclouds.javax.annotation.Nullable;
 import org.jclouds.logging.Logger;
 
 import com.google.common.base.Function;
-import com.google.common.cache.LoadingCache;
 
 @Singleton
 public class TemplateToAvailabilitySet implements Function<Template, AvailabilitySet> {
@@ -46,12 +44,10 @@ public class TemplateToAvailabilitySet implements Function<Template, Availabilit
    protected Logger logger = Logger.NULL;
 
    private final AzureComputeApi api;
-   private final LoadingCache<String, ResourceGroup> resourceGroupMap;
 
    @Inject
-   TemplateToAvailabilitySet(AzureComputeApi api, LoadingCache<String, ResourceGroup> resourceGroupMap) {
+   TemplateToAvailabilitySet(AzureComputeApi api) {
       this.api = api;
-      this.resourceGroupMap = resourceGroupMap;
    }
 
    @Nullable
@@ -62,7 +58,7 @@ public class TemplateToAvailabilitySet implements Function<Template, Availabilit
 
       AvailabilitySet availabilitySet = null;
       String location = input.getLocation().getId();
-      String resourceGroup = resourceGroupMap.getUnchecked(location).name();
+      String resourceGroup = options.getResourceGroup();
 
       if (options.getAvailabilitySetName() != null) {
          availabilitySet = api.getAvailabilitySetApi(resourceGroup).get(options.getAvailabilitySetName());

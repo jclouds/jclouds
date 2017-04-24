@@ -16,7 +16,7 @@
  */
 package org.jclouds.azurecompute.arm.compute.extensions;
 
-import static org.jclouds.compute.options.TemplateOptions.Builder.authorizePublicKey;
+import static org.jclouds.azurecompute.arm.compute.options.AzureTemplateOptions.Builder.resourceGroup;
 import static org.jclouds.azurecompute.arm.config.AzureComputeProperties.TIMEOUT_RESOURCE_DELETED;
 import static org.jclouds.compute.options.RunScriptOptions.Builder.wrapInInitScript;
 import static org.testng.Assert.assertEquals;
@@ -28,7 +28,6 @@ import java.util.Properties;
 
 import org.jclouds.azurecompute.arm.AzureComputeApi;
 import org.jclouds.azurecompute.arm.AzureComputeProviderMetadata;
-import org.jclouds.azurecompute.arm.domain.ResourceGroup;
 import org.jclouds.azurecompute.arm.internal.AzureLiveTestUtils;
 import org.jclouds.compute.ComputeTestUtils;
 import org.jclouds.compute.domain.ExecResponse;
@@ -43,7 +42,6 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 import com.google.common.base.Predicate;
-import com.google.common.cache.LoadingCache;
 import com.google.inject.Key;
 import com.google.inject.Module;
 import com.google.inject.TypeLiteral;
@@ -56,30 +54,27 @@ import com.google.inject.name.Names;
 @Test(groups = "live", singleThreaded = true, testName = "AzureComputeImageExtensionLiveTest")
 public class AzureComputeImageExtensionLiveTest extends BaseImageExtensionLiveTest {
 
-   private LoadingCache<String, ResourceGroup> resourceGroupMap;
    private Predicate<URI> resourceDeleted;
-   private ResourceGroup testResourceGroup;
+   private String resourceGroupName;
    
    public AzureComputeImageExtensionLiveTest() {
       provider = "azurecompute-arm";
+      resourceGroupName = getClass().getSimpleName().toLowerCase();
    }
    
    @BeforeClass(groups = { "integration", "live" })
    public void setupContext() {
       super.setupContext();
-      resourceGroupMap = context.utils().injector()
-            .getInstance(Key.get(new TypeLiteral<LoadingCache<String, ResourceGroup>>() {
-            }));
       resourceDeleted = context.utils().injector().getInstance(Key.get(new TypeLiteral<Predicate<URI>>() {
       }, Names.named(TIMEOUT_RESOURCE_DELETED)));
-      createResourceGroup();
+      createResourceGroup(resourceGroupName);
    }
    
    @AfterClass(groups = { "integration", "live" })
    @Override
    protected void tearDownContext() {
       try {
-         URI uri = view.unwrapApi(AzureComputeApi.class).getResourceGroupApi().delete(testResourceGroup.name());
+         URI uri = view.unwrapApi(AzureComputeApi.class).getResourceGroupApi().delete(resourceGroupName);
          if (uri != null) {
             assertTrue(resourceDeleted.apply(uri),
                   String.format("Resource %s was not terminated in the configured timeout", uri));
@@ -108,7 +103,7 @@ public class AzureComputeImageExtensionLiveTest extends BaseImageExtensionLiveTe
    @Override
    protected Properties setupProperties() {
       Properties properties = super.setupProperties();
-      AzureLiveTestUtils.defaultProperties(properties, getClass().getSimpleName().toLowerCase());
+      AzureLiveTestUtils.defaultProperties(properties);
       setIfTestSystemPropertyPresent(properties, "oauth.endpoint");
       return properties;
    }
@@ -122,11 +117,12 @@ public class AzureComputeImageExtensionLiveTest extends BaseImageExtensionLiveTe
    public TemplateBuilder getNodeTemplate() {
       Map<String, String> keyPair = ComputeTestUtils.setupKeyPair();
       return super.getNodeTemplate().options(
-            authorizePublicKey(keyPair.get("public")).overrideLoginPrivateKey(keyPair.get("private")));
+            resourceGroup(resourceGroupName).authorizePublicKey(keyPair.get("public")).overrideLoginPrivateKey(
+                  keyPair.get("private")));
    }
 
-   private void createResourceGroup() {
+   private void createResourceGroup(String name) {
       Location location = getNodeTemplate().build().getLocation();
-      testResourceGroup = resourceGroupMap.getUnchecked(location.getId());
+      view.unwrapApi(AzureComputeApi.class).getResourceGroupApi().create(name, location.getId(), null);
    }
 }

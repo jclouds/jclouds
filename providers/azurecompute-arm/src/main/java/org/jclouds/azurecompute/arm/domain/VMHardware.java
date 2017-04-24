@@ -62,14 +62,9 @@ public abstract class VMHardware {
     */
    public abstract String location();
 
-   /**
-    * Specifies if this HW is globally available
-    */
-   public abstract boolean globallyAvailable();
+   @SerializedNames({ "name", "numberOfCores", "osDiskSizeInMB", "resourceDiskSizeInMB", "memoryInMB", "maxDataDiskCount", "location"})
+   public static VMHardware create(String name, Integer numberOfCores, Integer osDiskSizeInMB, Integer resourceDiskSizeInMB, Integer memoryInMB, Integer maxDataDiskCount, String location) {
 
-   @SerializedNames({ "name", "numberOfCores", "osDiskSizeInMB", "resourceDiskSizeInMB", "memoryInMB", "maxDataDiskCount", "location", "globallyAvailable"})
-   public static VMHardware create(String name, Integer numberOfCores, Integer osDiskSizeInMB, Integer resourceDiskSizeInMB, Integer memoryInMB, Integer maxDataDiskCount, String location, boolean globallyAvailable) {
-
-      return new AutoValue_VMHardware(name, numberOfCores, osDiskSizeInMB, resourceDiskSizeInMB, memoryInMB, maxDataDiskCount, location, globallyAvailable);
+      return new AutoValue_VMHardware(name, numberOfCores, osDiskSizeInMB, resourceDiskSizeInMB, memoryInMB, maxDataDiskCount, location);
    }
 }

@@ -20,8 +20,11 @@ import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Strings.nullToEmpty;
 import static com.google.common.collect.Iterables.find;
 import static org.jclouds.azurecompute.arm.compute.AzureComputeServiceAdapter.GROUP_KEY;
+import static org.jclouds.azurecompute.arm.compute.domain.LocationAndName.fromLocationAndName;
+import static org.jclouds.azurecompute.arm.compute.domain.ResourceGroupAndName.fromResourceGroupAndName;
 import static org.jclouds.azurecompute.arm.compute.functions.VMImageToImage.encodeFieldsToUniqueId;
 import static org.jclouds.azurecompute.arm.compute.functions.VMImageToImage.encodeFieldsToUniqueIdCustom;
+import static org.jclouds.azurecompute.arm.domain.IdReference.extractResourceGroup;
 import static org.jclouds.compute.util.ComputeServiceUtils.addMetadataAndParseTagsFromCommaDelimitedValue;
 import static org.jclouds.location.predicates.LocationPredicates.idEquals;
 
@@ -34,13 +37,12 @@ import javax.inject.Inject;
 import javax.inject.Named;
 
 import org.jclouds.azurecompute.arm.AzureComputeApi;
+import org.jclouds.azurecompute.arm.compute.domain.LocationAndName;
 import org.jclouds.azurecompute.arm.compute.functions.VirtualMachineToStatus.StatusAndBackendStatus;
 import org.jclouds.azurecompute.arm.domain.IdReference;
 import org.jclouds.azurecompute.arm.domain.IpConfiguration;
 import org.jclouds.azurecompute.arm.domain.NetworkInterfaceCard;
 import org.jclouds.azurecompute.arm.domain.PublicIPAddress;
-import org.jclouds.azurecompute.arm.domain.RegionAndId;
-import org.jclouds.azurecompute.arm.domain.ResourceGroup;
 import org.jclouds.azurecompute.arm.domain.StorageProfile;
 import org.jclouds.azurecompute.arm.domain.VirtualMachine;
 import org.jclouds.collect.Memoized;
@@ -58,10 +60,7 @@ import org.jclouds.logging.Logger;
 import com.google.common.base.Function;
 import com.google.common.base.Optional;
 import com.google.common.base.Predicate;
-import com.google.common.base.Splitter;
 import com.google.common.base.Supplier;
-import com.google.common.cache.LoadingCache;
-import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 
 public class VirtualMachineToNodeMetadata implements Function<VirtualMachine, NodeMetadata> {
@@ -74,20 +73,18 @@ public class VirtualMachineToNodeMetadata implements Function<VirtualMachine, No
    private final GroupNamingConvention nodeNamingConvention;
    private final Supplier<Set<? extends Location>> locations;
    private final Supplier<Map<String, ? extends Hardware>> hardwares;
-   private final LoadingCache<String, ResourceGroup> resourceGroupMap;
    private final ImageCacheSupplier imageCache;
    private final VirtualMachineToStatus virtualMachineToStatus;
 
    @Inject
    VirtualMachineToNodeMetadata(AzureComputeApi api, GroupNamingConvention.Factory namingConvention,
          Supplier<Map<String, ? extends Hardware>> hardwares, @Memoized Supplier<Set<? extends Location>> locations,
-         Map<String, Credentials> credentialStore, LoadingCache<String, ResourceGroup> resourceGroupMap,
-         @Memoized Supplier<Set<? extends Image>> imageCache, VirtualMachineToStatus virtualMachineToStatus) {
+         Map<String, Credentials> credentialStore, @Memoized Supplier<Set<? extends Image>> imageCache,
+         VirtualMachineToStatus virtualMachineToStatus) {
       this.api = api;
       this.nodeNamingConvention = namingConvention.createWithoutPrefix();
       this.locations = locations;
       this.hardwares = hardwares;
-      this.resourceGroupMap = resourceGroupMap;
       this.virtualMachineToStatus = virtualMachineToStatus;
       checkArgument(imageCache instanceof ImageCacheSupplier,
             "This provider needs an instance of the ImageCacheSupplier");
@@ -96,10 +93,9 @@ public class VirtualMachineToNodeMetadata implements Function<VirtualMachine, No
 
    @Override
    public NodeMetadata apply(VirtualMachine virtualMachine) {
-      ResourceGroup resourceGroup = resourceGroupMap.getUnchecked(virtualMachine.location());
-
       NodeMetadataBuilder builder = new NodeMetadataBuilder();
-      builder.id(RegionAndId.fromRegionAndId(virtualMachine.location(), virtualMachine.name()).slashEncode());
+      builder.id(fromResourceGroupAndName(extractResourceGroup(virtualMachine.id()), virtualMachine.name())
+            .slashEncode());
       builder.providerId(virtualMachine.id());
       builder.name(virtualMachine.name());
       builder.hostname(virtualMachine.name());
@@ -125,8 +121,7 @@ public class VirtualMachineToNodeMetadata implements Function<VirtualMachine, No
       String locationName = virtualMachine.location();
       builder.location(getLocation(locations, locationName));
 
-      Optional<? extends Image> image = findImage(virtualMachine.properties().storageProfile(), locationName,
-            resourceGroup.name());
+      Optional<? extends Image> image = findImage(virtualMachine.properties().storageProfile(), locationName);
       
       if (image.isPresent()) {
          builder.imageId(image.get().getId());
@@ -137,7 +132,8 @@ public class VirtualMachineToNodeMetadata implements Function<VirtualMachine, No
                virtualMachine.id(), virtualMachine.id());
       }
 
-      builder.hardware(getHardware(virtualMachine.properties().hardwareProfile().vmSize()));
+      builder.hardware(getHardware(fromLocationAndName(virtualMachine.location(), virtualMachine.properties()
+            .hardwareProfile().vmSize())));
 
       return builder.build();
    }
@@ -158,12 +154,8 @@ public class VirtualMachineToNodeMetadata implements Function<VirtualMachine, No
       return privateIpAddresses;
    }
 
-   private NetworkInterfaceCard getNetworkInterfaceCard(IdReference networkInterfaceCardIdReference) {
-      Iterables.get(Splitter.on("/").split(networkInterfaceCardIdReference.id()), 2);
-      String resourceGroup = Iterables.get(Splitter.on("/").split(networkInterfaceCardIdReference.id()), 4);
-      String nicName = Iterables.getLast(Splitter.on("/").split(networkInterfaceCardIdReference.id()));
-      return api.getNetworkInterfaceCardApi(resourceGroup).get(nicName);
-
+   private NetworkInterfaceCard getNetworkInterfaceCard(IdReference nic) {
+      return api.getNetworkInterfaceCardApi(nic.resourceGroup()).get(nic.name());
    }
 
    private Iterable<String> getPublicIpAddresses(List<IdReference> idReferences) {
@@ -172,11 +164,11 @@ public class VirtualMachineToNodeMetadata implements Function<VirtualMachine, No
          NetworkInterfaceCard networkInterfaceCard = getNetworkInterfaceCard(networkInterfaceCardIdReference);
          if (networkInterfaceCard != null && networkInterfaceCard.properties() != null
                && networkInterfaceCard.properties().ipConfigurations() != null) {
-            String resourceGroup = Iterables.get(Splitter.on("/").split(networkInterfaceCardIdReference.id()), 4);
+            String resourceGroup = networkInterfaceCardIdReference.resourceGroup();
             for (IpConfiguration ipConfiguration : networkInterfaceCard.properties().ipConfigurations()) {
                if (ipConfiguration.properties().publicIPAddress() != null) {
-                  String publicIpId = ipConfiguration.properties().publicIPAddress().id();
-                  PublicIPAddress publicIp = api.getPublicIPAddressApi(resourceGroup).get(Iterables.getLast(Splitter.on("/").split(publicIpId)));
+                  IdReference publicIpId = ipConfiguration.properties().publicIPAddress();
+                  PublicIPAddress publicIp = api.getPublicIPAddressApi(resourceGroup).get(publicIpId.name());
                   if (publicIp != null && publicIp.properties().ipAddress() != null) {
                      publicIpAddresses.add(publicIp.properties().ipAddress());
                   }
@@ -191,8 +183,7 @@ public class VirtualMachineToNodeMetadata implements Function<VirtualMachine, No
       return find(locations.get(), idEquals(nullToEmpty(locationName)), null);
    }
 
-   protected Optional<? extends Image> findImage(final StorageProfile storageProfile, String locatioName,
-         String azureGroup) {
+   protected Optional<? extends Image> findImage(final StorageProfile storageProfile, String locatioName) {
       if (storageProfile.imageReference() != null) {
          // FIXME check this condition
          String imageId = storageProfile.imageReference().customImageId() != null ?
@@ -205,11 +196,12 @@ public class VirtualMachineToNodeMetadata implements Function<VirtualMachine, No
       }
    }
 
-   protected Hardware getHardware(final String vmSize) {
-      return Iterables.find(hardwares.get().values(), new Predicate<Hardware>() {
+   protected Hardware getHardware(final LocationAndName hardwareId) {
+      final String slashEncoded = hardwareId.slashEncode();
+      return find(hardwares.get().values(), new Predicate<Hardware>() {
          @Override
          public boolean apply(Hardware input) {
-            return input.getId().equals(vmSize);
+            return input.getId().equals(slashEncoded);
          }
       });
    }

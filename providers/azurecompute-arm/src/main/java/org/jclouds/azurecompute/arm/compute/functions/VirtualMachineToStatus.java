@@ -17,13 +17,13 @@
 package org.jclouds.azurecompute.arm.compute.functions;
 
 import static com.google.common.collect.Iterables.transform;
+import static org.jclouds.azurecompute.arm.domain.IdReference.extractResourceGroup;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import org.jclouds.azurecompute.arm.AzureComputeApi;
 import org.jclouds.azurecompute.arm.compute.functions.VirtualMachineToStatus.StatusAndBackendStatus;
-import org.jclouds.azurecompute.arm.domain.ResourceGroup;
 import org.jclouds.azurecompute.arm.domain.Status;
 import org.jclouds.azurecompute.arm.domain.VirtualMachine;
 import org.jclouds.azurecompute.arm.domain.VirtualMachineInstance;
@@ -36,7 +36,6 @@ import com.google.auto.value.AutoValue;
 import com.google.common.base.Function;
 import com.google.common.base.Functions;
 import com.google.common.base.Joiner;
-import com.google.common.cache.LoadingCache;
 import com.google.common.collect.ImmutableMap;
 
 @Singleton
@@ -80,17 +79,15 @@ public class VirtualMachineToStatus implements Function<VirtualMachine, StatusAn
          NodeMetadata.Status.UNRECOGNIZED);
 
    private final AzureComputeApi api;
-   private final LoadingCache<String, ResourceGroup> resourceGroupMap;
 
    @Inject
-   VirtualMachineToStatus(AzureComputeApi api, LoadingCache<String, ResourceGroup> resourceGroupMap) {
+   VirtualMachineToStatus(AzureComputeApi api) {
       this.api = api;
-      this.resourceGroupMap = resourceGroupMap;
    }
 
    @Override
    public StatusAndBackendStatus apply(VirtualMachine virtualMachine) {
-      ResourceGroup resourceGroup = resourceGroupMap.getUnchecked(virtualMachine.location());
+      String resourceGroup = extractResourceGroup(virtualMachine.id());
       ProvisioningState provisioningState = virtualMachine.properties().provisioningState();
 
       NodeMetadata.Status status = PROVISIONINGSTATE_TO_NODESTATUS.apply(provisioningState);
@@ -99,7 +96,7 @@ public class VirtualMachineToStatus implements Function<VirtualMachine, StatusAn
       if (ProvisioningState.SUCCEEDED.equals(provisioningState)) {
          // If the provisioning succeeded, we need to query the *real* status of
          // the VM
-         VirtualMachineInstance instanceDetails = api.getVirtualMachineApi(resourceGroup.name()).getInstanceDetails(
+         VirtualMachineInstance instanceDetails = api.getVirtualMachineApi(resourceGroup).getInstanceDetails(
                virtualMachine.name());
          if (instanceDetails != null && instanceDetails.powerState() != null) {
             status = POWERSTATE_TO_NODESTATUS.apply(instanceDetails.powerState());

@@ -21,7 +21,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 public class VMImages {
 
    public static boolean isCustom(String imageId) {
-      return checkNotNull(imageId, "id").split("/").length == 2;
+      return checkNotNull(imageId, "id").split("/").length == 3;
    }
   
 }

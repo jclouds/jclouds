@@ -16,6 +16,12 @@
  */
 package org.jclouds.azurecompute.arm.compute.functions;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+import static com.google.common.collect.Iterables.tryFind;
+import static java.util.Arrays.asList;
+import static org.jclouds.azurecompute.arm.domain.IdReference.extractResourceGroup;
+import static org.jclouds.azurecompute.arm.util.VMImages.isCustom;
+
 import java.util.Map;
 import java.util.Set;
 
@@ -40,11 +46,6 @@ import com.google.common.collect.FluentIterable;
 import com.google.common.collect.ImmutableMap;
 import com.google.inject.Inject;
 
-import static com.google.common.base.Preconditions.checkNotNull;
-import static com.google.common.collect.Iterables.tryFind;
-import static java.util.Arrays.asList;
-import static org.jclouds.azurecompute.arm.util.VMImages.isCustom;
-
 public class VMImageToImage implements Function<VMImage, Image> {
 
    private static final Map<String, OsFamily> OTHER_OS_MAP = ImmutableMap.<String, OsFamily> builder()
@@ -64,8 +65,8 @@ public class VMImageToImage implements Function<VMImage, Image> {
 
    public static String encodeFieldsToUniqueIdCustom(boolean globallyAvailable, String locationName,
          ImageReference imageReference) {
-      return (globallyAvailable ? "global" : locationName) + "/" + imageReference.customImageId()
-            .substring(imageReference.customImageId().lastIndexOf("/") + 1);
+      return extractResourceGroup(imageReference.customImageId()) + "/" + (globallyAvailable ? "global" : locationName)
+            + "/" + imageReference.customImageId().substring(imageReference.customImageId().lastIndexOf("/") + 1);
    }
 
    public static String encodeFieldsToUniqueId(VMImage imageReference) {
@@ -74,7 +75,8 @@ public class VMImageToImage implements Function<VMImage, Image> {
    }
 
    public static String encodeFieldsToUniqueIdCustom(VMImage imageReference) {
-      return (imageReference.globallyAvailable() ? "global" : imageReference.location()) + "/" + imageReference.name();
+      return imageReference.resourceGroup() + "/"
+            + (imageReference.globallyAvailable() ? "global" : imageReference.location()) + "/" + imageReference.name();
    }
 
    public static VMImage decodeFieldsFromUniqueId(final String id) {
@@ -82,10 +84,11 @@ public class VMImageToImage implements Function<VMImage, Image> {
       String[] fields = checkNotNull(id, "id").split("/");
       if (isCustom(id)) {
          /* id fields indexes
-         0: imageReference.location + "/" +
-         1: imageReference.name
+         0: imageReference.resourceGroup
+         1: imageReference.location + "/" +
+         2: imageReference.name
          */
-         vmImage = VMImage.customImage().location(fields[0]).name(fields[1]).build();
+         vmImage = VMImage.customImage().resourceGroup(fields[0]).location(fields[1]).name(fields[2]).build();
       } else {
          /* id fields indexes
          0: imageReference.location + "/" +

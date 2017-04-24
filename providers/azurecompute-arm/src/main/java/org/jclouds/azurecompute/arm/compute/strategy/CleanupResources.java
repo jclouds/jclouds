@@ -30,13 +30,12 @@ import javax.inject.Named;
 import javax.inject.Singleton;
 
 import org.jclouds.azurecompute.arm.AzureComputeApi;
+import org.jclouds.azurecompute.arm.compute.domain.ResourceGroupAndName;
 import org.jclouds.azurecompute.arm.domain.AvailabilitySet;
 import org.jclouds.azurecompute.arm.domain.IdReference;
 import org.jclouds.azurecompute.arm.domain.IpConfiguration;
 import org.jclouds.azurecompute.arm.domain.NetworkInterfaceCard;
 import org.jclouds.azurecompute.arm.domain.NetworkSecurityGroup;
-import org.jclouds.azurecompute.arm.domain.RegionAndId;
-import org.jclouds.azurecompute.arm.domain.ResourceGroup;
 import org.jclouds.azurecompute.arm.domain.VirtualMachine;
 import org.jclouds.azurecompute.arm.features.NetworkSecurityGroupApi;
 import org.jclouds.compute.functions.GroupNamingConvention;
@@ -45,10 +44,6 @@ import org.jclouds.logging.Logger;
 
 import com.google.common.base.Function;
 import com.google.common.base.Predicate;
-import com.google.common.base.Splitter;
-import com.google.common.cache.LoadingCache;
-import com.google.common.collect.Iterables;
-import com.google.common.collect.Lists;
 
 @Singleton
 public class CleanupResources {
@@ -59,52 +54,55 @@ public class CleanupResources {
 
    private final AzureComputeApi api;
    private final Predicate<URI> resourceDeleted;
-   private final LoadingCache<String, ResourceGroup> resourceGroupMap;
    private final GroupNamingConvention.Factory namingConvention;
 
    @Inject
    CleanupResources(AzureComputeApi azureComputeApi, @Named(TIMEOUT_RESOURCE_DELETED) Predicate<URI> resourceDeleted,
-         LoadingCache<String, ResourceGroup> resourceGroupMap, GroupNamingConvention.Factory namingConvention) {
+         GroupNamingConvention.Factory namingConvention) {
       this.api = azureComputeApi;
       this.resourceDeleted = resourceDeleted;
-      this.resourceGroupMap = resourceGroupMap;
       this.namingConvention = namingConvention;
    }
 
    public boolean cleanupNode(final String id) {
-      RegionAndId regionAndId = RegionAndId.fromSlashEncoded(id);
-      ResourceGroup resourceGroup = resourceGroupMap.getUnchecked(regionAndId.region());
-      String resourceGroupName = resourceGroup.name();
+      ResourceGroupAndName resourceGroupAndName = ResourceGroupAndName.fromSlashEncoded(id);
+      String resourceGroupName = resourceGroupAndName.resourceGroup();
 
-      VirtualMachine virtualMachine = api.getVirtualMachineApi(resourceGroupName).get(regionAndId.id());
+      VirtualMachine virtualMachine = api.getVirtualMachineApi(resourceGroupName).get(resourceGroupAndName.name());
       if (virtualMachine == null) {
          return true;
       }
 
-      logger.debug(">> destroying %s ...", regionAndId.slashEncode());
+      logger.debug(">> destroying %s ...", id);
       boolean vmDeleted = deleteVirtualMachine(resourceGroupName, virtualMachine);
 
       // We don't delete the network here, as it is global to the resource
       // group. It will be deleted when the resource group is deleted
 
-      cleanupVirtualMachineNICs(resourceGroupName, virtualMachine);
-      cleanupAvailabilitySetIfOrphaned(resourceGroupName, virtualMachine);
+      cleanupVirtualMachineNICs(virtualMachine);
+      cleanupAvailabilitySetIfOrphaned(virtualMachine);
 
       return vmDeleted;
    }
 
-   public void cleanupVirtualMachineNICs(String group, VirtualMachine virtualMachine) {
-      for (String nicName : getNetworkCardInterfaceNames(virtualMachine)) {
-         NetworkInterfaceCard nic = api.getNetworkInterfaceCardApi(group).get(nicName);
-         Iterable<String> publicIps = getPublicIps(group, nic);
+   public void cleanupVirtualMachineNICs(VirtualMachine virtualMachine) {
+      for (IdReference nicRef : virtualMachine.properties().networkProfile().networkInterfaces()) {
+         String nicResourceGroup = nicRef.resourceGroup();
+         String nicName = nicRef.name();
+         NetworkInterfaceCard nic = api.getNetworkInterfaceCardApi(nicRef.resourceGroup()).get(nicName);
+         
+         Iterable<IdReference> publicIps = getPublicIps(nic);
 
          logger.debug(">> destroying nic %s...", nicName);
-         URI nicDeletionURI = api.getNetworkInterfaceCardApi(group).delete(nicName);
+         URI nicDeletionURI = api.getNetworkInterfaceCardApi(nicResourceGroup).delete(nicName);
          resourceDeleted.apply(nicDeletionURI);
 
-         for (String publicIp : publicIps) {
-            logger.debug(">> deleting public ip nic %s...", publicIp);
-            api.getPublicIPAddressApi(group).delete(publicIp);
+         for (IdReference publicIp : publicIps) {
+            String publicIpResourceGroup = publicIp.resourceGroup();
+            String publicIpName = publicIp.name();
+            
+            logger.debug(">> deleting public ip nic %s...", publicIpName);
+            api.getPublicIPAddressApi(publicIpResourceGroup).delete(publicIpName);
          }
       }
    }
@@ -135,12 +133,13 @@ public class CleanupResources {
       return deleted;
    }
 
-   public boolean cleanupAvailabilitySetIfOrphaned(String resourceGroup, VirtualMachine virtualMachine) {
+   public boolean cleanupAvailabilitySetIfOrphaned(VirtualMachine virtualMachine) {
       boolean deleted = false;
       IdReference availabilitySetRef = virtualMachine.properties().availabilitySet();
 
       if (availabilitySetRef != null) {
-         String name = Iterables.getLast(Splitter.on("/").split(availabilitySetRef.id()));
+         String name = availabilitySetRef.name();
+         String resourceGroup = availabilitySetRef.resourceGroup();
          AvailabilitySet availabilitySet = api.getAvailabilitySetApi(resourceGroup).get(name);
 
          if (isOrphanedJcloudsAvailabilitySet(availabilitySet)) {
@@ -162,19 +161,13 @@ public class CleanupResources {
       return deleted;
    }
 
-   private Iterable<String> getPublicIps(String group, NetworkInterfaceCard nic) {
-      return transform(
-            filter(transform(nic.properties().ipConfigurations(), new Function<IpConfiguration, IdReference>() {
-               @Override
-               public IdReference apply(IpConfiguration input) {
-                  return input.properties().publicIPAddress();
-               }
-            }), notNull()), new Function<IdReference, String>() {
-               @Override
-               public String apply(IdReference input) {
-                  return Iterables.getLast(Splitter.on("/").split(input.id()));
-               }
-            });
+   private Iterable<IdReference> getPublicIps(NetworkInterfaceCard nic) {
+      return filter(transform(nic.properties().ipConfigurations(), new Function<IpConfiguration, IdReference>() {
+         @Override
+         public IdReference apply(IpConfiguration input) {
+            return input.properties().publicIPAddress();
+         }
+      }), notNull());
    }
 
    private static boolean isOrphanedJcloudsAvailabilitySet(AvailabilitySet availabilitySet) {
@@ -185,14 +178,6 @@ public class CleanupResources {
             && availabilitySet.tags().containsKey("jclouds")
             && (availabilitySet.properties().virtualMachines() == null || availabilitySet.properties()
                   .virtualMachines().isEmpty());
-   }
-
-   private List<String> getNetworkCardInterfaceNames(VirtualMachine virtualMachine) {
-      List<String> nics = Lists.newArrayList();
-      for (IdReference idReference : virtualMachine.properties().networkProfile().networkInterfaces()) {
-         nics.add(Iterables.getLast(Splitter.on("/").split(idReference.id())));
-      }
-      return nics;
    }
 
    private boolean deleteVirtualMachine(String group, VirtualMachine virtualMachine) {

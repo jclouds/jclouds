@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jclouds.azurecompute.arm.domain;
+package org.jclouds.azurecompute.arm.compute.domain;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -24,27 +24,27 @@ import com.google.common.base.Splitter;
 import com.google.common.collect.Iterables;
 
 @AutoValue
-public abstract class RegionAndId {
+public abstract class LocationAndName {
 
-   public abstract String region();
-   public abstract String id();
+   public abstract String location();
+   public abstract String name();
    
-   protected RegionAndId() {
+   protected LocationAndName() {
       
    }
    
-   public static RegionAndId fromSlashEncoded(String id) {
+   public static LocationAndName fromSlashEncoded(String id) {
       Iterable<String> parts = Splitter.on('/').split(checkNotNull(id, "id"));
-      checkArgument(Iterables.size(parts) == 2, "id must be in format regionId/id");
-      return new AutoValue_RegionAndId(Iterables.get(parts, 0), Iterables.get(parts, 1));
+      checkArgument(Iterables.size(parts) == 2, "id must be in format location/name");
+      return new AutoValue_LocationAndName(Iterables.get(parts, 0), Iterables.get(parts, 1));
    }
 
-   public static RegionAndId fromRegionAndId(String region, String id) {
-      return new AutoValue_RegionAndId(region, id);
+   public static LocationAndName fromLocationAndName(String location, String name) {
+      return new AutoValue_LocationAndName(location, name);
    }
 
    public String slashEncode() {
-      return region() + "/" + id();
+      return location() + "/" + name();
    }
    
 }

@@ -19,10 +19,12 @@ package org.jclouds.azurecompute.arm.compute;
 import static com.google.common.base.Preconditions.checkState;
 import static com.google.common.collect.ImmutableList.builder;
 import static com.google.common.collect.ImmutableList.of;
-import static com.google.common.collect.Iterables.contains;
 import static com.google.common.collect.Iterables.filter;
 import static com.google.common.collect.Iterables.getOnlyElement;
 import static com.google.common.collect.Iterables.transform;
+import static com.google.common.collect.Lists.newArrayList;
+import static org.jclouds.azurecompute.arm.compute.domain.LocationAndName.fromSlashEncoded;
+import static org.jclouds.azurecompute.arm.compute.domain.ResourceGroupAndName.fromResourceGroupAndName;
 import static org.jclouds.azurecompute.arm.compute.functions.VMImageToImage.decodeFieldsFromUniqueId;
 import static org.jclouds.azurecompute.arm.compute.functions.VMImageToImage.getMarketplacePlanFromImageMetadata;
 import static org.jclouds.azurecompute.arm.config.AzureComputeProperties.IMAGE_PUBLISHERS;
@@ -40,6 +42,7 @@ import javax.inject.Singleton;
 
 import org.jclouds.azurecompute.arm.AzureComputeApi;
 import org.jclouds.azurecompute.arm.compute.config.AzureComputeServiceContextModule.PublicIpAvailablePredicateFactory;
+import org.jclouds.azurecompute.arm.compute.domain.ResourceGroupAndName;
 import org.jclouds.azurecompute.arm.compute.functions.CustomImageToVMImage;
 import org.jclouds.azurecompute.arm.compute.options.AzureTemplateOptions;
 import org.jclouds.azurecompute.arm.compute.strategy.CleanupResources;
@@ -62,7 +65,6 @@ import org.jclouds.azurecompute.arm.domain.Offer;
 import org.jclouds.azurecompute.arm.domain.Plan;
 import org.jclouds.azurecompute.arm.domain.PublicIPAddress;
 import org.jclouds.azurecompute.arm.domain.PublicIPAddressProperties;
-import org.jclouds.azurecompute.arm.domain.RegionAndId;
 import org.jclouds.azurecompute.arm.domain.ResourceGroup;
 import org.jclouds.azurecompute.arm.domain.ResourceProviderMetaData;
 import org.jclouds.azurecompute.arm.domain.SKU;
@@ -90,7 +92,6 @@ import com.google.common.base.Objects;
 import com.google.common.base.Predicate;
 import com.google.common.base.Splitter;
 import com.google.common.base.Supplier;
-import com.google.common.cache.LoadingCache;
 import com.google.common.collect.FluentIterable;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
@@ -115,20 +116,18 @@ public class AzureComputeServiceAdapter implements ComputeServiceAdapter<Virtual
    private final List<String> imagePublishers;
    private final Supplier<Set<String>> regionIds;
    private final PublicIpAvailablePredicateFactory publicIpAvailable;
-   private final LoadingCache<String, ResourceGroup> resourceGroupMap;
    private final CustomImageToVMImage customImagetoVmImage;
 
    @Inject
    AzureComputeServiceAdapter(final AzureComputeApi api, @Named(IMAGE_PUBLISHERS) String imagePublishers,
          CleanupResources cleanupResources, @Region Supplier<Set<String>> regionIds,
-         PublicIpAvailablePredicateFactory publicIpAvailable, LoadingCache<String, ResourceGroup> resourceGroupMap,
+         PublicIpAvailablePredicateFactory publicIpAvailable,
          CustomImageToVMImage customImagetoVmImage) {
       this.api = api;
       this.imagePublishers = Splitter.on(',').trimResults().omitEmptyStrings().splitToList(imagePublishers);
       this.cleanupResources = cleanupResources;
       this.regionIds = regionIds;
       this.publicIpAvailable = publicIpAvailable;
-      this.resourceGroupMap = resourceGroupMap;
       this.customImagetoVmImage = customImagetoVmImage;
    }
 
@@ -138,15 +137,15 @@ public class AzureComputeServiceAdapter implements ComputeServiceAdapter<Virtual
 
       String locationName = template.getLocation().getId();
       Image image = template.getImage();
-      String hardwareId = template.getHardware().getId();
-      ResourceGroup resourceGroup = resourceGroupMap.getUnchecked(locationName);
+      String hardwareId = fromSlashEncoded(template.getHardware().getId()).name();
       // TODO ARM specific options
       AzureTemplateOptions templateOptions = template.getOptions().as(AzureTemplateOptions.class);
       String subnetId = templateOptions.getSubnetId();
+      String resourceGroupName = templateOptions.getResourceGroup();
       
       IdReference availabilitySet = getAvailabilitySetIdReference(templateOptions.getAvailabilitySet());
       StorageProfile storageProfile = createStorageProfile(image, templateOptions.getDataDisks());
-      NetworkInterfaceCard nic = createNetworkInterfaceCard(subnetId, name, locationName, resourceGroup.name(), template.getOptions());
+      NetworkInterfaceCard nic = createNetworkInterfaceCard(subnetId, name, locationName, resourceGroupName, template.getOptions());
       HardwareProfile hardwareProfile = HardwareProfile.builder().vmSize(hardwareId).build();
       OSProfile osProfile = createOsProfile(name, template);
       NetworkProfile networkProfile = NetworkProfile.builder().networkInterfaces(of(IdReference.create(nic.id()))).build();
@@ -165,14 +164,14 @@ public class AzureComputeServiceAdapter implements ComputeServiceAdapter<Virtual
       Map<String, String> metadataAndTags = metadataAndTagsAsCommaDelimitedValue(template.getOptions());
       Plan plan = getMarketplacePlanFromImageMetadata(template.getImage());
 
-      VirtualMachine virtualMachine = api.getVirtualMachineApi(resourceGroup.name()).createOrUpdate(name, template.getLocation().getId(),
+      VirtualMachine virtualMachine = api.getVirtualMachineApi(resourceGroupName).createOrUpdate(name, template.getLocation().getId(),
             virtualMachineProperties, metadataAndTags, plan);
 
       // Safe to pass null credentials here, as jclouds will default populate
       // the node with the default credentials from the image, or the ones in
       // the options, if provided.
-      RegionAndId regionAndId = RegionAndId.fromRegionAndId(locationName, name);
-      return new NodeAndInitialCredentials<VirtualMachine>(virtualMachine, regionAndId.slashEncode(), null);
+      ResourceGroupAndName resourceGroupAndName = fromResourceGroupAndName(resourceGroupName, name);
+      return new NodeAndInitialCredentials<VirtualMachine>(virtualMachine, resourceGroupAndName.slashEncode(), null);
    }
 
    @Override
@@ -183,8 +182,7 @@ public class AzureComputeServiceAdapter implements ComputeServiceAdapter<Virtual
          for (VMSize vmSize : vmSizes) {
             VMHardware hwProfile = VMHardware
                     .create(vmSize.name(), vmSize.numberOfCores(), vmSize.osDiskSizeInMB(),
-                            vmSize.resourceDiskSizeInMB(), vmSize.memoryInMB(), vmSize.maxDataDiskCount(), location.name(),
-                            false);
+                            vmSize.resourceDiskSizeInMB(), vmSize.memoryInMB(), vmSize.maxDataDiskCount(), location.name());
             hwProfiles.add(hwProfile);
          }
       }
@@ -221,9 +219,8 @@ public class AzureComputeServiceAdapter implements ComputeServiceAdapter<Virtual
       return osImages;
    }
    
-   private List<VMImage> listCustomImagesByLocation(String location) {
-      ResourceGroup resourceGroup = resourceGroupMap.getUnchecked(location);
-      List<org.jclouds.azurecompute.arm.domain.Image> customImages = api.getVirtualMachineImageApi(resourceGroup.name()).list();
+   private List<VMImage> listCustomImagesByResourceGroup(String resourceGroup) {
+      List<org.jclouds.azurecompute.arm.domain.Image> customImages = api.getVirtualMachineImageApi(resourceGroup).list();
       return Lists.transform(customImages, customImagetoVmImage);
    }
 
@@ -231,16 +228,29 @@ public class AzureComputeServiceAdapter implements ComputeServiceAdapter<Virtual
    public Iterable<VMImage> listImages() {
       final ImmutableList.Builder<VMImage> osImages = ImmutableList.builder();
       
-      Iterable<String> availableLocationNames = transform(listLocations(), new Function<Location, String>() {
-         @Override
-         public String apply(Location location) {
-            return location.name();
-         }
-      });
+      final List<String> availableLocationNames = newArrayList(transform(listLocations(),
+            new Function<Location, String>() {
+               @Override
+               public String apply(Location location) {
+                  return location.name();
+               }
+            }));
 
       for (String locationName : availableLocationNames) {
          osImages.addAll(listImagesByLocation(locationName));
-         osImages.addAll(listCustomImagesByLocation(locationName));
+      }
+
+      // We need to look for custom images in all resource groups
+      Iterable<ResourceGroup> resourceGroupsInLocation = filter(api.getResourceGroupApi().list(),
+            new Predicate<ResourceGroup>() {
+               @Override
+               public boolean apply(ResourceGroup input) {
+                  return availableLocationNames.contains(input.location());
+               }
+            });
+      
+      for (ResourceGroup resourceGroup : resourceGroupsInLocation) {
+         osImages.addAll(listCustomImagesByResourceGroup(resourceGroup.name()));
       }
 
       return osImages.build();
@@ -249,10 +259,10 @@ public class AzureComputeServiceAdapter implements ComputeServiceAdapter<Virtual
    @Override
    public VMImage getImage(final String id) {
       VMImage image = decodeFieldsFromUniqueId(id);
-      ResourceGroup resourceGroup = resourceGroupMap.getUnchecked(image.location());
 
       if (image.custom()) {
-         org.jclouds.azurecompute.arm.domain.Image vmImage = api.getVirtualMachineImageApi(resourceGroup.name()).get(image.name());
+         org.jclouds.azurecompute.arm.domain.Image vmImage = api.getVirtualMachineImageApi(image.resourceGroup()).get(
+               image.name());
          return vmImage == null ? null : customImagetoVmImage.apply(vmImage);
       }
 
@@ -304,9 +314,8 @@ public class AzureComputeServiceAdapter implements ComputeServiceAdapter<Virtual
 
    @Override
    public VirtualMachine getNode(final String id) {
-      RegionAndId regionAndId = RegionAndId.fromSlashEncoded(id);
-      ResourceGroup resourceGroup = resourceGroupMap.getUnchecked(regionAndId.region());
-      return api.getVirtualMachineApi(resourceGroup.name()).get(regionAndId.id());
+      ResourceGroupAndName resourceGroupAndName = ResourceGroupAndName.fromSlashEncoded(id);
+      return api.getVirtualMachineApi(resourceGroupAndName.resourceGroup()).get(resourceGroupAndName.name());
    }
 
    @Override
@@ -316,23 +325,20 @@ public class AzureComputeServiceAdapter implements ComputeServiceAdapter<Virtual
 
    @Override
    public void rebootNode(final String id) {
-      RegionAndId regionAndId = RegionAndId.fromSlashEncoded(id);
-      ResourceGroup resourceGroup = resourceGroupMap.getUnchecked(regionAndId.region());
-      api.getVirtualMachineApi(resourceGroup.name()).restart(regionAndId.id());
+      ResourceGroupAndName resourceGroupAndName = ResourceGroupAndName.fromSlashEncoded(id);
+      api.getVirtualMachineApi(resourceGroupAndName.resourceGroup()).restart(resourceGroupAndName.name());
    }
 
    @Override
    public void resumeNode(final String id) {
-      RegionAndId regionAndId = RegionAndId.fromSlashEncoded(id);
-      ResourceGroup resourceGroup = resourceGroupMap.getUnchecked(regionAndId.region());
-      api.getVirtualMachineApi(resourceGroup.name()).start(regionAndId.id());
+      ResourceGroupAndName resourceGroupAndName = ResourceGroupAndName.fromSlashEncoded(id);
+      api.getVirtualMachineApi(resourceGroupAndName.resourceGroup()).start(resourceGroupAndName.name());
    }
 
    @Override
    public void suspendNode(final String id) {
-      RegionAndId regionAndId = RegionAndId.fromSlashEncoded(id);
-      ResourceGroup resourceGroup = resourceGroupMap.getUnchecked(regionAndId.region());
-      api.getVirtualMachineApi(resourceGroup.name()).stop(regionAndId.id());
+      ResourceGroupAndName resourceGroupAndName = ResourceGroupAndName.fromSlashEncoded(id);
+      api.getVirtualMachineApi(resourceGroupAndName.resourceGroup()).stop(resourceGroupAndName.name());
    }
 
    @Override
@@ -346,10 +352,10 @@ public class AzureComputeServiceAdapter implements ComputeServiceAdapter<Virtual
 
    @Override
    public Iterable<VirtualMachine> listNodesByIds(final Iterable<String> ids) {
-      return filter(listNodes(), new Predicate<VirtualMachine>() {
+      return transform(ids, new Function<String, VirtualMachine>() {
          @Override
-         public boolean apply(VirtualMachine virtualMachine) {
-            return contains(ids, virtualMachine.id());
+         public VirtualMachine apply(String input) {
+            return getNode(input);
          }
       });
    }

@@ -34,7 +34,7 @@ import javax.inject.Singleton;
 import org.jclouds.azurecompute.arm.AzureComputeApi;
 import org.jclouds.azurecompute.arm.compute.AzureComputeService;
 import org.jclouds.azurecompute.arm.compute.AzureComputeServiceAdapter;
-import org.jclouds.azurecompute.arm.compute.domain.RegionAndIdAndIngressRules;
+import org.jclouds.azurecompute.arm.compute.domain.ResourceGroupAndNameAndIngressRules;
 import org.jclouds.azurecompute.arm.compute.extensions.AzureComputeImageExtension;
 import org.jclouds.azurecompute.arm.compute.extensions.AzureComputeSecurityGroupExtension;
 import org.jclouds.azurecompute.arm.compute.functions.LocationToLocation;
@@ -44,9 +44,9 @@ import org.jclouds.azurecompute.arm.compute.functions.VMHardwareToHardware;
 import org.jclouds.azurecompute.arm.compute.functions.VMImageToImage;
 import org.jclouds.azurecompute.arm.compute.functions.VirtualMachineToNodeMetadata;
 import org.jclouds.azurecompute.arm.compute.loaders.CreateSecurityGroupIfNeeded;
-import org.jclouds.azurecompute.arm.compute.loaders.ResourceGroupForLocation;
+import org.jclouds.azurecompute.arm.compute.loaders.DefaultResourceGroup;
 import org.jclouds.azurecompute.arm.compute.options.AzureTemplateOptions;
-import org.jclouds.azurecompute.arm.compute.strategy.CreateResourceGroupThenCreateNodes;
+import org.jclouds.azurecompute.arm.compute.strategy.CreateResourcesThenCreateNodes;
 import org.jclouds.azurecompute.arm.domain.Image;
 import org.jclouds.azurecompute.arm.domain.Location;
 import org.jclouds.azurecompute.arm.domain.NetworkSecurityGroup;
@@ -116,12 +116,12 @@ public class AzureComputeServiceContextModule extends
 
       bind(TemplateOptions.class).to(AzureTemplateOptions.class);
       bind(NodeAndTemplateOptionsToStatement.class).to(NodeAndTemplateOptionsToStatementWithoutPublicKey.class);
-      bind(CreateNodesInGroupThenAddToSet.class).to(CreateResourceGroupThenCreateNodes.class);
+      bind(CreateNodesInGroupThenAddToSet.class).to(CreateResourcesThenCreateNodes.class);
 
-      bind(new TypeLiteral<CacheLoader<RegionAndIdAndIngressRules, String>>() {
+      bind(new TypeLiteral<CacheLoader<ResourceGroupAndNameAndIngressRules, String>>() {
       }).to(CreateSecurityGroupIfNeeded.class);
       bind(new TypeLiteral<CacheLoader<String, ResourceGroup>>() {
-      }).to(ResourceGroupForLocation.class);
+      }).to(DefaultResourceGroup.class);
 
       bind(new TypeLiteral<ImageExtension>() {
       }).to(AzureComputeImageExtension.class);
@@ -131,14 +131,14 @@ public class AzureComputeServiceContextModule extends
 
    @Provides
    @Singleton
-   protected final LoadingCache<RegionAndIdAndIngressRules, String> securityGroupMap(
-         CacheLoader<RegionAndIdAndIngressRules, String> in) {
+   protected final LoadingCache<ResourceGroupAndNameAndIngressRules, String> securityGroupMap(
+         CacheLoader<ResourceGroupAndNameAndIngressRules, String> in) {
       return CacheBuilder.newBuilder().build(in);
    }
 
    @Provides
    @Singleton
-   protected final LoadingCache<String, ResourceGroup> resourceGroupMap(CacheLoader<String, ResourceGroup> in) {
+   protected final LoadingCache<String, ResourceGroup> defaultResourceGroup(CacheLoader<String, ResourceGroup> in) {
       return CacheBuilder.newBuilder().build(in);
    }
 

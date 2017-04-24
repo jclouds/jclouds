@@ -18,9 +18,8 @@ package org.jclouds.azurecompute.arm.compute.extensions;
 
 import static com.google.common.collect.Iterables.get;
 import static com.google.common.collect.Iterables.getOnlyElement;
+import static org.jclouds.azurecompute.arm.compute.options.AzureTemplateOptions.Builder.resourceGroup;
 import static org.jclouds.azurecompute.arm.config.AzureComputeProperties.TIMEOUT_RESOURCE_DELETED;
-import static org.jclouds.compute.options.TemplateOptions.Builder.inboundPorts;
-import static org.jclouds.compute.options.TemplateOptions.Builder.securityGroups;
 import static org.jclouds.compute.predicates.NodePredicates.inGroup;
 import static org.jclouds.net.domain.IpProtocol.TCP;
 import static org.testng.Assert.assertEquals;
@@ -34,12 +33,13 @@ import java.util.concurrent.ExecutionException;
 
 import org.jclouds.azurecompute.arm.AzureComputeApi;
 import org.jclouds.azurecompute.arm.AzureComputeProviderMetadata;
-import org.jclouds.azurecompute.arm.domain.ResourceGroup;
+import org.jclouds.azurecompute.arm.compute.options.AzureTemplateOptions;
 import org.jclouds.azurecompute.arm.internal.AzureLiveTestUtils;
 import org.jclouds.compute.ComputeService;
 import org.jclouds.compute.RunNodesException;
 import org.jclouds.compute.domain.NodeMetadata;
 import org.jclouds.compute.domain.SecurityGroup;
+import org.jclouds.compute.domain.Template;
 import org.jclouds.compute.extensions.SecurityGroupExtension;
 import org.jclouds.compute.extensions.internal.BaseSecurityGroupExtensionLiveTest;
 import org.jclouds.domain.Location;
@@ -52,7 +52,6 @@ import org.testng.annotations.Test;
 
 import com.google.common.base.Optional;
 import com.google.common.base.Predicate;
-import com.google.common.cache.LoadingCache;
 import com.google.inject.Key;
 import com.google.inject.TypeLiteral;
 import com.google.inject.name.Names;
@@ -64,23 +63,20 @@ import com.google.inject.name.Names;
 @Test(groups = "live", singleThreaded = true, testName = "AzureComputeSecurityGroupExtensionLiveTest")
 public class AzureComputeSecurityGroupExtensionLiveTest extends BaseSecurityGroupExtensionLiveTest {
 
-   private LoadingCache<String, ResourceGroup> resourceGroupMap;
    private Predicate<URI> resourceDeleted;
-   private ResourceGroup testResourceGroup;
+   private String resourceGroupName;
 
    public AzureComputeSecurityGroupExtensionLiveTest() {
       provider = "azurecompute-arm";
+      resourceGroupName = "sgelivetest";
    }
 
    @BeforeClass(groups = { "integration", "live" })
    public void setupContext() {
       super.setupContext();
-      resourceGroupMap = context.utils().injector()
-            .getInstance(Key.get(new TypeLiteral<LoadingCache<String, ResourceGroup>>() {
-            }));
       resourceDeleted = context.utils().injector().getInstance(Key.get(new TypeLiteral<Predicate<URI>>() {
       }, Names.named(TIMEOUT_RESOURCE_DELETED)));
-      createResourceGroup();
+      createResourceGroup(resourceGroupName);
    }
 
    @Test(groups = { "integration", "live" }, singleThreaded = true, dependsOnMethods = "testAddIpPermissionsFromSpec")
@@ -104,7 +100,8 @@ public class AzureComputeSecurityGroupExtensionLiveTest extends BaseSecurityGrou
       Optional<SecurityGroupExtension> securityGroupExtension = computeService.getSecurityGroupExtension();
       assertTrue(securityGroupExtension.isPresent(), "security group extension was not present");
 
-      NodeMetadata node = getOnlyElement(computeService.createNodesInGroup(nodeGroup, 1, securityGroups(groupId)));
+      NodeMetadata node = getOnlyElement(computeService.createNodesInGroup(nodeGroup, 1,
+            options().securityGroups(groupId)));
 
       try {
          Set<SecurityGroup> groups = securityGroupExtension.get().listSecurityGroupsForNode(node.getId());
@@ -121,8 +118,8 @@ public class AzureComputeSecurityGroupExtensionLiveTest extends BaseSecurityGrou
       Optional<SecurityGroupExtension> securityGroupExtension = computeService.getSecurityGroupExtension();
       assertTrue(securityGroupExtension.isPresent(), "security group extension was not present");
 
-      NodeMetadata node = getOnlyElement(computeService
-            .createNodesInGroup(nodeGroup, 1, inboundPorts(22, 23, 24, 8000)));
+      NodeMetadata node = getOnlyElement(computeService.createNodesInGroup(nodeGroup, 1,
+            options().inboundPorts(22, 23, 24, 8000)));
 
       try {
          Set<SecurityGroup> groups = securityGroupExtension.get().listSecurityGroupsForNode(node.getId());
@@ -141,7 +138,7 @@ public class AzureComputeSecurityGroupExtensionLiveTest extends BaseSecurityGrou
    @Override
    protected void tearDownContext() {
       try {
-         URI uri = view.unwrapApi(AzureComputeApi.class).getResourceGroupApi().delete(testResourceGroup.name());
+         URI uri = view.unwrapApi(AzureComputeApi.class).getResourceGroupApi().delete(resourceGroupName);
          if (uri != null) {
             assertTrue(resourceDeleted.apply(uri),
                   String.format("Resource %s was not terminated in the configured timeout", uri));
@@ -154,7 +151,7 @@ public class AzureComputeSecurityGroupExtensionLiveTest extends BaseSecurityGrou
    @Override
    protected Properties setupProperties() {
       Properties properties = super.setupProperties();
-      AzureLiveTestUtils.defaultProperties(properties, "sgelivetest");
+      AzureLiveTestUtils.defaultProperties(properties);
       setIfTestSystemPropertyPresent(properties, "oauth.endpoint");
       return properties;
    }
@@ -163,9 +160,18 @@ public class AzureComputeSecurityGroupExtensionLiveTest extends BaseSecurityGrou
    protected ProviderMetadata createProviderMetadata() {
       return AzureComputeProviderMetadata.builder().build();
    }
+   
+   private AzureTemplateOptions options() {
+      return resourceGroup(resourceGroupName);
+   }
+   
+   @Override
+   public Template getNodeTemplate() {
+      return view.getComputeService().templateBuilder().options(options()).build();
+   }
 
-   private void createResourceGroup() {
+   private void createResourceGroup(String name) {
       Location location = getNodeTemplate().getLocation();
-      testResourceGroup = resourceGroupMap.getUnchecked(location.getId());
+      view.unwrapApi(AzureComputeApi.class).getResourceGroupApi().create(name, location.getId(), null);
    }
 }

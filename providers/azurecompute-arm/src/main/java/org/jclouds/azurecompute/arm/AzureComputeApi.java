@@ -17,15 +17,16 @@
 package org.jclouds.azurecompute.arm;
 
 import java.io.Closeable;
+
 import javax.ws.rs.PathParam;
 
 import org.jclouds.azurecompute.arm.features.AvailabilitySetApi;
 import org.jclouds.azurecompute.arm.features.DeploymentApi;
+import org.jclouds.azurecompute.arm.features.DiskApi;
 import org.jclouds.azurecompute.arm.features.ImageApi;
 import org.jclouds.azurecompute.arm.features.JobApi;
 import org.jclouds.azurecompute.arm.features.LoadBalancerApi;
 import org.jclouds.azurecompute.arm.features.LocationApi;
-import org.jclouds.azurecompute.arm.features.DiskApi;
 import org.jclouds.azurecompute.arm.features.NetworkInterfaceCardApi;
 import org.jclouds.azurecompute.arm.features.NetworkSecurityGroupApi;
 import org.jclouds.azurecompute.arm.features.NetworkSecurityRuleApi;
@@ -47,7 +48,7 @@ import org.jclouds.rest.annotations.Delegate;
  * @see <a href="https://msdn.microsoft.com/en-us/library/azure/dn790568.aspx" >doc</a>
  */
 public interface AzureComputeApi extends Closeable {
-
+   
    /**
     * The Azure Resource Manager API includes operations for managing resource groups in your subscription.
     *
@@ -56,6 +57,9 @@ public interface AzureComputeApi extends Closeable {
    @Delegate
    ResourceGroupApi getResourceGroupApi();
 
+   /**
+    * Provides access to the Job tracking API.
+    */
    @Delegate
    JobApi getJobApi();
 

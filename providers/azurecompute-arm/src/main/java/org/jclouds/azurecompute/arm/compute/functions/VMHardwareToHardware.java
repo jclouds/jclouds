@@ -16,9 +16,10 @@
  */
 package org.jclouds.azurecompute.arm.compute.functions;
 
-import com.google.common.base.Supplier;
-import com.google.common.collect.FluentIterable;
-import com.google.inject.Inject;
+import static org.jclouds.azurecompute.arm.compute.domain.LocationAndName.fromLocationAndName;
+
+import java.util.Set;
+
 import org.jclouds.azurecompute.arm.domain.VMHardware;
 import org.jclouds.collect.Memoized;
 import org.jclouds.compute.domain.Hardware;
@@ -26,14 +27,15 @@ import org.jclouds.compute.domain.HardwareBuilder;
 import org.jclouds.compute.domain.Processor;
 import org.jclouds.compute.domain.Volume;
 import org.jclouds.compute.domain.VolumeBuilder;
-
-import com.google.common.base.Function;
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableMap;
 import org.jclouds.domain.Location;
 import org.jclouds.location.predicates.LocationPredicates;
 
-import java.util.Set;
+import com.google.common.base.Function;
+import com.google.common.base.Supplier;
+import com.google.common.collect.FluentIterable;
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
+import com.google.inject.Inject;
 
 public class VMHardwareToHardware implements Function<VMHardware, Hardware> {
 
@@ -49,10 +51,10 @@ public class VMHardwareToHardware implements Function<VMHardware, Hardware> {
       final HardwareBuilder builder = new HardwareBuilder()
               .name(from.name())
               .providerId(from.name())
-              .id(from.name())
+              .id(fromLocationAndName(from.location(), from.name()).slashEncode())
               .processors(ImmutableList.of(new Processor(from.numberOfCores(), 2)))
               .ram(from.memoryInMB())
-              .location(from.globallyAvailable() ? null : FluentIterable.from(locations.get())
+              .location(FluentIterable.from(locations.get())
                       .firstMatch(LocationPredicates.idEquals(from.location()))
                       .get());
 

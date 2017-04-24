@@ -98,6 +98,13 @@ public abstract class VMImage {
     */
    @Nullable
    public abstract String customImageId();
+   
+   /**
+    * The resource group for the image in case of custom images.
+    * @return
+    */
+   @Nullable
+   public abstract String resourceGroup();
 
    /**
     * Extended version properties.
@@ -127,6 +134,7 @@ public abstract class VMImage {
    public abstract static class Builder {
 
       public abstract Builder customImageId(String id);
+      public abstract Builder resourceGroup(String resourceGroup);
       public abstract Builder publisher(String published);
       public abstract Builder offer(String offer);
       public abstract Builder sku(String sku);

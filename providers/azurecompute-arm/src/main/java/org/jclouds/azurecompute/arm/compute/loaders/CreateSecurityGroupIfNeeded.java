@@ -28,7 +28,7 @@ import javax.inject.Named;
 import javax.inject.Singleton;
 
 import org.jclouds.azurecompute.arm.AzureComputeApi;
-import org.jclouds.azurecompute.arm.compute.domain.RegionAndIdAndIngressRules;
+import org.jclouds.azurecompute.arm.compute.domain.ResourceGroupAndNameAndIngressRules;
 import org.jclouds.azurecompute.arm.domain.NetworkSecurityGroup;
 import org.jclouds.azurecompute.arm.domain.NetworkSecurityGroupProperties;
 import org.jclouds.azurecompute.arm.domain.NetworkSecurityRule;
@@ -36,32 +36,27 @@ import org.jclouds.azurecompute.arm.domain.NetworkSecurityRuleProperties;
 import org.jclouds.azurecompute.arm.domain.NetworkSecurityRuleProperties.Access;
 import org.jclouds.azurecompute.arm.domain.NetworkSecurityRuleProperties.Direction;
 import org.jclouds.azurecompute.arm.domain.NetworkSecurityRuleProperties.Protocol;
-import org.jclouds.azurecompute.arm.domain.ResourceGroup;
 import org.jclouds.compute.reference.ComputeServiceConstants;
 import org.jclouds.logging.Logger;
 
 import com.google.common.cache.CacheLoader;
-import com.google.common.cache.LoadingCache;
 
 @Singleton
-public class CreateSecurityGroupIfNeeded extends CacheLoader<RegionAndIdAndIngressRules, String> {
+public class CreateSecurityGroupIfNeeded extends CacheLoader<ResourceGroupAndNameAndIngressRules, String> {
    @Resource
    @Named(ComputeServiceConstants.COMPUTE_LOGGER)
    protected Logger logger = Logger.NULL;
 
    private final AzureComputeApi api;
-   private final LoadingCache<String, ResourceGroup> resourceGroupMap;
 
    @Inject
-   CreateSecurityGroupIfNeeded(AzureComputeApi api, LoadingCache<String, ResourceGroup> resourceGroupMap) {
+   CreateSecurityGroupIfNeeded(AzureComputeApi api) {
       this.api = api;
-      this.resourceGroupMap = resourceGroupMap;
    }
 
    @Override
-   public String load(RegionAndIdAndIngressRules key) throws Exception {
-      ResourceGroup resourceGroup = resourceGroupMap.getUnchecked(key.region());
-      return createSecurityGroup(key.region(), resourceGroup.name(), key.id(), key.inboundPorts());
+   public String load(ResourceGroupAndNameAndIngressRules key) throws Exception {
+      return createSecurityGroup(key.location(), key.resourceGroup(), key.name(), key.inboundPorts());
    }
 
    private String createSecurityGroup(String location, String resourceGroup, String name, int[] inboundPorts) {

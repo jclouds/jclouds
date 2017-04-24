@@ -18,8 +18,10 @@ package org.jclouds.azurecompute.arm.compute.functions;
 
 import static com.google.common.collect.Iterables.filter;
 import static com.google.common.collect.Iterables.transform;
+import static org.jclouds.azurecompute.arm.compute.domain.ResourceGroupAndName.fromResourceGroupAndName;
 import static org.jclouds.azurecompute.arm.compute.functions.NetworkSecurityRuleToIpPermission.InboundRule;
 import static org.jclouds.azurecompute.arm.compute.functions.VirtualMachineToNodeMetadata.getLocation;
+import static org.jclouds.azurecompute.arm.domain.IdReference.extractResourceGroup;
 
 import java.util.Set;
 
@@ -27,7 +29,6 @@ import javax.inject.Singleton;
 
 import org.jclouds.azurecompute.arm.domain.NetworkSecurityGroup;
 import org.jclouds.azurecompute.arm.domain.NetworkSecurityRule;
-import org.jclouds.azurecompute.arm.domain.RegionAndId;
 import org.jclouds.collect.Memoized;
 import org.jclouds.compute.domain.SecurityGroup;
 import org.jclouds.compute.domain.SecurityGroupBuilder;
@@ -54,8 +55,8 @@ public class NetworkSecurityGroupToSecurityGroup implements Function<NetworkSecu
    public SecurityGroup apply(NetworkSecurityGroup input) {
       SecurityGroupBuilder builder = new SecurityGroupBuilder();
 
-      builder.id(RegionAndId.fromRegionAndId(input.location(), input.name()).slashEncode());
-      builder.providerId(input.properties().resourceGuid());
+      builder.id(fromResourceGroupAndName(extractResourceGroup(input.id()), input.name()).slashEncode());
+      builder.providerId(input.id());
       builder.name(input.name());
       builder.location(getLocation(locations, input.location()));
 

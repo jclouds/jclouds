@@ -16,6 +16,8 @@
  */
 package org.jclouds.azurecompute.arm.compute.functions;
 
+import static org.jclouds.azurecompute.arm.domain.IdReference.extractResourceGroup;
+
 import org.jclouds.azurecompute.arm.domain.Image;
 import org.jclouds.azurecompute.arm.domain.VMImage;
 
@@ -25,7 +27,7 @@ public class CustomImageToVMImage implements Function<Image, VMImage> {
 
    @Override
    public VMImage apply(Image input) {
-      return VMImage.customImage().customImageId(input.id()).location(input.location()).name(input.name())
+      return VMImage.customImage().resourceGroup(extractResourceGroup(input.id())).customImageId(input.id()).location(input.location()).name(input.name())
             .offer(input.properties().storageProfile().osDisk().osType()).build();
    }
 }

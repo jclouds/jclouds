@@ -34,7 +34,7 @@ import com.google.common.cache.CacheLoader;
 import com.google.common.collect.ImmutableMap;
 
 @Singleton
-public class ResourceGroupForLocation extends CacheLoader<String, ResourceGroup> {
+public class DefaultResourceGroup extends CacheLoader<String, ResourceGroup> {
    @Resource
    @Named(ComputeServiceConstants.COMPUTE_LOGGER)
    protected Logger logger = Logger.NULL;
@@ -43,7 +43,7 @@ public class ResourceGroupForLocation extends CacheLoader<String, ResourceGroup>
    private final LocationToResourceGroupName locationToResourceGroupName;
 
    @Inject
-   ResourceGroupForLocation(AzureComputeApi api, LocationToResourceGroupName locationToResourceGroupName) {
+   DefaultResourceGroup(AzureComputeApi api, LocationToResourceGroupName locationToResourceGroupName) {
       this.api = api.getResourceGroupApi();
       this.locationToResourceGroupName = locationToResourceGroupName;
    }
@@ -54,7 +54,7 @@ public class ResourceGroupForLocation extends CacheLoader<String, ResourceGroup>
       ResourceGroup resourceGroup = api.get(azureGroupName);
       if (resourceGroup == null) {
          logger.debug(">> creating resource group %s", azureGroupName);
-         final Map<String, String> tags = ImmutableMap.of("description", "jclouds managed VMs");
+         final Map<String, String> tags = ImmutableMap.of("description", "jclouds default resource group");
          resourceGroup = api.create(azureGroupName, locationId, tags);
       }
       return resourceGroup;
