@@ -149,7 +149,12 @@ public class LoadBalancerApiMockTest extends BaseAzureComputeApiMockTest {
             .builder().build();
       FrontendIPConfigurations frontendIPConfigurations = FrontendIPConfigurations.create("ipConfigs", null,
             frontendIPConfigurationsProperties, null);
-      return LoadBalancer.create(lbName, "westus", null, LoadBalancerProperties.builder()
-            .frontendIPConfigurations(ImmutableList.of(frontendIPConfigurations)).build(), null);
+      return LoadBalancer
+            .builder()
+            .name(lbName)
+            .location("westus")
+            .properties(
+                  LoadBalancerProperties.builder().frontendIPConfigurations(ImmutableList.of(frontendIPConfigurations))
+                        .build()).build();
    }
 }

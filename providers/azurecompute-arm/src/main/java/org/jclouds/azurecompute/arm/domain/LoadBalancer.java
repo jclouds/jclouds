@@ -26,25 +26,42 @@ import com.google.common.collect.ImmutableMap;
 
 @AutoValue
 public abstract class LoadBalancer {
-   @Nullable
-   public abstract String name();
+   
+   @Nullable public abstract String id();
+   @Nullable public abstract String name();
+   @Nullable public abstract String location();
+   @Nullable public abstract String etag();
+   @Nullable public abstract Map<String, String> tags();
+   @Nullable public abstract LoadBalancerProperties properties();
 
-   @Nullable
-   public abstract String location();
+   @SerializedNames({ "id", "name", "location", "etag", "tags", "properties", })
+   public static LoadBalancer create(String id, final String name, final String location, final String etag,
+         final Map<String, String> tags, final LoadBalancerProperties properties) {
+      return builder().id(id).name(name).location(location).etag(etag).tags(tags).properties(properties).build();
+   }
+   
+   public abstract Builder toBuilder();
 
-   @Nullable
-   public abstract Map<String, String> tags();
+   public static Builder builder() {
+      return new AutoValue_LoadBalancer.Builder();
+   }
+   
+   @AutoValue.Builder
+   public abstract static class Builder {
+      public abstract Builder id(String id);
+      public abstract Builder name(String name);
+      public abstract Builder location(String location);
+      public abstract Builder etag(String etag);
+      public abstract Builder tags(Map<String, String> tags);
+      public abstract Builder properties(LoadBalancerProperties properties);
+      
+      abstract Map<String, String> tags();
 
-   @Nullable
-   public abstract LoadBalancerProperties properties();
-
-   @Nullable
-   public abstract String etag();
-
-   @SerializedNames({ "name", "location", "tags", "properties", "etag" })
-   public static LoadBalancer create(final String name, final String location, final Map<String, String> tags,
-         final LoadBalancerProperties properties, final String etag) {
-      return new AutoValue_LoadBalancer(name, location, tags == null ? null : ImmutableMap.copyOf(tags), properties,
-            etag);
+      abstract LoadBalancer autoBuild();
+      
+      public LoadBalancer build() {
+         tags(tags() != null ? ImmutableMap.copyOf(tags()) : null);
+         return autoBuild();
+      }
    }
 }
