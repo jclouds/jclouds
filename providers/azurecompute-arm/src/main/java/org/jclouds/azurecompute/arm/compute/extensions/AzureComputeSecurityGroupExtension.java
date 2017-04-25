@@ -23,7 +23,6 @@ import static com.google.common.collect.Iterables.any;
 import static com.google.common.collect.Iterables.filter;
 import static com.google.common.collect.Iterables.transform;
 import static org.jclouds.azurecompute.arm.config.AzureComputeProperties.TIMEOUT_RESOURCE_DELETED;
-import static org.jclouds.compute.predicates.NodePredicates.locationId;
 
 import java.net.URI;
 import java.util.ArrayList;
@@ -55,6 +54,7 @@ import org.jclouds.compute.domain.SecurityGroupBuilder;
 import org.jclouds.compute.extensions.SecurityGroupExtension;
 import org.jclouds.compute.reference.ComputeServiceConstants;
 import org.jclouds.domain.Location;
+import org.jclouds.location.Region;
 import org.jclouds.logging.Logger;
 import org.jclouds.net.domain.IpPermission;
 import org.jclouds.net.domain.IpProtocol;
@@ -62,6 +62,7 @@ import org.jclouds.net.domain.IpProtocol;
 import com.google.common.base.Function;
 import com.google.common.base.Objects;
 import com.google.common.base.Predicate;
+import com.google.common.base.Supplier;
 import com.google.common.cache.LoadingCache;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Multimap;
@@ -77,40 +78,50 @@ public class AzureComputeSecurityGroupExtension implements SecurityGroupExtensio
    private final SecurityGroupAvailablePredicateFactory securityGroupAvailable;
    private final Predicate<URI> resourceDeleted;
    private final LoadingCache<String, ResourceGroup> defaultResourceGroup;
+   private final Supplier<Set<String>> regionIds;
 
    @Inject
    AzureComputeSecurityGroupExtension(AzureComputeApi api,
          Function<NetworkSecurityGroup, SecurityGroup> groupConverter,
          SecurityGroupAvailablePredicateFactory securityRuleAvailable,
          @Named(TIMEOUT_RESOURCE_DELETED) Predicate<URI> resourceDeleted,
-         LoadingCache<String, ResourceGroup> defaultResourceGroup) {
+         LoadingCache<String, ResourceGroup> defaultResourceGroup,
+         @Region Supplier<Set<String>> regionIds) {
       this.api = api;
       this.securityGroupConverter = groupConverter;
       this.securityGroupAvailable = securityRuleAvailable;
       this.resourceDeleted = resourceDeleted;
       this.defaultResourceGroup = defaultResourceGroup;
-   }
-
-   @Override
-   public Set<SecurityGroup> listSecurityGroups() {
-      ImmutableSet.Builder<SecurityGroup> securityGroups = ImmutableSet.builder();
-      for (ResourceGroup rg : api.getResourceGroupApi().list()) {
-         securityGroups.addAll(securityGroupsInResourceGroup(rg.name()));
-      }
-      return securityGroups.build();
-   }
-   
-   private Set<SecurityGroup> securityGroupsInResourceGroup(String resourceGroup) {
-      List<NetworkSecurityGroup> networkGroups = api.getNetworkSecurityGroupApi(resourceGroup).list();
-      return ImmutableSet.copyOf(transform(filter(networkGroups, notNull()), securityGroupConverter));
+      this.regionIds = regionIds;
    }
 
    @Override
    public Set<SecurityGroup> listSecurityGroupsInLocation(Location location) {
-      // Even though the resource groups are in a location, each security group
-      // can be in a different resource group, so we need to inspect all teh
-      // existing resource groups, and filter afterwards
-      return ImmutableSet.copyOf(filter(listSecurityGroups(), locationId(location.getId())));
+      return securityGroupsInLocations(ImmutableSet.of(location.getId()));
+   }
+
+   @Override
+   public Set<SecurityGroup> listSecurityGroups() {
+      return securityGroupsInLocations(regionIds.get());
+   }
+
+   private Set<SecurityGroup> securityGroupsInLocations(final Set<String> locations) {
+      List<SecurityGroup> securityGroups = new ArrayList<SecurityGroup>();
+      for (ResourceGroup rg : api.getResourceGroupApi().list()) {
+         securityGroups.addAll(securityGroupsInResourceGroup(rg.name()));
+      }
+      
+      return ImmutableSet.copyOf(filter(securityGroups, new Predicate<SecurityGroup>() {
+         @Override
+         public boolean apply(SecurityGroup input) {
+            return locations.contains(input.getLocation().getId());
+         }
+      }));
+   }
+
+   private Set<SecurityGroup> securityGroupsInResourceGroup(String resourceGroup) {
+      List<NetworkSecurityGroup> networkGroups = api.getNetworkSecurityGroupApi(resourceGroup).list();
+      return ImmutableSet.copyOf(transform(filter(networkGroups, notNull()), securityGroupConverter));
    }
 
    @Override

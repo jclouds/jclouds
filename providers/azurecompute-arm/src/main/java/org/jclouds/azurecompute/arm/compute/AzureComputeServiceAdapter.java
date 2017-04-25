@@ -220,8 +220,14 @@ public class AzureComputeServiceAdapter implements ComputeServiceAdapter<Virtual
    }
    
    private List<VMImage> listCustomImagesByResourceGroup(String resourceGroup) {
-      List<org.jclouds.azurecompute.arm.domain.Image> customImages = api.getVirtualMachineImageApi(resourceGroup).list();
-      return Lists.transform(customImages, customImagetoVmImage);
+      List<org.jclouds.azurecompute.arm.domain.Image> customImgs = api.getVirtualMachineImageApi(resourceGroup).list();
+      return ImmutableList.copyOf(transform(
+            filter(customImgs, new Predicate<org.jclouds.azurecompute.arm.domain.Image>() {
+               @Override
+               public boolean apply(org.jclouds.azurecompute.arm.domain.Image input) {
+                  return regionIds.get().contains(input.location());
+               }
+            }), customImagetoVmImage));
    }
 
    @Override
@@ -241,15 +247,7 @@ public class AzureComputeServiceAdapter implements ComputeServiceAdapter<Virtual
       }
 
       // We need to look for custom images in all resource groups
-      Iterable<ResourceGroup> resourceGroupsInLocation = filter(api.getResourceGroupApi().list(),
-            new Predicate<ResourceGroup>() {
-               @Override
-               public boolean apply(ResourceGroup input) {
-                  return availableLocationNames.contains(input.location());
-               }
-            });
-      
-      for (ResourceGroup resourceGroup : resourceGroupsInLocation) {
+      for (ResourceGroup resourceGroup : api.getResourceGroupApi().list()) {
          osImages.addAll(listCustomImagesByResourceGroup(resourceGroup.name()));
       }
 
@@ -345,7 +343,13 @@ public class AzureComputeServiceAdapter implements ComputeServiceAdapter<Virtual
    public Iterable<VirtualMachine> listNodes() {
       ImmutableList.Builder<VirtualMachine> nodes = builder();
       for (ResourceGroup resourceGroup : api.getResourceGroupApi().list()) {
-         nodes.addAll(api.getVirtualMachineApi(resourceGroup.name()).list());
+         List<VirtualMachine> vms = api.getVirtualMachineApi(resourceGroup.name()).list();
+         nodes.addAll(filter(vms, new Predicate<VirtualMachine>() {
+            @Override
+            public boolean apply(VirtualMachine input) {
+               return regionIds.get().contains(input.location());
+            }
+         }));
       }
       return nodes.build();
    }
