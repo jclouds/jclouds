@@ -61,7 +61,7 @@ public class NetworkSecurityGroupToSecurityGroup implements Function<NetworkSecu
       builder.location(getLocation(locations, input.location()));
 
       if (input.properties().securityRules() != null) {
-         // We just supoprt security groups that allow traffic to a set of
+         // We just support security groups that allow traffic to a set of
          // targets. We don't support deny rules or origin based rules in the
          // security group api.
          builder.ipPermissions(transform(filter(input.properties().securityRules(), InboundRule), ruleToPermission));

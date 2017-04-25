@@ -16,6 +16,9 @@
  */
 package org.jclouds.azurecompute.arm.domain;
 
+import static org.jclouds.azurecompute.arm.domain.IdReference.extractName;
+import static org.jclouds.azurecompute.arm.domain.IdReference.extractResourceGroup;
+
 import org.jclouds.javax.annotation.Nullable;
 import org.jclouds.json.SerializedNames;
 
@@ -89,5 +92,15 @@ public abstract class ImageReference {
       public abstract Builder version(String version);
 
       public abstract ImageReference build();
+   }
+   
+   public String encodeFieldsToUniqueId(String location) {
+      return VMImage.azureImage().location(location).publisher(publisher()).offer(offer()).sku(sku()).build()
+            .encodeFieldsToUniqueId();
+   }
+
+   public String encodeFieldsToUniqueIdCustom(String location) {
+      return VMImage.customImage().resourceGroup(extractResourceGroup(customImageId())).location(location)
+            .name(extractName(customImageId())).build().encodeFieldsToUniqueIdCustom();
    }
 }

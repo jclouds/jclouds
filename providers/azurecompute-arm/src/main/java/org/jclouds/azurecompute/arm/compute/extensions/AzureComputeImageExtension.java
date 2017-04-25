@@ -20,7 +20,6 @@ import static com.google.common.base.Functions.compose;
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkState;
 import static org.jclouds.azurecompute.arm.compute.domain.ResourceGroupAndName.fromSlashEncoded;
-import static org.jclouds.azurecompute.arm.compute.functions.VMImageToImage.decodeFieldsFromUniqueId;
 import static org.jclouds.azurecompute.arm.config.AzureComputeProperties.TIMEOUT_RESOURCE_DELETED;
 import static org.jclouds.compute.config.ComputeServiceProperties.TIMEOUT_NODE_SUSPENDED;
 
@@ -125,7 +124,7 @@ public class AzureComputeImageExtension implements ImageExtension {
 
    @Override
    public boolean deleteImage(String id) {
-      VMImage image = decodeFieldsFromUniqueId(id);
+      VMImage image = VMImage.decodeFieldsFromUniqueId(id);
       checkArgument(image.custom(), "Only custom images can be deleted");
 
       logger.debug(">> deleting image %s", id);

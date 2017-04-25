@@ -22,8 +22,6 @@ import static com.google.common.collect.Iterables.find;
 import static org.jclouds.azurecompute.arm.compute.AzureComputeServiceAdapter.GROUP_KEY;
 import static org.jclouds.azurecompute.arm.compute.domain.LocationAndName.fromLocationAndName;
 import static org.jclouds.azurecompute.arm.compute.domain.ResourceGroupAndName.fromResourceGroupAndName;
-import static org.jclouds.azurecompute.arm.compute.functions.VMImageToImage.encodeFieldsToUniqueId;
-import static org.jclouds.azurecompute.arm.compute.functions.VMImageToImage.encodeFieldsToUniqueIdCustom;
 import static org.jclouds.azurecompute.arm.domain.IdReference.extractResourceGroup;
 import static org.jclouds.compute.util.ComputeServiceUtils.addMetadataAndParseTagsFromCommaDelimitedValue;
 import static org.jclouds.location.predicates.LocationPredicates.idEquals;
@@ -185,10 +183,9 @@ public class VirtualMachineToNodeMetadata implements Function<VirtualMachine, No
 
    protected Optional<? extends Image> findImage(final StorageProfile storageProfile, String locatioName) {
       if (storageProfile.imageReference() != null) {
-         // FIXME check this condition
          String imageId = storageProfile.imageReference().customImageId() != null ?
-               encodeFieldsToUniqueIdCustom(false, locatioName, storageProfile.imageReference()) :
-               encodeFieldsToUniqueId(false, locatioName, storageProfile.imageReference());
+               storageProfile.imageReference().encodeFieldsToUniqueIdCustom(locatioName) :
+               storageProfile.imageReference().encodeFieldsToUniqueId(locatioName); 
          return imageCache.get(imageId);
       } else {
          logger.warn("could not find image for storage profile %s", storageProfile);

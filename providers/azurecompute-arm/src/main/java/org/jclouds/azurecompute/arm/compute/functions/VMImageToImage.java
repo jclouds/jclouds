@@ -19,14 +19,12 @@ package org.jclouds.azurecompute.arm.compute.functions;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.collect.Iterables.tryFind;
 import static java.util.Arrays.asList;
-import static org.jclouds.azurecompute.arm.domain.IdReference.extractResourceGroup;
-import static org.jclouds.azurecompute.arm.util.VMImages.isCustom;
+import static org.jclouds.location.predicates.LocationPredicates.idEquals;
 
 import java.util.Map;
 import java.util.Set;
 
 import org.jclouds.azurecompute.arm.compute.extensions.AzureComputeImageExtension;
-import org.jclouds.azurecompute.arm.domain.ImageReference;
 import org.jclouds.azurecompute.arm.domain.Plan;
 import org.jclouds.azurecompute.arm.domain.VMImage;
 import org.jclouds.collect.Memoized;
@@ -36,7 +34,6 @@ import org.jclouds.compute.domain.OperatingSystem;
 import org.jclouds.compute.domain.OsFamily;
 import org.jclouds.domain.Location;
 import org.jclouds.javax.annotation.Nullable;
-import org.jclouds.location.predicates.LocationPredicates;
 
 import com.google.common.base.Function;
 import com.google.common.base.Optional;
@@ -57,51 +54,6 @@ public class VMImageToImage implements Function<VMImage, Image> {
 
    private final Supplier<Set<? extends org.jclouds.domain.Location>> locations;
 
-   public static String encodeFieldsToUniqueId(boolean globallyAvailable, String locationName,
-         ImageReference imageReference) {
-      return (globallyAvailable ? "global" : locationName) + "/" + imageReference.publisher() + "/"
-            + imageReference.offer() + "/" + imageReference.sku();
-   }
-
-   public static String encodeFieldsToUniqueIdCustom(boolean globallyAvailable, String locationName,
-         ImageReference imageReference) {
-      return extractResourceGroup(imageReference.customImageId()) + "/" + (globallyAvailable ? "global" : locationName)
-            + "/" + imageReference.customImageId().substring(imageReference.customImageId().lastIndexOf("/") + 1);
-   }
-
-   public static String encodeFieldsToUniqueId(VMImage imageReference) {
-      return (imageReference.globallyAvailable() ? "global" : imageReference.location()) + "/"
-            + imageReference.publisher() + "/" + imageReference.offer() + "/" + imageReference.sku();
-   }
-
-   public static String encodeFieldsToUniqueIdCustom(VMImage imageReference) {
-      return imageReference.resourceGroup() + "/"
-            + (imageReference.globallyAvailable() ? "global" : imageReference.location()) + "/" + imageReference.name();
-   }
-
-   public static VMImage decodeFieldsFromUniqueId(final String id) {
-      VMImage vmImage;
-      String[] fields = checkNotNull(id, "id").split("/");
-      if (isCustom(id)) {
-         /* id fields indexes
-         0: imageReference.resourceGroup
-         1: imageReference.location + "/" +
-         2: imageReference.name
-         */
-         vmImage = VMImage.customImage().resourceGroup(fields[0]).location(fields[1]).name(fields[2]).build();
-      } else {
-         /* id fields indexes
-         0: imageReference.location + "/" +
-         1: imageReference.publisher + "/" +
-         2: imageReference.offer + "/" +
-         3: imageReference.sku + "/" +
-         */
-         vmImage = VMImage.azureImage().location(fields[0]).publisher(fields[1]).offer(fields[2]).sku(fields[3])
-               .build();
-      }
-      return vmImage;
-   }
-
    @Inject
    VMImageToImage(@Memoized Supplier<Set<? extends Location>> locations) {
       this.locations = locations;
@@ -111,29 +63,32 @@ public class VMImageToImage implements Function<VMImage, Image> {
    public Image apply(final VMImage image) {
       final ImageBuilder builder = new ImageBuilder();
       addMarketplacePlanToMetadataIfPresent(builder, image);
+      
+      Location location = FluentIterable.from(locations.get()).firstMatch(idEquals(image.location())).get();
+      
       if (image.custom()) {
-         builder.location(
-                     FluentIterable.from(locations.get()).firstMatch(LocationPredicates.idEquals(image.location()))
-                           .get()).name(image.name()).description(image.group()).status(Image.Status.AVAILABLE)
-               .version("latest").providerId(image.customImageId()).id(encodeFieldsToUniqueIdCustom(image));
-
-         final OperatingSystem.Builder osBuilder = osFamily().apply(image);
-         builder.operatingSystem(osBuilder.build());
+         builder
+            .id(image.encodeFieldsToUniqueIdCustom())
+            .providerId(image.customImageId())
+            .name(image.name())
+            .location(location)
+            .description(image.group())
+            .status(Image.Status.AVAILABLE)
+            .version("latest");
       } else {
          builder
-               .name(image.offer())
-               .description(image.sku())
-               .status(Image.Status.AVAILABLE)
-               .version(image.sku())
-               .id(encodeFieldsToUniqueId(image))
-               .providerId(image.publisher())
-               .location(
-                     image.globallyAvailable() ? null : FluentIterable.from(locations.get())
-                           .firstMatch(LocationPredicates.idEquals(image.location())).get());
-
-         final OperatingSystem.Builder osBuilder = osFamily().apply(image);
-         builder.operatingSystem(osBuilder.build());
+            .id(image.encodeFieldsToUniqueId())
+            .providerId(image.publisher())
+            .name(image.offer())
+            .location(location)
+            .description(image.sku())
+            .status(Image.Status.AVAILABLE)
+            .version(image.sku());
       }
+      
+      final OperatingSystem.Builder osBuilder = osFamily().apply(image);
+      builder.operatingSystem(osBuilder.build());
+      
       return builder.build();
    }
    

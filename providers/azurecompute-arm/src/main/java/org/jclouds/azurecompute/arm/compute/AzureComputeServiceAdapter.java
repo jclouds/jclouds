@@ -25,7 +25,6 @@ import static com.google.common.collect.Iterables.transform;
 import static com.google.common.collect.Lists.newArrayList;
 import static org.jclouds.azurecompute.arm.compute.domain.LocationAndName.fromSlashEncoded;
 import static org.jclouds.azurecompute.arm.compute.domain.ResourceGroupAndName.fromResourceGroupAndName;
-import static org.jclouds.azurecompute.arm.compute.functions.VMImageToImage.decodeFieldsFromUniqueId;
 import static org.jclouds.azurecompute.arm.compute.functions.VMImageToImage.getMarketplacePlanFromImageMetadata;
 import static org.jclouds.azurecompute.arm.config.AzureComputeProperties.IMAGE_PUBLISHERS;
 import static org.jclouds.azurecompute.arm.util.VMImages.isCustom;
@@ -256,7 +255,7 @@ public class AzureComputeServiceAdapter implements ComputeServiceAdapter<Virtual
 
    @Override
    public VMImage getImage(final String id) {
-      VMImage image = decodeFieldsFromUniqueId(id);
+      VMImage image = VMImage.decodeFieldsFromUniqueId(id);
 
       if (image.custom()) {
          org.jclouds.azurecompute.arm.domain.Image vmImage = api.getVirtualMachineImageApi(image.resourceGroup()).get(
