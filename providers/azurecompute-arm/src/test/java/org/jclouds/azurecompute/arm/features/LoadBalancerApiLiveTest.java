@@ -23,6 +23,7 @@ import static com.google.common.collect.Iterables.transform;
 import static com.google.common.collect.Lists.newArrayList;
 import static org.jclouds.azurecompute.arm.compute.options.AzureTemplateOptions.Builder.availabilitySet;
 import static org.jclouds.azurecompute.arm.config.AzureComputeProperties.TIMEOUT_RESOURCE_DELETED;
+import static org.jclouds.azurecompute.arm.domain.IdReference.extractName;
 import static org.jclouds.azurecompute.arm.domain.InboundNatRuleProperties.Protocol.Tcp;
 import static org.jclouds.compute.predicates.NodePredicates.inGroup;
 import static org.testng.Assert.assertEquals;
@@ -360,7 +361,7 @@ public class LoadBalancerApiLiveTest extends BaseComputeServiceContextLiveTest {
          VirtualMachine vm = api.getVirtualMachineApi(resourceGroupAndName.resourceGroup()).get(
                resourceGroupAndName.name());
 
-         String nicName = vm.properties().networkProfile().networkInterfaces().get(0).name();
+         String nicName = extractName(vm.properties().networkProfile().networkInterfaces().get(0).id());
          nicNames.add(nicName);
       }
 

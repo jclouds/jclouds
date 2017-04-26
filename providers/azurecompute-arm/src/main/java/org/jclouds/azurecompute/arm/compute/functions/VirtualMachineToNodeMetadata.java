@@ -22,6 +22,7 @@ import static com.google.common.collect.Iterables.find;
 import static org.jclouds.azurecompute.arm.compute.AzureComputeServiceAdapter.GROUP_KEY;
 import static org.jclouds.azurecompute.arm.compute.domain.LocationAndName.fromLocationAndName;
 import static org.jclouds.azurecompute.arm.compute.domain.ResourceGroupAndName.fromResourceGroupAndName;
+import static org.jclouds.azurecompute.arm.domain.IdReference.extractName;
 import static org.jclouds.azurecompute.arm.domain.IdReference.extractResourceGroup;
 import static org.jclouds.compute.util.ComputeServiceUtils.addMetadataAndParseTagsFromCommaDelimitedValue;
 import static org.jclouds.location.predicates.LocationPredicates.idEquals;
@@ -40,6 +41,7 @@ import org.jclouds.azurecompute.arm.compute.functions.VirtualMachineToStatus.Sta
 import org.jclouds.azurecompute.arm.domain.IdReference;
 import org.jclouds.azurecompute.arm.domain.IpConfiguration;
 import org.jclouds.azurecompute.arm.domain.NetworkInterfaceCard;
+import org.jclouds.azurecompute.arm.domain.NetworkProfile.NetworkInterface;
 import org.jclouds.azurecompute.arm.domain.PublicIPAddress;
 import org.jclouds.azurecompute.arm.domain.StorageProfile;
 import org.jclouds.azurecompute.arm.domain.VirtualMachine;
@@ -136,9 +138,9 @@ public class VirtualMachineToNodeMetadata implements Function<VirtualMachine, No
       return builder.build();
    }
 
-   private Iterable<String> getPrivateIpAddresses(List<IdReference> idReferences) {
+   private Iterable<String> getPrivateIpAddresses(List<NetworkInterface> networkInterfaces) {
       List<String> privateIpAddresses = Lists.newArrayList();
-      for (IdReference networkInterfaceCardIdReference : idReferences) {
+      for (NetworkInterface networkInterfaceCardIdReference : networkInterfaces) {
          NetworkInterfaceCard networkInterfaceCard = getNetworkInterfaceCard(networkInterfaceCardIdReference);
          if (networkInterfaceCard != null && networkInterfaceCard.properties() != null
                && networkInterfaceCard.properties().ipConfigurations() != null) {
@@ -152,21 +154,21 @@ public class VirtualMachineToNodeMetadata implements Function<VirtualMachine, No
       return privateIpAddresses;
    }
 
-   private NetworkInterfaceCard getNetworkInterfaceCard(IdReference nic) {
-      return api.getNetworkInterfaceCardApi(nic.resourceGroup()).get(nic.name());
+   private NetworkInterfaceCard getNetworkInterfaceCard(NetworkInterface nic) {
+      return api.getNetworkInterfaceCardApi(extractResourceGroup(nic.id())).get(extractName(nic.id()));
    }
 
-   private Iterable<String> getPublicIpAddresses(List<IdReference> idReferences) {
+   private Iterable<String> getPublicIpAddresses(List<NetworkInterface> networkInterfaces) {
       List<String> publicIpAddresses = Lists.newArrayList();
-      for (IdReference networkInterfaceCardIdReference : idReferences) {
+      for (NetworkInterface networkInterfaceCardIdReference : networkInterfaces) {
          NetworkInterfaceCard networkInterfaceCard = getNetworkInterfaceCard(networkInterfaceCardIdReference);
          if (networkInterfaceCard != null && networkInterfaceCard.properties() != null
                && networkInterfaceCard.properties().ipConfigurations() != null) {
-            String resourceGroup = networkInterfaceCardIdReference.resourceGroup();
             for (IpConfiguration ipConfiguration : networkInterfaceCard.properties().ipConfigurations()) {
                if (ipConfiguration.properties().publicIPAddress() != null) {
                   IdReference publicIpId = ipConfiguration.properties().publicIPAddress();
-                  PublicIPAddress publicIp = api.getPublicIPAddressApi(resourceGroup).get(publicIpId.name());
+                  PublicIPAddress publicIp = api.getPublicIPAddressApi(publicIpId.resourceGroup()).get(
+                        publicIpId.name());
                   if (publicIp != null && publicIp.properties().ipAddress() != null) {
                      publicIpAddresses.add(publicIp.properties().ipAddress());
                   }

@@ -26,23 +26,16 @@ import java.util.List;
 @AutoValue
 public abstract class NetworkInterfaceCardProperties implements Provisionable {
 
-   @Nullable
-   public abstract String provisioningState();
-
-   @Nullable
-   public abstract String resourceGuid();
-
-   @Nullable
-   public abstract Boolean enableIPForwarding();
-
-   @Nullable
-   public abstract List<IpConfiguration> ipConfigurations();
-
-   @Nullable
-   public abstract IdReference networkSecurityGroup();
+   @Nullable public abstract String provisioningState();
+   @Nullable public abstract String resourceGuid();
+   @Nullable public abstract Boolean enableIPForwarding();
+   @Nullable public abstract List<IpConfiguration> ipConfigurations();
+   @Nullable public abstract IdReference networkSecurityGroup();
 
    @SerializedNames({"provisioningState", "resourceGuid", "enableIPForwarding", "ipConfigurations", "networkSecurityGroup"})
-   public static NetworkInterfaceCardProperties create(final String provisioningState, final String resourceGuid, final Boolean enableIPForwarding, final List<IpConfiguration> ipConfigurations, final IdReference networkSecurityGroup) {
+   public static NetworkInterfaceCardProperties create(final String provisioningState, final String resourceGuid,
+         final Boolean enableIPForwarding, final List<IpConfiguration> ipConfigurations,
+         final IdReference networkSecurityGroup) {
       NetworkInterfaceCardProperties.Builder builder = NetworkInterfaceCardProperties.builder()
               .provisioningState(provisioningState)
               .resourceGuid(resourceGuid)
@@ -52,28 +45,26 @@ public abstract class NetworkInterfaceCardProperties implements Provisionable {
 
       return builder.build();
    }
-   
+
+   NetworkInterfaceCardProperties() {
+
+   }
+
    public abstract Builder toBuilder();
 
    public static Builder builder() {
-
       return new AutoValue_NetworkInterfaceCardProperties.Builder();
    }
 
    @AutoValue.Builder
    public abstract static class Builder {
       public abstract Builder provisioningState(String provisioningState);
-
       public abstract Builder resourceGuid(String resourceGuid);
-
       public abstract Builder enableIPForwarding(Boolean enableIPForwarding);
-
       public abstract Builder ipConfigurations(List<IpConfiguration> ipConfigurations);
-
-      abstract List<IpConfiguration> ipConfigurations();
-
       public abstract Builder networkSecurityGroup(IdReference networkSecurityGroup);
 
+      abstract List<IpConfiguration> ipConfigurations();
       abstract NetworkInterfaceCardProperties autoBuild();
 
       public NetworkInterfaceCardProperties build() {

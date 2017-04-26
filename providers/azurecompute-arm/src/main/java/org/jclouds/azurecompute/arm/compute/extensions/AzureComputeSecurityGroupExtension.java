@@ -23,6 +23,8 @@ import static com.google.common.collect.Iterables.any;
 import static com.google.common.collect.Iterables.filter;
 import static com.google.common.collect.Iterables.transform;
 import static org.jclouds.azurecompute.arm.config.AzureComputeProperties.TIMEOUT_RESOURCE_DELETED;
+import static org.jclouds.azurecompute.arm.domain.IdReference.extractName;
+import static org.jclouds.azurecompute.arm.domain.IdReference.extractResourceGroup;
 
 import java.net.URI;
 import java.util.ArrayList;
@@ -36,8 +38,8 @@ import javax.inject.Named;
 import org.jclouds.azurecompute.arm.AzureComputeApi;
 import org.jclouds.azurecompute.arm.compute.config.AzureComputeServiceContextModule.SecurityGroupAvailablePredicateFactory;
 import org.jclouds.azurecompute.arm.compute.domain.ResourceGroupAndName;
-import org.jclouds.azurecompute.arm.domain.IdReference;
 import org.jclouds.azurecompute.arm.domain.NetworkInterfaceCard;
+import org.jclouds.azurecompute.arm.domain.NetworkProfile.NetworkInterface;
 import org.jclouds.azurecompute.arm.domain.NetworkSecurityGroup;
 import org.jclouds.azurecompute.arm.domain.NetworkSecurityGroupProperties;
 import org.jclouds.azurecompute.arm.domain.NetworkSecurityRule;
@@ -135,12 +137,12 @@ public class AzureComputeSecurityGroupExtension implements SecurityGroupExtensio
       if (vm == null) {
          throw new IllegalArgumentException("Node " + nodeId + " was not found");
       }
-      List<IdReference> networkInterfacesIdReferences = vm.properties().networkProfile().networkInterfaces();
+      List<NetworkInterface> networkInterfaces = vm.properties().networkProfile().networkInterfaces();
       List<NetworkSecurityGroup> networkGroups = new ArrayList<NetworkSecurityGroup>();
 
-      for (IdReference networkInterfaceCardIdReference : networkInterfacesIdReferences) {
-         String nicName = networkInterfaceCardIdReference.name();
-         String nicResourceGroup = networkInterfaceCardIdReference.resourceGroup();
+      for (NetworkInterface networkInterfaceCardIdReference : networkInterfaces) {
+         String nicName = extractName(networkInterfaceCardIdReference.id());
+         String nicResourceGroup = extractResourceGroup(networkInterfaceCardIdReference.id());
          NetworkInterfaceCard card = api.getNetworkInterfaceCardApi(nicResourceGroup).get(nicName);
          if (card != null && card.properties().networkSecurityGroup() != null) {
             String secGroupName = card.properties().networkSecurityGroup().name();
@@ -171,9 +173,14 @@ public class AzureComputeSecurityGroupExtension implements SecurityGroupExtensio
       SecurityGroupBuilder builder = new SecurityGroupBuilder();
       builder.name(name);
       builder.location(location);
+      
+      NetworkSecurityGroup sg = api.getNetworkSecurityGroupApi(resourceGroup.name()).createOrUpdate(name,
+            location.getId(), null, NetworkSecurityGroupProperties.builder().build());
+      
+      checkState(securityGroupAvailable.create(resourceGroup.name()).apply(name),
+            "Security group was not created in the configured timeout");
 
-      return securityGroupConverter.apply(api.getNetworkSecurityGroupApi(resourceGroup.name()).createOrUpdate(name,
-            location.getId(), null, NetworkSecurityGroupProperties.builder().build()));
+      return securityGroupConverter.apply(sg);
    }
 
    @Override

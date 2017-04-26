@@ -16,6 +16,12 @@
  */
 package org.jclouds.azurecompute.arm.features;
 
+import static com.google.common.collect.Iterables.isEmpty;
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertNotNull;
+import static org.testng.Assert.assertNull;
+import static org.testng.Assert.assertTrue;
+
 import java.net.URI;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -26,9 +32,9 @@ import java.util.List;
 import org.jclouds.azurecompute.arm.domain.DataDisk;
 import org.jclouds.azurecompute.arm.domain.DiagnosticsProfile;
 import org.jclouds.azurecompute.arm.domain.HardwareProfile;
-import org.jclouds.azurecompute.arm.domain.IdReference;
 import org.jclouds.azurecompute.arm.domain.ImageReference;
 import org.jclouds.azurecompute.arm.domain.NetworkProfile;
+import org.jclouds.azurecompute.arm.domain.NetworkProfile.NetworkInterface;
 import org.jclouds.azurecompute.arm.domain.OSDisk;
 import org.jclouds.azurecompute.arm.domain.OSProfile;
 import org.jclouds.azurecompute.arm.domain.Plan;
@@ -44,12 +50,6 @@ import org.testng.annotations.Test;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.squareup.okhttp.mockwebserver.MockResponse;
-
-import static com.google.common.collect.Iterables.isEmpty;
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertNotNull;
-import static org.testng.Assert.assertNull;
-import static org.testng.Assert.assertTrue;
 
 @Test(groups = "unit", testName = "VirtualMachineApiMockTest", singleThreaded = true)
 public class VirtualMachineApiMockTest extends BaseAzureComputeApiMockTest {
@@ -257,9 +257,9 @@ public class VirtualMachineApiMockTest extends BaseAzureComputeApiMockTest {
       OSProfile.WindowsConfiguration windowsConfig = OSProfile.WindowsConfiguration.create(false, null, null, true,
             null);
       OSProfile osProfile = OSProfile.create("windowsmachine", "azureuser", null, null, null, windowsConfig);
-      IdReference networkInterface = IdReference.create("/subscriptions/SUBSCRIPTIONID"
-            + "/resourceGroups/groupname/providers/Microsoft.Network/networkInterfaces/" + "windowsmachine167");
-      List<IdReference> networkInterfaces = new ArrayList<IdReference>();
+      NetworkInterface networkInterface = NetworkInterface.create("/subscriptions/SUBSCRIPTIONID"
+            + "/resourceGroups/groupname/providers/Microsoft.Network/networkInterfaces/" + "windowsmachine167", null);
+      List<NetworkInterface> networkInterfaces = new ArrayList<NetworkInterface>();
       networkInterfaces.add(networkInterface);
       NetworkProfile networkProfile = NetworkProfile.create(networkInterfaces);
       DiagnosticsProfile.BootDiagnostics bootDiagnostics = DiagnosticsProfile.BootDiagnostics.create(true,

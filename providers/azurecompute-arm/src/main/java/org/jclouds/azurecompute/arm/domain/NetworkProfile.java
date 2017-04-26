@@ -19,6 +19,7 @@ package org.jclouds.azurecompute.arm.domain;
 import com.google.auto.value.AutoValue;
 import com.google.common.collect.ImmutableList;
 
+import org.jclouds.javax.annotation.Nullable;
 import org.jclouds.json.SerializedNames;
 
 import java.util.List;
@@ -26,14 +27,47 @@ import java.util.List;
 @AutoValue
 public abstract class NetworkProfile {
 
+   @AutoValue
+   public abstract static class NetworkInterface {
+      public abstract String id();
+      @Nullable public abstract NetworkInterfaceProperties properties();
+      
+      @AutoValue
+      public abstract static class NetworkInterfaceProperties {
+         public abstract boolean primary();
+         
+         NetworkInterfaceProperties() {
+            
+         }
+         
+         @SerializedNames({"primary"})
+         public static NetworkInterfaceProperties create(boolean primary) {
+            return new AutoValue_NetworkProfile_NetworkInterface_NetworkInterfaceProperties(primary);
+         }
+      }
+      
+      NetworkInterface() {
+         
+      }
+      
+      @SerializedNames({"id", "properties"})
+      public static NetworkInterface create(String id, NetworkInterfaceProperties properties) {
+         return new AutoValue_NetworkProfile_NetworkInterface(id, properties);
+      }
+   }
+   
    /**
     * List of network interfaces
     */
-   public abstract List<IdReference> networkInterfaces();
+   public abstract List<NetworkInterface> networkInterfaces();
 
    @SerializedNames({"networkInterfaces"})
-   public static NetworkProfile create(final List<IdReference> networkInterfaces) {
+   public static NetworkProfile create(final List<NetworkInterface> networkInterfaces) {
       return builder().networkInterfaces(networkInterfaces).build();
+   }
+   
+   NetworkProfile() {
+      
    }
    
    public abstract Builder toBuilder();
@@ -44,14 +78,14 @@ public abstract class NetworkProfile {
 
    @AutoValue.Builder
    public abstract static class Builder {
-      public abstract Builder networkInterfaces(List<IdReference> networkInterfaces);
+      public abstract Builder networkInterfaces(List<NetworkInterface> networkInterfaces);
 
-      abstract List<IdReference> networkInterfaces();
+      abstract List<NetworkInterface> networkInterfaces();
 
       abstract NetworkProfile autoBuild();
 
       public NetworkProfile build() {
-         networkInterfaces(networkInterfaces() != null ? ImmutableList.copyOf(networkInterfaces()) : ImmutableList.<IdReference>of());
+         networkInterfaces(networkInterfaces() != null ? ImmutableList.copyOf(networkInterfaces()) : ImmutableList.<NetworkInterface>of());
          return autoBuild();
       }
    }

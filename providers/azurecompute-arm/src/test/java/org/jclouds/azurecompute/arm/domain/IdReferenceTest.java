@@ -22,6 +22,7 @@ import static org.testng.Assert.assertEquals;
 
 import org.testng.annotations.Test;
 
+@Test(groups = "unit", testName = "IdReferenceTest")
 public class IdReferenceTest {
 
    @Test

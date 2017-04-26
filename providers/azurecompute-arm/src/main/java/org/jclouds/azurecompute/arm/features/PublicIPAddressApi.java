@@ -34,6 +34,7 @@ import org.jclouds.azurecompute.arm.domain.PublicIPAddress;
 import org.jclouds.azurecompute.arm.domain.PublicIPAddressProperties;
 import org.jclouds.azurecompute.arm.filters.ApiVersionFilter;
 import org.jclouds.azurecompute.arm.functions.FalseOn204;
+import org.jclouds.javax.annotation.Nullable;
 import org.jclouds.oauth.v2.filters.OAuthFilter;
 import org.jclouds.rest.annotations.Fallback;
 import org.jclouds.rest.annotations.MapBinder;
@@ -60,7 +61,7 @@ public interface PublicIPAddressApi {
    @PUT
    PublicIPAddress createOrUpdate(@PathParam("publicipaddressname") String publicipaddressname,
                                                  @PayloadParam("location") String location,
-                                                 @PayloadParam("tags") Map<String, String> tags,
+                                                 @Nullable @PayloadParam("tags") Map<String, String> tags,
                                                  @PayloadParam("properties") PublicIPAddressProperties properties);
 
    @Named("publicipaddress:get")

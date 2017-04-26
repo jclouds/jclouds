@@ -36,7 +36,7 @@ public class SubnetApiMockTest extends BaseAzureComputeApiMockTest {
    private final String resourcegroup = "myresourcegroup";
    private final String virtualNetwork = "myvirtualnetwork";
    private final String subnetName = "mysubnet";
-   private final String apiVersion = "api-version=2015-06-15";
+   private final String apiVersion = "api-version=2017-03-01";
 
    public void createSubnet() throws InterruptedException {
 

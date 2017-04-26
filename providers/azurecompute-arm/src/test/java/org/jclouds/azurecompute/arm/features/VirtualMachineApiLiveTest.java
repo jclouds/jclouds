@@ -51,6 +51,8 @@ import org.jclouds.azurecompute.arm.domain.VirtualMachine;
 import org.jclouds.azurecompute.arm.domain.VirtualMachineInstance;
 import org.jclouds.azurecompute.arm.domain.VirtualMachineInstance.PowerState;
 import org.jclouds.azurecompute.arm.domain.VirtualMachineProperties;
+import org.jclouds.azurecompute.arm.domain.NetworkProfile.NetworkInterface;
+import org.jclouds.azurecompute.arm.domain.NetworkProfile.NetworkInterface.NetworkInterfaceProperties;
 import org.jclouds.azurecompute.arm.functions.ParseJobStatus;
 import org.jclouds.azurecompute.arm.internal.BaseAzureComputeApiLiveTest;
 import org.testng.annotations.BeforeClass;
@@ -253,12 +255,11 @@ public class VirtualMachineApiLiveTest extends BaseAzureComputeApiLiveTest {
       OSProfile.WindowsConfiguration windowsConfig = OSProfile.WindowsConfiguration.create(false, null, null, true,
               null);
       OSProfile osProfile = OSProfile.create(vmName, "azureuser", "RFe3&432dg", null, null, windowsConfig);
-      IdReference networkInterface =
-              IdReference.create("/subscriptions/" + subscriptionid +
+      NetworkInterface networkInterface =
+            NetworkInterface.create("/subscriptions/" + subscriptionid +
                       "/resourceGroups/" + resourceGroupName + "/providers/Microsoft.Network/networkInterfaces/"
-                      + nic);
-      List<IdReference> networkInterfaces =
-              new ArrayList<IdReference>();
+                      + nic, NetworkInterfaceProperties.create(true));
+      List<NetworkInterface> networkInterfaces = new ArrayList<NetworkInterface>();
       networkInterfaces.add(networkInterface);
       NetworkProfile networkProfile = NetworkProfile.create(networkInterfaces);
       VirtualMachineProperties properties = VirtualMachineProperties.create(null,

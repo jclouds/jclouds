@@ -17,36 +17,55 @@
 
 package org.jclouds.azurecompute.arm.domain;
 
-import com.google.auto.value.AutoValue;
-import com.google.common.collect.ImmutableMap;
+import java.util.Map;
+
 import org.jclouds.javax.annotation.Nullable;
 import org.jclouds.json.SerializedNames;
 
-import java.util.Map;
+import com.google.auto.value.AutoValue;
+import com.google.common.collect.ImmutableMap;
 
 @AutoValue
 public abstract class PublicIPAddress {
 
    public abstract String name();
-
    public abstract String id();
-
    public abstract String etag();
-
    public abstract String location();
-
-   @Nullable
-   public abstract Map<String, String> tags();
-
+   @Nullable public abstract Map<String, String> tags();
    public abstract PublicIPAddressProperties properties();
 
-   @SerializedNames({"name", "id", "etag", "location", "tags", "properties"})
-   public static PublicIPAddress create(final String name,
-                                        final String id,
-                                        final String etag,
-                                        final String location,
-                                        final Map<String, String> tags,
-                                        final PublicIPAddressProperties properties) {
-      return new AutoValue_PublicIPAddress(name, id, etag, location, tags == null ? null : ImmutableMap.copyOf(tags), properties);
+   @SerializedNames({ "name", "id", "etag", "location", "tags", "properties" })
+   public static PublicIPAddress create(String name, String id, String etag, String location, Map<String, String> tags,
+         PublicIPAddressProperties properties) {
+      return builder().name(name).id(id).etag(etag).location(location).tags(tags).properties(properties).build();
+   }
+   
+   PublicIPAddress() {
+      
+   }
+   
+   public abstract Builder toBuilder();
+
+   public static Builder builder() {
+      return new AutoValue_PublicIPAddress.Builder();
+   }
+
+   @AutoValue.Builder
+   public abstract static class Builder {
+      public abstract Builder name(String name);
+      public abstract Builder id(String id);
+      public abstract Builder etag(String etag);
+      public abstract Builder location(String location);
+      public abstract Builder tags(Map<String, String> tags);
+      public abstract Builder properties(PublicIPAddressProperties properties);
+      
+      abstract Map<String, String> tags();
+      abstract PublicIPAddress autoBuild();
+
+      public PublicIPAddress build() {
+         tags(tags() != null ? ImmutableMap.copyOf(tags()) : null);
+         return autoBuild();
+      }
    }
 }

@@ -16,6 +16,7 @@
  */
 package org.jclouds.azurecompute.arm.compute.loaders;
 
+import static com.google.common.base.Preconditions.checkState;
 import static org.jclouds.compute.util.ComputeServiceUtils.getPortRangesFromList;
 
 import java.util.ArrayList;
@@ -28,6 +29,7 @@ import javax.inject.Named;
 import javax.inject.Singleton;
 
 import org.jclouds.azurecompute.arm.AzureComputeApi;
+import org.jclouds.azurecompute.arm.compute.config.AzureComputeServiceContextModule.SecurityGroupAvailablePredicateFactory;
 import org.jclouds.azurecompute.arm.compute.domain.ResourceGroupAndNameAndIngressRules;
 import org.jclouds.azurecompute.arm.domain.NetworkSecurityGroup;
 import org.jclouds.azurecompute.arm.domain.NetworkSecurityGroupProperties;
@@ -48,10 +50,12 @@ public class CreateSecurityGroupIfNeeded extends CacheLoader<ResourceGroupAndNam
    protected Logger logger = Logger.NULL;
 
    private final AzureComputeApi api;
+   private final SecurityGroupAvailablePredicateFactory securityGroupAvailable;
 
    @Inject
-   CreateSecurityGroupIfNeeded(AzureComputeApi api) {
+   CreateSecurityGroupIfNeeded(AzureComputeApi api, SecurityGroupAvailablePredicateFactory securityRuleAvailable) {
       this.api = api;
+      this.securityGroupAvailable = securityRuleAvailable;
    }
 
    @Override
@@ -86,6 +90,9 @@ public class CreateSecurityGroupIfNeeded extends CacheLoader<ResourceGroupAndNam
 
       NetworkSecurityGroup securityGroup = api.getNetworkSecurityGroupApi(resourceGroup).createOrUpdate(name, location,
             null, NetworkSecurityGroupProperties.builder().securityRules(rules).build());
+      
+      checkState(securityGroupAvailable.create(resourceGroup).apply(name),
+            "Security group was not created in the configured timeout");
 
       return securityGroup.id();
    }

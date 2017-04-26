@@ -17,10 +17,13 @@
 package org.jclouds.azurecompute.arm.compute.strategy;
 
 import static com.google.common.base.Preconditions.checkArgument;
-import static com.google.common.base.Preconditions.checkNotNull;
+import static com.google.common.base.Preconditions.checkState;
 import static com.google.common.collect.Iterables.getOnlyElement;
 import static org.jclouds.azurecompute.arm.config.AzureComputeProperties.DEFAULT_SUBNET_ADDRESS_PREFIX;
 import static org.jclouds.azurecompute.arm.config.AzureComputeProperties.DEFAULT_VNET_ADDRESS_SPACE_PREFIX;
+import static org.jclouds.azurecompute.arm.domain.IdReference.extractName;
+import static org.jclouds.azurecompute.arm.domain.IdReference.extractResourceGroup;
+import static org.jclouds.azurecompute.arm.domain.Subnet.extractVirtualNetwork;
 
 import java.util.Arrays;
 import java.util.Map;
@@ -37,13 +40,15 @@ import org.jclouds.azurecompute.arm.compute.domain.ResourceGroupAndName;
 import org.jclouds.azurecompute.arm.compute.domain.ResourceGroupAndNameAndIngressRules;
 import org.jclouds.azurecompute.arm.compute.functions.TemplateToAvailabilitySet;
 import org.jclouds.azurecompute.arm.compute.options.AzureTemplateOptions;
+import org.jclouds.azurecompute.arm.compute.options.IpOptions;
 import org.jclouds.azurecompute.arm.domain.AvailabilitySet;
 import org.jclouds.azurecompute.arm.domain.NetworkSecurityGroup;
+import org.jclouds.azurecompute.arm.domain.PublicIPAddress;
 import org.jclouds.azurecompute.arm.domain.ResourceGroup;
 import org.jclouds.azurecompute.arm.domain.Subnet;
-import org.jclouds.azurecompute.arm.domain.VirtualNetwork;
-import org.jclouds.azurecompute.arm.features.SubnetApi;
-import org.jclouds.azurecompute.arm.features.VirtualNetworkApi;
+import org.jclouds.azurecompute.arm.domain.Subnet.SubnetProperties;
+import org.jclouds.azurecompute.arm.domain.VirtualNetwork.AddressSpace;
+import org.jclouds.azurecompute.arm.domain.VirtualNetwork.VirtualNetworkProperties;
 import org.jclouds.compute.config.CustomizationResponse;
 import org.jclouds.compute.domain.NodeMetadata;
 import org.jclouds.compute.domain.Template;
@@ -56,8 +61,9 @@ import org.jclouds.compute.strategy.impl.CreateNodesWithGroupEncodedIntoNameThen
 import org.jclouds.domain.Location;
 import org.jclouds.logging.Logger;
 
-import com.google.common.base.Optional;
+import com.google.common.annotations.VisibleForTesting;
 import com.google.common.cache.LoadingCache;
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Multimap;
 import com.google.common.util.concurrent.ListenableFuture;
@@ -89,8 +95,7 @@ public class CreateResourcesThenCreateNodes extends CreateNodesWithGroupEncodedI
          TemplateToAvailabilitySet templateToAvailabilitySet) {
       super(addNodeWithGroupStrategy, listNodesStrategy, namingConvention, userExecutor,
             customizeNodeAndAddToGoodMapOrPutExceptionIntoBadMapFactory);
-      this.api = checkNotNull(api, "api cannot be null");
-      checkNotNull(userExecutor, "userExecutor cannot be null");
+      this.api = api;
       this.securityGroupMap = securityGroupMap;
       this.defaultVnetAddressPrefix = defaultVnetAddressPrefix;
       this.defaultSubnetAddressPrefix = defaultSubnetAddressPrefix;
@@ -103,7 +108,7 @@ public class CreateResourcesThenCreateNodes extends CreateNodesWithGroupEncodedI
          Multimap<NodeMetadata, CustomizationResponse> customizationResponses) {
 
       AzureTemplateOptions options = template.getOptions().as(AzureTemplateOptions.class);
-
+      
       // If there is a script to be run on the node and public key
       // authentication has been configured, warn users if the private key
       // is not present
@@ -112,42 +117,38 @@ public class CreateResourcesThenCreateNodes extends CreateNodesWithGroupEncodedI
                + "Authentication will delegate to the ssh-agent");
       }
 
-      // This sill create the resource group if it does not exist
       String location = template.getLocation().getId();
 
       createResourceGroupIfNeeded(group, location, options);
-      getOrCreateVirtualNetworkWithSubnet(location, options);
+      
+      normalizeNetworkOptions(options);
+      createDefaultNetworkIfNeeded(group, location, options);
+      
       configureSecurityGroupForOptions(group, template.getLocation(), options);
       configureAvailabilitySetForTemplate(template);
 
       return super.execute(group, count, template, goodNodes, badNodes, customizationResponses);
    }
 
-   protected synchronized void getOrCreateVirtualNetworkWithSubnet(final String location, AzureTemplateOptions options) {
-      String virtualNetworkName = Optional.fromNullable(options.getVirtualNetworkName()).or(
-            options.getResourceGroup() + "virtualnetwork");
-      String subnetName = options.getResourceGroup() + "subnet";
-
-      // Subnets belong to a virtual network so that needs to be created first
-      VirtualNetworkApi vnApi = api.getVirtualNetworkApi(options.getResourceGroup());
-      VirtualNetwork vn = vnApi.get(virtualNetworkName);
-
-      if (vn == null) {
-         Subnet subnet = Subnet.create(subnetName, null, null,
-               Subnet.SubnetProperties.builder().addressPrefix(defaultSubnetAddressPrefix).build());
-
-         VirtualNetwork.VirtualNetworkProperties virtualNetworkProperties = VirtualNetwork.VirtualNetworkProperties
-               .builder().addressSpace(VirtualNetwork.AddressSpace.create(Arrays.asList(defaultVnetAddressPrefix)))
+   protected synchronized void createDefaultNetworkIfNeeded(String group, String location, AzureTemplateOptions options) {
+      if (options.getIpOptions().isEmpty()) {
+         String name = namingConvention.create().sharedNameForGroup(group);
+         
+         Subnet subnet = Subnet.builder().name(name)
+               .properties(SubnetProperties.builder().addressPrefix(defaultSubnetAddressPrefix).build()).build();
+         
+         VirtualNetworkProperties properties = VirtualNetworkProperties.builder()
+               .addressSpace(AddressSpace.create(Arrays.asList(defaultVnetAddressPrefix)))
                .subnets(Arrays.asList(subnet)).build();
-
-         vn = vnApi.createOrUpdate(virtualNetworkName, location, virtualNetworkProperties);
+         
+         logger.debug(">> network options have not been configured. Creating network %s(%s) and subnet %s(%s)", name,
+               defaultVnetAddressPrefix, name, defaultSubnetAddressPrefix);
+         
+         api.getVirtualNetworkApi(options.getResourceGroup()).createOrUpdate(name, location, properties);
+         Subnet createdSubnet = api.getSubnetApi(options.getResourceGroup(), name).get(name);
+         
+         options.ipOptions(IpOptions.builder().subnet(createdSubnet.id()).allocateNewPublicIp(true).build());
       }
-
-      SubnetApi subnetApi = api.getSubnetApi(options.getResourceGroup(), virtualNetworkName);
-      Subnet subnet = subnetApi.get(subnetName);
-
-      options.virtualNetworkName(virtualNetworkName);
-      options.subnetId(subnet.id());
    }
 
    private static boolean hasRunScriptWithKeyAuthAndNoPrivateKey(Template template) {
@@ -194,6 +195,47 @@ public class CreateResourcesThenCreateNodes extends CreateNodesWithGroupEncodedI
          logger.debug(">> resource group [%s] does not exist. Creating!", options.getResourceGroup());
          api.getResourceGroupApi().create(options.getResourceGroup(), location,
                ImmutableMap.of("description", "jclouds default resource group"));
+      }
+   }
+   
+   @VisibleForTesting
+   void normalizeNetworkOptions(AzureTemplateOptions options) {
+      if (!options.getNetworks().isEmpty() && !options.getIpOptions().isEmpty()) {
+         throw new IllegalArgumentException("The options.networks and options.ipOptions are exclusive");
+      }
+      
+      if (!options.getNetworks().isEmpty() && options.getIpOptions().isEmpty()) {
+         // The portable interface allows to configure network IDs (subnet IDs),
+         // but we don't know the type of the IP configurations to be applied
+         // when attaching nodes to those networks. We'll assume private IPs
+         // with Dynamic allocation and no public ip address associated.
+         ImmutableList.Builder<IpOptions> ipOptions = ImmutableList.builder();
+         for (String subnetId : options.getNetworks()) {
+            ipOptions.add(IpOptions.builder().subnet(subnetId).build());
+         }
+         options.ipOptions(ipOptions.build());
+      }
+      
+      if (!options.getIpOptions().isEmpty()) {
+         // Eagerly validate that all configured subnets exist.
+         for (IpOptions ipConfig : options.getIpOptions()) {
+            if (ipConfig.allocateNewPublicIp() && ipConfig.publicIpId() != null) {
+               throw new IllegalArgumentException("The allocateNewPublicIps and publicIpId are exclusive");
+            }
+            
+            String resourceGroup = extractResourceGroup(ipConfig.subnet());
+            String networkName = extractVirtualNetwork(ipConfig.subnet());
+            String subnetName = extractName(ipConfig.subnet());
+            
+            Subnet subnet = api.getSubnetApi(resourceGroup, networkName).get(subnetName);
+            checkState(subnet != null, "Configured subnet %s does not exist", ipConfig.subnet());
+            
+            if (ipConfig.publicIpId() != null) {
+               PublicIPAddress publicIp = api.getPublicIPAddressApi(extractResourceGroup(ipConfig.publicIpId())).get(
+                     extractName(ipConfig.publicIpId()));
+               checkState(publicIp != null, "Configured public ip %s does not exist", ipConfig.publicIpId());               
+            }
+         }
       }
    }
 }

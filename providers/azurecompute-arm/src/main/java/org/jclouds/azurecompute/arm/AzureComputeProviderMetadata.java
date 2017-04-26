@@ -99,7 +99,7 @@ public class AzureComputeProviderMetadata extends BaseProviderMetadata {
       // Api versions used in each API
       properties.put(API_VERSION_PREFIX + DeploymentApi.class.getSimpleName(), "2016-02-01");
       properties.put(API_VERSION_PREFIX + LocationApi.class.getSimpleName(), "2015-11-01");
-      properties.put(API_VERSION_PREFIX + NetworkInterfaceCardApi.class.getSimpleName(), "2015-06-15");
+      properties.put(API_VERSION_PREFIX + NetworkInterfaceCardApi.class.getSimpleName(), "2017-03-01");
       properties.put(API_VERSION_PREFIX + NetworkSecurityGroupApi.class.getSimpleName(), "2016-03-30");
       properties.put(API_VERSION_PREFIX + NetworkSecurityRuleApi.class.getSimpleName(), "2016-03-30");
       properties.put(API_VERSION_PREFIX + OSImageApi.class.getSimpleName(), "2015-06-15");
@@ -107,7 +107,7 @@ public class AzureComputeProviderMetadata extends BaseProviderMetadata {
       properties.put(API_VERSION_PREFIX + ResourceGroupApi.class.getSimpleName(), "2015-01-01");
       properties.put(API_VERSION_PREFIX + ResourceProviderApi.class.getSimpleName(), "2015-01-01");
       properties.put(API_VERSION_PREFIX + StorageAccountApi.class.getSimpleName(), "2015-06-15");
-      properties.put(API_VERSION_PREFIX + SubnetApi.class.getSimpleName(), "2015-06-15");
+      properties.put(API_VERSION_PREFIX + SubnetApi.class.getSimpleName(), "2017-03-01");
       properties.put(API_VERSION_PREFIX + VirtualNetworkApi.class.getSimpleName(), "2015-06-15");
       properties.put(API_VERSION_PREFIX + VMSizeApi.class.getSimpleName(), "2015-06-15");
       properties.put(API_VERSION_PREFIX + VirtualMachineApi.class.getSimpleName(), "2016-04-30-preview");

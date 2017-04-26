@@ -40,7 +40,7 @@ public class NetworkInterfaceCardApiMockTest extends BaseAzureComputeApiMockTest
 
    private final String subscriptionid = "SUBSCRIPTIONID";
    private final String resourcegroup = "myresourcegroup";
-   private final String apiVersion = "api-version=2015-06-15";
+   private final String apiVersion = "api-version=2017-03-01";
    private final String location = "northeurope";
    private final String nicName = "myNic";
 
@@ -65,7 +65,8 @@ public class NetworkInterfaceCardApiMockTest extends BaseAzureComputeApiMockTest
 
       assertNull(nicApi.get(nicName));
 
-      assertSent(server, "GET", "/subscriptions/SUBSCRIPTIONID/resourcegroups/myresourcegroup/providers/Microsoft.Network/networkInterfaces/myNic?api-version=2015-06-15");
+      String path = String.format("/subscriptions/%s/resourcegroups/%s/providers/Microsoft.Network/networkInterfaces/%s?%s", subscriptionid, resourcegroup, nicName, apiVersion);
+      assertSent(server, "GET", path);
    }
 
    public void listNetworkInterfaceCards() throws InterruptedException {

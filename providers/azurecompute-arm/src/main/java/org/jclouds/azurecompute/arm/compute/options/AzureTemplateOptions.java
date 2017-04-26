@@ -32,28 +32,11 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 public class AzureTemplateOptions extends TemplateOptions implements Cloneable {
 
-   private String virtualNetworkName;
-   private String subnetId;
    private AvailabilitySet availabilitySet;
    private String availabilitySetName;
    private List<DataDisk> dataDisks = ImmutableList.of();
    private String resourceGroup;
-
-   /**
-    * Sets the virtual network name
-    */
-   public  AzureTemplateOptions virtualNetworkName(String virtualNetworkName) {
-      this.virtualNetworkName = virtualNetworkName;
-      return this;
-   }
-
-   /**
-    * Sets the subnet name
-    */
-   public  AzureTemplateOptions subnetId(String subnetId) {
-      this.subnetId = subnetId;
-      return this;
-   }
+   private List<IpOptions> ipOptions = ImmutableList.of();
    
    /**
     * Sets the availability set where the nodes will be configured. If it does
@@ -92,12 +75,35 @@ public class AzureTemplateOptions extends TemplateOptions implements Cloneable {
       return dataDisks(ImmutableList.copyOf(checkNotNull(dataDisks, "dataDisks")));
    }
    
-   public String getVirtualNetworkName() { return virtualNetworkName; }
-   public String getSubnetId() { return subnetId; }
+   /**
+    * Configure the NICs that will be attached to the created nodes.
+    * <p>
+    * Note that the number of NICs that can be attached depends on the size of
+    * the virtual machine, and that the guest operating system needs to be
+    * prepared to set up all the configured interfaces.
+    * <p>
+    * Depending on the image being used, a cloud-init or bootstrap script might
+    * be needed to make the interface setup.
+    */
+   public AzureTemplateOptions ipOptions(Iterable<IpOptions> ipOptions) {
+      for (IpOptions ipOption : checkNotNull(ipOptions, "ipOptions"))
+         checkNotNull(ipOption, "all ipOptions must be non-empty");
+      this.ipOptions = ImmutableList.copyOf(ipOptions);
+      return this;
+   }
+
+   /**
+    * @see {@link AzureTemplateOptions#ipOptions(Iterable)
+    */
+   public AzureTemplateOptions ipOptions(IpOptions... ipOptions) {
+      return ipOptions(ImmutableList.copyOf(checkNotNull(ipOptions, "ipOptions")));
+   }
+   
    public AvailabilitySet getAvailabilitySet() { return availabilitySet; }
    public String getAvailabilitySetName() { return availabilitySetName; }
    public List<DataDisk> getDataDisks() { return dataDisks; }
    public String getResourceGroup() { return resourceGroup; }
+   public List<IpOptions> getIpOptions() { return ipOptions; }
 
    @Override
    public AzureTemplateOptions clone() {
@@ -111,12 +117,11 @@ public class AzureTemplateOptions extends TemplateOptions implements Cloneable {
       super.copyTo(to);
       if (to instanceof AzureTemplateOptions) {
          AzureTemplateOptions eTo = AzureTemplateOptions.class.cast(to);
-         eTo.virtualNetworkName(virtualNetworkName);
-         eTo.subnetId(subnetId);
          eTo.availabilitySet(availabilitySet);
          eTo.availabilitySet(availabilitySetName);
          eTo.dataDisks(dataDisks);
          eTo.resourceGroup(resourceGroup);
+         eTo.ipOptions(ipOptions);
       }
    }
 
@@ -128,27 +133,22 @@ public class AzureTemplateOptions extends TemplateOptions implements Cloneable {
 
       AzureTemplateOptions that = (AzureTemplateOptions) o;
       
-      return Objects.equal(virtualNetworkName, that.virtualNetworkName) &&
-            Objects.equal(subnetId, that.subnetId) &&
+      return Objects.equal(availabilitySetName, that.availabilitySetName) &&
+            Objects.equal(resourceGroup, that.resourceGroup) &&
             Objects.equal(availabilitySet, that.availabilitySet) &&
-            Objects.equal(availabilitySetName, that.availabilitySetName) &&
             Objects.equal(dataDisks, that.dataDisks) &&
-            Objects.equal(resourceGroup, that.resourceGroup);
+            Objects.equal(ipOptions, that.ipOptions);
    }
 
    @Override
    public int hashCode() {
-      return Objects.hashCode(virtualNetworkName, subnetId, availabilitySet, availabilitySetName, dataDisks,
-            resourceGroup);
+      return Objects.hashCode(availabilitySet, availabilitySetName, dataDisks,
+            resourceGroup, ipOptions);
    }
 
    @Override
    public Objects.ToStringHelper string() {
       Objects.ToStringHelper toString = super.string();
-      if (virtualNetworkName != null)
-         toString.add("virtualNetworkName", virtualNetworkName);
-      if (subnetId != null)
-         toString.add("subnetId", subnetId);
       if (availabilitySet != null)
          toString.add("availabilitySet", availabilitySet);
       if (availabilitySetName != null)
@@ -157,26 +157,12 @@ public class AzureTemplateOptions extends TemplateOptions implements Cloneable {
          toString.add("dataDisks", dataDisks);
       if (resourceGroup != null)
          toString.add("resourceGroup", resourceGroup);
+      if (!ipOptions.isEmpty())
+         toString.add("ipOptions", ipOptions);
       return toString;
    }
 
    public static class Builder {
-
-      /**
-       * @see AzureTemplateOptions#virtualNetworkName(String)
-       */
-      public static AzureTemplateOptions virtualNetworkName(String virtualNetworkName) {
-         AzureTemplateOptions options = new AzureTemplateOptions();
-         return options.virtualNetworkName(virtualNetworkName);
-      }
-
-      /**
-       * @see AzureTemplateOptions#subnetId(String)
-       */
-      public static AzureTemplateOptions subnetId(String subnetId) {
-         AzureTemplateOptions options = new AzureTemplateOptions();
-         return options.subnetId(subnetId);
-      }
       
       /**
        * @see AzureTemplateOptions#availabilitySet(AvailabilitySet)
@@ -216,6 +202,22 @@ public class AzureTemplateOptions extends TemplateOptions implements Cloneable {
       public static AzureTemplateOptions resourceGroup(String resourceGroup) {
          AzureTemplateOptions options = new AzureTemplateOptions();
          return options.resourceGroup(resourceGroup);
+      }
+      
+      /**
+       * @see AzureTemplateOptions#ipOptions(IpOptions...)
+       */
+      public static AzureTemplateOptions ipOptions(IpOptions... ipOptions) {
+         AzureTemplateOptions options = new AzureTemplateOptions();
+         return options.ipOptions(ipOptions);
+      }
+
+      /**
+       * @see AzureTemplateOptions#ipOptions(Iterable)
+       */
+      public static AzureTemplateOptions ipOptions(Iterable<IpOptions> ipOptions) {
+         AzureTemplateOptions options = new AzureTemplateOptions();
+         return options.ipOptions(ipOptions);
       }
    }
 }
