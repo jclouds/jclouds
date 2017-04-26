@@ -16,13 +16,18 @@
  */
 package org.jclouds.azurecompute.arm.compute.strategy;
 
+import static com.google.common.base.Predicates.not;
 import static com.google.common.base.Predicates.notNull;
 import static com.google.common.collect.Iterables.filter;
 import static com.google.common.collect.Iterables.transform;
+import static com.google.common.collect.Maps.filterValues;
 import static org.jclouds.azurecompute.arm.config.AzureComputeProperties.TIMEOUT_RESOURCE_DELETED;
 
 import java.net.URI;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import javax.annotation.Resource;
 import javax.inject.Inject;
@@ -32,17 +37,22 @@ import javax.inject.Singleton;
 import org.jclouds.azurecompute.arm.AzureComputeApi;
 import org.jclouds.azurecompute.arm.compute.domain.ResourceGroupAndName;
 import org.jclouds.azurecompute.arm.domain.AvailabilitySet;
+import org.jclouds.azurecompute.arm.domain.DataDisk;
 import org.jclouds.azurecompute.arm.domain.IdReference;
 import org.jclouds.azurecompute.arm.domain.IpConfiguration;
+import org.jclouds.azurecompute.arm.domain.ManagedDiskParameters;
 import org.jclouds.azurecompute.arm.domain.NetworkInterfaceCard;
 import org.jclouds.azurecompute.arm.domain.NetworkSecurityGroup;
+import org.jclouds.azurecompute.arm.domain.OSDisk;
 import org.jclouds.azurecompute.arm.domain.VirtualMachine;
 import org.jclouds.azurecompute.arm.features.NetworkSecurityGroupApi;
 import org.jclouds.compute.functions.GroupNamingConvention;
 import org.jclouds.compute.reference.ComputeServiceConstants;
+import org.jclouds.javax.annotation.Nullable;
 import org.jclouds.logging.Logger;
 
 import com.google.common.base.Function;
+import com.google.common.base.Joiner;
 import com.google.common.base.Predicate;
 
 @Singleton
@@ -80,12 +90,14 @@ public class CleanupResources {
       // group. It will be deleted when the resource group is deleted
 
       cleanupVirtualMachineNICs(virtualMachine);
+      cleanupManagedDisks(virtualMachine);
       cleanupAvailabilitySetIfOrphaned(virtualMachine);
 
       return vmDeleted;
    }
 
-   public void cleanupVirtualMachineNICs(VirtualMachine virtualMachine) {
+   public boolean cleanupVirtualMachineNICs(VirtualMachine virtualMachine) {
+      boolean deleted = true;
       for (IdReference nicRef : virtualMachine.properties().networkProfile().networkInterfaces()) {
          String nicResourceGroup = nicRef.resourceGroup();
          String nicName = nicRef.name();
@@ -95,14 +107,44 @@ public class CleanupResources {
 
          logger.debug(">> destroying nic %s...", nicName);
          URI nicDeletionURI = api.getNetworkInterfaceCardApi(nicResourceGroup).delete(nicName);
-         resourceDeleted.apply(nicDeletionURI);
+         deleted &= nicDeletionURI == null || resourceDeleted.apply(nicDeletionURI);
 
          for (IdReference publicIp : publicIps) {
             String publicIpResourceGroup = publicIp.resourceGroup();
             String publicIpName = publicIp.name();
             
             logger.debug(">> deleting public ip nic %s...", publicIpName);
-            api.getPublicIPAddressApi(publicIpResourceGroup).delete(publicIpName);
+            deleted &= api.getPublicIPAddressApi(publicIpResourceGroup).delete(publicIpName);
+         }
+      }
+      return deleted;
+   }
+
+   public boolean cleanupManagedDisks(VirtualMachine virtualMachine) {
+      Map<String, URI> deleteJobs = new HashMap<String, URI>();
+
+      OSDisk osDisk = virtualMachine.properties().storageProfile().osDisk();
+      deleteManagedDisk(osDisk.managedDiskParameters(), deleteJobs);
+
+      for (DataDisk dataDisk : virtualMachine.properties().storageProfile().dataDisks()) {
+         deleteManagedDisk(dataDisk.managedDiskParameters(), deleteJobs);
+      }
+      
+      Set<String> nonDeletedDisks = filterValues(deleteJobs, not(resourceDeleted)).keySet();
+      if (!nonDeletedDisks.isEmpty()) {
+         logger.warn(">> could not delete disks: %s", Joiner.on(',').join(nonDeletedDisks));
+      }
+      
+      return nonDeletedDisks.isEmpty();
+   }
+   
+   private void deleteManagedDisk(@Nullable ManagedDiskParameters managedDisk, Map<String, URI> deleteJobs) {
+      if (managedDisk != null) {
+         IdReference diskRef = IdReference.create(managedDisk.id());
+         logger.debug(">> deleting managed disk %s...", diskRef.name());
+         URI uri = api.getDiskApi(diskRef.resourceGroup()).delete(diskRef.name());
+         if (uri != null) {
+            deleteJobs.put(diskRef.name(), uri);
          }
       }
    }
@@ -134,7 +176,7 @@ public class CleanupResources {
    }
 
    public boolean cleanupAvailabilitySetIfOrphaned(VirtualMachine virtualMachine) {
-      boolean deleted = false;
+      boolean deleted = true;
       IdReference availabilitySetRef = virtualMachine.properties().availabilitySet();
 
       if (availabilitySetRef != null) {
