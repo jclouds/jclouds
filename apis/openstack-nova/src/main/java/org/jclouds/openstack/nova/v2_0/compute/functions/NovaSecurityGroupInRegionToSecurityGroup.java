@@ -103,7 +103,7 @@ public class NovaSecurityGroupInRegionToSecurityGroup implements Function<Securi
            final Collection<org.jclouds.openstack.nova.v2_0.domain.SecurityGroup> referredGroup =
               groupInRegion.getGroupsByName().get(ruleGroup);
            if (null == referredGroup) {
-              logger.warn("Unknown group {} used in security rule, refusing to add it to {} ({})",
+              logger.warn("Unknown group %s used in security rule, refusing to add it to %s (%s)",
                  ruleGroup, owningGroup.getName(), owningGroup.getId());
               return null;
            }
