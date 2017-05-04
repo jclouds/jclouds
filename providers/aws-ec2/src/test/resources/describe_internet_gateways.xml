@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<DescribeInternetGatewaysResponse xmlns="http://ec2.amazonaws.com/doc/2012-06-01/">
+    <requestId>3ed08c74-7a82-48b1-96d6-58ec1a41e560</requestId>
+    <internetGatewaySet>
+        <item>
+            <internetGatewayId>igw-fada7c9c</internetGatewayId>
+            <attachmentSet/>
+            <tagSet>
+                <item>
+                    <key>Name</key>
+                    <value>describe_internet_gateways_test</value>
+                </item>
+            </tagSet>
+        </item>
+        <item>
+            <internetGatewayId>igw-6bca130c</internetGatewayId>
+            <attachmentSet>
+                <item>
+                    <vpcId>vpc-a13d29c6</vpcId>
+                    <state>available</state>
+                </item>
+            </attachmentSet>
+            <tagSet/>
+        </item>
+        <item>
+            <internetGatewayId>igw-d09a79b6</internetGatewayId>
+            <attachmentSet>
+                <item>
+                    <vpcId>vpc-17587171</vpcId>
+                    <state>available</state>
+                </item>
+            </attachmentSet>
+            <tagSet/>
+        </item>
+    </internetGatewaySet>
+</DescribeInternetGatewaysResponse>
+

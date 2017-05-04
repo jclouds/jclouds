@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<AttachInternetGatewayResponse xmlns="http://ec2.amazonaws.com/doc/2012-06-01/">
+    <requestId>87565c19-59bf-4f71-8f9a-9dcfec2b6640</requestId>
+    <return>true</return>
+</AttachInternetGatewayResponse>
