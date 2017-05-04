@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<DeleteInternetGatewayResponse xmlns="http://ec2.amazonaws.com/doc/2012-06-01/">
+    <requestId>de1da0ea-085f-4783-b270-af5338060497</requestId>
+    <return>true</return>
+</DeleteInternetGatewayResponse>
+

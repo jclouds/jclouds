@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CreateInternetGatewayResponse xmlns="http://ec2.amazonaws.com/doc/2012-06-01/">
+    <requestId>85c22645-f966-4025-9cb3-64bb5c833a54</requestId>
+    <internetGateway>
+        <internetGatewayId>igw-fada7c9c</internetGatewayId>
+        <attachmentSet/>
+        <tagSet/>
+    </internetGateway>
+</CreateInternetGatewayResponse>

@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<DetachInternetGatewayResponse xmlns="http://ec2.amazonaws.com/doc/2012-06-01/">
+    <requestId>3aa4e5fb-2395-4560-bd0d-d229bdc75391</requestId>
+    <return>true</return>
+</DetachInternetGatewayResponse>

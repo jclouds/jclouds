@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Response>
+    <Errors>
+        <Error>
+            <Code>DryRunOperation</Code>
+            <Message>Request would have succeeded, but DryRun flag is set.</Message>
+        </Error>
+    </Errors>
+    <RequestID>344ef005-e34b-42fb-a334-1180fe317e7c</RequestID>
+</Response>
+
