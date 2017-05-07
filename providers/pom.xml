@@ -52,6 +52,7 @@
     <module>serverlove-z1-man</module>
     <module>skalicloud-sdg-my</module>
     <module>go2cloud-jhb1</module>
+    <module>google-cloud-storage</module>
     <module>google-compute-engine</module>
     <module>softlayer</module>
     <module>rackspace-cloudfiles-us</module>
