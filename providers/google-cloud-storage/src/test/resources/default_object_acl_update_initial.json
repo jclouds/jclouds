@@ -1,0 +1,6 @@
+{
+   "kind": "storage#objectAccessControl",
+   "entity": "allUsers",
+   "role": "OWNER",
+   "etag": "CAo="
+}

@@ -1,0 +1,15 @@
+{
+   "kind": "storage#objectAccessControl",
+   "id": "jcloudstestbucket/foo.txt/1394121608485000/project-owners-1082289308625",
+   "selfLink": "https://www.googleapis.com/storage/v1/b/jcloudstestbucket/o/foo.txt/acl/project-owners-1082289308625",
+   "bucket": "jcloudstestbucket",
+   "object": "foo.txt",
+   "generation": "1394121608485000",
+   "entity": "project-owners-1082289308625",
+   "role": "OWNER",
+   "projectTeam": {
+      "projectNumber": "1082289308625",
+      "team": "owners"
+   },
+   "etag": "CIix/dmj/rwCEAE="
+}

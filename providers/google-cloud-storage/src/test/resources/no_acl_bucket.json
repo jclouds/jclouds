@@ -1,0 +1,15 @@
+{
+   "kind": "storage#bucket",
+   "id": "bhashbucket",
+   "selfLink": "https://content.googleapis.com/storage/v1/b/bhashbucket",
+   "projectNumber": "1082289308625",
+   "name": "bhashbucket",
+   "timeCreated": "2014-06-02T19:19:41.112Z",
+   "metageneration": "87",
+   "owner": {
+      "entity": "project-owners-1082289308625"
+   },
+   "location": "US",
+   "storageClass": "STANDARD",
+   "etag": "CFc="
+}

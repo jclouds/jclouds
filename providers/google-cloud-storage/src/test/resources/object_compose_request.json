@@ -1,0 +1,23 @@
+{
+  "sourceObjects": [
+    {
+      "name": "file_name",
+      "generation": 1000,
+      "objectPreconditions": {
+        "ifGenerationMatch": 1000
+      }
+    },
+    {
+      "name": "file_name2",
+      "generation": 1001,
+      "objectPreconditions": {
+        "ifGenerationMatch": 1001
+      }
+    }
+  ],
+  "destination": {
+    "name": "file_name",
+    "size": 1000,
+    "crc32c": "crc32c"
+  }
+}

@@ -1,0 +1,21 @@
+{
+   "kind": "storage#buckets",
+   "nextPageToken": "jcloudstestbucket500",
+   "items": [
+      {
+         "kind": "storage#bucket",
+         "id": "jcloudstestbucket500",
+         "selfLink": "https://www.googleapis.com/storage/v1/b/jcloudstestbucket500",
+         "projectNumber": "1082289308625",
+         "name": "jcloudstestbucket500",
+         "timeCreated": "2014-06-17T14:17:50.155Z",
+         "metageneration": "1",
+         "owner": {
+          "entity": "project-owners-1082289308625"
+         },
+         "location": "US",
+         "storageClass": "STANDARD",
+         "etag": "CAE="
+      }
+   ]
+}

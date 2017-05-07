@@ -1,0 +1,54 @@
+{
+   "kind": "storage#bucket",
+   "id": "jcloudstestbucket3500",
+   "selfLink": "https://www.googleapis.com/storage/v1/b/jcloudstestbucket3500",
+   "projectNumber": "1082289308625",
+   "name": "jcloudstestbucket3500",
+   "timeCreated": "2014-06-19T14:03:22.345Z",
+   "metageneration": "10",
+   "acl": [
+     {
+        "kind": "storage#bucketAccessControl",
+        "id": "jcloudstestbucket3500/project-owners-1082289308625",
+        "selfLink": "https://www.googleapis.com/storage/v1/b/jcloudstestbucket3500/acl/project-owners-1082289308625",
+        "bucket": "jcloudstestbucket3500",
+        "entity": "project-owners-1082289308625",
+        "role": "OWNER",
+        "projectTeam": {
+           "projectNumber": "1082289308625",
+           "team": "owners"
+        },
+        "etag": "CAo="
+     }
+    ],
+    "defaultObjectAcl": [
+       {
+          "kind": "storage#objectAccessControl",
+          "entity": "project-owners-1082289308625",
+          "role": "OWNER",
+          "etag": "CAo="
+       }
+    ],
+    
+    "cors": [
+       {
+          "maxAgeSeconds": 10,
+          "origin": [
+             "http://example.appspot.com"
+          ],
+          "responseHeader": [
+             "x-meta-goog-custom"
+          ],
+          "method": [
+            "GET",
+            "HEAD"            
+          ]
+        }
+    ],
+    "owner": {
+       "entity": "project-owners-1082289308625"
+     },
+    "location": "US",
+    "storageClass": "STANDARD",
+    "etag": "CAo="
+}
