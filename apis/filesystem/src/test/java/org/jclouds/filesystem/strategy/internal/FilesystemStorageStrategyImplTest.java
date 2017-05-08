@@ -29,6 +29,7 @@ import static org.testng.Assert.fail;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.nio.file.InvalidPathException;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
@@ -682,6 +683,16 @@ public class FilesystemStorageStrategyImplTest {
          Fail.failBecauseExceptionWasNotThrown(IOException.class);
       } catch (IOException ioe) {
          // expected
+      }
+   }
+
+   @Test
+   public void testDeletingInvalidPathFileEndsNormally() {
+      String invalidPathBlobKey = "A<!:!@#$%^&*?]8 /\0";
+      try {
+         storageStrategy.removeBlob(CONTAINER_NAME, invalidPathBlobKey);
+      } catch (InvalidPathException ipe) {
+         fail("Deleting an invalid path ended with an InvalidPathException.", ipe);
       }
    }
 

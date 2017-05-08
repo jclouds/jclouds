@@ -27,6 +27,7 @@ import java.nio.file.DirectoryNotEmptyException;
 import java.nio.file.Files;
 import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
+import java.nio.file.InvalidPathException;
 import java.nio.file.attribute.AclEntry;
 import java.nio.file.attribute.AclEntryPermission;
 import java.nio.file.attribute.AclEntryType;
@@ -77,10 +78,17 @@ public class Utils {
    }
 
    public static void delete(File file) throws IOException {
+      Path path;
+      try {
+         path = file.toPath();
+      } catch (InvalidPathException ipe) {
+         throw new IOException("Invalid file: " + file, ipe);
+      }
+
       for (int n = 0; n < 10; n++) {
          try {
-            Files.delete(file.toPath());
-            if (Files.exists(file.toPath())) {
+            Files.delete(path);
+            if (Files.exists(path)) {
                Uninterruptibles.sleepUninterruptibly(200, TimeUnit.MILLISECONDS);
                continue;
             }
@@ -98,7 +106,7 @@ public class Utils {
          }
       }
       // File could not be deleted multiple times. It is very likely locked in another process
-      throw new IOException("Could not delete: " + file.toPath());
+      throw new IOException("Could not delete: " + path);
    }
 
    /**
