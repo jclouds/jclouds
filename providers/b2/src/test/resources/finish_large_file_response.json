@@ -1,0 +1,14 @@
+{
+    "accountId": "YOUR_ACCOUNT_ID",
+    "action": "upload",
+    "bucketId": "e73ede9c9c8412db49f60715",
+    "contentLength": 208158542,
+    "contentSha1": "none",
+    "contentType": "b2/x-auto",
+    "fileId": "4_za71f544e781e6891531b001a_f200ec353a2184825_d20160409_m004829_c000_v0001016_t0028",
+    "fileInfo": {
+        "author": "unknown"
+    },
+    "fileName": "bigfile.dat",
+    "uploadTimestamp": 1460162909000
+}

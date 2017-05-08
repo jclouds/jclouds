@@ -1,0 +1,27 @@
+{
+    "files": [
+        {
+            "action": "upload",
+            "fileId": "4_z27c88f1d182b150646ff0b16_f100920ddab886245_d20150809_m232316_c100_v0009990_t0003",
+            "fileName": "files/hello.txt",
+            "size": 6,
+            "uploadTimestamp": 1439162596000
+        },
+        {
+            "action": "hide",
+            "fileId": "4_z27c88f1d182b150646ff0b16_f100920ddab886247_d20150809_m232323_c100_v0009990_t0005",
+            "fileName": "files/world.txt",
+            "size": 0,
+            "uploadTimestamp": 1439162603000
+        },
+        {
+            "action": "upload",
+            "fileId": "4_z27c88f1d182b150646ff0b16_f100920ddab886246_d20150809_m232316_c100_v0009990_t0003",
+            "fileName": "files/world.txt",
+            "size": 6,
+            "uploadTimestamp": 1439162596000
+        }
+    ],
+    "nextFileId": "4_z27c88f1d182b150646ff0b16_f100920ddab886247_d20150809_m232316_c100_v0009990_t0003",
+    "nextFileName": "files/world.txt"
+}

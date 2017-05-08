@@ -1,0 +1,26 @@
+{
+    "nextPartNumber": null,
+    "parts": [
+        {
+            "contentLength": 100000000,
+            "contentSha1": "062685a84ab248d2488f02f6b01b948de2514ad8",
+            "fileId": "4_ze73ede9c9c8412db49f60715_f100b4e93fbae6252_d20150824_m224353_c900_v8881000_t0001",
+            "partNumber": 1,
+            "uploadTimestamp": 1462212185000
+        },
+        {
+            "contentLength": 100000000,
+            "contentSha1": "cf634751c3d9f6a15344f23cbf13f3fc9542addf",
+            "fileId": "4_ze73ede9c9c8412db49f60715_f100b4e93fbae6252_d20150824_m224353_c900_v8881000_t0001",
+            "partNumber": 2,
+            "uploadTimestamp": 1462212296000
+        },
+        {
+            "contentLength": 8158554,
+            "contentSha1": "00ad164147cbbd60aedb2b04ff66b0f74f962753",
+            "fileId": "4_ze73ede9c9c8412db49f60715_f100b4e93fbae6252_d20150824_m224353_c900_v8881000_t0001",
+            "partNumber": 3,
+            "uploadTimestamp": 1462212327000
+        }
+    ]
+}
