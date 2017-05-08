@@ -50,6 +50,11 @@
     </dependency>
     <dependency>
       <groupId>org.apache.jclouds.provider</groupId>
+      <artifactId>b2</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.jclouds.provider</groupId>
       <artifactId>google-cloud-storage</artifactId>
       <version>${project.version}</version>
     </dependency>

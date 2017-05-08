@@ -36,6 +36,7 @@
     <module>aws-ec2</module>
     <module>aws-sqs</module>
     <module>aws-cloudwatch</module>
+    <module>b2</module>
     <module>digitalocean2</module>
     <module>elastichosts-lon-p</module>
     <module>elastichosts-sat-p</module>
