@@ -73,8 +73,9 @@ public class Aws4SignerForAuthorizationHeader extends Aws4SignerBase {
 
       Payload payload = request.getPayload();
 
-      // get host from request endpoint.
+      // get host & port from request endpoint.
       String host = request.getEndpoint().getHost();
+      int port = request.getEndpoint().getPort();
 
       Date date = timestampProvider.get();
       String timestamp = timestampFormat.format(date);
@@ -119,6 +120,13 @@ public class Aws4SignerForAuthorizationHeader extends Aws4SignerBase {
       }
 
       // host
+      // if the port is defined and doesn't match the URI scheme
+      if (port != -1) {
+         if (("http".equalsIgnoreCase(request.getEndpoint().getScheme()) && port != 80) ||
+                 ("https".equalsIgnoreCase(request.getEndpoint().getScheme()) && port != 443)) {
+            host += ":" + port; // append the port number to the hostname
+         }
+      }
       requestBuilder.replaceHeader(HttpHeaders.HOST, host);
       signedHeadersBuilder.put(HttpHeaders.HOST.toLowerCase(), host);
 
