@@ -133,6 +133,22 @@ public abstract class Aws4SignerBase {
       dateFormat.setTimeZone(GMT);
    }
 
+   protected static String hostHeaderFor(URI endpoint) {
+      String scheme = endpoint.getScheme();
+      String host = endpoint.getHost();
+      int port = endpoint.getPort();
+
+      // if the port is defined and doesn't match the URI scheme
+      if (port != -1) {
+         if (("http".equalsIgnoreCase(scheme) && port != 80) ||
+                 ("https".equalsIgnoreCase(scheme) && port != 443)) {
+            host += ":" + port; // append the port number to the hostname
+         }
+      }
+
+      return host; // else just use the original hostname
+   }
+
    protected String getContentType(HttpRequest request) {
       Payload payload = request.getPayload();
 

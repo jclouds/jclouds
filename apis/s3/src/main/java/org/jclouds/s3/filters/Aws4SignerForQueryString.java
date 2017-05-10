@@ -102,6 +102,7 @@ public class Aws4SignerForQueryString extends Aws4SignerBase {
       // For added security, you should sign as many headers as possible.
 
       // HOST
+      host = hostHeaderFor(request.getEndpoint());
       signedHeadersBuilder.put("host", host);
       ImmutableMap<String, String> signedHeaders = signedHeadersBuilder.build();
 

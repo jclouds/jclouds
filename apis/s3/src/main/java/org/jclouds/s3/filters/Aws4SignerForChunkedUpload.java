@@ -155,6 +155,7 @@ public class Aws4SignerForChunkedUpload extends Aws4SignerBase {
       }
 
       // host
+      host = hostHeaderFor(request.getEndpoint());
       requestBuilder.replaceHeader(HttpHeaders.HOST, host);
       signedHeadersBuilder.put(HttpHeaders.HOST.toLowerCase(), host);
 
