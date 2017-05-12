@@ -24,6 +24,7 @@ import org.jclouds.aws.ec2.features.AWSSubnetApi;
 import org.jclouds.aws.ec2.features.InternetGatewayApi;
 import org.jclouds.aws.ec2.features.MonitoringApi;
 import org.jclouds.aws.ec2.features.PlacementGroupApi;
+import org.jclouds.aws.ec2.features.RouteTableApi;
 import org.jclouds.aws.ec2.features.SpotInstanceApi;
 import org.jclouds.aws.ec2.features.VPCApi;
 import org.jclouds.ec2.EC2Api;
@@ -142,10 +143,24 @@ public interface AWSEC2Api extends EC2Api {
    Optional<? extends InternetGatewayApi> getInternetGatewayApi();
 
    /**
-    * Provides synchronous access to InternetGateway services in a given region.
+    * Provides synchronous access to Internet Gateway services in a given region.
     */
    @Delegate
    Optional<? extends InternetGatewayApi> getInternetGatewayApiForRegion(
+      @EndpointParam(parser = RegionToEndpointOrProviderIfNull.class) @Nullable String region
+   );
+
+   /**
+    * Provides synchronous access to Route Table services.
+    */
+   @Delegate
+   Optional<? extends RouteTableApi> getRouteTableApi();
+
+   /**
+    * Provides synchronous access to Route Table services in a given region.
+    */
+   @Delegate
+   Optional<? extends RouteTableApi> getRouteTableApiForRegion(
       @EndpointParam(parser = RegionToEndpointOrProviderIfNull.class) @Nullable String region
    );
 }

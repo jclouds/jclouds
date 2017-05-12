@@ -36,6 +36,7 @@ import org.jclouds.aws.ec2.domain.VPC;
 import org.jclouds.aws.ec2.options.CreateVpcOptions;
 import org.jclouds.aws.ec2.options.InternetGatewayOptions;
 import org.jclouds.ec2.features.TagApi;
+import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
@@ -49,7 +50,9 @@ import com.google.common.collect.ImmutableMap;
 @Test(groups = "live")
 public class InternetGatewayApiLiveTest extends BaseApiLiveTest<AWSEC2Api> {
 
-   private static final String TEST_REGION = "eu-west-1";
+   // Define -Djclouds.test.region=whatever to test in your preferred region;
+   // defaults to null, jclouds will pick the provider's default region
+   private static final String TEST_REGION = System.getProperty("jclouds.test.region");
 
    public InternetGatewayApiLiveTest() {
       provider = "aws-ec2";
@@ -60,8 +63,8 @@ public class InternetGatewayApiLiveTest extends BaseApiLiveTest<AWSEC2Api> {
 
    private VPCApi vpcClient;
    private VPC vpc;
-
    private InternetGateway gateway;
+
    private String simpleName = InternetGatewayApiLiveTest.class.getSimpleName() + new Random().nextInt(10000);
 
    @BeforeClass(groups = {"integration", "live"})
@@ -149,6 +152,7 @@ public class InternetGatewayApiLiveTest extends BaseApiLiveTest<AWSEC2Api> {
 
       try {
          gwClient.createInternetGateway(TEST_REGION, dryRun());
+         Assert.fail("Operation completed when exception was expected");
       } catch (AWSResponseException e) {
          assertEquals(e.getError().getCode(), "DryRunOperation", "Expected DryRunOperation but got " + e.getError());
       }

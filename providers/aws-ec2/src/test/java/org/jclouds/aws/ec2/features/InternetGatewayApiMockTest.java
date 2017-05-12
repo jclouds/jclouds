@@ -16,6 +16,7 @@
  */
 package org.jclouds.aws.ec2.features;
 
+import static javax.ws.rs.core.Response.Status.PRECONDITION_FAILED;
 import static org.jclouds.aws.ec2.options.InternetGatewayOptions.Builder.dryRun;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertFalse;
@@ -29,6 +30,7 @@ import org.jclouds.aws.ec2.domain.InternetGateway;
 import org.jclouds.aws.ec2.domain.InternetGatewayAttachment;
 import org.jclouds.aws.ec2.internal.BaseAWSEC2ApiMockTest;
 import org.jclouds.aws.ec2.options.InternetGatewayOptions;
+import org.testng.Assert;
 import org.testng.annotations.Test;
 
 import com.google.common.collect.FluentIterable;
@@ -164,7 +166,6 @@ public class InternetGatewayApiMockTest extends BaseAWSEC2ApiMockTest {
 
       assertPosted(DEFAULT_REGION, "Action=DescribeRegions");
       assertPosted(DEFAULT_REGION, "Action=DescribeInternetGateways");
-
    }
 
    public void deleteInternetGateway() throws Exception {
@@ -193,18 +194,19 @@ public class InternetGatewayApiMockTest extends BaseAWSEC2ApiMockTest {
    public void testWithOptions() throws Exception {
 
       enqueueRegions(DEFAULT_REGION);
-      enqueueXml(DEFAULT_REGION, "/create_internet_gateway_dry_run.xml");
+      enqueueXml(PRECONDITION_FAILED, DEFAULT_REGION, "/dry_run.xml");
 
       try {
          gatewayApi().createInternetGateway(DEFAULT_REGION, dryRun());
+         Assert.fail("Expected 'DryRunOperation' exception was not thrown");
       } catch (AWSResponseException e) {
          assertEquals(e.getError().getCode(), "DryRunOperation", "Expected DryRunOperation but got " + e.getError());
       }
 
       assertPosted(DEFAULT_REGION, "Action=DescribeRegions");
       assertPosted(DEFAULT_REGION, "Action=CreateInternetGateway&DryRun=true");
-
    }
+
    private InternetGatewayApi gatewayApi() {
       return api().getInternetGatewayApi().get();
    }

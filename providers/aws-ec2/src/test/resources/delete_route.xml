@@ -1,0 +1,4 @@
+<DeleteRouteResponse xmlns="http://ec2.amazonaws.com/doc/2012-06-01/">
+    <requestId>6d6d0513-5af2-46ae-8f8a-24c8c3ab0f70</requestId>
+    <return>true</return>
+</DeleteRouteResponse>
