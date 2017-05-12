@@ -1,0 +1,4 @@
+<DisassociateRouteTableResponse xmlns="http://ec2.amazonaws.com/doc/2012-06-01/">
+    <requestId>36e6a0e6-cd7a-45fc-8539-ba05cc070a3f</requestId>
+    <return>true</return>
+</DisassociateRouteTableResponse>

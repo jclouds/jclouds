@@ -26,9 +26,12 @@ import static org.jclouds.util.Strings2.toStringAndClose;
 import static org.testng.Assert.assertEquals;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
+
+import javax.ws.rs.core.Response;
 
 import org.jclouds.Constants;
 import org.jclouds.ContextBuilder;
@@ -155,6 +158,13 @@ public class BaseAWSEC2ApiMockTest {
             new MockResponse().addHeader(CONTENT_TYPE, APPLICATION_XML).setBody(describeRegionsResponse.toString()));
    }
 
+   protected void enqueueXml(Response.Status status, String region, String resource) {
+      enqueue(region, new MockResponse()
+         .setStatus("HTTP/1.1 " + status.getStatusCode() + " " + status.getReasonPhrase())
+         .addHeader(CONTENT_TYPE, APPLICATION_XML)
+         .setBody(stringFromResource(resource)));
+   }
+
    protected void enqueueXml(String region, String resource) {
       enqueue(region,
             new MockResponse().addHeader(CONTENT_TYPE, APPLICATION_XML).setBody(stringFromResource(resource)));
@@ -162,7 +172,12 @@ public class BaseAWSEC2ApiMockTest {
 
    protected String stringFromResource(String resourceName) {
       try {
-         return toStringAndClose(getClass().getResourceAsStream(resourceName));
+         final InputStream resourceAsStream = getClass().getResourceAsStream(resourceName);
+         if (resourceAsStream == null) {
+            throw new IllegalArgumentException(
+               "Could not find resource '" + resourceName + "' in class " + getClass().getSimpleName());
+         }
+         return toStringAndClose(resourceAsStream);
       } catch (IOException e) {
          throw propagate(e);
       }

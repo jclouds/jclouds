@@ -1,0 +1,24 @@
+<CreateRouteTableResponse xmlns="http://ec2.amazonaws.com/doc/2012-06-01/">
+    <requestId>59dbff89-35bd-4eac-99ed-be587EXAMPLE</requestId>
+    <routeTable>
+        <routeTableId>rtb-8bda6cef</routeTableId>
+        <vpcId>vpc-1a2b3c4d</vpcId>
+        <routeSet>
+            <item>
+                <destinationCidrBlock>10.0.0.0/16</destinationCidrBlock>
+                <gatewayId>local</gatewayId>
+                <state>active</state>
+                <origin>CreateRouteTable</origin>
+            </item>
+            <item>
+                <destinationIpv6CidrBlock>2001:db8:1234:1a00::/56</destinationIpv6CidrBlock>
+                <gatewayId>local</gatewayId>
+                <state>active</state>
+                <origin>CreateRouteTable</origin>
+            </item>
+        </routeSet>
+        <associationSet/>
+        <propagatingVgwSet/>
+        <tagSet/>
+    </routeTable>
+</CreateRouteTableResponse>

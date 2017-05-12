@@ -1,0 +1,4 @@
+<AssociateRouteTableResponse xmlns="http://ec2.amazonaws.com/doc/2012-06-01/">
+    <requestId>f87d1645-3919-4e26-b98f-852c47def4ee</requestId>
+    <associationId>rtbassoc-fb7fed9d</associationId>
+</AssociateRouteTableResponse>

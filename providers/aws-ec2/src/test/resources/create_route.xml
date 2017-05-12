@@ -1,0 +1,4 @@
+<CreateRouteResponse xmlns="http://ec2.amazonaws.com/doc/2012-06-01/">
+    <requestId>3b1d5abc-0d50-4367-87c1-a4dcc2f8b928</requestId>
+    <return>true</return>
+</CreateRouteResponse>
