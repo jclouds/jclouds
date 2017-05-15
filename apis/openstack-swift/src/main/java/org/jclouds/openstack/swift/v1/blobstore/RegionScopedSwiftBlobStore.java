@@ -37,6 +37,7 @@ import java.nio.channels.FileChannel;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
@@ -473,7 +474,7 @@ public class RegionScopedSwiftBlobStore implements BlobStore {
 
    private MultipartUpload initiateMultipartUpload(String container, BlobMetadata blobMetadata, long partSize, PutOptions options) {
       Long contentLength = blobMetadata.getContentMetadata().getContentLength();
-      String uploadId = String.format("%s/slo/%.6f/%s/%s", blobMetadata.getName(),
+      String uploadId = String.format(Locale.ENGLISH, "%s/slo/%.6f/%s/%s", blobMetadata.getName(),
               System.currentTimeMillis() / 1000.0, contentLength == null ? Long.valueOf(0) : contentLength,
               partSize);
       return MultipartUpload.create(container, blobMetadata.getName(), uploadId, blobMetadata, options);
