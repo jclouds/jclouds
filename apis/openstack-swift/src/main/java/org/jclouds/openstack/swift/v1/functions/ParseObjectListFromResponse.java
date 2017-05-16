@@ -18,6 +18,7 @@ package org.jclouds.openstack.swift.v1.functions;
 
 import static com.google.common.io.BaseEncoding.base16;
 import static org.jclouds.http.Uris.uriBuilder;
+import static org.jclouds.util.Strings2.urlEncode;
 
 import java.util.Date;
 import java.util.List;
@@ -96,7 +97,7 @@ public class ParseObjectListFromResponse implements Function<HttpResponse, Objec
          String etag = Strings.nullToEmpty(input.hash);
          Date lastModified = input.last_modified == null ? new Date() : input.last_modified;
          return SwiftObject.builder()
-               .uri(uriBuilder(containerUri).clearQuery().appendPath(input.name).build())
+               .uri(uriBuilder(containerUri).clearQuery().appendPath(urlEncode(input.name)).build())
                .name(name)
                .etag(etag)
                .payload(payload(input.bytes, etag, input.content_type, input.expires))
