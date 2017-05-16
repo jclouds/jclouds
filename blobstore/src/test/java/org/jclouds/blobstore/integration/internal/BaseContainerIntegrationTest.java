@@ -597,7 +597,7 @@ public class BaseContainerIntegrationTest extends BaseBlobStoreIntegrationTest {
 
    @DataProvider
    public Object[][] getBlobsToEscape() {
-      ImmutableSet<String> testNames = ImmutableSet.of("%20", "%20 ", " %20", " ");
+      ImmutableSet<String> testNames = ImmutableSet.of("%20", "%20 ", " %20", " ", "%", "%%");
       Object[][] result = new Object[1][1];
       result[0][0] = testNames;
       return result;
