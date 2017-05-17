@@ -16,15 +16,19 @@
  */
 package org.jclouds.aws.ec2.features;
 
+import static org.jclouds.aws.ec2.options.ModifySubnetAttributeOptions.Builder.mapPublicIpOnLaunch;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertTrue;
+
+import java.util.Random;
 
 import org.jclouds.aws.ec2.AWSEC2Api;
 import org.jclouds.aws.ec2.domain.VPC;
 import org.jclouds.aws.ec2.options.CreateVpcOptions;
 import org.jclouds.compute.internal.BaseComputeServiceContextLiveTest;
 import org.jclouds.ec2.domain.Subnet;
+import org.jclouds.ec2.features.TagApi;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
@@ -33,6 +37,7 @@ import com.google.common.base.Optional;
 import com.google.common.base.Predicate;
 import com.google.common.collect.FluentIterable;
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Iterables;
 
@@ -47,13 +52,15 @@ public class AWSSubnetApiLiveTest extends BaseComputeServiceContextLiveTest {
    private AWSEC2Api api;
    private AWSSubnetApi subnetClient;
    private VPCApi vpcClient;
+   private TagApi tagApi;
+   private String simpleName = getClass().getSimpleName() + new Random().nextInt(10000);
 
    private Subnet subnet;
    private VPC vpc;
 
    public AWSSubnetApiLiveTest() {
       provider = "aws-ec2";
-      region = "us-west-2";
+      region = "eu-west-1";
    }
 
    @Override
@@ -63,6 +70,7 @@ public class AWSSubnetApiLiveTest extends BaseComputeServiceContextLiveTest {
       api = view.unwrapApi(AWSEC2Api.class);
       subnetClient = api.getAWSSubnetApi().get();
       vpcClient = view.unwrapApi(AWSEC2Api.class).getVPCApi().get();
+      tagApi = api.getTagApiForRegion(region).get();
    }
 
    @Override
@@ -85,10 +93,12 @@ public class AWSSubnetApiLiveTest extends BaseComputeServiceContextLiveTest {
 
    @Test
    public void testCreateSubnetInRegion() {
-      vpc = vpcClient.createVpc(region, "10.0.0.0/16", CreateVpcOptions.NONE);
-      subnet = subnetClient.createSubnetInRegion(region, vpc.id(), "10.0.0.0/20");
+      vpc = vpcClient.createVpc(region, "10.21.0.0/16", CreateVpcOptions.NONE);
+      // tag the VPC for ease of identification in console if things go wrong
+      tagApi.applyToResources(ImmutableMap.of("Name", simpleName), ImmutableList.of(vpc.id()));
+      subnet = subnetClient.createSubnetInRegion(region, vpc.id(), "10.21.0.0/20");
       assertNotNull(subnet);
-      assertEquals(subnet.getCidrBlock(), "10.0.0.0/20");
+      assertEquals(subnet.getCidrBlock(), "10.21.0.0/20");
    }
 
    @Test(dependsOnMethods = "testCreateSubnetInRegion")
@@ -104,6 +114,12 @@ public class AWSSubnetApiLiveTest extends BaseComputeServiceContextLiveTest {
             ImmutableMultimap.of("subnet-id", subnet.getSubnetId()));
       Subnet subnetFound = Iterables.getOnlyElement(subnets);
       assertEquals(subnetFound.getSubnetId(), subnet.getSubnetId());
+   }
+
+   @Test(dependsOnMethods = "testCreateSubnetInRegion")
+   public void testModifySubnetAttribute() {
+      final boolean result = subnetClient.modifySubnetAttribute(region, subnet.getSubnetId(), mapPublicIpOnLaunch(true));
+      assertTrue(result, "Failed to modify subnet attribute");
    }
 
    @Test(dependsOnMethods = "testCreateSubnetInRegion")

@@ -25,6 +25,8 @@ import javax.ws.rs.Path;
 
 import org.jclouds.Fallbacks;
 import org.jclouds.aws.ec2.options.CreateSubnetOptions;
+import org.jclouds.aws.ec2.options.ModifySubnetAttributeOptions;
+import org.jclouds.aws.ec2.xml.ReturnValueHandler;
 import org.jclouds.aws.filters.FormSigner;
 import org.jclouds.ec2.binders.BindFiltersToIndexedFormParams;
 import org.jclouds.ec2.binders.BindSubnetIdsToIndexedFormParams;
@@ -130,4 +132,24 @@ public interface AWSSubnetApi extends SubnetApi {
    FluentIterable<Subnet> describeSubnetsInRegionWithFilter(
            @EndpointParam(parser = RegionToEndpointOrProviderIfNull.class) @Nullable String region,
            @BinderParam(BindFiltersToIndexedFormParams.class) Multimap<String, String> filter);
+
+   /**
+    * Modifies a subnet attribute. You can only modify one attribute at a time.
+    *
+    * @param region The region for the subnet
+    * @param subnetId The ID of the subnet
+    * @param options The options containing the attribute to modify. You can only modify one attribute at a time.
+    * @return true if the modification was successful
+    */
+   @SinceApiVersion("2014-06-15")
+   @Named("ModifySubnetAttribute")
+   @POST
+   @Path("/")
+   @FormParams(keys = ACTION, values = "ModifySubnetAttribute")
+   @XMLResponseParser(ReturnValueHandler.class)
+   @Fallback(Fallbacks.FalseOnNotFoundOr404.class)
+   boolean modifySubnetAttribute(
+      @EndpointParam(parser = RegionToEndpointOrProviderIfNull.class) @Nullable String region,
+      @FormParam("SubnetId") String subnetId,
+      ModifySubnetAttributeOptions options);
 }

@@ -183,7 +183,12 @@ public class BaseAWSEC2ApiMockTest {
       }
    }
 
+
    protected RecordedRequest assertPosted(String region, String postParams) throws InterruptedException {
+      return assertPosted(region, postParams, "2012-06-01");
+   }
+
+   protected RecordedRequest assertPosted(String region, String postParams, String apiVersion) throws InterruptedException {
       RecordedRequest request = regionToServers.get(region).takeRequest();
       assertEquals(request.getMethod(), "POST");
       assertEquals(request.getPath(), "/");
@@ -192,8 +197,8 @@ public class BaseAWSEC2ApiMockTest {
             request.getHeader(AUTHORIZATION)).startsWith("AWS4-HMAC-SHA256 Credential=AKIAIOSFODNN7EXAMPLE/20120416/" +
             region + "/ec2/aws4_request, SignedHeaders=content-type;host;x-amz-date, Signature=");
       String body = new String(request.getBody(), Charsets.UTF_8);
-      assertThat(body).contains("&Version=2012-06-01");
-      assertEquals(body.replace("&Version=2012-06-01", ""), postParams);
+      assertThat(body).contains("&Version=" + apiVersion);
+      assertEquals(body.replace("&Version=" + apiVersion, ""), postParams);
       return request;
    }
 }

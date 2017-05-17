@@ -16,6 +16,7 @@
  */
 package org.jclouds.aws.ec2.features;
 
+import static org.jclouds.aws.ec2.options.ModifySubnetAttributeOptions.Builder.mapPublicIpOnLaunch;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertTrue;
 
@@ -201,6 +202,25 @@ public class AWSSubnetApiMockTest extends BaseAWSEC2ApiMockTest {
       
       assertPosted(DEFAULT_REGION, "Action=DescribeRegions");
       assertPosted(region, "Action=DescribeSubnets");
+   }
+
+   public void modifySubnetAttribute() throws Exception {
+      String region = "us-west-2";
+      enqueueRegions(DEFAULT_REGION);
+      enqueue(DEFAULT_REGION,
+         new MockResponse().setBody("<ModifySubnetAttributeResponse xmlns=\"http://ec2.amazonaws.com/doc/2016-09-15/\">\n" +
+            "  <requestId>7a62c49f-347e-4fc4-9331-6e8eEXAMPLE</requestId>\n" +
+            "  <return>true</return>\n" +
+            "</ModifySubnetAttributeResponse>"));
+
+      final boolean result =
+         subnetApiForRegion(DEFAULT_REGION).modifySubnetAttribute(DEFAULT_REGION, "subnet-9d4a7b6c", mapPublicIpOnLaunch(true));
+      assertTrue(result, "Failed to match expected test result of 'true'");
+      assertPosted(DEFAULT_REGION, "Action=DescribeRegions");
+      assertPosted(DEFAULT_REGION,
+         "Action=ModifySubnetAttribute&SubnetId=subnet-9d4a7b6c&MapPublicIpOnLaunch.Value=true",
+         "2014-06-15");
+
    }
 
    private AWSSubnetApi subnetApi() {
