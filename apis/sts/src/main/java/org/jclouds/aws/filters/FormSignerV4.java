@@ -23,6 +23,7 @@ import static com.google.common.hash.Hashing.sha256;
 import static com.google.common.io.BaseEncoding.base16;
 import static com.google.common.net.HttpHeaders.AUTHORIZATION;
 import static com.google.common.net.HttpHeaders.HOST;
+import static org.jclouds.aws.filters.FormSignerUtils.getAnnotatedApiVersion;
 import static org.jclouds.aws.reference.FormParameters.ACTION;
 import static org.jclouds.aws.reference.FormParameters.VERSION;
 import static org.jclouds.http.utils.Queries.queryParser;
@@ -46,6 +47,7 @@ import org.jclouds.providers.ProviderMetadata;
 import org.jclouds.rest.annotations.ApiVersion;
 
 import com.google.common.base.Joiner;
+import com.google.common.base.Optional;
 import com.google.common.base.Splitter;
 import com.google.common.base.Supplier;
 import com.google.common.collect.ImmutableMap;
@@ -101,7 +103,18 @@ public final class FormSignerV4 implements FormSigner {
       this.serviceAndRegion = serviceAndRegion;
    }
 
-   @Override public HttpRequest filter(HttpRequest request) throws HttpException {
+   /**
+    * Adds the Authorization header to the request.
+    *
+    * Also if the method for the operation (or its class) is annotated with a version that is higher than the
+    * default (apiVersion), then the Version parameter of the request is set to be the value from the annotation.
+    *
+    * @param request The HTTP request for the API call.
+    * @return The request
+    * @throws HttpException
+    */
+   @Override
+   public HttpRequest filter(HttpRequest request) throws HttpException {
       checkArgument(request.getHeaders().containsKey(HOST), "request is not ready to sign; host not present");
       String host = request.getFirstHeaderOrNull(HOST);
       String form = request.getPayload().getRawContent().toString();
@@ -126,7 +139,15 @@ public final class FormSignerV4 implements FormSigner {
             .replaceHeader("X-Amz-Date", timestamp);
 
       if (!decodedParams.containsKey(VERSION)) {
-         requestBuilder.addFormParam(VERSION, apiVersion);
+         Optional<String> optAnnotatedVersion = getAnnotatedApiVersion(request);
+         if (optAnnotatedVersion.isPresent()) {
+            String annotatedVersion = optAnnotatedVersion.get();
+            // allow an explicit version annotation to _upgrade_ the version past apiVersion (but not downgrade)
+            String greater = annotatedVersion.compareTo(apiVersion) > 0 ? annotatedVersion : apiVersion;
+            requestBuilder.addFormParam(VERSION, greater);
+         } else {
+            requestBuilder.addFormParam(VERSION, apiVersion);
+         }
       }
 
       Credentials credentials = creds.get();

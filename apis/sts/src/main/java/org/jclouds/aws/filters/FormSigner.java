@@ -22,6 +22,7 @@ import static com.google.common.base.Preconditions.checkState;
 import static com.google.common.collect.Ordering.natural;
 import static com.google.common.io.BaseEncoding.base64;
 import static com.google.common.io.ByteStreams.readBytes;
+import static org.jclouds.aws.filters.FormSignerUtils.getAnnotatedApiVersion;
 import static org.jclouds.aws.reference.FormParameters.ACTION;
 import static org.jclouds.aws.reference.FormParameters.AWS_ACCESS_KEY_ID;
 import static org.jclouds.aws.reference.FormParameters.SECURITY_TOKEN;
@@ -59,6 +60,7 @@ import org.jclouds.rest.annotations.ApiVersion;
 
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Objects;
+import com.google.common.base.Optional;
 import com.google.common.base.Supplier;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
@@ -100,7 +102,15 @@ public interface FormSigner extends HttpRequestFilter {
       public HttpRequest filter(HttpRequest request) throws HttpException {
          checkNotNull(request.getFirstHeaderOrNull(HttpHeaders.HOST), "request is not ready to sign; host not present");
          Multimap<String, String> decodedParams = queryParser().apply(request.getPayload().getRawContent().toString());
-         decodedParams.replaceValues(VERSION, ImmutableSet.of(apiVersion));
+         Optional<String> optAnnotatedVersion = getAnnotatedApiVersion(request);
+         String version;
+         if (optAnnotatedVersion.isPresent()) {
+            String annotatedVersion = optAnnotatedVersion.get();
+            version = annotatedVersion.compareTo(apiVersion) > 0 ? annotatedVersion : apiVersion;
+         } else {
+            version = apiVersion;
+         }
+         decodedParams.replaceValues(VERSION, ImmutableSet.of(version));
          addSigningParams(decodedParams);
          validateParams(decodedParams);
          String stringToSign = createStringToSign(request, decodedParams);
