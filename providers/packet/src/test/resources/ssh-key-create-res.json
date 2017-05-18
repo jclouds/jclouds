@@ -1,0 +1,12 @@
+{
+  "id": "da5d6c21-2e8c-43ac-820f-ff41bd4e6ebc",
+  "label": "andrea-device-livetest",
+  "key": "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCdgcoNzH4hCc0j3b4MuG503L/J54uyFvwCAOu8vSsYuLpJ4AEyEOv+T0SfdF605fK6GYXA16Rxk3lrPt7mfKGNtXR0Ripbv7Zc6PvCRorwgj/cjh/45miozjrkXAiHD1GFZycfbi4YsoWAqZj7W4mwtctmhrYM0FPdya2XoRpVy89N+A5Xo4Xtd6EZn6JGEKQM5+kF2aL3ggy0od/DqjuEVYwZoyTe1RgUTXZSU/Woh7WMhsRHbqd3eYz4s6ac8n8IJPGKtUaQeqUtH7OK6NRYXVypUrkqNlwdNYZAwrjXg/x5T3D+bo11LENASRt9OJ2OkmRSTqRxBeDkhnVauWK/",
+  "fingerprint": "60:b0:5a:23:42:b8:53:19:d0:32:f1:4d:a8:7c:9b:71",
+  "created_at": "2017-01-20T14:15:26Z",
+  "updated_at": "2017-01-20T14:15:26Z",
+  "owner": {
+    "href": "/users/ad711bc3-6333-449a-a405-23ca81f38c00"
+  },
+  "href": "/ssh-keys/da5d6c21-2e8c-43ac-820f-ff41bd4e6ebc"
+}

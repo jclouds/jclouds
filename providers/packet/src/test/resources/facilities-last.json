@@ -1,0 +1,27 @@
+{
+  "facilities": [
+    {
+      "id": "2b70eb8f-fa18-47c0-aba7-222a842362fd",
+      "name": "Sunnyvale, CA",
+      "code": "sjc1",
+      "features": [],
+      "address": null
+    }
+  ],
+  "meta": {
+    "first": {
+      "href": "/facilities?page=1"
+    },
+    "previous": {
+      "href": "/facilities?page=1"
+    },
+    "self": {
+      "href": "/facilities?page=2"
+    },
+    "next": null,
+    "last": {
+      "href": "/facilities?page=2"
+    },
+    "total": 3
+  }
+}

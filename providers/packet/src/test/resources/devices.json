@@ -1,0 +1,282 @@
+{
+  "devices": [
+    {
+      "id": "98e22032-579e-4c04-bb12-05cc6a3864c8",
+      "short_id": "98e22032",
+      "hostname": "test",
+      "description": null,
+      "state": "provisioning",
+      "tags": [],
+      "billing_cycle": "hourly",
+      "user": "root",
+      "iqn": "iqn.2017-01.net.packet:device.98e22032",
+      "locked": false,
+      "bonding_mode": 5,
+      "created_at": "2017-01-03T09:47:59Z",
+      "updated_at": "2017-01-03T09:50:13Z",
+      "provisioning_percentage": 50,
+      "operating_system": {
+        "id": "68bad60d-f5a7-45c2-ad09-573edaad3a3c",
+        "slug": "centos_7",
+        "name": "Centos 7",
+        "distro": "centos",
+        "version": "7",
+        "provisionable_on": [
+          "baremetal_0",
+          "baremetal_1",
+          "baremetal_2",
+          "baremetal_3"
+        ]
+      },
+      "facility": {
+        "id": "e1e9c52e-a0bc-4117-b996-0fc94843ea09",
+        "name": "Parsippany, NJ",
+        "code": "ewr1",
+        "features": [
+          "baremetal",
+          "storage"
+        ],
+        "address": null
+      },
+      "project": {
+        "href": "/projects/93907f48-adfe-43ed-ad89-0e6e83721a54"
+      },
+      "ssh_keys": [
+        {
+          "href": "/ssh-keys/084a5dec-30be-415a-8937-9c615932e459"
+        },
+        {
+          "href": "/ssh-keys/a8d6cc17-7d9d-4fb9-8190-afdb301b67df"
+        },
+        {
+          "href": "/ssh-keys/a3d8bebe-574f-427d-80ee-bc2ba17f7074"
+        },
+        {
+          "href": "/ssh-keys/eacfb002-45e1-4047-a0d5-cd9d8bab19ed"
+        },
+        {
+          "href": "/ssh-keys/bba63e41-b12c-493a-81d4-e52f50f247ed"
+        }
+      ],
+      "project_lite": {
+        "href": "/projects/93907f48-adfe-43ed-ad89-0e6e83721a54"
+      },
+      "volumes": [],
+      "ip_addresses": [
+        {
+          "id": "5d0262c7-1727-411c-94c4-9e6f15490dd3",
+          "address_family": 4,
+          "netmask": "255.255.255.254",
+          "created_at": "2017-01-03T09:47:59Z",
+          "public": true,
+          "cidr": 31,
+          "management": true,
+          "manageable": true,
+          "assigned_to": {
+            "href": "/devices/98e22032-579e-4c04-bb12-05cc6a3864c8"
+          },
+          "network": "147.75.106.80",
+          "address": "147.75.106.81",
+          "gateway": "147.75.106.80",
+          "href": "/ips/5d0262c7-1727-411c-94c4-9e6f15490dd3"
+        },
+        {
+          "id": "f7d0e65c-eb3b-42bd-af9b-ad3a736d8d43",
+          "address_family": 6,
+          "netmask": "ffff:ffff:ffff:ffff:ffff:ffff:ffff:fffe",
+          "created_at": "2017-01-03T09:47:59Z",
+          "public": true,
+          "cidr": 127,
+          "management": true,
+          "manageable": true,
+          "assigned_to": {
+            "href": "/devices/98e22032-579e-4c04-bb12-05cc6a3864c8"
+          },
+          "network": "2604:1380:2:9800::",
+          "address": "2604:1380:2:9800::1",
+          "gateway": "2604:1380:2:9800::",
+          "href": "/ips/f7d0e65c-eb3b-42bd-af9b-ad3a736d8d43"
+        },
+        {
+          "id": "a3d00b4e-d74f-4ac2-8bc9-91065d815b41",
+          "address_family": 4,
+          "netmask": "255.255.255.254",
+          "created_at": "2017-01-03T09:47:59Z",
+          "public": false,
+          "cidr": 31,
+          "management": true,
+          "manageable": true,
+          "assigned_to": {
+            "href": "/devices/98e22032-579e-4c04-bb12-05cc6a3864c8"
+          },
+          "network": "10.99.214.0",
+          "address": "10.99.214.1",
+          "gateway": "10.99.214.0",
+          "href": "/ips/a3d00b4e-d74f-4ac2-8bc9-91065d815b41"
+        }
+      ],
+      "provisioning_events": [
+        {
+          "id": "bd62123b-afed-4e54-b1b9-89e219ba9cf0",
+          "type": "provisioning.101",
+          "body": "Provisioning started",
+          "created_at": "2017-01-03T09:47:59Z",
+          "relationships": [
+            {
+              "href": "#81909921-255e-413c-883a-c58d14c801ae"
+            }
+          ],
+          "interpolated": "Provisioning started",
+          "href": "/events/bd62123b-afed-4e54-b1b9-89e219ba9cf0"
+        },
+        {
+          "id": "14b4a9e6-be90-40ee-be48-b272f855e39c",
+          "type": "provisioning.102",
+          "body": "Network configured with addresses 147.75.106.81, 2604:1380:2:9800::1, and 10.99.214.1",
+          "created_at": "2017-01-03T09:48:46Z",
+          "relationships": [
+            {
+              "href": "#28588657-b8bf-44a1-98d3-27f8e04b660a"
+            }
+          ],
+          "interpolated": "Network configured with addresses 147.75.106.81, 2604:1380:2:9800::1, and 10.99.214.1",
+          "href": "/events/14b4a9e6-be90-40ee-be48-b272f855e39c"
+        },
+        {
+          "id": "57e3cadb-f9aa-4c73-be54-3c83e6cf462e",
+          "type": "provisioning.103",
+          "body": "Configuration written, restarting device",
+          "created_at": "2017-01-03T09:48:57Z",
+          "relationships": [
+            {
+              "href": "#25a7e807-f4aa-4f36-83cd-8347baeb26bc"
+            }
+          ],
+          "interpolated": "Configuration written, restarting device",
+          "href": "/events/57e3cadb-f9aa-4c73-be54-3c83e6cf462e"
+        },
+        {
+          "id": "b8322996-f57e-4c87-96cc-a16f33a0c305",
+          "type": "provisioning.104",
+          "body": "Connected to magic install system",
+          "created_at": "2017-01-03T09:50:13Z",
+          "relationships": [
+            {
+              "href": "#a4825d20-f7f2-426a-88db-38696bd3dfd6"
+            }
+          ],
+          "interpolated": "Connected to magic install system",
+          "href": "/events/b8322996-f57e-4c87-96cc-a16f33a0c305"
+        },
+        {
+          "id": "f00a00a9-7c59-420d-bdcf-2c0993303cf6",
+          "type": "provisioning.105",
+          "body": "Server partitions created",
+          "created_at": "2017-01-03T09:50:13Z",
+          "relationships": [
+            {
+              "href": "#6140659b-5e3d-4686-be8f-8879b6d3e27f"
+            }
+          ],
+          "interpolated": "Server partitions created",
+          "href": "/events/f00a00a9-7c59-420d-bdcf-2c0993303cf6"
+        },
+        {
+          "id": null,
+          "type": "provisioning.106",
+          "body": "Operating system packages installed",
+          "created_at": null,
+          "relationships": [],
+          "interpolated": "Operating system packages installed"
+        },
+        {
+          "id": null,
+          "type": "provisioning.107",
+          "body": "Server networking interfaces configured",
+          "created_at": null,
+          "relationships": [],
+          "interpolated": "Server networking interfaces configured"
+        },
+        {
+          "id": null,
+          "type": "provisioning.108",
+          "body": "Cloud-init packages installed and configured",
+          "created_at": null,
+          "relationships": [],
+          "interpolated": "Cloud-init packages installed and configured"
+        },
+        {
+          "id": null,
+          "type": "provisioning.109",
+          "body": "Installation finished, rebooting server",
+          "created_at": null,
+          "relationships": [],
+          "interpolated": "Installation finished, rebooting server"
+        },
+        {
+          "id": null,
+          "type": "provisioning.109",
+          "body": "Installation finished, rebooting server",
+          "created_at": null,
+          "relationships": [],
+          "interpolated": "Installation finished, rebooting server"
+        }
+      ],
+      "plan": {
+        "id": "e69c0169-4726-46ea-98f1-939c9e8a3607",
+        "slug": "baremetal_0",
+        "name": "Type 0",
+        "description": "Our Type 0 configuration is a general use \"cloud killer\" server, with a Intel Atom 2.4Ghz processor and 8GB of RAM.",
+        "line": "baremetal",
+        "specs": {
+          "cpus": [
+            {
+              "count": 1,
+              "type": "Intel Atom C2550 @ 2.4Ghz"
+            }
+          ],
+          "memory": {
+            "total": "8GB"
+          },
+          "drives": [
+            {
+              "count": 1,
+              "size": "80GB",
+              "type": "SSD"
+            }
+          ],
+          "nics": [
+            {
+              "count": 2,
+              "type": "1Gbps"
+            }
+          ],
+          "features": {
+            "raid": false,
+            "txt": true
+          }
+        },
+        "available_in": [
+          {
+            "href": "/facilities/2b70eb8f-fa18-47c0-aba7-222a842362fd"
+          },
+          {
+            "href": "/facilities/8e6470b3-b75e-47d1-bb93-45b225750975"
+          },
+          {
+            "href": "/facilities/8ea03255-89f9-4e62-9d3f-8817db82ceed"
+          },
+          {
+            "href": "/facilities/e1e9c52e-a0bc-4117-b996-0fc94843ea09"
+          }
+        ],
+        "pricing": {
+          "hour": 0.05
+        }
+      },
+      "userdata": "",
+      "root_password": ",q4*a8(eny",
+      "href": "/devices/98e22032-579e-4c04-bb12-05cc6a3864c8"
+    }
+  ]
+}

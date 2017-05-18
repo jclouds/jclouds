@@ -1,0 +1,106 @@
+{
+  "operating_systems": [
+    {
+      "id": "88239019-abc7-41e8-9a4d-cd334da97ff1",
+      "slug": "debian_8",
+      "name": "Debian 8",
+      "distro": "debian",
+      "version": "8",
+      "provisionable_on": [
+        "baremetal_0",
+        "baremetal_1",
+        "baremetal_2",
+        "baremetal_3"
+      ]
+    },
+    {
+      "id": "06e21ffe-a769-11e6-80f5-76304dec7eb7",
+      "slug": "deprovision",
+      "name": "Deprovision",
+      "distro": "centos",
+      "version": "",
+      "provisionable_on": []
+    },
+    {
+      "id": "06e22198-a769-11e6-80f5-76304dec7eb7",
+      "slug": "freebsd_10_3",
+      "name": "FreeBSD 10.3",
+      "distro": "freebsd",
+      "version": "10.3",
+      "provisionable_on": [
+        "baremetal_0",
+        "baremetal_1",
+        "baremetal_2",
+        "baremetal_3"
+      ]
+    },
+    {
+      "id": "06e22328-a769-11e6-80f5-76304dec7eb7",
+      "slug": "rancher",
+      "name": "RancherOS",
+      "distro": "rancher",
+      "version": "latest",
+      "provisionable_on": [
+        "baremetal_0",
+        "baremetal_1",
+        "baremetal_2",
+        "baremetal_3"
+      ]
+    },
+    {
+      "id": "06e224b8-a769-11e6-80f5-76304dec7eb7",
+      "slug": "ubuntu_14_04",
+      "name": "Ubuntu 14.04 LTS",
+      "distro": "ubuntu",
+      "version": "14.04",
+      "provisionable_on": [
+        "baremetal_0",
+        "baremetal_1",
+        "baremetal_2",
+        "baremetal_3"
+      ]
+    },
+    {
+      "id": "1b9b78e3-de68-466e-ba00-f2123e89c112",
+      "slug": "ubuntu_16_04",
+      "name": "Ubuntu 16.04 LTS",
+      "distro": "ubuntu",
+      "version": "16.04",
+      "provisionable_on": [
+        "baremetal_0",
+        "baremetal_1",
+        "baremetal_2",
+        "baremetal_2a",
+        "baremetal_3"
+      ]
+    },
+    {
+      "id": "06e22972-a769-11e6-80f5-76304dec7eb7",
+      "slug": "windows_2012_rc2",
+      "name": "Windows 2012 RC2",
+      "distro": "windows",
+      "version": "2012 RC2",
+      "provisionable_on": [
+        "baremetal_1",
+        "baremetal_2",
+        "baremetal_3"
+      ]
+    }
+  ],
+  "meta": {
+    "first": {
+      "href": "/operating-systems?page=1"
+    },
+    "previous": {
+      "href": "/operating-systems?page=1"
+    },
+    "self": {
+      "href": "/operating-systems?page=2"
+    },
+    "next": null,
+    "last": {
+      "href": "/operating-systems?page=2"
+    },
+    "total": 14
+  }
+}
