@@ -138,5 +138,10 @@
       <artifactId>docker</artifactId>
       <version>${project.version}</version>
     </dependency>
+    <dependency>
+      <groupId>org.apache.jclouds.provider</groupId>
+      <artifactId>packet</artifactId>
+      <version>${project.version}</version>
+    </dependency>
   </dependencies>
 </project>

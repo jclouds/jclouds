@@ -74,5 +74,6 @@
     <module>ultradns-ws</module>
     <module>dynect</module>
     <module>profitbricks</module>
+    <module>packet</module>
   </modules>
 </project>
