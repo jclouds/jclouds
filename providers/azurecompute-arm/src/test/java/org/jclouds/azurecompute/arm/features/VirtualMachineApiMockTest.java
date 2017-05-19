@@ -32,15 +32,23 @@ import java.util.List;
 import org.jclouds.azurecompute.arm.domain.DataDisk;
 import org.jclouds.azurecompute.arm.domain.DiagnosticsProfile;
 import org.jclouds.azurecompute.arm.domain.HardwareProfile;
+import org.jclouds.azurecompute.arm.domain.IdReference;
 import org.jclouds.azurecompute.arm.domain.ImageReference;
+import org.jclouds.azurecompute.arm.domain.ManagedDiskParameters;
 import org.jclouds.azurecompute.arm.domain.NetworkProfile;
 import org.jclouds.azurecompute.arm.domain.NetworkProfile.NetworkInterface;
 import org.jclouds.azurecompute.arm.domain.OSDisk;
 import org.jclouds.azurecompute.arm.domain.OSProfile;
+import org.jclouds.azurecompute.arm.domain.OSProfile.LinuxConfiguration;
+import org.jclouds.azurecompute.arm.domain.OSProfile.WindowsConfiguration.AdditionalUnattendContent;
+import org.jclouds.azurecompute.arm.domain.OSProfile.WindowsConfiguration.WinRM.Protocol;
+import org.jclouds.azurecompute.arm.domain.Secrets.SourceVault;
 import org.jclouds.azurecompute.arm.domain.Plan;
+import org.jclouds.azurecompute.arm.domain.Secrets;
 import org.jclouds.azurecompute.arm.domain.Status;
 import org.jclouds.azurecompute.arm.domain.StorageProfile;
 import org.jclouds.azurecompute.arm.domain.VHD;
+import org.jclouds.azurecompute.arm.domain.VaultCertificate;
 import org.jclouds.azurecompute.arm.domain.VirtualMachine;
 import org.jclouds.azurecompute.arm.domain.VirtualMachineInstance;
 import org.jclouds.azurecompute.arm.domain.VirtualMachineProperties;
@@ -122,18 +130,30 @@ public class VirtualMachineApiMockTest extends BaseAzureComputeApiMockTest {
             "PUT",
             "/subscriptions/SUBSCRIPTIONID/resourceGroups/groupname/providers/Microsoft.Compute"
                   + "/virtualMachines/windowsmachine?validating=false&api-version=2016-04-30-preview",
-            "{\"location\":\"westus\",\"tags\":{\"foo\":\"bar\"},\"properties\":"
-                  + "{\"vmId\":\"27ee085b-d707-xxxx-yyyy-2370e2eb1cc1\","
+            "{\"location\":\"westus\",\"properties\":"
+                  + "{\"vmId\":\"27ee085b-d707-xxxx-yyyy-2370e2eb1cc1\",\"licenseType\":\"Windows_Server\","
+                  + "\"availabilitySet\":{\"id\":\"/subscriptions/SUBSCRIPTIONID/resourceGroups/myResourceGroup/providers/Microsoft.Compute/availabilitySets/myAVSet\"},"
                   + "\"hardwareProfile\":{\"vmSize\":\"Standard_D1\"},"
-                  + "\"storageProfile\":{\"imageReference\":{\"publisher\":\"publisher\",\"offer\":\"offer\",\"sku\":\"sku\",\"version\":\"ver\"},"
+                  + "\"storageProfile\":{\"imageReference\":{\"id\":\"/subscriptions/SUBSCRIPTIONID/providers/Microsoft.Compute/locations/westus/publishers/MicrosoftWindowsServerEssentials/artifactype/vmimage/offers/OFFER/skus/OFFER/versions/latest\","
+                  + "\"publisher\":\"publisher\",\"offer\":\"OFFER\",\"sku\":\"sku\",\"version\":\"ver\"},"
                   + "\"osDisk\":{\"osType\":\"Windows\",\"name\":\"windowsmachine\","
-                  + "\"vhd\":{\"uri\":\"https://groupname2760.blob.core.windows.net/vhds/windowsmachine201624102936.vhd\"},\"caching\":\"ReadWrite\",\"createOption\":\"FromImage\"},\"dataDisks\":[]},"
-                  + "\"osProfile\":{\"computerName\":\"windowsmachine\",\"adminUsername\":\"azureuser\",\"windowsConfiguration\":{\"provisionVMAgent\":false,\"enableAutomaticUpdates\":true}},"
+                  + "\"vhd\":{\"uri\":\"https://groupname2760.blob.core.windows.net/vhds/windowsmachine201624102936.vhd\"},\"caching\":\"ReadWrite\",\"createOption\":\"FromImage\","
+                  + "\"managedDisk\":{\"id\":\"/subscriptions/SUBSCRIPTIONID/resourceGroups/myResourceGroup/providers/Microsoft.Compute/disks/osDisk\",\"storageAccountType\":\"Standard_LRS\"}},"
+                  + "\"dataDisks\":[{\"name\":\"mydatadisk1\",\"diskSizeGB\":\"1\",\"lun\":0,\"vhd\":{\"uri\":\"http://mystorage1.blob.core.windows.net/vhds/mydatadisk1.vhd\"},\"createOption\":\"Empty\",\"caching\":\"Unrecognized\"}]},"
+                  + "\"osProfile\":{\"computerName\":\"windowsmachine\",\"adminUsername\":\"azureuser\",\"adminPassword\":\"password\",\"customData\":\"\",\"windowsConfiguration\":{\"provisionVMAgent\":false,"
+                  + "\"winRM\":{\"listeners\":[{\"protocol\":\"https\",\"certificateUrl\":\"url-to-certificate\"}]},\"additionalUnattendContent\":[{\"pass\":\"oobesystem\",\"component\":\"Microsoft-Windows-Shell-Setup\",\"settingName\":\"FirstLogonCommands\",\"content\":\"<XML unattend content>\"}],"
+                  + "\"enableAutomaticUpdates\":true},"
+                  + "\"secrets\":[{\"sourceVault\":{\"id\":\"/subscriptions/SUBSCRIPTIONID/resourceGroups/myresourcegroup1/providers/Microsoft.KeyVault/vaults/myvault1\"},\"vaultCertificates\":[{\"certificateUrl\":\"https://myvault1.vault.azure.net/secrets/SECRETNAME/SECRETVERSION\",\"certificateStore\":\"CERTIFICATESTORENAME\"}]}]},"
                   + "\"networkProfile\":{\"networkInterfaces\":[{\"id\":\"/subscriptions/SUBSCRIPTIONID/resourceGroups/groupname/providers/Microsoft.Network/networkInterfaces/windowsmachine167\"}]},"
                   + "\"diagnosticsProfile\":{\"bootDiagnostics\":{\"enabled\":true,\"storageUri\":\"https://groupname2760.blob.core.windows.net/\"}},\"provisioningState\":\"CREATING\"},"
+                  + "\"tags\":{\"foo\":\"bar\"},"
                   + "\"plan\":{\"name\":\"deadline-slave-7-2\",\"publisher\":\"thinkboxsoftware\",\"product\":\"deadline7-2\"}}");
    }
-   
+
+   // See https://docs.microsoft.com/en-us/rest/api/compute/virtualmachines/virtualmachines-create-or-update
+   // for where part of the example json response comes from. Unfortunately examples in the microsoft docs
+   // are not valid json (e.g. missing commas, illegal quotes). Therefore this example merges the original 
+   // real-world example (presumably taken from the jclouds wire log), and snippets from the microsoft docs.
    public void testCreate() throws Exception {
       server.enqueue(jsonResponse("/createvirtualmachineresponse.json"));
 
@@ -145,15 +165,23 @@ public class VirtualMachineApiMockTest extends BaseAzureComputeApiMockTest {
             "PUT",
             "/subscriptions/SUBSCRIPTIONID/resourceGroups/groupname/providers/Microsoft.Compute"
                   + "/virtualMachines/windowsmachine?validating=false&api-version=2016-04-30-preview",
-            "{\"location\":\"westus\",\"tags\":{\"foo\":\"bar\"},\"properties\":"
-                  + "{\"vmId\":\"27ee085b-d707-xxxx-yyyy-2370e2eb1cc1\","
+            "{\"location\":\"westus\",\"properties\":"
+                  + "{\"vmId\":\"27ee085b-d707-xxxx-yyyy-2370e2eb1cc1\",\"licenseType\":\"Windows_Server\","
+                  + "\"availabilitySet\":{\"id\":\"/subscriptions/SUBSCRIPTIONID/resourceGroups/myResourceGroup/providers/Microsoft.Compute/availabilitySets/myAVSet\"},"
                   + "\"hardwareProfile\":{\"vmSize\":\"Standard_D1\"},"
-                  + "\"storageProfile\":{\"imageReference\":{\"publisher\":\"publisher\",\"offer\":\"offer\",\"sku\":\"sku\",\"version\":\"ver\"},"
+                  + "\"storageProfile\":{\"imageReference\":{\"id\":\"/subscriptions/SUBSCRIPTIONID/providers/Microsoft.Compute/locations/westus/publishers/MicrosoftWindowsServerEssentials/artifactype/vmimage/offers/OFFER/skus/OFFER/versions/latest\","
+                  + "\"publisher\":\"publisher\",\"offer\":\"OFFER\",\"sku\":\"sku\",\"version\":\"ver\"},"
                   + "\"osDisk\":{\"osType\":\"Windows\",\"name\":\"windowsmachine\","
-                  + "\"vhd\":{\"uri\":\"https://groupname2760.blob.core.windows.net/vhds/windowsmachine201624102936.vhd\"},\"caching\":\"ReadWrite\",\"createOption\":\"FromImage\"},\"dataDisks\":[]},"
-                  + "\"osProfile\":{\"computerName\":\"windowsmachine\",\"adminUsername\":\"azureuser\",\"windowsConfiguration\":{\"provisionVMAgent\":false,\"enableAutomaticUpdates\":true}},"
+                  + "\"vhd\":{\"uri\":\"https://groupname2760.blob.core.windows.net/vhds/windowsmachine201624102936.vhd\"},\"caching\":\"ReadWrite\",\"createOption\":\"FromImage\","
+                  + "\"managedDisk\":{\"id\":\"/subscriptions/SUBSCRIPTIONID/resourceGroups/myResourceGroup/providers/Microsoft.Compute/disks/osDisk\",\"storageAccountType\":\"Standard_LRS\"}},"
+                  + "\"dataDisks\":[{\"name\":\"mydatadisk1\",\"diskSizeGB\":\"1\",\"lun\":0,\"vhd\":{\"uri\":\"http://mystorage1.blob.core.windows.net/vhds/mydatadisk1.vhd\"},\"createOption\":\"Empty\",\"caching\":\"Unrecognized\"}]},"
+                  + "\"osProfile\":{\"computerName\":\"windowsmachine\",\"adminUsername\":\"azureuser\",\"adminPassword\":\"password\",\"customData\":\"\",\"windowsConfiguration\":{\"provisionVMAgent\":false,"
+                  + "\"winRM\":{\"listeners\":[{\"protocol\":\"https\",\"certificateUrl\":\"url-to-certificate\"}]},\"additionalUnattendContent\":[{\"pass\":\"oobesystem\",\"component\":\"Microsoft-Windows-Shell-Setup\",\"settingName\":\"FirstLogonCommands\",\"content\":\"<XML unattend content>\"}],"
+                  + "\"enableAutomaticUpdates\":true},"
+                  + "\"secrets\":[{\"sourceVault\":{\"id\":\"/subscriptions/SUBSCRIPTIONID/resourceGroups/myresourcegroup1/providers/Microsoft.KeyVault/vaults/myvault1\"},\"vaultCertificates\":[{\"certificateUrl\":\"https://myvault1.vault.azure.net/secrets/SECRETNAME/SECRETVERSION\",\"certificateStore\":\"CERTIFICATESTORENAME\"}]}]},"
                   + "\"networkProfile\":{\"networkInterfaces\":[{\"id\":\"/subscriptions/SUBSCRIPTIONID/resourceGroups/groupname/providers/Microsoft.Network/networkInterfaces/windowsmachine167\"}]},"
-                  + "\"diagnosticsProfile\":{\"bootDiagnostics\":{\"enabled\":true,\"storageUri\":\"https://groupname2760.blob.core.windows.net/\"}},\"provisioningState\":\"CREATING\"}}");
+                  + "\"diagnosticsProfile\":{\"bootDiagnostics\":{\"enabled\":true,\"storageUri\":\"https://groupname2760.blob.core.windows.net/\"}},\"provisioningState\":\"CREATING\"},"
+                  + "\"tags\":{\"foo\":\"bar\"}}");
    }
 
    public void testDeleteReturns404() throws Exception {
@@ -248,15 +276,31 @@ public class VirtualMachineApiMockTest extends BaseAzureComputeApiMockTest {
    }
 
    private VirtualMachineProperties getProperties() {
+      String licenseType = "Windows_Server";
+      IdReference availabilitySet = IdReference.create("/subscriptions/SUBSCRIPTIONID/resourceGroups/myResourceGroup/providers/Microsoft.Compute/availabilitySets/myAVSet");
       HardwareProfile hwProf = HardwareProfile.create("Standard_D1");
-      ImageReference imgRef = ImageReference.builder().publisher("publisher").offer("offer").sku("sku").version("ver").build();
+      ImageReference imgRef = ImageReference.builder().publisher("publisher").offer("OFFER").sku("sku").version("ver")
+            .customImageId("/subscriptions/SUBSCRIPTIONID/providers/Microsoft.Compute/locations/westus/publishers/MicrosoftWindowsServerEssentials/artifactype/vmimage/offers/OFFER/skus/OFFER/versions/latest")
+            .build();
       VHD vhd = VHD.create("https://groupname2760.blob.core.windows.net/vhds/windowsmachine201624102936.vhd");
-      List<DataDisk> dataDisks = new ArrayList<DataDisk>();
-      OSDisk osDisk = OSDisk.create("Windows", "windowsmachine", vhd, "ReadWrite", "FromImage", null, null, null);
+      List<DataDisk> dataDisks = ImmutableList.of(
+            DataDisk.create("mydatadisk1", "1", 0, VHD.create("http://mystorage1.blob.core.windows.net/vhds/mydatadisk1.vhd"), 
+                  null, "Empty", null, null, null));
+      ManagedDiskParameters managedDiskParameters = ManagedDiskParameters.create("/subscriptions/SUBSCRIPTIONID/resourceGroups/myResourceGroup/providers/Microsoft.Compute/disks/osDisk",
+            "Standard_LRS");
+      OSDisk osDisk = OSDisk.create("Windows", "windowsmachine", vhd, "ReadWrite", "FromImage", null, managedDiskParameters, null);
       StorageProfile storageProfile = StorageProfile.create(imgRef, osDisk, dataDisks);
-      OSProfile.WindowsConfiguration windowsConfig = OSProfile.WindowsConfiguration.create(false, null, null, true,
-            null);
-      OSProfile osProfile = OSProfile.create("windowsmachine", "azureuser", null, null, null, windowsConfig);
+      LinuxConfiguration linuxConfig = null;
+      OSProfile.WindowsConfiguration.WinRM winrm = OSProfile.WindowsConfiguration.WinRM.create(
+            ImmutableList.of(
+                  OSProfile.WindowsConfiguration.WinRM.ProtocolListener.create(Protocol.HTTPS, "url-to-certificate")));
+      List<AdditionalUnattendContent> additionalUnattendContent = ImmutableList.of(
+            AdditionalUnattendContent.create("oobesystem", "Microsoft-Windows-Shell-Setup", "FirstLogonCommands", "<XML unattend content>"));
+      OSProfile.WindowsConfiguration windowsConfig = OSProfile.WindowsConfiguration.create(false, winrm, additionalUnattendContent, true);
+      List<Secrets> secrets =  ImmutableList.of(
+            Secrets.create(SourceVault.create("/subscriptions/SUBSCRIPTIONID/resourceGroups/myresourcegroup1/providers/Microsoft.KeyVault/vaults/myvault1"), 
+                  ImmutableList.of(VaultCertificate.create("https://myvault1.vault.azure.net/secrets/SECRETNAME/SECRETVERSION", "CERTIFICATESTORENAME"))));
+      OSProfile osProfile = OSProfile.create("windowsmachine", "azureuser", "password", "", linuxConfig, windowsConfig, secrets);
       NetworkInterface networkInterface = NetworkInterface.create("/subscriptions/SUBSCRIPTIONID"
             + "/resourceGroups/groupname/providers/Microsoft.Network/networkInterfaces/" + "windowsmachine167", null);
       List<NetworkInterface> networkInterfaces = new ArrayList<NetworkInterface>();
@@ -266,7 +310,7 @@ public class VirtualMachineApiMockTest extends BaseAzureComputeApiMockTest {
             "https://groupname2760.blob.core.windows.net/");
       DiagnosticsProfile diagnosticsProfile = DiagnosticsProfile.create(bootDiagnostics);
       VirtualMachineProperties properties = VirtualMachineProperties.create("27ee085b-d707-xxxx-yyyy-2370e2eb1cc1",
-            null, null, hwProf, storageProfile, osProfile, networkProfile, diagnosticsProfile,
+            licenseType, availabilitySet, hwProf, storageProfile, osProfile, networkProfile, diagnosticsProfile,
             VirtualMachineProperties.ProvisioningState.CREATING);
       return properties;
    }

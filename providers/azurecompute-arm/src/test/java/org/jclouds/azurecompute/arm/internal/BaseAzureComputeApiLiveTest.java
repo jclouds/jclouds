@@ -41,6 +41,7 @@ import org.jclouds.azurecompute.arm.domain.ResourceGroup;
 import org.jclouds.azurecompute.arm.domain.Subnet;
 import org.jclouds.azurecompute.arm.domain.VirtualNetwork;
 import org.testng.annotations.AfterClass;
+import org.testng.annotations.BeforeClass;
 
 import com.google.common.base.Predicate;
 import com.google.common.base.Supplier;
@@ -66,6 +67,10 @@ public class BaseAzureComputeApiLiveTest extends BaseApiLiveTest<AzureComputeApi
    
    protected String resourceGroupName;
    
+   protected String vaultResourceGroup;
+   protected String vaultName;
+   protected String vaultCertificateUrl;
+
    public BaseAzureComputeApiLiveTest() {
       provider = "azurecompute-arm";
    }
@@ -80,6 +85,20 @@ public class BaseAzureComputeApiLiveTest extends BaseApiLiveTest<AzureComputeApi
       } finally {
          super.tearDown();
       }
+   }
+
+   @BeforeClass
+   @Override
+   public void setup() {
+      super.setup();
+
+      // Providing system properties for specifying the required Azure KeyVault configurations for Live tests
+      // They have to be externally provided, because azurecompute-arm doesn't support creating KeyVaults yet
+      //
+      // TODO Replace the used configurations once full KeyVault implementation is added to azurecompute-arm
+      vaultResourceGroup = System.getProperty("test.azurecompute-arm.vault.resource.group");
+      vaultName = System.getProperty("test.azurecompute-arm.vault.name");
+      vaultCertificateUrl = System.getProperty("test.azurecompute-arm.vault.certificate.url");
    }
 
    @Override protected AzureComputeApi create(Properties props, Iterable<Module> modules) {

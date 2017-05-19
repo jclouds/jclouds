@@ -16,15 +16,14 @@
  */
 package org.jclouds.azurecompute.arm.domain;
 
-import com.google.auto.value.AutoValue;
-import com.google.common.collect.ImmutableList;
+import java.util.List;
 
+import org.jclouds.azurecompute.arm.util.GetEnumValue;
 import org.jclouds.javax.annotation.Nullable;
 import org.jclouds.json.SerializedNames;
 
-import java.util.List;
-import java.util.Map;
-import com.google.common.collect.ImmutableMap;
+import com.google.auto.value.AutoValue;
+import com.google.common.collect.ImmutableList;
 
 @AutoValue
 public abstract class OSProfile {
@@ -91,15 +90,52 @@ public abstract class OSProfile {
 
       @AutoValue
       public abstract static class WinRM {
+          public enum Protocol {
+
+              HTTP("http"),
+              HTTPS("https"),
+              UNRECOGNIZED("Unrecognized");
+
+              private String value;
+
+              Protocol(String value) {
+                 this.value = value;
+              }
+
+              public static Protocol fromValue(String value) {
+                  return (Protocol) GetEnumValue.fromValueOrDefault(value, Protocol.UNRECOGNIZED);
+              }
+
+              @Override
+              public String toString() {
+                 return this.value;
+              }
+           }
+
+          @AutoValue
+          public abstract static class ProtocolListener {
+
+             public abstract Protocol protocol();
+
+             @Nullable
+             public abstract String certificateUrl();
+
+             @SerializedNames({"protocol", "certificateUrl"})
+             public static ProtocolListener create(final Protocol protocol, final String certificateUrl) {
+
+                return new AutoValue_OSProfile_WindowsConfiguration_WinRM_ProtocolListener(
+                        protocol, certificateUrl);
+             }
+          }
 
          /**
           * Map of different settings
           */
-         public abstract Map<String, String> listeners();
+         public abstract List<ProtocolListener> listeners();
 
          @SerializedNames({"listeners"})
-         public static WinRM create(final Map<String, String> listeners) {
-            return new AutoValue_OSProfile_WindowsConfiguration_WinRM(listeners == null ? ImmutableMap.<String, String>of() : ImmutableMap.copyOf(listeners));
+         public static WinRM create(final List<ProtocolListener> listeners) {
+            return new AutoValue_OSProfile_WindowsConfiguration_WinRM(listeners == null ? ImmutableList.<ProtocolListener>of() : ImmutableList.copyOf(listeners));
          }
       }
 
@@ -139,27 +175,20 @@ public abstract class OSProfile {
        * unattend content
        */
       @Nullable
-      public abstract AdditionalUnattendContent additionalUnattendContent();
+      public abstract List<AdditionalUnattendContent> additionalUnattendContent();
 
       /**
        * is automatic updates enabled
        */
       public abstract boolean enableAutomaticUpdates();
 
-      /**
-       * list of certificates
-       */
-      @Nullable
-      public abstract List<String> secrets();
-
-      @SerializedNames({"provisionVMAgent", "winRM", "additionalUnattendContent", "enableAutomaticUpdates",
-              "secrets"})
+      @SerializedNames({"provisionVMAgent", "winRM", "additionalUnattendContent", "enableAutomaticUpdates"})
       public static WindowsConfiguration create(final boolean provisionVMAgent, final WinRM winRM,
-                                                final AdditionalUnattendContent additionalUnattendContent,
-                                                final boolean enableAutomaticUpdates, final List<String> secrets) {
+                                                final List<AdditionalUnattendContent> additionalUnattendContent,
+                                                final boolean enableAutomaticUpdates) {
 
          return new AutoValue_OSProfile_WindowsConfiguration(provisionVMAgent, winRM,
-                 additionalUnattendContent, enableAutomaticUpdates, secrets == null ? null : ImmutableList.copyOf(secrets));
+                 additionalUnattendContent, enableAutomaticUpdates);
       }
    }
 
@@ -199,11 +228,17 @@ public abstract class OSProfile {
    @Nullable
    public abstract WindowsConfiguration windowsConfiguration();
 
+   /**
+    * The Secrets configuration of the VM
+    */
+   @Nullable
+   public abstract List<Secrets> secrets();
+
    @SerializedNames({"computerName", "adminUsername", "adminPassword", "customData", "linuxConfiguration",
-           "windowsConfiguration"})
+           "windowsConfiguration", "secrets"})
    public static OSProfile create(final String computerName, final String adminUsername, final String adminPassword,
                                   final String customData, final LinuxConfiguration linuxConfiguration,
-                                  final WindowsConfiguration windowsConfiguration) {
+                                  final WindowsConfiguration windowsConfiguration, final List<Secrets> secrets) {
       return builder()
               .computerName(computerName)
               .adminUsername(adminUsername)
@@ -211,6 +246,7 @@ public abstract class OSProfile {
               .customData(customData)
               .linuxConfiguration(linuxConfiguration)
               .windowsConfiguration(windowsConfiguration)
+              .secrets(secrets)
               .build();
    }
    
@@ -233,6 +269,8 @@ public abstract class OSProfile {
       public abstract Builder linuxConfiguration(LinuxConfiguration linuxConfiguration);
 
       public abstract Builder windowsConfiguration(WindowsConfiguration windowsConfiguration);
+
+      public abstract Builder secrets(List<Secrets> secrets);
 
       public abstract OSProfile build();
    }

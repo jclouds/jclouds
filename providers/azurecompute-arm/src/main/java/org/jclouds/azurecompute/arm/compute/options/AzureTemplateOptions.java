@@ -16,16 +16,18 @@
  */
 package org.jclouds.azurecompute.arm.compute.options;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 import java.util.List;
 
 import org.jclouds.azurecompute.arm.domain.AvailabilitySet;
 import org.jclouds.azurecompute.arm.domain.DataDisk;
+import org.jclouds.azurecompute.arm.domain.OSProfile.WindowsConfiguration;
+import org.jclouds.azurecompute.arm.domain.Secrets;
 import org.jclouds.compute.options.TemplateOptions;
 
 import com.google.common.base.Objects;
 import com.google.common.collect.ImmutableList;
-
-import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Azure ARM custom options
@@ -37,6 +39,8 @@ public class AzureTemplateOptions extends TemplateOptions implements Cloneable {
    private List<DataDisk> dataDisks = ImmutableList.of();
    private String resourceGroup;
    private List<IpOptions> ipOptions = ImmutableList.of();
+   private WindowsConfiguration windowsConfiguration;
+   private List<Secrets> secrets = ImmutableList.of();
    
    /**
     * Sets the availability set where the nodes will be configured. If it does
@@ -98,12 +102,36 @@ public class AzureTemplateOptions extends TemplateOptions implements Cloneable {
    public AzureTemplateOptions ipOptions(IpOptions... ipOptions) {
       return ipOptions(ImmutableList.copyOf(checkNotNull(ipOptions, "ipOptions")));
    }
-   
+
+   /**
+    * Windows configuration parameters
+    *
+    * @see <a href="https://docs.microsoft.com/en-us/rest/api/compute/virtualmachines/virtualmachines-create-or-update#bk_windowsconfig5">docs</a>
+    */
+   public AzureTemplateOptions windowsConfiguration(WindowsConfiguration windowsConfiguration) {
+       this.windowsConfiguration = windowsConfiguration;
+       return this;
+    }
+
+   /**
+    * Import certificates in the Windows Certificate Store
+    *
+    * @see <a href="https://docs.microsoft.com/en-us/rest/api/compute/virtualmachines/virtualmachines-create-or-update#bk_srcvault">docs</a>
+    */
+   public AzureTemplateOptions secrets(Iterable<? extends Secrets> secrets) {
+       for (Secrets secret : checkNotNull(secrets, "secrets"))
+           checkNotNull(secret, "secrets can not be empty");
+       this.secrets = ImmutableList.copyOf(secrets);
+       return this;
+    }
+
    public AvailabilitySet getAvailabilitySet() { return availabilitySet; }
    public String getAvailabilitySetName() { return availabilitySetName; }
    public List<DataDisk> getDataDisks() { return dataDisks; }
    public String getResourceGroup() { return resourceGroup; }
    public List<IpOptions> getIpOptions() { return ipOptions; }
+   public WindowsConfiguration getWindowsConfiguration() { return windowsConfiguration; }
+   public List<Secrets> getSecrets() { return secrets; }
 
    @Override
    public AzureTemplateOptions clone() {
@@ -122,6 +150,8 @@ public class AzureTemplateOptions extends TemplateOptions implements Cloneable {
          eTo.dataDisks(dataDisks);
          eTo.resourceGroup(resourceGroup);
          eTo.ipOptions(ipOptions);
+         eTo.windowsConfiguration(windowsConfiguration);
+         eTo.secrets(secrets);
       }
    }
 
@@ -137,7 +167,9 @@ public class AzureTemplateOptions extends TemplateOptions implements Cloneable {
             Objects.equal(resourceGroup, that.resourceGroup) &&
             Objects.equal(availabilitySet, that.availabilitySet) &&
             Objects.equal(dataDisks, that.dataDisks) &&
-            Objects.equal(ipOptions, that.ipOptions);
+            Objects.equal(ipOptions, that.ipOptions) &&
+            Objects.equal(windowsConfiguration, that.windowsConfiguration) &&
+            Objects.equal(secrets, that.secrets);
    }
 
    @Override
@@ -159,6 +191,10 @@ public class AzureTemplateOptions extends TemplateOptions implements Cloneable {
          toString.add("resourceGroup", resourceGroup);
       if (!ipOptions.isEmpty())
          toString.add("ipOptions", ipOptions);
+      if (windowsConfiguration != null)
+          toString.add("windowsConfiguration", windowsConfiguration);
+      if (!secrets.isEmpty())
+          toString.add("secrets", secrets);
       return toString;
    }
 
@@ -218,6 +254,22 @@ public class AzureTemplateOptions extends TemplateOptions implements Cloneable {
       public static AzureTemplateOptions ipOptions(Iterable<IpOptions> ipOptions) {
          AzureTemplateOptions options = new AzureTemplateOptions();
          return options.ipOptions(ipOptions);
+      }
+
+      /**
+       * @see AzureTemplateOptions#windowsConfiguration(WindowsConfiguration)
+       */
+      public static AzureTemplateOptions windowsConfiguration(WindowsConfiguration windowsConfiguration) {
+         AzureTemplateOptions options = new AzureTemplateOptions();
+         return options.windowsConfiguration(windowsConfiguration);
+      }
+
+      /**
+       * @see AzureTemplateOptions#secrets(List)
+       */
+      public static AzureTemplateOptions secrets(Iterable<? extends Secrets> secrets) {
+         AzureTemplateOptions options = new AzureTemplateOptions();
+         return options.secrets(secrets);
       }
    }
 }

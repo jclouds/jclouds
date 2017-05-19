@@ -42,22 +42,28 @@ import org.jclouds.azurecompute.arm.domain.NetworkProfile;
 import org.jclouds.azurecompute.arm.domain.OSDisk;
 import org.jclouds.azurecompute.arm.domain.OSProfile;
 import org.jclouds.azurecompute.arm.domain.ResourceDefinition;
+import org.jclouds.azurecompute.arm.domain.Secrets;
 import org.jclouds.azurecompute.arm.domain.StorageAccountType;
 import org.jclouds.azurecompute.arm.domain.StorageProfile;
 import org.jclouds.azurecompute.arm.domain.StorageService;
 import org.jclouds.azurecompute.arm.domain.Subnet;
 import org.jclouds.azurecompute.arm.domain.VHD;
+import org.jclouds.azurecompute.arm.domain.VaultCertificate;
 import org.jclouds.azurecompute.arm.domain.VirtualMachine;
 import org.jclouds.azurecompute.arm.domain.VirtualMachineInstance;
 import org.jclouds.azurecompute.arm.domain.VirtualMachineInstance.PowerState;
 import org.jclouds.azurecompute.arm.domain.VirtualMachineProperties;
 import org.jclouds.azurecompute.arm.domain.NetworkProfile.NetworkInterface;
 import org.jclouds.azurecompute.arm.domain.NetworkProfile.NetworkInterface.NetworkInterfaceProperties;
+import org.jclouds.azurecompute.arm.domain.OSProfile.WindowsConfiguration.WinRM.Protocol;
+import org.jclouds.azurecompute.arm.domain.OSProfile.WindowsConfiguration.WinRM.ProtocolListener;
 import org.jclouds.azurecompute.arm.functions.ParseJobStatus;
 import org.jclouds.azurecompute.arm.internal.BaseAzureComputeApiLiveTest;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
+import static org.testng.util.Strings.isNullOrEmpty;
 
+import com.beust.jcommander.internal.Lists;
 import com.google.common.base.Predicate;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
@@ -79,6 +85,7 @@ public class VirtualMachineApiLiveTest extends BaseAzureComputeApiLiveTest {
       subscriptionid = getSubscriptionId();
 
       createTestResourceGroup();
+
       virtualNetworkName = String.format("vn-%s-%s", this.getClass().getSimpleName().toLowerCase(), System.getProperty("user.name"));
 
       // Subnets belong to a virtual network so that needs to be created first
@@ -232,9 +239,9 @@ public class VirtualMachineApiLiveTest extends BaseAzureComputeApiLiveTest {
 
    private VirtualMachineProperties getProperties(String nic, String blob) {
 
-      HardwareProfile hwProf = HardwareProfile.create("Standard_D1");
-      ImageReference imgRef = ImageReference.builder().publisher("MicrosoftWindowsServerEssentials")
-              .offer("WindowsServerEssentials").sku("WindowsServerEssentials").version("latest").build();
+      HardwareProfile hwProf = HardwareProfile.create("Standard_D1_v2");
+      ImageReference imgRef = ImageReference.builder().publisher("MicrosoftWindowsServer")
+              .offer("WindowsServer").sku("2008-R2-SP1").version("latest").build();
       
       DataDisk.Builder dataDisk = DataDisk.builder().name("data").diskSizeGB("100").lun(0).createOption(DataDisk.DiskCreateOptionTypes.EMPTY);
       
@@ -250,11 +257,25 @@ public class VirtualMachineApiLiveTest extends BaseAzureComputeApiLiveTest {
          osDisk.vhd(VHD.create(blob + "vhds/" + vmName + ".vhd"));
          dataDisk.vhd(VHD.create(blob + "vhds/" + vmName + "data.vhd"));
       }
-      
+
       StorageProfile storageProfile = StorageProfile.create(imgRef, osDisk.build(), ImmutableList.of(dataDisk.build()));
-      OSProfile.WindowsConfiguration windowsConfig = OSProfile.WindowsConfiguration.create(false, null, null, true,
-              null);
-      OSProfile osProfile = OSProfile.create(vmName, "azureuser", "RFe3&432dg", null, null, windowsConfig);
+
+      List<Secrets> secrets = null;
+      OSProfile.WindowsConfiguration.WinRM winRm = null;
+      if (!isNullOrEmpty(vaultResourceGroup) && !isNullOrEmpty(vaultName) && !isNullOrEmpty(vaultCertificateUrl)) {
+          List<ProtocolListener> listeners = Lists.newArrayList();
+
+          listeners.add(OSProfile.WindowsConfiguration.WinRM.ProtocolListener.create(Protocol.HTTPS, vaultCertificateUrl));
+          listeners.add(OSProfile.WindowsConfiguration.WinRM.ProtocolListener.create(Protocol.HTTP, null));
+
+          winRm = OSProfile.WindowsConfiguration.WinRM.create(listeners);
+          VaultCertificate vaultCertificate = VaultCertificate.create(vaultCertificateUrl, vaultName);
+          secrets = ImmutableList.of(Secrets.create(Secrets.SourceVault.create(String.format("%s/providers/Microsoft.KeyVault/vaults/%s",
+                            api.getResourceGroupApi().get(vaultResourceGroup).id(), vaultName)),
+                    ImmutableList.of(vaultCertificate)));
+      }
+      OSProfile.WindowsConfiguration windowsConfig = OSProfile.WindowsConfiguration.create(true, winRm, null, true);
+      OSProfile osProfile = OSProfile.create(vmName, "azureuser", "RFe3&432dg", null, null, windowsConfig, secrets);
       NetworkInterface networkInterface =
             NetworkInterface.create("/subscriptions/" + subscriptionid +
                       "/resourceGroups/" + resourceGroupName + "/providers/Microsoft.Network/networkInterfaces/"

@@ -64,6 +64,8 @@ import org.jclouds.azurecompute.arm.domain.ManagedDiskParameters;
 import org.jclouds.azurecompute.arm.domain.NetworkInterfaceCard;
 import org.jclouds.azurecompute.arm.domain.NetworkInterfaceCardProperties;
 import org.jclouds.azurecompute.arm.domain.NetworkProfile;
+import org.jclouds.azurecompute.arm.domain.NetworkProfile.NetworkInterface;
+import org.jclouds.azurecompute.arm.domain.NetworkProfile.NetworkInterface.NetworkInterfaceProperties;
 import org.jclouds.azurecompute.arm.domain.OSDisk;
 import org.jclouds.azurecompute.arm.domain.OSProfile;
 import org.jclouds.azurecompute.arm.domain.Offer;
@@ -82,8 +84,6 @@ import org.jclouds.azurecompute.arm.domain.VMSize;
 import org.jclouds.azurecompute.arm.domain.Version;
 import org.jclouds.azurecompute.arm.domain.VirtualMachine;
 import org.jclouds.azurecompute.arm.domain.VirtualMachineProperties;
-import org.jclouds.azurecompute.arm.domain.NetworkProfile.NetworkInterface;
-import org.jclouds.azurecompute.arm.domain.NetworkProfile.NetworkInterface.NetworkInterfaceProperties;
 import org.jclouds.azurecompute.arm.features.NetworkInterfaceCardApi;
 import org.jclouds.azurecompute.arm.features.OSImageApi;
 import org.jclouds.compute.ComputeServiceAdapter;
@@ -390,6 +390,17 @@ public class AzureComputeServiceAdapter implements ComputeServiceAdapter<Virtual
          builder.linuxConfiguration(linuxConfiguration);
       }
 
+
+      AzureTemplateOptions azureTemplateOptions = template.getOptions().as(AzureTemplateOptions.class);
+
+      if (azureTemplateOptions.getWindowsConfiguration() != null) {
+          builder.windowsConfiguration(azureTemplateOptions.getWindowsConfiguration());
+      }
+
+      if (azureTemplateOptions.getSecrets() != null) {
+          builder.secrets(azureTemplateOptions.getSecrets());
+      }
+
       return builder.build();
    }
 
@@ -526,5 +537,4 @@ public class AzureComputeServiceAdapter implements ComputeServiceAdapter<Virtual
    private IdReference getAvailabilitySetIdReference(AvailabilitySet availabilitySet) {
       return availabilitySet != null ? IdReference.create(availabilitySet.id()) : null;
    }
-
 }
