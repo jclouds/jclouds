@@ -27,6 +27,7 @@ import org.jclouds.location.functions.RegionToEndpoint;
 import org.jclouds.openstack.swift.v1.features.AccountApi;
 import org.jclouds.openstack.swift.v1.features.BulkApi;
 import org.jclouds.openstack.swift.v1.features.ContainerApi;
+import org.jclouds.openstack.swift.v1.features.DynamicLargeObjectApi;
 import org.jclouds.openstack.swift.v1.features.ObjectApi;
 import org.jclouds.openstack.swift.v1.features.StaticLargeObjectApi;
 import org.jclouds.rest.annotations.Delegate;
@@ -66,5 +67,10 @@ public interface SwiftApi extends Closeable {
    @Delegate
    @Path("/{containerName}")
    StaticLargeObjectApi getStaticLargeObjectApi(@EndpointParam(parser = RegionToEndpoint.class) String region,
+         @PathParam("containerName") String containerName);
+
+   @Delegate
+   @Path("/{containerName}")
+   DynamicLargeObjectApi getDynamicLargeObjectApi(@EndpointParam(parser = RegionToEndpoint.class) String region,
          @PathParam("containerName") String containerName);
 }
