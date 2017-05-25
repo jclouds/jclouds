@@ -24,12 +24,14 @@ import org.jclouds.googlecomputeengine.domain.Image;
 import org.jclouds.googlecomputeengine.domain.Instance;
 import org.jclouds.googlecomputeengine.domain.Network;
 import org.jclouds.googlecomputeengine.domain.Operation;
+import org.jclouds.googlecomputeengine.domain.Subnetwork;
 import org.jclouds.googlecomputeengine.internal.BaseGoogleComputeEngineApiMockTest;
 import org.jclouds.googlecomputeengine.parse.ParseDiskTest;
 import org.jclouds.googlecomputeengine.parse.ParseImageTest;
 import org.jclouds.googlecomputeengine.parse.ParseInstanceTest;
 import org.jclouds.googlecomputeengine.parse.ParseNetworkTest;
 import org.jclouds.googlecomputeengine.parse.ParseOperationTest;
+import org.jclouds.googlecomputeengine.parse.ParseSubnetworkTest;
 import org.testng.annotations.Test;
 
 @Test(groups = "unit", testName = "ResourcesMockTest", singleThreaded = true)
@@ -153,6 +155,22 @@ public class ResourcesMockTest extends BaseGoogleComputeEngineApiMockTest {
       Operation operation = resourceApi().startInstance(server.getUrl("/foo/bar").toURI());
       assertEquals(operation, new ParseOperationTest().expected(url("/projects")));
       assertSent(server, "POST", "/foo/bar/start");
+   }
+   
+   public void testSubnetwork() throws Exception {
+      server.enqueue(jsonResponse("/subnetwork_get.json"));
+
+      Subnetwork subnet = resourceApi().subnetwork(server.getUrl("/foo/bar").toURI());
+      assertEquals(subnet, new ParseSubnetworkTest().expected(url("/projects")));
+      assertSent(server, "GET", "/foo/bar");
+   }
+   
+   public void testSubnetworkReturns404() throws Exception {
+      server.enqueue(response404());
+
+      Subnetwork subnet = resourceApi().subnetwork(server.getUrl("/foo/bar").toURI());
+      assertNull(subnet);
+      assertSent(server, "GET", "/foo/bar");
    }
    
    private Resources resourceApi() {

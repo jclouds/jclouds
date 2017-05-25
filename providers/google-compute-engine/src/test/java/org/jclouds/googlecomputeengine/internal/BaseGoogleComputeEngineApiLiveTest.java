@@ -48,6 +48,7 @@ public class BaseGoogleComputeEngineApiLiveTest extends BaseApiLiveTest<GoogleCo
 
    protected static final String ZONE_API_URL_SUFFIX = "/zones/";
    protected static final String DEFAULT_ZONE_NAME = "us-central1-f";
+   protected static final String REGION_API_URL_SUFFIX = "/regions/";
    protected static final String DEFAULT_REGION_NAME = "us-central1";
    protected static final String NETWORK_API_URL_SUFFIX = "/global/networks/";
    protected static final String MACHINE_TYPE_API_URL_SUFFIX = "/machineTypes/";
@@ -116,6 +117,14 @@ public class BaseGoogleComputeEngineApiLiveTest extends BaseApiLiveTest<GoogleCo
    protected URI getZoneUrl(String zone) {
       return URI.create(projectUrl + ZONE_API_URL_SUFFIX + zone);
    }
+   
+   protected URI getDefaultRegionUrl() {
+      return getRegionUrl(DEFAULT_REGION_NAME);
+   }
+
+   protected URI getRegionUrl(String region) {
+      return URI.create(projectUrl + REGION_API_URL_SUFFIX + region);
+   }
 
    protected URI getNetworkUrl(String network) {
       return URI.create(projectUrl + NETWORK_API_URL_SUFFIX + network);
@@ -161,6 +170,10 @@ public class BaseGoogleComputeEngineApiLiveTest extends BaseApiLiveTest<GoogleCo
 
    protected URI getUrlMapUrl(String urlMap) {
       return URI.create(projectUrl + URL_MAP_API_URL_SUFFIX + urlMap);
+   }
+   
+   protected URI getSubnetworkUrl(String region, String subnetName) {
+      return URI.create(projectUrl + REGION_API_URL_SUFFIX + region + "/subnetworks/" + subnetName);
    }
 }
 

@@ -16,24 +16,8 @@
  */
 package org.jclouds.googlecomputeengine.features;
 
-import com.google.common.base.Function;
-import com.google.common.base.Predicate;
-import com.google.common.base.Strings;
-import com.google.common.collect.FluentIterable;
-import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.ImmutableSet;
-import com.google.inject.Key;
-import com.google.inject.Module;
-import com.google.inject.TypeLiteral;
-import org.jclouds.encryption.bouncycastle.config.BouncyCastleCryptoModule;
-import org.jclouds.googlecomputeengine.GoogleComputeEngineApi;
-import org.jclouds.googlecomputeengine.domain.Image;
-import org.jclouds.googlecomputeengine.domain.Instance;
-import org.jclouds.googlecomputeengine.domain.NewInstance;
-import org.jclouds.googlecomputeengine.internal.BaseGoogleComputeEngineApiLiveTest;
-import org.jclouds.googlecomputeengine.options.DiskCreationOptions;
-import org.testng.annotations.AfterClass;
-import org.testng.annotations.Test;
+import static org.jclouds.googlecomputeengine.options.ListOptions.Builder.filter;
+import static org.testng.Assert.assertFalse;
 
 import java.net.URI;
 import java.security.NoSuchAlgorithmException;
@@ -44,8 +28,25 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.concurrent.atomic.AtomicReference;
 
-import static org.jclouds.googlecomputeengine.options.ListOptions.Builder.filter;
-import static org.testng.Assert.assertFalse;
+import org.jclouds.encryption.bouncycastle.config.BouncyCastleCryptoModule;
+import org.jclouds.googlecomputeengine.GoogleComputeEngineApi;
+import org.jclouds.googlecomputeengine.domain.Image;
+import org.jclouds.googlecomputeengine.domain.Instance;
+import org.jclouds.googlecomputeengine.domain.NewInstance;
+import org.jclouds.googlecomputeengine.internal.BaseGoogleComputeEngineApiLiveTest;
+import org.jclouds.googlecomputeengine.options.DiskCreationOptions;
+import org.testng.annotations.AfterClass;
+import org.testng.annotations.Test;
+
+import com.google.common.base.Function;
+import com.google.common.base.Predicate;
+import com.google.common.base.Strings;
+import com.google.common.collect.FluentIterable;
+import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.ImmutableSet;
+import com.google.inject.Key;
+import com.google.inject.Module;
+import com.google.inject.TypeLiteral;
 
 @Test(groups = "live", testName = "InstanceApiWindowsLiveTest")
 public class InstanceApiWindowsLiveTest extends BaseGoogleComputeEngineApiLiveTest {
@@ -80,6 +81,7 @@ public class InstanceApiWindowsLiveTest extends BaseGoogleComputeEngineApiLiveTe
               INSTANCE_NAME,
               getDefaultMachineTypeUrl(),
               getNetworkUrl(INSTANCE_NETWORK_NAME),
+              null,
               imageUri
       );
 
@@ -102,8 +104,7 @@ public class InstanceApiWindowsLiveTest extends BaseGoogleComputeEngineApiLiveTe
    @Test(groups = "live")
    public void testInsertInstanceWindows() {
       // need to insert the network first
-      assertOperationDoneSuccessfully(api.networks().createInIPv4Range
-              (INSTANCE_NETWORK_NAME, IPV4_RANGE));
+      assertOperationDoneSuccessfully(api.networks().createLegacy(INSTANCE_NETWORK_NAME, IPV4_RANGE));
 
       assertOperationDoneSuccessfully(diskApi().create(DISK_NAME,
             new DiskCreationOptions.Builder().sizeGb(DEFAULT_DISK_SIZE_GB).build()));

@@ -31,7 +31,7 @@ public class ParseSubnetworkTest extends BaseGoogleComputeEngineParseTest<Subnet
 
    @Override
    public String resource() {
-      return "/network_get.json";
+      return "/subnetwork_get.json";
    }
 
    @Override @Consumes(APPLICATION_JSON)
@@ -45,7 +45,7 @@ public class ParseSubnetworkTest extends BaseGoogleComputeEngineParseTest<Subnet
             "5850679262666457680", // id
             parse("2016-06-07T14:29:35.476-07:00"), // creationTimestamp
             URI.create(baseUrl + "/party/regions/someregion/subnetworks/jclouds-test"), // selfLink
-            "jclouds-subnetwork-test", // name
+            "jclouds-test", // name
             "A custom subnetwork for the project", // description
             "10.128.0.1",
             URI.create(baseUrl + "/party/global/networks/mynetwork"), // network

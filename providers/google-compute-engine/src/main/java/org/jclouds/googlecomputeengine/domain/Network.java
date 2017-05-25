@@ -25,6 +25,7 @@ import org.jclouds.json.SerializedNames;
 
 import com.google.auto.value.AutoValue;
 import com.google.common.base.Strings;
+import com.google.common.collect.ImmutableList;
 
 /**
  * Represents a network used to enable instance communication.
@@ -46,8 +47,6 @@ public abstract class Network {
 
    public abstract String name();
 
-   public abstract NetworkType type();
-
    @Nullable public abstract String description();
 
    /**
@@ -61,26 +60,24 @@ public abstract class Network {
     * If not specified, the default value is the first usable address in IPv4Range.
     */
    @Nullable public abstract String gatewayIPv4();
+   
+   public abstract boolean autoCreateSubnetworks();
 
-   @Nullable public abstract List<URI> subnetworks();
+   public abstract List<URI> subnetworks();
 
-   public static Network create(String id, Date creationTimestamp, URI selfLink, String name, String description, String rangeIPv4,
-                                String gatewayIPv4) {
-      return new AutoValue_Network(id, creationTimestamp, selfLink, name, NetworkType.LegacyNetwork, description,
-              rangeIPv4, gatewayIPv4, null);
-   }
-
-   @SerializedNames({ "id", "creationTimestamp", "selfLink", "name", "description", "IPv4Range", "gatewayIPv4", "autoCreateSubnetworks", "subnetworks" })
-   public static Network create(String id, Date creationTimestamp, URI selfLink, String name, String description, String rangeIPv4,
-         String gatewayIPv4, String autoCreateSubnetworks, List<URI> subnetworks) {
-      NetworkType type;
-      type = !Strings.isNullOrEmpty(rangeIPv4) ? NetworkType.LegacyNetwork
-              : (autoCreateSubnetworks.equals("true") ? NetworkType.AutoSubnetwork
-                  : NetworkType.CustomNetwork);
-      return new AutoValue_Network(id, creationTimestamp, selfLink, name, type, description, rangeIPv4, gatewayIPv4,
-              subnetworks);
+   @SerializedNames({ "id", "creationTimestamp", "selfLink", "name", "description", "IPv4Range", "gatewayIPv4",
+         "autoCreateSubnetworks", "subnetworks" })
+   public static Network create(String id, Date creationTimestamp, URI selfLink, String name, String description,
+         String rangeIPv4, String gatewayIPv4, boolean autoCreateSubnetworks, List<URI> subnetworks) {
+      return new AutoValue_Network(id, creationTimestamp, selfLink, name, description, rangeIPv4, gatewayIPv4,
+            autoCreateSubnetworks, subnetworks == null ? ImmutableList.<URI> of() : ImmutableList.copyOf(subnetworks));
    }
 
    Network() {
+   }
+
+   public NetworkType type() {
+      return !Strings.isNullOrEmpty(rangeIPv4()) ? NetworkType.LegacyNetwork
+            : (autoCreateSubnetworks() ? NetworkType.AutoSubnetwork : NetworkType.CustomNetwork);
    }
 }

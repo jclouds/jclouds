@@ -16,8 +16,6 @@
  */
 package org.jclouds.googlecomputeengine.options;
 
-import static com.google.common.base.Preconditions.checkNotNull;
-
 import java.net.URI;
 
 import org.jclouds.javax.annotation.Nullable;
@@ -33,7 +31,8 @@ public abstract class SubnetworkCreationOptions {
 
    public abstract String name();
 
-   @Nullable public abstract String description();
+   @Nullable
+   public abstract String description();
 
    public abstract URI network();
 
@@ -41,12 +40,16 @@ public abstract class SubnetworkCreationOptions {
 
    public abstract URI region();
 
-   @SerializedNames({ "name", "description", "network", "ipCidrRange", "region" })
-   public static SubnetworkCreationOptions create(String name, String description, URI network,
-                                                  String ipCidrRange, URI region) {
-      return new AutoValue_SubnetworkCreationOptions(name, description, network, ipCidrRange, region);
+   public abstract boolean privateIpGoogleAccess();
+
+   @SerializedNames({ "name", "description", "network", "ipCidrRange", "region", "privateIpGoogleAccess" })
+   public static SubnetworkCreationOptions create(String name, String description, URI network, String ipCidrRange,
+         URI region, boolean privateIpGoogleAccess) {
+      return new AutoValue_SubnetworkCreationOptions(name, description, network, ipCidrRange, region,
+            privateIpGoogleAccess);
    }
 
    SubnetworkCreationOptions() {
+      
    }
 }

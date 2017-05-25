@@ -19,6 +19,7 @@ package org.jclouds.googlecomputeengine.parse;
 import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 
 import java.net.URI;
+import java.util.Collections;
 
 import javax.ws.rs.Consumes;
 
@@ -48,7 +49,9 @@ public class ParseNetworkTest extends BaseGoogleComputeEngineParseTest<Network> 
             "jclouds-test", // name
             "A custom network for the project", // description
             "10.0.0.0/8", // rangeIPv4
-            "10.0.0.1" // gatewayIPv4
+            "10.0.0.1", // gatewayIPv4
+            false,
+            Collections.<URI> emptyList() // subnetworks
       );
    }
 }

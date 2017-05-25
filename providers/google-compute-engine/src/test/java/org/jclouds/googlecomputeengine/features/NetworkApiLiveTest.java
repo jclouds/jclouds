@@ -40,7 +40,7 @@ public class NetworkApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
 
    @Test(groups = "live")
    public void testInsertNetwork() {
-      assertOperationDoneSuccessfully(api().createInIPv4Range(NETWORK_NAME, IPV4_RANGE));
+      assertOperationDoneSuccessfully(api().createLegacy(NETWORK_NAME, IPV4_RANGE));
    }
 
    @Test(groups = "live", dependsOnMethods = "testInsertNetwork")

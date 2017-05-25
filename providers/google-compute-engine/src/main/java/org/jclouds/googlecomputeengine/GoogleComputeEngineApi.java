@@ -17,13 +17,11 @@
 package org.jclouds.googlecomputeengine;
 
 import java.io.Closeable;
-import java.net.URI;
 
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 
 import org.jclouds.googlecloud.config.CurrentProject;
-import org.jclouds.googlecomputeengine.domain.Subnetwork;
 import org.jclouds.googlecomputeengine.features.AddressApi;
 import org.jclouds.googlecomputeengine.features.AggregatedListApi;
 import org.jclouds.googlecomputeengine.features.BackendServiceApi;
@@ -46,12 +44,10 @@ import org.jclouds.googlecomputeengine.features.SubnetworkApi;
 import org.jclouds.googlecomputeengine.features.TargetHttpProxyApi;
 import org.jclouds.googlecomputeengine.features.TargetInstanceApi;
 import org.jclouds.googlecomputeengine.features.TargetPoolApi;
-import org.jclouds.googlecomputeengine.features.TargetHttpProxyApi;
 import org.jclouds.googlecomputeengine.features.UrlMapApi;
 import org.jclouds.googlecomputeengine.features.ZoneApi;
 import org.jclouds.rest.annotations.Delegate;
 import org.jclouds.rest.annotations.Endpoint;
-import org.jclouds.rest.annotations.EndpointParam;
 
 public interface GoogleComputeEngineApi extends Closeable {
 

@@ -30,18 +30,18 @@ import java.util.Properties;
 
 import org.jclouds.googlecloud.domain.ListPage;
 import org.jclouds.googlecomputeengine.GoogleComputeEngineApi;
+import org.jclouds.googlecomputeengine.domain.AttachDisk;
 import org.jclouds.googlecomputeengine.domain.Image;
 import org.jclouds.googlecomputeengine.domain.Instance;
 import org.jclouds.googlecomputeengine.domain.Instance.AttachedDisk;
+import org.jclouds.googlecomputeengine.domain.Instance.NetworkInterface.AccessConfig;
 import org.jclouds.googlecomputeengine.domain.Instance.NetworkInterface.AccessConfig.Type;
 import org.jclouds.googlecomputeengine.domain.Instance.Scheduling;
 import org.jclouds.googlecomputeengine.domain.Instance.Scheduling.OnHostMaintenance;
 import org.jclouds.googlecomputeengine.domain.Instance.SerialPortOutput;
 import org.jclouds.googlecomputeengine.domain.Instance.ServiceAccount;
-import org.jclouds.googlecomputeengine.domain.Instance.NetworkInterface.AccessConfig;
 import org.jclouds.googlecomputeengine.domain.Metadata;
 import org.jclouds.googlecomputeengine.domain.NewInstance;
-import org.jclouds.googlecomputeengine.domain.AttachDisk;
 import org.jclouds.googlecomputeengine.domain.Operation;
 import org.jclouds.googlecomputeengine.domain.Tags;
 import org.jclouds.googlecomputeengine.internal.BaseGoogleComputeEngineApiLiveTest;
@@ -96,6 +96,7 @@ public class InstanceApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
             INSTANCE_NAME, // name
             getDefaultMachineTypeUrl(), // machineType
             getNetworkUrl(INSTANCE_NETWORK_NAME), // network
+            null, // subnetwork
             Arrays.asList(AttachDisk.newBootDisk(imageUri),
                   AttachDisk.existingDisk(getDiskUrl(DISK_NAME))), // disks
             "a description", // description
@@ -106,6 +107,7 @@ public class InstanceApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
       instance2 = new NewInstance.Builder(INSTANCE_NAME2, // name
             getDefaultMachineTypeUrl(), // machineType
             getNetworkUrl(INSTANCE_NETWORK_NAME), // network
+            null, // subnetwork
             imageUri) // sourceImage
             .canIpForward(true)
             .description("description")
@@ -141,8 +143,7 @@ public class InstanceApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
    @Test(groups = "live")
    public void testInsertInstance() {
       // need to insert the network first
-      assertOperationDoneSuccessfully(api.networks().createInIPv4Range
-              (INSTANCE_NETWORK_NAME, IPV4_RANGE));
+      assertOperationDoneSuccessfully(api.networks().createLegacy(INSTANCE_NETWORK_NAME, IPV4_RANGE));
 
       assertOperationDoneSuccessfully(diskApi().create(DISK_NAME,
             new DiskCreationOptions.Builder().sizeGb(DEFAULT_DISK_SIZE_GB).build()));

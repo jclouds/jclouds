@@ -126,13 +126,11 @@ public final class GoogleComputeEngineHttpApiModule extends HttpApiModule<Google
 
       private final GetProject api;
       private final Supplier<URI> defaultEndpoint;
-      private final String identityName;
 
       @Inject
       UseApiToResolveProjectName(GetProject api, @Provider Supplier<URI> defaultEndpoint, ProviderMetadata metadata) {
          this.api = api;
          this.defaultEndpoint = defaultEndpoint;
-         this.identityName = metadata.getApiMetadata().getIdentityName();
       }
 
       @Override public URI apply(Credentials in) {

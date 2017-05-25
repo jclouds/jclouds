@@ -19,6 +19,8 @@ package org.jclouds.googlecomputeengine.compute.strategy;
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkState;
 import static com.google.common.collect.ImmutableList.of;
+import static org.jclouds.domain.LocationScope.ZONE;
+import static org.jclouds.googlecomputeengine.compute.domain.internal.RegionAndName.fromRegionAndName;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -41,20 +43,26 @@ import org.jclouds.compute.reference.ComputeServiceConstants;
 import org.jclouds.compute.strategy.CreateNodeWithGroupEncodedIntoName;
 import org.jclouds.compute.strategy.CustomizeNodeAndAddToGoodMapOrPutExceptionIntoBadMap;
 import org.jclouds.compute.strategy.ListNodesStrategy;
+import org.jclouds.domain.Location;
 import org.jclouds.googlecomputeengine.GoogleComputeEngineApi;
+import org.jclouds.googlecomputeengine.compute.domain.internal.RegionAndName;
 import org.jclouds.googlecomputeengine.compute.functions.FirewallTagNamingConvention;
+import org.jclouds.googlecomputeengine.compute.functions.Resources;
 import org.jclouds.googlecomputeengine.compute.options.GoogleComputeEngineTemplateOptions;
 import org.jclouds.googlecomputeengine.domain.Firewall;
 import org.jclouds.googlecomputeengine.domain.Firewall.Rule;
 import org.jclouds.googlecomputeengine.domain.Network;
 import org.jclouds.googlecomputeengine.domain.Operation;
+import org.jclouds.googlecomputeengine.domain.Subnetwork;
 import org.jclouds.googlecomputeengine.features.FirewallApi;
 import org.jclouds.googlecomputeengine.options.FirewallOptions;
 import org.jclouds.logging.Logger;
 import org.jclouds.ssh.SshKeyPairGenerator;
 
+import com.google.common.base.Optional;
 import com.google.common.base.Predicate;
 import com.google.common.base.Strings;
+import com.google.common.cache.LoadingCache;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Multimap;
@@ -72,9 +80,11 @@ public final class CreateNodesWithGroupEncodedIntoNameThenAddToSet extends
    public static final String DEFAULT_NETWORK_NAME = "default";
 
    private final GoogleComputeEngineApi api;
+   private final Resources resources;
    private final Predicate<AtomicReference<Operation>> operationDone;
    private final FirewallTagNamingConvention.Factory firewallTagNamingConvention;
    private final SshKeyPairGenerator keyGenerator;
+   private final LoadingCache<RegionAndName, Optional<Subnetwork>> subnetworksMap;
 
    @Resource
    @Named(ComputeServiceConstants.COMPUTE_LOGGER)
@@ -87,14 +97,17 @@ public final class CreateNodesWithGroupEncodedIntoNameThenAddToSet extends
          GroupNamingConvention.Factory namingConvention,
          @Named(Constants.PROPERTY_USER_THREADS) ListeningExecutorService userExecutor,
          CustomizeNodeAndAddToGoodMapOrPutExceptionIntoBadMap.Factory customizeNodeAndAddToGoodMapOrPutExceptionIntoBadMapFactory,
-         GoogleComputeEngineApi api, Predicate<AtomicReference<Operation>> operationDone,
-         FirewallTagNamingConvention.Factory firewallTagNamingConvention, SshKeyPairGenerator keyGenerator) {
+         GoogleComputeEngineApi api, Resources resources, Predicate<AtomicReference<Operation>> operationDone,
+         FirewallTagNamingConvention.Factory firewallTagNamingConvention, SshKeyPairGenerator keyGenerator,
+         LoadingCache<RegionAndName, Optional<Subnetwork>> subnetworksMap) {
       super(addNodeWithGroupStrategy, listNodesStrategy, namingConvention, userExecutor,
             customizeNodeAndAddToGoodMapOrPutExceptionIntoBadMapFactory);
       this.api = api;
+      this.resources = resources;
       this.operationDone = operationDone;
       this.firewallTagNamingConvention = firewallTagNamingConvention;
       this.keyGenerator = keyGenerator;
+      this.subnetworksMap = subnetworksMap;
    }
 
    @Override
@@ -102,16 +115,13 @@ public final class CreateNodesWithGroupEncodedIntoNameThenAddToSet extends
          Set<NodeMetadata> goodNodes, Map<NodeMetadata, Exception> badNodes,
          Multimap<NodeMetadata, CustomizationResponse> customizationResponses) {
 
-            Template mutableTemplate = template.clone();
       GoogleComputeEngineTemplateOptions templateOptions = GoogleComputeEngineTemplateOptions.class
-            .cast(mutableTemplate.getOptions());
+            .cast(template.getOptions());
       assert template.getOptions().equals(templateOptions) : "options didn't clone properly";
 
-      // Get Network
-      Network network = getNetwork(templateOptions.getNetworks());
-      // Setup Firewall rules
-      getOrCreateFirewalls(templateOptions, network, firewallTagNamingConvention.get(group));
-      templateOptions.networks(ImmutableSet.of(network.selfLink().toString()));
+      // Configure networking
+      configureNetworking(group, templateOptions, template.getLocation());
+      
       templateOptions.userMetadata(ComputeServiceConstants.NODE_GROUP_KEY, group);
 
       // Configure the default credentials, if needed
@@ -123,30 +133,48 @@ public final class CreateNodesWithGroupEncodedIntoNameThenAddToSet extends
       }
 
       if (templateOptions.getRunScript() != null && templateOptions.getLoginPrivateKey() == null) {
-         logger.warn(">> A runScript has been configured but no SSH key has been provided."
+         logger.warn(">> a runScript has been configured but no SSH key has been provided."
                + " Authentication will delegate to the ssh-agent");
       }
 
-      return super.execute(group, count, mutableTemplate, goodNodes, badNodes, customizationResponses);
+      return super.execute(group, count, template, goodNodes, badNodes, customizationResponses);
    }
 
    /**
-    * Try and find a network previously created by the user.
+    * Configure the networks taking into account that users may have configured
+    * a custom subnet or a legacy network.
     */
-   private Network getNetwork(Set<String> networks) {
-      String networkName;
-      if (networks == null || networks.isEmpty()){
-         networkName = DEFAULT_NETWORK_NAME;
-      }
-      else {
-         Iterator<String> iterator = networks.iterator();
-         networkName = nameFromNetworkString(iterator.next());
-         checkArgument(!iterator.hasNext(), "Error: Please specify only one network in TemplateOptions when using GCE.");
+   private void configureNetworking(String group, GoogleComputeEngineTemplateOptions options, Location location) {
+      String networkName = null;
+      Network network = null;
 
+      if (options.getNetworks().isEmpty()) {
+         networkName = DEFAULT_NETWORK_NAME;
+      } else {
+         Iterator<String> iterator = options.getNetworks().iterator();
+         networkName = nameFromNetworkString(iterator.next());
+         checkArgument(!iterator.hasNext(),
+               "Error: Please specify only one network/subnetwork in TemplateOptions when using GCE.");
       }
-      Network network = api.networks().get(networkName);
+
+      String region = ZONE == location.getScope() ? location.getParent().getId() : location.getId();
+      Optional<Subnetwork> subnet = subnetworksMap.getUnchecked(fromRegionAndName(region, networkName));
+      if (subnet.isPresent()) {
+         network = resources.network(subnet.get().network());
+         options.networks(ImmutableSet.of(subnet.get().selfLink().toString()));
+         logger.debug(">> attaching nodes to subnet(%s) in region(%s)", subnet.get().name(), region);
+      } else {
+         logger.warn(">> subnet(%s) was not found in region(%s). Trying to find a matching legacy network...",
+               networkName, region);
+         network = api.networks().get(networkName);
+         options.networks(ImmutableSet.of(network.selfLink().toString()));
+         logger.debug(">> attaching nodes to legacy network(%s)", network.name());
+      }
+
       checkArgument(network != null, "Error: no network with name %s was found", networkName);
-      return network;
+
+      // Setup Firewall rules
+      getOrCreateFirewalls(options, network, subnet, firewallTagNamingConvention.get(group));
    }
 
    /**
@@ -162,7 +190,7 @@ public final class CreateNodesWithGroupEncodedIntoNameThenAddToSet extends
     *      org.jclouds.googlecomputeengine.options.FirewallOptions)
     */
    private void getOrCreateFirewalls(GoogleComputeEngineTemplateOptions templateOptions, Network network,
-         FirewallTagNamingConvention naming) {
+         Optional<Subnetwork> subnet, FirewallTagNamingConvention naming) {
 
       Set<String> tags = Sets.newLinkedHashSet(templateOptions.getTags());
 
@@ -188,11 +216,14 @@ public final class CreateNodesWithGroupEncodedIntoNameThenAddToSet extends
       String name = naming.name(ports);
       Firewall firewall = firewallApi.get(name);
       AtomicReference<Operation> operation = null;
+      
+      String interiorRange = subnet.isPresent() ? subnet.get().ipCidrRange() : DEFAULT_INTERNAL_NETWORK_RANGE;
+      
       if (firewall == null) {
          List<Rule> rules = ImmutableList.of(Rule.create("tcp", ports), Rule.create("udp", ports));
          FirewallOptions firewallOptions = new FirewallOptions().name(name).network(network.selfLink())
                   .allowedRules(rules).sourceTags(templateOptions.getTags())
-                  .sourceRanges(of(DEFAULT_INTERNAL_NETWORK_RANGE, EXTERIOR_RANGE))
+                  .sourceRanges(of(interiorRange, EXTERIOR_RANGE))
                   .targetTags(ImmutableList.of(name));
 
          operation = Atomics.newReference(firewallApi

@@ -55,7 +55,8 @@ public class SubnetworkApiMockTest extends BaseGoogleComputeEngineApiMockTest {
               "my subnetwork",
               URI.create(url("/projects/party/global/networks/mynetwork")),
               "10.0.0.0/24",
-              URI.create(url("/projects/party/regions/someregion")))), new ParseOperationTest().expected(url("/projects")));
+              URI.create(url("/projects/party/regions/someregion")),
+              false)), new ParseOperationTest().expected(url("/projects")));
       assertSent(server, "POST", "/projects/party/regions/someregion/subnetworks",
             stringFromResource("/subnetwork_insert.json"));
    }

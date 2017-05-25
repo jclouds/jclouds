@@ -44,12 +44,20 @@ public class NetworkApiMockTest extends BaseGoogleComputeEngineApiMockTest {
       assertSent(server, "GET", "/projects/party/global/networks/jclouds-test");
    }
 
-   public void insert() throws Exception {
+   public void insertLegacy() throws Exception {
       server.enqueue(jsonResponse("/operation.json"));
 
-      assertEquals(networkApi().createInIPv4Range("test-network", "10.0.0.0/8"), new ParseOperationTest().expected(url("/projects")));
+      assertEquals(networkApi().createLegacy("test-network", "10.0.0.0/8"), new ParseOperationTest().expected(url("/projects")));
       assertSent(server, "POST", "/projects/party/global/networks",
             stringFromResource("/network_insert.json"));
+   }
+   
+   public void insertCustom() throws Exception {
+      server.enqueue(jsonResponse("/operation.json"));
+
+      assertEquals(networkApi().createCustom("test-network"), new ParseOperationTest().expected(url("/projects")));
+      assertSent(server, "POST", "/projects/party/global/networks",
+            stringFromResource("/network_insert_custom.json"));
    }
 
    public void delete() throws Exception {

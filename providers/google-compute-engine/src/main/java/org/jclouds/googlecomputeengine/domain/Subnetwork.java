@@ -48,13 +48,12 @@ public abstract class Subnetwork {
 
    public abstract URI region();
 
-   @SerializedNames({ "id", "creationTimestamp", "selfLink", "name",
-                      "description", "gatewayAddress", "network", "ipCidrRange", "region" })
-   public static Subnetwork create(String id, Date creationTimestamp, URI selfLink, String name,
-                                   String description, String gatewayAddress, URI network,
-                                   String ipCidrRange, URI region) {
-      return new AutoValue_Subnetwork(id, creationTimestamp, selfLink, name, description,
-              gatewayAddress, network, ipCidrRange, region);
+   @SerializedNames({ "id", "creationTimestamp", "selfLink", "name", "description", "gatewayAddress", "network",
+         "ipCidrRange", "region" })
+   public static Subnetwork create(String id, Date creationTimestamp, URI selfLink, String name, String description,
+         String gatewayAddress, URI network, String ipCidrRange, URI region) {
+      return new AutoValue_Subnetwork(id, creationTimestamp, selfLink, name, description, gatewayAddress, network,
+            ipCidrRange, region);
    }
 
    Subnetwork() {

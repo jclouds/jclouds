@@ -45,8 +45,7 @@ public class FirewallApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
    @Test(groups = "live")
    public void testInsertFirewall() {
       // need to insert the network first
-      assertOperationDoneSuccessfully(
-            api.networks().createInIPv4Range(FIREWALL_NETWORK_NAME, IPV4_RANGE));
+      assertOperationDoneSuccessfully(api.networks().createLegacy(FIREWALL_NETWORK_NAME, IPV4_RANGE));
 
       FirewallOptions firewall = new FirewallOptions()
               .addAllowedRule(Firewall.Rule.create("tcp", ImmutableList.of("22")))

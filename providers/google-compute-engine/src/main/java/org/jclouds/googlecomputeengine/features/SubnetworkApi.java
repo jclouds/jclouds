@@ -18,7 +18,6 @@ package org.jclouds.googlecomputeengine.features;
 
 import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 
-import java.net.URI;
 import java.util.Iterator;
 
 import javax.inject.Inject;
@@ -43,11 +42,7 @@ import org.jclouds.googlecomputeengine.options.SubnetworkCreationOptions;
 import org.jclouds.javax.annotation.Nullable;
 import org.jclouds.oauth.v2.filters.OAuthFilter;
 import org.jclouds.rest.annotations.BinderParam;
-import org.jclouds.rest.annotations.Delegate;
-import org.jclouds.rest.annotations.EndpointParam;
 import org.jclouds.rest.annotations.Fallback;
-import org.jclouds.rest.annotations.MapBinder;
-import org.jclouds.rest.annotations.PayloadParam;
 import org.jclouds.rest.annotations.RequestFilters;
 import org.jclouds.rest.annotations.SkipEncoding;
 import org.jclouds.rest.annotations.Transform;
@@ -107,6 +102,12 @@ public interface SubnetworkApi {
    @GET
    @Transform(SubnetworkPages.class)
    Iterator<ListPage<Subnetwork>> list();
+   
+   /** @see #listPage(String, ListOptions) */
+   @Named("Subnetworks:list")
+   @GET
+   @Transform(SubnetworkPages.class)
+   Iterator<ListPage<Subnetwork>> list(ListOptions options);
 
    static final class SubnetworkPages extends BaseCallerArg0ToIteratorOfListPage<Subnetwork, SubnetworkPages> {
 

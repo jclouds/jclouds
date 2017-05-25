@@ -37,18 +37,20 @@ public abstract class NetworkCreationOptions {
     * The range of internal addresses that are legal on this network. This range is a CIDR
     * specification, for example: {@code 192.168.0.0/16}.
     */
-   public abstract String rangeIPv4();
+   @Nullable public abstract String rangeIPv4();
 
    /**
     * This must be within the range specified by IPv4Range, and is typically the first usable address in that range.
     * If not specified, the default value is the first usable address in IPv4Range.
     */
    @Nullable public abstract String gatewayIPv4();
+   
+   @Nullable public abstract Boolean autoCreateSubnetworks();
 
-   @SerializedNames({ "name", "description", "IPv4Range", "gatewayIPv4" })
+   @SerializedNames({ "name", "description", "IPv4Range", "gatewayIPv4", "autoCreateSubnetworks" })
    public static NetworkCreationOptions create(String name, String description, String rangeIPv4,
-         String gatewayIPv4) {
-      return new AutoValue_NetworkCreationOptions(name, description, rangeIPv4, gatewayIPv4);
+         String gatewayIPv4, Boolean autoCreateSubnetworks) {
+      return new AutoValue_NetworkCreationOptions(name, description, rangeIPv4, gatewayIPv4, autoCreateSubnetworks);
    }
 
    NetworkCreationOptions() {
@@ -59,10 +61,15 @@ public abstract class NetworkCreationOptions {
       private String description;
       private String rangeIPv4;
       private String gatewayIPv4;
-
-      public Builder(String name, String rangeIPv4){
+      private Boolean autoCreateSubnetworks;
+      
+      public Builder(String name) {
          this.name = name;
+      }
+      
+      public Builder rangeIPv4(String rangeIPv4) {
          this.rangeIPv4 = rangeIPv4;
+         return this;
       }
 
       public Builder description(String description) {
@@ -74,11 +81,15 @@ public abstract class NetworkCreationOptions {
          this.gatewayIPv4 = gatewayIPv4;
          return this;
       }
+      
+      public Builder autoCreateSubnetworks(Boolean autoCreateSubnetworks) {
+         this.autoCreateSubnetworks = autoCreateSubnetworks;
+         return this;
+      }
 
       public NetworkCreationOptions build() {
          checkNotNull(name, "NetworkCreationOptions name cannot be null");
-         checkNotNull(rangeIPv4, "NetworkCreationOptions rangeIPv4 cannot be null");
-         return create(name, description, rangeIPv4, gatewayIPv4);
+         return create(name, description, rangeIPv4, gatewayIPv4, autoCreateSubnetworks);
       }
 
    }

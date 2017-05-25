@@ -16,42 +16,38 @@
  */
 package org.jclouds.googlecomputeengine.compute.loaders;
 
-import java.net.URI;
 import java.util.concurrent.ExecutionException;
 
-import javax.annotation.Resource;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-import org.jclouds.googlecomputeengine.compute.functions.Resources;
+import org.jclouds.googlecomputeengine.GoogleComputeEngineApi;
+import org.jclouds.googlecomputeengine.compute.domain.internal.RegionAndName;
 import org.jclouds.googlecomputeengine.domain.Subnetwork;
-import org.jclouds.logging.Logger;
 
+import com.google.common.base.Optional;
 import com.google.common.cache.CacheLoader;
 
-
 @Singleton
-public class SubnetworkLoader extends CacheLoader<URI, Subnetwork> {
-   @Resource
-   protected Logger logger = Logger.NULL;
+public class SubnetworkLoader extends CacheLoader<RegionAndName, Optional<Subnetwork>> {
 
-   private final Resources resources;
+   private final GoogleComputeEngineApi api;
 
    @Inject
-   SubnetworkLoader(Resources resources) {
-      this.resources = resources;
+   SubnetworkLoader(GoogleComputeEngineApi api) {
+      this.api = api;
    }
 
    @Override
-   public Subnetwork load(URI key) throws ExecutionException {
+   public Optional<Subnetwork> load(RegionAndName key) throws ExecutionException {
       try {
-         return resources.subnetwork(key);
-      } catch (Exception e) {
-         throw new ExecutionException(message(key, e), e);
+         return Optional.fromNullable(api.subnetworksInRegion(key.regionId()).get(key.name()));
+      } catch (Exception ex) {
+         throw new ExecutionException(message(key, ex), ex);
       }
    }
 
-   public static String message(URI key, Exception e) {
-      return String.format("could not find image for disk %s: %s", key.toString(), e.getMessage());
+   public static String message(RegionAndName key, Exception ex) {
+      return String.format("could not find subnet %s in region %s: %s", key.name(), key.regionId(), ex.getMessage());
    }
 }

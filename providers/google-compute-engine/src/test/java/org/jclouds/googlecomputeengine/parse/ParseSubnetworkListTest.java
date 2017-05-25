@@ -33,7 +33,7 @@ public class ParseSubnetworkListTest extends BaseGoogleComputeEngineParseTest<Li
 
    @Override
    public String resource() {
-      return "/network_list.json";
+      return "/subnetwork_list.json";
    }
 
    @Override @Consumes(APPLICATION_JSON)

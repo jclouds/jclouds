@@ -43,18 +43,9 @@ public abstract class NewInstance {
 
       abstract List<AccessConfig> accessConfigs();
 
-      static NetworkInterface create(URI network) {
-         return create(network, Arrays.asList(AccessConfig.create(null, Type.ONE_TO_ONE_NAT, null)));
-      }
-
       static NetworkInterface create(URI network, URI subnetwork) {
          return create(network, subnetwork,
              Arrays.asList(AccessConfig.create(null, Type.ONE_TO_ONE_NAT, null)));
-      }
-
-      @SerializedNames({ "network", "accessConfigs" })
-      static NetworkInterface create(URI network, List<AccessConfig> accessConfigs) {
-         return new AutoValue_NewInstance_NetworkInterface(network, null, accessConfigs);
       }
 
       @SerializedNames({ "network", "subnetwork", "accessConfigs" })
@@ -88,18 +79,9 @@ public abstract class NewInstance {
    @Nullable public abstract Scheduling scheduling();
 
    /** Convenience for creating a new instance with only a boot disk and minimal parameters. */
-   public static NewInstance create(String name, URI machineType, URI network, URI sourceImage) {
-      return create(name, machineType, network, Arrays.asList(AttachDisk.newBootDisk(sourceImage)), null, null);
-   }
-
    public static NewInstance create(String name, URI machineType, URI network, URI subnetwork, URI sourceImage) {
       return create(name, machineType, network, subnetwork, Arrays.asList(AttachDisk.newBootDisk(sourceImage)), null,
               null);
-   }
-
-   public static NewInstance create(String name, URI machineType, URI network, List<AttachDisk> disks,
-                                    @Nullable String description, @Nullable Tags tags) {
-      return create(name, machineType, network, null, disks, description, tags);
    }
 
    public static NewInstance create(String name, URI machineType, URI network, @Nullable URI subnetwork,
@@ -112,8 +94,9 @@ public abstract class NewInstance {
             foundBoot = true;
          }
       }
-      return create(name, machineType, null, ImmutableList.of(NetworkInterface.create(network)), ImmutableList.copyOf(disks),
-            description, tags != null ? tags : Tags.create(), Metadata.create(), null, null);
+      return create(name, machineType, null, ImmutableList.of(NetworkInterface.create(network, subnetwork)),
+            ImmutableList.copyOf(disks), description, tags != null ? tags : Tags.create(), Metadata.create(), null,
+            null);
    }
 
    @SerializedNames({ "name", "machineType", "canIpForward", "networkInterfaces", "disks", "description",
@@ -140,28 +123,12 @@ public abstract class NewInstance {
       private List<ServiceAccount> serviceAccounts;
       private Scheduling scheduling;
 
-      public Builder(String name, URI machineType, URI network, List<AttachDisk> disks) {
-         checkNotNull(name, "NewInstance name cannot be null");
-         this.name = name;
-         this.machineType = machineType;
-         this.networkInterfaces = ImmutableList.of(NetworkInterface.create(network));
-         this.disks = disks;
-      }
-
       public Builder(String name, URI machineType, URI network, URI subnetwork, List<AttachDisk> disks) {
          checkNotNull(name, "NewInstance name cannot be null");
          this.name = name;
          this.machineType = machineType;
          this.networkInterfaces = ImmutableList.of(NetworkInterface.create(network, subnetwork));
          this.disks = disks;
-      }
-
-      public Builder(String name, URI machineType, URI network, URI sourceImage) {
-         checkNotNull(name, "NewInstance name cannot be null");
-         this.name = name;
-         this.machineType = machineType;
-         this.networkInterfaces = ImmutableList.of(NetworkInterface.create(network));
-         this.disks = Arrays.asList(AttachDisk.newBootDisk(sourceImage));
       }
 
       public Builder(String name, URI machineType, URI network, URI subnetwork, URI sourceImage) {

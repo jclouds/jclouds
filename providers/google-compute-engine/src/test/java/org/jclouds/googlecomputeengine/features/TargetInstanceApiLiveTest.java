@@ -69,11 +69,12 @@ public class TargetInstanceApiLiveTest extends BaseGoogleComputeEngineApiLiveTes
             INSTANCE_NAME, // name
             getDefaultMachineTypeUrl(), // machineType
             getNetworkUrl(INSTANCE_NETWORK_NAME), // network
+            null, // subnetwork
             imageUri);
       
       // need to insert the network first
-      assertOperationDoneSuccessfully(api.networks().createInIPv4Range
-              (INSTANCE_NETWORK_NAME, IPV4_RANGE));
+      assertOperationDoneSuccessfully(api.networks().createLegacy(INSTANCE_NETWORK_NAME, IPV4_RANGE));
+      
       assertOperationDoneSuccessfully(api.instancesInZone(DEFAULT_ZONE_NAME).create(newInstance));
       instance = api.instancesInZone(DEFAULT_ZONE_NAME).get(INSTANCE_NAME);
       assertNotNull(instance);

@@ -55,6 +55,7 @@ import org.jclouds.googlecomputeengine.compute.functions.OrphanedGroupsFromDeadN
 import org.jclouds.googlecomputeengine.compute.functions.Resources;
 import org.jclouds.googlecomputeengine.compute.functions.ResetWindowsPassword;
 import org.jclouds.googlecomputeengine.compute.loaders.DiskURIToImage;
+import org.jclouds.googlecomputeengine.compute.loaders.SubnetworkLoader;
 import org.jclouds.googlecomputeengine.compute.options.GoogleComputeEngineTemplateOptions;
 import org.jclouds.googlecomputeengine.compute.predicates.AtomicInstanceVisible;
 import org.jclouds.googlecomputeengine.compute.predicates.AtomicOperationDone;
@@ -64,6 +65,7 @@ import org.jclouds.googlecomputeengine.domain.Image;
 import org.jclouds.googlecomputeengine.domain.Instance;
 import org.jclouds.googlecomputeengine.domain.MachineType;
 import org.jclouds.googlecomputeengine.domain.Operation;
+import org.jclouds.googlecomputeengine.domain.Subnetwork;
 import org.jclouds.location.suppliers.ImplicitLocationSupplier;
 import org.jclouds.location.suppliers.implicit.FirstZone;
 
@@ -84,6 +86,7 @@ import org.jclouds.compute.domain.internal.TemplateBuilderImpl;
 import org.jclouds.compute.functions.NodeAndTemplateOptionsToStatement;
 import org.jclouds.compute.functions.NodeAndTemplateOptionsToStatementWithoutPublicKey;
 import org.jclouds.googlecomputeengine.compute.domain.internal.GoogleComputeEngineArbitraryCpuRamTemplateBuilderImpl;
+import org.jclouds.googlecomputeengine.compute.domain.internal.RegionAndName;
 
 public final class GoogleComputeEngineServiceContextModule
       extends ComputeServiceAdapterContextModule<Instance, MachineType, Image, Location> {
@@ -137,6 +140,9 @@ public final class GoogleComputeEngineServiceContextModule
 
       bind(new TypeLiteral<CacheLoader<URI, Optional<Image>>>() {
       }).to(DiskURIToImage.class);
+      
+      bind(new TypeLiteral<CacheLoader<RegionAndName, Optional<Subnetwork>>>() {
+      }).to(SubnetworkLoader.class);
 
       bindHttpApi(binder(), Resources.class);
    }
@@ -203,8 +209,14 @@ public final class GoogleComputeEngineServiceContextModule
 
    @Provides
    @Singleton
-   protected LoadingCache<URI, Optional<Image>> diskURIToImageMap(
-         CacheLoader<URI, Optional<Image>> in) {
+   protected LoadingCache<URI, Optional<Image>> diskURIToImageMap(CacheLoader<URI, Optional<Image>> in) {
+      return CacheBuilder.newBuilder().build(in);
+   }
+
+   @Provides
+   @Singleton
+   protected LoadingCache<RegionAndName, Optional<Subnetwork>> subnetworksMap(
+         CacheLoader<RegionAndName, Optional<Subnetwork>> in) {
       return CacheBuilder.newBuilder().build(in);
    }
 

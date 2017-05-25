@@ -22,10 +22,11 @@ import static com.google.common.collect.Iterables.filter;
 import static com.google.common.collect.Lists.newArrayList;
 import static java.lang.String.format;
 import static org.jclouds.googlecloud.internal.ListPages.concat;
+import static org.jclouds.googlecomputeengine.compute.domain.internal.RegionAndName.fromRegionAndName;
+import static org.jclouds.googlecomputeengine.compute.strategy.CreateNodesWithGroupEncodedIntoNameThenAddToSet.nameFromNetworkString;
 import static org.jclouds.googlecomputeengine.config.GoogleComputeEngineProperties.IMAGE_PROJECTS;
 
 import java.net.URI;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicReference;
@@ -34,6 +35,7 @@ import javax.inject.Inject;
 import javax.inject.Named;
 
 import org.jclouds.compute.ComputeServiceAdapter;
+import org.jclouds.compute.domain.Hardware;
 import org.jclouds.compute.domain.NodeMetadata;
 import org.jclouds.compute.domain.OsFamily;
 import org.jclouds.compute.domain.Template;
@@ -43,7 +45,7 @@ import org.jclouds.domain.LocationBuilder;
 import org.jclouds.domain.LocationScope;
 import org.jclouds.domain.LoginCredentials;
 import org.jclouds.googlecomputeengine.GoogleComputeEngineApi;
-import org.jclouds.googlecomputeengine.compute.functions.FirewallTagNamingConvention;
+import org.jclouds.googlecomputeengine.compute.domain.internal.RegionAndName;
 import org.jclouds.googlecomputeengine.compute.functions.Resources;
 import org.jclouds.googlecomputeengine.compute.options.GoogleComputeEngineTemplateOptions;
 import org.jclouds.googlecomputeengine.domain.AttachDisk;
@@ -56,6 +58,7 @@ import org.jclouds.googlecomputeengine.domain.MachineType;
 import org.jclouds.googlecomputeengine.domain.NewInstance;
 import org.jclouds.googlecomputeengine.domain.Operation;
 import org.jclouds.googlecomputeengine.domain.Region;
+import org.jclouds.googlecomputeengine.domain.Subnetwork;
 import org.jclouds.googlecomputeengine.domain.Tags;
 import org.jclouds.googlecomputeengine.domain.Zone;
 import org.jclouds.googlecomputeengine.features.InstanceApi;
@@ -95,34 +98,32 @@ public final class GoogleComputeEngineServiceAdapter
    private final Predicate<AtomicReference<Operation>> operationDone;
    private final Predicate<AtomicReference<Instance>> instanceVisible;
    private final Function<Map<String, ?>, String> windowsPasswordGenerator;
-   private final FirewallTagNamingConvention.Factory firewallTagNamingConvention;
    private final List<String> imageProjects;
    private final LoadingCache<URI, Optional<Image>> diskURIToImage;
+   private final LoadingCache<RegionAndName, Optional<Subnetwork>> subnetworksMap;
 
-   @Inject GoogleComputeEngineServiceAdapter(JustProvider justProvider, GoogleComputeEngineApi api,
-                                            Predicate<AtomicReference<Operation>> operationDone,
-                                            Predicate<AtomicReference<Instance>> instanceVisible,
-                                            Function<Map<String, ?>, String> windowsPasswordGenerator,
-                                            Resources resources,
-                                            FirewallTagNamingConvention.Factory firewallTagNamingConvention,
-                                            @Named(IMAGE_PROJECTS) String imageProjects,
-                                            LoadingCache<URI, Optional<Image>> diskURIToImage) {
+   @Inject
+   GoogleComputeEngineServiceAdapter(JustProvider justProvider, GoogleComputeEngineApi api,
+         Predicate<AtomicReference<Operation>> operationDone, Predicate<AtomicReference<Instance>> instanceVisible,
+         Function<Map<String, ?>, String> windowsPasswordGenerator, Resources resources,
+         @Named(IMAGE_PROJECTS) String imageProjects, LoadingCache<URI, Optional<Image>> diskURIToImage,
+         LoadingCache<RegionAndName, Optional<Subnetwork>> subnetworksMap) {
       this.justProvider = justProvider;
       this.api = api;
       this.operationDone = operationDone;
       this.instanceVisible = instanceVisible;
       this.windowsPasswordGenerator = windowsPasswordGenerator;
       this.resources = resources;
-      this.firewallTagNamingConvention = firewallTagNamingConvention;
       this.imageProjects = Splitter.on(',').omitEmptyStrings().splitToList(imageProjects);
       this.diskURIToImage = diskURIToImage;
+      this.subnetworksMap = subnetworksMap;
    }
 
    @Override public NodeAndInitialCredentials<Instance> createNodeWithGroupEncodedIntoName(String group, String name,
          Template template) {
       GoogleComputeEngineTemplateOptions options = GoogleComputeEngineTemplateOptions.class.cast(template.getOptions());
 
-      checkNotNull(options.getNetworks(), "template options must specify a network");
+      checkNotNull(options.getNetworks(), "template options must specify a network or subnetwork");
       checkNotNull(template.getHardware().getUri(), "hardware must have a URI");
       checkNotNull(template.getImage().getUri(), "image URI is null");
 
@@ -131,15 +132,19 @@ public final class GoogleComputeEngineServiceAdapter
       List<AttachDisk> disks = Lists.newArrayList();
       disks.add(AttachDisk.newBootDisk(template.getImage().getUri(), getDiskTypeArgument(options, zone)));
 
-      Iterator<String> networks = options.getNetworks().iterator();
-
-      URI network = URI.create(networks.next());
-      assert !networks.hasNext() : "Error: Options should specify only one network";
-
-      Iterator<String> subnetworks = options.getSubnetworks().iterator();
-
-      URI subnetwork = subnetworks.hasNext() ? URI.create(subnetworks.next()) : null;
-      assert !subnetworks.hasNext() : "Error: Options should specify only one subnetwork";
+      URI network = URI.create(options.getNetworks().iterator().next());
+      URI subnetwork = null;
+      
+      if (isSubnetwork(network)) {
+         String region = template.getLocation().getParent().getId();
+         RegionAndName subnetRef = fromRegionAndName(region, nameFromNetworkString(network.toString()));
+         // This must be present, since the subnet is validated and its URI
+         // obtained in the CreateNodesWithGroupEncodedIntoNameThenAddToSet
+         // strategy
+         Optional<Subnetwork> subnet = subnetworksMap.getUnchecked(subnetRef);
+         network = subnet.get().network();
+         subnetwork = subnet.get().selfLink();
+      }
 
       Scheduling scheduling = getScheduling(options);
 
@@ -341,5 +346,9 @@ public final class GoogleComputeEngineServiceAdapter
       }
 
       return Scheduling.create(onHostMaintenance, automaticRestart, options.preemptible());
+   }
+   
+   private static boolean isSubnetwork(URI uri) {
+      return uri.toString().contains("/subnetworks/");
    }
 }

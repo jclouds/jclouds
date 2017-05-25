@@ -43,8 +43,7 @@ public class RouteApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
 
    @Test(groups = "live")
    public void testInsertRoute() {
-      assertOperationDoneSuccessfully(api.networks().createInIPv4Range
-              (ROUTE_NETWORK_NAME, IPV4_RANGE));
+      assertOperationDoneSuccessfully(api.networks().createLegacy(ROUTE_NETWORK_NAME, IPV4_RANGE));
       assertOperationDoneSuccessfully(api().createInNetwork(ROUTE_NAME,
               getNetworkUrl(ROUTE_NETWORK_NAME),
               new RouteOptions().addTag("footag")

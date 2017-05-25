@@ -43,7 +43,7 @@ import org.jclouds.javax.annotation.Nullable;
 import org.jclouds.oauth.v2.filters.OAuthFilter;
 import org.jclouds.rest.annotations.BinderParam;
 import org.jclouds.rest.annotations.Fallback;
-import org.jclouds.rest.annotations.MapBinder;
+import org.jclouds.rest.annotations.Payload;
 import org.jclouds.rest.annotations.PayloadParam;
 import org.jclouds.rest.annotations.RequestFilters;
 import org.jclouds.rest.annotations.SkipEncoding;
@@ -66,7 +66,7 @@ public interface NetworkApi {
    Network get(@PathParam("network") String networkName);
 
    /**
-    * Creates a persistent network resource in the specified project with the specified range.
+    * Creates a legacy persistent network resource in the specified project with the specified range.
     *
     * @param networkName the network name
     * @param IPv4Range   the range of the network to be inserted.
@@ -76,21 +76,33 @@ public interface NetworkApi {
    @Named("Networks:insert")
    @POST
    @Produces(APPLICATION_JSON)
-   @MapBinder(BindToJsonPayload.class)
-   Operation createInIPv4Range(@PayloadParam("name") String networkName,
-                               @PayloadParam("IPv4Range") String IPv4Range);
-
+   @Payload("%7B\"name\":\"{name}\",\"IPv4Range\":\"{IPv4Range}\"%7D")
+   Operation createLegacy(@PayloadParam("name") String networkName, @PayloadParam("IPv4Range") String IPv4Range);
+   
    /**
-    * Creates a persistent network resource in the specified project with the specified range and specified gateway.
+    * Creates a custom persistent network resource in the specified project with the specified range.
     *
-    * @param options the options to create the network.
+    * @param networkName the network name
     * @return an Operation resource. To check on the status of an operation, poll the Operations resource returned to
     *         you, and look for the status field.
     */
    @Named("Networks:insert")
    @POST
    @Produces(APPLICATION_JSON)
-   Operation createInIPv4Range(@BinderParam(BindToJsonPayload.class) NetworkCreationOptions options);
+   @Payload("%7B\"autoCreateSubnetworks\":false,\"name\":\"{name}\"%7D")
+   Operation createCustom(@PayloadParam("name") String networkName);
+
+   /**
+    * Creates a persistent network resource in the specified project with the specified options.
+    *
+    * @param options the network options.
+    * @return an Operation resource. To check on the status of an operation, poll the Operations resource returned to
+    *         you, and look for the status field.
+    */
+   @Named("Networks:insert")
+   @POST
+   @Produces(APPLICATION_JSON)
+   Operation create(@BinderParam(BindToJsonPayload.class) NetworkCreationOptions options);
 
    /** Deletes a network by name and returns the operation in progress, or null if not found. */
    @Named("Networks:delete")
@@ -124,7 +136,7 @@ public interface NetworkApi {
    @Transform(NetworkPages.class)
    Iterator<ListPage<Network>> list(ListOptions options);
 
-   final class NetworkPages extends BaseToIteratorOfListPage<Network, NetworkPages> {
+   static final class NetworkPages extends BaseToIteratorOfListPage<Network, NetworkPages> {
 
       private final GoogleComputeEngineApi api;
 

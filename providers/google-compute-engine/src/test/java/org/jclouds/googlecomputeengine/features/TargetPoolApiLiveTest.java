@@ -26,13 +26,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.jclouds.googlecloud.domain.ListPage;
+import org.jclouds.googlecomputeengine.domain.ForwardingRule.IPProtocol;
 import org.jclouds.googlecomputeengine.domain.HealthStatus;
 import org.jclouds.googlecomputeengine.domain.HttpHealthCheck;
 import org.jclouds.googlecomputeengine.domain.Image;
 import org.jclouds.googlecomputeengine.domain.Instance;
 import org.jclouds.googlecomputeengine.domain.NewInstance;
 import org.jclouds.googlecomputeengine.domain.TargetPool;
-import org.jclouds.googlecomputeengine.domain.ForwardingRule.IPProtocol;
 import org.jclouds.googlecomputeengine.internal.BaseGoogleComputeEngineApiLiveTest;
 import org.jclouds.googlecomputeengine.options.ForwardingRuleCreationOptions;
 import org.jclouds.googlecomputeengine.options.HttpHealthCheckCreationOptions;
@@ -84,9 +84,8 @@ public class TargetPoolApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
             })
             .first().get().selfLink();
 
-      // Insert a network.
-      assertOperationDoneSuccessfully(api.networks().createInIPv4Range(INSTANCE_NETWORK_NAME,
-            IPV4_RANGE));
+      // need to insert the network first
+      assertOperationDoneSuccessfully(api.networks().createLegacy(INSTANCE_NETWORK_NAME, IPV4_RANGE));
 
       // Create an instance.
       assertOperationDoneSuccessfully(
@@ -94,6 +93,7 @@ public class TargetPoolApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
                   INSTANCE_NAME, // name
                   getDefaultMachineTypeUrl(), // machineType
                   getNetworkUrl(INSTANCE_NETWORK_NAME), // network
+                  null, // subnetwork
                   imageUri // disks
             )));
 
