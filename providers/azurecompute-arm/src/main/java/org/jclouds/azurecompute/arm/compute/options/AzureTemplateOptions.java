@@ -42,7 +42,8 @@ public class AzureTemplateOptions extends TemplateOptions implements Cloneable {
    private List<IpOptions> ipOptions = ImmutableList.of();
    private WindowsConfiguration windowsConfiguration;
    private List<Secrets> secrets = ImmutableList.of();
-   
+   private String customData;
+
    /**
     * Sets the availability set where the nodes will be configured. If it does
     * not exist jclouds will create a new one with the given configuration.
@@ -60,7 +61,7 @@ public class AzureTemplateOptions extends TemplateOptions implements Cloneable {
       this.availabilitySetName = availabilitySetName;
       return this;
    }
-   
+
    /**
     * The resource group where the new resources will be created.
     */
@@ -79,7 +80,7 @@ public class AzureTemplateOptions extends TemplateOptions implements Cloneable {
    public AzureTemplateOptions dataDisks(DataDisk... dataDisks) {
       return dataDisks(ImmutableList.copyOf(checkNotNull(dataDisks, "dataDisks")));
    }
-   
+
    /**
     * Configure the NICs that will be attached to the created nodes.
     * <p>
@@ -99,6 +100,7 @@ public class AzureTemplateOptions extends TemplateOptions implements Cloneable {
 
    /**
     * @see {@link AzureTemplateOptions#ipOptions(Iterable)
+
     */
    public AzureTemplateOptions ipOptions(IpOptions... ipOptions) {
       return ipOptions(ImmutableList.copyOf(checkNotNull(ipOptions, "ipOptions")));
@@ -107,32 +109,66 @@ public class AzureTemplateOptions extends TemplateOptions implements Cloneable {
    /**
     * Windows configuration parameters
     *
-    * @see <a href="https://docs.microsoft.com/en-us/rest/api/compute/virtualmachines/virtualmachines-create-or-update#bk_windowsconfig5">docs</a>
+    * @see <a
+    *      href="https://docs.microsoft.com/en-us/rest/api/compute/virtualmachines/virtualmachines-create-or-update#bk_windowsconfig5">docs</a>
     */
    public AzureTemplateOptions windowsConfiguration(WindowsConfiguration windowsConfiguration) {
-       this.windowsConfiguration = windowsConfiguration;
-       return this;
-    }
+      this.windowsConfiguration = windowsConfiguration;
+      return this;
+   }
 
    /**
     * Import certificates in the Windows Certificate Store
     *
-    * @see <a href="https://docs.microsoft.com/en-us/rest/api/compute/virtualmachines/virtualmachines-create-or-update#bk_srcvault">docs</a>
+    * @see <a
+    *      href="https://docs.microsoft.com/en-us/rest/api/compute/virtualmachines/virtualmachines-create-or-update#bk_srcvault">docs</a>
     */
    public AzureTemplateOptions secrets(Iterable<? extends Secrets> secrets) {
-       for (Secrets secret : checkNotNull(secrets, "secrets"))
-           checkNotNull(secret, "secrets can not be empty");
-       this.secrets = ImmutableList.copyOf(secrets);
-       return this;
-    }
+      for (Secrets secret : checkNotNull(secrets, "secrets"))
+         checkNotNull(secret, "secrets can not be empty");
+      this.secrets = ImmutableList.copyOf(secrets);
+      return this;
+   }
 
-   public AvailabilitySet getAvailabilitySet() { return availabilitySet; }
-   public String getAvailabilitySetName() { return availabilitySetName; }
-   public List<DataDisk> getDataDisks() { return dataDisks; }
-   public String getResourceGroup() { return resourceGroup; }
-   public List<IpOptions> getIpOptions() { return ipOptions; }
-   public WindowsConfiguration getWindowsConfiguration() { return windowsConfiguration; }
-   public List<Secrets> getSecrets() { return secrets; }
+   /**
+    * Custom data (for cloud-init) for the Azure ARM API
+    */
+   public AzureTemplateOptions customData(String customData) {
+      this.customData = customData;
+      return this;
+   }
+
+   public AvailabilitySet getAvailabilitySet() {
+      return availabilitySet;
+   }
+
+   public String getAvailabilitySetName() {
+      return availabilitySetName;
+   }
+
+   public List<DataDisk> getDataDisks() {
+      return dataDisks;
+   }
+
+   public String getResourceGroup() {
+      return resourceGroup;
+   }
+
+   public List<IpOptions> getIpOptions() {
+      return ipOptions;
+   }
+
+   public WindowsConfiguration getWindowsConfiguration() {
+      return windowsConfiguration;
+   }
+
+   public List<Secrets> getSecrets() {
+      return secrets;
+   }
+
+   public String getCustomData() {
+      return customData;
+   }
 
    @Override
    public AzureTemplateOptions clone() {
@@ -153,30 +189,32 @@ public class AzureTemplateOptions extends TemplateOptions implements Cloneable {
          eTo.ipOptions(ipOptions);
          eTo.windowsConfiguration(windowsConfiguration);
          eTo.secrets(secrets);
+         eTo.customData(customData);
       }
    }
 
    @Override
    public boolean equals(Object o) {
-      if (this == o) return true;
-      if (!(o instanceof AzureTemplateOptions)) return false;
-      if (!super.equals(o)) return false;
+      if (this == o)
+         return true;
+      if (!(o instanceof AzureTemplateOptions))
+         return false;
+      if (!super.equals(o))
+         return false;
 
       AzureTemplateOptions that = (AzureTemplateOptions) o;
-      
-      return Objects.equal(availabilitySetName, that.availabilitySetName) &&
-            Objects.equal(resourceGroup, that.resourceGroup) &&
-            Objects.equal(availabilitySet, that.availabilitySet) &&
-            Objects.equal(dataDisks, that.dataDisks) &&
-            Objects.equal(ipOptions, that.ipOptions) &&
-            Objects.equal(windowsConfiguration, that.windowsConfiguration) &&
-            Objects.equal(secrets, that.secrets);
+
+      return Objects.equal(availabilitySetName, that.availabilitySetName)
+            && Objects.equal(resourceGroup, that.resourceGroup) && Objects.equal(availabilitySet, that.availabilitySet)
+            && Objects.equal(dataDisks, that.dataDisks) && Objects.equal(ipOptions, that.ipOptions)
+            && Objects.equal(windowsConfiguration, that.windowsConfiguration) && Objects.equal(secrets, that.secrets)
+            && Objects.equal(this.customData, that.customData);
    }
 
    @Override
    public int hashCode() {
-      return Objects.hashCode(availabilitySet, availabilitySetName, dataDisks,
-            resourceGroup, ipOptions);
+      return Objects.hashCode(super.hashCode(), availabilitySet, availabilitySetName, dataDisks, resourceGroup,
+            ipOptions, customData);
    }
 
    @Override
@@ -193,14 +231,16 @@ public class AzureTemplateOptions extends TemplateOptions implements Cloneable {
       if (!ipOptions.isEmpty())
          toString.add("ipOptions", ipOptions);
       if (windowsConfiguration != null)
-          toString.add("windowsConfiguration", windowsConfiguration);
+         toString.add("windowsConfiguration", windowsConfiguration);
       if (!secrets.isEmpty())
-          toString.add("secrets", secrets);
+         toString.add("secrets", secrets);
+      if (customData != null)
+         toString.add("customData", customData);
       return toString;
    }
 
    public static class Builder {
-      
+
       /**
        * @see AzureTemplateOptions#availabilitySet(AvailabilitySet)
        */
@@ -208,7 +248,7 @@ public class AzureTemplateOptions extends TemplateOptions implements Cloneable {
          AzureTemplateOptions options = new AzureTemplateOptions();
          return options.availabilitySet(availabilitySet);
       }
-      
+
       /**
        * @see AzureTemplateOptions#availabilitySet(String)
        */
@@ -232,7 +272,7 @@ public class AzureTemplateOptions extends TemplateOptions implements Cloneable {
          AzureTemplateOptions options = new AzureTemplateOptions();
          return options.dataDisks(dataDisks);
       }
-      
+
       /**
        * @see AzureTemplateOptions#resourceGroup(String)
        */
@@ -240,7 +280,7 @@ public class AzureTemplateOptions extends TemplateOptions implements Cloneable {
          AzureTemplateOptions options = new AzureTemplateOptions();
          return options.resourceGroup(resourceGroup);
       }
-      
+
       /**
        * @see AzureTemplateOptions#ipOptions(IpOptions...)
        */
@@ -271,6 +311,14 @@ public class AzureTemplateOptions extends TemplateOptions implements Cloneable {
       public static AzureTemplateOptions secrets(Iterable<? extends Secrets> secrets) {
          AzureTemplateOptions options = new AzureTemplateOptions();
          return options.secrets(secrets);
+      }
+
+      /**
+       * @see AzureTemplateOptions#customData
+       */
+      public static AzureTemplateOptions customData(String customData) {
+         AzureTemplateOptions options = new AzureTemplateOptions();
+         return options.customData(customData);
       }
    }
 }

@@ -99,6 +99,7 @@ import com.google.common.base.Function;
 import com.google.common.base.MoreObjects;
 import com.google.common.base.Predicate;
 import com.google.common.base.Splitter;
+import com.google.common.base.Strings;
 import com.google.common.base.Supplier;
 import com.google.common.collect.FluentIterable;
 import com.google.common.collect.ImmutableList;
@@ -381,7 +382,7 @@ public class AzureComputeServiceAdapter implements ComputeServiceAdapter<Virtual
       OSProfile.Builder builder = OSProfile.builder().adminUsername(adminUsername).adminPassword(adminPassword)
               .computerName(computerName);
 
-      if (template.getOptions().getPublicKey() != null
+      if (!Strings.isNullOrEmpty(template.getOptions().getPublicKey())
               && OsFamily.WINDOWS != template.getImage().getOperatingSystem().getFamily()) {
          OSProfile.LinuxConfiguration linuxConfiguration = OSProfile.LinuxConfiguration.create("true",
                  OSProfile.LinuxConfiguration.SSH.create(of(
@@ -391,7 +392,6 @@ public class AzureComputeServiceAdapter implements ComputeServiceAdapter<Virtual
          builder.linuxConfiguration(linuxConfiguration);
       }
 
-
       AzureTemplateOptions azureTemplateOptions = template.getOptions().as(AzureTemplateOptions.class);
 
       if (azureTemplateOptions.getWindowsConfiguration() != null) {
@@ -400,6 +400,10 @@ public class AzureComputeServiceAdapter implements ComputeServiceAdapter<Virtual
 
       if (azureTemplateOptions.getSecrets() != null) {
           builder.secrets(azureTemplateOptions.getSecrets());
+      }
+
+      if (!Strings.isNullOrEmpty(azureTemplateOptions.getCustomData())) {
+         builder.customData(azureTemplateOptions.getCustomData());
       }
 
       return builder.build();
