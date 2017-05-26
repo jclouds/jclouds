@@ -36,6 +36,7 @@ import org.jclouds.ec2.xml.DescribeSubnetsResponseHandler;
 import org.jclouds.ec2.xml.SubnetHandler;
 import org.jclouds.javax.annotation.Nullable;
 import org.jclouds.location.functions.RegionToEndpointOrProviderIfNull;
+import org.jclouds.rest.annotations.ApiVersionOverride;
 import org.jclouds.rest.annotations.BinderParam;
 import org.jclouds.rest.annotations.EndpointParam;
 import org.jclouds.rest.annotations.Fallback;
@@ -141,7 +142,7 @@ public interface AWSSubnetApi extends SubnetApi {
     * @param options The options containing the attribute to modify. You can only modify one attribute at a time.
     * @return true if the modification was successful
     */
-   @SinceApiVersion("2014-06-15")
+   @ApiVersionOverride("2014-06-15")
    @Named("ModifySubnetAttribute")
    @POST
    @Path("/")
