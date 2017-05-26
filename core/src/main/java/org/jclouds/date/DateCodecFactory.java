@@ -36,4 +36,5 @@ public interface DateCodecFactory {
 
    DateCodec iso8601Seconds();
 
+   DateCodec asctime();
 }
