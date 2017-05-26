@@ -49,7 +49,12 @@ public abstract class DataDisk implements Provisionable {
       UNRECOGNIZED;
 
       public static CachingTypes fromValue(final String text) {
-         return (CachingTypes) GetEnumValue.fromValueOrDefault(text, UNRECOGNIZED);
+         for (CachingTypes type : CachingTypes.values()) {
+            if (type.toString().equals(text)) {
+               return type;
+            }
+         }
+         return UNRECOGNIZED;
       }
 
       @Override
@@ -108,13 +113,15 @@ public abstract class DataDisk implements Provisionable {
    public static DataDisk create(final String name, final String diskSizeGB, final Integer lun,
                                  final VHD vhd, final VHD image, final String createOption, final String caching, 
                                  final ManagedDiskParameters managedDiskParamenters, final String provisioningState) {
-      return builder()
-              .name(name)
+      final Builder builder = builder();
+      if (caching != null) {
+         builder.caching(CachingTypes.fromValue(caching));
+      }
+      return builder.name(name)
               .diskSizeGB(diskSizeGB)
               .lun(lun)
               .vhd(vhd)
               .image(image)
-              .caching(CachingTypes.fromValue(caching))
               .createOption(DiskCreateOptionTypes.fromValue(createOption))
               .managedDiskParameters(managedDiskParamenters)
               .provisioningState(provisioningState)

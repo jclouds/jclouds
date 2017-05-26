@@ -18,7 +18,7 @@
           "id": "subscriptions/{subscriptionId}/resourceGroups/myResourceGroup/providers/Microsoft.Compute/disks/myManagedDisk1"
         },
         "osState": "generalized",
-        "hostCaching": "readwrite",
+        "hostCaching": "ReadWrite",
         "storageAccountType": "Standard_LRS",
         "diskSizeGB": 20
       },
@@ -32,7 +32,7 @@
           "managedDisk": {
             "id": "subscriptions/{subscriptionId}/resourceGroups/myResourceGroup/providers/Microsoft.Compute/disks/myManagedDisk2"
           },
-          "hostCaching": "readwrite",
+          "hostCaching": "ReadWrite",
           "storageAccountType": "Standard_LRS",
           "diskSizeInGB": 20
         }
