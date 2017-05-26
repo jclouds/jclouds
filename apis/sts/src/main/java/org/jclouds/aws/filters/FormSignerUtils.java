@@ -18,7 +18,7 @@ package org.jclouds.aws.filters;
 
 import org.jclouds.http.HttpRequest;
 import org.jclouds.reflect.Invocation;
-import org.jclouds.rest.annotations.SinceApiVersion;
+import org.jclouds.rest.annotations.ApiVersionOverride;
 import org.jclouds.rest.internal.GeneratedHttpRequest;
 
 import com.google.common.base.Optional;
@@ -32,7 +32,7 @@ public final class FormSignerUtils {
    private FormSignerUtils() {}
 
    /**
-    * Get the version from a @SinceApiVersion() annotation on an API method or its owning class.
+    * Get the version from a @ApiVersionOverride() annotation on an API method or its owning class.
     * @param request The API request for the method.
     * @return An optional of the value of the annotation.
     */
@@ -47,12 +47,12 @@ public final class FormSignerUtils {
 
    private static Optional<String> getAnnotatedApiVersion(Invocation invocation) {
       final Invokable<?, ?> invokable = invocation.getInvokable();
-      if (invokable.isAnnotationPresent(SinceApiVersion.class)) {
-         return Optional.fromNullable(invokable.getAnnotation(SinceApiVersion.class).value());
+      if (invokable.isAnnotationPresent(ApiVersionOverride.class)) {
+         return Optional.fromNullable(invokable.getAnnotation(ApiVersionOverride.class).value());
       } else {
          final Class<?> owner = invokable.getOwnerType().getRawType();
-         if (owner.isAnnotationPresent(SinceApiVersion.class)) {
-            return Optional.fromNullable(owner.getAnnotation(SinceApiVersion.class).value());
+         if (owner.isAnnotationPresent(ApiVersionOverride.class)) {
+            return Optional.fromNullable(owner.getAnnotation(ApiVersionOverride.class).value());
          }
       }
       return Optional.absent();
