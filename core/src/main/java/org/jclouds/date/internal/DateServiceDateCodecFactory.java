@@ -35,6 +35,7 @@ public class DateServiceDateCodecFactory implements DateCodecFactory {
    private final DateCodec rfc1123Codec;
    private final DateCodec iso8601Codec;
    private final DateCodec iso8601SecondsCodec;
+   private final DateCodec asctime;
 
    @Inject
    public DateServiceDateCodecFactory(DateService dateService) {
@@ -43,6 +44,7 @@ public class DateServiceDateCodecFactory implements DateCodecFactory {
       this.rfc1123Codec = new DateServiceRfc1123Codec(dateService);
       this.iso8601Codec = new DateServiceIso8601Codec(dateService);
       this.iso8601SecondsCodec = new DateServiceIso8601SecondsCodec(dateService);
+      this.asctime = new DateServiceAsctimeCodec(dateService);
    }
 
    @Singleton
@@ -153,6 +155,33 @@ public class DateServiceDateCodecFactory implements DateCodecFactory {
 
    }
 
+   @Singleton
+   public static class DateServiceAsctimeCodec implements DateCodec {
+
+      protected final DateService dateService;
+
+      @Inject
+      public DateServiceAsctimeCodec(DateService dateService) {
+         this.dateService = checkNotNull(dateService, "dateService");
+      }
+
+      @Override
+      public Date toDate(String date) throws IllegalArgumentException {
+         return dateService.cDateParse(date);
+      }
+
+      @Override
+      public String toString(Date date) {
+         return dateService.cDateFormat(date);
+      }
+
+      @Override
+      public String toString() {
+         return "asctime()";
+      }
+
+   }
+
    @Override
    public DateCodec rfc822() {
       return rfc822Codec;
@@ -173,4 +202,9 @@ public class DateServiceDateCodecFactory implements DateCodecFactory {
       return iso8601SecondsCodec;
    }
 
+   @Override
+   public DateCodec asctime() {
+      return asctime;
+   }
+   
 }
