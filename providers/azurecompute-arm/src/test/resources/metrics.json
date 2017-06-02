@@ -1,0 +1,19 @@
+{
+  "value": [
+    {
+      "data": [
+        {
+          "timeStamp": "2017-06-01T11:14:00Z",
+          "average": 0.295
+        }
+      ],
+      "id": "/subscriptions/SUBSCRIPTIONID/resourceGroups/myresourcegroup/providers/Microsoft.Compute/virtualMachines/myvm/providers/Microsoft.Insights/metrics/Percentage CPU",
+      "name": {
+        "value": "Percentage CPU",
+        "localizedValue": "Percentage CPU"
+      },
+      "type": "Microsoft.Insights/metrics",
+      "unit": "Percent"
+    }
+  ]
+}

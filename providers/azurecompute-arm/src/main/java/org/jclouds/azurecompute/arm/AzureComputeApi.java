@@ -27,6 +27,8 @@ import org.jclouds.azurecompute.arm.features.ImageApi;
 import org.jclouds.azurecompute.arm.features.JobApi;
 import org.jclouds.azurecompute.arm.features.LoadBalancerApi;
 import org.jclouds.azurecompute.arm.features.LocationApi;
+import org.jclouds.azurecompute.arm.features.MetricDefinitionsApi;
+import org.jclouds.azurecompute.arm.features.MetricsApi;
 import org.jclouds.azurecompute.arm.features.NetworkInterfaceCardApi;
 import org.jclouds.azurecompute.arm.features.NetworkSecurityGroupApi;
 import org.jclouds.azurecompute.arm.features.NetworkSecurityRuleApi;
@@ -208,4 +210,22 @@ public interface AzureComputeApi extends Closeable {
     */
    @Delegate
    ImageApi getVirtualMachineImageApi(@PathParam("resourcegroup") String resourcegroup);
+
+   /**
+    * The metrics API includes operations to get insights into entities within your
+    * subscription.
+    *
+    * @see <a href="https://docs.microsoft.com/en-us/rest/api/monitor/metrics">docs</a>
+    */
+   @Delegate
+   MetricsApi getMetricsApi(@PathParam("resourceid") String resourceid);
+
+   /**
+    * The metric definitions API includes operations to get insights available for entities within your
+    * subscription.
+    *
+    * @see <a href="https://docs.microsoft.com/en-us/rest/api/monitor/metricdefinitions">docs</a>
+    */
+   @Delegate
+   MetricDefinitionsApi getMetricsDefinitionsApi(@PathParam("resourceid") String resourceid);
 }

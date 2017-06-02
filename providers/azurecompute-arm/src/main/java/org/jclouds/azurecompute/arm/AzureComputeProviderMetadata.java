@@ -44,6 +44,8 @@ import org.jclouds.azurecompute.arm.features.ImageApi;
 import org.jclouds.azurecompute.arm.features.LoadBalancerApi;
 import org.jclouds.azurecompute.arm.features.LocationApi;
 import org.jclouds.azurecompute.arm.features.DiskApi;
+import org.jclouds.azurecompute.arm.features.MetricDefinitionsApi;
+import org.jclouds.azurecompute.arm.features.MetricsApi;
 import org.jclouds.azurecompute.arm.features.NetworkInterfaceCardApi;
 import org.jclouds.azurecompute.arm.features.NetworkSecurityGroupApi;
 import org.jclouds.azurecompute.arm.features.NetworkSecurityRuleApi;
@@ -115,6 +117,8 @@ public class AzureComputeProviderMetadata extends BaseProviderMetadata {
       properties.put(API_VERSION_PREFIX + AvailabilitySetApi.class.getSimpleName(), "2016-04-30-preview");
       properties.put(API_VERSION_PREFIX + DiskApi.class.getSimpleName(), "2017-03-30");
       properties.put(API_VERSION_PREFIX + ImageApi.class.getSimpleName(), "2016-04-30-preview");
+      properties.put(API_VERSION_PREFIX + MetricDefinitionsApi.class.getSimpleName(), "2017-05-01-preview");
+      properties.put(API_VERSION_PREFIX + MetricsApi.class.getSimpleName(), "2016-09-01");
       
       return properties;
    }
