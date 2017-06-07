@@ -21,6 +21,7 @@ import static org.jclouds.ec2.reference.EC2Constants.PROPERTY_EC2_AMI_OWNERS;
 import java.net.URI;
 import java.util.Properties;
 
+import org.jclouds.Constants;
 import org.jclouds.aws.ec2.compute.AWSEC2ComputeServiceContext;
 import org.jclouds.aws.ec2.compute.config.AWSEC2ComputeServiceContextModule;
 import org.jclouds.aws.ec2.config.AWSEC2HttpApiModule;
@@ -53,6 +54,8 @@ public final class AWSEC2ApiMetadata extends BaseHttpApiMetadata<AWSEC2Api> {
       // authorized key executes after ssh has started.  
       properties.setProperty("jclouds.ssh.max-retries", "7");
       properties.setProperty("jclouds.ssh.retry-auth", "true");
+      // required for custom retry handler 
+      properties.setProperty(Constants.PROPERTY_IDEMPOTENT_METHODS, "DELETE,GET,HEAD,OPTIONS,PUT,POST");
       return properties;
    }
 

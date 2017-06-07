@@ -29,6 +29,7 @@ import org.jclouds.aws.ec2.compute.functions.PresentSpotRequestsAndInstances;
 import org.jclouds.aws.ec2.compute.strategy.AWSEC2CreateNodesInGroupThenAddToSet;
 import org.jclouds.aws.ec2.compute.strategy.AWSEC2DestroyNodeStrategy;
 import org.jclouds.aws.ec2.compute.strategy.AWSEC2GetNodeMetadataStrategy;
+import org.jclouds.aws.ec2.compute.strategy.AWSEC2IOExceptionRetryHandler;
 import org.jclouds.aws.ec2.compute.strategy.AWSEC2ListNodesStrategy;
 import org.jclouds.aws.ec2.compute.strategy.AWSEC2ReviseParsedImage;
 import org.jclouds.aws.ec2.compute.strategy.CreateKeyPairPlacementAndSecurityGroupsAsNeededAndReturnRunOptions;
@@ -51,6 +52,7 @@ import org.jclouds.ec2.compute.strategy.EC2ListNodesStrategy;
 import org.jclouds.ec2.compute.strategy.ReviseParsedImage;
 import org.jclouds.ec2.compute.suppliers.EC2HardwareSupplier;
 import org.jclouds.ec2.compute.suppliers.RegionAndNameToImageSupplier;
+import org.jclouds.http.IOExceptionRetryHandler;
 import org.jclouds.rest.AuthorizationException;
 import org.jclouds.rest.suppliers.SetAndThrowAuthorizationExceptionSupplier;
 
@@ -84,6 +86,7 @@ public class AWSEC2ComputeServiceContextModule extends BaseComputeServiceContext
       bind(PresentInstances.class).to(PresentSpotRequestsAndInstances.class);
       bind(EC2CreateNodesInGroupThenAddToSet.class).to(AWSEC2CreateNodesInGroupThenAddToSet.class);
       bind(RunningInstanceToNodeMetadata.class).to(AWSRunningInstanceToNodeMetadata.class);
+      bind(IOExceptionRetryHandler.class).to(AWSEC2IOExceptionRetryHandler.class);
    }
 
    protected void installDependencies() {
