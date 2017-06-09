@@ -23,6 +23,7 @@ import static com.google.common.collect.Iterables.transform;
 import static org.jclouds.cloudstack.predicates.SecurityGroupPredicates.ruleCidrMatches;
 import static org.jclouds.cloudstack.predicates.SecurityGroupPredicates.ruleGroupMatches;
 
+import java.util.Map;
 import java.util.Set;
 
 import javax.inject.Inject;
@@ -150,6 +151,7 @@ public class CloudStackSecurityGroupExtension implements SecurityGroupExtension 
               api.getSecurityGroupApi().getSecurityGroup(id);
 
       if (group == null) {
+         invalidateCache(id);
          return false;
       }
 
@@ -159,15 +161,17 @@ public class CloudStackSecurityGroupExtension implements SecurityGroupExtension 
 
       api.getSecurityGroupApi().deleteSecurityGroup(id);
 
-      // TODO find something better here maybe - hard to map zones to groups
-      for (Location location : locations.get()) {
-         groupCreator.invalidate(ZoneSecurityGroupNamePortsCidrs.builder()
-                 .zone(location.getId())
-                 .name(group.getName())
-                 .build());
-      }
-
+      invalidateCache(id);
       return true;
+   }
+
+   private void invalidateCache(String id) {
+      for (Map.Entry<ZoneAndName, org.jclouds.cloudstack.domain.SecurityGroup> sg : groupCreator.asMap().entrySet()) {
+         if (id.equals(sg.getValue().getId())) {
+            groupCreator.invalidate(sg.getKey());
+            break;
+         }
+      }
    }
 
    @Override
