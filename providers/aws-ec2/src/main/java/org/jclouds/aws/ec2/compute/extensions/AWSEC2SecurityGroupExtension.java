@@ -24,6 +24,7 @@ import static com.google.common.collect.Iterables.transform;
 
 import javax.inject.Inject;
 import javax.inject.Named;
+import java.util.Map;
 import java.util.Set;
 
 import com.google.common.base.Function;
@@ -105,12 +106,17 @@ public class AWSEC2SecurityGroupExtension extends EC2SecurityGroupExtension {
 
       if (group != null) {
          client.getSecurityGroupApi().get().deleteSecurityGroupInRegionById(region, groupId);
-         // TODO: test this clear happens
          groupCreator.invalidate(new RegionNameAndIngressRules(region, group.getName(), null, false, null));
          return true;
+      } else {
+         for (Map.Entry<RegionAndName, String> cachedSg : groupCreator.asMap().entrySet()) {
+            if (groupId.equals(cachedSg.getValue())) {
+               groupCreator.invalidate(cachedSg.getKey());
+               break;
+            }
+         }
+         return false;
       }
-
-      return false;
    }
 
    @Override
