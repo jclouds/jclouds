@@ -172,16 +172,14 @@ public class EC2SecurityGroupExtension implements SecurityGroupExtension {
       String region = parts[0];
       String groupName = parts[1];
 
+      boolean deleted = false;
       if (!client.getSecurityGroupApi().get().describeSecurityGroupsInRegion(region, groupName).isEmpty()) {
          client.getSecurityGroupApi().get().deleteSecurityGroupInRegion(region, groupName);
-         // TODO: test this clear happens
-         groupCreator.invalidate(new RegionNameAndIngressRules(region, groupName, null, false, null));
-         return true;
+         deleted = true;
       }
-
-      return false;
+      groupCreator.invalidate(new RegionNameAndIngressRules(region, groupName, null, false, null));
+      return deleted;
    }
-
 
    @Override
    public SecurityGroup addIpPermission(IpPermission ipPermission, SecurityGroup group) {
