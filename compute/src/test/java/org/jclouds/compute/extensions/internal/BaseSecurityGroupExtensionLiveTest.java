@@ -27,6 +27,7 @@ import javax.annotation.Resource;
 import javax.inject.Named;
 
 import org.jclouds.compute.ComputeService;
+import org.jclouds.compute.ComputeServiceContext;
 import org.jclouds.compute.RunNodesException;
 import org.jclouds.compute.domain.SecurityGroup;
 import org.jclouds.compute.domain.Template;
@@ -60,6 +61,7 @@ public abstract class BaseSecurityGroupExtensionLiveTest extends BaseComputeServ
    protected Logger logger = Logger.NULL;
 
    protected final String secGroupName = "test-create-security-group";
+   protected final String secGroupNameToDelete = "test-create-security-group-to-delete";
    protected final String nodeGroup = "test-create-node-with-group";
 
    protected String groupId;
@@ -377,6 +379,70 @@ public abstract class BaseSecurityGroupExtensionLiveTest extends BaseComputeServ
 
       SecurityGroup group = optGroup.get();
       assertTrue(securityGroupExtension.get().removeSecurityGroup(group.getId()));
+   }
+
+   @Test(groups = {"integration", "live"}, singleThreaded = true)
+   public void testSecurityGroupCacheInvalidated() throws Exception {
+      ComputeService computeService = view.getComputeService();
+      Optional<SecurityGroupExtension> securityGroupExtension = computeService.getSecurityGroupExtension();
+      assertTrue(securityGroupExtension.isPresent(), "security extension was not present");
+      final SecurityGroupExtension security = securityGroupExtension.get();
+      final SecurityGroup seedGroup = security.createSecurityGroup(secGroupNameToDelete, getNodeTemplate().getLocation());
+      boolean deleted = security.removeSecurityGroup(seedGroup.getId());
+      assertTrue(deleted, "just created security group failed deletion");
+      final SecurityGroup recreatedGroup = security.createSecurityGroup(secGroupNameToDelete, getNodeTemplate().getLocation());
+
+      // Makes sure the security group exists and is re-created and is not just returned from cache
+      security.addIpPermission(IpPermission.builder()
+                      .fromPort(1000)
+                      .toPort(1000)
+                      .cidrBlock("1.1.1.1/32")
+                      .ipProtocol(IpProtocol.TCP)
+                      .build(),
+              recreatedGroup);
+      boolean deleted2 = security.removeSecurityGroup(recreatedGroup.getId());
+      assertTrue(deleted2, "just created security group failed deletion");
+   }
+
+   @Test(groups = {"integration", "live"}, singleThreaded = true)
+   public void testSecurityGroupCacheInvalidatedWhenDeletedExternally() throws Exception {
+      ComputeService computeService = view.getComputeService();
+      Optional<SecurityGroupExtension> securityGroupExtension = computeService.getSecurityGroupExtension();
+      assertTrue(securityGroupExtension.isPresent(), "security extension was not present");
+      final SecurityGroupExtension security = securityGroupExtension.get();
+      final SecurityGroup seedGroup = security.createSecurityGroup(secGroupNameToDelete, getNodeTemplate().getLocation());
+
+      deleteSecurityGroupFromAnotherView(seedGroup);
+
+      boolean deleted = security.removeSecurityGroup(seedGroup.getId());
+      assertFalse(deleted, "SG deleted externally so should've failed deletion");
+      final SecurityGroup recreatedGroup = security.createSecurityGroup(secGroupNameToDelete, getNodeTemplate().getLocation());
+
+      // Makes sure the security group exists and is re-created and is not just returned from cache
+      security.addIpPermission(IpPermission.builder()
+                      .fromPort(1000)
+                      .toPort(1000)
+                      .cidrBlock("1.1.1.1/32")
+                      .ipProtocol(IpProtocol.TCP)
+                      .build(),
+              recreatedGroup);
+      boolean deleted2 = security.removeSecurityGroup(recreatedGroup.getId());
+      assertTrue(deleted2, "just created security group failed deletion");
+   }
+
+   private void deleteSecurityGroupFromAnotherView(SecurityGroup seedGroup) {
+      ComputeServiceContext localView = createView(setupProperties(), setupModules());
+      try {
+         ComputeService localComputeService = localView.getComputeService();
+         Optional<SecurityGroupExtension> securityGroupExtension = localComputeService.getSecurityGroupExtension();
+         assertTrue(securityGroupExtension.isPresent(), "security extension was not present");
+         final SecurityGroupExtension security = securityGroupExtension.get();
+
+         boolean deleted = security.removeSecurityGroup(seedGroup.getId());
+         assertTrue(deleted, "just created security group failed deletion");
+      } finally {
+         localView.close();
+      }
    }
 
    private Multimap<String, String> emptyMultimap() {

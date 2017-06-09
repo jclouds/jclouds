@@ -191,14 +191,20 @@ public class NovaSecurityGroupExtension implements SecurityGroupExtension {
          return false;
       }
 
-      if (sgApi.get().get(groupId) == null) {
-         return false;
+      // Would be nice to delete the group and invalidate the cache atomically - i.e. use a mutex.
+      // Will make sure that a create operation in parallel won't see inconsistent state.
+
+      boolean deleted = sgApi.get().delete(groupId);
+
+      for (SecurityGroupInRegion cachedSg : groupCreator.asMap().values()) {
+         if (groupId.equals(cachedSg.getSecurityGroup().getId())) {
+            String groupName = cachedSg.getName();
+            groupCreator.invalidate(new RegionSecurityGroupNameAndPorts(region, groupName, ImmutableSet.<Integer>of()));
+            break;
+         }
       }
 
-      sgApi.get().delete(groupId);
-      // TODO: test this clear happens
-      groupCreator.invalidate(new RegionSecurityGroupNameAndPorts(region, groupId, ImmutableSet.<Integer> of()));
-      return true;
+      return deleted;
    }
 
    @Override
