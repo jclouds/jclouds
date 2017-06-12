@@ -150,6 +150,7 @@ public class CreateSshKeysThenCreateNodes extends CreateNodesWithGroupEncodedInt
          logger.debug(">> key pair not found. creating a new key pair %s ...", label);
          SshKey newKey = api.sshKeyApi().create(label, options.getPublicKey());
          logger.debug(">> key pair created! %s", newKey);
+         generatedSshKeyIds.add(newKey.id());
       } else {
          logger.debug(">> key pair found! %s", key);
          generatedSshKeyIds.add(key.id());
