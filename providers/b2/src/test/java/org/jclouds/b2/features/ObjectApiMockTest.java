@@ -340,7 +340,7 @@ public final class ObjectApiMockTest {
          ObjectApi api = api(server.getUrl("/").toString(), "b2").getObjectApi();
          String accountId = "d522aa47a10f";
 
-         B2ObjectList list = api.listFileNames(BUCKET_ID, null, null);
+         B2ObjectList list = api.listFileNames(BUCKET_ID, null, null, null, null);
 
          assertThat(list.nextFileName()).isNull();
          assertThat(list.files()).hasSize(2);
@@ -376,7 +376,7 @@ public final class ObjectApiMockTest {
          ObjectApi api = api(server.getUrl("/").toString(), "b2").getObjectApi();
          String accountId = "d522aa47a10f";
 
-         B2ObjectList list = api.listFileVersions(BUCKET_ID, null, null, null);
+         B2ObjectList list = api.listFileVersions(BUCKET_ID, null, null, null, null, null);
 
          assertThat(list.nextFileId()).isEqualTo("4_z27c88f1d182b150646ff0b16_f100920ddab886247_d20150809_m232316_c100_v0009990_t0003");
          assertThat(list.nextFileName()).isEqualTo("files/world.txt");

@@ -195,7 +195,7 @@ public final class ObjectApiLiveTest extends BaseB2ApiLiveTest {
             uploadFiles.add(createFile(objectApi, response.bucketId(), "file" + i));
          }
 
-         B2ObjectList list = objectApi.listFileNames(response.bucketId(), null, null);
+         B2ObjectList list = objectApi.listFileNames(response.bucketId(), null, null, null, null);
          assertThat(list.files()).hasSize(numFiles);
       } finally {
          for (UploadFileResponse uploadFile : uploadFiles.build()) {
@@ -218,10 +218,10 @@ public final class ObjectApiLiveTest extends BaseB2ApiLiveTest {
             uploadFiles.add(createFile(objectApi, response.bucketId(), "file"));
          }
 
-         B2ObjectList list = objectApi.listFileNames(response.bucketId(), null, null);
+         B2ObjectList list = objectApi.listFileNames(response.bucketId(), null, null, null, null);
          assertThat(list.files()).hasSize(1);
 
-         list = objectApi.listFileVersions(response.bucketId(), null, null, null);
+         list = objectApi.listFileVersions(response.bucketId(), null, null, null, null, null);
          assertThat(list.files()).hasSize(numFiles);
       } finally {
          for (UploadFileResponse uploadFile : uploadFiles.build()) {
@@ -243,15 +243,15 @@ public final class ObjectApiLiveTest extends BaseB2ApiLiveTest {
       try {
          uploadFile = createFile(objectApi, response.bucketId(), fileName);
 
-         B2ObjectList list = objectApi.listFileNames(response.bucketId(), null, null);
+         B2ObjectList list = objectApi.listFileNames(response.bucketId(), null, null, null, null);
          assertThat(list.files()).hasSize(1);
 
          hideFile = objectApi.hideFile(response.bucketId(), fileName);
 
-         list = objectApi.listFileNames(response.bucketId(), null, null);
+         list = objectApi.listFileNames(response.bucketId(), null, null, null, null);
          assertThat(list.files()).isEmpty();
 
-         list = objectApi.listFileVersions(response.bucketId(), null, null, null);
+         list = objectApi.listFileVersions(response.bucketId(), null, null, null, null, null);
          assertThat(list.files()).hasSize(2);
       } finally {
          if (hideFile != null) {

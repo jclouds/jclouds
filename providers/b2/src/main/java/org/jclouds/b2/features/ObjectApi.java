@@ -120,6 +120,7 @@ public interface ObjectApi {
    @Fallback(NullOnNotFoundOr404.class)
    B2Object downloadFileByName(@PathParam("bucketName") String bucketName, @PathParam("fileName") String fileName, GetOptions options);
 
+   @Deprecated
    @Named("b2_list_file_names")
    @GET
    @Path("/b2api/v1/b2_list_file_names")
@@ -129,6 +130,16 @@ public interface ObjectApi {
    @Produces(APPLICATION_JSON)
    B2ObjectList listFileNames(@PayloadParam("bucketId") String bucketId, @PayloadParam("startFileName") @Nullable String startFileName, @PayloadParam("maxFileCount") @Nullable Integer maxFileCount);
 
+   @Named("b2_list_file_names")
+   @GET
+   @Path("/b2api/v1/b2_list_file_names")
+   @MapBinder(BindToJsonPayload.class)
+   @RequestFilters(RequestAuthorization.class)
+   @Consumes(APPLICATION_JSON)
+   @Produces(APPLICATION_JSON)
+   B2ObjectList listFileNames(@PayloadParam("bucketId") String bucketId, @PayloadParam("startFileName") @Nullable String startFileName, @PayloadParam("maxFileCount") @Nullable Integer maxFileCount, @PayloadParam("prefix") @Nullable String prefix, @Nullable @PayloadParam("delimiter") String delimiter);
+
+   @Deprecated
    @Named("b2_list_file_versions")
    @GET
    @Path("/b2api/v1/b2_list_file_versions")
@@ -137,6 +148,15 @@ public interface ObjectApi {
    @Consumes(APPLICATION_JSON)
    @Produces(APPLICATION_JSON)
    B2ObjectList listFileVersions(@PayloadParam("bucketId") String bucketId, @PayloadParam("startFileId") @Nullable String startFileId, @PayloadParam("startFileName") @Nullable String startFileName, @PayloadParam("maxFileCount") @Nullable Integer maxFileCount);
+
+   @Named("b2_list_file_versions")
+   @GET
+   @Path("/b2api/v1/b2_list_file_versions")
+   @MapBinder(BindToJsonPayload.class)
+   @RequestFilters(RequestAuthorization.class)
+   @Consumes(APPLICATION_JSON)
+   @Produces(APPLICATION_JSON)
+   B2ObjectList listFileVersions(@PayloadParam("bucketId") String bucketId, @PayloadParam("startFileId") @Nullable String startFileId, @PayloadParam("startFileName") @Nullable String startFileName, @PayloadParam("maxFileCount") @Nullable Integer maxFileCount, @PayloadParam("prefix") @Nullable String prefix, @PayloadParam("delimiter") @Nullable String delimiter);
 
    @Named("b2_hide_file")
    @POST

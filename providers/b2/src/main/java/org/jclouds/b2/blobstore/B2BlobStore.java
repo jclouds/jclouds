@@ -29,6 +29,7 @@ import javax.inject.Inject;
 
 import org.jclouds.b2.B2Api;
 import org.jclouds.b2.B2ResponseException;
+import org.jclouds.b2.domain.Action;
 import org.jclouds.b2.domain.Authorization;
 import org.jclouds.b2.domain.B2Object;
 import org.jclouds.b2.domain.B2ObjectList;
@@ -76,7 +77,6 @@ import org.jclouds.io.PayloadSlicer;
 import org.jclouds.io.payloads.BaseMutableContentMetadata;
 
 import com.google.common.base.Preconditions;
-import com.google.common.base.Strings;
 import com.google.common.base.Supplier;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
@@ -191,53 +191,25 @@ public final class B2BlobStore extends BaseBlobStore {
 
       Bucket bucket = getBucket(container);
 
-      int size = 0;
       ImmutableList.Builder<StorageMetadata> builder = ImmutableList.builder();
-      Set<String> commonPrefixes = Sets.newHashSet();
-      String marker = options.getMarker();
-      while (true) {
-         B2ObjectList list = api.getObjectApi().listFileNames(bucket.bucketId(), marker, options.getMaxResults());
-         for (B2ObjectList.Entry entry : list.files()) {
-            // B2 does not support server-side filtering via prefix and delimiter so we emulate it on the client.
-            if (options.getPrefix() != null && !entry.fileName().startsWith(options.getPrefix())) {
-               continue;
+      B2ObjectList list = api.getObjectApi().listFileNames(bucket.bucketId(), options.getMarker(), options.getMaxResults(), options.getPrefix(), delimiter);
+      for (B2ObjectList.Entry entry : list.files()) {
+         if (entry.action() == Action.FOLDER) {
+            builder.add(new StorageMetadataImpl(StorageType.RELATIVE_PATH, null, entry.fileName(), null, null, null, null, entry.uploadTimestamp(), ImmutableMap.<String, String>of(), null));
+         } else if (options.isDetailed()) {
+            BlobMetadata metadata = blobMetadata(container, entry.fileName());
+            if (metadata != null) {
+               builder.add(metadata);
             }
-
-            if (delimiter != null) {
-               String fileName = entry.fileName();
-               int index = entry.fileName().indexOf(delimiter, Strings.nullToEmpty(options.getPrefix()).length());
-               if (index != -1) {
-                  String prefix = entry.fileName().substring(0, index + 1);
-                  if (!commonPrefixes.contains(prefix)) {
-                     commonPrefixes.add(prefix);
-                     ++size;
-                     builder.add(new StorageMetadataImpl(StorageType.RELATIVE_PATH, null, prefix, null, null, null, null, null, ImmutableMap.<String, String>of(), null));
-                  }
-                  continue;
-               }
-            }
-
-            if (options.isDetailed()) {
-               BlobMetadata metadata = blobMetadata(container, entry.fileName());
-               if (metadata != null) {
-                  ++size;
-                  builder.add(metadata);
-               }
-            } else {
-               Map<String, String> userMetadata = ImmutableMap.of();
-               ContentMetadata metadata = ContentMetadataBuilder.create()
-                     .contentLength(entry.size())
-                     .build();
-               ++size;
-               builder.add(new BlobMetadataImpl(null, entry.fileName(), null, null, null, null, entry.uploadTimestamp(), userMetadata, null, container, metadata, entry.size()));
-            }
-         }
-         marker = list.nextFileName();
-         if (marker == null || options.getMaxResults() == null || size == options.getMaxResults()) {
-            break;
+         } else {
+            Map<String, String> userMetadata = ImmutableMap.of();
+            ContentMetadata metadata = ContentMetadataBuilder.create()
+                  .contentLength(entry.size())
+                  .build();
+            builder.add(new BlobMetadataImpl(null, entry.fileName(), null, null, null, null, entry.uploadTimestamp(), userMetadata, null, container, metadata, entry.size()));
          }
       }
-      return new PageSetImpl<StorageMetadata>(builder.build(), marker);
+      return new PageSetImpl<StorageMetadata>(builder.build(), list.nextFileName());
    }
 
    @Override

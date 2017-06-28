@@ -19,6 +19,7 @@ package org.jclouds.b2.domain;
 import com.google.common.base.CaseFormat;
 
 public enum Action {
+   FOLDER,
    UPLOAD,
    HIDE;
 

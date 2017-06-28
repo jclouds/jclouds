@@ -39,13 +39,13 @@ public abstract class B2ObjectList {
    @AutoValue
    public abstract static class Entry {
       public abstract Action action();
-      public abstract String fileId();
+      @Nullable public abstract String fileId();
       public abstract String fileName();
       public abstract long size();
       public abstract Date uploadTimestamp();
 
       @SerializedNames({"action", "fileId", "fileName", "size", "uploadTimestamp"})
-      public static Entry create(Action action, String fileId, String fileName, long size, long uploadTimestamp) {
+      public static Entry create(Action action, @Nullable String fileId, String fileName, long size, long uploadTimestamp) {
          return new AutoValue_B2ObjectList_Entry(action, fileId, fileName, size, new Date(uploadTimestamp));
       }
    }
