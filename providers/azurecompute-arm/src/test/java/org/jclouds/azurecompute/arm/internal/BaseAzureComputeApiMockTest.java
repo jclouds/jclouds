@@ -28,6 +28,7 @@ import org.jclouds.ContextBuilder;
 import org.jclouds.azurecompute.arm.AzureComputeApi;
 import org.jclouds.azurecompute.arm.AzureComputeProviderMetadata;
 import org.jclouds.concurrent.config.ExecutorServiceModule;
+import org.jclouds.date.DateService;
 import org.jclouds.rest.ApiContext;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
@@ -52,6 +53,7 @@ public class BaseAzureComputeApiMockTest {
    protected MockWebServer server;
    protected AzureComputeApi api;
    protected ApiContext<AzureComputeApi> context;
+   protected DateService dateService;
 
    // So that we can ignore formatting.
    private final JsonParser parser = new JsonParser();
@@ -68,6 +70,7 @@ public class BaseAzureComputeApiMockTest {
               .overrides(setupProperties())
               .build();
       api = context.getApi();
+      dateService = context.utils().injector().getInstance(DateService.class);
    }
    
    protected Properties setupProperties() {

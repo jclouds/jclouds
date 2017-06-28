@@ -19,9 +19,7 @@ package org.jclouds.azurecompute.arm.features;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertTrue;
 
-import java.text.ParsePosition;
-import java.text.SimpleDateFormat;
-import java.util.Locale;
+import java.util.Date;
 
 import org.jclouds.azurecompute.arm.domain.Metric;
 import org.jclouds.azurecompute.arm.domain.MetricData;
@@ -41,11 +39,10 @@ public class MetricsApiMockTest extends BaseAzureComputeApiMockTest {
 
    public void testList() throws Exception {
       server.enqueue(jsonResponse("/metrics.json"));
-      final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.US);
       final MetricsApi metricsApi = api.getMetricsApi(resourceId);
-      assertEquals(metricsApi.list(filter), ImmutableList.of(Metric.create(ImmutableList.of(MetricData
-                .create(dateFormat.parse("2017-06-01T07:14:00", new ParsePosition(0)), null,
-                    Double.valueOf(0.295), null, null, null)),
+      Date timestamp = dateService.iso8601DateOrSecondsDateParse("2017-06-01T11:14:00Z");
+      assertEquals(metricsApi.list(filter), ImmutableList.of(Metric.create(
+            ImmutableList.of(MetricData.create(timestamp, null, Double.valueOf(0.295), null, null, null)),
             "/subscriptions/SUBSCRIPTIONID/resourceGroups/myresourcegroup/providers"
                   + "/Microsoft.Compute/virtualMachines/myvm/providers/Microsoft.Insights/metrics/Percentage CPU",
             MetricName.create("Percentage CPU", "Percentage CPU"), "Microsoft.Insights/metrics", "Percent")));
