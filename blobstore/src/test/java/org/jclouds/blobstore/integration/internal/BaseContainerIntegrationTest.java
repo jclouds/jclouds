@@ -53,6 +53,7 @@ import org.jclouds.http.HttpResponse;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.io.ByteSource;
@@ -590,6 +591,31 @@ public class BaseContainerIntegrationTest extends BaseBlobStoreIntegrationTest {
          PageSet<? extends StorageMetadata> res = blobStore.list(container, options);
          assertThat(res).hasSize(1);
          assertThat(res.iterator().next().getName()).isEqualTo("b/b");
+      } finally {
+         returnContainer(container);
+      }
+   }
+
+   /** Test that listing with an empty string for prefix and delimiter returns all of the keys. */
+   @Test(groups = {"integration", "live"})
+   public void testListEmptyPrefixDelimiter() throws Exception {
+      final String container = getContainerName();
+      BlobStore blobStore = view.getBlobStore();
+      blobStore.createContainerInLocation(null, container);
+
+      try {
+         ImmutableList<String> blobs = ImmutableList.of("a", "b", "c");
+         for (String blob : blobs) {
+            blobStore.putBlob(container, blobStore.blobBuilder(blob).payload("").build());
+         }
+         ListContainerOptions options = ListContainerOptions.Builder.delimiter("")
+                 .prefix("").afterMarker("");
+         PageSet<? extends StorageMetadata> rs = blobStore.list(container, options);
+         ImmutableList.Builder<String> builder = ImmutableList.builder();
+         for (StorageMetadata sm : rs) {
+            builder.add(sm.getName());
+         }
+         assertThat(builder.build()).containsExactlyElementsOf(blobs);
       } finally {
          returnContainer(container);
       }

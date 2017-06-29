@@ -90,6 +90,7 @@ import com.google.common.base.Function;
 import com.google.common.base.Optional;
 import com.google.common.base.Predicate;
 import com.google.common.base.Predicates;
+import com.google.common.base.Strings;
 import com.google.common.base.Supplier;
 import com.google.common.base.Throwables;
 import com.google.common.collect.FluentIterable;
@@ -266,7 +267,7 @@ public final class LocalBlobStore implements BlobStore {
       if (options != null) {
          if (options.getDir() != null && !options.getDir().isEmpty()) {
             contents = filterDirectory(contents, options);
-         } else if (options.getPrefix() != null) {
+         } else if (!Strings.isNullOrEmpty(options.getPrefix())) {
             contents = filterPrefix(contents, options);
          } else if (!options.isRecursive() || (options.getDelimiter() != null)) {
             String delimiter = options.getDelimiter() == null ? storageStrategy.getSeparator() : options.getDelimiter();
@@ -349,6 +350,9 @@ public final class LocalBlobStore implements BlobStore {
 
    private SortedSet<StorageMetadata> extractCommonPrefixes(SortedSet<StorageMetadata> contents, String delimiter,
                                                             String prefix) {
+      if (Strings.isNullOrEmpty(delimiter)) {
+         return contents;
+      }
       SortedSet<String> commonPrefixes = newTreeSet(
               transform(contents, new CommonPrefixes(prefix, delimiter)));
       commonPrefixes.remove(CommonPrefixes.NO_PREFIX);
