@@ -32,9 +32,9 @@ public abstract class ResumableUpload {
 
    @Nullable public abstract String contentLength();
 
-   @Nullable public abstract Long rangeUpperValue();
-
    @Nullable public abstract Long rangeLowerValue();
+
+   @Nullable public abstract Long rangeUpperValue();
 
    public static ResumableUpload create(int statusCode, String uploadId, String contentLength, Long rangeLowerValue,
          Long rangeUpperValue) {

@@ -58,8 +58,8 @@ public abstract class PaginatedCollection<T> extends IterableWithMarker<T> {
          @Nullable public abstract URI last();
 
          @SerializedNames({ "first", "prev", "next", "last" })
-         public static Pages create(URI first, URI next, URI prev, URI last) {
-            return new AutoValue_PaginatedCollection_Links_Pages(first, next, prev, last);
+         public static Pages create(URI first, URI prev, URI next, URI last) {
+            return new AutoValue_PaginatedCollection_Links_Pages(first, prev, next, last);
          }
 
          Pages() { }
