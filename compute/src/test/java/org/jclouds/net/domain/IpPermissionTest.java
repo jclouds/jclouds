@@ -223,6 +223,7 @@ public class IpPermissionTest {
       assertTrue(first.compareTo(second) == 0, first + " does not compare zero to " + second);
    }
 
+   @SuppressWarnings("SelfComparison")
    private static void assertOrder(IpPermission smaller, IpPermission bigger) {
       assertTrue(smaller.compareTo(bigger) < 0, smaller + " does not compare less than " + bigger);
       assertTrue(bigger.compareTo(smaller) > 0, bigger + " does not compare greater than " + smaller);
