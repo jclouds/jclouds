@@ -48,6 +48,6 @@ public class DataCenterListResponseHandlerTest extends BaseResponseHandlerTest<L
               DataCenter.builder().id("aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee").name("JClouds-DC").version(10).state(ProvisioningState.AVAILABLE).build(),
               DataCenter.builder().id("qqqqqqqq-wwww-rrrr-tttt-yyyyyyyyyyyy").name("Random DC").version(238).state(ProvisioningState.INPROCESS).build()
       );
-      assertEquals(expected, actual);
+      assertEquals(actual, expected);
    }
 }

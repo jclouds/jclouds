@@ -178,6 +178,6 @@ public class ImageListResponseHandlerTest extends BaseResponseHandlerTest<List<I
               .build()
       );
 
-      assertEquals(expected, actual);
+      assertEquals(actual, expected);
    }
 }

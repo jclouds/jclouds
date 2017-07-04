@@ -64,7 +64,7 @@ public class FirewallResponseHandlerTest extends BaseResponseHandlerTest<Firewal
               .rules(firewallRules)
               .build();
 
-      assertEquals(expected, actual);
+      assertEquals(actual, expected);
 
    }
 

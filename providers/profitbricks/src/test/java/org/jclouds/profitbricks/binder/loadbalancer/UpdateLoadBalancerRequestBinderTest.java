@@ -46,7 +46,7 @@ public class UpdateLoadBalancerRequestBinderTest {
       String actual = binder.createPayload(payload);
 
       assertNotNull(actual, "Binder returned null payload");
-      assertEquals(expectedPayload, actual);
+      assertEquals(actual, expectedPayload);
    }
 
    private final String expectedPayload

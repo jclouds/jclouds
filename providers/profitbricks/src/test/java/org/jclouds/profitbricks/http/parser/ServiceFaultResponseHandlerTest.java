@@ -52,7 +52,7 @@ public class ServiceFaultResponseHandlerTest extends BaseResponseHandlerTest<Ser
                               "The requested resource could not be found. Please refer to Request Id : 16370720. [VDC-6-404] The requested resource does not exist or already deleted by the users. ResourceId ﻿random-non-existing-id")
                         .requestId(16370720).build()).build();
 
-      assertEquals(expected, actual);
+      assertEquals(actual, expected);
    }
 
    @Test
@@ -64,6 +64,6 @@ public class ServiceFaultResponseHandlerTest extends BaseResponseHandlerTest<Ser
       ServiceFault expected = ServiceFault.builder().faultCode("S:Server").faultString("javax.ejb.EJBException")
             .build();
 
-      assertEquals(expected, actual);
+      assertEquals(actual, expected);
    }
 }

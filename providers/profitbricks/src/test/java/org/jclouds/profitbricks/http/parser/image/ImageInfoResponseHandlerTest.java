@@ -59,7 +59,7 @@ public class ImageInfoResponseHandlerTest extends BaseResponseHandlerTest<Image>
               .isWriteable(true)
               .build();
 
-      assertEquals(expected, actual);
+      assertEquals(actual, expected);
    }
 
 }

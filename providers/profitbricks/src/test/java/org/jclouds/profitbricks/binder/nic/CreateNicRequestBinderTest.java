@@ -38,7 +38,7 @@ public class CreateNicRequestBinderTest {
 
       String actual = binder.createPayload(payload);
       assertNotNull(actual, "Binder returned null payload");
-      assertEquals(expectedPayload, actual);
+      assertEquals(actual, expectedPayload);
    }
 
    private final String expectedPayload = ("<ws:createNic>\n"

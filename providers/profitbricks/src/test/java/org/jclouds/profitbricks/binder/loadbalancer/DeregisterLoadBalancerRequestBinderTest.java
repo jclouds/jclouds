@@ -35,7 +35,7 @@ public class DeregisterLoadBalancerRequestBinderTest {
               "load-balancer-id", ImmutableList.of("1", "2")));
 
       assertNotNull(actual, "Binder returned null payload");
-      assertEquals(expectedPayload, actual);
+      assertEquals(actual, expectedPayload);
    }
 
    private final String expectedPayload

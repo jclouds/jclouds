@@ -50,7 +50,7 @@ public class CreateLoadBalancerRequestBinderTest {
               .build());
 
       assertNotNull(actual, "Binder returned null payload");
-      assertEquals(expectedPayload, actual);
+      assertEquals(actual, expectedPayload);
    }
 
    private final String expectedPayload

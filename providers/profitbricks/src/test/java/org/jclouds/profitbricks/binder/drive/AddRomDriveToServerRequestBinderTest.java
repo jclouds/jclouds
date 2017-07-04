@@ -34,7 +34,7 @@ public class AddRomDriveToServerRequestBinderTest {
               .build();
 
       String actual = binder.createPayload(payload);
-      assertEquals(expectedPayload, actual);
+      assertEquals(actual, expectedPayload);
    }
 
    private final String expectedPayload
