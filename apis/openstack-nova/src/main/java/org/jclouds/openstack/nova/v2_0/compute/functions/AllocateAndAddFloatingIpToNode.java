@@ -64,15 +64,15 @@ public class AllocateAndAddFloatingIpToNode implements
    private final Predicate<AtomicReference<NodeMetadata>> nodeRunning;
    private final NovaApi novaApi;
    private final LoadingCache<RegionAndId, Iterable<? extends FloatingIP>> floatingIpCache;
-   private final CleanupServer cleanupServer;
+   private final CleanupResources cleanupResources;
 
    @Inject
    public AllocateAndAddFloatingIpToNode(@Named(TIMEOUT_NODE_RUNNING) Predicate<AtomicReference<NodeMetadata>> nodeRunning,
-            NovaApi novaApi, @Named("FLOATINGIP") LoadingCache<RegionAndId, Iterable<? extends FloatingIP>> floatingIpCache, CleanupServer cleanupServer) {
+            NovaApi novaApi, @Named("FLOATINGIP") LoadingCache<RegionAndId, Iterable<? extends FloatingIP>> floatingIpCache, CleanupResources cleanupResources) {
       this.nodeRunning = checkNotNull(nodeRunning, "nodeRunning");
       this.novaApi = checkNotNull(novaApi, "novaApi");
       this.floatingIpCache = checkNotNull(floatingIpCache, "floatingIpCache");
-      this.cleanupServer = checkNotNull(cleanupServer, "cleanupServer");
+      this.cleanupResources = checkNotNull(cleanupResources, "cleanupResources");
    }
 
    @Override
@@ -86,7 +86,7 @@ public class AllocateAndAddFloatingIpToNode implements
 
       Optional<FloatingIP> ip = allocateFloatingIPForNode(floatingIpApi, poolNames, node.getId());
       if (!ip.isPresent()) {
-         cleanupServer.apply(node.getId());
+         cleanupResources.apply(node);
          throw new InsufficientResourcesException("Failed to allocate a FloatingIP for node(" + node.getId() + ")");
       }
       logger.debug(">> adding floatingIp(%s) to node(%s)", ip.get().getIp(), node.getId());

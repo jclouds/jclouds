@@ -27,7 +27,9 @@ import java.util.Set;
 
 import org.jclouds.compute.options.TemplateOptions;
 import org.jclouds.domain.LoginCredentials;
+import org.jclouds.openstack.nova.v2_0.NovaApi;
 import org.jclouds.openstack.nova.v2_0.domain.Network;
+import org.jclouds.openstack.nova.v2_0.options.CreateServerOptions;
 import org.jclouds.scriptbuilder.domain.Statement;
 
 import com.google.common.base.Objects;
@@ -65,8 +67,6 @@ public class NovaTemplateOptions extends TemplateOptions implements Cloneable {
          eTo.autoAssignFloatingIp(shouldAutoAssignFloatingIp());
          if (getFloatingIpPoolNames().isPresent())
             eTo.floatingIpPoolNames(getFloatingIpPoolNames().get());
-         if (getSecurityGroupNames().isPresent())
-            eTo.securityGroupNames(getSecurityGroupNames().get());
          eTo.generateKeyPair(shouldGenerateKeyPair());
          eTo.keyPairName(getKeyPairName());
          if (getUserData() != null) {
@@ -134,8 +134,6 @@ public class NovaTemplateOptions extends TemplateOptions implements Cloneable {
       return toString;
    }
 
-   public static final NovaTemplateOptions NONE = new NovaTemplateOptions();
-
    /**
     * @see #getFloatingIpPoolNames()
     */
@@ -178,31 +176,9 @@ public class NovaTemplateOptions extends TemplateOptions implements Cloneable {
    }
 
    /**
-    *
-    * @see org.jclouds.openstack.nova.v2_0.options.CreateServerOptions#getSecurityGroupNames
-    * @deprecated Use @link {@link TemplateOptions#securityGroups(String...)} instead. To be removed in jclouds 2.0.
-    */
-   @Deprecated
-   public NovaTemplateOptions securityGroupNames(String... securityGroupNames) {
-      return securityGroupNames(ImmutableSet.copyOf(checkNotNull(securityGroupNames, "securityGroupNames")));
-   }
-
-   /**
-    * @see org.jclouds.openstack.nova.v2_0.options.CreateServerOptions#getSecurityGroupNames
-    * @deprecated Use {@link TemplateOptions#securityGroups(Iterable)} instead. To be removed in jclouds 2.0.
-    */
-   @Deprecated
-   public NovaTemplateOptions securityGroupNames(Iterable<String> securityGroupNames) {
-      for (String groupName : checkNotNull(securityGroupNames, "securityGroupNames"))
-         checkNotNull(emptyToNull(groupName), "all security groups must be non-empty");
-      securityGroups(securityGroupNames);
-      return this;
-   }
-
-   /**
     * <h3>Note</h3>
     *
-    * This requires that {@link NovaApi#getExtensionForRegion(String)} to return
+    * This requires that {@link NovaApi#getExtensionApi(String)} to return
     * {@link Optional#isPresent present}
     *
     * @return true if auto assignment of a floating ip to each vm is enabled
@@ -242,25 +218,13 @@ public class NovaTemplateOptions extends TemplateOptions implements Cloneable {
    /**
     * <h3>Note</h3>
     *
-    * This requires that {@link NovaApi#getKeyPairExtensionApi(String)} to return
+    * This requires that {@link NovaApi#getKeyPairApi(String)} to return
     * {@link Optional#isPresent present}
     *
     * @return true if auto generation of keypairs is enabled
     */
    public boolean shouldGenerateKeyPair() {
       return generateKeyPair;
-   }
-
-   /**
-    * if unset, generate a default group prefixed with {@link jclouds#} according
-    * to {@link #getInboundPorts()}
-    *
-    * @see org.jclouds.openstack.nova.v2_0.options.CreateServerOptions#getSecurityGroupNames
-    * @deprecated Use {@link TemplateOptions#getGroups()} instead. To be removed in jclouds 2.0.
-    */
-   @Deprecated
-   public Optional<Set<String>> getSecurityGroupNames() {
-      return getGroups().isEmpty() ? Optional.<Set<String>>absent() : Optional.of(getGroups());
    }
 
    public byte[] getUserData() {
@@ -332,22 +296,6 @@ public class NovaTemplateOptions extends TemplateOptions implements Cloneable {
        */
       public static NovaTemplateOptions keyPairName(String keyPairName) {
          return new NovaTemplateOptions().keyPairName(keyPairName);
-      }
-
-      /**
-       * @see org.jclouds.openstack.nova.v2_0.options.CreateServerOptions#getSecurityGroupNames
-       */
-      public static NovaTemplateOptions securityGroupNames(String... groupNames) {
-         NovaTemplateOptions options = new NovaTemplateOptions();
-         return NovaTemplateOptions.class.cast(options.securityGroupNames(groupNames));
-      }
-
-      /**
-       * @see org.jclouds.openstack.nova.v2_0.options.CreateServerOptions#getSecurityGroupNames
-       */
-      public static NovaTemplateOptions securityGroupNames(Iterable<String> groupNames) {
-         NovaTemplateOptions options = new NovaTemplateOptions();
-         return NovaTemplateOptions.class.cast(options.securityGroupNames(groupNames));
       }
 
       // methods that only facilitate returning the correct object type

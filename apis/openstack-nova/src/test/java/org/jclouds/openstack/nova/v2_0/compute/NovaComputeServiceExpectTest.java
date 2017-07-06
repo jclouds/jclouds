@@ -20,7 +20,6 @@ import static org.jclouds.compute.util.ComputeServiceUtils.getCores;
 import static org.jclouds.openstack.nova.v2_0.compute.options.NovaTemplateOptions.Builder.blockUntilRunning;
 import static org.jclouds.openstack.nova.v2_0.compute.options.NovaTemplateOptions.Builder.keyPairName;
 import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertTrue;
 
@@ -174,7 +173,7 @@ public class NovaComputeServiceExpectTest extends BaseNovaComputeServiceExpectTe
    HttpResponse securityGroupWithPort22 = HttpResponse.builder().statusCode(200)
          .payload(payloadFromResource("/securitygroup_details_port22.json")).build();
 
-   HttpRequest create = HttpRequest
+   HttpRequest createKeyPair = HttpRequest
          .builder()
          .method("POST")
          .endpoint("https://nova-api.openstack.org:9774/v2/3456/os-keypairs")
@@ -188,6 +187,16 @@ public class NovaComputeServiceExpectTest extends BaseNovaComputeServiceExpectTe
    HttpResponse keyPairWithPrivateKey = HttpResponse.builder().statusCode(200)
          .payload(payloadFromResource("/keypair_created_computeservice.json")).build();
 
+   HttpRequest getKeyPair = HttpRequest
+           .builder()
+           .method("GET")
+           .endpoint("https://nova-api.openstack.org:9774/v2/3456/os-keypairs/fooPair")
+           .addHeader("Accept", "application/json")
+           .addHeader("X-Auth-Token", authToken).build();
+
+   HttpResponse keyPairDetails = HttpResponse.builder().statusCode(200)
+           .payload(payloadFromResource("/keypair_details.json")).build();
+   
    HttpRequest serverDetail = HttpRequest
          .builder()
          .method("GET")
@@ -202,18 +211,12 @@ public class NovaComputeServiceExpectTest extends BaseNovaComputeServiceExpectTe
    public void testCreateNodeWithGeneratedKeyPair() throws Exception {
       Builder<HttpRequest, HttpResponse> requestResponseMap = ImmutableMap.<HttpRequest, HttpResponse> builder()
             .putAll(defaultTemplateOpenStack);
+      requestResponseMap.put(createKeyPair, keyPairWithPrivateKey);
       requestResponseMap.put(list, notFound);
-
       requestResponseMap.put(createWithPrefixOnGroup, securityGroupCreated);
-
       requestResponseMap.put(createRuleForDefaultPort22, securityGroupRuleCreated);
-
       requestResponseMap.put(getSecurityGroup, securityGroupWithPort22);
-
-      requestResponseMap.put(create, keyPairWithPrivateKey);
-
-      requestResponseMap.put(serverDetail, serverDetailResponse);
-
+      
       HttpRequest createServerWithGeneratedKeyPair = HttpRequest
             .builder()
             .method("POST")
@@ -222,13 +225,14 @@ public class NovaComputeServiceExpectTest extends BaseNovaComputeServiceExpectTe
             .addHeader("X-Auth-Token", authToken)
             .payload(
                   payloadFromStringWithContentType(
-                        "{\"server\":{\"name\":\"test-1\",\"imageRef\":\"14\",\"flavorRef\":\"1\",\"metadata\":{\"jclouds-group\":\"test\",\"jclouds_tags\":\"jclouds_keyPair,jclouds_securityGroup\"},\"key_name\":\"jclouds-test-0\",\"security_groups\":[{\"name\":\"jclouds-test\"}]}}",
+                        "{\"server\":{\"name\":\"test-1\",\"imageRef\":\"14\",\"flavorRef\":\"1\",\"metadata\":{\"jclouds_tags\":\"jclouds_sg-2769\"},\"key_name\":\"jclouds-test-0\",\"security_groups\":[{\"name\":\"jclouds-test\"}]}}",
                         "application/json")).build();
 
       HttpResponse createdServer = HttpResponse.builder().statusCode(202).message("HTTP/1.1 202 Accepted")
             .payload(payloadFromResourceWithContentType("/new_server.json", "application/json; charset=UTF-8")).build();
 
       requestResponseMap.put(createServerWithGeneratedKeyPair, createdServer);
+      requestResponseMap.put(serverDetail, serverDetailResponse);
 
       ComputeService apiThatCreatesNode = requestsSendResponses(requestResponseMap.build(), new AbstractModule() {
 
@@ -260,13 +264,13 @@ public class NovaComputeServiceExpectTest extends BaseNovaComputeServiceExpectTe
             .putAll(defaultTemplateOpenStack);
       requestResponseMap.put(list, notFound);
 
+      requestResponseMap.put(getKeyPair, keyPairDetails);
+      
       requestResponseMap.put(createWithPrefixOnGroup, securityGroupCreated);
 
       requestResponseMap.put(createRuleForDefaultPort22, securityGroupRuleCreated);
 
       requestResponseMap.put(getSecurityGroup, securityGroupWithPort22);
-
-      requestResponseMap.put(serverDetail, serverDetailResponse);
 
       HttpRequest createServerWithSuppliedKeyPair = HttpRequest
             .builder()
@@ -276,19 +280,20 @@ public class NovaComputeServiceExpectTest extends BaseNovaComputeServiceExpectTe
             .addHeader("X-Auth-Token", authToken)
             .payload(
                   payloadFromStringWithContentType(
-                        "{\"server\":{\"name\":\"test-0\",\"imageRef\":\"14\",\"flavorRef\":\"1\",\"metadata\":{\"jclouds-group\":\"test\",\"jclouds_tags\":\"jclouds_securityGroup\"},\"key_name\":\"fooPair\",\"security_groups\":[{\"name\":\"jclouds-test\"}]}}",
+                        "{\"server\":{\"name\":\"test-0\",\"imageRef\":\"14\",\"flavorRef\":\"1\",\"metadata\":{\"jclouds_tags\":\"jclouds_sg-2769\"},\"key_name\":\"testkeypair\",\"security_groups\":[{\"name\":\"jclouds-test\"}]}}",
                         "application/json")).build();
 
       HttpResponse createdServer = HttpResponse.builder().statusCode(202).message("HTTP/1.1 202 Accepted")
             .payload(payloadFromResourceWithContentType("/new_server.json", "application/json; charset=UTF-8")).build();
 
       requestResponseMap.put(createServerWithSuppliedKeyPair, createdServer);
+      requestResponseMap.put(serverDetail, serverDetailResponse);
 
       ComputeService apiThatCreatesNode = requestsSendResponses(requestResponseMap.build(), new AbstractModule() {
 
          @Override
          protected void configure() {
-            // predicatable node names
+            // predictable node names
             final AtomicInteger suffix = new AtomicInteger();
             bind(new TypeLiteral<Supplier<String>>() {
             }).toInstance(new Supplier<String>() {
@@ -304,11 +309,10 @@ public class NovaComputeServiceExpectTest extends BaseNovaComputeServiceExpectTe
       });
 
       NodeMetadata node = Iterables.getOnlyElement(apiThatCreatesNode.createNodesInGroup("test", 1,
-            keyPairName("fooPair").blockUntilRunning(false)));
+            keyPairName("fooPair").overrideLoginPrivateKey("privateKey").blockUntilRunning(false)));
       // we don't have access to this private key
-      assertFalse(node.getCredentials().getOptionalPrivateKey().isPresent());
+      assertTrue(node.getCredentials().getOptionalPrivateKey().isPresent());
    }
-
 
    @Test
    public void testCreateNodeWhileUserSpecifiesKeyPairAndUserSpecifiedGroups() throws Exception {
@@ -316,8 +320,26 @@ public class NovaComputeServiceExpectTest extends BaseNovaComputeServiceExpectTe
             .putAll(defaultTemplateOpenStack);
       requestResponseMap.put(list, notFound);
 
-      requestResponseMap.put(serverDetail, serverDetailResponse);
+      requestResponseMap.put(getKeyPair, keyPairDetails);
 
+      requestResponseMap.put(createWithPrefixOnGroup, securityGroupCreated);
+
+      requestResponseMap.put(createRuleForDefaultPort22, securityGroupRuleCreated);
+
+      requestResponseMap.put(getSecurityGroup, securityGroupWithPort22);
+
+      HttpRequest getSecurityGroup = HttpRequest
+              .builder()
+              .method("GET")
+              .endpoint("https://nova-api.openstack.org:9774/v2/3456/os-security-groups/mygroup")
+              .addHeader("Accept", "application/json")
+              .addHeader("X-Auth-Token", authToken).build();
+
+      HttpResponse securityGroupWDetails = HttpResponse.builder().statusCode(200)
+              .payload(payloadFromResource("/securitygroup_details_port22.json")).build();
+
+      requestResponseMap.put(getSecurityGroup, securityGroupWDetails);
+      
       HttpRequest createServerWithSuppliedKeyPairAndGroup = HttpRequest
             .builder()
             .method("POST")
@@ -326,20 +348,21 @@ public class NovaComputeServiceExpectTest extends BaseNovaComputeServiceExpectTe
             .addHeader("X-Auth-Token", authToken)
             .payload(
                   payloadFromStringWithContentType(
-                        "{\"server\":{\"name\":\"test-0\",\"imageRef\":\"14\",\"flavorRef\":\"1\"," +
-                        "\"metadata\":{\"jclouds-group\":\"test\"},\"key_name\":\"fooPair\",\"security_groups\":[{\"name\":\"mygroup\"}]}}",
+                        "{\"server\":{\"name\":\"test-0\",\"imageRef\":\"14\",\"flavorRef\":\"1\",\"key_name\":\"testkeypair\",\"security_groups\":[{\"name\":\"mygroup\"}]}}",
                         "application/json")).build();
 
       HttpResponse createdServer = HttpResponse.builder().statusCode(202).message("HTTP/1.1 202 Accepted")
             .payload(payloadFromResourceWithContentType("/new_server.json", "application/json; charset=UTF-8")).build();
 
       requestResponseMap.put(createServerWithSuppliedKeyPairAndGroup, createdServer);
+      
+      requestResponseMap.put(serverDetail, serverDetailResponse);
 
       ComputeService apiThatCreatesNode = requestsSendResponses(requestResponseMap.build(), new AbstractModule() {
 
          @Override
          protected void configure() {
-            // predicatable node names
+            // predictable node names
             final AtomicInteger suffix = new AtomicInteger();
             bind(new TypeLiteral<Supplier<String>>() {
             }).toInstance(new Supplier<String>() {
@@ -355,9 +378,9 @@ public class NovaComputeServiceExpectTest extends BaseNovaComputeServiceExpectTe
       });
 
       NodeMetadata node = Iterables.getOnlyElement(apiThatCreatesNode.createNodesInGroup("test", 1,
-            keyPairName("fooPair").securityGroupNames("mygroup").blockUntilRunning(false)));
+            keyPairName("fooPair").securityGroups("mygroup").blockUntilRunning(false)));
       // we don't have access to this private key
-      assertFalse(node.getCredentials().getOptionalPrivateKey().isPresent());
+      assertTrue(!node.getCredentials().getOptionalPrivateKey().isPresent());
    }
 
 }

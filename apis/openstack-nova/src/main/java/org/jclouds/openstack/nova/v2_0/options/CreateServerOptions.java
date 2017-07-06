@@ -367,9 +367,6 @@ public class CreateServerOptions implements MapBinder {
       return securityGroupNames(ImmutableSet.copyOf(checkNotNull(securityGroupNames, "securityGroupNames")));
    }
 
-   /**
-    * @see #getSecurityGroupNames()
-    */
    public CreateServerOptions securityGroupNames(Iterable<String> securityGroupNames) {
       for (String groupName : checkNotNull(securityGroupNames, "securityGroupNames"))
          checkNotNull(emptyToNull(groupName), "all security groups must be non-empty");

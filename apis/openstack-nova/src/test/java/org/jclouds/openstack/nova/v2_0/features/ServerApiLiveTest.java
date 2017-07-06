@@ -16,9 +16,11 @@
  */
 package org.jclouds.openstack.nova.v2_0.features;
 
-import com.google.common.base.Optional;
-import com.google.common.collect.ImmutableSet;
-import com.google.common.collect.Iterables;
+import static org.jclouds.openstack.nova.v2_0.domain.Server.Status.ACTIVE;
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertNotNull;
+import static org.testng.Assert.assertTrue;
+
 import org.jclouds.http.HttpResponseException;
 import org.jclouds.openstack.nova.v2_0.domain.BlockDeviceMapping;
 import org.jclouds.openstack.nova.v2_0.domain.Network;
@@ -34,11 +36,9 @@ import org.jclouds.openstack.v2_0.features.ExtensionApi;
 import org.jclouds.openstack.v2_0.predicates.LinkPredicates;
 import org.testng.annotations.Test;
 
-import static org.jclouds.openstack.nova.v2_0.domain.Server.Status.ACTIVE;
-import static org.jclouds.openstack.nova.v2_0.predicates.ServerPredicates.awaitActive;
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertNotNull;
-import static org.testng.Assert.assertTrue;
+import com.google.common.base.Optional;
+import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.Iterables;
 
 /**
  * Tests behavior of {@link ServerApi}
@@ -120,8 +120,6 @@ public class ServerApiLiveTest extends BaseNovaApiLiveTest {
             ServerCreated server = serverApi.create(hostName, imageId(regionId), "1", options);
             serverId = server.getId();
 
-            awaitActive(serverApi).apply(server.getId());
-
             Server serverCheck = serverApi.get(serverId);
             assertEquals(serverCheck.getStatus(), ACTIVE);
          } finally {
@@ -162,9 +160,6 @@ public class ServerApiLiveTest extends BaseNovaApiLiveTest {
 
                ServerCreated server = serverApi.create(hostName, "", flavorRef, options);
                serverId = server.getId();
-
-               awaitActive(serverApi).apply(server.getId());
-
                Server serverCheck = serverApi.get(serverId);
                assertEquals(serverCheck.getStatus(), ACTIVE);
             } finally {
@@ -240,8 +235,6 @@ public class ServerApiLiveTest extends BaseNovaApiLiveTest {
       }
 
       ServerCreated server = serverApi.create(hostName, imageId(regionId), flavorId(regionId), options);
-
-      awaitActive(serverApi).apply(server.getId());
 
       return serverApi.get(server.getId());
    }

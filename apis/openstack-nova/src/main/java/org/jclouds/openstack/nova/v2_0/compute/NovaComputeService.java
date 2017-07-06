@@ -54,7 +54,7 @@ import org.jclouds.compute.strategy.ResumeNodeStrategy;
 import org.jclouds.compute.strategy.SuspendNodeStrategy;
 import org.jclouds.domain.Credentials;
 import org.jclouds.domain.Location;
-import org.jclouds.openstack.nova.v2_0.compute.functions.CleanupServer;
+import org.jclouds.openstack.nova.v2_0.compute.functions.CleanupResources;
 import org.jclouds.openstack.nova.v2_0.compute.options.NovaTemplateOptions;
 import org.jclouds.scriptbuilder.functions.InitAdminAccess;
 
@@ -65,7 +65,7 @@ import com.google.common.util.concurrent.ListeningExecutorService;
 
 @Singleton
 public class NovaComputeService extends BaseComputeService {
-   protected final CleanupServer cleanupServer;
+   protected final CleanupResources cleanupResources;
 
    @Inject
    protected NovaComputeService(ComputeServiceContext context, Map<String, Credentials> credentialStore,
@@ -83,7 +83,7 @@ public class NovaComputeService extends BaseComputeService {
             RunScriptOnNode.Factory runScriptOnNodeFactory, InitAdminAccess initAdminAccess,
             PersistNodeCredentials persistNodeCredentials, Timeouts timeouts,
             @Named(Constants.PROPERTY_USER_THREADS) ListeningExecutorService userExecutor,
-            CleanupServer cleanupServer,
+            CleanupResources cleanupResources,
             Optional<ImageExtension> imageExtension,
             Optional<SecurityGroupExtension> securityGroupExtension) {
       super(context, credentialStore, images, sizes, locations, listNodesStrategy, getImageStrategy,
@@ -91,14 +91,14 @@ public class NovaComputeService extends BaseComputeService {
                startNodeStrategy, stopNodeStrategy, templateBuilderProvider, templateOptionsProvider, nodeRunning,
                nodeTerminated, nodeSuspended, initScriptRunnerFactory, initAdminAccess, runScriptOnNodeFactory,
                persistNodeCredentials, timeouts, userExecutor, imageExtension, securityGroupExtension);
-      this.cleanupServer = checkNotNull(cleanupServer, "cleanupServer");
+      this.cleanupResources = checkNotNull(cleanupResources, "cleanupResources");
 
    }
 
    @Override
    protected void cleanUpIncidentalResourcesOfDeadNodes(Set<? extends NodeMetadata> deadNodes) {
       for (NodeMetadata deadNode : deadNodes) {
-         cleanupServer.apply(deadNode.getId());
+         cleanupResources.apply(deadNode);
       }
    }
 

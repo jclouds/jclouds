@@ -16,10 +16,14 @@
  */
 package org.jclouds.openstack.nova.v2_0.parse;
 
-import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.ImmutableMultimap;
-import com.google.inject.Guice;
-import com.google.inject.Injector;
+import static org.jclouds.openstack.nova.v2_0.domain.Address.createV4;
+import static org.jclouds.openstack.nova.v2_0.domain.Address.createV6;
+
+import java.net.URI;
+
+import javax.ws.rs.Consumes;
+import javax.ws.rs.core.MediaType;
+
 import org.jclouds.date.internal.SimpleDateFormatDateService;
 import org.jclouds.json.BaseItemParserTest;
 import org.jclouds.json.config.GsonModule;
@@ -33,12 +37,10 @@ import org.jclouds.openstack.v2_0.domain.Resource;
 import org.jclouds.rest.annotations.SelectJson;
 import org.testng.annotations.Test;
 
-import javax.ws.rs.Consumes;
-import javax.ws.rs.core.MediaType;
-import java.net.URI;
-
-import static org.jclouds.openstack.nova.v2_0.domain.Address.createV4;
-import static org.jclouds.openstack.nova.v2_0.domain.Address.createV6;
+import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.ImmutableMultimap;
+import com.google.inject.Guice;
+import com.google.inject.Injector;
 
 @Test(groups = "unit", testName = "ParseServerTest")
 public class ParseServerTest extends BaseItemParserTest<Server> {
@@ -63,7 +65,7 @@ public class ParseServerTest extends BaseItemParserTest<Server> {
             .hostId("e4d909c290d0fb1ca068ffaddf22cbd0")
             .accessIPv4("67.23.10.132")
             .accessIPv6("::babe:67.23.10.132")
-            .status(Status.BUILD)
+            .status(Status.ACTIVE)
             .diskConfig(Server.DISK_CONFIG_AUTO)
             .availabilityZone("nova")
             .image(

@@ -22,7 +22,6 @@ import static org.jclouds.openstack.nova.v2_0.compute.options.NovaTemplateOption
 import static org.jclouds.openstack.nova.v2_0.compute.options.NovaTemplateOptions.Builder.generateKeyPair;
 import static org.jclouds.openstack.nova.v2_0.compute.options.NovaTemplateOptions.Builder.inboundPorts;
 import static org.jclouds.openstack.nova.v2_0.compute.options.NovaTemplateOptions.Builder.installPrivateKey;
-import static org.jclouds.openstack.nova.v2_0.compute.options.NovaTemplateOptions.Builder.securityGroupNames;
 import static org.testng.Assert.assertEquals;
 
 import java.io.IOException;
@@ -30,9 +29,6 @@ import java.io.IOException;
 import org.jclouds.compute.options.TemplateOptions;
 import org.jclouds.openstack.nova.v2_0.domain.Server;
 import org.testng.annotations.Test;
-
-import com.google.common.base.Optional;
-import com.google.common.collect.ImmutableSet;
 
 /**
  * Tests possible uses of NovaTemplateOptions and NovaTemplateOptions.Builder.*
@@ -43,52 +39,6 @@ public class NovaTemplateOptionsTest {
    public void testAs() {
       TemplateOptions options = new NovaTemplateOptions();
       assertEquals(options.as(NovaTemplateOptions.class), options);
-   }
-
-   @Test(expectedExceptions = NullPointerException.class, expectedExceptionsMessageRegExp = "all security groups must be non-empty")
-   public void testsecurityGroupNamesIterableBadFormat() {
-      NovaTemplateOptions options = new NovaTemplateOptions();
-      options.securityGroupNames(ImmutableSet.of("group1", ""));
-   }
-
-   @Test
-   public void testsecurityGroupNamesIterable() {
-      NovaTemplateOptions options = new NovaTemplateOptions();
-      options.securityGroupNames(ImmutableSet.of("group1", "group2"));
-      assertEquals(options.getSecurityGroupNames(), Optional.of(ImmutableSet.of("group1", "group2")));
-
-   }
-
-   @Test
-   public void testsecurityGroupNamesIterableStatic() {
-      NovaTemplateOptions options = securityGroupNames(ImmutableSet.of("group1", "group2"));
-      assertEquals(options.getSecurityGroupNames(), Optional.of(ImmutableSet.of("group1", "group2")));
-   }
-
-   @Test(expectedExceptions = NullPointerException.class, expectedExceptionsMessageRegExp = "all security groups must be non-empty")
-   public void testsecurityGroupNamesVarArgsBadFormat() {
-      NovaTemplateOptions options = new NovaTemplateOptions();
-      options.securityGroupNames("mygroup", "");
-   }
-
-   @Test
-   public void testsecurityGroupNamesVarArgs() {
-      NovaTemplateOptions options = new NovaTemplateOptions();
-      options.securityGroupNames("group1", "group2");
-      assertEquals(options.getSecurityGroupNames(), Optional.of(ImmutableSet.of("group1", "group2")));
-
-   }
-
-   @Test
-   public void testDefaultGroupsVarArgsEmpty() {
-      NovaTemplateOptions options = new NovaTemplateOptions();
-      assertEquals(options.getSecurityGroupNames(), Optional.absent());
-   }
-
-   @Test
-   public void testsecurityGroupNamesVarArgsStatic() {
-      NovaTemplateOptions options = securityGroupNames("group1", "group2");
-      assertEquals(options.getSecurityGroupNames(), Optional.of(ImmutableSet.of("group1", "group2")));
    }
 
    @Test

@@ -32,20 +32,15 @@ import org.jclouds.domain.LoginCredentials;
 import org.jclouds.http.HttpRequest;
 import org.jclouds.http.HttpResponse;
 import org.jclouds.openstack.nova.v2_0.compute.options.NovaTemplateOptions;
-import org.jclouds.openstack.nova.v2_0.domain.KeyPair;
 import org.jclouds.openstack.nova.v2_0.domain.Network;
 import org.jclouds.openstack.nova.v2_0.domain.Server;
-import org.jclouds.openstack.nova.v2_0.domain.regionscoped.RegionAndName;
 import org.jclouds.openstack.nova.v2_0.domain.regionscoped.ServerInRegion;
 import org.jclouds.openstack.nova.v2_0.internal.BaseNovaComputeServiceContextExpectTest;
 import org.testng.annotations.Test;
 
-import com.google.common.cache.LoadingCache;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import com.google.inject.Injector;
-import com.google.inject.Key;
-import com.google.inject.TypeLiteral;
 
 /**
  * Tests the compute service abstraction of the nova api.
@@ -239,7 +234,7 @@ public class NovaComputeServiceAdapterExpectTest extends BaseNovaComputeServiceC
       Injector forSecurityGroups = requestsSendResponses(requestResponseMap);
 
       Template template = forSecurityGroups.getInstance(TemplateBuilder.class).build();
-      template.getOptions().as(NovaTemplateOptions.class).securityGroupNames("group1", "group2");
+      template.getOptions().as(NovaTemplateOptions.class).securityGroups("group1", "group2");
 
       NovaComputeServiceAdapter adapter = forSecurityGroups.getInstance(NovaComputeServiceAdapter.class);
 
@@ -281,16 +276,9 @@ public class NovaComputeServiceAdapterExpectTest extends BaseNovaComputeServiceC
       Injector forSecurityGroups = requestsSendResponses(requestResponseMap);
 
       Template template = forSecurityGroups.getInstance(TemplateBuilder.class).build();
-      template.getOptions().as(NovaTemplateOptions.class).keyPairName("foo");
+      template.getOptions().as(NovaTemplateOptions.class).keyPairName("foo").overrideLoginPrivateKey("privateKey");
 
       NovaComputeServiceAdapter adapter = forSecurityGroups.getInstance(NovaComputeServiceAdapter.class);
-
-      // we expect to have already an entry in the cache for the key
-      LoadingCache<RegionAndName, KeyPair> keyPairCache = forSecurityGroups.getInstance(Key
-               .get(new TypeLiteral<LoadingCache<RegionAndName, KeyPair>>() {
-               }));
-      keyPairCache.put(RegionAndName.fromRegionAndName("az-1.region-a.geo-1", "foo"), KeyPair.builder().name("foo")
-               .privateKey("privateKey").build());
 
       NodeAndInitialCredentials<ServerInRegion> server = adapter.createNodeWithGroupEncodedIntoName("test", "test-e92",
                template);
@@ -359,13 +347,16 @@ public class NovaComputeServiceAdapterExpectTest extends BaseNovaComputeServiceC
             .statusCode(202)
             .build();
 
+      HttpResponse serverDetailSuspendedResponse = HttpResponse.builder().statusCode(200)
+              .payload(payloadFromResource("/server_details_suspended.json")).build();
+      
       Map<HttpRequest, HttpResponse> requestResponseMap = ImmutableMap.<HttpRequest, HttpResponse> builder()
                .put(keystoneAuthWithUsernameAndPasswordAndTenantName, responseWithKeystoneAccess)
                .put(extensionsOfNovaRequest, extensionsOfNovaResponse)
                .put(listDetail, listDetailResponse)
                .put(listFlavorsDetail, listFlavorsDetailResponse)
                .put(suspendServer, suspendServerResponse)
-               .put(serverDetail, serverDetailResponse).build();
+               .put(serverDetail, serverDetailSuspendedResponse).build();
 
       Injector forAdminExtension = requestsSendResponses(requestResponseMap);
 
@@ -394,13 +385,16 @@ public class NovaComputeServiceAdapterExpectTest extends BaseNovaComputeServiceC
             .statusCode(202)
             .build();
 
+      HttpResponse serverDetailSuspendedResponse = HttpResponse.builder().statusCode(200)
+              .payload(payloadFromResource("/server_details_suspended.json")).build();
+
       Map<HttpRequest, HttpResponse> requestResponseMap = ImmutableMap.<HttpRequest, HttpResponse> builder()
             .put(keystoneAuthWithUsernameAndPasswordAndTenantName, responseWithKeystoneAccess)
             .put(extensionsOfNovaRequest, unmatchedExtensionsOfNovaResponse)
             .put(listDetail, listDetailResponse)
             .put(listFlavorsDetail, listFlavorsDetailResponse)
             .put(suspendServer, suspendServerResponse)
-            .put(serverDetail, serverDetailResponse).build();
+            .put(serverDetail, serverDetailSuspendedResponse).build();
 
       Injector forAdminExtension = requestsSendResponses(requestResponseMap);
 
