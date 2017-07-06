@@ -190,7 +190,15 @@ public class AzureComputeSecurityGroupExtension implements SecurityGroupExtensio
       final ResourceGroupAndName resourceGroupAndName = ResourceGroupAndName.fromSlashEncoded(id);
       URI uri = api.getNetworkSecurityGroupApi(resourceGroupAndName.resourceGroup())
             .delete(resourceGroupAndName.name());
-      return resourceDeleted.apply(uri);
+
+      // https://docs.microsoft.com/en-us/rest/api/network/virtualnetwork/delete-a-network-security-group
+      if (uri != null) {
+         // 202-Accepted if resource exists and the request is accepted.
+         return resourceDeleted.apply(uri);
+      } else {
+         // 204-No Content if resource does not exist.
+         return false;
+      }
    }
 
    @Override
