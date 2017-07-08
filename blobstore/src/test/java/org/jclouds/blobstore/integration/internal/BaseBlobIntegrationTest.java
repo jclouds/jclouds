@@ -230,6 +230,22 @@ public class BaseBlobIntegrationTest extends BaseBlobStoreIntegrationTest {
    }
 
    @Test(groups = { "integration", "live" })
+   public void testOverwriteBlob() throws InterruptedException {
+      String container = getContainerName();
+      BlobStore blobStore = view.getBlobStore();
+      try {
+         String blobName = "hello";
+         Blob blob = blobStore.blobBuilder(blobName)
+               .payload(TEST_STRING)
+               .build();
+         blobStore.putBlob(container, blob);
+         blobStore.putBlob(container, blob);
+      } finally {
+         returnContainer(container);
+      }
+   }
+
+   @Test(groups = { "integration", "live" })
    public void testCreateBlobWithExpiry() throws InterruptedException {
       String container = getContainerName();
       BlobStore blobStore = view.getBlobStore();

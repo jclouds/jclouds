@@ -33,7 +33,6 @@ import org.jclouds.atmos.options.PutOptions;
 import org.jclouds.atmos.reference.AtmosErrorCode;
 import org.jclouds.atmos.xml.ErrorHandler;
 import org.jclouds.blobstore.ContainerNotFoundException;
-import org.jclouds.blobstore.KeyAlreadyExistsException;
 import org.jclouds.blobstore.domain.Blob;
 import org.jclouds.crypto.Crypto;
 import org.jclouds.http.HttpCommand;
@@ -72,14 +71,7 @@ public class AtmosUtils {
             Blob blob, PutOptions options) {
       final String path = container + "/" + blob.getMetadata().getName();
       final AtmosObject object = blob2Object.apply(blob);
-      
-      try {
-         sync.createFile(container, object, options);
-         
-      } catch (KeyAlreadyExistsException e) {
-         deletePathAndEnsureGone(sync, path);
-         sync.createFile(container, object, options);
-      }
+      sync.createFile(container, object, options);
       return path;
    }
    
