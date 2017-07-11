@@ -42,7 +42,6 @@ import com.google.inject.TypeLiteral;
 @Beta
 @ConfiguresCredentialStore
 public class CredentialStoreModule extends AbstractModule {
-   private static final Map<String, ByteSource> BACKING = new ConcurrentHashMap<String, ByteSource>();
    private final Map<String, ByteSource> backing;
 
    public CredentialStoreModule(Map<String, ByteSource> backing) {
@@ -50,7 +49,7 @@ public class CredentialStoreModule extends AbstractModule {
    }
 
    public CredentialStoreModule() {
-      this(null);
+      this(new ConcurrentHashMap<String, ByteSource>());
    }
 
    @Override
@@ -59,13 +58,8 @@ public class CredentialStoreModule extends AbstractModule {
       }).to(CredentialsToJsonByteSource.class);
       bind(new TypeLiteral<Function<ByteSource, Credentials>>() {
       }).to(CredentialsFromJsonByteSource.class);
-      if (backing != null) {
-         bind(new TypeLiteral<Map<String, ByteSource>>() {
-         }).toInstance(backing);
-      } else {
-         bind(new TypeLiteral<Map<String, ByteSource>>() {
-         }).toInstance(BACKING);
-      }
+      bind(new TypeLiteral<Map<String, ByteSource>>() {
+      }).toInstance(backing);
    }
 
    public static class CredentialsToJsonByteSource implements Function<Credentials, ByteSource> {

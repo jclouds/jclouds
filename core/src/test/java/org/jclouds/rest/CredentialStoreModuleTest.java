@@ -95,34 +95,38 @@ public class CredentialStoreModuleTest {
 
    }
 
-   public void testDefaultConsistentAcrossMultipleInjectors() throws IOException {
-      Map<String, ByteSource> map = getMap(createInjector());
+   public void testDefaultDifferentAcrossMultipleInjectors() throws IOException {
+      Injector injector = createInjector();
+      Map<String, ByteSource> map = getMap(injector);
+      put(map, getStore(injector), "test", new Credentials("user", "pass"));
 
-      put(map, getStore(createInjector()), "test", new Credentials("user", "pass"));
-      checkConsistent(map, getStore(createInjector()), "test", new Credentials("user", "pass"));
-      checkConsistent(map, getStore(createInjector()), "test", new Credentials("user", "pass"));
-      remove(map, getStore(createInjector()), "test");
-
+      Map<String, Credentials> anotherStore = getStore(createInjector());
+      assertEquals(anotherStore.size(), 0);
+      assertFalse(anotherStore.containsKey("test"));
    }
 
-   public void testLoginConsistentAcrossMultipleInjectorsAndLooksNice() throws IOException {
-      Map<String, ByteSource> map = getMap(createInjector());
+   public void testLoginDifferentAcrossMultipleInjectorsAndLooksNice() throws IOException {
+      Injector injector = createInjector();
+      Map<String, ByteSource> map = getMap(injector);
       LoginCredentials creds = LoginCredentials.builder().user("user").password("pass").build();
-      put(map, getStore(createInjector()), "test", creds);
-      checkConsistent(map, getStore(createInjector()), "test", creds, "{\"user\":\"user\",\"password\":\"pass\"}");
-      checkConsistent(map, getStore(createInjector()), "test", creds, "{\"user\":\"user\",\"password\":\"pass\"}");
-      remove(map, getStore(createInjector()), "test");
+      Map<String, Credentials> store = getStore(injector);
+      put(map, store, "test", creds);
+      checkConsistent(map, store, "test", creds, "{\"user\":\"user\",\"password\":\"pass\"}");
+      checkConsistent(map, store, "test", creds, "{\"user\":\"user\",\"password\":\"pass\"}");
+      remove(map, store, "test");
    }
 
-   public void testLoginConsistentAcrossMultipleInjectorsAndLooksNiceWithSudo() throws IOException {
-      Map<String, ByteSource> map = getMap(createInjector());
+   public void testLoginDifferentAcrossMultipleInjectorsAndLooksNiceWithSudo() throws IOException {
+      Injector injector = createInjector();
+      Map<String, ByteSource> map = getMap(injector);
       LoginCredentials creds = LoginCredentials.builder().user("user").password("pass").authenticateSudo(true).build();
-      put(map, getStore(createInjector()), "test", creds);
-      checkConsistent(map, getStore(createInjector()), "test", creds,
+      Map<String, Credentials> store = getStore(injector);
+      put(map, store, "test", creds);
+      checkConsistent(map, store, "test", creds,
             "{\"user\":\"user\",\"password\":\"pass\",\"authenticateSudo\":true}");
-      checkConsistent(map, getStore(createInjector()), "test", creds,
+      checkConsistent(map, store, "test", creds,
             "{\"user\":\"user\",\"password\":\"pass\",\"authenticateSudo\":true}");
-      remove(map, getStore(createInjector()), "test");
+      remove(map, store, "test");
    }
 
    public void testCredentialsToByteSourceConversion() throws Exception {
