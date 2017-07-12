@@ -94,8 +94,9 @@ public class AzureComputeProviderMetadata extends BaseProviderMetadata {
       properties.put(RESOURCENAME_PREFIX, "jclouds");
       properties.put(RESOURCENAME_DELIMITER, "-");
       properties.put(IMAGE_PUBLISHERS, "Canonical,RedHat");
-      // Default credentials for all images
-      properties.put(IMAGE_LOGIN_USER, "jclouds:Password12345!");
+      // Default credentials for all images, Azure doesn't accept root, admin; generate the password on the fly
+      properties.put(IMAGE_LOGIN_USER, "jclouds");
+      // Azure allows for passwordless sudo only when using a public key to login to the machine
       properties.put(IMAGE_AUTHENTICATE_SUDO, "true");
       properties.put(TEMPLATE, "imageNameMatches=UbuntuServer,osVersionMatches=1[456]\\.[01][04](\\.[0-9])?-LTS");
       // Api versions used in each API

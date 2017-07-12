@@ -375,18 +375,19 @@ public class AzureComputeServiceAdapter implements ComputeServiceAdapter<Virtual
 
    private OSProfile createOsProfile(String computerName, Template template) {
       String defaultLoginUser = template.getImage().getDefaultCredentials().getUser();
-      String defaultLoginPassword = template.getImage().getDefaultCredentials().getOptionalPassword().get();
       String adminUsername = Objects.firstNonNull(template.getOptions().getLoginUser(), defaultLoginUser);
-      String adminPassword = Objects.firstNonNull(template.getOptions().getLoginPassword(), defaultLoginPassword);
+      // Password already generated in CreateResourcesThenCreateNodes (if not set by user)
+      String adminPassword = template.getOptions().getLoginPassword();
       OSProfile.Builder builder = OSProfile.builder().adminUsername(adminUsername).adminPassword(adminPassword)
               .computerName(computerName);
 
       if (template.getOptions().getPublicKey() != null
               && OsFamily.WINDOWS != template.getImage().getOperatingSystem().getFamily()) {
          OSProfile.LinuxConfiguration linuxConfiguration = OSProfile.LinuxConfiguration.create("true",
-                 OSProfile.LinuxConfiguration.SSH.create(of(OSProfile.LinuxConfiguration.SSH.SSHPublicKey
-                         .create(String.format("/home/%s/.ssh/authorized_keys", adminUsername), template.getOptions()
-                                 .getPublicKey()))));
+                 OSProfile.LinuxConfiguration.SSH.create(of(
+                         OSProfile.LinuxConfiguration.SSH.SSHPublicKey.create(
+                                 String.format("/home/%s/.ssh/authorized_keys", adminUsername),
+                                 template.getOptions().getPublicKey()))));
          builder.linuxConfiguration(linuxConfiguration);
       }
 

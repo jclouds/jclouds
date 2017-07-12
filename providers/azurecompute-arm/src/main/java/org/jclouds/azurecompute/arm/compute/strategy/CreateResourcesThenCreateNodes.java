@@ -34,6 +34,7 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import javax.inject.Singleton;
 
+import com.google.common.base.Optional;
 import org.jclouds.Constants;
 import org.jclouds.azurecompute.arm.AzureComputeApi;
 import org.jclouds.azurecompute.arm.compute.domain.ResourceGroupAndName;
@@ -49,10 +50,12 @@ import org.jclouds.azurecompute.arm.domain.Subnet;
 import org.jclouds.azurecompute.arm.domain.Subnet.SubnetProperties;
 import org.jclouds.azurecompute.arm.domain.VirtualNetwork.AddressSpace;
 import org.jclouds.azurecompute.arm.domain.VirtualNetwork.VirtualNetworkProperties;
+import org.jclouds.azurecompute.arm.util.Passwords;
 import org.jclouds.compute.config.CustomizationResponse;
 import org.jclouds.compute.domain.NodeMetadata;
 import org.jclouds.compute.domain.Template;
 import org.jclouds.compute.functions.GroupNamingConvention;
+import org.jclouds.compute.options.TemplateOptions;
 import org.jclouds.compute.reference.ComputeServiceConstants;
 import org.jclouds.compute.strategy.CreateNodeWithGroupEncodedIntoName;
 import org.jclouds.compute.strategy.CustomizeNodeAndAddToGoodMapOrPutExceptionIntoBadMap;
@@ -108,6 +111,9 @@ public class CreateResourcesThenCreateNodes extends CreateNodesWithGroupEncodedI
          Multimap<NodeMetadata, CustomizationResponse> customizationResponses) {
 
       AzureTemplateOptions options = template.getOptions().as(AzureTemplateOptions.class);
+
+      // TODO Generate a private key instead. Also no need to use AUTHENTICATE_SUDO in this case.
+      generatePasswordIfNoneProvided(template);
       
       // If there is a script to be run on the node and public key
       // authentication has been configured, warn users if the private key
@@ -128,6 +134,15 @@ public class CreateResourcesThenCreateNodes extends CreateNodesWithGroupEncodedI
       configureAvailabilitySetForTemplate(template);
 
       return super.execute(group, count, template, goodNodes, badNodes, customizationResponses);
+   }
+
+   // Azure requires that we pass it the VM password. Need to generate one if not overridden by the user.
+   private void generatePasswordIfNoneProvided(Template template) {
+      TemplateOptions options = template.getOptions();
+      if (options.getLoginPassword() == null) {
+         Optional<String> passwordOptional = template.getImage().getDefaultCredentials().getOptionalPassword();
+         options.overrideLoginPassword(passwordOptional.or(Passwords.generate()));
+      }
    }
 
    protected synchronized void createDefaultNetworkIfNeeded(String group, String location, AzureTemplateOptions options) {
