@@ -21,6 +21,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 import static javax.ws.rs.core.MediaType.APPLICATION_XML;
 import static org.assertj.core.api.Assertions.failBecauseExceptionWasNotThrown;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.jclouds.io.Payloads.newInputStreamPayload;
 import static org.jclouds.io.Payloads.newStringPayload;
 import static org.jclouds.providers.AnonymousProviderMetadata.forApiOnEndpoint;
@@ -1557,6 +1558,17 @@ public class RestAnnotationProcessorTest extends BaseRestApiTest {
       request = newProcessor.apply(invocation);
       assertEquals(request.getFilters().size(), 2);
       assertEquals(request.getFilters().get(1).getClass(), ConnectionCloseHeader.class);
+   }
+
+   @Test
+   public void testZeroContentStripExpectHeader() {
+      Invokable<?, ?> method = method(TestRequestFilter.class, "post");
+      Invocation invocation = Invocation.create(method,
+              ImmutableList.<Object>of(HttpRequest.builder().method("POST").endpoint("http://localhost")
+                      .payload(new byte[0]).addHeader(HttpHeaders.EXPECT, "100-Continue")
+                      .build()));
+      GeneratedHttpRequest request = processor.apply(invocation);
+      assertThat(request.getFirstHeaderOrNull(HttpHeaders.EXPECT)).isNull();
    }
 
    public static class TestEncoding {

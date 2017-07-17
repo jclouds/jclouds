@@ -357,6 +357,9 @@ public class RestAnnotationProcessor implements Function<Invocation, HttpRequest
       if (request.getPayload() != null) {
          contentMetadataCodec.fromHeaders(request.getPayload().getContentMetadata(), headers);
       }
+
+      request = stripExpectHeaderIfContentZero(request);
+
       utils.checkRequestHasRequiredProperties(request);
       return request;
    }
@@ -777,6 +780,18 @@ public class RestAnnotationProcessor implements Function<Invocation, HttpRequest
          parts.add(part);
       }
       return parts.build();
+   }
+
+   private static GeneratedHttpRequest stripExpectHeaderIfContentZero(GeneratedHttpRequest request) {
+      boolean isBodyEmpty = true;
+      if (request.getPayload() != null) {
+         Long length = request.getPayload().getContentMetadata().getContentLength();
+         isBodyEmpty = length != null && length == 0;
+      }
+      if (isBodyEmpty) {
+         request = request.toBuilder().removeHeader("Expect").build();
+      }
+      return request;
    }
 
    private boolean isEncodedUsed(Invocation invocation) {

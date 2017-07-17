@@ -20,6 +20,7 @@ import static com.google.common.net.HttpHeaders.CONTENT_LENGTH;
 import static com.google.common.net.HttpHeaders.ETAG;
 import static com.google.common.net.HttpHeaders.EXPECT;
 import static com.google.common.util.concurrent.MoreExecutors.sameThreadExecutor;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.jclouds.Constants.PROPERTY_MAX_RETRIES;
 import static org.testng.Assert.assertEquals;
 
@@ -73,7 +74,7 @@ public class S3ClientMockTest {
       RecordedRequest request = server.takeRequest();
       assertEquals(request.getRequestLine(), "PUT /bucket/object HTTP/1.1");
       assertEquals(request.getHeaders(CONTENT_LENGTH), ImmutableList.of("0"));
-      assertEquals(request.getHeaders(EXPECT), ImmutableList.of("100-continue"));
+      assertThat(request.getHeaders(EXPECT)).isEmpty();
       server.shutdown();
    }
 
