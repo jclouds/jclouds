@@ -57,7 +57,7 @@ public class JettyStatements {
    
    public static Statement start() {
       return new StatementList(
-            literal(String.format("JETTY_PORT=%d %s/bin/jetty.sh start", port, JETTY_HOME)),
+            literal(String.format("JETTY_PORT=%d nohup %s/bin/jetty.sh start > start.log 2>&1 < /dev/null &", port, JETTY_HOME)),
             literal("test $? && sleep 1")); // in case it is slow starting the proc
    }
    

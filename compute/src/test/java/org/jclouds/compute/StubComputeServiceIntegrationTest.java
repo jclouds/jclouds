@@ -303,7 +303,7 @@ public class StubComputeServiceIntegrationTest extends BaseComputeServiceLiveTes
                clientNew.disconnect();
 
                String startJetty = new StringBuilder()
-                  .append("JETTY_PORT=8080 /usr/local/jetty/bin/jetty.sh start").append('\n')
+                  .append("JETTY_PORT=8080 nohup /usr/local/jetty/bin/jetty.sh start > start.log 2>&1 < /dev/null &").append('\n')
                   .append("test $? && sleep 1").append('\n').toString();
 
                clientNew.connect();
