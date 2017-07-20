@@ -640,6 +640,21 @@ public class BaseBlobIntegrationTest extends BaseBlobStoreIntegrationTest {
    }
 
    @Test(groups = { "integration", "live" })
+   public void testPutZeroLengthByteSource() throws Exception {
+      long length = 0;
+      Payload payload = new ByteSourcePayload(ByteSource.empty());
+      testPut(payload, null, payload, length, new PutOptions());
+   }
+
+   @Test(groups = { "integration", "live" })
+   public void testPutZeroLengthInputStream() throws Exception {
+      long length = 0;
+      ByteSource byteSource = ByteSource.empty();
+      Payload payload = new InputStreamPayload(byteSource.openStream());
+      testPut(payload, null, payload, length, new PutOptions());
+   }
+
+   @Test(groups = { "integration", "live" })
    public void testPutMultipartByteSource() throws Exception {
       long length = Math.max(getMinimumMultipartBlobSize(), MultipartUploadSlicingAlgorithm.DEFAULT_PART_SIZE + 1);
       BlobStore blobStore = view.getBlobStore();
