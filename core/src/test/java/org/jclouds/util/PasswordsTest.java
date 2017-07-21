@@ -14,14 +14,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jclouds.profitbricks.util;
+package org.jclouds.util;
 
 import com.google.common.collect.ImmutableList;
+import org.testng.annotations.Test;
+
 import java.util.List;
-import static org.jclouds.profitbricks.util.Passwords.isValidPassword;
+
+import static org.jclouds.util.Passwords.isValidPassword;
 import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertTrue;
-import org.testng.annotations.Test;
 
 @Test(groups = "unit", testName = "PasswordsTest")
 public class PasswordsTest {

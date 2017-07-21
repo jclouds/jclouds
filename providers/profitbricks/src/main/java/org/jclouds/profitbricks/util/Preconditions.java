@@ -21,7 +21,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Strings.isNullOrEmpty;
 import static com.google.common.net.InetAddresses.isInetAddress;
 import static org.jclouds.profitbricks.util.MacAddresses.isMacAddress;
-import static org.jclouds.profitbricks.util.Passwords.isValidPassword;
+import static org.jclouds.util.Passwords.isValidPassword;
 
 import java.util.List;
 import java.util.regex.Pattern;

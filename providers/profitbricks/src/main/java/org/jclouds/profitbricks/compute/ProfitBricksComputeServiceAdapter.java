@@ -59,7 +59,6 @@ import org.jclouds.profitbricks.domain.Server;
 import org.jclouds.profitbricks.domain.Snapshot;
 import org.jclouds.profitbricks.domain.Storage;
 import org.jclouds.profitbricks.features.ServerApi;
-import org.jclouds.profitbricks.util.Passwords;
 import org.jclouds.rest.ResourceNotFoundException;
 
 import com.google.common.base.Function;
@@ -72,6 +71,7 @@ import com.google.common.collect.Lists;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.inject.Inject;
+import org.jclouds.util.Passwords;
 
 @Singleton
 public class ProfitBricksComputeServiceAdapter implements ComputeServiceAdapter<Server, Hardware, Provisionable, Location> {
