@@ -50,7 +50,7 @@ import org.jclouds.azurecompute.arm.domain.Subnet;
 import org.jclouds.azurecompute.arm.domain.Subnet.SubnetProperties;
 import org.jclouds.azurecompute.arm.domain.VirtualNetwork.AddressSpace;
 import org.jclouds.azurecompute.arm.domain.VirtualNetwork.VirtualNetworkProperties;
-import org.jclouds.azurecompute.arm.util.Passwords;
+import org.jclouds.util.Passwords;
 import org.jclouds.compute.config.CustomizationResponse;
 import org.jclouds.compute.domain.NodeMetadata;
 import org.jclouds.compute.domain.Template;
