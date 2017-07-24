@@ -82,7 +82,8 @@ public class ParseXMLWithJAXB<T> implements Function<HttpResponse, T> {
 
    public <V> V apply(final InputStream stream, final Class<V> type) throws IOException {
       try {
-         return xml.fromXML(Strings2.toStringAndClose(stream), type);
+         String str = Strings2.toStringAndClose(stream);
+         return xml.fromXML(str, type);
       } finally {
          if (stream != null) {
             stream.close();

@@ -70,7 +70,11 @@ public class JAXBParser implements XMLParser {
 
    @SuppressWarnings("unchecked")
    @Override
-   public <T> T fromXML(final String xml, final Class<T> type) throws IOException {
+   public <T> T fromXML(String xml, final Class<T> type) throws IOException {
+      // ignore byte order mark
+      if (xml.charAt(0) == 0xFEFF) {
+         xml = xml.substring(1);
+      }
       try {
          StringReader reader = new StringReader(xml);
          JAXBContext context = JAXBContext.newInstance(type);

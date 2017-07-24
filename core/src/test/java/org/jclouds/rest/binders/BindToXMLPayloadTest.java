@@ -16,6 +16,7 @@
  */
 package org.jclouds.rest.binders;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.testng.Assert.assertEquals;
 
 import javax.xml.bind.annotation.XmlRootElement;
@@ -80,6 +81,13 @@ public class BindToXMLPayloadTest {
       BindToXMLPayload binder = new BindToXMLPayload(xml);
       HttpRequest request = HttpRequest.builder().method("GET").endpoint("http://momma").build();
       request = binder.bindToRequest(request, new Object());
+   }
+
+   @Test
+   public void testJAXBParserBOM() throws Exception {
+      String input = "\uFEFF<test><elem>foo</elem></test>";
+      TestJAXBDomain obj = xml.fromXML(input, TestJAXBDomain.class);
+      assertThat(obj.getElem()).isEqualTo("foo");
    }
 
    @XmlRootElement(name = "test")
