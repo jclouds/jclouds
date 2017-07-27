@@ -89,6 +89,8 @@ public class AzureComputeProviderMetadata extends BaseProviderMetadata {
       properties.put(PROPERTY_MAX_RATE_LIMIT_WAIT, 330000);
       properties.put(RESOURCE, "https://management.azure.com/");
       properties.put(CREDENTIAL_TYPE, CLIENT_CREDENTIALS_SECRET.toString());
+      // Set a default Oauth endpoint for Azure, fill in the tenantId based on the value supplied
+      properties.put("oauth.endpoint", "https://login.microsoft.com/${azurecompute-arm.tenantId}/oauth2/token");
       properties.put(DEFAULT_VNET_ADDRESS_SPACE_PREFIX, "10.0.0.0/16");
       properties.put(DEFAULT_SUBNET_ADDRESS_PREFIX, "10.0.0.0/24");
       properties.put(RESOURCENAME_PREFIX, "jclouds");
@@ -135,7 +137,7 @@ public class AzureComputeProviderMetadata extends BaseProviderMetadata {
          id("azurecompute-arm")
                  .name("Azure Resource Management")
                  .apiMetadata(new AzureManagementApiMetadata())
-                 .endpoint("https://management.azure.com/subscriptions/SUBSCRIPTION_ID")
+                 .endpoint("https://management.azure.com/subscriptions/${azurecompute-arm.subscriptionId}")
                  .homepage(URI.create("https://www.windowsazure.com/"))
                  .console(URI.create("https://windows.azure.com/default.aspx"))
                  .linkedServices("azureblob")
