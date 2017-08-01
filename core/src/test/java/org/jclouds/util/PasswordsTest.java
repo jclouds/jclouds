@@ -20,8 +20,10 @@ import com.google.common.collect.ImmutableList;
 import org.testng.annotations.Test;
 
 import java.util.List;
+import java.util.Random;
 
 import static org.jclouds.util.Passwords.isValidPassword;
+import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertTrue;
 
@@ -51,5 +53,11 @@ public class PasswordsTest {
          String pwd = Passwords.generate();
          assertTrue(isValidPassword(pwd), "Failed with: " + pwd);
       }
+   }
+
+   @Test
+   public void testGeneratorGeneratesRequestedLength() {
+      int passwordLength = new Random().nextInt(40) + 10;
+      assertEquals(Passwords.generate(passwordLength).length(), passwordLength);
    }
 }

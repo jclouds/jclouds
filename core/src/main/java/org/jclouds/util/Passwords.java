@@ -19,16 +19,18 @@ package org.jclouds.util;
 import java.util.Random;
 import java.util.regex.Pattern;
 
+import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableSet;
 
 public class Passwords {
 
    private static final Random random = new Random();
 
-   private static final int MIN_CHAR = 8;
-   private static final int MAX_CHAR = 50;
+   private static final int GENERATE_PASSWORD_LENGTH = 30;
+   private static final int VALID_PASSWORD_MIN_LENGTH = 8;
+   private static final int VALID_PASSWORD_MAX_LENGTH = 50;
    private static final String PASSWORD_FORMAT = String.format(
-           "[a-zA-Z0-9][^iIloOwWyYzZ10]{%d,%d}", MIN_CHAR - 1, MAX_CHAR);
+           "[a-zA-Z0-9][^iIloOwWyYzZ10]{%d,%d}", VALID_PASSWORD_MIN_LENGTH - 1, VALID_PASSWORD_MAX_LENGTH);
    private static final Pattern PASSWORD_PATTERN = Pattern.compile(PASSWORD_FORMAT);
 
    private static final ImmutableSet<Character> INVALID_CHARS = ImmutableSet.<Character>of(
@@ -39,7 +41,11 @@ public class Passwords {
    }
 
    public static String generate() {
-      int count = random.nextInt(MAX_CHAR - MIN_CHAR) + MIN_CHAR;
+      return generate(GENERATE_PASSWORD_LENGTH);
+   }
+
+   public static String generate(int count) {
+      Preconditions.checkArgument(count > 0, "Password length must be a positive number");
 
       final char[] buffer = new char[count];
 
