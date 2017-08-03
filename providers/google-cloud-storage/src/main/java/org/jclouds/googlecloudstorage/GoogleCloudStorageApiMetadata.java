@@ -27,6 +27,7 @@ import static org.jclouds.reflect.Reflection2.typeToken;
 import java.net.URI;
 import java.util.Properties;
 
+import org.jclouds.Constants;
 import org.jclouds.blobstore.BlobStoreContext;
 import org.jclouds.googlecloud.config.CurrentProject;
 import org.jclouds.googlecloudstorage.blobstore.config.GoogleCloudStorageBlobStoreContextModule;
@@ -62,6 +63,8 @@ public class GoogleCloudStorageApiMetadata extends BaseHttpApiMetadata<GoogleClo
       properties.put(OPERATION_COMPLETE_INTERVAL, 2000);
       properties.put(OPERATION_COMPLETE_TIMEOUT, 600000);
       properties.setProperty(PROPERTY_IDEMPOTENT_METHODS, "DELETE,GET,HEAD,OPTIONS,POST,PUT");
+      // bucket operations have a longer timeout
+      properties.setProperty(Constants.PROPERTY_RETRY_DELAY_START, String.valueOf(TimeUnit.SECONDS.toMillis(1)));
       return properties;
    }
 
