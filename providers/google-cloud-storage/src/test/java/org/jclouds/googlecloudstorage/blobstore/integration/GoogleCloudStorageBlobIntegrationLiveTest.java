@@ -27,7 +27,6 @@ import java.util.Properties;
 
 import javax.ws.rs.core.MediaType;
 
-import org.assertj.core.api.Fail;
 import org.jclouds.blobstore.BlobStore;
 import org.jclouds.blobstore.domain.Blob;
 import org.jclouds.blobstore.domain.BlobBuilder.PayloadBlobBuilder;
@@ -253,16 +252,6 @@ public class GoogleCloudStorageBlobIntegrationLiveTest extends BaseBlobIntegrati
    @Test(groups = { "integration", "live" }, dataProvider = "delete")
    public void deleteObject(String name) throws InterruptedException {
       super.deleteObject(name);
-   }
-
-   @Override
-   public void testSetBlobAccess() throws Exception {
-      try {
-         super.testSetBlobAccess();
-         Fail.failBecauseExceptionWasNotThrown(UnsupportedOperationException.class);
-      } catch (UnsupportedOperationException uoe) {
-         throw new SkipException("request signing not supported on GCS", uoe);
-      }
    }
 
    @Override

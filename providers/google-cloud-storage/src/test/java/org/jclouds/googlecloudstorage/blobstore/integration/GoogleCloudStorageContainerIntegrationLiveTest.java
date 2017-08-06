@@ -25,7 +25,6 @@ import java.util.Properties;
 
 import javax.ws.rs.core.MediaType;
 
-import org.assertj.core.api.Fail;
 import org.jclouds.blobstore.domain.BlobMetadata;
 import org.jclouds.blobstore.domain.PageSet;
 import org.jclouds.blobstore.domain.StorageMetadata;
@@ -92,15 +91,5 @@ public class GoogleCloudStorageContainerIntegrationLiveTest extends BaseContaine
    @Override
    public void testListMarkerPrefix() throws Exception {
       throw new SkipException("cannot specify arbitrary markers");
-   }
-
-   @Override
-   public void testSetContainerAccess() throws Exception {
-      try {
-         super.testSetContainerAccess();
-         Fail.failBecauseExceptionWasNotThrown(UnsupportedOperationException.class);
-      } catch (UnsupportedOperationException uoe) {
-         throw new SkipException("request signing not supported on GCS", uoe);
-      }
    }
 }
