@@ -18,6 +18,7 @@ package org.jclouds.openstack.nova.v2_0.compute.strategy;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
+import static com.google.common.base.Preconditions.checkState;
 
 import java.util.List;
 import java.util.Map;
@@ -43,6 +44,7 @@ import org.jclouds.openstack.nova.v2_0.compute.functions.AllocateAndAddFloatingI
 import org.jclouds.openstack.nova.v2_0.compute.options.NodeAndNovaTemplateOptions;
 import org.jclouds.openstack.nova.v2_0.compute.options.NovaTemplateOptions;
 import org.jclouds.openstack.nova.v2_0.domain.KeyPair;
+import org.jclouds.openstack.nova.v2_0.domain.SecurityGroup;
 import org.jclouds.openstack.nova.v2_0.domain.regionscoped.RegionAndName;
 import org.jclouds.openstack.nova.v2_0.domain.regionscoped.RegionSecurityGroupNameAndPorts;
 import org.jclouds.openstack.nova.v2_0.domain.regionscoped.SecurityGroupInRegion;
@@ -52,6 +54,7 @@ import com.google.common.base.Strings;
 import com.google.common.base.Throwables;
 import com.google.common.cache.LoadingCache;
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Iterables;
 import com.google.common.collect.Multimap;
 import com.google.common.primitives.Ints;
 import com.google.common.util.concurrent.Atomics;
@@ -92,7 +95,7 @@ public class ApplyNovaTemplateOptionsCreateNodesWithGroupEncodedIntoNameThenAddT
             Map<NodeMetadata, Exception> badNodes, Multimap<NodeMetadata, CustomizationResponse> customizationResponses) {
 
       NovaTemplateOptions templateOptions = NovaTemplateOptions.class.cast(template.getOptions());
-      String region = template.getLocation().getId();
+      final String region = template.getLocation().getId();
 
       if (templateOptions.shouldAutoAssignFloatingIp()) {
          checkArgument(novaApi.getFloatingIPApi(region).isPresent(),
@@ -104,7 +107,7 @@ public class ApplyNovaTemplateOptionsCreateNodesWithGroupEncodedIntoNameThenAddT
                  "Key Pairs are required by options, but the extension is not available! options: %s", templateOptions);
       }
 
-      List<Integer> inboundPorts = Ints.asList(templateOptions.getInboundPorts());
+      final List<Integer> inboundPorts = Ints.asList(templateOptions.getInboundPorts());
       if (!templateOptions.getGroups().isEmpty() || !inboundPorts.isEmpty()) {
          checkArgument(novaApi.getSecurityGroupApi(region).isPresent(),
                  "Security groups are required by options, but the extension is not available! options: %s",
@@ -129,8 +132,16 @@ public class ApplyNovaTemplateOptionsCreateNodesWithGroupEncodedIntoNameThenAddT
       ImmutableList.Builder<String> tagsBuilder = ImmutableList.builder();
 
       if (!templateOptions.getGroups().isEmpty()) {
+         Set<String> securityGroupNames = novaApi.getSecurityGroupApi(region).get().list()
+                 .transform(new Function<SecurityGroup, String>() {
+                    @Override
+                    public String apply(SecurityGroup input) {
+                       return input.getName();
+                    }
+                 })
+                 .toSet();
          for (String securityGroupName : templateOptions.getGroups()) {
-            checkNotNull(novaApi.getSecurityGroupApi(region).get().get(securityGroupName), "security group %s doesn't exist", securityGroupName);   
+            checkState(securityGroupNames.contains(securityGroupName), "Cannot find security group with name " + securityGroupName + ". \nSecurity groups available are: \n" + Iterables.toString(securityGroupNames)); // {
          }
       }
       else if (!inboundPorts.isEmpty()) {
