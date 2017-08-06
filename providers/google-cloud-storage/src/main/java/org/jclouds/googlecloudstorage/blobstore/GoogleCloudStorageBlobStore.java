@@ -215,13 +215,13 @@ public final class GoogleCloudStorageBlobStore extends BaseBlobStore {
 
    @Override
    public String putBlob(String container, Blob blob, PutOptions options) {
-      if (options.isMultipart() || !blob.getPayload().isRepeatable()) {
+      long length = checkNotNull(blob.getPayload().getContentMetadata().getContentLength());
+
+      if (length != 0 && (options.isMultipart() || !blob.getPayload().isRepeatable())) {
          // JCLOUDS-912 prevents using single-part uploads with InputStream payloads.
          // Work around this with multi-part upload which buffers parts in-memory.
          return putMultipartBlob(container, blob, options);
       } else {
-         checkNotNull(blob.getPayload().getContentMetadata().getContentLength());
-
          ObjectTemplate template = blobMetadataToObjectTemplate.apply(blob.getMetadata());
 
          HashCode md5 = blob.getMetadata().getContentMetadata().getContentMD5AsHashCode();
