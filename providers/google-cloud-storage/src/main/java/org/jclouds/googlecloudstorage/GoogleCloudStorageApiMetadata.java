@@ -26,6 +26,7 @@ import static org.jclouds.reflect.Reflection2.typeToken;
 
 import java.net.URI;
 import java.util.Properties;
+import java.util.concurrent.TimeUnit;
 
 import org.jclouds.Constants;
 import org.jclouds.blobstore.BlobStoreContext;
