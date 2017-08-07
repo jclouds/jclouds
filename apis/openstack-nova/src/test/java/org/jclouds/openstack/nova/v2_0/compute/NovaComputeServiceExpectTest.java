@@ -318,7 +318,8 @@ public class NovaComputeServiceExpectTest extends BaseNovaComputeServiceExpectTe
    public void testCreateNodeWhileUserSpecifiesKeyPairAndUserSpecifiedGroups() throws Exception {
       Builder<HttpRequest, HttpResponse> requestResponseMap = ImmutableMap.<HttpRequest, HttpResponse> builder()
             .putAll(defaultTemplateOpenStack);
-      requestResponseMap.put(list, notFound);
+      requestResponseMap.put(list, HttpResponse.builder().statusCode(200)
+              .payload(payloadFromResource("/securitygroup_list.json")).build());
 
       requestResponseMap.put(getKeyPair, keyPairDetails);
 
@@ -348,7 +349,7 @@ public class NovaComputeServiceExpectTest extends BaseNovaComputeServiceExpectTe
             .addHeader("X-Auth-Token", authToken)
             .payload(
                   payloadFromStringWithContentType(
-                        "{\"server\":{\"name\":\"test-0\",\"imageRef\":\"14\",\"flavorRef\":\"1\",\"key_name\":\"testkeypair\",\"security_groups\":[{\"name\":\"mygroup\"}]}}",
+                        "{\"server\":{\"name\":\"test-0\",\"imageRef\":\"14\",\"flavorRef\":\"1\",\"key_name\":\"testkeypair\",\"security_groups\":[{\"name\":\"name1\"}]}}",
                         "application/json")).build();
 
       HttpResponse createdServer = HttpResponse.builder().statusCode(202).message("HTTP/1.1 202 Accepted")
@@ -378,7 +379,7 @@ public class NovaComputeServiceExpectTest extends BaseNovaComputeServiceExpectTe
       });
 
       NodeMetadata node = Iterables.getOnlyElement(apiThatCreatesNode.createNodesInGroup("test", 1,
-            keyPairName("fooPair").securityGroups("mygroup").blockUntilRunning(false)));
+            keyPairName("fooPair").securityGroups("name1").blockUntilRunning(false)));
       // we don't have access to this private key
       assertTrue(!node.getCredentials().getOptionalPrivateKey().isPresent());
    }
