@@ -21,8 +21,6 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 import java.util.Date;
 
-import org.jclouds.javax.annotation.Nullable;
-
 import com.google.auto.value.AutoValue;
 import com.google.common.annotations.Beta;
 import org.jclouds.javax.annotation.Nullable;
