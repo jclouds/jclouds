@@ -1,0 +1,6 @@
+{
+  "error": {
+    "code": "ResourceNotFound",
+    "message": "The Resource 'Microsoft.Compute/virtualMachineScaleSets/jclouds-vmssname1' under resource group 'jcloud-eastus' was not found."
+  }
+}

@@ -45,7 +45,8 @@ public abstract class NetworkSecurityGroupProperties implements Provisionable {
    @Nullable
    public abstract String provisioningState();
 
-   @SerializedNames({"securityRules", "defaultSecurityRules", "networkInterfaces", "subnets", "resourceGuid", "provisioningState"})
+   @SerializedNames({"securityRules", "defaultSecurityRules", "networkInterfaces", "subnets", "resourceGuid",
+      "provisioningState"})
    public static NetworkSecurityGroupProperties create(final List<NetworkSecurityRule> securityRules,
                                           final List<NetworkSecurityRule> defaultSecurityRules,
                                           final List<NetworkInterfaceCard> networkInterfaces,

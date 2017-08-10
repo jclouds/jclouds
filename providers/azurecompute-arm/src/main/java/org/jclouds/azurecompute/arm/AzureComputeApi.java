@@ -20,27 +20,28 @@ import java.io.Closeable;
 
 import javax.ws.rs.PathParam;
 
-import org.jclouds.azurecompute.arm.features.AvailabilitySetApi;
-import org.jclouds.azurecompute.arm.features.DeploymentApi;
-import org.jclouds.azurecompute.arm.features.DiskApi;
-import org.jclouds.azurecompute.arm.features.ImageApi;
 import org.jclouds.azurecompute.arm.features.JobApi;
-import org.jclouds.azurecompute.arm.features.LoadBalancerApi;
 import org.jclouds.azurecompute.arm.features.LocationApi;
-import org.jclouds.azurecompute.arm.features.MetricDefinitionsApi;
-import org.jclouds.azurecompute.arm.features.MetricsApi;
-import org.jclouds.azurecompute.arm.features.NetworkInterfaceCardApi;
-import org.jclouds.azurecompute.arm.features.NetworkSecurityGroupApi;
-import org.jclouds.azurecompute.arm.features.NetworkSecurityRuleApi;
-import org.jclouds.azurecompute.arm.features.OSImageApi;
-import org.jclouds.azurecompute.arm.features.PublicIPAddressApi;
 import org.jclouds.azurecompute.arm.features.ResourceGroupApi;
-import org.jclouds.azurecompute.arm.features.ResourceProviderApi;
 import org.jclouds.azurecompute.arm.features.StorageAccountApi;
 import org.jclouds.azurecompute.arm.features.SubnetApi;
-import org.jclouds.azurecompute.arm.features.VMSizeApi;
-import org.jclouds.azurecompute.arm.features.VirtualMachineApi;
 import org.jclouds.azurecompute.arm.features.VirtualNetworkApi;
+import org.jclouds.azurecompute.arm.features.NetworkInterfaceCardApi;
+import org.jclouds.azurecompute.arm.features.PublicIPAddressApi;
+import org.jclouds.azurecompute.arm.features.VirtualMachineApi;
+import org.jclouds.azurecompute.arm.features.VirtualMachineScaleSetApi;
+import org.jclouds.azurecompute.arm.features.VMSizeApi;
+import org.jclouds.azurecompute.arm.features.OSImageApi;
+import org.jclouds.azurecompute.arm.features.DeploymentApi;
+import org.jclouds.azurecompute.arm.features.NetworkSecurityGroupApi;
+import org.jclouds.azurecompute.arm.features.NetworkSecurityRuleApi;
+import org.jclouds.azurecompute.arm.features.LoadBalancerApi;
+import org.jclouds.azurecompute.arm.features.AvailabilitySetApi;
+import org.jclouds.azurecompute.arm.features.ResourceProviderApi;
+import org.jclouds.azurecompute.arm.features.DiskApi;
+import org.jclouds.azurecompute.arm.features.ImageApi;
+import org.jclouds.azurecompute.arm.features.MetricsApi;
+import org.jclouds.azurecompute.arm.features.MetricDefinitionsApi;
 import org.jclouds.rest.annotations.Delegate;
 
 /**
@@ -123,6 +124,14 @@ public interface AzureComputeApi extends Closeable {
     */
    @Delegate
    VirtualMachineApi getVirtualMachineApi(@PathParam("resourceGroup") String resourceGroup);
+
+   /**
+    * The Virtual Machine Scale Set API includes operations for managing the virtual machines in your subscription.
+    *
+    * @see <a href="https://msdn.microsoft.com/en-us/library/azure/mt163630.aspx">docs</a>
+    */
+   @Delegate
+   VirtualMachineScaleSetApi getVirtualMachineScaleSetApi(@PathParam("resourceGroup") String resourceGroup);
 
    /**
     * This Azure Resource Manager API lists all available virtual machine sizes for a subscription in a given region

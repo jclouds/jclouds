@@ -36,7 +36,6 @@
             "id": "/subscriptions/SUBSCRIPTIONID/resourceGroups/myResourceGroup/providers/Microsoft.Compute/disks/osDisk",
             "storageAccountType": "Standard_LRS"
           },
-          "createOption":"Empty",
           "caching": "ReadWrite"
         }
       ]

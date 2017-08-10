@@ -75,6 +75,7 @@ public class BaseAzureComputeApiMockTest {
    
    protected Properties setupProperties() {
       Properties properties = new Properties();
+
       properties.put(CREDENTIAL_TYPE, BEARER_TOKEN_CREDENTIALS.toString());
       properties.put("oauth.endpoint", "https://login.microsoftonline.com/tenant-id/oauth2/token");
       return properties;

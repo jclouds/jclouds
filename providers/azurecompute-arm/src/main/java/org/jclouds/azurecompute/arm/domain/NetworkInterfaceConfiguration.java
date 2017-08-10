@@ -17,41 +17,28 @@
 package org.jclouds.azurecompute.arm.domain;
 
 import com.google.auto.value.AutoValue;
-import com.google.common.collect.ImmutableMap;
 import org.jclouds.javax.annotation.Nullable;
 import org.jclouds.json.SerializedNames;
 
-import java.util.Map;
-
 @AutoValue
-public abstract class NetworkInterfaceCard {
-
+public abstract class NetworkInterfaceConfiguration {
+   /**
+    * The name of the NetworkInterfaceConfiguration
+    */
    @Nullable
    public abstract String name();
 
+   /**
+    * The networkConfigurationProperties of the NetworkInterfaceConfiguration
+    */
    @Nullable
-   public abstract String id();
+   public abstract NetworkInterfaceConfigurationProperties networkInterfaceConfigurationProperties();
 
-   @Nullable
-   public abstract String etag();
+   @SerializedNames({"name", "properties"})
+   public static NetworkInterfaceConfiguration create(
+      final String name, NetworkInterfaceConfigurationProperties networkInterfaceConfigurationProperties) {
 
-   @Nullable
-   public abstract String location();
-
-   @Nullable
-   public abstract NetworkInterfaceCardProperties properties();
-
-   @Nullable
-   public abstract Map<String, String> tags();
-
-   @SerializedNames({"name", "id", "etag", "location", "properties", "tags"})
-   public static NetworkInterfaceCard create(final String name,
-                                             final String id,
-                                             final String etag,
-                                             final String location,
-                                             final NetworkInterfaceCardProperties properties,
-                                             final Map<String, String> tags) {
-      return new AutoValue_NetworkInterfaceCard(name, id, etag, location, properties,
-         tags != null ? ImmutableMap.copyOf(tags) : null);
+      return new AutoValue_NetworkInterfaceConfiguration(name, networkInterfaceConfigurationProperties);
    }
+
 }

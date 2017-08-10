@@ -32,7 +32,8 @@ public abstract class NetworkInterfaceCardProperties implements Provisionable {
    @Nullable public abstract List<IpConfiguration> ipConfigurations();
    @Nullable public abstract IdReference networkSecurityGroup();
 
-   @SerializedNames({"provisioningState", "resourceGuid", "enableIPForwarding", "ipConfigurations", "networkSecurityGroup"})
+   @SerializedNames({"provisioningState", "resourceGuid", "enableIPForwarding", "ipConfigurations",
+      "networkSecurityGroup"})
    public static NetworkInterfaceCardProperties create(final String provisioningState, final String resourceGuid,
          final Boolean enableIPForwarding, final List<IpConfiguration> ipConfigurations,
          final IdReference networkSecurityGroup) {

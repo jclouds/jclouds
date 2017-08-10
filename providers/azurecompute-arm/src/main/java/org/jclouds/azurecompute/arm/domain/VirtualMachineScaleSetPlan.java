@@ -17,41 +17,35 @@
 package org.jclouds.azurecompute.arm.domain;
 
 import com.google.auto.value.AutoValue;
-import com.google.common.collect.ImmutableMap;
 import org.jclouds.javax.annotation.Nullable;
 import org.jclouds.json.SerializedNames;
 
-import java.util.Map;
-
+/**
+ * SKU
+ */
 @AutoValue
-public abstract class NetworkInterfaceCard {
-
+public abstract class VirtualMachineScaleSetPlan {
+   /**
+    * The name of the Virtual Machine Scale Set Plan
+    */
    @Nullable
    public abstract String name();
 
+   /**
+    * The publisher of the Virtual Machine Scale Set Plan
+    */
    @Nullable
-   public abstract String id();
+   public abstract String publisher();
 
+   /**
+    * The product of the Virtual Machine Scale Set Plan
+    */
    @Nullable
-   public abstract String etag();
+   public abstract String product();
 
-   @Nullable
-   public abstract String location();
+   @SerializedNames({"name", "publisher", "product"})
+   public static VirtualMachineScaleSetPlan create(final String name, final String publisher, final String product) {
 
-   @Nullable
-   public abstract NetworkInterfaceCardProperties properties();
-
-   @Nullable
-   public abstract Map<String, String> tags();
-
-   @SerializedNames({"name", "id", "etag", "location", "properties", "tags"})
-   public static NetworkInterfaceCard create(final String name,
-                                             final String id,
-                                             final String etag,
-                                             final String location,
-                                             final NetworkInterfaceCardProperties properties,
-                                             final Map<String, String> tags) {
-      return new AutoValue_NetworkInterfaceCard(name, id, etag, location, properties,
-         tags != null ? ImmutableMap.copyOf(tags) : null);
+      return new AutoValue_VirtualMachineScaleSetPlan(name, publisher, product);
    }
 }
