@@ -5,7 +5,9 @@
       "name": "Sunnyvale, CA",
       "code": "sjc1",
       "features": [],
-      "address": null
+      "address":  {
+        "href": "e1e9c52e-a0bc-4117-b996-0fc94843ea09"
+      }
     }
   ],
   "meta": {

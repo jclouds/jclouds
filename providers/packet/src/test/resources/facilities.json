@@ -8,7 +8,9 @@
         "baremetal",
         "storage"
       ],
-      "address": null
+      "address":  {
+        "href": "e1e9c52e-a0bc-4117-b996-0fc94843ea09"
+      }
     },
     {
       "id": "8e6470b3-b75e-47d1-bb93-45b225750975",
@@ -17,14 +19,18 @@
       "features": [
         "storage"
       ],
-      "address": null
+      "address":  {
+        "href": "e1e9c52e-a0bc-4117-b996-0fc94843ea09"
+      }
     },
     {
       "id": "2b70eb8f-fa18-47c0-aba7-222a842362fd",
       "name": "Sunnyvale, CA",
       "code": "sjc1",
       "features": [],
-      "address": null
+      "address":  {
+        "href": "e1e9c52e-a0bc-4117-b996-0fc94843ea09"
+      }
     }
   ]
 }

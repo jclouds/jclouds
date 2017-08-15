@@ -32,10 +32,10 @@ public abstract class Facility {
     public abstract String code();
     public abstract List<String> features();
     @Nullable
-    public abstract String address();
+    public abstract Href address();
 
     @SerializedNames({"id", "name", "code", "features", "address"})
-    public static Facility create(final String id, String name, String code, List<String> features, String address) {
+    public static Facility create(final String id, String name, String code, List<String> features, Href address) {
         return new AutoValue_Facility(id, name, code,
                 features == null ? ImmutableList.<String> of() : ImmutableList.copyOf(features),
                 address);
