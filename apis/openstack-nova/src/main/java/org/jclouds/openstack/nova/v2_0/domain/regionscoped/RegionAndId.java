@@ -19,8 +19,9 @@ package org.jclouds.openstack.nova.v2_0.domain.regionscoped;
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 
+import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
-import com.google.common.base.Objects.ToStringHelper;
+import com.google.common.base.MoreObjects.ToStringHelper;
 import com.google.common.base.Splitter;
 import com.google.common.collect.Iterables;
 
@@ -78,7 +79,7 @@ public class RegionAndId {
    }
 
    protected ToStringHelper string() {
-      return Objects.toStringHelper(this).add("regionId", regionId).add("id", id);
+      return MoreObjects.toStringHelper(this).add("regionId", regionId).add("id", id);
    }
 
    @Override

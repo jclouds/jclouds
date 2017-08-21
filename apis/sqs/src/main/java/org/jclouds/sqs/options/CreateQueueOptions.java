@@ -21,6 +21,7 @@ import java.util.Map.Entry;
 
 import org.jclouds.http.options.BaseHttpRequestOptions;
 
+import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Multimap;
@@ -138,7 +139,7 @@ public class CreateQueueOptions extends BaseHttpRequestOptions implements Clonea
    @Override
    public String toString() {
       ImmutableMap<String, String> attributes = this.attributes.build();
-      return Objects.toStringHelper(this).omitNullValues().add("attributes", !attributes.isEmpty() ? attributes : null)
+      return MoreObjects.toStringHelper(this).omitNullValues().add("attributes", !attributes.isEmpty() ? attributes : null)
             .toString();
    }
 }

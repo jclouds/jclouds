@@ -20,8 +20,9 @@ import org.jclouds.javax.annotation.Nullable;
 import org.jclouds.rackspace.cloudloadbalancers.v1.domain.internal.BaseNode.Condition;
 import org.jclouds.rackspace.cloudloadbalancers.v1.domain.internal.BaseNode.Type;
 
+import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
-import com.google.common.base.Objects.ToStringHelper;
+import com.google.common.base.MoreObjects.ToStringHelper;
 
 /**
  * Used to update Nodes.
@@ -50,7 +51,7 @@ public class UpdateNode {
    }
 
    protected ToStringHelper string() {
-      return Objects.toStringHelper(this).omitNullValues()
+      return MoreObjects.toStringHelper(this).omitNullValues()
             .add("condition", condition).add("type", type).add("weight", weight);
    }
    

@@ -21,6 +21,7 @@ import static com.google.common.base.Objects.equal;
 import java.util.List;
 import java.util.Map;
 
+import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
@@ -169,7 +170,7 @@ public class DockerTemplateOptions extends TemplateOptions implements Cloneable 
 
    @Override
    public String toString() {
-      return Objects.toStringHelper(this)
+      return MoreObjects.toStringHelper(this)
               .add("volumes", volumes)
               .add("hostname", hostname)
               .add("dns", dns)

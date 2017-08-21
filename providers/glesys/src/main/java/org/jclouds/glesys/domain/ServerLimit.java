@@ -18,8 +18,9 @@ package org.jclouds.glesys.domain;
 
 import java.beans.ConstructorProperties;
 
+import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
-import com.google.common.base.Objects.ToStringHelper;
+import com.google.common.base.MoreObjects.ToStringHelper;
 
 /**
  * Detailed information about an OpenVZ server's limits
@@ -160,7 +161,7 @@ public class ServerLimit {
    }
 
    protected ToStringHelper string() {
-      return Objects.toStringHelper("").add("held", held).add("maxHeld", maxHeld).add("barrier", barrier)
+      return MoreObjects.toStringHelper("").add("held", held).add("maxHeld", maxHeld).add("barrier", barrier)
             .add("limit", limit).add("failCount", failCount);
    }
 

@@ -25,8 +25,9 @@ import java.util.Set;
 import org.jclouds.javax.annotation.Nullable;
 
 import com.google.common.base.CaseFormat;
+import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
-import com.google.common.base.Objects.ToStringHelper;
+import com.google.common.base.MoreObjects.ToStringHelper;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableSet;
@@ -1050,7 +1051,7 @@ public class VirtualMachine {
    }
 
    protected ToStringHelper string() {
-      return Objects.toStringHelper(this)
+      return MoreObjects.toStringHelper(this)
             .add("id", id).add("account", account).add("cpuCount", cpuCount).add("cpuSpeed", cpuSpeed).add("cpuUsed", cpuUsed)
             .add("displayName", displayName).add("created", created).add("domain", domain).add("domainId", domainId)
             .add("usesVirtualNetwork", usesVirtualNetwork).add("group", group).add("groupId", groupId).add("guestOSId", guestOSId)

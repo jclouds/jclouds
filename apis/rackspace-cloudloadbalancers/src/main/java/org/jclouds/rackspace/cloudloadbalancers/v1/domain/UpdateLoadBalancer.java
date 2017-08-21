@@ -19,8 +19,9 @@ package org.jclouds.rackspace.cloudloadbalancers.v1.domain;
 import org.jclouds.javax.annotation.Nullable;
 import org.jclouds.rackspace.cloudloadbalancers.v1.domain.internal.BaseLoadBalancer.Algorithm;
 
+import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
-import com.google.common.base.Objects.ToStringHelper;
+import com.google.common.base.MoreObjects.ToStringHelper;
 
 /**
  * Used to update Load Balancers.
@@ -68,7 +69,7 @@ public class UpdateLoadBalancer {
    }
 
    protected ToStringHelper string() {
-      return Objects.toStringHelper(this).omitNullValues().add("name", name).add("algorithm", algorithm)
+      return MoreObjects.toStringHelper(this).omitNullValues().add("name", name).add("algorithm", algorithm)
             .add("port", port).add("protocol", protocol).add("timeout", timeout).add("halfClosed", halfClosed);
    }
 

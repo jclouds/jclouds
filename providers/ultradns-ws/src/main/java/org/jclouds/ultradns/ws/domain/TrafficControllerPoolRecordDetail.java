@@ -19,6 +19,7 @@ package org.jclouds.ultradns.ws.domain;
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 
+import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
 
 public final class TrafficControllerPoolRecordDetail {
@@ -145,7 +146,7 @@ public final class TrafficControllerPoolRecordDetail {
 
    @Override
    public String toString() {
-      return Objects.toStringHelper(this).add("id", id).add("poolId", poolId).add("record", record)
+      return MoreObjects.toStringHelper(this).add("id", id).add("poolId", poolId).add("record", record)
             .add("weight", weight).add("priority", priority).add("forceAnswer", forceAnswer)
             .add("probingEnabled", probingEnabled).add("status", status).add("serving", serving)
             .add("description", description).toString();

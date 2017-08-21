@@ -24,6 +24,7 @@ import javax.inject.Named;
 
 import org.jclouds.domain.Credentials;
 
+import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
 
 /**
@@ -144,6 +145,6 @@ public final class SessionCredentials extends Credentials {
 
    @Override
    public String toString() {
-      return Objects.toStringHelper(this).add("userName", identity).add("customerName", customerName).toString();
+      return MoreObjects.toStringHelper(this).add("userName", identity).add("customerName", customerName).toString();
    }
 }

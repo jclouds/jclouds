@@ -23,8 +23,9 @@ import java.util.Date;
 
 import org.jclouds.javax.annotation.Nullable;
 
+import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
-import com.google.common.base.Objects.ToStringHelper;
+import com.google.common.base.MoreObjects.ToStringHelper;
 
 /**
  * Class User
@@ -397,7 +398,7 @@ public class User {
    }
 
    protected ToStringHelper string() {
-      return Objects.toStringHelper(this)
+      return MoreObjects.toStringHelper(this)
             .add("id", id).add("name", name).add("firstName", firstName).add("lastName", lastName).add("email", email)
             .add("created", created).add("state", state).add("account", account).add("accountType", accountType).add("domain", domain)
             .add("domainId", domainId).add("timeZone", timeZone).add("apiKey", apiKey).add("secretKey", secretKey);

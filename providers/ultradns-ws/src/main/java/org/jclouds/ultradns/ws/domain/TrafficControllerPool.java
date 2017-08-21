@@ -18,6 +18,7 @@ package org.jclouds.ultradns.ws.domain;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
+import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
 
 /**
@@ -143,7 +144,7 @@ public final class TrafficControllerPool {
 
    @Override
    public String toString() {
-      return Objects.toStringHelper(this).omitNullValues().add("zoneId", zoneId).add("id", id).add("name", name)
+      return MoreObjects.toStringHelper(this).omitNullValues().add("zoneId", zoneId).add("id", id).add("name", name)
             .add("dname", dname).add("status", statusCode).add("failOverEnabled", failOverEnabled)
             .add("probingEnabled", probingEnabled).toString();
    }

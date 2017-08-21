@@ -31,6 +31,7 @@ import org.jclouds.scriptbuilder.statements.ssh.InstallRSAPrivateKey;
 
 import com.google.common.base.Function;
 import com.google.common.base.Joiner;
+import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
 import com.google.common.base.Strings;
 import com.google.common.base.Throwables;
@@ -256,6 +257,6 @@ public class UserAdd implements Statement {
 
    @Override
    public String toString() {
-      return Objects.toStringHelper("").add("login", login).toString();
+      return MoreObjects.toStringHelper("").add("login", login).toString();
    }
 }

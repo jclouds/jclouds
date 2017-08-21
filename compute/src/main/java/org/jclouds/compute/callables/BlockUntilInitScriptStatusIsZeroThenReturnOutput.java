@@ -35,6 +35,7 @@ import org.jclouds.compute.reference.ComputeServiceConstants;
 import org.jclouds.logging.Logger;
 
 import com.google.common.annotations.VisibleForTesting;
+import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
 import com.google.common.base.Predicate;
 import com.google.common.base.Predicates;
@@ -166,7 +167,7 @@ public class BlockUntilInitScriptStatusIsZeroThenReturnOutput extends AbstractFu
 
    @Override
    public String toString() {
-      return Objects.toStringHelper(this).add("commandRunner", commandRunner).toString();
+      return MoreObjects.toStringHelper(this).add("commandRunner", commandRunner).toString();
    }
 
    @Override

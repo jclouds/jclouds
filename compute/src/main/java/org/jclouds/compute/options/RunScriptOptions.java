@@ -23,9 +23,10 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import org.jclouds.domain.LoginCredentials;
 import org.jclouds.javax.annotation.Nullable;
 
+import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
 import com.google.common.base.Optional;
-import com.google.common.base.Objects.ToStringHelper;
+import com.google.common.base.MoreObjects.ToStringHelper;
 
 /**
  * Enables additional options for running a script.
@@ -482,7 +483,7 @@ public class RunScriptOptions {
    }
 
    protected ToStringHelper string() {
-      ToStringHelper toString = Objects.toStringHelper("").omitNullValues();
+      ToStringHelper toString = MoreObjects.toStringHelper("").omitNullValues();
       toString.add("loginUser", loginUser);
       if (loginPassword != null && loginPassword.isPresent())
          toString.add("loginPasswordPresent", true);

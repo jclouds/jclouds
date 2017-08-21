@@ -21,6 +21,7 @@ import java.beans.ConstructorProperties;
 
 import org.jclouds.javax.annotation.Nullable;
 
+import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
 
 /**
@@ -226,7 +227,7 @@ public class VirtualGuestBlockDevice {
 
    @Override
    public String toString() {
-      return Objects.toStringHelper(this)
+      return MoreObjects.toStringHelper(this)
               .add("id", id)
               .add("uuid", uuid)
               .add("statusId", statusId)

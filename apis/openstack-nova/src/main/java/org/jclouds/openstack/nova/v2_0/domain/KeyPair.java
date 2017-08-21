@@ -24,8 +24,9 @@ import javax.inject.Named;
 
 import org.jclouds.javax.annotation.Nullable;
 
+import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
-import com.google.common.base.Objects.ToStringHelper;
+import com.google.common.base.MoreObjects.ToStringHelper;
 
 /**
  * Class KeyPair
@@ -172,7 +173,7 @@ public class KeyPair {
    }
    
    protected ToStringHelper string() {
-      return Objects.toStringHelper("")
+      return MoreObjects.toStringHelper("")
             .omitNullValues()
             .add("public_key", publicKey)
             .add("private_key", privateKey)

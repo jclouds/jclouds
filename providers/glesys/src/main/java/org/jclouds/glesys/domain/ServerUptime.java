@@ -20,8 +20,9 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 import java.beans.ConstructorProperties;
 
+import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
-import com.google.common.base.Objects.ToStringHelper;
+import com.google.common.base.MoreObjects.ToStringHelper;
 
 /**
  * Represents an 'uptime' duration of server in a Glesys cloud
@@ -115,7 +116,7 @@ public class ServerUptime {
    }
 
    protected ToStringHelper string() {
-      return Objects.toStringHelper("").add("current", current).add("unit", unit);
+      return MoreObjects.toStringHelper("").add("current", current).add("unit", unit);
    }
 
    @Override

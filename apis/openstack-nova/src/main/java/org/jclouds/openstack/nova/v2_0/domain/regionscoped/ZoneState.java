@@ -16,6 +16,7 @@
  */
 package org.jclouds.openstack.nova.v2_0.domain.regionscoped;
 
+import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
 
 public class ZoneState {
@@ -39,8 +40,8 @@ public class ZoneState {
       return Objects.equal(this.available, that.available);
    }
 
-   protected Objects.ToStringHelper string() {
-      return Objects.toStringHelper(this)
+   protected MoreObjects.ToStringHelper string() {
+      return MoreObjects.toStringHelper(this)
             .add("available", available);
    }
 

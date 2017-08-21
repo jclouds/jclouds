@@ -31,8 +31,9 @@ import org.jclouds.net.util.IpPermissions;
 
 import com.google.common.annotations.Beta;
 import com.google.common.base.Function;
+import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
-import com.google.common.base.Objects.ToStringHelper;
+import com.google.common.base.MoreObjects.ToStringHelper;
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
@@ -328,7 +329,7 @@ public class IpPermission implements Comparable<IpPermission> {
    }
 
    protected ToStringHelper string() {
-      return Objects.toStringHelper("").add("ipProtocol", ipProtocol).add("fromPort", fromPort)
+      return MoreObjects.toStringHelper("").add("ipProtocol", ipProtocol).add("fromPort", fromPort)
          .add("toPort", toPort).add("tenantIdGroupNamePairs", tenantIdGroupNamePairs).add("groupIds", groupIds)
          .add("cidrBlocks", cidrBlocks).add("exclusionCidrBlocks", exclusionCidrBlocks);
    }

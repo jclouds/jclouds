@@ -24,8 +24,9 @@ import javax.inject.Named;
 
 import org.jclouds.javax.annotation.Nullable;
 
+import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
-import com.google.common.base.Objects.ToStringHelper;
+import com.google.common.base.MoreObjects.ToStringHelper;
 
 /**
  * An OpenStack Cinder Volume Attachment (describes how Volumes are attached to Servers).
@@ -164,7 +165,7 @@ public class VolumeAttachment {
    }
    
    protected ToStringHelper string() {
-      return Objects.toStringHelper(this)
+      return MoreObjects.toStringHelper(this)
             .add("id", id).add("volumeId", volumeId).add("serverId", serverId).add("device", device);
    }
    

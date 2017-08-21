@@ -25,8 +25,9 @@ import com.google.common.collect.ImmutableSet;
 import org.jclouds.javax.annotation.Nullable;
 
 import com.google.common.base.CaseFormat;
+import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
-import com.google.common.base.Objects.ToStringHelper;
+import com.google.common.base.MoreObjects.ToStringHelper;
 
 /**
  * Representation of the API project response
@@ -248,7 +249,7 @@ public class Project implements Comparable<Project> {
    }
 
    protected ToStringHelper string() {
-      return Objects.toStringHelper(this).omitNullValues()
+      return MoreObjects.toStringHelper(this).omitNullValues()
             .add("id", id).add("account", account).add("displayText", displayText)
             .add("domain", domain).add("domainId", domainId).add("name", name).add("state", state)
             .add("tags", tags);

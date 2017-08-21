@@ -23,8 +23,9 @@ import java.util.Set;
 
 import org.jclouds.javax.annotation.Nullable;
 
+import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
-import com.google.common.base.Objects.ToStringHelper;
+import com.google.common.base.MoreObjects.ToStringHelper;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.primitives.Longs;
 
@@ -257,7 +258,7 @@ public class LoadBalancer implements Comparable<LoadBalancer> {
    }
    
    protected ToStringHelper string() {
-      return Objects.toStringHelper(this)
+      return MoreObjects.toStringHelper(this)
             .add("id", id).add("name", name).add("description", description).add("virtualIp", virtualIp).add("realIpList", realIpList).add("type", type).add("persistence", persistence).add("os", os).add("state", state).add("datacenter", datacenter);
    }
    

@@ -22,8 +22,9 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import org.jclouds.javax.annotation.Nullable;
 
 import com.google.common.annotations.Beta;
+import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
-import com.google.common.base.Objects.ToStringHelper;
+import com.google.common.base.MoreObjects.ToStringHelper;
 import com.google.common.base.Optional;
 
 /**
@@ -75,6 +76,6 @@ public final class InvocationSuccess {
    }
 
    protected ToStringHelper string() {
-      return Objects.toStringHelper("").omitNullValues().add("invocation", invocation).add("result", result.orNull());
+      return MoreObjects.toStringHelper("").omitNullValues().add("invocation", invocation).add("result", result.orNull());
    }
 }

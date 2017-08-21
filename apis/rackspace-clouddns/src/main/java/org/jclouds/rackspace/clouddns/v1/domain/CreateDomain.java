@@ -18,8 +18,9 @@ package org.jclouds.rackspace.clouddns.v1.domain;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
+import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
-import com.google.common.base.Objects.ToStringHelper;
+import com.google.common.base.MoreObjects.ToStringHelper;
 import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableMap;
 
@@ -106,7 +107,7 @@ public class CreateDomain {
    }
 
    protected ToStringHelper string() {
-      return Objects.toStringHelper(this).omitNullValues().add("name", name).add("email", emailAddress)
+      return MoreObjects.toStringHelper(this).omitNullValues().add("name", name).add("email", emailAddress)
             .add("ttl", ttl.orNull()).add("comment", comment.orNull()).add("subdomains", subdomains)
             .add("records", recordsList);
    }

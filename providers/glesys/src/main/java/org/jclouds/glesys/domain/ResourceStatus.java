@@ -20,8 +20,9 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 import java.beans.ConstructorProperties;
 
+import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
-import com.google.common.base.Objects.ToStringHelper;
+import com.google.common.base.MoreObjects.ToStringHelper;
 
 /**
  * Detailed information on usage
@@ -135,7 +136,7 @@ public class ResourceStatus {
    }
 
    protected ToStringHelper string() {
-      return Objects.toStringHelper("").add("usage", usage).add("max", max).add("unit", unit);
+      return MoreObjects.toStringHelper("").add("usage", usage).add("max", max).add("unit", unit);
    }
 
    @Override

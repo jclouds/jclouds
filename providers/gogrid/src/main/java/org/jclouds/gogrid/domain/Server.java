@@ -22,8 +22,9 @@ import java.beans.ConstructorProperties;
 
 import org.jclouds.javax.annotation.Nullable;
 
+import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
-import com.google.common.base.Objects.ToStringHelper;
+import com.google.common.base.MoreObjects.ToStringHelper;
 import com.google.common.primitives.Longs;
 
 /**
@@ -270,7 +271,7 @@ public class Server implements Comparable<Server> {
    }
    
    protected ToStringHelper string() {
-      return Objects.toStringHelper(this)
+      return MoreObjects.toStringHelper(this)
             .add("id", id).add("isSandbox", isSandbox).add("name", name).add("description", description).add("state", state).add("datacenter", datacenter).add("type", type).add("ram", ram).add("os", os).add("ip", ip).add("image", image);
    }
    

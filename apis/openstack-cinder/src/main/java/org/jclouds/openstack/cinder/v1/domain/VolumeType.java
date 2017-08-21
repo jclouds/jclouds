@@ -16,8 +16,9 @@
  */
 package org.jclouds.openstack.cinder.v1.domain;
 
+import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
-import com.google.common.base.Objects.ToStringHelper;
+import com.google.common.base.MoreObjects.ToStringHelper;
 import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableMap;
 import org.jclouds.javax.annotation.Nullable;
@@ -182,7 +183,7 @@ public class VolumeType {
    }
    
    protected ToStringHelper string() {
-      return Objects.toStringHelper(this)
+      return MoreObjects.toStringHelper(this)
             .add("id", id).add("name", name).add("created", created).add("updated", updated).add("extraSpecs", extraSpecs);
    }
    

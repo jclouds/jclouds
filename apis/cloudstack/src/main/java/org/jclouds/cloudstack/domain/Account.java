@@ -26,8 +26,9 @@ import org.jclouds.javax.annotation.Nullable;
 
 import com.google.common.base.CaseFormat;
 import com.google.common.base.Function;
+import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
-import com.google.common.base.Objects.ToStringHelper;
+import com.google.common.base.MoreObjects.ToStringHelper;
 import com.google.common.collect.ForwardingSet;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Maps;
@@ -776,7 +777,7 @@ public class Account extends ForwardingSet<User> {
    }
 
    protected ToStringHelper string() {
-      return Objects.toStringHelper(this)
+      return MoreObjects.toStringHelper(this)
             .add("id", id).add("type", type).add("networkDomain", networkDomain).add("domain", domain).add("domainId", domainId).add("IPsAvailable", IPsAvailable).add("IPLimit", IPLimit).add("IPs", IPs).add("cleanupRequired", cleanupRequired).add("name", name).add("receivedBytes", receivedBytes).add("sentBytes", sentBytes).add("snapshotsAvailable", snapshotsAvailable).add("snapshotLimit", snapshotLimit).add("snapshots", snapshots).add("state", state).add("templatesAvailable", templatesAvailable).add("templateLimit", templateLimit).add("templates", templates).add("VMsAvailable", VMsAvailable).add("VMLimit", VMLimit).add("VMsRunning", VMsRunning).add("VMsStopped", VMsStopped).add("VMs", VMs).add("volumesAvailable", volumesAvailable).add("volumeLimit", volumeLimit).add("volumes", volumes).add("users", users);
    }
 

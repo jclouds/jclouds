@@ -18,6 +18,7 @@ package org.jclouds.sts.options;
 
 import org.jclouds.http.options.BaseHttpRequestOptions;
 
+import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
 import com.google.common.collect.Multimap;
 
@@ -130,7 +131,7 @@ public class AssumeRoleOptions extends BaseHttpRequestOptions implements Cloneab
     */
    @Override
    public String toString() {
-      return Objects.toStringHelper(this).omitNullValues().add("externalId", externalId)
+      return MoreObjects.toStringHelper(this).omitNullValues().add("externalId", externalId)
             .add("durationSeconds", durationSeconds).add("policy", policy).toString();
    }
 }

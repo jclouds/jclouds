@@ -24,8 +24,9 @@ import javax.inject.Named;
 
 import org.jclouds.javax.annotation.Nullable;
 
+import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
-import com.google.common.base.Objects.ToStringHelper;
+import com.google.common.base.MoreObjects.ToStringHelper;
 
 /**
  * Class HostResourceUsage
@@ -168,7 +169,7 @@ public class HostResourceUsage {
    }
    
    protected ToStringHelper string() {
-      return Objects.toStringHelper(this)
+      return MoreObjects.toStringHelper(this)
             .add("host", host).add("project", project).add("memoryMb", memoryMb).add("cpu", cpu).add("diskGb", diskGb);
    }
    

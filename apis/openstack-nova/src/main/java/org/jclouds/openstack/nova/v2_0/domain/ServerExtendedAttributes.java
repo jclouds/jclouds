@@ -22,8 +22,9 @@ import javax.inject.Named;
 
 import org.jclouds.javax.annotation.Nullable;
 
+import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
-import com.google.common.base.Objects.ToStringHelper;
+import com.google.common.base.MoreObjects.ToStringHelper;
 
 /**
  * Additional attributes delivered by Extended Server Attributes extension (alias "OS-EXT-SRV-ATTR")
@@ -142,7 +143,7 @@ public class ServerExtendedAttributes {
    }
    
    protected ToStringHelper string() {
-      return Objects.toStringHelper(this)
+      return MoreObjects.toStringHelper(this)
             .add("instanceName", instanceName).add("hostName", hostName).add("hypervisorHostName", hypervisorHostName);
    }
    

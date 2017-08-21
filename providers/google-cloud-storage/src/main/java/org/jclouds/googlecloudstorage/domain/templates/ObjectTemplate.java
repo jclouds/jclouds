@@ -22,7 +22,7 @@ import java.util.Map;
 
 import org.jclouds.googlecloudstorage.domain.ObjectAccessControls;
 
-import com.google.common.base.Objects;
+import com.google.common.base.MoreObjects;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.net.MediaType;
@@ -161,7 +161,7 @@ public class ObjectTemplate {
 
    @Override
    public String toString() {
-      return Objects.toStringHelper(this)
+      return MoreObjects.toStringHelper(this)
          .add("name", name)
          .add("size", size)
          .add("cacheControl", cacheControl)

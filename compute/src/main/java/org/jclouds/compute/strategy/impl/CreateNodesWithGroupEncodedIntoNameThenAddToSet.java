@@ -16,7 +16,7 @@
  */
 package org.jclouds.compute.strategy.impl;
 
-import static com.google.common.base.Objects.toStringHelper;
+import static com.google.common.base.MoreObjects.toStringHelper;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.collect.Iterables.any;
 import static com.google.common.collect.Maps.newLinkedHashMap;
@@ -33,7 +33,7 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import javax.inject.Singleton;
 
-import com.google.common.base.Objects;
+import com.google.common.base.MoreObjects;
 import org.jclouds.Constants;
 import org.jclouds.compute.config.CustomizationResponse;
 import org.jclouds.compute.domain.ComputeMetadata;
@@ -76,8 +76,8 @@ public class CreateNodesWithGroupEncodedIntoNameThenAddToSet implements CreateNo
       public AtomicReference<NodeMetadata> call() throws Exception {
          NodeMetadata node = null;
          logger.debug(">> adding node location(%s) name(%s) image(%s) hardware(%s)", template.getLocation().getId(),
-               name, Objects.firstNonNull(template.getImage().getProviderId(), template.getImage().getId()),
-               Objects.firstNonNull(template.getHardware().getProviderId(), template.getHardware().getId()));
+               name, MoreObjects.firstNonNull(template.getImage().getProviderId(), template.getImage().getId()),
+               MoreObjects.firstNonNull(template.getHardware().getProviderId(), template.getHardware().getId()));
          node = addNodeWithGroupStrategy.createNodeWithGroupEncodedIntoName(group, name, template);
          logger.debug("<< %s node(%s)", formatStatus(node), node.getId());
          return new AtomicReference<NodeMetadata>(node);

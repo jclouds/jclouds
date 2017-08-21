@@ -16,7 +16,7 @@
  */
 package org.jclouds.googlecomputeengine.compute;
 
-import static com.google.common.base.Objects.firstNonNull;
+import static com.google.common.base.MoreObjects.firstNonNull;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.jclouds.compute.domain.OsFamily.COREOS;
 import static org.jclouds.compute.domain.OsFamily.DEBIAN;

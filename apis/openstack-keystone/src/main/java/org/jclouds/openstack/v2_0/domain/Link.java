@@ -23,8 +23,9 @@ import java.net.URI;
 
 import javax.inject.Named;
 
+import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
-import com.google.common.base.Objects.ToStringHelper;
+import com.google.common.base.MoreObjects.ToStringHelper;
 import com.google.common.base.Optional;
 
 /**
@@ -196,7 +197,7 @@ public class Link {
    }
 
    protected ToStringHelper string() {
-      return Objects.toStringHelper(this).omitNullValues().add("relation", relation).add("type", type.orNull())
+      return MoreObjects.toStringHelper(this).omitNullValues().add("relation", relation).add("type", type.orNull())
                .add("href", href);
    }
 

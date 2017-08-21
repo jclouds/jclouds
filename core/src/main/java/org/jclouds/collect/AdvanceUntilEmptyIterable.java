@@ -21,6 +21,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import java.util.Iterator;
 
 import com.google.common.annotations.Beta;
+import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
 import com.google.common.base.Supplier;
 import com.google.common.collect.AbstractIterator;
@@ -104,7 +105,7 @@ public class AdvanceUntilEmptyIterable<E> extends FluentIterable<FluentIterable<
        */
       @Override
       public String toString() {
-         return Objects.toStringHelper("").omitNullValues().add("current", current).add("unread", unread).toString();
+         return MoreObjects.toStringHelper("").omitNullValues().add("current", current).add("unread", unread).toString();
       }
    }
 

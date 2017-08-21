@@ -26,7 +26,7 @@ import java.util.concurrent.atomic.AtomicReference;
 
 import org.jclouds.rest.AuthorizationException;
 
-import com.google.common.base.Objects;
+import com.google.common.base.MoreObjects;
 import com.google.common.base.Optional;
 import com.google.common.base.Supplier;
 import com.google.common.cache.CacheBuilder;
@@ -87,7 +87,7 @@ public class MemoizedRetryOnTimeOutButNotOnAuthorizationExceptionSupplier<T> ext
 
       @Override
       public String toString() {
-         return Objects.toStringHelper(this).add("delegate", delegate).toString();
+         return MoreObjects.toStringHelper(this).add("delegate", delegate).toString();
       }
    }
    
@@ -157,7 +157,7 @@ public class MemoizedRetryOnTimeOutButNotOnAuthorizationExceptionSupplier<T> ext
 
    @Override
    public String toString() {
-      return Objects.toStringHelper(this).add("delegate", delegate).add("duration", duration).add("unit", unit)
+      return MoreObjects.toStringHelper(this).add("delegate", delegate).add("duration", duration).add("unit", unit)
             .toString();
    }
 

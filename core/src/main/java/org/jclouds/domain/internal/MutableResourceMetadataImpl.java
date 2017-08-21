@@ -23,8 +23,9 @@ import org.jclouds.domain.Location;
 import org.jclouds.domain.MutableResourceMetadata;
 import org.jclouds.domain.ResourceMetadata;
 
+import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
-import com.google.common.base.Objects.ToStringHelper;
+import com.google.common.base.MoreObjects.ToStringHelper;
 import com.google.common.collect.Maps;
 
 /**
@@ -164,7 +165,7 @@ public class MutableResourceMetadataImpl<T extends Enum<T>> implements MutableRe
    }
 
    protected ToStringHelper string() {
-      return Objects.toStringHelper("").omitNullValues()
+      return MoreObjects.toStringHelper("").omitNullValues()
             .add("id", id)
             .add("location", location)
             .add("name", name)

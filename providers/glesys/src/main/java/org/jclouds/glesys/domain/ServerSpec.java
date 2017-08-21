@@ -20,8 +20,9 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 import java.beans.ConstructorProperties;
 
+import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
-import com.google.common.base.Objects.ToStringHelper;
+import com.google.common.base.MoreObjects.ToStringHelper;
 
 /**
  * Class ServerSpec
@@ -215,7 +216,7 @@ public class ServerSpec {
    }
 
    protected ToStringHelper string() {
-      return Objects.toStringHelper("").add("platform", platform).add("datacenter", datacenter)
+      return MoreObjects.toStringHelper("").add("platform", platform).add("datacenter", datacenter)
             .add("memorySizeMB", memorySizeMB).add("diskSizeGB", diskSizeGB).add("templateName", templateName)
             .add("cpuCores", cpuCores).add("transferGB", transferGB);
    }

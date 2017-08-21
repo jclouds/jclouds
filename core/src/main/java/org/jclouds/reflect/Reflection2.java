@@ -33,6 +33,7 @@ import java.util.concurrent.ExecutionException;
 
 import com.google.common.annotations.Beta;
 import com.google.common.base.Function;
+import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
 import com.google.common.base.Optional;
 import com.google.common.base.Predicate;
@@ -248,7 +249,7 @@ public class Reflection2 {
       }
 
       public String toString() {
-         return Objects.toStringHelper("").add("type", type).add("parameterTypes", parameterTypes).toString();
+         return MoreObjects.toStringHelper("").add("type", type).add("parameterTypes", parameterTypes).toString();
       }
    }
 
@@ -297,7 +298,7 @@ public class Reflection2 {
       }
 
       public String toString() {
-         return Objects.toStringHelper("").add("type", type).add("name", name).add("parameterTypes", parameterTypes)
+         return MoreObjects.toStringHelper("").add("type", type).add("name", name).add("parameterTypes", parameterTypes)
                .toString();
       }
    }

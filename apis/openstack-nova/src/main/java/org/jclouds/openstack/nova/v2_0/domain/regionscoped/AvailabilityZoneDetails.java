@@ -16,6 +16,7 @@
  */
 package org.jclouds.openstack.nova.v2_0.domain.regionscoped;
 
+import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
 import com.google.common.collect.ImmutableMap;
 import com.google.gson.annotations.SerializedName;
@@ -51,8 +52,8 @@ public class AvailabilityZoneDetails {
 
       public Date getUpdated() { return updated; }
 
-      protected Objects.ToStringHelper string() {
-         return Objects.toStringHelper(this)
+      protected MoreObjects.ToStringHelper string() {
+         return MoreObjects.toStringHelper(this)
                .add("available", available)
                .add("active", active)
                .add("updated", updated);
@@ -106,8 +107,8 @@ public class AvailabilityZoneDetails {
             that.hosts);
    }
 
-   protected Objects.ToStringHelper string() {
-      return Objects.toStringHelper(this)
+   protected MoreObjects.ToStringHelper string() {
+      return MoreObjects.toStringHelper(this)
             .add("name", name)
             .add("state", state)
             .add("Hosts", hosts);

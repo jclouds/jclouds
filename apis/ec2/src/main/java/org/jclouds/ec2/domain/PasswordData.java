@@ -20,6 +20,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 import java.util.Date;
 
+import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
 
 /**
@@ -144,7 +145,7 @@ public class PasswordData {
     */
    @Override
    public String toString() {
-      return Objects.toStringHelper(this).omitNullValues().add("instanceId", instanceId).add("timestamp", timestamp)
+      return MoreObjects.toStringHelper(this).omitNullValues().add("instanceId", instanceId).add("timestamp", timestamp)
                .add("passwordData", passwordData).toString();
    }
 

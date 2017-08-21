@@ -16,7 +16,7 @@
  */
 package org.jclouds.chef.suppliers;
 
-import static com.google.common.base.Objects.firstNonNull;
+import static com.google.common.base.MoreObjects.firstNonNull;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 import java.util.regex.Matcher;

@@ -24,8 +24,9 @@ import java.util.Set;
 
 import org.jclouds.javax.annotation.Nullable;
 
+import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
-import com.google.common.base.Objects.ToStringHelper;
+import com.google.common.base.MoreObjects.ToStringHelper;
 import com.google.common.collect.ImmutableSet;
 
 /**
@@ -276,7 +277,7 @@ public class DiskOffering implements Comparable<DiskOffering> {
    }
 
    protected ToStringHelper string() {
-      return Objects.toStringHelper(this)
+      return MoreObjects.toStringHelper(this)
             .add("id", id).add("name", name).add("displayText", displayText).add("created", created).add("domain", domain)
             .add("domainId", domainId).add("diskSize", diskSize).add("customized", customized).add("tags", tags);
    }

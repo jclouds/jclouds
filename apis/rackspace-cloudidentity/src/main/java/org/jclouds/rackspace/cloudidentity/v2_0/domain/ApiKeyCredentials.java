@@ -17,7 +17,7 @@
 package org.jclouds.rackspace.cloudidentity.v2_0.domain;
 
 import static com.google.common.base.Objects.equal;
-import static com.google.common.base.Objects.toStringHelper;
+import static com.google.common.base.MoreObjects.toStringHelper;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 import org.jclouds.openstack.keystone.v2_0.config.CredentialType;

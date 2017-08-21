@@ -21,6 +21,7 @@ import java.beans.ConstructorProperties;
 
 import org.jclouds.javax.annotation.Nullable;
 
+import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
 import com.google.inject.name.Named;
 
@@ -101,7 +102,7 @@ public class ContainerVirtualGuestConfigurationOption {
 
    @Override
    public String toString() {
-      return Objects.toStringHelper(this)
+      return MoreObjects.toStringHelper(this)
               .add("productItemPrice", productItemPrice)
               .add("template", template)
               .toString();

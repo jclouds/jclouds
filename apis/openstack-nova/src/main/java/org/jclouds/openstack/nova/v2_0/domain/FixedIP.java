@@ -16,8 +16,9 @@
  */
 package org.jclouds.openstack.nova.v2_0.domain;
 
+import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
-import com.google.common.base.Objects.ToStringHelper;
+import com.google.common.base.MoreObjects.ToStringHelper;
 import org.jclouds.javax.annotation.Nullable;
 
 import javax.inject.Named;
@@ -71,7 +72,7 @@ public class FixedIP {
    }
 
    protected ToStringHelper string() {
-      return Objects.toStringHelper(this).add("ipAddress", ipAddress).add("subnetId", subnetId);
+      return MoreObjects.toStringHelper(this).add("ipAddress", ipAddress).add("subnetId", subnetId);
    }
 
    @Override

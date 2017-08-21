@@ -16,7 +16,7 @@
  */
 package org.jclouds.rackspace.cloudfiles.v1.domain;
 
-import static com.google.common.base.Objects.toStringHelper;
+import static com.google.common.base.MoreObjects.toStringHelper;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 import java.beans.ConstructorProperties;
@@ -25,7 +25,7 @@ import java.net.URI;
 import javax.inject.Named;
 
 import com.google.common.base.Objects;
-import com.google.common.base.Objects.ToStringHelper;
+import com.google.common.base.MoreObjects.ToStringHelper;
 
 /**
  * Represents a CDN Container in Rackspace Cloud Files.

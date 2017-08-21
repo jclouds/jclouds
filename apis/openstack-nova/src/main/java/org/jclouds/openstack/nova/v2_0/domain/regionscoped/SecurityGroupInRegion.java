@@ -24,7 +24,7 @@ import java.util.Map;
 import org.jclouds.openstack.nova.v2_0.domain.SecurityGroup;
 import org.jclouds.openstack.nova.v2_0.domain.TenantIdAndName;
 
-import com.google.common.base.Objects.ToStringHelper;
+import com.google.common.base.MoreObjects.ToStringHelper;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 

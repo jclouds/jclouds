@@ -22,8 +22,9 @@ import java.beans.ConstructorProperties;
 
 import org.jclouds.javax.annotation.Nullable;
 
+import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
-import com.google.common.base.Objects.ToStringHelper;
+import com.google.common.base.MoreObjects.ToStringHelper;
 import com.google.common.base.Optional;
 
 /**
@@ -139,7 +140,7 @@ public class HealthMonitor {
    }
 
    protected ToStringHelper string() {
-      return Objects.toStringHelper(this).omitNullValues().add("type", type).add("delay", delay)
+      return MoreObjects.toStringHelper(this).omitNullValues().add("type", type).add("delay", delay)
             .add("timeout", timeout).add("attemptsBeforeDeactivation", attemptsBeforeDeactivation)
             .add("bodyRegex", bodyRegex.orNull()).add("statusRegex", statusRegex.orNull()).add("path", path.orNull())
             .add("hostHeader", hostHeader.orNull());

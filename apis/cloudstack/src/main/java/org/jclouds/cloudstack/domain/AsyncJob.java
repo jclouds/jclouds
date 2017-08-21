@@ -23,8 +23,9 @@ import java.util.Date;
 
 import org.jclouds.javax.annotation.Nullable;
 
+import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
-import com.google.common.base.Objects.ToStringHelper;
+import com.google.common.base.MoreObjects.ToStringHelper;
 
 /**
  * Class AsyncJob
@@ -441,7 +442,7 @@ public class AsyncJob<S> {
    }
 
    protected ToStringHelper string() {
-      return Objects.toStringHelper(this)
+      return MoreObjects.toStringHelper(this)
             .add("accountId", accountId).add("cmd", cmd).add("created", created).add("id", id).add("instanceId", instanceId)
             .add("instanceType", instanceType).add("progress", progress).add("result", result).add("resultCode", resultCode)
             .add("resultType", resultType).add("status", status).add("userId", userId).add("error", error);

@@ -18,6 +18,7 @@ package org.jclouds.ec2.compute.domain;
 
 import org.jclouds.ec2.domain.PasswordData;
 
+import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
 
 /**
@@ -69,6 +70,6 @@ public class PasswordDataAndPrivateKey {
     */
    @Override
    public String toString() {
-      return Objects.toStringHelper(this).omitNullValues().add("passwordData", passwordData).toString();
+      return MoreObjects.toStringHelper(this).omitNullValues().add("passwordData", passwordData).toString();
    }
 }

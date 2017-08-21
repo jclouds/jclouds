@@ -21,6 +21,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import java.beans.ConstructorProperties;
 import java.util.Map;
 
+import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
 import com.google.common.collect.Iterables;
 
@@ -67,7 +68,7 @@ public final class HistoricalUsage {
 
    @Override
    public String toString() {
-      return Objects.toStringHelper(this).omitNullValues().add("accountId", accountId)
+      return MoreObjects.toStringHelper(this).omitNullValues().add("accountId", accountId)
             .add("accountUsage", getAccountUsage()).add("loadBalancerInfo", loadBalancerUsages).toString();
    }
 }

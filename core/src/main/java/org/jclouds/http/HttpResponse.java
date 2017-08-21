@@ -19,8 +19,9 @@ package org.jclouds.http;
 import org.jclouds.io.Payload;
 import org.jclouds.javax.annotation.Nullable;
 
+import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
-import com.google.common.base.Objects.ToStringHelper;
+import com.google.common.base.MoreObjects.ToStringHelper;
 import com.google.common.collect.Multimap;
 
 /**
@@ -114,7 +115,7 @@ public class HttpResponse extends HttpMessage {
    
    @Override
    protected ToStringHelper string() {
-      return Objects.toStringHelper("").omitNullValues()
+      return MoreObjects.toStringHelper("").omitNullValues()
                     .add("statusCode", statusCode)
                     .add("message", message)
                     .add("headers", headers)

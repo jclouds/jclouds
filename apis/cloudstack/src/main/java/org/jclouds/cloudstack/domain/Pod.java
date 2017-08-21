@@ -22,8 +22,9 @@ import java.beans.ConstructorProperties;
 
 import org.jclouds.javax.annotation.Nullable;
 
+import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
-import com.google.common.base.Objects.ToStringHelper;
+import com.google.common.base.MoreObjects.ToStringHelper;
 
 /**
  * Represents a Pod in CloudStack.
@@ -266,7 +267,7 @@ public class Pod implements Comparable<Pod> {
    }
 
    protected ToStringHelper string() {
-      return Objects.toStringHelper(this)
+      return MoreObjects.toStringHelper(this)
             .add("id", id).add("name", name).add("zoneId", zoneId).add("zoneName", zoneName).add("gateway", gateway).add("netmask", netmask).add("startIp", startIp).add("endIp", endIp).add("allocationState", allocationState);
    }
 

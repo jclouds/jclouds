@@ -16,6 +16,7 @@
  */
 package org.jclouds.softlayer.domain;
 
+import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
 import org.jclouds.javax.annotation.Nullable;
 
@@ -71,7 +72,7 @@ public class SoftwareLicense {
 
    @Override
    public String toString() {
-      return Objects.toStringHelper(this)
+      return MoreObjects.toStringHelper(this)
               .add("id", id)
               .add("softwareDescription", softwareDescription)
               .add("softwareDescriptionId", softwareDescriptionId)

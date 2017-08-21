@@ -17,7 +17,7 @@
 package org.jclouds.internal;
 
 import static com.google.common.base.Objects.equal;
-import static com.google.common.base.Objects.toStringHelper;
+import static com.google.common.base.MoreObjects.toStringHelper;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 import static org.jclouds.lifecycle.Closer.State.AVAILABLE;

@@ -20,6 +20,7 @@ import java.beans.ConstructorProperties;
 
 import org.jclouds.javax.annotation.Nullable;
 
+import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
 
 public final class EncryptedPasswordAndPrivateKey {
@@ -106,7 +107,7 @@ public final class EncryptedPasswordAndPrivateKey {
 
    @Override
    public String toString() {
-      return Objects.toStringHelper(this).omitNullValues()
+      return MoreObjects.toStringHelper(this).omitNullValues()
             .add("encryptedPassword", encryptedPassword).add("privateKey", privateKey).toString();
    }
 

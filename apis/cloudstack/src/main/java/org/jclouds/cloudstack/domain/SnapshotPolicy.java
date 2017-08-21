@@ -22,8 +22,9 @@ import java.beans.ConstructorProperties;
 
 import org.jclouds.javax.annotation.Nullable;
 
+import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
-import com.google.common.base.Objects.ToStringHelper;
+import com.google.common.base.MoreObjects.ToStringHelper;
 
 /**
  * Class SnapshotPolicy
@@ -203,7 +204,7 @@ public class SnapshotPolicy {
    }
 
    protected ToStringHelper string() {
-      return Objects.toStringHelper(this)
+      return MoreObjects.toStringHelper(this)
             .add("id", id).add("interval", interval).add("numberToRetain", numberToRetain).add("schedule", schedule).add("timezone", timezone)
             .add("volumeId", volumeId);
    }

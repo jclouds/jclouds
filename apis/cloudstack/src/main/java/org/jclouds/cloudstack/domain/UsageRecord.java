@@ -25,8 +25,9 @@ import java.util.Map;
 import org.jclouds.javax.annotation.Nullable;
 
 import com.google.common.base.Function;
+import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
-import com.google.common.base.Objects.ToStringHelper;
+import com.google.common.base.MoreObjects.ToStringHelper;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Maps;
 
@@ -550,7 +551,7 @@ public class UsageRecord {
    }
 
    protected ToStringHelper string() {
-      return Objects.toStringHelper(this)
+      return MoreObjects.toStringHelper(this)
             .add("id", id).add("description", description).add("accountId", accountId).add("accountName", accountName)
             .add("domainId", domainId).add("startDate", startDate).add("endDate", endDate).add("assignDate", assignDate)
             .add("releaseDate", releaseDate).add("zoneId", zoneId).add("virtualMachineId", virtualMachineId)

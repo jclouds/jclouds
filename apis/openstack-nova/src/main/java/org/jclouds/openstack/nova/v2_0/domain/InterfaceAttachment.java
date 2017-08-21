@@ -17,13 +17,14 @@
 
 package org.jclouds.openstack.nova.v2_0.domain;
 
-import static com.google.common.base.Objects.toStringHelper;
+import static com.google.common.base.MoreObjects.toStringHelper;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 import java.beans.ConstructorProperties;
 
 import javax.inject.Named;
 
+import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
 import com.google.common.collect.ImmutableSet;
 
@@ -161,7 +162,7 @@ public class InterfaceAttachment {
             && Objects.equal(this.fixedIps, that.fixedIps);
    }
 
-   protected Objects.ToStringHelper string() {
+   protected MoreObjects.ToStringHelper string() {
       return toStringHelper(this).add("networkId", networkId).add("portId", portId).add("portState", portState)
             .add("macAddress", macAddress).add("fixedIps", fixedIps);
    }

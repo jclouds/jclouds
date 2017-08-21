@@ -23,8 +23,9 @@ import java.util.Set;
 
 import org.jclouds.javax.annotation.Nullable;
 
+import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
-import com.google.common.base.Objects.ToStringHelper;
+import com.google.common.base.MoreObjects.ToStringHelper;
 import com.google.common.collect.ForwardingSet;
 import com.google.common.collect.ImmutableSet;
 
@@ -142,7 +143,7 @@ public class Access extends ForwardingSet<Service> implements Comparable<Access>
    }
 
    protected ToStringHelper string() {
-      return Objects.toStringHelper(this).omitNullValues().add("token", token).add("user", user)
+      return MoreObjects.toStringHelper(this).omitNullValues().add("token", token).add("user", user)
             .add("serviceCatalog", serviceCatalog);
    }
 

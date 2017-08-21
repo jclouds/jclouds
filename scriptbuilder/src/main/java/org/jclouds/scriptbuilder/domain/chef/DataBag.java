@@ -20,6 +20,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 import java.util.Map;
 
+import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
 import com.google.common.collect.ForwardingMap;
 import com.google.common.collect.ImmutableMap;
@@ -104,7 +105,7 @@ public class DataBag extends ForwardingMap<String, String> {
 
    @Override
    public String toString() {
-      return Objects.toStringHelper(this).add("name", name).toString();
+      return MoreObjects.toStringHelper(this).add("name", name).toString();
    }
 
 }

@@ -22,8 +22,9 @@ import java.beans.ConstructorProperties;
 
 import org.jclouds.javax.annotation.Nullable;
 
+import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
-import com.google.common.base.Objects.ToStringHelper;
+import com.google.common.base.MoreObjects.ToStringHelper;
 
 /**
  * Representation of the API domain response
@@ -202,7 +203,7 @@ public class Domain implements Comparable<Domain> {
    }
 
    protected ToStringHelper string() {
-      return Objects.toStringHelper(this)
+      return MoreObjects.toStringHelper(this)
             .add("id", id).add("hasChild", hasChild).add("level", level).add("name", name).add("networkDomain", networkDomain).add("parentDomainId", parentDomainId).add("parentDomainName", parentDomainName);
    }
 

@@ -36,7 +36,7 @@ import org.jclouds.ssh.SshClient;
 
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Function;
-import com.google.common.base.Objects;
+import com.google.common.base.MoreObjects;
 import com.google.common.base.Throwables;
 import com.google.common.eventbus.EventBus;
 import com.google.inject.assistedinject.Assisted;
@@ -129,7 +129,7 @@ public class RunScriptOnNodeUsingSsh implements RunScriptOnNode {
 
    @Override
    public String toString() {
-      return Objects.toStringHelper(this).add("node", node).add("name", statement).add("runAsRoot", runAsRoot)
+      return MoreObjects.toStringHelper(this).add("node", node).add("name", statement).add("runAsRoot", runAsRoot)
             .toString();
    }
 

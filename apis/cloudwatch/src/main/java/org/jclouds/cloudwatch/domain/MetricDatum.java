@@ -22,8 +22,9 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import java.util.Date;
 import java.util.Set;
 
+import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
-import com.google.common.base.Objects.ToStringHelper;
+import com.google.common.base.MoreObjects.ToStringHelper;
 import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
@@ -246,7 +247,7 @@ public class MetricDatum {
    }
 
    protected ToStringHelper string() {
-      return Objects.toStringHelper("").omitNullValues().add("dimensions", dimensions).add("metricName", metricName)
+      return MoreObjects.toStringHelper("").omitNullValues().add("dimensions", dimensions).add("metricName", metricName)
                .add("statisticValues", statisticValues.orNull()).add("timestamp", timestamp.orNull()).add("unit", unit)
                .add("value", value.orNull());
    }
