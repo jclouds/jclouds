@@ -102,7 +102,7 @@ public class ElasticStackComputeServiceAdapterTest {
       replay(api);
 
       ElasticStackComputeServiceAdapter adapter = new ElasticStackComputeServiceAdapter(api, driveNotClaimed,
-            preInstalledImageSupplier, driveCache, "12345678", MoreExecutors.sameThreadExecutor());
+            preInstalledImageSupplier, driveCache, "12345678", MoreExecutors.newDirectExecutorService());
 
       try {
          adapter.createNodeWithGroupEncodedIntoName("mock-group", "mock-name", template);

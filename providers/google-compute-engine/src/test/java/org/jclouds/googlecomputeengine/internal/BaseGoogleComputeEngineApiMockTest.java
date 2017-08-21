@@ -18,7 +18,7 @@ package org.jclouds.googlecomputeengine.internal;
 
 import static com.google.common.base.Charsets.UTF_8;
 import static com.google.common.base.Throwables.propagate;
-import static com.google.common.util.concurrent.MoreExecutors.sameThreadExecutor;
+import static com.google.common.util.concurrent.MoreExecutors.newDirectExecutorService;
 import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 import static org.jclouds.compute.config.ComputeServiceProperties.TIMEOUT_NODE_TERMINATED;
 import static org.jclouds.googlecloud.config.GoogleCloudProperties.CREDENTIAL_TYPE;
@@ -83,7 +83,7 @@ public class BaseGoogleComputeEngineApiMockTest {
    }
 
    private final Set<Module> modules = ImmutableSet
-         .of(new ExecutorServiceModule(sameThreadExecutor()), GoogleComputeEngineTestModule.INSTANCE, new OkHttpCommandExecutorServiceModule());
+         .of(new ExecutorServiceModule(newDirectExecutorService()), GoogleComputeEngineTestModule.INSTANCE, new OkHttpCommandExecutorServiceModule());
 
    final AtomicInteger suffix = new AtomicInteger();
 

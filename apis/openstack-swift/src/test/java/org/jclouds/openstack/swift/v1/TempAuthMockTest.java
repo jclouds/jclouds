@@ -16,7 +16,7 @@
  */
 package org.jclouds.openstack.swift.v1;
 
-import static com.google.common.util.concurrent.MoreExecutors.sameThreadExecutor;
+import static com.google.common.util.concurrent.MoreExecutors.newDirectExecutorService;
 import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.jclouds.openstack.keystone.v2_0.config.KeystoneProperties.CREDENTIAL_TYPE;
@@ -93,7 +93,7 @@ public class TempAuthMockTest {
             .credentials("user", "password")
             .endpoint(authUrl)
             .overrides(overrides)
-            .modules(ImmutableSet.of(new ExecutorServiceModule(sameThreadExecutor())))
+            .modules(ImmutableSet.of(new ExecutorServiceModule(newDirectExecutorService())))
             .buildApi(SwiftApi.class);
    }
 

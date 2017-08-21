@@ -43,7 +43,7 @@ public class PutOptions implements Cloneable {
    private boolean useCustomExecutor = false;
 
    // TODO: This exposes ListeningExecutorService to the user, instead of a regular ExecutorService
-   private ListeningExecutorService customExecutor = MoreExecutors.sameThreadExecutor();
+   private ListeningExecutorService customExecutor = MoreExecutors.newDirectExecutorService();
 
    public PutOptions() {
    }

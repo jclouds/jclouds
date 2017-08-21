@@ -43,7 +43,7 @@ import com.squareup.okhttp.mockwebserver.RecordedRequest;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.collect.Iterables.getOnlyElement;
-import static com.google.common.util.concurrent.MoreExecutors.sameThreadExecutor;
+import static com.google.common.util.concurrent.MoreExecutors.newDirectExecutorService;
 import static org.jclouds.Constants.PROPERTY_MAX_RETRIES;
 import static org.testng.Assert.assertEquals;
 
@@ -52,7 +52,7 @@ public class BasePacketApiMockTest {
    private static final String X_AUTHORIZATION_TOKEN = "c5401990f0c24135e8d6b5d260603fc71696d4738da9aa04a720229a01a2521d";
    private static final String DEFAULT_ENDPOINT = new PacketProviderMetadata().getEndpoint();
    
-   private final Set<Module> modules = ImmutableSet.<Module> of(new ExecutorServiceModule(sameThreadExecutor()));
+   private final Set<Module> modules = ImmutableSet.<Module> of(new ExecutorServiceModule(newDirectExecutorService()));
    
    protected MockWebServer server;
    protected PacketApi api;

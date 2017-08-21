@@ -19,7 +19,7 @@ package org.jclouds.aws.ec2.internal;
 import static com.google.common.base.Throwables.propagate;
 import static com.google.common.net.HttpHeaders.AUTHORIZATION;
 import static com.google.common.net.HttpHeaders.CONTENT_TYPE;
-import static com.google.common.util.concurrent.MoreExecutors.sameThreadExecutor;
+import static com.google.common.util.concurrent.MoreExecutors.newDirectExecutorService;
 import static javax.ws.rs.core.MediaType.APPLICATION_XML;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.jclouds.util.Strings2.toStringAndClose;
@@ -90,7 +90,7 @@ public class BaseAWSEC2ApiMockTest {
    }
 
    private final Set<Module> modules = ImmutableSet
-         .<Module>of(new MockAWSEC2HttpApiModule(), new ExecutorServiceModule(sameThreadExecutor()));
+         .<Module>of(new MockAWSEC2HttpApiModule(), new ExecutorServiceModule(newDirectExecutorService()));
 
    @ConfiguresHttpApi
    class MockAWSEC2HttpApiModule extends AWSEC2HttpApiModule {

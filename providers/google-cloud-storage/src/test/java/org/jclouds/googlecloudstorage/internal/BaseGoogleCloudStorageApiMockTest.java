@@ -18,7 +18,7 @@ package org.jclouds.googlecloudstorage.internal;
 
 import static com.google.common.base.Charsets.UTF_8;
 import static com.google.common.base.Throwables.propagate;
-import static com.google.common.util.concurrent.MoreExecutors.sameThreadExecutor;
+import static com.google.common.util.concurrent.MoreExecutors.newDirectExecutorService;
 import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 import static org.jclouds.googlecloud.config.GoogleCloudProperties.CREDENTIAL_TYPE;
 import static org.jclouds.googlecloud.config.GoogleCloudProperties.PROJECT_NAME;
@@ -74,7 +74,7 @@ public class BaseGoogleCloudStorageApiMockTest {
    }
 
    private final Set<AbstractModule> modules = ImmutableSet
-         .of(new ExecutorServiceModule(sameThreadExecutor()), new OkHttpCommandExecutorServiceModule());
+         .of(new ExecutorServiceModule(newDirectExecutorService()), new OkHttpCommandExecutorServiceModule());
 
 
    final AtomicInteger suffix = new AtomicInteger();

@@ -132,7 +132,7 @@ public class BlockUntilInitScriptStatusIsZeroThenReturnOutputTest {
    EventBus eventBus = new EventBus();
 
    public void testExitStatusZeroReturnsExecResponse() throws InterruptedException, ExecutionException {
-      ListeningExecutorService userExecutor = MoreExecutors.sameThreadExecutor();
+      ListeningExecutorService userExecutor = MoreExecutors.newDirectExecutorService();
       Predicate<String> notRunningAnymore = Predicates.alwaysTrue();
       SudoAwareInitManager commandRunner = createMockBuilder(SudoAwareInitManager.class).addMockedMethod("runAction")
                .addMockedMethod("getStatement").addMockedMethod("getNode").addMockedMethod("toString")
@@ -160,7 +160,7 @@ public class BlockUntilInitScriptStatusIsZeroThenReturnOutputTest {
 
    public void testFirstExitStatusOneButSecondExitStatusZeroReturnsExecResponse() throws InterruptedException,
             ExecutionException {
-      ListeningExecutorService userExecutor = MoreExecutors.sameThreadExecutor();
+      ListeningExecutorService userExecutor = MoreExecutors.newDirectExecutorService();
       Predicate<String> notRunningAnymore = Predicates.alwaysTrue();
 
       SudoAwareInitManager commandRunner = createMockBuilder(SudoAwareInitManager.class).addMockedMethod("runAction")
@@ -194,7 +194,7 @@ public class BlockUntilInitScriptStatusIsZeroThenReturnOutputTest {
    }
 
    public void testCancelInterruptStopsCommand() throws InterruptedException, ExecutionException {
-      ListeningExecutorService userExecutor = MoreExecutors.sameThreadExecutor();
+      ListeningExecutorService userExecutor = MoreExecutors.newDirectExecutorService();
       Predicate<String> notRunningAnymore = Predicates.alwaysTrue();
       SudoAwareInitManager commandRunner = createMockBuilder(SudoAwareInitManager.class).addMockedMethod(
                "refreshAndRunAction").addMockedMethod("runAction").addMockedMethod("getStatement").addMockedMethod(
@@ -239,7 +239,7 @@ public class BlockUntilInitScriptStatusIsZeroThenReturnOutputTest {
 
    public void testCancelDontInterruptLeavesCommandRunningAndReturnsLastStatus() throws InterruptedException,
             ExecutionException {
-      ListeningExecutorService userExecutor = MoreExecutors.sameThreadExecutor();
+      ListeningExecutorService userExecutor = MoreExecutors.newDirectExecutorService();
       Predicate<String> notRunningAnymore = Predicates.alwaysTrue();
       SudoAwareInitManager commandRunner = createMockBuilder(SudoAwareInitManager.class).addMockedMethod("runAction")
                .addMockedMethod("getStatement").addMockedMethod("getNode").addMockedMethod("toString")

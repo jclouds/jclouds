@@ -41,7 +41,7 @@ import com.squareup.okhttp.mockwebserver.RecordedRequest;
 final class B2TestUtils {
    static B2Api api(String uri, String provider, Properties overrides) {
        Set<Module> modules = ImmutableSet.<Module> of(
-             new ExecutorServiceModule(MoreExecutors.sameThreadExecutor()));
+             new ExecutorServiceModule(MoreExecutors.newDirectExecutorService()));
 
       return ContextBuilder.newBuilder(provider)
             .credentials("ACCOUNT_ID", "APPLICATION_KEY")

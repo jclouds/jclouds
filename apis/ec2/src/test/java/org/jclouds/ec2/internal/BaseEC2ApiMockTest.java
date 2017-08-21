@@ -18,7 +18,7 @@ package org.jclouds.ec2.internal;
 
 import static com.google.common.base.Throwables.propagate;
 import static com.google.common.net.HttpHeaders.CONTENT_TYPE;
-import static com.google.common.util.concurrent.MoreExecutors.sameThreadExecutor;
+import static com.google.common.util.concurrent.MoreExecutors.newDirectExecutorService;
 import static javax.ws.rs.core.MediaType.APPLICATION_XML;
 import static org.jclouds.util.Strings2.toStringAndClose;
 import static org.testng.Assert.assertEquals;
@@ -71,7 +71,7 @@ public class BaseEC2ApiMockTest {
             .modules(modules);
    }
 
-   private final Set<Module> modules = ImmutableSet.<Module>of(new ExecutorServiceModule(sameThreadExecutor()));
+   private final Set<Module> modules = ImmutableSet.<Module>of(new ExecutorServiceModule(newDirectExecutorService()));
 
    @BeforeMethod
    public void start() throws IOException {

@@ -18,7 +18,7 @@ package org.jclouds.lifecycle.config;
 
 import static com.google.common.base.Throwables.propagate;
 import static com.google.common.collect.Iterables.filter;
-import static com.google.common.util.concurrent.MoreExecutors.sameThreadExecutor;
+import static com.google.common.util.concurrent.MoreExecutors.newDirectExecutorService;
 import static com.google.inject.matcher.Matchers.any;
 import static org.jclouds.Constants.PROPERTY_SCHEDULER_THREADS;
 import static org.jclouds.Constants.PROPERTY_USER_THREADS;
@@ -117,7 +117,7 @@ public class LifeCycleModule extends AbstractModule {
                            invokeOnInjectee(method, injectee);
                         }
 
-                     }, sameThreadExecutor());
+                     }, newDirectExecutorService());
                   }
                });
             }

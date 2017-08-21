@@ -18,7 +18,7 @@ package org.jclouds.oauth.v2;
 
 import static com.google.common.base.Charsets.UTF_8;
 import static com.google.common.io.BaseEncoding.base64Url;
-import static com.google.common.util.concurrent.MoreExecutors.sameThreadExecutor;
+import static com.google.common.util.concurrent.MoreExecutors.newDirectExecutorService;
 import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 import static org.jclouds.Constants.PROPERTY_MAX_RETRIES;
 import static org.jclouds.oauth.v2.config.CredentialType.P12_PRIVATE_KEY_CREDENTIALS;
@@ -235,7 +235,7 @@ public class AuthorizationApiMockTest {
             .credentials("foo", toStringAndClose(OAuthTestUtils.class.getResourceAsStream("/testpk.pem")))
             .endpoint(url.toString())
             .overrides(overrides)
-            .modules(ImmutableSet.of(new ExecutorServiceModule(sameThreadExecutor()), new OAuthModule(), new Module() {
+            .modules(ImmutableSet.of(new ExecutorServiceModule(newDirectExecutorService()), new OAuthModule(), new Module() {
                @Override public void configure(Binder binder) {
                   binder.bind(OAuthScopes.class).toInstance(SingleScope.create(SCOPE));
                }
