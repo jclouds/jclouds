@@ -266,7 +266,7 @@ public abstract class BaseHttpCommandExecutorServiceIntegrationTest extends Base
 
       try {
          f = File.createTempFile("jclouds", "tmp");
-         long length = (new Random().nextInt(32) + 1) * 1024 * 1024;
+         long length = (new Random().nextInt(32) + 1) * 1024L * 1024L;
          TestUtils.randomByteSource().slice(0, length).copyTo(Files.asByteSink(f));
 
          ByteSource byteSource = asByteSource(f);
