@@ -26,6 +26,7 @@ import org.jclouds.azurecompute.arm.domain.OSProfile.WindowsConfiguration;
 import org.jclouds.azurecompute.arm.domain.Secrets;
 import org.jclouds.compute.options.TemplateOptions;
 
+import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
 import com.google.common.collect.ImmutableList;
 
@@ -179,8 +180,8 @@ public class AzureTemplateOptions extends TemplateOptions implements Cloneable {
    }
 
    @Override
-   public Objects.ToStringHelper string() {
-      Objects.ToStringHelper toString = super.string();
+   public MoreObjects.ToStringHelper string() {
+      MoreObjects.ToStringHelper toString = super.string();
       if (availabilitySet != null)
          toString.add("availabilitySet", availabilitySet);
       if (availabilitySetName != null)

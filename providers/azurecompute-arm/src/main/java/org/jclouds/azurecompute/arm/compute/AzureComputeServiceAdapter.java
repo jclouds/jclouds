@@ -96,7 +96,7 @@ import org.jclouds.location.Region;
 import org.jclouds.logging.Logger;
 
 import com.google.common.base.Function;
-import com.google.common.base.Objects;
+import com.google.common.base.MoreObjects;
 import com.google.common.base.Predicate;
 import com.google.common.base.Splitter;
 import com.google.common.base.Supplier;
@@ -375,7 +375,7 @@ public class AzureComputeServiceAdapter implements ComputeServiceAdapter<Virtual
 
    private OSProfile createOsProfile(String computerName, Template template) {
       String defaultLoginUser = template.getImage().getDefaultCredentials().getUser();
-      String adminUsername = Objects.firstNonNull(template.getOptions().getLoginUser(), defaultLoginUser);
+      String adminUsername = MoreObjects.firstNonNull(template.getOptions().getLoginUser(), defaultLoginUser);
       // Password already generated in CreateResourcesThenCreateNodes (if not set by user)
       String adminPassword = template.getOptions().getLoginPassword();
       OSProfile.Builder builder = OSProfile.builder().adminUsername(adminUsername).adminPassword(adminPassword)
