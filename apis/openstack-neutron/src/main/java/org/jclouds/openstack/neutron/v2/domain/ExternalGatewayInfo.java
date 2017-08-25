@@ -22,6 +22,7 @@ import javax.inject.Named;
 
 import org.jclouds.javax.annotation.Nullable;
 
+import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
 
 /**
@@ -90,7 +91,7 @@ public class ExternalGatewayInfo {
 
    @Override
    public String toString() {
-      return Objects.toStringHelper(this)
+      return MoreObjects.toStringHelper(this)
             .add("networkId", networkId)
             .add("enableSnat", enableSnat)
             .toString();

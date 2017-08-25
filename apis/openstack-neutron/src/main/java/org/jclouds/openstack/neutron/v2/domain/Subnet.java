@@ -25,6 +25,7 @@ import javax.inject.Named;
 
 import org.jclouds.javax.annotation.Nullable;
 
+import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
 import com.google.common.collect.ImmutableSet;
 
@@ -243,7 +244,7 @@ public class Subnet {
 
    @Override
    public String toString() {
-      return Objects.toStringHelper(this)
+      return MoreObjects.toStringHelper(this)
             .add("id", id)
             .add("name", name)
             .add("networkId", networkId)

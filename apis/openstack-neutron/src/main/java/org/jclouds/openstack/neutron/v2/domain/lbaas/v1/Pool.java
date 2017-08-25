@@ -22,6 +22,7 @@ import javax.inject.Named;
 
 import org.jclouds.javax.annotation.Nullable;
 
+import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
@@ -257,7 +258,7 @@ public class Pool {
 
    @Override
    public String toString() {
-      return Objects.toStringHelper(this).add("id", id).add("tenantId", tenantId).add("vipId", vipId)
+      return MoreObjects.toStringHelper(this).add("id", id).add("tenantId", tenantId).add("vipId", vipId)
             .add("name", name).add("description", description).add("subnetId", subnetId).add("protocol", protocol)
             .add("provider", provider).add("lbMethod", lbMethod).add("healthMonitors", healthMonitors)
             .add("healthMonitorsStatus", healthMonitorsStatus).add("members", members)

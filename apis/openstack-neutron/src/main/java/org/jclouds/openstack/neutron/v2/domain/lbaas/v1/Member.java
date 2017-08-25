@@ -22,6 +22,7 @@ import javax.inject.Named;
 
 import org.jclouds.javax.annotation.Nullable;
 
+import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
 
 /**
@@ -178,7 +179,7 @@ public class Member {
 
    @Override
    public String toString() {
-      return Objects.toStringHelper(this).add("id", id).add("tenantId", tenantId).add("poolId", poolId)
+      return MoreObjects.toStringHelper(this).add("id", id).add("tenantId", tenantId).add("poolId", poolId)
             .add("address", address).add("protocolPort", protocolPort).add("weight", weight)
             .add("adminStateUp", adminStateUp).add("status", status).add("statusDescription", statusDescription)
             .toString();

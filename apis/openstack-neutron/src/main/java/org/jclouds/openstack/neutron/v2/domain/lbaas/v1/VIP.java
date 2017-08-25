@@ -22,6 +22,7 @@ import javax.inject.Named;
 
 import org.jclouds.javax.annotation.Nullable;
 
+import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
 
 /**
@@ -250,7 +251,7 @@ public class VIP {
 
    @Override
    public String toString() {
-      return Objects.toStringHelper(this).add("id", id).add("tenantId", tenantId).add("name", name)
+      return MoreObjects.toStringHelper(this).add("id", id).add("tenantId", tenantId).add("name", name)
             .add("description", description).add("subnetId", subnetId).add("address", address).add("portId", portId)
             .add("protocol", protocol).add("protocolPort", protocolPort).add("poolId", poolId)
             .add("sessionPersistence", sessionPersistence).add("connectionLimit", connectionLimit)

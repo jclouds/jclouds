@@ -22,6 +22,7 @@ import javax.inject.Named;
 
 import org.jclouds.javax.annotation.Nullable;
 
+import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
 
 /**
@@ -87,8 +88,8 @@ public class PoolStatus {
             && Objects.equal(this.statusDescription, that.statusDescription);
    }
 
-   protected Objects.ToStringHelper string() {
-      return Objects.toStringHelper(this).add("id", id).add("status", status)
+   protected MoreObjects.ToStringHelper string() {
+      return MoreObjects.toStringHelper(this).add("id", id).add("status", status)
             .add("statusDescription", statusDescription);
    }
 

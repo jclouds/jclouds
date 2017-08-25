@@ -22,6 +22,7 @@ import javax.inject.Named;
 
 import org.jclouds.javax.annotation.Nullable;
 
+import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
 
 /**
@@ -89,8 +90,8 @@ public class NetworkSegment {
             && Objects.equal(this.segmentationId, that.segmentationId);
    }
 
-   protected Objects.ToStringHelper string() {
-      return Objects.toStringHelper(this).add("networkType", networkType).add("physicalNetwork", physicalNetwork)
+   protected MoreObjects.ToStringHelper string() {
+      return MoreObjects.toStringHelper(this).add("networkType", networkType).add("physicalNetwork", physicalNetwork)
             .add("segmentationId", segmentationId);
    }
 

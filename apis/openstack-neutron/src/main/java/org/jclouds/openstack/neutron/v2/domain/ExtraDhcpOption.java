@@ -22,6 +22,7 @@ import javax.inject.Named;
 
 import org.jclouds.javax.annotation.Nullable;
 
+import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
 
 /**
@@ -89,8 +90,8 @@ public class ExtraDhcpOption {
             && Objects.equal(this.optionValue, that.optionValue);
    }
 
-   protected Objects.ToStringHelper string() {
-      return Objects.toStringHelper(this).add("id", id).add("optionName", optionName).add("optionValue", optionValue);
+   protected MoreObjects.ToStringHelper string() {
+      return MoreObjects.toStringHelper(this).add("id", id).add("optionName", optionName).add("optionValue", optionValue);
    }
 
    @Override
