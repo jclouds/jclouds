@@ -22,6 +22,7 @@ import static com.google.common.util.concurrent.MoreExecutors.newDirectExecutorS
 import static com.google.inject.name.Names.named;
 import static org.easymock.EasyMock.createMock;
 import static org.jclouds.Constants.PROPERTY_USER_THREADS;
+import static org.jclouds.concurrent.config.ExecutorServiceModule.createSimpleTimeLimiter;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNull;
 
@@ -50,7 +51,6 @@ import com.google.common.collect.SortedSetMultimap;
 import com.google.common.collect.TreeMultimap;
 import com.google.common.reflect.Invokable;
 import com.google.common.util.concurrent.ListeningExecutorService;
-import com.google.common.util.concurrent.SimpleTimeLimiter;
 import com.google.common.util.concurrent.TimeLimiter;
 import com.google.inject.AbstractModule;
 import com.google.inject.Injector;
@@ -84,7 +84,7 @@ public abstract class BaseRestApiTest {
       @Provides
       @Singleton
       TimeLimiter timeLimiter(@Named(PROPERTY_USER_THREADS) ListeningExecutorService userExecutor) {
-         return new SimpleTimeLimiter(userExecutor);
+         return createSimpleTimeLimiter(userExecutor);
       }
    }
 
