@@ -25,8 +25,6 @@ import static org.testng.Assert.assertTrue;
 import java.io.IOException;
 import java.util.Set;
 
-import com.google.common.collect.ImmutableSet;
-import com.squareup.okhttp.mockwebserver.MockResponse;
 import org.jclouds.compute.ComputeService;
 import org.jclouds.compute.domain.ComputeMetadata;
 import org.jclouds.compute.domain.Hardware;
@@ -38,6 +36,9 @@ import org.jclouds.googlecomputeengine.compute.options.GoogleComputeEngineTempla
 import org.jclouds.googlecomputeengine.domain.Instance;
 import org.jclouds.googlecomputeengine.internal.BaseGoogleComputeEngineApiMockTest;
 import org.testng.annotations.Test;
+
+import com.google.common.collect.ImmutableSet;
+import com.squareup.okhttp.mockwebserver.MockResponse;
 
 @Test(groups = "unit", testName = "GoogleComputeEngineServiceMockTest", singleThreaded = true)
 public class GoogleComputeEngineServiceMockTest extends BaseGoogleComputeEngineApiMockTest {
@@ -76,7 +77,6 @@ public class GoogleComputeEngineServiceMockTest extends BaseGoogleComputeEngineA
       server.enqueue(jsonResponse("/disk_get_with_source_image.json"));
       server.enqueue(jsonResponse("/image_get_for_source_image.json"));
       server.enqueue(jsonResponse("/aggregated_machinetype_list.json")); // Why are we getting machineTypes to delete an instance?
-      server.enqueue(instanceWithNetworkAndStatus("test-delete-1", "default", RUNNING));
       server.enqueue(jsonResponse("/operation.json")); // instance delete
       server.enqueue(jsonResponse("/zone_operation.json"));
       server.enqueue(response404()); // deleted instance no longer exists
@@ -93,7 +93,6 @@ public class GoogleComputeEngineServiceMockTest extends BaseGoogleComputeEngineA
       assertSent(server, "GET", "/projects/party/zones/us-central1-a/disks/test");
       assertSent(server, "GET", "/projects/debian-cloud/global/images/debian-7-wheezy-v20140718");
       assertSent(server, "GET", "/projects/party/aggregated/machineTypes"); // Why are we getting machineTypes to delete an instance?
-      assertSent(server, "GET", "/jclouds/zones/us-central1-a/instances/test-delete-1");
       assertSent(server, "DELETE", "/jclouds/zones/us-central1-a/instances/test-delete-1"); // instance delete
       assertSent(server, "GET", "/projects/party/zones/us-central1-a/operations/operation-1354084865060");
       assertSent(server, "GET", "/projects/party/zones/us-central1-a/instances/test-delete-1"); // get instance
