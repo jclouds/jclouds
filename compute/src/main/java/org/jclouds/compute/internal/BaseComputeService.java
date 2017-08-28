@@ -23,7 +23,6 @@ import static com.google.common.base.Throwables.propagate;
 import static com.google.common.collect.Iterables.filter;
 import static com.google.common.collect.Maps.newLinkedHashMap;
 import static com.google.common.collect.Sets.newLinkedHashSet;
-import static java.util.concurrent.TimeUnit.MILLISECONDS;
 import static org.jclouds.compute.config.ComputeServiceProperties.TIMEOUT_NODE_RUNNING;
 import static org.jclouds.compute.config.ComputeServiceProperties.TIMEOUT_NODE_SUSPENDED;
 import static org.jclouds.compute.config.ComputeServiceProperties.TIMEOUT_NODE_TERMINATED;
@@ -32,7 +31,6 @@ import static org.jclouds.compute.predicates.NodePredicates.all;
 import static org.jclouds.compute.util.ComputeServiceUtils.formatStatus;
 import static org.jclouds.concurrent.FutureIterables.awaitCompletion;
 import static org.jclouds.concurrent.FutureIterables.transformParallel;
-import static org.jclouds.util.Predicates2.retry;
 
 import java.util.Map;
 import java.util.NoSuchElementException;
@@ -291,26 +289,14 @@ public class BaseComputeService implements ComputeService {
    protected NodeMetadata doDestroyNode(final String id) {
       checkNotNull(id, "id");
       logger.debug(">> destroying node(%s)", id);
-      final AtomicReference<NodeMetadata> node = Atomics.newReference();
-      Predicate<String> tester = retry(new Predicate<String>() {
-         public boolean apply(String input) {
-            try {
-               NodeMetadata md = destroyNodeStrategy.destroyNode(id);
-               if (md != null)
-                  node.set(md);
-               return true;
-            } catch (IllegalStateException e) {
-               logger.warn("<< illegal state destroying node(%s)", id);
-               return false;
-            }
-         }
-      }, timeouts.nodeTerminated, 1000, MILLISECONDS);
-
-      boolean successful = tester.apply(id) && (node.get() == null || nodeTerminated.apply(node));
+      NodeMetadata nodeMetadata = destroyNodeStrategy.destroyNode(id);
+      if (nodeMetadata == null) return null;
+      final AtomicReference<NodeMetadata> node = Atomics.newReference(nodeMetadata);
+      boolean successful = node.get() == null || nodeTerminated.apply(node);
       if (successful)
          credentialStore.remove("node#" + id);
       logger.debug("<< destroyed node(%s) success(%s)", id, successful);
-      return node.get();
+      return nodeMetadata;
    }
 
    protected void cleanUpIncidentalResourcesOfDeadNodes(Set<? extends NodeMetadata> deadNodes) {
