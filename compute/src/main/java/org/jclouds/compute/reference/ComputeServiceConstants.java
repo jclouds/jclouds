@@ -49,7 +49,7 @@ public final class ComputeServiceConstants {
    @Singleton
    public static class NamingConvention {
       @Inject(optional = true)
-      public final Supplier<String> randomSuffix = new Supplier<String>() {
+      public Supplier<String> randomSuffix = new Supplier<String>() {
          final SecureRandom random = new SecureRandom();
 
          @Override

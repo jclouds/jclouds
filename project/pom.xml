@@ -808,7 +808,7 @@
               <compilerArg>-Xep:AssertFalse:ERROR</compilerArg>
               <compilerArg>-Xep:AssistedInjectAndInjectOnConstructors:ERROR</compilerArg>
               <compilerArg>-Xep:CollectionIncompatibleType:ERROR</compilerArg>
-              <compilerArg>-Xep:GuiceInjectOnFinalField:OFF</compilerArg>  <!-- noisy -->
+              <compilerArg>-Xep:GuiceInjectOnFinalField:ERROR</compilerArg>
               <compilerArg>-Xep:MissingFail:ERROR</compilerArg>
               <compilerArg>-Xep:NullablePrimitive:ERROR</compilerArg>
               <compilerArg>-Xep:OverridesGuiceInjectableMethod:OFF</compilerArg>  <!-- internal error with 2.0.5 -->

@@ -51,7 +51,7 @@ public class RetryOnRenew implements HttpRetryHandler {
    @VisibleForTesting
    @Inject(optional = true)
    @Named(Constants.PROPERTY_MAX_RETRIES)
-   static final int NUM_RETRIES = 5;
+   static int NUM_RETRIES = 5;
 
    private final LoadingCache<Credentials, Access> authenticationResponseCache;
 
