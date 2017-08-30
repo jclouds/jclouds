@@ -46,7 +46,6 @@ import org.jclouds.util.Closeables2;
 import org.testng.annotations.Test;
 
 import javax.inject.Named;
-import javax.xml.ws.http.HTTPException;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -180,7 +179,6 @@ public class RequestAuthorizeSignatureV4ChunkedUploadTest {
     *
     * @param input
     * @return hash result
-    * @throws HTTPException
     */
    private static byte[] hash(InputStream input) {
       try {

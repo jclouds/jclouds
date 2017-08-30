@@ -39,7 +39,6 @@ import java.util.SortedMap;
 import java.util.TimeZone;
 
 import javax.inject.Inject;
-import javax.xml.ws.http.HTTPException;
 
 import com.google.common.base.Joiner;
 import com.google.common.base.Supplier;
@@ -244,9 +243,9 @@ public abstract class Aws4SignerBase {
     *
     * @param input
     * @return hash result
-    * @throws HTTPException
+    * @throws HttpException
     */
-   public static byte[] hash(InputStream input) throws HTTPException {
+   public static byte[] hash(InputStream input) throws HttpException {
       HashingInputStream his = new HashingInputStream(Hashing.sha256(), input);
       try {
          ByteStreams.copy(his, ByteStreams.nullOutputStream());
@@ -261,9 +260,9 @@ public abstract class Aws4SignerBase {
     *
     * @param bytes input bytes
     * @return hash result
-    * @throws HTTPException
+    * @throws HttpException
     */
-   public static byte[] hash(byte[] bytes) throws HTTPException {
+   public static byte[] hash(byte[] bytes) throws HttpException {
       try {
          return ByteSource.wrap(bytes).hash(Hashing.sha256()).asBytes();
       } catch (IOException e) {
@@ -277,9 +276,9 @@ public abstract class Aws4SignerBase {
     *
     * @param input input stream
     * @return hash result
-    * @throws HTTPException
+    * @throws HttpException
     */
-   public static byte[] hash(String input) throws HTTPException {
+   public static byte[] hash(String input) throws HttpException {
       return hash(new ByteArrayInputStream(input.getBytes(UTF_8)));
    }
 
