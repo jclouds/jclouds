@@ -129,7 +129,9 @@ public class Reflection2Test {
          "parallelStream",
          "removeIf",
          "spliterator",
-         "stream");
+         "stream",
+         // Java 9 methods
+         "of");
 
    private static final ImmutableSet<String> SORTED_SET_METHODS = ImmutableSet.<String>builder()
          .addAll(SET_METHODS)
