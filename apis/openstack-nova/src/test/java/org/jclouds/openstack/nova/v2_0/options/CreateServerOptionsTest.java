@@ -16,8 +16,9 @@
  */
 package org.jclouds.openstack.nova.v2_0.options;
 
-import static javax.xml.bind.DatatypeConverter.parseHexBinary;
 import static org.testng.Assert.assertTrue;
+
+import com.google.common.io.BaseEncoding;
 
 import org.testng.annotations.Test;
 
@@ -28,9 +29,9 @@ import org.testng.annotations.Test;
 public class CreateServerOptionsTest {
 
    private static final byte[] PLAINTEXT = "This is plain Text".getBytes();
-   private static final byte[] GZIPTOOSHORT = parseHexBinary("1f8b0000");
-   private static final byte[] GZIPOK = parseHexBinary("1f8b0800b6a9a45800034be4020007a1eadd02000000");
-   private static final byte[] OTHERBIN = parseHexBinary("f0f1f2f3f4f5f6f7f8f9fafbfcfdfeff");
+   private static final byte[] GZIPTOOSHORT = BaseEncoding.base16().lowerCase().decode("1f8b0000");
+   private static final byte[] GZIPOK = BaseEncoding.base16().lowerCase().decode("1f8b0800b6a9a45800034be4020007a1eadd02000000");
+   private static final byte[] OTHERBIN = BaseEncoding.base16().lowerCase().decode("f0f1f2f3f4f5f6f7f8f9fafbfcfdfeff");
 
    public void testPlainText() {
       CreateServerOptions o = new CreateServerOptions().userData(PLAINTEXT);
