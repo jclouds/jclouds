@@ -421,6 +421,7 @@ public final class GoogleCloudStorageBlobStore extends BaseBlobStore {
    public MultipartPart uploadMultipartPart(MultipartUpload mpu, int partNumber, Payload payload) {
       String partName = getMPUPartName(mpu, partNumber);
       long partSize = payload.getContentMetadata().getContentLength();
+      // TODO: JCLOUDS-1337: use multipartUpload to set storage class
       InsertObjectOptions insertOptions = new InsertObjectOptions().name(partName);
       GoogleCloudStorageObject object = api.getObjectApi().simpleUpload(mpu.containerName(),
             mpu.blobMetadata().getContentMetadata().getContentType(), partSize, payload, insertOptions);

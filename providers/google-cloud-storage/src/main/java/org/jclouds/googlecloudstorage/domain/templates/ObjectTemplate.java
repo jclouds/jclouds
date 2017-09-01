@@ -17,9 +17,12 @@
 
 package org.jclouds.googlecloudstorage.domain.templates;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 import java.util.List;
 import java.util.Map;
 
+import org.jclouds.googlecloudstorage.domain.DomainResourceReferences.StorageClass;
 import org.jclouds.googlecloudstorage.domain.ObjectAccessControls;
 
 import com.google.common.base.MoreObjects;
@@ -38,6 +41,7 @@ public class ObjectTemplate {
    private String contentType;
    private String crc32c;
    private String md5Hash;
+   private StorageClass storageClass;
    private Map<String, String> metadata;
    private List<ObjectAccessControls> acl;
 
@@ -107,6 +111,11 @@ public class ObjectTemplate {
       return this;
    }
 
+   public ObjectTemplate storageClass(StorageClass storageClass) {
+      this.storageClass = checkNotNull(storageClass);
+      return this;
+   }
+
    public ObjectTemplate addAcl(ObjectAccessControls acl) {
       if (this.acl == null) {
          this.acl = Lists.newArrayList();
@@ -155,6 +164,10 @@ public class ObjectTemplate {
       return md5Hash;
    }
 
+   public StorageClass storageClass() {
+      return storageClass;
+   }
+
    public String name() {
       return name;
    }
@@ -179,6 +192,7 @@ public class ObjectTemplate {
          .add("contentType", contentType)
          .add("crc32c", crc32c)
          .add("md5Hash", md5Hash)
+         .add("storageClass", storageClass)
          .add("metadata", metadata)
          .add("acl", acl)
          .toString();

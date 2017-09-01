@@ -34,6 +34,7 @@ import org.jclouds.googlecloudstorage.domain.Bucket;
 import org.jclouds.googlecloudstorage.domain.DomainResourceReferences.DestinationPredefinedAcl;
 import org.jclouds.googlecloudstorage.domain.DomainResourceReferences.ObjectRole;
 import org.jclouds.googlecloudstorage.domain.DomainResourceReferences.Projection;
+import org.jclouds.googlecloudstorage.domain.DomainResourceReferences.StorageClass;
 import org.jclouds.googlecloudstorage.domain.GoogleCloudStorageObject;
 import org.jclouds.googlecloudstorage.domain.ListPageWithPrefixes;
 import org.jclouds.googlecloudstorage.domain.ObjectAccessControls;
@@ -424,6 +425,7 @@ public class ObjectApiLiveTest extends BaseGoogleCloudStorageApiLiveTest {
 
       template.contentType("image/jpeg").addAcl(oacl).size(contentLength).name(MULTIPART_UPLOAD_OBJECT)
                .contentLanguage("en").contentDisposition("attachment").md5Hash(md5Hash)
+               .storageClass(StorageClass.NEARLINE)
                .customMetadata("custommetakey1", "custommetavalue1").crc32c(crc32c)
                .customMetadata(ImmutableMap.of("Adrian", "powderpuff"));
 
@@ -435,6 +437,11 @@ public class ObjectApiLiveTest extends BaseGoogleCloudStorageApiLiveTest {
 
       assertThat(gcsObject.metadata()).contains(entry("custommetakey1", "custommetavalue1"),
                entry("Adrian", "powderpuff")).doesNotContainKey("adrian");
+
+      gcsObject = api().getObject(BUCKET_NAME, MULTIPART_UPLOAD_OBJECT, null);
+
+      assertThat(gcsObject).isNotNull();
+      assertThat(gcsObject.storageClass()).isEqualTo(StorageClass.NEARLINE);
 
       PayloadEnclosing impl = api().download(BUCKET_NAME, MULTIPART_UPLOAD_OBJECT);
 
