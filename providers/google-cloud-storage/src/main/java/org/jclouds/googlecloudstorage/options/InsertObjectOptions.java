@@ -108,8 +108,8 @@ public class InsertObjectOptions extends BaseHttpRequestOptions {
          return new InsertObjectOptions().predefinedAcl(predefinedAcl);
       }
 
-      public UpdateObjectOptions projection(Projection projection) {
-         return new UpdateObjectOptions().projection(projection);
+      public InsertObjectOptions projection(Projection projection) {
+         return new InsertObjectOptions().projection(projection);
       }
    }
 }
