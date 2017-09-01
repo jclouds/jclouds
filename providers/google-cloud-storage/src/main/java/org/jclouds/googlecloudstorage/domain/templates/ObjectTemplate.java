@@ -147,6 +147,14 @@ public class ObjectTemplate {
       return metadata;
    }
 
+   public String crc32c() {
+      return crc32c;
+   }
+
+   public String md5Hash() {
+      return md5Hash;
+   }
+
    public String name() {
       return name;
    }
