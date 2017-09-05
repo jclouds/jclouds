@@ -30,29 +30,29 @@
   <packaging>pom</packaging>
   <name>jclouds apis project</name>
   <modules>
-    <module>cloudwatch</module>
-    <module>cloudstack</module>
-    <module>filesystem</module>
-    <module>byon</module>
-    <module>s3</module>
-    <module>ec2</module>
-    <module>sqs</module>
-    <module>elasticstack</module>
     <module>atmos</module>
-    <module>openstack-keystone</module>
+    <module>byon</module>
+    <module>chef</module>
+    <module>cloudstack</module>
+    <module>cloudwatch</module>
+    <module>docker</module>
+    <module>ec2</module>
+    <module>elasticstack</module>
+    <module>filesystem</module>
+    <module>oauth</module>
     <module>openstack-cinder</module>
-    <module>openstack-nova</module>
+    <module>openstack-keystone</module>
     <module>openstack-nova-ec2</module>
+    <module>openstack-nova</module>
     <module>openstack-swift</module>
     <module>openstack-trove</module>
-    <module>rackspace-cloudidentity</module>
-    <module>rackspace-cloudloadbalancers</module>
     <module>rackspace-clouddns</module>
     <module>rackspace-cloudfiles</module>
-    <module>sts</module>
+    <module>rackspace-cloudidentity</module>
+    <module>rackspace-cloudloadbalancers</module>
     <module>route53</module>
-    <module>chef</module>
-    <module>oauth</module>
-    <module>docker</module>
+    <module>s3</module>
+    <module>sqs</module>
+    <module>sts</module>
   </modules>
 </project>

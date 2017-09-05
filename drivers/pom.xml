@@ -29,16 +29,16 @@
   <packaging>pom</packaging>
   <name>jclouds drivers project</name>
   <modules>
-    <module>gae</module>
     <module>apachehc</module>
-    <module>joda</module>
     <module>bouncycastle</module>
+    <module>enterprise</module>
+    <module>gae</module>
+    <module>joda</module>
+    <module>jsch</module>
     <module>log4j</module>
+    <module>netty</module>
+    <module>okhttp</module>
     <module>slf4j</module>
     <module>sshj</module>
-    <module>jsch</module>
-    <module>netty</module>
-    <module>enterprise</module>
-    <module>okhttp</module>
   </modules>
 </project>
