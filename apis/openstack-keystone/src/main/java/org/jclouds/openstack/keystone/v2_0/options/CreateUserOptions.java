@@ -101,7 +101,7 @@ public class CreateUserOptions implements MapBinder{
          user.tenantId = tenant;
       user.enabled = enabled;
 
-      return bindToRequest(request, ImmutableMap.of("user", user));
+      return bindToRequest(request, (Object) ImmutableMap.of("user", user));
    }
 
    /**

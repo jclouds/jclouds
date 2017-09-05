@@ -42,11 +42,6 @@ public class BindAuthToJsonPayload extends BindToJsonPayload implements MapBinde
       super(jsonBinder);
    }
 
-   @Override
-   public <R extends HttpRequest> R bindToRequest(R request, Object toBind) {
-      throw new IllegalStateException("BindAuthToJsonPayload needs parameters");
-   }
-
    protected void addCredentialsInArgsOrNull(GeneratedHttpRequest gRequest, Builder<String, Object> builder) {
       for (Object arg : Iterables.filter(gRequest.getInvocation().getArgs(), Predicates.notNull())) {
          if (arg.getClass().isAnnotationPresent(CredentialType.class)) {

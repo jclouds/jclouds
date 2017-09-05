@@ -253,7 +253,7 @@ public class CreateServerOptions implements MapBinder {
          server.blockDeviceMappings = blockDeviceMappings;
       }
 
-      return bindToRequest(request, ImmutableMap.of("server", server));
+      return bindToRequest(request, (Object) ImmutableMap.of("server", server));
    }
 
    private static class NamedThingy extends ForwardingObject {

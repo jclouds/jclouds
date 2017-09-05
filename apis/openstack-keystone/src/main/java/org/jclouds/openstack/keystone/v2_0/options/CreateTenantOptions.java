@@ -88,7 +88,7 @@ public class CreateTenantOptions implements MapBinder {
          tenant.description = description;
       tenant.enabled = enabled;
 
-      return bindToRequest(request, ImmutableMap.of("tenant", tenant));
+      return bindToRequest(request, (Object) ImmutableMap.of("tenant", tenant));
    }
 
    /**

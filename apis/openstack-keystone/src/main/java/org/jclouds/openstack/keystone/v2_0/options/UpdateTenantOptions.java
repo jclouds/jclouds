@@ -86,7 +86,7 @@ public class UpdateTenantOptions implements MapBinder {
          tenant.name = name;
       tenant.enabled = enabled;
 
-      return bindToRequest(request, ImmutableMap.of("tenant", tenant));
+      return bindToRequest(request, (Object) ImmutableMap.of("tenant", tenant));
    }
 
    /**
