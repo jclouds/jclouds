@@ -16,8 +16,6 @@
  */
 package org.jclouds.profitbricks.http.parser.firewall;
 
-import com.google.inject.Inject;
-
 import org.jclouds.profitbricks.domain.Firewall;
 import org.jclouds.profitbricks.domain.ProvisioningState;
 import org.jclouds.profitbricks.http.parser.BaseProfitBricksResponseHandler;
@@ -32,8 +30,7 @@ public abstract class BaseFirewallResponseHandler<T> extends BaseProfitBricksRes
    protected boolean useFirewallRuleParser = false;
    protected Firewall.Builder builder;
 
-   @Inject
-   BaseFirewallResponseHandler(FirewallRuleListResponseHandler firewallRuleListResponseHandler) {
+   protected BaseFirewallResponseHandler(FirewallRuleListResponseHandler firewallRuleListResponseHandler) {
       this.builder = Firewall.builder();
       this.firewallRuleListResponseHandler = firewallRuleListResponseHandler;
    }

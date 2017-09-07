@@ -32,7 +32,6 @@ import java.util.Set;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 
-import javax.inject.Inject;
 import javax.inject.Named;
 
 import org.jclouds.blobstore.BlobStore;
@@ -78,7 +77,6 @@ public abstract class BaseBlobStore implements BlobStore {
    protected final Supplier<Set<? extends Location>> locations;
    protected final PayloadSlicer slicer;
 
-   @Inject
    protected BaseBlobStore(BlobStoreContext context, BlobUtils blobUtils, Supplier<Location> defaultLocation,
          @Memoized Supplier<Set<? extends Location>> locations, PayloadSlicer slicer) {
       this.context = checkNotNull(context, "context");

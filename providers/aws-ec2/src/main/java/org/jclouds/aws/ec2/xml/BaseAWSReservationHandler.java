@@ -24,7 +24,6 @@ import java.util.Map;
 import java.util.Set;
 
 import javax.annotation.Resource;
-import javax.inject.Inject;
 
 import org.jclouds.aws.ec2.domain.AWSRunningInstance;
 import org.jclouds.aws.ec2.domain.MonitoringState;
@@ -55,8 +54,7 @@ public abstract class BaseAWSReservationHandler<T> extends HandlerForGeneratedRe
    protected final DateService dateService;
    protected final Supplier<String> defaultRegion;
 
-   @Inject
-   public BaseAWSReservationHandler(DateService dateService, @Region Supplier<String> defaultRegion) {
+   protected BaseAWSReservationHandler(DateService dateService, @Region Supplier<String> defaultRegion) {
       this.dateService = dateService;
       this.defaultRegion = defaultRegion;
    }

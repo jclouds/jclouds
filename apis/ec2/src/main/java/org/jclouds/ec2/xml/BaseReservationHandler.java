@@ -22,8 +22,6 @@ import static org.jclouds.util.SaxUtils.equalsOrSuffix;
 import java.util.Date;
 import java.util.Set;
 
-import javax.inject.Inject;
-
 import org.jclouds.aws.util.AWSUtils;
 import org.jclouds.date.DateService;
 import org.jclouds.ec2.domain.Attachment;
@@ -45,8 +43,7 @@ public abstract class BaseReservationHandler<T> extends HandlerForGeneratedReque
    protected final DateService dateService;
    protected final Supplier<String> defaultRegion;
 
-   @Inject
-   public BaseReservationHandler(DateService dateService, @Region Supplier<String> defaultRegion) {
+   protected BaseReservationHandler(DateService dateService, @Region Supplier<String> defaultRegion) {
       this.dateService = dateService;
       this.defaultRegion = defaultRegion;
    }

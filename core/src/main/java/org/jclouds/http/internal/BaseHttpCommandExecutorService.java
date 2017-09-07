@@ -29,7 +29,6 @@ import java.net.ProtocolException;
 import java.util.Set;
 
 import javax.annotation.Resource;
-import javax.inject.Inject;
 import javax.inject.Named;
 
 import org.jclouds.Constants;
@@ -67,7 +66,6 @@ public abstract class BaseHttpCommandExecutorService<Q> implements HttpCommandEx
 
    private final Set<String> idempotentMethods;
 
-   @Inject
    protected BaseHttpCommandExecutorService(HttpUtils utils, ContentMetadataCodec contentMetadataCodec,
          DelegatingRetryHandler retryHandler, IOExceptionRetryHandler ioRetryHandler,
          DelegatingErrorHandler errorHandler, HttpWire wire,

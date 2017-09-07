@@ -19,8 +19,6 @@ package org.jclouds.profitbricks.http.parser.storage;
 import java.util.Date;
 import java.util.List;
 
-import com.google.inject.Inject;
-
 import org.jclouds.date.DateService;
 import org.jclouds.profitbricks.domain.ProvisioningState;
 import org.jclouds.profitbricks.domain.Storage;
@@ -36,8 +34,7 @@ public abstract class BaseStorageResponseHandler<T> extends BaseProfitBricksResp
    protected Storage.Builder builder;
    protected List<String> serverIds;
 
-   @Inject
-   BaseStorageResponseHandler(DateService dateService) {
+   protected BaseStorageResponseHandler(DateService dateService) {
       this.dateService = dateService;
       this.builder = Storage.builder();
       this.serverIds = Lists.newArrayList();

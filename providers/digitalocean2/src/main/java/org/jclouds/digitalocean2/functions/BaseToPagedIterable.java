@@ -18,8 +18,6 @@ package org.jclouds.digitalocean2.functions;
 
 import java.net.URI;
 
-import javax.inject.Inject;
-
 import org.jclouds.collect.IterableWithMarker;
 import org.jclouds.collect.internal.Arg0ToPagedIterable;
 import org.jclouds.digitalocean2.DigitalOcean2Api;
@@ -39,7 +37,7 @@ public abstract class BaseToPagedIterable<T, O extends ListOptions> extends
    private final Function<URI, O> linkToOptions;
    protected final DigitalOcean2Api api;
 
-   @Inject protected BaseToPagedIterable(DigitalOcean2Api api, Function<URI, O> linkToOptions) {
+   protected BaseToPagedIterable(DigitalOcean2Api api, Function<URI, O> linkToOptions) {
       this.api = api;
       this.linkToOptions = linkToOptions;
    }

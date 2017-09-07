@@ -16,8 +16,6 @@
  */
 package org.jclouds.packet.functions;
 
-import javax.inject.Inject;
-
 import org.jclouds.collect.IterableWithMarker;
 import org.jclouds.collect.internal.Arg0ToPagedIterable;
 import org.jclouds.packet.PacketApi;
@@ -38,7 +36,7 @@ public abstract class BaseToPagedIterable<T, O extends ListOptions> extends
    private final Function<Href, O> hrefToOptions;
    protected final PacketApi api;
 
-   @Inject protected BaseToPagedIterable(PacketApi api, Function<Href, O> hrefToOptions) {
+   protected BaseToPagedIterable(PacketApi api, Function<Href, O> hrefToOptions) {
       this.api = api;
       this.hrefToOptions = hrefToOptions;
    }

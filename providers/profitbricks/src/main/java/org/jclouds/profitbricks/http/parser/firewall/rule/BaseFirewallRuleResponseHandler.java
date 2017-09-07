@@ -19,16 +19,13 @@ package org.jclouds.profitbricks.http.parser.firewall.rule;
 import org.jclouds.profitbricks.domain.Firewall;
 import org.jclouds.profitbricks.domain.Firewall.Protocol;
 
-import com.google.inject.Inject;
-
 import org.jclouds.profitbricks.http.parser.BaseProfitBricksResponseHandler;
 
 public abstract class BaseFirewallRuleResponseHandler<T> extends BaseProfitBricksResponseHandler<T> {
 
    protected Firewall.Rule.Builder builder;
 
-   @Inject
-   BaseFirewallRuleResponseHandler() {
+   protected BaseFirewallRuleResponseHandler() {
       this.builder = Firewall.Rule.builder();
    }
 
