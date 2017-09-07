@@ -214,6 +214,7 @@ public class ObjectApiLiveTest extends BaseSwiftApiLiveTest {
             if (header.getKey().equals("Last-Modified"))continue;
             if (header.getKey().equals("X-Trans-Id"))continue;
             if (header.getKey().equals("X-Timestamp"))continue;
+            if (header.getKey().equals("X-Openstack-Request-Id"))continue;
             assertTrue(destHeaders.containsEntry(header.getKey(), header.getValue()), "Could not find: " + header);
          }
          assertEquals(destSwiftObject.getPayload().getContentMetadata().getContentDisposition(), "attachment; filename=\"updatedname.txt\"");

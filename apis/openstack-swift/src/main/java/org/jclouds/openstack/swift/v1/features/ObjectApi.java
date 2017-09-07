@@ -172,7 +172,6 @@ public interface ObjectApi {
    @Path("/{objectName}")
    @ResponseParser(ParseObjectFromResponse.class)
    @Fallback(NullOnNotFoundOr404.class)
-   @QueryParams(keys = "format", values = "json")
    @Nullable
    SwiftObject get(@PathParam("objectName") String objectName);
 

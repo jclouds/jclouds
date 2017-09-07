@@ -43,7 +43,7 @@ import com.google.common.collect.ImmutableMultimap;
 /**
  * Provides live tests for the {@link ContainerApi}.
  */
-@Test(groups = "live", testName = "ContainerApiLiveTest")
+@Test(groups = "live", testName = "ContainerApiLiveTest", singleThreaded = true)
 public class ContainerApiLiveTest extends BaseSwiftApiLiveTest {
 
    private String name = getClass().getSimpleName();
@@ -65,6 +65,7 @@ public class ContainerApiLiveTest extends BaseSwiftApiLiveTest {
          assertEquals(container.getMetadata().get("web-error"), "__error.html");
 
          assertTrue(getApi().getContainerApi(regionId).deleteIfEmpty(name));
+         assertTrue(getApi().getContainerApi(regionId).create(name));
       }
    }
 
@@ -133,20 +134,21 @@ public class ContainerApiLiveTest extends BaseSwiftApiLiveTest {
          assertEquals(updatedContainer.getMetadata().get("web-error"), "__error.html");
 
          assertTrue(getApi().getContainerApi(regionId).deleteIfEmpty(name));
+         assertTrue(getApi().getContainerApi(regionId).create(name));
       }
    }
 
    public void testUpdateContainer() throws Exception {
       for (String regionId : regions) {
          ContainerApi containerApi = getApi().getContainerApi(regionId);
-         assertThat(containerApi.create(name)).isTrue();
-
+         // The container should exist, as it was created in the setup() method
          assertThat(containerApi.get(name).getAnybodyRead().get()).isFalse();
 
          containerApi.update(name, new UpdateContainerOptions().anybodyRead());
          assertThat(containerApi.get(name).getAnybodyRead().get()).isTrue();
 
          assertThat(containerApi.deleteIfEmpty(name)).isTrue();
+         assertThat(containerApi.create(name)).isTrue();
       }
    }
 
