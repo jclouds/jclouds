@@ -28,6 +28,7 @@ import javax.inject.Named;
 import javax.inject.Provider;
 import javax.inject.Singleton;
 
+import org.jclouds.date.TimeStamp;
 import org.jclouds.domain.JsonBall;
 import org.jclouds.json.Json;
 import org.jclouds.ohai.Automatic;
@@ -100,7 +101,7 @@ public class OhaiModule extends AbstractModule {
       private final Provider<Long> timeProvider;
 
       @Inject
-      OhaiTimeProvider(Provider<Long> timeProvider) {
+      OhaiTimeProvider(@TimeStamp Provider<Long> timeProvider) {
          this.timeProvider = timeProvider;
       }
 
@@ -112,6 +113,7 @@ public class OhaiModule extends AbstractModule {
    }
 
    @Provides
+   @TimeStamp
    protected final Long provideMillis() {
       return millis();
    }

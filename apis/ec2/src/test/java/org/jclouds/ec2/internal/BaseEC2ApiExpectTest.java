@@ -25,7 +25,6 @@ import org.jclouds.rest.ConfiguresHttpApi;
 
 import com.google.common.base.Supplier;
 import com.google.inject.Module;
-import com.google.inject.Provides;
 import com.google.inject.TypeLiteral;
 
 public abstract class BaseEC2ApiExpectTest<T> extends BaseEC2ExpectTest<T> {
@@ -54,7 +53,6 @@ public abstract class BaseEC2ApiExpectTest<T> extends BaseEC2ExpectTest<T> {
       }
 
       @Override
-      @Provides
       protected String provideTimeStamp(DateService dateService) {
          return CONSTANT_DATE;
       }

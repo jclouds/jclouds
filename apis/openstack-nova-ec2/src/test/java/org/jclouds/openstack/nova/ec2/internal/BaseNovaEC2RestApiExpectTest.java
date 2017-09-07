@@ -30,7 +30,6 @@ import org.jclouds.rest.ConfiguresHttpApi;
 import org.jclouds.rest.internal.BaseRestApiExpectTest;
 
 import com.google.inject.Module;
-import com.google.inject.Provides;
 
 public abstract class BaseNovaEC2RestApiExpectTest extends BaseRestApiExpectTest<NovaEC2Api> {
    protected static final String CONSTANT_DATE = "2012-04-16T15:54:08.897Z";
@@ -58,7 +57,6 @@ public abstract class BaseNovaEC2RestApiExpectTest extends BaseRestApiExpectTest
    private static final class TestNovaEC2HttpApiModule extends NovaEC2HttpApiModule {
 
       @Override
-      @Provides
       protected String provideTimeStamp(DateService dateService) {
          return CONSTANT_DATE;
       }
