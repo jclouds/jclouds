@@ -740,6 +740,7 @@
             <compilerArgs>
               <compilerArg>-Xlint</compilerArg>
               <compilerArg>-Xlint:-deprecation</compilerArg>
+              <compilerArg>-Xlint:-processing</compilerArg>
               <compilerArg>-Xlint:-rawtypes</compilerArg>
               <compilerArg>-Xlint:-serial</compilerArg>
               <compilerArg>-Xlint:-unchecked</compilerArg>
