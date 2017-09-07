@@ -84,7 +84,6 @@ public final class FormSignerV4 implements FormSigner {
 
          /** This will only work for amazon deployments, and perhaps not all of them. */
          private static List<String> parseServiceAndRegion(String host) {
-            checkArgument(host.endsWith(".amazonaws.com"), "Only AWS endpoints currently supported %s", host);
             return Splitter.on('.').splitToList(host);
          }
       }
