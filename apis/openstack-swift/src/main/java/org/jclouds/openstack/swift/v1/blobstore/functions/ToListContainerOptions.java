@@ -21,6 +21,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import org.jclouds.blobstore.options.ListContainerOptions;
 
 import com.google.common.base.Function;
+import com.google.common.base.Strings;
 
 public class ToListContainerOptions implements
       Function<ListContainerOptions, org.jclouds.openstack.swift.v1.options.ListContainerOptions> {
@@ -45,7 +46,7 @@ public class ToListContainerOptions implements
       } else if (!from.isRecursive()) {
          options.delimiter('/');
       }
-      if (from.getDelimiter() != null) {
+      if (!Strings.isNullOrEmpty(from.getDelimiter())) {
          if (from.getDelimiter().length() != 1) {
             throw new IllegalArgumentException("Delimiter must be a single character");
          }
