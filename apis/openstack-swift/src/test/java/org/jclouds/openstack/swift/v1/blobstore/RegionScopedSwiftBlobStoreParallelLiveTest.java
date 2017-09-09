@@ -81,7 +81,7 @@ public class RegionScopedSwiftBlobStoreParallelLiveTest extends BaseBlobStoreInt
    // Override as needed for the right region
    protected BlobStore getBlobStore() {
       RegionScopedBlobStoreContext ctx = RegionScopedBlobStoreContext.class.cast(view);
-      return ctx.getBlobStore("US-TX");
+      return ctx.getBlobStore(ctx.getConfiguredRegions().iterator().next());
    }
 
    @Override
