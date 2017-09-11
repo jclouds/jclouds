@@ -16,9 +16,9 @@
  */
 package org.jclouds.http.handlers;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.jclouds.reflect.Reflection2.method;
 import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertTrue;
 import static org.testng.Assert.fail;
 
 import java.io.IOException;
@@ -52,32 +52,27 @@ public class BackoffLimitedRetryHandlerTest {
       long startTime = System.nanoTime();
       handler.imposeBackoffExponentialDelay(period, 2, 1, 5, "TEST FAILURE: 1");
       long elapsedTime = (System.nanoTime() - startTime) / 1000000;
-      assert elapsedTime >= period - 1 : elapsedTime;
-      assertTrue(elapsedTime < period + acceptableDelay);
+      assertThat(elapsedTime).isBetween(period, period + acceptableDelay);
 
       startTime = System.nanoTime();
       handler.imposeBackoffExponentialDelay(period, 2, 2, 5, "TEST FAILURE: 2");
       elapsedTime = (System.nanoTime() - startTime) / 1000000;
-      assert elapsedTime >= period * 4 - 1 : elapsedTime;
-      assertTrue(elapsedTime < period * 9);
+      assertThat(elapsedTime).isBetween(period * 4, period * 9);
 
       startTime = System.nanoTime();
       handler.imposeBackoffExponentialDelay(period, 2, 3, 5, "TEST FAILURE: 3");
       elapsedTime = (System.nanoTime() - startTime) / 1000000;
-      assert elapsedTime >= period * 9 - 1 : elapsedTime;
-      assertTrue(elapsedTime < period * 10);
+      assertThat(elapsedTime).isBetween(period * 9, period * 10);
 
       startTime = System.nanoTime();
       handler.imposeBackoffExponentialDelay(period, 2, 4, 5, "TEST FAILURE: 4");
       elapsedTime = (System.nanoTime() - startTime) / 1000000;
-      assert elapsedTime >= period * 10 - 1 : elapsedTime;
-      assertTrue(elapsedTime < period * 11);
+      assertThat(elapsedTime).isBetween(period * 10, period * 11);
 
       startTime = System.nanoTime();
       handler.imposeBackoffExponentialDelay(period, 2, 5, 5, "TEST FAILURE: 5");
       elapsedTime = (System.nanoTime() - startTime) / 1000000;
-      assert elapsedTime >= period * 10 - 1 : elapsedTime;
-      assertTrue(elapsedTime < period * 11);
+      assertThat(elapsedTime).isBetween(period * 10, period * 11);
 
    }
 
@@ -89,8 +84,7 @@ public class BackoffLimitedRetryHandlerTest {
       long startTime = System.nanoTime();
       handler.imposeBackoffExponentialDelay(period, 2, 1, 5, "TEST FAILURE: 1");
       long elapsedTime = (System.nanoTime() - startTime) / 1000000;
-      assert elapsedTime >= period - 1 : elapsedTime;
-      assertTrue(elapsedTime < period + acceptableDelay);
+      assertThat(elapsedTime).isBetween(period, period + acceptableDelay);
    }
 
    @Test
@@ -101,8 +95,7 @@ public class BackoffLimitedRetryHandlerTest {
       long startTime = System.nanoTime();
       handler.imposeBackoffExponentialDelay(period, 2, 1, 5, "TEST FAILURE: 1");
       long elapsedTime = (System.nanoTime() - startTime) / 1000000;
-      assert elapsedTime >= period - 1 : elapsedTime;
-      assertTrue(elapsedTime < period + acceptableDelay);
+      assertThat(elapsedTime).isBetween(period, period + acceptableDelay);
    }
 
    @Test
@@ -113,8 +106,7 @@ public class BackoffLimitedRetryHandlerTest {
       long startTime = System.nanoTime();
       handler.imposeBackoffExponentialDelay(period, 2, 1, 5, "TEST FAILURE: 1");
       long elapsedTime = (System.nanoTime() - startTime) / 1000000;
-      assert elapsedTime >= period - 1 : elapsedTime;
-      assertTrue(elapsedTime < period + acceptableDelay);
+      assertThat(elapsedTime).isBetween(period, period + acceptableDelay);
    }
 
    @Test
