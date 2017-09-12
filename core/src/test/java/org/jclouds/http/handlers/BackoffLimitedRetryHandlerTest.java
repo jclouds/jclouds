@@ -76,7 +76,8 @@ public class BackoffLimitedRetryHandlerTest {
 
    }
 
-   @Test
+   // TODO: disabled since this often fails due to race conditions
+   @Test(enabled = false)
    void testExponentialBackoffDelaySmallInterval5() throws InterruptedException {
       long period = 5;
       long acceptableDelay = period - 1;
@@ -87,7 +88,8 @@ public class BackoffLimitedRetryHandlerTest {
       assertThat(elapsedTime).isBetween(period, period + acceptableDelay);
    }
 
-   @Test
+   // TODO: disabled since this often fails due to race conditions
+   @Test(enabled = false)
    void testExponentialBackoffDelaySmallInterval1() throws InterruptedException {
       long period = 1;
       long acceptableDelay = 5;
