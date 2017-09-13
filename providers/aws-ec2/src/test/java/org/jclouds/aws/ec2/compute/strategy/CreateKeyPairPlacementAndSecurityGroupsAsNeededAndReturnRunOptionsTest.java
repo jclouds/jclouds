@@ -21,6 +21,7 @@ import static com.google.common.io.BaseEncoding.base64;
 import static org.easymock.EasyMock.anyObject;
 import static org.easymock.EasyMock.createMock;
 import static org.easymock.EasyMock.expect;
+import static org.easymock.EasyMock.partialMockBuilder;
 import static org.easymock.EasyMock.replay;
 import static org.easymock.EasyMock.verify;
 import static org.jclouds.aws.ec2.compute.AWSEC2TemplateOptions.Builder.keyPair;
@@ -28,7 +29,6 @@ import static org.jclouds.ec2.compute.strategy.CreateKeyPairAndSecurityGroupsAsN
 import static org.jclouds.ec2.compute.strategy.CreateKeyPairAndSecurityGroupsAsNeededAndReturnRunOptionsTest.KEYPAIR;
 import static org.testng.Assert.assertEquals;
 
-import java.lang.reflect.Method;
 import java.util.Set;
 import java.util.concurrent.ConcurrentMap;
 
@@ -84,20 +84,24 @@ public class CreateKeyPairPlacementAndSecurityGroupsAsNeededAndReturnRunOptionsT
       Set<String> generatedGroups = ImmutableSet.of(generatedGroup);
 
       // create mocks
-      CreateKeyPairPlacementAndSecurityGroupsAsNeededAndReturnRunOptions strategy = createMock(
-            CreateKeyPairPlacementAndSecurityGroupsAsNeededAndReturnRunOptions.class,
-            new Method[] {
+      CreateKeyPairPlacementAndSecurityGroupsAsNeededAndReturnRunOptions strategy = partialMockBuilder(
+            CreateKeyPairPlacementAndSecurityGroupsAsNeededAndReturnRunOptions.class)
+            .addMockedMethod(
                   CreateKeyPairAndSecurityGroupsAsNeededAndReturnRunOptions.class
-                        .getDeclaredMethod("getOptionsProvider"),
+                        .getDeclaredMethod("getOptionsProvider"))
+            .addMockedMethod(
                   CreateKeyPairAndSecurityGroupsAsNeededAndReturnRunOptions.class.getDeclaredMethod(
                         "createNewKeyPairUnlessUserSpecifiedOtherwise", String.class, String.class,
-                        TemplateOptions.class),
+                        TemplateOptions.class))
+            .addMockedMethod(
                   CreateKeyPairPlacementAndSecurityGroupsAsNeededAndReturnRunOptions.class.getDeclaredMethod(
                         "createNewPlacementGroupUnlessUserSpecifiedOtherwise", String.class, String.class,
-                        TemplateOptions.class),
+                        TemplateOptions.class))
+            .addMockedMethod(
                   CreateKeyPairAndSecurityGroupsAsNeededAndReturnRunOptions.class.getDeclaredMethod(
                         "getSecurityGroupsForTagAndOptions", String.class, String.class, String.class,
-                        TemplateOptions.class) });
+                        TemplateOptions.class))
+            .createMock();
 
       AWSEC2TemplateOptions options = createMock(AWSEC2TemplateOptions.class);
       Template template = createMock(Template.class);
@@ -147,20 +151,24 @@ public class CreateKeyPairPlacementAndSecurityGroupsAsNeededAndReturnRunOptionsT
       Set<String> generatedGroups = ImmutableSet.of(generatedGroup);
 
       // create mocks
-      CreateKeyPairPlacementAndSecurityGroupsAsNeededAndReturnRunOptions strategy = createMock(
-            CreateKeyPairPlacementAndSecurityGroupsAsNeededAndReturnRunOptions.class,
-            new Method[] {
+      CreateKeyPairPlacementAndSecurityGroupsAsNeededAndReturnRunOptions strategy = partialMockBuilder(
+            CreateKeyPairPlacementAndSecurityGroupsAsNeededAndReturnRunOptions.class)
+            .addMockedMethod(
                   CreateKeyPairAndSecurityGroupsAsNeededAndReturnRunOptions.class
-                        .getDeclaredMethod("getOptionsProvider"),
+                        .getDeclaredMethod("getOptionsProvider"))
+            .addMockedMethod(
                   CreateKeyPairAndSecurityGroupsAsNeededAndReturnRunOptions.class.getDeclaredMethod(
                         "createNewKeyPairUnlessUserSpecifiedOtherwise", String.class, String.class,
-                        TemplateOptions.class),
+                        TemplateOptions.class))
+            .addMockedMethod(
                   CreateKeyPairPlacementAndSecurityGroupsAsNeededAndReturnRunOptions.class.getDeclaredMethod(
                         "createNewPlacementGroupUnlessUserSpecifiedOtherwise", String.class, String.class,
-                        TemplateOptions.class),
+                        TemplateOptions.class))
+            .addMockedMethod(
                   CreateKeyPairAndSecurityGroupsAsNeededAndReturnRunOptions.class.getDeclaredMethod(
                         "getSecurityGroupsForTagAndOptions", String.class, String.class, String.class,
-                        TemplateOptions.class) });
+                        TemplateOptions.class))
+            .createMock();
 
       AWSEC2TemplateOptions options = createMock(AWSEC2TemplateOptions.class);
       Template template = createMock(Template.class);
@@ -213,20 +221,24 @@ public class CreateKeyPairPlacementAndSecurityGroupsAsNeededAndReturnRunOptionsT
       Set<String> generatedGroups = ImmutableSet.of(generatedGroup);
 
       // create mocks
-      CreateKeyPairPlacementAndSecurityGroupsAsNeededAndReturnRunOptions strategy = createMock(
-            CreateKeyPairPlacementAndSecurityGroupsAsNeededAndReturnRunOptions.class,
-            new Method[] {
+      CreateKeyPairPlacementAndSecurityGroupsAsNeededAndReturnRunOptions strategy = partialMockBuilder(
+            CreateKeyPairPlacementAndSecurityGroupsAsNeededAndReturnRunOptions.class)
+            .addMockedMethod(
                   CreateKeyPairAndSecurityGroupsAsNeededAndReturnRunOptions.class
-                        .getDeclaredMethod("getOptionsProvider"),
+                        .getDeclaredMethod("getOptionsProvider"))
+            .addMockedMethod(
                   CreateKeyPairAndSecurityGroupsAsNeededAndReturnRunOptions.class.getDeclaredMethod(
                         "createNewKeyPairUnlessUserSpecifiedOtherwise", String.class, String.class,
-                        TemplateOptions.class),
+                        TemplateOptions.class))
+            .addMockedMethod(
                   CreateKeyPairPlacementAndSecurityGroupsAsNeededAndReturnRunOptions.class.getDeclaredMethod(
                         "createNewPlacementGroupUnlessUserSpecifiedOtherwise", String.class, String.class,
-                        TemplateOptions.class),
+                        TemplateOptions.class))
+            .addMockedMethod(
                   CreateKeyPairAndSecurityGroupsAsNeededAndReturnRunOptions.class.getDeclaredMethod(
                         "getSecurityGroupsForTagAndOptions", String.class, String.class, String.class,
-                        TemplateOptions.class) });
+                        TemplateOptions.class))
+            .createMock();
 
       AWSEC2TemplateOptions options = createMock(AWSEC2TemplateOptions.class);
       Template template = createMock(Template.class);
@@ -277,22 +289,27 @@ public class CreateKeyPairPlacementAndSecurityGroupsAsNeededAndReturnRunOptionsT
       String systemGeneratedKeyPairName = "systemGeneratedKeyPair";
 
       // create mocks
-      CreateKeyPairPlacementAndSecurityGroupsAsNeededAndReturnRunOptions strategy = createMock(
-            CreateKeyPairPlacementAndSecurityGroupsAsNeededAndReturnRunOptions.class,
-            new Method[] {
+      CreateKeyPairPlacementAndSecurityGroupsAsNeededAndReturnRunOptions strategy = partialMockBuilder(
+            CreateKeyPairPlacementAndSecurityGroupsAsNeededAndReturnRunOptions.class)
+            .addMockedMethod(
                   CreateKeyPairAndSecurityGroupsAsNeededAndReturnRunOptions.class
-                        .getDeclaredMethod("getOptionsProvider"),
+                        .getDeclaredMethod("getOptionsProvider"))
+            .addMockedMethod(
                   CreateKeyPairAndSecurityGroupsAsNeededAndReturnRunOptions.class.getDeclaredMethod(
                         "createNewKeyPairUnlessUserSpecifiedOtherwise", String.class, String.class,
-                        TemplateOptions.class),
+                        TemplateOptions.class))
+            .addMockedMethod(
                   CreateKeyPairPlacementAndSecurityGroupsAsNeededAndReturnRunOptions.class.getDeclaredMethod(
                         "createNewPlacementGroupUnlessUserSpecifiedOtherwise", String.class, String.class,
-                        TemplateOptions.class),
+                        TemplateOptions.class))
+            .addMockedMethod(
                   CreateKeyPairAndSecurityGroupsAsNeededAndReturnRunOptions.class.getDeclaredMethod(
                         "getSecurityGroupsForTagAndOptions", String.class, String.class, String.class,
-                        TemplateOptions.class),
+                        TemplateOptions.class))
+            .addMockedMethod(
                   CreateKeyPairAndSecurityGroupsAsNeededAndReturnRunOptions.class.getDeclaredMethod(
-                        "vpcIdForSubnet", String.class)});
+                        "vpcIdForSubnet", String.class))
+            .createMock();
 
       AWSEC2TemplateOptions options = createMock(AWSEC2TemplateOptions.class);
       Template template = createMock(Template.class);
@@ -342,20 +359,24 @@ public class CreateKeyPairPlacementAndSecurityGroupsAsNeededAndReturnRunOptionsT
       Set<String> generatedGroups = ImmutableSet.of(generatedGroup);
 
       // create mocks
-      CreateKeyPairPlacementAndSecurityGroupsAsNeededAndReturnRunOptions strategy = createMock(
-            CreateKeyPairPlacementAndSecurityGroupsAsNeededAndReturnRunOptions.class,
-            new Method[] {
+      CreateKeyPairPlacementAndSecurityGroupsAsNeededAndReturnRunOptions strategy = partialMockBuilder(
+            CreateKeyPairPlacementAndSecurityGroupsAsNeededAndReturnRunOptions.class)
+            .addMockedMethod(
                   CreateKeyPairAndSecurityGroupsAsNeededAndReturnRunOptions.class
-                        .getDeclaredMethod("getOptionsProvider"),
+                        .getDeclaredMethod("getOptionsProvider"))
+            .addMockedMethod(
                   CreateKeyPairAndSecurityGroupsAsNeededAndReturnRunOptions.class.getDeclaredMethod(
                         "createNewKeyPairUnlessUserSpecifiedOtherwise", String.class, String.class,
-                        TemplateOptions.class),
+                        TemplateOptions.class))
+            .addMockedMethod(
                   CreateKeyPairPlacementAndSecurityGroupsAsNeededAndReturnRunOptions.class.getDeclaredMethod(
                         "createNewPlacementGroupUnlessUserSpecifiedOtherwise", String.class, String.class,
-                        TemplateOptions.class),
+                        TemplateOptions.class))
+            .addMockedMethod(
                   CreateKeyPairAndSecurityGroupsAsNeededAndReturnRunOptions.class.getDeclaredMethod(
                         "getSecurityGroupsForTagAndOptions", String.class, String.class, String.class,
-                        TemplateOptions.class) });
+                        TemplateOptions.class))
+            .createMock();
 
       AWSEC2TemplateOptions options = createMock(AWSEC2TemplateOptions.class);
       Template template = createMock(Template.class);

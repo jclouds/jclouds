@@ -275,8 +275,8 @@
       </dependency>
       <dependency>
         <groupId>org.easymock</groupId>
-        <artifactId>easymockclassextension</artifactId>
-        <version>3.1</version>
+        <artifactId>easymock</artifactId>
+        <version>3.4</version>
       </dependency>
       <dependency>
         <groupId>org.eclipse.jetty</groupId>
@@ -384,7 +384,7 @@
     </dependency>
     <dependency>
       <groupId>org.easymock</groupId>
-      <artifactId>easymockclassextension</artifactId>
+      <artifactId>easymock</artifactId>
       <scope>test</scope>
     </dependency>
     <dependency>

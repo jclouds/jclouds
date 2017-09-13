@@ -20,12 +20,12 @@ import static com.google.common.io.BaseEncoding.base64;
 import static org.easymock.EasyMock.anyObject;
 import static org.easymock.EasyMock.createMock;
 import static org.easymock.EasyMock.expect;
+import static org.easymock.EasyMock.partialMockBuilder;
 import static org.easymock.EasyMock.replay;
 import static org.easymock.EasyMock.verify;
 import static org.testng.Assert.assertEquals;
 
 import javax.inject.Provider;
-import java.lang.reflect.Method;
 import java.util.Set;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.ExecutionException;
@@ -103,17 +103,20 @@ public class CreateKeyPairAndSecurityGroupsAsNeededAndReturnRunOptionsTest {
       Set<String> generatedGroups = ImmutableSet.of(generatedGroup);
 
       // create mocks
-      CreateKeyPairAndSecurityGroupsAsNeededAndReturnRunOptions strategy = createMock(
-            CreateKeyPairAndSecurityGroupsAsNeededAndReturnRunOptions.class,
-            new Method[] {
+      CreateKeyPairAndSecurityGroupsAsNeededAndReturnRunOptions strategy = partialMockBuilder(
+            CreateKeyPairAndSecurityGroupsAsNeededAndReturnRunOptions.class)
+            .addMockedMethod(
                   CreateKeyPairAndSecurityGroupsAsNeededAndReturnRunOptions.class
-                        .getDeclaredMethod("getOptionsProvider"),
+                        .getDeclaredMethod("getOptionsProvider"))
+            .addMockedMethod(
                   CreateKeyPairAndSecurityGroupsAsNeededAndReturnRunOptions.class.getDeclaredMethod(
                         "createNewKeyPairUnlessUserSpecifiedOtherwise", String.class, String.class,
-                        TemplateOptions.class),
+                        TemplateOptions.class))
+            .addMockedMethod(
                   CreateKeyPairAndSecurityGroupsAsNeededAndReturnRunOptions.class.getDeclaredMethod(
                         "getSecurityGroupsForTagAndOptions", String.class, String.class, String.class,
-                        TemplateOptions.class) });
+                        TemplateOptions.class))
+            .createMock();
 
       EC2TemplateOptions options = createMock(EC2TemplateOptions.class);
       Template template = createMock(Template.class);
@@ -160,17 +163,20 @@ public class CreateKeyPairAndSecurityGroupsAsNeededAndReturnRunOptionsTest {
       Set<String> generatedGroups = ImmutableSet.of(generatedGroup);
 
       // create mocks
-      CreateKeyPairAndSecurityGroupsAsNeededAndReturnRunOptions strategy = createMock(
-            CreateKeyPairAndSecurityGroupsAsNeededAndReturnRunOptions.class,
-            new Method[] {
+      CreateKeyPairAndSecurityGroupsAsNeededAndReturnRunOptions strategy = partialMockBuilder(
+            CreateKeyPairAndSecurityGroupsAsNeededAndReturnRunOptions.class)
+            .addMockedMethod(
                   CreateKeyPairAndSecurityGroupsAsNeededAndReturnRunOptions.class
-                        .getDeclaredMethod("getOptionsProvider"),
+                        .getDeclaredMethod("getOptionsProvider"))
+            .addMockedMethod(
                   CreateKeyPairAndSecurityGroupsAsNeededAndReturnRunOptions.class.getDeclaredMethod(
                         "createNewKeyPairUnlessUserSpecifiedOtherwise", String.class, String.class,
-                        TemplateOptions.class),
+                        TemplateOptions.class))
+            .addMockedMethod(
                   CreateKeyPairAndSecurityGroupsAsNeededAndReturnRunOptions.class.getDeclaredMethod(
                         "getSecurityGroupsForTagAndOptions", String.class, String.class, String.class,
-                        TemplateOptions.class) });
+                        TemplateOptions.class))
+            .createMock();
 
       EC2TemplateOptions options = createMock(EC2TemplateOptions.class);
       Template template = createMock(Template.class);
