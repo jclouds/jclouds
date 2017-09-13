@@ -16,13 +16,6 @@
  */
 package org.jclouds.azurecompute.arm.compute.strategy;
 
-import static org.easymock.EasyMock.anyObject;
-import static org.easymock.EasyMock.createMock;
-import static org.easymock.EasyMock.expect;
-import static org.easymock.EasyMock.replay;
-import static org.easymock.EasyMock.verify;
-import static org.testng.Assert.assertEquals;
-
 import org.jclouds.azurecompute.arm.AzureComputeApi;
 import org.jclouds.azurecompute.arm.compute.options.AzureTemplateOptions;
 import org.jclouds.azurecompute.arm.compute.options.IpOptions;
@@ -34,6 +27,13 @@ import org.jclouds.azurecompute.arm.features.SubnetApi;
 import org.testng.annotations.Test;
 
 import com.google.common.collect.ImmutableList;
+
+import static org.easymock.EasyMock.anyObject;
+import static org.easymock.EasyMock.createMock;
+import static org.easymock.EasyMock.expect;
+import static org.easymock.EasyMock.replay;
+import static org.easymock.EasyMock.verify;
+import static org.testng.Assert.assertEquals;
 
 @Test(groups = "unit", testName = "CreateResourcesThenCreateNodesTest")
 public class CreateResourcesThenCreateNodesTest {
@@ -67,8 +67,9 @@ public class CreateResourcesThenCreateNodesTest {
       strategy(api).normalizeNetworkOptions(options);
 
       assertEquals(options.getIpOptions(), ImmutableList.of(
-            IpOptions.builder().subnet(netResource("/virtualNetworks/vn/subnets/foo")).build(), IpOptions.builder()
-                  .subnet(netResource("/virtualNetworks/vn/subnets/bar")).build()));
+              IpOptions.builder().subnet(netResource("/virtualNetworks/vn/subnets/foo")).allocateNewPublicIp(true).build(), 
+              IpOptions.builder().subnet(netResource("/virtualNetworks/vn/subnets/bar")).allocateNewPublicIp(true).build())
+      );
 
       // Verify that the code has validated that the subnets exist
       verify(api, subnetApi);

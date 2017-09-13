@@ -16,15 +16,6 @@
  */
 package org.jclouds.azurecompute.arm.compute.strategy;
 
-import static com.google.common.base.Preconditions.checkArgument;
-import static com.google.common.base.Preconditions.checkState;
-import static com.google.common.collect.Iterables.getOnlyElement;
-import static org.jclouds.azurecompute.arm.config.AzureComputeProperties.DEFAULT_SUBNET_ADDRESS_PREFIX;
-import static org.jclouds.azurecompute.arm.config.AzureComputeProperties.DEFAULT_VNET_ADDRESS_SPACE_PREFIX;
-import static org.jclouds.azurecompute.arm.domain.IdReference.extractName;
-import static org.jclouds.azurecompute.arm.domain.IdReference.extractResourceGroup;
-import static org.jclouds.azurecompute.arm.domain.Subnet.extractVirtualNetwork;
-
 import java.util.Arrays;
 import java.util.Map;
 import java.util.Set;
@@ -34,7 +25,6 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import javax.inject.Singleton;
 
-import com.google.common.base.Optional;
 import org.jclouds.Constants;
 import org.jclouds.azurecompute.arm.AzureComputeApi;
 import org.jclouds.azurecompute.arm.compute.domain.ResourceGroupAndName;
@@ -50,7 +40,6 @@ import org.jclouds.azurecompute.arm.domain.Subnet;
 import org.jclouds.azurecompute.arm.domain.Subnet.SubnetProperties;
 import org.jclouds.azurecompute.arm.domain.VirtualNetwork.AddressSpace;
 import org.jclouds.azurecompute.arm.domain.VirtualNetwork.VirtualNetworkProperties;
-import org.jclouds.util.Passwords;
 import org.jclouds.compute.config.CustomizationResponse;
 import org.jclouds.compute.domain.NodeMetadata;
 import org.jclouds.compute.domain.Template;
@@ -63,14 +52,25 @@ import org.jclouds.compute.strategy.ListNodesStrategy;
 import org.jclouds.compute.strategy.impl.CreateNodesWithGroupEncodedIntoNameThenAddToSet;
 import org.jclouds.domain.Location;
 import org.jclouds.logging.Logger;
+import org.jclouds.util.Passwords;
 
 import com.google.common.annotations.VisibleForTesting;
+import com.google.common.base.Optional;
 import com.google.common.cache.LoadingCache;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Multimap;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.ListeningExecutorService;
+
+import static com.google.common.base.Preconditions.checkArgument;
+import static com.google.common.base.Preconditions.checkState;
+import static com.google.common.collect.Iterables.getOnlyElement;
+import static org.jclouds.azurecompute.arm.config.AzureComputeProperties.DEFAULT_SUBNET_ADDRESS_PREFIX;
+import static org.jclouds.azurecompute.arm.config.AzureComputeProperties.DEFAULT_VNET_ADDRESS_SPACE_PREFIX;
+import static org.jclouds.azurecompute.arm.domain.IdReference.extractName;
+import static org.jclouds.azurecompute.arm.domain.IdReference.extractResourceGroup;
+import static org.jclouds.azurecompute.arm.domain.Subnet.extractVirtualNetwork;
 
 @Singleton
 public class CreateResourcesThenCreateNodes extends CreateNodesWithGroupEncodedIntoNameThenAddToSet {
@@ -219,14 +219,14 @@ public class CreateResourcesThenCreateNodes extends CreateNodesWithGroupEncodedI
          throw new IllegalArgumentException("The options.networks and options.ipOptions are exclusive");
       }
       
-      if (!options.getNetworks().isEmpty() && options.getIpOptions().isEmpty()) {
+      if (!options.getNetworks().isEmpty()) {
          // The portable interface allows to configure network IDs (subnet IDs),
          // but we don't know the type of the IP configurations to be applied
          // when attaching nodes to those networks. We'll assume private IPs
-         // with Dynamic allocation and no public ip address associated.
+         // with Dynamic allocation and new public ip address allocated.
          ImmutableList.Builder<IpOptions> ipOptions = ImmutableList.builder();
          for (String subnetId : options.getNetworks()) {
-            ipOptions.add(IpOptions.builder().subnet(subnetId).build());
+            ipOptions.add(IpOptions.builder().subnet(subnetId).allocateNewPublicIp(true).build());
          }
          options.ipOptions(ipOptions.build());
       }
@@ -241,7 +241,6 @@ public class CreateResourcesThenCreateNodes extends CreateNodesWithGroupEncodedI
             String resourceGroup = extractResourceGroup(ipConfig.subnet());
             String networkName = extractVirtualNetwork(ipConfig.subnet());
             String subnetName = extractName(ipConfig.subnet());
-            
             Subnet subnet = api.getSubnetApi(resourceGroup, networkName).get(subnetName);
             checkState(subnet != null, "Configured subnet %s does not exist", ipConfig.subnet());
             
