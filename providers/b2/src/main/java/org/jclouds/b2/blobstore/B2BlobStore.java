@@ -77,6 +77,7 @@ import org.jclouds.io.PayloadSlicer;
 import org.jclouds.io.payloads.BaseMutableContentMetadata;
 
 import com.google.common.base.Preconditions;
+import com.google.common.base.Strings;
 import com.google.common.base.Supplier;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
@@ -191,7 +192,7 @@ public final class B2BlobStore extends BaseBlobStore {
       Bucket bucket = getBucket(container);
 
       ImmutableList.Builder<StorageMetadata> builder = ImmutableList.builder();
-      B2ObjectList list = api.getObjectApi().listFileNames(bucket.bucketId(), options.getMarker(), options.getMaxResults(), options.getPrefix(), delimiter);
+      B2ObjectList list = api.getObjectApi().listFileNames(bucket.bucketId(), options.getMarker(), options.getMaxResults(), options.getPrefix(), Strings.emptyToNull(delimiter));
       for (B2ObjectList.Entry entry : list.files()) {
          if (entry.action() == Action.FOLDER) {
             builder.add(new StorageMetadataImpl(StorageType.RELATIVE_PATH, null, entry.fileName(), null, null, null, null, entry.uploadTimestamp(), ImmutableMap.<String, String>of(), null));
