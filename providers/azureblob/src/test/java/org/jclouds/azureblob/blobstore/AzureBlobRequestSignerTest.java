@@ -57,7 +57,7 @@ public class AzureBlobRequestSignerTest extends BaseRestAnnotationProcessingTest
             NoSuchMethodException, IOException {
       HttpRequest request = signer.signGetBlob("container", "name");
 
-      assertRequestLineEquals(request, "GET https://identity.blob.core.windows.net/container/name?sv=2016-05-31&se=2008-06-05T16%3A53%3A19Z&sr=b&sp=r&sig=2ud/p0SM7pAZd1/ydgqYghGzFDP%2Bb/1QjZQ3D1nKzOQ%3D HTTP/1.1");
+      assertRequestLineEquals(request, "GET https://identity.blob.core.windows.net/container/name?sv=2017-04-17&se=2008-06-05T16%3A53%3A19Z&sr=b&sp=r&sig=HzCwPCszb39utrHpHKFK6eeZWHJVLcaIwJYXVUgJ%2BQo%3D HTTP/1.1");
       assertNonPayloadHeadersEqual(request, "Date: Thu, 05 Jun 2008 16:38:19 GMT\n");
       assertPayloadEquals(request, null, null, false);
 
@@ -68,7 +68,7 @@ public class AzureBlobRequestSignerTest extends BaseRestAnnotationProcessingTest
             NoSuchMethodException, IOException {
       HttpRequest request = signer.signRemoveBlob("container", "name");
 
-      assertRequestLineEquals(request, "DELETE https://identity.blob.core.windows.net/container/name?sv=2016-05-31&se=2008-06-05T16%3A53%3A19Z&sr=b&sp=d&sig=eCvzaSr/pJGG85RXM2TthSOxj9%2Bhd/rJmz8AHgMo0nI%3D HTTP/1.1");
+      assertRequestLineEquals(request, "DELETE https://identity.blob.core.windows.net/container/name?sv=2017-04-17&se=2008-06-05T16%3A53%3A19Z&sr=b&sp=d&sig=xyHwMhO1Dg2LoJH/VoXeLraAp1FBWjdfcc0y31LMKnY%3D HTTP/1.1");
       assertNonPayloadHeadersEqual(request, "Date: Thu, 05 Jun 2008 16:38:19 GMT\n");
       assertPayloadEquals(request, null, null, false);
 
@@ -88,7 +88,7 @@ public class AzureBlobRequestSignerTest extends BaseRestAnnotationProcessingTest
 
       HttpRequest request = signer.signPutBlob("container", blob);
 
-      assertRequestLineEquals(request, "PUT https://identity.blob.core.windows.net/container/name?sv=2016-05-31&se=2008-06-05T16%3A53%3A19Z&sr=b&sp=w&sig=QkYYay9OSH6Dm5lMIwKTsCDsPqEu/GLd8M5WaOitRFY%3D HTTP/1.1");
+      assertRequestLineEquals(request, "PUT https://identity.blob.core.windows.net/container/name?sv=2017-04-17&se=2008-06-05T16%3A53%3A19Z&sr=b&sp=w&sig=blX/iud63gLIPVkDEeTYreIopqiVmHalxfrFFsHMJFc%3D HTTP/1.1");
       assertNonPayloadHeadersEqual(
                request,
                "Content-Length: 2\n" +
