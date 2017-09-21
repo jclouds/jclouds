@@ -26,6 +26,7 @@ import java.util.Set;
 
 import javax.inject.Inject;
 
+import org.jclouds.azureblob.domain.AccessTier;
 import org.jclouds.azureblob.domain.BlobProperties;
 import org.jclouds.azureblob.domain.BlobType;
 import org.jclouds.azureblob.domain.LeaseStatus;
@@ -70,6 +71,7 @@ public class ContainerNameEnumerationResultsHandler extends ParseSax.HandlerWith
    private String currentContentEncoding;
    private String currentContentLanguage;
    private BlobType currentBlobType;
+   private AccessTier currentAccessTier;
    private Date currentExpires;
    private boolean inBlob;
    private boolean inBlobPrefix;
@@ -129,16 +131,19 @@ public class ContainerNameEnumerationResultsHandler extends ParseSax.HandlerWith
          nextMarker = (nextMarker.equals("")) ? null : nextMarker;
       } else if (qName.equals("BlobType")) {
          currentBlobType = BlobType.fromValue(currentText.toString());
+      } else if (qName.equals("AccessTier")) {
+         currentAccessTier = AccessTier.fromValue(currentText.toString());
       } else if (qName.equals("LeaseStatus")) {
          currentLeaseStatus = LeaseStatus.fromValue(currentText.toString());
       } else if (qName.equals("Blob")) {
          URI currentUrl = uriBuilder(containerUrl).appendPath(Strings2.urlEncode(currentName)).build();
-         BlobProperties md = new BlobPropertiesImpl(currentBlobType, currentName, containerUrl.getPath().replace("/",
+         BlobProperties md = new BlobPropertiesImpl(currentBlobType, currentAccessTier, currentName, containerUrl.getPath().replace("/",
                   ""), currentUrl, currentLastModified, currentETag, currentSize, currentContentType,
                   currentContentMD5, currentContentEncoding, currentContentLanguage, currentExpires,
                   currentLeaseStatus, currentMetadata);
          blobMetadata.add(md);
          currentBlobType = null;
+         currentAccessTier = null;
          currentName = null;
          currentLastModified = null;
          currentETag = null;

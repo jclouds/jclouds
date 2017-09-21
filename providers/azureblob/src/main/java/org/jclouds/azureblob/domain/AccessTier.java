@@ -16,36 +16,25 @@
  */
 package org.jclouds.azureblob.domain;
 
-import java.net.URI;
-import java.util.Date;
-import java.util.Map;
+import static com.google.common.base.Preconditions.checkNotNull;
 
-import org.jclouds.io.ContentMetadata;
+import com.google.common.base.CaseFormat;
 
-public interface BlobProperties extends Comparable<BlobProperties> {
+public enum AccessTier {
+   HOT,
+   COOL,
+   ARCHIVE;
 
-   Map<String, String> getMetadata();
+   public String value() {
+      return CaseFormat.UPPER_UNDERSCORE.to(CaseFormat.UPPER_CAMEL, name());
+   }
 
-   /**
-    *  
-    */
-   BlobType getType();
+   @Override
+   public String toString() {
+      return value();
+   }
 
-   /** @return access tier or null if not set */
-   AccessTier getTier();
-
-   LeaseStatus getLeaseStatus();
-
-   URI getUrl();
-
-   String getName();
-
-   String getContainer();
-
-   Date getLastModified();
-
-   String getETag();
-
-   ContentMetadata getContentMetadata();
-
+   public static AccessTier fromValue(String tier) {
+      return valueOf(CaseFormat.UPPER_CAMEL.to(CaseFormat.UPPER_UNDERSCORE, checkNotNull(tier, "tier")));
+   }
 }

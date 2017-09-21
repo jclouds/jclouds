@@ -33,6 +33,7 @@ import org.jclouds.Fallbacks.VoidOnNotFoundOr404;
 import org.jclouds.azure.storage.filters.SharedKeyLiteAuthentication;
 import org.jclouds.azure.storage.options.ListOptions;
 import org.jclouds.azureblob.AzureBlobFallbacks.FalseIfContainerAlreadyExists;
+import org.jclouds.azureblob.domain.AccessTier;
 import org.jclouds.azureblob.domain.AzureBlob;
 import org.jclouds.azureblob.domain.ListBlobsInclude;
 import org.jclouds.azureblob.domain.PublicAccess;
@@ -375,6 +376,23 @@ public class AzureBlobClientTest extends BaseRestAnnotationProcessingTest<AzureB
       assertPayloadEquals(request, null, null, false);
 
       assertResponseParserClassEquals(method, request, ParseETagHeader.class);
+      assertSaxResponseParserClassEquals(method, null);
+      assertFallbackClassEquals(method, null);
+   }
+
+   public void testSetBlobTier() throws Exception {
+      AccessTier tier = AccessTier.COOL;
+      Invokable<?, ?> method = method(AzureBlobClient.class, "setBlobTier", String.class, String.class, AccessTier.class);
+      GeneratedHttpRequest request = processor.createRequest(method, ImmutableList.<Object> of("container", "blob", tier));
+
+      assertRequestLineEquals(request,
+               "PUT https://identity.blob.core.windows.net/container/blob?comp=tier HTTP/1.1");
+      assertNonPayloadHeadersEqual(request,
+               "x-ms-access-tier: " + tier + "\n" +
+               "x-ms-version: 2017-04-17\n");
+      assertPayloadEquals(request, null, null, false);
+
+      assertResponseParserClassEquals(method, request, ReleasePayloadAndReturn.class);
       assertSaxResponseParserClassEquals(method, null);
       assertFallbackClassEquals(method, null);
    }

@@ -13,6 +13,7 @@
             <Content-Length>8</Content-Length>
             <Content-Type>text/plain; charset=UTF-8</Content-Type>
             <BlobType>BlockBlob</BlobType>
+            <AccessTier>Hot</AccessTier>
             <LeaseStatus>unlocked</LeaseStatus>
             <Content-Encoding />
             <Content-Language />
@@ -26,6 +27,7 @@
             <Content-Length>14</Content-Length>
             <Content-Type>text/plain; charset=UTF-8</Content-Type>
             <BlobType>BlockBlob</BlobType>
+            <AccessTier>Cool</AccessTier>
             <LeaseStatus>unlocked</LeaseStatus>
             <Content-Encoding />
             <Content-Language />
@@ -42,6 +44,7 @@
             <Content-Length>25</Content-Length>
             <Content-Type>text/plain; charset=UTF-8</Content-Type>
             <BlobType>PageBlob</BlobType>
+            <AccessTier>Archive</AccessTier>
             <LeaseStatus>unlocked</LeaseStatus>
             <Content-Encoding />
             <Content-Language />

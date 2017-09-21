@@ -27,6 +27,7 @@ import javax.inject.Named;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.HEAD;
+import javax.ws.rs.HeaderParam;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
@@ -45,6 +46,7 @@ import org.jclouds.azureblob.binders.BindAzureBlocksToRequest;
 import org.jclouds.azureblob.binders.BindAzureContentMetadataToRequest;
 import org.jclouds.azureblob.binders.BindAzureCopyOptionsToRequest;
 import org.jclouds.azureblob.binders.BindPublicAccessToRequest;
+import org.jclouds.azureblob.domain.AccessTier;
 import org.jclouds.azureblob.domain.AzureBlob;
 import org.jclouds.azureblob.domain.BlobProperties;
 import org.jclouds.azureblob.domain.ContainerProperties;
@@ -433,6 +435,14 @@ public interface AzureBlobClient extends Closeable {
    String setBlobMetadata(
          @PathParam("container") @ParamValidators(ContainerNameValidator.class) String container,
          @PathParam("name") String name, @BinderParam(BindMapToHeadersWithPrefix.class) Map<String, String> metadata);
+
+   @Named("SetAccessTier")
+   @PUT
+   @Path("{container}/{name}")
+   @QueryParams(keys = { "comp" }, values = { "tier" })
+   void setBlobTier(
+         @PathParam("container") @ParamValidators(ContainerNameValidator.class) String container,
+         @PathParam("name") String name, @HeaderParam("x-ms-access-tier") AccessTier tier);
 
    /**
     * The Delete Blob operation marks the specified blob for deletion. The blob is later deleted

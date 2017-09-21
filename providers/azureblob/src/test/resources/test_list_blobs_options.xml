@@ -18,6 +18,7 @@
                 <Content-MD5 />
                 <Cache-Control />
                 <BlobType>BlockBlob</BlobType>
+                <AccessTier>Hot</AccessTier>
                 <LeaseStatus>unlocked</LeaseStatus>
             </Properties>
             <Metadata />

@@ -21,6 +21,7 @@ import static com.google.common.base.Preconditions.checkArgument;
 import javax.inject.Inject;
 
 import org.jclouds.azureblob.blobstore.functions.BlobMetadataToBlobProperties;
+import org.jclouds.azureblob.domain.AccessTier;
 import org.jclouds.azureblob.domain.MutableBlobProperties;
 import org.jclouds.blobstore.domain.BlobMetadata;
 import org.jclouds.blobstore.functions.ParseSystemAndUserMetadataFromHeaders;
@@ -55,6 +56,10 @@ public class ParseBlobPropertiesFromHeaders implements Function<HttpResponse, Mu
       BlobMetadata base = blobMetadataParser.apply(from);
       MutableBlobProperties to = blobToBlobProperties.apply(base);
       to.setContainer(container);
+      String tier = from.getFirstHeaderOrNull("x-ms-access-tier");
+      if (tier != null) {
+         to.setTier(AccessTier.fromValue(tier));
+      }
       return to;
    }
 

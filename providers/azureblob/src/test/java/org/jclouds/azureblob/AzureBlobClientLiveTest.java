@@ -38,6 +38,7 @@ import java.util.Set;
 import org.jclouds.azure.storage.AzureStorageResponseException;
 import org.jclouds.azure.storage.domain.BoundedSet;
 import org.jclouds.azure.storage.options.ListOptions;
+import org.jclouds.azureblob.domain.AccessTier;
 import org.jclouds.azureblob.domain.AzureBlob;
 import org.jclouds.azureblob.domain.BlobProperties;
 import org.jclouds.azureblob.domain.ContainerProperties;
@@ -560,7 +561,7 @@ public class AzureBlobClientLiveTest extends BaseBlobStoreIntegrationTest {
       assertEquals(ByteStreams2.toByteArrayAndClose(getBlob.getPayload().openStream()), byteSource.read());
    }
 
-   @Test
+   @Test(timeOut = 5 * 60 * 1000, dependsOnMethods = { "testCreateContainer" })
    public void testSetBlobProperties() throws Exception {
       String blobName = "blob-name";
       ByteSource byteSource = TestUtils.randomByteSource().slice(0, 1024);
@@ -590,5 +591,36 @@ public class AzureBlobClientLiveTest extends BaseBlobStoreIntegrationTest {
       assertThat(contentMetadata.getContentEncoding()).isEqualTo(contentEncoding);
       assertThat(contentMetadata.getContentLanguage()).isEqualTo(contentLanguage);
       assertThat(contentMetadata.getContentType()).isEqualTo(contentType);
+   }
+
+   @Test(timeOut = 5 * 60 * 1000, dependsOnMethods = { "testCreateContainer" })
+   public void testSetBlobTier() throws Exception {
+      String blobName = "tier-blob-name";
+      ByteSource byteSource = TestUtils.randomByteSource().slice(0, 1024);
+
+      // create blob
+      AzureBlob object = getApi().newBlob();
+      object.getProperties().setName(blobName);
+      object.setPayload(byteSource.read());
+      getApi().putBlob(privateContainer, object);
+
+      // default
+      BlobProperties properties = getApi().getBlobProperties(privateContainer, blobName);
+      assertThat(properties.getTier()).isNull();
+
+      // hot
+      getApi().setBlobTier(privateContainer, blobName, AccessTier.HOT);
+      properties = getApi().getBlobProperties(privateContainer, blobName);
+      assertThat(properties.getTier()).isEqualTo(AccessTier.HOT);
+
+      // cool
+      getApi().setBlobTier(privateContainer, blobName, AccessTier.COOL);
+      properties = getApi().getBlobProperties(privateContainer, blobName);
+      assertThat(properties.getTier()).isEqualTo(AccessTier.COOL);
+
+      // archive
+      getApi().setBlobTier(privateContainer, blobName, AccessTier.ARCHIVE);
+      properties = getApi().getBlobProperties(privateContainer, blobName);
+      assertThat(properties.getTier()).isEqualTo(AccessTier.ARCHIVE);
    }
 }

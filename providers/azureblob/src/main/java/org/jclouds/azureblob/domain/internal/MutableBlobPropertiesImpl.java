@@ -16,10 +16,13 @@
  */
 package org.jclouds.azureblob.domain.internal;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 import java.net.URI;
 import java.util.Date;
 import java.util.Map;
 
+import org.jclouds.azureblob.domain.AccessTier;
 import org.jclouds.azureblob.domain.BlobProperties;
 import org.jclouds.azureblob.domain.BlobType;
 import org.jclouds.azureblob.domain.LeaseStatus;
@@ -36,6 +39,7 @@ import com.google.common.collect.Maps;
 public class MutableBlobPropertiesImpl implements MutableBlobProperties {
 
    private BlobType type = BlobType.BLOCK_BLOB;
+   private AccessTier tier;
    private LeaseStatus leaseStatus = LeaseStatus.UNLOCKED;
 
    private String name;
@@ -75,6 +79,16 @@ public class MutableBlobPropertiesImpl implements MutableBlobProperties {
     */
    public void setType(BlobType type) {
       this.type = type;
+   }
+
+   @Override
+   public AccessTier getTier() {
+      return tier;
+   }
+
+   @Override
+   public void setTier(AccessTier tier) {
+      this.tier = checkNotNull(tier);
    }
 
    /**
