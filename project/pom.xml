@@ -587,25 +587,25 @@
               </packages>
             </exception>
           </exceptions>
-          <ignoredResources>
+          <ignoredResourcePatterns>
             <!-- For all the jetty packages -->
-            <ignoredResource>about\.html</ignoredResource>
+            <ignoredResourcePattern>about\.html</ignoredResourcePattern>
             <!-- There are several situations where a test-jar and another test-jar or a bundle conflict on these artifacts -->
-            <ignoredResource>log4j.xml</ignoredResource>
-            <ignoredResource>os.xml</ignoredResource>
-            <ignoredResource>virtualhardwaresection.xml</ignoredResource>
-            <ignoredResource>logback.xml</ignoredResource>
-            <ignoredResource>amzn_images.xml</ignoredResource>
-            <ignoredResource>test.jks</ignoredResource>
-            <ignoredResource>test</ignoredResource>
-            <ignoredResource>CreateInternetService-options-test.xml</ignoredResource>
-            <ignoredResource>.gitattributes</ignoredResource>
-            <ignoredResource>functions/.gitattributes</ignoredResource>
-            <ignoredResource>OSGI-OPT/bnd.bnd</ignoredResource>
+            <ignoredResourcePattern>log4j.xml</ignoredResourcePattern>
+            <ignoredResourcePattern>os.xml</ignoredResourcePattern>
+            <ignoredResourcePattern>virtualhardwaresection.xml</ignoredResourcePattern>
+            <ignoredResourcePattern>logback.xml</ignoredResourcePattern>
+            <ignoredResourcePattern>amzn_images.xml</ignoredResourcePattern>
+            <ignoredResourcePattern>test.jks</ignoredResourcePattern>
+            <ignoredResourcePattern>test</ignoredResourcePattern>
+            <ignoredResourcePattern>CreateInternetService-options-test.xml</ignoredResourcePattern>
+            <ignoredResourcePattern>.gitattributes</ignoredResourcePattern>
+            <ignoredResourcePattern>functions/.gitattributes</ignoredResourcePattern>
+            <ignoredResourcePattern>OSGI-OPT/bnd.bnd</ignoredResourcePattern>
             <!-- For bouncycastle -->
-            <ignoredResource>META-INF/BCKEY.DSA</ignoredResource>
-            <ignoredResource>META-INF/BCKEY.SF</ignoredResource>
-          </ignoredResources>
+            <ignoredResourcePattern>META-INF/BCKEY.DSA</ignoredResourcePattern>
+            <ignoredResourcePattern>META-INF/BCKEY.SF</ignoredResourcePattern>
+          </ignoredResourcePatterns>
           <failBuildInCaseOfConflict>true</failBuildInCaseOfConflict>
           <skip>${skipDuplicateFinder}</skip>
         </configuration>
