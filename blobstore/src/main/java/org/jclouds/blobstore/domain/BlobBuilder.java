@@ -41,6 +41,9 @@ public interface BlobBuilder {
     */
    BlobBuilder name(String name);
 
+   /** @param tier The storage tier of the {@link Blob}. Typically STANDARD. */
+   BlobBuilder tier(Tier tier);
+
    /**
     * @param type
     *           overrides default type of {@link StorageType#BLOB}

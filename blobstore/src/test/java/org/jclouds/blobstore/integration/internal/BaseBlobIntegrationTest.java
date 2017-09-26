@@ -59,6 +59,7 @@ import org.jclouds.blobstore.domain.MultipartUpload;
 import org.jclouds.blobstore.domain.PageSet;
 import org.jclouds.blobstore.domain.StorageMetadata;
 import org.jclouds.blobstore.domain.StorageType;
+import org.jclouds.blobstore.domain.Tier;
 import org.jclouds.blobstore.options.CopyOptions;
 import org.jclouds.blobstore.options.GetOptions;
 import org.jclouds.blobstore.options.PutOptions;
@@ -739,6 +740,54 @@ public class BaseBlobIntegrationTest extends BaseBlobStoreIntegrationTest {
          Blob blobPublic = blobStore.blobBuilder(blobNamePublic).payload(payload).build();
          blobStore.putBlob(containerName, blobPublic, new PutOptions().setBlobAccess(BlobAccess.PUBLIC_READ).multipart(true));
          assertThat(blobStore.getBlobAccess(containerName, blobNamePublic)).isEqualTo(BlobAccess.PUBLIC_READ);
+      } finally {
+         returnContainer(containerName);
+      }
+   }
+
+   @Test(groups = { "integration", "live" })
+   public void testPutBlobTierStandard() throws Exception {
+      testPutBlobTierHelper(Tier.STANDARD, new PutOptions());
+   }
+
+   @Test(groups = { "integration", "live" })
+   public void testPutBlobTierInfrequent() throws Exception {
+      testPutBlobTierHelper(Tier.INFREQUENT, new PutOptions());
+   }
+
+   @Test(groups = { "integration", "live" })
+   public void testPutBlobTierArchive() throws Exception {
+      testPutBlobTierHelper(Tier.ARCHIVE, new PutOptions());
+   }
+
+   @Test(groups = { "integration", "live" })
+   public void testPutBlobTierStandardMultipart() throws Exception {
+      testPutBlobTierHelper(Tier.STANDARD, new PutOptions().multipart(true));
+   }
+
+   @Test(groups = { "integration", "live" })
+   public void testPutBlobTierInfrequentMultipart() throws Exception {
+      testPutBlobTierHelper(Tier.INFREQUENT, new PutOptions().multipart(true));
+   }
+
+   @Test(groups = { "integration", "live" })
+   public void testPutBlobTierArchiveMultipart() throws Exception {
+      testPutBlobTierHelper(Tier.ARCHIVE, new PutOptions().multipart(true));
+   }
+
+   private void testPutBlobTierHelper(Tier tier, PutOptions options) throws Exception {
+      String blobName = "put-blob-tier-" + tier;
+      ByteSource payload = createTestInput(1024);
+      BlobStore blobStore = view.getBlobStore();
+      String containerName = getContainerName();
+      try {
+         Blob blob = blobStore.blobBuilder(blobName)
+            .payload(payload)
+            .contentLength(payload.size())
+            .tier(tier)
+            .build();
+         blobStore.putBlob(containerName, blob, options);
+         assertThat(blobStore.blobMetadata(containerName, blobName).getTier()).isEqualTo(tier);
       } finally {
          returnContainer(containerName);
       }

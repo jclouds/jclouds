@@ -29,6 +29,7 @@ import java.util.Map;
 import org.jclouds.blobstore.domain.Blob;
 import org.jclouds.blobstore.domain.BlobBuilder;
 import org.jclouds.blobstore.domain.StorageType;
+import org.jclouds.blobstore.domain.Tier;
 import org.jclouds.io.Payload;
 import org.jclouds.io.payloads.PhantomPayload;
 
@@ -41,6 +42,7 @@ public class BlobBuilderImpl implements BlobBuilder {
 
    private Payload payload;
    private String name;
+   private Tier tier = Tier.STANDARD;
    private Map<String, String> userMetadata = Maps.newLinkedHashMap();
    private StorageType type = StorageType.BLOB;
 
@@ -49,6 +51,12 @@ public class BlobBuilderImpl implements BlobBuilder {
       checkNotNull(name, "name");
       checkArgument(!name.isEmpty(), "name");
       this.name = name;
+      return this;
+   }
+
+   @Override
+   public BlobBuilder tier(Tier tier) {
+      this.tier = checkNotNull(tier, "tier");
       return this;
    }
 
@@ -117,6 +125,7 @@ public class BlobBuilderImpl implements BlobBuilder {
          blob.setPayload(payload);
       blob.getMetadata().setUserMetadata(userMetadata);
       blob.getMetadata().setType(type);
+      blob.getMetadata().setTier(tier);
       return blob;
    }
 
@@ -132,6 +141,11 @@ public class BlobBuilderImpl implements BlobBuilder {
       @Override
       public BlobBuilder name(String name) {
          return builder.name(name);
+      }
+
+      @Override
+      public BlobBuilder tier(Tier tier) {
+         return builder.tier(tier);
       }
 
       @Override

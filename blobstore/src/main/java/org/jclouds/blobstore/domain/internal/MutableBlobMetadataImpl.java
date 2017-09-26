@@ -24,6 +24,7 @@ import com.google.common.base.MoreObjects.ToStringHelper;
 import org.jclouds.blobstore.domain.BlobMetadata;
 import org.jclouds.blobstore.domain.MutableBlobMetadata;
 import org.jclouds.blobstore.domain.StorageType;
+import org.jclouds.blobstore.domain.Tier;
 import org.jclouds.http.HttpUtils;
 import org.jclouds.io.MutableContentMetadata;
 import org.jclouds.io.payloads.BaseMutableContentMetadata;
@@ -36,6 +37,7 @@ public class MutableBlobMetadataImpl extends MutableStorageMetadataImpl implemen
    private MutableContentMetadata contentMetadata;
    private URI publicUri;
    private String container;
+   private Tier tier;
 
    public MutableBlobMetadataImpl() {
       this.setType(StorageType.BLOB);
@@ -48,6 +50,7 @@ public class MutableBlobMetadataImpl extends MutableStorageMetadataImpl implemen
       HttpUtils.copy(from.getContentMetadata(), this.contentMetadata);
       this.publicUri = from.getPublicUri();
       this.container = from.getContainer();
+      this.tier = from.getTier() == null ? Tier.STANDARD : from.getTier();
    }
 
    /**
@@ -99,6 +102,16 @@ public class MutableBlobMetadataImpl extends MutableStorageMetadataImpl implemen
    }
 
    @Override
+   public Tier getTier() {
+      return tier;
+   }
+
+   @Override
+   public void setTier(Tier tier) {
+      this.tier = tier;
+   }
+
+   @Override
    public boolean equals(Object object) {
       if (object == this) {
          return true;
@@ -110,7 +123,8 @@ public class MutableBlobMetadataImpl extends MutableStorageMetadataImpl implemen
       return super.equals(that) &&
             Objects.equal(contentMetadata, that.contentMetadata) &&
             Objects.equal(publicUri, that.publicUri) &&
-            Objects.equal(container, that.container);
+            Objects.equal(container, that.container) &&
+            Objects.equal(tier, that.tier);
    }
 
    @Override
@@ -123,6 +137,7 @@ public class MutableBlobMetadataImpl extends MutableStorageMetadataImpl implemen
       return super.string()
             .add("publicUri", publicUri)
             .add("container", container)
-            .add("contentMetadata", contentMetadata);
+            .add("contentMetadata", contentMetadata)
+            .add("tier", tier);
    }
 }

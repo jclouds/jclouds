@@ -16,35 +16,19 @@
  */
 package org.jclouds.blobstore.domain;
 
-import java.net.URI;
-
-import org.jclouds.blobstore.domain.internal.BlobMetadataImpl;
-import org.jclouds.io.ContentMetadata;
-import org.jclouds.javax.annotation.Nullable;
-
-import com.google.inject.ImplementedBy;
-
 /**
- * System and user Metadata for the {@link Blob}.
+ * Store data with different strategies, ranging from most performant to lowest
+ * cost.  Tiering is best-effort and some providers will map lower tiers to
+ * higher ones.
  */
-@ImplementedBy(BlobMetadataImpl.class)
-public interface BlobMetadata extends StorageMetadata {
+public enum Tier {
+   /** Optimize for access speed. */
+   STANDARD,
+   /** Balance access speed against storage cost. */
+   INFREQUENT,
    /**
-    * If the blob is publicly readable, what is the URI one can access it at.
-    * 
-    * @return uri, or null, if not readable
+    * Optimize for storage cost.  Some providers may require a separate call to
+    * set the blob to STANDARD tier before access.
     */
-   @Nullable
-   URI getPublicUri();
-   
-   /**
-    * 
-    * @return the container holding this blob
-    */
-   @Nullable
-   String getContainer();
-
-   ContentMetadata getContentMetadata();
-
-   Tier getTier();
+   ARCHIVE;
 }

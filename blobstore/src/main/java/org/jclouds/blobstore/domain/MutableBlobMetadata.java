@@ -49,4 +49,6 @@ public interface MutableBlobMetadata extends BlobMetadata, MutableStorageMetadat
     * @see BlobMetadata#getContainer
     */
    void setContainer(@Nullable String container);
+
+   void setTier(Tier tier);
 }
