@@ -18,12 +18,20 @@ package org.jclouds.azureblob.domain;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
+import org.jclouds.blobstore.domain.Tier;
+
 import com.google.common.base.CaseFormat;
 
 public enum AccessTier {
-   HOT,
-   COOL,
-   ARCHIVE;
+   HOT(Tier.STANDARD),
+   COOL(Tier.INFREQUENT),
+   ARCHIVE(Tier.ARCHIVE);
+
+   private final Tier tier;
+
+   private AccessTier(Tier tier) {
+      this.tier = checkNotNull(tier);
+   }
 
    public String value() {
       return CaseFormat.UPPER_UNDERSCORE.to(CaseFormat.UPPER_CAMEL, name());
@@ -34,7 +42,21 @@ public enum AccessTier {
       return value();
    }
 
+   // TODO: call valueOf instead like GCS?
    public static AccessTier fromValue(String tier) {
       return valueOf(CaseFormat.UPPER_CAMEL.to(CaseFormat.UPPER_UNDERSCORE, checkNotNull(tier, "tier")));
+   }
+
+   public static AccessTier fromTier(Tier tier) {
+      switch (tier) {
+      case STANDARD: return AccessTier.HOT;
+      case INFREQUENT: return AccessTier.COOL;
+      case ARCHIVE: return AccessTier.ARCHIVE;
+      }
+      throw new IllegalArgumentException("invalid tier: " + tier);
+   }
+
+   public Tier toTier() {
+      return tier;
    }
 }

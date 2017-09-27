@@ -39,6 +39,7 @@ import org.jclouds.azureblob.blobstore.functions.BlobToAzureBlob;
 import org.jclouds.azureblob.blobstore.functions.ContainerToResourceMetadata;
 import org.jclouds.azureblob.blobstore.functions.ListBlobsResponseToResourceList;
 import org.jclouds.azureblob.blobstore.functions.ListOptionsToListBlobsOptions;
+import org.jclouds.azureblob.domain.AccessTier;
 import org.jclouds.azureblob.domain.AzureBlob;
 import org.jclouds.azureblob.domain.BlobBlockProperties;
 import org.jclouds.azureblob.domain.BlobProperties;
@@ -59,6 +60,7 @@ import org.jclouds.blobstore.domain.MultipartPart;
 import org.jclouds.blobstore.domain.MultipartUpload;
 import org.jclouds.blobstore.domain.PageSet;
 import org.jclouds.blobstore.domain.StorageMetadata;
+import org.jclouds.blobstore.domain.Tier;
 import org.jclouds.blobstore.domain.internal.PageSetImpl;
 import org.jclouds.blobstore.functions.BlobToHttpGetOptions;
 import org.jclouds.blobstore.internal.BaseBlobStore;
@@ -215,7 +217,7 @@ public class AzureBlobStore extends BaseBlobStore {
     */
    @Override
    public String putBlob(String container, Blob blob) {
-      return sync.putBlob(container, blob2AzureBlob.apply(blob));
+      return putBlob(container, blob, new PutOptions());
    }
 
    /**
@@ -231,10 +233,17 @@ public class AzureBlobStore extends BaseBlobStore {
       if (options.getBlobAccess() != BlobAccess.PRIVATE) {
          throw new UnsupportedOperationException("blob access not supported by Azure");
       }
+      String eTag;
       if (options.isMultipart()) {
-         return putMultipartBlob(container, blob, options);
+         eTag = putMultipartBlob(container, blob, options);
+      } else {
+         eTag = sync.putBlob(container, blob2AzureBlob.apply(blob));
       }
-      return putBlob(container, blob);
+      Tier tier = blob.getMetadata().getTier();
+      if (tier != Tier.STANDARD) {
+         sync.setBlobTier(container, blob.getMetadata().getName(), AccessTier.fromTier(tier));
+      }
+      return eTag;
    }
 
    @Override

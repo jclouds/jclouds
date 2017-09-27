@@ -21,6 +21,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+import org.jclouds.azureblob.domain.AccessTier;
 import org.jclouds.azureblob.domain.BlobProperties;
 import org.jclouds.azureblob.domain.PublicAccess;
 import org.jclouds.blobstore.domain.MutableBlobMetadata;
@@ -67,6 +68,8 @@ public class BlobPropertiesToBlobMetadata implements Function<BlobProperties, Mu
          to.setType(StorageType.BLOB);
       }
       to.setSize(from.getContentMetadata().getContentLength());
+      AccessTier tier = from.getTier();
+      to.setTier((tier != null ? tier : AccessTier.HOT).toTier());
       return to;
    }
 }
