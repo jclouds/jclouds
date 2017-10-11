@@ -17,6 +17,7 @@
 package org.jclouds.googlecloudstorage.blobstore.integration;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Fail.failBecauseExceptionWasNotThrown;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertNull;
@@ -308,6 +309,26 @@ public class GoogleCloudStorageBlobIntegrationLiveTest extends BaseBlobIntegrati
          super.testListMultipartUploads();
       } catch (UnsupportedOperationException uoe) {
          throw new SkipException("GCS does not support listing multipart uploads", uoe);
+      }
+   }
+
+   @Override
+   public void testPutBlobTierArchiveMultipart() throws Exception {
+      try {
+         super.testPutBlobTierArchiveMultipart();
+         failBecauseExceptionWasNotThrown(AssertionError.class);
+      } catch (AssertionError ae) {
+         throw new SkipException("GCS does not report storage class of composed objects", ae);
+      }
+   }
+
+   @Override
+   public void testPutBlobTierInfrequentMultipart() throws Exception {
+      try {
+         super.testPutBlobTierInfrequentMultipart();
+         failBecauseExceptionWasNotThrown(AssertionError.class);
+      } catch (AssertionError ae) {
+         throw new SkipException("GCS does not report storage class of composed objects", ae);
       }
    }
 }

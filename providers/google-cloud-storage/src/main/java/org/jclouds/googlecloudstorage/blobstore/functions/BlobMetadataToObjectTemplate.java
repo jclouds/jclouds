@@ -21,6 +21,7 @@ import static com.google.common.io.BaseEncoding.base64;
 import java.util.Map;
 
 import org.jclouds.blobstore.domain.BlobMetadata;
+import org.jclouds.googlecloudstorage.domain.DomainResourceReferences.StorageClass;
 import org.jclouds.googlecloudstorage.domain.templates.ObjectTemplate;
 import org.jclouds.io.ContentMetadata;
 
@@ -47,7 +48,8 @@ public class BlobMetadataToObjectTemplate implements Function<BlobMetadata, Obje
 
       ObjectTemplate template = new ObjectTemplate().contentType(contentType).size(contentLength)
                .contentEncoding(contentEncoding).contentLanguage(contentLanguage)
-               .contentDisposition(contentDisposition).name(name).customMetadata(userMeta);
+               .contentDisposition(contentDisposition).name(name).customMetadata(userMeta)
+               .storageClass(StorageClass.fromTier(from.getTier()));
       if (md5 != null) {
          template.md5Hash(base64().encode(md5.asBytes()));
       }

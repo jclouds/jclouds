@@ -50,6 +50,7 @@ public class ObjectToBlobMetadata implements Function<GoogleCloudStorageObject, 
       to.setPublicUri(from.mediaLink());
       to.setType(StorageType.BLOB);
       to.setSize(from.size());
+      to.setTier(from.storageClass().toTier());
       return to;
    }
 

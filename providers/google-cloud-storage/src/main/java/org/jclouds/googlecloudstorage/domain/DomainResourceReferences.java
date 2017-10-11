@@ -16,6 +16,10 @@
  */
 package org.jclouds.googlecloudstorage.domain;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
+import org.jclouds.blobstore.domain.Tier;
+
 import com.google.common.base.CaseFormat;
 
 public final class DomainResourceReferences {
@@ -45,11 +49,30 @@ public final class DomainResourceReferences {
    }
 
    public enum StorageClass {
-      COLDLINE,
-      DURABLE_REDUCED_AVAILABILITY,
-      MULTI_REGIONAL,
-      NEARLINE,
-      STANDARD;
+      COLDLINE(Tier.ARCHIVE),
+      DURABLE_REDUCED_AVAILABILITY(Tier.STANDARD),
+      MULTI_REGIONAL(Tier.STANDARD),
+      NEARLINE(Tier.INFREQUENT),
+      STANDARD(Tier.STANDARD);
+
+      private final Tier tier;
+
+      private StorageClass(Tier tier) {
+         this.tier = checkNotNull(tier, "tier");
+      }
+
+      public static StorageClass fromTier(Tier tier) {
+         switch (tier) {
+         case STANDARD: return StorageClass.STANDARD;
+         case INFREQUENT: return StorageClass.NEARLINE;
+         case ARCHIVE: return StorageClass.COLDLINE;
+         }
+         throw new IllegalArgumentException("invalid tier: " + tier);
+      }
+
+      public Tier toTier() {
+         return tier;
+      }
    }
 
    public enum Projection {

@@ -66,7 +66,6 @@ import org.jclouds.googlecloudstorage.domain.templates.BucketTemplate;
 import org.jclouds.googlecloudstorage.domain.templates.ComposeObjectTemplate;
 import org.jclouds.googlecloudstorage.domain.templates.ObjectAccessControlsTemplate;
 import org.jclouds.googlecloudstorage.domain.templates.ObjectTemplate;
-import org.jclouds.googlecloudstorage.options.InsertObjectOptions;
 import org.jclouds.googlecloudstorage.options.ListObjectOptions;
 import org.jclouds.http.HttpResponseException;
 import org.jclouds.io.ContentMetadata;
@@ -392,6 +391,8 @@ public final class GoogleCloudStorageBlobStore extends BaseBlobStore {
       }
 
       ObjectTemplate destination = blobMetadataToObjectTemplate.apply(mpu.blobMetadata());
+      // unset storage class because the subobjects store this state
+      destination.storageClass(DomainResourceReferences.StorageClass.STANDARD);
       if (mpu.putOptions().getBlobAccess() == BlobAccess.PUBLIC_READ) {
          ObjectAccessControls controls = ObjectAccessControls.builder()
                .entity("allUsers")
@@ -421,10 +422,11 @@ public final class GoogleCloudStorageBlobStore extends BaseBlobStore {
    public MultipartPart uploadMultipartPart(MultipartUpload mpu, int partNumber, Payload payload) {
       String partName = getMPUPartName(mpu, partNumber);
       long partSize = payload.getContentMetadata().getContentLength();
-      // TODO: JCLOUDS-1337: use multipartUpload to set storage class
-      InsertObjectOptions insertOptions = new InsertObjectOptions().name(partName);
-      GoogleCloudStorageObject object = api.getObjectApi().simpleUpload(mpu.containerName(),
-            mpu.blobMetadata().getContentMetadata().getContentType(), partSize, payload, insertOptions);
+      ObjectTemplate template = blobMetadataToObjectTemplate.apply(mpu.blobMetadata())
+            .name(partName)
+            .size(partSize);
+      GoogleCloudStorageObject object = api.getObjectApi().multipartUpload(
+            mpu.containerName(), template, payload);
       return MultipartPart.create(partNumber, partSize, object.etag(), object.updated());
    }
 
