@@ -62,6 +62,7 @@ import org.jclouds.blobstore.domain.ContainerAccess;
 import org.jclouds.blobstore.domain.MutableStorageMetadata;
 import org.jclouds.blobstore.domain.StorageMetadata;
 import org.jclouds.blobstore.domain.StorageType;
+import org.jclouds.blobstore.domain.Tier;
 import org.jclouds.blobstore.domain.internal.MutableStorageMetadataImpl;
 import org.jclouds.blobstore.options.CreateContainerOptions;
 import org.jclouds.blobstore.options.ListContainerOptions;
@@ -107,6 +108,7 @@ public class FilesystemStorageStrategyImpl implements LocalStorageStrategy {
    private static final String XATTR_CONTENT_MD5 = "user.content-md5";
    private static final String XATTR_CONTENT_TYPE = "user.content-type";
    private static final String XATTR_EXPIRES = "user.expires";
+   private static final String XATTR_STORAGE_TIER = "user.storage-tier";
    private static final String XATTR_USER_METADATA_PREFIX = "user.user-metadata.";
    private static final byte[] DIRECTORY_MD5 =
            Hashing.md5().hashBytes(new byte[0]).asBytes();
@@ -342,6 +344,7 @@ public class FilesystemStorageStrategyImpl implements LocalStorageStrategy {
          String contentType = null;
          HashCode hashCode = null;
          Date expires = null;
+         Tier tier = Tier.STANDARD;
          ImmutableMap.Builder<String, String> userMetadata = ImmutableMap.builder();
 
          UserDefinedFileAttributeView view = getUserDefinedFileAttributeView(file.toPath());
@@ -368,6 +371,7 @@ public class FilesystemStorageStrategyImpl implements LocalStorageStrategy {
                   buf.flip();
                   expires = new Date(buf.asLongBuffer().get());
                }
+               tier = Tier.valueOf(readStringAttributeIfPresent(view, attributes, XATTR_STORAGE_TIER));
                for (String attribute : attributes) {
                   if (!attribute.startsWith(XATTR_USER_METADATA_PREFIX)) {
                      continue;
@@ -388,6 +392,7 @@ public class FilesystemStorageStrategyImpl implements LocalStorageStrategy {
                .contentMD5(hashCode)
                .contentType(contentType)
                .expires(expires)
+               .tier(tier)
                .userMetadata(userMetadata.build());
          } else {
             builder.payload(byteSource)
@@ -421,6 +426,7 @@ public class FilesystemStorageStrategyImpl implements LocalStorageStrategy {
          buf.flip();
          view.write(XATTR_EXPIRES, buf);
       }
+      writeStringAttributeIfPresent(view, XATTR_STORAGE_TIER, blob.getMetadata().getTier().toString());
       for (Map.Entry<String, String> entry : blob.getMetadata().getUserMetadata().entrySet()) {
          writeStringAttributeIfPresent(view, XATTR_USER_METADATA_PREFIX + entry.getKey(), entry.getValue());
       }
