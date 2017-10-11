@@ -16,12 +16,6 @@
  */
 package org.jclouds.azurecompute.arm.features;
 
-import static com.google.common.collect.Iterables.isEmpty;
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertNotNull;
-import static org.testng.Assert.assertNull;
-import static org.testng.Assert.assertTrue;
-
 import java.net.URI;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -58,6 +52,12 @@ import org.testng.annotations.Test;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.squareup.okhttp.mockwebserver.MockResponse;
+
+import static com.google.common.collect.Iterables.isEmpty;
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertNotNull;
+import static org.testng.Assert.assertNull;
+import static org.testng.Assert.assertTrue;
 
 @Test(groups = "unit", testName = "VirtualMachineApiMockTest", singleThreaded = true)
 public class VirtualMachineApiMockTest extends BaseAzureComputeApiMockTest {
@@ -141,7 +141,7 @@ public class VirtualMachineApiMockTest extends BaseAzureComputeApiMockTest {
                   + "\"managedDisk\":{\"id\":\"/subscriptions/SUBSCRIPTIONID/resourceGroups/myResourceGroup/providers/Microsoft.Compute/disks/osDisk\",\"storageAccountType\":\"Standard_LRS\"}},"
                   + "\"dataDisks\":[{\"name\":\"mydatadisk1\",\"diskSizeGB\":\"1\",\"lun\":0,\"createOption\":\"Empty\",\"caching\":\"ReadWrite\",\"managedDisk\":{\"id\":\"/subscriptions/SUBSCRIPTIONID/resourceGroups/myResourceGroup/providers/Microsoft.Compute/disks/osDisk\",\"storageAccountType\":\"Standard_LRS\"}}]},"
                   + "\"osProfile\":{\"computerName\":\"windowsmachine\",\"adminUsername\":\"azureuser\",\"adminPassword\":\"password\",\"customData\":\"\",\"windowsConfiguration\":{\"provisionVMAgent\":false,"
-                  + "\"winRM\":{\"listeners\":[{\"protocol\":\"https\",\"certificateUrl\":\"url-to-certificate\"}]},\"additionalUnattendContent\":[{\"pass\":\"oobesystem\",\"component\":\"Microsoft-Windows-Shell-Setup\",\"settingName\":\"FirstLogonCommands\",\"content\":\"<XML unattend content>\"}],"
+                  + "\"winRM\":{\"listeners\":[{\"protocol\":\"https\",\"certificateUrl\":\"url-to-certificate\"}]},\"additionalUnattendContent\":[{\"passName\":\"oobesystem\",\"componentName\":\"Microsoft-Windows-Shell-Setup\",\"settingName\":\"FirstLogonCommands\",\"content\":\"<XML unattend content>\"}],"
                   + "\"enableAutomaticUpdates\":true},"
                   + "\"secrets\":[{\"sourceVault\":{\"id\":\"/subscriptions/SUBSCRIPTIONID/resourceGroups/myresourcegroup1/providers/Microsoft.KeyVault/vaults/myvault1\"},\"vaultCertificates\":[{\"certificateUrl\":\"https://myvault1.vault.azure.net/secrets/SECRETNAME/SECRETVERSION\",\"certificateStore\":\"CERTIFICATESTORENAME\"}]}]},"
                   + "\"networkProfile\":{\"networkInterfaces\":[{\"id\":\"/subscriptions/SUBSCRIPTIONID/resourceGroups/groupname/providers/Microsoft.Network/networkInterfaces/windowsmachine167\"}]},"
@@ -176,7 +176,7 @@ public class VirtualMachineApiMockTest extends BaseAzureComputeApiMockTest {
                   + "\"managedDisk\":{\"id\":\"/subscriptions/SUBSCRIPTIONID/resourceGroups/myResourceGroup/providers/Microsoft.Compute/disks/osDisk\",\"storageAccountType\":\"Standard_LRS\"}},"
                   + "\"dataDisks\":[{\"name\":\"mydatadisk1\",\"diskSizeGB\":\"1\",\"lun\":0,\"createOption\":\"Empty\",\"caching\":\"ReadWrite\",\"managedDisk\":{\"id\":\"/subscriptions/SUBSCRIPTIONID/resourceGroups/myResourceGroup/providers/Microsoft.Compute/disks/osDisk\",\"storageAccountType\":\"Standard_LRS\"}}]},"
                   + "\"osProfile\":{\"computerName\":\"windowsmachine\",\"adminUsername\":\"azureuser\",\"adminPassword\":\"password\",\"customData\":\"\",\"windowsConfiguration\":{\"provisionVMAgent\":false,"
-                  + "\"winRM\":{\"listeners\":[{\"protocol\":\"https\",\"certificateUrl\":\"url-to-certificate\"}]},\"additionalUnattendContent\":[{\"pass\":\"oobesystem\",\"component\":\"Microsoft-Windows-Shell-Setup\",\"settingName\":\"FirstLogonCommands\",\"content\":\"<XML unattend content>\"}],"
+                  + "\"winRM\":{\"listeners\":[{\"protocol\":\"https\",\"certificateUrl\":\"url-to-certificate\"}]},\"additionalUnattendContent\":[{\"passName\":\"oobesystem\",\"componentName\":\"Microsoft-Windows-Shell-Setup\",\"settingName\":\"FirstLogonCommands\",\"content\":\"<XML unattend content>\"}],"
                   + "\"enableAutomaticUpdates\":true},"
                   + "\"secrets\":[{\"sourceVault\":{\"id\":\"/subscriptions/SUBSCRIPTIONID/resourceGroups/myresourcegroup1/providers/Microsoft.KeyVault/vaults/myvault1\"},\"vaultCertificates\":[{\"certificateUrl\":\"https://myvault1.vault.azure.net/secrets/SECRETNAME/SECRETVERSION\",\"certificateStore\":\"CERTIFICATESTORENAME\"}]}]},"
                   + "\"networkProfile\":{\"networkInterfaces\":[{\"id\":\"/subscriptions/SUBSCRIPTIONID/resourceGroups/groupname/providers/Microsoft.Network/networkInterfaces/windowsmachine167\"}]},"
