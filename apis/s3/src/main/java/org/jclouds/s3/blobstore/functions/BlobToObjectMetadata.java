@@ -26,6 +26,7 @@ import org.jclouds.http.HttpUtils;
 import org.jclouds.rest.InvocationContext;
 import org.jclouds.rest.internal.GeneratedHttpRequest;
 import org.jclouds.s3.domain.MutableObjectMetadata;
+import org.jclouds.s3.domain.ObjectMetadata.StorageClass;
 import org.jclouds.s3.domain.internal.MutableObjectMetadataImpl;
 
 import com.google.common.base.Function;
@@ -48,6 +49,7 @@ public class BlobToObjectMetadata implements Function<BlobMetadata, MutableObjec
          for (Entry<String, String> entry : from.getUserMetadata().entrySet())
             to.getUserMetadata().put(entry.getKey().toLowerCase(), entry.getValue());
       }
+      to.setStorageClass(StorageClass.fromTier(from.getTier()));
       return to;
    }
 

@@ -21,6 +21,7 @@ import java.util.Date;
 import java.util.Map;
 
 import org.jclouds.io.MutableContentMetadata;
+import org.jclouds.s3.domain.ObjectMetadata.StorageClass;
 import org.jclouds.s3.domain.internal.MutableObjectMetadataImpl;
 
 import com.google.inject.ImplementedBy;

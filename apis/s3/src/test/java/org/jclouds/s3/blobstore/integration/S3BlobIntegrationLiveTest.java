@@ -16,13 +16,17 @@
  */
 package org.jclouds.s3.blobstore.integration;
 
+import static org.assertj.core.api.Fail.failBecauseExceptionWasNotThrown;
+
 import java.io.IOException;
 import java.util.Properties;
 import java.util.concurrent.ExecutionException;
 
 import org.jclouds.blobstore.integration.internal.BaseBlobIntegrationTest;
 import org.jclouds.blobstore.integration.internal.BaseBlobStoreIntegrationTest;
+import org.jclouds.http.HttpResponseException;
 import org.jclouds.s3.blobstore.strategy.MultipartUpload;
+import org.testng.SkipException;
 import org.testng.annotations.Test;
 
 @Test(groups = "live", testName = "S3BlobIntegrationLiveTest")
@@ -51,4 +55,23 @@ public class S3BlobIntegrationLiveTest extends BaseBlobIntegrationTest {
       super.testPutObjectStream();
    }
 
+   @Override
+   public void testPutBlobTierArchive() throws Exception {
+      try {
+         super.testPutBlobTierArchive();
+         failBecauseExceptionWasNotThrown(HttpResponseException.class);
+      } catch (HttpResponseException hre) {
+         throw new SkipException("S3 does not allow setting Glacier storage class on putBlob", hre);
+      }
+   }
+
+   @Override
+   public void testPutBlobTierArchiveMultipart() throws Exception {
+      try {
+         super.testPutBlobTierArchiveMultipart();
+         failBecauseExceptionWasNotThrown(HttpResponseException.class);
+      } catch (HttpResponseException hre) {
+         throw new SkipException("S3 does not allow setting Glacier storage class on putBlob", hre);
+      }
+   }
 }

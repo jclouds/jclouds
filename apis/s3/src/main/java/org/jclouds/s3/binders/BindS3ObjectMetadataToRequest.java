@@ -25,6 +25,7 @@ import javax.inject.Singleton;
 import org.jclouds.blobstore.binders.BindMapToHeadersWithPrefix;
 import org.jclouds.http.HttpRequest;
 import org.jclouds.rest.Binder;
+import org.jclouds.s3.domain.ObjectMetadata.StorageClass;
 import org.jclouds.s3.domain.S3Object;
 
 @Singleton
@@ -48,7 +49,14 @@ public class BindS3ObjectMetadataToRequest implements Binder {
             "contentLength must be set, streaming not supported");
       checkArgument(s3Object.getPayload().getContentMetadata().getContentLength() <= 5L * 1024 * 1024 * 1024,
             "maximum size for put object is 5GB");
-      
+
+      StorageClass storageClass = s3Object.getMetadata().getStorageClass();
+      if (storageClass != StorageClass.STANDARD) {
+         request = (R) request.toBuilder()
+               .replaceHeader("x-amz-storage-class", storageClass.toString())
+               .build();
+      }
+
       request = metadataPrefixer.bindToRequest(request, s3Object.getMetadata().getUserMetadata());
 
       return request;

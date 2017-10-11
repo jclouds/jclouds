@@ -16,10 +16,13 @@
  */
 package org.jclouds.s3.domain;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 import java.net.URI;
 import java.util.Date;
 import java.util.Map;
 
+import org.jclouds.blobstore.domain.Tier;
 import org.jclouds.io.ContentMetadata;
 
 /**
@@ -31,7 +34,29 @@ import org.jclouds.io.ContentMetadata;
 public interface ObjectMetadata extends Comparable<ObjectMetadata> {
 
    public enum StorageClass {
-      STANDARD, STANDARD_IA, REDUCED_REDUNDANCY
+      STANDARD(Tier.STANDARD),
+      STANDARD_IA(Tier.INFREQUENT),
+      REDUCED_REDUNDANCY(Tier.STANDARD),
+      GLACIER(Tier.ARCHIVE);
+
+      private final Tier tier;
+
+      private StorageClass(Tier tier) {
+         this.tier = checkNotNull(tier, "tier");
+      }
+
+      public static StorageClass fromTier(Tier tier) {
+         switch (tier) {
+         case STANDARD: return StorageClass.STANDARD;
+         case INFREQUENT: return StorageClass.STANDARD_IA;
+         case ARCHIVE: return StorageClass.GLACIER;
+         }
+         throw new IllegalArgumentException("invalid tier: " + tier);
+      }
+
+      public Tier toTier() {
+         return tier;
+      }
    }
 
    /**

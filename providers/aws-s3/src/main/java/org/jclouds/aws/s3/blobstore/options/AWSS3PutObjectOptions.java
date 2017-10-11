@@ -33,6 +33,7 @@ public class AWSS3PutObjectOptions extends PutObjectOptions {
       /**
        * @see AWSS3PutObjectOptions#storageClass
        */
+      @Deprecated
       public static AWSS3PutObjectOptions storageClass(ObjectMetadata.StorageClass storageClass) {
          AWSS3PutObjectOptions options = new AWSS3PutObjectOptions();
          return options.storageClass(storageClass);
@@ -49,6 +50,7 @@ public class AWSS3PutObjectOptions extends PutObjectOptions {
 
    private ObjectMetadata.StorageClass storageClass = ObjectMetadata.StorageClass.STANDARD;
 
+   @Deprecated
    public AWSS3PutObjectOptions storageClass(ObjectMetadata.StorageClass storageClass) {
       this.storageClass = storageClass;
       if (storageClass != ObjectMetadata.StorageClass.STANDARD) {
@@ -57,6 +59,7 @@ public class AWSS3PutObjectOptions extends PutObjectOptions {
       return this;
    }
 
+   @Deprecated
    public ObjectMetadata.StorageClass getStorageClass() {
       return storageClass;
    }

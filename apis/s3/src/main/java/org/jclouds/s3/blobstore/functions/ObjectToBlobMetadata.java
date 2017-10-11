@@ -51,6 +51,7 @@ public class ObjectToBlobMetadata implements Function<ObjectMetadata, MutableBlo
       to.setLocation(locationOfBucket.apply(from.getBucket()));
       to.setType(StorageType.BLOB);
       to.setSize(from.getContentMetadata().getContentLength());
+      to.setTier((from.getStorageClass() == null ? ObjectMetadata.StorageClass.STANDARD : from.getStorageClass()).toTier());
       return to;
    }
 }

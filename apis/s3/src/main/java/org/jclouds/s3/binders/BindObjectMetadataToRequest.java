@@ -81,6 +81,11 @@ public class BindObjectMetadataToRequest implements Binder {
          headers.put("Content-MD5", base64().encode(md.getContentMetadata().getContentMD5()));
       }
 
+      ObjectMetadata.StorageClass storageClass = md.getStorageClass();
+      if (storageClass != ObjectMetadata.StorageClass.STANDARD) {
+         headers.put("x-amz-storage-class", storageClass.toString());
+      }
+
       return (R) request.toBuilder().replaceHeaders(headers.build()).build();
    }
 }
