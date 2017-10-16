@@ -1375,5 +1375,59 @@
         </plugins>
       </build>
     </profile>
+    <profile>
+      <id>jenkins</id>
+      <build>
+        <plugins>
+          <!-- make sure jclouds is built with the right JDK -->
+          <plugin>
+            <artifactId>maven-toolchains-plugin</artifactId>
+            <version>1.1</version>
+            <executions>
+              <execution>
+                <goals>
+                  <goal>toolchain</goal>
+                </goals>
+              </execution>
+            </executions>
+            <configuration>
+              <toolchains>
+                <jdk>
+                  <version>1.7</version>
+                  <vendor>oracle</vendor>
+                </jdk>
+              </toolchains>
+            </configuration>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+    <profile>
+      <id>jenkins-jdk8</id>
+      <build>
+        <plugins>
+          <!-- make sure jclouds is built with the right JDK -->
+          <plugin>
+            <artifactId>maven-toolchains-plugin</artifactId>
+            <version>1.1</version>
+            <executions>
+              <execution>
+                <goals>
+                  <goal>toolchain</goal>
+                </goals>
+              </execution>
+            </executions>
+            <configuration>
+              <toolchains>
+                <jdk>
+                  <version>1.8</version>
+                  <vendor>openjdk</vendor>
+                </jdk>
+              </toolchains>
+            </configuration>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
   </profiles>
 </project>
