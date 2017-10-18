@@ -371,7 +371,10 @@ public class FilesystemStorageStrategyImpl implements LocalStorageStrategy {
                   buf.flip();
                   expires = new Date(buf.asLongBuffer().get());
                }
-               tier = Tier.valueOf(readStringAttributeIfPresent(view, attributes, XATTR_STORAGE_TIER));
+               String tierString = readStringAttributeIfPresent(view, attributes, XATTR_STORAGE_TIER);
+               if (tierString != null) {
+                  tier = Tier.valueOf(tierString);
+               }
                for (String attribute : attributes) {
                   if (!attribute.startsWith(XATTR_USER_METADATA_PREFIX)) {
                      continue;
