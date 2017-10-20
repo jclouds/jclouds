@@ -36,7 +36,6 @@ public abstract class BaseNicResponseHandler<T> extends BaseProfitBricksResponse
    protected Nic.Builder builder;
    protected List<String> ips;
 
-   @Inject
    BaseNicResponseHandler(FirewallResponseHandler firewallResponseHandler) {
       this.builder = Nic.builder();
       this.firewallResponseHandler = firewallResponseHandler;
