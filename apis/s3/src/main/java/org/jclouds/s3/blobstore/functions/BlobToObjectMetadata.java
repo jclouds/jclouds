@@ -49,7 +49,9 @@ public class BlobToObjectMetadata implements Function<BlobMetadata, MutableObjec
          for (Entry<String, String> entry : from.getUserMetadata().entrySet())
             to.getUserMetadata().put(entry.getKey().toLowerCase(), entry.getValue());
       }
-      to.setStorageClass(StorageClass.fromTier(from.getTier()));
+      if (from.getTier() != null) {
+         to.setStorageClass(StorageClass.fromTier(from.getTier()));
+      }
       return to;
    }
 
