@@ -24,14 +24,16 @@ import java.util.Properties;
 
 import org.jclouds.blobstore.domain.Blob;
 import org.jclouds.blobstore.domain.BlobMetadata;
+import org.jclouds.blobstore.domain.Tier;
 import org.jclouds.blobstore.integration.internal.BaseBlobIntegrationTest;
 import org.jclouds.blobstore.integration.internal.BaseBlobStoreIntegrationTest;
+import org.jclouds.blobstore.options.PutOptions;
 import org.jclouds.filesystem.reference.FilesystemConstants;
 import org.jclouds.filesystem.utils.TestUtils;
 import org.testng.annotations.Test;
 import org.testng.SkipException;
 
-@Test(groups = { "integration" }, singleThreaded = true,  testName = "blobstore.FilesystemBlobIntegrationTest")
+@Test(groups = { "integration" }, singleThreaded = true, testName = "blobstore.FilesystemBlobIntegrationTest")
 public class FilesystemBlobIntegrationTest extends BaseBlobIntegrationTest {
    public FilesystemBlobIntegrationTest() {
       provider = "filesystem";
@@ -80,17 +82,31 @@ public class FilesystemBlobIntegrationTest extends BaseBlobIntegrationTest {
       super.testCreateBlobWithExpiry();
    }
 
-   /* Java on OS X does not support extended attributes, which the filesystem backend
-    * uses to implement user metadata */
+   /*
+    * Java on OS X does not support extended attributes, which the filesystem
+    * backend uses to implement user metadata
+    */
    @Override
    protected void checkUserMetadata(Map<String, String> userMetadata1, Map<String, String> userMetadata2) {
       if (!isMacOSX()) {
          super.checkUserMetadata(userMetadata1, userMetadata2);
       }
    }
+   
+   @Override
+   protected void testPutBlobTierHelper(Tier tier, PutOptions options) throws Exception {
+      checkExtendedAttributesSupport();
+      super.testPutBlobTierHelper(tier, options);
+   }
 
    @Override
    public void testSetBlobAccess() throws Exception {
       throw new SkipException("filesystem does not support anonymous access");
+   }
+
+   protected void checkExtendedAttributesSupport() {
+      if (isMacOSX()) {
+         throw new SkipException("filesystem does not support extended attributes in Mac OSX");
+      }
    }
 }

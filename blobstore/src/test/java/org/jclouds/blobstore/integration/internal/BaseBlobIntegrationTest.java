@@ -775,7 +775,7 @@ public class BaseBlobIntegrationTest extends BaseBlobStoreIntegrationTest {
       testPutBlobTierHelper(Tier.ARCHIVE, new PutOptions().multipart(true));
    }
 
-   private void testPutBlobTierHelper(Tier tier, PutOptions options) throws Exception {
+   protected void testPutBlobTierHelper(Tier tier, PutOptions options) throws Exception {
       String blobName = "put-blob-tier-" + tier;
       ByteSource payload = createTestInput(1024);
       BlobStore blobStore = view.getBlobStore();
