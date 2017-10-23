@@ -19,8 +19,6 @@ package org.jclouds.profitbricks.http.parser.nic;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.google.inject.Inject;
-
 import org.jclouds.profitbricks.domain.Nic;
 import org.jclouds.profitbricks.domain.ProvisioningState;
 import org.jclouds.profitbricks.http.parser.BaseProfitBricksResponseHandler;
