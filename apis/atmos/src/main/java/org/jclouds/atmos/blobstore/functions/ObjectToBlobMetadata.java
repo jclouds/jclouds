@@ -29,6 +29,7 @@ import org.jclouds.atmos.filters.ShareUrl;
 import org.jclouds.atmos.functions.AtmosObjectName;
 import org.jclouds.blobstore.domain.MutableBlobMetadata;
 import org.jclouds.blobstore.domain.StorageType;
+import org.jclouds.blobstore.domain.Tier;
 import org.jclouds.blobstore.domain.internal.MutableBlobMetadataImpl;
 import org.jclouds.http.HttpUtils;
 
@@ -78,6 +79,7 @@ public class ObjectToBlobMetadata implements Function<AtmosObject, MutableBlobMe
       }
       to.setUserMetadata(lowerKeyMetadata);
       to.setSize(from.getContentMetadata().getContentLength());
+      to.setTier(Tier.STANDARD);
       return to;
    }
 }

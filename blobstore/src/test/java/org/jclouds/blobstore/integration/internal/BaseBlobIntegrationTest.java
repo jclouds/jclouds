@@ -787,10 +787,14 @@ public class BaseBlobIntegrationTest extends BaseBlobStoreIntegrationTest {
             .tier(tier)
             .build();
          blobStore.putBlob(containerName, blob, options);
-         assertThat(blobStore.blobMetadata(containerName, blobName).getTier()).isEqualTo(tier);
+         checkTier(blobStore.blobMetadata(containerName, blobName), tier);
       } finally {
          returnContainer(containerName);
       }
+   }
+
+   protected void checkTier(BlobMetadata metadata, Tier expected) {
+      assertThat(metadata.getTier()).isEqualTo(expected);
    }
 
    protected void checkUserMetadata(Map<String, String> userMetadata1, Map<String, String> userMetadata2) {

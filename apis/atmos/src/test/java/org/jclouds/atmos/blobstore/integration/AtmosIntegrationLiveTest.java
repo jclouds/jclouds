@@ -17,6 +17,7 @@
 package org.jclouds.atmos.blobstore.integration;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.failBecauseExceptionWasNotThrown;
 import static org.testng.Assert.assertEquals;
 
 import java.io.IOException;
@@ -24,6 +25,7 @@ import java.util.concurrent.ExecutionException;
 
 import org.jclouds.blobstore.domain.Blob;
 import org.jclouds.blobstore.domain.BlobMetadata;
+import org.jclouds.blobstore.domain.Tier;
 import org.jclouds.blobstore.integration.internal.BaseBlobIntegrationTest;
 import org.testng.SkipException;
 import org.testng.annotations.DataProvider;
@@ -196,5 +198,41 @@ public class AtmosIntegrationLiveTest extends BaseBlobIntegrationTest {
    @Test(groups = { "integration", "live" }, expectedExceptions = UnsupportedOperationException.class)
    public void testCopyIfNoneMatchNegative() throws Exception {
       super.testCopyIfNoneMatchNegative();
+   }
+
+   @Test(groups = { "integration", "live" })
+   public void testPutBlobTierStandardMultipart() throws Exception {
+      try {
+         super.testPutBlobTierStandardMultipart();
+         failBecauseExceptionWasNotThrown(UnsupportedOperationException.class);
+      } catch (UnsupportedOperationException uoe) {
+         throw new SkipException("Atmos does not support multipart", uoe);
+      }
+   }
+
+   @Test(groups = { "integration", "live" })
+   public void testPutBlobTierInfrequentMultipart() throws Exception {
+      try {
+         super.testPutBlobTierInfrequentMultipart();
+         failBecauseExceptionWasNotThrown(UnsupportedOperationException.class);
+      } catch (UnsupportedOperationException uoe) {
+         throw new SkipException("Atmos does not support multipart", uoe);
+      }
+   }
+
+   @Test(groups = { "integration", "live" })
+   public void testPutBlobTierArchiveMultipart() throws Exception {
+      try {
+         super.testPutBlobTierArchiveMultipart();
+         failBecauseExceptionWasNotThrown(UnsupportedOperationException.class);
+      } catch (UnsupportedOperationException uoe) {
+         throw new SkipException("Atmos does not support multipart", uoe);
+      }
+   }
+
+   @Override
+   protected void checkTier(BlobMetadata metadata, Tier expected) {
+      // Atmos maps all tiers to STANDARD
+      assertThat(metadata.getTier()).isEqualTo(Tier.STANDARD);
    }
 }
