@@ -23,6 +23,8 @@ import static org.jclouds.openstack.keystone.v2_0.config.KeystoneProperties.CRED
 import java.util.Properties;
 
 import org.jclouds.blobstore.domain.Blob;
+import org.jclouds.blobstore.domain.BlobMetadata;
+import org.jclouds.blobstore.domain.Tier;
 import org.jclouds.blobstore.integration.internal.BaseBlobIntegrationTest;
 import org.testng.SkipException;
 import org.testng.annotations.DataProvider;
@@ -128,5 +130,11 @@ public class SwiftBlobIntegrationLiveTest extends BaseBlobIntegrationTest {
    @Override
    protected long getMinimumMultipartBlobSize() {
       return 1;
+   }
+
+   @Override
+   protected void checkTier(BlobMetadata metadata, Tier expected) {
+      // Swift maps all tiers to STANDARD
+      assertThat(metadata.getTier()).isEqualTo(Tier.STANDARD);
    }
 }

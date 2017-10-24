@@ -20,6 +20,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 import org.jclouds.blobstore.domain.MutableBlobMetadata;
 import org.jclouds.blobstore.domain.StorageType;
+import org.jclouds.blobstore.domain.Tier;
 import org.jclouds.blobstore.domain.internal.MutableBlobMetadataImpl;
 import org.jclouds.openstack.swift.v1.domain.Container;
 import org.jclouds.openstack.swift.v1.domain.SwiftObject;
@@ -59,6 +60,7 @@ public class ToBlobMetadata implements Function<SwiftObject, MutableBlobMetadata
          to.setType(StorageType.BLOB);
       }
       to.setSize(from.getPayload().getContentMetadata().getContentLength());
+      to.setTier(Tier.STANDARD);
       return to;
    }
 
