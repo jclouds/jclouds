@@ -55,6 +55,7 @@ import org.jclouds.blobstore.domain.MutableBlobMetadata;
 import org.jclouds.blobstore.domain.PageSet;
 import org.jclouds.blobstore.domain.StorageMetadata;
 import org.jclouds.blobstore.domain.StorageType;
+import org.jclouds.blobstore.domain.Tier;
 import org.jclouds.blobstore.domain.internal.BlobImpl;
 import org.jclouds.blobstore.domain.internal.BlobMetadataImpl;
 import org.jclouds.blobstore.domain.internal.MutableBlobMetadataImpl;
@@ -454,6 +455,7 @@ public final class B2BlobStore extends BaseBlobStore {
       contentMetadata.setContentType(b2Object.contentType());
       metadata.setContentMetadata(contentMetadata);
       metadata.setUserMetadata(b2Object.fileInfo());
+      metadata.setTier(Tier.STANDARD);
       try {
          metadata.setPublicUri(URI.create(auth.get().downloadUrl() + "/file/" + container + "/" +
                URLEncoder.encode(b2Object.fileName(), "UTF-8")));

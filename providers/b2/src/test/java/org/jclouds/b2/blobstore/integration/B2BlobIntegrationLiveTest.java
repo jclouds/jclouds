@@ -16,6 +16,7 @@
  */
 package org.jclouds.b2.blobstore.integration;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.failBecauseExceptionWasNotThrown;
 
 import java.io.IOException;
@@ -24,6 +25,7 @@ import java.util.concurrent.ExecutionException;
 import org.jclouds.blobstore.domain.Blob;
 import org.jclouds.blobstore.domain.BlobMetadata;
 import org.jclouds.blobstore.domain.BlobBuilder.PayloadBlobBuilder;
+import org.jclouds.blobstore.domain.Tier;
 import org.jclouds.blobstore.integration.internal.BaseBlobIntegrationTest;
 import org.testng.SkipException;
 import org.testng.annotations.Test;
@@ -240,5 +242,41 @@ public final class B2BlobIntegrationLiveTest extends BaseBlobIntegrationTest {
       } catch (IllegalArgumentException iae) {
          throw new SkipException("B2 requires at least two parts", iae);
       }
+   }
+
+   @Test(groups = { "integration", "live" })
+   public void testPutBlobTierStandardMultipart() throws Exception {
+      try {
+         super.testPutBlobTierStandardMultipart();
+         failBecauseExceptionWasNotThrown(IllegalArgumentException.class);
+      } catch (IllegalArgumentException iae) {
+         throw new SkipException("B2 requires at least two parts", iae);
+      }
+   }
+
+   @Test(groups = { "integration", "live" })
+   public void testPutBlobTierInfrequentMultipart() throws Exception {
+      try {
+         super.testPutBlobTierInfrequentMultipart();
+         failBecauseExceptionWasNotThrown(IllegalArgumentException.class);
+      } catch (IllegalArgumentException iae) {
+         throw new SkipException("B2 requires at least two parts", iae);
+      }
+   }
+
+   @Test(groups = { "integration", "live" })
+   public void testPutBlobTierArchiveMultipart() throws Exception {
+      try {
+         super.testPutBlobTierArchiveMultipart();
+         failBecauseExceptionWasNotThrown(IllegalArgumentException.class);
+      } catch (IllegalArgumentException iae) {
+         throw new SkipException("B2 requires at least two parts", iae);
+      }
+   }
+
+   @Override
+   protected void checkTier(BlobMetadata metadata, Tier expected) {
+      // B2 maps all tiers to STANDARD
+      assertThat(metadata.getTier()).isEqualTo(Tier.STANDARD);
    }
 }
