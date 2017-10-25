@@ -219,6 +219,7 @@
   <properties>
     <maven.compile.source>1.6</maven.compile.source>
     <maven.compile.target>1.6</maven.compile.target>
+    <jdk.version>1.7</jdk.version>
     <maven.compile.deprecation>true</maven.compile.deprecation>
     <maven.site.url.base>gitsite:git@github.com/jclouds/jclouds-maven-site.git</maven.site.url.base>
     <guava.version>18.0</guava.version>
@@ -1379,7 +1380,7 @@
       <id>jenkins</id>
       <build>
         <plugins>
-          <!-- make sure jclouds is built with the right JDK -->
+          <!-- Make sure jclouds is built with the right JDK -->
           <plugin>
             <artifactId>maven-toolchains-plugin</artifactId>
             <version>1.1</version>
@@ -1393,35 +1394,7 @@
             <configuration>
               <toolchains>
                 <jdk>
-                  <version>1.7</version>
-                  <vendor>oracle</vendor>
-                </jdk>
-              </toolchains>
-            </configuration>
-          </plugin>
-        </plugins>
-      </build>
-    </profile>
-    <profile>
-      <id>jenkins-jdk8</id>
-      <build>
-        <plugins>
-          <!-- make sure jclouds is built with the right JDK -->
-          <plugin>
-            <artifactId>maven-toolchains-plugin</artifactId>
-            <version>1.1</version>
-            <executions>
-              <execution>
-                <goals>
-                  <goal>toolchain</goal>
-                </goals>
-              </execution>
-            </executions>
-            <configuration>
-              <toolchains>
-                <jdk>
-                  <version>1.8</version>
-                  <vendor>openjdk</vendor>
+                  <version>${jdk.version}</version>
                 </jdk>
               </toolchains>
             </configuration>
