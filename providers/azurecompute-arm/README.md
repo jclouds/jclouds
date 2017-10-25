@@ -13,24 +13,21 @@ Install and configure Azure CLI following these [steps](http://azure.microsoft.c
 Using the Azure CLI, run the following commands to create a service principal
 
 ```bash
-# Set mode to ARM
-azure config mode arm
-
 # Enter your Microsoft account credentials when prompted
-azure login
+az login
 
 # Set current subscription to create a service principal
-azure account set <Subscription-id>
+az account set --subscription <Subscription-id>
 
-# Create an AAD application with your information.
-azure ad app create --name <name> --password <password> --home-page <home-page> --identifier-uris <identifier-uris>
+# Create an AD application with your information.
+az ad app create --display-name <name> --password <password> --homepage <home-page> --identifier-uris <identifier-uris>
 
-# For example: azure ad app create --name "jcloudsarm"  --password abcd --home-page "https://jcloudsarm" --identifier-uris "https://jcloudsarm"
+# For example: az ad app create --display-name "jcloudsarm" --password abcd --homepage "https://jcloudsarm" --identifier-uris "https://jcloudsarm"
 
 # Output will include a value for `Application Id`, which will be used for the live tests
 
 # Create a Service Principal
-azure ad sp create <Application-id>
+az ad sp create --id <Application-id>
 
 # Output will include a value for `Object Id`, to be used in the next step 
 ```
@@ -39,13 +36,13 @@ Run the following commands to assign roles to the service principal
 
 ```bash
 # Assign roles for this service principal
-azure role assignment create --objectId <Object-id> -o Contributor -c /subscriptions/<Subscription-id>/
+az role assignment create --role Contributor --assignee <ObjectId>
 ```
 
 Look up the the tenant Id
 
 ```bash
-azure account show -s <Subscription-id> --json
+az account show
 
 # output will be a JSON which will include the `Tenant id`
 ```
@@ -53,7 +50,7 @@ azure account show -s <Subscription-id> --json
 Verify service principal
 
 ```bash
-azure login -u <Application-id> -p <password> --service-principal --tenant <Tenant-id>
+az login -u <Application-id> -p <password> --service-principal --tenant <Tenant-id>
 ```
 
 ## Run Live Tests
