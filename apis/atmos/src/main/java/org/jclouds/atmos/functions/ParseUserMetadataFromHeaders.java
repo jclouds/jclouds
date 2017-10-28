@@ -38,6 +38,7 @@ import com.google.common.collect.Maps;
 public class ParseUserMetadataFromHeaders implements Function<HttpResponse, UserMetadata> {
    private static final Set<String> SYS_KEYS = ImmutableSet.of(
          "atime", "ctime", "gid", "itime", "mtime", "nlink",
+         "parent",
          "policyname", "size", "uid", "content-md5", "objectid", "objname", "type");
 
    public UserMetadata apply(HttpResponse from) {
