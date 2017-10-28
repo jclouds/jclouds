@@ -16,6 +16,7 @@
  */
 package org.jclouds.atmos.blobstore;
 
+import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static org.jclouds.atmos.options.PutOptions.Builder.publicRead;
 
@@ -58,6 +59,7 @@ import org.jclouds.http.options.GetOptions;
 import org.jclouds.io.Payload;
 import org.jclouds.io.PayloadSlicer;
 
+import com.google.common.base.Strings;
 import com.google.common.base.Supplier;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
@@ -218,6 +220,7 @@ public class AtmosBlobStore extends BaseBlobStore {
    @Override
    public PageSet<? extends StorageMetadata> list(String container,
             org.jclouds.blobstore.options.ListContainerOptions options) {
+      checkArgument(Strings.isNullOrEmpty(options.getPrefix()), "does not support prefixes");
       container = AtmosUtils.adjustContainerIfDirOptionPresent(container, options);
       ListOptions nativeOptions = container2ContainerListOptions.apply(options);
       // until includeMeta() option works for namespace interface
