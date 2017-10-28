@@ -23,6 +23,7 @@ import javax.inject.Singleton;
 import org.jclouds.blobstore.options.ListContainerOptions;
 
 import com.google.common.base.Function;
+import com.google.common.base.Strings;
 
 @Singleton
 public class BlobStoreListOptionsToListOptions implements
@@ -31,7 +32,7 @@ public class BlobStoreListOptionsToListOptions implements
    public org.jclouds.atmos.options.ListOptions apply(ListContainerOptions from) {
       checkNotNull(from, "set options to instance NONE instead of passing null");
       org.jclouds.atmos.options.ListOptions httpOptions = new org.jclouds.atmos.options.ListOptions();
-      if (from.getMarker() != null) {
+      if (!Strings.isNullOrEmpty(from.getMarker())) {
          httpOptions.token(from.getMarker());
       }
       if (from.getMaxResults() != null) {
