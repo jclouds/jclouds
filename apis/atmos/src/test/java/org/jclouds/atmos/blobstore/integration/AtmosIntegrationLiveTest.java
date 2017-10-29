@@ -44,39 +44,8 @@ public class AtmosIntegrationLiveTest extends BaseBlobIntegrationTest {
    }
 
    @Override
-   @Test(enabled = false)
-   public void testGetIfMatch() {
-      // no etag support
-   }
-
-   @Override
-   @Test(enabled = false)
-   public void testGetIfModifiedSince() {
-      // not supported
-   }
-
-   @Override
-   @Test(enabled = false)
-   public void testGetIfNoneMatch() {
-      // no etag support
-   }
-
-   @Override
-   @Test(enabled = false)
-   public void testGetIfUnmodifiedSince() {
-      // not supported
-   }
-
-   @Override
-   @Test(enabled = false)
-   public void testGetRange() {
-      // TODO this should work
-   }
-
-   @Override
-   @Test(enabled = false)
    public void testGetTwoRanges() {
-      // not supported
+      throw new SkipException("Atmos MIME-encodes multiple ranges");
    }
 
    // not supported
@@ -124,16 +93,9 @@ public class AtmosIntegrationLiveTest extends BaseBlobIntegrationTest {
       throw new SkipException("Expiration not yet implemented");
    }
 
-   @Test(enabled = false)
-   // problem with the stub and md5, live is fine
+   @Override
    public void testMetadata() {
-      // TODO
-   }
-
-   @Test(enabled = false)
-   // problem with the stub and md5, live is fine
-   public void testPutObject() throws Exception {
-      // TODO
+      throw new SkipException("Atmos cannot overwrite blob when Content-MD5 is set");
    }
 
    @Override

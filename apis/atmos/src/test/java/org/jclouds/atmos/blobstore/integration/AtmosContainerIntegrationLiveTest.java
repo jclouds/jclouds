@@ -65,4 +65,9 @@ public class AtmosContainerIntegrationLiveTest extends BaseContainerIntegrationT
    public void testDelimiterList() {
       throw new SkipException("Delimiter support is not yet implemented");
    }
+
+   @Override
+   public void testListContainerPrefix() throws InterruptedException {
+      throw new SkipException("Prefix support is not yet implemented");
+   }
 }
