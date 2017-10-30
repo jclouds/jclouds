@@ -220,8 +220,15 @@ public class AtmosBlobStore extends BaseBlobStore {
    @Override
    public PageSet<? extends StorageMetadata> list(String container,
             org.jclouds.blobstore.options.ListContainerOptions options) {
-      checkArgument(Strings.isNullOrEmpty(options.getPrefix()), "does not support prefixes");
+      // TODO: recursive?
+      if (!Strings.nullToEmpty(options.getDelimiter()).equals("/") && !Strings.isNullOrEmpty(options.getPrefix())) {
+         throw new IllegalArgumentException("Atmos can only list via prefix if delimiter is / and the prefix matches an existing directory");
+      }
       container = AtmosUtils.adjustContainerIfDirOptionPresent(container, options);
+      if (!Strings.isNullOrEmpty(options.getPrefix())) {
+         // this only works when the prefix exactly matches a directory, the common usage
+         container += "/" + options.getPrefix();
+      }
       ListOptions nativeOptions = container2ContainerListOptions.apply(options);
       // until includeMeta() option works for namespace interface
       PageSet<? extends StorageMetadata> list = container2ResourceList.apply(sync.listDirectory(container,

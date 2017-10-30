@@ -58,16 +58,11 @@ public class AtmosContainerIntegrationLiveTest extends BaseContainerIntegrationT
 
    @Override
    public void testContainerListWithPrefix() {
-      throw new SkipException("Prefix option has not been plumbed down to Atmos");
+      throw new SkipException("Atmos can only list prefix which matches an existing directory");
    }
 
    @Override
    public void testDelimiterList() {
       throw new SkipException("Delimiter support is not yet implemented");
-   }
-
-   @Override
-   public void testListContainerPrefix() throws InterruptedException {
-      throw new SkipException("Prefix support is not yet implemented");
    }
 }
