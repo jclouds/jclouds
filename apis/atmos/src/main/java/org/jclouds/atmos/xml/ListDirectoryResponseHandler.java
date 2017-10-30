@@ -16,10 +16,14 @@
  */
 package org.jclouds.atmos.xml;
 
+import java.util.Date;
 import java.util.Set;
+
+import javax.inject.Inject;
 
 import org.jclouds.atmos.domain.DirectoryEntry;
 import org.jclouds.atmos.domain.FileType;
+import org.jclouds.date.DateService;
 import org.jclouds.http.functions.ParseSax;
 
 import com.google.common.collect.Sets;
@@ -37,11 +41,19 @@ public class ListDirectoryResponseHandler extends ParseSax.HandlerWithResult<Set
    private FileType currentType;
    private String currentFileName;
    private long currentSize;
+   private Date currentModificationTime;
 
    // metadata parsing
    private String currentName;
 
    private StringBuilder currentText = new StringBuilder();
+
+   private final DateService dateService;
+
+   @Inject
+   ListDirectoryResponseHandler(DateService dateService) {
+      this.dateService = dateService;
+   }
 
    public Set<DirectoryEntry> getResult() {
       return entries;
@@ -61,9 +73,11 @@ public class ListDirectoryResponseHandler extends ParseSax.HandlerWithResult<Set
       } else if (qName.equals("Value")) {
          if (currentName.equals("size")) {
             currentSize = Long.parseLong(currentText.toString().trim());
+         } else if (currentName.equals("mtime")) {
+            currentModificationTime = dateService.iso8601DateOrSecondsDateParse(currentText.toString().trim());
          }
       } else if (qName.equals("DirectoryEntry")) {
-         entries.add(new DirectoryEntry(currentObjectId, currentType, currentFileName, currentSize));
+         entries.add(new DirectoryEntry(currentObjectId, currentType, currentFileName, currentSize, currentModificationTime));
       }
       currentText.setLength(0);
    }

@@ -16,6 +16,10 @@
  */
 package org.jclouds.atmos.domain;
 
+import java.util.Date;
+
+import org.jclouds.javax.annotation.Nullable;
+
 import com.google.common.base.Objects;
 
 /**
@@ -26,12 +30,19 @@ public class DirectoryEntry implements Comparable<DirectoryEntry> {
    private final FileType type;
    private final String objname;
    private final long size;
+   @Nullable private final Date modifiedTime;
 
+   @Deprecated
    public DirectoryEntry(String objectid, FileType type, String objname, long size) {
+      this(objectid, type, objname, size, null);
+   }
+
+   public DirectoryEntry(String objectid, FileType type, String objname, long size, Date modifiedTime) {
       this.objectid = objectid;
       this.objname = objname;
       this.type = type;
       this.size = size;
+      this.modifiedTime = modifiedTime != null ? (Date) modifiedTime.clone() : null;
    }
 
    public String getObjectID() {
@@ -48,6 +59,10 @@ public class DirectoryEntry implements Comparable<DirectoryEntry> {
 
    public long getSize() {
       return size;
+   }
+
+   public Date getModifiedTime() {
+      return modifiedTime != null ? (Date) modifiedTime.clone() : null;
    }
 
    public int compareTo(DirectoryEntry o) {
