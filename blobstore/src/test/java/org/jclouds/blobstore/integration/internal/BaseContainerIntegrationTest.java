@@ -310,7 +310,7 @@ public class BaseContainerIntegrationTest extends BaseBlobStoreIntegrationTest {
          add15UnderRoot(containerName);
          awaitConsistency();
          PageSet<? extends StorageMetadata> container = view.getBlobStore().list(
-               containerName, new ListContainerOptions().prefix(prefix).delimiter("/"));
+               containerName, new ListContainerOptions().prefix(prefix + "/").delimiter("/"));
          assert container.getNextMarker() == null;
          assertEquals(container.size(), 10);
       } finally {
