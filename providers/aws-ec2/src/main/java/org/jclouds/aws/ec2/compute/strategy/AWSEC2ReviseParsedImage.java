@@ -51,6 +51,8 @@ public class AWSEC2ReviseParsedImage implements ReviseParsedImage {
    //        1111111        22222222222                    3333333333
    public static final Pattern AMAZON_WINDOWS_PATTERN = Pattern.compile(".*/(Windows)_Server-([^-]*-[^-]*)-.*-([^-]*)(\\.manifest.xml)?");
 
+   public static final Pattern CENTOS_MARKETPLACE_PATTERN = Pattern.compile(".*/(CentOS) Linux ([^ ]*) (.*)(\\.manifest.xml)?");
+
    public static final Pattern CANONICAL_PATTERN = Pattern.compile(".*/([^-]*)-([^-]*)-.*-(.*)(\\.manifest.xml)?");
 
    // ex rightscale-us-east/CentOS_5.4_x64_v4.4.10.manifest.xml
@@ -105,8 +107,8 @@ public class AWSEC2ReviseParsedImage implements ReviseParsedImage {
     *            if no configured matcher matches the manifest.
     */
    private Matcher getMatcherAndFind(String manifest) {
-      for (Pattern pattern : new Pattern[] { AMZN_PATTERN, AMAZON_PATTERN, AMAZON_WINDOWS_PATTERN, CANONICAL_PATTERN,
-              RIGHTIMAGE_PATTERN, RIGHTSCALE_PATTERN }) {
+      for (Pattern pattern : new Pattern[] { AMZN_PATTERN, AMAZON_PATTERN, AMAZON_WINDOWS_PATTERN,
+              CENTOS_MARKETPLACE_PATTERN, CANONICAL_PATTERN, RIGHTIMAGE_PATTERN, RIGHTSCALE_PATTERN }) {
          Matcher matcher = pattern.matcher(manifest);
          if (matcher.find())
             return matcher;
