@@ -94,4 +94,6 @@ public interface StorageMetadata extends ResourceMetadata<StorageType> {
 
    /** Size of the resource, possibly null. */
    Long getSize();
+
+   Tier getTier();
 }

@@ -40,18 +40,16 @@ public class BlobMetadataImpl extends StorageMetadataImpl implements BlobMetadat
    private final URI publicUri;
    private final String container;
    private final ContentMetadata contentMetadata;
-   private final Tier tier;
 
    public BlobMetadataImpl(String id, String name, @Nullable Location location, URI uri, String eTag,
             @Nullable Date creationDate, @Nullable Date lastModified,
             Map<String, String> userMetadata, @Nullable URI publicUri,
             @Nullable String container, ContentMetadata contentMetadata, @Nullable Long size,
             Tier tier) {
-      super(StorageType.BLOB, id, name, location, uri, eTag, creationDate, lastModified, userMetadata, size);
+      super(StorageType.BLOB, id, name, location, uri, eTag, creationDate, lastModified, userMetadata, size, tier);
       this.publicUri = publicUri;
       this.container = container;
       this.contentMetadata = checkNotNull(contentMetadata, "contentMetadata");
-      this.tier = checkNotNull(tier, "tier");
    }
 
    @Deprecated
@@ -95,11 +93,6 @@ public class BlobMetadataImpl extends StorageMetadataImpl implements BlobMetadat
    }
 
    @Override
-   public Tier getTier() {
-      return tier;
-   }
-
-   @Override
    public boolean equals(Object object) {
       if (object == this) {
          return true;
@@ -111,13 +104,12 @@ public class BlobMetadataImpl extends StorageMetadataImpl implements BlobMetadat
       return super.equals(that) &&
             Objects.equal(publicUri, that.publicUri) &&
             Objects.equal(container, that.container) &&
-            Objects.equal(contentMetadata, that.contentMetadata) &&
-            Objects.equal(tier, that.tier);
+            Objects.equal(contentMetadata, that.contentMetadata);
    }
 
    @Override
    public int hashCode() {
-      return Objects.hashCode(super.hashCode(), publicUri, container, contentMetadata, tier);
+      return Objects.hashCode(super.hashCode(), publicUri, container, contentMetadata);
    }
 
    @Override
@@ -125,7 +117,6 @@ public class BlobMetadataImpl extends StorageMetadataImpl implements BlobMetadat
       return super.string()
             .add("publicUri", publicUri)
             .add("container", container)
-            .add("contentMetadata", contentMetadata)
-            .add("tier", tier);
+            .add("contentMetadata", contentMetadata);
    }
 }

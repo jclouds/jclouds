@@ -24,6 +24,7 @@ import com.google.common.base.MoreObjects.ToStringHelper;
 import org.jclouds.blobstore.domain.MutableStorageMetadata;
 import org.jclouds.blobstore.domain.StorageMetadata;
 import org.jclouds.blobstore.domain.StorageType;
+import org.jclouds.blobstore.domain.Tier;
 import org.jclouds.domain.internal.MutableResourceMetadataImpl;
 
 /**
@@ -36,6 +37,7 @@ public class MutableStorageMetadataImpl extends MutableResourceMetadataImpl<Stor
    private Date creationDate;
    private Date lastModified;
    private Long size;
+   private Tier tier;
 
    public MutableStorageMetadataImpl() {
       super();
@@ -46,6 +48,7 @@ public class MutableStorageMetadataImpl extends MutableResourceMetadataImpl<Stor
       this.eTag = from.getETag();
       this.lastModified = from.getLastModified();
       this.size = from.getSize();
+      this.tier = from.getTier();
    }
 
    /**
@@ -101,6 +104,16 @@ public class MutableStorageMetadataImpl extends MutableResourceMetadataImpl<Stor
    }
 
    @Override
+   public Tier getTier() {
+      return tier;
+   }
+
+   @Override
+   public void setTier(Tier tier) {
+      this.tier = tier;
+   }
+
+   @Override
    public boolean equals(Object object) {
       if (object == this) {
          return true;
@@ -113,12 +126,13 @@ public class MutableStorageMetadataImpl extends MutableResourceMetadataImpl<Stor
             Objects.equal(eTag, that.eTag) &&
             Objects.equal(creationDate, that.creationDate) &&
             Objects.equal(lastModified, that.lastModified) &&
-            Objects.equal(size, that.size);
+            Objects.equal(size, that.size) &&
+            Objects.equal(tier, that.tier);
    }
 
    @Override
    public int hashCode() {
-      return Objects.hashCode(super.hashCode(), eTag, creationDate, lastModified, size);
+      return Objects.hashCode(super.hashCode(), eTag, creationDate, lastModified, size, tier);
    }
 
    @Override
@@ -127,6 +141,7 @@ public class MutableStorageMetadataImpl extends MutableResourceMetadataImpl<Stor
             .add("eTag", eTag)
             .add("creationDate", creationDate)
             .add("lastModified", lastModified)
-            .add("size", size);
+            .add("size", size)
+            .add("tier", tier);
    }
 }

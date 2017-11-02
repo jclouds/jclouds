@@ -27,6 +27,7 @@ import com.google.common.base.MoreObjects.ToStringHelper;
 
 import org.jclouds.blobstore.domain.StorageMetadata;
 import org.jclouds.blobstore.domain.StorageType;
+import org.jclouds.blobstore.domain.Tier;
 import org.jclouds.domain.Location;
 import org.jclouds.domain.internal.ResourceMetadataImpl;
 import org.jclouds.javax.annotation.Nullable;
@@ -45,17 +46,29 @@ public class StorageMetadataImpl extends ResourceMetadataImpl<StorageType> imple
    private final StorageType type;
    @Nullable
    private final Long size;
+   @Nullable
+   private final Tier tier;
 
    public StorageMetadataImpl(StorageType type, @Nullable String id, @Nullable String name,
          @Nullable Location location, @Nullable URI uri, @Nullable String eTag,
          @Nullable Date creationDate, @Nullable Date lastModified,
-         Map<String, String> userMetadata, @Nullable Long size) {
+         Map<String, String> userMetadata, @Nullable Long size, Tier tier) {
       super(id, name, location, uri, userMetadata);
       this.eTag = eTag;
       this.creationDate = creationDate;
       this.lastModified = lastModified;
       this.type = checkNotNull(type, "type");
       this.size = size;
+      this.tier = tier;
+   }
+
+   /** @deprecated call StorageMetadataImpl(StorageType.class, String.class, String.class, Location.class, URI.class, String.class, Date.class, Date.class, Map.class, Long.class, Tier.class) */
+   @Deprecated
+   public StorageMetadataImpl(StorageType type, @Nullable String id, @Nullable String name,
+         @Nullable Location location, @Nullable URI uri, @Nullable String eTag,
+         @Nullable Date creationDate, @Nullable Date lastModified,
+         Map<String, String> userMetadata, @Nullable Long size) {
+      this(type, id, name, location, uri, eTag, creationDate, lastModified, userMetadata, size, null);
    }
 
    /** @deprecated call StorageMetadataImpl(StorageType.class, String.class, String.class, Location.class, URI.class, String.class, Date.class, Date.class, Map.class, Long.class) */
@@ -78,7 +91,7 @@ public class StorageMetadataImpl extends ResourceMetadataImpl<StorageType> imple
    @Override
    public int hashCode() {
       return Objects.hashCode(super.hashCode(), eTag, creationDate,
-            lastModified, type, size);
+            lastModified, type, size, tier);
    }
 
    @Override
@@ -95,6 +108,7 @@ public class StorageMetadataImpl extends ResourceMetadataImpl<StorageType> imple
       if (!Objects.equal(lastModified, other.lastModified)) { return false; }
       if (!Objects.equal(type, other.type)) { return false; }
       if (!Objects.equal(size, other.size)) { return false; }
+      if (!Objects.equal(tier, other.tier)) { return false; }
       return true;
    }
 
@@ -105,7 +119,8 @@ public class StorageMetadataImpl extends ResourceMetadataImpl<StorageType> imple
             .add("creationDate", creationDate)
             .add("lastModified", lastModified)
             .add("type", type)
-            .add("size", size);
+            .add("size", size)
+            .add("tier", tier);
    }
 
    /**
@@ -134,4 +149,8 @@ public class StorageMetadataImpl extends ResourceMetadataImpl<StorageType> imple
       return size;
    }
 
+   @Override
+   public Tier getTier() {
+      return tier;
+   }
 }

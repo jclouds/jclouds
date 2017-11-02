@@ -123,7 +123,7 @@ public final class B2BlobStore extends BaseBlobStore {
       ImmutableList.Builder<StorageMetadata> builder = ImmutableList.builder();
       BucketList list = api.getBucketApi().listBuckets();
       for (Bucket bucket : list.buckets()) {
-         builder.add(new StorageMetadataImpl(StorageType.CONTAINER, null, bucket.bucketName(), defaultLocation.get(), null, null, null, null, ImmutableMap.<String, String>of(), null));
+         builder.add(new StorageMetadataImpl(StorageType.CONTAINER, null, bucket.bucketName(), defaultLocation.get(), null, null, null, null, ImmutableMap.<String, String>of(), null, Tier.STANDARD));
       }
       return new PageSetImpl<StorageMetadata>(builder.build(), null);
    }
@@ -196,7 +196,7 @@ public final class B2BlobStore extends BaseBlobStore {
       B2ObjectList list = api.getObjectApi().listFileNames(bucket.bucketId(), options.getMarker(), options.getMaxResults(), options.getPrefix(), Strings.emptyToNull(delimiter));
       for (B2ObjectList.Entry entry : list.files()) {
          if (entry.action() == Action.FOLDER) {
-            builder.add(new StorageMetadataImpl(StorageType.RELATIVE_PATH, null, entry.fileName(), null, null, null, null, entry.uploadTimestamp(), ImmutableMap.<String, String>of(), null));
+            builder.add(new StorageMetadataImpl(StorageType.RELATIVE_PATH, null, entry.fileName(), null, null, null, null, entry.uploadTimestamp(), ImmutableMap.<String, String>of(), null, Tier.STANDARD));
          } else if (options.isDetailed()) {
             BlobMetadata metadata = blobMetadata(container, entry.fileName());
             if (metadata != null) {

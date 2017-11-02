@@ -45,6 +45,4 @@ public interface BlobMetadata extends StorageMetadata {
    String getContainer();
 
    ContentMetadata getContentMetadata();
-
-   Tier getTier();
 }
