@@ -229,6 +229,30 @@ public class AWSEC2ImageParserTest {
 
    }
 
+   public void testParseCentOsOnMarketplaceImage() {
+
+      Set<org.jclouds.compute.domain.Image> result = convertImages("/centos_marketplace_images.xml");
+
+      assertEquals(
+            Iterables.get(result, 0),
+            new ImageBuilder()
+                  .name("CentOS Linux 7 x86_64 HVM EBS 1704_01-b7ee8a69-ee97-4a49-9e68-afaee216db2e-ami-d52f5bc3.4")
+                  .operatingSystem(
+                        new OperatingSystem.Builder().family(OsFamily.CENTOS).arch("x86_64")
+                              .version("7").description("aws-marketplace/CentOS Linux 7 x86_64 HVM EBS 1704_01-b7ee8a69-ee97-4a49-9e68-afaee216db2e-ami-d52f5bc3.4")
+                              .is64Bit(true).build()).description("CentOS Linux 7 x86_64 HVM EBS 1704_01")
+                  .defaultCredentials(LoginCredentials.builder().user("centos").build()).id("us-east-1/ami-061b1560")
+                  .providerId("ami-061b1560").location(defaultLocation).version("7")
+                  .userMetadata(ImmutableMap.of(
+                     "owner", "679593333241",
+                     "rootDeviceType", "ebs",
+                     "virtualizationType", "hvm",
+                     "hypervisor", "xen"))
+                  .status(org.jclouds.compute.domain.Image.Status.AVAILABLE).build());
+      assertEquals(Iterables.get(result, 0).getStatus(), org.jclouds.compute.domain.Image.Status.AVAILABLE);
+
+   }
+
    static Location defaultLocation = new LocationBuilder().scope(LocationScope.REGION).id("us-east-1")
          .description("us-east-1").build();
 

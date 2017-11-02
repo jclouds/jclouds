@@ -53,10 +53,13 @@ public class EC2PopulateDefaultLoginCredentialsForImageStrategy extends ReturnCr
       Builder credentials = LoginCredentials.builder().user("root");
       if (resourceToAuthenticate != null) {
          String owner = null;
+         String name = null;
          if (resourceToAuthenticate instanceof Image) {
             owner = Image.class.cast(resourceToAuthenticate).getImageOwnerId();
+            name = Image.class.cast(resourceToAuthenticate).getName();
          } else if (resourceToAuthenticate instanceof org.jclouds.compute.domain.Image) {
             owner = org.jclouds.compute.domain.Image.class.cast(resourceToAuthenticate).getUserMetadata().get("owner");
+            name = org.jclouds.compute.domain.Image.class.cast(resourceToAuthenticate).getUserMetadata().get("name");
          }
          checkArgument(owner != null, "Resource must be an image (for EC2)");
          // canonical/alestic images use the ubuntu user to login
@@ -65,6 +68,8 @@ public class EC2PopulateDefaultLoginCredentialsForImageStrategy extends ReturnCr
             // http://typepad.com/2010/09/introducing-amazon-linux-ami.html
          } else if (owner.equals("137112412989")) {
             credentials.user("ec2-user");
+         } else if (owner.equals("679593333241") && name != null && name.startsWith("CentOS")) {
+            credentials.user("centos");
          }
       }
       return credentials.build();

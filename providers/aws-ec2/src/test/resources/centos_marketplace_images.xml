@@ -1,0 +1,38 @@
+<?xml version="1.0"?>
+<DescribeImagesResponse xmlns="http://ec2.amazonaws.com/doc/2009-11-30/">
+    <requestId>6104eee1-affd-49d7-92a0-516cab8a8ba6</requestId>
+    <imagesSet>
+        <item>
+            <imageId>ami-061b1560</imageId>
+            <imageLocation>aws-marketplace/CentOS Linux 7 x86_64 HVM EBS 1704_01-b7ee8a69-ee97-4a49-9e68-afaee216db2e-ami-d52f5bc3.4</imageLocation>
+            <imageState>available</imageState>
+            <imageOwnerId>679593333241</imageOwnerId>
+            <isPublic>true</isPublic>
+            <productCodes>
+                <item>
+                    <productCode>aw0evgkw8e5c1q413zgy5pjce</productCode>
+                    <type>marketplace</type>
+                </item>
+            </productCodes>
+            <architecture>x86_64</architecture>
+            <imageType>machine</imageType>
+            <imageOwnerAlias>aws-marketplace</imageOwnerAlias>
+            <name>CentOS Linux 7 x86_64 HVM EBS 1704_01-b7ee8a69-ee97-4a49-9e68-afaee216db2e-ami-d52f5bc3.4</name>
+            <description>CentOS Linux 7 x86_64 HVM EBS 1704_01</description>
+            <rootDeviceType>ebs</rootDeviceType>
+            <rootDeviceName>/dev/sda1</rootDeviceName>
+            <blockDeviceMapping>
+                <item>
+                    <deviceName>/dev/sda1</deviceName>
+                    <ebs>
+                        <snapshotId>snap-00f18f3f6413c7879</snapshotId>
+                        <volumeSize>8</volumeSize>
+                        <deleteOnTermination>false</deleteOnTermination>
+                    </ebs>
+                </item>
+            </blockDeviceMapping>
+            <virtualizationType>hvm</virtualizationType>
+            <hypervisor>xen</hypervisor>
+        </item>
+    </imagesSet>
+</DescribeImagesResponse>
