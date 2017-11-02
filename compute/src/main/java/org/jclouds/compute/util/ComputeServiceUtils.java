@@ -140,7 +140,15 @@ public class ComputeServiceUtils {
 
    public static org.jclouds.compute.domain.OsFamily parseOsFamilyOrUnrecognized(String in) {
       org.jclouds.compute.domain.OsFamily myOs = null;
-      for (org.jclouds.compute.domain.OsFamily os : org.jclouds.compute.domain.OsFamily.values()) {
+      for (org.jclouds.compute.domain.OsFamily os : org.jclouds.compute.domain.OsFamily.proritisedValues()) {
+         if (in.toLowerCase().replaceAll("\\s", "").indexOf(os.toString()) != -1) {
+            myOs = os;
+         }
+      }
+      if (myOs != null) {
+         return myOs;
+      }
+      for (org.jclouds.compute.domain.OsFamily os : org.jclouds.compute.domain.OsFamily.nonProritisedValues()) {
          if (in.toLowerCase().replaceAll("\\s", "").indexOf(os.toString()) != -1) {
             myOs = os;
          }

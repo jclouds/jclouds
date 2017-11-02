@@ -21,11 +21,16 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.CaseFormat.LOWER_HYPHEN;
 import static com.google.common.base.CaseFormat.UPPER_UNDERSCORE;
 
+import java.util.Arrays;
+
+import com.google.common.base.Predicate;
+import com.google.common.collect.FluentIterable;
+
 /**
  * Running Operating system
  */
 public enum OsFamily {
-   UNRECOGNIZED, AIX, ALPINE, ARCH, CENTOS, DARWIN, DEBIAN, ESX, FEDORA, FREEBSD, GENTOO, HPUX, LINUX, COREOS, 
+   UNRECOGNIZED(false), AIX, ALPINE, ARCH, CENTOS, DARWIN, DEBIAN, ESX, FEDORA, FREEBSD, GENTOO, HPUX, LINUX(false), COREOS,
    /**
     * @see <a href="http://smartos.org">SmartOS</a>
     */
@@ -48,6 +53,16 @@ public enum OsFamily {
     */
    GCEL, SIGAR, SLACKWARE, SOLARIS, SUSE, TURBOLINUX, CLOUD_LINUX, UBUNTU, WINDOWS;
 
+   private final boolean prioritise;
+
+   OsFamily() {
+      this.prioritise = true;
+   }
+
+   OsFamily(boolean prioritise) {
+      this.prioritise = prioritise;
+   }
+
    public String value() {
       return UPPER_UNDERSCORE.to(LOWER_HYPHEN, name());
    }
@@ -57,11 +72,32 @@ public enum OsFamily {
       return value();
    }
 
+   public boolean shouldPrioritise() {
+      return prioritise;
+   }
+
    public static OsFamily fromValue(String osFamily) {
       try {
          return valueOf(LOWER_HYPHEN.to(UPPER_UNDERSCORE, checkNotNull(osFamily, "osFamily")));
       } catch (IllegalArgumentException e) {
          return UNRECOGNIZED;
       }
+   }
+
+   private static Predicate<OsFamily> predicateOnShouldPrioritise(final boolean prioritise) {
+      return new Predicate<OsFamily>() {
+         @Override
+         public boolean apply(OsFamily osFamily) {
+            return osFamily.shouldPrioritise() == prioritise;
+         }
+      };
+   }
+
+   public static OsFamily[] proritisedValues() {
+      return FluentIterable.from(Arrays.asList(values())).filter(predicateOnShouldPrioritise(true)).toArray(OsFamily.class);
+   }
+
+   public static OsFamily[] nonProritisedValues() {
+      return FluentIterable.from(Arrays.asList(values())).filter(predicateOnShouldPrioritise(false)).toArray(OsFamily.class);
    }
 }
