@@ -63,6 +63,7 @@ import org.jclouds.blobstore.domain.MutableStorageMetadata;
 import org.jclouds.blobstore.domain.PageSet;
 import org.jclouds.blobstore.domain.StorageMetadata;
 import org.jclouds.blobstore.domain.StorageType;
+import org.jclouds.blobstore.domain.Tier;
 import org.jclouds.blobstore.domain.internal.MutableStorageMetadataImpl;
 import org.jclouds.blobstore.domain.internal.PageSetImpl;
 import org.jclouds.blobstore.options.CopyOptions;
@@ -847,6 +848,10 @@ public final class LocalBlobStore implements BlobStore {
       Date expires = mpu.blobMetadata().getContentMetadata().getExpires();
       if (expires != null) {
          blobBuilder.expires(expires);
+      }
+      Tier tier = mpu.blobMetadata().getTier();
+      if (tier != null) {
+          blobBuilder.tier(tier);
       }
 
       String eTag = putBlob(mpu.containerName(), blobBuilder.build());
