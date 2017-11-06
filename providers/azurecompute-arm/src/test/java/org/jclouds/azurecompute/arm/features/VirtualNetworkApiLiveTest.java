@@ -55,7 +55,7 @@ public class VirtualNetworkApiLiveTest extends BaseAzureComputeApiLiveTest {
               VirtualNetwork.VirtualNetworkProperties.builder().addressSpace(
                       VirtualNetwork.AddressSpace.create(Arrays.asList(DEFAULT_VIRTUALNETWORK_ADDRESS_PREFIX))).build();
 
-      VirtualNetwork vn = api().createOrUpdate(virtualNetworkName, LOCATION, virtualNetworkProperties);
+      VirtualNetwork vn = api().createOrUpdate(virtualNetworkName, LOCATION, null, virtualNetworkProperties);
 
       assertEquals(vn.name(), virtualNetworkName);
       assertEquals(vn.location(), LOCATION);

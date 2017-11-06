@@ -132,7 +132,7 @@ public class BaseAzureComputeApiLiveTest extends BaseApiLiveTest<AzureComputeApi
       final VirtualNetwork.VirtualNetworkProperties virtualNetworkProperties =
               VirtualNetwork.VirtualNetworkProperties.create(null, null,
                       VirtualNetwork.AddressSpace.create(Arrays.asList(virtualnetworkAddressPrefix)), null);
-      VirtualNetwork virtualNetwork = api.getVirtualNetworkApi(resourceGroupName).createOrUpdate(virtualNetworkName, location, virtualNetworkProperties);
+      VirtualNetwork virtualNetwork = api.getVirtualNetworkApi(resourceGroupName).createOrUpdate(virtualNetworkName, location, null, virtualNetworkProperties);
       retry(new Predicate<String>() {
          @Override
          public boolean apply(final String name) {

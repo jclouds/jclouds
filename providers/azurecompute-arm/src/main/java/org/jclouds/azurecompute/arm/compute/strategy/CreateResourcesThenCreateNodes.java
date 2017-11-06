@@ -159,7 +159,7 @@ public class CreateResourcesThenCreateNodes extends CreateNodesWithGroupEncodedI
          logger.debug(">> network options have not been configured. Creating network %s(%s) and subnet %s(%s)", name,
                defaultVnetAddressPrefix, name, defaultSubnetAddressPrefix);
          
-         api.getVirtualNetworkApi(options.getResourceGroup()).createOrUpdate(name, location, properties);
+         api.getVirtualNetworkApi(options.getResourceGroup()).createOrUpdate(name, location, null, properties);
          Subnet createdSubnet = api.getSubnetApi(options.getResourceGroup(), name).get(name);
          
          options.ipOptions(IpOptions.builder().subnet(createdSubnet.id()).allocateNewPublicIp(true).build());
