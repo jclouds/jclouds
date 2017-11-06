@@ -164,7 +164,7 @@ public class SoftLayerComputeServiceAdapter implements
       } else {
          VirtualGuestBlockDeviceTemplateGroup blockDeviceTemplateGroup = VirtualGuestBlockDeviceTemplateGroup
                  .builder().globalIdentifier(imageId).build();
-         virtualGuestBuilder.blockDeviceTemplateGroup(blockDeviceTemplateGroup).build();
+         virtualGuestBuilder.blockDeviceTemplateGroup(blockDeviceTemplateGroup);
       }
       // set multi-disks
       if (!templateOptions.getBlockDevices().isEmpty()) {

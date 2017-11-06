@@ -137,7 +137,7 @@ public class ResponseStatusFromPayloadHttpCommandExecutorService extends JavaUrl
       char[] chars = new char[size];
       byte[] bytes = new byte[size];
 
-      is.read(bytes, 0, size);
+      ByteStreams.readFully(is, bytes);
       for (int i = 0; i < size;)
          chars[i] = (char) (bytes[i++] & 0xff);
 

@@ -281,7 +281,7 @@ public class Capacity implements Comparable<Capacity> {
    public int compareTo(Capacity other) {
       int comparison = this.zoneId.compareTo(other.zoneId);
       if (comparison == 0) comparison = this.podId.compareTo(other.podId);
-      if (comparison == 0) Integer.valueOf(this.type.code).compareTo(other.type.code);
+      if (comparison == 0) comparison = Integer.valueOf(this.type.code).compareTo(other.type.code);
       return comparison;
    }
 }

@@ -49,7 +49,7 @@ public class ParseToResumableUpload implements Function<HttpResponse, ResumableU
          }
       }
 
-      return ResumableUpload.create(response.getStatusCode(), uploadId, contentLength, upperLimit, lowerLimit);
+      return ResumableUpload.create(response.getStatusCode(), uploadId, contentLength, lowerLimit, upperLimit);
    }
 
    // Return the Id of the Upload

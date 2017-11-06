@@ -114,6 +114,7 @@ import com.google.common.collect.Iterables;
 import com.google.common.collect.Maps;
 import com.google.common.io.ByteSource;
 import com.google.common.io.ByteStreams;
+import com.google.common.io.Closeables;
 import com.google.common.net.HttpHeaders;
 import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.ListenableFuture;
@@ -758,7 +759,13 @@ public class RegionScopedSwiftBlobStore implements BlobStore {
                SwiftObject object = api.getObjectApi(regionId, containerName)
                      .get(objectName, org.jclouds.http.options.GetOptions.Builder.range(begin, end));
                // Download first, this is the part that usually fails
-               byte[] targetArray = ByteStreams.toByteArray(object.getPayload().openStream());
+               byte[] targetArray;
+               InputStream is = object.getPayload().openStream();
+               try {
+                  targetArray = ByteStreams.toByteArray(is);
+               } finally {
+                  Closeables.closeQuietly(is);
+               }
                // Map file region
                MappedByteBuffer out = raf.getChannel().map(FileChannel.MapMode.READ_WRITE, begin, end - begin + 1);
                out.put(targetArray);
@@ -898,7 +905,13 @@ public class RegionScopedSwiftBlobStore implements BlobStore {
                long time = System.nanoTime();
                SwiftObject object = api.getObjectApi(regionId, containerName)
                      .get(objectName, org.jclouds.http.options.GetOptions.Builder.range(begin, end));
-               byte[] downloadedBlock = ByteStreams.toByteArray(object.getPayload().openStream());
+               byte[] downloadedBlock;
+               InputStream is = object.getPayload().openStream();
+               try {
+                  downloadedBlock = ByteStreams.toByteArray(is);
+               } finally {
+                  Closeables.closeQuietly(is);
+               }
                return downloadedBlock;
             } catch (IOException e) {
                logger.debug(e.toString());

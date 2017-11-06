@@ -24,6 +24,7 @@ import static org.jclouds.util.Maps2.transformKeys;
 import static org.jclouds.util.Predicates2.startsWith;
 
 import java.util.Map;
+import java.util.regex.Pattern;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -107,7 +108,7 @@ public class ReadAnnotationsAndProperties implements InvocationConfig {
       });
       return transformKeys(longsByName, new Function<String, String>() {
          public String apply(String input) {
-            return input.replaceFirst(PROPERTY_TIMEOUTS_PREFIX, "");
+            return input.replaceFirst(Pattern.quote(PROPERTY_TIMEOUTS_PREFIX), "");
          }
       });
    }

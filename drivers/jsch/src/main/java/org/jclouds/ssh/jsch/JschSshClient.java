@@ -275,7 +275,7 @@ public class JschSshClient implements SshClient {
          try {
             sftp.put(is, path);
          } finally {
-            Closeables2.closeQuietly(contents);
+            Closeables2.closeQuietly(is);
          }
          return null;
       }
