@@ -240,7 +240,10 @@ public class BaseBlobIntegrationTest extends BaseBlobStoreIntegrationTest {
                .payload(TEST_STRING)
                .build();
          blobStore.putBlob(container, blob);
-         blobStore.putBlob(container, blob);
+         Blob overwriteBlob = blobStore.blobBuilder(blobName)
+               .payload("overwrite content")
+               .build();
+         blobStore.putBlob(container, overwriteBlob);
       } finally {
          returnContainer(container);
       }
