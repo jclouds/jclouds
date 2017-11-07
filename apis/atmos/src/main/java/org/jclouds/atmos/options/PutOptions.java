@@ -53,7 +53,11 @@ public class PutOptions extends BaseHttpRequestOptions {
       return this;
    }
 
-   /** By default Atmos does not allow overwriting objects. */
+   /**
+    * By default Atmos does not allow overwriting objects.
+    *
+    * Note: older versions of Atmos do not support this header.
+    */
    public PutOptions overwrite() {
       this.replaceHeader("x-emc-force-overwrite", "true");
       return this;

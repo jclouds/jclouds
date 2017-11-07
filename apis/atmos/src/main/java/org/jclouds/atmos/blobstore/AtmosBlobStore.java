@@ -267,7 +267,6 @@ public class AtmosBlobStore extends BaseBlobStore {
       if (options.getBlobAccess() == BlobAccess.PUBLIC_READ) {
          atmosOptions.publicRead();
       }
-      atmosOptions.overwrite();
       return AtmosUtils.putBlob(sync, crypto, blob2Object, container, blob, atmosOptions);
    }
 
