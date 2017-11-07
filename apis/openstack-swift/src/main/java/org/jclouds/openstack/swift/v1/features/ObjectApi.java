@@ -72,7 +72,6 @@ import com.google.common.annotations.Beta;
  */
 @Beta
 @RequestFilters(AuthenticateRequest.class)
-@Consumes(APPLICATION_JSON)
 public interface ObjectApi {
 
    /**
@@ -80,6 +79,7 @@ public interface ObjectApi {
     *
     * @return an {@link ObjectList} of {@link SwiftObject} ordered by name or {@code null}.
     */
+   @Consumes(APPLICATION_JSON)
    @Named("object:list")
    @GET
    @ResponseParser(ParseObjectListFromResponse.class)
@@ -98,6 +98,7 @@ public interface ObjectApi {
     *
     * @return an {@link ObjectList} of {@link SwiftObject} ordered by name or {@code null}.
     */
+   @Consumes(APPLICATION_JSON)
    @Named("object:list")
    @GET
    @ResponseParser(ParseObjectListFromResponse.class)
@@ -190,7 +191,6 @@ public interface ObjectApi {
    @Path("/{objectName}")
    @ResponseParser(ParseObjectFromResponse.class)
    @Fallback(NullOnNotFoundOr404.class)
-   @QueryParams(keys = "format", values = "json")
    @Nullable
    SwiftObject get(@PathParam("objectName") String objectName, GetOptions options);
 
