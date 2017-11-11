@@ -59,7 +59,7 @@ public class DirectoryEntryListToResourceMetadataList implements
                                  .get(), null, null, null, null, ImmutableMap.<String, String>of());
                      else {
                         BlobMetadataImpl metadata = new BlobMetadataImpl(from.getObjectID(), from.getObjectName(), defaultLocation.get(),
-                                 null, null, null, from.getModifiedTime(), ImmutableMap.<String, String>of(), null,
+                                 null, from.getObjectID(), null, from.getModifiedTime(), ImmutableMap.<String, String>of(), null,
                                  null, new BaseMutableContentMetadata());
                         MutableBlobMetadataImpl mutable = new MutableBlobMetadataImpl(metadata);
                         mutable.setSize(from.getSize());

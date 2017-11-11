@@ -23,13 +23,18 @@ import static org.testng.Assert.assertEquals;
 import java.io.IOException;
 import java.util.concurrent.ExecutionException;
 
+import org.jclouds.blobstore.BlobStore;
 import org.jclouds.blobstore.domain.Blob;
 import org.jclouds.blobstore.domain.BlobMetadata;
+import org.jclouds.blobstore.domain.StorageMetadata;
 import org.jclouds.blobstore.domain.Tier;
 import org.jclouds.blobstore.integration.internal.BaseBlobIntegrationTest;
+import org.jclouds.blobstore.options.ListContainerOptions;
 import org.testng.SkipException;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
+
+import com.google.common.io.ByteSource;
 
 @Test(groups = { "integration", "live" })
 public class AtmosIntegrationLiveTest extends BaseBlobIntegrationTest {
@@ -196,5 +201,31 @@ public class AtmosIntegrationLiveTest extends BaseBlobIntegrationTest {
    protected void checkTier(BlobMetadata metadata, Tier expected) {
       // Atmos maps all tiers to STANDARD
       assertThat(metadata.getTier()).isEqualTo(Tier.STANDARD);
+   }
+
+   // TODO: promote test to portable abstraction?
+   @Test(groups = { "integration", "live" })
+   public void testETag() throws Exception {
+      String blobName = "test-etag";
+      ByteSource payload = ByteSource.empty();
+      BlobStore blobStore = view.getBlobStore();
+      String containerName = getContainerName();
+      try {
+         Blob blob = blobStore.blobBuilder(blobName)
+            .payload(payload)
+            .contentLength(payload.size())
+            .build();
+         String eTag = blobStore.putBlob(containerName, blob);
+         assertThat(eTag).hasSize(44);
+
+         BlobMetadata metadata = blobStore.blobMetadata(containerName, blobName);
+         assertThat(metadata.getETag()).isEqualTo(eTag);
+
+         for (StorageMetadata sm : blobStore.list(containerName, ListContainerOptions.NONE)) {
+            assertThat(sm.getETag()).isEqualTo(eTag);
+         }
+      } finally {
+         returnContainer(containerName);
+      }
    }
 }

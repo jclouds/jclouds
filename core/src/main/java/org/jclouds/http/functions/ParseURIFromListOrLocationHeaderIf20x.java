@@ -71,7 +71,7 @@ public class ParseURIFromListOrLocationHeaderIf20x implements Function<HttpRespo
             locationUri = URI.create(location);
             return Uris.uriBuilder(request.getEndpoint()).path(locationUri.getPath()).query(locationUri.getQuery()).build();
          } else {
-            throw new HttpResponseException("no uri in headers or content", null, from);
+            return null;
          }
 
       }

@@ -20,6 +20,7 @@ import static org.jclouds.util.Predicates2.retry;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
+import java.net.URI;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
@@ -73,13 +74,19 @@ public class AtmosUtils {
       final String path = container + "/" + blob.getMetadata().getName();
       final AtmosObject object = blob2Object.apply(blob);
 
+      URI uri;
       try {
-         sync.createFile(container, object, options);
+         uri = sync.createFile(container, object, options);
       } catch (KeyAlreadyExistsException e) {
          deletePathAndEnsureGone(sync, path);
-         sync.createFile(container, object, options);
+         uri = sync.createFile(container, object, options);
       }
-      return path;
+
+      // return object ID as the ETag
+      String objectId = uri.getPath();
+      String prefix = "/rest/objects/";
+      checkState(objectId.startsWith(prefix), objectId);
+      return objectId.substring(prefix.length());
    }
    
    public static void deletePathAndEnsureGone(final AtmosClient sync, String path) {
