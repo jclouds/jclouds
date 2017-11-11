@@ -133,11 +133,6 @@ public class ParseAWSErrorFromXmlContent implements HttpErrorHandler {
                exception = new IllegalStateException(message, exception);
             }
             break;
-         case 416:
-            if ("InvalidRange".equals(errorCode)) {
-               exception = new IllegalArgumentException(message, exception);
-            }
-            break;
       }
       return exception;
    }

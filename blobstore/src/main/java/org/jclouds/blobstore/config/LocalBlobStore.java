@@ -704,11 +704,11 @@ public final class LocalBlobStore implements BlobStore {
                   offset = Long.parseLong(firstLast[0]);
                   last = Long.parseLong(firstLast[1]);
                } else {
-                  throw new IllegalArgumentException("illegal range: " + s);
+                  throw new HttpResponseException("illegal range: " + s, null, null);
                }
 
                if (offset >= blob.getPayload().getContentMetadata().getContentLength()) {
-                  throw new IllegalArgumentException("illegal range: " + s);
+                  throw new HttpResponseException("illegal range: " + s, null, null);
                }
                if (last + 1 > blob.getPayload().getContentMetadata().getContentLength()) {
                   last = blob.getPayload().getContentMetadata().getContentLength() - 1;
