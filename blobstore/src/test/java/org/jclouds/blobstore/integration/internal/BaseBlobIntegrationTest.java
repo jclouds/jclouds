@@ -16,6 +16,7 @@
  */
 package org.jclouds.blobstore.integration.internal;
 
+import static org.assertj.core.api.Fail.failBecauseExceptionWasNotThrown;
 import static com.google.common.base.Charsets.UTF_8;
 import static com.google.common.hash.Hashing.md5;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -387,11 +388,9 @@ public class BaseBlobIntegrationTest extends BaseBlobStoreIntegrationTest {
          addObjectAndValidateContent(container, name);
          try {
             view.getBlobStore().getBlob(container, name, range(TEST_STRING.length(), TEST_STRING.length() + 1));
-            throw new AssertionError("Invalid range not caught");
+            failBecauseExceptionWasNotThrown(HttpResponseException.class);
          } catch (HttpResponseException e) {
             assertThat(e.getResponse().getStatusCode()).isEqualTo(416);
-         } catch (IllegalArgumentException e) {
-            // expected
          }
       } finally {
          returnContainer(container);
