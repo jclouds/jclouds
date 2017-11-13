@@ -19,7 +19,6 @@ package org.jclouds.googlecomputeengine.compute;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Preconditions.checkState;
 import static com.google.common.collect.Iterables.filter;
-import static com.google.common.collect.Lists.newArrayList;
 import static java.lang.String.format;
 import static org.jclouds.googlecloud.internal.ListPages.concat;
 import static org.jclouds.googlecomputeengine.compute.domain.internal.RegionAndName.fromRegionAndName;
@@ -52,10 +51,12 @@ import org.jclouds.googlecomputeengine.domain.AttachDisk;
 import org.jclouds.googlecomputeengine.domain.DiskType;
 import org.jclouds.googlecomputeengine.domain.Image;
 import org.jclouds.googlecomputeengine.domain.Instance;
+import org.jclouds.googlecomputeengine.domain.Instance.NetworkInterface.AccessConfig;
 import org.jclouds.googlecomputeengine.domain.Instance.Scheduling;
 import org.jclouds.googlecomputeengine.domain.Instance.Scheduling.OnHostMaintenance;
 import org.jclouds.googlecomputeengine.domain.MachineType;
 import org.jclouds.googlecomputeengine.domain.NewInstance;
+import org.jclouds.googlecomputeengine.domain.NewInstance.NetworkInterface;
 import org.jclouds.googlecomputeengine.domain.Operation;
 import org.jclouds.googlecomputeengine.domain.Region;
 import org.jclouds.googlecomputeengine.domain.Subnetwork;
@@ -148,16 +149,24 @@ public final class GoogleComputeEngineServiceAdapter
 
       Scheduling scheduling = getScheduling(options);
 
-      NewInstance newInstance = new NewInstance.Builder(name,
+      List<NetworkInterface> networks = Lists.newArrayList();
+      if (options.assignExternalIp()) {
+         networks.add(NetworkInterface.create(network, subnetwork));
+      } else {
+         // Do not assign an externally facing IP address to the machine.
+         networks.add(NetworkInterface.create(network, subnetwork, ImmutableList.<AccessConfig>of()));
+      }
+
+      NewInstance.Builder newInstanceBuilder = new NewInstance.Builder(name,
             template.getHardware().getUri(), // machineType
-            network,
-            subnetwork,
+            networks,
             disks)
             .description(group)
             .tags(Tags.create(null, ImmutableList.copyOf(options.getTags())))
             .serviceAccounts(options.serviceAccounts())
-            .scheduling(scheduling)
-            .build();
+            .scheduling(scheduling);
+
+      NewInstance newInstance = newInstanceBuilder.build();
 
       // Add metadata from template and for ssh key and image id
       newInstance.metadata().putAll(options.getUserMetadata());
@@ -216,7 +225,7 @@ public final class GoogleComputeEngineServiceAdapter
    }
 
    @Override public Iterable<Image> listImages() {
-      List<Iterable<Image>> images = newArrayList();
+      List<Iterable<Image>> images = Lists.newArrayList();
 
       images.add(concat(api.images().list()));
 

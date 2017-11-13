@@ -28,6 +28,7 @@ import org.jclouds.scriptbuilder.domain.Statement;
 /** Instance options specific to Google Compute Engine. */
 public final class GoogleComputeEngineTemplateOptions extends TemplateOptions {
 
+   private boolean assignExternalIp = true;
    private boolean autoCreateKeyPair = true;
    private boolean autoCreateWindowsPassword;
    private List<ServiceAccount> serviceAccounts;
@@ -46,6 +47,7 @@ public final class GoogleComputeEngineTemplateOptions extends TemplateOptions {
       super.copyTo(to);
       if (to instanceof GoogleComputeEngineTemplateOptions) {
          GoogleComputeEngineTemplateOptions eTo = GoogleComputeEngineTemplateOptions.class.cast(to);
+         eTo.assignExternalIp(assignExternalIp());
          eTo.autoCreateKeyPair(autoCreateKeyPair());
          eTo.serviceAccounts(serviceAccounts());
          eTo.autoCreateWindowsPassword(autoCreateWindowsPassword());
@@ -67,6 +69,21 @@ public final class GoogleComputeEngineTemplateOptions extends TemplateOptions {
     */
    public String bootDiskType() {
       return bootDiskType;
+   }
+
+   /**
+    * Sets whether an external IP address should be assigned to the machine.
+    */
+   public GoogleComputeEngineTemplateOptions assignExternalIp(boolean assignExternalIp) {
+      this.assignExternalIp = assignExternalIp;
+      return this;
+   }
+
+   /**
+    * Gets whether an external IP address should be assigned to the machine.
+    */
+   public boolean assignExternalIp() {
+      return assignExternalIp;
    }
 
    /**
@@ -115,7 +132,7 @@ public final class GoogleComputeEngineTemplateOptions extends TemplateOptions {
     * the password if and only if the image is for a Windows VM.
     */
    public Boolean autoCreateWindowsPassword() {
-	   return autoCreateWindowsPassword;
+      return autoCreateWindowsPassword;
    }
    
    /**

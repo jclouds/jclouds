@@ -37,19 +37,19 @@ import com.google.common.collect.ImmutableList;
 @AutoValue
 public abstract class NewInstance {
    @AutoValue
-   abstract static class NetworkInterface {
+   public abstract static class NetworkInterface {
       abstract URI network();
       @Nullable abstract URI subnetwork();
 
       abstract List<AccessConfig> accessConfigs();
 
-      static NetworkInterface create(URI network, URI subnetwork) {
+      public static NetworkInterface create(URI network, URI subnetwork) {
          return create(network, subnetwork,
              Arrays.asList(AccessConfig.create(null, Type.ONE_TO_ONE_NAT, null)));
       }
 
       @SerializedNames({ "network", "subnetwork", "accessConfigs" })
-      static NetworkInterface create(URI network, URI subnetwork, List<AccessConfig> accessConfigs) {
+      public static NetworkInterface create(URI network, URI subnetwork, List<AccessConfig> accessConfigs) {
          return new AutoValue_NewInstance_NetworkInterface(network, subnetwork, accessConfigs);
       }
 
@@ -128,6 +128,14 @@ public abstract class NewInstance {
          this.name = name;
          this.machineType = machineType;
          this.networkInterfaces = ImmutableList.of(NetworkInterface.create(network, subnetwork));
+         this.disks = disks;
+      }
+
+      public Builder(String name, URI machineType, List<NetworkInterface> networks, List<AttachDisk> disks) {
+         checkNotNull(name, "NewInstance name cannot be null");
+         this.name = name;
+         this.machineType = machineType;
+         this.networkInterfaces = ImmutableList.copyOf(networks);
          this.disks = disks;
       }
 

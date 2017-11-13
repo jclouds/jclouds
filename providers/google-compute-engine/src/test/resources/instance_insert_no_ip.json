@@ -1,0 +1,42 @@
+{
+  "machineType": "%s",
+  "name": "test-1",
+  "networkInterfaces": [
+    {
+      "network": "https://www.googleapis.com/compute/v1/projects/party/global/networks/mynetwork",
+      "subnetwork": "https://www.googleapis.com/compute/v1/projects/party/regions/someregion/subnetworks/jclouds-test",
+      "accessConfigs": []
+    }
+  ],
+  "disks": [
+    {
+      "type": "PERSISTENT",
+      "initializeParams": {
+        "sourceImage": "%s",
+        "diskType": "https://content.googleapis.com/compute/v1/projects/party/zones/us-central1-a/diskTypes/pd-ssd"
+      },
+      "boot": true,
+      "autoDelete": true
+    }
+  ],
+  "description": "test",
+  "tags": {
+    "items": [
+      "aTag",
+      "jclouds-test-65f"
+    ]
+  },
+  "metadata": {
+    "items": [
+      {
+        "key": "jclouds-group",
+        "value": "test"
+      }
+    ]
+  },
+  "scheduling": {
+    "onHostMaintenance": "MIGRATE",
+    "automaticRestart": true,
+    "preemptible": false
+  }
+}
