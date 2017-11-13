@@ -92,11 +92,6 @@ public class AtmosIntegrationLiveTest extends BaseBlobIntegrationTest {
    }
 
    @Override
-   public void testMetadata() {
-      throw new SkipException("Atmos cannot overwrite blob when Content-MD5 is set");
-   }
-
-   @Override
    public void testMultipartUploadNoPartsAbort() throws Exception {
       throw new SkipException("Atmos does not support multipart uploads");
    }

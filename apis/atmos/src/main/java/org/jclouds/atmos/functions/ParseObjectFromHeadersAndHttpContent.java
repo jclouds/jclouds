@@ -70,6 +70,7 @@ public class ParseObjectFromHeadersAndHttpContent implements Function<HttpRespon
       object.getAllHeaders().putAll(from.getHeaders());
       object.setPayload(from.getPayload());
       object.getContentMetadata().setContentLength(attemptToParseSizeAndRangeFromHeaders(from));
+      object.getContentMetadata().setContentMD5(object.getSystemMetadata().getContentMD5());
       return object;
    }
 
