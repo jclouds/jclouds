@@ -16,11 +16,6 @@
  */
 package org.jclouds.atmos.blobstore.integration;
 
-import static org.testng.Assert.assertEquals;
-
-import java.io.IOException;
-
-import org.jclouds.blobstore.domain.BlobMetadata;
 import org.jclouds.blobstore.integration.internal.BaseContainerIntegrationTest;
 import org.testng.annotations.Test;
 import org.testng.SkipException;
@@ -29,11 +24,6 @@ import org.testng.SkipException;
 public class AtmosContainerIntegrationLiveTest extends BaseContainerIntegrationTest {
    public AtmosContainerIntegrationLiveTest() {
       provider = "atmos";
-   }
-
-   protected void checkMD5(BlobMetadata metadata) throws IOException {
-      // atmos doesn't support MD5
-      assertEquals(metadata.getContentMetadata().getContentMD5(), null);
    }
 
    @Override

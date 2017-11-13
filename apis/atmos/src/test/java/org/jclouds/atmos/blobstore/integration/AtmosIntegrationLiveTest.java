@@ -18,7 +18,6 @@ package org.jclouds.atmos.blobstore.integration;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.failBecauseExceptionWasNotThrown;
-import static org.testng.Assert.assertEquals;
 
 import java.io.IOException;
 import java.util.concurrent.ExecutionException;
@@ -85,12 +84,6 @@ public class AtmosIntegrationLiveTest extends BaseBlobIntegrationTest {
    @Test(expectedExceptions = IllegalArgumentException.class)
    public void testPutObjectStream() throws InterruptedException, IOException, ExecutionException {
       super.testPutObjectStream();
-   }
-
-   // not supported
-   @Override
-   protected void checkMD5(BlobMetadata metadata) throws IOException {
-      assertEquals(metadata.getContentMetadata().getContentMD5(), null);
    }
 
    @Override

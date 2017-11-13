@@ -45,7 +45,7 @@ public class ObjectToBlobMetadata implements Function<AtmosObject, MutableBlobMe
    private final ShareUrl shareUrl;
 
    private static final Set<String> systemMetadata = ImmutableSet.of("atime", "mtime", "ctime", "itime", "type", "uid",
-            "gid", "objectid", "objname", "size", "nlink", "policyname", "content-md5");
+            "gid", "objectid", "objname", "size", "nlink", "policyname");
 
    @Inject
    protected ObjectToBlobMetadata(AtmosObjectName objectName, ShareUrl shareUrl)
@@ -81,6 +81,7 @@ public class ObjectToBlobMetadata implements Function<AtmosObject, MutableBlobMe
       to.setSize(from.getContentMetadata().getContentLength());
       to.setTier(Tier.STANDARD);
       to.setETag(from.getSystemMetadata().getObjectID());
+      to.getContentMetadata().setContentMD5(from.getSystemMetadata().getContentMD5());
       return to;
    }
 }

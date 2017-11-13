@@ -47,7 +47,16 @@ public class ParseSystemMetadataFromHeaders implements Function<HttpResponse, Sy
       String meta = checkNotNull(from.getFirstHeaderOrNull(AtmosHeaders.META), AtmosHeaders.META);
       Map<String, String> metaMap = Splitter.on(", ").withKeyValueSeparator('=').split(meta);
       assert metaMap.size() >= 12 : String.format("Should be 12 entries in %s", metaMap);
-      byte[] md5 = metaMap.containsKey("content-md5") ? base16().lowerCase().decode(metaMap.get("content-md5")) : null;
+
+      byte[] md5 = null;
+      String wschecksum = from.getFirstHeaderOrNull(AtmosHeaders.CHECKSUM);
+      if (wschecksum != null) {
+         String[] parts = wschecksum.split("/");
+         if (parts[0].equalsIgnoreCase("MD5") && parts.length == 3) {
+            md5 = base16().lowerCase().decode(parts[2]);
+         }
+      }
+
       return new SystemMetadata(md5, dateService.iso8601SecondsDateParse(checkNotNull(metaMap.get("atime"), "atime")),
             dateService.iso8601SecondsDateParse(checkNotNull(metaMap.get("ctime"), "ctime")), checkNotNull(
                   metaMap.get("gid"), "gid"), dateService.iso8601SecondsDateParse(checkNotNull(metaMap.get("itime"),
