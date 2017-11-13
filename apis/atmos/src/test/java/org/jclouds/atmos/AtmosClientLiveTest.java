@@ -21,7 +21,6 @@ import static com.google.common.base.Preconditions.checkState;
 import static org.jclouds.util.Predicates2.retry;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNull;
-import static org.testng.Assert.fail;
 
 import java.io.IOException;
 import java.lang.reflect.UndeclaredThrowableException;
@@ -285,15 +284,6 @@ public class AtmosClientLiveTest extends BaseBlobStoreIntegrationTest {
       assert md.getPolicyName() != null;
       assertEquals(md.getType(), FileType.REGULAR);
       assert md.getUserID() != null;
-
-      try {
-         Strings2.toStringAndClose(URI.create(
-                  "http://accesspoint.emccis.com/rest/objects/" + getBlob.getSystemMetadata().getObjectID()).toURL()
-                  .openStream());
-         fail("shouldn't have worked, since it is private");
-      } catch (IOException e) {
-
-      }
    }
 
    private void replaceObject(AtmosObject object) throws Exception {
