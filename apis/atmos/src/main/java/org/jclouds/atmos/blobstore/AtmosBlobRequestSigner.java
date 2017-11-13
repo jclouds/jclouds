@@ -20,26 +20,35 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import static org.jclouds.blobstore.util.BlobStoreUtils.cleanRequest;
 import static org.jclouds.reflect.Reflection2.method;
 
+import java.net.URI;
+
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import org.jclouds.atmos.AtmosClient;
 import org.jclouds.atmos.blobstore.functions.BlobToObject;
 import org.jclouds.atmos.domain.AtmosObject;
+import org.jclouds.atmos.filters.SignRequest;
 import org.jclouds.atmos.options.PutOptions;
 import org.jclouds.blobstore.BlobRequestSigner;
 import org.jclouds.blobstore.domain.Blob;
 import org.jclouds.blobstore.functions.BlobToHttpGetOptions;
+import org.jclouds.domain.Credentials;
 import org.jclouds.http.HttpRequest;
+import org.jclouds.http.Uris;
 import org.jclouds.http.options.GetOptions;
+import org.jclouds.location.Provider;
 import org.jclouds.reflect.Invocation;
 
 import com.google.common.base.Function;
+import com.google.common.base.Supplier;
 import com.google.common.collect.ImmutableList;
 import com.google.common.reflect.Invokable;
 
 @Singleton
 public class AtmosBlobRequestSigner implements BlobRequestSigner {
+   private static final int DEFAULT_EXPIRY_SECONDS = 15 * 60;
+
    private final Function<Invocation, HttpRequest> processor;
    private final BlobToObject blobToObject;
    private final BlobToHttpGetOptions blob2ObjectGetOptions;
@@ -48,28 +57,36 @@ public class AtmosBlobRequestSigner implements BlobRequestSigner {
    private final Invokable<?, ?> deleteMethod;
    private final Invokable<?, ?> createMethod;
 
+   private final SignRequest signer;
+   private final URI endpoint;
+   private final String identity;
+
    @Inject
    public AtmosBlobRequestSigner(Function<Invocation, HttpRequest> processor, BlobToObject blobToObject,
-         BlobToHttpGetOptions blob2ObjectGetOptions) throws SecurityException, NoSuchMethodException {
+         BlobToHttpGetOptions blob2ObjectGetOptions, SignRequest signer,
+         @Provider Supplier<URI> endpointProvider, @Provider Supplier<Credentials> creds)
+         throws SecurityException, NoSuchMethodException {
       this.processor = checkNotNull(processor, "processor");
       this.blobToObject = checkNotNull(blobToObject, "blobToObject");
       this.blob2ObjectGetOptions = checkNotNull(blob2ObjectGetOptions, "blob2ObjectGetOptions");
       this.getMethod = method(AtmosClient.class, "readFile", String.class, GetOptions[].class);
       this.deleteMethod = method(AtmosClient.class, "deletePath", String.class);
       this.createMethod = method(AtmosClient.class, "createFile", String.class, AtmosObject.class, PutOptions[].class);
+      this.signer = signer;
+      this.endpoint = endpointProvider.get();
+      this.identity = creds.get().identity;
    }
 
    @Override
    public HttpRequest signGetBlob(String container, String name) {
-      checkNotNull(container, "container");
-      checkNotNull(name, "name");
-      return cleanRequest(processor.apply(Invocation.create(getMethod,
-            ImmutableList.<Object> of(getPath(container, name)))));
+      return signGetBlob(container, name, DEFAULT_EXPIRY_SECONDS);
    }
 
    @Override
    public HttpRequest signGetBlob(String container, String name, long timeInSeconds) {
-      throw new UnsupportedOperationException();
+      checkNotNull(container, "container");
+      checkNotNull(name, "name");
+      return sign("GET", "/rest/namespace/" + container + "/" + name, timeInSeconds);
    }
 
    @Override
@@ -106,4 +123,18 @@ public class AtmosBlobRequestSigner implements BlobRequestSigner {
             ImmutableList.of(getPath(container, name), blob2ObjectGetOptions.apply(checkNotNull(options, "options"))))));
    }
 
+   private HttpRequest sign(String method, String path, long timeInSeconds) {
+      String expires = String.valueOf(System.currentTimeMillis() / 1000 + timeInSeconds);
+      String stringToSign = method + "\n" +
+            path + "\n" +
+            identity + "\n" +
+            expires;
+      return HttpRequest.builder()
+            .method(method)
+            .endpoint(Uris.uriBuilder(endpoint.getScheme() + "://" + endpoint.getHost()).appendPath(path).build())
+            .addQueryParam("uid", identity)
+            .addQueryParam("expires", expires)
+            .addQueryParam("signature", signer.calculateSignature(stringToSign))
+            .build();
+   }
 }

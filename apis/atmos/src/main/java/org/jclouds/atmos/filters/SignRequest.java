@@ -113,7 +113,7 @@ public class SignRequest implements HttpRequestFilter {
       return buffer.toString();
    }
 
-   private String calculateSignature(String toSign) {
+   public String calculateSignature(String toSign) {
       String signature = signString(toSign);
       if (signatureWire.enabled())
          signatureWire.input(Strings2.toInputStream(signature));
