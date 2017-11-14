@@ -21,6 +21,7 @@ import static org.jclouds.blobstore.util.BlobStoreUtils.cleanRequest;
 import static org.jclouds.reflect.Reflection2.method;
 
 import java.net.URI;
+import java.util.Date;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -33,17 +34,19 @@ import org.jclouds.atmos.options.PutOptions;
 import org.jclouds.blobstore.BlobRequestSigner;
 import org.jclouds.blobstore.domain.Blob;
 import org.jclouds.blobstore.functions.BlobToHttpGetOptions;
+import org.jclouds.date.DateService;
+import org.jclouds.date.TimeStamp;
 import org.jclouds.domain.Credentials;
 import org.jclouds.http.HttpRequest;
 import org.jclouds.http.Uris;
 import org.jclouds.http.options.GetOptions;
-import org.jclouds.location.Provider;
 import org.jclouds.reflect.Invocation;
 
 import com.google.common.base.Function;
 import com.google.common.base.Supplier;
 import com.google.common.collect.ImmutableList;
 import com.google.common.reflect.Invokable;
+import com.google.inject.Provider;
 
 @Singleton
 public class AtmosBlobRequestSigner implements BlobRequestSigner {
@@ -60,11 +63,15 @@ public class AtmosBlobRequestSigner implements BlobRequestSigner {
    private final SignRequest signer;
    private final URI endpoint;
    private final String identity;
+   private final DateService dateService;
+   private final Provider<String> timeStampProvider;
 
    @Inject
    public AtmosBlobRequestSigner(Function<Invocation, HttpRequest> processor, BlobToObject blobToObject,
          BlobToHttpGetOptions blob2ObjectGetOptions, SignRequest signer,
-         @Provider Supplier<URI> endpointProvider, @Provider Supplier<Credentials> creds)
+         @org.jclouds.location.Provider Supplier<URI> endpointProvider,
+         @org.jclouds.location.Provider Supplier<Credentials> creds,
+         DateService dateService, @TimeStamp Provider<String> timeStampProvider)
          throws SecurityException, NoSuchMethodException {
       this.processor = checkNotNull(processor, "processor");
       this.blobToObject = checkNotNull(blobToObject, "blobToObject");
@@ -75,6 +82,8 @@ public class AtmosBlobRequestSigner implements BlobRequestSigner {
       this.signer = signer;
       this.endpoint = endpointProvider.get();
       this.identity = creds.get().identity;
+      this.dateService = dateService;
+      this.timeStampProvider = timeStampProvider;
    }
 
    @Override
@@ -124,7 +133,8 @@ public class AtmosBlobRequestSigner implements BlobRequestSigner {
    }
 
    private HttpRequest sign(String method, String path, long timeInSeconds) {
-      String expires = String.valueOf(System.currentTimeMillis() / 1000 + timeInSeconds);
+      Date now = dateService.rfc1123DateParse(timeStampProvider.get());
+      String expires = String.valueOf(now.getTime() / 1000 + timeInSeconds);
       String stringToSign = method + "\n" +
             path + "\n" +
             identity + "\n" +

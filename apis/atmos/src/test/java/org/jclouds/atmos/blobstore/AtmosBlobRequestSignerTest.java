@@ -59,10 +59,8 @@ public class AtmosBlobRequestSignerTest extends BaseRestAnnotationProcessingTest
             NoSuchMethodException, IOException {
       HttpRequest request = signer.signGetBlob("container", "name");
 
-      assertRequestLineEquals(request, "GET https://accesspoint.atmosonline.com/rest/namespace/container/name HTTP/1.1");
-      assertNonPayloadHeadersEqual(
-               request,
-               "Accept: */*\nDate: Thu, 05 Jun 2008 16:38:19 GMT\nx-emc-signature: DHDKwV6IPsJJvtrI9ktTiKq9us4=\nx-emc-uid: identity\n");
+      assertRequestLineEquals(request, "GET https://accesspoint.atmosonline.com/rest/namespace/container/name?uid=identity&expires=1212684799&signature=oijXdvPjHQ/LwWDcdx9Eozsu77o%3D HTTP/1.1");
+      assertNonPayloadHeadersEqual(request, "");
       assertPayloadEquals(request, null, null, false);
 
       assertEquals(request.getFilters().size(), 0);
