@@ -1,0 +1,8 @@
+{
+  "accountId": 1186236,
+  "id": 153503,
+  "cidr": 16,
+  "name": "testNet",
+  "networkIdentifier": "192.168.0.0",
+  "notes": "this is a test network from JClouds NetworkApiMockTest."
+}

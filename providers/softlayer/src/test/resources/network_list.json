@@ -1,0 +1,41 @@
+[
+  {
+    "accountId": 1186236,
+    "id": 153602,
+    "cidr": 24,
+    "name": "newNetworkApiLiveTestNetwork",
+    "networkIdentifier": "192.168.253.0",
+    "notes": "new notes"
+  },
+  {
+    "accountId": 1186236,
+    "id": 7505,
+    "cidr": 16,
+    "name": "ADN-public",
+    "networkIdentifier": "10.0.0.0",
+    "notes": "This network is available for testing and demo purposes.  Anything here will be automatically removed periodically"
+  },
+  {
+    "accountId": 1186236,
+    "id": 12202,
+    "cidr": 24,
+    "name": "testNet",
+    "networkIdentifier": "10.0.0.0"
+  },
+  {
+    "accountId": 1186236,
+    "id": 6802,
+    "cidr": 24,
+    "name": "mcltn-172-31-1",
+    "networkIdentifier": "172.31.1.0",
+    "notes": "mcltn network"
+  },
+  {
+    "accountId": 1186236,
+    "id": 6932,
+    "cidr": 16,
+    "name": "khoa_network",
+    "networkIdentifier": "10.0.0.0",
+    "notes": "Khoa's first test network"
+  }
+]

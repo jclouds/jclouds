@@ -19,6 +19,7 @@ package org.jclouds.softlayer;
 import org.jclouds.rest.annotations.Delegate;
 import org.jclouds.softlayer.features.AccountApi;
 import org.jclouds.softlayer.features.DatacenterApi;
+import org.jclouds.softlayer.features.NetworkApi;
 import org.jclouds.softlayer.features.SoftwareDescriptionApi;
 import org.jclouds.softlayer.features.VirtualGuestApi;
 import org.jclouds.softlayer.features.VirtualGuestBlockDeviceTemplateGroupApi;
@@ -56,4 +57,10 @@ public interface SoftLayerApi extends Closeable {
     */
    @Delegate
    AccountApi getAccountApi();
+
+   /**
+    * Provides access to Network features.
+    */
+   @Delegate
+   NetworkApi getNetworkApi();
 }

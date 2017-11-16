@@ -1,0 +1,18 @@
+{
+  "broadcastAddress": "192.168.1.255",
+  "cidr": 24,
+  "gateway": "192.168.1.1",
+  "id": 1581517,
+  "isCustomerOwned": true,
+  "isCustomerRoutable": false,
+  "modifyDate": null,
+  "netmask": "255.255.255.0",
+  "networkIdentifier": "192.168.1.0",
+  "networkVlanId": null,
+  "note": "testNet test create subnet",
+  "sortOrder": "4",
+  "totalIpAddresses": "256",
+  "usableIpAddressCount": "253",
+  "version": 4,
+  "addressSpace": "PRIVATE"
+}

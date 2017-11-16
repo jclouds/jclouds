@@ -1,0 +1,26 @@
+[
+  {
+    "broadcastAddress": "192.168.253.15",
+    "cidr": 28,
+    "gateway": "192.168.253.1",
+    "id": 1592631,
+    "isCustomerOwned": true,
+    "isCustomerRoutable": false,
+    "modifyDate": "2017-11-09T08:07:22-06:00",
+    "netmask": "255.255.255.240",
+    "networkIdentifier": "192.168.253.0",
+    "networkVlanId": 2188589,
+    "note": "This is a test subnet from NetworkApiMockTest",
+    "sortOrder": "1",
+    "subnetType": "ADDITIONAL_PRIMARY",
+    "totalIpAddresses": "16",
+    "usableIpAddressCount": "13",
+    "version": 4,
+    "datacenter": {
+      "id": 1441195,
+      "longName": "Dallas 10",
+      "name": "dal10",
+      "statusId": 2
+    }
+  }
+]
