@@ -28,6 +28,7 @@ import java.util.Set;
 import org.jclouds.compute.options.TemplateOptions;
 import org.jclouds.domain.LoginCredentials;
 import org.jclouds.openstack.nova.v2_0.NovaApi;
+import org.jclouds.openstack.nova.v2_0.domain.BlockDeviceMapping;
 import org.jclouds.openstack.nova.v2_0.domain.Network;
 import org.jclouds.openstack.nova.v2_0.options.CreateServerOptions;
 import org.jclouds.scriptbuilder.domain.Statement;
@@ -91,6 +92,8 @@ public class NovaTemplateOptions extends TemplateOptions implements Cloneable {
    protected boolean configDrive;
    protected Set<Network> novaNetworks;
    protected String availabilityZone;
+   // TODO move up to TemplateOptions as SoftLayer also have something similar?
+   protected Set<BlockDeviceMapping> blockDeviceMappings = ImmutableSet.of();
 
    @Override
    public boolean equals(Object o) {
@@ -107,13 +110,14 @@ public class NovaTemplateOptions extends TemplateOptions implements Cloneable {
             && equal(this.diskConfig, that.diskConfig)
             && equal(this.configDrive, that.configDrive)
             && equal(this.novaNetworks, that.novaNetworks)
-            && equal(this.availabilityZone, that.availabilityZone);
+            && equal(this.availabilityZone, that.availabilityZone)
+            && equal(this.blockDeviceMappings, that.blockDeviceMappings);
    }
 
    @Override
    public int hashCode() {
       return Objects.hashCode(super.hashCode(), autoAssignFloatingIp, floatingIpPoolNames, generateKeyPair, keyPairName, 
-              Arrays.hashCode(userData), diskConfig, configDrive, novaNetworks, availabilityZone);
+              Arrays.hashCode(userData), diskConfig, configDrive, novaNetworks, availabilityZone, blockDeviceMappings);
    }
 
    @Override
@@ -131,6 +135,7 @@ public class NovaTemplateOptions extends TemplateOptions implements Cloneable {
       toString.add("configDrive", configDrive);
       toString.add("novaNetworks", novaNetworks);
       toString.add("availabilityZone", availabilityZone);
+      toString.add("blockDeviceMappings", blockDeviceMappings);
       return toString;
    }
 
@@ -196,6 +201,21 @@ public class NovaTemplateOptions extends TemplateOptions implements Cloneable {
    }
 
    /**
+    * @see #getBlockDeviceMappings()
+    */
+   public NovaTemplateOptions blockDeviceMappings(BlockDeviceMapping... blockDeviceMappings) {
+      return blockDeviceMappings(ImmutableSet.copyOf(checkNotNull(blockDeviceMappings, "blockDeviceMappings")));
+   }
+
+   /**
+    * @see #getBlockDeviceMappings()
+    */
+   public NovaTemplateOptions blockDeviceMappings(Iterable<BlockDeviceMapping> blockDeviceMappings) {
+      this.blockDeviceMappings = ImmutableSet.copyOf(blockDeviceMappings);
+      return this;
+   }
+
+   /**
     * The floating IP pool name(s) to use when allocating a FloatingIP. Applicable
     * only if #shouldAutoAssignFloatingIp() returns true. If not set will attempt to
     * use whatever FloatingIP(s) can be found regardless of which pool they originated
@@ -257,6 +277,10 @@ public class NovaTemplateOptions extends TemplateOptions implements Cloneable {
     */
    public String getAvailabilityZone() {
       return availabilityZone;
+   }
+
+   public Set<BlockDeviceMapping> getBlockDeviceMappings() {
+      return blockDeviceMappings;
    }
 
    public static class Builder {

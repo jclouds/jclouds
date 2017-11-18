@@ -131,7 +131,8 @@ public class NovaComputeServiceAdapter implements
       if (templateOptions.getKeyPairName() != null) {
          options.keyPairName(templateOptions.getKeyPairName());
       }
-      
+      if (!templateOptions.getBlockDeviceMappings().isEmpty()) options.blockDeviceMappings(templateOptions.getBlockDeviceMappings());
+
       logger.debug(">> creating new server region(%s) name(%s) image(%s) flavor(%s) options(%s)", regionId, name, imageId, flavorId, options);
       final ServerCreated lightweightServer = novaApi.getServerApi(regionId).create(name, imageId, flavorId, options);
       if (!serverRunningPredicate.apply(RegionAndId.fromRegionAndId(regionId, lightweightServer.getId()))) {
