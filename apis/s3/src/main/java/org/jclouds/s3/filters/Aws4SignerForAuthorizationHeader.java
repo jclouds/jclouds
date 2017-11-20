@@ -192,7 +192,7 @@ public class Aws4SignerForAuthorizationHeader extends Aws4SignerBase {
       try {
          payloadStream = payload.openStream();
       } catch (IOException e) {
-         throw new HttpException("unable to open payload stream to calculate AWS4 signature.");
+         throw new HttpException("unable to open payload stream to calculate AWS4 signature.", e);
       }
       try {
          return base16().lowerCase().encode(hash(payloadStream));
@@ -213,7 +213,7 @@ public class Aws4SignerForAuthorizationHeader extends Aws4SignerBase {
          } catch (IOException e) {
             // reset payload stream
             throw new HttpException(
-                  "unable to reset unrepeatable payload stream after calculating AWS4 signature.");
+                  "unable to reset unrepeatable payload stream after calculating AWS4 signature.", e);
          }
       }
    }
