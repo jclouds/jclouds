@@ -169,8 +169,7 @@ public class Aws4SignerForAuthorizationHeader extends Aws4SignerBase {
 
    protected String getPayloadHash(HttpRequest request) {
       Payload payload = request.getPayload();
-      if (payload == null) {
-         // when payload is null.
+      if (payload == null || "0".equals(getContentLength(request))) {
          return getEmptyPayloadContentHash();
       }
       return calculatePayloadContentHash(payload);
