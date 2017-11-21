@@ -626,14 +626,19 @@ public class BaseBlobIntegrationTest extends BaseBlobStoreIntegrationTest {
    @Test(groups = { "integration", "live" })
    public void testPutZeroLengthByteSource() throws Exception {
       long length = 0;
-      Payload payload = new ByteSourcePayload(ByteSource.empty());
+      // do not use ByteSource.empty() since it is backed by a
+      // ByteArrayInputStream which supports reset
+      ByteSource byteSource = TestUtils.randomByteSource().slice(0, length);
+      Payload payload = new ByteSourcePayload(byteSource);
       testPut(payload, null, payload, length, new PutOptions());
    }
 
    @Test(groups = { "integration", "live" })
    public void testPutZeroLengthInputStream() throws Exception {
       long length = 0;
-      ByteSource byteSource = ByteSource.empty();
+      // do not use ByteSource.empty() since it is backed by a
+      // ByteArrayInputStream which supports reset
+      ByteSource byteSource = TestUtils.randomByteSource().slice(0, length);
       Payload payload = new InputStreamPayload(byteSource.openStream());
       testPut(payload, null, payload, length, new PutOptions());
    }
