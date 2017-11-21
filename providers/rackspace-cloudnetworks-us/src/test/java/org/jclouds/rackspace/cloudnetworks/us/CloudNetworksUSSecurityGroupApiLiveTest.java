@@ -16,7 +16,7 @@
  */
 package org.jclouds.rackspace.cloudnetworks.us;
 
-import org.jclouds.openstack.neutron.v2.extensions.SecurityGroupApiLiveTest;
+import org.jclouds.openstack.neutron.v2.features.SecurityGroupApiLiveTest;
 import org.testng.annotations.Test;
 
 @Test(groups = "live", testName = "CloudNetworksUSSecurityGroupApiLiveTest", singleThreaded = true)
