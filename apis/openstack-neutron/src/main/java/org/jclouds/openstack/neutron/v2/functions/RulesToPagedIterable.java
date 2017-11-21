@@ -24,7 +24,7 @@ import org.jclouds.collect.IterableWithMarker;
 import org.jclouds.collect.internal.Arg0ToPagedIterable;
 import org.jclouds.openstack.neutron.v2.NeutronApi;
 import org.jclouds.openstack.neutron.v2.domain.Rule;
-import org.jclouds.openstack.neutron.v2.extensions.SecurityGroupApi;
+import org.jclouds.openstack.neutron.v2.features.SecurityGroupApi;
 import org.jclouds.openstack.v2_0.options.PaginationOptions;
 
 import com.google.common.base.Function;
@@ -46,7 +46,7 @@ public class RulesToPagedIterable extends
    @Override
    protected Function<Object, IterableWithMarker<Rule>> markerToNextForArg0(Optional<Object> arg0) {
       String region = arg0.isPresent() ? arg0.get().toString() : null;
-      final SecurityGroupApi securityGroupApi = api.getSecurityGroupApi(region).get();
+      final SecurityGroupApi securityGroupApi = api.getSecurityGroupApi(region);
       return new Function<Object, IterableWithMarker<Rule>>() {
 
          @SuppressWarnings("unchecked")

@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package org.jclouds.openstack.neutron.v2.extensions;
+package org.jclouds.openstack.neutron.v2.features;
 
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
@@ -45,7 +45,7 @@ public class SecurityGroupApiLiveTest extends BaseNeutronApiLiveTest {
          SecurityGroup securityGroup = null;
 
          try {
-            sgApi = api.getSecurityGroupApi(region).get();
+            sgApi = api.getSecurityGroupApi(region);
 
             securityGroup = sgApi.create(
                   SecurityGroup.createBuilder().name("jclouds-test").description("jclouds test security group")

@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jclouds.openstack.neutron.v2.extensions;
+package org.jclouds.openstack.neutron.v2.features;
 
 import javax.inject.Named;
 import javax.ws.rs.Consumes;
@@ -41,9 +41,7 @@ import org.jclouds.openstack.neutron.v2.functions.ParseRules;
 import org.jclouds.openstack.neutron.v2.functions.ParseSecurityGroups;
 import org.jclouds.openstack.neutron.v2.functions.RulesToPagedIterable;
 import org.jclouds.openstack.neutron.v2.functions.SecurityGroupsToPagedIterable;
-import org.jclouds.openstack.v2_0.ServiceType;
 import org.jclouds.openstack.v2_0.options.PaginationOptions;
-import org.jclouds.openstack.v2_0.services.Extension;
 import org.jclouds.rest.annotations.Fallback;
 import org.jclouds.rest.annotations.RequestFilters;
 import org.jclouds.rest.annotations.ResponseParser;
@@ -64,11 +62,7 @@ import com.google.common.annotations.Beta;
 @RequestFilters(AuthenticateRequest.class)
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
-@Extension(of = ServiceType.NETWORK, namespace = ExtensionNamespaces.SECURITY_GROUPS, name = "security-group", alias = "security-group")
 public interface SecurityGroupApi {
-   /**
-    * Groups
-    */
 
    /**
     * @return all security groups currently defined in Neutron for the current tenant.
