@@ -17,22 +17,21 @@
 package org.jclouds.oauth.v2.filters;
 
 import static org.jclouds.Constants.PROPERTY_SESSION_INTERVAL;
-import static org.jclouds.oauth.v2.config.OAuthProperties.AUDIENCE;
 
 import javax.inject.Inject;
 import javax.inject.Named;
 
 import org.jclouds.domain.Credentials;
 import org.jclouds.location.Provider;
-import org.jclouds.oauth.v2.config.OAuthScopes;
+import org.jclouds.oauth.v2.config.OAuthConfigFactory;
 
 import com.google.common.base.Supplier;
 
 public class TestJWTBearerTokenFlow extends JWTBearerTokenFlow {
 
    @Inject TestJWTBearerTokenFlow(AuthorizeToken loader, @Named(PROPERTY_SESSION_INTERVAL) long tokenDuration,
-          @Provider Supplier<Credentials> credentialsSupplier, OAuthScopes scopes, @Named(AUDIENCE) String audience) {
-      super(loader, tokenDuration, credentialsSupplier, scopes, audience);
+          @Provider Supplier<Credentials> credentialsSupplier, OAuthConfigFactory oauthConfigFactory) {
+      super(loader, tokenDuration, credentialsSupplier, oauthConfigFactory);
    }
 
    /** Constant time for testing. */
