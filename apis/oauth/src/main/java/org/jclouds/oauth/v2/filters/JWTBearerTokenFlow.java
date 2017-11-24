@@ -18,7 +18,6 @@ package org.jclouds.oauth.v2.filters;
 
 import static java.util.concurrent.TimeUnit.SECONDS;
 import static org.jclouds.Constants.PROPERTY_SESSION_INTERVAL;
-import static org.jclouds.oauth.v2.config.OAuthProperties.AUDIENCE;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -28,7 +27,8 @@ import org.jclouds.http.HttpException;
 import org.jclouds.http.HttpRequest;
 import org.jclouds.location.Provider;
 import org.jclouds.oauth.v2.AuthorizationApi;
-import org.jclouds.oauth.v2.config.OAuthScopes;
+import org.jclouds.oauth.v2.config.OAuthConfigFactory;
+import org.jclouds.oauth.v2.config.OAuthConfigFactory.OAuthConfig;
 import org.jclouds.oauth.v2.domain.Claims;
 import org.jclouds.oauth.v2.domain.Token;
 
@@ -51,16 +51,14 @@ import com.google.common.cache.LoadingCache;
 public class JWTBearerTokenFlow implements OAuthFilter {
    private static final Joiner ON_COMMA = Joiner.on(",");
 
-   private final String audience;
    private final Supplier<Credentials> credentialsSupplier;
-   private final OAuthScopes scopes;
+   private final OAuthConfigFactory oauthConfigFactory;
    private final LoadingCache<TokenCacheKey, Token> tokenCache;
 
    @Inject JWTBearerTokenFlow(AuthorizeToken loader, @Named(PROPERTY_SESSION_INTERVAL) long tokenDuration,
-         @Provider Supplier<Credentials> credentialsSupplier, OAuthScopes scopes, @Named(AUDIENCE) String audience) {
+         @Provider Supplier<Credentials> credentialsSupplier, OAuthConfigFactory oauthConfigFactory) {
       this.credentialsSupplier = credentialsSupplier;
-      this.scopes = scopes;
-      this.audience = audience;
+      this.oauthConfigFactory = oauthConfigFactory;
       // since the session interval is also the token expiration time requested to the server make the token expire a
       // bit before the deadline to make sure there aren't session expiration exceptions
       long cacheExpirationSeconds = tokenDuration > 30 ? tokenDuration - 30 : tokenDuration;
@@ -89,10 +87,11 @@ public class JWTBearerTokenFlow implements OAuthFilter {
 
    @Override public HttpRequest filter(HttpRequest request) throws HttpException {
       long now = currentTimeSeconds();
+      OAuthConfig oauthConfig = oauthConfigFactory.forRequest(request);
       Claims claims = Claims.create( //
             credentialsSupplier.get().identity, // iss
-            ON_COMMA.join(scopes.forRequest(request)), // scope
-            audience, // aud
+            ON_COMMA.join(oauthConfig.scopes()), // scope
+            oauthConfig.audience(), // aud
             -1, // placeholder exp for the cache
             -1 // placeholder iat for the cache
       );

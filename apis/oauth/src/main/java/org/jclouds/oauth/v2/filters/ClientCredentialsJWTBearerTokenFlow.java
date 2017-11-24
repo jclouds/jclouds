@@ -18,20 +18,19 @@ package org.jclouds.oauth.v2.filters;
 
 import static java.util.concurrent.TimeUnit.SECONDS;
 import static org.jclouds.Constants.PROPERTY_SESSION_INTERVAL;
-import static org.jclouds.oauth.v2.config.OAuthProperties.AUDIENCE;
-import static org.jclouds.oauth.v2.config.OAuthProperties.RESOURCE;
+
+import java.util.UUID;
 
 import javax.inject.Inject;
 import javax.inject.Named;
-import java.util.List;
-import java.util.UUID;
 
 import org.jclouds.domain.Credentials;
 import org.jclouds.http.HttpException;
 import org.jclouds.http.HttpRequest;
 import org.jclouds.location.Provider;
 import org.jclouds.oauth.v2.AuthorizationApi;
-import org.jclouds.oauth.v2.config.OAuthScopes;
+import org.jclouds.oauth.v2.config.OAuthConfigFactory;
+import org.jclouds.oauth.v2.config.OAuthConfigFactory.OAuthConfig;
 import org.jclouds.oauth.v2.domain.ClientCredentialsAuthArgs;
 import org.jclouds.oauth.v2.domain.ClientCredentialsClaims;
 import org.jclouds.oauth.v2.domain.Token;
@@ -54,22 +53,16 @@ import com.google.common.cache.LoadingCache;
 public class ClientCredentialsJWTBearerTokenFlow implements OAuthFilter {
     private static final Joiner ON_SPACE = Joiner.on(" ");
 
-    private final String resource;
-    private final String audience;
     private final Supplier<Credentials> credentialsSupplier;
-    private final OAuthScopes scopes;
+    private final OAuthConfigFactory oauthConfigFactory;
     private final LoadingCache<ClientCredentialsAuthArgs, Token> tokenCache;
 
     @Inject
     ClientCredentialsJWTBearerTokenFlow(AuthorizeToken loader, @Named(PROPERTY_SESSION_INTERVAL) long tokenDuration,
                                         @Provider Supplier<Credentials> credentialsSupplier,
-                                        OAuthScopes scopes,
-                                        @Named(AUDIENCE) String audience,
-                                        @Named(RESOURCE) String resource) {
+                                        OAuthConfigFactory oauthConfigFactory) {
         this.credentialsSupplier = credentialsSupplier;
-        this.scopes = scopes;
-        this.audience = audience;
-        this.resource = resource;
+        this.oauthConfigFactory = oauthConfigFactory;
         // since the session interval is also the token expiration time requested to the server make the token expire a
         // bit before the deadline to make sure there aren't session expiration exceptions
         long cacheExpirationSeconds = tokenDuration > 30 ? tokenDuration - 30 : tokenDuration;
@@ -104,11 +97,11 @@ public class ClientCredentialsJWTBearerTokenFlow implements OAuthFilter {
     }
 
     @Override public HttpRequest filter(HttpRequest request) throws HttpException {
-        List<String> configuredScopes = scopes.forRequest(request);
+        OAuthConfig oauthConfig = oauthConfigFactory.forRequest(request);
         ClientCredentialsClaims claims = ClientCredentialsClaims.create( //
                 credentialsSupplier.get().identity, // iss
                 credentialsSupplier.get().identity, // sub
-                audience, // aud
+                oauthConfig.audience(), // aud
                 -1, // placeholder exp for the cache
                 -1, // placeholder nbf for the cache
                 null // placeholder jti for the cache
@@ -116,8 +109,8 @@ public class ClientCredentialsJWTBearerTokenFlow implements OAuthFilter {
         ClientCredentialsAuthArgs authArgs = ClientCredentialsAuthArgs.create(
                 credentialsSupplier.get().identity,
                 claims,
-                resource == null ? "" : resource,
-                configuredScopes.isEmpty() ? null : ON_SPACE.join(configuredScopes)
+                oauthConfig.resource(),
+                oauthConfig.scopes().isEmpty() ? null : ON_SPACE.join(oauthConfig.scopes())
          );
 
         Token token = tokenCache.getUnchecked(authArgs);

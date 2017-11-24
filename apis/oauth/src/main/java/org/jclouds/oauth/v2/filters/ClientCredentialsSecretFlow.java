@@ -16,30 +16,27 @@
  */
 package org.jclouds.oauth.v2.filters;
 
-import java.util.List;
+import static java.util.concurrent.TimeUnit.SECONDS;
+import static org.jclouds.Constants.PROPERTY_SESSION_INTERVAL;
+
+import javax.inject.Named;
+
+import org.jclouds.domain.Credentials;
+import org.jclouds.http.HttpException;
+import org.jclouds.http.HttpRequest;
+import org.jclouds.location.Provider;
+import org.jclouds.oauth.v2.AuthorizationApi;
+import org.jclouds.oauth.v2.config.OAuthConfigFactory;
+import org.jclouds.oauth.v2.config.OAuthConfigFactory.OAuthConfig;
+import org.jclouds.oauth.v2.domain.ClientSecret;
+import org.jclouds.oauth.v2.domain.Token;
 
 import com.google.common.base.Joiner;
 import com.google.common.base.Supplier;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
-
-import org.jclouds.oauth.v2.AuthorizationApi;
-import org.jclouds.oauth.v2.domain.ClientSecret;
-import org.jclouds.oauth.v2.config.OAuthScopes;
-import org.jclouds.oauth.v2.domain.Token;
-import org.jclouds.domain.Credentials;
-import org.jclouds.http.HttpException;
-import org.jclouds.http.HttpRequest;
-import org.jclouds.location.Provider;
-
-import javax.inject.Named;
-
 import com.google.inject.Inject;
-
-import static java.util.concurrent.TimeUnit.SECONDS;
-import static org.jclouds.Constants.PROPERTY_SESSION_INTERVAL;
-import static org.jclouds.oauth.v2.config.OAuthProperties.RESOURCE;
 
 /**
  * Authorizes new Bearer Tokens at runtime by sending up for the http request.
@@ -56,16 +53,14 @@ public class ClientCredentialsSecretFlow implements OAuthFilter {
 
     private final Supplier<Credentials> credentialsSupplier;
     private final LoadingCache<ClientSecret, Token> tokenCache;
-    private final String resource;
-    private final OAuthScopes scopes;
+    private final OAuthConfigFactory oauthConfigFactory;
 
     @Inject
     ClientCredentialsSecretFlow(AuthorizeToken loader, @Named(PROPERTY_SESSION_INTERVAL) long tokenDuration,
-                                @Provider Supplier<Credentials> credentialsSupplier, OAuthScopes scopes,
-                                @Named(RESOURCE) String resource) {
+                                @Provider Supplier<Credentials> credentialsSupplier,
+                                OAuthConfigFactory oauthConfigFactory) {
         this.credentialsSupplier = credentialsSupplier;
-        this.scopes = scopes;
-        this.resource = resource;
+        this.oauthConfigFactory = oauthConfigFactory;
         // since the session interval is also the token expiration time requested to the server make the token expire a
         // bit before the deadline to make sure there aren't session expiration exceptions
         long cacheExpirationSeconds = tokenDuration > 30 ? tokenDuration - 30 : tokenDuration;
@@ -85,12 +80,12 @@ public class ClientCredentialsSecretFlow implements OAuthFilter {
     }
 
     @Override public HttpRequest filter(HttpRequest request) throws HttpException {
-        List<String> configuredScopes = scopes.forRequest(request);
+        OAuthConfig oauthConfig = oauthConfigFactory.forRequest(request);
         ClientSecret client = ClientSecret.create(
                 credentialsSupplier.get().identity,
                 credentialsSupplier.get().credential,
-                resource == null ? "" : resource,
-                configuredScopes.isEmpty() ? null : ON_SPACE.join(configuredScopes)
+                oauthConfig.resource(),
+                oauthConfig.scopes().isEmpty() ? null : ON_SPACE.join(oauthConfig.scopes())
         );
         Token token = tokenCache.getUnchecked(client);
         String authorization = String.format("%s %s", token.tokenType(), token.accessToken());
