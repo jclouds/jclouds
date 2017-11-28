@@ -79,7 +79,7 @@ public class DropletToNodeMetadataTest {
    @BeforeMethod
    public void setup() {
       image = org.jclouds.digitalocean2.domain.Image.create(1, "14.04 x64",
-            "distribution", "Ubuntu", "ubuntu-1404-x86", true, ImmutableList.of("sfo1"), new Date());
+            "distribution", "Ubuntu", "ubuntu-1404-x86", true, ImmutableList.of("sfo1"), new Date(), 20, 20);
       region = Region.create("sfo1", "San Francisco 1", ImmutableList.of("2gb"), true, ImmutableList.<String> of());
       
       images = ImmutableSet.of(new ImageBuilder()
@@ -146,7 +146,7 @@ public class DropletToNodeMetadataTest {
    public void testConvertDropletOldImage() throws ParseException {
       // Use an image id that is not in the list of images
       org.jclouds.digitalocean2.domain.Image image = org.jclouds.digitalocean2.domain.Image.create(2, "14.04 x64",
-            "distribution", "Ubuntu", "ubuntu2-1404-x86", true, ImmutableList.of("sfo1"), new Date());
+            "distribution", "Ubuntu", "ubuntu2-1404-x86", true, ImmutableList.of("sfo1"), new Date(), 20, 20);
       
       Droplet droplet = Droplet.create(
             1,

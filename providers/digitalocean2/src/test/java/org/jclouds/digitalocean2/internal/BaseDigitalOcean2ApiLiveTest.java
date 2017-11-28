@@ -104,11 +104,11 @@ public class BaseDigitalOcean2ApiLiveTest extends BaseApiLiveTest<DigitalOcean2A
       }).get();
    }
    
-   protected Size cheapestSizeInRegion(final Region region) {
+   protected Size cheapestSizeInRegionForImage(final Region region, final Image image) {
       return sizesByPrice().min(api.sizeApi().list().concat().filter(new Predicate<Size>() {
          @Override
          public boolean apply(Size input) {
-            return input.available() && input.regions().contains(region.slug());
+            return input.available() && input.regions().contains(region.slug()) && input.disk() >= image.minDiskSize();
          }
       }));
    }
