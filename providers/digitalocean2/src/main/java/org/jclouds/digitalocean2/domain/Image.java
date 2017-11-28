@@ -37,11 +37,15 @@ public abstract class Image {
    public abstract boolean isPublic();
    public abstract List<String> regions();
    public abstract Date createdAt();
+   public abstract float minDiskSize();
+   public abstract float sizeGBs();
 
-   @SerializedNames({ "id", "name", "type", "distribution", "slug", "public", "regions", "created_at" })
+   @SerializedNames({ "id", "name", "type", "distribution", "slug", "public", "regions", "created_at", "min_disk_size",
+         "size_gigabytes" })
    public static Image create(int id, String name, String type, String distribution, String slug, boolean isPublic,
-         List<String> regions, Date createdAt) {
-      return new AutoValue_Image(id, name, type, distribution, slug, isPublic, copyOf(regions), createdAt);
+         List<String> regions, Date createdAt, float minDiskSize, float sizeGBs) {
+      return new AutoValue_Image(id, name, type, distribution, slug, isPublic, copyOf(regions), createdAt, minDiskSize,
+            sizeGBs);
    }
 
    Image() {}

@@ -57,8 +57,8 @@ public class DropletApiLiveTest extends BaseDigitalOcean2ApiLiveTest {
    @BeforeClass
    public void setupDroplet() {
       region = firstAvailableRegion();
-      size = cheapestSizeInRegion(region);
       image = ubuntuImageInRegion(region);
+      size = cheapestSizeInRegionForImage(region, image);
       
       Map<String, String> keyPair = SshKeys.generate();
       key = api.keyApi().create(prefix + "-droplet-livetest", keyPair.get("public"));

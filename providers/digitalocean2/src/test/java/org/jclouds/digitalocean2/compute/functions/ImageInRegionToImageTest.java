@@ -75,7 +75,7 @@ public class ImageInRegionToImageTest {
    @Test
    public void testConvertImage() {
       Image image = Image.create(1, "14.04 x64", "distribution", "Ubuntu", "ubuntu-1404-x86", true,
-            ImmutableList.of("sfo1", "lon1"), new Date());
+            ImmutableList.of("sfo1", "lon1"), new Date(), 20, 20);
       org.jclouds.compute.domain.Image expected = new ImageBuilder()
             .id("lon1/ubuntu-1404-x86") // Location scoped images have the location encoded in the id
             .providerId("1")
