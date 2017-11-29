@@ -108,7 +108,7 @@ public class FirewallApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
       assertEquals(firewalls.next().size(), 1);
    }
 
-   @Test(groups = "live", dependsOnMethods = "testListFirewall")
+   @Test(groups = "live", dependsOnMethods = "testListFirewall", alwaysRun = true)
    public void testDeleteFirewall() {
       assertOperationDoneSuccessfully(api().delete(FIREWALL_NAME));
       assertOperationDoneSuccessfully(api.networks().delete(FIREWALL_NETWORK_NAME));

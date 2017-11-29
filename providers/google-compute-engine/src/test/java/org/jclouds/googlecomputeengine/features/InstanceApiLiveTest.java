@@ -353,7 +353,7 @@ public class InstanceApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
       assertEquals(resultTags, expectedTags);
    }
 
-   @AfterClass(groups = { "integration", "live" })
+   @AfterClass(groups = { "integration", "live" }, alwaysRun = true)
    protected void tearDownContext() {
       try {
          waitOperationDone(api().delete(INSTANCE_NAME));

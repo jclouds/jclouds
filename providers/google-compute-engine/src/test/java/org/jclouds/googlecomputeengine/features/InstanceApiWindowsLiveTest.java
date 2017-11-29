@@ -118,7 +118,7 @@ public class InstanceApiWindowsLiveTest extends BaseGoogleComputeEngineApiLiveTe
       assertFalse(Strings.isNullOrEmpty(result), "Password shouldn't be empty");
    }
 
-   @AfterClass(groups = { "integration", "live" })
+   @AfterClass(groups = { "integration", "live" }, alwaysRun = true)
    protected void tearDownContext() {
       try {
          waitOperationDone(api().delete(INSTANCE_NAME));

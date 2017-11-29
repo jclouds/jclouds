@@ -82,7 +82,7 @@ public abstract class Image {
 
    public abstract Status status();
 
-   public abstract Long archiveSizeBytes();
+   @Nullable public abstract Long archiveSizeBytes();
 
    public abstract Long diskSizeGb();
 

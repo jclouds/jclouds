@@ -73,7 +73,7 @@ public class ForwardingRuleApiLiveTest extends BaseGoogleComputeEngineApiLiveTes
       address = addressApi().get(ADDRESS_NAME);
    }
 
-   @AfterClass
+   @AfterClass(alwaysRun = true)
    public void tearDown() {
       assertOperationDoneSuccessfully(targetPoolApi().delete(TARGETPOOL_NAME));
       assertOperationDoneSuccessfully(targetPoolApi().delete(TARGETPOOL_NAME_NEW));
