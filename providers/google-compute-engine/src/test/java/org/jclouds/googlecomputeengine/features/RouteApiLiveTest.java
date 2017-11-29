@@ -75,7 +75,7 @@ public class RouteApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
       assertRouteEquals(routesAsList.get(0));
    }
 
-   @Test(groups = "live", dependsOnMethods = "testListRoute")
+   @Test(groups = "live", dependsOnMethods = "testListRoute", alwaysRun = true)
    public void testDeleteRoute() {
       assertOperationDoneSuccessfully(api().delete(ROUTE_NAME));
       assertOperationDoneSuccessfully(api.networks().delete(ROUTE_NETWORK_NAME));

@@ -64,7 +64,7 @@ public class ProjectApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
       assertNotNull(project.commonInstanceMetadata().fingerprint());
    }
 
-   @Test(groups = "live", dependsOnMethods = "addItemToMetadata")
+   @Test(groups = "live", dependsOnMethods = "addItemToMetadata", alwaysRun = true)
    public void testDeleteItemFromMetadata() {
       Metadata metadata = project.commonInstanceMetadata().remove(METADATA_ITEM_KEY);
       assertOperationDoneSuccessfully(api.project().setCommonInstanceMetadata(metadata));

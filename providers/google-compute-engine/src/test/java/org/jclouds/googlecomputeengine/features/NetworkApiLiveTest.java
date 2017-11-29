@@ -61,7 +61,7 @@ public class NetworkApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
       assertNetworkEquals(networksAsList.get(0));
    }
 
-   @Test(groups = "live", dependsOnMethods = "testListNetwork")
+   @Test(groups = "live", dependsOnMethods = "testListNetwork", alwaysRun = true)
    public void testDeleteNetwork() {
       assertOperationDoneSuccessfully(api().delete(NETWORK_NAME));
    }

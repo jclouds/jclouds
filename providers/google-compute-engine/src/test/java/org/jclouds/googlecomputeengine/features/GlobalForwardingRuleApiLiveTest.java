@@ -104,7 +104,7 @@ public class GlobalForwardingRuleApiLiveTest extends BaseGoogleComputeEngineApiL
       assertEquals(forwardingRules.size(), 1);
    }
 
-   @Test(groups = "live", dependsOnMethods = "testListGlobalForwardingRule")
+   @Test(groups = "live", dependsOnMethods = "testListGlobalForwardingRule", alwaysRun = true)
    public void testDeleteGlobalForwardingRule() {
       assertOperationDoneSuccessfully(api().delete(GLOBAL_FORWARDING_RULE_NAME));
 

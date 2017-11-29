@@ -103,7 +103,7 @@ public class BackendServiceApiLiveTest extends BaseGoogleComputeEngineApiLiveTes
    }
     */
 
-   @Test(groups = "live", dependsOnMethods = "testListBackendService")
+   @Test(groups = "live", dependsOnMethods = "testListBackendService", alwaysRun = true)
    public void testDeleteBackendService() {
       assertOperationDoneSuccessfully(api().delete(BACKEND_SERVICE_NAME));
 

@@ -64,7 +64,7 @@ public class DiskApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
       assertDiskEquals(disksAsList.get(0));
    }
 
-   @Test(groups = "live", dependsOnMethods = "testListDisk")
+   @Test(groups = "live", dependsOnMethods = "testListDisk", alwaysRun = true)
    public void testDeleteDisk() {
       assertOperationDoneSuccessfully(api().delete(DISK_NAME));
    }

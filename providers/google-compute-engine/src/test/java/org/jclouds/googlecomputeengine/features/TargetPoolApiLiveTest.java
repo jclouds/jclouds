@@ -258,7 +258,7 @@ public class TargetPoolApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
       assertOperationDoneSuccessfully(api().delete(BACKUP_TARGETPOOL_NAME));
    }
 
-   @AfterClass(groups = { "integration", "live" })
+   @AfterClass(groups = { "integration", "live" }, alwaysRun = true)
    public void testCleanup(){
       InstanceApi instanceApi = api.instancesInZone(DEFAULT_ZONE_NAME);
       HttpHealthCheckApi httpHealthCheckApi = api.httpHeathChecks();

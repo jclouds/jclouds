@@ -16,32 +16,11 @@
  */
 package org.jclouds.googlecomputeengine.compute.functions;
 
-import com.google.common.base.Function;
-import com.google.common.base.Predicate;
-import com.google.common.base.Throwables;
-import com.google.common.collect.ImmutableMap;
-import com.google.common.io.BaseEncoding;
-import com.google.common.util.concurrent.Atomics;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import org.jclouds.compute.reference.ComputeServiceConstants;
-import org.jclouds.crypto.Crypto;
-import org.jclouds.googlecomputeengine.GoogleComputeEngineApi;
-import org.jclouds.googlecomputeengine.domain.Instance;
-import org.jclouds.googlecomputeengine.domain.Instance.SerialPortOutput;
-import org.jclouds.googlecomputeengine.domain.Metadata;
-import org.jclouds.googlecomputeengine.domain.Operation;
-import org.jclouds.googlecomputeengine.features.InstanceApi;
-import org.jclouds.logging.Logger;
-import org.jclouds.util.Predicates2;
+import static com.google.common.base.Predicates.notNull;
+import static com.google.common.collect.Iterables.filter;
+import static com.google.common.collect.Iterables.transform;
+import static com.google.common.collect.Iterables.tryFind;
 
-import javax.annotation.Resource;
-import javax.crypto.BadPaddingException;
-import javax.crypto.Cipher;
-import javax.crypto.IllegalBlockSizeException;
-import javax.crypto.NoSuchPaddingException;
-import javax.inject.Inject;
-import javax.inject.Named;
 import java.math.BigInteger;
 import java.nio.charset.Charset;
 import java.security.InvalidKeyException;
@@ -53,13 +32,42 @@ import java.security.spec.RSAPublicKeySpec;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Date;
-import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
 
-import static com.google.common.base.Preconditions.checkNotNull;
+import javax.annotation.Resource;
+import javax.crypto.BadPaddingException;
+import javax.crypto.Cipher;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
+import javax.inject.Inject;
+import javax.inject.Named;
+
+import org.jclouds.compute.reference.ComputeServiceConstants;
+import org.jclouds.crypto.Crypto;
+import org.jclouds.googlecomputeengine.GoogleComputeEngineApi;
+import org.jclouds.googlecomputeengine.domain.Instance;
+import org.jclouds.googlecomputeengine.domain.Instance.SerialPortOutput;
+import org.jclouds.googlecomputeengine.domain.Metadata;
+import org.jclouds.googlecomputeengine.domain.Operation;
+import org.jclouds.googlecomputeengine.features.InstanceApi;
+import org.jclouds.json.Json;
+import org.jclouds.logging.Logger;
+import org.jclouds.util.Predicates2;
+
+import com.google.common.base.Function;
+import com.google.common.base.Optional;
+import com.google.common.base.Predicate;
+import com.google.common.base.Splitter;
+import com.google.common.base.Throwables;
+import com.google.common.collect.ImmutableMap;
+import com.google.common.io.BaseEncoding;
+import com.google.common.util.concurrent.Atomics;
+import com.google.gson.GsonBuilder;
+import com.google.inject.TypeLiteral;
 
 /**
  * References:
@@ -92,12 +100,15 @@ public class ResetWindowsPassword implements Function<Map<String, ?>, String> {
    private final GoogleComputeEngineApi api;
    private final Crypto crypto;
    private final Predicate<AtomicReference<Operation>> operationDone;
+   private final Json json;
 
    @Inject
-   protected ResetWindowsPassword(GoogleComputeEngineApi api, Crypto crypto, Predicate<AtomicReference<Operation>> operationDone) {
+   protected ResetWindowsPassword(GoogleComputeEngineApi api, Crypto crypto,
+         Predicate<AtomicReference<Operation>> operationDone, Json json) {
       this.api = api;
       this.crypto = crypto;
       this.operationDone = operationDone;
+      this.json = json;
    }
 
    @Override
@@ -135,30 +146,63 @@ public class ResetWindowsPassword implements Function<Map<String, ?>, String> {
                 operation.get().httpErrorMessage());
        }
 
-       try {
-          final Map<String, String> passwordDict = new HashMap<String, String>();
-          boolean passwordRetrieved = Predicates2.retry(new Predicate<Instance>() {
-             public boolean apply(Instance instance) {
-                String serialPortContents = instanceApi.getSerialPortOutput(instance.name(), 4).contents();
-                if (!serialPortContents.startsWith("{\"ready\":true")) {
-                   return false;
-                }
-                String[] contentEntries = serialPortContents.split("\n");
-                passwordDict.clear();
-                passwordDict.putAll(new Gson().fromJson(contentEntries[contentEntries.length - 1], Map.class));
-                passwordDict.put("passwordDictContentEntries", contentEntries[contentEntries.length - 1]);
-                return passwordDict.get("encryptedPassword") != null;
-             }
-          }, 10 * 60, 30, TimeUnit.SECONDS).apply(instance.get()); // Notice that timeoutDuration should be less than EXPIRE_DURATION
-          if (passwordRetrieved) {
-             return decryptPassword(checkNotNull(passwordDict.get("encryptedPassword"), "encryptedPassword shouldn't be null"), keys);
-          } else {
-             throw new IllegalStateException("encryptedPassword shouldn't be null: " + passwordDict.get("passwordDictContentEntries"));
-          }
-       } catch (Exception e) {
-          throw Throwables.propagate(e);
-       }
+      try {
+         final AtomicReference<String> encryptedPassword = Atomics.newReference();
+         boolean passwordRetrieved = Predicates2.retry(new Predicate<Instance>() {
+            public boolean apply(Instance instance) {
+               String serialPortContents = instanceApi.getSerialPortOutput(instance.name(), 4).contents();
+               List<String> contentEntries = Splitter.on('\n').splitToList(serialPortContents);
+
+               Optional<String> retrievedPassword = tryFind(
+                     filter(transform(contentEntries, deserializeSerialOutput(json)), notNull()), HasEncryptedPassword)
+                     .transform(ExtractEncryptedPassword);
+
+               if (retrievedPassword.isPresent()) {
+                  encryptedPassword.set(retrievedPassword.get());
+               }
+
+               return retrievedPassword.isPresent();
+            }
+            // Notice that timeoutDuration should be less than EXPIRE_DURATION
+         }, 10 * 60, 30, TimeUnit.SECONDS).apply(instance.get());
+
+         if (passwordRetrieved) {
+            return decryptPassword(encryptedPassword.get(), keys);
+         } else {
+            throw new IllegalStateException("Did not find the encrypted password in the serial port output");
+         }
+      } catch (Exception e) {
+         throw Throwables.propagate(e);
+      }
    }
+
+   private static Function<String, Map<String, Object>> deserializeSerialOutput(final Json json) {
+      return new Function<String, Map<String, Object>>() {
+         @Override
+         public Map<String, Object> apply(String input) {
+            try {
+               return json.fromJson(input, new TypeLiteral<Map<String, Object>>() {
+               }.getType());
+            } catch (Exception ex) {
+               return null;
+            }
+         }
+      };
+   }
+
+   private static final Predicate<Map<String, Object>> HasEncryptedPassword = new Predicate<Map<String, Object>>() {
+      @Override
+      public boolean apply(Map<String, Object> input) {
+         return input.containsKey("encryptedPassword");
+      }
+   };
+
+   private static final Function<Map<String, Object>, String> ExtractEncryptedPassword = new Function<Map<String, Object>, String>() {
+      @Override
+      public String apply(Map<String, Object> input) {
+         return (String) input.get("encryptedPassword");
+      }
+   };
 
    /**
     * Decrypts the given password - the encrypted text is base64-encoded.

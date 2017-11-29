@@ -20,6 +20,8 @@ import com.google.common.base.Predicate;
 import com.google.common.base.Predicates;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.io.BaseEncoding;
+import com.google.gson.Gson;
+
 import org.jclouds.crypto.Crypto;
 import org.jclouds.encryption.bouncycastle.BouncyCastleCrypto;
 import org.jclouds.googlecomputeengine.GoogleComputeEngineApi;
@@ -29,6 +31,7 @@ import org.jclouds.googlecomputeengine.domain.Metadata;
 import org.jclouds.googlecomputeengine.domain.Operation;
 import org.jclouds.googlecomputeengine.features.InstanceApi;
 import org.jclouds.googlecomputeengine.parse.ParseInstanceTest;
+import org.jclouds.json.internal.GsonWrapper;
 import org.testng.annotations.Test;
 
 import javax.crypto.Cipher;
@@ -93,7 +96,7 @@ public class ResetWindowsPasswordTest {
 
       replay(api, instanceApi, operation, serialPortOutput, crypto, keyPairGenerator);
 
-      ResetWindowsPassword generator = new ResetWindowsPassword(api, crypto, operationDone);
+      ResetWindowsPassword generator = new ResetWindowsPassword(api, crypto, operationDone, new GsonWrapper(new Gson()));
       String result = generator.apply(ImmutableMap.of("instance", new AtomicReference<Instance>(instance), "zone", zone,  "email", "test@google.com", "userName", "test"));
 
       verify(api, instanceApi, operation, serialPortOutput);

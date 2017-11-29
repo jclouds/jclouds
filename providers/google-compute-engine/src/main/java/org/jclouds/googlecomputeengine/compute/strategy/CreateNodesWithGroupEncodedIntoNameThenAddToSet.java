@@ -208,34 +208,32 @@ public final class CreateNodesWithGroupEncodedIntoNameThenAddToSet extends
       }
 
       int[] inboundPorts = templateOptions.getInboundPorts();
-      if ((inboundPorts == null) || inboundPorts.length == 0){
-         return;
-      }
+      
+      if (inboundPorts != null && inboundPorts.length > 0) {
+         List<String> ports = simplifyPorts(inboundPorts);
+         String name = naming.name(ports);
+         Firewall firewall = firewallApi.get(name);
+         AtomicReference<Operation> operation = null;
 
-      List<String> ports = simplifyPorts(inboundPorts);
-      String name = naming.name(ports);
-      Firewall firewall = firewallApi.get(name);
-      AtomicReference<Operation> operation = null;
-      
-      String interiorRange = subnet.isPresent() ? subnet.get().ipCidrRange() : DEFAULT_INTERNAL_NETWORK_RANGE;
-      
-      if (firewall == null) {
-         List<Rule> rules = ImmutableList.of(Rule.create("tcp", ports), Rule.create("udp", ports));
-         FirewallOptions firewallOptions = new FirewallOptions().name(name).network(network.selfLink())
+         String interiorRange = subnet.isPresent() ? subnet.get().ipCidrRange() : DEFAULT_INTERNAL_NETWORK_RANGE;
+
+         if (firewall == null) {
+            List<Rule> rules = ImmutableList.of(Rule.create("tcp", ports), Rule.create("udp", ports));
+            FirewallOptions firewallOptions = new FirewallOptions().name(name).network(network.selfLink())
                   .allowedRules(rules).sourceTags(templateOptions.getTags())
-                  .sourceRanges(of(interiorRange, EXTERIOR_RANGE))
-                  .targetTags(ImmutableList.of(name));
+                  .sourceRanges(of(interiorRange, EXTERIOR_RANGE)).targetTags(ImmutableList.of(name));
 
-         operation = Atomics.newReference(firewallApi
-               .createInNetwork(firewallOptions.name(), network.selfLink(), firewallOptions));
+            operation = Atomics.newReference(firewallApi.createInNetwork(firewallOptions.name(), network.selfLink(),
+                  firewallOptions));
 
-         operationDone.apply(operation);
-         checkState(operation.get().httpErrorStatusCode() == null, "Could not insert firewall, operation failed %s",
-               operation);
+            operationDone.apply(operation);
+            checkState(operation.get().httpErrorStatusCode() == null, "Could not insert firewall, operation failed %s",
+                  operation);
+         }
 
-         // Add tags for firewalls
-         tags.add(name);
+         tags.add(name);  // Add tags for the inbound ports firewall
       }
+
       templateOptions.tags(tags);
    }
 

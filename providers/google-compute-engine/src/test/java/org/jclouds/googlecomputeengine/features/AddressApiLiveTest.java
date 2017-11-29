@@ -53,7 +53,7 @@ public class AddressApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
       assertEquals(addresses.next().size(), 1);
    }
 
-   @Test(groups = "live", dependsOnMethods = "testListAddress")
+   @Test(groups = "live", dependsOnMethods = "testListAddress", alwaysRun = true)
    public void testDeleteAddress() {
       assertOperationDoneSuccessfully(api().delete(ADDRESS_NAME));
    }

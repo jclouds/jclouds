@@ -71,7 +71,7 @@ public class SnapshotApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
       assertSnapshotEquals(snapshotsAsList.get(0));
    }
 
-   @Test(groups = "live", dependsOnMethods = "testListSnapshot")
+   @Test(groups = "live", dependsOnMethods = "testListSnapshot", alwaysRun = true)
    public void testDeleteDisk() {
       assertOperationDoneSuccessfully(diskApi().delete(DISK_NAME));
       assertOperationDoneSuccessfully(api().delete(SNAPSHOT_NAME));
