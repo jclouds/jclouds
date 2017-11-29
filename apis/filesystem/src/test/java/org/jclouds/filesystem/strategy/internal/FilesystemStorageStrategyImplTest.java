@@ -686,9 +686,21 @@ public class FilesystemStorageStrategyImplTest {
       }
    }
 
-   @Test
-   public void testDeletingInvalidPathFileEndsNormally() {
+   @DataProvider
+   public Object[][] getInvalidPathBlobKey() {
       String invalidPathBlobKey = "A<!:!@#$%^&*?]8 /\0";
+      // the JDK can't handle '/' in Windows file paths
+      if (TestUtils.isWindowsOs()) {
+         invalidPathBlobKey = invalidPathBlobKey.replace("/", "");
+      }
+
+      Object[][] result = new Object[1][1];
+      result[0][0] = invalidPathBlobKey;
+      return result;
+   }
+
+   @Test(dataProvider = "getInvalidPathBlobKey")
+   public void testDeletingInvalidPathFileEndsNormally(String invalidPathBlobKey) {
       try {
          storageStrategy.removeBlob(CONTAINER_NAME, invalidPathBlobKey);
       } catch (InvalidPathException ipe) {
