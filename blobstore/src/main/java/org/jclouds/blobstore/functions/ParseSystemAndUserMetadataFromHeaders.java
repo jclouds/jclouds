@@ -56,7 +56,7 @@ public class ParseSystemAndUserMetadataFromHeaders implements Function<HttpRespo
             @Named(PROPERTY_USER_METADATA_PREFIX) String metadataPrefix) {
       this.metadataFactory = checkNotNull(metadataFactory, "metadataFactory");
       this.dateParser = checkNotNull(dateParser, "dateParser");
-      this.metadataPrefix = checkNotNull(metadataPrefix, "metadataPrefix");
+      this.metadataPrefix = checkNotNull(metadataPrefix, "metadataPrefix").toLowerCase();
    }
 
    public MutableBlobMetadata apply(HttpResponse from) {
@@ -77,7 +77,7 @@ public class ParseSystemAndUserMetadataFromHeaders implements Function<HttpRespo
    @VisibleForTesting
    void addUserMetadataTo(HttpResponse from, MutableBlobMetadata metadata) {
       for (Entry<String, String> header : from.getHeaders().entries()) {
-         if (header.getKey() != null && header.getKey().startsWith(metadataPrefix))
+         if (header.getKey() != null && header.getKey().toLowerCase().startsWith(metadataPrefix))
             metadata.getUserMetadata().put((header.getKey().substring(metadataPrefix.length())).toLowerCase(),
                      header.getValue());
       }
