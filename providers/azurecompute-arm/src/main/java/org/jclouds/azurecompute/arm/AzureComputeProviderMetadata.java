@@ -37,28 +37,29 @@ import static org.jclouds.oauth.v2.config.OAuthProperties.RESOURCE;
 import java.net.URI;
 import java.util.Properties;
 
+import org.jclouds.azurecompute.arm.config.AzureComputeHttpApiModule.CurrentServicePrincipal;
 import org.jclouds.azurecompute.arm.domain.Region;
+import org.jclouds.azurecompute.arm.features.AvailabilitySetApi;
 import org.jclouds.azurecompute.arm.features.DeploymentApi;
+import org.jclouds.azurecompute.arm.features.DiskApi;
+import org.jclouds.azurecompute.arm.features.ImageApi;
+import org.jclouds.azurecompute.arm.features.LoadBalancerApi;
 import org.jclouds.azurecompute.arm.features.LocationApi;
+import org.jclouds.azurecompute.arm.features.MetricDefinitionsApi;
+import org.jclouds.azurecompute.arm.features.MetricsApi;
 import org.jclouds.azurecompute.arm.features.NetworkInterfaceCardApi;
 import org.jclouds.azurecompute.arm.features.NetworkSecurityGroupApi;
 import org.jclouds.azurecompute.arm.features.NetworkSecurityRuleApi;
 import org.jclouds.azurecompute.arm.features.OSImageApi;
-import org.jclouds.azurecompute.arm.features.ResourceGroupApi;
 import org.jclouds.azurecompute.arm.features.PublicIPAddressApi;
+import org.jclouds.azurecompute.arm.features.ResourceGroupApi;
 import org.jclouds.azurecompute.arm.features.ResourceProviderApi;
 import org.jclouds.azurecompute.arm.features.StorageAccountApi;
 import org.jclouds.azurecompute.arm.features.SubnetApi;
-import org.jclouds.azurecompute.arm.features.VirtualNetworkApi;
 import org.jclouds.azurecompute.arm.features.VMSizeApi;
 import org.jclouds.azurecompute.arm.features.VirtualMachineApi;
-import org.jclouds.azurecompute.arm.features.LoadBalancerApi;
-import org.jclouds.azurecompute.arm.features.AvailabilitySetApi;
-import org.jclouds.azurecompute.arm.features.DiskApi;
-import org.jclouds.azurecompute.arm.features.ImageApi;
-import org.jclouds.azurecompute.arm.features.MetricDefinitionsApi;
-import org.jclouds.azurecompute.arm.features.MetricsApi;
 import org.jclouds.azurecompute.arm.features.VirtualMachineScaleSetApi;
+import org.jclouds.azurecompute.arm.features.VirtualNetworkApi;
 import org.jclouds.providers.ProviderMetadata;
 import org.jclouds.providers.internal.BaseProviderMetadata;
 
@@ -124,7 +125,8 @@ public class AzureComputeProviderMetadata extends BaseProviderMetadata {
       properties.put(API_VERSION_PREFIX + MetricDefinitionsApi.class.getSimpleName(), "2017-05-01-preview");
       properties.put(API_VERSION_PREFIX + MetricsApi.class.getSimpleName(), "2016-09-01");
       properties.put(API_VERSION_PREFIX + VirtualMachineScaleSetApi.class.getSimpleName(), "2017-03-30");
-
+      properties.put(API_VERSION_PREFIX + CurrentServicePrincipal.class.getSimpleName(), "1.6");
+      
       return properties;
    }
 

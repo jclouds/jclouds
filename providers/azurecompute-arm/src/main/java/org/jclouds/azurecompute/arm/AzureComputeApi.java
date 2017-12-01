@@ -20,29 +20,33 @@ import java.io.Closeable;
 
 import javax.ws.rs.PathParam;
 
-import org.jclouds.azurecompute.arm.features.JobApi;
-import org.jclouds.azurecompute.arm.features.LocationApi;
-import org.jclouds.azurecompute.arm.features.ResourceGroupApi;
-import org.jclouds.azurecompute.arm.features.StorageAccountApi;
-import org.jclouds.azurecompute.arm.features.SubnetApi;
-import org.jclouds.azurecompute.arm.features.VirtualNetworkApi;
-import org.jclouds.azurecompute.arm.features.NetworkInterfaceCardApi;
-import org.jclouds.azurecompute.arm.features.PublicIPAddressApi;
-import org.jclouds.azurecompute.arm.features.VirtualMachineApi;
-import org.jclouds.azurecompute.arm.features.VirtualMachineScaleSetApi;
-import org.jclouds.azurecompute.arm.features.VMSizeApi;
-import org.jclouds.azurecompute.arm.features.OSImageApi;
-import org.jclouds.azurecompute.arm.features.DeploymentApi;
-import org.jclouds.azurecompute.arm.features.NetworkSecurityGroupApi;
-import org.jclouds.azurecompute.arm.features.NetworkSecurityRuleApi;
-import org.jclouds.azurecompute.arm.features.LoadBalancerApi;
+import org.jclouds.azurecompute.arm.domain.ServicePrincipal;
 import org.jclouds.azurecompute.arm.features.AvailabilitySetApi;
-import org.jclouds.azurecompute.arm.features.ResourceProviderApi;
+import org.jclouds.azurecompute.arm.features.DeploymentApi;
 import org.jclouds.azurecompute.arm.features.DiskApi;
 import org.jclouds.azurecompute.arm.features.ImageApi;
-import org.jclouds.azurecompute.arm.features.MetricsApi;
+import org.jclouds.azurecompute.arm.features.JobApi;
+import org.jclouds.azurecompute.arm.features.LoadBalancerApi;
+import org.jclouds.azurecompute.arm.features.LocationApi;
 import org.jclouds.azurecompute.arm.features.MetricDefinitionsApi;
+import org.jclouds.azurecompute.arm.features.MetricsApi;
+import org.jclouds.azurecompute.arm.features.NetworkInterfaceCardApi;
+import org.jclouds.azurecompute.arm.features.NetworkSecurityGroupApi;
+import org.jclouds.azurecompute.arm.features.NetworkSecurityRuleApi;
+import org.jclouds.azurecompute.arm.features.OSImageApi;
+import org.jclouds.azurecompute.arm.features.PublicIPAddressApi;
+import org.jclouds.azurecompute.arm.features.ResourceGroupApi;
+import org.jclouds.azurecompute.arm.features.ResourceProviderApi;
+import org.jclouds.azurecompute.arm.features.StorageAccountApi;
+import org.jclouds.azurecompute.arm.features.SubnetApi;
+import org.jclouds.azurecompute.arm.features.VMSizeApi;
+import org.jclouds.azurecompute.arm.features.VirtualMachineApi;
+import org.jclouds.azurecompute.arm.features.VirtualMachineScaleSetApi;
+import org.jclouds.azurecompute.arm.features.VirtualNetworkApi;
 import org.jclouds.rest.annotations.Delegate;
+
+import com.google.common.base.Supplier;
+import com.google.inject.Provides;
 
 /**
  * The Azure Resource Manager API is a REST API for managing your services and deployments.
@@ -237,4 +241,10 @@ public interface AzureComputeApi extends Closeable {
     */
    @Delegate
    MetricDefinitionsApi getMetricsDefinitionsApi(@PathParam("resourceid") String resourceid);
+   
+   /**
+    * Returns the information about the current service principal.
+    */
+   @Provides
+   Supplier<ServicePrincipal> getServicePrincipal();
 }
