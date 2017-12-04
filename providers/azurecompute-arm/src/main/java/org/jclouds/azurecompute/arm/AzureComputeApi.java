@@ -24,6 +24,7 @@ import org.jclouds.azurecompute.arm.domain.ServicePrincipal;
 import org.jclouds.azurecompute.arm.features.AvailabilitySetApi;
 import org.jclouds.azurecompute.arm.features.DeploymentApi;
 import org.jclouds.azurecompute.arm.features.DiskApi;
+import org.jclouds.azurecompute.arm.features.GraphRBACApi;
 import org.jclouds.azurecompute.arm.features.ImageApi;
 import org.jclouds.azurecompute.arm.features.JobApi;
 import org.jclouds.azurecompute.arm.features.LoadBalancerApi;
@@ -241,6 +242,15 @@ public interface AzureComputeApi extends Closeable {
     */
    @Delegate
    MetricDefinitionsApi getMetricsDefinitionsApi(@PathParam("resourceid") String resourceid);
+   
+   /**
+    * The Azure Active Directory Graph API provides programmatic access to Azure
+    * AD through REST API endpoints.
+    *
+    * @see <a href="https://docs.microsoft.com/en-us/rest/api/graphrbac/">docs</a>
+    */
+   @Delegate
+   GraphRBACApi getGraphRBACApi();
    
    /**
     * Returns the information about the current service principal.

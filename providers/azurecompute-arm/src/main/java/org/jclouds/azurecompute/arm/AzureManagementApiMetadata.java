@@ -16,6 +16,8 @@
  */
 package org.jclouds.azurecompute.arm;
 
+import static org.jclouds.reflect.Reflection2.typeToken;
+
 import java.net.URI;
 import java.util.Properties;
 
@@ -32,8 +34,6 @@ import org.jclouds.rest.internal.BaseHttpApiMetadata;
 import com.google.common.collect.ImmutableSet;
 import com.google.inject.Module;
 
-import static org.jclouds.reflect.Reflection2.typeToken;
-
 /**
  * Implementation of {@link ApiMetadata} for Microsoft Azure Resource Manager REST API
  */
@@ -43,9 +43,13 @@ public class AzureManagementApiMetadata extends BaseHttpApiMetadata<AzureCompute
    public Builder toBuilder() {
       return new Builder().fromApiMetadata(this);
    }
+   
+   public static Builder builder() {
+      return new Builder();
+   }
 
    public AzureManagementApiMetadata() {
-      this(new Builder());
+      this(builder());
    }
 
    protected AzureManagementApiMetadata(final Builder builder) {

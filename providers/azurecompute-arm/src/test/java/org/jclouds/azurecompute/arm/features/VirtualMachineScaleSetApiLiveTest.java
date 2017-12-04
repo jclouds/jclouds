@@ -17,7 +17,6 @@
 package org.jclouds.azurecompute.arm.features;
 
 import com.google.common.collect.ImmutableMap;
-import org.jclouds.azurecompute.arm.domain.DataDisk;
 import org.jclouds.azurecompute.arm.domain.Extension;
 import org.jclouds.azurecompute.arm.domain.ExtensionProfile;
 import org.jclouds.azurecompute.arm.domain.ExtensionProfileSettings;
@@ -69,8 +68,6 @@ public class VirtualMachineScaleSetApiLiveTest extends BaseAzureComputeApiLiveTe
 
    private String subscriptionid;
    private String vmssName;
-   private VirtualMachineScaleSetSKU SKU;
-   private String nicName;
    private String virtualNetworkName;
    private String subnetId;
    private Subnet subnet;
@@ -151,25 +148,6 @@ public class VirtualMachineScaleSetApiLiveTest extends BaseAzureComputeApiLiveTe
       return VirtualMachineScaleSetUpgradePolicy.create("Manual");
    }
 
-   private List<DataDisk> getDataDisks() {
-      List<DataDisk> datadisks = new ArrayList<DataDisk>();
-
-      datadisks.add(DataDisk.create(null, "10", 1, null,
-         null, "FromImage",
-         "None", getManagedDiskParameters(),
-         null));
-
-      return datadisks;
-   }
-
-   private StorageProfile getStorageProfile() {
-      return StorageProfile.create(getWindowsImageReference(), getWindowsOSDisk(), getDataDisks());
-   }
-
-   private StorageProfile getWindowsStorageProfile_Default() {
-      return StorageProfile.create(getWindowsImageReference(), getWindowsOSDisk(), null);
-   }
-
    private StorageProfile getLinuxStorageProfile_Default() {
       return StorageProfile.create(getLinuxImageReference(), getLinuxOSDisk(), null);
    }
@@ -178,19 +156,9 @@ public class VirtualMachineScaleSetApiLiveTest extends BaseAzureComputeApiLiveTe
       return ManagedDiskParameters.create(null, "Standard_LRS");
    }
 
-   private OSDisk getWindowsOSDisk() {
-      return OSDisk.create("Windows", null, null, null, "FromImage",
-         null, getManagedDiskParameters(), null);
-   }
-
    private OSDisk getLinuxOSDisk() {
       return OSDisk.create("Linux", null, null, null, "FromImage",
          null, getManagedDiskParameters(), null);
-   }
-
-   private ImageReference getWindowsImageReference() {
-      return ImageReference.create(null, "Microsoft.Windows", "Windows2016",
-         "Enterprise", "latest");
    }
 
    private ImageReference getLinuxImageReference() {

@@ -37,11 +37,11 @@ import static org.jclouds.oauth.v2.config.OAuthProperties.RESOURCE;
 import java.net.URI;
 import java.util.Properties;
 
-import org.jclouds.azurecompute.arm.config.AzureComputeHttpApiModule.CurrentServicePrincipal;
 import org.jclouds.azurecompute.arm.domain.Region;
 import org.jclouds.azurecompute.arm.features.AvailabilitySetApi;
 import org.jclouds.azurecompute.arm.features.DeploymentApi;
 import org.jclouds.azurecompute.arm.features.DiskApi;
+import org.jclouds.azurecompute.arm.features.GraphRBACApi;
 import org.jclouds.azurecompute.arm.features.ImageApi;
 import org.jclouds.azurecompute.arm.features.LoadBalancerApi;
 import org.jclouds.azurecompute.arm.features.LocationApi;
@@ -125,7 +125,7 @@ public class AzureComputeProviderMetadata extends BaseProviderMetadata {
       properties.put(API_VERSION_PREFIX + MetricDefinitionsApi.class.getSimpleName(), "2017-05-01-preview");
       properties.put(API_VERSION_PREFIX + MetricsApi.class.getSimpleName(), "2016-09-01");
       properties.put(API_VERSION_PREFIX + VirtualMachineScaleSetApi.class.getSimpleName(), "2017-03-30");
-      properties.put(API_VERSION_PREFIX + CurrentServicePrincipal.class.getSimpleName(), "1.6");
+      properties.put(API_VERSION_PREFIX + GraphRBACApi.class.getSimpleName(), "1.6");
       
       return properties;
    }

@@ -20,8 +20,12 @@ import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
+import java.net.URI;
 
+import javax.inject.Inject;
 import javax.inject.Qualifier;
+
+import com.google.common.base.Supplier;
 
 /**
  * Provides the Graph RBAC API endpoint for the current tenant.
@@ -32,4 +36,19 @@ import javax.inject.Qualifier;
 public @interface GraphRBAC {
 
    String ENDPOINT = "https://graph.windows.net/";
+
+   static class GraphRBACForTenant implements Supplier<URI> {
+      private final String tenantId;
+
+      @Inject
+      GraphRBACForTenant(@Tenant String tenantId) {
+         this.tenantId = tenantId;
+      }
+
+      @Override
+      public URI get() {
+         return URI.create(GraphRBAC.ENDPOINT + tenantId);
+      }
+
+   }
 }
