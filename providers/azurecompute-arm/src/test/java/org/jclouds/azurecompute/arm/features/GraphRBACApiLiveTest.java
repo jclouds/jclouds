@@ -22,13 +22,18 @@ import org.jclouds.azurecompute.arm.domain.ServicePrincipal;
 import org.jclouds.azurecompute.arm.internal.BaseAzureComputeApiLiveTest;
 import org.testng.annotations.Test;
 
-@Test(groups = "live", testName = "CurrentServicePrincipalApiLiveTest", singleThreaded = true)
-public class CurrentServicePrincipalApiLiveTest extends BaseAzureComputeApiLiveTest {
+@Test(groups = "live", testName = "GraphRBACApiLiveTest", singleThreaded = true)
+public class GraphRBACApiLiveTest extends BaseAzureComputeApiLiveTest {
 
    @Test
-   public void testGetCurrentServicePrincipal() {
+   public void testGetCurrentServicePrincipalSupplier() {
       ServicePrincipal currentUser = api.getServicePrincipal().get();
       assertEquals(currentUser.appId(), identity);
    }
 
+   @Test
+   public void testGetCurrentServicePrincipal() {
+      ServicePrincipal currentUser = api.getGraphRBACApi().getCurrentServicePrincipal();
+      assertEquals(currentUser.appId(), identity);
+   }
 }
