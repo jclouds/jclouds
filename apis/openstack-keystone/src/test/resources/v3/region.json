@@ -1,0 +1,10 @@
+{
+  "region": {
+    "parent_region_id": null,
+    "id": "RegionOne",
+    "links": {
+      "self": "http://localhost/identity/v3/regions/RegionApiLiveTest"
+    },
+    "description": "Updated"
+  }
+}

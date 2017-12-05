@@ -16,14 +16,14 @@
  */
 package org.jclouds.openstack.swift.v1.blobstore.integration;
 
-import static org.jclouds.openstack.keystone.v2_0.config.KeystoneProperties.CREDENTIAL_TYPE;
+import static org.jclouds.openstack.keystone.config.KeystoneProperties.CREDENTIAL_TYPE;
 import static org.testng.Assert.assertTrue;
 
 import java.util.Properties;
 
 import org.jclouds.blobstore.integration.internal.BaseContainerIntegrationTest;
-import org.testng.annotations.Test;
 import org.testng.SkipException;
+import org.testng.annotations.Test;
 
 @Test(groups = "live", testName = "SwiftContainerIntegrationLiveTest")
 public class SwiftContainerIntegrationLiveTest extends BaseContainerIntegrationTest {

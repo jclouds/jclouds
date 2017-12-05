@@ -21,8 +21,8 @@ import static org.testng.Assert.assertNotNull;
 
 import java.util.Properties;
 
+import org.jclouds.openstack.keystone.catalog.config.InternalUrlModule;
 import org.jclouds.openstack.nova.v2_0.internal.BaseNovaApiLiveTest;
-import org.jclouds.openstack.v2_0.config.InternalUrlModule;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 

@@ -1,0 +1,13 @@
+{
+  "user": {
+    "password_expires_at": null,
+    "links": {
+      "self": "http://localhost/identity/v3/users/0bedc61110fd4e94a251260a47f18f29"
+    },
+    "enabled": true,
+    "id": "0bedc61110fd4e94a251260a47f18f29",
+    "options": {},
+    "domain_id": "default",
+    "name": "User"
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "project": {
+    "is_domain": false,
+    "description": "Updated",
+    "links": {
+      "self": "http://localhost/identity/v3/projects/2f9b30f706bc45d7923e055567be2e98"
+    },
+    "tags": [],
+    "enabled": true,
+    "id": "2f9b30f706bc45d7923e055567be2e98",
+    "parent_id": "default",
+    "domain_id": "default",
+    "name": "ProjectApiLiveTest"
+  }
+}

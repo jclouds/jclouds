@@ -26,7 +26,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
 import org.jclouds.Fallbacks.EmptyFluentIterableOnNotFoundOr404;
-import org.jclouds.openstack.keystone.v2_0.filters.AuthenticateRequest;
+import org.jclouds.openstack.keystone.auth.filters.AuthenticateRequest;
 import org.jclouds.openstack.nova.v2_0.domain.Host;
 import org.jclouds.openstack.nova.v2_0.domain.HostResourceUsage;
 import org.jclouds.openstack.nova.v2_0.functions.FieldValueResponseParsers.MaintenanceModeDisabledResponseParser;

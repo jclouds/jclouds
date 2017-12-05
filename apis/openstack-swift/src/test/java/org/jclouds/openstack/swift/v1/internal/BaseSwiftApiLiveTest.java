@@ -25,7 +25,7 @@ import java.util.concurrent.TimeUnit;
 
 import org.jclouds.blobstore.integration.internal.BaseBlobStoreIntegrationTest;
 import org.jclouds.location.reference.LocationConstants;
-import org.jclouds.openstack.keystone.v2_0.config.KeystoneProperties;
+import org.jclouds.openstack.keystone.config.KeystoneProperties;
 import org.jclouds.openstack.swift.v1.SwiftApi;
 import org.jclouds.openstack.swift.v1.domain.BulkDeleteResponse;
 import org.jclouds.openstack.swift.v1.domain.ObjectList;

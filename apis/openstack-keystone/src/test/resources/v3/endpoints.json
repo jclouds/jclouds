@@ -1,0 +1,153 @@
+{
+  "endpoints": [
+    {
+      "region_id": "RegionOne",
+      "links": {
+        "self": "http://localhost/identity/v3/endpoints/151d1dd2c86b4af783143ab1aa9d9a39"
+      },
+      "url": "http://localhost/compute/v2/$(project_id)s",
+      "region": "RegionOne",
+      "enabled": true,
+      "interface": "public",
+      "service_id": "a14c47dc13194bf2a2195e861db9f906",
+      "id": "151d1dd2c86b4af783143ab1aa9d9a39"
+    },
+    {
+      "region_id": "RegionOne",
+      "links": {
+        "self": "http://localhost/identity/v3/endpoints/1a9f6c6bea0e4ff5bb8b17e3647a706e"
+      },
+      "url": "http://localhost/volume/v2/$(project_id)s",
+      "region": "RegionOne",
+      "enabled": true,
+      "interface": "public",
+      "service_id": "238841bcff5f4f2b9ee2f7973c19e22a",
+      "id": "1a9f6c6bea0e4ff5bb8b17e3647a706e"
+    },
+    {
+      "region_id": "RegionOne",
+      "links": {
+        "self": "http://localhost/identity/v3/endpoints/206d6d831dbf44ccad854ffb419b4f02"
+      },
+      "url": "http://localhost/volume/v1/$(project_id)s",
+      "region": "RegionOne",
+      "enabled": true,
+      "interface": "public",
+      "service_id": "a222e99e3d24476baa7762858dc34006",
+      "id": "206d6d831dbf44ccad854ffb419b4f02"
+    },
+    {
+      "region_id": "RegionOne",
+      "links": {
+        "self": "http://localhost/identity/v3/endpoints/23f60684390f4376aca5d828f2381e6e"
+      },
+      "url": "http://localhost:8080",
+      "region": "RegionOne",
+      "enabled": true,
+      "interface": "admin",
+      "service_id": "2774503aa5354d70a801df09a813db46",
+      "id": "23f60684390f4376aca5d828f2381e6e"
+    },
+    {
+      "region_id": "RegionOne",
+      "links": {
+        "self": "http://localhost/identity/v3/endpoints/572671cba1d34bd29fdd160eac891971"
+      },
+      "url": "http://localhost/volume/v3/$(project_id)s",
+      "region": "RegionOne",
+      "enabled": true,
+      "interface": "public",
+      "service_id": "be984bfb8b5f447d8a0ea3fa075054fc",
+      "id": "572671cba1d34bd29fdd160eac891971"
+    },
+    {
+      "region_id": "RegionOne",
+      "links": {
+        "self": "http://localhost/identity/v3/endpoints/882c0c04727744ee8d20839f5f9eec9a"
+      },
+      "url": "http://localhost/compute/v2.1",
+      "region": "RegionOne",
+      "enabled": true,
+      "interface": "public",
+      "service_id": "fcc6a934957545bbb5fee29a217530ef",
+      "id": "882c0c04727744ee8d20839f5f9eec9a"
+    },
+    {
+      "region_id": "RegionOne",
+      "links": {
+        "self": "http://localhost/identity/v3/endpoints/9f1b314e3bc5403a8dcdef14c9eb044c"
+      },
+      "url": "http://localhost/identity/v3",
+      "region": "RegionOne",
+      "enabled": true,
+      "interface": "public",
+      "service_id": "6b73ec12f7754a8696d758561a1cf5f1",
+      "id": "9f1b314e3bc5403a8dcdef14c9eb044c"
+    },
+    {
+      "region_id": "RegionOne",
+      "links": {
+        "self": "http://localhost/identity/v3/endpoints/bb2aa713d1154809aeb414e6fd71ba95"
+      },
+      "url": "http://localhost/image",
+      "region": "RegionOne",
+      "enabled": true,
+      "interface": "public",
+      "service_id": "5dbcb1098b2e41e083c05c9006bd9830",
+      "id": "bb2aa713d1154809aeb414e6fd71ba95"
+    },
+    {
+      "region_id": "RegionOne",
+      "links": {
+        "self": "http://localhost/identity/v3/endpoints/dcf25870430f468d8f8dfd9d3acb95cc"
+      },
+      "url": "http://localhost:9696/",
+      "region": "RegionOne",
+      "enabled": true,
+      "interface": "public",
+      "service_id": "d12688144a6e4d9db17ead14f4670d5b",
+      "id": "dcf25870430f468d8f8dfd9d3acb95cc"
+    },
+    {
+      "region_id": "RegionOne",
+      "links": {
+        "self": "http://localhost/identity/v3/endpoints/eb1517fb194a4df09109aa4606c245b9"
+      },
+      "url": "http://localhost/identity/v3",
+      "region": "RegionOne",
+      "enabled": true,
+      "interface": "admin",
+      "service_id": "6b73ec12f7754a8696d758561a1cf5f1",
+      "id": "eb1517fb194a4df09109aa4606c245b9"
+    },
+    {
+      "region_id": "RegionOne",
+      "links": {
+        "self": "http://localhost/identity/v3/endpoints/edd066392b3549508739e18d5e69dbb7"
+      },
+      "url": "http://localhost/placement",
+      "region": "RegionOne",
+      "enabled": true,
+      "interface": "public",
+      "service_id": "74efa863cb264dcbba922ff254a19876",
+      "id": "edd066392b3549508739e18d5e69dbb7"
+    },
+    {
+      "region_id": "RegionOne",
+      "links": {
+        "self": "http://localhost/identity/v3/endpoints/ef84daa849894b8ebda274615a083139"
+      },
+      "url": "http://localhost:8080/v1/AUTH_$(project_id)s",
+      "region": "RegionOne",
+      "enabled": true,
+      "interface": "public",
+      "service_id": "2774503aa5354d70a801df09a813db46",
+      "id": "ef84daa849894b8ebda274615a083139"
+    }
+  ],
+  "links": {
+    "self": "http://localhost/identity/v3/endpoints",
+    "previous": null,
+    "next": null
+  }
+}

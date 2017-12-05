@@ -34,7 +34,7 @@ import org.jclouds.Fallbacks.EmptyFluentIterableOnNotFoundOr404;
 import org.jclouds.Fallbacks.FalseOnNotFoundOr404;
 import org.jclouds.Fallbacks.NullOnNotFoundOr404;
 import org.jclouds.javax.annotation.Nullable;
-import org.jclouds.openstack.keystone.v2_0.filters.AuthenticateRequest;
+import org.jclouds.openstack.keystone.auth.filters.AuthenticateRequest;
 import org.jclouds.openstack.swift.v1.SwiftFallbacks.TrueOn404FalseOn409;
 import org.jclouds.openstack.swift.v1.binders.BindMetadataToHeaders.BindContainerMetadataToHeaders;
 import org.jclouds.openstack.swift.v1.binders.BindMetadataToHeaders.BindRemoveContainerMetadataToHeaders;

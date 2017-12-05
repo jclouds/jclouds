@@ -16,17 +16,17 @@
  */
 package org.jclouds.rackspace.cloudidentity.v2_0;
 
-import static org.jclouds.openstack.keystone.v2_0.config.KeystoneProperties.CREDENTIAL_TYPE;
+import static org.jclouds.openstack.keystone.config.KeystoneProperties.CREDENTIAL_TYPE;
 
 import java.net.URI;
 import java.util.Properties;
 
 import org.jclouds.apis.ApiMetadata;
+import org.jclouds.openstack.keystone.catalog.config.KeystoneAdminURLModule;
+import org.jclouds.openstack.keystone.catalog.config.ServiceCatalogModule;
 import org.jclouds.openstack.keystone.v2_0.KeystoneApiMetadata;
 import org.jclouds.openstack.keystone.v2_0.config.KeystoneHttpApiModule;
-import org.jclouds.openstack.keystone.v2_0.config.KeystoneHttpApiModule.KeystoneAdminURLModule;
 import org.jclouds.openstack.keystone.v2_0.config.KeystoneParserModule;
-import org.jclouds.rackspace.cloudidentity.v2_0.config.CloudIdentityAuthenticationApiModule;
 import org.jclouds.rackspace.cloudidentity.v2_0.config.CloudIdentityAuthenticationModule;
 import org.jclouds.rackspace.cloudidentity.v2_0.config.CloudIdentityCredentialTypes;
 
@@ -70,8 +70,8 @@ public class CloudIdentityApiMetadata extends KeystoneApiMetadata {
          .defaultProperties(CloudIdentityApiMetadata.defaultProperties())
          .documentation(URI.create("http://docs.rackspace.com/auth/api/v2.0/auth-api-devguide/"))
          .defaultModules(ImmutableSet.<Class<? extends Module>>builder()
-                                     .add(CloudIdentityAuthenticationApiModule.class)
                                      .add(CloudIdentityAuthenticationModule.class)
+                                     .add(ServiceCatalogModule.class)
                                      .add(KeystoneAdminURLModule.class)
                                      .add(KeystoneParserModule.class)
                                      .add(KeystoneHttpApiModule.class).build());

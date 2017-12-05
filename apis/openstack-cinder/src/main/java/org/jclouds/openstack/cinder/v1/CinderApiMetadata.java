@@ -16,8 +16,8 @@
  */
 package org.jclouds.openstack.cinder.v1;
 
-import static org.jclouds.openstack.keystone.v2_0.config.KeystoneProperties.CREDENTIAL_TYPE;
-import static org.jclouds.openstack.keystone.v2_0.config.KeystoneProperties.SERVICE_TYPE;
+import static org.jclouds.openstack.keystone.config.KeystoneProperties.CREDENTIAL_TYPE;
+import static org.jclouds.openstack.keystone.config.KeystoneProperties.SERVICE_TYPE;
 
 import java.net.URI;
 import java.util.Properties;
@@ -25,10 +25,11 @@ import java.util.Properties;
 import org.jclouds.apis.ApiMetadata;
 import org.jclouds.openstack.cinder.v1.config.CinderHttpApiModule;
 import org.jclouds.openstack.cinder.v1.config.CinderParserModule;
-import org.jclouds.openstack.keystone.v2_0.config.AuthenticationApiModule;
-import org.jclouds.openstack.keystone.v2_0.config.CredentialTypes;
-import org.jclouds.openstack.keystone.v2_0.config.KeystoneAuthenticationModule;
-import org.jclouds.openstack.keystone.v2_0.config.KeystoneAuthenticationModule.RegionModule;
+import org.jclouds.openstack.keystone.auth.config.AuthenticationModule;
+import org.jclouds.openstack.keystone.auth.config.CredentialTypes;
+import org.jclouds.openstack.keystone.catalog.config.ServiceCatalogModule;
+import org.jclouds.openstack.keystone.catalog.config.ServiceCatalogModule.RegionModule;
+import org.jclouds.openstack.keystone.config.KeystoneProperties;
 import org.jclouds.openstack.v2_0.ServiceType;
 import org.jclouds.rest.internal.BaseHttpApiMetadata;
 
@@ -58,6 +59,7 @@ public class CinderApiMetadata extends BaseHttpApiMetadata<CinderApi> {
    public static Properties defaultProperties() {
       Properties properties = BaseHttpApiMetadata.defaultProperties();
       properties.setProperty(SERVICE_TYPE, ServiceType.BLOCK_STORAGE);
+      properties.setProperty(KeystoneProperties.KEYSTONE_VERSION, "2");
       properties.setProperty(CREDENTIAL_TYPE, CredentialTypes.PASSWORD_CREDENTIALS);
       return properties;
    }
@@ -75,8 +77,8 @@ public class CinderApiMetadata extends BaseHttpApiMetadata<CinderApi> {
          .defaultEndpoint("http://localhost:5000/v2.0/")
          .defaultProperties(CinderApiMetadata.defaultProperties())
          .defaultModules(ImmutableSet.<Class<? extends Module>>builder()
-                                     .add(AuthenticationApiModule.class)
-                                     .add(KeystoneAuthenticationModule.class)
+                                     .add(AuthenticationModule.class)
+                                     .add(ServiceCatalogModule.class)
                                      .add(RegionModule.class)
                                      .add(CinderParserModule.class)
                                      .add(CinderHttpApiModule.class)

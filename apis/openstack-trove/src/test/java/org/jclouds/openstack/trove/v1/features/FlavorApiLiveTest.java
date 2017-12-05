@@ -45,7 +45,7 @@ public class FlavorApiLiveTest extends BaseTroveApiLiveTest {
         for (String region : api.getConfiguredRegions()) {
             FlavorApi flavorApi = api.getFlavorApi(region);
 
-            FluentIterable<Flavor> response = flavorApi.list( api.getCurrentTenantId().get().getId() ); // tenant id, but referred to as account id.
+            FluentIterable<Flavor> response = flavorApi.list( api.getCurrentTenantId().get()); // tenant id, but referred to as account id.
             for (Flavor flavor : response) {
                 checkFlavor(flavor);
             }

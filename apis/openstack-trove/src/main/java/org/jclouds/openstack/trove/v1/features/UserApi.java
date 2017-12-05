@@ -18,6 +18,7 @@ package org.jclouds.openstack.trove.v1.features;
 
 import java.util.List;
 import java.util.Set;
+
 import javax.inject.Named;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
@@ -27,11 +28,12 @@ import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.core.MediaType;
+
 import org.jclouds.Fallbacks.EmptyFluentIterableOnNotFoundOr404;
 import org.jclouds.Fallbacks.FalseOnNotFoundOr404;
 import org.jclouds.Fallbacks.NullOnNotFoundOr404;
 import org.jclouds.javax.annotation.Nullable;
-import org.jclouds.openstack.keystone.v2_0.filters.AuthenticateRequest;
+import org.jclouds.openstack.keystone.auth.filters.AuthenticateRequest;
 import org.jclouds.openstack.trove.v1.binders.BindCreateUserToJson;
 import org.jclouds.openstack.trove.v1.binders.BindGrantUserToJson;
 import org.jclouds.openstack.trove.v1.domain.User;
@@ -44,6 +46,7 @@ import org.jclouds.rest.annotations.RequestFilters;
 import org.jclouds.rest.annotations.ResponseParser;
 import org.jclouds.rest.annotations.SelectJson;
 import org.jclouds.rest.annotations.SkipEncoding;
+
 import com.google.common.collect.FluentIterable;
 
 /**

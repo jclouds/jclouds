@@ -21,7 +21,7 @@ import com.google.common.annotations.Beta;
 import com.google.common.collect.FluentIterable;
 import org.jclouds.Fallbacks;
 import org.jclouds.openstack.cinder.v1.domain.AvailabilityZone;
-import org.jclouds.openstack.keystone.v2_0.filters.AuthenticateRequest;
+import org.jclouds.openstack.keystone.auth.filters.AuthenticateRequest;
 import org.jclouds.openstack.v2_0.ServiceType;
 import org.jclouds.openstack.v2_0.services.Extension;
 import org.jclouds.rest.annotations.Fallback;

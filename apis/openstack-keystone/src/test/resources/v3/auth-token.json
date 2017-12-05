@@ -1,0 +1,13 @@
+{
+    "auth": {
+        "identity": {
+            "methods": [
+                "token"
+            ],
+            "token": {
+                "id": "token"
+            }
+        },
+        "scope": "unscoped"
+    }
+}

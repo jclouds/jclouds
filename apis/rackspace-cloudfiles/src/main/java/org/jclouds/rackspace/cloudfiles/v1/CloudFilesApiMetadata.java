@@ -16,15 +16,17 @@
  */
 package org.jclouds.rackspace.cloudfiles.v1;
 
-import static org.jclouds.openstack.keystone.v2_0.config.KeystoneProperties.CREDENTIAL_TYPE;
-import static org.jclouds.openstack.keystone.v2_0.config.KeystoneProperties.SERVICE_TYPE;
+import static org.jclouds.openstack.keystone.config.KeystoneProperties.CREDENTIAL_TYPE;
+import static org.jclouds.openstack.keystone.config.KeystoneProperties.KEYSTONE_VERSION;
+import static org.jclouds.openstack.keystone.config.KeystoneProperties.SERVICE_TYPE;
 import static org.jclouds.reflect.Reflection2.typeToken;
 
 import java.net.URI;
 import java.util.Properties;
 
 import org.jclouds.apis.ApiMetadata;
-import org.jclouds.openstack.keystone.v2_0.config.KeystoneAuthenticationModule.RegionModule;
+import org.jclouds.openstack.keystone.catalog.config.ServiceCatalogModule;
+import org.jclouds.openstack.keystone.catalog.config.ServiceCatalogModule.RegionModule;
 import org.jclouds.openstack.swift.v1.SwiftApiMetadata;
 import org.jclouds.openstack.swift.v1.blobstore.RegionScopedBlobStoreContext;
 import org.jclouds.openstack.swift.v1.blobstore.config.SignUsingTemporaryUrls;
@@ -32,7 +34,6 @@ import org.jclouds.openstack.swift.v1.blobstore.config.SwiftBlobStoreContextModu
 import org.jclouds.openstack.swift.v1.config.SwiftTypeAdapters;
 import org.jclouds.openstack.v2_0.ServiceType;
 import org.jclouds.rackspace.cloudfiles.v1.config.CloudFilesHttpApiModule;
-import org.jclouds.rackspace.cloudidentity.v2_0.config.CloudIdentityAuthenticationApiModule;
 import org.jclouds.rackspace.cloudidentity.v2_0.config.CloudIdentityAuthenticationModule;
 import org.jclouds.rackspace.cloudidentity.v2_0.config.CloudIdentityCredentialTypes;
 import org.jclouds.rest.internal.BaseHttpApiMetadata;
@@ -63,6 +64,7 @@ public class CloudFilesApiMetadata extends BaseHttpApiMetadata<CloudFilesApi> {
    public static Properties defaultProperties() {
       Properties properties = SwiftApiMetadata.defaultProperties();
       properties.setProperty(CREDENTIAL_TYPE, CloudIdentityCredentialTypes.API_KEY_CREDENTIALS);
+      properties.setProperty(KEYSTONE_VERSION, "2");
       properties.setProperty(SERVICE_TYPE, ServiceType.OBJECT_STORE);
       return properties;
    }
@@ -81,8 +83,8 @@ public class CloudFilesApiMetadata extends BaseHttpApiMetadata<CloudFilesApi> {
          .defaultProperties(CloudFilesApiMetadata.defaultProperties())
          .view(typeToken(RegionScopedBlobStoreContext.class))
          .defaultModules(ImmutableSet.<Class<? extends Module>>builder()
-                                     .add(CloudIdentityAuthenticationApiModule.class)
                                      .add(CloudIdentityAuthenticationModule.class)
+                                     .add(ServiceCatalogModule.class)
                                      .add(RegionModule.class)
                                      .add(SwiftTypeAdapters.class)
                                      .add(CloudFilesHttpApiModule.class)

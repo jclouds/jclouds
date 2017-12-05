@@ -19,14 +19,16 @@ package org.jclouds.rackspace.cloudfiles.us;
 import static org.jclouds.location.reference.LocationConstants.ISO3166_CODES;
 import static org.jclouds.location.reference.LocationConstants.PROPERTY_REGION;
 import static org.jclouds.location.reference.LocationConstants.PROPERTY_REGIONS;
-import static org.jclouds.openstack.keystone.v2_0.config.KeystoneProperties.CREDENTIAL_TYPE;
-import static org.jclouds.openstack.keystone.v2_0.config.KeystoneProperties.SERVICE_TYPE;
+import static org.jclouds.openstack.keystone.config.KeystoneProperties.CREDENTIAL_TYPE;
+import static org.jclouds.openstack.keystone.config.KeystoneProperties.KEYSTONE_VERSION;
+import static org.jclouds.openstack.keystone.config.KeystoneProperties.SERVICE_TYPE;
 import static org.jclouds.reflect.Reflection2.typeToken;
 
 import java.net.URI;
 import java.util.Properties;
 
-import org.jclouds.openstack.keystone.v2_0.config.KeystoneAuthenticationModule.RegionModule;
+import org.jclouds.openstack.keystone.catalog.config.ServiceCatalogModule;
+import org.jclouds.openstack.keystone.catalog.config.ServiceCatalogModule.RegionModule;
 import org.jclouds.openstack.swift.v1.blobstore.RegionScopedBlobStoreContext;
 import org.jclouds.openstack.swift.v1.blobstore.config.SignUsingTemporaryUrls;
 import org.jclouds.openstack.swift.v1.blobstore.config.SwiftBlobStoreContextModule;
@@ -36,7 +38,6 @@ import org.jclouds.providers.ProviderMetadata;
 import org.jclouds.providers.internal.BaseProviderMetadata;
 import org.jclouds.rackspace.cloudfiles.v1.CloudFilesApiMetadata;
 import org.jclouds.rackspace.cloudfiles.v1.config.CloudFilesHttpApiModule;
-import org.jclouds.rackspace.cloudidentity.v2_0.config.CloudIdentityAuthenticationApiModule;
 import org.jclouds.rackspace.cloudidentity.v2_0.config.CloudIdentityAuthenticationModule;
 import org.jclouds.rackspace.cloudidentity.v2_0.config.CloudIdentityCredentialTypes;
 
@@ -82,7 +83,8 @@ public class CloudFilesUSProviderMetadata extends BaseProviderMetadata {
    public static Properties defaultProperties() {
       Properties properties = new Properties();
       properties.setProperty(CREDENTIAL_TYPE, CloudIdentityCredentialTypes.API_KEY_CREDENTIALS);
-      properties.setProperty(SERVICE_TYPE, ServiceType.OBJECT_STORE); 
+      properties.setProperty(SERVICE_TYPE, ServiceType.OBJECT_STORE);
+      properties.setProperty(KEYSTONE_VERSION, "2");
 
       properties.setProperty(PROPERTY_REGIONS, "ORD,DFW,IAD,SYD,HKG");
       properties.setProperty(PROPERTY_REGION + ".ORD." + ISO3166_CODES, "US-IL");
@@ -111,8 +113,8 @@ public class CloudFilesUSProviderMetadata extends BaseProviderMetadata {
                .version("1.0")
                .view(typeToken(RegionScopedBlobStoreContext.class))
                .defaultModules(ImmutableSet.<Class<? extends Module>>builder()
-                     .add(CloudIdentityAuthenticationApiModule.class)
                      .add(CloudIdentityAuthenticationModule.class)
+                     .add(ServiceCatalogModule.class)
                      .add(RegionModule.class)
                      .add(SwiftTypeAdapters.class)
                      .add(CloudFilesHttpApiModule.class)

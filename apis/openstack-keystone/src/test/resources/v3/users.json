@@ -1,0 +1,132 @@
+{
+  "users": [
+    {
+      "password_expires_at": null,
+      "name": "UserApiLiveTest",
+      "links": {
+        "self": "http://localhost/identity/v3/users/0bedc61110fd4e94a251260a47f18f29"
+      },
+      "domain_id": "default",
+      "enabled": true,
+      "id": "0bedc61110fd4e94a251260a47f18f29",
+      "options": {}
+    },
+    {
+      "password_expires_at": null,
+      "name": "glance-swift",
+      "links": {
+        "self": "http://localhost/identity/v3/users/1194933d3f1147a3b0824848bb7ec5e2"
+      },
+      "domain_id": "default",
+      "enabled": true,
+      "id": "1194933d3f1147a3b0824848bb7ec5e2",
+      "options": {}
+    },
+    {
+      "password_expires_at": null,
+      "name": "nova",
+      "links": {
+        "self": "http://localhost/identity/v3/users/290999fc41fb48e397feef465d014fb6"
+      },
+      "domain_id": "default",
+      "enabled": true,
+      "id": "290999fc41fb48e397feef465d014fb6",
+      "options": {}
+    },
+    {
+      "password_expires_at": null,
+      "name": "placement",
+      "links": {
+        "self": "http://localhost/identity/v3/users/34e6ac0dd9bb4601bac4971785abd7f5"
+      },
+      "domain_id": "default",
+      "enabled": true,
+      "id": "34e6ac0dd9bb4601bac4971785abd7f5",
+      "options": {}
+    },
+    {
+      "name": "jclouds",
+      "links": {
+        "self": "http://localhost/identity/v3/users/6c3b325a28264f00865b38442429fd77"
+      },
+      "domain_id": "default",
+      "enabled": true,
+      "options": {},
+      "default_project_id": "43de288ea0ce4d2b8b811055b10f156b",
+      "id": "6c3b325a28264f00865b38442429fd77",
+      "password_expires_at": null
+    },
+    {
+      "password_expires_at": null,
+      "name": "cinder",
+      "links": {
+        "self": "http://localhost/identity/v3/users/6e705bff20794de5955acf0936f02b3f"
+      },
+      "domain_id": "default",
+      "enabled": true,
+      "id": "6e705bff20794de5955acf0936f02b3f",
+      "options": {}
+    },
+    {
+      "name": "demo",
+      "links": {
+        "self": "http://localhost/identity/v3/users/84910c7070144530a6b9627fe0e1743f"
+      },
+      "domain_id": "default",
+      "enabled": true,
+      "options": {},
+      "id": "84910c7070144530a6b9627fe0e1743f",
+      "email": "demo@example.com",
+      "password_expires_at": null
+    },
+    {
+      "password_expires_at": null,
+      "name": "swift",
+      "links": {
+        "self": "http://localhost/identity/v3/users/87306cb2f0954ca8919f0fbaf29a780f"
+      },
+      "domain_id": "default",
+      "enabled": true,
+      "id": "87306cb2f0954ca8919f0fbaf29a780f",
+      "options": {}
+    },
+    {
+      "password_expires_at": null,
+      "name": "glance",
+      "links": {
+        "self": "http://localhost/identity/v3/users/94c9f0f5e056489ebfef25870e8944fe"
+      },
+      "domain_id": "default",
+      "enabled": true,
+      "id": "94c9f0f5e056489ebfef25870e8944fe",
+      "options": {}
+    },
+    {
+      "password_expires_at": null,
+      "name": "admin",
+      "links": {
+        "self": "http://localhost/identity/v3/users/ab7bd6c2dd394fce8318e7562115d3f8"
+      },
+      "domain_id": "default",
+      "enabled": true,
+      "id": "ab7bd6c2dd394fce8318e7562115d3f8",
+      "options": {}
+    },
+    {
+      "password_expires_at": null,
+      "name": "neutron",
+      "links": {
+        "self": "http://localhost/identity/v3/users/d3607e141e334823978eec2e1ccca8de"
+      },
+      "domain_id": "default",
+      "enabled": true,
+      "id": "d3607e141e334823978eec2e1ccca8de",
+      "options": {}
+    }
+  ],
+  "links": {
+    "self": "http://localhost/identity/v3/users",
+    "previous": null,
+    "next": null
+  }
+}

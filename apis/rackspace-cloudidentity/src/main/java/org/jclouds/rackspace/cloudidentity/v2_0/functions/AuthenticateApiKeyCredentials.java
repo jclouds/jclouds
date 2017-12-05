@@ -19,14 +19,13 @@ package org.jclouds.rackspace.cloudidentity.v2_0.functions;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-import org.jclouds.openstack.keystone.v2_0.config.CredentialType;
-import org.jclouds.openstack.keystone.v2_0.domain.Access;
-import org.jclouds.openstack.keystone.v2_0.functions.internal.BaseAuthenticator;
+import org.jclouds.openstack.keystone.auth.config.CredentialType;
+import org.jclouds.openstack.keystone.auth.domain.AuthInfo;
+import org.jclouds.openstack.keystone.auth.domain.TenantOrDomainAndCredentials;
+import org.jclouds.openstack.keystone.auth.functions.BaseAuthenticator;
 import org.jclouds.rackspace.cloudidentity.v2_0.CloudIdentityAuthenticationApi;
 import org.jclouds.rackspace.cloudidentity.v2_0.config.CloudIdentityCredentialTypes;
 import org.jclouds.rackspace.cloudidentity.v2_0.domain.ApiKeyCredentials;
-
-import com.google.common.base.Optional;
 
 /**
  * 
@@ -39,18 +38,8 @@ public class AuthenticateApiKeyCredentials extends BaseAuthenticator<ApiKeyCrede
    protected final CloudIdentityAuthenticationApi api;
 
    @Inject
-   public AuthenticateApiKeyCredentials(CloudIdentityAuthenticationApi api) {
+   AuthenticateApiKeyCredentials(CloudIdentityAuthenticationApi api) {
       this.api = api;
-   }
-
-   @Override
-   protected Access authenticateWithTenantName(Optional<String> tenantId, ApiKeyCredentials apiKeyCredentials) {
-      return api.authenticateWithTenantNameAndCredentials(tenantId.orNull(), apiKeyCredentials);
-   }
-
-   @Override
-   protected Access authenticateWithTenantId(Optional<String> tenantId, ApiKeyCredentials apiKeyCredentials) {
-      return api.authenticateWithTenantIdAndCredentials(tenantId.orNull(), apiKeyCredentials);
    }
 
    @Override
@@ -61,5 +50,10 @@ public class AuthenticateApiKeyCredentials extends BaseAuthenticator<ApiKeyCrede
    @Override
    public String toString() {
       return "authenticateApiKeyCredentials()";
+   }
+
+   @Override
+   public AuthInfo authenticate(TenantOrDomainAndCredentials<ApiKeyCredentials> credentials) {
+      return api.authenticateApiKey(credentials);
    }
 }

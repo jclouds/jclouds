@@ -27,7 +27,7 @@ import javax.ws.rs.core.MediaType;
 
 import org.jclouds.Fallbacks.EmptyFluentIterableOnNotFoundOr404;
 import org.jclouds.Fallbacks.FalseOnNotFoundOr404;
-import org.jclouds.openstack.keystone.v2_0.filters.AuthenticateRequest;
+import org.jclouds.openstack.keystone.auth.filters.AuthenticateRequest;
 import org.jclouds.openstack.trove.v1.binders.BindCreateDatabaseToJson;
 import org.jclouds.openstack.trove.v1.functions.ParseDatabaseListForUser;
 import org.jclouds.rest.annotations.Fallback;

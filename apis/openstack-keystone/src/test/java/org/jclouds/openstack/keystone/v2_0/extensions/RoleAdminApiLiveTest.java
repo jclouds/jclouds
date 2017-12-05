@@ -59,7 +59,7 @@ public class RoleAdminApiLiveTest extends BaseKeystoneApiLiveTest {
    protected void tearDown() {
       if (testRole != null) {
          final String roleId = testRole.getId();
-         boolean success = roleAdminOption.get().delete(roleId);
+         assertTrue(roleAdminOption.get().delete(roleId));
          assertTrue(retry(new Predicate<RoleAdminApi>() {
             public boolean apply(RoleAdminApi roleApi) {
                return roleApi.get(roleId) == null;

@@ -18,7 +18,7 @@ package org.jclouds.openstack.swift.v1.blobstore;
 
 import static org.assertj.core.util.Files.delete;
 import static org.jclouds.blobstore.options.PutOptions.Builder.multipart;
-import static org.jclouds.openstack.keystone.v2_0.config.KeystoneProperties.CREDENTIAL_TYPE;
+import static org.jclouds.openstack.keystone.config.KeystoneProperties.CREDENTIAL_TYPE;
 import static org.testng.Assert.assertEquals;
 
 import java.io.File;

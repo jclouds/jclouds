@@ -28,7 +28,7 @@ import javax.ws.rs.HeaderParam;
 import javax.ws.rs.POST;
 
 import org.jclouds.Fallbacks.FalseOnNotFoundOr404;
-import org.jclouds.openstack.keystone.v2_0.filters.AuthenticateRequest;
+import org.jclouds.openstack.keystone.auth.filters.AuthenticateRequest;
 import org.jclouds.openstack.swift.v1.binders.BindMetadataToHeaders.BindAccountMetadataToHeaders;
 import org.jclouds.openstack.swift.v1.binders.BindMetadataToHeaders.BindRemoveAccountMetadataToHeaders;
 import org.jclouds.openstack.swift.v1.domain.Account;

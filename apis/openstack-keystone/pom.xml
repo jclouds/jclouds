@@ -32,13 +32,18 @@
   <packaging>bundle</packaging>
 
   <properties>
-    <!-- keystone endpoint -->
+    <!-- keystone version 2 -->
     <test.openstack-keystone.endpoint>http://localhost:5000/v${jclouds.api-version}/</test.openstack-keystone.endpoint>
-    <!-- keystone version -->
     <test.openstack-keystone.api-version>2.0</test.openstack-keystone.api-version>
     <test.openstack-keystone.build-version />
-    <test.openstack-keystone.identity>FIXME_IDENTITY</test.openstack-keystone.identity>
-    <test.openstack-keystone.credential>FIXME_CREDENTIALS</test.openstack-keystone.credential>
+    <test.openstack-keystone.identity>FIXME_TENANT:FIXME_USER</test.openstack-keystone.identity>
+    <test.openstack-keystone.credential>FIXME_PASSWORD</test.openstack-keystone.credential>
+    <!-- keystone version 3 -->
+    <test.openstack-keystone-3.endpoint>http://localhost/identity/v3</test.openstack-keystone-3.endpoint>
+    <test.openstack-keystone-3.api-version>3</test.openstack-keystone-3.api-version>
+    <test.openstack-keystone-3.build-version />
+    <test.openstack-keystone-3.identity>FIXME_DOMAIN:FIXME_USER</test.openstack-keystone-3.identity>
+    <test.openstack-keystone-3.credential>FIXME_PASSWORD</test.openstack-keystone-3.credential>
     <test.jclouds.keystone.credential-type>passwordCredentials</test.jclouds.keystone.credential-type>
 
     <jclouds.osgi.export>org.jclouds.openstack*;version="${project.version}"</jclouds.osgi.export>
@@ -69,6 +74,13 @@
       <version>${project.version}</version>
       <scope>test</scope>
     </dependency>
+    <!-- A driver that supports the PATCH verb is needed for tests -->
+    <dependency>
+      <groupId>org.apache.jclouds.driver</groupId>
+      <artifactId>jclouds-okhttp</artifactId>
+      <version>${project.version}</version>
+      <scope>test</scope>
+    </dependency>
     <dependency>
       <groupId>ch.qos.logback</groupId>
       <artifactId>logback-classic</artifactId>
@@ -84,7 +96,28 @@
       <artifactId>auto-service</artifactId>
       <optional>true</optional>
     </dependency>
+    <dependency>
+      <groupId>com.google.auto.value</groupId>
+      <artifactId>auto-value</artifactId>
+      <scope>provided</scope>
+    </dependency>
   </dependencies>
+  
+  <build>
+    <plugins>
+    <!-- Disabling error-prone compiler due to: https://github.com/google/error-prone/issues/711
+         The fix is only available in error-prone versions that do not support Java 7 -->
+      <plugin>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <inherited>false</inherited>
+        <configuration>
+          <source>${maven.compile.source}</source>
+          <target>${maven.compile.target}</target>
+          <encoding>${project.build.sourceEncoding}</encoding>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
 
   <profiles>
     <profile>
@@ -102,12 +135,56 @@
                   <goal>test</goal>
                 </goals>
                 <configuration>
+                  <excludes>
+                    <exclude>none</exclude>
+                  </excludes>
+                  <includes>
+                    <include>**/keystone/v2_0/**/*IntegrationTest.java</include>
+                    <include>**/keystone/v2_0/**/*LiveTest.java</include>
+                  </includes>
                   <systemPropertyVariables>
                     <test.openstack-keystone.endpoint>${test.openstack-keystone.endpoint}</test.openstack-keystone.endpoint>
                     <test.openstack-keystone.api-version>${test.openstack-keystone.api-version}</test.openstack-keystone.api-version>
                     <test.openstack-keystone.build-version>${test.openstack-keystone.build-version}</test.openstack-keystone.build-version>
                     <test.openstack-keystone.identity>${test.openstack-keystone.identity}</test.openstack-keystone.identity>
                     <test.openstack-keystone.credential>${test.openstack-keystone.credential}</test.openstack-keystone.credential>
+                    <test.jclouds.keystone.credential-type>${test.jclouds.keystone.credential-type}</test.jclouds.keystone.credential-type>
+                  </systemPropertyVariables>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+    <profile>
+      <id>live-v3</id>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-surefire-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>integration</id>
+                <phase>integration-test</phase>
+                <goals>
+                  <goal>test</goal>
+                </goals>
+                <configuration>
+                  <excludes>
+                    <exclude>none</exclude>
+                  </excludes>
+                  <includes>
+                    <include>**/keystone/v3/**/*IntegrationTest.java</include>
+                    <include>**/keystone/v3/**/*LiveTest.java</include>
+                  </includes>
+                  <systemPropertyVariables>
+                    <test.openstack-keystone-3.endpoint>${test.openstack-keystone.endpoint}</test.openstack-keystone-3.endpoint>
+                    <test.openstack-keystone-3.api-version>${test.openstack-keystone.api-version}</test.openstack-keystone-3.api-version>
+                    <test.openstack-keystone-3.build-version>${test.openstack-keystone.build-version}</test.openstack-keystone-3.build-version>
+                    <test.openstack-keystone-3.identity>${test.openstack-keystone-3.identity}</test.openstack-keystone-3.identity>
+                    <test.openstack-keystone-3.credential>${test.openstack-keystone-3.credential}</test.openstack-keystone-3.credential>
                     <test.jclouds.keystone.credential-type>${test.jclouds.keystone.credential-type}</test.jclouds.keystone.credential-type>
                   </systemPropertyVariables>
                 </configuration>

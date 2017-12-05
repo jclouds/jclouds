@@ -20,7 +20,7 @@ import java.util.Properties;
 
 import org.jclouds.apis.BaseApiLiveTest;
 import org.jclouds.openstack.cinder.v1.CinderApi;
-import org.jclouds.openstack.keystone.v2_0.config.KeystoneProperties;
+import org.jclouds.openstack.keystone.config.KeystoneProperties;
 
 /**
  * Tests behavior of CinderApi

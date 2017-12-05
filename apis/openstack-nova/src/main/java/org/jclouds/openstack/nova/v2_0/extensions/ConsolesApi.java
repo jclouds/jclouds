@@ -25,7 +25,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
 import org.jclouds.fallbacks.MapHttp4xxCodesToExceptions;
-import org.jclouds.openstack.keystone.v2_0.filters.AuthenticateRequest;
+import org.jclouds.openstack.keystone.auth.filters.AuthenticateRequest;
 import org.jclouds.openstack.nova.v2_0.binders.BindConsoleToJsonPayload;
 import org.jclouds.openstack.nova.v2_0.domain.Console;
 import org.jclouds.openstack.v2_0.ServiceType;

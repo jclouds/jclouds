@@ -21,7 +21,7 @@ import static java.util.logging.Logger.getAnonymousLogger;
 import java.util.Properties;
 
 import org.jclouds.compute.internal.BaseComputeServiceLiveTest;
-import org.jclouds.openstack.keystone.v2_0.config.KeystoneProperties;
+import org.jclouds.openstack.keystone.config.KeystoneProperties;
 import org.jclouds.openstack.nova.v2_0.config.NovaProperties;
 import org.jclouds.rest.AuthorizationException;
 import org.jclouds.sshj.config.SshjSshClientModule;

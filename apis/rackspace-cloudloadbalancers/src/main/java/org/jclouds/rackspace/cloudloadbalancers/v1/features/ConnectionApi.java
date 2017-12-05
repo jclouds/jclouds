@@ -29,7 +29,7 @@ import org.jclouds.Fallbacks.FalseOnNotFoundOr404;
 import org.jclouds.Fallbacks.FalseOnNotFoundOr422;
 import org.jclouds.Fallbacks.NullOnNotFoundOr404;
 import org.jclouds.Fallbacks.VoidOnNotFoundOr404;
-import org.jclouds.openstack.keystone.v2_0.filters.AuthenticateRequest;
+import org.jclouds.openstack.keystone.auth.filters.AuthenticateRequest;
 import org.jclouds.rackspace.cloudloadbalancers.v1.domain.ConnectionThrottle;
 import org.jclouds.rackspace.cloudloadbalancers.v1.functions.ParseNestedBoolean;
 import org.jclouds.rest.annotations.Fallback;

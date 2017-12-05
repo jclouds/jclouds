@@ -16,7 +16,7 @@
  */
 package org.jclouds.openstack.keystone.v2_0.internal;
 
-import static org.jclouds.openstack.keystone.v2_0.config.KeystoneProperties.SERVICE_TYPE;
+import static org.jclouds.openstack.keystone.config.KeystoneProperties.SERVICE_TYPE;
 
 import java.util.Properties;
 

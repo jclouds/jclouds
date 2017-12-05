@@ -72,7 +72,7 @@ public class FlavorApiExpectTest extends BaseTroveApiExpectTest {
       HttpResponse.builder().statusCode(200).payload(payloadFromResource("/flavor_list.json")).build() );
       FlavorApi api = troveApi.getFlavorApi("RegionOne");
 
-      Set<? extends Flavor> flavors = api.list(troveApi.getCurrentTenantId().get().getId() ).toSet();
+      Set<? extends Flavor> flavors = api.list(troveApi.getCurrentTenantId().get()).toSet();
       Flavor flavor = flavors.iterator().next();
       assertEquals(flavor.getName(), "512MB Instance");
       assertEquals(flavor.getId(), 1);

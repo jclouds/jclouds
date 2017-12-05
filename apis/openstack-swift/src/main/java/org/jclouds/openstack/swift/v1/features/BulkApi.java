@@ -32,7 +32,7 @@ import javax.ws.rs.QueryParam;
 import org.jclouds.http.HttpRequest;
 import org.jclouds.io.Payload;
 import org.jclouds.io.Payloads;
-import org.jclouds.openstack.keystone.v2_0.filters.AuthenticateRequest;
+import org.jclouds.openstack.keystone.auth.filters.AuthenticateRequest;
 import org.jclouds.openstack.swift.v1.binders.SetPayload;
 import org.jclouds.openstack.swift.v1.domain.BulkDeleteResponse;
 import org.jclouds.openstack.swift.v1.domain.ExtractArchiveResponse;

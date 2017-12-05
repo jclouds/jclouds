@@ -22,13 +22,12 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.core.MediaType;
 
-import org.jclouds.javax.annotation.Nullable;
-import org.jclouds.openstack.keystone.v2_0.AuthenticationApi;
+import org.jclouds.openstack.keystone.auth.AuthenticationApi;
+import org.jclouds.openstack.keystone.auth.domain.TenantOrDomainAndCredentials;
 import org.jclouds.openstack.keystone.v2_0.binders.BindAuthToJsonPayload;
 import org.jclouds.openstack.keystone.v2_0.domain.Access;
 import org.jclouds.rackspace.cloudidentity.v2_0.domain.ApiKeyCredentials;
 import org.jclouds.rest.annotations.MapBinder;
-import org.jclouds.rest.annotations.PayloadParam;
 import org.jclouds.rest.annotations.SelectJson;
 
 /**
@@ -47,18 +46,6 @@ public interface CloudIdentityAuthenticationApi extends AuthenticationApi {
    @POST
    @SelectJson("access")
    @MapBinder(BindAuthToJsonPayload.class)
-   Access authenticateWithTenantNameAndCredentials(@Nullable @PayloadParam("tenantName") String tenantName,
-         ApiKeyCredentials apiKeyCredentials);
+   Access authenticateApiKey(TenantOrDomainAndCredentials<ApiKeyCredentials> credentials);
 
-   /**
-    * Authenticate to generate a token.
-    *
-    * @return access with token
-    */
-   @Named("authenticate")
-   @POST
-   @SelectJson("access")
-   @MapBinder(BindAuthToJsonPayload.class)
-   Access authenticateWithTenantIdAndCredentials(@Nullable @PayloadParam("tenantId") String tenantId,
-         ApiKeyCredentials apiKeyCredentials);
 }

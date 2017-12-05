@@ -26,8 +26,10 @@ import org.jclouds.http.annotation.Redirection;
 import org.jclouds.http.annotation.ServerError;
 import org.jclouds.json.config.GsonModule.DateAdapter;
 import org.jclouds.json.config.GsonModule.Iso8601DateAdapter;
+import org.jclouds.openstack.keystone.auth.domain.AuthInfo;
 import org.jclouds.openstack.keystone.v2_0.domain.Access;
 import org.jclouds.openstack.keystone.v2_0.domain.Tenant;
+import org.jclouds.openstack.keystone.v3.domain.Token;
 import org.jclouds.openstack.trove.v1.TroveApi;
 import org.jclouds.openstack.trove.v1.handlers.TroveErrorHandler;
 import org.jclouds.rest.ConfiguresHttpApi;
@@ -67,14 +69,25 @@ public class TroveHttpApiModule extends HttpApiModule<TroveApi> {
    }
    
    @Provides
-   final Supplier<Optional<Tenant>> supplyTenant(Supplier<Access> access) {
+   final Supplier<Optional<String>> supplyTenant(Supplier<AuthInfo> access) {
       return Suppliers.compose(GetTenant.INSTANCE, access);
    }
    
-   private static enum GetTenant implements Function<Access, Optional<Tenant>> {
+   private static enum GetTenant implements Function<AuthInfo, Optional<String>> {
       INSTANCE;
-      public Optional<Tenant> apply(Access in){
-         return in.getToken().getTenant();
+      public Optional<String> apply(AuthInfo in) {
+         if (in instanceof Access) {
+            return Access.class.cast(in).getToken().getTenant().transform(new Function<Tenant, String>() {
+               @Override
+               public String apply(Tenant input) {
+                  return input.getId();
+               }
+            });
+         } else if (in instanceof Token) {
+            // FIXME: What if user authenticated scoped to another project?
+            return Optional.of(Token.class.cast(in).user().defaultProjectId());
+         }
+         return Optional.absent();
       }
    }
 }

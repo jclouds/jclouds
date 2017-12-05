@@ -59,7 +59,7 @@ public class ServiceAdminApiLiveTest extends BaseKeystoneApiLiveTest {
    protected void tearDown() {
       if (testService != null) {
          final String serviceId = testService.getId();
-         boolean success = serviceAdminOption.get().delete(serviceId);
+         assertTrue(serviceAdminOption.get().delete(serviceId));
          assertTrue(retry(new Predicate<ServiceAdminApi>() {
             public boolean apply(ServiceAdminApi serviceApi) {
                return serviceApi.get(serviceId) == null;

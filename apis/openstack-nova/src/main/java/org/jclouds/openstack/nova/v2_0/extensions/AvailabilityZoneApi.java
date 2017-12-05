@@ -23,7 +23,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.core.MediaType;
 
 import org.jclouds.Fallbacks.EmptyFluentIterableOnNotFoundOr404;
-import org.jclouds.openstack.keystone.v2_0.filters.AuthenticateRequest;
+import org.jclouds.openstack.keystone.auth.filters.AuthenticateRequest;
 import org.jclouds.openstack.nova.v2_0.domain.regionscoped.AvailabilityZone;
 import org.jclouds.openstack.nova.v2_0.domain.regionscoped.AvailabilityZoneDetails;
 import org.jclouds.openstack.v2_0.ServiceType;

@@ -20,7 +20,7 @@ import java.util.Properties;
 import java.util.logging.Logger;
 
 import org.jclouds.apis.BaseApiLiveTest;
-import org.jclouds.openstack.keystone.v2_0.config.KeystoneProperties;
+import org.jclouds.openstack.keystone.config.KeystoneProperties;
 import org.jclouds.rackspace.cloudloadbalancers.v1.CloudLoadBalancersApi;
 import org.testng.annotations.BeforeGroups;
 

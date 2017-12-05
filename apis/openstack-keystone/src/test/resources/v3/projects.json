@@ -1,0 +1,74 @@
+{
+  "links": {
+    "self": "http://localhost/identity/v3/projects",
+    "previous": null,
+    "next": null
+  },
+  "projects": [
+    {
+      "is_domain": false,
+      "description": "Updated",
+      "links": {
+        "self": "http://localhost/identity/v3/projects/2f9b30f706bc45d7923e055567be2e98"
+      },
+      "tags": [],
+      "enabled": true,
+      "id": "2f9b30f706bc45d7923e055567be2e98",
+      "parent_id": "default",
+      "domain_id": "default",
+      "name": "ProjectApiLiveTest"
+    },
+    {
+      "is_domain": false,
+      "description": "",
+      "links": {
+        "self": "http://localhost/identity/v3/projects/2fa489f9b84541b8a614c8c9df0d7596"
+      },
+      "tags": [],
+      "enabled": true,
+      "id": "2fa489f9b84541b8a614c8c9df0d7596",
+      "parent_id": "default",
+      "domain_id": "default",
+      "name": "service"
+    },
+    {
+      "is_domain": false,
+      "description": "",
+      "links": {
+        "self": "http://localhost/identity/v3/projects/43de288ea0ce4d2b8b811055b10f156b"
+      },
+      "tags": [],
+      "enabled": true,
+      "id": "43de288ea0ce4d2b8b811055b10f156b",
+      "parent_id": "default",
+      "domain_id": "default",
+      "name": "jclouds"
+    },
+    {
+      "is_domain": false,
+      "description": "Bootstrap project for initializing the cloud.",
+      "links": {
+        "self": "http://localhost/identity/v3/projects/90131053e7384f8a9e970544e0845913"
+      },
+      "tags": [],
+      "enabled": true,
+      "id": "90131053e7384f8a9e970544e0845913",
+      "parent_id": "default",
+      "domain_id": "default",
+      "name": "admin"
+    },
+    {
+      "is_domain": false,
+      "description": "",
+      "links": {
+        "self": "http://localhost/identity/v3/projects/d91b807dc87d477381500e8c920b10c7"
+      },
+      "tags": [],
+      "enabled": true,
+      "id": "d91b807dc87d477381500e8c920b10c7",
+      "parent_id": "default",
+      "domain_id": "default",
+      "name": "demo"
+    }
+  ]
+}

@@ -17,8 +17,9 @@
 package org.jclouds.openstack.nova.v2_0;
 
 import static org.jclouds.Constants.PROPERTY_SESSION_INTERVAL;
-import static org.jclouds.openstack.keystone.v2_0.config.KeystoneProperties.CREDENTIAL_TYPE;
-import static org.jclouds.openstack.keystone.v2_0.config.KeystoneProperties.SERVICE_TYPE;
+import static org.jclouds.openstack.keystone.config.KeystoneProperties.CREDENTIAL_TYPE;
+import static org.jclouds.openstack.keystone.config.KeystoneProperties.KEYSTONE_VERSION;
+import static org.jclouds.openstack.keystone.config.KeystoneProperties.SERVICE_TYPE;
 import static org.jclouds.openstack.nova.v2_0.config.NovaProperties.AUTO_ALLOCATE_FLOATING_IPS;
 import static org.jclouds.openstack.nova.v2_0.config.NovaProperties.AUTO_GENERATE_KEYPAIRS;
 import static org.jclouds.openstack.nova.v2_0.config.NovaProperties.TIMEOUT_SECURITYGROUP_PRESENT;
@@ -29,10 +30,10 @@ import java.util.Properties;
 
 import org.jclouds.apis.ApiMetadata;
 import org.jclouds.compute.ComputeServiceContext;
-import org.jclouds.openstack.keystone.v2_0.config.AuthenticationApiModule;
-import org.jclouds.openstack.keystone.v2_0.config.CredentialTypes;
-import org.jclouds.openstack.keystone.v2_0.config.KeystoneAuthenticationModule;
-import org.jclouds.openstack.keystone.v2_0.config.KeystoneAuthenticationModule.RegionModule;
+import org.jclouds.openstack.keystone.auth.config.AuthenticationModule;
+import org.jclouds.openstack.keystone.auth.config.CredentialTypes;
+import org.jclouds.openstack.keystone.catalog.config.ServiceCatalogModule;
+import org.jclouds.openstack.keystone.catalog.config.ServiceCatalogModule.RegionModule;
 import org.jclouds.openstack.nova.v2_0.compute.config.NovaComputeServiceContextModule;
 import org.jclouds.openstack.nova.v2_0.config.NovaHttpApiModule;
 import org.jclouds.openstack.nova.v2_0.config.NovaParserModule;
@@ -69,6 +70,7 @@ public class NovaApiMetadata extends BaseHttpApiMetadata<NovaApi>  {
       properties.setProperty("jclouds.ssh.retry-auth", "true");
       properties.setProperty(SERVICE_TYPE, ServiceType.COMPUTE);
       properties.setProperty(CREDENTIAL_TYPE, CredentialTypes.PASSWORD_CREDENTIALS);
+      properties.setProperty(KEYSTONE_VERSION, "2");
       properties.setProperty(AUTO_ALLOCATE_FLOATING_IPS, "false");
       properties.setProperty(AUTO_GENERATE_KEYPAIRS, "false");
       properties.setProperty(TIMEOUT_SECURITYGROUP_PRESENT, "500");
@@ -93,8 +95,8 @@ public class NovaApiMetadata extends BaseHttpApiMetadata<NovaApi>  {
          .defaultProperties(NovaApiMetadata.defaultProperties())
          .view(typeToken(ComputeServiceContext.class))
          .defaultModules(ImmutableSet.<Class<? extends Module>>builder()
-                                     .add(AuthenticationApiModule.class)
-                                     .add(KeystoneAuthenticationModule.class)
+                                     .add(AuthenticationModule.class)
+                                     .add(ServiceCatalogModule.class)
                                      .add(RegionModule.class)
                                      .add(NovaParserModule.class)
                                      .add(NovaHttpApiModule.class)

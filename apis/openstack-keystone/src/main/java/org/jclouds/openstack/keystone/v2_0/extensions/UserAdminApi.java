@@ -27,8 +27,8 @@ import javax.ws.rs.core.MediaType;
 
 import org.jclouds.Fallbacks.FalseOnNotFoundOr404;
 import org.jclouds.javax.annotation.Nullable;
+import org.jclouds.openstack.keystone.auth.filters.AuthenticateRequest;
 import org.jclouds.openstack.keystone.v2_0.domain.User;
-import org.jclouds.openstack.keystone.v2_0.filters.AuthenticateRequest;
 import org.jclouds.openstack.keystone.v2_0.options.CreateUserOptions;
 import org.jclouds.openstack.keystone.v2_0.options.UpdateUserOptions;
 import org.jclouds.openstack.v2_0.ServiceType;

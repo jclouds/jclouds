@@ -18,11 +18,11 @@ package org.jclouds.openstack.swift.v1.config;
 
 import static org.jclouds.http.HttpUtils.releasePayload;
 import static org.jclouds.http.Uris.uriBuilder;
-import static org.jclouds.openstack.v2_0.ServiceType.OBJECT_STORE;
-import static org.jclouds.openstack.v2_0.reference.AuthHeaders.AUTH_TOKEN;
-import static org.jclouds.rest.config.BinderUtils.bindHttpApi;
+import static org.jclouds.openstack.keystone.auth.AuthHeaders.AUTH_TOKEN;
 import static org.jclouds.openstack.swift.v1.reference.TempAuthHeaders.STORAGE_URL;
 import static org.jclouds.openstack.swift.v1.reference.TempAuthHeaders.TEMP_AUTH_HEADER_USER;
+import static org.jclouds.openstack.v2_0.ServiceType.OBJECT_STORE;
+import static org.jclouds.rest.config.BinderUtils.bindHttpApi;
 
 import java.io.Closeable;
 import java.net.URI;
@@ -38,8 +38,8 @@ import org.jclouds.ContextBuilder;
 import org.jclouds.domain.Credentials;
 import org.jclouds.http.HttpRequest;
 import org.jclouds.http.HttpResponse;
-import org.jclouds.openstack.keystone.v2_0.AuthenticationApi;
-import org.jclouds.openstack.keystone.v2_0.config.KeystoneAuthenticationModule;
+import org.jclouds.openstack.keystone.auth.config.AuthenticationModule;
+import org.jclouds.openstack.keystone.auth.domain.AuthInfo;
 import org.jclouds.openstack.keystone.v2_0.domain.Access;
 import org.jclouds.openstack.keystone.v2_0.domain.Endpoint;
 import org.jclouds.openstack.keystone.v2_0.domain.Service;
@@ -59,33 +59,34 @@ import com.google.inject.Injector;
 import com.google.inject.name.Named;
 
 /**
- * When {@link org.jclouds.openstack.keystone.v2_0.config.KeystoneProperties#CREDENTIAL_TYPE} is set to {@code
+ * When {@link org.jclouds.openstack.keystone.config.KeystoneProperties#CREDENTIAL_TYPE} is set to {@code
  * tempAuthCredentials}, do not use Keystone. Instead, bridge TempAuth to Keystone by faking a service catalog out of
  * the storage url. The {@link ContextBuilder#endpoint(String) endpoint} must be set to the TempAuth url, usually ending
  * in {@code auth/v1.0/}.
  */
-public final class SwiftAuthenticationModule extends KeystoneAuthenticationModule {
+public final class SwiftAuthenticationModule extends AuthenticationModule {
    @Override
    protected void configure() {
       super.configure();
-      bindHttpApi(binder(), AuthenticationApi.class);
       bindHttpApi(binder(), TempAuthApi.class);
    }
 
-   @Override protected Map<String, Function<Credentials, Access>> authenticationMethods(Injector i) {
-      return ImmutableMap.<String, Function<Credentials, Access>>builder()
-                         .putAll(super.authenticationMethods(i))
-                         .put("tempAuthCredentials", i.getInstance(TempAuth.class)).build();
+   @Override
+   protected Map<String, Function<Credentials, AuthInfo>> authenticationMethods(Injector i) {
+      return ImmutableMap.<String, Function<Credentials, AuthInfo>> builder()
+            .putAll(super.authenticationMethods(i))
+            .put("tempAuthCredentials", i.getInstance(TempAuth.class))
+            .build();
    }
    
-   static final class TempAuth implements Function<Credentials, Access> {
+   static final class TempAuth implements Function<Credentials, AuthInfo> {
       private final TempAuthApi delegate;
 
       @Inject TempAuth(TempAuthApi delegate) {
          this.delegate = delegate;
       }
 
-      @Override public Access apply(Credentials input) {
+      @Override public AuthInfo apply(Credentials input) {
          return delegate.auth(input);
       }
    }

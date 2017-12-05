@@ -38,7 +38,7 @@ import org.jclouds.Fallbacks.EmptyFluentIterableOnNotFoundOr404;
 import org.jclouds.Fallbacks.FalseOnNotFoundOr404;
 import org.jclouds.Fallbacks.NullOnNotFoundOr404;
 import org.jclouds.javax.annotation.Nullable;
-import org.jclouds.openstack.keystone.v2_0.filters.AuthenticateRequest;
+import org.jclouds.openstack.keystone.auth.filters.AuthenticateRequest;
 import org.jclouds.rackspace.cloudfiles.v1.binders.BindCDNPurgeEmailAddressesToHeaders;
 import org.jclouds.rackspace.cloudfiles.v1.domain.CDNContainer;
 import org.jclouds.rackspace.cloudfiles.v1.functions.ParseCDNContainerFromHeaders;

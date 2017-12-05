@@ -20,7 +20,7 @@ import java.util.Properties;
 import java.util.Set;
 
 import org.jclouds.apis.BaseApiLiveTest;
-import org.jclouds.openstack.keystone.v2_0.config.KeystoneProperties;
+import org.jclouds.openstack.keystone.config.KeystoneProperties;
 import org.jclouds.openstack.nova.v2_0.NovaApi;
 import org.jclouds.openstack.nova.v2_0.config.NovaProperties;
 import org.jclouds.openstack.nova.v2_0.domain.Flavor;

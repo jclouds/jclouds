@@ -22,6 +22,7 @@ import java.beans.ConstructorProperties;
 import java.util.Set;
 
 import org.jclouds.javax.annotation.Nullable;
+import org.jclouds.openstack.keystone.auth.domain.AuthInfo;
 
 import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
@@ -36,7 +37,7 @@ import com.google.common.collect.ImmutableSet;
  *      "http://docs.openstack.org/api/openstack-identity-service/2.0/content/Identity-Service-Concepts-e1362.html"
  *      />
  */
-public class Access extends ForwardingSet<Service> implements Comparable<Access> {
+public class Access extends ForwardingSet<Service> implements Comparable<Access>, AuthInfo {
 
    public static Builder<?> builder() {
       return new ConcreteBuilder();
@@ -164,6 +165,11 @@ public class Access extends ForwardingSet<Service> implements Comparable<Access>
    @Override
    protected Set<Service> delegate() {
       return serviceCatalog;
+   }
+
+   @Override
+   public String getAuthToken() {
+      return token.getId();
    }
 
 }

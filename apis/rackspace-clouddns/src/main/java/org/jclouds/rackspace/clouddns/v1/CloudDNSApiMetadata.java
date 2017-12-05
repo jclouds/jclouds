@@ -16,8 +16,9 @@
  */
 package org.jclouds.rackspace.clouddns.v1;
 
-import static org.jclouds.openstack.keystone.v2_0.config.KeystoneProperties.CREDENTIAL_TYPE;
-import static org.jclouds.openstack.keystone.v2_0.config.KeystoneProperties.SERVICE_TYPE;
+import static org.jclouds.openstack.keystone.config.KeystoneProperties.CREDENTIAL_TYPE;
+import static org.jclouds.openstack.keystone.config.KeystoneProperties.KEYSTONE_VERSION;
+import static org.jclouds.openstack.keystone.config.KeystoneProperties.SERVICE_TYPE;
 import static org.jclouds.rackspace.cloudidentity.v2_0.ServiceType.DNS;
 import static org.jclouds.rackspace.cloudidentity.v2_0.config.CloudIdentityCredentialTypes.API_KEY_CREDENTIALS;
 
@@ -25,9 +26,9 @@ import java.net.URI;
 import java.util.Properties;
 
 import org.jclouds.apis.ApiMetadata;
-import org.jclouds.openstack.keystone.v2_0.config.KeystoneAuthenticationModule.ProviderModule;
+import org.jclouds.openstack.keystone.catalog.config.ServiceCatalogModule;
+import org.jclouds.openstack.keystone.catalog.config.ServiceCatalogModule.ProviderModule;
 import org.jclouds.rackspace.clouddns.v1.config.CloudDNSHttpApiModule;
-import org.jclouds.rackspace.cloudidentity.v2_0.config.CloudIdentityAuthenticationApiModule;
 import org.jclouds.rackspace.cloudidentity.v2_0.config.CloudIdentityAuthenticationModule;
 import org.jclouds.rest.internal.BaseHttpApiMetadata;
 
@@ -58,6 +59,7 @@ public class CloudDNSApiMetadata extends BaseHttpApiMetadata<CloudDNSApi> {
       Properties properties = BaseHttpApiMetadata.defaultProperties();
       properties.setProperty(SERVICE_TYPE, DNS);
       properties.setProperty(CREDENTIAL_TYPE, API_KEY_CREDENTIALS);
+      properties.setProperty(KEYSTONE_VERSION, "2");
       return properties;
    }
 
@@ -73,8 +75,8 @@ public class CloudDNSApiMetadata extends BaseHttpApiMetadata<CloudDNSApi> {
          .defaultEndpoint("https://identity.api.rackspacecloud.com/v2.0/")
          .defaultProperties(CloudDNSApiMetadata.defaultProperties())
          .defaultModules(ImmutableSet.<Class<? extends Module>> builder()
-                                     .add(CloudIdentityAuthenticationApiModule.class)
                                      .add(CloudIdentityAuthenticationModule.class)
+                                     .add(ServiceCatalogModule.class)
                                      .add(ProviderModule.class)
                                      .add(CloudDNSHttpApiModule.class)
                                      .build());

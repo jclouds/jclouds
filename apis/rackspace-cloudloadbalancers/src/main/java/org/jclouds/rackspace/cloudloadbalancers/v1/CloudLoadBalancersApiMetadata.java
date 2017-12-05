@@ -16,8 +16,9 @@
  */
 package org.jclouds.rackspace.cloudloadbalancers.v1;
 
-import static org.jclouds.openstack.keystone.v2_0.config.KeystoneProperties.CREDENTIAL_TYPE;
-import static org.jclouds.openstack.keystone.v2_0.config.KeystoneProperties.SERVICE_TYPE;
+import static org.jclouds.openstack.keystone.config.KeystoneProperties.CREDENTIAL_TYPE;
+import static org.jclouds.openstack.keystone.config.KeystoneProperties.KEYSTONE_VERSION;
+import static org.jclouds.openstack.keystone.config.KeystoneProperties.SERVICE_TYPE;
 import static org.jclouds.reflect.Reflection2.typeToken;
 
 import java.net.URI;
@@ -25,9 +26,9 @@ import java.util.Properties;
 
 import org.jclouds.apis.ApiMetadata;
 import org.jclouds.loadbalancer.LoadBalancerServiceContext;
-import org.jclouds.openstack.keystone.v2_0.config.KeystoneAuthenticationModule.RegionModule;
+import org.jclouds.openstack.keystone.catalog.config.ServiceCatalogModule;
+import org.jclouds.openstack.keystone.catalog.config.ServiceCatalogModule.RegionModule;
 import org.jclouds.rackspace.cloudidentity.v2_0.ServiceType;
-import org.jclouds.rackspace.cloudidentity.v2_0.config.CloudIdentityAuthenticationApiModule;
 import org.jclouds.rackspace.cloudidentity.v2_0.config.CloudIdentityAuthenticationModule;
 import org.jclouds.rackspace.cloudidentity.v2_0.config.CloudIdentityCredentialTypes;
 import org.jclouds.rackspace.cloudloadbalancers.v1.config.CloudLoadBalancersHttpApiModule;
@@ -61,6 +62,7 @@ public class CloudLoadBalancersApiMetadata extends BaseHttpApiMetadata<CloudLoad
       Properties properties = BaseHttpApiMetadata.defaultProperties();
       properties.setProperty(SERVICE_TYPE, ServiceType.LOAD_BALANCERS);
       properties.setProperty(CREDENTIAL_TYPE, CloudIdentityCredentialTypes.API_KEY_CREDENTIALS);
+      properties.setProperty(KEYSTONE_VERSION, "2");
       return properties;
    }
 
@@ -77,8 +79,8 @@ public class CloudLoadBalancersApiMetadata extends BaseHttpApiMetadata<CloudLoad
                .defaultProperties(CloudLoadBalancersApiMetadata.defaultProperties())
                .view(typeToken(LoadBalancerServiceContext.class))
                .defaultModules(ImmutableSet.<Class<? extends Module>>builder()
-                            .add(CloudIdentityAuthenticationApiModule.class)
                             .add(CloudIdentityAuthenticationModule.class)
+                            .add(ServiceCatalogModule.class)
                             .add(RegionModule.class)
                             .add(CloudLoadBalancersHttpApiModule.class)
                             .add(CloudLoadBalancersLoadBalancerContextModule.class).build());

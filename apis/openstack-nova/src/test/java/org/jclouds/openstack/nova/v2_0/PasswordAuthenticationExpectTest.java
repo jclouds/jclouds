@@ -28,7 +28,7 @@ import com.google.common.collect.ImmutableSet;
 
 /**
  *
- * @see org.jclouds.openstack.keystone.v2_0.config.KeystoneProperties#CREDENTIAL_TYPE
+ * @see org.jclouds.openstack.keystone.config.KeystoneProperties#CREDENTIAL_TYPE
  */
 @Test(groups = "unit", testName = "PasswordAuthenticationExpectTest")
 public class PasswordAuthenticationExpectTest extends BaseNovaApiExpectTest {

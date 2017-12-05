@@ -18,8 +18,8 @@ package org.jclouds.openstack.swift.v1.features;
 
 import static com.google.common.net.HttpHeaders.EXPECT;
 import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
-import static org.jclouds.openstack.swift.v1.reference.SwiftHeaders.OBJECT_COPY_FROM;
 import static org.jclouds.openstack.swift.v1.reference.SwiftHeaders.OBJECT_COPY_FRESH_METADATA;
+import static org.jclouds.openstack.swift.v1.reference.SwiftHeaders.OBJECT_COPY_FROM;
 
 import java.util.Map;
 
@@ -41,7 +41,7 @@ import org.jclouds.blobstore.KeyNotFoundException;
 import org.jclouds.http.options.GetOptions;
 import org.jclouds.io.Payload;
 import org.jclouds.javax.annotation.Nullable;
-import org.jclouds.openstack.keystone.v2_0.filters.AuthenticateRequest;
+import org.jclouds.openstack.keystone.auth.filters.AuthenticateRequest;
 import org.jclouds.openstack.swift.v1.binders.BindMetadataToHeaders.BindObjectMetadataToHeaders;
 import org.jclouds.openstack.swift.v1.binders.BindMetadataToHeaders.BindRemoveObjectMetadataToHeaders;
 import org.jclouds.openstack.swift.v1.binders.BindToHeaders;

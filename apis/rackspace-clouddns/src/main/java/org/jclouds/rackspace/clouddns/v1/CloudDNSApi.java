@@ -28,7 +28,7 @@ import javax.ws.rs.PathParam;
 
 import org.jclouds.Fallbacks.NullOnNotFoundOr404;
 import org.jclouds.javax.annotation.Nullable;
-import org.jclouds.openstack.keystone.v2_0.filters.AuthenticateRequest;
+import org.jclouds.openstack.keystone.auth.filters.AuthenticateRequest;
 import org.jclouds.rackspace.clouddns.v1.config.CloudDNS;
 import org.jclouds.rackspace.clouddns.v1.domain.Job;
 import org.jclouds.rackspace.clouddns.v1.features.DomainApi;
@@ -36,6 +36,7 @@ import org.jclouds.rackspace.clouddns.v1.features.LimitApi;
 import org.jclouds.rackspace.clouddns.v1.features.RecordApi;
 import org.jclouds.rackspace.clouddns.v1.features.ReverseDNSApi;
 import org.jclouds.rackspace.clouddns.v1.functions.ParseJob;
+import org.jclouds.rackspace.clouddns.v1.predicates.JobPredicates;
 import org.jclouds.rest.annotations.Delegate;
 import org.jclouds.rest.annotations.Endpoint;
 import org.jclouds.rest.annotations.Fallback;

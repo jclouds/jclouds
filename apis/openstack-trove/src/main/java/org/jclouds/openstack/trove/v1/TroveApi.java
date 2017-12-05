@@ -24,7 +24,6 @@ import javax.ws.rs.PathParam;
 
 import org.jclouds.location.Region;
 import org.jclouds.location.functions.RegionToEndpoint;
-import org.jclouds.openstack.keystone.v2_0.domain.Tenant;
 import org.jclouds.openstack.trove.v1.features.DatabaseApi;
 import org.jclouds.openstack.trove.v1.features.FlavorApi;
 import org.jclouds.openstack.trove.v1.features.InstanceApi;
@@ -132,5 +131,5 @@ public interface TroveApi extends Closeable {
     * Provides the Tenant.
     */
    @Provides
-   Optional<Tenant> getCurrentTenantId();
+   Optional<String> getCurrentTenantId();
 }

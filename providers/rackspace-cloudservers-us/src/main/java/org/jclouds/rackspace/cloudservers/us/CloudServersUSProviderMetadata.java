@@ -16,21 +16,22 @@
  */
 package org.jclouds.rackspace.cloudservers.us;
 
+import static org.jclouds.compute.config.ComputeServiceProperties.TEMPLATE;
 import static org.jclouds.location.reference.LocationConstants.ISO3166_CODES;
 import static org.jclouds.location.reference.LocationConstants.PROPERTY_REGION;
 import static org.jclouds.location.reference.LocationConstants.PROPERTY_REGIONS;
-import static org.jclouds.openstack.keystone.v2_0.config.KeystoneProperties.CREDENTIAL_TYPE;
-import static org.jclouds.compute.config.ComputeServiceProperties.TEMPLATE;
+import static org.jclouds.openstack.keystone.config.KeystoneProperties.CREDENTIAL_TYPE;
+import static org.jclouds.openstack.keystone.config.KeystoneProperties.KEYSTONE_VERSION;
 
 import java.net.URI;
 import java.util.Properties;
 
-import org.jclouds.openstack.keystone.v2_0.config.KeystoneAuthenticationModule.RegionModule;
+import org.jclouds.openstack.keystone.catalog.config.ServiceCatalogModule;
+import org.jclouds.openstack.keystone.catalog.config.ServiceCatalogModule.RegionModule;
 import org.jclouds.openstack.nova.v2_0.NovaApiMetadata;
 import org.jclouds.openstack.nova.v2_0.config.NovaParserModule;
 import org.jclouds.providers.ProviderMetadata;
 import org.jclouds.providers.internal.BaseProviderMetadata;
-import org.jclouds.rackspace.cloudidentity.v2_0.config.CloudIdentityAuthenticationApiModule;
 import org.jclouds.rackspace.cloudidentity.v2_0.config.CloudIdentityAuthenticationModule;
 import org.jclouds.rackspace.cloudidentity.v2_0.config.CloudIdentityCredentialTypes;
 import org.jclouds.rackspace.cloudservers.us.config.CloudServersUSComputeServiceContextModule;
@@ -66,6 +67,7 @@ public class CloudServersUSProviderMetadata extends BaseProviderMetadata {
    public static Properties defaultProperties() {
       Properties properties = new Properties();
       properties.setProperty(CREDENTIAL_TYPE, CloudIdentityCredentialTypes.API_KEY_CREDENTIALS);
+      properties.setProperty(KEYSTONE_VERSION, "2");
       properties.setProperty(PROPERTY_REGIONS, "ORD,DFW,IAD,SYD,HKG");
       properties.setProperty(PROPERTY_REGION + ".ORD." + ISO3166_CODES, "US-IL");
       properties.setProperty(PROPERTY_REGION + ".DFW." + ISO3166_CODES, "US-TX");
@@ -94,8 +96,8 @@ public class CloudServersUSProviderMetadata extends BaseProviderMetadata {
                   .documentation(
                         URI.create("http://docs.rackspace.com/loadbalancers/api/v1.0/clb-devguide/content/index.html"))
                   .defaultModules(ImmutableSet.<Class<? extends Module>>builder()
-                        .add(CloudIdentityAuthenticationApiModule.class)
                         .add(CloudIdentityAuthenticationModule.class)
+                        .add(ServiceCatalogModule.class)
                         .add(RegionModule.class)
                         .add(NovaParserModule.class)
                         .add(CloudServersUSHttpApiModule.class)

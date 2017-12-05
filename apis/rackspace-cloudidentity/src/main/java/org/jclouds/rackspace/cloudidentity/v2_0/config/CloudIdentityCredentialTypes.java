@@ -16,7 +16,7 @@
  */
 package org.jclouds.rackspace.cloudidentity.v2_0.config;
 
-import org.jclouds.openstack.keystone.v2_0.config.CredentialTypes;
+import org.jclouds.openstack.keystone.auth.config.CredentialTypes;
 
 
 public class CloudIdentityCredentialTypes extends CredentialTypes {

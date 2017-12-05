@@ -22,7 +22,7 @@ import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.core.MediaType;
 
-import org.jclouds.openstack.keystone.v2_0.filters.AuthenticateRequest;
+import org.jclouds.openstack.keystone.auth.filters.AuthenticateRequest;
 import org.jclouds.openstack.v2_0.domain.Limits;
 import org.jclouds.rackspace.clouddns.v1.config.CloudDNS;
 import org.jclouds.rest.annotations.Endpoint;

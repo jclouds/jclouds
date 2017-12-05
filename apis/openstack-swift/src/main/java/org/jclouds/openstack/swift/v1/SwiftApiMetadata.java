@@ -17,21 +17,22 @@
 package org.jclouds.openstack.swift.v1;
 
 import static org.jclouds.Constants.PROPERTY_IDEMPOTENT_METHODS;
-import static org.jclouds.openstack.keystone.v2_0.config.KeystoneProperties.CREDENTIAL_TYPE;
-import static org.jclouds.openstack.keystone.v2_0.config.KeystoneProperties.SERVICE_TYPE;
-import static org.jclouds.openstack.swift.v1.reference.TempAuthHeaders.TEMP_AUTH_HEADER_USER;
-import static org.jclouds.openstack.swift.v1.reference.TempAuthHeaders.TEMP_AUTH_HEADER_PASS;
-import static org.jclouds.openstack.swift.v1.reference.TempAuthHeaders.DEFAULT_HEADER_USER;
+import static org.jclouds.openstack.keystone.config.KeystoneProperties.CREDENTIAL_TYPE;
+import static org.jclouds.openstack.keystone.config.KeystoneProperties.KEYSTONE_VERSION;
+import static org.jclouds.openstack.keystone.config.KeystoneProperties.SERVICE_TYPE;
 import static org.jclouds.openstack.swift.v1.reference.TempAuthHeaders.DEFAULT_HEADER_PASS;
+import static org.jclouds.openstack.swift.v1.reference.TempAuthHeaders.DEFAULT_HEADER_USER;
+import static org.jclouds.openstack.swift.v1.reference.TempAuthHeaders.TEMP_AUTH_HEADER_PASS;
+import static org.jclouds.openstack.swift.v1.reference.TempAuthHeaders.TEMP_AUTH_HEADER_USER;
 import static org.jclouds.reflect.Reflection2.typeToken;
-
 
 import java.net.URI;
 import java.util.Properties;
 
 import org.jclouds.apis.ApiMetadata;
-import org.jclouds.openstack.keystone.v2_0.config.CredentialTypes;
-import org.jclouds.openstack.keystone.v2_0.config.KeystoneAuthenticationModule.RegionModule;
+import org.jclouds.openstack.keystone.auth.config.CredentialTypes;
+import org.jclouds.openstack.keystone.catalog.config.ServiceCatalogModule;
+import org.jclouds.openstack.keystone.catalog.config.ServiceCatalogModule.RegionModule;
 import org.jclouds.openstack.swift.v1.blobstore.RegionScopedBlobStoreContext;
 import org.jclouds.openstack.swift.v1.blobstore.config.SignUsingTemporaryUrls;
 import org.jclouds.openstack.swift.v1.blobstore.config.SwiftBlobStoreContextModule;
@@ -64,6 +65,7 @@ public class SwiftApiMetadata extends BaseHttpApiMetadata<SwiftApi> {
    public static Properties defaultProperties() {
       Properties properties = BaseHttpApiMetadata.defaultProperties();
       properties.setProperty(SERVICE_TYPE, ServiceType.OBJECT_STORE);
+      properties.setProperty(KEYSTONE_VERSION, "2");
       properties.setProperty(PROPERTY_IDEMPOTENT_METHODS, "DELETE,GET,HEAD,OPTIONS,POST,PUT");
       // Can alternatively be set to "tempAuthCredentials"
       properties.setProperty(CREDENTIAL_TYPE, CredentialTypes.PASSWORD_CREDENTIALS);
@@ -87,6 +89,7 @@ public class SwiftApiMetadata extends BaseHttpApiMetadata<SwiftApi> {
          .view(typeToken(RegionScopedBlobStoreContext.class))
          .defaultModules(ImmutableSet.<Class<? extends Module>>builder()
                                      .add(SwiftAuthenticationModule.class)
+                                     .add(ServiceCatalogModule.class)
                                      .add(RegionModule.class)
                                      .add(SwiftTypeAdapters.class)
                                      .add(SwiftHttpApiModule.class)
