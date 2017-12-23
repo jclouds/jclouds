@@ -44,9 +44,9 @@ public abstract class Network {
    public abstract List<Subnet> subnets();
 
    @SerializedNames({"accountId", "id", "cidr", "networkIdentifier", "name", "notes", "subnets"})
-   public static Network create(final long id, final long accountId, int cidr, String networkIdentifier, String name,
+   public static Network create(long accountId, long id, int cidr, String networkIdentifier, String name,
                                 String notes, List<Subnet> subnets) {
-      return new AutoValue_Network(id, accountId, cidr, networkIdentifier, name, notes,
+      return new AutoValue_Network(accountId, id, cidr, networkIdentifier, name, notes,
                                     subnets == null ? ImmutableList.<Subnet> of() : ImmutableList.copyOf(subnets));
    }
 
