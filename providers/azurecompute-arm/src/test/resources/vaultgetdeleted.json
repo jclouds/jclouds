@@ -1,0 +1,12 @@
+{
+  "id": "/subscriptions/3fee811e-11bf-4b5c-9c62-a2f28b517724/providers/Microsoft.KeyVault/locations/westeurope/deletedVaults/kvvaultapilivetest",
+  "name": "kvvaultapilivetest",
+  "type": "Microsoft.KeyVault/deletedVaults",
+  "properties": {
+    "vaultId": "/subscriptions/3fee811e-11bf-4b5c-9c62-a2f28b517724/resourceGroups/rg-vaultapilivetest-jims/providers/Microsoft.KeyVault/vaults/kvvaultapilivetest",
+    "location": "westeurope",
+    "tags": {},
+    "deletionDate": "2017-10-29T22:06:02Z",
+    "scheduledPurgeDate": "2018-01-27T22:06:02Z"
+  }
+}

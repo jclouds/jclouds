@@ -26,6 +26,7 @@ import static org.testng.Assert.assertEquals;
 
 import java.io.IOException;
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.Properties;
 import java.util.Set;
 
@@ -71,7 +72,7 @@ public class BaseAzureComputeApiMockTest {
    private final JsonParser parser = new JsonParser();
 
    @BeforeMethod
-   public void start() throws IOException {
+   public void start() throws IOException, URISyntaxException {
       server = new MockWebServer();
       server.play();
       
@@ -148,10 +149,19 @@ public class BaseAzureComputeApiMockTest {
                   "https://management.azure.com/subscriptions/SUBSCRIPTIONID/operationresults/eyJqb2JJZCI6IlJFU09VUkNFR1JPVVBERUxFVElPTkpPQi1SVEVTVC1DRU5UUkFMVVMiLCJqb2JMb2NhdGlvbiI6ImNlbnRyYWx1cyJ9?api-version=2014-04-01");
    }
 
+   protected MockResponse response200WithHeader() {
+      return new MockResponse()
+              .setStatus("HTTP/1.1 200 O")
+              .addHeader("Location", "https://management.azure.com/subscriptions/SUBSCRIPTIONID/operationresults/eyJqb2JJZCI6IlJFU09VUkNFR1JPVVBERUxFVElPTkpPQi1SVEVTVC1DRU5UUkFMVVMiLCJqb2JMb2NhdGlvbiI6ImNlbnRyYWx1cyJ9?api-version=2014-04-01");
+   }
+
    protected String stringFromResource(String resourceName) {
       try {
-         return Resources.toString(getClass().getResource(resourceName), Charsets.UTF_8).replace(DEFAULT_ENDPOINT,
-               url(""));
+         String rsrc = Resources.toString(getClass().getResource(resourceName), Charsets.UTF_8);
+         if (rsrc.contains(DEFAULT_ENDPOINT)) {
+            rsrc = rsrc.replace(DEFAULT_ENDPOINT, url(""));
+         }
+         return rsrc;
       } catch (IOException e) {
          throw Throwables.propagate(e);
       }

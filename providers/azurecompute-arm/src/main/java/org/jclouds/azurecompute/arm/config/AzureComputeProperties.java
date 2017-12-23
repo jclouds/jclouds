@@ -34,4 +34,13 @@ public class AzureComputeProperties {
 
    public static final String API_VERSION_PREFIX = "jclouds.azurecompute.arm.apiversion.";
 
+   // Predicate constants
+   public static final String VAULT_DELETE_STATUS = "jclouds.azurecompute.arm.vault.delete_status";
+   public static final String VAULT_KEY_DELETED_STATUS = "jclouds.azurecompute.arm.vault.key.delete_status";
+   public static final String VAULT_KEY_RECOVERABLE_STATUS = "jclouds.azurecompute.arm.vault.key.recoverable_status";
+   public static final String VAULT_SECRET_DELETE_STATUS = "jclouds.azurecompute.arm.vault.secret.delete_status";
+   public static final String VAULT_SECRET_RECOVERABLE_STATUS = "jclouds.azurecompute.arm.vault.secret.recoverable_status";
+   public static final String VAULT_CERTIFICATE_DELETE_STATUS = "jclouds.azurecompute.arm.vault.certificate.delete_status";
+   public static final String VAULT_CERTIFICATE_RECOVERABLE_STATUS = "jclouds.azurecompute.arm.vault.certificate.recoverable_status";
+   public static final String VAULT_CERTIFICATE_OPERATION_STATUS = "jclouds.azurecompute.arm.vault.certificate.operation_status";
 }

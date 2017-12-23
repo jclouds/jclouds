@@ -1,0 +1,60 @@
+{
+  "id": "/subscriptions/012e832d-7b27-4c30-9f21-22cdd9159d12/resourceGroups/rg-vaultapilivetest-andrea/providers/Microsoft.KeyVault/vaults/vaultapilivetest-andrea",
+  "name": "vaultapilivetest-andrea",
+  "type": "Microsoft.KeyVault/vaults",
+  "location": "westeurope",
+  "tags": {},
+  "properties": {
+    "sku": {
+      "family": "A",
+      "name": "Standard"
+    },
+    "tenantId": "ba85e8cd-8c83-486e-a7e3-0d7666169d34",
+    "accessPolicies": [
+      {
+        "tenantId": "ba85e8cd-8c83-486e-a7e3-0d7666169d34",
+        "objectId": "b025a8c0-d7fa-42fd-8e62-d988a3f12791",
+        "permissions": {
+          "keys": [
+            "Get",
+            "List",
+            "Update",
+            "Create",
+            "Import",
+            "Delete",
+            "Recover",
+            "Backup",
+            "Restore"
+          ],
+          "secrets": [
+            "Get",
+            "List",
+            "Set",
+            "Delete",
+            "Recover",
+            "Backup",
+            "Restore"
+          ],
+          "certificates": [
+            "Get",
+            "List",
+            "Update",
+            "Create",
+            "Import",
+            "Delete",
+            "ManageContacts",
+            "ManageIssuers",
+            "GetIssuers",
+            "ListIssuers",
+            "SetIssuers",
+            "DeleteIssuers"
+          ]
+        }
+      }
+    ],
+    "enabledForDeployment": false,
+    "enabledForDiskEncryption": false,
+    "enabledForTemplateDeployment": false,
+    "vaultUri": "https://vaultapilivetest-andrea.vault.azure.net/"
+  }
+}

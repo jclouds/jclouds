@@ -39,7 +39,7 @@ import java.util.Properties;
 import java.util.Set;
 
 import org.jclouds.azurecompute.arm.AzureComputeApi;
-import org.jclouds.azurecompute.arm.compute.config.AzureComputeServiceContextModule.PublicIpAvailablePredicateFactory;
+import org.jclouds.azurecompute.arm.compute.config.AzurePredicatesModule.PublicIpAvailablePredicateFactory;
 import org.jclouds.azurecompute.arm.compute.domain.ResourceGroupAndName;
 import org.jclouds.azurecompute.arm.domain.AvailabilitySet;
 import org.jclouds.azurecompute.arm.domain.AvailabilitySet.AvailabilitySetProperties;

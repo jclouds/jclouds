@@ -29,7 +29,7 @@ import javax.inject.Named;
 import javax.inject.Singleton;
 
 import org.jclouds.azurecompute.arm.AzureComputeApi;
-import org.jclouds.azurecompute.arm.compute.config.AzureComputeServiceContextModule.SecurityGroupAvailablePredicateFactory;
+import org.jclouds.azurecompute.arm.compute.config.AzurePredicatesModule.SecurityGroupAvailablePredicateFactory;
 import org.jclouds.azurecompute.arm.compute.domain.ResourceGroupAndNameAndIngressRules;
 import org.jclouds.azurecompute.arm.domain.NetworkSecurityGroup;
 import org.jclouds.azurecompute.arm.domain.NetworkSecurityGroupProperties;

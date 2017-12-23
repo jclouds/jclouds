@@ -41,6 +41,7 @@ import org.jclouds.azurecompute.arm.features.ResourceProviderApi;
 import org.jclouds.azurecompute.arm.features.StorageAccountApi;
 import org.jclouds.azurecompute.arm.features.SubnetApi;
 import org.jclouds.azurecompute.arm.features.VMSizeApi;
+import org.jclouds.azurecompute.arm.features.VaultApi;
 import org.jclouds.azurecompute.arm.features.VirtualMachineApi;
 import org.jclouds.azurecompute.arm.features.VirtualMachineScaleSetApi;
 import org.jclouds.azurecompute.arm.features.VirtualNetworkApi;
@@ -242,7 +243,7 @@ public interface AzureComputeApi extends Closeable {
     */
    @Delegate
    MetricDefinitionsApi getMetricsDefinitionsApi(@PathParam("resourceid") String resourceid);
-   
+
    /**
     * The Azure Active Directory Graph API provides programmatic access to Azure
     * AD through REST API endpoints.
@@ -251,6 +252,15 @@ public interface AzureComputeApi extends Closeable {
     */
    @Delegate
    GraphRBACApi getGraphRBACApi();
+   
+   /**
+    * Managing your key vaults as well as the keys, secrets, and certificates within your key vaults can be 
+    * accomplished through a REST interface.
+    *
+    * @see <a href="https://docs.microsoft.com/en-us/rest/api/keyvault/">docs</a>
+    */
+   @Delegate
+   VaultApi getVaultApi(@PathParam("resourcegroup") String resourcegroup);
    
    /**
     * Returns the information about the current service principal.

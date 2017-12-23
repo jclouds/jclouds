@@ -1,0 +1,8 @@
+{
+	"key_props": {
+		"exportable": true,
+		"key_size": 3072,
+		"kty": "RSA",
+		"reuse_key": false
+	}
+}

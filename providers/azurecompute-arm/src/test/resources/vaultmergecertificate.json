@@ -1,0 +1,62 @@
+{
+  "id": "https://jimskv1.vault.azure.net/certificates/jmskv1cert6/d8f385d3741b4b1cba9c002299e892dd",
+  "kid": "https://jimskv1.vault.azure.net/keys/jmskv1cert6/d8f385d3741b4b1cba9c002299e892dd",
+  "sid": "https://jimskv1.vault.azure.net/secrets/jmskv1cert6/d8f385d3741b4b1cba9c002299e892dd",
+  "x5t": "SQix1jyV9XeF2Q8MCecpUr0etk4",
+  "cer": "MIIEQTCCAikCAhABMA0GCSqGSIb3DQEBCwUAMF4xCzAJBgNVBAYTAlVTMRMwEQYDVQQIDApDYWxpZm9ybmlhMRYwFAYDVQQKDA1BQ01FIFRlc3QgTHRkMSIwIAYDVQQDDBlBQ01FIFRlc3QgSW50ZXJtZWRpYXRlIENBMB4XDTE3MTEyODIzMDkxMVoXDTE4MTIwODIzMDkxMVowbjELMAkGA1UEBhMCVVMxCzAJBgNVBAgTAkNBMRIwEAYDVQQHEwlBbGxlZ2hhbnkxDTALBgNVBAoTBEFDTUUxFDASBgNVBAsTC0VuZ2luZWVyaW5nMRkwFwYDVQQDExBBQ01FIEZvb2JhciBDZXJ0MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAwE0Gu/rJlbkqL0ynSbkCdrM+XP4dis/QNPz819ybXXpIX8HfkmAxrpLmfWh36KlflFYgpuV/J5lnJKlRmPWWOFjizAhq0dBijJUdLf6+QuImDjijd/nkO5SeQApZ4D50imTJL81vs2vwAfcCLwdlf7MNrMIfBsyjRSJh/Phjqib6kcYWcz6I6yTfkcsXcUB1JgR8KnQdVy0gYDu1MacHu2VYuS35HpPcQyXRqR1Ky9qh16+OhheRJw03ghEiPMcKbWS5NRgw/l/itoST2Qd6BzJTHUkJaXHNSO9fNF/fAccqECp0ZfaCSrfZs47EcjCv+N7bvrqfFl4BhB77tb7ZAQIDAQABMA0GCSqGSIb3DQEBCwUAA4ICAQCbpjL5XGC3T6gWU8sxCbS0VBmgamyvSHA8jLkWUXQfPirGFwgdGN7394mYViVU0qe6ZqmnhlhqZ1h6VbkBMVwzp3KlRhuoz/fXlW+TFvEC8Q3F+7oUdHn8w3EMyjKA5EbLzRIYXBizdbfEn8eJynjyWEdOaJpMmy9au/oFSqpmZDcxWW2SKq4j+Pqjhr+Ig4BmTVvwR6iEERPYQI4pv0OxRa7xA6Hb8NF02TyDzV7k02kN9PL/QO2dh9f3U0YY5XlV1HQzQ/BmavudPT1MiuH0CVSlCHE/JetXdJdWZA4HRiwXJn+5K8MgE5i1hjjXN/dLuaY8vItJzyrgxGRtRZoJA8t7B3QJjDECmey2m0K0qjYu7l1jAVFBWaqDdJQLmnKxViuz0MF4uFqgveW6CZEMcdqwZQ2cmZPlmcjneT0veBBh5qCdFNFM9pYDn0wqt5ruK+vqHkqJdMToBPNaBfGX10ADlB8rKW24eve+2c0iVmorJuTPdOqm2L9NKGpf2scvZZU4n/khkGKihrSOLygeLZ6SQc74cRL35FmzJqqKKpZtG9/a91dkJDz2XUiTO5TialaOU9+A1+Xrzj8LGG9JnB0KizF5dOd5mbZTROr3VCexRxyTrtZLpeJK+lYQLkDQ5ixWnd2sikym4hy3+NZ1g6nE+GQpqSALB4YnsFgUdg==",
+  "attributes": {
+    "enabled": true,
+    "nbf": 1511910551,
+    "exp": 1544310551,
+    "created": 1511911458,
+    "updated": 1511911458,
+    "recoveryLevel": "Purgeable"
+  },
+  "policy": {
+    "id": "https://jimskv1.vault.azure.net/certificates/jmskv1cert6/policy",
+    "key_props": {
+      "exportable": true,
+      "kty": "RSA",
+      "key_size": 2048,
+      "reuse_key": true
+    },
+    "secret_props": {
+      "contentType": "application/x-pem-file"
+    },
+    "x509_props": {
+      "subject": "C=US, ST=CA, L=Alleghany, O=ACME, OU=Engineering, CN=ACME Foobar Cert",
+      "sans": {
+        "emails": [],
+        "dns_names": [],
+        "upns": []
+      },
+      "ekus": [
+        "1.3.6.1.5.5.7.3.1"
+      ],
+      "key_usage": [
+        "cRLSign",
+        "dataEncipherment",
+        "digitalSignature",
+        "keyAgreement",
+        "keyCertSign",
+        "keyEncipherment"
+      ],
+      "validity_months": 24,
+      "basic_constraints": {
+        "ca": false
+      }
+    },
+    "lifetime_actions": [],
+    "issuer": {
+      "name": "Unknown"
+    },
+    "attributes": {
+      "enabled": true,
+      "created": 1511910301,
+      "updated": 1511910301
+    }
+  },
+  "pending": {
+    "id": "https://jimskv1.vault.azure.net/certificates/jmskv1cert6/pending"
+  }
+}

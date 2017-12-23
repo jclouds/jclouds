@@ -18,6 +18,8 @@ package org.jclouds.azurecompute.arm.compute.domain;
 
 import static org.jclouds.azurecompute.arm.compute.domain.ResourceGroupAndName.fromResourceGroupAndName;
 
+import java.util.Arrays;
+
 import com.google.auto.value.AutoValue;
 import com.google.common.base.Objects;
 
@@ -28,6 +30,7 @@ public abstract class ResourceGroupAndNameAndIngressRules {
    
    public abstract String location();
 
+   @SuppressWarnings("mutable")
    public abstract int[] inboundPorts();
 
    ResourceGroupAndNameAndIngressRules() {
@@ -37,7 +40,7 @@ public abstract class ResourceGroupAndNameAndIngressRules {
    public static ResourceGroupAndNameAndIngressRules create(String resourceGroup, String location, String name,
          int[] inboundPorts) {
       return new AutoValue_ResourceGroupAndNameAndIngressRules(fromResourceGroupAndName(resourceGroup, name), location,
-            inboundPorts);
+            Arrays.copyOf(inboundPorts, inboundPorts.length));
    }
 
    public String name() {

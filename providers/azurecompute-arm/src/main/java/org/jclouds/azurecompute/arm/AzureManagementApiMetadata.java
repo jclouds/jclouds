@@ -23,6 +23,7 @@ import java.util.Properties;
 
 import org.jclouds.apis.ApiMetadata;
 import org.jclouds.azurecompute.arm.compute.config.AzureComputeServiceContextModule;
+import org.jclouds.azurecompute.arm.compute.config.AzurePredicatesModule;
 import org.jclouds.azurecompute.arm.config.AzureComputeHttpApiModule;
 import org.jclouds.azurecompute.arm.config.AzureComputeParserModule;
 import org.jclouds.azurecompute.arm.config.AzureComputeRateLimitModule;
@@ -80,6 +81,7 @@ public class AzureManagementApiMetadata extends BaseHttpApiMetadata<AzureCompute
                          .add(AzureComputeParserModule.class)
                          .add(AzureComputeHttpApiModule.class)
                          .add(AzureComputeServiceContextModule.class)
+                         .add(AzurePredicatesModule.class)
                          .add(AzureComputeRateLimitModule.class)
                          .build());
       }

@@ -1,0 +1,21 @@
+{
+	"id": "https://kvvaultapilivetest.vault.azure.net/certificates/issuers/globalsign01",
+	"provider": "GlobalSign",
+	"credentials": {
+		"account_id": "imauser"
+	},
+	"org_details": {
+		"zip": 0,
+		"admin_details": [{
+			"first_name": "Admin",
+			"last_name": "Guy",
+			"email": "adminguy@certsforme.com",
+			"phone": "867-5309"
+		}]
+	},
+	"attributes": {
+		"enabled": true,
+		"created": 1509346474,
+		"updated": 1509346474
+	}
+}

@@ -1,0 +1,15 @@
+{
+	"value": [{
+		"recoveryId": "https://kvvaultapilivetest.vault.azure.net/deletedkeys/myRecoverableKey",
+		"deletedDate": 1509335960,
+		"scheduledPurgeDate": 1517111960,
+		"kid": "https://kvvaultapilivetest.vault.azure.net/keys/myRecoverableKey",
+		"attributes": {
+			"enabled": true,
+			"created": 1509335950,
+			"updated": 1509335950,
+			"recoveryLevel": "Recoverable+Purgeable"
+		}
+	}],
+	"nextLink": null
+}

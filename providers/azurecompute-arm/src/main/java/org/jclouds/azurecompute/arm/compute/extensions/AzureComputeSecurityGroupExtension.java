@@ -36,7 +36,7 @@ import javax.inject.Inject;
 import javax.inject.Named;
 
 import org.jclouds.azurecompute.arm.AzureComputeApi;
-import org.jclouds.azurecompute.arm.compute.config.AzureComputeServiceContextModule.SecurityGroupAvailablePredicateFactory;
+import org.jclouds.azurecompute.arm.compute.config.AzurePredicatesModule.SecurityGroupAvailablePredicateFactory;
 import org.jclouds.azurecompute.arm.compute.domain.ResourceGroupAndName;
 import org.jclouds.azurecompute.arm.domain.NetworkInterfaceCard;
 import org.jclouds.azurecompute.arm.domain.NetworkProfile.NetworkInterface;

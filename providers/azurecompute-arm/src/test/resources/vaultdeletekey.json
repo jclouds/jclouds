@@ -1,0 +1,15 @@
+{
+	"key": {
+		"kid": "https://kvvaultapilivetest.vault.azure.net/keys/myKey/1374543b3de34500a97d075991ee3893",
+		"kty": "RSA",
+		"key_ops": ["encrypt", "decrypt", "sign", "verify", "wrapKey", "unwrapKey"],
+		"n": "tY2pzXPfU7NFYCWvZB1gJNAetkgJ7Qi75lTVOzVns9KjFFo6e_F9GSETZbAYl5oMwfLtdqQqT5fxzWDk0sYlz09HXvCCoYmbzobd3gJ6-WLAqhtCbBikr5HAIlCzy_UqKT--WhEw8AT_EJFBPIY9xNktqnaNZuRBmjmXinzT02qUmBZRsAdJmaYfG9IZSmToOkb54OytI5TreWN0JvceoQ3GSeFLMC5PUmXP6HmZliOzBBHWnXNq3H7a3qfWV3rxT2QpbrIuz18ZqOVp7o5868kN8knKytVcqEzmdiQUdabkqbrwuh-z_IEre9AqTfw6OjUUmLjs4lyKcpWLYFh8KJuML1ub-8u0VgNGwczUZ7aAld1iwGMsoMmQfMRDOnv-9pqtY-y40ZWpBGXpzFV-IvtKHnqQk_vWqowpE8xwx7yZ74z9XNgS9TmkVpcC-ONbEfNE1sez0Zf-RZ9eOm_7WSxxH6OJYtJI7wotBXYoy1bJaqo7mgHs1IUOFhSE-Evj",
+		"e": "AQAB"
+	},
+	"attributes": {
+		"enabled": true,
+		"created": 1509335925,
+		"updated": 1509335925,
+		"recoveryLevel": "Purgeable"
+	}
+}

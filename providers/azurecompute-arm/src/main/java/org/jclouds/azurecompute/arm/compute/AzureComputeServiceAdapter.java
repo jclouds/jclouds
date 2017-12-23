@@ -45,7 +45,7 @@ import javax.inject.Named;
 import javax.inject.Singleton;
 
 import org.jclouds.azurecompute.arm.AzureComputeApi;
-import org.jclouds.azurecompute.arm.compute.config.AzureComputeServiceContextModule.PublicIpAvailablePredicateFactory;
+import org.jclouds.azurecompute.arm.compute.config.AzurePredicatesModule.PublicIpAvailablePredicateFactory;
 import org.jclouds.azurecompute.arm.compute.domain.ResourceGroupAndName;
 import org.jclouds.azurecompute.arm.compute.functions.CustomImageToVMImage;
 import org.jclouds.azurecompute.arm.compute.options.AzureTemplateOptions;

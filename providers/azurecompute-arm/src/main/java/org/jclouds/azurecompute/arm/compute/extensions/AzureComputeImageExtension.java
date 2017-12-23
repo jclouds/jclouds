@@ -30,8 +30,8 @@ import javax.annotation.Resource;
 
 import org.jclouds.Constants;
 import org.jclouds.azurecompute.arm.AzureComputeApi;
-import org.jclouds.azurecompute.arm.compute.config.AzureComputeServiceContextModule.ImageAvailablePredicateFactory;
-import org.jclouds.azurecompute.arm.compute.config.AzureComputeServiceContextModule.VirtualMachineInStatePredicateFactory;
+import org.jclouds.azurecompute.arm.compute.config.AzurePredicatesModule.ImageAvailablePredicateFactory;
+import org.jclouds.azurecompute.arm.compute.config.AzurePredicatesModule.VirtualMachineInStatePredicateFactory;
 import org.jclouds.azurecompute.arm.compute.domain.ResourceGroupAndName;
 import org.jclouds.azurecompute.arm.compute.functions.CustomImageToVMImage;
 import org.jclouds.azurecompute.arm.domain.IdReference;

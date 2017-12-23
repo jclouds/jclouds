@@ -1,0 +1,23 @@
+{
+	"value": [{
+		"kid": "https://kvvaultapilivetest.vault.azure.net/keys/myKey/1374543b3de34500a97d075991ee3893",
+		"attributes": {
+			"enabled": true,
+			"created": 1509335925,
+			"updated": 1509335925,
+			"recoveryLevel": "Purgeable"
+		}
+	}, {
+		"kid": "https://kvvaultapilivetest.vault.azure.net/keys/myKey/bd6566ec707e4ad89f4ab9577d9d0bef",
+		"attributes": {
+			"enabled": true,
+			"created": 1509335902,
+			"updated": 1509335923,
+			"recoveryLevel": "Purgeable"
+		},
+		"tags": {
+			"purpose": "testing"
+		}
+	}],
+	"nextLink": null
+}

@@ -16,22 +16,8 @@
  */
 package org.jclouds.azurecompute.arm.compute.config;
 
-import static com.google.common.base.Preconditions.checkNotNull;
-import static org.jclouds.azurecompute.arm.config.AzureComputeProperties.OPERATION_TIMEOUT;
-import static org.jclouds.azurecompute.arm.config.AzureComputeProperties.TIMEOUT_RESOURCE_DELETED;
-import static org.jclouds.compute.config.ComputeServiceProperties.TIMEOUT_IMAGE_AVAILABLE;
-import static org.jclouds.compute.config.ComputeServiceProperties.TIMEOUT_NODE_RUNNING;
-import static org.jclouds.compute.config.ComputeServiceProperties.TIMEOUT_NODE_SUSPENDED;
-import static org.jclouds.compute.config.ComputeServiceProperties.TIMEOUT_NODE_TERMINATED;
-import static org.jclouds.util.Predicates2.retry;
-
-import java.net.URI;
-import java.util.List;
-
-import javax.inject.Named;
 import javax.inject.Singleton;
 
-import org.jclouds.azurecompute.arm.AzureComputeApi;
 import org.jclouds.azurecompute.arm.compute.AzureComputeService;
 import org.jclouds.azurecompute.arm.compute.AzureComputeServiceAdapter;
 import org.jclouds.azurecompute.arm.compute.domain.ResourceGroupAndNameAndIngressRules;
@@ -47,20 +33,13 @@ import org.jclouds.azurecompute.arm.compute.loaders.CreateSecurityGroupIfNeeded;
 import org.jclouds.azurecompute.arm.compute.loaders.DefaultResourceGroup;
 import org.jclouds.azurecompute.arm.compute.options.AzureTemplateOptions;
 import org.jclouds.azurecompute.arm.compute.strategy.CreateResourcesThenCreateNodes;
-import org.jclouds.azurecompute.arm.domain.Image;
 import org.jclouds.azurecompute.arm.domain.Location;
 import org.jclouds.azurecompute.arm.domain.NetworkSecurityGroup;
 import org.jclouds.azurecompute.arm.domain.NetworkSecurityRule;
-import org.jclouds.azurecompute.arm.domain.Provisionable;
-import org.jclouds.azurecompute.arm.domain.PublicIPAddress;
-import org.jclouds.azurecompute.arm.domain.ResourceDefinition;
 import org.jclouds.azurecompute.arm.domain.ResourceGroup;
 import org.jclouds.azurecompute.arm.domain.VMHardware;
 import org.jclouds.azurecompute.arm.domain.VMImage;
 import org.jclouds.azurecompute.arm.domain.VirtualMachine;
-import org.jclouds.azurecompute.arm.domain.VirtualMachineInstance;
-import org.jclouds.azurecompute.arm.domain.VirtualMachineInstance.PowerState;
-import org.jclouds.azurecompute.arm.functions.ParseJobStatus;
 import org.jclouds.compute.ComputeService;
 import org.jclouds.compute.ComputeServiceAdapter;
 import org.jclouds.compute.config.ComputeServiceAdapterContextModule;
@@ -72,15 +51,10 @@ import org.jclouds.compute.extensions.SecurityGroupExtension;
 import org.jclouds.compute.functions.NodeAndTemplateOptionsToStatement;
 import org.jclouds.compute.functions.NodeAndTemplateOptionsToStatementWithoutPublicKey;
 import org.jclouds.compute.options.TemplateOptions;
-import org.jclouds.compute.reference.ComputeServiceConstants.PollPeriod;
-import org.jclouds.compute.reference.ComputeServiceConstants.Timeouts;
 import org.jclouds.compute.strategy.CreateNodesInGroupThenAddToSet;
 import org.jclouds.net.domain.IpPermission;
 
-import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Function;
-import com.google.common.base.Predicate;
-import com.google.common.base.Supplier;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
@@ -141,247 +115,4 @@ public class AzureComputeServiceContextModule extends
    protected final LoadingCache<String, ResourceGroup> defaultResourceGroup(CacheLoader<String, ResourceGroup> in) {
       return CacheBuilder.newBuilder().build(in);
    }
-
-   @Provides
-   @Named(TIMEOUT_NODE_RUNNING)
-   protected VirtualMachineInStatePredicateFactory provideVirtualMachineRunningPredicate(final AzureComputeApi api,
-         final Timeouts timeouts, final PollPeriod pollPeriod) {
-      return new VirtualMachineInStatePredicateFactory(api, PowerState.RUNNING, timeouts.nodeRunning,
-            pollPeriod.pollInitialPeriod, pollPeriod.pollMaxPeriod);
-   }
-
-   @Provides
-   @Named(TIMEOUT_NODE_TERMINATED)
-   protected Predicate<URI> provideNodeTerminatedPredicate(final AzureComputeApi api, final Timeouts timeouts,
-         final PollPeriod pollPeriod) {
-      return retry(new ActionDonePredicate(api), timeouts.nodeTerminated, pollPeriod.pollInitialPeriod,
-            pollPeriod.pollMaxPeriod);
-   }
-
-   @Provides
-   @Named(TIMEOUT_IMAGE_AVAILABLE)
-   protected Predicate<URI> provideImageCapturedPredicate(final AzureComputeApi api, final Timeouts timeouts,
-         final PollPeriod pollPeriod) {
-      return retry(new ImageCapturedPredicate(api), timeouts.imageAvailable, pollPeriod.pollInitialPeriod,
-            pollPeriod.pollMaxPeriod);
-   }
-
-   @Provides
-   @Named(TIMEOUT_RESOURCE_DELETED)
-   protected Predicate<URI> provideResourceDeletedPredicate(final AzureComputeApi api, final Timeouts timeouts,
-         final PollPeriod pollPeriod) {
-      return retry(new ActionDonePredicate(api), timeouts.nodeTerminated, pollPeriod.pollInitialPeriod,
-            pollPeriod.pollMaxPeriod);
-   }
-
-   @Provides
-   @Named(TIMEOUT_NODE_SUSPENDED)
-   protected VirtualMachineInStatePredicateFactory provideNodeSuspendedPredicate(final AzureComputeApi api,
-         final Timeouts timeouts, final PollPeriod pollPeriod) {
-      return new VirtualMachineInStatePredicateFactory(api, PowerState.STOPPED, timeouts.nodeTerminated,
-            pollPeriod.pollInitialPeriod, pollPeriod.pollMaxPeriod);
-   }
-
-   @Provides
-   protected PublicIpAvailablePredicateFactory providePublicIpAvailablePredicate(final AzureComputeApi api,
-         Predicate<Supplier<Provisionable>> resourceAvailable) {
-      return new PublicIpAvailablePredicateFactory(api, resourceAvailable);
-   }
-
-   @Provides
-   protected SecurityGroupAvailablePredicateFactory provideSecurityGroupAvailablePredicate(final AzureComputeApi api,
-         Predicate<Supplier<Provisionable>> resourceAvailable) {
-      return new SecurityGroupAvailablePredicateFactory(api, resourceAvailable);
-   }
-   
-   @Provides
-   protected ImageAvailablePredicateFactory provideImageAvailablePredicate(final AzureComputeApi api,
-         Predicate<Supplier<Provisionable>> resourceAvailable, final Timeouts timeouts, final PollPeriod pollPeriod) {
-      return new ImageAvailablePredicateFactory(api, retry(new ResourceInStatusPredicate("Succeeded"),
-            timeouts.imageAvailable, pollPeriod.pollInitialPeriod, pollPeriod.pollMaxPeriod));
-   }
-
-   @Provides
-   protected Predicate<Supplier<Provisionable>> provideResourceAvailablePredicate(final AzureComputeApi api,
-         @Named(OPERATION_TIMEOUT) Integer operationTimeout, PollPeriod pollPeriod) {
-      return retry(new ResourceInStatusPredicate("Succeeded"), operationTimeout, pollPeriod.pollInitialPeriod,
-            pollPeriod.pollMaxPeriod);
-   }
-
-   @Provides
-   @Named("STORAGE")
-   protected Predicate<URI> provideStorageAccountAvailablePredicate(final AzureComputeApi api,
-         @Named(OPERATION_TIMEOUT) Integer operationTimeout, PollPeriod pollPeriod) {
-      return retry(new ActionDonePredicate(api), operationTimeout, pollPeriod.pollInitialPeriod,
-            pollPeriod.pollMaxPeriod);
-   }
-
-   @VisibleForTesting
-   static class ActionDonePredicate implements Predicate<URI> {
-
-      private final AzureComputeApi api;
-
-      public ActionDonePredicate(final AzureComputeApi api) {
-         this.api = checkNotNull(api, "api must not be null");
-      }
-
-      @Override
-      public boolean apply(final URI uri) {
-         checkNotNull(uri, "uri cannot be null");
-         return ParseJobStatus.JobStatus.DONE == api.getJobApi().jobStatus(uri)
-               || ParseJobStatus.JobStatus.NO_CONTENT == api.getJobApi().jobStatus(uri);
-      }
-
-   }
-
-   @VisibleForTesting
-   static class ImageCapturedPredicate implements Predicate<URI> {
-
-      private final AzureComputeApi api;
-
-      public ImageCapturedPredicate(final AzureComputeApi api) {
-         this.api = checkNotNull(api, "api must not be null");
-      }
-
-      @Override
-      public boolean apply(final URI uri) {
-         checkNotNull(uri, "uri cannot be null");
-         if (api.getJobApi().jobStatus(uri) != ParseJobStatus.JobStatus.DONE) {
-            return false;
-         }
-         List<ResourceDefinition> definitions = api.getJobApi().captureStatus(uri);
-         return definitions != null;
-      }
-   }
-
-   public static class VirtualMachineInStatePredicateFactory {
-
-      private final AzureComputeApi api;
-      private final PowerState powerState;
-      private final long timeout;
-      private final long period;
-      private final long maxPeriod;
-
-      VirtualMachineInStatePredicateFactory(final AzureComputeApi api, final PowerState powerState, final long timeout,
-            final long period, final long maxPeriod) {
-         this.api = checkNotNull(api, "api cannot be null");
-         this.powerState = checkNotNull(powerState, "powerState cannot be null");
-         this.timeout = timeout;
-         this.period = period;
-         this.maxPeriod = maxPeriod;
-      }
-
-      public Predicate<String> create(final String azureGroup) {
-         return retry(new Predicate<String>() {
-            @Override
-            public boolean apply(final String name) {
-               checkNotNull(name, "name cannot be null");
-               VirtualMachineInstance vmInstance = api.getVirtualMachineApi(azureGroup).getInstanceDetails(name);
-               if (vmInstance == null) {
-                  return false;
-               }
-               return powerState == vmInstance.powerState();
-            }
-         }, timeout, period, maxPeriod);
-      }
-   }
-   
-   public static class ResourceInStatusPredicate implements Predicate<Supplier<Provisionable>> {
-      private final String expectedStatus;
-
-      ResourceInStatusPredicate(String expectedStatus) {
-         this.expectedStatus = checkNotNull(expectedStatus, "expectedStatus cannot be null");
-      }
-
-      @Override
-      public boolean apply(Supplier<Provisionable> provisionableSupplier) {
-         checkNotNull(provisionableSupplier, "provisionableSupplier supplier cannot be null");
-         Provisionable provisionable = provisionableSupplier.get();
-         return provisionable != null && provisionable.provisioningState().equalsIgnoreCase(expectedStatus);
-      }
-   }
-
-   public static class PublicIpAvailablePredicateFactory {
-      private final AzureComputeApi api;
-      private final Predicate<Supplier<Provisionable>> resourceAvailable;
-
-      PublicIpAvailablePredicateFactory(final AzureComputeApi api, Predicate<Supplier<Provisionable>> resourceAvailable) {
-         this.api = checkNotNull(api, "api cannot be null");
-         this.resourceAvailable = resourceAvailable;
-      }
-
-      public Predicate<String> create(final String azureGroup) {
-         checkNotNull(azureGroup, "azureGroup cannot be null");
-         return new Predicate<String>() {
-            @Override
-            public boolean apply(final String name) {
-               checkNotNull(name, "name cannot be null");
-               return resourceAvailable.apply(new Supplier<Provisionable>() {
-                  @Override
-                  public Provisionable get() {
-                     PublicIPAddress publicIp = api.getPublicIPAddressApi(azureGroup).get(name);
-                     return publicIp == null ? null : publicIp.properties();
-                  }
-               });
-            }
-         };
-      }
-   }
-
-   public static class SecurityGroupAvailablePredicateFactory {
-      private final AzureComputeApi api;
-      private final Predicate<Supplier<Provisionable>> resourceAvailable;
-
-      SecurityGroupAvailablePredicateFactory(final AzureComputeApi api,
-            Predicate<Supplier<Provisionable>> resourceAvailable) {
-         this.api = checkNotNull(api, "api cannot be null");
-         this.resourceAvailable = resourceAvailable;
-      }
-
-      public Predicate<String> create(final String resourceGroup) {
-         checkNotNull(resourceGroup, "resourceGroup cannot be null");
-         return new Predicate<String>() {
-            @Override
-            public boolean apply(final String name) {
-               checkNotNull(name, "name cannot be null");
-               return resourceAvailable.apply(new Supplier<Provisionable>() {
-                  @Override
-                  public Provisionable get() {
-                     NetworkSecurityGroup sg = api.getNetworkSecurityGroupApi(resourceGroup).get(name);
-                     return sg == null ? null : sg.properties();
-                  }
-               });
-            }
-         };
-      }
-   }
-   
-   public static class ImageAvailablePredicateFactory {
-      private final AzureComputeApi api;
-      private final Predicate<Supplier<Provisionable>> resourceAvailable;
-      
-      ImageAvailablePredicateFactory(final AzureComputeApi api,
-            Predicate<Supplier<Provisionable>> resourceAvailable) {
-         this.api = checkNotNull(api, "api cannot be null");
-         this.resourceAvailable = resourceAvailable;
-      }
-
-      public Predicate<String> create(final String resourceGroup) {
-         checkNotNull(resourceGroup, "resourceGroup cannot be null");
-         return new Predicate<String>() {
-            @Override
-            public boolean apply(final String name) {
-               checkNotNull(name, "name cannot be null");
-               return resourceAvailable.apply(new Supplier<Provisionable>() {
-                  @Override
-                  public Provisionable get() {
-                     Image img = api.getVirtualMachineImageApi(resourceGroup).get(name);
-                     return img == null ? null : img.properties();
-                  }
-               });
-            }
-         };
-      }
-   }
-
 }

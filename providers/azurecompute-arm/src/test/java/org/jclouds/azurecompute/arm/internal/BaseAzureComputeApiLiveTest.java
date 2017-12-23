@@ -17,21 +17,42 @@
 package org.jclouds.azurecompute.arm.internal;
 
 import static com.google.common.base.Preconditions.checkNotNull;
-import static org.jclouds.azurecompute.arm.config.AzureComputeProperties.TIMEOUT_RESOURCE_DELETED;
 import static org.jclouds.compute.config.ComputeServiceProperties.TIMEOUT_IMAGE_AVAILABLE;
 import static org.jclouds.util.Predicates2.retry;
 import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertTrue;
+import static org.jclouds.azurecompute.arm.config.AzureComputeProperties.TIMEOUT_RESOURCE_DELETED;
+import static org.jclouds.azurecompute.arm.config.AzureComputeProperties.VAULT_DELETE_STATUS;
+import static org.jclouds.azurecompute.arm.config.AzureComputeProperties.VAULT_SECRET_DELETE_STATUS;
+import static org.jclouds.azurecompute.arm.config.AzureComputeProperties.VAULT_SECRET_RECOVERABLE_STATUS;
+import static org.jclouds.azurecompute.arm.config.AzureComputeProperties.VAULT_KEY_DELETED_STATUS;
+import static org.jclouds.azurecompute.arm.config.AzureComputeProperties.VAULT_KEY_RECOVERABLE_STATUS;
+import static org.jclouds.azurecompute.arm.config.AzureComputeProperties.VAULT_CERTIFICATE_DELETE_STATUS;
+import static org.jclouds.azurecompute.arm.config.AzureComputeProperties.VAULT_CERTIFICATE_RECOVERABLE_STATUS;
+import static org.jclouds.azurecompute.arm.config.AzureComputeProperties.VAULT_CERTIFICATE_OPERATION_STATUS;
 
+import java.io.IOException;
 import java.net.URI;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Properties;
 import java.util.Random;
 
+import com.google.common.base.Charsets;
+import com.google.common.base.Throwables;
+import com.google.common.io.Resources;
 import org.jclouds.apis.BaseApiLiveTest;
 import org.jclouds.azurecompute.arm.AzureComputeApi;
-import org.jclouds.azurecompute.arm.compute.config.AzureComputeServiceContextModule.PublicIpAvailablePredicateFactory;
+import org.jclouds.azurecompute.arm.config.Tenant;
+import org.jclouds.azurecompute.arm.compute.config.AzurePredicatesModule.VaultPredicates.DeletedVaultStatusPredicateFactory;
+import org.jclouds.azurecompute.arm.compute.config.AzurePredicatesModule.VaultKeyPredicates.DeletedKeyStatusPredicateFactory;
+import org.jclouds.azurecompute.arm.compute.config.AzurePredicatesModule.VaultKeyPredicates.RecoverableKeyStatusPredicateFactory;
+import org.jclouds.azurecompute.arm.compute.config.AzurePredicatesModule.VaultSecretPredicates.DeletedSecretStatusPredicateFactory;
+import org.jclouds.azurecompute.arm.compute.config.AzurePredicatesModule.VaultSecretPredicates.RecoverableSecretStatusPredicateFactory;
+import org.jclouds.azurecompute.arm.compute.config.AzurePredicatesModule.VaultCertificatePredicates.CertificateOperationStatusPredicateFactory;
+import org.jclouds.azurecompute.arm.compute.config.AzurePredicatesModule.VaultCertificatePredicates.DeletedCertificateStatusPredicateFactory;
+import org.jclouds.azurecompute.arm.compute.config.AzurePredicatesModule.VaultCertificatePredicates.RecoverableCertificateStatusPredicateFactory;
+import org.jclouds.azurecompute.arm.compute.config.AzurePredicatesModule.PublicIpAvailablePredicateFactory;
 import org.jclouds.azurecompute.arm.domain.NetworkSecurityGroup;
 import org.jclouds.azurecompute.arm.domain.NetworkSecurityGroupProperties;
 import org.jclouds.azurecompute.arm.domain.NetworkSecurityRule;
@@ -47,11 +68,11 @@ import com.google.common.base.Predicate;
 import com.google.common.base.Supplier;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
-import com.google.inject.Injector;
-import com.google.inject.Key;
-import com.google.inject.Module;
-import com.google.inject.TypeLiteral;
 import com.google.inject.name.Names;
+import com.google.inject.Injector;
+import com.google.inject.Module;
+import com.google.inject.Key;
+import com.google.inject.TypeLiteral;
 
 public class BaseAzureComputeApiLiveTest extends BaseApiLiveTest<AzureComputeApi> {
 
@@ -64,12 +85,22 @@ public class BaseAzureComputeApiLiveTest extends BaseApiLiveTest<AzureComputeApi
    protected Predicate<URI> resourceDeleted;
    protected PublicIpAvailablePredicateFactory publicIpAvailable;
    protected Predicate<Supplier<Provisionable>> resourceAvailable;
-   
+   protected DeletedVaultStatusPredicateFactory deletedVaultStatus;
+   protected DeletedKeyStatusPredicateFactory deletedKeyStatus;
+   protected RecoverableKeyStatusPredicateFactory recoverableKeyStatus;
+   protected DeletedSecretStatusPredicateFactory deletedSecretStatus;
+   protected RecoverableSecretStatusPredicateFactory recoverableSecretStatus;
+   protected DeletedCertificateStatusPredicateFactory deletedCertificateStatus;
+   protected RecoverableCertificateStatusPredicateFactory recoverableCertificateStatus;
+   protected CertificateOperationStatusPredicateFactory certificateOperationStatus;
+
+
    protected String resourceGroupName;
    
    protected String vaultResourceGroup;
    protected String vaultName;
    protected String vaultCertificateUrl;
+   protected String tenantId;
 
    public BaseAzureComputeApiLiveTest() {
       provider = "azurecompute-arm";
@@ -110,6 +141,16 @@ public class BaseAzureComputeApiLiveTest extends BaseApiLiveTest<AzureComputeApi
       publicIpAvailable = injector.getInstance(PublicIpAvailablePredicateFactory.class);
       resourceAvailable = injector.getInstance(Key.get(new TypeLiteral<Predicate<Supplier<Provisionable>>>() {
       }));
+      deletedVaultStatus = injector.getInstance(Key.get(DeletedVaultStatusPredicateFactory.class, Names.named(VAULT_DELETE_STATUS)));
+      deletedKeyStatus = injector.getInstance(Key.get(DeletedKeyStatusPredicateFactory.class, Names.named(VAULT_KEY_DELETED_STATUS)));
+      recoverableKeyStatus = injector.getInstance(Key.get(RecoverableKeyStatusPredicateFactory.class, Names.named(VAULT_KEY_RECOVERABLE_STATUS)));
+      deletedSecretStatus = injector.getInstance(Key.get(DeletedSecretStatusPredicateFactory.class, Names.named(VAULT_SECRET_DELETE_STATUS)));
+      recoverableSecretStatus = injector.getInstance(Key.get(RecoverableSecretStatusPredicateFactory.class, Names.named(VAULT_SECRET_RECOVERABLE_STATUS)));
+      deletedCertificateStatus = injector.getInstance(Key.get(DeletedCertificateStatusPredicateFactory.class, Names.named(VAULT_CERTIFICATE_DELETE_STATUS)));
+      recoverableCertificateStatus = injector.getInstance(Key.get(RecoverableCertificateStatusPredicateFactory.class, Names.named(VAULT_CERTIFICATE_RECOVERABLE_STATUS)));
+      certificateOperationStatus = injector.getInstance(Key.get(CertificateOperationStatusPredicateFactory.class, Names.named(VAULT_CERTIFICATE_OPERATION_STATUS)));
+
+      tenantId = injector.getInstance(Key.get(String.class, Tenant.class));
       return injector.getInstance(AzureComputeApi.class);
    }
 
@@ -198,4 +239,11 @@ public class BaseAzureComputeApiLiveTest extends BaseApiLiveTest<AzureComputeApi
       return subscriptionId;
    }
 
+   protected String stringFromResource(String resourceName) {
+      try {
+         return Resources.toString(getClass().getResource(resourceName), Charsets.UTF_8);
+      } catch (IOException e) {
+         throw Throwables.propagate(e);
+      }
+   }
 }
