@@ -52,7 +52,7 @@ import org.jclouds.compute.strategy.ListNodesStrategy;
 import org.jclouds.compute.strategy.impl.CreateNodesWithGroupEncodedIntoNameThenAddToSet;
 import org.jclouds.domain.Location;
 import org.jclouds.logging.Logger;
-import org.jclouds.util.Passwords;
+import org.jclouds.util.PasswordGenerator;
 
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Optional;
@@ -84,6 +84,7 @@ public class CreateResourcesThenCreateNodes extends CreateNodesWithGroupEncodedI
    private final String defaultVnetAddressPrefix;
    private final String defaultSubnetAddressPrefix;
    private final TemplateToAvailabilitySet templateToAvailabilitySet;
+   private final PasswordGenerator.Config passwordGenerator;
 
    @Inject
    protected CreateResourcesThenCreateNodes(
@@ -95,7 +96,8 @@ public class CreateResourcesThenCreateNodes extends CreateNodesWithGroupEncodedI
          AzureComputeApi api, @Named(DEFAULT_VNET_ADDRESS_SPACE_PREFIX) String defaultVnetAddressPrefix,
          @Named(DEFAULT_SUBNET_ADDRESS_PREFIX) String defaultSubnetAddressPrefix,
          LoadingCache<ResourceGroupAndNameAndIngressRules, String> securityGroupMap,
-         TemplateToAvailabilitySet templateToAvailabilitySet) {
+         TemplateToAvailabilitySet templateToAvailabilitySet,
+         PasswordGenerator.Config passwordGenerator) {
       super(addNodeWithGroupStrategy, listNodesStrategy, namingConvention, userExecutor,
             customizeNodeAndAddToGoodMapOrPutExceptionIntoBadMapFactory);
       this.api = api;
@@ -103,6 +105,7 @@ public class CreateResourcesThenCreateNodes extends CreateNodesWithGroupEncodedI
       this.defaultVnetAddressPrefix = defaultVnetAddressPrefix;
       this.defaultSubnetAddressPrefix = defaultSubnetAddressPrefix;
       this.templateToAvailabilitySet = templateToAvailabilitySet;
+      this.passwordGenerator = passwordGenerator;
    }
 
    @Override
@@ -141,7 +144,7 @@ public class CreateResourcesThenCreateNodes extends CreateNodesWithGroupEncodedI
       TemplateOptions options = template.getOptions();
       if (options.getLoginPassword() == null) {
          Optional<String> passwordOptional = template.getImage().getDefaultCredentials().getOptionalPassword();
-         options.overrideLoginPassword(passwordOptional.or(Passwords.generate()));
+         options.overrideLoginPassword(passwordOptional.or(passwordGenerator.generate()));
       }
    }
 

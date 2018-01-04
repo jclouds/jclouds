@@ -24,6 +24,7 @@ import org.jclouds.azurecompute.arm.domain.PublicIPAddressProperties;
 import org.jclouds.azurecompute.arm.domain.Subnet;
 import org.jclouds.azurecompute.arm.features.PublicIPAddressApi;
 import org.jclouds.azurecompute.arm.features.SubnetApi;
+import org.jclouds.util.PasswordGenerator;
 import org.testng.annotations.Test;
 
 import com.google.common.collect.ImmutableList;
@@ -101,7 +102,7 @@ public class CreateResourcesThenCreateNodesTest {
    }
 
    private static CreateResourcesThenCreateNodes strategy(AzureComputeApi api) {
-      return new CreateResourcesThenCreateNodes(null, null, null, null, null, api, null, null, null, null);
+      return new CreateResourcesThenCreateNodes(null, null, null, null, null, api, null, null, null, null, new PasswordGenerator().lower());
    }
 
    private static String netResource(String resource) {

@@ -53,6 +53,7 @@ import org.jclouds.compute.functions.NodeAndTemplateOptionsToStatementWithoutPub
 import org.jclouds.compute.options.TemplateOptions;
 import org.jclouds.compute.strategy.CreateNodesInGroupThenAddToSet;
 import org.jclouds.net.domain.IpPermission;
+import org.jclouds.util.PasswordGenerator;
 
 import com.google.common.base.Function;
 import com.google.common.cache.CacheBuilder;
@@ -101,6 +102,21 @@ public class AzureComputeServiceContextModule extends
       }).to(AzureComputeImageExtension.class);
       bind(new TypeLiteral<SecurityGroupExtension>() {
       }).to(AzureComputeSecurityGroupExtension.class);
+   }
+   
+   @Provides
+   @Singleton
+   protected PasswordGenerator.Config providePasswordGenerator() {
+      // Guest passwords must be between 6-72 characters long.
+      // Must contain an upper case character.
+      // Must contain a lower case character.
+      // Must contain a numeric digit.
+      // Must contain a special character. Control characters are not allowed.
+      return new PasswordGenerator()
+            .lower().min(2).max(10)
+            .upper().min(2).max(10)
+            .numbers().min(2).max(10)
+            .symbols().min(2).max(10);
    }
 
    @Provides
