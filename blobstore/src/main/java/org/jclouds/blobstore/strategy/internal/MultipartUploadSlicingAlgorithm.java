@@ -103,14 +103,10 @@ public final class MultipartUploadSlicingAlgorithm {
          unitPartSize = maximumPartSize;
          parts = (int)(length / unitPartSize);
       }
-      if (parts > maximumNumberOfParts) { // if splits in too many parts or
-                                         // cannot be split
-         unitPartSize = minimumPartSize; // take the minimum part size
-         parts = (int)(length / unitPartSize);
-      }
-      if (parts > maximumNumberOfParts) { // if still splits in too many parts
-         parts = maximumNumberOfParts - 1; // limit them. do not care about not
-                                          // covering
+      if (parts > maximumNumberOfParts) {
+         partSize = length / maximumNumberOfParts;
+         unitPartSize = partSize;
+         parts = maximumNumberOfParts;
       }
       long remainder = length % unitPartSize;
       if (remainder == 0 && parts > 0) {
