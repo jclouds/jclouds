@@ -59,7 +59,6 @@ import org.jclouds.profitbricks.domain.Server;
 import org.jclouds.profitbricks.domain.Snapshot;
 import org.jclouds.profitbricks.domain.Storage;
 import org.jclouds.profitbricks.features.ServerApi;
-import org.jclouds.profitbricks.util.Passwords;
 import org.jclouds.rest.ResourceNotFoundException;
 
 import com.google.common.base.Function;
@@ -73,6 +72,8 @@ import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.inject.Inject;
 
+import org.jclouds.util.PasswordGenerator;
+
 @Singleton
 public class ProfitBricksComputeServiceAdapter implements ComputeServiceAdapter<Server, Hardware, Provisionable, Location> {
 
@@ -85,6 +86,7 @@ public class ProfitBricksComputeServiceAdapter implements ComputeServiceAdapter<
    private final ListeningExecutorService executorService;
    private final ProvisioningJob.Factory jobFactory;
    private final ProvisioningManager provisioningManager;
+   private final PasswordGenerator.Config passwordGenerator;
 
    private static final Integer DEFAULT_LAN_ID = 1;
 
@@ -93,12 +95,14 @@ public class ProfitBricksComputeServiceAdapter implements ComputeServiceAdapter<
            @Named(POLL_PREDICATE_DATACENTER) Predicate<String> waitDcUntilAvailable,
            @Named(PROPERTY_USER_THREADS) ListeningExecutorService executorService,
            ProvisioningJob.Factory jobFactory,
-           ProvisioningManager provisioningManager) {
+           ProvisioningManager provisioningManager,
+           PasswordGenerator.Config passwordGenerator) {
       this.api = api;
       this.waitDcUntilAvailable = waitDcUntilAvailable;
       this.executorService = executorService;
       this.jobFactory = jobFactory;
       this.provisioningManager = provisioningManager;
+      this.passwordGenerator = passwordGenerator;
    }
    
    @Override
@@ -115,7 +119,7 @@ public class ProfitBricksComputeServiceAdapter implements ComputeServiceAdapter<
 
       TemplateOptions options = template.getOptions();
       final String loginUser = isNullOrEmpty(options.getLoginUser()) ? "root" : options.getLoginUser();
-      final String password = options.hasLoginPassword() ? options.getLoginPassword() : Passwords.generate();
+      final String password = options.hasLoginPassword() ? options.getLoginPassword() : passwordGenerator.generate();
 
       final org.jclouds.compute.domain.Image image = template.getImage();
 

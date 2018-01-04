@@ -57,6 +57,7 @@ import org.jclouds.profitbricks.domain.Provisionable;
 import org.jclouds.profitbricks.domain.ProvisioningState;
 import org.jclouds.profitbricks.domain.Server;
 import org.jclouds.profitbricks.domain.Storage;
+import org.jclouds.util.PasswordGenerator;
 
 import com.google.common.base.Function;
 import com.google.common.base.Predicate;
@@ -97,6 +98,16 @@ public class ProfitBricksComputeServiceContextModule extends
 
       bind(new TypeLiteral<Function<Hardware, Hardware>>() {
       }).to(Class.class.cast(IdentityFunction.class));
+   }
+   
+   @Provides
+   @Singleton
+   protected PasswordGenerator.Config providePasswordGenerator() {
+      return new PasswordGenerator()
+            .lower().min(2).max(10).exclude("ilowyz".toCharArray())
+            .upper().min(2).max(10).exclude("IOWYZ".toCharArray())
+            .numbers().min(2).max(10).exclude("10".toCharArray())
+            .symbols().count(0);
    }
 
    @Provides
