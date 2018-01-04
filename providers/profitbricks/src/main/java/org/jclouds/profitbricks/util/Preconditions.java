@@ -21,7 +21,6 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Strings.isNullOrEmpty;
 import static com.google.common.net.InetAddresses.isInetAddress;
 import static org.jclouds.profitbricks.util.MacAddresses.isMacAddress;
-import static org.jclouds.util.Passwords.isValidPassword;
 
 import java.util.List;
 import java.util.regex.Pattern;
@@ -92,9 +91,15 @@ public final class Preconditions {
    public static void checkSize(Float size) {
       checkArgument(size > 1, "Storage size must be > 1GB");
    }
+   
+   private static final int VALID_PASSWORD_MIN_LENGTH = 8;
+   private static final int VALID_PASSWORD_MAX_LENGTH = 50;
+   private static final String PASSWORD_FORMAT = String.format(
+           "[a-zA-Z0-9][^iIloOwWyYzZ10]{%d,%d}", VALID_PASSWORD_MIN_LENGTH - 1, VALID_PASSWORD_MAX_LENGTH);
+   private static final Pattern PASSWORD_PATTERN = Pattern.compile(PASSWORD_FORMAT);
 
    public static void checkPassword(String password) {
-      checkArgument(isValidPassword(password), "Password must be between 8 and 50 characters, "
+      checkArgument(PASSWORD_PATTERN.matcher(password).matches(), "Password must be between 8 and 50 characters, "
               + "only a-z, A-Z, 0-9 without  characters i, I, l, o, O, w, W, y, Y, z, Z and 1, 0");
    }
 }
