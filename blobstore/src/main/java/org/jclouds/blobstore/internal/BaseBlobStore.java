@@ -356,13 +356,23 @@ public abstract class BaseBlobStore implements BlobStore {
       MultipartUpload mpu = initiateMultipartUpload(container, blob.getMetadata(), overrides);
       try {
          long contentLength = blob.getMetadata().getContentMetadata().getContentLength();
+         // TODO: inject MultipartUploadSlicingAlgorithm to override default part size
          MultipartUploadSlicingAlgorithm algorithm = new MultipartUploadSlicingAlgorithm(
                getMinimumMultipartPartSize(), getMaximumMultipartPartSize(), getMaximumNumberOfParts());
          long partSize = algorithm.calculateChunkSize(contentLength);
          int partNumber = 1;
-         for (Payload payload : slicer.slice(blob.getPayload(), partSize)) {
+         // TODO: for InputStream payloads, this buffers all parts in-memory!
+         while (partNumber < algorithm.getParts()) {
+            Payload payload = slicer.slice(blob.getPayload(), algorithm.getCopied(), partSize);
             BlobUploader b =
                   new BlobUploader(mpu, partNumber++, payload);
+            parts.add(executor.submit(b));
+            algorithm.addCopied(partSize);
+         }
+         if (algorithm.getRemaining() != 0) {
+            Payload payload = slicer.slice(blob.getPayload(), algorithm.getCopied(), algorithm.getRemaining());
+            BlobUploader b =
+                  new BlobUploader(mpu, partNumber, payload);
             parts.add(executor.submit(b));
          }
          return completeMultipartUpload(mpu, Futures.getUnchecked(Futures.allAsList(parts)));
