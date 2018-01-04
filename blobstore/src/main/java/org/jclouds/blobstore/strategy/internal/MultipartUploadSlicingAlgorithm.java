@@ -132,8 +132,7 @@ public final class MultipartUploadSlicingAlgorithm {
       this.copied = copied;
    }
 
-   @VisibleForTesting
-   protected int getParts() {
+   public int getParts() {
       return parts;
    }
 
@@ -141,7 +140,7 @@ public final class MultipartUploadSlicingAlgorithm {
       return ++part;
    }
 
-   protected void addCopied(long copied) {
+   public void addCopied(long copied) {
       this.copied += copied;
    }
 
@@ -156,8 +155,7 @@ public final class MultipartUploadSlicingAlgorithm {
       return chunkSize;
    }
 
-   @VisibleForTesting
-   protected long getRemaining() {
+   public long getRemaining() {
       return remaining;
    }
 
