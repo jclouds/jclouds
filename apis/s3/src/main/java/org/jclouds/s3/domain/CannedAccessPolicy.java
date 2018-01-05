@@ -16,6 +16,8 @@
  */
 package org.jclouds.s3.domain;
 
+import com.google.common.base.CaseFormat;
+
 /**
  * Description from Amazon's documentation:
  * 
@@ -36,34 +38,49 @@ public enum CannedAccessPolicy {
     /**
      * Owner gets FULL_CONTROL. No one else has access rights (default).
      */
-    PRIVATE("private"),
+    PRIVATE,
     /**
      * Owner gets FULL_CONTROL and the anonymous identity is granted READ
      * access. If this policy is used on an object, it can be read from a
      * browser with no authentication.
      */
-    PUBLIC_READ("public-read"),
+    PUBLIC_READ,
     /**
      * Owner gets FULL_CONTROL, the anonymous identity is granted READ and
      * WRITE access. This can be a useful policy to apply to a bucket, but is
      * generally not recommended.
      */
-    PUBLIC_READ_WRITE("public-read-write"),
+    PUBLIC_READ_WRITE,
+    /**
+     * Owner gets FULL_CONTROL. Amazon EC2 gets READ access to GET an Amazon
+     * Machine Image (AMI) bundle from Amazon S3.
+     */
+    AWS_EXEC_READ,
     /**
      * Owner gets FULL_CONTROL, and any identity authenticated as a registered
      * Amazon S3 user is granted READ access.
      */
-    AUTHENTICATED_READ("authenticated-read");
-
-    private String policyName;
-
-    CannedAccessPolicy(String policyName) {
-	this.policyName = policyName;
-    }
+    AUTHENTICATED_READ,
+    /**
+     * Object owner gets FULL_CONTROL. Bucket owner gets READ access. If you
+     * specify this canned ACL when creating a bucket, Amazon S3 ignores it.
+     */
+    BUCKET_OWNER_READ,
+    /**
+     * Both the object owner and the bucket owner get FULL_CONTROL over the
+     * object. If you specify this canned ACL when creating a bucket, Amazon S3
+     * ignores it.
+     */
+    BUCKET_OWNER_FULL_CONTROL,
+    /**
+     * The LogDelivery group gets WRITE and READ_ACP permissions on the bucket.
+     * For more information about logs, see (Server Access Logging).
+     */
+    LOG_DELIVERY_WRITE;
 
     @Override
     public String toString() {
-	return policyName;
+       return CaseFormat.UPPER_UNDERSCORE.to(CaseFormat.LOWER_HYPHEN, name());
     }
     
     /**
@@ -77,16 +94,6 @@ public enum CannedAccessPolicy {
      * policy.
      */
     public static CannedAccessPolicy fromHeader(String capHeader) {
-       if ("private".equals(capHeader)) {
-          return CannedAccessPolicy.PRIVATE;
-       } else if ("public-read".equals(capHeader)) {
-          return CannedAccessPolicy.PUBLIC_READ;
-       } else if ("public-read-write".equals(capHeader)) {
-          return CannedAccessPolicy.PUBLIC_READ_WRITE;
-       } else if ("authenticated-read".equals(capHeader)) {
-          return CannedAccessPolicy.AUTHENTICATED_READ;
-       } else {
-          return null;
-       }
+       return valueOf(CaseFormat.LOWER_HYPHEN.to(CaseFormat.UPPER_UNDERSCORE, capHeader));
     }
 }
