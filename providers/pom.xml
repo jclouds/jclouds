@@ -37,6 +37,7 @@
     <module>aws-sqs</module>
     <module>aws-sts</module>
     <module>azureblob</module>
+    <module>azurecompute-arm</module>
     <module>b2</module>
     <module>digitalocean2</module>
     <module>dynect</module>

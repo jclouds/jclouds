@@ -1,8 +1,8 @@
-jclouds Labs - Azure Compute ARM Provider
-============
+Azure Compute ARM Provider
+==========================
 
-Build status for azurecomputearm module:
-[![Build Status](https://jclouds.ci.cloudbees.com/buildStatus/icon?job=jclouds-labs/org.apache.jclouds.labs$azurecompute-arm)](https://jclouds.ci.cloudbees.com/job/jclouds-labs/org.apache.jclouds.labs$azurecompute-arm/)
+Build status for azurecompute-arm module:
+[![Build Status](https://jclouds.ci.cloudbees.com/buildStatus/icon?job=jclouds/org.apache.jclouds.provider$azurecompute-arm)](https://jclouds.ci.cloudbees.com/job/jclouds/org.apache.jclouds.provider$azurecompute-arm/)
 
 ## Setting Up Test Credentials
 

@@ -143,5 +143,10 @@
       <artifactId>packet</artifactId>
       <version>${project.version}</version>
     </dependency>
+    <dependency>
+      <groupId>org.apache.jclouds.provider</groupId>
+      <artifactId>azurecompute-arm</artifactId>
+      <version>${project.version}</version>
+    </dependency>
   </dependencies>
 </project>
