@@ -1,0 +1,55 @@
+{
+	"recoveryId": "https://kvvaultapilivetest.vault.azure.net/deletedcertificates/myRecoverableCertificate",
+	"deletedDate": 1509346545,
+	"scheduledPurgeDate": 1517122545,
+	"id": "https://kvvaultapilivetest.vault.azure.net/certificates/myRecoverableCertificate/42f1b607074a4531b4f14fb4447d4346",
+	"kid": "https://kvvaultapilivetest.vault.azure.net/keys/myRecoverableCertificate/42f1b607074a4531b4f14fb4447d4346",
+	"sid": "https://kvvaultapilivetest.vault.azure.net/secrets/myRecoverableCertificate/42f1b607074a4531b4f14fb4447d4346",
+	"x5t": "-qEnW6P9TdfOOXzbNQNS5ZKveRo",
+	"cer": "MIIFNDCCAxygAwIBAgICQ0MwDQYJKoZIhvcNAQELBQAwVjELMAkGA1UEBhMCVVMxEzARBgNVBAgMCkNhbGlmb3JuaWExDzANBgNVBAoMBkZvb2JhcjEhMB8GA1UEAwwYRm9vYmFyIEludGVybWVkaWF0ZSBDQSAxMB4XDTE3MTAyODIyNTIxNFoXDTE4MTEwNzIyNTIxNFowUTELMAkGA1UEBhMCVVMxEzARBgNVBAgMCkNhbGlmb3JuaWExDzANBgNVBAoMBkZvb2JhcjEcMBoGA1UEAwwTdGVzdHNpdGUuZm9vYmFyLmNvbTCCASIwDQYJKoZIhvcNAQEBBQADggEPADCCAQoCggEBAKKlPGmdiqKloSbUri9gvo2lyS0x2axSpeTfgIxI4Qnqhq8wMkih+SuO8+2rzIUd3S9nYqVww6yy+qHiJLXi3DKVYM/jgJnF+PlUoXxulD1abN8kX+TCKuHeAfTSIjM6WSgimGqW3hoB6bYHsaUFaAIg5FYbg5/IpbEMnD2yjU4M/nHVbxRwPqHGYdYfSqGDeHYjDb8GdA/+N0JDEoMVflTQKrDzq9R0lwOg+kICem1D+kww9ajyTu/7QdE8oOhAzuqFIVkCyZwpkrs576ng34mP04vpGcBs8YiKODydtFl2p5labXr5la0LVpLJL6rUkM3EhWOhQ0s+fCGtfrlmFRMCAwEAAaOCAQ8wggELMAkGA1UdEwQCMAAwEQYJYIZIAYb4QgEBBAQDAgZAMDMGCWCGSAGG+EIBDQQmFiRPcGVuU1NMIEdlbmVyYXRlZCBTZXJ2ZXIgQ2VydGlmaWNhdGUwHQYDVR0OBBYEFNPsyKBhnCjL7pVBLRYK3jaoZ8PfMHIGA1UdIwRrMGmAFAf9rGqvLeJheBNJOHBKTG3Oz32PoU2kSzBJMQswCQYDVQQGEwJVUzETMBEGA1UECAwKQ2FsaWZvcm5pYTEPMA0GA1UECgwGRm9vYmFyMRQwEgYDVQQDDAtGb29iYXIgUm9vdIICQkIwDgYDVR0PAQH/BAQDAgWgMBMGA1UdJQQMMAoGCCsGAQUFBwMBMA0GCSqGSIb3DQEBCwUAA4ICAQA4sFKv4JDZ0+CVjcHL9bkTpk5I2L45xXk3d7GrhBpGveyy8vlb/g7P0qyAVo0UnB+eRTtwk6GTsJdzz4FBem+FDq8ZO/N51Rn4ZJQbDg24eGErK4rpbOo5OQgKKhTKjjBYwsAsIOkJ1TKQDQ3++Kqw3cWh/vlCWoxGPSMOeU/Iro34IWzSeEREMamYo5kIYq2ERCcVSoTcYB87cTYMU+ORyQSEx/OncDuAKm45ub92By5NpeFVMk+8ibifgzbNJHVnaZUVg8ScdM1A4Db6WAL0SUsYIawrnQ+TENs+6Ekls+wu8G5FAmbtOEV0WOafGvdcnELn5IPXlkvLbiRx5EChG+nF3XrLgn3dBQwP2cGrI/IPRm1XfaaBAkMSkf6St5TX3C40g1CGcNSVoKBYBB2Di+hPXwTHImGggR1JF34ljHCokMoPxmr7lP9pam0dhP/SSpIwxfsvDJylBgUEqTr3tsVDIDfMtJjudK7A7H1HMoqEiqlzRvJIEZ1koOxANFcQ1f9am2PPUNFvfK9IbLQlV8d4k1w6xBAeOVke79lJI9pTTCSVb+PTDniEL79JXjmjQUoKE4zo1u41d+wLu3dEGM27GI7BdLYt6bRsolZvrbey7Nn4c0t4ug4B4GTd1SLLVJns/IRLBrNr1anBJ7u9WFruBUEWwtdxAwSoXdtIIQ==",
+	"attributes": {
+		"enabled": true,
+		"nbf": 1509231134,
+		"exp": 1541631134,
+		"created": 1509346510,
+		"updated": 1509346510,
+		"recoveryLevel": "Recoverable+Purgeable"
+	},
+	"policy": {
+		"id": "https://kvvaultapilivetest.vault.azure.net/certificates/myRecoverableCertificate/policy",
+		"key_props": {
+			"exportable": true,
+			"kty": "RSA",
+			"key_size": 2048,
+			"reuse_key": false
+		},
+		"secret_props": {
+			"contentType": "application/x-pem-file"
+		},
+		"x509_props": {
+			"subject": "CN=testsite.foobar.com, O=Foobar, S=California, C=US",
+			"ekus": ["1.3.6.1.5.5.7.3.1"],
+			"key_usage": ["digitalSignature", "keyEncipherment"],
+			"validity_months": 13,
+			"basic_constraints": {
+				"ca": false
+			}
+		},
+		"lifetime_actions": [{
+			"trigger": {
+				"lifetime_percentage": 80
+			},
+			"action": {
+				"action_type": "EmailContacts"
+			}
+		}],
+		"issuer": {
+			"name": "Unknown"
+		},
+		"attributes": {
+			"enabled": true,
+			"created": 1509346510,
+			"updated": 1509346510
+		}
+	}
+}

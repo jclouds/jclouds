@@ -1,0 +1,15 @@
+{
+	"credentials": {
+		"account_id": "imauser",
+		"pwd": "This1sMyPa55wurD!"
+	},
+	"org_details": {
+		"admin_details": [{
+			"email": "adminguy@certsforme.com",
+			"first_name": "Admin",
+			"last_name": "Guy",
+			"phone": "867-5309"
+		}]
+	},
+	"provider": "GlobalSign"
+}

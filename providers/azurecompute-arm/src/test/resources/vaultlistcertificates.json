@@ -1,0 +1,27 @@
+{
+	"value": [{
+		"id": "https://kvvaultapilivetest.vault.azure.net/certificates/myCertificate",
+		"x5t": "K7HXO6YIK6xwCX8W1InUKsJV9Rk",
+		"attributes": {
+			"enabled": true,
+			"nbf": 1509345867,
+			"exp": 1540882467,
+			"created": 1509346467,
+			"updated": 1509346472
+		},
+		"tags": {
+			"selfsigned": "true"
+		}
+	}, {
+		"id": "https://kvvaultapilivetest.vault.azure.net/certificates/myImportableCertificate",
+		"x5t": "-qEnW6P9TdfOOXzbNQNS5ZKveRo",
+		"attributes": {
+			"enabled": true,
+			"nbf": 1509231134,
+			"exp": 1541631134,
+			"created": 1509346469,
+			"updated": 1509346469
+		}
+	}],
+	"nextLink": null
+}

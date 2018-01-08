@@ -1,0 +1,22 @@
+{
+  "resources": [
+    {
+      "name": "[parameters('vnName')]",
+      "type": "Microsoft.Compute/virtualMachines",
+      "location": "westeurope",
+      "apiVersion": "2015-06-15",
+      "properties": {
+        "hardwareProfile": {
+          "vmSize": "[paramters('vmSize')]"
+        },
+        "storageProfile": {
+          "osDisk": {
+            "osType":"Windows",
+            "name":"testmachine-osDisk.539c38a7-642c-43cc-a20b-89b0f3e56afe.vhd"
+          }
+        },
+        "provisioningState": "0.0"
+      }
+    }
+  ]
+}

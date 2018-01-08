@@ -1,0 +1,11 @@
+{
+	"id": "https://kvvaultapilivetest.vault.azure.net/certificates/myCertificate/pending",
+	"issuer": {
+		"name": "Self"
+	},
+	"csr": "MIICszCCAZsCAQAwIzEhMB8GA1UEAxMYbXljZXJ0aWZpY2F0ZS5mb29iYXIuY29tMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEArrIwtQO60BI1vUkS/Vx0TQ5dBLjWBFfQFUHABJoKXCeloLrHWrWnhaxyj5jvEVGYF5OLBNeHd6PR43bmHKnzq3vhQXUA1sKBRxAJavSM9a+MKBpN39aKvSnqRNdnETE8kwNteIpbmDVMe18UnGtyhRbMKqJ73HpGyyRdiD8nTS9F65SCRQlKALNz0Vi3z52Loo6kRoZPAfcRkDAbbg7JxIuMEEcbrBR0dScR0m2OucYtR3PQ7PUQMXSsLwZmGAu1e/KuqjTNC6XpxRpWSTHf3kS1Q4LjNXde8sk1/5Xovzo/MlVQ7L2tt4pVK79ZkeePbL9ZSKsTc3Thi7G+o8pCewIDAQABoEswSQYJKoZIhvcNAQkOMTwwOjAOBgNVHQ8BAf8EBAMCBaAwHQYDVR0lBBYwFAYIKwYBBQUHAwEGCCsGAQUFBwMCMAkGA1UdEwQCMAAwDQYJKoZIhvcNAQELBQADggEBABoDgWVU0DqfhKsujIa4gUHyZKvRWhms0reqb4Ld9GkF4O6TV+TxibBUZRW3SSVvA+po8G7aX+E+si0BfQiwM1PutcK0f5WuYMiEkQ6xaiDhIblrouCYRCTiYmmt2+8iuKAtDNqgqMJjViGXUKcGQgz7UTEJY/LLlgxW2kDyfEJOhGls40AT7tuXAjZ6QPLT9vAdQ8B0L0JNzJ6lJcDe7KattWonjQ4cLZ7xvY0SwUyvabui1UkOFze/EEkLwnJjigvfWkzhoJS7j0Cp3nI08c5zd/rQGq1XNVb9plnjtQP0kwNVQdHVeTug9rqZCyuS3jqwa1prrXkZJyufMmuNSV0=",
+	"cancellation_requested": false,
+	"status": "inProgress",
+	"status_details": "Pending certificate created. Certificate request is in progress. This may take some time based on the issuer provider. Please check again later.",
+	"request_id": "550fcfd2c33440aea6cd354658f91ddb"
+}

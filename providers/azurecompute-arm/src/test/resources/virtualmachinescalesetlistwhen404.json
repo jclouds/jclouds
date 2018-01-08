@@ -1,0 +1,6 @@
+{
+  "error": {
+    "code": "ResourceGroupNotFound",
+    "message": "Resource group 'jcloud-eastus1' could not be found."
+  }
+}

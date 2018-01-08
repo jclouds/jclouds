@@ -1,0 +1,7 @@
+{
+	"contacts": [{
+		"email": "foo@bar.com",
+		"name": "Foo bar",
+		"phone": "867-5309"
+	}]
+}

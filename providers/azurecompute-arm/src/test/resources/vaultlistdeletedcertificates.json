@@ -1,0 +1,18 @@
+{
+	"value": [{
+		"recoveryId": "https://kvvaultapilivetest.vault.azure.net/deletedcertificates/myRecoverableCertificate",
+		"deletedDate": 1509346545,
+		"scheduledPurgeDate": 1517122545,
+		"id": "https://kvvaultapilivetest.vault.azure.net/certificates/myRecoverableCertificate",
+		"x5t": "-qEnW6P9TdfOOXzbNQNS5ZKveRo",
+		"attributes": {
+			"enabled": true,
+			"nbf": 1509231134,
+			"exp": 1541631134,
+			"created": 1509346510,
+			"updated": 1509346510,
+			"recoveryLevel": "Recoverable+Purgeable"
+		}
+	}],
+	"nextLink": null
+}

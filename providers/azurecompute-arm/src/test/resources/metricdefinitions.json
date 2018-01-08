@@ -1,0 +1,25 @@
+{
+  "value": [
+    {
+      "id": "/subscriptions/SUBSCRIPTIONID/resourceGroups/myresourcegroup/providers/Microsoft.Compute/virtualMachines/myvm/providers/microsoft.insights/metricdefinitions/Percentage CPU",
+      "resourceId": "/subscriptions/SUBSCRIPTIONID/resourceGroups/myresourcegroup/providers/Microsoft.Compute/virtualMachines/myvm",
+      "name": {
+        "value": "Percentage CPU",
+        "localizedValue": "Percentage CPU"
+      },
+      "isDimensionRequired": false,
+      "unit": "Percent",
+      "primaryAggregationType": "Average",
+      "metricAvailabilities": [
+        {
+          "timeGrain": "PT1M",
+          "retention": "P30D"
+        },
+        {
+          "timeGrain": "PT1H",
+          "retention": "P30D"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,12 @@
+[
+  {
+    "location": "eastus",
+    "name": "MicrosoftVisualStudio",
+    "id": "/Subscriptions/c36d97d3-3fea-4561-aa2d-e61168908c5b/Providers/Microsoft.Compute/Locations/eastus/Publishers/MicrosoftVisualStudio"
+  },
+  {
+    "location": "eastus",
+    "name": "MicrosoftWindowsServer",
+    "id": "/Subscriptions/c36d97d3-3fea-4561-aa2d-e61168908c5b/Providers/Microsoft.Compute/Locations/eastus/Publishers/MicrosoftWindowsServer"
+  }
+]

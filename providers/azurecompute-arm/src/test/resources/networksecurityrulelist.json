@@ -1,0 +1,35 @@
+{
+  "value": [{
+    "name": "denyallout",
+    "id": "/subscriptions/e43b3d9c-f839-48a8-b0fb-691aee6f1e4d/resourceGroups/jims859groupjclouds/providers/Microsoft.Network/networkSecurityGroups/testNetworkSecurityGroup/securityRules/denyallout",
+    "etag": "W/\"409ae6c7-fbe1-4bc4-aadb-c1d8330844d2\"",
+    "properties": {
+      "provisioningState": "Succeeded",
+      "description": "deny all out",
+      "protocol": "Tcp",
+      "sourcePortRange": "*",
+      "destinationPortRange": "*",
+      "sourceAddressPrefix": "*",
+      "destinationAddressPrefix": "*",
+      "access": "Deny",
+      "priority": 4095,
+      "direction": "Outbound"
+    }
+  }, {
+    "name": "allowalludpin",
+    "id": "/subscriptions/e43b3d9c-f839-48a8-b0fb-691aee6f1e4d/resourceGroups/jims859groupjclouds/providers/Microsoft.Network/networkSecurityGroups/testNetworkSecurityGroup/securityRules/allowalludpin",
+    "etag": "W/\"409ae6c7-fbe1-4bc4-aadb-c1d8330844d2\"",
+    "properties": {
+      "provisioningState": "Succeeded",
+      "description": "allow all udp in",
+      "protocol": "Udp",
+      "sourcePortRange": "*",
+      "destinationPortRange": "*",
+      "sourceAddressPrefix": "*",
+      "destinationAddressPrefix": "*",
+      "access": "Allow",
+      "priority": 4094,
+      "direction": "Inbound"
+    }
+  }]
+}

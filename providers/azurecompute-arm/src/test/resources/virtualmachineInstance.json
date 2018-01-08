@@ -1,0 +1,40 @@
+{
+  "vmAgent": {
+    "vmAgentVersion": "2.7.1198.766",
+    "statuses": [
+      {
+        "code": "ProvisioningState/succeeded",
+        "level": "Info",
+        "displayStatus": "Ready",
+        "message": "GuestAgent is running and accepting new configurations.",
+        "time": "2016-05-04T08:42:15+00:00"
+      }
+    ]
+  },
+  "disks": [
+    {
+      "name": "windowsmachine",
+      "statuses": [
+        {
+          "code": "ProvisioningState/succeeded",
+          "level": "Info",
+          "displayStatus": "Provisioning succeeded",
+          "time": "2016-05-04T08:31:45.2525129+00:00"
+        }
+      ]
+    }
+  ],
+  "statuses": [
+    {
+      "code": "ProvisioningState/succeeded",
+      "level": "Info",
+      "displayStatus": "Provisioning succeeded",
+      "time": "2016-05-04T08:38:52.4310433+00:00"
+    },
+    {
+      "code": "PowerState/running",
+      "level": "Info",
+      "displayStatus": "VM running"
+    }
+  ]
+}

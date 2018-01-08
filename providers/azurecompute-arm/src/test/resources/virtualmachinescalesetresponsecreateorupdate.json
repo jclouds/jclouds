@@ -1,0 +1,103 @@
+{
+  "location": "eastus",
+  "sku": {
+    "name": "Standard_A1",
+    "tier": "Standard",
+    "capacity": 10
+  },
+  "properties": {
+    "singlePlacementGroup": true,
+    "overProvision": true,
+    "upgradePolicy": {
+      "mode": "Manual"
+    },
+    "virtualMachineProfile": {
+      "storageProfile": {
+        "imageReference": {
+          "publisher": "Canonical",
+          "offer": "UbuntuServer",
+          "sku": "16.04-LTS",
+          "version": "latest"
+        },
+        "osDisk": {
+          "osType": "Windows",
+          "createOption": "FromImage",
+          "managedDisk": {
+            "storageAccountType": "Standard_LRS"
+          }
+        },
+        "dataDisks": [{
+          "diskSizeGB": "10",
+          "lun": 1,
+          "createOption": "Unrecognized",
+          "caching": "None",
+          "managedDisk": {
+            "storageAccountType": "Standard_LRS"
+          }
+        }
+        ]
+      },
+      "osProfile": {
+        "computerNamePrefix": "jclouds-vmssname",
+        "adminUsername": "jclouds",
+        "adminPassword": "jClouds1!",
+        "linuxConfiguration": {
+          "disablePasswordAuthentication": "False"
+        },
+        "secrets": []
+      },
+      "networkProfile": {
+        "networkInterfaceConfigurations": [{
+          "name": "nicconfig1",
+          "properties": {
+            "primary": true,
+            "enableAcceleratedNetworking": false,
+            "dnsSettings": {
+              "dnsServers": ["8.8.8.8"]
+            },
+            "ipConfigurations": [{
+              "name": "ipconfig1",
+              "properties": {
+                "publicIPAddressConfiguration": {
+                  "name": "pub1",
+                  "properties": {
+                    "idleTimeoutInMinutes": 15
+                  }
+                },
+                "subnet": {
+                  "name": "virtualNetworkName",
+                  "id": "/subscriptions/xxxxx-xxxx-xxxx-xxxx-xxxxxx/resourceGroups/jcloud-eastus/providers/Microsoft.Network/virtualNetworks/jclouds-eastus-virtualNetworkName/subnets/jclouds-eastus-subnet",
+                  "properties": {}
+                },
+                "privateIPAddressVersion": "IPv4",
+                "loadBalancerBackendAddressPools": [],
+                "loadBalancerInboundNatPools": []
+              }
+            }
+            ]
+          }
+        }
+        ]
+      },
+      "extensionProfile": {
+        "extensions": [{
+          "name": "extensionName",
+          "properties": {
+            "publisher": "Microsoft.compute",
+            "type": "CustomScriptExtension",
+            "typeHandlerVersion": "1.1",
+            "autoUpgradeMinorVersion": false,
+            "settings": {
+              "fileUris": ["https://mystorage1.blob.core.windows.net/winvmextekfacnt/SampleCmd_1.cmd"],
+              "commandToExecute": "SampleCmd_1.cmd"
+            },
+            "protectedSettings": {
+              "StorageAccountKey": "jclouds-accountkey"
+            }
+          }
+        }
+        ]
+      }
+    }
+  }
+}

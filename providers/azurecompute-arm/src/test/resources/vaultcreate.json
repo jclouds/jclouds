@@ -1,0 +1,26 @@
+{
+  "id": "/subscriptions/3fee811e-11bf-4b5c-9c62-a2f28b517724/resourceGroups/rg-vaultapilivetest-jims/providers/Microsoft.KeyVault/vaults/kvvaultapilivetest",
+  "name": "kvvaultapilivetest",
+  "type": "Microsoft.KeyVault/vaults",
+  "location": "westeurope",
+  "tags": {},
+  "properties": {
+    "sku": {
+      "family": "A",
+      "name": "standard"
+    },
+    "tenantId": "72f988bf-86f1-41af-91ab-2d7cd011db47",
+    "accessPolicies": [{
+      "tenantId": "72f988bf-86f1-41af-91ab-2d7cd011db47",
+      "objectId": "5a7f4cb9-ce9d-4b31-87ce-f61083c4b0ea",
+      "permissions": {
+        "certificates": ["Get", "List", "Update", "Create", "Import", "Delete", "ManageContacts", "ManageIssuers", "GetIssuers", "ListIssuers", "SetIssuers", "DeleteIssuers", "Purge", "Recover"],
+        "keys": ["Get", "List", "Update", "Create", "Import", "Delete", "Recover", "Backup", "Restore", "Purge"],
+        "secrets": ["Get", "List", "Set", "Delete", "Recover", "Backup", "Restore", "Purge"],
+        "storage": []
+      }
+    }],
+    "enabledForDeployment": false,
+    "vaultUri": "https://kvvaultapilivetest.vault.azure.net"
+  }
+}

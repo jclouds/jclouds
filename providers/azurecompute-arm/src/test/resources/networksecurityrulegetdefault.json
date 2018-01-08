@@ -1,0 +1,17 @@
+{
+  "name": "AllowVnetInBound",
+  "id": "/subscriptions/e43b3d9c-f839-48a8-b0fb-691aee6f1e4d/resourceGroups/jims741groupjclouds/providers/Microsoft.Network/networkSecurityGroups/testNetworkSecurityGroup/defaultSecurityRules/AllowVnetInBound",
+  "etag": "W/\"23efab91-398a-4984-a9a7-281af38f6538\"",
+  "properties": {
+    "provisioningState": "Succeeded",
+    "description": "Allow inbound traffic from all VMs in VNET",
+    "protocol": "*",
+    "sourcePortRange": "*",
+    "destinationPortRange": "*",
+    "sourceAddressPrefix": "VirtualNetwork",
+    "destinationAddressPrefix": "VirtualNetwork",
+    "access": "Allow",
+    "priority": 65000,
+    "direction": "Inbound"
+  }
+}

@@ -1,0 +1,15 @@
+{
+	"value": [{
+		"id": "/subscriptions/3fee811e-11bf-4b5c-9c62-a2f28b517724/providers/Microsoft.KeyVault/locations/westeurope/deletedVaults/kvvaultapilivetest",
+		"name": "kvvaultapilivetest",
+		"type": "Microsoft.KeyVault/deletedVaults",
+		"properties": {
+			"vaultId": "/subscriptions/3fee811e-11bf-4b5c-9c62-a2f28b517724/resourceGroups/rg-vaultapilivetest-jims/providers/Microsoft.KeyVault/vaults/kvvaultapilivetest",
+			"location": "westeurope",
+			"tags": {},
+			"deletionDate": "2017-10-29T22:06:02Z",
+			"scheduledPurgeDate": "2018-01-27T22:06:02Z"
+		}
+	}],
+	"nextLink": "https://management.azure.com/subscriptions/3fee811e-11bf-4b5c-9c62-a2f28b517724/providers/Microsoft.KeyVault/deletedVaults?api-version=2016-10-01&%24skiptoken=HY1db4IwGEb%2fS7PsrpQyUCQxiwts0QkMbDHxjo8Xh%2bUrtLgN438f8fJJzjnPDbXwq%2fZVKyRybujoHZjH4%2fDLQw76VqqXDiFN2qZnaKBVWjqNA2h51xA5ZjIfql5VXSvJSwlgUwqY0qzEZmbleJUvDJwapWFnFl0uDZP0Q3etChgk8at86GRXKu0T%2fpJ0rBUpoAYFxWPI17Sv8HUm5%2fja0OkCUx3r9PlJivmxE9CuuUiOcbJjMY%2ffmZfwA1%2bFe17z0t1Sn50t%2fyLM4LKZgknogZubPkvsQOzeQrdwQ49PMRNT4J3cSN9akfCNaDp9%2bOzh%2fERsg%2b73fw%3d%3d"
+}

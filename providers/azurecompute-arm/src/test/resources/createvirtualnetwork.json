@@ -1,0 +1,20 @@
+{
+  "name": "mockvirtualnetwork",
+  "id": "/subscriptions/SUBSCRIPTIONID/resourceGroups/azurearmtesting/providers/Microsoft.Network/virtualNetworks/mockvirtualnetwork",
+  "etag": "W/\"bb0f3bf7-381e-424b-8e00-8f813c61956c\"",
+  "type": "Microsoft.Network/virtualNetworks",
+  "location": "westeurope",
+  "tags": {
+    "key": "value"
+  },
+  "properties": {
+    "provisioningState": "Updating",
+    "resourceGuid": "5192bdb3-f6ed-44ad-bf4c-059cff905791",
+    "addressSpace": {
+      "addressPrefixes": [
+        "10.2.0.0/16"
+      ]
+    },
+    "subnets": []
+  }
+}

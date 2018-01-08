@@ -1,0 +1,12 @@
+[
+  {
+    "location": "eastus",
+    "name": "2.0.20151120",
+    "id": "/Subscriptions/c36d97d3-3fea-4561-aa2d-e61168908c5b/Providers/Microsoft.Compute/Locations/eastus/Publishers/MicrosoftWindowsServer/ArtifactTypes/VMImage/Offers/WindowsServer/Skus/2008-R2-SP1/Versions/2.0.20151120"
+  },
+  {
+    "location": "eastus",
+    "name": "2.0.20151214",
+    "id": "/Subscriptions/c36d97d3-3fea-4561-aa2d-e61168908c5b/Providers/Microsoft.Compute/Locations/eastus/Publishers/MicrosoftWindowsServer/ArtifactTypes/VMImage/Offers/WindowsServer/Skus/2008-R2-SP1/Versions/2.0.20151214"
+  }
+]

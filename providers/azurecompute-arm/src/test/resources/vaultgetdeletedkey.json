@@ -1,0 +1,18 @@
+{
+	"recoveryId": "https://kvvaultapilivetest.vault.azure.net/deletedkeys/myRecoverableKey",
+	"deletedDate": 1509335960,
+	"scheduledPurgeDate": 1517111960,
+	"key": {
+		"kid": "https://kvvaultapilivetest.vault.azure.net/keys/myRecoverableKey/274f6c69b94b41359a5932226425eb43",
+		"kty": "RSA",
+		"key_ops": ["encrypt", "decrypt", "sign", "verify", "wrapKey", "unwrapKey"],
+		"n": "urhKlXbEGvYetOSH-GLytvSJ5djS0-5SKBtFOlJ2885PE0s_ZbnkRURDm2fImv_RV763HKSUQbEolQNs8I99N-3uCkrDStVZ6MPii9-0U6lrEkX7LrMRNYCfPAaSSZhSjCbsyqX9Y-N_A5Jz9uHNuXvpjQ9N7ojUK7fqqhnJKcJ6l6YsGOhGCD3uei4SL5GzbSAn2auIK51lj77UXjBZaudnNWTiKaCbTAmSmEe13DOJkg82_7Y1eWea3NJn4T2nY8WqRJCp4hzBsPBmFXjE1lgFWcSjm_afiSb0mCUP7v7tSOLR3xUBv9WgMO7p4_ce_--A9ZWP418Uqq0COcHAWQ",
+		"e": "AQAB"
+	},
+	"attributes": {
+		"enabled": true,
+		"created": 1509335950,
+		"updated": 1509335950,
+		"recoveryLevel": "Recoverable+Purgeable"
+	}
+}

@@ -1,0 +1,21 @@
+{
+   "value": [
+      {
+         "id": "/subscriptions/SUBSCRIPTIONID/resourceGroups/test1",
+         "name": "test1",
+         "location": "westus",
+         "properties": {
+            "provisioningState": "Succeeded"
+         }
+      },
+      {
+         "id": "/subscriptions/SUBSCRIPTIONID/resourceGroups/test2",
+         "name": "test2",
+         "location": "eastus",
+         "properties": {
+            "provisioningState": "Succeeded"
+         }
+      }
+   ],
+   "nextLink": "https://management.azure.com/subscriptions/SUBSCRIPTIONID/resourceGroups?api-version=2015-11-01&%24top=2&%24skiptoken=eyJuZXh0UGFydGl0aW9uS2V5IjoiMSE4IVJVTkJNalEtIiwibmV4dFJvd0tleSI6IjEhNjghTURSR04wVkRPRGc0UlRJNE5ERkZSRGcxTXpjMVJURTNOelkyTURBeFJqVmZRVTVRVWtsRFJWUkZVMVF0VjBWVFZGVlQifQ%3d%3d"
+}

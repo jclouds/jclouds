@@ -1,0 +1,23 @@
+{
+  "value": [
+    {
+      "sku": {
+        "name": "Standard_LRS",
+        "tier": "Standard"
+      },
+      "properties": {
+        "creationData": {
+          "createOption": "Empty"
+        },
+        "diskSizeGB": 2,
+        "timeCreated": "2017-03-01T09:48:27.4526118+00:00",
+        "provisioningState": "Succeeded",
+        "diskState": "Unattached"
+      },
+      "type": "Microsoft.Compute/disks",
+      "location": "westeurope",
+      "id": "/subscriptions/610bba05-d7a7-4567-96af-48ecbd09453b/resourceGroups/rg-diskapilivetest-andrea/providers/Microsoft.Compute/disks/jclouds-646",
+      "name": "jclouds-646"
+    }
+  ]
+}

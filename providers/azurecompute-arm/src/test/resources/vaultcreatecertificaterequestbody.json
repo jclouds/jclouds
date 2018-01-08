@@ -1,0 +1,21 @@
+{
+	"policy": {
+		"id": "myCertificate",
+		"issuer": {
+			"name": "Self"
+		},
+		"key_props": {
+			"exportable": false,
+			"key_size": 2048,
+			"kty": "RSA",
+			"reuse_key": false
+		},
+		"lifetime_actions": [],
+		"x509_props": {
+			"ekus": [],
+			"key_usage": [],
+			"subject": "CN\u003dmycertificate.foobar.com",
+			"validity_months": 12
+		}
+	}
+}

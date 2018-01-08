@@ -1,0 +1,35 @@
+{
+  "name": "myNic",
+  "id": "/subscriptions/12345678-2749-4e68-9dcf-123456789abc/resourceGroups/azurearmtesting/providers/Microsoft.Network/networkInterfaces/myNic",
+  "etag": "W/\"3dff0c55-a7a7-434f-837b-0cad946b755f\"",
+  "type": "Microsoft.Network/networkInterfaces",
+  "location": "northeurope",
+  "tags": {
+    "mycustomtag": "foobar"
+  },
+  "properties": {
+    "provisioningState": "Succeeded",
+    "resourceGuid": "f3465472-536f-49e7-9e9c-fa91b971a618",
+    "ipConfigurations": [
+      {
+        "name": "myip1",
+        "id": "/subscriptions/12345678-2749-4e68-9dcf-123456789abc/resourceGroups/azurearmtesting/providers/Microsoft.Network/networkInterfaces/myNic/ipConfigurations/myip1",
+        "etag": "W/\"3dff0c55-a7a7-434f-837b-0cad946b755f\"",
+        "properties": {
+          "provisioningState": "Succeeded",
+          "privateIPAddress": "10.2.0.4",
+          "privateIPAllocationMethod": "Dynamic",
+          "subnet": {
+            "id": "/subscriptions/12345678-2749-4e68-9dcf-123456789abc/resourceGroups/azurearmtesting/providers/Microsoft.Network/virtualNetworks/myvirtualnetwork/subnets/mysubnet"
+          },
+          "primary": true
+        }
+      }
+    ],
+    "dnsSettings": {
+      "dnsServers": [],
+      "appliedDnsServers": []
+    },
+    "enableIPForwarding": false
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "key": {
+    "kid": "https://kvvaultapilivetest.vault.azure.net/keys/myKey/f5cfaa4b90a34710a646af83636a5c1b",
+    "kty": "RSA",
+    "key_ops": ["encrypt", "decrypt", "sign", "verify", "wrapKey", "unwrapKey"],
+    "n": "zattdXaoaTAnEDPv38dpgkLSuVp56_7TNczuyBGy3GOF62LgLEId1i7You5R4SGAXJDVDWBVAFIcbw3ppgbn-DgCf4QbAWWREQUOvPNhFvm78Ey6tewofP5jyrCDeSBkjlXC5lRgd8XtVXv0JvNtOU_GbTLMVAGOwPE-0nZWXaD__nkO90AS_2D1tDywcZ7vKix9WjkjYTmY1CEw06-vsQJSYSaaL2M5MmE-S21sgoGZUv7a0jHxDR2rEX3okFoW0sjynz6yxCZtYUmUyDMpWdTIaqKu9ZhfxZPtb6T9E8yAStvma0M5xc70gfOj1LJRK8mMhLmB4lh0POj-2a4fBw",
+    "e": "AQAB"
+  },
+  "attributes": {
+    "enabled": true,
+    "created": 1509314506,
+    "updated": 1509314506,
+    "recoveryLevel": "Purgeable"
+  }
+}

@@ -1,0 +1,12 @@
+{
+  "properties": {
+    "platformUpdateDomainCount": 2,
+    "platformFaultDomainCount": 3,
+    "virtualMachines": []
+  },
+  "type": "Microsoft.Compute/availabilitySets",
+  "location": "westeurope",
+  "tags": {},
+  "id": "/subscriptions/SUBSCRIPTIONID/resourceGroups/myresourcegroup/providers/Microsoft.Compute/availabilitySets/myas",
+  "name": "myas"
+}

@@ -1,0 +1,24 @@
+{
+  "name": "mypublicaddress",
+  "id": "/subscriptions/fakeb2f5-4710-4e93-bdf4-419edbde2178/resourceGroups/myresourcegroup/providers/Microsoft.Network/publicIPAddresses/mypublicaddress",
+  "etag": "W/\"0b020646-202f-4ac6-b1a7-f9645db7c371\"",
+  "type": "Microsoft.Network/publicIPAddresses",
+  "location": "northeurope",
+  "tags": {
+    "testkey": "testvalue"
+  },
+  "properties": {
+    "provisioningState": "Succeeded",
+    "resourceGuid": "eb0da01e-2a30-4e84-b7a4-0ce9dde019f5",
+    "ipAddress": "12.123.12.123",
+    "publicIPAllocationMethod": "Static",
+    "idleTimeoutInMinutes": 4,
+    "dnsSettings": {
+      "domainNameLabel": "foobar",
+      "fqdn": "foobar.northeurope.cloudapp.azure.com"
+    },
+    "ipConfiguration": {
+      "id": "/subscriptions/fakeb2f5-4710-4e93-bdf4-419edbde2178/resourceGroups/myresourcegroup/providers/Microsoft.Network/networkInterfaces/myNic/ipConfigurations/myip1"
+    }
+  }
+}

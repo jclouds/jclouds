@@ -1,0 +1,53 @@
+{
+  "odata.metadata": "https://graph.windows.net/tenantId/$metadata#directoryObjects/Microsoft.DirectoryServices.ServicePrincipal",
+  "value": [
+    {
+      "odata.type": "Microsoft.DirectoryServices.ServicePrincipal",
+      "objectType": "ServicePrincipal",
+      "objectId": "objectId",
+      "deletionTimestamp": null,
+      "accountEnabled": true,
+      "addIns": [],
+      "alternativeNames": [],
+      "appDisplayName": "jclouds",
+      "appId": "applicationId",
+      "appOwnerTenantId": "tenantId",
+      "appRoleAssignmentRequired": false,
+      "appRoles": [],
+      "displayName": "jclouds",
+      "errorUrl": null,
+      "homepage": "https://jclouds.apache.org",
+      "keyCredentials": [],
+      "logoutUrl": null,
+      "oauth2Permissions": [
+        {
+          "adminConsentDescription": "Allow the application to access jclouds on behalf of the signed-in user.",
+          "adminConsentDisplayName": "Access jclouds",
+          "id": "id",
+          "isEnabled": true,
+          "type": "User",
+          "userConsentDescription": "Allow the application to access jclouds on your behalf.",
+          "userConsentDisplayName": "Access jclouds",
+          "value": "user_impersonation"
+        }
+      ],
+      "passwordCredentials": [],
+      "preferredTokenSigningKeyThumbprint": null,
+      "publisherName": "Default Directory",
+      "replyUrls": [
+        "https://jclouds.apache.org"
+      ],
+      "samlMetadataUrl": null,
+      "servicePrincipalNames": [
+        "https://jclouds.onmicrosoft.com/jcloudsid",
+        "applicationId"
+      ],
+      "servicePrincipalType": "Application",
+      "tags": [
+        "WindowsAzureActiveDirectoryIntegratedApp"
+      ],
+      "tokenEncryptionKeyId": null
+    }
+  ]
+}
+

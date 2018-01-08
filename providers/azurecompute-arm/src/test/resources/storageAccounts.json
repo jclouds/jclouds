@@ -1,0 +1,90 @@
+{
+  "value": [{
+    "id": "/subscriptions/SUBSCRIPTIONID/resourceGroups/resourceGroup/providers/Microsoft.Storage/storageAccounts/TESTSTORAGE",
+    "location": "westus",
+    "name": "TESTSTORAGE",
+    "properties": {
+      "accountType": "Standard_RAGRS",
+      "creationTime": "2016-02-24T13:04:45.0890883Z",
+      "primaryEndpoints": {
+        "blob": "https://TESTSTORAGE.blob.core.windows.net/",
+        "file": "https://TESTSTORAGE.file.core.windows.net/",
+        "queue": "https://TESTSTORAGE.queue.core.windows.net/",
+        "table": "https://TESTSTORAGE.table.core.windows.net/"
+      },
+      "primaryLocation": "westus",
+      "provisioningState": "Succeeded",
+      "secondaryEndpoints": {
+        "blob": "https://TESTSTORAGE-secondary.blob.core.windows.net/",
+        "queue": "https://TESTSTORAGE-secondary.queue.core.windows.net/",
+        "table": "https://TESTSTORAGE-secondary.table.core.windows.net/"
+      },
+      "secondaryLocation": "eastus",
+      "statusOfPrimary": "available",
+      "statusOfSecondary": "available"
+    },
+    "tags": {
+      "key1": "value1",
+      "key2": "value2"
+    },
+    "type": "Microsoft.Storage/storageAccounts"
+  }, {
+    "id": "/subscriptions/SUBSCRIPTIONID/resourceGroups/resourceGroup/providers/Microsoft.Storage/storageAccounts/TESTSTORAGE2",
+    "location": "westus",
+    "name": "TESTSTORAGE2",
+    "properties": {
+      "accountType": "Standard_RAGRS",
+      "creationTime": "2016-02-24T13:11:43.8265672Z",
+      "primaryEndpoints": {
+        "blob": "https://TESTSTORAGE2.blob.core.windows.net/",
+        "file": "https://TESTSTORAGE2.file.core.windows.net/",
+        "queue": "https://TESTSTORAGE2.queue.core.windows.net/",
+        "table": "https://TESTSTORAGE2.table.core.windows.net/"
+      },
+      "primaryLocation": "westus",
+      "provisioningState": "Succeeded",
+      "secondaryEndpoints": {
+        "blob": "https://TESTSTORAGE2-secondary.blob.core.windows.net/",
+        "queue": "https://TESTSTORAGE2-secondary.queue.core.windows.net/",
+        "table": "https://TESTSTORAGE2-secondary.table.core.windows.net/"
+      },
+      "secondaryLocation": "eastus",
+      "statusOfPrimary": "available",
+      "statusOfSecondary": "available"
+    },
+    "tags": {
+      "key1": "value1",
+      "key2": "value2"
+    },
+    "type": "Microsoft.Storage/storageAccounts"
+  }, {
+    "id": "/subscriptions/SUBSCRIPTIONID/resourceGroups/resourceGroup/providers/Microsoft.Storage/storageAccounts/TESTSTORAGE3",
+    "location": "westus",
+    "name": "TESTSTORAGE3",
+    "properties": {
+      "accountType": "Standard_RAGRS",
+      "creationTime": "2016-02-24T14:12:59.5223315Z",
+      "primaryEndpoints": {
+        "blob": "https://TESTSTORAGE3.blob.core.windows.net/",
+        "file": "https://TESTSTORAGE3.file.core.windows.net/",
+        "queue": "https://TESTSTORAGE3.queue.core.windows.net/",
+        "table": "https://TESTSTORAGE3.table.core.windows.net/"
+      },
+      "primaryLocation": "westus",
+      "provisioningState": "Succeeded",
+      "secondaryEndpoints": {
+        "blob": "https://TESTSTORAGE3-secondary.blob.core.windows.net/",
+        "queue": "https://TESTSTORAGE3-secondary.queue.core.windows.net/",
+        "table": "https://TESTSTORAGE3-secondary.table.core.windows.net/"
+      },
+      "secondaryLocation": "eastus",
+      "statusOfPrimary": "available",
+      "statusOfSecondary": "available"
+    },
+    "tags": {
+      "key1": "value1",
+      "key2": "value2"
+    },
+    "type": "Microsoft.Storage/storageAccounts"
+  }]
+}

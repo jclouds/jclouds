@@ -1,0 +1,21 @@
+{
+  "location": "westeurope",
+  "properties": {
+    "tenantId": "myTenantId",
+    "sku": {
+      "location": "westeurope",
+      "name": "standard",
+      "family": "A"
+    },
+    "accessPolicies": [{
+      "objectId": "myIdentityObjectId",
+      "tenantId": "myTenantId",
+      "permissions": {
+        "certificates": ["Get", "List", "Update", "Create", "Import", "Delete", "ManageContacts", "ManageIssuers", "GetIssuers", "ListIssuers", "SetIssuers", "DeleteIssuers", "Purge", "Recover"],
+        "keys": ["Get", "List", "Update", "Create", "Import", "Delete", "Recover", "Backup", "Restore", "Purge", "Encrypt", "Decrypt", "Sign", "Verify", "WrapKey", "UnwrapKey"],
+        "secrets": ["Get", "List", "Set", "Delete", "Recover", "Backup", "Restore", "Purge"],
+        "storage": []
+      }
+    }]
+  }
+}

@@ -1,0 +1,42 @@
+{
+  "value": [{
+    "kid": "https://kvvaultapilivetest.vault.azure.net/keys/myCertificate",
+    "attributes": {
+      "enabled": true,
+      "nbf": 1509313915,
+      "exp": 1540850515,
+      "created": 1509314515,
+      "updated": 1509314515,
+      "recoveryLevel": "Purgeable"
+    },
+    "managed": true
+  }, {
+    "kid": "https://kvvaultapilivetest.vault.azure.net/keys/myImportableCertificate",
+    "attributes": {
+      "enabled": true,
+      "nbf": 1509231134,
+      "exp": 1541631134,
+      "created": 1509314521,
+      "updated": 1509314521,
+      "recoveryLevel": "Purgeable"
+    },
+    "managed": true
+  }, {
+    "kid": "https://kvvaultapilivetest.vault.azure.net/keys/myImportKey",
+    "attributes": {
+      "enabled": true,
+      "created": 1509314522,
+      "updated": 1509314522,
+      "recoveryLevel": "Purgeable"
+    }
+  }, {
+    "kid": "https://kvvaultapilivetest.vault.azure.net/keys/myKey",
+    "attributes": {
+      "enabled": true,
+      "created": 1509314506,
+      "updated": 1509314506,
+      "recoveryLevel": "Purgeable"
+    }
+  }],
+  "nextLink": null
+}

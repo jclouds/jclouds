@@ -1,0 +1,14 @@
+{
+  "name": "mysubnet",
+  "id": "/subscriptions/SUBSCRIPTIONID/resourceGroups/azurearmtesting/providers/Microsoft.Network/virtualNetworks/myvirtualnetwork/subnets/mysubnet",
+  "etag": "W/\"b68ab7a3-38d5-4690-a978-20149a6a0994\"",
+  "properties": {
+    "provisioningState": "Succeeded",
+    "addressPrefix": "10.2.0.0/24",
+    "ipConfigurations": [
+      {
+        "id": "/subscriptions/SUBSCRIPTIONID/resourceGroups/azurearmtesting/providers/Microsoft.Network/networkInterfaces/myNic/ipConfigurations/myip1"
+      }
+    ]
+  }
+}

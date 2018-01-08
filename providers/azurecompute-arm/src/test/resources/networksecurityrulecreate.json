@@ -1,0 +1,17 @@
+{
+  "name": "allowalludpin",
+  "id": "/subscriptions/e43b3d9c-f839-48a8-b0fb-691aee6f1e4d/resourceGroups/jims859groupjclouds/providers/Microsoft.Network/networkSecurityGroups/testNetworkSecurityGroup/securityRules/allowalludpin",
+  "etag": "W/\"d9b6cda9-3873-445d-bc70-cd9c13f87ba7\"",
+  "properties": {
+    "provisioningState": "Updating",
+    "description": "allow all udp in",
+    "protocol": "Udp",
+    "sourcePortRange": "*",
+    "destinationPortRange": "*",
+    "sourceAddressPrefix": "*",
+    "destinationAddressPrefix": "*",
+    "access": "Allow",
+    "priority": 4094,
+    "direction": "Inbound"
+  }
+}
