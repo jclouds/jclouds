@@ -334,6 +334,13 @@ public class FilesystemStorageStrategyImpl implements LocalStorageStrategy {
       ByteSource byteSource;
 
       if (getDirectoryBlobSuffix(key) != null) {
+         if (!file.isDirectory()) {
+            // filesystem blobstore does not allow the existence of "file" and
+            // "file/" and getDirectoryBlobSuffix normalizes "file/" to "file".
+            // Therefore we need to return null when the normalized file is not
+            // a directory.
+            return null;
+         }
          logger.debug("%s - %s is a directory", container, key);
          byteSource = ByteSource.empty();
       } else {

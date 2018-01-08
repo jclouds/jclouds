@@ -16,6 +16,7 @@
  */
 package org.jclouds.filesystem.strategy.internal;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.jclouds.filesystem.util.Utils.isMacOSX;
 import static org.jclouds.utils.TestUtils.NO_INVOCATIONS;
 import static org.jclouds.utils.TestUtils.SINGLE_NO_ARG_INVOCATION;
@@ -694,6 +695,42 @@ public class FilesystemStorageStrategyImplTest {
       } catch (InvalidPathException ipe) {
          fail("Deleting an invalid path ended with an InvalidPathException.", ipe);
       }
+   }
+
+   @Test
+   public void testGetBlobTrailingSlash() throws Exception {
+      String key = "key";
+      ByteSource byteSource = randomByteSource().slice(0, 1024);
+      Blob blob = new BlobBuilderImpl()
+            .name(key)
+            .payload(byteSource)
+            .contentLength(byteSource.size())
+            .build();
+      storageStrategy.putBlob(CONTAINER_NAME, blob);
+
+      blob = storageStrategy.getBlob(CONTAINER_NAME, key);
+      assertThat(blob).isNotNull();
+
+      blob = storageStrategy.getBlob(CONTAINER_NAME, key + "/");
+      assertThat(blob).isNull();
+   }
+
+   @Test
+   public void testPutBlobTrailingSlash() throws Exception {
+      String key = "key";
+      ByteSource byteSource = ByteSource.empty();
+      Blob blob = new BlobBuilderImpl()
+            .name(key + "/")
+            .payload(byteSource)
+            .contentLength(byteSource.size())
+            .build();
+      storageStrategy.putBlob(CONTAINER_NAME, blob);
+
+      blob = storageStrategy.getBlob(CONTAINER_NAME, key);
+      assertThat(blob).isNull();
+
+      blob = storageStrategy.getBlob(CONTAINER_NAME, key + "/");
+      assertThat(blob).isNotNull();
    }
 
    // ---------------------------------------------------------- Private methods
