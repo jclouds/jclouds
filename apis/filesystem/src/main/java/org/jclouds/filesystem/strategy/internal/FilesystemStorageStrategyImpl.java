@@ -19,6 +19,7 @@ package org.jclouds.filesystem.strategy.internal;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Strings.isNullOrEmpty;
 import static com.google.common.io.BaseEncoding.base16;
+import static java.nio.file.Files.createDirectories;
 import static java.nio.file.Files.getFileAttributeView;
 import static java.nio.file.Files.getPosixFilePermissions;
 import static java.nio.file.Files.probeContentType;
@@ -36,6 +37,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.AccessDeniedException;
 import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
 import java.nio.file.attribute.BasicFileAttributes;
@@ -75,6 +77,7 @@ import org.jclouds.filesystem.util.Utils;
 import org.jclouds.io.ContentMetadata;
 import org.jclouds.io.Payload;
 import org.jclouds.logging.Logger;
+import org.jclouds.rest.AuthorizationException;
 import org.jclouds.rest.annotations.ParamValidators;
 
 import com.google.common.base.Function;
@@ -908,8 +911,15 @@ public class FilesystemStorageStrategyImpl implements LocalStorageStrategy {
       }
 
       File directoryToCreate = new File(directoryFullName);
-      boolean result = directoryToCreate.mkdirs();
-      return result;
+      try {
+         createDirectories(directoryToCreate.toPath());
+      } catch (AccessDeniedException ade) {
+         throw new AuthorizationException(ade);
+      } catch (IOException ioe) {
+         logger.debug("Could not create directory: %s", ioe.getMessage());
+         return false;
+      }
+      return true;
    }
 
    /** Read the String representation of filesystem attribute, or return null if not present. */
