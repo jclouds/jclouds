@@ -17,6 +17,8 @@
 
 package org.jclouds.openstack.neutron.v2.features;
 
+import static com.google.common.collect.Iterables.filter;
+import static com.google.common.collect.Iterables.size;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertTrue;
@@ -28,6 +30,8 @@ import org.jclouds.openstack.neutron.v2.domain.RuleProtocol;
 import org.jclouds.openstack.neutron.v2.domain.SecurityGroup;
 import org.jclouds.openstack.neutron.v2.internal.BaseNeutronApiLiveTest;
 import org.testng.annotations.Test;
+
+import com.google.common.base.Predicate;
 
 /**
  * Tests parsing and Guice wiring of RouterApi
@@ -67,8 +71,12 @@ public class SecurityGroupApiLiveTest extends BaseNeutronApiLiveTest {
 
             assertEquals(securityGroup.getName(), "jclouds-test");
             assertEquals(securityGroup.getDescription(), "jclouds test security group");
-
-            assertEquals(securityGroup.getRules().size(), 1);
+            assertEquals(size(filter(securityGroup.getRules(), new Predicate<Rule>() {
+               @Override
+               public boolean apply(Rule input) {
+                  return RuleDirection.INGRESS.equals(input.getDirection());
+               }
+            })), 1);
 
             Rule newSecGroupRule = null;
 

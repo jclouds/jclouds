@@ -16,12 +16,12 @@
  */
 package org.jclouds.openstack.neutron.v2.internal;
 
-import static org.jclouds.openstack.keystone.v2_0.config.KeystoneProperties.CREDENTIAL_TYPE;
-import static org.jclouds.openstack.keystone.v2_0.config.KeystoneProperties.SERVICE_TYPE;
+import static org.jclouds.openstack.keystone.config.KeystoneProperties.CREDENTIAL_TYPE;
+import static org.jclouds.openstack.keystone.config.KeystoneProperties.SERVICE_TYPE;
 
 import java.util.Properties;
 
-import org.jclouds.openstack.keystone.v2_0.config.CredentialTypes;
+import org.jclouds.openstack.keystone.auth.config.CredentialTypes;
 import org.jclouds.openstack.neutron.v2.NeutronApi;
 import org.jclouds.openstack.v2_0.internal.BaseOpenStackMockTest;
 

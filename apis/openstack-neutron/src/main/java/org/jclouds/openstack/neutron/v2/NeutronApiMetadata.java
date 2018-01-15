@@ -16,17 +16,18 @@
  */
 package org.jclouds.openstack.neutron.v2;
 
-import static org.jclouds.openstack.keystone.v2_0.config.KeystoneProperties.CREDENTIAL_TYPE;
-import static org.jclouds.openstack.keystone.v2_0.config.KeystoneProperties.SERVICE_TYPE;
+import static org.jclouds.openstack.keystone.config.KeystoneProperties.CREDENTIAL_TYPE;
+import static org.jclouds.openstack.keystone.config.KeystoneProperties.KEYSTONE_VERSION;
+import static org.jclouds.openstack.keystone.config.KeystoneProperties.SERVICE_TYPE;
 
 import java.net.URI;
 import java.util.Properties;
 
 import org.jclouds.apis.ApiMetadata;
-import org.jclouds.openstack.keystone.v2_0.config.AuthenticationApiModule;
-import org.jclouds.openstack.keystone.v2_0.config.CredentialTypes;
-import org.jclouds.openstack.keystone.v2_0.config.KeystoneAuthenticationModule;
-import org.jclouds.openstack.keystone.v2_0.config.KeystoneAuthenticationModule.RegionModule;
+import org.jclouds.openstack.keystone.auth.config.AuthenticationModule;
+import org.jclouds.openstack.keystone.auth.config.CredentialTypes;
+import org.jclouds.openstack.keystone.catalog.config.ServiceCatalogModule;
+import org.jclouds.openstack.keystone.catalog.config.ServiceCatalogModule.RegionModule;
 import org.jclouds.openstack.neutron.v2.config.NeutronHttpApiModule;
 import org.jclouds.openstack.v2_0.ServiceType;
 import org.jclouds.rest.internal.BaseHttpApiMetadata;
@@ -59,6 +60,7 @@ public class NeutronApiMetadata extends BaseHttpApiMetadata<NeutronApi> {
       Properties properties = BaseHttpApiMetadata.defaultProperties();
       properties.setProperty(SERVICE_TYPE, ServiceType.NETWORK);
       properties.setProperty(CREDENTIAL_TYPE, CredentialTypes.PASSWORD_CREDENTIALS);
+      properties.setProperty(KEYSTONE_VERSION, "2");
       return properties;
    }
 
@@ -76,8 +78,8 @@ public class NeutronApiMetadata extends BaseHttpApiMetadata<NeutronApi> {
             .defaultEndpoint("http://localhost:5000/v2.0/")
             .defaultProperties(NeutronApiMetadata.defaultProperties())
             .defaultModules(ImmutableSet.<Class<? extends Module>>builder()
-               .add(AuthenticationApiModule.class)
-               .add(KeystoneAuthenticationModule.class)
+               .add(AuthenticationModule.class)
+               .add(ServiceCatalogModule.class)
                .add(RegionModule.class)
                .add(NeutronHttpApiModule.class).build());
       }

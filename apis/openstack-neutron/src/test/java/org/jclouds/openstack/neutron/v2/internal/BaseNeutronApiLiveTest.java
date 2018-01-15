@@ -16,12 +16,14 @@
  */
 package org.jclouds.openstack.neutron.v2.internal;
 
+import java.util.Properties;
+
 import org.jclouds.apis.BaseApiLiveTest;
-import org.jclouds.openstack.keystone.v2_0.config.KeystoneProperties;
+import org.jclouds.logging.config.LoggingModule;
+import org.jclouds.logging.slf4j.config.SLF4JLoggingModule;
+import org.jclouds.openstack.keystone.config.KeystoneProperties;
 import org.jclouds.openstack.neutron.v2.NeutronApi;
 import org.testng.annotations.Test;
-
-import java.util.Properties;
 
 /**
  * Tests behavior of {@code NeutronApi}
@@ -32,6 +34,11 @@ public class BaseNeutronApiLiveTest extends BaseApiLiveTest<NeutronApi> {
 
    public BaseNeutronApiLiveTest() {
       provider = "openstack-neutron";
+   }
+
+   @Override
+   protected LoggingModule getLoggingModule() {
+      return new SLF4JLoggingModule();
    }
 
    @Override
