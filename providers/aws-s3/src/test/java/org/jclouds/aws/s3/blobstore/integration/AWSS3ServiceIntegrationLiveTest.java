@@ -39,6 +39,7 @@ public class AWSS3ServiceIntegrationLiveTest extends S3ServiceIntegrationLiveTes
             "CN-11",
             "DE-HE",
             "GB-LND",
+            "FR-IDF",
             "IE",
             "IN-MH",
             "JP-13",

@@ -50,6 +50,11 @@ public class Region {
     * EU (London)
     */
    public static final String EU_WEST_2 = "eu-west-2";
+   
+   /**
+    * EU (Paris)
+    */
+   public static final String EU_WEST_3 = "eu-west-3";
 
    /**
     * EU (Frankfurt)
@@ -141,18 +146,20 @@ public class Region {
     */
     public static final String CN_NORTH_1 = "cn-north-1";
 
-   public static final Set<String> DEFAULT_S3 = ImmutableSet.of(US_STANDARD, US_EAST_2, US_WEST_1, US_WEST_2, CA_CENTRAL_1, EU_WEST_1, EU_WEST_2, EU_CENTRAL_1, SA_EAST_1,
-         AP_SOUTHEAST_1, AP_SOUTHEAST_2, AP_SOUTH_1, AP_NORTHEAST_1, AP_NORTHEAST_2, CN_NORTH_1);
+   public static final Set<String> DEFAULT_S3 = ImmutableSet.of(US_STANDARD, US_EAST_2, US_WEST_1, US_WEST_2,
+         CA_CENTRAL_1, EU_WEST_1, EU_WEST_2, EU_WEST_3, EU_CENTRAL_1, SA_EAST_1, AP_SOUTHEAST_1, AP_SOUTHEAST_2,
+         AP_SOUTH_1, AP_NORTHEAST_1, AP_NORTHEAST_2, CN_NORTH_1);
 
-   public static final Set<String> DEFAULT_REGIONS = ImmutableSet.of(US_EAST_1, US_EAST_2, US_WEST_1, US_WEST_2, CA_CENTRAL_1, SA_EAST_1,
-         EU_WEST_1, EU_WEST_2, EU_CENTRAL_1, AP_SOUTHEAST_1, AP_SOUTHEAST_2, AP_SOUTH_1, AP_NORTHEAST_1, AP_NORTHEAST_2, CN_NORTH_1);
+   public static final Set<String> DEFAULT_REGIONS = ImmutableSet.of(US_EAST_1, US_EAST_2, US_WEST_1, US_WEST_2,
+         CA_CENTRAL_1, SA_EAST_1, EU_WEST_1, EU_WEST_2, EU_WEST_3, EU_CENTRAL_1, AP_SOUTHEAST_1, AP_SOUTHEAST_2,
+         AP_SOUTH_1, AP_NORTHEAST_1, AP_NORTHEAST_2, CN_NORTH_1);
 
    public static Properties regionPropertiesS3() {
 
       Properties properties = regionProperties();
       properties.setProperty(PROPERTY_REGIONS, Joiner.on(',').join(DEFAULT_S3));
       // note that due to US_STANDARD the codes include US instead of US-VA
-      properties.setProperty(PROPERTY_ISO3166_CODES, "US,US-OH,US-CA,US-OR,CA,BR-SP,IE,GB-LND,DE-HE,SG,AU-NSW,IN-MH,JP-13,KR-11,CN-11");
+      properties.setProperty(PROPERTY_ISO3166_CODES, "US,US-OH,US-CA,US-OR,CA,BR-SP,IE,GB-LND,FR-IDF,DE-HE,SG,AU-NSW,IN-MH,JP-13,KR-11,CN-11");
       properties.setProperty(PROPERTY_REGION + "." + US_STANDARD + "." + ISO3166_CODES, "US");
       return properties;
    }
@@ -160,7 +167,7 @@ public class Region {
    public static Properties regionProperties() {
       Properties properties = new Properties();
       properties.setProperty(PROPERTY_REGIONS, Joiner.on(',').join(DEFAULT_REGIONS));
-      properties.setProperty(PROPERTY_ISO3166_CODES, "US-VA,US-OH,US-CA,US-OR,CA,BR-SP,IE,GB-LND,DE-HE,SG,AU-NSW,IN-MH,JP-13,KR-11,CN-11");
+      properties.setProperty(PROPERTY_ISO3166_CODES, "US-VA,US-OH,US-CA,US-OR,CA,BR-SP,IE,GB-LND,FR-IDF,DE-HE,SG,AU-NSW,IN-MH,JP-13,KR-11,CN-11");
       properties.setProperty(PROPERTY_REGION + "." + US_EAST_1 + "." + ISO3166_CODES, "US-VA");
       properties.setProperty(PROPERTY_REGION + "." + US_EAST_2 + "." + ISO3166_CODES, "US-OH");
       properties.setProperty(PROPERTY_REGION + "." + US_WEST_1 + "." + ISO3166_CODES, "US-CA");
@@ -169,6 +176,7 @@ public class Region {
       properties.setProperty(PROPERTY_REGION + "." + SA_EAST_1 + "." + ISO3166_CODES, "BR-SP");
       properties.setProperty(PROPERTY_REGION + "." + EU_WEST_1 + "." + ISO3166_CODES, "IE");
       properties.setProperty(PROPERTY_REGION + "." + EU_WEST_2 + "." + ISO3166_CODES, "GB-LND");
+      properties.setProperty(PROPERTY_REGION + "." + EU_WEST_3 + "." + ISO3166_CODES, "FR-IDF");
       properties.setProperty(PROPERTY_REGION + "." + EU_CENTRAL_1 + "." + ISO3166_CODES, "DE-HE");
       properties.setProperty(PROPERTY_REGION + "." + AP_SOUTHEAST_1 + "." + ISO3166_CODES, "SG");
       properties.setProperty(PROPERTY_REGION + "." + AP_SOUTHEAST_2 + "." + ISO3166_CODES, "AU-NSW");
