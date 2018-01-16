@@ -63,21 +63,29 @@ import static org.jclouds.ec2.compute.domain.EC2HardwareBuilder.r3_4xlarge;
 import static org.jclouds.ec2.compute.domain.EC2HardwareBuilder.r3_8xlarge;
 import static org.jclouds.ec2.compute.domain.EC2HardwareBuilder.r3_large;
 import static org.jclouds.ec2.compute.domain.EC2HardwareBuilder.r3_xlarge;
+import static org.jclouds.ec2.compute.domain.EC2HardwareBuilder.r4_16xlarge;
+import static org.jclouds.ec2.compute.domain.EC2HardwareBuilder.r4_2xlarge;
+import static org.jclouds.ec2.compute.domain.EC2HardwareBuilder.r4_4xlarge;
+import static org.jclouds.ec2.compute.domain.EC2HardwareBuilder.r4_8xlarge;
+import static org.jclouds.ec2.compute.domain.EC2HardwareBuilder.r4_large;
+import static org.jclouds.ec2.compute.domain.EC2HardwareBuilder.r4_xlarge;
 import static org.jclouds.ec2.compute.domain.EC2HardwareBuilder.t1_micro;
 import static org.jclouds.ec2.compute.domain.EC2HardwareBuilder.t2_large;
 import static org.jclouds.ec2.compute.domain.EC2HardwareBuilder.t2_medium;
 import static org.jclouds.ec2.compute.domain.EC2HardwareBuilder.t2_micro;
 import static org.jclouds.ec2.compute.domain.EC2HardwareBuilder.t2_small;
 
-import javax.inject.Inject;
-import javax.inject.Singleton;
 import java.util.Set;
 
-import com.google.common.collect.ImmutableSet;
-import com.google.common.collect.ImmutableSet.Builder;
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
 import org.jclouds.aws.ec2.compute.config.ClusterCompute;
 import org.jclouds.compute.domain.Hardware;
 import org.jclouds.ec2.compute.suppliers.EC2HardwareSupplier;
+
+import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.ImmutableSet.Builder;
 
 @Singleton
 public class AWSEC2HardwareSupplier extends EC2HardwareSupplier {
@@ -141,6 +149,12 @@ public class AWSEC2HardwareSupplier extends EC2HardwareSupplier {
       sizes.add(r3_2xlarge().build());
       sizes.add(r3_4xlarge().build());
       sizes.add(r3_8xlarge().build());
+      sizes.add(r4_large().build());
+      sizes.add(r4_xlarge().build());
+      sizes.add(r4_2xlarge().build());
+      sizes.add(r4_4xlarge().build());
+      sizes.add(r4_8xlarge().build());
+      sizes.add(r4_16xlarge().build());
       sizes.add(d2_xlarge().build());
       sizes.add(d2_2xlarge().build());
       sizes.add(d2_4xlarge().build());
