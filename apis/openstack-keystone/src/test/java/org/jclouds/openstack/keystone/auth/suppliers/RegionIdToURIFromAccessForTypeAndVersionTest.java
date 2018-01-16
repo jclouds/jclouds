@@ -71,8 +71,7 @@ public class RegionIdToURIFromAccessForTypeAndVersionTest {
 
    @Test(expectedExceptions = NoSuchElementException.class)
    public void testRegionUnmatches() {
-      Maps.transformValues(factory.createForApiTypeAndVersion("compute", "1.0").get(),
-               Suppliers.<URI> supplierFunction());
+      factory.createForApiTypeAndVersion("compute", "1.0").get();
    }
    
    public void testRegionMatches() {
