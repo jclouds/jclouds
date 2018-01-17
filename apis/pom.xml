@@ -44,6 +44,7 @@
     <module>openstack-keystone</module>
     <module>openstack-nova-ec2</module>
     <module>openstack-nova</module>
+    <module>openstack-neutron</module>
     <module>openstack-swift</module>
     <module>openstack-trove</module>
     <module>rackspace-clouddns</module>
