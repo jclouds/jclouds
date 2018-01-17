@@ -39,7 +39,7 @@
         <test.profitbricks.api-version>1.3</test.profitbricks.api-version>
         <jclouds.osgi.export>org.jclouds.profitbricks*;version="${project.version}"</jclouds.osgi.export>
         <jclouds.osgi.import>
-            org.jclouds.labs*;version="${project.version}",
+            org.jclouds.profitbricks*;version="${project.version}",
             org.jclouds*;version="${project.version}",
             *
         </jclouds.osgi.import>
