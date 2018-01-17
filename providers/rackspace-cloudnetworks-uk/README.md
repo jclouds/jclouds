@@ -1,4 +1,0 @@
-Rackspace Networks UK
-========================
-
-Beta

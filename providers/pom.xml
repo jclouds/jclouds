@@ -70,6 +70,8 @@
     <module>rackspace-cloudfiles-us</module>
     <module>rackspace-cloudloadbalancers-uk</module>
     <module>rackspace-cloudloadbalancers-us</module>
+    <module>rackspace-cloudnetworks-uk</module>
+    <module>rackspace-cloudnetworks-us</module>
     <module>rackspace-cloudservers-uk</module>
     <module>rackspace-cloudservers-us</module>
     <module>serverlove-z1-man</module>

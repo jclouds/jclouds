@@ -1,4 +1,3 @@
 Rackspace Networks US
 ========================
 
-Beta

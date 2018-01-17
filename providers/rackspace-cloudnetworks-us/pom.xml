@@ -23,13 +23,10 @@
     <groupId>org.apache.jclouds</groupId>
     <artifactId>jclouds-project</artifactId>
     <version>2.1.0-SNAPSHOT</version>
-    <relativePath />
+    <relativePath>../../project/pom.xml</relativePath>
   </parent>
-
-  <!-- TODO: when out of labs, switch to org.jclouds.provider -->
-  <groupId>org.apache.jclouds.labs</groupId>
+  <groupId>org.apache.jclouds.provider</groupId>
   <artifactId>rackspace-cloudnetworks-us</artifactId>
-  <version>2.1.0-SNAPSHOT</version>
   <name>jclouds Rackspace Cloud Networks US provider</name>
   <description>OpenStack Neutron implementation targeted to Rackspace Cloud Networks US</description>
   <packaging>bundle</packaging>
@@ -47,35 +44,35 @@
 
   <dependencies>
     <dependency>
-      <groupId>org.apache.jclouds.labs</groupId>
+      <groupId>org.apache.jclouds.api</groupId>
       <artifactId>openstack-neutron</artifactId>
-      <version>${project.parent.version}</version>
+      <version>${project.version}</version>
     </dependency>
     <dependency>
       <groupId>org.apache.jclouds.api</groupId>
       <artifactId>rackspace-cloudidentity</artifactId>
-      <version>${project.parent.version}</version>
+      <version>${project.version}</version>
     </dependency>
 
     <!-- Test Dependencies -->
     <dependency>
-      <groupId>org.apache.jclouds.labs</groupId>
+      <groupId>org.apache.jclouds.api</groupId>
       <artifactId>openstack-neutron</artifactId>
-      <version>${project.parent.version}</version>
+      <version>${project.version}</version>
       <type>test-jar</type>
       <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>org.apache.jclouds</groupId>
       <artifactId>jclouds-core</artifactId>
-      <version>${project.parent.version}</version>
+      <version>${project.version}</version>
       <type>test-jar</type>
       <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>org.apache.jclouds.driver</groupId>
       <artifactId>jclouds-slf4j</artifactId>
-      <version>${project.parent.version}</version>
+      <version>${project.version}</version>
       <scope>test</scope>
     </dependency>
     <dependency>
