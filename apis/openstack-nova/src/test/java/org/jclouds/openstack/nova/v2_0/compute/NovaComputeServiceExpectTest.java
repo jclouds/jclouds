@@ -225,7 +225,7 @@ public class NovaComputeServiceExpectTest extends BaseNovaComputeServiceExpectTe
             .addHeader("X-Auth-Token", authToken)
             .payload(
                   payloadFromStringWithContentType(
-                        "{\"server\":{\"name\":\"test-1\",\"imageRef\":\"14\",\"flavorRef\":\"1\",\"metadata\":{\"jclouds_tags\":\"jclouds_sg-2769\"},\"key_name\":\"jclouds-test-0\",\"security_groups\":[{\"name\":\"jclouds-test\"}]}}",
+                        "{\"server\":{\"name\":\"test-1\",\"imageRef\":\"2235\",\"flavorRef\":\"1\",\"metadata\":{\"jclouds_tags\":\"jclouds_sg-RegionOne/2769\"},\"key_name\":\"jclouds-test-0\",\"security_groups\":[{\"name\":\"jclouds-test\"}]}}",
                         "application/json")).build();
 
       HttpResponse createdServer = HttpResponse.builder().statusCode(202).message("HTTP/1.1 202 Accepted")
@@ -280,7 +280,7 @@ public class NovaComputeServiceExpectTest extends BaseNovaComputeServiceExpectTe
             .addHeader("X-Auth-Token", authToken)
             .payload(
                   payloadFromStringWithContentType(
-                        "{\"server\":{\"name\":\"test-0\",\"imageRef\":\"14\",\"flavorRef\":\"1\",\"metadata\":{\"jclouds_tags\":\"jclouds_sg-2769\"},\"key_name\":\"testkeypair\",\"security_groups\":[{\"name\":\"jclouds-test\"}]}}",
+                        "{\"server\":{\"name\":\"test-0\",\"imageRef\":\"2235\",\"flavorRef\":\"1\",\"metadata\":{\"jclouds_tags\":\"jclouds_sg-RegionOne/2769\"},\"key_name\":\"testkeypair\",\"security_groups\":[{\"name\":\"jclouds-test\"}]}}",
                         "application/json")).build();
 
       HttpResponse createdServer = HttpResponse.builder().statusCode(202).message("HTTP/1.1 202 Accepted")
@@ -349,7 +349,7 @@ public class NovaComputeServiceExpectTest extends BaseNovaComputeServiceExpectTe
             .addHeader("X-Auth-Token", authToken)
             .payload(
                   payloadFromStringWithContentType(
-                        "{\"server\":{\"name\":\"test-0\",\"imageRef\":\"14\",\"flavorRef\":\"1\",\"key_name\":\"testkeypair\",\"security_groups\":[{\"name\":\"name1\"}]}}",
+                        "{\"server\":{\"name\":\"test-0\",\"imageRef\":\"2235\",\"flavorRef\":\"1\",\"key_name\":\"testkeypair\",\"security_groups\":[{\"name\":\"name1\"}]}}",
                         "application/json")).build();
 
       HttpResponse createdServer = HttpResponse.builder().statusCode(202).message("HTTP/1.1 202 Accepted")

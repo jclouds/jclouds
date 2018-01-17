@@ -406,17 +406,18 @@ public abstract class BaseSecurityGroupExtensionLiveTest extends BaseComputeServ
 
    @Test(groups = {"integration", "live"}, singleThreaded = true)
    public void testSecurityGroupCacheInvalidatedWhenDeletedExternally() throws Exception {
+      String testSecurityGroupName = secGroupNameToDelete + "-externally";
       ComputeService computeService = view.getComputeService();
       Optional<SecurityGroupExtension> securityGroupExtension = computeService.getSecurityGroupExtension();
       assertTrue(securityGroupExtension.isPresent(), "security extension was not present");
       final SecurityGroupExtension security = securityGroupExtension.get();
-      final SecurityGroup seedGroup = security.createSecurityGroup(secGroupNameToDelete, getNodeTemplate().getLocation());
+      final SecurityGroup seedGroup = security.createSecurityGroup(testSecurityGroupName, getNodeTemplate().getLocation());
 
       deleteSecurityGroupFromAnotherView(seedGroup);
 
       boolean deleted = security.removeSecurityGroup(seedGroup.getId());
       assertFalse(deleted, "SG deleted externally so should've failed deletion");
-      final SecurityGroup recreatedGroup = security.createSecurityGroup(secGroupNameToDelete, getNodeTemplate().getLocation());
+      final SecurityGroup recreatedGroup = security.createSecurityGroup(testSecurityGroupName, getNodeTemplate().getLocation());
 
       // Makes sure the security group exists and is re-created and is not just returned from cache
       security.addIpPermission(IpPermission.builder()

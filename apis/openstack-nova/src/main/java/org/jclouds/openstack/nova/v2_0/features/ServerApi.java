@@ -19,6 +19,7 @@ package org.jclouds.openstack.nova.v2_0.features;
 import com.google.common.base.Optional;
 
 import java.util.Map;
+import java.util.Set;
 
 import javax.inject.Named;
 import javax.ws.rs.Consumes;
@@ -31,6 +32,7 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
+import org.jclouds.Fallbacks;
 import org.jclouds.Fallbacks.AbsentOn403Or404Or500;
 import org.jclouds.Fallbacks.EmptyMapOnNotFoundOr404;
 import org.jclouds.Fallbacks.EmptyPagedIterableOnNotFoundOr404;
@@ -40,6 +42,7 @@ import org.jclouds.Fallbacks.VoidOnNotFoundOr404;
 import org.jclouds.collect.PagedIterable;
 import org.jclouds.fallbacks.MapHttp4xxCodesToExceptions;
 import org.jclouds.javax.annotation.Nullable;
+import org.jclouds.openstack.nova.v2_0.domain.SecurityGroup;
 import org.jclouds.openstack.v2_0.domain.PaginatedCollection;
 import org.jclouds.openstack.keystone.auth.filters.AuthenticateRequest;
 import org.jclouds.openstack.keystone.v2_0.KeystoneFallbacks.EmptyPaginatedCollectionOnNotFoundOr404;
@@ -362,8 +365,8 @@ public interface ServerApi {
     *
     * @param id
     *           id of the image
-    * @param metadata
-    *           a Map containing the metadata
+    * @param key
+    *           a key containing the metadata
     * @return the value or null if not present
     */
    @Named("server:getMetadata")
@@ -428,4 +431,19 @@ public interface ServerApi {
    @ResponseParser(ParseDiagnostics.class)
    @Fallback(AbsentOn403Or404Or500.class)
    Optional<Map<String, String>> getDiagnostics(@PathParam("id") String id);
+
+   /**
+    * Lists Security Groups for a server.
+
+    * @param id
+    *           id of the server
+    * @return a list of security groups attached to the server
+    */
+   @Named("server:getSecurityGroups")
+   @GET
+   @Path("/{id}/os-security-groups")
+   @SelectJson("security_groups")
+   @Fallback(Fallbacks.EmptySetOnNotFoundOr404.class)
+   Set<SecurityGroup> listSecurityGroupForServer(@PathParam("id") String id);
+
 }

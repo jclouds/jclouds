@@ -80,6 +80,7 @@ public class NovaTemplateOptions extends TemplateOptions implements Cloneable {
          eTo.configDrive(getConfigDrive());
          eTo.novaNetworks(getNovaNetworks());
          eTo.availabilityZone(getAvailabilityZone());
+         eTo.blockDeviceMappings(getBlockDeviceMappings());
       }
    }
 

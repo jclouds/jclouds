@@ -13,7 +13,7 @@
         </encoder>
     </appender>
     <appender name="COMPUTEFILE" class="ch.qos.logback.core.FileAppender">
-        <file>target/jclouds-compute.log</file>
+        <file>target/test-data/jclouds-compute.log</file>
         <encoder>
             <Pattern>%d %-5p [%c] [%thread] %m%n</Pattern>
         </encoder>

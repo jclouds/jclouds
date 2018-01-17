@@ -113,13 +113,12 @@ public class NovaSecurityGroupExtensionExpectTest extends BaseNovaComputeService
               payloadFromResource("/server_with_security_groups_extension.json")).build();
 
       HttpRequest list = HttpRequest.builder().method("GET").endpoint(
-              URI.create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v2/3456/os-security-groups")).headers(
+              URI.create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v2/3456/servers/8d0a6ca5-8849-4b3d-b86e-f24c92490ebb/os-security-groups")).headers(
               ImmutableMultimap.<String, String> builder().put("Accept", "application/json").put("X-Auth-Token",
                       authToken).build()).build();
 
       HttpResponse listResponse = HttpResponse.builder().statusCode(200).payload(
               payloadFromResource("/securitygroup_list.json")).build();
-
 
       Builder<HttpRequest, HttpResponse> requestResponseMap = ImmutableMap.<HttpRequest, HttpResponse> builder();
       requestResponseMap.put(keystoneAuthWithUsernameAndPasswordAndTenantName, responseWithKeystoneAccess);

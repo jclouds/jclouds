@@ -46,7 +46,6 @@ import com.google.common.collect.Iterables;
 @Test(groups = "live", singleThreaded = true, testName = "NovaSecurityGroupExtensionLiveTest")
 public class NovaSecurityGroupExtensionLiveTest extends BaseSecurityGroupExtensionLiveTest {
 
-
    @Resource
    @Named(ComputeServiceConstants.COMPUTE_LOGGER)
    protected Logger logger = Logger.CONSOLE;

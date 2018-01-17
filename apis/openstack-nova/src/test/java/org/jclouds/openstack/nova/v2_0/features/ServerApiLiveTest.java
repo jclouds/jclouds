@@ -24,6 +24,7 @@ import static org.testng.Assert.assertTrue;
 import org.jclouds.http.HttpResponseException;
 import org.jclouds.openstack.nova.v2_0.domain.BlockDeviceMapping;
 import org.jclouds.openstack.nova.v2_0.domain.Network;
+import org.jclouds.openstack.nova.v2_0.domain.SecurityGroup;
 import org.jclouds.openstack.nova.v2_0.domain.Server;
 import org.jclouds.openstack.nova.v2_0.domain.ServerCreated;
 import org.jclouds.openstack.nova.v2_0.extensions.AvailabilityZoneApi;
@@ -88,7 +89,7 @@ public class ServerApiLiveTest extends BaseNovaApiLiveTest {
       for (String regionId : regions) {
          ServerApi serverApi = api.getServerApi(regionId);
          Optional<? extends AvailabilityZoneApi> availabilityZoneApi = api.getAvailabilityZoneApi(regionId);
-         availabilityZone = availabilityZoneApi.isPresent() ? Iterables.getLast(availabilityZoneApi.get().list()).getName() : "nova";
+         availabilityZone = availabilityZoneApi.isPresent() ? Iterables.get(availabilityZoneApi.get().list(), 0).getName() : "nova";
          try {
             serverId = createServer(regionId, availabilityZone).getId();
             Server server = serverApi.get(serverId);
@@ -226,6 +227,18 @@ public class ServerApiLiveTest extends BaseNovaApiLiveTest {
       }
    }
 
+   @Test(description = "GET /v${apiVersion}/servers/{id}/os-security-groups")
+   public void testListSecurityGroupForServer() throws Exception {
+      for (String regionId : regions) {
+         ServerApi serverApi = api.getServerApi(regionId);
+         for (Resource server : serverApi.list().concat()) {
+            for (SecurityGroup securityGroup : serverApi.listSecurityGroupForServer(server.getId())) {
+               checkSecurityGroup(securityGroup);
+            }
+         }
+      }
+   }
+
    private Server createServer(String regionId, String availabilityZoneId) {
       ServerApi serverApi = api.getServerApi(regionId);
 
@@ -249,5 +262,11 @@ public class ServerApiLiveTest extends BaseNovaApiLiveTest {
    private void checkServer(Server server) {
       checkResource(server);
       assertNotNull(server.getFlavor());
+   }
+
+   private void checkSecurityGroup(SecurityGroup securityGroup) {
+      assertNotNull(securityGroup.getId());
+      assertNotNull(securityGroup.getName());
+      assertNotNull(securityGroup.getRules());
    }
 }

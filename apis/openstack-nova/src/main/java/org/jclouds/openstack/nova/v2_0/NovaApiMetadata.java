@@ -17,6 +17,7 @@
 package org.jclouds.openstack.nova.v2_0;
 
 import static org.jclouds.Constants.PROPERTY_SESSION_INTERVAL;
+import static org.jclouds.compute.config.ComputeServiceProperties.TEMPLATE;
 import static org.jclouds.openstack.keystone.config.KeystoneProperties.CREDENTIAL_TYPE;
 import static org.jclouds.openstack.keystone.config.KeystoneProperties.KEYSTONE_VERSION;
 import static org.jclouds.openstack.keystone.config.KeystoneProperties.SERVICE_TYPE;
@@ -78,6 +79,7 @@ public class NovaApiMetadata extends BaseHttpApiMetadata<NovaApi>  {
       // before expiry by default.  We choose a value less than the latter
       // since the former persists between jclouds invocations.
       properties.setProperty(PROPERTY_SESSION_INTERVAL, 30 * 60 + "");
+      properties.put(TEMPLATE, "osFamily=UBUNTU,os64Bit=true,osVersionMatches=16.*");
       return properties;
    }
 

@@ -27,13 +27,12 @@ import javax.inject.Named;
 import javax.inject.Singleton;
 
 import org.jclouds.compute.domain.NodeMetadata;
+import org.jclouds.compute.domain.SecurityGroup;
+import org.jclouds.compute.extensions.SecurityGroupExtension;
 import org.jclouds.compute.reference.ComputeServiceConstants;
 import org.jclouds.logging.Logger;
-import org.jclouds.openstack.nova.v2_0.NovaApi;
-import org.jclouds.openstack.nova.v2_0.domain.SecurityGroup;
 import org.jclouds.openstack.nova.v2_0.domain.regionscoped.RegionAndId;
 import org.jclouds.openstack.nova.v2_0.domain.regionscoped.RegionAndName;
-import org.jclouds.openstack.nova.v2_0.domain.regionscoped.SecurityGroupInRegion;
 
 import com.google.common.base.Function;
 import com.google.common.base.Predicate;
@@ -47,38 +46,29 @@ public class CleanupResources implements Function<NodeMetadata, Boolean> {
    @Named(ComputeServiceConstants.COMPUTE_LOGGER)
    protected Logger logger = Logger.NULL;
 
-   protected final NovaApi novaApi;
    protected final RemoveFloatingIpFromNodeAndDeallocate removeFloatingIpFromNodeAndDeallocate;
-   protected final LoadingCache<RegionAndName, SecurityGroupInRegion> securityGroupMap;
+   protected final LoadingCache<RegionAndName, SecurityGroup> securityGroupMap;
+
+   private final SecurityGroupExtension securityGroupExtension;
 
    @Inject
-   public CleanupResources(NovaApi novaApi, RemoveFloatingIpFromNodeAndDeallocate removeFloatingIpFromNodeAndDeallocate,
-                           LoadingCache<RegionAndName, SecurityGroupInRegion> securityGroupMap) {
-
-      this.novaApi = novaApi;
+   public CleanupResources(RemoveFloatingIpFromNodeAndDeallocate removeFloatingIpFromNodeAndDeallocate,
+         LoadingCache<RegionAndName, SecurityGroup> securityGroupMap, SecurityGroupExtension securityGroupExtension) {
       this.removeFloatingIpFromNodeAndDeallocate = removeFloatingIpFromNodeAndDeallocate;
       this.securityGroupMap = checkNotNull(securityGroupMap, "securityGroupMap");
+      this.securityGroupExtension = securityGroupExtension;
    }
 
    @Override
    public Boolean apply(NodeMetadata node) {
       final RegionAndId regionAndId = RegionAndId.fromSlashEncoded(node.getId());
       removeFloatingIpFromNodeifAny(regionAndId);
-      return removeSecurityGroupCreatedByJcloudsAndInvalidateCache(regionAndId.getRegion(), node.getTags());
+      return removeSecurityGroupCreatedByJcloudsAndInvalidateCache(node.getTags());
    }
 
-   public boolean removeSecurityGroupCreatedByJcloudsAndInvalidateCache(String regionId, Set<String> tags) {
+   public boolean removeSecurityGroupCreatedByJcloudsAndInvalidateCache(Set<String> tags) {
       String securityGroupIdCreatedByJclouds = getSecurityGroupIdCreatedByJclouds(tags);
-      if (securityGroupIdCreatedByJclouds != null) {
-         SecurityGroup securityGroup = novaApi.getSecurityGroupApi(regionId).get().get(securityGroupIdCreatedByJclouds);
-         RegionAndName regionAndName = RegionAndName.fromRegionAndName(regionId, securityGroup.getName());
-         logger.debug(">> deleting securityGroup(%s)", regionAndName);
-         novaApi.getSecurityGroupApi(regionId).get().delete(securityGroupIdCreatedByJclouds);
-         securityGroupMap.invalidate(regionAndName);
-         logger.debug("<< deleted securityGroup(%s)", regionAndName);
-         return true;
-      }
-      return false;
+      return securityGroupExtension.removeSecurityGroup(securityGroupIdCreatedByJclouds);
    }
 
    private void removeFloatingIpFromNodeifAny(RegionAndId regionAndId) {
@@ -88,7 +78,7 @@ public class CleanupResources implements Function<NodeMetadata, Boolean> {
          logger.warn(e, "<< error removing and deallocating ip from node(%s): %s", regionAndId, e.getMessage());
       }
    }
-   
+
    private String getSecurityGroupIdCreatedByJclouds(Set<String> tags) {
       return FluentIterable.from(tags).filter(new Predicate<String>() {
          @Override

@@ -23,7 +23,6 @@ import static com.google.common.base.Preconditions.checkState;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.atomic.AtomicReference;
 
 import javax.inject.Inject;
@@ -33,25 +32,25 @@ import javax.inject.Singleton;
 import org.jclouds.Constants;
 import org.jclouds.compute.config.CustomizationResponse;
 import org.jclouds.compute.domain.NodeMetadata;
+import org.jclouds.compute.domain.SecurityGroup;
 import org.jclouds.compute.domain.Template;
+import org.jclouds.compute.extensions.SecurityGroupExtension;
 import org.jclouds.compute.functions.GroupNamingConvention;
 import org.jclouds.compute.strategy.CreateNodeWithGroupEncodedIntoName;
 import org.jclouds.compute.strategy.CustomizeNodeAndAddToGoodMapOrPutExceptionIntoBadMap;
 import org.jclouds.compute.strategy.ListNodesStrategy;
 import org.jclouds.compute.strategy.impl.CreateNodesWithGroupEncodedIntoNameThenAddToSet;
+import org.jclouds.javax.annotation.Nullable;
 import org.jclouds.openstack.nova.v2_0.NovaApi;
 import org.jclouds.openstack.nova.v2_0.compute.functions.AllocateAndAddFloatingIpToNode;
 import org.jclouds.openstack.nova.v2_0.compute.options.NodeAndNovaTemplateOptions;
 import org.jclouds.openstack.nova.v2_0.compute.options.NovaTemplateOptions;
 import org.jclouds.openstack.nova.v2_0.domain.KeyPair;
-import org.jclouds.openstack.nova.v2_0.domain.SecurityGroup;
 import org.jclouds.openstack.nova.v2_0.domain.regionscoped.RegionAndName;
 import org.jclouds.openstack.nova.v2_0.domain.regionscoped.RegionSecurityGroupNameAndPorts;
-import org.jclouds.openstack.nova.v2_0.domain.regionscoped.SecurityGroupInRegion;
 
 import com.google.common.base.Function;
 import com.google.common.base.Strings;
-import com.google.common.base.Throwables;
 import com.google.common.cache.LoadingCache;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
@@ -70,8 +69,9 @@ public class ApplyNovaTemplateOptionsCreateNodesWithGroupEncodedIntoNameThenAddT
    public static final String JCLOUDS_SG_PREFIX = "jclouds_sg";
 
    private final AllocateAndAddFloatingIpToNode createAndAddFloatingIpToNode;
-   protected final LoadingCache<RegionAndName, SecurityGroupInRegion> securityGroupCache;
-   protected final NovaApi novaApi;
+   private final LoadingCache<RegionAndName, SecurityGroup> securityGroupCache;
+   private final NovaApi novaApi;
+   private final SecurityGroupExtension securityGroupExtension;
 
    @Inject
    protected ApplyNovaTemplateOptionsCreateNodesWithGroupEncodedIntoNameThenAddToSet(
@@ -81,13 +81,16 @@ public class ApplyNovaTemplateOptionsCreateNodesWithGroupEncodedIntoNameThenAddT
             CustomizeNodeAndAddToGoodMapOrPutExceptionIntoBadMap.Factory customizeNodeAndAddToGoodMapOrPutExceptionIntoBadMapFactory,
             @Named(Constants.PROPERTY_USER_THREADS) ListeningExecutorService userExecutor,
             AllocateAndAddFloatingIpToNode createAndAddFloatingIpToNode,
-            LoadingCache<RegionAndName, SecurityGroupInRegion> securityGroupCache, NovaApi novaApi) {
+            LoadingCache<RegionAndName, SecurityGroup> securityGroupCache,
+            NovaApi novaApi,
+            SecurityGroupExtension securityGroupExtension) {
       super(addNodeWithTagStrategy, listNodesStrategy, namingConvention, userExecutor,
                customizeNodeAndAddToGoodMapOrPutExceptionIntoBadMapFactory);
       this.securityGroupCache = checkNotNull(securityGroupCache, "securityGroupCache");
       this.createAndAddFloatingIpToNode = checkNotNull(createAndAddFloatingIpToNode,
                "createAndAddFloatingIpToNode");
       this.novaApi = checkNotNull(novaApi, "novaApi");
+      this.securityGroupExtension = securityGroupExtension;
    }
 
    @Override
@@ -106,14 +109,8 @@ public class ApplyNovaTemplateOptionsCreateNodesWithGroupEncodedIntoNameThenAddT
          checkArgument(novaApi.getKeyPairApi(region).isPresent(),
                  "Key Pairs are required by options, but the extension is not available! options: %s", templateOptions);
       }
-
       final List<Integer> inboundPorts = Ints.asList(templateOptions.getInboundPorts());
-      if (!templateOptions.getGroups().isEmpty() || !inboundPorts.isEmpty()) {
-         checkArgument(novaApi.getSecurityGroupApi(region).isPresent(),
-                 "Security groups are required by options, but the extension is not available! options: %s",
-                 templateOptions);
-      }
-      
+
       KeyPair keyPair = null;
       if (templateOptions.shouldGenerateKeyPair()) {
          keyPair = generateKeyPair(region, namingConvention.create().sharedNameForGroup(group));
@@ -132,29 +129,29 @@ public class ApplyNovaTemplateOptionsCreateNodesWithGroupEncodedIntoNameThenAddT
       ImmutableList.Builder<String> tagsBuilder = ImmutableList.builder();
 
       if (!templateOptions.getGroups().isEmpty()) {
-         Set<String> securityGroupNames = novaApi.getSecurityGroupApi(region).get().list()
-                 .transform(new Function<SecurityGroup, String>() {
-                    @Override
-                    public String apply(SecurityGroup input) {
-                       return input.getName();
-                    }
-                 })
-                 .toSet();
+         Iterable<String> securityGroupNames = Iterables.transform(securityGroupExtension.listSecurityGroups(), new Function<org.jclouds.compute.domain.SecurityGroup, String>() {
+            @Override
+            public String apply(@Nullable org.jclouds.compute.domain.SecurityGroup input) {
+               return input.getName();
+            }
+         });
          for (String securityGroupName : templateOptions.getGroups()) {
-            checkState(securityGroupNames.contains(securityGroupName), "Cannot find security group with name " + securityGroupName + ". \nSecurity groups available are: \n" + Iterables.toString(securityGroupNames)); // {
+            checkState(Iterables.contains(securityGroupNames, securityGroupName), "Cannot find security group with name " + securityGroupName + ". \nSecurity groups available are: \n" + Iterables.toString(securityGroupNames)); // {
          }
-      }
-      else if (!inboundPorts.isEmpty()) {
-         SecurityGroupInRegion securityGroupInRegion;
+
+      } else if (!inboundPorts.isEmpty()) {
          String securityGroupName = namingConvention.create().sharedNameForGroup(group);
-         try {
-            securityGroupInRegion = securityGroupCache.get(new RegionSecurityGroupNameAndPorts(region, securityGroupName, inboundPorts));
-         } catch (ExecutionException e) {
-            throw Throwables.propagate(e.getCause());
+
+         // populate the security group cache with existing security groups
+         for (SecurityGroup existingSecurityGroup : securityGroupExtension.listSecurityGroupsInLocation(template.getLocation())) {
+            securityGroupCache.put(new RegionSecurityGroupNameAndPorts(region, existingSecurityGroup.getName(), inboundPorts), existingSecurityGroup);
          }
-         templateOptions.securityGroups(securityGroupName);
-         tagsBuilder.add(String.format("%s-%s", JCLOUDS_SG_PREFIX, securityGroupInRegion.getSecurityGroup().getId()));
+
+         SecurityGroup securityGroup = securityGroupCache.getUnchecked(new RegionSecurityGroupNameAndPorts(region, securityGroupName, inboundPorts));
+         templateOptions.securityGroups(securityGroup.getName());
+         tagsBuilder.add(String.format("%s-%s", JCLOUDS_SG_PREFIX, securityGroup.getId()));
       }
+
       templateOptions.tags(tagsBuilder.build());
 
       Map<?, ListenableFuture<Void>> responses = super.execute(group, count, template, goodNodes, badNodes,

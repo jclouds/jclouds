@@ -53,6 +53,11 @@
       <artifactId>openstack-keystone</artifactId>
       <version>${project.version}</version>
     </dependency>
+    <dependency>
+      <groupId>org.apache.jclouds.api</groupId>
+      <artifactId>openstack-neutron</artifactId>
+      <version>${project.version}</version>
+    </dependency>
     <!-- for the extension namespaces -->
     <dependency>
       <groupId>com.google.inject.extensions</groupId>

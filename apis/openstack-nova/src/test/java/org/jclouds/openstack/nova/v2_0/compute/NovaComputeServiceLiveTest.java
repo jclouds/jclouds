@@ -21,12 +21,15 @@ import static java.util.logging.Logger.getAnonymousLogger;
 import java.util.Properties;
 
 import org.jclouds.compute.internal.BaseComputeServiceLiveTest;
+import org.jclouds.logging.config.LoggingModule;
+import org.jclouds.logging.slf4j.config.SLF4JLoggingModule;
 import org.jclouds.openstack.keystone.config.KeystoneProperties;
 import org.jclouds.openstack.nova.v2_0.config.NovaProperties;
 import org.jclouds.rest.AuthorizationException;
 import org.jclouds.sshj.config.SshjSshClientModule;
 import org.testng.annotations.Test;
 
+import com.google.common.collect.ImmutableSet;
 import com.google.inject.Module;
 
 @Test(groups = "live", singleThreaded = true, testName = "NovaComputeServiceLiveTest")
@@ -40,7 +43,17 @@ public class NovaComputeServiceLiveTest extends BaseComputeServiceLiveTest {
    protected Module getSshModule() {
       return new SshjSshClientModule();
    }
-   
+
+   @Override
+   protected LoggingModule getLoggingModule() {
+      return new SLF4JLoggingModule();
+   }
+
+   @Override
+   protected Iterable<Module> setupModules() {
+      return ImmutableSet.of(getLoggingModule(), credentialStoreModule, getSshModule());
+   }
+
    @Override
    public void testOptionToNotBlock() {
       // start call is blocking anyway.
@@ -49,12 +62,14 @@ public class NovaComputeServiceLiveTest extends BaseComputeServiceLiveTest {
    @Test(enabled = true, dependsOnMethods = "testReboot")
    public void testSuspendResume() throws Exception {
       try {
-         // may fail because of lack of AdminActions extension or non-admin user, so log and continue
+         // may fail because of lack of AdminActions extension or non-admin user, so log
+         // and continue
          super.testSuspendResume();
       } catch (AuthorizationException e) {
          getAnonymousLogger().info("testSuspendResume() threw, probably due to lack of privileges: " + e.getMessage());
       } catch (UnsupportedOperationException e) {
-         getAnonymousLogger().info("testSuspendResume() threw, probably due to unavailable AdminActions extension: " + e.getMessage());
+         getAnonymousLogger().info(
+               "testSuspendResume() threw, probably due to unavailable AdminActions extension: " + e.getMessage());
       }
    }
 

@@ -140,7 +140,7 @@ public class NovaComputeServiceAdapter implements
          logger.warn(message);
          String tagString = metadataAndTagsAsCommaDelimitedValue.get("jclouds_tags");
          Set<String> tags = Sets.newHashSet(Splitter.on(',').split(tagString));
-         cleanupResources.removeSecurityGroupCreatedByJcloudsAndInvalidateCache(regionId, tags);
+         cleanupResources.removeSecurityGroupCreatedByJcloudsAndInvalidateCache(tags);
          throw new IllegalStateException(message);
       }
       logger.trace("<< server(%s)", lightweightServer.getId());

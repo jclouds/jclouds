@@ -16,14 +16,12 @@
  */
 package org.jclouds.openstack.nova.v2_0.compute.extensions;
 
-
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Predicates.and;
 import static com.google.common.base.Predicates.notNull;
 import static com.google.common.collect.Iterables.concat;
 import static com.google.common.collect.Iterables.filter;
 import static com.google.common.collect.Iterables.transform;
-import static org.jclouds.openstack.nova.v2_0.predicates.SecurityGroupPredicates.nameIn;
 import static org.jclouds.openstack.nova.v2_0.predicates.SecurityGroupPredicates.ruleCidr;
 import static org.jclouds.openstack.nova.v2_0.predicates.SecurityGroupPredicates.ruleEndPort;
 import static org.jclouds.openstack.nova.v2_0.predicates.SecurityGroupPredicates.ruleGroup;
@@ -32,9 +30,9 @@ import static org.jclouds.openstack.nova.v2_0.predicates.SecurityGroupPredicates
 
 import java.util.Set;
 
-import javax.inject.Inject;
 import javax.inject.Named;
 
+import com.google.inject.Inject;
 import org.jclouds.Constants;
 import org.jclouds.compute.domain.SecurityGroup;
 import org.jclouds.compute.extensions.SecurityGroupExtension;
@@ -46,13 +44,11 @@ import org.jclouds.net.domain.IpProtocol;
 import org.jclouds.openstack.nova.v2_0.NovaApi;
 import org.jclouds.openstack.nova.v2_0.domain.Ingress;
 import org.jclouds.openstack.nova.v2_0.domain.SecurityGroupRule;
-import org.jclouds.openstack.nova.v2_0.domain.ServerWithSecurityGroups;
 import org.jclouds.openstack.nova.v2_0.domain.regionscoped.RegionAndId;
 import org.jclouds.openstack.nova.v2_0.domain.regionscoped.RegionAndName;
 import org.jclouds.openstack.nova.v2_0.domain.regionscoped.RegionSecurityGroupNameAndPorts;
 import org.jclouds.openstack.nova.v2_0.domain.regionscoped.SecurityGroupInRegion;
 import org.jclouds.openstack.nova.v2_0.extensions.SecurityGroupApi;
-import org.jclouds.openstack.nova.v2_0.extensions.ServerWithSecurityGroupsApi;
 
 import com.google.common.base.Function;
 import com.google.common.base.Optional;
@@ -73,7 +69,7 @@ public class NovaSecurityGroupExtension implements SecurityGroupExtension {
    protected final ListeningExecutorService userExecutor;
    protected final Supplier<Set<String>> regionIds;
    protected final Function<SecurityGroupInRegion, SecurityGroup> groupConverter;
-   protected final LoadingCache<RegionAndName, SecurityGroupInRegion> groupCreator;
+   protected final LoadingCache<RegionAndName, SecurityGroup> groupCreator;
    protected final GroupNamingConvention.Factory namingConvention;
 
    @Inject
@@ -81,7 +77,7 @@ public class NovaSecurityGroupExtension implements SecurityGroupExtension {
                                     @Named(Constants.PROPERTY_USER_THREADS) ListeningExecutorService userExecutor,
                                     @Region Supplier<Set<String>> regionIds,
                                     Function<SecurityGroupInRegion, SecurityGroup> groupConverter,
-                                    LoadingCache<RegionAndName, SecurityGroupInRegion> groupCreator,
+                                    LoadingCache<RegionAndName, SecurityGroup> groupCreator,
                                     GroupNamingConvention.Factory namingConvention) {
 
       this.api = checkNotNull(api, "api");
@@ -121,25 +117,9 @@ public class NovaSecurityGroupExtension implements SecurityGroupExtension {
    public Set<SecurityGroup> listSecurityGroupsForNode(String id) {
       RegionAndId regionAndId = RegionAndId.fromSlashEncoded(checkNotNull(id, "id"));
       String region = regionAndId.getRegion();
-      String instanceId = regionAndId.getId();
-
-      Optional<? extends ServerWithSecurityGroupsApi> serverApi = api.getServerWithSecurityGroupsApi(region);
-      Optional<? extends SecurityGroupApi> sgApi = api.getSecurityGroupApi(region);
-
-      if (!serverApi.isPresent() || !sgApi.isPresent()) {
-         return ImmutableSet.of();
-      }
-
-      ServerWithSecurityGroups instance = serverApi.get().get(instanceId);
-      if (instance == null) {
-         return ImmutableSet.of();
-      }
-
-      Set<String> groupNames = instance.getSecurityGroupNames();
-       final FluentIterable<org.jclouds.openstack.nova.v2_0.domain.SecurityGroup> allGroups = sgApi.get().list();
-       Set<? extends SecurityGroupInRegion> rawGroups =
-              allGroups.filter(nameIn(groupNames)).transform(groupToGroupInRegion(allGroups, region)).toSet();
-
+      Set<org.jclouds.openstack.nova.v2_0.domain.SecurityGroup> allGroups = api.getServerApi(region).listSecurityGroupForServer(regionAndId.getId());
+      Set<? extends SecurityGroupInRegion> rawGroups =
+              FluentIterable.from(allGroups).transform(groupToGroupInRegion(allGroups, region)).toSet();
       return ImmutableSet.copyOf(transform(filter(rawGroups, notNull()), groupConverter));
    }
 
@@ -174,8 +154,8 @@ public class NovaSecurityGroupExtension implements SecurityGroupExtension {
       String markerGroup = namingConvention.create().sharedNameForGroup(name);
       RegionSecurityGroupNameAndPorts regionAndName = new RegionSecurityGroupNameAndPorts(region, markerGroup, ImmutableSet.<Integer> of());
 
-      SecurityGroupInRegion rawGroup = groupCreator.getUnchecked(regionAndName);
-      return groupConverter.apply(rawGroup);
+      SecurityGroup rawGroup = groupCreator.getUnchecked(regionAndName);
+      return rawGroup;
    }
 
    @Override
@@ -196,8 +176,8 @@ public class NovaSecurityGroupExtension implements SecurityGroupExtension {
 
       boolean deleted = sgApi.get().delete(groupId);
 
-      for (SecurityGroupInRegion cachedSg : groupCreator.asMap().values()) {
-         if (groupId.equals(cachedSg.getSecurityGroup().getId())) {
+      for (SecurityGroup cachedSg : groupCreator.asMap().values()) {
+         if (id.equals(cachedSg.getId())) {
             String groupName = cachedSg.getName();
             groupCreator.invalidate(new RegionSecurityGroupNameAndPorts(region, groupName, ImmutableSet.<Integer>of()));
             break;

@@ -19,6 +19,7 @@ package org.jclouds.openstack.nova.v2_0.features;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertTrue;
 
+import com.google.common.collect.Iterables;
 import org.jclouds.http.HttpRequest;
 import org.jclouds.http.HttpResponse;
 import org.jclouds.openstack.nova.v2_0.NovaApi;
@@ -30,6 +31,7 @@ import org.jclouds.openstack.nova.v2_0.options.RebuildServerOptions;
 import org.jclouds.openstack.nova.v2_0.parse.ParseCreatedServerTest;
 import org.jclouds.openstack.nova.v2_0.parse.ParseMetadataListTest;
 import org.jclouds.openstack.nova.v2_0.parse.ParseMetadataUpdateTest;
+import org.jclouds.openstack.nova.v2_0.parse.ParseSecurityGroupListTest;
 import org.jclouds.openstack.nova.v2_0.parse.ParseServerDetailsStatesTest;
 import org.jclouds.openstack.nova.v2_0.parse.ParseServerDiagnostics;
 import org.jclouds.openstack.nova.v2_0.parse.ParseServerListTest;
@@ -497,5 +499,36 @@ public class ServerApiExpectTest extends BaseNovaApiExpectTest {
         assertTrue(!requestsSendResponses(keystoneAuthWithUsernameAndPasswordAndTenantName, responseWithKeystoneAccess, getDiagnostics,
             HttpResponse.builder().statusCode(statusCode).build()).getServerApi("az-1.region-a.geo-1").getDiagnostics(serverId).isPresent());
       }
+   }
+
+   public void testListSecurityGroupsForServerWhenResponseIs200() throws Exception {
+      String serverId = "123";
+      HttpRequest getDiagnostics = HttpRequest.builder()
+              .method("GET")
+              .addHeader("Accept", "application/json")
+              .endpoint("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v2/3456/servers/" + serverId + "/os-security-groups")
+              .addHeader("X-Auth-Token", authToken)
+              .build();
+
+      HttpResponse serverDiagnosticsResponse = HttpResponse.builder().statusCode(202).message("HTTP/1.1 202 Accepted")
+              .payload(payloadFromResourceWithContentType("/securitygroup_list.json", "application/json; charset=UTF-8")).build();
+
+      NovaApi apiWithNewServer = requestsSendResponses(keystoneAuthWithUsernameAndPasswordAndTenantName,
+              responseWithKeystoneAccess, getDiagnostics, serverDiagnosticsResponse);
+      assertEquals(Iterables.toString(apiWithNewServer.getServerApi("az-1.region-a.geo-1").listSecurityGroupForServer(serverId)),
+              Iterables.toString(new ParseSecurityGroupListTest().expected()));
+   }
+
+   public void testListSecurityGroupsForServerWhenResponseIs404() throws Exception {
+      String serverId = "123";
+      HttpRequest getSecurityGroups = HttpRequest.builder()
+              .method("GET")
+              .addHeader("Accept", "application/json")
+              .endpoint("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v2/3456/servers/" + serverId + "/os-security-groups")
+              .addHeader("X-Auth-Token", authToken)
+              .build();
+
+      assertTrue(requestsSendResponses(keystoneAuthWithUsernameAndPasswordAndTenantName, responseWithKeystoneAccess, getSecurityGroups,
+              HttpResponse.builder().statusCode(404).build()).getServerApi("az-1.region-a.geo-1").listSecurityGroupForServer(serverId).isEmpty());
    }
 }

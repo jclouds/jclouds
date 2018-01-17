@@ -17,21 +17,22 @@
 package org.jclouds.openstack.nova.v2_0.compute.config;
 
 import static com.google.common.base.Preconditions.checkNotNull;
-import static java.util.concurrent.TimeUnit.MILLISECONDS;
 import static org.jclouds.compute.config.ComputeServiceProperties.TIMEOUT_NODE_RUNNING;
 import static org.jclouds.compute.config.ComputeServiceProperties.TIMEOUT_NODE_TERMINATED;
 import static org.jclouds.openstack.nova.v2_0.config.NovaProperties.AUTO_ALLOCATE_FLOATING_IPS;
 import static org.jclouds.openstack.nova.v2_0.config.NovaProperties.AUTO_GENERATE_KEYPAIRS;
-import static org.jclouds.openstack.nova.v2_0.config.NovaProperties.TIMEOUT_SECURITYGROUP_PRESENT;
 import static org.jclouds.util.Predicates2.retry;
 
 import java.util.Map;
 import java.util.Set;
-import java.util.concurrent.atomic.AtomicReference;
 
 import javax.inject.Named;
 import javax.inject.Singleton;
 
+import com.google.inject.Inject;
+import com.google.inject.Provider;
+import com.google.inject.assistedinject.FactoryModuleBuilder;
+import org.jclouds.Context;
 import org.jclouds.collect.Memoized;
 import org.jclouds.compute.ComputeService;
 import org.jclouds.compute.ComputeServiceAdapter;
@@ -53,6 +54,7 @@ import org.jclouds.functions.IdentityFunction;
 import org.jclouds.openstack.nova.v2_0.NovaApi;
 import org.jclouds.openstack.nova.v2_0.compute.NovaComputeService;
 import org.jclouds.openstack.nova.v2_0.compute.NovaComputeServiceAdapter;
+import org.jclouds.openstack.nova.v2_0.compute.extensions.NeutronSecurityGroupExtension;
 import org.jclouds.openstack.nova.v2_0.compute.extensions.NovaImageExtension;
 import org.jclouds.openstack.nova.v2_0.compute.extensions.NovaSecurityGroupExtension;
 import org.jclouds.openstack.nova.v2_0.compute.functions.CleanupResources;
@@ -60,7 +62,9 @@ import org.jclouds.openstack.nova.v2_0.compute.functions.CreateSecurityGroupIfNe
 import org.jclouds.openstack.nova.v2_0.compute.functions.FlavorInRegionToHardware;
 import org.jclouds.openstack.nova.v2_0.compute.functions.ImageInRegionToImage;
 import org.jclouds.openstack.nova.v2_0.compute.functions.ImageToOperatingSystem;
+import org.jclouds.openstack.nova.v2_0.compute.functions.NeutronSecurityGroupToSecurityGroup;
 import org.jclouds.openstack.nova.v2_0.compute.functions.NovaSecurityGroupInRegionToSecurityGroup;
+import org.jclouds.openstack.nova.v2_0.compute.functions.NovaSecurityGroupToSecurityGroup;
 import org.jclouds.openstack.nova.v2_0.compute.functions.OrphanedGroupsByRegionId;
 import org.jclouds.openstack.nova.v2_0.compute.functions.ServerInRegionToNodeMetadata;
 import org.jclouds.openstack.nova.v2_0.compute.loaders.FindSecurityGroupOrCreate;
@@ -77,7 +81,6 @@ import org.jclouds.openstack.nova.v2_0.domain.regionscoped.RegionAndName;
 import org.jclouds.openstack.nova.v2_0.domain.regionscoped.RegionSecurityGroupNameAndPorts;
 import org.jclouds.openstack.nova.v2_0.domain.regionscoped.SecurityGroupInRegion;
 import org.jclouds.openstack.nova.v2_0.domain.regionscoped.ServerInRegion;
-import org.jclouds.openstack.nova.v2_0.predicates.FindSecurityGroupWithNameAndReturnTrue;
 
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Function;
@@ -137,10 +140,10 @@ public class NovaComputeServiceContextModule extends
       bind(new TypeLiteral<CacheLoader<RegionAndId, Iterable<? extends FloatingIP>>>() {
       }).annotatedWith(Names.named("FLOATINGIP")).to(LoadFloatingIpsForInstance.class);
 
-      bind(new TypeLiteral<Function<RegionSecurityGroupNameAndPorts, SecurityGroupInRegion>>() {
+      bind(new TypeLiteral<Function<RegionSecurityGroupNameAndPorts, SecurityGroup>>() {
       }).to(CreateSecurityGroupIfNeeded.class);
 
-      bind(new TypeLiteral<CacheLoader<RegionAndName, SecurityGroupInRegion>>() {
+      bind(new TypeLiteral<CacheLoader<RegionAndName, SecurityGroup>>() {
       }).to(FindSecurityGroupOrCreate.class);
 
       bind(CreateNodesWithGroupEncodedIntoNameThenAddToSet.class).to(
@@ -149,11 +152,37 @@ public class NovaComputeServiceContextModule extends
       bind(new TypeLiteral<ImageExtension>() {
       }).to(NovaImageExtension.class);
 
-      bind(new TypeLiteral<SecurityGroupExtension>() {
-      }).to(NovaSecurityGroupExtension.class);
-
       bind(new TypeLiteral<Function<NodeMetadata, Boolean>>() {
       }).to(CleanupResources.class);
+
+      install(new FactoryModuleBuilder().build(NeutronSecurityGroupToSecurityGroup.Factory.class));
+      install(new FactoryModuleBuilder().build(NovaSecurityGroupToSecurityGroup.Factory.class));
+
+      bind(new TypeLiteral<SecurityGroupExtension>() {
+      }).toProvider(SecurityGroupExtensionProvider.class);
+
+   }
+
+   @Singleton
+   public static class SecurityGroupExtensionProvider implements Provider<SecurityGroupExtension> {
+      @Inject(optional = true)
+      @Named("openstack-neutron")
+      protected Supplier<Context> neutronApiContextSupplier;
+
+      private final NeutronSecurityGroupExtension neutronSecurityGroupExtension;
+      private final NovaSecurityGroupExtension novaSecurityGroupExtension;
+
+      @Inject
+      SecurityGroupExtensionProvider(NeutronSecurityGroupExtension neutronSecurityGroupExtension,
+                                            NovaSecurityGroupExtension novaSecurityGroupExtension) {
+         this.neutronSecurityGroupExtension = neutronSecurityGroupExtension;
+         this.novaSecurityGroupExtension = novaSecurityGroupExtension;
+      }
+
+      @Override
+      public SecurityGroupExtension get() {
+         return neutronApiContextSupplier != null ? neutronSecurityGroupExtension : novaSecurityGroupExtension;
+      }
    }
 
    @Override
@@ -192,8 +221,8 @@ public class NovaComputeServiceContextModule extends
 
    @Provides
    @Singleton
-   protected final LoadingCache<RegionAndName, SecurityGroupInRegion> securityGroupMap(
-            CacheLoader<RegionAndName, SecurityGroupInRegion> in) {
+   protected final LoadingCache<RegionAndName, SecurityGroup> securityGroupMap(
+           CacheLoader<RegionAndName, SecurityGroup> in) {
       return CacheBuilder.newBuilder().build(in);
    }
 
@@ -201,15 +230,6 @@ public class NovaComputeServiceContextModule extends
    protected Map<OsFamily, LoginCredentials> osFamilyToCredentials(Injector injector) {
       return ImmutableMap.of(OsFamily.WINDOWS, LoginCredentials.builder().user("Administrator").build(),
                OsFamily.UBUNTU, LoginCredentials.builder().user("ubuntu").build());
-   }
-
-   @Provides
-   @Singleton
-   @Named("SECURITYGROUP_PRESENT")
-   protected final Predicate<AtomicReference<RegionAndName>> securityGroupEventualConsistencyDelay(
-            FindSecurityGroupWithNameAndReturnTrue in,
-            @Named(TIMEOUT_SECURITYGROUP_PRESENT) long msDelay) {
-      return retry(in, msDelay, 100L, MILLISECONDS);
    }
 
    @Provides

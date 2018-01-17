@@ -19,16 +19,28 @@ package org.jclouds.openstack.nova.v2_0.functions;
 import static org.testng.Assert.assertEquals;
 
 import java.net.URI;
+import java.util.Map;
 
+import com.google.common.base.Function;
+import com.google.common.base.Functions;
+import com.google.common.base.Supplier;
+import com.google.common.base.Suppliers;
+import com.google.inject.Injector;
+import org.jclouds.compute.domain.SecurityGroupBuilder;
+import org.jclouds.domain.Location;
+import org.jclouds.domain.LocationBuilder;
+import org.jclouds.domain.LocationScope;
 import org.jclouds.http.HttpRequest;
 import org.jclouds.http.HttpResponse;
+import org.jclouds.net.domain.IpPermission;
+import org.jclouds.net.domain.IpProtocol;
 import org.jclouds.openstack.nova.v2_0.NovaApi;
 import org.jclouds.openstack.nova.v2_0.compute.functions.CreateSecurityGroupIfNeeded;
-import org.jclouds.openstack.nova.v2_0.domain.SecurityGroup;
+import org.jclouds.openstack.nova.v2_0.compute.functions.NeutronSecurityGroupToSecurityGroup;
+import org.jclouds.openstack.nova.v2_0.compute.functions.NovaSecurityGroupInRegionToSecurityGroup;
 import org.jclouds.openstack.nova.v2_0.domain.regionscoped.RegionSecurityGroupNameAndPorts;
 import org.jclouds.openstack.nova.v2_0.domain.regionscoped.SecurityGroupInRegion;
 import org.jclouds.openstack.nova.v2_0.internal.BaseNovaApiExpectTest;
-import org.jclouds.openstack.nova.v2_0.parse.ParseComputeServiceTypicalSecurityGroupTest;
 import org.testng.annotations.Test;
 
 import com.google.common.collect.ImmutableList;
@@ -47,6 +59,18 @@ public class CreateSecurityGroupIfNeededTest extends BaseNovaApiExpectTest {
                      payloadFromStringWithContentType(
                               "{\"security_group\":{\"name\":\"jclouds_mygroup\",\"description\":\"jclouds_mygroup\"}}",
                               "application/json")).build();
+
+   Location provider = new LocationBuilder().scope(LocationScope.PROVIDER).id("openstack-nova").description(
+           "openstack-nova").build();
+   Location region = new LocationBuilder().id("az-1.region-a.geo-1").description("az-1.region-a.geo-1").scope(
+           LocationScope.REGION).parent(provider).build();
+   Supplier<Map<String, Location>> locationIndex = Suppliers.<Map<String, Location>> ofInstance(ImmutableMap
+           .<String, Location> of("az-1.region-a.geo-1", region));
+
+   Function<SecurityGroupInRegion, org.jclouds.compute.domain.SecurityGroup> securityGroupInRegionSecurityGroupFunction = new NovaSecurityGroupInRegionToSecurityGroup(locationIndex);
+
+   Injector injector = createInjector(Functions.forMap(ImmutableMap.<HttpRequest, HttpResponse>of()), createModule(), setupProperties());
+   NeutronSecurityGroupToSecurityGroup.Factory factory = injector.getInstance(NeutronSecurityGroupToSecurityGroup.Factory.class);
 
    private final int groupId = 2769;
 
@@ -126,13 +150,46 @@ public class CreateSecurityGroupIfNeededTest extends BaseNovaApiExpectTest {
 
       NovaApi apiCanCreateSecurityGroup = requestsSendResponses(builder.build());
 
-      CreateSecurityGroupIfNeeded fn = new CreateSecurityGroupIfNeeded(apiCanCreateSecurityGroup);
+      CreateSecurityGroupIfNeeded fn = new CreateSecurityGroupIfNeeded(apiCanCreateSecurityGroup, locationIndex, securityGroupInRegionSecurityGroupFunction, factory);
 
       // we can find it
-      final SecurityGroup expected = new ParseComputeServiceTypicalSecurityGroupTest().expected();
+      org.jclouds.compute.domain.SecurityGroup expected = new SecurityGroupBuilder()
+              .id("az-1.region-a.geo-1/2769")
+              .providerId("2769")
+              .name("jclouds_mygroup")
+              .location(locationIndex.get().get("az-1.region-a.geo-1"))
+              .ipPermissions(ImmutableList.of(
+                      IpPermission.builder()
+                      .ipProtocol(IpProtocol.TCP)
+                      .fromPort(22)
+                      .toPort(22)
+                      .cidrBlock("0.0.0.0/0")
+                      .build(),
+                      IpPermission.builder()
+                              .ipProtocol(IpProtocol.TCP)
+                              .fromPort(22)
+                              .toPort(22)
+                              .groupIds(ImmutableList.of("az-1.region-a.geo-1/2769"))
+                              .build(),
+                      IpPermission.builder()
+                              .ipProtocol(IpProtocol.TCP)
+                              .fromPort(8080)
+                              .toPort(8080)
+                              .cidrBlock("0.0.0.0/0")
+                              .build(),
+                      IpPermission.builder()
+                              .ipProtocol(IpProtocol.TCP)
+                              .fromPort(8080)
+                              .toPort(8080)
+                              .groupIds(ImmutableList.of("az-1.region-a.geo-1/2769"))
+                              .build()
+              )
+      )
+      .build();
+
       assertEquals(
-         fn.apply(new RegionSecurityGroupNameAndPorts("az-1.region-a.geo-1", "jclouds_mygroup", ImmutableSet.of(22, 8080))).toString(),
-         new SecurityGroupInRegion(expected, "az-1.region-a.geo-1", ImmutableList.of(expected)).toString());
+              fn.apply(new RegionSecurityGroupNameAndPorts("az-1.region-a.geo-1", "jclouds_mygroup", ImmutableSet.of(22, 8080))).toString(),
+              expected.toString().trim());
 
    }
 
@@ -163,12 +220,45 @@ public class CreateSecurityGroupIfNeededTest extends BaseNovaApiExpectTest {
 
       NovaApi apiWhenSecurityGroupsExist = requestsSendResponses(builder.build());
 
-      CreateSecurityGroupIfNeeded fn = new CreateSecurityGroupIfNeeded(apiWhenSecurityGroupsExist);
+      CreateSecurityGroupIfNeeded fn = new CreateSecurityGroupIfNeeded(apiWhenSecurityGroupsExist, locationIndex, securityGroupInRegionSecurityGroupFunction, factory);
 
       // we can find it
-      final SecurityGroup expected = new ParseComputeServiceTypicalSecurityGroupTest().expected();
+      org.jclouds.compute.domain.SecurityGroup expected = new SecurityGroupBuilder()
+              .id("az-1.region-a.geo-1/2769")
+              .providerId("2769")
+              .name("jclouds_mygroup")
+              .location(locationIndex.get().get("az-1.region-a.geo-1"))
+              .ipPermissions(ImmutableList.of(
+                      IpPermission.builder()
+                              .ipProtocol(IpProtocol.TCP)
+                              .fromPort(22)
+                              .toPort(22)
+                              .cidrBlock("0.0.0.0/0")
+                              .build(),
+                      IpPermission.builder()
+                              .ipProtocol(IpProtocol.TCP)
+                              .fromPort(22)
+                              .toPort(22)
+                              .groupIds(ImmutableList.of("az-1.region-a.geo-1/2769"))
+                              .build(),
+                      IpPermission.builder()
+                              .ipProtocol(IpProtocol.TCP)
+                              .fromPort(8080)
+                              .toPort(8080)
+                              .cidrBlock("0.0.0.0/0")
+                              .build(),
+                      IpPermission.builder()
+                              .ipProtocol(IpProtocol.TCP)
+                              .fromPort(8080)
+                              .toPort(8080)
+                              .groupIds(ImmutableList.of("az-1.region-a.geo-1/2769"))
+                              .build()
+                      )
+              )
+              .build();
       assertEquals(
-         fn.apply(new RegionSecurityGroupNameAndPorts("az-1.region-a.geo-1", "jclouds_mygroup", ImmutableSet.of(22, 8080))).toString(),
-         new SecurityGroupInRegion(expected, "az-1.region-a.geo-1", ImmutableList.of(expected)).toString());
+              fn.apply(new RegionSecurityGroupNameAndPorts("az-1.region-a.geo-1", "jclouds_mygroup", ImmutableSet.of(22, 8080))).toString(),
+              expected.toString().trim()
+      );
    }
 }

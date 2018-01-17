@@ -418,6 +418,33 @@
         },
         {
             "status": "ACTIVE",
+            "updated": "2012-03-12T07:49:23Z",
+            "name": "Ubuntu Lucid 16.04 LTS Server 64-bit (Kernel)",
+            "links": [
+                {
+                    "href": "https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v2/37936628937291/images/1235",
+                    "rel": "self"
+                },
+                {
+                    "href": "https://az-1.region-a.geo-1.compute.hpcloudsvc.com/37936628937291/images/1235",
+                    "rel": "bookmark"
+                }
+            ],
+            "created": "2011-12-21T11:39:58Z",
+            "progress": 100,
+            "id": "2235",
+            "metadata": {
+                "image_location": "local",
+                "image_state": "available",
+                "min_ram": 0,
+                "min_disk": 0,
+                "architecture": "amd64",
+                "owner": null,
+                "project_id": "None"
+            }
+        },
+        {
+            "status": "ACTIVE",
             "updated": "2012-03-12T07:49:05Z",
             "name": "CentOS 5.6 Server 64-bit 20111207",
             "links": [

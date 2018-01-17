@@ -66,7 +66,7 @@ public class NovaComputeServiceAdapterExpectTest extends BaseNovaComputeServiceC
          .addHeader("Accept", "application/json")
          .addHeader("X-Auth-Token", authToken)
          .payload(payloadFromStringWithContentType(
-                  "{\"server\":{\"name\":\"test-e92\",\"imageRef\":\"1241\",\"flavorRef\":\"100\",\"networks\": [{\"uuid\": \"4ebd35cf-bfe7-4d93-b0d8-eb468ce2245a\"}]}}", "application/json"))
+                  "{\"server\":{\"name\":\"test-e92\",\"imageRef\":\"2235\",\"flavorRef\":\"100\",\"networks\":[{\"uuid\":\"4ebd35cf-bfe7-4d93-b0d8-eb468ce2245a\"}]}}", "application/json"))
          .build();
 
       HttpResponse createServerResponse = HttpResponse.builder().statusCode(202).message("HTTP/1.1 202 Accepted")
@@ -101,7 +101,7 @@ public class NovaComputeServiceAdapterExpectTest extends BaseNovaComputeServiceC
          .addHeader("Accept", "application/json")
          .addHeader("X-Auth-Token", authToken)
          .payload(payloadFromStringWithContentType(
-                  "{\"server\":{\"name\":\"test-e92\",\"imageRef\":\"1241\",\"flavorRef\":\"100\",\"OS-DCF:diskConfig\":\"AUTO\"}}", "application/json"))
+                  "{\"server\":{\"name\":\"test-e92\",\"imageRef\":\"2235\",\"flavorRef\":\"100\",\"OS-DCF:diskConfig\":\"AUTO\"}}", "application/json"))
          .build();
 
       HttpResponse createServerResponse = HttpResponse.builder().statusCode(202).message("HTTP/1.1 202 Accepted")
@@ -136,7 +136,7 @@ public class NovaComputeServiceAdapterExpectTest extends BaseNovaComputeServiceC
          .addHeader("Accept", "application/json")
          .addHeader("X-Auth-Token", authToken)
          .payload(payloadFromStringWithContentType(
-                  "{\"server\":{\"name\":\"test-e92\",\"imageRef\":\"1241\",\"flavorRef\":\"100\",\"config_drive\":\"true\"}}", "application/json"))
+                  "{\"server\":{\"name\":\"test-e92\",\"imageRef\":\"2235\",\"flavorRef\":\"100\",\"config_drive\":\"true\"}}", "application/json"))
          .build();
 
       HttpResponse createServerResponse = HttpResponse.builder().statusCode(202).message("HTTP/1.1 202 Accepted")
@@ -170,7 +170,7 @@ public class NovaComputeServiceAdapterExpectTest extends BaseNovaComputeServiceC
          .addHeader("Accept", "application/json")
          .addHeader("X-Auth-Token", authToken)
          .payload(payloadFromStringWithContentType(
-                  "{\"server\":{\"name\":\"test-e92\",\"imageRef\":\"1241\",\"flavorRef\":\"100\",\"networks\":[{\"uuid\":\"12345\", \"port\":\"67890\", \"fixed_ip\":\"192.168.0.1\"},{\"uuid\":\"54321\", \"port\":\"09876\", \"fixed_ip\":\"192.168.0.2\"},{\"uuid\":\"non-nova-uuid\"}]}}", "application/json"))
+                  "{\"server\":{\"name\":\"test-e92\",\"imageRef\":\"2235\",\"flavorRef\":\"100\",\"networks\":[{\"uuid\":\"12345\",\"port\":\"67890\",\"fixed_ip\":\"192.168.0.1\"},{\"uuid\":\"54321\",\"port\":\"09876\",\"fixed_ip\":\"192.168.0.2\"},{\"uuid\":\"non-nova-uuid\"}]}}", "application/json"))
          .build();
 
       HttpResponse createServerResponse = HttpResponse.builder().statusCode(202).message("HTTP/1.1 202 Accepted")
@@ -217,7 +217,7 @@ public class NovaComputeServiceAdapterExpectTest extends BaseNovaComputeServiceC
          .addHeader("Accept", "application/json")
          .addHeader("X-Auth-Token", authToken)
          .payload(payloadFromStringWithContentType(
-                  "{\"server\":{\"name\":\"test-e92\",\"imageRef\":\"1241\",\"flavorRef\":\"100\",\"security_groups\":[{\"name\":\"group1\"}, {\"name\":\"group2\"}]}}", "application/json"))
+                  "{\"server\":{\"name\":\"test-e92\",\"imageRef\":\"2235\",\"flavorRef\":\"100\",\"security_groups\":[{\"name\":\"group1\"},{\"name\":\"group2\"}]}}", "application/json"))
          .build();
 
       HttpResponse createServerResponse = HttpResponse.builder().statusCode(202).message("HTTP/1.1 202 Accepted")
@@ -258,7 +258,7 @@ public class NovaComputeServiceAdapterExpectTest extends BaseNovaComputeServiceC
          .addHeader("Accept", "application/json")
          .addHeader("X-Auth-Token", authToken)
          .payload(payloadFromStringWithContentType(
-                  "{\"server\":{\"name\":\"test-e92\",\"imageRef\":\"1241\",\"flavorRef\":\"100\",\"key_name\":\"foo\"}}", "application/json"))
+                  "{\"server\":{\"name\":\"test-e92\",\"imageRef\":\"2235\",\"flavorRef\":\"100\",\"key_name\":\"foo\"}}", "application/json"))
          .build();
 
 
@@ -301,7 +301,7 @@ public class NovaComputeServiceAdapterExpectTest extends BaseNovaComputeServiceC
          .addHeader("Accept", "application/json")
          .addHeader("X-Auth-Token", authToken)
          .payload(payloadFromStringWithContentType(
-                  "{\"server\":{\"name\":\"test-e92\",\"imageRef\":\"1241\",\"flavorRef\":\"100\"}}", "application/json"))
+                  "{\"server\":{\"name\":\"test-e92\",\"imageRef\":\"2235\",\"flavorRef\":\"100\"}}", "application/json"))
          .build();
 
       HttpResponse createServerResponse = HttpResponse.builder().statusCode(202).message("HTTP/1.1 202 Accepted")
