@@ -1,0 +1,13 @@
+{
+    "vip": {
+        "name": "new-name",
+        "description": "new description",
+        "pool_id": "61b1f87a-7a21-4ad3-9dda-7f81d249944f",
+        "session_persistence": {
+            "cookie_name": "MyNewAppCookie",
+            "type": "APP_COOKIE"
+        },
+        "connection_limit": 50,
+        "admin_state_up": false
+    }
+}

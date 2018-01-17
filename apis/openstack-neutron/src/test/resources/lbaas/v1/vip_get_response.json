@@ -1,0 +1,21 @@
+{
+    "vip": {
+        "status": "ACTIVE",
+        "protocol": "HTTP",
+        "description": "",
+        "admin_state_up": true,
+        "subnet_id": "8032909d-47a1-4715-90af-5153ffe39861",
+        "tenant_id": "83657cfcdfe44cd5920adaf26c48ceea",
+        "connection_limit": 1000,
+        "pool_id": "72741b06-df4d-4715-b142-276b6bce75ab",
+        "session_persistence": {
+            "cookie_name": "MyAppCookie",
+            "type": "APP_COOKIE"
+        },
+        "address": "10.0.0.10",
+        "protocol_port": 80,
+        "port_id": "b5a743d6-056b-468b-862d-fb13a9aa694e",
+        "id": "4ec89087-d057-4e2c-911f-60a3b47ee304",
+        "name": "my-vip"
+    }
+}

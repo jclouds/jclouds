@@ -1,0 +1,9 @@
+{"subnet": {
+    "ip_version": 4,
+    "cidr": "10.0.3.0/24",
+    "network_id": "1234567890",
+    "name": "jclouds-wibble",
+    "tenant_id": "1234567890",
+    "id": "624312ff-d14b-4ba3-9834-1c78d23d574d",
+    "ipv6_address_mode": "slaac"
+}}

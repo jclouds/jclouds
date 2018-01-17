@@ -1,0 +1,11 @@
+{
+    "pool": {
+        "name": "new_name",
+        "description": "new description",
+        "lb_method": "NEW_LB_METHOD",
+        "health_monitors": [
+            "5d4b5228-33b0-4e60-b225-9b727c1a20e7"
+        ],
+        "admin_state_up": false
+    }
+}

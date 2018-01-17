@@ -1,0 +1,20 @@
+{
+    "members": [
+        {
+            "status": "ACTIVE",
+            "protocol_port": 80,
+            "weight": 1,
+            "admin_state_up": true,
+            "tenant_id": "83657cfcdfe44cd5920adaf26c48ceea",
+            "pool_id": "72741b06-df4d-4715-b142-276b6bce75ab",
+            "address": "10.0.0.5",
+            "id":"48a471ea-64f1-4eb6-9be7-dae6bbe40a0f"
+        }
+    ],
+    "members_links": [
+        {
+            "href": "/v2.0/lb/members.json?marker=396f12f8-521e-4b91-8e21-2e003500433a",
+            "rel": "next"
+        }
+    ]
+}

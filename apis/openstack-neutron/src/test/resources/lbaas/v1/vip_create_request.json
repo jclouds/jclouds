@@ -1,0 +1,9 @@
+{
+    "vip": {
+        "protocol": "HTTP",
+        "name": "NewVip",
+        "subnet_id": "8032909d-47a1-4715-90af-5153ffe39861",
+        "pool_id": "61b1f87a-7a21-4ad3-9dda-7f81d249944f",
+        "protocol_port":80
+    }
+}

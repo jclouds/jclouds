@@ -1,0 +1,7 @@
+{
+    "member": {
+        "weight": 2,
+        "admin_state_up": false,
+        "pool_id": "new_pool_id"
+    }
+}

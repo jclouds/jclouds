@@ -1,0 +1,255 @@
+{
+  "firewall_policies": [
+    {
+      "name": "myfirewallrule",
+      "firewall_rules": [
+        "3e5a4e53-4390-4b22-baea-75529dbeafb8",
+        "4e58f636-1ef1-4e8e-b3ad-5f7f9d1f9f23"
+      ],
+      "tenant_id": "e1defcdd823741c89afd5824040deed2",
+      "audited": false,
+      "shared": true,
+      "id": "18d2f4e5-afdd-4c10-87ea-d35f38faf98c",
+      "description": ""
+    },
+    {
+      "name": "Policy SBT",
+      "firewall_rules": [],
+      "tenant_id": "ba6ba03f266e4ccfb07d2372bc8d68a2",
+      "audited": false,
+      "shared": true,
+      "id": "31d6368b-3d8b-49a1-af5d-901283223801",
+      "description": ""
+    },
+    {
+      "name": "FW-POLICY-DEMO",
+      "firewall_rules": [
+        "e434b562-c33f-4d64-84da-adfaaa94630e",
+        "03a3d9d7-eb92-49c4-83c1-a479ec37d87b",
+        "1086d52d-2323-434d-a1e8-ade5791fb5ac",
+        "7240cdf3-a8da-4006-90e2-9191d998fee0",
+        "eec4cdbe-859f-45c5-9acb-1935056af1e4",
+        "a18ee08e-9d5d-4c9e-9372-c4b8f71c6c75",
+        "7aefe7f9-01f6-4387-900e-177684e3c59d",
+        "b6017900-7811-4428-9940-a02033042c88",
+        "94129848-4eb8-4c8e-9164-cd8ee60faa49",
+        "e0649a2b-a327-45ed-a3a0-f068cb3fcf37",
+        "53f5bf0a-05e3-4a30-800b-611151a9685d",
+        "e07558b1-5e18-4d2d-a79b-0a95f36d1715",
+        "43931a28-513d-4cbb-80fa-464bf49df65f",
+        "79572a32-fda4-4f2c-bdad-bb11a08af9ed"
+      ],
+      "tenant_id": "cfb5b69938dc49f19f192eabf62a32e6",
+      "audited": false,
+      "shared": true,
+      "id": "4c0743e4-0361-4ed0-a6ce-2a8959d978a9",
+      "description": ""
+    },
+    {
+      "name": "fw-policy",
+      "firewall_rules": [
+        "3c51d308-1c5c-4776-b4ac-6d3c9ebd5685",
+        "e614f597-4eb2-457a-a102-5b9ad2beba42",
+        "e908239c-2b40-4afa-8ec3-9c4b437367da",
+        "1ae9b906-9250-4f8c-a262-b0fe6e7b1680",
+        "daa2ee3c-760c-4c67-81a8-e61a310366f1",
+        "1bd356b4-d0b0-4a86-a5a3-3245ac838960",
+        "e72605a4-f866-4cfe-9962-6577c4a87a4d"
+      ],
+      "tenant_id": "3e00d5716204446c8d3c47a466eec25a",
+      "audited": false,
+      "shared": false,
+      "id": "5083ef0d-7ad2-4305-acd8-bd036c332e1e",
+      "description": ""
+    },
+    {
+      "name": "PolicyOfTheVoid",
+      "firewall_rules": [],
+      "tenant_id": "85c79b517ef6431881c9477d2227be5f",
+      "audited": true,
+      "shared": true,
+      "id": "60779a72-21bd-4b97-a587-cd5fb8b8e7c0",
+      "description": ""
+    },
+    {
+      "name": "Policy",
+      "firewall_rules": [
+        "2b6646ea-a0d8-4982-b3e2-e14ad2743428",
+        "21a42289-b05c-4271-9f06-1172b88c8465",
+        "7b998345-1660-428f-969d-bfcdb4c0dbaf",
+        "8996fcfd-b88d-4b68-bff7-5fb07fc0088a",
+        "55b96a08-f868-45fd-9386-1fd831b7b63b",
+        "df5aaeb6-50d7-4344-9f00-f973d5e28185",
+        "bc23bcb1-1a81-4658-b72d-485da3af8a8a"
+      ],
+      "tenant_id": "ccef3550ec724607a8024977b3b4e410",
+      "audited": false,
+      "shared": true,
+      "id": "63337440-d0ad-4a3c-9e26-777a6e360119",
+      "description": "Ping + SSH"
+    },
+    {
+      "name": "allow_all",
+      "firewall_rules": ["d52ea23a-9911-44ef-815b-f3b4b6b0df64"],
+      "tenant_id": "53b1ed26b8874556bc7141f9482fd789",
+      "audited": false,
+      "shared": true,
+      "id": "6e3d5d6d-1356-43eb-91ef-d6f70888632d",
+      "description": "Allow All"
+    },
+    {
+      "name": "Politique Production",
+      "firewall_rules": [
+        "a6f58b76-5c90-4530-908c-cc7dbd945a4b",
+        "3521380b-624c-42a1-8415-992b52a9dfec",
+        "fbcf3060-bd0c-4cd9-b4b1-cf3c76b7fe7d",
+        "45aecaba-a659-490a-8f12-92adfda79c15",
+        "5cfc4e09-a765-4f4e-93d5-8a9650f051f8",
+        "304ff502-eb6f-46b5-8110-c75a483c23e0",
+        "1662f0bb-a9a6-415a-b1a7-19ba113d7a52",
+        "8bbd0490-452c-4bee-a70f-213558e0bc65",
+        "e39fcf85-bea2-49fa-8a8e-c69c5f2e29ae",
+        "1bbdd6ba-9ae8-4cd3-8815-ef992c56cb63",
+        "100e638c-77cf-4f1e-8194-5a26171f645a",
+        "91b8316c-96ae-41da-9c14-42e1f778c0a8"
+      ],
+      "tenant_id": "13a12b25d3cf4275905e2a6b9878a619",
+      "audited": false,
+      "shared": true,
+      "id": "89d7ef67-4cb8-485f-83ac-14085e616137",
+      "description": ""
+    },
+    {
+      "name": "any-shared",
+      "firewall_rules": ["b35ab1c6-309d-4690-b16c-0343a535651c"],
+      "tenant_id": "3fdcdc95fc88431597700dbb20be37c6",
+      "audited": false,
+      "shared": true,
+      "id": "a0a3a1b1-d985-4507-b785-311f8e981fa6",
+      "description": ""
+    },
+    {
+      "name": "production",
+      "firewall_rules": ["5dbe3498-b230-4b34-9915-7bcc22bed99c"],
+      "tenant_id": "94eb5f2fd9ed471992e2c5c2313b0703",
+      "audited": false,
+      "shared": true,
+      "id": "a23d0af2-3124-49cf-ae04-02c175eda549",
+      "description": "production"
+    },
+    {
+      "name": "PolProdStdDmz1",
+      "firewall_rules": [
+        "3178c9f6-f017-462b-b93f-715e11247c30",
+        "2b775a98-9813-48e0-8f32-a04dfc176872",
+        "a5a7e990-fbe4-429b-a55c-35df087b6f80",
+        "6ca67373-b89e-492d-94c6-1c40765800ce",
+        "bf93dda9-6f42-42cf-852f-689b6facf5b4",
+        "e3bd91ee-1337-4d73-9484-836a0fb5869b"
+      ],
+      "tenant_id": "3345a933109049779647ff02ca498f3a",
+      "audited": false,
+      "shared": true,
+      "id": "afc19c5c-d136-4dbf-b614-c0b784a4f68d",
+      "description": ""
+    },
+    {
+      "name": "ALL",
+      "firewall_rules": [
+        "43bfdc83-5f76-407d-b851-5803d4e23f0b",
+        "316965f2-4242-4c56-8e34-22f4ff1992a3",
+        "1fb6cbde-4446-4bef-9eac-cc6b76afc565",
+        "a3da3767-608d-493d-b15a-1793d66891c8",
+        "6f58413b-3667-41f6-93b4-eef813632aee",
+        "a28bdf75-894f-4af5-9063-e2fcee4cb01d",
+        "0ed005c7-2d89-43a1-8aaf-714d44858173",
+        "710e513c-df2b-4c78-8572-bd9701f5b108",
+        "016922c5-7810-41cb-ae2c-04bbd87b3b24",
+        "22d6ade0-0f0d-473a-9cec-4b5ba22db8e4",
+        "7ed0e62c-848d-4e4e-baa7-eea7e9c3c3ec",
+        "05a34244-0922-4a6d-b551-c95c500f2194",
+        "9d40ac55-0802-4590-aa89-8199dab7038f",
+        "3d1f3c70-44e1-4c6e-9253-53421976d707",
+        "4d22985f-ad50-459d-af00-eea902900e41",
+        "dd16596d-065d-4a3a-bb75-054ab7acf54f",
+        "33228008-6dba-4270-9c55-3d8752472795",
+        "46ea5a1c-8b4b-4eaf-b9c2-767efa8bc2ae",
+        "3b3c3136-d914-46ae-ace3-726f638ed1d5",
+        "2c3f8fce-3d05-405a-8249-1d3843b8a62d",
+        "23106a5d-556e-4e78-af13-1d0c9280b2e2",
+        "40e342d6-86fc-4205-b306-e9dcd816b958",
+        "bf290614-8ab0-487f-811f-4474a51a40d3",
+        "08b91c69-310d-4d55-bea1-ffe0d95e150b",
+        "8e9509ff-93cb-442d-92c6-1cfb79b9243c",
+        "019bd1b9-2f2b-4cfa-b645-6eb779d4622e",
+        "4f7fd6e2-7ac5-4a46-8e3d-c4dcdde8a3f0",
+        "4fd8fc8b-c449-457d-8526-6ba23f6f299d",
+        "e2a96758-70ba-499c-bd97-6d8ee55610ed",
+        "ade798f5-862a-442b-8168-f39a06030535"
+      ],
+      "tenant_id": "b6e174b62a964db7bf897a38b92fc217",
+      "audited": false,
+      "shared": true,
+      "id": "e0f918c2-7a10-45d1-a5f9-9b2a2026bf3e",
+      "description": ""
+    },
+    {
+      "name": "Pre-Prod",
+      "firewall_rules": [
+        "fd124f42-f064-4259-b840-1ca05203c6b7",
+        "f03bd950-6c56-4f5e-a307-45967078f507"
+      ],
+      "tenant_id": "80cf934d6ffb4ef5b244f1c512ad1e61",
+      "audited": false,
+      "shared": true,
+      "id": "e2a5fb51-698c-4898-87e8-f1eee6b50919",
+      "description": ""
+    },
+    {
+      "name": "ports VM ouverts",
+      "firewall_rules": ["c5535724-8ed8-4e50-933a-17e37b06994d"],
+      "tenant_id": "66165eac36f846099ab3f667f0c05229",
+      "audited": false,
+      "shared": true,
+      "id": "e5b8e392-1e70-4948-a6a4-b3726b528059",
+      "description": "ouverture de tous les ports du projet stagiaires"
+    },
+    {
+      "name": "www",
+      "firewall_rules": [
+        "75452b36-268e-4e75-aaf4-f0e7ed50bc97",
+        "c9e77ca0-1bc8-497d-904d-948107873dc6",
+        "67004fb6-9111-441f-a3c1-b94b08bbd496",
+        "80965cc0-2d60-48e8-8fe9-78be016f10b6",
+        "41c72886-f39d-450e-b4b5-818ebddf17d5",
+        "c854fab5-bdaf-4a86-9359-78de93e5df01",
+        "350288f9-4aea-4e13-b434-91141e5e5960",
+        "03d2a6ad-633f-431a-8463-4370d06a22c8"
+      ],
+      "tenant_id": "9145d91459d248b1b02fdaca97c6a75d",
+      "audited": false,
+      "shared": true,
+      "id": "f2b08c1e-aa81-4668-8ae1-1401bcb0576c",
+      "description": ""
+    },
+    {
+      "name": "fw-policy",
+      "firewall_rules": [
+        "32ea5280-b601-4531-903f-ddef6dd1b733",
+        "f6f39ac3-0bda-47ff-b8b9-f089a5440e19",
+        "dad47cfb-893f-4d7c-8e40-c7a86bcda175",
+        "1d089edc-ae35-4c60-b6af-79b69e2f3247",
+        "eac689d5-ce70-4d4a-bf43-5d1416ebb770",
+        "3c1318de-e095-4870-a2ec-3091fee81683",
+        "beb6249b-5e98-4c25-a356-d45f5b0cae29",
+        "b4b2362e-0d16-42ef-b8e4-9de56ca00c84",
+        "72c159d0-4777-4468-9136-543ba42d18f0"
+      ],
+      "tenant_id": "94eb5f2fd9ed471992e2c5c2313b0703",
+      "audited": false,
+      "shared": true,
+      "id": "f66e862e-9982-465e-a5af-79d61ca9c6eb",
+      "description": ""
+    }
+  ]
+}

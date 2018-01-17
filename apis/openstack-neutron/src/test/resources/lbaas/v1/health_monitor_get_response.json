@@ -1,0 +1,16 @@
+{
+    "health_monitor": {
+        "status": "ACTIVE",
+        "admin_state_up": true,
+        "tenant_id": "4fd44f30292945e481c7b8a0c8908869",
+        "delay": 5,
+        "expected_codes": "200",
+        "max_retries": 2,
+        "http_method": "GET",
+        "timeout": 2,
+        "url_path": "/",
+        "type": "HTTP",
+        "pools": [],
+        "id": "5d4b5228-33b0-4e60-b225-9b727c1a20e7"
+    }
+}

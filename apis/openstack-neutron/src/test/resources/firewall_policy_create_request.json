@@ -1,0 +1,8 @@
+{
+  "firewall_policy": {
+    "name": "jclouds-fw-policy_group-52-e8b",
+    "shared": false,
+    "firewall_rules": [],
+    "audited": false
+  }
+}

@@ -1,0 +1,8 @@
+{
+    "health_monitor": {
+        "delay": 1,
+        "max_retries": 1,
+        "type": "HTTP",
+        "timeout": 1
+    }
+}

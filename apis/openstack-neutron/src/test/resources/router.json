@@ -1,0 +1,9 @@
+{"router": {
+    "status": "ACTIVE",
+    "external_gateway_info": {
+        "network_id": "624312ff-d14b-4ba3-9834-1c78d23d574d"
+    },
+    "name": "jclouds-wibble",
+    "tenant_id": "1234567890",
+    "id": "16dba3bc-f3fa-4775-afdc-237e12c72f6a"
+}}

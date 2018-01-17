@@ -1,0 +1,10 @@
+{
+    "extension": {
+        "name": "Neutron L3 Router",
+        "namespace": "http://docs.openstack.org/ext/neutron/router/api/v1.0",
+        "alias": "router",
+        "updated": "2012-07-20T10:00:00-00:00",
+        "description": "Router abstraction for basic L3 forwarding between L2 Neutron networks and access to external networks via a NAT gateway.",
+        "links": []
+    }
+}

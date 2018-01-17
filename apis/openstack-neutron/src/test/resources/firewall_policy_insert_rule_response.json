@@ -1,0 +1,10 @@
+{
+  "name": "jclouds-fw-policy_group-52-e8b",
+  "firewall_rules": ["59585143-e819-48c9-944d-f03e0f049dba"],
+  "shared": false,
+  "audited": false,
+  "tenant_id": "3e00d5716204446c8d3c47a466eec25a",
+  "id": "12971159-95cf-4ca1-9baa-c82298ae0918",
+  "firewall_list": [],
+  "description": ""
+}
