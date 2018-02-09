@@ -606,7 +606,7 @@ public class AzureBlobClientLiveTest extends BaseBlobStoreIntegrationTest {
 
       // default
       BlobProperties properties = getApi().getBlobProperties(privateContainer, blobName);
-      assertThat(properties.getTier()).isNull();
+      assertThat(properties.getTier()).isEqualTo(AccessTier.HOT);
 
       // hot
       getApi().setBlobTier(privateContainer, blobName, AccessTier.HOT);
