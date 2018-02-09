@@ -360,7 +360,7 @@ public abstract class BaseBlobStore implements BlobStore {
          long partSize = algorithm.calculateChunkSize(contentLength);
          int partNumber = 1;
          // TODO: for InputStream payloads, this buffers all parts in-memory!
-         while (partNumber < algorithm.getParts()) {
+         while (partNumber <= algorithm.getParts()) {
             Payload payload = slicer.slice(blob.getPayload(), algorithm.getCopied(), partSize);
             BlobUploader b =
                   new BlobUploader(mpu, partNumber++, payload);
