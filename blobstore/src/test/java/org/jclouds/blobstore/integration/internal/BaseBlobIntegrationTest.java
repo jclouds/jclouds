@@ -757,6 +757,8 @@ public class BaseBlobIntegrationTest extends BaseBlobStoreIntegrationTest {
          assertThat(etag).isNotNull();
 
          Blob blob = blobStore.getBlob(container, blobName);
+         assertThat(blob.getMetadata().getContentMetadata().getContentLength()).isEqualTo(length);
+
          InputStream is = null;
          try {
             is = blob.getPayload().openStream();
