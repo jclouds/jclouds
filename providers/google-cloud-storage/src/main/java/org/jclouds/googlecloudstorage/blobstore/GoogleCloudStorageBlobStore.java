@@ -66,6 +66,7 @@ import org.jclouds.googlecloudstorage.domain.templates.BucketTemplate;
 import org.jclouds.googlecloudstorage.domain.templates.ComposeObjectTemplate;
 import org.jclouds.googlecloudstorage.domain.templates.ObjectAccessControlsTemplate;
 import org.jclouds.googlecloudstorage.domain.templates.ObjectTemplate;
+import org.jclouds.googlecloudstorage.options.InsertObjectOptions;
 import org.jclouds.googlecloudstorage.options.ListObjectOptions;
 import org.jclouds.http.HttpResponseException;
 import org.jclouds.io.ContentMetadata;
@@ -422,11 +423,8 @@ public final class GoogleCloudStorageBlobStore extends BaseBlobStore {
    public MultipartPart uploadMultipartPart(MultipartUpload mpu, int partNumber, Payload payload) {
       String partName = getMPUPartName(mpu, partNumber);
       long partSize = payload.getContentMetadata().getContentLength();
-      ObjectTemplate template = blobMetadataToObjectTemplate.apply(mpu.blobMetadata())
-            .name(partName)
-            .size(partSize);
-      GoogleCloudStorageObject object = api.getObjectApi().multipartUpload(
-            mpu.containerName(), template, payload);
+      GoogleCloudStorageObject object = api.getObjectApi().simpleUpload(
+            mpu.containerName(), "application/unknown", partSize, payload, new InsertObjectOptions().name(partName));
       return MultipartPart.create(partNumber, partSize, object.etag(), object.updated());
    }
 
