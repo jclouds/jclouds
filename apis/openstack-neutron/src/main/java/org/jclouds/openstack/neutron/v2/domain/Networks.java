@@ -17,7 +17,9 @@
 package org.jclouds.openstack.neutron.v2.domain;
 
 import java.beans.ConstructorProperties;
+import java.util.Set;
 
+import com.google.common.base.Predicate;
 import org.jclouds.openstack.v2_0.domain.Link;
 import org.jclouds.openstack.v2_0.domain.PaginatedCollection;
 
@@ -32,5 +34,26 @@ public class Networks extends PaginatedCollection<Network> {
    @ConstructorProperties({"networks", "networks_links"})
    protected Networks(Iterable<Network> networks, Iterable<Link> networksLinks) {
       super(networks, networksLinks);
+   }
+
+   public static class Predicates {
+
+      public static Predicate<Network> externalNetworks(final String availabilityZone) {
+         return new Predicate<Network>() {
+            @Override
+            public boolean apply(Network network) {
+               return availabilityZone.equals(network.getAvailabilityZone()) && network.getExternal();
+            }
+         };
+      }
+
+      public static Predicate<Network> namedNetworks(final Set<String> names) {
+         return new Predicate<Network>() {
+            @Override
+            public boolean apply(Network network) {
+               return names.contains(network.getName());
+            }
+         };
+      }
    }
 }

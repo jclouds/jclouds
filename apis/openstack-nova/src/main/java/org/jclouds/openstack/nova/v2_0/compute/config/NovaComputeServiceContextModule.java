@@ -71,7 +71,7 @@ import org.jclouds.openstack.nova.v2_0.compute.loaders.FindSecurityGroupOrCreate
 import org.jclouds.openstack.nova.v2_0.compute.loaders.LoadFloatingIpsForInstance;
 import org.jclouds.openstack.nova.v2_0.compute.options.NovaTemplateOptions;
 import org.jclouds.openstack.nova.v2_0.compute.strategy.ApplyNovaTemplateOptionsCreateNodesWithGroupEncodedIntoNameThenAddToSet;
-import org.jclouds.openstack.nova.v2_0.domain.FloatingIP;
+import org.jclouds.openstack.nova.v2_0.domain.FloatingIpForServer;
 import org.jclouds.openstack.nova.v2_0.domain.Server;
 import org.jclouds.openstack.nova.v2_0.domain.Server.Status;
 import org.jclouds.openstack.nova.v2_0.domain.regionscoped.FlavorInRegion;
@@ -137,7 +137,7 @@ public class NovaComputeServiceContextModule extends
 
       bind(TemplateOptions.class).to(NovaTemplateOptions.class);
 
-      bind(new TypeLiteral<CacheLoader<RegionAndId, Iterable<? extends FloatingIP>>>() {
+      bind(new TypeLiteral<CacheLoader<RegionAndId, Iterable<? extends FloatingIpForServer>>>() {
       }).annotatedWith(Names.named("FLOATINGIP")).to(LoadFloatingIpsForInstance.class);
 
       bind(new TypeLiteral<Function<RegionSecurityGroupNameAndPorts, SecurityGroup>>() {
@@ -214,8 +214,8 @@ public class NovaComputeServiceContextModule extends
    @Provides
    @Singleton
    @Named("FLOATINGIP")
-   protected final LoadingCache<RegionAndId, Iterable<? extends FloatingIP>> instanceToFloatingIps(
-            @Named("FLOATINGIP") CacheLoader<RegionAndId, Iterable<? extends FloatingIP>> in) {
+   protected final LoadingCache<RegionAndId, Iterable<? extends FloatingIpForServer>> instanceToFloatingIps(
+            @Named("FLOATINGIP") CacheLoader<RegionAndId, Iterable<? extends FloatingIpForServer>> in) {
       return CacheBuilder.newBuilder().build(in);
    }
 
@@ -313,7 +313,7 @@ public class NovaComputeServiceContextModule extends
 
       @Override
       public boolean apply(RegionAndId regionAndId) {
-         checkNotNull(regionAndId, "regionAndId");
+         checkNotNull(regionAndId, "serverId");
          Server server = api.getServerApi(regionAndId.getRegion()).get(regionAndId.getId());
          if (server == null) {
             throw new IllegalStateException(String.format("Server %s not found.", regionAndId.getId()));
@@ -333,7 +333,7 @@ public class NovaComputeServiceContextModule extends
 
       @Override
       public boolean apply(RegionAndId regionAndId) {
-         checkNotNull(regionAndId, "regionAndId");
+         checkNotNull(regionAndId, "serverId");
          Server server = api.getServerApi(regionAndId.getRegion()).get(regionAndId.getId());
          return server == null;
       }

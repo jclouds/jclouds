@@ -25,6 +25,7 @@ import static org.testng.AssertJUnit.assertFalse;
 
 import org.jclouds.openstack.nova.v2_0.NovaApi;
 import org.jclouds.openstack.nova.v2_0.domain.FloatingIP;
+import org.jclouds.openstack.nova.v2_0.domain.FloatingIpForServer;
 import org.jclouds.openstack.nova.v2_0.domain.regionscoped.RegionAndId;
 import org.jclouds.openstack.nova.v2_0.extensions.FloatingIPApi;
 import org.testng.annotations.Test;
@@ -50,8 +51,8 @@ public class LoadFloatingIpsForInstanceTest {
       replay(ipApi);
 
       LoadFloatingIpsForInstance parser = new LoadFloatingIpsForInstance(api);
-
-      assertEquals(ImmutableSet.copyOf(parser.load(RegionAndId.fromRegionAndId("RegionOne", "i-blah"))), ImmutableSet.of(testIp));
+      FloatingIpForServer floatingIpForServer = FloatingIpForServer.create(RegionAndId.fromRegionAndId("RegionOne", "i-blah"), "1", "1.1.1.1");
+      assertEquals(ImmutableSet.copyOf(parser.load(RegionAndId.fromRegionAndId("RegionOne", "i-blah"))), ImmutableSet.of(floatingIpForServer));
 
       verify(api);
       verify(ipApi);

@@ -20,7 +20,14 @@ import static java.util.logging.Logger.getAnonymousLogger;
 
 import java.util.Properties;
 
+import com.google.common.collect.ImmutableSet;
+import org.jclouds.Context;
+import org.jclouds.ContextBuilder;
 import org.jclouds.compute.internal.BaseComputeServiceLiveTest;
+import org.jclouds.config.ContextLinking;
+import org.jclouds.encryption.bouncycastle.config.BouncyCastleCryptoModule;
+import org.jclouds.logging.config.LoggingModule;
+import org.jclouds.logging.slf4j.config.SLF4JLoggingModule;
 import org.jclouds.openstack.keystone.config.KeystoneProperties;
 import org.jclouds.openstack.nova.v2_0.config.NovaProperties;
 import org.jclouds.rest.AuthorizationException;
@@ -29,16 +36,47 @@ import org.testng.annotations.Test;
 
 import com.google.inject.Module;
 
-@Test(groups = "live", singleThreaded = true, testName = "NovaComputeServiceLiveTest")
-public class NovaComputeServiceLiveTest extends BaseComputeServiceLiveTest {
+@Test(groups = "live", singleThreaded = true, testName = "NovaWithNeutronComputeServiceLiveTest")
+public class NovaWithNeutronComputeServiceLiveTest extends BaseComputeServiceLiveTest {
 
-   public NovaComputeServiceLiveTest() {
+   private Context neutronApiContext;
+
+   public NovaWithNeutronComputeServiceLiveTest() {
       provider = "openstack-nova";
+
+      Properties overrides = setupProperties();
+      neutronApiContext = ContextBuilder.newBuilder("openstack-neutron")
+              .endpoint(setIfTestSystemPropertyPresent(overrides,
+                      "openstack-nova.endpoint"))
+              .credentials(setIfTestSystemPropertyPresent(overrides,
+                      "openstack-nova.identity"),
+                      setIfTestSystemPropertyPresent(overrides, "openstack-nova.credential"))
+              .modules(ImmutableSet.<Module>of(
+                      new SshjSshClientModule(),
+                      new SLF4JLoggingModule(),
+                      new BouncyCastleCryptoModule())
+              )
+              .build();
    }
 
    @Override
    protected Module getSshModule() {
       return new SshjSshClientModule();
+   }
+
+   @Override
+   protected LoggingModule getLoggingModule() {
+      return new SLF4JLoggingModule();
+   }
+
+   @Override
+   protected Iterable<Module> setupModules() {
+      return ImmutableSet.of(
+              ContextLinking.linkContext(neutronApiContext),
+              getLoggingModule(),
+              credentialStoreModule,
+              getSshModule()
+      );
    }
    
    @Override

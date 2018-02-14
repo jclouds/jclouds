@@ -42,6 +42,7 @@ import org.jclouds.Fallbacks.VoidOnNotFoundOr404;
 import org.jclouds.collect.PagedIterable;
 import org.jclouds.fallbacks.MapHttp4xxCodesToExceptions;
 import org.jclouds.javax.annotation.Nullable;
+import org.jclouds.openstack.nova.v2_0.domain.PortInterface;
 import org.jclouds.openstack.nova.v2_0.domain.SecurityGroup;
 import org.jclouds.openstack.v2_0.domain.PaginatedCollection;
 import org.jclouds.openstack.keystone.auth.filters.AuthenticateRequest;
@@ -445,5 +446,19 @@ public interface ServerApi {
    @SelectJson("security_groups")
    @Fallback(Fallbacks.EmptySetOnNotFoundOr404.class)
    Set<SecurityGroup> listSecurityGroupForServer(@PathParam("id") String id);
+
+   /**
+    * Lists port interfaces that are attached to a server.
+    *
+    * @param id
+    *           id of the server
+    * @return a list of ports attached to the server
+    */
+   @Named("server:getPortInterfaces")
+   @GET
+   @Path("/{id}/os-interface")
+   @SelectJson("interfaceAttachments")
+   @Fallback(Fallbacks.EmptySetOnNotFoundOr404.class)
+   Set<PortInterface> listPortInterfaces(@PathParam("id") String id);
 
 }

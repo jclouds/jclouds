@@ -22,7 +22,7 @@ import java.util.Set;
 import javax.ws.rs.Path;
 
 import org.jclouds.location.Region;
-import org.jclouds.openstack.neutron.v2.extensions.FloatingIPApi;
+import org.jclouds.openstack.neutron.v2.features.FloatingIPApi;
 import org.jclouds.openstack.neutron.v2.extensions.RouterApi;
 import org.jclouds.openstack.neutron.v2.features.SecurityGroupApi;
 import org.jclouds.openstack.neutron.v2.extensions.lbaas.v1.LBaaSApi;
@@ -89,6 +89,12 @@ public interface NeutronApi extends Closeable {
    SecurityGroupApi getSecurityGroupApi(@EndpointParam(parser = VersionAwareRegionToEndpoint.class) String region);
 
    /**
+    * Provides access to Floating IP features.
+    */
+   @Delegate
+   FloatingIPApi getFloatingIPApi(@EndpointParam(parser = VersionAwareRegionToEndpoint.class) String region);
+
+   /**
     * Provides access to Router features.
     *
     * <h3>NOTE</h3>
@@ -97,16 +103,6 @@ public interface NeutronApi extends Closeable {
     */
    @Delegate
    Optional<RouterApi> getRouterApi(@EndpointParam(parser = VersionAwareRegionToEndpoint.class) String region);
-
-   /**
-    * Provides access to Floating IP features.
-    *
-    * <h3>NOTE</h3>
-    * This API is an extension that may or may not be present in your OpenStack cloud. Use the Optional return type
-    * to determine if it is present.
-    */
-   @Delegate
-   Optional<FloatingIPApi> getFloatingIPApi(@EndpointParam(parser = VersionAwareRegionToEndpoint.class) String region);
 
    /**
     * Provides access to LBaaS features.

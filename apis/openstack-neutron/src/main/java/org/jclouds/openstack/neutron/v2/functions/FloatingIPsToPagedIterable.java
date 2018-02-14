@@ -22,7 +22,7 @@ import org.jclouds.collect.IterableWithMarker;
 import org.jclouds.collect.internal.Arg0ToPagedIterable;
 import org.jclouds.openstack.neutron.v2.NeutronApi;
 import org.jclouds.openstack.neutron.v2.domain.FloatingIP;
-import org.jclouds.openstack.neutron.v2.extensions.FloatingIPApi;
+import org.jclouds.openstack.neutron.v2.features.FloatingIPApi;
 import org.jclouds.openstack.v2_0.options.PaginationOptions;
 
 import javax.inject.Inject;
@@ -44,7 +44,7 @@ public class FloatingIPsToPagedIterable extends Arg0ToPagedIterable.FromCaller<F
    @Override
    protected Function<Object, IterableWithMarker<FloatingIP>> markerToNextForArg0(Optional<Object> arg0) {
       String region = arg0.isPresent() ? arg0.get().toString() : null;
-      final FloatingIPApi floatingIPApi = api.getFloatingIPApi(region).get();
+      final FloatingIPApi floatingIPApi = api.getFloatingIPApi(region);
       return new Function<Object, IterableWithMarker<FloatingIP>>() {
 
          @SuppressWarnings("unchecked")

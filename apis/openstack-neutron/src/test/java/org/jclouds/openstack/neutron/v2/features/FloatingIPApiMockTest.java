@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jclouds.openstack.neutron.v2.extensions;
+package org.jclouds.openstack.neutron.v2.features;
 
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
@@ -45,13 +45,12 @@ public class FloatingIPApiMockTest extends BaseNeutronApiMockTest {
    public void testCreateFloatingIP() throws IOException, InterruptedException, URISyntaxException {
       MockWebServer server = mockOpenStackServer();
       server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/access.json"))));
-      server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/extension_list.json"))));
       server.enqueue(addCommonHeaders(
             new MockResponse().setResponseCode(201).setBody(stringFromResource("/floatingip_create_response.json"))));
 
       try {
          NeutronApi neutronApi = api(server.getUrl("/").toString(), "openstack-neutron", overrides);
-         FloatingIPApi api = neutronApi.getFloatingIPApi("RegionOne").get();
+         FloatingIPApi api = neutronApi.getFloatingIPApi("RegionOne");
 
          FloatingIP.CreateFloatingIP createFip = FloatingIP.createBuilder("376da547-b977-4cfe-9cba-275c80debf57")
                .portId("ce705c24-c1ef-408a-bda3-7bbd946164ab")
@@ -62,9 +61,8 @@ public class FloatingIPApiMockTest extends BaseNeutronApiMockTest {
          /*
           * Check request
           */
-         assertEquals(server.getRequestCount(), 3);
+         assertEquals(server.getRequestCount(), 2);
          assertAuthentication(server);
-         assertExtensions(server, uriApiVersion + "");
          assertRequest(server.takeRequest(), "POST", uriApiVersion + "/floatingips", "/floatingip_create_request.json");
 
          /*
@@ -87,21 +85,19 @@ public class FloatingIPApiMockTest extends BaseNeutronApiMockTest {
    public void testListSpecificPageFloatingIP() throws IOException, InterruptedException, URISyntaxException {
       MockWebServer server = mockOpenStackServer();
       server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/access.json"))));
-      server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/extension_list.json"))));
       server.enqueue(addCommonHeaders(new MockResponse().setResponseCode(200).setBody(stringFromResource("/floatingip_list_response_paged1.json"))));
 
       try {
          NeutronApi neutronApi = api(server.getUrl("/").toString(), "openstack-neutron", overrides);
-         FloatingIPApi api = neutronApi.getFloatingIPApi("RegionOne").get();
+         FloatingIPApi api = neutronApi.getFloatingIPApi("RegionOne");
 
          FloatingIPs floatingIPs = api.list(PaginationOptions.Builder.limit(2).marker("abcdefg"));
 
          /*
           * Check request
           */
-         assertEquals(server.getRequestCount(), 3);
+         assertEquals(server.getRequestCount(), 2);
          assertAuthentication(server);
-         assertExtensions(server, uriApiVersion + "");
          assertRequest(server.takeRequest(), "GET", uriApiVersion + "/floatingips?limit=2&marker=abcdefg");
 
          /*
@@ -119,13 +115,12 @@ public class FloatingIPApiMockTest extends BaseNeutronApiMockTest {
    public void testListPagedFloatingIP() throws IOException, InterruptedException, URISyntaxException {
       MockWebServer server = mockOpenStackServer();
       server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/access.json"))));
-      server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/extension_list.json"))));
       server.enqueue(addCommonHeaders(new MockResponse().setResponseCode(200).setBody(stringFromResource("/floatingip_list_response_paged1.json"))));
       server.enqueue(addCommonHeaders(new MockResponse().setResponseCode(200).setBody(stringFromResource("/floatingip_list_response_paged2.json"))));
 
       try {
          NeutronApi neutronApi = api(server.getUrl("/").toString(), "openstack-neutron", overrides);
-         FloatingIPApi api = neutronApi.getFloatingIPApi("RegionOne").get();
+         FloatingIPApi api = neutronApi.getFloatingIPApi("RegionOne");
 
          // Note: Lazy! Have to actually look at the collection.
          List<FloatingIP> floatingIPs = api.list().concat().toList();
@@ -133,9 +128,8 @@ public class FloatingIPApiMockTest extends BaseNeutronApiMockTest {
          /*
           * Check request
           */
-         assertEquals(server.getRequestCount(), 4);
+         assertEquals(server.getRequestCount(), 3);
          assertAuthentication(server);
-         assertExtensions(server, uriApiVersion + "");
          assertRequest(server.takeRequest(), "GET", uriApiVersion + "/floatingips");
          assertRequest(server.takeRequest(), "GET", uriApiVersion + "/floatingips?marker=71c1e68c-171a-4aa2-aca5-50ea153a3718");
 
@@ -154,22 +148,20 @@ public class FloatingIPApiMockTest extends BaseNeutronApiMockTest {
    public void testGetFloatingIP() throws IOException, InterruptedException, URISyntaxException {
       MockWebServer server = mockOpenStackServer();
       server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/access.json"))));
-      server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/extension_list.json"))));
       server.enqueue(addCommonHeaders(
             new MockResponse().setResponseCode(201).setBody(stringFromResource("/floatingip_get_response.json"))));
 
       try {
          NeutronApi neutronApi = api(server.getUrl("/").toString(), "openstack-neutron", overrides);
-         FloatingIPApi api = neutronApi.getFloatingIPApi("RegionOne").get();
+         FloatingIPApi api = neutronApi.getFloatingIPApi("RegionOne");
 
          FloatingIP floatingIP = api.get("12345");
 
          /*
           * Check request
           */
-         assertEquals(server.getRequestCount(), 3);
+         assertEquals(server.getRequestCount(), 2);
          assertAuthentication(server);
-         assertExtensions(server, uriApiVersion + "");
          assertRequest(server.takeRequest(), "GET", uriApiVersion + "/floatingips/12345");
 
          /*
@@ -192,13 +184,12 @@ public class FloatingIPApiMockTest extends BaseNeutronApiMockTest {
    public void testUpdateFloatingIP() throws IOException, InterruptedException, URISyntaxException {
       MockWebServer server = mockOpenStackServer();
       server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/access.json"))));
-      server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/extension_list.json"))));
       server.enqueue(addCommonHeaders(
             new MockResponse().setResponseCode(201).setBody(stringFromResource("/floatingip_update_response.json"))));
 
       try {
          NeutronApi neutronApi = api(server.getUrl("/").toString(), "openstack-neutron", overrides);
-         FloatingIPApi api = neutronApi.getFloatingIPApi("RegionOne").get();
+         FloatingIPApi api = neutronApi.getFloatingIPApi("RegionOne");
 
          FloatingIP.UpdateFloatingIP updateFloatingIP = FloatingIP.updateBuilder()
                .portId("fc861431-0e6c-4842-a0ed-e2363f9bc3a8")
@@ -209,9 +200,8 @@ public class FloatingIPApiMockTest extends BaseNeutronApiMockTest {
          /*
           * Check request
           */
-         assertEquals(server.getRequestCount(), 3);
+         assertEquals(server.getRequestCount(), 2);
          assertAuthentication(server);
-         assertExtensions(server, uriApiVersion + "");
          assertRequest(server.takeRequest(), "PUT", uriApiVersion + "/floatingips/12345", "/floatingip_update_request.json");
 
          /*
@@ -228,13 +218,12 @@ public class FloatingIPApiMockTest extends BaseNeutronApiMockTest {
    public void testUpdateFloatingIPDissociate() throws IOException, InterruptedException, URISyntaxException {
       MockWebServer server = mockOpenStackServer();
       server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/access.json"))));
-      server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/extension_list.json"))));
       server.enqueue(addCommonHeaders(
             new MockResponse().setResponseCode(201).setBody(stringFromResource("/floatingip_update_dissociate_response.json"))));
 
       try {
          NeutronApi neutronApi = api(server.getUrl("/").toString(), "openstack-neutron", overrides);
-         FloatingIPApi api = neutronApi.getFloatingIPApi("RegionOne").get();
+         FloatingIPApi api = neutronApi.getFloatingIPApi("RegionOne");
 
          FloatingIP.UpdateFloatingIP updateFloatingIP = FloatingIP.updateBuilder().build();
 
@@ -243,9 +232,8 @@ public class FloatingIPApiMockTest extends BaseNeutronApiMockTest {
          /*
           * Check request
           */
-         assertEquals(server.getRequestCount(), 3);
+         assertEquals(server.getRequestCount(), 2);
          assertAuthentication(server);
-         assertExtensions(server, uriApiVersion + "");
          assertRequest(server.takeRequest(), "PUT", uriApiVersion + "/floatingips/12345", "/floatingip_update_dissociate_request.json");
 
          /*
@@ -262,22 +250,20 @@ public class FloatingIPApiMockTest extends BaseNeutronApiMockTest {
    public void testDeleteFloatingIP() throws IOException, InterruptedException, URISyntaxException {
       MockWebServer server = mockOpenStackServer();
       server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/access.json"))));
-      server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/extension_list.json"))));
       server.enqueue(addCommonHeaders(
             new MockResponse().setResponseCode(201)));
 
       try {
          NeutronApi neutronApi = api(server.getUrl("/").toString(), "openstack-neutron", overrides);
-         FloatingIPApi api = neutronApi.getFloatingIPApi("RegionOne").get();
+         FloatingIPApi api = neutronApi.getFloatingIPApi("RegionOne");
 
          boolean result = api.delete("12345");
 
          /*
           * Check request
           */
-         assertEquals(server.getRequestCount(), 3);
+         assertEquals(server.getRequestCount(), 2);
          assertAuthentication(server);
-         assertExtensions(server, uriApiVersion + "");
          assertRequest(server.takeRequest(), "DELETE", uriApiVersion + "/floatingips/12345");
 
          /*

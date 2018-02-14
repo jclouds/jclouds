@@ -19,8 +19,10 @@ package org.jclouds.openstack.nova.v2_0.compute.loaders;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+import com.google.common.base.Function;
 import org.jclouds.openstack.nova.v2_0.NovaApi;
 import org.jclouds.openstack.nova.v2_0.domain.FloatingIP;
+import org.jclouds.openstack.nova.v2_0.domain.FloatingIpForServer;
 import org.jclouds.openstack.nova.v2_0.domain.regionscoped.RegionAndId;
 import org.jclouds.openstack.nova.v2_0.extensions.FloatingIPApi;
 
@@ -35,7 +37,7 @@ import com.google.common.collect.ImmutableSet;
  * them.
  */
 @Singleton
-public class LoadFloatingIpsForInstance extends CacheLoader<RegionAndId, Iterable<? extends FloatingIP>> {
+public class LoadFloatingIpsForInstance extends CacheLoader<RegionAndId, Iterable<? extends FloatingIpForServer>> {
    private final NovaApi api;
 
    @Inject
@@ -44,7 +46,7 @@ public class LoadFloatingIpsForInstance extends CacheLoader<RegionAndId, Iterabl
    }
 
    @Override
-   public Iterable<? extends FloatingIP> load(final RegionAndId key) throws Exception {
+   public Iterable<? extends FloatingIpForServer> load(final RegionAndId key) throws Exception {
       String region = key.getRegion();
       Optional<? extends FloatingIPApi> ipApiOptional = api.getFloatingIPApi(region);
       if (ipApiOptional.isPresent()) {
@@ -54,7 +56,13 @@ public class LoadFloatingIpsForInstance extends CacheLoader<RegionAndId, Iterabl
                      public boolean apply(FloatingIP input) {
                         return key.getId().equals(input.getInstanceId());
                      }
-                  });
+                  })
+                 .transform(new Function<FloatingIP, FloatingIpForServer>() {
+                     @Override
+                     public FloatingIpForServer apply(FloatingIP input) {
+                         return FloatingIpForServer.create(key, input.getId(), input.getIp());
+                     }
+                 });
       }
       return ImmutableSet.of();
    }

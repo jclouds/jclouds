@@ -270,7 +270,6 @@ public abstract class Aws4SignerBase {
       }
    }
 
-
    /**
     * hash string (encoding UTF_8) with sha256
     *

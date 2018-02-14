@@ -15,28 +15,25 @@
  * limitations under the License.
  */
 
-package org.jclouds.openstack.neutron.v2.extensions;
+package org.jclouds.openstack.neutron.v2.features;
 
-import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertTrue;
 
 import java.util.Set;
 
+import com.google.common.base.Predicate;
 import org.jclouds.openstack.neutron.v2.domain.FloatingIP;
 import org.jclouds.openstack.neutron.v2.domain.IP;
 import org.jclouds.openstack.neutron.v2.domain.Network;
-import org.jclouds.openstack.neutron.v2.domain.NetworkType;
-import org.jclouds.openstack.neutron.v2.domain.Subnet;
-import org.jclouds.openstack.neutron.v2.features.NetworkApi;
-import org.jclouds.openstack.neutron.v2.features.SubnetApi;
 import org.jclouds.openstack.neutron.v2.internal.BaseNeutronApiLiveTest;
+import org.testng.Assert;
 import org.testng.annotations.Test;
 
 import com.google.common.collect.ImmutableSet;
 
 /**
- * Tests parsing and Guice wiring of RouterApi
+ * Tests parsing and Guice wiring of FloatingIPApi
  */
 @Test(groups = "live", testName = "FloatingIPApiLiveTest")
 public class FloatingIPApiLiveTest extends BaseNeutronApiLiveTest {
@@ -44,44 +41,32 @@ public class FloatingIPApiLiveTest extends BaseNeutronApiLiveTest {
    public void testCreateUpdateAndDeleteFloatingIP() {
       for (String region : api.getConfiguredRegions()) {
 
-         SubnetApi subnetApi = api.getSubnetApi(region);
-         FloatingIPApi floatingIPApi = api.getFloatingIPApi(region).get();
+         FloatingIPApi floatingIPApi = api.getFloatingIPApi(region);
          NetworkApi networkApi = api.getNetworkApi(region);
 
          FloatingIP floatingIPGet = null;
-         String ipv4SubnetId = null;
-         Network network = null;
+         Network network;
 
          try {
-            network = networkApi.create(
-                  Network.createBuilder("jclouds-network-test").external(true).networkType(NetworkType.LOCAL).build());
-            assertNotNull(network);
+            network = networkApi.list().concat().firstMatch(new Predicate<Network>() {
+               @Override
+               public boolean apply(Network input) {
+                  return input.getExternal();
+               }
+            }).orNull();
 
-            ipv4SubnetId = subnetApi.create(Subnet.createBuilder(network.getId(), "198.51.100.0/24").ipVersion(4)
-                  .name("JClouds-Live-IPv4-Subnet").build()).getId();
+            if (network == null) Assert.fail("Cannot find a suitable external network. Please add it manually or contact your administrator");
 
-            floatingIPApi.create(FloatingIP.createBuilder(network.getId()).build());
-
+            FloatingIP floatingIP = floatingIPApi.create(FloatingIP.createBuilder(network.getId()).availabilityZone(network.getAvailabilityZone()).build());
             /* List and Get test */
             Set<FloatingIP> floatingIPs = floatingIPApi.list().concat().toSet();
-            FloatingIP floatingIPList = floatingIPs.iterator().next();
-            floatingIPGet = floatingIPApi.get(floatingIPList.getId());
+            floatingIPGet = floatingIPApi.get(floatingIP.getId());
 
             assertNotNull(floatingIPGet);
-            assertEquals(floatingIPGet, floatingIPList);
+            assertTrue(floatingIPs.contains(floatingIP));
          }
          finally {
-            try {
-               assertTrue(floatingIPApi.delete(floatingIPGet.getId()));
-            }
-            finally {
-               try {
-                  assertTrue(subnetApi.delete(ipv4SubnetId));
-               }
-               finally {
-                  assertTrue(networkApi.delete(network.getId()));
-               }
-            }
+            assertTrue(floatingIPApi.delete(floatingIPGet.getId()));
          }
       }
    }

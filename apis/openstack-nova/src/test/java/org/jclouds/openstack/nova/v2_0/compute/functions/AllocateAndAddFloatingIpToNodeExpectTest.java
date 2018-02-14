@@ -68,14 +68,27 @@ public class AllocateAndAddFloatingIpToNodeExpectTest extends BaseNovaComputeSer
       HttpResponse createFloatingIPResponse = HttpResponse.builder().statusCode(200).payload(
                payloadFromResource("/floatingip_details.json")).build();
 
+      HttpRequest listAZs = HttpRequest.builder().method("GET").endpoint(
+              URI.create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v2/3456/os-availability-zone")).headers(
+              ImmutableMultimap.<String, String> builder().put("Accept", "application/json")
+                      .put("X-Auth-Token", authToken)
+                      .build())
+              .build();
+
+      HttpResponse listAZsResponseForUnassigned = HttpResponse.builder().statusCode(200).payload(
+              payloadFromResource("/availability_zone_list.json")).build();
+
       HttpRequest addFloatingIPRequest = addFloatingIPForAddress("10.0.0.3");
 
       AllocateAndAddFloatingIpToNode fn = requestsSendResponses(
-               ImmutableMap.<HttpRequest, HttpResponse> builder().put(keystoneAuthWithUsernameAndPasswordAndTenantName,
-                        responseWithKeystoneAccess).put(extensionsOfNovaRequest, extensionsOfNovaResponse).put(
-                        createFloatingIP, createFloatingIPResponse)
-                        .put(addFloatingIPRequest, addFloatingIPResponse).build()).getContext().utils().injector()
-               .getInstance(AllocateAndAddFloatingIpToNode.class);
+               ImmutableMap.<HttpRequest, HttpResponse> builder()
+                       .put(keystoneAuthWithUsernameAndPasswordAndTenantName, responseWithKeystoneAccess)
+                       .put(listAZs, listAZsResponseForUnassigned)
+                       .put(extensionsOfNovaRequest, extensionsOfNovaResponse)
+                       .put(createFloatingIP, createFloatingIPResponse)
+                       .put(addFloatingIPRequest, addFloatingIPResponse).build())
+              .getContext().utils().injector()
+              .getInstance(AllocateAndAddFloatingIpToNode.class);
 
       AtomicReference<NodeMetadata> nodeRef = Atomics.newReference(node);
       AtomicReference<NovaTemplateOptions> optionsRef = Atomics.newReference(options);
@@ -110,6 +123,16 @@ public class AllocateAndAddFloatingIpToNodeExpectTest extends BaseNovaComputeSer
                                  "{\"badRequest\": {\"message\": \"AddressLimitExceeded: Address quota exceeded. You cannot create any more addresses\", \"code\": 400}}",
                                  "application/json")).build();
 
+      HttpRequest listAZs = HttpRequest.builder().method("GET").endpoint(
+              URI.create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v2/3456/os-availability-zone")).headers(
+              ImmutableMultimap.<String, String> builder().put("Accept", "application/json")
+                      .put("X-Auth-Token", authToken)
+                      .build())
+              .build();
+
+      HttpResponse listAZsResponseForUnassigned = HttpResponse.builder().statusCode(200).payload(
+              payloadFromResource("/availability_zone_list.json")).build();
+
       HttpRequest list = HttpRequest.builder().method("GET").endpoint(
                URI.create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v2/3456/os-floating-ips")).headers(
                ImmutableMultimap.<String, String> builder().put("Accept", "application/json").put("X-Auth-Token",
@@ -121,12 +144,16 @@ public class AllocateAndAddFloatingIpToNodeExpectTest extends BaseNovaComputeSer
       HttpRequest addFloatingIPRequest = addFloatingIPForAddress("10.0.0.5");
 
       AllocateAndAddFloatingIpToNode fn = requestsSendResponses(
-               ImmutableMap.<HttpRequest, HttpResponse> builder().put(keystoneAuthWithUsernameAndPasswordAndTenantName,
-                        responseWithKeystoneAccess).put(extensionsOfNovaRequest, extensionsOfNovaResponse).put(
-                        createFloatingIP, createFloatingIPResponse)
-                        .put(addFloatingIPRequest, addFloatingIPResponse).put(list,
-                                 listResponseForUnassigned).build()).getContext().utils().injector()
-               .getInstance(AllocateAndAddFloatingIpToNode.class);
+               ImmutableMap.<HttpRequest, HttpResponse> builder()
+                       .put(keystoneAuthWithUsernameAndPasswordAndTenantName, responseWithKeystoneAccess)
+                       .put(listAZs, listAZsResponseForUnassigned)
+                       .put(extensionsOfNovaRequest, extensionsOfNovaResponse)
+                       .put(createFloatingIP, createFloatingIPResponse)
+                       .put(addFloatingIPRequest, addFloatingIPResponse)
+                       .put(list, listResponseForUnassigned)
+                       .build())
+              .getContext().utils().injector()
+              .getInstance(AllocateAndAddFloatingIpToNode.class);
 
       AtomicReference<NodeMetadata> nodeRef = Atomics.newReference(node);
       AtomicReference<NovaTemplateOptions> optionsRef = Atomics.newReference(options);
@@ -148,6 +175,16 @@ public class AllocateAndAddFloatingIpToNodeExpectTest extends BaseNovaComputeSer
                                  "{\"badRequest\": {\"message\": \"AddressLimitExceeded: Address quota exceeded. You cannot create any more addresses\", \"code\": 404}}",
                                  "application/json")).build();
 
+      HttpRequest listAZs = HttpRequest.builder().method("GET").endpoint(
+              URI.create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v2/3456/os-availability-zone")).headers(
+              ImmutableMultimap.<String, String> builder().put("Accept", "application/json")
+                      .put("X-Auth-Token", authToken)
+                      .build())
+              .build();
+
+      HttpResponse listAZsResponseForUnassigned = HttpResponse.builder().statusCode(200).payload(
+              payloadFromResource("/availability_zone_list.json")).build();
+
       HttpRequest list = HttpRequest.builder().method("GET").endpoint(
                URI.create("https://az-1.region-a.geo-1.compute.hpcloudsvc.com/v2/3456/os-floating-ips")).headers(
                ImmutableMultimap.<String, String> builder().put("Accept", "application/json").put("X-Auth-Token",
@@ -159,12 +196,15 @@ public class AllocateAndAddFloatingIpToNodeExpectTest extends BaseNovaComputeSer
       HttpRequest addFloatingIPRequest = addFloatingIPForAddress("10.0.0.5");
 
       AllocateAndAddFloatingIpToNode fn = requestsSendResponses(
-               ImmutableMap.<HttpRequest, HttpResponse> builder().put(keystoneAuthWithUsernameAndPasswordAndTenantName,
-                        responseWithKeystoneAccess).put(extensionsOfNovaRequest, extensionsOfNovaResponse).put(
-                        createFloatingIP, createFloatingIPResponse)
-                        .put(addFloatingIPRequest, addFloatingIPResponse).put(list,
-                                 listResponseForUnassigned).build()).getContext().utils().injector()
-               .getInstance(AllocateAndAddFloatingIpToNode.class);
+               ImmutableMap.<HttpRequest, HttpResponse> builder()
+                       .put(keystoneAuthWithUsernameAndPasswordAndTenantName, responseWithKeystoneAccess)
+                       .put(listAZs, listAZsResponseForUnassigned)
+                       .put(extensionsOfNovaRequest, extensionsOfNovaResponse)
+                       .put(createFloatingIP, createFloatingIPResponse)
+                       .put(addFloatingIPRequest, addFloatingIPResponse)
+                       .put(list, listResponseForUnassigned).build())
+              .getContext().utils().injector()
+              .getInstance(AllocateAndAddFloatingIpToNode.class);
 
       AtomicReference<NodeMetadata> nodeRef = Atomics.newReference(node);
       AtomicReference<NovaTemplateOptions> optionsRef = Atomics.newReference(options);

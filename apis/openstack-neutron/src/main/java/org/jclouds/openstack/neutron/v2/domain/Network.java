@@ -47,6 +47,8 @@ public class Network {
    private Boolean shared;
    @Named("tenant_id")
    private String tenantId;
+   @Named("availability_zone")
+   private String availabilityZone;
 
    // providernet.py: Provider Networks Extension
    @Named("provider:network_type")
@@ -85,12 +87,12 @@ public class Network {
    @Named("flavor:network")
    private String networkFlavor;
 
-   @ConstructorProperties({"id", "status", "subnets", "name", "admin_state_up", "shared", "tenant_id",
+   @ConstructorProperties({"id", "status", "subnets", "name", "admin_state_up", "shared", "tenant_id", "availability_zone",
          "provider:network_type", "provider:physical_network", "provider:segmentation_id", "router:external",
          "port_security_enabled", "n1kv:profile_id", "n1kv:multicast_ip", "n1kv:segment_add", "n1kv:segment_del",
          "n1kv:member_segments", "segments", "flavor:network"})
    private Network(String id, NetworkStatus status, ImmutableSet<String> subnets, String name, Boolean adminStateUp,
-         Boolean shared, String tenantId, NetworkType networkType, String physicalNetworkName, Integer segmentationId,
+         Boolean shared, String tenantId, String availabilityZone, NetworkType networkType, String physicalNetworkName, Integer segmentationId,
          Boolean external, Boolean portSecurity, String profileId, String multicastIp, String segmentAdd,
          String segmentDel, String memberSegments, ImmutableSet<NetworkSegment> segments, String networkFlavor) {
       // No checkNotNulls. With Neutron, any of these properties can be left null when used in an update.
@@ -101,6 +103,7 @@ public class Network {
       this.adminStateUp = adminStateUp;
       this.shared = shared;
       this.tenantId = tenantId;
+      this.availabilityZone = availabilityZone;
       this.networkType = networkType;
       this.physicalNetworkName = physicalNetworkName;
       this.segmentationId = segmentationId;
@@ -132,6 +135,7 @@ public class Network {
       network.adminStateUp,
       network.shared,
       network.tenantId,
+      network.availabilityZone,
       network.networkType,
       network.physicalNetworkName,
       network.segmentationId,
@@ -203,6 +207,14 @@ public class Network {
    @Nullable
    public String getTenantId() {
       return tenantId;
+   }
+
+   /**
+    * @return the availability zone of the Network
+    */
+   @Nullable
+   public String getAvailabilityZone() {
+      return availabilityZone;
    }
 
    /**
@@ -304,7 +316,7 @@ public class Network {
 
    @Override
    public int hashCode() {
-      return Objects.hashCode(id, status, subnets, name, adminStateUp, shared, tenantId, networkType,
+      return Objects.hashCode(id, status, subnets, name, adminStateUp, shared, tenantId, availabilityZone, networkType,
             physicalNetworkName, segmentationId, external, portSecurity, profileId, multicastIp, segmentAdd, segmentDel,
             memberSegments, segments, networkFlavor);
    }
@@ -323,6 +335,7 @@ public class Network {
             && Objects.equal(this.adminStateUp, that.adminStateUp)
             && Objects.equal(this.shared, that.shared)
             && Objects.equal(this.tenantId, that.tenantId)
+            && Objects.equal(this.availabilityZone, that.availabilityZone)
             && Objects.equal(this.networkType, that.networkType)
             && Objects.equal(this.physicalNetworkName, that.physicalNetworkName)
             && Objects.equal(this.segmentationId, that.segmentationId)
@@ -347,6 +360,7 @@ public class Network {
             .add("adminStateUp", adminStateUp)
             .add("shared", shared)
             .add("tenantId", tenantId)
+            .add("availabilityZone", availabilityZone)
             .add("networkType", networkType)
             .add("physicalNetworkName", physicalNetworkName)
             .add("segmentationId", segmentationId)
@@ -433,6 +447,17 @@ public class Network {
        */
       public ParameterizedBuilderType tenantId(String tenantId) {
          network.tenantId = tenantId;
+         return self();
+      }
+
+      /**
+       * Provide the availabilityZone to the Network's Builder.
+       *
+       * @return the Builder.
+       * @see Network#getAvailabilityZone() ()
+       */
+      public ParameterizedBuilderType availabilityZone(String availabilityZone) {
+         network.availabilityZone = availabilityZone;
          return self();
       }
 

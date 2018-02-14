@@ -68,6 +68,7 @@ public class CleanupResources implements Function<NodeMetadata, Boolean> {
 
    public boolean removeSecurityGroupCreatedByJcloudsAndInvalidateCache(Set<String> tags) {
       String securityGroupIdCreatedByJclouds = getSecurityGroupIdCreatedByJclouds(tags);
+      if (securityGroupIdCreatedByJclouds == null) return true;
       return securityGroupExtension.removeSecurityGroup(securityGroupIdCreatedByJclouds);
    }
 

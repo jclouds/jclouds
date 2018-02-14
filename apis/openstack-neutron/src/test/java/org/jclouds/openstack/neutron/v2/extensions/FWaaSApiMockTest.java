@@ -36,6 +36,7 @@ import org.jclouds.openstack.neutron.v2.domain.FloatingIP;
 import org.jclouds.openstack.neutron.v2.domain.UpdateFirewall;
 import org.jclouds.openstack.neutron.v2.domain.UpdateFirewallPolicy;
 import org.jclouds.openstack.neutron.v2.domain.UpdateFirewallRule;
+import org.jclouds.openstack.neutron.v2.features.FloatingIPApi;
 import org.jclouds.openstack.neutron.v2.internal.BaseNeutronApiMockTest;
 import org.jclouds.openstack.v2_0.domain.PaginatedCollection;
 import org.jclouds.openstack.v2_0.options.PaginationOptions;
@@ -130,13 +131,12 @@ public class FWaaSApiMockTest extends BaseNeutronApiMockTest {
    public void testListPagedFirewall() throws IOException, InterruptedException, URISyntaxException {
       MockWebServer server = mockOpenStackServer();
       server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/access.json"))));
-      server.enqueue(addCommonHeaders(new MockResponse().setBody(stringFromResource("/extension_list.json"))));
       server.enqueue(addCommonHeaders(new MockResponse().setResponseCode(200).setBody(stringFromResource("/floatingip_list_response_paged1.json"))));
       server.enqueue(addCommonHeaders(new MockResponse().setResponseCode(200).setBody(stringFromResource("/floatingip_list_response_paged2.json"))));
 
       try {
          NeutronApi neutronApi = api(server.getUrl("/").toString(), "openstack-neutron", overrides);
-         FloatingIPApi api = neutronApi.getFloatingIPApi("RegionOne").get();
+         FloatingIPApi api = neutronApi.getFloatingIPApi("RegionOne");
 
          // Note: Lazy! Have to actually look at the collection.
          List<FloatingIP> floatingIPs = api.list().concat().toList();
@@ -144,9 +144,8 @@ public class FWaaSApiMockTest extends BaseNeutronApiMockTest {
          /*
           * Check request
           */
-         assertEquals(server.getRequestCount(), 4);
+         assertEquals(server.getRequestCount(), 3);
          assertAuthentication(server);
-         assertExtensions(server, uriApiVersion + "");
          assertRequest(server.takeRequest(), "GET", uriApiVersion + "/floatingips");
          assertRequest(server.takeRequest(), "GET", uriApiVersion + "/floatingips?marker=71c1e68c-171a-4aa2-aca5-50ea153a3718");
 

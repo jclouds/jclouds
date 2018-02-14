@@ -34,6 +34,8 @@ public class FloatingIP {
    private String id;
    @Named("router_id")
    private String routerId;
+   @Named("project_id")
+   private String projectId;
    @Named("tenant_id")
    private String tenantId;
    // Only mandatory attribute when creating
@@ -45,21 +47,25 @@ public class FloatingIP {
    private String floatingIpAddress;
    @Named("port_id")
    private String portId;
+   @Named("availability_zone")
+   private String availabilityZone;
 
    /**
     * Deserialization constructor
     */
-   @ConstructorProperties({"id", "router_id", "tenant_id", "floating_network_id", "fixed_ip_address",
-         "floating_ip_address", "port_id"})
-   private FloatingIP(String id, String routerId, String tenantId, String floatingNetworkId, String fixedIpAddress,
-         String floatingIpAddress, String portId) {
+   @ConstructorProperties({"id", "router_id", "project_id", "tenant_id", "floating_network_id", "fixed_ip_address",
+         "floating_ip_address", "port_id", "availability_zone"})
+   private FloatingIP(String id, String routerId, String projectId, String tenantId, String floatingNetworkId, String fixedIpAddress,
+         String floatingIpAddress, String portId, String availabilityZone) {
       this.id = id;
       this.routerId = routerId;
+      this.projectId = projectId;
       this.tenantId = tenantId;
       this.floatingNetworkId = floatingNetworkId;
       this.fixedIpAddress = fixedIpAddress;
       this.floatingIpAddress = floatingIpAddress;
       this.portId = portId;
+      this.availabilityZone = availabilityZone;
    }
 
    private FloatingIP() {}
@@ -68,8 +74,8 @@ public class FloatingIP {
     * @param floatingIP The floating IP to copy from
     */
    private FloatingIP(FloatingIP floatingIP) {
-      this(floatingIP.id, floatingIP.routerId, floatingIP.tenantId, floatingIP.floatingNetworkId,
-            floatingIP.fixedIpAddress, floatingIP.floatingIpAddress, floatingIP.portId);
+      this(floatingIP.id, floatingIP.routerId, floatingIP.projectId, floatingIP.tenantId, floatingIP.floatingNetworkId,
+            floatingIP.fixedIpAddress, floatingIP.floatingIpAddress, floatingIP.portId, floatingIP.availabilityZone);
    }
 
    /**
@@ -86,6 +92,14 @@ public class FloatingIP {
    @Nullable
    public String getRouterId() {
       return routerId;
+   }
+
+   /**
+    * @return the project id of the Floating IP
+    */
+   @Nullable
+   public String getProjectId() {
+      return projectId;
    }
 
    /**
@@ -128,6 +142,14 @@ public class FloatingIP {
       return portId;
    }
 
+   /**
+    * @return the availability zone for this floating IP
+    */
+   @Nullable
+   public String getAvailabilityZone() {
+      return availabilityZone;
+   }
+
    @Override
    public boolean equals(Object o) {
       if (this == o)
@@ -139,17 +161,20 @@ public class FloatingIP {
 
       return Objects.equal(this.id, that.id) &&
             Objects.equal(this.routerId, that.routerId) &&
+            Objects.equal(this.projectId, that.projectId) &&
             Objects.equal(this.tenantId, that.tenantId) &&
             Objects.equal(this.floatingNetworkId, that.floatingNetworkId) &&
             Objects.equal(this.fixedIpAddress, that.fixedIpAddress) &&
             Objects.equal(this.floatingIpAddress, that.floatingIpAddress) &&
-            Objects.equal(this.portId, that.portId);
+            Objects.equal(this.portId, that.portId) &&
+            Objects.equal(this.availabilityZone, that.availabilityZone);
+
    }
 
    @Override
    public int hashCode() {
-      return Objects.hashCode(id, routerId, tenantId, floatingNetworkId, fixedIpAddress, floatingIpAddress,
-            portId);
+      return Objects.hashCode(id, routerId, projectId, tenantId, floatingNetworkId, fixedIpAddress, floatingIpAddress,
+            portId, availabilityZone);
    }
 
    @Override
@@ -157,11 +182,13 @@ public class FloatingIP {
       return MoreObjects.toStringHelper(this)
             .add("id", id)
             .add("routerId", routerId)
+            .add("projectId", projectId)
             .add("tenantId", tenantId)
             .add("floatingNetworkId", floatingNetworkId)
             .add("fixedIpAddress", fixedIpAddress)
             .add("floatingIpAddress", floatingIpAddress)
             .add("portId", portId)
+            .add("availabilityZone", availabilityZone)
             .toString();
    }
 
@@ -190,6 +217,17 @@ public class FloatingIP {
       }
 
       protected abstract ParameterizedBuilderType self();
+
+      /**
+       * Provide the project ID for this Floating IP.
+       *
+       * @return the Builder.
+       * @see FloatingIP#getProjectId() ()
+       */
+      public ParameterizedBuilderType projectId(String projectId) {
+         floatingIP.projectId = projectId;
+         return self();
+      }
 
       /**
        * Provide the tenantId for this Floating IP. Admin-only.
@@ -249,6 +287,18 @@ public class FloatingIP {
          floatingIP.portId = portId;
          return self();
       }
+
+      /**
+       * Provides the availability zone for this Floating IP.
+       *
+       * @return the Builder.
+       * @see FloatingIP#getAvailabilityZone()
+       */
+      public ParameterizedBuilderType availabilityZone(String availabilityZone) {
+         floatingIP.availabilityZone = availabilityZone;
+         return self();
+      }
+
    }
 
    public static class CreateBuilder extends Builder<CreateBuilder> {

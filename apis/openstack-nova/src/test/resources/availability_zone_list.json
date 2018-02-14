@@ -1,0 +1,18 @@
+{
+  "availabilityZoneInfo": [
+    {
+      "zoneState": {
+        "available": true
+      },
+      "hosts": null,
+      "zoneName": "uk-1a"
+    },
+    {
+      "zoneState": {
+        "available": true
+      },
+      "hosts": null,
+      "zoneName": "uk-1b"
+    }
+  ]
+}
