@@ -22,13 +22,13 @@
   <parent>
     <groupId>org.apache.jclouds</groupId>
     <artifactId>jclouds-project</artifactId>
-    <version>2.1.0</version>
+    <version>2.1.1-SNAPSHOT</version>
     <relativePath>../../project/pom.xml</relativePath>
   </parent>
 
   <groupId>org.apache.jclouds.provider</groupId>
   <artifactId>rackspace-cloudfiles-us</artifactId>
-  <version>2.1.0</version>
+  <version>2.1.1-SNAPSHOT</version>
   <name>jclouds Rackspace Cloud Files US provider</name>
   <description>OpenStack Object Storage implementation targeted to Rackspace Cloud Files US</description>
   <packaging>bundle</packaging>
