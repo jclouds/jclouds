@@ -19,6 +19,7 @@ package org.jclouds.googlecloudstorage.blobstore.functions;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 import org.jclouds.blobstore.options.ListContainerOptions;
+import org.jclouds.googlecloudstorage.domain.DomainResourceReferences.Projection;
 import org.jclouds.googlecloudstorage.options.ListObjectOptions;
 
 import com.google.common.base.Function;
@@ -52,6 +53,9 @@ public class BlobStoreListContainerOptionsToListObjectOptions implements
       }
       if (from.getMaxResults() != null) {
          httpOptions = httpOptions.maxResults(from.getMaxResults());
+      }
+      if (from.isDetailed()) {
+         httpOptions = httpOptions.projection(Projection.FULL);
       }
       return httpOptions;
    }

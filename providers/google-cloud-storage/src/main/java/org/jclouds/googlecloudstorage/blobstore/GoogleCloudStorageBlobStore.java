@@ -45,7 +45,6 @@ import org.jclouds.blobstore.options.CreateContainerOptions;
 import org.jclouds.blobstore.options.GetOptions;
 import org.jclouds.blobstore.options.ListContainerOptions;
 import org.jclouds.blobstore.options.PutOptions;
-import org.jclouds.blobstore.strategy.internal.FetchBlobMetadata;
 import org.jclouds.blobstore.util.BlobUtils;
 import org.jclouds.collect.Memoized;
 import org.jclouds.domain.Location;
@@ -79,7 +78,6 @@ import com.google.common.base.Supplier;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
 import com.google.common.hash.HashCode;
-import com.google.inject.Provider;
 
 public final class GoogleCloudStorageBlobStore extends BaseBlobStore {
 
@@ -87,7 +85,6 @@ public final class GoogleCloudStorageBlobStore extends BaseBlobStore {
    private final BucketToStorageMetadata bucketToStorageMetadata;
    private final ObjectToBlobMetadata objectToBlobMetadata;
    private final ObjectListToStorageMetadata objectListToStorageMetadata;
-   private final Provider<FetchBlobMetadata> fetchBlobMetadataProvider;
    private final BlobMetadataToObjectTemplate blobMetadataToObjectTemplate;
    private final BlobStoreListContainerOptionsToListObjectOptions listContainerOptionsToListObjectOptions;
    private final Supplier<String> projectId;
@@ -97,7 +94,6 @@ public final class GoogleCloudStorageBlobStore extends BaseBlobStore {
             @Memoized Supplier<Set<? extends Location>> locations, PayloadSlicer slicer, GoogleCloudStorageApi api,
             BucketToStorageMetadata bucketToStorageMetadata, ObjectToBlobMetadata objectToBlobMetadata,
             ObjectListToStorageMetadata objectListToStorageMetadata,
-            Provider<FetchBlobMetadata> fetchBlobMetadataProvider,
             BlobMetadataToObjectTemplate blobMetadataToObjectTemplate,
             BlobStoreListContainerOptionsToListObjectOptions listContainerOptionsToListObjectOptions,
             @CurrentProject Supplier<String> projectId,
@@ -107,7 +103,6 @@ public final class GoogleCloudStorageBlobStore extends BaseBlobStore {
       this.bucketToStorageMetadata = bucketToStorageMetadata;
       this.objectToBlobMetadata = objectToBlobMetadata;
       this.objectListToStorageMetadata = objectListToStorageMetadata;
-      this.fetchBlobMetadataProvider = checkNotNull(fetchBlobMetadataProvider, "fetchBlobMetadataProvider");
       this.blobMetadataToObjectTemplate = blobMetadataToObjectTemplate;
       this.listContainerOptionsToListObjectOptions = listContainerOptionsToListObjectOptions;
       this.projectId = projectId;
@@ -192,8 +187,7 @@ public final class GoogleCloudStorageBlobStore extends BaseBlobStore {
    public PageSet<? extends StorageMetadata> list(String container, ListContainerOptions options) {
       ListObjectOptions listOptions = listContainerOptionsToListObjectOptions.apply(options);
       ListPageWithPrefixes<GoogleCloudStorageObject> gcsList = api.getObjectApi().listObjects(container, listOptions);
-      PageSet<? extends StorageMetadata> list = objectListToStorageMetadata.apply(gcsList);
-      return options.isDetailed() ? fetchBlobMetadataProvider.get().setContainerName(container).apply(list) : list;
+      return objectListToStorageMetadata.apply(gcsList);
    }
 
    /**
