@@ -19,9 +19,20 @@ package org.jclouds.azureblob.blobstore.integration;
 import java.io.IOException;
 import java.util.concurrent.ExecutionException;
 
+import javax.ws.rs.core.MediaType;
+
+import com.google.common.base.Charsets;
+import com.google.common.collect.ImmutableMap;
+import org.jclouds.blobstore.domain.Blob;
 import org.jclouds.blobstore.integration.internal.BaseBlobIntegrationTest;
+import org.jclouds.blobstore.options.CopyOptions;
 import org.testng.SkipException;
 import org.testng.annotations.Test;
+
+import static com.google.common.hash.Hashing.md5;
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertNotNull;
+import static org.testng.Assert.assertNull;
 
 @Test(groups = "live")
 public class AzureBlobIntegrationLiveTest extends BaseBlobIntegrationTest {
@@ -63,5 +74,38 @@ public class AzureBlobIntegrationLiveTest extends BaseBlobIntegrationTest {
    @Test(groups = { "integration", "live" }, expectedExceptions = UnsupportedOperationException.class)
    public void testPutBlobAccessMultipart() throws Exception {
       super.testPutBlobAccessMultipart();
+   }
+
+   @Test(groups = { "integration", "live" })
+   public void testSigningOfUppercaseMetadata() throws InterruptedException {
+      String containerName = getContainerName();
+      String blobName = "testSigningOfUppercaseMetadata";
+
+      Blob blob = view.getBlobStore().blobBuilder(blobName)
+          .userMetadata(ImmutableMap.of("B", "b", "a", "a"))
+          .payload(TEST_STRING).contentType(MediaType.TEXT_PLAIN)
+          .contentMD5(md5().hashString(TEST_STRING, Charsets.UTF_8))
+          .build();
+
+      try {
+         assertNull(view.getBlobStore().blobMetadata(containerName, blobName));
+
+         addBlobToContainer(containerName, blob);
+         assertConsistencyAwareContainerSize(containerName, 1);
+
+         view.getBlobStore().copyBlob(
+             containerName, blobName, containerName, blobName,
+             CopyOptions.builder().userMetadata(ImmutableMap.of("B", "b", "a", "a")).build()
+         );
+
+         Blob newObject = view.getBlobStore().getBlob(containerName, blobName);
+
+         assertNotNull(newObject);
+         assertEquals(newObject.getMetadata().getUserMetadata().get("b"), "b");
+         assertEquals(newObject.getMetadata().getUserMetadata().get("a"), "a");
+
+      } finally {
+         returnContainer(containerName);
+      }
    }
 }
