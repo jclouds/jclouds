@@ -23,7 +23,8 @@ import static org.jclouds.util.Patterns.NEWLINE_PATTERN;
 import static org.jclouds.util.Strings2.toInputStream;
 
 import java.util.Collection;
-import java.util.Set;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import javax.annotation.Resource;
 import javax.inject.Inject;
@@ -31,6 +32,11 @@ import javax.inject.Named;
 import javax.inject.Provider;
 import javax.inject.Singleton;
 
+import com.google.common.base.Function;
+import com.google.common.base.Joiner;
+import com.google.common.collect.Iterables;
+import com.google.common.collect.Maps;
+import com.google.common.collect.Multimap;
 import org.jclouds.Constants;
 import org.jclouds.crypto.Crypto;
 import org.jclouds.date.TimeStamp;
@@ -50,7 +56,6 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableMap.Builder;
 import com.google.common.collect.Multimaps;
-import com.google.common.collect.Sets;
 import com.google.common.io.ByteProcessor;
 import com.google.common.net.HttpHeaders;
 
@@ -150,17 +155,25 @@ public class SharedKeyLiteAuthentication implements HttpRequestFilter {
    }
 
    private void appendCanonicalizedHeaders(HttpRequest request, StringBuilder toSign) {
-      // TreeSet == Sort the headers alphabetically.
-      Set<String> headers = Sets.newTreeSet(request.getHeaders().keySet());
-      for (String header : headers) {
+      // TreeMap == Sort the headers alphabetically.
+      Map<String, String> headers = Maps.newTreeMap();
+      Multimap<String, String> requestHeaders = request.getHeaders();
+      for (String header : requestHeaders.keySet()) {
          if (header.startsWith("x-ms-")) {
-            toSign.append(header.toLowerCase()).append(":");
-            for (String value : request.getHeaders().get(header)) {
-               toSign.append(NEWLINE_PATTERN.matcher(value).replaceAll("")).append(",");
-            }
-            toSign.deleteCharAt(toSign.lastIndexOf(","));
-            toSign.append("\n");
+            String value = Joiner.on(",").join(Iterables.transform(requestHeaders.get(header),
+                new Function<String, Object>()
+                {
+                   @Override
+                   public Object apply(final String value) {
+                      return NEWLINE_PATTERN.matcher(value).replaceAll("");
+                   }
+                })
+            );
+            headers.put(header.toLowerCase(), value);
          }
+      }
+      for (Entry<String, String> entry : headers.entrySet()) {
+         toSign.append(entry.getKey()).append(":").append(entry.getValue()).append("\n");
       }
    }
 
