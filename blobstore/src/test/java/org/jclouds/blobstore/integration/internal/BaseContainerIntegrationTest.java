@@ -553,6 +553,28 @@ public class BaseContainerIntegrationTest extends BaseBlobStoreIntegrationTest {
    }
 
    @Test(groups = {"integration", "live"})
+   public void testContainerListWithDetails() throws InterruptedException {
+      final String containerName = getContainerName();
+      BlobStore blobStore = view.getBlobStore();
+      String prefix = "testContainerListWithDetails/";
+      try {
+         blobStore.putBlob(containerName, blobStore.blobBuilder(prefix + "foo/bar").payload("").build());
+         blobStore.putBlob(containerName, blobStore.blobBuilder(prefix + "car").payload("").build());
+         checkEqualNames(
+             ImmutableSet.of(prefix + "foo/", prefix + "car"),
+             blobStore.list(containerName, ListContainerOptions.Builder.prefix(prefix).delimiter("/"))
+         );
+         checkEqualNames(
+             ImmutableSet.of(prefix + "foo/", prefix + "car"),
+             blobStore.list(containerName, ListContainerOptions.Builder.prefix(prefix).delimiter("/").withDetails())
+         );
+      }
+      finally {
+         returnContainer(containerName);
+      }
+   }
+
+   @Test(groups = {"integration", "live"})
    public void testDelimiterList() throws InterruptedException {
       final String containerName = getContainerName();
       BlobStore blobStore = view.getBlobStore();
