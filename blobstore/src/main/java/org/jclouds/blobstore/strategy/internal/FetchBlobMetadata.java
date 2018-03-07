@@ -24,9 +24,9 @@ import java.util.concurrent.Callable;
 import javax.annotation.Resource;
 import javax.inject.Named;
 
+import com.google.common.util.concurrent.Futures;
 import org.jclouds.Constants;
 import org.jclouds.blobstore.BlobStore;
-import org.jclouds.blobstore.domain.BlobMetadata;
 import org.jclouds.blobstore.domain.PageSet;
 import org.jclouds.blobstore.domain.StorageMetadata;
 import org.jclouds.blobstore.domain.StorageType;
@@ -37,8 +37,6 @@ import org.jclouds.javax.annotation.concurrent.NotThreadSafe;
 import org.jclouds.logging.Logger;
 
 import com.google.common.base.Function;
-import com.google.common.base.Predicate;
-import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.ListeningExecutorService;
@@ -81,19 +79,16 @@ public class FetchBlobMetadata implements Function<PageSet<? extends StorageMeta
    public PageSet<? extends StorageMetadata> apply(PageSet<? extends StorageMetadata> in) {
       checkState(container != null, "container name should be initialized");
 
-      Iterable<BlobMetadata> returnv = Lists.newArrayList(transformParallel(Iterables.filter(in, new Predicate<StorageMetadata>() {
+      Iterable<StorageMetadata> returnv = Lists.newArrayList(transformParallel(in,
+          new Function<StorageMetadata, ListenableFuture<? extends StorageMetadata>>() {
 
          @Override
-         public boolean apply(StorageMetadata input) {
-            return input.getType() == StorageType.BLOB;
-         }
-
-      }), new Function<StorageMetadata, ListenableFuture<? extends BlobMetadata>>() {
-
-         @Override
-         public ListenableFuture<BlobMetadata> apply(final StorageMetadata from) {
-            return userExecutor.submit(new Callable<BlobMetadata>() {
-               @Override public BlobMetadata call() throws Exception {
+         public ListenableFuture<StorageMetadata> apply(final StorageMetadata from) {
+            if (from.getType() != StorageType.BLOB) {
+               return Futures.immediateFuture(from);
+            }
+            return userExecutor.submit(new Callable<StorageMetadata>() {
+               @Override public StorageMetadata call() throws Exception {
                   return blobstore.blobMetadata(container, from.getName());
                }
             });
@@ -101,6 +96,6 @@ public class FetchBlobMetadata implements Function<PageSet<? extends StorageMeta
 
       }, userExecutor, maxTime, logger, String.format("getting metadata from containerName: %s", container)));
 
-      return new PageSetImpl<BlobMetadata>(returnv, in.getNextMarker());
+      return new PageSetImpl<StorageMetadata>(returnv, in.getNextMarker());
    }
 }
