@@ -321,10 +321,10 @@ public interface AzureBlobClient extends Closeable {
     * blob.
     * <p/>
     * <h4>Remarks</h4>
-    * The maximum upload size for a blob is 64 MB. If your blob is larger than 64 MB, you may upload
+    * The maximum upload size for a blob is 256 MB. If your blob is larger than 256 MB, you may upload
     * it as a set of blocks. For more information, see the Put Block and Put Block List operations.
     * <p/>
-    * If you attempt to upload a blob that is larger than 64 MB, the service returns status code 413
+    * If you attempt to upload a blob that is larger than 256 MB, the service returns status code 413
     * (Request Payload Too Large). The Blob service also returns additional information about the
     * error in the response, including the maximum blob size permitted in bytes.
     */

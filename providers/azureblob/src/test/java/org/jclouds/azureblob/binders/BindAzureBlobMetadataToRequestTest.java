@@ -35,10 +35,10 @@ import com.google.common.collect.ImmutableMap;
 public class BindAzureBlobMetadataToRequestTest extends BaseRestAnnotationProcessingTest<AzureBlobClient> {
 
    @Test
-   public void testPassWithMinimumDetailsAndPayload64MB() {
+   public void testPassWithMinimumDetailsAndPayload256MB() {
       AzureBlob blob = injector.getInstance(AzureBlob.Factory.class).create(null);
       Payload payload = Payloads.newStringPayload("");
-      payload.getContentMetadata().setContentLength(64 * 1024 * 1024L);
+      payload.getContentMetadata().setContentLength(256 * 1024 * 1024L);
       blob.setPayload(payload);
       blob.getProperties().setName("foo");
 
@@ -55,7 +55,7 @@ public class BindAzureBlobMetadataToRequestTest extends BaseRestAnnotationProces
    public void testExtendedPropertiesBind() {
       AzureBlob blob = injector.getInstance(AzureBlob.Factory.class).create(null);
       Payload payload = Payloads.newStringPayload("");
-      payload.getContentMetadata().setContentLength(64 * 1024 * 1024L);
+      payload.getContentMetadata().setContentLength(256 * 1024 * 1024L);
       blob.setPayload(payload);
       blob.getProperties().setName("foo");
       blob.getProperties().setMetadata(ImmutableMap.of("foo", "bar"));
@@ -96,10 +96,10 @@ public class BindAzureBlobMetadataToRequestTest extends BaseRestAnnotationProces
    }
 
    @Test(expectedExceptions = IllegalArgumentException.class)
-   public void testOver64MBIsBad() {
+   public void testOver256MBIsBad() {
       AzureBlob blob = injector.getInstance(AzureBlob.Factory.class).create(null);
       Payload payload = Payloads.newStringPayload("");
-      payload.getContentMetadata().setContentLength(64 * 1024 * 1024L + 1);
+      payload.getContentMetadata().setContentLength(256 * 1024 * 1024L + 1);
       blob.setPayload(payload);
       blob.getProperties().setName("foo");
 

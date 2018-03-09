@@ -76,9 +76,11 @@ public class BindAzureBlobMetadataToRequest implements Binder {
          headers.put("x-ms-blob-content-length", blob.getPayload().getContentMetadata().getContentLength().toString());
          break;
       case BLOCK_BLOB:
+         // see https://docs.microsoft.com/en-us/rest/api/storageservices/understanding-block-blobs--append-blobs--and-page-blobs
+         // see AzureBlobApiMetadata#version (current API version used is 2017-04-17)
          checkArgument(
-               checkNotNull(blob.getPayload().getContentMetadata().getContentLength(), "blob.getContentLength()") <= 64L * 1024 * 1024,
-               "maximum size for put Blob is 64MB");
+               checkNotNull(blob.getPayload().getContentMetadata().getContentLength(), "blob.getContentLength()") <= 256L * 1024 * 1024,
+               "maximum size for put Blob is 256MB");
          break;
       }
       request = (R) request.toBuilder().replaceHeaders(Multimaps.forMap(headers.build())).build();
