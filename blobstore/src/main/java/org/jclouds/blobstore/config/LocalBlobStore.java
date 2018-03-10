@@ -84,6 +84,7 @@ import org.jclouds.io.ByteStreams2;
 import org.jclouds.io.ContentMetadata;
 import org.jclouds.io.ContentMetadataCodec;
 import org.jclouds.io.Payload;
+import org.jclouds.io.payloads.InputStreamPayload;
 import org.jclouds.logging.Logger;
 import org.jclouds.util.Closeables2;
 
@@ -719,7 +720,12 @@ public final class LocalBlobStore implements BlobStore {
                      "bytes " + offset + "-" + last + "/" + blob.getPayload().getContentMetadata().getContentLength());
             }
             ContentMetadata cmd = blob.getPayload().getContentMetadata();
-            blob.setPayload(ByteSource.concat(streams.build()));
+            // return InputStream to more closely follow real blobstore
+            try {
+               blob.setPayload(ByteSource.concat(streams.build()).openStream());
+            } catch (IOException ioe) {
+               throw new RuntimeException(ioe);
+            }
             HttpUtils.copy(cmd, blob.getPayload().getContentMetadata());
             blob.getPayload().getContentMetadata().setContentLength(size);
             blob.getMetadata().setSize(size);
@@ -743,7 +749,15 @@ public final class LocalBlobStore implements BlobStore {
 
    private Blob copyBlob(Blob blob) {
       Blob returnVal = blobFactory.create(BlobStoreUtils.copy(blob.getMetadata()));
-      returnVal.setPayload(blob.getPayload());
+      // return InputStream to more closely follow real blobstore
+      Payload payload;
+      try {
+         payload = new InputStreamPayload(blob.getPayload().openStream());
+      } catch (IOException ioe) {
+         throw new RuntimeException(ioe);
+      }
+      payload.setContentMetadata(blob.getMetadata().getContentMetadata());
+      returnVal.setPayload(payload);
       copyPayloadHeadersToBlob(blob.getPayload(), returnVal);
       return returnVal;
    }
