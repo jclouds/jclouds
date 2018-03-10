@@ -66,20 +66,6 @@ public class AtmosBlobRequestSignerTest extends BaseRestAnnotationProcessingTest
       assertEquals(request.getFilters().size(), 0);
    }
 
-   public void testSignRemoveBlob() throws ArrayIndexOutOfBoundsException, SecurityException, IllegalArgumentException,
-            NoSuchMethodException, IOException {
-      HttpRequest request = signer.signRemoveBlob("container", "name");
-
-      assertRequestLineEquals(request,
-               "DELETE https://accesspoint.atmosonline.com/rest/namespace/container/name HTTP/1.1");
-      assertNonPayloadHeadersEqual(
-               request,
-               "Accept: */*\nDate: Thu, 05 Jun 2008 16:38:19 GMT\nx-emc-signature: cPnxwSdWfIjChx8sox+43U9oo20=\nx-emc-uid: identity\n");
-      assertPayloadEquals(request, null, null, false);
-
-      assertEquals(request.getFilters().size(), 0);
-   }
-
    public void testSignPutBlob() throws ArrayIndexOutOfBoundsException, SecurityException, IllegalArgumentException,
             NoSuchMethodException, IOException {
       HashCode hashCode = HashCode.fromBytes(new byte[16]);

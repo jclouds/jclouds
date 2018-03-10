@@ -99,14 +99,4 @@ public final class B2BlobSignerLiveTest extends BaseBlobSignerLiveTest {
          throw new SkipException("unsupported by B2", uoe);
       }
    }
-
-   @Test
-   public void testSignRemoveUrl() throws Exception {
-      try {
-         super.testSignRemoveUrl();
-         failBecauseExceptionWasNotThrown(UnsupportedOperationException.class);
-      } catch (UnsupportedOperationException uoe) {
-         throw new SkipException("unsupported by B2", uoe);
-      }
-   }
 }

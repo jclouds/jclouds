@@ -806,14 +806,6 @@ public class FilesystemBlobStoreTest {
                 .build();
         assertEquals(expected, request);
 
-        request = signer.signRemoveBlob(containerName, blobName);
-        expected = HttpRequest.builder()
-                .method("DELETE")
-                .endpoint(endPoint)
-                .headers(request.getHeaders())
-                .build();
-        assertEquals(expected, request);
-
         Blob blob = blobStore.blobBuilder(blobName).forSigning().build();
         request = signer.signPutBlob(containerName, blob);
         expected = HttpRequest.builder()

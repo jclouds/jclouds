@@ -79,12 +79,6 @@ public abstract class BaseBlobSignerExpectTest extends BaseRestApiExpectTest<Blo
    protected abstract HttpRequest getBlobWithOptions();
 
    @Test
-   public void testSignRemoveBlob() {
-      BlobStore removeBlob = requestsSendResponses(init());
-      assertEquals(removeBlob.getContext().getSigner().signRemoveBlob(container, name), removeBlob());
-   }
-
-   @Test
    public void testSignPutBlob() throws Exception {
       HashCode hashCode = HashCode.fromBytes(new byte[16]);
       BlobStore signPutBlob = requestsSendResponses(init());

@@ -193,26 +193,6 @@ public class BaseBlobSignerLiveTest extends BaseBlobStoreIntegrationTest {
        testSignPutUrlWithTime(-getSignedUrlTimeout());
    }
 
-   @Test
-   public void testSignRemoveUrl() throws Exception {
-      String name = "hello";
-      String text = "fooooooooooooooooooooooo";
-
-      Blob blob = view.getBlobStore().blobBuilder(name).payload(text).contentType("text/plain").build();
-      String container = getContainerName();
-      try {
-         view.getBlobStore().putBlob(container, blob);
-         awaitConsistency();
-         assertConsistencyAwareContainerSize(container, 1);
-         HttpRequest request = view.getSigner().signRemoveBlob(container, name);
-         assertEquals(request.getFilters().size(), 0);
-         view.utils().http().invoke(request);
-         assert !view.getBlobStore().blobExists(container, name);
-      } finally {
-         returnContainer(container);
-      }
-   }
-
    protected void awaitConsistency() {
       if (view.getConsistencyModel() == ConsistencyModel.EVENTUAL) {
          Uninterruptibles.sleepUninterruptibly(AWAIT_CONSISTENCY_TIMEOUT_SECONDS, TimeUnit.SECONDS);

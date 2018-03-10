@@ -98,12 +98,6 @@ public final class GoogleCloudStorageBlobRequestSigner implements BlobRequestSig
       return sign("PUT", container, blob.getMetadata().getName(), GetOptions.NONE, timestamp.get() + timeInSeconds, null);
    }
 
-   @Deprecated
-   @Override
-   public HttpRequest signRemoveBlob(String container, String name) {
-      throw new UnsupportedOperationException();
-   }
-
    private HttpRequest sign(String method, String container, String name, GetOptions options, long expires, String contentType) {
       checkNotNull(container, "container");
       checkNotNull(name, "name");

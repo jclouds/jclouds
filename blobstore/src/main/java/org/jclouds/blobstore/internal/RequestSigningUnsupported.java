@@ -41,12 +41,6 @@ public class RequestSigningUnsupported implements BlobRequestSigner {
       throw new UnsupportedOperationException();
    }
 
-   @Deprecated
-   @Override
-   public HttpRequest signRemoveBlob(String container, String name) {
-      throw new UnsupportedOperationException();
-   }
-
    @Override
    public HttpRequest signPutBlob(String container, Blob blob) {
       throw new UnsupportedOperationException();

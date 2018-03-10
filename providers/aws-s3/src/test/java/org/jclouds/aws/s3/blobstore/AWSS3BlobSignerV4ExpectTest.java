@@ -136,11 +136,6 @@ public class AWSS3BlobSignerV4ExpectTest extends S3BlobSignerExpectTest {
    }
 
    @Override
-   public void testSignRemoveBlob() {
-      throw new SkipException("skip testSignRemoveBlob");
-   }
-
-   @Override
    protected Module createModule() {
       return new TestAWSS3SignerV4HttpApiModule();
    }

@@ -111,15 +111,6 @@ public class AtmosBlobRequestSigner implements BlobRequestSigner {
       throw new UnsupportedOperationException();
    }
 
-   @Deprecated
-   @Override
-   public HttpRequest signRemoveBlob(String container, String name) {
-      checkNotNull(container, "container");
-      checkNotNull(name, "name");
-      return cleanRequest(processor.apply(Invocation.create(deleteMethod,
-            ImmutableList.<Object> of(getPath(container, name)))));
-   }
-
    private String getPath(String container, String name) {
       return checkNotNull(container, "container") + "/" + checkNotNull(name, "name");
    }

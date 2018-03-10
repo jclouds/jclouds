@@ -90,8 +90,6 @@ public class AzureBlobRequestSigner implements BlobRequestSigner {
             blob.getMetadata().getContentMetadata().getContentLength());
    }
 
-   @Deprecated
-   @Override
    public HttpRequest signRemoveBlob(String container, String name) {
       checkNotNull(container, "container");
       checkNotNull(name, "name");

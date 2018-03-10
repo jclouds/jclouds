@@ -50,7 +50,7 @@ public class AzureBlobRequestSignerTest extends BaseRestAnnotationProcessingTest
       credential = "aaaabbbb"; 
    }
    
-   private BlobRequestSigner signer;
+   private AzureBlobRequestSigner signer;
    private Factory blobFactory;
 
    public void testSignGetBlob() throws ArrayIndexOutOfBoundsException, SecurityException, IllegalArgumentException,
@@ -102,7 +102,7 @@ public class AzureBlobRequestSignerTest extends BaseRestAnnotationProcessingTest
    protected void setupFactory() throws IOException {
       super.setupFactory();
       this.blobFactory = injector.getInstance(Blob.Factory.class);
-      this.signer = injector.getInstance(BlobRequestSigner.class);
+      this.signer = (AzureBlobRequestSigner) injector.getInstance(BlobRequestSigner.class);
    }
 
    @Override

@@ -75,14 +75,6 @@ public class LocalBlobRequestSigner implements BlobRequestSigner {
       throw new UnsupportedOperationException();
    }
 
-   @Deprecated
-   @Override
-   public HttpRequest signRemoveBlob(String container, String name) {
-      HttpRequest request = HttpRequest.builder().method("DELETE").endpoint(String.format("%s/%s/%s", endpoint.get(), container,
-               name)).build();
-      return basicAuth.filter(request);
-   }
-
    @Override
    public HttpRequest signGetBlob(String container, String name, GetOptions options) {
       HttpRequest request = HttpRequest.builder().method("GET").endpoint(

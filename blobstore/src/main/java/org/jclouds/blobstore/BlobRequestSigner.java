@@ -61,20 +61,6 @@ public interface BlobRequestSigner {
    HttpRequest signGetBlob(String container, String name, GetOptions options);
 
    /**
-    * gets a signed request, including headers as necessary, to delete a blob from an external
-    * client.
-    * 
-    * @param container
-    *           container where the blob resides
-    * @param directory
-    *           full path to the blob
-    * @throws UnsupportedOperationException
-    *            if not supported by the provider
-    */
-   @Deprecated
-   HttpRequest signRemoveBlob(String container, String name);
-
-   /**
     * gets a signed request, including headers as necessary, to upload a blob from an external
     * client.
     * 

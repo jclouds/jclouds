@@ -61,17 +61,6 @@ public class TransientBlobRequestSignerTest extends BaseRestAnnotationProcessing
       assertEquals(request.getFilters().size(), 0);
    }
 
-   public void testSignRemoveBlob() throws ArrayIndexOutOfBoundsException, SecurityException, IllegalArgumentException,
-            NoSuchMethodException, IOException {
-      HttpRequest request = signer.signRemoveBlob(containerName, blobName);
-
-      assertRequestLineEquals(request, "DELETE " + fullUrl + " HTTP/1.1");
-      assertNonPayloadHeadersEqual(request, "Authorization: Basic aWRlbnRpdHk6Y3JlZGVudGlhbA==\n");
-      assertPayloadEquals(request, null, null, false);
-
-      assertEquals(request.getFilters().size(), 0);
-   }
-
    public void testSignPutBlob() throws ArrayIndexOutOfBoundsException, SecurityException, IllegalArgumentException,
             NoSuchMethodException, IOException {
       HashCode hashCode = HashCode.fromBytes(new byte[16]);

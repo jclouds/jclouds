@@ -17,20 +17,11 @@
 package org.jclouds.googlecloudstorage.blobstore.integration;
 
 import org.jclouds.blobstore.integration.internal.BaseBlobSignerLiveTest;
-import org.testng.SkipException;
 import org.testng.annotations.Test;
 
 @Test(groups = { "live" })
 public class GoogleCloudStorageBlobSignerLiveTest extends BaseBlobSignerLiveTest {
    public GoogleCloudStorageBlobSignerLiveTest() {
       provider = "google-cloud-storage";
-   }
-
-   public void testSignRemoveUrl() throws Exception {
-      try {
-         super.testSignRemoveUrl();
-      } catch (UnsupportedOperationException uoe) {
-         throw new SkipException("not yet implemented in GCS", uoe);
-      }
    }
 }
