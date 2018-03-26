@@ -89,7 +89,6 @@ public class ProjectApiLiveTest extends BaseGoogleComputeEngineApiLiveTest {
       }, operationDoneTimeout, operationDoneInterval, MILLISECONDS).apply(o);
 
       assertEquals(o.get().status(), Status.DONE);
-      assertEquals(o.get().error().errors().get(0).code(), "PERMISSIONS_ERROR");
-      assertEquals(o.get().error().errors().get(0).message(), "Required 'read' permission for 'unexisting-bucket'");
+      assertEquals(o.get().error().errors().get(0).code(), "EXTERNAL_RESOURCE_NOT_FOUND");
    }
 }
