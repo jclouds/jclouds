@@ -36,6 +36,7 @@ public interface ObjectMetadata extends Comparable<ObjectMetadata> {
    public enum StorageClass {
       STANDARD(Tier.STANDARD),
       STANDARD_IA(Tier.INFREQUENT),
+      ONEZONE_IA(Tier.INFREQUENT),
       REDUCED_REDUNDANCY(Tier.STANDARD),
       GLACIER(Tier.ARCHIVE);
 
