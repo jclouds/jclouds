@@ -16,7 +16,8 @@
  */
 package org.jclouds.aws.s3;
 
-import static org.jclouds.aws.s3.blobstore.options.AWSS3PutOptions.Builder.storageClass;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.jclouds.aws.s3.blobstore.options.AWSS3PutObjectOptions.Builder.storageClass;
 import static org.jclouds.s3.options.ListBucketOptions.Builder.withPrefix;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
@@ -33,11 +34,11 @@ import org.jclouds.http.HttpRequest;
 import org.jclouds.http.HttpResponse;
 import org.jclouds.location.predicates.LocationPredicates;
 import org.jclouds.rest.HttpClient;
-import org.jclouds.s3.S3Client;
 import org.jclouds.s3.S3ClientLiveTest;
 import org.jclouds.s3.domain.ListBucketResponse;
 import org.jclouds.s3.domain.ObjectMetadata;
 import org.jclouds.s3.domain.ObjectMetadata.StorageClass;
+import org.jclouds.s3.domain.S3Object;
 import org.testng.ITestContext;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
@@ -64,22 +65,30 @@ public class AWSS3ClientLiveTest extends S3ClientLiveTest {
       super.setUpResourcesOnThisThread(testContext);
    }
 
-   public void testPutWithReducedRedundancyStorage() throws InterruptedException {
+   public void testPutWithStorageClass() throws Exception {
       String containerName = getContainerName();
+      AWSS3Client s3Client = getApi();
       try {
-         String blobName = "test-rrs";
-         BlobStore blobStore = view.getBlobStore();
-         blobStore.createContainerInLocation(null, containerName);
+         for (StorageClass storageClass : StorageClass.values()) {
+            if (storageClass == StorageClass.GLACIER) {
+               // AWS does not allow creation of Glacier objects
+               continue;
+            }
 
-         Blob blob = blobStore.blobBuilder(blobName).payload("something").build();
-         blobStore.putBlob(containerName, blob,
-            storageClass(StorageClass.REDUCED_REDUNDANCY));
+            String blobName = "test-" + storageClass;
+            BlobStore blobStore = view.getBlobStore();
+            blobStore.createContainerInLocation(null, containerName);
 
-         S3Client s3Client = view.unwrapApi(S3Client.class);
-         ListBucketResponse response = s3Client.listBucket(containerName, withPrefix(blobName));
+            S3Object object = s3Client.newS3Object();
+            object.getMetadata().setKey(blobName);
+            object.setPayload("something");
+            s3Client.putObject(containerName, object, storageClass(storageClass));
 
-         ObjectMetadata metadata = response.iterator().next();
-         assertEquals(metadata.getStorageClass(), StorageClass.REDUCED_REDUNDANCY);
+            ListBucketResponse response = s3Client.listBucket(containerName, withPrefix(blobName));
+
+            ObjectMetadata metadata = response.iterator().next();
+            assertThat(metadata.getStorageClass()).isEqualTo(storageClass);
+         }
 
       } finally {
          returnContainer(containerName);
