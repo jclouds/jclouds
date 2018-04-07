@@ -24,6 +24,7 @@ import java.security.NoSuchAlgorithmException;
 import java.security.PrivateKey;
 import java.security.Signature;
 import java.security.SignatureException;
+import java.util.Map;
 
 import javax.annotation.Resource;
 import javax.inject.Provider;
@@ -95,7 +96,8 @@ public final class GoogleCloudStorageBlobRequestSigner implements BlobRequestSig
 
    @Override
    public HttpRequest signPutBlob(String container, Blob blob, long timeInSeconds) {
-      return sign("PUT", container, blob.getMetadata().getName(), GetOptions.NONE, timestamp.get() + timeInSeconds, null);
+      return sign("PUT", container, blob.getMetadata().getName(), GetOptions.NONE, timestamp.get() + timeInSeconds,
+            blob.getMetadata().getContentMetadata().getContentType());
    }
 
    @Deprecated
@@ -131,11 +133,14 @@ public final class GoogleCloudStorageBlobRequestSigner implements BlobRequestSig
       }
       String signature = BaseEncoding.base64().encode(rawSignature);
 
+      for (Map.Entry<String, String> entry : options.buildRequestHeaders().entries()) {
+         request.addHeader(entry.getKey(), entry.getValue());
+      }
+
       return (HttpRequest) request
             .addQueryParam("Expires", String.valueOf(expires))
             .addQueryParam("GoogleAccessId", creds.get().identity)
             .addQueryParam("Signature", signature)
-            .headers(options.buildRequestHeaders())
             .build();
    }
 
