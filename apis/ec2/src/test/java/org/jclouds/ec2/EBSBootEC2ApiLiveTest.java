@@ -27,7 +27,6 @@ import static org.testng.Assert.assertNotNull;
 
 import java.net.UnknownHostException;
 import java.util.Map;
-import java.util.Set;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeoutException;
 
@@ -511,15 +510,15 @@ public class EBSBootEC2ApiLiveTest extends BaseComputeServiceContextLiveTest {
       assert runningTester.apply(instance);
 
       // search my identity for the instance I just created
-      Set<? extends Reservation<? extends RunningInstance>> reservations = client.getInstanceApi().get()
-            .describeInstancesInRegion(instance.getRegion(), instance.getId()); // last
+      Reservation<? extends RunningInstance> reservation = Iterables.getOnlyElement(client.getInstanceApi().get()
+            .describeInstancesInRegion(instance.getRegion(), instance.getId())); // last
       // parameter
       // (ids)
       // narrows
       // the
       // search
 
-      instance = Iterables.getOnlyElement(Iterables.getOnlyElement(reservations));
+      instance = Iterables.getOnlyElement(reservation);
 
       System.out.printf("%d: %s awaiting ssh service to start%n", System.currentTimeMillis(), instance.getIpAddress());
       assert socketTester.apply(HostAndPort.fromParts(instance.getIpAddress(), 22));

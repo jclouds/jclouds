@@ -17,7 +17,6 @@
 package org.jclouds.compute.internal;
 
 import static com.google.common.base.Preconditions.checkNotNull;
-import static com.google.common.base.Predicates.and;
 import static com.google.common.base.Predicates.in;
 import static com.google.common.base.Predicates.not;
 import static com.google.common.collect.ImmutableSet.copyOf;
@@ -557,8 +556,8 @@ public abstract class BaseComputeServiceLiveTest extends BaseComputeServiceConte
          throw e;
       }
 
-      Map<String, ? extends NodeMetadata> metadataMap = newLinkedHashMap(uniqueIndex(
-            filter(client.listNodesDetailsMatching(all()), and(inGroup(group), not(TERMINATED))),
+      Map<String, ? extends NodeMetadata> uniqueMap = uniqueIndex(
+            filter(client.listNodesDetailsMatching(all()), Predicates.and(inGroup(group), not(TERMINATED))),
             new Function<NodeMetadata, String>() {
 
                @Override
@@ -566,7 +565,8 @@ public abstract class BaseComputeServiceLiveTest extends BaseComputeServiceConte
                   return from.getId();
                }
 
-            }));
+            });
+      Map<String, ? extends NodeMetadata> metadataMap = newLinkedHashMap(uniqueMap);
       for (NodeMetadata node : nodes) {
          metadataMap.remove(node.getId());
          NodeMetadata metadata = client.getNodeMetadata(node.getId());
@@ -697,7 +697,7 @@ public abstract class BaseComputeServiceLiveTest extends BaseComputeServiceConte
    }
 
    private Set<? extends NodeMetadata> refreshNodes() {
-      return filter(client.listNodesDetailsMatching(all()), and(inGroup(group), not(TERMINATED)));
+      return filter(client.listNodesDetailsMatching(all()), Predicates.and(inGroup(group), not(TERMINATED)));
    }
 
    static class ServiceStats {

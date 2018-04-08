@@ -17,7 +17,6 @@
 package org.jclouds.openstack.nova.v2_0.compute.predicates;
 
 import static com.google.common.base.Preconditions.checkNotNull;
-import static com.google.common.base.Predicates.and;
 import static com.google.common.collect.Iterables.all;
 import static org.jclouds.compute.predicates.NodePredicates.TERMINATED;
 import static org.jclouds.compute.predicates.NodePredicates.inGroup;
@@ -48,6 +47,6 @@ public class AllNodesInGroupTerminated implements Predicate<RegionAndName> {
       // new nodes can have the region as their location, existing nodes, the parent is the
       // location
       return all(computeService.listNodesDetailsMatching(Predicates.<ComputeMetadata> or(locationId(input.getRegion()),
-               parentLocationId(input.getRegion()))), and(inGroup(input.getName()), TERMINATED));
+               parentLocationId(input.getRegion()))), Predicates.and(inGroup(input.getName()), TERMINATED));
    }
 }

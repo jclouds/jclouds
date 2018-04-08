@@ -60,7 +60,6 @@ import java.util.regex.Pattern;
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Preconditions.checkState;
-import static com.google.common.base.Predicates.and;
 import static com.google.common.collect.Iterables.filter;
 import static com.google.common.collect.Iterables.find;
 import static com.google.common.collect.Iterables.size;
@@ -888,12 +887,12 @@ public class TemplateBuilderImpl implements TemplateBuilder {
 
             @Override
             public boolean apply(Image input) {
-               return and(osPredicates).apply(input.getOperatingSystem());
+               return Predicates.and(osPredicates).apply(input.getOperatingSystem());
             }
 
             @Override
             public String toString() {
-               return and(osPredicates).toString();
+               return Predicates.and(osPredicates).toString();
             }
 
          });

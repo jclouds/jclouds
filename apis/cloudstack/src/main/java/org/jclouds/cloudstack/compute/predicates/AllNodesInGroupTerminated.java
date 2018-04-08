@@ -17,7 +17,6 @@
 package org.jclouds.cloudstack.compute.predicates;
 
 import static com.google.common.base.Preconditions.checkNotNull;
-import static com.google.common.base.Predicates.and;
 import static com.google.common.collect.Iterables.all;
 import static org.jclouds.compute.predicates.NodePredicates.TERMINATED;
 import static org.jclouds.compute.predicates.NodePredicates.inGroup;
@@ -48,6 +47,6 @@ public class AllNodesInGroupTerminated implements Predicate<ZoneAndName> {
       // new nodes can have the zone as their location, existing nodes, the parent is the
       // location
       return all(computeService.listNodesDetailsMatching(Predicates.<ComputeMetadata> or(locationId(input.getZone()),
-               parentLocationId(input.getZone()))), and(inGroup(input.getName()), TERMINATED));
+               parentLocationId(input.getZone()))), Predicates.and(inGroup(input.getName()), TERMINATED));
    }
 }

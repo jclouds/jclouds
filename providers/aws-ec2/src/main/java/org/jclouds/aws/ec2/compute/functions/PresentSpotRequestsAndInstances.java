@@ -17,7 +17,6 @@
 package org.jclouds.aws.ec2.compute.functions;
 
 import static com.google.common.base.Preconditions.checkNotNull;
-import static com.google.common.base.Predicates.compose;
 import static com.google.common.base.Predicates.containsPattern;
 import static com.google.common.collect.Iterables.any;
 import static com.google.common.collect.Iterables.toArray;
@@ -41,6 +40,7 @@ import org.jclouds.ec2.compute.functions.PresentInstances;
 import org.jclouds.ec2.domain.RunningInstance;
 
 import com.google.common.base.Function;
+import com.google.common.base.Predicates;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.ImmutableSet.Builder;
 import com.google.common.collect.Multimap;
@@ -67,7 +67,7 @@ public class PresentSpotRequestsAndInstances extends PresentInstances {
    public Set<RunningInstance> apply(Set<RegionAndName> regionAndIds) {
       if (checkNotNull(regionAndIds, "regionAndIds").isEmpty())
          return ImmutableSet.of();
-      if (any(regionAndIds, compose(containsPattern("sir-"), nameFunction())))
+      if (any(regionAndIds, Predicates.compose(containsPattern("sir-"), nameFunction())))
          return getSpots(regionAndIds);
       return super.apply(regionAndIds);
    }

@@ -28,7 +28,6 @@ import static org.testng.Assert.fail;
 import java.io.IOException;
 import java.net.UnknownHostException;
 import java.util.Map;
-import java.util.Set;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeoutException;
 
@@ -368,12 +367,12 @@ public class CloudApplicationArchitecturesEC2ApiLiveTest extends BaseComputeServ
 
    private RunningInstance getInstance(String instanceId) {
       // search my identity for the instance I just created
-      Set<? extends Reservation<? extends RunningInstance>> reservations = client.getInstanceApi().get()
-            .describeInstancesInRegion(null, instanceId); // last parameter
+      Reservation<? extends RunningInstance> reservation = Iterables.getOnlyElement(client.getInstanceApi().get()
+            .describeInstancesInRegion(null, instanceId)); // last parameter
       // (ids) narrows the
       // search
 
-      return Iterables.getOnlyElement(Iterables.getOnlyElement(reservations));
+      return Iterables.getOnlyElement(reservation);
    }
 
    /**

@@ -38,6 +38,11 @@ public abstract class Validator<T> implements Predicate<T> {
         return true; // by contract, if no exception thrown
     }
 
+    // TODO: add @Override after upgrading to Java 8
+    public boolean test(@Nullable T t) {
+        return apply(t);
+    }
+
     /**
      * Validates the parameter
      * @param t parameter to be validated

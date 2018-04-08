@@ -45,6 +45,7 @@ import org.jclouds.compute.internal.BaseComputeServiceContextLiveTest;
 import org.jclouds.compute.options.TemplateOptions;
 import org.jclouds.domain.LoginCredentials;
 import org.jclouds.ec2.domain.KeyPair;
+import org.jclouds.ec2.domain.Reservation;
 import org.jclouds.logging.log4j.config.Log4JLoggingModule;
 import org.jclouds.sshj.config.SshjSshClientModule;
 import org.testng.annotations.BeforeClass;
@@ -196,7 +197,8 @@ public class AWSKeyPairApiLiveTest extends BaseComputeServiceContextLiveTest {
    }
 
    protected AWSRunningInstance getInstance(AWSInstanceApi instanceApi, String id) {
-      return getOnlyElement(getOnlyElement(instanceApi.describeInstancesInRegion(null, id)));
+      Reservation<? extends AWSRunningInstance> reservation = getOnlyElement(instanceApi.describeInstancesInRegion(null, id));
+      return getOnlyElement(reservation);
    }
    
    @Override

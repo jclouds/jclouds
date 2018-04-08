@@ -42,6 +42,8 @@ import org.jclouds.compute.internal.BaseComputeServiceContextLiveTest;
 import org.jclouds.compute.predicates.NodePredicates;
 import org.jclouds.ec2.compute.domain.EC2HardwareBuilder;
 import org.jclouds.ec2.domain.InstanceType;
+import org.jclouds.ec2.domain.Reservation;
+import org.jclouds.ec2.domain.RunningInstance;
 import org.jclouds.scriptbuilder.domain.Statements;
 import org.jclouds.scriptbuilder.statements.java.InstallJDK;
 import org.jclouds.scriptbuilder.statements.login.AdminAccess;
@@ -186,8 +188,9 @@ public class PlacementGroupApiLiveTest extends BaseComputeServiceContextLiveTest
          Set<? extends NodeMetadata> nodes = view.getComputeService().createNodesInGroup(group, 1, template);
          NodeMetadata node = getOnlyElement(nodes);
 
-         getOnlyElement(getOnlyElement(client.getInstanceApi().get().describeInstancesInRegion(null,
-                  node.getProviderId())));
+         Reservation<? extends RunningInstance> reservation = getOnlyElement(client.getInstanceApi().get().describeInstancesInRegion(null,
+                  node.getProviderId()));
+         getOnlyElement(reservation);
 
       } catch (RunNodesException e) {
          System.err.println(e.getNodeErrors().keySet());

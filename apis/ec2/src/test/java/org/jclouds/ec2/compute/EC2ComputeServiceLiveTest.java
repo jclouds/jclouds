@@ -40,6 +40,7 @@ import org.jclouds.ec2.compute.options.EC2TemplateOptions;
 import org.jclouds.ec2.domain.BlockDevice;
 import org.jclouds.ec2.domain.KeyPair;
 import org.jclouds.ec2.domain.PublicIpInstanceIdPair;
+import org.jclouds.ec2.domain.Reservation;
 import org.jclouds.ec2.domain.RunningInstance;
 import org.jclouds.ec2.domain.SecurityGroup;
 import org.jclouds.ec2.domain.Snapshot;
@@ -336,8 +337,9 @@ public class EC2ComputeServiceLiveTest extends BaseComputeServiceLiveTest {
     * @throws NoSuchElementException If no instance with that id exists, or the instance is in a different region
     */
    public static RunningInstance getInstance(InstanceApi instanceClient, String id) {
-      RunningInstance instance = Iterables.getOnlyElement(Iterables.getOnlyElement(instanceClient
-               .describeInstancesInRegion(null, id)));
+      Reservation<? extends RunningInstance> reservation = Iterables.getOnlyElement(instanceClient
+               .describeInstancesInRegion(null, id));
+      RunningInstance instance = Iterables.getOnlyElement(reservation);
       return instance;
    }
 

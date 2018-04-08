@@ -90,8 +90,9 @@ public class BaseContainerLiveTest extends BaseBlobStoreIntegrationTest {
    }
 
    static Location findNonDefaultLocationOrSkip(BlobStore blobStore, Location defaultLocation) {
-      List<? extends Location> locs = Lists.newArrayList(Iterables.filter(blobStore.listAssignableLocations(),
-               Predicates.not(Predicates.equalTo(defaultLocation))));
+      Iterable<? extends Location> iterable = Iterables.filter(blobStore.listAssignableLocations(),
+               Predicates.not(Predicates.equalTo(defaultLocation)));
+      List<? extends Location> locs = Lists.newArrayList(iterable);
       if (locs.size() == 0)
          throw new SkipException("No non-default location found in " + locs);
       // try to use a diverse location

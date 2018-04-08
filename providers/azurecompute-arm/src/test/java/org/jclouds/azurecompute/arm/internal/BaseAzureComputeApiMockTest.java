@@ -18,7 +18,7 @@ package org.jclouds.azurecompute.arm.internal;
 
 import static com.google.common.base.Predicates.not;
 import static com.google.common.collect.Iterables.filter;
-import static com.google.common.util.concurrent.MoreExecutors.sameThreadExecutor;
+import static com.google.common.util.concurrent.MoreExecutors.newDirectExecutorService;
 import static org.assertj.core.util.Sets.newHashSet;
 import static org.jclouds.oauth.v2.config.CredentialType.BEARER_TOKEN_CREDENTIALS;
 import static org.jclouds.oauth.v2.config.OAuthProperties.CREDENTIAL_TYPE;
@@ -104,7 +104,7 @@ public class BaseAzureComputeApiMockTest {
 
    protected Set<Module> setupModules() {
       ImmutableSet.Builder<Module> modules = ImmutableSet.builder();
-      modules.add(new ExecutorServiceModule(sameThreadExecutor()));
+      modules.add(new ExecutorServiceModule(newDirectExecutorService()));
       // Override the default HTTP module to accomodate custom bindings for the
       // hardcoded endpoints such as the Graph RBAC API one.
       modules.add(new TestAzureComputeHttpApiModule(server));
