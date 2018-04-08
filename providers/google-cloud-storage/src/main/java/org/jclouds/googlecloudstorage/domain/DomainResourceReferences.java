@@ -20,6 +20,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 import org.jclouds.blobstore.domain.Tier;
 
+import com.google.common.annotations.Beta;
 import com.google.common.base.CaseFormat;
 
 public final class DomainResourceReferences {
@@ -32,7 +33,40 @@ public final class DomainResourceReferences {
    }
 
    public enum Location {
-      ASIA, EU, US, ASIA_EAST1, US_CENTRAL1, US_CENTRAL2, US_EAST1, US_EAST2, US_EAST3, US_WEST1;
+
+     /*
+      *  Multi-Regional
+      */
+      ASIA, EU, US,
+
+      /*
+       *  Regional
+       */
+      ASIA_EAST1,
+      ASIA_NORTHEAST1,
+      ASIA_SOUTH1,
+      ASIA_SOUTHEAST1,
+
+      NORTHAMERICA_NORTHEAST1,
+      US_CENTRAL1,
+      US_EAST1,
+      US_EAST4,
+      US_WEST1,
+
+      SOUTHAMERICA_EAST1,
+
+      EUROPE_WEST1,
+      EUROPE_WEST2,
+      EUROPE_WEST3,
+      EUROPE_WEST4,
+
+      AUSTRALIA_SOUTHEAST1,
+
+      /*
+       *  Alpha locations
+       */
+      @Beta
+      US_CENTRAL2;
 
       public String value() {
          return name().replace('_', '-');
