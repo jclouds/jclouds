@@ -93,6 +93,7 @@ public class AzureBlobRequestSignerTest extends BaseRestAnnotationProcessingTest
                request,
                "Content-Length: 2\n" +
                "Date: Thu, 05 Jun 2008 16:38:19 GMT\n" +
+               "x-ms-blob-content-type: text/plain\n" +
                "x-ms-blob-type: BlockBlob\n");
 
       assertEquals(request.getFilters().size(), 0);

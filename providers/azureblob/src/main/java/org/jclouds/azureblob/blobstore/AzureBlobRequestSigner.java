@@ -34,6 +34,7 @@ import org.jclouds.domain.Credentials;
 import org.jclouds.http.HttpRequest;
 import org.jclouds.http.Uris;
 import org.jclouds.http.options.GetOptions;
+import org.jclouds.javax.annotation.Nullable;
 
 import com.google.common.base.Supplier;
 import com.google.common.net.HttpHeaders;
@@ -74,7 +75,7 @@ public class AzureBlobRequestSigner implements BlobRequestSigner {
    public HttpRequest signGetBlob(String container, String name, long timeInSeconds) {
       checkNotNull(container, "container");
       checkNotNull(name, "name");
-      return sign("GET", container, name, null, timeInSeconds, null);
+      return sign("GET", container, name, null, timeInSeconds, null, null);
    }
 
    @Override
@@ -87,13 +88,14 @@ public class AzureBlobRequestSigner implements BlobRequestSigner {
       checkNotNull(container, "container");
       checkNotNull(blob, "blob");
       return sign("PUT", container, blob.getMetadata().getName(), null, timeInSeconds,
-            blob.getMetadata().getContentMetadata().getContentLength());
+            blob.getMetadata().getContentMetadata().getContentLength(),
+            blob.getMetadata().getContentMetadata().getContentType());
    }
 
    public HttpRequest signRemoveBlob(String container, String name) {
       checkNotNull(container, "container");
       checkNotNull(name, "name");
-      return sign("DELETE", container, name, null, DEFAULT_EXPIRY_SECONDS, null);
+      return sign("DELETE", container, name, null, DEFAULT_EXPIRY_SECONDS, null, null);
    }
 
    @Override
@@ -101,10 +103,10 @@ public class AzureBlobRequestSigner implements BlobRequestSigner {
       checkNotNull(container, "container");
       checkNotNull(name, "name");
       return sign("GET", container, name, blob2HttpGetOptions.apply(checkNotNull(options, "options")),
-            DEFAULT_EXPIRY_SECONDS, null);
+            DEFAULT_EXPIRY_SECONDS, null, null);
    }
 
-   private HttpRequest sign(String method, String container, String name, GetOptions options, long expires, Long contentLength) {
+   private HttpRequest sign(String method, String container, String name, @Nullable GetOptions options, long expires, @Nullable Long contentLength, @Nullable String contentType) {
       checkNotNull(method, "method");
       checkNotNull(container, "container");
       checkNotNull(name, "name");
@@ -133,6 +135,10 @@ public class AzureBlobRequestSigner implements BlobRequestSigner {
 
       if (contentLength != null) {
          request.replaceHeader(HttpHeaders.CONTENT_LENGTH, contentLength.toString());
+      }
+
+      if (contentType != null) {
+         request.replaceHeader("x-ms-blob-content-type", contentType);
       }
 
       if (options != null) {
