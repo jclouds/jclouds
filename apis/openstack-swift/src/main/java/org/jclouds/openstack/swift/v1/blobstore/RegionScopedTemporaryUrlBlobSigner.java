@@ -32,11 +32,13 @@ import org.jclouds.date.TimeStamp;
 import org.jclouds.http.HttpRequest;
 import org.jclouds.http.Uris;
 import org.jclouds.http.options.GetOptions;
+import org.jclouds.javax.annotation.Nullable;
 import org.jclouds.location.Region;
 import org.jclouds.openstack.swift.v1.SwiftApi;
 import org.jclouds.openstack.swift.v1.TemporaryUrlSigner;
 
 import com.google.common.base.Supplier;
+import com.google.common.net.HttpHeaders;
 import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
 import com.google.inject.name.Named;
@@ -70,12 +72,12 @@ public class RegionScopedTemporaryUrlBlobSigner implements BlobRequestSigner {
 
    @Override
    public HttpRequest signGetBlob(String container, String name, long timeInSeconds) {
-      return sign("GET", container, name, GetOptions.NONE, timestamp.get() + timeInSeconds);
+      return sign("GET", container, name, GetOptions.NONE, timestamp.get() + timeInSeconds, null);
    }
 
    @Override
    public HttpRequest signGetBlob(String container, String name, org.jclouds.blobstore.options.GetOptions options) {
-      return sign("GET", container, name, toGetOptions.apply(options), timestamp.get() + DEFAULT_SIGNING_TIMEOUT);
+      return sign("GET", container, name, toGetOptions.apply(options), timestamp.get() + DEFAULT_SIGNING_TIMEOUT, null);
    }
 
    @Override
@@ -85,20 +87,24 @@ public class RegionScopedTemporaryUrlBlobSigner implements BlobRequestSigner {
 
    @Override
    public HttpRequest signPutBlob(String container, Blob blob, long timeInSeconds) {
-      return sign("PUT", container, blob.getMetadata().getName(), GetOptions.NONE, timestamp.get() + timeInSeconds);
+      return sign("PUT", container, blob.getMetadata().getName(), GetOptions.NONE, timestamp.get() + timeInSeconds, blob.getMetadata().getContentMetadata().getContentType());
    }
 
-   private HttpRequest sign(String method, String container, String name, GetOptions options, long expires) {
+   private HttpRequest sign(String method, String container, String name, GetOptions options, long expires, @Nullable String contentType) {
       checkNotNull(container, "container");
       checkNotNull(name, "name");
       URI url = Uris.uriBuilder(storageUrl).appendPath(container).appendPath(name).build();
       String signature = signer.sign(method, url.getPath(), expires);
-      return HttpRequest.builder()
+      HttpRequest.Builder builder = HttpRequest.builder()
                         .method(method)
                         .endpoint(url)
                         .addQueryParams(options.buildQueryParameters())
                         .addQueryParam("temp_url_sig", signature)
                         .addQueryParam("temp_url_expires", String.valueOf(expires))
-                        .headers(options.buildRequestHeaders()).build();
+                        .headers(options.buildRequestHeaders());
+      if (contentType != null) {
+         builder.replaceHeader(HttpHeaders.CONTENT_TYPE, contentType);
+      }
+      return builder.build();
    }
 }
