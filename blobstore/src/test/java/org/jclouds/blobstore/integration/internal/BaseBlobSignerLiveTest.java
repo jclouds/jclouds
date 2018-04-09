@@ -17,6 +17,7 @@
 package org.jclouds.blobstore.integration.internal;
 
 import static com.google.common.net.HttpHeaders.EXPECT;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.jclouds.blobstore.options.GetOptions.Builder.range;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.fail;
@@ -130,13 +131,15 @@ public class BaseBlobSignerLiveTest extends BaseBlobStoreIntegrationTest {
       String name = "hello";
       String text = "fooooooooooooooooooooooo";
 
-      Blob blob = view.getBlobStore().blobBuilder(name).payload(text).contentType("text/plain").build();
+      Blob blob = view.getBlobStore().blobBuilder(name).payload(text).contentType("image/png").build();
       String container = getContainerName();
       try {
          HttpRequest request = view.getSigner().signPutBlob(container, blob);
          assertEquals(request.getFilters().size(), 0);
          Strings2.toStringAndClose(view.utils().http().invoke(request).getPayload().openStream());
-         assertConsistencyAwareContainerSize(container, 1);
+
+         blob = view.getBlobStore().getBlob(container, name);
+         assertThat(blob.getMetadata().getContentMetadata().getContentType()).isEqualTo("image/png");
       } finally {
          returnContainer(container);
       }
