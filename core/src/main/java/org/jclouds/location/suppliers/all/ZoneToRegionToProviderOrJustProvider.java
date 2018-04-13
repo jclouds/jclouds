@@ -113,7 +113,10 @@ public class ZoneToRegionToProviderOrJustProvider implements LocationsSupplier {
             provider = region.getParent();
             if (regionIdToZoneIds.containsKey(region.getId())) {
                for (String zoneId : regionIdToZoneIds.get(region.getId()).get())
-                  zoneIdToParent.put(zoneId, region);
+                  // Just consider the zones provided by the zone supplier (zones can be filtered)
+                  if (zoneIds.contains(zoneId)) {
+                     zoneIdToParent.put(zoneId, region);
+                  }
             } else {
                logger.debug("no zones configured for region: %s", region);
             }
