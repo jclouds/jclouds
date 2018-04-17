@@ -158,7 +158,7 @@ public class SoftLayerComputeServiceAdapter implements
 
       // set operating system or blockDeviceTemplateGroup
       Optional<OperatingSystem> optionalOperatingSystem = tryExtractOperatingSystemFrom(imageId);
-      if (optionalOperatingSystem != null) {
+      if (optionalOperatingSystem.isPresent()) {
          virtualGuestBuilder.operatingSystem(optionalOperatingSystem.get());
       // the imageId specified is an id of a public/private/flex image
       } else {
