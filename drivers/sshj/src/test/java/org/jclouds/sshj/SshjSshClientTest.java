@@ -109,7 +109,7 @@ public class SshjSshClientTest {
       assert ssh.shouldRetry(new TransportException("socket closed"));
       assert ssh.shouldRetry(new ConnectionException("problem"));
       assert ssh.shouldRetry(new ConnectException("Connection refused"));
-      assert !ssh.shouldRetry(new IOException("channel %s is not open", new NullPointerException()));
+      assert !ssh.shouldRetry(new IOException("channel is not open", new NullPointerException()));
    }
 
    public void testOnlyRetryAuthWhenSet() {

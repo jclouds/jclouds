@@ -79,8 +79,8 @@ public class JschSshClientTest {
    public void testExceptionClassesRetry() {
       assert ssh.shouldRetry(new JSchException("io error", new IOException("socket closed")));
       assert ssh.shouldRetry(new JSchException("connect error", new ConnectException("problem")));
-      assert ssh.shouldRetry(new IOException("channel %s is not open", new NullPointerException()));
-      assert ssh.shouldRetry(new IOException("channel %s is not open", new NullPointerException(null)));
+      assert ssh.shouldRetry(new IOException("channel is not open", new NullPointerException()));
+      assert ssh.shouldRetry(new IOException("channel is not open", new NullPointerException(null)));
    }
 
    public void testOnlyRetryAuthWhenSet() throws UnknownHostException {
