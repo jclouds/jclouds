@@ -30,6 +30,65 @@ import org.testng.annotations.Test;
 @Test(groups = "unit", testName = "GetProvisioningStateResponseHandlerTest")
 public class GetProvisioningStateResponseHandlerTest extends BaseResponseHandlerTest<ProvisioningState> {
 
+   private final Map<ProvisioningState, String> sampleResponses = new LinkedHashMap<ProvisioningState, String>();
+
+   GetProvisioningStateResponseHandlerTest() {
+      sampleResponses.put(ProvisioningState.INACTIVE,
+              "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:ws=\"http://ws.api.profitbricks.com/\">\n"
+              + "   <soapenv:Header/>\n"
+              + "   <soapenv:Body>\n"
+              + "      <ws:getDataCenterStateResponse>\n"
+              + "         <return>INACTIVE</return>\n"
+              + "      </ws:getDataCenterStateResponse>\n"
+              + "   </soapenv:Body>\n"
+              + "</soapenv:Envelope>");
+      sampleResponses.put(ProvisioningState.INPROCESS,
+              "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:ws=\"http://ws.api.profitbricks.com/\">\n"
+              + "   <soapenv:Header/>\n"
+              + "   <soapenv:Body>\n"
+              + "      <ws:getDataCenterStateResponse>\n"
+              + "         <return>INPROCESS</return>\n"
+              + "      </ws:getDataCenterStateResponse>\n"
+              + "   </soapenv:Body>\n"
+              + "</soapenv:Envelope>");
+      sampleResponses.put(ProvisioningState.AVAILABLE,
+              "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:ws=\"http://ws.api.profitbricks.com/\">\n"
+              + "   <soapenv:Header/>\n"
+              + "   <soapenv:Body>\n"
+              + "      <ws:getDataCenterStateResponse>\n"
+              + "         <return>AVAILABLE</return>\n"
+              + "      </ws:getDataCenterStateResponse>\n"
+              + "   </soapenv:Body>\n"
+              + "</soapenv:Envelope>");
+      sampleResponses.put(ProvisioningState.DELETED,
+              "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:ws=\"http://ws.api.profitbricks.com/\">\n"
+              + "   <soapenv:Header/>\n"
+              + "   <soapenv:Body>\n"
+              + "      <ws:getDataCenterStateResponse>\n"
+              + "         <return>DELETED</return>\n"
+              + "      </ws:getDataCenterStateResponse>\n"
+              + "   </soapenv:Body>\n"
+              + "</soapenv:Envelope>");
+      sampleResponses.put(ProvisioningState.ERROR,
+              "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:ws=\"http://ws.api.profitbricks.com/\">\n"
+              + "   <soapenv:Header/>\n"
+              + "   <soapenv:Body>\n"
+              + "      <ws:getDataCenterStateResponse>\n"
+              + "         <return>ERROR</return>\n"
+              + "      </ws:getDataCenterStateResponse>\n"
+              + "   </soapenv:Body>\n"
+              + "</soapenv:Envelope>");
+      sampleResponses.put(ProvisioningState.UNRECOGNIZED,
+              "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:ws=\"http://ws.api.profitbricks.com/\">\n"
+              + "   <soapenv:Header/>\n"
+              + "   <soapenv:Body>\n"
+              + "      <ws:getDataCenterStateResponse>\n"
+              + "         <return>MEH</return>\n"
+              + "      </ws:getDataCenterStateResponse>\n"
+              + "   </soapenv:Body>\n"
+              + "</soapenv:Envelope>");
+   }
+
    @Override
    protected ParseSax<ProvisioningState> createParser() {
       return factory.create(injector.getInstance(GetProvisioningStateResponseHandler.class));
@@ -47,64 +106,4 @@ public class GetProvisioningStateResponseHandlerTest extends BaseResponseHandler
       }
 
    }
-
-   private final Map<ProvisioningState, String> sampleResponses = new LinkedHashMap<ProvisioningState, String>() {
-      {
-         put(ProvisioningState.INACTIVE,
-                 "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:ws=\"http://ws.api.profitbricks.com/\">\n"
-                 + "   <soapenv:Header/>\n"
-                 + "   <soapenv:Body>\n"
-                 + "      <ws:getDataCenterStateResponse>\n"
-                 + "         <return>INACTIVE</return>\n"
-                 + "      </ws:getDataCenterStateResponse>\n"
-                 + "   </soapenv:Body>\n"
-                 + "</soapenv:Envelope>");
-         put(ProvisioningState.INPROCESS,
-                 "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:ws=\"http://ws.api.profitbricks.com/\">\n"
-                 + "   <soapenv:Header/>\n"
-                 + "   <soapenv:Body>\n"
-                 + "      <ws:getDataCenterStateResponse>\n"
-                 + "         <return>INPROCESS</return>\n"
-                 + "      </ws:getDataCenterStateResponse>\n"
-                 + "   </soapenv:Body>\n"
-                 + "</soapenv:Envelope>");
-         put(ProvisioningState.AVAILABLE,
-                 "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:ws=\"http://ws.api.profitbricks.com/\">\n"
-                 + "   <soapenv:Header/>\n"
-                 + "   <soapenv:Body>\n"
-                 + "      <ws:getDataCenterStateResponse>\n"
-                 + "         <return>AVAILABLE</return>\n"
-                 + "      </ws:getDataCenterStateResponse>\n"
-                 + "   </soapenv:Body>\n"
-                 + "</soapenv:Envelope>");
-         put(ProvisioningState.DELETED,
-                 "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:ws=\"http://ws.api.profitbricks.com/\">\n"
-                 + "   <soapenv:Header/>\n"
-                 + "   <soapenv:Body>\n"
-                 + "      <ws:getDataCenterStateResponse>\n"
-                 + "         <return>DELETED</return>\n"
-                 + "      </ws:getDataCenterStateResponse>\n"
-                 + "   </soapenv:Body>\n"
-                 + "</soapenv:Envelope>");
-         put(ProvisioningState.ERROR,
-                 "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:ws=\"http://ws.api.profitbricks.com/\">\n"
-                 + "   <soapenv:Header/>\n"
-                 + "   <soapenv:Body>\n"
-                 + "      <ws:getDataCenterStateResponse>\n"
-                 + "         <return>ERROR</return>\n"
-                 + "      </ws:getDataCenterStateResponse>\n"
-                 + "   </soapenv:Body>\n"
-                 + "</soapenv:Envelope>");
-         put(ProvisioningState.UNRECOGNIZED,
-                 "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:ws=\"http://ws.api.profitbricks.com/\">\n"
-                 + "   <soapenv:Header/>\n"
-                 + "   <soapenv:Body>\n"
-                 + "      <ws:getDataCenterStateResponse>\n"
-                 + "         <return>MEH</return>\n"
-                 + "      </ws:getDataCenterStateResponse>\n"
-                 + "   </soapenv:Body>\n"
-                 + "</soapenv:Envelope>");
-      }
-   };
-
 }
