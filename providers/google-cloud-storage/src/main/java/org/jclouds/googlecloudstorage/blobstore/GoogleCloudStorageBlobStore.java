@@ -379,15 +379,17 @@ public final class GoogleCloudStorageBlobStore extends BaseBlobStore {
 
    @Override
    public String completeMultipartUpload(MultipartUpload mpu, List<MultipartPart> parts) {
-      ImmutableList.Builder<GoogleCloudStorageObject> objects = ImmutableList.builder();
+      ImmutableList.Builder<GoogleCloudStorageObject> objectsBuilder = ImmutableList.builder();
       for (MultipartPart part : parts) {
-         objects.add(api.getObjectApi().getObject(mpu.containerName(),
+         objectsBuilder.add(api.getObjectApi().getObject(mpu.containerName(),
                Strings2.urlEncode(getMPUPartName(mpu, part.partNumber()))));
       }
 
       ObjectTemplate destination = blobMetadataToObjectTemplate.apply(mpu.blobMetadata());
-      // unset storage class because the subobjects store this state
-      destination.storageClass(DomainResourceReferences.StorageClass.STANDARD);
+      final ImmutableList<GoogleCloudStorageObject> objects = objectsBuilder.build();
+      if (!objects.isEmpty()) {
+         destination.storageClass(objects.get(0).storageClass());
+      }
       if (mpu.putOptions().getBlobAccess() == BlobAccess.PUBLIC_READ) {
          ObjectAccessControls controls = ObjectAccessControls.builder()
                .entity("allUsers")
@@ -398,7 +400,7 @@ public final class GoogleCloudStorageBlobStore extends BaseBlobStore {
       }
 
       ComposeObjectTemplate template = ComposeObjectTemplate.builder()
-            .fromGoogleCloudStorageObject(objects.build())
+            .fromGoogleCloudStorageObject(objects)
             .destination(destination).build();
       String eTag = api.getObjectApi().composeObjects(mpu.containerName(), Strings2.urlEncode(mpu.blobName()), template)
             .etag();
