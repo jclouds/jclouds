@@ -36,7 +36,12 @@ import org.jclouds.blobstore.domain.PageSet;
 import org.jclouds.blobstore.domain.StorageMetadata;
 import org.jclouds.blobstore.integration.internal.BaseBlobIntegrationTest;
 import org.jclouds.blobstore.options.PutOptions;
+import org.jclouds.googlecloud.config.CurrentProject;
 import org.jclouds.googlecloud.internal.TestProperties;
+import org.jclouds.googlecloudstorage.GoogleCloudStorageApi;
+import org.jclouds.googlecloudstorage.domain.DomainResourceReferences.Location;
+import org.jclouds.googlecloudstorage.domain.DomainResourceReferences.StorageClass;
+import org.jclouds.googlecloudstorage.domain.templates.BucketTemplate;
 import org.jclouds.io.Payloads;
 import org.jclouds.io.payloads.ByteSourcePayload;
 import org.jclouds.utils.TestUtils;
@@ -55,6 +60,7 @@ import com.google.common.io.Files;
 @Test(groups = { "live", "blobstorelive" })
 public class GoogleCloudStorageBlobIntegrationLiveTest extends BaseBlobIntegrationTest {
 
+   private final String PROJECT_NUMBER;
    private long PART_SIZE = 5L * 1024L * 1024L;
 
    @Override
@@ -64,6 +70,7 @@ public class GoogleCloudStorageBlobIntegrationLiveTest extends BaseBlobIntegrati
 
    public GoogleCloudStorageBlobIntegrationLiveTest() throws IOException {
       provider = "google-cloud-storage";
+      PROJECT_NUMBER = CurrentProject.ClientEmail.toProjectNumber(System.getProperty("test.google-cloud-storage.identity"));
    }
 
    @Override protected Properties setupProperties() {
@@ -329,6 +336,31 @@ public class GoogleCloudStorageBlobIntegrationLiveTest extends BaseBlobIntegrati
          failBecauseExceptionWasNotThrown(AssertionError.class);
       } catch (AssertionError ae) {
          throw new SkipException("GCS does not report storage class of composed objects", ae);
+      }
+   }
+
+   @Test(groups = { "integration", "live" })
+   public void testMultipartUploadSinglePartMultiRegional() throws Exception {
+      String containerName = "jclouds-multiregional";
+      BucketTemplate template = new BucketTemplate()
+            .name(containerName)
+            .location(Location.US)
+            .storageClass(StorageClass.COLDLINE);
+      GoogleCloudStorageApi api = view.unwrapApi(GoogleCloudStorageApi.class);
+      api.getBucketApi().createBucket(PROJECT_NUMBER, template);
+      String blobName = "multiregional-blobname";
+
+      try {
+         long length = 32 * 1024L;
+         ByteSource byteSource = TestUtils.randomByteSource().slice(0, length);
+         Blob blob = view.getBlobStore().blobBuilder(blobName)
+                 .payload(byteSource)
+                 .contentLength(length)
+                 .build();
+         view.getBlobStore().putBlob(containerName, blob, new PutOptions().multipart(true));
+      } finally {
+         view.getBlobStore().removeBlob(containerName, blobName);
+         api.getBucketApi().deleteBucket(containerName);
       }
    }
 }
