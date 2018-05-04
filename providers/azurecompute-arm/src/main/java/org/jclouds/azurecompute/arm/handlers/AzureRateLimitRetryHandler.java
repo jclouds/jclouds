@@ -16,6 +16,7 @@
  */
 package org.jclouds.azurecompute.arm.handlers;
 
+import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import org.jclouds.http.HttpCommand;
@@ -26,14 +27,41 @@ import com.google.common.annotations.Beta;
 import com.google.common.base.Optional;
 import com.google.common.net.HttpHeaders;
 
+/**
+ * Handles 429 Too Many Requests responses.
+ * <p>
+ * The Azure ARM provider also returns this 429 HTTP status code for some errors
+ * when resources are busy or in a state where they cannot be modified. In this
+ * case this handler delegates to the {@link AzureRetryableErrorHandler} to
+ * determine if the requests can be retried.
+ */
 @Beta
 @Singleton
 public class AzureRateLimitRetryHandler extends RateLimitRetryHandler {
+
+   private final AzureRetryableErrorHandler retryableErrorHandler;
+
+   @Inject
+   AzureRateLimitRetryHandler(AzureRetryableErrorHandler retryableErrorHandler) {
+      this.retryableErrorHandler = retryableErrorHandler;
+   }
+
+   @Override
+   protected boolean delayRequestUntilAllowed(HttpCommand command, HttpResponse response) {
+      if (!isRateLimitError(response)) {
+         return retryableErrorHandler.shouldRetryRequest(command, response);
+      }
+      return super.delayRequestUntilAllowed(command, response);
+   }
 
    @Override
    protected Optional<Long> millisToNextAvailableRequest(HttpCommand command, HttpResponse response) {
       String secondsToNextAvailableRequest = response.getFirstHeaderOrNull(HttpHeaders.RETRY_AFTER);
       return secondsToNextAvailableRequest != null ? Optional.of(Long.valueOf(secondsToNextAvailableRequest) * 1000)
             : Optional.<Long> absent();
+   }
+
+   public static boolean isRateLimitError(HttpResponse response) {
+      return response.getFirstHeaderOrNull(HttpHeaders.RETRY_AFTER) != null;
    }
 }

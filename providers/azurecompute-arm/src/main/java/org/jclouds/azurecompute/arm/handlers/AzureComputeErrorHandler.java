@@ -16,6 +16,8 @@
  */
 package org.jclouds.azurecompute.arm.handlers;
 
+import static org.jclouds.azurecompute.arm.handlers.AzureRateLimitRetryHandler.isRateLimitError;
+
 import java.io.IOException;
 
 import javax.inject.Singleton;
@@ -38,7 +40,10 @@ public class AzureComputeErrorHandler implements HttpErrorHandler {
 
    @Override
    public void handleError(final HttpCommand command, final HttpResponse response) {
-      // it is important to always read fully and close streams
+      // It is important to always read fully and close streams
+      // For 429 errors the response body might have already been consumed as
+      // some errors report information in the response body that needs to be
+      // handled by the retry handlers.
       String message = parseMessage(response);
       Exception exception = message == null
               ? new HttpResponseException(command, response)
@@ -70,7 +75,11 @@ public class AzureComputeErrorHandler implements HttpErrorHandler {
                exception = new IllegalStateException(message, exception);
                break;
             case 429:
-               exception = new AzureComputeRateLimitExceededException(response, exception);
+               if (isRateLimitError(response)) {
+                  exception = new AzureComputeRateLimitExceededException(response, exception);
+               } else {
+                  exception = new IllegalStateException(message, exception);
+               }
                break;
             default:
          }
