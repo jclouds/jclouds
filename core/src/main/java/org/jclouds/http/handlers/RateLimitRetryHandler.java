@@ -87,7 +87,7 @@ public abstract class RateLimitRetryHandler implements HttpRetryHandler {
       }
    }
 
-   private boolean delayRequestUntilAllowed(final HttpCommand command, final HttpResponse response) {
+   protected boolean delayRequestUntilAllowed(final HttpCommand command, final HttpResponse response) {
       Optional<Long> millisToNextAvailableRequest = millisToNextAvailableRequest(command, response);
       if (!millisToNextAvailableRequest.isPresent()) {
          logger.error("Cannot retry after rate limit error, no retry information provided in the response");
