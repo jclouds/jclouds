@@ -84,15 +84,12 @@ public class VaultApiMockTest extends BaseAzureComputeApiMockTest {
    private URI vaultUri;
 
    private static String KEY_NAME = "myKey";
-   private static String TEMP_KEY_NAME = "myTempKey";
    private static String IMPORT_KEY_NAME = "myImportKey";
    private static String RECOVERABLE_KEY_NAME = "myRecoverableKey";
    private static String SECRET_NAME = "mySecret";
    private static String RECOVERABLE_SECRET_NAME = "myRecoverableSecret";
    private static String CERTIFICATE_NAME = "myCertificate";
-   private static String TEMP_CERTIFICATE_NAME = "myTempCertificate";
    private static String RECOVERABLE_CERTIFICATE_NAME = "myRecoverableCertificate";
-   private static String IMPORTABLE_CERTIFICATE_NAME = "myImportableCertificate";
    private static String CERTIFICATE_ISSUER_NAME = "globalsign01";
    private String IMPORTABLE_CERTIFICATE_PEM = stringFromResource("/vaultimportablecert.txt");
    private String sampleSecret = stringFromResource("/vaultsamplesecret.txt");

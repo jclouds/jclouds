@@ -318,17 +318,6 @@ public class VaultApiLiveTest extends BaseAzureComputeApiLiveTest {
 
    @Test(dependsOnMethods = "testUpdateKey")
    public void testListKeyVersions() {
-      // Create a second version of the key
-      KeyAttributes keyAttr = KeyAttributes.create(true, null, null, null, null, null);
-      KeyBundle keyBundle = api().createKey(vaultUri,
-              KEY_NAME,
-              keyAttr,
-              null,
-              null,
-              3072,
-              "RSA",
-              null);
-
       // List key versions
       List<Key> keys = api().getKeyVersions(vaultUri, KEY_NAME);
       assertNotNull(keys);
@@ -427,7 +416,7 @@ public class VaultApiLiveTest extends BaseAzureComputeApiLiveTest {
 
    @Test(dependsOnMethods = {"testDeleteRecoverableKey", "testGetDeletedKey"})
    public void testRecoverDeletedKey() {
-      KeyBundle key = api().recoverDeletedKey(vaultUri, RECOVERABLE_KEY_NAME);
+      api().recoverDeletedKey(vaultUri, RECOVERABLE_KEY_NAME);
       checkState(recoverableKeyStatus.create(resourceGroupName, vaultUri, true).apply(RECOVERABLE_KEY_NAME),
               "key was not recovered before timeout");
    }
@@ -435,7 +424,7 @@ public class VaultApiLiveTest extends BaseAzureComputeApiLiveTest {
    @Test(dependsOnMethods = "testRecoverDeletedKey")
    public void testPurgeDeletedKey() {
       // delete the key
-      DeletedKeyBundle dkb = api().deleteKey(vaultUri, RECOVERABLE_KEY_NAME);
+      api().deleteKey(vaultUri, RECOVERABLE_KEY_NAME);
       checkState(deletedKeyStatus.create(resourceGroupName, vaultUri, true).apply(RECOVERABLE_KEY_NAME),
               "key was not deleted before timeout");
 
@@ -559,7 +548,7 @@ public class VaultApiLiveTest extends BaseAzureComputeApiLiveTest {
    public void testListSecretVersions() {
       // Create a second version of the secret
       SecretAttributes attributes = SecretAttributes.create(true, null, null, null, null, null);
-      SecretBundle secretBundle = api().setSecret(vaultUri,
+      api().setSecret(vaultUri,
               SECRET_NAME,
               attributes,
               "aNewSecretKey",
@@ -684,7 +673,7 @@ public class VaultApiLiveTest extends BaseAzureComputeApiLiveTest {
 
    @Test(dependsOnMethods = {"testDeleteRecoverableSecret", "testGetDeletedSecret"})
    public void testRecoverDeletedSecret() {
-      SecretBundle secret = api().recoverDeletedSecret(vaultUri, RECOVERABLE_SECRET_NAME);
+      api().recoverDeletedSecret(vaultUri, RECOVERABLE_SECRET_NAME);
       checkState(recoverableSecretStatus.create(resourceGroupName, vaultUri, true).apply(RECOVERABLE_SECRET_NAME),
               "secret was not created before timeout");
    }
@@ -692,7 +681,7 @@ public class VaultApiLiveTest extends BaseAzureComputeApiLiveTest {
    @Test(dependsOnMethods = "testRecoverDeletedSecret")
    public void testPurgeDeletedSecret() {
       // delete the secret
-      DeletedSecretBundle dsb = api().deleteSecret(vaultUri, RECOVERABLE_SECRET_NAME);
+      api().deleteSecret(vaultUri, RECOVERABLE_SECRET_NAME);
       checkState(deletedSecretStatus.create(resourceGroupName, vaultUri, true).apply(RECOVERABLE_SECRET_NAME),
               "secret was not deleted before timeout");
 
@@ -1041,7 +1030,7 @@ public class VaultApiLiveTest extends BaseAzureComputeApiLiveTest {
    @Test(dependsOnMethods = "testRecoverDeletedCertificate")
    public void testPurgeDeletedCertificate() {
       // delete the certificate
-      DeletedCertificateBundle dcb = api().deleteCertificate(vaultUri, RECOVERABLE_CERTIFICATE_NAME);
+      api().deleteCertificate(vaultUri, RECOVERABLE_CERTIFICATE_NAME);
       checkState(deletedCertificateStatus.create(resourceGroupName, vaultUri, true).apply(RECOVERABLE_CERTIFICATE_NAME),
               "certificate was not deleted before timeout");
 

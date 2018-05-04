@@ -330,7 +330,6 @@ public class AzurePredicatesModule extends AbstractModule {
                     @Override
                     public boolean apply(final String name) {
                         checkNotNull(name, "name cannot be null");
-                        boolean present = false;
                         List<Vault.DeletedVault> vaults = api.getVaultApi(resourceGroup).listDeletedVaults();
                         return shouldBePresent == Iterables.any(vaults, new Predicate<Vault.DeletedVault>() {
                             @Override public boolean apply(Vault.DeletedVault input) {
@@ -380,7 +379,6 @@ public class AzurePredicatesModule extends AbstractModule {
                     @Override
                     public boolean apply(final String name) {
                         checkNotNull(name, "name cannot be null");
-                        boolean present = false;
                         DeletedKeyBundle key = api.getVaultApi(resourceGroup).getDeletedKey(vaultUri, name);
                         return shouldBePresent == (key != null);
                     }
@@ -408,7 +406,6 @@ public class AzurePredicatesModule extends AbstractModule {
                     @Override
                     public boolean apply(final String name) {
                         checkNotNull(name, "name cannot be null");
-                        boolean result = false;
                         KeyBundle key = api.getVaultApi(resourceGroup).getKey(vaultUri, name);
                         return key != null ? (isRecovered ? true : key.attributes().recoveryLevel().contains("Recoverable")) : false;
                     }
@@ -453,7 +450,6 @@ public class AzurePredicatesModule extends AbstractModule {
                 return retry(new Predicate<String>() {
                     @Override
                     public boolean apply(final String name) {
-                        boolean present = false;
                         checkNotNull(name, "name cannot be null");
                         DeletedSecretBundle secret = api.getVaultApi(resourceGroup).getDeletedSecret(vaultUri, name);
                         return shouldBePresent == (secret != null);
@@ -534,7 +530,6 @@ public class AzurePredicatesModule extends AbstractModule {
                 return retry(new Predicate<String>() {
                     @Override
                     public boolean apply(final String name) {
-                        boolean present = false;
                         checkNotNull(name, "name cannot be null");
                         DeletedCertificateBundle cert = api.getVaultApi(resourceGroup).getDeletedCertificate(vaultUri, name);
                         return shouldBePresent == (cert != null);
@@ -591,7 +586,6 @@ public class AzurePredicatesModule extends AbstractModule {
                     @Override
                     public boolean apply(final String name) {
                         checkNotNull(name, "name cannot be null");
-                        boolean result = false;
                         CertificateOperation certOp = api.getVaultApi(resourceGroup).getCertificateOperation(vaultUri, name);
                         return isCreate ? ((certOp != null) ? !certOp.status().equals("inProgress") : false) : (certOp == null);
                     }
