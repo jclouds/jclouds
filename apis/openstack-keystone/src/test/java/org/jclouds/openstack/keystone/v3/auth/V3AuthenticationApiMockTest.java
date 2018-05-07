@@ -19,6 +19,7 @@ package org.jclouds.openstack.keystone.v3.auth;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertTrue;
 
+import org.jclouds.openstack.keystone.auth.domain.ApiAccessKeyCredentials;
 import org.jclouds.openstack.keystone.auth.domain.AuthInfo;
 import org.jclouds.openstack.keystone.auth.domain.PasswordCredentials;
 import org.jclouds.openstack.keystone.auth.domain.TenantOrDomainAndCredentials;
@@ -31,71 +32,132 @@ import org.testng.annotations.Test;
 public class V3AuthenticationApiMockTest extends BaseV3KeystoneApiMockTest {
 
    public void testAuthenticatePassword() throws InterruptedException {
-      server.enqueue(jsonResponse("/v3/token.json"));
 
-      TenantOrDomainAndCredentials<PasswordCredentials> credentials = TenantOrDomainAndCredentials.<PasswordCredentials> builder()
-            .tenantOrDomainName("domain")
-            .scope("unscoped")
+      TenantOrDomainAndCredentials<PasswordCredentials> credentials = TenantOrDomainAndCredentials
+            .<PasswordCredentials> builder().tenantOrDomainName("domain").scope("unscoped")
             .credentials(PasswordCredentials.builder().username("identity").password("credential").build()).build();
-      
-      AuthInfo authInfo = authenticationApi.authenticatePassword(credentials);
 
-      assertTrue(authInfo instanceof Token);
-      assertEquals(authInfo, tokenFromResource("/v3/token.json"));
-
-      assertEquals(server.getRequestCount(), 1);
-      assertSent(server, "POST", "/auth/tokens", stringFromResource("/v3/auth-password.json"));
+      checkTokenResult(credentials, "/v3/auth-password.json");
    }
-   
+
    public void testAuthenticatePasswordScoped() throws InterruptedException {
-      server.enqueue(jsonResponse("/v3/token.json"));
 
-      TenantOrDomainAndCredentials<PasswordCredentials> credentials = TenantOrDomainAndCredentials.<PasswordCredentials> builder()
-            .tenantOrDomainName("domain")
-            .scope("projectId:1234567890")
+      TenantOrDomainAndCredentials<PasswordCredentials> credentials = TenantOrDomainAndCredentials
+            .<PasswordCredentials> builder().tenantOrDomainName("domain").scope("projectId:1234567890")
             .credentials(PasswordCredentials.builder().username("identity").password("credential").build()).build();
-      
-      AuthInfo authInfo = authenticationApi.authenticatePassword(credentials);
 
-      assertTrue(authInfo instanceof Token);
-      assertEquals(authInfo, tokenFromResource("/v3/token.json"));
+      checkTokenResult(credentials, "/v3/auth-password-scoped.json");
+   }
 
-      assertEquals(server.getRequestCount(), 1);
-      assertSent(server, "POST", "/auth/tokens", stringFromResource("/v3/auth-password-scoped.json"));
+   public void testAuthenticatePasswordProjectScopedIdDomainBackwardsCompat() throws InterruptedException {
+      // See JCLOUDS-1414, before add of KeystoneProperties.PROJECT_DOMAIN,
+      // TENANT_ID was not used as domain for project-scoped with id
+      // => Unit test only for backward compatibility (is the same as
+      // 'testAuthenticatePasswordScoped' with TENANT-ID in addition)
+
+      TenantOrDomainAndCredentials<PasswordCredentials> credentials = TenantOrDomainAndCredentials
+            .<PasswordCredentials> builder().tenantOrDomainName("domain").scope("projectId:1234567890")
+            .tenantOrDomainId("somethingShouldNotBeUsed")
+            .credentials(PasswordCredentials.builder().username("identity").password("credential").build()).build();
+
+      checkTokenResult(credentials, "/v3/auth-password-scoped.json");
+   }
+
+   public void testAuthenticatePasswordProjectScopedNameDomainBackwardsCompat() throws InterruptedException {
+      // See JCLOUDS-1414, before add of KeystoneProperties.PROJECT_DOMAIN,
+      // domain-id of project-scoped could be filled with TENANT_ID
+      // => Unit test only for backward compatibility
+
+      TenantOrDomainAndCredentials<PasswordCredentials> credentials = TenantOrDomainAndCredentials
+            .<PasswordCredentials> builder().tenantOrDomainName("domain").scope("project:my-project")
+            .tenantOrDomainId("default")
+            .credentials(PasswordCredentials.builder().username("identity").password("credential").build()).build();
+
+      checkTokenResult(credentials, "/v3/auth-password-project-scoped-name-domain-backwards-compat.json");
+   }
+
+   public void testAuthenticatePasswordProjectScopedIdDomainId() throws InterruptedException {
+
+      TenantOrDomainAndCredentials<PasswordCredentials> credentials = TenantOrDomainAndCredentials
+            .<PasswordCredentials> builder().tenantOrDomainName("domain").scope("projectId:42-project-42")
+            .projectDomainId("42-domain-42")
+            .credentials(PasswordCredentials.builder().username("identity").password("credential").build()).build();
+
+      checkTokenResult(credentials, "/v3/auth-password-project-scoped-id-domain-id.json");
+   }
+
+   public void testAuthenticatePasswordProjectScopedIdDomainName() throws InterruptedException {
+
+      TenantOrDomainAndCredentials<PasswordCredentials> credentials = TenantOrDomainAndCredentials
+            .<PasswordCredentials> builder().tenantOrDomainName("domain").scope("projectId:42")
+            .projectDomainName("default")
+            .credentials(PasswordCredentials.builder().username("identity").password("credential").build()).build();
+
+      checkTokenResult(credentials, "/v3/auth-password-project-scoped-id-domain-name.json");
+   }
+
+   public void testAuthenticatePasswordProjectScopedNameDomainId() throws InterruptedException {
+
+      TenantOrDomainAndCredentials<PasswordCredentials> credentials = TenantOrDomainAndCredentials
+            .<PasswordCredentials> builder().tenantOrDomainName("domain").scope("project:my-project")
+            .projectDomainId("42")
+            .credentials(PasswordCredentials.builder().username("identity").password("credential").build()).build();
+
+      checkTokenResult(credentials, "/v3/auth-password-project-scoped-name-domain-id.json");
+   }
+
+   public void testAuthenticatePasswordProjectScopedNameDomainName() throws InterruptedException {
+
+      TenantOrDomainAndCredentials<PasswordCredentials> credentials = TenantOrDomainAndCredentials
+            .<PasswordCredentials> builder().tenantOrDomainName("domain").scope("project:my-project")
+            .projectDomainName("default")
+            .credentials(PasswordCredentials.builder().username("identity").password("credential").build()).build();
+
+      checkTokenResult(credentials, "/v3/auth-password-project-scoped-name-domain-name.json");
    }
 
    public void testAuthenticateToken() throws InterruptedException {
-      server.enqueue(jsonResponse("/v3/token.json"));
 
-      TenantOrDomainAndCredentials<TokenCredentials> credentials = TenantOrDomainAndCredentials.<TokenCredentials> builder()
-            .tenantOrDomainName("domain")
-            .scope("unscoped")
+      TenantOrDomainAndCredentials<TokenCredentials> credentials = TenantOrDomainAndCredentials
+            .<TokenCredentials> builder().tenantOrDomainName("domain").scope("unscoped")
             .credentials(TokenCredentials.builder().id("token").build()).build();
-      
-      AuthInfo authInfo = authenticationApi.authenticateToken(credentials);
 
-      assertTrue(authInfo instanceof Token);
-      assertEquals(authInfo, tokenFromResource("/v3/token.json"));
-
-      assertEquals(server.getRequestCount(), 1);
-      assertSent(server, "POST", "/auth/tokens", stringFromResource("/v3/auth-token.json"));
+      checkTokenResult(credentials, "/v3/auth-token.json");
    }
-   
+
    public void testAuthenticateTokenScoped() throws InterruptedException {
+
+      TenantOrDomainAndCredentials<TokenCredentials> credentials = TenantOrDomainAndCredentials
+            .<TokenCredentials> builder().tenantOrDomainName("domain").scope("domain:mydomain")
+            .credentials(TokenCredentials.builder().id("token").build()).build();
+
+      checkTokenResult(credentials, "/v3/auth-token-scoped.json");
+   }
+
+   @SuppressWarnings("unchecked")
+   private void checkTokenResult(TenantOrDomainAndCredentials<?> credentials, String json) throws InterruptedException {
       server.enqueue(jsonResponse("/v3/token.json"));
 
-      TenantOrDomainAndCredentials<TokenCredentials> credentials = TenantOrDomainAndCredentials.<TokenCredentials> builder()
-            .tenantOrDomainName("domain")
-            .scope("domain:mydomain")
-            .credentials(TokenCredentials.builder().id("token").build()).build();
-      
-      AuthInfo authInfo = authenticationApi.authenticateToken(credentials);
+      AuthInfo authInfo = null;
+
+      if (credentials.credentials() instanceof PasswordCredentials) {
+         authInfo = authenticationApi
+               .authenticatePassword((TenantOrDomainAndCredentials<PasswordCredentials>) credentials);
+      } else if (credentials.credentials() instanceof TokenCredentials) {
+         authInfo = authenticationApi.authenticateToken((TenantOrDomainAndCredentials<TokenCredentials>) credentials);
+      } else if (credentials.credentials() instanceof ApiAccessKeyCredentials) {
+         authInfo = authenticationApi
+               .authenticateAccessKey((TenantOrDomainAndCredentials<ApiAccessKeyCredentials>) credentials);
+      } else {
+         throw new IllegalArgumentException(String.format("Unsupported authentication method with class: %s",
+               credentials.credentials().getClass().getName()));
+      }
 
       assertTrue(authInfo instanceof Token);
       assertEquals(authInfo, tokenFromResource("/v3/token.json"));
 
       assertEquals(server.getRequestCount(), 1);
-      assertSent(server, "POST", "/auth/tokens", stringFromResource("/v3/auth-token-scoped.json"));
+      assertSent(server, "POST", "/auth/tokens", stringFromResource(json));
    }
 
 }

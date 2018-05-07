@@ -38,6 +38,7 @@ import org.jclouds.openstack.keystone.v3.domain.Auth.DomainScope;
 import org.jclouds.openstack.keystone.v3.domain.Auth.Id;
 import org.jclouds.openstack.keystone.v3.domain.Auth.Name;
 import org.jclouds.openstack.keystone.v3.domain.Auth.ProjectIdScope;
+import org.jclouds.openstack.keystone.v3.domain.Auth.ProjectIdScope.ProjectId;
 import org.jclouds.openstack.keystone.v3.domain.Auth.ProjectScope;
 import org.jclouds.openstack.keystone.v3.domain.Auth.ProjectScope.ProjectName;
 import org.jclouds.rest.MapBinder;
@@ -50,8 +51,7 @@ import com.google.common.collect.ImmutableSet;
 
 public abstract class BindAuthToJsonPayload<T> extends BindToJsonPayload implements MapBinder {
 
-   private static final Set<String> SCOPE_PREFIXES = ImmutableSet
-         .of(PROJECT, PROJECT_ID, DOMAIN, DOMAIN_ID);
+   private static final Set<String> SCOPE_PREFIXES = ImmutableSet.of(PROJECT, PROJECT_ID, DOMAIN, DOMAIN_ID);
 
    protected BindAuthToJsonPayload(Json jsonBinder) {
       super(jsonBinder);
@@ -93,15 +93,32 @@ public abstract class BindAuthToJsonPayload<T> extends BindToJsonPayload impleme
       checkArgument(SCOPE_PREFIXES.contains(parts[0]), "Scope prefix should be: %s", SCOPE_PREFIXES);
 
       if (PROJECT.equals(parts[0])) {
-         Object domainScope = credentials.tenantOrDomainId() != null ? Id.create(credentials.tenantOrDomainId()) : Name
-               .create(credentials.tenantOrDomainName());
-         return ProjectScope.create(ProjectName.create(parts[1], domainScope));
+         return ProjectScope.create(ProjectName.create(parts[1], parseProjectDomain(credentials, true)));
       } else if (PROJECT_ID.equals(parts[0])) {
-         return ProjectIdScope.create(Id.create(parts[1]));
+         // tenant (name/id) was never used as domain for project-id; so try to
+         // keep backward compatibility
+         return ProjectIdScope.create(ProjectId.create(parts[1], parseProjectDomain(credentials, false)));
       } else if (DOMAIN.equals(parts[0])) {
          return DomainScope.create(Name.create(parts[1]));
       } else {
          return DomainIdScope.create(Id.create(parts[1]));
       }
+   }
+
+   private Object parseProjectDomain(TenantOrDomainAndCredentials<T> credentials, boolean useTenantAsDefaultDomain) {
+      // Before 'projectDomainName'/'projectDomainId' support,
+      // 'tenantOrDomainId' was used as domain (id) for project-scoped by name,
+      // but not by id, so 'useTenantAsDefaultDomain' flag allows to manage that
+      Object domainScope = null;
+      if (useTenantAsDefaultDomain && credentials.tenantOrDomainId() != null) {
+         domainScope = Id.create(credentials.tenantOrDomainId());
+      } else if (credentials.projectDomainName() != null) {
+         domainScope = Name.create(credentials.projectDomainName());
+      } else if (credentials.projectDomainId() != null) {
+         domainScope = Id.create(credentials.projectDomainId());
+      } else if (useTenantAsDefaultDomain) {
+         domainScope = Name.create(credentials.tenantOrDomainName());
+      }
+      return domainScope;
    }
 }

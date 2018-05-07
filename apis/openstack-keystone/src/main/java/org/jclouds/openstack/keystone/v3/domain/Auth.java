@@ -26,18 +26,24 @@ import com.google.auto.value.AutoValue;
 @AutoValue
 public abstract class Auth {
    public abstract Identity identity();
-   @Nullable public abstract Object scope();
+
+   @Nullable
+   public abstract Object scope();
 
    @SerializedNames({ "identity", "scope" })
    public static Auth create(Identity identity, Object scope) {
       return new AutoValue_Auth(identity, scope);
    }
-   
+
    @AutoValue
    public abstract static class Identity {
       public abstract List<String> methods();
-      @Nullable public abstract Id token();
-      @Nullable public abstract PasswordAuth password();
+
+      @Nullable
+      public abstract Id token();
+
+      @Nullable
+      public abstract PasswordAuth password();
 
       @SerializedNames({ "methods", "token", "password" })
       public static Identity create(List<String> methods, Id token, PasswordAuth password) {
@@ -56,7 +62,9 @@ public abstract class Auth {
          @AutoValue
          public abstract static class UserAuth {
             public abstract String name();
+
             public abstract DomainAuth domain();
+
             public abstract String password();
 
             @SerializedNames({ "name", "domain", "password" })
@@ -66,7 +74,8 @@ public abstract class Auth {
 
             @AutoValue
             public abstract static class DomainAuth {
-               @Nullable public abstract String name();
+               @Nullable
+               public abstract String name();
 
                @SerializedNames({ "name" })
                public static DomainAuth create(String name) {
@@ -76,7 +85,7 @@ public abstract class Auth {
          }
       }
    }
-   
+
    @AutoValue
    public abstract static class Id {
       public abstract String id();
@@ -86,17 +95,18 @@ public abstract class Auth {
          return new AutoValue_Auth_Id(id);
       }
    }
-   
+
    @AutoValue
    public abstract static class Name {
-      @Nullable public abstract String name();
+      @Nullable
+      public abstract String name();
 
       @SerializedNames({ "name" })
       public static Name create(String name) {
          return new AutoValue_Auth_Name(name);
       }
    }
-   
+
    public static class Scope {
       public static final String PROJECT = "project";
       public static final String PROJECT_ID = "projectId";
@@ -108,22 +118,24 @@ public abstract class Auth {
    @AutoValue
    public abstract static class ProjectScope {
       public abstract ProjectName project();
-      
+
       @SerializedNames({ Scope.PROJECT })
       public static ProjectScope create(ProjectName project) {
          return new AutoValue_Auth_ProjectScope(project);
       }
-      
+
       @AutoValue
       public abstract static class ProjectName {
          public abstract String name();
-         @Nullable public abstract Object domain();
-         
+
+         @Nullable
+         public abstract Object domain();
+
          @SerializedNames({ "name", Scope.DOMAIN })
          public static ProjectName create(String name, Object domain) {
             return new AutoValue_Auth_ProjectScope_ProjectName(name, domain);
          }
-         
+
          public static ProjectName create(String name, Name domain) {
             return new AutoValue_Auth_ProjectScope_ProjectName(name, domain);
          }
@@ -133,17 +145,38 @@ public abstract class Auth {
          }
       }
    }
-   
+
    @AutoValue
    public abstract static class ProjectIdScope {
-      public abstract Id project();
+      public abstract ProjectId project();
 
       @SerializedNames({ Scope.PROJECT })
-      public static ProjectIdScope create(Id id) {
-         return new AutoValue_Auth_ProjectIdScope(id);
+      public static ProjectIdScope create(ProjectId project) {
+         return new AutoValue_Auth_ProjectIdScope(project);
+      }
+
+      @AutoValue
+      public abstract static class ProjectId {
+         public abstract String id();
+
+         @Nullable
+         public abstract Object domain();
+
+         @SerializedNames({ "id", Scope.DOMAIN })
+         public static ProjectId create(String id, Object domain) {
+            return new AutoValue_Auth_ProjectIdScope_ProjectId(id, domain);
+         }
+
+         public static ProjectId create(String id, Name domain) {
+            return new AutoValue_Auth_ProjectIdScope_ProjectId(id, domain);
+         }
+
+         public static ProjectId create(String id, Id domain) {
+            return new AutoValue_Auth_ProjectIdScope_ProjectId(id, domain);
+         }
       }
    }
-   
+
    @AutoValue
    public abstract static class DomainIdScope {
       public abstract Id domain();
@@ -153,7 +186,7 @@ public abstract class Auth {
          return new AutoValue_Auth_DomainIdScope(id);
       }
    }
-   
+
    @AutoValue
    public abstract static class DomainScope {
       public abstract Name domain();

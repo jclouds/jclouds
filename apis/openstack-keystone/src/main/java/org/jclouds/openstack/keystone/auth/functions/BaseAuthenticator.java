@@ -17,6 +17,8 @@
 package org.jclouds.openstack.keystone.auth.functions;
 
 import static com.google.common.base.Preconditions.checkState;
+import static org.jclouds.openstack.keystone.config.KeystoneProperties.PROJECT_DOMAIN_ID;
+import static org.jclouds.openstack.keystone.config.KeystoneProperties.PROJECT_DOMAIN_NAME;
 import static org.jclouds.openstack.keystone.config.KeystoneProperties.REQUIRES_TENANT;
 import static org.jclouds.openstack.keystone.config.KeystoneProperties.SCOPE;
 import static org.jclouds.openstack.keystone.config.KeystoneProperties.TENANT_ID;
@@ -51,15 +53,25 @@ public abstract class BaseAuthenticator<C> implements Function<Credentials, Auth
    @Inject(optional = true)
    @Named(REQUIRES_TENANT)
    protected boolean requiresTenant;
-   
+
    @Inject(optional = true)
    @Named(SCOPE)
    protected String scope = Scope.UNSCOPED;
 
+   @Inject(optional = true)
+   @Named(PROJECT_DOMAIN_NAME)
+   protected String projectDomainName;
+
+   @Inject(optional = true)
+   @Named(PROJECT_DOMAIN_ID)
+   protected String projectDomainId;
+
    @PostConstruct
    public void checkPropertiesAreCompatible() {
-      checkState(defaultTenantName == null || defaultTenantId == null, "you cannot specify both %s and %s",
-            TENANT_NAME, TENANT_ID);
+      checkState(defaultTenantName == null || defaultTenantId == null, "you cannot specify both %s and %s", TENANT_NAME,
+            TENANT_ID);
+      checkState(projectDomainName == null || projectDomainId == null, "you cannot specify both %s and %s",
+            PROJECT_DOMAIN_NAME, PROJECT_DOMAIN_ID);
    }
 
    @Override
@@ -74,21 +86,21 @@ public abstract class BaseAuthenticator<C> implements Function<Credentials, Auth
       }
 
       if (defaultTenantId == null && tenantName == null && requiresTenant) {
-         throw new IllegalArgumentException(
-               String.format(
-                     "current configuration is set to [%s]. Unless you set [%s] or [%s], you must prefix your identity with 'tenantName:'",
-                     REQUIRES_TENANT, TENANT_NAME, TENANT_ID));
+         throw new IllegalArgumentException(String.format(
+               "current configuration is set to [%s]. Unless you set [%s] or [%s], you must prefix your identity with 'tenantName:'",
+               REQUIRES_TENANT, TENANT_NAME, TENANT_ID));
       }
-      
+
       C creds = createCredentials(usernameOrAccessKey, passwordOrSecretKeyOrToken);
-      TenantOrDomainAndCredentials<C> credsWithTenant = TenantOrDomainAndCredentials.<C> builder().tenantOrDomainId(defaultTenantId)
-            .tenantOrDomainName(tenantName).scope(scope).credentials(creds).build();
-      
+      TenantOrDomainAndCredentials<C> credsWithTenant = TenantOrDomainAndCredentials.<C> builder()
+            .tenantOrDomainId(defaultTenantId).tenantOrDomainName(tenantName).scope(scope)
+            .projectDomainName(projectDomainName).projectDomainId(projectDomainId).credentials(creds).build();
+
       return authenticate(credsWithTenant);
    }
 
    public abstract C createCredentials(String identity, String credential);
-   
+
    public abstract AuthInfo authenticate(TenantOrDomainAndCredentials<C> credentials);
 
 }

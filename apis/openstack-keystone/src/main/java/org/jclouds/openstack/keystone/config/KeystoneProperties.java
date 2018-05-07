@@ -65,7 +65,7 @@ public final class KeystoneProperties {
     * @see <a href="http://wiki.openstack.org/CLIAuth">openstack docs</a>
     */
    public static final String REQUIRES_TENANT = "jclouds.keystone.requires-tenant";
-   
+
    /**
     * set this property to specify for scoped authentication.
     * <p>
@@ -81,12 +81,40 @@ public final class KeystoneProperties {
    public static final String SCOPE = "jclouds.keystone.scope";
 
    /**
+    * Set this property to specify the domain name of project (tenant)
+    * scope.<br/>
+    * Required property when authentication {@link #SCOPE} is 'project:' and
+    * project (tenant) domain is different than the user domain (Otherwise, the
+    * domain used is the same as the user). <br/>
+    * Cannot be used simultaneously with {@link #PROJECT_DOMAIN_ID}
+    *
+    * @see <a href=
+    *      "https://docs.openstack.org/keystone/latest/api_curl_examples.html#project-scoped">openstack
+    *      docs : Identity service (Keystone)</a>
+    */
+   public static final String PROJECT_DOMAIN_NAME = "jclouds.keystone.project-domain-name";
+
+   /**
+    * Set this property to specify the domain id of project (tenant) scope.<br/>
+    * Required property when authentication {@link #SCOPE} is 'project:' and
+    * project (tenant) domain is different than the user domain (Otherwise, the
+    * domain used is the same as the user). <br/>
+    * Cannot be used simultaneously with {@link #PROJECT_DOMAIN_NAME}
+    *
+    * 
+    * @see <a href=
+    *      "https://docs.openstack.org/keystone/latest/api_curl_examples.html#project-scoped">openstack
+    *      docs : Identity service (Keystone)</a>
+    */
+   public static final String PROJECT_DOMAIN_ID = "jclouds.keystone.project-domain-id";
+
+   /**
     * type of the keystone service. ex. {@code compute}
     *
     * @see ServiceType
     */
    public static final String SERVICE_TYPE = "jclouds.keystone.service-type";
-   
+
    /**
     * Version of keystone to be used by services. Default: 3.
     */
