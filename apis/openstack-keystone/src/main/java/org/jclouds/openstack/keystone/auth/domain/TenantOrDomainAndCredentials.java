@@ -30,7 +30,9 @@ public abstract class TenantOrDomainAndCredentials<T> {
    @Nullable public abstract String tenantOrDomainId();
    @Nullable public abstract String tenantOrDomainName();
    @Nullable public abstract String scope();
-   public abstract T credentials();
+   @Nullable public abstract String projectDomainName();
+   @Nullable public abstract String projectDomainId();
+   public abstract T credentials(); 
 
    TenantOrDomainAndCredentials() {
 
@@ -45,6 +47,8 @@ public abstract class TenantOrDomainAndCredentials<T> {
       public abstract Builder<T> tenantOrDomainId(String tenantId);
       public abstract Builder<T> tenantOrDomainName(String tenantName);
       public abstract Builder<T> scope(String scope);
+      public abstract Builder<T> projectDomainName(String projectDomainName);
+      public abstract Builder<T> projectDomainId(String projectDomainId); 
       public abstract Builder<T> credentials(T credentials);
 
       public abstract TenantOrDomainAndCredentials<T> build();
