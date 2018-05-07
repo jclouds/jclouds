@@ -16,7 +16,6 @@
  */
 package org.jclouds.azurecompute.arm.compute.extensions;
 
-import static com.google.common.collect.Iterables.get;
 import static com.google.common.collect.Iterables.getOnlyElement;
 import static org.jclouds.azurecompute.arm.compute.options.AzureTemplateOptions.Builder.resourceGroup;
 import static org.jclouds.azurecompute.arm.config.AzureComputeProperties.TIMEOUT_RESOURCE_DELETED;
@@ -127,8 +126,8 @@ public class AzureComputeSecurityGroupExtensionLiveTest extends BaseSecurityGrou
 
          SecurityGroup group = getOnlyElement(groups);
          assertEquals(group.getIpPermissions().size(), 2);
-         assertEquals(get(group.getIpPermissions(), 0), IpPermissions.permit(TCP).fromPort(22).to(24));
-         assertEquals(get(group.getIpPermissions(), 1), IpPermissions.permit(TCP).port(8000));
+         assertTrue(group.getIpPermissions().contains(IpPermissions.permit(TCP).fromPort(22).to(24)));
+         assertTrue(group.getIpPermissions().contains(IpPermissions.permit(TCP).port(8000)));
       } finally {
          computeService.destroyNodesMatching(inGroup(node.getGroup()));
       }
