@@ -17,6 +17,7 @@
 package org.jclouds.azurecompute.arm;
 
 import static org.jclouds.Constants.PROPERTY_MAX_RATE_LIMIT_WAIT;
+import static org.jclouds.Constants.PROPERTY_SESSION_INTERVAL;
 import static org.jclouds.azurecompute.arm.config.AzureComputeProperties.API_VERSION_PREFIX;
 import static org.jclouds.azurecompute.arm.config.AzureComputeProperties.DEFAULT_SUBNET_ADDRESS_PREFIX;
 import static org.jclouds.azurecompute.arm.config.AzureComputeProperties.DEFAULT_VNET_ADDRESS_SPACE_PREFIX;
@@ -90,6 +91,7 @@ public class AzureComputeProviderMetadata extends BaseProviderMetadata {
       properties.put(TIMEOUT_NODE_TERMINATED, 60 * 10 * 1000);
       // Default max wait in rate limit: 5m30s
       properties.put(PROPERTY_MAX_RATE_LIMIT_WAIT, 330000);
+      properties.put(PROPERTY_SESSION_INTERVAL, 300);
       properties.put(RESOURCE, "https://management.azure.com/");
       properties.put(CREDENTIAL_TYPE, CLIENT_CREDENTIALS_SECRET.toString());
       // Set a default Oauth endpoint for Azure, fill in the tenantId based on the value supplied
