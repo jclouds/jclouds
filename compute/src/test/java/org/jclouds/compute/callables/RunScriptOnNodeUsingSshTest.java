@@ -103,7 +103,7 @@ public class RunScriptOnNodeUsingSshTest {
       expect(sshClient.getUsername()).andReturn("tester");
       expect(sshClient.getHostAddress()).andReturn("somewhere.example.com");
       expect(
-            sshClient.exec("sudo -S sh <<'RUN_SCRIPT_AS_ROOT_SSH'\n" + "testpassword!\n" + "echo $USER\n"
+            sshClient.exec("sudo -S sh <<'RUN_SCRIPT_AS_ROOT_SSH'\n" + "'testpassword!'\n" + "echo $USER\n"
                   + "echo $USER\n" + "RUN_SCRIPT_AS_ROOT_SSH\n")).andReturn(new ExecResponse("root\nroot\n", null, 0));
       sshClient.disconnect();
       replay(sshClient);
