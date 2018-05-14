@@ -42,6 +42,8 @@ public class RunScriptOnNodeUsingSshTest {
    private NodeMetadata node;
    private Function<NodeMetadata, SshClient> sshFactory;
 
+   private static String testPassword = "wit h(char%special";
+
    @BeforeMethod(groups = { "unit" })
    public void init() {
       sshClient = createMock(SshClient.class);
@@ -52,7 +54,8 @@ public class RunScriptOnNodeUsingSshTest {
          }
       };
       node = createMock(NodeMetadata.class);
-      expect(node.getCredentials()).andReturn(LoginCredentials.builder().user("tester").password("notalot").build()).atLeastOnce();
+      expect(node.getCredentials()).andReturn(LoginCredentials.builder().user("tester").password(testPassword).build())
+            .atLeastOnce();
       replay(node);
    }
 
@@ -92,7 +95,8 @@ public class RunScriptOnNodeUsingSshTest {
 
    public void simpleRootTestWithSudoPassword() {
       node = createMock(NodeMetadata.class);
-      expect(node.getCredentials()).andReturn(LoginCredentials.builder().user("tester").password("testpassword!").authenticateSudo(true).build())
+      expect(node.getCredentials())
+            .andReturn(LoginCredentials.builder().user("tester").password(testPassword).authenticateSudo(true).build())
             .atLeastOnce();
       replay(node);
       RunScriptOnNodeUsingSsh testMe = new RunScriptOnNodeUsingSsh(sshFactory, eventBus, node, exec("echo $USER\necho $USER"),
@@ -102,8 +106,7 @@ public class RunScriptOnNodeUsingSshTest {
       sshClient.connect();
       expect(sshClient.getUsername()).andReturn("tester");
       expect(sshClient.getHostAddress()).andReturn("somewhere.example.com");
-      expect(
-            sshClient.exec("sudo -S sh <<'RUN_SCRIPT_AS_ROOT_SSH'\n" + "'testpassword!'\n" + "echo $USER\n"
+      expect(sshClient.exec("sudo -S sh <<'RUN_SCRIPT_AS_ROOT_SSH'\n" + "'" + testPassword + "'\n" + "echo $USER\n"
                   + "echo $USER\n" + "RUN_SCRIPT_AS_ROOT_SSH\n")).andReturn(new ExecResponse("root\nroot\n", null, 0));
       sshClient.disconnect();
       replay(sshClient);
@@ -113,7 +116,7 @@ public class RunScriptOnNodeUsingSshTest {
 
    public void testUserAddAsRoot() {
       RunScriptOnNodeUsingSsh testMe = new RunScriptOnNodeUsingSsh(sshFactory, eventBus, node, UserAdd.builder()
-            .login("testuser").build(), wrapInInitScript(false).runAsRoot(true).overrideLoginPassword("test"));
+            .login("testuser").build(), wrapInInitScript(false).runAsRoot(true).overrideLoginPassword(testPassword));
 
       testMe.init();
 
