@@ -73,9 +73,14 @@ public class VirtualMachineToStatus implements Function<VirtualMachine, StatusAn
                      .build(), NodeMetadata.Status.UNRECOGNIZED);
 
    private static final Function<PowerState, NodeMetadata.Status> POWERSTATE_TO_NODESTATUS = Functions.forMap(
-         ImmutableMap.<PowerState, NodeMetadata.Status> builder().put(PowerState.RUNNING, NodeMetadata.Status.RUNNING)
+         ImmutableMap.<PowerState, NodeMetadata.Status> builder()
+               .put(PowerState.RUNNING, NodeMetadata.Status.RUNNING)
+               .put(PowerState.STARTING, NodeMetadata.Status.PENDING)
                .put(PowerState.STOPPED, NodeMetadata.Status.SUSPENDED)
-               .put(PowerState.UNRECOGNIZED, NodeMetadata.Status.UNRECOGNIZED).build(),
+               .put(PowerState.STOPPING, NodeMetadata.Status.PENDING)
+               .put(PowerState.DEALLOCATED, NodeMetadata.Status.SUSPENDED)
+               .put(PowerState.DEALLOCATING, NodeMetadata.Status.PENDING)
+               .put(PowerState.UNKNOWN, NodeMetadata.Status.UNRECOGNIZED).build(),
          NodeMetadata.Status.UNRECOGNIZED);
 
    private final AzureComputeApi api;

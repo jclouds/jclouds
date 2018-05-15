@@ -41,13 +41,20 @@ public abstract class VirtualMachineInstance {
    public static final String PROVISIONING_STATE_PREFIX = "ProvisioningState/";
    public static final String POWER_STATE_PREFIX = "PowerState/";
    
+   /**
+    * @see <a href="https://docs.microsoft.com/en-us/java/api/com.microsoft.azure.management.compute._power_state" />
+    */
    public enum PowerState {
       RUNNING,
+      STARTING,
       STOPPED,
-      UNRECOGNIZED;
+      STOPPING,
+      DEALLOCATED,
+      DEALLOCATING,
+      UNKNOWN;
 
       public static PowerState fromValue(final String text) {
-         return (PowerState) GetEnumValue.fromValueOrDefault(text, PowerState.UNRECOGNIZED);
+         return (PowerState) GetEnumValue.fromValueOrDefault(text, PowerState.UNKNOWN);
       }
    }
    
