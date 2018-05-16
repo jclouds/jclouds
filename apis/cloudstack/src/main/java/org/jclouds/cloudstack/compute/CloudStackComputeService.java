@@ -17,11 +17,11 @@
 package org.jclouds.cloudstack.compute;
 
 import static com.google.common.base.Preconditions.checkNotNull;
+import static org.jclouds.cloudstack.predicates.SshKeyPairPredicates.nameMatches;
+import static org.jclouds.cloudstack.predicates.ZonePredicates.supportsSecurityGroups;
 import static org.jclouds.compute.config.ComputeServiceProperties.TIMEOUT_NODE_RUNNING;
 import static org.jclouds.compute.config.ComputeServiceProperties.TIMEOUT_NODE_SUSPENDED;
 import static org.jclouds.compute.config.ComputeServiceProperties.TIMEOUT_NODE_TERMINATED;
-import static org.jclouds.cloudstack.predicates.SshKeyPairPredicates.nameMatches;
-import static org.jclouds.cloudstack.predicates.ZonePredicates.supportsSecurityGroups;
 
 import java.util.Map;
 import java.util.Set;
@@ -33,6 +33,13 @@ import javax.inject.Provider;
 import javax.inject.Singleton;
 
 import org.jclouds.Constants;
+import org.jclouds.cloudstack.CloudStackApi;
+import org.jclouds.cloudstack.compute.options.CloudStackTemplateOptions;
+import org.jclouds.cloudstack.domain.SecurityGroup;
+import org.jclouds.cloudstack.domain.SshKeyPair;
+import org.jclouds.cloudstack.domain.Zone;
+import org.jclouds.cloudstack.domain.ZoneAndName;
+import org.jclouds.cloudstack.predicates.SecurityGroupPredicates;
 import org.jclouds.collect.Memoized;
 import org.jclouds.compute.ComputeServiceContext;
 import org.jclouds.compute.callables.RunScriptOnNode;
@@ -42,11 +49,11 @@ import org.jclouds.compute.domain.NodeMetadata;
 import org.jclouds.compute.domain.TemplateBuilder;
 import org.jclouds.compute.extensions.ImageExtension;
 import org.jclouds.compute.extensions.SecurityGroupExtension;
+import org.jclouds.compute.extensions.internal.DelegatingImageExtension;
 import org.jclouds.compute.functions.GroupNamingConvention;
 import org.jclouds.compute.internal.BaseComputeService;
 import org.jclouds.compute.internal.PersistNodeCredentials;
 import org.jclouds.compute.options.TemplateOptions;
-import org.jclouds.compute.reference.ComputeServiceConstants.Timeouts;
 import org.jclouds.compute.strategy.CreateNodesInGroupThenAddToSet;
 import org.jclouds.compute.strategy.DestroyNodeStrategy;
 import org.jclouds.compute.strategy.GetImageStrategy;
@@ -58,13 +65,6 @@ import org.jclouds.compute.strategy.ResumeNodeStrategy;
 import org.jclouds.compute.strategy.SuspendNodeStrategy;
 import org.jclouds.domain.Credentials;
 import org.jclouds.domain.Location;
-import org.jclouds.cloudstack.CloudStackApi;
-import org.jclouds.cloudstack.compute.options.CloudStackTemplateOptions;
-import org.jclouds.cloudstack.domain.SecurityGroup;
-import org.jclouds.cloudstack.domain.SshKeyPair;
-import org.jclouds.cloudstack.domain.Zone;
-import org.jclouds.cloudstack.domain.ZoneAndName;
-import org.jclouds.cloudstack.predicates.SecurityGroupPredicates;
 import org.jclouds.scriptbuilder.functions.InitAdminAccess;
 
 import com.google.common.base.Function;
@@ -88,32 +88,30 @@ public class CloudStackComputeService extends BaseComputeService {
 
    @Inject
    protected CloudStackComputeService(ComputeServiceContext context, Map<String, Credentials> credentialStore,
-            @Memoized Supplier<Set<? extends Image>> images, @Memoized Supplier<Set<? extends Hardware>> sizes,
-            @Memoized Supplier<Set<? extends Location>> locations, ListNodesStrategy listNodesStrategy,
-            GetImageStrategy getImageStrategy, GetNodeMetadataStrategy getNodeMetadataStrategy,
-            CreateNodesInGroupThenAddToSet runNodesAndAddToSetStrategy, RebootNodeStrategy rebootNodeStrategy,
-            DestroyNodeStrategy destroyNodeStrategy, ResumeNodeStrategy startNodeStrategy,
-            SuspendNodeStrategy stopNodeStrategy, Provider<TemplateBuilder> templateBuilderProvider,
-            @Named("DEFAULT") Provider<TemplateOptions> templateOptionsProvider,
-            @Named(TIMEOUT_NODE_RUNNING) Predicate<AtomicReference<NodeMetadata>> nodeRunning,
-            @Named(TIMEOUT_NODE_TERMINATED) Predicate<AtomicReference<NodeMetadata>> nodeTerminated,
-            @Named(TIMEOUT_NODE_SUSPENDED) Predicate<AtomicReference<NodeMetadata>> nodeSuspended,
-            InitializeRunScriptOnNodeOrPlaceInBadMap.Factory initScriptRunnerFactory,
-            RunScriptOnNode.Factory runScriptOnNodeFactory, InitAdminAccess initAdminAccess,
-            PersistNodeCredentials persistNodeCredentials, Timeouts timeouts,
-            @Named(Constants.PROPERTY_USER_THREADS) ListeningExecutorService userExecutor, CloudStackApi client,
-            LoadingCache<ZoneAndName, SecurityGroup> securityGroupMap,
-            LoadingCache<String, SshKeyPair> keyPairCache,
-            Function<Set<? extends NodeMetadata>, Multimap<String, String>> orphanedGroupsByZoneId,
-            GroupNamingConvention.Factory namingConvention,
-            Supplier<LoadingCache<String, Zone>> zoneIdToZone,
-            Optional<ImageExtension> imageExtension,
-            Optional<SecurityGroupExtension> securityGroupExtension) {
+         @Memoized Supplier<Set<? extends Image>> images, @Memoized Supplier<Set<? extends Hardware>> sizes,
+         @Memoized Supplier<Set<? extends Location>> locations, ListNodesStrategy listNodesStrategy,
+         GetImageStrategy getImageStrategy, GetNodeMetadataStrategy getNodeMetadataStrategy,
+         CreateNodesInGroupThenAddToSet runNodesAndAddToSetStrategy, RebootNodeStrategy rebootNodeStrategy,
+         DestroyNodeStrategy destroyNodeStrategy, ResumeNodeStrategy startNodeStrategy,
+         SuspendNodeStrategy stopNodeStrategy, Provider<TemplateBuilder> templateBuilderProvider,
+         @Named("DEFAULT") Provider<TemplateOptions> templateOptionsProvider,
+         @Named(TIMEOUT_NODE_RUNNING) Predicate<AtomicReference<NodeMetadata>> nodeRunning,
+         @Named(TIMEOUT_NODE_TERMINATED) Predicate<AtomicReference<NodeMetadata>> nodeTerminated,
+         @Named(TIMEOUT_NODE_SUSPENDED) Predicate<AtomicReference<NodeMetadata>> nodeSuspended,
+         InitializeRunScriptOnNodeOrPlaceInBadMap.Factory initScriptRunnerFactory,
+         RunScriptOnNode.Factory runScriptOnNodeFactory, InitAdminAccess initAdminAccess,
+         PersistNodeCredentials persistNodeCredentials,
+         @Named(Constants.PROPERTY_USER_THREADS) ListeningExecutorService userExecutor, CloudStackApi client,
+         LoadingCache<ZoneAndName, SecurityGroup> securityGroupMap, LoadingCache<String, SshKeyPair> keyPairCache,
+         Function<Set<? extends NodeMetadata>, Multimap<String, String>> orphanedGroupsByZoneId,
+         GroupNamingConvention.Factory namingConvention, Supplier<LoadingCache<String, Zone>> zoneIdToZone,
+         Optional<ImageExtension> imageExtension, Optional<SecurityGroupExtension> securityGroupExtension,
+         DelegatingImageExtension.Factory delegatingImageExtension) {
       super(context, credentialStore, images, sizes, locations, listNodesStrategy, getImageStrategy,
-               getNodeMetadataStrategy, runNodesAndAddToSetStrategy, rebootNodeStrategy, destroyNodeStrategy,
-               startNodeStrategy, stopNodeStrategy, templateBuilderProvider, templateOptionsProvider, nodeRunning,
-               nodeTerminated, nodeSuspended, initScriptRunnerFactory, initAdminAccess, runScriptOnNodeFactory,
-               persistNodeCredentials, timeouts, userExecutor, imageExtension, securityGroupExtension);
+            getNodeMetadataStrategy, runNodesAndAddToSetStrategy, rebootNodeStrategy, destroyNodeStrategy,
+            startNodeStrategy, stopNodeStrategy, templateBuilderProvider, templateOptionsProvider, nodeRunning,
+            nodeTerminated, nodeSuspended, initScriptRunnerFactory, initAdminAccess, runScriptOnNodeFactory,
+            persistNodeCredentials, userExecutor, imageExtension, securityGroupExtension, delegatingImageExtension);
       this.zoneIdToZone = checkNotNull(zoneIdToZone, "zoneIdToZone");
       this.client = checkNotNull(client, "client");
       this.securityGroupMap = checkNotNull(securityGroupMap, "securityGroupMap");

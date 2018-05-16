@@ -47,6 +47,7 @@ import org.jclouds.compute.domain.NodeMetadata;
 import org.jclouds.compute.domain.TemplateBuilder;
 import org.jclouds.compute.extensions.ImageExtension;
 import org.jclouds.compute.extensions.SecurityGroupExtension;
+import org.jclouds.compute.extensions.internal.DelegatingImageExtension;
 import org.jclouds.compute.functions.GroupNamingConvention;
 import org.jclouds.compute.internal.PersistNodeCredentials;
 import org.jclouds.compute.options.TemplateOptions;
@@ -103,13 +104,14 @@ public class AWSEC2ComputeService extends EC2ComputeService {
          @Named("DELETED") Predicate<PlacementGroup> placementGroupDeleted, Optional<ImageExtension> imageExtension,
          GroupNamingConvention.Factory namingConvention,
          @Named(PROPERTY_EC2_GENERATE_INSTANCE_NAMES) boolean generateInstanceNames,
-         Optional<SecurityGroupExtension> securityGroupExtension) {
+         Optional<SecurityGroupExtension> securityGroupExtension,
+         DelegatingImageExtension.Factory delegatingImageExtension) {
       super(context, credentialStore, images, sizes, locations, listNodesStrategy, getImageStrategy,
             getNodeMetadataStrategy, runNodesAndAddToSetStrategy, rebootNodeStrategy, destroyNodeStrategy,
             startNodeStrategy, stopNodeStrategy, templateBuilderProvider, templateOptionsProvider, nodeRunning,
             nodeTerminated, nodeSuspended, initScriptRunnerFactory, runScriptOnNodeFactory, initAdminAccess,
             persistNodeCredentials, timeouts, userExecutor, client, credentialsMap, securityGroupMap, imageExtension,
-            namingConvention, generateInstanceNames, securityGroupExtension);
+            namingConvention, generateInstanceNames, securityGroupExtension, delegatingImageExtension);
       this.client = client;
       this.placementGroupMap = placementGroupMap;
       this.placementGroupDeleted = placementGroupDeleted;

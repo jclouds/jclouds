@@ -68,7 +68,6 @@ import org.jclouds.compute.extensions.internal.DelegatingImageExtension;
 import org.jclouds.compute.options.RunScriptOptions;
 import org.jclouds.compute.options.TemplateOptions;
 import org.jclouds.compute.reference.ComputeServiceConstants;
-import org.jclouds.compute.reference.ComputeServiceConstants.Timeouts;
 import org.jclouds.compute.strategy.CreateNodesInGroupThenAddToSet;
 import org.jclouds.compute.strategy.DestroyNodeStrategy;
 import org.jclouds.compute.strategy.GetImageStrategy;
@@ -131,7 +130,6 @@ public class BaseComputeService implements ComputeService {
    private final Predicate<AtomicReference<NodeMetadata>> nodeTerminated;
    private final Predicate<AtomicReference<NodeMetadata>> nodeSuspended;
    private final InitializeRunScriptOnNodeOrPlaceInBadMap.Factory initScriptRunnerFactory;
-   private final Timeouts timeouts;
    private final InitAdminAccess initAdminAccess;
    private final PersistNodeCredentials persistNodeCredentials;
    private final RunScriptOnNode.Factory runScriptOnNodeFactory;
@@ -154,8 +152,9 @@ public class BaseComputeService implements ComputeService {
             @Named(TIMEOUT_NODE_SUSPENDED) Predicate<AtomicReference<NodeMetadata>> nodeSuspended,
             InitializeRunScriptOnNodeOrPlaceInBadMap.Factory initScriptRunnerFactory, InitAdminAccess initAdminAccess,
             RunScriptOnNode.Factory runScriptOnNodeFactory, PersistNodeCredentials persistNodeCredentials,
-            Timeouts timeouts, @Named(Constants.PROPERTY_USER_THREADS) ListeningExecutorService userExecutor,
-            Optional<ImageExtension> imageExtension, Optional<SecurityGroupExtension> securityGroupExtension) {
+            @Named(Constants.PROPERTY_USER_THREADS) ListeningExecutorService userExecutor,
+            Optional<ImageExtension> imageExtension, Optional<SecurityGroupExtension> securityGroupExtension,
+            DelegatingImageExtension.Factory delegatingImageExtension) {
       this.context = checkNotNull(context, "context");
       this.credentialStore = checkNotNull(credentialStore, "credentialStore");
       this.images = checkNotNull(images, "images");
@@ -175,15 +174,14 @@ public class BaseComputeService implements ComputeService {
       this.nodeTerminated = checkNotNull(nodeTerminated, "nodeTerminated");
       this.nodeSuspended = checkNotNull(nodeSuspended, "nodeSuspended");
       this.initScriptRunnerFactory = checkNotNull(initScriptRunnerFactory, "initScriptRunnerFactory");
-      this.timeouts = checkNotNull(timeouts, "timeouts");
       this.initAdminAccess = checkNotNull(initAdminAccess, "initAdminAccess");
       this.runScriptOnNodeFactory = checkNotNull(runScriptOnNodeFactory, "runScriptOnNodeFactory");
       this.persistNodeCredentials = checkNotNull(persistNodeCredentials, "persistNodeCredentials");
       this.userExecutor = checkNotNull(userExecutor, "userExecutor");
       this.securityGroupExtension = checkNotNull(securityGroupExtension, "securityGroupExtension");
       if (imageExtension.isPresent() && images instanceof ImageCacheSupplier) {
-         this.imageExtension = Optional.<ImageExtension> of(new DelegatingImageExtension(ImageCacheSupplier.class
-               .cast(images), imageExtension.get()));
+         this.imageExtension = Optional.<ImageExtension> of(delegatingImageExtension.create(
+               ImageCacheSupplier.class.cast(images), imageExtension.get()));
       } else {
          this.imageExtension = checkNotNull(imageExtension, "imageExtension");
       }

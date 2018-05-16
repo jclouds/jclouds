@@ -57,6 +57,7 @@ import org.jclouds.compute.domain.Template;
 import org.jclouds.compute.domain.TemplateBuilder;
 import org.jclouds.compute.extensions.ImageExtension;
 import org.jclouds.compute.extensions.SecurityGroupExtension;
+import org.jclouds.compute.extensions.internal.DelegatingImageExtension;
 import org.jclouds.compute.functions.GroupNamingConvention;
 import org.jclouds.compute.functions.GroupNamingConvention.Factory;
 import org.jclouds.compute.internal.BaseComputeService;
@@ -113,30 +114,31 @@ public class EC2ComputeService extends BaseComputeService {
 
    @Inject
    protected EC2ComputeService(ComputeServiceContext context, Map<String, Credentials> credentialStore,
-            @Memoized Supplier<Set<? extends Image>> images, @Memoized Supplier<Set<? extends Hardware>> sizes,
-            @Memoized Supplier<Set<? extends Location>> locations, ListNodesStrategy listNodesStrategy,
-            GetImageStrategy getImageStrategy, GetNodeMetadataStrategy getNodeMetadataStrategy,
-            CreateNodesInGroupThenAddToSet runNodesAndAddToSetStrategy, RebootNodeStrategy rebootNodeStrategy,
-            DestroyNodeStrategy destroyNodeStrategy, ResumeNodeStrategy startNodeStrategy,
-            SuspendNodeStrategy stopNodeStrategy, Provider<TemplateBuilder> templateBuilderProvider,
-            @Named("DEFAULT") Provider<TemplateOptions> templateOptionsProvider,
-            @Named(TIMEOUT_NODE_RUNNING) Predicate<AtomicReference<NodeMetadata>> nodeRunning,
-            @Named(TIMEOUT_NODE_TERMINATED) Predicate<AtomicReference<NodeMetadata>> nodeTerminated,
-            @Named(TIMEOUT_NODE_SUSPENDED) Predicate<AtomicReference<NodeMetadata>> nodeSuspended,
-            InitializeRunScriptOnNodeOrPlaceInBadMap.Factory initScriptRunnerFactory,
-            RunScriptOnNode.Factory runScriptOnNodeFactory, InitAdminAccess initAdminAccess,
-            PersistNodeCredentials persistNodeCredentials, Timeouts timeouts,
-            @Named(Constants.PROPERTY_USER_THREADS) ListeningExecutorService userExecutor, EC2Api client,
-            ConcurrentMap<RegionAndName, KeyPair> credentialsMap,
-            @Named("SECURITY") LoadingCache<RegionAndName, String> securityGroupMap,
-            Optional<ImageExtension> imageExtension, GroupNamingConvention.Factory namingConvention,
-            @Named(PROPERTY_EC2_GENERATE_INSTANCE_NAMES) boolean generateInstanceNames,
-            Optional<SecurityGroupExtension> securityGroupExtension) {
+         @Memoized Supplier<Set<? extends Image>> images, @Memoized Supplier<Set<? extends Hardware>> sizes,
+         @Memoized Supplier<Set<? extends Location>> locations, ListNodesStrategy listNodesStrategy,
+         GetImageStrategy getImageStrategy, GetNodeMetadataStrategy getNodeMetadataStrategy,
+         CreateNodesInGroupThenAddToSet runNodesAndAddToSetStrategy, RebootNodeStrategy rebootNodeStrategy,
+         DestroyNodeStrategy destroyNodeStrategy, ResumeNodeStrategy startNodeStrategy,
+         SuspendNodeStrategy stopNodeStrategy, Provider<TemplateBuilder> templateBuilderProvider,
+         @Named("DEFAULT") Provider<TemplateOptions> templateOptionsProvider,
+         @Named(TIMEOUT_NODE_RUNNING) Predicate<AtomicReference<NodeMetadata>> nodeRunning,
+         @Named(TIMEOUT_NODE_TERMINATED) Predicate<AtomicReference<NodeMetadata>> nodeTerminated,
+         @Named(TIMEOUT_NODE_SUSPENDED) Predicate<AtomicReference<NodeMetadata>> nodeSuspended,
+         InitializeRunScriptOnNodeOrPlaceInBadMap.Factory initScriptRunnerFactory,
+         RunScriptOnNode.Factory runScriptOnNodeFactory, InitAdminAccess initAdminAccess,
+         PersistNodeCredentials persistNodeCredentials, Timeouts timeouts,
+         @Named(Constants.PROPERTY_USER_THREADS) ListeningExecutorService userExecutor, EC2Api client,
+         ConcurrentMap<RegionAndName, KeyPair> credentialsMap,
+         @Named("SECURITY") LoadingCache<RegionAndName, String> securityGroupMap,
+         Optional<ImageExtension> imageExtension, GroupNamingConvention.Factory namingConvention,
+         @Named(PROPERTY_EC2_GENERATE_INSTANCE_NAMES) boolean generateInstanceNames,
+         Optional<SecurityGroupExtension> securityGroupExtension,
+         DelegatingImageExtension.Factory delegatingImageExtension) {
       super(context, credentialStore, images, sizes, locations, listNodesStrategy, getImageStrategy,
-               getNodeMetadataStrategy, runNodesAndAddToSetStrategy, rebootNodeStrategy, destroyNodeStrategy,
-               startNodeStrategy, stopNodeStrategy, templateBuilderProvider, templateOptionsProvider, nodeRunning,
-               nodeTerminated, nodeSuspended, initScriptRunnerFactory, initAdminAccess, runScriptOnNodeFactory,
-               persistNodeCredentials, timeouts, userExecutor, imageExtension, securityGroupExtension);
+            getNodeMetadataStrategy, runNodesAndAddToSetStrategy, rebootNodeStrategy, destroyNodeStrategy,
+            startNodeStrategy, stopNodeStrategy, templateBuilderProvider, templateOptionsProvider, nodeRunning,
+            nodeTerminated, nodeSuspended, initScriptRunnerFactory, initAdminAccess, runScriptOnNodeFactory,
+            persistNodeCredentials, userExecutor, imageExtension, securityGroupExtension, delegatingImageExtension);
       this.client = client;
       this.credentialsMap = credentialsMap;
       this.securityGroupMap = securityGroupMap;

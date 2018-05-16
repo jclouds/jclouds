@@ -45,6 +45,7 @@ import org.jclouds.compute.domain.Template;
 import org.jclouds.compute.domain.TemplateBuilder;
 import org.jclouds.compute.extensions.ImageExtension;
 import org.jclouds.compute.extensions.SecurityGroupExtension;
+import org.jclouds.compute.extensions.internal.DelegatingImageExtension;
 import org.jclouds.compute.functions.CreateSshClientOncePortIsListeningOnNode;
 import org.jclouds.compute.functions.DefaultCredentialsFromImageOrOverridingCredentials;
 import org.jclouds.compute.options.RunScriptOptions;
@@ -112,6 +113,8 @@ public abstract class BaseComputeServiceContextModule extends AbstractModule {
       }, InitializeRunScriptOnNodeOrPlaceInBadMap.class).build(InitializeRunScriptOnNodeOrPlaceInBadMap.Factory.class));
 
       install(new FactoryModuleBuilder().build(BlockUntilInitScriptStatusIsZeroThenReturnOutput.Factory.class));
+      
+      install(new FactoryModuleBuilder().build(DelegatingImageExtension.Factory.class));
    }
 
    protected void bindCredentialsOverriderFunction() {

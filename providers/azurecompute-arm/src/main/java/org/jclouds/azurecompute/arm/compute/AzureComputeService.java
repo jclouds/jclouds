@@ -16,6 +16,10 @@
  */
 package org.jclouds.azurecompute.arm.compute;
 
+import static org.jclouds.compute.config.ComputeServiceProperties.TIMEOUT_NODE_RUNNING;
+import static org.jclouds.compute.config.ComputeServiceProperties.TIMEOUT_NODE_SUSPENDED;
+import static org.jclouds.compute.config.ComputeServiceProperties.TIMEOUT_NODE_TERMINATED;
+
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
@@ -38,10 +42,10 @@ import org.jclouds.compute.domain.NodeMetadata;
 import org.jclouds.compute.domain.TemplateBuilder;
 import org.jclouds.compute.extensions.ImageExtension;
 import org.jclouds.compute.extensions.SecurityGroupExtension;
+import org.jclouds.compute.extensions.internal.DelegatingImageExtension;
 import org.jclouds.compute.internal.BaseComputeService;
 import org.jclouds.compute.internal.PersistNodeCredentials;
 import org.jclouds.compute.options.TemplateOptions;
-import org.jclouds.compute.reference.ComputeServiceConstants.Timeouts;
 import org.jclouds.compute.strategy.CreateNodesInGroupThenAddToSet;
 import org.jclouds.compute.strategy.DestroyNodeStrategy;
 import org.jclouds.compute.strategy.GetImageStrategy;
@@ -62,10 +66,6 @@ import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.util.concurrent.ListeningExecutorService;
 
-import static org.jclouds.compute.config.ComputeServiceProperties.TIMEOUT_NODE_RUNNING;
-import static org.jclouds.compute.config.ComputeServiceProperties.TIMEOUT_NODE_SUSPENDED;
-import static org.jclouds.compute.config.ComputeServiceProperties.TIMEOUT_NODE_TERMINATED;
-
 @Singleton
 public class AzureComputeService extends BaseComputeService {
    private final CleanupResources cleanupResources;
@@ -84,15 +84,16 @@ public class AzureComputeService extends BaseComputeService {
          @Named(TIMEOUT_NODE_SUSPENDED) Predicate<AtomicReference<NodeMetadata>> nodeSuspended,
          InitializeRunScriptOnNodeOrPlaceInBadMap.Factory initScriptRunnerFactory,
          RunScriptOnNode.Factory runScriptOnNodeFactory, InitAdminAccess initAdminAccess,
-         PersistNodeCredentials persistNodeCredentials, Timeouts timeouts,
+         PersistNodeCredentials persistNodeCredentials,
          @Named(Constants.PROPERTY_USER_THREADS) ListeningExecutorService userExecutor,
          CleanupResources cleanupResources, Optional<ImageExtension> imageExtension,
-         Optional<SecurityGroupExtension> securityGroupExtension) {
+         Optional<SecurityGroupExtension> securityGroupExtension,
+         DelegatingImageExtension.Factory delegatingImageExtension) {
       super(context, credentialStore, images, sizes, locations, listNodesStrategy, getImageStrategy,
             getNodeMetadataStrategy, runNodesAndAddToSetStrategy, rebootNodeStrategy, destroyNodeStrategy,
             startNodeStrategy, stopNodeStrategy, templateBuilderProvider, templateOptionsProvider, nodeRunning,
             nodeTerminated, nodeSuspended, initScriptRunnerFactory, initAdminAccess, runScriptOnNodeFactory,
-            persistNodeCredentials, timeouts, userExecutor, imageExtension, securityGroupExtension);
+            persistNodeCredentials, userExecutor, imageExtension, securityGroupExtension, delegatingImageExtension);
       this.cleanupResources = cleanupResources;
    }
 
