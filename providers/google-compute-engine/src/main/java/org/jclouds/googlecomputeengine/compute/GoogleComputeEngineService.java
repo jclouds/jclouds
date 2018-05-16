@@ -39,11 +39,11 @@ import org.jclouds.compute.domain.NodeMetadata;
 import org.jclouds.compute.domain.TemplateBuilder;
 import org.jclouds.compute.extensions.ImageExtension;
 import org.jclouds.compute.extensions.SecurityGroupExtension;
+import org.jclouds.compute.extensions.internal.DelegatingImageExtension;
 import org.jclouds.compute.functions.GroupNamingConvention;
 import org.jclouds.compute.internal.BaseComputeService;
 import org.jclouds.compute.internal.PersistNodeCredentials;
 import org.jclouds.compute.options.TemplateOptions;
-import org.jclouds.compute.reference.ComputeServiceConstants;
 import org.jclouds.compute.strategy.CreateNodesInGroupThenAddToSet;
 import org.jclouds.compute.strategy.DestroyNodeStrategy;
 import org.jclouds.compute.strategy.GetImageStrategy;
@@ -76,44 +76,30 @@ public final class GoogleComputeEngineService extends BaseComputeService {
    private final GoogleComputeEngineApi api;
    private final Predicate<AtomicReference<Operation>> operationDone;
 
-   @Inject GoogleComputeEngineService(ComputeServiceContext context,
-                                        Map<String, Credentials> credentialStore,
-                                        @Memoized Supplier<Set<? extends Image>> images,
-                                        @Memoized Supplier<Set<? extends Hardware>> hardwareProfiles,
-                                        @Memoized Supplier<Set<? extends Location>> locations,
-                                        ListNodesStrategy listNodesStrategy,
-                                        GetImageStrategy getImageStrategy,
-                                        GetNodeMetadataStrategy getNodeMetadataStrategy,
-                                        CreateNodesInGroupThenAddToSet runNodesAndAddToSetStrategy,
-                                        RebootNodeStrategy rebootNodeStrategy,
-                                        DestroyNodeStrategy destroyNodeStrategy,
-                                        ResumeNodeStrategy resumeNodeStrategy,
-                                        SuspendNodeStrategy suspendNodeStrategy,
-                                        Provider<TemplateBuilder> templateBuilderProvider,
-                                        @Named("DEFAULT") Provider<TemplateOptions> templateOptionsProvider,
-                                        @Named(TIMEOUT_NODE_RUNNING) Predicate<AtomicReference<NodeMetadata>>
-                                                nodeRunning,
-                                        @Named(TIMEOUT_NODE_TERMINATED) Predicate<AtomicReference<NodeMetadata>>
-                                                nodeTerminated,
-                                        @Named(TIMEOUT_NODE_SUSPENDED)
-                                        Predicate<AtomicReference<NodeMetadata>> nodeSuspended,
-                                        InitializeRunScriptOnNodeOrPlaceInBadMap.Factory initScriptRunnerFactory,
-                                        InitAdminAccess initAdminAccess,
-                                        RunScriptOnNode.Factory runScriptOnNodeFactory,
-                                        PersistNodeCredentials persistNodeCredentials,
-                                        ComputeServiceConstants.Timeouts timeouts,
-                                        @Named(Constants.PROPERTY_USER_THREADS) ListeningExecutorService userExecutor,
-                                        Optional<ImageExtension> imageExtension,
-                                        Optional<SecurityGroupExtension> securityGroupExtension,
-                                        Function<Set<? extends NodeMetadata>, Set<String>> findOrphanedGroups,
-                                        GroupNamingConvention.Factory namingConvention,
-                                        GoogleComputeEngineApi api,
-                                        Predicate<AtomicReference<Operation>> operationDone) {
+   @Inject
+   GoogleComputeEngineService(ComputeServiceContext context, Map<String, Credentials> credentialStore,
+         @Memoized Supplier<Set<? extends Image>> images, @Memoized Supplier<Set<? extends Hardware>> hardwareProfiles,
+         @Memoized Supplier<Set<? extends Location>> locations, ListNodesStrategy listNodesStrategy,
+         GetImageStrategy getImageStrategy, GetNodeMetadataStrategy getNodeMetadataStrategy,
+         CreateNodesInGroupThenAddToSet runNodesAndAddToSetStrategy, RebootNodeStrategy rebootNodeStrategy,
+         DestroyNodeStrategy destroyNodeStrategy, ResumeNodeStrategy resumeNodeStrategy,
+         SuspendNodeStrategy suspendNodeStrategy, Provider<TemplateBuilder> templateBuilderProvider,
+         @Named("DEFAULT") Provider<TemplateOptions> templateOptionsProvider,
+         @Named(TIMEOUT_NODE_RUNNING) Predicate<AtomicReference<NodeMetadata>> nodeRunning,
+         @Named(TIMEOUT_NODE_TERMINATED) Predicate<AtomicReference<NodeMetadata>> nodeTerminated,
+         @Named(TIMEOUT_NODE_SUSPENDED) Predicate<AtomicReference<NodeMetadata>> nodeSuspended,
+         InitializeRunScriptOnNodeOrPlaceInBadMap.Factory initScriptRunnerFactory, InitAdminAccess initAdminAccess,
+         RunScriptOnNode.Factory runScriptOnNodeFactory, PersistNodeCredentials persistNodeCredentials,
+         @Named(Constants.PROPERTY_USER_THREADS) ListeningExecutorService userExecutor,
+         Optional<ImageExtension> imageExtension, Optional<SecurityGroupExtension> securityGroupExtension,
+         Function<Set<? extends NodeMetadata>, Set<String>> findOrphanedGroups,
+         GroupNamingConvention.Factory namingConvention, GoogleComputeEngineApi api,
+         Predicate<AtomicReference<Operation>> operationDone, DelegatingImageExtension.Factory delegatingImageExtension) {
       super(context, credentialStore, images, hardwareProfiles, locations, listNodesStrategy, getImageStrategy,
-              getNodeMetadataStrategy, runNodesAndAddToSetStrategy, rebootNodeStrategy, destroyNodeStrategy,
-              resumeNodeStrategy, suspendNodeStrategy, templateBuilderProvider, templateOptionsProvider, nodeRunning,
-              nodeTerminated, nodeSuspended, initScriptRunnerFactory, initAdminAccess, runScriptOnNodeFactory,
-              persistNodeCredentials, timeouts, userExecutor, imageExtension, securityGroupExtension);
+            getNodeMetadataStrategy, runNodesAndAddToSetStrategy, rebootNodeStrategy, destroyNodeStrategy,
+            resumeNodeStrategy, suspendNodeStrategy, templateBuilderProvider, templateOptionsProvider, nodeRunning,
+            nodeTerminated, nodeSuspended, initScriptRunnerFactory, initAdminAccess, runScriptOnNodeFactory,
+            persistNodeCredentials, userExecutor, imageExtension, securityGroupExtension, delegatingImageExtension);
       this.findOrphanedGroups = findOrphanedGroups;
       this.namingConvention = namingConvention;
       this.api = api;

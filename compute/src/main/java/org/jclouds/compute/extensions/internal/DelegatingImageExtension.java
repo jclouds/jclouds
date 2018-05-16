@@ -16,17 +16,30 @@
  */
 package org.jclouds.compute.extensions.internal;
 
-import static com.google.common.base.Preconditions.checkNotNull;
+import java.util.Map;
 
+import javax.annotation.Resource;
+import javax.inject.Inject;
+import javax.inject.Named;
+
+import org.jclouds.compute.config.ComputeServiceAdapterContextModule.AddDefaultCredentialsToImage;
+import org.jclouds.compute.domain.CloneImageTemplate;
 import org.jclouds.compute.domain.Image;
+import org.jclouds.compute.domain.ImageBuilder;
 import org.jclouds.compute.domain.ImageTemplate;
 import org.jclouds.compute.extensions.ImageExtension;
+import org.jclouds.compute.reference.ComputeServiceConstants;
 import org.jclouds.compute.suppliers.ImageCacheSupplier;
+import org.jclouds.domain.Credentials;
+import org.jclouds.domain.LoginCredentials;
+import org.jclouds.logging.Logger;
 
 import com.google.common.annotations.Beta;
+import com.google.common.base.Function;
 import com.google.common.util.concurrent.FutureCallback;
 import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.ListenableFuture;
+import com.google.inject.assistedinject.Assisted;
 
 /**
  * Delegates to the provider specific {@link ImageExtension} and takes care of
@@ -35,20 +48,65 @@ import com.google.common.util.concurrent.ListenableFuture;
 @Beta
 public class DelegatingImageExtension implements ImageExtension {
 
+   public interface Factory {
+      DelegatingImageExtension create(ImageCacheSupplier imageCache, ImageExtension delegate);
+   }
+
+   @Resource
+   @Named(ComputeServiceConstants.COMPUTE_LOGGER)
+   protected Logger logger = Logger.NULL;
+
    private final ImageCacheSupplier imageCache;
    private final ImageExtension delegate;
+   private final AddDefaultCredentialsToImage addDefaultCredentialsToImage;
+   private final Map<String, Credentials> credentialStore;
 
-   public DelegatingImageExtension(ImageCacheSupplier imageCache, ImageExtension delegate) {
-      this.imageCache = checkNotNull(imageCache, "imageCache");
-      this.delegate = checkNotNull(delegate, "delegate");
+   @Inject
+   DelegatingImageExtension(@Assisted ImageCacheSupplier imageCache, @Assisted ImageExtension delegate,
+         AddDefaultCredentialsToImage addDefaultCredentialsToImage, Map<String, Credentials> credentialStore) {
+      this.imageCache = imageCache;
+      this.delegate = delegate;
+      this.addDefaultCredentialsToImage = addDefaultCredentialsToImage;
+      this.credentialStore = credentialStore;
    }
 
    public ImageTemplate buildImageTemplateFromNode(String name, String id) {
       return delegate.buildImageTemplateFromNode(name, id);
    }
 
-   public ListenableFuture<Image> createImage(ImageTemplate template) {
+   public ListenableFuture<Image> createImage(final ImageTemplate template) {
       ListenableFuture<Image> future = delegate.createImage(template);
+
+      // Populate the default image credentials, if missing
+      future = Futures.transform(future, new Function<Image, Image>() {
+         @Override
+         public Image apply(Image input) {
+            if (input.getDefaultCredentials() != null) {
+               return input;
+            }
+
+            // If the image has been created by cloning a node, then try to
+            // populate the known node credentials as the default image
+            // credentials
+            if (template instanceof CloneImageTemplate) {
+               final CloneImageTemplate cloneImageTemplate = (CloneImageTemplate) template;
+
+               Credentials nodeCredentials = credentialStore.get("node#" + cloneImageTemplate.getSourceNodeId());
+               if (nodeCredentials != null) {
+                  logger.info(">> Adding node(%s) credentials to image(%s)...", cloneImageTemplate.getSourceNodeId(),
+                        cloneImageTemplate.getName());
+                  return ImageBuilder.fromImage(input)
+                        .defaultCredentials(LoginCredentials.fromCredentials(nodeCredentials)).build();
+               }
+            }
+
+            // If no credentials are known for the node, populate the default
+            // credentials using the defined strategy
+            logger.info(">> Adding default image credentials to image(%s)...", template.getName());
+            return addDefaultCredentialsToImage.apply(input);
+         }
+      });
+
       Futures.addCallback(future, new FutureCallback<Image>() {
          @Override
          public void onSuccess(Image result) {
