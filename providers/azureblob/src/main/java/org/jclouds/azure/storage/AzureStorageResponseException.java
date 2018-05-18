@@ -20,6 +20,7 @@ import org.jclouds.azure.storage.domain.AzureStorageError;
 import org.jclouds.http.HttpCommand;
 import org.jclouds.http.HttpResponse;
 import org.jclouds.http.HttpResponseException;
+import org.jclouds.javax.annotation.Nullable;
 
 /**
  * Encapsulates an Error from Azure Storage Services.
@@ -30,7 +31,7 @@ import org.jclouds.http.HttpResponseException;
  */
 public class AzureStorageResponseException extends HttpResponseException {
 
-   private AzureStorageError error = new AzureStorageError();
+   private transient AzureStorageError error = new AzureStorageError();
 
    public AzureStorageResponseException(HttpCommand command, HttpResponse response, AzureStorageError error) {
       super(String.format("command %s failed with code %s, error: %s", command.toString(), response
@@ -65,6 +66,7 @@ public class AzureStorageResponseException extends HttpResponseException {
       this.error = error;
    }
 
+   @Nullable
    public AzureStorageError getError() {
       return error;
    }

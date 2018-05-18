@@ -19,6 +19,7 @@ package org.jclouds.ultradns.ws;
 import org.jclouds.http.HttpCommand;
 import org.jclouds.http.HttpResponse;
 import org.jclouds.http.HttpResponseException;
+import org.jclouds.javax.annotation.Nullable;
 
 /**
  * @see UltraDNSWSError
@@ -27,13 +28,14 @@ public class UltraDNSWSResponseException extends HttpResponseException {
 
    private static final long serialVersionUID = 5493782874839736777L;
 
-   private final UltraDNSWSError error;
+   private final transient UltraDNSWSError error;
 
    public UltraDNSWSResponseException(HttpCommand command, HttpResponse response, UltraDNSWSError error) {
       super(error.toString(), command, response);
       this.error = error;
    }
 
+   @Nullable
    public UltraDNSWSError getError() {
       return error;
    }

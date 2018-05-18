@@ -22,9 +22,10 @@ import org.jclouds.http.HttpResponse;
 import org.jclouds.http.HttpResponseException;
 
 import com.google.common.base.Preconditions;
+import org.jclouds.javax.annotation.Nullable;
 
 public final class B2ResponseException extends HttpResponseException {
-   private final B2Error error;
+   private final transient B2Error error;
 
    public B2ResponseException(HttpCommand command, HttpResponse response, B2Error error) {
       super("request " + command.getCurrentRequest().getRequestLine() + " failed with code " + response.getStatusCode()
@@ -32,6 +33,7 @@ public final class B2ResponseException extends HttpResponseException {
       this.error = error;
    }
 
+   @Nullable
    public B2Error getError() {
       return error;
    }

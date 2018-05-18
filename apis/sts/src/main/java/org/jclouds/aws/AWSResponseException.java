@@ -20,6 +20,7 @@ import org.jclouds.aws.domain.AWSError;
 import org.jclouds.http.HttpCommand;
 import org.jclouds.http.HttpResponse;
 import org.jclouds.http.HttpResponseException;
+import org.jclouds.javax.annotation.Nullable;
 
 /**
  * Encapsulates an AWS Error from Amazon.
@@ -30,7 +31,7 @@ import org.jclouds.http.HttpResponseException;
  */
 public class AWSResponseException extends HttpResponseException {
 
-   private AWSError error = new AWSError();
+   private transient AWSError error = new AWSError();
 
    public AWSResponseException(HttpCommand command, HttpResponse response, AWSError error) {
       super(String.format("request %s failed with code %s, error: %s", command.getCurrentRequest().getRequestLine(), response
@@ -65,6 +66,7 @@ public class AWSResponseException extends HttpResponseException {
       this.error = error;
    }
 
+   @Nullable
    public AWSError getError() {
       return error;
    }
