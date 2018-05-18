@@ -24,16 +24,18 @@ import org.jclouds.gogrid.domain.internal.ErrorResponse;
 import org.jclouds.http.HttpCommand;
 import org.jclouds.http.HttpResponse;
 import org.jclouds.http.HttpResponseException;
+import org.jclouds.javax.annotation.Nullable;
 
 public class GoGridResponseException extends HttpResponseException {
 
-    private Set<ErrorResponse> errors;
+    private transient Set<ErrorResponse> errors;
 
     public GoGridResponseException(HttpCommand command, HttpResponse response, Set<ErrorResponse> errors) {
         super(buildMessage(command, response, errors), command, response);
         this.setErrors(errors);
     }
 
+    @Nullable
     public Set<ErrorResponse> getError() {
         return errors;
     }

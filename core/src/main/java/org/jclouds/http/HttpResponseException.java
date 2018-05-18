@@ -31,8 +31,8 @@ public class HttpResponseException extends RuntimeException {
 
    private static final long serialVersionUID = 1L;
 
-   protected final HttpCommand command;
-   protected final HttpResponse response;
+   protected final transient HttpCommand command;
+   protected final transient HttpResponse response;
    private String content;
 
    public HttpResponseException(String message, HttpCommand command, @Nullable HttpResponse response, Throwable cause) {
@@ -112,6 +112,7 @@ public class HttpResponseException extends RuntimeException {
             .getRequestLine(), response.getStatusLine(), content), command, response, content);
    }
 
+   @Nullable
    public HttpCommand getCommand() {
       return command;
    }

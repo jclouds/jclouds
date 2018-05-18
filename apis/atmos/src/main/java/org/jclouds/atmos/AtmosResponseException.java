@@ -20,6 +20,7 @@ import org.jclouds.atmos.domain.AtmosError;
 import org.jclouds.http.HttpCommand;
 import org.jclouds.http.HttpResponse;
 import org.jclouds.http.HttpResponseException;
+import org.jclouds.javax.annotation.Nullable;
 
 /**
  * Encapsulates an Error from Atmos Storage Services.
@@ -29,7 +30,7 @@ import org.jclouds.http.HttpResponseException;
  */
 public class AtmosResponseException extends HttpResponseException {
 
-   private AtmosError error;
+   private transient AtmosError error;
 
    public AtmosResponseException(HttpCommand command, HttpResponse response,
             AtmosError error) {
@@ -65,6 +66,7 @@ public class AtmosResponseException extends HttpResponseException {
       this.error = error;
    }
 
+   @Nullable
    public AtmosError getError() {
       return error;
    }
