@@ -23,10 +23,10 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
 import javax.inject.Singleton;
 
 import org.jclouds.azurecompute.arm.AzureComputeApi;
+import org.jclouds.azurecompute.arm.compute.config.AzureNameValidator;
 import org.jclouds.azurecompute.arm.config.GraphRBAC.GraphRBACForTenant;
 import org.jclouds.azurecompute.arm.domain.ServicePrincipal;
 import org.jclouds.azurecompute.arm.handlers.AzureComputeErrorHandler;
@@ -38,6 +38,7 @@ import org.jclouds.location.suppliers.ImplicitLocationSupplier;
 import org.jclouds.location.suppliers.implicit.FirstRegion;
 import org.jclouds.oauth.v2.config.OAuthConfigFactory;
 import org.jclouds.oauth.v2.config.OAuthScopes;
+import org.jclouds.predicates.Validator;
 import org.jclouds.rest.AuthorizationException;
 import org.jclouds.rest.ConfiguresHttpApi;
 import org.jclouds.rest.config.HttpApiModule;
@@ -73,6 +74,8 @@ public class AzureComputeHttpApiModule extends HttpApiModule<AzureComputeApi> {
       super.configure();
       bind(OAuthScopes.class).toInstance(OAuthScopes.NoScopes.create());
       bind(OAuthConfigFactory.class).to(AzureOAuthConfigFactory.class).in(Scopes.SINGLETON);
+      bind(new TypeLiteral<Validator<String>>() {
+      }).to(AzureNameValidator.class).in(Scopes.SINGLETON);
       bindServiceEndpoints();
    }
 
