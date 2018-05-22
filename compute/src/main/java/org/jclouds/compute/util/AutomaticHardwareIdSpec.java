@@ -75,7 +75,7 @@ public class AutomaticHardwareIdSpec {
    @Override
    public String toString() {
       if (disk.isPresent()) {
-         return String.format("automatic:cores=%s;ram=%s;disk=%.0f", cores, ram, disk.get().floatValue());
+         return String.format("automatic:cores=%s;ram=%s;disk=%.0f", cores, ram, disk.get());
       }
       else {
          return String.format("automatic:cores=%s;ram=%s", cores, ram);

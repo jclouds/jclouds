@@ -57,7 +57,7 @@ public class AzureRateLimitRetryHandler extends RateLimitRetryHandler {
    @Override
    protected Optional<Long> millisToNextAvailableRequest(HttpCommand command, HttpResponse response) {
       String secondsToNextAvailableRequest = response.getFirstHeaderOrNull(HttpHeaders.RETRY_AFTER);
-      return secondsToNextAvailableRequest != null ? Optional.of(Long.valueOf(secondsToNextAvailableRequest) * 1000)
+      return secondsToNextAvailableRequest != null ? Optional.of(Long.parseLong(secondsToNextAvailableRequest) * 1000)
             : Optional.<Long> absent();
    }
 

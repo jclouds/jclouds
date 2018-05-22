@@ -59,6 +59,7 @@ public abstract class ResourceGroupAndNameAndIngressRules {
       return Objects.hashCode(resourceGroup(), name());
    }
 
+   @edu.umd.cs.findbugs.annotations.SuppressFBWarnings(value = "EQ_UNUSUAL")
    @Override
    public boolean equals(Object obj) {
       if (obj == this) {

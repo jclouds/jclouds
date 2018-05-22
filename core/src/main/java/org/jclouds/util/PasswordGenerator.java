@@ -180,7 +180,7 @@ public class PasswordGenerator {
          if (exclusions == null || exclusions.length == 0) {
             this.characters = characters.toCharArray();
          } else {
-            this.characters = new String(characters).replaceAll("[" + new String(exclusions) + "]", "").toCharArray();
+            this.characters = characters.replaceAll("[" + new String(exclusions) + "]", "").toCharArray();
          }
       }
 
