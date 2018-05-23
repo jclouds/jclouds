@@ -342,8 +342,9 @@ public final class LocalBlobStore implements BlobStore {
          }
       }));
 
-      if (options.getDelimiter() != null) {
-         return extractCommonPrefixes(contents, options.getDelimiter(), options.getPrefix());
+      if (options.getDelimiter() != null || !options.isRecursive()) {
+          String delimiter = options.getDelimiter() == null ? storageStrategy.getSeparator() : options.getDelimiter();
+          return extractCommonPrefixes(contents, delimiter, options.getPrefix());
       }
 
       return contents;
