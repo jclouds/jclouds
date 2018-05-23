@@ -300,6 +300,7 @@ public class ListContainerOptions extends ListOptions implements Cloneable {
    public String toString() {
       return "[dir=" + dir + ", recursive=" + recursive + ", detailed=" + detailed
                + ", prefix=" + prefix + ", marker=" + getMarker()
+               + ", delimiter=" + delimiter
                + ", maxResults=" + getMaxResults() + "]";
    }
 
