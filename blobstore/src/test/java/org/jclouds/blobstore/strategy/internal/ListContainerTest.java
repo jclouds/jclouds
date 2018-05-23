@@ -72,7 +72,7 @@ public class ListContainerTest {
       blobStore.putBlob(containerName, blobStore.blobBuilder("bar").payload("").build());
 
       Iterable<? extends StorageMetadata> results = concatter.execute(containerName,
-            ListContainerOptions.Builder.prefix(prefix).recursive());
+            ListContainerOptions.Builder.prefix(prefix)./* irrelevant */recursive());
       assertThat(results).hasSize(3);
       assertThat(Iterables.get(results, 0).getName()).isEqualTo(prefix);
       assertThat(Iterables.get(results, 0).getType()).isEqualTo(StorageType.BLOB);
@@ -124,6 +124,28 @@ public class ListContainerTest {
       assertThat(Iterables.get(results, 1).getName()).isEqualTo(prefix + "bar/object");
       assertThat(Iterables.get(results, 2).getType()).isEqualTo(StorageType.BLOB);
       assertThat(Iterables.get(results, 2).getName()).isEqualTo(prefix + "baz/object");
+   }
+
+   public void testListRecursivePrefixDelimiter() {
+      String containerName = "testListRecursivePrefixDelimiter";
+      String prefix = "foo/";
+      blobStore.createContainerInLocation(null, containerName);
+      blobStore.putBlob(containerName, blobStore.blobBuilder(prefix + "object").payload("").build());
+      blobStore.putBlob(containerName, blobStore.blobBuilder(prefix + "bar/object").payload("")
+            .build());
+      blobStore.putBlob(containerName, blobStore.blobBuilder(prefix + "baz/object").payload("")
+            .build());
+      blobStore.putBlob(containerName, blobStore.blobBuilder("bar/object").payload("").build());
+
+      Iterable<? extends StorageMetadata> results = concatter.execute(containerName,
+            ListContainerOptions.Builder.prefix(prefix));
+      assertThat(results).hasSize(3);
+      assertThat(Iterables.get(results, 0).getType()).isEqualTo(StorageType.RELATIVE_PATH);
+      assertThat(Iterables.get(results, 0).getName()).isEqualTo(prefix + "bar/");
+      assertThat(Iterables.get(results, 1).getType()).isEqualTo(StorageType.RELATIVE_PATH);
+      assertThat(Iterables.get(results, 1).getName()).isEqualTo(prefix + "baz/");
+      assertThat(Iterables.get(results, 2).getType()).isEqualTo(StorageType.BLOB);
+      assertThat(Iterables.get(results, 2).getName()).isEqualTo(prefix + "object");
    }
 
    public void testListDirectory() {
