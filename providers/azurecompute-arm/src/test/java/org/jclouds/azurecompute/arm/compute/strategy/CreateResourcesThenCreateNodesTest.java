@@ -16,6 +16,13 @@
  */
 package org.jclouds.azurecompute.arm.compute.strategy;
 
+import static org.easymock.EasyMock.anyObject;
+import static org.easymock.EasyMock.createMock;
+import static org.easymock.EasyMock.expect;
+import static org.easymock.EasyMock.replay;
+import static org.easymock.EasyMock.verify;
+import static org.testng.Assert.assertEquals;
+
 import org.jclouds.azurecompute.arm.AzureComputeApi;
 import org.jclouds.azurecompute.arm.compute.options.AzureTemplateOptions;
 import org.jclouds.azurecompute.arm.compute.options.IpOptions;
@@ -28,13 +35,6 @@ import org.jclouds.util.PasswordGenerator;
 import org.testng.annotations.Test;
 
 import com.google.common.collect.ImmutableList;
-
-import static org.easymock.EasyMock.anyObject;
-import static org.easymock.EasyMock.createMock;
-import static org.easymock.EasyMock.expect;
-import static org.easymock.EasyMock.replay;
-import static org.easymock.EasyMock.verify;
-import static org.testng.Assert.assertEquals;
 
 @Test(groups = "unit", testName = "CreateResourcesThenCreateNodesTest")
 public class CreateResourcesThenCreateNodesTest {
@@ -102,7 +102,8 @@ public class CreateResourcesThenCreateNodesTest {
    }
 
    private static CreateResourcesThenCreateNodes strategy(AzureComputeApi api) {
-      return new CreateResourcesThenCreateNodes(null, null, null, null, null, api, null, null, null, null, new PasswordGenerator().lower());
+      return new CreateResourcesThenCreateNodes(null, null, null, null, null, api, null, null, null, null,
+            new PasswordGenerator().lower(), null); 
    }
 
    private static String netResource(String resource) {

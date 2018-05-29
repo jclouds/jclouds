@@ -16,6 +16,46 @@
  */
 package org.jclouds.azurecompute.arm.compute.config;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+import static org.jclouds.azurecompute.arm.config.AzureComputeProperties.OPERATION_TIMEOUT;
+import static org.jclouds.azurecompute.arm.config.AzureComputeProperties.TIMEOUT_RESOURCE_DELETED;
+import static org.jclouds.azurecompute.arm.config.AzureComputeProperties.VAULT_CERTIFICATE_DELETE_STATUS;
+import static org.jclouds.azurecompute.arm.config.AzureComputeProperties.VAULT_CERTIFICATE_OPERATION_STATUS;
+import static org.jclouds.azurecompute.arm.config.AzureComputeProperties.VAULT_CERTIFICATE_RECOVERABLE_STATUS;
+import static org.jclouds.azurecompute.arm.config.AzureComputeProperties.VAULT_DELETE_STATUS;
+import static org.jclouds.azurecompute.arm.config.AzureComputeProperties.VAULT_KEY_DELETED_STATUS;
+import static org.jclouds.azurecompute.arm.config.AzureComputeProperties.VAULT_KEY_RECOVERABLE_STATUS;
+import static org.jclouds.azurecompute.arm.config.AzureComputeProperties.VAULT_SECRET_DELETE_STATUS;
+import static org.jclouds.azurecompute.arm.config.AzureComputeProperties.VAULT_SECRET_RECOVERABLE_STATUS;
+import static org.jclouds.compute.config.ComputeServiceProperties.TIMEOUT_IMAGE_AVAILABLE;
+import static org.jclouds.compute.config.ComputeServiceProperties.TIMEOUT_NODE_RUNNING;
+import static org.jclouds.compute.config.ComputeServiceProperties.TIMEOUT_NODE_SUSPENDED;
+import static org.jclouds.compute.config.ComputeServiceProperties.TIMEOUT_NODE_TERMINATED;
+import static org.jclouds.util.Predicates2.retry;
+
+import java.net.URI;
+import java.util.List;
+
+import org.jclouds.azurecompute.arm.AzureComputeApi;
+import org.jclouds.azurecompute.arm.domain.Certificate.CertificateBundle;
+import org.jclouds.azurecompute.arm.domain.Certificate.CertificateOperation;
+import org.jclouds.azurecompute.arm.domain.Certificate.DeletedCertificateBundle;
+import org.jclouds.azurecompute.arm.domain.Image;
+import org.jclouds.azurecompute.arm.domain.Key.DeletedKeyBundle;
+import org.jclouds.azurecompute.arm.domain.Key.KeyBundle;
+import org.jclouds.azurecompute.arm.domain.NetworkSecurityGroup;
+import org.jclouds.azurecompute.arm.domain.Provisionable;
+import org.jclouds.azurecompute.arm.domain.PublicIPAddress;
+import org.jclouds.azurecompute.arm.domain.ResourceDefinition;
+import org.jclouds.azurecompute.arm.domain.Secret.DeletedSecretBundle;
+import org.jclouds.azurecompute.arm.domain.Secret.SecretBundle;
+import org.jclouds.azurecompute.arm.domain.Vault;
+import org.jclouds.azurecompute.arm.domain.VirtualMachineInstance;
+import org.jclouds.azurecompute.arm.domain.VirtualNetwork;
+import org.jclouds.azurecompute.arm.functions.ParseJobStatus;
+import org.jclouds.compute.reference.ComputeServiceConstants;
+import org.jclouds.compute.reference.ComputeServiceConstants.PollPeriod;
+
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Predicate;
 import com.google.common.base.Supplier;
@@ -23,47 +63,6 @@ import com.google.common.collect.Iterables;
 import com.google.inject.AbstractModule;
 import com.google.inject.Provides;
 import com.google.inject.name.Named;
-
-import org.jclouds.compute.reference.ComputeServiceConstants;
-import org.jclouds.compute.reference.ComputeServiceConstants.PollPeriod;
-
-import org.jclouds.azurecompute.arm.domain.Image;
-import org.jclouds.azurecompute.arm.domain.NetworkSecurityGroup;
-import org.jclouds.azurecompute.arm.domain.Provisionable;
-import org.jclouds.azurecompute.arm.domain.PublicIPAddress;
-import org.jclouds.azurecompute.arm.domain.ResourceDefinition;
-import org.jclouds.azurecompute.arm.domain.Vault;
-import org.jclouds.azurecompute.arm.domain.VirtualMachineInstance;
-import org.jclouds.azurecompute.arm.functions.ParseJobStatus;
-import org.jclouds.azurecompute.arm.AzureComputeApi;
-import org.jclouds.azurecompute.arm.domain.Key.DeletedKeyBundle;
-import org.jclouds.azurecompute.arm.domain.Key.KeyBundle;
-import org.jclouds.azurecompute.arm.domain.Secret.DeletedSecretBundle;
-import org.jclouds.azurecompute.arm.domain.Secret.SecretBundle;
-import org.jclouds.azurecompute.arm.domain.Certificate.DeletedCertificateBundle;
-import org.jclouds.azurecompute.arm.domain.Certificate.CertificateBundle;
-import org.jclouds.azurecompute.arm.domain.Certificate.CertificateOperation;
-
-import java.net.URI;
-import java.util.List;
-
-import static org.jclouds.util.Predicates2.retry;
-import static org.jclouds.compute.config.ComputeServiceProperties.TIMEOUT_NODE_RUNNING;
-import static org.jclouds.compute.config.ComputeServiceProperties.TIMEOUT_NODE_TERMINATED;
-import static org.jclouds.compute.config.ComputeServiceProperties.TIMEOUT_NODE_SUSPENDED;
-import static org.jclouds.compute.config.ComputeServiceProperties.TIMEOUT_IMAGE_AVAILABLE;
-import static org.jclouds.azurecompute.arm.config.AzureComputeProperties.TIMEOUT_RESOURCE_DELETED;
-import static org.jclouds.azurecompute.arm.config.AzureComputeProperties.OPERATION_TIMEOUT;
-import static org.jclouds.azurecompute.arm.config.AzureComputeProperties.VAULT_DELETE_STATUS;
-import static org.jclouds.azurecompute.arm.config.AzureComputeProperties.VAULT_KEY_DELETED_STATUS;
-import static org.jclouds.azurecompute.arm.config.AzureComputeProperties.VAULT_KEY_RECOVERABLE_STATUS;
-import static org.jclouds.azurecompute.arm.config.AzureComputeProperties.VAULT_SECRET_DELETE_STATUS;
-import static org.jclouds.azurecompute.arm.config.AzureComputeProperties.VAULT_SECRET_RECOVERABLE_STATUS;
-import static org.jclouds.azurecompute.arm.config.AzureComputeProperties.VAULT_CERTIFICATE_DELETE_STATUS;
-import static org.jclouds.azurecompute.arm.config.AzureComputeProperties.VAULT_CERTIFICATE_RECOVERABLE_STATUS;
-import static org.jclouds.azurecompute.arm.config.AzureComputeProperties.VAULT_CERTIFICATE_OPERATION_STATUS;
-
-import static com.google.common.base.Preconditions.checkNotNull;
 
 public class AzurePredicatesModule extends AbstractModule {
     protected void configure() {
@@ -134,6 +133,12 @@ public class AzurePredicatesModule extends AbstractModule {
         return retry(new ResourceInStatusPredicate("Succeeded"), operationTimeout, pollPeriod.pollInitialPeriod,
                 pollPeriod.pollMaxPeriod);
     }
+
+   @Provides
+   protected NetworkAvailablePredicateFactory provideNetworkAvailablePredicate(final AzureComputeApi api,
+         Predicate<Supplier<Provisionable>> resourceAvailable) {
+      return new NetworkAvailablePredicateFactory(api, resourceAvailable);
+   }
 
     @VisibleForTesting
     static class ActionDonePredicate implements Predicate<URI> {
@@ -273,6 +278,35 @@ public class AzurePredicatesModule extends AbstractModule {
             };
         }
     }
+
+   public static class NetworkAvailablePredicateFactory {
+      private final AzureComputeApi api;
+      private final Predicate<Supplier<Provisionable>> resourceAvailable;
+
+      NetworkAvailablePredicateFactory(final AzureComputeApi api,
+            Predicate<Supplier<Provisionable>> resourceAvailable) {
+         this.api = checkNotNull(api, "api cannot be null");
+         this.resourceAvailable = resourceAvailable;
+      }
+
+      public Predicate<String> create(final String resourceGroup) {
+         checkNotNull(resourceGroup, "resourceGroup cannot be null");
+         return new Predicate<String>() {
+            @Override
+            public boolean apply(final String name) {
+               checkNotNull(name, "name cannot be null");
+               return resourceAvailable.apply(new Supplier<Provisionable>() {
+                  @Override
+                  public Provisionable get() {
+                     VirtualNetwork vnet = api.getVirtualNetworkApi(resourceGroup).get(name);
+                     return vnet == null ? null : vnet.properties();
+                  }
+               });
+            }
+         };
+      }
+   }
+
 
     public static class ImageAvailablePredicateFactory {
         private final AzureComputeApi api;
