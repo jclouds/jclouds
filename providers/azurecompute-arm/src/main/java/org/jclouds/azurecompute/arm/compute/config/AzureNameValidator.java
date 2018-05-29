@@ -33,19 +33,20 @@ import com.google.inject.Singleton;
  */
 @Singleton
 public class AzureNameValidator extends Validator<String> {
-   private final int min = 2;
-   private final int max = 63;
+   private static final int minLength = 2;
+   private static final int maxLength = 63;
 
    public void validate(String name) {
 
-      if (name == null || name.length() < min || name.length() > max)
-         throw exception(name, "Can't be null or empty. Length must be " + min + " to " + max + " symbols.");
-      if (CharMatcher.JAVA_LETTER_OR_DIGIT.indexIn(name) != 0)
+      if (name == null || name.length() < minLength || name.length() > maxLength)
+         throw exception(name, "Can't be null or empty. Length must be " + minLength + " to " + maxLength + " symbols");
+      if (!CharMatcher.JAVA_LETTER_OR_DIGIT.matches(name.charAt(0)))
          throw exception(name, "Should start with letter/number");
 
       CharMatcher range = getAcceptableRange();
       if (!range.matchesAllOf(name))
-         throw exception(name, "Should have lowercase or uppercase ASCII letters, numbers, or dashes");
+         throw exception(name,
+               "Should have lowercase or uppercase ASCII letters, numbers, dashes, underscores and periods");
    }
 
    private CharMatcher getAcceptableRange() {
@@ -53,8 +54,7 @@ public class AzureNameValidator extends Validator<String> {
    }
 
    protected IllegalArgumentException exception(String name, String reason) {
-      return new IllegalArgumentException(
-            String.format("Object '%s' doesn't match Azure naming constraints. " + "Reason: %s.", name,
+      return new IllegalArgumentException(String.format("Object '%s' doesn't match Azure naming constraints: %s", name,
                   reason));
    }
 
