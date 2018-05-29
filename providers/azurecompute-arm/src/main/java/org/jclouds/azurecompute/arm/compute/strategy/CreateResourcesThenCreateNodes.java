@@ -16,10 +16,18 @@
  */
 package org.jclouds.azurecompute.arm.compute.strategy;
 
+import static com.google.common.base.Preconditions.checkArgument;
+import static com.google.common.base.Preconditions.checkState;
+import static com.google.common.collect.Iterables.getOnlyElement;
+import static org.jclouds.azurecompute.arm.config.AzureComputeProperties.DEFAULT_SUBNET_ADDRESS_PREFIX;
+import static org.jclouds.azurecompute.arm.config.AzureComputeProperties.DEFAULT_VNET_ADDRESS_SPACE_PREFIX;
+import static org.jclouds.azurecompute.arm.domain.IdReference.extractName;
+import static org.jclouds.azurecompute.arm.domain.IdReference.extractResourceGroup;
+import static org.jclouds.azurecompute.arm.domain.Subnet.extractVirtualNetwork;
+
 import java.util.Arrays;
 import java.util.Map;
 import java.util.Set;
-
 import javax.annotation.Resource;
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -27,6 +35,7 @@ import javax.inject.Singleton;
 
 import org.jclouds.Constants;
 import org.jclouds.azurecompute.arm.AzureComputeApi;
+import org.jclouds.azurecompute.arm.compute.config.AzurePredicatesModule.NetworkAvailablePredicateFactory;
 import org.jclouds.azurecompute.arm.compute.domain.ResourceGroupAndName;
 import org.jclouds.azurecompute.arm.compute.domain.ResourceGroupAndNameAndIngressRules;
 import org.jclouds.azurecompute.arm.compute.functions.TemplateToAvailabilitySet;
@@ -63,15 +72,6 @@ import com.google.common.collect.Multimap;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.ListeningExecutorService;
 
-import static com.google.common.base.Preconditions.checkArgument;
-import static com.google.common.base.Preconditions.checkState;
-import static com.google.common.collect.Iterables.getOnlyElement;
-import static org.jclouds.azurecompute.arm.config.AzureComputeProperties.DEFAULT_SUBNET_ADDRESS_PREFIX;
-import static org.jclouds.azurecompute.arm.config.AzureComputeProperties.DEFAULT_VNET_ADDRESS_SPACE_PREFIX;
-import static org.jclouds.azurecompute.arm.domain.IdReference.extractName;
-import static org.jclouds.azurecompute.arm.domain.IdReference.extractResourceGroup;
-import static org.jclouds.azurecompute.arm.domain.Subnet.extractVirtualNetwork;
-
 @Singleton
 public class CreateResourcesThenCreateNodes extends CreateNodesWithGroupEncodedIntoNameThenAddToSet {
 
@@ -85,6 +85,7 @@ public class CreateResourcesThenCreateNodes extends CreateNodesWithGroupEncodedI
    private final String defaultSubnetAddressPrefix;
    private final TemplateToAvailabilitySet templateToAvailabilitySet;
    private final PasswordGenerator.Config passwordGenerator;
+   private final NetworkAvailablePredicateFactory networkAvailable;
 
    @Inject
    protected CreateResourcesThenCreateNodes(
@@ -96,8 +97,8 @@ public class CreateResourcesThenCreateNodes extends CreateNodesWithGroupEncodedI
          AzureComputeApi api, @Named(DEFAULT_VNET_ADDRESS_SPACE_PREFIX) String defaultVnetAddressPrefix,
          @Named(DEFAULT_SUBNET_ADDRESS_PREFIX) String defaultSubnetAddressPrefix,
          LoadingCache<ResourceGroupAndNameAndIngressRules, String> securityGroupMap,
-         TemplateToAvailabilitySet templateToAvailabilitySet,
-         PasswordGenerator.Config passwordGenerator) {
+         TemplateToAvailabilitySet templateToAvailabilitySet, PasswordGenerator.Config passwordGenerator,
+         NetworkAvailablePredicateFactory networkAvailable) {
       super(addNodeWithGroupStrategy, listNodesStrategy, namingConvention, userExecutor,
             customizeNodeAndAddToGoodMapOrPutExceptionIntoBadMapFactory);
       this.api = api;
@@ -106,6 +107,7 @@ public class CreateResourcesThenCreateNodes extends CreateNodesWithGroupEncodedI
       this.defaultSubnetAddressPrefix = defaultSubnetAddressPrefix;
       this.templateToAvailabilitySet = templateToAvailabilitySet;
       this.passwordGenerator = passwordGenerator;
+      this.networkAvailable = networkAvailable;
    }
 
    @Override
@@ -163,8 +165,12 @@ public class CreateResourcesThenCreateNodes extends CreateNodesWithGroupEncodedI
                defaultVnetAddressPrefix, name, defaultSubnetAddressPrefix);
          
          api.getVirtualNetworkApi(options.getResourceGroup()).createOrUpdate(name, location, null, properties);
+
+         checkState(networkAvailable.create(options.getResourceGroup()).apply(name),
+               "Network/Subnet was not created in the configured timeout");
+
          Subnet createdSubnet = api.getSubnetApi(options.getResourceGroup(), name).get(name);
-         
+
          options.ipOptions(IpOptions.builder().subnet(createdSubnet.id()).allocateNewPublicIp(true).build());
       }
    }
