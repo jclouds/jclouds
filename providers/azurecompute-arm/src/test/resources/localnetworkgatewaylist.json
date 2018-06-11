@@ -1,0 +1,22 @@
+{
+  "value": [
+    {
+      "name": "mylocalgw",
+      "id": "/subscriptions/SUBSCRIPTIONID/resourceGroups/myresourcegroup/providers/Microsoft.Network/localNetworkGateways/mylocalgw",
+      "etag": "W/\"e76a6517-260a-4424-811b-b4d518109424\"",
+      "type": "Microsoft.Network/localNetworkGateways",
+      "location": "westeurope",
+      "properties": {
+        "provisioningState": "Updating",
+        "resourceGuid": "cd00ef09-fec6-4d6e-aa15-77cf06d14915",
+        "localNetworkAddressSpace": {
+          "addressPrefixes": [
+            "192.168.0.0/24"
+          ]
+        },
+        "gatewayIpAddress": "1.2.3.4"
+      }
+    }
+  ]
+}
+

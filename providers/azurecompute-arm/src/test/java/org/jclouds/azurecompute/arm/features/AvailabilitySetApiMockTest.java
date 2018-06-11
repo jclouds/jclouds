@@ -138,7 +138,7 @@ public class AvailabilitySetApiMockTest extends BaseAzureComputeApiMockTest {
       assertSent(server, "DELETE", path);
    }
 
-   public void deleteSubnetResourceDoesNotExist() throws InterruptedException {
+   public void deleteAvailabilitySetDoesNotExist() throws InterruptedException {
 
       server.enqueue(response204());
 

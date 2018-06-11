@@ -28,6 +28,7 @@ import org.jclouds.azurecompute.arm.features.GraphRBACApi;
 import org.jclouds.azurecompute.arm.features.ImageApi;
 import org.jclouds.azurecompute.arm.features.JobApi;
 import org.jclouds.azurecompute.arm.features.LoadBalancerApi;
+import org.jclouds.azurecompute.arm.features.LocalNetworkGatewayApi;
 import org.jclouds.azurecompute.arm.features.LocationApi;
 import org.jclouds.azurecompute.arm.features.MetricDefinitionsApi;
 import org.jclouds.azurecompute.arm.features.MetricsApi;
@@ -261,6 +262,14 @@ public interface AzureComputeApi extends Closeable {
     */
    @Delegate
    VaultApi getVaultApi(@PathParam("resourcegroup") String resourcegroup);
+   
+   /**
+    * Management features for Local Network Gateways.
+    * 
+    * @see <a href="https://docs.microsoft.com/en-us/rest/api/network-gateway/localnetworkgateways">docs</a>
+    */
+   @Delegate
+   LocalNetworkGatewayApi getLocalNetworkGatewayApi(@PathParam("resourcegroup") String resourcegroup);
    
    /**
     * Returns the information about the current service principal.
