@@ -17,9 +17,10 @@
 
 package org.jclouds.azurecompute.arm.domain;
 
-import com.google.auto.value.AutoValue;
 import org.jclouds.javax.annotation.Nullable;
 import org.jclouds.json.SerializedNames;
+
+import com.google.auto.value.AutoValue;
 
 @AutoValue
 public abstract class IpConfiguration {
@@ -34,18 +35,15 @@ public abstract class IpConfiguration {
    public abstract String etag();
 
    @Nullable
-   public abstract Boolean primary();
-
-   @Nullable
    public abstract IpConfigurationProperties properties();
 
-   @SerializedNames({"name", "id", "etag", "primary", "properties"})
-   public static IpConfiguration create(final String name, final String id, final String etag, final Boolean primary, final IpConfigurationProperties properties) {
+   @SerializedNames({ "name", "id", "etag", "properties" })
+   public static IpConfiguration create(final String name, final String id, final String etag,
+         final IpConfigurationProperties properties) {
       return builder()
               .name(name)
               .id(id)
               .etag(etag)
-              .primary(primary)
               .properties(properties)
               .build();
    }
@@ -61,7 +59,6 @@ public abstract class IpConfiguration {
       public abstract Builder name(String name);
       public abstract Builder id(String id);
       public abstract Builder etag(String etag);
-      public abstract Builder primary(Boolean primary);
       public abstract Builder properties(IpConfigurationProperties properties);
       public abstract IpConfiguration build();
    }

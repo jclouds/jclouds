@@ -21,6 +21,7 @@ import static org.jclouds.util.Predicates2.retry;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertTrue;
+import static org.testng.util.Strings.isNullOrEmpty;
 
 import java.net.URI;
 import java.util.ArrayList;
@@ -39,8 +40,12 @@ import org.jclouds.azurecompute.arm.domain.ManagedDiskParameters;
 import org.jclouds.azurecompute.arm.domain.NetworkInterfaceCard;
 import org.jclouds.azurecompute.arm.domain.NetworkInterfaceCardProperties;
 import org.jclouds.azurecompute.arm.domain.NetworkProfile;
+import org.jclouds.azurecompute.arm.domain.NetworkProfile.NetworkInterface;
+import org.jclouds.azurecompute.arm.domain.NetworkProfile.NetworkInterface.NetworkInterfaceProperties;
 import org.jclouds.azurecompute.arm.domain.OSDisk;
 import org.jclouds.azurecompute.arm.domain.OSProfile;
+import org.jclouds.azurecompute.arm.domain.OSProfile.WindowsConfiguration.WinRM.Protocol;
+import org.jclouds.azurecompute.arm.domain.OSProfile.WindowsConfiguration.WinRM.ProtocolListener;
 import org.jclouds.azurecompute.arm.domain.ResourceDefinition;
 import org.jclouds.azurecompute.arm.domain.Secrets;
 import org.jclouds.azurecompute.arm.domain.StorageAccountType;
@@ -53,15 +58,10 @@ import org.jclouds.azurecompute.arm.domain.VirtualMachine;
 import org.jclouds.azurecompute.arm.domain.VirtualMachineInstance;
 import org.jclouds.azurecompute.arm.domain.VirtualMachineInstance.PowerState;
 import org.jclouds.azurecompute.arm.domain.VirtualMachineProperties;
-import org.jclouds.azurecompute.arm.domain.NetworkProfile.NetworkInterface;
-import org.jclouds.azurecompute.arm.domain.NetworkProfile.NetworkInterface.NetworkInterfaceProperties;
-import org.jclouds.azurecompute.arm.domain.OSProfile.WindowsConfiguration.WinRM.Protocol;
-import org.jclouds.azurecompute.arm.domain.OSProfile.WindowsConfiguration.WinRM.ProtocolListener;
 import org.jclouds.azurecompute.arm.functions.ParseJobStatus;
 import org.jclouds.azurecompute.arm.internal.BaseAzureComputeApiLiveTest;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
-import static org.testng.util.Strings.isNullOrEmpty;
 
 import com.beust.jcommander.internal.Lists;
 import com.google.common.base.Predicate;
@@ -291,10 +291,10 @@ public class VirtualMachineApiLiveTest extends BaseAzureComputeApiLiveTest {
    private NetworkInterfaceCard createNetworkInterfaceCard(final String resourceGroupName, String networkInterfaceCardName, String locationName, String ipConfigurationName) {
       //Create properties object
       final NetworkInterfaceCardProperties networkInterfaceCardProperties = NetworkInterfaceCardProperties
-            .builder()
-            .ipConfigurations(
-                  Arrays.asList(IpConfiguration.create(ipConfigurationName, null, null, null, IpConfigurationProperties
-                        .create(null, null, "Dynamic", IdReference.create(subnetId), null, null, null)))).build();
+            .builder().ipConfigurations(Arrays.asList(IpConfiguration.create(ipConfigurationName, null, null,
+                  IpConfigurationProperties
+                        .create(null, null, "Dynamic", IdReference.create(subnetId), null, null, null, Boolean.TRUE))))
+            .build();
 
       final Map<String, String> tags = ImmutableMap.of("jclouds", "livetest");
       return api.getNetworkInterfaceCardApi(resourceGroupName).createOrUpdate(networkInterfaceCardName, locationName, networkInterfaceCardProperties, tags);

@@ -16,6 +16,7 @@
  */
 package org.jclouds.azurecompute.arm.features;
 
+import static java.lang.Boolean.TRUE;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertTrue;
@@ -66,12 +67,10 @@ public class NetworkInterfaceCardApiLiveTest extends BaseAzureComputeApiLiveTest
    @Test
    public void createNetworkInterfaceCard() {
       //Create properties object
-      final NetworkInterfaceCardProperties networkInterfaceCardProperties =
-              NetworkInterfaceCardProperties.builder().ipConfigurations(
-                      Arrays.asList(IpConfiguration.builder()
-                              .name("myipconfig")
-                              .properties(IpConfigurationProperties.builder()
-                                      .privateIPAllocationMethod("Dynamic")
+      final NetworkInterfaceCardProperties networkInterfaceCardProperties = NetworkInterfaceCardProperties.builder()
+            .ipConfigurations(Arrays.asList(IpConfiguration.builder().name("myipconfig")
+                        .properties(IpConfigurationProperties.builder().privateIPAllocationMethod("Dynamic").primary
+                                    (TRUE)
                                       .subnet(IdReference.create(subnetId)).build()
                               ).build()
                       )).build();
@@ -84,6 +83,7 @@ public class NetworkInterfaceCardApiLiveTest extends BaseAzureComputeApiLiveTest
       assertTrue(nic.properties().ipConfigurations().size() > 0);
       assertEquals(nic.properties().ipConfigurations().get(0).name(), "myipconfig");
       assertEquals(nic.properties().ipConfigurations().get(0).properties().privateIPAllocationMethod(), "Dynamic");
+      assertTrue(nic.properties().ipConfigurations().get(0).properties().primary());
       assertEquals(nic.properties().ipConfigurations().get(0).properties().subnet().id(), subnetId);
       assertEquals(nic.tags().get("jclouds"), "livetest");
    }

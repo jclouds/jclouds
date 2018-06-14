@@ -1,35 +1,50 @@
 {
-  "name": "myNic",
-  "id": "/subscriptions/12345678-2749-4e68-9dcf-123456789abc/resourceGroups/azurearmtesting/providers/Microsoft.Network/networkInterfaces/myNic",
-  "etag": "W/\"6b51f6e7-232b-4289-b740-04a996929f5e\"",
-  "type": "Microsoft.Network/networkInterfaces",
-  "location": "northeurope",
+  "name": "myusualvm607",
+  "id": "/subscriptions/bd81406c-6028-4037-9f03-9a3af4ff725d/resourceGroups/abiquo-eastus/providers/Microsoft.Network/networkInterfaces/myusualvm607",
+  "etag": "W/\"01f72f0f-a12f-426a-bf9a-25d09be49cee\"",
+  "location": "eastus",
   "tags": {
     "mycustomtag": "foobar"
   },
   "properties": {
     "provisioningState": "Succeeded",
-    "resourceGuid": "f3465472-536f-49e7-9e9c-fa91b971a618",
+    "resourceGuid": "40a46008-5368-4e9f-ba39-a87b76ea047d",
     "ipConfigurations": [
       {
-        "name": "myip1",
-        "id": "/subscriptions/12345678-2749-4e68-9dcf-123456789abc/resourceGroups/azurearmtesting/providers/Microsoft.Network/networkInterfaces/myNic/ipConfigurations/myip1",
-        "etag": "W/\"6b51f6e7-232b-4289-b740-04a996929f5e\"",
+        "name": "ipconfig1",
+        "id": "/subscriptions/bd81406c-6028-4037-9f03-9a3af4ff725d/resourceGroups/abiquo-eastus/providers/Microsoft.Network/networkInterfaces/myusualvm607/ipConfigurations/ipconfig1",
+        "etag": "W/\"01f72f0f-a12f-426a-bf9a-25d09be49cee\"",
         "properties": {
           "provisioningState": "Succeeded",
-          "privateIPAddress": "10.2.0.4",
+          "privateIPAddress": "192.168.0.4",
           "privateIPAllocationMethod": "Dynamic",
-          "subnet": {
-            "id": "/subscriptions/12345678-2749-4e68-9dcf-123456789abc/resourceGroups/azurearmtesting/providers/Microsoft.Network/virtualNetworks/myvirtualnetwork/subnets/mysubnet"
+          "publicIPAddress": {
+            "id": "/subscriptions/bd81406c-6028-4037-9f03-9a3af4ff725d/resourceGroups/abiquo-eastus/providers/Microsoft.Network/publicIPAddresses/myusualvm-ip"
           },
-          "primary": true
+          "subnet": {
+            "id": "/subscriptions/bd81406c-6028-4037-9f03-9a3af4ff725d/resourceGroups/abiquo-eastus/providers/Microsoft.Network/virtualNetworks/abqvnet-bf0tuznt0x/subnets/abqsubnet-reauuik6qx"
+          },
+          "primary": true,
+          "privateIPAddressVersion": "IPv4",
+          "isInUseWithService": false
         }
       }
     ],
     "dnsSettings": {
       "dnsServers": [],
-      "appliedDnsServers": []
+      "appliedDnsServers": [],
+      "internalDomainNameSuffix": "zqh4yoheybzejmruwtgyl2semg.bx.internal.cloudapp.net"
     },
-    "enableIPForwarding": false
-  }
+    "macAddress": "00-0D-3A-17-A4-C9",
+    "enableAcceleratedNetworking": false,
+    "enableIPForwarding": false,
+    "networkSecurityGroup": {
+      "id": "/subscriptions/bd81406c-6028-4037-9f03-9a3af4ff725d/resourceGroups/abiquo-eastus/providers/Microsoft.Network/networkSecurityGroups/myusualvm-nsg"
+    },
+    "primary": true,
+    "virtualMachine": {
+      "id": "/subscriptions/bd81406c-6028-4037-9f03-9a3af4ff725d/resourceGroups/abiquo-eastus/providers/Microsoft.Compute/virtualMachines/myusualvm"
+    }
+  },
+  "type": "Microsoft.Network/networkInterfaces"
 }

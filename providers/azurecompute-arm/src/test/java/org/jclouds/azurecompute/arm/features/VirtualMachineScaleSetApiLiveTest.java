@@ -16,7 +16,18 @@
  */
 package org.jclouds.azurecompute.arm.features;
 
-import com.google.common.collect.ImmutableMap;
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertNotNull;
+import static org.testng.Assert.assertTrue;
+
+import java.net.URI;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import org.jclouds.azurecompute.arm.domain.Extension;
 import org.jclouds.azurecompute.arm.domain.ExtensionProfile;
 import org.jclouds.azurecompute.arm.domain.ExtensionProfileSettings;
@@ -51,17 +62,7 @@ import org.jclouds.azurecompute.arm.internal.BaseAzureComputeApiLiveTest;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
-import java.net.URI;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.HashMap;
-import java.util.Arrays;
-
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertNotNull;
-import static org.testng.Assert.assertTrue;
+import com.google.common.collect.ImmutableMap;
 
 @Test(groups = "live", testName = "VirtualMachineScaleSetApiLiveTest")
 public class VirtualMachineScaleSetApiLiveTest extends BaseAzureComputeApiLiveTest {
@@ -249,10 +250,9 @@ public class VirtualMachineScaleSetApiLiveTest extends BaseAzureComputeApiLiveTe
    private NetworkInterfaceCard createNetworkInterfaceCard(final String resourceGroupName, String networkInterfaceCardName, String locationName, String ipConfigurationName) {
       //Create properties object
       final NetworkInterfaceCardProperties networkInterfaceCardProperties = NetworkInterfaceCardProperties
-         .builder()
-         .ipConfigurations(
-            Arrays.asList(IpConfiguration.create(ipConfigurationName, null, null, null, IpConfigurationProperties
-               .create(null, null, "Dynamic", IdReference.create(subnetId), null, null, null)))).build();
+         .builder().ipConfigurations(Arrays.asList(IpConfiguration.create(ipConfigurationName, null, null,
+                  IpConfigurationProperties
+                        .create(null, null, "Dynamic", IdReference.create(subnetId), null, null, null, null)))).build();
 
       final Map<String, String> tags = ImmutableMap.of("jclouds", "livetest");
       return api.getNetworkInterfaceCardApi(resourceGroupName).createOrUpdate(networkInterfaceCardName, locationName, networkInterfaceCardProperties, tags);

@@ -16,8 +16,15 @@
  */
 package org.jclouds.azurecompute.arm.features;
 
-import com.google.common.collect.ImmutableMap;
-import com.squareup.okhttp.mockwebserver.MockResponse;
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertNotNull;
+import static org.testng.Assert.assertNull;
+import static org.testng.Assert.assertTrue;
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
+
 import org.jclouds.azurecompute.arm.domain.IdReference;
 import org.jclouds.azurecompute.arm.domain.IpConfiguration;
 import org.jclouds.azurecompute.arm.domain.IpConfigurationProperties;
@@ -26,14 +33,8 @@ import org.jclouds.azurecompute.arm.domain.NetworkInterfaceCardProperties;
 import org.jclouds.azurecompute.arm.internal.BaseAzureComputeApiMockTest;
 import org.testng.annotations.Test;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-
-import static org.testng.Assert.assertNotNull;
-import static org.testng.Assert.assertNull;
-import static org.testng.Assert.assertTrue;
-import static org.testng.Assert.assertEquals;
+import com.google.common.collect.ImmutableMap;
+import com.squareup.okhttp.mockwebserver.MockResponse;
 
 @Test(groups = "unit", testName = "NetworkInterfaceCardApiMockTest", singleThreaded = true)
 public class NetworkInterfaceCardApiMockTest extends BaseAzureComputeApiMockTest {
@@ -54,7 +55,9 @@ public class NetworkInterfaceCardApiMockTest extends BaseAzureComputeApiMockTest
       assertSent(server, "GET", path);
       assertNotNull(nic);
       assertEquals(nic.name(), nicName);
+      assertTrue(nic.properties().primary());
       assertEquals(nic.properties().ipConfigurations().get(0).name(), "myip1");
+      assertTrue(nic.properties().ipConfigurations().get(0).properties().primary());
       assertEquals(nic.tags().get("mycustomtag"), "foobar");
    }
 
@@ -104,16 +107,24 @@ public class NetworkInterfaceCardApiMockTest extends BaseAzureComputeApiMockTest
 
       final String SubnetID = "/subscriptions/" + subscriptionid + "/resourceGroups/azurearmtesting/providers/Microsoft.Network/virtualNetworks/myvirtualnetwork/subnets/mysubnet";
       //Create properties object
-      final NetworkInterfaceCardProperties networkInterfaceCardProperties = NetworkInterfaceCardProperties.create(null,
-            null, null, Arrays.asList(IpConfiguration.create("myipconfig", null, null, null, IpConfigurationProperties
-                  .create(null, null, "Dynamic", IdReference.create(SubnetID), null, null, null))), null);
+      final NetworkInterfaceCardProperties networkInterfaceCardProperties = NetworkInterfaceCardProperties
+            .create(null, null, null, Arrays.asList(IpConfiguration.create("myipconfig", null, null,
+                  IpConfigurationProperties
+                        .create(null, null, "Dynamic", IdReference.create(SubnetID), null, null, null, Boolean.TRUE))),
+                  null, Boolean.TRUE);
 
       final Map<String, String> tags = ImmutableMap.of("mycustomtag", "foobar");
 
       NetworkInterfaceCard nic = nicApi.createOrUpdate(nicName, location, networkInterfaceCardProperties, tags);
 
+
       String path = String.format("/subscriptions/%s/resourcegroups/%s/providers/Microsoft.Network/networkInterfaces/%s?%s", subscriptionid, resourcegroup, nicName, apiVersion);
-      String json = String.format("{ \"location\":\"%s\", \"tags\": { \"mycustomtag\": \"foobar\" }, \"properties\":{ \"ipConfigurations\":[ { \"name\":\"%s\", \"properties\":{ \"subnet\":{ \"id\": \"%s\" }, \"privateIPAllocationMethod\":\"%s\" } } ] } }", location, "myipconfig", SubnetID, "Dynamic");
+      String json = String.format(
+            "{\"location\":\"northeurope\",\"properties\":{\"ipConfigurations\":[{\"name\":\"myipconfig\","
+                  + "\"properties\":{\"privateIPAllocationMethod\":\"Dynamic\","
+                  + "\"subnet\":{\"id\":\"/subscriptions/SUBSCRIPTIONID/resourceGroups/azurearmtesting/providers"
+                  + "/Microsoft" + ".Network/virtualNetworks/myvirtualnetwork/subnets/mysubnet\"},\"primary\":true}}],"
+                  + "\"primary\":true}," + "\"tags\":{\"mycustomtag\":\"foobar\"}}");
       assertSent(server, "PUT", path, json);
       assertEquals(nic.tags().get("mycustomtag"), "foobar");
    }
