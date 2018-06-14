@@ -18,11 +18,11 @@ package org.jclouds.azurecompute.arm.domain;
 
 import java.util.List;
 
-import com.google.auto.value.AutoValue;
-import com.google.common.collect.ImmutableList;
-
 import org.jclouds.javax.annotation.Nullable;
 import org.jclouds.json.SerializedNames;
+
+import com.google.auto.value.AutoValue;
+import com.google.common.collect.ImmutableList;
 
 @AutoValue
 public abstract class IpConfigurationProperties implements Provisionable {
@@ -48,11 +48,15 @@ public abstract class IpConfigurationProperties implements Provisionable {
    @Nullable
    public abstract List<IdReference> loadBalancerInboundNatRules();
 
-   @SerializedNames({ "provisioningState", "privateIPAddress", "privateIPAllocationMethod", "subnet",
-         "publicIPAddress", "loadBalancerBackendAddressPools", "loadBalancerInboundNatRules" })
+   @Nullable
+   public abstract Boolean primary();
+
+   @SerializedNames({ "provisioningState", "privateIPAddress", "privateIPAllocationMethod", "subnet", "publicIPAddress",
+         "loadBalancerBackendAddressPools", "loadBalancerInboundNatRules", "primary" })
    public static IpConfigurationProperties create(final String provisioningState, final String privateIPAddress,
          final String privateIPAllocationMethod, final IdReference subnet, final IdReference publicIPAddress,
-         List<IdReference> loadBalancerBackendAddressPools, List<IdReference> loadBalancerInboundNatRules) {
+         List<IdReference> loadBalancerBackendAddressPools, List<IdReference> loadBalancerInboundNatRules,
+         final Boolean primary) {
 
       return builder()
               .provisioningState(provisioningState)
@@ -61,7 +65,7 @@ public abstract class IpConfigurationProperties implements Provisionable {
               .subnet(subnet)
               .publicIPAddress(publicIPAddress)
               .loadBalancerBackendAddressPools(loadBalancerBackendAddressPools)
-              .loadBalancerInboundNatRules(loadBalancerInboundNatRules)
+            .loadBalancerInboundNatRules(loadBalancerInboundNatRules).primary(primary)
               .build();
    }
    
@@ -82,10 +86,12 @@ public abstract class IpConfigurationProperties implements Provisionable {
       public abstract Builder subnet(IdReference subnet);
 
       public abstract Builder publicIPAddress(IdReference publicIPAddress);
-      
+
       public abstract Builder loadBalancerBackendAddressPools(List<IdReference> loadBalancerBackendAddressPools);
       
       public abstract Builder loadBalancerInboundNatRules(List<IdReference> loadBalancerInboundNatRules);
+
+      public abstract Builder primary(Boolean primary);
       
       abstract List<IdReference> loadBalancerBackendAddressPools();
       

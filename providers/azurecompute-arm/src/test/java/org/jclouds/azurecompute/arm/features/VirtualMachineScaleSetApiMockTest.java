@@ -16,7 +16,18 @@
  */
 package org.jclouds.azurecompute.arm.features;
 
-import com.google.common.collect.ImmutableMap;
+import static com.google.common.collect.Iterables.isEmpty;
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertNotNull;
+import static org.testng.Assert.assertNull;
+import static org.testng.Assert.assertTrue;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import org.jclouds.azurecompute.arm.domain.DataDisk;
 import org.jclouds.azurecompute.arm.domain.Extension;
 import org.jclouds.azurecompute.arm.domain.ExtensionProfile;
@@ -49,17 +60,7 @@ import org.jclouds.azurecompute.arm.domain.VirtualMachineScaleSetVirtualMachineP
 import org.jclouds.azurecompute.arm.internal.BaseAzureComputeApiMockTest;
 import org.testng.annotations.Test;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import static com.google.common.collect.Iterables.isEmpty;
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertNotNull;
-import static org.testng.Assert.assertNull;
-import static org.testng.Assert.assertTrue;
+import com.google.common.collect.ImmutableMap;
 
 
 @Test(groups = "unit", testName = "VirtualMachineScaleSetAPIMockTest", singleThreaded = true)
@@ -349,9 +350,9 @@ public class VirtualMachineScaleSetApiMockTest extends BaseAzureComputeApiMockTe
                       IdReference.create(
                               "/subscriptions/xxxxx-xxxx-xxxx-xxxx-xxxxxx/resourceGroups/" +
                                       "jcloud-eastus/providers/" +
-                                      "Microsoft.Network/virtualNetworks/" +
-                                      "jclouds-eastus-virtualNetworkName/subnets/" +
-                                      "jclouds-eastus-subnet")
+                                      "Microsoft.Network/virtualNetworks/" + "jclouds-eastus-virtualNetworkName"
+                                    + "/subnets/"
+                                    + "jclouds-eastus-subnet"), Boolean.TRUE
               );
 
       Map<String, String> tags = ImmutableMap.of("jclouds", "livetest");

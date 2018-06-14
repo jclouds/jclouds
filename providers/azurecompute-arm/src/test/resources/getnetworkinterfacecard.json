@@ -26,6 +26,7 @@
         }
       }
     ],
+    "primary": true,
     "dnsSettings": {
       "dnsServers": [],
       "appliedDnsServers": []

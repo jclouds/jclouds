@@ -16,12 +16,13 @@
  */
 package org.jclouds.azurecompute.arm.domain;
 
-import com.google.auto.value.AutoValue;
-import com.google.common.collect.ImmutableList;
+import java.util.List;
+
 import org.jclouds.javax.annotation.Nullable;
 import org.jclouds.json.SerializedNames;
 
-import java.util.List;
+import com.google.auto.value.AutoValue;
+import com.google.common.collect.ImmutableList;
 
 @AutoValue
 public abstract class NetworkInterfaceCardProperties implements Provisionable {
@@ -32,17 +33,20 @@ public abstract class NetworkInterfaceCardProperties implements Provisionable {
    @Nullable public abstract List<IpConfiguration> ipConfigurations();
    @Nullable public abstract IdReference networkSecurityGroup();
 
+   @Nullable
+   public abstract Boolean primary();
+
    @SerializedNames({"provisioningState", "resourceGuid", "enableIPForwarding", "ipConfigurations",
-      "networkSecurityGroup"})
+         "networkSecurityGroup", "primary" })
    public static NetworkInterfaceCardProperties create(final String provisioningState, final String resourceGuid,
          final Boolean enableIPForwarding, final List<IpConfiguration> ipConfigurations,
-         final IdReference networkSecurityGroup) {
+         final IdReference networkSecurityGroup, final Boolean primary) {
       NetworkInterfaceCardProperties.Builder builder = NetworkInterfaceCardProperties.builder()
               .provisioningState(provisioningState)
               .resourceGuid(resourceGuid)
               .enableIPForwarding(enableIPForwarding)
               .ipConfigurations(ipConfigurations == null ? null : ImmutableList.copyOf(ipConfigurations))
-              .networkSecurityGroup(networkSecurityGroup);
+            .networkSecurityGroup(networkSecurityGroup).primary(primary);
 
       return builder.build();
    }
@@ -64,6 +68,9 @@ public abstract class NetworkInterfaceCardProperties implements Provisionable {
       public abstract Builder enableIPForwarding(Boolean enableIPForwarding);
       public abstract Builder ipConfigurations(List<IpConfiguration> ipConfigurations);
       public abstract Builder networkSecurityGroup(IdReference networkSecurityGroup);
+
+      public abstract Builder primary(Boolean primary);
+
 
       abstract List<IpConfiguration> ipConfigurations();
       abstract NetworkInterfaceCardProperties autoBuild();
