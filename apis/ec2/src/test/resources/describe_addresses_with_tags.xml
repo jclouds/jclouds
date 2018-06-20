@@ -1,0 +1,24 @@
+<DescribeAddressesResponse xmlns="http://ec2.amazonaws.com/doc/2009-11-30/">
+    <addressesSet>
+        <item>
+            <instanceId>i-f15ebb98</instanceId>
+            <publicIp>67.202.55.255</publicIp>
+        </item>
+        <item>
+            <publicIp>67.202.55.233</publicIp>
+        </item>
+        <item>
+            <publicIp>54.76.27.192</publicIp>
+            <tagSet>
+                <item>
+                    <key>Name</key>
+                    <value>value-fa97d19c</value>
+                </item>
+                <item>
+                    <key>Empty</key>
+                    <value/>
+                </item>
+            </tagSet>
+        </item>
+    </addressesSet>
+</DescribeAddressesResponse>

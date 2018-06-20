@@ -16,6 +16,9 @@
  */
 package org.jclouds.ec2.xml;
 
+import static org.jclouds.util.SaxUtils.equalsOrSuffix;
+
+import java.util.Map;
 import java.util.Set;
 
 import javax.annotation.Resource;
@@ -26,12 +29,12 @@ import org.jclouds.ec2.domain.PublicIpInstanceIdPair;
 import org.jclouds.http.functions.ParseSax.HandlerForGeneratedRequestWithResult;
 import org.jclouds.location.Region;
 import org.jclouds.logging.Logger;
+import org.xml.sax.Attributes;
 
 import com.google.common.base.Supplier;
 import com.google.common.collect.Sets;
 
-public class DescribeAddressesResponseHandler extends
-         HandlerForGeneratedRequestWithResult<Set<PublicIpInstanceIdPair>> {
+public class DescribeAddressesResponseHandler extends HandlerForGeneratedRequestWithResult<Set<PublicIpInstanceIdPair>> {
 
    @Resource
    protected Logger logger = Logger.NULL;
@@ -42,14 +45,38 @@ public class DescribeAddressesResponseHandler extends
    @Region
    Supplier<String> defaultRegion;
    private String instanceId;
+   private final TagSetHandler tagSetHandler;
+   private boolean inTagSet;
+   private Map<String, String> tagResults;
+
+   @Inject
+   DescribeAddressesResponseHandler(final TagSetHandler tagSetHandler) {
+      this.tagSetHandler = tagSetHandler;
+   }
+
+   @Override
+   public void startElement(final String uri, final String name, final String qName, final Attributes attrs) {
+      if (equalsOrSuffix(qName, "tagSet")) {
+         inTagSet = true;
+      }
+      if (inTagSet) {
+         tagSetHandler.startElement(uri, name, qName, attrs);
+      }
+   }
 
    protected String currentOrNull() {
       String returnVal = currentText.toString().trim();
       return returnVal.equals("") ? null : returnVal;
    }
 
-   public void endElement(String uri, String name, String qName) {
-      if (qName.equals("publicIp")) {
+   @Override
+   public void endElement(final String uri, final String name, final String qName) {
+      if (equalsOrSuffix(qName, "tagSet")) {
+         inTagSet = false;
+         tagResults = tagSetHandler.getResult();
+      } else if (inTagSet) {
+         tagSetHandler.endElement(uri, name, qName);
+      } else if (qName.equals("publicIp")) {
          ipAddress = currentOrNull();
       } else if (qName.equals("instanceId")) {
          instanceId = currentOrNull();
@@ -57,15 +84,23 @@ public class DescribeAddressesResponseHandler extends
          String region = AWSUtils.findRegionInArgsOrNull(getRequest());
          if (region == null)
             region = defaultRegion.get();
-         pairs.add(new PublicIpInstanceIdPair(region, ipAddress, instanceId));
+
+         pairs.add(new PublicIpInstanceIdPair(region, ipAddress, instanceId, tagResults));
          ipAddress = null;
          instanceId = null;
+         tagResults = null;
       }
+
       currentText.setLength(0);
    }
 
-   public void characters(char[] ch, int start, int length) {
-      currentText.append(ch, start, length);
+   @Override
+   public void characters(final char[] ch, final int start, final int length) {
+      if (inTagSet) {
+         tagSetHandler.characters(ch, start, length);
+      } else {
+         currentText.append(ch, start, length);
+      }
    }
 
    @Override

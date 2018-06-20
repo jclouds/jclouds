@@ -20,13 +20,15 @@ import static org.testng.Assert.assertEquals;
 
 import java.io.InputStream;
 import java.net.UnknownHostException;
+import java.util.Collections;
 import java.util.Set;
 
 import org.jclouds.ec2.domain.PublicIpInstanceIdPair;
 import org.jclouds.http.functions.ParseSax;
 import org.testng.annotations.Test;
 
-import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.ImmutableSet;
 
 /**
  * Tests behavior of {@code DescribeAddressesResponseHandler}
@@ -43,13 +45,29 @@ public class DescribeAddressesResponseHandlerTest extends BaseEC2HandlerTest {
       addDefaultRegionToHandler(handler);
 
       Set<PublicIpInstanceIdPair> result = factory.create(handler).parse(is);
+      
+      assertEquals(result, ImmutableSet.of(new PublicIpInstanceIdPair(defaultRegion, "67.202.55.255", "i-f15ebb98",
+            Collections.<String, String> emptyMap()), new PublicIpInstanceIdPair(defaultRegion, "67.202.55.233", null,
+            Collections.<String, String> emptyMap())));
+   }
+   
+   public void testApplyInputStreamWithTags() throws UnknownHostException {
 
-      assertEquals(result, ImmutableList.of(new PublicIpInstanceIdPair(defaultRegion,
-               "67.202.55.255", "i-f15ebb98"), new PublicIpInstanceIdPair(defaultRegion,
-               "67.202.55.233", null)));
+      InputStream is = getClass().getResourceAsStream("/describe_addresses_with_tags.xml");
+
+      DescribeAddressesResponseHandler handler = injector.getInstance(DescribeAddressesResponseHandler.class);
+      addDefaultRegionToHandler(handler);
+
+      Set<PublicIpInstanceIdPair> result = factory.create(handler).parse(is);
+
+      assertEquals(result.size(), 3);
+      assertEquals(result, ImmutableSet.of(new PublicIpInstanceIdPair(defaultRegion, "67.202.55.255", "i-f15ebb98",
+            Collections.<String, String> emptyMap()), new PublicIpInstanceIdPair(defaultRegion, "67.202.55.233", null,
+            Collections.<String, String> emptyMap()), new PublicIpInstanceIdPair(defaultRegion, "54.76.27.192", null,
+            ImmutableMap.of("Name", "value-fa97d19c", "Empty", ""))));
    }
 
-   private void addDefaultRegionToHandler(ParseSax.HandlerWithResult<?> handler) {
+   private void addDefaultRegionToHandler(final ParseSax.HandlerWithResult<?> handler) {
       handler.setContext(request);
    }
 }

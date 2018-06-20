@@ -18,7 +18,11 @@ package org.jclouds.ec2.domain;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
+import java.util.Map;
+
 import org.jclouds.javax.annotation.Nullable;
+
+import com.google.common.collect.ImmutableMap;
 
 /**
  * 
@@ -31,11 +35,14 @@ public class PublicIpInstanceIdPair implements Comparable<PublicIpInstanceIdPair
    @Nullable
    private final String instanceId;
    private final String publicIp;
+   private final Map<String, String> tags;
 
-   public PublicIpInstanceIdPair(String region, String publicIp, @Nullable String instanceId) {
+   public PublicIpInstanceIdPair(final String region, final String publicIp, @Nullable final String instanceId,
+         @Nullable final Map<String, String> tags) {
       this.region = checkNotNull(region, "region");
       this.instanceId = instanceId;
       this.publicIp = checkNotNull(publicIp, "publicIp");
+      this.tags = tags == null ? ImmutableMap.<String, String> of() : ImmutableMap.copyOf(tags);
    }
 
    /**
@@ -53,8 +60,8 @@ public class PublicIpInstanceIdPair implements Comparable<PublicIpInstanceIdPair
     * {@inheritDoc}
     */
    @Override
-   public int compareTo(PublicIpInstanceIdPair o) {
-      return (this == o) ? 0 : getPublicIp().compareTo(o.getPublicIp());
+   public int compareTo(final PublicIpInstanceIdPair o) {
+      return this == o ? 0 : getPublicIp().compareTo(o.getPublicIp());
    }
 
    /**
@@ -70,6 +77,10 @@ public class PublicIpInstanceIdPair implements Comparable<PublicIpInstanceIdPair
    public String getPublicIp() {
       return publicIp;
    }
+   
+   public Map<String, String> getTags() {
+      return tags;
+   }
 
    @Override
    public int hashCode() {
@@ -78,6 +89,7 @@ public class PublicIpInstanceIdPair implements Comparable<PublicIpInstanceIdPair
       result = prime * result + ((instanceId == null) ? 0 : instanceId.hashCode());
       result = prime * result + ((publicIp == null) ? 0 : publicIp.hashCode());
       result = prime * result + ((region == null) ? 0 : region.hashCode());
+      result = prime * result + ((tags == null) ? 0 : tags.hashCode());
       return result;
    }
 
@@ -105,7 +117,11 @@ public class PublicIpInstanceIdPair implements Comparable<PublicIpInstanceIdPair
             return false;
       } else if (!region.equals(other.region))
          return false;
+      if (tags == null) {
+         if (other.tags != null)
+            return false;
+      } else if (!tags.equals(other.tags))
+         return false;
       return true;
    }
-
 }
