@@ -54,13 +54,17 @@ public enum Region {
    BRAZIL_SOUTH("Brazil South", "BR"),
    AUSTRALIA_EAST("Australia East", "AU-NSW"),
    AUSTRALIA_SOUTH_EAST("Australia Southeast", "AU-VIC"),
+   AUSTRALIA_CENTRAL("Australia Central", "AU-ACT"), 
+   AUSTRALIA_CENTRAL_2("Australia Central 2", "AU-ACT"),
    CENTRAL_INDIA("Central India", "IN-GA"),
    SOUTH_INDIA("South India", "IN-TN"),
    WEST_INDIA("West India", "IN-MH"),
    CHINA_EAST("China East", "CN-SH"),
    CHINA_NORTH("China North", "CN-BJ"),
    CANADA_CENTRAL("Canada Central", "CA-ON"),
-   CANADA_EAST("Canada East", "CA-QC");
+   CANADA_EAST("Canada East", "CA-QC"),
+   FRANCE_CENTRAL("France Central", "FR-IDF"), 
+   FRANCE_SOUTH("France South", "FR-PAC");
 
    private final String name;
 
