@@ -19,7 +19,6 @@ package org.jclouds.azurecompute.arm.features;
 import java.net.URI;
 import java.util.List;
 import java.util.Map;
-
 import javax.inject.Named;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
@@ -113,6 +112,11 @@ public interface VirtualMachineApi {
    @POST
    @Path("/{name}/powerOff")
    void stop(@PathParam("name") String name);
+
+   @Named("DeallocateVirtualMachine")
+   @POST
+   @Path("/{name}/deallocate")
+   void deallocate(@PathParam("name") String name);
 
    @Named("generalize")
    @POST

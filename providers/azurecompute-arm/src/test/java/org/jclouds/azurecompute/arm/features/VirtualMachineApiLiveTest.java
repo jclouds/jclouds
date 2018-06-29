@@ -156,13 +156,20 @@ public class VirtualMachineApiLiveTest extends BaseAzureComputeApiLiveTest {
       assertEquals(vm.properties().storageProfile().dataDisks().size(), oldDataDisks.size() + 1);
    }
 
-   @Test(dependsOnMethods = "testUpdate")
+   @Test(dependsOnMethods = "testRestart")
    public void testStop() {
       api().stop(vmName);
       assertTrue(stateReached(vmName, PowerState.STOPPED), "stop operation did not complete in the configured timeout");
    }
 
-   @Test(dependsOnMethods = "testStop")
+   @Test(dependsOnMethods = "testUpdate")
+   public void testDeallocate() {
+      api().deallocate(vmName);
+      assertTrue(stateReached(vmName, PowerState.DEALLOCATED),
+            "deallocate operation did not complete in the configured timeout");
+   }
+
+   @Test(dependsOnMethods = "testDeallocate")
    public void testRestart() {
       api().start(vmName);
       assertTrue(stateReached(vmName, PowerState.RUNNING), "start operation did not complete in the configured timeout");
