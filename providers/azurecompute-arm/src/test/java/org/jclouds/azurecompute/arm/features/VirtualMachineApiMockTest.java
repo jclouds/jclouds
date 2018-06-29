@@ -16,6 +16,12 @@
  */
 package org.jclouds.azurecompute.arm.features;
 
+import static com.google.common.collect.Iterables.isEmpty;
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertNotNull;
+import static org.testng.Assert.assertNull;
+import static org.testng.Assert.assertTrue;
+
 import java.net.URI;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -52,12 +58,6 @@ import org.testng.annotations.Test;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.squareup.okhttp.mockwebserver.MockResponse;
-
-import static com.google.common.collect.Iterables.isEmpty;
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertNotNull;
-import static org.testng.Assert.assertNull;
-import static org.testng.Assert.assertTrue;
 
 @Test(groups = "unit", testName = "VirtualMachineApiMockTest", singleThreaded = true)
 public class VirtualMachineApiMockTest extends BaseAzureComputeApiMockTest {
@@ -213,7 +213,7 @@ public class VirtualMachineApiMockTest extends BaseAzureComputeApiMockTest {
    }
 
    public void testStart() throws Exception {
-      server.enqueue(new MockResponse().setResponseCode(204));
+      server.enqueue(response202WithHeader());
 
       final VirtualMachineApi vmAPI = api.getVirtualMachineApi("groupname");
 
@@ -224,7 +224,7 @@ public class VirtualMachineApiMockTest extends BaseAzureComputeApiMockTest {
    }
 
    public void testRestart() throws Exception {
-      server.enqueue(new MockResponse().setResponseCode(204));
+      server.enqueue(response202WithHeader());
 
       final VirtualMachineApi vmAPI = api.getVirtualMachineApi("groupname");
 
@@ -235,7 +235,7 @@ public class VirtualMachineApiMockTest extends BaseAzureComputeApiMockTest {
    }
 
    public void testStop() throws Exception {
-      server.enqueue(new MockResponse().setResponseCode(204));
+      server.enqueue(response202WithHeader());
 
       final VirtualMachineApi vmAPI = api.getVirtualMachineApi("groupname");
 
@@ -243,6 +243,17 @@ public class VirtualMachineApiMockTest extends BaseAzureComputeApiMockTest {
 
       assertSent(server, "POST", "/subscriptions/SUBSCRIPTIONID/resourceGroups/groupname/providers/Microsoft.Compute"
             + "/virtualMachines/windowsmachine/powerOff?api-version=2016-04-30-preview");
+   }
+
+   public void testDeallocate() throws Exception {
+      server.enqueue(response202WithHeader());
+
+      final VirtualMachineApi vmAPI = api.getVirtualMachineApi("groupname");
+
+      vmAPI.deallocate("windowsmachine");
+
+      assertSent(server, "POST", "/subscriptions/SUBSCRIPTIONID/resourceGroups/groupname/providers/Microsoft.Compute"
+            + "/virtualMachines/windowsmachine/deallocate?api-version=2016-04-30-preview");
    }
 
    public void testGeneralize() throws Exception {
