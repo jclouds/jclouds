@@ -25,9 +25,9 @@ import static org.testng.Assert.assertTrue;
 import java.net.URI;
 import java.util.List;
 
-import org.jclouds.azurecompute.arm.domain.LocalNetworkGateway;
-import org.jclouds.azurecompute.arm.domain.LocalNetworkGatewayProperties;
-import org.jclouds.azurecompute.arm.domain.LocalNetworkGatewayProperties.AddressSpace;
+import org.jclouds.azurecompute.arm.domain.AddressSpace;
+import org.jclouds.azurecompute.arm.domain.vpn.LocalNetworkGateway;
+import org.jclouds.azurecompute.arm.domain.vpn.LocalNetworkGatewayProperties;
 import org.jclouds.azurecompute.arm.internal.BaseAzureComputeApiMockTest;
 import org.testng.annotations.Test;
 
@@ -46,7 +46,7 @@ public class LocalNetworkGatewayApiMockTest extends BaseAzureComputeApiMockTest 
       LocalNetworkGatewayApi gwapi = api.getLocalNetworkGatewayApi(resourcegroup);
 
       AddressSpace localAddresses = AddressSpace.create(ImmutableList.of("192.168.0.0/24"));
-      LocalNetworkGatewayProperties props = LocalNetworkGatewayProperties.builder().gatewayIpAddress("1.2.3.4")
+      LocalNetworkGatewayProperties props = LocalNetworkGatewayProperties.builder("1.2.3.4")
             .localNetworkAddressSpace(localAddresses).build();
       LocalNetworkGateway gw = gwapi.createOrUpdate(name, "westeurope", null, props);
 

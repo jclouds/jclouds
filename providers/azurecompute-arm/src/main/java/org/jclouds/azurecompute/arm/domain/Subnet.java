@@ -31,6 +31,10 @@ import org.jclouds.json.SerializedNames;
 @AutoValue
 public abstract class Subnet {
 
+   // To create VPN endpoints, a "GatewaySubnet" is required. Azure identifies
+   // such networks by name, and they have to be named exactly "GatewaySubnet".
+   public static final String GATEWAY_SUBNET_NAME = "GatewaySubnet";
+   
    private static final Pattern NETWORK_PATTERN = Pattern.compile("^.*/virtualNetworks/([^/]+)(/.*)?$");
    
    @AutoValue
@@ -131,6 +135,12 @@ public abstract class Subnet {
       public abstract Builder id(String id);
       public abstract Builder etag(String etag);
       public abstract Builder properties(SubnetProperties properties);
+      
+      // Gateway subnets are identified by name
+      public Builder setGatewaySubnet() {
+         return name(GATEWAY_SUBNET_NAME);
+      }
+      
       public abstract Subnet build();
    }
 }

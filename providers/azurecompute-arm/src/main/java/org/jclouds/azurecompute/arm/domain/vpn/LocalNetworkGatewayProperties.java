@@ -14,15 +14,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jclouds.azurecompute.arm.domain;
+package org.jclouds.azurecompute.arm.domain.vpn;
 
-import java.util.List;
-
+import org.jclouds.azurecompute.arm.domain.AddressSpace;
+import org.jclouds.azurecompute.arm.domain.Provisionable;
 import org.jclouds.javax.annotation.Nullable;
 import org.jclouds.json.SerializedNames;
 
 import com.google.auto.value.AutoValue;
-import com.google.common.collect.ImmutableList;
 
 @AutoValue
 public abstract class LocalNetworkGatewayProperties implements Provisionable {
@@ -37,9 +36,8 @@ public abstract class LocalNetworkGatewayProperties implements Provisionable {
          "resourceGuid" })
    public static LocalNetworkGatewayProperties create(BGPSettings bgpSettings, String gatewayIpAddress,
          AddressSpace localNetworkAddressSpace, String provisioningState, String resourceGuid) {
-      return builder().bgpSettings(bgpSettings).gatewayIpAddress(gatewayIpAddress)
-            .localNetworkAddressSpace(localNetworkAddressSpace).provisioningState(provisioningState)
-            .resourceGuid(resourceGuid).build();
+      return builder(gatewayIpAddress).bgpSettings(bgpSettings).localNetworkAddressSpace(localNetworkAddressSpace)
+            .provisioningState(provisioningState).resourceGuid(resourceGuid).build();
    }
 
    LocalNetworkGatewayProperties() {
@@ -48,8 +46,8 @@ public abstract class LocalNetworkGatewayProperties implements Provisionable {
 
    public abstract LocalNetworkGatewayProperties.Builder toBuilder();
 
-   public static LocalNetworkGatewayProperties.Builder builder() {
-      return new AutoValue_LocalNetworkGatewayProperties.Builder();
+   public static LocalNetworkGatewayProperties.Builder builder(String gatewayIpAddress) {
+      return new AutoValue_LocalNetworkGatewayProperties.Builder().gatewayIpAddress(gatewayIpAddress);
    }
 
    @AutoValue.Builder
@@ -61,36 +59,5 @@ public abstract class LocalNetworkGatewayProperties implements Provisionable {
       public abstract Builder resourceGuid(String resourceGuid);
 
       public abstract LocalNetworkGatewayProperties build();
-   }
-
-   @AutoValue
-   public abstract static class BGPSettings {
-      public abstract int asn();
-      public abstract String bgpPeeringAddress();
-      public abstract int peerWeight();
-
-      @SerializedNames({ "asn", "bgpPeeringAddress", "peerWeight" })
-      public static LocalNetworkGatewayProperties.BGPSettings create(int asn, String bgpPeeringAddress, int peerWeight) {
-         return new AutoValue_LocalNetworkGatewayProperties_BGPSettings(asn, bgpPeeringAddress, peerWeight);
-      }
-
-      BGPSettings() {
-
-      }
-   }
-
-   @AutoValue
-   public abstract static class AddressSpace {
-      public abstract List<String> addressPrefixes();
-
-      @SerializedNames({ "addressPrefixes" })
-      public static LocalNetworkGatewayProperties.AddressSpace create(List<String> addressPrefixes) {
-         return new AutoValue_LocalNetworkGatewayProperties_AddressSpace(
-               addressPrefixes == null ? ImmutableList.<String> of() : ImmutableList.copyOf(addressPrefixes));
-      }
-
-      AddressSpace() {
-
-      }
    }
 }

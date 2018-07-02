@@ -63,6 +63,7 @@ import org.jclouds.azurecompute.arm.features.VaultApi;
 import org.jclouds.azurecompute.arm.features.VirtualMachineApi;
 import org.jclouds.azurecompute.arm.features.VirtualMachineScaleSetApi;
 import org.jclouds.azurecompute.arm.features.VirtualNetworkApi;
+import org.jclouds.azurecompute.arm.features.VirtualNetworkGatewayApi;
 import org.jclouds.providers.ProviderMetadata;
 import org.jclouds.providers.internal.BaseProviderMetadata;
 
@@ -132,6 +133,7 @@ public class AzureComputeProviderMetadata extends BaseProviderMetadata {
       properties.put(API_VERSION_PREFIX + GraphRBACApi.class.getSimpleName(), "1.6");
       properties.put(API_VERSION_PREFIX + VaultApi.class.getSimpleName(), "2016-10-01");
       properties.put(API_VERSION_PREFIX + LocalNetworkGatewayApi.class.getSimpleName(), "2018-02-01");
+      properties.put(API_VERSION_PREFIX + VirtualNetworkGatewayApi.class.getSimpleName(), "2018-02-01");
       
       return properties;
    }

@@ -24,6 +24,7 @@ import static org.testng.Assert.assertTrue;
 import java.util.Arrays;
 import java.util.List;
 
+import org.jclouds.azurecompute.arm.domain.AddressSpace;
 import org.jclouds.azurecompute.arm.domain.VirtualNetwork;
 import org.jclouds.azurecompute.arm.internal.BaseAzureComputeApiLiveTest;
 import org.testng.annotations.BeforeClass;
@@ -53,7 +54,7 @@ public class VirtualNetworkApiLiveTest extends BaseAzureComputeApiLiveTest {
 
       final VirtualNetwork.VirtualNetworkProperties virtualNetworkProperties =
               VirtualNetwork.VirtualNetworkProperties.builder().addressSpace(
-                      VirtualNetwork.AddressSpace.create(Arrays.asList(DEFAULT_VIRTUALNETWORK_ADDRESS_PREFIX))).build();
+                      AddressSpace.create(Arrays.asList(DEFAULT_VIRTUALNETWORK_ADDRESS_PREFIX))).build();
 
       VirtualNetwork vn = api().createOrUpdate(virtualNetworkName, LOCATION, null, virtualNetworkProperties);
 
