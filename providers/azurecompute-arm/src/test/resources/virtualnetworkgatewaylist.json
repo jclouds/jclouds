@@ -1,0 +1,49 @@
+{
+  "value": [
+    {
+      "name": "myvirtualgw",
+      "id": "/subscriptions/SUBSCRIPTIONID/resourceGroups/rg-virtualnetworkgatewayapilivetest-nacx/providers/Microsoft.Network/virtualNetworkGateways/myvirtualgw",
+      "etag": "W/\"7d15735c-35b4-4e22-a281-d7d54c6fdecf\"",
+      "type": "Microsoft.Network/virtualNetworkGateways",
+      "location": "westeurope",
+      "properties": {
+        "provisioningState": "Updating",
+        "resourceGuid": "36998db6-e664-4683-ad8d-9afb2e23b1d8",
+        "ipConfigurations": [
+          {
+            "name": "myvirtualgw-ipconf",
+            "id": "/subscriptions/SUBSCRIPTIONID/resourceGroups/rg-virtualnetworkgatewayapilivetest-nacx/providers/Microsoft.Network/virtualNetworkGateways/myvirtualgw/ipConfigurations/myvirtualgw-ipconf",
+            "etag": "W/\"7d15735c-35b4-4e22-a281-d7d54c6fdecf\"",
+            "properties": {
+              "provisioningState": "Updating",
+              "privateIPAllocationMethod": "Dynamic",
+              "publicIPAddress": {
+                "id": "/subscriptions/SUBSCRIPTIONID/resourceGroups/rg-virtualnetworkgatewayapilivetest-nacx/providers/Microsoft.Network/publicIPAddresses/myvirtualgw-publicip"
+              },
+              "subnet": {
+                "id": "/subscriptions/SUBSCRIPTIONID/resourceGroups/rg-virtualnetworkgatewayapilivetest-nacx/providers/Microsoft.Network/virtualNetworks/myvirtualgw-net/subnets/GatewaySubnet"
+              }
+            }
+          }
+        ],
+        "sku": {
+          "name": "Basic",
+          "tier": "Basic",
+          "capacity": 2
+        },
+        "gatewayType": "Vpn",
+        "vpnType": "PolicyBased",
+        "enableBgp": false,
+        "activeActive": false,
+        "vpnClientConfiguration": {
+          "vpnClientProtocols": [
+            "SSTP"
+          ],
+          "vpnClientRootCertificates": [],
+          "vpnClientRevokedCertificates": [],
+          "vpnClientIpsecPolicies": []
+        }
+      }
+    }
+  ]
+}

@@ -17,19 +17,19 @@
 package org.jclouds.azurecompute.arm.internal;
 
 import static com.google.common.base.Preconditions.checkNotNull;
+import static org.jclouds.azurecompute.arm.config.AzureComputeProperties.TIMEOUT_RESOURCE_DELETED;
+import static org.jclouds.azurecompute.arm.config.AzureComputeProperties.VAULT_CERTIFICATE_DELETE_STATUS;
+import static org.jclouds.azurecompute.arm.config.AzureComputeProperties.VAULT_CERTIFICATE_OPERATION_STATUS;
+import static org.jclouds.azurecompute.arm.config.AzureComputeProperties.VAULT_CERTIFICATE_RECOVERABLE_STATUS;
+import static org.jclouds.azurecompute.arm.config.AzureComputeProperties.VAULT_DELETE_STATUS;
+import static org.jclouds.azurecompute.arm.config.AzureComputeProperties.VAULT_KEY_DELETED_STATUS;
+import static org.jclouds.azurecompute.arm.config.AzureComputeProperties.VAULT_KEY_RECOVERABLE_STATUS;
+import static org.jclouds.azurecompute.arm.config.AzureComputeProperties.VAULT_SECRET_DELETE_STATUS;
+import static org.jclouds.azurecompute.arm.config.AzureComputeProperties.VAULT_SECRET_RECOVERABLE_STATUS;
 import static org.jclouds.compute.config.ComputeServiceProperties.TIMEOUT_IMAGE_AVAILABLE;
 import static org.jclouds.util.Predicates2.retry;
 import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertTrue;
-import static org.jclouds.azurecompute.arm.config.AzureComputeProperties.TIMEOUT_RESOURCE_DELETED;
-import static org.jclouds.azurecompute.arm.config.AzureComputeProperties.VAULT_DELETE_STATUS;
-import static org.jclouds.azurecompute.arm.config.AzureComputeProperties.VAULT_SECRET_DELETE_STATUS;
-import static org.jclouds.azurecompute.arm.config.AzureComputeProperties.VAULT_SECRET_RECOVERABLE_STATUS;
-import static org.jclouds.azurecompute.arm.config.AzureComputeProperties.VAULT_KEY_DELETED_STATUS;
-import static org.jclouds.azurecompute.arm.config.AzureComputeProperties.VAULT_KEY_RECOVERABLE_STATUS;
-import static org.jclouds.azurecompute.arm.config.AzureComputeProperties.VAULT_CERTIFICATE_DELETE_STATUS;
-import static org.jclouds.azurecompute.arm.config.AzureComputeProperties.VAULT_CERTIFICATE_RECOVERABLE_STATUS;
-import static org.jclouds.azurecompute.arm.config.AzureComputeProperties.VAULT_CERTIFICATE_OPERATION_STATUS;
 
 import java.io.IOException;
 import java.net.URI;
@@ -38,21 +38,20 @@ import java.util.List;
 import java.util.Properties;
 import java.util.Random;
 
-import com.google.common.base.Charsets;
-import com.google.common.base.Throwables;
-import com.google.common.io.Resources;
 import org.jclouds.apis.BaseApiLiveTest;
 import org.jclouds.azurecompute.arm.AzureComputeApi;
-import org.jclouds.azurecompute.arm.config.Tenant;
-import org.jclouds.azurecompute.arm.compute.config.AzurePredicatesModule.VaultPredicates.DeletedVaultStatusPredicateFactory;
-import org.jclouds.azurecompute.arm.compute.config.AzurePredicatesModule.VaultKeyPredicates.DeletedKeyStatusPredicateFactory;
-import org.jclouds.azurecompute.arm.compute.config.AzurePredicatesModule.VaultKeyPredicates.RecoverableKeyStatusPredicateFactory;
-import org.jclouds.azurecompute.arm.compute.config.AzurePredicatesModule.VaultSecretPredicates.DeletedSecretStatusPredicateFactory;
-import org.jclouds.azurecompute.arm.compute.config.AzurePredicatesModule.VaultSecretPredicates.RecoverableSecretStatusPredicateFactory;
+import org.jclouds.azurecompute.arm.compute.config.AzurePredicatesModule.PublicIpAvailablePredicateFactory;
 import org.jclouds.azurecompute.arm.compute.config.AzurePredicatesModule.VaultCertificatePredicates.CertificateOperationStatusPredicateFactory;
 import org.jclouds.azurecompute.arm.compute.config.AzurePredicatesModule.VaultCertificatePredicates.DeletedCertificateStatusPredicateFactory;
 import org.jclouds.azurecompute.arm.compute.config.AzurePredicatesModule.VaultCertificatePredicates.RecoverableCertificateStatusPredicateFactory;
-import org.jclouds.azurecompute.arm.compute.config.AzurePredicatesModule.PublicIpAvailablePredicateFactory;
+import org.jclouds.azurecompute.arm.compute.config.AzurePredicatesModule.VaultKeyPredicates.DeletedKeyStatusPredicateFactory;
+import org.jclouds.azurecompute.arm.compute.config.AzurePredicatesModule.VaultKeyPredicates.RecoverableKeyStatusPredicateFactory;
+import org.jclouds.azurecompute.arm.compute.config.AzurePredicatesModule.VaultPredicates.DeletedVaultStatusPredicateFactory;
+import org.jclouds.azurecompute.arm.compute.config.AzurePredicatesModule.VaultSecretPredicates.DeletedSecretStatusPredicateFactory;
+import org.jclouds.azurecompute.arm.compute.config.AzurePredicatesModule.VaultSecretPredicates.RecoverableSecretStatusPredicateFactory;
+import org.jclouds.azurecompute.arm.compute.config.AzurePredicatesModule.VirtualNetworkGatewayAvailablePredicateFactory;
+import org.jclouds.azurecompute.arm.config.Tenant;
+import org.jclouds.azurecompute.arm.domain.AddressSpace;
 import org.jclouds.azurecompute.arm.domain.NetworkSecurityGroup;
 import org.jclouds.azurecompute.arm.domain.NetworkSecurityGroupProperties;
 import org.jclouds.azurecompute.arm.domain.NetworkSecurityRule;
@@ -64,15 +63,18 @@ import org.jclouds.azurecompute.arm.domain.VirtualNetwork;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 
+import com.google.common.base.Charsets;
 import com.google.common.base.Predicate;
 import com.google.common.base.Supplier;
+import com.google.common.base.Throwables;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
-import com.google.inject.name.Names;
+import com.google.common.io.Resources;
 import com.google.inject.Injector;
-import com.google.inject.Module;
 import com.google.inject.Key;
+import com.google.inject.Module;
 import com.google.inject.TypeLiteral;
+import com.google.inject.name.Names;
 
 public class BaseAzureComputeApiLiveTest extends BaseApiLiveTest<AzureComputeApi> {
 
@@ -84,6 +86,7 @@ public class BaseAzureComputeApiLiveTest extends BaseApiLiveTest<AzureComputeApi
    protected Predicate<URI> imageAvailablePredicate;
    protected Predicate<URI> resourceDeleted;
    protected PublicIpAvailablePredicateFactory publicIpAvailable;
+   protected VirtualNetworkGatewayAvailablePredicateFactory virtualNetworkGatewayStatus;
    protected Predicate<Supplier<Provisionable>> resourceAvailable;
    protected DeletedVaultStatusPredicateFactory deletedVaultStatus;
    protected DeletedKeyStatusPredicateFactory deletedKeyStatus;
@@ -93,7 +96,6 @@ public class BaseAzureComputeApiLiveTest extends BaseApiLiveTest<AzureComputeApi
    protected DeletedCertificateStatusPredicateFactory deletedCertificateStatus;
    protected RecoverableCertificateStatusPredicateFactory recoverableCertificateStatus;
    protected CertificateOperationStatusPredicateFactory certificateOperationStatus;
-
 
    protected String resourceGroupName;
    
@@ -139,6 +141,7 @@ public class BaseAzureComputeApiLiveTest extends BaseApiLiveTest<AzureComputeApi
       resourceDeleted = injector.getInstance(Key.get(new TypeLiteral<Predicate<URI>>() {
       }, Names.named(TIMEOUT_RESOURCE_DELETED)));
       publicIpAvailable = injector.getInstance(PublicIpAvailablePredicateFactory.class);
+      virtualNetworkGatewayStatus = injector.getInstance(VirtualNetworkGatewayAvailablePredicateFactory.class);
       resourceAvailable = injector.getInstance(Key.get(new TypeLiteral<Predicate<Supplier<Provisionable>>>() {
       }));
       deletedVaultStatus = injector.getInstance(Key.get(DeletedVaultStatusPredicateFactory.class, Names.named(VAULT_DELETE_STATUS)));
@@ -172,7 +175,7 @@ public class BaseAzureComputeApiLiveTest extends BaseApiLiveTest<AzureComputeApi
    protected VirtualNetwork createDefaultVirtualNetwork(final String resourceGroupName, final String virtualNetworkName, final String virtualnetworkAddressPrefix, final String location) {
       final VirtualNetwork.VirtualNetworkProperties virtualNetworkProperties =
               VirtualNetwork.VirtualNetworkProperties.create(null, null,
-                      VirtualNetwork.AddressSpace.create(Arrays.asList(virtualnetworkAddressPrefix)), null);
+                      AddressSpace.create(Arrays.asList(virtualnetworkAddressPrefix)), null);
       VirtualNetwork virtualNetwork = api.getVirtualNetworkApi(resourceGroupName).createOrUpdate(virtualNetworkName, location, null, virtualNetworkProperties);
       retry(new Predicate<String>() {
          @Override

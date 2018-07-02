@@ -49,7 +49,6 @@ public class NetworkInterfaceCardApiLiveTest extends BaseAzureComputeApiLiveTest
    public void setup() {
       super.setup();
       createTestResourceGroup();
-      assertNotNull(api.getResourceGroupApi().create(resourceGroupName, LOCATION, ImmutableMap.<String, String>of()));
       String virtualNetworkName = String.format("vn-%s-%s", this.getClass().getSimpleName().toLowerCase(), System.getProperty("user.name"));
       nicName = String.format("nic-%s-%s", this.getClass().getSimpleName().toLowerCase(), System.getProperty("user.name"));
       String subnetName = String.format("s-%s-%s", this.getClass().getSimpleName().toLowerCase(), System.getProperty("user.name"));

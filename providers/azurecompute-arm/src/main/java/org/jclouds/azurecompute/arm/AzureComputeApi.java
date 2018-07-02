@@ -46,6 +46,7 @@ import org.jclouds.azurecompute.arm.features.VaultApi;
 import org.jclouds.azurecompute.arm.features.VirtualMachineApi;
 import org.jclouds.azurecompute.arm.features.VirtualMachineScaleSetApi;
 import org.jclouds.azurecompute.arm.features.VirtualNetworkApi;
+import org.jclouds.azurecompute.arm.features.VirtualNetworkGatewayApi;
 import org.jclouds.rest.annotations.Delegate;
 
 import com.google.common.base.Supplier;
@@ -151,7 +152,7 @@ public interface AzureComputeApi extends Closeable {
    /**
     * The Azure Resource Manager API gets all the OS images in your subscription.
     *
-    * @see <a href="http://msdn.microsoft.com/en-us/library/jj157175">docs</a>
+    * @see <a href="https://docs.microsoft.com/en-us/rest/api/compute/virtualmachineimages">docs</a>
     */
    @Delegate
    OSImageApi getOSImageApi(@PathParam("location") String location);
@@ -270,6 +271,14 @@ public interface AzureComputeApi extends Closeable {
     */
    @Delegate
    LocalNetworkGatewayApi getLocalNetworkGatewayApi(@PathParam("resourcegroup") String resourcegroup);
+   
+   /**
+    * Management features for Virtual Network Gateways.
+    * 
+    * @see <a href="https://docs.microsoft.com/en-us/rest/api/network-gateway/virtualnetworkgateways">docs</a>
+    */
+   @Delegate
+   VirtualNetworkGatewayApi getVirtualNetworkGatewayApi(@PathParam("resourcegroup") String resourcegroup);
    
    /**
     * Returns the information about the current service principal.

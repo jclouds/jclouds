@@ -23,7 +23,7 @@ package org.jclouds.azurecompute.arm.config;
 public class AzureComputeProperties {
 
    public static final String OPERATION_TIMEOUT = "jclouds.azurecompute.arm.operation.timeout";
-
+   
    public static final String IMAGE_PUBLISHERS = "jclouds.azurecompute.arm.publishers";
 
    public static final String TIMEOUT_RESOURCE_DELETED = "jclouds.azurecompute.arm.timeout.resourcedeleted";

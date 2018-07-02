@@ -32,8 +32,8 @@ import javax.ws.rs.core.MediaType;
 
 import org.jclouds.Fallbacks.EmptyListOnNotFoundOr404;
 import org.jclouds.Fallbacks.NullOnNotFoundOr404;
-import org.jclouds.azurecompute.arm.domain.vpn.LocalNetworkGateway;
-import org.jclouds.azurecompute.arm.domain.vpn.LocalNetworkGatewayProperties;
+import org.jclouds.azurecompute.arm.domain.vpn.VirtualNetworkGateway;
+import org.jclouds.azurecompute.arm.domain.vpn.VirtualNetworkGatewayProperties;
 import org.jclouds.azurecompute.arm.filters.ApiVersionFilter;
 import org.jclouds.azurecompute.arm.functions.URIParser;
 import org.jclouds.javax.annotation.Nullable;
@@ -46,36 +46,35 @@ import org.jclouds.rest.annotations.ResponseParser;
 import org.jclouds.rest.annotations.SelectJson;
 import org.jclouds.rest.binders.BindToJsonPayload;
 
-@Path("/resourcegroups/{resourcegroup}/providers/Microsoft.Network/localNetworkGateways")
+@Path("/resourcegroups/{resourcegroup}/providers/Microsoft.Network/virtualNetworkGateways")
 @RequestFilters({ OAuthFilter.class, ApiVersionFilter.class })
 @Consumes(MediaType.APPLICATION_JSON)
-public interface LocalNetworkGatewayApi extends Closeable {
+public interface VirtualNetworkGatewayApi extends Closeable {
 
-   @Named("localnetworkgateway:list")
+   @Named("virtualnetworkgateway:list")
    @GET
    @SelectJson("value")
    @Fallback(EmptyListOnNotFoundOr404.class)
-   List<LocalNetworkGateway> list();
+   List<VirtualNetworkGateway> list();
 
-   @Named("localnetworkgateway:get")
+   @Named("virtualnetworkgateway:get")
    @Path("/{name}")
    @GET
    @Fallback(NullOnNotFoundOr404.class)
-   LocalNetworkGateway get(@PathParam("name") String name);
+   VirtualNetworkGateway get(@PathParam("name") String name);
 
-   @Named("localnetworkgateway:createOrUpdate")
+   @Named("virtualnetworkgateway:createOrUpdate")
    @MapBinder(BindToJsonPayload.class)
    @Path("/{name}")
    @PUT
-   LocalNetworkGateway createOrUpdate(@PathParam("name") String name, @PayloadParam("location") String location,
+   VirtualNetworkGateway createOrUpdate(@PathParam("name") String name, @PayloadParam("location") String location,
          @Nullable @PayloadParam("tags") Map<String, String> tags,
-         @PayloadParam("properties") LocalNetworkGatewayProperties properties);
+         @PayloadParam("properties") VirtualNetworkGatewayProperties properties);
 
-   @Named("localnetworkgateway:delete")
+   @Named("virtualnetworkgateway:delete")
    @Path("/{name}")
    @DELETE
    @ResponseParser(URIParser.class)
    @Fallback(NullOnNotFoundOr404.class)
    URI delete(@PathParam("name") String name);
-
 }
