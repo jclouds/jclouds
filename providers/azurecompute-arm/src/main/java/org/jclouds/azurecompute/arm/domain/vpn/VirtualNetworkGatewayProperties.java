@@ -60,7 +60,7 @@ public abstract class VirtualNetworkGatewayProperties implements Provisionable {
    
    public static Builder builder(boolean enableBGP, VirtualNetworkGatewayType virtualNetworkGatewayType, SKU sku) {
       return new AutoValue_VirtualNetworkGatewayProperties.Builder().enableBGP(enableBGP)
-            .gatewayType(virtualNetworkGatewayType).sku(sku);
+            .gatewayType(virtualNetworkGatewayType).sku(sku).ipConfigurations(ImmutableList.<IpConfiguration> of());
    }
    
    public abstract Builder toBuilder();

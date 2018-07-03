@@ -18,6 +18,7 @@ package org.jclouds.azurecompute.arm.features;
 
 import static com.google.common.collect.Iterables.any;
 import static java.util.Collections.singletonList;
+import static java.util.logging.Logger.getAnonymousLogger;
 import static org.jclouds.azurecompute.arm.domain.vpn.VirtualNetworkGatewayType.Vpn;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
@@ -83,6 +84,7 @@ public class VirtualNetworkGatewayApiLiveTest extends BaseAzureComputeApiLiveTes
             .builder(false, Vpn, SKU.create(1, SKUName.Basic, SKUTier.Basic)).vpnType(VPNType.PolicyBased)
             .ipConfigurations(singletonList(ipconf)).build();
 
+      getAnonymousLogger().info(String.format("Creating virtual network gateway %s. This may take a while...", name));
       VirtualNetworkGateway gw = api().createOrUpdate(name, LOCATION, null, props);
 
       assertNotNull(gw);
@@ -118,7 +120,7 @@ public class VirtualNetworkGatewayApiLiveTest extends BaseAzureComputeApiLiveTes
       assertEquals(gw.tags().get("foo"), "bar");
    }
 
-   @Test(dependsOnMethods = { "getVirtualNetworkGateway", "listVirtualNetworkGateways", "updateVirtualNetworkGateway" }, alwaysRun = true)
+   @Test(dependsOnMethods = { "getVirtualNetworkGateway", "listVirtualNetworkGateways", "updateVirtualNetworkGateway" })
    public void deleteVirtualNetworkGateway() {
       // Make sure the resource is fully provisioned before deleting it
       assertTrue(virtualNetworkGatewayAvailable.apply(name));
