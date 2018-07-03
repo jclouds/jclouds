@@ -47,6 +47,7 @@ import org.jclouds.azurecompute.arm.features.VirtualMachineApi;
 import org.jclouds.azurecompute.arm.features.VirtualMachineScaleSetApi;
 import org.jclouds.azurecompute.arm.features.VirtualNetworkApi;
 import org.jclouds.azurecompute.arm.features.VirtualNetworkGatewayApi;
+import org.jclouds.azurecompute.arm.features.VirtualNetworkGatewayConnectionApi;
 import org.jclouds.rest.annotations.Delegate;
 
 import com.google.common.base.Supplier;
@@ -279,6 +280,14 @@ public interface AzureComputeApi extends Closeable {
     */
    @Delegate
    VirtualNetworkGatewayApi getVirtualNetworkGatewayApi(@PathParam("resourcegroup") String resourcegroup);
+   
+   /**
+    * Management features for Virtual Network Gateway Connections.
+    * 
+    * @see <a href="https://docs.microsoft.com/en-us/rest/api/network-gateway/virtualnetworkgatewayconnections">docs</a>
+    */
+   @Delegate
+   VirtualNetworkGatewayConnectionApi getVirtualNetworkGatewayConnectionApi(@PathParam("resourcegroup") String resourcegroup);
    
    /**
     * Returns the information about the current service principal.

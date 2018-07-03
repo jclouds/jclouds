@@ -1,0 +1,29 @@
+{
+    "value": [
+      {
+        "name": "myconn",
+        "id": "/subscriptions/SUBSCRIPTIONID/resourceGroups/rg-virtualnetworkgatewayconnectionapilivetest-nacx/providers/Microsoft.Network/connections/myconn",
+        "etag": "W/\"e6f08058-3815-4498-858b-0fe750e086c8\"",
+        "type": "Microsoft.Network/connections",
+        "location": "westeurope",
+        "properties": {
+          "provisioningState": "Updating",
+          "resourceGuid": "1c7fc4e8-5d48-476b-b951-38279aec7d63",
+          "virtualNetworkGateway1": {
+            "id": "/subscriptions/SUBSCRIPTIONID/resourceGroups/rg-virtualnetworkgatewayconnectionapilivetest-nacx/providers/Microsoft.Network/virtualNetworkGateways/jclouds-827-vgw"
+          },
+          "localNetworkGateway2": {
+            "id": "/subscriptions/SUBSCRIPTIONID/resourceGroups/rg-virtualnetworkgatewayconnectionapilivetest-nacx/providers/Microsoft.Network/localNetworkGateways/jclouds-827-lgw"
+          },
+          "connectionType": "IPsec",
+          "routingWeight": 0,
+          "enableBgp": false,
+          "usePolicyBasedTrafficSelectors": false,
+          "ipsecPolicies": [],
+          "ingressBytesTransferred": 0,
+          "egressBytesTransferred": 0,
+          "tunnelConnectionStatus": []
+        }
+      }
+    ]
+  }

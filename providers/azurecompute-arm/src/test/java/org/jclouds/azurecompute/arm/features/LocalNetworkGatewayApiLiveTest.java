@@ -98,7 +98,7 @@ public class LocalNetworkGatewayApiLiveTest extends BaseAzureComputeApiLiveTest 
       assertTrue(gw.properties().localNetworkAddressSpace().addressPrefixes().contains("192.168.1.0/24"));
    }
 
-   @Test(dependsOnMethods = { "getLocalNetworkGateway", "listLocalNetworkGateways", "updateLocalNetworkGateway" }, alwaysRun = true)
+   @Test(dependsOnMethods = { "getLocalNetworkGateway", "listLocalNetworkGateways", "updateLocalNetworkGateway" })
    public void deleteLocalNetworkGateway() {
       // Make sure the resource is fully provisioned before deleting it
       waitUntilAvailable(name);
@@ -110,13 +110,13 @@ public class LocalNetworkGatewayApiLiveTest extends BaseAzureComputeApiLiveTest 
       return api.getLocalNetworkGatewayApi(resourceGroupName);
    }
 
-   private boolean waitUntilAvailable(final String name) {
-      return resourceAvailable.apply(new Supplier<Provisionable>() {
+   private void waitUntilAvailable(final String name) {
+      assertTrue(resourceAvailable.apply(new Supplier<Provisionable>() {
          @Override
          public Provisionable get() {
             LocalNetworkGateway gw = api().get(name);
             return gw == null ? null : gw.properties();
          }
-      });
+      }));
    }
 }
