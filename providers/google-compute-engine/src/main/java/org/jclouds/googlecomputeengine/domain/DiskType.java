@@ -38,7 +38,7 @@ public abstract class DiskType {
 
    @Nullable public abstract Deprecated deprecated();
 
-   public abstract URI zone();
+   @Nullable public abstract URI zone();
 
    public abstract URI selfLink();
 
