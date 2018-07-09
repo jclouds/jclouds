@@ -17,6 +17,7 @@
 package org.jclouds.azurecompute.arm.features;
 
 import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertNotEquals;
 import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertNull;
 import static org.testng.Assert.assertTrue;
@@ -87,13 +88,49 @@ public class NetworkInterfaceCardApiMockTest extends BaseAzureComputeApiMockTest
       assertEquals(nicList.get(1).properties().ipConfigurations().get(0).properties().privateIPAllocationMethod(), "Static");
    }
 
+   public void listAllNetworkInterfaceCardsInSubscription() throws InterruptedException {
+      server.enqueue(jsonResponse("/listallnetworkinterfaces.json"));
+
+      final NetworkInterfaceCardApi nicApi = api.getNetworkInterfaceCardApi(null);
+      List<NetworkInterfaceCard> nicList = nicApi.listAllInSubscription();
+      String path = String
+            .format("/subscriptions/%s/providers/Microsoft.Network/networkInterfaces?%s", subscriptionid, apiVersion);
+
+      assertSent(server, "GET", path);
+      assertTrue(nicList.size() == 3);
+      assertTrue(nicList.get(0).properties().ipConfigurations().size() > 0);
+      assertEquals(nicList.get(0).properties().ipConfigurations().get(0).properties().privateIPAllocationMethod(),
+            "Dynamic");
+      assertTrue(nicList.get(1).properties().ipConfigurations().size() > 0);
+      assertEquals(nicList.get(1).properties().ipConfigurations().get(0).properties().privateIPAllocationMethod(),
+            "Static");
+      assertTrue(nicList.get(2).properties().ipConfigurations().size() > 0);
+      assertNotEquals(IdReference.extractResourceGroup(nicList.get(2).id()), resourcegroup);
+      assertEquals(nicList.get(2).properties().ipConfigurations().get(0).properties().privateIPAllocationMethod(),
+            "Static");
+   }
+
+   public void listAllNetworkInterfaceCardsInSubscriptionEmpty() throws Exception {
+      server.enqueue(new MockResponse().setResponseCode(404));
+
+      final NetworkInterfaceCardApi nicApi = api.getNetworkInterfaceCardApi(null);
+
+      assertTrue(nicApi.listAllInSubscription().isEmpty());
+      String path = String
+            .format("/subscriptions/%s/providers/Microsoft.Network/networkInterfaces?%s", subscriptionid, apiVersion);
+
+      assertSent(server, "GET", path);
+   }
+
    public void listNetworkInterfaceCardsEmpty() throws Exception {
       server.enqueue(new MockResponse().setResponseCode(404));
 
       final NetworkInterfaceCardApi nicApi = api.getNetworkInterfaceCardApi(resourcegroup);
 
       assertTrue(nicApi.list().isEmpty());
-      String path = String.format("/subscriptions/%s/resourcegroups/%s/providers/Microsoft.Network/networkInterfaces?%s", subscriptionid, resourcegroup, apiVersion);
+      String path = String
+            .format("/subscriptions/%s/resourcegroups/%s/providers/Microsoft.Network/networkInterfaces?%s",
+                  subscriptionid, resourcegroup, apiVersion);
 
       assertSent(server, "GET", path);
    }

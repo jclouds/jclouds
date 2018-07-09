@@ -18,7 +18,6 @@ package org.jclouds.azurecompute.arm.features;
 
 import java.util.List;
 import java.util.Map;
-
 import javax.inject.Named;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
@@ -44,19 +43,26 @@ import org.jclouds.rest.annotations.ResponseParser;
 import org.jclouds.rest.annotations.SelectJson;
 import org.jclouds.rest.binders.BindToJsonPayload;
 
-@Path("/resourcegroups/{resourcegroup}/providers/Microsoft.Network/publicIPAddresses")
 @RequestFilters({ OAuthFilter.class, ApiVersionFilter.class })
 @Consumes(MediaType.APPLICATION_JSON)
 public interface PublicIPAddressApi {
 
    @Named("publicipaddress:list")
+   @Path("/resourcegroups/{resourcegroup}/providers/Microsoft.Network/publicIPAddresses")
    @SelectJson("value")
    @GET
    @Fallback(EmptyListOnNotFoundOr404.class)
    List<PublicIPAddress> list();
 
+   @Named("publicipaddress:list_all")
+   @Path("/providers/Microsoft.Network/publicIPAddresses")
+   @SelectJson("value")
+   @GET
+   @Fallback(EmptyListOnNotFoundOr404.class)
+   List<PublicIPAddress> listAllInSubscription();
+
    @Named("publicipaddress:create_or_update")
-   @Path("/{publicipaddressname}")
+   @Path("/resourcegroups/{resourcegroup}/providers/Microsoft.Network/publicIPAddresses/{publicipaddressname}")
    @MapBinder(BindToJsonPayload.class)
    @PUT
    PublicIPAddress createOrUpdate(@PathParam("publicipaddressname") String publicipaddressname,
@@ -65,13 +71,13 @@ public interface PublicIPAddressApi {
                                                  @PayloadParam("properties") PublicIPAddressProperties properties);
 
    @Named("publicipaddress:get")
-   @Path("/{publicipaddressname}")
+   @Path("/resourcegroups/{resourcegroup}/providers/Microsoft.Network/publicIPAddresses/{publicipaddressname}")
    @GET
    @Fallback(NullOnNotFoundOr404.class)
    PublicIPAddress get(@PathParam("publicipaddressname") String publicipaddressname);
 
    @Named("publicipaddress:delete")
-   @Path("/{publicipaddressname}")
+   @Path("/resourcegroups/{resourcegroup}/providers/Microsoft.Network/publicIPAddresses/{publicipaddressname}")
    @DELETE
    @ResponseParser(FalseOn204.class)
    boolean delete(@PathParam("publicipaddressname") String publicipaddressname);

@@ -105,7 +105,14 @@ public class NetworkInterfaceCardApiLiveTest extends BaseAzureComputeApiLiveTest
       assertTrue(nicList.contains(api().get(nicName)));
    }
 
-   @Test(dependsOnMethods = {"listNetworkInterfaceCards", "getNetworkInterfaceCard"})
+   @Test(dependsOnMethods = "createNetworkInterfaceCard")
+   public void listAllNetworkInterfaceCardsInSubscription() {
+      List<NetworkInterfaceCard> nicList = api.getNetworkInterfaceCardApi(null).listAllInSubscription();
+      assertTrue(nicList.contains(api().get(nicName)));
+   }
+
+   @Test(dependsOnMethods = { "listNetworkInterfaceCards", "listAllNetworkInterfaceCardsInSubscription",
+         "getNetworkInterfaceCard" })
    public void deleteNetworkInterfaceCard() {
       URI uri = api().delete(nicName);
       assertResourceDeleted(uri);
