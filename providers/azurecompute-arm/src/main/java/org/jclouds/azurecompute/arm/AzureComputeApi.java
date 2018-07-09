@@ -17,7 +17,6 @@
 package org.jclouds.azurecompute.arm;
 
 import java.io.Closeable;
-
 import javax.ws.rs.PathParam;
 
 import org.jclouds.azurecompute.arm.domain.ServicePrincipal;
@@ -48,6 +47,7 @@ import org.jclouds.azurecompute.arm.features.VirtualMachineScaleSetApi;
 import org.jclouds.azurecompute.arm.features.VirtualNetworkApi;
 import org.jclouds.azurecompute.arm.features.VirtualNetworkGatewayApi;
 import org.jclouds.azurecompute.arm.features.VirtualNetworkGatewayConnectionApi;
+import org.jclouds.javax.annotation.Nullable;
 import org.jclouds.rest.annotations.Delegate;
 
 import com.google.common.base.Supplier;
@@ -115,7 +115,7 @@ public interface AzureComputeApi extends Closeable {
     * @see <a href="https://msdn.microsoft.com/en-us/library/mt163668.aspx">docs</a>
     */
    @Delegate
-   NetworkInterfaceCardApi getNetworkInterfaceCardApi(@PathParam("resourcegroup") String resourcegroup);
+   NetworkInterfaceCardApi getNetworkInterfaceCardApi(@Nullable @PathParam("resourcegroup") String resourcegroup);
 
    /**
     * The Public IP Address API includes operations for managing public ID Addresses for NICs in your subscription.
@@ -123,7 +123,7 @@ public interface AzureComputeApi extends Closeable {
     * @see <a href="https://msdn.microsoft.com/en-us/library/azure/mt163638.aspx">docs</a>
     */
    @Delegate
-   PublicIPAddressApi getPublicIPAddressApi(@PathParam("resourcegroup") String resourcegroup);
+   PublicIPAddressApi getPublicIPAddressApi(@Nullable @PathParam("resourcegroup") String resourcegroup);
 
 
    /**

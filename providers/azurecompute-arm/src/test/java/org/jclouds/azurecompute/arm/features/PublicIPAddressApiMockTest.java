@@ -16,22 +16,23 @@
  */
 package org.jclouds.azurecompute.arm.features;
 
-import com.google.common.collect.ImmutableMap;
-import com.squareup.okhttp.mockwebserver.MockResponse;
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertFalse;
+import static org.testng.Assert.assertNotNull;
+import static org.testng.Assert.assertNull;
+import static org.testng.Assert.assertTrue;
+
+import java.util.List;
+import java.util.Map;
+
 import org.jclouds.azurecompute.arm.domain.DnsSettings;
 import org.jclouds.azurecompute.arm.domain.PublicIPAddress;
 import org.jclouds.azurecompute.arm.domain.PublicIPAddressProperties;
 import org.jclouds.azurecompute.arm.internal.BaseAzureComputeApiMockTest;
 import org.testng.annotations.Test;
 
-import java.util.List;
-import java.util.Map;
-
-import static org.testng.Assert.assertFalse;
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertTrue;
-import static org.testng.Assert.assertNotNull;
-import static org.testng.Assert.assertNull;
+import com.google.common.collect.ImmutableMap;
+import com.squareup.okhttp.mockwebserver.MockResponse;
 
 
 @Test(groups = "unit", testName = "NetworkInterfaceCardApiMockTest", singleThreaded = true)
@@ -99,6 +100,30 @@ public class PublicIPAddressApiMockTest extends BaseAzureComputeApiMockTest {
       List<PublicIPAddress> ipList = ipApi.list();
 
       String path = String.format("/subscriptions/%s/resourcegroups/%s/providers/Microsoft.Network/publicIPAddresses?%s", subscriptionid, resourcegroup, apiVersion);
+      assertSent(server, "GET", path);
+      assertEquals(ipList.size(), 0);
+   }
+
+   public void listAllPublicIPAddressesInSubscription() throws InterruptedException {
+      server.enqueue(jsonResponse("/PublicIPAddressListAll.json"));
+
+      final PublicIPAddressApi ipApi = api.getPublicIPAddressApi(null);
+      List<PublicIPAddress> ipList = ipApi.listAllInSubscription();
+
+      String path = String
+            .format("/subscriptions/%s/providers/Microsoft.Network/publicIPAddresses?%s", subscriptionid, apiVersion);
+      assertSent(server, "GET", path);
+      assertEquals(ipList.size(), 5);
+   }
+
+   public void listAllPublicIPAddressesInSubscriptionEmpty() throws InterruptedException {
+      server.enqueue(new MockResponse().setResponseCode(404));
+
+      final PublicIPAddressApi ipApi = api.getPublicIPAddressApi(null);
+      List<PublicIPAddress> ipList = ipApi.listAllInSubscription();
+
+      String path = String
+            .format("/subscriptions/%s/providers/Microsoft.Network/publicIPAddresses?%s", subscriptionid, apiVersion);
       assertSent(server, "GET", path);
       assertEquals(ipList.size(), 0);
    }

@@ -119,7 +119,18 @@ public class PublicIPAddressApiLiveTest extends BaseAzureComputeApiLiveTest {
       assertTrue(ipList.size() > 0);
    }
 
-   @Test(groups = "live", dependsOnMethods = {"listPublicIPAddresses", "getPublicIPAddress"}, alwaysRun = true)
+   @Test(groups = "live", dependsOnMethods = "createPublicIPAddress")
+   public void listAllPublicIPAddressesInSubscription() {
+
+      final PublicIPAddressApi ipApi = api.getPublicIPAddressApi(null);
+
+      List<PublicIPAddress> ipList = ipApi.listAllInSubscription();
+
+      assertTrue(ipList.size() > 0);
+   }
+
+   @Test(groups = "live", dependsOnMethods = { "listPublicIPAddresses", "listAllPublicIPAddressesInSubscription",
+         "getPublicIPAddress" }, alwaysRun = true)
    public void deletePublicIPAddress() {
       final PublicIPAddressApi ipApi = api.getPublicIPAddressApi(resourceGroupName);
       boolean status = ipApi.delete(publicIpAddressName);

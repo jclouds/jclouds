@@ -19,7 +19,6 @@ package org.jclouds.azurecompute.arm.features;
 import java.net.URI;
 import java.util.List;
 import java.util.Map;
-
 import javax.inject.Named;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
@@ -45,19 +44,26 @@ import org.jclouds.rest.annotations.ResponseParser;
 import org.jclouds.rest.annotations.SelectJson;
 import org.jclouds.rest.binders.BindToJsonPayload;
 
-@Path("/resourcegroups/{resourcegroup}/providers/Microsoft.Network/networkInterfaces")
 @RequestFilters({ OAuthFilter.class, ApiVersionFilter.class })
 @Consumes(MediaType.APPLICATION_JSON)
 public interface NetworkInterfaceCardApi {
 
    @Named("networkinterfacecard:list")
+   @Path("/resourcegroups/{resourcegroup}/providers/Microsoft.Network/networkInterfaces")
    @SelectJson("value")
    @GET
    @Fallback(EmptyListOnNotFoundOr404.class)
    List<NetworkInterfaceCard> list();
 
+   @Named("networkinterfacecard:list_all")
+   @Path("/providers/Microsoft.Network/networkInterfaces")
+   @SelectJson("value")
+   @GET
+   @Fallback(EmptyListOnNotFoundOr404.class)
+   List<NetworkInterfaceCard> listAllInSubscription();
+
    @Named("networkinterfacecard:create_or_update")
-   @Path("/{networkinterfacecardname}")
+   @Path("/resourcegroups/{resourcegroup}/providers/Microsoft.Network/networkInterfaces/{networkinterfacecardname}")
    @MapBinder(BindToJsonPayload.class)
    @PUT
    NetworkInterfaceCard createOrUpdate(@PathParam("networkinterfacecardname") String networkinterfacecardname,
@@ -66,13 +72,13 @@ public interface NetworkInterfaceCardApi {
          @Nullable @PayloadParam("tags") Map<String, String> tags);
 
    @Named("networkinterfacecard:get")
-   @Path("/{networkinterfacecardname}")
+   @Path("/resourcegroups/{resourcegroup}/providers/Microsoft.Network/networkInterfaces/{networkinterfacecardname}")
    @GET
    @Fallback(NullOnNotFoundOr404.class)
    NetworkInterfaceCard get(@PathParam("networkinterfacecardname") String networkinterfacecardname);
 
    @Named("networkinterfacecard:delete")
-   @Path("/{networkinterfacecardname}")
+   @Path("/resourcegroups/{resourcegroup}/providers/Microsoft.Network/networkInterfaces/{networkinterfacecardname}")
    @DELETE
    @ResponseParser(URIParser.class)
    @Fallback(NullOnNotFoundOr404.class)
