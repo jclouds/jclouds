@@ -37,15 +37,19 @@ import java.net.URI;
 import java.net.URL;
 import java.util.Date;
 import java.util.Map;
+import java.util.Properties;
 import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeoutException;
 import java.util.concurrent.TimeUnit;
 
+import org.jclouds.ContextBuilder;
+import org.jclouds.aws.domain.SessionCredentials;
 import org.jclouds.blobstore.KeyNotFoundException;
 import org.jclouds.blobstore.domain.Blob;
 import org.jclouds.blobstore.integration.internal.BaseBlobStoreIntegrationTest;
+import org.jclouds.domain.Credentials;
 import org.jclouds.http.HttpResponseException;
 import org.jclouds.io.ByteStreams2;
 import org.jclouds.io.Payload;
@@ -66,6 +70,7 @@ import org.jclouds.util.Strings2;
 import org.jclouds.utils.TestUtils;
 import org.testng.annotations.Test;
 
+import com.google.common.base.Supplier;
 import com.google.common.base.Throwables;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
@@ -80,10 +85,33 @@ public class S3ClientLiveTest extends BaseBlobStoreIntegrationTest {
    public static final String DEFAULT_OWNER_ID = "abc123";
    private static final ByteSource oneHundredOneConstitutions = TestUtils.randomByteSource().slice(0, 5 * 1024 * 1024 + 1);
 
+   protected String sessionToken;
+
    public S3ClientLiveTest() {
       this.provider = "s3";
    }
    
+   @Override
+   protected Properties setupProperties() {
+      Properties overrides = super.setupProperties();
+      sessionToken = setIfTestSystemPropertyPresent(overrides, provider + ".sessionToken");
+      return overrides;
+   }
+
+   @Override
+   protected ContextBuilder newBuilder() {
+      ContextBuilder builder = super.newBuilder();
+      if (sessionToken != null) {
+         builder.credentialsSupplier(new Supplier<Credentials>() {
+            @Override
+            public Credentials get() {
+               return SessionCredentials.builder().identity(identity).credential(credential).sessionToken(sessionToken).build();
+            }
+         });
+      }
+      return builder;
+   }
+
    public S3Client getApi() {
       return view.unwrapApi(S3Client.class);
    }

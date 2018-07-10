@@ -37,6 +37,7 @@
     <test.s3.build-version />
     <test.s3.identity>${test.aws.identity}</test.s3.identity>
     <test.s3.credential>${test.aws.credential}</test.s3.credential>
+    <test.s3.sessionToken>${test.aws.sessionToken}</test.s3.sessionToken>
 
     <jclouds.osgi.export>org.jclouds.s3*;version="${project.version}"</jclouds.osgi.export>
     <jclouds.osgi.import>org.jclouds*;version="${project.version}",*</jclouds.osgi.import>
@@ -131,6 +132,7 @@
                     <test.s3.build-version>${test.s3.build-version}</test.s3.build-version>
                     <test.s3.identity>${test.s3.identity}</test.s3.identity>
                     <test.s3.credential>${test.s3.credential}</test.s3.credential>
+                    <test.s3.sessionToken>${test.s3.sessionToken}</test.s3.sessionToken>
                   </systemPropertyVariables>
                 </configuration>
               </execution>

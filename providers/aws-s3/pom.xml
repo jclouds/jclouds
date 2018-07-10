@@ -40,6 +40,7 @@
     <test.aws-s3.build-version />
     <test.aws-s3.identity>${test.aws.identity}</test.aws-s3.identity>
     <test.aws-s3.credential>${test.aws.credential}</test.aws-s3.credential>
+    <test.aws-s3.sessionToken>${test.aws.sessionToken}</test.aws-s3.sessionToken>
     <test.blobstore.container-count>25</test.blobstore.container-count>
 
     <jclouds.osgi.export>org.jclouds.aws.s3*;version="${project.version}"</jclouds.osgi.export>
@@ -137,6 +138,7 @@
                     <test.aws-s3.build-version>${test.aws-s3.build-version}</test.aws-s3.build-version>
                     <test.aws-s3.identity>${test.aws-s3.identity}</test.aws-s3.identity>
                     <test.aws-s3.credential>${test.aws-s3.credential}</test.aws-s3.credential>
+                    <test.aws-s3.sessionToken>${test.aws-s3.sessionToken}</test.aws-s3.sessionToken>
                     <test.initializer>${test.initializer}</test.initializer>
                     <jclouds.blobstore.httpstream.url>${jclouds.blobstore.httpstream.url}</jclouds.blobstore.httpstream.url>
                     <jclouds.blobstore.httpstream.md5>${jclouds.blobstore.httpstream.md5}</jclouds.blobstore.httpstream.md5>
