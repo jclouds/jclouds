@@ -398,7 +398,7 @@ public abstract class Aws4SignerBase {
 
       // CanonicalQueryString + '\n' +
       if (endpoint.getQuery() != null) {
-         canonicalRequest.append(getCanonicalizedQueryString(endpoint.getQuery()));
+         canonicalRequest.append(getCanonicalizedQueryString(endpoint.getRawQuery()));
       }
       canonicalRequest.append("\n");
 
