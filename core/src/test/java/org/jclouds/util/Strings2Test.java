@@ -23,12 +23,15 @@ import static org.testng.Assert.assertEquals;
 import org.testng.annotations.Test;
 
 import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.ImmutableMultimap;
 
 @Test(groups = "unit")
 public class Strings2Test {
 
    public void testReplaceTokens() {
       assertEquals(Strings2.replaceTokens("hello {where}", ImmutableMap.of("where", "world")), "hello world");
+      assertEquals(Strings2.replaceTokens("hello {where}", ImmutableMap.of("where", "$1,000,000 \\o/!")), "hello $1,000,000 \\o/!");
+      assertEquals(Strings2.replaceTokens("hello {where}", ImmutableMultimap.of("where", "$1,000,000 \\o/!")), "hello $1,000,000 \\o/!");
    }
 
    public void testUrlEncodeDecodeShouldGiveTheSameString() {

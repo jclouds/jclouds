@@ -182,7 +182,7 @@ public class Strings2 {
    public static String replaceTokens(String input, Multimap<String, ?> tokenValues) {
       for (Entry<String, ?> tokenValue : tokenValues.entries()) {
          Pattern pattern = TOKEN_TO_PATTERN.getUnchecked(tokenValue.getKey());
-         input = pattern.matcher(input).replaceAll(tokenValue.getValue().toString());
+         input = pattern.matcher(input).replaceAll(tokenValue.getValue().toString().replace("\\", "\\\\").replace("$", "\\$"));
       }
       return input;
    }
