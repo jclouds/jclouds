@@ -21,6 +21,7 @@ import static com.google.common.base.Throwables.getCausalChain;
 import static com.google.common.base.Throwables.propagate;
 import static com.google.common.collect.Iterables.find;
 
+import java.util.ConcurrentModificationException;
 import java.util.NoSuchElementException;
 
 import org.jclouds.concurrent.TransformParallelException;
@@ -135,6 +136,7 @@ public class Throwables2 {
          ResourceNotFoundException.class,
          InsufficientResourcesException.class,
          RateLimitExceededException.class,
+         ConcurrentModificationException.class,
          HttpResponseException.class);
 
    // Note this needs to be kept up-to-date with all top-level exceptions jclouds works against
