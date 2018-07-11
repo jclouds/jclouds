@@ -41,6 +41,7 @@ import org.jclouds.s3.S3ApiMetadata;
 import org.jclouds.s3.S3Client;
 import org.jclouds.s3.config.S3HttpApiModule;
 import org.jclouds.s3.domain.S3Object;
+import org.jclouds.s3.options.ListBucketOptions;
 import org.jclouds.s3.options.PutObjectOptions;
 import org.testng.annotations.Test;
 
@@ -82,6 +83,11 @@ public class RequestAuthorizeSignatureV4Test {
          + "Credential=AKIAPAEBI3QI4EXAMPLE/20150203/cn-north-1/s3/aws4_request, "
          + "SignedHeaders=content-length;content-type;host;x-amz-content-sha256;x-amz-date;x-amz-storage-class, "
          + "Signature=090f1bb1db984221ae1a20c5d12a82820a0d74b4be85f20daa1431604f41df08";
+
+   private static final String LIST_BUCKET_RESULT = "AWS4-HMAC-SHA256 "
+         + "Credential=AKIAPAEBI3QI4EXAMPLE/20150203/cn-north-1/s3/aws4_request, "
+         + "SignedHeaders=host;x-amz-content-sha256;x-amz-date, "
+         + "Signature=6cc5d0758e2599be7cb172fd57cefab2828201a2b4d372972a83dc304de93958";
 
    private static final String BUCKET_NAME = "test-bucket";
    private static final String OBJECT_NAME = "ExampleObject.txt";
@@ -190,4 +196,23 @@ public class RequestAuthorizeSignatureV4Test {
       assertEquals(filtered.getFirstHeaderOrNull("Authorization"), PUT_OBJECT_RESULT);
 
    }
+
+   // JCLOUDS-1401
+   @Test
+   void testListBucketFunnyCharactersSignature() {
+      Invocation invocation = Invocation.create(method(S3Client.class, "listBucket", String.class,
+                  ListBucketOptions[].class),
+            // Simulating ListBucketOptions.Builder.withPrefix("foo%2Fbar") with manual endpoint:
+            ImmutableList.<Object>of(BUCKET_NAME, new ListBucketOptions[0]));
+
+      HttpRequest getObject = GeneratedHttpRequest.builder().method("GET")
+            .invocation(invocation)
+            .endpoint("https://" + BUCKET_NAME + ".s3.cn-north-1.amazonaws.com.cn/?delimiter=/&prefix=foo%252Fbar")
+            .addHeader(HttpHeaders.HOST, BUCKET_NAME + ".s3.cn-north-1.amazonaws.com.cn")
+            .build();
+
+      HttpRequest filtered = filter(temporaryCredentials).filter(getObject);
+      assertEquals(filtered.getFirstHeaderOrNull("Authorization"), LIST_BUCKET_RESULT);
+   }
+
 }
