@@ -15,9 +15,9 @@
  * limitations under the License.
  */
 package org.jclouds.azurecompute.arm.features;
+
 import java.util.List;
 import java.util.Map;
-
 import javax.inject.Named;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
@@ -25,10 +25,12 @@ import javax.ws.rs.GET;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
 import org.jclouds.Fallbacks.EmptyListOnNotFoundOr404;
 import org.jclouds.Fallbacks.NullOnNotFoundOr404;
+import org.jclouds.azurecompute.arm.domain.IpAddressAvailabilityResult;
 import org.jclouds.azurecompute.arm.domain.VirtualNetwork;
 import org.jclouds.azurecompute.arm.filters.ApiVersionFilter;
 import org.jclouds.azurecompute.arm.functions.FalseOn204;
@@ -58,9 +60,8 @@ public interface VirtualNetworkApi {
    @MapBinder(BindToJsonPayload.class)
    @PUT
    VirtualNetwork createOrUpdate(@PathParam("virtualnetworkname") String virtualnetworkname,
-                                               @PayloadParam("location") String location,
-                                               @Nullable @PayloadParam("tags") Map<String, String> tags,
-                                               @PayloadParam("properties")VirtualNetwork.VirtualNetworkProperties properties);
+         @PayloadParam("location") String location, @Nullable @PayloadParam("tags") Map<String, String> tags,
+         @PayloadParam("properties") VirtualNetwork.VirtualNetworkProperties properties);
 
    @Named("virtualnetwork:get")
    @Path("/{virtualnetworkname}")
@@ -73,4 +74,10 @@ public interface VirtualNetworkApi {
    @DELETE
    @ResponseParser(FalseOn204.class)
    boolean delete(@PathParam("virtualnetworkname") String virtualnetworkname);
+
+   @Named("virtualnetwork:check_ip_address_availability")
+   @Path("/{virtualnetworkname}/CheckIPAddressAvailability")
+   @GET
+   IpAddressAvailabilityResult checkIPAddressAvailability(@PathParam("virtualnetworkname") String virtualnetworkname,
+         @QueryParam("ipAddress") String ipAddress);
 }
