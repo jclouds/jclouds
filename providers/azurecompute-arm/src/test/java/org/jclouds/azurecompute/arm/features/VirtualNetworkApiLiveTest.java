@@ -21,19 +21,35 @@ import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertTrue;
 
+import java.net.URI;
 import java.util.Arrays;
 import java.util.List;
 
 import org.jclouds.azurecompute.arm.domain.AddressSpace;
+import org.jclouds.azurecompute.arm.domain.FrontendIPConfigurations;
+import org.jclouds.azurecompute.arm.domain.FrontendIPConfigurationsProperties;
+import org.jclouds.azurecompute.arm.domain.IdReference;
+import org.jclouds.azurecompute.arm.domain.IpAddressAvailabilityResult;
+import org.jclouds.azurecompute.arm.domain.LoadBalancer;
+import org.jclouds.azurecompute.arm.domain.LoadBalancerProperties;
+import org.jclouds.azurecompute.arm.domain.Subnet;
+import org.jclouds.azurecompute.arm.domain.Subnet.SubnetProperties;
 import org.jclouds.azurecompute.arm.domain.VirtualNetwork;
 import org.jclouds.azurecompute.arm.internal.BaseAzureComputeApiLiveTest;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
+import com.google.common.collect.ImmutableList;
+
 @Test(groups = "live", singleThreaded = true)
 public class VirtualNetworkApiLiveTest extends BaseAzureComputeApiLiveTest {
 
+   private static final String TEST_VIRTUALNETWORK_ADDRESS_PREFIX = "10.20.0.0/16";
+   private static final String TEST_IP_ADDRESS_AVAILABLE = "10.20.0.15";
+   private static final String TEST_IP_ADDRESS_USED_IN_PROVIDER = "10.20.0.7";
+
    private String virtualNetworkName;
+
 
    @BeforeClass
    @Override
@@ -52,11 +68,16 @@ public class VirtualNetworkApiLiveTest extends BaseAzureComputeApiLiveTest {
    @Test(dependsOnMethods = "deleteVirtualNetworkResourceDoesNotExist")
    public void createVirtualNetwork() {
 
-      final VirtualNetwork.VirtualNetworkProperties virtualNetworkProperties =
-              VirtualNetwork.VirtualNetworkProperties.builder().addressSpace(
-                      AddressSpace.create(Arrays.asList(DEFAULT_VIRTUALNETWORK_ADDRESS_PREFIX))).build();
+      Subnet subnet = Subnet.builder().name("subnetName")
+            .properties(SubnetProperties.builder().addressPrefix(TEST_VIRTUALNETWORK_ADDRESS_PREFIX).build()).build();
+
+      final VirtualNetwork.VirtualNetworkProperties virtualNetworkProperties = VirtualNetwork.VirtualNetworkProperties
+            .builder().subnets(ImmutableList.<Subnet> of(subnet))
+            .addressSpace(AddressSpace.create(Arrays.asList(TEST_VIRTUALNETWORK_ADDRESS_PREFIX))).build();
 
       VirtualNetwork vn = api().createOrUpdate(virtualNetworkName, LOCATION, null, virtualNetworkProperties);
+
+      networkAvailablePredicate.create(resourceGroupName).apply(virtualNetworkName);
 
       assertEquals(vn.name(), virtualNetworkName);
       assertEquals(vn.location(), LOCATION);
@@ -77,7 +98,24 @@ public class VirtualNetworkApiLiveTest extends BaseAzureComputeApiLiveTest {
       assertTrue(vnList.size() > 0);
    }
 
-   @Test(dependsOnMethods = {"listVirtualNetworks", "getVirtualNetwork"}, alwaysRun = true)
+   @Test(dependsOnMethods = "getVirtualNetwork")
+   public void checkIpAvailability() {
+      final IpAddressAvailabilityResult checkResultAvailable = api()
+            .checkIPAddressAvailability(virtualNetworkName, TEST_IP_ADDRESS_AVAILABLE);
+      assertTrue(checkResultAvailable.available());
+      assertTrue(checkResultAvailable.availableIPAddresses().isEmpty());
+
+      LoadBalancer lbCreated = createLoadBalancerWithPrivateIP(TEST_IP_ADDRESS_USED_IN_PROVIDER);
+
+      final IpAddressAvailabilityResult checkResultUnavailable = api()
+            .checkIPAddressAvailability(virtualNetworkName, TEST_IP_ADDRESS_USED_IN_PROVIDER);
+      assertFalse(checkResultUnavailable.available());
+      assertFalse(checkResultUnavailable.availableIPAddresses().isEmpty());
+
+      deleteLoadBalancer(lbCreated);
+   }
+
+   @Test(dependsOnMethods = { "listVirtualNetworks", "getVirtualNetwork", "checkIpAvailability" }, alwaysRun = true)
    public void deleteVirtualNetwork() {
       boolean status = api().delete(virtualNetworkName);
       assertTrue(status);
@@ -87,4 +125,26 @@ public class VirtualNetworkApiLiveTest extends BaseAzureComputeApiLiveTest {
       return api.getVirtualNetworkApi(resourceGroupName);
    }
 
+   private LoadBalancerApi lbApi() {
+      return api.getLoadBalancerApi(resourceGroupName);
+   }
+
+   private LoadBalancer createLoadBalancerWithPrivateIP(final String ipAddress) {
+
+      FrontendIPConfigurationsProperties frontendProps = FrontendIPConfigurationsProperties.builder()
+            .privateIPAddress(ipAddress).privateIPAllocationMethod("Static")
+            .subnet(IdReference.create(api().get(virtualNetworkName).properties().subnets().get(0).id())).build();
+      FrontendIPConfigurations frontendIps = FrontendIPConfigurations.create("ipConfigs", null, frontendProps, null);
+      LoadBalancerProperties props = LoadBalancerProperties.builder()
+            .frontendIPConfigurations(ImmutableList.of(frontendIps)).build();
+
+      LoadBalancer lbCreated = lbApi().createOrUpdate("lbName", LOCATION, null, props);
+      assertNotNull(lbCreated);
+      return lbCreated;
+   }
+
+   private void deleteLoadBalancer(LoadBalancer lbCreated) {
+      URI lbDeletedURI = lbApi().delete(lbCreated.name());
+      assertResourceDeleted(lbDeletedURI);
+   }
 }

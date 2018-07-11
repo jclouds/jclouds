@@ -17,6 +17,7 @@
 package org.jclouds.azurecompute.arm.internal;
 
 import static com.google.common.base.Preconditions.checkNotNull;
+
 import static org.jclouds.azurecompute.arm.config.AzureComputeProperties.TIMEOUT_RESOURCE_DELETED;
 import static org.jclouds.azurecompute.arm.config.AzureComputeProperties.VAULT_CERTIFICATE_DELETE_STATUS;
 import static org.jclouds.azurecompute.arm.config.AzureComputeProperties.VAULT_CERTIFICATE_OPERATION_STATUS;
@@ -40,6 +41,7 @@ import java.util.Random;
 
 import org.jclouds.apis.BaseApiLiveTest;
 import org.jclouds.azurecompute.arm.AzureComputeApi;
+import org.jclouds.azurecompute.arm.compute.config.AzurePredicatesModule.NetworkAvailablePredicateFactory;
 import org.jclouds.azurecompute.arm.compute.config.AzurePredicatesModule.PublicIpAvailablePredicateFactory;
 import org.jclouds.azurecompute.arm.compute.config.AzurePredicatesModule.VaultCertificatePredicates.CertificateOperationStatusPredicateFactory;
 import org.jclouds.azurecompute.arm.compute.config.AzurePredicatesModule.VaultCertificatePredicates.DeletedCertificateStatusPredicateFactory;
@@ -96,6 +98,7 @@ public class BaseAzureComputeApiLiveTest extends BaseApiLiveTest<AzureComputeApi
    protected DeletedCertificateStatusPredicateFactory deletedCertificateStatus;
    protected RecoverableCertificateStatusPredicateFactory recoverableCertificateStatus;
    protected CertificateOperationStatusPredicateFactory certificateOperationStatus;
+   protected NetworkAvailablePredicateFactory networkAvailablePredicate;
 
    protected String resourceGroupName;
    
@@ -152,6 +155,7 @@ public class BaseAzureComputeApiLiveTest extends BaseApiLiveTest<AzureComputeApi
       deletedCertificateStatus = injector.getInstance(Key.get(DeletedCertificateStatusPredicateFactory.class, Names.named(VAULT_CERTIFICATE_DELETE_STATUS)));
       recoverableCertificateStatus = injector.getInstance(Key.get(RecoverableCertificateStatusPredicateFactory.class, Names.named(VAULT_CERTIFICATE_RECOVERABLE_STATUS)));
       certificateOperationStatus = injector.getInstance(Key.get(CertificateOperationStatusPredicateFactory.class, Names.named(VAULT_CERTIFICATE_OPERATION_STATUS)));
+      networkAvailablePredicate = injector.getInstance(NetworkAvailablePredicateFactory.class);
 
       tenantId = injector.getInstance(Key.get(String.class, Tenant.class));
       return injector.getInstance(AzureComputeApi.class);
