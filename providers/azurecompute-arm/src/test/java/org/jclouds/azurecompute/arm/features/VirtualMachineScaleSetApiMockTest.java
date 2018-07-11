@@ -351,8 +351,7 @@ public class VirtualMachineScaleSetApiMockTest extends BaseAzureComputeApiMockTe
                               "/subscriptions/xxxxx-xxxx-xxxx-xxxx-xxxxxx/resourceGroups/" +
                                       "jcloud-eastus/providers/" +
                                       "Microsoft.Network/virtualNetworks/" + "jclouds-eastus-virtualNetworkName"
-                                    + "/subnets/"
-                                    + "jclouds-eastus-subnet"), Boolean.TRUE
+                                    + "/subnets/" + "jclouds-eastus-subnet"), null, Boolean.TRUE
               );
 
       Map<String, String> tags = ImmutableMap.of("jclouds", "livetest");

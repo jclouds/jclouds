@@ -32,21 +32,20 @@ public abstract class NetworkInterfaceCardProperties implements Provisionable {
    @Nullable public abstract Boolean enableIPForwarding();
    @Nullable public abstract List<IpConfiguration> ipConfigurations();
    @Nullable public abstract IdReference networkSecurityGroup();
-
-   @Nullable
-   public abstract Boolean primary();
+   @Nullable public abstract IdReference virtualMachine();
+   @Nullable public abstract Boolean primary();
 
    @SerializedNames({"provisioningState", "resourceGuid", "enableIPForwarding", "ipConfigurations",
-         "networkSecurityGroup", "primary" })
+         "networkSecurityGroup", "virtualMachine", "primary" })
    public static NetworkInterfaceCardProperties create(final String provisioningState, final String resourceGuid,
          final Boolean enableIPForwarding, final List<IpConfiguration> ipConfigurations,
-         final IdReference networkSecurityGroup, final Boolean primary) {
+         final IdReference networkSecurityGroup, final IdReference virtualMachine, final Boolean primary) {
       NetworkInterfaceCardProperties.Builder builder = NetworkInterfaceCardProperties.builder()
               .provisioningState(provisioningState)
               .resourceGuid(resourceGuid)
               .enableIPForwarding(enableIPForwarding)
               .ipConfigurations(ipConfigurations == null ? null : ImmutableList.copyOf(ipConfigurations))
-            .networkSecurityGroup(networkSecurityGroup).primary(primary);
+            .networkSecurityGroup(networkSecurityGroup).virtualMachine(virtualMachine).primary(primary);
 
       return builder.build();
    }
@@ -68,7 +67,7 @@ public abstract class NetworkInterfaceCardProperties implements Provisionable {
       public abstract Builder enableIPForwarding(Boolean enableIPForwarding);
       public abstract Builder ipConfigurations(List<IpConfiguration> ipConfigurations);
       public abstract Builder networkSecurityGroup(IdReference networkSecurityGroup);
-
+      public abstract Builder virtualMachine(IdReference virtualMachine);
       public abstract Builder primary(Boolean primary);
 
 
