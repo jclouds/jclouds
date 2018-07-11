@@ -48,7 +48,10 @@ import org.jclouds.ContextBuilder;
 import org.jclouds.aws.domain.SessionCredentials;
 import org.jclouds.blobstore.KeyNotFoundException;
 import org.jclouds.blobstore.domain.Blob;
+import org.jclouds.blobstore.domain.PageSet;
+import org.jclouds.blobstore.domain.StorageMetadata;
 import org.jclouds.blobstore.integration.internal.BaseBlobStoreIntegrationTest;
+import org.jclouds.blobstore.options.ListContainerOptions;
 import org.jclouds.domain.Credentials;
 import org.jclouds.http.HttpResponseException;
 import org.jclouds.io.ByteStreams2;
@@ -532,6 +535,23 @@ public class S3ClientLiveTest extends BaseBlobStoreIntegrationTest {
          returnContainer(containerName);
          returnContainer(destinationContainer);
 
+      }
+   }
+
+   // JCLOUDS-1401
+   public void testUnusualKeyCharacters() throws InterruptedException, ExecutionException, TimeoutException, IOException {
+      String containerName = getContainerName();
+      try {
+         String dirName = "a%2Fb&xxx#?:$'\\\"<>čॐ";
+         String fileName = "foo%3Abar.xml";
+         addToContainerAndValidate(containerName, dirName + '/' + fileName);
+         PageSet<? extends StorageMetadata> list = view.getBlobStore().list(containerName,
+                  ListContainerOptions.Builder.prefix(dirName + "/"));
+         assertEquals(list.size(), 1);
+         StorageMetadata md = list.iterator().next();
+         assertEquals(md.getName(), dirName + '/' + fileName);
+      } finally {
+         returnContainer(containerName);
       }
    }
 
