@@ -239,6 +239,11 @@ public class EC2HardwareBuilder extends HardwareBuilder {
       return this;
    }
 
+   private EC2HardwareBuilder m5() {
+      virtualizationTypes(VirtualizationType.HVM);
+      return this;
+   }
+
    private EC2HardwareBuilder c3() {
       virtualizationTypes(VirtualizationType.HVM, VirtualizationType.PARAVIRTUAL);
       return this;
@@ -586,6 +591,73 @@ public class EC2HardwareBuilder extends HardwareBuilder {
             .is64Bit(true)
             .rootDeviceType(RootDeviceType.EBS);
    }
+
+   /**
+    * @see InstanceType#M5_LARGE
+    */
+   public static EC2HardwareBuilder m5_large() {
+      return new EC2HardwareBuilder(InstanceType.M5_LARGE).m5()
+            .ram(8192)
+            .processors(ImmutableList.of(new Processor(2, 2.5)))
+            .is64Bit(true)
+            .rootDeviceType(RootDeviceType.EBS);
+   }
+
+   /**
+    * @see InstanceType#M5_XLARGE
+    */
+   public static EC2HardwareBuilder m5_xlarge() {
+      return new EC2HardwareBuilder(InstanceType.M5_XLARGE).m5()
+            .ram(16384)
+            .processors(ImmutableList.of(new Processor(4, 2.5)))
+            .is64Bit(true)
+            .rootDeviceType(RootDeviceType.EBS);
+   }
+
+   /**
+    * @see InstanceType#M5_2XLARGE
+    */
+   public static EC2HardwareBuilder m5_2xlarge() {
+      return new EC2HardwareBuilder(InstanceType.M5_2XLARGE).m5()
+            .ram(32768)
+            .processors(ImmutableList.of(new Processor(8, 2.5)))
+            .is64Bit(true)
+            .rootDeviceType(RootDeviceType.EBS);
+   }
+
+   /**
+    * @see InstanceType#M5_4XLARGE
+    */
+   public static EC2HardwareBuilder m5_4xlarge() {
+      return new EC2HardwareBuilder(InstanceType.M5_4XLARGE).m5()
+            .ram(65536)
+            .processors(ImmutableList.of(new Processor(16, 2.5)))
+            .is64Bit(true)
+            .rootDeviceType(RootDeviceType.EBS);
+   }
+
+   /**
+    * @see InstanceType#M5_12XLARGE
+    */
+   public static EC2HardwareBuilder m5_12xlarge() {
+      return new EC2HardwareBuilder(InstanceType.M5_12XLARGE).m5()
+            .ram(196608)
+            .processors(ImmutableList.of(new Processor(48.0, 2.5)))
+            .is64Bit(true)
+            .rootDeviceType(RootDeviceType.EBS);
+   }
+
+   /**
+    * @see InstanceType#M5_24XLARGE
+    */
+   public static EC2HardwareBuilder m5_24xlarge() {
+      return new EC2HardwareBuilder(InstanceType.M5_24XLARGE).m5()
+            .ram(393216)
+            .processors(ImmutableList.of(new Processor(96.0, 2.5)))
+            .is64Bit(true)
+            .rootDeviceType(RootDeviceType.EBS);
+   }
+
 
    /**
     * @see InstanceType#C1_MEDIUM

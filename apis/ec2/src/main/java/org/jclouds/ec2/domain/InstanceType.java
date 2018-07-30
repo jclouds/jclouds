@@ -269,6 +269,78 @@ public class InstanceType {
    public static final String M4_10XLARGE = "m4.10xlarge";
 
    /**
+    * M5 Large Instance
+    * <ul>
+    * <li>8 GiB memory</li>
+    * <li>5 EC2 Compute Units (2 virtual cores with 2.5 EC2 Compute Units each)</li>
+    * <li>EBS storage only</li>
+    * <li>64-bit platform</li>
+    * <li>I/O Performance: Moderate</li>
+    * </ul>
+    */
+   public static final String M5_LARGE = "m5.large";
+
+   /**
+    * M5 Extra Large Instance
+    * <ul>
+    * <li>16 GiB memory</li>
+    * <li>10 EC2 Compute Units (4 virtual cores with 2.5 EC2 Compute Units each)</li>
+    * <li>EBS storage only</li>
+    * <li>64-bit platform</li>
+    * <li>I/O Performance: High</li>
+    * </ul>
+    */
+   public static final String M5_XLARGE = "m5.xlarge";
+
+   /**
+    * M5 Double Extra Large Instance
+    * <ul>
+    * <li>32 GiB memory</li>
+    * <li>26 EC2 Compute Units (8 virtual cores with 2.5 EC2 Compute Units each)</li>
+    * <li>EBS storage only</li>
+    * <li>64-bit platform</li>
+    * <li>I/O Performance: High</li>
+    * </ul>
+    */
+   public static final String M5_2XLARGE = "m5.2xlarge";
+
+   /**
+    * M5 Quadruple Extra Large Instance
+    * <ul>
+    * <li>64 GiB memory</li>
+    * <li>40 EC2 Compute Units (16 virtual cores with 2.5 EC2 Compute Units each)</li>
+    * <li>EBS storage only</li>
+    * <li>64-bit platform</li>
+    * <li>I/O Performance: High</li>
+    * </ul>
+    */
+   public static final String M5_4XLARGE = "m5.4xlarge";
+
+   /**
+    * M5 12x Extra Large Instance
+    * <ul>
+    * <li>192 GiB memory</li>
+    * <li>144 EC2 Compute Units (48 virtual cores with 2.5 EC2 Compute Units each)</li>
+    * <li>EBS storage only</li>
+    * <li>64-bit platform</li>
+    * <li>I/O Performance: High</li>
+    * </ul>
+    */
+   public static final String M5_12XLARGE = "m5.12xlarge";
+
+   /**
+    * M5 24x Extra Large Instance
+    * <ul>
+    * <li>384 GiB memory</li>
+    * <li>288 EC2 Compute Units (96 virtual cores with 2.5 EC2 Compute Units each)</li>
+    * <li>EBS storage only</li>
+    * <li>64-bit platform</li>
+    * <li>I/O Performance: High</li>
+    * </ul>
+    */
+   public static final String M5_24XLARGE = "m5.24xlarge";
+
+   /**
     * High-CPU Medium Instance
     * <ul>
     * <li>1.7 GB of memory</li>
