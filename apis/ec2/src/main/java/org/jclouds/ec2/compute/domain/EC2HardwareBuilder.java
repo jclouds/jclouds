@@ -249,6 +249,11 @@ public class EC2HardwareBuilder extends HardwareBuilder {
       return this;
    }
    
+   private EC2HardwareBuilder c5() {
+      virtualizationTypes(VirtualizationType.HVM, VirtualizationType.PARAVIRTUAL);
+      return this;
+   }
+   
    // TODO include D2 (dense) types?
    private EC2HardwareBuilder d2() {
       virtualizationTypes(VirtualizationType.HVM);
@@ -727,6 +732,66 @@ public class EC2HardwareBuilder extends HardwareBuilder {
       return new EC2HardwareBuilder(InstanceType.C4_8XLARGE).c4()
          .ram(61440)
          .processors(ImmutableList.of(new Processor(36.0, 3.5)))
+         .rootDeviceType(RootDeviceType.EBS);
+   }
+
+   /**
+    * @see InstanceType#C5_LARGE
+    */
+   public static EC2HardwareBuilder c5_large() {
+      return new EC2HardwareBuilder(InstanceType.C5_LARGE).c5()
+         .ram(4096)
+         .processors(ImmutableList.of(new Processor(2.0, 3.0)))
+         .rootDeviceType(RootDeviceType.EBS);
+   }
+
+   /**
+    * @see InstanceType#C5_XLARGE
+    */
+   public static EC2HardwareBuilder c5_xlarge() {
+      return new EC2HardwareBuilder(InstanceType.C5_XLARGE).c5()
+         .ram(8192)
+         .processors(ImmutableList.of(new Processor(4.0, 3.0)))
+         .rootDeviceType(RootDeviceType.EBS);
+   }
+
+   /**
+    * @see InstanceType#C5_2XLARGE
+    */
+   public static EC2HardwareBuilder c5_2xlarge() {
+      return new EC2HardwareBuilder(InstanceType.C5_2XLARGE).c5()
+         .ram(16384)
+         .processors(ImmutableList.of(new Processor(8.0, 3.0)))
+         .rootDeviceType(RootDeviceType.EBS);
+   }
+
+   /**
+    * @see InstanceType#C5_4XLARGE
+    */
+   public static EC2HardwareBuilder c5_4xlarge() {
+      return new EC2HardwareBuilder(InstanceType.C5_4XLARGE).c5()
+         .ram(32768)
+         .processors(ImmutableList.of(new Processor(16.0, 3.0)))
+         .rootDeviceType(RootDeviceType.EBS);
+   }
+
+   /**
+    * @see InstanceType#C5_9XLARGE
+    */
+   public static EC2HardwareBuilder c5_9xlarge() {
+      return new EC2HardwareBuilder(InstanceType.C5_9XLARGE).c5()
+         .ram(73728)
+         .processors(ImmutableList.of(new Processor(36.0, 3.0)))
+         .rootDeviceType(RootDeviceType.EBS);
+   }
+
+   /**
+    * @see InstanceType#C5_18XLARGE
+    */
+   public static EC2HardwareBuilder c5_18xlarge() {
+      return new EC2HardwareBuilder(InstanceType.C5_18XLARGE).c5()
+         .ram(147456)
+         .processors(ImmutableList.of(new Processor(72.0, 3.0)))
          .rootDeviceType(RootDeviceType.EBS);
    }
 

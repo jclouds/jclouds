@@ -488,6 +488,72 @@ public class InstanceType {
    public static final String C4_LARGE = "c4.large";
 
    /**
+    * C5 Compute-optimized Large
+    * <ul>
+    *    <li>4 GiB of memory</li>
+    *    <li>2 vCPU</li>
+    *    <li>No instance storage (EBS storage only)</li>
+    *    <li>Up to 25 Gbps of network bandwidth using Elastic Network Adapter (ENA)-based Enhanced Networking</li>
+    * </ul>
+    */
+   public static final String C5_LARGE = "c5.large";
+
+   /**
+    * C5 Compute-optimized X Large
+    * <ul>
+    *    <li>8 GiB of memory</li>
+    *    <li>4 vCPU</li>
+    *    <li>No instance storage (EBS storage only)</li>
+    *    <li>Up to 25 Gbps of network bandwidth using Elastic Network Adapter (ENA)-based Enhanced Networking</li>
+    * </ul>
+    */
+   public static final String C5_XLARGE = "c5.xlarge";
+
+   /**
+    * C5 Compute-optimized 2x Large
+    * <ul>
+    *    <li>16 GiB of memory</li>
+    *    <li>8 vCPU</li>
+    *    <li>No instance storage (EBS storage only)</li>
+    *    <li>Up to 25 Gbps of network bandwidth using Elastic Network Adapter (ENA)-based Enhanced Networking</li>
+    * </ul>
+    */
+   public static final String C5_2XLARGE = "c5.2xlarge";
+
+   /**
+    * C5 Compute-optimized 4x Large
+    * <ul>
+    *    <li>32 GiB of memory</li>
+    *    <li>16 vCPU</li>
+    *    <li>No instance storage (EBS storage only)</li>
+    *    <li>Up to 25 Gbps of network bandwidth using Elastic Network Adapter (ENA)-based Enhanced Networking</li>
+    * </ul>
+    */
+   public static final String C5_4XLARGE = "c5.4xlarge";
+
+   /**
+    * C5 Compute-optimized 9x Large
+    * <ul>
+    *    <li>72 GiB of memory</li>
+    *    <li>36 vCPU</li>
+    *    <li>No instance storage (EBS storage only)</li>
+    *    <li>Up to 25 Gbps of network bandwidth using Elastic Network Adapter (ENA)-based Enhanced Networking</li>
+    * </ul>
+    */
+   public static final String C5_9XLARGE = "c5.9xlarge";
+
+   /**
+    * C5 Compute-optimized 18x Large
+    * <ul>
+    *    <li>144 GiB of memory</li>
+    *    <li>72 vCPU</li>
+    *    <li>No instance storage (EBS storage only)</li>
+    *    <li>Up to 25 Gbps of network bandwidth using Elastic Network Adapter (ENA)-based Enhanced Networking</li>
+    * </ul>
+    */
+   public static final String C5_18XLARGE = "c5.18xlarge";
+
+   /**
     * D2 Dense Storage Extra Large
     * <ul>
     *    <li>30.5 GiB of memory</li>
