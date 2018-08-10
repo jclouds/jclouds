@@ -16,6 +16,7 @@
  */
 package org.jclouds.azurecompute.arm.config;
 
+import static org.jclouds.azurecompute.arm.config.AzureComputeHttpApiModule.IS_CHINA_ENDPOINT;
 import static org.jclouds.oauth.v2.config.OAuthProperties.AUDIENCE;
 import static org.jclouds.oauth.v2.config.OAuthProperties.RESOURCE;
 
@@ -29,7 +30,7 @@ import com.google.inject.name.Named;
 
 public class AzureOAuthConfigFactory implements OAuthConfigFactory {
    private final OAuthScopes scopes;
-   
+
    @Named(AUDIENCE)
    @Inject(optional = true)
    private String audience;
@@ -37,6 +38,10 @@ public class AzureOAuthConfigFactory implements OAuthConfigFactory {
    @Named(RESOURCE)
    @Inject(optional = true)
    private String resource;
+
+   @Named(IS_CHINA_ENDPOINT)
+   @Inject(optional = true)
+   private boolean isChinaEndpoint;
 
    @Inject
    AzureOAuthConfigFactory(OAuthScopes scopes) {
@@ -54,7 +59,9 @@ public class AzureOAuthConfigFactory implements OAuthConfigFactory {
                   .getAnnotation(OAuthResource.class);
          }
       }
-      String oauthResource = customResource != null ? customResource.value() : resource;
+      String oauthResource = customResource == null ?
+            resource :
+            (isChinaEndpoint ? customResource.chinaEndpoint() : customResource.value());
       return OAuthConfig.create(scopes.forRequest(input), audience, oauthResource);
    }
 }

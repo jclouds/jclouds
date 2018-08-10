@@ -30,12 +30,15 @@ public class ParseTenantIdTest {
 
       assertEquals(module.provideTenant("https://login.microsoftonline.com/tenantId/oauth2/token"), "tenantId");
       assertEquals(module.provideTenant("https://login.microsoft.com/tenant2/oauth2/token"), "tenant2");
-      
+      assertEquals(module.provideTenant("https://login.chinacloudapi.cn/tenantId/oauth2/token"), "tenantId");
+      assertEquals(module.provideTenant("https://login.chinacloudapi.cn/tenant2/oauth2/token"), "tenant2");
+
       assertInvalid(module, "https://login.microsoftonline.com/a/b/c/oauth2/token");
       assertInvalid(module, "https://login.microsoft.com/a/b/c/oauth2/token");
       assertInvalid(module, "https://login.microsoftonline.com//oauth2/token");
       assertInvalid(module, "https://login.microsoft.com//oauth2/token");
-      assertInvalid(module, "https://login.microsoftabc.com/tenant/oauth2/token");
+      assertInvalid(module, "https://login.chinacloudapi.cn/a/b/c/oauth2/token");
+      assertInvalid(module, "https://login.chinacloudapi.cn//oauth2/token");
    }
 
    private static void assertInvalid(AzureComputeHttpApiModule module, String endpoint) {

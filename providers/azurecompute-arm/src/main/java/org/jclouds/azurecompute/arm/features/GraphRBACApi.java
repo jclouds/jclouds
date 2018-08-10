@@ -37,7 +37,7 @@ import com.google.inject.name.Named;
 @RequestFilters({ OAuthFilter.class, ApiVersionFilter.class })
 @Consumes(MediaType.APPLICATION_JSON)
 @Endpoint(GraphRBAC.class)
-@OAuthResource(GraphRBAC.ENDPOINT)
+@OAuthResource(value = GraphRBAC.STANDARD_ENDPOINT, chinaEndpoint = GraphRBAC.CHINA_ENDPOINT)
 public interface GraphRBACApi {
 
    @Named("servicePrincipal:get")

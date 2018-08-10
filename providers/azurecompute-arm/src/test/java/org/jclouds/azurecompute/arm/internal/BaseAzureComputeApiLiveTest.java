@@ -17,7 +17,6 @@
 package org.jclouds.azurecompute.arm.internal;
 
 import static com.google.common.base.Preconditions.checkNotNull;
-
 import static org.jclouds.azurecompute.arm.config.AzureComputeProperties.TIMEOUT_RESOURCE_DELETED;
 import static org.jclouds.azurecompute.arm.config.AzureComputeProperties.VAULT_CERTIFICATE_DELETE_STATUS;
 import static org.jclouds.azurecompute.arm.config.AzureComputeProperties.VAULT_CERTIFICATE_OPERATION_STATUS;
@@ -28,6 +27,7 @@ import static org.jclouds.azurecompute.arm.config.AzureComputeProperties.VAULT_K
 import static org.jclouds.azurecompute.arm.config.AzureComputeProperties.VAULT_SECRET_DELETE_STATUS;
 import static org.jclouds.azurecompute.arm.config.AzureComputeProperties.VAULT_SECRET_RECOVERABLE_STATUS;
 import static org.jclouds.compute.config.ComputeServiceProperties.TIMEOUT_IMAGE_AVAILABLE;
+import static org.jclouds.oauth.v2.config.OAuthProperties.RESOURCE;
 import static org.jclouds.util.Predicates2.retry;
 import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertTrue;
@@ -166,6 +166,7 @@ public class BaseAzureComputeApiLiveTest extends BaseApiLiveTest<AzureComputeApi
       // for oauth
       AzureLiveTestUtils.defaultProperties(properties);
       checkNotNull(setIfTestSystemPropertyPresent(properties, "oauth.endpoint"), "test.oauth.endpoint");
+      setIfTestSystemPropertyPresent(properties, RESOURCE);
       return properties;
    }
    

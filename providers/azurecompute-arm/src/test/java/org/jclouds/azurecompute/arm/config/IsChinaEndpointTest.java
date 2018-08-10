@@ -16,21 +16,23 @@
  */
 package org.jclouds.azurecompute.arm.config;
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
-import javax.inject.Qualifier;
+import static org.testng.Assert.assertFalse;
+import static org.testng.Assert.assertTrue;
 
-/**
- * Configures a custom OAuth resource for certain APIs and methods.
- */
-@Retention(value = RetentionPolicy.RUNTIME)
-@Target(value = { ElementType.TYPE, ElementType.METHOD })
-@Qualifier
-public @interface OAuthResource {
+import org.testng.annotations.Test;
 
-   String value();
+@Test(groups = "unit", testName = "IsChinaEndpointTest")
+public class IsChinaEndpointTest {
 
-   String chinaEndpoint();
+   @Test
+   public void testIsChinaEndpoint() {
+      AzureComputeHttpApiModule module = new AzureComputeHttpApiModule();
+
+      assertTrue(module.isChinaEndpoint("https://login.chinacloudapi.cn/tenantId/oauth2/token"));
+      assertFalse(module.isChinaEndpoint("http://login.chinacloudapi.cn/tenantId/oauth2/token"));
+      assertFalse(module.isChinaEndpoint("https://login.chinacloudapi.cn/otherpaths/not/oauth"));
+      assertFalse(module.isChinaEndpoint("https://login.microsoftonline.com/tenantId/oauth2/token"));
+      assertFalse(module.isChinaEndpoint("https://login.microsoft.com/otherpaths/not/oauth"));
+   }
+
 }
