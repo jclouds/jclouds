@@ -54,7 +54,12 @@ import com.google.inject.name.Named;
 public class AzureComputeHttpApiModule extends HttpApiModule<AzureComputeApi> {
 
    private static final Pattern OAUTH_TENANT_PATTERN = Pattern
-         .compile("https://login.microsoft(?:online)?.com/([^/]+)/oauth2/token");
+         .compile("https://login.(microsoft(?:online)?.com|chinacloudapi.cn)/([^/]+)/oauth2/token");
+
+   private static final Pattern CHINA_OAUTH_ENDPOINT_PATTERN = Pattern
+         .compile("https://login.chinacloudapi.cn/([^/]+)/oauth2/token");
+
+   public static final String IS_CHINA_ENDPOINT = "jclouds.isChinaEndpoint";
 
    @Override
    protected void bindErrorHandlers() {
@@ -92,7 +97,14 @@ public class AzureComputeHttpApiModule extends HttpApiModule<AzureComputeApi> {
       if (!m.matches()) {
          throw new IllegalArgumentException("Could not parse tenantId from: " + oauthEndpoint);
       }
-      return m.group(1);
+      return m.group(2);
+   }
+
+   @Provides
+   @Singleton
+   @Named(IS_CHINA_ENDPOINT)
+   protected final boolean isChinaEndpoint(@Named("oauth.endpoint") final String oauthEndpoint) {
+      return CHINA_OAUTH_ENDPOINT_PATTERN.matcher(oauthEndpoint).matches();
    }
 
    @Provides

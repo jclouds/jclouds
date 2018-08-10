@@ -16,13 +16,15 @@
  */
 package org.jclouds.azurecompute.arm.config;
 
+import static org.jclouds.azurecompute.arm.config.AzureComputeHttpApiModule.IS_CHINA_ENDPOINT;
+
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 import java.net.URI;
-
 import javax.inject.Inject;
+import javax.inject.Named;
 import javax.inject.Qualifier;
 
 import com.google.common.base.Supplier;
@@ -35,19 +37,22 @@ import com.google.common.base.Supplier;
 @Qualifier
 public @interface GraphRBAC {
 
-   String ENDPOINT = "https://graph.windows.net/";
+   String STANDARD_ENDPOINT = "https://graph.windows.net/";
+   String CHINA_ENDPOINT = "https://graph.chinacloudapi.cn/";
 
    static class GraphRBACForTenant implements Supplier<URI> {
       private final String tenantId;
+      private final boolean isChinaEndpoint;
 
       @Inject
-      GraphRBACForTenant(@Tenant String tenantId) {
+      GraphRBACForTenant(@Tenant String tenantId, @Named(IS_CHINA_ENDPOINT) boolean isChinaEndpoint) {
          this.tenantId = tenantId;
+         this.isChinaEndpoint = isChinaEndpoint;
       }
 
       @Override
       public URI get() {
-         return URI.create(GraphRBAC.ENDPOINT + tenantId);
+         return URI.create((isChinaEndpoint ? CHINA_ENDPOINT : STANDARD_ENDPOINT) + tenantId);
       }
 
    }
