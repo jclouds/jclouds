@@ -2679,6 +2679,13 @@ public class RestAnnotationProcessorTest extends BaseRestApiTest {
       assertEquals(new URI("http://foo/bar"), result);
    }
 
+   @Test
+   public void testComplexHost() throws Exception {
+      URI result = RestAnnotationProcessor.addHostIfMissing(new URI("bar"), new URI("http://foo/foobar"));
+      assertEquals(new URI("http://foo/foobar/bar"), result);
+   }
+
+
    DateService dateService = new SimpleDateFormatDateService();
    RestAnnotationProcessor processor;
    TransformerForRequest transformer;
