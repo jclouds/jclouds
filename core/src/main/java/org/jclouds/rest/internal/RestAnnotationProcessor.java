@@ -573,7 +573,9 @@ public class RestAnnotationProcessor implements Function<Invocation, HttpRequest
          return null;
       if (original.getHost() != null)
          return original;
-      return withHost.resolve(original);
+      String host = withHost.toString();
+      URI baseURI = host.endsWith("/") ? withHost : URI.create(host + "/");
+      return baseURI.resolve(original);
    }
 
    private org.jclouds.rest.MapBinder getMapPayloadBinderOrNull(Invocation invocation) {
