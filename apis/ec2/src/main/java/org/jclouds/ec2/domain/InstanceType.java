@@ -842,4 +842,30 @@ public class InstanceType {
     * </ul>
     */
    public static final String R4_16XLARGE = "r4.16xlarge";
+   
+   /**
+    * X1 16x Large-scale, enterprise-class and in-memory applications
+    * <ul>
+    * <li>976 GB memory</li>
+    * <li>64 vCPU</li>
+    * <li>Intel Xeon E7-8880 v3 (Haswell) processors</li>
+    * <li>1 SSD-based volume with 1920 GiB of instance storage</li>
+    * <li>64-bit platform</li>
+    * <li>Network Performance: 25 Gigabit</li>
+    * </ul>
+    */
+   public static final String X1_16XLARGE = "x1.16xlarge";
+   
+   /**
+    * X1 32x Large-scale, enterprise-class and in-memory applications
+    * <ul>
+    * <li>1952 GB memory</li>
+    * <li>128 vCPU</li>
+    * <li>Intel Xeon E7-8880 v3 (Haswell) processors</li>
+    * <li>2 SSD-based volume with 1920 GiB of instance storage</li>
+    * <li>64-bit platform</li>
+    * <li>Network Performance: 25 Gigabit</li>
+    * </ul>
+    */
+   public static final String X1_32XLARGE = "x1.32xlarge";
 }

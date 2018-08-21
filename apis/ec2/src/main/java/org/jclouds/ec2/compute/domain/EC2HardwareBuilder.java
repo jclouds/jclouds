@@ -290,6 +290,19 @@ public class EC2HardwareBuilder extends HardwareBuilder {
       virtualizationTypes(VirtualizationType.HVM, VirtualizationType.PARAVIRTUAL);
       return this;
    }
+   
+   private EC2HardwareBuilder x1() {
+	      virtualizationTypes(VirtualizationType.HVM);
+	      
+	      // TODO X1 is not deprecated, but it requires that you are using a VPC
+	      // until we have a way for hardware instances to be filtered based on network
+	      // we do NOT want X1 selected automatically.
+	      // You get: org.jclouds.aws.AWSResponseException: request POST https://ec2.eu-west-1.amazonaws.com/ HTTP/1.1 failed with code 400, error: AWSError{requestId='2300b99e-ddc0-42ab-b1ed-9d628a161be4', requestToken='null', code='VPCResourceNotSpecified', message='The specified instance type can only be used in a VPC. A subnet ID or network interface ID is required to carry out the request.', context='{Response=, Errors=}'}
+	      // A user can explicitly request a x1 if they are also setting up a VPC.
+	      deprecated();
+	      
+	      return this;
+   }
 
    // TODO below this line are previous generation, discouraged
    // http://aws.amazon.com/ec2/previous-generation/
@@ -1211,6 +1224,31 @@ public class EC2HardwareBuilder extends HardwareBuilder {
             .processors(ImmutableList.of(new Processor(64.0, 2.3)));
    }
 
+   /**
+    * @see InstanceType#X1_16XLARGE
+    */
+   public static EC2HardwareBuilder x1_16xlarge() {
+      return new EC2HardwareBuilder(InstanceType.X1_16XLARGE).x1()
+            .ram(999424)
+            .volumes(ImmutableList.<Volume> of(
+                    new VolumeBuilder().type(LOCAL).size(10.0f).device("/dev/sda1").bootDevice(true).durable(false).build(),
+                    new VolumeBuilder().type(LOCAL).size(1920.0f).device("/dev/sdb").bootDevice(false).durable(false).build()))
+            .processors(ImmutableList.of(new Processor(64.0, 2.3)));
+   }
+
+   /**
+    * @see InstanceType#X1_32XLARGE
+    */
+   public static EC2HardwareBuilder x1_32xlarge() {
+      return new EC2HardwareBuilder(InstanceType.X1_32XLARGE).x1()
+            .ram(1998848)
+            .volumes(ImmutableList.<Volume> of(
+                    new VolumeBuilder().type(LOCAL).size(10.0f).device("/dev/sda1").bootDevice(true).durable(false).build(),
+                    new VolumeBuilder().type(LOCAL).size(1920.0f).device("/dev/sdb").bootDevice(false).durable(false).build(),
+                    new VolumeBuilder().type(LOCAL).size(1920.0f).device("/dev/sdc").bootDevice(false).durable(false).build()))
+            .processors(ImmutableList.of(new Processor(128.0, 2.3)));
+   }
+   
    @SuppressWarnings("unchecked")
    @Override
    public Hardware build() {
