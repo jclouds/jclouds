@@ -86,6 +86,7 @@ public final class DomainResourceReferences {
       COLDLINE(Tier.ARCHIVE),
       DURABLE_REDUCED_AVAILABILITY(Tier.STANDARD),
       MULTI_REGIONAL(Tier.STANDARD),
+      REGIONAL(Tier.STANDARD),
       NEARLINE(Tier.INFREQUENT),
       STANDARD(Tier.STANDARD);
 
