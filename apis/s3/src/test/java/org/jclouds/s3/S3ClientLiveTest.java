@@ -93,7 +93,7 @@ public class S3ClientLiveTest extends BaseBlobStoreIntegrationTest {
    public S3ClientLiveTest() {
       this.provider = "s3";
    }
-   
+
    @Override
    protected Properties setupProperties() {
       Properties overrides = super.setupProperties();
@@ -405,6 +405,20 @@ public class S3ClientLiveTest extends BaseBlobStoreIntegrationTest {
          returnContainer(containerName);
          returnContainer(destinationContainer);
 
+      }
+   }
+
+   public void testCopyObjectWithSourceKeyRequiringEncoding() throws Exception {
+      String containerName = getContainerName();
+      String sourceKeyRequiringEncoding = "apples#?:$&'\"<>čॐ";
+      String destinationContainer = getContainerName();
+      try {
+         addToContainerAndValidate(containerName, sourceKeyRequiringEncoding);
+         getApi().copyObject(containerName, sourceKeyRequiringEncoding, destinationContainer, destinationKey);
+         validateContent(destinationContainer, destinationKey);
+      } finally {
+         returnContainer(containerName);
+         returnContainer(destinationContainer);
       }
    }
 

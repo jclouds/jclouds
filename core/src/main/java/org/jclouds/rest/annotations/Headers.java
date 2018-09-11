@@ -48,4 +48,10 @@ public @interface Headers {
     * 
     */
    String[] values();
+
+   /**
+    * Indicates whether a header should be URL encoded. Optional for backwards compatibility.
+    * The default behavior is that the header is not URL encoded.
+    */
+   boolean[] urlEncode() default {};
 }

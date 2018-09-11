@@ -33,6 +33,7 @@ import org.jclouds.ContextBuilder;
 import org.jclouds.concurrent.config.ExecutorServiceModule;
 import org.jclouds.http.okhttp.config.OkHttpCommandExecutorServiceModule;
 import org.jclouds.s3.domain.S3Object;
+import org.jclouds.s3.options.CopyObjectOptions;
 import org.testng.annotations.Test;
 
 import com.google.common.collect.ImmutableList;
@@ -94,6 +95,20 @@ public class S3ClientMockTest {
       assertEquals(request.getRequestLine(), "PUT /bucket/someDir/fileName HTTP/1.1");
       assertEquals(request.getHeaders(EXPECT), ImmutableList.of("100-continue"));
 
+      server.shutdown();
+   }
+
+   public void testSourceEncodedOnCopy() throws IOException, InterruptedException {
+      MockWebServer server = new MockWebServer();
+      server.enqueue(new MockResponse().setBody("<CopyObjectResult>\n" +
+              "   <LastModified>2009-10-28T22:32:00</LastModified>\n" +
+              "   <ETag>\"9b2cf535f27731c974343645a3985328\"</ETag>\n" +
+              " </CopyObjectResult>"));
+      server.play();
+      S3Client client = getS3Client(server.getUrl("/"));
+      client.copyObject("sourceBucket", "apples#?:$&'\"<>čॐ", "destinationBucket", "destinationObject", CopyObjectOptions.NONE);
+      RecordedRequest request = server.takeRequest();
+      assertEquals(request.getHeaders("x-amz-copy-source"), ImmutableList.of("/sourceBucket/apples%23%3F%3A%24%26%27%22%3C%3E%C4%8D%E0%A5%90"));
       server.shutdown();
    }
 }
