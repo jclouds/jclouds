@@ -382,7 +382,7 @@ public interface S3Client extends Closeable {
    @Named("PutObject")
    @PUT
    @Path("/{destinationObject}")
-   @Headers(keys = "x-amz-copy-source", values = "/{sourceBucket}/{sourceObject}")
+   @Headers(keys = "x-amz-copy-source", values = "/{sourceBucket}/{sourceObject}", urlEncode = true)
    @XMLResponseParser(CopyObjectHandler.class)
    ObjectMetadata copyObject(@PathParam("sourceBucket") String sourceBucket,
          @PathParam("sourceObject") String sourceObject,
@@ -733,7 +733,7 @@ public interface S3Client extends Closeable {
    @Named("UploadPartCopy")
    @PUT
    @Path("/{key}")
-   @Headers(keys = {"x-amz-copy-source", "x-amz-copy-source-range"}, values = {"/{sourceBucket}/{sourceObject}", "bytes={startOffset}-{endOffset}"})
+   @Headers(keys = {"x-amz-copy-source", "x-amz-copy-source-range"}, values = {"/{sourceBucket}/{sourceObject}", "bytes={startOffset}-{endOffset}"}, urlEncode = {true, false})
    @ResponseParser(ETagFromHttpResponseViaRegex.class)
    String uploadPartCopy(@Bucket @EndpointParam(parser = AssignCorrectHostnameForBucket.class) @BinderParam(
          BindAsHostPrefixIfConfigured.class) @ParamValidators(BucketNameValidator.class) String bucketName,

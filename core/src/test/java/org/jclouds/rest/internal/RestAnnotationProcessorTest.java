@@ -1796,6 +1796,12 @@ public class RestAnnotationProcessorTest extends BaseRestApiTest {
 
       @GET
       @Path("/")
+      @Headers(keys = "x-amz-copy-source", values = "/{bucket}", urlEncode = true)
+      public void oneHeaderEncoded(@PathParam("bucket") String path) {
+      }
+
+      @GET
+      @Path("/")
       @Headers(keys = { "slash", "hyphen" }, values = { "/{bucket}", "-{bucket}" })
       public void twoHeader(@PathParam("bucket") String path) {
       }
@@ -1810,6 +1816,12 @@ public class RestAnnotationProcessorTest extends BaseRestApiTest {
       @Path("/")
       @Headers(keys = "x-amz-copy-source", values = "/{bucket}/{key}")
       public void twoHeadersOutOfOrder(@PathParam("key") String path, @PathParam("bucket") String path2) {
+      }
+
+      @GET
+      @Path("/")
+      @Headers(keys = {"unencoded", "x-amz-copy-source"}, values = {"/{bucket}", "/{bucket}"}, urlEncode = {false, true})
+      public void twoHeadersMixedEncoding(@PathParam("bucket") String path) {
       }
    }
 
@@ -1850,6 +1862,24 @@ public class RestAnnotationProcessorTest extends BaseRestApiTest {
    }
 
    @Test
+   public void testBuildOneHeaderUnencoded() throws SecurityException, NoSuchMethodException {
+      Invokable<?, ?> method = method(TestHeader.class, "oneHeader", String.class);
+      Multimap<String, String> headers = processor.apply(Invocation.create(method,
+              ImmutableList.<Object> of("apples#?:$&'\"<>čॐ"))).getHeaders();
+      assertEquals(headers.size(), 1);
+      assertEquals(headers.get("x-amz-copy-source"), ImmutableList.of("/apples#?:$&'\"<>čॐ"));
+   }
+
+   @Test
+   public void testBuildOneHeaderEncoded() throws SecurityException, NoSuchMethodException {
+      Invokable<?, ?> method = method(TestHeader.class, "oneHeaderEncoded", String.class);
+      Multimap<String, String> headers = processor.apply(Invocation.create(method,
+              ImmutableList.<Object> of("apples#?:$&'\"<>čॐ"))).getHeaders();
+      assertEquals(headers.size(), 1);
+      assertEquals(headers.get("x-amz-copy-source"), ImmutableList.of("/apples%23%3F%3A%24%26%27%22%3C%3E%C4%8D%E0%A5%90"));
+   }
+
+   @Test
    public void testBuildTwoHeaders() throws SecurityException, NoSuchMethodException {
       Invokable<?, ?> method = method(TestHeader.class, "twoHeaders", String.class, String.class);
       Multimap<String, String> headers = processor.apply(Invocation.create(method,
@@ -1866,6 +1896,16 @@ public class RestAnnotationProcessorTest extends BaseRestApiTest {
             ImmutableList.<Object> of("robot", "eggs"))).getHeaders();
       assertEquals(headers.size(), 1);
       assertEquals(headers.get("x-amz-copy-source"), ImmutableList.of("/eggs/robot"));
+   }
+
+   @Test
+   public void testBuildTwoHeadersMixedEncoding() throws SecurityException, NoSuchMethodException {
+      Invokable<?, ?> method = method(TestHeader.class, "twoHeadersMixedEncoding", String.class);
+      Multimap<String, String> headers = processor.apply(Invocation.create(method,
+              ImmutableList.<Object> of("apples#?:$&'\"<>čॐ"))).getHeaders();
+      assertEquals(headers.size(), 2);
+      assertEquals(headers.get("unencoded"), ImmutableList.of("/apples#?:$&'\"<>čॐ"));
+      assertEquals(headers.get("x-amz-copy-source"), ImmutableList.of("/apples%23%3F%3A%24%26%27%22%3C%3E%C4%8D%E0%A5%90"));
    }
 
    public static class TestReplaceQueryOptions extends BaseHttpRequestOptions {

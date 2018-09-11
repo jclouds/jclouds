@@ -763,6 +763,9 @@ public class RestAnnotationProcessor implements Function<Invocation, HttpRequest
       for (int i = 0; i < header.keys().length; i++) {
          String value = header.values()[i];
          value = replaceTokens(value, tokenValues);
+         // urlEncode may have less entries than keys e.g. default value of {}
+         if (i < header.urlEncode().length && header.urlEncode()[i])
+            value = urlEncode(value, '/');
          headers.put(header.keys()[i], value);
       }
    }
