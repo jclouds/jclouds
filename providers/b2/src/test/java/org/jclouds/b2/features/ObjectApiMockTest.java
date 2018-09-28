@@ -69,12 +69,12 @@ public final class ObjectApiMockTest {
          ObjectApi api = api(server.getUrl("/").toString(), "b2").getObjectApi();
          UploadUrlResponse response = api.getUploadUrl(BUCKET_ID);
          assertThat(response.bucketId()).isEqualTo(BUCKET_ID);
-         assertThat(response.uploadUrl()).isEqualTo(URI.create("https://pod-000-1005-03.backblaze.com/b2api/v1/b2_upload_file?cvt=c001_v0001005_t0027&bucket=4a48fe8875c6214145260818"));
+         assertThat(response.uploadUrl()).isEqualTo(URI.create("https://pod-000-1005-03.backblaze.com/b2api/v2/b2_upload_file?cvt=c001_v0001005_t0027&bucket=4a48fe8875c6214145260818"));
          assertThat(response.authorizationToken()).isEqualTo("2_20151009170037_f504a0f39a0f4e657337e624_9754dde94359bd7b8f1445c8f4cc1a231a33f714_upld");
 
          assertThat(server.getRequestCount()).isEqualTo(2);
          assertAuthentication(server);
-         assertRequest(server.takeRequest(), "POST", "/b2api/v1/b2_get_upload_url", "/get_upload_url_request.json");
+         assertRequest(server.takeRequest(), "POST", "/b2api/v2/b2_get_upload_url", "/get_upload_url_request.json");
       } finally {
          server.shutdown();
       }
@@ -96,7 +96,7 @@ public final class ObjectApiMockTest {
 
          assertThat(server.getRequestCount()).isEqualTo(2);
          assertAuthentication(server);
-         assertRequest(server.takeRequest(), "POST", "/b2api/v1/b2_get_upload_url", "/get_upload_url_request.json");
+         assertRequest(server.takeRequest(), "POST", "/b2api/v2/b2_get_upload_url", "/get_upload_url_request.json");
       } finally {
          server.shutdown();
       }
@@ -110,7 +110,7 @@ public final class ObjectApiMockTest {
          ObjectApi api = api(server.getUrl("/").toString(), "b2").getObjectApi();
          String accountId = "d522aa47a10f";
 
-         UploadUrlResponse uploadUrl = UploadUrlResponse.create(BUCKET_ID, server.getUrl("/b2api/v1/b2_upload_file/4a48fe8875c6214145260818/c001_v0001007_t0042").toURI(), "FAKE-AUTHORIZATION-TOKEN");
+         UploadUrlResponse uploadUrl = UploadUrlResponse.create(BUCKET_ID, server.getUrl("/b2api/v2/b2_upload_file/4a48fe8875c6214145260818/c001_v0001007_t0042").toURI(), "FAKE-AUTHORIZATION-TOKEN");
          Payload payload = Payloads.newStringPayload(PAYLOAD);
          payload.getContentMetadata().setContentType(CONTENT_TYPE);
          UploadFileResponse response = api.uploadFile(uploadUrl, FILE_NAME, SHA1, FILE_INFO, payload);
@@ -125,7 +125,7 @@ public final class ObjectApiMockTest {
          assertThat(response.fileInfo()).isEqualTo(FILE_INFO);
 
          assertThat(server.getRequestCount()).isEqualTo(1);
-         assertRequest(server.takeRequest(), "POST", "/b2api/v1/b2_upload_file/4a48fe8875c6214145260818/c001_v0001007_t0042");
+         assertRequest(server.takeRequest(), "POST", "/b2api/v2/b2_upload_file/4a48fe8875c6214145260818/c001_v0001007_t0042");
       } finally {
          server.shutdown();
       }
@@ -144,7 +144,7 @@ public final class ObjectApiMockTest {
 
          assertThat(server.getRequestCount()).isEqualTo(2);
          assertAuthentication(server);
-         assertRequest(server.takeRequest(), "POST", "/b2api/v1/b2_delete_file_version", "/delete_object_request.json");
+         assertRequest(server.takeRequest(), "POST", "/b2api/v2/b2_delete_file_version", "/delete_object_request.json");
       } finally {
          server.shutdown();
       }
@@ -166,7 +166,7 @@ public final class ObjectApiMockTest {
 
          assertThat(server.getRequestCount()).isEqualTo(2);
          assertAuthentication(server);
-         assertRequest(server.takeRequest(), "POST", "/b2api/v1/b2_delete_file_version", "/delete_object_request.json");
+         assertRequest(server.takeRequest(), "POST", "/b2api/v2/b2_delete_file_version", "/delete_object_request.json");
       } finally {
          server.shutdown();
       }
@@ -194,7 +194,7 @@ public final class ObjectApiMockTest {
 
          assertThat(server.getRequestCount()).isEqualTo(2);
          assertAuthentication(server);
-         assertRequest(server.takeRequest(), "POST", "/b2api/v1/b2_get_file_info", "/get_file_info_request.json");
+         assertRequest(server.takeRequest(), "POST", "/b2api/v2/b2_get_file_info", "/get_file_info_request.json");
       } finally {
          server.shutdown();
       }
@@ -212,7 +212,7 @@ public final class ObjectApiMockTest {
 
          assertThat(server.getRequestCount()).isEqualTo(2);
          assertAuthentication(server);
-         assertRequest(server.takeRequest(), "POST", "/b2api/v1/b2_get_file_info", "/get_file_info_request.json");
+         assertRequest(server.takeRequest(), "POST", "/b2api/v2/b2_get_file_info", "/get_file_info_request.json");
       } finally {
          server.shutdown();
       }
@@ -248,11 +248,11 @@ public final class ObjectApiMockTest {
 
          RecordedRequest request = server.takeRequest();
          assertThat(request.getMethod()).isEqualTo("GET");
-         assertThat(request.getPath()).isEqualTo("/b2api/v1/b2_authorize_account");
+         assertThat(request.getPath()).isEqualTo("/b2api/v2/b2_authorize_account");
 
          request = server.takeRequest();
          assertThat(request.getMethod()).isEqualTo("GET");
-         assertThat(request.getPath()).isEqualTo("/b2api/v1/b2_download_file_by_id?fileId=4_h4a48fe8875c6214145260818_f000000000000472a_d20140104_m032022_c001_v0000123_t0104");
+         assertThat(request.getPath()).isEqualTo("/b2api/v2/b2_download_file_by_id?fileId=4_h4a48fe8875c6214145260818_f000000000000472a_d20140104_m032022_c001_v0000123_t0104");
       } finally {
          server.shutdown();
       }
@@ -280,11 +280,11 @@ public final class ObjectApiMockTest {
 
          RecordedRequest request = server.takeRequest();
          assertThat(request.getMethod()).isEqualTo("GET");
-         assertThat(request.getPath()).isEqualTo("/b2api/v1/b2_authorize_account");
+         assertThat(request.getPath()).isEqualTo("/b2api/v2/b2_authorize_account");
 
          request = server.takeRequest();
          assertThat(request.getMethod()).isEqualTo("GET");
-         assertThat(request.getPath()).isEqualTo("/b2api/v1/b2_download_file_by_id?fileId=4_h4a48fe8875c6214145260818_f000000000000472a_d20140104_m032022_c001_v0000123_t0104");
+         assertThat(request.getPath()).isEqualTo("/b2api/v2/b2_download_file_by_id?fileId=4_h4a48fe8875c6214145260818_f000000000000472a_d20140104_m032022_c001_v0000123_t0104");
          assertThat(request.getHeaders()).contains("Range: bytes=42-69");
       } finally {
          server.shutdown();
@@ -321,7 +321,7 @@ public final class ObjectApiMockTest {
 
          RecordedRequest request = server.takeRequest();
          assertThat(request.getMethod()).isEqualTo("GET");
-         assertThat(request.getPath()).isEqualTo("/b2api/v1/b2_authorize_account");
+         assertThat(request.getPath()).isEqualTo("/b2api/v2/b2_authorize_account");
 
          request = server.takeRequest();
          assertThat(request.getMethod()).isEqualTo("GET");
@@ -361,7 +361,7 @@ public final class ObjectApiMockTest {
 
          assertThat(server.getRequestCount()).isEqualTo(2);
          assertAuthentication(server);
-         assertRequest(server.takeRequest(), "POST", "/b2api/v1/b2_list_file_names", "/list_file_names_request.json");
+         assertRequest(server.takeRequest(), "POST", "/b2api/v2/b2_list_file_names", "/list_file_names_request.json");
       } finally {
          server.shutdown();
       }
@@ -405,7 +405,7 @@ public final class ObjectApiMockTest {
 
          assertThat(server.getRequestCount()).isEqualTo(2);
          assertAuthentication(server);
-         assertRequest(server.takeRequest(), "POST", "/b2api/v1/b2_list_file_versions", "/list_file_versions_request.json");
+         assertRequest(server.takeRequest(), "POST", "/b2api/v2/b2_list_file_versions", "/list_file_versions_request.json");
       } finally {
          server.shutdown();
       }
@@ -428,7 +428,7 @@ public final class ObjectApiMockTest {
 
          assertThat(server.getRequestCount()).isEqualTo(2);
          assertAuthentication(server);
-         assertRequest(server.takeRequest(), "POST", "/b2api/v1/b2_hide_file", "/hide_file_request.json");
+         assertRequest(server.takeRequest(), "POST", "/b2api/v2/b2_hide_file", "/hide_file_request.json");
       } finally {
          server.shutdown();
       }

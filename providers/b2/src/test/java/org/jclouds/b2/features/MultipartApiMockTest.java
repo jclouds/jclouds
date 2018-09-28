@@ -76,7 +76,7 @@ public final class MultipartApiMockTest {
 
          assertThat(server.getRequestCount()).isEqualTo(2);
          assertAuthentication(server);
-         assertRequest(server.takeRequest(), "POST", "/b2api/v1/b2_start_large_file", "/start_large_file_request.json");
+         assertRequest(server.takeRequest(), "POST", "/b2api/v2/b2_start_large_file", "/start_large_file_request.json");
       } finally {
          server.shutdown();
       }
@@ -97,7 +97,7 @@ public final class MultipartApiMockTest {
 
          assertThat(server.getRequestCount()).isEqualTo(2);
          assertAuthentication(server);
-         assertRequest(server.takeRequest(), "POST", "/b2api/v1/b2_cancel_large_file", "/cancel_large_file_request.json");
+         assertRequest(server.takeRequest(), "POST", "/b2api/v2/b2_cancel_large_file", "/cancel_large_file_request.json");
       } finally {
          server.shutdown();
       }
@@ -127,7 +127,7 @@ public final class MultipartApiMockTest {
 
          assertThat(server.getRequestCount()).isEqualTo(2);
          assertAuthentication(server);
-         assertRequest(server.takeRequest(), "POST", "/b2api/v1/b2_finish_large_file", "/finish_large_file_request.json");
+         assertRequest(server.takeRequest(), "POST", "/b2api/v2/b2_finish_large_file", "/finish_large_file_request.json");
       } finally {
          server.shutdown();
       }
@@ -143,11 +143,11 @@ public final class MultipartApiMockTest {
          GetUploadPartResponse response = api.getUploadPartUrl(FILE_ID);
          assertThat(response.authorizationToken()).isEqualTo(AUTHORIZATION_TOKEN);
          assertThat(response.fileId()).isEqualTo(FILE_ID);
-         assertThat(response.uploadUrl()).isEqualTo(URI.create("https://pod-000-1016-09.backblaze.com/b2api/v1/b2_upload_part/4_ze73ede9c9c8412db49f60715_f100b4e93fbae6252_d20150824_m224353_c900_v8881000_t0001/0037"));
+         assertThat(response.uploadUrl()).isEqualTo(URI.create("https://pod-000-1016-09.backblaze.com/b2api/v2/b2_upload_part/4_ze73ede9c9c8412db49f60715_f100b4e93fbae6252_d20150824_m224353_c900_v8881000_t0001/0037"));
 
          assertThat(server.getRequestCount()).isEqualTo(2);
          assertAuthentication(server);
-         assertRequest(server.takeRequest(), "POST", "/b2api/v1/b2_get_upload_part_url", "/get_upload_part_url_request.json");
+         assertRequest(server.takeRequest(), "POST", "/b2api/v2/b2_get_upload_part_url", "/get_upload_part_url_request.json");
       } finally {
          server.shutdown();
       }
@@ -159,7 +159,7 @@ public final class MultipartApiMockTest {
 
       try {
          MultipartApi api = api(server.getUrl("/").toString(), "b2").getMultipartApi();
-         GetUploadPartResponse uploadPart = GetUploadPartResponse.create(FILE_ID, server.getUrl("/b2api/v1/b2_upload_part/4a48fe8875c6214145260818/c001_v0001007_t0042").toURI(), AUTHORIZATION_TOKEN);
+         GetUploadPartResponse uploadPart = GetUploadPartResponse.create(FILE_ID, server.getUrl("/b2api/v2/b2_upload_part/4a48fe8875c6214145260818/c001_v0001007_t0042").toURI(), AUTHORIZATION_TOKEN);
          long contentLength = 100 * 1000 * 1000;
          Payload payload = Payloads.newByteSourcePayload(TestUtils.randomByteSource().slice(0, contentLength));
          payload.getContentMetadata().setContentLength(contentLength);
@@ -170,7 +170,7 @@ public final class MultipartApiMockTest {
          assertThat(response.partNumber()).isEqualTo(1);
 
          assertThat(server.getRequestCount()).isEqualTo(1);
-         assertRequest(server.takeRequest(), "POST", "/b2api/v1/b2_upload_part/4a48fe8875c6214145260818/c001_v0001007_t0042");
+         assertRequest(server.takeRequest(), "POST", "/b2api/v2/b2_upload_part/4a48fe8875c6214145260818/c001_v0001007_t0042");
       } finally {
          server.shutdown();
       }
@@ -210,7 +210,7 @@ public final class MultipartApiMockTest {
 
          assertThat(server.getRequestCount()).isEqualTo(2);
          assertAuthentication(server);
-         assertRequest(server.takeRequest(), "POST", "/b2api/v1/b2_list_parts", "/list_parts_request.json");
+         assertRequest(server.takeRequest(), "POST", "/b2api/v2/b2_list_parts", "/list_parts_request.json");
       } finally {
          server.shutdown();
       }
@@ -238,7 +238,7 @@ public final class MultipartApiMockTest {
 
          assertThat(server.getRequestCount()).isEqualTo(2);
          assertAuthentication(server);
-         assertRequest(server.takeRequest(), "POST", "/b2api/v1/b2_list_unfinished_large_files", "/list_unfinished_large_files_request.json");
+         assertRequest(server.takeRequest(), "POST", "/b2api/v2/b2_list_unfinished_large_files", "/list_unfinished_large_files_request.json");
       } finally {
          server.shutdown();
       }

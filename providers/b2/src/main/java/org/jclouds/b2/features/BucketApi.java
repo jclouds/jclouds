@@ -46,14 +46,14 @@ import org.jclouds.rest.binders.BindToJsonPayload;
 public interface BucketApi {
    @Named("b2_create_bucket")
    @POST
-   @Path("/b2api/v1/b2_create_bucket")
+   @Path("/b2api/v2/b2_create_bucket")
    @MapBinder(BindToJsonPayload.class)
    @PayloadParams(keys = {"accountId"}, values = {"{jclouds.identity}"})
    Bucket createBucket(@PayloadParam("bucketName") String bucketName, @PayloadParam("bucketType") BucketType bucketType);
 
    @Named("b2_delete_bucket")
    @POST
-   @Path("/b2api/v1/b2_delete_bucket")
+   @Path("/b2api/v2/b2_delete_bucket")
    @MapBinder(BindToJsonPayload.class)
    @PayloadParams(keys = {"accountId"}, values = {"{jclouds.identity}"})
    @Fallback(NullOnNotFoundOr404.class)
@@ -61,14 +61,14 @@ public interface BucketApi {
 
    @Named("b2_update_bucket")
    @POST
-   @Path("/b2api/v1/b2_update_bucket")
+   @Path("/b2api/v2/b2_update_bucket")
    @MapBinder(BindToJsonPayload.class)
    @PayloadParams(keys = {"accountId"}, values = {"{jclouds.identity}"})
    Bucket updateBucket(@PayloadParam("bucketId") String bucketId, @PayloadParam("bucketType") BucketType bucketType);
 
    @Named("b2_list_buckets")
    @POST
-   @Path("/b2api/v1/b2_list_buckets")
+   @Path("/b2api/v2/b2_list_buckets")
    @MapBinder(BindToJsonPayload.class)
    @PayloadParams(keys = {"accountId"}, values = {"{jclouds.identity}"})
    BucketList listBuckets();

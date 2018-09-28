@@ -56,7 +56,7 @@ import org.jclouds.rest.binders.BindToJsonPayload;
 public interface ObjectApi {
    @Named("b2_get_upload_url")
    @POST
-   @Path("/b2api/v1/b2_get_upload_url")
+   @Path("/b2api/v2/b2_get_upload_url")
    @RequestFilters(RequestAuthorization.class)
    @MapBinder(BindToJsonPayload.class)
    @Consumes(APPLICATION_JSON)
@@ -71,7 +71,7 @@ public interface ObjectApi {
 
    @Named("b2_delete_file_version")
    @POST
-   @Path("/b2api/v1/b2_delete_file_version")
+   @Path("/b2api/v2/b2_delete_file_version")
    @MapBinder(BindToJsonPayload.class)
    @RequestFilters(RequestAuthorization.class)
    @Consumes(APPLICATION_JSON)
@@ -80,7 +80,7 @@ public interface ObjectApi {
 
    @Named("b2_get_file_info")
    @POST
-   @Path("/b2api/v1/b2_get_file_info")
+   @Path("/b2api/v2/b2_get_file_info")
    @MapBinder(BindToJsonPayload.class)
    @RequestFilters(RequestAuthorization.class)
    @Consumes(APPLICATION_JSON)
@@ -90,7 +90,7 @@ public interface ObjectApi {
 
    @Named("b2_download_file_by_id")
    @GET
-   @Path("/b2api/v1/b2_download_file_by_id")
+   @Path("/b2api/v2/b2_download_file_by_id")
    @RequestFilters(RequestAuthorizationDownload.class)
    @ResponseParser(ParseB2ObjectFromResponse.class)
    @Fallback(NullOnNotFoundOr404.class)
@@ -98,7 +98,7 @@ public interface ObjectApi {
 
    @Named("b2_download_file_by_id")
    @GET
-   @Path("/b2api/v1/b2_download_file_by_id")
+   @Path("/b2api/v2/b2_download_file_by_id")
    @RequestFilters(RequestAuthorizationDownload.class)
    @ResponseParser(ParseB2ObjectFromResponse.class)
    @Fallback(NullOnNotFoundOr404.class)
@@ -123,7 +123,7 @@ public interface ObjectApi {
    @Deprecated
    @Named("b2_list_file_names")
    @GET
-   @Path("/b2api/v1/b2_list_file_names")
+   @Path("/b2api/v2/b2_list_file_names")
    @MapBinder(BindToJsonPayload.class)
    @RequestFilters(RequestAuthorization.class)
    @Consumes(APPLICATION_JSON)
@@ -132,7 +132,7 @@ public interface ObjectApi {
 
    @Named("b2_list_file_names")
    @GET
-   @Path("/b2api/v1/b2_list_file_names")
+   @Path("/b2api/v2/b2_list_file_names")
    @MapBinder(BindToJsonPayload.class)
    @RequestFilters(RequestAuthorization.class)
    @Consumes(APPLICATION_JSON)
@@ -142,7 +142,7 @@ public interface ObjectApi {
    @Deprecated
    @Named("b2_list_file_versions")
    @GET
-   @Path("/b2api/v1/b2_list_file_versions")
+   @Path("/b2api/v2/b2_list_file_versions")
    @MapBinder(BindToJsonPayload.class)
    @RequestFilters(RequestAuthorization.class)
    @Consumes(APPLICATION_JSON)
@@ -151,7 +151,7 @@ public interface ObjectApi {
 
    @Named("b2_list_file_versions")
    @GET
-   @Path("/b2api/v1/b2_list_file_versions")
+   @Path("/b2api/v2/b2_list_file_versions")
    @MapBinder(BindToJsonPayload.class)
    @RequestFilters(RequestAuthorization.class)
    @Consumes(APPLICATION_JSON)
@@ -160,7 +160,7 @@ public interface ObjectApi {
 
    @Named("b2_hide_file")
    @POST
-   @Path("/b2api/v1/b2_hide_file")
+   @Path("/b2api/v2/b2_hide_file")
    @MapBinder(BindToJsonPayload.class)
    @RequestFilters(RequestAuthorization.class)
    @Consumes(APPLICATION_JSON)

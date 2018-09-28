@@ -54,12 +54,12 @@ public final class B2RetryHandler extends BackoffLimitedRetryHandler implements 
 
       // B2 requires retrying on a different storage node for uploads
       String path = request.getEndpoint().getPath();
-      if (path.startsWith("/b2api/v1/b2_upload_file")) {
+      if (path.startsWith("/b2api/v2/b2_upload_file")) {
          String bucketId = path.split("/")[4];
          UploadUrlResponse uploadUrl = api.getObjectApi().getUploadUrl(bucketId);
          builder.endpoint(uploadUrl.uploadUrl())
                .replaceHeader(HttpHeaders.AUTHORIZATION, uploadUrl.authorizationToken());
-      } else if (path.startsWith("/b2api/v1/b2_upload_part")) {
+      } else if (path.startsWith("/b2api/v2/b2_upload_part")) {
          String fileId = path.split("/")[4];
          GetUploadPartResponse uploadUrl = api.getMultipartApi().getUploadPartUrl(fileId);
          builder.endpoint(uploadUrl.uploadUrl())

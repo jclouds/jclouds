@@ -65,7 +65,7 @@ final class B2TestUtils {
    static void assertAuthentication(MockWebServer server) {
       assertThat(server.getRequestCount()).isGreaterThanOrEqualTo(1);
       try {
-         assertThat(server.takeRequest().getRequestLine()).isEqualTo("GET /b2api/v1/b2_authorize_account HTTP/1.1");
+         assertThat(server.takeRequest().getRequestLine()).isEqualTo("GET /b2api/v2/b2_authorize_account HTTP/1.1");
       } catch (InterruptedException e) {
          throw Throwables.propagate(e);
       }

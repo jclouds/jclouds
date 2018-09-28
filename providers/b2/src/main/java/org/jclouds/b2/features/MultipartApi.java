@@ -51,7 +51,7 @@ import org.jclouds.rest.binders.BindToJsonPayload;
 public interface MultipartApi {
    @Named("b2_start_large_file")
    @POST
-   @Path("/b2api/v1/b2_start_large_file")
+   @Path("/b2api/v2/b2_start_large_file")
    @RequestFilters(RequestAuthorization.class)
    @MapBinder(BindToJsonPayload.class)
    @Produces(APPLICATION_JSON)
@@ -59,7 +59,7 @@ public interface MultipartApi {
 
    @Named("b2_cancel_large_file")
    @POST
-   @Path("/b2api/v1/b2_cancel_large_file")
+   @Path("/b2api/v2/b2_cancel_large_file")
    @RequestFilters(RequestAuthorization.class)
    @MapBinder(BindToJsonPayload.class)
    @Produces(APPLICATION_JSON)
@@ -67,7 +67,7 @@ public interface MultipartApi {
 
    @Named("b2_finish_large_file")
    @POST
-   @Path("/b2api/v1/b2_finish_large_file")
+   @Path("/b2api/v2/b2_finish_large_file")
    @RequestFilters(RequestAuthorization.class)
    @MapBinder(BindToJsonPayload.class)
    @Produces(APPLICATION_JSON)
@@ -75,7 +75,7 @@ public interface MultipartApi {
 
    @Named("b2_get_upload_part_url")
    @POST
-   @Path("/b2api/v1/b2_get_upload_part_url")
+   @Path("/b2api/v2/b2_get_upload_part_url")
    @RequestFilters(RequestAuthorization.class)
    @MapBinder(BindToJsonPayload.class)
    @Produces(APPLICATION_JSON)
@@ -88,7 +88,7 @@ public interface MultipartApi {
 
    @Named("b2_list_parts")
    @POST
-   @Path("/b2api/v1/b2_list_parts")
+   @Path("/b2api/v2/b2_list_parts")
    @RequestFilters(RequestAuthorization.class)
    @MapBinder(BindToJsonPayload.class)
    @Produces(APPLICATION_JSON)
@@ -96,7 +96,7 @@ public interface MultipartApi {
 
    @Named("b2_list_unfinished_large_files")
    @POST
-   @Path("/b2api/v1/b2_list_unfinished_large_files")
+   @Path("/b2api/v2/b2_list_unfinished_large_files")
    @RequestFilters(RequestAuthorization.class)
    @MapBinder(BindToJsonPayload.class)
    @Produces(APPLICATION_JSON)

@@ -30,7 +30,7 @@ import org.jclouds.rest.annotations.RequestFilters;
 public interface AuthorizationApi {
    @Named("b2_authorize_account")
    @GET
-   @Path("/b2api/v1/b2_authorize_account")
+   @Path("/b2api/v2/b2_authorize_account")
    @RequestFilters(BasicAuthentication.class)
    @Consumes(APPLICATION_JSON)
    Authorization authorizeAccount();

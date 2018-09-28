@@ -47,7 +47,7 @@ public final class BucketApiMockTest {
 
          assertThat(server.getRequestCount()).isEqualTo(2);
          assertAuthentication(server);
-         assertRequest(server.takeRequest(), "POST", "/b2api/v1/b2_create_bucket", "/create_bucket_request.json");
+         assertRequest(server.takeRequest(), "POST", "/b2api/v2/b2_create_bucket", "/create_bucket_request.json");
       } finally {
          server.shutdown();
       }
@@ -67,7 +67,7 @@ public final class BucketApiMockTest {
 
          assertThat(server.getRequestCount()).isEqualTo(2);
          assertAuthentication(server);
-         assertRequest(server.takeRequest(), "POST", "/b2api/v1/b2_delete_bucket", "/delete_bucket_request.json");
+         assertRequest(server.takeRequest(), "POST", "/b2api/v2/b2_delete_bucket", "/delete_bucket_request.json");
       } finally {
          server.shutdown();
       }
@@ -85,7 +85,7 @@ public final class BucketApiMockTest {
 
          assertThat(server.getRequestCount()).isEqualTo(2);
          assertAuthentication(server);
-         assertRequest(server.takeRequest(), "POST", "/b2api/v1/b2_delete_bucket", "/delete_bucket_request.json");
+         assertRequest(server.takeRequest(), "POST", "/b2api/v2/b2_delete_bucket", "/delete_bucket_request.json");
       } finally {
          server.shutdown();
       }
@@ -105,7 +105,7 @@ public final class BucketApiMockTest {
 
          assertThat(server.getRequestCount()).isEqualTo(2);
          assertAuthentication(server);
-         assertRequest(server.takeRequest(), "POST", "/b2api/v1/b2_update_bucket", "/update_bucket_request.json");
+         assertRequest(server.takeRequest(), "POST", "/b2api/v2/b2_update_bucket", "/update_bucket_request.json");
       } finally {
          server.shutdown();
       }
@@ -133,7 +133,7 @@ public final class BucketApiMockTest {
 
          assertThat(server.getRequestCount()).isEqualTo(2);
          assertAuthentication(server);
-         assertRequest(server.takeRequest(), "POST", "/b2api/v1/b2_list_buckets", "/list_buckets_request.json");
+         assertRequest(server.takeRequest(), "POST", "/b2api/v2/b2_list_buckets", "/list_buckets_request.json");
       } finally {
          server.shutdown();
       }
