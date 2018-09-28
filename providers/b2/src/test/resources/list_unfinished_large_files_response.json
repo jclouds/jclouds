@@ -1,4 +1,5 @@
 {
+    "action": "upload",
     "files": [
         {
             "accountId": "YOUR_ACCOUNT_ID",

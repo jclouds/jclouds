@@ -26,6 +26,8 @@ import com.google.common.collect.ImmutableMap;
 
 @AutoValue
 public abstract class MultipartUploadResponse {
+   /** Always "upload". */
+   public abstract Action action();
    public abstract String accountId();
    public abstract String bucketId();
    public abstract String contentType();
@@ -34,8 +36,8 @@ public abstract class MultipartUploadResponse {
    public abstract String fileName();
    public abstract Date uploadTimestamp();
 
-   @SerializedNames({"accountId", "bucketId", "contentType", "fileId", "fileInfo", "fileName", "uploadTimestamp"})
-   public static MultipartUploadResponse create(String accountId, String bucketId, String contentType, String fileId, Map<String, String> fileInfo, String fileName, long uploadTimestamp) {
-      return new AutoValue_MultipartUploadResponse(accountId, bucketId, contentType, fileId, ImmutableMap.copyOf(fileInfo), fileName, new Date(uploadTimestamp));
+   @SerializedNames({"action", "accountId", "bucketId", "contentType", "fileId", "fileInfo", "fileName", "uploadTimestamp"})
+   public static MultipartUploadResponse create(Action action, String accountId, String bucketId, String contentType, String fileId, Map<String, String> fileInfo, String fileName, long uploadTimestamp) {
+      return new AutoValue_MultipartUploadResponse(action, accountId, bucketId, contentType, fileId, ImmutableMap.copyOf(fileInfo), fileName, new Date(uploadTimestamp));
    }
 }

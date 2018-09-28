@@ -26,12 +26,14 @@ import com.google.auto.value.AutoValue;
 public abstract class HideFileResponse {
    /** Always "hide". */
    public abstract Action action();
+   public abstract String accountId();
+   public abstract String bucketId();
    public abstract String fileId();
    public abstract String fileName();
    public abstract Date uploadTimestamp();
 
-   @SerializedNames({"action", "fileId", "fileName", "uploadTimestamp"})
-   public static HideFileResponse create(Action action, String fileId, String fileName, long uploadTimestamp) {
-      return new AutoValue_HideFileResponse(action, fileId, fileName, new Date(uploadTimestamp));
+   @SerializedNames({"action", "accountId", "bucketId", "fileId", "fileName", "uploadTimestamp"})
+   public static HideFileResponse create(Action action, String accountId, String bucketId, String fileId, String fileName, long uploadTimestamp) {
+      return new AutoValue_HideFileResponse(action, accountId, bucketId, fileId, fileName, new Date(uploadTimestamp));
    }
 }

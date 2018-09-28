@@ -40,16 +40,22 @@ public abstract class ListUnfinishedLargeFilesResponse {
    @AutoValue
    public abstract static class Entry {
       public abstract String accountId();
+      /** Always "upload". */
+      public abstract Action action();
       public abstract String bucketId();
+      /** Always null. */
+      @Nullable public abstract Long contentLength();
+      /** Always null. */
+      @Nullable public abstract String contentSha1();
       public abstract String contentType();
       public abstract String fileId();
       public abstract Map<String, String> fileInfo();
       public abstract String fileName();
       public abstract Date uploadTimestamp();
 
-      @SerializedNames({"accountId", "bucketId", "contentType", "fileId", "fileInfo", "fileName", "uploadTimestamp"})
-      public static Entry create(String accountId, String bucketId, String contentType, String fileId, Map<String, String> fileInfo, String fileName, long uploadTimestamp) {
-         return new AutoValue_ListUnfinishedLargeFilesResponse_Entry(accountId, bucketId, contentType, fileId, ImmutableMap.copyOf(fileInfo), fileName, new Date(uploadTimestamp));
+      @SerializedNames({"accountId", "action", "bucketId", "contentLength", "contentSha1", "contentType", "fileId", "fileInfo", "fileName", "uploadTimestamp"})
+      public static Entry create(String accountId, Action action, String bucketId, @Nullable Long contentLength, @Nullable String contentSha1, String contentType, String fileId, Map<String, String> fileInfo, String fileName, long uploadTimestamp) {
+         return new AutoValue_ListUnfinishedLargeFilesResponse_Entry(accountId, action, bucketId, contentLength, contentSha1, contentType, fileId, ImmutableMap.copyOf(fileInfo), fileName, new Date(uploadTimestamp));
       }
    }
 }
