@@ -26,13 +26,11 @@ public abstract class Authorization {
    public abstract String apiUrl();
    public abstract String authorizationToken();
    public abstract String downloadUrl();
-   @Deprecated
-   public abstract long minimumPartSize();
    public abstract long absoluteMinimumPartSize();
    public abstract long recommendedPartSize();
 
-   @SerializedNames({"accountId", "apiUrl", "authorizationToken", "downloadUrl", "minimumPartSize", "absoluteMinimumPartSize", "recommendedPartSize"})
-   public static Authorization create(String accountId, String apiUrl, String authorizationToken, String downloadUrl, long minimumPartSize, long absoluteMinimumPartSize, long recommendedPartSize) {
-      return new AutoValue_Authorization(accountId, apiUrl, authorizationToken, downloadUrl, minimumPartSize, absoluteMinimumPartSize, recommendedPartSize);
+   @SerializedNames({"accountId", "apiUrl", "authorizationToken", "downloadUrl", "absoluteMinimumPartSize", "recommendedPartSize"})
+   public static Authorization create(String accountId, String apiUrl, String authorizationToken, String downloadUrl, long absoluteMinimumPartSize, long recommendedPartSize) {
+      return new AutoValue_Authorization(accountId, apiUrl, authorizationToken, downloadUrl, absoluteMinimumPartSize, recommendedPartSize);
    }
 }
