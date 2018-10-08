@@ -228,7 +228,13 @@ public class EC2HardwareBuilder extends HardwareBuilder {
       
       return this;
    }
-   
+
+   private EC2HardwareBuilder t3() {
+      virtualizationType(VirtualizationType.HVM);
+
+      return this;
+   }
+
    private EC2HardwareBuilder m3() {
       virtualizationTypes(VirtualizationType.HVM, VirtualizationType.PARAVIRTUAL);
       return this;
@@ -394,12 +400,21 @@ public class EC2HardwareBuilder extends HardwareBuilder {
    }
 
    /**
+    * @see InstanceType#T2_NANO
+    */
+   public static EC2HardwareBuilder t2_nano() {
+      return new EC2HardwareBuilder(InstanceType.T2_NANO).t2()
+              .ram(512)
+              .processors(ImmutableList.of(new Processor(1.0, 3.3))).rootDeviceType(RootDeviceType.EBS);
+   }
+
+   /**
     * @see InstanceType#T2_MICRO
     */
    public static EC2HardwareBuilder t2_micro() {
       return new EC2HardwareBuilder(InstanceType.T2_MICRO).t2()
             .ram(1024)
-            .processors(ImmutableList.of(new Processor(1.0, 0.1))).rootDeviceType(RootDeviceType.EBS);
+            .processors(ImmutableList.of(new Processor(1.0, 3.3))).rootDeviceType(RootDeviceType.EBS);
    }
 
    /**
@@ -408,7 +423,7 @@ public class EC2HardwareBuilder extends HardwareBuilder {
    public static EC2HardwareBuilder t2_small() {
       return new EC2HardwareBuilder(InstanceType.T2_SMALL).t2()
             .ram(2048)
-            .processors(ImmutableList.of(new Processor(1.0, 0.2))).rootDeviceType(RootDeviceType.EBS);
+            .processors(ImmutableList.of(new Processor(1.0, 3.3))).rootDeviceType(RootDeviceType.EBS);
    }
 
    /**
@@ -417,7 +432,7 @@ public class EC2HardwareBuilder extends HardwareBuilder {
    public static EC2HardwareBuilder t2_medium() {
       return new EC2HardwareBuilder(InstanceType.T2_MEDIUM).t2()
             .ram(4096)
-            .processors(ImmutableList.of(new Processor(1.0, 0.4))).rootDeviceType(RootDeviceType.EBS);
+            .processors(ImmutableList.of(new Processor(2.0, 3.3))).rootDeviceType(RootDeviceType.EBS);
    }
 
    /**
@@ -426,8 +441,91 @@ public class EC2HardwareBuilder extends HardwareBuilder {
    public static EC2HardwareBuilder t2_large() {
       return new EC2HardwareBuilder(InstanceType.T2_LARGE).t2()
             .ram(8192)
-            .processors(ImmutableList.of(new Processor(1.0, 0.4))).rootDeviceType(RootDeviceType.EBS);
+            .processors(ImmutableList.of(new Processor(2.0, 3.0))).rootDeviceType(RootDeviceType.EBS);
    }
+
+   /**
+    * @see InstanceType#T2_XLARGE
+    */
+   public static EC2HardwareBuilder t2_xlarge() {
+      return new EC2HardwareBuilder(InstanceType.T2_XLARGE).t2()
+              .ram(16384)
+              .processors(ImmutableList.of(new Processor(4.0, 3.0))).rootDeviceType(RootDeviceType.EBS);
+   }
+
+   /**
+    * @see InstanceType#T2_2XLARGE
+    */
+   public static EC2HardwareBuilder t2_2xlarge() {
+      return new EC2HardwareBuilder(InstanceType.T2_2XLARGE).t2()
+              .ram(32768)
+              .processors(ImmutableList.of(new Processor(8.0, 3.0))).rootDeviceType(RootDeviceType.EBS);
+   }
+
+   /**
+    * @see InstanceType#T3_NANO
+    */
+   public static EC2HardwareBuilder t3_nano() {
+      return new EC2HardwareBuilder(InstanceType.T3_NANO).t3()
+              .ram(512)
+              .processors(ImmutableList.of(new Processor(2.0, 2.5))).rootDeviceType(RootDeviceType.EBS);
+   }
+
+   /**
+    * @see InstanceType#T3_MICRO
+    */
+   public static EC2HardwareBuilder t3_micro() {
+      return new EC2HardwareBuilder(InstanceType.T3_MICRO).t3()
+              .ram(1024)
+              .processors(ImmutableList.of(new Processor(2.0, 2.5))).rootDeviceType(RootDeviceType.EBS);
+   }
+
+   /**
+    * @see InstanceType#T3_SMALL
+    */
+   public static EC2HardwareBuilder t3_small() {
+      return new EC2HardwareBuilder(InstanceType.T3_SMALL).t3()
+              .ram(2048)
+              .processors(ImmutableList.of(new Processor(2.0, 2.5))).rootDeviceType(RootDeviceType.EBS);
+   }
+
+   /**
+    * @see InstanceType#T3_MEDIUM
+    */
+   public static EC2HardwareBuilder t3_medium() {
+      return new EC2HardwareBuilder(InstanceType.T3_MEDIUM).t3()
+              .ram(4096)
+              .processors(ImmutableList.of(new Processor(2.0, 2.5))).rootDeviceType(RootDeviceType.EBS);
+   }
+
+   /**
+    * @see InstanceType#T3_LARGE
+    */
+   public static EC2HardwareBuilder t3_large() {
+      return new EC2HardwareBuilder(InstanceType.T3_LARGE).t3()
+              .ram(8192)
+              .processors(ImmutableList.of(new Processor(2.0, 2.5))).rootDeviceType(RootDeviceType.EBS);
+   }
+
+   /**
+    * @see InstanceType#T3_XLARGE
+    */
+   public static EC2HardwareBuilder t3_xlarge() {
+      return new EC2HardwareBuilder(InstanceType.T3_XLARGE).t3()
+              .ram(16384)
+              .processors(ImmutableList.of(new Processor(4.0, 2.5))).rootDeviceType(RootDeviceType.EBS);
+   }
+
+   /**
+    * @see InstanceType#T3_2XLARGE
+    */
+   public static EC2HardwareBuilder t3_2xlarge() {
+      return new EC2HardwareBuilder(InstanceType.T3_2XLARGE).t3()
+              .ram(32768)
+              .processors(ImmutableList.of(new Processor(8.0, 2.5))).rootDeviceType(RootDeviceType.EBS);
+   }
+
+
 
    /**
     * @see InstanceType#M1_LARGE
@@ -603,6 +701,17 @@ public class EC2HardwareBuilder extends HardwareBuilder {
             .processors(ImmutableList.of(new Processor(40.0, 3.1125)))
             .is64Bit(true)
             .rootDeviceType(RootDeviceType.EBS);
+   }
+
+   /**
+    * @see InstanceType#M4_16XLARGE
+    */
+   public static EC2HardwareBuilder m4_16xlarge() {
+      return new EC2HardwareBuilder(InstanceType.M4_16XLARGE).m4()
+              .ram(262144)
+              .processors(ImmutableList.of(new Processor(64.0, 3.1125)))
+              .is64Bit(true)
+              .rootDeviceType(RootDeviceType.EBS);
    }
 
    /**
