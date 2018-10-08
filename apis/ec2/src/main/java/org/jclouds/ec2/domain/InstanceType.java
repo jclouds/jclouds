@@ -32,6 +32,17 @@ public class InstanceType {
    /**
     * Micro Burstable Performance Instance
     * <ul>
+    * <li>512 MB memory</li>
+    * <li>1 vCPU / 10% baseline performance</li>
+    * <li>No instance storage (EBS storage only)</li>
+    * <li>64-bit platform</li>
+    * </ul>
+    */
+   public static final String T2_NANO = "t2.nano";
+
+   /**
+    * Micro Burstable Performance Instance
+    * <ul>
     * <li>1 GB memory</li>
     * <li>1 vCPU / 10% baseline performance</li>
     * <li>No instance storage (EBS storage only)</li>
@@ -72,6 +83,105 @@ public class InstanceType {
     * </ul>
     */
    public static final String T2_LARGE = "t2.large";
+
+   /**
+    * Micro Burstable Performance Instance
+    * <ul>
+    * <li>16 GB memory</li>
+    * <li>4 vCPU / 40% baseline performance</li>
+    * <li>No instance storage (EBS storage only)</li>
+    * <li>64-bit platform</li>
+    * </ul>
+    */
+   public static final String T2_XLARGE = "t2.xlarge";
+
+   /**
+    * Micro Burstable Performance Instance
+    * <ul>
+    * <li>32 GB memory</li>
+    * <li>8 vCPU / 40% baseline performance</li>
+    * <li>No instance storage (EBS storage only)</li>
+    * <li>64-bit platform</li>
+    * </ul>
+    */
+   public static final String T2_2XLARGE = "t2.2xlarge";
+
+   /**
+    * Micro Burstable Performance Instance
+    * <ul>
+    * <li>512 MB memory</li>
+    * <li>2 vCPU / 10% baseline performance</li>
+    * <li>No instance storage (EBS storage only)</li>
+    * <li>64-bit platform</li>
+    * </ul>
+    */
+   public static final String T3_NANO = "t3.nano";
+
+   /**
+    * Micro Burstable Performance Instance
+    * <ul>
+    * <li>1 GB memory</li>
+    * <li>2 vCPU / 10% baseline performance</li>
+    * <li>No instance storage (EBS storage only)</li>
+    * <li>64-bit platform</li>
+    * </ul>
+    */
+   public static final String T3_MICRO = "t3.micro";
+
+   /**
+    * Micro Burstable Performance Instance
+    * <ul>
+    * <li>2 GB memory</li>
+    * <li>2 vCPU / 10% baseline performance</li>
+    * <li>No instance storage (EBS storage only)</li>
+    * <li>64-bit platform</li>
+    * </ul>
+    */
+   public static final String T3_SMALL = "t3.small";
+
+   /**
+    * Micro Burstable Performance Instance
+    * <ul>
+    * <li>4 GB memory</li>
+    * <li>2 vCPU / 10% baseline performance</li>
+    * <li>No instance storage (EBS storage only)</li>
+    * <li>64-bit platform</li>
+    * </ul>
+    */
+   public static final String T3_MEDIUM = "t3.medium";
+
+   /**
+    * Micro Burstable Performance Instance
+    * <ul>
+    * <li>8 GB memory</li>
+    * <li>2 vCPU / 10% baseline performance</li>
+    * <li>No instance storage (EBS storage only)</li>
+    * <li>64-bit platform</li>
+    * </ul>
+    */
+   public static final String T3_LARGE = "t3.large";
+
+   /**
+    * Micro Burstable Performance Instance
+    * <ul>
+    * <li>16 GB memory</li>
+    * <li>4 vCPU / 10% baseline performance</li>
+    * <li>No instance storage (EBS storage only)</li>
+    * <li>64-bit platform</li>
+    * </ul>
+    */
+   public static final String T3_XLARGE = "t3.xlarge";
+
+   /**
+    * Micro Burstable Performance Instance
+    * <ul>
+    * <li>32 GB memory</li>
+    * <li>8 vCPU / 10% baseline performance</li>
+    * <li>No instance storage (EBS storage only)</li>
+    * <li>64-bit platform</li>
+    * </ul>
+    */
+   public static final String T3_2XLARGE = "t3.2xlarge";
 
     /**
     * Small Instance
@@ -267,6 +377,18 @@ public class InstanceType {
     * </ul>
     */
    public static final String M4_10XLARGE = "m4.10xlarge";
+
+   /**
+    * M4 Sexdecuple Extra Large Instance
+    * <ul>
+    * <li>256 GiB memory</li>
+    * <li>199.2 EC2 Compute Units (64 virtual cores with 3.1125 EC2 Compute Units each)</li>
+    * <li>EBS storage only</li>
+    * <li>64-bit platform</li>
+    * <li>I/O Performance: High</li>
+    * </ul>
+    */
+   public static final String M4_16XLARGE = "m4.16xlarge";
 
    /**
     * M5 Large Instance
