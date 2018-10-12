@@ -169,6 +169,7 @@ public class SimpleDateFormatDateService implements DateService {
    }
 
    @Override
+   @SuppressWarnings("UnusedException")
    public Date iso8601DateOrSecondsDateParse(String toParse)
          throws IllegalArgumentException {
       try {

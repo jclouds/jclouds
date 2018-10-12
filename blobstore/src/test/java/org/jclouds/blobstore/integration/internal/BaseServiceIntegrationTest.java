@@ -76,8 +76,6 @@ public class BaseServiceIntegrationTest extends BaseBlobStoreIntegrationTest {
 
    @Test(groups = { "integration", "live" })
    public void testGetAssignableLocations() throws Exception {
-      if (view.unwrap() instanceof Location)
-         assertProvider(Location.class.cast(view.unwrap()));
       for (Location location : view.getBlobStore().listAssignableLocations()) {
          System.err.printf("location %s%n", location);
          assert location.getId() != null : location;

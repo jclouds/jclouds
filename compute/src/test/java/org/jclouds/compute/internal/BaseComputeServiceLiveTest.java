@@ -568,7 +568,7 @@ public abstract class BaseComputeServiceLiveTest extends BaseComputeServiceConte
             });
       Map<String, ? extends NodeMetadata> metadataMap = newLinkedHashMap(uniqueMap);
       for (NodeMetadata node : nodes) {
-         metadataMap.remove(node.getId());
+         assertNotNull(metadataMap.remove(node.getId()));
          NodeMetadata metadata = client.getNodeMetadata(node.getId());
          assertEquals(metadata.getProviderId(), node.getProviderId());
          assertEquals(metadata.getGroup(), node.getGroup());
@@ -664,7 +664,6 @@ public abstract class BaseComputeServiceLiveTest extends BaseComputeServiceConte
          assert node.getProviderId() != null : node;
          assert node.getLocation() != null : node;
          assertEquals(node.getType(), ComputeType.NODE);
-         assert node instanceof NodeMetadata;
          NodeMetadata nodeMetadata = node;
          assert nodeMetadata.getProviderId() != null : nodeMetadata;
          // nullable

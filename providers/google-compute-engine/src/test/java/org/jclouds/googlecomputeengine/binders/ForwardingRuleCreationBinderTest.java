@@ -62,8 +62,8 @@ public class ForwardingRuleCreationBinderTest extends BaseGoogleComputeEngineExp
             "{\""
             + "name\":\"testForwardingRuleName\","
             + "\"description\":\"" + DESCRIPTION + "\","
-            + "\"IPAddress\":\"" + IP_ADDRESS + "\","
-            + "\"IPProtocol\":\"SCTP\","
+            + "\"ipAddress\":\"" + IP_ADDRESS + "\","
+            + "\"ipProtocol\":\"SCTP\","
             + "\"portRange\":\"" + PORT_RANGE + "\","
             + "\"target\":\"" + TARGET + "\""
             + "}");

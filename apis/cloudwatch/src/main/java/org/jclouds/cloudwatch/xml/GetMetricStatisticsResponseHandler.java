@@ -33,8 +33,8 @@ public class GetMetricStatisticsResponseHandler extends ParseSax.HandlerWithResu
    private final DatapointHandler datapointHandler;
 
    @Inject
-   public GetMetricStatisticsResponseHandler(DatapointHandler DatapointHandler) {
-      this.datapointHandler = DatapointHandler;
+   public GetMetricStatisticsResponseHandler(DatapointHandler datapointHandler) {
+      this.datapointHandler = datapointHandler;
    }
 
    public Set<Datapoint> getResult() {

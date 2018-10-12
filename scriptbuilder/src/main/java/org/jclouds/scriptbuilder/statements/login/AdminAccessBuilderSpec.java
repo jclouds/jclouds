@@ -389,6 +389,7 @@ public class AdminAccessBuilderSpec {
                && equal(adminPrivateKeyFile, that.adminPrivateKeyFile) && equal(adminPassword, that.adminPassword)
                && equal(loginPassword, that.loginPassword) && equal(lockSsh, that.lockSsh)
                && equal(grantSudoToAdminUser, that.grantSudoToAdminUser)
+               && equal(authorizeAdminPublicKey, that.authorizeAdminPublicKey)
                && equal(installAdminPrivateKey, that.installAdminPrivateKey)
                && equal(resetLoginPassword, that.resetLoginPassword);
    }

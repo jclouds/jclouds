@@ -276,16 +276,13 @@ public class VirtualMachineScaleSetApiMockTest extends BaseAzureComputeApiMockTe
 
 
    private VirtualMachineScaleSetNetworkProfile getNetworkProfile() {
-      List<NetworkProfile.NetworkInterface> networkInterfacesList =
-              new ArrayList<NetworkProfile.NetworkInterface>();
-
       NetworkInterfaceCard nic =
               createNetworkInterfaceCard(
                       "jc-nic-" + 123,
                       "eastus");
-      networkInterfacesList.add(NetworkProfile.NetworkInterface.create(
+      NetworkProfile.NetworkInterface.create(
               nic.id(),
-              NetworkProfile.NetworkInterface.NetworkInterfaceProperties.create(true)));
+              NetworkProfile.NetworkInterface.NetworkInterfaceProperties.create(true));
 
       List<NetworkInterfaceConfiguration> networkInterfaceConfigurations =
               new ArrayList<NetworkInterfaceConfiguration>();

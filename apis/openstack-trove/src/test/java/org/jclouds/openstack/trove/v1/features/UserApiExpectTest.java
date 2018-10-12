@@ -180,9 +180,6 @@ public class UserApiExpectTest extends BaseTroveApiExpectTest {
             HttpResponse.builder().statusCode(202).build() // response
             ).getUserApi("RegionOne", "instanceId-1234-5678");
 
-      Set<String> databases = Sets.newHashSet();
-      databases.add( "database" );
-      databases.add( "database" );
       boolean result = api.revoke("dbuser1", "databaseA");
       assertTrue(result);
    }
@@ -198,9 +195,6 @@ public class UserApiExpectTest extends BaseTroveApiExpectTest {
             HttpResponse.builder().statusCode(202).build() // response
             ).getUserApi("RegionOne", "instanceId-1234-5678");
 
-      Set<String> databases = Sets.newHashSet();
-      databases.add( "database" );
-      databases.add( "database" );
       boolean result = api.delete("dbuser1");
       assertTrue(result);
    }

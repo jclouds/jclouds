@@ -47,7 +47,7 @@ public abstract class Group {
    @AutoValue.Builder
    public abstract static class Builder {
       public abstract Builder id(String id);
-      public abstract Builder name(String String);
+      public abstract Builder name(String string);
       public abstract Builder description(String description);
       public abstract Builder domainId(String domainId);
       public abstract Builder link(Link link);

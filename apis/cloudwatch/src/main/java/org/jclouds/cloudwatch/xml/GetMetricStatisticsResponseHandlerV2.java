@@ -39,8 +39,8 @@ public class GetMetricStatisticsResponseHandlerV2 extends ParseSax.HandlerWithRe
    private boolean inDatapoints;
 
    @Inject
-   public GetMetricStatisticsResponseHandlerV2(DatapointHandler DatapointHandler) {
-      this.datapointHandler = DatapointHandler;
+   public GetMetricStatisticsResponseHandlerV2(DatapointHandler datapointHandler) {
+      this.datapointHandler = datapointHandler;
    }
 
    public GetMetricStatisticsResponse getResult() {

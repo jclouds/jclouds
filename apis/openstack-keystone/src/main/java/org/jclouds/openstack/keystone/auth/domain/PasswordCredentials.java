@@ -39,7 +39,7 @@ public abstract class PasswordCredentials {
    }
    
    @Override
-   public String toString() {
+   public final String toString() {
       return MoreObjects.toStringHelper(this).add("username", username())
             .add("password", password() == null ? null : "*****").toString();
    }

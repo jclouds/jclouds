@@ -55,13 +55,13 @@ public abstract class ResourceGroupAndNameAndIngressRules {
    // class so that we can search only by region/id in a map
 
    @Override
-   public int hashCode() {
+   public final int hashCode() {
       return Objects.hashCode(resourceGroup(), name());
    }
 
    @edu.umd.cs.findbugs.annotations.SuppressFBWarnings(value = "EQ_UNUSUAL")
    @Override
-   public boolean equals(Object obj) {
+   public final boolean equals(Object obj) {
       if (obj == this) {
          return true;
       }

@@ -53,9 +53,9 @@ public class ForwardingRuleCreationBinder extends BindToJsonPayload {
       @SuppressWarnings("unused")
       private String description;
       @SuppressWarnings("unused")
-      private String IPAddress;
+      private String ipAddress;
       @SuppressWarnings("unused")
-      private ForwardingRule.IPProtocol IPProtocol;
+      private ForwardingRule.IPProtocol ipProtocol;
       @SuppressWarnings("unused")
       private String portRange;
       @SuppressWarnings("unused")
@@ -64,8 +64,8 @@ public class ForwardingRuleCreationBinder extends BindToJsonPayload {
       private ForwardingRuleCreationBinderHelper(String name, ForwardingRuleCreationOptions forwardingRuleCreationOptions){
          this.name = name;
          this.description = forwardingRuleCreationOptions.description();
-         this.IPAddress = forwardingRuleCreationOptions.ipAddress();
-         this.IPProtocol = forwardingRuleCreationOptions.ipProtocol();
+         this.ipAddress = forwardingRuleCreationOptions.ipAddress();
+         this.ipProtocol = forwardingRuleCreationOptions.ipProtocol();
          this.portRange = forwardingRuleCreationOptions.portRange();
          this.target = forwardingRuleCreationOptions.target();
       }

@@ -21,6 +21,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.entry;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertFalse;
+import static org.testng.Assert.assertNotEquals;
 import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertTrue;
 
@@ -314,7 +315,7 @@ public class ObjectApiLiveTest extends BaseGoogleCloudStorageApiLiveTest {
       ListPageWithPrefixes<GoogleCloudStorageObject> list = api().listObjects(BUCKET_NAME);
 
       assertNotNull(list);
-      assertEquals(list.get(0) instanceof GoogleCloudStorageObject, true);
+      assertNotEquals(list.size(), 0);
    }
 
    @Test(groups = "live", dependsOnMethods = "testComposeObjectWithOptions")
@@ -324,7 +325,6 @@ public class ObjectApiLiveTest extends BaseGoogleCloudStorageApiLiveTest {
 
       while (list.nextPageToken() != null) {
          assertNotNull(list);
-         assertEquals(list.get(0) instanceof GoogleCloudStorageObject, true);
          assertEquals(list.size(), 1);
 
          options = new ListObjectOptions().maxResults(1).pageToken(list.nextPageToken());

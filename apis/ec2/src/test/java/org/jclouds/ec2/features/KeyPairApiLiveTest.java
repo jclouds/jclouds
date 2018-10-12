@@ -92,9 +92,9 @@ public class KeyPairApiLiveTest extends BaseComputeServiceContextLiveTest {
          assertNotNull(allResults);
          if (!allResults.isEmpty()) {
             KeyPair pair = allResults.last();
-            SortedSet<KeyPair> result = Sets.newTreeSet(client.describeKeyPairsInRegionWithFilter(region,
+            client.describeKeyPairsInRegionWithFilter(region,
                     ImmutableMultimap.<String, String>builder()
-                            .put("invalid-filter", pair.getKeyName()).build()));
+                            .put("invalid-filter", pair.getKeyName()).build());
          }
       }
    }

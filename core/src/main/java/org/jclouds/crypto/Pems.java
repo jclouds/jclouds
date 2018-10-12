@@ -35,6 +35,7 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.StringReader;
+import java.nio.charset.StandardCharsets;
 import java.security.PrivateKey;
 import java.security.PublicKey;
 import java.security.cert.CertificateEncodingException;
@@ -174,6 +175,10 @@ public class Pems {
          this.content = checkNotNull(content, "content");
       }
 
+      @Override
+      public String toString() {
+         return type + " " + new String(content, StandardCharsets.UTF_8);
+      }
    }
 
    /**

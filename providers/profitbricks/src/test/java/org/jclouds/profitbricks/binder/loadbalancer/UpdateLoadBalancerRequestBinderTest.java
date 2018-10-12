@@ -19,10 +19,6 @@ package org.jclouds.profitbricks.binder.loadbalancer;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
 
-import java.util.List;
-
-import com.google.common.collect.Lists;
-
 import org.jclouds.profitbricks.domain.LoadBalancer;
 import org.testng.annotations.Test;
 
@@ -32,9 +28,6 @@ public class UpdateLoadBalancerRequestBinderTest {
    @Test
    public void testDeregisterPayload() {
       UpdateLoadBalancerRequestBinder binder = new UpdateLoadBalancerRequestBinder();
-      List<String> serverIds = Lists.newArrayList();
-      serverIds.add("1");
-      serverIds.add("2");
 
       LoadBalancer.Request.UpdatePayload payload = LoadBalancer.Request.updatingBuilder()
               .id("aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee")
