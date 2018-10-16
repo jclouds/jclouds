@@ -26,8 +26,10 @@ import java.util.Set;
 
 import javax.annotation.Resource;
 import javax.inject.Inject;
+import javax.inject.Named;
 import javax.inject.Singleton;
 
+import org.jclouds.Constants;
 import org.jclouds.date.DateCodecFactory;
 import org.jclouds.fallbacks.HeaderToRetryAfterException;
 import org.jclouds.http.HttpCommand;
@@ -51,6 +53,10 @@ import com.google.common.collect.ImmutableSet;
 // TODO: is there error spec someplace? let's type errors, etc.
 @Singleton
 public class NovaErrorHandler implements HttpErrorHandler {
+
+   @com.google.inject.Inject(optional = true)
+   @Named(Constants.PROPERTY_LOGGER_WIRE_LOG_SENSITIVE_INFO)
+   private boolean logSensitiveInformation = false;
 
    @Resource
    protected Logger logger = Logger.NULL;
@@ -76,7 +82,7 @@ public class NovaErrorHandler implements HttpErrorHandler {
       String content = data != null ? emptyToNull(new String(data)) : null;
 
       Exception exception = content != null ? new HttpResponseException(command, response, content)
-            : new HttpResponseException(command, response);
+            : new HttpResponseException(command, response, logSensitiveInformation);
       String requestLine = command.getCurrentRequest().getRequestLine();
       String message = content != null ? content : String.format("%s -> %s", requestLine, response.getStatusLine());
       switch (response.getStatusCode()) {
