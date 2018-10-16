@@ -35,7 +35,7 @@ public abstract class AttachDisk {
       @Nullable public abstract Long diskSizeGb();
 
       /** The {@link org.jclouds.googlecomputeengine.domain.Image#selfLink() source image}. */
-      public abstract URI sourceImage();
+      @Nullable public abstract URI sourceImage();
 
       @Nullable public abstract URI diskType();
 
