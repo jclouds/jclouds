@@ -18,12 +18,15 @@ package org.jclouds.googlecomputeengine.compute;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Preconditions.checkState;
+import static com.google.common.collect.Iterables.contains;
 import static com.google.common.collect.Iterables.filter;
+import static com.google.common.collect.Iterables.transform;
 import static java.lang.String.format;
 import static org.jclouds.googlecloud.internal.ListPages.concat;
 import static org.jclouds.googlecomputeengine.compute.domain.internal.RegionAndName.fromRegionAndName;
 import static org.jclouds.googlecomputeengine.compute.strategy.CreateNodesWithGroupEncodedIntoNameThenAddToSet.nameFromNetworkString;
 import static org.jclouds.googlecomputeengine.config.GoogleComputeEngineProperties.IMAGE_PROJECTS;
+import static org.jclouds.location.predicates.LocationPredicates.isZone;
 
 import java.net.URI;
 import java.util.List;
@@ -216,10 +219,17 @@ public final class GoogleComputeEngineServiceAdapter
    }
 
    @Override public Iterable<MachineType> listHardwareProfiles() {
+      // JCLOUDS-1463: Only return the machine types that belong to zones that are actually available
+      final Iterable<String> zones = transform(filter(listLocations(), isZone()), new Function<Location, String>() {
+         public String apply(Location input) {
+            return input.getId();
+         }
+      });
+
       return filter(concat(api.aggregatedList().machineTypes()), new Predicate<MachineType>() {
          @Override
          public boolean apply(MachineType input) {
-            return input.deprecated() == null;
+            return input.deprecated() == null && contains(zones, input.zone());
          }
       });
    }
