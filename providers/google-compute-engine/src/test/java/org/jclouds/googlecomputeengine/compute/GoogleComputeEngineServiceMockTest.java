@@ -47,6 +47,7 @@ public class GoogleComputeEngineServiceMockTest extends BaseGoogleComputeEngineA
       server.enqueue(singleRegionSingleZoneResponse());
       server.enqueue(jsonResponse("/image_list.json"));
       server.enqueue(jsonResponse("/image_list_debian.json")); // per IMAGE_PROJECTS = "debian-cloud"
+      server.enqueue(singleRegionSingleZoneResponse());
       server.enqueue(jsonResponse("/aggregated_machinetype_list.json"));
 
       ComputeService computeService = computeService();
@@ -60,7 +61,7 @@ public class GoogleComputeEngineServiceMockTest extends BaseGoogleComputeEngineA
       Hardware fastest = computeService.templateBuilder().fastest().build().getHardware();
       assertNotNull(fastest);
 
-      assertEquals(computeService.listHardwareProfiles().size(), 3);
+      assertEquals(computeService.listHardwareProfiles().size(), 2);
 
       Template toMatch = computeService.templateBuilder().imageId(template.getImage().getId()).build();
       assertEquals(toMatch.getImage(), template.getImage());
@@ -68,6 +69,7 @@ public class GoogleComputeEngineServiceMockTest extends BaseGoogleComputeEngineA
       assertSent(server, "GET", "/projects/party/regions");
       assertSent(server, "GET", "/projects/party/global/images");
       assertSent(server, "GET", "/projects/debian-cloud/global/images");
+      assertSent(server, "GET", "/projects/party/regions");
       assertSent(server, "GET", "/projects/party/aggregated/machineTypes");
    }
 
@@ -76,6 +78,7 @@ public class GoogleComputeEngineServiceMockTest extends BaseGoogleComputeEngineA
       server.enqueue(singleRegionSingleZoneResponse());
       server.enqueue(jsonResponse("/disk_get_with_source_image.json"));
       server.enqueue(jsonResponse("/image_get_for_source_image.json"));
+      server.enqueue(singleRegionSingleZoneResponse());
       server.enqueue(jsonResponse("/aggregated_machinetype_list.json")); // Why are we getting machineTypes to delete an instance?
       server.enqueue(jsonResponse("/operation.json")); // instance delete
       server.enqueue(jsonResponse("/zone_operation.json"));
@@ -92,6 +95,7 @@ public class GoogleComputeEngineServiceMockTest extends BaseGoogleComputeEngineA
       assertSent(server, "GET", "/projects/party/regions");
       assertSent(server, "GET", "/projects/party/zones/us-central1-a/disks/test");
       assertSent(server, "GET", "/projects/debian-cloud/global/images/debian-7-wheezy-v20140718");
+      assertSent(server, "GET", "/projects/party/regions");
       assertSent(server, "GET", "/projects/party/aggregated/machineTypes"); // Why are we getting machineTypes to delete an instance?
       assertSent(server, "DELETE", "/jclouds/zones/us-central1-a/instances/test-delete-1"); // instance delete
       assertSent(server, "GET", "/projects/party/zones/us-central1-a/operations/operation-1354084865060");
@@ -133,6 +137,7 @@ public class GoogleComputeEngineServiceMockTest extends BaseGoogleComputeEngineA
       server.enqueue(singleRegionSingleZoneResponse());
       server.enqueue(jsonResponse("/disk_get_with_source_image.json"));
       server.enqueue(jsonResponse("/image_get_for_source_image.json"));
+      server.enqueue(singleRegionSingleZoneResponse());
       server.enqueue(jsonResponse("/aggregated_machinetype_list.json"));
 
       Set<? extends ComputeMetadata> nodes = computeService().listNodes();
@@ -144,6 +149,7 @@ public class GoogleComputeEngineServiceMockTest extends BaseGoogleComputeEngineA
       assertSent(server, "GET", "/projects/party/regions");
       assertSent(server, "GET", "/projects/party/zones/us-central1-a/disks/test");
       assertSent(server, "GET", "/projects/debian-cloud/global/images/debian-7-wheezy-v20140718");
+      assertSent(server, "GET", "/projects/party/regions");
       assertSent(server, "GET", "/projects/party/aggregated/machineTypes");
    }
 
@@ -152,6 +158,7 @@ public class GoogleComputeEngineServiceMockTest extends BaseGoogleComputeEngineA
       server.enqueue(aggregatedListWithInstanceNetworkAndStatus("test-0", "test-network", RUNNING));
       server.enqueue(singleRegionSingleZoneResponse());
       server.enqueue(jsonResponse("/disk_get_with_source_snapshot.json"));
+      server.enqueue(singleRegionSingleZoneResponse());
       server.enqueue(jsonResponse("/aggregated_machinetype_list.json"));
 
       Set<? extends ComputeMetadata> nodes = computeService().listNodes();
@@ -162,6 +169,7 @@ public class GoogleComputeEngineServiceMockTest extends BaseGoogleComputeEngineA
       assertSent(server, "GET", "/projects/party/aggregated/instances");
       assertSent(server, "GET", "/projects/party/regions");
       assertSent(server, "GET", "/projects/party/zones/us-central1-a/disks/test");
+      assertSent(server, "GET", "/projects/party/regions");
       assertSent(server, "GET", "/projects/party/aggregated/machineTypes");
    }
 
@@ -171,6 +179,7 @@ public class GoogleComputeEngineServiceMockTest extends BaseGoogleComputeEngineA
       server.enqueue(singleRegionSingleZoneResponse());
       server.enqueue(jsonResponse("/image_list.json"));
       server.enqueue(jsonResponse("/image_list_debian.json")); // per IMAGE_PROJECTS = "debian-cloud"
+      server.enqueue(singleRegionSingleZoneResponse());
       server.enqueue(jsonResponse("/aggregated_machinetype_list.json"));
       server.enqueue(new MockResponse().setResponseCode(404)); // Get Subnet
       server.enqueue(jsonResponse("/network_get_default.json"));
@@ -198,6 +207,7 @@ public class GoogleComputeEngineServiceMockTest extends BaseGoogleComputeEngineA
       assertSent(server, "GET", "/projects/party/regions");
       assertSent(server, "GET", "/projects/party/global/images");
       assertSent(server, "GET", "/projects/debian-cloud/global/images");
+      assertSent(server, "GET", "/projects/party/regions");
       assertSent(server, "GET", "/projects/party/aggregated/machineTypes");
       assertSent(server, "GET", "/projects/party/regions/us-central1/subnetworks/default");
       assertSent(server, "GET", "/projects/party/global/networks/default");
@@ -219,6 +229,7 @@ public class GoogleComputeEngineServiceMockTest extends BaseGoogleComputeEngineA
       server.enqueue(singleRegionSingleZoneResponse());
       server.enqueue(jsonResponse("/image_list.json"));
       server.enqueue(jsonResponse("/image_list_debian.json")); // per IMAGE_PROJECTS = "debian-cloud"
+      server.enqueue(singleRegionSingleZoneResponse());
       server.enqueue(jsonResponse("/aggregated_machinetype_list.json"));
       server.enqueue(new MockResponse().setResponseCode(404)); // Get Subnet
       server.enqueue(jsonResponse("/network_get_default.json"));
@@ -249,6 +260,7 @@ public class GoogleComputeEngineServiceMockTest extends BaseGoogleComputeEngineA
       assertSent(server, "GET", "/projects/party/regions");
       assertSent(server, "GET", "/projects/party/global/images");
       assertSent(server, "GET", "/projects/debian-cloud/global/images");
+      assertSent(server, "GET", "/projects/party/regions");
       assertSent(server, "GET", "/projects/party/aggregated/machineTypes");
       assertSent(server, "GET", "/projects/party/regions/us-central1/subnetworks/default");
       assertSent(server, "GET", "/projects/party/global/networks/default");
@@ -271,6 +283,7 @@ public class GoogleComputeEngineServiceMockTest extends BaseGoogleComputeEngineA
       server.enqueue(singleRegionSingleZoneResponse());
       server.enqueue(jsonResponse("/image_list.json"));
       server.enqueue(jsonResponse("/image_list_debian.json")); // per IMAGE_PROJECTS = "debian-cloud"
+      server.enqueue(singleRegionSingleZoneResponse());
       server.enqueue(jsonResponse("/aggregated_machinetype_list.json"));
       server.enqueue(jsonResponse("/subnetwork_get.json"));
       server.enqueue(jsonResponse("/network_get.json"));
@@ -301,6 +314,7 @@ public class GoogleComputeEngineServiceMockTest extends BaseGoogleComputeEngineA
       assertSent(server, "GET", "/projects/party/regions");
       assertSent(server, "GET", "/projects/party/global/images");
       assertSent(server, "GET", "/projects/debian-cloud/global/images");
+      assertSent(server, "GET", "/projects/party/regions");
       assertSent(server, "GET", "/projects/party/aggregated/machineTypes");
       assertSent(server, "GET", "/projects/party/regions/us-central1/subnetworks/jclouds-test");
       assertSent(server, "GET", "/projects/party/global/networks/mynetwork");
@@ -323,6 +337,7 @@ public class GoogleComputeEngineServiceMockTest extends BaseGoogleComputeEngineA
       server.enqueue(singleRegionSingleZoneResponse());
       server.enqueue(jsonResponse("/image_list.json"));
       server.enqueue(jsonResponse("/image_list_debian.json")); // per IMAGE_PROJECTS = "debian-cloud"
+      server.enqueue(singleRegionSingleZoneResponse());
       server.enqueue(jsonResponse("/aggregated_machinetype_list.json"));
       server.enqueue(jsonResponse("/subnetwork_get.json"));
       server.enqueue(jsonResponse("/network_get.json"));
@@ -353,6 +368,7 @@ public class GoogleComputeEngineServiceMockTest extends BaseGoogleComputeEngineA
       assertSent(server, "GET", "/projects/party/regions");
       assertSent(server, "GET", "/projects/party/global/images");
       assertSent(server, "GET", "/projects/debian-cloud/global/images");
+      assertSent(server, "GET", "/projects/party/regions");
       assertSent(server, "GET", "/projects/party/aggregated/machineTypes");
       assertSent(server, "GET", "/projects/party/regions/us-central1/subnetworks/jclouds-test");
       assertSent(server, "GET", "/projects/party/global/networks/mynetwork");

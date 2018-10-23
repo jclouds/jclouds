@@ -50,7 +50,7 @@
          ],
          "maximumPersistentDisks": 16,
          "maximumPersistentDisksSizeGb": "1024",
-         "zone": "us-central1-a"
+         "zone": "asia-east2-a"
        }
      ]
    }
