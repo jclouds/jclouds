@@ -16,6 +16,7 @@
  */
 package org.jclouds.filesystem.strategy.internal;
 
+import static com.google.common.base.Charsets.US_ASCII;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Strings.isNullOrEmpty;
 import static com.google.common.io.BaseEncoding.base16;
@@ -35,6 +36,7 @@ import static org.jclouds.util.Closeables2.closeQuietly;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.AccessDeniedException;
@@ -48,6 +50,7 @@ import java.util.Date;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
+import java.util.regex.Pattern;
 
 import javax.annotation.Resource;
 import javax.inject.Inject;
@@ -115,6 +118,7 @@ public class FilesystemStorageStrategyImpl implements LocalStorageStrategy {
    private static final String XATTR_USER_METADATA_PREFIX = "user.user-metadata.";
    private static final byte[] DIRECTORY_MD5 =
            Hashing.md5().hashBytes(new byte[0]).asBytes();
+   private static final Pattern MPU_ETAG_FORMAT = Pattern.compile("\"[a-f0-9]{32}-\\d+\"");
 
    @Resource
    protected Logger logger = Logger.NULL;
@@ -353,6 +357,7 @@ public class FilesystemStorageStrategyImpl implements LocalStorageStrategy {
          String contentLanguage = null;
          String contentType = null;
          HashCode hashCode = null;
+         String eTag = null;
          Date expires = null;
          Tier tier = Tier.STANDARD;
          ImmutableMap.Builder<String, String> userMetadata = ImmutableMap.builder();
@@ -373,7 +378,15 @@ public class FilesystemStorageStrategyImpl implements LocalStorageStrategy {
                if (attributes.contains(XATTR_CONTENT_MD5)) {
                   ByteBuffer buf = ByteBuffer.allocate(view.size(XATTR_CONTENT_MD5));
                   view.read(XATTR_CONTENT_MD5, buf);
-                  hashCode = HashCode.fromBytes(buf.array());
+                  byte [] etagBytes = buf.array();
+                  if (etagBytes.length == 16) {
+                     // regular object
+                     hashCode = HashCode.fromBytes(buf.array());
+                     eTag = "\"" + hashCode + "\"";
+                  } else {
+                     // multi-part object
+                     eTag = new String(etagBytes, US_ASCII);
+                  }
                }
                if (attributes.contains(XATTR_EXPIRES)) {
                   ByteBuffer buf = ByteBuffer.allocate(view.size(XATTR_EXPIRES));
@@ -403,6 +416,7 @@ public class FilesystemStorageStrategyImpl implements LocalStorageStrategy {
                .contentLanguage(contentLanguage)
                .contentLength(byteSource.size())
                .contentMD5(hashCode)
+               .eTag(eTag)
                .contentType(contentType)
                .expires(expires)
                .tier(tier)
@@ -488,23 +502,36 @@ public class FilesystemStorageStrategyImpl implements LocalStorageStrategy {
       String tmpBlobName = blobKey + "-" + UUID.randomUUID();
       File tmpFile = getFileForBlobKey(containerName, tmpBlobName);
       Path tmpPath = tmpFile.toPath();
-      HashingInputStream his = null;
+      boolean isMpu = false;
+      if (blob.getMetadata() != null && blob.getMetadata().getETag() != null)
+         isMpu = MPU_ETAG_FORMAT.matcher(blob.getMetadata().getETag()).matches();
+      InputStream inputStream = null;
+      byte[] eTag = null;
       try {
          Files.createParentDirs(tmpFile);
-         his = new HashingInputStream(Hashing.md5(), payload.openStream());
-         long actualSize = Files.asByteSink(tmpFile).writeFrom(his);
+         if (isMpu) {
+            inputStream = payload.openStream();
+            eTag = blob.getMetadata().getETag().getBytes();
+         } else {
+            inputStream = new HashingInputStream(Hashing.md5(), payload.openStream());
+         }
+         long actualSize = Files.asByteSink(tmpFile).writeFrom(inputStream);
          Long expectedSize = blob.getMetadata().getContentMetadata().getContentLength();
          if (expectedSize != null && actualSize != expectedSize) {
             throw new IOException("Content-Length mismatch, actual: " + actualSize +
                   " expected: " + expectedSize);
          }
-         HashCode actualHashCode = his.hash();
-         HashCode expectedHashCode = payload.getContentMetadata().getContentMD5AsHashCode();
-         if (expectedHashCode != null && !actualHashCode.equals(expectedHashCode)) {
-            throw new IOException("MD5 hash code mismatch, actual: " + actualHashCode +
-                  " expected: " + expectedHashCode);
+
+         if (!isMpu) {
+            HashCode actualHashCode = ((HashingInputStream) inputStream).hash();
+            HashCode expectedHashCode = payload.getContentMetadata().getContentMD5AsHashCode();
+            if (expectedHashCode != null && !actualHashCode.equals(expectedHashCode)) {
+               throw new IOException("MD5 hash code mismatch, actual: " + actualHashCode +
+                       " expected: " + expectedHashCode);
+            }
+            payload.getContentMetadata().setContentMD5(actualHashCode);
+            eTag = actualHashCode.asBytes();
          }
-         payload.getContentMetadata().setContentMD5(actualHashCode);
 
          if (outputFile.exists()) {
             delete(outputFile);
@@ -513,7 +540,7 @@ public class FilesystemStorageStrategyImpl implements LocalStorageStrategy {
          UserDefinedFileAttributeView view = getUserDefinedFileAttributeView(tmpPath);
          if (view != null) {
             try {
-               view.write(XATTR_CONTENT_MD5, ByteBuffer.wrap(actualHashCode.asBytes()));
+               view.write(XATTR_CONTENT_MD5, ByteBuffer.wrap(eTag));
                writeCommonMetadataAttr(view, blob);
             } catch (IOException e) {
                logger.debug("xattrs not supported on %s", tmpPath);
@@ -527,7 +554,7 @@ public class FilesystemStorageStrategyImpl implements LocalStorageStrategy {
          }
          tmpFile = null;
 
-         return base16().lowerCase().encode(actualHashCode.asBytes());
+         return base16().lowerCase().encode(eTag);
       } finally {
          if (tmpFile != null) {
             try {
@@ -536,7 +563,7 @@ public class FilesystemStorageStrategyImpl implements LocalStorageStrategy {
                logger.debug("Could not delete %s: %s", tmpFile, e);
             }
          }
-         closeQuietly(his);
+         closeQuietly(inputStream);
          if (payload != null) {
             payload.release();
          }

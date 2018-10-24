@@ -58,6 +58,12 @@ public interface BlobBuilder {
    BlobBuilder userMetadata(Map<String, String> userMetadata);
 
    /**
+    * @param eTag
+    *           Entity Tag associated with the Blob. Typically, content MD5 hash.
+    */
+   BlobBuilder eTag(String eTag);
+
+   /**
     * 
     * @param payload
     *           payload you wish to construct the {@link Blob} with.
@@ -132,5 +138,7 @@ public interface BlobBuilder {
       PayloadBlobBuilder contentEncoding(String contentEncoding);
 
       PayloadBlobBuilder expires(Date expires);
+
+      PayloadBlobBuilder eTag(String string);
    }
 }

@@ -19,11 +19,17 @@ package org.jclouds.filesystem.integration;
 import static org.jclouds.filesystem.util.Utils.isMacOSX;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import static java.nio.charset.StandardCharsets.US_ASCII;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
+import com.google.common.hash.Hashing;
 import org.jclouds.blobstore.domain.Blob;
 import org.jclouds.blobstore.domain.BlobMetadata;
+import org.jclouds.blobstore.domain.MultipartPart;
 import org.jclouds.blobstore.domain.Tier;
 import org.jclouds.blobstore.integration.internal.BaseBlobIntegrationTest;
 import org.jclouds.blobstore.integration.internal.BaseBlobStoreIntegrationTest;
@@ -102,6 +108,22 @@ public class FilesystemBlobIntegrationTest extends BaseBlobIntegrationTest {
    @Override
    public void testSetBlobAccess() throws Exception {
       throw new SkipException("filesystem does not support anonymous access");
+   }
+
+   @Override
+   protected void checkMPUParts(Blob blob, List<MultipartPart> partsList) {
+      assertThat(blob.getMetadata().getETag()).endsWith(String.format("-%d\"", partsList.size()));
+      StringBuilder eTags = new StringBuilder();
+      for (MultipartPart part : partsList) {
+         eTags.append(part.partETag());
+      }
+      String expectedETag = new StringBuilder("\"")
+         .append(Hashing.md5().hashString(eTags.toString(), US_ASCII))
+         .append("-")
+         .append(partsList.size())
+         .append("\"")
+         .toString();
+      assertThat(blob.getMetadata().getETag()).isEqualTo(expectedETag);
    }
 
    protected void checkExtendedAttributesSupport() {

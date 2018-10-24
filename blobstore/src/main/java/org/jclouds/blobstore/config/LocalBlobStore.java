@@ -25,6 +25,7 @@ import static com.google.common.collect.Iterables.transform;
 import static com.google.common.collect.Iterables.tryFind;
 import static com.google.common.collect.Sets.filter;
 import static com.google.common.collect.Sets.newTreeSet;
+import static java.nio.charset.StandardCharsets.US_ASCII;
 import static org.jclouds.blobstore.options.ListContainerOptions.Builder.recursive;
 
 import java.io.File;
@@ -45,6 +46,7 @@ import javax.annotation.Resource;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+import com.google.common.hash.Hashing;
 import org.jclouds.blobstore.BlobStore;
 import org.jclouds.blobstore.BlobStoreContext;
 import org.jclouds.blobstore.ContainerNotFoundException;
@@ -824,6 +826,8 @@ public final class LocalBlobStore implements BlobStore {
    public String completeMultipartUpload(MultipartUpload mpu, List<MultipartPart> parts) {
       ImmutableList.Builder<InputStream> streams = ImmutableList.builder();
       long contentLength = 0;
+      StringBuilder partHashes = new StringBuilder();
+
       for (MultipartPart part : parts) {
          Blob blobPart = getBlob(mpu.containerName(), MULTIPART_PREFIX + mpu.id() + "-" + mpu.blobName() + "-" + part.partNumber());
          contentLength += blobPart.getMetadata().getContentMetadata().getContentLength();
@@ -834,11 +838,19 @@ public final class LocalBlobStore implements BlobStore {
             throw propagate(ioe);
          }
          streams.add(is);
+         partHashes.append(blobPart.getMetadata().getETag());
       }
+      String mpuETag = new StringBuilder("\"")
+         .append(Hashing.md5().hashString(partHashes.toString(), US_ASCII).toString())
+         .append("-")
+         .append(parts.size())
+         .append("\"")
+         .toString();
       PayloadBlobBuilder blobBuilder = blobBuilder(mpu.blobName())
             .userMetadata(mpu.blobMetadata().getUserMetadata())
             .payload(new SequenceInputStream(Iterators.asEnumeration(streams.build().iterator())))
-            .contentLength(contentLength);
+            .contentLength(contentLength)
+            .eTag(mpuETag);
       String cacheControl = mpu.blobMetadata().getContentMetadata().getCacheControl();
       if (cacheControl != null) {
          blobBuilder.cacheControl(cacheControl);
@@ -869,7 +881,7 @@ public final class LocalBlobStore implements BlobStore {
           blobBuilder.tier(tier);
       }
 
-      String eTag = putBlob(mpu.containerName(), blobBuilder.build());
+      putBlob(mpu.containerName(), blobBuilder.build());
 
       for (MultipartPart part : parts) {
          removeBlob(mpu.containerName(), MULTIPART_PREFIX + mpu.id() + "-" + mpu.blobName() + "-" + part.partNumber());
@@ -878,7 +890,7 @@ public final class LocalBlobStore implements BlobStore {
 
       setBlobAccess(mpu.containerName(), mpu.blobName(), mpu.putOptions().getBlobAccess());
 
-      return eTag;
+      return mpuETag;
    }
 
    @Override

@@ -899,6 +899,9 @@ public class BaseBlobIntegrationTest extends BaseBlobStoreIntegrationTest {
                .getMetadata().getContentMetadata().getContentLanguage();
    }
 
+   protected void checkMPUParts(Blob newBlob, List<MultipartPart> parts) {
+   }
+
    protected static volatile Crypto crypto;
    static {
       try {
@@ -1321,6 +1324,7 @@ public class BaseBlobIntegrationTest extends BaseBlobStoreIntegrationTest {
          assertThat(ByteStreams2.toByteArrayAndClose(newBlob.getPayload().openStream())).isEqualTo(byteSource.read());
          checkContentMetadata(newBlob);
          checkUserMetadata(newBlob.getMetadata().getUserMetadata(), blob.getMetadata().getUserMetadata());
+         checkMPUParts(newBlob, parts);
       } finally {
          returnContainer(container);
       }
@@ -1366,6 +1370,7 @@ public class BaseBlobIntegrationTest extends BaseBlobStoreIntegrationTest {
          assertThat(ByteStreams2.toByteArrayAndClose(newBlob.getPayload().openStream())).isEqualTo(byteSource.read());
          checkContentMetadata(newBlob);
          checkUserMetadata(newBlob.getMetadata().getUserMetadata(), blob.getMetadata().getUserMetadata());
+         checkMPUParts(newBlob, parts);
       } finally {
          returnContainer(container);
       }

@@ -45,6 +45,7 @@ public class BlobBuilderImpl implements BlobBuilder {
    private Tier tier = Tier.STANDARD;
    private Map<String, String> userMetadata = Maps.newLinkedHashMap();
    private StorageType type = StorageType.BLOB;
+   private String eTag;
 
    @Override
    public BlobBuilder name(String name) {
@@ -63,6 +64,12 @@ public class BlobBuilderImpl implements BlobBuilder {
    @Override
    public BlobBuilder type(StorageType type) {
       this.type = type;
+      return this;
+   }
+
+   @Override
+   public BlobBuilder eTag(String eTag) {
+      this.eTag = eTag;
       return this;
    }
 
@@ -126,6 +133,7 @@ public class BlobBuilderImpl implements BlobBuilder {
       blob.getMetadata().setUserMetadata(userMetadata);
       blob.getMetadata().setType(type);
       blob.getMetadata().setTier(tier);
+      blob.getMetadata().setETag(eTag);
       return blob;
    }
 
@@ -252,6 +260,12 @@ public class BlobBuilderImpl implements BlobBuilder {
       @Override
       public PayloadBlobBuilder expires(Date expires) {
          payload.getContentMetadata().setExpires(expires);
+         return this;
+      }
+
+      @Override
+      public PayloadBlobBuilder eTag(String eTag) {
+         this.builder.eTag(eTag);
          return this;
       }
 
