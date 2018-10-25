@@ -19,23 +19,31 @@ package org.jclouds.filesystem.integration;
 import static org.jclouds.filesystem.util.Utils.isMacOSX;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
-import static java.nio.charset.StandardCharsets.US_ASCII;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import com.google.common.collect.ImmutableList;
+import com.google.common.hash.Hasher;
 import com.google.common.hash.Hashing;
+import com.google.common.io.BaseEncoding;
 import org.jclouds.blobstore.domain.Blob;
+import org.jclouds.blobstore.domain.BlobBuilder;
 import org.jclouds.blobstore.domain.BlobMetadata;
 import org.jclouds.blobstore.domain.MultipartPart;
+import org.jclouds.blobstore.domain.MultipartUpload;
 import org.jclouds.blobstore.domain.Tier;
+import org.jclouds.blobstore.BlobStore;
 import org.jclouds.blobstore.integration.internal.BaseBlobIntegrationTest;
 import org.jclouds.blobstore.integration.internal.BaseBlobStoreIntegrationTest;
 import org.jclouds.blobstore.options.PutOptions;
 import org.jclouds.filesystem.reference.FilesystemConstants;
 import org.jclouds.filesystem.utils.TestUtils;
+import org.jclouds.io.Payload;
+import org.jclouds.io.Payloads;
 import org.testng.annotations.Test;
 import org.testng.SkipException;
 
@@ -113,17 +121,47 @@ public class FilesystemBlobIntegrationTest extends BaseBlobIntegrationTest {
    @Override
    protected void checkMPUParts(Blob blob, List<MultipartPart> partsList) {
       assertThat(blob.getMetadata().getETag()).endsWith(String.format("-%d\"", partsList.size()));
-      StringBuilder eTags = new StringBuilder();
+      Hasher eTagHasher = Hashing.md5().newHasher();
       for (MultipartPart part : partsList) {
-         eTags.append(part.partETag());
+         eTagHasher.putBytes(BaseEncoding.base16().lowerCase().decode(part.partETag()));
       }
       String expectedETag = new StringBuilder("\"")
-         .append(Hashing.md5().hashString(eTags.toString(), US_ASCII))
+         .append(eTagHasher.hash())
          .append("-")
          .append(partsList.size())
          .append("\"")
          .toString();
       assertThat(blob.getMetadata().getETag()).isEqualTo(expectedETag);
+   }
+
+   @Test(groups = { "integration", "live" })
+   public void testMultipartUploadMultiplePartsKnownETag() throws Exception {
+      BlobStore blobStore = view.getBlobStore();
+      String container = getContainerName();
+      // Pre-computed ETag returned by AWS S3 for the MPU consisting of two 5MB parts filled with 'b'
+      String expectedETag = "\"84462a16f6a60478d50148808aa609c1-2\"";
+      int partSize = 5 * 1024 * 1024;
+      try {
+         String name = "blob-name";
+         BlobBuilder blobBuilder = blobStore.blobBuilder(name);
+         Blob blob = blobBuilder.build();
+         MultipartUpload mpu = blobStore.initiateMultipartUpload(container, blob.getMetadata(), new PutOptions());
+
+         byte[] content = new byte[partSize];
+         Arrays.fill(content, (byte) 'b');
+         Payload payload = Payloads.newByteArrayPayload(content);
+
+         payload.getContentMetadata().setContentLength((long) partSize);
+
+         MultipartPart part1 = blobStore.uploadMultipartPart(mpu, 1, payload);
+         MultipartPart part2 = blobStore.uploadMultipartPart(mpu, 2, payload);
+         blobStore.completeMultipartUpload(mpu, ImmutableList.of(part1, part2));
+
+         BlobMetadata newBlobMetadata = blobStore.blobMetadata(container, name);
+         assertThat(newBlobMetadata.getETag()).isEqualTo(expectedETag);
+      } finally {
+         returnContainer(container);
+      }
    }
 
    protected void checkExtendedAttributesSupport() {

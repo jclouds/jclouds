@@ -25,7 +25,6 @@ import static com.google.common.collect.Iterables.transform;
 import static com.google.common.collect.Iterables.tryFind;
 import static com.google.common.collect.Sets.filter;
 import static com.google.common.collect.Sets.newTreeSet;
-import static java.nio.charset.StandardCharsets.US_ASCII;
 import static org.jclouds.blobstore.options.ListContainerOptions.Builder.recursive;
 
 import java.io.File;
@@ -46,6 +45,7 @@ import javax.annotation.Resource;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+import com.google.common.hash.Hasher;
 import com.google.common.hash.Hashing;
 import org.jclouds.blobstore.BlobStore;
 import org.jclouds.blobstore.BlobStoreContext;
@@ -101,6 +101,7 @@ import com.google.common.collect.FluentIterable;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Iterators;
+import com.google.common.io.BaseEncoding;
 import com.google.common.io.ByteSource;
 import com.google.common.net.HttpHeaders;
 
@@ -826,7 +827,7 @@ public final class LocalBlobStore implements BlobStore {
    public String completeMultipartUpload(MultipartUpload mpu, List<MultipartPart> parts) {
       ImmutableList.Builder<InputStream> streams = ImmutableList.builder();
       long contentLength = 0;
-      StringBuilder partHashes = new StringBuilder();
+      Hasher md5Hasher = Hashing.md5().newHasher();
 
       for (MultipartPart part : parts) {
          Blob blobPart = getBlob(mpu.containerName(), MULTIPART_PREFIX + mpu.id() + "-" + mpu.blobName() + "-" + part.partNumber());
@@ -838,10 +839,10 @@ public final class LocalBlobStore implements BlobStore {
             throw propagate(ioe);
          }
          streams.add(is);
-         partHashes.append(blobPart.getMetadata().getETag());
+         md5Hasher.putBytes(BaseEncoding.base16().lowerCase().decode(blobPart.getMetadata().getETag()));
       }
       String mpuETag = new StringBuilder("\"")
-         .append(Hashing.md5().hashString(partHashes.toString(), US_ASCII).toString())
+         .append(md5Hasher.hash())
          .append("-")
          .append(parts.size())
          .append("\"")
