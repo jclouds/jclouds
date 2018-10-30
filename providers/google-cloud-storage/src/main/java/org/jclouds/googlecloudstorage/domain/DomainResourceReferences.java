@@ -43,6 +43,7 @@ public final class DomainResourceReferences {
        *  Regional
        */
       ASIA_EAST1,
+      ASIA_EAST2,
       ASIA_NORTHEAST1,
       ASIA_SOUTH1,
       ASIA_SOUTHEAST1,
@@ -52,6 +53,7 @@ public final class DomainResourceReferences {
       US_EAST1,
       US_EAST4,
       US_WEST1,
+      US_WEST2,
 
       SOUTHAMERICA_EAST1,
 
@@ -59,6 +61,7 @@ public final class DomainResourceReferences {
       EUROPE_WEST2,
       EUROPE_WEST3,
       EUROPE_WEST4,
+      EUROPE_NORTH1,
 
       AUSTRALIA_SOUTHEAST1,
 
