@@ -80,6 +80,14 @@ public class BaseBlobStoreIntegrationTest extends BaseViewLiveTest<BlobStoreCont
          String.format(XML_STRING_FORMAT, "candy"), "path/4", String.format(XML_STRING_FORMAT, "dogma"), "path/5",
          String.format(XML_STRING_FORMAT, "emma"));
 
+   private static final Map<String, String> FILE_NESTED_STRINGS = ImmutableMap.of(
+           "path/1/a", String.format(XML_STRING_FORMAT, "apple"),
+           "path/1/2/b", String.format(XML_STRING_FORMAT, "bear"),
+           "path/1/2/3/c", String.format(XML_STRING_FORMAT, "candy"),
+           "path/1/2/3/4/d", String.format(XML_STRING_FORMAT, "dog"),
+           "path/1/2/3/5/e", String.format(XML_STRING_FORMAT, "echo")
+   );
+
    public static long INCONSISTENCY_WINDOW = 10000;
    protected static final AtomicInteger containerIndex = new AtomicInteger(0);
 
@@ -278,6 +286,14 @@ public class BaseBlobStoreIntegrationTest extends BaseViewLiveTest<BlobStoreCont
       for (Entry<String, String> entry : Iterables.concat(fiveStrings.entrySet(), fiveStringsUnderPath.entrySet())) {
          Blob sourceObject = view.getBlobStore().blobBuilder(entry.getKey()).payload(entry.getValue())
                .contentType("text/xml").build();
+         addBlobToContainer(sourceContainer, sourceObject);
+      }
+   }
+
+   protected void add5NestedBlobsToContainer(String sourceContainer) {
+      for (Entry<String, String> entry : FILE_NESTED_STRINGS.entrySet()) {
+         Blob sourceObject = view.getBlobStore().blobBuilder(entry.getKey()).payload(entry.getValue())
+                 .contentType("text/xml").build();
          addBlobToContainer(sourceContainer, sourceObject);
       }
    }
