@@ -177,6 +177,63 @@ public class BaseContainerIntegrationTest extends BaseBlobStoreIntegrationTest {
    }
 
    @Test(groups = { "integration", "live" })
+   public void testClearWithOptions() throws InterruptedException {
+      String containerName = getContainerName();
+      try {
+         ListContainerOptions options;
+
+         add5NestedBlobsToContainer(containerName);
+         options = new ListContainerOptions();
+         options.prefix("path/1/");
+         options.recursive();
+         view.getBlobStore().clearContainer(containerName, options);
+         assertConsistencyAwareContainerSize(containerName, 0);
+
+         view.getBlobStore().clearContainer(containerName);
+         add5NestedBlobsToContainer(containerName);
+         options = new ListContainerOptions();
+         options.prefix("path/1/2/3");
+         options.recursive();
+         view.getBlobStore().clearContainer(containerName, options);
+         assertConsistencyAwareContainerSize(containerName, 2);
+
+         view.getBlobStore().clearContainer(containerName);
+         add5NestedBlobsToContainer(containerName);
+         options = new ListContainerOptions();
+         options.prefix("path/1/2/3/4/");
+         options.recursive();
+         view.getBlobStore().clearContainer(containerName, options);
+         assertConsistencyAwareContainerSize(containerName, 4);
+
+         // non-recursive, should not clear anything, as prefix does not match
+         view.getBlobStore().clearContainer(containerName);
+         add5NestedBlobsToContainer(containerName);
+         options = new ListContainerOptions();
+         options.prefix("path/1/2/3");
+         view.getBlobStore().clearContainer(containerName, options);
+         assertConsistencyAwareContainerSize(containerName, 5);
+
+         // non-recursive, should only clear path/1/2/3/c
+         view.getBlobStore().clearContainer(containerName);
+         add5NestedBlobsToContainer(containerName);
+         options = new ListContainerOptions();
+         options.prefix("path/1/2/3/");
+         view.getBlobStore().clearContainer(containerName, options);
+         assertConsistencyAwareContainerSize(containerName, 4);
+
+         // non-recursive, should only clear path/1/2/3/c
+         view.getBlobStore().clearContainer(containerName);
+         add5NestedBlobsToContainer(containerName);
+         options = new ListContainerOptions();
+         options.prefix("path/1/2/3/c");
+         view.getBlobStore().clearContainer(containerName, options);
+         assertConsistencyAwareContainerSize(containerName, 4);
+      } finally {
+         returnContainer(containerName);
+      }
+   }
+
+   @Test(groups = { "integration", "live" })
    public void testListContainerMarker() throws InterruptedException {
       String containerName = getContainerName();
       try {
