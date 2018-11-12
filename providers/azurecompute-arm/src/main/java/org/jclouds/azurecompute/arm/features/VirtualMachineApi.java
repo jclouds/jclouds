@@ -32,6 +32,7 @@ import javax.ws.rs.core.MediaType;
 
 import org.jclouds.Fallbacks;
 import org.jclouds.azurecompute.arm.domain.Plan;
+import org.jclouds.azurecompute.arm.domain.VMSize;
 import org.jclouds.azurecompute.arm.domain.VirtualMachine;
 import org.jclouds.azurecompute.arm.domain.VirtualMachineInstance;
 import org.jclouds.azurecompute.arm.domain.VirtualMachineProperties;
@@ -52,7 +53,7 @@ import org.jclouds.rest.binders.BindToJsonPayload;
 /**
  * The Virtual Machine API includes operations for managing the virtual machines in your subscription.
  *
- * @see <a href="https://docs.microsoft.com/en-us/rest/api/compute/virtualmachines/virtualmachines-rest-api">docs</a>
+ * @see <a href="https://docs.microsoft.com/en-us/rest/api/compute/virtualmachines">docs</a>
  */
 @Path("/resourceGroups/{resourceGroup}/providers/Microsoft.Compute/virtualMachines")
 @RequestFilters({ OAuthFilter.class, ApiVersionFilter.class })
@@ -90,6 +91,13 @@ public interface VirtualMachineApi {
    @SelectJson("value")
    @Fallback(Fallbacks.EmptyListOnNotFoundOr404.class)
    List<VirtualMachine> list();
+
+   @Named("ListAvailableSizes")
+   @GET
+   @SelectJson("value")
+   @Path("/{name}/vmSizes")
+   @Fallback(Fallbacks.EmptyListOnNotFoundOr404.class)
+   List<VMSize> listAvailableSizes(@PathParam("name") String name);
 
    @Named("DeleteVirtualMachine")
    @DELETE
@@ -139,6 +147,6 @@ public interface VirtualMachineApi {
    URI capture(@PathParam("name") String name,
                @PayloadParam("vhdPrefix") String vhdPrefix,
                @PayloadParam("destinationContainerName") String destinationContainerName);
-
+   
 }
 
