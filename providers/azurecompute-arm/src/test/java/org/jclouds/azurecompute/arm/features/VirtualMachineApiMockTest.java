@@ -48,6 +48,7 @@ import org.jclouds.azurecompute.arm.domain.Secrets.SourceVault;
 import org.jclouds.azurecompute.arm.domain.Status;
 import org.jclouds.azurecompute.arm.domain.StorageProfile;
 import org.jclouds.azurecompute.arm.domain.VHD;
+import org.jclouds.azurecompute.arm.domain.VMSize;
 import org.jclouds.azurecompute.arm.domain.VaultCertificate;
 import org.jclouds.azurecompute.arm.domain.VirtualMachine;
 import org.jclouds.azurecompute.arm.domain.VirtualMachineInstance;
@@ -68,7 +69,7 @@ public class VirtualMachineApiMockTest extends BaseAzureComputeApiMockTest {
       assertEquals(vmAPI.get("windowsmachine"),
             getVM(Plan.create("thinkboxsoftware", "deadline-slave-7-2", "deadline7-2")));
       assertSent(server, "GET", "/subscriptions/SUBSCRIPTIONID/resourceGroups/groupname/providers/Microsoft.Compute"
-            + "/virtualMachines/windowsmachine?api-version=2016-04-30-preview");
+            + "/virtualMachines/windowsmachine?api-version=2018-06-01");
    }
 
    public void testGetEmpty() throws Exception {
@@ -76,7 +77,7 @@ public class VirtualMachineApiMockTest extends BaseAzureComputeApiMockTest {
       final VirtualMachineApi vmAPI = api.getVirtualMachineApi("groupname");
       assertNull(vmAPI.get("windowsmachine"));
       assertSent(server, "GET", "/subscriptions/SUBSCRIPTIONID/resourceGroups/groupname/providers/Microsoft.Compute"
-            + "/virtualMachines/windowsmachine?api-version=2016-04-30-preview");
+            + "/virtualMachines/windowsmachine?api-version=2018-06-01");
    }
 
    public void testGetInstanceDetails() throws Exception {
@@ -91,7 +92,7 @@ public class VirtualMachineApiMockTest extends BaseAzureComputeApiMockTest {
       // assertEquals(actual.statuses().get(0).time().toString(),
       // expected.statuses().get(0).time().toString());
       assertSent(server, "GET", "/subscriptions/SUBSCRIPTIONID/resourceGroups/groupname/providers/Microsoft.Compute"
-            + "/virtualMachines/windowsmachine/instanceView?api-version=2016-04-30-preview");
+            + "/virtualMachines/windowsmachine/instanceView?api-version=2018-06-01");
    }
 
    public void testGetInstanceDetailsEmpty() throws Exception {
@@ -99,7 +100,7 @@ public class VirtualMachineApiMockTest extends BaseAzureComputeApiMockTest {
       final VirtualMachineApi vmAPI = api.getVirtualMachineApi("groupname");
       assertNull(vmAPI.getInstanceDetails("windowsmachine"));
       assertSent(server, "GET", "/subscriptions/SUBSCRIPTIONID/resourceGroups/groupname/providers/Microsoft.Compute"
-            + "/virtualMachines/windowsmachine/instanceView?api-version=2016-04-30-preview");
+            + "/virtualMachines/windowsmachine/instanceView?api-version=2018-06-01");
    }
 
    public void testList() throws Exception {
@@ -107,7 +108,7 @@ public class VirtualMachineApiMockTest extends BaseAzureComputeApiMockTest {
       final VirtualMachineApi vmAPI = api.getVirtualMachineApi("groupname");
       assertEquals(vmAPI.list(), getVMList());
       assertSent(server, "GET", "/subscriptions/SUBSCRIPTIONID/resourceGroups/groupname/providers/Microsoft.Compute"
-            + "/virtualMachines?api-version=2016-04-30-preview");
+            + "/virtualMachines?api-version=2018-06-01");
    }
 
    public void testListEmpty() throws Exception {
@@ -115,7 +116,17 @@ public class VirtualMachineApiMockTest extends BaseAzureComputeApiMockTest {
       final VirtualMachineApi vmAPI = api.getVirtualMachineApi("groupname");
       assertTrue(isEmpty(vmAPI.list()));
       assertSent(server, "GET", "/subscriptions/SUBSCRIPTIONID/resourceGroups/groupname/providers/Microsoft.Compute"
-            + "/virtualMachines?api-version=2016-04-30-preview");
+            + "/virtualMachines?api-version=2018-06-01");
+   }
+
+   public void testListAvailableSizes() throws Exception {
+      server.enqueue(jsonResponse("/virtualmachineavailablesizes.json"));
+      final VirtualMachineApi vmAPI = api.getVirtualMachineApi("groupname");
+      assertEquals(vmAPI.listAvailableSizes("windowsmachine"), ImmutableList.of(VMSize.create("Standard_A0", 1,
+            1047552, 20480, 768, 1), VMSize.create("Standard_A1", 1,
+            1047552, 71680, 1792, 2)));
+      assertSent(server, "GET", "/subscriptions/SUBSCRIPTIONID/resourceGroups/groupname/providers/Microsoft.Compute"
+            + "/virtualMachines/windowsmachine/vmSizes?api-version=2018-06-01");
    }
 
    public void testCreateWithPlan() throws Exception {
@@ -129,7 +140,7 @@ public class VirtualMachineApiMockTest extends BaseAzureComputeApiMockTest {
             server,
             "PUT",
             "/subscriptions/SUBSCRIPTIONID/resourceGroups/groupname/providers/Microsoft.Compute"
-                  + "/virtualMachines/windowsmachine?validating=false&api-version=2016-04-30-preview",
+                  + "/virtualMachines/windowsmachine?validating=false&api-version=2018-06-01",
             "{\"location\":\"westus\",\"properties\":"
                   + "{\"vmId\":\"27ee085b-d707-xxxx-yyyy-2370e2eb1cc1\",\"licenseType\":\"Windows_Server\","
                   + "\"availabilitySet\":{\"id\":\"/subscriptions/SUBSCRIPTIONID/resourceGroups/myResourceGroup/providers/Microsoft.Compute/availabilitySets/myAVSet\"},"
@@ -164,7 +175,7 @@ public class VirtualMachineApiMockTest extends BaseAzureComputeApiMockTest {
             server,
             "PUT",
             "/subscriptions/SUBSCRIPTIONID/resourceGroups/groupname/providers/Microsoft.Compute"
-                  + "/virtualMachines/windowsmachine?validating=false&api-version=2016-04-30-preview",
+                  + "/virtualMachines/windowsmachine?validating=false&api-version=2018-06-01",
             "{\"location\":\"westus\",\"properties\":"
                   + "{\"vmId\":\"27ee085b-d707-xxxx-yyyy-2370e2eb1cc1\",\"licenseType\":\"Windows_Server\","
                   + "\"availabilitySet\":{\"id\":\"/subscriptions/SUBSCRIPTIONID/resourceGroups/myResourceGroup/providers/Microsoft.Compute/availabilitySets/myAVSet\"},"
@@ -195,7 +206,7 @@ public class VirtualMachineApiMockTest extends BaseAzureComputeApiMockTest {
       assertNull(uri);
 
       assertSent(server, "DELETE", "/subscriptions/SUBSCRIPTIONID/resourceGroups/groupname/providers/Microsoft.Compute"
-            + "/virtualMachines/windowsmachine?api-version=2016-04-30-preview");
+            + "/virtualMachines/windowsmachine?api-version=2018-06-01");
    }
 
    public void testDelete() throws Exception {
@@ -209,7 +220,7 @@ public class VirtualMachineApiMockTest extends BaseAzureComputeApiMockTest {
       assertNotNull(uri);
 
       assertSent(server, "DELETE", "/subscriptions/SUBSCRIPTIONID/resourceGroups/groupname/providers/Microsoft.Compute"
-            + "/virtualMachines/windowsmachine?api-version=2016-04-30-preview");
+            + "/virtualMachines/windowsmachine?api-version=2018-06-01");
    }
 
    public void testStart() throws Exception {
@@ -220,7 +231,7 @@ public class VirtualMachineApiMockTest extends BaseAzureComputeApiMockTest {
       vmAPI.start("windowsmachine");
 
       assertSent(server, "POST", "/subscriptions/SUBSCRIPTIONID/resourceGroups/groupname/providers/Microsoft.Compute"
-            + "/virtualMachines/windowsmachine/start?api-version=2016-04-30-preview");
+            + "/virtualMachines/windowsmachine/start?api-version=2018-06-01");
    }
 
    public void testRestart() throws Exception {
@@ -231,7 +242,7 @@ public class VirtualMachineApiMockTest extends BaseAzureComputeApiMockTest {
       vmAPI.restart("windowsmachine");
 
       assertSent(server, "POST", "/subscriptions/SUBSCRIPTIONID/resourceGroups/groupname/providers/Microsoft.Compute"
-            + "/virtualMachines/windowsmachine/restart?api-version=2016-04-30-preview");
+            + "/virtualMachines/windowsmachine/restart?api-version=2018-06-01");
    }
 
    public void testStop() throws Exception {
@@ -242,7 +253,7 @@ public class VirtualMachineApiMockTest extends BaseAzureComputeApiMockTest {
       vmAPI.stop("windowsmachine");
 
       assertSent(server, "POST", "/subscriptions/SUBSCRIPTIONID/resourceGroups/groupname/providers/Microsoft.Compute"
-            + "/virtualMachines/windowsmachine/powerOff?api-version=2016-04-30-preview");
+            + "/virtualMachines/windowsmachine/powerOff?api-version=2018-06-01");
    }
 
    public void testDeallocate() throws Exception {
@@ -253,7 +264,7 @@ public class VirtualMachineApiMockTest extends BaseAzureComputeApiMockTest {
       vmAPI.deallocate("windowsmachine");
 
       assertSent(server, "POST", "/subscriptions/SUBSCRIPTIONID/resourceGroups/groupname/providers/Microsoft.Compute"
-            + "/virtualMachines/windowsmachine/deallocate?api-version=2016-04-30-preview");
+            + "/virtualMachines/windowsmachine/deallocate?api-version=2018-06-01");
    }
 
    public void testGeneralize() throws Exception {
@@ -261,7 +272,7 @@ public class VirtualMachineApiMockTest extends BaseAzureComputeApiMockTest {
       final VirtualMachineApi vmAPI = api.getVirtualMachineApi("groupname");
       vmAPI.generalize("vm"); // IllegalStateException if failed
       assertSent(server, "POST", "/subscriptions/SUBSCRIPTIONID/resourceGroups/groupname/providers/Microsoft.Compute"
-            + "/virtualMachines/vm/generalize?api-version=2016-04-30-preview");
+            + "/virtualMachines/vm/generalize?api-version=2018-06-01");
    }
 
    public void testCapture() throws Exception {
@@ -271,7 +282,7 @@ public class VirtualMachineApiMockTest extends BaseAzureComputeApiMockTest {
       URI uri = vmAPI.capture("vm", "prefix", "container");
       assertNotNull(uri);
       assertSent(server, "POST", "/subscriptions/SUBSCRIPTIONID/resourceGroups/groupname/providers/Microsoft.Compute"
-            + "/virtualMachines/vm/capture?api-version=2016-04-30-preview",
+            + "/virtualMachines/vm/capture?api-version=2018-06-01",
             "{\"vhdPrefix\":\"prefix\",\"destinationContainerName\":\"container\",\"overwriteVhds\":\"true\"}");
    }
 
@@ -282,7 +293,7 @@ public class VirtualMachineApiMockTest extends BaseAzureComputeApiMockTest {
       URI uri = vmAPI.capture("vm", "prefix", "container");
       assertNull(uri);
       assertSent(server, "POST", "/subscriptions/SUBSCRIPTIONID/resourceGroups/groupname/providers/Microsoft.Compute"
-            + "/virtualMachines/vm/capture?api-version=2016-04-30-preview",
+            + "/virtualMachines/vm/capture?api-version=2018-06-01",
             "{\"vhdPrefix\":\"prefix\",\"destinationContainerName\":\"container\",\"overwriteVhds\":\"true\"}");
    }
 
@@ -417,4 +428,5 @@ public class VirtualMachineApiMockTest extends BaseAzureComputeApiMockTest {
       list.add(machineWithBlobDisks);
       return list;
    }
+
 }

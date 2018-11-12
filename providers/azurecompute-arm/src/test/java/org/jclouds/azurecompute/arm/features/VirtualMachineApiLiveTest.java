@@ -19,6 +19,7 @@ package org.jclouds.azurecompute.arm.features;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.jclouds.util.Predicates2.retry;
 import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertTrue;
 import static org.testng.util.Strings.isNullOrEmpty;
@@ -53,6 +54,7 @@ import org.jclouds.azurecompute.arm.domain.StorageProfile;
 import org.jclouds.azurecompute.arm.domain.StorageService;
 import org.jclouds.azurecompute.arm.domain.Subnet;
 import org.jclouds.azurecompute.arm.domain.VHD;
+import org.jclouds.azurecompute.arm.domain.VMSize;
 import org.jclouds.azurecompute.arm.domain.VaultCertificate;
 import org.jclouds.azurecompute.arm.domain.VirtualMachine;
 import org.jclouds.azurecompute.arm.domain.VirtualMachineInstance;
@@ -189,6 +191,14 @@ public class VirtualMachineApiLiveTest extends BaseAzureComputeApiLiveTest {
       });
 
       assertTrue(vmPresent);
+   }
+
+   @Test(dependsOnMethods = "testCreate")
+   public void testListAvailableSizes() {
+      List<VMSize> vmSizes = api().listAvailableSizes(vmName);
+
+      assertNotNull(vmSizes);
+      assertFalse(vmSizes.isEmpty());
    }
 
    @Test(dependsOnMethods = "testRestart")

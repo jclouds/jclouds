@@ -123,7 +123,7 @@ public class AzureComputeProviderMetadata extends BaseProviderMetadata {
       properties.put(API_VERSION_PREFIX + SubnetApi.class.getSimpleName(), "2017-03-01");
       properties.put(API_VERSION_PREFIX + VirtualNetworkApi.class.getSimpleName(), "2015-06-15");
       properties.put(API_VERSION_PREFIX + VMSizeApi.class.getSimpleName(), "2015-06-15");
-      properties.put(API_VERSION_PREFIX + VirtualMachineApi.class.getSimpleName(), "2016-04-30-preview");
+      properties.put(API_VERSION_PREFIX + VirtualMachineApi.class.getSimpleName(), "2018-06-01");
       properties.put(API_VERSION_PREFIX + LoadBalancerApi.class.getSimpleName(), "2016-03-30");
       properties.put(API_VERSION_PREFIX + AvailabilitySetApi.class.getSimpleName(), "2016-04-30-preview");
       properties.put(API_VERSION_PREFIX + DiskApi.class.getSimpleName(), "2017-03-30");
