@@ -193,4 +193,9 @@ public class FilesystemContainerIntegrationTest extends BaseContainerIntegration
    public void testSetContainerAccess() throws Exception {
       throw new SkipException("filesystem does not support anonymous access");
    }
+
+   @Override
+   public void testClearWithOptions() throws InterruptedException {
+      throw new SkipException("filesystem does not support clear with options");
+   }
 }
