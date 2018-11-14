@@ -16,6 +16,7 @@
  */
 package org.jclouds.filesystem.strategy.internal;
 
+import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Strings.isNullOrEmpty;
 import static com.google.common.io.BaseEncoding.base16;
@@ -248,9 +249,8 @@ public class FilesystemStorageStrategyImpl implements LocalStorageStrategy {
    @Override
    public void clearContainer(String container, ListContainerOptions options) {
       filesystemContainerNameValidator.validate(container);
-      if (options.getDir() != null) {
-         container += denormalize("/" + options.getDir());
-      }
+      // TODO: these require calling removeDirectoriesTreeOfBlobKey
+      checkArgument(options.getDir() == null || options.getPrefix() == null, "cannot specify directory or prefix");
       try {
          File containerFile = openFolder(container);
          File[] children = containerFile.listFiles();
