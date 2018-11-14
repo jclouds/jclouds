@@ -250,7 +250,7 @@ public class FilesystemStorageStrategyImpl implements LocalStorageStrategy {
    public void clearContainer(String container, ListContainerOptions options) {
       filesystemContainerNameValidator.validate(container);
       // TODO: these require calling removeDirectoriesTreeOfBlobKey
-      checkArgument(options.getDir() == null || options.getPrefix() == null, "cannot specify directory or prefix");
+      checkArgument(options.getDir() == null && options.getPrefix() == null, "cannot specify directory or prefix");
       try {
          File containerFile = openFolder(container);
          File[] children = containerFile.listFiles();
