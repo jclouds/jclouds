@@ -182,6 +182,8 @@ public class BaseContainerIntegrationTest extends BaseBlobStoreIntegrationTest {
       try {
          ListContainerOptions options;
 
+         // Should wipe out all objects, as there are empty folders
+         // above
          add5NestedBlobsToContainer(containerName);
          options = new ListContainerOptions();
          options.prefix("path/1/");
@@ -195,7 +197,9 @@ public class BaseContainerIntegrationTest extends BaseBlobStoreIntegrationTest {
          options.prefix("path/1/2/3");
          options.recursive();
          view.getBlobStore().clearContainer(containerName, options);
-         assertConsistencyAwareContainerSize(containerName, 2);
+         assertConsistencyAwareBlobExists(containerName, "path/1/a");
+         assertConsistencyAwareBlobExists(containerName, "path/1/2/b");
+         assertConsistencyAwareBlobDoesntExist(containerName, "path/1/2/3");
 
          view.getBlobStore().clearContainer(containerName);
          add5NestedBlobsToContainer(containerName);
@@ -203,7 +207,10 @@ public class BaseContainerIntegrationTest extends BaseBlobStoreIntegrationTest {
          options.prefix("path/1/2/3/4/");
          options.recursive();
          view.getBlobStore().clearContainer(containerName, options);
-         assertConsistencyAwareContainerSize(containerName, 4);
+         assertConsistencyAwareBlobExists(containerName, "path/1/a");
+         assertConsistencyAwareBlobExists(containerName, "path/1/2/b");
+         assertConsistencyAwareBlobExists(containerName, "path/1/2/3/5/e");
+         assertConsistencyAwareBlobDoesntExist(containerName, "path/1/2/3/4");
 
          // non-recursive, should not clear anything, as prefix does not match
          view.getBlobStore().clearContainer(containerName);
@@ -211,7 +218,11 @@ public class BaseContainerIntegrationTest extends BaseBlobStoreIntegrationTest {
          options = new ListContainerOptions();
          options.prefix("path/1/2/3");
          view.getBlobStore().clearContainer(containerName, options);
-         assertConsistencyAwareContainerSize(containerName, 5);
+         assertConsistencyAwareBlobExists(containerName, "path/1/a");
+         assertConsistencyAwareBlobExists(containerName, "path/1/2/b");
+         assertConsistencyAwareBlobExists(containerName, "path/1/2/3/c");
+         assertConsistencyAwareBlobExists(containerName, "path/1/2/3/5/e");
+
 
          // non-recursive, should only clear path/1/2/3/c
          view.getBlobStore().clearContainer(containerName);
@@ -219,7 +230,10 @@ public class BaseContainerIntegrationTest extends BaseBlobStoreIntegrationTest {
          options = new ListContainerOptions();
          options.prefix("path/1/2/3/");
          view.getBlobStore().clearContainer(containerName, options);
-         assertConsistencyAwareContainerSize(containerName, 4);
+         assertConsistencyAwareBlobExists(containerName, "path/1/a");
+         assertConsistencyAwareBlobExists(containerName, "path/1/2/b");
+         assertConsistencyAwareBlobExists(containerName, "path/1/2/3/4/d");
+         assertConsistencyAwareBlobDoesntExist(containerName, "path/1/2/3/c");
 
          // non-recursive, should only clear path/1/2/3/c
          view.getBlobStore().clearContainer(containerName);
@@ -227,7 +241,10 @@ public class BaseContainerIntegrationTest extends BaseBlobStoreIntegrationTest {
          options = new ListContainerOptions();
          options.prefix("path/1/2/3/c");
          view.getBlobStore().clearContainer(containerName, options);
-         assertConsistencyAwareContainerSize(containerName, 4);
+         assertConsistencyAwareBlobExists(containerName, "path/1/a");
+         assertConsistencyAwareBlobExists(containerName, "path/1/2/b");
+         assertConsistencyAwareBlobExists(containerName, "path/1/2/3/4/d");
+         assertConsistencyAwareBlobDoesntExist(containerName, "path/1/2/3/c");
       } finally {
          returnContainer(containerName);
       }
