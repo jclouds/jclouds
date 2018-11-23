@@ -31,6 +31,7 @@ import org.testng.annotations.Test;
 import com.google.common.collect.ImmutableSet;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
+import org.jclouds.cloudstack.domain.Tag;
 
 @Test(groups = "unit")
 public class ListUsageRecordsResponseTest extends BaseSetParserTest<UsageRecord> {
@@ -61,7 +62,9 @@ public class ListUsageRecordsResponseTest extends BaseSetParserTest<UsageRecord>
                .description("Template Id:203 Size:3117171712")
                .usage("24 Hrs").usageType(UsageRecord.UsageType.TEMPLATE).rawUsageHours(24)
                .size(3117171712L).templateId("0").id("203").project("project1").projectId("1")
-               .startDate(start).endDate(end).build());
+               .startDate(start).endDate(end).domain("myDomain").virtualSize(3117171712L)
+               .cpuNumber(2L).cpuSpeed(1024L).memory(512L).isSystem(false).isDefault(false)
+               .tags(ImmutableSet.of(Tag.builder().key("env").value("dev").build())).build());
 
    }
    
