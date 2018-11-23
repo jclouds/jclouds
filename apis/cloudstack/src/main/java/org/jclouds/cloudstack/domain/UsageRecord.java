@@ -30,6 +30,7 @@ import com.google.common.base.Objects;
 import com.google.common.base.MoreObjects.ToStringHelper;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Maps;
+import java.util.Set;
 
 /**
  * Represents a usage record from CloudStack
@@ -53,6 +54,13 @@ public class UsageRecord {
       PORT_FORWARDING_RULE(12),
       NETWORK_OFFERING(13),
       VPN_USERS(14),
+      VM_DISK_IO_READ(21),
+      VM_DISK_IO_WRITE(22),
+      VM_DISK_BYTES_READ(23),
+      VM_DISK_BYTES_WRITE(24),
+      VM_SNAPSHOT(25),
+      VOLUME_SECONDARY(26),
+      VM_SNAPSHOT_ON_PRIMARY(27),
       UNRECOGNIZED(0);
 
       private int code;
@@ -109,7 +117,7 @@ public class UsageRecord {
       protected String serviceOfferingId;
       protected String templateId;
       protected String ipAddress;
-      protected boolean isSourceNAT;
+      protected Boolean isSourceNAT;
       protected double rawUsageHours;
       protected String usage;
       protected Long size;
@@ -117,6 +125,15 @@ public class UsageRecord {
       protected UsageType usageType;
       protected String project;
       protected String projectId;
+      protected String domain;
+      protected Long virtualSize;
+      protected Long cpuNumber;
+      protected Long cpuSpeed;
+      protected Long memory;
+      protected Boolean isSystem;
+      protected String networkId;
+      protected Boolean isDefault;
+      protected Set<Tag> tags;
 
       /**
        * @see UsageRecord#getId()
@@ -241,7 +258,7 @@ public class UsageRecord {
       /**
        * @see UsageRecord#isSourceNAT()
        */
-      public T isSourceNAT(boolean isSourceNAT) {
+      public T isSourceNAT(Boolean isSourceNAT) {
          this.isSourceNAT = isSourceNAT;
          return self();
       }
@@ -301,10 +318,82 @@ public class UsageRecord {
          this.projectId = projectId;
          return self();
       }
+      
+      /**
+       * @see UsageRecord#getDomain()
+       */
+      public T domain(String domain) {
+          this.domain = domain;
+          return self();
+      }
+      
+      /**
+       * @see UsageRecord#getVirtualSize()
+       */
+      public T virtualSize(Long virtualSize) {
+          this.virtualSize = virtualSize;
+          return self();
+      }
+      
+      /**
+       * @see UsageRecord#getCpuNumber()
+       */
+      public T cpuNumber(Long cpuNumber) {
+          this.cpuNumber = cpuNumber;
+          return self();
+      }
+    
+      /**
+       * @see UsageRecord#getCpuSpeed()
+       */
+      public T cpuSpeed(Long cpuSpeed) {
+          this.cpuSpeed = cpuSpeed;
+          return self();
+      }
+    
+      /**
+       * @see UsageRecord#getMemory()
+       */
+      public T memory(Long memory) {
+          this.memory = memory;
+          return self();
+      }
+      
+      /**
+       * @see UsageRecord#isSystem()
+       */
+      public T isSystem(Boolean isSystem) {
+          this.isSystem = isSystem;
+          return self();
+      }
+      
+      /**
+       * @see UsageRecord#getNetworkId()
+       */
+      public T networkId(String networkId) {
+          this.networkId = networkId;
+          return self();
+      }
+      
+      /**
+       * @see UsageRecord#isDefault()
+       */
+      public T isDefault(Boolean isDefault) {
+          this.isDefault = isDefault;
+          return self();
+      }
+      /**
+       * @see UsageRecord#getTags()
+       */
+      public T tags(Set<Tag> tags) {
+          this.tags = tags;
+          return self();
+      }
       public UsageRecord build() {
          return new UsageRecord(id, description, accountId, accountName, domainId, startDate, endDate, assignDate, releaseDate,
                zoneId, virtualMachineId, virtualMachineName, serviceOfferingId, templateId, ipAddress, isSourceNAT, rawUsageHours,
-               usage, size, type, usageType, project, projectId);
+               usage, size, type, usageType, project, projectId, domain, virtualSize, cpuNumber, cpuSpeed, memory, isSystem,
+               networkId, isDefault, tags);
       }
 
       public T fromUsageRecord(UsageRecord in) {
@@ -331,7 +420,16 @@ public class UsageRecord {
                .type(in.getType())
                .usageType(in.getUsageType())
                .project(in.getProject())
-               .projectId(in.getProjectId());
+               .projectId(in.getProjectId())
+               .domain(in.getDomain())
+               .virtualSize(in.getVirtualSize())
+               .cpuNumber(in.getCpuNumber())
+               .cpuSpeed(in.getCpuSpeed())
+               .memory(in.getMemory())
+               .isSystem(in.isSystem())
+               .networkId(in.getNetworkId())
+               .isDefault(in.isDefault())
+               .tags(in.getTags());
       }
    }
 
@@ -357,7 +455,7 @@ public class UsageRecord {
    private final String serviceOfferingId;
    private final String templateId;
    private final String ipAddress;
-   private final boolean isSourceNAT;
+   private final Boolean isSourceNAT;
    private final double rawUsageHours;
    private final String usage;
    private final Long size;
@@ -365,18 +463,30 @@ public class UsageRecord {
    private final UsageType usageType;
    private final String project;
    private final String projectId;
+   private final String domain;
+   private final Long virtualSize;
+   private final Long cpuNumber;
+   private final Long cpuSpeed;
+   private final Long memory;
+   private final Boolean isSystem;
+   private final String networkId;
+   private final Boolean isDefault;
+   private final Set<Tag> tags;
 
    @ConstructorProperties({
          "usageid", "description", "accountid", "account", "domainid", "startdate", "enddate", "assigndate", "releasedate",
          "zoneid", "virtualmachineid", "name", "offeringid", "templateid", "ipaddress", "issourcenat", "rawusage", "usage",
-         "size", "type", "usagetype", "project", "projectid"
+         "size", "type", "usagetype", "project", "projectid", "domain", "virtualsize", "cpunumber", "cpuspeed", "memory",
+         "issystem", "networkid", "isdefault", "tags"
    })
    protected UsageRecord(String id, @Nullable String description, @Nullable String accountId, @Nullable String accountName,
                          @Nullable String domainId, @Nullable Date startDate, @Nullable Date endDate, @Nullable Date assignDate,
                          @Nullable String releaseDate, @Nullable String zoneId, @Nullable String virtualMachineId, @Nullable String virtualMachineName,
                          @Nullable String serviceOfferingId, @Nullable String templateId, @Nullable String ipAddress,
-                         boolean isSourceNAT, double rawUsageHours, @Nullable String usage, @Nullable Long size,
-                         @Nullable String type, @Nullable UsageType usageType, @Nullable String project, @Nullable String projectId) {
+                         @Nullable Boolean isSourceNAT, double rawUsageHours, @Nullable String usage, @Nullable Long size,
+                         @Nullable String type, @Nullable UsageType usageType, @Nullable String project, @Nullable String projectId,
+                         @Nullable String domain, @Nullable Long virtualSize, @Nullable Long cpuNumber, @Nullable Long cpuSpeed, @Nullable Long memory, 
+                         @Nullable Boolean isSystem, @Nullable String networkId, @Nullable Boolean isDefault, @Nullable Set<Tag> tags) {
       this.id = id;
       this.description = description;
       this.accountId = accountId;
@@ -400,6 +510,15 @@ public class UsageRecord {
       this.usageType = usageType;
       this.project = project;
       this.projectId = projectId;
+      this.domain = domain;
+      this.virtualSize = virtualSize;
+      this.cpuNumber = cpuNumber;
+      this.cpuSpeed = cpuSpeed;
+      this.memory = memory;
+      this.isSystem = isSystem;
+      this.networkId = networkId;
+      this.isDefault = isDefault;
+      this.tags = tags == null ? ImmutableSet.<Tag>of() : ImmutableSet.copyOf(tags);
    }
 
    public String getId() {
@@ -476,7 +595,8 @@ public class UsageRecord {
       return this.ipAddress;
    }
 
-   public boolean isSourceNAT() {
+   @Nullable
+   public Boolean isSourceNAT() {
       return this.isSourceNAT;
    }
 
@@ -513,11 +633,55 @@ public class UsageRecord {
       return this.projectId;
    }
 
+    @Nullable
+    public String getDomain() {
+        return domain;
+    }
+
+    @Nullable
+    public Long getVirtualSize() {
+        return virtualSize;
+    }
+
+    @Nullable
+    public Long getCpuNumber() {
+        return cpuNumber;
+    }
+
+    @Nullable
+    public Long getCpuSpeed() {
+        return cpuSpeed;
+    }
+
+    @Nullable
+    public Long getMemory() {
+        return memory;
+    }
+
+    @Nullable
+    public Boolean isSystem() {
+        return isSystem;
+    }
+
+    @Nullable
+    public String getNetworkId() {
+        return networkId;
+    }
+
+    @Nullable
+    public Boolean isDefault() {
+        return isDefault;
+    }
+   @Nullable
+    public Set<Tag> getTags() {
+        return tags;
+    }
    @Override
    public int hashCode() {
       return Objects.hashCode(id, description, accountId, accountName, domainId, startDate, endDate, assignDate, releaseDate,
             zoneId, virtualMachineId, virtualMachineName, serviceOfferingId, templateId, ipAddress, isSourceNAT, rawUsageHours,
-            size, usage, type, usageType, project, projectId);
+            size, usage, type, usageType, project, projectId, domain, virtualSize, cpuNumber, cpuSpeed, memory, isSystem,
+            networkId, isDefault, tags);
    }
 
    @Override
@@ -547,7 +711,15 @@ public class UsageRecord {
             && Objects.equal(this.type, that.type)
             && Objects.equal(this.usageType, that.usageType)
             && Objects.equal(this.project, that.project)
-            && Objects.equal(this.projectId, that.projectId);
+            && Objects.equal(this.domain, that.domain)
+            && Objects.equal(this.virtualSize, that.virtualSize)
+            && Objects.equal(this.cpuNumber, that.cpuNumber)
+            && Objects.equal(this.cpuSpeed, that.cpuSpeed)
+            && Objects.equal(this.memory, that.memory)
+            && Objects.equal(this.isSystem, that.isSystem)
+            && Objects.equal(this.networkId, that.networkId)
+            && Objects.equal(this.isDefault, that.isDefault)
+            && Objects.equal(this.tags, that.tags);
    }
 
    protected ToStringHelper string() {
@@ -557,7 +729,9 @@ public class UsageRecord {
             .add("releaseDate", releaseDate).add("zoneId", zoneId).add("virtualMachineId", virtualMachineId)
             .add("virtualMachineName", virtualMachineName).add("serviceOfferingId", serviceOfferingId).add("templateId", templateId)
             .add("ipAddress", ipAddress).add("isSourceNAT", isSourceNAT).add("rawUsageHours", rawUsageHours).add("usage", usage)
-            .add("size", size).add("type", type).add("usageType", usageType).add("project", project).add("projectId", projectId);
+            .add("size", size).add("type", type).add("usageType", usageType).add("project", project).add("projectId", projectId)
+            .add("domain", domain).add("virtualSize", virtualSize).add("cpuNumber", cpuNumber).add("cpuSpeed", cpuSpeed).add("memory", memory)
+            .add("isSystem", isSystem).add("networkId", networkId).add("isDefault", isDefault).add("tags", tags);
    }
 
    @Override

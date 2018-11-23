@@ -20,6 +20,7 @@ import static org.jclouds.cloudstack.options.ListUsageRecordsOptions.Builder.acc
 import static org.jclouds.cloudstack.options.ListUsageRecordsOptions.Builder.accountInDomain;
 import static org.jclouds.cloudstack.options.ListUsageRecordsOptions.Builder.domainId;
 import static org.jclouds.cloudstack.options.ListUsageRecordsOptions.Builder.keyword;
+import static org.jclouds.cloudstack.options.ListUsageRecordsOptions.Builder.includeTags;
 import static org.jclouds.cloudstack.options.ListUsageRecordsOptions.Builder.page;
 import static org.jclouds.cloudstack.options.ListUsageRecordsOptions.Builder.pageSize;
 import static org.jclouds.cloudstack.options.ListUsageRecordsOptions.Builder.type;
@@ -91,5 +92,14 @@ public class ListUsageRecordsOptionsTest {
         ListUsageRecordsOptions options = pageSize("500");
         assertEquals(ImmutableSet.of("500"), options.buildQueryParameters().get("pagesize"));
     }
-	
+    
+    public void testIncludeTags() {
+        ListUsageRecordsOptions options = new ListUsageRecordsOptions().includeTags(true);
+        assertEquals(ImmutableSet.of("true"), options.buildQueryParameters().get("includetags"));
+    }
+
+    public void testIncludeTagsStatic() {
+        ListUsageRecordsOptions options = includeTags(true);
+        assertEquals(ImmutableSet.of("true"), options.buildQueryParameters().get("includetags"));
+    }
 }

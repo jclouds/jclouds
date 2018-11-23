@@ -65,6 +65,11 @@ public class ListUsageRecordsOptions extends AccountInDomainOptions {
          ListUsageRecordsOptions options = new ListUsageRecordsOptions();
          return options.pageSize(pageSize);
       }
+      
+      public static ListUsageRecordsOptions includeTags(boolean includeTags) {
+         ListUsageRecordsOptions options = new ListUsageRecordsOptions();
+         return options.includeTags(includeTags);
+      }
 
    }
 
@@ -107,5 +112,9 @@ public class ListUsageRecordsOptions extends AccountInDomainOptions {
       this.queryParameters.replaceValues("pagesize", ImmutableSet.of(pageSize));
       return this;
    }
-	
+   
+   public ListUsageRecordsOptions includeTags(boolean includeTags) {
+      this.queryParameters.replaceValues("includetags", ImmutableSet.of(includeTags + ""));
+      return this;
+   } 
 }
