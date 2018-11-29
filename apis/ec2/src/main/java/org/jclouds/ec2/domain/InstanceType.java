@@ -463,6 +463,79 @@ public class InstanceType {
    public static final String M5_24XLARGE = "m5.24xlarge";
 
    /**
+    * M5D Large Instance
+    * <ul>
+    * <li>8 GiB memory</li>
+    * <li>5 EC2 Compute Units (2 virtual cores with 2.5 EC2 Compute Units each)</li>
+    * <li>1 x 75 NVMe SSD</li>
+    * <li>EBS storage</li>
+    * <li>64-bit platform</li>
+    * <li>I/O Performance: Moderate</li>
+    * </ul>
+    */
+   public static final String M5D_LARGE = "m5d.large";
+
+   /**
+    * M5D Extra Large Instance
+    * <ul>
+    * <li>16 GiB memory</li>
+    * <li>10 EC2 Compute Units (4 virtual cores with 2.5 EC2 Compute Units each)</li>
+    * <li>1 x 150 NVMe SSD</li>
+    * <li>64-bit platform</li>
+    * <li>I/O Performance: High</li>
+    * </ul>
+    */
+   public static final String M5D_XLARGE = "m5d.xlarge";
+
+   /**
+    * M5D Double Extra Large Instance
+    * <ul>
+    * <li>32 GiB memory</li>
+    * <li>26 EC2 Compute Units (8 virtual cores with 2.5 EC2 Compute Units each)</li>
+    * <li>1 x 300 NVMe SSD</li>
+    * <li>64-bit platform</li>
+    * <li>I/O Performance: High</li>
+    * </ul>
+    */
+   public static final String M5D_2XLARGE = "m5d.2xlarge";
+
+   /**
+    * M5D Quadruple Extra Large Instance
+    * <ul>
+    * <li>64 GiB memory</li>
+    * <li>40 EC2 Compute Units (16 virtual cores with 2.5 EC2 Compute Units each)</li>
+    * <li> x 300 NVMe SSD</li>
+    * <li>64-bit platform</li>
+    * <li>I/O Performance: High</li>
+    * </ul>
+    */
+   public static final String M5D_4XLARGE = "m5d.4xlarge";
+
+   /**
+    * M5D 12x Extra Large Instance
+    * <ul>
+    * <li>192 GiB memory</li>
+    * <li>144 EC2 Compute Units (48 virtual cores with 2.5 EC2 Compute Units each)</li>
+    * <li>2 x 900 NVMe SSD</li>
+    * <li>64-bit platform</li>
+    * <li>I/O Performance: High</li>
+    * </ul>
+    */
+   public static final String M5D_12XLARGE = "m5d.12xlarge";
+
+   /**
+    * M5D 24x Extra Large Instance
+    * <ul>
+    * <li>384 GiB memory</li>
+    * <li>288 EC2 Compute Units (96 virtual cores with 2.5 EC2 Compute Units each)</li>
+    * <li>4 x 900 NVMe SSD</li>
+    * <li>64-bit platform</li>
+    * <li>I/O Performance: High</li>
+    * </ul>
+    */
+   public static final String M5D_24XLARGE = "m5d.24xlarge";
+
+   /**
     * High-CPU Medium Instance
     * <ul>
     * <li>1.7 GB of memory</li>
@@ -746,6 +819,72 @@ public class InstanceType {
     * </ul>
     */
    public static final String C5_18XLARGE = "c5.18xlarge";
+
+   /**
+    * C5D Compute-optimized Large
+    * <ul>
+    *    <li>4 GiB of memory</li>
+    *    <li>2 vCPU</li>
+    *    <li>1 x 50 NVMe SSD</li>
+    *    <li>Up to 25 Gbps of network bandwidth using Elastic Network Adapter (ENA)-based Enhanced Networking</li>
+    * </ul>
+    */
+   public static final String C5D_LARGE = "c5d.large";
+
+   /**
+    * C5D Compute-optimized X Large
+    * <ul>
+    *    <li>8 GiB of memory</li>
+    *    <li>4 vCPU</li>
+    *    <li>1 x 100 NVMe SSD</li>
+    *    <li>Up to 25 Gbps of network bandwidth using Elastic Network Adapter (ENA)-based Enhanced Networking</li>
+    * </ul>
+    */
+   public static final String C5D_XLARGE = "c5d.xlarge";
+
+   /**
+    * C5D Compute-optimized 2x Large
+    * <ul>
+    *    <li>16 GiB of memory</li>
+    *    <li>8 vCPU</li>
+    *    <li>1 x 225 NVMe SSD</li>
+    *    <li>Up to 25 Gbps of network bandwidth using Elastic Network Adapter (ENA)-based Enhanced Networking</li>
+    * </ul>
+    */
+   public static final String C5D_2XLARGE = "c5d.2xlarge";
+
+   /**
+    * C5D Compute-optimized 4x Large
+    * <ul>
+    *    <li>32 GiB of memory</li>
+    *    <li>16 vCPU</li>
+    *    <li>1 x 450 NVMe SSD</li>
+    *    <li>Up to 25 Gbps of network bandwidth using Elastic Network Adapter (ENA)-based Enhanced Networking</li>
+    * </ul>
+    */
+   public static final String C5D_4XLARGE = "c5d.4xlarge";
+
+   /**
+    * C5D Compute-optimized 9x Large
+    * <ul>
+    *    <li>72 GiB of memory</li>
+    *    <li>36 vCPU</li>
+    *    <li>1 x 900 NVMe SSD</li>
+    *    <li>Up to 25 Gbps of network bandwidth using Elastic Network Adapter (ENA)-based Enhanced Networking</li>
+    * </ul>
+    */
+   public static final String C5D_9XLARGE = "c5d.9xlarge";
+
+   /**
+    * C5D Compute-optimized 18x Large
+    * <ul>
+    *    <li>144 GiB of memory</li>
+    *    <li>72 vCPU</li>
+    *    <li>2 x 900 NVMe SSD</li>
+    *    <li>Up to 25 Gbps of network bandwidth using Elastic Network Adapter (ENA)-based Enhanced Networking</li>
+    * </ul>
+    */
+   public static final String C5D_18XLARGE = "c5d.18xlarge";
 
    /**
     * D2 Dense Storage Extra Large
