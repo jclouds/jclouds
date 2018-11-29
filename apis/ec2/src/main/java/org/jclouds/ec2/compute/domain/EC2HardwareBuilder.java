@@ -780,7 +780,89 @@ public class EC2HardwareBuilder extends HardwareBuilder {
             .rootDeviceType(RootDeviceType.EBS);
    }
 
+   /**
+    * @see InstanceType#M5D_LARGE
+    */
+   public static EC2HardwareBuilder m5d_large() {
+      return new EC2HardwareBuilder(InstanceType.M5D_LARGE).m5()
+            .ram(8192)
+            .processors(ImmutableList.of(new Processor(2, 2.5)))
+            .volumes(ImmutableList.<Volume>of(
+                    new VolumeBuilder().type(LOCAL).size(10.0f).device("/dev/sda1").bootDevice(true).durable(false).build(),
+                    new VolumeBuilder().type(LOCAL).size(75.0f).device("/dev/sdb").bootDevice(false).durable(false).build()))
+            .is64Bit(true);
+   }
 
+   /**
+    * @see InstanceType#M5D_XLARGE
+    */
+   public static EC2HardwareBuilder m5d_xlarge() {
+      return new EC2HardwareBuilder(InstanceType.M5D_XLARGE).m5()
+            .ram(16384)
+            .processors(ImmutableList.of(new Processor(4, 2.5)))
+            .volumes(ImmutableList.<Volume>of(
+                    new VolumeBuilder().type(LOCAL).size(10.0f).device("/dev/sda1").bootDevice(true).durable(false).build(),
+                    new VolumeBuilder().type(LOCAL).size(150.0f).device("/dev/sdb").bootDevice(false).durable(false).build()))
+            .is64Bit(true);
+   }
+
+   /**
+    * @see InstanceType#M5D_2XLARGE
+    */
+   public static EC2HardwareBuilder m5d_2xlarge() {
+      return new EC2HardwareBuilder(InstanceType.M5D_2XLARGE).m5()
+            .ram(32768)
+            .processors(ImmutableList.of(new Processor(8, 2.5)))
+            .volumes(ImmutableList.<Volume>of(
+                    new VolumeBuilder().type(LOCAL).size(10.0f).device("/dev/sda1").bootDevice(true).durable(false).build(),
+                    new VolumeBuilder().type(LOCAL).size(300.0f).device("/dev/sdb").bootDevice(false).durable(false).build()))
+            .is64Bit(true);
+   }
+
+   /**
+    * @see InstanceType#M5D_4XLARGE
+    */
+   public static EC2HardwareBuilder m5d_4xlarge() {
+      return new EC2HardwareBuilder(InstanceType.M5D_4XLARGE).m5()
+            .ram(65536)
+            .processors(ImmutableList.of(new Processor(16, 2.5)))
+            .volumes(ImmutableList.<Volume>of(
+                    new VolumeBuilder().type(LOCAL).size(10.0f).device("/dev/sda1").bootDevice(true).durable(false).build(),
+                    new VolumeBuilder().type(LOCAL).size(300.0f).device("/dev/sdb").bootDevice(false).durable(false).build(),
+                    new VolumeBuilder().type(LOCAL).size(300.0f).device("/dev/sdc").bootDevice(false).durable(false).build()))
+            .is64Bit(true);
+   }
+
+   /**
+    * @see InstanceType#M5D_12XLARGE
+    */
+   public static EC2HardwareBuilder m5d_12xlarge() {
+      return new EC2HardwareBuilder(InstanceType.M5D_12XLARGE).m5()
+            .ram(196608)
+            .processors(ImmutableList.of(new Processor(48.0, 2.5)))
+            .volumes(ImmutableList.<Volume>of(
+                    new VolumeBuilder().type(LOCAL).size(10.0f).device("/dev/sda1").bootDevice(true).durable(false).build(),
+                    new VolumeBuilder().type(LOCAL).size(900.0f).device("/dev/sdb").bootDevice(false).durable(false).build(),
+                    new VolumeBuilder().type(LOCAL).size(900.0f).device("/dev/sdc").bootDevice(false).durable(false).build()))
+            .is64Bit(true);
+   }
+
+   /**
+    * @see InstanceType#M5D_24XLARGE
+    */
+   public static EC2HardwareBuilder m5d_24xlarge() {
+      return new EC2HardwareBuilder(InstanceType.M5D_24XLARGE).m5()
+            .ram(393216)
+            .processors(ImmutableList.of(new Processor(96.0, 2.5)))
+            .volumes(ImmutableList.<Volume>of(
+                    new VolumeBuilder().type(LOCAL).size(10.0f).device("/dev/sda1").bootDevice(true).durable(false).build(),
+                    new VolumeBuilder().type(LOCAL).size(900.0f).device("/dev/sdb").bootDevice(false).durable(false).build(),
+                    new VolumeBuilder().type(LOCAL).size(900.0f).device("/dev/sdc").bootDevice(false).durable(false).build(),
+                    new VolumeBuilder().type(LOCAL).size(900.0f).device("/dev/sdd").bootDevice(false).durable(false).build(),
+                    new VolumeBuilder().type(LOCAL).size(900.0f).device("/dev/sde").bootDevice(false).durable(false).build()))
+            .is64Bit(true);
+   }
+   
    /**
     * @see InstanceType#C1_MEDIUM
     */
@@ -989,6 +1071,85 @@ public class EC2HardwareBuilder extends HardwareBuilder {
          .rootDeviceType(RootDeviceType.EBS);
    }
 
+   /**
+    * @see InstanceType#C5D_LARGE
+    */
+   public static EC2HardwareBuilder c5d_large() {
+      return new EC2HardwareBuilder(InstanceType.C5D_LARGE).c5()
+         .ram(4096)
+         .processors(ImmutableList.of(new Processor(2.0, 3.0)))
+         .volumes(ImmutableList.<Volume>of(
+                 new VolumeBuilder().type(LOCAL).size(10.0f).device("/dev/sda1").bootDevice(true).durable(false).build(),
+                 new VolumeBuilder().type(LOCAL).size(50.0f).device("/dev/sdb").bootDevice(false).durable(false).build()))
+           .is64Bit(true);
+   }
+
+   /**
+    * @see InstanceType#C5D_XLARGE
+    */
+   public static EC2HardwareBuilder c5d_xlarge() {
+      return new EC2HardwareBuilder(InstanceType.C5D_XLARGE).c5()
+         .ram(8192)
+         .processors(ImmutableList.of(new Processor(4.0, 3.0)))
+         .volumes(ImmutableList.<Volume>of(
+                 new VolumeBuilder().type(LOCAL).size(10.0f).device("/dev/sda1").bootDevice(true).durable(false).build(),
+                 new VolumeBuilder().type(LOCAL).size(100.0f).device("/dev/sdb").bootDevice(false).durable(false).build()))
+           .is64Bit(true);
+   }
+
+   /**
+    * @see InstanceType#C5D_2XLARGE
+    */
+   public static EC2HardwareBuilder c5d_2xlarge() {
+      return new EC2HardwareBuilder(InstanceType.C5D_2XLARGE).c5()
+         .ram(16384)
+         .processors(ImmutableList.of(new Processor(8.0, 3.0)))
+         .volumes(ImmutableList.<Volume>of(
+                 new VolumeBuilder().type(LOCAL).size(10.0f).device("/dev/sda1").bootDevice(true).durable(false).build(),
+                 new VolumeBuilder().type(LOCAL).size(225.0f).device("/dev/sdb").bootDevice(false).durable(false).build()))
+           .is64Bit(true);
+   }
+
+   /**
+    * @see InstanceType#C5D_4XLARGE
+    */
+   public static EC2HardwareBuilder c5d_4xlarge() {
+      return new EC2HardwareBuilder(InstanceType.C5D_4XLARGE).c5()
+         .ram(32768)
+         .processors(ImmutableList.of(new Processor(16.0, 3.0)))
+         .volumes(ImmutableList.<Volume>of(
+                 new VolumeBuilder().type(LOCAL).size(10.0f).device("/dev/sda1").bootDevice(true).durable(false).build(),
+                 new VolumeBuilder().type(LOCAL).size(450.0f).device("/dev/sdb").bootDevice(false).durable(false).build()))
+           .is64Bit(true);
+   }
+
+   /**
+    * @see InstanceType#C5D_9XLARGE
+    */
+   public static EC2HardwareBuilder c5d_9xlarge() {
+      return new EC2HardwareBuilder(InstanceType.C5D_9XLARGE).c5()
+         .ram(73728)
+         .processors(ImmutableList.of(new Processor(36.0, 3.0)))
+         .volumes(ImmutableList.<Volume>of(
+                 new VolumeBuilder().type(LOCAL).size(10.0f).device("/dev/sda1").bootDevice(true).durable(false).build(),
+                 new VolumeBuilder().type(LOCAL).size(900.0f).device("/dev/sdb").bootDevice(false).durable(false).build()))
+           .is64Bit(true);
+   }
+
+   /**
+    * @see InstanceType#C5D_18XLARGE
+    */
+   public static EC2HardwareBuilder c5d_18xlarge() {
+      return new EC2HardwareBuilder(InstanceType.C5D_18XLARGE).c5()
+         .ram(147456)
+         .processors(ImmutableList.of(new Processor(72.0, 3.0)))
+         .volumes(ImmutableList.<Volume>of(
+                 new VolumeBuilder().type(LOCAL).size(10.0f).device("/dev/sda1").bootDevice(true).durable(false).build(),
+                 new VolumeBuilder().type(LOCAL).size(900.0f).device("/dev/sdb").bootDevice(false).durable(false).build(),
+                 new VolumeBuilder().type(LOCAL).size(900.0f).device("/dev/sdc").bootDevice(false).durable(false).build()))
+           .is64Bit(true);
+   }
+   
    /**
     * @see InstanceType#D2_XLARGE
     */
