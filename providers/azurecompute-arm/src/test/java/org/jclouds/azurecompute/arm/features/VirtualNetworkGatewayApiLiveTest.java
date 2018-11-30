@@ -29,10 +29,10 @@ import java.util.Collections;
 
 import org.jclouds.azurecompute.arm.domain.IdReference;
 import org.jclouds.azurecompute.arm.domain.IpAllocationMethod;
-import org.jclouds.azurecompute.arm.domain.PublicIPAddress;
-import org.jclouds.azurecompute.arm.domain.PublicIPAddressProperties;
 import org.jclouds.azurecompute.arm.domain.Subnet;
 import org.jclouds.azurecompute.arm.domain.VirtualNetwork;
+import org.jclouds.azurecompute.arm.domain.publicipaddress.PublicIPAddress;
+import org.jclouds.azurecompute.arm.domain.publicipaddress.PublicIPAddressProperties;
 import org.jclouds.azurecompute.arm.domain.vpn.SKU;
 import org.jclouds.azurecompute.arm.domain.vpn.SKU.SKUName;
 import org.jclouds.azurecompute.arm.domain.vpn.SKU.SKUTier;
@@ -71,7 +71,7 @@ public class VirtualNetworkGatewayApiLiveTest extends BaseAzureComputeApiLiveTes
       PublicIPAddressProperties props = PublicIPAddressProperties.builder()
             .publicIPAllocationMethod(IpAllocationMethod.Dynamic.name()).idleTimeoutInMinutes(4).build();
       publicIp = api.getPublicIPAddressApi(resourceGroupName).createOrUpdate(name + "-publicip", LOCATION,
-            Collections.<String, String> emptyMap(), props);
+            Collections.<String, String> emptyMap(), null, props);
    }
 
    @Test

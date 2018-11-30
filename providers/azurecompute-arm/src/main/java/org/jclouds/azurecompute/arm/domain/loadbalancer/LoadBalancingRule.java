@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jclouds.azurecompute.arm.domain;
+package org.jclouds.azurecompute.arm.domain.loadbalancer;
 
 import org.jclouds.javax.annotation.Nullable;
 import org.jclouds.json.SerializedNames;

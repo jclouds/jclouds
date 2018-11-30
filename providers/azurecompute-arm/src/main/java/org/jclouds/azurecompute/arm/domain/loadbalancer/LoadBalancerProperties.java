@@ -14,10 +14,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jclouds.azurecompute.arm.domain;
+package org.jclouds.azurecompute.arm.domain.loadbalancer;
 
 import java.util.List;
 
+import org.jclouds.azurecompute.arm.domain.BackendAddressPool;
+import org.jclouds.azurecompute.arm.domain.FrontendIPConfigurations;
+import org.jclouds.azurecompute.arm.domain.InboundNatRule;
+import org.jclouds.azurecompute.arm.domain.Probe;
+import org.jclouds.azurecompute.arm.domain.Provisionable;
 import org.jclouds.javax.annotation.Nullable;
 import org.jclouds.json.SerializedNames;
 

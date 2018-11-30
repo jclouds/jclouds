@@ -19,7 +19,6 @@ package org.jclouds.azurecompute.arm.features;
 import java.net.URI;
 import java.util.List;
 import java.util.Map;
-
 import javax.inject.Named;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
@@ -31,8 +30,9 @@ import javax.ws.rs.core.MediaType;
 
 import org.jclouds.Fallbacks.EmptyListOnNotFoundOr404;
 import org.jclouds.Fallbacks.NullOnNotFoundOr404;
-import org.jclouds.azurecompute.arm.domain.LoadBalancer;
-import org.jclouds.azurecompute.arm.domain.LoadBalancerProperties;
+import org.jclouds.azurecompute.arm.domain.loadbalancer.LoadBalancer;
+import org.jclouds.azurecompute.arm.domain.loadbalancer.LoadBalancer.SKU;
+import org.jclouds.azurecompute.arm.domain.loadbalancer.LoadBalancerProperties;
 import org.jclouds.azurecompute.arm.filters.ApiVersionFilter;
 import org.jclouds.azurecompute.arm.functions.URIParser;
 import org.jclouds.javax.annotation.Nullable;
@@ -68,6 +68,7 @@ public interface LoadBalancerApi {
    @MapBinder(BindToJsonPayload.class)
    LoadBalancer createOrUpdate(@PathParam("loadbalancername") String lbName,
          @PayloadParam("location") String location, @Nullable @PayloadParam("tags") Map<String, String> tags,
+         @Nullable @PayloadParam("sku") SKU sku,
          @PayloadParam("properties") LoadBalancerProperties properties);
 
    @Named("loadbalancer:delete")

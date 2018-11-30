@@ -16,5 +16,8 @@
       "domainNameLabel": "foobar",
       "fqdn": "foobar.northeurope.cloudapp.azure.com"
     }
+  },
+  "sku": {
+    "name": "Basic"
   }
 }

@@ -25,6 +25,8 @@ import static org.jclouds.azurecompute.arm.compute.options.AzureTemplateOptions.
 import static org.jclouds.azurecompute.arm.config.AzureComputeProperties.TIMEOUT_RESOURCE_DELETED;
 import static org.jclouds.azurecompute.arm.domain.IdReference.extractName;
 import static org.jclouds.azurecompute.arm.domain.InboundNatRuleProperties.Protocol.Tcp;
+import static org.jclouds.azurecompute.arm.domain.loadbalancer.LoadBalancer.SKU.SKUName.Basic;
+import static org.jclouds.azurecompute.arm.domain.loadbalancer.LoadBalancer.SKU.SKUName.Standard;
 import static org.jclouds.compute.predicates.NodePredicates.inGroup;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
@@ -52,19 +54,19 @@ import org.jclouds.azurecompute.arm.domain.InboundNatRule;
 import org.jclouds.azurecompute.arm.domain.InboundNatRuleProperties;
 import org.jclouds.azurecompute.arm.domain.IpConfiguration;
 import org.jclouds.azurecompute.arm.domain.IpConfigurationProperties;
-import org.jclouds.azurecompute.arm.domain.LoadBalancer;
-import org.jclouds.azurecompute.arm.domain.LoadBalancerProperties;
-import org.jclouds.azurecompute.arm.domain.LoadBalancingRule;
-import org.jclouds.azurecompute.arm.domain.LoadBalancingRuleProperties;
-import org.jclouds.azurecompute.arm.domain.LoadBalancingRuleProperties.Protocol;
 import org.jclouds.azurecompute.arm.domain.NetworkInterfaceCard;
 import org.jclouds.azurecompute.arm.domain.NetworkInterfaceCardProperties;
 import org.jclouds.azurecompute.arm.domain.Probe;
 import org.jclouds.azurecompute.arm.domain.ProbeProperties;
 import org.jclouds.azurecompute.arm.domain.Provisionable;
-import org.jclouds.azurecompute.arm.domain.PublicIPAddress;
-import org.jclouds.azurecompute.arm.domain.PublicIPAddressProperties;
 import org.jclouds.azurecompute.arm.domain.VirtualMachine;
+import org.jclouds.azurecompute.arm.domain.loadbalancer.LoadBalancer;
+import org.jclouds.azurecompute.arm.domain.loadbalancer.LoadBalancerProperties;
+import org.jclouds.azurecompute.arm.domain.loadbalancer.LoadBalancingRule;
+import org.jclouds.azurecompute.arm.domain.loadbalancer.LoadBalancingRuleProperties;
+import org.jclouds.azurecompute.arm.domain.loadbalancer.LoadBalancingRuleProperties.Protocol;
+import org.jclouds.azurecompute.arm.domain.publicipaddress.PublicIPAddress;
+import org.jclouds.azurecompute.arm.domain.publicipaddress.PublicIPAddressProperties;
 import org.jclouds.azurecompute.arm.internal.AzureLiveTestUtils;
 import org.jclouds.compute.RunNodesException;
 import org.jclouds.compute.domain.NodeMetadata;
@@ -88,6 +90,8 @@ public class LoadBalancerApiLiveTest extends BaseComputeServiceContextLiveTest {
 
    private static final String lbName = String.format("lb-%s-%s", LoadBalancerApiLiveTest.class.getSimpleName()
          .toLowerCase(), System.getProperty("user.name"));
+
+   private static final String lbStandardName = lbName + "Standard";
 
    private Predicate<URI> resourceDeleted;
    private PublicIpAvailablePredicateFactory publicIpAvailable;
@@ -161,18 +165,40 @@ public class LoadBalancerApiLiveTest extends BaseComputeServiceContextLiveTest {
    }
 
    @Test(dependsOnMethods = "testDeleteLoadBalancerDoesNotExist")
-   public void testCreateLoadBalancer() {
-      LoadBalancer createLB = newLoadBalancer(lbName, location);
+   public void testCreateLoadBalancerStandard() {
+      LoadBalancer createLB = newLoadBalancer(lbStandardName, location);
 
-      PublicIPAddress publicIP = createPublicIPAddress("Ip4LoadBalancer");
-      FrontendIPConfigurationsProperties fronendProps = FrontendIPConfigurationsProperties.builder()
+      PublicIPAddress publicIP = createPublicIPAddress("Ip4LoadBalancerStandard",
+            PublicIPAddress.SKU.create(PublicIPAddress.SKU.SKUName.Standard));
+      FrontendIPConfigurationsProperties frontendProps = FrontendIPConfigurationsProperties.builder()
             .publicIPAddress(IdReference.create(publicIP.id())).build();
-      FrontendIPConfigurations frontendIps = FrontendIPConfigurations.create("ipConfigs", null, fronendProps, null);
+      FrontendIPConfigurations frontendIps = FrontendIPConfigurations.create("ipConfigs", null, frontendProps, null);
       LoadBalancerProperties props = LoadBalancerProperties.builder()
             .frontendIPConfigurations(ImmutableList.of(frontendIps)).build();
 
-      lb = lbApi.createOrUpdate(lbName, createLB.location(), createLB.tags(), props);
+      lb = lbApi.createOrUpdate(lbStandardName, createLB.location(), createLB.tags(), LoadBalancer.SKU.create(Standard),
+            props);
       assertNotNull(lb);
+      assertEquals(lb.name(), lbStandardName);
+      assertEquals(lb.sku().name(), Standard);
+   }
+
+   @Test(dependsOnMethods = "testDeleteLoadBalancerDoesNotExist")
+   public void testCreateLoadBalancer() {
+      LoadBalancer createLB = newLoadBalancer(lbName, location);
+
+      PublicIPAddress publicIP = createPublicIPAddress("Ip4LoadBalancer",
+            PublicIPAddress.SKU.create(PublicIPAddress.SKU.SKUName.Basic));
+      FrontendIPConfigurationsProperties frontendProps = FrontendIPConfigurationsProperties.builder()
+            .publicIPAddress(IdReference.create(publicIP.id())).build();
+      FrontendIPConfigurations frontendIps = FrontendIPConfigurations.create("ipConfigs", null, frontendProps, null);
+      LoadBalancerProperties props = LoadBalancerProperties.builder()
+            .frontendIPConfigurations(ImmutableList.of(frontendIps)).build();
+
+      lb = lbApi.createOrUpdate(lbName, createLB.location(), createLB.tags(), null, props);
+      assertNotNull(lb);
+      assertEquals(lb.name(), lbName);
+      assertEquals(lb.sku().name(), Basic);
    }
 
    @Test(dependsOnMethods = "testCreateLoadBalancer")
@@ -305,7 +331,7 @@ public class LoadBalancerApiLiveTest extends BaseComputeServiceContextLiveTest {
       assertResourceDeleted(uri);
    }
 
-   private PublicIPAddress createPublicIPAddress(final String publicIpAddressName) {
+   private PublicIPAddress createPublicIPAddress(final String publicIpAddressName, final PublicIPAddress.SKU sku) {
       final PublicIPAddressApi ipApi = view.unwrapApi(AzureComputeApi.class).getPublicIPAddressApi(group);
       PublicIPAddress publicIPAddress = ipApi.get(publicIpAddressName);
 
@@ -313,7 +339,7 @@ public class LoadBalancerApiLiveTest extends BaseComputeServiceContextLiveTest {
          final Map<String, String> tags = ImmutableMap.of("testkey", "testvalue");
          PublicIPAddressProperties properties = PublicIPAddressProperties.builder().publicIPAllocationMethod("Static")
                .idleTimeoutInMinutes(4).build();
-         publicIPAddress = ipApi.createOrUpdate(publicIpAddressName, location, tags, properties);
+         publicIPAddress = ipApi.createOrUpdate(publicIpAddressName, location, tags, sku, properties);
 
          checkState(publicIpAvailable.create(group).apply(publicIpAddressName),
                "Public IP was not provisioned in the configured timeout");
@@ -421,7 +447,7 @@ public class LoadBalancerApiLiveTest extends BaseComputeServiceContextLiveTest {
    }
 
    private LoadBalancer updateLoadBalancer(final String name, LoadBalancerProperties props) {
-      lbApi.createOrUpdate(name, location, null, props);
+      lbApi.createOrUpdate(name, location, null, null, props);
       resourceAvailable.apply(new Supplier<Provisionable>() {
          @Override
          public Provisionable get() {

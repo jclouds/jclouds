@@ -29,8 +29,9 @@ import javax.ws.rs.core.MediaType;
 
 import org.jclouds.Fallbacks.EmptyListOnNotFoundOr404;
 import org.jclouds.Fallbacks.NullOnNotFoundOr404;
-import org.jclouds.azurecompute.arm.domain.PublicIPAddress;
-import org.jclouds.azurecompute.arm.domain.PublicIPAddressProperties;
+import org.jclouds.azurecompute.arm.domain.publicipaddress.PublicIPAddress;
+import org.jclouds.azurecompute.arm.domain.publicipaddress.PublicIPAddress.SKU;
+import org.jclouds.azurecompute.arm.domain.publicipaddress.PublicIPAddressProperties;
 import org.jclouds.azurecompute.arm.filters.ApiVersionFilter;
 import org.jclouds.azurecompute.arm.functions.FalseOn204;
 import org.jclouds.javax.annotation.Nullable;
@@ -66,9 +67,9 @@ public interface PublicIPAddressApi {
    @MapBinder(BindToJsonPayload.class)
    @PUT
    PublicIPAddress createOrUpdate(@PathParam("publicipaddressname") String publicipaddressname,
-                                                 @PayloadParam("location") String location,
-                                                 @Nullable @PayloadParam("tags") Map<String, String> tags,
-                                                 @PayloadParam("properties") PublicIPAddressProperties properties);
+         @PayloadParam("location") String location, @Nullable @PayloadParam("tags") Map<String, String> tags,
+         @Nullable @PayloadParam("sku") SKU sku,
+         @PayloadParam("properties") PublicIPAddressProperties properties);
 
    @Named("publicipaddress:get")
    @Path("/resourcegroups/{resourcegroup}/providers/Microsoft.Network/publicIPAddresses/{publicipaddressname}")

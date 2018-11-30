@@ -17,6 +17,8 @@
 package org.jclouds.azurecompute.arm.features;
 
 import static com.google.common.collect.Iterables.isEmpty;
+import static org.jclouds.azurecompute.arm.config.AzureComputeProperties.API_VERSION_PREFIX;
+import static org.jclouds.azurecompute.arm.domain.loadbalancer.LoadBalancer.SKU.SKUName.Basic;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertNull;
@@ -25,10 +27,11 @@ import static org.testng.Assert.assertTrue;
 import java.net.URI;
 import java.util.List;
 
+import org.jclouds.azurecompute.arm.AzureComputeProviderMetadata;
 import org.jclouds.azurecompute.arm.domain.FrontendIPConfigurations;
 import org.jclouds.azurecompute.arm.domain.FrontendIPConfigurationsProperties;
-import org.jclouds.azurecompute.arm.domain.LoadBalancer;
-import org.jclouds.azurecompute.arm.domain.LoadBalancerProperties;
+import org.jclouds.azurecompute.arm.domain.loadbalancer.LoadBalancer;
+import org.jclouds.azurecompute.arm.domain.loadbalancer.LoadBalancerProperties;
 import org.jclouds.azurecompute.arm.internal.BaseAzureComputeApiMockTest;
 import org.testng.annotations.Test;
 
@@ -38,25 +41,28 @@ import com.google.common.collect.ImmutableList;
 public class LoadBalancerApiMockTest extends BaseAzureComputeApiMockTest {
    private final String subscriptionid = "SUBSCRIPTIONID";
    private final String resourcegroup = "myresourcegroup";
-   private final String apiVersion = "api-version=2016-03-30";
+   private final String apiVersion = "api-version=" + AzureComputeProviderMetadata.defaultProperties()
+         .getProperty(API_VERSION_PREFIX + LoadBalancerApi.class.getSimpleName());
    private final String lbName = "testLoadBalancer";
 
    public void createLoadBalancer() throws InterruptedException {
       LoadBalancer nsg = newLoadBalancer();
 
       server.enqueue(jsonResponse("/loadbalancercreate.json").setResponseCode(200));
-      final LoadBalancerApi nsgApi = api.getLoadBalancerApi(resourcegroup);
+      final LoadBalancerApi loadBalancerApi = api.getLoadBalancerApi(resourcegroup);
 
       String path = String.format("/subscriptions/%s/resourcegroups/%s/providers/Microsoft.Network/loadBalancers/%s?%s",
             subscriptionid, resourcegroup, lbName, apiVersion);
       
-      String json = "{\"location\":\"westeurope\",\"properties\":{\"frontendIPConfigurations\":[{\"name\":\"ipConfigs\",\"properties\":{}}]}}";
+      String json = "{\"location\":\"westeurope\",\"properties\":{\"frontendIPConfigurations\":[{\"name\":\"ipConfigs"
+            + "\",\"properties\":{}}]} }";
       
-      LoadBalancer result = nsgApi.createOrUpdate(lbName, "westeurope", null, nsg.properties());
+      LoadBalancer result = loadBalancerApi.createOrUpdate(lbName, "westeurope", null, null, nsg.properties());
       assertSent(server, "PUT", path, json);
 
       assertEquals(result.name(), lbName);
       assertEquals(result.location(), "westeurope");
+      assertEquals(result.sku().name(), Basic);
    }
 
    public void getLoadBalancer() throws InterruptedException {
@@ -73,6 +79,7 @@ public class LoadBalancerApiMockTest extends BaseAzureComputeApiMockTest {
       assertEquals(result.location(), "westeurope");
       assertEquals(result.properties().loadBalancingRules().size(), 1);
       assertEquals(result.properties().loadBalancingRules().get(0).name(), "lbRule1");
+      assertEquals(result.sku().name(), Basic);
    }
 
    public void getLoadBalancerReturns404() throws InterruptedException {

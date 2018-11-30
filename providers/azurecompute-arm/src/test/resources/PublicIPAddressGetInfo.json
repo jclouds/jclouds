@@ -20,5 +20,8 @@
     "ipConfiguration": {
       "id": "/subscriptions/fakeb2f5-4710-4e93-bdf4-419edbde2178/resourceGroups/myresourcegroup/providers/Microsoft.Network/networkInterfaces/myNic/ipConfigurations/myip1"
     }
+  },
+  "sku": {
+    "name": "Basic"
   }
 }

@@ -16,6 +16,8 @@
  */
 package org.jclouds.azurecompute.arm.features;
 
+import static org.jclouds.azurecompute.arm.domain.publicipaddress.PublicIPAddress.SKU.SKUName.Basic;
+import static org.jclouds.azurecompute.arm.domain.publicipaddress.PublicIPAddress.SKU.SKUName.Standard;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertNotNull;
@@ -25,8 +27,9 @@ import static org.testng.Assert.assertTrue;
 import java.util.List;
 import java.util.Map;
 
-import org.jclouds.azurecompute.arm.domain.PublicIPAddress;
-import org.jclouds.azurecompute.arm.domain.PublicIPAddressProperties;
+import org.jclouds.azurecompute.arm.domain.publicipaddress.PublicIPAddress;
+import org.jclouds.azurecompute.arm.domain.publicipaddress.PublicIPAddress.SKU;
+import org.jclouds.azurecompute.arm.domain.publicipaddress.PublicIPAddressProperties;
 import org.jclouds.azurecompute.arm.internal.BaseAzureComputeApiLiveTest;
 import org.jclouds.util.Predicates2;
 import org.testng.annotations.BeforeClass;
@@ -39,6 +42,7 @@ import com.google.common.collect.ImmutableMap;
 public class PublicIPAddressApiLiveTest extends BaseAzureComputeApiLiveTest {
 
    private final String publicIpAddressName = "myipaddress";
+   private final String publicIpAddressNameStandard = "myipaddressStandard";
    private String subscriptionid;
 
    @BeforeClass
@@ -69,7 +73,7 @@ public class PublicIPAddressApiLiveTest extends BaseAzureComputeApiLiveTest {
                   .idleTimeoutInMinutes(4)
                   .build();
 
-      PublicIPAddress ip = ipApi.createOrUpdate(publicIpAddressName, LOCATION, tags, properties);
+      PublicIPAddress ip = ipApi.createOrUpdate(publicIpAddressName, LOCATION, tags, null, properties);
 
       assertNotNull(ip);
       assertEquals(ip.name(), publicIpAddressName);
@@ -81,6 +85,34 @@ public class PublicIPAddressApiLiveTest extends BaseAzureComputeApiLiveTest {
       assertNull(ip.properties().ipAddress()); // as we don't get IP address until Succeeded state
       assertEquals(ip.properties().publicIPAllocationMethod(), "Static");
       assertEquals(ip.properties().idleTimeoutInMinutes().intValue(), 4);
+      assertEquals(ip.sku().name(), Basic);
+   }
+
+   @Test(groups = "live", dependsOnMethods = "deletePublicIPAddressResourceDoesNotExist")
+   public void createPublicIPAddressStandard() {
+      final PublicIPAddressApi ipApi = api.getPublicIPAddressApi(resourceGroupName);
+
+      final Map<String, String> tags = ImmutableMap.of("testkey", "testvalue");
+
+      PublicIPAddressProperties properties = PublicIPAddressProperties.builder().publicIPAllocationMethod("Static")
+            .idleTimeoutInMinutes(4).build();
+
+      PublicIPAddress ip = ipApi
+            .createOrUpdate(publicIpAddressNameStandard, LOCATION, tags, SKU.create(Standard), properties);
+
+      assertNotNull(ip);
+      assertEquals(ip.name(), publicIpAddressNameStandard);
+      assertEquals(ip.location(), LOCATION);
+      assertEquals(ip.id(),
+            String.format("/subscriptions/%s/resourceGroups/%s/providers/Microsoft.Network/publicIPAddresses/%s",
+                  subscriptionid, resourceGroupName, publicIpAddressNameStandard));
+      assertEquals(ip.tags().get("testkey"), "testvalue");
+      assertNotNull(ip.properties());
+      assertEquals(ip.properties().provisioningState(), "Updating");
+      assertNull(ip.properties().ipAddress()); // as we don't get IP address until Succeeded state
+      assertEquals(ip.properties().publicIPAllocationMethod(), "Static");
+      assertEquals(ip.properties().idleTimeoutInMinutes().intValue(), 4);
+      assertEquals(ip.sku().name(), Standard);
    }
 
    @Test(groups = "live", dependsOnMethods = "createPublicIPAddress")

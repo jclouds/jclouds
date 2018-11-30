@@ -4,6 +4,9 @@
   "etag": "W/\"406af4e7-b24b-4c00-b42f-b3c4399bf61d\"",
   "type": "Microsoft.Network/loadBalancers",
   "location": "westeurope",
+  "sku": {
+    "name": "Basic"
+  },
   "properties": {
     "provisioningState": "Succeeded",
     "resourceGuid": "112b7e75-f287-4789-9f6a-9a55a6fbe47c",

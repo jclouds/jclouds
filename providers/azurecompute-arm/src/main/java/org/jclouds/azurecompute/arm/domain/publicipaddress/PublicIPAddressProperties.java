@@ -14,12 +14,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jclouds.azurecompute.arm.domain;
+package org.jclouds.azurecompute.arm.domain.publicipaddress;
 
-import com.google.auto.value.AutoValue;
-
+import org.jclouds.azurecompute.arm.domain.DnsSettings;
+import org.jclouds.azurecompute.arm.domain.IdReference;
+import org.jclouds.azurecompute.arm.domain.Provisionable;
 import org.jclouds.javax.annotation.Nullable;
 import org.jclouds.json.SerializedNames;
+
+import com.google.auto.value.AutoValue;
 
 @AutoValue
 public abstract class PublicIPAddressProperties implements Provisionable {
