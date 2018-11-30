@@ -18,6 +18,7 @@ package org.jclouds.azurecompute.arm.domain;
 
 import java.util.List;
 
+import org.jclouds.azurecompute.arm.domain.publicipaddress.PublicIPAddress;
 import org.jclouds.javax.annotation.Nullable;
 
 import com.google.auto.value.AutoValue;

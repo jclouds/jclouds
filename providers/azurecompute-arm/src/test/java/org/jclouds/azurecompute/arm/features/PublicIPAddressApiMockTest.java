@@ -16,6 +16,8 @@
  */
 package org.jclouds.azurecompute.arm.features;
 
+import static org.jclouds.azurecompute.arm.config.AzureComputeProperties.API_VERSION_PREFIX;
+import static org.jclouds.azurecompute.arm.domain.publicipaddress.PublicIPAddress.SKU.SKUName.Basic;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertNotNull;
@@ -25,9 +27,11 @@ import static org.testng.Assert.assertTrue;
 import java.util.List;
 import java.util.Map;
 
+import org.jclouds.azurecompute.arm.AzureComputeProviderMetadata;
 import org.jclouds.azurecompute.arm.domain.DnsSettings;
-import org.jclouds.azurecompute.arm.domain.PublicIPAddress;
-import org.jclouds.azurecompute.arm.domain.PublicIPAddressProperties;
+import org.jclouds.azurecompute.arm.domain.publicipaddress.PublicIPAddress;
+import org.jclouds.azurecompute.arm.domain.publicipaddress.PublicIPAddress.SKU;
+import org.jclouds.azurecompute.arm.domain.publicipaddress.PublicIPAddressProperties;
 import org.jclouds.azurecompute.arm.internal.BaseAzureComputeApiMockTest;
 import org.testng.annotations.Test;
 
@@ -35,12 +39,13 @@ import com.google.common.collect.ImmutableMap;
 import com.squareup.okhttp.mockwebserver.MockResponse;
 
 
-@Test(groups = "unit", testName = "NetworkInterfaceCardApiMockTest", singleThreaded = true)
+@Test(groups = "unit", testName = "PublicIPAddressApiMockTest", singleThreaded = true)
 public class PublicIPAddressApiMockTest extends BaseAzureComputeApiMockTest {
 
    private final String subscriptionid = "SUBSCRIPTIONID";
    private final String resourcegroup = "myresourcegroup";
-   private final String apiVersion = "api-version=2015-06-15";
+   private final String apiVersion = "api-version=" + AzureComputeProviderMetadata.defaultProperties()
+         .getProperty(API_VERSION_PREFIX + LoadBalancerApi.class.getSimpleName());
    private final String location = "northeurope";
    private final String publicIpName = "mypublicaddress";
 
@@ -68,6 +73,7 @@ public class PublicIPAddressApiMockTest extends BaseAzureComputeApiMockTest {
       assertEquals(ip.properties().dnsSettings().fqdn(), "foobar.northeurope.cloudapp.azure.com");
       assertNotNull(ip.properties().ipConfiguration());
       assertEquals(ip.properties().ipConfiguration().id(), "/subscriptions/fakeb2f5-4710-4e93-bdf4-419edbde2178/resourceGroups/myresourcegroup/providers/Microsoft.Network/networkInterfaces/myNic/ipConfigurations/myip1");
+      assertEquals(ip.sku().name(), Basic);
    }
 
    public void getPublicIPAddressInfoEmpty() throws Exception {
@@ -139,10 +145,12 @@ public class PublicIPAddressApiMockTest extends BaseAzureComputeApiMockTest {
       PublicIPAddressProperties properties = PublicIPAddressProperties.create(null, null, "Static", 4, null,
               DnsSettings.create("foobar", "foobar.northeurope.cloudapp.azure.com", null));
 
-      PublicIPAddress ip = ipApi.createOrUpdate(publicIpName, location, tags, properties);
+      PublicIPAddress ip = ipApi.createOrUpdate(publicIpName, location, tags, SKU.create(Basic), properties);
 
       String path = String.format("/subscriptions/%s/resourcegroups/%s/providers/Microsoft.Network/publicIPAddresses/%s?%s", subscriptionid, resourcegroup, publicIpName, apiVersion);
-      String json = String.format("{ \"location\": \"%s\", \"tags\": { \"testkey\": \"testvalue\" }, \"properties\": { \"publicIPAllocationMethod\": \"Static\", \"idleTimeoutInMinutes\": 4, \"dnsSettings\": { \"domainNameLabel\": \"foobar\", \"fqdn\": \"foobar.northeurope.cloudapp.azure.com\" } } }", location);
+      String json = String.format("{ \"location\": \"%s\", \"tags\": { \"testkey\": \"testvalue\" }, \"properties\": "
+            + "{ \"publicIPAllocationMethod\": \"Static\", \"idleTimeoutInMinutes\": 4, \"dnsSettings\": { "
+            + "\"domainNameLabel\": \"foobar\", \"fqdn\": \"foobar.northeurope.cloudapp.azure.com\" } }, \"sku\": {\"name\": \"Basic\" } }", location);
       assertSent(server, "PUT", path, json);
 
       assertNotNull(ip);
@@ -158,6 +166,7 @@ public class PublicIPAddressApiMockTest extends BaseAzureComputeApiMockTest {
       assertNotNull(ip.properties().dnsSettings());
       assertEquals(ip.properties().dnsSettings().domainNameLabel(), "foobar");
       assertEquals(ip.properties().dnsSettings().fqdn(), "foobar.northeurope.cloudapp.azure.com");
+      assertEquals(ip.sku().name(), Basic);
    }
 
    @Test(expectedExceptions = IllegalArgumentException.class)
@@ -172,7 +181,7 @@ public class PublicIPAddressApiMockTest extends BaseAzureComputeApiMockTest {
       PublicIPAddressProperties properties = PublicIPAddressProperties.create(null, null, "Static", 4, null,
               DnsSettings.create("foobar", "foobar.northeurope.cloudapp.azure.com", null));
 
-      ipApi.createOrUpdate(publicIpName, location, tags, properties);
+      ipApi.createOrUpdate(publicIpName, location, tags, null, properties);
    }
 
    public void deletePublicIPAddress() throws InterruptedException {

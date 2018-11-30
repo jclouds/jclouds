@@ -14,10 +14,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jclouds.azurecompute.arm.domain;
+package org.jclouds.azurecompute.arm.domain.loadbalancer;
 
 import java.util.Map;
 
+import org.jclouds.azurecompute.arm.util.GetEnumValue;
 import org.jclouds.javax.annotation.Nullable;
 import org.jclouds.json.SerializedNames;
 
@@ -34,10 +35,13 @@ public abstract class LoadBalancer {
    @Nullable public abstract Map<String, String> tags();
    @Nullable public abstract LoadBalancerProperties properties();
 
-   @SerializedNames({ "id", "name", "location", "etag", "tags", "properties", })
+   @Nullable
+   public abstract SKU sku();
+
+   @SerializedNames({ "id", "name", "location", "etag", "tags", "sku", "properties"})
    public static LoadBalancer create(String id, final String name, final String location, final String etag,
-         final Map<String, String> tags, final LoadBalancerProperties properties) {
-      return builder().id(id).name(name).location(location).etag(etag).tags(tags).properties(properties).build();
+         final Map<String, String> tags, final SKU sku, final LoadBalancerProperties properties) {
+      return builder().id(id).name(name).location(location).etag(etag).tags(tags).sku(sku).properties(properties).build();
    }
    
    public abstract Builder toBuilder();
@@ -54,6 +58,8 @@ public abstract class LoadBalancer {
       public abstract Builder etag(String etag);
       public abstract Builder tags(Map<String, String> tags);
       public abstract Builder properties(LoadBalancerProperties properties);
+
+      public abstract Builder sku(SKU sku);
       
       abstract Map<String, String> tags();
 
@@ -64,4 +70,25 @@ public abstract class LoadBalancer {
          return autoBuild();
       }
    }
+
+   @AutoValue
+   public abstract static class SKU {
+
+      public enum SKUName {
+         Basic, Standard, Unrecognized;
+
+         public static SKUName fromValue(final String text) {
+            return (SKUName) GetEnumValue.fromValueOrDefault(text, SKUName.Unrecognized);
+         }
+      }
+
+      public abstract SKUName name();
+
+      @SerializedNames({ "name" })
+      public static SKU create(final SKUName name) {
+
+         return new AutoValue_LoadBalancer_SKU(name);
+      }
+   }
+
 }

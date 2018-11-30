@@ -15,10 +15,11 @@
  * limitations under the License.
  */
 
-package org.jclouds.azurecompute.arm.domain;
+package org.jclouds.azurecompute.arm.domain.publicipaddress;
 
 import java.util.Map;
 
+import org.jclouds.azurecompute.arm.util.GetEnumValue;
 import org.jclouds.javax.annotation.Nullable;
 import org.jclouds.json.SerializedNames;
 
@@ -35,10 +36,13 @@ public abstract class PublicIPAddress {
    @Nullable public abstract Map<String, String> tags();
    public abstract PublicIPAddressProperties properties();
 
-   @SerializedNames({ "name", "id", "etag", "location", "tags", "properties" })
+   @Nullable
+   public abstract SKU sku();
+
+   @SerializedNames({ "name", "id", "etag", "location", "tags", "sku", "properties"})
    public static PublicIPAddress create(String name, String id, String etag, String location, Map<String, String> tags,
-         PublicIPAddressProperties properties) {
-      return builder().name(name).id(id).etag(etag).location(location).tags(tags).properties(properties).build();
+         SKU sku, PublicIPAddressProperties properties) {
+      return builder().name(name).id(id).etag(etag).location(location).tags(tags).sku(sku).properties(properties).build();
    }
    
    PublicIPAddress() {
@@ -59,6 +63,8 @@ public abstract class PublicIPAddress {
       public abstract Builder location(String location);
       public abstract Builder tags(Map<String, String> tags);
       public abstract Builder properties(PublicIPAddressProperties properties);
+
+      public abstract Builder sku(SKU sku);
       
       abstract Map<String, String> tags();
       abstract PublicIPAddress autoBuild();
@@ -66,6 +72,26 @@ public abstract class PublicIPAddress {
       public PublicIPAddress build() {
          tags(tags() != null ? ImmutableMap.copyOf(tags()) : null);
          return autoBuild();
+      }
+   }
+
+   @AutoValue
+   public abstract static class SKU {
+
+      public enum SKUName {
+         Basic, Standard, Unrecognized;
+
+         public static SKUName fromValue(final String text) {
+            return (SKUName) GetEnumValue.fromValueOrDefault(text, SKUName.Unrecognized);
+         }
+      }
+
+      public abstract SKUName name();
+
+      @SerializedNames({ "name" })
+      public static SKU create(final SKUName name) {
+
+         return new AutoValue_PublicIPAddress_SKU(name);
       }
    }
 }

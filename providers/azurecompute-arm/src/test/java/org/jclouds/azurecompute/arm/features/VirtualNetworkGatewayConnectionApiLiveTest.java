@@ -32,10 +32,10 @@ import org.jclouds.azurecompute.arm.domain.AddressSpace;
 import org.jclouds.azurecompute.arm.domain.IdReference;
 import org.jclouds.azurecompute.arm.domain.IpAllocationMethod;
 import org.jclouds.azurecompute.arm.domain.Provisionable;
-import org.jclouds.azurecompute.arm.domain.PublicIPAddress;
-import org.jclouds.azurecompute.arm.domain.PublicIPAddressProperties;
 import org.jclouds.azurecompute.arm.domain.Subnet;
 import org.jclouds.azurecompute.arm.domain.VirtualNetwork;
+import org.jclouds.azurecompute.arm.domain.publicipaddress.PublicIPAddress;
+import org.jclouds.azurecompute.arm.domain.publicipaddress.PublicIPAddressProperties;
 import org.jclouds.azurecompute.arm.domain.vpn.LocalNetworkGateway;
 import org.jclouds.azurecompute.arm.domain.vpn.LocalNetworkGatewayProperties;
 import org.jclouds.azurecompute.arm.domain.vpn.SKU;
@@ -98,7 +98,7 @@ public class VirtualNetworkGatewayConnectionApiLiveTest extends BaseAzureCompute
       PublicIPAddressProperties props = PublicIPAddressProperties.builder()
             .publicIPAllocationMethod(IpAllocationMethod.Dynamic.name()).idleTimeoutInMinutes(4).build();
       PublicIPAddress publicIp = api.getPublicIPAddressApi(resourceGroupName).createOrUpdate(name + "-publicip",
-            LOCATION, Collections.<String, String> emptyMap(), props);
+            LOCATION, Collections.<String, String> emptyMap(), null, props);
 
       IpConfigurationProperties ipprops = IpConfigurationProperties.builder(IpAllocationMethod.Dynamic)
             .subnet(IdReference.create(subnet.id())).publicIPAddress(IdReference.create(publicIp.id())).build();
