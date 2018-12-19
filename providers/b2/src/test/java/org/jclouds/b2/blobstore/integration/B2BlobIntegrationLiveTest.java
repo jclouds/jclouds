@@ -65,59 +65,9 @@ public final class B2BlobIntegrationLiveTest extends BaseBlobIntegrationTest {
    }
 
    @Override
-   public void testCopyBlobCopyMetadata() throws Exception {
-      try {
-         super.testCopyBlobCopyMetadata();
-         failBecauseExceptionWasNotThrown(IllegalArgumentException.class);
-      } catch (IllegalArgumentException iae) {
-         throw new SkipException("B2 does not support the Cache-Control header", iae);
-      }
-   }
-
-   @Override
    public void testCopyBlobReplaceMetadata() throws Exception {
       try {
          super.testCopyBlobReplaceMetadata();
-         failBecauseExceptionWasNotThrown(IllegalArgumentException.class);
-      } catch (IllegalArgumentException iae) {
-         throw new SkipException("B2 does not support the Cache-Control header", iae);
-      }
-   }
-
-   @Override
-   public void testCopyIfMatch() throws Exception {
-      try {
-         super.testCopyIfMatch();
-         failBecauseExceptionWasNotThrown(IllegalArgumentException.class);
-      } catch (IllegalArgumentException iae) {
-         throw new SkipException("B2 does not support the Cache-Control header", iae);
-      }
-   }
-
-   @Override
-   public void testCopyIfNoneMatch() throws Exception {
-      try {
-         super.testCopyIfNoneMatch();
-         failBecauseExceptionWasNotThrown(IllegalArgumentException.class);
-      } catch (IllegalArgumentException iae) {
-         throw new SkipException("B2 does not support the Cache-Control header", iae);
-      }
-   }
-
-   @Override
-   public void testCopyIfModifiedSince() throws Exception {
-      try {
-         super.testCopyIfModifiedSince();
-         failBecauseExceptionWasNotThrown(IllegalArgumentException.class);
-      } catch (IllegalArgumentException iae) {
-         throw new SkipException("B2 does not support the Cache-Control header", iae);
-      }
-   }
-
-   @Override
-   public void testCopyIfUnmodifiedSince() throws Exception {
-      try {
-         super.testCopyIfUnmodifiedSince();
          failBecauseExceptionWasNotThrown(IllegalArgumentException.class);
       } catch (IllegalArgumentException iae) {
          throw new SkipException("B2 does not support the Cache-Control header", iae);
