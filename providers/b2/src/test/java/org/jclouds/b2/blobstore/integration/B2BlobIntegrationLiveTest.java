@@ -244,36 +244,6 @@ public final class B2BlobIntegrationLiveTest extends BaseBlobIntegrationTest {
       }
    }
 
-   @Test(groups = { "integration", "live" })
-   public void testPutBlobTierStandardMultipart() throws Exception {
-      try {
-         super.testPutBlobTierStandardMultipart();
-         failBecauseExceptionWasNotThrown(IllegalArgumentException.class);
-      } catch (IllegalArgumentException iae) {
-         throw new SkipException("B2 requires at least two parts", iae);
-      }
-   }
-
-   @Test(groups = { "integration", "live" })
-   public void testPutBlobTierInfrequentMultipart() throws Exception {
-      try {
-         super.testPutBlobTierInfrequentMultipart();
-         failBecauseExceptionWasNotThrown(IllegalArgumentException.class);
-      } catch (IllegalArgumentException iae) {
-         throw new SkipException("B2 requires at least two parts", iae);
-      }
-   }
-
-   @Test(groups = { "integration", "live" })
-   public void testPutBlobTierArchiveMultipart() throws Exception {
-      try {
-         super.testPutBlobTierArchiveMultipart();
-         failBecauseExceptionWasNotThrown(IllegalArgumentException.class);
-      } catch (IllegalArgumentException iae) {
-         throw new SkipException("B2 requires at least two parts", iae);
-      }
-   }
-
    @Override
    protected void checkTier(BlobMetadata metadata, Tier expected) {
       // B2 maps all tiers to STANDARD

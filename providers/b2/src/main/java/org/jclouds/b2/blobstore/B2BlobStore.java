@@ -229,7 +229,9 @@ public final class B2BlobStore extends BaseBlobStore {
          throw new UnsupportedOperationException("B2 only supports private access blobs");
       }
 
-      if (options.isMultipart()) {
+      long contentLength = Preconditions.checkNotNull(blob.getMetadata().getContentMetadata().getContentLength(),
+            "must provide content-length to use multi-part upload");
+      if (options.isMultipart() && contentLength >= auth.get().recommendedPartSize()) {
          return putMultipartBlob(container, blob, options);
       } else {
          String name = blob.getMetadata().getName();
