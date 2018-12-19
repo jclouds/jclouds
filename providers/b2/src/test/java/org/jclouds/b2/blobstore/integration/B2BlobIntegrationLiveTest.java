@@ -126,12 +126,7 @@ public final class B2BlobIntegrationLiveTest extends BaseBlobIntegrationTest {
 
    @Override
    public void testPutObjectStream() throws InterruptedException, IOException, ExecutionException {
-      try {
-         super.testPutObjectStream();
-         failBecauseExceptionWasNotThrown(IllegalArgumentException.class);
-      } catch (IllegalArgumentException iae) {
-         throw new SkipException("B2 does not support the Cache-Control header", iae);
-      }
+      throw new SkipException("B2 requires a Content-Length");
    }
 
    @Override
