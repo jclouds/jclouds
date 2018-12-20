@@ -235,7 +235,7 @@ public class AzureComputeServiceAdapter implements ComputeServiceAdapter<Virtual
             filter(customImgs, new Predicate<org.jclouds.azurecompute.arm.domain.Image>() {
                @Override
                public boolean apply(org.jclouds.azurecompute.arm.domain.Image input) {
-                  return regionIds.get().contains(input.location());
+                  return regionIds.get().isEmpty() || regionIds.get().contains(input.location());
                }
             }), customImagetoVmImage));
    }
@@ -357,7 +357,7 @@ public class AzureComputeServiceAdapter implements ComputeServiceAdapter<Virtual
          nodes.addAll(filter(vms, new Predicate<VirtualMachine>() {
             @Override
             public boolean apply(VirtualMachine input) {
-               return regionIds.get().contains(input.location());
+               return regionIds.get().isEmpty() || regionIds.get().contains(input.location());
             }
          }));
       }
