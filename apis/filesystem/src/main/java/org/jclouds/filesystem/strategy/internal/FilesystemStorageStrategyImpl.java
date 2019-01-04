@@ -736,7 +736,11 @@ public class FilesystemStorageStrategyImpl implements LocalStorageStrategy {
       if (!exists && getDirectoryBlobSuffix(tokens[tokens.length - 1]) != null
               && file.isDirectory()) {
          UserDefinedFileAttributeView view = getUserDefinedFileAttributeView(file.toPath());
-         exists = view != null && view.list().contains(XATTR_CONTENT_MD5);
+         try {
+            exists = view != null && view.list().contains(XATTR_CONTENT_MD5);
+         } catch (IOException ioe) {
+            logger.debug("xattrs not supported on %s", file.toPath());
+         }
       }
       return exists;
    }
