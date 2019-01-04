@@ -679,7 +679,13 @@ public class BaseBlobIntegrationTest extends BaseBlobStoreIntegrationTest {
 
    @Test(groups = { "integration", "live" })
    public void testPutMultipartInputStream() throws Exception {
-      long length = getMinimumMultipartBlobSize();
+      long length = Math.max(getMinimumMultipartBlobSize(), MultipartUploadSlicingAlgorithm.DEFAULT_PART_SIZE + 1);
+      BlobStore blobStore = view.getBlobStore();
+      MultipartUploadSlicingAlgorithm algorithm = new MultipartUploadSlicingAlgorithm(
+              blobStore.getMinimumMultipartPartSize(), blobStore.getMaximumMultipartPartSize(),
+              blobStore.getMaximumNumberOfParts());
+      // make sure that we are creating multiple parts
+      assertThat(algorithm.calculateChunkSize(length)).isLessThan(length);
       ByteSource byteSource = TestUtils.randomByteSource().slice(0, length);
       Payload payload = new InputStreamPayload(byteSource.openStream());
       testPut(payload, null, new ByteSourcePayload(byteSource), length, new PutOptions().multipart(true));
