@@ -79,9 +79,9 @@
   </mailingLists>
 
   <scm>
-    <connection>scm:git:https://git-wip-us.apache.org/repos/asf/jclouds.git</connection>
-    <developerConnection>scm:git:https://git-wip-us.apache.org/repos/asf/jclouds.git</developerConnection>
-    <url>https://git-wip-us.apache.org/repos/asf?p=jclouds.git</url>
+    <connection>scm:git:https://gitbox.apache.org/repos/asf/jclouds.git</connection>
+    <developerConnection>scm:git:https://gitbox.apache.org/repos/asf/jclouds.git</developerConnection>
+    <url>https://gitbox.apache.org/repos/asf?p=jclouds.git</url>
     <tag>HEAD</tag>
   </scm>
 
