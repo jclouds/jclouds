@@ -234,7 +234,7 @@ public final class LocalBlobStore implements BlobStore {
       // Loading blobs from container
       Iterable<String> blobBelongingToContainer = null;
       try {
-         blobBelongingToContainer = storageStrategy.getBlobKeysInsideContainer(containerName);
+         blobBelongingToContainer = storageStrategy.getBlobKeysInsideContainer(containerName, options.getPrefix());
       } catch (IOException e) {
          logger.error(e, "An error occurred loading blobs contained into container %s", containerName);
          propagate(e);
@@ -410,7 +410,7 @@ public final class LocalBlobStore implements BlobStore {
       boolean returnVal = true;
       if (storageStrategy.containerExists(containerName)) {
          try {
-            if (Iterables.isEmpty(storageStrategy.getBlobKeysInsideContainer(containerName)))
+            if (Iterables.isEmpty(storageStrategy.getBlobKeysInsideContainer(containerName, null)))
                storageStrategy.deleteContainer(containerName);
             else
                returnVal = false;

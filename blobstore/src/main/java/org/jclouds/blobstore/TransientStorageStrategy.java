@@ -25,6 +25,7 @@ import java.util.Date;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
+import java.util.concurrent.ConcurrentSkipListMap;
 
 import javax.inject.Inject;
 
@@ -59,7 +60,7 @@ import com.google.common.io.ByteStreams;
 import com.google.common.net.HttpHeaders;
 
 public class TransientStorageStrategy implements LocalStorageStrategy {
-   private final ConcurrentMap<String, ConcurrentMap<String, Blob>> containerToBlobs = new ConcurrentHashMap<String, ConcurrentMap<String, Blob>>();
+   private final ConcurrentMap<String, ConcurrentSkipListMap<String, Blob>> containerToBlobs = new ConcurrentHashMap<String, ConcurrentSkipListMap<String, Blob>>();
    private final ConcurrentMap<String, ConcurrentMap<String, BlobAccess>> containerToBlobAccess = new ConcurrentHashMap<String, ConcurrentMap<String, BlobAccess>>();
    private final ConcurrentMap<String, StorageMetadata> containerMetadata = new ConcurrentHashMap<String, StorageMetadata>();
    private final ConcurrentMap<String, ContainerAccess> containerAccessMap = new ConcurrentHashMap<String, ContainerAccess>();
@@ -90,7 +91,7 @@ public class TransientStorageStrategy implements LocalStorageStrategy {
    @Override
    public boolean createContainerInLocation(String containerName, Location location, CreateContainerOptions options) {
       ConcurrentMap<String, Blob> origValue = containerToBlobs.putIfAbsent(
-            containerName, new ConcurrentHashMap<String, Blob>());
+            containerName, new ConcurrentSkipListMap<String, Blob>());
       if (origValue != null) {
          return false;
       }
@@ -148,8 +149,13 @@ public class TransientStorageStrategy implements LocalStorageStrategy {
    }
 
    @Override
-   public Iterable<String> getBlobKeysInsideContainer(final String containerName) {
-      return containerToBlobs.get(containerName).keySet();
+   public Iterable<String> getBlobKeysInsideContainer(final String containerName, String prefix) {
+      ConcurrentSkipListMap<String, Blob> blobs = containerToBlobs.get(containerName);
+      if (prefix == null) {
+         return blobs.keySet();
+      }
+      String lastPrefix = prefix + (char) 65535;  // TODO: better sentinel?
+      return blobs.subMap(prefix, /*fromInclusive=*/ true, lastPrefix, /*toInclusive=*/ false).keySet();
    }
 
    @Override
