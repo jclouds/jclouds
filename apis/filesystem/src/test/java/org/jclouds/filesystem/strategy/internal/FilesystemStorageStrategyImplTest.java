@@ -427,7 +427,7 @@ public class FilesystemStorageStrategyImplTest {
       Blob blob = storageStrategy.newBlob(blobKey);
       storageStrategy.putBlob(CONTAINER_NAME, blob);
 
-      Iterable<String> keys = storageStrategy.getBlobKeysInsideContainer(CONTAINER_NAME);
+      Iterable<String> keys = storageStrategy.getBlobKeysInsideContainer(CONTAINER_NAME, null);
       Iterator<String> iter = keys.iterator();
       assertTrue(iter.hasNext());
       assertEquals(iter.next(), blobKey);
@@ -598,7 +598,7 @@ public class FilesystemStorageStrategyImplTest {
       Iterable<String> resultList;
 
       // no container
-      resultList = storageStrategy.getBlobKeysInsideContainer(CONTAINER_NAME);
+      resultList = storageStrategy.getBlobKeysInsideContainer(CONTAINER_NAME, null);
       assertNotNull(resultList, "Result is null");
       assertFalse(resultList.iterator().hasNext(), "Blobs detected");
 
@@ -609,10 +609,10 @@ public class FilesystemStorageStrategyImplTest {
                TestUtils.createRandomBlobKey("GetBlobKeys-", ".jpg"),
                TestUtils.createRandomBlobKey("563" + "/" + "g3sx2" + "/" + "removeBlob-", ".jpg"),
                TestUtils.createRandomBlobKey("563" + "/" + "g3sx2" + "/" + "removeBlob-", ".jpg") });
-      storageStrategy.getBlobKeysInsideContainer(CONTAINER_NAME);
+      storageStrategy.getBlobKeysInsideContainer(CONTAINER_NAME, null);
 
       List<String> retrievedBlobKeys = Lists.newArrayList();
-      resultList = storageStrategy.getBlobKeysInsideContainer(CONTAINER_NAME);
+      resultList = storageStrategy.getBlobKeysInsideContainer(CONTAINER_NAME, null);
       Iterator<String> containersIterator = resultList.iterator();
       while (containersIterator.hasNext()) {
          retrievedBlobKeys.add(containersIterator.next());

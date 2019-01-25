@@ -342,7 +342,7 @@ public class FilesystemStorageStrategyImpl implements LocalStorageStrategy {
     * @throws IOException
     */
    @Override
-   public Iterable<String> getBlobKeysInsideContainer(String container) throws IOException {
+   public Iterable<String> getBlobKeysInsideContainer(String container, String prefix) throws IOException {
       filesystemContainerNameValidator.validate(container);
       // check if container exists
       // TODO maybe an error is more appropriate
@@ -353,7 +353,7 @@ public class FilesystemStorageStrategyImpl implements LocalStorageStrategy {
 
       File containerFile = openFolder(container);
       final int containerPathLength = containerFile.getAbsolutePath().length() + 1;
-      populateBlobKeysInContainer(containerFile, blobNames, new Function<String, String>() {
+      populateBlobKeysInContainer(containerFile, blobNames, prefix, new Function<String, String>() {
          @Override
          public String apply(String string) {
             return denormalize(string.substring(containerPathLength));
@@ -753,7 +753,7 @@ public class FilesystemStorageStrategyImpl implements LocalStorageStrategy {
    public long countBlobs(String container, ListContainerOptions options) {
       // TODO: honor options
       try {
-         return Iterables.size(getBlobKeysInsideContainer(container));
+         return Iterables.size(getBlobKeysInsideContainer(container, null));
       } catch (IOException ioe) {
          throw Throwables.propagate(ioe);
       }
@@ -964,17 +964,27 @@ public class FilesystemStorageStrategyImpl implements LocalStorageStrategy {
    }
 
    private static void populateBlobKeysInContainer(File directory, Set<String> blobNames,
-         Function<String, String> function) {
+         String prefix, Function<String, String> function) {
       File[] children = directory.listFiles();
       if (children == null) {
          return;
       }
       for (File child : children) {
+         String fullPath = function.apply(child.getAbsolutePath());
          if (child.isFile()) {
-            blobNames.add( function.apply(child.getAbsolutePath()) );
+            if (prefix != null && !fullPath.startsWith(prefix)) {
+               continue;
+            }
+            blobNames.add(fullPath);
          } else if (child.isDirectory()) {
-            blobNames.add(function.apply(child.getAbsolutePath()) + File.separator); // TODO: undo if failures
-            populateBlobKeysInContainer(child, blobNames, function);
+            // Consider a prefix /a/b/c but we have only descended to path /a.
+            // We need to match the path against the prefix to continue
+            // matching down to /a/b.
+            if (prefix != null && !fullPath.startsWith(prefix) && !prefix.startsWith(fullPath + "/")) {
+               continue;
+            }
+            blobNames.add(fullPath + File.separator); // TODO: undo if failures
+            populateBlobKeysInContainer(child, blobNames, prefix, function);
          }
       }
    }

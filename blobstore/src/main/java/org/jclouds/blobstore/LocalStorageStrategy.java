@@ -98,7 +98,7 @@ public interface LocalStorageStrategy {
      * @return
      * @throws IOException
      */
-    Iterable<String> getBlobKeysInsideContainer(String container) throws IOException;
+    Iterable<String> getBlobKeysInsideContainer(String container, String prefix) throws IOException;
 
     /**
      * Load the blob with the given key belonging to the container with the given
