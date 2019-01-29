@@ -28,12 +28,14 @@ import static com.google.common.collect.Sets.newTreeSet;
 import static org.jclouds.blobstore.options.ListContainerOptions.Builder.recursive;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.SequenceInputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -756,7 +758,14 @@ public final class LocalBlobStore implements BlobStore {
       // return InputStream to more closely follow real blobstore
       Payload payload;
       try {
-         payload = new InputStreamPayload(blob.getPayload().openStream());
+         InputStream is = blob.getPayload().openStream();
+         if (is instanceof FileInputStream) {
+            // except for FileInputStream since large MPU can open too many fds
+            is.close();
+            payload = blob.getPayload();
+         } else {
+            payload = new InputStreamPayload(blob.getPayload().openStream());
+         }
       } catch (IOException ioe) {
          throw new RuntimeException(ioe);
       }
@@ -825,20 +834,14 @@ public final class LocalBlobStore implements BlobStore {
 
    @Override
    public String completeMultipartUpload(MultipartUpload mpu, List<MultipartPart> parts) {
-      ImmutableList.Builder<InputStream> streams = ImmutableList.builder();
+      ImmutableList.Builder<Blob> blobs = ImmutableList.builder();
       long contentLength = 0;
       Hasher md5Hasher = Hashing.md5().newHasher();
 
       for (MultipartPart part : parts) {
          Blob blobPart = getBlob(mpu.containerName(), MULTIPART_PREFIX + mpu.id() + "-" + mpu.blobName() + "-" + part.partNumber());
          contentLength += blobPart.getMetadata().getContentMetadata().getContentLength();
-         InputStream is;
-         try {
-            is = blobPart.getPayload().openStream();
-         } catch (IOException ioe) {
-            throw propagate(ioe);
-         }
-         streams.add(is);
+         blobs.add(blobPart);
          md5Hasher.putBytes(BaseEncoding.base16().lowerCase().decode(blobPart.getMetadata().getETag()));
       }
       String mpuETag = new StringBuilder("\"")
@@ -849,7 +852,7 @@ public final class LocalBlobStore implements BlobStore {
          .toString();
       PayloadBlobBuilder blobBuilder = blobBuilder(mpu.blobName())
             .userMetadata(mpu.blobMetadata().getUserMetadata())
-            .payload(new SequenceInputStream(Iterators.asEnumeration(streams.build().iterator())))
+            .payload(new MultiBlobInputStream(blobs.build()))
             .contentLength(contentLength)
             .eTag(mpuETag);
       String cacheControl = mpu.blobMetadata().getContentMetadata().getCacheControl();
@@ -998,5 +1001,41 @@ public final class LocalBlobStore implements BlobStore {
       return eTag;
    }
 
+   private static final class MultiBlobInputStream extends InputStream {
+      private final Iterator<Blob> blobs;
+      private InputStream current;
 
+      MultiBlobInputStream(List<Blob> blobs) {
+         this.blobs = blobs.iterator();
+      }
+
+      @Override
+      public int read() throws IOException {
+         byte[] b = new byte[1];
+         int result = read(b, 0, b.length);
+         if (result == -1) {
+            return -1;
+         }
+         return b[0] & 0x000000FF;
+      }
+
+      @Override
+      public int read(byte[] b, int off, int len) throws IOException {
+         while (true) {
+            if (current == null) {
+               if (!blobs.hasNext()) {
+                  return -1;
+               }
+               current = blobs.next().getPayload().openStream();
+            }
+            int result = current.read(b, off, len);
+            if (result == -1) {
+               current.close();
+               current = null;
+               continue;
+            }
+            return result;
+         }
+      }
+   }
 }

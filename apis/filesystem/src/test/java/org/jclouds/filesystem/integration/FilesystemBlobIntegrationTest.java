@@ -164,6 +164,34 @@ public class FilesystemBlobIntegrationTest extends BaseBlobIntegrationTest {
       }
    }
 
+   @Test(groups = { "integration", "live" })
+   public void test10000PartMultipartUpload() throws Exception {
+      BlobStore blobStore = view.getBlobStore();
+      String container = getContainerName();
+      int partSize = (int) blobStore.getMinimumMultipartPartSize();
+      try {
+         String name = "blob-name";
+         BlobBuilder blobBuilder = blobStore.blobBuilder(name);
+         Blob blob = blobBuilder.build();
+         MultipartUpload mpu = blobStore.initiateMultipartUpload(container, blob.getMetadata(), new PutOptions());
+         ImmutableList.Builder<MultipartPart> parts = ImmutableList.builder();
+         byte[] content = new byte[partSize];
+
+         for (int i = 0; i < 10 * 1000; ++i) {
+            Payload payload = Payloads.newByteArrayPayload(content);
+            payload.getContentMetadata().setContentLength((long) partSize);
+            parts.add(blobStore.uploadMultipartPart(mpu, i, payload));
+         }
+
+         blobStore.completeMultipartUpload(mpu, parts.build());
+
+         BlobMetadata newBlobMetadata = blobStore.blobMetadata(container, name);
+         assertThat(newBlobMetadata.getSize()).isEqualTo(10 * 1000 * partSize);
+      } finally {
+         returnContainer(container);
+      }
+   }
+
    protected void checkExtendedAttributesSupport() {
       if (isMacOSX()) {
          throw new SkipException("filesystem does not support extended attributes in Mac OSX");
