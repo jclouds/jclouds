@@ -29,6 +29,8 @@ import com.google.common.base.Optional;
 import com.google.common.base.Predicate;
 import com.google.common.collect.Maps;
 
+import org.gaul.modernizer_maven_annotations.SuppressModernizer;
+
 /**
  * Resolves the values of the properties so they can be inferred from other
  * properties.
@@ -82,6 +84,7 @@ public class ExpandProperties implements Function<Properties, Properties> {
       });
    }
 
+   @SuppressModernizer  // for Matcher.appendReplacement(StringBuffer, String)
    private boolean resolveProperties(Map<String, String> properties, Map<String, String> variables) {
       boolean anyReplacementDone = false;
       for (Map.Entry<String, String> entry : properties.entrySet()) {

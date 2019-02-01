@@ -22,6 +22,7 @@ import java.util.Dictionary;
 import java.util.Enumeration;
 import java.util.Hashtable;
 
+import org.gaul.modernizer_maven_annotations.SuppressModernizer;
 import org.jclouds.scriptbuilder.domain.OsFamily;
 import org.jclouds.scriptbuilder.domain.ShellToken;
 import org.jclouds.scriptbuilder.functionloader.FunctionLoader;
@@ -98,6 +99,7 @@ public class BundleFunctionLoader implements FunctionLoader {
       }
    }
 
+   @SuppressModernizer  // for BundleContext.registerService(String, Object, Dictionary)
    private void registerFunction(String functions) {
       String[] className = { FunctionLoader.class.getName() };
       Dictionary<String, Object> dictionary = new Hashtable<String, Object>(1);
