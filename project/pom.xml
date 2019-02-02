@@ -1119,6 +1119,7 @@
             <links>
               <link>http://download.oracle.com/javase/6/docs/api/</link>
             </links>
+            <additionalJOption>-Xdoclint:none</additionalJOption>
           </configuration>
         </plugin>
       </plugins>
