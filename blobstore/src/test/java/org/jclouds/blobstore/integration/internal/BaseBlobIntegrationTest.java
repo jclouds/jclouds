@@ -1290,6 +1290,33 @@ public class BaseBlobIntegrationTest extends BaseBlobStoreIntegrationTest {
 
          blobStore.abortMultipartUpload(mpu);
 
+         assertThat(blobStore.list(container)).isEmpty();
+
+         blob = blobStore.getBlob(container, name);
+         assertThat(blob).isNull();
+      } finally {
+         returnContainer(container);
+      }
+   }
+
+   @Test(groups = { "integration", "live" })
+   public void testMultipartUploadOnePartAbort() throws Exception {
+      BlobStore blobStore = view.getBlobStore();
+      String container = getContainerName();
+      try {
+         String name = "blob-name";
+         Blob blob = blobStore.blobBuilder(name).build();
+         MultipartUpload mpu = blobStore.initiateMultipartUpload(container, blob.getMetadata(), new PutOptions());
+
+         ByteSource byteSource = TestUtils.randomByteSource().slice(0, 1);
+         Payload payload = Payloads.newByteSourcePayload(byteSource);
+         payload.getContentMetadata().setContentLength(byteSource.size());
+         MultipartPart part = blobStore.uploadMultipartPart(mpu, 1, payload);
+
+         blobStore.abortMultipartUpload(mpu);
+
+         assertThat(blobStore.list(container)).isEmpty();
+
          blob = blobStore.getBlob(container, name);
          assertThat(blob).isNull();
       } finally {
