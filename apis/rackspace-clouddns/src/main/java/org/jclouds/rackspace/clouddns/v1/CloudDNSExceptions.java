@@ -23,7 +23,11 @@ import org.jclouds.rackspace.clouddns.v1.domain.Job;
 /**
  * Exceptions likely to be encountered when using {@link CloudDNSApi}
  */
-public interface CloudDNSExceptions {
+public final class CloudDNSExceptions {
+   private CloudDNSExceptions() {
+      throw new AssertionError("intentionally not implemented");
+   }
+
    /**
     * A Job errored out.
     */

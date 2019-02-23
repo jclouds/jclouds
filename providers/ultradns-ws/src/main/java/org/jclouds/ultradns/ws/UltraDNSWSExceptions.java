@@ -19,7 +19,10 @@ package org.jclouds.ultradns.ws;
 /**
  * Exceptions likely to be encountered when using {@link UltraDNSWSApi}
  */
-public interface UltraDNSWSExceptions {
+public final class UltraDNSWSExceptions {
+   private UltraDNSWSExceptions() {
+      throw new AssertionError("intentionally not implemented");
+   }
 
    /**
     * The Zone or other resource already exists

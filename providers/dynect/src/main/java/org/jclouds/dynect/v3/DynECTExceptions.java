@@ -19,7 +19,11 @@ package org.jclouds.dynect.v3;
 /**
  * Exceptions likely to be encountered when using {@link DynECTApi}
  */
-public interface DynECTExceptions {
+public final class DynECTExceptions {
+   private DynECTExceptions() {
+      throw new AssertionError("intentionally not implemented");
+   }
+
    /**
     * You must wait until another job is finished before attempting this command
     * again
