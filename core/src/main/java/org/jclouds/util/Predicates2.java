@@ -176,7 +176,7 @@ public class Predicates2 {
        */
       @Deprecated
       protected boolean before(Date end) {
-         return new Date().compareTo(end) <= 1;
+         return new Date().compareTo(end) < 0;
       }
 
       /**
