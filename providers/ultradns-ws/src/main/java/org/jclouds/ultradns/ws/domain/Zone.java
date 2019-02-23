@@ -44,7 +44,7 @@ public final class Zone {
       this.accountId = checkNotNull(accountId, "accountId for %s", name);
       this.ownerId = checkNotNull(ownerId, "ownerId for %s", name);
       this.dnssecStatus = checkNotNull(dnssecStatus, "dnssecStatus for %s", name);
-      this.primarySrc = checkNotNull(primarySrc, "primarySrc for %s", primarySrc);
+      this.primarySrc = checkNotNull(primarySrc, "primarySrc for %s", name);
    }
 
    /**

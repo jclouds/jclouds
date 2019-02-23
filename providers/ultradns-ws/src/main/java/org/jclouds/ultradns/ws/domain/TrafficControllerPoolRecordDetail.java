@@ -48,7 +48,7 @@ public final class TrafficControllerPoolRecordDetail {
       this.probingEnabled = probingEnabled;
       this.status = checkNotNull(status, "status for %s", poolId);
       this.serving = serving;
-      this.description = checkNotNull(description, "description for %s", description);
+      this.description = checkNotNull(description, "description for %s", poolId);
    }
 
    /**

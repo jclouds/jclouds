@@ -91,7 +91,7 @@ public final class Zone {
       this.fqdn = checkNotNull(fqdn, "fqdn");
       this.type = checkNotNull(type, "type for %s", fqdn);
       this.serial = serial;
-      this.serialStyle = checkNotNull(serialStyle, "serialStyle for %s", serialStyle);
+      this.serialStyle = checkNotNull(serialStyle, "serialStyle for %s", fqdn);
    }
 
    /**

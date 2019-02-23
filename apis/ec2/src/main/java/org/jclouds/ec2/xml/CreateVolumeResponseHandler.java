@@ -186,7 +186,7 @@ public class CreateVolumeResponseHandler extends ParseSax.HandlerForGeneratedReq
                }
 
             }
-            checkNotNull(regionToZones, "zone %s not in %s", zone, regionToZones);
+            checkNotNull(region, "zone %s not in %s", zone, regionToZones);
          } else {
             region = defaultRegion.get();
          }

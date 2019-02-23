@@ -54,7 +54,7 @@ public class WireLiveTest {
          InputStream in = wire.input(fromServer);
          byte[] compare = md5().hashBytes(ByteStreams.toByteArray(in)).asBytes();
          Thread.sleep(100);
-         assertEquals(base16().lowerCase().encode(compare), checkNotNull(sysHttpStreamMd5, sysHttpStreamMd5));
+         assertEquals(base16().lowerCase().encode(compare), checkNotNull(sysHttpStreamMd5, "sysHttpStreamMd5"));
          assertEquals(((BufferLogger) wire.getWireLog()).buff.toString().getBytes().length, 3331484);
          return null;
       }
@@ -134,7 +134,7 @@ public class WireLiveTest {
          InputStream in = wire.input(connection.getInputStream());
          byte[] compare = ByteStreams2.hashAndClose(in, md5()).asBytes();
          Thread.sleep(100);
-         assertEquals(base16().lowerCase().encode(compare), checkNotNull(sysHttpStreamMd5, sysHttpStreamMd5));
+         assertEquals(base16().lowerCase().encode(compare), checkNotNull(sysHttpStreamMd5, "sysHttpStreamMd5"));
          assertEquals(((BufferLogger) wire.getWireLog()).buff.toString().getBytes().length, 3331484);
       } catch (UnknownHostException e) {
          // probably in offline mode
@@ -159,7 +159,7 @@ public class WireLiveTest {
          InputStream in = wire.input(connection.getInputStream());
          byte[] compare = ByteStreams2.hashAndClose(in, md5()).asBytes();
          Thread.sleep(100);
-         assertEquals(base16().lowerCase().encode(compare), checkNotNull(sysHttpStreamMd5, sysHttpStreamMd5));
+         assertEquals(base16().lowerCase().encode(compare), checkNotNull(sysHttpStreamMd5, "sysHttpStreamMd5"));
          assertEquals(((BufferLogger) wire.getWireLog()).buff.toString().getBytes().length, 3331484);
       } catch (UnknownHostException e) {
          // probably in offline mode

@@ -41,7 +41,7 @@ public final class CreatePrimaryZone {
       this.fqdn = checkNotNull(fqdn, "fqdn");
       this.contact = checkNotNull(contact, "contact for %s", fqdn);
       this.defaultTTL = defaultTTL;
-      this.serialStyle = checkNotNull(serialStyle, "serialStyle for %s", serialStyle);
+      this.serialStyle = checkNotNull(serialStyle, "serialStyle for %s", fqdn);
    }
 
    /**

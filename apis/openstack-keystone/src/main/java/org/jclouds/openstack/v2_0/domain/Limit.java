@@ -42,7 +42,7 @@ public final class Limit {
    @ConstructorProperties({ "verb", "unit", "value", "remaining", "next-available" })
    private Limit(String verb, String unit, int value, @Nullable Integer remaining, @Nullable Date nextAvailable) {
       this.verb = checkNotNull(verb, "verb");
-      this.unit = checkNotNull(unit, "unit", unit);
+      this.unit = checkNotNull(unit, "unit");
       this.value = value;
       this.remaining = Optional.fromNullable(remaining);
       this.nextAvailable = Optional.fromNullable(nextAvailable);

@@ -183,7 +183,7 @@ public class ResourceRecordSet {
       this.ttl = checkNotNull(ttl, "ttl for %s", name);
       checkArgument(ttl.or(0) >= 0, "ttl of %s must be unsigned", name);
       this.values = checkNotNull(values, "values for %s", name);
-      this.aliasTarget = checkNotNull(aliasTarget, "aliasTarget for %s", aliasTarget);
+      this.aliasTarget = checkNotNull(aliasTarget, "aliasTarget for %s", name);
    }
 
    /**
