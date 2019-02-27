@@ -21,10 +21,13 @@ import static com.google.common.io.ByteStreams.readBytes;
 import static org.jclouds.crypto.Macs.asByteProcessor;
 import static org.jclouds.util.Patterns.NEWLINE_PATTERN;
 import static org.jclouds.util.Strings2.toInputStream;
+import org.jclouds.http.Uris.UriBuilder;
 
 import java.util.Collection;
 import java.util.Map;
 import java.util.Map.Entry;
+import org.jclouds.http.Uris;
+import java.net.URI;
 
 import javax.annotation.Resource;
 import javax.inject.Inject;
@@ -67,12 +70,15 @@ import com.google.common.net.HttpHeaders;
 @Singleton
 public class SharedKeyLiteAuthentication implements HttpRequestFilter {
    private static final Collection<String> FIRST_HEADERS_TO_SIGN = ImmutableList.of(HttpHeaders.DATE);
-
    private final SignatureWire signatureWire;
    private final Supplier<Credentials> creds;
    private final Provider<String> timeStampProvider;
    private final Crypto crypto;
+   private final String credential;
+   private final String identity;
    private final HttpUtils utils;
+   private final URI storageUrl;
+   private final boolean isSAS;
 
    @Resource
    @Named(Constants.LOGGER_SIGNATURE)
@@ -81,25 +87,71 @@ public class SharedKeyLiteAuthentication implements HttpRequestFilter {
    @Inject
    public SharedKeyLiteAuthentication(SignatureWire signatureWire,
          @org.jclouds.location.Provider Supplier<Credentials> creds, @TimeStamp Provider<String> timeStampProvider,
-         Crypto crypto, HttpUtils utils) {
+         Crypto crypto, HttpUtils utils, @Named("sasAuth") boolean sasAuthentication) {
       this.crypto = crypto;
       this.utils = utils;
       this.signatureWire = signatureWire;
+      this.storageUrl = URI.create("https://" + creds.get().identity + ".blob.core.windows.net/");
       this.creds = creds;
+      this.identity = creds.get().identity;
+      this.credential = creds.get().credential;
       this.timeStampProvider = timeStampProvider;
+      this.isSAS = sasAuthentication;
    }
-
+   
+   /** 
+    * this is an updated filter method, which decides whether the SAS or SharedKeyLite 
+    * is used and applies the right filtering.  
+    */
    public HttpRequest filter(HttpRequest request) throws HttpException {
-      request = replaceDateHeader(request);
-      String signature = calculateSignature(createStringToSign(request));
-      request = replaceAuthorizationHeader(request, signature);
+      request = this.isSAS ? filterSAS(request, this.credential) : filterKey(request);
       utils.logRequest(signatureLog, request, "<<");
       return request;
    }
-
+   
+   /** 
+    * this filter method is applied only for the cases with SAS Authentication. 
+    */
+   public HttpRequest filterSAS(HttpRequest request, String credential) throws HttpException, IllegalArgumentException {
+      URI requestUri = request.getEndpoint();
+      String formattedCredential = credential.startsWith("?") ? credential.substring(1) : credential;
+      String initialQuery = requestUri.getQuery();
+      String finalQuery = initialQuery == null ? formattedCredential : initialQuery + "&" + formattedCredential;
+      String[] parametersArray = cutUri(requestUri); 
+      String containerName = parametersArray[1]; 
+      UriBuilder endpoint = Uris.uriBuilder(storageUrl).appendPath(containerName);
+      if (parametersArray.length == 3) {
+         endpoint.appendPath(parametersArray[2]).query(finalQuery);
+      } else {
+         endpoint.query("restype=container&" + finalQuery);
+      }
+      return removeAuthorizationHeader(
+         replaceDateHeader(request.toBuilder()
+            .endpoint(endpoint.build())
+            .build()));
+   }
+   
+   /**
+    * this is a 'standard' filter method, applied when SharedKeyLite authentication is used. 
+    */
+   public HttpRequest filterKey(HttpRequest request) throws HttpException {
+      request = replaceDateHeader(request);
+      String signature = calculateSignature(createStringToSign(request));
+      return replaceAuthorizationHeader(request, signature);
+   }
+   
    HttpRequest replaceAuthorizationHeader(HttpRequest request, String signature) {
       return request.toBuilder()
             .replaceHeader(HttpHeaders.AUTHORIZATION, "SharedKeyLite " + creds.get().identity + ":" + signature)
+            .build();
+   }
+   
+   /**
+    * this method removes Authorisation header, since it is not needed for SAS Authentication 
+    */
+   HttpRequest removeAuthorizationHeader(HttpRequest request) {
+      return request.toBuilder()
+            .removeHeader(HttpHeaders.AUTHORIZATION)
             .build();
    }
 
@@ -110,6 +162,18 @@ public class SharedKeyLiteAuthentication implements HttpRequestFilter {
       request = request.toBuilder().replaceHeaders(Multimaps.forMap(builder.build())).build();
       return request;
    }
+   
+   /**
+    * this is the method to parse container name and blob name from the HttpRequest. 
+    */ 
+   public String[] cutUri(URI uri) throws IllegalArgumentException {
+      String path = uri.getPath();
+      String[] result = path.split("/");
+      if (result.length < 2) {
+         throw new IllegalArgumentException("there is neither ContainerName nor BlobName in the URI path");
+      }
+      return result;
+   } 
 
    public String createStringToSign(HttpRequest request) {
       utils.logRequest(signatureLog, request, ">>");
