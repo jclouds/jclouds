@@ -18,7 +18,15 @@ package org.jclouds.azureblob.config;
 
 import static org.jclouds.Constants.PROPERTY_SESSION_INTERVAL;
 
+import static com.google.common.base.Predicates.in;
+
+import static com.google.common.collect.Iterables.all;
+import com.google.common.base.Splitter;
+import com.google.common.collect.ImmutableList;
+
 import java.util.concurrent.TimeUnit;
+import java.util.Map;
+import java.util.List;
 
 import javax.inject.Named;
 
@@ -36,6 +44,7 @@ import org.jclouds.json.config.GsonModule.DateAdapter;
 import org.jclouds.json.config.GsonModule.Iso8601DateAdapter;
 import org.jclouds.rest.ConfiguresHttpApi;
 import org.jclouds.rest.config.HttpApiModule;
+import org.jclouds.domain.Credentials;
 
 import com.google.common.base.Supplier;
 import com.google.common.base.Suppliers;
@@ -62,6 +71,23 @@ public class AzureBlobHttpApiModule extends HttpApiModule<AzureBlobClient> {
 
    protected String provideTimeStamp(@TimeStamp Supplier<String> cache) {
       return cache.get();
+   }
+   
+   /** 
+    * checks which Authentication type is used 
+    */
+   @Named("sasAuth")
+   @Provides 
+   protected boolean authSAS(@org.jclouds.location.Provider Supplier<Credentials> creds) {
+      String credential = creds.get().credential;
+      String formattedCredential = credential.startsWith("?") ? credential.substring(1) : credential;
+      List<String> required = ImmutableList.of("sv", "se", "sig", "sp"); 
+      try {
+         Map<String, String> tokens = Splitter.on('&').withKeyValueSeparator('=').split(formattedCredential);
+         return all(required, in(tokens.keySet()));
+      } catch (Exception ex) {
+         return false;
+      }
    }
 
    /**

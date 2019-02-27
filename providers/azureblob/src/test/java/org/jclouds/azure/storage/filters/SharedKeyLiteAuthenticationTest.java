@@ -42,6 +42,8 @@ public class SharedKeyLiteAuthenticationTest {
    private static final String ACCOUNT = "foo";
    private Injector injector;
    private SharedKeyLiteAuthentication filter;
+   private SharedKeyLiteAuthentication filterSAS;
+   private SharedKeyLiteAuthentication filterSASQuestionMark;
 
    @DataProvider(parallel = true)
    public Object[][] dataProvider() {
@@ -51,6 +53,19 @@ public class SharedKeyLiteAuthenticationTest {
             { HttpRequest.builder().method(HttpMethod.PUT).endpoint("http://" + ACCOUNT
                   + ".blob.core.windows.net/movies/MOV1.avi?comp=blocklist&timeout=120").build() },
             { HttpRequest.builder().method(HttpMethod.GET).endpoint("http://" + ACCOUNT + ".blob.core.windows.net/movies/MOV1.avi").build() } };
+   }
+   
+   @DataProvider(name = "auth-sas-data", parallel = true)
+   public Object[][] requests(){
+      return new Object[][]{
+            { HttpRequest.builder().method(HttpMethod.PUT).endpoint("https://" + ACCOUNT 
+                  + ".blob.core.windows.net/movies/MOV1.avi?comp=block&blockid=BlockId1&timeout=60").build(), filterSAS, "https://foo.blob.core.windows.net/movies/MOV1.avi?comp=block&blockid=BlockId1&timeout=60&sv=2018-03-28&ss=b&srt=sco&sp=rwdlac&se=2019-02-13T17%3A18%3A22Z&st=2019-02-13T09%3A18%3A22Z&spr=https&sig=sMnaKSD94CzEPeGnWauTT0wBNIn%2B4ySkZO5PEAW7zs%3D"},
+            { HttpRequest.builder().method(HttpMethod.PUT).endpoint("https://" + ACCOUNT
+                  + ".blob.core.windows.net/movies/MOV1.avi?comp=blocklist&timeout=120").build(), filterSAS, "https://foo.blob.core.windows.net/movies/MOV1.avi?comp=blocklist&timeout=120&sv=2018-03-28&ss=b&srt=sco&sp=rwdlac&se=2019-02-13T17%3A18%3A22Z&st=2019-02-13T09%3A18%3A22Z&spr=https&sig=sMnaKSD94CzEPeGnWauTT0wBNIn%2B4ySkZO5PEAW7zs%3D" },
+            { HttpRequest.builder().method(HttpMethod.GET).endpoint("https://" + ACCOUNT
+                  + ".blob.core.windows.net/movies/MOV1.avi").build(), filterSAS, "https://foo.blob.core.windows.net/movies/MOV1.avi?sv=2018-03-28&ss=b&srt=sco&sp=rwdlac&se=2019-02-13T17%3A18%3A22Z&st=2019-02-13T09%3A18%3A22Z&spr=https&sig=sMnaKSD94CzEPeGnWauTT0wBNIn%2B4ySkZO5PEAW7zs%3D" }, 
+            { HttpRequest.builder().method(HttpMethod.GET).endpoint("https://" + ACCOUNT
+                  + ".blob.core.windows.net/movies/MOV1.avi").build(), filterSASQuestionMark, "https://foo.blob.core.windows.net/movies/MOV1.avi?sv=2018-03-28&ss=b&srt=sco&sp=rwdlac&se=2019-02-13T17%3A18%3A22Z&st=2019-02-13T09%3A18%3A22Z&spr=https&sig=sMnaKSD94CzEPeGnWauTT0wBNIn%2B4ySkZO5PEAW7zs%3D" } };
    }
 
    /**
@@ -73,6 +88,15 @@ public class SharedKeyLiteAuthenticationTest {
       }
       System.out.printf("%s: %d iterations before the timestamp updated %n", Thread.currentThread().getName(),
             iterations);
+   }
+   
+   /**
+    * this test is similar to testIdempotent; it checks whether request is properly filtered when it comes to SAS Authentication
+    */
+   @Test(dataProvider = "auth-sas-data") 
+   void testFilter(HttpRequest request, SharedKeyLiteAuthentication filter, String expected) {
+      request = filter.filter(request);
+      assertEquals(request.getEndpoint().toString(), expected);
    }
 
    @Test
@@ -127,5 +151,19 @@ public class SharedKeyLiteAuthenticationTest {
             .modules(ImmutableSet.<Module> of(new MockModule(), new NullLoggingModule()))
             .buildInjector();
       filter = injector.getInstance(SharedKeyLiteAuthentication.class);
+      injector = ContextBuilder
+            .newBuilder("azureblob")
+            .endpoint("https://${jclouds.identity}.blob.core.windows.net")
+            .credentials(ACCOUNT, "sv=2018-03-28&ss=b&srt=sco&sp=rwdlac&se=2019-02-13T17:18:22Z&st=2019-02-13T09:18:22Z&spr=https&sig=sMnaKSD94CzEPeGnWauTT0wBNIn%2B4ySkZO5PEAW7zs%3D")
+            .modules(ImmutableSet.<Module> of(new MockModule(), new NullLoggingModule()))
+            .buildInjector(); 
+      filterSAS = injector.getInstance(SharedKeyLiteAuthentication.class);
+      injector = ContextBuilder
+            .newBuilder("azureblob")
+            .endpoint("https://${jclouds.identity}.blob.core.windows.net")
+            .credentials(ACCOUNT, "?sv=2018-03-28&ss=b&srt=sco&sp=rwdlac&se=2019-02-13T17:18:22Z&st=2019-02-13T09:18:22Z&spr=https&sig=sMnaKSD94CzEPeGnWauTT0wBNIn%2B4ySkZO5PEAW7zs%3D")
+            .modules(ImmutableSet.<Module> of(new MockModule(), new NullLoggingModule()))
+            .buildInjector(); 
+      filterSASQuestionMark = injector.getInstance(SharedKeyLiteAuthentication.class);
    }
 }
