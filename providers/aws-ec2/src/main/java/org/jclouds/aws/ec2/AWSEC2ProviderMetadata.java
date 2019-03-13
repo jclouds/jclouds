@@ -87,7 +87,7 @@ public class AWSEC2ProviderMetadata extends BaseProviderMetadata {
          .defaultProperties(AWSEC2ProviderMetadata.defaultProperties())
          .linkedServices("aws-ec2", "aws-elb", "aws-cloudwatch", "aws-s3", "aws-simpledb")
                .iso3166Codes("US-VA", "US-OH", "US-CA", "US-OR", "CA", "BR-SP", "IE", "GB-LND", "FR-IDF", "DE-HE",
-                     "SG", "AU-NSW", "IN-MH", "JP-13", "KR-11", "CN-11");
+                     "SG", "AU-NSW", "IN-MH", "JP-13", "KR-11", "CN-BJ", "CN-NX");
       }
 
       @Override
