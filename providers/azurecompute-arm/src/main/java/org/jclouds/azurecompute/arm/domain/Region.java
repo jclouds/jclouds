@@ -66,7 +66,9 @@ public enum Region {
    CANADA_CENTRAL("Canada Central", "CA-ON"),
    CANADA_EAST("Canada East", "CA-QC"),
    FRANCE_CENTRAL("France Central", "FR-IDF"), 
-   FRANCE_SOUTH("France South", "FR-PAC");
+   FRANCE_SOUTH("France South", "FR-PAC"),
+   SOUTH_AFRICA_NORTH("South Africa North", "ZA-GT"),
+   SOUTH_AFRICA_WEST("South Africa West", "ZA-WC");
 
    private final String name;
 
