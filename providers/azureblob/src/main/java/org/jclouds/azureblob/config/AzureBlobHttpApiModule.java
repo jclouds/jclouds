@@ -81,7 +81,7 @@ public class AzureBlobHttpApiModule extends HttpApiModule<AzureBlobClient> {
    protected boolean authSAS(@org.jclouds.location.Provider Supplier<Credentials> creds) {
       String credential = creds.get().credential;
       String formattedCredential = credential.startsWith("?") ? credential.substring(1) : credential;
-      List<String> required = ImmutableList.of("sv", "se", "sig", "sp"); 
+      List<String> required = ImmutableList.of("sv", "sig"); 
       try {
          Map<String, String> tokens = Splitter.on('&').withKeyValueSeparator('=').split(formattedCredential);
          return all(required, in(tokens.keySet()));
