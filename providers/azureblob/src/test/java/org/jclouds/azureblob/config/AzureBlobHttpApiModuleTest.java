@@ -37,7 +37,8 @@ public class AzureBlobHttpApiModuleTest {
          {false, "sva=swajak&sta=stancyja&spa=spakoj&sea=mora&sig=podpis"}, 
          {true, "sv=2018-03-28&ss=b&srt=sco&sp=r&se=2019-02-13T17:03:09Z&st=2019-02-13T09:03:09Z&spr=https&sig=wNkWK%2GURTjHWhtqG6Q2Gu%2Qu%3FPukW6N4%2FIH4Mr%2F%2FO42M%3D"}, 
          {true, "sp=rl&st=2019-02-14T08:50:26Z&se=2019-02-15T08:50:26Z&sv=2018-03-28&sig=Ukow8%2GtpQpAiVZBLcWp1%2RSpFq928MAqzp%2BdrdregaB6%3D&sr=b"}, 
-         {false, ""} 
+         {false, ""},
+         {true, "sig=Ukow8%2GtpQpAiVZBLcWp1%2RSpFq928MAqzp%2BdrdregaB6%3D\u0026sv=2018-03-28"}
      };
    }
 
