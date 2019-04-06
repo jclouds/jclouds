@@ -38,7 +38,8 @@ public interface ObjectMetadata extends Comparable<ObjectMetadata> {
       STANDARD_IA(Tier.INFREQUENT),
       ONEZONE_IA(Tier.INFREQUENT),
       REDUCED_REDUNDANCY(Tier.STANDARD),
-      GLACIER(Tier.ARCHIVE);
+      GLACIER(Tier.ARCHIVE),
+      DEEP_ARCHIVE(Tier.ARCHIVE);
 
       private final Tier tier;
 
@@ -50,7 +51,7 @@ public interface ObjectMetadata extends Comparable<ObjectMetadata> {
          switch (tier) {
          case STANDARD: return StorageClass.STANDARD;
          case INFREQUENT: return StorageClass.STANDARD_IA;
-         case ARCHIVE: return StorageClass.GLACIER;
+         case ARCHIVE: return StorageClass.DEEP_ARCHIVE;
          }
          throw new IllegalArgumentException("invalid tier: " + tier);
       }
