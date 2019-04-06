@@ -67,11 +67,6 @@ public class AWSS3ClientLiveTest extends S3ClientLiveTest {
       AWSS3Client s3Client = getApi();
       try {
          for (StorageClass storageClass : StorageClass.values()) {
-            if (storageClass == StorageClass.GLACIER) {
-               // AWS does not allow creation of Glacier objects
-               continue;
-            }
-
             String blobName = "test-" + storageClass;
             BlobStore blobStore = view.getBlobStore();
             blobStore.createContainerInLocation(null, containerName);

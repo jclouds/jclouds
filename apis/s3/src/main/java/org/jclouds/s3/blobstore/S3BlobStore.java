@@ -266,8 +266,6 @@ public class S3BlobStore extends BaseBlobStore {
       if (overrides.getBlobAccess() == BlobAccess.PUBLIC_READ) {
          options = options.withAcl(CannedAccessPolicy.PUBLIC_READ);
       }
-      // TODO: S3 does not allow putObject if Tier.ARCHIVE.  Instead, copyBlob
-      // after putBlob when the former supports tiers.
       return sync.putObject(container, blob2Object.apply(blob), options);
    }
 
