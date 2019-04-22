@@ -325,7 +325,15 @@ public final class Constants {
     * </code>
     */
    public static final String PROPERTY_TIMEOUTS_PREFIX = "jclouds.timeouts.";
-   
+
+   /**
+    * Integer property. Default (32768).
+    * <p/>
+    * Buffer size for socket write (currently honored only by the default
+    * Java URL HTTP client, JavaUrlHttpCommandExcecutorService).
+    */
+   public static final String PROPERTY_OUTPUT_SOCKET_BUFFER_SIZE = "jclouds.output-socket-buffer-size";
+
    /**
     * Boolean property. Default (true).
     * <p/>

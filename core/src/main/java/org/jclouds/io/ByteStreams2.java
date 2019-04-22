@@ -17,11 +17,13 @@
 
 package org.jclouds.io;
 
+import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static org.jclouds.util.Closeables2.closeQuietly;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 
 import com.google.common.annotations.Beta;
 import com.google.common.hash.HashCode;
@@ -31,6 +33,8 @@ import com.google.common.io.ByteStreams;
 
 @Beta
 public class ByteStreams2 {
+   private static final int INPUT_STREAM_READ_END_OF_STREAM_INDICATOR = -1;
+
    public static HashCode hashAndClose(InputStream input, HashFunction hashFunction) throws IOException {
       checkNotNull(input, "input");
       checkNotNull(hashFunction, "hashFunction");
@@ -49,6 +53,25 @@ public class ByteStreams2 {
          return ByteStreams.toByteArray(input);
       } finally {
          closeQuietly(input);
+      }
+   }
+
+   public static long copy(InputStream from, OutputStream to, int bufferSize) throws IOException {
+      checkNotNull(from, "from");
+      checkNotNull(to, "to");
+      checkArgument(bufferSize >= 1, "bufferSize must be >= 1");
+
+      byte[] buf = new byte[bufferSize];
+      long total = 0L;
+
+      while (true) {
+         int len = from.read(buf);
+         if (len == INPUT_STREAM_READ_END_OF_STREAM_INDICATOR) {
+            return total;
+         }
+
+         to.write(buf, 0, len);
+         total += (long)len;
       }
    }
 }

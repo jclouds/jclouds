@@ -17,6 +17,7 @@
 package org.jclouds.profitbricks.http;
 
 import static org.jclouds.Constants.PROPERTY_IDEMPOTENT_METHODS;
+import static org.jclouds.Constants.PROPERTY_OUTPUT_SOCKET_BUFFER_SIZE;
 import static org.jclouds.Constants.PROPERTY_USER_AGENT;
 import static org.jclouds.util.Closeables2.closeQuietly;
 
@@ -71,9 +72,10 @@ public class ResponseStatusFromPayloadHttpCommandExecutorService extends JavaUrl
            @Named("untrusted") Supplier<SSLContext> untrustedSSLContextProvider, Function<URI, Proxy> proxyForURI,
            ParseSax<ServiceFault> faultHandler,
            @Named(PROPERTY_IDEMPOTENT_METHODS) String idempotentMethods,
+           @Named(PROPERTY_OUTPUT_SOCKET_BUFFER_SIZE) int outputSocketBufferSize,
            @Named(PROPERTY_USER_AGENT) String userAgent) {
       super(utils, contentMetadataCodec, retryHandler, ioRetryHandler, errorHandler, wire, verifier, untrustedSSLContextProvider, proxyForURI,
-            idempotentMethods, userAgent);
+            idempotentMethods, outputSocketBufferSize, userAgent);
       this.faultHandler = faultHandler;
    }
 

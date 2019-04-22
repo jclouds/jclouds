@@ -22,6 +22,7 @@ import static com.google.common.net.HttpHeaders.CONTENT_LENGTH;
 import static com.google.common.net.HttpHeaders.HOST;
 import static com.google.common.net.HttpHeaders.USER_AGENT;
 import static org.jclouds.Constants.PROPERTY_IDEMPOTENT_METHODS;
+import static org.jclouds.Constants.PROPERTY_OUTPUT_SOCKET_BUFFER_SIZE;
 import static org.jclouds.Constants.PROPERTY_USER_AGENT;
 import static org.jclouds.http.HttpUtils.filterOutContentHeaders;
 import static org.jclouds.io.Payloads.newInputStreamPayload;
@@ -50,6 +51,7 @@ import org.jclouds.http.HttpUtils;
 import org.jclouds.http.IOExceptionRetryHandler;
 import org.jclouds.http.handlers.DelegatingErrorHandler;
 import org.jclouds.http.handlers.DelegatingRetryHandler;
+import org.jclouds.io.ByteStreams2;
 import org.jclouds.io.ContentMetadataCodec;
 import org.jclouds.io.MutableContentMetadata;
 import org.jclouds.io.Payload;
@@ -58,7 +60,6 @@ import com.google.common.base.Function;
 import com.google.common.base.Supplier;
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.ImmutableMultimap.Builder;
-import com.google.common.io.ByteStreams;
 import com.google.common.io.CountingOutputStream;
 import com.google.inject.Inject;
 
@@ -69,6 +70,7 @@ public class JavaUrlHttpCommandExecutorService extends BaseHttpCommandExecutorSe
    protected final HostnameVerifier verifier;
    @Inject(optional = true)
    protected Supplier<SSLContext> sslContextSupplier;
+   protected final int outputSocketBufferSize;
    protected final String userAgent;
 
    @Inject
@@ -77,6 +79,7 @@ public class JavaUrlHttpCommandExecutorService extends BaseHttpCommandExecutorSe
          DelegatingErrorHandler errorHandler, HttpWire wire, @Named("untrusted") HostnameVerifier verifier,
          @Named("untrusted") Supplier<SSLContext> untrustedSSLContextProvider, Function<URI, Proxy> proxyForURI,
          @Named(PROPERTY_IDEMPOTENT_METHODS) String idempotentMethods,
+         @Named(PROPERTY_OUTPUT_SOCKET_BUFFER_SIZE) int outputSocketBufferSize,
          @Named(PROPERTY_USER_AGENT) String userAgent) {
       super(utils, contentMetadataCodec, retryHandler, ioRetryHandler, errorHandler, wire, idempotentMethods);
       if (utils.getMaxConnections() > 0) {
@@ -86,6 +89,7 @@ public class JavaUrlHttpCommandExecutorService extends BaseHttpCommandExecutorSe
       this.verifier = checkNotNull(verifier, "verifier");
       this.proxyForURI = checkNotNull(proxyForURI, "proxyForURI");
       this.userAgent = userAgent;
+      this.outputSocketBufferSize = outputSocketBufferSize;
    }
 
    @Override
@@ -295,7 +299,7 @@ public class JavaUrlHttpCommandExecutorService extends BaseHttpCommandExecutorSe
       CountingOutputStream out = new CountingOutputStream(connection.getOutputStream());
       InputStream is = payload.openStream();
       try {
-         ByteStreams.copy(is, out);
+         ByteStreams2.copy(is, out, outputSocketBufferSize);
       } catch (IOException e) {
          logger.error(e, "error after writing %d/%s bytes to %s", out.getCount(), lengthDesc, connection.getURL());
          throw e;

@@ -17,6 +17,7 @@
 package org.jclouds.dynect.v3.config;
 
 import static org.jclouds.Constants.PROPERTY_IDEMPOTENT_METHODS;
+import static org.jclouds.Constants.PROPERTY_OUTPUT_SOCKET_BUFFER_SIZE;
 import static org.jclouds.Constants.PROPERTY_USER_AGENT;
 import static org.jclouds.http.HttpUtils.closeClientButKeepContentStream;
 import static org.jclouds.rest.config.BinderUtils.bindHttpApi;
@@ -106,10 +107,11 @@ public class DynECTHttpApiModule extends HttpApiModule<DynECTApi> {
             DelegatingErrorHandler errorHandler, HttpWire wire, @Named("untrusted") HostnameVerifier verifier,
             @Named("untrusted") Supplier<SSLContext> untrustedSSLContextProvider, Function<URI, Proxy> proxyForURI,
             @Named(PROPERTY_IDEMPOTENT_METHODS) String idempotentMethods,
+            @Named(PROPERTY_OUTPUT_SOCKET_BUFFER_SIZE) int outputSocketBufferSize,
             @Named(PROPERTY_USER_AGENT) String userAgent)
             throws SecurityException, NoSuchFieldException {
          super(utils, contentMetadataCodec, retryHandler, ioRetryHandler, errorHandler, wire, verifier,
-               untrustedSSLContextProvider, proxyForURI, idempotentMethods, userAgent);
+               untrustedSSLContextProvider, proxyForURI, idempotentMethods, outputSocketBufferSize, userAgent);
       }
 
       /**

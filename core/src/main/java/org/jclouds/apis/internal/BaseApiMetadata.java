@@ -27,6 +27,7 @@ import static org.jclouds.Constants.PROPERTY_MAX_CONNECTIONS_PER_HOST;
 import static org.jclouds.Constants.PROPERTY_MAX_CONNECTION_REUSE;
 import static org.jclouds.Constants.PROPERTY_MAX_PARALLEL_DELETES;
 import static org.jclouds.Constants.PROPERTY_MAX_SESSION_FAILURES;
+import static org.jclouds.Constants.PROPERTY_OUTPUT_SOCKET_BUFFER_SIZE;
 import static org.jclouds.Constants.PROPERTY_PRETTY_PRINT_PAYLOADS;
 import static org.jclouds.Constants.PROPERTY_SCHEDULER_THREADS;
 import static org.jclouds.Constants.PROPERTY_SESSION_INTERVAL;
@@ -89,6 +90,7 @@ public abstract class BaseApiMetadata implements ApiMetadata {
       props.setProperty(PROPERTY_MAX_PARALLEL_DELETES, numUserThreads + "");
 
       props.setProperty(PROPERTY_IDEMPOTENT_METHODS, "DELETE,GET,HEAD,OPTIONS,PUT");
+      props.setProperty(PROPERTY_OUTPUT_SOCKET_BUFFER_SIZE, 32768 + "");
       return props;
    }
 

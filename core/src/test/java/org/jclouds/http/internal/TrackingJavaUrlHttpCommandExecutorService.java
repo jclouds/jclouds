@@ -17,6 +17,7 @@
 package org.jclouds.http.internal;
 
 import static org.jclouds.Constants.PROPERTY_IDEMPOTENT_METHODS;
+import static org.jclouds.Constants.PROPERTY_OUTPUT_SOCKET_BUFFER_SIZE;
 import static org.jclouds.Constants.PROPERTY_USER_AGENT;
 
 import java.net.Proxy;
@@ -92,10 +93,11 @@ public class TrackingJavaUrlHttpCommandExecutorService extends JavaUrlHttpComman
             @Named("untrusted") Supplier<SSLContext> untrustedSSLContextProvider, Function<URI, Proxy> proxyForURI,
             List<HttpCommand> commandsInvoked,
             @Named(PROPERTY_IDEMPOTENT_METHODS) String idempotentMethods,
+            @Named(PROPERTY_OUTPUT_SOCKET_BUFFER_SIZE) int outputSocketBufferSize,
             @Named(PROPERTY_USER_AGENT) String userAgent)
             throws SecurityException, NoSuchFieldException {
       super(utils, contentMetadataCodec, retryHandler, ioRetryHandler, errorHandler, wire, verifier,
-            untrustedSSLContextProvider, proxyForURI, idempotentMethods, userAgent);
+            untrustedSSLContextProvider, proxyForURI, idempotentMethods, outputSocketBufferSize, userAgent);
       this.commandsInvoked = commandsInvoked;
    }
 
