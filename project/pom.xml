@@ -743,14 +743,95 @@
       </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-compiler-plugin</artifactId>
-        <version>3.1</version>
+        <artifactId>maven-resources-plugin</artifactId>
+        <version>2.6</version>
         <configuration>
-          <compilerId>javac-with-errorprone</compilerId>
-          <forceJavacCompilerUse>true</forceJavacCompilerUse>
           <encoding>${project.build.sourceEncoding}</encoding>
-          <source>${maven.compile.source}</source>
-          <target>${maven.compile.target}</target>
+        </configuration>
+      </plugin>
+      <plugin>
+        <artifactId>maven-jar-plugin</artifactId>
+        <version>2.4</version>
+        <executions>
+          <execution>
+            <goals>
+              <goal>test-jar</goal>
+            </goals>
+          </execution>
+        </executions>
+        <configuration>
+          <archive>
+            <manifestEntries>
+              <Specification-Title>jclouds ${project.name}</Specification-Title>
+              <Specification-Vendor>jclouds</Specification-Vendor>
+              <Implementation-Vendor>jclouds</Implementation-Vendor>
+              <Implementation-Vendor-Id>org.jclouds</Implementation-Vendor-Id>
+              <Implementation-Version>${project.version}</Implementation-Version>
+              <X-Compile-Source-JDK>${maven.compile.source}</X-Compile-Source-JDK>
+              <X-Compile-Target-JDK>${maven.compile.target}</X-Compile-Target-JDK>
+            </manifestEntries>
+          </archive>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.felix</groupId>
+        <artifactId>maven-bundle-plugin</artifactId>
+        <version>2.3.7</version>
+        <extensions>true</extensions>
+        <configuration>
+          <obrRepository>NONE</obrRepository>
+          <instructions>
+            <Bundle-Activator>${jclouds.osgi.activator}</Bundle-Activator>
+            <Bundle-SymbolicName>${project.artifactId}</Bundle-SymbolicName>
+            <Export-Package>${jclouds.osgi.export}</Export-Package>
+            <Import-Package>${guava.osgi.import},${jclouds.osgi.import}</Import-Package>
+            <DynamicImport-Package>${jclouds.osgi.dynamic}</DynamicImport-Package>
+            <Fragment-Host>${jclouds.osgi.fragment}</Fragment-Host>
+          </instructions>
+        </configuration>
+      </plugin>
+      <plugin>
+        <artifactId>maven-checkstyle-plugin</artifactId>
+        <version>2.15</version>
+        <!-- configuration and dependencies set via profiles -->
+        <executions>
+          <execution>
+            <id>default</id>
+            <phase>verify</phase>
+            <goals>
+              <goal>check</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.gaul</groupId>
+        <artifactId>modernizer-maven-plugin</artifactId>
+        <version>1.8.0</version>
+        <!-- configuration and dependencies set via profiles -->
+        <executions>
+          <execution>
+            <id>modernizer</id>
+            <phase>verify</phase>
+            <goals>
+              <goal>modernizer</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+    <pluginManagement>
+      <plugins>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-compiler-plugin</artifactId>
+          <version>3.8.0</version>
+          <configuration>
+            <compilerId>javac-with-errorprone</compilerId>
+            <forceJavacCompilerUse>true</forceJavacCompilerUse>
+            <encoding>${project.build.sourceEncoding}</encoding>
+            <source>${maven.compile.source}</source>
+            <target>${maven.compile.target}</target>
             <showDeprecation>false</showDeprecation>
             <showWarnings>true</showWarnings>
             <compilerArgs>
@@ -877,101 +958,20 @@
               <compilerArg>-Xep:UnlockMethod:ERROR</compilerArg>
               <compilerArg>-Xep:WildcardImport:ERROR</compilerArg>
             </compilerArgs>
-        </configuration>
-        <dependencies>
-          <dependency>
-            <groupId>org.codehaus.plexus</groupId>
-            <artifactId>plexus-compiler-javac-errorprone</artifactId>
-            <version>2.6</version>
-          </dependency>
-          <dependency>
-            <groupId>com.google.errorprone</groupId>
-            <artifactId>error_prone_core</artifactId>
-            <version>2.0.5</version>
-          </dependency>
-        </dependencies>
-      </plugin>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-resources-plugin</artifactId>
-        <version>2.6</version>
-        <configuration>
-          <encoding>${project.build.sourceEncoding}</encoding>
-        </configuration>
-      </plugin>
-      <plugin>
-        <artifactId>maven-jar-plugin</artifactId>
-        <version>2.4</version>
-        <executions>
-          <execution>
-            <goals>
-              <goal>test-jar</goal>
-            </goals>
-          </execution>
-        </executions>
-        <configuration>
-          <archive>
-            <manifestEntries>
-              <Specification-Title>jclouds ${project.name}</Specification-Title>
-              <Specification-Vendor>jclouds</Specification-Vendor>
-              <Implementation-Vendor>jclouds</Implementation-Vendor>
-              <Implementation-Vendor-Id>org.jclouds</Implementation-Vendor-Id>
-              <Implementation-Version>${project.version}</Implementation-Version>
-              <X-Compile-Source-JDK>${maven.compile.source}</X-Compile-Source-JDK>
-              <X-Compile-Target-JDK>${maven.compile.target}</X-Compile-Target-JDK>
-            </manifestEntries>
-          </archive>
-        </configuration>
-      </plugin>
-      <plugin>
-        <groupId>org.apache.felix</groupId>
-        <artifactId>maven-bundle-plugin</artifactId>
-        <version>2.3.7</version>
-        <extensions>true</extensions>
-        <configuration>
-          <obrRepository>NONE</obrRepository>
-          <instructions>
-            <Bundle-Activator>${jclouds.osgi.activator}</Bundle-Activator>
-            <Bundle-SymbolicName>${project.artifactId}</Bundle-SymbolicName>
-            <Export-Package>${jclouds.osgi.export}</Export-Package>
-            <Import-Package>${guava.osgi.import},${jclouds.osgi.import}</Import-Package>
-            <DynamicImport-Package>${jclouds.osgi.dynamic}</DynamicImport-Package>
-            <Fragment-Host>${jclouds.osgi.fragment}</Fragment-Host>
-          </instructions>
-        </configuration>
-      </plugin>
-      <plugin>
-        <artifactId>maven-checkstyle-plugin</artifactId>
-        <version>2.15</version>
-        <!-- configuration and dependencies set via profiles -->
-        <executions>
-          <execution>
-            <id>default</id>
-            <phase>verify</phase>
-            <goals>
-              <goal>check</goal>
-            </goals>
-          </execution>
-        </executions>
-      </plugin>
-      <plugin>
-        <groupId>org.gaul</groupId>
-        <artifactId>modernizer-maven-plugin</artifactId>
-        <version>1.8.0</version>
-        <!-- configuration and dependencies set via profiles -->
-        <executions>
-          <execution>
-            <id>modernizer</id>
-            <phase>verify</phase>
-            <goals>
-              <goal>modernizer</goal>
-            </goals>
-          </execution>
-        </executions>
-      </plugin>
-    </plugins>
-    <pluginManagement>
-      <plugins>
+          </configuration>
+          <dependencies>
+            <dependency>
+              <groupId>org.codehaus.plexus</groupId>
+              <artifactId>plexus-compiler-javac-errorprone</artifactId>
+              <version>2.6</version>
+            </dependency>
+            <dependency>
+              <groupId>com.google.errorprone</groupId>
+              <artifactId>error_prone_core</artifactId>
+              <version>2.0.5</version>
+            </dependency>
+          </dependencies>
+        </plugin>
         <plugin>
           <artifactId>maven-archetype-plugin</artifactId>
           <version>2.2</version>
@@ -1141,6 +1141,22 @@
       </plugins>
     </pluginManagement>
   </build>
+  <reporting>
+    <plugins>
+      <plugin>
+        <!-- When building jclouds-project, override the config to use the local file -->
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-checkstyle-plugin</artifactId>
+        <configuration>
+          <configLocation>../resources/checkstyle.xml</configLocation>
+          <includeTestSourceDirectory>true</includeTestSourceDirectory>
+          <failOnViolation>true</failOnViolation>
+          <failsOnError>true</failsOnError>
+          <violationSeverity>warning</violationSeverity>
+        </configuration>
+      </plugin>
+    </plugins>
+  </reporting>
   <profiles>
     <profile>
       <id>live</id>
@@ -1270,6 +1286,7 @@
         <plugins>
           <plugin>
             <!-- When building jclouds-project, override the config to use the local file -->
+            <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-checkstyle-plugin</artifactId>
             <configuration>
               <configLocation>../resources/checkstyle.xml</configLocation>
