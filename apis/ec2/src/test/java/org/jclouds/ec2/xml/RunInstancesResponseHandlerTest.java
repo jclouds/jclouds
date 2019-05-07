@@ -72,9 +72,8 @@ public class RunInstancesResponseHandlerTest extends BaseEC2HandlerTest {
                .imageId("ami-60a54009").instanceId("i-2be64332").instanceState(InstanceState.PENDING).rawState(
                         "pending").instanceType(InstanceType.M1_SMALL).keyName("example-key-name").launchTime(
                         dateService.iso8601DateParse("2007-08-07T11:51:50.000Z"))// MonitoringState.ENABLED,
-               .availabilityZone("us-east-1b").build())
-
-      , "AIDADH4IGTRXXKCD", null, "r-47a5402e");
+               .availabilityZone("us-east-1b").build()),
+      "AIDADH4IGTRXXKCD", null, "r-47a5402e");
 
       RunInstancesResponseHandler handler = injector.getInstance(RunInstancesResponseHandler.class);
       addDefaultRegionToHandler(handler);
@@ -93,8 +92,8 @@ public class RunInstancesResponseHandlerTest extends BaseEC2HandlerTest {
                .imageId("qmi-9ac92558").instanceId("i-01b0dac3").instanceState(InstanceState.PENDING).rawState(
                         "pending").instanceType(InstanceType.M1_SMALL).keyName("jclouds#greenqloud-computeblock#35")
                         .launchTime(dateService.iso8601DateParse("2012-06-15T19:06:35.000+00:00"))
-                        .rootDeviceType(RootDeviceType.EBS).availabilityZone("is-1a").build())
-      , "56eeacd9-c790-45c3-85f3-e4380b55e1d8<", null, "r-f847a6ca");
+                        .rootDeviceType(RootDeviceType.EBS).availabilityZone("is-1a").build()),
+      "56eeacd9-c790-45c3-85f3-e4380b55e1d8<", null, "r-f847a6ca");
 
       RunInstancesResponseHandler handler = injector.getInstance(RunInstancesResponseHandler.class);
       addDefaultRegionToHandler(handler);

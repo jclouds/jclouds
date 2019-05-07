@@ -31,7 +31,7 @@ public class AvailabilityZone {
    private final String name;
    private final ZoneState state;
 
-   @ConstructorProperties({"zoneName" , "zoneState"})
+   @ConstructorProperties({"zoneName", "zoneState"})
    protected AvailabilityZone(String name, ZoneState state) {
       this.name = name;
       this.state = state;

@@ -31,7 +31,7 @@ public abstract class Hypervisor {
    @Nullable
    public abstract String getName();
 
-   @SerializedNames({"id" , "hypervisor_hostname"})
+   @SerializedNames({"id", "hypervisor_hostname"})
    private static Hypervisor create(String id, String name) {
       return new AutoValue_Hypervisor(id, name);
    }

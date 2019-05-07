@@ -48,7 +48,7 @@
         </module>
         <module name="NoWhitespaceBefore"/>
         <module name="RedundantImport"/>
-        <module name="RedundantModifier"/>
+       <!-- <module name="RedundantModifier"/> -->
         <module name="SimplifyBooleanExpression"/>
         <module name="TypeName"/>
         <module name="UnnecessaryParentheses"/>
@@ -96,9 +96,5 @@
         <property name="format" value="\r\n"/>
         <property name="message" value="Do not use Windows line endings"/>
         <property name="fileExtensions" value="java,xml,json"/>
-    </module>
-
-    <module name="SuppressionFilter">
-        <property name="file" value="resources/checkstyle-suppressions.xml"/>
     </module>
 </module>

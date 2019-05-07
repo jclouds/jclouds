@@ -54,7 +54,7 @@ public class LimitApiTest extends BaseCloudStackApiTest<LimitApi> {
 
    public void testListResourceLimitsOptions() throws SecurityException, NoSuchMethodException, IOException {
       Invokable<?, ?> method = method(LimitApi.class, "listResourceLimits", ListResourceLimitsOptions[].class);
-      GeneratedHttpRequest httpRequest = processor.createRequest(method, ImmutableList.<Object> of(ListResourceLimitsOptions.Builder.account("jclouds" , "23")));
+      GeneratedHttpRequest httpRequest = processor.createRequest(method, ImmutableList.<Object> of(ListResourceLimitsOptions.Builder.account("jclouds", "23")));
 
       assertRequestLineEquals(httpRequest,
             "GET http://localhost:8080/client/api?response=json&command=listResourceLimits&listAll=true&account=jclouds&domainid=23 HTTP/1.1");

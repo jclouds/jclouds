@@ -44,8 +44,8 @@ public class CloudServersUKProviderMetadataExpectTest extends BaseNovaApiExpectT
             .endpoint("https://lon.identity.api.rackspacecloud.com/v2.0/tokens")
             .addHeader("Accept", "application/json")
             .payload(payloadFromStringWithContentType(
-                     "{\"auth\":{\"RAX-KSKEY:apiKeyCredentials\":{\"username\":\"myUsername\",\"apiKey\":\"myApiKey\"}}}"
-                     , "application/json")).build();
+                     "{\"auth\":{\"RAX-KSKEY:apiKeyCredentials\":{\"username\":\"myUsername\",\"apiKey\":\"myApiKey\"}}}",
+                     "application/json")).build();
 
 
       HttpResponse authenticationResponse = HttpResponse.builder().statusCode(200)

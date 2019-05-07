@@ -70,7 +70,7 @@ public class AvailabilityZoneDetails {
    private final ZoneState state;
    private final Map<String, Map<String, HostService>> hosts;
 
-   @ConstructorProperties({"zoneName" , "zoneState", "hosts"})
+   @ConstructorProperties({"zoneName", "zoneState", "hosts"})
    protected AvailabilityZoneDetails(String name, ZoneState state, Map<String, Map<String, HostService>> hosts) {
       this.name = name;
       this.state = state;

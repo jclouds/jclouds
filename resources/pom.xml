@@ -37,6 +37,7 @@
         <directory>${project.basedir}</directory>
         <includes>
           <include>checkstyle.xml</include>
+          <include>checkstyle-suppressions.xml</include>
           <include>modernizer_exclusions.txt</include>
         </includes>
       </resource>

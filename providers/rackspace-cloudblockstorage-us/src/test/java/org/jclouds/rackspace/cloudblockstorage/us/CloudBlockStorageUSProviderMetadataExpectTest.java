@@ -44,8 +44,8 @@ public class CloudBlockStorageUSProviderMetadataExpectTest extends BaseCinderApi
             .endpoint("https://identity.api.rackspacecloud.com/v2.0/tokens")
             .addHeader("Accept", "application/json")
             .payload(payloadFromStringWithContentType(
-                     "{\"auth\":{\"RAX-KSKEY:apiKeyCredentials\":{\"username\":\"myUsername\",\"apiKey\":\"myApiKey\"}}}"
-                     , "application/json")).build();
+                     "{\"auth\":{\"RAX-KSKEY:apiKeyCredentials\":{\"username\":\"myUsername\",\"apiKey\":\"myApiKey\"}}}",
+                     "application/json")).build();
 
 
       HttpResponse authenticationResponse = HttpResponse.builder()

@@ -785,7 +785,7 @@
       </plugin>
       <plugin>
         <artifactId>maven-checkstyle-plugin</artifactId>
-        <version>2.15</version>
+        <version>3.0.0</version>
         <!-- configuration and dependencies set via profiles -->
         <executions>
           <execution>
@@ -1142,6 +1142,8 @@
         <artifactId>maven-checkstyle-plugin</artifactId>
         <configuration>
           <configLocation>../resources/checkstyle.xml</configLocation>
+          <suppressionsLocation>../resources/checkstyle-suppressions.xml</suppressionsLocation>
+          <suppressionsFileExpression>checkstyle.suppressions.file</suppressionsFileExpression>
           <includeTestSourceDirectory>true</includeTestSourceDirectory>
           <failOnViolation>true</failOnViolation>
           <failsOnError>true</failsOnError>
@@ -1328,6 +1330,8 @@
             <configuration>
               <!-- jclouds-resources has the checkstyle config in the classpath -->
               <configLocation>resources/checkstyle.xml</configLocation>
+              <suppressionsLocation>resources/checkstyle-suppressions.xml</suppressionsLocation>
+              <suppressionsFileExpression>checkstyle.suppressions.file</suppressionsFileExpression>
               <includeTestSourceDirectory>true</includeTestSourceDirectory>
               <failOnViolation>true</failOnViolation>
               <failsOnError>true</failsOnError>

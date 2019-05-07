@@ -209,7 +209,7 @@ public class SecurityGroupApiTest extends BaseCloudStackApiTest<SecurityGroupApi
                                                            .addQueryParam("cidrlist", "1.1.1.1/24,1.2.2.2/16").build();
 
    public void testAuthorizeIngressICMPToCIDRs() throws SecurityException, NoSuchMethodException, IOException {
-      Invokable<?, ?> method = method(SecurityGroupApi.class, "authorizeIngressICMPToCIDRs", String.class , int.class,
+      Invokable<?, ?> method = method(SecurityGroupApi.class, "authorizeIngressICMPToCIDRs", String.class, int.class,
             int.class, Iterable.class, AccountInDomainOptions[].class);
       GeneratedHttpRequest httpRequest = processor.createRequest(method, ImmutableList.<Object> of(2, 22, 22, ImmutableSet.of("1.1.1.1/24", "1.2.2.2/16")));
 

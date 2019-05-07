@@ -67,7 +67,7 @@ public abstract class DeploymentTemplate {
    @Nullable
    public abstract List<?> outputs();
 
-   @SerializedNames({"$schema", "contentVersion", "parameters", "variables", "resources" , "outputs"})
+   @SerializedNames({"$schema", "contentVersion", "parameters", "variables", "resources", "outputs"})
    public static DeploymentTemplate create(final String schema,
                                            final String contentVersion,
                                            final TemplateParameters parameters,

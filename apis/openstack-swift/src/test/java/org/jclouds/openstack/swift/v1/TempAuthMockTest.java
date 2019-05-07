@@ -48,8 +48,8 @@ public class TempAuthMockTest {
      final String headerName = "X-Auth-User";
      final String headerPass = "X-Auth-Pass";
      Properties overrides = new Properties();
-     overrides.setProperty(TempAuthHeaders.TEMP_AUTH_HEADER_USER , headerName);
-     overrides.setProperty(TempAuthHeaders.TEMP_AUTH_HEADER_PASS , headerPass);
+     overrides.setProperty(TempAuthHeaders.TEMP_AUTH_HEADER_USER, headerName);
+     overrides.setProperty(TempAuthHeaders.TEMP_AUTH_HEADER_PASS, headerPass);
      // with specific Header Name values
      test(overrides, headerName, headerPass);
    }
