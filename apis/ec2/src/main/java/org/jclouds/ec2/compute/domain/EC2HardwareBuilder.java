@@ -1518,7 +1518,51 @@ public class EC2HardwareBuilder extends HardwareBuilder {
                     new VolumeBuilder().type(LOCAL).size(1920.0f).device("/dev/sdc").bootDevice(false).durable(false).build()))
             .processors(ImmutableList.of(new Processor(128.0, 2.3)));
    }
-   
+
+   /**
+    * @see InstanceType#A1_MEDIUM
+    */
+   public static EC2HardwareBuilder a1_medium() {
+      return new EC2HardwareBuilder(InstanceType.A1_MEDIUM).ram(2048)
+            .processors(ImmutableList.of(new Processor(1, 2.3))).rootDeviceType(RootDeviceType.EBS)
+            .virtualizationType(VirtualizationType.HVM);
+   }
+
+   /**
+    * @see InstanceType#A1_LARGE
+    */
+   public static org.jclouds.ec2.compute.domain.EC2HardwareBuilder a1_large() {
+      return new EC2HardwareBuilder(InstanceType.A1_LARGE).ram(4096).processors(ImmutableList.of(new Processor(2, 2.3)))
+            .rootDeviceType(RootDeviceType.EBS).virtualizationType(VirtualizationType.HVM);
+   }
+
+   /**
+    * @see InstanceType#A1_XLARGE
+    */
+   public static org.jclouds.ec2.compute.domain.EC2HardwareBuilder a1_xlarge() {
+      return new EC2HardwareBuilder(InstanceType.A1_XLARGE).ram(8192)
+            .processors(ImmutableList.of(new Processor(4, 2.3))).rootDeviceType(RootDeviceType.EBS)
+            .virtualizationType(VirtualizationType.HVM);
+   }
+
+   /**
+    * @see InstanceType#A1_2XLARGE
+    */
+   public static org.jclouds.ec2.compute.domain.EC2HardwareBuilder a1_2xlarge() {
+      return new EC2HardwareBuilder(InstanceType.A1_2XLARGE).ram(16384)
+            .processors(ImmutableList.of(new Processor(8, 2.3))).rootDeviceType(RootDeviceType.EBS)
+            .virtualizationType(VirtualizationType.HVM);
+   }
+
+   /**
+    * @see InstanceType#A1_4XLARGE
+    */
+   public static org.jclouds.ec2.compute.domain.EC2HardwareBuilder a1_4xlarge() {
+      return new EC2HardwareBuilder(InstanceType.A1_4XLARGE).ram(32768)
+            .processors(ImmutableList.of(new Processor(16, 2.3))).rootDeviceType(RootDeviceType.EBS)
+            .virtualizationType(VirtualizationType.HVM);
+   }
+
    @SuppressWarnings("unchecked")
    @Override
    public Hardware build() {

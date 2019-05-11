@@ -123,7 +123,7 @@ public class Image implements Comparable<Image> {
    }
 
    public static enum Architecture {
-      I386, X86_64, UNRECOGNIZED;
+      I386, X86_64, ARM64, UNRECOGNIZED;
       public String value() {
          return name().toLowerCase();
       }
