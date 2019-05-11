@@ -58,7 +58,7 @@ import com.squareup.okhttp.mockwebserver.MockWebServer;
 import com.squareup.okhttp.mockwebserver.RecordedRequest;
 
 /**
- * Tests need to run {@code singleThreaded = true) as otherwise tests will clash on the regionToServers field.
+ * Tests need to run {@code singleThreaded = true} as otherwise tests will clash on the regionToServers field.
  * Sharing the regionToServers field means less code to write.
  */
 public class BaseAWSEC2ApiMockTest {

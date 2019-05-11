@@ -1129,4 +1129,69 @@ public class InstanceType {
     * </ul>
     */
    public static final String X1_32XLARGE = "x1.32xlarge";
+
+   /**
+    * A1 Medium
+    * <ul>
+    * <li>Provider Id: a1.medium</li>
+    * <li>vCPU: 1</li>
+    * <li>Memory (GiB): 2</li>
+    * <li>No instance storage (EBS storage only)</li>
+    * <li>64-bit platform</li>
+    * <li>Network Performance: up to 10 Gigabit</li>
+    * </ul>
+    */
+   public static final String A1_MEDIUM = "a1.medium";
+
+   /**
+    * A1 Large
+    * <ul>
+    * <li>Provider Id: a1.large</li>
+    * <li>vCPU: 2</li>
+    * <li>Memory (GiB): 4</li>
+    * <li>No instance storage (EBS storage only)</li>
+    * <li>64-bit platform</li>
+    * <li>Network Performance: up to 10 Gigabit</li>
+    * </ul>
+    */
+   public static final String A1_LARGE = "a1.large";
+
+   /**
+    * A1 XLarge
+    * <ul>
+    * <li>Provider Id: a1.xlarge</li>
+    * <li>vCPU: 4</li>
+    * <li>Memory (GiB): 8</li>
+    * <li>No instance storage (EBS storage only)</li>
+    * <li>64-bit platform</li>
+    * <li>Network Performance: up to 10 Gigabit</li>
+    * </ul>
+    */
+   public static final String A1_XLARGE = "a1.xlarge";
+
+   /**
+    * A1 2XLarge
+    * <ul>
+    * <li>Provider Id: a1.2xlarge</li>
+    * <li>vCPU: 8</li>
+    * <li>Memory (GiB): 16</li>
+    * <li>No instance storage (EBS storage only)</li>
+    * <li>64-bit platform</li>
+    * <li>Network Performance: up to 10 Gigabit</li>
+    * </ul>
+    */
+   public static final String A1_2XLARGE = "a1.2xlarge";
+
+   /**
+    * A1 4XLarge
+    * <ul>
+    * <li>Provider Id: a1.4xlarge</li>
+    * <li>vCPU: 16</li>
+    * <li>Memory (GiB): 32</li>
+    * <li>No instance storage (EBS storage only)</li>
+    * <li>64-bit platform</li>
+    * <li>Network Performance: up to 10 Gigabit</li>
+    * </ul>
+    */
+   public static final String A1_4XLARGE = "a1.4xlarge";
 }

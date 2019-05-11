@@ -35,7 +35,7 @@ public class AWSEC2ComputeServiceApiMockTest extends BaseAWSEC2ApiMockTest {
 
    protected String getDefaultSmallestInstanceType() {
       // NOT t2.xxx because that requires a VPC
-      return "m3.medium";
+      return "a1.medium";
    }
      
    protected String getDefaultParavirtualInstanceType() {
@@ -44,7 +44,7 @@ public class AWSEC2ComputeServiceApiMockTest extends BaseAWSEC2ApiMockTest {
    }
 
    protected String getDefaultImageId() {
-       return "be3adfd7";
+       return "7ea24a17";
    }
    
    public void launchVPCSpotInstanceSubnetId() throws Exception {
