@@ -55,14 +55,13 @@ import org.jclouds.rest.binders.BindToJsonPayload;
  *
  * @see <a href="https://docs.microsoft.com/en-us/rest/api/compute/virtualmachines">docs</a>
  */
-@Path("/resourceGroups/{resourceGroup}/providers/Microsoft.Compute/virtualMachines")
 @RequestFilters({ OAuthFilter.class, ApiVersionFilter.class })
 @Consumes(MediaType.APPLICATION_JSON)
 public interface VirtualMachineApi {
 
    @Named("GetVirtualMachine")
    @GET
-   @Path("/{name}")
+   @Path("/resourceGroups/{resourceGroup}/providers/Microsoft.Compute/virtualMachines/{name}")
    @Fallback(Fallbacks.NullOnNotFoundOr404.class)
    VirtualMachine get(@PathParam("name") String name);
 
@@ -71,64 +70,77 @@ public interface VirtualMachineApi {
     */
    @Named("GetVirtualMachineInstance")
    @GET
-   @Path("/{name}/instanceView")
+   @Path("/resourceGroups/{resourceGroup}/providers/Microsoft.Compute/virtualMachines/{name}/instanceView")
    @Fallback(Fallbacks.NullOnNotFoundOr404.class)
    VirtualMachineInstance getInstanceDetails(@PathParam("name") String name);
-   
+
    @Named("CreateOrUpdateVirtualMachine")
    @PUT
    @MapBinder(BindToJsonPayload.class)
-   @Path("/{vmname}")
+   @Path("/resourceGroups/{resourceGroup}/providers/Microsoft.Compute/virtualMachines/{vmname}")
    @QueryParams(keys = "validating", values = "false")
-   VirtualMachine createOrUpdate(@PathParam("vmname") String vmname,
-                                 @PayloadParam("location") String location,
-                                 @PayloadParam("properties") VirtualMachineProperties properties,
-                                 @PayloadParam("tags") Map<String, String> tags,
-                                 @Nullable @PayloadParam("plan") Plan plan);
+   VirtualMachine createOrUpdate(@PathParam("vmname") String vmname, @PayloadParam("location") String location,
+         @PayloadParam("properties") VirtualMachineProperties properties,
+         @PayloadParam("tags") Map<String, String> tags, @Nullable @PayloadParam("plan") Plan plan);
 
    @Named("ListVirtualMachines")
    @GET
+   @Path("/resourceGroups/{resourceGroup}/providers/Microsoft.Compute/virtualMachines")
    @SelectJson("value")
    @Fallback(Fallbacks.EmptyListOnNotFoundOr404.class)
    List<VirtualMachine> list();
 
+   @Named("ListVirtualMachinesAll")
+   @GET
+   @Path("/providers/Microsoft.Compute/virtualMachines")
+   @SelectJson("value")
+   @Fallback(Fallbacks.EmptyListOnNotFoundOr404.class)
+   List<VirtualMachine> listAll();
+
+   @Named("ListVirtualMachinesByLocation")
+   @GET
+   @Path("/providers/Microsoft.Compute/locations/{location}/virtualMachines")
+   @SelectJson("value")
+   @Fallback(Fallbacks.EmptyListOnNotFoundOr404.class)
+   List<VirtualMachine> listByLocation(@PathParam("location") String location);
+
    @Named("ListAvailableSizes")
    @GET
    @SelectJson("value")
-   @Path("/{name}/vmSizes")
+   @Path("/resourceGroups/{resourceGroup}/providers/Microsoft.Compute/virtualMachines/{name}/vmSizes")
    @Fallback(Fallbacks.EmptyListOnNotFoundOr404.class)
    List<VMSize> listAvailableSizes(@PathParam("name") String name);
 
    @Named("DeleteVirtualMachine")
    @DELETE
-   @Path("/{name}")
+   @Path("/resourceGroups/{resourceGroup}/providers/Microsoft.Compute/virtualMachines/{name}")
    @ResponseParser(URIParser.class)
    @Fallback(Fallbacks.NullOnNotFoundOr404.class)
    URI delete(@PathParam("name") String name);
 
    @Named("RestartVirtualMachine")
    @POST
-   @Path("/{name}/restart")
+   @Path("/resourceGroups/{resourceGroup}/providers/Microsoft.Compute/virtualMachines/{name}/restart")
    void restart(@PathParam("name") String name);
 
    @Named("StartVirtualMachine")
    @POST
-   @Path("/{name}/start")
+   @Path("/resourceGroups/{resourceGroup}/providers/Microsoft.Compute/virtualMachines/{name}/start")
    void start(@PathParam("name") String name);
 
    @Named("StopVirtualMachine")
    @POST
-   @Path("/{name}/powerOff")
+   @Path("/resourceGroups/{resourceGroup}/providers/Microsoft.Compute/virtualMachines/{name}/powerOff")
    void stop(@PathParam("name") String name);
 
    @Named("DeallocateVirtualMachine")
    @POST
-   @Path("/{name}/deallocate")
+   @Path("/resourceGroups/{resourceGroup}/providers/Microsoft.Compute/virtualMachines/{name}/deallocate")
    void deallocate(@PathParam("name") String name);
 
    @Named("generalize")
    @POST
-   @Path("/{name}/generalize")
+   @Path("/resourceGroups/{resourceGroup}/providers/Microsoft.Compute/virtualMachines/{name}/generalize")
    void generalize(@PathParam("name") String name);
 
    /**
@@ -140,13 +152,12 @@ public interface VirtualMachineApi {
    @Named("capture")
    @POST
    @Payload("%7B\"vhdPrefix\":\"{vhdPrefix}\",\"destinationContainerName\":\"{destinationContainerName}\",\"overwriteVhds\":\"true\"%7D")
-   @Path("/{name}/capture")
+   @Path("/resourceGroups/{resourceGroup}/providers/Microsoft.Compute/virtualMachines/{name}/capture")
    @ResponseParser(URIParser.class)
    @Fallback(Fallbacks.NullOnNotFoundOr404.class)
    @Produces(MediaType.APPLICATION_JSON)
-   URI capture(@PathParam("name") String name,
-               @PayloadParam("vhdPrefix") String vhdPrefix,
-               @PayloadParam("destinationContainerName") String destinationContainerName);
-   
+   URI capture(@PathParam("name") String name, @PayloadParam("vhdPrefix") String vhdPrefix,
+         @PayloadParam("destinationContainerName") String destinationContainerName);
+
 }
 
