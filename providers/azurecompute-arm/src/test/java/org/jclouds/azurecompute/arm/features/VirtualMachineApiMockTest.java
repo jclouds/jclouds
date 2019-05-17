@@ -104,7 +104,7 @@ public class VirtualMachineApiMockTest extends BaseAzureComputeApiMockTest {
    }
 
    public void testList() throws Exception {
-      server.enqueue(jsonResponse("/virtualmachines.json"));
+      server.enqueue(jsonResponse("/virtualmachinesinresourcegroup.json"));
       final VirtualMachineApi vmAPI = api.getVirtualMachineApi("groupname");
       assertEquals(vmAPI.list(), getVMList());
       assertSent(server, "GET", "/subscriptions/SUBSCRIPTIONID/resourceGroups/groupname/providers/Microsoft.Compute"
@@ -116,6 +116,22 @@ public class VirtualMachineApiMockTest extends BaseAzureComputeApiMockTest {
       final VirtualMachineApi vmAPI = api.getVirtualMachineApi("groupname");
       assertTrue(isEmpty(vmAPI.list()));
       assertSent(server, "GET", "/subscriptions/SUBSCRIPTIONID/resourceGroups/groupname/providers/Microsoft.Compute"
+            + "/virtualMachines?api-version=2018-06-01");
+   }
+
+   public void testListAll() throws Exception {
+      server.enqueue(jsonResponse("/virtualmachinesinsubscription.json"));
+      final VirtualMachineApi vmAPI = api.getVirtualMachineApi(null);
+      assertEquals(vmAPI.listAll(), getVMListAll());
+      assertSent(server, "GET",
+            "/subscriptions/SUBSCRIPTIONID/providers/Microsoft.Compute/virtualMachines?api-version=2018-06-01");
+   }
+
+   public void testListByLocation() throws Exception {
+      server.enqueue(jsonResponse("/virtualmachinesinlocation.json"));
+      final VirtualMachineApi vmAPI = api.getVirtualMachineApi(null);
+      assertEquals(vmAPI.listByLocation("testlocation"), getVMListByLocation()); // TODO bylocation
+      assertSent(server, "GET", "/subscriptions/SUBSCRIPTIONID/providers/Microsoft.Compute/locations/testlocation"
             + "/virtualMachines?api-version=2018-06-01");
    }
 
@@ -426,6 +442,53 @@ public class VirtualMachineApiMockTest extends BaseAzureComputeApiMockTest {
                       + "resourceGroups/groupname/providers/Microsoft.Compute/virtualMachines/windowsmachine", "windowsmachine",
               "Microsoft.Compute/virtualMachines", "westus", null, propertiesWithBlobDisks, null);
       list.add(machineWithBlobDisks);
+      return list;
+   }
+
+   private List<VirtualMachine> getVMListAll() {
+      List<VirtualMachine> list = new ArrayList<VirtualMachine>();
+      VirtualMachineProperties propertiesWithManagedDisks = getVMWithManagedDisksProperties();
+      VirtualMachine machineWithManagedDisks = VirtualMachine.create("/subscriptions/SUBSCRIPTIONID/" + ""
+                  + "resourceGroups/groupname/providers/Microsoft.Compute/virtualMachines/windowsmachine",
+            "windowsmachine",
+            "Microsoft.Compute/virtualMachines", "westus", null, propertiesWithManagedDisks, null);
+      list.add(machineWithManagedDisks);
+      VirtualMachineProperties propertiesWithBlobDisks = getVMWithBlobDisksProperties();
+      VirtualMachine machineWithBlobDisks = VirtualMachine.create("/subscriptions/SUBSCRIPTIONID/" + ""
+                  + "resourceGroups/groupname/providers/Microsoft.Compute/virtualMachines/windowsmachine",
+            "windowsmachine",
+            "Microsoft.Compute/virtualMachines", "westus", null, propertiesWithBlobDisks, null);
+      list.add(machineWithBlobDisks);
+      VirtualMachine machineInDifferentResourceGroup = VirtualMachine.create("/subscriptions/SUBSCRIPTIONID/" + ""
+                  + "resourceGroups/otherresourcegroup/providers/Microsoft.Compute/virtualMachines/windowsmachine",
+            "windowsmachine", "Microsoft.Compute/virtualMachines", "westus", null, propertiesWithBlobDisks, null);
+      list.add(machineInDifferentResourceGroup);
+      VirtualMachine machineInDifferentLocation = VirtualMachine.create("/subscriptions/SUBSCRIPTIONID/" + ""
+                  + "resourceGroups/groupname/providers/Microsoft.Compute/virtualMachines/windowsmachine",
+            "windowsmachine",
+            "Microsoft.Compute/virtualMachines", "eastus", null, propertiesWithBlobDisks, null);
+      list.add(machineInDifferentLocation);
+      return list;
+   }
+
+   private List<VirtualMachine> getVMListByLocation() {
+      List<VirtualMachine> list = new ArrayList<VirtualMachine>();
+      VirtualMachineProperties propertiesWithManagedDisks = getVMWithManagedDisksProperties();
+      VirtualMachine machineWithManagedDisks = VirtualMachine.create("/subscriptions/SUBSCRIPTIONID/" + ""
+                  + "resourceGroups/groupname/providers/Microsoft.Compute/virtualMachines/windowsmachine",
+            "windowsmachine",
+            "Microsoft.Compute/virtualMachines", "westus", null, propertiesWithManagedDisks, null);
+      list.add(machineWithManagedDisks);
+      VirtualMachineProperties propertiesWithBlobDisks = getVMWithBlobDisksProperties();
+      VirtualMachine machineWithBlobDisks = VirtualMachine.create("/subscriptions/SUBSCRIPTIONID/" + ""
+                  + "resourceGroups/groupname/providers/Microsoft.Compute/virtualMachines/windowsmachine",
+            "windowsmachine",
+            "Microsoft.Compute/virtualMachines", "westus", null, propertiesWithBlobDisks, null);
+      list.add(machineWithBlobDisks);
+      VirtualMachine machineInDifferentResourceGroup = VirtualMachine.create("/subscriptions/SUBSCRIPTIONID/" + ""
+                  + "resourceGroups/otherresourcegroup/providers/Microsoft.Compute/virtualMachines/windowsmachine",
+            "windowsmachine", "Microsoft.Compute/virtualMachines", "westus", null, propertiesWithBlobDisks, null);
+      list.add(machineInDifferentResourceGroup);
       return list;
    }
 

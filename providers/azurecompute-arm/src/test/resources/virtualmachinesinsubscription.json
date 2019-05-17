@@ -1,0 +1,411 @@
+{
+  "value": [
+    {
+      "properties": {
+        "vmId": "27ee085b-d707-xxxx-yyyy-2370e2eb1cc1",
+        "licenseType": "Windows_Server",
+        "availabilitySet": {
+          "id": "/subscriptions/SUBSCRIPTIONID/resourceGroups/myResourceGroup/providers/Microsoft.Compute/availabilitySets/myAVSet"
+        },
+        "hardwareProfile": {
+          "vmSize": "Standard_D1"
+        },
+        "storageProfile": {
+          "imageReference": {
+            "publisher": "publisher",
+            "offer": "OFFER",
+            "sku": "sku",
+            "version": "ver",
+            "id": "/subscriptions/SUBSCRIPTIONID/providers/Microsoft.Compute/locations/westus/publishers/MicrosoftWindowsServerEssentials/artifactype/vmimage/offers/OFFER/skus/OFFER/versions/latest"
+          },
+          "osDisk": {
+            "osType": "Windows",
+            "name": "windowsmachine",
+            "createOption": "FromImage",
+            "managedDisk": {
+              "id": "/subscriptions/SUBSCRIPTIONID/resourceGroups/myResourceGroup/providers/Microsoft.Compute/disks/osDisk",
+              "storageAccountType": "Standard_LRS"
+            },
+            "caching": "ReadWrite"
+          },
+          "dataDisks": [
+            {
+              "name": "mydatadisk1",
+              "diskSizeGB": "1",
+              "lun": 0,
+              "createOption": "Empty",
+              "caching": "ReadWrite",
+              "managedDisk": {
+                "id": "/subscriptions/SUBSCRIPTIONID/resourceGroups/myResourceGroup/providers/Microsoft.Compute/disks/osDisk",
+                "storageAccountType": "Standard_LRS"
+              }
+            }
+          ]
+        },
+        "osProfile": {
+          "computerName": "windowsmachine",
+          "adminUsername": "azureuser",
+          "adminPassword": "password",
+          "customData": "",
+          "windowsConfiguration": {
+            "provisionVMAgent": false,
+            "enableAutomaticUpdates": true,
+            "winRM": {
+              "listeners": [
+                {
+                  "protocol": "https",
+                  "certificateUrl": "url-to-certificate"
+                }
+              ]
+            },
+            "additionalUnattendContent": [
+              {
+                "passName": "oobesystem",
+                "componentName": "Microsoft-Windows-Shell-Setup",
+                "settingName": "FirstLogonCommands",
+                "content": "<XML unattend content>"
+              }
+            ]
+          },
+          "secrets": [
+            {
+              "sourceVault": {
+                "id": "/subscriptions/SUBSCRIPTIONID/resourceGroups/myresourcegroup1/providers/Microsoft.KeyVault/vaults/myvault1"
+              },
+              "vaultCertificates": [
+                {
+                  "certificateUrl": "https://myvault1.vault.azure.net/secrets/SECRETNAME/SECRETVERSION",
+                  "certificateStore": "CERTIFICATESTORENAME"
+                }
+              ]
+            }
+          ]
+        },
+        "networkProfile": {
+          "networkInterfaces": [
+            {
+              "id": "/subscriptions/SUBSCRIPTIONID/resourceGroups/groupname/providers/Microsoft.Network/networkInterfaces/windowsmachine167"
+            }
+          ]
+        },
+        "diagnosticsProfile": {
+          "bootDiagnostics": {
+            "enabled": true,
+            "storageUri": "https://groupname2760.blob.core.windows.net/"
+          }
+        },
+        "provisioningState": "Creating"
+      },
+      "id": "/subscriptions/SUBSCRIPTIONID/resourceGroups/groupname/providers/Microsoft.Compute/virtualMachines/windowsmachine",
+      "name": "windowsmachine",
+      "type": "Microsoft.Compute/virtualMachines",
+      "location": "westus"
+    },
+    {
+      "properties": {
+        "vmId": "27ee085b-d707-xxxx-yyyy-2370e2eb1cc1",
+        "licenseType": "Windows_Server",
+        "availabilitySet": {
+          "id": "/subscriptions/SUBSCRIPTIONID/resourceGroups/myResourceGroup/providers/Microsoft.Compute/availabilitySets/myAVSet"
+        },
+        "hardwareProfile": {
+          "vmSize": "Standard_D1"
+        },
+        "storageProfile": {
+          "imageReference": {
+            "publisher": "publisher",
+            "offer": "OFFER",
+            "sku": "sku",
+            "version": "ver",
+            "id": "/subscriptions/SUBSCRIPTIONID/providers/Microsoft.Compute/locations/westus/publishers/MicrosoftWindowsServerEssentials/artifactype/vmimage/offers/OFFER/skus/OFFER/versions/latest"
+          },
+          "osDisk": {
+            "osType": "Windows",
+            "name": "windowsmachine",
+            "createOption": "FromImage",
+            "managedDisk": {
+              "id": "/subscriptions/SUBSCRIPTIONID/resourceGroups/myResourceGroup/providers/Microsoft.Compute/disks/osDisk",
+              "storageAccountType": "Standard_LRS"
+            },
+            "vhd": {
+              "uri": "https://groupname2760.blob.core.windows.net/vhds/windowsmachine201624102936.vhd"
+            },
+            "caching": "ReadWrite"
+          },
+          "dataDisks": [
+            {
+              "name": "mydatadisk1",
+              "diskSizeGB": "1",
+              "lun": 0,
+              "vhd": {
+                "uri": "http://mystorage1.blob.core.windows.net/vhds/mydatadisk1.vhd"
+              },
+              "createOption": "Empty"
+            }
+          ]
+        },
+        "osProfile": {
+          "computerName": "windowsmachine",
+          "adminUsername": "azureuser",
+          "adminPassword": "password",
+          "customData": "",
+          "windowsConfiguration": {
+            "provisionVMAgent": false,
+            "enableAutomaticUpdates": true,
+            "winRM": {
+              "listeners": [
+                {
+                  "protocol": "https",
+                  "certificateUrl": "url-to-certificate"
+                }
+              ]
+            },
+            "additionalUnattendContent": [
+              {
+                "passName": "oobesystem",
+                "componentName": "Microsoft-Windows-Shell-Setup",
+                "settingName": "FirstLogonCommands",
+                "content": "<XML unattend content>"
+              }
+            ]
+          },
+          "secrets": [
+            {
+              "sourceVault": {
+                "id": "/subscriptions/SUBSCRIPTIONID/resourceGroups/myresourcegroup1/providers/Microsoft.KeyVault/vaults/myvault1"
+              },
+              "vaultCertificates": [
+                {
+                  "certificateUrl": "https://myvault1.vault.azure.net/secrets/SECRETNAME/SECRETVERSION",
+                  "certificateStore": "CERTIFICATESTORENAME"
+                }
+              ]
+            }
+          ]
+        },
+        "networkProfile": {
+          "networkInterfaces": [
+            {
+              "id": "/subscriptions/SUBSCRIPTIONID/resourceGroups/groupname/providers/Microsoft.Network/networkInterfaces/windowsmachine167"
+            }
+          ]
+        },
+        "diagnosticsProfile": {
+          "bootDiagnostics": {
+            "enabled": true,
+            "storageUri": "https://groupname2760.blob.core.windows.net/"
+          }
+        },
+        "provisioningState": "Creating"
+      },
+      "id": "/subscriptions/SUBSCRIPTIONID/resourceGroups/groupname/providers/Microsoft.Compute/virtualMachines/windowsmachine",
+      "name": "windowsmachine",
+      "type": "Microsoft.Compute/virtualMachines",
+      "location": "westus"
+    },
+    {
+      "properties": {
+        "vmId": "27ee085b-d707-xxxx-yyyy-2370e2eb1cc1",
+        "licenseType": "Windows_Server",
+        "availabilitySet": {
+          "id": "/subscriptions/SUBSCRIPTIONID/resourceGroups/myResourceGroup/providers/Microsoft.Compute/availabilitySets/myAVSet"
+        },
+        "hardwareProfile": {
+          "vmSize": "Standard_D1"
+        },
+        "storageProfile": {
+          "imageReference": {
+            "publisher": "publisher",
+            "offer": "OFFER",
+            "sku": "sku",
+            "version": "ver",
+            "id": "/subscriptions/SUBSCRIPTIONID/providers/Microsoft.Compute/locations/westus/publishers/MicrosoftWindowsServerEssentials/artifactype/vmimage/offers/OFFER/skus/OFFER/versions/latest"
+          },
+          "osDisk": {
+            "osType": "Windows",
+            "name": "windowsmachine",
+            "createOption": "FromImage",
+            "managedDisk": {
+              "id": "/subscriptions/SUBSCRIPTIONID/resourceGroups/myResourceGroup/providers/Microsoft.Compute/disks/osDisk",
+              "storageAccountType": "Standard_LRS"
+            },
+            "vhd": {
+              "uri": "https://groupname2760.blob.core.windows.net/vhds/windowsmachine201624102936.vhd"
+            },
+            "caching": "ReadWrite"
+          },
+          "dataDisks": [
+            {
+              "name": "mydatadisk1",
+              "diskSizeGB": "1",
+              "lun": 0,
+              "vhd": {
+                "uri": "http://mystorage1.blob.core.windows.net/vhds/mydatadisk1.vhd"
+              },
+              "createOption": "Empty"
+            }
+          ]
+        },
+        "osProfile": {
+          "computerName": "windowsmachine",
+          "adminUsername": "azureuser",
+          "adminPassword": "password",
+          "customData": "",
+          "windowsConfiguration": {
+            "provisionVMAgent": false,
+            "enableAutomaticUpdates": true,
+            "winRM": {
+              "listeners": [
+                {
+                  "protocol": "https",
+                  "certificateUrl": "url-to-certificate"
+                }
+              ]
+            },
+            "additionalUnattendContent": [
+              {
+                "passName": "oobesystem",
+                "componentName": "Microsoft-Windows-Shell-Setup",
+                "settingName": "FirstLogonCommands",
+                "content": "<XML unattend content>"
+              }
+            ]
+          },
+          "secrets": [
+            {
+              "sourceVault": {
+                "id": "/subscriptions/SUBSCRIPTIONID/resourceGroups/myresourcegroup1/providers/Microsoft.KeyVault/vaults/myvault1"
+              },
+              "vaultCertificates": [
+                {
+                  "certificateUrl": "https://myvault1.vault.azure.net/secrets/SECRETNAME/SECRETVERSION",
+                  "certificateStore": "CERTIFICATESTORENAME"
+                }
+              ]
+            }
+          ]
+        },
+        "networkProfile": {
+          "networkInterfaces": [
+            {
+              "id": "/subscriptions/SUBSCRIPTIONID/resourceGroups/groupname/providers/Microsoft.Network/networkInterfaces/windowsmachine167"
+            }
+          ]
+        },
+        "diagnosticsProfile": {
+          "bootDiagnostics": {
+            "enabled": true,
+            "storageUri": "https://groupname2760.blob.core.windows.net/"
+          }
+        },
+        "provisioningState": "Creating"
+      },
+      "id": "/subscriptions/SUBSCRIPTIONID/resourceGroups/otherresourcegroup/providers/Microsoft.Compute/virtualMachines/windowsmachine",
+      "name": "windowsmachine",
+      "type": "Microsoft.Compute/virtualMachines",
+      "location": "westus"
+    },
+    {
+      "properties": {
+        "vmId": "27ee085b-d707-xxxx-yyyy-2370e2eb1cc1",
+        "licenseType": "Windows_Server",
+        "availabilitySet": {
+          "id": "/subscriptions/SUBSCRIPTIONID/resourceGroups/myResourceGroup/providers/Microsoft.Compute/availabilitySets/myAVSet"
+        },
+        "hardwareProfile": {
+          "vmSize": "Standard_D1"
+        },
+        "storageProfile": {
+          "imageReference": {
+            "publisher": "publisher",
+            "offer": "OFFER",
+            "sku": "sku",
+            "version": "ver",
+            "id": "/subscriptions/SUBSCRIPTIONID/providers/Microsoft.Compute/locations/westus/publishers/MicrosoftWindowsServerEssentials/artifactype/vmimage/offers/OFFER/skus/OFFER/versions/latest"
+          },
+          "osDisk": {
+            "osType": "Windows",
+            "name": "windowsmachine",
+            "createOption": "FromImage",
+            "managedDisk": {
+              "id": "/subscriptions/SUBSCRIPTIONID/resourceGroups/myResourceGroup/providers/Microsoft.Compute/disks/osDisk",
+              "storageAccountType": "Standard_LRS"
+            },
+            "vhd": {
+              "uri": "https://groupname2760.blob.core.windows.net/vhds/windowsmachine201624102936.vhd"
+            },
+            "caching": "ReadWrite"
+          },
+          "dataDisks": [
+            {
+              "name": "mydatadisk1",
+              "diskSizeGB": "1",
+              "lun": 0,
+              "vhd": {
+                "uri": "http://mystorage1.blob.core.windows.net/vhds/mydatadisk1.vhd"
+              },
+              "createOption": "Empty"
+            }
+          ]
+        },
+        "osProfile": {
+          "computerName": "windowsmachine",
+          "adminUsername": "azureuser",
+          "adminPassword": "password",
+          "customData": "",
+          "windowsConfiguration": {
+            "provisionVMAgent": false,
+            "enableAutomaticUpdates": true,
+            "winRM": {
+              "listeners": [
+                {
+                  "protocol": "https",
+                  "certificateUrl": "url-to-certificate"
+                }
+              ]
+            },
+            "additionalUnattendContent": [
+              {
+                "passName": "oobesystem",
+                "componentName": "Microsoft-Windows-Shell-Setup",
+                "settingName": "FirstLogonCommands",
+                "content": "<XML unattend content>"
+              }
+            ]
+          },
+          "secrets": [
+            {
+              "sourceVault": {
+                "id": "/subscriptions/SUBSCRIPTIONID/resourceGroups/myresourcegroup1/providers/Microsoft.KeyVault/vaults/myvault1"
+              },
+              "vaultCertificates": [
+                {
+                  "certificateUrl": "https://myvault1.vault.azure.net/secrets/SECRETNAME/SECRETVERSION",
+                  "certificateStore": "CERTIFICATESTORENAME"
+                }
+              ]
+            }
+          ]
+        },
+        "networkProfile": {
+          "networkInterfaces": [
+            {
+              "id": "/subscriptions/SUBSCRIPTIONID/resourceGroups/groupname/providers/Microsoft.Network/networkInterfaces/windowsmachine167"
+            }
+          ]
+        },
+        "diagnosticsProfile": {
+          "bootDiagnostics": {
+            "enabled": true,
+            "storageUri": "https://groupname2760.blob.core.windows.net/"
+          }
+        },
+        "provisioningState": "Creating"
+      },
+      "id": "/subscriptions/SUBSCRIPTIONID/resourceGroups/groupname/providers/Microsoft.Compute/virtualMachines/windowsmachine",
+      "name": "windowsmachine",
+      "type": "Microsoft.Compute/virtualMachines",
+      "location": "eastus"
+    }
+  ]
+}

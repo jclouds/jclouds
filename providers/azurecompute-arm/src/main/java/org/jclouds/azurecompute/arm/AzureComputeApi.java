@@ -132,7 +132,7 @@ public interface AzureComputeApi extends Closeable {
     * @see <a href="https://msdn.microsoft.com/en-us/library/azure/mt163630.aspx">docs</a>
     */
    @Delegate
-   VirtualMachineApi getVirtualMachineApi(@PathParam("resourceGroup") String resourceGroup);
+   VirtualMachineApi getVirtualMachineApi(@Nullable @PathParam("resourceGroup") String resourceGroup);
 
    /**
     * The Virtual Machine Scale Set API includes operations for managing the virtual machines in your subscription.

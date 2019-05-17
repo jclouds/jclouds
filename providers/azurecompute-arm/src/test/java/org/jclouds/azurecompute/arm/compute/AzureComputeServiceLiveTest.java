@@ -16,16 +16,23 @@
  */
 package org.jclouds.azurecompute.arm.compute;
 
+import static com.google.common.collect.ImmutableSet.copyOf;
+import static com.google.common.collect.Iterables.transform;
 import static org.jclouds.azurecompute.arm.compute.options.AzureTemplateOptions.Builder.resourceGroup;
 import static org.jclouds.azurecompute.arm.config.AzureComputeProperties.TIMEOUT_RESOURCE_DELETED;
+import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertTrue;
 
 import java.net.URI;
 import java.util.Properties;
+import java.util.Set;
 
 import org.jclouds.azurecompute.arm.AzureComputeApi;
 import org.jclouds.azurecompute.arm.AzureComputeProviderMetadata;
 import org.jclouds.azurecompute.arm.internal.AzureLiveTestUtils;
+import org.jclouds.compute.domain.ComputeMetadata;
+import org.jclouds.compute.domain.ComputeType;
+import org.jclouds.compute.domain.NodeMetadata;
 import org.jclouds.compute.domain.Template;
 import org.jclouds.compute.domain.TemplateBuilder;
 import org.jclouds.compute.internal.BaseComputeServiceLiveTest;
@@ -40,6 +47,7 @@ import org.jclouds.sshj.config.SshjSshClientModule;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.Test;
 
+import com.google.common.base.Function;
 import com.google.common.base.Predicate;
 import com.google.inject.Key;
 import com.google.inject.Module;
@@ -65,6 +73,32 @@ public class AzureComputeServiceLiveTest extends BaseComputeServiceLiveTest {
       super.initializeContext();
       resourceDeleted = context.utils().injector().getInstance(Key.get(new TypeLiteral<Predicate<URI>>() {
       }, Names.named(TIMEOUT_RESOURCE_DELETED)));
+   }
+
+   // Base method performs Iterables.elementsEqual which is case sensitive.
+   // Azure API can return values in different cases so we'll perform a custom validation
+   @Override
+   @Test(dependsOnMethods = "testSuspendResume")
+   public void testListNodesByIds() {
+      final Set<String> nodeIds = copyOf(transform(nodes, new Function<NodeMetadata, String>() {
+
+         @Override
+         public String apply(NodeMetadata from) {
+            return from.getId();
+         }
+
+      }));
+
+      final Set<? extends ComputeMetadata> listedNodes = client.listNodesByIds(nodeIds);
+
+      assertEquals(listedNodes.size(), nodes.size());
+
+      for (ComputeMetadata listedNode : listedNodes) {
+         assert listedNode.getProviderId() != null : listedNode;
+         assert listedNode.getLocation() != null : listedNode;
+         assertEquals(listedNode.getType(), ComputeType.NODE);
+         assert nodeIds.contains(listedNode.getId());
+      }
    }
 
    @Override

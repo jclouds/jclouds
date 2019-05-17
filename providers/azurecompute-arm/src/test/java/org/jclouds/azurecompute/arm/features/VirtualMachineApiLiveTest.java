@@ -194,6 +194,41 @@ public class VirtualMachineApiLiveTest extends BaseAzureComputeApiLiveTest {
    }
 
    @Test(dependsOnMethods = "testCreate")
+   public void testListAll() {
+      List<VirtualMachine> list = api.getVirtualMachineApi(null).listAll();
+      final VirtualMachine vm = api().get(vmName);
+
+      boolean vmPresent = Iterables.any(list, new Predicate<VirtualMachine>() {
+         public boolean apply(VirtualMachine input) {
+            return input.name().equals(vm.name());
+         }
+      });
+
+      assertTrue(vmPresent);
+   }
+
+   @Test(dependsOnMethods = "testCreate")
+   public void testListByLocation() {
+      List<VirtualMachine> list = api.getVirtualMachineApi(null).listByLocation(LOCATION);
+      final VirtualMachine vm = api().get(vmName);
+
+      boolean vmPresent = Iterables.any(list, new Predicate<VirtualMachine>() {
+         public boolean apply(VirtualMachine input) {
+            return input.name().equals(vm.name());
+         }
+      });
+      assertTrue(vmPresent);
+
+      boolean vmsInOtherLocations = Iterables.any(list, new Predicate<VirtualMachine>() {
+         public boolean apply(VirtualMachine input) {
+            return !input.location().equals(LOCATION);
+         }
+      });
+      assertFalse(vmsInOtherLocations);
+
+   }
+
+   @Test(dependsOnMethods = "testCreate")
    public void testListAvailableSizes() {
       List<VMSize> vmSizes = api().listAvailableSizes(vmName);
 
