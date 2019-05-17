@@ -54,6 +54,7 @@ public class NetworkSecurityGroupApiMockTest extends BaseAzureComputeApiMockTest
                       .access(NetworkSecurityRuleProperties.Access.Deny)
                       .priority(4095)
                       .direction(NetworkSecurityRuleProperties.Direction.Outbound)
+                      .provisioningState("Succeeded")
                       .build());
       ArrayList<NetworkSecurityRule> ruleList = new ArrayList<NetworkSecurityRule>();
       ruleList.add(rule);

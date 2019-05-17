@@ -52,6 +52,7 @@ public class NetworkSecurityRuleApiMockTest extends BaseAzureComputeApiMockTest 
                       .access(NetworkSecurityRuleProperties.Access.Allow)
                       .priority(4094)
                       .direction(NetworkSecurityRuleProperties.Direction.Inbound)
+                      .provisioningState("Succeeded")
                       .build());
       return rule;
    }

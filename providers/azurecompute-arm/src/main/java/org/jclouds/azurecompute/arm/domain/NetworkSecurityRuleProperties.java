@@ -16,14 +16,14 @@
  */
 package org.jclouds.azurecompute.arm.domain;
 
-import com.google.auto.value.AutoValue;
-
 import org.jclouds.azurecompute.arm.util.GetEnumValue;
 import org.jclouds.javax.annotation.Nullable;
 import org.jclouds.json.SerializedNames;
 
+import com.google.auto.value.AutoValue;
+
 @AutoValue
-public abstract class NetworkSecurityRuleProperties {
+public abstract class NetworkSecurityRuleProperties implements Provisionable {
    public enum Protocol {
       // * is an allowed value, will handle in
       Tcp("Tcp"),
@@ -91,7 +91,10 @@ public abstract class NetworkSecurityRuleProperties {
 
    public abstract Direction direction();
 
-   @SerializedNames({"description", "protocol", "sourcePortRange", "destinationPortRange", "sourceAddressPrefix", "destinationAddressPrefix", "access", "priority", "direction"})
+   @Nullable
+   public abstract String provisioningState();
+
+   @SerializedNames({ "description", "protocol", "sourcePortRange", "destinationPortRange", "sourceAddressPrefix", "destinationAddressPrefix", "access", "priority", "direction", "provisioningState" })
    public static NetworkSecurityRuleProperties create(final String description,
                                                       final Protocol protocol,
                                                       final String sourcePortRange,
@@ -100,7 +103,8 @@ public abstract class NetworkSecurityRuleProperties {
                                                       final String destinationAddressPrefix,
                                                       final Access access,
                                                       final Integer priority,
-                                                      final Direction direction) {
+                                                      final Direction direction,
+                                                      final String provisioningState) {
       return builder()
               .description(description)
               .protocol(protocol)
@@ -110,7 +114,7 @@ public abstract class NetworkSecurityRuleProperties {
               .destinationAddressPrefix(destinationAddressPrefix)
               .access(access)
               .priority(priority)
-              .direction(direction)
+              .direction(direction).provisioningState(provisioningState)
               .build();
    }
    
@@ -139,6 +143,8 @@ public abstract class NetworkSecurityRuleProperties {
       public abstract Builder priority(Integer priority);
 
       public abstract Builder direction(Direction direction);
+
+      public abstract Builder provisioningState(String provisioningState);
 
       public abstract NetworkSecurityRuleProperties build();
    }
