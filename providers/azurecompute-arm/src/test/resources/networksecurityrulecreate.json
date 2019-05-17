@@ -12,6 +12,7 @@
     "destinationAddressPrefix": "*",
     "access": "Allow",
     "priority": 4094,
-    "direction": "Inbound"
+    "direction": "Inbound",
+    "provisioningState": "Succeeded"
   }
 }

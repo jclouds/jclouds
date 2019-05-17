@@ -45,6 +45,7 @@ import org.jclouds.azurecompute.arm.domain.Image;
 import org.jclouds.azurecompute.arm.domain.Key.DeletedKeyBundle;
 import org.jclouds.azurecompute.arm.domain.Key.KeyBundle;
 import org.jclouds.azurecompute.arm.domain.NetworkSecurityGroup;
+import org.jclouds.azurecompute.arm.domain.NetworkSecurityRule;
 import org.jclouds.azurecompute.arm.domain.Provisionable;
 import org.jclouds.azurecompute.arm.domain.ResourceDefinition;
 import org.jclouds.azurecompute.arm.domain.Secret.DeletedSecretBundle;
@@ -120,6 +121,12 @@ public class AzurePredicatesModule extends AbstractModule {
    protected SecurityGroupAvailablePredicateFactory provideSecurityGroupAvailablePredicate(final AzureComputeApi api,
          Predicate<Supplier<Provisionable>> resourceAvailable) {
       return new SecurityGroupAvailablePredicateFactory(api, resourceAvailable);
+   }
+
+   @Provides
+   protected SecurityGroupRuleAvailablePredicateFactory provideSecurityGroupRuleAvailablePredicate(final AzureComputeApi api,
+         Predicate<Supplier<Provisionable>> resourceAvailable) {
+      return new SecurityGroupRuleAvailablePredicateFactory(api, resourceAvailable);
    }
 
    @Provides
@@ -285,6 +292,34 @@ public class AzurePredicatesModule extends AbstractModule {
                   public Provisionable get() {
                      NetworkSecurityGroup sg = api.getNetworkSecurityGroupApi(resourceGroup).get(name);
                      return sg == null ? null : sg.properties();
+                  }
+               });
+            }
+         };
+      }
+   }
+
+   public static class SecurityGroupRuleAvailablePredicateFactory {
+      private final AzureComputeApi api;
+      private final Predicate<Supplier<Provisionable>> resourceAvailable;
+
+      SecurityGroupRuleAvailablePredicateFactory(final AzureComputeApi api, Predicate<Supplier<Provisionable>> resourceAvailable) {
+         this.api = checkNotNull(api, "api cannot be null");
+         this.resourceAvailable = resourceAvailable;
+      }
+
+      public Predicate<String> create(final String resourceGroup, final String securityGroupName) {
+         checkNotNull(resourceGroup, "resourceGroup cannot be null");
+         checkNotNull(securityGroupName, "securityGroupName cannot be null");
+         return new Predicate<String>() {
+            @Override
+            public boolean apply(final String name) {
+               checkNotNull(name, "name cannot be null");
+               return resourceAvailable.apply(new Supplier<Provisionable>() {
+                  @Override
+                  public Provisionable get() {
+                     NetworkSecurityRule securityRule = api.getNetworkSecurityRuleApi(resourceGroup, securityGroupName).get(name);
+                     return securityRule == null ? null : securityRule.properties();
                   }
                });
             }
