@@ -69,7 +69,7 @@ public class NetworkSecurityGroupApiLiveTest extends BaseAzureComputeApiLiveTest
       assertNotNull(result);
       assertEquals(result.size(), 1);
 
-      // check that the nework security group matches the one we originally passed in
+      // check that the network security group matches the one we originally passed in
       NetworkSecurityGroup original = newNetworkSecurityGroup(nsgName, LOCATION);
       NetworkSecurityGroup nsg = result.get(0);
       assertEquals(original.name(), nsg.name());
@@ -84,7 +84,37 @@ public class NetworkSecurityGroupApiLiveTest extends BaseAzureComputeApiLiveTest
       assertTrue(originalRule.properties().equals(nsgRule.properties()));
    }
 
-   @Test(dependsOnMethods = {"listNetworkSecurityGroups", "getNetworkSecurityGroup"}, alwaysRun = true)
+   @Test(dependsOnMethods = "createNetworkSecurityGroup")
+   public void listAllNetworkSecurityGroups() {
+      List<NetworkSecurityGroup> result = api().listAll();
+
+      // verify we have at least the original created SG. We could retrieve here any other SGs in different RGs
+      assertNotNull(result);
+      assertTrue(result.size() > 1);
+
+      NetworkSecurityGroup original = newNetworkSecurityGroup(nsgName, LOCATION);
+      boolean found = false;
+      for (NetworkSecurityGroup networkSecurityGroup : result) {
+         if (networkSecurityGroup.name().equalsIgnoreCase(original.name())) {
+            assertEquals(original.name(), networkSecurityGroup.name());
+            assertEquals(original.location(), networkSecurityGroup.location());
+            assertEquals(original.tags(), networkSecurityGroup.tags());
+
+            // check the network security rule in the group
+            assertEquals(networkSecurityGroup.properties().securityRules().size(), 1);
+            NetworkSecurityRule originalRule = original.properties().securityRules().get(0);
+            NetworkSecurityRule nsgRule = networkSecurityGroup.properties().securityRules().get(0);
+            assertEquals(originalRule.name(), nsgRule.name());
+            assertTrue(originalRule.properties().equals(nsgRule.properties()));
+            found = true;
+            break;
+         }
+      }
+
+      assertTrue(found, "NSG created in test was not found in subscription");
+   }
+
+   @Test(dependsOnMethods = { "listNetworkSecurityGroups", "listAllNetworkSecurityGroups", "getNetworkSecurityGroup" }, alwaysRun = true)
    public void deleteNetworkSecurityGroup() {
       URI uri = api().delete(nsgName);
       assertResourceDeleted(uri);
