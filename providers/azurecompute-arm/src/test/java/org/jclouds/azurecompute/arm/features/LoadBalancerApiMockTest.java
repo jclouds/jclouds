@@ -109,6 +109,19 @@ public class LoadBalancerApiMockTest extends BaseAzureComputeApiMockTest {
       assertTrue(result.size() > 0);
    }
 
+   public void listAllLoadBalancers() throws InterruptedException {
+      server.enqueue(jsonResponse("/loadbalancerlistall.json").setResponseCode(200));
+
+      final LoadBalancerApi nsgApi = api.getLoadBalancerApi(resourcegroup);
+      List<LoadBalancer> result = nsgApi.listAll();
+
+      String path = String.format("/subscriptions/%s/providers/Microsoft.Network/loadBalancers?%s", subscriptionid, apiVersion);
+      assertSent(server, "GET", path);
+
+      assertNotNull(result);
+      assertTrue(result.size() > 0);
+   }
+
    public void listLoadBalancersReturns404() throws InterruptedException {
       server.enqueue(response404());
 

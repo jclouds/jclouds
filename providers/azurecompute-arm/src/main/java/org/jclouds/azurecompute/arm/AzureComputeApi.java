@@ -192,7 +192,7 @@ public interface AzureComputeApi extends Closeable {
     *      </a>
     */
    @Delegate
-   LoadBalancerApi getLoadBalancerApi(@PathParam("resourcegroup") String resourcegroup);
+   LoadBalancerApi getLoadBalancerApi(@Nullable @PathParam("resourcegroup") String resourcegroup);
 
    /**
     * The AvailabilitySet API includes operations for managing availability sets

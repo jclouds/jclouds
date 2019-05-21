@@ -1,0 +1,66 @@
+{
+  "value": [
+    {
+      "name": "testLoadBalancer",
+      "id": "/subscriptions/SUBSCRIPTIONID/resourceGroups/rg-loadbalancerapilivetest-nacx/providers/Microsoft.Network/loadBalancers/testLoadBalancer",
+      "etag": "W/\"1107154b-8717-486b-80c1-af99ec62897b\"",
+      "type": "Microsoft.Network/loadBalancers",
+      "location": "westeurope",
+      "properties": {
+        "provisioningState": "Succeeded",
+        "resourceGuid": "383708b3-8d4e-474c-8908-9c4e311ac0bf",
+        "frontendIPConfigurations": [
+          {
+            "name": "ipConfigs",
+            "id": "/subscriptions/SUBSCRIPTIONID/resourceGroups/rg-loadbalancerapilivetest-nacx/providers/Microsoft.Network/loadBalancers/testLoadBalancer/frontendIPConfigurations/ipConfigs",
+            "etag": "W/\"1107154b-8717-486b-80c1-af99ec62897b\"",
+            "properties": {
+              "provisioningState": "Succeeded",
+              "privateIPAllocationMethod": "Dynamic",
+              "publicIPAddress": {
+                "id": "/subscriptions/SUBSCRIPTIONID/resourceGroups/rg-loadbalancerapilivetest-nacx/providers/Microsoft.Network/publicIPAddresses/Ip4LoadBalancer"
+              }
+            }
+          }
+        ],
+        "backendAddressPools": [],
+        "loadBalancingRules": [],
+        "probes": [],
+        "inboundNatRules": [],
+        "outboundNatRules": [],
+        "inboundNatPools": []
+      }
+    },
+    {
+      "name": "testLoadBalancer",
+      "id": "/subscriptions/SUBSCRIPTIONID/resourceGroups/other-rg/providers/Microsoft.Network/loadBalancers/testLoadBalancer",
+      "etag": "W/\"1107154b-8717-486b-80c1-af99ec62897b\"",
+      "type": "Microsoft.Network/loadBalancers",
+      "location": "westeurope",
+      "properties": {
+        "provisioningState": "Succeeded",
+        "resourceGuid": "383708b3-8d4e-474c-8908-9c4e311ac0bf",
+        "frontendIPConfigurations": [
+          {
+            "name": "ipConfigs",
+            "id": "/subscriptions/SUBSCRIPTIONID/resourceGroups/other-rg/providers/Microsoft.Network/loadBalancers/testLoadBalancer/frontendIPConfigurations/ipConfigs",
+            "etag": "W/\"1107154b-8717-486b-80c1-af99ec62897b\"",
+            "properties": {
+              "provisioningState": "Succeeded",
+              "privateIPAllocationMethod": "Dynamic",
+              "publicIPAddress": {
+                "id": "/subscriptions/SUBSCRIPTIONID/resourceGroups/other-rg/providers/Microsoft.Network/publicIPAddresses/Ip4LoadBalancer"
+              }
+            }
+          }
+        ],
+        "backendAddressPools": [],
+        "loadBalancingRules": [],
+        "probes": [],
+        "inboundNatRules": [],
+        "outboundNatRules": [],
+        "inboundNatPools": []
+      }
+    }
+  ]
+}
