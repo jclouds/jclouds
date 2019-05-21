@@ -172,7 +172,7 @@ public interface AzureComputeApi extends Closeable {
     * @see <a href="https://msdn.microsoft.com/en-us/library/azure/mt163615.aspx">docs</a>
     */
    @Delegate
-   NetworkSecurityGroupApi getNetworkSecurityGroupApi(@PathParam("resourcegroup") String resourcegroup);
+   NetworkSecurityGroupApi getNetworkSecurityGroupApi(@Nullable @PathParam("resourcegroup") String resourcegroup);
  
    /**
     * The NetworkSecurityRule API includes operations for managing network security rules within a network security group.

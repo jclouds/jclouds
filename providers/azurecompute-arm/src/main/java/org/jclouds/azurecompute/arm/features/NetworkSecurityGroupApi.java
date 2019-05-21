@@ -19,7 +19,6 @@ package org.jclouds.azurecompute.arm.features;
 import java.net.URI;
 import java.util.List;
 import java.util.Map;
-
 import javax.inject.Named;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
@@ -29,6 +28,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.core.MediaType;
 
+import org.jclouds.Fallbacks;
 import org.jclouds.Fallbacks.EmptyListOnNotFoundOr404;
 import org.jclouds.Fallbacks.NullOnNotFoundOr404;
 import org.jclouds.azurecompute.arm.domain.NetworkSecurityGroup;
@@ -45,26 +45,38 @@ import org.jclouds.rest.annotations.ResponseParser;
 import org.jclouds.rest.annotations.SelectJson;
 import org.jclouds.rest.binders.BindToJsonPayload;
 
-@Path("/resourcegroups/{resourcegroup}/providers/Microsoft.Network/networkSecurityGroups")
+/**
+ * The Network Security Group API includes operations for managing the network security groups in your subscription.
+ *
+ * @see <a href="https://docs.microsoft.com/en-us/rest/api/virtualnetwork/networksecuritygroups">docs</a>
+ */
 @RequestFilters({ OAuthFilter.class, ApiVersionFilter.class })
 @Consumes(MediaType.APPLICATION_JSON)
 public interface NetworkSecurityGroupApi {
 
    @Named("networksecuritygroup:list")
+   @Path("/resourcegroups/{resourcegroup}/providers/Microsoft.Network/networkSecurityGroups")
    @GET
    @SelectJson("value")
    @Fallback(EmptyListOnNotFoundOr404.class)
    List<NetworkSecurityGroup> list();
 
+   @Named("networksecuritygroup:listall")
+   @GET
+   @Path("/providers/Microsoft.Network/networkSecurityGroups")
+   @SelectJson("value")
+   @Fallback(Fallbacks.EmptyListOnNotFoundOr404.class)
+   List<NetworkSecurityGroup> listAll();
+
    @Named("networksecuritygroup:delete")
-   @Path("/{networksecuritygroupname}")
+   @Path("/resourcegroups/{resourcegroup}/providers/Microsoft.Network/networkSecurityGroups/{networksecuritygroupname}")
    @DELETE
    @ResponseParser(URIParser.class)
    @Fallback(NullOnNotFoundOr404.class)
    URI delete(@PathParam("networksecuritygroupname") String nsgName);
 
    @Named("networksecuritygroup:createOrUpdate")
-   @Path("/{networksecuritygroupname}")
+   @Path("/resourcegroups/{resourcegroup}/providers/Microsoft.Network/networkSecurityGroups/{networksecuritygroupname}")
    @PUT
    @MapBinder(BindToJsonPayload.class)
    NetworkSecurityGroup createOrUpdate(@PathParam("networksecuritygroupname") String nsgName,
@@ -72,8 +84,9 @@ public interface NetworkSecurityGroupApi {
          @PayloadParam("properties") NetworkSecurityGroupProperties properties);
 
    @Named("networksecuritygroup:get")
-   @Path("/{networksecuritygroupname}")
+   @Path("/resourcegroups/{resourcegroup}/providers/Microsoft.Network/networkSecurityGroups/{networksecuritygroupname}")
    @GET
    @Fallback(NullOnNotFoundOr404.class)
    NetworkSecurityGroup get(@PathParam("networksecuritygroupname") String nsgName);
+
 }

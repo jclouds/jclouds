@@ -16,7 +16,16 @@
  */
 package org.jclouds.azurecompute.arm.features;
 
-import com.google.gson.Gson;
+import static com.google.common.collect.Iterables.isEmpty;
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertNotNull;
+import static org.testng.Assert.assertNull;
+import static org.testng.Assert.assertTrue;
+
+import java.net.URI;
+import java.util.ArrayList;
+import java.util.List;
+
 import org.jclouds.azurecompute.arm.domain.NetworkSecurityGroup;
 import org.jclouds.azurecompute.arm.domain.NetworkSecurityGroupProperties;
 import org.jclouds.azurecompute.arm.domain.NetworkSecurityRule;
@@ -25,15 +34,7 @@ import org.jclouds.azurecompute.arm.domain.NetworkSecurityRuleProperties.Protoco
 import org.jclouds.azurecompute.arm.internal.BaseAzureComputeApiMockTest;
 import org.testng.annotations.Test;
 
-import java.net.URI;
-import java.util.ArrayList;
-import java.util.List;
-
-import static com.google.common.collect.Iterables.isEmpty;
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertNull;
-import static org.testng.Assert.assertNotNull;
-import static org.testng.Assert.assertTrue;
+import com.google.gson.Gson;
 
 @Test(groups = "unit", testName = "NetworkSecurityGroupApiMockTest", singleThreaded = true)
 public class NetworkSecurityGroupApiMockTest extends BaseAzureComputeApiMockTest {
@@ -121,6 +122,19 @@ public class NetworkSecurityGroupApiMockTest extends BaseAzureComputeApiMockTest
 
       assertNotNull(result);
       assertTrue(result.size() > 0);
+   }
+
+   public void listAllNetworkSecurityGroups() throws InterruptedException {
+      server.enqueue(jsonResponse("/networksecuritygrouplistall.json").setResponseCode(200));
+
+      final NetworkSecurityGroupApi nsgApi = api.getNetworkSecurityGroupApi(resourcegroup);
+      List<NetworkSecurityGroup> result = nsgApi.listAll();
+
+      String path = String.format("/subscriptions/%s/providers/Microsoft.Network/networkSecurityGroups?%s", subscriptionid, apiVersion);
+      assertSent(server, "GET", path);
+
+      assertNotNull(result);
+      assertEquals(result.size(), 2);
    }
 
    public void listNetworkSecurityGroupsReturns404() throws InterruptedException {
