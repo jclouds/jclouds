@@ -40,7 +40,7 @@
     <test.openstack-swift.identity>FIXME_IDENTITY</test.openstack-swift.identity>
     <test.openstack-swift.credential>FIXME_CREDENTIALS</test.openstack-swift.credential>
     <test.jclouds.keystone.credential-type>passwordCredentials</test.jclouds.keystone.credential-type>
-    <jclouds.blobstore.httpstream.url>http://archive.apache.org/dist/commons/logging/binaries/commons-logging-1.1.1-bin.tar.gz</jclouds.blobstore.httpstream.url>
+    <jclouds.blobstore.httpstream.url>https://archive.apache.org/dist/commons/logging/binaries/commons-logging-1.1.1-bin.tar.gz</jclouds.blobstore.httpstream.url>
     <jclouds.blobstore.httpstream.md5>e5de09672af9b386c30a311654d8541a</jclouds.blobstore.httpstream.md5>
     <jclouds.osgi.export>org.jclouds.openstack.swift.v1*;version="${project.version}"</jclouds.osgi.export>
     <jclouds.osgi.import>org.jclouds*;version="${project.version}",*</jclouds.osgi.import>

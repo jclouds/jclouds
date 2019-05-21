@@ -30,14 +30,14 @@
   <version>2.2.0-SNAPSHOT</version>
   <packaging>pom</packaging>
   <name>Apache jclouds Project</name>
-  <url>http://jclouds.apache.org/</url>
+  <url>https://jclouds.apache.org/</url>
   <description>Apache jclouds: Concurrent API for Cloud Services</description>
   <inceptionYear>2009</inceptionYear>
 
   <licenses>
     <license>
       <name>The Apache Software License, Version 2.0</name>
-      <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+      <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
       <distribution>repo</distribution>
     </license>
   </licenses>
@@ -55,26 +55,26 @@
       <subscribe>user-subscribe@jclouds.apache.org</subscribe>
       <unsubscribe>user-unsubscribe@jclouds.apache.org</unsubscribe>
       <post>user@jclouds.apache.org</post>
-      <archive>http://mail-archives.apache.org/mod_mbox/jclouds-user/</archive>
+      <archive>https://mail-archives.apache.org/mod_mbox/jclouds-user/</archive>
     </mailingList>
     <mailingList>
       <name>Developer List</name>
       <subscribe>dev-subscribe@jclouds.apache.org</subscribe>
       <unsubscribe>dev-unsubscribe@jclouds.apache.org</unsubscribe>
       <post>dev@jclouds.apache.org</post>
-      <archive>http://mail-archives.apache.org/mod_mbox/jclouds-dev/</archive>
+      <archive>https://mail-archives.apache.org/mod_mbox/jclouds-dev/</archive>
     </mailingList>
     <mailingList>
       <name>Commits List</name>
       <subscribe>commits-subscribe@jclouds.apache.org</subscribe>
       <unsubscribe>commits-unsubscribe@jclouds.apache.org</unsubscribe>
-      <archive>http://mail-archives.apache.org/mod_mbox/jclouds-commits/</archive>
+      <archive>https://mail-archives.apache.org/mod_mbox/jclouds-commits/</archive>
     </mailingList>
     <mailingList>
       <name>Issues List</name>
       <subscribe>issues-subscribe@jclouds.apache.org</subscribe>
       <unsubscribe>issues-unsubscribe@jclouds.apache.org</unsubscribe>
-      <archive>http://mail-archives.apache.org/mod_mbox/jclouds-issues/</archive>
+      <archive>https://mail-archives.apache.org/mod_mbox/jclouds-issues/</archive>
     </mailingList>
   </mailingLists>
 
@@ -238,7 +238,7 @@
     <osgi.compendium.version>${osgi.version}</osgi.compendium.version>
     <http.proxyHost />
     <http.proxyPort />
-    <jclouds.wire.httpstream.url>http://archive.apache.org/dist/commons/logging/binaries/commons-logging-1.1.1-bin.tar.gz</jclouds.wire.httpstream.url>
+    <jclouds.wire.httpstream.url>https://archive.apache.org/dist/commons/logging/binaries/commons-logging-1.1.1-bin.tar.gz</jclouds.wire.httpstream.url>
     <jclouds.wire.httpstream.md5>e5de09672af9b386c30a311654d8541a</jclouds.wire.httpstream.md5>
     <jclouds.blobstore.httpstream.url>${jclouds.wire.httpstream.url}</jclouds.blobstore.httpstream.url>
     <jclouds.blobstore.httpstream.md5>${jclouds.wire.httpstream.md5}</jclouds.blobstore.httpstream.md5>
@@ -1127,7 +1127,7 @@
             <encoding>${project.build.sourceEncoding}</encoding>
             <quiet>true</quiet>
             <links>
-              <link>http://download.oracle.com/javase/6/docs/api/</link>
+              <link>https://download.oracle.com/javase/6/docs/api/</link>
             </links>
           </configuration>
         </plugin>
@@ -1181,7 +1181,7 @@
                   <systemPropertyVariables>
                     <!--
                         If you're behind a proxy, set this here
-                        http://java.sun.com/javase/6/docs/technotes/guides/net/proxies.html
+                        https://docs.oracle.com/javase/6/docs/technotes/guides/net/proxies.html
 
 <https.proxyHost>proxy</https.proxyHost>
 <https.proxyPort>port</https.proxyPort>
