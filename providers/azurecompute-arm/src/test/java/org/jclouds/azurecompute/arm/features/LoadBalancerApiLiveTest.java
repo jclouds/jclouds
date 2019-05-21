@@ -219,6 +219,23 @@ public class LoadBalancerApiLiveTest extends BaseComputeServiceContextLiveTest {
    }
 
    @Test(dependsOnMethods = "testCreateLoadBalancer")
+   public void testListAllLoadBalancers() {
+      List<LoadBalancer> result = lbApi.listAll();
+
+      // Verify we have something
+      assertNotNull(result);
+      assertTrue(result.size() > 0);
+
+      // Check that the load balancer matches the one we originally passed in
+      assertTrue(any(result, new Predicate<LoadBalancer>() {
+         @Override
+         public boolean apply(LoadBalancer input) {
+            return lb.name().equals(input.name());
+         }
+      }));
+   }
+
+   @Test(dependsOnMethods = "testCreateLoadBalancer")
    public void testGetLoadBalancer() {
       lb = lbApi.get(lbName);
       assertNotNull(lb);
@@ -324,7 +341,7 @@ public class LoadBalancerApiLiveTest extends BaseComputeServiceContextLiveTest {
 
    }
 
-   @Test(dependsOnMethods = { "testCreateLoadBalancer", "testListLoadBalancers", "testGetLoadBalancer", "testAddProbe",
+   @Test(dependsOnMethods = { "testCreateLoadBalancer", "testListLoadBalancers", "testListAllLoadBalancers", "testGetLoadBalancer", "testAddProbe",
          "testAddLoadBalancingRule", "testAddBackendPool", "testAttachNodesToBackendPool", "testAddInboundNatRule" }, alwaysRun = true)
    public void deleteLoadBalancer() {
       URI uri = lbApi.delete(lbName);

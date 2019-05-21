@@ -45,34 +45,44 @@ import org.jclouds.rest.annotations.ResponseParser;
 import org.jclouds.rest.annotations.SelectJson;
 import org.jclouds.rest.binders.BindToJsonPayload;
 
-@Path("/resourcegroups/{resourcegroup}/providers/Microsoft.Network/loadBalancers")
+/**
+ * The Load Balancer API includes operations for managing the load balancers in your subscription.
+ *
+ * @see <a href="https://docs.microsoft.com/en-us/rest/api/load-balancer/loadbalancers">docs</a>
+ */
 @RequestFilters({ OAuthFilter.class, ApiVersionFilter.class })
 @Consumes(MediaType.APPLICATION_JSON)
 public interface LoadBalancerApi {
 
    @Named("loadbalancer:list")
    @GET
+   @Path("/resourcegroups/{resourcegroup}/providers/Microsoft.Network/loadBalancers")
    @SelectJson("value")
    @Fallback(EmptyListOnNotFoundOr404.class)
    List<LoadBalancer> list();
 
+   @Named("loadbalancer:listall")
+   @GET
+   @Path("/providers/Microsoft.Network/loadBalancers")
+   @SelectJson("value")
+   @Fallback(EmptyListOnNotFoundOr404.class)
+   List<LoadBalancer> listAll();
+
    @Named("loadbalancer:get")
-   @Path("/{loadbalancername}")
+   @Path("/resourcegroups/{resourcegroup}/providers/Microsoft.Network/loadBalancers/{loadbalancername}")
    @GET
    @Fallback(NullOnNotFoundOr404.class)
    LoadBalancer get(@PathParam("loadbalancername") String lbName);
 
    @Named("loadbalancer:createOrUpdate")
-   @Path("/{loadbalancername}")
+   @Path("/resourcegroups/{resourcegroup}/providers/Microsoft.Network/loadBalancers/{loadbalancername}")
    @PUT
    @MapBinder(BindToJsonPayload.class)
-   LoadBalancer createOrUpdate(@PathParam("loadbalancername") String lbName,
-         @PayloadParam("location") String location, @Nullable @PayloadParam("tags") Map<String, String> tags,
-         @Nullable @PayloadParam("sku") SKU sku,
+   LoadBalancer createOrUpdate(@PathParam("loadbalancername") String lbName, @PayloadParam("location") String location, @Nullable @PayloadParam("tags") Map<String, String> tags, @Nullable @PayloadParam("sku") SKU sku,
          @PayloadParam("properties") LoadBalancerProperties properties);
 
    @Named("loadbalancer:delete")
-   @Path("/{loadbalancername}")
+   @Path("/resourcegroups/{resourcegroup}/providers/Microsoft.Network/loadBalancers/{loadbalancername}")
    @DELETE
    @ResponseParser(URIParser.class)
    @Fallback(NullOnNotFoundOr404.class)
