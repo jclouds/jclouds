@@ -1,0 +1,99 @@
+{
+  "value": [
+    {
+      "name": "mockvirtualnetwork",
+      "id": "/subscriptions/6b6748c8-3e69-4e27-9b71-df97a81c0bbc/resourceGroups/azurearmtesting/providers/Microsoft.Network/virtualNetworks/mockvirtualnetwork",
+      "etag": "W/\"0dcd223f-670c-49ca-abe7-5978d127c131\"",
+      "type": "Microsoft.Network/virtualNetworks",
+      "location": "westeurope",
+      "tags": {
+        "key": "value"
+      },
+      "properties": {
+        "provisioningState": "Succeeded",
+        "resourceGuid": "1568c76a-73a4-4a60-8dfb-53b823197ccb",
+        "addressSpace": {
+          "addressPrefixes": [
+            "10.2.0.0/16"
+          ]
+        },
+        "subnets": []
+      }
+    },
+    {
+      "name": "anothervirtualnetworks",
+      "id": "/subscriptions/SUBSCRIPTIONID/resourceGroups/azurearmtesting/providers/Microsoft.Network/virtualNetworks/anothervirtualnetworks",
+      "etag": "W/\"7604d8fe-f3b8-4fd4-ae52-ab503cc29097\"",
+      "type": "Microsoft.Network/virtualNetworks",
+      "location": "westeurope",
+      "tags": {
+        "key": "value"
+      },
+      "properties": {
+        "provisioningState": "Succeeded",
+        "resourceGuid": "5192bdb3-f6ed-44ad-bf4c-059cff905791",
+        "addressSpace": {
+          "addressPrefixes": [
+            "10.2.0.0/16"
+          ]
+        },
+        "subnets": []
+      }
+    },
+    {
+      "name": "myvirtualnetwork",
+      "id": "/subscriptions/SUBSCRIPTIONID/resourceGroups/azurearmtesting/providers/Microsoft.Network/virtualNetworks/myvirtualnetwork",
+      "etag": "W/\"bc7e1d77-eec0-4b91-ae80-afc33cf3c867\"",
+      "type": "Microsoft.Network/virtualNetworks",
+      "location": "westeurope",
+      "tags": {
+        "key": "value"
+      },
+      "properties": {
+        "provisioningState": "Succeeded",
+        "resourceGuid": "8da85637-833c-4445-a681-81ca3fb90044",
+        "addressSpace": {
+          "addressPrefixes": [
+            "10.2.0.0/16"
+          ]
+        },
+        "subnets": [
+          {
+            "name": "mysubnet",
+            "id": "/subscriptions/SUBSCRIPTIONID/resourceGroups/azurearmtesting/providers/Microsoft.Network/virtualNetworks/myvirtualnetwork/subnets/mysubnet",
+            "etag": "W/\"bc7e1d77-eec0-4b91-ae80-afc33cf3c867\"",
+            "properties": {
+              "provisioningState": "Succeeded",
+              "addressPrefix": "10.2.0.0/24",
+              "ipConfigurations": [
+                {
+                  "id": "/subscriptions/SUBSCRIPTIONID/resourceGroups/azurearmtesting/providers/Microsoft.Network/networkInterfaces/myNic/ipConfigurations/myip1"
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "mockvirtualnetworkextra",
+      "id": "/subscriptions/6b6748c8-3e69-4e27-9b71-df97a81c0bbc/resourceGroups/other-rg/providers/Microsoft.Network/virtualNetworks/mockvirtualnetwork",
+      "etag": "W/\"0dcd223f-670c-49ca-abe7-5978d127c131\"",
+      "type": "Microsoft.Network/virtualNetworks",
+      "location": "westeurope",
+      "tags": {
+        "key": "value"
+      },
+      "properties": {
+        "provisioningState": "Succeeded",
+        "resourceGuid": "1568c76a-73a4-4a60-8dfb-53b823197ccb",
+        "addressSpace": {
+          "addressPrefixes": [
+            "10.2.0.0/16"
+          ]
+        },
+        "subnets": []
+      }
+    }
+  ]
+}

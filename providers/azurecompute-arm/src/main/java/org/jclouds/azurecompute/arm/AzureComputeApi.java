@@ -106,7 +106,7 @@ public interface AzureComputeApi extends Closeable {
     * @see <a href="https://msdn.microsoft.com/en-us/library/azure/mt163661.aspx">docs</a>
     */
    @Delegate
-   VirtualNetworkApi getVirtualNetworkApi(@PathParam("resourcegroup") String resourcegroup);
+   VirtualNetworkApi getVirtualNetworkApi(@Nullable @PathParam("resourcegroup") String resourcegroup);
 
 
    /**
