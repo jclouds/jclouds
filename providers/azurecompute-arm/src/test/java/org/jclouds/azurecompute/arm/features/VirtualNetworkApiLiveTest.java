@@ -16,6 +16,7 @@
  */
 package org.jclouds.azurecompute.arm.features;
 
+import static com.google.common.collect.Iterables.any;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertNotNull;
@@ -39,6 +40,7 @@ import org.jclouds.azurecompute.arm.internal.BaseAzureComputeApiLiveTest;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
+import com.google.common.base.Predicate;
 import com.google.common.collect.ImmutableList;
 
 @Test(groups = "live", singleThreaded = true)
@@ -49,7 +51,7 @@ public class VirtualNetworkApiLiveTest extends BaseAzureComputeApiLiveTest {
    private static final String TEST_IP_ADDRESS_USED_IN_PROVIDER = "10.20.0.7";
 
    private String virtualNetworkName;
-
+   private VirtualNetwork vn;
 
    @BeforeClass
    @Override
@@ -75,7 +77,7 @@ public class VirtualNetworkApiLiveTest extends BaseAzureComputeApiLiveTest {
             .builder().subnets(ImmutableList.<Subnet> of(subnet))
             .addressSpace(AddressSpace.create(Arrays.asList(TEST_VIRTUALNETWORK_ADDRESS_PREFIX))).build();
 
-      VirtualNetwork vn = api().createOrUpdate(virtualNetworkName, LOCATION, null, virtualNetworkProperties);
+      vn = api().createOrUpdate(virtualNetworkName, LOCATION, null, virtualNetworkProperties);
 
       networkAvailablePredicate.create(resourceGroupName).apply(virtualNetworkName);
 
@@ -95,7 +97,31 @@ public class VirtualNetworkApiLiveTest extends BaseAzureComputeApiLiveTest {
    @Test(dependsOnMethods = "createVirtualNetwork")
    public void listVirtualNetworks() {
       List<VirtualNetwork> vnList = api().list();
+
+      assertNotNull(vnList);
       assertTrue(vnList.size() > 0);
+
+      assertTrue(any(vnList, new Predicate<VirtualNetwork>() {
+         @Override
+         public boolean apply(VirtualNetwork input) {
+            return vn.name().equals(input.name());
+         }
+      }));
+   }
+
+   @Test(dependsOnMethods = "createVirtualNetwork")
+   public void listAllVirtualNetworks() {
+      List<VirtualNetwork> vnList = api.getVirtualNetworkApi(null).listAll();
+
+      assertNotNull(vnList);
+      assertTrue(vnList.size() > 0);
+
+      assertTrue(any(vnList, new Predicate<VirtualNetwork>() {
+         @Override
+         public boolean apply(VirtualNetwork input) {
+            return vn.name().equals(input.name());
+         }
+      }));
    }
 
    @Test(dependsOnMethods = "getVirtualNetwork")
@@ -115,7 +141,7 @@ public class VirtualNetworkApiLiveTest extends BaseAzureComputeApiLiveTest {
       deleteLoadBalancer(lbCreated);
    }
 
-   @Test(dependsOnMethods = { "listVirtualNetworks", "getVirtualNetwork", "checkIpAvailability" }, alwaysRun = true)
+   @Test(dependsOnMethods = { "listVirtualNetworks", "listAllVirtualNetworks", "getVirtualNetwork", "checkIpAvailability" }, alwaysRun = true)
    public void deleteVirtualNetwork() {
       boolean status = api().delete(virtualNetworkName);
       assertTrue(status);

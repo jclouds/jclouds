@@ -44,40 +44,51 @@ import org.jclouds.rest.annotations.ResponseParser;
 import org.jclouds.rest.annotations.SelectJson;
 import org.jclouds.rest.binders.BindToJsonPayload;
 
-@Path("/resourcegroups/{resourcegroup}/providers/Microsoft.Network/virtualNetworks")
+/**
+ * The Virtual Networks API includes operations for managing Azure virtual networks in your subscription.
+ *
+ * @see <a href="https://docs.microsoft.com/en-us/rest/api/virtualnetwork/virtualnetworks">docs</a>
+ */
+@Path("")
 @RequestFilters({ OAuthFilter.class, ApiVersionFilter.class })
 @Consumes(MediaType.APPLICATION_JSON)
 public interface VirtualNetworkApi {
 
    @Named("virtualnetwork:list")
+   @Path("/resourcegroups/{resourcegroup}/providers/Microsoft.Network/virtualNetworks")
    @SelectJson("value")
    @GET
    @Fallback(EmptyListOnNotFoundOr404.class)
    List<VirtualNetwork> list();
 
+   @Named("loadbalancer:listall")
+   @GET
+   @Path("/providers/Microsoft.Network/virtualNetworks")
+   @SelectJson("value")
+   @Fallback(EmptyListOnNotFoundOr404.class)
+   List<VirtualNetwork> listAll();
+
    @Named("virtualnetwork:create_or_update")
-   @Path("/{virtualnetworkname}")
+   @Path("/resourcegroups/{resourcegroup}/providers/Microsoft.Network/virtualNetworks/{virtualnetworkname}")
    @MapBinder(BindToJsonPayload.class)
    @PUT
-   VirtualNetwork createOrUpdate(@PathParam("virtualnetworkname") String virtualnetworkname,
-         @PayloadParam("location") String location, @Nullable @PayloadParam("tags") Map<String, String> tags,
+   VirtualNetwork createOrUpdate(@PathParam("virtualnetworkname") String virtualnetworkname, @PayloadParam("location") String location, @Nullable @PayloadParam("tags") Map<String, String> tags,
          @PayloadParam("properties") VirtualNetwork.VirtualNetworkProperties properties);
 
    @Named("virtualnetwork:get")
-   @Path("/{virtualnetworkname}")
+   @Path("/resourcegroups/{resourcegroup}/providers/Microsoft.Network/virtualNetworks/{virtualnetworkname}")
    @GET
    @Fallback(NullOnNotFoundOr404.class)
    VirtualNetwork get(@PathParam("virtualnetworkname") String virtualnetworkname);
 
    @Named("virtualnetwork:delete")
-   @Path("/{virtualnetworkname}")
+   @Path("/resourcegroups/{resourcegroup}/providers/Microsoft.Network/virtualNetworks/{virtualnetworkname}")
    @DELETE
    @ResponseParser(FalseOn204.class)
    boolean delete(@PathParam("virtualnetworkname") String virtualnetworkname);
 
    @Named("virtualnetwork:check_ip_address_availability")
-   @Path("/{virtualnetworkname}/CheckIPAddressAvailability")
+   @Path("/resourcegroups/{resourcegroup}/providers/Microsoft.Network/virtualNetworks/{virtualnetworkname}/CheckIPAddressAvailability")
    @GET
-   IpAddressAvailabilityResult checkIPAddressAvailability(@PathParam("virtualnetworkname") String virtualnetworkname,
-         @QueryParam("ipAddress") String ipAddress);
+   IpAddressAvailabilityResult checkIPAddressAvailability(@PathParam("virtualnetworkname") String virtualnetworkname, @QueryParam("ipAddress") String ipAddress);
 }
