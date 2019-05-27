@@ -28,10 +28,12 @@ import org.jclouds.blobstore.domain.MutableBlobMetadata;
 import org.jclouds.blobstore.domain.StorageType;
 import org.jclouds.blobstore.domain.internal.MutableBlobMetadataImpl;
 import org.jclouds.http.HttpUtils;
+import org.jclouds.azureblob.config.InsufficientAccessRightsException;
+import org.jclouds.util.Throwables2;
 
 import com.google.common.base.Function;
-import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
+
 
 @Singleton
 public class BlobPropertiesToBlobMetadata implements Function<BlobProperties, MutableBlobMetadata> {
@@ -58,8 +60,10 @@ public class BlobPropertiesToBlobMetadata implements Function<BlobProperties, Mu
             PublicAccess containerAcl = containerAcls.getUnchecked(from.getContainer());
             if (containerAcl != PublicAccess.PRIVATE)
                to.setPublicUri(from.getUrl());
-         } catch (CacheLoader.InvalidCacheLoadException e) {
-            // nulls not permitted from cache loader
+         } catch (Exception ex) {
+            //AzureBlob is not a publicly accessible object, but it is impossible to obtain ACL using SAS Auth. 
+            InsufficientAccessRightsException iare = Throwables2.getFirstThrowableOfType(ex, InsufficientAccessRightsException.class);
+            if (iare == null) throw ex;  
          }
       if (to.getContentMetadata() != null && to.getContentMetadata().getContentType() != null &&
             to.getContentMetadata().getContentType().equals("application/directory")) {
