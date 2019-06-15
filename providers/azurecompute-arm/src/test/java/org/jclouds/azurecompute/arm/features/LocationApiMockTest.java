@@ -33,7 +33,7 @@ public class LocationApiMockTest extends BaseAzureComputeApiMockTest {
       final LocationApi locationAPI = api.getLocationApi();
       assertEquals(locationAPI.list(), ImmutableList.of(
               Location.create("/subscriptions/SUBSCRIPTIONID/locations/eastasia",
-                      "eastasia", "East Asia", 114.188, 22.267)
+                      "eastasia", "East Asia", "114.188", "22.267")
       ));
       assertSent(server, "GET", "/subscriptions/SUBSCRIPTIONID/locations?api-version=2015-11-01");
    }
