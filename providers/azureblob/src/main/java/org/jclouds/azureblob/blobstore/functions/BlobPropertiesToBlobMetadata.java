@@ -60,7 +60,7 @@ public class BlobPropertiesToBlobMetadata implements Function<BlobProperties, Mu
             PublicAccess containerAcl = containerAcls.getUnchecked(from.getContainer());
             if (containerAcl != PublicAccess.PRIVATE)
                to.setPublicUri(from.getUrl());
-         } catch (Exception ex) {
+         } catch (RuntimeException ex) {
             //AzureBlob is not a publicly accessible object, but it is impossible to obtain ACL using SAS Auth. 
             InsufficientAccessRightsException iare = Throwables2.getFirstThrowableOfType(ex, InsufficientAccessRightsException.class);
             if (iare == null) throw ex;  
