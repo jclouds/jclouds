@@ -42,16 +42,16 @@ public abstract class Location {
    /**
     * The longitude of the datacenter
     */
-   public abstract double longitude();
+   public abstract String longitude();
 
    /**
     * The latitude of the datacenter
     */
-   public abstract double latitude();
+   public abstract String latitude();
 
    @SerializedNames({"id", "name", "displayName", "longitude", "latitude"})
-   public static Location create(final String id, final String name, final String displayName, final double longitude,
-           final double latitude) {
+   public static Location create(final String id, final String name, final String displayName, final String longitude,
+           final String latitude) {
 
       return new AutoValue_Location(id, name, displayName, longitude, latitude);
    }
