@@ -19,7 +19,10 @@ atlassian-ide-plugin.xml
 .java-version
 .factorypath
 .apt_generated
+.apt_generated_tests
 .checkstyle
 nb-configuration.xml
 nbactions.xml
 /.nb-gradle/
+dependency-reduced-pom.xml
+.vscode

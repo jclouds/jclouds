@@ -16,6 +16,20 @@
  */
 package org.jclouds.json.internal;
 
+import static com.google.common.base.MoreObjects.toStringHelper;
+import static com.google.common.base.Objects.equal;
+
+import java.io.IOException;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
+
+import org.jclouds.json.gson.internal.JsonReaderInternalAccess;
+
 import com.google.common.base.Objects;
 import com.google.common.collect.FluentIterable;
 import com.google.common.collect.ImmutableCollection;
@@ -27,23 +41,10 @@ import com.google.common.collect.Multimap;
 import com.google.gson.Gson;
 import com.google.gson.TypeAdapter;
 import com.google.gson.TypeAdapterFactory;
-import com.google.gson.internal.JsonReaderInternalAccess;
 import com.google.gson.reflect.TypeToken;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonToken;
 import com.google.gson.stream.JsonWriter;
-
-import java.io.IOException;
-import java.lang.reflect.ParameterizedType;
-import java.lang.reflect.Type;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Set;
-
-import static com.google.common.base.Objects.equal;
-import static com.google.common.base.MoreObjects.toStringHelper;
 
 /**
  * Eliminates null values when deserializing Collections, Maps, and Multimaps
@@ -55,7 +56,7 @@ public class NullFilteringTypeAdapterFactories {
    }
 
    static <T> TypeToken<?> resolve(TypeToken<T> ownerType, Type param) {
-      return TypeToken.get(com.google.gson.internal.$Gson$Types.resolve(ownerType.getType(), ownerType.getRawType(),
+      return TypeToken.get(org.jclouds.json.gson.internal.$Gson$Types.resolve(ownerType.getType(), ownerType.getRawType(),
             param));
    }
 

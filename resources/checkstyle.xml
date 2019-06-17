@@ -57,7 +57,7 @@
         </module>
         <module name="IllegalImport">
             <!-- Avoid importing AutoValue shaded packages such as Guava -->
-            <property name="illegalPkgs" value="sun,autovalue,org.testng.internal"/>
+            <property name="illegalPkgs" value="sun,autovalue,org.testng.internal,com.google.gson.internal"/>
         </module>
         <module name="WhitespaceAfter">
             <!-- TYPECAST disabled -->
