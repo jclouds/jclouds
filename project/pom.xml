@@ -1152,12 +1152,10 @@
                   <dependency>
                     <groupId>org.apache.jclouds</groupId>
                     <artifactId>jclouds-core</artifactId>
-                    <version>${project.version}</version>
                   </dependency>
                   <dependency>
                     <groupId>org.apache.jclouds</groupId>
                     <artifactId>jclouds-gson</artifactId>
-                    <version>${project.version}</version>
                   </dependency>
                 </conflictingDependencies>
                 <packages>
