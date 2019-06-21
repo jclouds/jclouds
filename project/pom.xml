@@ -270,8 +270,8 @@
             gson dependency as well. 
           -->
           <exclusion>
-            <groupId>com.google.code.gson</groupId>
-            <artifactId>gson</artifactId>
+            <groupId>org.apache.jclouds</groupId>
+            <artifactId>jclouds-gson-shaded</artifactId>
           </exclusion>
         </exclusions>
       </dependency>

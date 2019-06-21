@@ -23,24 +23,29 @@
     <artifactId>jclouds-project</artifactId>
     <groupId>org.apache.jclouds</groupId>
     <version>2.2.0-SNAPSHOT</version>
-    <relativePath>../project/pom.xml</relativePath>
+    <relativePath>../../project/pom.xml</relativePath>
   </parent>
 
-  <artifactId>jclouds-gson-modules</artifactId>
-  <name>jclouds gson modules</name>
-  <packaging>pom</packaging>
+  <artifactId>jclouds-gson</artifactId>
+  <name>jclouds-gson OSGi bundle</name>
+  <description>jclouds-gson OSGi bundle with gson internal packages relocated</description>
+  <packaging>bundle</packaging>
 
-  <!--
-    The maven-bundle-plugin computes the manifest based on the classes that actually exist in
-    the classpath, but the maven-shade-plugin, runs after the bundle plugin. This results in the generated
-    manifest file not having the exports for the packages that have been relocated.
-    There are several threads on stackoverflow and others trying to make both plugins work together nicely but
-    none of the combinations work in our use case.
-    To overcome this, we generate both separately; first the shaded jar, then the bundle based on that jar. 
-  -->
-  <modules>
-    <module>gson-shaded</module>
-    <module>gson-bundle</module>
-  </modules>
+  <properties>
+    <jclouds.osgi.export>
+      org.jclouds.json.gson.internal*;version=${project.version};-noimport:=true,
+      !com.google.gson.internal*,
+      com.google.gson*;version=${project.version};-noimport:=true,
+    </jclouds.osgi.export>
+    <jclouds.osgi.import>*</jclouds.osgi.import>
+  </properties>
+
+  <dependencies>
+    <dependency>
+      <groupId>org.apache.jclouds</groupId>
+      <artifactId>jclouds-gson-shaded</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+  </dependencies>
 
 </project>
