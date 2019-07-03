@@ -26,6 +26,7 @@ import java.lang.reflect.Modifier;
 import java.util.List;
 import java.util.Map;
 
+import org.jclouds.json.gson.internal.bind.JsonAdapterAnnotationTypeAdapterFactory;
 import org.jclouds.json.gson.internal.ConstructorConstructor;
 import org.jclouds.json.gson.internal.Excluder;
 import org.jclouds.json.gson.internal.bind.ReflectiveTypeAdapterFactory;
@@ -115,7 +116,8 @@ public final class DeserializationConstructorAndReflectiveTypeAdapterFactory imp
       this.constructorFieldNamingPolicy = checkNotNull(deserializationFieldNamingPolicy,
             "deserializationFieldNamingPolicy");
       this.delegateFactory = new ReflectiveTypeAdapterFactory(constructorConstructor, checkNotNull(
-            serializationFieldNamingPolicy, "fieldNamingPolicy"), checkNotNull(excluder, "excluder"));
+            serializationFieldNamingPolicy, "fieldNamingPolicy"), checkNotNull(excluder, "excluder"),
+              new JsonAdapterAnnotationTypeAdapterFactory(constructorConstructor));
    }
 
    public <T> TypeAdapter<T> create(Gson gson, TypeToken<T> type) {
