@@ -1,0 +1,14 @@
+{
+  "properties": {
+    "creationData": {
+      "createOption": "Empty"
+    },
+    "diskSizeGB": 2,
+    "provisioningState": "Updating",
+    "isArmResource": true
+  },
+  "tags": {
+    "exampleTag": "jclouds-test-tag"
+  },
+  "location": "westeurope"
+}
