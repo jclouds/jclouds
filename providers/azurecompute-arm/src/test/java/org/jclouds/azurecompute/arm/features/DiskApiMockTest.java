@@ -19,6 +19,7 @@ package org.jclouds.azurecompute.arm.features;
 import java.net.URI;
 import java.util.List;
 
+import com.google.common.collect.ImmutableMap;
 import org.jclouds.azurecompute.arm.domain.CreationData;
 import org.jclouds.azurecompute.arm.domain.Disk;
 import org.jclouds.azurecompute.arm.domain.DiskProperties;
@@ -56,6 +57,25 @@ public class DiskApiMockTest extends BaseAzureComputeApiMockTest {
 
       assertEquals(dataDisk.properties().provisioningState(), "Updating");
       assertTrue(dataDisk.properties().diskSizeGB() == 2);
+   }
+
+   public void createDiskWithTags() throws InterruptedException {
+
+      server.enqueue(jsonResponse("/creatediskwithtagsresponse.json").setResponseCode(200));
+
+      final DiskApi diskApi = api.getDiskApi(resourcegroup);
+
+      DiskProperties properties = DiskProperties.builder().diskSizeGB(2).creationData(CreationData.create(CreationData.CreateOptions.EMPTY)).build();
+
+      Disk dataDisk = diskApi.createOrUpdate(diskName, "westus", ImmutableMap.of("exampleTag", "jclouds-test-tag"), properties);
+
+      String path = String.format("/subscriptions/%s/resourcegroups/%s/providers/Microsoft.Compute/disks/%s?%s", subscriptionid, resourcegroup, diskName, apiVersion);
+      String json = "{\"location\":\"westus\",\"tags\":{\"exampleTag\":\"jclouds-test-tag\"},\"properties\":{\"diskSizeGB\":2,\"creationData\":{\"createOption\":\"Empty\"}}}";
+      assertSent(server, "PUT", path, json);
+
+      assertEquals(dataDisk.properties().provisioningState(), "Updating");
+      assertTrue(dataDisk.properties().diskSizeGB() == 2);
+      assertTrue(dataDisk.tags().containsValue("jclouds-test-tag"));
    }
 
    public void getDisk() throws InterruptedException {

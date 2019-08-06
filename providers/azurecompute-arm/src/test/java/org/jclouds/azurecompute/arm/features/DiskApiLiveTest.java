@@ -30,6 +30,7 @@ import org.testng.annotations.Test;
 
 import com.google.common.base.Predicate;
 import com.google.common.base.Supplier;
+import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Iterables;
 
 import static org.testng.Assert.assertNotNull;
@@ -58,9 +59,10 @@ public class DiskApiLiveTest extends BaseAzureComputeApiLiveTest {
    @Test
    public void createDisk() {
       DiskProperties properties = DiskProperties.builder().creationData(CreationData.create(CreationData.CreateOptions.EMPTY)).diskSizeGB(2).build();
-      Disk dataDisk = api().createOrUpdate(diskName, LOCATION, properties);
+      Disk dataDisk = api().createOrUpdate(diskName, LOCATION, ImmutableMap.of("exampleTag", "jclouds-test-tag"), properties);
       assertTrue(waitUntilAvailable(diskName), "creation operation did not complete in the configured timeout");
       assertTrue(dataDisk.properties().diskSizeGB() == 2);
+      assertTrue(dataDisk.tags().containsValue("jclouds-test-tag"));
    }
 
    @Test(dependsOnMethods = "createDisk")

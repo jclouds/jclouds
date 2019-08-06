@@ -18,6 +18,7 @@ package org.jclouds.azurecompute.arm.features;
 
 import java.net.URI;
 import java.util.List;
+import java.util.Map;
 
 import javax.inject.Named;
 import javax.ws.rs.Consumes;
@@ -34,6 +35,7 @@ import org.jclouds.azurecompute.arm.domain.Disk;
 import org.jclouds.azurecompute.arm.domain.DiskProperties;
 import org.jclouds.azurecompute.arm.filters.ApiVersionFilter;
 import org.jclouds.azurecompute.arm.functions.URIParser;
+import org.jclouds.javax.annotation.Nullable;
 import org.jclouds.oauth.v2.filters.OAuthFilter;
 import org.jclouds.rest.annotations.Fallback;
 import org.jclouds.rest.annotations.MapBinder;
@@ -60,6 +62,15 @@ public interface DiskApi {
    @Path("/{diskName}")
    Disk createOrUpdate(@PathParam("diskName") String diskName,
                        @PayloadParam("location") String location,
+                       @PayloadParam("properties") DiskProperties properties);
+
+   @Named("disk:create_or_update")
+   @PUT
+   @MapBinder(BindToJsonPayload.class)
+   @Path("/{diskName}")
+   Disk createOrUpdate(@PathParam("diskName") String diskName,
+                       @PayloadParam("location") String location,
+                       @Nullable @PayloadParam("tags") Map<String, String> tags,
                        @PayloadParam("properties") DiskProperties properties);
 
    @Named("disk:get")
