@@ -20,7 +20,6 @@ import static org.jclouds.http.HttpUtils.closeClientButKeepContentStream;
 import static org.jclouds.http.HttpUtils.releasePayload;
 
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
 
 import javax.annotation.Resource;
 import javax.inject.Inject;
@@ -41,6 +40,7 @@ import org.jclouds.rest.ResourceNotFoundException;
 import org.jclouds.util.Strings2;
 
 import com.google.common.annotations.VisibleForTesting;
+import com.google.common.base.Charsets;
 
 /**
  * This will parse and set an appropriate exception on the command object.
@@ -66,7 +66,7 @@ public class ParseAWSErrorFromXmlContent implements HttpErrorHandler {
          AWSError error = null;
          // it is important to always read fully and close streams
          byte[] data = closeClientButKeepContentStream(response);
-         String message = data != null ? new String(data, StandardCharsets.UTF_8) : null;
+         String message = data != null ? new String(data, Charsets.UTF_8) : null;
          if (response.getPayload() != null) {
             String contentType = response.getPayload().getContentMetadata().getContentType();
             if (contentType != null && (contentType.indexOf("xml") != -1 || contentType.indexOf("unknown") != -1)) {
