@@ -25,6 +25,7 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringReader;
+import java.nio.charset.StandardCharsets;
 
 import javax.annotation.Resource;
 
@@ -93,7 +94,7 @@ public class ParseSax<T> implements Function<HttpResponse, T>, InvocationContext
       String from = null;
       try {
          byte[] fromBytes = closeClientButKeepContentStream(response);
-         from = new String(fromBytes);
+         from = new String(fromBytes, StandardCharsets.UTF_8);
          validateXml(from);
          // Use InputStream to skip over byte order mark.
          return doParse(new InputSource(new ByteArrayInputStream(fromBytes)));
@@ -134,7 +135,7 @@ public class ParseSax<T> implements Function<HttpResponse, T>, InvocationContext
 
    protected T doParse(InputSource from) throws IOException, SAXException {
       checkNotNull(from, "xml inputsource");
-      from.setEncoding("UTF-8");
+      from.setEncoding(StandardCharsets.UTF_8.name());
       parser.setContentHandler(getHandler());
       // This method should accept documents with a BOM (Byte-order mark)
       parser.parse(from);
