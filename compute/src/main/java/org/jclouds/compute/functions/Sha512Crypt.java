@@ -169,7 +169,7 @@ public class Sha512Crypt {
             shadowPrefix = shadowPrefix.substring(0, SALT_LEN_MAX);
          }
       } else {
-         java.util.Random randgen = new java.util.Random();
+         java.util.Random randgen = new java.security.SecureRandom();
          StringBuilder saltBuf = new StringBuilder();
 
          while (saltBuf.length() < 16) {
