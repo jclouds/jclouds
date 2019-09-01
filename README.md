@@ -7,6 +7,6 @@ For more information about using or contributing to jclouds, please visit our we
 
 License
 -------
-Copyright (C) 2009-2013 The Apache Software Foundation
+Copyright (C) 2009-2019 The Apache Software Foundation
 
 Licensed under the Apache License, Version 2.0
