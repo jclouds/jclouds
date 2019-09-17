@@ -23,11 +23,13 @@ import com.google.common.collect.ImmutableMap;
 import org.jclouds.azurecompute.arm.domain.CreationData;
 import org.jclouds.azurecompute.arm.domain.Disk;
 import org.jclouds.azurecompute.arm.domain.DiskProperties;
+import org.jclouds.azurecompute.arm.domain.DiskSku;
 import org.jclouds.azurecompute.arm.internal.BaseAzureComputeApiMockTest;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
 import static com.google.common.collect.Iterables.isEmpty;
+import static org.jclouds.azurecompute.arm.domain.StorageAccountType.PREMIUM_LRS;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNull;
 import static org.testng.Assert.assertTrue;
@@ -71,6 +73,27 @@ public class DiskApiMockTest extends BaseAzureComputeApiMockTest {
 
       String path = String.format("/subscriptions/%s/resourcegroups/%s/providers/Microsoft.Compute/disks/%s?%s", subscriptionid, resourcegroup, diskName, apiVersion);
       String json = "{\"location\":\"westus\",\"tags\":{\"exampleTag\":\"jclouds-test-tag\"},\"properties\":{\"diskSizeGB\":2,\"creationData\":{\"createOption\":\"Empty\"}}}";
+      assertSent(server, "PUT", path, json);
+
+      assertEquals(dataDisk.properties().provisioningState(), "Updating");
+      assertTrue(dataDisk.properties().diskSizeGB() == 2);
+      assertTrue(dataDisk.tags().containsValue("jclouds-test-tag"));
+   }
+
+   public void createDiskWithTagsAndSku() throws InterruptedException {
+
+      server.enqueue(jsonResponse("/creatediskwithtagsandskuresponse.json").setResponseCode(200));
+
+      final DiskApi diskApi = api.getDiskApi(resourcegroup);
+
+      DiskProperties properties = DiskProperties.builder().diskSizeGB(2).creationData(CreationData.create(CreationData.CreateOptions.EMPTY)).build();
+
+      DiskSku sku = DiskSku.builder().name(PREMIUM_LRS).build();
+
+      Disk dataDisk = diskApi.createOrUpdate(diskName, "westus", ImmutableMap.of("exampleTag", "jclouds-test-tag"), properties, sku);
+
+      String path = String.format("/subscriptions/%s/resourcegroups/%s/providers/Microsoft.Compute/disks/%s?%s", subscriptionid, resourcegroup, diskName, apiVersion);
+      String json = "{\"location\":\"westus\",\"tags\":{\"exampleTag\":\"jclouds-test-tag\"},\"properties\":{\"diskSizeGB\":2,\"creationData\":{\"createOption\":\"Empty\"}},\"sku\":{\"name\":\"Premium_LRS\"}}";
       assertSent(server, "PUT", path, json);
 
       assertEquals(dataDisk.properties().provisioningState(), "Updating");
