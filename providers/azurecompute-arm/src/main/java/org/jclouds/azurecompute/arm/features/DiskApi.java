@@ -33,6 +33,7 @@ import org.jclouds.Fallbacks.EmptyListOnNotFoundOr404;
 import org.jclouds.Fallbacks.NullOnNotFoundOr404;
 import org.jclouds.azurecompute.arm.domain.Disk;
 import org.jclouds.azurecompute.arm.domain.DiskProperties;
+import org.jclouds.azurecompute.arm.domain.DiskSku;
 import org.jclouds.azurecompute.arm.filters.ApiVersionFilter;
 import org.jclouds.azurecompute.arm.functions.URIParser;
 import org.jclouds.javax.annotation.Nullable;
@@ -72,6 +73,16 @@ public interface DiskApi {
                        @PayloadParam("location") String location,
                        @Nullable @PayloadParam("tags") Map<String, String> tags,
                        @PayloadParam("properties") DiskProperties properties);
+
+   @Named("disk:create_or_update")
+   @PUT
+   @MapBinder(BindToJsonPayload.class)
+   @Path("/{diskName}")
+   Disk createOrUpdate(@PathParam("diskName") String diskName,
+           @PayloadParam("location") String location,
+           @Nullable @PayloadParam("tags") Map<String, String> tags,
+           @PayloadParam("properties") DiskProperties properties,
+           @Nullable @PayloadParam("sku") DiskSku sku);
 
    @Named("disk:get")
    @Path("/{diskName}")

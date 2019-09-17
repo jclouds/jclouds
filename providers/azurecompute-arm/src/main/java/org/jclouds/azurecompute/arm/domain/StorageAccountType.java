@@ -17,11 +17,17 @@
 package org.jclouds.azurecompute.arm.domain;
 
 public enum StorageAccountType {
-   /** Enum value Standard_LRS. */
+   /** Enum value Standard HDD. */
    STANDARD_LRS("Standard_LRS"),
 
-   /** Enum value Premium_LRS. */
-   PREMIUM_LRS("Premium_LRS");
+   /** Enum value Standard SSD. */
+   STANDARD_SSD_LRS("StandardSSD_LRS"),
+
+   /** Enum value Premium SSD. */
+   PREMIUM_LRS("Premium_LRS"),
+
+   /** Enum value Ultra SSD (Available only if your subscription is enabled for ultra disks). */
+   ULTRA_SSD_LRS("UltraSSD_LRS");
 
    /** The actual serialized value for a StorageAccountTypes instance. */
    private String value;

@@ -1,0 +1,17 @@
+{
+  "properties": {
+    "creationData": {
+      "createOption": "Empty"
+    },
+    "diskSizeGB": 2,
+    "provisioningState": "Updating",
+    "isArmResource": true
+  },
+  "tags": {
+    "exampleTag": "jclouds-test-tag"
+  },
+  "sku": {
+    "name": "Premium_LRS"
+  },
+  "location": "westeurope"
+}

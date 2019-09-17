@@ -23,6 +23,7 @@ import java.util.UUID;
 import org.jclouds.azurecompute.arm.domain.CreationData;
 import org.jclouds.azurecompute.arm.domain.Disk;
 import org.jclouds.azurecompute.arm.domain.DiskProperties;
+import org.jclouds.azurecompute.arm.domain.DiskSku;
 import org.jclouds.azurecompute.arm.domain.Provisionable;
 import org.jclouds.azurecompute.arm.internal.BaseAzureComputeApiLiveTest;
 import org.testng.annotations.BeforeClass;
@@ -33,6 +34,7 @@ import com.google.common.base.Supplier;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Iterables;
 
+import static org.jclouds.azurecompute.arm.domain.StorageAccountType.PREMIUM_LRS;
 import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertNull;
 import static org.testng.Assert.assertTrue;
@@ -59,7 +61,8 @@ public class DiskApiLiveTest extends BaseAzureComputeApiLiveTest {
    @Test
    public void createDisk() {
       DiskProperties properties = DiskProperties.builder().creationData(CreationData.create(CreationData.CreateOptions.EMPTY)).diskSizeGB(2).build();
-      Disk dataDisk = api().createOrUpdate(diskName, LOCATION, ImmutableMap.of("exampleTag", "jclouds-test-tag"), properties);
+      DiskSku sku = DiskSku.builder().name(PREMIUM_LRS).build();
+      Disk dataDisk = api().createOrUpdate(diskName, LOCATION, ImmutableMap.of("exampleTag", "jclouds-test-tag"), properties, sku);
       assertTrue(waitUntilAvailable(diskName), "creation operation did not complete in the configured timeout");
       assertTrue(dataDisk.properties().diskSizeGB() == 2);
       assertTrue(dataDisk.tags().containsValue("jclouds-test-tag"));
