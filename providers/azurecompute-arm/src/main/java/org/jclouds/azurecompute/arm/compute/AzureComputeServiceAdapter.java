@@ -155,7 +155,7 @@ public class AzureComputeServiceAdapter implements ComputeServiceAdapter<Virtual
       IdReference availabilitySet = getAvailabilitySetIdReference(templateOptions.getAvailabilitySet());
       NetworkProfile networkProfile = createNetworkProfile(createNetworkInterfaceCards(name, locationName,
             templateOptions));
-      StorageProfile storageProfile = createStorageProfile(image, templateOptions.getDataDisks());
+      StorageProfile storageProfile = createStorageProfile(image, templateOptions);
       HardwareProfile hardwareProfile = HardwareProfile.builder().vmSize(hardwareId).build();
       OSProfile osProfile = createOsProfile(name, template);
       
@@ -515,8 +515,10 @@ public class AzureComputeServiceAdapter implements ComputeServiceAdapter<Virtual
       return ip;
    }
 
-   private StorageProfile createStorageProfile(Image image, List<DataDisk> dataDisks) {
-      return StorageProfile.create(createImageReference(image), createOSDisk(image), dataDisks);
+   private StorageProfile createStorageProfile(Image image, AzureTemplateOptions templateOptions) {
+      List<DataDisk> dataDisks = templateOptions.getDataDisks();
+      StorageAccountType osDiskStorageType = templateOptions.getOsDiskStorageType();
+      return StorageProfile.create(createImageReference(image), createOSDisk(image, osDiskStorageType), dataDisks);
    }
 
    private ImageReference createImageReference(Image image) {
@@ -525,14 +527,14 @@ public class AzureComputeServiceAdapter implements ComputeServiceAdapter<Virtual
             .version("latest").build();
    }
 
-   private OSDisk createOSDisk(Image image) {
+   private OSDisk createOSDisk(Image image, StorageAccountType osDiskStorageType) {
       OsFamily osFamily = image.getOperatingSystem().getFamily();
       String osType = osFamily == OsFamily.WINDOWS ? "Windows" : "Linux";
       return OSDisk.builder()
               .osType(osType)
               .caching(DataDisk.CachingTypes.READ_WRITE.toString())
               .createOption(CreationData.CreateOptions.FROM_IMAGE.toString())
-              .managedDiskParameters(ManagedDiskParameters.create(null, StorageAccountType.STANDARD_LRS.toString()))
+              .managedDiskParameters(ManagedDiskParameters.create(null, osDiskStorageType.toString()))
               .build();
    }
    
