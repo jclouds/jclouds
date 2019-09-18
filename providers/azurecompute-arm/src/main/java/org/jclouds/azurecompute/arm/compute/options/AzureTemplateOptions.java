@@ -24,6 +24,7 @@ import org.jclouds.azurecompute.arm.domain.AvailabilitySet;
 import org.jclouds.azurecompute.arm.domain.DataDisk;
 import org.jclouds.azurecompute.arm.domain.OSProfile.WindowsConfiguration;
 import org.jclouds.azurecompute.arm.domain.Secrets;
+import org.jclouds.azurecompute.arm.domain.StorageAccountType;
 import org.jclouds.compute.options.TemplateOptions;
 
 import com.google.common.base.MoreObjects;
@@ -43,6 +44,7 @@ public class AzureTemplateOptions extends TemplateOptions implements Cloneable {
    private WindowsConfiguration windowsConfiguration;
    private List<Secrets> secrets = ImmutableList.of();
    private String customData;
+   private StorageAccountType osDiskStorageType = StorageAccountType.STANDARD_LRS;
 
    /**
     * Sets the availability set where the nodes will be configured. If it does
@@ -138,6 +140,11 @@ public class AzureTemplateOptions extends TemplateOptions implements Cloneable {
       return this;
    }
 
+   public AzureTemplateOptions osDiskStorageType(StorageAccountType osDiskStorageType) {
+      this.osDiskStorageType = osDiskStorageType;
+      return this;
+   }
+
    public AvailabilitySet getAvailabilitySet() {
       return availabilitySet;
    }
@@ -170,6 +177,10 @@ public class AzureTemplateOptions extends TemplateOptions implements Cloneable {
       return customData;
    }
 
+   public StorageAccountType getOsDiskStorageType() {
+      return osDiskStorageType;
+   }
+
    @Override
    public AzureTemplateOptions clone() {
       AzureTemplateOptions options = new AzureTemplateOptions();
@@ -190,6 +201,7 @@ public class AzureTemplateOptions extends TemplateOptions implements Cloneable {
          eTo.windowsConfiguration(windowsConfiguration);
          eTo.secrets(secrets);
          eTo.customData(customData);
+         eTo.osDiskStorageType(osDiskStorageType);
       }
    }
 
@@ -306,7 +318,7 @@ public class AzureTemplateOptions extends TemplateOptions implements Cloneable {
       }
 
       /**
-       * @see AzureTemplateOptions#secrets(List)
+       * @see AzureTemplateOptions#secrets(Iterable)
        */
       public static AzureTemplateOptions secrets(Iterable<? extends Secrets> secrets) {
          AzureTemplateOptions options = new AzureTemplateOptions();
@@ -314,11 +326,19 @@ public class AzureTemplateOptions extends TemplateOptions implements Cloneable {
       }
 
       /**
-       * @see AzureTemplateOptions#customData
+       * @see AzureTemplateOptions#customData(String)
        */
       public static AzureTemplateOptions customData(String customData) {
          AzureTemplateOptions options = new AzureTemplateOptions();
          return options.customData(customData);
+      }
+
+      /**
+       * @see AzureTemplateOptions#osDiskStorageType(StorageAccountType)
+       */
+      public static AzureTemplateOptions osDiskStorageType(StorageAccountType osDiskStorageType) {
+         AzureTemplateOptions options = new AzureTemplateOptions();
+         return options.osDiskStorageType(osDiskStorageType);
       }
    }
 }
