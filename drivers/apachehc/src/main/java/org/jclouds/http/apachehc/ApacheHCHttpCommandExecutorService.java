@@ -88,7 +88,7 @@ public class ApacheHCHttpCommandExecutorService extends BaseHttpCommandExecutorS
       org.apache.http.HttpResponse apacheResponse = executeRequest(nativeRequest);
 
       Payload payload = null;
-      if (apacheResponse.getEntity() != null)
+      if (apacheResponse.getEntity() != null) {
          try {
             payload = Payloads.newInputStreamPayload(apacheResponse.getEntity().getContent());
             if (apacheResponse.getEntity().getContentLength() >= 0)
@@ -99,17 +99,19 @@ public class ApacheHCHttpCommandExecutorService extends BaseHttpCommandExecutorS
             logger.warn(e, "couldn't receive payload for request: %s", nativeRequest.getRequestLine());
             throw e;
          }
+      }
       Multimap<String, String> headers = LinkedHashMultimap.create();
       for (Header header : apacheResponse.getAllHeaders()) {
          headers.put(header.getName(), header.getValue());
       }
       if (payload != null) {
          contentMetadataCodec.fromHeaders(payload.getContentMetadata(), headers);
+         headers = filterOutContentHeaders(headers);
       }
       return HttpResponse.builder().statusCode(apacheResponse.getStatusLine().getStatusCode())
                                    .message(apacheResponse.getStatusLine().getReasonPhrase())
                                    .payload(payload)
-                                   .headers(filterOutContentHeaders(headers)).build();
+                                   .headers(headers).build();
    }
 
    private org.apache.http.HttpResponse executeRequest(HttpUriRequest nativeRequest) throws IOException,
