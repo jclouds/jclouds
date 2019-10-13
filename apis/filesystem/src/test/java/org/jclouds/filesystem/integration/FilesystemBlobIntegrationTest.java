@@ -120,6 +120,11 @@ public class FilesystemBlobIntegrationTest extends BaseBlobIntegrationTest {
 
    @Override
    protected void checkMPUParts(Blob blob, List<MultipartPart> partsList) {
+      // Mac OS X HFS+ does not support UserDefinedFileAttributeView:
+      // https://bugs.openjdk.java.net/browse/JDK-8030048
+      if (isMacOSX()) {
+         return;
+      }
       assertThat(blob.getMetadata().getETag()).endsWith(String.format("-%d\"", partsList.size()));
       Hasher eTagHasher = Hashing.md5().newHasher();
       for (MultipartPart part : partsList) {
@@ -134,7 +139,9 @@ public class FilesystemBlobIntegrationTest extends BaseBlobIntegrationTest {
       assertThat(blob.getMetadata().getETag()).isEqualTo(expectedETag);
    }
 
-   @Test(groups = { "integration", "live" })
+   // Mac OS X HFS+ does not support UserDefinedFileAttributeView:
+   // https://bugs.openjdk.java.net/browse/JDK-8030048
+   @Test(dataProvider = "ignoreOnMacOSX", groups = { "integration", "live" })
    public void testMultipartUploadMultiplePartsKnownETag() throws Exception {
       BlobStore blobStore = view.getBlobStore();
       String container = getContainerName();
