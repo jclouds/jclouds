@@ -74,24 +74,22 @@ public class SSLModule extends AbstractModule {
 
    @Singleton
    public static class UntrustedSSLContextSupplier implements Supplier<SSLContext> {
-      private final TrustAllCerts trustAllCerts;
+      private final SSLContext sslContext;
 
       @Inject
       UntrustedSSLContextSupplier(TrustAllCerts trustAllCerts) {
-         this.trustAllCerts = trustAllCerts;
+         try {
+            SSLContext sslContext = SSLContext.getInstance("SSL");
+            sslContext.init(null, new TrustManager[] { trustAllCerts }, new SecureRandom());
+            this.sslContext = sslContext;
+         } catch (Exception e) {
+            throw Throwables.propagate(e);
+         }
       }
 
       @Override
       public SSLContext get() {
-         try {
-            SSLContext sc;
-            sc = SSLContext.getInstance("SSL");
-            sc.init(null, new TrustManager[] { trustAllCerts }, new SecureRandom());
-            return sc;
-         } catch (Exception e) {
-            throw Throwables.propagate(e);
-         }
-
+         return sslContext;
       }
    }
 
