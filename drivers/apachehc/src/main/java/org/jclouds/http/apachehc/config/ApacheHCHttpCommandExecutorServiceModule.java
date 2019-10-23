@@ -143,7 +143,7 @@ public class ApacheHCHttpCommandExecutorServiceModule extends AbstractModule {
 
    @Provides
    @Singleton
-   final HttpClient newDefaultHttpClient(ProxyConfig config, BasicHttpParams params, ClientConnectionManager cm) {
+   final HttpClient newDefaultHttpClient(ProxyConfig config, HttpParams params, ClientConnectionManager cm) {
       DefaultHttpClient client = new DefaultHttpClient(cm, params);
       if (config.useSystem()) {
          ProxySelectorRoutePlanner routePlanner = new ProxySelectorRoutePlanner(client.getConnectionManager()
