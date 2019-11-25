@@ -79,7 +79,7 @@ public class SSLModule extends AbstractModule {
       @Inject
       UntrustedSSLContextSupplier(TrustAllCerts trustAllCerts) {
          try {
-            SSLContext sslContext = SSLContext.getInstance("SSL");
+            SSLContext sslContext = SSLContext.getInstance("TLS");
             sslContext.init(null, new TrustManager[] { trustAllCerts }, new SecureRandom());
             this.sslContext = sslContext;
          } catch (Exception e) {
