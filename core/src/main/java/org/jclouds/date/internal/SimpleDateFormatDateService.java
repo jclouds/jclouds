@@ -49,7 +49,7 @@ public class SimpleDateFormatDateService implements DateService {
    // See http://stackoverflow.com/questions/10584647/simpledateformat-parse-is-one-hour-out-using-rfc-1123-gmt-in-summer
    // for why not using "zzz"
    // @GuardedBy("this")
-   private static final SimpleDateFormat rfc1123SimpleDateFormat = new SimpleDateFormat("EEE, dd MMM yyyyy HH:mm:ss Z", Locale.US);
+   private static final SimpleDateFormat rfc1123SimpleDateFormat = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss Z", Locale.US);
 
    // @GuardedBy("this")
    private static final SimpleDateFormat cSimpleDateFormat = new SimpleDateFormat("EEE MMM dd HH:mm:ss Z yyyy", Locale.US);
