@@ -840,7 +840,9 @@ public final class LocalBlobStore implements BlobStore {
          Blob blobPart = getBlob(mpu.containerName(), MULTIPART_PREFIX + mpu.id() + "-" + mpu.blobName() + "-" + part.partNumber());
          contentLength += blobPart.getMetadata().getContentMetadata().getContentLength();
          blobs.add(blobPart);
-         md5Hasher.putBytes(BaseEncoding.base16().lowerCase().decode(blobPart.getMetadata().getETag()));
+         if (blobPart.getMetadata().getETag() != null) {
+            md5Hasher.putBytes(BaseEncoding.base16().lowerCase().decode(blobPart.getMetadata().getETag()));
+         }
       }
       String mpuETag = new StringBuilder("\"")
          .append(md5Hasher.hash())
